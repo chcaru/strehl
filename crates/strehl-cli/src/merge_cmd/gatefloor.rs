@@ -46,6 +46,7 @@
 
 use anyhow::{Context, Result};
 use strehl_core::align::{Resampler, Similarity};
+use strehl_core::plane::PlaneGeometry;
 use strehl_core::pyramid::{level_sizes, LevelSize, Pyramid, Workspace};
 use strehl_raw::Frame;
 
@@ -259,7 +260,13 @@ impl Probe {
     ) -> Result<()> {
         let mut probe = template.clone();
         let black = f64::from(template.levels.black);
-        fill_noise(&mut probe.data, black + PROBE_LEVEL, PROBE_SIGMA, index);
+        fill_probe_noise(
+            &mut probe,
+            self.domain.full,
+            black + PROBE_LEVEL,
+            PROBE_SIGMA,
+            index,
+        )?;
 
         align_cmd::warp_frame_in_place(&mut probe, t, self.domain.full, resampler, scratch)
             .context("warping the noise probe for the band-noise floor")?;
@@ -422,13 +429,38 @@ fn pooled_mean_square(level: &[f32], sz: LevelSize) -> Option<f64> {
     Some(acc / (iw * ih) as f64)
 }
 
-/// Fill `data` with `level + N(0, sigma^2)`, quantised to u16 as a real frame
-/// is.
+/// Fill only the complete quads that both gather implementations consume.
+/// The RNG advances in active-relative row order, never through unused storage.
+/// Using the full geometry (not the analysis Crop) also keeps the probe at a
+/// photosite unchanged when only the output domain changes. Odd trailing active
+/// sensels are outside the consumer's complete-quad extent and remain untouched.
+fn fill_probe_noise(
+    frame: &mut Frame,
+    full: PlaneGeometry,
+    level: f64,
+    sigma: f64,
+    index: usize,
+) -> Result<()> {
+    super::validate_pyramid_frame(frame, full, index)?;
+    let (ax, ay) = (frame.active.x, frame.active.y);
+    let width = 2 * full.width;
+    let sites = frame
+        .data
+        .chunks_exact_mut(frame.stride)
+        .skip(ay)
+        .take(2 * full.height)
+        .flat_map(|row| row[ax..ax + width].iter_mut());
+    fill_noise(sites, level, sigma, index);
+    Ok(())
+}
+
+/// Fill the destination sequence with `level + N(0, sigma^2)`, quantised to u16
+/// as a real frame is.
 ///
 /// Deterministic in `index` alone. A probe seeded from a clock or from thread
 /// scheduling would make the gate -- and therefore the merge -- irreproducible,
 /// and the byte-freezes would fail for a reason that is not a bug in the merge.
-fn fill_noise(data: &mut [u16], level: f64, sigma: f64, index: usize) {
+fn fill_noise<'a>(data: impl Iterator<Item = &'a mut u16>, level: f64, sigma: f64, index: usize) {
     // SplitMix64. Self-contained on purpose: the probe's determinism is a
     // property of this file and should not move if a shared RNG is retuned.
     let mut s = 0x9E37_79B9_7F4A_7C15u64
@@ -442,7 +474,7 @@ fn fill_noise(data: &mut [u16], level: f64, sigma: f64, index: usize) {
         f64::from(((z ^ (z >> 31)) >> 40) as u32) / f64::from(1u32 << 24)
     };
     let mut spare: Option<f64> = None;
-    for d in data.iter_mut() {
+    for d in data {
         // Box-Muller, both draws used.
         let g = match spare.take() {
             Some(g) => g,
@@ -456,4 +488,20 @@ fn fill_noise(data: &mut [u16], level: f64, sigma: f64, index: usize) {
         };
         *d = (level + sigma * g).round().clamp(0.0, f64::from(u16::MAX)) as u16;
     }
+}
+
+#[cfg(test)]
+mod m194c_author_tests {
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/m194c-probe-layout/author-tests.rs"
+    ));
+}
+
+#[cfg(test)]
+mod m194c_independent_tests {
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/m194c-probe-layout/independent-tests.rs"
+    ));
 }

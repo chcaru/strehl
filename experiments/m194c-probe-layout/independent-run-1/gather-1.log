@@ -1,0 +1,1212 @@
+
+running 4 tests
+test merge_cmd::gatefloor::m194c_independent_tests::independent_actual_probe_layout_and_live_metadata ... M194C_INDEPENDENT actual-probe layout-comparisons=80 seed-controls=20 warp-live=true wb-fullres=true beta0-bits=[1060348518, 1026457683]
+ok
+test merge_cmd::gatefloor::m194c_independent_tests::independent_actual_writer_layout_and_power ... M194C_INDEPENDENT delivered prefix=whole fullres=true sha256=eea98d1d80c9805042a8ecbd4629d720c5f001e11a048448d683f80ed49f2070 layout-equalities=4 active/noise/warp/WB-live=true observer-on/placebo-identical=true dir=C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli\../../experiments/m194c-probe-layout/independent-work\15000-true
+M194C_INDEPENDENT delivered prefix=crop fullres=true sha256=1eb75211f1f9ee5870c94b55e31e0631949e86dff5e77581e5a8b9d34ee55151 layout-equalities=4 active/noise/warp/WB-live=true observer-on/placebo-identical=true dir=C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli\../../experiments/m194c-probe-layout/independent-work\15000-true
+ok
+test merge_cmd::gatefloor::m194c_independent_tests::independent_empty_nan_and_real_merge_fallback ... FAILED
+test merge_cmd::gatefloor::m194c_independent_tests::independent_sequence_layout_legacy_and_seed ... M194C_INDEPENDENT legacy-layout w=70 h=46 seed=0 layout=1 changed=3189/3220
+M194C_INDEPENDENT legacy-layout w=70 h=46 seed=0 layout=2 changed=3191/3220
+M194C_INDEPENDENT legacy-layout w=70 h=46 seed=17 layout=1 changed=3193/3220
+M194C_INDEPENDENT legacy-layout w=70 h=46 seed=17 layout=2 changed=3204/3220
+M194C_INDEPENDENT legacy-layout w=70 h=46 seed=43 layout=1 changed=3205/3220
+M194C_INDEPENDENT legacy-layout w=70 h=46 seed=43 layout=2 changed=3197/3220
+M194C_INDEPENDENT legacy-layout w=118 h=82 seed=0 layout=1 changed=9586/9676
+M194C_INDEPENDENT legacy-layout w=118 h=82 seed=0 layout=2 changed=9576/9676
+M194C_INDEPENDENT legacy-layout w=118 h=82 seed=17 layout=1 changed=9612/9676
+M194C_INDEPENDENT legacy-layout w=118 h=82 seed=17 layout=2 changed=9607/9676
+M194C_INDEPENDENT legacy-layout w=118 h=82 seed=43 layout=1 changed=9609/9676
+M194C_INDEPENDENT legacy-layout w=118 h=82 seed=43 layout=2 changed=9619/9676
+M194C_INDEPENDENT sampler comparisons=12 legacy-packed=6 seed-live=6
+ok
+
+failures:
+
+failures:
+    merge_cmd::gatefloor::m194c_independent_tests::independent_empty_nan_and_real_merge_fallback
+
+test result: FAILED. 3 passed; 1 failed; 0 ignored; 0 measured; 133 filtered out; finished in 7.16s
+
+frames          : 5 from M194C-INDEPENDENT-NO-SUCH-RAW-DIRECTORY  (first decode 0.00 s)
+planes          : 137 x 95 per CFA plane
+--- the merge ---
+bands           : 3 Laplacian levels + 1 base, coarsest 18 x 12
+selection       : SOFT -- weight = (band power above the noise floor)^exponent, a convex combination.
+                  Sign coherence is free: a convex combination cannot take adjacent
+                  coefficients from opposite-signed frames, which is the ringing a
+                  coefficient-wise argmax produces.
+noise gate      : 2.00 x the modelled band-noise power. Below it, NO frame may win and the
+                  merge averages -- which is the correct estimator when there is no
+                  information, and the only operation that gets below single-frame noise.
+exponent        : 2.00
+per-band exp    : 2 3 4   (coarsest -> finest)
+                  sharpness ramps 1.4x per octave toward the fine bands. A wrong pick in a
+                  fine band is one high-frequency coefficient nobody can see; a wrong pick
+                  in a coarse band IS the rim.
+base band       : plain mean across frames
+not applied     : photometric gain, clip census, outlier rejection, halo correction, through-focus
+                  statistics. Those are the --merge estimator path's stages; this arm is the merge only.
+alignment       : ON (M194c-independent), reference frame 2, 5 placed / 0 refused, 0.0 s
+  held-out err  : NOT MEASURED   resampler: CatmullRom
+  coverage      : WARNING -- could not fit a fully covered grid; the render may contain black regions where no frame reaches.
+memory plan     : 5 canonical chunks, 1 reusable frame worker, 1 retained + 1 scratch accumulator, 2 execution threads
+                  CONSTANT in the frame count and reduction order. Chunks run serially; spatial work uses
+                  the execution pool. STREHL_PYRAMID_WORKERS=N changes threads, never arithmetic.
+
+folded          : 5 / 5 frames in 0.3 s (0.06 s per frame, 2 execution threads)
+band noise gain : 0.8894 0.0529 0.0101 0.0037
+                  (E[L_k^2] / sigma_0^2, MEASURED on these operators, not derived.)
+measured floor  : 0.7808 0.0489
+                  x white       : 0.8779 0.9252
+                  THE FLOOR THE GATE ACTUALLY USED, averaged over 5 warped
+  frames. The line above it is the white-noise constant, which is
+  exact only for an UNWARPED frame; resampling correlates neighbours
+                  and moves the per-band split. Bands past this list kept the constant.
+                  STREHL_GATE_FLOOR=white restores it everywhere.
+averaged        : 0.0% 0.0% 0.0% 100.0%
+                  per level, the fraction of coefficients where NO frame cleared the noise
+                  floor and the merge therefore averaged instead of selecting. Near 0%
+                  everywhere would mean the gate is not gating and this is a naive
+                  pyramid stacker.
+
+
+wrote           : C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli\../../experiments/m194c-probe-layout/independent-work\15000-true\whole-baseline.tif (274 x 190, 16-bit RGB, linear camera-native RGB, Malvar-He-Cutler demosaic)
+                  Full sensor resolution: every CFA site estimated, one focus
+                  decision per quad. Interpolated -- do not measure resolution on it.
+collapse+write  : 0.0 s
+total           : 0.3 s
+frames          : 5 from M194C-INDEPENDENT-NO-SUCH-RAW-DIRECTORY  (first decode 0.00 s)
+planes          : 137 x 95 per CFA plane
+--- the merge ---
+bands           : 3 Laplacian levels + 1 base, coarsest 18 x 12
+selection       : SOFT -- weight = (band power above the noise floor)^exponent, a convex combination.
+                  Sign coherence is free: a convex combination cannot take adjacent
+                  coefficients from opposite-signed frames, which is the ringing a
+                  coefficient-wise argmax produces.
+noise gate      : 2.00 x the modelled band-noise power. Below it, NO frame may win and the
+                  merge averages -- which is the correct estimator when there is no
+                  information, and the only operation that gets below single-frame noise.
+exponent        : 2.00
+per-band exp    : 2 3 4   (coarsest -> finest)
+                  sharpness ramps 1.4x per octave toward the fine bands. A wrong pick in a
+                  fine band is one high-frequency coefficient nobody can see; a wrong pick
+                  in a coarse band IS the rim.
+base band       : plain mean across frames
+not applied     : photometric gain, clip census, outlier rejection, halo correction, through-focus
+                  statistics. Those are the --merge estimator path's stages; this arm is the merge only.
+alignment       : ON (M194c-independent), reference frame 2, 5 placed / 0 refused, 0.0 s
+  held-out err  : NOT MEASURED   resampler: CatmullRom
+  coverage      : WARNING -- could not fit a fully covered grid; the render may contain black regions where no frame reaches.
+memory plan     : 5 canonical chunks, 1 reusable frame worker, 1 retained + 1 scratch accumulator, 2 execution threads
+                  CONSTANT in the frame count and reduction order. Chunks run serially; spatial work uses
+                  the execution pool. STREHL_PYRAMID_WORKERS=N changes threads, never arithmetic.
+
+folded          : 5 / 5 frames in 0.1 s (0.03 s per frame, 2 execution threads)
+band noise gain : 0.8894 0.0529 0.0101 0.0037
+                  (E[L_k^2] / sigma_0^2, MEASURED on these operators, not derived.)
+measured floor  : 0.7808 0.0489
+                  x white       : 0.8779 0.9252
+                  THE FLOOR THE GATE ACTUALLY USED, averaged over 5 warped
+  frames. The line above it is the white-noise constant, which is
+  exact only for an UNWARPED frame; resampling correlates neighbours
+                  and moves the per-band split. Bands past this list kept the constant.
+                  STREHL_GATE_FLOOR=white restores it everywhere.
+averaged        : 0.0% 0.0% 0.0% 100.0%
+                  per level, the fraction of coefficients where NO frame cleared the noise
+                  floor and the merge therefore averaged instead of selecting. Near 0%
+                  everywhere would mean the gate is not gating and this is a naive
+                  pyramid stacker.
+
+
+wrote           : C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli\../../experiments/m194c-probe-layout/independent-work\15000-true\whole-layout1.tif (274 x 190, 16-bit RGB, linear camera-native RGB, Malvar-He-Cutler demosaic)
+                  Full sensor resolution: every CFA site estimated, one focus
+                  decision per quad. Interpolated -- do not measure resolution on it.
+collapse+write  : 0.0 s
+total           : 0.2 s
+frames          : 5 from M194C-INDEPENDENT-NO-SUCH-RAW-DIRECTORY  (first decode 0.00 s)
+planes          : 137 x 95 per CFA plane
+--- the merge ---
+bands           : 3 Laplacian levels + 1 base, coarsest 18 x 12
+selection       : SOFT -- weight = (band power above the noise floor)^exponent, a convex combination.
+                  Sign coherence is free: a convex combination cannot take adjacent
+                  coefficients from opposite-signed frames, which is the ringing a
+                  coefficient-wise argmax produces.
+noise gate      : 2.00 x the modelled band-noise power. Below it, NO frame may win and the
+                  merge averages -- which is the correct estimator when there is no
+                  information, and the only operation that gets below single-frame noise.
+exponent        : 2.00
+per-band exp    : 2 3 4   (coarsest -> finest)
+                  sharpness ramps 1.4x per octave toward the fine bands. A wrong pick in a
+                  fine band is one high-frequency coefficient nobody can see; a wrong pick
+                  in a coarse band IS the rim.
+base band       : plain mean across frames
+not applied     : photometric gain, clip census, outlier rejection, halo correction, through-focus
+                  statistics. Those are the --merge estimator path's stages; this arm is the merge only.
+alignment       : ON (M194c-independent), reference frame 2, 5 placed / 0 refused, 0.0 s
+  held-out err  : NOT MEASURED   resampler: CatmullRom
+  coverage      : WARNING -- could not fit a fully covered grid; the render may contain black regions where no frame reaches.
+memory plan     : 5 canonical chunks, 1 reusable frame worker, 1 retained + 1 scratch accumulator, 2 execution threads
+                  CONSTANT in the frame count and reduction order. Chunks run serially; spatial work uses
+                  the execution pool. STREHL_PYRAMID_WORKERS=N changes threads, never arithmetic.
+
+folded          : 5 / 5 frames in 0.1 s (0.03 s per frame, 2 execution threads)
+band noise gain : 0.8894 0.0529 0.0101 0.0037
+                  (E[L_k^2] / sigma_0^2, MEASURED on these operators, not derived.)
+measured floor  : 0.7808 0.0489
+                  x white       : 0.8779 0.9252
+                  THE FLOOR THE GATE ACTUALLY USED, averaged over 5 warped
+  frames. The line above it is the white-noise constant, which is
+  exact only for an UNWARPED frame; resampling correlates neighbours
+                  and moves the per-band split. Bands past this list kept the constant.
+                  STREHL_GATE_FLOOR=white restores it everywhere.
+averaged        : 0.0% 0.0% 0.0% 100.0%
+                  per level, the fraction of coefficients where NO frame cleared the noise
+                  floor and the merge therefore averaged instead of selecting. Near 0%
+                  everywhere would mean the gate is not gating and this is a naive
+                  pyramid stacker.
+
+
+wrote           : C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli\../../experiments/m194c-probe-layout/independent-work\15000-true\whole-poison1.tif (274 x 190, 16-bit RGB, linear camera-native RGB, Malvar-He-Cutler demosaic)
+                  Full sensor resolution: every CFA site estimated, one focus
+                  decision per quad. Interpolated -- do not measure resolution on it.
+collapse+write  : 0.0 s
+total           : 0.2 s
+frames          : 5 from M194C-INDEPENDENT-NO-SUCH-RAW-DIRECTORY  (first decode 0.00 s)
+planes          : 137 x 95 per CFA plane
+--- the merge ---
+bands           : 3 Laplacian levels + 1 base, coarsest 18 x 12
+selection       : SOFT -- weight = (band power above the noise floor)^exponent, a convex combination.
+                  Sign coherence is free: a convex combination cannot take adjacent
+                  coefficients from opposite-signed frames, which is the ringing a
+                  coefficient-wise argmax produces.
+noise gate      : 2.00 x the modelled band-noise power. Below it, NO frame may win and the
+                  merge averages -- which is the correct estimator when there is no
+                  information, and the only operation that gets below single-frame noise.
+exponent        : 2.00
+per-band exp    : 2 3 4   (coarsest -> finest)
+                  sharpness ramps 1.4x per octave toward the fine bands. A wrong pick in a
+                  fine band is one high-frequency coefficient nobody can see; a wrong pick
+                  in a coarse band IS the rim.
+base band       : plain mean across frames
+not applied     : photometric gain, clip census, outlier rejection, halo correction, through-focus
+                  statistics. Those are the --merge estimator path's stages; this arm is the merge only.
+alignment       : ON (M194c-independent), reference frame 2, 5 placed / 0 refused, 0.0 s
+  held-out err  : NOT MEASURED   resampler: CatmullRom
+  coverage      : WARNING -- could not fit a fully covered grid; the render may contain black regions where no frame reaches.
+memory plan     : 5 canonical chunks, 1 reusable frame worker, 1 retained + 1 scratch accumulator, 2 execution threads
+                  CONSTANT in the frame count and reduction order. Chunks run serially; spatial work uses
+                  the execution pool. STREHL_PYRAMID_WORKERS=N changes threads, never arithmetic.
+
+folded          : 5 / 5 frames in 0.1 s (0.03 s per frame, 2 execution threads)
+band noise gain : 0.8894 0.0529 0.0101 0.0037
+                  (E[L_k^2] / sigma_0^2, MEASURED on these operators, not derived.)
+measured floor  : 0.7808 0.0489
+                  x white       : 0.8779 0.9252
+                  THE FLOOR THE GATE ACTUALLY USED, averaged over 5 warped
+  frames. The line above it is the white-noise constant, which is
+  exact only for an UNWARPED frame; resampling correlates neighbours
+                  and moves the per-band split. Bands past this list kept the constant.
+                  STREHL_GATE_FLOOR=white restores it everywhere.
+averaged        : 0.0% 0.0% 0.0% 100.0%
+                  per level, the fraction of coefficients where NO frame cleared the noise
+                  floor and the merge therefore averaged instead of selecting. Near 0%
+                  everywhere would mean the gate is not gating and this is a naive
+                  pyramid stacker.
+
+
+wrote           : C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli\../../experiments/m194c-probe-layout/independent-work\15000-true\whole-layout2.tif (274 x 190, 16-bit RGB, linear camera-native RGB, Malvar-He-Cutler demosaic)
+                  Full sensor resolution: every CFA site estimated, one focus
+                  decision per quad. Interpolated -- do not measure resolution on it.
+collapse+write  : 0.0 s
+total           : 0.2 s
+frames          : 5 from M194C-INDEPENDENT-NO-SUCH-RAW-DIRECTORY  (first decode 0.00 s)
+planes          : 137 x 95 per CFA plane
+--- the merge ---
+bands           : 3 Laplacian levels + 1 base, coarsest 18 x 12
+selection       : SOFT -- weight = (band power above the noise floor)^exponent, a convex combination.
+                  Sign coherence is free: a convex combination cannot take adjacent
+                  coefficients from opposite-signed frames, which is the ringing a
+                  coefficient-wise argmax produces.
+noise gate      : 2.00 x the modelled band-noise power. Below it, NO frame may win and the
+                  merge averages -- which is the correct estimator when there is no
+                  information, and the only operation that gets below single-frame noise.
+exponent        : 2.00
+per-band exp    : 2 3 4   (coarsest -> finest)
+                  sharpness ramps 1.4x per octave toward the fine bands. A wrong pick in a
+                  fine band is one high-frequency coefficient nobody can see; a wrong pick
+                  in a coarse band IS the rim.
+base band       : plain mean across frames
+not applied     : photometric gain, clip census, outlier rejection, halo correction, through-focus
+                  statistics. Those are the --merge estimator path's stages; this arm is the merge only.
+alignment       : ON (M194c-independent), reference frame 2, 5 placed / 0 refused, 0.0 s
+  held-out err  : NOT MEASURED   resampler: CatmullRom
+  coverage      : WARNING -- could not fit a fully covered grid; the render may contain black regions where no frame reaches.
+memory plan     : 5 canonical chunks, 1 reusable frame worker, 1 retained + 1 scratch accumulator, 2 execution threads
+                  CONSTANT in the frame count and reduction order. Chunks run serially; spatial work uses
+                  the execution pool. STREHL_PYRAMID_WORKERS=N changes threads, never arithmetic.
+
+folded          : 5 / 5 frames in 0.1 s (0.03 s per frame, 2 execution threads)
+band noise gain : 0.8894 0.0529 0.0101 0.0037
+                  (E[L_k^2] / sigma_0^2, MEASURED on these operators, not derived.)
+measured floor  : 0.7808 0.0489
+                  x white       : 0.8779 0.9252
+                  THE FLOOR THE GATE ACTUALLY USED, averaged over 5 warped
+  frames. The line above it is the white-noise constant, which is
+  exact only for an UNWARPED frame; resampling correlates neighbours
+                  and moves the per-band split. Bands past this list kept the constant.
+                  STREHL_GATE_FLOOR=white restores it everywhere.
+averaged        : 0.0% 0.0% 0.0% 100.0%
+                  per level, the fraction of coefficients where NO frame cleared the noise
+                  floor and the merge therefore averaged instead of selecting. Near 0%
+                  everywhere would mean the gate is not gating and this is a naive
+                  pyramid stacker.
+
+
+wrote           : C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli\../../experiments/m194c-probe-layout/independent-work\15000-true\whole-poison2.tif (274 x 190, 16-bit RGB, linear camera-native RGB, Malvar-He-Cutler demosaic)
+                  Full sensor resolution: every CFA site estimated, one focus
+                  decision per quad. Interpolated -- do not measure resolution on it.
+collapse+write  : 0.0 s
+total           : 0.2 s
+frames          : 5 from M194C-INDEPENDENT-NO-SUCH-RAW-DIRECTORY  (first decode 0.00 s)
+planes          : 137 x 95 per CFA plane
+--- the merge ---
+bands           : 3 Laplacian levels + 1 base, coarsest 18 x 12
+selection       : SOFT -- weight = (band power above the noise floor)^exponent, a convex combination.
+                  Sign coherence is free: a convex combination cannot take adjacent
+                  coefficients from opposite-signed frames, which is the ringing a
+                  coefficient-wise argmax produces.
+noise gate      : 2.00 x the modelled band-noise power. Below it, NO frame may win and the
+                  merge averages -- which is the correct estimator when there is no
+                  information, and the only operation that gets below single-frame noise.
+exponent        : 2.00
+per-band exp    : 2 3 4   (coarsest -> finest)
+                  sharpness ramps 1.4x per octave toward the fine bands. A wrong pick in a
+                  fine band is one high-frequency coefficient nobody can see; a wrong pick
+                  in a coarse band IS the rim.
+base band       : plain mean across frames
+not applied     : photometric gain, clip census, outlier rejection, halo correction, through-focus
+                  statistics. Those are the --merge estimator path's stages; this arm is the merge only.
+alignment       : ON (M194c-independent), reference frame 2, 5 placed / 0 refused, 0.0 s
+  held-out err  : NOT MEASURED   resampler: CatmullRom
+  coverage      : WARNING -- could not fit a fully covered grid; the render may contain black regions where no frame reaches.
+memory plan     : 5 canonical chunks, 1 reusable frame worker, 1 retained + 1 scratch accumulator, 2 execution threads
+                  CONSTANT in the frame count and reduction order. Chunks run serially; spatial work uses
+                  the execution pool. STREHL_PYRAMID_WORKERS=N changes threads, never arithmetic.
+
+folded          : 5 / 5 frames in 0.1 s (0.03 s per frame, 2 execution threads)
+band noise gain : 0.8894 0.0529 0.0101 0.0037
+                  (E[L_k^2] / sigma_0^2, MEASURED on these operators, not derived.)
+measured floor  : 0.7808 0.0489
+                  x white       : 0.8779 0.9252
+                  THE FLOOR THE GATE ACTUALLY USED, averaged over 5 warped
+  frames. The line above it is the white-noise constant, which is
+  exact only for an UNWARPED frame; resampling correlates neighbours
+                  and moves the per-band split. Bands past this list kept the constant.
+                  STREHL_GATE_FLOOR=white restores it everywhere.
+averaged        : 0.0% 0.0% 0.0% 100.0%
+                  per level, the fraction of coefficients where NO frame cleared the noise
+                  floor and the merge therefore averaged instead of selecting. Near 0%
+                  everywhere would mean the gate is not gating and this is a naive
+                  pyramid stacker.
+
+
+wrote           : C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli\../../experiments/m194c-probe-layout/independent-work\15000-true\whole-single-site.tif (274 x 190, 16-bit RGB, linear camera-native RGB, Malvar-He-Cutler demosaic)
+                  Full sensor resolution: every CFA site estimated, one focus
+                  decision per quad. Interpolated -- do not measure resolution on it.
+collapse+write  : 0.0 s
+total           : 0.2 s
+frames          : 5 from M194C-INDEPENDENT-NO-SUCH-RAW-DIRECTORY  (first decode 0.00 s)
+planes          : 137 x 95 per CFA plane
+--- the merge ---
+bands           : 3 Laplacian levels + 1 base, coarsest 18 x 12
+selection       : SOFT -- weight = (band power above the noise floor)^exponent, a convex combination.
+                  Sign coherence is free: a convex combination cannot take adjacent
+                  coefficients from opposite-signed frames, which is the ringing a
+                  coefficient-wise argmax produces.
+noise gate      : 2.00 x the modelled band-noise power. Below it, NO frame may win and the
+                  merge averages -- which is the correct estimator when there is no
+                  information, and the only operation that gets below single-frame noise.
+exponent        : 2.00
+per-band exp    : 2 3 4   (coarsest -> finest)
+                  sharpness ramps 1.4x per octave toward the fine bands. A wrong pick in a
+                  fine band is one high-frequency coefficient nobody can see; a wrong pick
+                  in a coarse band IS the rim.
+base band       : plain mean across frames
+not applied     : photometric gain, clip census, outlier rejection, halo correction, through-focus
+                  statistics. Those are the --merge estimator path's stages; this arm is the merge only.
+alignment       : ON (M194c-independent), reference frame 2, 5 placed / 0 refused, 0.0 s
+  held-out err  : NOT MEASURED   resampler: CatmullRom
+  coverage      : WARNING -- could not fit a fully covered grid; the render may contain black regions where no frame reaches.
+memory plan     : 5 canonical chunks, 1 reusable frame worker, 1 retained + 1 scratch accumulator, 2 execution threads
+                  CONSTANT in the frame count and reduction order. Chunks run serially; spatial work uses
+                  the execution pool. STREHL_PYRAMID_WORKERS=N changes threads, never arithmetic.
+
+folded          : 5 / 5 frames in 0.1 s (0.03 s per frame, 2 execution threads)
+band noise gain : 0.8894 0.0529 0.0101 0.0037
+                  (E[L_k^2] / sigma_0^2, MEASURED on these operators, not derived.)
+measured floor  : 0.7808 0.0489
+                  x white       : 0.8779 0.9252
+                  THE FLOOR THE GATE ACTUALLY USED, averaged over 5 warped
+  frames. The line above it is the white-noise constant, which is
+  exact only for an UNWARPED frame; resampling correlates neighbours
+                  and moves the per-band split. Bands past this list kept the constant.
+                  STREHL_GATE_FLOOR=white restores it everywhere.
+averaged        : 0.0% 0.0% 0.0% 100.0%
+                  per level, the fraction of coefficients where NO frame cleared the noise
+                  floor and the merge therefore averaged instead of selecting. Near 0%
+                  everywhere would mean the gate is not gating and this is a naive
+                  pyramid stacker.
+
+
+wrote           : C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli\../../experiments/m194c-probe-layout/independent-work\15000-true\whole-active.tif (274 x 190, 16-bit RGB, linear camera-native RGB, Malvar-He-Cutler demosaic)
+                  Full sensor resolution: every CFA site estimated, one focus
+                  decision per quad. Interpolated -- do not measure resolution on it.
+collapse+write  : 0.0 s
+total           : 0.2 s
+frames          : 5 from M194C-INDEPENDENT-NO-SUCH-RAW-DIRECTORY  (first decode 0.00 s)
+planes          : 137 x 95 per CFA plane
+--- the merge ---
+bands           : 3 Laplacian levels + 1 base, coarsest 18 x 12
+selection       : SOFT -- weight = (band power above the noise floor)^exponent, a convex combination.
+                  Sign coherence is free: a convex combination cannot take adjacent
+                  coefficients from opposite-signed frames, which is the ringing a
+                  coefficient-wise argmax produces.
+noise gate      : 2.00 x the modelled band-noise power. Below it, NO frame may win and the
+                  merge averages -- which is the correct estimator when there is no
+                  information, and the only operation that gets below single-frame noise.
+exponent        : 2.00
+per-band exp    : 2 3 4   (coarsest -> finest)
+                  sharpness ramps 1.4x per octave toward the fine bands. A wrong pick in a
+                  fine band is one high-frequency coefficient nobody can see; a wrong pick
+                  in a coarse band IS the rim.
+base band       : plain mean across frames
+not applied     : photometric gain, clip census, outlier rejection, halo correction, through-focus
+                  statistics. Those are the --merge estimator path's stages; this arm is the merge only.
+alignment       : ON (M194c-independent), reference frame 2, 5 placed / 0 refused, 0.0 s
+  held-out err  : NOT MEASURED   resampler: CatmullRom
+  coverage      : WARNING -- could not fit a fully covered grid; the render may contain black regions where no frame reaches.
+memory plan     : 5 canonical chunks, 1 reusable frame worker, 1 retained + 1 scratch accumulator, 2 execution threads
+                  CONSTANT in the frame count and reduction order. Chunks run serially; spatial work uses
+                  the execution pool. STREHL_PYRAMID_WORKERS=N changes threads, never arithmetic.
+
+folded          : 5 / 5 frames in 0.2 s (0.04 s per frame, 2 execution threads)
+band noise gain : 0.8894 0.0529 0.0101 0.0037
+                  (E[L_k^2] / sigma_0^2, MEASURED on these operators, not derived.)
+measured floor  : 0.7808 0.0489
+                  x white       : 0.8779 0.9252
+                  THE FLOOR THE GATE ACTUALLY USED, averaged over 5 warped
+  frames. The line above it is the white-noise constant, which is
+  exact only for an UNWARPED frame; resampling correlates neighbours
+                  and moves the per-band split. Bands past this list kept the constant.
+                  STREHL_GATE_FLOOR=white restores it everywhere.
+averaged        : 0.0% 0.0% 0.0% 100.0%
+                  per level, the fraction of coefficients where NO frame cleared the noise
+                  floor and the merge therefore averaged instead of selecting. Near 0%
+                  everywhere would mean the gate is not gating and this is a naive
+                  pyramid stacker.
+
+
+wrote           : C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli\../../experiments/m194c-probe-layout/independent-work\15000-true\whole-noise.tif (274 x 190, 16-bit RGB, linear camera-native RGB, Malvar-He-Cutler demosaic)
+                  Full sensor resolution: every CFA site estimated, one focus
+                  decision per quad. Interpolated -- do not measure resolution on it.
+collapse+write  : 0.0 s
+total           : 0.2 s
+frames          : 5 from M194C-INDEPENDENT-NO-SUCH-RAW-DIRECTORY  (first decode 0.00 s)
+planes          : 137 x 95 per CFA plane
+--- the merge ---
+bands           : 3 Laplacian levels + 1 base, coarsest 18 x 12
+selection       : SOFT -- weight = (band power above the noise floor)^exponent, a convex combination.
+                  Sign coherence is free: a convex combination cannot take adjacent
+                  coefficients from opposite-signed frames, which is the ringing a
+                  coefficient-wise argmax produces.
+noise gate      : 2.00 x the modelled band-noise power. Below it, NO frame may win and the
+                  merge averages -- which is the correct estimator when there is no
+                  information, and the only operation that gets below single-frame noise.
+exponent        : 2.00
+per-band exp    : 2 3 4   (coarsest -> finest)
+                  sharpness ramps 1.4x per octave toward the fine bands. A wrong pick in a
+                  fine band is one high-frequency coefficient nobody can see; a wrong pick
+                  in a coarse band IS the rim.
+base band       : plain mean across frames
+not applied     : photometric gain, clip census, outlier rejection, halo correction, through-focus
+                  statistics. Those are the --merge estimator path's stages; this arm is the merge only.
+alignment       : ON (M194c-independent), reference frame 2, 5 placed / 0 refused, 0.0 s
+  held-out err  : NOT MEASURED   resampler: CatmullRom
+  coverage      : WARNING -- could not fit a fully covered grid; the render may contain black regions where no frame reaches.
+memory plan     : 5 canonical chunks, 1 reusable frame worker, 1 retained + 1 scratch accumulator, 2 execution threads
+                  CONSTANT in the frame count and reduction order. Chunks run serially; spatial work uses
+                  the execution pool. STREHL_PYRAMID_WORKERS=N changes threads, never arithmetic.
+
+folded          : 5 / 5 frames in 0.2 s (0.04 s per frame, 2 execution threads)
+band noise gain : 0.8894 0.0529 0.0101 0.0037
+                  (E[L_k^2] / sigma_0^2, MEASURED on these operators, not derived.)
+measured floor  : 0.7852 0.0489
+                  x white       : 0.8828 0.9251
+                  THE FLOOR THE GATE ACTUALLY USED, averaged over 5 warped
+  frames. The line above it is the white-noise constant, which is
+  exact only for an UNWARPED frame; resampling correlates neighbours
+                  and moves the per-band split. Bands past this list kept the constant.
+                  STREHL_GATE_FLOOR=white restores it everywhere.
+averaged        : 0.0% 0.0% 0.0% 100.0%
+                  per level, the fraction of coefficients where NO frame cleared the noise
+                  floor and the merge therefore averaged instead of selecting. Near 0%
+                  everywhere would mean the gate is not gating and this is a naive
+                  pyramid stacker.
+
+
+wrote           : C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli\../../experiments/m194c-probe-layout/independent-work\15000-true\whole-warp.tif (274 x 190, 16-bit RGB, linear camera-native RGB, Malvar-He-Cutler demosaic)
+                  Full sensor resolution: every CFA site estimated, one focus
+                  decision per quad. Interpolated -- do not measure resolution on it.
+collapse+write  : 0.0 s
+total           : 0.2 s
+frames          : 5 from M194C-INDEPENDENT-NO-SUCH-RAW-DIRECTORY  (first decode 0.00 s)
+planes          : 137 x 95 per CFA plane
+--- the merge ---
+bands           : 3 Laplacian levels + 1 base, coarsest 18 x 12
+selection       : SOFT -- weight = (band power above the noise floor)^exponent, a convex combination.
+                  Sign coherence is free: a convex combination cannot take adjacent
+                  coefficients from opposite-signed frames, which is the ringing a
+                  coefficient-wise argmax produces.
+noise gate      : 2.00 x the modelled band-noise power. Below it, NO frame may win and the
+                  merge averages -- which is the correct estimator when there is no
+                  information, and the only operation that gets below single-frame noise.
+exponent        : 2.00
+per-band exp    : 2 3 4   (coarsest -> finest)
+                  sharpness ramps 1.4x per octave toward the fine bands. A wrong pick in a
+                  fine band is one high-frequency coefficient nobody can see; a wrong pick
+                  in a coarse band IS the rim.
+base band       : plain mean across frames
+not applied     : photometric gain, clip census, outlier rejection, halo correction, through-focus
+                  statistics. Those are the --merge estimator path's stages; this arm is the merge only.
+alignment       : ON (M194c-independent), reference frame 2, 5 placed / 0 refused, 0.0 s
+  held-out err  : NOT MEASURED   resampler: CatmullRom
+  coverage      : WARNING -- could not fit a fully covered grid; the render may contain black regions where no frame reaches.
+memory plan     : 5 canonical chunks, 1 reusable frame worker, 1 retained + 1 scratch accumulator, 2 execution threads
+                  CONSTANT in the frame count and reduction order. Chunks run serially; spatial work uses
+                  the execution pool. STREHL_PYRAMID_WORKERS=N changes threads, never arithmetic.
+
+folded          : 5 / 5 frames in 0.2 s (0.04 s per frame, 2 execution threads)
+band noise gain : 0.8894 0.0529 0.0101 0.0037
+                  (E[L_k^2] / sigma_0^2, MEASURED on these operators, not derived.)
+measured floor  : 0.7847 0.0490
+                  x white       : 0.8822 0.9261
+                  THE FLOOR THE GATE ACTUALLY USED, averaged over 5 warped
+  frames. The line above it is the white-noise constant, which is
+  exact only for an UNWARPED frame; resampling correlates neighbours
+                  and moves the per-band split. Bands past this list kept the constant.
+                  STREHL_GATE_FLOOR=white restores it everywhere.
+averaged        : 0.0% 0.0% 0.0% 100.0%
+                  per level, the fraction of coefficients where NO frame cleared the noise
+                  floor and the merge therefore averaged instead of selecting. Near 0%
+                  everywhere would mean the gate is not gating and this is a naive
+                  pyramid stacker.
+
+
+wrote           : C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli\../../experiments/m194c-probe-layout/independent-work\15000-true\whole-wb.tif (274 x 190, 16-bit RGB, linear camera-native RGB, Malvar-He-Cutler demosaic)
+                  Full sensor resolution: every CFA site estimated, one focus
+                  decision per quad. Interpolated -- do not measure resolution on it.
+collapse+write  : 0.0 s
+total           : 0.2 s
+frames          : 5 from M194C-INDEPENDENT-NO-SUCH-RAW-DIRECTORY  (first decode 0.00 s)
+planes          : 137 x 95 per CFA plane
+--- the merge ---
+bands           : 3 Laplacian levels + 1 base, coarsest 18 x 12
+selection       : SOFT -- weight = (band power above the noise floor)^exponent, a convex combination.
+                  Sign coherence is free: a convex combination cannot take adjacent
+                  coefficients from opposite-signed frames, which is the ringing a
+                  coefficient-wise argmax produces.
+noise gate      : 2.00 x the modelled band-noise power. Below it, NO frame may win and the
+                  merge averages -- which is the correct estimator when there is no
+                  information, and the only operation that gets below single-frame noise.
+exponent        : 2.00
+per-band exp    : 2 3 4   (coarsest -> finest)
+                  sharpness ramps 1.4x per octave toward the fine bands. A wrong pick in a
+                  fine band is one high-frequency coefficient nobody can see; a wrong pick
+                  in a coarse band IS the rim.
+base band       : plain mean across frames
+not applied     : photometric gain, clip census, outlier rejection, halo correction, through-focus
+                  statistics. Those are the --merge estimator path's stages; this arm is the merge only.
+alignment       : ON (M194c-independent), reference frame 2, 5 placed / 0 refused, 0.0 s
+  held-out err  : NOT MEASURED   resampler: CatmullRom
+  coverage      : WARNING -- could not fit a fully covered grid; the render may contain black regions where no frame reaches.
+memory plan     : 5 canonical chunks, 1 reusable frame worker, 1 retained + 1 scratch accumulator, 2 execution threads
+                  CONSTANT in the frame count and reduction order. Chunks run serially; spatial work uses
+                  the execution pool. STREHL_PYRAMID_WORKERS=N changes threads, never arithmetic.
+
+folded          : 5 / 5 frames in 0.2 s (0.05 s per frame, 2 execution threads)
+band noise gain : 0.8894 0.0529 0.0101 0.0037
+                  (E[L_k^2] / sigma_0^2, MEASURED on these operators, not derived.)
+measured floor  : 0.7808 0.0489
+                  x white       : 0.8779 0.9252
+                  THE FLOOR THE GATE ACTUALLY USED, averaged over 5 warped
+  frames. The line above it is the white-noise constant, which is
+  exact only for an UNWARPED frame; resampling correlates neighbours
+                  and moves the per-band split. Bands past this list kept the constant.
+                  STREHL_GATE_FLOOR=white restores it everywhere.
+averaged        : 0.0% 0.0% 0.0% 100.0%
+                  per level, the fraction of coefficients where NO frame cleared the noise
+                  floor and the merge therefore averaged instead of selecting. Near 0%
+                  everywhere would mean the gate is not gating and this is a naive
+                  pyramid stacker.
+
+
+wrote           : C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli\../../experiments/m194c-probe-layout/independent-work\15000-true\whole-observer1.tif (274 x 190, 16-bit RGB, linear camera-native RGB, Malvar-He-Cutler demosaic)
+                  Full sensor resolution: every CFA site estimated, one focus
+                  decision per quad. Interpolated -- do not measure resolution on it.
+collapse+write  : 0.0 s
+total           : 0.2 s
+frames          : 5 from M194C-INDEPENDENT-NO-SUCH-RAW-DIRECTORY  (first decode 0.00 s)
+planes          : 137 x 95 per CFA plane
+--- the merge ---
+bands           : 3 Laplacian levels + 1 base, coarsest 18 x 12
+selection       : SOFT -- weight = (band power above the noise floor)^exponent, a convex combination.
+                  Sign coherence is free: a convex combination cannot take adjacent
+                  coefficients from opposite-signed frames, which is the ringing a
+                  coefficient-wise argmax produces.
+noise gate      : 2.00 x the modelled band-noise power. Below it, NO frame may win and the
+                  merge averages -- which is the correct estimator when there is no
+                  information, and the only operation that gets below single-frame noise.
+exponent        : 2.00
+per-band exp    : 2 3 4   (coarsest -> finest)
+                  sharpness ramps 1.4x per octave toward the fine bands. A wrong pick in a
+                  fine band is one high-frequency coefficient nobody can see; a wrong pick
+                  in a coarse band IS the rim.
+base band       : plain mean across frames
+not applied     : photometric gain, clip census, outlier rejection, halo correction, through-focus
+                  statistics. Those are the --merge estimator path's stages; this arm is the merge only.
+alignment       : ON (M194c-independent), reference frame 2, 5 placed / 0 refused, 0.0 s
+  held-out err  : NOT MEASURED   resampler: CatmullRom
+  coverage      : WARNING -- could not fit a fully covered grid; the render may contain black regions where no frame reaches.
+memory plan     : 5 canonical chunks, 1 reusable frame worker, 1 retained + 1 scratch accumulator, 2 execution threads
+                  CONSTANT in the frame count and reduction order. Chunks run serially; spatial work uses
+                  the execution pool. STREHL_PYRAMID_WORKERS=N changes threads, never arithmetic.
+
+folded          : 5 / 5 frames in 0.2 s (0.05 s per frame, 2 execution threads)
+band noise gain : 0.8894 0.0529 0.0101 0.0037
+                  (E[L_k^2] / sigma_0^2, MEASURED on these operators, not derived.)
+measured floor  : 0.7808 0.0489
+                  x white       : 0.8779 0.9252
+                  THE FLOOR THE GATE ACTUALLY USED, averaged over 5 warped
+  frames. The line above it is the white-noise constant, which is
+  exact only for an UNWARPED frame; resampling correlates neighbours
+                  and moves the per-band split. Bands past this list kept the constant.
+                  STREHL_GATE_FLOOR=white restores it everywhere.
+averaged        : 0.0% 0.0% 0.0% 100.0%
+                  per level, the fraction of coefficients where NO frame cleared the noise
+                  floor and the merge therefore averaged instead of selecting. Near 0%
+                  everywhere would mean the gate is not gating and this is a naive
+                  pyramid stacker.
+
+
+wrote           : C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli\../../experiments/m194c-probe-layout/independent-work\15000-true\whole-observer2.tif (274 x 190, 16-bit RGB, linear camera-native RGB, Malvar-He-Cutler demosaic)
+                  Full sensor resolution: every CFA site estimated, one focus
+                  decision per quad. Interpolated -- do not measure resolution on it.
+collapse+write  : 0.0 s
+total           : 0.3 s
+frames          : 5 from M194C-INDEPENDENT-NO-SUCH-RAW-DIRECTORY  (first decode 0.00 s)
+planes          : 137 x 95 per CFA plane
+analysis domain : 112 x 78 at full-plane origin (9, 6) -- Crop is applied BEFORE luma, variance, weighting and accumulation
+--- the merge ---
+bands           : 3 Laplacian levels + 1 base, coarsest 14 x 10
+selection       : SOFT -- weight = (band power above the noise floor)^exponent, a convex combination.
+                  Sign coherence is free: a convex combination cannot take adjacent
+                  coefficients from opposite-signed frames, which is the ringing a
+                  coefficient-wise argmax produces.
+noise gate      : 2.00 x the modelled band-noise power. Below it, NO frame may win and the
+                  merge averages -- which is the correct estimator when there is no
+                  information, and the only operation that gets below single-frame noise.
+exponent        : 2.00
+per-band exp    : 2 3 4   (coarsest -> finest)
+                  sharpness ramps 1.4x per octave toward the fine bands. A wrong pick in a
+                  fine band is one high-frequency coefficient nobody can see; a wrong pick
+                  in a coarse band IS the rim.
+base band       : plain mean across frames
+not applied     : photometric gain, clip census, outlier rejection, halo correction, through-focus
+                  statistics. Those are the --merge estimator path's stages; this arm is the merge only.
+alignment       : ON (M194c-independent), reference frame 2, 5 placed / 0 refused, 0.0 s
+  held-out err  : NOT MEASURED   resampler: CatmullRom
+  coverage      : CROPPED to the region EVERY frame covers -- 112 x 78 plane px at (9, 6) of 137 x 95, emitted at UNITY SCALE. 0.0% of width dropped and NOT upsampled (k=1.0000), so the output is SMALLER than the plane by design and no placement carries a coverage scale. The reference frame's own placement reaches the gather unmodified.
+memory plan     : 5 canonical chunks, 1 reusable frame worker, 1 retained + 1 scratch accumulator, 2 execution threads
+                  CONSTANT in the frame count and reduction order. Chunks run serially; spatial work uses
+                  the execution pool. STREHL_PYRAMID_WORKERS=N changes threads, never arithmetic.
+
+folded          : 5 / 5 frames in 0.2 s (0.04 s per frame, 2 execution threads)
+band noise gain : 0.8894 0.0529 0.0101 0.0037
+                  (E[L_k^2] / sigma_0^2, MEASURED on these operators, not derived.)
+measured floor  : 0.7779 0.0487
+                  x white       : 0.8746 0.9200
+                  THE FLOOR THE GATE ACTUALLY USED, averaged over 5 warped
+  frames. The line above it is the white-noise constant, which is
+  exact only for an UNWARPED frame; resampling correlates neighbours
+                  and moves the per-band split. Bands past this list kept the constant.
+                  STREHL_GATE_FLOOR=white restores it everywhere.
+averaged        : 0.0% 0.0% 0.0% 100.0%
+                  per level, the fraction of coefficients where NO frame cleared the noise
+                  floor and the merge therefore averaged instead of selecting. Near 0%
+                  everywhere would mean the gate is not gating and this is a naive
+                  pyramid stacker.
+
+output domain    : compact Crop 112x78 from full-plane origin (9, 6); collapsed plane written directly (no second crop)
+
+wrote           : C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli\../../experiments/m194c-probe-layout/independent-work\15000-true\crop-baseline.tif (224 x 156, 16-bit RGB, linear camera-native RGB, Malvar-He-Cutler demosaic)
+                  Full sensor resolution: every CFA site estimated, one focus
+                  decision per quad. Interpolated -- do not measure resolution on it.
+collapse+write  : 0.0 s
+total           : 0.2 s
+frames          : 5 from M194C-INDEPENDENT-NO-SUCH-RAW-DIRECTORY  (first decode 0.00 s)
+planes          : 137 x 95 per CFA plane
+analysis domain : 112 x 78 at full-plane origin (9, 6) -- Crop is applied BEFORE luma, variance, weighting and accumulation
+--- the merge ---
+bands           : 3 Laplacian levels + 1 base, coarsest 14 x 10
+selection       : SOFT -- weight = (band power above the noise floor)^exponent, a convex combination.
+                  Sign coherence is free: a convex combination cannot take adjacent
+                  coefficients from opposite-signed frames, which is the ringing a
+                  coefficient-wise argmax produces.
+noise gate      : 2.00 x the modelled band-noise power. Below it, NO frame may win and the
+                  merge averages -- which is the correct estimator when there is no
+                  information, and the only operation that gets below single-frame noise.
+exponent        : 2.00
+per-band exp    : 2 3 4   (coarsest -> finest)
+                  sharpness ramps 1.4x per octave toward the fine bands. A wrong pick in a
+                  fine band is one high-frequency coefficient nobody can see; a wrong pick
+                  in a coarse band IS the rim.
+base band       : plain mean across frames
+not applied     : photometric gain, clip census, outlier rejection, halo correction, through-focus
+                  statistics. Those are the --merge estimator path's stages; this arm is the merge only.
+alignment       : ON (M194c-independent), reference frame 2, 5 placed / 0 refused, 0.0 s
+  held-out err  : NOT MEASURED   resampler: CatmullRom
+  coverage      : CROPPED to the region EVERY frame covers -- 112 x 78 plane px at (9, 6) of 137 x 95, emitted at UNITY SCALE. 0.0% of width dropped and NOT upsampled (k=1.0000), so the output is SMALLER than the plane by design and no placement carries a coverage scale. The reference frame's own placement reaches the gather unmodified.
+memory plan     : 5 canonical chunks, 1 reusable frame worker, 1 retained + 1 scratch accumulator, 2 execution threads
+                  CONSTANT in the frame count and reduction order. Chunks run serially; spatial work uses
+                  the execution pool. STREHL_PYRAMID_WORKERS=N changes threads, never arithmetic.
+
+folded          : 5 / 5 frames in 0.2 s (0.04 s per frame, 2 execution threads)
+band noise gain : 0.8894 0.0529 0.0101 0.0037
+                  (E[L_k^2] / sigma_0^2, MEASURED on these operators, not derived.)
+measured floor  : 0.7779 0.0487
+                  x white       : 0.8746 0.9200
+                  THE FLOOR THE GATE ACTUALLY USED, averaged over 5 warped
+  frames. The line above it is the white-noise constant, which is
+  exact only for an UNWARPED frame; resampling correlates neighbours
+                  and moves the per-band split. Bands past this list kept the constant.
+                  STREHL_GATE_FLOOR=white restores it everywhere.
+averaged        : 0.0% 0.0% 0.0% 100.0%
+                  per level, the fraction of coefficients where NO frame cleared the noise
+                  floor and the merge therefore averaged instead of selecting. Near 0%
+                  everywhere would mean the gate is not gating and this is a naive
+                  pyramid stacker.
+
+output domain    : compact Crop 112x78 from full-plane origin (9, 6); collapsed plane written directly (no second crop)
+
+wrote           : C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli\../../experiments/m194c-probe-layout/independent-work\15000-true\crop-layout1.tif (224 x 156, 16-bit RGB, linear camera-native RGB, Malvar-He-Cutler demosaic)
+                  Full sensor resolution: every CFA site estimated, one focus
+                  decision per quad. Interpolated -- do not measure resolution on it.
+collapse+write  : 0.0 s
+total           : 0.2 s
+frames          : 5 from M194C-INDEPENDENT-NO-SUCH-RAW-DIRECTORY  (first decode 0.00 s)
+planes          : 137 x 95 per CFA plane
+analysis domain : 112 x 78 at full-plane origin (9, 6) -- Crop is applied BEFORE luma, variance, weighting and accumulation
+--- the merge ---
+bands           : 3 Laplacian levels + 1 base, coarsest 14 x 10
+selection       : SOFT -- weight = (band power above the noise floor)^exponent, a convex combination.
+                  Sign coherence is free: a convex combination cannot take adjacent
+                  coefficients from opposite-signed frames, which is the ringing a
+                  coefficient-wise argmax produces.
+noise gate      : 2.00 x the modelled band-noise power. Below it, NO frame may win and the
+                  merge averages -- which is the correct estimator when there is no
+                  information, and the only operation that gets below single-frame noise.
+exponent        : 2.00
+per-band exp    : 2 3 4   (coarsest -> finest)
+                  sharpness ramps 1.4x per octave toward the fine bands. A wrong pick in a
+                  fine band is one high-frequency coefficient nobody can see; a wrong pick
+                  in a coarse band IS the rim.
+base band       : plain mean across frames
+not applied     : photometric gain, clip census, outlier rejection, halo correction, through-focus
+                  statistics. Those are the --merge estimator path's stages; this arm is the merge only.
+alignment       : ON (M194c-independent), reference frame 2, 5 placed / 0 refused, 0.0 s
+  held-out err  : NOT MEASURED   resampler: CatmullRom
+  coverage      : CROPPED to the region EVERY frame covers -- 112 x 78 plane px at (9, 6) of 137 x 95, emitted at UNITY SCALE. 0.0% of width dropped and NOT upsampled (k=1.0000), so the output is SMALLER than the plane by design and no placement carries a coverage scale. The reference frame's own placement reaches the gather unmodified.
+memory plan     : 5 canonical chunks, 1 reusable frame worker, 1 retained + 1 scratch accumulator, 2 execution threads
+                  CONSTANT in the frame count and reduction order. Chunks run serially; spatial work uses
+                  the execution pool. STREHL_PYRAMID_WORKERS=N changes threads, never arithmetic.
+
+folded          : 5 / 5 frames in 0.2 s (0.04 s per frame, 2 execution threads)
+band noise gain : 0.8894 0.0529 0.0101 0.0037
+                  (E[L_k^2] / sigma_0^2, MEASURED on these operators, not derived.)
+measured floor  : 0.7779 0.0487
+                  x white       : 0.8746 0.9200
+                  THE FLOOR THE GATE ACTUALLY USED, averaged over 5 warped
+  frames. The line above it is the white-noise constant, which is
+  exact only for an UNWARPED frame; resampling correlates neighbours
+                  and moves the per-band split. Bands past this list kept the constant.
+                  STREHL_GATE_FLOOR=white restores it everywhere.
+averaged        : 0.0% 0.0% 0.0% 100.0%
+                  per level, the fraction of coefficients where NO frame cleared the noise
+                  floor and the merge therefore averaged instead of selecting. Near 0%
+                  everywhere would mean the gate is not gating and this is a naive
+                  pyramid stacker.
+
+output domain    : compact Crop 112x78 from full-plane origin (9, 6); collapsed plane written directly (no second crop)
+
+wrote           : C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli\../../experiments/m194c-probe-layout/independent-work\15000-true\crop-poison1.tif (224 x 156, 16-bit RGB, linear camera-native RGB, Malvar-He-Cutler demosaic)
+                  Full sensor resolution: every CFA site estimated, one focus
+                  decision per quad. Interpolated -- do not measure resolution on it.
+collapse+write  : 0.0 s
+total           : 0.2 s
+frames          : 5 from M194C-INDEPENDENT-NO-SUCH-RAW-DIRECTORY  (first decode 0.00 s)
+planes          : 137 x 95 per CFA plane
+analysis domain : 112 x 78 at full-plane origin (9, 6) -- Crop is applied BEFORE luma, variance, weighting and accumulation
+--- the merge ---
+bands           : 3 Laplacian levels + 1 base, coarsest 14 x 10
+selection       : SOFT -- weight = (band power above the noise floor)^exponent, a convex combination.
+                  Sign coherence is free: a convex combination cannot take adjacent
+                  coefficients from opposite-signed frames, which is the ringing a
+                  coefficient-wise argmax produces.
+noise gate      : 2.00 x the modelled band-noise power. Below it, NO frame may win and the
+                  merge averages -- which is the correct estimator when there is no
+                  information, and the only operation that gets below single-frame noise.
+exponent        : 2.00
+per-band exp    : 2 3 4   (coarsest -> finest)
+                  sharpness ramps 1.4x per octave toward the fine bands. A wrong pick in a
+                  fine band is one high-frequency coefficient nobody can see; a wrong pick
+                  in a coarse band IS the rim.
+base band       : plain mean across frames
+not applied     : photometric gain, clip census, outlier rejection, halo correction, through-focus
+                  statistics. Those are the --merge estimator path's stages; this arm is the merge only.
+alignment       : ON (M194c-independent), reference frame 2, 5 placed / 0 refused, 0.0 s
+  held-out err  : NOT MEASURED   resampler: CatmullRom
+  coverage      : CROPPED to the region EVERY frame covers -- 112 x 78 plane px at (9, 6) of 137 x 95, emitted at UNITY SCALE. 0.0% of width dropped and NOT upsampled (k=1.0000), so the output is SMALLER than the plane by design and no placement carries a coverage scale. The reference frame's own placement reaches the gather unmodified.
+memory plan     : 5 canonical chunks, 1 reusable frame worker, 1 retained + 1 scratch accumulator, 2 execution threads
+                  CONSTANT in the frame count and reduction order. Chunks run serially; spatial work uses
+                  the execution pool. STREHL_PYRAMID_WORKERS=N changes threads, never arithmetic.
+
+folded          : 5 / 5 frames in 0.2 s (0.04 s per frame, 2 execution threads)
+band noise gain : 0.8894 0.0529 0.0101 0.0037
+                  (E[L_k^2] / sigma_0^2, MEASURED on these operators, not derived.)
+measured floor  : 0.7779 0.0487
+                  x white       : 0.8746 0.9200
+                  THE FLOOR THE GATE ACTUALLY USED, averaged over 5 warped
+  frames. The line above it is the white-noise constant, which is
+  exact only for an UNWARPED frame; resampling correlates neighbours
+                  and moves the per-band split. Bands past this list kept the constant.
+                  STREHL_GATE_FLOOR=white restores it everywhere.
+averaged        : 0.0% 0.0% 0.0% 100.0%
+                  per level, the fraction of coefficients where NO frame cleared the noise
+                  floor and the merge therefore averaged instead of selecting. Near 0%
+                  everywhere would mean the gate is not gating and this is a naive
+                  pyramid stacker.
+
+output domain    : compact Crop 112x78 from full-plane origin (9, 6); collapsed plane written directly (no second crop)
+
+wrote           : C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli\../../experiments/m194c-probe-layout/independent-work\15000-true\crop-layout2.tif (224 x 156, 16-bit RGB, linear camera-native RGB, Malvar-He-Cutler demosaic)
+                  Full sensor resolution: every CFA site estimated, one focus
+                  decision per quad. Interpolated -- do not measure resolution on it.
+collapse+write  : 0.0 s
+total           : 0.2 s
+frames          : 5 from M194C-INDEPENDENT-NO-SUCH-RAW-DIRECTORY  (first decode 0.00 s)
+planes          : 137 x 95 per CFA plane
+analysis domain : 112 x 78 at full-plane origin (9, 6) -- Crop is applied BEFORE luma, variance, weighting and accumulation
+--- the merge ---
+bands           : 3 Laplacian levels + 1 base, coarsest 14 x 10
+selection       : SOFT -- weight = (band power above the noise floor)^exponent, a convex combination.
+                  Sign coherence is free: a convex combination cannot take adjacent
+                  coefficients from opposite-signed frames, which is the ringing a
+                  coefficient-wise argmax produces.
+noise gate      : 2.00 x the modelled band-noise power. Below it, NO frame may win and the
+                  merge averages -- which is the correct estimator when there is no
+                  information, and the only operation that gets below single-frame noise.
+exponent        : 2.00
+per-band exp    : 2 3 4   (coarsest -> finest)
+                  sharpness ramps 1.4x per octave toward the fine bands. A wrong pick in a
+                  fine band is one high-frequency coefficient nobody can see; a wrong pick
+                  in a coarse band IS the rim.
+base band       : plain mean across frames
+not applied     : photometric gain, clip census, outlier rejection, halo correction, through-focus
+                  statistics. Those are the --merge estimator path's stages; this arm is the merge only.
+alignment       : ON (M194c-independent), reference frame 2, 5 placed / 0 refused, 0.0 s
+  held-out err  : NOT MEASURED   resampler: CatmullRom
+  coverage      : CROPPED to the region EVERY frame covers -- 112 x 78 plane px at (9, 6) of 137 x 95, emitted at UNITY SCALE. 0.0% of width dropped and NOT upsampled (k=1.0000), so the output is SMALLER than the plane by design and no placement carries a coverage scale. The reference frame's own placement reaches the gather unmodified.
+memory plan     : 5 canonical chunks, 1 reusable frame worker, 1 retained + 1 scratch accumulator, 2 execution threads
+                  CONSTANT in the frame count and reduction order. Chunks run serially; spatial work uses
+                  the execution pool. STREHL_PYRAMID_WORKERS=N changes threads, never arithmetic.
+
+folded          : 5 / 5 frames in 0.2 s (0.04 s per frame, 2 execution threads)
+band noise gain : 0.8894 0.0529 0.0101 0.0037
+                  (E[L_k^2] / sigma_0^2, MEASURED on these operators, not derived.)
+measured floor  : 0.7779 0.0487
+                  x white       : 0.8746 0.9200
+                  THE FLOOR THE GATE ACTUALLY USED, averaged over 5 warped
+  frames. The line above it is the white-noise constant, which is
+  exact only for an UNWARPED frame; resampling correlates neighbours
+                  and moves the per-band split. Bands past this list kept the constant.
+                  STREHL_GATE_FLOOR=white restores it everywhere.
+averaged        : 0.0% 0.0% 0.0% 100.0%
+                  per level, the fraction of coefficients where NO frame cleared the noise
+                  floor and the merge therefore averaged instead of selecting. Near 0%
+                  everywhere would mean the gate is not gating and this is a naive
+                  pyramid stacker.
+
+output domain    : compact Crop 112x78 from full-plane origin (9, 6); collapsed plane written directly (no second crop)
+
+wrote           : C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli\../../experiments/m194c-probe-layout/independent-work\15000-true\crop-poison2.tif (224 x 156, 16-bit RGB, linear camera-native RGB, Malvar-He-Cutler demosaic)
+                  Full sensor resolution: every CFA site estimated, one focus
+                  decision per quad. Interpolated -- do not measure resolution on it.
+collapse+write  : 0.0 s
+total           : 0.2 s
+frames          : 5 from M194C-INDEPENDENT-NO-SUCH-RAW-DIRECTORY  (first decode 0.00 s)
+planes          : 137 x 95 per CFA plane
+analysis domain : 112 x 78 at full-plane origin (9, 6) -- Crop is applied BEFORE luma, variance, weighting and accumulation
+--- the merge ---
+bands           : 3 Laplacian levels + 1 base, coarsest 14 x 10
+selection       : SOFT -- weight = (band power above the noise floor)^exponent, a convex combination.
+                  Sign coherence is free: a convex combination cannot take adjacent
+                  coefficients from opposite-signed frames, which is the ringing a
+                  coefficient-wise argmax produces.
+noise gate      : 2.00 x the modelled band-noise power. Below it, NO frame may win and the
+                  merge averages -- which is the correct estimator when there is no
+                  information, and the only operation that gets below single-frame noise.
+exponent        : 2.00
+per-band exp    : 2 3 4   (coarsest -> finest)
+                  sharpness ramps 1.4x per octave toward the fine bands. A wrong pick in a
+                  fine band is one high-frequency coefficient nobody can see; a wrong pick
+                  in a coarse band IS the rim.
+base band       : plain mean across frames
+not applied     : photometric gain, clip census, outlier rejection, halo correction, through-focus
+                  statistics. Those are the --merge estimator path's stages; this arm is the merge only.
+alignment       : ON (M194c-independent), reference frame 2, 5 placed / 0 refused, 0.0 s
+  held-out err  : NOT MEASURED   resampler: CatmullRom
+  coverage      : CROPPED to the region EVERY frame covers -- 112 x 78 plane px at (9, 6) of 137 x 95, emitted at UNITY SCALE. 0.0% of width dropped and NOT upsampled (k=1.0000), so the output is SMALLER than the plane by design and no placement carries a coverage scale. The reference frame's own placement reaches the gather unmodified.
+memory plan     : 5 canonical chunks, 1 reusable frame worker, 1 retained + 1 scratch accumulator, 2 execution threads
+                  CONSTANT in the frame count and reduction order. Chunks run serially; spatial work uses
+                  the execution pool. STREHL_PYRAMID_WORKERS=N changes threads, never arithmetic.
+
+folded          : 5 / 5 frames in 0.2 s (0.04 s per frame, 2 execution threads)
+band noise gain : 0.8894 0.0529 0.0101 0.0037
+                  (E[L_k^2] / sigma_0^2, MEASURED on these operators, not derived.)
+measured floor  : 0.7779 0.0487
+                  x white       : 0.8746 0.9200
+                  THE FLOOR THE GATE ACTUALLY USED, averaged over 5 warped
+  frames. The line above it is the white-noise constant, which is
+  exact only for an UNWARPED frame; resampling correlates neighbours
+                  and moves the per-band split. Bands past this list kept the constant.
+                  STREHL_GATE_FLOOR=white restores it everywhere.
+averaged        : 0.0% 0.0% 0.0% 100.0%
+                  per level, the fraction of coefficients where NO frame cleared the noise
+                  floor and the merge therefore averaged instead of selecting. Near 0%
+                  everywhere would mean the gate is not gating and this is a naive
+                  pyramid stacker.
+
+output domain    : compact Crop 112x78 from full-plane origin (9, 6); collapsed plane written directly (no second crop)
+
+wrote           : C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli\../../experiments/m194c-probe-layout/independent-work\15000-true\crop-single-site.tif (224 x 156, 16-bit RGB, linear camera-native RGB, Malvar-He-Cutler demosaic)
+                  Full sensor resolution: every CFA site estimated, one focus
+                  decision per quad. Interpolated -- do not measure resolution on it.
+collapse+write  : 0.0 s
+total           : 0.2 s
+frames          : 5 from M194C-INDEPENDENT-NO-SUCH-RAW-DIRECTORY  (first decode 0.00 s)
+planes          : 137 x 95 per CFA plane
+analysis domain : 112 x 78 at full-plane origin (9, 6) -- Crop is applied BEFORE luma, variance, weighting and accumulation
+--- the merge ---
+bands           : 3 Laplacian levels + 1 base, coarsest 14 x 10
+selection       : SOFT -- weight = (band power above the noise floor)^exponent, a convex combination.
+                  Sign coherence is free: a convex combination cannot take adjacent
+                  coefficients from opposite-signed frames, which is the ringing a
+                  coefficient-wise argmax produces.
+noise gate      : 2.00 x the modelled band-noise power. Below it, NO frame may win and the
+                  merge averages -- which is the correct estimator when there is no
+                  information, and the only operation that gets below single-frame noise.
+exponent        : 2.00
+per-band exp    : 2 3 4   (coarsest -> finest)
+                  sharpness ramps 1.4x per octave toward the fine bands. A wrong pick in a
+                  fine band is one high-frequency coefficient nobody can see; a wrong pick
+                  in a coarse band IS the rim.
+base band       : plain mean across frames
+not applied     : photometric gain, clip census, outlier rejection, halo correction, through-focus
+                  statistics. Those are the --merge estimator path's stages; this arm is the merge only.
+alignment       : ON (M194c-independent), reference frame 2, 5 placed / 0 refused, 0.0 s
+  held-out err  : NOT MEASURED   resampler: CatmullRom
+  coverage      : CROPPED to the region EVERY frame covers -- 112 x 78 plane px at (9, 6) of 137 x 95, emitted at UNITY SCALE. 0.0% of width dropped and NOT upsampled (k=1.0000), so the output is SMALLER than the plane by design and no placement carries a coverage scale. The reference frame's own placement reaches the gather unmodified.
+memory plan     : 5 canonical chunks, 1 reusable frame worker, 1 retained + 1 scratch accumulator, 2 execution threads
+                  CONSTANT in the frame count and reduction order. Chunks run serially; spatial work uses
+                  the execution pool. STREHL_PYRAMID_WORKERS=N changes threads, never arithmetic.
+
+folded          : 5 / 5 frames in 0.2 s (0.04 s per frame, 2 execution threads)
+band noise gain : 0.8894 0.0529 0.0101 0.0037
+                  (E[L_k^2] / sigma_0^2, MEASURED on these operators, not derived.)
+measured floor  : 0.7779 0.0487
+                  x white       : 0.8746 0.9200
+                  THE FLOOR THE GATE ACTUALLY USED, averaged over 5 warped
+  frames. The line above it is the white-noise constant, which is
+  exact only for an UNWARPED frame; resampling correlates neighbours
+                  and moves the per-band split. Bands past this list kept the constant.
+                  STREHL_GATE_FLOOR=white restores it everywhere.
+averaged        : 0.0% 0.0% 0.0% 100.0%
+                  per level, the fraction of coefficients where NO frame cleared the noise
+                  floor and the merge therefore averaged instead of selecting. Near 0%
+                  everywhere would mean the gate is not gating and this is a naive
+                  pyramid stacker.
+
+output domain    : compact Crop 112x78 from full-plane origin (9, 6); collapsed plane written directly (no second crop)
+
+wrote           : C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli\../../experiments/m194c-probe-layout/independent-work\15000-true\crop-active.tif (224 x 156, 16-bit RGB, linear camera-native RGB, Malvar-He-Cutler demosaic)
+                  Full sensor resolution: every CFA site estimated, one focus
+                  decision per quad. Interpolated -- do not measure resolution on it.
+collapse+write  : 0.0 s
+total           : 0.2 s
+frames          : 5 from M194C-INDEPENDENT-NO-SUCH-RAW-DIRECTORY  (first decode 0.00 s)
+planes          : 137 x 95 per CFA plane
+analysis domain : 112 x 78 at full-plane origin (9, 6) -- Crop is applied BEFORE luma, variance, weighting and accumulation
+--- the merge ---
+bands           : 3 Laplacian levels + 1 base, coarsest 14 x 10
+selection       : SOFT -- weight = (band power above the noise floor)^exponent, a convex combination.
+                  Sign coherence is free: a convex combination cannot take adjacent
+                  coefficients from opposite-signed frames, which is the ringing a
+                  coefficient-wise argmax produces.
+noise gate      : 2.00 x the modelled band-noise power. Below it, NO frame may win and the
+                  merge averages -- which is the correct estimator when there is no
+                  information, and the only operation that gets below single-frame noise.
+exponent        : 2.00
+per-band exp    : 2 3 4   (coarsest -> finest)
+                  sharpness ramps 1.4x per octave toward the fine bands. A wrong pick in a
+                  fine band is one high-frequency coefficient nobody can see; a wrong pick
+                  in a coarse band IS the rim.
+base band       : plain mean across frames
+not applied     : photometric gain, clip census, outlier rejection, halo correction, through-focus
+                  statistics. Those are the --merge estimator path's stages; this arm is the merge only.
+alignment       : ON (M194c-independent), reference frame 2, 5 placed / 0 refused, 0.0 s
+  held-out err  : NOT MEASURED   resampler: CatmullRom
+  coverage      : CROPPED to the region EVERY frame covers -- 112 x 78 plane px at (9, 6) of 137 x 95, emitted at UNITY SCALE. 0.0% of width dropped and NOT upsampled (k=1.0000), so the output is SMALLER than the plane by design and no placement carries a coverage scale. The reference frame's own placement reaches the gather unmodified.
+memory plan     : 5 canonical chunks, 1 reusable frame worker, 1 retained + 1 scratch accumulator, 2 execution threads
+                  CONSTANT in the frame count and reduction order. Chunks run serially; spatial work uses
+                  the execution pool. STREHL_PYRAMID_WORKERS=N changes threads, never arithmetic.
+
+folded          : 5 / 5 frames in 0.2 s (0.04 s per frame, 2 execution threads)
+band noise gain : 0.8894 0.0529 0.0101 0.0037
+                  (E[L_k^2] / sigma_0^2, MEASURED on these operators, not derived.)
+measured floor  : 0.7779 0.0487
+                  x white       : 0.8746 0.9200
+                  THE FLOOR THE GATE ACTUALLY USED, averaged over 5 warped
+  frames. The line above it is the white-noise constant, which is
+  exact only for an UNWARPED frame; resampling correlates neighbours
+                  and moves the per-band split. Bands past this list kept the constant.
+                  STREHL_GATE_FLOOR=white restores it everywhere.
+averaged        : 0.1% 0.0% 0.0% 100.0%
+                  per level, the fraction of coefficients where NO frame cleared the noise
+                  floor and the merge therefore averaged instead of selecting. Near 0%
+                  everywhere would mean the gate is not gating and this is a naive
+                  pyramid stacker.
+
+output domain    : compact Crop 112x78 from full-plane origin (9, 6); collapsed plane written directly (no second crop)
+
+wrote           : C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli\../../experiments/m194c-probe-layout/independent-work\15000-true\crop-noise.tif (224 x 156, 16-bit RGB, linear camera-native RGB, Malvar-He-Cutler demosaic)
+                  Full sensor resolution: every CFA site estimated, one focus
+                  decision per quad. Interpolated -- do not measure resolution on it.
+collapse+write  : 0.0 s
+total           : 0.2 s
+frames          : 5 from M194C-INDEPENDENT-NO-SUCH-RAW-DIRECTORY  (first decode 0.00 s)
+planes          : 137 x 95 per CFA plane
+analysis domain : 112 x 78 at full-plane origin (9, 6) -- Crop is applied BEFORE luma, variance, weighting and accumulation
+--- the merge ---
+bands           : 3 Laplacian levels + 1 base, coarsest 14 x 10
+selection       : SOFT -- weight = (band power above the noise floor)^exponent, a convex combination.
+                  Sign coherence is free: a convex combination cannot take adjacent
+                  coefficients from opposite-signed frames, which is the ringing a
+                  coefficient-wise argmax produces.
+noise gate      : 2.00 x the modelled band-noise power. Below it, NO frame may win and the
+                  merge averages -- which is the correct estimator when there is no
+                  information, and the only operation that gets below single-frame noise.
+exponent        : 2.00
+per-band exp    : 2 3 4   (coarsest -> finest)
+                  sharpness ramps 1.4x per octave toward the fine bands. A wrong pick in a
+                  fine band is one high-frequency coefficient nobody can see; a wrong pick
+                  in a coarse band IS the rim.
+base band       : plain mean across frames
+not applied     : photometric gain, clip census, outlier rejection, halo correction, through-focus
+                  statistics. Those are the --merge estimator path's stages; this arm is the merge only.
+alignment       : ON (M194c-independent), reference frame 2, 5 placed / 0 refused, 0.0 s
+  held-out err  : NOT MEASURED   resampler: CatmullRom
+  coverage      : CROPPED to the region EVERY frame covers -- 112 x 78 plane px at (9, 6) of 137 x 95, emitted at UNITY SCALE. 0.0% of width dropped and NOT upsampled (k=1.0000), so the output is SMALLER than the plane by design and no placement carries a coverage scale. The reference frame's own placement reaches the gather unmodified.
+memory plan     : 5 canonical chunks, 1 reusable frame worker, 1 retained + 1 scratch accumulator, 2 execution threads
+                  CONSTANT in the frame count and reduction order. Chunks run serially; spatial work uses
+                  the execution pool. STREHL_PYRAMID_WORKERS=N changes threads, never arithmetic.
+
+folded          : 5 / 5 frames in 0.2 s (0.04 s per frame, 2 execution threads)
+band noise gain : 0.8894 0.0529 0.0101 0.0037
+                  (E[L_k^2] / sigma_0^2, MEASURED on these operators, not derived.)
+measured floor  : 0.7804 0.0488
+                  x white       : 0.8774 0.9230
+                  THE FLOOR THE GATE ACTUALLY USED, averaged over 5 warped
+  frames. The line above it is the white-noise constant, which is
+  exact only for an UNWARPED frame; resampling correlates neighbours
+                  and moves the per-band split. Bands past this list kept the constant.
+                  STREHL_GATE_FLOOR=white restores it everywhere.
+averaged        : 0.0% 0.0% 0.0% 100.0%
+                  per level, the fraction of coefficients where NO frame cleared the noise
+                  floor and the merge therefore averaged instead of selecting. Near 0%
+                  everywhere would mean the gate is not gating and this is a naive
+                  pyramid stacker.
+
+output domain    : compact Crop 112x78 from full-plane origin (9, 6); collapsed plane written directly (no second crop)
+
+wrote           : C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli\../../experiments/m194c-probe-layout/independent-work\15000-true\crop-warp.tif (224 x 156, 16-bit RGB, linear camera-native RGB, Malvar-He-Cutler demosaic)
+                  Full sensor resolution: every CFA site estimated, one focus
+                  decision per quad. Interpolated -- do not measure resolution on it.
+collapse+write  : 0.0 s
+total           : 0.2 s
+frames          : 5 from M194C-INDEPENDENT-NO-SUCH-RAW-DIRECTORY  (first decode 0.00 s)
+planes          : 137 x 95 per CFA plane
+analysis domain : 112 x 78 at full-plane origin (9, 6) -- Crop is applied BEFORE luma, variance, weighting and accumulation
+--- the merge ---
+bands           : 3 Laplacian levels + 1 base, coarsest 14 x 10
+selection       : SOFT -- weight = (band power above the noise floor)^exponent, a convex combination.
+                  Sign coherence is free: a convex combination cannot take adjacent
+                  coefficients from opposite-signed frames, which is the ringing a
+                  coefficient-wise argmax produces.
+noise gate      : 2.00 x the modelled band-noise power. Below it, NO frame may win and the
+                  merge averages -- which is the correct estimator when there is no
+                  information, and the only operation that gets below single-frame noise.
+exponent        : 2.00
+per-band exp    : 2 3 4   (coarsest -> finest)
+                  sharpness ramps 1.4x per octave toward the fine bands. A wrong pick in a
+                  fine band is one high-frequency coefficient nobody can see; a wrong pick
+                  in a coarse band IS the rim.
+base band       : plain mean across frames
+not applied     : photometric gain, clip census, outlier rejection, halo correction, through-focus
+                  statistics. Those are the --merge estimator path's stages; this arm is the merge only.
+alignment       : ON (M194c-independent), reference frame 2, 5 placed / 0 refused, 0.0 s
+  held-out err  : NOT MEASURED   resampler: CatmullRom
+  coverage      : CROPPED to the region EVERY frame covers -- 112 x 78 plane px at (9, 6) of 137 x 95, emitted at UNITY SCALE. 0.0% of width dropped and NOT upsampled (k=1.0000), so the output is SMALLER than the plane by design and no placement carries a coverage scale. The reference frame's own placement reaches the gather unmodified.
+memory plan     : 5 canonical chunks, 1 reusable frame worker, 1 retained + 1 scratch accumulator, 2 execution threads
+                  CONSTANT in the frame count and reduction order. Chunks run serially; spatial work uses
+                  the execution pool. STREHL_PYRAMID_WORKERS=N changes threads, never arithmetic.
+
+folded          : 5 / 5 frames in 0.2 s (0.04 s per frame, 2 execution threads)
+band noise gain : 0.8894 0.0529 0.0101 0.0037
+                  (E[L_k^2] / sigma_0^2, MEASURED on these operators, not derived.)
+measured floor  : 0.7780 0.0487
+                  x white       : 0.8747 0.9203
+                  THE FLOOR THE GATE ACTUALLY USED, averaged over 5 warped
+  frames. The line above it is the white-noise constant, which is
+  exact only for an UNWARPED frame; resampling correlates neighbours
+                  and moves the per-band split. Bands past this list kept the constant.
+                  STREHL_GATE_FLOOR=white restores it everywhere.
+averaged        : 0.0% 0.0% 0.0% 100.0%
+                  per level, the fraction of coefficients where NO frame cleared the noise
+                  floor and the merge therefore averaged instead of selecting. Near 0%
+                  everywhere would mean the gate is not gating and this is a naive
+                  pyramid stacker.
+
+output domain    : compact Crop 112x78 from full-plane origin (9, 6); collapsed plane written directly (no second crop)
+
+wrote           : C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli\../../experiments/m194c-probe-layout/independent-work\15000-true\crop-wb.tif (224 x 156, 16-bit RGB, linear camera-native RGB, Malvar-He-Cutler demosaic)
+                  Full sensor resolution: every CFA site estimated, one focus
+                  decision per quad. Interpolated -- do not measure resolution on it.
+collapse+write  : 0.0 s
+total           : 0.2 s
+frames          : 5 from M194C-INDEPENDENT-NO-SUCH-RAW-DIRECTORY  (first decode 0.00 s)
+planes          : 137 x 95 per CFA plane
+analysis domain : 112 x 78 at full-plane origin (9, 6) -- Crop is applied BEFORE luma, variance, weighting and accumulation
+--- the merge ---
+bands           : 3 Laplacian levels + 1 base, coarsest 14 x 10
+selection       : SOFT -- weight = (band power above the noise floor)^exponent, a convex combination.
+                  Sign coherence is free: a convex combination cannot take adjacent
+                  coefficients from opposite-signed frames, which is the ringing a
+                  coefficient-wise argmax produces.
+noise gate      : 2.00 x the modelled band-noise power. Below it, NO frame may win and the
+                  merge averages -- which is the correct estimator when there is no
+                  information, and the only operation that gets below single-frame noise.
+exponent        : 2.00
+per-band exp    : 2 3 4   (coarsest -> finest)
+                  sharpness ramps 1.4x per octave toward the fine bands. A wrong pick in a
+                  fine band is one high-frequency coefficient nobody can see; a wrong pick
+                  in a coarse band IS the rim.
+base band       : plain mean across frames
+not applied     : photometric gain, clip census, outlier rejection, halo correction, through-focus
+                  statistics. Those are the --merge estimator path's stages; this arm is the merge only.
+alignment       : ON (M194c-independent), reference frame 2, 5 placed / 0 refused, 0.0 s
+  held-out err  : NOT MEASURED   resampler: CatmullRom
+  coverage      : CROPPED to the region EVERY frame covers -- 112 x 78 plane px at (9, 6) of 137 x 95, emitted at UNITY SCALE. 0.0% of width dropped and NOT upsampled (k=1.0000), so the output is SMALLER than the plane by design and no placement carries a coverage scale. The reference frame's own placement reaches the gather unmodified.
+memory plan     : 5 canonical chunks, 1 reusable frame worker, 1 retained + 1 scratch accumulator, 2 execution threads
+                  CONSTANT in the frame count and reduction order. Chunks run serially; spatial work uses
+                  the execution pool. STREHL_PYRAMID_WORKERS=N changes threads, never arithmetic.
+
+folded          : 5 / 5 frames in 0.2 s (0.04 s per frame, 2 execution threads)
+band noise gain : 0.8894 0.0529 0.0101 0.0037
+                  (E[L_k^2] / sigma_0^2, MEASURED on these operators, not derived.)
+measured floor  : 0.7779 0.0487
+                  x white       : 0.8746 0.9200
+                  THE FLOOR THE GATE ACTUALLY USED, averaged over 5 warped
+  frames. The line above it is the white-noise constant, which is
+  exact only for an UNWARPED frame; resampling correlates neighbours
+                  and moves the per-band split. Bands past this list kept the constant.
+                  STREHL_GATE_FLOOR=white restores it everywhere.
+averaged        : 0.0% 0.0% 0.0% 100.0%
+                  per level, the fraction of coefficients where NO frame cleared the noise
+                  floor and the merge therefore averaged instead of selecting. Near 0%
+                  everywhere would mean the gate is not gating and this is a naive
+                  pyramid stacker.
+
+output domain    : compact Crop 112x78 from full-plane origin (9, 6); collapsed plane written directly (no second crop)
+
+wrote           : C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli\../../experiments/m194c-probe-layout/independent-work\15000-true\crop-observer1.tif (224 x 156, 16-bit RGB, linear camera-native RGB, Malvar-He-Cutler demosaic)
+                  Full sensor resolution: every CFA site estimated, one focus
+                  decision per quad. Interpolated -- do not measure resolution on it.
+collapse+write  : 0.0 s
+total           : 0.2 s
+frames          : 5 from M194C-INDEPENDENT-NO-SUCH-RAW-DIRECTORY  (first decode 0.00 s)
+planes          : 137 x 95 per CFA plane
+analysis domain : 112 x 78 at full-plane origin (9, 6) -- Crop is applied BEFORE luma, variance, weighting and accumulation
+--- the merge ---
+bands           : 3 Laplacian levels + 1 base, coarsest 14 x 10
+selection       : SOFT -- weight = (band power above the noise floor)^exponent, a convex combination.
+                  Sign coherence is free: a convex combination cannot take adjacent
+                  coefficients from opposite-signed frames, which is the ringing a
+                  coefficient-wise argmax produces.
+noise gate      : 2.00 x the modelled band-noise power. Below it, NO frame may win and the
+                  merge averages -- which is the correct estimator when there is no
+                  information, and the only operation that gets below single-frame noise.
+exponent        : 2.00
+per-band exp    : 2 3 4   (coarsest -> finest)
+                  sharpness ramps 1.4x per octave toward the fine bands. A wrong pick in a
+                  fine band is one high-frequency coefficient nobody can see; a wrong pick
+                  in a coarse band IS the rim.
+base band       : plain mean across frames
+not applied     : photometric gain, clip census, outlier rejection, halo correction, through-focus
+                  statistics. Those are the --merge estimator path's stages; this arm is the merge only.
+alignment       : ON (M194c-independent), reference frame 2, 5 placed / 0 refused, 0.0 s
+  held-out err  : NOT MEASURED   resampler: CatmullRom
+  coverage      : CROPPED to the region EVERY frame covers -- 112 x 78 plane px at (9, 6) of 137 x 95, emitted at UNITY SCALE. 0.0% of width dropped and NOT upsampled (k=1.0000), so the output is SMALLER than the plane by design and no placement carries a coverage scale. The reference frame's own placement reaches the gather unmodified.
+memory plan     : 5 canonical chunks, 1 reusable frame worker, 1 retained + 1 scratch accumulator, 2 execution threads
+                  CONSTANT in the frame count and reduction order. Chunks run serially; spatial work uses
+                  the execution pool. STREHL_PYRAMID_WORKERS=N changes threads, never arithmetic.
+
+folded          : 5 / 5 frames in 0.2 s (0.04 s per frame, 2 execution threads)
+band noise gain : 0.8894 0.0529 0.0101 0.0037
+                  (E[L_k^2] / sigma_0^2, MEASURED on these operators, not derived.)
+measured floor  : 0.7779 0.0487
+                  x white       : 0.8746 0.9200
+                  THE FLOOR THE GATE ACTUALLY USED, averaged over 5 warped
+  frames. The line above it is the white-noise constant, which is
+  exact only for an UNWARPED frame; resampling correlates neighbours
+                  and moves the per-band split. Bands past this list kept the constant.
+                  STREHL_GATE_FLOOR=white restores it everywhere.
+averaged        : 0.0% 0.0% 0.0% 100.0%
+                  per level, the fraction of coefficients where NO frame cleared the noise
+                  floor and the merge therefore averaged instead of selecting. Near 0%
+                  everywhere would mean the gate is not gating and this is a naive
+                  pyramid stacker.
+
+output domain    : compact Crop 112x78 from full-plane origin (9, 6); collapsed plane written directly (no second crop)
+
+wrote           : C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli\../../experiments/m194c-probe-layout/independent-work\15000-true\crop-observer2.tif (224 x 156, 16-bit RGB, linear camera-native RGB, Malvar-He-Cutler demosaic)
+                  Full sensor resolution: every CFA site estimated, one focus
+                  decision per quad. Interpolated -- do not measure resolution on it.
+collapse+write  : 0.0 s
+total           : 0.2 s
+
+thread 'merge_cmd::gatefloor::m194c_independent_tests::independent_empty_nan_and_real_merge_fallback' (39872) panicked at C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli/../../experiments/m194c-probe-layout/independent-tests.rs:200:5:
+assertion `left != right` failed
+  left: [1161527296, 1161558583, 1161575556, 1161570450, 1161545600, 1161512376, 1161485978, 1161478484, 1161493321, 1161523702, 1161555727, 1161574745, 1161572056, 1161548887, 1161515841, 1161488036, 1161478192, 1161490815, 1161520127, 1161552720, 1161573681, 1161573422, 1161552060, 1161519366, 1161490303, 1161478164, 1161488504, 1161516591, 1161549576, 1161572367, 1161574539, 1161555096, 1161522935, 1161492769, 1161478399, 1161486400, 1161513112, 1161546313, 1161570813, 1161575404, 1161557987, 1161526526, 1161495419, 1161478896, 1161484516, 1161509709, 1161542947, 1161569026, 1161576013, 1161560711, 1161530122, 1161498240, 1161479652, 1161482861, 1161506401, 1161539499, 1161567015, 1161576359, 1161563257, 1161533702, 1161501216, 1161480662, 1161481444, 1161503205, 1161535986, 1161564791, 1161576446, 1161565611, 1161537248, 1161504333, 1161481923, 1161480272, 1161546888, 1161571101, 1161575272, 1161557494, 1161525900, 1161494945, 1161478791, 1161484828, 1161510295, 1161543541, 1161569354, 1161575925, 1161560250, 1161529496, 1161497737, 1161479502, 1161483132, 1161506968, 1161540104, 1161567380, 1161576318, 1161562827, 1161533081, 1161500688, 1161480468, 1161481673, 1161503751, 1161536600, 1161565193, 1161576448, 1161565215, 1161536634, 1161503781, 1161481686, 1161480458, 1161500659, 1161533046, 1161562803, 1161576315, 1161567401, 1161540138, 1161507000, 1161483148, 1161479493, 1161497710, 1161529462, 1161560223, 1161575920, 1161569372, 1161543572, 1161510327, 1161484846, 1161478785, 1161494919, 1161525866, 1161557466, 1161575264, 1161571116, 1161546920, 1161513746, 1161486771, 1161478336, 1161492302, 1161522278, 1161554548, 1161574353, 1161572629, 1161550164, 1161517237, 1161488913, 1161478150, 1161489873, 1161563233, 1161576357, 1161567035, 1161539532, 1161506431, 1161482876, 1161479643, 1161498212, 1161530087, 1161560686, 1161576008, 1161569044, 1161542980, 1161509741, 1161484533, 1161478890, 1161495393, 1161526491, 1161557958, 1161575397, 1161570829, 1161546344, 1161513145, 1161486420, 1161478396, 1161492744, 1161522900, 1161555067, 1161574529, 1161572381, 1161549607, 1161516625, 1161488525, 1161478163, 1161490280, 1161519332, 1161552028, 1161573408, 1161573692, 1161552749, 1161520162, 1161490838, 1161478194, 1161488016, 1161515807, 1161548855, 1161572040, 1161574754, 1161555756, 1161523736, 1161493346, 1161478488, 1161485961, 1161512343, 1161545569, 1161570433, 1161575563, 1161558610, 1161527331, 1161496036, 1161479043, 1161484126, 1161508962, 1161542183, 1161568596, 1161576113, 1161561297, 1161530925, 1161498893, 1161479856, 1161482523, 1161505675, 1161573621, 1161573481, 1161552212, 1161519542, 1161490421, 1161478170, 1161488394, 1161516417, 1161549417, 1161572297, 1161574589, 1161555243, 1161523112, 1161492896, 1161478418, 1161486302, 1161512941, 1161546148, 1161570730, 1161575440, 1161558124, 1161526704, 1161495555, 1161478927, 1161484429, 1161509542, 1161542779, 1161568931, 1161576035, 1161560841, 1161530300, 1161498384, 1161479696, 1161482785, 1161506238, 1161539326, 1161566909, 1161576370, 1161563378, 1161533879, 1161501368, 1161480719, 1161481380, 1161503048, 1161535809, 1161564676, 1161576441, 1161565722, 1161537423, 1161504491, 1161481992, 1161480220, 1161499986, 1161532246, 1161562243, 1161576249, 1161567860, 1161540913, 1161507735, 1161483507, 1161479313, 1161497073, 1161528659, 1161559622, 1161575796, 1161569782, 1161544330, 1161511085, 1161485257, 1161478662, 1161494320, 1161525062, 1161576330, 1161562950, 1161533258, 1161500838, 1161480523, 1161481607, 1161503595, 1161536425, 1161565079, 1161576448, 1161565329, 1161536809, 1161503938, 1161481753, 1161480404, 1161500509, 1161532869, 1161562680, 1161576302, 1161567503, 1161540310, 1161507162, 1161483226, 1161479452, 1161497567, 1161529283, 1161560090, 1161575893, 1161569463, 1161543741, 1161510495, 1161484936, 1161478757, 1161494785, 1161525687, 1161557325, 1161575225, 1161571197, 1161547084, 1161513917, 1161486872, 1161478321, 1161492176, 1161522099, 1161554400, 1161574300, 1161572696, 1161550321, 1161517412, 1161489025, 1161478147, 1161489756, 1161518539, 1161551329, 1161573124, 1161573951, 1161553434, 1161520959, 1161491382, 1161478237, 1161487537, 1161515027, 1161548130, 1161571702, 1161574957, 1161556408, 1161524540, 1161493932, 1161478589, 1161485531, 1161511581, 1161544820, 1161570912, 1161546509, 1161513316, 1161486519, 1161478378, 1161492617, 1161522723, 1161554920, 1161574479, 1161572452, 1161549765, 1161516799, 1161488635, 1161478159, 1161490164, 1161519156, 1161551873, 1161573346, 1161573751, 1161552902, 1161520338, 1161490958, 1161478202, 1161487909, 1161515635, 1161548695, 1161571966, 1161574800, 1161555901, 1161523915, 1161493475, 1161478509, 1161485863, 1161512173, 1161545402, 1161570347, 1161575596, 1161558747, 1161527509, 1161496174, 1161479077, 1161484041, 1161508794, 1161542013, 1161568498, 1161576133, 1161561426, 1161531102, 1161499039, 1161479903, 1161482450, 1161505514, 1161538544, 1161566428, 1161576409, 1161563920, 1161534675, 1161502055, 1161480982, 1161481099, 1161502352, 1161535016, 1161564149, 1161576422, 1161566219, 1161538209, 1161505206, 1161482310, 1161479995, 1161499321, 1161531445, 1161561673, 1161558263, 1161526883, 1161495691, 1161478959, 1161484342, 1161509376, 1161542612, 1161568836, 1161576059, 1161560972, 1161530478, 1161498528, 1161479741, 1161482710, 1161506077, 1161539153, 1161566804, 1161576379, 1161563499, 1161534056, 1161501520, 1161480776, 1161481316, 1161502892, 1161535633, 1161564560, 1161576438, 1161565833, 1161537597, 1161504649, 1161482061, 1161480169, 1161499838, 1161532069, 1161562116, 1161576233, 1161567961, 1161541084, 1161507899, 1161483588, 1161479274, 1161496930, 1161528479, 1161559487, 1161575766, 1161569871, 1161544497, 1161511253, 1161485350, 1161478637, 1161494186, 1161524883, 1161556684, 1161575040, 1161571553, 1161547818, 1161514694, 1161487335, 1161478259, 1161491618, 1161521301, 1161553725, 1161574059, 1161572998, 1161551028, 1161518201, 1161489535, 1161478145, 1161489241, 1161517749, 1161550624, 1161572826, 1161540482, 1161507325, 1161483305, 1161479412, 1161497426, 1161529106, 1161559959, 1161575867, 1161569554, 1161543909, 1161510663, 1161485026, 1161478729, 1161494651, 1161525509, 1161557184, 1161575185, 1161571277, 1161547247, 1161514089, 1161486974, 1161478306, 1161492054, 1161521923, 1161554252, 1161574248, 1161572764, 1161550478, 1161517586, 1161489137, 1161478146, 1161489641, 1161518364, 1161551173, 1161573059, 1161574007, 1161553585, 1161521135, 1161491504, 1161478248, 1161487432, 1161514854, 1161547968, 1161571625, 1161575001, 1161556552, 1161524718, 1161494063, 1161478613, 1161485436, 1161511410, 1161544652, 1161569953, 1161575739, 1161559361, 1161528314, 1161496801, 1161479239, 1161483664, 1161508051, 1161541245, 1161568056, 1161576219, 1161562000, 1161531904, 1161499701, 1161480122, 1161482126, 1161504796, 1161537759, 1161565936, 1161576434, 1161520515, 1161491078, 1161478211, 1161487801, 1161515460, 1161548535, 1161571893, 1161574846, 1161556047, 1161524092, 1161493605, 1161478531, 1161485769, 1161512004, 1161545236, 1161570261, 1161575629, 1161558884, 1161527687, 1161496312, 1161479112, 1161483956, 1161508630, 1161541842, 1161568400, 1161576153, 1161561553, 1161531280, 1161499185, 1161479950, 1161482377, 1161505354, 1161538370, 1161566320, 1161576415, 1161564039, 1161534852, 1161502208, 1161481042, 1161481038, 1161502197, 1161534839, 1161564030, 1161576415, 1161566327, 1161538383, 1161505366, 1161482382, 1161479947, 1161499174, 1161531267, 1161561544, 1161576151, 1161568407, 1161541855, 1161508641, 1161483962, 1161479109, 1161496302, 1161527675, 1161558875, 1161575628, 1161570269, 1161545248, 1161512016, 1161485775, 1161478529, 1161493595, 1161524080, 1161556035, 1161574843, 1161571897, 1161501672, 1161480834, 1161481254, 1161502738, 1161535458, 1161564444, 1161576435, 1161565945, 1161537772, 1161504807, 1161482131, 1161480119, 1161499691, 1161531891, 1161561990, 1161576216, 1161568061, 1161541255, 1161508063, 1161483670, 1161479237, 1161496790, 1161528302, 1161559352, 1161575738, 1161569960, 1161544664, 1161511422, 1161485443, 1161478612, 1161494054, 1161524705, 1161556541, 1161574998, 1161571630, 1161547979, 1161514866, 1161487439, 1161478247, 1161491496, 1161521123, 1161553574, 1161574003, 1161573063, 1161551184, 1161518377, 1161489649, 1161478146, 1161489129, 1161517574, 1161550467, 1161572759, 1161574251, 1161554262, 1161521935, 1161492061, 1161478307, 1161486966, 1161514077, 1161547235, 1161571271, 1161575189, 1161557196, 1161525522, 1161494661, 1161478731, 1161485021, 1161510651, 1161543897, 1161569548, 1161575868, 1161559967, 1161487076, 1161478292, 1161491928, 1161521745, 1161554101, 1161574194, 1161572831, 1161550635, 1161517761, 1161489250, 1161478144, 1161489528, 1161518188, 1161551017, 1161572993, 1161574062, 1161553736, 1161521313, 1161491627, 1161478260, 1161487328, 1161514681, 1161547806, 1161571547, 1161575043, 1161556695, 1161524896, 1161494195, 1161478638, 1161485343, 1161511241, 1161544485, 1161569864, 1161575769, 1161559496, 1161528492, 1161496941, 1161479277, 1161483583, 1161507887, 1161541072, 1161567955, 1161576234, 1161562126, 1161532082, 1161499849, 1161480173, 1161482056, 1161504638, 1161537585, 1161565825, 1161576438, 1161564568, 1161535646, 1161502904, 1161481321, 1161480772, 1161501509, 1161534043, 1161563490, 1161576379, 1161566812, 1161539165, 1161506089, 1161482715, 1161479737, 1161498520, 1161530465, 1161560962, 1161576057, 1161568843, 1161542621, 1161479147, 1161483872, 1161508465, 1161541672, 1161568302, 1161576172, 1161561681, 1161531458, 1161499331, 1161479999, 1161482305, 1161505196, 1161538196, 1161566211, 1161576422, 1161564157, 1161535028, 1161502362, 1161481103, 1161480978, 1161502044, 1161534663, 1161563911, 1161576408, 1161566436, 1161538557, 1161505526, 1161482455, 1161479899, 1161499028, 1161531090, 1161561416, 1161576132, 1161568505, 1161542025, 1161508806, 1161484047, 1161479074, 1161496164, 1161527496, 1161558737, 1161575595, 1161570354, 1161545414, 1161512186, 1161485870, 1161478507, 1161493468, 1161523903, 1161555891, 1161574799, 1161571972, 1161548707, 1161515646, 1161487916, 1161478202, 1161490949, 1161520325, 1161552891, 1161573746, 1161573351, 1161551885, 1161519169, 1161490172, 1161478159, 1161488628, 1161516786, 1161549754, 1161572447, 1161574483, 1161554931, 1161522735, 1161479199, 1161496652, 1161528122, 1161559216, 1161575706, 1161570048, 1161544831, 1161511591, 1161485537, 1161478587, 1161493923, 1161524527, 1161556398, 1161574954, 1161571707, 1161548141, 1161515039, 1161487544, 1161478236, 1161491374, 1161520946, 1161553423, 1161573947, 1161573128, 1161551340, 1161518552, 1161489764, 1161478148, 1161489017, 1161517399, 1161550309, 1161572691, 1161574304, 1161554410, 1161522112, 1161492185, 1161478322, 1161486865, 1161513905, 1161547072, 1161571191, 1161575228, 1161557337, 1161525700, 1161494794, 1161478759, 1161484931, 1161510484, 1161543730, 1161569457, 1161575896, 1161560100, 1161529296, 1161497578, 1161479455, 1161483221, 1161507151, 1161540298, 1161567496, 1161576304, 1161562688, 1161532882, 1161500520, 1161480408, 1161481748, 1161503927, 1161536798, 1161565322, 1161576448, 1161565088, 1161536438, 1161503605, 1161487224, 1161514509, 1161547644, 1161571469, 1161575085, 1161556837, 1161525074, 1161494327, 1161478664, 1161485252, 1161511073, 1161544319, 1161569775, 1161575798, 1161559631, 1161528670, 1161497081, 1161479315, 1161483501, 1161507724, 1161540900, 1161567853, 1161576251, 1161562251, 1161532259, 1161499997, 1161480224, 1161481987, 1161504479, 1161537410, 1161565714, 1161576441, 1161564684, 1161535822, 1161503058, 1161481384, 1161480715, 1161501357, 1161533866, 1161563370, 1161576369, 1161566918, 1161539338, 1161506250, 1161482790, 1161479693, 1161498375, 1161530288, 1161560833, 1161576034, 1161568939, 1161542791, 1161509554, 1161484435, 1161478925, 1161495545, 1161526692, 1161558114, 1161575438, 1161570737, 1161546160, 1161512953, 1161486309, 1161478416, 1161492887, 1161523100, 1161555232, 1161574585, 1161572301, 1161549428, 1161516429, 1161488402, 1161501891, 1161534486, 1161563792, 1161576400, 1161566543, 1161538730, 1161505686, 1161482528, 1161479852, 1161498883, 1161530912, 1161561287, 1161576111, 1161568602, 1161542195, 1161508972, 1161484132, 1161479040, 1161496026, 1161527318, 1161558600, 1161575560, 1161570439, 1161545580, 1161512356, 1161485967, 1161478486, 1161493337, 1161523724, 1161555746, 1161574751, 1161572046, 1161548867, 1161515819, 1161488023, 1161478193, 1161490829, 1161520149, 1161552738, 1161573688, 1161573413, 1161552039, 1161519345, 1161490289, 1161478164, 1161488517, 1161516613, 1161549595, 1161572376, 1161574534, 1161555078, 1161522913, 1161492753, 1161478397, 1161486413, 1161513133, 1161546333, 1161570823, 1161575400, 1161557968, 1161526504, 1161495402, 1161478892, 1161484527, 1161509729, 1161542968, 1161569038, 1161576009, 1161560695, 1161530100, 1161498222, 1161479646, 1161520769, 1161553272, 1161573891, 1161573192, 1161551496, 1161518727, 1161489880, 1161478150, 1161488905, 1161517225, 1161550151, 1161572622, 1161574356, 1161554559, 1161522289, 1161492310, 1161478337, 1161486764, 1161513734, 1161546908, 1161571111, 1161575267, 1161557476, 1161525878, 1161494928, 1161478787, 1161484840, 1161510316, 1161543561, 1161569364, 1161575922, 1161560232, 1161529474, 1161497720, 1161479496, 1161483142, 1161506988, 1161540125, 1161567393, 1161576316, 1161562812, 1161533059, 1161500669, 1161480462, 1161481681, 1161503770, 1161536623, 1161565207, 1161576448, 1161565201, 1161536613, 1161503762, 1161481678, 1161480464, 1161500677, 1161533068, 1161562818, 1161576317, 1161567388, 1161540117, 1161506980, 1161483138, 1161479499, 1161497728, 1161529483, 1161560239, 1161575923, 1161569360, 1161543552, 1161510307, 1161484834, 1161478789, 1161540729, 1161567752, 1161576266, 1161562376, 1161532437, 1161500145, 1161480275, 1161481918, 1161504321, 1161537236, 1161565603, 1161576444, 1161564800, 1161535997, 1161503214, 1161481448, 1161480658, 1161501206, 1161533689, 1161563248, 1161576359, 1161567022, 1161539511, 1161506411, 1161482866, 1161479648, 1161498231, 1161530109, 1161560702, 1161576012, 1161569032, 1161542960, 1161509721, 1161484523, 1161478894, 1161495409, 1161526513, 1161557975, 1161575401, 1161570819, 1161546324, 1161513124, 1161486408, 1161478398, 1161492760, 1161522923, 1161555086, 1161574535, 1161572373, 1161549587, 1161516603, 1161488512, 1161478164, 1161490295, 1161519354, 1161552047, 1161573416, 1161573685, 1161552731, 1161520140, 1161490823, 1161478193, 1161488028, 1161515830, 1161548875, 1161572049, 1161574749, 1161555740, 1161523715, 1161493330, 1161478485, 1161485972, 1161558462, 1161575526, 1161570524, 1161545745, 1161512526, 1161486063, 1161478465, 1161493208, 1161523546, 1161555600, 1161574704, 1161572119, 1161549027, 1161515993, 1161488130, 1161478186, 1161490710, 1161519972, 1161552586, 1161573628, 1161573474, 1161552193, 1161519521, 1161490406, 1161478169, 1161488410, 1161516438, 1161549437, 1161572306, 1161574582, 1161555225, 1161523091, 1161492880, 1161478415, 1161486314, 1161512962, 1161546168, 1161570740, 1161575436, 1161558107, 1161526683, 1161495538, 1161478923, 1161484439, 1161509563, 1161542800, 1161568943, 1161576033, 1161560825, 1161530278, 1161498366, 1161479690, 1161482794, 1161506258, 1161539347, 1161566922, 1161576368, 1161563363, 1161533857, 1161501349, 1161480712, 1161481387, 1161503066, 1161535831, 1161564690, 1161576441, 1161565709, 1161537402, 1161504471, 1161481983, 1161480226, 1161500004, 1161571029, 1161575306, 1161557617, 1161526056, 1161495063, 1161478816, 1161484749, 1161510148, 1161543392, 1161569272, 1161575947, 1161560365, 1161529653, 1161497862, 1161479538, 1161483064, 1161506826, 1161539953, 1161567290, 1161576329, 1161562935, 1161533236, 1161500819, 1161480516, 1161481615, 1161503616, 1161536447, 1161565095, 1161576449, 1161565317, 1161536788, 1161503918, 1161481744, 1161480411, 1161500527, 1161532891, 1161562695, 1161576303, 1161567491, 1161540289, 1161507142, 1161483217, 1161479457, 1161497585, 1161529305, 1161560107, 1161575897, 1161569452, 1161543720, 1161510474, 1161484925, 1161478760, 1161494801, 1161525710, 1161557343, 1161575230, 1161571187, 1161547064, 1161513896, 1161486860, 1161478323, 1161492194, 1161522121, 1161554418, 1161574306, 1161572687, 1161550301, 1161517390, 1161489011, 1161478148, 1161489770, 1161518561, 1161576347, 1161567127, 1161539684, 1161506573, 1161482943, 1161479605, 1161498087, 1161529931, 1161560570, 1161575986, 1161569126, 1161543129, 1161509887, 1161484611, 1161478863, 1161495274, 1161526335, 1161557836, 1161575365, 1161570902, 1161546489, 1161513295, 1161486507, 1161478380, 1161492633, 1161522745, 1161554939, 1161574487, 1161572444, 1161549746, 1161516777, 1161488621, 1161478159, 1161490178, 1161519178, 1161551892, 1161573354, 1161573743, 1161552883, 1161520316, 1161490943, 1161478201, 1161487921, 1161515655, 1161548715, 1161571975, 1161574795, 1161555883, 1161523893, 1161493459, 1161478506, 1161485876, 1161512195, 1161545424, 1161570358, 1161575593, 1161558730, 1161527487, 1161496157, 1161479073, 1161484051, 1161508816, 1161542034, 1161568510, 1161576131, 1161561409, 1161531081, 1161499021, 1161479897, 1161482459, 1161505534, 1161538565, 1161573535, 1161552346, 1161519697, 1161490524, 1161478175, 1161488299, 1161516264, 1161549277, 1161572233, 1161574630, 1161555371, 1161523268, 1161493008, 1161478434, 1161486216, 1161512791, 1161546003, 1161570656, 1161575472, 1161558246, 1161526861, 1161495675, 1161478955, 1161484352, 1161509396, 1161542632, 1161568850, 1161576056, 1161560955, 1161530456, 1161498511, 1161479735, 1161482719, 1161506097, 1161539174, 1161566817, 1161576378, 1161563484, 1161534034, 1161501501, 1161480769, 1161481324, 1161502911, 1161535655, 1161564574, 1161576438, 1161565820, 1161537576, 1161504629, 1161482053, 1161480175, 1161499857, 1161532092, 1161562133, 1161576235, 1161567949, 1161541063, 1161507879, 1161483578, 1161479279, 1161496948, 1161528501, 1161559503, 1161575770, 1161569860, 1161544476, 1161511233, 1161485338, 1161478640, 1161494202, 1161524905, 1161556702, 1161563058, 1161533413, 1161500970, 1161480571, 1161481549, 1161503457, 1161536271, 1161564979, 1161576447, 1161565428, 1161536963, 1161504075, 1161481812, 1161480357, 1161500378, 1161532713, 1161562571, 1161576289, 1161567593, 1161540461, 1161507305, 1161483296, 1161479417, 1161497443, 1161529128, 1161559973, 1161575872, 1161569543, 1161543888, 1161510642, 1161485015, 1161478732, 1161494667, 1161525531, 1161557201, 1161575190, 1161571267, 1161547227, 1161514068, 1161486961, 1161478308, 1161492067, 1161521944, 1161554269, 1161574254, 1161572755, 1161550459, 1161517565, 1161489123, 1161478146, 1161489656, 1161518387, 1161551193, 1161573068, 1161574000, 1161553567, 1161521114, 1161491489, 1161478247, 1161487445, 1161514875, 1161547988, 1161571634, 1161574995, 1161556534, 1161524696, 1161494047, 1161478610, 1161485447, 1161511431, 1161544672, 1161569964, 1161546653, 1161513466, 1161486607, 1161478363, 1161492508, 1161522566, 1161554790, 1161574435, 1161572514, 1161549907, 1161516952, 1161488732, 1161478155, 1161490061, 1161519002, 1161551738, 1161573291, 1161573801, 1161553035, 1161520493, 1161491063, 1161478210, 1161487815, 1161515482, 1161548555, 1161571902, 1161574840, 1161556028, 1161524071, 1161493589, 1161478528, 1161485779, 1161512026, 1161545257, 1161570272, 1161575625, 1161558867, 1161527666, 1161496295, 1161479107, 1161483967, 1161508649, 1161541863, 1161568412, 1161576150, 1161561537, 1161531259, 1161499167, 1161479944, 1161482386, 1161505375, 1161538394, 1161566334, 1161576415, 1161564024, 1161534830, 1161502189, 1161481035, 1161481045, 1161502216, 1161534861, 1161564045, 1161576416, 1161566314, 1161538362, 1161505346, 1161482373, 1161479953, 1161499192, 1161531289, 1161561559, 1161576154, 1161527039, 1161495811, 1161478988, 1161484266, 1161509231, 1161542460, 1161568752, 1161576078, 1161561085, 1161530634, 1161498656, 1161479780, 1161482644, 1161505936, 1161539001, 1161566710, 1161576387, 1161563605, 1161534211, 1161501653, 1161480827, 1161481261, 1161502758, 1161535479, 1161564457, 1161576434, 1161565931, 1161537750, 1161504788, 1161482123, 1161480125, 1161499709, 1161531913, 1161562006, 1161576218, 1161568049, 1161541234, 1161508043, 1161483660, 1161479241, 1161496807, 1161528323, 1161559368, 1161575740, 1161569949, 1161544643, 1161511401, 1161485431, 1161478615, 1161494071, 1161524729, 1161556560, 1161575003, 1161571621, 1161547961, 1161514845, 1161487427, 1161478249, 1161491511, 1161521144, 1161553593, 1161574010, 1161573055, 1161551165, 1161518355, 1161489635, 1161478146, 1161489144, 1161517595, 1161550486, 1161572767, 1161574245, 1161507468, 1161483376, 1161479377, 1161497301, 1161528949, 1161559840, 1161575842, 1161569634, 1161544056, 1161510810, 1161485107, 1161478705, 1161494534, 1161525352, 1161557059, 1161575150, 1161571346, 1161547390, 1161514240, 1161487063, 1161478294, 1161491943, 1161521766, 1161554120, 1161574201, 1161572823, 1161550616, 1161517740, 1161489236, 1161478145, 1161489542, 1161518212, 1161551037, 1161573001, 1161574056, 1161553717, 1161521291, 1161491612, 1161478259, 1161487340, 1161514702, 1161547826, 1161571557, 1161575038, 1161556677, 1161524874, 1161494179, 1161478635, 1161485355, 1161511263, 1161544507, 1161569875, 1161575765, 1161559480, 1161528470, 1161496923, 1161479272, 1161483592, 1161507907, 1161541094, 1161567966, 1161576232, 1161562110, 1161532060, 1161499830, 1161480167, 1161482065, 1161504659, 1161537606, 1161565839, 1161576438, 1161564554, 1161491184, 1161478220, 1161487708, 1161515309, 1161548393, 1161571825, 1161574885, 1161556173, 1161524249, 1161493719, 1161478551, 1161485684, 1161511856, 1161545091, 1161570186, 1161575657, 1161559004, 1161527844, 1161496433, 1161479143, 1161483883, 1161508484, 1161541693, 1161568314, 1161576170, 1161561665, 1161531436, 1161499313, 1161479993, 1161482314, 1161505215, 1161538219, 1161566225, 1161576421, 1161564142, 1161535006, 1161502343, 1161481096, 1161480985, 1161502063, 1161534684, 1161563926, 1161576409, 1161566422, 1161538535, 1161505506, 1161482446, 1161479905, 1161499048, 1161531112, 1161561432, 1161576135, 1161568493, 1161542004, 1161508786, 1161484036, 1161479079, 1161496180, 1161527518, 1161558754, 1161575598, 1161570343, 1161545394, 1161512165, 1161485859, 1161478510, 1161493483, 1161523924, 1161555909, 1161574803, 1161571963, 1161548687, 1161480886, 1161481199, 1161502602, 1161535303, 1161564340, 1161576430, 1161566040, 1161537925, 1161504947, 1161482193, 1161480075, 1161499562, 1161531737, 1161561879, 1161576202, 1161568148, 1161541405, 1161508207, 1161483743, 1161479204, 1161496668, 1161528144, 1161559233, 1161575710, 1161570037, 1161544810, 1161511570, 1161485525, 1161478590, 1161493939, 1161524549, 1161556415, 1161574962, 1161571700, 1161548121, 1161515018, 1161487531, 1161478237, 1161491388, 1161520967, 1161553442, 1161573954, 1161573120, 1161551321, 1161518530, 1161489750, 1161478147, 1161489030, 1161517421, 1161550329, 1161572699, 1161574297, 1161554392, 1161522090, 1161492170, 1161478320, 1161486877, 1161513926, 1161547092, 1161571201, 1161575223, 1161557318, 1161525678, 1161494778, 1161478755, 1161484941, 1161510504, 1161543749, 1161569470, 1161575892, 1161560084, 1161529274, 1161478280, 1161491819, 1161521589, 1161553970, 1161574147, 1161572890, 1161550773, 1161517915, 1161489349, 1161478144, 1161489428, 1161518037, 1161550882, 1161572936, 1161574111, 1161553868, 1161521468, 1161491735, 1161478271, 1161487238, 1161514530, 1161547663, 1161571479, 1161575080, 1161556820, 1161525052, 1161494311, 1161478661, 1161485261, 1161511094, 1161544339, 1161569786, 1161575795, 1161559614, 1161528649, 1161497064, 1161479311, 1161483511, 1161507744, 1161540921, 1161567865, 1161576249, 1161562236, 1161532238, 1161499979, 1161480218, 1161481995, 1161504499, 1161537433, 1161565728, 1161576441, 1161564670, 1161535800, 1161503039, 1161481376, 1161480722, 1161501375, 1161533888, 1161563384, 1161576370, 1161566904, 1161539317, 1161506230, 1161482781, 1161479698, 1161498392, 1161530309, 1161560848, 1161576038, 1161568926, 1161542770, 1161509534, 1161483799, 1161508320, 1161541522, 1161568216, 1161576188, 1161561792, 1161531614, 1161499460, 1161480041, 1161482242, 1161505056, 1161538044, 1161566116, 1161576427, 1161564260, 1161535183, 1161502497, 1161481157, 1161480926, 1161501911, 1161534508, 1161563807, 1161576401, 1161566530, 1161538709, 1161505666, 1161482519, 1161479858, 1161498900, 1161530936, 1161561304, 1161576114, 1161568592, 1161542174, 1161508951, 1161484121, 1161479044, 1161496043, 1161527340, 1161558617, 1161575564, 1161570429, 1161545560, 1161512335, 1161485955, 1161478489, 1161493353, 1161523746, 1161555763, 1161574757, 1161572037, 1161548848, 1161515798, 1161488009, 1161478194, 1161490844, 1161520170, 1161552757, 1161573695, 1161573405, 1161552020, 1161519323, 1161490274, 1161478163, 1161488531, 1161516634, 1161549615, 1161572385, 1161574527, 1161555060, 1161522891, 1161492737, 1161496528, 1161527966, 1161559097, 1161575679, 1161570125, 1161544977, 1161511739, 1161485619, 1161478567, 1161493808, 1161524371, 1161556271, 1161574916, 1161571775, 1161548284, 1161515190, 1161487636, 1161478227, 1161491269, 1161520793, 1161553291, 1161573898, 1161573184, 1161551477, 1161518706, 1161489865, 1161478150, 1161488919, 1161517246, 1161550171, 1161572631, 1161574349, 1161554542, 1161522268, 1161492295, 1161478336, 1161486776, 1161513755, 1161546929, 1161571120, 1161575262, 1161557459, 1161525856, 1161494912, 1161478784, 1161484850, 1161510336, 1161543581, 1161569376, 1161575919, 1161560216, 1161529453, 1161497702, 1161479491, 1161483151, 1161507008, 1161540146, 1161567406, 1161576314, 1161562797, 1161533037, 1161500651, 1161480455, 1161481689, 1161503789, 1161536643, 1161565221, 1161576449, 1161565188, 1161536591, 1161503743, 1161481670, 1161514358, 1161547501, 1161571400, 1161575122, 1161556962, 1161525230, 1161494443, 1161478687, 1161485169, 1161510925, 1161544171, 1161569696, 1161575823, 1161559749, 1161528827, 1161497205, 1161479350, 1161483430, 1161507582, 1161540752, 1161567764, 1161576264, 1161562361, 1161532415, 1161500127, 1161480269, 1161481926, 1161504341, 1161537257, 1161565616, 1161576444, 1161564786, 1161535976, 1161503195, 1161481440, 1161480665, 1161501224, 1161533711, 1161563263, 1161576360, 1161567009, 1161539490, 1161506392, 1161482857, 1161479654, 1161498247, 1161530131, 1161560717, 1161576013, 1161569021, 1161542939, 1161509700, 1161484512, 1161478897, 1161495426, 1161526535, 1161557992, 1161575406, 1161570809, 1161546304, 1161513103, 1161486396, 1161478400, 1161492775, 1161522943, 1161555103, 1161574541, 1161572365, 1161549568, 1161516582, 1161488498, 1161478165, 1161534331, 1161563687, 1161576394, 1161566638, 1161538882, 1161505826, 1161482593, 1161479812, 1161498755, 1161530756, 1161561174, 1161576092, 1161568686, 1161542344, 1161509117, 1161484207, 1161479011, 1161495906, 1161527162, 1161558479, 1161575530, 1161570514, 1161545725, 1161512505, 1161486051, 1161478468, 1161493224, 1161523568, 1161555617, 1161574710, 1161572110, 1161549008, 1161515972, 1161488117, 1161478187, 1161490724, 1161519994, 1161552604, 1161573636, 1161573467, 1161552174, 1161519499, 1161490392, 1161478168, 1161488421, 1161516459, 1161549456, 1161572313, 1161574576, 1161555207, 1161523069, 1161492865, 1161478413, 1161486326, 1161512983, 1161546188, 1161570750, 1161575432, 1161558091, 1161526661, 1161495522, 1161478920, 1161484450, 1161509584, 1161542820, 1161568954, 1161576030, 1161560810, 1161530256, 1161498349, 1161479685, 1161482804, 1161553139, 1161573841, 1161573248, 1161551633, 1161518882, 1161489981, 1161478153, 1161488808, 1161517071, 1161550013, 1161572561, 1161574401, 1161554689, 1161522445, 1161492421, 1161478352, 1161486676, 1161513585, 1161546766, 1161571039, 1161575301, 1161557600, 1161526035, 1161495046, 1161478813, 1161484760, 1161510169, 1161543413, 1161569283, 1161575944, 1161560348, 1161529631, 1161497845, 1161479533, 1161483073, 1161506846, 1161539974, 1161567302, 1161576327, 1161562920, 1161533214, 1161500801, 1161480509, 1161481623, 1161503632, 1161536468, 1161565107, 1161576448, 1161565301, 1161536766, 1161503899, 1161481736, 1161480417, 1161500545, 1161532912, 1161562710, 1161576305, 1161567478, 1161540268, 1161507123, 1161483207, 1161479462, 1161497603, 1161529328, 1161560123, 1161575900, 1161569441, 1161543700, 1161510454, 1161484914, 1161478764, 1161494819, 1161567663, 1161576279, 1161562487, 1161532592, 1161500276, 1161480321, 1161481858, 1161504183, 1161537082, 1161565505, 1161576446, 1161564902, 1161536151, 1161503350, 1161481505, 1161480609, 1161501073, 1161533535, 1161563143, 1161576350, 1161567114, 1161539663, 1161506553, 1161482934, 1161479610, 1161498103, 1161529953, 1161560586, 1161575989, 1161569115, 1161543108, 1161509867, 1161484600, 1161478867, 1161495290, 1161526357, 1161557853, 1161575369, 1161570891, 1161546469, 1161513274, 1161486495, 1161478382, 1161492648, 1161522766, 1161554956, 1161574492, 1161572435, 1161549727, 1161516756, 1161488608, 1161478160, 1161490192, 1161519199, 1161551911, 1161573361, 1161573736, 1161552865, 1161520295, 1161490928, 1161478200, 1161487934, 1161515677, 1161548735, 1161571984, 1161574789, 1161555865, 1161523871, 1161493444, 1161478504, 1161485888, 1161512216, 1161575496, 1161570599, 1161545890, 1161512675, 1161486149, 1161478448, 1161493095, 1161523390, 1161555471, 1161574664, 1161572184, 1161549168, 1161516145, 1161488225, 1161478180, 1161490606, 1161519818, 1161552453, 1161573577, 1161573529, 1161552328, 1161519676, 1161490510, 1161478174, 1161488312, 1161516285, 1161549296, 1161572242, 1161574624, 1161555354, 1161523247, 1161492992, 1161478432, 1161486228, 1161512812, 1161546023, 1161570667, 1161575467, 1161558229, 1161526839, 1161495658, 1161478951, 1161484363, 1161509417, 1161542650, 1161568859, 1161576053, 1161560940, 1161530434, 1161498493, 1161479730, 1161482728, 1161506117, 1161539195, 1161566829, 1161576377, 1161563470, 1161534013, 1161501482, 1161480762, 1161481332, 1161502930, 1161535677, 1161564588, 1161576439, 1161565806, 1161537555, 1161504610, 1161482044, 1161480182, 1161499874, 1161532112, 1161575339, 1161557740, 1161526213, 1161495181, 1161478842, 1161484671, 1161510001, 1161543244, 1161569191, 1161575970, 1161560481, 1161529809, 1161497988, 1161479576, 1161482996, 1161506684, 1161539802, 1161567198, 1161576340, 1161563043, 1161533392, 1161500952, 1161480564, 1161481557, 1161503476, 1161536292, 1161564993, 1161576447, 1161565414, 1161536941, 1161504056, 1161481803, 1161480364, 1161500396, 1161532736, 1161562587, 1161576291, 1161567581, 1161540440, 1161507285, 1161483286, 1161479422, 1161497460, 1161529149, 1161559990, 1161575873, 1161569532, 1161543868, 1161510622, 1161485004, 1161478736, 1161494684, 1161525552, 1161557219, 1161575195, 1161571257, 1161547207, 1161514047, 1161486949, 1161478310, 1161492082, 1161521965, 1161554287, 1161574261, 1161572747, 1161550440, 1161517544, 1161489109, 1161478146, 1161489669, 1161518407, 1161551211, 1161567219, 1161539835, 1161506715, 1161483011, 1161479567, 1161497961, 1161529774, 1161560455, 1161575965, 1161569208, 1161543277, 1161510034, 1161484689, 1161478836, 1161495155, 1161526178, 1161557713, 1161575332, 1161570976, 1161546633, 1161513445, 1161486594, 1161478365, 1161492522, 1161522588, 1161554808, 1161574441, 1161572505, 1161549885, 1161516931, 1161488718, 1161478156, 1161490075, 1161519023, 1161551758, 1161573300, 1161573794, 1161553017, 1161520471, 1161491049, 1161478209, 1161487827, 1161515503, 1161548574, 1161571910, 1161574835, 1161556010, 1161524049, 1161493573, 1161478526, 1161485791, 1161512045, 1161545277, 1161570282, 1161575621, 1161558851, 1161527644, 1161496278, 1161479103, 1161483977, 1161508670, 1161541884, 1161568425, 1161576149, 1161561522, 1161531237, 1161499149, 1161479939, 1161482395, 1161505394, 1161538413, 1161566346, 1161552481, 1161519852, 1161490629, 1161478181, 1161488204, 1161516113, 1161549136, 1161572169, 1161574672, 1161555500, 1161523424, 1161493120, 1161478452, 1161486131, 1161512643, 1161545858, 1161570582, 1161575502, 1161558368, 1161527018, 1161495795, 1161478984, 1161484276, 1161509251, 1161542481, 1161568764, 1161576075, 1161561069, 1161530612, 1161498638, 1161479775, 1161482653, 1161505958, 1161539023, 1161566723, 1161576386, 1161563590, 1161534189, 1161501634, 1161480820, 1161481269, 1161502775, 1161535500, 1161564472, 1161576435, 1161565917, 1161537729, 1161504768, 1161482114, 1161480131, 1161499726, 1161531935, 1161562021, 1161576220, 1161568036, 1161541213, 1161508023, 1161483650, 1161479246, 1161496825, 1161528344, 1161559385, 1161575744, 1161569939, 1161544623, 1161511381, 1161485420, 1161478618, 1161494086, 1161524749, 1161556576, 1161575008, 1161533569, 1161501102, 1161480620, 1161481492, 1161503320, 1161536117, 1161564878, 1161576445, 1161565526, 1161537116, 1161504214, 1161481871, 1161480311, 1161500249, 1161532559, 1161562461, 1161576277, 1161567683, 1161540612, 1161507449, 1161483366, 1161479381, 1161497319, 1161528970, 1161559856, 1161575846, 1161569623, 1161544036, 1161510789, 1161485095, 1161478708, 1161494551, 1161525376, 1161557078, 1161575155, 1161571337, 1161547370, 1161514219, 1161487051, 1161478295, 1161491958, 1161521788, 1161554138, 1161574208, 1161572815, 1161550597, 1161517718, 1161489222, 1161478145, 1161489554, 1161518231, 1161551055, 1161573009, 1161574049, 1161553699, 1161521269, 1161491597, 1161478257, 1161487353, 1161514723, 1161547846, 1161571566, 1161575033, 1161556659, 1161524852, 1161494163, 1161478632, 1161485367, 1161511282, 1161544526, 1161569886, 1161575762, 1161513616, 1161486695, 1161478348, 1161492396, 1161522411, 1161554660, 1161574391, 1161572575, 1161550043, 1161517105, 1161488829, 1161478152, 1161489960, 1161518849, 1161551604, 1161573236, 1161573853, 1161553169, 1161520648, 1161491169, 1161478219, 1161487721, 1161515330, 1161548413, 1161571835, 1161574880, 1161556155, 1161524227, 1161493703, 1161478548, 1161485696, 1161511876, 1161545112, 1161570195, 1161575653, 1161558987, 1161527822, 1161496416, 1161479138, 1161483893, 1161508505, 1161541713, 1161568326, 1161576167, 1161561649, 1161531414, 1161499295, 1161479987, 1161482322, 1161505234, 1161538239, 1161566238, 1161576420, 1161564128, 1161534985, 1161502324, 1161481088, 1161480993, 1161502082, 1161534707, 1161563940, 1161576410, 1161566409, 1161538514, 1161505486, 1161482437, 1161479911, 1161499066, 1161531133, 1161561448, 1161576136, 1161568481, 1161495932, 1161479017, 1161484190, 1161509085, 1161542311, 1161568668, 1161576097, 1161561199, 1161530790, 1161498783, 1161479821, 1161482579, 1161505796, 1161538849, 1161566617, 1161576395, 1161563712, 1161534366, 1161501787, 1161480878, 1161481207, 1161502621, 1161535324, 1161564355, 1161576430, 1161566027, 1161537903, 1161504927, 1161482185, 1161480081, 1161499579, 1161531757, 1161561896, 1161576203, 1161568136, 1161541384, 1161508187, 1161483733, 1161479208, 1161496685, 1161528166, 1161559249, 1161575713, 1161570026, 1161544790, 1161511550, 1161485514, 1161478593, 1161493955, 1161524570, 1161556433, 1161574965, 1161571688, 1161548102, 1161514997, 1161487518, 1161478239, 1161491403, 1161520990, 1161553461, 1161573961, 1161573112, 1161551302, 1161518509, 1161489736, 1161478147, 1161489044, 1161517443, 1161550348, 1161572708, 1161574291, 1161554374, 1161483446, 1161479342, 1161497177, 1161528792, 1161559722, 1161575817, 1161569713, 1161544203, 1161510958, 1161485187, 1161478682, 1161494419, 1161525198, 1161556935, 1161575115, 1161571416, 1161547533, 1161514391, 1161487154, 1161478282, 1161491834, 1161521611, 1161553988, 1161574154, 1161572882, 1161550754, 1161517893, 1161489335, 1161478144, 1161489440, 1161518057, 1161550899, 1161572943, 1161574105, 1161553850, 1161521446, 1161491720, 1161478270, 1161487249, 1161514551, 1161547683, 1161571488, 1161575075, 1161556802, 1161525030, 1161494295, 1161478658, 1161485274, 1161511114, 1161544359, 1161569799, 1161575791, 1161559598, 1161528627, 1161497047, 1161479306, 1161483521, 1161507765, 1161540943, 1161567879, 1161576247, 1161562220, 1161532216, 1161499960, 1161480211, 1161482004, 1161504519, 1161537453, 1161565741, 1161576441, 1161564656, 1161535778, 1161478229, 1161487616, 1161515157, 1161548251, 1161571759, 1161574924, 1161556299, 1161524405, 1161493833, 1161478571, 1161485601, 1161511708, 1161544944, 1161570108, 1161575685, 1161559123, 1161528001, 1161496556, 1161479175, 1161483809, 1161508340, 1161541543, 1161568228, 1161576186, 1161561777, 1161531592, 1161499442, 1161480035, 1161482251, 1161505075, 1161538065, 1161566128, 1161576427, 1161564247, 1161535161, 1161502478, 1161481149, 1161480933, 1161501928, 1161534529, 1161563821, 1161576402, 1161566517, 1161538688, 1161505646, 1161482510, 1161479864, 1161498918, 1161530955, 1161561319, 1161576118, 1161568578, 1161542153, 1161508931, 1161484111, 1161479048, 1161496059, 1161527362, 1161558633, 1161575568, 1161570418, 1161545539, 1161512314, 1161485943, 1161478491, 1161493368, 1161523767, 1161555782, 1161574763, 1161572028, 1161548828, 1161515777, 1161481145, 1161502467, 1161535148, 1161564237, 1161576425, 1161566136, 1161538078, 1161505086, 1161482256, 1161480032, 1161499432, 1161531579, 1161561769, 1161576185, 1161568235, 1161541555, 1161508352, 1161483815, 1161479172, 1161496545, 1161527988, 1161559113, 1161575682, 1161570114, 1161544956, 1161511719, 1161485608, 1161478570, 1161493824, 1161524392, 1161556290, 1161574921, 1161571764, 1161548263, 1161515169, 1161487623, 1161478228, 1161491282, 1161520812, 1161553309, 1161573906, 1161573177, 1161551458, 1161518685, 1161489851, 1161478149, 1161488932, 1161517267, 1161550190, 1161572640, 1161574345, 1161554523, 1161522246, 1161492280, 1161478334, 1161486788, 1161513777, 1161546948, 1161571130, 1161575258, 1161557442, 1161525834, 1161494896, 1161478780, 1161484861, 1161510357, 1161543602, 1161569387, 1161575915, 1161560200, 1161529431, 1161497685, 1161491711, 1161521434, 1161553838, 1161574100, 1161572948, 1161550910, 1161518069, 1161489449, 1161478144, 1161489327, 1161517881, 1161550742, 1161572877, 1161574158, 1161553999, 1161521623, 1161491843, 1161478283, 1161487146, 1161514379, 1161547521, 1161571410, 1161575117, 1161556945, 1161525209, 1161494427, 1161478684, 1161485180, 1161510946, 1161544191, 1161569707, 1161575819, 1161559732, 1161528805, 1161497187, 1161479345, 1161483440, 1161507600, 1161540772, 1161567777, 1161576264, 1161562346, 1161532393, 1161500109, 1161480263, 1161481935, 1161504360, 1161537280, 1161565630, 1161576444, 1161564772, 1161535954, 1161503176, 1161481433, 1161480672, 1161501243, 1161533734, 1161563279, 1161576361, 1161566997, 1161539469, 1161506372, 1161482848, 1161479659, 1161498265, 1161530153, 1161560733, 1161576016, 1161569010, 1161542918, 1161509680, 1161484501, 1161508175, 1161541372, 1161568129, 1161576204, 1161561904, 1161531770, 1161499589, 1161480085, 1161482180, 1161504916, 1161537891, 1161566019, 1161576431, 1161564363, 1161535337, 1161502632, 1161481211, 1161480874, 1161501776, 1161534353, 1161563702, 1161576394, 1161566624, 1161538861, 1161505807, 1161482584, 1161479817, 1161498773, 1161530777, 1161561189, 1161576096, 1161568675, 1161542323, 1161509097, 1161484196, 1161479015, 1161495924, 1161527184, 1161558496, 1161575535, 1161570505, 1161545705, 1161512484, 1161486040, 1161478470, 1161493239, 1161523590, 1161555635, 1161574716, 1161572102, 1161548988, 1161515951, 1161488104, 1161478188, 1161490740, 1161520016, 1161552624, 1161573643, 1161573459, 1161552155, 1161519478, 1161490377, 1161478168, 1161488435, 1161516481, 1161549475, 1161572323, 1161574570, 1161555189, 1161523047, 1161492849, 1161478411, 1161527809, 1161558977, 1161575651, 1161570202, 1161545123, 1161511888, 1161485703, 1161478546, 1161493694, 1161524214, 1161556145, 1161574877, 1161571840, 1161548424, 1161515342, 1161487729, 1161478218, 1161491161, 1161520636, 1161553159, 1161573848, 1161573240, 1161551613, 1161518860, 1161489967, 1161478152, 1161488821, 1161517092, 1161550032, 1161572570, 1161574395, 1161554671, 1161522423, 1161492405, 1161478350, 1161486689, 1161513605, 1161546786, 1161571050, 1161575296, 1161557583, 1161526013, 1161495030, 1161478809, 1161484771, 1161510189, 1161543433, 1161569295, 1161575941, 1161560333, 1161529609, 1161497827, 1161479528, 1161483083, 1161506866, 1161539995, 1161567315, 1161576326, 1161562905, 1161533193, 1161500783, 1161480503, 1161481631, 1161503651, 1161536489, 1161565122, 1161576448, 1161565288, 1161536745, 1161503880, 1161481728, 1161480424, 1161547358, 1161571331, 1161575158, 1161557087, 1161525387, 1161494560, 1161478710, 1161485089, 1161510778, 1161544023, 1161569617, 1161575848, 1161559866, 1161528983, 1161497329, 1161479384, 1161483360, 1161507437, 1161540599, 1161567675, 1161576278, 1161562470, 1161532571, 1161500258, 1161480315, 1161481866, 1161504202, 1161537104, 1161565518, 1161576446, 1161564888, 1161536130, 1161503331, 1161481497, 1161480616, 1161501091, 1161533556, 1161563156, 1161576350, 1161567102, 1161539641, 1161506533, 1161482924, 1161479616, 1161498121, 1161529974, 1161560602, 1161575993, 1161569104, 1161543087, 1161509847, 1161484589, 1161478870, 1161495307, 1161526378, 1161557870, 1161575374, 1161570881, 1161546448, 1161513253, 1161486482, 1161478384, 1161492664, 1161522788, 1161554974, 1161574498, 1161572427, 1161549707, 1161516735, 1161488594, 1161478160, 1161490206, 1161563582, 1161576386, 1161566731, 1161539034, 1161505967, 1161482658, 1161479772, 1161498627, 1161530599, 1161561060, 1161576073, 1161568771, 1161542493, 1161509262, 1161484283, 1161478982, 1161495785, 1161527005, 1161558358, 1161575500, 1161570588, 1161545870, 1161512654, 1161486137, 1161478450, 1161493111, 1161523412, 1161555489, 1161574668, 1161572174, 1161549148, 1161516124, 1161488212, 1161478180, 1161490621, 1161519839, 1161552471, 1161573583, 1161573520, 1161552309, 1161519654, 1161490495, 1161478174, 1161488325, 1161516307, 1161549316, 1161572250, 1161574619, 1161555336, 1161523225, 1161492976, 1161478430, 1161486240, 1161512833, 1161546044, 1161570677, 1161575463, 1161558212, 1161526817, 1161495641, 1161478947, 1161484374, 1161509437, 1161542671, 1161568871, 1161576050, 1161560924, 1161530412, 1161498475, 1161479724, 1161482737, 1161506136, 1161573790, 1161573303, 1161551768, 1161519036, 1161490083, 1161478156, 1161488710, 1161516918, 1161549874, 1161572500, 1161574445, 1161554819, 1161522601, 1161492531, 1161478366, 1161486587, 1161513433, 1161546621, 1161570968, 1161575334, 1161557723, 1161526191, 1161495165, 1161478839, 1161484682, 1161510022, 1161543265, 1161569202, 1161575966, 1161560464, 1161529787, 1161497970, 1161479570, 1161483005, 1161506704, 1161539823, 1161567211, 1161576338, 1161563028, 1161533370, 1161500933, 1161480558, 1161481565, 1161503495, 1161536314, 1161565007, 1161576447, 1161565400, 1161536920, 1161504037, 1161481795, 1161480370, 1161500414, 1161532757, 1161562602, 1161576293, 1161567568, 1161540419, 1161507265, 1161483276, 1161479427, 1161497477, 1161529170, 1161560006, 1161575876, 1161569521, 1161543847, 1161510601, 1161484993, 1161478739, 1161494700, 1161525574, 1161576292, 1161562595, 1161532748, 1161500407, 1161480368, 1161481799, 1161504046, 1161536929, 1161565406, 1161576447, 1161565001, 1161536305, 1161503487, 1161481562, 1161480560, 1161500941, 1161533379, 1161563034, 1161576339, 1161567206, 1161539814, 1161506695, 1161483001, 1161479573, 1161497978, 1161529796, 1161560471, 1161575968, 1161569197, 1161543256, 1161510013, 1161484678, 1161478840, 1161495173, 1161526201, 1161557730, 1161575336, 1161570964, 1161546613, 1161513424, 1161486582, 1161478367, 1161492537, 1161522610, 1161554827, 1161574448, 1161572496, 1161549867, 1161516909, 1161488705, 1161478156, 1161490089, 1161519045, 1161551775, 1161573307, 1161573787, 1161552998, 1161520450, 1161491034, 1161478208, 1161487840, 1161515524, 1161548593, 1161571919, 1161574829, 1161555993, 1161524027, 1161493557, 1161478523, 1161485803, 1161512066, 1161545298, 1161570673, 1161546035, 1161512825, 1161486235, 1161478431, 1161492983, 1161523234, 1161555344, 1161574622, 1161572247, 1161549308, 1161516298, 1161488320, 1161478174, 1161490502, 1161519663, 1161552317, 1161573523, 1161573580, 1161552462, 1161519830, 1161490614, 1161478180, 1161488217, 1161516133, 1161549156, 1161572178, 1161574666, 1161555483, 1161523403, 1161493104, 1161478449, 1161486142, 1161512663, 1161545878, 1161570593, 1161575498, 1161558351, 1161526996, 1161495778, 1161478980, 1161484287, 1161509271, 1161542502, 1161568776, 1161576072, 1161561053, 1161530590, 1161498620, 1161479769, 1161482662, 1161505975, 1161539043, 1161566737, 1161576387, 1161563576, 1161534168, 1161501616, 1161480813, 1161481277, 1161502794, 1161535522, 1161564486, 1161576435, 1161565903, 1161537708, 1161504749, 1161482106, 1161480137, 1161499744, 1161531956, 1161562037, 1161557863, 1161526369, 1161495300, 1161478869, 1161484594, 1161509855, 1161543098, 1161569110, 1161575991, 1161560596, 1161529965, 1161498114, 1161479613, 1161482928, 1161506542, 1161539650, 1161567107, 1161576350, 1161563150, 1161533547, 1161501084, 1161480613, 1161481500, 1161503339, 1161536138, 1161564892, 1161576446, 1161565513, 1161537095, 1161504194, 1161481863, 1161480318, 1161500265, 1161532580, 1161562477, 1161576280, 1161567670, 1161540591, 1161507428, 1161483356, 1161479386, 1161497336, 1161528992, 1161559873, 1161575849, 1161569612, 1161544015, 1161510769, 1161485084, 1161478712, 1161494567, 1161525396, 1161557094, 1161575161, 1161571329, 1161547350, 1161514198, 1161487038, 1161478297, 1161491973, 1161521810, 1161554156, 1161574214, 1161572806, 1161550578, 1161517697, 1161489208, 1161478145, 1161489568, 1161518253, 1161551074, 1161573017, 1161539987, 1161506857, 1161483079, 1161479530, 1161497835, 1161529618, 1161560340, 1161575945, 1161569291, 1161543425, 1161510181, 1161484767, 1161478810, 1161495037, 1161526022, 1161557590, 1161575298, 1161571045, 1161546776, 1161513595, 1161486682, 1161478350, 1161492411, 1161522432, 1161554679, 1161574397, 1161572566, 1161550025, 1161517084, 1161488816, 1161478152, 1161489974, 1161518869, 1161551621, 1161573243, 1161573846, 1161553150, 1161520626, 1161491155, 1161478217, 1161487734, 1161515351, 1161548432, 1161571844, 1161574874, 1161556137, 1161524205, 1161493687, 1161478545, 1161485707, 1161511897, 1161545131, 1161570206, 1161575650, 1161558972, 1161527800, 1161496400, 1161479134, 1161483903, 1161508525, 1161541734, 1161568338, 1161576165, 1161561634, 1161531393, 1161499277, 1161479981, 1161482331, 1161505253, 1161538260, 1161566251, 1161576419]
+ right: [1161527296, 1161558583, 1161575556, 1161570450, 1161545600, 1161512376, 1161485978, 1161478484, 1161493321, 1161523702, 1161555727, 1161574745, 1161572056, 1161548887, 1161515841, 1161488036, 1161478192, 1161490815, 1161520127, 1161552720, 1161573681, 1161573422, 1161552060, 1161519366, 1161490303, 1161478164, 1161488504, 1161516591, 1161549576, 1161572367, 1161574539, 1161555096, 1161522935, 1161492769, 1161478399, 1161486400, 1161513112, 1161546313, 1161570813, 1161575404, 1161557987, 1161526526, 1161495419, 1161478896, 1161484516, 1161509709, 1161542947, 1161569026, 1161576013, 1161560711, 1161530122, 1161498240, 1161479652, 1161482861, 1161506401, 1161539499, 1161567015, 1161576359, 1161563257, 1161533702, 1161501216, 1161480662, 1161481444, 1161503205, 1161535986, 1161564791, 1161576446, 1161565611, 1161537248, 1161504333, 1161481923, 1161480272, 1161546888, 1161571101, 1161575272, 1161557494, 1161525900, 1161494945, 1161478791, 1161484828, 1161510295, 1161543541, 1161569354, 1161575925, 1161560250, 1161529496, 1161497737, 1161479502, 1161483132, 1161506968, 1161540104, 1161567380, 1161576318, 1161562827, 1161533081, 1161500688, 1161480468, 1161481673, 1161503751, 1161536600, 1161565193, 1161576448, 1161565215, 1161536634, 1161503781, 1161481686, 1161480458, 1161500659, 1161533046, 1161562803, 1161576315, 1161567401, 1161540138, 1161507000, 1161483148, 1161479493, 1161497710, 1161529462, 1161560223, 1161575920, 1161569372, 1161543572, 1161510327, 1161484846, 1161478785, 1161494919, 1161525866, 1161557466, 1161575264, 1161571116, 1161546920, 1161513746, 1161486771, 1161478336, 1161492302, 1161522278, 1161554548, 1161574353, 1161572629, 1161550164, 1161517237, 1161488913, 1161478150, 1161489873, 1161563233, 1161576357, 1161567035, 1161539532, 1161506431, 1161482876, 1161479643, 1161498212, 1161530087, 1161560686, 1161576008, 1161569044, 1161542980, 1161509741, 1161484533, 1161478890, 1161495393, 1161526491, 1161557958, 1161575397, 1161570829, 1161546344, 1161513145, 1161486420, 1161478396, 1161492744, 1161522900, 1161555067, 1161574529, 1161572381, 1161549607, 1161516625, 1161488525, 1161478163, 1161490280, 1161519332, 1161552028, 1161573408, 1161573692, 1161552749, 1161520162, 1161490838, 1161478194, 1161488016, 1161515807, 1161548855, 1161572040, 1161574754, 1161555756, 1161523736, 1161493346, 1161478488, 1161485961, 1161512343, 1161545569, 1161570433, 1161575563, 1161558610, 1161527331, 1161496036, 1161479043, 1161484126, 1161508962, 1161542183, 1161568596, 1161576113, 1161561297, 1161530925, 1161498893, 1161479856, 1161482523, 1161505675, 1161573621, 1161573481, 1161552212, 1161519542, 1161490421, 1161478170, 1161488394, 1161516417, 1161549417, 1161572297, 1161574589, 1161555243, 1161523112, 1161492896, 1161478418, 1161486302, 1161512941, 1161546148, 1161570730, 1161575440, 1161558124, 1161526704, 1161495555, 1161478927, 1161484429, 1161509542, 1161542779, 1161568931, 1161576035, 1161560841, 1161530300, 1161498384, 1161479696, 1161482785, 1161506238, 1161539326, 1161566909, 1161576370, 1161563378, 1161533879, 1161501368, 1161480719, 1161481380, 1161503048, 1161535809, 1161564676, 1161576441, 1161565722, 1161537423, 1161504491, 1161481992, 1161480220, 1161499986, 1161532246, 1161562243, 1161576249, 1161567860, 1161540913, 1161507735, 1161483507, 1161479313, 1161497073, 1161528659, 1161559622, 1161575796, 1161569782, 1161544330, 1161511085, 1161485257, 1161478662, 1161494320, 1161525062, 1161576330, 1161562950, 1161533258, 1161500838, 1161480523, 1161481607, 1161503595, 1161536425, 1161565079, 1161576448, 1161565329, 1161536809, 1161503938, 1161481753, 1161480404, 1161500509, 1161532869, 1161562680, 1161576302, 1161567503, 1161540310, 1161507162, 1161483226, 1161479452, 1161497567, 1161529283, 1161560090, 1161575893, 1161569463, 1161543741, 1161510495, 1161484936, 1161478757, 1161494785, 1161525687, 1161557325, 1161575225, 1161571197, 1161547084, 1161513917, 1161486872, 1161478321, 1161492176, 1161522099, 1161554400, 1161574300, 1161572696, 1161550321, 1161517412, 1161489025, 1161478147, 1161489756, 1161518539, 1161551329, 1161573124, 1161573951, 1161553434, 1161520959, 1161491382, 1161478237, 1161487537, 1161515027, 1161548130, 1161571702, 1161574957, 1161556408, 1161524540, 1161493932, 1161478589, 1161485531, 1161511581, 1161544820, 1161570912, 1161546509, 1161513316, 1161486519, 1161478378, 1161492617, 1161522723, 1161554920, 1161574479, 1161572452, 1161549765, 1161516799, 1161488635, 1161478159, 1161490164, 1161519156, 1161551873, 1161573346, 1161573751, 1161552902, 1161520338, 1161490958, 1161478202, 1161487909, 1161515635, 1161548695, 1161571966, 1161574800, 1161555901, 1161523915, 1161493475, 1161478509, 1161485863, 1161512173, 1161545402, 1161570347, 1161575596, 1161558747, 1161527509, 1161496174, 1161479077, 1161484041, 1161508794, 1161542013, 1161568498, 1161576133, 1161561426, 1161531102, 1161499039, 1161479903, 1161482450, 1161505514, 1161538544, 1161566428, 1161576409, 1161563920, 1161534675, 1161502055, 1161480982, 1161481099, 1161502352, 1161535016, 1161564149, 1161576422, 1161566219, 1161538209, 1161505206, 1161482310, 1161479995, 1161499321, 1161531445, 1161561673, 1161558263, 1161526883, 1161495691, 1161478959, 1161484342, 1161509376, 1161542612, 1161568836, 1161576059, 1161560972, 1161530478, 1161498528, 1161479741, 1161482710, 1161506077, 1161539153, 1161566804, 1161576379, 1161563499, 1161534056, 1161501520, 1161480776, 1161481316, 1161502892, 1161535633, 1161564560, 1161576438, 1161565833, 1161537597, 1161504649, 1161482061, 1161480169, 1161499838, 1161532069, 1161562116, 1161576233, 1161567961, 1161541084, 1161507899, 1161483588, 1161479274, 1161496930, 1161528479, 1161559487, 1161575766, 1161569871, 1161544497, 1161511253, 1161485350, 1161478637, 1161494186, 1161524883, 1161556684, 1161575040, 1161571553, 1161547818, 1161514694, 1161487335, 1161478259, 1161491618, 1161521301, 1161553725, 1161574059, 1161572998, 1161551028, 1161518201, 1161489535, 1161478145, 1161489241, 1161517749, 1161550624, 1161572826, 1161540482, 1161507325, 1161483305, 1161479412, 1161497426, 1161529106, 1161559959, 1161575867, 1161569554, 1161543909, 1161510663, 1161485026, 1161478729, 1161494651, 1161525509, 1161557184, 1161575185, 1161571277, 1161547247, 1161514089, 1161486974, 1161478306, 1161492054, 1161521923, 1161554252, 1161574248, 1161572764, 1161550478, 1161517586, 1161489137, 1161478146, 1161489641, 1161518364, 1161551173, 1161573059, 1161574007, 1161553585, 1161521135, 1161491504, 1161478248, 1161487432, 1161514854, 1161547968, 1161571625, 1161575001, 1161556552, 1161524718, 1161494063, 1161478613, 1161485436, 1161511410, 1161544652, 1161569953, 1161575739, 1161559361, 1161528314, 1161496801, 1161479239, 1161483664, 1161508051, 1161541245, 1161568056, 1161576219, 1161562000, 1161531904, 1161499701, 1161480122, 1161482126, 1161504796, 1161537759, 1161565936, 1161576434, 1161520515, 1161491078, 1161478211, 1161487801, 1161515460, 1161548535, 1161571893, 1161574846, 1161556047, 1161524092, 1161493605, 1161478531, 1161485769, 1161512004, 1161545236, 1161570261, 1161575629, 1161558884, 1161527687, 1161496312, 1161479112, 1161483956, 1161508630, 1161541842, 1161568400, 1161576153, 1161561553, 1161531280, 1161499185, 1161479950, 1161482377, 1161505354, 1161538370, 1161566320, 1161576415, 1161564039, 1161534852, 1161502208, 1161481042, 1161481038, 1161502197, 1161534839, 1161564030, 1161576415, 1161566327, 1161538383, 1161505366, 1161482382, 1161479947, 1161499174, 1161531267, 1161561544, 1161576151, 1161568407, 1161541855, 1161508641, 1161483962, 1161479109, 1161496302, 1161527675, 1161558875, 1161575628, 1161570269, 1161545248, 1161512016, 1161485775, 1161478529, 1161493595, 1161524080, 1161556035, 1161574843, 1161571897, 1161501672, 1161480834, 1161481254, 1161502738, 1161535458, 1161564444, 1161576435, 1161565945, 1161537772, 1161504807, 1161482131, 1161480119, 1161499691, 1161531891, 1161561990, 1161576216, 1161568061, 1161541255, 1161508063, 1161483670, 1161479237, 1161496790, 1161528302, 1161559352, 1161575738, 1161569960, 1161544664, 1161511422, 1161485443, 1161478612, 1161494054, 1161524705, 1161556541, 1161574998, 1161571630, 1161547979, 1161514866, 1161487439, 1161478247, 1161491496, 1161521123, 1161553574, 1161574003, 1161573063, 1161551184, 1161518377, 1161489649, 1161478146, 1161489129, 1161517574, 1161550467, 1161572759, 1161574251, 1161554262, 1161521935, 1161492061, 1161478307, 1161486966, 1161514077, 1161547235, 1161571271, 1161575189, 1161557196, 1161525522, 1161494661, 1161478731, 1161485021, 1161510651, 1161543897, 1161569548, 1161575868, 1161559967, 1161487076, 1161478292, 1161491928, 1161521745, 1161554101, 1161574194, 1161572831, 1161550635, 1161517761, 1161489250, 1161478144, 1161489528, 1161518188, 1161551017, 1161572993, 1161574062, 1161553736, 1161521313, 1161491627, 1161478260, 1161487328, 1161514681, 1161547806, 1161571547, 1161575043, 1161556695, 1161524896, 1161494195, 1161478638, 1161485343, 1161511241, 1161544485, 1161569864, 1161575769, 1161559496, 1161528492, 1161496941, 1161479277, 1161483583, 1161507887, 1161541072, 1161567955, 1161576234, 1161562126, 1161532082, 1161499849, 1161480173, 1161482056, 1161504638, 1161537585, 1161565825, 1161576438, 1161564568, 1161535646, 1161502904, 1161481321, 1161480772, 1161501509, 1161534043, 1161563490, 1161576379, 1161566812, 1161539165, 1161506089, 1161482715, 1161479737, 1161498520, 1161530465, 1161560962, 1161576057, 1161568843, 1161542621, 1161479147, 1161483872, 1161508465, 1161541672, 1161568302, 1161576172, 1161561681, 1161531458, 1161499331, 1161479999, 1161482305, 1161505196, 1161538196, 1161566211, 1161576422, 1161564157, 1161535028, 1161502362, 1161481103, 1161480978, 1161502044, 1161534663, 1161563911, 1161576408, 1161566436, 1161538557, 1161505526, 1161482455, 1161479899, 1161499028, 1161531090, 1161561416, 1161576132, 1161568505, 1161542025, 1161508806, 1161484047, 1161479074, 1161496164, 1161527496, 1161558737, 1161575595, 1161570354, 1161545414, 1161512186, 1161485870, 1161478507, 1161493468, 1161523903, 1161555891, 1161574799, 1161571972, 1161548707, 1161515646, 1161487916, 1161478202, 1161490949, 1161520325, 1161552891, 1161573746, 1161573351, 1161551885, 1161519169, 1161490172, 1161478159, 1161488628, 1161516786, 1161549754, 1161572447, 1161574483, 1161554931, 1161522735, 1161479199, 1161496652, 1161528122, 1161559216, 1161575706, 1161570048, 1161544831, 1161511591, 1161485537, 1161478587, 1161493923, 1161524527, 1161556398, 1161574954, 1161571707, 1161548141, 1161515039, 1161487544, 1161478236, 1161491374, 1161520946, 1161553423, 1161573947, 1161573128, 1161551340, 1161518552, 1161489764, 1161478148, 1161489017, 1161517399, 1161550309, 1161572691, 1161574304, 1161554410, 1161522112, 1161492185, 1161478322, 1161486865, 1161513905, 1161547072, 1161571191, 1161575228, 1161557337, 1161525700, 1161494794, 1161478759, 1161484931, 1161510484, 1161543730, 1161569457, 1161575896, 1161560100, 1161529296, 1161497578, 1161479455, 1161483221, 1161507151, 1161540298, 1161567496, 1161576304, 1161562688, 1161532882, 1161500520, 1161480408, 1161481748, 1161503927, 1161536798, 1161565322, 1161576448, 1161565088, 1161536438, 1161503605, 1161487224, 1161514509, 1161547644, 1161571469, 1161575085, 1161556837, 1161525074, 1161494327, 1161478664, 1161485252, 1161511073, 1161544319, 1161569775, 1161575798, 1161559631, 1161528670, 1161497081, 1161479315, 1161483501, 1161507724, 1161540900, 1161567853, 1161576251, 1161562251, 1161532259, 1161499997, 1161480224, 1161481987, 1161504479, 1161537410, 1161565714, 1161576441, 1161564684, 1161535822, 1161503058, 1161481384, 1161480715, 1161501357, 1161533866, 1161563370, 1161576369, 1161566918, 1161539338, 1161506250, 1161482790, 1161479693, 1161498375, 1161530288, 1161560833, 1161576034, 1161568939, 1161542791, 1161509554, 1161484435, 1161478925, 1161495545, 1161526692, 1161558114, 1161575438, 1161570737, 1161546160, 1161512953, 1161486309, 1161478416, 1161492887, 1161523100, 1161555232, 1161574585, 1161572301, 1161549428, 1161516429, 1161488402, 1161501891, 1161534486, 1161563792, 1161576400, 1161566543, 1161538730, 1161505686, 1161482528, 1161479852, 1161498883, 1161530912, 1161561287, 1161576111, 1161568602, 1161542195, 1161508972, 1161484132, 1161479040, 1161496026, 1161527318, 1161558600, 1161575560, 1161570439, 1161545580, 1161512356, 1161485967, 1161478486, 1161493337, 1161523724, 1161555746, 1161574751, 1161572046, 1161548867, 1161515819, 1161488023, 1161478193, 1161490829, 1161520149, 1161552738, 1161573688, 1161573413, 1161552039, 1161519345, 1161490289, 1161478164, 1161488517, 1161516613, 1161549595, 1161572376, 1161574534, 1161555078, 1161522913, 1161492753, 1161478397, 1161486413, 1161513133, 1161546333, 1161570823, 1161575400, 1161557968, 1161526504, 1161495402, 1161478892, 1161484527, 1161509729, 1161542968, 1161569038, 1161576009, 1161560695, 1161530100, 1161498222, 1161479646, 1161520769, 1161553272, 1161573891, 1161573192, 1161551496, 1161518727, 1161489880, 1161478150, 1161488905, 1161517225, 1161550151, 1161572622, 1161574356, 1161554559, 1161522289, 1161492310, 1161478337, 1161486764, 1161513734, 1161546908, 1161571111, 1161575267, 1161557476, 1161525878, 1161494928, 1161478787, 1161484840, 1161510316, 1161543561, 1161569364, 1161575922, 1161560232, 1161529474, 1161497720, 1161479496, 1161483142, 1161506988, 1161540125, 1161567393, 1161576316, 1161562812, 1161533059, 1161500669, 1161480462, 1161481681, 1161503770, 1161536623, 1161565207, 1161576448, 1161565201, 1161536613, 1161503762, 1161481678, 1161480464, 1161500677, 1161533068, 1161562818, 1161576317, 1161567388, 1161540117, 1161506980, 1161483138, 1161479499, 1161497728, 1161529483, 1161560239, 1161575923, 1161569360, 1161543552, 1161510307, 1161484834, 1161478789, 1161540729, 1161567752, 1161576266, 1161562376, 1161532437, 1161500145, 1161480275, 1161481918, 1161504321, 1161537236, 1161565603, 1161576444, 1161564800, 1161535997, 1161503214, 1161481448, 1161480658, 1161501206, 1161533689, 1161563248, 1161576359, 1161567022, 1161539511, 1161506411, 1161482866, 1161479648, 1161498231, 1161530109, 1161560702, 1161576012, 1161569032, 1161542960, 1161509721, 1161484523, 1161478894, 1161495409, 1161526513, 1161557975, 1161575401, 1161570819, 1161546324, 1161513124, 1161486408, 1161478398, 1161492760, 1161522923, 1161555086, 1161574535, 1161572373, 1161549587, 1161516603, 1161488512, 1161478164, 1161490295, 1161519354, 1161552047, 1161573416, 1161573685, 1161552731, 1161520140, 1161490823, 1161478193, 1161488028, 1161515830, 1161548875, 1161572049, 1161574749, 1161555740, 1161523715, 1161493330, 1161478485, 1161485972, 1161558462, 1161575526, 1161570524, 1161545745, 1161512526, 1161486063, 1161478465, 1161493208, 1161523546, 1161555600, 1161574704, 1161572119, 1161549027, 1161515993, 1161488130, 1161478186, 1161490710, 1161519972, 1161552586, 1161573628, 1161573474, 1161552193, 1161519521, 1161490406, 1161478169, 1161488410, 1161516438, 1161549437, 1161572306, 1161574582, 1161555225, 1161523091, 1161492880, 1161478415, 1161486314, 1161512962, 1161546168, 1161570740, 1161575436, 1161558107, 1161526683, 1161495538, 1161478923, 1161484439, 1161509563, 1161542800, 1161568943, 1161576033, 1161560825, 1161530278, 1161498366, 1161479690, 1161482794, 1161506258, 1161539347, 1161566922, 1161576368, 1161563363, 1161533857, 1161501349, 1161480712, 1161481387, 1161503066, 1161535831, 1161564690, 1161576441, 1161565709, 1161537402, 1161504471, 1161481983, 1161480226, 1161500004, 1161571029, 1161575306, 1161557617, 1161526056, 1161495063, 1161478816, 1161484749, 1161510148, 1161543392, 1161569272, 1161575947, 1161560365, 1161529653, 1161497862, 1161479538, 1161483064, 1161506826, 1161539953, 1161567290, 1161576329, 1161562935, 1161533236, 1161500819, 1161480516, 1161481615, 1161503616, 1161536447, 1161565095, 1161576449, 1161565317, 1161536788, 1161503918, 1161481744, 1161480411, 1161500527, 1161532891, 1161562695, 1161576303, 1161567491, 1161540289, 1161507142, 1161483217, 1161479457, 1161497585, 1161529305, 1161560107, 1161575897, 1161569452, 1161543720, 1161510474, 1161484925, 1161478760, 1161494801, 1161525710, 1161557343, 1161575230, 1161571187, 1161547064, 1161513896, 1161486860, 1161478323, 1161492194, 1161522121, 1161554418, 1161574306, 1161572687, 1161550301, 1161517390, 1161489011, 1161478148, 1161489770, 1161518561, 1161576347, 1161567127, 1161539684, 1161506573, 1161482943, 1161479605, 1161498087, 1161529931, 1161560570, 1161575986, 1161569126, 1161543129, 1161509887, 1161484611, 1161478863, 1161495274, 1161526335, 1161557836, 1161575365, 1161570902, 1161546489, 1161513295, 1161486507, 1161478380, 1161492633, 1161522745, 1161554939, 1161574487, 1161572444, 1161549746, 1161516777, 1161488621, 1161478159, 1161490178, 1161519178, 1161551892, 1161573354, 1161573743, 1161552883, 1161520316, 1161490943, 1161478201, 1161487921, 1161515655, 1161548715, 1161571975, 1161574795, 1161555883, 1161523893, 1161493459, 1161478506, 1161485876, 1161512195, 1161545424, 1161570358, 1161575593, 1161558730, 1161527487, 1161496157, 1161479073, 1161484051, 1161508816, 1161542034, 1161568510, 1161576131, 1161561409, 1161531081, 1161499021, 1161479897, 1161482459, 1161505534, 1161538565, 1161573535, 1161552346, 1161519697, 1161490524, 1161478175, 1161488299, 1161516264, 1161549277, 1161572233, 1161574630, 1161555371, 1161523268, 1161493008, 1161478434, 1161486216, 1161512791, 1161546003, 1161570656, 1161575472, 1161558246, 1161526861, 1161495675, 1161478955, 1161484352, 1161509396, 1161542632, 1161568850, 1161576056, 1161560955, 1161530456, 1161498511, 1161479735, 1161482719, 1161506097, 1161539174, 1161566817, 1161576378, 1161563484, 1161534034, 1161501501, 1161480769, 1161481324, 1161502911, 1161535655, 1161564574, 1161576438, 1161565820, 1161537576, 1161504629, 1161482053, 1161480175, 1161499857, 1161532092, 1161562133, 1161576235, 1161567949, 1161541063, 1161507879, 1161483578, 1161479279, 1161496948, 1161528501, 1161559503, 1161575770, 1161569860, 1161544476, 1161511233, 1161485338, 1161478640, 1161494202, 1161524905, 1161556702, 1161563058, 1161533413, 1161500970, 1161480571, 1161481549, 1161503457, 1161536271, 1161564979, 1161576447, 1161565428, 1161536963, 1161504075, 1161481812, 1161480357, 1161500378, 1161532713, 1161562571, 1161576289, 1161567593, 1161540461, 1161507305, 1161483296, 1161479417, 1161497443, 1161529128, 1161559973, 1161575872, 1161569543, 1161543888, 1161510642, 1161485015, 1161478732, 1161494667, 1161525531, 1161557201, 1161575190, 1161571267, 1161547227, 1161514068, 1161486961, 1161478308, 1161492067, 1161521944, 1161554269, 1161574254, 1161572755, 1161550459, 1161517565, 1161489123, 1161478146, 1161489656, 1161518387, 1161551193, 1161573068, 1161574000, 1161553567, 1161521114, 1161491489, 1161478247, 1161487445, 1161514875, 1161547988, 1161571634, 1161574995, 1161556534, 1161524696, 1161494047, 1161478610, 1161485447, 1161511431, 1161544672, 1161569964, 1161546653, 1161513466, 1161486607, 1161478363, 1161492508, 1161522566, 1161554790, 1161574435, 1161572514, 1161549907, 1161516952, 1161488732, 1161478155, 1161490061, 1161519002, 1161551738, 1161573291, 1161573801, 1161553035, 1161520493, 1161491063, 1161478210, 1161487815, 1161515482, 1161548555, 1161571902, 1161574840, 1161556028, 1161524071, 1161493589, 1161478528, 1161485779, 1161512026, 1161545257, 1161570272, 1161575625, 1161558867, 1161527666, 1161496295, 1161479107, 1161483967, 1161508649, 1161541863, 1161568412, 1161576150, 1161561537, 1161531259, 1161499167, 1161479944, 1161482386, 1161505375, 1161538394, 1161566334, 1161576415, 1161564024, 1161534830, 1161502189, 1161481035, 1161481045, 1161502216, 1161534861, 1161564045, 1161576416, 1161566314, 1161538362, 1161505346, 1161482373, 1161479953, 1161499192, 1161531289, 1161561559, 1161576154, 1161527039, 1161495811, 1161478988, 1161484266, 1161509231, 1161542460, 1161568752, 1161576078, 1161561085, 1161530634, 1161498656, 1161479780, 1161482644, 1161505936, 1161539001, 1161566710, 1161576387, 1161563605, 1161534211, 1161501653, 1161480827, 1161481261, 1161502758, 1161535479, 1161564457, 1161576434, 1161565931, 1161537750, 1161504788, 1161482123, 1161480125, 1161499709, 1161531913, 1161562006, 1161576218, 1161568049, 1161541234, 1161508043, 1161483660, 1161479241, 1161496807, 1161528323, 1161559368, 1161575740, 1161569949, 1161544643, 1161511401, 1161485431, 1161478615, 1161494071, 1161524729, 1161556560, 1161575003, 1161571621, 1161547961, 1161514845, 1161487427, 1161478249, 1161491511, 1161521144, 1161553593, 1161574010, 1161573055, 1161551165, 1161518355, 1161489635, 1161478146, 1161489144, 1161517595, 1161550486, 1161572767, 1161574245, 1161507468, 1161483376, 1161479377, 1161497301, 1161528949, 1161559840, 1161575842, 1161569634, 1161544056, 1161510810, 1161485107, 1161478705, 1161494534, 1161525352, 1161557059, 1161575150, 1161571346, 1161547390, 1161514240, 1161487063, 1161478294, 1161491943, 1161521766, 1161554120, 1161574201, 1161572823, 1161550616, 1161517740, 1161489236, 1161478145, 1161489542, 1161518212, 1161551037, 1161573001, 1161574056, 1161553717, 1161521291, 1161491612, 1161478259, 1161487340, 1161514702, 1161547826, 1161571557, 1161575038, 1161556677, 1161524874, 1161494179, 1161478635, 1161485355, 1161511263, 1161544507, 1161569875, 1161575765, 1161559480, 1161528470, 1161496923, 1161479272, 1161483592, 1161507907, 1161541094, 1161567966, 1161576232, 1161562110, 1161532060, 1161499830, 1161480167, 1161482065, 1161504659, 1161537606, 1161565839, 1161576438, 1161564554, 1161491184, 1161478220, 1161487708, 1161515309, 1161548393, 1161571825, 1161574885, 1161556173, 1161524249, 1161493719, 1161478551, 1161485684, 1161511856, 1161545091, 1161570186, 1161575657, 1161559004, 1161527844, 1161496433, 1161479143, 1161483883, 1161508484, 1161541693, 1161568314, 1161576170, 1161561665, 1161531436, 1161499313, 1161479993, 1161482314, 1161505215, 1161538219, 1161566225, 1161576421, 1161564142, 1161535006, 1161502343, 1161481096, 1161480985, 1161502063, 1161534684, 1161563926, 1161576409, 1161566422, 1161538535, 1161505506, 1161482446, 1161479905, 1161499048, 1161531112, 1161561432, 1161576135, 1161568493, 1161542004, 1161508786, 1161484036, 1161479079, 1161496180, 1161527518, 1161558754, 1161575598, 1161570343, 1161545394, 1161512165, 1161485859, 1161478510, 1161493483, 1161523924, 1161555909, 1161574803, 1161571963, 1161548687, 1161480886, 1161481199, 1161502602, 1161535303, 1161564340, 1161576430, 1161566040, 1161537925, 1161504947, 1161482193, 1161480075, 1161499562, 1161531737, 1161561879, 1161576202, 1161568148, 1161541405, 1161508207, 1161483743, 1161479204, 1161496668, 1161528144, 1161559233, 1161575710, 1161570037, 1161544810, 1161511570, 1161485525, 1161478590, 1161493939, 1161524549, 1161556415, 1161574962, 1161571700, 1161548121, 1161515018, 1161487531, 1161478237, 1161491388, 1161520967, 1161553442, 1161573954, 1161573120, 1161551321, 1161518530, 1161489750, 1161478147, 1161489030, 1161517421, 1161550329, 1161572699, 1161574297, 1161554392, 1161522090, 1161492170, 1161478320, 1161486877, 1161513926, 1161547092, 1161571201, 1161575223, 1161557318, 1161525678, 1161494778, 1161478755, 1161484941, 1161510504, 1161543749, 1161569470, 1161575892, 1161560084, 1161529274, 1161478280, 1161491819, 1161521589, 1161553970, 1161574147, 1161572890, 1161550773, 1161517915, 1161489349, 1161478144, 1161489428, 1161518037, 1161550882, 1161572936, 1161574111, 1161553868, 1161521468, 1161491735, 1161478271, 1161487238, 1161514530, 1161547663, 1161571479, 1161575080, 1161556820, 1161525052, 1161494311, 1161478661, 1161485261, 1161511094, 1161544339, 1161569786, 1161575795, 1161559614, 1161528649, 1161497064, 1161479311, 1161483511, 1161507744, 1161540921, 1161567865, 1161576249, 1161562236, 1161532238, 1161499979, 1161480218, 1161481995, 1161504499, 1161537433, 1161565728, 1161576441, 1161564670, 1161535800, 1161503039, 1161481376, 1161480722, 1161501375, 1161533888, 1161563384, 1161576370, 1161566904, 1161539317, 1161506230, 1161482781, 1161479698, 1161498392, 1161530309, 1161560848, 1161576038, 1161568926, 1161542770, 1161509534, 1161483799, 1161508320, 1161541522, 1161568216, 1161576188, 1161561792, 1161531614, 1161499460, 1161480041, 1161482242, 1161505056, 1161538044, 1161566116, 1161576427, 1161564260, 1161535183, 1161502497, 1161481157, 1161480926, 1161501911, 1161534508, 1161563807, 1161576401, 1161566530, 1161538709, 1161505666, 1161482519, 1161479858, 1161498900, 1161530936, 1161561304, 1161576114, 1161568592, 1161542174, 1161508951, 1161484121, 1161479044, 1161496043, 1161527340, 1161558617, 1161575564, 1161570429, 1161545560, 1161512335, 1161485955, 1161478489, 1161493353, 1161523746, 1161555763, 1161574757, 1161572037, 1161548848, 1161515798, 1161488009, 1161478194, 1161490844, 1161520170, 1161552757, 1161573695, 1161573405, 1161552020, 1161519323, 1161490274, 1161478163, 1161488531, 1161516634, 1161549615, 1161572385, 1161574527, 1161555060, 1161522891, 1161492737, 1161496528, 1161527966, 1161559097, 1161575679, 1161570125, 1161544977, 1161511739, 1161485619, 1161478567, 1161493808, 1161524371, 1161556271, 1161574916, 1161571775, 1161548284, 1161515190, 1161487636, 1161478227, 1161491269, 1161520793, 1161553291, 1161573898, 1161573184, 1161551477, 1161518706, 1161489865, 1161478150, 1161488919, 1161517246, 1161550171, 1161572631, 1161574349, 1161554542, 1161522268, 1161492295, 1161478336, 1161486776, 1161513755, 1161546929, 1161571120, 1161575262, 1161557459, 1161525856, 1161494912, 1161478784, 1161484850, 1161510336, 1161543581, 1161569376, 1161575919, 1161560216, 1161529453, 1161497702, 1161479491, 1161483151, 1161507008, 1161540146, 1161567406, 1161576314, 1161562797, 1161533037, 1161500651, 1161480455, 1161481689, 1161503789, 1161536643, 1161565221, 1161576449, 1161565188, 1161536591, 1161503743, 1161481670, 1161514358, 1161547501, 1161571400, 1161575122, 1161556962, 1161525230, 1161494443, 1161478687, 1161485169, 1161510925, 1161544171, 1161569696, 1161575823, 1161559749, 1161528827, 1161497205, 1161479350, 1161483430, 1161507582, 1161540752, 1161567764, 1161576264, 1161562361, 1161532415, 1161500127, 1161480269, 1161481926, 1161504341, 1161537257, 1161565616, 1161576444, 1161564786, 1161535976, 1161503195, 1161481440, 1161480665, 1161501224, 1161533711, 1161563263, 1161576360, 1161567009, 1161539490, 1161506392, 1161482857, 1161479654, 1161498247, 1161530131, 1161560717, 1161576013, 1161569021, 1161542939, 1161509700, 1161484512, 1161478897, 1161495426, 1161526535, 1161557992, 1161575406, 1161570809, 1161546304, 1161513103, 1161486396, 1161478400, 1161492775, 1161522943, 1161555103, 1161574541, 1161572365, 1161549568, 1161516582, 1161488498, 1161478165, 1161534331, 1161563687, 1161576394, 1161566638, 1161538882, 1161505826, 1161482593, 1161479812, 1161498755, 1161530756, 1161561174, 1161576092, 1161568686, 1161542344, 1161509117, 1161484207, 1161479011, 1161495906, 1161527162, 1161558479, 1161575530, 1161570514, 1161545725, 1161512505, 1161486051, 1161478468, 1161493224, 1161523568, 1161555617, 1161574710, 1161572110, 1161549008, 1161515972, 1161488117, 1161478187, 1161490724, 1161519994, 1161552604, 1161573636, 1161573467, 1161552174, 1161519499, 1161490392, 1161478168, 1161488421, 1161516459, 1161549456, 1161572313, 1161574576, 1161555207, 1161523069, 1161492865, 1161478413, 1161486326, 1161512983, 1161546188, 1161570750, 1161575432, 1161558091, 1161526661, 1161495522, 1161478920, 1161484450, 1161509584, 1161542820, 1161568954, 1161576030, 1161560810, 1161530256, 1161498349, 1161479685, 1161482804, 1161553139, 1161573841, 1161573248, 1161551633, 1161518882, 1161489981, 1161478153, 1161488808, 1161517071, 1161550013, 1161572561, 1161574401, 1161554689, 1161522445, 1161492421, 1161478352, 1161486676, 1161513585, 1161546766, 1161571039, 1161575301, 1161557600, 1161526035, 1161495046, 1161478813, 1161484760, 1161510169, 1161543413, 1161569283, 1161575944, 1161560348, 1161529631, 1161497845, 1161479533, 1161483073, 1161506846, 1161539974, 1161567302, 1161576327, 1161562920, 1161533214, 1161500801, 1161480509, 1161481623, 1161503632, 1161536468, 1161565107, 1161576448, 1161565301, 1161536766, 1161503899, 1161481736, 1161480417, 1161500545, 1161532912, 1161562710, 1161576305, 1161567478, 1161540268, 1161507123, 1161483207, 1161479462, 1161497603, 1161529328, 1161560123, 1161575900, 1161569441, 1161543700, 1161510454, 1161484914, 1161478764, 1161494819, 1161567663, 1161576279, 1161562487, 1161532592, 1161500276, 1161480321, 1161481858, 1161504183, 1161537082, 1161565505, 1161576446, 1161564902, 1161536151, 1161503350, 1161481505, 1161480609, 1161501073, 1161533535, 1161563143, 1161576350, 1161567114, 1161539663, 1161506553, 1161482934, 1161479610, 1161498103, 1161529953, 1161560586, 1161575989, 1161569115, 1161543108, 1161509867, 1161484600, 1161478867, 1161495290, 1161526357, 1161557853, 1161575369, 1161570891, 1161546469, 1161513274, 1161486495, 1161478382, 1161492648, 1161522766, 1161554956, 1161574492, 1161572435, 1161549727, 1161516756, 1161488608, 1161478160, 1161490192, 1161519199, 1161551911, 1161573361, 1161573736, 1161552865, 1161520295, 1161490928, 1161478200, 1161487934, 1161515677, 1161548735, 1161571984, 1161574789, 1161555865, 1161523871, 1161493444, 1161478504, 1161485888, 1161512216, 1161575496, 1161570599, 1161545890, 1161512675, 1161486149, 1161478448, 1161493095, 1161523390, 1161555471, 1161574664, 1161572184, 1161549168, 1161516145, 1161488225, 1161478180, 1161490606, 1161519818, 1161552453, 1161573577, 1161573529, 1161552328, 1161519676, 1161490510, 1161478174, 1161488312, 1161516285, 1161549296, 1161572242, 1161574624, 1161555354, 1161523247, 1161492992, 1161478432, 1161486228, 1161512812, 1161546023, 1161570667, 1161575467, 1161558229, 1161526839, 1161495658, 1161478951, 1161484363, 1161509417, 1161542650, 1161568859, 1161576053, 1161560940, 1161530434, 1161498493, 1161479730, 1161482728, 1161506117, 1161539195, 1161566829, 1161576377, 1161563470, 1161534013, 1161501482, 1161480762, 1161481332, 1161502930, 1161535677, 1161564588, 1161576439, 1161565806, 1161537555, 1161504610, 1161482044, 1161480182, 1161499874, 1161532112, 1161575339, 1161557740, 1161526213, 1161495181, 1161478842, 1161484671, 1161510001, 1161543244, 1161569191, 1161575970, 1161560481, 1161529809, 1161497988, 1161479576, 1161482996, 1161506684, 1161539802, 1161567198, 1161576340, 1161563043, 1161533392, 1161500952, 1161480564, 1161481557, 1161503476, 1161536292, 1161564993, 1161576447, 1161565414, 1161536941, 1161504056, 1161481803, 1161480364, 1161500396, 1161532736, 1161562587, 1161576291, 1161567581, 1161540440, 1161507285, 1161483286, 1161479422, 1161497460, 1161529149, 1161559990, 1161575873, 1161569532, 1161543868, 1161510622, 1161485004, 1161478736, 1161494684, 1161525552, 1161557219, 1161575195, 1161571257, 1161547207, 1161514047, 1161486949, 1161478310, 1161492082, 1161521965, 1161554287, 1161574261, 1161572747, 1161550440, 1161517544, 1161489109, 1161478146, 1161489669, 1161518407, 1161551211, 1161567219, 1161539835, 1161506715, 1161483011, 1161479567, 1161497961, 1161529774, 1161560455, 1161575965, 1161569208, 1161543277, 1161510034, 1161484689, 1161478836, 1161495155, 1161526178, 1161557713, 1161575332, 1161570976, 1161546633, 1161513445, 1161486594, 1161478365, 1161492522, 1161522588, 1161554808, 1161574441, 1161572505, 1161549885, 1161516931, 1161488718, 1161478156, 1161490075, 1161519023, 1161551758, 1161573300, 1161573794, 1161553017, 1161520471, 1161491049, 1161478209, 1161487827, 1161515503, 1161548574, 1161571910, 1161574835, 1161556010, 1161524049, 1161493573, 1161478526, 1161485791, 1161512045, 1161545277, 1161570282, 1161575621, 1161558851, 1161527644, 1161496278, 1161479103, 1161483977, 1161508670, 1161541884, 1161568425, 1161576149, 1161561522, 1161531237, 1161499149, 1161479939, 1161482395, 1161505394, 1161538413, 1161566346, 1161552481, 1161519852, 1161490629, 1161478181, 1161488204, 1161516113, 1161549136, 1161572169, 1161574672, 1161555500, 1161523424, 1161493120, 1161478452, 1161486131, 1161512643, 1161545858, 1161570582, 1161575502, 1161558368, 1161527018, 1161495795, 1161478984, 1161484276, 1161509251, 1161542481, 1161568764, 1161576075, 1161561069, 1161530612, 1161498638, 1161479775, 1161482653, 1161505958, 1161539023, 1161566723, 1161576386, 1161563590, 1161534189, 1161501634, 1161480820, 1161481269, 1161502775, 1161535500, 1161564472, 1161576435, 1161565917, 1161537729, 1161504768, 1161482114, 1161480131, 1161499726, 1161531935, 1161562021, 1161576220, 1161568036, 1161541213, 1161508023, 1161483650, 1161479246, 1161496825, 1161528344, 1161559385, 1161575744, 1161569939, 1161544623, 1161511381, 1161485420, 1161478618, 1161494086, 1161524749, 1161556576, 1161575008, 1161533569, 1161501102, 1161480620, 1161481492, 1161503320, 1161536117, 1161564878, 1161576445, 1161565526, 1161537116, 1161504214, 1161481871, 1161480311, 1161500249, 1161532559, 1161562461, 1161576277, 1161567683, 1161540612, 1161507449, 1161483366, 1161479381, 1161497319, 1161528970, 1161559856, 1161575846, 1161569623, 1161544036, 1161510789, 1161485095, 1161478708, 1161494551, 1161525376, 1161557078, 1161575155, 1161571337, 1161547370, 1161514219, 1161487051, 1161478295, 1161491958, 1161521788, 1161554138, 1161574208, 1161572815, 1161550597, 1161517718, 1161489222, 1161478145, 1161489554, 1161518231, 1161551055, 1161573009, 1161574049, 1161553699, 1161521269, 1161491597, 1161478257, 1161487353, 1161514723, 1161547846, 1161571566, 1161575033, 1161556659, 1161524852, 1161494163, 1161478632, 1161485367, 1161511282, 1161544526, 1161569886, 1161575762, 1161513616, 1161486695, 1161478348, 1161492396, 1161522411, 1161554660, 1161574391, 1161572575, 1161550043, 1161517105, 1161488829, 1161478152, 1161489960, 1161518849, 1161551604, 1161573236, 1161573853, 1161553169, 1161520648, 1161491169, 1161478219, 1161487721, 1161515330, 1161548413, 1161571835, 1161574880, 1161556155, 1161524227, 1161493703, 1161478548, 1161485696, 1161511876, 1161545112, 1161570195, 1161575653, 1161558987, 1161527822, 1161496416, 1161479138, 1161483893, 1161508505, 1161541713, 1161568326, 1161576167, 1161561649, 1161531414, 1161499295, 1161479987, 1161482322, 1161505234, 1161538239, 1161566238, 1161576420, 1161564128, 1161534985, 1161502324, 1161481088, 1161480993, 1161502082, 1161534707, 1161563940, 1161576410, 1161566409, 1161538514, 1161505486, 1161482437, 1161479911, 1161499066, 1161531133, 1161561448, 1161576136, 1161568481, 1161495932, 1161479017, 1161484190, 1161509085, 1161542311, 1161568668, 1161576097, 1161561199, 1161530790, 1161498783, 1161479821, 1161482579, 1161505796, 1161538849, 1161566617, 1161576395, 1161563712, 1161534366, 1161501787, 1161480878, 1161481207, 1161502621, 1161535324, 1161564355, 1161576430, 1161566027, 1161537903, 1161504927, 1161482185, 1161480081, 1161499579, 1161531757, 1161561896, 1161576203, 1161568136, 1161541384, 1161508187, 1161483733, 1161479208, 1161496685, 1161528166, 1161559249, 1161575713, 1161570026, 1161544790, 1161511550, 1161485514, 1161478593, 1161493955, 1161524570, 1161556433, 1161574965, 1161571688, 1161548102, 1161514997, 1161487518, 1161478239, 1161491403, 1161520990, 1161553461, 1161573961, 1161573112, 1161551302, 1161518509, 1161489736, 1161478147, 1161489044, 1161517443, 1161550348, 1161572708, 1161574291, 1161554374, 1161483446, 1161479342, 1161497177, 1161528792, 1161559722, 1161575817, 1161569713, 1161544203, 1161510958, 1161485187, 1161478682, 1161494419, 1161525198, 1161556935, 1161575115, 1161571416, 1161547533, 1161514391, 1161487154, 1161478282, 1161491834, 1161521611, 1161553988, 1161574154, 1161572882, 1161550754, 1161517893, 1161489335, 1161478144, 1161489440, 1161518057, 1161550899, 1161572943, 1161574105, 1161553850, 1161521446, 1161491720, 1161478270, 1161487249, 1161514551, 1161547683, 1161571488, 1161575075, 1161556802, 1161525030, 1161494295, 1161478658, 1161485274, 1161511114, 1161544359, 1161569799, 1161575791, 1161559598, 1161528627, 1161497047, 1161479306, 1161483521, 1161507765, 1161540943, 1161567879, 1161576247, 1161562220, 1161532216, 1161499960, 1161480211, 1161482004, 1161504519, 1161537453, 1161565741, 1161576441, 1161564656, 1161535778, 1161478229, 1161487616, 1161515157, 1161548251, 1161571759, 1161574924, 1161556299, 1161524405, 1161493833, 1161478571, 1161485601, 1161511708, 1161544944, 1161570108, 1161575685, 1161559123, 1161528001, 1161496556, 1161479175, 1161483809, 1161508340, 1161541543, 1161568228, 1161576186, 1161561777, 1161531592, 1161499442, 1161480035, 1161482251, 1161505075, 1161538065, 1161566128, 1161576427, 1161564247, 1161535161, 1161502478, 1161481149, 1161480933, 1161501928, 1161534529, 1161563821, 1161576402, 1161566517, 1161538688, 1161505646, 1161482510, 1161479864, 1161498918, 1161530955, 1161561319, 1161576118, 1161568578, 1161542153, 1161508931, 1161484111, 1161479048, 1161496059, 1161527362, 1161558633, 1161575568, 1161570418, 1161545539, 1161512314, 1161485943, 1161478491, 1161493368, 1161523767, 1161555782, 1161574763, 1161572028, 1161548828, 1161515777, 1161481145, 1161502467, 1161535148, 1161564237, 1161576425, 1161566136, 1161538078, 1161505086, 1161482256, 1161480032, 1161499432, 1161531579, 1161561769, 1161576185, 1161568235, 1161541555, 1161508352, 1161483815, 1161479172, 1161496545, 1161527988, 1161559113, 1161575682, 1161570114, 1161544956, 1161511719, 1161485608, 1161478570, 1161493824, 1161524392, 1161556290, 1161574921, 1161571764, 1161548263, 1161515169, 1161487623, 1161478228, 1161491282, 1161520812, 1161553309, 1161573906, 1161573177, 1161551458, 1161518685, 1161489851, 1161478149, 1161488932, 1161517267, 1161550190, 1161572640, 1161574345, 1161554523, 1161522246, 1161492280, 1161478334, 1161486788, 1161513777, 1161546948, 1161571130, 1161575258, 1161557442, 1161525834, 1161494896, 1161478780, 1161484861, 1161510357, 1161543602, 1161569387, 1161575915, 1161560200, 1161529431, 1161497685, 1161491711, 1161521434, 1161553838, 1161574100, 1161572948, 1161550910, 1161518069, 1161489449, 1161478144, 1161489327, 1161517881, 1161550742, 1161572877, 1161574158, 1161553999, 1161521623, 1161491843, 1161478283, 1161487146, 1161514379, 1161547521, 1161571410, 1161575117, 1161556945, 1161525209, 1161494427, 1161478684, 1161485180, 1161510946, 1161544191, 1161569707, 1161575819, 1161559732, 1161528805, 1161497187, 1161479345, 1161483440, 1161507600, 1161540772, 1161567777, 1161576264, 1161562346, 1161532393, 1161500109, 1161480263, 1161481935, 1161504360, 1161537280, 1161565630, 1161576444, 1161564772, 1161535954, 1161503176, 1161481433, 1161480672, 1161501243, 1161533734, 1161563279, 1161576361, 1161566997, 1161539469, 1161506372, 1161482848, 1161479659, 1161498265, 1161530153, 1161560733, 1161576016, 1161569010, 1161542918, 1161509680, 1161484501, 1161508175, 1161541372, 1161568129, 1161576204, 1161561904, 1161531770, 1161499589, 1161480085, 1161482180, 1161504916, 1161537891, 1161566019, 1161576431, 1161564363, 1161535337, 1161502632, 1161481211, 1161480874, 1161501776, 1161534353, 1161563702, 1161576394, 1161566624, 1161538861, 1161505807, 1161482584, 1161479817, 1161498773, 1161530777, 1161561189, 1161576096, 1161568675, 1161542323, 1161509097, 1161484196, 1161479015, 1161495924, 1161527184, 1161558496, 1161575535, 1161570505, 1161545705, 1161512484, 1161486040, 1161478470, 1161493239, 1161523590, 1161555635, 1161574716, 1161572102, 1161548988, 1161515951, 1161488104, 1161478188, 1161490740, 1161520016, 1161552624, 1161573643, 1161573459, 1161552155, 1161519478, 1161490377, 1161478168, 1161488435, 1161516481, 1161549475, 1161572323, 1161574570, 1161555189, 1161523047, 1161492849, 1161478411, 1161527809, 1161558977, 1161575651, 1161570202, 1161545123, 1161511888, 1161485703, 1161478546, 1161493694, 1161524214, 1161556145, 1161574877, 1161571840, 1161548424, 1161515342, 1161487729, 1161478218, 1161491161, 1161520636, 1161553159, 1161573848, 1161573240, 1161551613, 1161518860, 1161489967, 1161478152, 1161488821, 1161517092, 1161550032, 1161572570, 1161574395, 1161554671, 1161522423, 1161492405, 1161478350, 1161486689, 1161513605, 1161546786, 1161571050, 1161575296, 1161557583, 1161526013, 1161495030, 1161478809, 1161484771, 1161510189, 1161543433, 1161569295, 1161575941, 1161560333, 1161529609, 1161497827, 1161479528, 1161483083, 1161506866, 1161539995, 1161567315, 1161576326, 1161562905, 1161533193, 1161500783, 1161480503, 1161481631, 1161503651, 1161536489, 1161565122, 1161576448, 1161565288, 1161536745, 1161503880, 1161481728, 1161480424, 1161547358, 1161571331, 1161575158, 1161557087, 1161525387, 1161494560, 1161478710, 1161485089, 1161510778, 1161544023, 1161569617, 1161575848, 1161559866, 1161528983, 1161497329, 1161479384, 1161483360, 1161507437, 1161540599, 1161567675, 1161576278, 1161562470, 1161532571, 1161500258, 1161480315, 1161481866, 1161504202, 1161537104, 1161565518, 1161576446, 1161564888, 1161536130, 1161503331, 1161481497, 1161480616, 1161501091, 1161533556, 1161563156, 1161576350, 1161567102, 1161539641, 1161506533, 1161482924, 1161479616, 1161498121, 1161529974, 1161560602, 1161575993, 1161569104, 1161543087, 1161509847, 1161484589, 1161478870, 1161495307, 1161526378, 1161557870, 1161575374, 1161570881, 1161546448, 1161513253, 1161486482, 1161478384, 1161492664, 1161522788, 1161554974, 1161574498, 1161572427, 1161549707, 1161516735, 1161488594, 1161478160, 1161490206, 1161563582, 1161576386, 1161566731, 1161539034, 1161505967, 1161482658, 1161479772, 1161498627, 1161530599, 1161561060, 1161576073, 1161568771, 1161542493, 1161509262, 1161484283, 1161478982, 1161495785, 1161527005, 1161558358, 1161575500, 1161570588, 1161545870, 1161512654, 1161486137, 1161478450, 1161493111, 1161523412, 1161555489, 1161574668, 1161572174, 1161549148, 1161516124, 1161488212, 1161478180, 1161490621, 1161519839, 1161552471, 1161573583, 1161573520, 1161552309, 1161519654, 1161490495, 1161478174, 1161488325, 1161516307, 1161549316, 1161572250, 1161574619, 1161555336, 1161523225, 1161492976, 1161478430, 1161486240, 1161512833, 1161546044, 1161570677, 1161575463, 1161558212, 1161526817, 1161495641, 1161478947, 1161484374, 1161509437, 1161542671, 1161568871, 1161576050, 1161560924, 1161530412, 1161498475, 1161479724, 1161482737, 1161506136, 1161573790, 1161573303, 1161551768, 1161519036, 1161490083, 1161478156, 1161488710, 1161516918, 1161549874, 1161572500, 1161574445, 1161554819, 1161522601, 1161492531, 1161478366, 1161486587, 1161513433, 1161546621, 1161570968, 1161575334, 1161557723, 1161526191, 1161495165, 1161478839, 1161484682, 1161510022, 1161543265, 1161569202, 1161575966, 1161560464, 1161529787, 1161497970, 1161479570, 1161483005, 1161506704, 1161539823, 1161567211, 1161576338, 1161563028, 1161533370, 1161500933, 1161480558, 1161481565, 1161503495, 1161536314, 1161565007, 1161576447, 1161565400, 1161536920, 1161504037, 1161481795, 1161480370, 1161500414, 1161532757, 1161562602, 1161576293, 1161567568, 1161540419, 1161507265, 1161483276, 1161479427, 1161497477, 1161529170, 1161560006, 1161575876, 1161569521, 1161543847, 1161510601, 1161484993, 1161478739, 1161494700, 1161525574, 1161576292, 1161562595, 1161532748, 1161500407, 1161480368, 1161481799, 1161504046, 1161536929, 1161565406, 1161576447, 1161565001, 1161536305, 1161503487, 1161481562, 1161480560, 1161500941, 1161533379, 1161563034, 1161576339, 1161567206, 1161539814, 1161506695, 1161483001, 1161479573, 1161497978, 1161529796, 1161560471, 1161575968, 1161569197, 1161543256, 1161510013, 1161484678, 1161478840, 1161495173, 1161526201, 1161557730, 1161575336, 1161570964, 1161546613, 1161513424, 1161486582, 1161478367, 1161492537, 1161522610, 1161554827, 1161574448, 1161572496, 1161549867, 1161516909, 1161488705, 1161478156, 1161490089, 1161519045, 1161551775, 1161573307, 1161573787, 1161552998, 1161520450, 1161491034, 1161478208, 1161487840, 1161515524, 1161548593, 1161571919, 1161574829, 1161555993, 1161524027, 1161493557, 1161478523, 1161485803, 1161512066, 1161545298, 1161570673, 1161546035, 1161512825, 1161486235, 1161478431, 1161492983, 1161523234, 1161555344, 1161574622, 1161572247, 1161549308, 1161516298, 1161488320, 1161478174, 1161490502, 1161519663, 1161552317, 1161573523, 1161573580, 1161552462, 1161519830, 1161490614, 1161478180, 1161488217, 1161516133, 1161549156, 1161572178, 1161574666, 1161555483, 1161523403, 1161493104, 1161478449, 1161486142, 1161512663, 1161545878, 1161570593, 1161575498, 1161558351, 1161526996, 1161495778, 1161478980, 1161484287, 1161509271, 1161542502, 1161568776, 1161576072, 1161561053, 1161530590, 1161498620, 1161479769, 1161482662, 1161505975, 1161539043, 1161566737, 1161576387, 1161563576, 1161534168, 1161501616, 1161480813, 1161481277, 1161502794, 1161535522, 1161564486, 1161576435, 1161565903, 1161537708, 1161504749, 1161482106, 1161480137, 1161499744, 1161531956, 1161562037, 1161557863, 1161526369, 1161495300, 1161478869, 1161484594, 1161509855, 1161543098, 1161569110, 1161575991, 1161560596, 1161529965, 1161498114, 1161479613, 1161482928, 1161506542, 1161539650, 1161567107, 1161576350, 1161563150, 1161533547, 1161501084, 1161480613, 1161481500, 1161503339, 1161536138, 1161564892, 1161576446, 1161565513, 1161537095, 1161504194, 1161481863, 1161480318, 1161500265, 1161532580, 1161562477, 1161576280, 1161567670, 1161540591, 1161507428, 1161483356, 1161479386, 1161497336, 1161528992, 1161559873, 1161575849, 1161569612, 1161544015, 1161510769, 1161485084, 1161478712, 1161494567, 1161525396, 1161557094, 1161575161, 1161571329, 1161547350, 1161514198, 1161487038, 1161478297, 1161491973, 1161521810, 1161554156, 1161574214, 1161572806, 1161550578, 1161517697, 1161489208, 1161478145, 1161489568, 1161518253, 1161551074, 1161573017, 1161539987, 1161506857, 1161483079, 1161479530, 1161497835, 1161529618, 1161560340, 1161575945, 1161569291, 1161543425, 1161510181, 1161484767, 1161478810, 1161495037, 1161526022, 1161557590, 1161575298, 1161571045, 1161546776, 1161513595, 1161486682, 1161478350, 1161492411, 1161522432, 1161554679, 1161574397, 1161572566, 1161550025, 1161517084, 1161488816, 1161478152, 1161489974, 1161518869, 1161551621, 1161573243, 1161573846, 1161553150, 1161520626, 1161491155, 1161478217, 1161487734, 1161515351, 1161548432, 1161571844, 1161574874, 1161556137, 1161524205, 1161493687, 1161478545, 1161485707, 1161511897, 1161545131, 1161570206, 1161575650, 1161558972, 1161527800, 1161496400, 1161479134, 1161483903, 1161508525, 1161541734, 1161568338, 1161576165, 1161561634, 1161531393, 1161499277, 1161479981, 1161482331, 1161505253, 1161538260, 1161566251, 1161576419]
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

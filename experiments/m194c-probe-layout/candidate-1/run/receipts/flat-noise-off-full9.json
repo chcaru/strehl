@@ -1,0 +1,403 @@
+{
+  "confidence": null,
+  "decode_counts": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+  ],
+  "frame_subset_original": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "manifest_sha256": "60ae007752236191358ee45f015e04a5b5243fb7c0704d065af88fb3f74ddb44",
+  "output": {
+    "bytes": 361851,
+    "channels": 3,
+    "height": 212,
+    "path": "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-1\\run\\tiffs\\flat-noise-off-full9.tif",
+    "pixel_sha256_le": "2fc3eeb603ae1f0a8d0a9bdfb4da0e1262e260d5ce18f1e105acf564b9b485db",
+    "sample_type": "u16",
+    "sha256": "4cf945da51c2fc41715c07c20188b0329c6de60d17f5a8aa3c2928b5ae86bfcd",
+    "software": "strehl 0.0.0",
+    "width": 284
+  },
+  "plan": {
+    "canonical_native_offset": [
+      18,
+      14
+    ],
+    "config": {
+      "auto_exposure": false,
+      "bands": 3,
+      "base": "Mean",
+      "ca": "off",
+      "defect": "off",
+      "demosaic": true,
+      "exponent": 2.0,
+      "exposure_stops": 0,
+      "fallback": "Mean",
+      "fallback_k": 3,
+      "fallback_power": 4.0,
+      "gate": 2.0,
+      "gate_floor_enabled": true,
+      "hull": "InputRange",
+      "hull_from_level": 1,
+      "hull_lambda": 2.0,
+      "hull_low_only": false,
+      "mean_coarse": 0,
+      "merge": "Pyramid",
+      "photometric": "Off",
+      "resampler": "CatmullRom",
+      "restoration": "unset",
+      "select": "SoftPower",
+      "sharpen_per_octave": 1.399999976158142,
+      "significance_scale": 0.0,
+      "space": "CameraLinear"
+    },
+    "cover_fit": {
+      "k": 0.8901581355932207,
+      "kind": "Crop"
+    },
+    "crop_quad": {
+      "height": 106,
+      "width": 142,
+      "x": 9,
+      "y": 7
+    },
+    "diagnostic": null,
+    "environment": {
+      "RAYON_NUM_THREADS": "2",
+      "STREHL_DEFECT": "off",
+      "STREHL_FIX_CA": "off",
+      "STREHL_FULLRES_GATHER": "1",
+      "STREHL_PYRAMID_WORKERS": "2"
+    },
+    "full_native": [
+      320,
+      240
+    ],
+    "full_quad": [
+      160,
+      120
+    ],
+    "inputs": [
+      {
+        "bytes": 153600,
+        "index": 0,
+        "path": "frames/frame-00.cfa",
+        "sha256": "94339363f2ed812b22b0ea313d6beb7e598b9813bb02210fcce14e6073d2580b"
+      },
+      {
+        "bytes": 153600,
+        "index": 1,
+        "path": "frames/frame-01.cfa",
+        "sha256": "94339363f2ed812b22b0ea313d6beb7e598b9813bb02210fcce14e6073d2580b"
+      },
+      {
+        "bytes": 153600,
+        "index": 2,
+        "path": "frames/frame-02.cfa",
+        "sha256": "94339363f2ed812b22b0ea313d6beb7e598b9813bb02210fcce14e6073d2580b"
+      },
+      {
+        "bytes": 153600,
+        "index": 3,
+        "path": "frames/frame-03.cfa",
+        "sha256": "94339363f2ed812b22b0ea313d6beb7e598b9813bb02210fcce14e6073d2580b"
+      },
+      {
+        "bytes": 153600,
+        "index": 4,
+        "path": "frames/frame-04.cfa",
+        "sha256": "94339363f2ed812b22b0ea313d6beb7e598b9813bb02210fcce14e6073d2580b"
+      },
+      {
+        "bytes": 153600,
+        "index": 5,
+        "path": "frames/frame-05.cfa",
+        "sha256": "94339363f2ed812b22b0ea313d6beb7e598b9813bb02210fcce14e6073d2580b"
+      },
+      {
+        "bytes": 153600,
+        "index": 6,
+        "path": "frames/frame-06.cfa",
+        "sha256": "94339363f2ed812b22b0ea313d6beb7e598b9813bb02210fcce14e6073d2580b"
+      },
+      {
+        "bytes": 153600,
+        "index": 7,
+        "path": "frames/frame-07.cfa",
+        "sha256": "94339363f2ed812b22b0ea313d6beb7e598b9813bb02210fcce14e6073d2580b"
+      },
+      {
+        "bytes": 153600,
+        "index": 8,
+        "path": "frames/frame-08.cfa",
+        "sha256": "94339363f2ed812b22b0ea313d6beb7e598b9813bb02210fcce14e6073d2580b"
+      }
+    ],
+    "level_sizes": [
+      [
+        142,
+        106
+      ],
+      [
+        71,
+        53
+      ],
+      [
+        36,
+        27
+      ],
+      [
+        18,
+        14
+      ]
+    ],
+    "manifest_sha256": "60ae007752236191358ee45f015e04a5b5243fb7c0704d065af88fb3f74ddb44",
+    "noise": {
+      "black": 512.0,
+      "gain_dn_per_e": 0.25,
+      "iso": 160.0,
+      "prnu": false,
+      "provenance": "Fallback: explicitly synthetic-known coefficients; no calibration claim",
+      "read_noise_e": 4.0,
+      "variance_at_3000_dn": 751.0,
+      "white": 15360.0
+    },
+    "noise_enabled": false,
+    "normalization": {
+      "second_black_subtraction": false,
+      "tiff_u16_to_dn": 0.22656595712214847
+    },
+    "output_channels": 3,
+    "output_native": [
+      284,
+      212
+    ],
+    "placements": [
+      {
+        "original_index": 0,
+        "params": {
+          "ax": -0.6454069239380663,
+          "ay": 0.5331622415140548,
+          "g": 0.056122341212005766,
+          "rot": 0.0
+        },
+        "quad_similarity": {
+          "a_im": 0.0,
+          "a_re": 1.0561223412120058,
+          "b_im": 0.5331622415140548,
+          "b_re": -0.6454069239380663
+        },
+        "scale": 1.0561223412120058
+      },
+      {
+        "original_index": 1,
+        "params": {
+          "ax": -0.48411591998817083,
+          "ay": 0.3999218469467498,
+          "g": 0.04209703652071051,
+          "rot": 0.0
+        },
+        "quad_similarity": {
+          "a_im": 0.0,
+          "a_re": 1.0420970365207105,
+          "b_im": 0.3999218469467498,
+          "b_re": -0.48411591998817083
+        },
+        "scale": 1.0420970365207105
+      },
+      {
+        "original_index": 2,
+        "params": {
+          "ax": -0.3603542234332421,
+          "ay": 0.2976839237057217,
+          "g": 0.03133514986376018,
+          "rot": 0.0
+        },
+        "quad_similarity": {
+          "a_im": 0.0,
+          "a_re": 1.0313351498637602,
+          "b_im": 0.2976839237057217,
+          "b_re": -0.3603542234332421
+        },
+        "scale": 1.0313351498637602
+      },
+      {
+        "original_index": 3,
+        "params": {
+          "ax": -0.29835192108654063,
+          "ay": 0.24646463046279443,
+          "g": 0.025943645311873098,
+          "rot": 0.0
+        },
+        "quad_similarity": {
+          "a_im": 0.0,
+          "a_re": 1.025943645311873,
+          "b_im": 0.24646463046279443,
+          "b_re": -0.29835192108654063
+        },
+        "scale": 1.025943645311873
+      },
+      {
+        "original_index": 4,
+        "params": {
+          "ax": 0.0,
+          "ay": -0.0,
+          "g": 0.0,
+          "rot": 0.0
+        },
+        "quad_similarity": {
+          "a_im": 0.0,
+          "a_re": 1.0,
+          "b_im": -0.0,
+          "b_re": 0.0
+        },
+        "scale": 1.0
+      },
+      {
+        "original_index": 5,
+        "params": {
+          "ax": 0.22195731153496862,
+          "ay": -0.18335603996366973,
+          "g": -0.019300635785649445,
+          "rot": 0.0
+        },
+        "quad_similarity": {
+          "a_im": 0.0,
+          "a_re": 0.9806993642143506,
+          "b_im": -0.18335603996366973,
+          "b_re": 0.22195731153496862
+        },
+        "scale": 0.9806993642143506
+      },
+      {
+        "original_index": 6,
+        "params": {
+          "ax": 0.45897492765562004,
+          "ay": -0.37915320110681655,
+          "g": -0.03991086327440174,
+          "rot": 0.0
+        },
+        "quad_similarity": {
+          "a_im": 0.0,
+          "a_re": 0.9600891367255983,
+          "b_im": -0.37915320110681655,
+          "b_re": 0.45897492765562004
+        },
+        "scale": 0.9600891367255983
+      },
+      {
+        "original_index": 7,
+        "params": {
+          "ax": 0.8170215237733142,
+          "ay": -0.6749308239866508,
+          "g": -0.07104534989333167,
+          "rot": 0.0
+        },
+        "quad_similarity": {
+          "a_im": 0.0,
+          "a_re": 0.9289546501066683,
+          "b_im": -0.6749308239866508,
+          "b_re": 0.8170215237733142
+        },
+        "scale": 0.9289546501066683
+      },
+      {
+        "original_index": 8,
+        "params": {
+          "ax": 1.0896859092157225,
+          "ay": -0.9001753163086403,
+          "g": -0.09475529645354108,
+          "rot": 0.0
+        },
+        "quad_similarity": {
+          "a_im": 0.0,
+          "a_re": 0.9052447035464589,
+          "b_im": -0.9001753163086403,
+          "b_re": 1.0896859092157225
+        },
+        "scale": 0.9052447035464589
+      }
+    ],
+    "producer": {
+      "command": [
+        "experiments/m194b-known-scene/produce.py",
+        "--commission",
+        "experiments/m194b-known-scene/producer-commission-1/commission.json",
+        "--out",
+        "experiments/m194b-known-scene/producer-output-1"
+      ],
+      "expected_electrons_sha256": "b167ab9ccb763fc0ccfc66c940db08dd125939ef9d90a0c6d5b5fe8c1370455f",
+      "preregistration_sha256": "b8295044614f55db45e715d7c5ffc985e676f3104443e6fe5dcf20193e9c0129",
+      "source_sha256": {
+        "experiments/M103-halfdrift/data/truth-dense.json": "45b12d8c7106fa1c9c1ce3d5f663896a43992ff35f867fd3c6374131cb67be01",
+        "experiments/m194b-known-scene/produce.py": "c17391b26199ea70b29e4f0da12667fe1b8ca9dc355053ea49b3e8a87cc6c4a0",
+        "experiments/m25-simulator/src/strehl_sim/config.py": "507d165e405812a9fdcffbf83a026e699f844dfd88bb2af9faec6e4c12c0ba59",
+        "experiments/m25-simulator/src/strehl_sim/optics.py": "ac5a2342d5ad3e6551ca3ddade5dba8feb9ea8f555f3aa36b71c774c6868fb93",
+        "experiments/m25-simulator/src/strehl_sim/render.py": "8b842d06ab1a550d1c66263dde2969e0e390a439938e57cb54c4095a6a36118c",
+        "experiments/m25-simulator/src/strehl_sim/scene.py": "9bea8539999ca64f893505337dbbe4c32c5765bc2368508275be43eed008351f",
+        "experiments/m25-simulator/src/strehl_sim/sensor.py": "d3057d2bfe3be5c832314e3a442941ef8269dd9a9c3b35e7e100a520e975957f"
+      }
+    },
+    "reference_original_index": 4,
+    "repeat": null,
+    "roi_native": [
+      64,
+      64,
+      256,
+      176
+    ],
+    "scale_centre_native": [
+      183.0,
+      101.0
+    ],
+    "scene": "flat",
+    "schema": "m194b-consumer-plan-v1",
+    "sensor": {
+      "active_origin": [
+        2,
+        4
+      ],
+      "black": 512.0,
+      "buffer_height": 247,
+      "cfa": "RGGB",
+      "height": 240,
+      "iso": 160.0,
+      "noise_gain_dn_per_e": 0.25,
+      "read_noise_e": 4.0,
+      "stride": 327,
+      "wb": [
+        1.3333333333333333,
+        1.0,
+        1.6666666666666667
+      ],
+      "white": 15360.0,
+      "width": 320
+    },
+    "software": "strehl 0.0.0 (444eb759be03-dirty)",
+    "wb_f32": [
+      1.3333333730697632,
+      1.0,
+      1.6666666269302368
+    ]
+  },
+  "plan_sha256": "603d6f916132d3c986208812b4e24aebceb30ff536230812c86f30c4681e232a",
+  "reference_local_index": 4,
+  "reference_original_index": 4,
+  "schema": "m194b-consumer-receipt-v1"
+}

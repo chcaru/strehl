@@ -1,0 +1,14 @@
+{
+  "command": [
+    "rustfmt",
+    "--check",
+    "--edition",
+    "2024",
+    "--config",
+    "skip_children=true",
+    "experiments/m194c-probe-layout/author-tests.rs",
+    "experiments/m194c-probe-layout/independent-tests.rs"
+  ],
+  "exit_code": 0,
+  "scope": "Authored test sources; frozen legacy function preserves its source text."
+}

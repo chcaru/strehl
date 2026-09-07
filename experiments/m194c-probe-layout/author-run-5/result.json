@@ -1,0 +1,55 @@
+{
+  "schema": "m194c-author-controls-v1",
+  "build_record": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\author-run-5\\build.json",
+  "build_sha256": "8a4876025f515569b12baec9370513a2bcae779a199ce83cd790f4710faa68c0",
+  "checks": [
+    {
+      "command": [
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\author-run-5\\known-scene-tests.exe",
+        "merge_cmd::gatefloor::m194c_author_tests::",
+        "--include-ignored",
+        "--test-threads=1",
+        "--nocapture"
+      ],
+      "started_utc": "2026-09-07T10:45:28.055488+00:00",
+      "ended_utc": "2026-09-07T10:45:30.347752+00:00",
+      "exit_code": 0,
+      "log": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\author-run-5\\gather-0.log",
+      "log_sha256": "32091348114c87109d0758858ab719cd4fcc1ef60ddcb130ab8ee8d4c579e07a",
+      "environment": {
+        "STREHL_DEFECT": "off",
+        "STREHL_FIX_CA": "off",
+        "STREHL_FULLRES_GATHER": "0",
+        "STREHL_PYRAMID_WORKERS": "2",
+        "RAYON_NUM_THREADS": "2",
+        "STREHL_M194C": "1"
+      },
+      "pass": true
+    },
+    {
+      "command": [
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\author-run-5\\known-scene-tests.exe",
+        "merge_cmd::gatefloor::m194c_author_tests::",
+        "--include-ignored",
+        "--test-threads=1",
+        "--nocapture"
+      ],
+      "started_utc": "2026-09-07T10:45:30.352756+00:00",
+      "ended_utc": "2026-09-07T10:45:32.799429+00:00",
+      "exit_code": 0,
+      "log": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\author-run-5\\gather-1.log",
+      "log_sha256": "55b8cb34bbf6aa2c0c1daf290788c0bd537e115762295da5e3712f92b60bf483",
+      "environment": {
+        "STREHL_DEFECT": "off",
+        "STREHL_FIX_CA": "off",
+        "STREHL_FULLRES_GATHER": "1",
+        "STREHL_PYRAMID_WORKERS": "2",
+        "RAYON_NUM_THREADS": "2",
+        "STREHL_M194C": "1"
+      },
+      "pass": true
+    }
+  ],
+  "sources_unchanged": true,
+  "pass": true
+}

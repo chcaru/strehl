@@ -1,0 +1,7 @@
+/work/
+/__pycache__/
+*.exe
+*.pdb
+*.cfa
+*.npy
+*.tif

@@ -1,0 +1,109 @@
+rustfmt --edition 2024 --config skip_children=true --emit stdout crates\strehl-cli\src\merge_cmd\gatefloor.rs
+{
+  "schema": "m194c-scoped-format-v1",
+  "command": [
+    "rustfmt",
+    "--edition",
+    "2024",
+    "--config",
+    "skip_children=true",
+    "--emit",
+    "stdout",
+    "crates\\strehl-cli\\src\\merge_cmd\\gatefloor.rs"
+  ],
+  "exit_code": 0,
+  "source_sha256": "bcea35986c73011c20d872bddc9c0ef3ea9354101259bd3952c16976bb1c9496",
+  "owned_added_or_replaced_lines": [
+    49,
+    263,
+    264,
+    265,
+    266,
+    267,
+    268,
+    269,
+    432,
+    433,
+    434,
+    435,
+    436,
+    437,
+    438,
+    439,
+    440,
+    441,
+    442,
+    443,
+    444,
+    445,
+    446,
+    447,
+    448,
+    449,
+    450,
+    451,
+    452,
+    453,
+    454,
+    455,
+    456,
+    457,
+    458,
+    463,
+    477,
+    492,
+    493,
+    494,
+    495,
+    496,
+    497,
+    498,
+    499,
+    500,
+    501,
+    502,
+    503,
+    504,
+    505,
+    506,
+    507
+  ],
+  "inherited_format_differences": [
+    {
+      "kind": "replace",
+      "current_lines": [
+        50,
+        50
+      ],
+      "lines": [
+        "use strehl_core::pyramid::{level_sizes, LevelSize, Pyramid, Workspace};"
+      ]
+    },
+    {
+      "kind": "replace",
+      "current_lines": [
+        304,
+        305
+      ],
+      "lines": [
+        "        let mean = (self.luma.iter().map(|v| f64::from(*v)).sum::<f64>()",
+        "            / self.luma.len() as f64) as f32;"
+      ]
+    },
+    {
+      "kind": "replace",
+      "current_lines": [
+        466,
+        468
+      ],
+      "lines": [
+        "    let mut s = 0x9E37_79B9_7F4A_7C15u64",
+        "        .wrapping_mul(index as u64 + 1)",
+        "        ^ 0x2545_F491_4F6C_DD1D;"
+      ]
+    }
+  ],
+  "overlap_owned_lines": [],
+  "scope": "New gatefloor lines only; full-file formatting debt is retained.",
+  "pass": true
+}

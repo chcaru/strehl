@@ -1,0 +1,33 @@
+{
+  "schema": "m194b-consumer-command-v1",
+  "command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\work\\consumer-binaries\\b8b5fe7def374ec1bb9ffdac34bd4de0\\known-scene-tests.exe",
+    "--exact",
+    "merge_cmd::known_scene_benchmark::m194b_known_scene_consumer",
+    "--ignored",
+    "--test-threads=1",
+    "--nocapture"
+  ],
+  "exit_code": 0,
+  "pass_": true,
+  "log": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\logs\\flat-seed-739-single4.command.log",
+  "log_sha256": "0712f8dfde25f26e76a7ad2043d26a32f3fc3764f861cf65a40dbb81f0fe2816",
+  "build_sha256": "64975e805b77552f81158424de066bc26903170372af61b84cf394d6743e643f",
+  "environment": {
+    "STREHL_DEFECT": "off",
+    "STREHL_FIX_CA": "off",
+    "STREHL_FULLRES_GATHER": "1",
+    "STREHL_PYRAMID_WORKERS": "2",
+    "RAYON_NUM_THREADS": "2",
+    "STREHL_M194B_MODE": "render",
+    "STREHL_M194B_MANIFEST": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\flat\\seed-739\\manifest.json",
+    "STREHL_M194B_MANIFEST_SHA256": "2914f07d3e849954c08a6485bcc1ee6492766222d61b1ea7580a18578362b661",
+    "STREHL_M194B_PLAN": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\plans\\flat-seed-739.json",
+    "STREHL_M194B_PLAN_SHA256": "a09234392373560df537f74a3b6f59715cfea31755a3fe082dcef52c9bf91f7d",
+    "STREHL_M194B_SUBSET": "best",
+    "STREHL_M194B_OUTPUT": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\tiffs\\flat-seed-739-single4.tif",
+    "STREHL_M194B_RECEIPT": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\receipts\\flat-seed-739-single4.json"
+  },
+  "result": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\receipts\\flat-seed-739-single4.json",
+  "result_sha256": "962aa1cfff7ea41d85a38b895c47795696ad6d292749668c603f462767ada49e"
+}

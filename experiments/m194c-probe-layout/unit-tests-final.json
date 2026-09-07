@@ -1,0 +1,21 @@
+{
+  "command": [
+    "cargo",
+    "test",
+    "-p",
+    "strehl-cli",
+    "--bin",
+    "strehl",
+    "--target-dir",
+    "target/m194c-probe-layout",
+    "--",
+    "--test-threads=1"
+  ],
+  "exit_code": 0,
+  "compiling_cli": true,
+  "checking_cli": false,
+  "test_results": [
+    "test result: ok. 136 passed; 0 failed; 2 ignored; 0 measured; 0 filtered out; finished in 16.56s"
+  ],
+  "new_source_warnings": []
+}

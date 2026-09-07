@@ -1,0 +1,100 @@
+{
+  "schema": "m194c-independent-controls-v1",
+  "build_record": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\author-run-3\\build.json",
+  "build_sha256": "3cf5a31596acdf73f114776b456693a477eebcdfb3b90dd60933048e2b7a3d7a",
+  "started_utc": "2026-09-07T10:39:18.809375+00:00",
+  "runner_sha256": "e5a9e09cb3af4c759e018fad233f58cd93efa85d9c232d38904e937156c33348",
+  "prereg_sha256": "b6b4df0c7b7efb65a5235553fc166ee87ef4068321c04ce3eb4fa58240fad231",
+  "amendment_sha256": "fc8b7471792a2ec50eaf43327b7e38f6d58b714ee2f2e9323181fd9ab86836dc",
+  "dispositions": {
+    "original_sinusoid_fallback_power": "retained expected failure; equalities unpowered",
+    "checkerboard_fallback_power": "separate prospectively amended component control"
+  },
+  "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+  "checks": [
+    {
+      "gather": "0",
+      "command": [
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\author-run-3\\known-scene-tests.exe",
+        "merge_cmd::gatefloor::m194c_independent_tests::",
+        "--test-threads=1",
+        "--nocapture"
+      ],
+      "exit_code": 101,
+      "started_utc": "2026-09-07T10:39:18.832965+00:00",
+      "ended_utc": "2026-09-07T10:39:24.702275+00:00",
+      "environment": {
+        "STREHL_DEFECT": "off",
+        "STREHL_FIX_CA": "off",
+        "STREHL_FULLRES_GATHER": "0",
+        "STREHL_PYRAMID_WORKERS": "2",
+        "RAYON_NUM_THREADS": "2"
+      },
+      "log": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\independent-run-2\\gather-0.log",
+      "log_sha256": "2b7234df2803e88f1eee37aeb9606a74078b0ef5daed2868de5b0179c8723e62",
+      "evidence_lines": [
+        "test merge_cmd::gatefloor::m194c_independent_tests::independent_actual_probe_layout_and_live_metadata ... M194C_INDEPENDENT actual-probe layout-comparisons=80 seed-controls=20 warp-live=true wb-fullres=false beta0-bits=[1057619201, 1027273548]",
+        "test merge_cmd::gatefloor::m194c_independent_tests::independent_actual_writer_layout_and_power ... M194C_INDEPENDENT delivered prefix=whole fullres=false sha256=d1ce8596684100ef7bd7e022161b5cd49b80108a289cb3f70ed6946dc5ca4d86 layout-equalities=4 active/noise/warp/WB-live=true observer-on/placebo-identical=true dir=C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-cli\\../../experiments/m194c-probe-layout/independent-work\\42060-false",
+        "M194C_INDEPENDENT delivered prefix=crop fullres=false sha256=f62a0a0c46333f2b5f81b6b244937cba153fba20b41fad47aff50b94ed7cbbef layout-equalities=4 active/noise/warp/WB-live=true observer-on/placebo-identical=true dir=C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-cli\\../../experiments/m194c-probe-layout/independent-work\\42060-false",
+        "test merge_cmd::gatefloor::m194c_independent_tests::independent_sequence_layout_legacy_and_seed ... M194C_INDEPENDENT legacy-layout w=70 h=46 seed=0 layout=1 changed=3189/3220",
+        "M194C_INDEPENDENT legacy-layout w=70 h=46 seed=0 layout=2 changed=3191/3220",
+        "M194C_INDEPENDENT legacy-layout w=70 h=46 seed=17 layout=1 changed=3193/3220",
+        "M194C_INDEPENDENT legacy-layout w=70 h=46 seed=17 layout=2 changed=3204/3220",
+        "M194C_INDEPENDENT legacy-layout w=70 h=46 seed=43 layout=1 changed=3205/3220",
+        "M194C_INDEPENDENT legacy-layout w=70 h=46 seed=43 layout=2 changed=3197/3220",
+        "M194C_INDEPENDENT legacy-layout w=118 h=82 seed=0 layout=1 changed=9586/9676",
+        "M194C_INDEPENDENT legacy-layout w=118 h=82 seed=0 layout=2 changed=9576/9676",
+        "M194C_INDEPENDENT legacy-layout w=118 h=82 seed=17 layout=1 changed=9612/9676",
+        "M194C_INDEPENDENT legacy-layout w=118 h=82 seed=17 layout=2 changed=9607/9676",
+        "M194C_INDEPENDENT legacy-layout w=118 h=82 seed=43 layout=1 changed=9609/9676",
+        "M194C_INDEPENDENT legacy-layout w=118 h=82 seed=43 layout=2 changed=9619/9676",
+        "M194C_INDEPENDENT sampler comparisons=12 legacy-packed=6 seed-live=6"
+      ],
+      "pass": false
+    },
+    {
+      "gather": "1",
+      "command": [
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\author-run-3\\known-scene-tests.exe",
+        "merge_cmd::gatefloor::m194c_independent_tests::",
+        "--test-threads=1",
+        "--nocapture"
+      ],
+      "exit_code": 101,
+      "started_utc": "2026-09-07T10:39:24.707722+00:00",
+      "ended_utc": "2026-09-07T10:39:32.200348+00:00",
+      "environment": {
+        "STREHL_DEFECT": "off",
+        "STREHL_FIX_CA": "off",
+        "STREHL_FULLRES_GATHER": "1",
+        "STREHL_PYRAMID_WORKERS": "2",
+        "RAYON_NUM_THREADS": "2"
+      },
+      "log": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\independent-run-2\\gather-1.log",
+      "log_sha256": "c825e25225d732934144aa37b40bc74f6d645d9e2992431864c685cd75ab1e24",
+      "evidence_lines": [
+        "test merge_cmd::gatefloor::m194c_independent_tests::independent_actual_probe_layout_and_live_metadata ... M194C_INDEPENDENT actual-probe layout-comparisons=80 seed-controls=20 warp-live=true wb-fullres=true beta0-bits=[1060348518, 1026457683]",
+        "test merge_cmd::gatefloor::m194c_independent_tests::independent_actual_writer_layout_and_power ... M194C_INDEPENDENT delivered prefix=whole fullres=true sha256=eea98d1d80c9805042a8ecbd4629d720c5f001e11a048448d683f80ed49f2070 layout-equalities=4 active/noise/warp/WB-live=true observer-on/placebo-identical=true dir=C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-cli\\../../experiments/m194c-probe-layout/independent-work\\20568-true",
+        "M194C_INDEPENDENT delivered prefix=crop fullres=true sha256=1eb75211f1f9ee5870c94b55e31e0631949e86dff5e77581e5a8b9d34ee55151 layout-equalities=4 active/noise/warp/WB-live=true observer-on/placebo-identical=true dir=C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-cli\\../../experiments/m194c-probe-layout/independent-work\\20568-true",
+        "test merge_cmd::gatefloor::m194c_independent_tests::independent_sequence_layout_legacy_and_seed ... M194C_INDEPENDENT legacy-layout w=70 h=46 seed=0 layout=1 changed=3189/3220",
+        "M194C_INDEPENDENT legacy-layout w=70 h=46 seed=0 layout=2 changed=3191/3220",
+        "M194C_INDEPENDENT legacy-layout w=70 h=46 seed=17 layout=1 changed=3193/3220",
+        "M194C_INDEPENDENT legacy-layout w=70 h=46 seed=17 layout=2 changed=3204/3220",
+        "M194C_INDEPENDENT legacy-layout w=70 h=46 seed=43 layout=1 changed=3205/3220",
+        "M194C_INDEPENDENT legacy-layout w=70 h=46 seed=43 layout=2 changed=3197/3220",
+        "M194C_INDEPENDENT legacy-layout w=118 h=82 seed=0 layout=1 changed=9586/9676",
+        "M194C_INDEPENDENT legacy-layout w=118 h=82 seed=0 layout=2 changed=9576/9676",
+        "M194C_INDEPENDENT legacy-layout w=118 h=82 seed=17 layout=1 changed=9612/9676",
+        "M194C_INDEPENDENT legacy-layout w=118 h=82 seed=17 layout=2 changed=9607/9676",
+        "M194C_INDEPENDENT legacy-layout w=118 h=82 seed=43 layout=1 changed=9609/9676",
+        "M194C_INDEPENDENT legacy-layout w=118 h=82 seed=43 layout=2 changed=9619/9676",
+        "M194C_INDEPENDENT sampler comparisons=12 legacy-packed=6 seed-live=6"
+      ],
+      "pass": false
+    }
+  ],
+  "pass_": false,
+  "compiled_source_count": 102,
+  "sources_unchanged": true,
+  "ended_utc": "2026-09-07T10:39:32.218323+00:00"
+}

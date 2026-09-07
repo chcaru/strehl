@@ -1,0 +1,106 @@
+{
+  "schema": "m194c-candidate-controller-v1",
+  "status": "complete",
+  "command": [
+    "experiments/m194c-probe-layout/run-candidate.py",
+    "--out",
+    "experiments/m194c-probe-layout/candidate-2"
+  ],
+  "started_utc": "2026-09-07T10:45:18.644246+00:00",
+  "baseline_commit": "444eb759be0358cda25e97d4375f977a039efe6a",
+  "baseline_index_sha256": "37f99736bd32dfb4891bd8fa2b033cacc2c58e9265515fa53cb5921dd80d9c08",
+  "frozen_m194b_files": {
+    "consumer-run.py": "ca2e635e4bae833b29c8254a4c4932adc3f46fd86e2a6e60587630b1cd23572c",
+    "run-baseline.py": "3b813f181ad1fe4f6cf8801ce66cc2349f45e8f7d7fdaa42a08a18890b68e8ae",
+    "score.py": "d292c8623827eb960bc28dc341398c7e164f5c14cd31af74663ee24c1ff5b5dd",
+    "score-benchmark.py": "eccbd41383ebcb46d865aef6745b39cafe91dab9294ea109b3a83981388fa80b",
+    "producer-output-1/producer-result.json": "544d47dbc0fdebcf220094ca53434ca49abfee62f55febec27b36f58c24087cc",
+    "producer-commission-1/commission.json": "0a8eb43a53d8f44a6e803f531fd2e83d12b7a59e280440e730dc6ea6523b50d5"
+  },
+  "supplemental_before": {
+    "experiments/m194c-probe-layout/author-tests.rs": "6eb9940f98e7e21012ae83011fdc30d290654cdd55dafd320ad3f9918e6ad3bc",
+    "experiments/m194c-probe-layout/compare-candidate.py": "71991f3296f85d3e0343a87d1c8c50b0b38141de7be9d70d9e26c02c4b86422a",
+    "experiments/m194c-probe-layout/comparison-preregister.md": "2eb468227fef7d6bbcaf09753551fa30a605c9e6405bd600593ba81d01c46e0f",
+    "experiments/m194c-probe-layout/independent-tests.rs": "72accd1598756d13e340947ded9c27f40c65420bd137c593b962131ddf8dc58d",
+    "experiments/m194c-probe-layout/legacy-fill-noise.rs": "ffdc647077cb18f9161b8cc6e04f53d155220bc817adbf2a4da1b3d9b4c47388",
+    "experiments/m194c-probe-layout/legacy-source.json": "10ff730eb799f0a4ad0ebeb667cb5d923c43a4993d2a233af03049cb8b3ca4e1",
+    "experiments/m194c-probe-layout/preregister.md": "57dfbbe540526f9b091c7d139e0a274d1b4fcc5919ba467b78468f4317391dee",
+    "experiments/m194c-probe-layout/run-candidate.py": "c47cc1d52cc4a9f5756e8dc1fd39d4e2d601c574a9f5ea815aba131de19f9c23"
+  },
+  "supplemental_snapshots_root": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\supplemental-sources",
+  "commands": [
+    {
+      "command": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-X",
+        "utf8",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\consumer-run.py",
+        "build",
+        "--build-record",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\build.json"
+      ],
+      "exit_code": 0,
+      "log": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\build-controller.log",
+      "log_sha256": "e460dfacc162f96afa5709806d421a49bdd4f8d7e5469a703d0c179a3d3bb301"
+    },
+    {
+      "command": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-X",
+        "utf8",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\run-baseline.py",
+        "--build-record",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\build.json",
+        "--build-record-sha",
+        "64975e805b77552f81158424de066bc26903170372af61b84cf394d6743e643f",
+        "--producer-result",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\producer-result.json",
+        "--producer-result-sha",
+        "544d47dbc0fdebcf220094ca53434ca49abfee62f55febec27b36f58c24087cc",
+        "--producer-commission",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-commission-1\\commission.json",
+        "--producer-commission-sha",
+        "0a8eb43a53d8f44a6e803f531fd2e83d12b7a59e280440e730dc6ea6523b50d5",
+        "--out",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run"
+      ],
+      "exit_code": 0,
+      "log": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\render-controller.log",
+      "log_sha256": "8c63c41b51bdb45609247ed08943134ade4161b0900e68fee98549df62e1d6a6"
+    },
+    {
+      "command": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-X",
+        "utf8",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\score-benchmark.py",
+        "--index",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\run-index.json",
+        "--expected-index-sha",
+        "71b2ba05ddc23fc78640aa1f9b53ea3b12ddac0f1fa955d1ee8cdf8428fda6ab",
+        "--out",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\score.json"
+      ],
+      "exit_code": 0,
+      "log": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\score-controller.log",
+      "log_sha256": "44cf0f92caf0553c63d3709fe48584d69f5d0dfbefa8300b59d7237a89618065"
+    }
+  ],
+  "build_sha256": "64975e805b77552f81158424de066bc26903170372af61b84cf394d6743e643f",
+  "changed_compiler_inputs": [
+    "crates/strehl-cli/src/merge_cmd/gatefloor.rs"
+  ],
+  "index_sha256": "71b2ba05ddc23fc78640aa1f9b53ea3b12ddac0f1fa955d1ee8cdf8428fda6ab",
+  "score_sha256": "5963b7b5804e9b726bd0cb4ee561dd857c45b26c996625794d53b81d3aa83428",
+  "supplemental_after": {
+    "experiments/m194c-probe-layout/author-tests.rs": "6eb9940f98e7e21012ae83011fdc30d290654cdd55dafd320ad3f9918e6ad3bc",
+    "experiments/m194c-probe-layout/compare-candidate.py": "71991f3296f85d3e0343a87d1c8c50b0b38141de7be9d70d9e26c02c4b86422a",
+    "experiments/m194c-probe-layout/comparison-preregister.md": "2eb468227fef7d6bbcaf09753551fa30a605c9e6405bd600593ba81d01c46e0f",
+    "experiments/m194c-probe-layout/independent-tests.rs": "72accd1598756d13e340947ded9c27f40c65420bd137c593b962131ddf8dc58d",
+    "experiments/m194c-probe-layout/legacy-fill-noise.rs": "ffdc647077cb18f9161b8cc6e04f53d155220bc817adbf2a4da1b3d9b4c47388",
+    "experiments/m194c-probe-layout/legacy-source.json": "10ff730eb799f0a4ad0ebeb667cb5d923c43a4993d2a233af03049cb8b3ca4e1",
+    "experiments/m194c-probe-layout/preregister.md": "57dfbbe540526f9b091c7d139e0a274d1b4fcc5919ba467b78468f4317391dee",
+    "experiments/m194c-probe-layout/run-candidate.py": "c47cc1d52cc4a9f5756e8dc1fd39d4e2d601c574a9f5ea815aba131de19f9c23"
+  },
+  "completed_utc": "2026-09-07T10:45:52.326263+00:00"
+}

@@ -1,0 +1,829 @@
+{
+  "schema": "m194c-independent-controls-v1",
+  "build_record": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\author-run-5\\build.json",
+  "build_sha256": "8a4876025f515569b12baec9370513a2bcae779a199ce83cd790f4710faa68c0",
+  "started_utc": "2026-09-07T10:45:55.735084+00:00",
+  "runner_sha256": "e1932ab3293ef73d8c179302c2e019787c68a7c0ec71f3d5f359bc87da44bde6",
+  "prereg_sha256": "b6b4df0c7b7efb65a5235553fc166ee87ef4068321c04ce3eb4fa58240fad231",
+  "amendment_sha256": "fc8b7471792a2ec50eaf43327b7e38f6d58b714ee2f2e9323181fd9ab86836dc",
+  "amendment_2_sha256": "e5b911cb7ce091e352e811ef090a55db8000b523459fd7ced3a82cc00a99bf00",
+  "dispositions": {
+    "original_sinusoid_fallback_power": "retained omitted-reset expected failure; equalities unpowered",
+    "checkerboard_fallback_power": "separate component control with corrected next_frame lifecycle",
+    "raw_NaN": "direct core fault injection, not production finite-prefix caller fallback",
+    "stats_flags": "inert options in prepared pyramid path; not active observer commissioning"
+  },
+  "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+  "checks": [
+    {
+      "gather": "0",
+      "command": [
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\author-run-5\\known-scene-tests.exe",
+        "merge_cmd::gatefloor::m194c_independent_tests::",
+        "--test-threads=1",
+        "--nocapture"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-09-07T10:45:55.760251+00:00",
+      "ended_utc": "2026-09-07T10:46:01.332890+00:00",
+      "environment": {
+        "STREHL_DEFECT": "off",
+        "STREHL_FIX_CA": "off",
+        "STREHL_FULLRES_GATHER": "0",
+        "STREHL_PYRAMID_WORKERS": "2",
+        "RAYON_NUM_THREADS": "2"
+      },
+      "log": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\independent-run-4\\gather-0.log",
+      "log_sha256": "9a5a63722683eca90938d511371b61eba2bd46f7b48447853dce71748000d1ee",
+      "evidence_lines": [
+        "test merge_cmd::gatefloor::m194c_independent_tests::independent_actual_probe_layout_and_live_metadata ... M194C_INDEPENDENT actual-probe layout-comparisons=80 seed-controls=20 warp-live=true wb-fullres=false beta0-bits=[1057619201, 1027273548]",
+        "test merge_cmd::gatefloor::m194c_independent_tests::independent_actual_writer_layout_and_power ... M194C_INDEPENDENT delivered prefix=whole fullres=false sha256=d1ce8596684100ef7bd7e022161b5cd49b80108a289cb3f70ed6946dc5ca4d86 layout-equalities=4 active/noise/warp/WB-live=true observer-on/placebo-identical=true dir=C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-cli\\../../experiments/m194c-probe-layout/independent-work\\27348-false",
+        "M194C_INDEPENDENT delivered prefix=crop fullres=false sha256=f62a0a0c46333f2b5f81b6b244937cba153fba20b41fad47aff50b94ed7cbbef layout-equalities=4 active/noise/warp/WB-live=true observer-on/placebo-identical=true dir=C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-cli\\../../experiments/m194c-probe-layout/independent-work\\27348-false",
+        "test merge_cmd::gatefloor::m194c_independent_tests::independent_empty_nan_and_real_merge_fallback ... M194C_INDEPENDENT additive-checkerboard None/empty-length-fallback=true raw-NaN-core-fault-means=true finite-floor-live=true variance-live=true mean-sites=[3052.0, 2948.0] selected-sites=[3110.0, 2890.0]",
+        "test merge_cmd::gatefloor::m194c_independent_tests::independent_sequence_layout_legacy_and_seed ... M194C_INDEPENDENT legacy-layout w=70 h=46 seed=0 layout=1 changed=3189/3220",
+        "M194C_INDEPENDENT legacy-layout w=70 h=46 seed=0 layout=2 changed=3191/3220",
+        "M194C_INDEPENDENT legacy-layout w=70 h=46 seed=17 layout=1 changed=3193/3220",
+        "M194C_INDEPENDENT legacy-layout w=70 h=46 seed=17 layout=2 changed=3204/3220",
+        "M194C_INDEPENDENT legacy-layout w=70 h=46 seed=43 layout=1 changed=3205/3220",
+        "M194C_INDEPENDENT legacy-layout w=70 h=46 seed=43 layout=2 changed=3197/3220",
+        "M194C_INDEPENDENT legacy-layout w=118 h=82 seed=0 layout=1 changed=9586/9676",
+        "M194C_INDEPENDENT legacy-layout w=118 h=82 seed=0 layout=2 changed=9576/9676",
+        "M194C_INDEPENDENT legacy-layout w=118 h=82 seed=17 layout=1 changed=9612/9676",
+        "M194C_INDEPENDENT legacy-layout w=118 h=82 seed=17 layout=2 changed=9607/9676",
+        "M194C_INDEPENDENT legacy-layout w=118 h=82 seed=43 layout=1 changed=9609/9676",
+        "M194C_INDEPENDENT legacy-layout w=118 h=82 seed=43 layout=2 changed=9619/9676",
+        "M194C_INDEPENDENT sampler comparisons=12 legacy-packed=6 seed-live=6"
+      ],
+      "pass": true,
+      "tiffs": {
+        "crop-active": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-cli\\..\\..\\experiments\\m194c-probe-layout\\independent-work\\27348-false\\crop-active.tif",
+          "sha256": "c4351e903b00575523c4a2b9d70733c4849fa99c6e21cda97a43d52346ea7040",
+          "bytes": 210267,
+          "shape": [
+            156,
+            224,
+            3
+          ],
+          "pixel_sha256": "bbaa19866c83b84cc1f57c766f405927f2eb7005caadde758791892e62fd8829",
+          "software": "strehl 0.0.0",
+          "description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+          "minimum": 13026,
+          "maximum": 26506
+        },
+        "crop-baseline": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-cli\\..\\..\\experiments\\m194c-probe-layout\\independent-work\\27348-false\\crop-baseline.tif",
+          "sha256": "f62a0a0c46333f2b5f81b6b244937cba153fba20b41fad47aff50b94ed7cbbef",
+          "bytes": 210267,
+          "shape": [
+            156,
+            224,
+            3
+          ],
+          "pixel_sha256": "2e218161a781e56b30ce314f3de897d6c40bf5db73d9a74b1435cb23739883a3",
+          "software": "strehl 0.0.0",
+          "description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+          "minimum": 12143,
+          "maximum": 25049
+        },
+        "crop-layout1": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-cli\\..\\..\\experiments\\m194c-probe-layout\\independent-work\\27348-false\\crop-layout1.tif",
+          "sha256": "f62a0a0c46333f2b5f81b6b244937cba153fba20b41fad47aff50b94ed7cbbef",
+          "bytes": 210267,
+          "shape": [
+            156,
+            224,
+            3
+          ],
+          "pixel_sha256": "2e218161a781e56b30ce314f3de897d6c40bf5db73d9a74b1435cb23739883a3",
+          "software": "strehl 0.0.0",
+          "description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+          "minimum": 12143,
+          "maximum": 25049
+        },
+        "crop-layout2": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-cli\\..\\..\\experiments\\m194c-probe-layout\\independent-work\\27348-false\\crop-layout2.tif",
+          "sha256": "f62a0a0c46333f2b5f81b6b244937cba153fba20b41fad47aff50b94ed7cbbef",
+          "bytes": 210267,
+          "shape": [
+            156,
+            224,
+            3
+          ],
+          "pixel_sha256": "2e218161a781e56b30ce314f3de897d6c40bf5db73d9a74b1435cb23739883a3",
+          "software": "strehl 0.0.0",
+          "description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+          "minimum": 12143,
+          "maximum": 25049
+        },
+        "crop-noise": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-cli\\..\\..\\experiments\\m194c-probe-layout\\independent-work\\27348-false\\crop-noise.tif",
+          "sha256": "03de000adc60322fb48ac4888a14f825f14784d4238b7da7b8d6b4625412e2f2",
+          "bytes": 210267,
+          "shape": [
+            156,
+            224,
+            3
+          ],
+          "pixel_sha256": "4fd3ea1f9f4d213481c14ec93965f7984814a13abd56cb60fe0a362f16c77540",
+          "software": "strehl 0.0.0",
+          "description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+          "minimum": 12138,
+          "maximum": 25062
+        },
+        "crop-observer1": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-cli\\..\\..\\experiments\\m194c-probe-layout\\independent-work\\27348-false\\crop-observer1.tif",
+          "sha256": "f62a0a0c46333f2b5f81b6b244937cba153fba20b41fad47aff50b94ed7cbbef",
+          "bytes": 210267,
+          "shape": [
+            156,
+            224,
+            3
+          ],
+          "pixel_sha256": "2e218161a781e56b30ce314f3de897d6c40bf5db73d9a74b1435cb23739883a3",
+          "software": "strehl 0.0.0",
+          "description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+          "minimum": 12143,
+          "maximum": 25049
+        },
+        "crop-observer2": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-cli\\..\\..\\experiments\\m194c-probe-layout\\independent-work\\27348-false\\crop-observer2.tif",
+          "sha256": "f62a0a0c46333f2b5f81b6b244937cba153fba20b41fad47aff50b94ed7cbbef",
+          "bytes": 210267,
+          "shape": [
+            156,
+            224,
+            3
+          ],
+          "pixel_sha256": "2e218161a781e56b30ce314f3de897d6c40bf5db73d9a74b1435cb23739883a3",
+          "software": "strehl 0.0.0",
+          "description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+          "minimum": 12143,
+          "maximum": 25049
+        },
+        "crop-poison1": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-cli\\..\\..\\experiments\\m194c-probe-layout\\independent-work\\27348-false\\crop-poison1.tif",
+          "sha256": "f62a0a0c46333f2b5f81b6b244937cba153fba20b41fad47aff50b94ed7cbbef",
+          "bytes": 210267,
+          "shape": [
+            156,
+            224,
+            3
+          ],
+          "pixel_sha256": "2e218161a781e56b30ce314f3de897d6c40bf5db73d9a74b1435cb23739883a3",
+          "software": "strehl 0.0.0",
+          "description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+          "minimum": 12143,
+          "maximum": 25049
+        },
+        "crop-poison2": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-cli\\..\\..\\experiments\\m194c-probe-layout\\independent-work\\27348-false\\crop-poison2.tif",
+          "sha256": "f62a0a0c46333f2b5f81b6b244937cba153fba20b41fad47aff50b94ed7cbbef",
+          "bytes": 210267,
+          "shape": [
+            156,
+            224,
+            3
+          ],
+          "pixel_sha256": "2e218161a781e56b30ce314f3de897d6c40bf5db73d9a74b1435cb23739883a3",
+          "software": "strehl 0.0.0",
+          "description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+          "minimum": 12143,
+          "maximum": 25049
+        },
+        "crop-single-site": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-cli\\..\\..\\experiments\\m194c-probe-layout\\independent-work\\27348-false\\crop-single-site.tif",
+          "sha256": "e48114aab57ba41c79c3f953c6008ec18ed93c179f29c4be0cd60c4659297a89",
+          "bytes": 210267,
+          "shape": [
+            156,
+            224,
+            3
+          ],
+          "pixel_sha256": "72c1154a2e328ff3864fac822421a7e3a936b0cf882ee616ab71636611d283b2",
+          "software": "strehl 0.0.0",
+          "description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+          "minimum": 12143,
+          "maximum": 25144
+        },
+        "crop-warp": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-cli\\..\\..\\experiments\\m194c-probe-layout\\independent-work\\27348-false\\crop-warp.tif",
+          "sha256": "fb2553882b78793f6168b3f778934c70723cd176cd3db65920a8aa0aa4d8abb3",
+          "bytes": 210267,
+          "shape": [
+            156,
+            224,
+            3
+          ],
+          "pixel_sha256": "5f62b3e31943c6b516aaa86ec0834c5c5b05c5917a36042b27e06c079e9bcb13",
+          "software": "strehl 0.0.0",
+          "description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+          "minimum": 12140,
+          "maximum": 25046
+        },
+        "crop-wb": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-cli\\..\\..\\experiments\\m194c-probe-layout\\independent-work\\27348-false\\crop-wb.tif",
+          "sha256": "09ddc3de49b787d11687af8673950bcc00bd916f1d6eaeff729d73f3c8da9e20",
+          "bytes": 210267,
+          "shape": [
+            156,
+            224,
+            3
+          ],
+          "pixel_sha256": "c41b0890cc52dfd0cb2545ea81b7c3333108731aa70a637e7a4bf66a1a9e29c4",
+          "software": "strehl 0.0.0",
+          "description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+          "minimum": 8589,
+          "maximum": 27319
+        },
+        "whole-active": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-cli\\..\\..\\experiments\\m194c-probe-layout\\independent-work\\27348-false\\whole-active.tif",
+          "sha256": "34e391166725fba769b997b8a96d4e729a9b17271d34fdc7cca1f32f7a882f6e",
+          "bytes": 312963,
+          "shape": [
+            190,
+            274,
+            3
+          ],
+          "pixel_sha256": "a580be120c784a01abfd81664aa96d1d5ecc48d3e3d41d95d2538ee818817cd7",
+          "software": "strehl 0.0.0",
+          "description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+          "minimum": 0,
+          "maximum": 30293
+        },
+        "whole-baseline": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-cli\\..\\..\\experiments\\m194c-probe-layout\\independent-work\\27348-false\\whole-baseline.tif",
+          "sha256": "d1ce8596684100ef7bd7e022161b5cd49b80108a289cb3f70ed6946dc5ca4d86",
+          "bytes": 312963,
+          "shape": [
+            190,
+            274,
+            3
+          ],
+          "pixel_sha256": "f3cfadafdb96645582ccede7f493a07571c8c9b82234f8b3c713aad81e986d52",
+          "software": "strehl 0.0.0",
+          "description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+          "minimum": 0,
+          "maximum": 28547
+        },
+        "whole-layout1": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-cli\\..\\..\\experiments\\m194c-probe-layout\\independent-work\\27348-false\\whole-layout1.tif",
+          "sha256": "d1ce8596684100ef7bd7e022161b5cd49b80108a289cb3f70ed6946dc5ca4d86",
+          "bytes": 312963,
+          "shape": [
+            190,
+            274,
+            3
+          ],
+          "pixel_sha256": "f3cfadafdb96645582ccede7f493a07571c8c9b82234f8b3c713aad81e986d52",
+          "software": "strehl 0.0.0",
+          "description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+          "minimum": 0,
+          "maximum": 28547
+        },
+        "whole-layout2": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-cli\\..\\..\\experiments\\m194c-probe-layout\\independent-work\\27348-false\\whole-layout2.tif",
+          "sha256": "d1ce8596684100ef7bd7e022161b5cd49b80108a289cb3f70ed6946dc5ca4d86",
+          "bytes": 312963,
+          "shape": [
+            190,
+            274,
+            3
+          ],
+          "pixel_sha256": "f3cfadafdb96645582ccede7f493a07571c8c9b82234f8b3c713aad81e986d52",
+          "software": "strehl 0.0.0",
+          "description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+          "minimum": 0,
+          "maximum": 28547
+        },
+        "whole-noise": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-cli\\..\\..\\experiments\\m194c-probe-layout\\independent-work\\27348-false\\whole-noise.tif",
+          "sha256": "970834503e2f32f1502a377b4d1bfe00c4f8192de19113495849c05c370d30cc",
+          "bytes": 312963,
+          "shape": [
+            190,
+            274,
+            3
+          ],
+          "pixel_sha256": "6a85cede3a4b969d1a9eca6a07d1160a327def42c7e73ee5b1fe4bd9b47d55d2",
+          "software": "strehl 0.0.0",
+          "description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+          "minimum": 0,
+          "maximum": 28423
+        },
+        "whole-observer1": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-cli\\..\\..\\experiments\\m194c-probe-layout\\independent-work\\27348-false\\whole-observer1.tif",
+          "sha256": "d1ce8596684100ef7bd7e022161b5cd49b80108a289cb3f70ed6946dc5ca4d86",
+          "bytes": 312963,
+          "shape": [
+            190,
+            274,
+            3
+          ],
+          "pixel_sha256": "f3cfadafdb96645582ccede7f493a07571c8c9b82234f8b3c713aad81e986d52",
+          "software": "strehl 0.0.0",
+          "description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+          "minimum": 0,
+          "maximum": 28547
+        },
+        "whole-observer2": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-cli\\..\\..\\experiments\\m194c-probe-layout\\independent-work\\27348-false\\whole-observer2.tif",
+          "sha256": "d1ce8596684100ef7bd7e022161b5cd49b80108a289cb3f70ed6946dc5ca4d86",
+          "bytes": 312963,
+          "shape": [
+            190,
+            274,
+            3
+          ],
+          "pixel_sha256": "f3cfadafdb96645582ccede7f493a07571c8c9b82234f8b3c713aad81e986d52",
+          "software": "strehl 0.0.0",
+          "description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+          "minimum": 0,
+          "maximum": 28547
+        },
+        "whole-poison1": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-cli\\..\\..\\experiments\\m194c-probe-layout\\independent-work\\27348-false\\whole-poison1.tif",
+          "sha256": "d1ce8596684100ef7bd7e022161b5cd49b80108a289cb3f70ed6946dc5ca4d86",
+          "bytes": 312963,
+          "shape": [
+            190,
+            274,
+            3
+          ],
+          "pixel_sha256": "f3cfadafdb96645582ccede7f493a07571c8c9b82234f8b3c713aad81e986d52",
+          "software": "strehl 0.0.0",
+          "description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+          "minimum": 0,
+          "maximum": 28547
+        },
+        "whole-poison2": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-cli\\..\\..\\experiments\\m194c-probe-layout\\independent-work\\27348-false\\whole-poison2.tif",
+          "sha256": "d1ce8596684100ef7bd7e022161b5cd49b80108a289cb3f70ed6946dc5ca4d86",
+          "bytes": 312963,
+          "shape": [
+            190,
+            274,
+            3
+          ],
+          "pixel_sha256": "f3cfadafdb96645582ccede7f493a07571c8c9b82234f8b3c713aad81e986d52",
+          "software": "strehl 0.0.0",
+          "description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+          "minimum": 0,
+          "maximum": 28547
+        },
+        "whole-single-site": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-cli\\..\\..\\experiments\\m194c-probe-layout\\independent-work\\27348-false\\whole-single-site.tif",
+          "sha256": "a908f24677502ff21ea7e92cf16af1e711af378e690e10fa10d79f6cc42b244a",
+          "bytes": 312963,
+          "shape": [
+            190,
+            274,
+            3
+          ],
+          "pixel_sha256": "8aff6326a25d9adb54673e1887ab81404495289c9decfe260affe14be0c1bd92",
+          "software": "strehl 0.0.0",
+          "description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+          "minimum": 0,
+          "maximum": 28547
+        },
+        "whole-warp": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-cli\\..\\..\\experiments\\m194c-probe-layout\\independent-work\\27348-false\\whole-warp.tif",
+          "sha256": "4cf69db11b01847d08e3b2e5411122c56f4fe2e1223b60955a3686a17214ff50",
+          "bytes": 312963,
+          "shape": [
+            190,
+            274,
+            3
+          ],
+          "pixel_sha256": "1b96da6262b38e6a21ecdcc01200c9ef98f31d1b2543a6e54bf7596e6b16348a",
+          "software": "strehl 0.0.0",
+          "description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+          "minimum": 0,
+          "maximum": 28551
+        },
+        "whole-wb": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-cli\\..\\..\\experiments\\m194c-probe-layout\\independent-work\\27348-false\\whole-wb.tif",
+          "sha256": "47d06e56fff7b21387c18544cf54384b303eb984df8dd00cd2508283080daea1",
+          "bytes": 312963,
+          "shape": [
+            190,
+            274,
+            3
+          ],
+          "pixel_sha256": "2d714897bd2a217888f3ccecc885806bb913eb70518da298e0f459b9206cc76d",
+          "software": "strehl 0.0.0",
+          "description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+          "minimum": 0,
+          "maximum": 29836
+        }
+      }
+    },
+    {
+      "gather": "1",
+      "command": [
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\author-run-5\\known-scene-tests.exe",
+        "merge_cmd::gatefloor::m194c_independent_tests::",
+        "--test-threads=1",
+        "--nocapture"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-09-07T10:46:01.462992+00:00",
+      "ended_utc": "2026-09-07T10:46:08.706246+00:00",
+      "environment": {
+        "STREHL_DEFECT": "off",
+        "STREHL_FIX_CA": "off",
+        "STREHL_FULLRES_GATHER": "1",
+        "STREHL_PYRAMID_WORKERS": "2",
+        "RAYON_NUM_THREADS": "2"
+      },
+      "log": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\independent-run-4\\gather-1.log",
+      "log_sha256": "12ffa9fe42cba29ac8836fbf80b7cb2f95fa8869883161c7980a3cf30a22db3f",
+      "evidence_lines": [
+        "test merge_cmd::gatefloor::m194c_independent_tests::independent_actual_probe_layout_and_live_metadata ... M194C_INDEPENDENT actual-probe layout-comparisons=80 seed-controls=20 warp-live=true wb-fullres=true beta0-bits=[1060348518, 1026457683]",
+        "test merge_cmd::gatefloor::m194c_independent_tests::independent_actual_writer_layout_and_power ... M194C_INDEPENDENT delivered prefix=whole fullres=true sha256=eea98d1d80c9805042a8ecbd4629d720c5f001e11a048448d683f80ed49f2070 layout-equalities=4 active/noise/warp/WB-live=true observer-on/placebo-identical=true dir=C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-cli\\../../experiments/m194c-probe-layout/independent-work\\7104-true",
+        "M194C_INDEPENDENT delivered prefix=crop fullres=true sha256=1eb75211f1f9ee5870c94b55e31e0631949e86dff5e77581e5a8b9d34ee55151 layout-equalities=4 active/noise/warp/WB-live=true observer-on/placebo-identical=true dir=C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-cli\\../../experiments/m194c-probe-layout/independent-work\\7104-true",
+        "test merge_cmd::gatefloor::m194c_independent_tests::independent_empty_nan_and_real_merge_fallback ... M194C_INDEPENDENT additive-checkerboard None/empty-length-fallback=true raw-NaN-core-fault-means=true finite-floor-live=true variance-live=true mean-sites=[3052.0, 2948.0] selected-sites=[3110.0, 2890.0]",
+        "test merge_cmd::gatefloor::m194c_independent_tests::independent_sequence_layout_legacy_and_seed ... M194C_INDEPENDENT legacy-layout w=70 h=46 seed=0 layout=1 changed=3189/3220",
+        "M194C_INDEPENDENT legacy-layout w=70 h=46 seed=0 layout=2 changed=3191/3220",
+        "M194C_INDEPENDENT legacy-layout w=70 h=46 seed=17 layout=1 changed=3193/3220",
+        "M194C_INDEPENDENT legacy-layout w=70 h=46 seed=17 layout=2 changed=3204/3220",
+        "M194C_INDEPENDENT legacy-layout w=70 h=46 seed=43 layout=1 changed=3205/3220",
+        "M194C_INDEPENDENT legacy-layout w=70 h=46 seed=43 layout=2 changed=3197/3220",
+        "M194C_INDEPENDENT legacy-layout w=118 h=82 seed=0 layout=1 changed=9586/9676",
+        "M194C_INDEPENDENT legacy-layout w=118 h=82 seed=0 layout=2 changed=9576/9676",
+        "M194C_INDEPENDENT legacy-layout w=118 h=82 seed=17 layout=1 changed=9612/9676",
+        "M194C_INDEPENDENT legacy-layout w=118 h=82 seed=17 layout=2 changed=9607/9676",
+        "M194C_INDEPENDENT legacy-layout w=118 h=82 seed=43 layout=1 changed=9609/9676",
+        "M194C_INDEPENDENT legacy-layout w=118 h=82 seed=43 layout=2 changed=9619/9676",
+        "M194C_INDEPENDENT sampler comparisons=12 legacy-packed=6 seed-live=6"
+      ],
+      "pass": true,
+      "tiffs": {
+        "crop-active": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-cli\\..\\..\\experiments\\m194c-probe-layout\\independent-work\\7104-true\\crop-active.tif",
+          "sha256": "1696a0dd053d473fccdb6f8ed8b706a411a22beb6b64fe27f19339928c5f5b65",
+          "bytes": 210267,
+          "shape": [
+            156,
+            224,
+            3
+          ],
+          "pixel_sha256": "9cd3c4fa4f9e3a72946eea2b652523415e71acdd1243e64c19379673d1d5f943",
+          "software": "strehl 0.0.0",
+          "description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+          "minimum": 13081,
+          "maximum": 26325
+        },
+        "crop-baseline": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-cli\\..\\..\\experiments\\m194c-probe-layout\\independent-work\\7104-true\\crop-baseline.tif",
+          "sha256": "1eb75211f1f9ee5870c94b55e31e0631949e86dff5e77581e5a8b9d34ee55151",
+          "bytes": 210267,
+          "shape": [
+            156,
+            224,
+            3
+          ],
+          "pixel_sha256": "d99cb9d15a088baea34a5339fe1d4cf5aac0075ef903d1b58fa94c0ae661d1f9",
+          "software": "strehl 0.0.0",
+          "description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+          "minimum": 12199,
+          "maximum": 24868
+        },
+        "crop-layout1": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-cli\\..\\..\\experiments\\m194c-probe-layout\\independent-work\\7104-true\\crop-layout1.tif",
+          "sha256": "1eb75211f1f9ee5870c94b55e31e0631949e86dff5e77581e5a8b9d34ee55151",
+          "bytes": 210267,
+          "shape": [
+            156,
+            224,
+            3
+          ],
+          "pixel_sha256": "d99cb9d15a088baea34a5339fe1d4cf5aac0075ef903d1b58fa94c0ae661d1f9",
+          "software": "strehl 0.0.0",
+          "description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+          "minimum": 12199,
+          "maximum": 24868
+        },
+        "crop-layout2": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-cli\\..\\..\\experiments\\m194c-probe-layout\\independent-work\\7104-true\\crop-layout2.tif",
+          "sha256": "1eb75211f1f9ee5870c94b55e31e0631949e86dff5e77581e5a8b9d34ee55151",
+          "bytes": 210267,
+          "shape": [
+            156,
+            224,
+            3
+          ],
+          "pixel_sha256": "d99cb9d15a088baea34a5339fe1d4cf5aac0075ef903d1b58fa94c0ae661d1f9",
+          "software": "strehl 0.0.0",
+          "description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+          "minimum": 12199,
+          "maximum": 24868
+        },
+        "crop-noise": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-cli\\..\\..\\experiments\\m194c-probe-layout\\independent-work\\7104-true\\crop-noise.tif",
+          "sha256": "e77fed165a605c8c5e5df4fc52b0601059acf881eed0d653b5716fdd7bb67f7b",
+          "bytes": 210267,
+          "shape": [
+            156,
+            224,
+            3
+          ],
+          "pixel_sha256": "4e6082ff7b4bc521865140598cd27ae7d5b249b27e3445ed6fedc79c3711be84",
+          "software": "strehl 0.0.0",
+          "description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+          "minimum": 12199,
+          "maximum": 24889
+        },
+        "crop-observer1": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-cli\\..\\..\\experiments\\m194c-probe-layout\\independent-work\\7104-true\\crop-observer1.tif",
+          "sha256": "1eb75211f1f9ee5870c94b55e31e0631949e86dff5e77581e5a8b9d34ee55151",
+          "bytes": 210267,
+          "shape": [
+            156,
+            224,
+            3
+          ],
+          "pixel_sha256": "d99cb9d15a088baea34a5339fe1d4cf5aac0075ef903d1b58fa94c0ae661d1f9",
+          "software": "strehl 0.0.0",
+          "description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+          "minimum": 12199,
+          "maximum": 24868
+        },
+        "crop-observer2": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-cli\\..\\..\\experiments\\m194c-probe-layout\\independent-work\\7104-true\\crop-observer2.tif",
+          "sha256": "1eb75211f1f9ee5870c94b55e31e0631949e86dff5e77581e5a8b9d34ee55151",
+          "bytes": 210267,
+          "shape": [
+            156,
+            224,
+            3
+          ],
+          "pixel_sha256": "d99cb9d15a088baea34a5339fe1d4cf5aac0075ef903d1b58fa94c0ae661d1f9",
+          "software": "strehl 0.0.0",
+          "description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+          "minimum": 12199,
+          "maximum": 24868
+        },
+        "crop-poison1": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-cli\\..\\..\\experiments\\m194c-probe-layout\\independent-work\\7104-true\\crop-poison1.tif",
+          "sha256": "1eb75211f1f9ee5870c94b55e31e0631949e86dff5e77581e5a8b9d34ee55151",
+          "bytes": 210267,
+          "shape": [
+            156,
+            224,
+            3
+          ],
+          "pixel_sha256": "d99cb9d15a088baea34a5339fe1d4cf5aac0075ef903d1b58fa94c0ae661d1f9",
+          "software": "strehl 0.0.0",
+          "description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+          "minimum": 12199,
+          "maximum": 24868
+        },
+        "crop-poison2": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-cli\\..\\..\\experiments\\m194c-probe-layout\\independent-work\\7104-true\\crop-poison2.tif",
+          "sha256": "1eb75211f1f9ee5870c94b55e31e0631949e86dff5e77581e5a8b9d34ee55151",
+          "bytes": 210267,
+          "shape": [
+            156,
+            224,
+            3
+          ],
+          "pixel_sha256": "d99cb9d15a088baea34a5339fe1d4cf5aac0075ef903d1b58fa94c0ae661d1f9",
+          "software": "strehl 0.0.0",
+          "description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+          "minimum": 12199,
+          "maximum": 24868
+        },
+        "crop-single-site": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-cli\\..\\..\\experiments\\m194c-probe-layout\\independent-work\\7104-true\\crop-single-site.tif",
+          "sha256": "f3f6ba4b42fc3c7d46b515feee1d2034b8afecf3c1c3d52f05d6130eac7f73dd",
+          "bytes": 210267,
+          "shape": [
+            156,
+            224,
+            3
+          ],
+          "pixel_sha256": "364371d16630a0e55b40f91c1d2e28b3e7250c9ea9f90070554d16b9023fcfc0",
+          "software": "strehl 0.0.0",
+          "description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+          "minimum": 12199,
+          "maximum": 25313
+        },
+        "crop-warp": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-cli\\..\\..\\experiments\\m194c-probe-layout\\independent-work\\7104-true\\crop-warp.tif",
+          "sha256": "5d479b47f8d7b3b2a24dca87aaf72abb29dcea41f3e86c02a9a6d8ea45a424d8",
+          "bytes": 210267,
+          "shape": [
+            156,
+            224,
+            3
+          ],
+          "pixel_sha256": "16ccd2b648339b72c106777a42c1e6153b6c8e578e506db32ca3923efb55e5b7",
+          "software": "strehl 0.0.0",
+          "description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+          "minimum": 12224,
+          "maximum": 24912
+        },
+        "crop-wb": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-cli\\..\\..\\experiments\\m194c-probe-layout\\independent-work\\7104-true\\crop-wb.tif",
+          "sha256": "76e10d8fd723dc2faf78aa5f8a8ffbf4d0cf60cc8a27b9c548b672e84241081d",
+          "bytes": 210267,
+          "shape": [
+            156,
+            224,
+            3
+          ],
+          "pixel_sha256": "de8ac2d18f9acbfc892cec18bcb605706cf70d6b3ec18e6902945bcae4bf6e94",
+          "software": "strehl 0.0.0",
+          "description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+          "minimum": 8516,
+          "maximum": 27228
+        },
+        "whole-active": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-cli\\..\\..\\experiments\\m194c-probe-layout\\independent-work\\7104-true\\whole-active.tif",
+          "sha256": "d0775e0c5144e7166f436102792815e96d8094416f5261bf044cbd2fb163eaa1",
+          "bytes": 312963,
+          "shape": [
+            190,
+            274,
+            3
+          ],
+          "pixel_sha256": "6a35b03f6001f9dac787b9ff9a4b2866d77f8dd8e4e00e435ceb5b6bc756b6d3",
+          "software": "strehl 0.0.0",
+          "description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+          "minimum": 0,
+          "maximum": 28995
+        },
+        "whole-baseline": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-cli\\..\\..\\experiments\\m194c-probe-layout\\independent-work\\7104-true\\whole-baseline.tif",
+          "sha256": "eea98d1d80c9805042a8ecbd4629d720c5f001e11a048448d683f80ed49f2070",
+          "bytes": 312963,
+          "shape": [
+            190,
+            274,
+            3
+          ],
+          "pixel_sha256": "81db0450ebca1e96ea12cee39ce0f99c136771e5530c245270b409b8ccc6d745",
+          "software": "strehl 0.0.0",
+          "description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+          "minimum": 0,
+          "maximum": 27375
+        },
+        "whole-layout1": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-cli\\..\\..\\experiments\\m194c-probe-layout\\independent-work\\7104-true\\whole-layout1.tif",
+          "sha256": "eea98d1d80c9805042a8ecbd4629d720c5f001e11a048448d683f80ed49f2070",
+          "bytes": 312963,
+          "shape": [
+            190,
+            274,
+            3
+          ],
+          "pixel_sha256": "81db0450ebca1e96ea12cee39ce0f99c136771e5530c245270b409b8ccc6d745",
+          "software": "strehl 0.0.0",
+          "description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+          "minimum": 0,
+          "maximum": 27375
+        },
+        "whole-layout2": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-cli\\..\\..\\experiments\\m194c-probe-layout\\independent-work\\7104-true\\whole-layout2.tif",
+          "sha256": "eea98d1d80c9805042a8ecbd4629d720c5f001e11a048448d683f80ed49f2070",
+          "bytes": 312963,
+          "shape": [
+            190,
+            274,
+            3
+          ],
+          "pixel_sha256": "81db0450ebca1e96ea12cee39ce0f99c136771e5530c245270b409b8ccc6d745",
+          "software": "strehl 0.0.0",
+          "description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+          "minimum": 0,
+          "maximum": 27375
+        },
+        "whole-noise": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-cli\\..\\..\\experiments\\m194c-probe-layout\\independent-work\\7104-true\\whole-noise.tif",
+          "sha256": "34818885c7e771585e347ef9eb9b7ec8f3f250542fe9426b29cfc6bbb2c6aaf1",
+          "bytes": 312963,
+          "shape": [
+            190,
+            274,
+            3
+          ],
+          "pixel_sha256": "bfbe6e83354d746e85ef69af2b379b7409586898c9f3a6185a8110caa5e71c3b",
+          "software": "strehl 0.0.0",
+          "description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+          "minimum": 0,
+          "maximum": 27337
+        },
+        "whole-observer1": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-cli\\..\\..\\experiments\\m194c-probe-layout\\independent-work\\7104-true\\whole-observer1.tif",
+          "sha256": "eea98d1d80c9805042a8ecbd4629d720c5f001e11a048448d683f80ed49f2070",
+          "bytes": 312963,
+          "shape": [
+            190,
+            274,
+            3
+          ],
+          "pixel_sha256": "81db0450ebca1e96ea12cee39ce0f99c136771e5530c245270b409b8ccc6d745",
+          "software": "strehl 0.0.0",
+          "description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+          "minimum": 0,
+          "maximum": 27375
+        },
+        "whole-observer2": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-cli\\..\\..\\experiments\\m194c-probe-layout\\independent-work\\7104-true\\whole-observer2.tif",
+          "sha256": "eea98d1d80c9805042a8ecbd4629d720c5f001e11a048448d683f80ed49f2070",
+          "bytes": 312963,
+          "shape": [
+            190,
+            274,
+            3
+          ],
+          "pixel_sha256": "81db0450ebca1e96ea12cee39ce0f99c136771e5530c245270b409b8ccc6d745",
+          "software": "strehl 0.0.0",
+          "description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+          "minimum": 0,
+          "maximum": 27375
+        },
+        "whole-poison1": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-cli\\..\\..\\experiments\\m194c-probe-layout\\independent-work\\7104-true\\whole-poison1.tif",
+          "sha256": "eea98d1d80c9805042a8ecbd4629d720c5f001e11a048448d683f80ed49f2070",
+          "bytes": 312963,
+          "shape": [
+            190,
+            274,
+            3
+          ],
+          "pixel_sha256": "81db0450ebca1e96ea12cee39ce0f99c136771e5530c245270b409b8ccc6d745",
+          "software": "strehl 0.0.0",
+          "description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+          "minimum": 0,
+          "maximum": 27375
+        },
+        "whole-poison2": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-cli\\..\\..\\experiments\\m194c-probe-layout\\independent-work\\7104-true\\whole-poison2.tif",
+          "sha256": "eea98d1d80c9805042a8ecbd4629d720c5f001e11a048448d683f80ed49f2070",
+          "bytes": 312963,
+          "shape": [
+            190,
+            274,
+            3
+          ],
+          "pixel_sha256": "81db0450ebca1e96ea12cee39ce0f99c136771e5530c245270b409b8ccc6d745",
+          "software": "strehl 0.0.0",
+          "description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+          "minimum": 0,
+          "maximum": 27375
+        },
+        "whole-single-site": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-cli\\..\\..\\experiments\\m194c-probe-layout\\independent-work\\7104-true\\whole-single-site.tif",
+          "sha256": "371e83dc926652ad9bbda68a34d1b1524fc89636ea17e9a94df503e14d5e2c98",
+          "bytes": 312963,
+          "shape": [
+            190,
+            274,
+            3
+          ],
+          "pixel_sha256": "0645ed35b5a987b6f7bd0fbeb870f78bcd752f121d2e06083c2b8814e07fcae8",
+          "software": "strehl 0.0.0",
+          "description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+          "minimum": 0,
+          "maximum": 27375
+        },
+        "whole-warp": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-cli\\..\\..\\experiments\\m194c-probe-layout\\independent-work\\7104-true\\whole-warp.tif",
+          "sha256": "474765cc122a623880e0bdf7384db2b64d75f74caa40c97beb7bd7e4ab10c702",
+          "bytes": 312963,
+          "shape": [
+            190,
+            274,
+            3
+          ],
+          "pixel_sha256": "4a9848c5a444b4600ce5c43b65141fd31d19c4aac4ea7f2d605293eae24e5430",
+          "software": "strehl 0.0.0",
+          "description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+          "minimum": 0,
+          "maximum": 27404
+        },
+        "whole-wb": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-cli\\..\\..\\experiments\\m194c-probe-layout\\independent-work\\7104-true\\whole-wb.tif",
+          "sha256": "8e17170b47636a4bb26404ace04ba04db4fc3e1d55b02743df08d6dd18523efa",
+          "bytes": 312963,
+          "shape": [
+            190,
+            274,
+            3
+          ],
+          "pixel_sha256": "cae7b4ed8352104d360bc42ca9073df2d064bb569a6610322cc3033a8d52cba5",
+          "software": "strehl 0.0.0",
+          "description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+          "minimum": 0,
+          "maximum": 29209
+        }
+      }
+    }
+  ],
+  "pass_": true,
+  "compiled_source_count": 102,
+  "sources_unchanged": true,
+  "ended_utc": "2026-09-07T10:46:08.735772+00:00"
+}

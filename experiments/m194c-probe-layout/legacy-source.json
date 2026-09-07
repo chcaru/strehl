@@ -1,0 +1,8 @@
+{
+  "schema": "m194c-legacy-function-v1",
+  "source": "crates/strehl-cli/src/merge_cmd/gatefloor.rs",
+  "source_sha256": "15a332afba5c7dd5e4a8696dbc6541c7a925e97e6e63bdba9d55ff1f3584f63e",
+  "function_text_sha256": "ffdc647077cb18f9161b8cc6e04f53d155220bc817adbf2a4da1b3d9b4c47388",
+  "copied_function": "fill_noise; unchanged text from declaration through file end",
+  "scope": "pre-edit project source, no external dependency implementation"
+}

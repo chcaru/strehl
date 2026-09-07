@@ -1,0 +1,9 @@
+
+running 4 tests
+test merge_cmd::gatefloor::m194c_author_tests::m194c_actual_probe_is_invariant_to_layout_in_each_gather ... ok
+test merge_cmd::gatefloor::m194c_author_tests::m194c_sampler_matches_legacy_packed_and_rejects_storage_addressing ... ok
+test merge_cmd::gatefloor::m194c_author_tests::m194c_sampler_refuses_malformed_storage_before_writing ... ok
+test merge_cmd::gatefloor::m194c_author_tests::m194c_sampler_seed_and_quantization_are_live ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 133 filtered out; finished in 2.10s
+

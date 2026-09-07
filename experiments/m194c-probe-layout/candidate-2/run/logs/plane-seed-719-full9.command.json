@@ -1,0 +1,33 @@
+{
+  "schema": "m194b-consumer-command-v1",
+  "command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\work\\consumer-binaries\\b8b5fe7def374ec1bb9ffdac34bd4de0\\known-scene-tests.exe",
+    "--exact",
+    "merge_cmd::known_scene_benchmark::m194b_known_scene_consumer",
+    "--ignored",
+    "--test-threads=1",
+    "--nocapture"
+  ],
+  "exit_code": 0,
+  "pass_": true,
+  "log": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\logs\\plane-seed-719-full9.command.log",
+  "log_sha256": "63696c255a797de83b2be0973dcd209d2f4ac59937dbe6b9d6e66918001f2660",
+  "build_sha256": "64975e805b77552f81158424de066bc26903170372af61b84cf394d6743e643f",
+  "environment": {
+    "STREHL_DEFECT": "off",
+    "STREHL_FIX_CA": "off",
+    "STREHL_FULLRES_GATHER": "1",
+    "STREHL_PYRAMID_WORKERS": "2",
+    "RAYON_NUM_THREADS": "2",
+    "STREHL_M194B_MODE": "render",
+    "STREHL_M194B_MANIFEST": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\plane\\seed-719\\manifest.json",
+    "STREHL_M194B_MANIFEST_SHA256": "f81ba272154bf96535cef72f2340da6d1b36c2b25d5a5cf0e50f5f61d0e574e0",
+    "STREHL_M194B_PLAN": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\plans\\plane-seed-719.json",
+    "STREHL_M194B_PLAN_SHA256": "ab60d21c147237008b1a8b947ae64100fa459f7ee8cb3698dcf2af1913760997",
+    "STREHL_M194B_SUBSET": "all",
+    "STREHL_M194B_OUTPUT": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\tiffs\\plane-seed-719-full9.tif",
+    "STREHL_M194B_RECEIPT": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\receipts\\plane-seed-719-full9.json"
+  },
+  "result": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\receipts\\plane-seed-719-full9.json",
+  "result_sha256": "b6972ef2d43c6276a10bd2feba957ee1b6a2ee4c882a637b26a23a44642b2d20"
+}

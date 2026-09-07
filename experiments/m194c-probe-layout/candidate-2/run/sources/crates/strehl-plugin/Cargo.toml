@@ -1,0 +1,13 @@
+[package]
+name = "strehl-plugin"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+description = "The pluggable focus-measure seam: the host measures a contributed operator's noise scale rather than trusting a declaration."
+
+[dependencies]
+strehl-core.workspace = true
+thiserror.workspace = true

@@ -1,0 +1,90 @@
+{
+  "schema": "m194c-independent-comparison-bindings-v1",
+  "pass_": true,
+  "controller_sha256": "460bcec07f4fb7df28af519b3a6becb4dc789ca55e571007d5b97bc418332bce",
+  "source_sha256": {
+    "run-candidate.py": "c47cc1d52cc4a9f5756e8dc1fd39d4e2d601c574a9f5ea815aba131de19f9c23",
+    "compare-candidate.py": "71991f3296f85d3e0343a87d1c8c50b0b38141de7be9d70d9e26c02c4b86422a"
+  },
+  "cases": [
+    {
+      "name": "unchanged-copy",
+      "accepted": true,
+      "sha256": "460bcec07f4fb7df28af519b3a6becb4dc789ca55e571007d5b97bc418332bce"
+    },
+    {
+      "name": "missing-nested-source",
+      "accepted": false,
+      "error": "ValueError: supplemental source set or bytes changed",
+      "sha256": "9b72a8055c715b49a62d1844efed1a85fb356db017175e774c6d45673cc48ada"
+    },
+    {
+      "name": "changed-independent-source",
+      "accepted": false,
+      "error": "ValueError: supplemental source set or bytes changed",
+      "sha256": "1aa7b8d146c5c7459cfeccf5d980ba06effecfe1d2b659bee00a922d5f4210ac"
+    },
+    {
+      "name": "added-source-member",
+      "accepted": false,
+      "error": "ValueError: supplemental source set or bytes changed",
+      "sha256": "85b8a3d036f1efafe5cb9bf8a6fca2380fc8c19d57d123e274b0e807f468ca16"
+    },
+    {
+      "name": "false-render-argv",
+      "accepted": false,
+      "error": "ValueError: candidate controller argv differs from fixed build/render/score operations",
+      "sha256": "cb4f72f57d3397db051c2ac1f5e326e579eded71c3cc7a01ce79ae2efe2f3bab"
+    },
+    {
+      "name": "failed-scoring-command",
+      "accepted": false,
+      "error": "ValueError: candidate build/render/score chain incomplete",
+      "sha256": "ae4cca445b51479ef717210c0fd0d04d73d1806430470bda49bf1c70f3d9ad08"
+    },
+    {
+      "name": "missing-scoring-command",
+      "accepted": false,
+      "error": "ValueError: candidate build/render/score chain incomplete",
+      "sha256": "4047594f41512331c79095e2c5c57fd74d31de288703d8bb23da20735b13792b"
+    },
+    {
+      "name": "false-compiler-delta",
+      "accepted": false,
+      "error": "ValueError: candidate compiler inputs differ outside gatefloor",
+      "sha256": "53b638cc78770104b3bc19ad16ea9c9cd197d02f2d35211aee1f8a3b9d48fe6a"
+    },
+    {
+      "name": "missing-original-input-binding",
+      "accepted": false,
+      "error": "ValueError: fixed benchmark source set differs",
+      "sha256": "2c0ee710814e12c92ae3a1ed47e3b99bb95a1888aa3bc3057709a97b0507cc1c"
+    },
+    {
+      "name": "changed-scorer-binding",
+      "accepted": false,
+      "error": "ValueError: fixed benchmark source changed",
+      "sha256": "104b7a11e0996f66342a40984dfd1be8a647741b9ce10a6ba3073cac23984a06"
+    },
+    {
+      "name": "changed-final-source",
+      "accepted": false,
+      "error": "ValueError: candidate supplemental source changed",
+      "sha256": "a08d72e205f5b5707cd6ebb757e2695055ca834d1365f3a15e0c3db461ade9bb"
+    },
+    {
+      "name": "different-baseline-index",
+      "accepted": false,
+      "error": "ValueError: wrong original benchmark index",
+      "sha256": "5051b75ffdad43d632bebef314103ecee5b7083afed82046c1cd042a033b99b5"
+    },
+    {
+      "name": "different-scored-run-index",
+      "accepted": false,
+      "error": "ValueError: trusted artifact changed: C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\run-index.json",
+      "sha256": "79d7be1eb138a7fe901c87b0ec0760183c52019463d74123f58481ba9946b029"
+    }
+  ],
+  "original_unchanged": true,
+  "scope": "new controller JSON copies only; original build/index/score/source snapshots and TIFFs unchanged"
+}

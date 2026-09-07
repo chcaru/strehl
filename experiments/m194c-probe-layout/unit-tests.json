@@ -1,0 +1,23 @@
+{
+  "command": [
+    "cargo",
+    "test",
+    "-p",
+    "strehl-cli",
+    "--bin",
+    "strehl",
+    "--target-dir",
+    "target/m194c-probe-layout",
+    "--",
+    "--test-threads=1"
+  ],
+  "exit_code": 101,
+  "compiling_cli": true,
+  "checking_cli": false,
+  "test_results": [
+    "test result: FAILED. 135 passed; 1 failed; 2 ignored; 0 measured; 0 filtered out; finished in 17.13s"
+  ],
+  "new_source_warnings": [
+    "thread 'merge_cmd::gatefloor::m194c_independent_tests::independent_empty_nan_and_real_merge_fallback' (26820) panicked at C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-cli/../../experiments/m194c-probe-layout/independent-tests.rs:353:5:"
+  ]
+}

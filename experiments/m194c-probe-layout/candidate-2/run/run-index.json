@@ -1,0 +1,3344 @@
+{
+  "schema": "m194b-benchmark-run-v1",
+  "status": "complete",
+  "started_utc": "2026-09-07T10:45:22.924158+00:00",
+  "command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\run-baseline.py",
+    "--build-record",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\build.json",
+    "--build-record-sha",
+    "64975e805b77552f81158424de066bc26903170372af61b84cf394d6743e643f",
+    "--producer-result",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\producer-result.json",
+    "--producer-result-sha",
+    "544d47dbc0fdebcf220094ca53434ca49abfee62f55febec27b36f58c24087cc",
+    "--producer-commission",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-commission-1\\commission.json",
+    "--producer-commission-sha",
+    "0a8eb43a53d8f44a6e803f531fd2e83d12b7a59e280440e730dc6ea6523b50d5",
+    "--out",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run"
+  ],
+  "sources_before": {
+    "Cargo.lock": "82a228ddda138d1b6269e1a32a6e55377369bb94923e92da362cf11cc9569a4b",
+    "Cargo.toml": "732c5d4d874594cccbfd896ae688afa01e91290f0b1c8fd0331fa8b06f914984",
+    "crates/strehl-cli/build.rs": "5b864155733a90c2a4f7152e21d3dbcc5d5e0f469b4aa772c328fe86e4aa2091",
+    "crates/strehl-cli/Cargo.toml": "d0e6b05aa93df026270e513fd3e5ab9cd50726596ef1475b8a3680faa84b2650",
+    "crates/strehl-cli/examples/blend-render.rs": "86c403dc074519bdf54dd66226a82ac935d8a91a26d44799596989fbcacd25b9",
+    "crates/strehl-cli/examples/blend-truth.rs": "38a5a9464a7c09521dad8320a90faea4f25a09aead175af3f37f25dc7e034ca2",
+    "crates/strehl-cli/examples/build-demosaic-truth.rs": "fb33639b174986c9159b8a544b46b5cb4aa3a514a4315a80738c55b4305f27fd",
+    "crates/strehl-cli/examples/build-gatefloor.rs": "c377d932c168c8ac5d74ae3c96e9a1d714726ccb91fca01697b5e1596e8de0cd",
+    "crates/strehl-cli/examples/build-plugin-field.rs": "a733f23be4a3d385a4011f249b8fd3769a3fd018dade66aa43c9d19935ec6f71",
+    "crates/strehl-cli/examples/build-resamp-mtf.rs": "69dd26cb260d9d0435ec1689dbcfd27b0cab16f9feffe82d3b944701e80bcb27",
+    "crates/strehl-cli/examples/cover-reference.rs": "f1762977aa8ae7c1d95366f5c65a6857dc6ab012e9e7323a4054ff6cd2bf5c7e",
+    "crates/strehl-cli/examples/defect-cpl-split.rs": "0131f7bbdbfb6f840472e318a290205134f739f4f4b93c441a2d8d4f42873bb4",
+    "crates/strehl-cli/examples/defect-flat-census.rs": "070f2e343597916269cc4699d34a7bd485dccac9d17b185303af152a745c8273",
+    "crates/strehl-cli/examples/defect-geometry-census.rs": "23e3d8ff39020a9ef09701bd17886ea09249f503495f5e527c53d84a014126e4",
+    "crates/strehl-cli/examples/defect-geometry-verdict.rs": "38e4e8ea3afb115a018413985813e730bd109351489f761c771f2cf144a62749",
+    "crates/strehl-cli/examples/defect-plant-fidelity.rs": "bff657c34c0ac00bba47b75dd17f7698e47328631600718e0c2adfe99adcb7f5",
+    "crates/strehl-cli/examples/m123-null-radius.rs": "29780cdb8f20768705949bf5622783faff6ba2cb9d46326779eb064ac0a941cd",
+    "crates/strehl-cli/examples/m123-outlier-real.rs": "3cb776b76023f5ebe7ac5ffa588e31b4b0a8c34d98794d2cd174ef071d638275",
+    "crates/strehl-cli/examples/m123-trap-decompose.rs": "be1462beb949bf32eb1e54b3a598ad488ee616aca79704a2940f9049f5aecf9f",
+    "crates/strehl-cli/examples/m60-disagreement.rs": "e6800fabce502189bba14148b42f96ceabd893e77e8732af27394592a219a93b",
+    "crates/strehl-cli/examples/m65-election.rs": "8bb8b1f268107d171ca8d3454687c02ca0bec24dea629ede433f9547c993ae8f",
+    "crates/strehl-cli/examples/m67-focus-correctness.rs": "9b2fa813ced90939f7cb065fbb12662fd8129b4e06269183764e6e52e048881c",
+    "crates/strehl-cli/examples/m73-cylinder.rs": "b42700a1384eb2d6f12d4072b4040fbe3f4da82cf27de1d71eb47fd181e7cd55",
+    "crates/strehl-cli/examples/m86-align.rs": "63dad30331cf9ecb293374d35133f1f9062592e016f3cafd767b962b76080a2e",
+    "crates/strehl-cli/examples/m89-robust.rs": "acb6f32abf2d40dd9b1d00085710ee4b5ae77c34481a3730ba6bb76bdebbaa2f",
+    "crates/strehl-cli/examples/m90-prnu.rs": "7e5a232e10d70ea7809780ea32f578a7aadf6cff46a3d2df45ffc5e79031f5c8",
+    "crates/strehl-cli/examples/m90-rho.rs": "fbe0faadaa636616cec0755e872509e33a65a108b636d50f5a359e6f3a582d7f",
+    "crates/strehl-cli/examples/m91-photometry.rs": "e39f2f6d95e0606ec7f9525991b17c4519d4c3deac709188f8b5e3eaa1625f61",
+    "crates/strehl-cli/examples/m93-election.rs": "d63a840f830be4489fc32c05c8f11e3c26e10e163df40d6eb15f1ad9c39ea677",
+    "crates/strehl-cli/examples/m95-demosaic.rs": "8210edf48821204928af800b307617389f4a1b7a0e24003f1c6d9375436fde81",
+    "crates/strehl-cli/examples/m95-kernel.rs": "bd2391e8b83da68b742cf0bf98834315c013e07afa1fd6afbc79f06ca3c1d614",
+    "crates/strehl-cli/examples/m95-lanczos.rs": "61d6f4d5ba260cd3c601f1a9f525b2cac922ef42270ebec3c58f0e5dc04fa298",
+    "crates/strehl-cli/examples/m96-election-margin.rs": "06d62fd30245590a74d6c948d3d7ef0421e65b836c32abbc39d71ed364470eac",
+    "crates/strehl-cli/examples/m97-outlier.rs": "cb6562b5d0a3352ef7005fdc82a65f8ba80821739ca851402cd42f556248652c",
+    "crates/strehl-cli/examples/m97-tornmap.rs": "55b21b7803d7a1afe7305c80a799f0e1de89b76098878c1deef8e9c6a7a1ff4e",
+    "crates/strehl-cli/examples/m99-photometric.rs": "a253c53102f873961dbd13c3190e178374c58e3c7967e2fef407b5865e59b512",
+    "crates/strehl-cli/src/align_cmd.rs": "b3de7738151a6bc0500c66dd916f9fcb20cdb9be0bf698ad00425d3ebb397c69",
+    "crates/strehl-cli/src/bin/strehl-common-input.rs": "0abf5917357365ba83028f82c0a2855917ad45071d95d3ec2d404702de1ef31f",
+    "crates/strehl-cli/src/focus_plugin.rs": "d917dba8f3bfc57a709b7af6650dc43a34724383270ac5faec986ed3a963d337",
+    "crates/strehl-cli/src/image_out.rs": "c1362363740cb0176985283455cd6ddef80479854b1bbc9f0396851c490f82b6",
+    "crates/strehl-cli/src/main.rs": "a29e0f975764b75491eb3147e94f15b05944120cdc3cdd55a24830a89a2e5340",
+    "crates/strehl-cli/src/merge_cmd/dump.rs": "2827483acbbce3dc528f3d27642cb54e8c8f99abb85b0b23f89f59c53c93bfe3",
+    "crates/strehl-cli/src/merge_cmd/gatefloor.rs": "bcea35986c73011c20d872bddc9c0ef3ea9354101259bd3952c16976bb1c9496",
+    "crates/strehl-cli/src/merge_cmd/halo.rs": "fc234df8b515f982bbc527448ea0a0764c30b088385405d85f253800aaf7dd55",
+    "crates/strehl-cli/src/merge_cmd/known-scene-benchmark.rs": "4ac1d2e82aef7ca4428b7e3fd276f691a50d4be8e0e2152ad00be00de8db2034",
+    "crates/strehl-cli/src/merge_cmd/production-truth.rs": "4ddd69b66cfbdad55443f3e0273aa60f188f3b5de314eddba5ef2378aee93955",
+    "crates/strehl-cli/src/merge_cmd.rs": "693d0539b09302f77bdafd27b30356560f4cc2740d7414cc1c163b7bf1b5335f",
+    "crates/strehl-cli/src/stack.rs": "108bb38a964946c7e7b7c25c640ce08297835faee253ad4e059e6074f5655572",
+    "crates/strehl-cli/tests/byte-freeze.rs": "750efd0d5605d76bc1e5000e9945a58d57ef4418ec25299cd27920408f53976c",
+    "crates/strehl-cli/tests/byte-freezes.tsv": "d74c3f1da19c0edf6625bc6a26ccad3de6a6ab6c201f009d009b9999c5f4d001",
+    "crates/strehl-cli/tests/data/coffee-bean-20.clamped-catmull.warpmap.txt": "d35352b083530cf52d7649d384e046e3eb410de41b4f5444c4b7992338900fe8",
+    "crates/strehl-cli/tests/data/coffee-bean-20.warpmap.txt": "ef74541395db1ba606067bcf04947909bd6a9c5be530fe8aad21578b5c1e93b3",
+    "crates/strehl-core/Cargo.toml": "25bdef9c60ef30849ba184116f2b5aa202b07baf55da22ca311f725ab56bde16",
+    "crates/strehl-core/examples/demosaic-plane.rs": "d40278227e647f195be75e1c199eab04132cdc21c7ae07648cf29bbb410d2f8c",
+    "crates/strehl-core/examples/focus-window-cost.rs": "ddb8aa01857c03860f62fbbf82793e8e1b5d2df32adde877269af2be39c9b997",
+    "crates/strehl-core/examples/restore-plane.rs": "5707ab9a2a66333968936d704ea8888fa7535dc6e0b7c73c1a3f815fd2c1a0d1",
+    "crates/strehl-core/src/align.rs": "6d33f0e24f21d4370ccd8df0bf618e54a5ad615b838bc265469b4f85051c2786",
+    "crates/strehl-core/src/boxfilter.rs": "5cf6dab36c8ddb7499acbec140df509b4e1e5fe0b0ace3a13f8d7cf68f979b8e",
+    "crates/strehl-core/src/clip.rs": "aa1ccdac944d928879f94770b2161152a271f9fa208c57c66d8921e5a643533d",
+    "crates/strehl-core/src/color.rs": "83c1aa371dc751862bfef5724a6eceab8182c5d68b6f31ac299b3443c14c8f1e",
+    "crates/strehl-core/src/defect-map-ILCE-7CM2-dust.txt": "a406efd51f806e360e1e51fc1421eca5e3cc912f356ced0693c8477a398853ee",
+    "crates/strehl-core/src/defect_map.rs": "1738c770c9f316a6aeac3f742bf7abc9581ea386b4e07ec128e50df35c2ffb14",
+    "crates/strehl-core/src/demosaic.rs": "425d6889485011cf6f2aaf57b0b873f15fd6ee3250853f3ba5f6540b496b3810",
+    "crates/strehl-core/src/edgeaware.rs": "a32580ac72dd273e62cab40afa9b36e2462ef57335c8d7cd8ab0725184c7f77b",
+    "crates/strehl-core/src/election_coherence.rs": "47640a176cb445dd2f01b309d907da066ae7f5a6d28b354d2de60362538f948e",
+    "crates/strehl-core/src/flat_ratio.rs": "da1df7167b6f18ac248c1ee347671388391a968aa45a762299c4418a2287fef0",
+    "crates/strehl-core/src/focus.rs": "71e63def76e40f18df440617a9dba7013d799ceabd30bf805149223433384e3e",
+    "crates/strehl-core/src/highlight.rs": "97d4aacec3d7e6c3dd2df1f792ffb7ee136a8f6064ffb0dc1656476730f7641e",
+    "crates/strehl-core/src/lib.rs": "91419ceb273be1dc9ab15dbdc6347bd2b398d29cf36c0da9184ee533372f8022",
+    "crates/strehl-core/src/merge.rs": "7362cf6fab70db56443693e5483f052ba48b32cc7ef264d64ec4a7bd1b50e4ef",
+    "crates/strehl-core/src/noise.rs": "d88dc9cf419a8fdb1e3ff2c51f0b0ac80d785c17de7f9e71e905fc977fce0ecc",
+    "crates/strehl-core/src/optics.rs": "1884fd98c7a2adf903c152b3d877051cfeba71316bdbb797fd2f1ba1433a5524",
+    "crates/strehl-core/src/outlier.rs": "8d3fb7a225b5811c2d831db4339953b15a5181bfcda7591ac05f23f6adf5e67d",
+    "crates/strehl-core/src/photometric.rs": "b6102288c7fc2312f16d108dc3d943d290a5b8fd5d5a5c39306d97489191399b",
+    "crates/strehl-core/src/plane.rs": "8c219f9c4d2c8c0da19416998b0f369a9f9d44e305740664f29caaba69203dc4",
+    "crates/strehl-core/src/profile.rs": "07e7cf7b3040239a5a32464ae998a434696031010ce8d87dac7f2dd2a95ac1f1",
+    "crates/strehl-core/src/pyramid.rs": "7b6376e68a1a6488f958b85e65cfdc57dfe8b8826d4612d8429d08f8743632ac",
+    "crates/strehl-core/src/restore.rs": "3ab5c6660b7a45837ac4b5560078092e6aafa9c85a041a935e95b0cd77533afd",
+    "crates/strehl-core/src/robust.rs": "2cf6013b948f5c9d4f11783633f04e6d76ac9830383197c05506b0d68fe24004",
+    "crates/strehl-core/src/softgate.rs": "0cb0f916dade24e6e3a31529378390a083c6c56cb3e8b479eb7eb65ac04f688d",
+    "crates/strehl-core/src/stack.rs": "c951cdbb304e4894676f1ff6a77316e7e2ab68d7756f22bf623562380d5f6337",
+    "crates/strehl-core/src/through_focus.rs": "475a6c4eece089638ab916e3d7f4cf480197e2d838b5244347c16762f5122a3d",
+    "crates/strehl-core/src/warpmap.rs": "9d2198eeab5e8a941e297cf8fcd8a217d2454390220433ae19cc6b07e6fd721b",
+    "crates/strehl-plugin/Cargo.toml": "b3fd67fd414ac138119f4ab8dedaee280cea23b1bcc20f21f066f09d3575c88c",
+    "crates/strehl-plugin/examples/calibration-survey.rs": "b453361321e0e777148121ba5a4b8edff557a5d59aa1d9615b91386208c4aafe",
+    "crates/strehl-plugin/examples/f5-design-probes.rs": "4f368b7e3ec8ab522183ee3b86fa36adbee76a2b5d772c8f0bafcc9706536676",
+    "crates/strehl-plugin/src/calibrate.rs": "7e10fbd56d8257f409a083461854bf999f8c97ce1a65aad5f90da3b76c8d2a10",
+    "crates/strehl-plugin/src/field.rs": "6a1da0df1fc4d6ba5e7cbfc0bc3d79295e89bca7b21647f237154bd97018ced5",
+    "crates/strehl-plugin/src/lib.rs": "9dbb902a31cb21ba5e07fe1576f96b0cffad2dd8fed70a777c2bfaaab41f97e7",
+    "crates/strehl-plugin/src/measure.rs": "a3941112f7e5a19b2929d83e95afa97d7be1f2ed3465d6160715386705a23c20",
+    "crates/strehl-plugin/src/reference.rs": "eca4ecf81d1e783c48d680323907fd34336d1f3d5accdedfbdf726e14e847cfb",
+    "crates/strehl-plugin/src/registry.rs": "1543ba679a56bdcd9ff625e54c9efd97d74c316cbf0726866e125cc1eb806a35",
+    "crates/strehl-plugin/src/rng.rs": "402c5fa0acb97df6de6df14a51935de05ad9a71d20f4a909a9f7154f52442225",
+    "crates/strehl-raw/Cargo.toml": "6e1e7cfdadb24371423143fb10945b0e61b3f45696365aa87a721661edde31c9",
+    "crates/strehl-raw/examples/identity.rs": "78cdc478590b5bfd46bf3bcbed46cb0d74f5d788b08d38a5fd98636d46443668",
+    "crates/strehl-raw/src/common_tiff.rs": "bac1d18f036b8960a8e82d01b610ae945d00d259d4cc3fe7eb9106e8a8077f42",
+    "crates/strehl-raw/src/identity.rs": "676d18872656a72a93e3257b1677c38ea2ee39084574e1153bdbbfbc6e8ad1fe",
+    "crates/strehl-raw/src/lib.rs": "1513fd3e682f2edb8c54c7d47083f20f66525ad72a5687fb2e530bb5697fef2a",
+    "experiments/m194-production-truth/independent-controls.rs": "bd5777f1f960e7db217fda4b4ce9f24a963cea9351d244acf8aac84ee68f718f",
+    "experiments/m25-simulator/src/strehl_sim/config.py": "507d165e405812a9fdcffbf83a026e699f844dfd88bb2af9faec6e4c12c0ba59",
+    "experiments/m25-simulator/src/strehl_sim/optics.py": "ac5a2342d5ad3e6551ca3ddade5dba8feb9ea8f555f3aa36b71c774c6868fb93",
+    "experiments/m25-simulator/src/strehl_sim/render.py": "8b842d06ab1a550d1c66263dde2969e0e390a439938e57cb54c4095a6a36118c",
+    "experiments/m25-simulator/src/strehl_sim/scene.py": "9bea8539999ca64f893505337dbbe4c32c5765bc2368508275be43eed008351f",
+    "experiments/m25-simulator/src/strehl_sim/sensor.py": "d3057d2bfe3be5c832314e3a442941ef8269dd9a9c3b35e7e100a520e975957f",
+    "experiments/M103-halfdrift/data/truth-dense.json": "45b12d8c7106fa1c9c1ce3d5f663896a43992ff35f867fd3c6374131cb67be01",
+    "experiments/m194b-known-scene/produce.py": "c17391b26199ea70b29e4f0da12667fe1b8ca9dc355053ea49b3e8a87cc6c4a0",
+    "experiments/m194b-known-scene/run-baseline.py": "3b813f181ad1fe4f6cf8801ce66cc2349f45e8f7d7fdaa42a08a18890b68e8ae",
+    "experiments/m194b-known-scene/consumer-run.py": "ca2e635e4bae833b29c8254a4c4932adc3f46fd86e2a6e60587630b1cd23572c",
+    "experiments/m194b-known-scene/commission-forward.py": "b29160d462c5f340fffeb10c772cd5bb8a5629536837d57ac059bccd4fd01775",
+    "experiments/m194b-known-scene/score.py": "d292c8623827eb960bc28dc341398c7e164f5c14cd31af74663ee24c1ff5b5dd",
+    "experiments/m194b-known-scene/score-benchmark.py": "eccbd41383ebcb46d865aef6745b39cafe91dab9294ea109b3a83981388fa80b",
+    "experiments/m194b-known-scene/preregister.md": "70720d92113b8700b52c1b5b1d57cc6dcb728296131fe3a309cc03b6d59b4093",
+    "experiments/m194b-known-scene/scorer-preregister.md": "5dbbc271fdaba2eae4df6d95067e60e9fb96abe51803117aa78980832cc38fbb",
+    "experiments/m194b-known-scene/producer-preregister.json": "b8295044614f55db45e715d7c5ffc985e676f3104443e6fe5dcf20193e9c0129"
+  },
+  "source_snapshots": [
+    {
+      "original_path": "Cargo.lock",
+      "path": "sources/Cargo.lock",
+      "sha256": "82a228ddda138d1b6269e1a32a6e55377369bb94923e92da362cf11cc9569a4b"
+    },
+    {
+      "original_path": "Cargo.toml",
+      "path": "sources/Cargo.toml",
+      "sha256": "732c5d4d874594cccbfd896ae688afa01e91290f0b1c8fd0331fa8b06f914984"
+    },
+    {
+      "original_path": "crates/strehl-cli/Cargo.toml",
+      "path": "sources/crates/strehl-cli/Cargo.toml",
+      "sha256": "d0e6b05aa93df026270e513fd3e5ab9cd50726596ef1475b8a3680faa84b2650"
+    },
+    {
+      "original_path": "crates/strehl-cli/build.rs",
+      "path": "sources/crates/strehl-cli/build.rs",
+      "sha256": "5b864155733a90c2a4f7152e21d3dbcc5d5e0f469b4aa772c328fe86e4aa2091"
+    },
+    {
+      "original_path": "crates/strehl-cli/examples/blend-render.rs",
+      "path": "sources/crates/strehl-cli/examples/blend-render.rs",
+      "sha256": "86c403dc074519bdf54dd66226a82ac935d8a91a26d44799596989fbcacd25b9"
+    },
+    {
+      "original_path": "crates/strehl-cli/examples/blend-truth.rs",
+      "path": "sources/crates/strehl-cli/examples/blend-truth.rs",
+      "sha256": "38a5a9464a7c09521dad8320a90faea4f25a09aead175af3f37f25dc7e034ca2"
+    },
+    {
+      "original_path": "crates/strehl-cli/examples/build-demosaic-truth.rs",
+      "path": "sources/crates/strehl-cli/examples/build-demosaic-truth.rs",
+      "sha256": "fb33639b174986c9159b8a544b46b5cb4aa3a514a4315a80738c55b4305f27fd"
+    },
+    {
+      "original_path": "crates/strehl-cli/examples/build-gatefloor.rs",
+      "path": "sources/crates/strehl-cli/examples/build-gatefloor.rs",
+      "sha256": "c377d932c168c8ac5d74ae3c96e9a1d714726ccb91fca01697b5e1596e8de0cd"
+    },
+    {
+      "original_path": "crates/strehl-cli/examples/build-plugin-field.rs",
+      "path": "sources/crates/strehl-cli/examples/build-plugin-field.rs",
+      "sha256": "a733f23be4a3d385a4011f249b8fd3769a3fd018dade66aa43c9d19935ec6f71"
+    },
+    {
+      "original_path": "crates/strehl-cli/examples/build-resamp-mtf.rs",
+      "path": "sources/crates/strehl-cli/examples/build-resamp-mtf.rs",
+      "sha256": "69dd26cb260d9d0435ec1689dbcfd27b0cab16f9feffe82d3b944701e80bcb27"
+    },
+    {
+      "original_path": "crates/strehl-cli/examples/cover-reference.rs",
+      "path": "sources/crates/strehl-cli/examples/cover-reference.rs",
+      "sha256": "f1762977aa8ae7c1d95366f5c65a6857dc6ab012e9e7323a4054ff6cd2bf5c7e"
+    },
+    {
+      "original_path": "crates/strehl-cli/examples/defect-cpl-split.rs",
+      "path": "sources/crates/strehl-cli/examples/defect-cpl-split.rs",
+      "sha256": "0131f7bbdbfb6f840472e318a290205134f739f4f4b93c441a2d8d4f42873bb4"
+    },
+    {
+      "original_path": "crates/strehl-cli/examples/defect-flat-census.rs",
+      "path": "sources/crates/strehl-cli/examples/defect-flat-census.rs",
+      "sha256": "070f2e343597916269cc4699d34a7bd485dccac9d17b185303af152a745c8273"
+    },
+    {
+      "original_path": "crates/strehl-cli/examples/defect-geometry-census.rs",
+      "path": "sources/crates/strehl-cli/examples/defect-geometry-census.rs",
+      "sha256": "23e3d8ff39020a9ef09701bd17886ea09249f503495f5e527c53d84a014126e4"
+    },
+    {
+      "original_path": "crates/strehl-cli/examples/defect-geometry-verdict.rs",
+      "path": "sources/crates/strehl-cli/examples/defect-geometry-verdict.rs",
+      "sha256": "38e4e8ea3afb115a018413985813e730bd109351489f761c771f2cf144a62749"
+    },
+    {
+      "original_path": "crates/strehl-cli/examples/defect-plant-fidelity.rs",
+      "path": "sources/crates/strehl-cli/examples/defect-plant-fidelity.rs",
+      "sha256": "bff657c34c0ac00bba47b75dd17f7698e47328631600718e0c2adfe99adcb7f5"
+    },
+    {
+      "original_path": "crates/strehl-cli/examples/m123-null-radius.rs",
+      "path": "sources/crates/strehl-cli/examples/m123-null-radius.rs",
+      "sha256": "29780cdb8f20768705949bf5622783faff6ba2cb9d46326779eb064ac0a941cd"
+    },
+    {
+      "original_path": "crates/strehl-cli/examples/m123-outlier-real.rs",
+      "path": "sources/crates/strehl-cli/examples/m123-outlier-real.rs",
+      "sha256": "3cb776b76023f5ebe7ac5ffa588e31b4b0a8c34d98794d2cd174ef071d638275"
+    },
+    {
+      "original_path": "crates/strehl-cli/examples/m123-trap-decompose.rs",
+      "path": "sources/crates/strehl-cli/examples/m123-trap-decompose.rs",
+      "sha256": "be1462beb949bf32eb1e54b3a598ad488ee616aca79704a2940f9049f5aecf9f"
+    },
+    {
+      "original_path": "crates/strehl-cli/examples/m60-disagreement.rs",
+      "path": "sources/crates/strehl-cli/examples/m60-disagreement.rs",
+      "sha256": "e6800fabce502189bba14148b42f96ceabd893e77e8732af27394592a219a93b"
+    },
+    {
+      "original_path": "crates/strehl-cli/examples/m65-election.rs",
+      "path": "sources/crates/strehl-cli/examples/m65-election.rs",
+      "sha256": "8bb8b1f268107d171ca8d3454687c02ca0bec24dea629ede433f9547c993ae8f"
+    },
+    {
+      "original_path": "crates/strehl-cli/examples/m67-focus-correctness.rs",
+      "path": "sources/crates/strehl-cli/examples/m67-focus-correctness.rs",
+      "sha256": "9b2fa813ced90939f7cb065fbb12662fd8129b4e06269183764e6e52e048881c"
+    },
+    {
+      "original_path": "crates/strehl-cli/examples/m73-cylinder.rs",
+      "path": "sources/crates/strehl-cli/examples/m73-cylinder.rs",
+      "sha256": "b42700a1384eb2d6f12d4072b4040fbe3f4da82cf27de1d71eb47fd181e7cd55"
+    },
+    {
+      "original_path": "crates/strehl-cli/examples/m86-align.rs",
+      "path": "sources/crates/strehl-cli/examples/m86-align.rs",
+      "sha256": "63dad30331cf9ecb293374d35133f1f9062592e016f3cafd767b962b76080a2e"
+    },
+    {
+      "original_path": "crates/strehl-cli/examples/m89-robust.rs",
+      "path": "sources/crates/strehl-cli/examples/m89-robust.rs",
+      "sha256": "acb6f32abf2d40dd9b1d00085710ee4b5ae77c34481a3730ba6bb76bdebbaa2f"
+    },
+    {
+      "original_path": "crates/strehl-cli/examples/m90-prnu.rs",
+      "path": "sources/crates/strehl-cli/examples/m90-prnu.rs",
+      "sha256": "7e5a232e10d70ea7809780ea32f578a7aadf6cff46a3d2df45ffc5e79031f5c8"
+    },
+    {
+      "original_path": "crates/strehl-cli/examples/m90-rho.rs",
+      "path": "sources/crates/strehl-cli/examples/m90-rho.rs",
+      "sha256": "fbe0faadaa636616cec0755e872509e33a65a108b636d50f5a359e6f3a582d7f"
+    },
+    {
+      "original_path": "crates/strehl-cli/examples/m91-photometry.rs",
+      "path": "sources/crates/strehl-cli/examples/m91-photometry.rs",
+      "sha256": "e39f2f6d95e0606ec7f9525991b17c4519d4c3deac709188f8b5e3eaa1625f61"
+    },
+    {
+      "original_path": "crates/strehl-cli/examples/m93-election.rs",
+      "path": "sources/crates/strehl-cli/examples/m93-election.rs",
+      "sha256": "d63a840f830be4489fc32c05c8f11e3c26e10e163df40d6eb15f1ad9c39ea677"
+    },
+    {
+      "original_path": "crates/strehl-cli/examples/m95-demosaic.rs",
+      "path": "sources/crates/strehl-cli/examples/m95-demosaic.rs",
+      "sha256": "8210edf48821204928af800b307617389f4a1b7a0e24003f1c6d9375436fde81"
+    },
+    {
+      "original_path": "crates/strehl-cli/examples/m95-kernel.rs",
+      "path": "sources/crates/strehl-cli/examples/m95-kernel.rs",
+      "sha256": "bd2391e8b83da68b742cf0bf98834315c013e07afa1fd6afbc79f06ca3c1d614"
+    },
+    {
+      "original_path": "crates/strehl-cli/examples/m95-lanczos.rs",
+      "path": "sources/crates/strehl-cli/examples/m95-lanczos.rs",
+      "sha256": "61d6f4d5ba260cd3c601f1a9f525b2cac922ef42270ebec3c58f0e5dc04fa298"
+    },
+    {
+      "original_path": "crates/strehl-cli/examples/m96-election-margin.rs",
+      "path": "sources/crates/strehl-cli/examples/m96-election-margin.rs",
+      "sha256": "06d62fd30245590a74d6c948d3d7ef0421e65b836c32abbc39d71ed364470eac"
+    },
+    {
+      "original_path": "crates/strehl-cli/examples/m97-outlier.rs",
+      "path": "sources/crates/strehl-cli/examples/m97-outlier.rs",
+      "sha256": "cb6562b5d0a3352ef7005fdc82a65f8ba80821739ca851402cd42f556248652c"
+    },
+    {
+      "original_path": "crates/strehl-cli/examples/m97-tornmap.rs",
+      "path": "sources/crates/strehl-cli/examples/m97-tornmap.rs",
+      "sha256": "55b21b7803d7a1afe7305c80a799f0e1de89b76098878c1deef8e9c6a7a1ff4e"
+    },
+    {
+      "original_path": "crates/strehl-cli/examples/m99-photometric.rs",
+      "path": "sources/crates/strehl-cli/examples/m99-photometric.rs",
+      "sha256": "a253c53102f873961dbd13c3190e178374c58e3c7967e2fef407b5865e59b512"
+    },
+    {
+      "original_path": "crates/strehl-cli/src/align_cmd.rs",
+      "path": "sources/crates/strehl-cli/src/align_cmd.rs",
+      "sha256": "b3de7738151a6bc0500c66dd916f9fcb20cdb9be0bf698ad00425d3ebb397c69"
+    },
+    {
+      "original_path": "crates/strehl-cli/src/bin/strehl-common-input.rs",
+      "path": "sources/crates/strehl-cli/src/bin/strehl-common-input.rs",
+      "sha256": "0abf5917357365ba83028f82c0a2855917ad45071d95d3ec2d404702de1ef31f"
+    },
+    {
+      "original_path": "crates/strehl-cli/src/focus_plugin.rs",
+      "path": "sources/crates/strehl-cli/src/focus_plugin.rs",
+      "sha256": "d917dba8f3bfc57a709b7af6650dc43a34724383270ac5faec986ed3a963d337"
+    },
+    {
+      "original_path": "crates/strehl-cli/src/image_out.rs",
+      "path": "sources/crates/strehl-cli/src/image_out.rs",
+      "sha256": "c1362363740cb0176985283455cd6ddef80479854b1bbc9f0396851c490f82b6"
+    },
+    {
+      "original_path": "crates/strehl-cli/src/main.rs",
+      "path": "sources/crates/strehl-cli/src/main.rs",
+      "sha256": "a29e0f975764b75491eb3147e94f15b05944120cdc3cdd55a24830a89a2e5340"
+    },
+    {
+      "original_path": "crates/strehl-cli/src/merge_cmd.rs",
+      "path": "sources/crates/strehl-cli/src/merge_cmd.rs",
+      "sha256": "693d0539b09302f77bdafd27b30356560f4cc2740d7414cc1c163b7bf1b5335f"
+    },
+    {
+      "original_path": "crates/strehl-cli/src/merge_cmd/dump.rs",
+      "path": "sources/crates/strehl-cli/src/merge_cmd/dump.rs",
+      "sha256": "2827483acbbce3dc528f3d27642cb54e8c8f99abb85b0b23f89f59c53c93bfe3"
+    },
+    {
+      "original_path": "crates/strehl-cli/src/merge_cmd/gatefloor.rs",
+      "path": "sources/crates/strehl-cli/src/merge_cmd/gatefloor.rs",
+      "sha256": "bcea35986c73011c20d872bddc9c0ef3ea9354101259bd3952c16976bb1c9496"
+    },
+    {
+      "original_path": "crates/strehl-cli/src/merge_cmd/halo.rs",
+      "path": "sources/crates/strehl-cli/src/merge_cmd/halo.rs",
+      "sha256": "fc234df8b515f982bbc527448ea0a0764c30b088385405d85f253800aaf7dd55"
+    },
+    {
+      "original_path": "crates/strehl-cli/src/merge_cmd/known-scene-benchmark.rs",
+      "path": "sources/crates/strehl-cli/src/merge_cmd/known-scene-benchmark.rs",
+      "sha256": "4ac1d2e82aef7ca4428b7e3fd276f691a50d4be8e0e2152ad00be00de8db2034"
+    },
+    {
+      "original_path": "crates/strehl-cli/src/merge_cmd/production-truth.rs",
+      "path": "sources/crates/strehl-cli/src/merge_cmd/production-truth.rs",
+      "sha256": "4ddd69b66cfbdad55443f3e0273aa60f188f3b5de314eddba5ef2378aee93955"
+    },
+    {
+      "original_path": "crates/strehl-cli/src/stack.rs",
+      "path": "sources/crates/strehl-cli/src/stack.rs",
+      "sha256": "108bb38a964946c7e7b7c25c640ce08297835faee253ad4e059e6074f5655572"
+    },
+    {
+      "original_path": "crates/strehl-cli/tests/byte-freeze.rs",
+      "path": "sources/crates/strehl-cli/tests/byte-freeze.rs",
+      "sha256": "750efd0d5605d76bc1e5000e9945a58d57ef4418ec25299cd27920408f53976c"
+    },
+    {
+      "original_path": "crates/strehl-cli/tests/byte-freezes.tsv",
+      "path": "sources/crates/strehl-cli/tests/byte-freezes.tsv",
+      "sha256": "d74c3f1da19c0edf6625bc6a26ccad3de6a6ab6c201f009d009b9999c5f4d001"
+    },
+    {
+      "original_path": "crates/strehl-cli/tests/data/coffee-bean-20.clamped-catmull.warpmap.txt",
+      "path": "sources/crates/strehl-cli/tests/data/coffee-bean-20.clamped-catmull.warpmap.txt",
+      "sha256": "d35352b083530cf52d7649d384e046e3eb410de41b4f5444c4b7992338900fe8"
+    },
+    {
+      "original_path": "crates/strehl-cli/tests/data/coffee-bean-20.warpmap.txt",
+      "path": "sources/crates/strehl-cli/tests/data/coffee-bean-20.warpmap.txt",
+      "sha256": "ef74541395db1ba606067bcf04947909bd6a9c5be530fe8aad21578b5c1e93b3"
+    },
+    {
+      "original_path": "crates/strehl-core/Cargo.toml",
+      "path": "sources/crates/strehl-core/Cargo.toml",
+      "sha256": "25bdef9c60ef30849ba184116f2b5aa202b07baf55da22ca311f725ab56bde16"
+    },
+    {
+      "original_path": "crates/strehl-core/examples/demosaic-plane.rs",
+      "path": "sources/crates/strehl-core/examples/demosaic-plane.rs",
+      "sha256": "d40278227e647f195be75e1c199eab04132cdc21c7ae07648cf29bbb410d2f8c"
+    },
+    {
+      "original_path": "crates/strehl-core/examples/focus-window-cost.rs",
+      "path": "sources/crates/strehl-core/examples/focus-window-cost.rs",
+      "sha256": "ddb8aa01857c03860f62fbbf82793e8e1b5d2df32adde877269af2be39c9b997"
+    },
+    {
+      "original_path": "crates/strehl-core/examples/restore-plane.rs",
+      "path": "sources/crates/strehl-core/examples/restore-plane.rs",
+      "sha256": "5707ab9a2a66333968936d704ea8888fa7535dc6e0b7c73c1a3f815fd2c1a0d1"
+    },
+    {
+      "original_path": "crates/strehl-core/src/align.rs",
+      "path": "sources/crates/strehl-core/src/align.rs",
+      "sha256": "6d33f0e24f21d4370ccd8df0bf618e54a5ad615b838bc265469b4f85051c2786"
+    },
+    {
+      "original_path": "crates/strehl-core/src/boxfilter.rs",
+      "path": "sources/crates/strehl-core/src/boxfilter.rs",
+      "sha256": "5cf6dab36c8ddb7499acbec140df509b4e1e5fe0b0ace3a13f8d7cf68f979b8e"
+    },
+    {
+      "original_path": "crates/strehl-core/src/clip.rs",
+      "path": "sources/crates/strehl-core/src/clip.rs",
+      "sha256": "aa1ccdac944d928879f94770b2161152a271f9fa208c57c66d8921e5a643533d"
+    },
+    {
+      "original_path": "crates/strehl-core/src/color.rs",
+      "path": "sources/crates/strehl-core/src/color.rs",
+      "sha256": "83c1aa371dc751862bfef5724a6eceab8182c5d68b6f31ac299b3443c14c8f1e"
+    },
+    {
+      "original_path": "crates/strehl-core/src/defect-map-ILCE-7CM2-dust.txt",
+      "path": "sources/crates/strehl-core/src/defect-map-ILCE-7CM2-dust.txt",
+      "sha256": "a406efd51f806e360e1e51fc1421eca5e3cc912f356ced0693c8477a398853ee"
+    },
+    {
+      "original_path": "crates/strehl-core/src/defect_map.rs",
+      "path": "sources/crates/strehl-core/src/defect_map.rs",
+      "sha256": "1738c770c9f316a6aeac3f742bf7abc9581ea386b4e07ec128e50df35c2ffb14"
+    },
+    {
+      "original_path": "crates/strehl-core/src/demosaic.rs",
+      "path": "sources/crates/strehl-core/src/demosaic.rs",
+      "sha256": "425d6889485011cf6f2aaf57b0b873f15fd6ee3250853f3ba5f6540b496b3810"
+    },
+    {
+      "original_path": "crates/strehl-core/src/edgeaware.rs",
+      "path": "sources/crates/strehl-core/src/edgeaware.rs",
+      "sha256": "a32580ac72dd273e62cab40afa9b36e2462ef57335c8d7cd8ab0725184c7f77b"
+    },
+    {
+      "original_path": "crates/strehl-core/src/election_coherence.rs",
+      "path": "sources/crates/strehl-core/src/election_coherence.rs",
+      "sha256": "47640a176cb445dd2f01b309d907da066ae7f5a6d28b354d2de60362538f948e"
+    },
+    {
+      "original_path": "crates/strehl-core/src/flat_ratio.rs",
+      "path": "sources/crates/strehl-core/src/flat_ratio.rs",
+      "sha256": "da1df7167b6f18ac248c1ee347671388391a968aa45a762299c4418a2287fef0"
+    },
+    {
+      "original_path": "crates/strehl-core/src/focus.rs",
+      "path": "sources/crates/strehl-core/src/focus.rs",
+      "sha256": "71e63def76e40f18df440617a9dba7013d799ceabd30bf805149223433384e3e"
+    },
+    {
+      "original_path": "crates/strehl-core/src/highlight.rs",
+      "path": "sources/crates/strehl-core/src/highlight.rs",
+      "sha256": "97d4aacec3d7e6c3dd2df1f792ffb7ee136a8f6064ffb0dc1656476730f7641e"
+    },
+    {
+      "original_path": "crates/strehl-core/src/lib.rs",
+      "path": "sources/crates/strehl-core/src/lib.rs",
+      "sha256": "91419ceb273be1dc9ab15dbdc6347bd2b398d29cf36c0da9184ee533372f8022"
+    },
+    {
+      "original_path": "crates/strehl-core/src/merge.rs",
+      "path": "sources/crates/strehl-core/src/merge.rs",
+      "sha256": "7362cf6fab70db56443693e5483f052ba48b32cc7ef264d64ec4a7bd1b50e4ef"
+    },
+    {
+      "original_path": "crates/strehl-core/src/noise.rs",
+      "path": "sources/crates/strehl-core/src/noise.rs",
+      "sha256": "d88dc9cf419a8fdb1e3ff2c51f0b0ac80d785c17de7f9e71e905fc977fce0ecc"
+    },
+    {
+      "original_path": "crates/strehl-core/src/optics.rs",
+      "path": "sources/crates/strehl-core/src/optics.rs",
+      "sha256": "1884fd98c7a2adf903c152b3d877051cfeba71316bdbb797fd2f1ba1433a5524"
+    },
+    {
+      "original_path": "crates/strehl-core/src/outlier.rs",
+      "path": "sources/crates/strehl-core/src/outlier.rs",
+      "sha256": "8d3fb7a225b5811c2d831db4339953b15a5181bfcda7591ac05f23f6adf5e67d"
+    },
+    {
+      "original_path": "crates/strehl-core/src/photometric.rs",
+      "path": "sources/crates/strehl-core/src/photometric.rs",
+      "sha256": "b6102288c7fc2312f16d108dc3d943d290a5b8fd5d5a5c39306d97489191399b"
+    },
+    {
+      "original_path": "crates/strehl-core/src/plane.rs",
+      "path": "sources/crates/strehl-core/src/plane.rs",
+      "sha256": "8c219f9c4d2c8c0da19416998b0f369a9f9d44e305740664f29caaba69203dc4"
+    },
+    {
+      "original_path": "crates/strehl-core/src/profile.rs",
+      "path": "sources/crates/strehl-core/src/profile.rs",
+      "sha256": "07e7cf7b3040239a5a32464ae998a434696031010ce8d87dac7f2dd2a95ac1f1"
+    },
+    {
+      "original_path": "crates/strehl-core/src/pyramid.rs",
+      "path": "sources/crates/strehl-core/src/pyramid.rs",
+      "sha256": "7b6376e68a1a6488f958b85e65cfdc57dfe8b8826d4612d8429d08f8743632ac"
+    },
+    {
+      "original_path": "crates/strehl-core/src/restore.rs",
+      "path": "sources/crates/strehl-core/src/restore.rs",
+      "sha256": "3ab5c6660b7a45837ac4b5560078092e6aafa9c85a041a935e95b0cd77533afd"
+    },
+    {
+      "original_path": "crates/strehl-core/src/robust.rs",
+      "path": "sources/crates/strehl-core/src/robust.rs",
+      "sha256": "2cf6013b948f5c9d4f11783633f04e6d76ac9830383197c05506b0d68fe24004"
+    },
+    {
+      "original_path": "crates/strehl-core/src/softgate.rs",
+      "path": "sources/crates/strehl-core/src/softgate.rs",
+      "sha256": "0cb0f916dade24e6e3a31529378390a083c6c56cb3e8b479eb7eb65ac04f688d"
+    },
+    {
+      "original_path": "crates/strehl-core/src/stack.rs",
+      "path": "sources/crates/strehl-core/src/stack.rs",
+      "sha256": "c951cdbb304e4894676f1ff6a77316e7e2ab68d7756f22bf623562380d5f6337"
+    },
+    {
+      "original_path": "crates/strehl-core/src/through_focus.rs",
+      "path": "sources/crates/strehl-core/src/through_focus.rs",
+      "sha256": "475a6c4eece089638ab916e3d7f4cf480197e2d838b5244347c16762f5122a3d"
+    },
+    {
+      "original_path": "crates/strehl-core/src/warpmap.rs",
+      "path": "sources/crates/strehl-core/src/warpmap.rs",
+      "sha256": "9d2198eeab5e8a941e297cf8fcd8a217d2454390220433ae19cc6b07e6fd721b"
+    },
+    {
+      "original_path": "crates/strehl-plugin/Cargo.toml",
+      "path": "sources/crates/strehl-plugin/Cargo.toml",
+      "sha256": "b3fd67fd414ac138119f4ab8dedaee280cea23b1bcc20f21f066f09d3575c88c"
+    },
+    {
+      "original_path": "crates/strehl-plugin/examples/calibration-survey.rs",
+      "path": "sources/crates/strehl-plugin/examples/calibration-survey.rs",
+      "sha256": "b453361321e0e777148121ba5a4b8edff557a5d59aa1d9615b91386208c4aafe"
+    },
+    {
+      "original_path": "crates/strehl-plugin/examples/f5-design-probes.rs",
+      "path": "sources/crates/strehl-plugin/examples/f5-design-probes.rs",
+      "sha256": "4f368b7e3ec8ab522183ee3b86fa36adbee76a2b5d772c8f0bafcc9706536676"
+    },
+    {
+      "original_path": "crates/strehl-plugin/src/calibrate.rs",
+      "path": "sources/crates/strehl-plugin/src/calibrate.rs",
+      "sha256": "7e10fbd56d8257f409a083461854bf999f8c97ce1a65aad5f90da3b76c8d2a10"
+    },
+    {
+      "original_path": "crates/strehl-plugin/src/field.rs",
+      "path": "sources/crates/strehl-plugin/src/field.rs",
+      "sha256": "6a1da0df1fc4d6ba5e7cbfc0bc3d79295e89bca7b21647f237154bd97018ced5"
+    },
+    {
+      "original_path": "crates/strehl-plugin/src/lib.rs",
+      "path": "sources/crates/strehl-plugin/src/lib.rs",
+      "sha256": "9dbb902a31cb21ba5e07fe1576f96b0cffad2dd8fed70a777c2bfaaab41f97e7"
+    },
+    {
+      "original_path": "crates/strehl-plugin/src/measure.rs",
+      "path": "sources/crates/strehl-plugin/src/measure.rs",
+      "sha256": "a3941112f7e5a19b2929d83e95afa97d7be1f2ed3465d6160715386705a23c20"
+    },
+    {
+      "original_path": "crates/strehl-plugin/src/reference.rs",
+      "path": "sources/crates/strehl-plugin/src/reference.rs",
+      "sha256": "eca4ecf81d1e783c48d680323907fd34336d1f3d5accdedfbdf726e14e847cfb"
+    },
+    {
+      "original_path": "crates/strehl-plugin/src/registry.rs",
+      "path": "sources/crates/strehl-plugin/src/registry.rs",
+      "sha256": "1543ba679a56bdcd9ff625e54c9efd97d74c316cbf0726866e125cc1eb806a35"
+    },
+    {
+      "original_path": "crates/strehl-plugin/src/rng.rs",
+      "path": "sources/crates/strehl-plugin/src/rng.rs",
+      "sha256": "402c5fa0acb97df6de6df14a51935de05ad9a71d20f4a909a9f7154f52442225"
+    },
+    {
+      "original_path": "crates/strehl-raw/Cargo.toml",
+      "path": "sources/crates/strehl-raw/Cargo.toml",
+      "sha256": "6e1e7cfdadb24371423143fb10945b0e61b3f45696365aa87a721661edde31c9"
+    },
+    {
+      "original_path": "crates/strehl-raw/examples/identity.rs",
+      "path": "sources/crates/strehl-raw/examples/identity.rs",
+      "sha256": "78cdc478590b5bfd46bf3bcbed46cb0d74f5d788b08d38a5fd98636d46443668"
+    },
+    {
+      "original_path": "crates/strehl-raw/src/common_tiff.rs",
+      "path": "sources/crates/strehl-raw/src/common_tiff.rs",
+      "sha256": "bac1d18f036b8960a8e82d01b610ae945d00d259d4cc3fe7eb9106e8a8077f42"
+    },
+    {
+      "original_path": "crates/strehl-raw/src/identity.rs",
+      "path": "sources/crates/strehl-raw/src/identity.rs",
+      "sha256": "676d18872656a72a93e3257b1677c38ea2ee39084574e1153bdbbfbc6e8ad1fe"
+    },
+    {
+      "original_path": "crates/strehl-raw/src/lib.rs",
+      "path": "sources/crates/strehl-raw/src/lib.rs",
+      "sha256": "1513fd3e682f2edb8c54c7d47083f20f66525ad72a5687fb2e530bb5697fef2a"
+    },
+    {
+      "original_path": "experiments/M103-halfdrift/data/truth-dense.json",
+      "path": "sources/experiments/M103-halfdrift/data/truth-dense.json",
+      "sha256": "45b12d8c7106fa1c9c1ce3d5f663896a43992ff35f867fd3c6374131cb67be01"
+    },
+    {
+      "original_path": "experiments/m194-production-truth/independent-controls.rs",
+      "path": "sources/experiments/m194-production-truth/independent-controls.rs",
+      "sha256": "bd5777f1f960e7db217fda4b4ce9f24a963cea9351d244acf8aac84ee68f718f"
+    },
+    {
+      "original_path": "experiments/m194b-known-scene/commission-forward.py",
+      "path": "sources/experiments/m194b-known-scene/commission-forward.py",
+      "sha256": "b29160d462c5f340fffeb10c772cd5bb8a5629536837d57ac059bccd4fd01775"
+    },
+    {
+      "original_path": "experiments/m194b-known-scene/consumer-run.py",
+      "path": "sources/experiments/m194b-known-scene/consumer-run.py",
+      "sha256": "ca2e635e4bae833b29c8254a4c4932adc3f46fd86e2a6e60587630b1cd23572c"
+    },
+    {
+      "original_path": "experiments/m194b-known-scene/preregister.md",
+      "path": "sources/experiments/m194b-known-scene/preregister.md",
+      "sha256": "70720d92113b8700b52c1b5b1d57cc6dcb728296131fe3a309cc03b6d59b4093"
+    },
+    {
+      "original_path": "experiments/m194b-known-scene/produce.py",
+      "path": "sources/experiments/m194b-known-scene/produce.py",
+      "sha256": "c17391b26199ea70b29e4f0da12667fe1b8ca9dc355053ea49b3e8a87cc6c4a0"
+    },
+    {
+      "original_path": "experiments/m194b-known-scene/producer-preregister.json",
+      "path": "sources/experiments/m194b-known-scene/producer-preregister.json",
+      "sha256": "b8295044614f55db45e715d7c5ffc985e676f3104443e6fe5dcf20193e9c0129"
+    },
+    {
+      "original_path": "experiments/m194b-known-scene/run-baseline.py",
+      "path": "sources/experiments/m194b-known-scene/run-baseline.py",
+      "sha256": "3b813f181ad1fe4f6cf8801ce66cc2349f45e8f7d7fdaa42a08a18890b68e8ae"
+    },
+    {
+      "original_path": "experiments/m194b-known-scene/score-benchmark.py",
+      "path": "sources/experiments/m194b-known-scene/score-benchmark.py",
+      "sha256": "eccbd41383ebcb46d865aef6745b39cafe91dab9294ea109b3a83981388fa80b"
+    },
+    {
+      "original_path": "experiments/m194b-known-scene/score.py",
+      "path": "sources/experiments/m194b-known-scene/score.py",
+      "sha256": "d292c8623827eb960bc28dc341398c7e164f5c14cd31af74663ee24c1ff5b5dd"
+    },
+    {
+      "original_path": "experiments/m194b-known-scene/scorer-preregister.md",
+      "path": "sources/experiments/m194b-known-scene/scorer-preregister.md",
+      "sha256": "5dbbc271fdaba2eae4df6d95067e60e9fb96abe51803117aa78980832cc38fbb"
+    },
+    {
+      "original_path": "experiments/m25-simulator/src/strehl_sim/config.py",
+      "path": "sources/experiments/m25-simulator/src/strehl_sim/config.py",
+      "sha256": "507d165e405812a9fdcffbf83a026e699f844dfd88bb2af9faec6e4c12c0ba59"
+    },
+    {
+      "original_path": "experiments/m25-simulator/src/strehl_sim/optics.py",
+      "path": "sources/experiments/m25-simulator/src/strehl_sim/optics.py",
+      "sha256": "ac5a2342d5ad3e6551ca3ddade5dba8feb9ea8f555f3aa36b71c774c6868fb93"
+    },
+    {
+      "original_path": "experiments/m25-simulator/src/strehl_sim/render.py",
+      "path": "sources/experiments/m25-simulator/src/strehl_sim/render.py",
+      "sha256": "8b842d06ab1a550d1c66263dde2969e0e390a439938e57cb54c4095a6a36118c"
+    },
+    {
+      "original_path": "experiments/m25-simulator/src/strehl_sim/scene.py",
+      "path": "sources/experiments/m25-simulator/src/strehl_sim/scene.py",
+      "sha256": "9bea8539999ca64f893505337dbbe4c32c5765bc2368508275be43eed008351f"
+    },
+    {
+      "original_path": "experiments/m25-simulator/src/strehl_sim/sensor.py",
+      "path": "sources/experiments/m25-simulator/src/strehl_sim/sensor.py",
+      "sha256": "d3057d2bfe3be5c832314e3a442941ef8269dd9a9c3b35e7e100a520e975957f"
+    }
+  ],
+  "cases": [
+    {
+      "label": "flat-noise-off",
+      "scene": "flat",
+      "repeat": null,
+      "noise_enabled": false,
+      "manifest_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\flat\\noise-off\\manifest.json",
+      "manifest_sha256": "60ae007752236191358ee45f015e04a5b5243fb7c0704d065af88fb3f74ddb44",
+      "plan_path": "plans/flat-noise-off.json",
+      "plan_sha256": "603d6f916132d3c986208812b4e24aebceb30ff536230812c86f30c4681e232a",
+      "arms": [
+        {
+          "name": "full9",
+          "receipt_path": "receipts/flat-noise-off-full9.json",
+          "receipt_sha256": "d45b23e9068905e12b65ec9b4a1b7a925f91148d9164603af82c6ff90175a453"
+        },
+        {
+          "name": "single4",
+          "receipt_path": "receipts/flat-noise-off-single4.json",
+          "receipt_sha256": "b4141dc4ea48b0b4efaa2cdff21d3300bd730842c17a6bf8570e01437472cb5b"
+        }
+      ]
+    },
+    {
+      "label": "flat-seed-701",
+      "scene": "flat",
+      "repeat": 701,
+      "noise_enabled": true,
+      "manifest_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\flat\\seed-701\\manifest.json",
+      "manifest_sha256": "6b505c8b3459c36f1d8c423500a8fb05d9fd0989e8ad8e7ad8d7481e8dfc79bf",
+      "plan_path": "plans/flat-seed-701.json",
+      "plan_sha256": "3f083cb8e72f48117332d11ba5160ac6172967ab1a66334626adaf8f64060120",
+      "arms": [
+        {
+          "name": "full9",
+          "receipt_path": "receipts/flat-seed-701-full9.json",
+          "receipt_sha256": "744ad6893ccea8c638df4b98684f97e6f16786c863747ab4202742fa8a93836e"
+        },
+        {
+          "name": "single4",
+          "receipt_path": "receipts/flat-seed-701-single4.json",
+          "receipt_sha256": "c6f0f01fb62fe8d581fef906667ada73c9f2d4829243ae57c8e89d99c4d53532"
+        }
+      ]
+    },
+    {
+      "label": "flat-seed-709",
+      "scene": "flat",
+      "repeat": 709,
+      "noise_enabled": true,
+      "manifest_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\flat\\seed-709\\manifest.json",
+      "manifest_sha256": "0966990a3ea3ce057d91ebbeb5e8d650176292e20f04132e69cef5c26c75a5aa",
+      "plan_path": "plans/flat-seed-709.json",
+      "plan_sha256": "bdb04622278b638640e4e2422537e331a27c52caa64a52c315d12aae2dc4ce70",
+      "arms": [
+        {
+          "name": "full9",
+          "receipt_path": "receipts/flat-seed-709-full9.json",
+          "receipt_sha256": "19678536c5e03f621a7ab7b6a97d4c152c392dc6e88ad4421bc70974cab28ea0"
+        },
+        {
+          "name": "single4",
+          "receipt_path": "receipts/flat-seed-709-single4.json",
+          "receipt_sha256": "d072bb0167544068a26eecfc240f4f6545d92169082bc283bc21d30b1fa01551"
+        }
+      ]
+    },
+    {
+      "label": "flat-seed-719",
+      "scene": "flat",
+      "repeat": 719,
+      "noise_enabled": true,
+      "manifest_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\flat\\seed-719\\manifest.json",
+      "manifest_sha256": "0e4da023ff155be030ebd7336f753b736fe7f4dd3c8fe1b97b37121ca36111e7",
+      "plan_path": "plans/flat-seed-719.json",
+      "plan_sha256": "a1b4ba2fc43cac2a5cf2156af901aacd1d4555420770e0303fc9dd0ff4a3dcc8",
+      "arms": [
+        {
+          "name": "full9",
+          "receipt_path": "receipts/flat-seed-719-full9.json",
+          "receipt_sha256": "5baabf527c683b765f6e0981427e4c82aadb9ae177ca6ca3da432b524afe1d37"
+        },
+        {
+          "name": "single4",
+          "receipt_path": "receipts/flat-seed-719-single4.json",
+          "receipt_sha256": "697f85fc6d7806ff9fc9ff627be74ba871f40141a2af222861fb3091fd0966bc"
+        }
+      ]
+    },
+    {
+      "label": "flat-seed-727",
+      "scene": "flat",
+      "repeat": 727,
+      "noise_enabled": true,
+      "manifest_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\flat\\seed-727\\manifest.json",
+      "manifest_sha256": "4bb5464883fc7a9230fb38fee010e3df93a80967f024c7c4eff380f88c356027",
+      "plan_path": "plans/flat-seed-727.json",
+      "plan_sha256": "56f73880fd57486906970848f0b39fdd762f65d24211b8c84636c4bdba386860",
+      "arms": [
+        {
+          "name": "full9",
+          "receipt_path": "receipts/flat-seed-727-full9.json",
+          "receipt_sha256": "2e04a6f5d2a8c69409ab665235d79c643a966cb07f74539f0fe818df30b36e93"
+        },
+        {
+          "name": "single4",
+          "receipt_path": "receipts/flat-seed-727-single4.json",
+          "receipt_sha256": "f2f0931ca46932693a5f27a98532390d08746ec01ac50076a1953acaa2d70660"
+        }
+      ]
+    },
+    {
+      "label": "flat-seed-733",
+      "scene": "flat",
+      "repeat": 733,
+      "noise_enabled": true,
+      "manifest_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\flat\\seed-733\\manifest.json",
+      "manifest_sha256": "05f9fbb85b1e60a13181e55e55faa733c9cb1d88bdd915ed453f7f4bdef05681",
+      "plan_path": "plans/flat-seed-733.json",
+      "plan_sha256": "6ea52e481e3d51a19e3a6051b08ce32327e9c9e8e1fed8395cdbd16a3a06a67a",
+      "arms": [
+        {
+          "name": "full9",
+          "receipt_path": "receipts/flat-seed-733-full9.json",
+          "receipt_sha256": "5c67074a53ce500e7cb695b6f9b2ee57ca158b24cdfd28788ff4dfec4a267ed3"
+        },
+        {
+          "name": "single4",
+          "receipt_path": "receipts/flat-seed-733-single4.json",
+          "receipt_sha256": "48b2cabfaf404788a145c3291d29a1a0584831c86bdd455e93e546174392f0ac"
+        }
+      ]
+    },
+    {
+      "label": "flat-seed-739",
+      "scene": "flat",
+      "repeat": 739,
+      "noise_enabled": true,
+      "manifest_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\flat\\seed-739\\manifest.json",
+      "manifest_sha256": "2914f07d3e849954c08a6485bcc1ee6492766222d61b1ea7580a18578362b661",
+      "plan_path": "plans/flat-seed-739.json",
+      "plan_sha256": "a09234392373560df537f74a3b6f59715cfea31755a3fe082dcef52c9bf91f7d",
+      "arms": [
+        {
+          "name": "full9",
+          "receipt_path": "receipts/flat-seed-739-full9.json",
+          "receipt_sha256": "b4498a8ff8f07bc5e76ffa1aa611982d7081f7a381648cfc7155092f84fd6b62"
+        },
+        {
+          "name": "single4",
+          "receipt_path": "receipts/flat-seed-739-single4.json",
+          "receipt_sha256": "962aa1cfff7ea41d85a38b895c47795696ad6d292749668c603f462767ada49e"
+        }
+      ]
+    },
+    {
+      "label": "flat-seed-743",
+      "scene": "flat",
+      "repeat": 743,
+      "noise_enabled": true,
+      "manifest_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\flat\\seed-743\\manifest.json",
+      "manifest_sha256": "7bcf0e1987fc118344711b3d1113ae35c27adfb26142b089f6a25c2034f007e1",
+      "plan_path": "plans/flat-seed-743.json",
+      "plan_sha256": "5b029494d627c8adbc749fd7a882a1b8d547ff24c148a814efec9fc876503db0",
+      "arms": [
+        {
+          "name": "full9",
+          "receipt_path": "receipts/flat-seed-743-full9.json",
+          "receipt_sha256": "cf70798c69819793f2f8856064104f2c16d05ada7e17223e9795d020f41b9562"
+        },
+        {
+          "name": "single4",
+          "receipt_path": "receipts/flat-seed-743-single4.json",
+          "receipt_sha256": "0329be994bbdf833484ec1ebc27008222b7ffaf821566ff784c6ae48099026c7"
+        }
+      ]
+    },
+    {
+      "label": "flat-seed-751",
+      "scene": "flat",
+      "repeat": 751,
+      "noise_enabled": true,
+      "manifest_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\flat\\seed-751\\manifest.json",
+      "manifest_sha256": "d0d40adfd8693a128653d400ea9c17912a8e0bcb0a5dddadd4b550e91c335788",
+      "plan_path": "plans/flat-seed-751.json",
+      "plan_sha256": "7d83cfb930ee30287e6841697c832cd7dc2f532f7d6fb6819df867601a1267e2",
+      "arms": [
+        {
+          "name": "full9",
+          "receipt_path": "receipts/flat-seed-751-full9.json",
+          "receipt_sha256": "cb3bbaf7ab9e9da2e20c881d765843fc55e158894d27bb841bf6e77ff2a4a644"
+        },
+        {
+          "name": "single4",
+          "receipt_path": "receipts/flat-seed-751-single4.json",
+          "receipt_sha256": "f8b66ccad528e75b5cca74031995c35929196e0dd9b83adece12efb2c2f474a0"
+        }
+      ]
+    },
+    {
+      "label": "plane-noise-off",
+      "scene": "plane",
+      "repeat": null,
+      "noise_enabled": false,
+      "manifest_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\plane\\noise-off\\manifest.json",
+      "manifest_sha256": "ff9b676ff948270b54a9b1d987f0309ea61edaf13e390941463d9a2d5e4222df",
+      "plan_path": "plans/plane-noise-off.json",
+      "plan_sha256": "fbda51bb57e84e9fdc1d798f6236296178e271ae0f86f3e88207a8d4702de041",
+      "arms": [
+        {
+          "name": "full9",
+          "receipt_path": "receipts/plane-noise-off-full9.json",
+          "receipt_sha256": "0c750969f6f3caeab2f7790b253c34d64684618f30066d602b2e8f255a332300"
+        },
+        {
+          "name": "single4",
+          "receipt_path": "receipts/plane-noise-off-single4.json",
+          "receipt_sha256": "9464adf45b88154d80a997b6d7ae47a925fcf2c1ecd5fa05e261b7383c6af070"
+        }
+      ]
+    },
+    {
+      "label": "plane-seed-701",
+      "scene": "plane",
+      "repeat": 701,
+      "noise_enabled": true,
+      "manifest_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\plane\\seed-701\\manifest.json",
+      "manifest_sha256": "9b1754be33bf2879c57ad0239c9340f06c35a383b922414096796b1dfea9fc1b",
+      "plan_path": "plans/plane-seed-701.json",
+      "plan_sha256": "bf26bdbfd3d045beeab1763f7f5bfd89cb4a9b49d8d0798cf54ddf35f6e4570c",
+      "arms": [
+        {
+          "name": "full9",
+          "receipt_path": "receipts/plane-seed-701-full9.json",
+          "receipt_sha256": "b7b49dcb60ab216ccdb897face9671876d47fc0086112035985e2402de1518ab"
+        },
+        {
+          "name": "single4",
+          "receipt_path": "receipts/plane-seed-701-single4.json",
+          "receipt_sha256": "797b8902d83e34e676967a9cbfe087b79f93f0f0ff43c10799422d760a757fcb"
+        }
+      ]
+    },
+    {
+      "label": "plane-seed-709",
+      "scene": "plane",
+      "repeat": 709,
+      "noise_enabled": true,
+      "manifest_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\plane\\seed-709\\manifest.json",
+      "manifest_sha256": "cc6bd65bdfe773ffef60b8c0d10b300cbae778c7c13de1aa084d4336634e2a8c",
+      "plan_path": "plans/plane-seed-709.json",
+      "plan_sha256": "144e62ec6d0770d88f6af2844c82f2f31debef72715b89c43e9288032c1bf53f",
+      "arms": [
+        {
+          "name": "full9",
+          "receipt_path": "receipts/plane-seed-709-full9.json",
+          "receipt_sha256": "2c25bab1e0e94fa2511113671f4be7a0ebb7d343ee8200e1e4f079050ebd9458"
+        },
+        {
+          "name": "single4",
+          "receipt_path": "receipts/plane-seed-709-single4.json",
+          "receipt_sha256": "c7d30b31072eeb09966b9ee686eb92c26505f93c594ad581b4529de85f9be73e"
+        }
+      ]
+    },
+    {
+      "label": "plane-seed-719",
+      "scene": "plane",
+      "repeat": 719,
+      "noise_enabled": true,
+      "manifest_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\plane\\seed-719\\manifest.json",
+      "manifest_sha256": "f81ba272154bf96535cef72f2340da6d1b36c2b25d5a5cf0e50f5f61d0e574e0",
+      "plan_path": "plans/plane-seed-719.json",
+      "plan_sha256": "ab60d21c147237008b1a8b947ae64100fa459f7ee8cb3698dcf2af1913760997",
+      "arms": [
+        {
+          "name": "full9",
+          "receipt_path": "receipts/plane-seed-719-full9.json",
+          "receipt_sha256": "b6972ef2d43c6276a10bd2feba957ee1b6a2ee4c882a637b26a23a44642b2d20"
+        },
+        {
+          "name": "single4",
+          "receipt_path": "receipts/plane-seed-719-single4.json",
+          "receipt_sha256": "6573a75368472e3949847fef0d194e50f974487ce50067ab7338fdd954e769ca"
+        }
+      ]
+    },
+    {
+      "label": "plane-seed-727",
+      "scene": "plane",
+      "repeat": 727,
+      "noise_enabled": true,
+      "manifest_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\plane\\seed-727\\manifest.json",
+      "manifest_sha256": "502dfc93f59c89bc084f9966ca710aad595987923da191a694fb9b673cfb3740",
+      "plan_path": "plans/plane-seed-727.json",
+      "plan_sha256": "4284cd1221f3c69924c4906f7343b26ffdd1379284116e5a1078018b46d7fe0c",
+      "arms": [
+        {
+          "name": "full9",
+          "receipt_path": "receipts/plane-seed-727-full9.json",
+          "receipt_sha256": "ed37a8efed74d9bd676338101ed8c7f38b927f907ec9ed670eb7afdcfbf27faa"
+        },
+        {
+          "name": "single4",
+          "receipt_path": "receipts/plane-seed-727-single4.json",
+          "receipt_sha256": "a7994b06dcb9366215fbe9336406c3060ed1fc43d8af8b2bd5bd70c38052f519"
+        }
+      ]
+    },
+    {
+      "label": "plane-seed-733",
+      "scene": "plane",
+      "repeat": 733,
+      "noise_enabled": true,
+      "manifest_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\plane\\seed-733\\manifest.json",
+      "manifest_sha256": "fbd50e1c16ce11145025b656d8a42178159af5d476f58e611b135e522e05e1fa",
+      "plan_path": "plans/plane-seed-733.json",
+      "plan_sha256": "8b559cf2f65a9ce2ead0b41d0f2e25c6b17508dd5c1949923cce620f1e7b059c",
+      "arms": [
+        {
+          "name": "full9",
+          "receipt_path": "receipts/plane-seed-733-full9.json",
+          "receipt_sha256": "22421e180bafa804fcbc7447a36e45c75da88058850b50208354e271174e8801"
+        },
+        {
+          "name": "single4",
+          "receipt_path": "receipts/plane-seed-733-single4.json",
+          "receipt_sha256": "4c6c62d4a1d35d68e375ff7665df01542597d68be8a4c59860bf38752cbdf812"
+        }
+      ]
+    },
+    {
+      "label": "plane-seed-739",
+      "scene": "plane",
+      "repeat": 739,
+      "noise_enabled": true,
+      "manifest_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\plane\\seed-739\\manifest.json",
+      "manifest_sha256": "e86c62ddd41bd4ad098d12d39470b47fd37356eb548e407bc878b2d1aec032b6",
+      "plan_path": "plans/plane-seed-739.json",
+      "plan_sha256": "0665099ae10583a95b206e33b314fa600e4ac40a04762bf2c496805062850ee0",
+      "arms": [
+        {
+          "name": "full9",
+          "receipt_path": "receipts/plane-seed-739-full9.json",
+          "receipt_sha256": "8acbe640c2e062c9661d70160f6a94bd331b83e8fce558e306c4a455a83bc244"
+        },
+        {
+          "name": "single4",
+          "receipt_path": "receipts/plane-seed-739-single4.json",
+          "receipt_sha256": "0fdc443d644be2b87ada7bf0d3a581d60b88a75c8da98560c5fbd274d354be0f"
+        }
+      ]
+    },
+    {
+      "label": "plane-seed-743",
+      "scene": "plane",
+      "repeat": 743,
+      "noise_enabled": true,
+      "manifest_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\plane\\seed-743\\manifest.json",
+      "manifest_sha256": "80f07e72a4d9aee94c0c7ce24063d563b2bc120d5b904c403218008126eeaa7a",
+      "plan_path": "plans/plane-seed-743.json",
+      "plan_sha256": "271ec63b9b1061c3fe539550313789fccfe718cf28614d0162c27f69c39d16d1",
+      "arms": [
+        {
+          "name": "full9",
+          "receipt_path": "receipts/plane-seed-743-full9.json",
+          "receipt_sha256": "2b6e332829655b05ac8d797f4b1618c273e526b9ed3ec16157df19452e700507"
+        },
+        {
+          "name": "single4",
+          "receipt_path": "receipts/plane-seed-743-single4.json",
+          "receipt_sha256": "244987b624c8af0ecd99f57c92f4d4a8999c8f4ea5f47e5c2aa54bdde2c9b6f2"
+        }
+      ]
+    },
+    {
+      "label": "plane-seed-751",
+      "scene": "plane",
+      "repeat": 751,
+      "noise_enabled": true,
+      "manifest_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\plane\\seed-751\\manifest.json",
+      "manifest_sha256": "25d25f4d64daccb5e2906040c46f8c6e1b99aaf67ac35c1370cab0c8acf7b16e",
+      "plan_path": "plans/plane-seed-751.json",
+      "plan_sha256": "5f3a9b135b4c35a0015010152a34f1f803d9aa40fa10136c1353cee387ebe9c8",
+      "arms": [
+        {
+          "name": "full9",
+          "receipt_path": "receipts/plane-seed-751-full9.json",
+          "receipt_sha256": "4d6d297b481229276c2e84aec6a55094bf2760de6dc600bd5fddff322bd8d75b"
+        },
+        {
+          "name": "single4",
+          "receipt_path": "receipts/plane-seed-751-single4.json",
+          "receipt_sha256": "5f0dc713aaafec591368f3169045f5ceb2cd9193761c6d7b5b711e27a18f4da4"
+        }
+      ]
+    },
+    {
+      "label": "color-noise-off",
+      "scene": "color",
+      "repeat": null,
+      "noise_enabled": false,
+      "manifest_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\color\\noise-off\\manifest.json",
+      "manifest_sha256": "21fffbadd35149150f98634ff3394c2e4ef6bb0a879ab5fcdebd0336f35fac51",
+      "plan_path": "plans/color-noise-off.json",
+      "plan_sha256": "30b0cefa44d51883b3237514492b1bf253adca360d8be2b25df0b528a44bc2b8",
+      "arms": [
+        {
+          "name": "full9",
+          "receipt_path": "receipts/color-noise-off-full9.json",
+          "receipt_sha256": "c59a4ec9b1f5b49095fc01dd7679a14c08b72d03f87017d02482f18e4def441d"
+        },
+        {
+          "name": "single4",
+          "receipt_path": "receipts/color-noise-off-single4.json",
+          "receipt_sha256": "f9002301c82b34e0a796c42d2fa97df6d72e9367e8cf791457127d87115ca15e"
+        }
+      ]
+    },
+    {
+      "label": "color-null-noise-off",
+      "scene": "color-null",
+      "repeat": null,
+      "noise_enabled": false,
+      "manifest_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\color-null\\noise-off\\manifest.json",
+      "manifest_sha256": "546dbb3b37a02db0240a13392e187a344d644dcfae887f97682165794fd4ab23",
+      "plan_path": "plans/color-null-noise-off.json",
+      "plan_sha256": "1f4d7733424e2c1e71edf3e2cb2262c183ea43cab913dc468dc2dbd5b5f0c9be",
+      "arms": [
+        {
+          "name": "full9",
+          "receipt_path": "receipts/color-null-noise-off-full9.json",
+          "receipt_sha256": "66512c5d2df164af90987d3926b6449b56d4e644e897d1956eb487d037490304"
+        },
+        {
+          "name": "single4",
+          "receipt_path": "receipts/color-null-noise-off-single4.json",
+          "receipt_sha256": "7892faf5f47a15588dbc71124005254672ea9f9629558e8e703fffd35c2e4406"
+        }
+      ]
+    }
+  ],
+  "commands": [
+    {
+      "command": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-X",
+        "utf8",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\consumer-run.py",
+        "plan",
+        "--build-record",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\build.json",
+        "--build-sha256",
+        "64975e805b77552f81158424de066bc26903170372af61b84cf394d6743e643f",
+        "--manifest",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\flat\\noise-off\\manifest.json",
+        "--manifest-sha256",
+        "60ae007752236191358ee45f015e04a5b5243fb7c0704d065af88fb3f74ddb44",
+        "--plan",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\plans\\flat-noise-off.json",
+        "--log",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\logs\\flat-noise-off-plan.command.log"
+      ],
+      "exit_code": 0,
+      "log": "logs/flat-noise-off-plan.controller.log",
+      "log_sha256": "c5d426634931e1301a106ce3b998323984e596571f81441ab97152e9ae3b096b",
+      "completed_utc": "2026-09-07T10:45:23.253478+00:00",
+      "consumer_evidence": {
+        "path": "logs/flat-noise-off-plan.command.json",
+        "sha256": "cdb85433179ca029e837b80b1d01665c117e64abe9c8359dbdaf268d1959b2c4"
+      }
+    },
+    {
+      "command": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-X",
+        "utf8",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\consumer-run.py",
+        "plan",
+        "--build-record",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\build.json",
+        "--build-sha256",
+        "64975e805b77552f81158424de066bc26903170372af61b84cf394d6743e643f",
+        "--manifest",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\flat\\seed-701\\manifest.json",
+        "--manifest-sha256",
+        "6b505c8b3459c36f1d8c423500a8fb05d9fd0989e8ad8e7ad8d7481e8dfc79bf",
+        "--plan",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\plans\\flat-seed-701.json",
+        "--log",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\logs\\flat-seed-701-plan.command.log"
+      ],
+      "exit_code": 0,
+      "log": "logs/flat-seed-701-plan.controller.log",
+      "log_sha256": "5057097f680b782d69f79449844b9fa1a3cc78cbe76c5775182dc54ccf133d55",
+      "completed_utc": "2026-09-07T10:45:23.448645+00:00",
+      "consumer_evidence": {
+        "path": "logs/flat-seed-701-plan.command.json",
+        "sha256": "6e56fa1aeefe4a87f0f8c4ddd0e3fe7cf7490bde5791ddbc7f5159b7479eb4ad"
+      }
+    },
+    {
+      "command": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-X",
+        "utf8",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\consumer-run.py",
+        "plan",
+        "--build-record",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\build.json",
+        "--build-sha256",
+        "64975e805b77552f81158424de066bc26903170372af61b84cf394d6743e643f",
+        "--manifest",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\flat\\seed-709\\manifest.json",
+        "--manifest-sha256",
+        "0966990a3ea3ce057d91ebbeb5e8d650176292e20f04132e69cef5c26c75a5aa",
+        "--plan",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\plans\\flat-seed-709.json",
+        "--log",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\logs\\flat-seed-709-plan.command.log"
+      ],
+      "exit_code": 0,
+      "log": "logs/flat-seed-709-plan.controller.log",
+      "log_sha256": "aa6ab514874d08177f4079381ad09cfe990808d81e3d747ff97040e293345194",
+      "completed_utc": "2026-09-07T10:45:23.647495+00:00",
+      "consumer_evidence": {
+        "path": "logs/flat-seed-709-plan.command.json",
+        "sha256": "d12a39f81ddf940b9587d55f2a9f019c085a067128999e3ecd2e7aa8e6f33f1d"
+      }
+    },
+    {
+      "command": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-X",
+        "utf8",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\consumer-run.py",
+        "plan",
+        "--build-record",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\build.json",
+        "--build-sha256",
+        "64975e805b77552f81158424de066bc26903170372af61b84cf394d6743e643f",
+        "--manifest",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\flat\\seed-719\\manifest.json",
+        "--manifest-sha256",
+        "0e4da023ff155be030ebd7336f753b736fe7f4dd3c8fe1b97b37121ca36111e7",
+        "--plan",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\plans\\flat-seed-719.json",
+        "--log",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\logs\\flat-seed-719-plan.command.log"
+      ],
+      "exit_code": 0,
+      "log": "logs/flat-seed-719-plan.controller.log",
+      "log_sha256": "e218f1334ebe6ba60ed3a4260e93de183758cbcb3762297d1cbabadd08629f61",
+      "completed_utc": "2026-09-07T10:45:23.863347+00:00",
+      "consumer_evidence": {
+        "path": "logs/flat-seed-719-plan.command.json",
+        "sha256": "586338e85730c4824043d2a19fe4a74968b8cb644ad9cdcd75635b463b22e495"
+      }
+    },
+    {
+      "command": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-X",
+        "utf8",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\consumer-run.py",
+        "plan",
+        "--build-record",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\build.json",
+        "--build-sha256",
+        "64975e805b77552f81158424de066bc26903170372af61b84cf394d6743e643f",
+        "--manifest",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\flat\\seed-727\\manifest.json",
+        "--manifest-sha256",
+        "4bb5464883fc7a9230fb38fee010e3df93a80967f024c7c4eff380f88c356027",
+        "--plan",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\plans\\flat-seed-727.json",
+        "--log",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\logs\\flat-seed-727-plan.command.log"
+      ],
+      "exit_code": 0,
+      "log": "logs/flat-seed-727-plan.controller.log",
+      "log_sha256": "4298f01c3518ce6d71993b88d2650f08193f68ea2bdb091a90a41caee1b78362",
+      "completed_utc": "2026-09-07T10:45:24.062684+00:00",
+      "consumer_evidence": {
+        "path": "logs/flat-seed-727-plan.command.json",
+        "sha256": "bcba7490e50a4f637935a5006bad4aa2b713fa1f7b1be6dfc2eb80268d862eca"
+      }
+    },
+    {
+      "command": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-X",
+        "utf8",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\consumer-run.py",
+        "plan",
+        "--build-record",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\build.json",
+        "--build-sha256",
+        "64975e805b77552f81158424de066bc26903170372af61b84cf394d6743e643f",
+        "--manifest",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\flat\\seed-733\\manifest.json",
+        "--manifest-sha256",
+        "05f9fbb85b1e60a13181e55e55faa733c9cb1d88bdd915ed453f7f4bdef05681",
+        "--plan",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\plans\\flat-seed-733.json",
+        "--log",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\logs\\flat-seed-733-plan.command.log"
+      ],
+      "exit_code": 0,
+      "log": "logs/flat-seed-733-plan.controller.log",
+      "log_sha256": "d02684967f39ac7c493fc0831acad379044f0266c3e7384085dfd418d6d529c5",
+      "completed_utc": "2026-09-07T10:45:24.259851+00:00",
+      "consumer_evidence": {
+        "path": "logs/flat-seed-733-plan.command.json",
+        "sha256": "20873574484e43eb1dbf52f84e03518052600234d4cfcf31181663d064ab839a"
+      }
+    },
+    {
+      "command": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-X",
+        "utf8",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\consumer-run.py",
+        "plan",
+        "--build-record",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\build.json",
+        "--build-sha256",
+        "64975e805b77552f81158424de066bc26903170372af61b84cf394d6743e643f",
+        "--manifest",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\flat\\seed-739\\manifest.json",
+        "--manifest-sha256",
+        "2914f07d3e849954c08a6485bcc1ee6492766222d61b1ea7580a18578362b661",
+        "--plan",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\plans\\flat-seed-739.json",
+        "--log",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\logs\\flat-seed-739-plan.command.log"
+      ],
+      "exit_code": 0,
+      "log": "logs/flat-seed-739-plan.controller.log",
+      "log_sha256": "9df1e221b33373b1aa360b48fde276cd38a1ba2dad86df01b6cba3d32e9e6651",
+      "completed_utc": "2026-09-07T10:45:24.460072+00:00",
+      "consumer_evidence": {
+        "path": "logs/flat-seed-739-plan.command.json",
+        "sha256": "abb6aab2241f01fc7565c5f968b645bda4e419f6f2c32f9c98ace0827b216228"
+      }
+    },
+    {
+      "command": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-X",
+        "utf8",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\consumer-run.py",
+        "plan",
+        "--build-record",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\build.json",
+        "--build-sha256",
+        "64975e805b77552f81158424de066bc26903170372af61b84cf394d6743e643f",
+        "--manifest",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\flat\\seed-743\\manifest.json",
+        "--manifest-sha256",
+        "7bcf0e1987fc118344711b3d1113ae35c27adfb26142b089f6a25c2034f007e1",
+        "--plan",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\plans\\flat-seed-743.json",
+        "--log",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\logs\\flat-seed-743-plan.command.log"
+      ],
+      "exit_code": 0,
+      "log": "logs/flat-seed-743-plan.controller.log",
+      "log_sha256": "c95cb0b6e22f7b4086cd58557703d54fce085330e6d510b053f08bf71abf53c5",
+      "completed_utc": "2026-09-07T10:45:24.656080+00:00",
+      "consumer_evidence": {
+        "path": "logs/flat-seed-743-plan.command.json",
+        "sha256": "79268a3293c070403c68b0ee758d63a02750f0f4d5ad9a2d7dc2593c9ada69ae"
+      }
+    },
+    {
+      "command": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-X",
+        "utf8",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\consumer-run.py",
+        "plan",
+        "--build-record",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\build.json",
+        "--build-sha256",
+        "64975e805b77552f81158424de066bc26903170372af61b84cf394d6743e643f",
+        "--manifest",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\flat\\seed-751\\manifest.json",
+        "--manifest-sha256",
+        "d0d40adfd8693a128653d400ea9c17912a8e0bcb0a5dddadd4b550e91c335788",
+        "--plan",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\plans\\flat-seed-751.json",
+        "--log",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\logs\\flat-seed-751-plan.command.log"
+      ],
+      "exit_code": 0,
+      "log": "logs/flat-seed-751-plan.controller.log",
+      "log_sha256": "0972b01aceaa0faf589155ce01c65b418f6c1964e25e5d04899dc09453998d5e",
+      "completed_utc": "2026-09-07T10:45:24.845749+00:00",
+      "consumer_evidence": {
+        "path": "logs/flat-seed-751-plan.command.json",
+        "sha256": "c45f7f100f24d8e22c0a5f0fc5328a255d0cd160f2a4331b25631eee0842cb1f"
+      }
+    },
+    {
+      "command": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-X",
+        "utf8",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\consumer-run.py",
+        "plan",
+        "--build-record",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\build.json",
+        "--build-sha256",
+        "64975e805b77552f81158424de066bc26903170372af61b84cf394d6743e643f",
+        "--manifest",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\plane\\noise-off\\manifest.json",
+        "--manifest-sha256",
+        "ff9b676ff948270b54a9b1d987f0309ea61edaf13e390941463d9a2d5e4222df",
+        "--plan",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\plans\\plane-noise-off.json",
+        "--log",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\logs\\plane-noise-off-plan.command.log"
+      ],
+      "exit_code": 0,
+      "log": "logs/plane-noise-off-plan.controller.log",
+      "log_sha256": "abd0cd8189de06411821e53ab7aca1d8c0bfdc86e8fa65364735696d3395158e",
+      "completed_utc": "2026-09-07T10:45:25.037628+00:00",
+      "consumer_evidence": {
+        "path": "logs/plane-noise-off-plan.command.json",
+        "sha256": "1e42909152fa49566ac9d21954a3711ba3434f0316287bb876defe0e694f3b47"
+      }
+    },
+    {
+      "command": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-X",
+        "utf8",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\consumer-run.py",
+        "plan",
+        "--build-record",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\build.json",
+        "--build-sha256",
+        "64975e805b77552f81158424de066bc26903170372af61b84cf394d6743e643f",
+        "--manifest",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\plane\\seed-701\\manifest.json",
+        "--manifest-sha256",
+        "9b1754be33bf2879c57ad0239c9340f06c35a383b922414096796b1dfea9fc1b",
+        "--plan",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\plans\\plane-seed-701.json",
+        "--log",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\logs\\plane-seed-701-plan.command.log"
+      ],
+      "exit_code": 0,
+      "log": "logs/plane-seed-701-plan.controller.log",
+      "log_sha256": "f0a21ef9db3ee9aba44ce677d55f05506484c359fac123546d4bcf1b695da2be",
+      "completed_utc": "2026-09-07T10:45:25.235887+00:00",
+      "consumer_evidence": {
+        "path": "logs/plane-seed-701-plan.command.json",
+        "sha256": "7cd0d279c047bd89c392536646de339d1889ef4eaf54d395197a45be8bdb34d8"
+      }
+    },
+    {
+      "command": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-X",
+        "utf8",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\consumer-run.py",
+        "plan",
+        "--build-record",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\build.json",
+        "--build-sha256",
+        "64975e805b77552f81158424de066bc26903170372af61b84cf394d6743e643f",
+        "--manifest",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\plane\\seed-709\\manifest.json",
+        "--manifest-sha256",
+        "cc6bd65bdfe773ffef60b8c0d10b300cbae778c7c13de1aa084d4336634e2a8c",
+        "--plan",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\plans\\plane-seed-709.json",
+        "--log",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\logs\\plane-seed-709-plan.command.log"
+      ],
+      "exit_code": 0,
+      "log": "logs/plane-seed-709-plan.controller.log",
+      "log_sha256": "a30fb9f9cf409105f530cd7d16bb8e869f326a86d3fc3c4baed4b80425a1c842",
+      "completed_utc": "2026-09-07T10:45:25.432417+00:00",
+      "consumer_evidence": {
+        "path": "logs/plane-seed-709-plan.command.json",
+        "sha256": "d11d9cb794cc7a8f7134d4b60ce61c62cd4464c36a0afdd51cf0b6fecbb70664"
+      }
+    },
+    {
+      "command": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-X",
+        "utf8",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\consumer-run.py",
+        "plan",
+        "--build-record",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\build.json",
+        "--build-sha256",
+        "64975e805b77552f81158424de066bc26903170372af61b84cf394d6743e643f",
+        "--manifest",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\plane\\seed-719\\manifest.json",
+        "--manifest-sha256",
+        "f81ba272154bf96535cef72f2340da6d1b36c2b25d5a5cf0e50f5f61d0e574e0",
+        "--plan",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\plans\\plane-seed-719.json",
+        "--log",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\logs\\plane-seed-719-plan.command.log"
+      ],
+      "exit_code": 0,
+      "log": "logs/plane-seed-719-plan.controller.log",
+      "log_sha256": "8f14de04c1b998cacf2347eb7163d959968e176535ce310c297f6c0b857b0067",
+      "completed_utc": "2026-09-07T10:45:25.630132+00:00",
+      "consumer_evidence": {
+        "path": "logs/plane-seed-719-plan.command.json",
+        "sha256": "9d5b5ea18e594c5fccd232e3d34e7365f0e82e6fa6b839979ad8b8546dc8dfcc"
+      }
+    },
+    {
+      "command": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-X",
+        "utf8",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\consumer-run.py",
+        "plan",
+        "--build-record",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\build.json",
+        "--build-sha256",
+        "64975e805b77552f81158424de066bc26903170372af61b84cf394d6743e643f",
+        "--manifest",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\plane\\seed-727\\manifest.json",
+        "--manifest-sha256",
+        "502dfc93f59c89bc084f9966ca710aad595987923da191a694fb9b673cfb3740",
+        "--plan",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\plans\\plane-seed-727.json",
+        "--log",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\logs\\plane-seed-727-plan.command.log"
+      ],
+      "exit_code": 0,
+      "log": "logs/plane-seed-727-plan.controller.log",
+      "log_sha256": "c689a734d6b632b00fc6c5f8432cb378efa6023d42ed84c97b6c5765807a83b3",
+      "completed_utc": "2026-09-07T10:45:25.834530+00:00",
+      "consumer_evidence": {
+        "path": "logs/plane-seed-727-plan.command.json",
+        "sha256": "c2471de2211d4277e710c7ea75ab9e30e61146fa3b1ea1aecbdb3d854ef0344f"
+      }
+    },
+    {
+      "command": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-X",
+        "utf8",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\consumer-run.py",
+        "plan",
+        "--build-record",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\build.json",
+        "--build-sha256",
+        "64975e805b77552f81158424de066bc26903170372af61b84cf394d6743e643f",
+        "--manifest",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\plane\\seed-733\\manifest.json",
+        "--manifest-sha256",
+        "fbd50e1c16ce11145025b656d8a42178159af5d476f58e611b135e522e05e1fa",
+        "--plan",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\plans\\plane-seed-733.json",
+        "--log",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\logs\\plane-seed-733-plan.command.log"
+      ],
+      "exit_code": 0,
+      "log": "logs/plane-seed-733-plan.controller.log",
+      "log_sha256": "42e62799bbedefa4d8263cce671f52efed453f73ab6e1a902884d64793f0dfa6",
+      "completed_utc": "2026-09-07T10:45:26.091924+00:00",
+      "consumer_evidence": {
+        "path": "logs/plane-seed-733-plan.command.json",
+        "sha256": "21ca1461668d2705f3894b75dbe9800cf5ac5dd442f1cffd7c50a4e311491d76"
+      }
+    },
+    {
+      "command": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-X",
+        "utf8",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\consumer-run.py",
+        "plan",
+        "--build-record",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\build.json",
+        "--build-sha256",
+        "64975e805b77552f81158424de066bc26903170372af61b84cf394d6743e643f",
+        "--manifest",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\plane\\seed-739\\manifest.json",
+        "--manifest-sha256",
+        "e86c62ddd41bd4ad098d12d39470b47fd37356eb548e407bc878b2d1aec032b6",
+        "--plan",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\plans\\plane-seed-739.json",
+        "--log",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\logs\\plane-seed-739-plan.command.log"
+      ],
+      "exit_code": 0,
+      "log": "logs/plane-seed-739-plan.controller.log",
+      "log_sha256": "32de18d899fc9411a8a53ec089eca99e70611521a06a2c50a48164d63f3fb0c1",
+      "completed_utc": "2026-09-07T10:45:26.296230+00:00",
+      "consumer_evidence": {
+        "path": "logs/plane-seed-739-plan.command.json",
+        "sha256": "e712ac57cccec9cf035c7a5c61dd2acf8d5889531e16eaee54ac49fbdbfac10c"
+      }
+    },
+    {
+      "command": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-X",
+        "utf8",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\consumer-run.py",
+        "plan",
+        "--build-record",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\build.json",
+        "--build-sha256",
+        "64975e805b77552f81158424de066bc26903170372af61b84cf394d6743e643f",
+        "--manifest",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\plane\\seed-743\\manifest.json",
+        "--manifest-sha256",
+        "80f07e72a4d9aee94c0c7ce24063d563b2bc120d5b904c403218008126eeaa7a",
+        "--plan",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\plans\\plane-seed-743.json",
+        "--log",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\logs\\plane-seed-743-plan.command.log"
+      ],
+      "exit_code": 0,
+      "log": "logs/plane-seed-743-plan.controller.log",
+      "log_sha256": "887c509d92da1fce5a72b05e9fe2a8ee713c853593822999fea9c36824ab5bc8",
+      "completed_utc": "2026-09-07T10:45:26.506332+00:00",
+      "consumer_evidence": {
+        "path": "logs/plane-seed-743-plan.command.json",
+        "sha256": "c62ec2c8ef6a7f5b10e3a8afd3d24ed2461fc163fda71a0a8e6985207d946a62"
+      }
+    },
+    {
+      "command": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-X",
+        "utf8",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\consumer-run.py",
+        "plan",
+        "--build-record",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\build.json",
+        "--build-sha256",
+        "64975e805b77552f81158424de066bc26903170372af61b84cf394d6743e643f",
+        "--manifest",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\plane\\seed-751\\manifest.json",
+        "--manifest-sha256",
+        "25d25f4d64daccb5e2906040c46f8c6e1b99aaf67ac35c1370cab0c8acf7b16e",
+        "--plan",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\plans\\plane-seed-751.json",
+        "--log",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\logs\\plane-seed-751-plan.command.log"
+      ],
+      "exit_code": 0,
+      "log": "logs/plane-seed-751-plan.controller.log",
+      "log_sha256": "0458dac098af2f3d8ed3650ae5f6791a53e29289f6cc10ae6d94606e5a26ec72",
+      "completed_utc": "2026-09-07T10:45:26.732381+00:00",
+      "consumer_evidence": {
+        "path": "logs/plane-seed-751-plan.command.json",
+        "sha256": "8a7aa89a9d4e7c66102fa83370b747280eaa02fbbfe4f29e9c30d8c55bb079de"
+      }
+    },
+    {
+      "command": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-X",
+        "utf8",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\consumer-run.py",
+        "plan",
+        "--build-record",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\build.json",
+        "--build-sha256",
+        "64975e805b77552f81158424de066bc26903170372af61b84cf394d6743e643f",
+        "--manifest",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\color\\noise-off\\manifest.json",
+        "--manifest-sha256",
+        "21fffbadd35149150f98634ff3394c2e4ef6bb0a879ab5fcdebd0336f35fac51",
+        "--plan",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\plans\\color-noise-off.json",
+        "--log",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\logs\\color-noise-off-plan.command.log"
+      ],
+      "exit_code": 0,
+      "log": "logs/color-noise-off-plan.controller.log",
+      "log_sha256": "963e9e875e32944e62692a1990405bfa3ab996e7343e31307a29c00b017117ac",
+      "completed_utc": "2026-09-07T10:45:26.947732+00:00",
+      "consumer_evidence": {
+        "path": "logs/color-noise-off-plan.command.json",
+        "sha256": "b8b0a79a0ebcf570fbf8ec2dc35956d701337b14d629a288053c36700122820d"
+      }
+    },
+    {
+      "command": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-X",
+        "utf8",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\consumer-run.py",
+        "plan",
+        "--build-record",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\build.json",
+        "--build-sha256",
+        "64975e805b77552f81158424de066bc26903170372af61b84cf394d6743e643f",
+        "--manifest",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\color-null\\noise-off\\manifest.json",
+        "--manifest-sha256",
+        "546dbb3b37a02db0240a13392e187a344d644dcfae887f97682165794fd4ab23",
+        "--plan",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\plans\\color-null-noise-off.json",
+        "--log",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\logs\\color-null-noise-off-plan.command.log"
+      ],
+      "exit_code": 0,
+      "log": "logs/color-null-noise-off-plan.controller.log",
+      "log_sha256": "97d9708a38511a690745a298d0dd19433f0c7ef7ba3a8ccc6f20b2fcbd130cae",
+      "completed_utc": "2026-09-07T10:45:27.174781+00:00",
+      "consumer_evidence": {
+        "path": "logs/color-null-noise-off-plan.command.json",
+        "sha256": "aea08e2837deee75b82b3810d7b6cf38e2ea44d8e4c8d2ca32bcdff06d418861"
+      }
+    },
+    {
+      "command": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-X",
+        "utf8",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\consumer-run.py",
+        "render",
+        "--build-record",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\build.json",
+        "--build-sha256",
+        "64975e805b77552f81158424de066bc26903170372af61b84cf394d6743e643f",
+        "--manifest",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\flat\\noise-off\\manifest.json",
+        "--manifest-sha256",
+        "60ae007752236191358ee45f015e04a5b5243fb7c0704d065af88fb3f74ddb44",
+        "--plan",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\plans\\flat-noise-off.json",
+        "--plan-sha256",
+        "603d6f916132d3c986208812b4e24aebceb30ff536230812c86f30c4681e232a",
+        "--subset",
+        "all",
+        "--output",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\tiffs\\flat-noise-off-full9.tif",
+        "--receipt",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\receipts\\flat-noise-off-full9.json",
+        "--log",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\logs\\flat-noise-off-full9.command.log"
+      ],
+      "exit_code": 0,
+      "log": "logs/flat-noise-off-full9.controller.log",
+      "log_sha256": "cdee55df8b7ddb3d1686f02ccfbc1fe4d087dd17a1887c20e335c6d425c7a2f4",
+      "completed_utc": "2026-09-07T10:45:27.949987+00:00",
+      "consumer_evidence": {
+        "path": "logs/flat-noise-off-full9.command.json",
+        "sha256": "aea6979cba83dc7d5263a572e247e0cf299a4b1717319f7e2beaf7676cca1dbe"
+      }
+    },
+    {
+      "command": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-X",
+        "utf8",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\consumer-run.py",
+        "render",
+        "--build-record",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\build.json",
+        "--build-sha256",
+        "64975e805b77552f81158424de066bc26903170372af61b84cf394d6743e643f",
+        "--manifest",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\flat\\noise-off\\manifest.json",
+        "--manifest-sha256",
+        "60ae007752236191358ee45f015e04a5b5243fb7c0704d065af88fb3f74ddb44",
+        "--plan",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\plans\\flat-noise-off.json",
+        "--plan-sha256",
+        "603d6f916132d3c986208812b4e24aebceb30ff536230812c86f30c4681e232a",
+        "--subset",
+        "best",
+        "--output",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\tiffs\\flat-noise-off-single4.tif",
+        "--receipt",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\receipts\\flat-noise-off-single4.json",
+        "--log",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\logs\\flat-noise-off-single4.command.log"
+      ],
+      "exit_code": 0,
+      "log": "logs/flat-noise-off-single4.controller.log",
+      "log_sha256": "dd93df4db21e76899522cf14224b2e63eaf715e0991fffd0952806e26978b7ce",
+      "completed_utc": "2026-09-07T10:45:28.392478+00:00",
+      "consumer_evidence": {
+        "path": "logs/flat-noise-off-single4.command.json",
+        "sha256": "91f090daac98ddaf2803f7fc31e5e2d17b8249218054ef0eadf33b1716be2090"
+      }
+    },
+    {
+      "command": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-X",
+        "utf8",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\consumer-run.py",
+        "render",
+        "--build-record",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\build.json",
+        "--build-sha256",
+        "64975e805b77552f81158424de066bc26903170372af61b84cf394d6743e643f",
+        "--manifest",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\flat\\seed-701\\manifest.json",
+        "--manifest-sha256",
+        "6b505c8b3459c36f1d8c423500a8fb05d9fd0989e8ad8e7ad8d7481e8dfc79bf",
+        "--plan",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\plans\\flat-seed-701.json",
+        "--plan-sha256",
+        "3f083cb8e72f48117332d11ba5160ac6172967ab1a66334626adaf8f64060120",
+        "--subset",
+        "all",
+        "--output",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\tiffs\\flat-seed-701-full9.tif",
+        "--receipt",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\receipts\\flat-seed-701-full9.json",
+        "--log",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\logs\\flat-seed-701-full9.command.log"
+      ],
+      "exit_code": 0,
+      "log": "logs/flat-seed-701-full9.controller.log",
+      "log_sha256": "6422836e9f3643128167d11d4c1fa3ec450fd3f6a29a31e8ec7cb405dc77dce6",
+      "completed_utc": "2026-09-07T10:45:29.153843+00:00",
+      "consumer_evidence": {
+        "path": "logs/flat-seed-701-full9.command.json",
+        "sha256": "b224d12431924ecbe208130eb933be4b02a195ab90ac68c17e9422c9e5416560"
+      }
+    },
+    {
+      "command": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-X",
+        "utf8",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\consumer-run.py",
+        "render",
+        "--build-record",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\build.json",
+        "--build-sha256",
+        "64975e805b77552f81158424de066bc26903170372af61b84cf394d6743e643f",
+        "--manifest",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\flat\\seed-701\\manifest.json",
+        "--manifest-sha256",
+        "6b505c8b3459c36f1d8c423500a8fb05d9fd0989e8ad8e7ad8d7481e8dfc79bf",
+        "--plan",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\plans\\flat-seed-701.json",
+        "--plan-sha256",
+        "3f083cb8e72f48117332d11ba5160ac6172967ab1a66334626adaf8f64060120",
+        "--subset",
+        "best",
+        "--output",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\tiffs\\flat-seed-701-single4.tif",
+        "--receipt",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\receipts\\flat-seed-701-single4.json",
+        "--log",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\logs\\flat-seed-701-single4.command.log"
+      ],
+      "exit_code": 0,
+      "log": "logs/flat-seed-701-single4.controller.log",
+      "log_sha256": "19ef748f340f5e852b5c971b44ab2951d0961bfaf21b334122646436f7791b50",
+      "completed_utc": "2026-09-07T10:45:29.588320+00:00",
+      "consumer_evidence": {
+        "path": "logs/flat-seed-701-single4.command.json",
+        "sha256": "a7c200c65e55b2020b3753694f59e984d0aaa98b4780e5f54b9353295aa0b969"
+      }
+    },
+    {
+      "command": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-X",
+        "utf8",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\consumer-run.py",
+        "render",
+        "--build-record",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\build.json",
+        "--build-sha256",
+        "64975e805b77552f81158424de066bc26903170372af61b84cf394d6743e643f",
+        "--manifest",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\flat\\seed-709\\manifest.json",
+        "--manifest-sha256",
+        "0966990a3ea3ce057d91ebbeb5e8d650176292e20f04132e69cef5c26c75a5aa",
+        "--plan",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\plans\\flat-seed-709.json",
+        "--plan-sha256",
+        "bdb04622278b638640e4e2422537e331a27c52caa64a52c315d12aae2dc4ce70",
+        "--subset",
+        "all",
+        "--output",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\tiffs\\flat-seed-709-full9.tif",
+        "--receipt",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\receipts\\flat-seed-709-full9.json",
+        "--log",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\logs\\flat-seed-709-full9.command.log"
+      ],
+      "exit_code": 0,
+      "log": "logs/flat-seed-709-full9.controller.log",
+      "log_sha256": "7a7a58eb674bb3b28ec65c91ddc89f8f75ae6e0a207e2b9d2351825810e7d549",
+      "completed_utc": "2026-09-07T10:45:30.335682+00:00",
+      "consumer_evidence": {
+        "path": "logs/flat-seed-709-full9.command.json",
+        "sha256": "8314d367188d86add073ecc581c4ebd60e82651d18c9e2e13a57282a922924a6"
+      }
+    },
+    {
+      "command": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-X",
+        "utf8",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\consumer-run.py",
+        "render",
+        "--build-record",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\build.json",
+        "--build-sha256",
+        "64975e805b77552f81158424de066bc26903170372af61b84cf394d6743e643f",
+        "--manifest",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\flat\\seed-709\\manifest.json",
+        "--manifest-sha256",
+        "0966990a3ea3ce057d91ebbeb5e8d650176292e20f04132e69cef5c26c75a5aa",
+        "--plan",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\plans\\flat-seed-709.json",
+        "--plan-sha256",
+        "bdb04622278b638640e4e2422537e331a27c52caa64a52c315d12aae2dc4ce70",
+        "--subset",
+        "best",
+        "--output",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\tiffs\\flat-seed-709-single4.tif",
+        "--receipt",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\receipts\\flat-seed-709-single4.json",
+        "--log",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\logs\\flat-seed-709-single4.command.log"
+      ],
+      "exit_code": 0,
+      "log": "logs/flat-seed-709-single4.controller.log",
+      "log_sha256": "5b2cb81b4ae4f5791c0f21b77409f83eadd744eec69012d7d2fa910712c3eb92",
+      "completed_utc": "2026-09-07T10:45:30.774779+00:00",
+      "consumer_evidence": {
+        "path": "logs/flat-seed-709-single4.command.json",
+        "sha256": "924002c06117fc2652cc03495bfca1bdaf1b15ba7f6cfbe9ead92ee1b05489d9"
+      }
+    },
+    {
+      "command": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-X",
+        "utf8",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\consumer-run.py",
+        "render",
+        "--build-record",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\build.json",
+        "--build-sha256",
+        "64975e805b77552f81158424de066bc26903170372af61b84cf394d6743e643f",
+        "--manifest",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\flat\\seed-719\\manifest.json",
+        "--manifest-sha256",
+        "0e4da023ff155be030ebd7336f753b736fe7f4dd3c8fe1b97b37121ca36111e7",
+        "--plan",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\plans\\flat-seed-719.json",
+        "--plan-sha256",
+        "a1b4ba2fc43cac2a5cf2156af901aacd1d4555420770e0303fc9dd0ff4a3dcc8",
+        "--subset",
+        "all",
+        "--output",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\tiffs\\flat-seed-719-full9.tif",
+        "--receipt",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\receipts\\flat-seed-719-full9.json",
+        "--log",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\logs\\flat-seed-719-full9.command.log"
+      ],
+      "exit_code": 0,
+      "log": "logs/flat-seed-719-full9.controller.log",
+      "log_sha256": "a88103ef492563fa4dadcc827f1be5f1c29332c08f53ad36421533d246d7796d",
+      "completed_utc": "2026-09-07T10:45:31.536488+00:00",
+      "consumer_evidence": {
+        "path": "logs/flat-seed-719-full9.command.json",
+        "sha256": "f3742fc058ff36e5a25ac23b4aa6eeb5a4ace9967e4f581e10fea20ccce4b3e0"
+      }
+    },
+    {
+      "command": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-X",
+        "utf8",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\consumer-run.py",
+        "render",
+        "--build-record",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\build.json",
+        "--build-sha256",
+        "64975e805b77552f81158424de066bc26903170372af61b84cf394d6743e643f",
+        "--manifest",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\flat\\seed-719\\manifest.json",
+        "--manifest-sha256",
+        "0e4da023ff155be030ebd7336f753b736fe7f4dd3c8fe1b97b37121ca36111e7",
+        "--plan",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\plans\\flat-seed-719.json",
+        "--plan-sha256",
+        "a1b4ba2fc43cac2a5cf2156af901aacd1d4555420770e0303fc9dd0ff4a3dcc8",
+        "--subset",
+        "best",
+        "--output",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\tiffs\\flat-seed-719-single4.tif",
+        "--receipt",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\receipts\\flat-seed-719-single4.json",
+        "--log",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\logs\\flat-seed-719-single4.command.log"
+      ],
+      "exit_code": 0,
+      "log": "logs/flat-seed-719-single4.controller.log",
+      "log_sha256": "b88f47728c0b75ad55b4adaff25354153ef6e2f5504cc557ef3a036d8c6d26ec",
+      "completed_utc": "2026-09-07T10:45:31.983546+00:00",
+      "consumer_evidence": {
+        "path": "logs/flat-seed-719-single4.command.json",
+        "sha256": "6b74d96652bdf2c9b0a350e5d9fcfa71a190cc3e87d166829568b531678fe145"
+      }
+    },
+    {
+      "command": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-X",
+        "utf8",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\consumer-run.py",
+        "render",
+        "--build-record",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\build.json",
+        "--build-sha256",
+        "64975e805b77552f81158424de066bc26903170372af61b84cf394d6743e643f",
+        "--manifest",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\flat\\seed-727\\manifest.json",
+        "--manifest-sha256",
+        "4bb5464883fc7a9230fb38fee010e3df93a80967f024c7c4eff380f88c356027",
+        "--plan",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\plans\\flat-seed-727.json",
+        "--plan-sha256",
+        "56f73880fd57486906970848f0b39fdd762f65d24211b8c84636c4bdba386860",
+        "--subset",
+        "all",
+        "--output",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\tiffs\\flat-seed-727-full9.tif",
+        "--receipt",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\receipts\\flat-seed-727-full9.json",
+        "--log",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\logs\\flat-seed-727-full9.command.log"
+      ],
+      "exit_code": 0,
+      "log": "logs/flat-seed-727-full9.controller.log",
+      "log_sha256": "1d4baabe531bb548fbdc06a707799a862d3103448bc1dc3bbea58653a08d8b31",
+      "completed_utc": "2026-09-07T10:45:32.738761+00:00",
+      "consumer_evidence": {
+        "path": "logs/flat-seed-727-full9.command.json",
+        "sha256": "0c02d3c9719ffc124090eddce21587f472db3d99a75dedbb32010e664764f20a"
+      }
+    },
+    {
+      "command": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-X",
+        "utf8",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\consumer-run.py",
+        "render",
+        "--build-record",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\build.json",
+        "--build-sha256",
+        "64975e805b77552f81158424de066bc26903170372af61b84cf394d6743e643f",
+        "--manifest",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\flat\\seed-727\\manifest.json",
+        "--manifest-sha256",
+        "4bb5464883fc7a9230fb38fee010e3df93a80967f024c7c4eff380f88c356027",
+        "--plan",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\plans\\flat-seed-727.json",
+        "--plan-sha256",
+        "56f73880fd57486906970848f0b39fdd762f65d24211b8c84636c4bdba386860",
+        "--subset",
+        "best",
+        "--output",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\tiffs\\flat-seed-727-single4.tif",
+        "--receipt",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\receipts\\flat-seed-727-single4.json",
+        "--log",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\logs\\flat-seed-727-single4.command.log"
+      ],
+      "exit_code": 0,
+      "log": "logs/flat-seed-727-single4.controller.log",
+      "log_sha256": "3a63637a39dccc052f6c8f16b69621b675db2dfa398e79c5f4e79730dc26286f",
+      "completed_utc": "2026-09-07T10:45:33.175390+00:00",
+      "consumer_evidence": {
+        "path": "logs/flat-seed-727-single4.command.json",
+        "sha256": "860e52949fa6f76c874d4f06524f1a9bd380b0083d28343422110c503d6eecc0"
+      }
+    },
+    {
+      "command": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-X",
+        "utf8",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\consumer-run.py",
+        "render",
+        "--build-record",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\build.json",
+        "--build-sha256",
+        "64975e805b77552f81158424de066bc26903170372af61b84cf394d6743e643f",
+        "--manifest",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\flat\\seed-733\\manifest.json",
+        "--manifest-sha256",
+        "05f9fbb85b1e60a13181e55e55faa733c9cb1d88bdd915ed453f7f4bdef05681",
+        "--plan",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\plans\\flat-seed-733.json",
+        "--plan-sha256",
+        "6ea52e481e3d51a19e3a6051b08ce32327e9c9e8e1fed8395cdbd16a3a06a67a",
+        "--subset",
+        "all",
+        "--output",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\tiffs\\flat-seed-733-full9.tif",
+        "--receipt",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\receipts\\flat-seed-733-full9.json",
+        "--log",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\logs\\flat-seed-733-full9.command.log"
+      ],
+      "exit_code": 0,
+      "log": "logs/flat-seed-733-full9.controller.log",
+      "log_sha256": "ca372698bdaaba01efa25bee0ac29ea59a0543607b9f7ff37f7f12f528e80daa",
+      "completed_utc": "2026-09-07T10:45:33.937387+00:00",
+      "consumer_evidence": {
+        "path": "logs/flat-seed-733-full9.command.json",
+        "sha256": "9826d5fa1693d0a4760ee4f597b7d6e7c5a3a77609d58c9a0a161f980206e296"
+      }
+    },
+    {
+      "command": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-X",
+        "utf8",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\consumer-run.py",
+        "render",
+        "--build-record",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\build.json",
+        "--build-sha256",
+        "64975e805b77552f81158424de066bc26903170372af61b84cf394d6743e643f",
+        "--manifest",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\flat\\seed-733\\manifest.json",
+        "--manifest-sha256",
+        "05f9fbb85b1e60a13181e55e55faa733c9cb1d88bdd915ed453f7f4bdef05681",
+        "--plan",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\plans\\flat-seed-733.json",
+        "--plan-sha256",
+        "6ea52e481e3d51a19e3a6051b08ce32327e9c9e8e1fed8395cdbd16a3a06a67a",
+        "--subset",
+        "best",
+        "--output",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\tiffs\\flat-seed-733-single4.tif",
+        "--receipt",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\receipts\\flat-seed-733-single4.json",
+        "--log",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\logs\\flat-seed-733-single4.command.log"
+      ],
+      "exit_code": 0,
+      "log": "logs/flat-seed-733-single4.controller.log",
+      "log_sha256": "600787910775c77eb33c87764497160a13a8020484a1e2ecef073db2221b6626",
+      "completed_utc": "2026-09-07T10:45:34.363009+00:00",
+      "consumer_evidence": {
+        "path": "logs/flat-seed-733-single4.command.json",
+        "sha256": "5ddcea78abf8898d080f52b054bd0a1f61e186fcd4fc16ffbfaf06c17280b274"
+      }
+    },
+    {
+      "command": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-X",
+        "utf8",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\consumer-run.py",
+        "render",
+        "--build-record",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\build.json",
+        "--build-sha256",
+        "64975e805b77552f81158424de066bc26903170372af61b84cf394d6743e643f",
+        "--manifest",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\flat\\seed-739\\manifest.json",
+        "--manifest-sha256",
+        "2914f07d3e849954c08a6485bcc1ee6492766222d61b1ea7580a18578362b661",
+        "--plan",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\plans\\flat-seed-739.json",
+        "--plan-sha256",
+        "a09234392373560df537f74a3b6f59715cfea31755a3fe082dcef52c9bf91f7d",
+        "--subset",
+        "all",
+        "--output",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\tiffs\\flat-seed-739-full9.tif",
+        "--receipt",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\receipts\\flat-seed-739-full9.json",
+        "--log",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\logs\\flat-seed-739-full9.command.log"
+      ],
+      "exit_code": 0,
+      "log": "logs/flat-seed-739-full9.controller.log",
+      "log_sha256": "9f58e37c23a96317eb174c1423b9bb2d0b3030f3f28ae3814c64fa636cf7a690",
+      "completed_utc": "2026-09-07T10:45:35.112078+00:00",
+      "consumer_evidence": {
+        "path": "logs/flat-seed-739-full9.command.json",
+        "sha256": "134457d02e03dd13fa9dcfdd8a5263e1a90d04579eedcd4c96f09dd19f86e30a"
+      }
+    },
+    {
+      "command": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-X",
+        "utf8",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\consumer-run.py",
+        "render",
+        "--build-record",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\build.json",
+        "--build-sha256",
+        "64975e805b77552f81158424de066bc26903170372af61b84cf394d6743e643f",
+        "--manifest",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\flat\\seed-739\\manifest.json",
+        "--manifest-sha256",
+        "2914f07d3e849954c08a6485bcc1ee6492766222d61b1ea7580a18578362b661",
+        "--plan",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\plans\\flat-seed-739.json",
+        "--plan-sha256",
+        "a09234392373560df537f74a3b6f59715cfea31755a3fe082dcef52c9bf91f7d",
+        "--subset",
+        "best",
+        "--output",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\tiffs\\flat-seed-739-single4.tif",
+        "--receipt",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\receipts\\flat-seed-739-single4.json",
+        "--log",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\logs\\flat-seed-739-single4.command.log"
+      ],
+      "exit_code": 0,
+      "log": "logs/flat-seed-739-single4.controller.log",
+      "log_sha256": "bb4189d0be0006758699b30dd12aca80f0eab6003d979c03aac2e5abeff4fc3d",
+      "completed_utc": "2026-09-07T10:45:35.540726+00:00",
+      "consumer_evidence": {
+        "path": "logs/flat-seed-739-single4.command.json",
+        "sha256": "e9e6585a9160d8047f7e9e1dc441ea041dd68cdaad17bdb41cd72f70f7d91dff"
+      }
+    },
+    {
+      "command": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-X",
+        "utf8",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\consumer-run.py",
+        "render",
+        "--build-record",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\build.json",
+        "--build-sha256",
+        "64975e805b77552f81158424de066bc26903170372af61b84cf394d6743e643f",
+        "--manifest",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\flat\\seed-743\\manifest.json",
+        "--manifest-sha256",
+        "7bcf0e1987fc118344711b3d1113ae35c27adfb26142b089f6a25c2034f007e1",
+        "--plan",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\plans\\flat-seed-743.json",
+        "--plan-sha256",
+        "5b029494d627c8adbc749fd7a882a1b8d547ff24c148a814efec9fc876503db0",
+        "--subset",
+        "all",
+        "--output",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\tiffs\\flat-seed-743-full9.tif",
+        "--receipt",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\receipts\\flat-seed-743-full9.json",
+        "--log",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\logs\\flat-seed-743-full9.command.log"
+      ],
+      "exit_code": 0,
+      "log": "logs/flat-seed-743-full9.controller.log",
+      "log_sha256": "8d8334c919f79c991f6408baca6b7107385e904366d31c8b360f8482348aa0ce",
+      "completed_utc": "2026-09-07T10:45:36.287459+00:00",
+      "consumer_evidence": {
+        "path": "logs/flat-seed-743-full9.command.json",
+        "sha256": "cbf640aa3fea6884bfebe40e1c4d49b542eded1314309024bb4958727949ccdb"
+      }
+    },
+    {
+      "command": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-X",
+        "utf8",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\consumer-run.py",
+        "render",
+        "--build-record",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\build.json",
+        "--build-sha256",
+        "64975e805b77552f81158424de066bc26903170372af61b84cf394d6743e643f",
+        "--manifest",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\flat\\seed-743\\manifest.json",
+        "--manifest-sha256",
+        "7bcf0e1987fc118344711b3d1113ae35c27adfb26142b089f6a25c2034f007e1",
+        "--plan",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\plans\\flat-seed-743.json",
+        "--plan-sha256",
+        "5b029494d627c8adbc749fd7a882a1b8d547ff24c148a814efec9fc876503db0",
+        "--subset",
+        "best",
+        "--output",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\tiffs\\flat-seed-743-single4.tif",
+        "--receipt",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\receipts\\flat-seed-743-single4.json",
+        "--log",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\logs\\flat-seed-743-single4.command.log"
+      ],
+      "exit_code": 0,
+      "log": "logs/flat-seed-743-single4.controller.log",
+      "log_sha256": "7e9a8cb6ddbb9ea214f777e7c11189ea355791f401c9117527da56f98bb29409",
+      "completed_utc": "2026-09-07T10:45:36.711269+00:00",
+      "consumer_evidence": {
+        "path": "logs/flat-seed-743-single4.command.json",
+        "sha256": "3bff80401b512ee22210a0ae74e73de55ff138552656cfc2fa4f1dfa10cf3649"
+      }
+    },
+    {
+      "command": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-X",
+        "utf8",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\consumer-run.py",
+        "render",
+        "--build-record",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\build.json",
+        "--build-sha256",
+        "64975e805b77552f81158424de066bc26903170372af61b84cf394d6743e643f",
+        "--manifest",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\flat\\seed-751\\manifest.json",
+        "--manifest-sha256",
+        "d0d40adfd8693a128653d400ea9c17912a8e0bcb0a5dddadd4b550e91c335788",
+        "--plan",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\plans\\flat-seed-751.json",
+        "--plan-sha256",
+        "7d83cfb930ee30287e6841697c832cd7dc2f532f7d6fb6819df867601a1267e2",
+        "--subset",
+        "all",
+        "--output",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\tiffs\\flat-seed-751-full9.tif",
+        "--receipt",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\receipts\\flat-seed-751-full9.json",
+        "--log",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\logs\\flat-seed-751-full9.command.log"
+      ],
+      "exit_code": 0,
+      "log": "logs/flat-seed-751-full9.controller.log",
+      "log_sha256": "51781ec55237682f36a32f1b736485abd7abc50a743aca0886b7d7e2beec20fb",
+      "completed_utc": "2026-09-07T10:45:37.460950+00:00",
+      "consumer_evidence": {
+        "path": "logs/flat-seed-751-full9.command.json",
+        "sha256": "48d992f25b670ac5ec4033953e4b2c7fc09a1b5d43aeff65319249e20020139e"
+      }
+    },
+    {
+      "command": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-X",
+        "utf8",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\consumer-run.py",
+        "render",
+        "--build-record",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\build.json",
+        "--build-sha256",
+        "64975e805b77552f81158424de066bc26903170372af61b84cf394d6743e643f",
+        "--manifest",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\flat\\seed-751\\manifest.json",
+        "--manifest-sha256",
+        "d0d40adfd8693a128653d400ea9c17912a8e0bcb0a5dddadd4b550e91c335788",
+        "--plan",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\plans\\flat-seed-751.json",
+        "--plan-sha256",
+        "7d83cfb930ee30287e6841697c832cd7dc2f532f7d6fb6819df867601a1267e2",
+        "--subset",
+        "best",
+        "--output",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\tiffs\\flat-seed-751-single4.tif",
+        "--receipt",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\receipts\\flat-seed-751-single4.json",
+        "--log",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\logs\\flat-seed-751-single4.command.log"
+      ],
+      "exit_code": 0,
+      "log": "logs/flat-seed-751-single4.controller.log",
+      "log_sha256": "28051a32aaff4858fecb7a0efb51c88688124033427ad196adc4f854f4cde688",
+      "completed_utc": "2026-09-07T10:45:37.889245+00:00",
+      "consumer_evidence": {
+        "path": "logs/flat-seed-751-single4.command.json",
+        "sha256": "f8a96af24acd6919436caacc8f59c5797d45d29fe03d5bb7117ca97bff60f66b"
+      }
+    },
+    {
+      "command": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-X",
+        "utf8",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\consumer-run.py",
+        "render",
+        "--build-record",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\build.json",
+        "--build-sha256",
+        "64975e805b77552f81158424de066bc26903170372af61b84cf394d6743e643f",
+        "--manifest",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\plane\\noise-off\\manifest.json",
+        "--manifest-sha256",
+        "ff9b676ff948270b54a9b1d987f0309ea61edaf13e390941463d9a2d5e4222df",
+        "--plan",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\plans\\plane-noise-off.json",
+        "--plan-sha256",
+        "fbda51bb57e84e9fdc1d798f6236296178e271ae0f86f3e88207a8d4702de041",
+        "--subset",
+        "all",
+        "--output",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\tiffs\\plane-noise-off-full9.tif",
+        "--receipt",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\receipts\\plane-noise-off-full9.json",
+        "--log",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\logs\\plane-noise-off-full9.command.log"
+      ],
+      "exit_code": 0,
+      "log": "logs/plane-noise-off-full9.controller.log",
+      "log_sha256": "7922324e69e86d531757f8d93db0b5978c504e5d9e321e3c39b7c0f02b06cbbc",
+      "completed_utc": "2026-09-07T10:45:38.642349+00:00",
+      "consumer_evidence": {
+        "path": "logs/plane-noise-off-full9.command.json",
+        "sha256": "1f4c01239c0c94c41f64b828c12117f3ed158d5fe94677a84a5ca10883f56bba"
+      }
+    },
+    {
+      "command": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-X",
+        "utf8",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\consumer-run.py",
+        "render",
+        "--build-record",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\build.json",
+        "--build-sha256",
+        "64975e805b77552f81158424de066bc26903170372af61b84cf394d6743e643f",
+        "--manifest",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\plane\\noise-off\\manifest.json",
+        "--manifest-sha256",
+        "ff9b676ff948270b54a9b1d987f0309ea61edaf13e390941463d9a2d5e4222df",
+        "--plan",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\plans\\plane-noise-off.json",
+        "--plan-sha256",
+        "fbda51bb57e84e9fdc1d798f6236296178e271ae0f86f3e88207a8d4702de041",
+        "--subset",
+        "best",
+        "--output",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\tiffs\\plane-noise-off-single4.tif",
+        "--receipt",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\receipts\\plane-noise-off-single4.json",
+        "--log",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\logs\\plane-noise-off-single4.command.log"
+      ],
+      "exit_code": 0,
+      "log": "logs/plane-noise-off-single4.controller.log",
+      "log_sha256": "b671c59db1618d80577247a550e0970fdb90f8abf6cac56c5bacd32bec8545f6",
+      "completed_utc": "2026-09-07T10:45:39.071846+00:00",
+      "consumer_evidence": {
+        "path": "logs/plane-noise-off-single4.command.json",
+        "sha256": "b9944710c110f7ec794f0a94600f6c75b260cfd477514ce801be8534011f54f4"
+      }
+    },
+    {
+      "command": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-X",
+        "utf8",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\consumer-run.py",
+        "render",
+        "--build-record",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\build.json",
+        "--build-sha256",
+        "64975e805b77552f81158424de066bc26903170372af61b84cf394d6743e643f",
+        "--manifest",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\plane\\seed-701\\manifest.json",
+        "--manifest-sha256",
+        "9b1754be33bf2879c57ad0239c9340f06c35a383b922414096796b1dfea9fc1b",
+        "--plan",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\plans\\plane-seed-701.json",
+        "--plan-sha256",
+        "bf26bdbfd3d045beeab1763f7f5bfd89cb4a9b49d8d0798cf54ddf35f6e4570c",
+        "--subset",
+        "all",
+        "--output",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\tiffs\\plane-seed-701-full9.tif",
+        "--receipt",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\receipts\\plane-seed-701-full9.json",
+        "--log",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\logs\\plane-seed-701-full9.command.log"
+      ],
+      "exit_code": 0,
+      "log": "logs/plane-seed-701-full9.controller.log",
+      "log_sha256": "296d0d46cd87099c2fdf5ee39967e67c5bccf6c9a7e5a4d2be1bc900e0bf1ce4",
+      "completed_utc": "2026-09-07T10:45:39.828292+00:00",
+      "consumer_evidence": {
+        "path": "logs/plane-seed-701-full9.command.json",
+        "sha256": "6f630163852ae45b1189a5004c7e9c51523bc73f6f52bf51b504b1cfaffed613"
+      }
+    },
+    {
+      "command": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-X",
+        "utf8",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\consumer-run.py",
+        "render",
+        "--build-record",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\build.json",
+        "--build-sha256",
+        "64975e805b77552f81158424de066bc26903170372af61b84cf394d6743e643f",
+        "--manifest",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\plane\\seed-701\\manifest.json",
+        "--manifest-sha256",
+        "9b1754be33bf2879c57ad0239c9340f06c35a383b922414096796b1dfea9fc1b",
+        "--plan",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\plans\\plane-seed-701.json",
+        "--plan-sha256",
+        "bf26bdbfd3d045beeab1763f7f5bfd89cb4a9b49d8d0798cf54ddf35f6e4570c",
+        "--subset",
+        "best",
+        "--output",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\tiffs\\plane-seed-701-single4.tif",
+        "--receipt",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\receipts\\plane-seed-701-single4.json",
+        "--log",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\logs\\plane-seed-701-single4.command.log"
+      ],
+      "exit_code": 0,
+      "log": "logs/plane-seed-701-single4.controller.log",
+      "log_sha256": "28121d1f0552324c2c840996e9757b961a5164944ab5dd80e1a370224a49b855",
+      "completed_utc": "2026-09-07T10:45:40.257872+00:00",
+      "consumer_evidence": {
+        "path": "logs/plane-seed-701-single4.command.json",
+        "sha256": "b4ad6e942303233f7919b39d7b44063dc7165aaeef341dd1f509c52460f5e3de"
+      }
+    },
+    {
+      "command": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-X",
+        "utf8",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\consumer-run.py",
+        "render",
+        "--build-record",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\build.json",
+        "--build-sha256",
+        "64975e805b77552f81158424de066bc26903170372af61b84cf394d6743e643f",
+        "--manifest",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\plane\\seed-709\\manifest.json",
+        "--manifest-sha256",
+        "cc6bd65bdfe773ffef60b8c0d10b300cbae778c7c13de1aa084d4336634e2a8c",
+        "--plan",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\plans\\plane-seed-709.json",
+        "--plan-sha256",
+        "144e62ec6d0770d88f6af2844c82f2f31debef72715b89c43e9288032c1bf53f",
+        "--subset",
+        "all",
+        "--output",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\tiffs\\plane-seed-709-full9.tif",
+        "--receipt",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\receipts\\plane-seed-709-full9.json",
+        "--log",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\logs\\plane-seed-709-full9.command.log"
+      ],
+      "exit_code": 0,
+      "log": "logs/plane-seed-709-full9.controller.log",
+      "log_sha256": "23cc682310cf20d5d64780e0b48d3d4b49c7b9f6f115e9720b9a72369021da9c",
+      "completed_utc": "2026-09-07T10:45:41.017177+00:00",
+      "consumer_evidence": {
+        "path": "logs/plane-seed-709-full9.command.json",
+        "sha256": "16519588918a2d08f50442789875038548478ccdc834ca2e872709687cb79235"
+      }
+    },
+    {
+      "command": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-X",
+        "utf8",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\consumer-run.py",
+        "render",
+        "--build-record",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\build.json",
+        "--build-sha256",
+        "64975e805b77552f81158424de066bc26903170372af61b84cf394d6743e643f",
+        "--manifest",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\plane\\seed-709\\manifest.json",
+        "--manifest-sha256",
+        "cc6bd65bdfe773ffef60b8c0d10b300cbae778c7c13de1aa084d4336634e2a8c",
+        "--plan",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\plans\\plane-seed-709.json",
+        "--plan-sha256",
+        "144e62ec6d0770d88f6af2844c82f2f31debef72715b89c43e9288032c1bf53f",
+        "--subset",
+        "best",
+        "--output",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\tiffs\\plane-seed-709-single4.tif",
+        "--receipt",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\receipts\\plane-seed-709-single4.json",
+        "--log",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\logs\\plane-seed-709-single4.command.log"
+      ],
+      "exit_code": 0,
+      "log": "logs/plane-seed-709-single4.controller.log",
+      "log_sha256": "97ee906f359ece9b516787717a574bdf4a7a5d58d8b61ee6dff7694662ace52c",
+      "completed_utc": "2026-09-07T10:45:41.447747+00:00",
+      "consumer_evidence": {
+        "path": "logs/plane-seed-709-single4.command.json",
+        "sha256": "41ad80348dd3f550c632486e80c0f8cbed9756152b35398b6731ec208f01b35c"
+      }
+    },
+    {
+      "command": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-X",
+        "utf8",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\consumer-run.py",
+        "render",
+        "--build-record",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\build.json",
+        "--build-sha256",
+        "64975e805b77552f81158424de066bc26903170372af61b84cf394d6743e643f",
+        "--manifest",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\plane\\seed-719\\manifest.json",
+        "--manifest-sha256",
+        "f81ba272154bf96535cef72f2340da6d1b36c2b25d5a5cf0e50f5f61d0e574e0",
+        "--plan",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\plans\\plane-seed-719.json",
+        "--plan-sha256",
+        "ab60d21c147237008b1a8b947ae64100fa459f7ee8cb3698dcf2af1913760997",
+        "--subset",
+        "all",
+        "--output",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\tiffs\\plane-seed-719-full9.tif",
+        "--receipt",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\receipts\\plane-seed-719-full9.json",
+        "--log",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\logs\\plane-seed-719-full9.command.log"
+      ],
+      "exit_code": 0,
+      "log": "logs/plane-seed-719-full9.controller.log",
+      "log_sha256": "46dfdf50e6ea434d511277f5e06d67677df34f6a21b6a7dca07953713b97ccf0",
+      "completed_utc": "2026-09-07T10:45:42.200487+00:00",
+      "consumer_evidence": {
+        "path": "logs/plane-seed-719-full9.command.json",
+        "sha256": "a43eeefd0370d92080213c04c083c0e6204c024febc878433f5d77d0138ddaa2"
+      }
+    },
+    {
+      "command": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-X",
+        "utf8",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\consumer-run.py",
+        "render",
+        "--build-record",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\build.json",
+        "--build-sha256",
+        "64975e805b77552f81158424de066bc26903170372af61b84cf394d6743e643f",
+        "--manifest",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\plane\\seed-719\\manifest.json",
+        "--manifest-sha256",
+        "f81ba272154bf96535cef72f2340da6d1b36c2b25d5a5cf0e50f5f61d0e574e0",
+        "--plan",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\plans\\plane-seed-719.json",
+        "--plan-sha256",
+        "ab60d21c147237008b1a8b947ae64100fa459f7ee8cb3698dcf2af1913760997",
+        "--subset",
+        "best",
+        "--output",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\tiffs\\plane-seed-719-single4.tif",
+        "--receipt",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\receipts\\plane-seed-719-single4.json",
+        "--log",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\logs\\plane-seed-719-single4.command.log"
+      ],
+      "exit_code": 0,
+      "log": "logs/plane-seed-719-single4.controller.log",
+      "log_sha256": "5f883fd1d73e61c8b1b7f980ac839dc779024e6274ebcdd8d18cc5b304ecb1de",
+      "completed_utc": "2026-09-07T10:45:42.630017+00:00",
+      "consumer_evidence": {
+        "path": "logs/plane-seed-719-single4.command.json",
+        "sha256": "9a8ba5d7c62f8c9d5fa6aaea2204925ebbbfd7dca801048cea9c242da3d34ec5"
+      }
+    },
+    {
+      "command": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-X",
+        "utf8",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\consumer-run.py",
+        "render",
+        "--build-record",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\build.json",
+        "--build-sha256",
+        "64975e805b77552f81158424de066bc26903170372af61b84cf394d6743e643f",
+        "--manifest",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\plane\\seed-727\\manifest.json",
+        "--manifest-sha256",
+        "502dfc93f59c89bc084f9966ca710aad595987923da191a694fb9b673cfb3740",
+        "--plan",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\plans\\plane-seed-727.json",
+        "--plan-sha256",
+        "4284cd1221f3c69924c4906f7343b26ffdd1379284116e5a1078018b46d7fe0c",
+        "--subset",
+        "all",
+        "--output",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\tiffs\\plane-seed-727-full9.tif",
+        "--receipt",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\receipts\\plane-seed-727-full9.json",
+        "--log",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\logs\\plane-seed-727-full9.command.log"
+      ],
+      "exit_code": 0,
+      "log": "logs/plane-seed-727-full9.controller.log",
+      "log_sha256": "49dbe4ae0d14628f1c57556623c7b89757648bad94c25db0fa1da24efde4d81d",
+      "completed_utc": "2026-09-07T10:45:43.388011+00:00",
+      "consumer_evidence": {
+        "path": "logs/plane-seed-727-full9.command.json",
+        "sha256": "9effcfbb8994b196e16e6b88f7a30d377bd75ebbe44a9835db414a7ba111a1a7"
+      }
+    },
+    {
+      "command": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-X",
+        "utf8",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\consumer-run.py",
+        "render",
+        "--build-record",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\build.json",
+        "--build-sha256",
+        "64975e805b77552f81158424de066bc26903170372af61b84cf394d6743e643f",
+        "--manifest",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\plane\\seed-727\\manifest.json",
+        "--manifest-sha256",
+        "502dfc93f59c89bc084f9966ca710aad595987923da191a694fb9b673cfb3740",
+        "--plan",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\plans\\plane-seed-727.json",
+        "--plan-sha256",
+        "4284cd1221f3c69924c4906f7343b26ffdd1379284116e5a1078018b46d7fe0c",
+        "--subset",
+        "best",
+        "--output",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\tiffs\\plane-seed-727-single4.tif",
+        "--receipt",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\receipts\\plane-seed-727-single4.json",
+        "--log",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\logs\\plane-seed-727-single4.command.log"
+      ],
+      "exit_code": 0,
+      "log": "logs/plane-seed-727-single4.controller.log",
+      "log_sha256": "5f5c166da60b465ba2c38efb417baf101a52c6fcb7685b3287c782d77f16095b",
+      "completed_utc": "2026-09-07T10:45:43.814784+00:00",
+      "consumer_evidence": {
+        "path": "logs/plane-seed-727-single4.command.json",
+        "sha256": "9413b36f0ac93ee8c1ed9c040f37397f0aa11e330b81cd92d40fecf0617549c8"
+      }
+    },
+    {
+      "command": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-X",
+        "utf8",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\consumer-run.py",
+        "render",
+        "--build-record",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\build.json",
+        "--build-sha256",
+        "64975e805b77552f81158424de066bc26903170372af61b84cf394d6743e643f",
+        "--manifest",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\plane\\seed-733\\manifest.json",
+        "--manifest-sha256",
+        "fbd50e1c16ce11145025b656d8a42178159af5d476f58e611b135e522e05e1fa",
+        "--plan",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\plans\\plane-seed-733.json",
+        "--plan-sha256",
+        "8b559cf2f65a9ce2ead0b41d0f2e25c6b17508dd5c1949923cce620f1e7b059c",
+        "--subset",
+        "all",
+        "--output",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\tiffs\\plane-seed-733-full9.tif",
+        "--receipt",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\receipts\\plane-seed-733-full9.json",
+        "--log",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\logs\\plane-seed-733-full9.command.log"
+      ],
+      "exit_code": 0,
+      "log": "logs/plane-seed-733-full9.controller.log",
+      "log_sha256": "43f25a9d8325bb164bbcee5faf3b71b8f7ecf6361285ae747f6b6e41eea5fafd",
+      "completed_utc": "2026-09-07T10:45:44.569225+00:00",
+      "consumer_evidence": {
+        "path": "logs/plane-seed-733-full9.command.json",
+        "sha256": "46c6da20df6b49f370355da1069e3a8eeb5f7d2e36dc210fd4161bc2847cdbee"
+      }
+    },
+    {
+      "command": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-X",
+        "utf8",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\consumer-run.py",
+        "render",
+        "--build-record",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\build.json",
+        "--build-sha256",
+        "64975e805b77552f81158424de066bc26903170372af61b84cf394d6743e643f",
+        "--manifest",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\plane\\seed-733\\manifest.json",
+        "--manifest-sha256",
+        "fbd50e1c16ce11145025b656d8a42178159af5d476f58e611b135e522e05e1fa",
+        "--plan",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\plans\\plane-seed-733.json",
+        "--plan-sha256",
+        "8b559cf2f65a9ce2ead0b41d0f2e25c6b17508dd5c1949923cce620f1e7b059c",
+        "--subset",
+        "best",
+        "--output",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\tiffs\\plane-seed-733-single4.tif",
+        "--receipt",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\receipts\\plane-seed-733-single4.json",
+        "--log",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\logs\\plane-seed-733-single4.command.log"
+      ],
+      "exit_code": 0,
+      "log": "logs/plane-seed-733-single4.controller.log",
+      "log_sha256": "c1c99b639dac509ea315a8619a05a1ab2aa0140d2bdbf2012958959a8c794864",
+      "completed_utc": "2026-09-07T10:45:44.999849+00:00",
+      "consumer_evidence": {
+        "path": "logs/plane-seed-733-single4.command.json",
+        "sha256": "91d2fa40d1dbe91155d397ce09b48c42201621ad93d361adc4f9224080070f87"
+      }
+    },
+    {
+      "command": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-X",
+        "utf8",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\consumer-run.py",
+        "render",
+        "--build-record",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\build.json",
+        "--build-sha256",
+        "64975e805b77552f81158424de066bc26903170372af61b84cf394d6743e643f",
+        "--manifest",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\plane\\seed-739\\manifest.json",
+        "--manifest-sha256",
+        "e86c62ddd41bd4ad098d12d39470b47fd37356eb548e407bc878b2d1aec032b6",
+        "--plan",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\plans\\plane-seed-739.json",
+        "--plan-sha256",
+        "0665099ae10583a95b206e33b314fa600e4ac40a04762bf2c496805062850ee0",
+        "--subset",
+        "all",
+        "--output",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\tiffs\\plane-seed-739-full9.tif",
+        "--receipt",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\receipts\\plane-seed-739-full9.json",
+        "--log",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\logs\\plane-seed-739-full9.command.log"
+      ],
+      "exit_code": 0,
+      "log": "logs/plane-seed-739-full9.controller.log",
+      "log_sha256": "08b8f1a4379f9d0e0f3a06979cdcedd02a8e9aabbd7197364c8b235f9c00e0f1",
+      "completed_utc": "2026-09-07T10:45:45.746544+00:00",
+      "consumer_evidence": {
+        "path": "logs/plane-seed-739-full9.command.json",
+        "sha256": "6fa2cfe7dd8fca2b069865a715a52532afcdbe6580f79b923379d2334fe52349"
+      }
+    },
+    {
+      "command": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-X",
+        "utf8",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\consumer-run.py",
+        "render",
+        "--build-record",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\build.json",
+        "--build-sha256",
+        "64975e805b77552f81158424de066bc26903170372af61b84cf394d6743e643f",
+        "--manifest",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\plane\\seed-739\\manifest.json",
+        "--manifest-sha256",
+        "e86c62ddd41bd4ad098d12d39470b47fd37356eb548e407bc878b2d1aec032b6",
+        "--plan",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\plans\\plane-seed-739.json",
+        "--plan-sha256",
+        "0665099ae10583a95b206e33b314fa600e4ac40a04762bf2c496805062850ee0",
+        "--subset",
+        "best",
+        "--output",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\tiffs\\plane-seed-739-single4.tif",
+        "--receipt",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\receipts\\plane-seed-739-single4.json",
+        "--log",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\logs\\plane-seed-739-single4.command.log"
+      ],
+      "exit_code": 0,
+      "log": "logs/plane-seed-739-single4.controller.log",
+      "log_sha256": "0b07ef31f945b017498edae5d3ed65399ae8ee862d72c4220a658ddd04f657b5",
+      "completed_utc": "2026-09-07T10:45:46.174215+00:00",
+      "consumer_evidence": {
+        "path": "logs/plane-seed-739-single4.command.json",
+        "sha256": "d34a9b6bb28a8589becb4216bfd2a4bbd03902cbe6d6cd4e0d2f44870127e21c"
+      }
+    },
+    {
+      "command": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-X",
+        "utf8",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\consumer-run.py",
+        "render",
+        "--build-record",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\build.json",
+        "--build-sha256",
+        "64975e805b77552f81158424de066bc26903170372af61b84cf394d6743e643f",
+        "--manifest",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\plane\\seed-743\\manifest.json",
+        "--manifest-sha256",
+        "80f07e72a4d9aee94c0c7ce24063d563b2bc120d5b904c403218008126eeaa7a",
+        "--plan",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\plans\\plane-seed-743.json",
+        "--plan-sha256",
+        "271ec63b9b1061c3fe539550313789fccfe718cf28614d0162c27f69c39d16d1",
+        "--subset",
+        "all",
+        "--output",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\tiffs\\plane-seed-743-full9.tif",
+        "--receipt",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\receipts\\plane-seed-743-full9.json",
+        "--log",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\logs\\plane-seed-743-full9.command.log"
+      ],
+      "exit_code": 0,
+      "log": "logs/plane-seed-743-full9.controller.log",
+      "log_sha256": "1aa9f9b6dc2bb47f36fe6cc3ef2f67350bf56382f619ebd548be18c0a2159f44",
+      "completed_utc": "2026-09-07T10:45:46.927284+00:00",
+      "consumer_evidence": {
+        "path": "logs/plane-seed-743-full9.command.json",
+        "sha256": "84b4fcbb533db483b644a905a2c8096808effcee3d83159ad4323be6c46555ea"
+      }
+    },
+    {
+      "command": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-X",
+        "utf8",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\consumer-run.py",
+        "render",
+        "--build-record",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\build.json",
+        "--build-sha256",
+        "64975e805b77552f81158424de066bc26903170372af61b84cf394d6743e643f",
+        "--manifest",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\plane\\seed-743\\manifest.json",
+        "--manifest-sha256",
+        "80f07e72a4d9aee94c0c7ce24063d563b2bc120d5b904c403218008126eeaa7a",
+        "--plan",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\plans\\plane-seed-743.json",
+        "--plan-sha256",
+        "271ec63b9b1061c3fe539550313789fccfe718cf28614d0162c27f69c39d16d1",
+        "--subset",
+        "best",
+        "--output",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\tiffs\\plane-seed-743-single4.tif",
+        "--receipt",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\receipts\\plane-seed-743-single4.json",
+        "--log",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\logs\\plane-seed-743-single4.command.log"
+      ],
+      "exit_code": 0,
+      "log": "logs/plane-seed-743-single4.controller.log",
+      "log_sha256": "6973f57cda9d9b9c13171add5d4f4468f30ce2fff3b1cc0b81ed288aa0118f3f",
+      "completed_utc": "2026-09-07T10:45:47.359499+00:00",
+      "consumer_evidence": {
+        "path": "logs/plane-seed-743-single4.command.json",
+        "sha256": "16104b0cf2442c1516dc4028c5b0b4e3087222f332af74246c970a5766d8f12d"
+      }
+    },
+    {
+      "command": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-X",
+        "utf8",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\consumer-run.py",
+        "render",
+        "--build-record",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\build.json",
+        "--build-sha256",
+        "64975e805b77552f81158424de066bc26903170372af61b84cf394d6743e643f",
+        "--manifest",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\plane\\seed-751\\manifest.json",
+        "--manifest-sha256",
+        "25d25f4d64daccb5e2906040c46f8c6e1b99aaf67ac35c1370cab0c8acf7b16e",
+        "--plan",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\plans\\plane-seed-751.json",
+        "--plan-sha256",
+        "5f3a9b135b4c35a0015010152a34f1f803d9aa40fa10136c1353cee387ebe9c8",
+        "--subset",
+        "all",
+        "--output",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\tiffs\\plane-seed-751-full9.tif",
+        "--receipt",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\receipts\\plane-seed-751-full9.json",
+        "--log",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\logs\\plane-seed-751-full9.command.log"
+      ],
+      "exit_code": 0,
+      "log": "logs/plane-seed-751-full9.controller.log",
+      "log_sha256": "85686d08e93c14866452e05f45e6f54d9eb7f87e671c708799d8f0fefcf39b97",
+      "completed_utc": "2026-09-07T10:45:48.111950+00:00",
+      "consumer_evidence": {
+        "path": "logs/plane-seed-751-full9.command.json",
+        "sha256": "c3b9d7db7d9f3ab0392ee293f11b66bf39f5ee7bd3ea6b9bb7765bf557133952"
+      }
+    },
+    {
+      "command": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-X",
+        "utf8",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\consumer-run.py",
+        "render",
+        "--build-record",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\build.json",
+        "--build-sha256",
+        "64975e805b77552f81158424de066bc26903170372af61b84cf394d6743e643f",
+        "--manifest",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\plane\\seed-751\\manifest.json",
+        "--manifest-sha256",
+        "25d25f4d64daccb5e2906040c46f8c6e1b99aaf67ac35c1370cab0c8acf7b16e",
+        "--plan",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\plans\\plane-seed-751.json",
+        "--plan-sha256",
+        "5f3a9b135b4c35a0015010152a34f1f803d9aa40fa10136c1353cee387ebe9c8",
+        "--subset",
+        "best",
+        "--output",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\tiffs\\plane-seed-751-single4.tif",
+        "--receipt",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\receipts\\plane-seed-751-single4.json",
+        "--log",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\logs\\plane-seed-751-single4.command.log"
+      ],
+      "exit_code": 0,
+      "log": "logs/plane-seed-751-single4.controller.log",
+      "log_sha256": "48539bc1b551f6738c566ee3d7d3d535e1a41ef313754cf1c20b43939d9d4c4e",
+      "completed_utc": "2026-09-07T10:45:48.553134+00:00",
+      "consumer_evidence": {
+        "path": "logs/plane-seed-751-single4.command.json",
+        "sha256": "2ae45c1e13489bfda9e18274415c7d5959f986843104aa85c28ff6ac000a36b2"
+      }
+    },
+    {
+      "command": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-X",
+        "utf8",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\consumer-run.py",
+        "render",
+        "--build-record",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\build.json",
+        "--build-sha256",
+        "64975e805b77552f81158424de066bc26903170372af61b84cf394d6743e643f",
+        "--manifest",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\color\\noise-off\\manifest.json",
+        "--manifest-sha256",
+        "21fffbadd35149150f98634ff3394c2e4ef6bb0a879ab5fcdebd0336f35fac51",
+        "--plan",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\plans\\color-noise-off.json",
+        "--plan-sha256",
+        "30b0cefa44d51883b3237514492b1bf253adca360d8be2b25df0b528a44bc2b8",
+        "--subset",
+        "all",
+        "--output",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\tiffs\\color-noise-off-full9.tif",
+        "--receipt",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\receipts\\color-noise-off-full9.json",
+        "--log",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\logs\\color-noise-off-full9.command.log"
+      ],
+      "exit_code": 0,
+      "log": "logs/color-noise-off-full9.controller.log",
+      "log_sha256": "d8b191a0c432b724f3f11ec03f5cb550baf3b65cfaa913c7a813b757c9daff50",
+      "completed_utc": "2026-09-07T10:45:49.306636+00:00",
+      "consumer_evidence": {
+        "path": "logs/color-noise-off-full9.command.json",
+        "sha256": "931de68d97bec2ae5c452d94fab07df54e2807e2304c2b52d707beb69dd7ef74"
+      }
+    },
+    {
+      "command": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-X",
+        "utf8",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\consumer-run.py",
+        "render",
+        "--build-record",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\build.json",
+        "--build-sha256",
+        "64975e805b77552f81158424de066bc26903170372af61b84cf394d6743e643f",
+        "--manifest",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\color\\noise-off\\manifest.json",
+        "--manifest-sha256",
+        "21fffbadd35149150f98634ff3394c2e4ef6bb0a879ab5fcdebd0336f35fac51",
+        "--plan",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\plans\\color-noise-off.json",
+        "--plan-sha256",
+        "30b0cefa44d51883b3237514492b1bf253adca360d8be2b25df0b528a44bc2b8",
+        "--subset",
+        "best",
+        "--output",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\tiffs\\color-noise-off-single4.tif",
+        "--receipt",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\receipts\\color-noise-off-single4.json",
+        "--log",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\logs\\color-noise-off-single4.command.log"
+      ],
+      "exit_code": 0,
+      "log": "logs/color-noise-off-single4.controller.log",
+      "log_sha256": "1078b69c677ebe2c35d1dd7962a390aee0ffee06235c1098ef4b91528e711588",
+      "completed_utc": "2026-09-07T10:45:49.737009+00:00",
+      "consumer_evidence": {
+        "path": "logs/color-noise-off-single4.command.json",
+        "sha256": "d7c8f7620ad6be0d1cc11f7166aac2171d9e9f1b3d538772adf99283e9d4d356"
+      }
+    },
+    {
+      "command": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-X",
+        "utf8",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\consumer-run.py",
+        "render",
+        "--build-record",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\build.json",
+        "--build-sha256",
+        "64975e805b77552f81158424de066bc26903170372af61b84cf394d6743e643f",
+        "--manifest",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\color-null\\noise-off\\manifest.json",
+        "--manifest-sha256",
+        "546dbb3b37a02db0240a13392e187a344d644dcfae887f97682165794fd4ab23",
+        "--plan",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\plans\\color-null-noise-off.json",
+        "--plan-sha256",
+        "1f4d7733424e2c1e71edf3e2cb2262c183ea43cab913dc468dc2dbd5b5f0c9be",
+        "--subset",
+        "all",
+        "--output",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\tiffs\\color-null-noise-off-full9.tif",
+        "--receipt",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\receipts\\color-null-noise-off-full9.json",
+        "--log",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\logs\\color-null-noise-off-full9.command.log"
+      ],
+      "exit_code": 0,
+      "log": "logs/color-null-noise-off-full9.controller.log",
+      "log_sha256": "5cd60176ae08c23ba2c9f15a3d4e2cfc01b5b91d40ca1be18d710fa471d2fc99",
+      "completed_utc": "2026-09-07T10:45:50.489612+00:00",
+      "consumer_evidence": {
+        "path": "logs/color-null-noise-off-full9.command.json",
+        "sha256": "fa5747dab9c157b0f06f9a45a6b4217009f9a7c0d487e73872c0de49580d3ae6"
+      }
+    },
+    {
+      "command": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-X",
+        "utf8",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\consumer-run.py",
+        "render",
+        "--build-record",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\build.json",
+        "--build-sha256",
+        "64975e805b77552f81158424de066bc26903170372af61b84cf394d6743e643f",
+        "--manifest",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\color-null\\noise-off\\manifest.json",
+        "--manifest-sha256",
+        "546dbb3b37a02db0240a13392e187a344d644dcfae887f97682165794fd4ab23",
+        "--plan",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\plans\\color-null-noise-off.json",
+        "--plan-sha256",
+        "1f4d7733424e2c1e71edf3e2cb2262c183ea43cab913dc468dc2dbd5b5f0c9be",
+        "--subset",
+        "best",
+        "--output",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\tiffs\\color-null-noise-off-single4.tif",
+        "--receipt",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\receipts\\color-null-noise-off-single4.json",
+        "--log",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\run\\logs\\color-null-noise-off-single4.command.log"
+      ],
+      "exit_code": 0,
+      "log": "logs/color-null-noise-off-single4.controller.log",
+      "log_sha256": "66bf3ea256f0b93c3d43e3f5776c6cfbfeeb0a1ea21bae84fa61a72ce9f1ef85",
+      "completed_utc": "2026-09-07T10:45:50.934936+00:00",
+      "consumer_evidence": {
+        "path": "logs/color-null-noise-off-single4.command.json",
+        "sha256": "2bf39b05765c06488954b322177773a1fcd8cb18dc0c9c56d750340e48d89493"
+      }
+    }
+  ],
+  "build_record": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-2\\build.json",
+    "sha256": "64975e805b77552f81158424de066bc26903170372af61b84cf394d6743e643f"
+  },
+  "producer_result": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\producer-result.json",
+    "sha256": "544d47dbc0fdebcf220094ca53434ca49abfee62f55febec27b36f58c24087cc"
+  },
+  "producer_commission": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-commission-1\\commission.json",
+    "sha256": "0a8eb43a53d8f44a6e803f531fd2e83d12b7a59e280440e730dc6ea6523b50d5"
+  },
+  "all_plans_frozen_utc": "2026-09-07T10:45:27.183782+00:00",
+  "sources_after": {
+    "Cargo.lock": "82a228ddda138d1b6269e1a32a6e55377369bb94923e92da362cf11cc9569a4b",
+    "Cargo.toml": "732c5d4d874594cccbfd896ae688afa01e91290f0b1c8fd0331fa8b06f914984",
+    "crates/strehl-cli/build.rs": "5b864155733a90c2a4f7152e21d3dbcc5d5e0f469b4aa772c328fe86e4aa2091",
+    "crates/strehl-cli/Cargo.toml": "d0e6b05aa93df026270e513fd3e5ab9cd50726596ef1475b8a3680faa84b2650",
+    "crates/strehl-cli/examples/blend-render.rs": "86c403dc074519bdf54dd66226a82ac935d8a91a26d44799596989fbcacd25b9",
+    "crates/strehl-cli/examples/blend-truth.rs": "38a5a9464a7c09521dad8320a90faea4f25a09aead175af3f37f25dc7e034ca2",
+    "crates/strehl-cli/examples/build-demosaic-truth.rs": "fb33639b174986c9159b8a544b46b5cb4aa3a514a4315a80738c55b4305f27fd",
+    "crates/strehl-cli/examples/build-gatefloor.rs": "c377d932c168c8ac5d74ae3c96e9a1d714726ccb91fca01697b5e1596e8de0cd",
+    "crates/strehl-cli/examples/build-plugin-field.rs": "a733f23be4a3d385a4011f249b8fd3769a3fd018dade66aa43c9d19935ec6f71",
+    "crates/strehl-cli/examples/build-resamp-mtf.rs": "69dd26cb260d9d0435ec1689dbcfd27b0cab16f9feffe82d3b944701e80bcb27",
+    "crates/strehl-cli/examples/cover-reference.rs": "f1762977aa8ae7c1d95366f5c65a6857dc6ab012e9e7323a4054ff6cd2bf5c7e",
+    "crates/strehl-cli/examples/defect-cpl-split.rs": "0131f7bbdbfb6f840472e318a290205134f739f4f4b93c441a2d8d4f42873bb4",
+    "crates/strehl-cli/examples/defect-flat-census.rs": "070f2e343597916269cc4699d34a7bd485dccac9d17b185303af152a745c8273",
+    "crates/strehl-cli/examples/defect-geometry-census.rs": "23e3d8ff39020a9ef09701bd17886ea09249f503495f5e527c53d84a014126e4",
+    "crates/strehl-cli/examples/defect-geometry-verdict.rs": "38e4e8ea3afb115a018413985813e730bd109351489f761c771f2cf144a62749",
+    "crates/strehl-cli/examples/defect-plant-fidelity.rs": "bff657c34c0ac00bba47b75dd17f7698e47328631600718e0c2adfe99adcb7f5",
+    "crates/strehl-cli/examples/m123-null-radius.rs": "29780cdb8f20768705949bf5622783faff6ba2cb9d46326779eb064ac0a941cd",
+    "crates/strehl-cli/examples/m123-outlier-real.rs": "3cb776b76023f5ebe7ac5ffa588e31b4b0a8c34d98794d2cd174ef071d638275",
+    "crates/strehl-cli/examples/m123-trap-decompose.rs": "be1462beb949bf32eb1e54b3a598ad488ee616aca79704a2940f9049f5aecf9f",
+    "crates/strehl-cli/examples/m60-disagreement.rs": "e6800fabce502189bba14148b42f96ceabd893e77e8732af27394592a219a93b",
+    "crates/strehl-cli/examples/m65-election.rs": "8bb8b1f268107d171ca8d3454687c02ca0bec24dea629ede433f9547c993ae8f",
+    "crates/strehl-cli/examples/m67-focus-correctness.rs": "9b2fa813ced90939f7cb065fbb12662fd8129b4e06269183764e6e52e048881c",
+    "crates/strehl-cli/examples/m73-cylinder.rs": "b42700a1384eb2d6f12d4072b4040fbe3f4da82cf27de1d71eb47fd181e7cd55",
+    "crates/strehl-cli/examples/m86-align.rs": "63dad30331cf9ecb293374d35133f1f9062592e016f3cafd767b962b76080a2e",
+    "crates/strehl-cli/examples/m89-robust.rs": "acb6f32abf2d40dd9b1d00085710ee4b5ae77c34481a3730ba6bb76bdebbaa2f",
+    "crates/strehl-cli/examples/m90-prnu.rs": "7e5a232e10d70ea7809780ea32f578a7aadf6cff46a3d2df45ffc5e79031f5c8",
+    "crates/strehl-cli/examples/m90-rho.rs": "fbe0faadaa636616cec0755e872509e33a65a108b636d50f5a359e6f3a582d7f",
+    "crates/strehl-cli/examples/m91-photometry.rs": "e39f2f6d95e0606ec7f9525991b17c4519d4c3deac709188f8b5e3eaa1625f61",
+    "crates/strehl-cli/examples/m93-election.rs": "d63a840f830be4489fc32c05c8f11e3c26e10e163df40d6eb15f1ad9c39ea677",
+    "crates/strehl-cli/examples/m95-demosaic.rs": "8210edf48821204928af800b307617389f4a1b7a0e24003f1c6d9375436fde81",
+    "crates/strehl-cli/examples/m95-kernel.rs": "bd2391e8b83da68b742cf0bf98834315c013e07afa1fd6afbc79f06ca3c1d614",
+    "crates/strehl-cli/examples/m95-lanczos.rs": "61d6f4d5ba260cd3c601f1a9f525b2cac922ef42270ebec3c58f0e5dc04fa298",
+    "crates/strehl-cli/examples/m96-election-margin.rs": "06d62fd30245590a74d6c948d3d7ef0421e65b836c32abbc39d71ed364470eac",
+    "crates/strehl-cli/examples/m97-outlier.rs": "cb6562b5d0a3352ef7005fdc82a65f8ba80821739ca851402cd42f556248652c",
+    "crates/strehl-cli/examples/m97-tornmap.rs": "55b21b7803d7a1afe7305c80a799f0e1de89b76098878c1deef8e9c6a7a1ff4e",
+    "crates/strehl-cli/examples/m99-photometric.rs": "a253c53102f873961dbd13c3190e178374c58e3c7967e2fef407b5865e59b512",
+    "crates/strehl-cli/src/align_cmd.rs": "b3de7738151a6bc0500c66dd916f9fcb20cdb9be0bf698ad00425d3ebb397c69",
+    "crates/strehl-cli/src/bin/strehl-common-input.rs": "0abf5917357365ba83028f82c0a2855917ad45071d95d3ec2d404702de1ef31f",
+    "crates/strehl-cli/src/focus_plugin.rs": "d917dba8f3bfc57a709b7af6650dc43a34724383270ac5faec986ed3a963d337",
+    "crates/strehl-cli/src/image_out.rs": "c1362363740cb0176985283455cd6ddef80479854b1bbc9f0396851c490f82b6",
+    "crates/strehl-cli/src/main.rs": "a29e0f975764b75491eb3147e94f15b05944120cdc3cdd55a24830a89a2e5340",
+    "crates/strehl-cli/src/merge_cmd/dump.rs": "2827483acbbce3dc528f3d27642cb54e8c8f99abb85b0b23f89f59c53c93bfe3",
+    "crates/strehl-cli/src/merge_cmd/gatefloor.rs": "bcea35986c73011c20d872bddc9c0ef3ea9354101259bd3952c16976bb1c9496",
+    "crates/strehl-cli/src/merge_cmd/halo.rs": "fc234df8b515f982bbc527448ea0a0764c30b088385405d85f253800aaf7dd55",
+    "crates/strehl-cli/src/merge_cmd/known-scene-benchmark.rs": "4ac1d2e82aef7ca4428b7e3fd276f691a50d4be8e0e2152ad00be00de8db2034",
+    "crates/strehl-cli/src/merge_cmd/production-truth.rs": "4ddd69b66cfbdad55443f3e0273aa60f188f3b5de314eddba5ef2378aee93955",
+    "crates/strehl-cli/src/merge_cmd.rs": "693d0539b09302f77bdafd27b30356560f4cc2740d7414cc1c163b7bf1b5335f",
+    "crates/strehl-cli/src/stack.rs": "108bb38a964946c7e7b7c25c640ce08297835faee253ad4e059e6074f5655572",
+    "crates/strehl-cli/tests/byte-freeze.rs": "750efd0d5605d76bc1e5000e9945a58d57ef4418ec25299cd27920408f53976c",
+    "crates/strehl-cli/tests/byte-freezes.tsv": "d74c3f1da19c0edf6625bc6a26ccad3de6a6ab6c201f009d009b9999c5f4d001",
+    "crates/strehl-cli/tests/data/coffee-bean-20.clamped-catmull.warpmap.txt": "d35352b083530cf52d7649d384e046e3eb410de41b4f5444c4b7992338900fe8",
+    "crates/strehl-cli/tests/data/coffee-bean-20.warpmap.txt": "ef74541395db1ba606067bcf04947909bd6a9c5be530fe8aad21578b5c1e93b3",
+    "crates/strehl-core/Cargo.toml": "25bdef9c60ef30849ba184116f2b5aa202b07baf55da22ca311f725ab56bde16",
+    "crates/strehl-core/examples/demosaic-plane.rs": "d40278227e647f195be75e1c199eab04132cdc21c7ae07648cf29bbb410d2f8c",
+    "crates/strehl-core/examples/focus-window-cost.rs": "ddb8aa01857c03860f62fbbf82793e8e1b5d2df32adde877269af2be39c9b997",
+    "crates/strehl-core/examples/restore-plane.rs": "5707ab9a2a66333968936d704ea8888fa7535dc6e0b7c73c1a3f815fd2c1a0d1",
+    "crates/strehl-core/src/align.rs": "6d33f0e24f21d4370ccd8df0bf618e54a5ad615b838bc265469b4f85051c2786",
+    "crates/strehl-core/src/boxfilter.rs": "5cf6dab36c8ddb7499acbec140df509b4e1e5fe0b0ace3a13f8d7cf68f979b8e",
+    "crates/strehl-core/src/clip.rs": "aa1ccdac944d928879f94770b2161152a271f9fa208c57c66d8921e5a643533d",
+    "crates/strehl-core/src/color.rs": "83c1aa371dc751862bfef5724a6eceab8182c5d68b6f31ac299b3443c14c8f1e",
+    "crates/strehl-core/src/defect-map-ILCE-7CM2-dust.txt": "a406efd51f806e360e1e51fc1421eca5e3cc912f356ced0693c8477a398853ee",
+    "crates/strehl-core/src/defect_map.rs": "1738c770c9f316a6aeac3f742bf7abc9581ea386b4e07ec128e50df35c2ffb14",
+    "crates/strehl-core/src/demosaic.rs": "425d6889485011cf6f2aaf57b0b873f15fd6ee3250853f3ba5f6540b496b3810",
+    "crates/strehl-core/src/edgeaware.rs": "a32580ac72dd273e62cab40afa9b36e2462ef57335c8d7cd8ab0725184c7f77b",
+    "crates/strehl-core/src/election_coherence.rs": "47640a176cb445dd2f01b309d907da066ae7f5a6d28b354d2de60362538f948e",
+    "crates/strehl-core/src/flat_ratio.rs": "da1df7167b6f18ac248c1ee347671388391a968aa45a762299c4418a2287fef0",
+    "crates/strehl-core/src/focus.rs": "71e63def76e40f18df440617a9dba7013d799ceabd30bf805149223433384e3e",
+    "crates/strehl-core/src/highlight.rs": "97d4aacec3d7e6c3dd2df1f792ffb7ee136a8f6064ffb0dc1656476730f7641e",
+    "crates/strehl-core/src/lib.rs": "91419ceb273be1dc9ab15dbdc6347bd2b398d29cf36c0da9184ee533372f8022",
+    "crates/strehl-core/src/merge.rs": "7362cf6fab70db56443693e5483f052ba48b32cc7ef264d64ec4a7bd1b50e4ef",
+    "crates/strehl-core/src/noise.rs": "d88dc9cf419a8fdb1e3ff2c51f0b0ac80d785c17de7f9e71e905fc977fce0ecc",
+    "crates/strehl-core/src/optics.rs": "1884fd98c7a2adf903c152b3d877051cfeba71316bdbb797fd2f1ba1433a5524",
+    "crates/strehl-core/src/outlier.rs": "8d3fb7a225b5811c2d831db4339953b15a5181bfcda7591ac05f23f6adf5e67d",
+    "crates/strehl-core/src/photometric.rs": "b6102288c7fc2312f16d108dc3d943d290a5b8fd5d5a5c39306d97489191399b",
+    "crates/strehl-core/src/plane.rs": "8c219f9c4d2c8c0da19416998b0f369a9f9d44e305740664f29caaba69203dc4",
+    "crates/strehl-core/src/profile.rs": "07e7cf7b3040239a5a32464ae998a434696031010ce8d87dac7f2dd2a95ac1f1",
+    "crates/strehl-core/src/pyramid.rs": "7b6376e68a1a6488f958b85e65cfdc57dfe8b8826d4612d8429d08f8743632ac",
+    "crates/strehl-core/src/restore.rs": "3ab5c6660b7a45837ac4b5560078092e6aafa9c85a041a935e95b0cd77533afd",
+    "crates/strehl-core/src/robust.rs": "2cf6013b948f5c9d4f11783633f04e6d76ac9830383197c05506b0d68fe24004",
+    "crates/strehl-core/src/softgate.rs": "0cb0f916dade24e6e3a31529378390a083c6c56cb3e8b479eb7eb65ac04f688d",
+    "crates/strehl-core/src/stack.rs": "c951cdbb304e4894676f1ff6a77316e7e2ab68d7756f22bf623562380d5f6337",
+    "crates/strehl-core/src/through_focus.rs": "475a6c4eece089638ab916e3d7f4cf480197e2d838b5244347c16762f5122a3d",
+    "crates/strehl-core/src/warpmap.rs": "9d2198eeab5e8a941e297cf8fcd8a217d2454390220433ae19cc6b07e6fd721b",
+    "crates/strehl-plugin/Cargo.toml": "b3fd67fd414ac138119f4ab8dedaee280cea23b1bcc20f21f066f09d3575c88c",
+    "crates/strehl-plugin/examples/calibration-survey.rs": "b453361321e0e777148121ba5a4b8edff557a5d59aa1d9615b91386208c4aafe",
+    "crates/strehl-plugin/examples/f5-design-probes.rs": "4f368b7e3ec8ab522183ee3b86fa36adbee76a2b5d772c8f0bafcc9706536676",
+    "crates/strehl-plugin/src/calibrate.rs": "7e10fbd56d8257f409a083461854bf999f8c97ce1a65aad5f90da3b76c8d2a10",
+    "crates/strehl-plugin/src/field.rs": "6a1da0df1fc4d6ba5e7cbfc0bc3d79295e89bca7b21647f237154bd97018ced5",
+    "crates/strehl-plugin/src/lib.rs": "9dbb902a31cb21ba5e07fe1576f96b0cffad2dd8fed70a777c2bfaaab41f97e7",
+    "crates/strehl-plugin/src/measure.rs": "a3941112f7e5a19b2929d83e95afa97d7be1f2ed3465d6160715386705a23c20",
+    "crates/strehl-plugin/src/reference.rs": "eca4ecf81d1e783c48d680323907fd34336d1f3d5accdedfbdf726e14e847cfb",
+    "crates/strehl-plugin/src/registry.rs": "1543ba679a56bdcd9ff625e54c9efd97d74c316cbf0726866e125cc1eb806a35",
+    "crates/strehl-plugin/src/rng.rs": "402c5fa0acb97df6de6df14a51935de05ad9a71d20f4a909a9f7154f52442225",
+    "crates/strehl-raw/Cargo.toml": "6e1e7cfdadb24371423143fb10945b0e61b3f45696365aa87a721661edde31c9",
+    "crates/strehl-raw/examples/identity.rs": "78cdc478590b5bfd46bf3bcbed46cb0d74f5d788b08d38a5fd98636d46443668",
+    "crates/strehl-raw/src/common_tiff.rs": "bac1d18f036b8960a8e82d01b610ae945d00d259d4cc3fe7eb9106e8a8077f42",
+    "crates/strehl-raw/src/identity.rs": "676d18872656a72a93e3257b1677c38ea2ee39084574e1153bdbbfbc6e8ad1fe",
+    "crates/strehl-raw/src/lib.rs": "1513fd3e682f2edb8c54c7d47083f20f66525ad72a5687fb2e530bb5697fef2a",
+    "experiments/m194-production-truth/independent-controls.rs": "bd5777f1f960e7db217fda4b4ce9f24a963cea9351d244acf8aac84ee68f718f",
+    "experiments/m25-simulator/src/strehl_sim/config.py": "507d165e405812a9fdcffbf83a026e699f844dfd88bb2af9faec6e4c12c0ba59",
+    "experiments/m25-simulator/src/strehl_sim/optics.py": "ac5a2342d5ad3e6551ca3ddade5dba8feb9ea8f555f3aa36b71c774c6868fb93",
+    "experiments/m25-simulator/src/strehl_sim/render.py": "8b842d06ab1a550d1c66263dde2969e0e390a439938e57cb54c4095a6a36118c",
+    "experiments/m25-simulator/src/strehl_sim/scene.py": "9bea8539999ca64f893505337dbbe4c32c5765bc2368508275be43eed008351f",
+    "experiments/m25-simulator/src/strehl_sim/sensor.py": "d3057d2bfe3be5c832314e3a442941ef8269dd9a9c3b35e7e100a520e975957f",
+    "experiments/M103-halfdrift/data/truth-dense.json": "45b12d8c7106fa1c9c1ce3d5f663896a43992ff35f867fd3c6374131cb67be01",
+    "experiments/m194b-known-scene/produce.py": "c17391b26199ea70b29e4f0da12667fe1b8ca9dc355053ea49b3e8a87cc6c4a0",
+    "experiments/m194b-known-scene/run-baseline.py": "3b813f181ad1fe4f6cf8801ce66cc2349f45e8f7d7fdaa42a08a18890b68e8ae",
+    "experiments/m194b-known-scene/consumer-run.py": "ca2e635e4bae833b29c8254a4c4932adc3f46fd86e2a6e60587630b1cd23572c",
+    "experiments/m194b-known-scene/commission-forward.py": "b29160d462c5f340fffeb10c772cd5bb8a5629536837d57ac059bccd4fd01775",
+    "experiments/m194b-known-scene/score.py": "d292c8623827eb960bc28dc341398c7e164f5c14cd31af74663ee24c1ff5b5dd",
+    "experiments/m194b-known-scene/score-benchmark.py": "eccbd41383ebcb46d865aef6745b39cafe91dab9294ea109b3a83981388fa80b",
+    "experiments/m194b-known-scene/preregister.md": "70720d92113b8700b52c1b5b1d57cc6dcb728296131fe3a309cc03b6d59b4093",
+    "experiments/m194b-known-scene/scorer-preregister.md": "5dbbc271fdaba2eae4df6d95067e60e9fb96abe51803117aa78980832cc38fbb",
+    "experiments/m194b-known-scene/producer-preregister.json": "b8295044614f55db45e715d7c5ffc985e676f3104443e6fe5dcf20193e9c0129"
+  },
+  "completed_utc": "2026-09-07T10:45:50.984057+00:00"
+}

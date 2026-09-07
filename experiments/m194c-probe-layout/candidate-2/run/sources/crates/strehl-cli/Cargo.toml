@@ -1,0 +1,33 @@
+[package]
+name = "strehl-cli"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+description = "Command-line interface for strehl."
+
+[[bin]]
+name = "strehl"
+path = "src/main.rs"
+
+[[bin]]
+name = "strehl-common-input"
+path = "src/bin/strehl-common-input.rs"
+
+[dependencies]
+strehl-core.workspace = true
+strehl-plugin.workspace = true
+strehl-raw.workspace = true
+clap.workspace = true
+anyhow.workspace = true
+rayon.workspace = true
+tracing.workspace = true
+tracing-subscriber.workspace = true
+tiff.workspace = true
+
+[dev-dependencies]
+serde = { version = "=1.0.229", features = ["derive"] }
+serde_json = { version = "=1.0.151", features = ["float_roundtrip"] }
+sha2 = "=0.11.0"

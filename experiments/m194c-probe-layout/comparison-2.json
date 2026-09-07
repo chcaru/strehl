@@ -1,0 +1,2604 @@
+{
+  "schema": "m194c-version-comparison-v1",
+  "controller_sha256": "460bcec07f4fb7df28af519b3a6becb4dc789ca55e571007d5b97bc418332bce",
+  "baseline_score_sha256": "ecca571832e696cd72b491dff4a2d2c195d6ab64258ac6b480aef2d7eb4bbedb",
+  "candidate_score_sha256": "5963b7b5804e9b726bd0cb4ee561dd857c45b26c996625794d53b81d3aa83428",
+  "output_pairs": 40,
+  "rows": [
+    {
+      "scene": "flat",
+      "repeat": null,
+      "arm": "full9",
+      "pixels": {
+        "changed_components": 0,
+        "components": 180624,
+        "max_abs_dn_by_channel": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "roi_changed_components": 0,
+        "roi_rms_delta_dn_by_channel": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "roi_mean_delta_dn_by_channel": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "whole_tiff_identical": true,
+      "ideal_rmse_change_dn": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "observation_rmse_change_dn": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "scene": "flat",
+      "repeat": null,
+      "arm": "single4",
+      "pixels": {
+        "changed_components": 0,
+        "components": 180624,
+        "max_abs_dn_by_channel": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "roi_changed_components": 0,
+        "roi_rms_delta_dn_by_channel": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "roi_mean_delta_dn_by_channel": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "whole_tiff_identical": true,
+      "ideal_rmse_change_dn": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "observation_rmse_change_dn": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "scene": "flat",
+      "repeat": 701,
+      "arm": "full9",
+      "pixels": {
+        "changed_components": 58076,
+        "components": 180624,
+        "max_abs_dn_by_channel": [
+          71.82140840772126,
+          77.7121232928971,
+          87.454459449149
+        ],
+        "roi_changed_components": 21891,
+        "roi_rms_delta_dn_by_channel": [
+          3.262484502659616,
+          3.3865849625876994,
+          3.326689519956784
+        ],
+        "roi_mean_delta_dn_by_channel": [
+          0.15170773886727323,
+          0.03482145127830784,
+          -0.033673028225556546
+        ]
+      },
+      "whole_tiff_identical": false,
+      "ideal_rmse_change_dn": [
+        0.215080986597048,
+        0.24615238075570467,
+        0.2358062443367963
+      ],
+      "observation_rmse_change_dn": [
+        0.215080986597048,
+        0.24615238075570467,
+        0.2358062443367963
+      ]
+    },
+    {
+      "scene": "flat",
+      "repeat": 701,
+      "arm": "single4",
+      "pixels": {
+        "changed_components": 0,
+        "components": 180624,
+        "max_abs_dn_by_channel": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "roi_changed_components": 0,
+        "roi_rms_delta_dn_by_channel": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "roi_mean_delta_dn_by_channel": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "whole_tiff_identical": true,
+      "ideal_rmse_change_dn": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "observation_rmse_change_dn": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "scene": "flat",
+      "repeat": 709,
+      "arm": "full9",
+      "pixels": {
+        "changed_components": 54227,
+        "components": 180624,
+        "max_abs_dn_by_channel": [
+          104.44690623331053,
+          86.32162966353872,
+          93.11860837720315
+        ],
+        "roi_changed_components": 18417,
+        "roi_rms_delta_dn_by_channel": [
+          3.2116195806660173,
+          2.8456254658262443,
+          3.1931490068593376
+        ],
+        "roi_mean_delta_dn_by_channel": [
+          -0.1233237782791463,
+          -0.04480957103982982,
+          -0.02333722075081669
+        ]
+      },
+      "whole_tiff_identical": false,
+      "ideal_rmse_change_dn": [
+        0.10182557953442739,
+        0.059741376133150226,
+        0.08029767434071289
+      ],
+      "observation_rmse_change_dn": [
+        0.10182557953442739,
+        0.059741376133150226,
+        0.08029767434071289
+      ]
+    },
+    {
+      "scene": "flat",
+      "repeat": 709,
+      "arm": "single4",
+      "pixels": {
+        "changed_components": 0,
+        "components": 180624,
+        "max_abs_dn_by_channel": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "roi_changed_components": 0,
+        "roi_rms_delta_dn_by_channel": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "roi_mean_delta_dn_by_channel": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "whole_tiff_identical": true,
+      "ideal_rmse_change_dn": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "observation_rmse_change_dn": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "scene": "flat",
+      "repeat": 719,
+      "arm": "full9",
+      "pixels": {
+        "changed_components": 51500,
+        "components": 180624,
+        "max_abs_dn_by_channel": [
+          80.43091477836288,
+          82.24344243534006,
+          84.73566796368368
+        ],
+        "roi_changed_components": 16253,
+        "roi_rms_delta_dn_by_channel": [
+          2.861086536513804,
+          3.0542226503696672,
+          3.0416953133629647
+        ],
+        "roi_mean_delta_dn_by_channel": [
+          0.0404055266724083,
+          -0.01105225488379446,
+          0.07908315077003661
+        ]
+      },
+      "whole_tiff_identical": false,
+      "ideal_rmse_change_dn": [
+        0.17244263502290913,
+        0.25166372435662154,
+        0.1784563696220438
+      ],
+      "observation_rmse_change_dn": [
+        0.17244263502290913,
+        0.25166372435662154,
+        0.1784563696220438
+      ]
+    },
+    {
+      "scene": "flat",
+      "repeat": 719,
+      "arm": "single4",
+      "pixels": {
+        "changed_components": 0,
+        "components": 180624,
+        "max_abs_dn_by_channel": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "roi_changed_components": 0,
+        "roi_rms_delta_dn_by_channel": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "roi_mean_delta_dn_by_channel": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "whole_tiff_identical": true,
+      "ideal_rmse_change_dn": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "observation_rmse_change_dn": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "scene": "flat",
+      "repeat": 727,
+      "arm": "full9",
+      "pixels": {
+        "changed_components": 55128,
+        "components": 180624,
+        "max_abs_dn_by_channel": [
+          87.00132753490516,
+          76.80585946440806,
+          78.39182116426309
+        ],
+        "roi_changed_components": 21649,
+        "roi_rms_delta_dn_by_channel": [
+          2.8982730216888637,
+          2.875148441843788,
+          2.9027246033876337
+        ],
+        "roi_mean_delta_dn_by_channel": [
+          -0.03871976806286689,
+          -0.011231366736057619,
+          -0.039351927541444245
+        ]
+      },
+      "whole_tiff_identical": false,
+      "ideal_rmse_change_dn": [
+        0.15855082822575284,
+        0.2396476140794359,
+        0.1727851957931108
+      ],
+      "observation_rmse_change_dn": [
+        0.15855082822575284,
+        0.2396476140794359,
+        0.1727851957931108
+      ]
+    },
+    {
+      "scene": "flat",
+      "repeat": 727,
+      "arm": "single4",
+      "pixels": {
+        "changed_components": 0,
+        "components": 180624,
+        "max_abs_dn_by_channel": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "roi_changed_components": 0,
+        "roi_rms_delta_dn_by_channel": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "roi_mean_delta_dn_by_channel": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "whole_tiff_identical": true,
+      "ideal_rmse_change_dn": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "observation_rmse_change_dn": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "scene": "flat",
+      "repeat": 733,
+      "arm": "full9",
+      "pixels": {
+        "changed_components": 52251,
+        "components": 180624,
+        "max_abs_dn_by_channel": [
+          82.69657434958435,
+          81.11061264972932,
+          81.56374456397316
+        ],
+        "roi_changed_components": 18161,
+        "roi_rms_delta_dn_by_channel": [
+          2.8224666216249945,
+          3.059996921893852,
+          2.9931503689760683
+        ],
+        "roi_mean_delta_dn_by_channel": [
+          -0.012822301423812169,
+          -0.015287723390263604,
+          0.006184626898749631
+        ]
+      },
+      "whole_tiff_identical": false,
+      "ideal_rmse_change_dn": [
+        0.1037723304755982,
+        0.14438745409683662,
+        0.09658720323651337
+      ],
+      "observation_rmse_change_dn": [
+        0.1037723304755982,
+        0.14438745409683662,
+        0.09658720323651337
+      ]
+    },
+    {
+      "scene": "flat",
+      "repeat": 733,
+      "arm": "single4",
+      "pixels": {
+        "changed_components": 0,
+        "components": 180624,
+        "max_abs_dn_by_channel": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "roi_changed_components": 0,
+        "roi_rms_delta_dn_by_channel": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "roi_mean_delta_dn_by_channel": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "whole_tiff_identical": true,
+      "ideal_rmse_change_dn": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "observation_rmse_change_dn": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "scene": "flat",
+      "repeat": 739,
+      "arm": "full9",
+      "pixels": {
+        "changed_components": 56989,
+        "components": 180624,
+        "max_abs_dn_by_channel": [
+          71.59484245059866,
+          84.96223392080583,
+          77.9386892500188
+        ],
+        "roi_changed_components": 19119,
+        "roi_rms_delta_dn_by_channel": [
+          2.237436982524279,
+          2.1393233989477483,
+          2.0673981938677786
+        ],
+        "roi_mean_delta_dn_by_channel": [
+          -0.05773723237673881,
+          -0.03363088426031909,
+          -0.03790849673202675
+        ]
+      },
+      "whole_tiff_identical": false,
+      "ideal_rmse_change_dn": [
+        -0.03386798523522572,
+        0.025706515684490228,
+        -0.015059232241299014
+      ],
+      "observation_rmse_change_dn": [
+        -0.03386798523522572,
+        0.025706515684490228,
+        -0.015059232241299014
+      ]
+    },
+    {
+      "scene": "flat",
+      "repeat": 739,
+      "arm": "single4",
+      "pixels": {
+        "changed_components": 0,
+        "components": 180624,
+        "max_abs_dn_by_channel": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "roi_changed_components": 0,
+        "roi_rms_delta_dn_by_channel": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "roi_mean_delta_dn_by_channel": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "whole_tiff_identical": true,
+      "ideal_rmse_change_dn": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "observation_rmse_change_dn": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "scene": "flat",
+      "repeat": 743,
+      "arm": "full9",
+      "pixels": {
+        "changed_components": 57375,
+        "components": 180624,
+        "max_abs_dn_by_channel": [
+          91.53264667734766,
+          89.94668497749308,
+          90.39981689173692
+        ],
+        "roi_changed_components": 20012,
+        "roi_rms_delta_dn_by_channel": [
+          3.3014552003357056,
+          2.9003338283045594,
+          2.9517879135939844
+        ],
+        "roi_mean_delta_dn_by_channel": [
+          -0.0003055437479787696,
+          -0.0035717010539617518,
+          -0.1066663760186306
+        ]
+      },
+      "whole_tiff_identical": false,
+      "ideal_rmse_change_dn": [
+        0.2782862357786797,
+        0.24010857470803693,
+        0.23082349445371797
+      ],
+      "observation_rmse_change_dn": [
+        0.2782862357786797,
+        0.24010857470803693,
+        0.23082349445371797
+      ]
+    },
+    {
+      "scene": "flat",
+      "repeat": 743,
+      "arm": "single4",
+      "pixels": {
+        "changed_components": 0,
+        "components": 180624,
+        "max_abs_dn_by_channel": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "roi_changed_components": 0,
+        "roi_rms_delta_dn_by_channel": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "roi_mean_delta_dn_by_channel": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "whole_tiff_identical": true,
+      "ideal_rmse_change_dn": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "observation_rmse_change_dn": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "scene": "flat",
+      "repeat": 751,
+      "arm": "full9",
+      "pixels": {
+        "changed_components": 54488,
+        "components": 180624,
+        "max_abs_dn_by_channel": [
+          75.67302967879732,
+          78.61838712138524,
+          101.2749828336
+        ],
+        "roi_changed_components": 17344,
+        "roi_rms_delta_dn_by_channel": [
+          2.7967072481954287,
+          2.656679109396516,
+          2.914534810322615
+        ],
+        "roi_mean_delta_dn_by_channel": [
+          0.04928736734642071,
+          -0.033736244173414795,
+          0.156269823104341
+        ]
+      },
+      "whole_tiff_identical": false,
+      "ideal_rmse_change_dn": [
+        0.1461130447008614,
+        0.14107957726719889,
+        0.1136831356417165
+      ],
+      "observation_rmse_change_dn": [
+        0.1461130447008614,
+        0.14107957726719889,
+        0.1136831356417165
+      ]
+    },
+    {
+      "scene": "flat",
+      "repeat": 751,
+      "arm": "single4",
+      "pixels": {
+        "changed_components": 0,
+        "components": 180624,
+        "max_abs_dn_by_channel": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "roi_changed_components": 0,
+        "roi_rms_delta_dn_by_channel": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "roi_mean_delta_dn_by_channel": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "whole_tiff_identical": true,
+      "ideal_rmse_change_dn": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "observation_rmse_change_dn": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "scene": "plane",
+      "repeat": null,
+      "arm": "full9",
+      "pixels": {
+        "changed_components": 153082,
+        "components": 180624,
+        "max_abs_dn_by_channel": [
+          1.5859616998550337,
+          1.5859616998550337,
+          1.359395742732886
+        ],
+        "roi_changed_components": 54599,
+        "roi_rms_delta_dn_by_channel": [
+          0.4150451357165329,
+          0.4141988147944166,
+          0.41285092212441
+        ],
+        "roi_mean_delta_dn_by_channel": [
+          -0.014223588267992245,
+          -0.014160372320134737,
+          -0.014276268224540322
+        ]
+      },
+      "whole_tiff_identical": false,
+      "ideal_rmse_change_dn": [
+        0.21496088003232217,
+        0.21736193389583036,
+        0.21397208238074938
+      ],
+      "observation_rmse_change_dn": [
+        -0.029455601207189375,
+        -0.02329004217770425,
+        -0.03000964197602407
+      ],
+      "wave_amplitude_change_dn": [
+        [
+          -0.5331472058546183,
+          -0.53433242471624,
+          -0.5306631210723936
+        ],
+        [
+          0.11341120492784285,
+          0.10807813841370262,
+          0.11274003652565057
+        ]
+      ]
+    },
+    {
+      "scene": "plane",
+      "repeat": null,
+      "arm": "single4",
+      "pixels": {
+        "changed_components": 0,
+        "components": 180624,
+        "max_abs_dn_by_channel": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "roi_changed_components": 0,
+        "roi_rms_delta_dn_by_channel": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "roi_mean_delta_dn_by_channel": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "whole_tiff_identical": true,
+      "ideal_rmse_change_dn": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "observation_rmse_change_dn": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "wave_amplitude_change_dn": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0
+        ]
+      ]
+    },
+    {
+      "scene": "plane",
+      "repeat": 701,
+      "arm": "full9",
+      "pixels": {
+        "changed_components": 158795,
+        "components": 180624,
+        "max_abs_dn_by_channel": [
+          3.6250553139543626,
+          2.492225528344079,
+          3.398489356832215
+        ],
+        "roi_changed_components": 56843,
+        "roi_rms_delta_dn_by_channel": [
+          0.767229691485698,
+          0.6563458228208625,
+          0.7950477260299238
+        ],
+        "roi_mean_delta_dn_by_channel": [
+          -0.013644108745962627,
+          -0.01696294600849434,
+          -0.018216728974339368
+        ]
+      },
+      "whole_tiff_identical": false,
+      "ideal_rmse_change_dn": [
+        0.2237029491562481,
+        0.22146742842426193,
+        0.23067749293861084
+      ],
+      "observation_rmse_change_dn": [
+        -0.0506725586945187,
+        -0.054812324175278704,
+        -0.04668020738938772
+      ],
+      "wave_amplitude_change_dn": [
+        [
+          -0.5656912311192741,
+          -0.5497712478765493,
+          -0.5752743067807842
+        ],
+        [
+          0.11256856706415874,
+          0.10126699816990481,
+          0.10556261322906835
+        ]
+      ]
+    },
+    {
+      "scene": "plane",
+      "repeat": 701,
+      "arm": "single4",
+      "pixels": {
+        "changed_components": 0,
+        "components": 180624,
+        "max_abs_dn_by_channel": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "roi_changed_components": 0,
+        "roi_rms_delta_dn_by_channel": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "roi_mean_delta_dn_by_channel": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "whole_tiff_identical": true,
+      "ideal_rmse_change_dn": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "observation_rmse_change_dn": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "wave_amplitude_change_dn": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0
+        ]
+      ]
+    },
+    {
+      "scene": "plane",
+      "repeat": 709,
+      "arm": "full9",
+      "pixels": {
+        "changed_components": 158603,
+        "components": 180624,
+        "max_abs_dn_by_channel": [
+          3.398489356832215,
+          2.718791485465772,
+          3.6250553139543626
+        ],
+        "roi_changed_components": 56665,
+        "roi_rms_delta_dn_by_channel": [
+          0.7623245724537164,
+          0.6619428644703542,
+          0.773519885417136
+        ],
+        "roi_mean_delta_dn_by_channel": [
+          -0.00994597579628501,
+          -0.012632653580238731,
+          -0.00879755274353571
+        ]
+      },
+      "whole_tiff_identical": false,
+      "ideal_rmse_change_dn": [
+        0.23123169276021827,
+        0.21475951347865418,
+        0.19292144329666883
+      ],
+      "observation_rmse_change_dn": [
+        -0.03612673725753979,
+        -0.052582440961415955,
+        -0.05014197071258941
+      ],
+      "wave_amplitude_change_dn": [
+        [
+          -0.564645772972483,
+          -0.5412528674981445,
+          -0.5041250898963199
+        ],
+        [
+          0.10050033092971944,
+          0.10656307852289615,
+          0.10706362536981828
+        ]
+      ]
+    },
+    {
+      "scene": "plane",
+      "repeat": 709,
+      "arm": "single4",
+      "pixels": {
+        "changed_components": 0,
+        "components": 180624,
+        "max_abs_dn_by_channel": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "roi_changed_components": 0,
+        "roi_rms_delta_dn_by_channel": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "roi_mean_delta_dn_by_channel": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "whole_tiff_identical": true,
+      "ideal_rmse_change_dn": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "observation_rmse_change_dn": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "wave_amplitude_change_dn": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0
+        ]
+      ]
+    },
+    {
+      "scene": "plane",
+      "repeat": 719,
+      "arm": "full9",
+      "pixels": {
+        "changed_components": 158425,
+        "components": 180624,
+        "max_abs_dn_by_channel": [
+          3.398489356832215,
+          2.9453574425879196,
+          3.398489356832215
+        ],
+        "roi_changed_components": 56575,
+        "roi_rms_delta_dn_by_channel": [
+          0.7566245787111916,
+          0.6499151059551639,
+          0.7949741624194717
+        ],
+        "roi_mean_delta_dn_by_channel": [
+          -0.010925822988079335,
+          -0.012105854014757547,
+          -0.022041293819733104
+        ]
+      },
+      "whole_tiff_identical": false,
+      "ideal_rmse_change_dn": [
+        0.2178743622310435,
+        0.2131450071422023,
+        0.220055069063406
+      ],
+      "observation_rmse_change_dn": [
+        -0.029477503174733855,
+        -0.04606921812461451,
+        -0.058846990082733086
+      ],
+      "wave_amplitude_change_dn": [
+        [
+          -0.5427853092464829,
+          -0.5325349811116098,
+          -0.567950290701333
+        ],
+        [
+          0.10645808830687997,
+          0.1035864570226579,
+          0.11965921680192082
+        ]
+      ]
+    },
+    {
+      "scene": "plane",
+      "repeat": 719,
+      "arm": "single4",
+      "pixels": {
+        "changed_components": 0,
+        "components": 180624,
+        "max_abs_dn_by_channel": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "roi_changed_components": 0,
+        "roi_rms_delta_dn_by_channel": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "roi_mean_delta_dn_by_channel": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "whole_tiff_identical": true,
+      "ideal_rmse_change_dn": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "observation_rmse_change_dn": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "wave_amplitude_change_dn": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0
+        ]
+      ]
+    },
+    {
+      "scene": "plane",
+      "repeat": 727,
+      "arm": "full9",
+      "pixels": {
+        "changed_components": 158546,
+        "components": 180624,
+        "max_abs_dn_by_channel": [
+          3.6250553139543626,
+          2.7187914854662267,
+          3.6250553139543626
+        ],
+        "roi_changed_components": 56743,
+        "roi_rms_delta_dn_by_channel": [
+          0.7428076053964923,
+          0.6562676237369333,
+          0.7896701529974057
+        ],
+        "roi_mean_delta_dn_by_channel": [
+          -0.01211639000606715,
+          -0.01488735572049839,
+          -0.013243741076196799
+        ]
+      },
+      "whole_tiff_identical": false,
+      "ideal_rmse_change_dn": [
+        0.21559406237200562,
+        0.21447012597985804,
+        0.23547696256288475
+      ],
+      "observation_rmse_change_dn": [
+        -0.03783629061544502,
+        -0.055991109692905994,
+        -0.04132159164438143
+      ],
+      "wave_amplitude_change_dn": [
+        [
+          -0.5296404533940517,
+          -0.5465158341580718,
+          -0.5730857331124071
+        ],
+        [
+          0.09214112582307621,
+          0.11189819831932368,
+          0.09363703645934152
+        ]
+      ]
+    },
+    {
+      "scene": "plane",
+      "repeat": 727,
+      "arm": "single4",
+      "pixels": {
+        "changed_components": 0,
+        "components": 180624,
+        "max_abs_dn_by_channel": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "roi_changed_components": 0,
+        "roi_rms_delta_dn_by_channel": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "roi_mean_delta_dn_by_channel": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "whole_tiff_identical": true,
+      "ideal_rmse_change_dn": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "observation_rmse_change_dn": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "wave_amplitude_change_dn": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0
+        ]
+      ]
+    },
+    {
+      "scene": "plane",
+      "repeat": 733,
+      "arm": "full9",
+      "pixels": {
+        "changed_components": 158364,
+        "components": 180624,
+        "max_abs_dn_by_channel": [
+          3.6250553139543626,
+          2.718791485465772,
+          3.171923399710522
+        ],
+        "roi_changed_components": 56683,
+        "roi_rms_delta_dn_by_channel": [
+          0.7587747626627152,
+          0.6545777020268901,
+          0.7690988734450587
+        ],
+        "roi_mean_delta_dn_by_channel": [
+          -0.01376000465036874,
+          -0.012716941510715615,
+          -0.009313816317707209
+        ]
+      },
+      "whole_tiff_identical": false,
+      "ideal_rmse_change_dn": [
+        0.23203016126477394,
+        0.20986037068381336,
+        0.22035657479973736
+      ],
+      "observation_rmse_change_dn": [
+        -0.049980478332406264,
+        -0.053630614658109366,
+        -0.04808975532050752
+      ],
+      "wave_amplitude_change_dn": [
+        [
+          -0.5679692532524996,
+          -0.5336239596878727,
+          -0.5392447483354204
+        ],
+        [
+          0.09469882545300834,
+          0.10727511036853343,
+          0.08748921192955095
+        ]
+      ]
+    },
+    {
+      "scene": "plane",
+      "repeat": 733,
+      "arm": "single4",
+      "pixels": {
+        "changed_components": 0,
+        "components": 180624,
+        "max_abs_dn_by_channel": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "roi_changed_components": 0,
+        "roi_rms_delta_dn_by_channel": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "roi_mean_delta_dn_by_channel": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "whole_tiff_identical": true,
+      "ideal_rmse_change_dn": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "observation_rmse_change_dn": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "wave_amplitude_change_dn": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0
+        ]
+      ]
+    },
+    {
+      "scene": "plane",
+      "repeat": 739,
+      "arm": "full9",
+      "pixels": {
+        "changed_components": 158730,
+        "components": 180624,
+        "max_abs_dn_by_channel": [
+          3.6250553139543626,
+          3.1719233997100673,
+          3.398489356832215
+        ],
+        "roi_changed_components": 56690,
+        "roi_rms_delta_dn_by_channel": [
+          0.7561732892536408,
+          0.6452280661838842,
+          0.7791606200679805
+        ],
+        "roi_mean_delta_dn_by_channel": [
+          -0.015140219511929084,
+          -0.01470824386823466,
+          -0.010767783118435403
+        ]
+      },
+      "whole_tiff_identical": false,
+      "ideal_rmse_change_dn": [
+        0.2024079860994874,
+        0.20826435951924793,
+        0.21328059988263703
+      ],
+      "observation_rmse_change_dn": [
+        -0.059503846557289464,
+        -0.0445547667496502,
+        -0.05045627739103864
+      ],
+      "wave_amplitude_change_dn": [
+        [
+          -0.5301256755720942,
+          -0.531351108991089,
+          -0.548848948512898
+        ],
+        [
+          0.11377939285173966,
+          0.11270732828177188,
+          0.11528528415576034
+        ]
+      ]
+    },
+    {
+      "scene": "plane",
+      "repeat": 739,
+      "arm": "single4",
+      "pixels": {
+        "changed_components": 0,
+        "components": 180624,
+        "max_abs_dn_by_channel": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "roi_changed_components": 0,
+        "roi_rms_delta_dn_by_channel": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "roi_mean_delta_dn_by_channel": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "whole_tiff_identical": true,
+      "ideal_rmse_change_dn": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "observation_rmse_change_dn": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "wave_amplitude_change_dn": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0
+        ]
+      ]
+    },
+    {
+      "scene": "plane",
+      "repeat": 743,
+      "arm": "full9",
+      "pixels": {
+        "changed_components": 158643,
+        "components": 180624,
+        "max_abs_dn_by_channel": [
+          3.8516212710765103,
+          3.1719233997100673,
+          3.8516212710765103
+        ],
+        "roi_changed_components": 56704,
+        "roi_rms_delta_dn_by_channel": [
+          0.7523660599111501,
+          0.6590099373035054,
+          0.7878603826671392
+        ],
+        "roi_mean_delta_dn_by_channel": [
+          -0.015182363477168106,
+          -0.01696294600849396,
+          -0.012211213927853636
+        ]
+      },
+      "whole_tiff_identical": false,
+      "ideal_rmse_change_dn": [
+        0.20897497926098652,
+        0.2099060263715984,
+        0.21758345599178597
+      ],
+      "observation_rmse_change_dn": [
+        -0.04456391524786696,
+        -0.058126354377822764,
+        -0.04829132813177317
+      ],
+      "wave_amplitude_change_dn": [
+        [
+          -0.5252638141427042,
+          -0.5374316374476393,
+          -0.5622076260572726
+        ],
+        [
+          0.09966064600567393,
+          0.11064367397506203,
+          0.11813321589352199
+        ]
+      ]
+    },
+    {
+      "scene": "plane",
+      "repeat": 743,
+      "arm": "single4",
+      "pixels": {
+        "changed_components": 0,
+        "components": 180624,
+        "max_abs_dn_by_channel": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "roi_changed_components": 0,
+        "roi_rms_delta_dn_by_channel": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "roi_mean_delta_dn_by_channel": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "whole_tiff_identical": true,
+      "ideal_rmse_change_dn": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "observation_rmse_change_dn": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "wave_amplitude_change_dn": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0
+        ]
+      ]
+    },
+    {
+      "scene": "plane",
+      "repeat": 751,
+      "arm": "full9",
+      "pixels": {
+        "changed_components": 158857,
+        "components": 180624,
+        "max_abs_dn_by_channel": [
+          4.078187228198658,
+          3.1719233997100673,
+          3.398489356832215
+        ],
+        "roi_changed_components": 56749,
+        "roi_rms_delta_dn_by_channel": [
+          0.7669029333211785,
+          0.6530698476470411,
+          0.7830281056632484
+        ],
+        "roi_mean_delta_dn_by_channel": [
+          -0.014908427703117596,
+          -0.014402700120255638,
+          -0.012822301423812424
+        ]
+      },
+      "whole_tiff_identical": false,
+      "ideal_rmse_change_dn": [
+        0.22432927209207776,
+        0.21172364225479612,
+        0.2099590708285035
+      ],
+      "observation_rmse_change_dn": [
+        -0.049517146120839683,
+        -0.04584296346828154,
+        -0.05214039671718318
+      ],
+      "wave_amplitude_change_dn": [
+        [
+          -0.5559858789528676,
+          -0.5335178466776256,
+          -0.5366992370508683
+        ],
+        [
+          0.09909617354105649,
+          0.10656447894231746,
+          0.10735828824098803
+        ]
+      ]
+    },
+    {
+      "scene": "plane",
+      "repeat": 751,
+      "arm": "single4",
+      "pixels": {
+        "changed_components": 0,
+        "components": 180624,
+        "max_abs_dn_by_channel": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "roi_changed_components": 0,
+        "roi_rms_delta_dn_by_channel": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "roi_mean_delta_dn_by_channel": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "whole_tiff_identical": true,
+      "ideal_rmse_change_dn": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "observation_rmse_change_dn": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "wave_amplitude_change_dn": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0
+        ]
+      ]
+    },
+    {
+      "scene": "color",
+      "repeat": null,
+      "arm": "full9",
+      "pixels": {
+        "changed_components": 135703,
+        "components": 180624,
+        "max_abs_dn_by_channel": [
+          3.398489356832215,
+          1.8125276569771813,
+          3.398489356832215
+        ],
+        "roi_changed_components": 48065,
+        "roi_rms_delta_dn_by_channel": [
+          0.5963729845158491,
+          0.3637504599792166,
+          0.6036198562576323
+        ],
+        "roi_mean_delta_dn_by_channel": [
+          0.0009587752091760723,
+          0.0002633997827405498,
+          0.00010535991309638486
+        ]
+      },
+      "whole_tiff_identical": false,
+      "ideal_rmse_change_dn": [
+        -0.21304492666706665,
+        -0.05363836946089151,
+        -0.21502616312095313
+      ]
+    },
+    {
+      "scene": "color",
+      "repeat": null,
+      "arm": "single4",
+      "pixels": {
+        "changed_components": 0,
+        "components": 180624,
+        "max_abs_dn_by_channel": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "roi_changed_components": 0,
+        "roi_rms_delta_dn_by_channel": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "roi_mean_delta_dn_by_channel": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "whole_tiff_identical": true,
+      "ideal_rmse_change_dn": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "scene": "color-null",
+      "repeat": null,
+      "arm": "full9",
+      "pixels": {
+        "changed_components": 93196,
+        "components": 180624,
+        "max_abs_dn_by_channel": [
+          0.9062638284885907,
+          0.9062638284885907,
+          0.9062638284885907
+        ],
+        "roi_changed_components": 33634,
+        "roi_rms_delta_dn_by_channel": [
+          0.2138950683049744,
+          0.19786555325220004,
+          0.2146414946770527
+        ],
+        "roi_mean_delta_dn_by_channel": [
+          -0.0011168150788200258,
+          -0.00028447176535986057,
+          -0.0007164474090543893
+        ]
+      },
+      "whole_tiff_identical": false,
+      "ideal_rmse_change_dn": [
+        -0.07199521788700736,
+        -0.06536663950817001,
+        -0.07127982601768679
+      ]
+    },
+    {
+      "scene": "color-null",
+      "repeat": null,
+      "arm": "single4",
+      "pixels": {
+        "changed_components": 0,
+        "components": 180624,
+        "max_abs_dn_by_channel": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "roi_changed_components": 0,
+        "roi_rms_delta_dn_by_channel": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "roi_mean_delta_dn_by_channel": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "whole_tiff_identical": true,
+      "ideal_rmse_change_dn": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    }
+  ],
+  "paired": [
+    {
+      "scene": "flat",
+      "arm": "full9",
+      "target": "ideal",
+      "variance_ratio_candidate_to_baseline": [
+        1.0213676498949074,
+        1.0253804785061427,
+        1.0191812656365207
+      ],
+      "difference": {
+        "direction": "M194c candidate minus M194b baseline, same arm and input repeats",
+        "repeat_mse_difference_dn2": [
+          [
+            5.947291693951399,
+            6.908185285712818,
+            6.820907661306478
+          ],
+          [
+            2.8094316092148404,
+            1.604207447137071,
+            2.293352975381481
+          ],
+          [
+            4.689166392152941,
+            6.842620339277062,
+            4.985995456917777
+          ],
+          [
+            4.308993550808907,
+            6.471548568979614,
+            4.800649618840993
+          ],
+          [
+            2.8939001217143527,
+            3.973650909854001,
+            2.76134903310421
+          ],
+          [
+            -0.9165375089404506,
+            0.6808994660072472,
+            -0.4158387053754211
+          ],
+          [
+            7.4357241933587375,
+            6.445899832120574,
+            6.4834098223979595
+          ],
+          [
+            4.06762714285577,
+            3.9390088212258263,
+            3.266811497859152
+          ]
+        ],
+        "mean_mse_difference_dn2": [
+          3.904449649389562,
+          4.608252583789277,
+          3.8745796700540787
+        ],
+        "mse_difference_sem_dn2": [
+          0.8753709273972757,
+          0.8704463677471379,
+          0.8461712750414717
+        ],
+        "temporal_variance_difference_dn2": [
+          3.962032339758963,
+          4.651960778046913,
+          3.8015145199784683
+        ],
+        "variance_difference_jackknife_se_dn2": [
+          0.8570465407617008,
+          0.8865409735879813,
+          0.8394561405783768
+        ],
+        "leave_one_out_variance_difference_dn2": [
+          [
+            3.685539361024638,
+            4.299368043538607,
+            3.4912476289276526
+          ],
+          [
+            4.152275583838701,
+            5.09105966120606,
+            4.129157118183656
+          ],
+          [
+            3.9009386000990958,
+            4.2822310744961385,
+            3.603710927779389
+          ],
+          [
+            3.917632819494372,
+            4.480483568800963,
+            3.6409980642513915
+          ],
+          [
+            4.150829912453105,
+            4.711471233020944,
+            3.9332856962570304
+          ],
+          [
+            4.592866615728042,
+            5.219249723157873,
+            4.378716169374229
+          ],
+          [
+            3.4354870901339325,
+            4.372478003000964,
+            3.3739830823954264
+          ],
+          [
+            3.8606887352976003,
+            4.75934491714537,
+            3.861017472648115
+          ]
+        ],
+        "uncertainty_scope": "paired whole-image repeats; delete-one-repeat variance uncertainty is a small-sample diagnostic"
+      }
+    },
+    {
+      "scene": "flat",
+      "arm": "full9",
+      "target": "observation",
+      "variance_ratio_candidate_to_baseline": [
+        1.0213676498949074,
+        1.0253804785061427,
+        1.0191812656365207
+      ],
+      "difference": {
+        "direction": "M194c candidate minus M194b baseline, same arm and input repeats",
+        "repeat_mse_difference_dn2": [
+          [
+            5.947291693951399,
+            6.908185285712818,
+            6.820907661306478
+          ],
+          [
+            2.8094316092148404,
+            1.604207447137071,
+            2.293352975381481
+          ],
+          [
+            4.689166392152941,
+            6.842620339277062,
+            4.985995456917777
+          ],
+          [
+            4.308993550808907,
+            6.471548568979614,
+            4.800649618840993
+          ],
+          [
+            2.8939001217143527,
+            3.973650909854001,
+            2.76134903310421
+          ],
+          [
+            -0.9165375089404506,
+            0.6808994660072472,
+            -0.4158387053754211
+          ],
+          [
+            7.4357241933587375,
+            6.445899832120574,
+            6.4834098223979595
+          ],
+          [
+            4.06762714285577,
+            3.9390088212258263,
+            3.266811497859152
+          ]
+        ],
+        "mean_mse_difference_dn2": [
+          3.904449649389562,
+          4.608252583789277,
+          3.8745796700540787
+        ],
+        "mse_difference_sem_dn2": [
+          0.8753709273972757,
+          0.8704463677471379,
+          0.8461712750414717
+        ],
+        "temporal_variance_difference_dn2": [
+          3.962032339758963,
+          4.651960778046913,
+          3.8015145199784683
+        ],
+        "variance_difference_jackknife_se_dn2": [
+          0.8570465407617008,
+          0.8865409735879813,
+          0.8394561405783768
+        ],
+        "leave_one_out_variance_difference_dn2": [
+          [
+            3.685539361024638,
+            4.299368043538607,
+            3.4912476289276526
+          ],
+          [
+            4.152275583838701,
+            5.09105966120606,
+            4.129157118183656
+          ],
+          [
+            3.9009386000990958,
+            4.2822310744961385,
+            3.603710927779389
+          ],
+          [
+            3.917632819494372,
+            4.480483568800963,
+            3.6409980642513915
+          ],
+          [
+            4.150829912453105,
+            4.711471233020944,
+            3.9332856962570304
+          ],
+          [
+            4.592866615728042,
+            5.219249723157873,
+            4.378716169374229
+          ],
+          [
+            3.4354870901339325,
+            4.372478003000964,
+            3.3739830823954264
+          ],
+          [
+            3.8606887352976003,
+            4.75934491714537,
+            3.861017472648115
+          ]
+        ],
+        "uncertainty_scope": "paired whole-image repeats; delete-one-repeat variance uncertainty is a small-sample diagnostic"
+      }
+    },
+    {
+      "scene": "flat",
+      "arm": "single4",
+      "target": "ideal",
+      "variance_ratio_candidate_to_baseline": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "difference": {
+        "direction": "M194c candidate minus M194b baseline, same arm and input repeats",
+        "repeat_mse_difference_dn2": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "mean_mse_difference_dn2": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "mse_difference_sem_dn2": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "temporal_variance_difference_dn2": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "variance_difference_jackknife_se_dn2": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "leave_one_out_variance_difference_dn2": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "uncertainty_scope": "paired whole-image repeats; delete-one-repeat variance uncertainty is a small-sample diagnostic"
+      }
+    },
+    {
+      "scene": "flat",
+      "arm": "single4",
+      "target": "observation",
+      "variance_ratio_candidate_to_baseline": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "difference": {
+        "direction": "M194c candidate minus M194b baseline, same arm and input repeats",
+        "repeat_mse_difference_dn2": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "mean_mse_difference_dn2": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "mse_difference_sem_dn2": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "temporal_variance_difference_dn2": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "variance_difference_jackknife_se_dn2": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "leave_one_out_variance_difference_dn2": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "uncertainty_scope": "paired whole-image repeats; delete-one-repeat variance uncertainty is a small-sample diagnostic"
+      }
+    },
+    {
+      "scene": "plane",
+      "arm": "full9",
+      "target": "ideal",
+      "variance_ratio_candidate_to_baseline": [
+        0.9953216794045433,
+        0.9960480863585255,
+        0.9949006352440755
+      ],
+      "difference": {
+        "direction": "M194c candidate minus M194b baseline, same arm and input repeats",
+        "repeat_mse_difference_dn2": [
+          [
+            31.463104327134715,
+            30.943983025782472,
+            32.660761258681305
+          ],
+          [
+            32.5862233951093,
+            30.063900991693117,
+            27.421345644028406
+          ],
+          [
+            30.8419296200982,
+            29.83186326041414,
+            30.897262618564127
+          ],
+          [
+            30.56316027350931,
+            30.001716570210192,
+            33.41057304336027
+          ],
+          [
+            32.786315611146165,
+            29.448570774768996,
+            31.199351371474222
+          ],
+          [
+            28.615703890274744,
+            29.19906157355399,
+            30.062792733918286
+          ],
+          [
+            29.592489482439305,
+            29.37338826432824,
+            30.878070286004913
+          ],
+          [
+            31.66983276589326,
+            29.71322432744637,
+            29.676396788000602
+          ]
+        ],
+        "mean_mse_difference_dn2": [
+          31.014844920700625,
+          29.82196359852469,
+          30.775819218004017
+        ],
+        "mse_difference_sem_dn2": [
+          0.5044476414863613,
+          0.19320342834512072,
+          0.6501256319182126
+        ],
+        "temporal_variance_difference_dn2": [
+          -0.6372385587140172,
+          -0.37608341678127033,
+          -0.7590996877746647
+        ],
+        "variance_difference_jackknife_se_dn2": [
+          0.09269860285975948,
+          0.027485797245591505,
+          0.06023648672354248
+        ],
+        "leave_one_out_variance_difference_dn2": [
+          [
+            -0.7008776967987558,
+            -0.3897134704272389,
+            -0.7697506728386827
+          ],
+          [
+            -0.6566038685547824,
+            -0.37605666140227356,
+            -0.7353351003346802
+          ],
+          [
+            -0.6688612704064383,
+            -0.37667969370829724,
+            -0.7617142267617965
+          ],
+          [
+            -0.6460982548544223,
+            -0.3635366788864758,
+            -0.7831579733936564
+          ],
+          [
+            -0.6088623841345395,
+            -0.365093293443266,
+            -0.7795443632896593
+          ],
+          [
+            -0.590476281357013,
+            -0.39410754756487165,
+            -0.7759138161624435
+          ],
+          [
+            -0.621909119378472,
+            -0.36747061466807907,
+            -0.7125836792538109
+          ],
+          [
+            -0.6042195942281978,
+            -0.376009374148623,
+            -0.7547976701677328
+          ]
+        ],
+        "uncertainty_scope": "paired whole-image repeats; delete-one-repeat variance uncertainty is a small-sample diagnostic"
+      }
+    },
+    {
+      "scene": "plane",
+      "arm": "full9",
+      "target": "observation",
+      "variance_ratio_candidate_to_baseline": [
+        0.9953216794045433,
+        0.9960480863585255,
+        0.9949006352440755
+      ],
+      "difference": {
+        "direction": "M194c candidate minus M194b baseline, same arm and input repeats",
+        "repeat_mse_difference_dn2": [
+          [
+            -1.4407878884097727,
+            -1.5543932396574007,
+            -1.3700865026286806
+          ],
+          [
+            -1.015439156797811,
+            -1.4917443193257611,
+            -1.4718951032286611
+          ],
+          [
+            -0.8294670259991221,
+            -1.2968511699818919,
+            -1.7103007220043764
+          ],
+          [
+            -1.0913435548247605,
+            -1.5867534369130283,
+            -1.2244714362687432
+          ],
+          [
+            -1.420832849256442,
+            -1.5205569677350184,
+            -1.4315149049528202
+          ],
+          [
+            -1.6902494996793394,
+            -1.2622426269295204,
+            -1.4747244916272564
+          ],
+          [
+            -1.2711199232939236,
+            -1.65022065509703,
+            -1.4226020070587992
+          ],
+          [
+            -1.4081820462107544,
+            -1.2933367974571013,
+            -1.5066735386624828
+          ]
+        ],
+        "mean_mse_difference_dn2": [
+          -1.2709277430589907,
+          -1.457012401637094,
+          -1.4515335883039775
+        ],
+        "mse_difference_sem_dn2": [
+          0.0980530094574621,
+          0.05332950130164304,
+          0.04825192180191368
+        ],
+        "temporal_variance_difference_dn2": [
+          -0.6372385587140172,
+          -0.37608341678127033,
+          -0.7590996877746647
+        ],
+        "variance_difference_jackknife_se_dn2": [
+          0.09269860285975948,
+          0.027485797245591505,
+          0.06023648672354248
+        ],
+        "leave_one_out_variance_difference_dn2": [
+          [
+            -0.7008776967987558,
+            -0.3897134704272389,
+            -0.7697506728386827
+          ],
+          [
+            -0.6566038685547824,
+            -0.37605666140227356,
+            -0.7353351003346802
+          ],
+          [
+            -0.6688612704064383,
+            -0.37667969370829724,
+            -0.7617142267617965
+          ],
+          [
+            -0.6460982548544223,
+            -0.3635366788864758,
+            -0.7831579733936564
+          ],
+          [
+            -0.6088623841345395,
+            -0.365093293443266,
+            -0.7795443632896593
+          ],
+          [
+            -0.590476281357013,
+            -0.39410754756487165,
+            -0.7759138161624435
+          ],
+          [
+            -0.621909119378472,
+            -0.36747061466807907,
+            -0.7125836792538109
+          ],
+          [
+            -0.6042195942281978,
+            -0.376009374148623,
+            -0.7547976701677328
+          ]
+        ],
+        "uncertainty_scope": "paired whole-image repeats; delete-one-repeat variance uncertainty is a small-sample diagnostic"
+      }
+    },
+    {
+      "scene": "plane",
+      "arm": "single4",
+      "target": "ideal",
+      "variance_ratio_candidate_to_baseline": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "difference": {
+        "direction": "M194c candidate minus M194b baseline, same arm and input repeats",
+        "repeat_mse_difference_dn2": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "mean_mse_difference_dn2": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "mse_difference_sem_dn2": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "temporal_variance_difference_dn2": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "variance_difference_jackknife_se_dn2": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "leave_one_out_variance_difference_dn2": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "uncertainty_scope": "paired whole-image repeats; delete-one-repeat variance uncertainty is a small-sample diagnostic"
+      }
+    },
+    {
+      "scene": "plane",
+      "arm": "single4",
+      "target": "observation",
+      "variance_ratio_candidate_to_baseline": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "difference": {
+        "direction": "M194c candidate minus M194b baseline, same arm and input repeats",
+        "repeat_mse_difference_dn2": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "mean_mse_difference_dn2": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "mse_difference_sem_dn2": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "temporal_variance_difference_dn2": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "variance_difference_jackknife_se_dn2": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "leave_one_out_variance_difference_dn2": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "uncertainty_scope": "paired whole-image repeats; delete-one-repeat variance uncertainty is a small-sample diagnostic"
+      }
+    }
+  ],
+  "engineering_review_triggers": [
+    {
+      "scene": "flat",
+      "arm": "full9",
+      "reason": "temporal variance increase >2%",
+      "ratio": [
+        1.0213676498949074,
+        1.0253804785061427,
+        1.0191812656365207
+      ]
+    }
+  ],
+  "scope": "fixed synthetic software comparison; no physical or SOTA quality admission"
+}

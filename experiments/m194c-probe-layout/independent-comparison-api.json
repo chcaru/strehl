@@ -1,0 +1,162 @@
+{
+  "schema": "m194c-independent-comparison-api-v1",
+  "pass_": true,
+  "checks": {
+    "whole-image-and-mask-counts-separate": true,
+    "whole-image-max-includes-outside-ROI": true,
+    "signed-ROI-movement": true,
+    "ROI-RMS-movement": true,
+    "same-output-exact-null": true,
+    "known20DN-offset": true,
+    "across-version-direction-label": true,
+    "paired-version-mean-sign": true,
+    "paired-whole-repeat-SEM": true,
+    "paired-version-exact-null": true,
+    "four-malformed-refusals": true
+  },
+  "subject_sha256": "71991f3296f85d3e0343a87d1c8c50b0b38141de7be9d70d9e26c02c4b86422a",
+  "pixel_delta": {
+    "changed_components": 8,
+    "components": 663,
+    "max_abs_dn_by_channel": [
+      11.0,
+      13.0,
+      17.0
+    ],
+    "roi_changed_components": 5,
+    "roi_rms_delta_dn_by_channel": [
+      0.18442777839082938,
+      0.24743582965269675,
+      0.36885555678165877
+    ],
+    "roi_mean_delta_dn_by_channel": [
+      0.006802721088435374,
+      -0.02040816326530612,
+      0.04081632653061224
+    ]
+  },
+  "paired": {
+    "direction": "M194c candidate minus M194b baseline, same arm and input repeats",
+    "repeat_mse_difference_dn2": [
+      [
+        -25.0,
+        77.0,
+        -68.25
+      ],
+      [
+        -8.0,
+        18.75,
+        5.75
+      ],
+      [
+        -1.75,
+        1.4375,
+        18.75
+      ],
+      [
+        3.0,
+        -8.0,
+        15.75
+      ],
+      [
+        4.8125,
+        -9.765625,
+        8.25
+      ],
+      [
+        6.25,
+        -9.5625,
+        -3.25
+      ],
+      [
+        8.0,
+        -3.25,
+        -38.25
+      ],
+      [
+        4.25,
+        62.9375,
+        -239.25
+      ],
+      [
+        -13.0,
+        200.0,
+        -584.25
+      ]
+    ],
+    "mean_mse_difference_dn2": [
+      -2.3819444444444446,
+      36.61631944444444,
+      -98.30555555555556
+    ],
+    "mse_difference_sem_dn2": [
+      3.6577253143598196,
+      23.105535503025212,
+      66.50451344564499
+    ],
+    "temporal_variance_difference_dn2": [
+      -9.864583333333359,
+      51.789062500000135,
+      -105.22222222222221
+    ],
+    "variance_difference_jackknife_se_dn2": [
+      5.205207395270427,
+      27.32733882516974,
+      55.52221221621787
+    ],
+    "leave_one_out_variance_difference_dn2": [
+      [
+        -8.193080357142843,
+        43.01367187499993,
+        -87.39285714285704
+      ],
+      [
+        -10.1484375,
+        53.279296875,
+        -108.25
+      ],
+      [
+        -10.764508928571455,
+        56.51367187500015,
+        -114.82142857142861
+      ],
+      [
+        -11.139508928571454,
+        58.482421875000135,
+        -118.82142857142864
+      ],
+      [
+        -11.236607142857148,
+        58.99218750000002,
+        -119.85714285714309
+      ],
+      [
+        -11.2734375,
+        59.185546875,
+        -120.25
+      ],
+      [
+        -11.166294642857148,
+        58.62304687500002,
+        -119.10714285714309
+      ],
+      [
+        -9.3984375,
+        49.341796875,
+        -100.25
+      ],
+      [
+        -5.4609375,
+        28.669921875,
+        -58.25
+      ]
+    ],
+    "uncertainty_scope": "paired whole-image repeats; delete-one-repeat variance uncertainty is a small-sample diagnostic"
+  },
+  "rejected": [
+    "empty-mask",
+    "shape-mismatch",
+    "nonfinite",
+    "paired-two-repeats"
+  ]
+}

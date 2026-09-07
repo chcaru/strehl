@@ -1,0 +1,26 @@
+{
+  "command": [
+    "cargo",
+    "test",
+    "-p",
+    "strehl-cli",
+    "--bin",
+    "strehl",
+    "--target-dir",
+    "target/m194c-probe-layout",
+    "--no-run",
+    "--message-format=json-render-diagnostics"
+  ],
+  "started_utc": "2026-09-07T10:34:23.827434+00:00",
+  "ended_utc": "2026-09-07T10:34:29.320095+00:00",
+  "exit_code": 0,
+  "log": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\author-run-2\\build-command.log",
+  "log_sha256": "fe52f9d7398c57486d84da040daf4c21c31cb70d340fd1a022723458f9c199eb",
+  "environment": {
+    "STREHL_DEFECT": "off",
+    "STREHL_FIX_CA": "off",
+    "STREHL_FULLRES_GATHER": "1",
+    "STREHL_PYRAMID_WORKERS": "2",
+    "RAYON_NUM_THREADS": "2"
+  }
+}

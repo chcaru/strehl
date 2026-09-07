@@ -1,0 +1,17 @@
+{
+  "stage": "post-render root comparison preflight",
+  "failure": "exact recomputed score equality",
+  "differences": [],
+  "count": 0,
+  "status": "no comparison published",
+  "controller_sha256": "6f282d79d8659c32615c8b5e40a5721ebcf8707c161b8ee52b3638fb1701c3df",
+  "top_level_container_differences": [
+    {
+      "key": "domain",
+      "stored": "list",
+      "recomputed": "tuple"
+    }
+  ],
+  "json_normalized_exact_equal": true,
+  "explanation": "The returned domain is a tuple; JSON stores it as a list. Numeric values agree exactly after JSON-container normalization."
+}

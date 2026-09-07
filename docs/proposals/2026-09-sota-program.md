@@ -269,14 +269,23 @@ from the ideal plane and less accurate on the analytic colour component. Keep
 both targets and the single-frame comparator distinct. See the
 [M194b report](../research/M194b-known-scene.md) and its retained controls/failures.
 
-**M194c is the next product repair:** M194b's independent padding control failed.
-Identical image pixels in different decoded-buffer storage produced different
-measured probe floors and output pixels; switching to the white floor eliminated
-the difference. Repair the probe's dependence on unused storage, preserve its
-statistical law and measured-floor consumer, and quantify the change on the same
-known-scene inputs. This concrete defect takes priority over another parameter
-sweep. M25's physical optics/occlusion limits remain; the later two-layer
-extension has its own controls. No new capture or SOTA admission is claimed.
+**M194c completed as a storage correction with a measured cost:** identical image
+data now give identical probe floors and TIFFs across unused-storage layouts.
+The RNG law and merge settings are unchanged. On the fixed benchmark, flat
+green temporal variance rises 2.538%, and a sparse adverse movement reaches
+104.447 post-WB DN inside the scored window. The review trigger remains fired;
+this is an accepted correctness tradeoff, not a quality improvement. See the
+[M194c report](../research/M194c-probe-layout.md) for paired uncertainty,
+whole-image extremes, independent controls and retained failures.
+
+**M194d is the next bounded quality experiment:** audit the existing admission
+prototypes and withdrawn Phase-1 refutation, then commission one actual-output
+admission operator on the fixed truth/noise inputs. Preserve the prior Phase-1
+and capture gates; this development experiment cannot substitute for them.
+Do not tune the probe seed or gate to hide M194c's flat regression. Keep both
+reference targets and the sparse flat-pixel failure visible. M25's physical
+optics/occlusion limits remain; the later two-layer extension has its own
+controls. No new capture, SOTA admission or default quality promotion is claimed.
 
 **M192d complete and independently verified:** the
 [native observer rehearsal](../research/M192d-production-rehearsal.md) ran all

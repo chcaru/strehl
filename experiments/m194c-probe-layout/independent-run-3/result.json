@@ -1,0 +1,18 @@
+{
+  "schema": "m194c-independent-controls-v1",
+  "build_record": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\author-run-4\\build.json",
+  "build_sha256": "6f2806acdbe785f5fd526000212bd8f246799bdecb6c358641e744bbaf6a1c39",
+  "started_utc": "2026-09-07T10:44:00.769557+00:00",
+  "runner_sha256": "e5a9e09cb3af4c759e018fad233f58cd93efa85d9c232d38904e937156c33348",
+  "prereg_sha256": "b6b4df0c7b7efb65a5235553fc166ee87ef4068321c04ce3eb4fa58240fad231",
+  "amendment_sha256": "fc8b7471792a2ec50eaf43327b7e38f6d58b714ee2f2e9323181fd9ab86836dc",
+  "dispositions": {
+    "original_sinusoid_fallback_power": "retained expected failure; equalities unpowered",
+    "checkerboard_fallback_power": "separate prospectively amended component control"
+  },
+  "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+  "checks": [],
+  "pass_": false,
+  "exception": "ValueError('candidate executable binding mismatch')",
+  "ended_utc": "2026-09-07T10:44:00.776443+00:00"
+}

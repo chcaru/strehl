@@ -1,0 +1,33 @@
+{
+  "schema": "m194b-consumer-command-v1",
+  "command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\work\\consumer-binaries\\b4a36b2246af47e2aa7721c3062e4c0b\\known-scene-tests.exe",
+    "--exact",
+    "merge_cmd::known_scene_benchmark::m194b_known_scene_consumer",
+    "--ignored",
+    "--test-threads=1",
+    "--nocapture"
+  ],
+  "exit_code": 0,
+  "pass_": true,
+  "log": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-1\\run\\logs\\plane-noise-off-full9.command.log",
+  "log_sha256": "bbb3a9c30542354fcf9db08b88c88bbc2bdfc4cb128413698dccaaf4a6bbf1a0",
+  "build_sha256": "48862d88cadcb5ba2bda989e2d8cd72466333c421e1c2e31d77d9c3622127faa",
+  "environment": {
+    "STREHL_DEFECT": "off",
+    "STREHL_FIX_CA": "off",
+    "STREHL_FULLRES_GATHER": "1",
+    "STREHL_PYRAMID_WORKERS": "2",
+    "RAYON_NUM_THREADS": "2",
+    "STREHL_M194B_MODE": "render",
+    "STREHL_M194B_MANIFEST": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\plane\\noise-off\\manifest.json",
+    "STREHL_M194B_MANIFEST_SHA256": "ff9b676ff948270b54a9b1d987f0309ea61edaf13e390941463d9a2d5e4222df",
+    "STREHL_M194B_PLAN": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-1\\run\\plans\\plane-noise-off.json",
+    "STREHL_M194B_PLAN_SHA256": "fbda51bb57e84e9fdc1d798f6236296178e271ae0f86f3e88207a8d4702de041",
+    "STREHL_M194B_SUBSET": "all",
+    "STREHL_M194B_OUTPUT": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-1\\run\\tiffs\\plane-noise-off-full9.tif",
+    "STREHL_M194B_RECEIPT": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-1\\run\\receipts\\plane-noise-off-full9.json"
+  },
+  "result": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-1\\run\\receipts\\plane-noise-off-full9.json",
+  "result_sha256": "9e300230eb766f062aeb30a89a09000e2482294a0782789e147ee66a377511b3"
+}

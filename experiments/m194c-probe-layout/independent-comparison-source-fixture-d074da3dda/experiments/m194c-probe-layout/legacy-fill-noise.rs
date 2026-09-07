@@ -1,0 +1,1 @@
+fn legacy_marker() {}

@@ -1,0 +1,19 @@
+{
+  "command": [
+    "cargo",
+    "clippy",
+    "-p",
+    "strehl-cli",
+    "--bin",
+    "strehl",
+    "--tests",
+    "--no-deps",
+    "--target-dir",
+    "target/m194c-probe-layout"
+  ],
+  "exit_code": 0,
+  "compiling_cli": true,
+  "checking_cli": false,
+  "test_results": [],
+  "new_source_warnings": []
+}

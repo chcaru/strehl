@@ -1,0 +1,33 @@
+{
+  "schema": "m194b-consumer-command-v1",
+  "command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\work\\consumer-binaries\\b4a36b2246af47e2aa7721c3062e4c0b\\known-scene-tests.exe",
+    "--exact",
+    "merge_cmd::known_scene_benchmark::m194b_known_scene_consumer",
+    "--ignored",
+    "--test-threads=1",
+    "--nocapture"
+  ],
+  "exit_code": 0,
+  "pass_": true,
+  "log": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-1\\run\\logs\\flat-seed-727-full9.command.log",
+  "log_sha256": "4cc2e173f39237683994cb72cc330da1e8af5fd4086b78318ac497ee4646308b",
+  "build_sha256": "48862d88cadcb5ba2bda989e2d8cd72466333c421e1c2e31d77d9c3622127faa",
+  "environment": {
+    "STREHL_DEFECT": "off",
+    "STREHL_FIX_CA": "off",
+    "STREHL_FULLRES_GATHER": "1",
+    "STREHL_PYRAMID_WORKERS": "2",
+    "RAYON_NUM_THREADS": "2",
+    "STREHL_M194B_MODE": "render",
+    "STREHL_M194B_MANIFEST": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\flat\\seed-727\\manifest.json",
+    "STREHL_M194B_MANIFEST_SHA256": "4bb5464883fc7a9230fb38fee010e3df93a80967f024c7c4eff380f88c356027",
+    "STREHL_M194B_PLAN": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-1\\run\\plans\\flat-seed-727.json",
+    "STREHL_M194B_PLAN_SHA256": "56f73880fd57486906970848f0b39fdd762f65d24211b8c84636c4bdba386860",
+    "STREHL_M194B_SUBSET": "all",
+    "STREHL_M194B_OUTPUT": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-1\\run\\tiffs\\flat-seed-727-full9.tif",
+    "STREHL_M194B_RECEIPT": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-1\\run\\receipts\\flat-seed-727-full9.json"
+  },
+  "result": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\candidate-1\\run\\receipts\\flat-seed-727-full9.json",
+  "result_sha256": "14332d4fcfd577e971ae930c9d765f6e362ccf171114ee54430eb429f221f97e"
+}

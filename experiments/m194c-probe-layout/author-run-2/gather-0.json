@@ -1,0 +1,22 @@
+{
+  "command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\author-run-2\\known-scene-tests.exe",
+    "merge_cmd::gatefloor::m194c_author_tests::",
+    "--include-ignored",
+    "--test-threads=1",
+    "--nocapture"
+  ],
+  "started_utc": "2026-09-07T10:34:29.706505+00:00",
+  "ended_utc": "2026-09-07T10:34:31.956930+00:00",
+  "exit_code": 0,
+  "log": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\author-run-2\\gather-0.log",
+  "log_sha256": "f4a8351c999d6573fea7f49be2d462f85b408117782b1c450162c4b58f576252",
+  "environment": {
+    "STREHL_DEFECT": "off",
+    "STREHL_FIX_CA": "off",
+    "STREHL_FULLRES_GATHER": "0",
+    "STREHL_PYRAMID_WORKERS": "2",
+    "RAYON_NUM_THREADS": "2",
+    "STREHL_M194C": "1"
+  }
+}

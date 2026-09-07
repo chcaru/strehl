@@ -1,0 +1,50 @@
+{
+  "schema": "m194c-independent-comparison-sources-v1",
+  "pass_": true,
+  "subject_sha256": "c47cc1d52cc4a9f5756e8dc1fd39d4e2d601c574a9f5ea815aba131de19f9c23",
+  "real_set_checked": {
+    "experiments/m194c-probe-layout/author-tests.rs": "6eb9940f98e7e21012ae83011fdc30d290654cdd55dafd320ad3f9918e6ad3bc",
+    "experiments/m194c-probe-layout/compare-candidate.py": "f8ee6a84afe5798244282b3ac1857188b7950818987934178ef39fbfe21d852e",
+    "experiments/m194c-probe-layout/comparison-preregister.md": "2eb468227fef7d6bbcaf09753551fa30a605c9e6405bd600593ba81d01c46e0f",
+    "experiments/m194c-probe-layout/independent-tests.rs": "30cd7c19c10c9b3740b95cc3b7d118863a8c97e197201b856a44d2a9ff961767",
+    "experiments/m194c-probe-layout/legacy-fill-noise.rs": "ffdc647077cb18f9161b8cc6e04f53d155220bc817adbf2a4da1b3d9b4c47388",
+    "experiments/m194c-probe-layout/legacy-source.json": "10ff730eb799f0a4ad0ebeb667cb5d923c43a4993d2a233af03049cb8b3ca4e1",
+    "experiments/m194c-probe-layout/preregister.md": "57dfbbe540526f9b091c7d139e0a274d1b4fcc5919ba467b78468f4317391dee",
+    "experiments/m194c-probe-layout/run-candidate.py": "c47cc1d52cc4a9f5756e8dc1fd39d4e2d601c574a9f5ea815aba131de19f9c23"
+  },
+  "private_fixture": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\independent-comparison-source-fixture-d074da3dda",
+  "cases": [
+    {
+      "name": "omitted-nested-include-binding",
+      "rejected": true,
+      "error": "supplemental source set or bytes changed"
+    },
+    {
+      "name": "wrong-included-source-hash",
+      "rejected": true,
+      "error": "supplemental source set or bytes changed"
+    },
+    {
+      "name": "actual-nested-source-changed",
+      "rejected": true,
+      "error": "supplemental source set or bytes changed"
+    },
+    {
+      "name": "added-source-not-attested",
+      "rejected": true,
+      "error": "supplemental source set or bytes changed"
+    },
+    {
+      "name": "rehashed-but-unreached-source",
+      "rejected": true,
+      "error": "Rust include set differs: reached={WindowsPath('C:/dev/blog/death-of-software/projects/strehl/experiments/m194c-probe-layout/independent-comparison-source-fixture-d074da3dda/experiments/m194c-probe-layout/legacy-fill-noise.rs'), WindowsPath('C:/dev/blog/death-of-software/projects/strehl/experiments/m194c-probe-layout/independent-comparison-source-fixture-d074da3dda/experiments/m194c-probe-layout/author-tests.rs')}, attested={WindowsPath('C:/dev/blog/death-of-software/projects/strehl/experiments/m194c-probe-layout/independent-comparison-source-fixture-d074da3dda/experiments/m194c-probe-layout/legacy-fill-noise.rs'), WindowsPath('C:/dev/blog/death-of-software/projects/strehl/experiments/m194c-probe-layout/independent-comparison-source-fixture-d074da3dda/experiments/m194c-probe-layout/unreached.rs'), WindowsPath('C:/dev/blog/death-of-software/projects/strehl/experiments/m194c-probe-layout/independent-comparison-source-fixture-d074da3dda/experiments/m194c-probe-layout/author-tests.rs')}"
+    },
+    {
+      "name": "coherently-rehashed-missing-nested-declaration",
+      "rejected": true,
+      "error": "Rust include set differs: reached={WindowsPath('C:/dev/blog/death-of-software/projects/strehl/experiments/m194c-probe-layout/independent-comparison-source-fixture-d074da3dda/experiments/m194c-probe-layout/author-tests.rs')}, attested={WindowsPath('C:/dev/blog/death-of-software/projects/strehl/experiments/m194c-probe-layout/independent-comparison-source-fixture-d074da3dda/experiments/m194c-probe-layout/legacy-fill-noise.rs'), WindowsPath('C:/dev/blog/death-of-software/projects/strehl/experiments/m194c-probe-layout/independent-comparison-source-fixture-d074da3dda/experiments/m194c-probe-layout/author-tests.rs')}"
+    }
+  ],
+  "unchanged_control_before_after": true,
+  "scope": "read-only real set plus private source-set/closure mutations; no compiler or product execution"
+}

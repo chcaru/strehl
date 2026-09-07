@@ -1,0 +1,56 @@
+{
+  "schema": "m194c-independent-comparison-controls-v1",
+  "pass_": true,
+  "checks": {
+    "same-actual-array-exact-zero": true,
+    "signed20DN-offset": true,
+    "spatial-blur-moves-actual-wave": true,
+    "flat-blur-exact-inert": true,
+    "actual-color-swap-moves-RB-error": true,
+    "independent-repeat-noise-variance-difference": true,
+    "original-artifacts-unchanged": true
+  },
+  "script_sha256": "d6b5c98b8f247ac26073f6fb55a1069939a9c17254d1a3cd326e6566a34968fd",
+  "baseline_index_sha256": "37f99736bd32dfb4891bd8fa2b033cacc2c58e9265515fa53cb5921dd80d9c08",
+  "source_tiff_sha256": "b528eb1e3facff16cbc541727c040742c2268dba7c74511a0d4990593a34cdb1",
+  "records": {
+    "offset": {
+      "bias_dn": [
+        20.0,
+        20.0,
+        20.0
+      ],
+      "mse_dn2": [
+        400.0,
+        400.0,
+        400.0
+      ],
+      "rmse_dn": [
+        20.0,
+        20.0,
+        20.0
+      ]
+    },
+    "blur_amplitude_before": [
+      150.1965221353209,
+      150.33385622941853,
+      150.1991290639724
+    ],
+    "blur_amplitude_after": [
+      131.26105700741024,
+      131.3810772189177,
+      131.263335277277
+    ],
+    "color_permutation_mse_difference": [
+      43602.72213039614,
+      0.0,
+      43602.72213039614
+    ],
+    "temporal_variance_difference": [
+      6.0,
+      24.0,
+      96.0
+    ]
+  },
+  "scope": "difference-instrument controls on private arrays, not replacement candidate outputs"
+}
