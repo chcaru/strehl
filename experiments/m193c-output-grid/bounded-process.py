@@ -74,7 +74,7 @@ def run(command, env, cwd, log, *, api, wall_seconds, cpu_seconds,
     assigned = False
     result = dict(command=command, exit_code=None, error=None, cleanup_errors=[],
                   wall_seconds=None, log_bytes=0, job_accounting=None, job_memory=None,
-                  terminal_job_accounting=False,
+                  terminal_job_accounting=False, configured_job_limits=None,
                   limits=dict(wall_seconds=wall_seconds, cpu_seconds=cpu_seconds,
                               log_bytes=log_bytes, committed_bytes=committed_bytes),
                   scope="owned job tree; committed memory, observed user+kernel CPU; not RSS or a timing benchmark")
@@ -120,6 +120,17 @@ def run(command, env, cwd, log, *, api, wall_seconds, cpu_seconds,
         if not api.kernel32.SetInformationJobObject(job, api.JOB_OBJECT_EXTENDED_LIMIT_INFORMATION_CLASS,
                                                     ctypes.byref(limits), ctypes.sizeof(limits)):
             raise ctypes.WinError(ctypes.get_last_error())
+        observed_limits = api.JOBOBJECT_EXTENDED_LIMIT_INFORMATION()
+        returned = api.wt.DWORD()
+        if not api.kernel32.QueryInformationJobObject(job, api.JOB_OBJECT_EXTENDED_LIMIT_INFORMATION_CLASS,
+                                                      ctypes.byref(observed_limits), ctypes.sizeof(observed_limits),
+                                                      ctypes.byref(returned)):
+            raise ctypes.WinError(ctypes.get_last_error())
+        result["configured_job_limits"] = dict(flags=int(observed_limits.basic_limit_information.limit_flags),
+                                                committed_bytes=int(observed_limits.job_memory_limit))
+        need(result["configured_job_limits"]["flags"] & 0x200
+             and result["configured_job_limits"]["committed_bytes"] == committed_bytes,
+             "Job memory limit readback")
         with log.open("xb") as stream:
             process = subprocess.Popen(command, cwd=cwd, env=env, stdin=subprocess.DEVNULL,
                                        stdout=subprocess.PIPE, stderr=subprocess.STDOUT, bufsize=0,

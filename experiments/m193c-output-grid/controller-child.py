@@ -26,11 +26,11 @@ elif mode == "nested-timeout":
                              creationflags=subprocess.CREATE_NO_WINDOW)
     print("M193C_NESTED_PID=" + str(child.pid), flush=True)
     child.wait()
-elif mode == "memory":
+elif mode in ("memory", "memory-allowed"):
     try:
         allocation = bytearray(128 << 20)
-        print("M193C_MEMORY_UNEXPECTEDLY_ALLOWED=" + str(len(allocation)), flush=True)
-        raise SystemExit(9)
+        print("M193C_MEMORY_ALLOWED=" + str(len(allocation)), flush=True)
+        raise SystemExit(0 if mode == "memory-allowed" else 9)
     except MemoryError:
         print("M193C_MEMORY_REFUSED", flush=True)
         raise SystemExit(7)

@@ -98,7 +98,7 @@ def main():
         watched = a.output/"watched-input.txt"
         watched.write_bytes(b"original-private-input")
         watched_expected = binding(watched)
-        modes = ("valid", "nonzero", "exact-log", "overflow-log", "timeout", "nested-timeout", "memory", "late-log-binding", "changed-input", "restored")
+        modes = ("valid", "nonzero", "exact-log", "overflow-log", "timeout", "nested-timeout", "memory-allowed", "memory", "late-log-binding", "changed-input", "restored")
         for index, mode in enumerate(modes):
             check_sources()
             if mode == "restored":
@@ -121,7 +121,8 @@ def main():
             try:
                 actual = helper.run(argv, env, ROOT, log, api=api,
                                     wall_seconds=5 if mode == "nested-timeout" else 1 if mode == "timeout" else 10,
-                                    cpu_seconds=10, log_bytes=65536, committed_bytes=64<<20,
+                                    cpu_seconds=10, log_bytes=65536,
+                                    committed_bytes=(256 if mode == "memory-allowed" else 64)<<20,
                                     check=unchanged if mode in ("changed-input", "restored") else lambda: None)
             finally:
                 helper.binding = original_binding
@@ -155,8 +156,14 @@ def main():
                                       and parents[0] != children[0]
                                       and baseline > 0
                                       and actual["job_accounting"]["total_processes"] > baseline)
+            elif mode == "memory-allowed":
+                row["passed"] = clean and actual["exit_code"] == 0 and b"M193C_MEMORY_ALLOWED=134217728" in text
             elif mode == "memory":
-                row["passed"] = clean and actual["exit_code"] == 7 and b"M193C_MEMORY_REFUSED" in text
+                os_refusal = clean and actual["exit_code"] == 7 and b"M193C_MEMORY_REFUSED" in text
+                parent_refusal = (actual["error"] == "ValueError('child committed-memory bound')"
+                                  and actual["job_memory"]["peak_job_memory_used_bytes"] > 64<<20)
+                row["memory_refusal_route"] = "child-MemoryError" if os_refusal else "parent-observed-peak" if parent_refusal else None
+                row["passed"] = (os_refusal or parent_refusal) and result["cases"][-2]["mode"] == "memory-allowed" and result["cases"][-2]["passed"] is True
             elif mode == "late-log-binding":
                 row["passed"] = ("child log bound" in (actual["error"] or "") and text == b"x"*65536
                                  and len(actual["cleanup_errors"]) == 1
@@ -168,8 +175,10 @@ def main():
                 row["passed"] = row["passed"] and actual["cleanup_errors"] == []
             row["passed"] = row["passed"] and actual["terminal_job_accounting"] is True
             row["passed"] = row["passed"] and actual["job_accounting"]["active_processes"] == 0
+            row["passed"] = (row["passed"] and actual["configured_job_limits"]["flags"] & 0x200 != 0
+                             and actual["configured_job_limits"]["committed_bytes"] == actual["limits"]["committed_bytes"])
             need(row["passed"] is True, "controller case refused its intended oracle: " + mode)
-        need(len(result["cases"]) == 10, "complete finite controller population")
+        need(len(result["cases"]) == 11, "complete finite controller population")
         need(binding(watched) == watched_expected, "watched input restored")
         produced.append(file_ref(watched))
         result["status"] = "PASS_OWNED_PROCESS_CONTROLS_ONLY"
