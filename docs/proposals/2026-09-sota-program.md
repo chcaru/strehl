@@ -71,29 +71,30 @@ the protocol's inconclusive category, not a proven physical cause. A transition
 within the first mirrored sweep pair is visible in both wall and product CPU
 time; its cause remains unresolved.
 
-**Next executable systems action:** commission timestamped sampling-gap and
-per-query latency diagnostics on controlled allocation/null/stall plants,
-including a short child allocation that must be detected. Observe scheduling
-and frequency alongside a separate timing rehearsal. The present aggregates
-cannot locate the gap or attribute the timing transition. Determine whether
-instrumentation or the execution arrangement needs a prospective change before
-funding another full run. Compare observer overhead and output hashes with
-diagnostics on/off, including the placebo. The
+**Completed follow-through:** [M192b](../research/M192b-verifier.md) implements
+the missing execution/evidence bindings; [M192c](../research/M192c-sampler.md)
+commissions timestamped phase diagnostics on allocation/null/stall controls;
+[M192d](../research/M192d-production-rehearsal.md) verifies observer off/on/placebo
+non-perturbation on actual native outputs. Do not dispatch those completed
+questions again. None identifies the historical stall or timing-transition cause.
+
+**Next executable systems action:** integrate the commissioned observer and
+stricter verifier into a durable prospective campaign runner, with bounded
+long-run trace retention, explicit overflow/terminal recovery and the complete
+invocation bindings. Freeze the resulting protocol and commission a small
+end-to-end run before considering another full campaign. Retain the bounded
+timing rehearsal aimed at the unresolved execution-state transition; a small
+runner test alone need not exercise it. The existing
 [measurement diagnosis](../../experiments/review-m192-measurement/findings.md)
-defines the phase-delay, child-lifetime, and timing controls. Any change must be
-frozen and independently verified;
-do not replace individual repeats, discard the first pair, relax 100 ms/2%, or
-reinterpret this certificate after the result. No new full campaign is launched.
-Carry the independent review's command, worker-environment, campaign-ID, and
-manifest-binding checks into the automated verifier before the next campaign.
-The review checked those bindings in this package; the generic validator's
-missing checks are hardening work, not an observed inconsistency here.
+and completed reports define the remaining limits. Do not replace individual
+repeats, discard the first pair, relax 100 ms/2%, or reinterpret the old certificate.
+No new full campaign has been launched.
 
 This certificate covers the pinned native-RAW merge with prerecorded alignment
 sidecars. It does not test the live alignment solver, the comparative common-TIFF
 M11 output, or image quality. Preserve the scorecard's historical failing lineage;
 this repaired lineage adds one passed bar and three unmeasured bars, not a SOTA
-claim. Geometry consumer repair in step 2 remains the next product-facing work.
+claim. The actual-output geometry adapter in step 2 remains open.
 
 ### 2. Make geometry executable before declaring it closed
 
@@ -150,40 +151,40 @@ present in M189 Amendment 1; it does not retract the isotropic experiment.
 See [M189b](../research/M189b-directional-detail.md) for the exact command,
 independent population calculation, flat-first controls, and limits.
 
-The decision is whether this can be a restricted diagnostic, whether an
-externally anchored transfer estimate can be commissioned for actual outputs,
-or whether the truth-reference route is required. Do not treat a theoretical
-or tested limitation as proof that every useful scope is impossible; equally,
-do not advertise tested isotropic safety as a general common-LSI guarantee.
+**Decision taken:** retain v2 as a restricted diagnostic and use known scene
+truth for the production development comparison. M194 commissions the actual
+CFA-to-TIFF seam; M194b establishes its first scoped baseline; M194c corrects
+probe storage dependence; M194d measures one positive-weight candidate. Do not
+advertise tested isotropic safety as a general common-LSI guarantee.
 
 Physical-reference work remains governed by M135/M164/M166 and the current
 owner sheet. No new photograph is requested by this takeover. First finish
 software commissioning on development inputs. A new reference must validate
 its information advantage; a sharper-looking edge alone is not truth.
 
-**Exit and next implementation experiment:** M189b closes the directional-safety
-question for v2; do not fund another general guarantee from this radial score.
-Keep it as a scoped research diagnostic. The next development benchmark must
-run the actual production merge on a known latent scene with independently
-rendered defocus, curved per-frame geometry, occlusion boundaries, and injected
-sensor noise, reporting reconstruction error and flat-region temporal noise.
-Reuse the project's existing scene renderers after a prior-art audit; do not
-call a duplicate plant independent evidence. Freeze the scene/noise controls
-before testing a single admission change. A real-output adapter must separately
-observe its noise/transfer law (M189 §4.2–4.4); applying a RAW scalar PTC gain
-to an adaptive demosaiced output is not that observation. The development
-benchmark can reject and improve code while the physical reference route is
-being commissioned; it cannot itself license a real-capture SOTA claim.
+**Current next implementation:** M194e commissions the missing joint-pupil
+two-depth geometric model before any new occlusion-quality comparison. Its
+preregistration is committed at `773f5762`; author and independent implementations
+are active. The one-plane M194b/M194d evidence cannot express depth-boundary dilution.
+The new mathematical model will not clear M25's failed physical/optics gates.
+Any later production bridge, noise population and quality comparison need an
+explicit versioned contract and independently checked scope. A real-output
+adapter must separately observe its noise/transfer law (M189 §4.2–4.4);
+applying a RAW scalar PTC gain to adaptive demosaiced output is insufficient.
+The development benchmark can improve code while physical-reference work is
+pending; it cannot license a real-capture SOTA claim.
 
 ### 4. Ship one measured quality change at a time
 
-After the evaluation path and geometry have an explicit supported scope,
-return to the admission merge's actual consumer: reconstructed pixels. Compare
-one candidate with one pinned production baseline on existing development
-stacks. Pair detail fidelity with flat-region noise, known blur/sharpening
-controls, occlusion-boundary error, and clipping. Keep an untreated control
-and an independent verifier. Avoid bundling admission, base-band, photometric,
-depth, and output changes into one result.
+**First scoped comparison complete:** M194d measures reconstructed production
+pixels against known scene truth and repeated flat-noise controls. Its candidate
+remains experimental, with small detail costs and sparse adverse errors retained.
+The next depth-boundary comparison depends on M194e and a separately commissioned
+production bridge and noise population. Compare one candidate with one pinned
+production baseline. Pair detail fidelity with flat-region noise, known
+blur/sharpening controls, occlusion-boundary error and clipping. Keep an untreated
+control and an independent verifier. Avoid bundling admission, base-band,
+photometric, depth and output changes into one result.
 
 If a candidate passes development controls, freeze its binary and settings
 before the registered holdout. If it fails, record which input falsified it
