@@ -171,7 +171,7 @@ def validate_plan(plan, row, *, authority, authority_sha, selected_frames, execu
     exact(plan["floor_witness"], {"source": "actual terminal stderr", "eligible_prefix_maximum": 2,
                                  "required": "finite nonempty prefix and count equal selected frames", "unmeasured": "existing white-floor fallback"}, "floor witness scope")
     exact(plan["environment"], REQUIRED_ENV, "actual child required environment")
-    exact(plan["build"], {"sha256": executable["sha256"], "bytes": executable["bytes"], "software": "strehl 0.0.0"}, "actual executable identity")
+    exact(plan["build"], {"sha256": executable["sha256"], "bytes": executable["bytes"], "software": "strehl 0.0.0 (48f69d82b419)"}, "actual executable identity")
     need(type(plan["input_bindings"]) is dict and plan["input_bindings"], "nonempty actual input ledger")
     return plan["geometry"]
 
