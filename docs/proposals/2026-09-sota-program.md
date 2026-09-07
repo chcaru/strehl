@@ -387,8 +387,13 @@ registration change if support fails, without assuming a graph solve can create
 missing correspondences. M194g verification has completed from committed
 `b11cea39`; its actual check result is
 `5a0c6dcc84608a64e7545ee9ac751441c468194347eb0cf7534793b0c971a4c5`.
-The held ten-render coordinate prototype and separate registration derivative
-design are now in independent source review. Existing owned RAW decode may
+The ten-render coordinate prototype and separate registration derivative
+have passed independent source review and a fresh test-only build. The final
+eleven process controls passed; two earlier instrument refusals and the first
+compiler failure remain preserved. The encompassing private campaign and
+independent image readers are being completed before any new image or RAW
+experiment. See the [M193c progress record](../research/M193c-output-grid.md).
+Existing owned RAW decode may
 allocate before exposing shape: enforce a process committed-memory limit and
 check the returned geometry before further owned image allocations, without
 claiming a predecode shape proof or an exact RSS bound. Preserve resolved
