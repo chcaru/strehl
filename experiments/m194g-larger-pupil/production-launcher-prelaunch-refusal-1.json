@@ -1,0 +1,18 @@
+{
+  "schema": "m194g-root-prelaunch-refusal-v1",
+  "status": "REFUSED_BEFORE_CHILD",
+  "release": "experiments/m194g-larger-pupil/production-launcher-controls-release-1.json",
+  "changed_source": "experiments/m194g-larger-pupil/independent-production-controller-review.md",
+  "expected": {
+    "sha256": "56435465b0a9f5af3ea9dad9cb492d4f0503508c8d1959f2c7b692c1e8a33a96",
+    "bytes": 4190
+  },
+  "actual": {
+    "sha256": "000d385b4139ff653a57a284dfbc09e803f1b6ced3c1a8211a6f22f923d84649",
+    "bytes": 6589
+  },
+  "observed_error": "AssertionError: experiments/m194g-larger-pupil/independent-production-controller-review.md",
+  "child_started": false,
+  "output_created": false,
+  "reason": "Independent review appendix landed after release assembly; root initial-source gate refused before launching controller."
+}
