@@ -1,10 +1,11 @@
 # M194e — joint-pupil depth-boundary model
 
 2026-09-07. **In progress; complete numerical commissioning has not passed.**
-Both full image attempts stopped at registered sensor-cell error limits.
-Each completed three primary frames; the fourth refused, and neither refinement
-arm ran. There is no admitted CFA package or merge-quality result from this
-milestone yet. Preserve both failures while investigating their causes.
+Three full image attempts stopped at registered sensor-cell error limits. The
+first two each completed three primary frames. The third completed all five
+primary, all five angular-refinement and two cell-refinement frames before a
+new refusal. There is no admitted CFA package or merge-quality result from this
+milestone yet. Preserve all failures while investigating their causes.
 
 ## Purpose and scope
 
@@ -126,7 +127,7 @@ whole-cell reference, and they do not establish the true local leaf error.
 The proposed numerical correction must therefore still pass independent
 whole-cell and complete-image comparisons.
 
-## Numerical amendment 2: current implementation
+## Numerical amendment 2 and the second refusal
 
 The squared-distance cell-coordinate amendment and independent prospective
 review were committed at `d839ce9b` before implementation. It changes variables
@@ -185,8 +186,76 @@ with a complete-frontier, absolute-error aggregate and deterministic refinement
 priority. It retains the whole-cell, separate pupil, independent full-image and
 refinement limits, plus existing orders, depth and resource ceilings. The former
 local condition becomes a diagnostic. This is an explicit change to the former
-admission rule, and neither failed run is retroactively passed. Implementation
-and new full-image evidence remain pending at this stage.
+admission rule, and neither failed run is retroactively passed.
+
+## Numerical amendment 3: current implementation
+
+The third amendment and independent prospective review are committed at
+`2a75e519`; implementation and exact author-control snapshots are committed at
+`8596d413`. The allocator retains every current leaf, sums absolute differences
+and both weighted pupil terms in canonical order, and separately enforces the
+high-pupil cap. Capped leaves remain in the total. A complete binary frontier,
+unchanged child geometry and original work/depth ceilings are checked on the
+actual numerical path. No monotonic decrease of quadrature indicators is assumed.
+
+Author controls10 passes all 196 cases on numerical source
+`a22d49fd43a1bc8d0f807fc1d4417104d5b9ffe1d771b418be58d276d7804460`.
+The earlier controls9 attempt is preserved: its tiny observer scene needed no
+refinement, so an assertion expecting positive depth was unpowered. The corrected
+control retains the observed zero depth and adds the registered (31,7) cell,
+which exercises refinement and local over-allocation. Observer off/count/placebo
+preserve identical value and indicator bytes while only count collects the new
+statistics. The old no-map ablation now returns under global allocation, as the
+preregistration explicitly permitted; the archived local-source refusal remains.
+This does not establish that every earlier coordinate intervention is necessary
+for the globally allocated method.
+
+The strict receipt schema records completed-cell counts, leaf counts, depth
+extrema and local over-allocation counts. Independent static review rejected
+impossible count combinations before source freeze, including unobserved depth
+extrema. Those constraints check diagnostic consistency, not optical truth.
+Independent allocator controls pass62, emission API controls pass191
+(original109 plus82 metadata cases), and final-reader controls pass36
+(original26 plus10 metadata cases). Their exact result hashes are recorded in
+`full-float-release-3.md`, committed at `909a1baa` before launch. The third
+fifteen-image campaign ran on the frozen source and passed the previously
+refusing fourth primary frame, then encountered the different failure below.
+
+## Third complete-run refusal: inner and outer error budgets
+
+`float-run-3/result.json`, SHA
+`38e691f130e830f9bfb2b21176049cbd98b15a2134b638a03ee8f6363566c89f`,
+is terminal **UNCOMMISSIONED_NUMERICS**. It contains twelve complete arrays:
+all five primary and all five angle-refined frames, plus cell-refined frames
+0 and 1. Cell-refined frame2 refuses after four cells, at native(4,0), far from
+the foreground boundary. No complete bundle or independent full-image gate
+was issued. Source/design bindings remain identical. The cell arm's118.70CPU
+seconds are provenance, not a comparative speed claim or the refusal cause.
+
+**VERIFIED diagnostic:** the complete128-leaf depth6 frontier in
+`cell-diagnosis-3/result.json` covers area1 and has no refinable leaf left.
+Its absolute spatial quadrature differences sum to2.13163e-12 electrons,
+while weighted low/high pupil indicators sum to0.0001469995081 and
+0.0001469206071 respectively. Total cell indicator0.0002939201173 exceeds
+the cell-refined limit0.0001875. The separate high-pupil limit0.00025 passes.
+The two initial roots already had indicator0.000295335346: spatial refinement
+barely changes this pupil-indicator floor. The frozen independent whole-cell
+reference is11383.252407088143 electrons; the diagnostic value differs by
+−1.63709e-11. That diagnostic agreement does not admit the refused computation.
+The independent reader reconstructs both initial roots and all128 binary
+paths/geometries; its16 checks pass in `independent-coupled-budget-read-2.json`.
+Its first attempt confused two different source-map key conventions and is
+preserved as a diagnostic-reader failure. It did not compute optical samples.
+
+**DERIVED allocation mismatch:** each inner point calculation may meet its
+0.00025 pupil target while the sum of both weighted pupil terms exceeds the
+stricter outer cell-refinement budget. Subdividing sensor cells cannot generally
+remove the integral of already accepted point indicators. The next prospective
+amendment must allocate compatible inner accuracy explicitly. A shared inner
+target derived from the strongest registered cell budget can preserve the
+primary-versus-cell-refinement angular policy while retaining every global
+accuracy, resource and full-population limit. No replacement has been
+implemented or admitted at this stage.
 
 ## Consequence for the following production experiment
 

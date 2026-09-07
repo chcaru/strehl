@@ -1,0 +1,37 @@
+{
+  "status": "DIAGNOSTIC_INVALID",
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-X",
+    "utf8",
+    "-X",
+    "pycache_prefix=experiments/m194e-joint-pupil/work/cache-independent-coupled-read-1",
+    "experiments/m194e-joint-pupil/independent-coupled-budget-read.py",
+    "--output",
+    "experiments/m194e-joint-pupil/independent-coupled-budget-read-1.json"
+  ],
+  "executable": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+  "xoptions": {
+    "utf8": true,
+    "pycache_prefix": "experiments/m194e-joint-pupil/work/cache-independent-coupled-read-1"
+  },
+  "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+  "numpy": "2.4.4",
+  "source_sha256": "d0d91d77216ab782e5a6e73e3e8cfe5400e85e164e00855292fe085bfd76c616",
+  "checks": [
+    {
+      "name": "author-source-design-unchanged",
+      "passed": true
+    },
+    {
+      "name": "diagnostic-source-unchanged",
+      "passed": true
+    },
+    {
+      "name": "diagnostic-not-admitted",
+      "passed": true
+    }
+  ],
+  "error": "KeyError('model.py')",
+  "traceback": "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-coupled-budget-read.py\", line 60, in main\n    check(\"snapshot-source-\" + name, sha(HERE / \"float-run-3/source\" / name) == digest and run[\"sources_before\"][name] == digest)\n                                                                                           ~~~~~~~~~~~~~~~~~~~~~^^^^^^\nKeyError: 'model.py'\n"
+}

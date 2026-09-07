@@ -1,0 +1,26 @@
+{
+  "completed_cells": 3072,
+  "status": "running",
+  "total_cells": 3072,
+  "work": {
+    "angular_nodes": 125821440,
+    "cell_allocation": {
+      "cells": 3072,
+      "cells_with_locally_overallocated_leaves": 130,
+      "leaves": 7479,
+      "locally_overallocated_leaves": 529,
+      "maximum_depth": 5,
+      "minimum_depth": 0
+    },
+    "cpu_seconds": 125.078125,
+    "observer": "count",
+    "observer_events": 15667547,
+    "optional_hook_calls": 2426021,
+    "peak_live_scalar_frames": 1,
+    "peak_node_pairs": 32768,
+    "point_calls": 678560,
+    "tracked_peak_ndarray_bytes": 6729728,
+    "tracked_peak_ndarrays": 70,
+    "wall_seconds": 125.42200000002049
+  }
+}

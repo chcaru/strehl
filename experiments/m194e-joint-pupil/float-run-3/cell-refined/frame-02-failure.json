@@ -1,0 +1,60 @@
+{
+  "completed_cells": 4,
+  "error": "NumericalFailure('UNCOMMISSIONED_NUMERICS: cell depth/global-error ceiling')",
+  "frame": {
+    "K": 12.0,
+    "forward_similarity": {
+      "centre": [
+        0.0,
+        0.0
+      ],
+      "rotation": 0.0,
+      "scale": 1.0,
+      "translation": [
+        0.0,
+        0.0
+      ]
+    },
+    "index": 2,
+    "inverse_focus": 0.75
+  },
+  "integrator": {
+    "angle_depth": 10,
+    "angle_high": 32,
+    "angle_low": 16,
+    "angular_limit": 600000000,
+    "arm": "cell-refined",
+    "array_limit": 33554432,
+    "cell_depth": 6,
+    "cell_high": 16,
+    "cell_low": 8,
+    "cell_tolerance": 0.0001875,
+    "cpu_limit": 600,
+    "node_pair_limit": 32768,
+    "point_limit": 4000000,
+    "pupil_tolerance": 0.00025,
+    "wall_limit": 1200
+  },
+  "status": "UNCOMMISSIONED_NUMERICS",
+  "work": {
+    "angular_nodes": 6781920,
+    "cell_allocation": {
+      "cells": 4,
+      "cells_with_locally_overallocated_leaves": 2,
+      "leaves": 8,
+      "locally_overallocated_leaves": 2,
+      "maximum_depth": 0,
+      "minimum_depth": 0
+    },
+    "cpu_seconds": 118.703125,
+    "observer": "count",
+    "observer_events": 9153208,
+    "optional_hook_calls": 1413172,
+    "peak_live_scalar_frames": 1,
+    "peak_node_pairs": 32768,
+    "point_calls": 83840,
+    "tracked_peak_ndarray_bytes": 6940800,
+    "tracked_peak_ndarrays": 175,
+    "wall_seconds": 119.03200000000652
+  }
+}

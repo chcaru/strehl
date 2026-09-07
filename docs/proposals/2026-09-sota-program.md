@@ -166,11 +166,20 @@ its information advantage; a sharper-looking edge alone is not truth.
 two-depth geometric model before any new occlusion-quality comparison. Its
 preregistration is committed at `773f5762`; author and independent implementations
 are active. [M194e's current record](../research/M194e-joint-pupil.md) preserves
-two numerical refusals: the original angular integration limit, then a
-sensor-cell tangency limit in the first complete-image attempt after the
-angular remedy. Independent component checks pass, but the complete model
-remains uncommissioned. The next action is a prospectively reviewed cell
-integration correction with existing accuracy limits retained. The one-plane
+the original angular integration refusal and two subsequent complete-image
+attempts that stopped at local sensor-cell error allocations. Independent
+diagnosis of the second cell establishes that the complete-cell aggregate
+meets the existing limit despite the local refusal. Amendment3, preregistered
+at `2a75e519`, explicitly replaces area-proportional local admission with global
+absolute-error allocation while retaining whole-cell/pupil, independent image,
+refinement and resource limits. Its independent controls passed; the full
+rerun completed twelve of fifteen arrays before an inner/outer error-budget
+mismatch stopped the cell-refinement arm. The next prospective correction
+allocates a shared inner point target from the strongest existing cell budget,
+preserving isolated refinement arms and all global bars. The exact diagnostic,
+three failed complete runs and their source snapshots remain in the M194e
+record. All fifteen newly generated frames must still pass before the model is
+commissioned. The one-plane
 M194b/M194d evidence cannot express depth-boundary dilution.
 The new mathematical model will not clear M25's failed physical/optics gates.
 Any later production bridge, noise population and quality comparison need an

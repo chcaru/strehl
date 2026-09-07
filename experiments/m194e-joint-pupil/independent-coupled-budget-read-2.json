@@ -1,0 +1,133 @@
+{
+  "status": "DIAGNOSTIC_VERIFIED_NO_ADMISSION",
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-X",
+    "utf8",
+    "-X",
+    "pycache_prefix=experiments/m194e-joint-pupil/work/cache-independent-coupled-read-2",
+    "experiments/m194e-joint-pupil/independent-coupled-budget-read.py",
+    "--output",
+    "experiments/m194e-joint-pupil/independent-coupled-budget-read-2.json"
+  ],
+  "executable": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+  "xoptions": {
+    "utf8": true,
+    "pycache_prefix": "experiments/m194e-joint-pupil/work/cache-independent-coupled-read-2"
+  },
+  "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+  "numpy": "2.4.4",
+  "source_sha256": "63e96c0a0fe6583509c136bb7baaf20e8bb7d8f0c7d501be4e90b28d50dbb3c1",
+  "checks": [
+    {
+      "name": "author-source-design-unchanged",
+      "passed": true
+    },
+    {
+      "name": "diagnostic-source-unchanged",
+      "passed": true
+    },
+    {
+      "name": "diagnostic-not-admitted",
+      "passed": true
+    },
+    {
+      "name": "snapshot-source-model.py",
+      "passed": true
+    },
+    {
+      "name": "snapshot-source-render.py",
+      "passed": true
+    },
+    {
+      "name": "frozen-reference-array",
+      "passed": true
+    },
+    {
+      "name": "initial-complete-depth-frontier",
+      "passed": true
+    },
+    {
+      "name": "initial-every-leaf-geometry-and-terms",
+      "passed": true,
+      "leaves": 2
+    },
+    {
+      "name": "initial-all-reported-sums",
+      "passed": true,
+      "totals": {
+        "area": 1.0,
+        "value": 11383.252407088126,
+        "cell_delta": 9.094947017729282e-13,
+        "sum_low_pupil_e": 0.0001492910489976939,
+        "pupil_error": 0.00014604429568497733,
+        "cell_error": 0.0002953353455921659,
+        "signed_truth_error_e": -1.6370904631912708e-11
+      }
+    },
+    {
+      "name": "initial-cell-fails-pupil-passes",
+      "passed": true
+    },
+    {
+      "name": "initial-pupil-terms-alone-exceed-cell-bar",
+      "passed": true
+    },
+    {
+      "name": "terminal-complete-depth-frontier",
+      "passed": true
+    },
+    {
+      "name": "terminal-every-leaf-geometry-and-terms",
+      "passed": true,
+      "leaves": 128
+    },
+    {
+      "name": "terminal-all-reported-sums",
+      "passed": true,
+      "totals": {
+        "area": 1.0,
+        "value": 11383.252407088126,
+        "cell_delta": 2.1316282072803006e-12,
+        "sum_low_pupil_e": 0.00014699950807447616,
+        "pupil_error": 0.0001469206070715453,
+        "cell_error": 0.00029392011727764965,
+        "signed_truth_error_e": -1.6370904631912708e-11
+      }
+    },
+    {
+      "name": "terminal-cell-fails-pupil-passes",
+      "passed": true
+    },
+    {
+      "name": "terminal-pupil-terms-alone-exceed-cell-bar",
+      "passed": true
+    }
+  ],
+  "reference_value_e": 11383.252407088143,
+  "frontiers": {
+    "initial": {
+      "area": 1.0,
+      "value": 11383.252407088126,
+      "cell_delta": 9.094947017729282e-13,
+      "sum_low_pupil_e": 0.0001492910489976939,
+      "pupil_error": 0.00014604429568497733,
+      "cell_error": 0.0002953353455921659,
+      "signed_truth_error_e": -1.6370904631912708e-11
+    },
+    "terminal": {
+      "area": 1.0,
+      "value": 11383.252407088126,
+      "cell_delta": 2.1316282072803006e-12,
+      "sum_low_pupil_e": 0.00014699950807447616,
+      "pupil_error": 0.0001469206070715453,
+      "cell_error": 0.00029392011727764965,
+      "signed_truth_error_e": -1.6370904631912708e-11
+    }
+  },
+  "inputs": {
+    "float-run-3\\result.json": "38e691f130e830f9bfb2b21176049cbd98b15a2134b638a03ee8f6363566c89f",
+    "cell-diagnosis-3\\result.json": "49902496359b6976776bb765e2228b36409d1df2e20bd405a11d8ece1732093f",
+    "independent-reference-1\\result.json": "8791700cdc969847ff75f9fbd9205739ee2135ac4bbbdbe445d00b6664c7eccc"
+  }
+}
