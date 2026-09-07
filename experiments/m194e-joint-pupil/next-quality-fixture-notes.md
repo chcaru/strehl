@@ -1,9 +1,9 @@
 # After the geometric commission: larger-fixture numerical work
 
 2026-09-07, root. **Prospective reasoning only; not a registered experiment or
-implemented optimization.** M194e remains uncommissioned while amendment4's
-full run is being checked. These notes neither change that fixed fixture nor admit a
-larger one.
+implemented optimization.** M194e's amendment4 full run and CFA conversion have
+now passed independent checks. These notes neither change that fixed fixture
+nor admit a larger one.
 
 The source/size audit in `next-production-bridge.md` establishes why a larger
 scene is required for the three-band M194d comparison. Simply scaling the

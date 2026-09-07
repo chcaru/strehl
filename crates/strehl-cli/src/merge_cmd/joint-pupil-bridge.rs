@@ -830,7 +830,9 @@ impl PyramidFrameSource for BridgeSource {
             "source CFA length/hash changed"
         );
         let data: Vec<u16> = bytes
-            .chunks_exact(2)
+            .as_chunks::<2>()
+            .0
+            .iter()
             .map(|p| u16::from_le_bytes([p[0], p[1]]))
             .collect();
         ensure!(
@@ -921,23 +923,27 @@ fn prepare_bridge(
         json!({"original_index":i,"local_index":i,"quad_similarity":{"a_re":t.a.re,"a_im":t.a.im,"b_re":t.b.re,"b_im":t.b.im}})
     }).collect();
     let exe = std::env::current_exe()?;
+    let config = json!({"merge":"Pyramid","bands":cfg.bands,"gate":cfg.gate,"exponent":cfg.exponent,"sharpen_per_octave":cfg.sharpen_per_octave,
+        "admission":format!("{:?}",cfg.admission),"select":format!("{:?}",cfg.select),"base":format!("{:?}",cfg.base),"mean_coarse":cfg.mean_coarse,
+        "hull":format!("{:?}",cfg.hull),"hull_lambda":cfg.hull_lambda,"hull_low_only":cfg.hull_low_only,"hull_from_level":cfg.hull_from_level,
+        "fallback":format!("{:?}",cfg.fallback),"fallback_k":cfg.fallback_k,"fallback_power":cfg.fallback_power,"significance_scale":cfg.significance_scale,
+        "resampler":"CatmullRom","demosaic":"MHC","space":"CameraLinear","fullres_gather":true,"exposure_stops":settings.exposure,"auto_exposure":false,
+        "confidence":settings.confidence,"photometric":"Off","gate_floor_enabled":gatefloor::enabled(),"measured_floor_bands":0,
+        "floor_fallback":"empty measured beta; existing per-band fixed beta","ca":"off","defect":"off","restoration":"unset"});
+    let noise = json!({"gain_dn_per_e":0.25,"read_noise_e":4.0,"black":512.0,"white":15360.0,"iso":160.0,
+        "provenance":"Fallback: injected synthetic algorithm coefficients; noise draws off","prnu":false});
+    let normalization = json!({"tiff_u16_to_dn":14848.0/65535.0,"second_black_subtraction":false,
+        "input_rounding":"ties-to-even","output_rounding":"half-up after clipping"});
+    let build = json!({"test_executable_sha256":hash_file(&exe)?,"bytes":fs::metadata(&exe)?.len(),"software":crate::SOFTWARE});
     let plan = json!({"schema":"m194f-consumer-plan-v1","authority":{"manifest_sha256":MANIFEST_HASH,"cfa_commission_sha256":GATE_HASH,"float_commission_sha256":FLOAT_HASH},
         "input_bindings":inputs.bindings.files,"sensor":inputs.manifest.sensor,"inputs":inputs.manifest.frames,"producer":inputs.manifest.producer,
         "full_native":[64,48],"full_quad":[full.width,full.height],"crop_quad":{"x":rect.x,"y":rect.y,"width":rect.width,"height":rect.height},
         "canonical_native_offset":[rect.x*2,rect.y*2],"output_native":[rect.width*2,rect.height*2],"output_channels":3,
         "reference_original_index":2,"reference_local_index":2,"placements":placements,"cover_fit":{"kind":"Crop","k":k},
         "level_sizes":sizes.iter().map(|s|[s.width,s.height]).collect::<Vec<_>>(),
-        "noise":{"gain_dn_per_e":0.25,"read_noise_e":4.0,"black":512.0,"white":15360.0,"iso":160.0,"provenance":"Fallback: injected synthetic algorithm coefficients; noise draws off","prnu":false},
-        "wb_f32":[4.0f32/3.0,1.0f32,5.0f32/3.0],"normalization":{"tiff_u16_to_dn":14848.0/65535.0,"second_black_subtraction":false,"input_rounding":"ties-to-even","output_rounding":"half-up after clipping"},
-        "config":{"merge":"Pyramid","bands":cfg.bands,"gate":cfg.gate,"exponent":cfg.exponent,"sharpen_per_octave":cfg.sharpen_per_octave,
-            "admission":format!("{:?}",cfg.admission),"select":format!("{:?}",cfg.select),"base":format!("{:?}",cfg.base),"mean_coarse":cfg.mean_coarse,
-            "hull":format!("{:?}",cfg.hull),"hull_lambda":cfg.hull_lambda,"hull_low_only":cfg.hull_low_only,"hull_from_level":cfg.hull_from_level,
-            "fallback":format!("{:?}",cfg.fallback),"fallback_k":cfg.fallback_k,"fallback_power":cfg.fallback_power,"significance_scale":cfg.significance_scale,
-            "resampler":"CatmullRom","demosaic":"MHC","space":"CameraLinear","fullres_gather":true,"exposure_stops":settings.exposure,"auto_exposure":false,
-            "confidence":settings.confidence,"photometric":"Off","gate_floor_enabled":gatefloor::enabled(),"measured_floor_bands":0,
-            "floor_fallback":"empty measured beta; existing per-band fixed beta","ca":"off","defect":"off","restoration":"unset"},
+        "noise":noise,"wb_f32":[4.0f32/3.0,1.0f32,5.0f32/3.0],"normalization":normalization,"config":config,
         "observer":{"mode":settings.observer,"excludes_planning_reads":true,"excludes_raw_prologue":true},"environment":environment,
-        "build":{"test_executable_sha256":hash_file(&exe)?,"bytes":fs::metadata(&exe)?.len(),"software":crate::SOFTWARE}});
+        "build":build});
     Ok((domain, fit, plan))
 }
 fn validate_plan(saved: &Value, recomputed: &Value) -> Result<()> {

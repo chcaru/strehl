@@ -580,8 +580,10 @@ fn independent_source_files(root: &Path) -> (Vec<PathBuf>, Vec<String>, Vec<Vec<
         fs::write(&path, &bytes).unwrap();
         decoded.push(
             bytes
-                .chunks_exact(2)
-                .map(|p| u16::from_le_bytes([p[0], p[1]]))
+                .as_chunks::<2>()
+                .0
+                .iter()
+                .map(|p| u16::from_le_bytes(*p))
                 .collect(),
         );
         hashes.push(digest(&bytes));
