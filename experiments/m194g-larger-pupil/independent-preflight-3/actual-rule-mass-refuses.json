@@ -1,0 +1,77 @@
+{
+  "status": "UNCOMMISSIONED_COST",
+  "width": 1,
+  "height": 1,
+  "frame_indices": [
+    0
+  ],
+  "arms": [
+    "primary"
+  ],
+  "frames": [
+    {
+      "arm": "primary",
+      "frame_index": 0,
+      "visited_cells": 0,
+      "branches": {
+        "foreground": 0,
+        "background": 0,
+        "numerical": 1
+      },
+      "roots": 4,
+      "low_points": 0,
+      "high_points": 0,
+      "angular_nodes": 0,
+      "maximum_intervals": 0,
+      "unsupported_selector_reason": null,
+      "integrator": {
+        "arm": "primary",
+        "angle_low": 16,
+        "angle_high": 32,
+        "cell_low": 4,
+        "cell_high": 8,
+        "pupil_tolerance": 0.00025,
+        "cell_tolerance": 0.00075,
+        "cell_point_tolerance": 4.6875e-05,
+        "angle_depth": 10,
+        "cell_depth": 6,
+        "point_limit": 4000000,
+        "angular_limit": 600000000,
+        "cpu_limit": 600,
+        "wall_limit": 1200,
+        "array_limit": 33554432,
+        "node_pair_limit": 32768
+      },
+      "status": "running",
+      "last_coordinate": [
+        0,
+        0
+      ]
+    }
+  ],
+  "completed_frames": 0,
+  "completed_cells": 0,
+  "error": "NumericalFailure('UNCOMMISSIONED_NUMERICS: relative cell rule mass')",
+  "traceback": "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\preflight.py\", line 234, in count_geometry\n    bound.render.validate_cell_rule(triangle, weights)\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\render.py\", line 537, in validate_cell_rule\n    raise NumericalFailure(\"UNCOMMISSIONED_NUMERICS: relative cell rule mass\")\nm194g_frozen_render.NumericalFailure: UNCOMMISSIONED_NUMERICS: relative cell rule mass\n",
+  "ordered_partial_stream_sha256": "f34a0bd5ba59b27fd986df147cd37942e977ecf5db08f0911f486cb0f89a9028",
+  "work": {
+    "limits": {
+      "whole_run_cpu_seconds": 60.0,
+      "whole_run_wall_seconds": 120.0,
+      "tracked_owned_ndarray_bytes": 33554432,
+      "per_frame_points_strictly_below": 8000000,
+      "per_frame_angular_nodes_strictly_below": 1200000000
+    },
+    "cpu_seconds": 0.0,
+    "wall_seconds": 0.0,
+    "frame_points": 0,
+    "frame_angular_nodes": 0,
+    "total_points": 0,
+    "total_angular_nodes": 0,
+    "frame_count": 1,
+    "check_calls": 12,
+    "tracked_peak_ndarray_bytes": 2305,
+    "tracked_peak_ndarrays": 13,
+    "array_scope": "unique reachable wrapper-owned ndarray backing allocations; excludes Python objects/RSS/frozen-helper transient temporaries"
+  }
+}

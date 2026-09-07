@@ -1,0 +1,583 @@
+{
+  "schema": "m194g-geometry-preflight-v1",
+  "status": "PASS_COST_ONLY",
+  "scope": "private synthetic completion stub; no intended geometry counted",
+  "invocation": {
+    "orig_argv": [
+      "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+      "-B",
+      "-X",
+      "faulthandler",
+      "-X",
+      "pycache_prefix=experiments/m194g-larger-pupil/work/independent-preflight-cache-3",
+      "experiments/m194g-larger-pupil/independent-preflight-controls.py",
+      "--output",
+      "experiments/m194g-larger-pupil/independent-preflight-3"
+    ],
+    "argv": [
+      "experiments/m194g-larger-pupil/independent-preflight-controls.py",
+      "--output",
+      "experiments/m194g-larger-pupil/independent-preflight-3"
+    ],
+    "xoptions": {
+      "faulthandler": true,
+      "pycache_prefix": "experiments/m194g-larger-pupil/work/independent-preflight-cache-3"
+    },
+    "executable": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "cwd": "C:\\dev\\blog\\death-of-software\\projects\\strehl"
+  },
+  "started_utc": "2026-09-07T16:48:30.354064+00:00",
+  "fixture": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\fixture.json",
+    "sha256": "fc36b5f252c5efeda1cba753312dd061ebf5583856ec45466f61b0f66dc31ef2",
+    "bytes": 1984
+  },
+  "fixture_record": {
+    "schema": "m194g-expected-fixture-v1",
+    "scope": "continuous shared-pupil scalar expected electrons; no noise or CFA authority",
+    "width": 320,
+    "height": 240,
+    "cell": "integer-centre-unit-square",
+    "dtype": "<f8",
+    "scene": {
+      "depths": [
+        1.0,
+        2.0
+      ],
+      "mask_normal": [
+        1.0,
+        -0.15
+      ],
+      "mask_offset": 142.0,
+      "mask_state": "half-plane",
+      "foreground": {
+        "constant": 15000.0,
+        "affine": [
+          0.0,
+          0.0
+        ],
+        "waves": [
+          {
+            "amplitude": 1400.0,
+            "frequency": [
+              0.045,
+              0.095
+            ],
+            "phase": 0.7
+          },
+          {
+            "amplitude": 700.0,
+            "frequency": [
+              0.17,
+              0.01
+            ],
+            "phase": 0.3
+          }
+        ]
+      },
+      "background": {
+        "constant": 12000.0,
+        "affine": [
+          0.0,
+          0.0
+        ],
+        "waves": [
+          {
+            "amplitude": 3200.0,
+            "frequency": [
+              0.08,
+              0.015
+            ],
+            "phase": 0.2
+          },
+          {
+            "amplitude": 1800.0,
+            "frequency": [
+              -0.035,
+              0.12
+            ],
+            "phase": 1.1
+          }
+        ]
+      }
+    },
+    "frame_indices": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "inverse_foci": [
+      0.5,
+      0.625,
+      0.75,
+      0.875,
+      1.0
+    ],
+    "K": 12.0,
+    "forward_similarity": {
+      "scale": 1.0,
+      "rotation": 0.0,
+      "centre": [
+        0.0,
+        0.0
+      ],
+      "translation": [
+        0.0,
+        0.0
+      ]
+    },
+    "reference_index": 2,
+    "gauge": "reference-2 native pixels; identity placements",
+    "arms": [
+      "primary",
+      "angle-refined",
+      "cell-refined"
+    ],
+    "selector_intermediate_bit_limit": 4096,
+    "preflight_limits": {
+      "whole_run_cpu_seconds": 60.0,
+      "whole_run_wall_seconds": 120.0,
+      "tracked_owned_ndarray_bytes": 33554432,
+      "per_frame_points_strictly_below": 8000000,
+      "per_frame_angular_nodes_strictly_below": 1200000000
+    },
+    "future_render_limits": {
+      "per_frame_points": 16000000,
+      "per_frame_angular_nodes": 2400000000,
+      "per_arm_cpu_seconds": 1800.0,
+      "per_arm_wall_seconds": 3600.0,
+      "tracked_owned_ndarray_bytes": 33554432,
+      "live_scalar_frames": 1,
+      "node_pairs": 32768
+    },
+    "future_float_bars_e": {
+      "maximum": 0.004,
+      "rms": 0.0008,
+      "author_refinement_maximum": 0.001,
+      "independent_refinement_maximum": 0.0005,
+      "fixed_boundary_abs_mask_height": 8.0
+    }
+  },
+  "sources_before": {
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\author-controls.py": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\author-controls.py",
+      "sha256": "c1f29b6680ee5161559fe498a81f13738c3d30124fa71e5fb79dce4fbe750ff7",
+      "bytes": 14068
+    },
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\design-sources.json": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\design-sources.json",
+      "sha256": "d7f488811494c4231b5cfc3ab2cb8ac672b6f0a481becc4e510b521e5a39f636",
+      "bytes": 2695
+    },
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\fixture.json": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\fixture.json",
+      "sha256": "fc36b5f252c5efeda1cba753312dd061ebf5583856ec45466f61b0f66dc31ef2",
+      "bytes": 1984
+    },
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\geometry.py": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\geometry.py",
+      "sha256": "24b812071b8b6189423b9792a22c55abd9a4f4a78921a9d558ab24489f1923b3",
+      "bytes": 6591
+    },
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-geometry-controls.py": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-geometry-controls.py",
+      "sha256": "0d258f9bccde6a2b64afc6d83a7105c7f6f12b2054fd9868fe4cad3eb32cb33d",
+      "bytes": 24616
+    },
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-geometry-preregister.md": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-geometry-preregister.md",
+      "sha256": "fecf46e8b79a87328d4e7e61ad975863cff082add8ed2154a3045a24c057fda7",
+      "bytes": 8327
+    },
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-preflight-controls-design.md": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-preflight-controls-design.md",
+      "sha256": "0dd8134ec6bb71e00c3a41369f4af549a0583e7395da3eea9b22e995a15cc6c7",
+      "bytes": 6909
+    },
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-preflight-controls.py": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-preflight-controls.py",
+      "sha256": "7d5872de9083359eaaadf5c6a2240ae14c76ca4c432b4b8b18d1db9cf47b1e9c",
+      "bytes": 32765
+    },
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-preflight-design-review.md": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-preflight-design-review.md",
+      "sha256": "fd8265226dec4fa398b8676eb6c0e79c150cf69bb24ec875bcd3c4a6bbae3e27",
+      "bytes": 7377
+    },
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\pinned-loader.py": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\pinned-loader.py",
+      "sha256": "222fab4a932fe236c120d8a48e4521747474e2ef57ba58781bf5c59f644f4f76",
+      "bytes": 2939
+    },
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\preflight.py": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\preflight.py",
+      "sha256": "829669612359e5f60a1610fbc36604eb4cef5647911df604124de9e13160b485",
+      "bytes": 22826
+    },
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\preregister.md": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\preregister.md",
+      "sha256": "d0c570ec892a2c3e40b90c0f7eef2a9ff0649dd53bc34adee6b6bc65280f14c8",
+      "bytes": 10645
+    }
+  },
+  "frozen_imports": {
+    "model.py": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\model.py",
+      "sha256": "a74cd9bd61ea2f717a185e86f725b5ed192431056a447581db0f8562cf9f70b8",
+      "bytes": 8015
+    },
+    "render.py": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\render.py",
+      "sha256": "487c1727ca3aab05dd66a7056fb368712ccaabbbe604818fdc8b47eda77b6e97",
+      "bytes": 32791
+    }
+  },
+  "local_imports": {
+    "loader_sha256": "222fab4a932fe236c120d8a48e4521747474e2ef57ba58781bf5c59f644f4f76",
+    "geometry": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\geometry.py",
+      "sha256": "24b812071b8b6189423b9792a22c55abd9a4f4a78921a9d558ab24489f1923b3",
+      "bytes": 6591
+    }
+  },
+  "versions": {
+    "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+    "numpy": "2.4.4"
+  },
+  "thread_environment": {
+    "OMP_NUM_THREADS": "2",
+    "OPENBLAS_NUM_THREADS": "2",
+    "MKL_NUM_THREADS": "2",
+    "NUMEXPR_NUM_THREADS": "2"
+  },
+  "fixture_only": true,
+  "width": 320,
+  "height": 240,
+  "frame_indices": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "arms": [
+    "primary",
+    "angle-refined",
+    "cell-refined"
+  ],
+  "frames": [
+    {
+      "arm": "primary",
+      "frame_index": 0,
+      "status": "complete",
+      "visited_cells": 76800,
+      "branches": {
+        "foreground": 76800,
+        "background": 0,
+        "numerical": 0
+      },
+      "roots": 0,
+      "low_points": 0,
+      "high_points": 0,
+      "angular_nodes": 0
+    },
+    {
+      "arm": "primary",
+      "frame_index": 1,
+      "status": "complete",
+      "visited_cells": 76800,
+      "branches": {
+        "foreground": 76800,
+        "background": 0,
+        "numerical": 0
+      },
+      "roots": 0,
+      "low_points": 0,
+      "high_points": 0,
+      "angular_nodes": 0
+    },
+    {
+      "arm": "primary",
+      "frame_index": 2,
+      "status": "complete",
+      "visited_cells": 76800,
+      "branches": {
+        "foreground": 76800,
+        "background": 0,
+        "numerical": 0
+      },
+      "roots": 0,
+      "low_points": 0,
+      "high_points": 0,
+      "angular_nodes": 0
+    },
+    {
+      "arm": "primary",
+      "frame_index": 3,
+      "status": "complete",
+      "visited_cells": 76800,
+      "branches": {
+        "foreground": 76800,
+        "background": 0,
+        "numerical": 0
+      },
+      "roots": 0,
+      "low_points": 0,
+      "high_points": 0,
+      "angular_nodes": 0
+    },
+    {
+      "arm": "primary",
+      "frame_index": 4,
+      "status": "complete",
+      "visited_cells": 76800,
+      "branches": {
+        "foreground": 76800,
+        "background": 0,
+        "numerical": 0
+      },
+      "roots": 0,
+      "low_points": 0,
+      "high_points": 0,
+      "angular_nodes": 0
+    },
+    {
+      "arm": "angle-refined",
+      "frame_index": 0,
+      "status": "complete",
+      "visited_cells": 76800,
+      "branches": {
+        "foreground": 76800,
+        "background": 0,
+        "numerical": 0
+      },
+      "roots": 0,
+      "low_points": 0,
+      "high_points": 0,
+      "angular_nodes": 0
+    },
+    {
+      "arm": "angle-refined",
+      "frame_index": 1,
+      "status": "complete",
+      "visited_cells": 76800,
+      "branches": {
+        "foreground": 76800,
+        "background": 0,
+        "numerical": 0
+      },
+      "roots": 0,
+      "low_points": 0,
+      "high_points": 0,
+      "angular_nodes": 0
+    },
+    {
+      "arm": "angle-refined",
+      "frame_index": 2,
+      "status": "complete",
+      "visited_cells": 76800,
+      "branches": {
+        "foreground": 76800,
+        "background": 0,
+        "numerical": 0
+      },
+      "roots": 0,
+      "low_points": 0,
+      "high_points": 0,
+      "angular_nodes": 0
+    },
+    {
+      "arm": "angle-refined",
+      "frame_index": 3,
+      "status": "complete",
+      "visited_cells": 76800,
+      "branches": {
+        "foreground": 76800,
+        "background": 0,
+        "numerical": 0
+      },
+      "roots": 0,
+      "low_points": 0,
+      "high_points": 0,
+      "angular_nodes": 0
+    },
+    {
+      "arm": "angle-refined",
+      "frame_index": 4,
+      "status": "complete",
+      "visited_cells": 76800,
+      "branches": {
+        "foreground": 76800,
+        "background": 0,
+        "numerical": 0
+      },
+      "roots": 0,
+      "low_points": 0,
+      "high_points": 0,
+      "angular_nodes": 0
+    },
+    {
+      "arm": "cell-refined",
+      "frame_index": 0,
+      "status": "complete",
+      "visited_cells": 76800,
+      "branches": {
+        "foreground": 76800,
+        "background": 0,
+        "numerical": 0
+      },
+      "roots": 0,
+      "low_points": 0,
+      "high_points": 0,
+      "angular_nodes": 0
+    },
+    {
+      "arm": "cell-refined",
+      "frame_index": 1,
+      "status": "complete",
+      "visited_cells": 76800,
+      "branches": {
+        "foreground": 76800,
+        "background": 0,
+        "numerical": 0
+      },
+      "roots": 0,
+      "low_points": 0,
+      "high_points": 0,
+      "angular_nodes": 0
+    },
+    {
+      "arm": "cell-refined",
+      "frame_index": 2,
+      "status": "complete",
+      "visited_cells": 76800,
+      "branches": {
+        "foreground": 76800,
+        "background": 0,
+        "numerical": 0
+      },
+      "roots": 0,
+      "low_points": 0,
+      "high_points": 0,
+      "angular_nodes": 0
+    },
+    {
+      "arm": "cell-refined",
+      "frame_index": 3,
+      "status": "complete",
+      "visited_cells": 76800,
+      "branches": {
+        "foreground": 76800,
+        "background": 0,
+        "numerical": 0
+      },
+      "roots": 0,
+      "low_points": 0,
+      "high_points": 0,
+      "angular_nodes": 0
+    },
+    {
+      "arm": "cell-refined",
+      "frame_index": 4,
+      "status": "complete",
+      "visited_cells": 76800,
+      "branches": {
+        "foreground": 76800,
+        "background": 0,
+        "numerical": 0
+      },
+      "roots": 0,
+      "low_points": 0,
+      "high_points": 0,
+      "angular_nodes": 0
+    }
+  ],
+  "completed_frames": 15,
+  "completed_cells": 1152000,
+  "ordered_stream_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+  "work": {
+    "limits": {
+      "whole_run_cpu_seconds": 60.0,
+      "whole_run_wall_seconds": 120.0,
+      "tracked_owned_ndarray_bytes": 33554432,
+      "per_frame_points_strictly_below": 8000000,
+      "per_frame_angular_nodes_strictly_below": 1200000000
+    },
+    "cpu_seconds": 0.0,
+    "wall_seconds": 0.0,
+    "frame_points": 0,
+    "frame_angular_nodes": 0,
+    "total_points": 0,
+    "total_angular_nodes": 0,
+    "frame_count": 15,
+    "check_calls": 4,
+    "tracked_peak_ndarray_bytes": 0,
+    "tracked_peak_ndarrays": 0,
+    "array_scope": "unique reachable wrapper-owned ndarray backing allocations; excludes Python objects/RSS/frozen-helper transient temporaries"
+  },
+  "sources_after": {
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\author-controls.py": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\author-controls.py",
+      "sha256": "c1f29b6680ee5161559fe498a81f13738c3d30124fa71e5fb79dce4fbe750ff7",
+      "bytes": 14068
+    },
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\design-sources.json": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\design-sources.json",
+      "sha256": "d7f488811494c4231b5cfc3ab2cb8ac672b6f0a481becc4e510b521e5a39f636",
+      "bytes": 2695
+    },
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\fixture.json": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\fixture.json",
+      "sha256": "fc36b5f252c5efeda1cba753312dd061ebf5583856ec45466f61b0f66dc31ef2",
+      "bytes": 1984
+    },
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\geometry.py": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\geometry.py",
+      "sha256": "24b812071b8b6189423b9792a22c55abd9a4f4a78921a9d558ab24489f1923b3",
+      "bytes": 6591
+    },
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-geometry-controls.py": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-geometry-controls.py",
+      "sha256": "0d258f9bccde6a2b64afc6d83a7105c7f6f12b2054fd9868fe4cad3eb32cb33d",
+      "bytes": 24616
+    },
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-geometry-preregister.md": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-geometry-preregister.md",
+      "sha256": "fecf46e8b79a87328d4e7e61ad975863cff082add8ed2154a3045a24c057fda7",
+      "bytes": 8327
+    },
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-preflight-controls-design.md": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-preflight-controls-design.md",
+      "sha256": "0dd8134ec6bb71e00c3a41369f4af549a0583e7395da3eea9b22e995a15cc6c7",
+      "bytes": 6909
+    },
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-preflight-controls.py": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-preflight-controls.py",
+      "sha256": "7d5872de9083359eaaadf5c6a2240ae14c76ca4c432b4b8b18d1db9cf47b1e9c",
+      "bytes": 32765
+    },
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-preflight-design-review.md": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-preflight-design-review.md",
+      "sha256": "fd8265226dec4fa398b8676eb6c0e79c150cf69bb24ec875bcd3c4a6bbae3e27",
+      "bytes": 7377
+    },
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\pinned-loader.py": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\pinned-loader.py",
+      "sha256": "222fab4a932fe236c120d8a48e4521747474e2ef57ba58781bf5c59f644f4f76",
+      "bytes": 2939
+    },
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\preflight.py": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\preflight.py",
+      "sha256": "829669612359e5f60a1610fbc36604eb4cef5647911df604124de9e13160b485",
+      "bytes": 22826
+    },
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\preregister.md": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\preregister.md",
+      "sha256": "d0c570ec892a2c3e40b90c0f7eef2a9ff0649dd53bc34adee6b6bc65280f14c8",
+      "bytes": 10645
+    }
+  },
+  "ended_utc": "2026-09-07T16:48:30.389597+00:00"
+}

@@ -1,0 +1,692 @@
+[
+  {
+    "name": "intended-fixture-external-pin",
+    "passed": true,
+    "detail": {
+      "sha256": "fc36b5f252c5efeda1cba753312dd061ebf5583856ec45466f61b0f66dc31ef2"
+    }
+  },
+  {
+    "name": "intended-shape-frame-arm-consumer",
+    "passed": true,
+    "detail": {
+      "scope": "literal preregistration consistency; not optical evidence"
+    }
+  },
+  {
+    "name": "intended-geometry-and-limits",
+    "passed": true,
+    "detail": {
+      "scope": "fixed input identity and resource contract"
+    }
+  },
+  {
+    "name": "frozen-loader-restores-existing-bare-model",
+    "passed": true,
+    "detail": {}
+  },
+  {
+    "name": "actual-render-imports-actual-pinned-model",
+    "passed": true,
+    "detail": {
+      "model_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\model.py",
+      "render_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\render.py"
+    }
+  },
+  {
+    "name": "loaded-original-source-hashes-current",
+    "passed": true,
+    "detail": {}
+  },
+  {
+    "name": "unchanged-private-source-copy-companion",
+    "passed": true,
+    "detail": {}
+  },
+  {
+    "name": "changed-model.py-before-import",
+    "passed": true,
+    "detail": {
+      "refusal": "ValueError: pinned source mismatch: C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-preflight-3\\private-frozen-copy\\model.py"
+    }
+  },
+  {
+    "name": "changed-model.py-after-import",
+    "passed": true,
+    "detail": {
+      "refusal": "ValueError: pinned source mismatch: C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-preflight-3\\private-frozen-copy\\model.py"
+    }
+  },
+  {
+    "name": "failed-load-restores-bare-model-model.py",
+    "passed": true,
+    "detail": {}
+  },
+  {
+    "name": "changed-render.py-before-import",
+    "passed": true,
+    "detail": {
+      "refusal": "ValueError: pinned source mismatch: C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-preflight-3\\private-frozen-copy\\render.py"
+    }
+  },
+  {
+    "name": "changed-render.py-after-import",
+    "passed": true,
+    "detail": {
+      "refusal": "ValueError: pinned source mismatch: C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-preflight-3\\private-frozen-copy\\render.py"
+    }
+  },
+  {
+    "name": "failed-load-restores-bare-model-render.py",
+    "passed": true,
+    "detail": {}
+  },
+  {
+    "name": "missing-model-before-import",
+    "passed": true,
+    "detail": {
+      "refusal": "FileNotFoundError: [WinError 2] The system cannot find the file specified: 'C:\\\\dev\\\\blog\\\\death-of-software\\\\projects\\\\strehl\\\\experiments\\\\m194g-larger-pupil\\\\independent-preflight-3\\\\private-frozen-copy\\\\model.py'"
+    }
+  },
+  {
+    "name": "missing-source-error-preserves-bare-model",
+    "passed": true,
+    "detail": {}
+  },
+  {
+    "name": "restored-source-copy-final-companion",
+    "passed": true,
+    "detail": {}
+  },
+  {
+    "name": "actual-intended-fixture-load-companion",
+    "passed": true,
+    "detail": {}
+  },
+  {
+    "name": "wrong-schema-stale-fixture-pin",
+    "passed": true,
+    "detail": {
+      "refusal": "ValueError: pinned source mismatch: C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-preflight-3\\wrong-schema.json"
+    }
+  },
+  {
+    "name": "wrong-schema-rehashed-unregistered-fixture",
+    "passed": true,
+    "detail": {
+      "refusal": "ValueError: external fixture binding differs from registered fixture"
+    }
+  },
+  {
+    "name": "unknown-field-stale-fixture-pin",
+    "passed": true,
+    "detail": {
+      "refusal": "ValueError: pinned source mismatch: C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-preflight-3\\unknown-field.json"
+    }
+  },
+  {
+    "name": "unknown-field-rehashed-unregistered-fixture",
+    "passed": true,
+    "detail": {
+      "refusal": "ValueError: external fixture binding differs from registered fixture"
+    }
+  },
+  {
+    "name": "missing-scene-stale-fixture-pin",
+    "passed": true,
+    "detail": {
+      "refusal": "ValueError: pinned source mismatch: C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-preflight-3\\missing-scene.json"
+    }
+  },
+  {
+    "name": "missing-scene-rehashed-unregistered-fixture",
+    "passed": true,
+    "detail": {
+      "refusal": "ValueError: external fixture binding differs from registered fixture"
+    }
+  },
+  {
+    "name": "bool-width-stale-fixture-pin",
+    "passed": true,
+    "detail": {
+      "refusal": "ValueError: pinned source mismatch: C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-preflight-3\\bool-width.json"
+    }
+  },
+  {
+    "name": "bool-width-rehashed-unregistered-fixture",
+    "passed": true,
+    "detail": {
+      "refusal": "ValueError: external fixture binding differs from registered fixture"
+    }
+  },
+  {
+    "name": "float-width-stale-fixture-pin",
+    "passed": true,
+    "detail": {
+      "refusal": "ValueError: pinned source mismatch: C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-preflight-3\\float-width.json"
+    }
+  },
+  {
+    "name": "float-width-rehashed-unregistered-fixture",
+    "passed": true,
+    "detail": {
+      "refusal": "ValueError: external fixture binding differs from registered fixture"
+    }
+  },
+  {
+    "name": "duplicate-frame-stale-fixture-pin",
+    "passed": true,
+    "detail": {
+      "refusal": "ValueError: pinned source mismatch: C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-preflight-3\\duplicate-frame.json"
+    }
+  },
+  {
+    "name": "duplicate-frame-rehashed-unregistered-fixture",
+    "passed": true,
+    "detail": {
+      "refusal": "ValueError: external fixture binding differs from registered fixture"
+    }
+  },
+  {
+    "name": "duplicate-arm-stale-fixture-pin",
+    "passed": true,
+    "detail": {
+      "refusal": "ValueError: pinned source mismatch: C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-preflight-3\\duplicate-arm.json"
+    }
+  },
+  {
+    "name": "duplicate-arm-rehashed-unregistered-fixture",
+    "passed": true,
+    "detail": {
+      "refusal": "ValueError: external fixture binding differs from registered fixture"
+    }
+  },
+  {
+    "name": "changed-scene-phase-stale-fixture-pin",
+    "passed": true,
+    "detail": {
+      "refusal": "ValueError: pinned source mismatch: C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-preflight-3\\changed-scene-phase.json"
+    }
+  },
+  {
+    "name": "changed-scene-phase-rehashed-unregistered-fixture",
+    "passed": true,
+    "detail": {
+      "refusal": "ValueError: external fixture binding differs from registered fixture"
+    }
+  },
+  {
+    "name": "wrong-external-fixture-pin",
+    "passed": true,
+    "detail": {
+      "refusal": "ValueError: external fixture binding differs from registered fixture"
+    }
+  },
+  {
+    "name": "actual-budget-points-just-below",
+    "passed": true,
+    "detail": {
+      "consumed": 16,
+      "strict_limit": 17
+    }
+  },
+  {
+    "name": "actual-budget-points-equality",
+    "passed": true,
+    "detail": {
+      "refusal": "CostFailure: UNCOMMISSIONED_COST: strict per-frame work ceiling"
+    }
+  },
+  {
+    "name": "actual-budget-nodes-just-below",
+    "passed": true,
+    "detail": {
+      "consumed": 16,
+      "strict_limit": 17
+    }
+  },
+  {
+    "name": "actual-budget-nodes-equality",
+    "passed": true,
+    "detail": {
+      "refusal": "CostFailure: UNCOMMISSIONED_COST: strict per-frame work ceiling"
+    }
+  },
+  {
+    "name": "actual-budget-cpu-does-not-reset-with-frame",
+    "passed": true,
+    "detail": {
+      "refusal": "CostFailure: UNCOMMISSIONED_COST: whole-run time ceiling"
+    }
+  },
+  {
+    "name": "actual-budget-wall-does-not-reset-with-frame",
+    "passed": true,
+    "detail": {
+      "refusal": "CostFailure: UNCOMMISSIONED_COST: whole-run time ceiling"
+    }
+  },
+  {
+    "name": "actual-budget-two-views-one-1024-byte-owner",
+    "passed": true,
+    "detail": {
+      "backing_bytes": 1024
+    }
+  },
+  {
+    "name": "actual-budget-second-owned-allocation-refuses",
+    "passed": true,
+    "detail": {
+      "refusal": "CostFailure: UNCOMMISSIONED_COST: tracked owned-array ceiling"
+    }
+  },
+  {
+    "name": "actual-budget-released-owner-no-longer-live",
+    "passed": true,
+    "detail": {
+      "live_bytes": 1024
+    }
+  },
+  {
+    "name": "actual-insufficient-rational-budget-falls-back-unchanged",
+    "passed": true,
+    "detail": {
+      "dispositions": [
+        "numerical",
+        "numerical",
+        "numerical"
+      ],
+      "reason": "rational intermediate bit ceiling"
+    }
+  },
+  {
+    "name": "invalid-rational-budget-0",
+    "passed": true,
+    "detail": {
+      "refusal": "ValueError: rational bit limit must be1..4096"
+    }
+  },
+  {
+    "name": "invalid-rational-budget--1",
+    "passed": true,
+    "detail": {
+      "refusal": "ValueError: rational bit limit must be1..4096"
+    }
+  },
+  {
+    "name": "invalid-rational-budget-True",
+    "passed": true,
+    "detail": {
+      "refusal": "ValueError: rational bit limit must be1..4096"
+    }
+  },
+  {
+    "name": "invalid-rational-budget-4097",
+    "passed": true,
+    "detail": {
+      "refusal": "ValueError: rational bit limit must be1..4096"
+    }
+  },
+  {
+    "name": "invalid-rational-budget-8.0",
+    "passed": true,
+    "detail": {
+      "refusal": "ValueError: rational bit limit must be1..4096"
+    }
+  },
+  {
+    "name": "actual-private-exact-coverage-and-branch-oracle",
+    "passed": true,
+    "detail": {
+      "cells": 810,
+      "distinct_cells": 810
+    }
+  },
+  {
+    "name": "private-fixture-all-branches-and-defocus-signs-occur",
+    "passed": true,
+    "detail": {
+      "branches": {
+        "foreground": 282,
+        "background": 306,
+        "numerical": 222
+      }
+    }
+  },
+  {
+    "name": "actual-low-high-root-cut-counts-match-independent-loop",
+    "passed": true,
+    "detail": {
+      "frame_rows": 15,
+      "reference": "private-reference.json",
+      "actual": "private-actual.json"
+    }
+  },
+  {
+    "name": "actual-counter-consumes-live-rules-and-point-helper",
+    "passed": true,
+    "detail": {
+      "cut_points": 167040,
+      "cut_batches": 2088,
+      "radiance_calls": 0
+    }
+  },
+  {
+    "name": "reordered-valid-coverage-counts-not-order-digest",
+    "passed": true,
+    "detail": {
+      "normal_last": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "reversed_last": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "scope": "counts/geometry equal; actual final coordinate and ordered digest legitimately differ"
+    }
+  },
+  {
+    "name": "missing-last-cell",
+    "passed": true,
+    "detail": {
+      "refusal": "CostFailure: UNCOMMISSIONED_COST: incomplete coordinate coverage"
+    }
+  },
+  {
+    "name": "duplicate-replaces-missing-cell",
+    "passed": true,
+    "detail": {
+      "refusal": "CostFailure: UNCOMMISSIONED_COST: duplicate or out-of-range coordinate coverage"
+    }
+  },
+  {
+    "name": "outside-grid",
+    "passed": true,
+    "detail": {
+      "refusal": "CostFailure: UNCOMMISSIONED_COST: duplicate or out-of-range coordinate coverage"
+    }
+  },
+  {
+    "name": "bool-coordinate",
+    "passed": true,
+    "detail": {
+      "refusal": "CostFailure: UNCOMMISSIONED_COST: integer coordinate enumeration required"
+    }
+  },
+  {
+    "name": "float-coordinate",
+    "passed": true,
+    "detail": {
+      "refusal": "CostFailure: UNCOMMISSIONED_COST: integer coordinate enumeration required"
+    }
+  },
+  {
+    "name": "duplicate-original-frame-index",
+    "passed": true,
+    "detail": {
+      "refusal": "ValueError: unique original indices0..4 required"
+    }
+  },
+  {
+    "name": "duplicate-arm",
+    "passed": true,
+    "detail": {
+      "refusal": "ValueError: nonempty unique bounded frame/arm population required"
+    }
+  },
+  {
+    "name": "actual-analytic-cpu-limit-across-cells",
+    "passed": true,
+    "detail": {
+      "refusal": "CostFailure: UNCOMMISSIONED_COST: whole-run time ceiling"
+    }
+  },
+  {
+    "name": "actual-analytic-cpu-limit-across-frames",
+    "passed": true,
+    "detail": {
+      "refusal": "CostFailure: UNCOMMISSIONED_COST: whole-run time ceiling"
+    }
+  },
+  {
+    "name": "actual-analytic-cpu-limit-across-arms",
+    "passed": true,
+    "detail": {
+      "refusal": "CostFailure: UNCOMMISSIONED_COST: whole-run time ceiling"
+    }
+  },
+  {
+    "name": "actual-analytic-wall-limit-across-cells",
+    "passed": true,
+    "detail": {
+      "refusal": "CostFailure: UNCOMMISSIONED_COST: whole-run time ceiling"
+    }
+  },
+  {
+    "name": "actual-analytic-wall-limit-across-frames",
+    "passed": true,
+    "detail": {
+      "refusal": "CostFailure: UNCOMMISSIONED_COST: whole-run time ceiling"
+    }
+  },
+  {
+    "name": "actual-analytic-wall-limit-across-arms",
+    "passed": true,
+    "detail": {
+      "refusal": "CostFailure: UNCOMMISSIONED_COST: whole-run time ceiling"
+    }
+  },
+  {
+    "name": "actual-missing-root-refuses",
+    "passed": true,
+    "detail": {
+      "refusal": "CostFailure: UNCOMMISSIONED_COST: cell root area coverage"
+    }
+  },
+  {
+    "name": "actual-rule-mass-refuses",
+    "passed": true,
+    "detail": {
+      "refusal": "CostFailure: UNCOMMISSIONED_COST: UNCOMMISSIONED_NUMERICS: relative cell rule mass"
+    }
+  },
+  {
+    "name": "actual-low-point-omission-refuses",
+    "passed": true,
+    "detail": {
+      "refusal": "CostFailure: UNCOMMISSIONED_COST: consumed cell rule point count"
+    }
+  },
+  {
+    "name": "actual-point-cut-omission-refuses",
+    "passed": true,
+    "detail": {
+      "refusal": "CostFailure: UNCOMMISSIONED_COST: missing consumed point cut"
+    }
+  },
+  {
+    "name": "actual-count-per_frame_points_strictly_below-crossing",
+    "passed": true,
+    "detail": {
+      "refusal": "CostFailure: UNCOMMISSIONED_COST: strict per-frame work ceiling"
+    }
+  },
+  {
+    "name": "actual-count-per_frame_angular_nodes_strictly_below-crossing",
+    "passed": true,
+    "detail": {
+      "refusal": "CostFailure: UNCOMMISSIONED_COST: strict per-frame work ceiling"
+    }
+  },
+  {
+    "name": "actual-count-tracked_owned_ndarray_bytes-crossing",
+    "passed": true,
+    "detail": {
+      "refusal": "CostFailure: UNCOMMISSIONED_COST: tracked owned-array ceiling"
+    }
+  },
+  {
+    "name": "private-controller-valid-completion-companion",
+    "passed": true,
+    "detail": {
+      "fixture_only": true
+    }
+  },
+  {
+    "name": "private-controller-omitted-frame-refuses",
+    "passed": true,
+    "detail": {
+      "fixture_only": true,
+      "error": "CostFailure('UNCOMMISSIONED_COST: intended frame/arm order mismatch')"
+    }
+  },
+  {
+    "name": "private-controller-omitted-arm-refuses",
+    "passed": true,
+    "detail": {
+      "fixture_only": true,
+      "error": "CostFailure('UNCOMMISSIONED_COST: intended population completion mismatch')"
+    }
+  },
+  {
+    "name": "private-controller-duplicate-frame-replaces-missing-refuses",
+    "passed": true,
+    "detail": {
+      "fixture_only": true,
+      "error": "CostFailure('UNCOMMISSIONED_COST: intended frame/arm order mismatch')"
+    }
+  },
+  {
+    "name": "private-controller-wrong-shape-refuses",
+    "passed": true,
+    "detail": {
+      "fixture_only": true,
+      "error": "CostFailure('UNCOMMISSIONED_COST: intended population completion mismatch')"
+    }
+  },
+  {
+    "name": "private-controller-wrong-completed-cell-count-refuses",
+    "passed": true,
+    "detail": {
+      "fixture_only": true,
+      "error": "CostFailure('UNCOMMISSIONED_COST: intended population completion mismatch')"
+    }
+  },
+  {
+    "name": "private-controller-missing-visited-cell-refuses",
+    "passed": true,
+    "detail": {
+      "fixture_only": true,
+      "error": "CostFailure('UNCOMMISSIONED_COST: intended frame coverage mismatch')"
+    }
+  },
+  {
+    "name": "private-controller-wrong-live-budget-frame-count-refuses",
+    "passed": true,
+    "detail": {
+      "fixture_only": true,
+      "error": "CostFailure('UNCOMMISSIONED_COST: intended population completion mismatch')"
+    }
+  },
+  {
+    "name": "private-controller-omitted-low-work-from-total-refuses",
+    "passed": true,
+    "detail": {
+      "fixture_only": true,
+      "error": "CostFailure('UNCOMMISSIONED_COST: intended total work mismatch')"
+    }
+  },
+  {
+    "name": "private-controller-float-width-refuses",
+    "passed": true,
+    "detail": {
+      "fixture_only": true,
+      "error": "CostFailure('UNCOMMISSIONED_COST: intended completion types mismatch')"
+    }
+  },
+  {
+    "name": "private-controller-float-completed-cell-count-refuses",
+    "passed": true,
+    "detail": {
+      "fixture_only": true,
+      "error": "CostFailure('UNCOMMISSIONED_COST: intended completion types mismatch')"
+    }
+  },
+  {
+    "name": "private-controller-bool-frame-index-refuses",
+    "passed": true,
+    "detail": {
+      "fixture_only": true,
+      "error": "CostFailure('UNCOMMISSIONED_COST: intended row integer types mismatch')"
+    }
+  },
+  {
+    "name": "private-controller-float-row-visited-refuses",
+    "passed": true,
+    "detail": {
+      "fixture_only": true,
+      "error": "CostFailure('UNCOMMISSIONED_COST: intended row integer types mismatch')"
+    }
+  },
+  {
+    "name": "private-controller-bool-top-frame-index-refuses",
+    "passed": true,
+    "detail": {
+      "fixture_only": true,
+      "error": "CostFailure('UNCOMMISSIONED_COST: intended completion types mismatch')"
+    }
+  },
+  {
+    "name": "private-controller-float-row-low-count-refuses",
+    "passed": true,
+    "detail": {
+      "fixture_only": true,
+      "error": "CostFailure('UNCOMMISSIONED_COST: intended row integer types mismatch')"
+    }
+  },
+  {
+    "name": "private-controller-cancelling-negative-work-refuses",
+    "passed": true,
+    "detail": {
+      "fixture_only": true,
+      "error": "CostFailure('UNCOMMISSIONED_COST: intended row integer types mismatch')"
+    }
+  },
+  {
+    "name": "private-controller-current-source-change-refuses",
+    "passed": true,
+    "detail": {
+      "error": "CostFailure('UNCOMMISSIONED_COST: source/config changed during preflight')"
+    }
+  },
+  {
+    "name": "private-controller-final-source-capture-failure-retained",
+    "passed": true,
+    "detail": {}
+  },
+  {
+    "name": "private-controller-original-error-not-overwritten-by-capture-failure",
+    "passed": true,
+    "detail": {}
+  },
+  {
+    "name": "private-controller-valid-final-companion",
+    "passed": true,
+    "detail": {
+      "fixture_only": true
+    }
+  }
+]

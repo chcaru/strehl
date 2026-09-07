@@ -1,0 +1,115 @@
+{
+  "status": "PASS_COST_ONLY",
+  "width": 2,
+  "height": 1,
+  "frame_indices": [
+    0,
+    1
+  ],
+  "arms": [
+    "primary"
+  ],
+  "frames": [
+    {
+      "arm": "primary",
+      "frame_index": 0,
+      "visited_cells": 2,
+      "branches": {
+        "foreground": 2,
+        "background": 0,
+        "numerical": 0
+      },
+      "roots": 0,
+      "low_points": 0,
+      "high_points": 0,
+      "angular_nodes": 0,
+      "maximum_intervals": 0,
+      "unsupported_selector_reason": null,
+      "integrator": {
+        "arm": "primary",
+        "angle_low": 16,
+        "angle_high": 32,
+        "cell_low": 4,
+        "cell_high": 8,
+        "pupil_tolerance": 0.00025,
+        "cell_tolerance": 0.00075,
+        "cell_point_tolerance": 4.6875e-05,
+        "angle_depth": 10,
+        "cell_depth": 6,
+        "point_limit": 4000000,
+        "angular_limit": 600000000,
+        "cpu_limit": 600,
+        "wall_limit": 1200,
+        "array_limit": 33554432,
+        "node_pair_limit": 32768
+      },
+      "status": "complete",
+      "last_coordinate": [
+        0,
+        0
+      ]
+    },
+    {
+      "arm": "primary",
+      "frame_index": 1,
+      "visited_cells": 2,
+      "branches": {
+        "foreground": 2,
+        "background": 0,
+        "numerical": 0
+      },
+      "roots": 0,
+      "low_points": 0,
+      "high_points": 0,
+      "angular_nodes": 0,
+      "maximum_intervals": 0,
+      "unsupported_selector_reason": null,
+      "integrator": {
+        "arm": "primary",
+        "angle_low": 16,
+        "angle_high": 32,
+        "cell_low": 4,
+        "cell_high": 8,
+        "pupil_tolerance": 0.00025,
+        "cell_tolerance": 0.00075,
+        "cell_point_tolerance": 4.6875e-05,
+        "angle_depth": 10,
+        "cell_depth": 6,
+        "point_limit": 4000000,
+        "angular_limit": 600000000,
+        "cpu_limit": 600,
+        "wall_limit": 1200,
+        "array_limit": 33554432,
+        "node_pair_limit": 32768
+      },
+      "status": "complete",
+      "last_coordinate": [
+        0,
+        0
+      ]
+    }
+  ],
+  "completed_frames": 2,
+  "completed_cells": 4,
+  "ordered_stream_sha256": "96ec889693158120d499a09529b70a4c58eccd589d3781f11431eb52d8503b20",
+  "work": {
+    "limits": {
+      "whole_run_cpu_seconds": 60.0,
+      "whole_run_wall_seconds": 120.0,
+      "tracked_owned_ndarray_bytes": 33554432,
+      "per_frame_points_strictly_below": 8000000,
+      "per_frame_angular_nodes_strictly_below": 1200000000
+    },
+    "cpu_seconds": 0.0,
+    "wall_seconds": 0.0,
+    "frame_points": 0,
+    "frame_angular_nodes": 0,
+    "total_points": 0,
+    "total_angular_nodes": 0,
+    "frame_count": 2,
+    "check_calls": 21,
+    "tracked_peak_ndarray_bytes": 32,
+    "tracked_peak_ndarrays": 1,
+    "array_scope": "unique reachable wrapper-owned ndarray backing allocations; excludes Python objects/RSS/frozen-helper transient temporaries"
+  }
+}

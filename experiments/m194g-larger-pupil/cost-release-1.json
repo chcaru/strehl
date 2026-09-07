@@ -1,0 +1,111 @@
+{
+  "schema": "m194g-cost-release-v1",
+  "scope": "geometry-only intended cost count; no radiance or float authority",
+  "source_checkpoint": "dbf997d9",
+  "controls": [
+    {
+      "path": "experiments/m194g-larger-pupil/author-controls-2/result.json",
+      "sha256": "d6451d9a854f4d7b90e4eae5e391be5b966a902c65b87af377530b65d0934f04",
+      "bytes": 14317,
+      "checks": 41
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/independent-geometry-controls-2/result.json",
+      "sha256": "a178a9d32f49b8f2b2af8737f7285de89d9ea70abe0e3be7cf5bb9002c3796b4",
+      "bytes": 480044,
+      "checks": 373
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/independent-preflight-3/result.json",
+      "sha256": "4b7320ed7382b61a8c581d93bd565283a749394530540ca23c7503db5372594d",
+      "bytes": 24718,
+      "checks": 94
+    }
+  ],
+  "files": [
+    {
+      "path": "experiments/m194e-joint-pupil/model.py",
+      "sha256": "a74cd9bd61ea2f717a185e86f725b5ed192431056a447581db0f8562cf9f70b8",
+      "bytes": 8015
+    },
+    {
+      "path": "experiments/m194e-joint-pupil/render.py",
+      "sha256": "487c1727ca3aab05dd66a7056fb368712ccaabbbe604818fdc8b47eda77b6e97",
+      "bytes": 32791
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/author-controls.py",
+      "sha256": "c1f29b6680ee5161559fe498a81f13738c3d30124fa71e5fb79dce4fbe750ff7",
+      "bytes": 14068
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/design-sources.json",
+      "sha256": "d7f488811494c4231b5cfc3ab2cb8ac672b6f0a481becc4e510b521e5a39f636",
+      "bytes": 2695
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/fixture.json",
+      "sha256": "fc36b5f252c5efeda1cba753312dd061ebf5583856ec45466f61b0f66dc31ef2",
+      "bytes": 1984
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/geometry.py",
+      "sha256": "24b812071b8b6189423b9792a22c55abd9a4f4a78921a9d558ab24489f1923b3",
+      "bytes": 6591
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/independent-geometry-controls.py",
+      "sha256": "0d258f9bccde6a2b64afc6d83a7105c7f6f12b2054fd9868fe4cad3eb32cb33d",
+      "bytes": 24616
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/independent-geometry-preregister.md",
+      "sha256": "fecf46e8b79a87328d4e7e61ad975863cff082add8ed2154a3045a24c057fda7",
+      "bytes": 8327
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/independent-preflight-controls-design.md",
+      "sha256": "0dd8134ec6bb71e00c3a41369f4af549a0583e7395da3eea9b22e995a15cc6c7",
+      "bytes": 6909
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/independent-preflight-controls.py",
+      "sha256": "7d5872de9083359eaaadf5c6a2240ae14c76ca4c432b4b8b18d1db9cf47b1e9c",
+      "bytes": 32765
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/independent-preflight-design-review.md",
+      "sha256": "fd8265226dec4fa398b8676eb6c0e79c150cf69bb24ec875bcd3c4a6bbae3e27",
+      "bytes": 7377
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/pinned-loader.py",
+      "sha256": "222fab4a932fe236c120d8a48e4521747474e2ef57ba58781bf5c59f644f4f76",
+      "bytes": 2939
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/preflight.py",
+      "sha256": "829669612359e5f60a1610fbc36604eb4cef5647911df604124de9e13160b485",
+      "bytes": 22826
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/preregister.md",
+      "sha256": "d0c570ec892a2c3e40b90c0f7eef2a9ff0649dd53bc34adee6b6bc65280f14c8",
+      "bytes": 10645
+    }
+  ],
+  "command": [
+    "python",
+    "-X",
+    "utf8",
+    "-X",
+    "pycache_prefix=experiments/m194g-larger-pupil/work/cache-preflight-1",
+    "experiments/m194g-larger-pupil/preflight.py",
+    "--output",
+    "experiments/m194g-larger-pupil/preflight-1"
+  ],
+  "required_terminal_status": "PASS_COST_ONLY",
+  "required_completed_cells": 1152000,
+  "required_completed_frames": 15,
+  "numerical_release": false
+}

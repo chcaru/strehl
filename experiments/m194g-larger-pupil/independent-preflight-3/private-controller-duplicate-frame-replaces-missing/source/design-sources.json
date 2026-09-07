@@ -1,0 +1,72 @@
+{
+  "schema": "m194g-design-lineage-v1",
+  "scope": "Lineage only; neither old admission nor this source list admits larger arrays",
+  "created_from_commit": "cb0f5735a522423145652a420c039b03e8223bdc",
+  "files": [
+    {
+      "path": "experiments/m194f-production-bridge/next-larger-implementation.md",
+      "bytes": 16715,
+      "sha256": "987d7923577ffea261981b097190fa1886d03069d05b47ad10a17652b6e1bb61"
+    },
+    {
+      "path": "experiments/m194f-production-bridge/next-larger-preregistration-notes.md",
+      "bytes": 9919,
+      "sha256": "800586f20914af01f67b262b44eba024a371923ca1cc88ed277e4ccef66d9704"
+    },
+    {
+      "path": "experiments/m194f-production-bridge/next-larger-prior-art.log",
+      "bytes": 560,
+      "sha256": "7caa500ce7877ad1dfd189230c2fdee4bf811090c4b9fe5e918b678fc1220dcf"
+    },
+    {
+      "path": "experiments/m194e-joint-pupil/next-quality-fixture-notes.md",
+      "bytes": 3689,
+      "sha256": "5a61fc31bcb44eec53cf1c253e942bb7386ff02034e64ab25a8bc8b049db28ac"
+    },
+    {
+      "path": "experiments/m194e-joint-pupil/model.py",
+      "bytes": 8015,
+      "sha256": "a74cd9bd61ea2f717a185e86f725b5ed192431056a447581db0f8562cf9f70b8"
+    },
+    {
+      "path": "experiments/m194e-joint-pupil/render.py",
+      "bytes": 32791,
+      "sha256": "487c1727ca3aab05dd66a7056fb368712ccaabbbe604818fdc8b47eda77b6e97"
+    },
+    {
+      "path": "experiments/m194e-joint-pupil/independent-model.py",
+      "bytes": 11144,
+      "sha256": "0cd8ea2331b269e65befdee110560cbc345e89c12348cbe1dc3144f7c04443f0"
+    },
+    {
+      "path": "docs/research/M194e-joint-pupil.md",
+      "bytes": 22338,
+      "sha256": "5cbc0d223d8611ddd2fd58d6535d0d6211a99dab1bbb2a825a37ff94aea4232f"
+    },
+    {
+      "path": "docs/research/M194f-production-bridge.md",
+      "bytes": 15175,
+      "sha256": "02524dfeb50dae71171aeed6ca34f5cef3d328cdb2a08335b3996bcadb798a6a"
+    },
+    {
+      "path": "docs/research/M194b-known-scene.md",
+      "bytes": 16908,
+      "sha256": "b00b8989a0e89b38c76abef720736300dadeb525357e95d3b6f3e80990481de8"
+    },
+    {
+      "path": "docs/research/M194d-band-admission.md",
+      "bytes": 16575,
+      "sha256": "0d875bab09babcec2cb9f505e7afaf75a59e512bcec1c36f0da686e5ce1604a0"
+    }
+  ],
+  "primary_references": [
+    {
+      "url": "https://dlmf.nist.gov/10.9.E4",
+      "scope": "Order-1 Poisson integral gives continuous uniform-disc transfer; no measured physical authority"
+    },
+    {
+      "url": "https://docs.scipy.org/doc/scipy/reference/generated/scipy.special.j1.html",
+      "scope": "Author function contract, not an independent numerical gate"
+    }
+  ]
+}
