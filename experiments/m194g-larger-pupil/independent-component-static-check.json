@@ -1,0 +1,17 @@
+{
+  "scope": "source-only AST parse; no module import or helper execution",
+  "files": [
+    {
+      "path": "experiments\\m194g-larger-pupil\\independent-component-reader.py",
+      "sha256": "cd69c42a223ce3f859b5f546729234f433a134282fc7e401711ec265265a23a3",
+      "bytes": 57678,
+      "top_level_items": 62
+    },
+    {
+      "path": "experiments\\m194g-larger-pupil\\independent-component-controls.py",
+      "sha256": "885f40c88b031e5323de8cbcc98ba3c430353c47ab8b3e64930975502b45619a",
+      "bytes": 41570,
+      "top_level_items": 31
+    }
+  ]
+}
