@@ -1,0 +1,2568 @@
+{
+  "schema": "m194e-independent-map-controls-v1",
+  "status": "PASS_MAP_COMPONENTS_ONLY",
+  "command": [
+    "experiments/m194e-joint-pupil/independent-map-controls.py",
+    "--render-sha256",
+    "a22d49fd43a1bc8d0f807fc1d4417104d5b9ffe1d771b418be58d276d7804460",
+    "--output",
+    "experiments/m194e-joint-pupil/independent-map-controls-2"
+  ],
+  "sources": {
+    "model.py": "a74cd9bd61ea2f717a185e86f725b5ed192431056a447581db0f8562cf9f70b8",
+    "render.py": "a22d49fd43a1bc8d0f807fc1d4417104d5b9ffe1d771b418be58d276d7804460",
+    "independent-model.py": "0cd8ea2331b269e65befdee110560cbc345e89c12348cbe1dc3144f7c04443f0",
+    "independent-map-controls.py": "3edf314c6d06dd53cbe3a1202b8a21b24d3db0905144872607a449f10854810f",
+    "independent-amendment-2-review.md": "954c37d7da90d38136fda82c0f788c4451b899df9585bcfb6285b3ba6dab34dc",
+    "independent-amendment-3-review.md": "69dbcdae7485ecbba1665a728872080eeee8aeec94c1b839e110d4c90f336317"
+  },
+  "checks": [
+    {
+      "name": "perm-012-edge-area",
+      "passed": true,
+      "value": 1.8750000000000004,
+      "expected": 1.875,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "perm-012-edge-affine",
+      "passed": true,
+      "value": 18772.968750000007,
+      "expected": 18772.96875,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-012-edge-positive-inside",
+      "passed": true
+    },
+    {
+      "name": "perm-012-edge-cusp",
+      "passed": true,
+      "value": 0.4285714285714287,
+      "expected": 0.42857142857142855,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "perm-012-edge-linear-destroyer-rejected",
+      "passed": true,
+      "error": -4.472492359824942e-05
+    },
+    {
+      "name": "perm-012-edge-wrong-Jacobian-rejected",
+      "passed": true
+    },
+    {
+      "name": "perm-012-vertex-area",
+      "passed": true,
+      "value": 1.8749999999999993,
+      "expected": 1.875,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "perm-012-vertex-affine",
+      "passed": true,
+      "value": 18772.968749999996,
+      "expected": 18772.96875,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-012-vertex-positive-inside",
+      "passed": true
+    },
+    {
+      "name": "perm-012-vertex-cusp",
+      "passed": true,
+      "value": 1.0714285714285707,
+      "expected": 1.0714285714285714,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "perm-012-vertex-linear-destroyer-rejected",
+      "passed": true,
+      "error": -1.329171167951948e-05
+    },
+    {
+      "name": "perm-012-vertex-wrong-Jacobian-rejected",
+      "passed": true
+    },
+    {
+      "name": "perm-012-edge-delta-0.0-predicate",
+      "passed": true,
+      "indices": [
+        0,
+        1
+      ]
+    },
+    {
+      "name": "perm-012-edge-delta-0.0-area",
+      "passed": true,
+      "value": 1.8749999999999987,
+      "expected": 1.875,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "perm-012-edge-delta-0.0-affine",
+      "passed": true,
+      "value": 18772.968749999985,
+      "expected": 18772.96875,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-012-edge-delta-0.0-Fourier",
+      "passed": true,
+      "value": 4.539509032500356e-14,
+      "expected": 0.0,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-012-edge-delta-2.842170943040401e-14-predicate",
+      "passed": true,
+      "indices": [
+        0,
+        1
+      ]
+    },
+    {
+      "name": "perm-012-edge-delta-2.842170943040401e-14-area",
+      "passed": true,
+      "value": 1.8749999999999987,
+      "expected": 1.875,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "perm-012-edge-delta-2.842170943040401e-14-affine",
+      "passed": true,
+      "value": 18772.968749999985,
+      "expected": 18772.96875,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-012-edge-delta-2.842170943040401e-14-Fourier",
+      "passed": true,
+      "value": 4.539509032500356e-14,
+      "expected": 0.0,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-012-edge-delta--2.842170943040401e-14-predicate",
+      "passed": true,
+      "indices": [
+        0,
+        1
+      ]
+    },
+    {
+      "name": "perm-012-edge-delta--2.842170943040401e-14-area",
+      "passed": true,
+      "value": 1.8749999999999987,
+      "expected": 1.875,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "perm-012-edge-delta--2.842170943040401e-14-affine",
+      "passed": true,
+      "value": 18772.968749999985,
+      "expected": 18772.96875,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-012-edge-delta--2.842170943040401e-14-Fourier",
+      "passed": true,
+      "value": 4.539509032500356e-14,
+      "expected": 0.0,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-012-edge-delta-5.820766091346741e-11-predicate",
+      "passed": true,
+      "indices": []
+    },
+    {
+      "name": "perm-012-edge-delta-5.820766091346741e-11-area",
+      "passed": true,
+      "value": 1.8750000000000002,
+      "expected": 1.875,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "perm-012-edge-delta-5.820766091346741e-11-affine",
+      "passed": true,
+      "value": 18772.96875,
+      "expected": 18772.96875,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-012-edge-delta-5.820766091346741e-11-Fourier",
+      "passed": true,
+      "value": 9.485749680535094e-16,
+      "expected": 0.0,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-012-edge-delta-5.820766091346741e-11-old-rule-byte-null",
+      "passed": true
+    },
+    {
+      "name": "perm-012-edge-delta--5.820766091346741e-11-predicate",
+      "passed": true,
+      "indices": []
+    },
+    {
+      "name": "perm-012-edge-delta--5.820766091346741e-11-area",
+      "passed": true,
+      "value": 1.8750000000000002,
+      "expected": 1.875,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "perm-012-edge-delta--5.820766091346741e-11-affine",
+      "passed": true,
+      "value": 18772.96875,
+      "expected": 18772.96875,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-012-edge-delta--5.820766091346741e-11-Fourier",
+      "passed": true,
+      "value": 9.485749680535094e-16,
+      "expected": 0.0,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-012-edge-delta--5.820766091346741e-11-old-rule-byte-null",
+      "passed": true
+    },
+    {
+      "name": "perm-012-vertex-delta-0.0-predicate",
+      "passed": true,
+      "indices": [
+        2
+      ]
+    },
+    {
+      "name": "perm-012-vertex-delta-0.0-area",
+      "passed": true,
+      "value": 1.8750000000000018,
+      "expected": 1.875,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "perm-012-vertex-delta-0.0-affine",
+      "passed": true,
+      "value": 18772.968750000015,
+      "expected": 18772.96875,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-012-vertex-delta-0.0-Fourier",
+      "passed": true,
+      "value": 4.6135210586395794e-14,
+      "expected": 0.0,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-012-vertex-delta-2.842170943040401e-14-predicate",
+      "passed": true,
+      "indices": [
+        2
+      ]
+    },
+    {
+      "name": "perm-012-vertex-delta-2.842170943040401e-14-area",
+      "passed": true,
+      "value": 1.8750000000000018,
+      "expected": 1.875,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "perm-012-vertex-delta-2.842170943040401e-14-affine",
+      "passed": true,
+      "value": 18772.968750000015,
+      "expected": 18772.96875,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-012-vertex-delta-2.842170943040401e-14-Fourier",
+      "passed": true,
+      "value": 4.6135210586395794e-14,
+      "expected": 0.0,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-012-vertex-delta--2.842170943040401e-14-predicate",
+      "passed": true,
+      "indices": [
+        2
+      ]
+    },
+    {
+      "name": "perm-012-vertex-delta--2.842170943040401e-14-area",
+      "passed": true,
+      "value": 1.8750000000000018,
+      "expected": 1.875,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "perm-012-vertex-delta--2.842170943040401e-14-affine",
+      "passed": true,
+      "value": 18772.968750000015,
+      "expected": 18772.96875,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-012-vertex-delta--2.842170943040401e-14-Fourier",
+      "passed": true,
+      "value": 4.6135210586395794e-14,
+      "expected": 0.0,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-012-vertex-delta-5.820766091346741e-11-predicate",
+      "passed": true,
+      "indices": []
+    },
+    {
+      "name": "perm-012-vertex-delta-5.820766091346741e-11-area",
+      "passed": true,
+      "value": 1.8750000000000002,
+      "expected": 1.875,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "perm-012-vertex-delta-5.820766091346741e-11-affine",
+      "passed": true,
+      "value": 18772.96875,
+      "expected": 18772.96875,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-012-vertex-delta-5.820766091346741e-11-Fourier",
+      "passed": true,
+      "value": 9.485749680535094e-16,
+      "expected": 0.0,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-012-vertex-delta-5.820766091346741e-11-old-rule-byte-null",
+      "passed": true
+    },
+    {
+      "name": "perm-012-vertex-delta--5.820766091346741e-11-predicate",
+      "passed": true,
+      "indices": []
+    },
+    {
+      "name": "perm-012-vertex-delta--5.820766091346741e-11-area",
+      "passed": true,
+      "value": 1.8750000000000002,
+      "expected": 1.875,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "perm-012-vertex-delta--5.820766091346741e-11-affine",
+      "passed": true,
+      "value": 18772.96875,
+      "expected": 18772.96875,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-012-vertex-delta--5.820766091346741e-11-Fourier",
+      "passed": true,
+      "value": 9.485749680535094e-16,
+      "expected": 0.0,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-012-vertex-delta--5.820766091346741e-11-old-rule-byte-null",
+      "passed": true
+    },
+    {
+      "name": "perm-012-coalesced-deterministic",
+      "passed": true
+    },
+    {
+      "name": "perm-012-coalesced-area",
+      "passed": true,
+      "value": 1.8749999999999993,
+      "expected": 1.875,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "perm-012-R0-old-path",
+      "passed": true
+    },
+    {
+      "name": "perm-012-R0-byte-null",
+      "passed": true
+    },
+    {
+      "name": "perm-012-full-old-path",
+      "passed": true
+    },
+    {
+      "name": "perm-012-full-byte-null",
+      "passed": true
+    },
+    {
+      "name": "perm-012-absent-old-path",
+      "passed": true
+    },
+    {
+      "name": "perm-012-absent-byte-null",
+      "passed": true
+    },
+    {
+      "name": "perm-012-coordinates-unchanged",
+      "passed": true
+    },
+    {
+      "name": "perm-021-edge-area",
+      "passed": true,
+      "value": 1.8750000000000004,
+      "expected": 1.875,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "perm-021-edge-affine",
+      "passed": true,
+      "value": 18772.968750000007,
+      "expected": 18772.96875,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-021-edge-positive-inside",
+      "passed": true
+    },
+    {
+      "name": "perm-021-edge-cusp",
+      "passed": true,
+      "value": 0.4285714285714287,
+      "expected": 0.42857142857142855,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "perm-021-edge-linear-destroyer-rejected",
+      "passed": true,
+      "error": -0.00020714380236314112
+    },
+    {
+      "name": "perm-021-edge-wrong-Jacobian-rejected",
+      "passed": true
+    },
+    {
+      "name": "perm-021-vertex-area",
+      "passed": true,
+      "value": 1.8749999999999993,
+      "expected": 1.875,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "perm-021-vertex-affine",
+      "passed": true,
+      "value": 18772.968749999996,
+      "expected": 18772.96875,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-021-vertex-positive-inside",
+      "passed": true
+    },
+    {
+      "name": "perm-021-vertex-cusp",
+      "passed": true,
+      "value": 1.0714285714285707,
+      "expected": 1.0714285714285714,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "perm-021-vertex-linear-destroyer-rejected",
+      "passed": true,
+      "error": 2.108759653429715e-05
+    },
+    {
+      "name": "perm-021-vertex-wrong-Jacobian-rejected",
+      "passed": true
+    },
+    {
+      "name": "perm-021-edge-delta-0.0-predicate",
+      "passed": true,
+      "indices": [
+        0,
+        2
+      ]
+    },
+    {
+      "name": "perm-021-edge-delta-0.0-area",
+      "passed": true,
+      "value": 1.8749999999999987,
+      "expected": 1.875,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "perm-021-edge-delta-0.0-affine",
+      "passed": true,
+      "value": 18772.968749999985,
+      "expected": 18772.96875,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-021-edge-delta-0.0-Fourier",
+      "passed": true,
+      "value": 4.539509032500356e-14,
+      "expected": 0.0,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-021-edge-delta-2.842170943040401e-14-predicate",
+      "passed": true,
+      "indices": [
+        0,
+        2
+      ]
+    },
+    {
+      "name": "perm-021-edge-delta-2.842170943040401e-14-area",
+      "passed": true,
+      "value": 1.8749999999999987,
+      "expected": 1.875,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "perm-021-edge-delta-2.842170943040401e-14-affine",
+      "passed": true,
+      "value": 18772.968749999985,
+      "expected": 18772.96875,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-021-edge-delta-2.842170943040401e-14-Fourier",
+      "passed": true,
+      "value": 4.539509032500356e-14,
+      "expected": 0.0,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-021-edge-delta--2.842170943040401e-14-predicate",
+      "passed": true,
+      "indices": [
+        0,
+        2
+      ]
+    },
+    {
+      "name": "perm-021-edge-delta--2.842170943040401e-14-area",
+      "passed": true,
+      "value": 1.8749999999999987,
+      "expected": 1.875,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "perm-021-edge-delta--2.842170943040401e-14-affine",
+      "passed": true,
+      "value": 18772.968749999985,
+      "expected": 18772.96875,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-021-edge-delta--2.842170943040401e-14-Fourier",
+      "passed": true,
+      "value": 4.539509032500356e-14,
+      "expected": 0.0,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-021-edge-delta-5.820766091346741e-11-predicate",
+      "passed": true,
+      "indices": []
+    },
+    {
+      "name": "perm-021-edge-delta-5.820766091346741e-11-area",
+      "passed": true,
+      "value": 1.8750000000000002,
+      "expected": 1.875,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "perm-021-edge-delta-5.820766091346741e-11-affine",
+      "passed": true,
+      "value": 18772.968750000004,
+      "expected": 18772.96875,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-021-edge-delta-5.820766091346741e-11-Fourier",
+      "passed": true,
+      "value": 7.021666937153402e-16,
+      "expected": 0.0,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-021-edge-delta-5.820766091346741e-11-old-rule-byte-null",
+      "passed": true
+    },
+    {
+      "name": "perm-021-edge-delta--5.820766091346741e-11-predicate",
+      "passed": true,
+      "indices": []
+    },
+    {
+      "name": "perm-021-edge-delta--5.820766091346741e-11-area",
+      "passed": true,
+      "value": 1.8750000000000002,
+      "expected": 1.875,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "perm-021-edge-delta--5.820766091346741e-11-affine",
+      "passed": true,
+      "value": 18772.968750000004,
+      "expected": 18772.96875,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-021-edge-delta--5.820766091346741e-11-Fourier",
+      "passed": true,
+      "value": 7.021666937153402e-16,
+      "expected": 0.0,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-021-edge-delta--5.820766091346741e-11-old-rule-byte-null",
+      "passed": true
+    },
+    {
+      "name": "perm-021-vertex-delta-0.0-predicate",
+      "passed": true,
+      "indices": [
+        1
+      ]
+    },
+    {
+      "name": "perm-021-vertex-delta-0.0-area",
+      "passed": true,
+      "value": 1.8750000000000018,
+      "expected": 1.875,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "perm-021-vertex-delta-0.0-affine",
+      "passed": true,
+      "value": 18772.968750000015,
+      "expected": 18772.96875,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-021-vertex-delta-0.0-Fourier",
+      "passed": true,
+      "value": 4.6135210586395794e-14,
+      "expected": 0.0,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-021-vertex-delta-2.842170943040401e-14-predicate",
+      "passed": true,
+      "indices": [
+        1
+      ]
+    },
+    {
+      "name": "perm-021-vertex-delta-2.842170943040401e-14-area",
+      "passed": true,
+      "value": 1.8750000000000018,
+      "expected": 1.875,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "perm-021-vertex-delta-2.842170943040401e-14-affine",
+      "passed": true,
+      "value": 18772.968750000015,
+      "expected": 18772.96875,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-021-vertex-delta-2.842170943040401e-14-Fourier",
+      "passed": true,
+      "value": 4.6135210586395794e-14,
+      "expected": 0.0,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-021-vertex-delta--2.842170943040401e-14-predicate",
+      "passed": true,
+      "indices": [
+        1
+      ]
+    },
+    {
+      "name": "perm-021-vertex-delta--2.842170943040401e-14-area",
+      "passed": true,
+      "value": 1.8750000000000018,
+      "expected": 1.875,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "perm-021-vertex-delta--2.842170943040401e-14-affine",
+      "passed": true,
+      "value": 18772.968750000015,
+      "expected": 18772.96875,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-021-vertex-delta--2.842170943040401e-14-Fourier",
+      "passed": true,
+      "value": 4.6135210586395794e-14,
+      "expected": 0.0,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-021-vertex-delta-5.820766091346741e-11-predicate",
+      "passed": true,
+      "indices": []
+    },
+    {
+      "name": "perm-021-vertex-delta-5.820766091346741e-11-area",
+      "passed": true,
+      "value": 1.8750000000000002,
+      "expected": 1.875,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "perm-021-vertex-delta-5.820766091346741e-11-affine",
+      "passed": true,
+      "value": 18772.968750000004,
+      "expected": 18772.96875,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-021-vertex-delta-5.820766091346741e-11-Fourier",
+      "passed": true,
+      "value": 7.021666937153402e-16,
+      "expected": 0.0,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-021-vertex-delta-5.820766091346741e-11-old-rule-byte-null",
+      "passed": true
+    },
+    {
+      "name": "perm-021-vertex-delta--5.820766091346741e-11-predicate",
+      "passed": true,
+      "indices": []
+    },
+    {
+      "name": "perm-021-vertex-delta--5.820766091346741e-11-area",
+      "passed": true,
+      "value": 1.8750000000000002,
+      "expected": 1.875,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "perm-021-vertex-delta--5.820766091346741e-11-affine",
+      "passed": true,
+      "value": 18772.968750000004,
+      "expected": 18772.96875,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-021-vertex-delta--5.820766091346741e-11-Fourier",
+      "passed": true,
+      "value": 7.021666937153402e-16,
+      "expected": 0.0,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-021-vertex-delta--5.820766091346741e-11-old-rule-byte-null",
+      "passed": true
+    },
+    {
+      "name": "perm-021-coalesced-deterministic",
+      "passed": true
+    },
+    {
+      "name": "perm-021-coalesced-area",
+      "passed": true,
+      "value": 1.8749999999999993,
+      "expected": 1.875,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "perm-021-R0-old-path",
+      "passed": true
+    },
+    {
+      "name": "perm-021-R0-byte-null",
+      "passed": true
+    },
+    {
+      "name": "perm-021-full-old-path",
+      "passed": true
+    },
+    {
+      "name": "perm-021-full-byte-null",
+      "passed": true
+    },
+    {
+      "name": "perm-021-absent-old-path",
+      "passed": true
+    },
+    {
+      "name": "perm-021-absent-byte-null",
+      "passed": true
+    },
+    {
+      "name": "perm-021-coordinates-unchanged",
+      "passed": true
+    },
+    {
+      "name": "perm-102-edge-area",
+      "passed": true,
+      "value": 1.8750000000000004,
+      "expected": 1.875,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "perm-102-edge-affine",
+      "passed": true,
+      "value": 18772.968750000007,
+      "expected": 18772.96875,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-102-edge-positive-inside",
+      "passed": true
+    },
+    {
+      "name": "perm-102-edge-cusp",
+      "passed": true,
+      "value": 0.4285714285714287,
+      "expected": 0.42857142857142855,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "perm-102-edge-linear-destroyer-rejected",
+      "passed": true,
+      "error": -4.47249235981384e-05
+    },
+    {
+      "name": "perm-102-edge-wrong-Jacobian-rejected",
+      "passed": true
+    },
+    {
+      "name": "perm-102-vertex-area",
+      "passed": true,
+      "value": 1.8749999999999993,
+      "expected": 1.875,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "perm-102-vertex-affine",
+      "passed": true,
+      "value": 18772.968749999996,
+      "expected": 18772.96875,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-102-vertex-positive-inside",
+      "passed": true
+    },
+    {
+      "name": "perm-102-vertex-cusp",
+      "passed": true,
+      "value": 1.0714285714285707,
+      "expected": 1.0714285714285714,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "perm-102-vertex-linear-destroyer-rejected",
+      "passed": true,
+      "error": -1.3291711679741525e-05
+    },
+    {
+      "name": "perm-102-vertex-wrong-Jacobian-rejected",
+      "passed": true
+    },
+    {
+      "name": "perm-102-edge-delta-0.0-predicate",
+      "passed": true,
+      "indices": [
+        1,
+        0
+      ]
+    },
+    {
+      "name": "perm-102-edge-delta-0.0-area",
+      "passed": true,
+      "value": 1.8749999999999987,
+      "expected": 1.875,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "perm-102-edge-delta-0.0-affine",
+      "passed": true,
+      "value": 18772.968749999985,
+      "expected": 18772.96875,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-102-edge-delta-0.0-Fourier",
+      "passed": true,
+      "value": 4.539509032500356e-14,
+      "expected": 0.0,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-102-edge-delta-2.842170943040401e-14-predicate",
+      "passed": true,
+      "indices": [
+        1,
+        0
+      ]
+    },
+    {
+      "name": "perm-102-edge-delta-2.842170943040401e-14-area",
+      "passed": true,
+      "value": 1.8749999999999987,
+      "expected": 1.875,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "perm-102-edge-delta-2.842170943040401e-14-affine",
+      "passed": true,
+      "value": 18772.968749999985,
+      "expected": 18772.96875,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-102-edge-delta-2.842170943040401e-14-Fourier",
+      "passed": true,
+      "value": 4.539509032500356e-14,
+      "expected": 0.0,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-102-edge-delta--2.842170943040401e-14-predicate",
+      "passed": true,
+      "indices": [
+        1,
+        0
+      ]
+    },
+    {
+      "name": "perm-102-edge-delta--2.842170943040401e-14-area",
+      "passed": true,
+      "value": 1.8749999999999987,
+      "expected": 1.875,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "perm-102-edge-delta--2.842170943040401e-14-affine",
+      "passed": true,
+      "value": 18772.968749999985,
+      "expected": 18772.96875,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-102-edge-delta--2.842170943040401e-14-Fourier",
+      "passed": true,
+      "value": 4.539509032500356e-14,
+      "expected": 0.0,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-102-edge-delta-5.820766091346741e-11-predicate",
+      "passed": true,
+      "indices": []
+    },
+    {
+      "name": "perm-102-edge-delta-5.820766091346741e-11-area",
+      "passed": true,
+      "value": 1.8750000000000002,
+      "expected": 1.875,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "perm-102-edge-delta-5.820766091346741e-11-affine",
+      "passed": true,
+      "value": 18772.96875,
+      "expected": 18772.96875,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-102-edge-delta-5.820766091346741e-11-Fourier",
+      "passed": true,
+      "value": 4.965068306494546e-16,
+      "expected": 0.0,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-102-edge-delta-5.820766091346741e-11-old-rule-byte-null",
+      "passed": true
+    },
+    {
+      "name": "perm-102-edge-delta--5.820766091346741e-11-predicate",
+      "passed": true,
+      "indices": []
+    },
+    {
+      "name": "perm-102-edge-delta--5.820766091346741e-11-area",
+      "passed": true,
+      "value": 1.8750000000000002,
+      "expected": 1.875,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "perm-102-edge-delta--5.820766091346741e-11-affine",
+      "passed": true,
+      "value": 18772.96875,
+      "expected": 18772.96875,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-102-edge-delta--5.820766091346741e-11-Fourier",
+      "passed": true,
+      "value": 4.965068306494546e-16,
+      "expected": 0.0,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-102-edge-delta--5.820766091346741e-11-old-rule-byte-null",
+      "passed": true
+    },
+    {
+      "name": "perm-102-vertex-delta-0.0-predicate",
+      "passed": true,
+      "indices": [
+        2
+      ]
+    },
+    {
+      "name": "perm-102-vertex-delta-0.0-area",
+      "passed": true,
+      "value": 1.8750000000000018,
+      "expected": 1.875,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "perm-102-vertex-delta-0.0-affine",
+      "passed": true,
+      "value": 18772.968750000015,
+      "expected": 18772.96875,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-102-vertex-delta-0.0-Fourier",
+      "passed": true,
+      "value": 4.6135210586395794e-14,
+      "expected": 0.0,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-102-vertex-delta-2.842170943040401e-14-predicate",
+      "passed": true,
+      "indices": [
+        2
+      ]
+    },
+    {
+      "name": "perm-102-vertex-delta-2.842170943040401e-14-area",
+      "passed": true,
+      "value": 1.8750000000000018,
+      "expected": 1.875,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "perm-102-vertex-delta-2.842170943040401e-14-affine",
+      "passed": true,
+      "value": 18772.968750000015,
+      "expected": 18772.96875,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-102-vertex-delta-2.842170943040401e-14-Fourier",
+      "passed": true,
+      "value": 4.6135210586395794e-14,
+      "expected": 0.0,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-102-vertex-delta--2.842170943040401e-14-predicate",
+      "passed": true,
+      "indices": [
+        2
+      ]
+    },
+    {
+      "name": "perm-102-vertex-delta--2.842170943040401e-14-area",
+      "passed": true,
+      "value": 1.8750000000000018,
+      "expected": 1.875,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "perm-102-vertex-delta--2.842170943040401e-14-affine",
+      "passed": true,
+      "value": 18772.968750000015,
+      "expected": 18772.96875,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-102-vertex-delta--2.842170943040401e-14-Fourier",
+      "passed": true,
+      "value": 4.6135210586395794e-14,
+      "expected": 0.0,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-102-vertex-delta-5.820766091346741e-11-predicate",
+      "passed": true,
+      "indices": []
+    },
+    {
+      "name": "perm-102-vertex-delta-5.820766091346741e-11-area",
+      "passed": true,
+      "value": 1.8750000000000002,
+      "expected": 1.875,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "perm-102-vertex-delta-5.820766091346741e-11-affine",
+      "passed": true,
+      "value": 18772.96875,
+      "expected": 18772.96875,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-102-vertex-delta-5.820766091346741e-11-Fourier",
+      "passed": true,
+      "value": 4.965068306494546e-16,
+      "expected": 0.0,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-102-vertex-delta-5.820766091346741e-11-old-rule-byte-null",
+      "passed": true
+    },
+    {
+      "name": "perm-102-vertex-delta--5.820766091346741e-11-predicate",
+      "passed": true,
+      "indices": []
+    },
+    {
+      "name": "perm-102-vertex-delta--5.820766091346741e-11-area",
+      "passed": true,
+      "value": 1.8750000000000002,
+      "expected": 1.875,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "perm-102-vertex-delta--5.820766091346741e-11-affine",
+      "passed": true,
+      "value": 18772.96875,
+      "expected": 18772.96875,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-102-vertex-delta--5.820766091346741e-11-Fourier",
+      "passed": true,
+      "value": 4.965068306494546e-16,
+      "expected": 0.0,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-102-vertex-delta--5.820766091346741e-11-old-rule-byte-null",
+      "passed": true
+    },
+    {
+      "name": "perm-102-coalesced-deterministic",
+      "passed": true
+    },
+    {
+      "name": "perm-102-coalesced-area",
+      "passed": true,
+      "value": 1.8749999999999993,
+      "expected": 1.875,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "perm-102-R0-old-path",
+      "passed": true
+    },
+    {
+      "name": "perm-102-R0-byte-null",
+      "passed": true
+    },
+    {
+      "name": "perm-102-full-old-path",
+      "passed": true
+    },
+    {
+      "name": "perm-102-full-byte-null",
+      "passed": true
+    },
+    {
+      "name": "perm-102-absent-old-path",
+      "passed": true
+    },
+    {
+      "name": "perm-102-absent-byte-null",
+      "passed": true
+    },
+    {
+      "name": "perm-102-coordinates-unchanged",
+      "passed": true
+    },
+    {
+      "name": "perm-120-edge-area",
+      "passed": true,
+      "value": 1.8750000000000004,
+      "expected": 1.875,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "perm-120-edge-affine",
+      "passed": true,
+      "value": 18772.968750000007,
+      "expected": 18772.96875,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-120-edge-positive-inside",
+      "passed": true
+    },
+    {
+      "name": "perm-120-edge-cusp",
+      "passed": true,
+      "value": 0.4285714285714287,
+      "expected": 0.42857142857142855,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "perm-120-edge-linear-destroyer-rejected",
+      "passed": true,
+      "error": -0.00020714380236314112
+    },
+    {
+      "name": "perm-120-edge-wrong-Jacobian-rejected",
+      "passed": true
+    },
+    {
+      "name": "perm-120-vertex-area",
+      "passed": true,
+      "value": 1.8749999999999993,
+      "expected": 1.875,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "perm-120-vertex-affine",
+      "passed": true,
+      "value": 18772.968749999996,
+      "expected": 18772.96875,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-120-vertex-positive-inside",
+      "passed": true
+    },
+    {
+      "name": "perm-120-vertex-cusp",
+      "passed": true,
+      "value": 1.0714285714285707,
+      "expected": 1.0714285714285714,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "perm-120-vertex-linear-destroyer-rejected",
+      "passed": true,
+      "error": 2.1087596534519193e-05
+    },
+    {
+      "name": "perm-120-vertex-wrong-Jacobian-rejected",
+      "passed": true
+    },
+    {
+      "name": "perm-120-edge-delta-0.0-predicate",
+      "passed": true,
+      "indices": [
+        2,
+        0
+      ]
+    },
+    {
+      "name": "perm-120-edge-delta-0.0-area",
+      "passed": true,
+      "value": 1.8749999999999987,
+      "expected": 1.875,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "perm-120-edge-delta-0.0-affine",
+      "passed": true,
+      "value": 18772.968749999985,
+      "expected": 18772.96875,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-120-edge-delta-0.0-Fourier",
+      "passed": true,
+      "value": 4.539509032500356e-14,
+      "expected": 0.0,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-120-edge-delta-2.842170943040401e-14-predicate",
+      "passed": true,
+      "indices": [
+        2,
+        0
+      ]
+    },
+    {
+      "name": "perm-120-edge-delta-2.842170943040401e-14-area",
+      "passed": true,
+      "value": 1.8749999999999987,
+      "expected": 1.875,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "perm-120-edge-delta-2.842170943040401e-14-affine",
+      "passed": true,
+      "value": 18772.968749999985,
+      "expected": 18772.96875,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-120-edge-delta-2.842170943040401e-14-Fourier",
+      "passed": true,
+      "value": 4.539509032500356e-14,
+      "expected": 0.0,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-120-edge-delta--2.842170943040401e-14-predicate",
+      "passed": true,
+      "indices": [
+        2,
+        0
+      ]
+    },
+    {
+      "name": "perm-120-edge-delta--2.842170943040401e-14-area",
+      "passed": true,
+      "value": 1.8749999999999987,
+      "expected": 1.875,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "perm-120-edge-delta--2.842170943040401e-14-affine",
+      "passed": true,
+      "value": 18772.968749999985,
+      "expected": 18772.96875,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-120-edge-delta--2.842170943040401e-14-Fourier",
+      "passed": true,
+      "value": 4.539509032500356e-14,
+      "expected": 0.0,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-120-edge-delta-5.820766091346741e-11-predicate",
+      "passed": true,
+      "indices": []
+    },
+    {
+      "name": "perm-120-edge-delta-5.820766091346741e-11-area",
+      "passed": true,
+      "value": 1.8750000000000002,
+      "expected": 1.875,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "perm-120-edge-delta-5.820766091346741e-11-affine",
+      "passed": true,
+      "value": 18772.968750000004,
+      "expected": 18772.96875,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-120-edge-delta-5.820766091346741e-11-Fourier",
+      "passed": true,
+      "value": 9.155133597044475e-16,
+      "expected": 0.0,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-120-edge-delta-5.820766091346741e-11-old-rule-byte-null",
+      "passed": true
+    },
+    {
+      "name": "perm-120-edge-delta--5.820766091346741e-11-predicate",
+      "passed": true,
+      "indices": []
+    },
+    {
+      "name": "perm-120-edge-delta--5.820766091346741e-11-area",
+      "passed": true,
+      "value": 1.8750000000000002,
+      "expected": 1.875,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "perm-120-edge-delta--5.820766091346741e-11-affine",
+      "passed": true,
+      "value": 18772.968750000004,
+      "expected": 18772.96875,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-120-edge-delta--5.820766091346741e-11-Fourier",
+      "passed": true,
+      "value": 9.155133597044475e-16,
+      "expected": 0.0,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-120-edge-delta--5.820766091346741e-11-old-rule-byte-null",
+      "passed": true
+    },
+    {
+      "name": "perm-120-vertex-delta-0.0-predicate",
+      "passed": true,
+      "indices": [
+        1
+      ]
+    },
+    {
+      "name": "perm-120-vertex-delta-0.0-area",
+      "passed": true,
+      "value": 1.8750000000000018,
+      "expected": 1.875,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "perm-120-vertex-delta-0.0-affine",
+      "passed": true,
+      "value": 18772.968750000015,
+      "expected": 18772.96875,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-120-vertex-delta-0.0-Fourier",
+      "passed": true,
+      "value": 4.6135210586395794e-14,
+      "expected": 0.0,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-120-vertex-delta-2.842170943040401e-14-predicate",
+      "passed": true,
+      "indices": [
+        1
+      ]
+    },
+    {
+      "name": "perm-120-vertex-delta-2.842170943040401e-14-area",
+      "passed": true,
+      "value": 1.8750000000000018,
+      "expected": 1.875,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "perm-120-vertex-delta-2.842170943040401e-14-affine",
+      "passed": true,
+      "value": 18772.968750000015,
+      "expected": 18772.96875,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-120-vertex-delta-2.842170943040401e-14-Fourier",
+      "passed": true,
+      "value": 4.6135210586395794e-14,
+      "expected": 0.0,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-120-vertex-delta--2.842170943040401e-14-predicate",
+      "passed": true,
+      "indices": [
+        1
+      ]
+    },
+    {
+      "name": "perm-120-vertex-delta--2.842170943040401e-14-area",
+      "passed": true,
+      "value": 1.8750000000000018,
+      "expected": 1.875,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "perm-120-vertex-delta--2.842170943040401e-14-affine",
+      "passed": true,
+      "value": 18772.968750000015,
+      "expected": 18772.96875,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-120-vertex-delta--2.842170943040401e-14-Fourier",
+      "passed": true,
+      "value": 4.6135210586395794e-14,
+      "expected": 0.0,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-120-vertex-delta-5.820766091346741e-11-predicate",
+      "passed": true,
+      "indices": []
+    },
+    {
+      "name": "perm-120-vertex-delta-5.820766091346741e-11-area",
+      "passed": true,
+      "value": 1.8750000000000002,
+      "expected": 1.875,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "perm-120-vertex-delta-5.820766091346741e-11-affine",
+      "passed": true,
+      "value": 18772.968750000004,
+      "expected": 18772.96875,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-120-vertex-delta-5.820766091346741e-11-Fourier",
+      "passed": true,
+      "value": 9.155133597044475e-16,
+      "expected": 0.0,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-120-vertex-delta-5.820766091346741e-11-old-rule-byte-null",
+      "passed": true
+    },
+    {
+      "name": "perm-120-vertex-delta--5.820766091346741e-11-predicate",
+      "passed": true,
+      "indices": []
+    },
+    {
+      "name": "perm-120-vertex-delta--5.820766091346741e-11-area",
+      "passed": true,
+      "value": 1.8750000000000002,
+      "expected": 1.875,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "perm-120-vertex-delta--5.820766091346741e-11-affine",
+      "passed": true,
+      "value": 18772.968750000004,
+      "expected": 18772.96875,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-120-vertex-delta--5.820766091346741e-11-Fourier",
+      "passed": true,
+      "value": 9.155133597044475e-16,
+      "expected": 0.0,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-120-vertex-delta--5.820766091346741e-11-old-rule-byte-null",
+      "passed": true
+    },
+    {
+      "name": "perm-120-coalesced-deterministic",
+      "passed": true
+    },
+    {
+      "name": "perm-120-coalesced-area",
+      "passed": true,
+      "value": 1.8749999999999993,
+      "expected": 1.875,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "perm-120-R0-old-path",
+      "passed": true
+    },
+    {
+      "name": "perm-120-R0-byte-null",
+      "passed": true
+    },
+    {
+      "name": "perm-120-full-old-path",
+      "passed": true
+    },
+    {
+      "name": "perm-120-full-byte-null",
+      "passed": true
+    },
+    {
+      "name": "perm-120-absent-old-path",
+      "passed": true
+    },
+    {
+      "name": "perm-120-absent-byte-null",
+      "passed": true
+    },
+    {
+      "name": "perm-120-coordinates-unchanged",
+      "passed": true
+    },
+    {
+      "name": "perm-201-edge-area",
+      "passed": true,
+      "value": 1.8750000000000004,
+      "expected": 1.875,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "perm-201-edge-affine",
+      "passed": true,
+      "value": 18772.968750000007,
+      "expected": 18772.96875,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-201-edge-positive-inside",
+      "passed": true
+    },
+    {
+      "name": "perm-201-edge-cusp",
+      "passed": true,
+      "value": 0.4285714285714287,
+      "expected": 0.42857142857142855,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "perm-201-edge-linear-destroyer-rejected",
+      "passed": true,
+      "error": -4.47249235981384e-05
+    },
+    {
+      "name": "perm-201-edge-wrong-Jacobian-rejected",
+      "passed": true
+    },
+    {
+      "name": "perm-201-vertex-area",
+      "passed": true,
+      "value": 1.8749999999999993,
+      "expected": 1.875,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "perm-201-vertex-affine",
+      "passed": true,
+      "value": 18772.968749999996,
+      "expected": 18772.96875,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-201-vertex-positive-inside",
+      "passed": true
+    },
+    {
+      "name": "perm-201-vertex-cusp",
+      "passed": true,
+      "value": 1.0714285714285707,
+      "expected": 1.0714285714285714,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "perm-201-vertex-linear-destroyer-rejected",
+      "passed": true,
+      "error": -1.3291711679741525e-05
+    },
+    {
+      "name": "perm-201-vertex-wrong-Jacobian-rejected",
+      "passed": true
+    },
+    {
+      "name": "perm-201-edge-delta-0.0-predicate",
+      "passed": true,
+      "indices": [
+        1,
+        2
+      ]
+    },
+    {
+      "name": "perm-201-edge-delta-0.0-area",
+      "passed": true,
+      "value": 1.8749999999999987,
+      "expected": 1.875,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "perm-201-edge-delta-0.0-affine",
+      "passed": true,
+      "value": 18772.968749999985,
+      "expected": 18772.96875,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-201-edge-delta-0.0-Fourier",
+      "passed": true,
+      "value": 4.539509032500356e-14,
+      "expected": 0.0,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-201-edge-delta-2.842170943040401e-14-predicate",
+      "passed": true,
+      "indices": [
+        1,
+        2
+      ]
+    },
+    {
+      "name": "perm-201-edge-delta-2.842170943040401e-14-area",
+      "passed": true,
+      "value": 1.8749999999999987,
+      "expected": 1.875,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "perm-201-edge-delta-2.842170943040401e-14-affine",
+      "passed": true,
+      "value": 18772.968749999985,
+      "expected": 18772.96875,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-201-edge-delta-2.842170943040401e-14-Fourier",
+      "passed": true,
+      "value": 4.539509032500356e-14,
+      "expected": 0.0,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-201-edge-delta--2.842170943040401e-14-predicate",
+      "passed": true,
+      "indices": [
+        1,
+        2
+      ]
+    },
+    {
+      "name": "perm-201-edge-delta--2.842170943040401e-14-area",
+      "passed": true,
+      "value": 1.8749999999999987,
+      "expected": 1.875,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "perm-201-edge-delta--2.842170943040401e-14-affine",
+      "passed": true,
+      "value": 18772.968749999985,
+      "expected": 18772.96875,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-201-edge-delta--2.842170943040401e-14-Fourier",
+      "passed": true,
+      "value": 4.539509032500356e-14,
+      "expected": 0.0,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-201-edge-delta-5.820766091346741e-11-predicate",
+      "passed": true,
+      "indices": []
+    },
+    {
+      "name": "perm-201-edge-delta-5.820766091346741e-11-area",
+      "passed": true,
+      "value": 1.8750000000000002,
+      "expected": 1.875,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "perm-201-edge-delta-5.820766091346741e-11-affine",
+      "passed": true,
+      "value": 18772.96875,
+      "expected": 18772.96875,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-201-edge-delta-5.820766091346741e-11-Fourier",
+      "passed": true,
+      "value": 4.577566798522237e-16,
+      "expected": 0.0,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-201-edge-delta-5.820766091346741e-11-old-rule-byte-null",
+      "passed": true
+    },
+    {
+      "name": "perm-201-edge-delta--5.820766091346741e-11-predicate",
+      "passed": true,
+      "indices": []
+    },
+    {
+      "name": "perm-201-edge-delta--5.820766091346741e-11-area",
+      "passed": true,
+      "value": 1.8750000000000002,
+      "expected": 1.875,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "perm-201-edge-delta--5.820766091346741e-11-affine",
+      "passed": true,
+      "value": 18772.96875,
+      "expected": 18772.96875,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-201-edge-delta--5.820766091346741e-11-Fourier",
+      "passed": true,
+      "value": 4.577566798522237e-16,
+      "expected": 0.0,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-201-edge-delta--5.820766091346741e-11-old-rule-byte-null",
+      "passed": true
+    },
+    {
+      "name": "perm-201-vertex-delta-0.0-predicate",
+      "passed": true,
+      "indices": [
+        0
+      ]
+    },
+    {
+      "name": "perm-201-vertex-delta-0.0-area",
+      "passed": true,
+      "value": 1.8750000000000018,
+      "expected": 1.875,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "perm-201-vertex-delta-0.0-affine",
+      "passed": true,
+      "value": 18772.968750000015,
+      "expected": 18772.96875,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-201-vertex-delta-0.0-Fourier",
+      "passed": true,
+      "value": 4.6135210586395794e-14,
+      "expected": 0.0,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-201-vertex-delta-2.842170943040401e-14-predicate",
+      "passed": true,
+      "indices": [
+        0
+      ]
+    },
+    {
+      "name": "perm-201-vertex-delta-2.842170943040401e-14-area",
+      "passed": true,
+      "value": 1.8750000000000018,
+      "expected": 1.875,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "perm-201-vertex-delta-2.842170943040401e-14-affine",
+      "passed": true,
+      "value": 18772.968750000015,
+      "expected": 18772.96875,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-201-vertex-delta-2.842170943040401e-14-Fourier",
+      "passed": true,
+      "value": 4.6135210586395794e-14,
+      "expected": 0.0,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-201-vertex-delta--2.842170943040401e-14-predicate",
+      "passed": true,
+      "indices": [
+        0
+      ]
+    },
+    {
+      "name": "perm-201-vertex-delta--2.842170943040401e-14-area",
+      "passed": true,
+      "value": 1.8750000000000018,
+      "expected": 1.875,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "perm-201-vertex-delta--2.842170943040401e-14-affine",
+      "passed": true,
+      "value": 18772.968750000015,
+      "expected": 18772.96875,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-201-vertex-delta--2.842170943040401e-14-Fourier",
+      "passed": true,
+      "value": 4.6135210586395794e-14,
+      "expected": 0.0,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-201-vertex-delta-5.820766091346741e-11-predicate",
+      "passed": true,
+      "indices": []
+    },
+    {
+      "name": "perm-201-vertex-delta-5.820766091346741e-11-area",
+      "passed": true,
+      "value": 1.8750000000000002,
+      "expected": 1.875,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "perm-201-vertex-delta-5.820766091346741e-11-affine",
+      "passed": true,
+      "value": 18772.96875,
+      "expected": 18772.96875,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-201-vertex-delta-5.820766091346741e-11-Fourier",
+      "passed": true,
+      "value": 4.577566798522237e-16,
+      "expected": 0.0,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-201-vertex-delta-5.820766091346741e-11-old-rule-byte-null",
+      "passed": true
+    },
+    {
+      "name": "perm-201-vertex-delta--5.820766091346741e-11-predicate",
+      "passed": true,
+      "indices": []
+    },
+    {
+      "name": "perm-201-vertex-delta--5.820766091346741e-11-area",
+      "passed": true,
+      "value": 1.8750000000000002,
+      "expected": 1.875,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "perm-201-vertex-delta--5.820766091346741e-11-affine",
+      "passed": true,
+      "value": 18772.96875,
+      "expected": 18772.96875,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-201-vertex-delta--5.820766091346741e-11-Fourier",
+      "passed": true,
+      "value": 4.577566798522237e-16,
+      "expected": 0.0,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-201-vertex-delta--5.820766091346741e-11-old-rule-byte-null",
+      "passed": true
+    },
+    {
+      "name": "perm-201-coalesced-deterministic",
+      "passed": true
+    },
+    {
+      "name": "perm-201-coalesced-area",
+      "passed": true,
+      "value": 1.8749999999999993,
+      "expected": 1.875,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "perm-201-R0-old-path",
+      "passed": true
+    },
+    {
+      "name": "perm-201-R0-byte-null",
+      "passed": true
+    },
+    {
+      "name": "perm-201-full-old-path",
+      "passed": true
+    },
+    {
+      "name": "perm-201-full-byte-null",
+      "passed": true
+    },
+    {
+      "name": "perm-201-absent-old-path",
+      "passed": true
+    },
+    {
+      "name": "perm-201-absent-byte-null",
+      "passed": true
+    },
+    {
+      "name": "perm-201-coordinates-unchanged",
+      "passed": true
+    },
+    {
+      "name": "perm-210-edge-area",
+      "passed": true,
+      "value": 1.8750000000000004,
+      "expected": 1.875,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "perm-210-edge-affine",
+      "passed": true,
+      "value": 18772.968750000007,
+      "expected": 18772.96875,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-210-edge-positive-inside",
+      "passed": true
+    },
+    {
+      "name": "perm-210-edge-cusp",
+      "passed": true,
+      "value": 0.4285714285714287,
+      "expected": 0.42857142857142855,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "perm-210-edge-linear-destroyer-rejected",
+      "passed": true,
+      "error": -4.47249235981384e-05
+    },
+    {
+      "name": "perm-210-edge-wrong-Jacobian-rejected",
+      "passed": true
+    },
+    {
+      "name": "perm-210-vertex-area",
+      "passed": true,
+      "value": 1.8749999999999993,
+      "expected": 1.875,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "perm-210-vertex-affine",
+      "passed": true,
+      "value": 18772.968749999996,
+      "expected": 18772.96875,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-210-vertex-positive-inside",
+      "passed": true
+    },
+    {
+      "name": "perm-210-vertex-cusp",
+      "passed": true,
+      "value": 1.0714285714285707,
+      "expected": 1.0714285714285714,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "perm-210-vertex-linear-destroyer-rejected",
+      "passed": true,
+      "error": -1.3291711679741525e-05
+    },
+    {
+      "name": "perm-210-vertex-wrong-Jacobian-rejected",
+      "passed": true
+    },
+    {
+      "name": "perm-210-edge-delta-0.0-predicate",
+      "passed": true,
+      "indices": [
+        2,
+        1
+      ]
+    },
+    {
+      "name": "perm-210-edge-delta-0.0-area",
+      "passed": true,
+      "value": 1.8749999999999987,
+      "expected": 1.875,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "perm-210-edge-delta-0.0-affine",
+      "passed": true,
+      "value": 18772.968749999985,
+      "expected": 18772.96875,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-210-edge-delta-0.0-Fourier",
+      "passed": true,
+      "value": 4.539509032500356e-14,
+      "expected": 0.0,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-210-edge-delta-2.842170943040401e-14-predicate",
+      "passed": true,
+      "indices": [
+        2,
+        1
+      ]
+    },
+    {
+      "name": "perm-210-edge-delta-2.842170943040401e-14-area",
+      "passed": true,
+      "value": 1.8749999999999987,
+      "expected": 1.875,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "perm-210-edge-delta-2.842170943040401e-14-affine",
+      "passed": true,
+      "value": 18772.968749999985,
+      "expected": 18772.96875,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-210-edge-delta-2.842170943040401e-14-Fourier",
+      "passed": true,
+      "value": 4.539509032500356e-14,
+      "expected": 0.0,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-210-edge-delta--2.842170943040401e-14-predicate",
+      "passed": true,
+      "indices": [
+        2,
+        1
+      ]
+    },
+    {
+      "name": "perm-210-edge-delta--2.842170943040401e-14-area",
+      "passed": true,
+      "value": 1.8749999999999987,
+      "expected": 1.875,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "perm-210-edge-delta--2.842170943040401e-14-affine",
+      "passed": true,
+      "value": 18772.968749999985,
+      "expected": 18772.96875,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-210-edge-delta--2.842170943040401e-14-Fourier",
+      "passed": true,
+      "value": 4.539509032500356e-14,
+      "expected": 0.0,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-210-edge-delta-5.820766091346741e-11-predicate",
+      "passed": true,
+      "indices": []
+    },
+    {
+      "name": "perm-210-edge-delta-5.820766091346741e-11-area",
+      "passed": true,
+      "value": 1.8750000000000002,
+      "expected": 1.875,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "perm-210-edge-delta-5.820766091346741e-11-affine",
+      "passed": true,
+      "value": 18772.96875,
+      "expected": 18772.96875,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-210-edge-delta-5.820766091346741e-11-Fourier",
+      "passed": true,
+      "value": 7.447602459741819e-16,
+      "expected": 0.0,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-210-edge-delta-5.820766091346741e-11-old-rule-byte-null",
+      "passed": true
+    },
+    {
+      "name": "perm-210-edge-delta--5.820766091346741e-11-predicate",
+      "passed": true,
+      "indices": []
+    },
+    {
+      "name": "perm-210-edge-delta--5.820766091346741e-11-area",
+      "passed": true,
+      "value": 1.8750000000000002,
+      "expected": 1.875,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "perm-210-edge-delta--5.820766091346741e-11-affine",
+      "passed": true,
+      "value": 18772.96875,
+      "expected": 18772.96875,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-210-edge-delta--5.820766091346741e-11-Fourier",
+      "passed": true,
+      "value": 7.447602459741819e-16,
+      "expected": 0.0,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-210-edge-delta--5.820766091346741e-11-old-rule-byte-null",
+      "passed": true
+    },
+    {
+      "name": "perm-210-vertex-delta-0.0-predicate",
+      "passed": true,
+      "indices": [
+        0
+      ]
+    },
+    {
+      "name": "perm-210-vertex-delta-0.0-area",
+      "passed": true,
+      "value": 1.8750000000000018,
+      "expected": 1.875,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "perm-210-vertex-delta-0.0-affine",
+      "passed": true,
+      "value": 18772.968750000015,
+      "expected": 18772.96875,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-210-vertex-delta-0.0-Fourier",
+      "passed": true,
+      "value": 4.6135210586395794e-14,
+      "expected": 0.0,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-210-vertex-delta-2.842170943040401e-14-predicate",
+      "passed": true,
+      "indices": [
+        0
+      ]
+    },
+    {
+      "name": "perm-210-vertex-delta-2.842170943040401e-14-area",
+      "passed": true,
+      "value": 1.8750000000000018,
+      "expected": 1.875,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "perm-210-vertex-delta-2.842170943040401e-14-affine",
+      "passed": true,
+      "value": 18772.968750000015,
+      "expected": 18772.96875,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-210-vertex-delta-2.842170943040401e-14-Fourier",
+      "passed": true,
+      "value": 4.6135210586395794e-14,
+      "expected": 0.0,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-210-vertex-delta--2.842170943040401e-14-predicate",
+      "passed": true,
+      "indices": [
+        0
+      ]
+    },
+    {
+      "name": "perm-210-vertex-delta--2.842170943040401e-14-area",
+      "passed": true,
+      "value": 1.8750000000000018,
+      "expected": 1.875,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "perm-210-vertex-delta--2.842170943040401e-14-affine",
+      "passed": true,
+      "value": 18772.968750000015,
+      "expected": 18772.96875,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-210-vertex-delta--2.842170943040401e-14-Fourier",
+      "passed": true,
+      "value": 4.6135210586395794e-14,
+      "expected": 0.0,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-210-vertex-delta-5.820766091346741e-11-predicate",
+      "passed": true,
+      "indices": []
+    },
+    {
+      "name": "perm-210-vertex-delta-5.820766091346741e-11-area",
+      "passed": true,
+      "value": 1.8750000000000002,
+      "expected": 1.875,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "perm-210-vertex-delta-5.820766091346741e-11-affine",
+      "passed": true,
+      "value": 18772.96875,
+      "expected": 18772.96875,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-210-vertex-delta-5.820766091346741e-11-Fourier",
+      "passed": true,
+      "value": 7.447602459741819e-16,
+      "expected": 0.0,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-210-vertex-delta-5.820766091346741e-11-old-rule-byte-null",
+      "passed": true
+    },
+    {
+      "name": "perm-210-vertex-delta--5.820766091346741e-11-predicate",
+      "passed": true,
+      "indices": []
+    },
+    {
+      "name": "perm-210-vertex-delta--5.820766091346741e-11-area",
+      "passed": true,
+      "value": 1.8750000000000002,
+      "expected": 1.875,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "perm-210-vertex-delta--5.820766091346741e-11-affine",
+      "passed": true,
+      "value": 18772.96875,
+      "expected": 18772.96875,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-210-vertex-delta--5.820766091346741e-11-Fourier",
+      "passed": true,
+      "value": 7.447602459741819e-16,
+      "expected": 0.0,
+      "tolerance": 1e-08
+    },
+    {
+      "name": "perm-210-vertex-delta--5.820766091346741e-11-old-rule-byte-null",
+      "passed": true
+    },
+    {
+      "name": "perm-210-coalesced-deterministic",
+      "passed": true
+    },
+    {
+      "name": "perm-210-coalesced-area",
+      "passed": true,
+      "value": 1.8749999999999993,
+      "expected": 1.875,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "perm-210-R0-old-path",
+      "passed": true
+    },
+    {
+      "name": "perm-210-R0-byte-null",
+      "passed": true
+    },
+    {
+      "name": "perm-210-full-old-path",
+      "passed": true
+    },
+    {
+      "name": "perm-210-full-byte-null",
+      "passed": true
+    },
+    {
+      "name": "perm-210-absent-old-path",
+      "passed": true
+    },
+    {
+      "name": "perm-210-absent-byte-null",
+      "passed": true
+    },
+    {
+      "name": "perm-210-coordinates-unchanged",
+      "passed": true
+    },
+    {
+      "name": "three-near-candidates-closest-edge",
+      "passed": true
+    },
+    {
+      "name": "three-near-candidates-retain-area-ratio",
+      "passed": true,
+      "value": 1.0000000000000004,
+      "expected": 1.0,
+      "tolerance": 1e-12
+    },
+    {
+      "name": "three-near-candidates-positive",
+      "passed": true
+    },
+    {
+      "name": "nonfinite-predicate-refusal-inf",
+      "passed": true,
+      "refusal": "UNCOMMISSIONED_NUMERICS: finite triangle vertices required"
+    },
+    {
+      "name": "nonfinite-predicate-refusal-nan",
+      "passed": true,
+      "refusal": "UNCOMMISSIONED_NUMERICS: finite triangle vertices required"
+    },
+    {
+      "name": "actual-formerly-refused-cell",
+      "passed": true,
+      "value": 15204.412150782977,
+      "expected": 15204.412150777305,
+      "tolerance": 0.004
+    },
+    {
+      "name": "actual-map-observer-byte-null",
+      "passed": true
+    },
+    {
+      "name": "actual-both-map-branches-powered",
+      "passed": true,
+      "counts": {
+        "0": 18,
+        "1": 16,
+        "2": 6
+      }
+    },
+    {
+      "name": "same-source-linear-map-ablation-disposition-recorded",
+      "passed": true
+    },
+    {
+      "name": "archived-local-31-7-still-refuses",
+      "passed": true,
+      "refusal": "UNCOMMISSIONED_NUMERICS: cell depth/error ceiling"
+    }
+  ],
+  "legacy_render_sha256": "ef52c45d28ec2dda5aa897cfd57dacc4b4a3e300d3a581c35f305c76e2dd03f8",
+  "actual_cell": {
+    "value_e": 15204.412150782977,
+    "reference_e": 15204.412150777305,
+    "receipt": {
+      "value_error_indicator_e": 0.0003667300924324998,
+      "cell_indicator_e": 0.00036663299340708325,
+      "weighted_high_pupil_indicator_e": 9.709902541659062e-08,
+      "cell_quadrature_delta_e": 0.00036643873016828366,
+      "area": 1.0,
+      "leaf_triangles": 12,
+      "work": {
+        "point_calls": 1600,
+        "angular_nodes": 312768,
+        "peak_node_pairs": 10624,
+        "tracked_peak_ndarray_bytes": 2166896,
+        "tracked_peak_ndarrays": 57,
+        "peak_live_scalar_frames": 0,
+        "observer": "count",
+        "observer_events": 10656,
+        "optional_hook_calls": 1626,
+        "cell_allocation": {
+          "cells": 1,
+          "leaves": 12,
+          "minimum_depth": 0,
+          "maximum_depth": 3,
+          "locally_overallocated_leaves": 2,
+          "cells_with_locally_overallocated_leaves": 1
+        },
+        "cpu_seconds": 0.078125,
+        "wall_seconds": 0.06299999996554106
+      }
+    },
+    "observed_receipt": {
+      "value_error_indicator_e": 0.0003667300924324998,
+      "cell_indicator_e": 0.00036663299340708325,
+      "weighted_high_pupil_indicator_e": 9.709902541659062e-08,
+      "cell_quadrature_delta_e": 0.00036643873016828366,
+      "area": 1.0,
+      "leaf_triangles": 12,
+      "work": {
+        "point_calls": 1600,
+        "angular_nodes": 312768,
+        "peak_node_pairs": 10624,
+        "tracked_peak_ndarray_bytes": 2166896,
+        "tracked_peak_ndarrays": 57,
+        "peak_live_scalar_frames": 0,
+        "observer": "count",
+        "observer_events": 10656,
+        "optional_hook_calls": 1626,
+        "cell_allocation": {
+          "cells": 1,
+          "leaves": 12,
+          "minimum_depth": 0,
+          "maximum_depth": 3,
+          "locally_overallocated_leaves": 2,
+          "cells_with_locally_overallocated_leaves": 1
+        },
+        "cpu_seconds": 0.078125,
+        "wall_seconds": 0.07800000009592623
+      }
+    },
+    "selected_rule_calls": {
+      "0": 18,
+      "1": 16,
+      "2": 6
+    },
+    "scalar_sha256": "ee633c50e2a30b298f0dcec7ca81202e4d1c522db93e32d8c20019a0365b774e"
+  },
+  "same_source_linear_map_ablation": {
+    "status": "RETURNED",
+    "value_e": 15204.412143645808,
+    "reference_error_e": 7.131497113732621e-06,
+    "receipt": {
+      "value_error_indicator_e": 0.000559646355735533,
+      "cell_indicator_e": 0.0005595492988747773,
+      "weighted_high_pupil_indicator_e": 9.705686075567538e-08,
+      "cell_quadrature_delta_e": 0.0005593551016147558,
+      "area": 1.0,
+      "leaf_triangles": 10,
+      "work": {
+        "point_calls": 1280,
+        "angular_nodes": 250656,
+        "peak_node_pairs": 10624,
+        "tracked_peak_ndarray_bytes": 2166656,
+        "tracked_peak_ndarrays": 54,
+        "peak_live_scalar_frames": 0,
+        "observer": "count",
+        "observer_events": 8485,
+        "optional_hook_calls": 1296,
+        "cell_allocation": {
+          "cells": 1,
+          "leaves": 10,
+          "minimum_depth": 0,
+          "maximum_depth": 3,
+          "locally_overallocated_leaves": 5,
+          "cells_with_locally_overallocated_leaves": 1
+        },
+        "cpu_seconds": 0.046875,
+        "wall_seconds": 0.06199999991804361
+      }
+    }
+  },
+  "legacy_local_render_sha256": "a59e9686823d6f4ab2749dd8ca0f1a0bbf6cd847ee32ed04eef44dc78a87aba5",
+  "source_unchanged": true
+}

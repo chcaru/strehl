@@ -1,0 +1,751 @@
+{
+  "schema": "m194e-independent-comparison-v1",
+  "status": "PASS_FLOAT_MODEL",
+  "command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-compare.py",
+    "--bundle",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\float-run-4\\float-bundle.json",
+    "--bundle-sha256",
+    "200da9731cc90b508b544658c4fb084f0b52d11cace116d525248a9a3812e8e1",
+    "--author-run",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\float-run-4\\result.json",
+    "--author-run-sha256",
+    "6436a4ec32255ff383c4ec674b5a80f8d854acd7973638af53738550ddd70d40",
+    "--schema-sha256",
+    "1efac4ff18b704047d3386e58379e6dd5c53fc7cd28854da044d20b35c179d13",
+    "--reader-controls",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-reader-controls-6\\result.json",
+    "--reader-controls-sha256",
+    "05042a5b6ab3cd96e447d9e2811999251fea909adc3c1e8694747c47e3f69b82",
+    "--output",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-full-comparison-1"
+  ],
+  "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+  "numpy": "2.4.4",
+  "numerical_threads": 2,
+  "inputs": {
+    "reader_controls": {
+      "path": "experiments/m194e-joint-pupil/independent-reader-controls-6/result.json",
+      "bytes": 1829,
+      "sha256": "05042a5b6ab3cd96e447d9e2811999251fea909adc3c1e8694747c47e3f69b82"
+    },
+    "observer": {
+      "path": "experiments/m194e-joint-pupil/independent-observer-4/result.json",
+      "bytes": 35124,
+      "sha256": "87ae62c0f302e39b2c2f4c70447cabba2596a5f2263300502b086b7c41f09640"
+    },
+    "map_controls": {
+      "path": "experiments/m194e-joint-pupil/independent-map-controls-3/result.json",
+      "bytes": 66906,
+      "sha256": "44aa1c841eed2fff3057c4351c7bf054eb9c55a9cb67d420bb4f8be66ae74245"
+    },
+    "allocation_controls": {
+      "path": "experiments/m194e-joint-pupil/independent-allocation-controls-4/result.json",
+      "bytes": 55467,
+      "sha256": "2b67e94226da7cf0a09d6378ea180c9fad4125c12b7aa54672503dcf4a68ff04"
+    },
+    "target_controls": {
+      "path": "experiments/m194e-joint-pupil/independent-target-controls-1/result.json",
+      "bytes": 33606,
+      "sha256": "c94c6c8a6222d68406eea8cd4c39fa4f70fe2771e0662a74b87a721e9910993b"
+    },
+    "controls": {
+      "path": "experiments/m194e-joint-pupil/independent-controls-1/result.json",
+      "bytes": 15809,
+      "sha256": "e122c38565184a0d1798a6e03cfdf3dd2fae9aab2ede6e7a0dae82b8f7cb10ab"
+    },
+    "author_api": {
+      "path": "experiments/m194e-joint-pupil/independent-author-api-6/result.json",
+      "bytes": 419585,
+      "sha256": "466c380788d3ce726d3cc91f02da1c7addde71eb3afd02eecd477058d7832f9d"
+    },
+    "reference": {
+      "path": "experiments/m194e-joint-pupil/independent-reference-1/result.json",
+      "bytes": 9119,
+      "sha256": "8791700cdc969847ff75f9fbd9205739ee2135ac4bbbdbe445d00b6664c7eccc"
+    },
+    "bundle": {
+      "path": "experiments/m194e-joint-pupil/float-run-4/float-bundle.json",
+      "bytes": 19693,
+      "sha256": "200da9731cc90b508b544658c4fb084f0b52d11cace116d525248a9a3812e8e1"
+    },
+    "author_run": {
+      "path": "experiments/m194e-joint-pupil/float-run-4/result.json",
+      "bytes": 23630,
+      "sha256": "6436a4ec32255ff383c4ec674b5a80f8d854acd7973638af53738550ddd70d40"
+    },
+    "math_controls": {
+      "path": "experiments/m194e-joint-pupil/independent-comparison-controls-1/result.json",
+      "bytes": 2788,
+      "sha256": "690801fc7cd1b01ecc7e78be29328868584c582f133ad0188574b36a7978d53e"
+    }
+  },
+  "sources": {
+    "experiments/m194e-joint-pupil/independent-compare.py": "e9745149a30f2754240c2970ce5d1855849679636488efecd125202831432f42",
+    "experiments/m194e-joint-pupil/independent-comparison-math.py": "d9f95b67aaf03a20c70623e55b7d932b5d43dbaef041a8f69b6995a56b22c50f",
+    "experiments/m194e-joint-pupil/independent-comparison-controls.py": "d4286e195b8fe8fbd7b6f48c2db655105864cfd84184b132791424774b4b65f4",
+    "experiments/m194e-joint-pupil/independent-model.py": "0cd8ea2331b269e65befdee110560cbc345e89c12348cbe1dc3144f7c04443f0",
+    "experiments/m194e-joint-pupil/independent-design.md": "5d98f9e949b77da629cc32e1cc3f35d2bcf9cb0b7fbdad28d58476e35509bf87",
+    "experiments/m194e-joint-pupil/independent-reader-controls.py": "8d49d0e5c7db9e1ffd985f5d7023b025f340f91a57413c662785bba67e4e897f",
+    "experiments/m194e-joint-pupil/independent-reader-preregister.md": "16a3a0d4fbacf8262e9e37aa6220e62a08ba533a6f820c7cc35584fc66c7ed53",
+    "experiments/m194e-joint-pupil/model.py": "a74cd9bd61ea2f717a185e86f725b5ed192431056a447581db0f8562cf9f70b8",
+    "experiments/m194e-joint-pupil/render.py": "487c1727ca3aab05dd66a7056fb368712ccaabbbe604818fdc8b47eda77b6e97",
+    "experiments/m194e-joint-pupil/independent-observer-check.py": "e00664163d2b32a6abba3214764dd8c31b6a80cdc55ff513b2492004905736fe",
+    "experiments/m194e-joint-pupil/independent-observer-preregister.md": "021d839821558b1a2cc0af0b042cae231f4d3333125521b107f329714891bd5b",
+    "experiments/m194e-joint-pupil/independent-amendment-3-review.md": "69dbcdae7485ecbba1665a728872080eeee8aeec94c1b839e110d4c90f336317",
+    "experiments/m194e-joint-pupil/independent-amendment-4-review.md": "828b4dfbae1abfae5f396355ddfa2bd304187a2ea5efdb253eb95075bc6ff055",
+    "experiments/m194e-joint-pupil/independent-map-controls.py": "be3e336589d210e92dfc8f43e26851fa4b049f3d8b88b4ee2358b98cbf6f8ffc",
+    "experiments/m194e-joint-pupil/independent-amendment-2-review.md": "954c37d7da90d38136fda82c0f788c4451b899df9585bcfb6285b3ba6dab34dc",
+    "experiments/m194e-joint-pupil/independent-allocation-controls.py": "cc5b94e434c6b81db1e3ab0cd7971e6af50cd884ba83777e3271f6ea1d594667",
+    "experiments/m194e-joint-pupil/independent-target-controls.py": "602c9c7b759589255e8e1e836b67eae5b44a93009c44fc17b4b24c3e238ff770",
+    "experiments/m194e-joint-pupil/independent-target-api-binding.md": "ef7cee4897bf05e02e8b5677394b725c42e0ac52018c8af9f3c4112d9117b26a",
+    "experiments/m194e-joint-pupil/independent-controls.py": "1cbed1f0b815e117ea6abd43d3871147a35c639721e04852fae2ccbcf26c5048",
+    "experiments/m194e-joint-pupil/independent-author-check.py": "a484056b642db046287428213ea6079ff67d7b250d58ab593f57d064abc4c2cd",
+    "experiments/m194e-joint-pupil/independent-reference.py": "e3105500e0d6e697258a4d689b3634a6c65a6008a9b23149609d5eeb5304fda7",
+    "experiments/m194e-joint-pupil/author-controls.py": "b661d06db65d7e07c5eec5c46891df4b73ebf2ee22f269e5ec62ce2ca7d04f5c",
+    "experiments/m194e-joint-pupil/commission.py": "bca12a5c0f4d995d60133780687874b1bd6c21d7cf7746f6232e2063516aab18",
+    "experiments/m194e-joint-pupil/emit-cfa.py": "fbcdfa2c716f638e9aa8f9cf13ba3024a575feca0ad15d1a67012f51176c82fd",
+    "experiments/m194e-joint-pupil/schema.py": "1efac4ff18b704047d3386e58379e6dd5c53fc7cd28854da044d20b35c179d13",
+    "experiments/m194e-joint-pupil/emission-contract.md": "c362b63626a820615b59584889492d94bc6520aa36c415a75443e2fcdde868cb",
+    "experiments/m194e-joint-pupil/implementation-plan.md": "dbac8c9ce4ff2d555bd49291de325e3f3494459b23b9cd83ec4ff180cf93f1a0",
+    "experiments/m194e-joint-pupil/implementation-preregister.md": "2196166ee9a36af8cc73e272e97d430d4478b2b8e05fc3af2215afc64de0e500",
+    "experiments/m194e-joint-pupil/numerical-amendment-1.md": "79bfd4a45167e6442f852557ff8d1a7641e200fade53127deb964f17805fbff9",
+    "experiments/m194e-joint-pupil/numerical-amendment-2.md": "4f07b4afff3760567021c3e9c27227682630fcef2a40e230e267a7528e69bc4f",
+    "experiments/m194e-joint-pupil/numerical-amendment-3.md": "e1e79088ff4c147be0b6a96410e4cc03913ad954da63c59e567f06648009fe43",
+    "experiments/m194e-joint-pupil/numerical-amendment-4.md": "2a5b73161a4ec50957fd2a1bc147955000b2fe43182f29d9987f0357de1cba26"
+  },
+  "frames": [
+    {
+      "arm": "primary",
+      "index": 0,
+      "statistics": {
+        "whole": {
+          "count": 3072,
+          "maximum_e": 3.266733983764425e-06,
+          "rms_e": 6.267123774829234e-08,
+          "maximum_pass": true,
+          "rms_pass": true
+        },
+        "edge": {
+          "count": 775,
+          "maximum_e": 3.266733983764425e-06,
+          "rms_e": 1.247746989924008e-07,
+          "maximum_pass": true,
+          "rms_pass": true
+        },
+        "pass": true
+      },
+      "actual": {
+        "bytes": 24704,
+        "dtype": "<f8",
+        "path": "primary/frame-00-scalar.npy",
+        "sha256": "1b21f6f7aee7331f04652d85154fec998171155d49ffb7e6b4eae3de2a6bf477",
+        "shape": [
+          48,
+          64
+        ]
+      },
+      "reference": {
+        "path": "refined-0.npy",
+        "bytes": 24704,
+        "sha256": "2a227f46c2b9781feabe6a7383a63c50e9f843157ef70ead17a0a3a1eac41899"
+      }
+    },
+    {
+      "arm": "primary",
+      "index": 1,
+      "statistics": {
+        "whole": {
+          "count": 3072,
+          "maximum_e": 8.865863492246717e-07,
+          "rms_e": 2.8745967822536792e-08,
+          "maximum_pass": true,
+          "rms_pass": true
+        },
+        "edge": {
+          "count": 775,
+          "maximum_e": 8.865863492246717e-07,
+          "rms_e": 5.57506333587052e-08,
+          "maximum_pass": true,
+          "rms_pass": true
+        },
+        "pass": true
+      },
+      "actual": {
+        "bytes": 24704,
+        "dtype": "<f8",
+        "path": "primary/frame-01-scalar.npy",
+        "sha256": "643b3187486e5226be1474e9f93858f8089af2505db31cdc01ed085fa5f51538",
+        "shape": [
+          48,
+          64
+        ]
+      },
+      "reference": {
+        "path": "refined-1.npy",
+        "bytes": 24704,
+        "sha256": "cc22d4c3960086515119341b44ade8d47b6c5735c9892b6098d72b5783b1f305"
+      }
+    },
+    {
+      "arm": "primary",
+      "index": 2,
+      "statistics": {
+        "whole": {
+          "count": 3072,
+          "maximum_e": 0.00012419945960573386,
+          "rms_e": 2.2448767439374392e-06,
+          "maximum_pass": true,
+          "rms_pass": true
+        },
+        "edge": {
+          "count": 775,
+          "maximum_e": 0.00012419945960573386,
+          "rms_e": 4.469431187679662e-06,
+          "maximum_pass": true,
+          "rms_pass": true
+        },
+        "pass": true
+      },
+      "actual": {
+        "bytes": 24704,
+        "dtype": "<f8",
+        "path": "primary/frame-02-scalar.npy",
+        "sha256": "2bc87603707138a4beb3496e8dbc421dc614792017668c86865d1b6c5ccb94cd",
+        "shape": [
+          48,
+          64
+        ]
+      },
+      "reference": {
+        "path": "refined-2.npy",
+        "bytes": 24704,
+        "sha256": "580e77622eb612e2a45b65b8e6d45f5bf87b3b86960eaa7e0e9fe53ff804a11d"
+      }
+    },
+    {
+      "arm": "primary",
+      "index": 3,
+      "statistics": {
+        "whole": {
+          "count": 3072,
+          "maximum_e": 1.0451567504787818e-06,
+          "rms_e": 2.6064737138923185e-08,
+          "maximum_pass": true,
+          "rms_pass": true
+        },
+        "edge": {
+          "count": 775,
+          "maximum_e": 1.0451567504787818e-06,
+          "rms_e": 5.187662732644448e-08,
+          "maximum_pass": true,
+          "rms_pass": true
+        },
+        "pass": true
+      },
+      "actual": {
+        "bytes": 24704,
+        "dtype": "<f8",
+        "path": "primary/frame-03-scalar.npy",
+        "sha256": "706ec9921efd9885bf150b9fcbd2fafa20eae68cadd27c58ce924f3c5b31fc24",
+        "shape": [
+          48,
+          64
+        ]
+      },
+      "reference": {
+        "path": "refined-3.npy",
+        "bytes": 24704,
+        "sha256": "72c7842f7061fda599be011db3e89b12741876ed3ab9ba56137e2a916d9a0d82"
+      }
+    },
+    {
+      "arm": "primary",
+      "index": 4,
+      "statistics": {
+        "whole": {
+          "count": 3072,
+          "maximum_e": 7.908056431915611e-08,
+          "rms_e": 2.384262758341516e-09,
+          "maximum_pass": true,
+          "rms_pass": true
+        },
+        "edge": {
+          "count": 775,
+          "maximum_e": 4.317007551435381e-08,
+          "rms_e": 2.244865226582535e-09,
+          "maximum_pass": true,
+          "rms_pass": true
+        },
+        "pass": true
+      },
+      "actual": {
+        "bytes": 24704,
+        "dtype": "<f8",
+        "path": "primary/frame-04-scalar.npy",
+        "sha256": "db406e077afcef6fb12215e6f1b66f241c0affe6553bae9f4350ecfa3f8b5fc3",
+        "shape": [
+          48,
+          64
+        ]
+      },
+      "reference": {
+        "path": "refined-4.npy",
+        "bytes": 24704,
+        "sha256": "3ddd4fa171949b5ee06b81432ba6dc03537403425c47827b2f1c2498b5df55a1"
+      }
+    },
+    {
+      "arm": "angle-refined",
+      "index": 0,
+      "statistics": {
+        "whole": {
+          "count": 3072,
+          "maximum_e": 3.266730345785618e-06,
+          "rms_e": 6.267108410957106e-08,
+          "maximum_pass": true,
+          "rms_pass": true
+        },
+        "edge": {
+          "count": 775,
+          "maximum_e": 3.266730345785618e-06,
+          "rms_e": 1.2477451295350076e-07,
+          "maximum_pass": true,
+          "rms_pass": true
+        },
+        "pass": true
+      },
+      "actual": {
+        "bytes": 24704,
+        "dtype": "<f8",
+        "path": "angle-refined/frame-00-scalar.npy",
+        "sha256": "7706f55f9a4f9db0b9e9c049c01d1f434f660e6fe5dac55bab046fd87960b0e7",
+        "shape": [
+          48,
+          64
+        ]
+      },
+      "reference": {
+        "path": "refined-0.npy",
+        "bytes": 24704,
+        "sha256": "2a227f46c2b9781feabe6a7383a63c50e9f843157ef70ead17a0a3a1eac41899"
+      }
+    },
+    {
+      "arm": "angle-refined",
+      "index": 1,
+      "statistics": {
+        "whole": {
+          "count": 3072,
+          "maximum_e": 8.865845302352682e-07,
+          "rms_e": 2.874597917214616e-08,
+          "maximum_pass": true,
+          "rms_pass": true
+        },
+        "edge": {
+          "count": 775,
+          "maximum_e": 8.865845302352682e-07,
+          "rms_e": 5.575058403716681e-08,
+          "maximum_pass": true,
+          "rms_pass": true
+        },
+        "pass": true
+      },
+      "actual": {
+        "bytes": 24704,
+        "dtype": "<f8",
+        "path": "angle-refined/frame-01-scalar.npy",
+        "sha256": "cea1eed1a64ef742b63796e8dcf2f5a6db2e65dcf33d665bd20fb2ab4548bac1",
+        "shape": [
+          48,
+          64
+        ]
+      },
+      "reference": {
+        "path": "refined-1.npy",
+        "bytes": 24704,
+        "sha256": "cc22d4c3960086515119341b44ade8d47b6c5735c9892b6098d72b5783b1f305"
+      }
+    },
+    {
+      "arm": "angle-refined",
+      "index": 2,
+      "statistics": {
+        "whole": {
+          "count": 3072,
+          "maximum_e": 0.00012419945778674446,
+          "rms_e": 2.2448767106230197e-06,
+          "maximum_pass": true,
+          "rms_pass": true
+        },
+        "edge": {
+          "count": 775,
+          "maximum_e": 0.00012419945778674446,
+          "rms_e": 4.469431121371843e-06,
+          "maximum_pass": true,
+          "rms_pass": true
+        },
+        "pass": true
+      },
+      "actual": {
+        "bytes": 24704,
+        "dtype": "<f8",
+        "path": "angle-refined/frame-02-scalar.npy",
+        "sha256": "0c0f8afc004dc7af4bef02252d345c1dfb2931cc485a139506dff0f86ebaa761",
+        "shape": [
+          48,
+          64
+        ]
+      },
+      "reference": {
+        "path": "refined-2.npy",
+        "bytes": 24704,
+        "sha256": "580e77622eb612e2a45b65b8e6d45f5bf87b3b86960eaa7e0e9fe53ff804a11d"
+      }
+    },
+    {
+      "arm": "angle-refined",
+      "index": 3,
+      "statistics": {
+        "whole": {
+          "count": 3072,
+          "maximum_e": 1.0451567504787818e-06,
+          "rms_e": 2.606470011400602e-08,
+          "maximum_pass": true,
+          "rms_pass": true
+        },
+        "edge": {
+          "count": 775,
+          "maximum_e": 1.0451567504787818e-06,
+          "rms_e": 5.187656362057204e-08,
+          "maximum_pass": true,
+          "rms_pass": true
+        },
+        "pass": true
+      },
+      "actual": {
+        "bytes": 24704,
+        "dtype": "<f8",
+        "path": "angle-refined/frame-03-scalar.npy",
+        "sha256": "de7873199aeb59a2dd0cd09bbdc1d08d992214bbfc37767573a3a5c416d7d3a1",
+        "shape": [
+          48,
+          64
+        ]
+      },
+      "reference": {
+        "path": "refined-3.npy",
+        "bytes": 24704,
+        "sha256": "72c7842f7061fda599be011db3e89b12741876ed3ab9ba56137e2a916d9a0d82"
+      }
+    },
+    {
+      "arm": "angle-refined",
+      "index": 4,
+      "statistics": {
+        "whole": {
+          "count": 3072,
+          "maximum_e": 7.907874532975256e-08,
+          "rms_e": 2.383753586974435e-09,
+          "maximum_pass": true,
+          "rms_pass": true
+        },
+        "edge": {
+          "count": 775,
+          "maximum_e": 4.316279955673963e-08,
+          "rms_e": 2.2441127594094922e-09,
+          "maximum_pass": true,
+          "rms_pass": true
+        },
+        "pass": true
+      },
+      "actual": {
+        "bytes": 24704,
+        "dtype": "<f8",
+        "path": "angle-refined/frame-04-scalar.npy",
+        "sha256": "13c2f2a03f3143ca0e349225f9dd8347c51e28da3ab97627ea98f4e3758f8e37",
+        "shape": [
+          48,
+          64
+        ]
+      },
+      "reference": {
+        "path": "refined-4.npy",
+        "bytes": 24704,
+        "sha256": "3ddd4fa171949b5ee06b81432ba6dc03537403425c47827b2f1c2498b5df55a1"
+      }
+    },
+    {
+      "arm": "cell-refined",
+      "index": 0,
+      "statistics": {
+        "whole": {
+          "count": 3072,
+          "maximum_e": 2.621163730509579e-09,
+          "rms_e": 1.653042139082796e-10,
+          "maximum_pass": true,
+          "rms_pass": true
+        },
+        "edge": {
+          "count": 775,
+          "maximum_e": 2.621163730509579e-09,
+          "rms_e": 1.6543913219566796e-10,
+          "maximum_pass": true,
+          "rms_pass": true
+        },
+        "pass": true
+      },
+      "actual": {
+        "bytes": 24704,
+        "dtype": "<f8",
+        "path": "cell-refined/frame-00-scalar.npy",
+        "sha256": "8f61dda2af88fbcbaba39caa991f567162176ca7a1a2f9243c4d3ed81a1e8152",
+        "shape": [
+          48,
+          64
+        ]
+      },
+      "reference": {
+        "path": "refined-0.npy",
+        "bytes": 24704,
+        "sha256": "2a227f46c2b9781feabe6a7383a63c50e9f843157ef70ead17a0a3a1eac41899"
+      }
+    },
+    {
+      "arm": "cell-refined",
+      "index": 1,
+      "statistics": {
+        "whole": {
+          "count": 3072,
+          "maximum_e": 2.550150384195149e-07,
+          "rms_e": 6.5907899815767e-09,
+          "maximum_pass": true,
+          "rms_pass": true
+        },
+        "edge": {
+          "count": 775,
+          "maximum_e": 6.064510671421885e-08,
+          "rms_e": 2.202941140124414e-09,
+          "maximum_pass": true,
+          "rms_pass": true
+        },
+        "pass": true
+      },
+      "actual": {
+        "bytes": 24704,
+        "dtype": "<f8",
+        "path": "cell-refined/frame-01-scalar.npy",
+        "sha256": "e3ee3deced715670b707c09151fe0d72895d80daa722665763655bb2ff4dca6a",
+        "shape": [
+          48,
+          64
+        ]
+      },
+      "reference": {
+        "path": "refined-1.npy",
+        "bytes": 24704,
+        "sha256": "cc22d4c3960086515119341b44ade8d47b6c5735c9892b6098d72b5783b1f305"
+      }
+    },
+    {
+      "arm": "cell-refined",
+      "index": 2,
+      "statistics": {
+        "whole": {
+          "count": 3072,
+          "maximum_e": 6.189293344505131e-07,
+          "rms_e": 1.1869169050003127e-08,
+          "maximum_pass": true,
+          "rms_pass": true
+        },
+        "edge": {
+          "count": 775,
+          "maximum_e": 6.189293344505131e-07,
+          "rms_e": 2.3630700525065016e-08,
+          "maximum_pass": true,
+          "rms_pass": true
+        },
+        "pass": true
+      },
+      "actual": {
+        "bytes": 24704,
+        "dtype": "<f8",
+        "path": "cell-refined/frame-02-scalar.npy",
+        "sha256": "975b2de9a4fd15bdbb1e843a686f233edfc0287c8adea011efa91000a3a05933",
+        "shape": [
+          48,
+          64
+        ]
+      },
+      "reference": {
+        "path": "refined-2.npy",
+        "bytes": 24704,
+        "sha256": "580e77622eb612e2a45b65b8e6d45f5bf87b3b86960eaa7e0e9fe53ff804a11d"
+      }
+    },
+    {
+      "arm": "cell-refined",
+      "index": 3,
+      "statistics": {
+        "whole": {
+          "count": 3072,
+          "maximum_e": 3.581226337701082e-08,
+          "rms_e": 6.852688311048177e-10,
+          "maximum_pass": true,
+          "rms_pass": true
+        },
+        "edge": {
+          "count": 775,
+          "maximum_e": 8.325514500029385e-09,
+          "rms_e": 3.303701221516483e-10,
+          "maximum_pass": true,
+          "rms_pass": true
+        },
+        "pass": true
+      },
+      "actual": {
+        "bytes": 24704,
+        "dtype": "<f8",
+        "path": "cell-refined/frame-03-scalar.npy",
+        "sha256": "8999eabfaab674d650cb9d848511c9dcc35d0e11b33d4b14006df58364ae5809",
+        "shape": [
+          48,
+          64
+        ]
+      },
+      "reference": {
+        "path": "refined-3.npy",
+        "bytes": 24704,
+        "sha256": "72c7842f7061fda599be011db3e89b12741876ed3ab9ba56137e2a916d9a0d82"
+      }
+    },
+    {
+      "arm": "cell-refined",
+      "index": 4,
+      "statistics": {
+        "whole": {
+          "count": 3072,
+          "maximum_e": 7.90842022979632e-08,
+          "rms_e": 2.3844548225654803e-09,
+          "maximum_pass": true,
+          "rms_pass": true
+        },
+        "edge": {
+          "count": 775,
+          "maximum_e": 4.317189450375736e-08,
+          "rms_e": 2.245149728698529e-09,
+          "maximum_pass": true,
+          "rms_pass": true
+        },
+        "pass": true
+      },
+      "actual": {
+        "bytes": 24704,
+        "dtype": "<f8",
+        "path": "cell-refined/frame-04-scalar.npy",
+        "sha256": "4adc8f458032c120a5cccb00ce14c8716182967d0400d81bee91b8606c76bbc7",
+        "shape": [
+          48,
+          64
+        ]
+      },
+      "reference": {
+        "path": "refined-4.npy",
+        "bytes": 24704,
+        "sha256": "3ddd4fa171949b5ee06b81432ba6dc03537403425c47827b2f1c2498b5df55a1"
+      }
+    }
+  ],
+  "author_refinement": [
+    {
+      "arm": "angle-refined",
+      "index": 0,
+      "maximum_e": 4.321918822824955e-09,
+      "passed": true
+    },
+    {
+      "arm": "cell-refined",
+      "index": 0,
+      "maximum_e": 3.2662155717844144e-06,
+      "passed": true
+    },
+    {
+      "arm": "angle-refined",
+      "index": 1,
+      "maximum_e": 6.548361852765083e-11,
+      "passed": true
+    },
+    {
+      "arm": "cell-refined",
+      "index": 1,
+      "maximum_e": 8.849929145071656e-07,
+      "passed": true
+    },
+    {
+      "arm": "angle-refined",
+      "index": 2,
+      "maximum_e": 9.094947017729282e-12,
+      "passed": true
+    },
+    {
+      "arm": "cell-refined",
+      "index": 2,
+      "maximum_e": 0.00012358053027128335,
+      "passed": true
+    },
+    {
+      "arm": "angle-refined",
+      "index": 3,
+      "maximum_e": 9.094947017729282e-12,
+      "passed": true
+    },
+    {
+      "arm": "cell-refined",
+      "index": 3,
+      "maximum_e": 1.045043973135762e-06,
+      "passed": true
+    },
+    {
+      "arm": "angle-refined",
+      "index": 4,
+      "maximum_e": 3.092281986027956e-11,
+      "passed": true
+    },
+    {
+      "arm": "cell-refined",
+      "index": 4,
+      "maximum_e": 2.546585164964199e-11,
+      "passed": true
+    }
+  ],
+  "independent_refinement": [
+    {
+      "index": 0,
+      "maximum_e": 2.956221578642726e-08,
+      "passed": true
+    },
+    {
+      "index": 1,
+      "maximum_e": 2.5502959033474326e-07,
+      "passed": true
+    },
+    {
+      "index": 2,
+      "maximum_e": 5.183519533602521e-07,
+      "passed": true
+    },
+    {
+      "index": 3,
+      "maximum_e": 2.2009771782904863e-09,
+      "passed": true
+    },
+    {
+      "index": 4,
+      "maximum_e": 1.9572325982153416e-09,
+      "passed": true
+    }
+  ],
+  "source_unchanged": true,
+  "cpu_seconds": 0.1875,
+  "wall_seconds": 0.1823378000408411
+}

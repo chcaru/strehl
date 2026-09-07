@@ -1,0 +1,117 @@
+{
+  "schema": "m194e-independent-reader-launch-v1",
+  "status": "CHILD_COMPLETED",
+  "launcher_orig_argv": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-X",
+    "utf8",
+    "-X",
+    "pycache_prefix=experiments/m194e-joint-pupil/work/cache-independent-comparison-launch-1",
+    "experiments/m194e-joint-pupil/independent-comparison-launch.py",
+    "--bundle",
+    "experiments/m194e-joint-pupil/float-run-4/float-bundle.json",
+    "--bundle-sha256",
+    "200da9731cc90b508b544658c4fb084f0b52d11cace116d525248a9a3812e8e1",
+    "--author-run",
+    "experiments/m194e-joint-pupil/float-run-4/result.json",
+    "--author-run-sha256",
+    "6436a4ec32255ff383c4ec674b5a80f8d854acd7973638af53738550ddd70d40",
+    "--schema-sha256",
+    "1efac4ff18b704047d3386e58379e6dd5c53fc7cd28854da044d20b35c179d13",
+    "--reader-controls",
+    "experiments/m194e-joint-pupil/independent-reader-controls-6/result.json",
+    "--reader-controls-sha256",
+    "05042a5b6ab3cd96e447d9e2811999251fea909adc3c1e8694747c47e3f69b82",
+    "--output",
+    "experiments/m194e-joint-pupil/independent-full-comparison-1",
+    "--cache-prefix",
+    "experiments/m194e-joint-pupil/work/cache-independent-full-comparison-1"
+  ],
+  "launcher_xoptions": {
+    "utf8": true,
+    "pycache_prefix": "experiments/m194e-joint-pupil/work/cache-independent-comparison-launch-1"
+  },
+  "executable": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+  "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "launcher_sha256": "aebd798c2992f8e6c393bd73ae2a39100f81c4d0586593723165c90293f1aa33",
+  "reader_sha256": "e9745149a30f2754240c2970ce5d1855849679636488efecd125202831432f42",
+  "child_argv": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-X",
+    "utf8",
+    "-X",
+    "pycache_prefix=C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\work\\cache-independent-full-comparison-1",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-compare.py",
+    "--bundle",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\float-run-4\\float-bundle.json",
+    "--bundle-sha256",
+    "200da9731cc90b508b544658c4fb084f0b52d11cace116d525248a9a3812e8e1",
+    "--author-run",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\float-run-4\\result.json",
+    "--author-run-sha256",
+    "6436a4ec32255ff383c4ec674b5a80f8d854acd7973638af53738550ddd70d40",
+    "--schema-sha256",
+    "1efac4ff18b704047d3386e58379e6dd5c53fc7cd28854da044d20b35c179d13",
+    "--reader-controls",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-reader-controls-6\\result.json",
+    "--reader-controls-sha256",
+    "05042a5b6ab3cd96e447d9e2811999251fea909adc3c1e8694747c47e3f69b82",
+    "--output",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-full-comparison-1"
+  ],
+  "cwd": "C:\\dev\\blog\\death-of-software\\projects\\strehl",
+  "cache_absent_before": true,
+  "numerical_thread_environment": {
+    "OMP_NUM_THREADS": "2",
+    "OPENBLAS_NUM_THREADS": "2",
+    "MKL_NUM_THREADS": "2",
+    "NUMEXPR_NUM_THREADS": "2"
+  },
+  "bindings_before": {
+    "bundle": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\float-run-4\\float-bundle.json",
+      "sha256": "200da9731cc90b508b544658c4fb084f0b52d11cace116d525248a9a3812e8e1",
+      "bytes": 19693
+    },
+    "author_run": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\float-run-4\\result.json",
+      "sha256": "6436a4ec32255ff383c4ec674b5a80f8d854acd7973638af53738550ddd70d40",
+      "bytes": 23630
+    },
+    "reader_controls": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-reader-controls-6\\result.json",
+      "sha256": "05042a5b6ab3cd96e447d9e2811999251fea909adc3c1e8694747c47e3f69b82",
+      "bytes": 1829
+    },
+    "schema": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\schema.py",
+      "sha256": "1efac4ff18b704047d3386e58379e6dd5c53fc7cd28854da044d20b35c179d13",
+      "bytes": 17347
+    }
+  },
+  "started_utc": "2026-09-07T15:00:46Z",
+  "exit_code": 0,
+  "wall_seconds": 0.6583496999228373,
+  "ended_utc": "2026-09-07T15:00:47Z",
+  "reader_unchanged": true,
+  "bindings_unchanged": true,
+  "logs": {
+    "stdout": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-full-comparison-1-stdout.log",
+      "bytes": 61,
+      "sha256": "148c7d3b1e07e72ad9fcfddeb1f3e9987fd1e3a12e652712a428b37c820d70af"
+    },
+    "stderr": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-full-comparison-1-stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "child_result": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-full-comparison-1\\result.json",
+    "bytes": 24846,
+    "sha256": "00a6a877005bfc15c33d583f70e4ef6d4f4fb334667ebc00ae61f84e0e20f42f",
+    "status": "PASS_FLOAT_MODEL"
+  }
+}

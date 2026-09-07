@@ -1,0 +1,286 @@
+{
+  "schema": "m194e-float-commission-v1",
+  "status": "PASS",
+  "author_root": "experiments/m194e-joint-pupil/float-run-4",
+  "author_bundle": {
+    "path": "float-bundle.json",
+    "bytes": 19693,
+    "sha256": "200da9731cc90b508b544658c4fb084f0b52d11cace116d525248a9a3812e8e1"
+  },
+  "producer_sources": {
+    "experiments/m194e-joint-pupil/author-controls.py": {
+      "bytes": 35389,
+      "sha256": "b661d06db65d7e07c5eec5c46891df4b73ebf2ee22f269e5ec62ce2ca7d04f5c"
+    },
+    "experiments/m194e-joint-pupil/commission.py": {
+      "bytes": 6369,
+      "sha256": "bca12a5c0f4d995d60133780687874b1bd6c21d7cf7746f6232e2063516aab18"
+    },
+    "experiments/m194e-joint-pupil/emit-cfa.py": {
+      "bytes": 8870,
+      "sha256": "fbcdfa2c716f638e9aa8f9cf13ba3024a575feca0ad15d1a67012f51176c82fd"
+    },
+    "experiments/m194e-joint-pupil/model.py": {
+      "bytes": 8015,
+      "sha256": "a74cd9bd61ea2f717a185e86f725b5ed192431056a447581db0f8562cf9f70b8"
+    },
+    "experiments/m194e-joint-pupil/render.py": {
+      "bytes": 32791,
+      "sha256": "487c1727ca3aab05dd66a7056fb368712ccaabbbe604818fdc8b47eda77b6e97"
+    },
+    "experiments/m194e-joint-pupil/schema.py": {
+      "bytes": 17347,
+      "sha256": "1efac4ff18b704047d3386e58379e6dd5c53fc7cd28854da044d20b35c179d13"
+    }
+  },
+  "scene": {
+    "background": {
+      "affine": [
+        0.0,
+        0.0
+      ],
+      "constant": 12000.0,
+      "waves": [
+        {
+          "amplitude": 3200.0,
+          "frequency": [
+            0.08,
+            0.015
+          ],
+          "phase": 0.2
+        },
+        {
+          "amplitude": 1800.0,
+          "frequency": [
+            -0.035,
+            0.12
+          ],
+          "phase": 1.1
+        }
+      ]
+    },
+    "depths": [
+      1.0,
+      2.0
+    ],
+    "foreground": {
+      "affine": [
+        0.0,
+        0.0
+      ],
+      "constant": 15000.0,
+      "waves": [
+        {
+          "amplitude": 1400.0,
+          "frequency": [
+            0.045,
+            0.095
+          ],
+          "phase": 0.7
+        },
+        {
+          "amplitude": 700.0,
+          "frequency": [
+            0.17,
+            0.01
+          ],
+          "phase": 0.3
+        }
+      ]
+    },
+    "mask": {
+      "normal": [
+        1.0,
+        -0.15
+      ],
+      "offset": 28.4,
+      "side": "ge"
+    }
+  },
+  "ray_model": {
+    "coordinates": "native-displacement-before-inverse-similarity",
+    "defocus": "K*(inverse_focus-1/depth)",
+    "diffraction": false,
+    "exposure": "radiance-normalized",
+    "name": "shared-pupil-two-opaque-planes-v1",
+    "pupil": "uniform-unit-disc-area",
+    "spectral_optics": false,
+    "visibility": "foreground-first-same-ray"
+  },
+  "numerical_contract": {
+    "arms": {
+      "angle-refined": {
+        "angle_depth": 10,
+        "angle_high": 64,
+        "angle_low": 32,
+        "angular_limit": 600000000,
+        "arm": "angle-refined",
+        "array_limit": 33554432,
+        "cell_depth": 6,
+        "cell_high": 8,
+        "cell_low": 4,
+        "cell_point_tolerance": 1.171875e-05,
+        "cell_tolerance": 0.00075,
+        "cpu_limit": 600,
+        "node_pair_limit": 32768,
+        "point_limit": 4000000,
+        "pupil_tolerance": 6.25e-05,
+        "wall_limit": 1200
+      },
+      "cell-refined": {
+        "angle_depth": 10,
+        "angle_high": 32,
+        "angle_low": 16,
+        "angular_limit": 600000000,
+        "arm": "cell-refined",
+        "array_limit": 33554432,
+        "cell_depth": 6,
+        "cell_high": 16,
+        "cell_low": 8,
+        "cell_point_tolerance": 4.6875e-05,
+        "cell_tolerance": 0.0001875,
+        "cpu_limit": 600,
+        "node_pair_limit": 32768,
+        "point_limit": 4000000,
+        "pupil_tolerance": 0.00025,
+        "wall_limit": 1200
+      },
+      "primary": {
+        "angle_depth": 10,
+        "angle_high": 32,
+        "angle_low": 16,
+        "angular_limit": 600000000,
+        "arm": "primary",
+        "array_limit": 33554432,
+        "cell_depth": 6,
+        "cell_high": 8,
+        "cell_low": 4,
+        "cell_point_tolerance": 4.6875e-05,
+        "cell_tolerance": 0.00075,
+        "cpu_limit": 600,
+        "node_pair_limit": 32768,
+        "point_limit": 4000000,
+        "pupil_tolerance": 0.00025,
+        "wall_limit": 1200
+      }
+    },
+    "arrays": "all-five-complete-float64-frames",
+    "author_refinement_max_e": 0.001,
+    "cell_allocation": "global-absolute-leaf-priority-v1",
+    "cell_map": "predicate-square-distance-duffy-v1",
+    "cell_point_policy": "family-min-cell-budget-quarter-v1",
+    "edge_distance_native": 8,
+    "independent_refinement_max_e": 0.0005,
+    "indicators": "weighted-low-and-high-pupil-plus-cell-delta",
+    "max_discrepancy_e": 0.004,
+    "method": "polar-radial-ladder32-tangent-cell-global-inner-v5",
+    "radial_crossing_levels": 32,
+    "rms_discrepancy_e": 0.0008
+  },
+  "expected_scalars": {
+    "0": {
+      "bytes": 24704,
+      "dtype": "<f8",
+      "path": "primary/frame-00-scalar.npy",
+      "sha256": "1b21f6f7aee7331f04652d85154fec998171155d49ffb7e6b4eae3de2a6bf477",
+      "shape": [
+        48,
+        64
+      ]
+    },
+    "1": {
+      "bytes": 24704,
+      "dtype": "<f8",
+      "path": "primary/frame-01-scalar.npy",
+      "sha256": "643b3187486e5226be1474e9f93858f8089af2505db31cdc01ed085fa5f51538",
+      "shape": [
+        48,
+        64
+      ]
+    },
+    "2": {
+      "bytes": 24704,
+      "dtype": "<f8",
+      "path": "primary/frame-02-scalar.npy",
+      "sha256": "2bc87603707138a4beb3496e8dbc421dc614792017668c86865d1b6c5ccb94cd",
+      "shape": [
+        48,
+        64
+      ]
+    },
+    "3": {
+      "bytes": 24704,
+      "dtype": "<f8",
+      "path": "primary/frame-03-scalar.npy",
+      "sha256": "706ec9921efd9885bf150b9fcbd2fafa20eae68cadd27c58ce924f3c5b31fc24",
+      "shape": [
+        48,
+        64
+      ]
+    },
+    "4": {
+      "bytes": 24704,
+      "dtype": "<f8",
+      "path": "primary/frame-04-scalar.npy",
+      "sha256": "db406e077afcef6fb12215e6f1b66f241c0affe6553bae9f4350ecfa3f8b5fc3",
+      "shape": [
+        48,
+        64
+      ]
+    }
+  },
+  "numerical_receipts": {
+    "0": {
+      "bytes": 1961,
+      "path": "primary/frame-00-numerical.json",
+      "sha256": "d12cd31ce29ad560314b76214528a18e4486e2abe5dc2b406cdb5e4dc8c39c1a"
+    },
+    "1": {
+      "bytes": 1964,
+      "path": "primary/frame-01-numerical.json",
+      "sha256": "6a03baed2a428ac4f1f33aee8028ce44dc4b97a1bfe20b42181cb711d8dea1e8"
+    },
+    "2": {
+      "bytes": 1967,
+      "path": "primary/frame-02-numerical.json",
+      "sha256": "7656847cb5a887a000b146fe3faa9b30f9896a9cb3dbd0b531592317f8aa9f65"
+    },
+    "3": {
+      "bytes": 1969,
+      "path": "primary/frame-03-numerical.json",
+      "sha256": "5eefe0fd93f4b94952e5f960278fd6797bf32a42dd54a1ad62dcb7fee190070f"
+    },
+    "4": {
+      "bytes": 1962,
+      "path": "primary/frame-04-numerical.json",
+      "sha256": "b2ba0f860c281cf52f3e9ac09a24af8d8dccbcf99a042c9c8ad1a050e4516017"
+    }
+  },
+  "author_controls": {
+    "bytes": 50220,
+    "path": "experiments/m194e-joint-pupil/author-controls-11/result.json",
+    "sha256": "7313221769eac8d09f133f08a69691245727c7440adc2826bad13ef4bddc8123"
+  },
+  "independent_evidence": {
+    "controls": {
+      "path": "experiments/m194e-joint-pupil/independent-controls-1/result.json",
+      "bytes": 15809,
+      "sha256": "e122c38565184a0d1798a6e03cfdf3dd2fae9aab2ede6e7a0dae82b8f7cb10ab"
+    },
+    "author_api": {
+      "path": "experiments/m194e-joint-pupil/independent-author-api-6/result.json",
+      "bytes": 419585,
+      "sha256": "466c380788d3ce726d3cc91f02da1c7addde71eb3afd02eecd477058d7832f9d"
+    },
+    "reference": {
+      "path": "experiments/m194e-joint-pupil/independent-reference-1/result.json",
+      "bytes": 9119,
+      "sha256": "8791700cdc969847ff75f9fbd9205739ee2135ac4bbbdbe445d00b6664c7eccc"
+    },
+    "comparison": {
+      "path": "experiments/m194e-joint-pupil/independent-full-comparison-1/result.json",
+      "bytes": 24846,
+      "sha256": "00a6a877005bfc15c33d583f70e4ef6d4f4fb334667ebc00ae61f84e0e20f42f"
+    }
+  }
+}

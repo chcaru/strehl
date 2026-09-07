@@ -1,0 +1,19 @@
+{
+  "status": "VERIFIED_STRUCTURAL_FLOAT_GATE",
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-X",
+    "utf8",
+    "-X",
+    "pycache_prefix=experiments/m194e-joint-pupil/work/cache-independent-gate-validation-1",
+    "-c",
+    "import sys,json,hashlib; from pathlib import Path; d=Path('experiments/m194e-joint-pupil').resolve(); sys.path.insert(0,str(d)); import schema; result=schema.validate_commission(d/'float-run-4/float-bundle.json',d/'independent-full-comparison-1/float-commission.json','4bd57b896be0b68c42fb1384a468a4f29cc54139a18a046a678dd97bad408217'); receipt={'status':'VERIFIED_STRUCTURAL_FLOAT_GATE','command':sys.orig_argv,'executable':sys.executable,'xoptions':sys._xoptions,'schema_sha256':hashlib.sha256((d/'schema.py').read_bytes()).hexdigest(),'gate_sha256':'4bd57b896be0b68c42fb1384a468a4f29cc54139a18a046a678dd97bad408217'}; p=d/'independent-full-comparison-1-structural-gate.json'; f=p.open('x',encoding='utf8'); json.dump(receipt,f,indent=2); f.close(); print(receipt['status'])"
+  ],
+  "executable": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+  "xoptions": {
+    "utf8": true,
+    "pycache_prefix": "experiments/m194e-joint-pupil/work/cache-independent-gate-validation-1"
+  },
+  "schema_sha256": "1efac4ff18b704047d3386e58379e6dd5c53fc7cd28854da044d20b35c179d13",
+  "gate_sha256": "4bd57b896be0b68c42fb1384a468a4f29cc54139a18a046a678dd97bad408217"
+}
