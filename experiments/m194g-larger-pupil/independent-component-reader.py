@@ -958,7 +958,9 @@ def verify_controls(reads, path, trusted):
                 "entry-actual-run-preserves-primary-and-secondary-errors",
                 "actual-reference-v2-all300-returned-rows", "actual-reference-v2-chord-delta",
                 "actual-reference-v2-analytic-coherent-positive-work", "actual-reference-v2-omitted-adapter-release",
-                "actual-normalization-evidence-scalar-fault-inert", "actual-normalization-evidence-request-fault-inert"}
+                "actual-normalization-evidence-scalar-fault-inert", "actual-normalization-evidence-request-fault-inert",
+                "actual-verify-entry-pinned-markdown-and-results", "actual-verify-entry-wrong-amendment-pin",
+                "actual-verify-entry-old-json-choice", "actual-verify-entry-restored"}
     need(required <= names, "deciding private controls omitted")
     for name, ref in controls["source_bindings"].items():
         reads.bound(REPO, {"path": name, **ref})
@@ -990,7 +992,7 @@ def verify(author_path, author_sha, reference_path, reference_sha, execution_pat
     release = read_execution(reads, execution_path, execution_sha, scope="components")
     catalog = reads.external(HERE / "component-population.json", CATALOG_SHA)
     need(catalog["resolved_design"]["sha256"] == DESIGN_SHA, "fixed numerical design differs")
-    reads.external(HERE / "reference-interval-amendment-1.md", INTERVAL_AMENDMENT_SHA)
+    reads.bytes(HERE / "reference-interval-amendment-1.md", INTERVAL_AMENDMENT_SHA)
     author, reference = reads.external(author_path, author_sha), reads.external(reference_path, reference_sha)
     keys(author, ("schema", "status", "scope", "invocation", "execution_release", "catalog", "inputs_sha256",
                   "sources_before", "sources_after", "source_capture_error", "planned_calls", "rows", "observer_executions",

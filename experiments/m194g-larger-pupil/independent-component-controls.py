@@ -730,6 +730,72 @@ def reference_fixture_controls(reader, catalog, path, trusted, output, release):
     return checks.rows
 
 
+def top_level_verify_controls(reader, author_path, author_sha, reference_path, reference_sha, release):
+    """Actual verify entry; stop at its controls dependency, not a fake PASS."""
+    checks, reads = Checks(), reader.Reads()
+    author = reads.external(author_path, author_sha)
+    numerical = author["execution_release"]
+    numerical_path = Path(numerical["path"]).resolve()
+    reader.need(any(reader.relative_path(REPO, item["path"]) == numerical_path
+                    and item["sha256"] == numerical["sha256"] and item["bytes"] == numerical["bytes"]
+                    for item in release["inputs"]), "top-level numerical release is not an explicit input")
+    amendment_path = (HERE / "reference-interval-amendment-1.md").resolve()
+
+    class ReachedControlsBoundary(RuntimeError):
+        pass
+
+    def attempt(*, bad_pin=False, old_json_choice=False):
+        saved_pin = reader.INTERVAL_AMENDMENT_SHA
+        saved_controls = reader.verify_controls
+        saved_bytes = reader.Reads.bytes
+        observed = {}
+
+        def boundary(actual_reads, path, trusted):
+            expected = {str(amendment_path): saved_pin,
+                        str(Path(author_path).resolve()): author_sha,
+                        str(Path(reference_path).resolve()): reference_sha}
+            reader.need(all(actual_reads.observed.get(path, {}).get("sha256") == sha
+                            for path, sha in expected.items()), "actual verify did not read its complete entry inputs")
+            observed.update({path: actual_reads.observed[path] for path in expected})
+            actual_reads.finish()
+            raise ReachedControlsBoundary("actual verify reached controls after pinned Markdown and result reads")
+
+        def regress_json(actual_reads, path, trusted, *args, **kwargs):
+            data = saved_bytes(actual_reads, path, trusted, *args, **kwargs)
+            # Target verify's explicit byte-pin call, not the release's earlier
+            # length-bound source/input checks or final ledger rechecks.
+            if Path(path).resolve() == amendment_path and not args and not kwargs:
+                reader.strict_json(data)
+            return data
+
+        try:
+            reader.verify_controls = boundary
+            if bad_pin:
+                reader.INTERVAL_AMENDMENT_SHA = "0" * 64
+            if old_json_choice:
+                reader.Reads.bytes = regress_json
+            try:
+                reader.verify(author_path, author_sha, reference_path, reference_sha,
+                              numerical_path, numerical["sha256"], "PRIVATE_UNREACHED_CONTROLS", "0" * 64)
+            except ReachedControlsBoundary:
+                return {"fixture_only": True, "reached": "verify_controls",
+                        "numerical_comparison_executed": False, "actual_entry_inputs": observed}
+            raise AssertionError("actual verify returned without the required private boundary")
+        finally:
+            reader.INTERVAL_AMENDMENT_SHA = saved_pin
+            reader.verify_controls = saved_controls
+            reader.Reads.bytes = saved_bytes
+
+    checks.check("actual-verify-entry-pinned-markdown-and-results", attempt)
+    checks.check("actual-verify-entry-wrong-amendment-pin", lambda: attempt(bad_pin=True),
+                 True, ("ValueError", "actual file hash/length differs"))
+    checks.check("actual-verify-entry-old-json-choice", lambda: attempt(old_json_choice=True),
+                 True, ("JSONDecodeError", "Expecting value"))
+    checks.check("actual-verify-entry-restored", attempt)
+    reads.finish()
+    return checks.rows
+
+
 def load_checked_module(path, wanted, name):
     path = Path(path).resolve()
     raw = path.read_bytes()
@@ -800,6 +866,8 @@ def main():
             raise ValueError("actual reference fixture must be an explicitly pinned release input")
         actual.extend(reference_fixture_controls(reader, catalog, args.reference_fixture, args.reference_fixture_sha256,
                                                   args.output / "actual-reference-fixtures", release))
+        actual.extend(top_level_verify_controls(reader, args.author_fixture, args.author_fixture_sha256,
+                                                 args.reference_fixture, args.reference_fixture_sha256, release))
         core = result["groups"][0]
         core["checks"].extend(actual)
         core["check_count"] = len(core["checks"])
