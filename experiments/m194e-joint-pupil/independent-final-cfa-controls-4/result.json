@@ -1,0 +1,486 @@
+{
+  "checks": [
+    {
+      "detail": {
+        "rounded_reference_code_differences": [
+          192,
+          192,
+          192,
+          192,
+          192
+        ],
+        "sample_count": 15360,
+        "status": "PASS_FIXTURE_READER_ONLY"
+      },
+      "expected": "pass",
+      "name": "valid-five-frame-and-live-rounding-tie-companion",
+      "passed": true
+    },
+    {
+      "detail": {
+        "error": "independent predecessor nonterminal or fixture/genuine mode mismatch: author_api",
+        "error_type": "ValueError",
+        "traceback": "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 79, in check\n    detail = fn()\n             ^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 99, in <lambda>\n    check(\"fixture-gate-cannot-pass-genuine-mode\", lambda: V.verify(mp, V.sha(mp), gp, V.sha(gp)), True)\n                                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-verify-cfa.py\", line 219, in verify\n    need(record.get(\"status\") == status and record.get(\"source_unchanged\") is True, \"independent predecessor nonterminal or fixture/genuine mode mismatch: \" + name)\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-verify-cfa.py\", line 61, in need\n    raise ValueError(message)\nValueError: independent predecessor nonterminal or fixture/genuine mode mismatch: author_api\n"
+      },
+      "expected": "refuse",
+      "name": "fixture-gate-cannot-pass-genuine-mode",
+      "passed": true
+    },
+    {
+      "detail": {
+        "error": "external digest differs",
+        "error_type": "ValueError",
+        "traceback": "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 79, in check\n    detail = fn()\n             ^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 100, in <lambda>\n    check(\"wrong-external-manifest-digest\", lambda: V.verify(mp, \"0\" * 64, gp, V.sha(gp), fixture_only=True), True)\n                                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-verify-cfa.py\", line 169, in verify\n    manifest = reads.external(manifest_path, manifest_sha)\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-verify-cfa.py\", line 114, in external\n    need(self.observed[str(path)][\"sha256\"] == trusted, \"external digest differs\")\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-verify-cfa.py\", line 61, in need\n    raise ValueError(message)\nValueError: external digest differs\n"
+      },
+      "expected": "refuse",
+      "name": "wrong-external-manifest-digest",
+      "passed": true
+    },
+    {
+      "detail": {
+        "error": "external digest differs",
+        "error_type": "ValueError",
+        "traceback": "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 79, in check\n    detail = fn()\n             ^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 101, in <lambda>\n    check(\"wrong-external-gate-digest\", lambda: V.verify(mp, V.sha(mp), gp, \"0\" * 64, fixture_only=True), True)\n                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-verify-cfa.py\", line 170, in verify\n    gate = reads.external(commission_path, commission_sha)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-verify-cfa.py\", line 114, in external\n    need(self.observed[str(path)][\"sha256\"] == trusted, \"external digest differs\")\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-verify-cfa.py\", line 61, in need\n    raise ValueError(message)\nValueError: external digest differs\n"
+      },
+      "expected": "refuse",
+      "name": "wrong-external-gate-digest",
+      "passed": true
+    },
+    {
+      "detail": {
+        "error": "emission incomplete or refused",
+        "error_type": "ValueError",
+        "traceback": "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 79, in check\n    detail = fn()\n             ^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 150, in <lambda>\n    check(\"rebound-\" + name, lambda name=name, fn=fn: mutated(name, fn), True)\n                                                      ^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 113, in mutated\n    return V.verify(root / \"manifest.json\", V.sha(root / \"manifest.json\"), gp, V.sha(gp), fixture_only=True)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-verify-cfa.py\", line 176, in verify\n    need(run[\"schema\"] == \"m194e-emission-run-v1\" and run[\"status\"] == \"CFA_COMPLETE_AWAITING_INDEPENDENT_REVIEW\", \"emission incomplete or refused\")\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-verify-cfa.py\", line 61, in need\n    raise ValueError(message)\nValueError: emission incomplete or refused\n"
+      },
+      "expected": "refuse",
+      "name": "rebound-nonterminal",
+      "passed": true
+    },
+    {
+      "detail": {
+        "error": "emission incomplete or refused",
+        "error_type": "ValueError",
+        "traceback": "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 79, in check\n    detail = fn()\n             ^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 150, in <lambda>\n    check(\"rebound-\" + name, lambda name=name, fn=fn: mutated(name, fn), True)\n                                                      ^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 113, in mutated\n    return V.verify(root / \"manifest.json\", V.sha(root / \"manifest.json\"), gp, V.sha(gp), fixture_only=True)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-verify-cfa.py\", line 176, in verify\n    need(run[\"schema\"] == \"m194e-emission-run-v1\" and run[\"status\"] == \"CFA_COMPLETE_AWAITING_INDEPENDENT_REVIEW\", \"emission incomplete or refused\")\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-verify-cfa.py\", line 61, in need\n    raise ValueError(message)\nValueError: emission incomplete or refused\n"
+      },
+      "expected": "refuse",
+      "name": "rebound-refused-completion",
+      "passed": true
+    },
+    {
+      "detail": {
+        "error": "emission used different external float authority",
+        "error_type": "ValueError",
+        "traceback": "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 79, in check\n    detail = fn()\n             ^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 150, in <lambda>\n    check(\"rebound-\" + name, lambda name=name, fn=fn: mutated(name, fn), True)\n                                                      ^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 113, in mutated\n    return V.verify(root / \"manifest.json\", V.sha(root / \"manifest.json\"), gp, V.sha(gp), fixture_only=True)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-verify-cfa.py\", line 177, in verify\n    need(run[\"trusted_float_sha256\"] == commission_sha, \"emission used different external float authority\")\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-verify-cfa.py\", line 61, in need\n    raise ValueError(message)\nValueError: emission used different external float authority\n"
+      },
+      "expected": "refuse",
+      "name": "rebound-gate-binding",
+      "passed": true
+    },
+    {
+      "detail": {
+        "error": "source provenance differs",
+        "error_type": "ValueError",
+        "traceback": "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 79, in check\n    detail = fn()\n             ^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 150, in <lambda>\n    check(\"rebound-\" + name, lambda name=name, fn=fn: mutated(name, fn), True)\n                                                      ^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 113, in mutated\n    return V.verify(root / \"manifest.json\", V.sha(root / \"manifest.json\"), gp, V.sha(gp), fixture_only=True)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-verify-cfa.py\", line 190, in verify\n    need(run[\"sources_before\"] == run[\"sources_after\"] == gate[\"producer_sources\"] == S.source_bindings(), \"source provenance differs\")\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-verify-cfa.py\", line 61, in need\n    raise ValueError(message)\nValueError: source provenance differs\n"
+      },
+      "expected": "refuse",
+      "name": "rebound-source-after",
+      "passed": true
+    },
+    {
+      "detail": {
+        "error": "recorded command missing",
+        "error_type": "ValueError",
+        "traceback": "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 79, in check\n    detail = fn()\n             ^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 150, in <lambda>\n    check(\"rebound-\" + name, lambda name=name, fn=fn: mutated(name, fn), True)\n                                                      ^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 113, in mutated\n    return V.verify(root / \"manifest.json\", V.sha(root / \"manifest.json\"), gp, V.sha(gp), fixture_only=True)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-verify-cfa.py\", line 192, in verify\n    need(type(run[\"command\"]) is list and run[\"command\"] and all(type(v) is str for v in run[\"command\"]), \"recorded command missing\")\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-verify-cfa.py\", line 61, in need\n    raise ValueError(message)\nValueError: recorded command missing\n"
+      },
+      "expected": "refuse",
+      "name": "rebound-missing-command",
+      "passed": true
+    },
+    {
+      "detail": {
+        "error": "closed terminal emission receipt required",
+        "error_type": "ValueError",
+        "traceback": "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 79, in check\n    detail = fn()\n             ^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 150, in <lambda>\n    check(\"rebound-\" + name, lambda name=name, fn=fn: mutated(name, fn), True)\n                                                      ^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 113, in mutated\n    return V.verify(root / \"manifest.json\", V.sha(root / \"manifest.json\"), gp, V.sha(gp), fixture_only=True)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-verify-cfa.py\", line 175, in verify\n    keys(run, (\"schema\", \"status\", \"command\", \"started_utc\", \"python\", \"numpy\", \"input_bundle\", \"float_commission\", \"trusted_float_sha256\", \"sources_before\", \"frames\", \"sources_after\", \"ended_utc\"), \"closed terminal emission receipt required\")\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-verify-cfa.py\", line 65, in keys\n    need(type(value) is dict and set(value) == set(names), message)\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-verify-cfa.py\", line 61, in need\n    raise ValueError(message)\nValueError: closed terminal emission receipt required\n"
+      },
+      "expected": "refuse",
+      "name": "rebound-unknown-receipt",
+      "passed": true
+    },
+    {
+      "detail": {
+        "error": "closed emitted manifest required",
+        "error_type": "ValueError",
+        "traceback": "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 79, in check\n    detail = fn()\n             ^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 150, in <lambda>\n    check(\"rebound-\" + name, lambda name=name, fn=fn: mutated(name, fn), True)\n                                                      ^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 113, in mutated\n    return V.verify(root / \"manifest.json\", V.sha(root / \"manifest.json\"), gp, V.sha(gp), fixture_only=True)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-verify-cfa.py\", line 171, in verify\n    keys(manifest, (\"schema\", \"status\", \"producer\", \"sensor\", \"scene\", \"ray_model\", \"numerical_contract\", \"frames\"), \"closed emitted manifest required\")\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-verify-cfa.py\", line 65, in keys\n    need(type(value) is dict and set(value) == set(names), message)\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-verify-cfa.py\", line 61, in need\n    raise ValueError(message)\nValueError: closed emitted manifest required\n"
+      },
+      "expected": "refuse",
+      "name": "rebound-unknown-manifest",
+      "passed": true
+    },
+    {
+      "detail": {
+        "error": "",
+        "error_type": "AssertionError",
+        "traceback": "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 79, in check\n    detail = fn()\n             ^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 150, in <lambda>\n    check(\"rebound-\" + name, lambda name=name, fn=fn: mutated(name, fn), True)\n                                                      ^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 113, in mutated\n    return V.verify(root / \"manifest.json\", V.sha(root / \"manifest.json\"), gp, V.sha(gp), fixture_only=True)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-verify-cfa.py\", line 242, in verify\n    actual = A.actual_output(manifest_path, bundle_path)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-emission-api-controls.py\", line 210, in actual_output\n    assert f[key] == expected\n           ^^^^^^^^^^^^^^^^^^\nAssertionError\n"
+      },
+      "expected": "refuse",
+      "name": "rebound-wrong-cfa-units",
+      "passed": true
+    },
+    {
+      "detail": {
+        "error": "emitted sensor.noise: fixed value differs",
+        "error_type": "ValueError",
+        "traceback": "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 79, in check\n    detail = fn()\n             ^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 150, in <lambda>\n    check(\"rebound-\" + name, lambda name=name, fn=fn: mutated(name, fn), True)\n                                                      ^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 113, in mutated\n    return V.verify(root / \"manifest.json\", V.sha(root / \"manifest.json\"), gp, V.sha(gp), fixture_only=True)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-verify-cfa.py\", line 183, in verify\n    S.same_shape_value(manifest[name], bundle[name], \"emitted \" + name)\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\schema.py\", line 29, in same_shape_value\n    same_shape_value(value[k], expected[k], f\"{name}.{k}\")\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\schema.py\", line 37, in same_shape_value\n    raise ValueError(f\"{name}: fixed value differs\")\nValueError: emitted sensor.noise: fixed value differs\n"
+      },
+      "expected": "refuse",
+      "name": "rebound-noise",
+      "passed": true
+    },
+    {
+      "detail": {
+        "error": "emitted sensor.noise: fixed value differs",
+        "error_type": "ValueError",
+        "traceback": "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 79, in check\n    detail = fn()\n             ^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 150, in <lambda>\n    check(\"rebound-\" + name, lambda name=name, fn=fn: mutated(name, fn), True)\n                                                      ^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 113, in mutated\n    return V.verify(root / \"manifest.json\", V.sha(root / \"manifest.json\"), gp, V.sha(gp), fixture_only=True)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-verify-cfa.py\", line 183, in verify\n    S.same_shape_value(manifest[name], bundle[name], \"emitted \" + name)\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\schema.py\", line 29, in same_shape_value\n    same_shape_value(value[k], expected[k], f\"{name}.{k}\")\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\schema.py\", line 37, in same_shape_value\n    raise ValueError(f\"{name}: fixed value differs\")\nValueError: emitted sensor.noise: fixed value differs\n"
+      },
+      "expected": "refuse",
+      "name": "rebound-false-as-zero-noise",
+      "passed": true
+    },
+    {
+      "detail": {
+        "error": "emitted sensor.width: fixed integer differs",
+        "error_type": "ValueError",
+        "traceback": "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 79, in check\n    detail = fn()\n             ^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 150, in <lambda>\n    check(\"rebound-\" + name, lambda name=name, fn=fn: mutated(name, fn), True)\n                                                      ^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 113, in mutated\n    return V.verify(root / \"manifest.json\", V.sha(root / \"manifest.json\"), gp, V.sha(gp), fixture_only=True)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-verify-cfa.py\", line 183, in verify\n    S.same_shape_value(manifest[name], bundle[name], \"emitted \" + name)\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\schema.py\", line 29, in same_shape_value\n    same_shape_value(value[k], expected[k], f\"{name}.{k}\")\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\schema.py\", line 40, in same_shape_value\n    raise ValueError(f\"{name}: fixed integer differs\")\nValueError: emitted sensor.width: fixed integer differs\n"
+      },
+      "expected": "refuse",
+      "name": "rebound-float-width",
+      "passed": true
+    },
+    {
+      "detail": {
+        "error": "emitted frame geometry.index: fixed integer differs",
+        "error_type": "ValueError",
+        "traceback": "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 79, in check\n    detail = fn()\n             ^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 150, in <lambda>\n    check(\"rebound-\" + name, lambda name=name, fn=fn: mutated(name, fn), True)\n                                                      ^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 113, in mutated\n    return V.verify(root / \"manifest.json\", V.sha(root / \"manifest.json\"), gp, V.sha(gp), fixture_only=True)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-verify-cfa.py\", line 189, in verify\n    S.same_shape_value({k: actual[k] for k in geometry}, {k: original[k] for k in geometry}, \"emitted frame geometry\")\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\schema.py\", line 29, in same_shape_value\n    same_shape_value(value[k], expected[k], f\"{name}.{k}\")\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\schema.py\", line 40, in same_shape_value\n    raise ValueError(f\"{name}: fixed integer differs\")\nValueError: emitted frame geometry.index: fixed integer differs\n"
+      },
+      "expected": "refuse",
+      "name": "rebound-bool-index",
+      "passed": true
+    },
+    {
+      "detail": {
+        "error": "",
+        "error_type": "AssertionError",
+        "traceback": "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 79, in check\n    detail = fn()\n             ^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 150, in <lambda>\n    check(\"rebound-\" + name, lambda name=name, fn=fn: mutated(name, fn), True)\n                                                      ^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 113, in mutated\n    return V.verify(root / \"manifest.json\", V.sha(root / \"manifest.json\"), gp, V.sha(gp), fixture_only=True)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-verify-cfa.py\", line 242, in verify\n    actual = A.actual_output(manifest_path, bundle_path)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-emission-api-controls.py\", line 203, in actual_output\n    assert set(f) == {\"index\", \"inverse_focus\", \"K\", \"forward_similarity\", \"expected_scalar\", \"numerical_receipt\", \"expected_cfa\", \"cfa\"}\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n"
+      },
+      "expected": "refuse",
+      "name": "rebound-missing-expected",
+      "passed": true
+    },
+    {
+      "detail": {
+        "error": "five emitted frames required",
+        "error_type": "ValueError",
+        "traceback": "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 79, in check\n    detail = fn()\n             ^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 150, in <lambda>\n    check(\"rebound-\" + name, lambda name=name, fn=fn: mutated(name, fn), True)\n                                                      ^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 113, in mutated\n    return V.verify(root / \"manifest.json\", V.sha(root / \"manifest.json\"), gp, V.sha(gp), fixture_only=True)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-verify-cfa.py\", line 186, in verify\n    need(type(manifest[\"frames\"]) is list and len(manifest[\"frames\"]) == 5, \"five emitted frames required\")\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-verify-cfa.py\", line 61, in need\n    raise ValueError(message)\nValueError: five emitted frames required\n"
+      },
+      "expected": "refuse",
+      "name": "rebound-incomplete-five",
+      "passed": true
+    },
+    {
+      "detail": {
+        "error": "actual conversion mismatch: expected-electron samples=0, CFA samples=1",
+        "error_type": "ValueError",
+        "traceback": "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 79, in check\n    detail = fn()\n             ^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 150, in <lambda>\n    check(\"rebound-\" + name, lambda name=name, fn=fn: mutated(name, fn), True)\n                                                      ^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 113, in mutated\n    return V.verify(root / \"manifest.json\", V.sha(root / \"manifest.json\"), gp, V.sha(gp), fixture_only=True)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-verify-cfa.py\", line 242, in verify\n    actual = A.actual_output(manifest_path, bundle_path)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-emission-api-controls.py\", line 219, in actual_output\n    result.append(O.compare_files(root / f[\"expected_scalar\"][\"path\"], root / f[\"expected_cfa\"][\"path\"], root / f[\"cfa\"][\"path\"]))\n                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-cfa-oracle.py\", line 120, in compare_files\n    raise ValueError(\nValueError: actual conversion mismatch: expected-electron samples=0, CFA samples=1\n"
+      },
+      "expected": "refuse",
+      "name": "rebound-rehashed-cfa-value",
+      "passed": true
+    },
+    {
+      "detail": {
+        "error": "actual conversion mismatch: expected-electron samples=1, CFA samples=0",
+        "error_type": "ValueError",
+        "traceback": "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 79, in check\n    detail = fn()\n             ^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 150, in <lambda>\n    check(\"rebound-\" + name, lambda name=name, fn=fn: mutated(name, fn), True)\n                                                      ^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 113, in mutated\n    return V.verify(root / \"manifest.json\", V.sha(root / \"manifest.json\"), gp, V.sha(gp), fixture_only=True)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-verify-cfa.py\", line 242, in verify\n    actual = A.actual_output(manifest_path, bundle_path)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-emission-api-controls.py\", line 219, in actual_output\n    result.append(O.compare_files(root / f[\"expected_scalar\"][\"path\"], root / f[\"expected_cfa\"][\"path\"], root / f[\"cfa\"][\"path\"]))\n                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-cfa-oracle.py\", line 120, in compare_files\n    raise ValueError(\nValueError: actual conversion mismatch: expected-electron samples=1, CFA samples=0\n"
+      },
+      "expected": "refuse",
+      "name": "rebound-rehashed-electron-value",
+      "passed": true
+    },
+    {
+      "detail": {
+        "error": "[Errno 2] No such file or directory: 'C:\\\\dev\\\\blog\\\\death-of-software\\\\projects\\\\strehl\\\\experiments\\\\m194e-joint-pupil\\\\independent-final-cfa-controls-4\\\\mutant-missing-cfa-file\\\\missing.cfa'",
+        "error_type": "FileNotFoundError",
+        "traceback": "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 79, in check\n    detail = fn()\n             ^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 150, in <lambda>\n    check(\"rebound-\" + name, lambda name=name, fn=fn: mutated(name, fn), True)\n                                                      ^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 113, in mutated\n    return V.verify(root / \"manifest.json\", V.sha(root / \"manifest.json\"), gp, V.sha(gp), fixture_only=True)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-verify-cfa.py\", line 242, in verify\n    actual = A.actual_output(manifest_path, bundle_path)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-emission-api-controls.py\", line 207, in actual_output\n    expected = ref(root / f[key][\"path\"], root, key != \"numerical_receipt\")\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-emission-api-controls.py\", line 75, in ref\n    value = dict(path=path.relative_to(root).as_posix(), sha256=sha(path), bytes=path.stat().st_size)\n                                                                ^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-emission-api-controls.py\", line 57, in sha\n    with Path(path).open(\"rb\") as stream:\n         ^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\pathlib.py\", line 1013, in open\n    return io.open(self, mode, buffering, encoding, errors, newline)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nFileNotFoundError: [Errno 2] No such file or directory: 'C:\\\\dev\\\\blog\\\\death-of-software\\\\projects\\\\strehl\\\\experiments\\\\m194e-joint-pupil\\\\independent-final-cfa-controls-4\\\\mutant-missing-cfa-file\\\\missing.cfa'\n"
+      },
+      "expected": "refuse",
+      "name": "rebound-missing-cfa-file",
+      "passed": true
+    },
+    {
+      "detail": {
+        "error": "emission used different external float authority",
+        "error_type": "ValueError",
+        "traceback": "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 79, in check\n    detail = fn()\n             ^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 157, in bad_gate\n    return V.verify(mp, V.sha(mp), dest, V.sha(dest), fixture_only=True)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-verify-cfa.py\", line 177, in verify\n    need(run[\"trusted_float_sha256\"] == commission_sha, \"emission used different external float authority\")\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-verify-cfa.py\", line 61, in need\n    raise ValueError(message)\nValueError: emission used different external float authority\n"
+      },
+      "expected": "refuse",
+      "name": "failed-gate-current-hash",
+      "passed": true
+    },
+    {
+      "detail": {
+        "channels": [
+          {
+            "channel": "R",
+            "code_differences_outside_allowance": 0,
+            "maximum_unquantized_reference_difference_dn": 3.749999996216502e-05,
+            "minimum_half_integer_margin_dn": 0.5,
+            "registered_float_allowance_dn": 0.00075,
+            "rounded_reference_code_differences": 0,
+            "sites_within_rounding_allowance": 0
+          },
+          {
+            "channel": "G",
+            "code_differences_outside_allowance": 0,
+            "maximum_unquantized_reference_difference_dn": 5.000000010113581e-05,
+            "minimum_half_integer_margin_dn": 0.5,
+            "registered_float_allowance_dn": 0.001,
+            "rounded_reference_code_differences": 0,
+            "sites_within_rounding_allowance": 0
+          },
+          {
+            "channel": "B",
+            "code_differences_outside_allowance": 0,
+            "maximum_unquantized_reference_difference_dn": 3.0000000151630957e-05,
+            "minimum_half_integer_margin_dn": 0.5,
+            "registered_float_allowance_dn": 0.0006,
+            "rounded_reference_code_differences": 0,
+            "sites_within_rounding_allowance": 0
+          }
+        ],
+        "interpretation": "Approximate reference; its rounded CFA is not the exact conversion authority",
+        "maximum_scalar_discrepancy_e": 0.00020000000040454324,
+        "rms_scalar_discrepancy_e": 0.00020000000040454324,
+        "rounded_reference_code_differences": 0
+      },
+      "expected": "pass",
+      "name": "reference-discrepancy-valid",
+      "passed": true
+    },
+    {
+      "detail": {
+        "error": "admitted scalar/reference discrepancy exceeds existing bars",
+        "error_type": "ValueError",
+        "traceback": "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 79, in check\n    detail = fn()\n             ^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 163, in <lambda>\n    check(\"reference-discrepancy-live-maximum\", lambda: V.reference_diagnostic(scalar, scalar + .005, codes), True)\n                                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-verify-cfa.py\", line 133, in reference_diagnostic\n    need(maximum <= .004 and rms <= .0008, \"admitted scalar/reference discrepancy exceeds existing bars\")\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-verify-cfa.py\", line 61, in need\n    raise ValueError(message)\nValueError: admitted scalar/reference discrepancy exceeds existing bars\n"
+      },
+      "expected": "refuse",
+      "name": "reference-discrepancy-live-maximum",
+      "passed": true
+    },
+    {
+      "detail": {
+        "error": "admitted scalar/reference discrepancy exceeds existing bars",
+        "error_type": "ValueError",
+        "traceback": "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 79, in check\n    detail = fn()\n             ^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 164, in <lambda>\n    check(\"reference-discrepancy-live-rms\", lambda: V.reference_diagnostic(scalar, scalar + .001, codes), True)\n                                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-verify-cfa.py\", line 133, in reference_diagnostic\n    need(maximum <= .004 and rms <= .0008, \"admitted scalar/reference discrepancy exceeds existing bars\")\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-verify-cfa.py\", line 61, in need\n    raise ValueError(message)\nValueError: admitted scalar/reference discrepancy exceeds existing bars\n"
+      },
+      "expected": "refuse",
+      "name": "reference-discrepancy-live-rms",
+      "passed": true
+    },
+    {
+      "detail": {
+        "rounded_reference_code_differences": [
+          192,
+          192,
+          192,
+          192,
+          192
+        ],
+        "sample_count": 15360,
+        "status": "PASS_FIXTURE_READER_ONLY"
+      },
+      "expected": "pass",
+      "name": "unchanged-final-valid-companion",
+      "passed": true
+    },
+    {
+      "detail": {
+        "sample_count": 15360,
+        "status": "PASS_FIXTURE_READER_ONLY"
+      },
+      "expected": "pass",
+      "name": "allocation-resealed-valid-companion",
+      "passed": true
+    },
+    {
+      "detail": {
+        "error": "full frame requires count diagnostics for every cell",
+        "error_type": "ValueError",
+        "traceback": "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 79, in check\n    detail = fn()\n             ^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 199, in <lambda>\n    lambda field=field, value=value: rebound_allocation(field,\n                                     ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 191, in rebound_allocation\n    result = V.verify(new_mp, V.sha(new_mp), new_gp, V.sha(new_gp), fixture_only=True)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-verify-cfa.py\", line 181, in verify\n    bundle, _ = S.validate_commission(bundle_path, commission_path, commission_sha)\n                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\schema.py\", line 274, in validate_commission\n    bundle = validate_bundle(bundle_path)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\schema.py\", line 261, in validate_bundle\n    validate_frames(bundle[\"frames\"], path.parent, \"primary\")\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\schema.py\", line 210, in validate_frames\n    validate_cell_allocation(work, full_frame=True)\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\schema.py\", line 148, in validate_cell_allocation\n    raise ValueError(\"full frame requires count diagnostics for every cell\")\nValueError: full frame requires count diagnostics for every cell\n"
+      },
+      "expected": "refuse",
+      "name": "allocation-resealed-cells",
+      "passed": true
+    },
+    {
+      "detail": {
+        "error": "allocation leaf count contradicts depth/root bounds",
+        "error_type": "ValueError",
+        "traceback": "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 79, in check\n    detail = fn()\n             ^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 199, in <lambda>\n    lambda field=field, value=value: rebound_allocation(field,\n                                     ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 191, in rebound_allocation\n    result = V.verify(new_mp, V.sha(new_mp), new_gp, V.sha(new_gp), fixture_only=True)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-verify-cfa.py\", line 181, in verify\n    bundle, _ = S.validate_commission(bundle_path, commission_path, commission_sha)\n                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\schema.py\", line 274, in validate_commission\n    bundle = validate_bundle(bundle_path)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\schema.py\", line 261, in validate_bundle\n    validate_frames(bundle[\"frames\"], path.parent, \"primary\")\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\schema.py\", line 210, in validate_frames\n    validate_cell_allocation(work, full_frame=True)\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\schema.py\", line 166, in validate_cell_allocation\n    raise ValueError(\"allocation leaf count contradicts depth/root bounds\")\nValueError: allocation leaf count contradicts depth/root bounds\n"
+      },
+      "expected": "refuse",
+      "name": "allocation-resealed-leaves",
+      "passed": true
+    },
+    {
+      "detail": {
+        "error": "cell allocation minimum_depth: nonnegative integer required",
+        "error_type": "ValueError",
+        "traceback": "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 79, in check\n    detail = fn()\n             ^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 199, in <lambda>\n    lambda field=field, value=value: rebound_allocation(field,\n                                     ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 191, in rebound_allocation\n    result = V.verify(new_mp, V.sha(new_mp), new_gp, V.sha(new_gp), fixture_only=True)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-verify-cfa.py\", line 181, in verify\n    bundle, _ = S.validate_commission(bundle_path, commission_path, commission_sha)\n                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\schema.py\", line 274, in validate_commission\n    bundle = validate_bundle(bundle_path)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\schema.py\", line 261, in validate_bundle\n    validate_frames(bundle[\"frames\"], path.parent, \"primary\")\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\schema.py\", line 210, in validate_frames\n    validate_cell_allocation(work, full_frame=True)\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\schema.py\", line 144, in validate_cell_allocation\n    integer(allocation[key], \"cell allocation \" + key)\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\schema.py\", line 47, in integer\n    raise ValueError(f\"{name}: nonnegative integer required\")\nValueError: cell allocation minimum_depth: nonnegative integer required\n"
+      },
+      "expected": "refuse",
+      "name": "allocation-resealed-minimum_depth",
+      "passed": true
+    },
+    {
+      "detail": {
+        "error": "allocation depths exceed registered range",
+        "error_type": "ValueError",
+        "traceback": "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 79, in check\n    detail = fn()\n             ^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 199, in <lambda>\n    lambda field=field, value=value: rebound_allocation(field,\n                                     ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 191, in rebound_allocation\n    result = V.verify(new_mp, V.sha(new_mp), new_gp, V.sha(new_gp), fixture_only=True)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-verify-cfa.py\", line 181, in verify\n    bundle, _ = S.validate_commission(bundle_path, commission_path, commission_sha)\n                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\schema.py\", line 274, in validate_commission\n    bundle = validate_bundle(bundle_path)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\schema.py\", line 261, in validate_bundle\n    validate_frames(bundle[\"frames\"], path.parent, \"primary\")\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\schema.py\", line 210, in validate_frames\n    validate_cell_allocation(work, full_frame=True)\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\schema.py\", line 158, in validate_cell_allocation\n    raise ValueError(\"allocation depths exceed registered range\")\nValueError: allocation depths exceed registered range\n"
+      },
+      "expected": "refuse",
+      "name": "allocation-resealed-maximum_depth",
+      "passed": true
+    },
+    {
+      "detail": {
+        "error": "local allocation diagnostic counts disagree",
+        "error_type": "ValueError",
+        "traceback": "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 79, in check\n    detail = fn()\n             ^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 199, in <lambda>\n    lambda field=field, value=value: rebound_allocation(field,\n                                     ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 191, in rebound_allocation\n    result = V.verify(new_mp, V.sha(new_mp), new_gp, V.sha(new_gp), fixture_only=True)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-verify-cfa.py\", line 181, in verify\n    bundle, _ = S.validate_commission(bundle_path, commission_path, commission_sha)\n                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\schema.py\", line 274, in validate_commission\n    bundle = validate_bundle(bundle_path)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\schema.py\", line 261, in validate_bundle\n    validate_frames(bundle[\"frames\"], path.parent, \"primary\")\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\schema.py\", line 210, in validate_frames\n    validate_cell_allocation(work, full_frame=True)\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\schema.py\", line 170, in validate_cell_allocation\n    raise ValueError(\"local allocation diagnostic counts disagree\")\nValueError: local allocation diagnostic counts disagree\n"
+      },
+      "expected": "refuse",
+      "name": "allocation-resealed-locally_overallocated_leaves",
+      "passed": true
+    },
+    {
+      "detail": {
+        "error": "local allocation diagnostic counts disagree",
+        "error_type": "ValueError",
+        "traceback": "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 79, in check\n    detail = fn()\n             ^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 199, in <lambda>\n    lambda field=field, value=value: rebound_allocation(field,\n                                     ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 191, in rebound_allocation\n    result = V.verify(new_mp, V.sha(new_mp), new_gp, V.sha(new_gp), fixture_only=True)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-verify-cfa.py\", line 181, in verify\n    bundle, _ = S.validate_commission(bundle_path, commission_path, commission_sha)\n                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\schema.py\", line 274, in validate_commission\n    bundle = validate_bundle(bundle_path)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\schema.py\", line 261, in validate_bundle\n    validate_frames(bundle[\"frames\"], path.parent, \"primary\")\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\schema.py\", line 210, in validate_frames\n    validate_cell_allocation(work, full_frame=True)\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\schema.py\", line 170, in validate_cell_allocation\n    raise ValueError(\"local allocation diagnostic counts disagree\")\nValueError: local allocation diagnostic counts disagree\n"
+      },
+      "expected": "refuse",
+      "name": "allocation-resealed-cells_with_locally_overallocated_leaves",
+      "passed": true
+    },
+    {
+      "detail": {
+        "error": "work: exact keys required ['angular_nodes', 'cell_allocation', 'cpu_seconds', 'observer', 'observer_events', 'optional_hook_calls', 'peak_live_scalar_frames', 'peak_node_pairs', 'point_calls', 'tracked_peak_ndarray_bytes', 'tracked_peak_ndarrays', 'wall_seconds']",
+        "error_type": "ValueError",
+        "traceback": "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 79, in check\n    detail = fn()\n             ^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 201, in <lambda>\n    check(\"allocation-resealed-missing\", lambda: rebound_allocation(\"missing\",\n                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 191, in rebound_allocation\n    result = V.verify(new_mp, V.sha(new_mp), new_gp, V.sha(new_gp), fixture_only=True)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-verify-cfa.py\", line 181, in verify\n    bundle, _ = S.validate_commission(bundle_path, commission_path, commission_sha)\n                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\schema.py\", line 274, in validate_commission\n    bundle = validate_bundle(bundle_path)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\schema.py\", line 261, in validate_bundle\n    validate_frames(bundle[\"frames\"], path.parent, \"primary\")\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\schema.py\", line 208, in validate_frames\n    exact_keys(work, (\"point_calls\", \"angular_nodes\", \"peak_node_pairs\", \"tracked_peak_ndarray_bytes\", \"tracked_peak_ndarrays\", \"peak_live_scalar_frames\",\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\schema.py\", line 21, in exact_keys\n    raise ValueError(f\"{name}: exact keys required {sorted(keys)}\")\nValueError: work: exact keys required ['angular_nodes', 'cell_allocation', 'cpu_seconds', 'observer', 'observer_events', 'optional_hook_calls', 'peak_live_scalar_frames', 'peak_node_pairs', 'point_calls', 'tracked_peak_ndarray_bytes', 'tracked_peak_ndarrays', 'wall_seconds']\n"
+      },
+      "expected": "refuse",
+      "name": "allocation-resealed-missing",
+      "passed": true
+    },
+    {
+      "detail": {
+        "error": "full frame requires count diagnostics for every cell",
+        "error_type": "ValueError",
+        "traceback": "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 79, in check\n    detail = fn()\n             ^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 205, in <lambda>\n    lambda mode=mode: rebound_allocation(mode, lambda r: r[\"work\"].update(\n                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 191, in rebound_allocation\n    result = V.verify(new_mp, V.sha(new_mp), new_gp, V.sha(new_gp), fixture_only=True)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-verify-cfa.py\", line 181, in verify\n    bundle, _ = S.validate_commission(bundle_path, commission_path, commission_sha)\n                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\schema.py\", line 274, in validate_commission\n    bundle = validate_bundle(bundle_path)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\schema.py\", line 261, in validate_bundle\n    validate_frames(bundle[\"frames\"], path.parent, \"primary\")\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\schema.py\", line 210, in validate_frames\n    validate_cell_allocation(work, full_frame=True)\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\schema.py\", line 148, in validate_cell_allocation\n    raise ValueError(\"full frame requires count diagnostics for every cell\")\nValueError: full frame requires count diagnostics for every cell\n"
+      },
+      "expected": "refuse",
+      "name": "allocation-resealed-full-off",
+      "passed": true
+    },
+    {
+      "detail": {
+        "error": "full frame requires count diagnostics for every cell",
+        "error_type": "ValueError",
+        "traceback": "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 79, in check\n    detail = fn()\n             ^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 205, in <lambda>\n    lambda mode=mode: rebound_allocation(mode, lambda r: r[\"work\"].update(\n                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 191, in rebound_allocation\n    result = V.verify(new_mp, V.sha(new_mp), new_gp, V.sha(new_gp), fixture_only=True)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-verify-cfa.py\", line 181, in verify\n    bundle, _ = S.validate_commission(bundle_path, commission_path, commission_sha)\n                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\schema.py\", line 274, in validate_commission\n    bundle = validate_bundle(bundle_path)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\schema.py\", line 261, in validate_bundle\n    validate_frames(bundle[\"frames\"], path.parent, \"primary\")\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\schema.py\", line 210, in validate_frames\n    validate_cell_allocation(work, full_frame=True)\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\schema.py\", line 148, in validate_cell_allocation\n    raise ValueError(\"full frame requires count diagnostics for every cell\")\nValueError: full frame requires count diagnostics for every cell\n"
+      },
+      "expected": "refuse",
+      "name": "allocation-resealed-full-placebo",
+      "passed": true
+    }
+  ],
+  "command": [
+    "experiments/m194e-joint-pupil/independent-final-cfa-controls.py",
+    "--output",
+    "experiments/m194e-joint-pupil/independent-final-cfa-controls-4"
+  ],
+  "fixture_only": true,
+  "genuine_cfa_commission_issued": false,
+  "interpreter_argv": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-B",
+    "-X",
+    "faulthandler",
+    "-X",
+    "pycache_prefix=experiments/m194e-joint-pupil/work/independent-final-cfa-cache-4",
+    "experiments/m194e-joint-pupil/independent-final-cfa-controls.py",
+    "--output",
+    "experiments/m194e-joint-pupil/independent-final-cfa-controls-4"
+  ],
+  "numpy": "2.4.4",
+  "pass_": true,
+  "passed": 36,
+  "populations": {
+    "amendment3": {
+      "passed": 10,
+      "total": 10
+    },
+    "original": {
+      "passed": 26,
+      "total": 26
+    }
+  },
+  "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+  "source_unchanged": true,
+  "sources": {
+    "author-controls.py": "941562b0a3686f84c905e3a4d2c141eb886698682acccace413d23f1da589f41",
+    "commission.py": "bca12a5c0f4d995d60133780687874b1bd6c21d7cf7746f6232e2063516aab18",
+    "emission-contract.md": "c5d5930f73a42f9e490b19c4606e17a88378bd0028e4999e9d32637581eaf9f7",
+    "emit-cfa.py": "fbcdfa2c716f638e9aa8f9cf13ba3024a575feca0ad15d1a67012f51176c82fd",
+    "implementation-plan.md": "dbac8c9ce4ff2d555bd49291de325e3f3494459b23b9cd83ec4ff180cf93f1a0",
+    "implementation-preregister.md": "2196166ee9a36af8cc73e272e97d430d4478b2b8e05fc3af2215afc64de0e500",
+    "independent-amendment3-metadata-design.md": "b4a2d69d959be33768178b19cccb029bcb1d43f81e5bc0c960a402c822ad6394",
+    "independent-cfa-oracle.py": "1b23d656481752fc3c34384c489fc6556e78a74925d8cd717f4faa350040d48a",
+    "independent-design.md": "5d98f9e949b77da629cc32e1cc3f35d2bcf9cb0b7fbdad28d58476e35509bf87",
+    "independent-emission-api-controls.py": "ae99651ed89d1cf831b9df58834e3413013165e6c26faec7b075506449caf367",
+    "independent-emission-design.md": "e84890e77773043e4e893712e5debbcf76bf292fce4d81af959a857f61aadfcc",
+    "independent-final-cfa-controls.py": "80e8408b9c17423d40c61f09d1bbb77e5d789c390fb320ee851cf9cfe3ace843",
+    "independent-verify-cfa.py": "8efd44b92f96fff651b17eabf29e99ed2f2ad234bdb92a1f617a40d2d2382d2b",
+    "model.py": "a74cd9bd61ea2f717a185e86f725b5ed192431056a447581db0f8562cf9f70b8",
+    "numerical-amendment-1.md": "79bfd4a45167e6442f852557ff8d1a7641e200fade53127deb964f17805fbff9",
+    "numerical-amendment-2.md": "4f07b4afff3760567021c3e9c27227682630fcef2a40e230e267a7528e69bc4f",
+    "numerical-amendment-3.md": "e1e79088ff4c147be0b6a96410e4cc03913ad954da63c59e567f06648009fe43",
+    "render.py": "a22d49fd43a1bc8d0f807fc1d4417104d5b9ffe1d771b418be58d276d7804460",
+    "schema.py": "578f403ed7167c6c0988d927691fa91e5deec7010407f90999e12a0328bbaf8b"
+  },
+  "sources_after": {
+    "author-controls.py": "941562b0a3686f84c905e3a4d2c141eb886698682acccace413d23f1da589f41",
+    "commission.py": "bca12a5c0f4d995d60133780687874b1bd6c21d7cf7746f6232e2063516aab18",
+    "emission-contract.md": "c5d5930f73a42f9e490b19c4606e17a88378bd0028e4999e9d32637581eaf9f7",
+    "emit-cfa.py": "fbcdfa2c716f638e9aa8f9cf13ba3024a575feca0ad15d1a67012f51176c82fd",
+    "implementation-plan.md": "dbac8c9ce4ff2d555bd49291de325e3f3494459b23b9cd83ec4ff180cf93f1a0",
+    "implementation-preregister.md": "2196166ee9a36af8cc73e272e97d430d4478b2b8e05fc3af2215afc64de0e500",
+    "independent-amendment3-metadata-design.md": "b4a2d69d959be33768178b19cccb029bcb1d43f81e5bc0c960a402c822ad6394",
+    "independent-cfa-oracle.py": "1b23d656481752fc3c34384c489fc6556e78a74925d8cd717f4faa350040d48a",
+    "independent-design.md": "5d98f9e949b77da629cc32e1cc3f35d2bcf9cb0b7fbdad28d58476e35509bf87",
+    "independent-emission-api-controls.py": "ae99651ed89d1cf831b9df58834e3413013165e6c26faec7b075506449caf367",
+    "independent-emission-design.md": "e84890e77773043e4e893712e5debbcf76bf292fce4d81af959a857f61aadfcc",
+    "independent-final-cfa-controls.py": "80e8408b9c17423d40c61f09d1bbb77e5d789c390fb320ee851cf9cfe3ace843",
+    "independent-verify-cfa.py": "8efd44b92f96fff651b17eabf29e99ed2f2ad234bdb92a1f617a40d2d2382d2b",
+    "model.py": "a74cd9bd61ea2f717a185e86f725b5ed192431056a447581db0f8562cf9f70b8",
+    "numerical-amendment-1.md": "79bfd4a45167e6442f852557ff8d1a7641e200fade53127deb964f17805fbff9",
+    "numerical-amendment-2.md": "4f07b4afff3760567021c3e9c27227682630fcef2a40e230e267a7528e69bc4f",
+    "numerical-amendment-3.md": "e1e79088ff4c147be0b6a96410e4cc03913ad954da63c59e567f06648009fe43",
+    "render.py": "a22d49fd43a1bc8d0f807fc1d4417104d5b9ffe1d771b418be58d276d7804460",
+    "schema.py": "578f403ed7167c6c0988d927691fa91e5deec7010407f90999e12a0328bbaf8b"
+  },
+  "status": "PASS_FIXTURE_READER_ONLY",
+  "total": 36,
+  "xoptions": {
+    "faulthandler": true,
+    "pycache_prefix": "experiments/m194e-joint-pupil/work/independent-final-cfa-cache-4"
+  }
+}

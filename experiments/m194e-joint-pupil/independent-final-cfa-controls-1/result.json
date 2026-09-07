@@ -1,0 +1,331 @@
+{
+  "checks": [
+    {
+      "detail": {
+        "rounded_reference_code_differences": [
+          192,
+          192,
+          192,
+          192,
+          192
+        ],
+        "sample_count": 15360,
+        "status": "PASS_FIXTURE_READER_ONLY"
+      },
+      "expected": "pass",
+      "name": "valid-five-frame-and-live-rounding-tie-companion",
+      "passed": true
+    },
+    {
+      "detail": {
+        "error": "independent predecessor nonterminal or fixture/genuine mode mismatch: author_api",
+        "error_type": "ValueError",
+        "traceback": "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 80, in check\n    detail = fn()\n             ^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 100, in <lambda>\n    check(\"fixture-gate-cannot-pass-genuine-mode\", lambda: V.verify(mp, V.sha(mp), gp, V.sha(gp)), True)\n                                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-verify-cfa.py\", line 211, in verify\n    need(record.get(\"status\") == status and record.get(\"source_unchanged\") is True, \"independent predecessor nonterminal or fixture/genuine mode mismatch: \" + name)\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-verify-cfa.py\", line 61, in need\n    raise ValueError(message)\nValueError: independent predecessor nonterminal or fixture/genuine mode mismatch: author_api\n"
+      },
+      "expected": "refuse",
+      "name": "fixture-gate-cannot-pass-genuine-mode",
+      "passed": true
+    },
+    {
+      "detail": {
+        "error": "external digest differs",
+        "error_type": "ValueError",
+        "traceback": "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 80, in check\n    detail = fn()\n             ^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 101, in <lambda>\n    check(\"wrong-external-manifest-digest\", lambda: V.verify(mp, \"0\" * 64, gp, V.sha(gp), fixture_only=True), True)\n                                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-verify-cfa.py\", line 169, in verify\n    manifest = reads.external(manifest_path, manifest_sha)\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-verify-cfa.py\", line 114, in external\n    need(self.observed[str(path)][\"sha256\"] == trusted, \"external digest differs\")\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-verify-cfa.py\", line 61, in need\n    raise ValueError(message)\nValueError: external digest differs\n"
+      },
+      "expected": "refuse",
+      "name": "wrong-external-manifest-digest",
+      "passed": true
+    },
+    {
+      "detail": {
+        "error": "external digest differs",
+        "error_type": "ValueError",
+        "traceback": "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 80, in check\n    detail = fn()\n             ^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 102, in <lambda>\n    check(\"wrong-external-gate-digest\", lambda: V.verify(mp, V.sha(mp), gp, \"0\" * 64, fixture_only=True), True)\n                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-verify-cfa.py\", line 170, in verify\n    gate = reads.external(commission_path, commission_sha)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-verify-cfa.py\", line 114, in external\n    need(self.observed[str(path)][\"sha256\"] == trusted, \"external digest differs\")\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-verify-cfa.py\", line 61, in need\n    raise ValueError(message)\nValueError: external digest differs\n"
+      },
+      "expected": "refuse",
+      "name": "wrong-external-gate-digest",
+      "passed": true
+    },
+    {
+      "detail": {
+        "error": "emission incomplete or refused",
+        "error_type": "ValueError",
+        "traceback": "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 80, in check\n    detail = fn()\n             ^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 149, in <lambda>\n    check(\"rebound-\" + name, lambda name=name, fn=fn: mutated(name, fn), True)\n                                                      ^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 114, in mutated\n    return V.verify(root / \"manifest.json\", V.sha(root / \"manifest.json\"), gp, V.sha(gp), fixture_only=True)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-verify-cfa.py\", line 176, in verify\n    need(run[\"schema\"] == \"m194e-emission-run-v1\" and run[\"status\"] == \"CFA_COMPLETE_AWAITING_INDEPENDENT_REVIEW\", \"emission incomplete or refused\")\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-verify-cfa.py\", line 61, in need\n    raise ValueError(message)\nValueError: emission incomplete or refused\n"
+      },
+      "expected": "refuse",
+      "name": "rebound-nonterminal",
+      "passed": true
+    },
+    {
+      "detail": {
+        "error": "emission incomplete or refused",
+        "error_type": "ValueError",
+        "traceback": "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 80, in check\n    detail = fn()\n             ^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 149, in <lambda>\n    check(\"rebound-\" + name, lambda name=name, fn=fn: mutated(name, fn), True)\n                                                      ^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 114, in mutated\n    return V.verify(root / \"manifest.json\", V.sha(root / \"manifest.json\"), gp, V.sha(gp), fixture_only=True)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-verify-cfa.py\", line 176, in verify\n    need(run[\"schema\"] == \"m194e-emission-run-v1\" and run[\"status\"] == \"CFA_COMPLETE_AWAITING_INDEPENDENT_REVIEW\", \"emission incomplete or refused\")\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-verify-cfa.py\", line 61, in need\n    raise ValueError(message)\nValueError: emission incomplete or refused\n"
+      },
+      "expected": "refuse",
+      "name": "rebound-refused-completion",
+      "passed": true
+    },
+    {
+      "detail": {
+        "error": "emission used different external float authority",
+        "error_type": "ValueError",
+        "traceback": "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 80, in check\n    detail = fn()\n             ^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 149, in <lambda>\n    check(\"rebound-\" + name, lambda name=name, fn=fn: mutated(name, fn), True)\n                                                      ^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 114, in mutated\n    return V.verify(root / \"manifest.json\", V.sha(root / \"manifest.json\"), gp, V.sha(gp), fixture_only=True)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-verify-cfa.py\", line 177, in verify\n    need(run[\"trusted_float_sha256\"] == commission_sha, \"emission used different external float authority\")\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-verify-cfa.py\", line 61, in need\n    raise ValueError(message)\nValueError: emission used different external float authority\n"
+      },
+      "expected": "refuse",
+      "name": "rebound-gate-binding",
+      "passed": true
+    },
+    {
+      "detail": {
+        "error": "source provenance differs",
+        "error_type": "ValueError",
+        "traceback": "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 80, in check\n    detail = fn()\n             ^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 149, in <lambda>\n    check(\"rebound-\" + name, lambda name=name, fn=fn: mutated(name, fn), True)\n                                                      ^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 114, in mutated\n    return V.verify(root / \"manifest.json\", V.sha(root / \"manifest.json\"), gp, V.sha(gp), fixture_only=True)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-verify-cfa.py\", line 182, in verify\n    need(run[\"sources_before\"] == run[\"sources_after\"] == gate[\"producer_sources\"] == S.source_bindings(), \"source provenance differs\")\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-verify-cfa.py\", line 61, in need\n    raise ValueError(message)\nValueError: source provenance differs\n"
+      },
+      "expected": "refuse",
+      "name": "rebound-source-after",
+      "passed": true
+    },
+    {
+      "detail": {
+        "error": "recorded command missing",
+        "error_type": "ValueError",
+        "traceback": "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 80, in check\n    detail = fn()\n             ^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 149, in <lambda>\n    check(\"rebound-\" + name, lambda name=name, fn=fn: mutated(name, fn), True)\n                                                      ^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 114, in mutated\n    return V.verify(root / \"manifest.json\", V.sha(root / \"manifest.json\"), gp, V.sha(gp), fixture_only=True)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-verify-cfa.py\", line 184, in verify\n    need(type(run[\"command\"]) is list and run[\"command\"] and all(type(v) is str for v in run[\"command\"]), \"recorded command missing\")\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-verify-cfa.py\", line 61, in need\n    raise ValueError(message)\nValueError: recorded command missing\n"
+      },
+      "expected": "refuse",
+      "name": "rebound-missing-command",
+      "passed": true
+    },
+    {
+      "detail": {
+        "error": "closed terminal emission receipt required",
+        "error_type": "ValueError",
+        "traceback": "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 80, in check\n    detail = fn()\n             ^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 149, in <lambda>\n    check(\"rebound-\" + name, lambda name=name, fn=fn: mutated(name, fn), True)\n                                                      ^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 114, in mutated\n    return V.verify(root / \"manifest.json\", V.sha(root / \"manifest.json\"), gp, V.sha(gp), fixture_only=True)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-verify-cfa.py\", line 175, in verify\n    keys(run, (\"schema\", \"status\", \"command\", \"started_utc\", \"python\", \"numpy\", \"input_bundle\", \"float_commission\", \"trusted_float_sha256\", \"sources_before\", \"frames\", \"sources_after\", \"ended_utc\"), \"closed terminal emission receipt required\")\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-verify-cfa.py\", line 65, in keys\n    need(type(value) is dict and set(value) == set(names), message)\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-verify-cfa.py\", line 61, in need\n    raise ValueError(message)\nValueError: closed terminal emission receipt required\n"
+      },
+      "expected": "refuse",
+      "name": "rebound-unknown-receipt",
+      "passed": true
+    },
+    {
+      "detail": {
+        "error": "closed emitted manifest required",
+        "error_type": "ValueError",
+        "traceback": "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 80, in check\n    detail = fn()\n             ^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 149, in <lambda>\n    check(\"rebound-\" + name, lambda name=name, fn=fn: mutated(name, fn), True)\n                                                      ^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 114, in mutated\n    return V.verify(root / \"manifest.json\", V.sha(root / \"manifest.json\"), gp, V.sha(gp), fixture_only=True)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-verify-cfa.py\", line 171, in verify\n    keys(manifest, (\"schema\", \"status\", \"producer\", \"sensor\", \"scene\", \"ray_model\", \"numerical_contract\", \"frames\"), \"closed emitted manifest required\")\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-verify-cfa.py\", line 65, in keys\n    need(type(value) is dict and set(value) == set(names), message)\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-verify-cfa.py\", line 61, in need\n    raise ValueError(message)\nValueError: closed emitted manifest required\n"
+      },
+      "expected": "refuse",
+      "name": "rebound-unknown-manifest",
+      "passed": true
+    },
+    {
+      "detail": {
+        "error": "",
+        "error_type": "AssertionError",
+        "traceback": "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 80, in check\n    detail = fn()\n             ^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 149, in <lambda>\n    check(\"rebound-\" + name, lambda name=name, fn=fn: mutated(name, fn), True)\n                                                      ^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 114, in mutated\n    return V.verify(root / \"manifest.json\", V.sha(root / \"manifest.json\"), gp, V.sha(gp), fixture_only=True)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-verify-cfa.py\", line 234, in verify\n    actual = A.actual_output(manifest_path, bundle_path)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-emission-api-controls.py\", line 203, in actual_output\n    assert f[key] == expected\n           ^^^^^^^^^^^^^^^^^^\nAssertionError\n"
+      },
+      "expected": "refuse",
+      "name": "rebound-wrong-cfa-units",
+      "passed": true
+    },
+    {
+      "detail": {
+        "error": "",
+        "error_type": "AssertionError",
+        "traceback": "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 80, in check\n    detail = fn()\n             ^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 149, in <lambda>\n    check(\"rebound-\" + name, lambda name=name, fn=fn: mutated(name, fn), True)\n                                                      ^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 114, in mutated\n    return V.verify(root / \"manifest.json\", V.sha(root / \"manifest.json\"), gp, V.sha(gp), fixture_only=True)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-verify-cfa.py\", line 234, in verify\n    actual = A.actual_output(manifest_path, bundle_path)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-emission-api-controls.py\", line 185, in actual_output\n    assert m[key] == b[key]\n           ^^^^^^^^^^^^^^^^\nAssertionError\n"
+      },
+      "expected": "refuse",
+      "name": "rebound-noise",
+      "passed": true
+    },
+    {
+      "detail": "WRONG: accepted declared invalid input",
+      "expected": "refuse",
+      "name": "rebound-bool-index",
+      "passed": false
+    },
+    {
+      "detail": {
+        "error": "",
+        "error_type": "AssertionError",
+        "traceback": "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 80, in check\n    detail = fn()\n             ^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 149, in <lambda>\n    check(\"rebound-\" + name, lambda name=name, fn=fn: mutated(name, fn), True)\n                                                      ^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 114, in mutated\n    return V.verify(root / \"manifest.json\", V.sha(root / \"manifest.json\"), gp, V.sha(gp), fixture_only=True)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-verify-cfa.py\", line 234, in verify\n    actual = A.actual_output(manifest_path, bundle_path)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-emission-api-controls.py\", line 196, in actual_output\n    assert set(f) == {\"index\", \"inverse_focus\", \"K\", \"forward_similarity\", \"expected_scalar\", \"numerical_receipt\", \"expected_cfa\", \"cfa\"}\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n"
+      },
+      "expected": "refuse",
+      "name": "rebound-missing-expected",
+      "passed": true
+    },
+    {
+      "detail": {
+        "error": "",
+        "error_type": "AssertionError",
+        "traceback": "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 80, in check\n    detail = fn()\n             ^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 149, in <lambda>\n    check(\"rebound-\" + name, lambda name=name, fn=fn: mutated(name, fn), True)\n                                                      ^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 114, in mutated\n    return V.verify(root / \"manifest.json\", V.sha(root / \"manifest.json\"), gp, V.sha(gp), fixture_only=True)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-verify-cfa.py\", line 234, in verify\n    actual = A.actual_output(manifest_path, bundle_path)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-emission-api-controls.py\", line 183, in actual_output\n    assert len(m[\"frames\"]) == 5\n           ^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n"
+      },
+      "expected": "refuse",
+      "name": "rebound-incomplete-five",
+      "passed": true
+    },
+    {
+      "detail": {
+        "error": "actual conversion mismatch: expected-electron samples=0, CFA samples=1",
+        "error_type": "ValueError",
+        "traceback": "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 80, in check\n    detail = fn()\n             ^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 149, in <lambda>\n    check(\"rebound-\" + name, lambda name=name, fn=fn: mutated(name, fn), True)\n                                                      ^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 114, in mutated\n    return V.verify(root / \"manifest.json\", V.sha(root / \"manifest.json\"), gp, V.sha(gp), fixture_only=True)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-verify-cfa.py\", line 234, in verify\n    actual = A.actual_output(manifest_path, bundle_path)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-emission-api-controls.py\", line 212, in actual_output\n    result.append(O.compare_files(root / f[\"expected_scalar\"][\"path\"], root / f[\"expected_cfa\"][\"path\"], root / f[\"cfa\"][\"path\"]))\n                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-cfa-oracle.py\", line 120, in compare_files\n    raise ValueError(\nValueError: actual conversion mismatch: expected-electron samples=0, CFA samples=1\n"
+      },
+      "expected": "refuse",
+      "name": "rebound-rehashed-cfa-value",
+      "passed": true
+    },
+    {
+      "detail": {
+        "error": "actual conversion mismatch: expected-electron samples=1, CFA samples=0",
+        "error_type": "ValueError",
+        "traceback": "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 80, in check\n    detail = fn()\n             ^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 149, in <lambda>\n    check(\"rebound-\" + name, lambda name=name, fn=fn: mutated(name, fn), True)\n                                                      ^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 114, in mutated\n    return V.verify(root / \"manifest.json\", V.sha(root / \"manifest.json\"), gp, V.sha(gp), fixture_only=True)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-verify-cfa.py\", line 234, in verify\n    actual = A.actual_output(manifest_path, bundle_path)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-emission-api-controls.py\", line 212, in actual_output\n    result.append(O.compare_files(root / f[\"expected_scalar\"][\"path\"], root / f[\"expected_cfa\"][\"path\"], root / f[\"cfa\"][\"path\"]))\n                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-cfa-oracle.py\", line 120, in compare_files\n    raise ValueError(\nValueError: actual conversion mismatch: expected-electron samples=1, CFA samples=0\n"
+      },
+      "expected": "refuse",
+      "name": "rebound-rehashed-electron-value",
+      "passed": true
+    },
+    {
+      "detail": {
+        "error": "[Errno 2] No such file or directory: 'C:\\\\dev\\\\blog\\\\death-of-software\\\\projects\\\\strehl\\\\experiments\\\\m194e-joint-pupil\\\\independent-final-cfa-controls-1\\\\mutant-missing-cfa-file\\\\missing.cfa'",
+        "error_type": "FileNotFoundError",
+        "traceback": "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 80, in check\n    detail = fn()\n             ^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 149, in <lambda>\n    check(\"rebound-\" + name, lambda name=name, fn=fn: mutated(name, fn), True)\n                                                      ^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 114, in mutated\n    return V.verify(root / \"manifest.json\", V.sha(root / \"manifest.json\"), gp, V.sha(gp), fixture_only=True)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-verify-cfa.py\", line 234, in verify\n    actual = A.actual_output(manifest_path, bundle_path)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-emission-api-controls.py\", line 200, in actual_output\n    expected = ref(root / f[key][\"path\"], root, key != \"numerical_receipt\")\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-emission-api-controls.py\", line 69, in ref\n    value = dict(path=path.relative_to(root).as_posix(), sha256=sha(path), bytes=path.stat().st_size)\n                                                                ^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-emission-api-controls.py\", line 51, in sha\n    with Path(path).open(\"rb\") as stream:\n         ^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\pathlib.py\", line 1013, in open\n    return io.open(self, mode, buffering, encoding, errors, newline)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nFileNotFoundError: [Errno 2] No such file or directory: 'C:\\\\dev\\\\blog\\\\death-of-software\\\\projects\\\\strehl\\\\experiments\\\\m194e-joint-pupil\\\\independent-final-cfa-controls-1\\\\mutant-missing-cfa-file\\\\missing.cfa'\n"
+      },
+      "expected": "refuse",
+      "name": "rebound-missing-cfa-file",
+      "passed": true
+    },
+    {
+      "detail": {
+        "error": "emission used different external float authority",
+        "error_type": "ValueError",
+        "traceback": "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 80, in check\n    detail = fn()\n             ^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 156, in bad_gate\n    return V.verify(mp, V.sha(mp), dest, V.sha(dest), fixture_only=True)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-verify-cfa.py\", line 177, in verify\n    need(run[\"trusted_float_sha256\"] == commission_sha, \"emission used different external float authority\")\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-verify-cfa.py\", line 61, in need\n    raise ValueError(message)\nValueError: emission used different external float authority\n"
+      },
+      "expected": "refuse",
+      "name": "failed-gate-current-hash",
+      "passed": true
+    },
+    {
+      "detail": {
+        "channels": [
+          {
+            "channel": "R",
+            "code_differences_outside_allowance": 0,
+            "maximum_unquantized_reference_difference_dn": 3.749999996216502e-05,
+            "minimum_half_integer_margin_dn": 0.5,
+            "registered_float_allowance_dn": 0.00075,
+            "rounded_reference_code_differences": 0,
+            "sites_within_rounding_allowance": 0
+          },
+          {
+            "channel": "G",
+            "code_differences_outside_allowance": 0,
+            "maximum_unquantized_reference_difference_dn": 5.000000010113581e-05,
+            "minimum_half_integer_margin_dn": 0.5,
+            "registered_float_allowance_dn": 0.001,
+            "rounded_reference_code_differences": 0,
+            "sites_within_rounding_allowance": 0
+          },
+          {
+            "channel": "B",
+            "code_differences_outside_allowance": 0,
+            "maximum_unquantized_reference_difference_dn": 3.0000000151630957e-05,
+            "minimum_half_integer_margin_dn": 0.5,
+            "registered_float_allowance_dn": 0.0006,
+            "rounded_reference_code_differences": 0,
+            "sites_within_rounding_allowance": 0
+          }
+        ],
+        "interpretation": "Approximate reference; its rounded CFA is not the exact conversion authority",
+        "maximum_scalar_discrepancy_e": 0.00020000000040454324,
+        "rms_scalar_discrepancy_e": 0.00020000000040454324,
+        "rounded_reference_code_differences": 0
+      },
+      "expected": "pass",
+      "name": "reference-discrepancy-valid",
+      "passed": true
+    },
+    {
+      "detail": {
+        "error": "admitted scalar/reference discrepancy exceeds existing bars",
+        "error_type": "ValueError",
+        "traceback": "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 80, in check\n    detail = fn()\n             ^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 162, in <lambda>\n    check(\"reference-discrepancy-live-maximum\", lambda: V.reference_diagnostic(scalar, scalar + .005, codes), True)\n                                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-verify-cfa.py\", line 133, in reference_diagnostic\n    need(maximum <= .004 and rms <= .0008, \"admitted scalar/reference discrepancy exceeds existing bars\")\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-verify-cfa.py\", line 61, in need\n    raise ValueError(message)\nValueError: admitted scalar/reference discrepancy exceeds existing bars\n"
+      },
+      "expected": "refuse",
+      "name": "reference-discrepancy-live-maximum",
+      "passed": true
+    },
+    {
+      "detail": {
+        "error": "admitted scalar/reference discrepancy exceeds existing bars",
+        "error_type": "ValueError",
+        "traceback": "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 80, in check\n    detail = fn()\n             ^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-final-cfa-controls.py\", line 163, in <lambda>\n    check(\"reference-discrepancy-live-rms\", lambda: V.reference_diagnostic(scalar, scalar + .001, codes), True)\n                                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-verify-cfa.py\", line 133, in reference_diagnostic\n    need(maximum <= .004 and rms <= .0008, \"admitted scalar/reference discrepancy exceeds existing bars\")\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-verify-cfa.py\", line 61, in need\n    raise ValueError(message)\nValueError: admitted scalar/reference discrepancy exceeds existing bars\n"
+      },
+      "expected": "refuse",
+      "name": "reference-discrepancy-live-rms",
+      "passed": true
+    },
+    {
+      "detail": {
+        "rounded_reference_code_differences": [
+          192,
+          192,
+          192,
+          192,
+          192
+        ],
+        "sample_count": 15360,
+        "status": "PASS_FIXTURE_READER_ONLY"
+      },
+      "expected": "pass",
+      "name": "unchanged-final-valid-companion",
+      "passed": true
+    }
+  ],
+  "command": [
+    "experiments/m194e-joint-pupil/independent-final-cfa-controls.py",
+    "--output",
+    "experiments/m194e-joint-pupil/independent-final-cfa-controls-1"
+  ],
+  "fixture_only": true,
+  "genuine_cfa_commission_issued": false,
+  "interpreter_argv": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-B",
+    "-X",
+    "faulthandler",
+    "-X",
+    "pycache_prefix=experiments/m194e-joint-pupil/work/independent-final-cfa-cache-1",
+    "experiments/m194e-joint-pupil/independent-final-cfa-controls.py",
+    "--output",
+    "experiments/m194e-joint-pupil/independent-final-cfa-controls-1"
+  ],
+  "numpy": "2.4.4",
+  "pass_": false,
+  "passed": 23,
+  "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+  "source_unchanged": true,
+  "sources": {
+    "emit-cfa.py": "fbcdfa2c716f638e9aa8f9cf13ba3024a575feca0ad15d1a67012f51176c82fd",
+    "independent-cfa-oracle.py": "1b23d656481752fc3c34384c489fc6556e78a74925d8cd717f4faa350040d48a",
+    "independent-emission-api-controls.py": "8231589e6e7d9ae9c16411ebe22675da794b60fc5755d8a0264e8a38164df58e",
+    "independent-final-cfa-controls.py": "f3a313a29326e054cd6bea737a4ad2fd94f4e5288ab028667cf2e6db5806095c",
+    "independent-verify-cfa.py": "0c9ac4dbee6928bf04ea801ee535d49449f886e8b0640deb25cfa673a19a5597",
+    "model.py": "a74cd9bd61ea2f717a185e86f725b5ed192431056a447581db0f8562cf9f70b8",
+    "render.py": "ef52c45d28ec2dda5aa897cfd57dacc4b4a3e300d3a581c35f305c76e2dd03f8",
+    "schema.py": "0bcc546634a748ee31fbd5095b6aae3a1eab18899a557dbed8aeeb8af102a82c"
+  },
+  "sources_after": {
+    "emit-cfa.py": "fbcdfa2c716f638e9aa8f9cf13ba3024a575feca0ad15d1a67012f51176c82fd",
+    "independent-cfa-oracle.py": "1b23d656481752fc3c34384c489fc6556e78a74925d8cd717f4faa350040d48a",
+    "independent-emission-api-controls.py": "8231589e6e7d9ae9c16411ebe22675da794b60fc5755d8a0264e8a38164df58e",
+    "independent-final-cfa-controls.py": "f3a313a29326e054cd6bea737a4ad2fd94f4e5288ab028667cf2e6db5806095c",
+    "independent-verify-cfa.py": "0c9ac4dbee6928bf04ea801ee535d49449f886e8b0640deb25cfa673a19a5597",
+    "model.py": "a74cd9bd61ea2f717a185e86f725b5ed192431056a447581db0f8562cf9f70b8",
+    "render.py": "ef52c45d28ec2dda5aa897cfd57dacc4b4a3e300d3a581c35f305c76e2dd03f8",
+    "schema.py": "0bcc546634a748ee31fbd5095b6aae3a1eab18899a557dbed8aeeb8af102a82c"
+  },
+  "status": "FAIL_FIXTURE_READER_ONLY",
+  "total": 24,
+  "xoptions": {
+    "faulthandler": true,
+    "pycache_prefix": "experiments/m194e-joint-pupil/work/independent-final-cfa-cache-1"
+  }
+}
