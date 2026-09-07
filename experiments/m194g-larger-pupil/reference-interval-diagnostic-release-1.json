@@ -1,0 +1,150 @@
+{
+  "schema": "m194g-numerical-execution-release-v1",
+  "scope": "reference-interval-diagnostic",
+  "source_bindings": {
+    "experiments/m194e-joint-pupil/independent-model.py": {
+      "sha256": "0cd8ea2331b269e65befdee110560cbc345e89c12348cbe1dc3144f7c04443f0",
+      "bytes": 11144
+    },
+    "experiments/m194e-joint-pupil/model.py": {
+      "sha256": "a74cd9bd61ea2f717a185e86f725b5ed192431056a447581db0f8562cf9f70b8",
+      "bytes": 8015
+    },
+    "experiments/m194e-joint-pupil/render.py": {
+      "sha256": "487c1727ca3aab05dd66a7056fb368712ccaabbbe604818fdc8b47eda77b6e97",
+      "bytes": 32791
+    },
+    "experiments/m194g-larger-pupil/amendment-1-counter-budget.md": {
+      "sha256": "205ba1ac42e8325eb7d1ede41e05399776eddf7d80a99ecb3ba12b1931f73a99",
+      "bytes": 5367
+    },
+    "experiments/m194g-larger-pupil/author-components.py": {
+      "sha256": "29b20c8d903af50dfcbbd9a11b05222b151d8210502a22426e182fbb27fde31f",
+      "bytes": 26996
+    },
+    "experiments/m194g-larger-pupil/author-render.py": {
+      "sha256": "303e2598612cc71653bd6273725682e4e5eb1319f39f119920c0ee5982254234",
+      "bytes": 7703
+    },
+    "experiments/m194g-larger-pupil/component-population.json": {
+      "sha256": "3814eeaf459e14a0a32e90ceeab6fc9d2994c92ee55bf17c824478accc3cbd41",
+      "bytes": 210899
+    },
+    "experiments/m194g-larger-pupil/fixture.json": {
+      "sha256": "e84f0bbbda9bef039da86616c9f051d416929f4dbe78477cc5b3fc21206856bb",
+      "bytes": 1985
+    },
+    "experiments/m194g-larger-pupil/geometry.py": {
+      "sha256": "24b812071b8b6189423b9792a22c55abd9a4f4a78921a9d558ab24489f1923b3",
+      "bytes": 6591
+    },
+    "experiments/m194g-larger-pupil/hybrid.py": {
+      "sha256": "89e71eb1a89a0236299af2f0408f58bcc50a3aa3f6cb70a2aedeb174818de885",
+      "bytes": 29261
+    },
+    "experiments/m194g-larger-pupil/independent-component-reader-design.md": {
+      "sha256": "176fc147e26b14d7eb7415b9ec5f33a57497927bb6e46e773a01c1b27bf08fff",
+      "bytes": 11584
+    },
+    "experiments/m194g-larger-pupil/independent-cost-2-read.json": {
+      "sha256": "a29b4fb9d95e668ebda8da14d97afc9e5a24875e58bb9858f017db95ca006715",
+      "bytes": 8309
+    },
+    "experiments/m194g-larger-pupil/independent-cost-2-review.md": {
+      "sha256": "54c40872716c32d488821711fecebdf2d4c3efeb7992300dba9eb289ccfa1d26",
+      "bytes": 6750
+    },
+    "experiments/m194g-larger-pupil/independent-reference-components.py": {
+      "sha256": "3a318c80d52cf49368edaf7b6486578df1dbf7720a358a2d91ebedde79360fbc",
+      "bytes": 23861
+    },
+    "experiments/m194g-larger-pupil/independent-reference.py": {
+      "sha256": "40199977f0f7f2d2e487ccacae59f04b60c67a6e7b636eea092c2365483c2de3",
+      "bytes": 32331
+    },
+    "experiments/m194g-larger-pupil/next-component-schema-notes.md": {
+      "sha256": "d01d99094cdc6c7efba0c62c9c06b11555e9c9cf87f25b07ddcdbcc6a5b9d370",
+      "bytes": 6062
+    },
+    "experiments/m194g-larger-pupil/next-numerical-release-review.md": {
+      "sha256": "a15edf35c5416dfe479f59a0acd9cbdc016c4aa5f91fbdbab70f0cbd44ef3d01",
+      "bytes": 6655
+    },
+    "experiments/m194g-larger-pupil/next-numerical-release.md": {
+      "sha256": "b8fd755f53f7172405b398744915a344c09f72977c37b1eff2e73999478e314a",
+      "bytes": 6525
+    },
+    "experiments/m194g-larger-pupil/next-reference-plan.md": {
+      "sha256": "685d1b5b7d7780c7dc7e9469b4be472b66c9d0ca4716c27de5579e0a303d2151",
+      "bytes": 12396
+    },
+    "experiments/m194g-larger-pupil/numerical-implementation-release-1.json": {
+      "sha256": "77efbefaa876fe7d222a6a968d3233f0859df87924d49245431ba32eff239ba2",
+      "bytes": 3072
+    },
+    "experiments/m194g-larger-pupil/numerical-source-review-1.md": {
+      "sha256": "44a94f2ab1a09b7493fdf47f818d1c4090cfc0ddd83b7c9456d8ca4f2be2d2f1",
+      "bytes": 6822
+    },
+    "experiments/m194g-larger-pupil/pinned-loader.py": {
+      "sha256": "222fab4a932fe236c120d8a48e4521747474e2ef57ba58781bf5c59f644f4f76",
+      "bytes": 2939
+    },
+    "experiments/m194g-larger-pupil/preflight-2/result.json": {
+      "sha256": "c9e9154fd395a06a5d1cbb28123ac84f92ee1ac61b1a97216f8904b8b6261677",
+      "bytes": 34957
+    },
+    "experiments/m194g-larger-pupil/preregister.md": {
+      "sha256": "d0c570ec892a2c3e40b90c0f7eef2a9ff0649dd53bc34adee6b6bc65280f14c8",
+      "bytes": 10645
+    },
+    "experiments/m194g-larger-pupil/reference-interval-diagnostic.py": {
+      "sha256": "1ae00e6c464b8dff6ff1dda6b9790021c38f91dcb2feb0368c6ce97bd4b19f3e",
+      "bytes": 27754
+    },
+    "experiments/m194g-larger-pupil/next-reference-interval-diagnosis.md": {
+      "sha256": "b9d54a18f42ed8a83ef301265a6ecb9e286757e9041c6d740a2c635ed92e5179",
+      "bytes": 7858
+    }
+  },
+  "inputs": [
+    {
+      "path": "experiments/m194g-larger-pupil/independent-reference-components-1/result.json",
+      "sha256": "514520ee73ea4504be17f0520791c174d11f202c371cd1ce9f6b11a4a8da7b0b",
+      "bytes": 1493700
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/next-reference-interval-diagnosis.md",
+      "sha256": "b9d54a18f42ed8a83ef301265a6ecb9e286757e9041c6d740a2c635ed92e5179",
+      "bytes": 7858
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/component-population.json",
+      "sha256": "3814eeaf459e14a0a32e90ceeab6fc9d2994c92ee55bf17c824478accc3cbd41",
+      "bytes": 210899
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/numerical-components-release-1.json",
+      "sha256": "99895afd4cd99151708b7fa0e462297a273bd5fceabf205c0228f0bb197847fa",
+      "bytes": 7991
+    }
+  ],
+  "commands": [
+    [
+      "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+      "-X",
+      "utf8",
+      "-X",
+      "faulthandler",
+      "-X",
+      "pycache_prefix=experiments/m194g-larger-pupil/work/cache-reference-interval-diagnostic-1",
+      "experiments/m194g-larger-pupil/reference-interval-diagnostic.py",
+      "--output",
+      "experiments/m194g-larger-pupil/reference-interval-diagnostic-1",
+      "--execution-release",
+      "experiments/m194g-larger-pupil/reference-interval-diagnostic-release-1.json",
+      "--execution-release-sha256",
+      "ACTUAL_EXECUTION_RELEASE_SHA256"
+    ]
+  ]
+}
