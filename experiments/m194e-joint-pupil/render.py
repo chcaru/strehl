@@ -73,13 +73,21 @@ class Meter:
         self.frame_refs = []
         self.peak_frames = 0
         self.observer_events = 0
+        self.optional_hook_calls = 0
         self.arrays = {}
+
+    def _optional_observe(self, arrays):
+        self.optional_hook_calls += 1
+        if self.observer == "count":
+            # Collection occurs only in count mode. Placebo traverses the same
+            # optional hook and returns without collecting the statistic.
+            self.observer_events += sum(isinstance(a, np.ndarray) for a in arrays)
 
     def watch(self, *arrays):
         # The storage bound is checked in every observer mode. Optional event
         # counting is the observer under the byte-null/placebo control.
-        if self.observer == "count":
-            self.observer_events += 1
+        if self.observer != "off":
+            self._optional_observe(arrays)
         for value in arrays:
             if isinstance(value, np.ndarray):
                 base = value
@@ -118,6 +126,7 @@ class Meter:
         return dict(point_calls=self.points, angular_nodes=self.nodes, peak_node_pairs=self.peak_pairs,
                     tracked_peak_ndarray_bytes=self.peak_bytes, tracked_peak_ndarrays=self.peak_arrays,
                     peak_live_scalar_frames=self.peak_frames, observer=self.observer, observer_events=self.observer_events,
+                    optional_hook_calls=self.optional_hook_calls,
                     cpu_seconds=time.process_time() - self.started_cpu, wall_seconds=time.monotonic() - self.started_wall)
 
 
@@ -127,7 +136,7 @@ def gauss(order):
     return (x + 1) / 2, w / 2
 
 
-def cosine_radial(phi, beta, lo, hi):
+def cosine_radial(phi, beta, lo, hi, meter=None):
     """Integral of r*cos(phi+beta*r), stable at beta=0 and zero width."""
     m, h = (hi + lo) / 2, (hi - lo) / 2
     z = beta * h
@@ -139,17 +148,30 @@ def cosine_radial(phi, beta, lo, hi):
     sinc = np.where(small, sinc_series, np.sin(z) / safe)
     d = np.where(small, d_series, (np.sin(z) - z * np.cos(z)) / (safe * safe))
     phase = phi + beta * m
-    return 2 * m * h * sinc * np.cos(phase) - 2 * h * h * d * np.sin(phase)
+    result = 2 * m * h * sinc * np.cos(phase) - 2 * h * h * d * np.sin(phase)
+    if meter is not None:
+        meter.watch(phi, beta, lo, hi, m, h, z, small, z2, sinc_series, d_series, safe, sinc, d, phase, result)
+    return result
 
 
-def field_radial(field, q0, direction, displacement, lo, hi):
+def field_radial(field, q0, direction, displacement, lo, hi, meter):
     c = field.constant + field.affine[0] * q0[..., 0] + field.affine[1] * q0[..., 1]
+    if np.all(np.equal(lo, hi)) and np.all(c > 0):
+        # Zero radial area is exactly +0 in the original positive-DC evaluation,
+        # including signed wave/affine terms. The c>0 guard keeps signed-zero
+        # behavior for other component inputs on the original arithmetic path.
+        value = np.zeros(np.broadcast_shapes(c.shape, direction.shape[:-1], np.shape(lo), np.shape(hi)))
+        meter.watch(q0, direction, lo, hi, c, value)
+        return value
     slope = displacement * (field.affine[0] * direction[..., 0] + field.affine[1] * direction[..., 1])
     value = c * (hi * hi - lo * lo) / 2 + slope * (hi**3 - lo**3) / 3
+    meter.watch(q0, direction, lo, hi, c, slope, value)
     for wave in field.waves:
         phi = 2 * np.pi * (wave.frequency[0] * q0[..., 0] + wave.frequency[1] * q0[..., 1]) + wave.phase
         beta = 2 * np.pi * displacement * (wave.frequency[0] * direction[..., 0] + wave.frequency[1] * direction[..., 1])
-        value = value + wave.amplitude * cosine_radial(phi, beta, lo, hi)
+        meter.watch(phi, beta, value)
+        value = value + wave.amplitude * cosine_radial(phi, beta, lo, hi, meter)
+        meter.watch(value)
     return value
 
 
@@ -161,7 +183,7 @@ def native_mask(scene, frame):
     return n, offset
 
 
-def angular_integrand(scene, frame, xy, angles, meter):
+def angular_integrand(scene, frame, xy, heights, angles, meter):
     # xy has (interval,2), angles (interval,node); this is the only pupil batch.
     count = angles.size
     meter.check(nodes=count, pairs=count)
@@ -169,7 +191,8 @@ def angular_integrand(scene, frame, xy, angles, meter):
     direction = u @ frame.forward_similarity.inverse_matrix().T
     q0 = frame.forward_similarity.inverse(xy)[:, None, :]
     df, db = frame.defocus(scene)
-    h = q0[..., 0] * scene.mask_normal[0] + q0[..., 1] * scene.mask_normal[1] - scene.mask_offset
+    # The exact same represented chief-ray height sets cuts and radial crossing.
+    h = heights[:, None]
     slope = df * (direction[..., 0] * scene.mask_normal[0] + direction[..., 1] * scene.mask_normal[1])
     crossing = np.clip(-h / np.where(slope == 0, 1., slope), 0., 1.)
     lo = np.where(slope > 0, crossing, 0.)
@@ -179,13 +202,36 @@ def angular_integrand(scene, frame, xy, angles, meter):
         lo, hi = np.zeros_like(lo), np.ones_like(hi)
     elif scene.mask_state == "absent":
         lo, hi = np.ones_like(lo), np.ones_like(hi)
-    fg = field_radial(scene.foreground, q0, direction, df, lo, hi)
-    bg = field_radial(scene.background, q0, direction, db, 0., lo) + field_radial(scene.background, q0, direction, db, hi, 1.)
+    meter.watch(xy, heights, angles, u, direction, q0, h, slope, crossing, lo, hi)
+    fg = field_radial(scene.foreground, q0, direction, df, lo, hi, meter)
+    meter.watch(fg)
+    bg_first = field_radial(scene.background, q0, direction, db, 0., lo, meter)
+    meter.watch(bg_first)
+    bg = bg_first + field_radial(scene.background, q0, direction, db, hi, 1., meter)
     value = (fg + bg) / np.pi
     meter.watch(xy, angles, u, direction, q0, h, slope, crossing, lo, hi, fg, bg, value)
     if not np.isfinite(value).all():
         raise NumericalFailure("UNCOMMISSIONED_NUMERICS: nonfinite angular evaluation")
     return value
+
+
+def angular_cuts(height, radius, alpha, mask_state, include_ladder=True):
+    """Fixed geometry-only subdivision; no radial mass is omitted."""
+    start = alpha - np.pi / 2
+    cuts = [start, start + 2 * np.pi]
+    if mask_state == "half-plane" and radius and abs(height) < radius:
+        cuts.append(start + np.pi)
+        if height:
+            eta = abs(height) / radius
+            sign = 1 if height > 0 else -1
+            levels = (1.,) + tuple(2. ** -j for j in range(1, 33)) if include_ladder else (1.,)
+            for r in levels:
+                if eta < r:
+                    delta = math.asin(max(0., min(1., eta / r)))
+                    for angle in (alpha + np.pi / 2 + sign * delta, alpha + 3 * np.pi / 2 - sign * delta):
+                        cuts.append(start + ((angle - start) % (2 * np.pi)))
+    # Only identical floating endpoints coalesce; no tolerance-based snapping.
+    return sorted(set(cuts))
 
 
 def render_points(scene, frame, xy, integrator, meter):
@@ -196,19 +242,15 @@ def render_points(scene, frame, xy, integrator, meter):
     n, offset = native_mask(scene, frame)
     df, _ = frame.defocus(scene)
     radius = abs(df) * math.hypot(*n)
-    h = xy @ n - offset
+    q0 = frame.forward_similarity.inverse(xy)
+    h = q0[:, 0] * scene.mask_normal[0] + q0[:, 1] * scene.mask_normal[1] - scene.mask_offset
     # A mask-normal perpendicular is the periodic boundary; crossing directions
-    # and the other perpendicular produce at most four nonempty intervals.
+    # and the fixed radial ladder resolve narrow visibility boundary layers.
     alpha = math.atan2(n[1] * df, n[0] * df) if df else math.atan2(n[1], n[0])
     start = alpha - np.pi / 2
     ids, left, right = [], [], []
     for j, hj in enumerate(h):
-        cuts = [start, start + 2 * np.pi]
-        if scene.mask_state == "half-plane" and radius and abs(hj) < radius:
-            cuts.append(start + np.pi)
-            angle = math.acos(max(-1., min(1., -hj / radius)))
-            cuts.extend(start + ((alpha + sign * angle - start) % (2 * np.pi)) for sign in (-1, 1))
-        cuts = sorted(set(cuts))
+        cuts = angular_cuts(hj, radius, alpha, scene.mask_state)
         for a, b in zip(cuts[:-1], cuts[1:]):
             if b > a:
                 ids.append(j)
@@ -216,6 +258,7 @@ def render_points(scene, frame, xy, integrator, meter):
                 right.append(b)
     ids, left, right = np.array(ids), np.array(left), np.array(right)
     values, errors = np.zeros(len(xy)), np.zeros(len(xy))
+    meter.watch(xy, q0, h, ids, left, right, values, errors)
     budgets = integrator.pupil_tolerance * (right - left) / (2 * np.pi)
     pending = [(ids, left, right, budgets, 0)]
     low_nodes, low_weights = gauss(integrator.angle_low)
@@ -226,8 +269,8 @@ def render_points(scene, frame, xy, integrator, meter):
         for begin in range(0, len(ids), chunk):
             ix, a, b, budget = ids[begin:begin + chunk], left[begin:begin + chunk], right[begin:begin + chunk], budgets[begin:begin + chunk]
             width = b - a
-            low = width * (angular_integrand(scene, frame, xy[ix], a[:, None] + width[:, None] * low_nodes, meter) @ low_weights)
-            high = width * (angular_integrand(scene, frame, xy[ix], a[:, None] + width[:, None] * high_nodes, meter) @ high_weights)
+            low = width * (angular_integrand(scene, frame, xy[ix], h[ix], a[:, None] + width[:, None] * low_nodes, meter) @ low_weights)
+            high = width * (angular_integrand(scene, frame, xy[ix], h[ix], a[:, None] + width[:, None] * high_nodes, meter) @ high_weights)
             error = np.abs(high - low)
             good = error <= budget
             np.add.at(values, ix[good], high[good])
@@ -238,6 +281,8 @@ def render_points(scene, frame, xy, integrator, meter):
                     raise NumericalFailure("UNCOMMISSIONED_NUMERICS: angular depth/error ceiling")
                 bad = ~good
                 mid = (a[bad] + b[bad]) / 2
+                if np.any((mid <= a[bad]) | (mid >= b[bad])):
+                    raise NumericalFailure("UNCOMMISSIONED_NUMERICS: unresolved unrepresentable angular midpoint")
                 pending.append((np.concatenate((ix[bad], ix[bad])), np.concatenate((a[bad], mid)),
                                 np.concatenate((mid, b[bad])), np.tile(budget[bad] / 2, 2), depth + 1))
     if not np.isfinite(values).all() or np.any(values < 0) or np.any(errors > integrator.pupil_tolerance * (1 + 1e-12)):
@@ -350,8 +395,8 @@ def render_frame(scene, frame, sensor, integrator, output_directory, *, meter=No
     meter = meter or Meter(integrator)
     meter.new_frame()
     shape = (sensor["height"], sensor["width"])
-    values = np.empty(shape, dtype="<f8")
-    errors = np.empty(shape, dtype="<f8")
+    values = np.full(shape, np.nan, dtype="<f8")
+    errors = np.full(shape, np.nan, dtype="<f8")
     meter.frame(values)
     meter.watch(errors)
     completed = 0
@@ -364,7 +409,11 @@ def render_frame(scene, frame, sensor, integrator, output_directory, *, meter=No
                         errors[y, x] = receipt["value_error_indicator_e"]
                         completed += 1
                 meter.check()
+                write_json(output_directory / f"frame-{frame.index:02d}-progress.json",
+                           dict(status="running", completed_cells=completed, total_cells=int(values.size), work=meter.receipt()))
     except Exception as error:
+        # Uncomputed cells remain explicitly NaN, never mistaken for a full array.
+        np.save(output_directory / f"frame-{frame.index:02d}-partial.npy", values, allow_pickle=False)
         write_json(output_directory / f"frame-{frame.index:02d}-failure.json", dict(status="UNCOMMISSIONED_NUMERICS", completed_cells=completed,
                    error=repr(error), frame=asdict(frame), integrator=asdict(integrator), work=meter.receipt()))
         raise
