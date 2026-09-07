@@ -19,10 +19,15 @@ Sources and author controls resolve from the repository root; design names
 resolve from this experiment's source directory. Frame references resolve from
 the float-bundle directory. Child references inside a numerical receipt resolve
 from that receipt's directory. This last distinction clarifies the earlier
-informal blanket description of bundle-relative references; the first API tests
-have not yet run. The revised numerical contract names
-`polar-radial-ladder32-clipped-cell-v2`,32 radial crossing levels, the three
-unchanged integrators and existing comparison/indicator limits.
+informal blanket description of bundle-relative references and was fixed before
+the first API tests. Following numerical amendment2's preregistration at
+`d839ce9b`, the current numerical contract names
+`polar-radial-ladder32-tangent-cell-v3`,32 radial crossing levels,
+`cell_map: predicate-square-distance-duffy-v1`, the three unchanged integrators
+and existing comparison/indicator limits. Design bindings include both numerical
+amendments. The predicate selects a coordinate map without moving vertices or
+changing scene geometry. Earlier source-bound packages retain their original
+contract; their results do not commission this revision.
 
 The genuine independent float commission has exact keys schema, status,
 author_root, author_bundle, producer_sources, scene, ray_model,

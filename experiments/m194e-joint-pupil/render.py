@@ -338,9 +338,52 @@ def triangle_area(t):
     return abs(a[0] * b[1] - a[1] * b[0]) / 2
 
 
-def triangle_rule(t, order):
+def tangent_indices(t, scene, frame):
+    """Select a coordinate map, never move vertices or claim exact incidence."""
+    t = np.asarray(t, dtype=np.float64)
+    if t.shape != (3, 2) or not np.isfinite(t).all():
+        raise NumericalFailure("UNCOMMISSIONED_NUMERICS: finite triangle vertices required")
+    if scene.mask_state != "half-plane":
+        return ()
+    n, offset = native_mask(scene, frame)
+    radius = abs(frame.defocus(scene)[0]) * math.hypot(*n)
+    if radius == 0:
+        return ()
+    h = t @ n - offset
+    tau = 64 * np.finfo(float).eps * (np.abs(n[0] * t[:, 0]) + np.abs(n[1] * t[:, 1]) + abs(offset) + radius)
+    if not np.isfinite(radius) or not np.isfinite(h).all() or not np.isfinite(tau).all():
+        raise NumericalFailure("UNCOMMISSIONED_NUMERICS: nonfinite cell-map predicate")
+    alternatives = []
+    for sign in (-1, 1):
+        distance = np.abs(h - sign * radius)
+        if not np.isfinite(distance).all():
+            raise NumericalFailure("UNCOMMISSIONED_NUMERICS: nonfinite tangent residual")
+        candidates = [j for j in range(3) if distance[j] <= tau[j]]
+        if candidates:
+            ranked = sorted(candidates, key=lambda j: (distance[j], tuple(t[j])))
+            alternatives.append((float(distance[ranked[0]]), sign, tuple(ranked[:2])))
+    return min(alternatives, key=lambda item: (item[0], item[1]))[2] if alternatives else ()
+
+
+def triangle_rule(t, order, indices=()):
     nodes, weights = gauss(order)
     s, u = np.meshgrid(nodes, nodes, indexing="ij")
+    if indices:
+        if len(indices) > 2 or len(set(indices)) != len(indices) or any(type(j) is not int or not 0 <= j < 3 for j in indices):
+            raise ValueError("one or two distinct triangle vertex indices required")
+        r = s * s
+        area = triangle_area(t)
+        if len(indices) == 2:
+            a, b = sorted((t[j] for j in indices), key=lambda vertex: tuple(vertex))
+            c = t[next(j for j in range(3) if j not in indices)]
+            xy = ((1 - r)[..., None] * ((1 - u)[..., None] * a + u[..., None] * b) + r[..., None] * c).reshape(-1, 2)
+            jacobian = 4 * area * s * (1 - r)
+        else:
+            c = t[indices[0]]
+            a, b = sorted((t[j] for j in range(3) if j not in indices), key=lambda vertex: tuple(vertex))
+            xy = ((1 - r)[..., None] * c + r[..., None] * ((1 - u)[..., None] * a + u[..., None] * b)).reshape(-1, 2)
+            jacobian = 4 * area * s**3
+        return xy, (weights[:, None] * weights[None, :] * jacobian).ravel()
     w = (weights[:, None] * weights[None, :] * (1 - s) * (2 * triangle_area(t))).ravel()
     xy = (t[0] + s[..., None] * (t[1] - t[0]) + ((1 - s) * u)[..., None] * (t[2] - t[0])).reshape(-1, 2)
     return xy, w
@@ -348,8 +391,9 @@ def triangle_rule(t, order):
 
 def integrate_triangle(scene, frame, triangle, integrator, meter, depth=0):
     area = triangle_area(triangle)
-    low_xy, low_w = triangle_rule(triangle, integrator.cell_low)
-    high_xy, high_w = triangle_rule(triangle, integrator.cell_high)
+    indices = tangent_indices(triangle, scene, frame)
+    low_xy, low_w = triangle_rule(triangle, integrator.cell_low, indices)
+    high_xy, high_w = triangle_rule(triangle, integrator.cell_high, indices)
     low_v, low_e = render_points(scene, frame, low_xy, integrator, meter)
     high_v, high_e = render_points(scene, frame, high_xy, integrator, meter)
     low, high = float(low_w @ low_v), float(high_w @ high_v)

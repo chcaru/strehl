@@ -33,10 +33,11 @@ def run(output, controls):
     output.mkdir(parents=True, exist_ok=False)
     started = datetime.now(timezone.utc).isoformat()
     sources = schema.source_bindings()
+    designs = schema.design_bindings()
     record = dict(schema="m194e-author-float-run-v1", status="running", command=sys.argv, started_utc=started,
                   invocation=dict(orig_argv=sys.orig_argv, xoptions=sys._xoptions, executable=sys.executable, cwd=str(Path.cwd())),
                   environment=dict(python=sys.version, numpy=np.__version__, platform=platform.platform(), numerical_threads=2),
-                  sources_before=sources, arms={}, comparisons={})
+                  sources_before=sources, designs_before=designs, arms={}, comparisons={})
     write_json(output / "result.json", record)
     snapshot = output / "source"
     snapshot.mkdir()
@@ -82,8 +83,10 @@ def run(output, controls):
             raise ValueError("UNCOMMISSIONED_NUMERICS: author refinement exceeds .001e")
         if schema.source_bindings() != sources:
             raise ValueError("source changed during float run")
+        if schema.design_bindings() != designs:
+            raise ValueError("design changed during float run")
         bundle = dict(schema="m194e-float-bundle-v1", status="uncommissioned",
-                      producer=dict(source_base="repository", sources=sources, designs=schema.design_bindings(), command=sys.argv,
+                      producer=dict(source_base="repository", sources=sources, designs=designs, command=sys.argv,
                                     author_controls=file_ref(controls, schema.REPOSITORY)),
                       sensor=sensor, scene=scene_record(scene), ray_model=RAY_MODEL, numerical_contract=schema.numerical_contract(),
                       frames=record["arms"]["primary"]["frames"],
@@ -98,6 +101,7 @@ def run(output, controls):
         record["traceback"] = traceback.format_exc()
         traceback.print_exc()
     record["sources_after"] = schema.source_bindings()
+    record["designs_after"] = schema.design_bindings()
     record["ended_utc"] = datetime.now(timezone.utc).isoformat()
     write_json(output / "result.json", record)
     print(json.dumps(dict(status=record["status"], output=str(output))), flush=True)

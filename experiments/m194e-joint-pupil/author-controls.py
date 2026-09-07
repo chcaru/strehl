@@ -9,6 +9,7 @@ import argparse
 from dataclasses import replace
 from datetime import datetime, timezone
 import importlib.util
+import itertools
 import json
 import math
 from pathlib import Path
@@ -163,6 +164,61 @@ def run(output):
         finally:
             renderer.angular_cuts = original_cuts
 
+        # Amendment2 exercises the actual full-run failure before any new image
+        # bundle. The independent whole-cell value is a regression reference.
+        fixed_cell, fixed_receipt = render_cell(p, primary_frames()[3], (30, 4))
+        check("tangent-map-fixed-full-run-cell", abs(fixed_cell - 15204.412150777305) <= .004 and fixed_receipt["value_error_indicator_e"] <= .001,
+              actual=fixed_cell, independent_reference=15204.412150777305, receipt=fixed_receipt)
+        original_selector = renderer.tangent_indices
+        try:
+            renderer.tangent_indices = lambda triangle, scene, frame: ()
+            refuses("linear-cell-map-retains-full-run-refusal", lambda: render_cell(p, primary_frames()[3], (30, 4)), NumericalFailure)
+        finally:
+            renderer.tangent_indices = original_selector
+
+        component = np.array(((0., 0.), (2., 0.), (0., 1.)))
+        component_max = 0.
+        for permutation in itertools.permutations(range(3)):
+            triangle = component[list(permutation)]
+            edge = tuple(i for i, original in enumerate(permutation) if original in (0, 1))
+            vertex = (permutation.index(2),)
+            for kind, selected in (("edge", edge), ("vertex", vertex)):
+                nodes, weights = renderer.triangle_rule(triangle, 4, selected)
+                check(f"square-map-area-moment-{permutation}-{kind}", abs(weights.sum()-1) < 1e-13 and np.all(weights > 0)
+                      and np.max(np.abs(weights @ nodes - (2/3,1/3))) < 1e-13)
+                powers = nodes[:, 1]**1.5 if kind == "edge" else (1-nodes[:, 1])**1.5
+                expected = 8/35 if kind == "edge" else 4/7
+                value = float(weights @ powers)
+                component_max = max(component_max, abs(value-expected))
+                check(f"square-map-fractional-power-{permutation}-{kind}", abs(value-expected)<1e-13, value=value, expected=expected)
+        ordinary_nodes, ordinary_weights = renderer.triangle_rule(component, 4)
+        check("linear-map-fractional-power-destroyer", abs(float(ordinary_weights @ ordinary_nodes[:,1]**1.5)-8/35)>1e-7)
+        reference_nodes, reference_weights = renderer.triangle_rule(component, 96)
+        expected_wave = float(reference_weights @ (9000*np.cos(2*np.pi*(.11*reference_nodes[:,0]+.19*reference_nodes[:,1])+.27)))
+        for selected in ((0,1),(2,)):
+            nodes, weights = renderer.triangle_rule(component, 8, selected)
+            value=float(weights @ (9000*np.cos(2*np.pi*(.11*nodes[:,0]+.19*nodes[:,1])+.27)))
+            check(f"square-map-Fourier-{selected}",abs(value-expected_wave)<=.004,actual=value,reference=expected_wave)
+
+        near_scene=Scene(Field(30),Field(10),(1,2),(0,1),0)
+        near_frame=Frame(0,.5,2)
+        allowance=128*np.finfo(float).eps
+        for multiplier in (-2.,-.5,0.,.5,2.):
+            shifted=np.array(((0.,1+multiplier*allowance),(2.,1+multiplier*allowance),(0.,2+multiplier*allowance)))
+            original_vertices=shifted.copy()
+            selected=renderer.tangent_indices(shifted,near_scene,near_frame)
+            expected_count=2 if abs(multiplier)<=.5 else 0
+            nodes,weights=renderer.triangle_rule(shifted,4,selected)
+            area=renderer.triangle_area(shifted)
+            expected_affine=area*(4000+300*shifted[:,0].mean()-700*shifted[:,1].mean())
+            actual=float(weights @ (4000+300*nodes[:,0]-700*nodes[:,1]))
+            check(f"near-predicate-whole-triangle-{multiplier}",len(selected)==expected_count and np.array_equal(shifted,original_vertices)
+                  and abs(weights.sum()-area)<1e-13 and abs(actual-expected_affine)<1e-9,indices=list(selected),offset=multiplier*allowance)
+        check("zero-pupil-and-mask-null-map",renderer.tangent_indices(component,near_scene,replace(near_frame,K=0))==()
+              and renderer.tangent_indices(component,replace(near_scene,mask_state="full"),near_frame)==()
+              and renderer.tangent_indices(component,replace(near_scene,mask_state="absent"),near_frame)==())
+        refuses("nonfinite-triangle-map-refusal",lambda:renderer.tangent_indices(np.full((3,2),np.nan),near_scene,near_frame),NumericalFailure)
+
         nodes, weights = np.polynomial.legendre.leggauss(96)
         max_primitive = 0.
         for beta in (0., 1e-8, -1e-8, .01, -.01, .3, -.3, 3., -3., 9., -9.):
@@ -181,6 +237,10 @@ def run(output):
         old = importlib.util.module_from_spec(spec)
         sys.modules[spec.name] = old
         spec.loader.exec_module(old)
+        unselected=component+np.array((30.,20.))
+        old_xy,old_weights=old.triangle_rule(unselected,8)
+        new_xy,new_weights=renderer.triangle_rule(unselected,8,renderer.tangent_indices(unselected,near_scene,near_frame))
+        check("unselected-cell-rule-byte-null",old_xy.tobytes()==new_xy.tobytes() and old_weights.tobytes()==new_weights.tobytes())
         raw_comparisons = 0
         for scalar_case in (True, False):
             q = np.array((.2, -.7)) if scalar_case else np.array((((.2, -.7),), ((.9, .1),)))
