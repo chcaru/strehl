@@ -1,0 +1,21 @@
+{
+  "status": "RUNNING",
+  "stem": "refined-4",
+  "completed": 76800,
+  "total": 76800,
+  "budget": {
+    "evaluations": 6415668,
+    "cpu_seconds": 56.09375,
+    "wall_seconds": 56.31299999996554,
+    "limits": {
+      "evaluations": 30000000,
+      "cpu_seconds": 600.0,
+      "wall_seconds": 1200.0
+    },
+    "factor_evaluations": 1386,
+    "chord_evaluations": 6414282,
+    "peak_explicit_array_bytes": 1382400,
+    "live_scalar_frame_owners": 1,
+    "array_accounting_scope": "live named ndarray backing allocations; excludes hidden temporaries, Python objects and RSS"
+  }
+}

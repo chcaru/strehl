@@ -1,0 +1,798 @@
+{
+  "schema": "m194g-independent-reference-arm-v1",
+  "status": "PASS_COMPLETE_REFERENCE_ARM_ONLY",
+  "arm": "refined",
+  "ref_root": "repository",
+  "repository_provenance": "C:\\dev\\blog\\death-of-software\\projects\\strehl",
+  "runtime": {
+    "command": [
+      "experiments/m194g-larger-pupil/independent-reference.py",
+      "--arm",
+      "refined",
+      "--output",
+      "experiments/m194g-larger-pupil/full-reference-refined-1",
+      "--controls",
+      "experiments/m194g-larger-pupil/independent-reference-components-2/result.json",
+      "--controls-sha256",
+      "bbeda46abd41a3fb604e787cbaf0d598cc01b70230175fd1cefe96242e1f997d",
+      "--execution-release",
+      "experiments/m194g-larger-pupil/full-reference-release-1.json",
+      "--execution-release-sha256",
+      "66ef6ee72eeba61a5c8dedf616339d606fb75ff4570514be89e01bdc6bf0c31e"
+    ],
+    "interpreter_argv": [
+      "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+      "-X",
+      "utf8",
+      "-X",
+      "faulthandler",
+      "-X",
+      "pycache_prefix=experiments/m194g-larger-pupil/work/cache-full-reference-refined-1",
+      "experiments/m194g-larger-pupil/independent-reference.py",
+      "--arm",
+      "refined",
+      "--output",
+      "experiments/m194g-larger-pupil/full-reference-refined-1",
+      "--controls",
+      "experiments/m194g-larger-pupil/independent-reference-components-2/result.json",
+      "--controls-sha256",
+      "bbeda46abd41a3fb604e787cbaf0d598cc01b70230175fd1cefe96242e1f997d",
+      "--execution-release",
+      "experiments/m194g-larger-pupil/full-reference-release-1.json",
+      "--execution-release-sha256",
+      "66ef6ee72eeba61a5c8dedf616339d606fb75ff4570514be89e01bdc6bf0c31e"
+    ],
+    "executable": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "xoptions": {
+      "utf8": true,
+      "faulthandler": true,
+      "pycache_prefix": "experiments/m194g-larger-pupil/work/cache-full-reference-refined-1"
+    },
+    "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+    "numpy": "2.4.4",
+    "scipy": "1.17.1",
+    "environment": {
+      "OMP_NUM_THREADS": "2",
+      "OPENBLAS_NUM_THREADS": "2",
+      "MKL_NUM_THREADS": "2",
+      "NUMEXPR_NUM_THREADS": "2"
+    }
+  },
+  "frames": [
+    {
+      "arm": "refined",
+      "index": 0,
+      "inverse_focus": 0.5,
+      "frame": {
+        "index": 0,
+        "inverse_focus": 0.5,
+        "K": 12.0,
+        "forward_similarity": {
+          "scale": 1.0,
+          "rotation": 0.0,
+          "centre": [
+            0.0,
+            0.0
+          ],
+          "translation": [
+            0.0,
+            0.0
+          ]
+        }
+      },
+      "input": {
+        "path": "experiments/m194g-larger-pupil/full-reference-refined-1/refined-0-input.json",
+        "sha256": "e75de036b28805dbd434fcae8033b7d279b074c2bb470cd4b53757456a325728",
+        "bytes": 1405
+      },
+      "array": {
+        "path": "experiments/m194g-larger-pupil/full-reference-refined-1/refined-0-array.npy",
+        "sha256": "89a38e49b97871642d27779030967febed0ebda057513bfe1172b3b91f4670e8",
+        "bytes": 614528,
+        "dtype": "<f8",
+        "shape": [
+          240,
+          320
+        ]
+      },
+      "indicators": {
+        "path": "experiments/m194g-larger-pupil/full-reference-refined-1/refined-0-indicators.npy",
+        "sha256": "c50ac973475e425454947c708810e228040ece044d3e573b38f182037ed80c8c",
+        "bytes": 614528,
+        "dtype": "<f8",
+        "shape": [
+          240,
+          320
+        ]
+      },
+      "branches": {
+        "path": "experiments/m194g-larger-pupil/full-reference-refined-1/refined-0-branches.npy",
+        "sha256": "09c124808cf24a5116e401df7f74638b6a4d11e2098c7e34215ca29373680fe7",
+        "bytes": 76928,
+        "dtype": "|u1",
+        "shape": [
+          240,
+          320
+        ]
+      },
+      "completed_cells": 76800,
+      "shape": [
+        240,
+        320
+      ],
+      "dtype": "<f8",
+      "minimum_e": 7082.096951417683,
+      "maximum_e": 16917.903048582317,
+      "maximum_indicator_e": 7.80710502755774e-06,
+      "engine": {
+        "method": "m194g-independent-spatial-cache-v2",
+        "target_e": 7.8125e-06,
+        "cache_entries": 2,
+        "cache_hits": 72658,
+        "cache_misses": 2,
+        "cache_evictions": 0,
+        "transfer_consumptions": 145320,
+        "branch_counts": {
+          "foreground": 36228,
+          "background": 36432,
+          "numerical": 4140,
+          "point": 0
+        },
+        "normalization": {
+          "adapter": "cartesian-unit-interval-v1",
+          "mapping": "nearest-endpoint-affine-binary64-v1",
+          "jacobian": "inside-weighted-callback",
+          "request": "unchanged-epsabs",
+          "target_e": 7.8125e-06,
+          "intervals": 15756,
+          "integrand_calls": 2189586
+        }
+      },
+      "indicator_scope_by_branch": {
+        "foreground": "conditional propagated spatial quadrature estimates",
+        "background": "conditional propagated spatial quadrature estimates",
+        "numerical": "frozen independent Cartesian quadrature estimate"
+      },
+      "analytic_phase_arithmetic_engineering_reservation_e": 3.90625e-06
+    },
+    {
+      "arm": "refined",
+      "index": 1,
+      "inverse_focus": 0.625,
+      "frame": {
+        "index": 1,
+        "inverse_focus": 0.625,
+        "K": 12.0,
+        "forward_similarity": {
+          "scale": 1.0,
+          "rotation": 0.0,
+          "centre": [
+            0.0,
+            0.0
+          ],
+          "translation": [
+            0.0,
+            0.0
+          ]
+        }
+      },
+      "input": {
+        "path": "experiments/m194g-larger-pupil/full-reference-refined-1/refined-1-input.json",
+        "sha256": "a206541c8f2c7d28de8a9dcc6edb461be9b9c6a39cded2d4abd94b6e63d2f735",
+        "bytes": 1407
+      },
+      "array": {
+        "path": "experiments/m194g-larger-pupil/full-reference-refined-1/refined-1-array.npy",
+        "sha256": "f5ab3c545a50769df109e47e500b2f7b8e5ef13315c65781561d1a261b29869a",
+        "bytes": 614528,
+        "dtype": "<f8",
+        "shape": [
+          240,
+          320
+        ]
+      },
+      "indicators": {
+        "path": "experiments/m194g-larger-pupil/full-reference-refined-1/refined-1-indicators.npy",
+        "sha256": "b2bf783ce6a7d1c1c7d07d56f591cf171c4fa4b32a5c4039e72a46ecdc8e6860",
+        "bytes": 614528,
+        "dtype": "<f8",
+        "shape": [
+          240,
+          320
+        ]
+      },
+      "branches": {
+        "path": "experiments/m194g-larger-pupil/full-reference-refined-1/refined-1-branches.npy",
+        "sha256": "afbbbfc01f8272e2d499b0d34d6106a8c4b0e033ecadd4b23c85104dd0dfd8c7",
+        "bytes": 76928,
+        "dtype": "|u1",
+        "shape": [
+          240,
+          320
+        ]
+      },
+      "completed_cells": 76800,
+      "shape": [
+        240,
+        320
+      ],
+      "dtype": "<f8",
+      "minimum_e": 7596.331244824531,
+      "maximum_e": 16403.66875517553,
+      "maximum_indicator_e": 7.808311668371806e-06,
+      "engine": {
+        "method": "m194g-independent-spatial-cache-v2",
+        "target_e": 7.8125e-06,
+        "cache_entries": 4,
+        "cache_hits": 146144,
+        "cache_misses": 4,
+        "cache_evictions": 0,
+        "transfer_consumptions": 292296,
+        "branch_counts": {
+          "foreground": 72876,
+          "background": 73272,
+          "numerical": 7452,
+          "point": 0
+        },
+        "normalization": {
+          "adapter": "cartesian-unit-interval-v1",
+          "mapping": "nearest-endpoint-affine-binary64-v1",
+          "jacobian": "inside-weighted-callback",
+          "request": "unchanged-epsabs",
+          "target_e": 7.8125e-06,
+          "intervals": 27804,
+          "integrand_calls": 3913392
+        }
+      },
+      "indicator_scope_by_branch": {
+        "foreground": "conditional propagated spatial quadrature estimates",
+        "background": "conditional propagated spatial quadrature estimates",
+        "numerical": "frozen independent Cartesian quadrature estimate"
+      },
+      "analytic_phase_arithmetic_engineering_reservation_e": 3.90625e-06
+    },
+    {
+      "arm": "refined",
+      "index": 2,
+      "inverse_focus": 0.75,
+      "frame": {
+        "index": 2,
+        "inverse_focus": 0.75,
+        "K": 12.0,
+        "forward_similarity": {
+          "scale": 1.0,
+          "rotation": 0.0,
+          "centre": [
+            0.0,
+            0.0
+          ],
+          "translation": [
+            0.0,
+            0.0
+          ]
+        }
+      },
+      "input": {
+        "path": "experiments/m194g-larger-pupil/full-reference-refined-1/refined-2-input.json",
+        "sha256": "6d3c6ad87052428f59a85ae6e416812e02fd3984723b153cc125eb01576b893a",
+        "bytes": 1406
+      },
+      "array": {
+        "path": "experiments/m194g-larger-pupil/full-reference-refined-1/refined-2-array.npy",
+        "sha256": "50479fe418173c2dbec44848675c44c38e88ce4ea78145256d35548a95aafac6",
+        "bytes": 614528,
+        "dtype": "<f8",
+        "shape": [
+          240,
+          320
+        ]
+      },
+      "indicators": {
+        "path": "experiments/m194g-larger-pupil/full-reference-refined-1/refined-2-indicators.npy",
+        "sha256": "ad78c82cfe6111da426f5f4b6962e1cc6c443100d637a2131b1b342cf4ebdad5",
+        "bytes": 614528,
+        "dtype": "<f8",
+        "shape": [
+          240,
+          320
+        ]
+      },
+      "branches": {
+        "path": "experiments/m194g-larger-pupil/full-reference-refined-1/refined-2-branches.npy",
+        "sha256": "157b422b2f114012aed17715fb09c495f7d65199d6f91ff97e80c0ad5206b8bd",
+        "bytes": 76928,
+        "dtype": "|u1",
+        "shape": [
+          240,
+          320
+        ]
+      },
+      "completed_cells": 76800,
+      "shape": [
+        240,
+        320
+      ],
+      "dtype": "<f8",
+      "minimum_e": 8891.920547325792,
+      "maximum_e": 15974.794446125758,
+      "maximum_indicator_e": 7.795971971140825e-06,
+      "engine": {
+        "method": "m194g-independent-spatial-cache-v2",
+        "target_e": 7.8125e-06,
+        "cache_entries": 6,
+        "cache_hits": 220458,
+        "cache_misses": 6,
+        "cache_evictions": 0,
+        "transfer_consumptions": 440928,
+        "branch_counts": {
+          "foreground": 109932,
+          "background": 110532,
+          "numerical": 9936,
+          "point": 0
+        },
+        "normalization": {
+          "adapter": "cartesian-unit-interval-v1",
+          "mapping": "nearest-endpoint-affine-binary64-v1",
+          "jacobian": "inside-weighted-callback",
+          "request": "unchanged-epsabs",
+          "target_e": 7.8125e-06,
+          "intervals": 36144,
+          "integrand_calls": 5202078
+        }
+      },
+      "indicator_scope_by_branch": {
+        "foreground": "conditional propagated spatial quadrature estimates",
+        "background": "conditional propagated spatial quadrature estimates",
+        "numerical": "frozen independent Cartesian quadrature estimate"
+      },
+      "analytic_phase_arithmetic_engineering_reservation_e": 3.90625e-06
+    },
+    {
+      "arm": "refined",
+      "index": 3,
+      "inverse_focus": 0.875,
+      "frame": {
+        "index": 3,
+        "inverse_focus": 0.875,
+        "K": 12.0,
+        "forward_similarity": {
+          "scale": 1.0,
+          "rotation": 0.0,
+          "centre": [
+            0.0,
+            0.0
+          ],
+          "translation": [
+            0.0,
+            0.0
+          ]
+        }
+      },
+      "input": {
+        "path": "experiments/m194g-larger-pupil/full-reference-refined-1/refined-3-input.json",
+        "sha256": "84300c2cf5c5cc0e63dd2861527ef604e526666b2dbe3d3b0c06bd138804793d",
+        "bytes": 1407
+      },
+      "array": {
+        "path": "experiments/m194g-larger-pupil/full-reference-refined-1/refined-3-array.npy",
+        "sha256": "9e4ecac928b51002a1855adc8e49015d6a1167587ac163e421073c8e0e5cd95c",
+        "bytes": 614528,
+        "dtype": "<f8",
+        "shape": [
+          240,
+          320
+        ]
+      },
+      "indicators": {
+        "path": "experiments/m194g-larger-pupil/full-reference-refined-1/refined-3-indicators.npy",
+        "sha256": "8b1161c505c355496142666c1da1296d5f0a2f78b4728ded6f8688093b8c5444",
+        "bytes": 614528,
+        "dtype": "<f8",
+        "shape": [
+          240,
+          320
+        ]
+      },
+      "branches": {
+        "path": "experiments/m194g-larger-pupil/full-reference-refined-1/refined-3-branches.npy",
+        "sha256": "c9a99474e623309b210798dffc24b94dc5df4e9600db2d4e06b44911f015008b",
+        "bytes": 76928,
+        "dtype": "|u1",
+        "shape": [
+          240,
+          320
+        ]
+      },
+      "completed_cells": 76800,
+      "shape": [
+        240,
+        320
+      ],
+      "dtype": "<f8",
+      "minimum_e": 10393.869172547324,
+      "maximum_e": 16686.597355964775,
+      "maximum_indicator_e": 7.75351488975225e-06,
+      "engine": {
+        "method": "m194g-independent-spatial-cache-v2",
+        "target_e": 7.8125e-06,
+        "cache_entries": 8,
+        "cache_hits": 295600,
+        "cache_misses": 8,
+        "cache_evictions": 0,
+        "transfer_consumptions": 591216,
+        "branch_counts": {
+          "foreground": 147408,
+          "background": 148200,
+          "numerical": 11592,
+          "point": 0
+        },
+        "normalization": {
+          "adapter": "cartesian-unit-interval-v1",
+          "mapping": "nearest-endpoint-affine-binary64-v1",
+          "jacobian": "inside-weighted-callback",
+          "request": "unchanged-epsabs",
+          "target_e": 7.8125e-06,
+          "intervals": 40680,
+          "integrand_calls": 6029646
+        }
+      },
+      "indicator_scope_by_branch": {
+        "foreground": "conditional propagated spatial quadrature estimates",
+        "background": "conditional propagated spatial quadrature estimates",
+        "numerical": "frozen independent Cartesian quadrature estimate"
+      },
+      "analytic_phase_arithmetic_engineering_reservation_e": 3.90625e-06
+    },
+    {
+      "arm": "refined",
+      "index": 4,
+      "inverse_focus": 1.0,
+      "frame": {
+        "index": 4,
+        "inverse_focus": 1.0,
+        "K": 12.0,
+        "forward_similarity": {
+          "scale": 1.0,
+          "rotation": 0.0,
+          "centre": [
+            0.0,
+            0.0
+          ],
+          "translation": [
+            0.0,
+            0.0
+          ]
+        }
+      },
+      "input": {
+        "path": "experiments/m194g-larger-pupil/full-reference-refined-1/refined-4-input.json",
+        "sha256": "8cd13f1a39936374902593b3d9922d96802a17e6221b6e44b2d9fc9750b4670d",
+        "bytes": 1405
+      },
+      "array": {
+        "path": "experiments/m194g-larger-pupil/full-reference-refined-1/refined-4-array.npy",
+        "sha256": "fda529230c5ee3233c87e2c59627129b8d7e780dfad5dd1fd8eef64b28194421",
+        "bytes": 614528,
+        "dtype": "<f8",
+        "shape": [
+          240,
+          320
+        ]
+      },
+      "indicators": {
+        "path": "experiments/m194g-larger-pupil/full-reference-refined-1/refined-4-indicators.npy",
+        "sha256": "d9b5612931a02a87523698857f4a960a5ed066a9c84a0e68b3c576fdb3ca524f",
+        "bytes": 614528,
+        "dtype": "<f8",
+        "shape": [
+          240,
+          320
+        ]
+      },
+      "branches": {
+        "path": "experiments/m194g-larger-pupil/full-reference-refined-1/refined-4-branches.npy",
+        "sha256": "4f23ff12a21e5052cf907fdc39e8d4256a763cb9267cffb8106e53949bd20bc5",
+        "bytes": 76928,
+        "dtype": "|u1",
+        "shape": [
+          240,
+          320
+        ]
+      },
+      "completed_cells": 76800,
+      "shape": [
+        240,
+        320
+      ],
+      "dtype": "<f8",
+      "minimum_e": 11144.571877894572,
+      "maximum_e": 17041.38647819214,
+      "maximum_indicator_e": 7.798869298700127e-06,
+      "engine": {
+        "method": "m194g-independent-spatial-cache-v2",
+        "target_e": 7.8125e-06,
+        "cache_entries": 10,
+        "cache_hits": 371570,
+        "cache_misses": 10,
+        "cache_evictions": 0,
+        "transfer_consumptions": 743160,
+        "branch_counts": {
+          "foreground": 185292,
+          "background": 186288,
+          "numerical": 12420,
+          "point": 0
+        },
+        "normalization": {
+          "adapter": "cartesian-unit-interval-v1",
+          "mapping": "nearest-endpoint-affine-binary64-v1",
+          "jacobian": "inside-weighted-callback",
+          "request": "unchanged-epsabs",
+          "target_e": 7.8125e-06,
+          "intervals": 41508,
+          "integrand_calls": 6414282
+        }
+      },
+      "indicator_scope_by_branch": {
+        "foreground": "conditional propagated spatial quadrature estimates",
+        "background": "conditional propagated spatial quadrature estimates",
+        "numerical": "frozen independent Cartesian quadrature estimate"
+      },
+      "analytic_phase_arithmetic_engineering_reservation_e": 3.90625e-06
+    }
+  ],
+  "sources_before": {
+    "experiments/m194g-larger-pupil/independent-reference.py": {
+      "sha256": "ae217b3b6587eb1b1db0cbf86060ae7f0bf3df34098af18eb4212c2b3d4981cc",
+      "bytes": 33478
+    },
+    "experiments/m194g-larger-pupil/independent-reference-components.py": {
+      "sha256": "7512692df1be164b35edcb2b22e0ccbe0afc2c6c8fdae0fd494a175b9def78ad",
+      "bytes": 24490
+    },
+    "experiments/m194e-joint-pupil/independent-model.py": {
+      "sha256": "0cd8ea2331b269e65befdee110560cbc345e89c12348cbe1dc3144f7c04443f0",
+      "bytes": 11144
+    },
+    "experiments/m194g-larger-pupil/independent-normalized-interval.py": {
+      "sha256": "0db00d10d31af75818187542470b455be863b39d834cb0f95f8d2f2281c9df52",
+      "bytes": 4392
+    },
+    "experiments/m194g-larger-pupil/independent-normalized-interval-controls.py": {
+      "sha256": "58d232029bc6a79ed36625899fe8d5e952d96447894c2c37e0b2a5a24d81d27b",
+      "bytes": 19961
+    },
+    "experiments/m194g-larger-pupil/reference-interval-amendment-1.md": {
+      "sha256": "e80af8bc3d549ba021dba16cfea440dda080c542c4fe8cc5c807071b55220848",
+      "bytes": 11273
+    },
+    "experiments/m194g-larger-pupil/component-population.json": {
+      "sha256": "3814eeaf459e14a0a32e90ceeab6fc9d2994c92ee55bf17c824478accc3cbd41",
+      "bytes": 210899
+    },
+    "experiments/m194g-larger-pupil/fixture.json": {
+      "sha256": "e84f0bbbda9bef039da86616c9f051d416929f4dbe78477cc5b3fc21206856bb",
+      "bytes": 1985
+    },
+    "experiments/m194g-larger-pupil/next-reference-plan.md": {
+      "sha256": "685d1b5b7d7780c7dc7e9469b4be472b66c9d0ca4716c27de5579e0a303d2151",
+      "bytes": 12396
+    },
+    "experiments/m194g-larger-pupil/next-numerical-release.md": {
+      "sha256": "b8fd755f53f7172405b398744915a344c09f72977c37b1eff2e73999478e314a",
+      "bytes": 6525
+    },
+    "experiments/m194g-larger-pupil/numerical-implementation-release-1.json": {
+      "sha256": "77efbefaa876fe7d222a6a968d3233f0859df87924d49245431ba32eff239ba2",
+      "bytes": 3072
+    }
+  },
+  "budget": {
+    "evaluations": 6415668,
+    "cpu_seconds": 56.109375,
+    "wall_seconds": 56.34400000004098,
+    "limits": {
+      "evaluations": 30000000,
+      "cpu_seconds": 600.0,
+      "wall_seconds": 1200.0
+    },
+    "factor_evaluations": 1386,
+    "chord_evaluations": 6414282,
+    "peak_explicit_array_bytes": 1382400,
+    "live_scalar_frame_owners": 0,
+    "array_accounting_scope": "live named ndarray backing allocations; excludes hidden temporaries, Python objects and RSS"
+  },
+  "exception": null,
+  "traceback": null,
+  "finalization_errors": [],
+  "execution_release": {
+    "path": "experiments/m194g-larger-pupil/full-reference-release-1.json",
+    "sha256": "66ef6ee72eeba61a5c8dedf616339d606fb75ff4570514be89e01bdc6bf0c31e",
+    "bytes": 12258
+  },
+  "controls": {
+    "path": "experiments/m194g-larger-pupil/independent-reference-components-2/result.json",
+    "sha256": "bbeda46abd41a3fb604e787cbaf0d598cc01b70230175fd1cefe96242e1f997d",
+    "bytes": 2200686
+  },
+  "fixture": {
+    "path": "experiments/m194g-larger-pupil/fixture.json",
+    "sha256": "e84f0bbbda9bef039da86616c9f051d416929f4dbe78477cc5b3fc21206856bb",
+    "bytes": 1985
+  },
+  "input": {
+    "schema": "m194g-expected-fixture-v1",
+    "scope": "continuous shared-pupil scalar expected electrons; no noise or CFA authority",
+    "width": 320,
+    "height": 240,
+    "cell": "integer-centre-unit-square",
+    "dtype": "<f8",
+    "scene": {
+      "depths": [
+        1.0,
+        2.0
+      ],
+      "mask_normal": [
+        1.0,
+        -0.15
+      ],
+      "mask_offset": 142.0,
+      "mask_state": "half-plane",
+      "foreground": {
+        "constant": 15000.0,
+        "affine": [
+          0.0,
+          0.0
+        ],
+        "waves": [
+          {
+            "amplitude": 1400.0,
+            "frequency": [
+              0.045,
+              0.095
+            ],
+            "phase": 0.7
+          },
+          {
+            "amplitude": 700.0,
+            "frequency": [
+              0.17,
+              0.01
+            ],
+            "phase": 0.3
+          }
+        ]
+      },
+      "background": {
+        "constant": 12000.0,
+        "affine": [
+          0.0,
+          0.0
+        ],
+        "waves": [
+          {
+            "amplitude": 3200.0,
+            "frequency": [
+              0.08,
+              0.015
+            ],
+            "phase": 0.2
+          },
+          {
+            "amplitude": 1800.0,
+            "frequency": [
+              -0.035,
+              0.12
+            ],
+            "phase": 1.1
+          }
+        ]
+      }
+    },
+    "frame_indices": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "inverse_foci": [
+      0.5,
+      0.625,
+      0.75,
+      0.875,
+      1.0
+    ],
+    "K": 12.0,
+    "forward_similarity": {
+      "scale": 1.0,
+      "rotation": 0.0,
+      "centre": [
+        0.0,
+        0.0
+      ],
+      "translation": [
+        0.0,
+        0.0
+      ]
+    },
+    "reference_index": 2,
+    "gauge": "reference-2 native pixels; identity placements",
+    "arms": [
+      "primary",
+      "angle-refined",
+      "cell-refined"
+    ],
+    "selector_intermediate_bit_limit": 4096,
+    "preflight_limits": {
+      "whole_run_cpu_seconds": 180.0,
+      "whole_run_wall_seconds": 240.0,
+      "tracked_owned_ndarray_bytes": 33554432,
+      "per_frame_points_strictly_below": 8000000,
+      "per_frame_angular_nodes_strictly_below": 1200000000
+    },
+    "future_render_limits": {
+      "per_frame_points": 16000000,
+      "per_frame_angular_nodes": 2400000000,
+      "per_arm_cpu_seconds": 1800.0,
+      "per_arm_wall_seconds": 3600.0,
+      "tracked_owned_ndarray_bytes": 33554432,
+      "live_scalar_frames": 1,
+      "node_pairs": 32768
+    },
+    "future_float_bars_e": {
+      "maximum": 0.004,
+      "rms": 0.0008,
+      "author_refinement_maximum": 0.001,
+      "independent_refinement_maximum": 0.0005,
+      "fixed_boundary_abs_mask_height": 8.0
+    }
+  },
+  "authority": "one full reference arm only; cross-arm refinement and complete external comparison remain required",
+  "sources_after": {
+    "experiments/m194g-larger-pupil/independent-reference.py": {
+      "sha256": "ae217b3b6587eb1b1db0cbf86060ae7f0bf3df34098af18eb4212c2b3d4981cc",
+      "bytes": 33478
+    },
+    "experiments/m194g-larger-pupil/independent-reference-components.py": {
+      "sha256": "7512692df1be164b35edcb2b22e0ccbe0afc2c6c8fdae0fd494a175b9def78ad",
+      "bytes": 24490
+    },
+    "experiments/m194e-joint-pupil/independent-model.py": {
+      "sha256": "0cd8ea2331b269e65befdee110560cbc345e89c12348cbe1dc3144f7c04443f0",
+      "bytes": 11144
+    },
+    "experiments/m194g-larger-pupil/independent-normalized-interval.py": {
+      "sha256": "0db00d10d31af75818187542470b455be863b39d834cb0f95f8d2f2281c9df52",
+      "bytes": 4392
+    },
+    "experiments/m194g-larger-pupil/independent-normalized-interval-controls.py": {
+      "sha256": "58d232029bc6a79ed36625899fe8d5e952d96447894c2c37e0b2a5a24d81d27b",
+      "bytes": 19961
+    },
+    "experiments/m194g-larger-pupil/reference-interval-amendment-1.md": {
+      "sha256": "e80af8bc3d549ba021dba16cfea440dda080c542c4fe8cc5c807071b55220848",
+      "bytes": 11273
+    },
+    "experiments/m194g-larger-pupil/component-population.json": {
+      "sha256": "3814eeaf459e14a0a32e90ceeab6fc9d2994c92ee55bf17c824478accc3cbd41",
+      "bytes": 210899
+    },
+    "experiments/m194g-larger-pupil/fixture.json": {
+      "sha256": "e84f0bbbda9bef039da86616c9f051d416929f4dbe78477cc5b3fc21206856bb",
+      "bytes": 1985
+    },
+    "experiments/m194g-larger-pupil/next-reference-plan.md": {
+      "sha256": "685d1b5b7d7780c7dc7e9469b4be472b66c9d0ca4716c27de5579e0a303d2151",
+      "bytes": 12396
+    },
+    "experiments/m194g-larger-pupil/next-numerical-release.md": {
+      "sha256": "b8fd755f53f7172405b398744915a344c09f72977c37b1eff2e73999478e314a",
+      "bytes": 6525
+    },
+    "experiments/m194g-larger-pupil/numerical-implementation-release-1.json": {
+      "sha256": "77efbefaa876fe7d222a6a968d3233f0859df87924d49245431ba32eff239ba2",
+      "bytes": 3072
+    }
+  },
+  "sources_unchanged": true
+}

@@ -1,0 +1,83 @@
+{
+  "scene": {
+    "depths": [
+      1.0,
+      2.0
+    ],
+    "mask_normal": [
+      1.0,
+      -0.15
+    ],
+    "mask_offset": 142.0,
+    "mask_state": "half-plane",
+    "foreground": {
+      "constant": 15000.0,
+      "affine": [
+        0.0,
+        0.0
+      ],
+      "waves": [
+        {
+          "amplitude": 1400.0,
+          "frequency": [
+            0.045,
+            0.095
+          ],
+          "phase": 0.7
+        },
+        {
+          "amplitude": 700.0,
+          "frequency": [
+            0.17,
+            0.01
+          ],
+          "phase": 0.3
+        }
+      ]
+    },
+    "background": {
+      "constant": 12000.0,
+      "affine": [
+        0.0,
+        0.0
+      ],
+      "waves": [
+        {
+          "amplitude": 3200.0,
+          "frequency": [
+            0.08,
+            0.015
+          ],
+          "phase": 0.2
+        },
+        {
+          "amplitude": 1800.0,
+          "frequency": [
+            -0.035,
+            0.12
+          ],
+          "phase": 1.1
+        }
+      ]
+    }
+  },
+  "frame": {
+    "index": 3,
+    "inverse_focus": 0.875,
+    "K": 12.0,
+    "forward_similarity": {
+      "scale": 1.0,
+      "rotation": 0.0,
+      "centre": [
+        0.0,
+        0.0
+      ],
+      "translation": [
+        0.0,
+        0.0
+      ]
+    }
+  },
+  "width": 320,
+  "height": 240
+}

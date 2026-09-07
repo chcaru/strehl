@@ -1,0 +1,77 @@
+{
+  "schema": "m194g-numerical-implementation-release-v1",
+  "scope": "author hybrid, independent spatial reference, component/observer controllers and result readers; implementation only",
+  "cost_admission": [
+    {
+      "path": "experiments/m194g-larger-pupil/preflight-2/result.json",
+      "sha256": "c9e9154fd395a06a5d1cbb28123ac84f92ee1ac61b1a97216f8904b8b6261677",
+      "bytes": 34957
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/independent-cost-2-read.json",
+      "sha256": "a29b4fb9d95e668ebda8da14d97afc9e5a24875e58bb9858f017db95ca006715",
+      "bytes": 8309
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/independent-cost-2-review.md",
+      "sha256": "54c40872716c32d488821711fecebdf2d4c3efeb7992300dba9eb289ccfa1d26",
+      "bytes": 6750
+    }
+  ],
+  "specifications": [
+    {
+      "path": "experiments/m194g-larger-pupil/preregister.md",
+      "sha256": "d0c570ec892a2c3e40b90c0f7eef2a9ff0649dd53bc34adee6b6bc65280f14c8",
+      "bytes": 10645
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/amendment-1-counter-budget.md",
+      "sha256": "205ba1ac42e8325eb7d1ede41e05399776eddf7d80a99ecb3ba12b1931f73a99",
+      "bytes": 5367
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/fixture.json",
+      "sha256": "e84f0bbbda9bef039da86616c9f051d416929f4dbe78477cc5b3fc21206856bb",
+      "bytes": 1985
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/component-population.json",
+      "sha256": "3814eeaf459e14a0a32e90ceeab6fc9d2994c92ee55bf17c824478accc3cbd41",
+      "bytes": 210899
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/next-component-schema-notes.md",
+      "sha256": "d01d99094cdc6c7efba0c62c9c06b11555e9c9cf87f25b07ddcdbcc6a5b9d370",
+      "bytes": 6062
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/next-reference-plan.md",
+      "sha256": "685d1b5b7d7780c7dc7e9469b4be472b66c9d0ca4716c27de5579e0a303d2151",
+      "bytes": 12396
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/next-numerical-release.md",
+      "sha256": "b8fd755f53f7172405b398744915a344c09f72977c37b1eff2e73999478e314a",
+      "bytes": 6525
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/next-numerical-release-review.md",
+      "sha256": "a15edf35c5416dfe479f59a0acd9cbdc016c4aa5f91fbdbab70f0cbd44ef3d01",
+      "bytes": 6655
+    }
+  ],
+  "owners": {
+    "author": "implementation_audit",
+    "reference": "directional_detail",
+    "independent_result_resource_reader": "roadmap_audit",
+    "releases": "root"
+  },
+  "requirements": [
+    "Keep original e model/render/independent-model and g geometry/loader unchanged",
+    "No actual radiance/helper execution before source and exact component-command release is committed",
+    "All author/reference components and independent consuming-reader checks must pass before a separate intended full-array release",
+    "No new noise/CFA/product/default change"
+  ],
+  "radiance_execution_released": false,
+  "intended_arrays_released": false
+}

@@ -451,3 +451,32 @@ physical-model, all-image, camera-noise, production-quality or SOTA claim.
 The next commands render all25 complete scalar images across three author
 and two independent reference arms. The separate full-array reader must
 consume every frame under the unchanged numerical bars before noise emission.
+
+## Complete expected-image production, first release
+
+Source/command commit9663ec61 froze the two scope-specific releases before
+all image work: `full-author-release-1.json`, SHA256
+`fc369e4c48fdd67dec32dbd22b9467e64ad89665961b1f422ae8abd484ce16c9`,
+and `full-reference-release-1.json`, SHA256
+`66ef6ee72eeba61a5c8dedf616339d606fb75ff4570514be89e01bdc6bf0c31e`.
+Root checked all30 source bindings against current and raw committed bytes,
+all24 inputs, the exact391-path evidence commit and all fresh destinations.
+The three author arms run in order in one process family; the two independent
+reference arms run in order in another. At most one arm per family runs at
+once. The existing limits and complete original frame populations apply.
+
+**MEASURED reference producer completion, full comparison pending:** root
+collected exit0 from the reference family session20314. Both arms report
+`PASS_COMPLETE_REFERENCE_ARM_ONLY`, all five frames complete at76800 cells
+each, sources unchanged, null exception/traceback and no finalization errors.
+Primary result SHA256 is
+`0c34069b97c98f11b3c419450406ea725b72153e9ab8126fdbf57bd7c52ce476`
+(25899 bytes); refined is
+`77e47cfd83bb447d3ba74d00d998ee879d5f0a4f92b218dfb82d6bab2d66b617`
+(25935 bytes). Primary records5996256 integrand evaluations,
+53.5CPU/53.65700000000652wall seconds; refined records6415668 evaluations,
+56.109375CPU/56.34400000004098wall seconds. Both track1382400 peak named
+ndarray bytes and zero live scalar frames at terminal. These are completed
+arm readings under their allowances, not a speed comparison. The producer's
+values and receipts still require the complete independent array consumer;
+successful reference arms alone do not grant full float or noise authority.
