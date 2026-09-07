@@ -356,3 +356,56 @@ formula, tolerance, split or warning disposition. This localizes the warning
 mechanism; it does not measure a true scalar error or admit expected images.
 The next work is a separately specified and commissioned normalized-interval
 adapter, followed by complete component populations under unchanged bars.
+
+## Complete second component producer runs
+
+The exact normalized-interval amendment was committed at1477e677 after
+independent artifact/design review. Numeric source/command release4fbe56d7
+then fixed both complete commands before execution. Root verified its exact
+six changed paths, all27 numerical source bindings against current bytes and
+raw committed Git blobs, all14 inputs and both new output destinations.
+`numerical-components-release-2.json` has SHA256
+`4941a294ca69f8c7a20d70a67e1bf65858d7823748df340cfe7defebabbc701b`.
+The independent reader/private-driver sources are separately versioned
+consumers; neither numerical process imports them. Their later source freeze
+cannot change these numerical inputs or outputs.
+
+**MEASURED producer completion; independent comparison pending:** root
+collected exit0 from the actual reference session11696 and author session57446.
+The second reference result is2200686 bytes, SHA256
+`bbeda46abd41a3fb604e787cbaf0d598cc01b70230175fd1cefe96242e1f997d`.
+All300 ordinary rows return values; all66 producer checks pass, including
+the11 new interval groups. All150 refinement and52 oracle comparisons are
+present, along with14 existing optical fault/restored groups. Sources are
+unchanged, with no exception or finalization error. The persisted result
+records129974 integrand calls,13.78125CPU/14.016000000061467wall seconds and
+24576 tracked ndarray bytes. The launch log's later post-write budget reads
+13.84375CPU/14.077999999979511wall seconds; neither is a speed comparison.
+
+The additive controls include72 direct polynomial/mode calls and12 active
+Jacobian/interpolation/request faults. Root read the actual fault magnitudes:
+the ordinary-width missing/repeated Jacobian errors are1.0/0.5; the two
+interpolation errors are0.7812499999999996 and0.16276041666666688, each above
+its fixed rational-oracle bar. Both endpoint slivers also reject the
+Jacobian faults. The four request-scaling faults change the actual delegated
+request while their scalar errors are zero: they commission a call contract,
+not a demonstrated accuracy loss. Restored signatures and the original
+disabled-adapter warning are retained. No warning was suppressed in the
+successful reference method.
+
+The second author result is1253975 bytes, SHA256
+`91af8579a12b73de17548b5a72a20ab5922272b7550b522684c6d2f8b54243ee`.
+It completes331 calls and511 passing producer checks under the unchanged
+operator, with1082883 points,270801888 angular nodes,6832758 tracked ndarray
+bytes and82.9375CPU/83.85999999998603wall seconds. The source/capture error
+fields are null. The61 started-frame count still includes the deliberate
+coverage failure; it is not61 completed normal frames.
+
+The next released consumer sequence is the current-source private controls
+and complete cross-method reader using both actual second results. Its
+prospective suite now contains193 checks: the original145,38 v2 metadata and
+source controls, and10 controls of actual direct-interval evidence. The latter
+were added before any v2 consumer execution so a self-reported passing group
+cannot substitute for reading its scalar errors, requests and restored data.
+The earlier source-review note's183 was the then-current prospective count.
+No private193 pass or full expected-image authority is claimed here.

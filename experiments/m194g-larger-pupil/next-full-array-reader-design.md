@@ -34,6 +34,13 @@ comparison tests agreement on this population; shared model errors or a
 different untested scene can defeat it. It does not establish physical optics,
 real-capture truth, preserved detail or product quality.
 
+Also report per-frame counts and descriptive discrepancies separately for
+the author's actual fallback-selected population and the broader independent
+reference-boundary population, as already required by the preregistration.
+Retain their distinct mask definitions and provenance. These summaries do not
+add acceptance bars, select the whole/band population or require the two
+branch maps to agree; an empty descriptive subset is reported as empty.
+
 ## Actual bytes, complete semantics and authority
 
 Bind the actual externally pinned component authority, render execution
@@ -51,7 +58,9 @@ four diagnostic columns. Reuse the independently commissioned semantic
 checks where their contract applies; do not invoke the author's frame reader.
 Validate all76800 sites, complete numerical coverage and per-frame work
 budgets. Full-frame work is not the component-batch budget: keep the existing
-full-arm CPU/wall and per-frame point/node limits. Reference full-arm counts
+author per-frame16000000-point/2400000000-node and full-arm1800CPU/3600wall
+limits. Do not reuse the component author's cumulative-work validator without
+its explicit full-arm mode. Reference full-arm counts
 must remain cumulative across all five frames. A producer's wider analytic
 selector need not agree with the author's branch map; compare every scalar.
 

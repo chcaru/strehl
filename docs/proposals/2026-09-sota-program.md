@@ -185,9 +185,11 @@ observer frames. The separate reference attempted all300 rows but refused28
 near-tangent evaluations on quadrature warnings. All145 independent private
 payload/resource/entry controls now pass. The96-call diagnostic preserves the
 original numerical signatures in off/count/placebo and locates all28 warnings
-on endpoint intervals5–16 binary64 steps wide. Current work is a prospective
-normalized-interval adapter and complete renewed component comparison under
-unchanged accuracy bars; no full expected-image population is admitted. See the
+on endpoint intervals5–16 binary64 steps wide. The separately released
+normalized-interval reference now returns all300 values and passes66 producer
+checks; the complete author rerun passes511. Current work is the refreshed193
+private consumer controls and complete independent comparison under unchanged
+accuracy bars; no full expected-image population is admitted. See the
 [M194g record](../research/M194g-larger-pupil.md). Its [prospective protocol](../../experiments/m194g-larger-pupil/preregister.md)
 keeps later noise-law admission and the fixed M194d comparison on actual
 three-band production output separate from expected-image generation.

@@ -1,0 +1,299 @@
+{
+  "schema": "m194g-independent-complete-cost-read-v1",
+  "evidence_consistent": true,
+  "disposition": "PASS_COST_ONLY",
+  "scope": "complete geometry cost admission only; no numerical/radiance/quality admission",
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-B",
+    "-X",
+    "faulthandler",
+    "-X",
+    "pycache_prefix=experiments/m194g-larger-pupil/work/cache-independent-cost-2-read",
+    "experiments/m194g-larger-pupil/independent-cost-2-read.py"
+  ],
+  "reader_sha256": "91e5381cfdb6420732d2679620a5bae59e39522f6aab0ff9cf8864fe0386160b",
+  "external_pins": {
+    "cost-release-2.json": "7214addd5905a0f238a51554b7bd7add67ba6aa8c2b1c5abb8135159117aabbf",
+    "preflight-2/result.json": "c9e9154fd395a06a5d1cbb28123ac84f92ee1ac61b1a97216f8904b8b6261677",
+    "preflight-1/result.json": "f23b5b1d24ba3e9516b246dce452c336749a3824c373484018a63c68ba66d010",
+    "independent-cost-1-read.py": "da31e6fba6d5aa1eb1d5becd83f7e2e903d1918b294742e4e3fd41138ca91ff7"
+  },
+  "source_commit": "44d2670dc30de10e2f4d2b8ca277c5278732c1eb",
+  "commit_time": "2026-09-07T10:32:14-07:00",
+  "started_utc": "2026-09-07T17:32:35.001326+00:00",
+  "ended_utc": "2026-09-07T17:34:30.242347+00:00",
+  "source_files": 21,
+  "all_source_current_snapshot_release_git_bindings_match": true,
+  "controls": [
+    {
+      "path": "experiments/m194g-larger-pupil/independent-budget-1/result.json",
+      "sha256": "e1d308f95eea671a665529aebc891595e14c2be0cbe8aca8a82d36870c449e95",
+      "checks": 53,
+      "historical": false
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/author-controls-2/result.json",
+      "sha256": "d6451d9a854f4d7b90e4eae5e391be5b966a902c65b87af377530b65d0934f04",
+      "checks": 41,
+      "historical": true
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/independent-geometry-controls-2/result.json",
+      "sha256": "a178a9d32f49b8f2b2af8737f7285de89d9ea70abe0e3be7cf5bb9002c3796b4",
+      "checks": 373,
+      "historical": true
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/independent-preflight-3/result.json",
+      "sha256": "4b7320ed7382b61a8c581d93bd565283a749394530540ca23c7503db5372594d",
+      "checks": 94,
+      "historical": true
+    }
+  ],
+  "complete_rows": 15,
+  "complete_cells": 1152000,
+  "frame_rows": [
+    {
+      "arm": "primary",
+      "index": 0,
+      "cells": 76800,
+      "branches": {
+        "foreground": 36708,
+        "background": 36912,
+        "numerical": 3180
+      },
+      "roots": 8016,
+      "points": 641280,
+      "angular_nodes": 184139136,
+      "maximum_intervals": 42
+    },
+    {
+      "arm": "primary",
+      "index": 1,
+      "cells": 76800,
+      "branches": {
+        "foreground": 37068,
+        "background": 37272,
+        "numerical": 2460
+      },
+      "roots": 6576,
+      "points": 526080,
+      "angular_nodes": 149075712,
+      "maximum_intervals": 40
+    },
+    {
+      "arm": "primary",
+      "index": 2,
+      "cells": 76800,
+      "branches": {
+        "foreground": 37428,
+        "background": 37632,
+        "numerical": 1740
+      },
+      "roots": 5136,
+      "points": 410880,
+      "angular_nodes": 113300352,
+      "maximum_intervals": 40
+    },
+    {
+      "arm": "primary",
+      "index": 3,
+      "cells": 76800,
+      "branches": {
+        "foreground": 37800,
+        "background": 38004,
+        "numerical": 996
+      },
+      "roots": 3648,
+      "points": 291840,
+      "angular_nodes": 74874240,
+      "maximum_intervals": 38
+    },
+    {
+      "arm": "primary",
+      "index": 4,
+      "cells": 76800,
+      "branches": {
+        "foreground": 38160,
+        "background": 38364,
+        "numerical": 276
+      },
+      "roots": 1104,
+      "points": 88320,
+      "angular_nodes": 4239360,
+      "maximum_intervals": 1
+    },
+    {
+      "arm": "angle-refined",
+      "index": 0,
+      "cells": 76800,
+      "branches": {
+        "foreground": 36708,
+        "background": 36912,
+        "numerical": 3180
+      },
+      "roots": 8016,
+      "points": 641280,
+      "angular_nodes": 368278272,
+      "maximum_intervals": 42
+    },
+    {
+      "arm": "angle-refined",
+      "index": 1,
+      "cells": 76800,
+      "branches": {
+        "foreground": 37068,
+        "background": 37272,
+        "numerical": 2460
+      },
+      "roots": 6576,
+      "points": 526080,
+      "angular_nodes": 298151424,
+      "maximum_intervals": 40
+    },
+    {
+      "arm": "angle-refined",
+      "index": 2,
+      "cells": 76800,
+      "branches": {
+        "foreground": 37428,
+        "background": 37632,
+        "numerical": 1740
+      },
+      "roots": 5136,
+      "points": 410880,
+      "angular_nodes": 226600704,
+      "maximum_intervals": 40
+    },
+    {
+      "arm": "angle-refined",
+      "index": 3,
+      "cells": 76800,
+      "branches": {
+        "foreground": 37800,
+        "background": 38004,
+        "numerical": 996
+      },
+      "roots": 3648,
+      "points": 291840,
+      "angular_nodes": 149748480,
+      "maximum_intervals": 38
+    },
+    {
+      "arm": "angle-refined",
+      "index": 4,
+      "cells": 76800,
+      "branches": {
+        "foreground": 38160,
+        "background": 38364,
+        "numerical": 276
+      },
+      "roots": 1104,
+      "points": 88320,
+      "angular_nodes": 8478720,
+      "maximum_intervals": 1
+    },
+    {
+      "arm": "cell-refined",
+      "index": 0,
+      "cells": 76800,
+      "branches": {
+        "foreground": 36708,
+        "background": 36912,
+        "numerical": 3180
+      },
+      "roots": 8016,
+      "points": 2565120,
+      "angular_nodes": 741288960,
+      "maximum_intervals": 50
+    },
+    {
+      "arm": "cell-refined",
+      "index": 1,
+      "cells": 76800,
+      "branches": {
+        "foreground": 37068,
+        "background": 37272,
+        "numerical": 2460
+      },
+      "roots": 6576,
+      "points": 2104320,
+      "angular_nodes": 601070976,
+      "maximum_intervals": 48
+    },
+    {
+      "arm": "cell-refined",
+      "index": 2,
+      "cells": 76800,
+      "branches": {
+        "foreground": 37428,
+        "background": 37632,
+        "numerical": 1740
+      },
+      "roots": 5136,
+      "points": 1643520,
+      "angular_nodes": 457909632,
+      "maximum_intervals": 48
+    },
+    {
+      "arm": "cell-refined",
+      "index": 3,
+      "cells": 76800,
+      "branches": {
+        "foreground": 37800,
+        "background": 38004,
+        "numerical": 996
+      },
+      "roots": 3648,
+      "points": 1167360,
+      "angular_nodes": 304189056,
+      "maximum_intervals": 46
+    },
+    {
+      "arm": "cell-refined",
+      "index": 4,
+      "cells": 76800,
+      "branches": {
+        "foreground": 38160,
+        "background": 38364,
+        "numerical": 276
+      },
+      "roots": 1104,
+      "points": 353280,
+      "angular_nodes": 16957440,
+      "maximum_intervals": 1
+    }
+  ],
+  "work": {
+    "limits": {
+      "whole_run_cpu_seconds": 180.0,
+      "whole_run_wall_seconds": 240.0,
+      "tracked_owned_ndarray_bytes": 33554432,
+      "per_frame_points_strictly_below": 8000000,
+      "per_frame_angular_nodes_strictly_below": 1200000000
+    },
+    "cpu_seconds": 113.9375,
+    "wall_seconds": 115.68799999996554,
+    "frame_points": 353280,
+    "frame_angular_nodes": 16957440,
+    "total_points": 11750400,
+    "total_angular_nodes": 3698302464,
+    "frame_count": 15,
+    "check_calls": 15035170,
+    "tracked_peak_ndarray_bytes": 91280,
+    "tracked_peak_ndarrays": 18,
+    "array_scope": "unique reachable wrapper-owned ndarray backing allocations; excludes Python objects/RSS/frozen-helper transient temporaries"
+  },
+  "maximum_frame_points": 2565120,
+  "maximum_frame_nodes": 741288960,
+  "old_ten_rows_exactly_equal": true,
+  "ordered_stream_sha256": "74827222370a9d733c520adbe0515b71a3ca545e31e2d7e1c9457cf9de547e70",
+  "independent_full_stream_replay": false,
+  "nominal_counter_not_rerun": true,
+  "root_attributed_exit": {
+    "session": 9359,
+    "exit_code": 0,
+    "independently_observed_by_this_reader": false
+  }
+}

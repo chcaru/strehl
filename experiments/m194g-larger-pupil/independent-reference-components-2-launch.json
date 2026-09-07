@@ -1,0 +1,30 @@
+{
+  "schema": "m194g-root-numerical-launch-v1",
+  "status": "COMPLETE",
+  "source_commit": "4fbe56d7da02145e24191d7f2d05d767efcc903c",
+  "release_sha256": "4941a294ca69f8c7a20d70a67e1bf65858d7823748df340cfe7defebabbc701b",
+  "interpreter_argv": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-X",
+    "utf8",
+    "-X",
+    "faulthandler",
+    "-X",
+    "pycache_prefix=experiments/m194g-larger-pupil/work/cache-independent-reference-components-2",
+    "experiments/m194g-larger-pupil/independent-reference-components.py",
+    "--output",
+    "experiments/m194g-larger-pupil/independent-reference-components-2",
+    "--reference-sha256",
+    "ae217b3b6587eb1b1db0cbf86060ae7f0bf3df34098af18eb4212c2b3d4981cc",
+    "--execution-release",
+    "experiments/m194g-larger-pupil/numerical-components-release-2.json",
+    "--execution-release-sha256",
+    "4941a294ca69f8c7a20d70a67e1bf65858d7823748df340cfe7defebabbc701b"
+  ],
+  "started_utc": "2026-09-07T19:02:26.3428650Z",
+  "finished_utc": "2026-09-07T19:02:40.5553706Z",
+  "exit_code": 0,
+  "parent_shell_pid": 45772,
+  "cwd": "C:\\dev\\blog\\death-of-software\\projects\\strehl",
+  "log": "experiments/m194g-larger-pupil/independent-reference-components-2-launch.log"
+}

@@ -570,6 +570,166 @@ def author_fixture_controls(reader, reference_module, catalog, path, trusted, ou
     return checks.rows
 
 
+def reference_fixture_controls(reader, catalog, path, trusted, output, release):
+    """Actual v2 reference rows, private rehashed metadata, no invented values."""
+    output = Path(output)
+    output.mkdir()
+    reads, checks = reader.Reads(), Checks()
+    reference = reads.external(path, trusted)
+    if reference.get("schema") != "m194g-independent-reference-components-v1" or reference.get("status") != "PASS_REFERENCE_COMPONENTS_ONLY":
+        raise ValueError("externally pinned completed v2 reference fixture required")
+    root = Path(path).resolve().parent
+    checks.check("actual-reference-v2-all300-returned-rows",
+                 lambda: len(reader.read_reference_values(reference, catalog)[0]))
+    companions = (("geometry-060", "primary"), ("geometry-060", "refined"),
+                  ("transfer-small-full", "primary"), ("joint-relative-sign-point", "refined"))
+    selected = {}
+    for case_id, arm in companions:
+        rows = [row for row in reference["baseline"] if (row["case_id"], row["arm"]) == (case_id, arm)]
+        reader.need(len(rows) == 1, "fixed actual v2 metadata companion absent or duplicated")
+        selected[(case_id, arm)] = rows[0]
+
+    def attempt(name, change=None, *, key=("geometry-060", "refined")):
+        row = copy.deepcopy(selected[key])
+        if change is not None:
+            change(row)
+        # Persist and hash a private metadata fixture, then reopen it. This is
+        # not a rewritten successful reference result or numerical authority.
+        raw = reader.canonical({"schema": "m194g-private-reference-row-fixture-v1",
+                                "fixture_only": True, "row": row}) + b"\n"
+        dest = output / (name + ".json")
+        dest.write_bytes(raw)
+        reopened = reads.external(dest, hashlib.sha256(raw).hexdigest())
+        verified = reader.reference_row(reopened["row"], catalog, case_id=key[0], arm=key[1])
+        return {"case_id": key[0], "arm": key[1], "branch": verified["branch"],
+                "value_e": verified["value_e"], "normalization": verified["receipt"]["normalization"]}
+
+    for key in companions:
+        name = "actual-reference-v2-valid-" + key[0] + "-" + key[1]
+        checks.check(name, lambda name=name, key=key: attempt(name, key=key))
+
+    def chord_delta(row):
+        row["work_after"]["chord_evaluations"] += 1
+        row["work_after"]["evaluations"] += 1
+
+    def coherent_work(row, intervals, calls):
+        row["receipt"]["normalization"]["intervals"] = intervals
+        row["receipt"]["normalization"]["integrand_calls"] = calls
+        for field, count in (("intervals", intervals), ("integrand_calls", calls)):
+            row["engine_after"]["normalization"][field] = row["engine_before"]["normalization"][field] + count
+        row["work_after"]["chord_evaluations"] = row["work_before"]["chord_evaluations"] + calls
+        row["work_after"]["evaluations"] = row["work_after"]["factor_evaluations"] + row["work_after"]["chord_evaluations"]
+
+    mutations = (
+        ("row-method-v1", lambda r: r.__setitem__("method", "m194g-independent-spatial-cache-v1"), "reference row identity"),
+        ("engine-method-v1", lambda r: r["engine_after"].__setitem__("method", "m194g-independent-spatial-cache-v1"), "actual independent method/target"),
+        ("returned-integrand-method", lambda r: r["receipt"].__setitem__("method", reader.REFERENCE_METHOD), "returned reference integrand method"),
+        ("missing-row-normalization", lambda r: r["receipt"].pop("normalization"), "reference normalization receipt absent"),
+        ("missing-engine-normalization", lambda r: r["engine_before"].pop("normalization"), "closed keys: independent engine receipt"),
+        ("unknown-normalization-field", lambda r: r["receipt"]["normalization"].__setitem__("accepted", True), "closed keys: reference normalization"),
+        ("missing-normalization-field", lambda r: r["receipt"]["normalization"].pop("request"), "closed keys: reference normalization"),
+        ("adapter-v0", lambda r: r["receipt"]["normalization"].__setitem__("adapter", "cartesian-unit-interval-v0"), "record differs: normalization convention"),
+        ("mapping", lambda r: r["receipt"]["normalization"].__setitem__("mapping", "midpoint"), "record differs: normalization convention"),
+        ("jacobian", lambda r: r["receipt"]["normalization"].__setitem__("jacobian", "outside-return-value"), "record differs: normalization convention"),
+        ("request-convention", lambda r: r["receipt"]["normalization"].__setitem__("request", "epsabs-divided-by-width"), "record differs: normalization convention"),
+        ("target-bool", lambda r: r["receipt"]["normalization"].__setitem__("target_e", True), "finite real: normalization actual target"),
+        ("target-other-arm", lambda r: r["receipt"]["normalization"].__setitem__("target_e", .000125), "normalization actual target differs"),
+        ("row-count-bool", lambda r: r["receipt"]["normalization"].__setitem__("intervals", True), "integer: normalization intervals"),
+        ("row-count-float", lambda r: r["receipt"]["normalization"].__setitem__("integrand_calls", float(r["receipt"]["normalization"]["integrand_calls"])), "integer: normalization integrand calls"),
+        ("engine-count-bool", lambda r: r["engine_before"]["normalization"].__setitem__("integrand_calls", False), "integer: normalization integrand calls"),
+        ("engine-count-float", lambda r: r["engine_after"]["normalization"].__setitem__("intervals", float(r["engine_after"]["normalization"]["intervals"])), "integer: normalization intervals"),
+        ("count-negative", lambda r: r["receipt"]["normalization"].__setitem__("integrand_calls", -1), "integer: normalization integrand calls"),
+        ("counter-decreases", lambda r: r["engine_before"]["normalization"].__setitem__("intervals", r["engine_after"]["normalization"]["intervals"] + 1), "reference normalization counters decreased"),
+        ("row-engine-delta", lambda r: r["receipt"]["normalization"].__setitem__("integrand_calls", r["receipt"]["normalization"]["integrand_calls"] + 1), "reference row normalization differs from engine delta"),
+        ("chord-delta", chord_delta, "reference normalization differs from chord work"),
+        ("frozen-interval-count", lambda r: r["receipt"].__setitem__("intervals", r["receipt"]["intervals"] + 1), "reference normalization differs from frozen interval count"),
+        ("frozen-interval-float", lambda r: r["receipt"].__setitem__("intervals", float(r["receipt"]["intervals"])), "integer: frozen interval count"),
+        ("actual-request", lambda r: r["receipt"].__setitem__("request_e", .000125), "reference receipt actual target differs"),
+        ("coherent-zero-numerical-work", lambda r: coherent_work(r, 0, 0), "returned numerical reference lacks normalization work"),
+    )
+    for suffix, change, boundary in mutations:
+        name = "actual-reference-v2-" + suffix
+        checks.check(name, lambda name=name, change=change: attempt(name, change),
+                     True, ("ValueError", boundary))
+    checks.check("actual-reference-v2-analytic-coherent-positive-work",
+                 lambda: attempt("analytic-coherent-positive-work", lambda r: coherent_work(r, 1, 21),
+                                 key=("transfer-small-full", "primary")),
+                 True, ("ValueError", "analytic reference must have zero normalization work"))
+    checks.check("actual-reference-v2-analytic-returned-method-v1",
+                 lambda: attempt("analytic-returned-method-v1", lambda r: r["receipt"].__setitem__("method", "m194g-independent-spatial-cache-v1"),
+                                 key=("transfer-small-full", "primary")),
+                 True, ("ValueError", "returned analytic reference method differs"))
+    checks.check("actual-reference-v2-restored-numerical", lambda: attempt("restored-numerical"))
+    checks.check("actual-reference-v2-restored-analytic",
+                 lambda: attempt("restored-analytic", key=("transfer-small-full", "primary")))
+
+    required = {"experiments/m194g-larger-pupil/" + name for name in
+                ("independent-normalized-interval.py", "independent-normalized-interval-controls.py",
+                 "reference-interval-amendment-1.md")}
+    adapter_name = "experiments/m194g-larger-pupil/independent-normalized-interval.py"
+
+    def source_attempt(*, omit_exercised=False, omit_released=False):
+        before, after, private_release = (copy.deepcopy(reference["sources_before"]),
+                                          copy.deepcopy(reference["sources_after"]), copy.deepcopy(release))
+        if omit_exercised:
+            before.pop(adapter_name)
+            after.pop(adapter_name)
+        if omit_released:
+            private_release["source_bindings"].pop(adapter_name)
+        return reader.source_closure(reads, before, after, root, ("source-snapshot",), required, private_release)
+
+    checks.check("actual-reference-v2-source-closure-valid", source_attempt)
+    checks.check("actual-reference-v2-omitted-adapter-exercised",
+                 lambda: source_attempt(omit_exercised=True), True,
+                 ("ValueError", "exercised source closure omits actual dependency"))
+    checks.check("actual-reference-v2-omitted-adapter-release",
+                 lambda: source_attempt(omit_released=True), True,
+                 ("ValueError", "entry release omits exercised dependency"))
+    checks.check("actual-reference-v2-source-closure-restored", source_attempt)
+
+    def interval_attempt(name, change=None):
+        # The externally pinned result embeds these actual direct-call records.
+        # A rehashed private envelope tests their interpretation, not authority.
+        fixture = {"checks": copy.deepcopy(reference["checks"])}
+        if change is not None:
+            change(fixture)
+        raw = reader.canonical({"schema": "m194g-private-normalization-evidence-v1",
+                                "fixture_only": True, "record": fixture}) + b"\n"
+        destination = output / ("normalization-" + name + ".json")
+        destination.write_bytes(raw)
+        reopened = reads.external(destination, hashlib.sha256(raw).hexdigest())
+        return reader.read_normalization_evidence(reopened["record"])
+
+    def interval_case(fixture, group="jacobian-faults"):
+        return next(x for x in fixture["checks"] if x["name"] == "normalized-interval-" + group)["evidence"]["cases"][0]
+
+    def erase_scalar_fault(fixture):
+        case = interval_case(fixture)
+        case["active"]["value"] = float(reader.Fraction(case["active"]["oracle_fraction"]))
+
+    def erase_request_fault(fixture):
+        case = interval_case(fixture, "request-faults")
+        case["active"]["delegated"][0]["kwargs"]["epsabs"] = case["active"]["request"]
+
+    checks.check("actual-normalization-evidence-valid", lambda: interval_attempt("valid"))
+    for suffix, change, boundary in (
+        ("scalar-fault-inert", erase_scalar_fault, "normalization actual scalar fault not powered"),
+        ("request-fault-inert", erase_request_fault, "normalization actual request fault not powered"),
+        ("relaxed-error-limit", lambda f: interval_case(f)["active"].__setitem__("error_limit", 1.), "record differs: normalization fixed request/error limit"),
+        ("false-oracle", lambda f: interval_case(f)["active"].__setitem__("oracle_fraction", "0"), "normalization independent polynomial oracle"),
+        ("zero-callbacks", lambda f: interval_case(f)["active"].__setitem__("delegated_callbacks", 0), "integer: normalization actual callbacks"),
+        ("unrelated-exception", lambda f: interval_case(f)["active"].__setitem__("exception", "TypeError('private fixture')"), "normalization direct unexpected exception"),
+        ("false-fault-magnitude", lambda f: interval_case(f).__setitem__("actual_scalar_error_fraction", "0"), "normalization recorded actual fault magnitude"),
+        ("restoration-changed", lambda f: interval_case(f)["restored"].__setitem__("value", interval_case(f)["restored"]["value"] + 1.), "normalization actual direct polynomial error/indicator"),
+    ):
+        checks.check("actual-normalization-evidence-" + suffix,
+                     lambda suffix=suffix, change=change: interval_attempt(suffix, change),
+                     True, ("ValueError", boundary))
+    checks.check("actual-normalization-evidence-restored", lambda: interval_attempt("restored"))
+    reads.finish()
+    return checks.rows
+
+
 def load_checked_module(path, wanted, name):
     path = Path(path).resolve()
     raw = path.read_bytes()
@@ -590,6 +750,8 @@ def main():
     parser.add_argument("--execution-release-sha256", required=True)
     parser.add_argument("--author-fixture", type=Path, required=True)
     parser.add_argument("--author-fixture-sha256", required=True)
+    parser.add_argument("--reference-fixture", type=Path, required=True)
+    parser.add_argument("--reference-fixture-sha256", required=True)
     args = parser.parse_args()
     args.output.mkdir(parents=True, exist_ok=False)
     result = dict(schema="m194g-independent-component-controls-command-v1", fixture_only=True,
@@ -633,6 +795,11 @@ def main():
             raise ValueError("actual author fixture must be an explicitly pinned release input")
         actual = author_fixture_controls(reader, modules["independent-reference.py"], catalog,
                                          args.author_fixture, args.author_fixture_sha256, args.output / "actual-author-fixtures")
+        if not any((REPO / item["path"]).resolve() == args.reference_fixture.resolve()
+                   and item["sha256"] == args.reference_fixture_sha256 for item in release["inputs"]):
+            raise ValueError("actual reference fixture must be an explicitly pinned release input")
+        actual.extend(reference_fixture_controls(reader, catalog, args.reference_fixture, args.reference_fixture_sha256,
+                                                  args.output / "actual-reference-fixtures", release))
         core = result["groups"][0]
         core["checks"].extend(actual)
         core["check_count"] = len(core["checks"])

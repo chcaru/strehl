@@ -8,12 +8,14 @@ from __future__ import annotations
 import argparse
 from collections import defaultdict
 from datetime import datetime, timezone
+from fractions import Fraction
 import hashlib
 import io
 import json
 import math
 from pathlib import Path, PurePosixPath
 import re
+import struct
 import sys
 import time
 import traceback
@@ -24,6 +26,22 @@ HERE = Path(__file__).resolve().parent
 REPO = HERE.parents[1]
 CATALOG_SHA = "3814eeaf459e14a0a32e90ceeab6fc9d2994c92ee55bf17c824478accc3cbd41"
 DESIGN_SHA = "b8fd755f53f7172405b398744915a344c09f72977c37b1eff2e73999478e314a"
+INTERVAL_AMENDMENT_SHA = "e80af8bc3d549ba021dba16cfea440dda080c542c4fe8cc5c807071b55220848"
+REFERENCE_METHOD = "m194g-independent-spatial-cache-v2"
+NORMALIZATION_CONVENTION = {
+    "adapter": "cartesian-unit-interval-v1",
+    "mapping": "nearest-endpoint-affine-binary64-v1",
+    "jacobian": "inside-weighted-callback",
+    "request": "unchanged-epsabs",
+}
+NORMALIZATION_CHECKS = (
+    "normalized-interval-polynomial-oracles", "normalized-interval-delegated-request",
+    "normalized-interval-observer-null", "normalized-interval-node-domain",
+    "normalized-interval-jacobian-faults", "normalized-interval-interpolation-faults",
+    "normalized-interval-request-faults", "normalized-interval-warning-and-restoration",
+    "normalized-interval-dependency-scope", "normalized-interval-historical-refusal",
+    "normalized-interval-complete-accounting",
+)
 MAX_JSON = 16 * 1024 * 1024
 MAX_ARRAY = 32 * 1024 * 1024
 DIAGNOSTIC_COLUMNS = (
@@ -484,10 +502,149 @@ def reference_work(work):
 REFERENCE_CUMULATIVE = ("evaluations", "factor_evaluations", "chord_evaluations", "cpu_seconds", "wall_seconds")
 
 
+def normalization_receipt(value, target):
+    keys(value, (*NORMALIZATION_CONVENTION, "target_e", "intervals", "integrand_calls"),
+         "reference normalization")
+    equal_record({name: value[name] for name in NORMALIZATION_CONVENTION},
+                 NORMALIZATION_CONVENTION, "normalization convention")
+    need(finite(value["target_e"], "normalization actual target") == target,
+         "normalization actual target differs")
+    return (integer(value["intervals"], "normalization intervals"),
+            integer(value["integrand_calls"], "normalization integrand calls"))
+
+
+def read_normalization_evidence(reference):
+    """Interpret the actual direct-call data, without importing either integrator."""
+    groups = {}
+    for item in reference["checks"]:
+        name = item.get("name")
+        if name in NORMALIZATION_CHECKS:
+            need(name not in groups and item["passed"] is True, "normalization group duplicate/failed")
+            groups[name] = item["evidence"]
+    need(set(groups) == set(NORMALIZATION_CHECKS), "normalization evidence groups incomplete")
+    intervals = dict(A=(-.875, -.125), B=(.125, .625), C=(-.3125, .9375), D=(-1., 1.),
+                     E=(-1., float.fromhex('-0x1.ffffffffffff9p-1')),
+                     F=(float.fromhex('0x1.fffffffffffe9p-1'), 1.))
+    polynomials = dict(constant=(2., 0., 0.), affine=(3., 2., 0.),
+                       signed=(-.375, 1., 0.), quadratic=(1., 1., 1.))
+
+    def direct(row, purpose="good"):
+        ident, poly, mode = row["interval"], row["polynomial"], row["mode"]
+        need(ident in intervals and poly in polynomials and mode in ("off", "count", "placebo"),
+             "normalization direct identity")
+        a, b = intervals[ident]
+        coeff = polynomials[poly]
+        equal_record([row["a"], row["b"], row["coefficients"]], [a, b, list(coeff)],
+                     "normalization direct inputs")
+        width = b - a
+        scale = width * max(1., sum(abs(c) for c in coeff))
+        request, limit = 2.**-40 * scale, 256. * 2.**-52 * scale
+        equal_record([row["request"], row["error_limit"]], [request, limit],
+                     "normalization fixed request/error limit")
+        fa, fb = Fraction(a), Fraction(b)
+        oracle = sum(Fraction(c) * (fb**(j+1) - fa**(j+1)) / (j+1) for j, c in enumerate(coeff))
+        need(row["oracle_fraction"] == str(oracle), "normalization independent polynomial oracle")
+        need(row["exception"] is None, "normalization direct unexpected exception")
+        value = finite(row["value"], "normalization direct value")
+        indicator = finite(row["indicator"], "normalization direct indicator", 0.)
+        error = abs(Fraction(value) - oracle)
+        if purpose == "good":
+            need(error <= Fraction(limit) and indicator <= request and row["warnings"] == [],
+                 "normalization actual direct polynomial error/indicator")
+        elif purpose == "scalar":
+            need(error > Fraction(limit), "normalization actual scalar fault not powered")
+        need(type(row["delegated"]) is list and len(row["delegated"]) == 1,
+             "normalization one actual delegated call")
+        call = row["delegated"][0]
+        equal_record([call["left"], call["right"]], [0., 1.], "normalization delegated interval")
+        keys(call["kwargs"], ("epsabs", "epsrel", "limit"), "normalization delegated kwargs")
+        equal_record([call["kwargs"]["epsrel"], call["kwargs"]["limit"]], [0., 128],
+                     "normalization fixed relative tolerance/limit")
+        actual_request = finite(call["kwargs"]["epsabs"], "normalization actual delegated request", 0.)
+        request_changed = struct.pack("<d", actual_request) != struct.pack("<d", request)
+        need(request_changed == (purpose == "request"), "normalization actual request fault not powered")
+        if purpose != "scalar":
+            need(type(call["returned"]) is list and len(call["returned"]) == 2,
+                 "normalization delegated returned pair")
+            pair = [finite(x, "normalization actual returned pair") for x in call["returned"]]
+            need(struct.pack("<dd", *pair) == struct.pack("<dd", value, indicator),
+                 "normalization unscaled delegated returned pair")
+        calls = integer(row["delegated_callbacks"], "normalization actual callbacks", 1)
+        need(integer(row["actual_integrand_calls"], "normalization actual integrand calls", 1) == calls,
+             "normalization direct actual callback accounting")
+        need(normalization_receipt(row["normalized"], .000125) == (1, calls),
+             "normalization direct mandatory counters")
+        expected_signature = dict(value=value.hex(), indicator=indicator.hex(), callbacks=calls,
+                                  samples=digest(row["delegated_sample_sha256"]),
+                                  warnings=row["warnings"], exception=None)
+        equal_record(row["signature"], expected_signature, "normalization actual signature")
+        hooks = integer(row["hook_calls"], "normalization optional hook count")
+        need(type(row["collected"]) is list, "normalization actual collected list")
+        if mode == "count":
+            need(hooks == len(row["collected"]) == calls, "normalization live observer count")
+            samples = hashlib.sha256()
+            for event in row["collected"]:
+                need(type(event) is list and len(event) == 4 and all(type(x) is str for x in event),
+                     "normalization collected event")
+                u, t, v, weighted = [float.fromhex(x) for x in event]
+                need(all(math.isfinite(x) for x in (u, t, v, weighted)) and 0. <= u <= 1. and a <= t <= b,
+                     "normalization collected node domain")
+                samples.update(struct.pack("<dd", u, weighted))
+            need(samples.hexdigest() == row["delegated_sample_sha256"], "normalization actual observer sample hash")
+        else:
+            need(row["collected"] == [] and hooks == (0 if mode == "off" else calls),
+                 "normalization off/placebo collection")
+        return (ident, poly, mode), error, request_changed
+
+    rows = groups["normalized-interval-polynomial-oracles"]["rows"]
+    expected = {(i, p, m) for i in intervals for p in polynomials for m in ("off", "count", "placebo")}
+    need(type(rows) is list and len(rows) == len(expected), "normalization complete 72 direct rows")
+    baseline, errors = {}, []
+    for row in rows:
+        identity, error, _ = direct(row)
+        need(identity not in baseline, "normalization duplicate direct row")
+        baseline[identity] = row
+        errors.append(float(error))
+    need(set(baseline) == expected, "normalization fixed direct population")
+    for ident in intervals:
+        for poly in polynomials:
+            for mode in ("count", "placebo"):
+                equal_record(baseline[ident, poly, mode]["signature"], baseline[ident, poly, "off"]["signature"],
+                             "normalization actual observer identity")
+    plans = {
+        "jacobian-faults": [(name, i, "constant", "scalar") for i in ("B", "E", "F")
+                            for name in ("omit-jacobian", "repeat-jacobian")],
+        "interpolation-faults": [("left-half", "C", "affine", "scalar"), ("midpoint", "C", "quadratic", "scalar")],
+        "request-faults": [(name, i, "constant", "request") for i in ("B", "C")
+                           for name in ("request-divide-width", "request-multiply-width")],
+    }
+    fault_summary = []
+    for group, plan in plans.items():
+        cases = groups["normalized-interval-" + group]["cases"]
+        need(type(cases) is list and len(cases) == len(plan), "normalization fixed fault population")
+        for case, (name, ident, poly, purpose) in zip(cases, plan):
+            need(case["name"] == name and case["passed"] is True, "normalization actual fault identity")
+            identity, error, changed = direct(case["active"], purpose)
+            need(identity == (ident, poly, "off"), "normalization active fault stimulus")
+            restored_identity, _, _ = direct(case["restored"])
+            need(restored_identity == identity, "normalization restored fault stimulus")
+            equal_record(case["baseline_signature"], baseline[identity]["signature"], "normalization fault baseline")
+            equal_record(case["restored"]["signature"], baseline[identity]["signature"], "normalization fault restored bytes")
+            need(case["actual_scalar_error_fraction"] == str(error), "normalization recorded actual fault magnitude")
+            equal_record(case["actual_scalar_error"], float(error), "normalization recorded floating fault magnitude")
+            need(case["delegated_request_bitwise_changed"] is changed, "normalization recorded request change")
+            fault_summary.append(dict(name=name, interval=ident, polynomial=poly, scope=purpose,
+                                      actual_error_fraction=str(error), actual_error_e=float(error),
+                                      error_limit_e=case["active"]["error_limit"], request_changed=changed,
+                                      actual_delegated_request=case["active"]["delegated"][0]["kwargs"]["epsabs"]))
+    return dict(direct_rows=len(rows), direct_max_error_e=max(errors), observer_pairs=24,
+                active_faults=fault_summary, authority="direct interval contract and polynomial controls only")
+
+
 def reference_row(row, catalog, *, case_id, arm, phase="baseline", fault_id=None):
     keys(row, ("case_id", "arm", "method", "phase", "fault_id", "call", "scene", "frame", "native_xy", "status",
                "value_e", "branch", "receipt", "work_before", "work_after", "engine_before", "engine_after", "error"), "reference component row")
-    need(row["case_id"] == case_id and row["arm"] == arm and row["method"] == "m194g-independent-spatial-cache-v1"
+    need(row["case_id"] == case_id and row["arm"] == arm and row["method"] == REFERENCE_METHOD
          and row["phase"] == phase and row["fault_id"] == fault_id, "reference row identity differs")
     case = next(c for c in catalog["cases"] if c["id"] == case_id)
     expected = case_inputs(catalog, case)
@@ -496,18 +653,22 @@ def reference_row(row, catalog, *, case_id, arm, phase="baseline", fault_id=None
     before, after = reference_work(row["work_before"]), reference_work(row["work_after"])
     monotone_work(before, after, REFERENCE_CUMULATIVE, "reference call")
     target = {"primary": .000125, "refined": .0000078125}[arm]
+    normalizations = []
     for key in ("engine_before", "engine_after"):
         engine = row[key]
         keys(engine, ("method", "target_e", "cache_entries", "cache_hits", "cache_misses", "cache_evictions",
-                      "transfer_consumptions", "branch_counts"), "independent engine receipt")
-        need(engine["method"] == "m194g-independent-spatial-cache-v1" and finite(engine["target_e"], "reference actual target") == target,
+                      "transfer_consumptions", "branch_counts", "normalization"), "independent engine receipt")
+        need(engine["method"] == REFERENCE_METHOD and finite(engine["target_e"], "reference actual target") == target,
              "actual independent method/target differs")
+        normalizations.append(normalization_receipt(engine["normalization"], target))
         for count in ("cache_entries", "cache_hits", "cache_misses", "cache_evictions", "transfer_consumptions"):
             integer(engine[count], count)
         need(engine["cache_entries"] <= 20, "independent cache exceeds fixed bound")
         keys(engine["branch_counts"], ("foreground", "background", "numerical", "point"), "reference consumed branches")
         for count in engine["branch_counts"].values():
             integer(count, "reference branch count")
+    normalization_delta = tuple(new - old for old, new in zip(*normalizations))
+    need(all(count >= 0 for count in normalization_delta), "reference normalization counters decreased")
     if phase == "fault" and fault_id in ("zero-over-zero", "stale-target"):
         need(row["status"] == "REFUSED" and row["value_e"] is None and type(row["error"]) is str, "reference refusal required")
         return row
@@ -516,6 +677,22 @@ def reference_row(row, catalog, *, case_id, arm, phase="baseline", fault_id=None
     finite(row["value_e"], "independent actual scalar", 0)
     need(row["branch"] in ("foreground", "background", "numerical", "point")
          and row["receipt"]["branch"] == row["branch"], "independent branch receipt differs")
+    receipt = row["receipt"]
+    need("normalization" in receipt, "reference normalization receipt absent")
+    counts = normalization_receipt(receipt["normalization"], target)
+    need(counts == normalization_delta, "reference row normalization differs from engine delta")
+    chord_delta = after["chord_evaluations"] - before["chord_evaluations"]
+    need(counts[1] == chord_delta, "reference normalization differs from chord work")
+    need("request_e" in receipt and finite(receipt["request_e"], "reference receipt target") == target,
+         "reference receipt actual target differs")
+    if row["branch"] in ("numerical", "point"):
+        need(receipt.get("method") == "cartesian-pupil-analytic-cell-v1", "returned reference integrand method differs")
+        need(counts[0] > 0 and counts[1] > 0, "returned numerical reference lacks normalization work")
+        need("intervals" in receipt and integer(receipt["intervals"], "frozen interval count", 1) == counts[0],
+             "reference normalization differs from frozen interval count")
+    else:
+        need(receipt.get("method") == REFERENCE_METHOD, "returned analytic reference method differs")
+        need(counts == (0, 0), "analytic reference must have zero normalization work")
     # Wider independent selector branches intentionally need not match author.
     return row
 
@@ -524,6 +701,7 @@ def source_closure(reads, before, after, root, snapshot_dirs, required, release)
     need(type(before) is dict and before and type(after) is dict, "completed exercised source maps required")
     equal_record(after, before, "exercised source before/after")
     need(set(required) <= set(before), "exercised source closure omits actual dependency")
+    need(set(required) <= set(release["source_bindings"]), "entry release omits exercised dependency")
     for name, ref in before.items():
         keys(ref, ("sha256", "bytes"), "exercised source binding")
         reads.bound(REPO, {"path": name, **ref})
@@ -777,7 +955,10 @@ def verify_controls(reads, path, trusted):
                 "author-actual-analytic-cache-clock-crossing", "reference-live-owner-storage-one-byte-over",
                 "author-second-live-scalar-refuses", "reference-second-live-scalar-refuses",
                 "entry-rehashed-omitted-model", "entry-unreleased-actual-argv",
-                "entry-actual-run-preserves-primary-and-secondary-errors"}
+                "entry-actual-run-preserves-primary-and-secondary-errors",
+                "actual-reference-v2-all300-returned-rows", "actual-reference-v2-chord-delta",
+                "actual-reference-v2-analytic-coherent-positive-work", "actual-reference-v2-omitted-adapter-release",
+                "actual-normalization-evidence-scalar-fault-inert", "actual-normalization-evidence-request-fault-inert"}
     need(required <= names, "deciding private controls omitted")
     for name, ref in controls["source_bindings"].items():
         reads.bound(REPO, {"path": name, **ref})
@@ -809,6 +990,7 @@ def verify(author_path, author_sha, reference_path, reference_sha, execution_pat
     release = read_execution(reads, execution_path, execution_sha, scope="components")
     catalog = reads.external(HERE / "component-population.json", CATALOG_SHA)
     need(catalog["resolved_design"]["sha256"] == DESIGN_SHA, "fixed numerical design differs")
+    reads.external(HERE / "reference-interval-amendment-1.md", INTERVAL_AMENDMENT_SHA)
     author, reference = reads.external(author_path, author_sha), reads.external(reference_path, reference_sha)
     keys(author, ("schema", "status", "scope", "invocation", "execution_release", "catalog", "inputs_sha256",
                   "sources_before", "sources_after", "source_capture_error", "planned_calls", "rows", "observer_executions",
@@ -843,7 +1025,9 @@ def verify(author_path, author_sha, reference_path, reference_sha, execution_pat
     author_required |= {"experiments/m194e-joint-pupil/model.py", "experiments/m194e-joint-pupil/render.py"}
     reference_required = {"experiments/m194g-larger-pupil/" + name for name in
                           ("independent-reference.py", "independent-reference-components.py", "component-population.json",
-                           "fixture.json", "next-reference-plan.md", "next-numerical-release.md", "numerical-implementation-release-1.json")}
+                           "fixture.json", "next-reference-plan.md", "next-numerical-release.md", "numerical-implementation-release-1.json",
+                           "independent-normalized-interval.py", "independent-normalized-interval-controls.py",
+                           "reference-interval-amendment-1.md")}
     reference_required.add("experiments/m194e-joint-pupil/independent-model.py")
     source_rows = {"author": source_closure(reads, author["sources_before"], author["sources_after"], author_root,
                                             ("sources-before", "sources-after"), author_required, release),
@@ -856,6 +1040,7 @@ def verify(author_path, author_sha, reference_path, reference_sha, execution_pat
         need(all(value == "2" for value in runtime[key].values()), "actual numerical thread setting differs")
     a_values, a_index = read_author_rows(reads, author, author_root, catalog)
     r_values, r_index = read_reference_values(reference, catalog)
+    normalization = read_normalization_evidence(reference)
     components = compare_component_values(catalog, a_values, r_values)
     faults = read_fault_values(a_index, reference, r_index, catalog)
     oracles = read_oracles(reads, reference, r_index, a_index, catalog)
@@ -864,11 +1049,15 @@ def verify(author_path, author_sha, reference_path, reference_sha, execution_pat
          "author deciding controls incomplete or failed")
     need(type(reference["checks"]) is list and reference["checks"] and all(type(c) is dict and c["passed"] is True for c in reference["checks"]),
          "reference deciding controls incomplete or failed")
+    names = [item.get("name") for item in reference["checks"]]
+    need(all(names.count(name) == 1 for name in NORMALIZATION_CHECKS),
+         "actual normalization control groups missing or duplicated")
     reads.finish()
     return {"schema": "m194g-independent-component-verification-v1", "status": "PASS_COMPONENTS_AND_OBSERVER_ONLY",
             "authority": "Fixed numerical components and small observer payload only; no all-image or CFA admission",
             "sources": source_rows, "private_controls": controls, "components": components,
             "faults": faults, "literal_oracles": oracles, "observer_frames": observers,
+            "normalization_controls": normalization,
             "actual_author_work": author["work"], "actual_reference_work": reference["budget"],
             "input_bindings": reads.observed}
 
