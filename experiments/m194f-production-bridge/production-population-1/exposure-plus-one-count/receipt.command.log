@@ -1,0 +1,12 @@
+
+running 1 test
+test merge_cmd::known_scene_benchmark::joint_pupil_bridge::m194f_production_bridge ... FAILED
+
+failures:
+
+failures:
+    merge_cmd::known_scene_benchmark::joint_pupil_bridge::m194f_production_bridge
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 149 filtered out; finished in 0.19s
+
+Error: --exposure and --auto-exposure are viewing controls and need --srgb; the default output is the linear measurement file and must not be rescaled
