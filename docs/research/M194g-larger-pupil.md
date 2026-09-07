@@ -1,11 +1,12 @@
 # M194g — larger shared-pupil expected images
 
-2026-09-07. **IN PROGRESS; first numerical reference population is uncommissioned.** The fixed
-320×240 fixture needs a complete geometry-only cost pass, independently
-commissioned radiance components, and complete independently admitted expected
-arrays before it can feed any noise or production comparison. The geometry cost
-prerequisite passes; numerical component work is active. No full expected-image
-population, noise population or larger production output has been released.
+2026-09-07. **IN PROGRESS: fixed38 diagnostics complete; separate numerical
+verification pending.** The full expected arrays, specified software noise,
+saved90 CFA files and larger production bridge have independently passed their
+staged commissions. All38 registered production outputs and the frozen quality
+reader completed. The experimental weighting remains experimental; no default,
+physical-camera calibration or SOTA claim changes. Earlier phase statuses below
+are historical observations, superseded only by the later explicit releases.
 
 ## Consumer and decision
 
@@ -679,5 +680,144 @@ source, original command, target association and finalization checks pass.
 Independent ten-cell result SHA256 `a79b885524963a164506365fcccaa571fb7abd652cb43ec4d817b7085d6437c7`.
 
 No candidate quality metric or production-default change follows from these
-passes. Current work runs the compiled bridge on six private colour outputs,
-then12 intended commissioning outputs before the fixed38-output comparison.
+passes. The subsequent bridge and comparison stages are recorded below.
+
+## Production bridge commissioning and retained verifier refusal
+
+**MEASURED / independently VERIFIED:** the frozen launcher controls first
+passed23 live cases (release2,66ce5e8b). A later source review found that its
+standalone final publication rechecked the build receipt but did not repeat
+the actual executable/include-file closure at that last boundary. Per-child
+and matrix closure already checked the actual build. The minimal amendment
+adds Build.finish to standalone publication. Its separately frozen release3
+(d8738438) passes the original23 plus three actual publication controls:
+valid copied executable, a private one-byte post-write executable change
+refused by the real build checker, and restored-byte success. The original
+successful record is retained as rejected in the live fault arm. The actual
+release1 bootstrap had earlier refused a changed review-document hash before
+creating its output directory; its refusal record is also retained. Neither
+failure is an image-quality result. See the exact release files and
+production-controller-amendment-1-review.md for the distinct scopes.
+
+The actual copied Rust executable then ran six private tests, with6 passed,
+0 failed and1 deliberately ignored output test. The exact command is in
+production-private-controls-release-1.json, frozen58da1e56; result SHA256
+`eff686d8dcbf7346d09f9682d132d6b3ce958e145bf20e8ef758b0a81d99f6f9`.
+The separate ignored output invocation (release1,350041c7) produced all six
+private colour TIFFs and the controlled decode failure. Its result SHA256 is
+`965438745b4288e852aa63d39dff99d22557d9d46bb175e6d599b96ec4415bbe`.
+
+The independent private-output command (release4e97f4d0...,f643c957) returned
+exit0, PASS_PRIVATE_PRODUCTION_BRIDGE_READ, with9 passing controls and all
+six actual TIFFs decoded. Every output is300x226 at native origin(10,8).
+The constant oracle's maximum error is0.10229648279550929 post-WB DN;
+the affine/changed-green maximum is0.11383500356350851 DN, below the fixed
+0.25DN criterion. These analytical checks cover60 predeclared native sites
+per image, not a whole-image exact-ramp claim. All pixels are independently
+parsed and hashed. Observer off/count/placebo match both complete file and
+pixel hashes; the controlled decode error retains the observed read counts
+and emits no output. Result SHA256 is
+`26cbbaf4d138eb3f87f7d52b8042294ab6b50fa83c7864bdfdafe7959e37fe80`.
+
+The intended12 controller's exact releasefe32ddc6... was frozenfefcb7e4.
+It returned exit0 and COMPLETE_12_RGB_OUTPUTS_UNSCORED, with all12 actual
+plans completed before any rendering. Each407403-byte TIFF uses the same
+300x226/native(10,8) gauge. Its index SHA256 is
+`c6ef5ba4ea15f09d7a0fa53f22cc184d9a4239c99ad850c2ec9747542ac90353`.
+This rehearsal population supplies bridge commissioning, not candidate scores.
+
+**MEASURED verifier failure, retained:** independent intended-read release1
+(frozen6dc536bf) returned exit1 on the first actual plan, after its population
+check and before any TIFF decode. The verifier confused the package-only
+image software string with the executable's revision-bearing string. The
+retained actual compiler log independently identifies package0.0.0 and
+STREHL_BUILD_ID=48f69d82b419. The scoped repair requires the exact string
+`strehl 0.0.0 (48f69d82b419)` for plans while retaining `strehl 0.0.0` for
+TIFFs. It changes no image, control population, numerical limit or parameter.
+The original full result and source snapshots remain in the first directory.
+
+The replacement exact intended-read release091b1eda... was frozen877386aa
+and returned exit0. It passes all59 association/reducer controls and decodes
+all12 actual TIFFs. These59 comprise actual12-entry/population checks,
+wrong plan/floor/endpoint controls, private38 schema failures and complete
+private18-output reductions for half-noise, pure bias and an outside-window
+spike. Each private reduction loads34 callback arrays; those102 private
+loads are distinct from the12 actual TIFF decodes. The spike is consumed at
+native(23,19) with67.5DN actual error. Controls do not stand in for candidate
+outputs. Child result SHA256 is
+`a28f2022b146bd1433dd135c14340c118d9ad46cf671de4a57c1c4500ed08fac`.
+
+The complete independent intended-read result is1799058 bytes, SHA256
+`69dc4b40673aec0b25fd4d900350bd2a4b4b905c81187559188e16bfa378f7f4`,
+PASS_PRODUCTION_BRIDGE_ONLY. It has null error, empty finalization errors,
+matching source/input closures,12 TIFF decodes and no optical cells. The
+same-run off/count/placebo file hash is
+`1b7624c24e0c99d57f1e0c1abea4e85cdc9f8c917f175d2587a18ece4210d440`;
+the independently reconstructed pixel hash is
+`cf5d699d84dd2393ea900e0e3a9b9ff86ab0ffeedf1b7954d6b0d47a48b3a966`.
+The acyclic bridge-commission.json is168417 bytes, SHA256
+`58ea0340b2961b72d5e489b6945b6eb9363c7f05a3e2980b26916a61095dfa79`.
+This issues only production-bridge admission.
+
+The fixed38 quality matrix source and exact release43b216da... are frozen
+at61452547. Its actual command has now been launched, after the bridge gate
+above. Completion, candidate diagnostics and their independent review remain
+pending; neither a candidate-quality pass nor a default change is claimed.
+
+## Fixed38 complete diagnostics; independent verification pending
+
+**MEASURED:** the exact matrix command in production-matrix-release-1.json
+(frozen61452547) returned exit0 and COMPLETE_38_RGB_OUTPUTS_UNSCORED. All38
+plans preceded38 renders, with no missing row, retry or selected-subset result.
+Its66801-byte index has SHA256
+`03e7ffe9028cca5d56266603db09fbadd3f7f3cc19e95db609007a96914d55ca`.
+It retains the exact alternating global-state order and separate endpoints.
+
+The source-reviewed quality command was frozen at9a825936 in
+independent-quality-score-release-1.json, SHA256
+`28ae3b1917d647c19503016b808370aeb113e1d3da4746ad5559981d2b916ef7`.
+It returned exit0 and COMPLETE_FIXED_QUALITY_DIAGNOSTICS after38 initial TIFF
+reads plus34 flat and36 textured rereads,0 optical calls and both full scene
+readouts. Every checked output entry is retained separately; the terminal
+result is444640 bytes, SHA256
+`7477f1553ac53dc87d554cee04117c536f7e5d3476b97ce9fde8f5d3b42b95df`.
+Errors are null, finalization errors empty, source/input closures unchanged.
+
+The fixed native window has3584 sites, boundary513 sites, and whole output
+67800 sites. Initial recorded window readings are below. These are complete
+reader results pending the separate numerical verification, not independent
+verification merely because this table reproduces them.
+
+| Scene/channel | HardFloor temporal variance DN² | Pedestal temporal variance DN² | Candidate/baseline | Paired ideal MSE change DN² | Eight-repeat SE DN² |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| flat R | 297.2417385439432 | 193.55885476999492 | 0.6511832951797241 | -104.03087335262919 | 9.533453644748079 |
+| flat G | 268.7922138740406 | 130.5680610279353 | 0.4857583452514779 | -138.06011936019777 | 8.42754309212918 |
+| flat B | 326.4576054816631 | 211.43342730811386 | 0.6476596769622203 | -115.17467443511576 | 6.783805636272118 |
+| textured R | 619.0867739705876 | 618.6550847074219 | 0.9993026999100675 | -0.3404101619928497 | 0.07886166691000986 |
+| textured G | 429.54135775854 | 428.9944978023048 | 0.9987268747319493 | -0.4703148335042897 | 0.18661817070174666 |
+| textured B | 671.0461646199662 | 670.9376894780958 | 0.9998383492111427 | -0.16352554177001366 | 0.13795137779766117 |
+
+Variance can reward blur or bias; ideal error and wave/residual readings remain
+paired with it. The flat noise-off outputs match between modes and have about
+0.040DN window RMSE from representation/quantization. Textured noise-off window
+RMSE remains about62–63DN in both modes against the unquantized ideal; a small
+candidate-minus-baseline change does not establish accurate reconstruction.
+
+All486 descriptive review flags are false. Their absence is not a quality
+pass. The maximum absolute-error worsening still reaches43.64672741937602DN
+inside W on flat R/seed743 at native(202,104), and53.469565880827304DN over the
+whole flat output at(31,231). Textured maximum worsening is4.984451056687249DN
+inside W on G/seed743 at(210,107), and12.007995727473826DN over the whole output
+on B/seed727 at(307,86). These movements are measured against the same ideal
+at each native site, with signed before/after values retained in the readout.
+They are not claimed defect causes. No output-derived region or reference is
+used to select these extreme values.
+
+**Current disposition: retain experimental weighting and current HardFloor
+default.** The first completed reading supports substantial flat-region noise
+reduction, much smaller textured-region changes and retained sparse costs.
+The new model can express a depth boundary, but this one fixed scene is not a
+physical or cross-capture generalization. A separate decoder, temporal estimator
+and least-squares implementation will verify the full fixed diagnostics before
+the milestone is declared complete. No parameter sweep or new quality bar has
+been introduced after these readings.

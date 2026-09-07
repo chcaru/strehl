@@ -198,8 +198,12 @@ The fixed numerical population and specified software-noise law are admitted.
 All90 saved sensor files now pass their independent reader and37 controls;
 69 quality/TIFF instruments and the separate ten-cell ideal-target check pass.
 The larger three-band bridge compiles after a retained two-return repair.
-Current work runs its private/intended production commissioning before the
-registered38-output quality comparison. See the
+Its six private colour outputs and12 intended bridge outputs independently
+pass, including59 association/reducer controls. All38 registered comparison
+outputs and their108-read quality diagnostics are now complete; separate
+numerical verification is next. The first reading retains a substantial flat
+noise benefit and sparse costs, with no default change or candidate-quality
+pass. See the
 [M194g record](../research/M194g-larger-pupil.md). Its [prospective protocol](../../experiments/m194g-larger-pupil/preregister.md)
 keeps later noise-law admission and the fixed M194d comparison on actual
 three-band production output separate from expected-image generation.
@@ -363,3 +367,17 @@ consumer is not a full rendered common-TIFF stack, and M193b's valid descriptors
 do not yet authenticate actual output mapping. Use the new M194 source seam to
 commission that mapping, including same-size false translations and nonzero
 crop origins, before claiming adapter coverage.
+
+
+**Next concrete geometry development: M193c.** The
+[output-grid charter](../../experiments/m193c-output-grid/charter.md) starts
+native output-coordinate authentication and complementary-focus coverage on
+nine fixed historical coffee-bean rungs. Metadata accessibility is observed;
+no image has been decoded under this new charter. Root reviewed the design and
+keeps native geometry separate from the missing full common-TIFF stack route.
+M165's one-file identity test cannot supply that route or its colour/noise
+contract. Exact private coordinate plants, production seam and execution limits
+must be frozen before builds or real renders. The outcome will guide a concrete
+registration change if support fails, without assuming a graph solve can create
+missing correspondences. M194g verification completes before any held product
+source is changed.
