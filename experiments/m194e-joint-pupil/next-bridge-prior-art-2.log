@@ -1,0 +1,44 @@
+terms: production, known, scene, cfa, bridge, pyramid, depth, boundary
+==============================================================================
+CITE THESE IN THE BRIEF (rule 40):
+
+  ORCH-veiling.md                      score   467  <-- HEADLINE MATCH
+      ORCH-veiling — the merge loses to its own inputs on depth-separated subjects
+      !! PRIOR REFUSAL: My own leading candidate is refuted.** I argued green's 2x CFA sample density
+  BUILD-ELECT.md                       score   198  <-- HEADLINE MATCH
+      BUILD-ELECT: the wrong-depth patches inside the subject
+      !! PRIOR REFUSAL: The stripe is not real scene content. REFUTED, and this is the strongest
+  V-DILUTE.md                          score   193  <-- HEADLINE MATCH
+      V-DILUTE — is the pyramid merge's selection diluted by stack depth?
+  BUILD-BLEND.md                       score   191  <-- HEADLINE MATCH
+      BUILD-BLEND — a Laplacian multi-band merge against the depth-boundary rim
+  M194-production-truth.md             score   185  <-- HEADLINE MATCH
+      M194 — synthetic decoded CFA reaches the production Pyramid path
+  M194b-known-scene.md                 score   183  <-- HEADLINE MATCH
+      M194b — a known-scene baseline through the production merge
+  BUILD-SOFTGATE.md                    score   130  <-- HEADLINE MATCH
+      BUILD-SOFTGATE — the soft admission kernel is wired into the pyramid, the env channel now refuses a typo
+  M166-m10-definition-repair.md        score   127  <-- HEADLINE MATCH
+      M166 — M10 physical-depth definition repair
+  M-PHASE0-RHO.md                      score   126  <-- HEADLINE MATCH
+      M-PHASE0-RHO: scene power at the CFA aliases
+  V-SELECT.md                          score   114  <-- HEADLINE MATCH
+      V-SELECT — does the shipped merge choose incoherently, and does that get worse with depth?
+      !! PRIOR REFUSAL: I did not build the reference merge that would establish what the scene
+
+  also mentions it: M87-occlusion.md, M63-bimodality.md, B-algorithms-sota.md, BUILD-SHARP.md, BUILD-DEFECT.md, G-edof-deconvolution.md
+
+IN THE SOURCE (a test name can be the whole answer):
+  crates\strehl-cli\examples\blend-truth.rs:80  fn fg_depth(y: usize) -> f32 {
+  crates\strehl-cli\examples\blend-truth.rs:202  fn occluding_scene(name: &'static str, fg_level: f32, bg_level: f32) -> Scene {
+  crates\strehl-cli\examples\blend-truth.rs:253  fn texture_scene() -> Scene {
+  crates\strehl-cli\examples\blend-truth.rs:274  fn texture_depth(x: usize, y: usize) -> f32 {
+  crates\strehl-cli\examples\blend-truth.rs:287  fn render_frame(scene: &Scene, k: usize, out: &mut [f32], seed: u32) {
+  crates\strehl-cli\examples\blend-truth.rs:413  fn true_depth(scene: &Scene, x: usize, y: usize) -> f32 {
+  crates\strehl-cli\examples\blend-truth.rs:430  fn merge_oracle(scene: &Scene, frames: &[Vec<f32>]) -> Vec<f32> {
+  crates\strehl-cli\examples\blend-truth.rs:564  fn run_scene(scene: &Scene) -> Result<()> {
+  crates\strehl-cli\examples\build-demosaic-truth.rs:197  fn scene_achromatic() -> Scene {
+  crates\strehl-cli\examples\build-demosaic-truth.rs:207  fn scene_coloured() -> Scene {
+  crates\strehl-cli\examples\build-demosaic-truth.rs:222  fn scene_vivid() -> Scene {
+  crates\strehl-cli\examples\build-demosaic-truth.rs:240  fn scene_flat() -> Scene {
+==============================================================================
