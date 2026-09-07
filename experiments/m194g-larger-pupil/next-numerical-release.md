@@ -28,14 +28,25 @@ that geometry-only record. Run all three arms; require actual foreground,
 background, numerical branches, signed/zero defocus and nonzero wave-transfer
 work to be reached. No sensor/noise/CFA conversion is performed.
 
-Use four fixed executions under the same global author component budget:
+Use integer centres x=0..8,y=0..5 with native linear index9*y+x, all five
+frames and primary/angle-refined/cell-refined arms:810 cells per execution.
+Independent geometric witnesses on every frame are background(0,0),
+foreground(8,5) and numerical(4,3). Their actual reader dispositions must match.
+Use four fixed executions (3240 cells total) under the same global author component budget:
 off row-major, count row-major, placebo row-major, and count reverse-row-major.
 Reverse the complete cell sequence, not only rows. Require each one's full
 scalar, branch and sorted fallback diagnostic payloads to be byte-identical.
 Mode-dependent counters, hook receipts, timing and ordered traversal digest
 are separate. Count/placebo hooks must execute, with actual collection only
-in count. Use one actual scalar change and one omitted/duplicated coordinate
-as powered failures of the consuming equality/coverage checks. These are
+in count, with actual nonzero count collection and no off/placebo collection.
+Record consumed wave-transfer witnesses on both full-layer branches, including
+zero and nonzero selected defocus; a configured wave or unused cache is
+insufficient. At frame2 primary, native(4,3), change the stored scalar by
+exactly+1electron. Separately replace that coordinate with(5,3), making one
+omission and duplicate. At the original numerical site, independently change
+the stored cell_quadrature_delta_e by+.01electron while leaving scalar and
+branch arrays unchanged. Actual equality/coverage/semantic consumers must
+reject these mutations and accept reopened restored companions. These are
 instrument controls, not a timing sweep or a full-image quality comparison.
 
 ## Successful-frame payload
@@ -44,14 +55,20 @@ Use a new M194g schema, not an M194e certificate. Keep one current scalar
 frame and bounded scratch. A complete frame has:
 
 - scalar little-endian f64[height,width], all finite and covered;
-- branch u8[height,width] with explicit foreground/background/numerical codes;
+- branch u8[height,width] with foreground/background/numerical codes0/1/2;
 - sorted unique native linear indices little-endian u32[N], exactly the sites
   whose branch is numerical;
 - finite fallback diagnostics little-endian f64[N,4], ordered as
   value_error_indicator_e, cell_indicator_e, weighted_high_pupil_indicator_e,
   cell_quadrature_delta_e from the actual unchanged fallback receipt.
 
-Analytic sites have no fallback diagnostic row and no fictitious zero adaptive
+Require finite nonnegative indicators, direct receipt-column correspondence,
+and value_error_indicator_e=cell_indicator_e+weighted_high_pupil_indicator_e.
+The last identity is arithmetic serialization evidence, not an independent
+precision check; cell_quadrature_delta_e is a sum of absolute leaf differences.
+Reject a numerical site without a sparse row, a row on an analytic site,
+duplicate/unsorted indices and an invalid branch code through the semantic
+reader, not only outer file hashes. Analytic sites have no fallback diagnostic row and no fictitious zero adaptive
 indicator. Their method/finite-arithmetic scope is recorded separately, and
 every analytic scalar still faces the external whole-image comparison. Sort
 sparse diagnostics by native index before writing so traversal order does not

@@ -1,6 +1,6 @@
 # M194g — larger shared-pupil expected images
 
-2026-09-07. **IN PROGRESS; first intended geometry count refused.** The fixed
+2026-09-07. **IN PROGRESS; amended complete geometry count independently passes.** The fixed
 320×240 fixture needs a complete geometry-only cost pass, independently
 commissioned radiance components, and complete independently admitted expected
 arrays before it can feed any noise or production comparison. No larger
@@ -173,6 +173,65 @@ resource allowance the program is willing to spend, preserving all geometry,
 coverage, work/storage and later accuracy requirements. It needs independent
 review, committed implementation and affected controls before that launch.
 The original60-second refusal will remain a refusal under its original bar.
+
+## Amendment1 and complete cost run2
+
+Amendment1 and its independent control design were committed at01d4e52b,
+before the implementation/driver release5eb0968d. All53 affected independent
+checks passed on their first invocation. They verify the exact allowed source
+changes, unchanged function/class bodies, actual constructor/check/traversal
+boundaries at180CPU/240wall, old-policy destroyers, persistent clocks across
+cells/frames/arms, unchanged strict work/storage limits and actual copied
+input/amendment entry refusals. Their injected clocks and private exception
+sentinels are controls, not measured full coverage. Result hash:
+`e1d308f95eea671a665529aebc891595e14c2be0cbe8aca8a82d36870c449e95`.
+The [independent report](../../experiments/m194g-larger-pupil/independent-budget-report.md)
+states the precise recording-versus-acceptance scope of its source-change case.
+
+The new complete-run release44d2670d binds21 source files, the affected result,
+the historical controls at their original sources, the actual fixture and this
+exact command before execution:
+
+```powershell
+python -X utf8 -X pycache_prefix=experiments/m194g-larger-pupil/work/cache-preflight-2 experiments/m194g-larger-pupil/preflight.py --output experiments/m194g-larger-pupil/preflight-2
+```
+
+**MEASURED:** run2 completed all15 rows and1152000 cells, returning
+PASS_COST_ONLY; root collected exit0 from launch session9359. It started
+17:32:35.001326 UTC and ended17:34:30.242347 UTC. Whole-run resource samples are
+113.9375CPU and115.68799999996554wall seconds, within180/240. These remain
+cooperative samples before final terminal serialization, not process-exit
+timing. No speed comparison or radiance runtime prediction follows.
+
+Result SHA256 is
+`c9e9154fd395a06a5d1cbb28123ac84f92ee1ac61b1a97216f8904b8b6261677`;
+complete ordered geometry digest is
+`74827222370a9d733c520adbe0515b71a3ca545e31e2d7e1c9457cf9de547e70`.
+Every row has76800 completed cells and ends at(319,239). The five primary and
+five angle-refined rows match the corresponding retained complete run1 counts.
+The newly complete cell-refined rows have the same input-defined branches and
+root counts, with their own actually enumerated point/cut work:
+
+| Original frame | Low points | High points | Nominal angular nodes | Maximum intervals |
+| --- | --- | --- | --- | --- |
+| 0 | 513024 | 2052096 | 741288960 | 50 |
+| 1 | 420864 | 1683456 | 601070976 | 48 |
+| 2 | 328704 | 1314816 | 457909632 | 48 |
+| 3 | 233472 | 933888 | 304189056 | 46 |
+| 4 | 70656 | 282624 | 16957440 | 1 |
+
+Maximum per-frame work is2565120 points and741288960 nominal nodes, strictly
+below8000000/1200000000. Total work across all rows is11750400 points and
+3698302464 nominal nodes; totals are not per-frame quantities. Tracked peak
+ndarray backing storage is91280 bytes across18 owners under the32MiB scope.
+The recorded local sources are unchanged before/after. The independent terminal
+review verifies all21 actual release/current/snapshot/Git bindings, all fifteen
+rows and different exact row-boundary branch counts. Its read result is
+`a29b4fb9d95e668ebda8da14d97afc9e5a24875e58bb9858f017db95ca006715`;
+see [the complete independent review](../../experiments/m194g-larger-pupil/independent-cost-2-review.md).
+The cost prerequisite is discharged; numerical implementation and component
+commissioning are next. No radiance integral or expected array is admitted yet.
+The first60-second refusal and failed profiling instrument remain failures.
 
 ## Onward design, not released experiments
 

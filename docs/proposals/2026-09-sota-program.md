@@ -177,10 +177,11 @@ and the amended observed-channel WB control pass. The unsupported exposure arm
 and instrument failures remain in the [M194f report](../research/M194f-production-bridge.md).
 The small fixture has one Laplacian band plus a base. **Current next: M194g**
 commissions the larger numerical boundary fixture, starting with geometry-only
-cost and coverage checks. Its first intended count refused the fixed60-second
-CPU ceiling after10/15 complete frame/arm rows and821287/1152000 cells; independent
-geometry/count/source checks support that refusal. A prospective counter-only
-repair is next; no larger radiance population is admitted. See the
+cost and coverage checks. Its amended full count independently passes all15
+rows and1152000 cells within the prospectively chosen180CPU/240wall allowance.
+The original60-second refusal and stopped profiling instrument are retained.
+Current work is the numerical renderer, separate spatial reference and their
+fixed component/observer commission; no larger radiance population is admitted. See the
 [M194g record](../research/M194g-larger-pupil.md). Its [prospective protocol](../../experiments/m194g-larger-pupil/preregister.md)
 keeps later noise-law admission and the fixed M194d comparison on actual
 three-band production output separate from expected-image generation.
