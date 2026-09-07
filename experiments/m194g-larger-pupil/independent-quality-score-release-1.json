@@ -1,0 +1,149 @@
+{
+  "schema": "m194g-quality-execution-release-v1",
+  "scope": "score",
+  "source_bindings": {
+    "experiments/m194g-larger-pupil/independent-quality-score.py": {
+      "sha256": "f3ac10250e8cd44ed23d53f3825f3f005a9402e149326eaa9d6353a0ccaa04c4",
+      "bytes": 28535
+    },
+    "experiments/m194g-larger-pupil/independent-quality-io.py": {
+      "sha256": "6efe4702aff2f883c63fed04a4570cd58fcd8e348158184d66f239c92d16e5e1",
+      "bytes": 12486
+    },
+    "experiments/m194g-larger-pupil/independent-quality-metrics.py": {
+      "sha256": "5ea046cf35444bae210cbddbb7d0132904f456959a62a7a77ad9138b1cbbff12",
+      "bytes": 16762
+    },
+    "experiments/m194g-larger-pupil/independent-quality-adapter.py": {
+      "sha256": "c53ebe8eeb2ceac08e2732feb7848e6e121b780b910717f6064af6580ec8f89c",
+      "bytes": 21499
+    },
+    "experiments/m194g-larger-pupil/independent-quality-readout.py": {
+      "sha256": "120d6b5b40b43c6b1affb66ecc87a8bcdeb44e2b0908e89e6d3319639ee512e4",
+      "bytes": 8634
+    },
+    "experiments/m194g-larger-pupil/independent-rgb-tiff.py": {
+      "sha256": "d01a74aefcfa15b2146256b54ea51876715ab203b7de123b3cff2b0af4a1b19c",
+      "bytes": 7305
+    },
+    "experiments/m194g-larger-pupil/independent-production-bridge-read.py": {
+      "sha256": "132245c97016e231bf9a21c1016b4291f38540b97bddac4d44198a824aedf65a",
+      "bytes": 14835
+    },
+    "experiments/m194g-larger-pupil/independent-private-bridge-read.py": {
+      "sha256": "5a51638950933392b244c5a069487f2d1e786058ffe23a3b9b0b92b9617432b5",
+      "bytes": 18768
+    }
+  },
+  "inputs": [
+    {
+      "path": "experiments/m194g-larger-pupil/production-matrix-1/run-index.json",
+      "sha256": "03e7ffe9028cca5d56266603db09fbadd3f7f3cc19e95db609007a96914d55ca",
+      "bytes": 66801
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/independent-quality-target-1/target.json",
+      "sha256": "e72eb2bf4f23e71bad1ce03ef1b9df44142a15107585a542462b6acfbbcf8c2f",
+      "bytes": 5059
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/independent-k0-target-1/result.json",
+      "sha256": "a79b885524963a164506365fcccaa571fb7abd652cb43ec4d817b7085d6437c7",
+      "bytes": 74153
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/independent-quality-instruments-1/result.json",
+      "sha256": "cdb596da485a49acf835024bea6e44b21f55922dac804b14d56f26de61bd8ac4",
+      "bytes": 24896
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/fixture.json",
+      "sha256": "e84f0bbbda9bef039da86616c9f051d416929f4dbe78477cc5b3fc21206856bb",
+      "bytes": 1985
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/next-quality-reader-preregister.md",
+      "sha256": "f27ce21f6661abd903dc44ffb24f8df089e4a4507e3d634458579f8cb4df4407",
+      "bytes": 12693
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/next-quality-target-interface.md",
+      "sha256": "fd9ddb9f259c70013cace8394653d0b406f300ce2ec3524ac9c760ee7f736993",
+      "bytes": 5774
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/next-quality-instrument-interface.md",
+      "sha256": "896074349b636fbb257519b0dec991a3d4ed80b1f3bb7e833ee6055a3d7546d0",
+      "bytes": 2895
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/next-quality-adapter-control-interface.md",
+      "sha256": "2703bd7439df3581b7c605dade7c6f8791b04b2e3bec81faab58814abad1ec8d",
+      "bytes": 3763
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/next-quality-score-adapter.md",
+      "sha256": "eb687f55dba4c93a526f0de00f36ebd9c5b69f0ac9abbd87c887c13ab27fa811",
+      "bytes": 7934
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/next-quality-matrix-design.md",
+      "sha256": "2d48d991898b8a5e478830b95652a4e671cbb84fc9834ba442fd812ad2f362fd",
+      "bytes": 7177
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/next-quality-score-interface.md",
+      "sha256": "fed9d69a3e6b61e349effaa748e1d4d5af7add1f0917d1c50b39d9a880b1fe37",
+      "bytes": 5817
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/independent-final-quality-score-review.md",
+      "sha256": "ab9eb41bc8ebc6cb0c6bfcc721f9f99c7730aeba7f63d07068ba5016c13466f1",
+      "bytes": 5475
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/independent-quality-score-root-review.md",
+      "sha256": "5bca4b7f5423c98c26dba747d8157172d32b997b7a2a9a13a5897197e944504a",
+      "bytes": 3917
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/quality-score-entry-packaging.md",
+      "sha256": "dd69190fa385adab52ad31d409b5c2edcf48efa71c960ab1fe77b0351411207f",
+      "bytes": 1873
+    }
+  ],
+  "commands": [
+    [
+      "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+      "-X",
+      "utf8",
+      "-X",
+      "faulthandler",
+      "-X",
+      "pycache_prefix=experiments/m194g-larger-pupil/work/cache-independent-quality-score-1",
+      "experiments/m194g-larger-pupil/independent-quality-score.py",
+      "--release",
+      "experiments/m194g-larger-pupil/independent-quality-score-release-1.json",
+      "--release-sha256",
+      "ACTUAL_EXECUTION_RELEASE_SHA256",
+      "--matrix",
+      "experiments/m194g-larger-pupil/production-matrix-1/run-index.json",
+      "--matrix-sha256",
+      "03e7ffe9028cca5d56266603db09fbadd3f7f3cc19e95db609007a96914d55ca",
+      "--target",
+      "experiments/m194g-larger-pupil/independent-quality-target-1/target.json",
+      "--target-sha256",
+      "e72eb2bf4f23e71bad1ce03ef1b9df44142a15107585a542462b6acfbbcf8c2f",
+      "--target-verification",
+      "experiments/m194g-larger-pupil/independent-k0-target-1/result.json",
+      "--target-verification-sha256",
+      "a79b885524963a164506365fcccaa571fb7abd652cb43ec4d817b7085d6437c7",
+      "--instrument-commission",
+      "experiments/m194g-larger-pupil/independent-quality-instruments-1/result.json",
+      "--instrument-commission-sha256",
+      "cdb596da485a49acf835024bea6e44b21f55922dac804b14d56f26de61bd8ac4",
+      "--output",
+      "experiments/m194g-larger-pupil/independent-quality-score-1"
+    ]
+  ]
+}

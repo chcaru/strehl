@@ -1,0 +1,1381 @@
+{
+  "floor_witness": "bound terminal stderr requires independent read; no exact beta authority",
+  "hook_calls": 0,
+  "inputs_unchanged": true,
+  "output": {
+    "bytes": 407403,
+    "channels": 3,
+    "height": 226,
+    "path": "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\production-matrix-1\\case-07.tif",
+    "pixel_sha256_le": "d772c14aa657b6b1bd7ca94359964fcfe5addd25b3a88577287d14a6377adcee",
+    "sample_type": "u16",
+    "sha256": "7a378bc11427610cb5e17bd471e71c5702b4c41678904ab8ccd9ff44686d28ab",
+    "software": "strehl 0.0.0",
+    "width": 300
+  },
+  "plan": {
+    "authority": {
+      "float_commission": {
+        "bytes": 2981,
+        "path": "experiments/m194g-larger-pupil/independent-full-array-verification-1/float-commission.json",
+        "sha256": "3f18d8954347382b2dffe0ca501f93ef8da54c3b966a1a606851323d86277a2b"
+      },
+      "generation_result": {
+        "bytes": 15531,
+        "path": "experiments/m194g-larger-pupil/software-noise-intended-1/result.json",
+        "sha256": "c9549335951b630d90ed6bd893391905575e38b0bcab3308ff8fd36063dfd02a"
+      },
+      "independent_read": {
+        "bytes": 141211,
+        "path": "experiments/m194g-larger-pupil/independent-noise-files-1/result.json",
+        "sha256": "1089a1b5a6cb6e1fdb9fbe01937e057ff029f95e34aae4afe1e454bbe73bce34"
+      },
+      "manifest": {
+        "bytes": 35052,
+        "path": "experiments/m194g-larger-pupil/software-noise-intended-1/noise-manifest.json",
+        "sha256": "80007e235c58c0cdee5549ffd3e3173a9e39886a35fb458cf0670a8ac5a47a67"
+      },
+      "noise_commission": {
+        "bytes": 6571,
+        "path": "experiments/m194g-larger-pupil/software-noise-commission-1/result.json",
+        "sha256": "5ce444627af4787b404318bc4d78f4b9332f0081234e107ab597d269849a81c7"
+      },
+      "ref_root": "repository",
+      "schema": "m194g-software-noise-admission-v1",
+      "status": "PASS_SOFTWARE_NOISE_FILES_ONLY"
+    },
+    "build": {
+      "bytes": 12767744,
+      "sha256": "1a96f3a472288c1c057e16df4cd8a4d04ed6a4a5a1cc2c80adbd67d69df2ccd1",
+      "software": "strehl 0.0.0 (48f69d82b419)"
+    },
+    "config": {
+      "admission": "HardFloor",
+      "auto_exposure": false,
+      "bands": 3,
+      "base": "Mean",
+      "ca": "off",
+      "confidence": false,
+      "defect": "off",
+      "demosaic": "MHC",
+      "exponent": 2.0,
+      "exposure_stops": 0,
+      "fallback": "Mean",
+      "fallback_k": 3,
+      "fallback_power": 4.0,
+      "floor_scale": "unset",
+      "fullres_gather": true,
+      "gate": 2.0,
+      "gate_floor_enabled": true,
+      "hull": "InputRange",
+      "hull_from_level": 1,
+      "hull_lambda": 2.0,
+      "hull_low_only": false,
+      "mean_coarse": 0,
+      "merge": "Pyramid",
+      "photometric": "Off",
+      "resampler": "CatmullRom",
+      "restoration": "unset",
+      "select": "SoftPower",
+      "sharpen_per_octave": 1.399999976158142,
+      "significance_scale": 0.0,
+      "space": "CameraLinear"
+    },
+    "environment": {
+      "RAYON_NUM_THREADS": "2",
+      "STREHL_DEFECT": "off",
+      "STREHL_FIX_CA": "off",
+      "STREHL_FULLRES_GATHER": "1",
+      "STREHL_PYRAMID_WORKERS": "2"
+    },
+    "floor_witness": {
+      "eligible_prefix_maximum": 2,
+      "required": "finite nonempty prefix and count equal selected frames",
+      "source": "actual terminal stderr",
+      "unmeasured": "existing white-floor fallback"
+    },
+    "frame_wb_f32": [
+      1.3333333730697632,
+      1.0,
+      1.6666666269302368
+    ],
+    "geometry": {
+      "canonical_native_offset": [
+        10,
+        8
+      ],
+      "crop_quad": {
+        "height": 113,
+        "width": 150,
+        "x": 5,
+        "y": 4
+      },
+      "full_native": [
+        320,
+        240
+      ],
+      "full_quad": [
+        160,
+        120
+      ],
+      "level_sizes": [
+        [
+          150,
+          113
+        ],
+        [
+          75,
+          57
+        ],
+        [
+          38,
+          29
+        ],
+        [
+          19,
+          15
+        ]
+      ],
+      "output_native": [
+        300,
+        226
+      ],
+      "placements": [
+        {
+          "local_index": 0,
+          "original_index": 0,
+          "probe_seed_index": 0,
+          "quad_similarity": {
+            "a_im": 0.0,
+            "a_re": 1.0,
+            "b_im": 0.0,
+            "b_re": 0.0
+          }
+        },
+        {
+          "local_index": 1,
+          "original_index": 1,
+          "probe_seed_index": 1,
+          "quad_similarity": {
+            "a_im": 0.0,
+            "a_re": 1.0,
+            "b_im": 0.0,
+            "b_re": 0.0
+          }
+        },
+        {
+          "local_index": 2,
+          "original_index": 2,
+          "probe_seed_index": 2,
+          "quad_similarity": {
+            "a_im": 0.0,
+            "a_re": 1.0,
+            "b_im": 0.0,
+            "b_re": 0.0
+          }
+        },
+        {
+          "local_index": 3,
+          "original_index": 3,
+          "probe_seed_index": 3,
+          "quad_similarity": {
+            "a_im": 0.0,
+            "a_re": 1.0,
+            "b_im": 0.0,
+            "b_re": 0.0
+          }
+        },
+        {
+          "local_index": 4,
+          "original_index": 4,
+          "probe_seed_index": 4,
+          "quad_similarity": {
+            "a_im": 0.0,
+            "a_re": 1.0,
+            "b_im": 0.0,
+            "b_re": 0.0
+          }
+        }
+      ],
+      "reference_coordinate_gauge": 2,
+      "reference_local_index": 2
+    },
+    "injected_noise": {
+      "gain_dn_per_e": [
+        0.25,
+        0.25,
+        0.25,
+        0.25
+      ],
+      "iso": 160.0,
+      "prnu": false,
+      "provenance": "Fallback: injected synthetic algorithm coefficients; not physical calibration",
+      "read_noise_e": [
+        4.0,
+        4.0,
+        4.0,
+        4.0
+      ]
+    },
+    "input_bindings": {
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\fixture.json": {
+        "bytes": 1985,
+        "sha256": "e84f0bbbda9bef039da86616c9f051d416929f4dbe78477cc5b3fc21206856bb"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\full-author-angle-refined-1\\result.json": {
+        "bytes": 14217,
+        "sha256": "dab51375c68bb5f7fa42ec7933368e3b53f15537d0b1d44d818074e928949a6b"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\full-author-cell-refined-1\\result.json": {
+        "bytes": 14211,
+        "sha256": "a385f8e070cbc9019e798ee13e9c2dead2fae50f84a27de386333fc84daa538f"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\full-author-primary-1\\frame-0\\receipt.json": {
+        "bytes": 3708,
+        "sha256": "55befc5d64021ca80afd0afb90b68a99dee7eeb7f07b2802423b30848609a9b7"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\full-author-primary-1\\frame-0\\scalar.npy": {
+        "bytes": 614528,
+        "sha256": "c561cc8a03a3996be6b90aee2aeff49ad9fa03107adc55a2eb746229a87700f9"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\full-author-primary-1\\frame-1\\receipt.json": {
+        "bytes": 4098,
+        "sha256": "810324df53445f8ae8a34a8db70fcd019f88110e509b81c1bc6f75976ccb188f"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\full-author-primary-1\\frame-1\\scalar.npy": {
+        "bytes": 614528,
+        "sha256": "5b27f97ce0adb31f54530aeaa89da9c210f1fd7bfa2e28808bec2e7c54974aef"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\full-author-primary-1\\frame-2\\receipt.json": {
+        "bytes": 4203,
+        "sha256": "322038b7bae028865fb93f9fc7eda1c096a6ef5e426fdc009b301fc138e9bcf1"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\full-author-primary-1\\frame-2\\scalar.npy": {
+        "bytes": 614528,
+        "sha256": "42067cbbdc311f4803b1b94c6c2f241078d2a47bd894740f2463cee8f0e62cbb"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\full-author-primary-1\\frame-3\\receipt.json": {
+        "bytes": 4206,
+        "sha256": "c4f8bd08119cbffe060ef71636904f1c495ab2ea4f558bd9024646da575fdac6"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\full-author-primary-1\\frame-3\\scalar.npy": {
+        "bytes": 614528,
+        "sha256": "058f9efbded5f131f5e68ec924ce12d2a93b00abc078dcfa50097b110380f16f"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\full-author-primary-1\\frame-4\\receipt.json": {
+        "bytes": 4254,
+        "sha256": "6cd45ce3e2476126c4f7dece773fbc36da0a3e0fcee0633976ab4762e9011502"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\full-author-primary-1\\frame-4\\scalar.npy": {
+        "bytes": 614528,
+        "sha256": "cea40dcd12a424828c3c76b54f2192c38da2a59e90e9e67f447fb5b6052ca00c"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\full-author-primary-1\\result.json": {
+        "bytes": 14173,
+        "sha256": "bdb95d23eb4eb97802557bf9683e6e7e95ea1ff32cd951d495efe43c675a0f19"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\full-reference-primary-1\\result.json": {
+        "bytes": 25899,
+        "sha256": "0c34069b97c98f11b3c419450406ea725b72153e9ab8126fdbf57bd7c52ce476"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\full-reference-refined-1\\result.json": {
+        "bytes": 25935,
+        "sha256": "77e47cfd83bb447d3ba74d00d998ee879d5f0a4f92b218dfb82d6bab2d66b617"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-component-verification-3\\result.json": {
+        "bytes": 472315,
+        "sha256": "a652837ff7f7db4b6ca21ca1c5afedfc2f572920bd2f626aca29679faca8c139"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-full-array-verification-1\\float-commission.json": {
+        "bytes": 2981,
+        "sha256": "3f18d8954347382b2dffe0ca501f93ef8da54c3b966a1a606851323d86277a2b"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-full-array-verification-1\\result.json": {
+        "bytes": 344512,
+        "sha256": "042893c976ecc99845c98e894afd359852d428a8a87d4028d09c03bef3dfcedb"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-full-float-authority-schema.md": {
+        "bytes": 7787,
+        "sha256": "3097142b76a796838a2b9ed50d8dcda972ba9945bbc0df75906901abe0e2c606"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-noise-authority-controls-1\\result.json": {
+        "bytes": 22698,
+        "sha256": "d7b5bd9a321dff4fc5e9b51e2d9f58c4c726dbca7954f7e32f8bb4a607f24435"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-noise-files-1\\controls\\below-black-alias.cfa": {
+        "bytes": 153600,
+        "sha256": "34be53fffe1a87f92e18ec6d0b6f57c2fcc9dbc56200140f93344b99a27a4d12"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-noise-files-1\\controls\\below-black.cfa": {
+        "bytes": 153600,
+        "sha256": "34be53fffe1a87f92e18ec6d0b6f57c2fcc9dbc56200140f93344b99a27a4d12"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-noise-files-1\\controls\\bool-frame-index-manifest.json": {
+        "bytes": 35056,
+        "sha256": "de5556018345ec37800a8a9f348bdaaa3c88ac3ac342976e50739e69845c5e1d"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-noise-files-1\\controls\\bool-seed-manifest.json": {
+        "bytes": 35053,
+        "sha256": "ee2b3f36aa27d6eb53fd4584b02bc2b6dd129f56619b62c7ccbae96a9a85ef4f"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-noise-files-1\\controls\\cfa-above-white.cfa": {
+        "bytes": 153600,
+        "sha256": "736269085d1fd3e75e346297fe182b36a376f649997d92e476f80e12c77972d1"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-noise-files-1\\controls\\duplicate-bundle-manifest.json": {
+        "bytes": 35059,
+        "sha256": "01c8fbe6889d13ad3b5d641fbd7054e7660938cd154ab23b68893d29112dacbd"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-noise-files-1\\controls\\extra-manifest-field-manifest.json": {
+        "bytes": 35062,
+        "sha256": "678b2660d5fea1657b8668b21b40bd66aa2370fbdee112d9733981ef47f3c67e"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-noise-files-1\\controls\\incomplete-actual-entry-generation.json": {
+        "bytes": 15503,
+        "sha256": "a30902985cc165b31dd2476c1ebe9fa96c681760e8b908aac437c9b953ccac46"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-noise-files-1\\controls\\incomplete-manifest-manifest.json": {
+        "bytes": 35024,
+        "sha256": "d804858bd7bf1704ddcf89a302078f38cfc209569e779ebb48bdbfb4882bfdc7"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-noise-files-1\\controls\\missing-bundle-manifest.json": {
+        "bytes": 33292,
+        "sha256": "71672b717e7f0d104b7eeedb02aa13193a40ffe5d8c43a967ec9261360224d8f"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-noise-files-1\\controls\\missing-frame-manifest.json": {
+        "bytes": 34704,
+        "sha256": "969c12f054c7f85f4cb7833ca7774afff78662468757263228af73c5bf86dc30"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-noise-files-1\\controls\\restored-manifest.json": {
+        "bytes": 35052,
+        "sha256": "80007e235c58c0cdee5549ffd3e3173a9e39886a35fb458cf0670a8ac5a47a67"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-noise-files-1\\controls\\valid-manifest.json": {
+        "bytes": 35052,
+        "sha256": "80007e235c58c0cdee5549ffd3e3173a9e39886a35fb458cf0670a8ac5a47a67"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-noise-files-1\\controls\\wrong-factors-manifest.json": {
+        "bytes": 35052,
+        "sha256": "96ac349e36922d86ced04a1d279e5b48befa724a70665d202f3f2b20d96529ad"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-noise-files-1\\controls\\wrong-focus-manifest.json": {
+        "bytes": 35054,
+        "sha256": "6c1cb9770c85c25009c73f59a135a6f83869c5c0a8ca3cd3ca6d66182155848c"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-noise-files-1\\controls\\wrong-origin-manifest.json": {
+        "bytes": 35052,
+        "sha256": "0baa17076d786d7909e5341ec31161a5c80b1e1480f7d608a105e932de1a8877"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-noise-files-1\\controls\\wrong-reference-manifest.json": {
+        "bytes": 35052,
+        "sha256": "279d25d3057f523862acaa1d1704e57473769df4dba58959c8781bfc0146ef9f"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-noise-files-1\\controls\\wrong-scene-manifest.json": {
+        "bytes": 35048,
+        "sha256": "332080591e8a071313d0565faa73ecfd6e22486ef3db731655c25224781fd4d5"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-noise-files-1\\noise-admission.json": {
+        "bytes": 1082,
+        "sha256": "088272bfbeca6d00a816a5de72eeaf7aac8f8ca6e0ef68941ab236655fa298e7"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-noise-files-1\\result.json": {
+        "bytes": 141211,
+        "sha256": "1089a1b5a6cb6e1fdb9fbe01937e057ff029f95e34aae4afe1e454bbe73bce34"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-noise-files-release-1.json": {
+        "bytes": 3395,
+        "sha256": "dea6a22722831390125dadd1cafefeef29c9a36b9335191996fc2a4c0feb70a9"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-noise-files.py": {
+        "bytes": 31690,
+        "sha256": "335893cdfb7b3e5794b76d76edbeceb3577a371bb5436239ac1bf0f4c6c03d06"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-noise-reader.py": {
+        "bytes": 72676,
+        "sha256": "aba1bc507a9236d55ad4799b786a56bc995d08eb33585f66280981e483d72138"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-noise-verifier-support.py": {
+        "bytes": 12422,
+        "sha256": "0854094c53db0e73a109cc74d12d37b02f6500af9c364231217e7565cd013c15"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\next-noise-contract.md": {
+        "bytes": 30515,
+        "sha256": "4e92e176d0cfae6dcdc9fedab3ff8f5d40f858c47eb0fcddbd14877d894d29f2"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\next-noise-core-static-review.md": {
+        "bytes": 5477,
+        "sha256": "5515d304fb9e35f1f0b11cad70a0ba2923242fd57b52175da44808a5e240795c"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\next-noise-files-verifier-design.md": {
+        "bytes": 13391,
+        "sha256": "375dd381d821c8805a94b72845d8c4b588d2a10fa377407638c92aa57035a510"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\next-noise-reader-implementation.md": {
+        "bytes": 6358,
+        "sha256": "8d323666c01329f378183688dbf58494e060d3d99c525a82a04dada6832bd403"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\next-software-noise-run-implementation.md": {
+        "bytes": 3810,
+        "sha256": "c5ceebefd2c0ecd39e76c57f33c89e2322c1de76fafbf852b9fac8f89934e13c"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\noise-runtime-capture-1\\result.json": {
+        "bytes": 2446,
+        "sha256": "95357e909267355992d58062ffca74729e7108716f52b867084f1d9d57ae145e"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\noise-runtime-capture-1\\runtime.json": {
+        "bytes": 10162,
+        "sha256": "5785be482f28d097e0fb9bd7111b2655502485951fc52b08b6cc2ac01d9d49c3"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-authority.py": {
+        "bytes": 13041,
+        "sha256": "c02508370fd2706f81babe4f15d7961a4f2bbd5ae65b83ec7ccedb443000bac0"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-commission-1\\independent-private-read.json": {
+        "bytes": 394120,
+        "sha256": "363dd1e91c45cf4ede50607f1a18a1df5b959de80fa08b73e8945abe71a39a0c"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-commission-1\\independent-reader-command.json": {
+        "bytes": 381,
+        "sha256": "5aae94ee1d4d4e99db60a065d7bb6e3bbd7e63579715aea5a3ac10fdf5b1bb01"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-commission-1\\independent-reader-controls.json": {
+        "bytes": 5178,
+        "sha256": "92886d9cb9afb3b7913361c28dbbb69f8dae000931a78796495203176cc45040"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-commission-1\\private-index.json": {
+        "bytes": 236566,
+        "sha256": "bde3f1e5a894d89a7fe869a5aa7c504e2295df4d444119e6917eb7f343179813"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-commission-1\\result.json": {
+        "bytes": 6571,
+        "sha256": "5ce444627af4787b404318bc4d78f4b9332f0081234e107ab597d269849a81c7"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-commission-1\\runtime.json": {
+        "bytes": 10162,
+        "sha256": "5785be482f28d097e0fb9bd7111b2655502485951fc52b08b6cc2ac01d9d49c3"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\flat\\noise-off\\frame-0-audit.json": {
+        "bytes": 915,
+        "sha256": "a4bc0bf0ba764415fd05d677c9057bec652d909c867b2fb3b609e0362d2359d2"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\flat\\noise-off\\frame-0.cfa": {
+        "bytes": 153600,
+        "sha256": "94339363f2ed812b22b0ea313d6beb7e598b9813bb02210fcce14e6073d2580b"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\flat\\noise-off\\frame-1-audit.json": {
+        "bytes": 915,
+        "sha256": "ff189039774e3f8517f6f993ab13390bd0460321b6977b9305bb3f5fd76cc806"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\flat\\noise-off\\frame-1.cfa": {
+        "bytes": 153600,
+        "sha256": "94339363f2ed812b22b0ea313d6beb7e598b9813bb02210fcce14e6073d2580b"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\flat\\noise-off\\frame-2-audit.json": {
+        "bytes": 915,
+        "sha256": "cc01b1c5bdf5aa94f97f38c7f33f40c235a0618d62192555a83e037debe43ce4"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\flat\\noise-off\\frame-2.cfa": {
+        "bytes": 153600,
+        "sha256": "94339363f2ed812b22b0ea313d6beb7e598b9813bb02210fcce14e6073d2580b"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\flat\\noise-off\\frame-3-audit.json": {
+        "bytes": 915,
+        "sha256": "c361242ac7d5a77c4061a2407b9f8a89745f889dc7f9318ae25fe1d808875b8c"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\flat\\noise-off\\frame-3.cfa": {
+        "bytes": 153600,
+        "sha256": "94339363f2ed812b22b0ea313d6beb7e598b9813bb02210fcce14e6073d2580b"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\flat\\noise-off\\frame-4-audit.json": {
+        "bytes": 915,
+        "sha256": "1501d5eb99d71f782828015e82a313a32778ff22eab89d81cd2103d70dd501eb"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\flat\\noise-off\\frame-4.cfa": {
+        "bytes": 153600,
+        "sha256": "94339363f2ed812b22b0ea313d6beb7e598b9813bb02210fcce14e6073d2580b"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\flat\\seed-701\\frame-0-audit.json": {
+        "bytes": 2653,
+        "sha256": "bdb0f2dc0987954987f38abca5b30bc8a709643c6f3d09e8454d066180248c9c"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\flat\\seed-701\\frame-0.cfa": {
+        "bytes": 153600,
+        "sha256": "d8f72f48985bb7d8743e80151de706de48202b020b0d70ce6a84fe4a8142f7ce"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\flat\\seed-701\\frame-1-audit.json": {
+        "bytes": 2664,
+        "sha256": "dd0b8d8273b5016495c52df3f6d2555290f497cac17a09fb121d634ab40cde6a"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\flat\\seed-701\\frame-1.cfa": {
+        "bytes": 153600,
+        "sha256": "05d80d3d6803d0d3cb7737ab7ab323c4efe38bfbddb625b9efbd77d31c2b0616"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\flat\\seed-701\\frame-2-audit.json": {
+        "bytes": 2660,
+        "sha256": "0c88d4e8d9e8acb599dc74451ede38ca2347af82d39ae10985aaa84465c2c991"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\flat\\seed-701\\frame-2.cfa": {
+        "bytes": 153600,
+        "sha256": "d25fc0bcbd311f716b30dbe30e20783135280a9e7118f1224f10672fd09e458c"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\flat\\seed-701\\frame-3-audit.json": {
+        "bytes": 2657,
+        "sha256": "7c2c83f8e4fea7ba92c5fc9a803354bee26e9792259b392cbcc42ff3f3d0801a"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\flat\\seed-701\\frame-3.cfa": {
+        "bytes": 153600,
+        "sha256": "f100ae03d95bde0f1cd752766feb706154175fcb8acdb214f6ccbff2b21bda13"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\flat\\seed-701\\frame-4-audit.json": {
+        "bytes": 2657,
+        "sha256": "4e681ae17f7ded0e79840ce9037c072bd42e0b1eb60678063a6fe2760560e395"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\flat\\seed-701\\frame-4.cfa": {
+        "bytes": 153600,
+        "sha256": "ee3f7ac177680d9e97e61c7ce4188dc3b58e9293f55c6d9f41920833242d9359"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\flat\\seed-709\\frame-0-audit.json": {
+        "bytes": 2658,
+        "sha256": "fa67d91c6cc6cee50fd2265ee7da3ec4e1b6a1e69db1349e9fb402df0d8516f5"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\flat\\seed-709\\frame-0.cfa": {
+        "bytes": 153600,
+        "sha256": "3f926d3eea1f0839d75bd73c21b2cef53af25d4b6286d745df7ac2d4fa5bdd8c"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\flat\\seed-709\\frame-1-audit.json": {
+        "bytes": 2660,
+        "sha256": "d7bd910bad37a184abd7b5f918e0b1d5bdaab44afa010938898aa852d7074efc"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\flat\\seed-709\\frame-1.cfa": {
+        "bytes": 153600,
+        "sha256": "84db3208f4c5c2f5b91bc278bd5fa7b47957d23c22f500c6a7d1a9d72107df2c"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\flat\\seed-709\\frame-2-audit.json": {
+        "bytes": 2662,
+        "sha256": "0eab1900198da3da6d2dfe21b46a5c81ec918b05a37026db29a6543ce7202e7e"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\flat\\seed-709\\frame-2.cfa": {
+        "bytes": 153600,
+        "sha256": "5eba01af8035353c212ad02140ea10dc95d8d5e8c7b8f95818b2ad1e844e9798"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\flat\\seed-709\\frame-3-audit.json": {
+        "bytes": 2658,
+        "sha256": "f9506bec2cdeff947a84f8bda083b735dc9f3cc0a60b502f4bde4057871b7680"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\flat\\seed-709\\frame-3.cfa": {
+        "bytes": 153600,
+        "sha256": "170e143cd21e227eac11e73119fbe509d10d2feb0b6eeeebc81c52ced8812280"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\flat\\seed-709\\frame-4-audit.json": {
+        "bytes": 2658,
+        "sha256": "64f03be6b48be34a39758b6873cf6052b47f050d6a905af54e31d02a2192d7a2"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\flat\\seed-709\\frame-4.cfa": {
+        "bytes": 153600,
+        "sha256": "c1b240520c16444480d8591526bb4ec760d7453efc52ff49d6a4c64691779761"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\flat\\seed-719\\frame-0-audit.json": {
+        "bytes": 2660,
+        "sha256": "17a995a1b3a451ecd0bef635ec2a7e88612c7a73a9d6209a6a771ba8599398e4"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\flat\\seed-719\\frame-0.cfa": {
+        "bytes": 153600,
+        "sha256": "9a70f48d5a807fe4aa301c22f989e1fd6fc0fe0819fbc4179a8d9122d6816b93"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\flat\\seed-719\\frame-1-audit.json": {
+        "bytes": 2659,
+        "sha256": "8161f102a5166f54431342aad7d4f559bf41d20ccac0d961445460ba46260f10"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\flat\\seed-719\\frame-1.cfa": {
+        "bytes": 153600,
+        "sha256": "6a5be03b6e5be15ce8a101e99f9e9040fad824e4297fe75ee96b391350ffca75"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\flat\\seed-719\\frame-2-audit.json": {
+        "bytes": 2659,
+        "sha256": "c6a7c96962e091294bde884dbd145e5ed785cff02dc8bff23f2a173f723e6731"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\flat\\seed-719\\frame-2.cfa": {
+        "bytes": 153600,
+        "sha256": "af127888f4152478b8b035c21ca4226c5b593b2c09a1845a23aa06e9735c5158"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\flat\\seed-719\\frame-3-audit.json": {
+        "bytes": 2658,
+        "sha256": "b6ca9ccf47b3f549e0fea3e80e3474d6197da0506f121f8016d9cd67e9dc7382"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\flat\\seed-719\\frame-3.cfa": {
+        "bytes": 153600,
+        "sha256": "0a78402d689828368426a8b6d0a4e347760f6bfc8e474ce3b1df7414bee716ea"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\flat\\seed-719\\frame-4-audit.json": {
+        "bytes": 2660,
+        "sha256": "6a6fb68e20c9cb0d7b3537616fb8f6ce493999106fc4e8df4ceb0b2919065c67"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\flat\\seed-719\\frame-4.cfa": {
+        "bytes": 153600,
+        "sha256": "0cefb70193e883e924eefdd21ea867c60c33ef1f77b53b707dc9b526609cbf5b"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\flat\\seed-727\\frame-0-audit.json": {
+        "bytes": 2661,
+        "sha256": "efc6ad22b4c863e950d6fbe167c78f9d531c1d92683eb9b713d8c0b658d3d61f"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\flat\\seed-727\\frame-0.cfa": {
+        "bytes": 153600,
+        "sha256": "3e287637d6e73d660d96ee90bb06274b5ee4fff064e698bb8a95badc65d26fe1"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\flat\\seed-727\\frame-1-audit.json": {
+        "bytes": 2656,
+        "sha256": "1f4f49823c8a317546242d1b819e0727385d948170b8c8f3a51c9eb5cd959bd4"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\flat\\seed-727\\frame-1.cfa": {
+        "bytes": 153600,
+        "sha256": "742a8f2728a3b7430d1ce3a17ddab7d3d8e48bd80428b721a829b409f2ba1c19"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\flat\\seed-727\\frame-2-audit.json": {
+        "bytes": 2659,
+        "sha256": "de234ae75755c47aaf30cfe6161c75a775154bcc2ea8c80a508e60af1454009a"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\flat\\seed-727\\frame-2.cfa": {
+        "bytes": 153600,
+        "sha256": "782dde0e6ace1bf3f61017c366791ccd3c5e864b54cc0df5acb57a4273927050"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\flat\\seed-727\\frame-3-audit.json": {
+        "bytes": 2663,
+        "sha256": "b3708842bd6ff1e1f8b0a7f45f63ce818346a334835fe4c3a26e69d5812b4aac"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\flat\\seed-727\\frame-3.cfa": {
+        "bytes": 153600,
+        "sha256": "6144349594a4725209ebb8045f955f42e759d5d3eee0186b8605caf6fb8f0b45"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\flat\\seed-727\\frame-4-audit.json": {
+        "bytes": 2662,
+        "sha256": "71c62d929a4befdf4aa5df045af0c537f2938c8e409a1bcdd868968b07460685"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\flat\\seed-727\\frame-4.cfa": {
+        "bytes": 153600,
+        "sha256": "d47c89dd0183aac86ae45db05af08209adf52ff332d6fd24c00c6040a211eb44"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\flat\\seed-733\\frame-0-audit.json": {
+        "bytes": 2660,
+        "sha256": "0183391632d085c6f005bc7146ed56beb9f07276ffed1b6f66308d3b178e6471"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\flat\\seed-733\\frame-0.cfa": {
+        "bytes": 153600,
+        "sha256": "fa15f9d5006f5da2916245e68c22e1feea08a08826e4da977b975ad4a256f535"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\flat\\seed-733\\frame-1-audit.json": {
+        "bytes": 2661,
+        "sha256": "6ea9defbdbabe4a8cf8cffdb41a56bb65ab5409ce13322a1be4a6086673a3ec0"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\flat\\seed-733\\frame-1.cfa": {
+        "bytes": 153600,
+        "sha256": "ffd83f05a9cfb8f0738cb0d66f017da94d7b981b532014e0d44603a1f4d7f05e"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\flat\\seed-733\\frame-2-audit.json": {
+        "bytes": 2651,
+        "sha256": "7156f01e0618b75d59230553fa26d764058be737ee90b13830fa2606e561cced"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\flat\\seed-733\\frame-2.cfa": {
+        "bytes": 153600,
+        "sha256": "deaaca517708ecbc5154f08d521af628c58e3d3af004a856d73d11f24d3afef2"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\flat\\seed-733\\frame-3-audit.json": {
+        "bytes": 2660,
+        "sha256": "5fcacffb6b27666c6125b8c3f3afed67e61bcd4663aba6bf2ac8380f969ee527"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\flat\\seed-733\\frame-3.cfa": {
+        "bytes": 153600,
+        "sha256": "71224770ac02ad19d899e993817457d52eb27e4f8374f409ea58491b87c91798"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\flat\\seed-733\\frame-4-audit.json": {
+        "bytes": 2659,
+        "sha256": "cc42144ecf21e598e36628ba3a6af77a549c6c756cb2dcddd887fd8acde15cec"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\flat\\seed-733\\frame-4.cfa": {
+        "bytes": 153600,
+        "sha256": "34f41b5f4fecf0be014f785a8b66fc17ccf5524709c7a5fd9da30656a0dbdbb5"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\flat\\seed-739\\frame-0-audit.json": {
+        "bytes": 2663,
+        "sha256": "55b127af3b54a298dee9880cb4c96de0b1c3b392c6dc343be0384cc2f7806e40"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\flat\\seed-739\\frame-0.cfa": {
+        "bytes": 153600,
+        "sha256": "33af9b27a2150dc982c389337d3b1df026b2294fd4cd58b5fbf5a3bce303e192"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\flat\\seed-739\\frame-1-audit.json": {
+        "bytes": 2660,
+        "sha256": "ea03ea8c0c8c87e27b6c784de6fcc6a3480f8df5d11d78017510373ccb8b7a47"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\flat\\seed-739\\frame-1.cfa": {
+        "bytes": 153600,
+        "sha256": "26e46ccf33770f1a1f704e52d848f7036c977d4b0f8f82538c1a00e7e8bbad90"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\flat\\seed-739\\frame-2-audit.json": {
+        "bytes": 2657,
+        "sha256": "730a3c127025a5f496bc4f02c77bd6f04b179fdac5c84c4aa438c0779347e789"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\flat\\seed-739\\frame-2.cfa": {
+        "bytes": 153600,
+        "sha256": "bc91a412cc9aa04dacf1e937c3cbeb80db4b1d2d2b9f1614b9b22ecb2f43cdfe"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\flat\\seed-739\\frame-3-audit.json": {
+        "bytes": 2663,
+        "sha256": "1fe665af745005dd49f7b547410b05bcdbb4b148fd42c987aba151451fadbcd5"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\flat\\seed-739\\frame-3.cfa": {
+        "bytes": 153600,
+        "sha256": "f07ab15750dc8c34ec9971ba27cea619a1d354c47f3d6effa617b1b226f31411"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\flat\\seed-739\\frame-4-audit.json": {
+        "bytes": 2658,
+        "sha256": "b2f54d66b3b5e4277ebaf431560d2acad3067bef4d651f493d629e7bcf46a2e6"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\flat\\seed-739\\frame-4.cfa": {
+        "bytes": 153600,
+        "sha256": "9a32b15bd8f60d84be16cdfbf9fafe8006985905ceb656f71329a27c8faef966"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\flat\\seed-743\\frame-0-audit.json": {
+        "bytes": 2660,
+        "sha256": "d2f8477932558dde658142757e8e89b289c86c0c8663c231d70f4b711f70ee7b"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\flat\\seed-743\\frame-0.cfa": {
+        "bytes": 153600,
+        "sha256": "ba5c5460f8ea65c2daf0c12f0f606eeea06a1e4ae73e4fc5bca6c01efe443ad9"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\flat\\seed-743\\frame-1-audit.json": {
+        "bytes": 2660,
+        "sha256": "9400a3b1ea7c5beb7caed414d5fc4e16728bda5d764749d54a703f951ae9698d"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\flat\\seed-743\\frame-1.cfa": {
+        "bytes": 153600,
+        "sha256": "2522173565cb2ff26ce85e55cce347f31a1a511b4dd8e23da2f31cf3f4c1f331"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\flat\\seed-743\\frame-2-audit.json": {
+        "bytes": 2662,
+        "sha256": "88fa5cd456ff5caa2e18ca6f5bb9c276c665d1260c2f526019ae701ba89732da"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\flat\\seed-743\\frame-2.cfa": {
+        "bytes": 153600,
+        "sha256": "0e40791ebb695b7428a72d4f06c98582a1a82d1ae4ae32650281e5115605fa56"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\flat\\seed-743\\frame-3-audit.json": {
+        "bytes": 2657,
+        "sha256": "b607db80a8d148f9df2c023750e816b18c1ac09ad7cf62d42e2a2cc3330c527c"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\flat\\seed-743\\frame-3.cfa": {
+        "bytes": 153600,
+        "sha256": "ae3a369d7ebee92036f8c4e410ddcc72d1781974ccc9adb6f114d8e519e1d68e"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\flat\\seed-743\\frame-4-audit.json": {
+        "bytes": 2663,
+        "sha256": "aab5f068db7cb864736e1fa1ba40fa00764eb9716a6d818e752873c5ab176176"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\flat\\seed-743\\frame-4.cfa": {
+        "bytes": 153600,
+        "sha256": "d836ff7259413d5e4a4cbdcbe12e2fe9c4866214c7cf4d25849c9f5487bf6804"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\flat\\seed-751\\frame-0-audit.json": {
+        "bytes": 2661,
+        "sha256": "aed71e50b3ebbf9533ebffbe340d64880c66ca2094ae268a9741767de509364a"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\flat\\seed-751\\frame-0.cfa": {
+        "bytes": 153600,
+        "sha256": "8bb95927e9db85c38163346e1c7ad86714fbd13df62a5b187c7a7a0b65af56a9"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\flat\\seed-751\\frame-1-audit.json": {
+        "bytes": 2656,
+        "sha256": "e6f4f74de3091e1342fd1b87442cbef55eae0184301b0dca8cfcea22ef8b71fa"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\flat\\seed-751\\frame-1.cfa": {
+        "bytes": 153600,
+        "sha256": "6dd6327e1707b61c523e0cd0852e59252b56a3e32ce4534b624134eab4ba8b26"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\flat\\seed-751\\frame-2-audit.json": {
+        "bytes": 2659,
+        "sha256": "37a235239059203e8f1d318455c4255c458539ca2f9ab0d9c39e826e601610b7"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\flat\\seed-751\\frame-2.cfa": {
+        "bytes": 153600,
+        "sha256": "019a3c22cdcd31a8a48f5f51f4c345d772ae105c476ce67b4658e6655eea0522"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\flat\\seed-751\\frame-3-audit.json": {
+        "bytes": 2658,
+        "sha256": "0d2ef1720fbf1b2a0d24d109386ff80e8c8954ec793c9ae976d26961b81ea0d9"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\flat\\seed-751\\frame-3.cfa": {
+        "bytes": 153600,
+        "sha256": "4db6366d5f2dc26073a5f246ce67682b17114031f021dd454221052a6362c706"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\flat\\seed-751\\frame-4-audit.json": {
+        "bytes": 2657,
+        "sha256": "7e56afe058a71a6e91f59be4e715d522317d2caa53273f7f7c8ee7d0a0d08f82"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\flat\\seed-751\\frame-4.cfa": {
+        "bytes": 153600,
+        "sha256": "a4776a99744e3900e15d47080cfbb8e157c219bf3a62d0246b6f81150b3ed339"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\noise-manifest.json": {
+        "bytes": 35052,
+        "sha256": "80007e235c58c0cdee5549ffd3e3173a9e39886a35fb458cf0670a8ac5a47a67"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\result.json": {
+        "bytes": 15531,
+        "sha256": "c9549335951b630d90ed6bd893391905575e38b0bcab3308ff8fd36063dfd02a"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\runtime.json": {
+        "bytes": 10162,
+        "sha256": "5785be482f28d097e0fb9bd7111b2655502485951fc52b08b6cc2ac01d9d49c3"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\sources-before\\experiments\\m194g-larger-pupil\\next-noise-contract.md": {
+        "bytes": 30515,
+        "sha256": "4e92e176d0cfae6dcdc9fedab3ff8f5d40f858c47eb0fcddbd14877d894d29f2"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\textured\\noise-off\\frame-0-audit.json": {
+        "bytes": 918,
+        "sha256": "dbf54b7adb10cebcf3f7f9f22c28980bf597eaf9843735e5c7eca763232501ec"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\textured\\noise-off\\frame-0.cfa": {
+        "bytes": 153600,
+        "sha256": "46ee1e8ba09b76effcf1433652495309648dd4a1938fd6f80be4d8d1b3a7db95"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\textured\\noise-off\\frame-1-audit.json": {
+        "bytes": 918,
+        "sha256": "ec4a1dea9988941874a980c8c8728fe10cf841c2fdf51c02e8a39a84a6d490b4"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\textured\\noise-off\\frame-1.cfa": {
+        "bytes": 153600,
+        "sha256": "f7166a67c21916feea362e84add11a13ed0df29aac3ec9d35aaea49d43592b1c"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\textured\\noise-off\\frame-2-audit.json": {
+        "bytes": 918,
+        "sha256": "a31a4fd401a217bda6cba5b84f71eb255f3b21c9296baef00e6e629502b1569d"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\textured\\noise-off\\frame-2.cfa": {
+        "bytes": 153600,
+        "sha256": "e99577842cae426facf87ad9a185fb1e3d486ac5ef5f02d86e26207d835352fb"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\textured\\noise-off\\frame-3-audit.json": {
+        "bytes": 918,
+        "sha256": "faae620f3af6e668e1321a370a6c1242255971d055bf2f48118707c7bdf7e8ef"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\textured\\noise-off\\frame-3.cfa": {
+        "bytes": 153600,
+        "sha256": "72231584c88dd56ac4d345d3b30914cc856a4a67ecadbbaddb9c57675a82902a"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\textured\\noise-off\\frame-4-audit.json": {
+        "bytes": 918,
+        "sha256": "53d3befab94dcbdc062566713005da2c187b79063d067d264b98e6524cfb1e2c"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\textured\\noise-off\\frame-4.cfa": {
+        "bytes": 153600,
+        "sha256": "070bf0fcb67290c1b76e37cd7e46811803480a774e0ca013836077c5d7e8dd10"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\textured\\seed-701\\frame-0-audit.json": {
+        "bytes": 2669,
+        "sha256": "facf830e1b87cf0c61627aac174049ebd4411b9852959368626b7ffefd33a288"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\textured\\seed-701\\frame-0.cfa": {
+        "bytes": 153600,
+        "sha256": "e1dbb8cf5e6f7189a9fbc02f479a9da58a766dce4ef1d86f2447ef2179894e68"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\textured\\seed-701\\frame-1-audit.json": {
+        "bytes": 2668,
+        "sha256": "a5eb16c05529d79770b0288d6307aee73a10bb6deefd8002a01ec1e988c1c595"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\textured\\seed-701\\frame-1.cfa": {
+        "bytes": 153600,
+        "sha256": "fb22df2343be94e1a2d0b851766a6be095c3b2495b5b00cb1d8efb39effaab3e"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\textured\\seed-701\\frame-2-audit.json": {
+        "bytes": 2675,
+        "sha256": "c3cb399d642487b552f35cb07c147b54006923123936fb1e9e9db1edeec4a51b"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\textured\\seed-701\\frame-2.cfa": {
+        "bytes": 153600,
+        "sha256": "184f78d59481536620ff17ee0528415e205e65973210ff30b508a1c761948195"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\textured\\seed-701\\frame-3-audit.json": {
+        "bytes": 2673,
+        "sha256": "efae6c59a962581f4667a604897f97d6800efca93530ee83d40c5ee0e4294124"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\textured\\seed-701\\frame-3.cfa": {
+        "bytes": 153600,
+        "sha256": "7ac35a898e829ca7dc6ba74fbfc1b555e93410d275c3634ef90ab377ed5deb6f"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\textured\\seed-701\\frame-4-audit.json": {
+        "bytes": 2672,
+        "sha256": "4575cb30186d468205a0c08ff917674cf5061aaabec8b6291cda88086843161e"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\textured\\seed-701\\frame-4.cfa": {
+        "bytes": 153600,
+        "sha256": "7fde36cf5da34c9f0655bf2b98d1df5f142b2126da71d4c0f6ae4312f6efbca2"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\textured\\seed-709\\frame-0-audit.json": {
+        "bytes": 2667,
+        "sha256": "d1c8a7534e75fcd3bf35196649def6c5c84eacb2d126ecfb13a4d2bf8e17dd43"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\textured\\seed-709\\frame-0.cfa": {
+        "bytes": 153600,
+        "sha256": "447a3cb94e3c5c8f0384bca502f8e5e012d73c8f6d948847c5cd414eb06288c6"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\textured\\seed-709\\frame-1-audit.json": {
+        "bytes": 2671,
+        "sha256": "99e07f88891350284aa65be79e9202ea15dc76c0a565e85a9f61d5abc7e26cf9"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\textured\\seed-709\\frame-1.cfa": {
+        "bytes": 153600,
+        "sha256": "a48ac22836b3bb839710d91b0b03e682a11e233fe10425140c2c1fe32889343a"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\textured\\seed-709\\frame-2-audit.json": {
+        "bytes": 2669,
+        "sha256": "2350259fc432e7c0b0eacd4ab7cf3dacfc618b42d6d2f93117ccbd5432c7478c"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\textured\\seed-709\\frame-2.cfa": {
+        "bytes": 153600,
+        "sha256": "21c9fbc716f632595ddf99ebab82248bad37e2fd7cf5f52e29a3ce3b6e0ce5b7"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\textured\\seed-709\\frame-3-audit.json": {
+        "bytes": 2671,
+        "sha256": "8e1eed9530301b6b3b1093fc2d231163bd95134b6395d35f306ed6eac1b7ccd6"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\textured\\seed-709\\frame-3.cfa": {
+        "bytes": 153600,
+        "sha256": "27a850af29662f4ef24ab7ffca3f3b6aabc9ef38e80cb8f89dec9ea3e94b6ae4"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\textured\\seed-709\\frame-4-audit.json": {
+        "bytes": 2669,
+        "sha256": "0ac4ac23ceba36d4418d460778433f1f12c746abf506ee42d15c26f2ed27071a"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\textured\\seed-709\\frame-4.cfa": {
+        "bytes": 153600,
+        "sha256": "a4b7f9016b672be5df7da0f6f16ee462cf50fec70531b7268843917fdce110e7"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\textured\\seed-719\\frame-0-audit.json": {
+        "bytes": 2674,
+        "sha256": "11c2bb93e845a223747aa65263c259840b0abaf330a18842b421bf506eb9f543"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\textured\\seed-719\\frame-0.cfa": {
+        "bytes": 153600,
+        "sha256": "a17f62098f215703f3685b628e5c9d1ccbbf7f0a9b353cf4fdb3a952aea766ee"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\textured\\seed-719\\frame-1-audit.json": {
+        "bytes": 2667,
+        "sha256": "d6f78e043b3645f6b0ca600e3795a0bd302f2cd38711c21244e3d3fad9bfe2c0"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\textured\\seed-719\\frame-1.cfa": {
+        "bytes": 153600,
+        "sha256": "460b2a44ccc7fa72fbbc42fce69cdab97393c2b2be16f731a5ad5f921bed2dba"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\textured\\seed-719\\frame-2-audit.json": {
+        "bytes": 2669,
+        "sha256": "55a837f85bc67cd725884cb3fc06789cd9ad270abf957354a316f30150f9f9d5"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\textured\\seed-719\\frame-2.cfa": {
+        "bytes": 153600,
+        "sha256": "31e7e82cabd2df9e532181d4d59a22fcebb9416452e6f3e7a907eb16a466f7b1"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\textured\\seed-719\\frame-3-audit.json": {
+        "bytes": 2671,
+        "sha256": "d00a154002f02a437888fbd1c5f7f3d3f59b9501c13299bdef74327503a76647"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\textured\\seed-719\\frame-3.cfa": {
+        "bytes": 153600,
+        "sha256": "2897036e66830f494933fdc269c7484356bfb45d378ab39ede4f9bb7a5dfeeda"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\textured\\seed-719\\frame-4-audit.json": {
+        "bytes": 2670,
+        "sha256": "eb59c4fa50329d00b80f38522f4c6cc3c5e83254aaa0695028df3dd68dafcab0"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\textured\\seed-719\\frame-4.cfa": {
+        "bytes": 153600,
+        "sha256": "5d4865ba3bea875a5ebd5ae17c25997ba12690f4f2c8a2ec2927b59b9231d789"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\textured\\seed-727\\frame-0-audit.json": {
+        "bytes": 2670,
+        "sha256": "60bda9f378b312a5cf9eff5770b56541d01644bb28555e8ea2062e257919f1f6"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\textured\\seed-727\\frame-0.cfa": {
+        "bytes": 153600,
+        "sha256": "e79379ee92de37da197fc50b4caef4ebe0888e0d05e915c0b0a45a8c0be8732b"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\textured\\seed-727\\frame-1-audit.json": {
+        "bytes": 2666,
+        "sha256": "c0d9b398d0bb5b6e3cb54ce5b401d3eb176b86bc9a2969baa7f9edb4def032dd"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\textured\\seed-727\\frame-1.cfa": {
+        "bytes": 153600,
+        "sha256": "a002a28e41917accf6e959c1d5c29705e9c9eb4013e7970c04cffc4c927d9342"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\textured\\seed-727\\frame-2-audit.json": {
+        "bytes": 2670,
+        "sha256": "3814553f9d3868c86754f594ea618e9fa551764e460a249fade63acaa746039a"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\textured\\seed-727\\frame-2.cfa": {
+        "bytes": 153600,
+        "sha256": "31048d2b23b5d67d582469f07d4adba7dad40bfc96bba0016899431a6b9d1606"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\textured\\seed-727\\frame-3-audit.json": {
+        "bytes": 2665,
+        "sha256": "289d2313fd3743ffcda5ad841c2dc240e842b0d51e8e3893a2db1398bf342fc4"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\textured\\seed-727\\frame-3.cfa": {
+        "bytes": 153600,
+        "sha256": "c80b1f4d570c919de0b0d718120093549b94c10d305a1cdc18b0a677a6a9090f"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\textured\\seed-727\\frame-4-audit.json": {
+        "bytes": 2675,
+        "sha256": "9b944f20d067050601d17376c8f0265eaba9d43736b27200de3250e87f720130"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\textured\\seed-727\\frame-4.cfa": {
+        "bytes": 153600,
+        "sha256": "6a42e1d335cb99fdcdf198d0fb91bdbd01586fbf5c4246acd23b7c3322a3a9b4"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\textured\\seed-733\\frame-0-audit.json": {
+        "bytes": 2668,
+        "sha256": "7cefd3b406617cfed0deab651fd3d09eb9e48b76e6b3b0bb2e1924c7d7e0b5a8"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\textured\\seed-733\\frame-0.cfa": {
+        "bytes": 153600,
+        "sha256": "36c5b258db77cb8f792e8666d4e5ec6d08826767590d9bb06c7fe519bb0347fc"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\textured\\seed-733\\frame-1-audit.json": {
+        "bytes": 2672,
+        "sha256": "2dad151d72c244ec5fbbdba512eb6ee07b52c73173cfb8eaef9b46e911d0aa42"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\textured\\seed-733\\frame-1.cfa": {
+        "bytes": 153600,
+        "sha256": "b4c724d34fa230efd4a4c661434a37068843a5a7161a9661f3411be1c2c5ed00"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\textured\\seed-733\\frame-2-audit.json": {
+        "bytes": 2673,
+        "sha256": "e4b5888e4ce86ea5a8c75003db93d49d48356659ab036683e803fc14e35b7eb2"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\textured\\seed-733\\frame-2.cfa": {
+        "bytes": 153600,
+        "sha256": "fb2d743865537dfe766da468610a1b01956540cc88eb568c2daff8bd7d130ddd"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\textured\\seed-733\\frame-3-audit.json": {
+        "bytes": 2668,
+        "sha256": "634183e95b2f4ef91b36f7f1d2658a614c8b7c3bb43e0978990a049289ad150d"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\textured\\seed-733\\frame-3.cfa": {
+        "bytes": 153600,
+        "sha256": "2f8895720b74353a98cc43709e550e46b50386233aa457d5a983931fe49b5d95"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\textured\\seed-733\\frame-4-audit.json": {
+        "bytes": 2668,
+        "sha256": "4fed98c1daabaa812205919de6114c8174ee8e568d6b2c73004d32507259c37b"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\textured\\seed-733\\frame-4.cfa": {
+        "bytes": 153600,
+        "sha256": "2706a067ed281d26f7170af15a0f62f48155011757bf83addf031c9c44e3b87c"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\textured\\seed-739\\frame-0-audit.json": {
+        "bytes": 2668,
+        "sha256": "f3b2e34aeb407430a37859074e921e61e7e3acaf9064747bbb7a0954e040596a"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\textured\\seed-739\\frame-0.cfa": {
+        "bytes": 153600,
+        "sha256": "b33bc440f6c18ba97434c7995e01b3d0e0db8020da46205ce5cd577694e6b798"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\textured\\seed-739\\frame-1-audit.json": {
+        "bytes": 2668,
+        "sha256": "0af7ed3f99fdc3c7533d61f313eb1652b3bf56f11cb67a62228de5e1c253e399"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\textured\\seed-739\\frame-1.cfa": {
+        "bytes": 153600,
+        "sha256": "9b8159e9c3979335f508326f2b0ff20d88b26f420f2e954f647917e23a4d48fd"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\textured\\seed-739\\frame-2-audit.json": {
+        "bytes": 2674,
+        "sha256": "1099b6195525f28b32c9db8deee01e0bcd086c75af3fab45edc2f67690851965"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\textured\\seed-739\\frame-2.cfa": {
+        "bytes": 153600,
+        "sha256": "c2d8f95010f447e2d753343ce78cb24996066fd8d3b33c48ffc87f2bae4d9456"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\textured\\seed-739\\frame-3-audit.json": {
+        "bytes": 2669,
+        "sha256": "2a589293387e6a01c45b4a6882ba4fc487c27d637c6656ccc72439646a5be154"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\textured\\seed-739\\frame-3.cfa": {
+        "bytes": 153600,
+        "sha256": "41da6f0505fa0c674ad2bd183b7c59a1730c2bc532870af24d87069fe2afa7e3"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\textured\\seed-739\\frame-4-audit.json": {
+        "bytes": 2671,
+        "sha256": "9d63da8fb132aa0baa6f573910f10dcc0f0738b5c1494322ac014615721745fd"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\textured\\seed-739\\frame-4.cfa": {
+        "bytes": 153600,
+        "sha256": "c8a81403357b75396a81798de1da427fa75f07ad53b8ae42d87f3fb7ed56eb69"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\textured\\seed-743\\frame-0-audit.json": {
+        "bytes": 2669,
+        "sha256": "c4f70edac23bcd65f53f71e49d7061a89e9a913e6ec3a112d6b6bdd9eef3a7d3"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\textured\\seed-743\\frame-0.cfa": {
+        "bytes": 153600,
+        "sha256": "393157e72dd7ab009684b3f26e1a4f8b3c0a2154714db0c8a0a7fd6f0f925658"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\textured\\seed-743\\frame-1-audit.json": {
+        "bytes": 2669,
+        "sha256": "b4c5b535d4754cf5a2ad0e1652aea7a0d2eb0ded37601a4437f73a45c92f0a51"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\textured\\seed-743\\frame-1.cfa": {
+        "bytes": 153600,
+        "sha256": "878defae40065195d854058c11dfa555d7bbf6f699af12a6020ce2fbb803bbb7"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\textured\\seed-743\\frame-2-audit.json": {
+        "bytes": 2674,
+        "sha256": "df8e4892fda0df29c2dcfe1bc70170e608dbaedd05389b6e082a5b4a0b3b45f9"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\textured\\seed-743\\frame-2.cfa": {
+        "bytes": 153600,
+        "sha256": "cdfcb3c6ed99d58bd744bb8e2e7815196c813e5ec70a1d4d1f06b64b91328d8d"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\textured\\seed-743\\frame-3-audit.json": {
+        "bytes": 2670,
+        "sha256": "42b8f90c43e123ee918d96233ec1dfb108427cb49dfec82ab29e7915db5862d3"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\textured\\seed-743\\frame-3.cfa": {
+        "bytes": 153600,
+        "sha256": "5dbc442f6bd3a88a490bf8f0debcaff936685bcfc53279c120f1ce42567bb942"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\textured\\seed-743\\frame-4-audit.json": {
+        "bytes": 2672,
+        "sha256": "70441d7dc771850c366855e6e6fff97ad24a096123a5ba86f9c7d6d59ea5c6d9"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\textured\\seed-743\\frame-4.cfa": {
+        "bytes": 153600,
+        "sha256": "85c03f1ad71558d247338b3a64054b7617e3256976267eb91d5e2859faad0c3f"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\textured\\seed-751\\frame-0-audit.json": {
+        "bytes": 2672,
+        "sha256": "0b87f36752d4f239a0174a2afeb966e47fb324ca5c4eccc274bf753ed3093eca"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\textured\\seed-751\\frame-0.cfa": {
+        "bytes": 153600,
+        "sha256": "7910a106464f787336f9d7b87d41bd7feb6e76d5636b74b64993377498798d30"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\textured\\seed-751\\frame-1-audit.json": {
+        "bytes": 2674,
+        "sha256": "be318a121a36abb578549efcdaae556fc91df235221f83175fd58aa5b0a3c1fd"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\textured\\seed-751\\frame-1.cfa": {
+        "bytes": 153600,
+        "sha256": "1e6878670296c59dc3b74430e1a4e74e16930734972320ca865ca96f74ca9257"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\textured\\seed-751\\frame-2-audit.json": {
+        "bytes": 2670,
+        "sha256": "16afc0e80161a22006eddc80a69a2f0608ded31f3b2f8e0ef9875a7a5079e70d"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\textured\\seed-751\\frame-2.cfa": {
+        "bytes": 153600,
+        "sha256": "a066969288f942e727cb3596cdd497304e892e2976c7fb52ca1243e545ab27da"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\textured\\seed-751\\frame-3-audit.json": {
+        "bytes": 2668,
+        "sha256": "d9d0b158872cd932bfeecbe4be5d9752d1bb78f60cf7fe29212e542d23de20d9"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\textured\\seed-751\\frame-3.cfa": {
+        "bytes": 153600,
+        "sha256": "3bd620a3c591dc51ea89446e4ea1a2813e8a8c57e420be5ce86c7da75c35b14c"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\textured\\seed-751\\frame-4-audit.json": {
+        "bytes": 2672,
+        "sha256": "48278eea9695921150c814db94028f4239d0c6dd6b48009a684be2ab9c100e4a"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-1\\textured\\seed-751\\frame-4.cfa": {
+        "bytes": 153600,
+        "sha256": "589378e7bd79d34ce8b5c0e134139872dc5b4cdf13416ccb3e34ce8fd8e3f28c"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-intended-release-1.json": {
+        "bytes": 4824,
+        "sha256": "2f4a8d2aa426854b4c87fd3a31975bf19581048620175fc3433997b345865744"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-interface.md": {
+        "bytes": 8242,
+        "sha256": "98048ba64d9f984e6dbba17607b40d6c5899057aa88708b9354e98a40fa131c2"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise-run.py": {
+        "bytes": 38301,
+        "sha256": "5f3b8e35ee641426d2d225f0724e457fe956861f87c8e3b1f04bcfe9eaa05c96"
+      },
+      "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\software-noise.py": {
+        "bytes": 35805,
+        "sha256": "abe9d712cbf9caf07f8dfc276a0e0ab4474366db039fd3b1fc2f25cb7a057292"
+      }
+    },
+    "noise_admission_sha256": "088272bfbeca6d00a816a5de72eeaf7aac8f8ca6e0ef68941ab236655fa298e7",
+    "normalization": {
+      "input_rounding": "ties-even-then-clip-[0,15360]",
+      "output_rounding": "half-up after clipping",
+      "second_black_subtraction": false,
+      "tiff_u16_to_dn": 0.22656595712214847
+    },
+    "observer": {
+      "excludes_planning_reads": true,
+      "excludes_raw_prologue": true,
+      "mode": "off"
+    },
+    "schema": "m194g-noise-consumer-plan-v1",
+    "selected": {
+      "frames": [
+        {
+          "audit": {
+            "bytes": 2660,
+            "path": "flat/seed-719/frame-0-audit.json",
+            "sha256": "17a995a1b3a451ecd0bef635ec2a7e88612c7a73a9d6209a6a771ba8599398e4"
+          },
+          "cfa": {
+            "bytes": 153600,
+            "dtype": "<u2",
+            "path": "flat/seed-719/frame-0.cfa",
+            "sha256": "9a70f48d5a807fe4aa301c22f989e1fd6fc0fe0819fbc4179a8d9122d6816b93",
+            "shape": [
+              240,
+              320
+            ]
+          },
+          "index": 0,
+          "inverse_focus": 0.5
+        },
+        {
+          "audit": {
+            "bytes": 2659,
+            "path": "flat/seed-719/frame-1-audit.json",
+            "sha256": "8161f102a5166f54431342aad7d4f559bf41d20ccac0d961445460ba46260f10"
+          },
+          "cfa": {
+            "bytes": 153600,
+            "dtype": "<u2",
+            "path": "flat/seed-719/frame-1.cfa",
+            "sha256": "6a5be03b6e5be15ce8a101e99f9e9040fad824e4297fe75ee96b391350ffca75",
+            "shape": [
+              240,
+              320
+            ]
+          },
+          "index": 1,
+          "inverse_focus": 0.625
+        },
+        {
+          "audit": {
+            "bytes": 2659,
+            "path": "flat/seed-719/frame-2-audit.json",
+            "sha256": "c6a7c96962e091294bde884dbd145e5ed785cff02dc8bff23f2a173f723e6731"
+          },
+          "cfa": {
+            "bytes": 153600,
+            "dtype": "<u2",
+            "path": "flat/seed-719/frame-2.cfa",
+            "sha256": "af127888f4152478b8b035c21ca4226c5b593b2c09a1845a23aa06e9735c5158",
+            "shape": [
+              240,
+              320
+            ]
+          },
+          "index": 2,
+          "inverse_focus": 0.75
+        },
+        {
+          "audit": {
+            "bytes": 2658,
+            "path": "flat/seed-719/frame-3-audit.json",
+            "sha256": "b6ca9ccf47b3f549e0fea3e80e3474d6197da0506f121f8016d9cd67e9dc7382"
+          },
+          "cfa": {
+            "bytes": 153600,
+            "dtype": "<u2",
+            "path": "flat/seed-719/frame-3.cfa",
+            "sha256": "0a78402d689828368426a8b6d0a4e347760f6bfc8e474ce3b1df7414bee716ea",
+            "shape": [
+              240,
+              320
+            ]
+          },
+          "index": 3,
+          "inverse_focus": 0.875
+        },
+        {
+          "audit": {
+            "bytes": 2660,
+            "path": "flat/seed-719/frame-4-audit.json",
+            "sha256": "6a6fb68e20c9cb0d7b3537616fb8f6ce493999106fc4e8df4ceb0b2919065c67"
+          },
+          "cfa": {
+            "bytes": 153600,
+            "dtype": "<u2",
+            "path": "flat/seed-719/frame-4.cfa",
+            "sha256": "0cefb70193e883e924eefdd21ea867c60c33ef1f77b53b707dc9b526609cbf5b",
+            "shape": [
+              240,
+              320
+            ]
+          },
+          "index": 4,
+          "inverse_focus": 1.0
+        }
+      ],
+      "noise_enabled": true,
+      "scene": "flat",
+      "seed": 719,
+      "subset": "all"
+    },
+    "sensor": {
+      "black": [
+        512,
+        512,
+        512,
+        512
+      ],
+      "cfa": "RGGB",
+      "factors_f64": [
+        0.75,
+        1.0,
+        1.0,
+        0.6
+      ],
+      "gain_dn_per_e": [
+        0.25,
+        0.25,
+        0.25,
+        0.25
+      ],
+      "quantization": "ties-even-then-clip-[0,15360]",
+      "read_noise_e": [
+        4.0,
+        4.0,
+        4.0,
+        4.0
+      ],
+      "wb_rgb_f32": [
+        1.3333333730697632,
+        1.0,
+        1.6666666269302368
+      ],
+      "white": [
+        15360,
+        15360,
+        15360,
+        15360
+      ]
+    },
+    "wb_f32": [
+      1.3333333730697632,
+      1.0,
+      1.6666666269302368
+    ]
+  },
+  "plan_sha256": "b9a35d76977b1977a3a74f4b3e5ebd99947eda56d3d21964b20c4f5325a42da0",
+  "schema": "m194g-noise-consumer-receipt-v1",
+  "status": "COMPLETE_RGB_UNVERIFIED",
+  "successful_decode_counts": [
+    0,
+    0,
+    0,
+    0,
+    0
+  ]
+}
