@@ -1,0 +1,256 @@
+{
+  "schema": "m194e-independent-author-api-v1",
+  "status": "UNCOMMISSIONED_NUMERICS",
+  "argv": [
+    "experiments/m194e-joint-pupil/independent-author-check.py",
+    "--output",
+    "experiments/m194e-joint-pupil/independent-author-api-1",
+    "--model-sha256",
+    "a74cd9bd61ea2f717a185e86f725b5ed192431056a447581db0f8562cf9f70b8",
+    "--render-sha256",
+    "2320d2a24a8678da7d50795662bb34b54a41c5200abdc8d111d9457c86d599a5"
+  ],
+  "sources": {
+    "model.py": "a74cd9bd61ea2f717a185e86f725b5ed192431056a447581db0f8562cf9f70b8",
+    "render.py": "2320d2a24a8678da7d50795662bb34b54a41c5200abdc8d111d9457c86d599a5",
+    "independent-model.py": "0cd8ea2331b269e65befdee110560cbc345e89c12348cbe1dc3144f7c04443f0",
+    "independent-author-check.py": "3ee5034be5407266f4aed4d533be401fbba892905b8667beeefa281f8ec9e639",
+    "independent-design.md": "5d98f9e949b77da629cc32e1cc3f35d2bcf9cb0b7fbdad28d58476e35509bf87"
+  },
+  "checks": [
+    {
+      "name": "flat-first-0.0",
+      "actual": 0.0,
+      "expected": 0.0,
+      "max_error_e": 0.0,
+      "tolerance_e": 1e-07,
+      "passed": true
+    },
+    {
+      "name": "flat-first-10000.0",
+      "actual": 10000.0,
+      "expected": 10000.0,
+      "max_error_e": 0.0,
+      "tolerance_e": 1e-07,
+      "passed": true
+    },
+    {
+      "name": "flat-first-20000.0",
+      "actual": 20000.0,
+      "expected": 20000.0,
+      "max_error_e": 0.0,
+      "tolerance_e": 1e-07,
+      "passed": true
+    },
+    {
+      "name": "R1-rays-1.0",
+      "actual": [
+        30.0,
+        20.000000000000014
+      ],
+      "expected": [
+        30.0,
+        20.0
+      ],
+      "max_error_e": 1.4210854715202004e-14,
+      "tolerance_e": 1e-10,
+      "passed": true
+    },
+    {
+      "name": "R1-pupil-permutation-1.0",
+      "actual": [
+        20.000000000000014,
+        30.0
+      ],
+      "expected": [
+        20.0,
+        30.0
+      ],
+      "max_error_e": 1.4210854715202004e-14,
+      "tolerance_e": 1e-10,
+      "passed": true
+    },
+    {
+      "name": "R1-rays--1.0",
+      "actual": [
+        30.0,
+        9.999999999999986
+      ],
+      "expected": [
+        30.0,
+        10.0
+      ],
+      "max_error_e": 1.4210854715202004e-14,
+      "tolerance_e": 1e-10,
+      "passed": true
+    },
+    {
+      "name": "R1-pupil-permutation--1.0",
+      "actual": [
+        9.999999999999986,
+        30.0
+      ],
+      "expected": [
+        10.0,
+        30.0
+      ],
+      "max_error_e": 1.4210854715202004e-14,
+      "tolerance_e": 1e-10,
+      "passed": true
+    },
+    {
+      "name": "R2-continuous-affine--800.0",
+      "actual": 10757.235660137161,
+      "expected": 10757.235660137163,
+      "max_error_e": 1.8189894035458565e-12,
+      "tolerance_e": 0.02,
+      "passed": true
+    },
+    {
+      "name": "R2-continuous-affine-0.0",
+      "actual": 11000.0,
+      "expected": 11000.0,
+      "max_error_e": 0.0,
+      "tolerance_e": 0.02,
+      "passed": true
+    },
+    {
+      "name": "R2-continuous-affine-800.0",
+      "actual": 11242.764339862839,
+      "expected": 11242.764339862837,
+      "max_error_e": 1.8189894035458565e-12,
+      "tolerance_e": 0.02,
+      "passed": true
+    },
+    {
+      "name": "R3-segment--0.73",
+      "actual": 11757.869983530596,
+      "expected": 11757.86998353059,
+      "max_error_e": 5.4569682106375694e-12,
+      "tolerance_e": 0.02,
+      "passed": true
+    },
+    {
+      "name": "R3-segment--0.21",
+      "actual": 10898.102774707328,
+      "expected": 10898.10277470733,
+      "max_error_e": 1.8189894035458565e-12,
+      "tolerance_e": 0.02,
+      "passed": true
+    },
+    {
+      "name": "R3-segment-0.34",
+      "actual": 9863.38511784789,
+      "expected": 9863.38511784789,
+      "max_error_e": 0.0,
+      "tolerance_e": 0.02,
+      "passed": true
+    },
+    {
+      "name": "R3-segment-0.81",
+      "actual": 9144.801724887773,
+      "expected": 9144.801724887771,
+      "max_error_e": 1.8189894035458565e-12,
+      "tolerance_e": 0.02,
+      "passed": true
+    },
+    {
+      "name": "R3-explicit-full",
+      "actual": 12000.000000000002,
+      "expected": 12000.0,
+      "max_error_e": 1.8189894035458565e-12,
+      "tolerance_e": 0.02,
+      "passed": true
+    },
+    {
+      "name": "R3-hidden-change-full",
+      "actual": 12000.000000000002,
+      "expected": 12000.0,
+      "max_error_e": 1.8189894035458565e-12,
+      "tolerance_e": 0.02,
+      "passed": true
+    },
+    {
+      "name": "R3-explicit-absent",
+      "actual": 9000.0,
+      "expected": 9000.0,
+      "max_error_e": 0.0,
+      "tolerance_e": 0.02,
+      "passed": true
+    },
+    {
+      "name": "R3-hidden-change-absent",
+      "actual": 9000.0,
+      "expected": 9000.0,
+      "max_error_e": 0.0,
+      "tolerance_e": 0.02,
+      "passed": true
+    },
+    {
+      "name": "order-reversal-live",
+      "actual": 9000.0,
+      "expected": 9000.0,
+      "max_error_e": 0.0,
+      "tolerance_e": 0.02,
+      "passed": true
+    },
+    {
+      "name": "unordered-depth-refusal",
+      "passed": true
+    },
+    {
+      "name": "R3-focused-0.8",
+      "actual": 12000.0,
+      "expected": 12000.00000000001,
+      "max_error_e": 9.094947017729282e-12,
+      "tolerance_e": 0.02,
+      "passed": true
+    },
+    {
+      "name": "R3-focused-0.4",
+      "actual": 10551.746846402966,
+      "expected": 10551.746846402972,
+      "max_error_e": 5.4569682106375694e-12,
+      "tolerance_e": 0.02,
+      "passed": true
+    },
+    {
+      "name": "R4-cell-joint-1.0",
+      "actual": 17.52,
+      "expected": 17.52,
+      "max_error_e": 0.0,
+      "tolerance_e": 0.02,
+      "passed": true
+    },
+    {
+      "name": "R4-cell-joint--1.0",
+      "actual": 18.48,
+      "expected": 18.48,
+      "max_error_e": 0.0,
+      "tolerance_e": 0.02,
+      "passed": true
+    },
+    {
+      "name": "R5-transformed-11.0-False",
+      "actual": 11393.177721579741,
+      "expected": 11393.177721579741,
+      "max_error_e": 0.0,
+      "tolerance_e": 0.02,
+      "passed": true
+    }
+  ],
+  "texture_checks": [],
+  "exception": "UNCOMMISSIONED_NUMERICS: angular depth/error ceiling",
+  "traceback": "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-author-check.py\", line 128, in main\n    actual,receipt=subject(affine,fr,c,cell)\n                   ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-author-check.py\", line 71, in subject\n    actual,receipt=fun(a,f,xy,ai,meter)\n                   ^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\render.py\", line 336, in render_cell\n    results = [integrate_triangle(scene, frame, t, integrator, meter) for t in triangles]\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\render.py\", line 309, in integrate_triangle\n    high_v, high_e = render_points(scene, frame, high_xy, integrator, meter)\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\render.py\", line 238, in render_points\n    raise NumericalFailure(\"UNCOMMISSIONED_NUMERICS: angular depth/error ceiling\")\nrender.NumericalFailure: UNCOMMISSIONED_NUMERICS: angular depth/error ceiling\n",
+  "budget": {
+    "evaluations": 1323,
+    "cpu_seconds": 0.046875,
+    "wall_seconds": 0.0470000000204891,
+    "limits": {
+      "evaluations": 30000000,
+      "cpu_seconds": 600.0,
+      "wall_seconds": 1200.0
+    }
+  },
+  "source_unchanged": true
+}

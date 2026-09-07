@@ -1,0 +1,57 @@
+{
+  "argv": [
+    "experiments/m194e-joint-pupil/diagnose-angle.py",
+    "experiments/m194e-joint-pupil/angle-diagnosis-1"
+  ],
+  "diagnostic": {
+    "a": [
+      -4.388537161289493,
+      -1.250133749512834
+    ],
+    "alpha": -2.8178015338900315,
+    "b": [
+      -4.385469318267228,
+      -1.2470659064905694
+    ],
+    "budget": [
+      1.2206559540584664e-07,
+      1.2206559540584664e-07
+    ],
+    "depth": 10,
+    "error": [
+      5.0164769944238685e-05,
+      5.016476982966367e-05
+    ],
+    "h": [
+      -0.00018694746088954162,
+      -0.00018694746088954162
+    ],
+    "high": [
+      5.8402003687083575,
+      5.840200368707324
+    ],
+    "low": [
+      5.840250533478302,
+      5.840250533477153
+    ],
+    "radius": 3.07989,
+    "start": -4.3885978606849285,
+    "xy": [
+      [
+        37.205640692083165,
+        24.129460847876985
+      ],
+      [
+        37.205640692083165,
+        24.129460847876985
+      ]
+    ]
+  },
+  "error": "NumericalFailure('UNCOMMISSIONED_NUMERICS: angular depth/error ceiling')",
+  "sources": {
+    "diagnose-angle.py": "309398b6362589f4962d37d5e39109103edf27a490df19ce2ab639ab7ba4d4cc",
+    "model.py": "a74cd9bd61ea2f717a185e86f725b5ed192431056a447581db0f8562cf9f70b8",
+    "render.py": "2320d2a24a8678da7d50795662bb34b54a41c5200abdc8d111d9457c86d599a5"
+  },
+  "traceback": "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\diagnose-angle.py\", line 27, in <module>\n    record[\"result\"] = render_cell(scene, frame, c)\n                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\render.py\", line 336, in render_cell\n    results = [integrate_triangle(scene, frame, t, integrator, meter) for t in triangles]\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\render.py\", line 309, in integrate_triangle\n    high_v, high_e = render_points(scene, frame, high_xy, integrator, meter)\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\render.py\", line 238, in render_points\n    raise NumericalFailure(\"UNCOMMISSIONED_NUMERICS: angular depth/error ceiling\")\nrender.NumericalFailure: UNCOMMISSIONED_NUMERICS: angular depth/error ceiling\n"
+}
