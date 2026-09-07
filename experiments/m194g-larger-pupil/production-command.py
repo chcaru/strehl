@@ -414,6 +414,64 @@ def publish(metadata,name,result,recheck,*,failure_status):
         raise original
 
 
+def completion_check(source_check,build):
+    source_check()
+    if build is not None: build.finish()
+
+
+def publication_controls(build,metadata,source_check,result):
+    """Exercise post-write executable closure with a private copy only."""
+    import copy
+    checks=result["checks"]
+    def add(name,ok,evidence):
+        checks.append(dict(name=name,**{"pass":bool(ok)},evidence=evidence))
+        result["check_count"]=len(checks)
+        need(ok,"publication control failed: "+name)
+    copied=metadata.write("private-publication/copied-tests.exe",build.executable.read_bytes())
+    changed=copy.deepcopy(build.record); changed["test_executable"]=copied
+    private_ref=metadata.json("private-publication/build.json",changed)
+    private_build=Build(private_ref)
+    def good_check(): completion_check(source_check,private_build)
+    first=publish(metadata,"private-publication/valid.json",
+                  dict(status="PRIVATE_COMPLETE",error=None,finalization_errors=[]),good_check,failure_status="PRIVATE_REFUSED")
+    add("final-publication-valid",read_json(first)[0]["status"]=="PRIVATE_COMPLETE",{"result":first})
+    path=checked_ref(copied)
+    with path.open("rb") as stream: original=stream.read(1)
+    need(len(original)==1,"private copied executable empty")
+    calls=0
+    def changed_check():
+        def observed_sources():
+            nonlocal calls
+            source_check(); calls+=1
+            if calls==2:
+                metadata.reserve(1)
+                with path.open("r+b") as stream: stream.write(bytes([original[0]^1]))
+                metadata.bytes+=1
+        completion_check(observed_sources,private_build)
+    failed=dict(status="PRIVATE_COMPLETE",error=None,finalization_errors=[])
+    refusal=None
+    try:
+        publish(metadata,"private-publication/changed.json",failed,changed_check,failure_status="PRIVATE_REFUSED")
+    except ValueError as exc: refusal=str(exc)
+    finally:
+        metadata.reserve(1)
+        with path.open("r+b") as stream: stream.write(original)
+        metadata.bytes+=1
+    rejected=ref(metadata.root/"private-publication/changed.json.rejected")
+    metadata.adopt(rejected,tiff=True) # Renaming retained already-counted bytes.
+    actual=ref(metadata.root/"private-publication/changed.json")
+    stored,_=read_json(actual)
+    add("final-publication-executable-change-refused",
+        refusal is not None and "bound file changed" in refusal and calls==2
+        and stored["status"]=="PRIVATE_REFUSED" and stored["error"] is not None
+        and read_json(rejected)[0]["status"]=="PRIVATE_COMPLETE",
+        dict(error=refusal,callback_count=calls,result=actual,rejected=rejected,private_executable=copied))
+    restored=publish(metadata,"private-publication/restored.json",
+                     dict(status="PRIVATE_COMPLETE",error=None,finalization_errors=[]),good_check,failure_status="PRIVATE_REFUSED")
+    add("final-publication-restored",read_json(restored)[0]["status"]=="PRIVATE_COMPLETE",{"result":restored})
+    result["status"]="PASS_PRIVATE_PUBLICATION_CONTROLS_ONLY"
+
+
 LAUNCH_CONTROL_IDS=("actual-build-and-list", "build-source-omission-refused", "build-artifact-mismatch-refused",
                     "build-list-omission-refused", "build-metadata-restored", "environment-overrides-cleared", "environment-restored",
                     "output-association-valid", "output-association-stale", "output-association-restored",
@@ -559,13 +617,15 @@ def main():
     parser.add_argument("--observer",choices=("off","count","placebo"),default="off")
     parser.add_argument("--plan",type=Path); parser.add_argument("--plan-sha256")
     args=parser.parse_args()
-    release,release_ref,recheck=authorize(args,"production-"+args.kind)
+    release,release_ref,source_check=authorize(args,"production-"+args.kind)
+    build=None
+    def recheck(): completion_check(source_check,build)
     metadata=Metadata(args.output)
     result=dict(schema="m194g-production-command-v1",status="UNCOMMISSIONED_PRODUCTION_COMMAND",
                 ref_root="repository",kind=args.kind,execution_release=release_ref,invocation=list(sys.orig_argv),
                 build=ref(args.build),sources_before=release["source_bindings"],sources_after=None,
                 inputs_before={r["path"]:{k:r[k] for k in ("sha256","bytes")} for r in release["inputs"]},inputs_after=None,
-                child=None,controls=None,error=None,finalization_errors=[],work=None)
+                child=None,controls=None,publication_controls=None,error=None,finalization_errors=[],work=None)
     try:
         need(result["build"]["sha256"]==args.build_sha256 and result["build"] in release["inputs"],"external released build pin")
         build=Build(result["build"])
@@ -573,6 +633,9 @@ def main():
             result["controls"]=dict(schema="m194g-production-launcher-controls-v1",status="UNCOMMISSIONED_LAUNCHER_CONTROLS",
                                     fixture_only=True,check_count=0,checks=[])
             launcher_controls(build,metadata,recheck,result["controls"])
+            result["publication_controls"]=dict(schema="m194g-production-publication-controls-v1",
+                status="UNCOMMISSIONED_PUBLICATION_CONTROLS",fixture_only=True,check_count=0,checks=[])
+            publication_controls(build,metadata,source_check,result["publication_controls"])
         else:
             noise=ref(args.noise_admission) if args.noise_admission else None
             saved_plan=ref(args.plan) if args.plan else None
