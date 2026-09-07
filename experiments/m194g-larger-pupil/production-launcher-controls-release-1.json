@@ -1,0 +1,53 @@
+{
+  "schema": "m194g-numerical-execution-release-v1",
+  "scope": "production-launcher-controls",
+  "source_bindings": {
+    "experiments/m194g-larger-pupil/production-command.py": {
+      "sha256": "756a9c71da8c5f6dfaf3231e386ec09c83902c8f2aedb1ec23b5eb01b764635c",
+      "bytes": 34644
+    },
+    "experiments/m194g-larger-pupil/bridge-build.py": {
+      "sha256": "030c85a9bdbe5a32339dc503f306938f3b3cf719a2ebf7c5cdb1b5ec154a2713",
+      "bytes": 12358
+    },
+    "experiments/m194g-larger-pupil/next-production-controller-design.md": {
+      "sha256": "cada40fba5339a56a3c792f268e7fdb89187f3a5b4be3dcf8a059cf51789ba44",
+      "bytes": 9085
+    },
+    "experiments/m194g-larger-pupil/independent-production-controller-review.md": {
+      "sha256": "56435465b0a9f5af3ea9dad9cb492d4f0503508c8d1959f2c7b692c1e8a33a96",
+      "bytes": 4190
+    }
+  },
+  "inputs": [
+    {
+      "path": "experiments/m194g-larger-pupil/bridge-build-2/result.json",
+      "sha256": "04e7cf3915e77b83dbe8e7183249445e48ff451292bb16d4d926b3d6346f9be0",
+      "bytes": 42312
+    }
+  ],
+  "commands": [
+    [
+      "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+      "-X",
+      "utf8",
+      "-X",
+      "faulthandler",
+      "-X",
+      "pycache_prefix=experiments/m194g-larger-pupil/work/cache-production-launcher-controls-1",
+      "experiments/m194g-larger-pupil/production-command.py",
+      "--release",
+      "experiments/m194g-larger-pupil/production-launcher-controls-release-1.json",
+      "--release-sha256",
+      "ACTUAL_EXECUTION_RELEASE_SHA256",
+      "--build",
+      "experiments/m194g-larger-pupil/bridge-build-2/result.json",
+      "--build-sha256",
+      "04e7cf3915e77b83dbe8e7183249445e48ff451292bb16d4d926b3d6346f9be0",
+      "--kind",
+      "launcher-controls",
+      "--output",
+      "experiments/m194g-larger-pupil/production-launcher-controls-1"
+    ]
+  ]
+}

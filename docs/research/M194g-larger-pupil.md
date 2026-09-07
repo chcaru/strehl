@@ -603,3 +603,81 @@ read paths need their own controlled failures. The final90 emitted CFAs also
 need their separate independent reader and five-reference admission record.
 Neither gate is supplied by this private-trace pass. Those implementations
 and the larger production adapter are the current next work.
+
+## Intended sensor files, larger build and quality instruments
+
+**MEASURED / independently VERIFIED:** the committed actual-authority command
+(85415e4e, independent-noise-authority-controls-release-1.json) returned exit0.
+Its38 checks pass, including two distinct hardlinked scalar paths reaching the
+actual alias refusal, incomplete ancestor records, malformed NPY inputs and
+changed final inputs. No sampler call, generator construction or variate was
+used. The result SHA256 is
+`d7b5bd9a321dff4fc5e9b51e2d9f58c4c726dbca7954f7e32f8bb4a607f24435`.
+
+The intended emission was frozen at48f69d82 with exactly the same ten source
+bindings as the private software-noise commission. The command in
+software-noise-intended-release-1.json, SHA256
+`2f4a8d2aa426854b4c87fd3a31975bf19581048620175fc3433997b345865744`,
+returned exit0. It completed90/90 original frames,160 generators and12288000
+variates (6144000 each photon/read), with no changed seeds or retries. The
+result SHA256 is
+`c9549335951b630d90ed6bd893391905575e38b0bcab3308ff8fd36063dfd02a`;
+actual manifest is noise-manifest.json,35052 bytes, SHA256
+`80007e235c58c0cdee5549ffd3e3173a9e39886a35fb458cf0670a8ac5a47a67`.
+The final203-file package is14551113 bytes. Last pre-terminal counters record
+3.265625CPU/4.10207210003864wall seconds and5683200 peak live named-array bytes.
+These concurrent-run times are budget observations, not performance comparisons.
+
+The independent actual-file command was frozen at06ea2f4a, release SHA256
+`dea6a22722831390125dadd1cafefeef29c9a36b9335191996fc2a4c0feb70a9`,
+and returned exit0. It reads all90 saved CFAs and audits, independently checks
+all ten noise-off encodings, and passes37 private controls. The80 noisy rows
+check saved Q, source/key/audit associations and rails; unretained noisy
+intermediate samples cannot be recovered from quantized Q and are not claimed
+as newly observed. No new draws were made. Its result SHA256 is
+`1089a1b5a6cb6e1fdb9fbe01937e057ff029f95e34aae4afe1e454bbe73bce34`.
+The acyclic five-reference noise-admission.json is1082 bytes, SHA256
+`088272bfbeca6d00a816a5de72eeaf7aac8f8ca6e0ef68941ab236655fa298e7`,
+status PASS_SOFTWARE_NOISE_FILES_ONLY. All source/input finalization checks pass.
+
+**MEASURED build failure retained:** the first larger Rust build under85415e4e
+returned cargo exit101 after an actual Compiling strehl-cli line. Two bridge
+helper functions omitted their required Ok(()) tails. Its original log/result
+are archived in bridge-build-1; this was a compile defect, not an image result.
+The minimal repair adds those two returns. Independent review of the root
+build driver checked the separate fresh target directory, with the first
+failed artifacts retained. The replacement exact build release752c1397... was
+frozen at48f69d82 and returned exit0 with an actual rebuilt CLI and all eight
+registered test names listed. bridge-build-2/result.json has SHA256
+`04e7cf3915e77b83dbe8e7183249445e48ff451292bb16d4d926b3d6346f9be0`;
+the copied12767744-byte test executable has SHA256
+`1a96f3a472288c1c057e16df4cd8a4d04ed6a4a5a1cc2c80adbd67d69df2ccd1`.
+This command compiled/listed tests only. Production render/test claims require
+the subsequent actual invocations.
+
+**MEASURED / independently VERIFIED instruments:** the exact target and
+private-instrument releases563c9159... and420ba445... were frozen at06ea2f4a.
+Both returned exit0. The target produced all76800 K=0 expected-electron cells
+and16 ordered local controls (15 valid numerical calls plus two pre-call
+geometry/radiance refusals). The distinct instrument run passed69 checks:46
+metric controls and23 TIFF entry checks, including both byte orders, multiple
+strips and a legal193x17 image refused by the historical128 bound. Flat controls
+ran before wave controls; phase errors, amplitude inflation, extra residual
+energy, outside-window spikes, temporal/spatial separation and repeat-wise
+uncertainty controls were exercised. The instrument result SHA256 is
+`cdb596da485a49acf835024bea6e44b21f55922dac804b14d56f26de61bd8ac4`.
+
+The separately released K=0 verifier (3f6c851c; releasef4da2c57...) returned
+exit0 after eight literal oracles and four live/restored fault groups (20
+private integrations). Its analytic-x/split-y integration uses no polygon,
+pupil or producer helpers. All ten fixed cells pass max.004e/RMS.0008e: actual
+maximum6.002665031701326e-11e and RMS2.7569843395909545e-11e. It checks the entire
+array for file/type/finite-value integrity, but independently integrates only
+these ten cells; this is not a whole-array second integration. All geometry,
+source, original command, target association and finalization checks pass.
+
+Independent ten-cell result SHA256 `a79b885524963a164506365fcccaa571fb7abd652cb43ec4d817b7085d6437c7`.
+
+No candidate quality metric or production-default change follows from these
+passes. Current work runs the compiled bridge on six private colour outputs,
+then12 intended commissioning outputs before the fixed38-output comparison.

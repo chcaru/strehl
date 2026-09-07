@@ -1,0 +1,3008 @@
+{
+  "cells": [
+    {
+      "independent": {
+        "absolute_request_e": 1e-07,
+        "branch_calls": {
+          "background": 0,
+          "foreground": 0,
+          "mixed": 21
+        },
+        "callback_calls": 21,
+        "evaluated_xy": [
+          142.0,
+          0.0
+        ],
+        "fault": null,
+        "indicator_e": 1.3245624225828727e-10,
+        "native_xy": [
+          142,
+          0
+        ],
+        "pieces": [
+          {
+            "callbacks": 21,
+            "epsabs": 1e-07,
+            "epsrel": 0.0,
+            "error": null,
+            "high": 0.5,
+            "indicator_e": 1.3245624225828727e-10,
+            "limit": 128,
+            "low": -0.5,
+            "value_e": 11930.597665546375
+          }
+        ],
+        "value_e": 11930.597665546375,
+        "y_breaks": [
+          -0.5,
+          0.5
+        ]
+      },
+      "native_xy": [
+        142,
+        0
+      ],
+      "signed_error_e": -9.094947017729282e-12,
+      "target_e": 11930.597665546366
+    },
+    {
+      "independent": {
+        "absolute_request_e": 1e-07,
+        "branch_calls": {
+          "background": 0,
+          "foreground": 0,
+          "mixed": 21
+        },
+        "callback_calls": 21,
+        "evaluated_xy": [
+          142.0,
+          1.0
+        ],
+        "fault": null,
+        "indicator_e": 1.1632218885079511e-10,
+        "native_xy": [
+          142,
+          1
+        ],
+        "pieces": [
+          {
+            "callbacks": 21,
+            "epsabs": 1e-07,
+            "epsrel": 0.0,
+            "error": null,
+            "high": 1.5,
+            "indicator_e": 1.1632218885079511e-10,
+            "limit": 128,
+            "low": 0.5,
+            "value_e": 10477.371327267227
+          }
+        ],
+        "value_e": 10477.371327267227,
+        "y_breaks": [
+          0.5,
+          1.5
+        ]
+      },
+      "native_xy": [
+        142,
+        1
+      ],
+      "signed_error_e": -2.9103830456733704e-11,
+      "target_e": 10477.371327267198
+    },
+    {
+      "independent": {
+        "absolute_request_e": 1e-07,
+        "branch_calls": {
+          "background": 0,
+          "foreground": 0,
+          "mixed": 21
+        },
+        "callback_calls": 21,
+        "evaluated_xy": [
+          143.0,
+          7.0
+        ],
+        "fault": null,
+        "indicator_e": 1.3856819274326142e-10,
+        "native_xy": [
+          143,
+          7
+        ],
+        "pieces": [
+          {
+            "callbacks": 21,
+            "epsabs": 1e-07,
+            "epsrel": 0.0,
+            "error": null,
+            "high": 7.5,
+            "indicator_e": 1.3856819274326142e-10,
+            "limit": 128,
+            "low": 6.5,
+            "value_e": 12481.113224079103
+          }
+        ],
+        "value_e": 12481.113224079103,
+        "y_breaks": [
+          6.5,
+          7.5
+        ]
+      },
+      "native_xy": [
+        143,
+        7
+      ],
+      "signed_error_e": -3.637978807091713e-11,
+      "target_e": 12481.113224079067
+    },
+    {
+      "independent": {
+        "absolute_request_e": 1e-07,
+        "branch_calls": {
+          "background": 0,
+          "foreground": 0,
+          "mixed": 21
+        },
+        "callback_calls": 21,
+        "evaluated_xy": [
+          150.0,
+          53.0
+        ],
+        "fault": null,
+        "indicator_e": 1.6445329292916472e-10,
+        "native_xy": [
+          150,
+          53
+        ],
+        "pieces": [
+          {
+            "callbacks": 21,
+            "epsabs": 1e-07,
+            "epsrel": 0.0,
+            "error": null,
+            "high": 53.5,
+            "indicator_e": 1.6445329292916472e-10,
+            "limit": 128,
+            "low": 52.5,
+            "value_e": 14812.635775112745
+          }
+        ],
+        "value_e": 14812.635775112745,
+        "y_breaks": [
+          52.5,
+          53.5
+        ]
+      },
+      "native_xy": [
+        150,
+        53
+      ],
+      "signed_error_e": 2.9103830456733704e-11,
+      "target_e": 14812.635775112774
+    },
+    {
+      "independent": {
+        "absolute_request_e": 1e-07,
+        "branch_calls": {
+          "background": 21,
+          "foreground": 0,
+          "mixed": 0
+        },
+        "callback_calls": 21,
+        "evaluated_xy": [
+          151.0,
+          64.0
+        ],
+        "fault": null,
+        "indicator_e": 1.472317498929879e-10,
+        "native_xy": [
+          151,
+          64
+        ],
+        "pieces": [
+          {
+            "callbacks": 21,
+            "epsabs": 1e-07,
+            "epsrel": 0.0,
+            "error": null,
+            "high": 64.5,
+            "indicator_e": 1.472317498929879e-10,
+            "limit": 128,
+            "low": 63.5,
+            "value_e": 13261.457079103327
+          }
+        ],
+        "value_e": 13261.457079103327,
+        "y_breaks": [
+          63.5,
+          64.5
+        ]
+      },
+      "native_xy": [
+        151,
+        64
+      ],
+      "signed_error_e": -9.094947017729282e-12,
+      "target_e": 13261.457079103318
+    },
+    {
+      "independent": {
+        "absolute_request_e": 1e-07,
+        "branch_calls": {
+          "background": 0,
+          "foreground": 0,
+          "mixed": 21
+        },
+        "callback_calls": 21,
+        "evaluated_xy": [
+          152.0,
+          64.0
+        ],
+        "fault": null,
+        "indicator_e": 1.7091533106621825e-10,
+        "native_xy": [
+          152,
+          64
+        ],
+        "pieces": [
+          {
+            "callbacks": 21,
+            "epsabs": 1e-07,
+            "epsrel": 0.0,
+            "error": null,
+            "high": 64.5,
+            "indicator_e": 1.7091533106621825e-10,
+            "limit": 128,
+            "low": 63.5,
+            "value_e": 15394.68442603451
+          }
+        ],
+        "value_e": 15394.68442603451,
+        "y_breaks": [
+          63.5,
+          64.5
+        ]
+      },
+      "native_xy": [
+        152,
+        64
+      ],
+      "signed_error_e": 9.094947017729282e-12,
+      "target_e": 15394.684426034519
+    },
+    {
+      "independent": {
+        "absolute_request_e": 1e-07,
+        "branch_calls": {
+          "background": 21,
+          "foreground": 0,
+          "mixed": 21
+        },
+        "callback_calls": 42,
+        "evaluated_xy": [
+          159.0,
+          117.0
+        ],
+        "fault": null,
+        "indicator_e": 8.68271650282982e-11,
+        "native_xy": [
+          159,
+          117
+        ],
+        "pieces": [
+          {
+            "callbacks": 21,
+            "epsabs": 5e-08,
+            "epsrel": 0.0,
+            "error": null,
+            "high": 116.66666666666667,
+            "indicator_e": 1.38083039775179e-11,
+            "limit": 128,
+            "low": 116.5,
+            "value_e": 1243.741452955363
+          },
+          {
+            "callbacks": 21,
+            "epsabs": 5e-08,
+            "epsrel": 0.0,
+            "error": null,
+            "high": 117.5,
+            "indicator_e": 7.30188610507803e-11,
+            "limit": 128,
+            "low": 116.66666666666667,
+            "value_e": 6576.954308386244
+          }
+        ],
+        "value_e": 7820.695761341607,
+        "y_breaks": [
+          116.5,
+          116.66666666666667,
+          117.5
+        ]
+      },
+      "native_xy": [
+        159,
+        117
+      ],
+      "signed_error_e": -1.546140993013978e-11,
+      "target_e": 7820.695761341592
+    },
+    {
+      "independent": {
+        "absolute_request_e": 1e-07,
+        "branch_calls": {
+          "background": 0,
+          "foreground": 21,
+          "mixed": 21
+        },
+        "callback_calls": 42,
+        "evaluated_xy": [
+          160.0,
+          117.0
+        ],
+        "fault": null,
+        "indicator_e": 1.433317818509088e-10,
+        "native_xy": [
+          160,
+          117
+        ],
+        "pieces": [
+          {
+            "callbacks": 21,
+            "epsabs": 5e-08,
+            "epsrel": 0.0,
+            "error": null,
+            "high": 116.66666666666667,
+            "indicator_e": 2.474323715420079e-11,
+            "limit": 128,
+            "low": 116.5,
+            "value_e": 2228.6726725519698
+          },
+          {
+            "callbacks": 21,
+            "epsabs": 5e-08,
+            "epsrel": 0.0,
+            "error": null,
+            "high": 117.5,
+            "indicator_e": 1.18588544696708e-10,
+            "limit": 128,
+            "low": 116.66666666666667,
+            "value_e": 10681.506514130071
+          }
+        ],
+        "value_e": 12910.17918668204,
+        "y_breaks": [
+          116.5,
+          116.66666666666667,
+          117.5
+        ]
+      },
+      "native_xy": [
+        160,
+        117
+      ],
+      "signed_error_e": -6.002665031701326e-11,
+      "target_e": 12910.17918668198
+    },
+    {
+      "independent": {
+        "absolute_request_e": 1e-07,
+        "branch_calls": {
+          "background": 0,
+          "foreground": 0,
+          "mixed": 21
+        },
+        "callback_calls": 21,
+        "evaluated_xy": [
+          169.0,
+          179.0
+        ],
+        "fault": null,
+        "indicator_e": 1.526267135278692e-10,
+        "native_xy": [
+          169,
+          179
+        ],
+        "pieces": [
+          {
+            "callbacks": 21,
+            "epsabs": 1e-07,
+            "epsrel": 0.0,
+            "error": null,
+            "high": 179.5,
+            "indicator_e": 1.526267135278692e-10,
+            "limit": 128,
+            "low": 178.5,
+            "value_e": 13747.392203417903
+          }
+        ],
+        "value_e": 13747.392203417903,
+        "y_breaks": [
+          178.5,
+          179.5
+        ]
+      },
+      "native_xy": [
+        169,
+        179
+      ],
+      "signed_error_e": 1.8189894035458565e-11,
+      "target_e": 13747.392203417921
+    },
+    {
+      "independent": {
+        "absolute_request_e": 1e-07,
+        "branch_calls": {
+          "background": 0,
+          "foreground": 0,
+          "mixed": 21
+        },
+        "callback_calls": 21,
+        "evaluated_xy": [
+          178.0,
+          239.0
+        ],
+        "fault": null,
+        "indicator_e": 1.608291994573909e-10,
+        "native_xy": [
+          178,
+          239
+        ],
+        "pieces": [
+          {
+            "callbacks": 21,
+            "epsabs": 1e-07,
+            "epsrel": 0.0,
+            "error": null,
+            "high": 239.5,
+            "indicator_e": 1.608291994573909e-10,
+            "limit": 128,
+            "low": 238.5,
+            "value_e": 14486.206454932017
+          }
+        ],
+        "value_e": 14486.206454932017,
+        "y_breaks": [
+          238.5,
+          239.5
+        ]
+      },
+      "native_xy": [
+        178,
+        239
+      ],
+      "signed_error_e": 1.2732925824820995e-11,
+      "target_e": 14486.20645493203
+    }
+  ],
+  "controls": {
+    "calls": [
+      {
+        "error": null,
+        "fault": null,
+        "name": "constant-foreground",
+        "native_xy": [
+          0,
+          0
+        ],
+        "result": {
+          "absolute_request_e": 1e-07,
+          "branch_calls": {
+            "background": 0,
+            "foreground": 21,
+            "mixed": 0
+          },
+          "callback_calls": 21,
+          "evaluated_xy": [
+            0.0,
+            0.0
+          ],
+          "fault": null,
+          "indicator_e": 3.33066907387547e-13,
+          "native_xy": [
+            0,
+            0
+          ],
+          "pieces": [
+            {
+              "callbacks": 21,
+              "epsabs": 1e-07,
+              "epsrel": 0.0,
+              "error": null,
+              "high": 0.5,
+              "indicator_e": 3.33066907387547e-13,
+              "limit": 128,
+              "low": -0.5,
+              "value_e": 30.000000000000004
+            }
+          ],
+          "value_e": 30.000000000000004,
+          "y_breaks": [
+            -0.5,
+            0.5
+          ]
+        },
+        "scene": {
+          "background": {
+            "affine": [
+              0.0,
+              0.0
+            ],
+            "constant": 10,
+            "waves": []
+          },
+          "foreground": {
+            "affine": [
+              0.0,
+              0.0
+            ],
+            "constant": 30,
+            "waves": []
+          },
+          "mask_normal": [
+            1.0,
+            0.0
+          ],
+          "mask_offset": -2,
+          "mask_state": "half-plane"
+        }
+      },
+      {
+        "error": null,
+        "fault": null,
+        "name": "affine-background",
+        "native_xy": [
+          0,
+          0
+        ],
+        "result": {
+          "absolute_request_e": 1e-07,
+          "branch_calls": {
+            "background": 21,
+            "foreground": 0,
+            "mixed": 0
+          },
+          "callback_calls": 21,
+          "evaluated_xy": [
+            0.0,
+            0.0
+          ],
+          "fault": null,
+          "indicator_e": 1.1102230246251565e-13,
+          "native_xy": [
+            0,
+            0
+          ],
+          "pieces": [
+            {
+              "callbacks": 21,
+              "epsabs": 1e-07,
+              "epsrel": 0.0,
+              "error": null,
+              "high": 0.5,
+              "indicator_e": 1.1102230246251565e-13,
+              "limit": 128,
+              "low": -0.5,
+              "value_e": 10.0
+            }
+          ],
+          "value_e": 10.0,
+          "y_breaks": [
+            -0.5,
+            0.5
+          ]
+        },
+        "scene": {
+          "background": {
+            "affine": [
+              4,
+              0.0
+            ],
+            "constant": 10,
+            "waves": []
+          },
+          "foreground": {
+            "affine": [
+              0.0,
+              0.0
+            ],
+            "constant": 30,
+            "waves": []
+          },
+          "mask_normal": [
+            1.0,
+            0.0
+          ],
+          "mask_offset": 2,
+          "mask_state": "half-plane"
+        }
+      },
+      {
+        "error": null,
+        "fault": null,
+        "name": "vertical-coupled",
+        "native_xy": [
+          0,
+          0
+        ],
+        "result": {
+          "absolute_request_e": 1e-07,
+          "branch_calls": {
+            "background": 0,
+            "foreground": 0,
+            "mixed": 21
+          },
+          "callback_calls": 21,
+          "evaluated_xy": [
+            0.0,
+            0.0
+          ],
+          "fault": null,
+          "indicator_e": 1.9451107391432743e-13,
+          "native_xy": [
+            0,
+            0
+          ],
+          "pieces": [
+            {
+              "callbacks": 21,
+              "epsabs": 1e-07,
+              "epsrel": 0.0,
+              "error": null,
+              "high": 0.5,
+              "indicator_e": 1.9451107391432743e-13,
+              "limit": 128,
+              "low": -0.5,
+              "value_e": 17.52
+            }
+          ],
+          "value_e": 17.52,
+          "y_breaks": [
+            -0.5,
+            0.5
+          ]
+        },
+        "scene": {
+          "background": {
+            "affine": [
+              4,
+              0.0
+            ],
+            "constant": 10,
+            "waves": []
+          },
+          "foreground": {
+            "affine": [
+              0.0,
+              0.0
+            ],
+            "constant": 30,
+            "waves": []
+          },
+          "mask_normal": [
+            1.0,
+            0.0
+          ],
+          "mask_offset": 0.1,
+          "mask_state": "half-plane"
+        }
+      },
+      {
+        "error": null,
+        "fault": null,
+        "name": "vertical-reversed-gradient",
+        "native_xy": [
+          0,
+          0
+        ],
+        "result": {
+          "absolute_request_e": 1e-07,
+          "branch_calls": {
+            "background": 0,
+            "foreground": 0,
+            "mixed": 21
+          },
+          "callback_calls": 21,
+          "evaluated_xy": [
+            0.0,
+            0.0
+          ],
+          "fault": null,
+          "indicator_e": 2.0516921495072893e-13,
+          "native_xy": [
+            0,
+            0
+          ],
+          "pieces": [
+            {
+              "callbacks": 21,
+              "epsabs": 1e-07,
+              "epsrel": 0.0,
+              "error": null,
+              "high": 0.5,
+              "indicator_e": 2.0516921495072893e-13,
+              "limit": 128,
+              "low": -0.5,
+              "value_e": 18.48
+            }
+          ],
+          "value_e": 18.48,
+          "y_breaks": [
+            -0.5,
+            0.5
+          ]
+        },
+        "scene": {
+          "background": {
+            "affine": [
+              -4,
+              0.0
+            ],
+            "constant": 10,
+            "waves": []
+          },
+          "foreground": {
+            "affine": [
+              0.0,
+              0.0
+            ],
+            "constant": 30,
+            "waves": []
+          },
+          "mask_normal": [
+            1.0,
+            0.0
+          ],
+          "mask_offset": 0.1,
+          "mask_state": "half-plane"
+        }
+      },
+      {
+        "error": null,
+        "fault": null,
+        "name": "diagonal-coupled",
+        "native_xy": [
+          0,
+          0
+        ],
+        "result": {
+          "absolute_request_e": 1e-07,
+          "branch_calls": {
+            "background": 0,
+            "foreground": 0,
+            "mixed": 21
+          },
+          "callback_calls": 21,
+          "evaluated_xy": [
+            0.0,
+            0.0
+          ],
+          "fault": null,
+          "indicator_e": 2.183438615096141e-13,
+          "native_xy": [
+            0,
+            0
+          ],
+          "pieces": [
+            {
+              "callbacks": 21,
+              "epsabs": 1e-07,
+              "epsrel": 0.0,
+              "error": null,
+              "high": 0.5,
+              "indicator_e": 2.183438615096141e-13,
+              "limit": 128,
+              "low": -0.5,
+              "value_e": 19.666666666666664
+            }
+          ],
+          "value_e": 19.666666666666664,
+          "y_breaks": [
+            -0.5,
+            0.5
+          ]
+        },
+        "scene": {
+          "background": {
+            "affine": [
+              4,
+              0.0
+            ],
+            "constant": 10,
+            "waves": []
+          },
+          "foreground": {
+            "affine": [
+              0.0,
+              0.0
+            ],
+            "constant": 30,
+            "waves": []
+          },
+          "mask_normal": [
+            1.0,
+            1
+          ],
+          "mask_offset": 0,
+          "mask_state": "half-plane"
+        }
+      },
+      {
+        "error": null,
+        "fault": null,
+        "name": "wave",
+        "native_xy": [
+          0,
+          0
+        ],
+        "result": {
+          "absolute_request_e": 1e-07,
+          "branch_calls": {
+            "background": 0,
+            "foreground": 21,
+            "mixed": 0
+          },
+          "callback_calls": 21,
+          "evaluated_xy": [
+            0.0,
+            0.0
+          ],
+          "fault": null,
+          "indicator_e": 1.1821100057984617e-12,
+          "native_xy": [
+            0,
+            0
+          ],
+          "pieces": [
+            {
+              "callbacks": 21,
+              "epsabs": 1e-07,
+              "epsrel": 0.0,
+              "error": null,
+              "high": 0.5,
+              "indicator_e": 1.1821100057984617e-12,
+              "limit": 128,
+              "low": -0.5,
+              "value_e": 106.47500363249775
+            }
+          ],
+          "value_e": 106.47500363249775,
+          "y_breaks": [
+            -0.5,
+            0.5
+          ]
+        },
+        "scene": {
+          "background": {
+            "affine": [
+              0.0,
+              0.0
+            ],
+            "constant": 10,
+            "waves": []
+          },
+          "foreground": {
+            "affine": [
+              0.0,
+              0.0
+            ],
+            "constant": 100,
+            "waves": [
+              {
+                "amplitude": 7.0,
+                "frequency": [
+                  0.125,
+                  0.0625
+                ],
+                "phase": 0.3
+              }
+            ]
+          },
+          "mask_normal": [
+            1.0,
+            0.0
+          ],
+          "mask_offset": -2,
+          "mask_state": "half-plane"
+        }
+      },
+      {
+        "error": null,
+        "fault": null,
+        "name": "negative-sinc",
+        "native_xy": [
+          0,
+          0
+        ],
+        "result": {
+          "absolute_request_e": 1e-07,
+          "branch_calls": {
+            "background": 0,
+            "foreground": 21,
+            "mixed": 0
+          },
+          "callback_calls": 21,
+          "evaluated_xy": [
+            0.0,
+            0.0
+          ],
+          "fault": null,
+          "indicator_e": 1.094568880082189e-12,
+          "native_xy": [
+            0,
+            0
+          ],
+          "pieces": [
+            {
+              "callbacks": 21,
+              "epsabs": 1e-07,
+              "epsrel": 0.0,
+              "error": null,
+              "high": 0.5,
+              "indicator_e": 1.094568880082189e-12,
+              "limit": 128,
+              "low": -0.5,
+              "value_e": 98.59000000938975
+            }
+          ],
+          "value_e": 98.59000000938975,
+          "y_breaks": [
+            -0.5,
+            0.5
+          ]
+        },
+        "scene": {
+          "background": {
+            "affine": [
+              0.0,
+              0.0
+            ],
+            "constant": 10,
+            "waves": []
+          },
+          "foreground": {
+            "affine": [
+              0.0,
+              0.0
+            ],
+            "constant": 100,
+            "waves": [
+              {
+                "amplitude": 7.0,
+                "frequency": [
+                  1.5,
+                  0.0625
+                ],
+                "phase": 0.3
+              }
+            ]
+          },
+          "mask_normal": [
+            1.0,
+            0.0
+          ],
+          "mask_offset": -2,
+          "mask_state": "half-plane"
+        }
+      },
+      {
+        "error": null,
+        "fault": null,
+        "name": "zero-fx",
+        "native_xy": [
+          0,
+          0
+        ],
+        "result": {
+          "absolute_request_e": 1e-07,
+          "branch_calls": {
+            "background": 0,
+            "foreground": 21,
+            "mixed": 0
+          },
+          "callback_calls": 21,
+          "evaluated_xy": [
+            0.0,
+            0.0
+          ],
+          "fault": null,
+          "indicator_e": 1.1839914428667865e-12,
+          "native_xy": [
+            0,
+            0
+          ],
+          "pieces": [
+            {
+              "callbacks": 21,
+              "epsabs": 1e-07,
+              "epsrel": 0.0,
+              "error": null,
+              "high": 0.5,
+              "indicator_e": 1.1839914428667865e-12,
+              "limit": 128,
+              "low": -0.5,
+              "value_e": 106.6444684180943
+            }
+          ],
+          "value_e": 106.6444684180943,
+          "y_breaks": [
+            -0.5,
+            0.5
+          ]
+        },
+        "scene": {
+          "background": {
+            "affine": [
+              0.0,
+              0.0
+            ],
+            "constant": 10,
+            "waves": []
+          },
+          "foreground": {
+            "affine": [
+              0.0,
+              0.0
+            ],
+            "constant": 100,
+            "waves": [
+              {
+                "amplitude": 7.0,
+                "frequency": [
+                  0.0,
+                  0.0625
+                ],
+                "phase": 0.3
+              }
+            ]
+          },
+          "mask_normal": [
+            1.0,
+            0.0
+          ],
+          "mask_offset": -2,
+          "mask_state": "half-plane"
+        }
+      },
+      {
+        "error": null,
+        "fault": null,
+        "name": "shift-x-baseline",
+        "native_xy": [
+          0,
+          0
+        ],
+        "result": {
+          "absolute_request_e": 1e-07,
+          "branch_calls": {
+            "background": 0,
+            "foreground": 21,
+            "mixed": 0
+          },
+          "callback_calls": 21,
+          "evaluated_xy": [
+            0.0,
+            0.0
+          ],
+          "fault": null,
+          "indicator_e": 1.1821100057984617e-12,
+          "native_xy": [
+            0,
+            0
+          ],
+          "pieces": [
+            {
+              "callbacks": 21,
+              "epsabs": 1e-07,
+              "epsrel": 0.0,
+              "error": null,
+              "high": 0.5,
+              "indicator_e": 1.1821100057984617e-12,
+              "limit": 128,
+              "low": -0.5,
+              "value_e": 106.47500363249775
+            }
+          ],
+          "value_e": 106.47500363249775,
+          "y_breaks": [
+            -0.5,
+            0.5
+          ]
+        },
+        "scene": {
+          "background": {
+            "affine": [
+              0.0,
+              0.0
+            ],
+            "constant": 10,
+            "waves": []
+          },
+          "foreground": {
+            "affine": [
+              0.0,
+              0.0
+            ],
+            "constant": 100,
+            "waves": [
+              {
+                "amplitude": 7.0,
+                "frequency": [
+                  0.125,
+                  0.0625
+                ],
+                "phase": 0.3
+              }
+            ]
+          },
+          "mask_normal": [
+            1.0,
+            0.0
+          ],
+          "mask_offset": -2,
+          "mask_state": "half-plane"
+        }
+      },
+      {
+        "error": null,
+        "fault": "shift-x",
+        "name": "shift-x-active",
+        "native_xy": [
+          0,
+          0
+        ],
+        "result": {
+          "absolute_request_e": 1e-07,
+          "branch_calls": {
+            "background": 0,
+            "foreground": 21,
+            "mixed": 0
+          },
+          "callback_calls": 21,
+          "evaluated_xy": [
+            1.0,
+            0.0
+          ],
+          "fault": "shift-x",
+          "indicator_e": 1.1453306868215816e-12,
+          "native_xy": [
+            0,
+            0
+          ],
+          "pieces": [
+            {
+              "callbacks": 21,
+              "epsabs": 1e-07,
+              "epsrel": 0.0,
+              "error": null,
+              "high": 0.5,
+              "indicator_e": 1.1453306868215816e-12,
+              "limit": 128,
+              "low": -0.5,
+              "value_e": 103.16221708771337
+            }
+          ],
+          "value_e": 103.16221708771337,
+          "y_breaks": [
+            -0.5,
+            0.5
+          ]
+        },
+        "scene": {
+          "background": {
+            "affine": [
+              0.0,
+              0.0
+            ],
+            "constant": 10,
+            "waves": []
+          },
+          "foreground": {
+            "affine": [
+              0.0,
+              0.0
+            ],
+            "constant": 100,
+            "waves": [
+              {
+                "amplitude": 7.0,
+                "frequency": [
+                  0.125,
+                  0.0625
+                ],
+                "phase": 0.3
+              }
+            ]
+          },
+          "mask_normal": [
+            1.0,
+            0.0
+          ],
+          "mask_offset": -2,
+          "mask_state": "half-plane"
+        }
+      },
+      {
+        "error": null,
+        "fault": null,
+        "name": "shift-x-restored",
+        "native_xy": [
+          0,
+          0
+        ],
+        "result": {
+          "absolute_request_e": 1e-07,
+          "branch_calls": {
+            "background": 0,
+            "foreground": 21,
+            "mixed": 0
+          },
+          "callback_calls": 21,
+          "evaluated_xy": [
+            0.0,
+            0.0
+          ],
+          "fault": null,
+          "indicator_e": 1.1821100057984617e-12,
+          "native_xy": [
+            0,
+            0
+          ],
+          "pieces": [
+            {
+              "callbacks": 21,
+              "epsabs": 1e-07,
+              "epsrel": 0.0,
+              "error": null,
+              "high": 0.5,
+              "indicator_e": 1.1821100057984617e-12,
+              "limit": 128,
+              "low": -0.5,
+              "value_e": 106.47500363249775
+            }
+          ],
+          "value_e": 106.47500363249775,
+          "y_breaks": [
+            -0.5,
+            0.5
+          ]
+        },
+        "scene": {
+          "background": {
+            "affine": [
+              0.0,
+              0.0
+            ],
+            "constant": 10,
+            "waves": []
+          },
+          "foreground": {
+            "affine": [
+              0.0,
+              0.0
+            ],
+            "constant": 100,
+            "waves": [
+              {
+                "amplitude": 7.0,
+                "frequency": [
+                  0.125,
+                  0.0625
+                ],
+                "phase": 0.3
+              }
+            ]
+          },
+          "mask_normal": [
+            1.0,
+            0.0
+          ],
+          "mask_offset": -2,
+          "mask_state": "half-plane"
+        }
+      },
+      {
+        "error": null,
+        "fault": null,
+        "name": "centre-mask-baseline",
+        "native_xy": [
+          0,
+          0
+        ],
+        "result": {
+          "absolute_request_e": 1e-07,
+          "branch_calls": {
+            "background": 0,
+            "foreground": 0,
+            "mixed": 21
+          },
+          "callback_calls": 21,
+          "evaluated_xy": [
+            0.0,
+            0.0
+          ],
+          "fault": null,
+          "indicator_e": 1.9451107391432743e-13,
+          "native_xy": [
+            0,
+            0
+          ],
+          "pieces": [
+            {
+              "callbacks": 21,
+              "epsabs": 1e-07,
+              "epsrel": 0.0,
+              "error": null,
+              "high": 0.5,
+              "indicator_e": 1.9451107391432743e-13,
+              "limit": 128,
+              "low": -0.5,
+              "value_e": 17.52
+            }
+          ],
+          "value_e": 17.52,
+          "y_breaks": [
+            -0.5,
+            0.5
+          ]
+        },
+        "scene": {
+          "background": {
+            "affine": [
+              4,
+              0.0
+            ],
+            "constant": 10,
+            "waves": []
+          },
+          "foreground": {
+            "affine": [
+              0.0,
+              0.0
+            ],
+            "constant": 30,
+            "waves": []
+          },
+          "mask_normal": [
+            1.0,
+            0.0
+          ],
+          "mask_offset": 0.1,
+          "mask_state": "half-plane"
+        }
+      },
+      {
+        "error": null,
+        "fault": "centre-mask",
+        "name": "centre-mask-active",
+        "native_xy": [
+          0,
+          0
+        ],
+        "result": {
+          "absolute_request_e": 1e-07,
+          "branch_calls": {
+            "background": 0,
+            "foreground": 0,
+            "mixed": 21
+          },
+          "callback_calls": 21,
+          "evaluated_xy": [
+            0.0,
+            0.0
+          ],
+          "fault": "centre-mask",
+          "indicator_e": 1.1102230246251565e-13,
+          "native_xy": [
+            0,
+            0
+          ],
+          "pieces": [
+            {
+              "callbacks": 21,
+              "epsabs": 1e-07,
+              "epsrel": 0.0,
+              "error": null,
+              "high": 0.5,
+              "indicator_e": 1.1102230246251565e-13,
+              "limit": 128,
+              "low": -0.5,
+              "value_e": 10.0
+            }
+          ],
+          "value_e": 10.0,
+          "y_breaks": [
+            -0.5,
+            0.5
+          ]
+        },
+        "scene": {
+          "background": {
+            "affine": [
+              4,
+              0.0
+            ],
+            "constant": 10,
+            "waves": []
+          },
+          "foreground": {
+            "affine": [
+              0.0,
+              0.0
+            ],
+            "constant": 30,
+            "waves": []
+          },
+          "mask_normal": [
+            1.0,
+            0.0
+          ],
+          "mask_offset": 0.1,
+          "mask_state": "half-plane"
+        }
+      },
+      {
+        "error": null,
+        "fault": null,
+        "name": "centre-mask-restored",
+        "native_xy": [
+          0,
+          0
+        ],
+        "result": {
+          "absolute_request_e": 1e-07,
+          "branch_calls": {
+            "background": 0,
+            "foreground": 0,
+            "mixed": 21
+          },
+          "callback_calls": 21,
+          "evaluated_xy": [
+            0.0,
+            0.0
+          ],
+          "fault": null,
+          "indicator_e": 1.9451107391432743e-13,
+          "native_xy": [
+            0,
+            0
+          ],
+          "pieces": [
+            {
+              "callbacks": 21,
+              "epsabs": 1e-07,
+              "epsrel": 0.0,
+              "error": null,
+              "high": 0.5,
+              "indicator_e": 1.9451107391432743e-13,
+              "limit": 128,
+              "low": -0.5,
+              "value_e": 17.52
+            }
+          ],
+          "value_e": 17.52,
+          "y_breaks": [
+            -0.5,
+            0.5
+          ]
+        },
+        "scene": {
+          "background": {
+            "affine": [
+              4,
+              0.0
+            ],
+            "constant": 10,
+            "waves": []
+          },
+          "foreground": {
+            "affine": [
+              0.0,
+              0.0
+            ],
+            "constant": 30,
+            "waves": []
+          },
+          "mask_normal": [
+            1.0,
+            0.0
+          ],
+          "mask_offset": 0.1,
+          "mask_state": "half-plane"
+        }
+      },
+      {
+        "error": null,
+        "fault": null,
+        "name": "unweighted-alpha-baseline",
+        "native_xy": [
+          0,
+          0
+        ],
+        "result": {
+          "absolute_request_e": 1e-07,
+          "branch_calls": {
+            "background": 0,
+            "foreground": 0,
+            "mixed": 21
+          },
+          "callback_calls": 21,
+          "evaluated_xy": [
+            0.0,
+            0.0
+          ],
+          "fault": null,
+          "indicator_e": 1.9451107391432743e-13,
+          "native_xy": [
+            0,
+            0
+          ],
+          "pieces": [
+            {
+              "callbacks": 21,
+              "epsabs": 1e-07,
+              "epsrel": 0.0,
+              "error": null,
+              "high": 0.5,
+              "indicator_e": 1.9451107391432743e-13,
+              "limit": 128,
+              "low": -0.5,
+              "value_e": 17.52
+            }
+          ],
+          "value_e": 17.52,
+          "y_breaks": [
+            -0.5,
+            0.5
+          ]
+        },
+        "scene": {
+          "background": {
+            "affine": [
+              4,
+              0.0
+            ],
+            "constant": 10,
+            "waves": []
+          },
+          "foreground": {
+            "affine": [
+              0.0,
+              0.0
+            ],
+            "constant": 30,
+            "waves": []
+          },
+          "mask_normal": [
+            1.0,
+            0.0
+          ],
+          "mask_offset": 0.1,
+          "mask_state": "half-plane"
+        }
+      },
+      {
+        "error": null,
+        "fault": "unweighted-alpha",
+        "name": "unweighted-alpha-active",
+        "native_xy": [
+          0,
+          0
+        ],
+        "result": {
+          "absolute_request_e": 1e-07,
+          "branch_calls": {
+            "background": 0,
+            "foreground": 0,
+            "mixed": 21
+          },
+          "callback_calls": 21,
+          "evaluated_xy": [
+            0.0,
+            0.0
+          ],
+          "fault": "unweighted-alpha",
+          "indicator_e": 4.440892098500626e-13,
+          "native_xy": [
+            0,
+            0
+          ],
+          "pieces": [
+            {
+              "callbacks": 21,
+              "epsabs": 1e-07,
+              "epsrel": 0.0,
+              "error": null,
+              "high": 0.5,
+              "indicator_e": 4.440892098500626e-13,
+              "limit": 128,
+              "low": -0.5,
+              "value_e": 40.0
+            }
+          ],
+          "value_e": 40.0,
+          "y_breaks": [
+            -0.5,
+            0.5
+          ]
+        },
+        "scene": {
+          "background": {
+            "affine": [
+              4,
+              0.0
+            ],
+            "constant": 10,
+            "waves": []
+          },
+          "foreground": {
+            "affine": [
+              0.0,
+              0.0
+            ],
+            "constant": 30,
+            "waves": []
+          },
+          "mask_normal": [
+            1.0,
+            0.0
+          ],
+          "mask_offset": 0.1,
+          "mask_state": "half-plane"
+        }
+      },
+      {
+        "error": null,
+        "fault": null,
+        "name": "unweighted-alpha-restored",
+        "native_xy": [
+          0,
+          0
+        ],
+        "result": {
+          "absolute_request_e": 1e-07,
+          "branch_calls": {
+            "background": 0,
+            "foreground": 0,
+            "mixed": 21
+          },
+          "callback_calls": 21,
+          "evaluated_xy": [
+            0.0,
+            0.0
+          ],
+          "fault": null,
+          "indicator_e": 1.9451107391432743e-13,
+          "native_xy": [
+            0,
+            0
+          ],
+          "pieces": [
+            {
+              "callbacks": 21,
+              "epsabs": 1e-07,
+              "epsrel": 0.0,
+              "error": null,
+              "high": 0.5,
+              "indicator_e": 1.9451107391432743e-13,
+              "limit": 128,
+              "low": -0.5,
+              "value_e": 17.52
+            }
+          ],
+          "value_e": 17.52,
+          "y_breaks": [
+            -0.5,
+            0.5
+          ]
+        },
+        "scene": {
+          "background": {
+            "affine": [
+              4,
+              0.0
+            ],
+            "constant": 10,
+            "waves": []
+          },
+          "foreground": {
+            "affine": [
+              0.0,
+              0.0
+            ],
+            "constant": 30,
+            "waves": []
+          },
+          "mask_normal": [
+            1.0,
+            0.0
+          ],
+          "mask_offset": 0.1,
+          "mask_state": "half-plane"
+        }
+      },
+      {
+        "error": null,
+        "fault": null,
+        "name": "separate-alpha-baseline",
+        "native_xy": [
+          0,
+          0
+        ],
+        "result": {
+          "absolute_request_e": 1e-07,
+          "branch_calls": {
+            "background": 0,
+            "foreground": 0,
+            "mixed": 21
+          },
+          "callback_calls": 21,
+          "evaluated_xy": [
+            0.0,
+            0.0
+          ],
+          "fault": null,
+          "indicator_e": 1.9451107391432743e-13,
+          "native_xy": [
+            0,
+            0
+          ],
+          "pieces": [
+            {
+              "callbacks": 21,
+              "epsabs": 1e-07,
+              "epsrel": 0.0,
+              "error": null,
+              "high": 0.5,
+              "indicator_e": 1.9451107391432743e-13,
+              "limit": 128,
+              "low": -0.5,
+              "value_e": 17.52
+            }
+          ],
+          "value_e": 17.52,
+          "y_breaks": [
+            -0.5,
+            0.5
+          ]
+        },
+        "scene": {
+          "background": {
+            "affine": [
+              4,
+              0.0
+            ],
+            "constant": 10,
+            "waves": []
+          },
+          "foreground": {
+            "affine": [
+              0.0,
+              0.0
+            ],
+            "constant": 30,
+            "waves": []
+          },
+          "mask_normal": [
+            1.0,
+            0.0
+          ],
+          "mask_offset": 0.1,
+          "mask_state": "half-plane"
+        }
+      },
+      {
+        "error": null,
+        "fault": "separate-alpha",
+        "name": "separate-alpha-active",
+        "native_xy": [
+          0,
+          0
+        ],
+        "result": {
+          "absolute_request_e": 1e-07,
+          "branch_calls": {
+            "background": 0,
+            "foreground": 0,
+            "mixed": 21
+          },
+          "callback_calls": 21,
+          "evaluated_xy": [
+            0.0,
+            0.0
+          ],
+          "fault": "separate-alpha",
+          "indicator_e": 1.9984014443252818e-13,
+          "native_xy": [
+            0,
+            0
+          ],
+          "pieces": [
+            {
+              "callbacks": 21,
+              "epsabs": 1e-07,
+              "epsrel": 0.0,
+              "error": null,
+              "high": 0.5,
+              "indicator_e": 1.9984014443252818e-13,
+              "limit": 128,
+              "low": -0.5,
+              "value_e": 18.0
+            }
+          ],
+          "value_e": 18.0,
+          "y_breaks": [
+            -0.5,
+            0.5
+          ]
+        },
+        "scene": {
+          "background": {
+            "affine": [
+              4,
+              0.0
+            ],
+            "constant": 10,
+            "waves": []
+          },
+          "foreground": {
+            "affine": [
+              0.0,
+              0.0
+            ],
+            "constant": 30,
+            "waves": []
+          },
+          "mask_normal": [
+            1.0,
+            0.0
+          ],
+          "mask_offset": 0.1,
+          "mask_state": "half-plane"
+        }
+      },
+      {
+        "error": null,
+        "fault": null,
+        "name": "separate-alpha-restored",
+        "native_xy": [
+          0,
+          0
+        ],
+        "result": {
+          "absolute_request_e": 1e-07,
+          "branch_calls": {
+            "background": 0,
+            "foreground": 0,
+            "mixed": 21
+          },
+          "callback_calls": 21,
+          "evaluated_xy": [
+            0.0,
+            0.0
+          ],
+          "fault": null,
+          "indicator_e": 1.9451107391432743e-13,
+          "native_xy": [
+            0,
+            0
+          ],
+          "pieces": [
+            {
+              "callbacks": 21,
+              "epsabs": 1e-07,
+              "epsrel": 0.0,
+              "error": null,
+              "high": 0.5,
+              "indicator_e": 1.9451107391432743e-13,
+              "limit": 128,
+              "low": -0.5,
+              "value_e": 17.52
+            }
+          ],
+          "value_e": 17.52,
+          "y_breaks": [
+            -0.5,
+            0.5
+          ]
+        },
+        "scene": {
+          "background": {
+            "affine": [
+              4,
+              0.0
+            ],
+            "constant": 10,
+            "waves": []
+          },
+          "foreground": {
+            "affine": [
+              0.0,
+              0.0
+            ],
+            "constant": 30,
+            "waves": []
+          },
+          "mask_normal": [
+            1.0,
+            0.0
+          ],
+          "mask_offset": 0.1,
+          "mask_state": "half-plane"
+        }
+      }
+    ],
+    "check_count": 12,
+    "faults": [
+      {
+        "absolute_change_e": 3.312786544784373,
+        "active": {
+          "absolute_request_e": 1e-07,
+          "branch_calls": {
+            "background": 0,
+            "foreground": 21,
+            "mixed": 0
+          },
+          "callback_calls": 21,
+          "evaluated_xy": [
+            1.0,
+            0.0
+          ],
+          "fault": "shift-x",
+          "indicator_e": 1.1453306868215816e-12,
+          "native_xy": [
+            0,
+            0
+          ],
+          "pieces": [
+            {
+              "callbacks": 21,
+              "epsabs": 1e-07,
+              "epsrel": 0.0,
+              "error": null,
+              "high": 0.5,
+              "indicator_e": 1.1453306868215816e-12,
+              "limit": 128,
+              "low": -0.5,
+              "value_e": 103.16221708771337
+            }
+          ],
+          "value_e": 103.16221708771337,
+          "y_breaks": [
+            -0.5,
+            0.5
+          ]
+        },
+        "baseline": {
+          "absolute_request_e": 1e-07,
+          "branch_calls": {
+            "background": 0,
+            "foreground": 21,
+            "mixed": 0
+          },
+          "callback_calls": 21,
+          "evaluated_xy": [
+            0.0,
+            0.0
+          ],
+          "fault": null,
+          "indicator_e": 1.1821100057984617e-12,
+          "native_xy": [
+            0,
+            0
+          ],
+          "pieces": [
+            {
+              "callbacks": 21,
+              "epsabs": 1e-07,
+              "epsrel": 0.0,
+              "error": null,
+              "high": 0.5,
+              "indicator_e": 1.1821100057984617e-12,
+              "limit": 128,
+              "low": -0.5,
+              "value_e": 106.47500363249775
+            }
+          ],
+          "value_e": 106.47500363249775,
+          "y_breaks": [
+            -0.5,
+            0.5
+          ]
+        },
+        "kind": "active-restored",
+        "name": "shift-x",
+        "passed": true,
+        "restored": {
+          "absolute_request_e": 1e-07,
+          "branch_calls": {
+            "background": 0,
+            "foreground": 21,
+            "mixed": 0
+          },
+          "callback_calls": 21,
+          "evaluated_xy": [
+            0.0,
+            0.0
+          ],
+          "fault": null,
+          "indicator_e": 1.1821100057984617e-12,
+          "native_xy": [
+            0,
+            0
+          ],
+          "pieces": [
+            {
+              "callbacks": 21,
+              "epsabs": 1e-07,
+              "epsrel": 0.0,
+              "error": null,
+              "high": 0.5,
+              "indicator_e": 1.1821100057984617e-12,
+              "limit": 128,
+              "low": -0.5,
+              "value_e": 106.47500363249775
+            }
+          ],
+          "value_e": 106.47500363249775,
+          "y_breaks": [
+            -0.5,
+            0.5
+          ]
+        },
+        "restored_bytes_equal": true
+      },
+      {
+        "absolute_change_e": 7.52,
+        "active": {
+          "absolute_request_e": 1e-07,
+          "branch_calls": {
+            "background": 0,
+            "foreground": 0,
+            "mixed": 21
+          },
+          "callback_calls": 21,
+          "evaluated_xy": [
+            0.0,
+            0.0
+          ],
+          "fault": "centre-mask",
+          "indicator_e": 1.1102230246251565e-13,
+          "native_xy": [
+            0,
+            0
+          ],
+          "pieces": [
+            {
+              "callbacks": 21,
+              "epsabs": 1e-07,
+              "epsrel": 0.0,
+              "error": null,
+              "high": 0.5,
+              "indicator_e": 1.1102230246251565e-13,
+              "limit": 128,
+              "low": -0.5,
+              "value_e": 10.0
+            }
+          ],
+          "value_e": 10.0,
+          "y_breaks": [
+            -0.5,
+            0.5
+          ]
+        },
+        "baseline": {
+          "absolute_request_e": 1e-07,
+          "branch_calls": {
+            "background": 0,
+            "foreground": 0,
+            "mixed": 21
+          },
+          "callback_calls": 21,
+          "evaluated_xy": [
+            0.0,
+            0.0
+          ],
+          "fault": null,
+          "indicator_e": 1.9451107391432743e-13,
+          "native_xy": [
+            0,
+            0
+          ],
+          "pieces": [
+            {
+              "callbacks": 21,
+              "epsabs": 1e-07,
+              "epsrel": 0.0,
+              "error": null,
+              "high": 0.5,
+              "indicator_e": 1.9451107391432743e-13,
+              "limit": 128,
+              "low": -0.5,
+              "value_e": 17.52
+            }
+          ],
+          "value_e": 17.52,
+          "y_breaks": [
+            -0.5,
+            0.5
+          ]
+        },
+        "kind": "active-restored",
+        "name": "centre-mask",
+        "passed": true,
+        "restored": {
+          "absolute_request_e": 1e-07,
+          "branch_calls": {
+            "background": 0,
+            "foreground": 0,
+            "mixed": 21
+          },
+          "callback_calls": 21,
+          "evaluated_xy": [
+            0.0,
+            0.0
+          ],
+          "fault": null,
+          "indicator_e": 1.9451107391432743e-13,
+          "native_xy": [
+            0,
+            0
+          ],
+          "pieces": [
+            {
+              "callbacks": 21,
+              "epsabs": 1e-07,
+              "epsrel": 0.0,
+              "error": null,
+              "high": 0.5,
+              "indicator_e": 1.9451107391432743e-13,
+              "limit": 128,
+              "low": -0.5,
+              "value_e": 17.52
+            }
+          ],
+          "value_e": 17.52,
+          "y_breaks": [
+            -0.5,
+            0.5
+          ]
+        },
+        "restored_bytes_equal": true
+      },
+      {
+        "absolute_change_e": 22.48,
+        "active": {
+          "absolute_request_e": 1e-07,
+          "branch_calls": {
+            "background": 0,
+            "foreground": 0,
+            "mixed": 21
+          },
+          "callback_calls": 21,
+          "evaluated_xy": [
+            0.0,
+            0.0
+          ],
+          "fault": "unweighted-alpha",
+          "indicator_e": 4.440892098500626e-13,
+          "native_xy": [
+            0,
+            0
+          ],
+          "pieces": [
+            {
+              "callbacks": 21,
+              "epsabs": 1e-07,
+              "epsrel": 0.0,
+              "error": null,
+              "high": 0.5,
+              "indicator_e": 4.440892098500626e-13,
+              "limit": 128,
+              "low": -0.5,
+              "value_e": 40.0
+            }
+          ],
+          "value_e": 40.0,
+          "y_breaks": [
+            -0.5,
+            0.5
+          ]
+        },
+        "baseline": {
+          "absolute_request_e": 1e-07,
+          "branch_calls": {
+            "background": 0,
+            "foreground": 0,
+            "mixed": 21
+          },
+          "callback_calls": 21,
+          "evaluated_xy": [
+            0.0,
+            0.0
+          ],
+          "fault": null,
+          "indicator_e": 1.9451107391432743e-13,
+          "native_xy": [
+            0,
+            0
+          ],
+          "pieces": [
+            {
+              "callbacks": 21,
+              "epsabs": 1e-07,
+              "epsrel": 0.0,
+              "error": null,
+              "high": 0.5,
+              "indicator_e": 1.9451107391432743e-13,
+              "limit": 128,
+              "low": -0.5,
+              "value_e": 17.52
+            }
+          ],
+          "value_e": 17.52,
+          "y_breaks": [
+            -0.5,
+            0.5
+          ]
+        },
+        "kind": "active-restored",
+        "name": "unweighted-alpha",
+        "passed": true,
+        "restored": {
+          "absolute_request_e": 1e-07,
+          "branch_calls": {
+            "background": 0,
+            "foreground": 0,
+            "mixed": 21
+          },
+          "callback_calls": 21,
+          "evaluated_xy": [
+            0.0,
+            0.0
+          ],
+          "fault": null,
+          "indicator_e": 1.9451107391432743e-13,
+          "native_xy": [
+            0,
+            0
+          ],
+          "pieces": [
+            {
+              "callbacks": 21,
+              "epsabs": 1e-07,
+              "epsrel": 0.0,
+              "error": null,
+              "high": 0.5,
+              "indicator_e": 1.9451107391432743e-13,
+              "limit": 128,
+              "low": -0.5,
+              "value_e": 17.52
+            }
+          ],
+          "value_e": 17.52,
+          "y_breaks": [
+            -0.5,
+            0.5
+          ]
+        },
+        "restored_bytes_equal": true
+      },
+      {
+        "absolute_change_e": 0.4800000000000004,
+        "active": {
+          "absolute_request_e": 1e-07,
+          "branch_calls": {
+            "background": 0,
+            "foreground": 0,
+            "mixed": 21
+          },
+          "callback_calls": 21,
+          "evaluated_xy": [
+            0.0,
+            0.0
+          ],
+          "fault": "separate-alpha",
+          "indicator_e": 1.9984014443252818e-13,
+          "native_xy": [
+            0,
+            0
+          ],
+          "pieces": [
+            {
+              "callbacks": 21,
+              "epsabs": 1e-07,
+              "epsrel": 0.0,
+              "error": null,
+              "high": 0.5,
+              "indicator_e": 1.9984014443252818e-13,
+              "limit": 128,
+              "low": -0.5,
+              "value_e": 18.0
+            }
+          ],
+          "value_e": 18.0,
+          "y_breaks": [
+            -0.5,
+            0.5
+          ]
+        },
+        "baseline": {
+          "absolute_request_e": 1e-07,
+          "branch_calls": {
+            "background": 0,
+            "foreground": 0,
+            "mixed": 21
+          },
+          "callback_calls": 21,
+          "evaluated_xy": [
+            0.0,
+            0.0
+          ],
+          "fault": null,
+          "indicator_e": 1.9451107391432743e-13,
+          "native_xy": [
+            0,
+            0
+          ],
+          "pieces": [
+            {
+              "callbacks": 21,
+              "epsabs": 1e-07,
+              "epsrel": 0.0,
+              "error": null,
+              "high": 0.5,
+              "indicator_e": 1.9451107391432743e-13,
+              "limit": 128,
+              "low": -0.5,
+              "value_e": 17.52
+            }
+          ],
+          "value_e": 17.52,
+          "y_breaks": [
+            -0.5,
+            0.5
+          ]
+        },
+        "kind": "active-restored",
+        "name": "separate-alpha",
+        "passed": true,
+        "restored": {
+          "absolute_request_e": 1e-07,
+          "branch_calls": {
+            "background": 0,
+            "foreground": 0,
+            "mixed": 21
+          },
+          "callback_calls": 21,
+          "evaluated_xy": [
+            0.0,
+            0.0
+          ],
+          "fault": null,
+          "indicator_e": 1.9451107391432743e-13,
+          "native_xy": [
+            0,
+            0
+          ],
+          "pieces": [
+            {
+              "callbacks": 21,
+              "epsabs": 1e-07,
+              "epsrel": 0.0,
+              "error": null,
+              "high": 0.5,
+              "indicator_e": 1.9451107391432743e-13,
+              "limit": 128,
+              "low": -0.5,
+              "value_e": 17.52
+            }
+          ],
+          "value_e": 17.52,
+          "y_breaks": [
+            -0.5,
+            0.5
+          ]
+        },
+        "restored_bytes_equal": true
+      }
+    ],
+    "literal_oracles": [
+      {
+        "absolute_error_e": 3.552713678800501e-15,
+        "actual": {
+          "absolute_request_e": 1e-07,
+          "branch_calls": {
+            "background": 0,
+            "foreground": 21,
+            "mixed": 0
+          },
+          "callback_calls": 21,
+          "evaluated_xy": [
+            0.0,
+            0.0
+          ],
+          "fault": null,
+          "indicator_e": 3.33066907387547e-13,
+          "native_xy": [
+            0,
+            0
+          ],
+          "pieces": [
+            {
+              "callbacks": 21,
+              "epsabs": 1e-07,
+              "epsrel": 0.0,
+              "error": null,
+              "high": 0.5,
+              "indicator_e": 3.33066907387547e-13,
+              "limit": 128,
+              "low": -0.5,
+              "value_e": 30.000000000000004
+            }
+          ],
+          "value_e": 30.000000000000004,
+          "y_breaks": [
+            -0.5,
+            0.5
+          ]
+        },
+        "expected_fraction": "30",
+        "kind": "literal-oracle",
+        "limit_e": 1e-08,
+        "name": "constant-foreground",
+        "passed": true
+      },
+      {
+        "absolute_error_e": 0.0,
+        "actual": {
+          "absolute_request_e": 1e-07,
+          "branch_calls": {
+            "background": 21,
+            "foreground": 0,
+            "mixed": 0
+          },
+          "callback_calls": 21,
+          "evaluated_xy": [
+            0.0,
+            0.0
+          ],
+          "fault": null,
+          "indicator_e": 1.1102230246251565e-13,
+          "native_xy": [
+            0,
+            0
+          ],
+          "pieces": [
+            {
+              "callbacks": 21,
+              "epsabs": 1e-07,
+              "epsrel": 0.0,
+              "error": null,
+              "high": 0.5,
+              "indicator_e": 1.1102230246251565e-13,
+              "limit": 128,
+              "low": -0.5,
+              "value_e": 10.0
+            }
+          ],
+          "value_e": 10.0,
+          "y_breaks": [
+            -0.5,
+            0.5
+          ]
+        },
+        "expected_fraction": "10",
+        "kind": "literal-oracle",
+        "limit_e": 1e-08,
+        "name": "affine-background",
+        "passed": true
+      },
+      {
+        "absolute_error_e": 4.263256414560601e-16,
+        "actual": {
+          "absolute_request_e": 1e-07,
+          "branch_calls": {
+            "background": 0,
+            "foreground": 0,
+            "mixed": 21
+          },
+          "callback_calls": 21,
+          "evaluated_xy": [
+            0.0,
+            0.0
+          ],
+          "fault": null,
+          "indicator_e": 1.9451107391432743e-13,
+          "native_xy": [
+            0,
+            0
+          ],
+          "pieces": [
+            {
+              "callbacks": 21,
+              "epsabs": 1e-07,
+              "epsrel": 0.0,
+              "error": null,
+              "high": 0.5,
+              "indicator_e": 1.9451107391432743e-13,
+              "limit": 128,
+              "low": -0.5,
+              "value_e": 17.52
+            }
+          ],
+          "value_e": 17.52,
+          "y_breaks": [
+            -0.5,
+            0.5
+          ]
+        },
+        "expected_fraction": "438/25",
+        "kind": "literal-oracle",
+        "limit_e": 1e-08,
+        "name": "vertical-coupled",
+        "passed": true
+      },
+      {
+        "absolute_error_e": 4.263256414560601e-16,
+        "actual": {
+          "absolute_request_e": 1e-07,
+          "branch_calls": {
+            "background": 0,
+            "foreground": 0,
+            "mixed": 21
+          },
+          "callback_calls": 21,
+          "evaluated_xy": [
+            0.0,
+            0.0
+          ],
+          "fault": null,
+          "indicator_e": 2.0516921495072893e-13,
+          "native_xy": [
+            0,
+            0
+          ],
+          "pieces": [
+            {
+              "callbacks": 21,
+              "epsabs": 1e-07,
+              "epsrel": 0.0,
+              "error": null,
+              "high": 0.5,
+              "indicator_e": 2.0516921495072893e-13,
+              "limit": 128,
+              "low": -0.5,
+              "value_e": 18.48
+            }
+          ],
+          "value_e": 18.48,
+          "y_breaks": [
+            -0.5,
+            0.5
+          ]
+        },
+        "expected_fraction": "462/25",
+        "kind": "literal-oracle",
+        "limit_e": 1e-08,
+        "name": "vertical-reversed-gradient",
+        "passed": true
+      },
+      {
+        "absolute_error_e": 2.3684757858670005e-15,
+        "actual": {
+          "absolute_request_e": 1e-07,
+          "branch_calls": {
+            "background": 0,
+            "foreground": 0,
+            "mixed": 21
+          },
+          "callback_calls": 21,
+          "evaluated_xy": [
+            0.0,
+            0.0
+          ],
+          "fault": null,
+          "indicator_e": 2.183438615096141e-13,
+          "native_xy": [
+            0,
+            0
+          ],
+          "pieces": [
+            {
+              "callbacks": 21,
+              "epsabs": 1e-07,
+              "epsrel": 0.0,
+              "error": null,
+              "high": 0.5,
+              "indicator_e": 2.183438615096141e-13,
+              "limit": 128,
+              "low": -0.5,
+              "value_e": 19.666666666666664
+            }
+          ],
+          "value_e": 19.666666666666664,
+          "y_breaks": [
+            -0.5,
+            0.5
+          ]
+        },
+        "expected_fraction": "59/3",
+        "kind": "literal-oracle",
+        "limit_e": 1e-08,
+        "name": "diagonal-coupled",
+        "passed": true
+      },
+      {
+        "absolute_error_e": 0.0,
+        "actual": {
+          "absolute_request_e": 1e-07,
+          "branch_calls": {
+            "background": 0,
+            "foreground": 21,
+            "mixed": 0
+          },
+          "callback_calls": 21,
+          "evaluated_xy": [
+            0.0,
+            0.0
+          ],
+          "fault": null,
+          "indicator_e": 1.1821100057984617e-12,
+          "native_xy": [
+            0,
+            0
+          ],
+          "pieces": [
+            {
+              "callbacks": 21,
+              "epsabs": 1e-07,
+              "epsrel": 0.0,
+              "error": null,
+              "high": 0.5,
+              "indicator_e": 1.1821100057984617e-12,
+              "limit": 128,
+              "low": -0.5,
+              "value_e": 106.47500363249775
+            }
+          ],
+          "value_e": 106.47500363249775,
+          "y_breaks": [
+            -0.5,
+            0.5
+          ]
+        },
+        "expected_fraction": "7492512291931079/70368744177664",
+        "kind": "literal-oracle",
+        "limit_e": 1e-07,
+        "name": "wave",
+        "passed": true
+      },
+      {
+        "absolute_error_e": 1.4210854715202004e-14,
+        "actual": {
+          "absolute_request_e": 1e-07,
+          "branch_calls": {
+            "background": 0,
+            "foreground": 21,
+            "mixed": 0
+          },
+          "callback_calls": 21,
+          "evaluated_xy": [
+            0.0,
+            0.0
+          ],
+          "fault": null,
+          "indicator_e": 1.094568880082189e-12,
+          "native_xy": [
+            0,
+            0
+          ],
+          "pieces": [
+            {
+              "callbacks": 21,
+              "epsabs": 1e-07,
+              "epsrel": 0.0,
+              "error": null,
+              "high": 0.5,
+              "indicator_e": 1.094568880082189e-12,
+              "limit": 128,
+              "low": -0.5,
+              "value_e": 98.59000000938975
+            }
+          ],
+          "value_e": 98.59000000938975,
+          "y_breaks": [
+            -0.5,
+            0.5
+          ]
+        },
+        "expected_fraction": "3468827244568319/35184372088832",
+        "kind": "literal-oracle",
+        "limit_e": 1e-07,
+        "name": "negative-sinc",
+        "passed": true
+      },
+      {
+        "absolute_error_e": 0.0,
+        "actual": {
+          "absolute_request_e": 1e-07,
+          "branch_calls": {
+            "background": 0,
+            "foreground": 21,
+            "mixed": 0
+          },
+          "callback_calls": 21,
+          "evaluated_xy": [
+            0.0,
+            0.0
+          ],
+          "fault": null,
+          "indicator_e": 1.1839914428667865e-12,
+          "native_xy": [
+            0,
+            0
+          ],
+          "pieces": [
+            {
+              "callbacks": 21,
+              "epsabs": 1e-07,
+              "epsrel": 0.0,
+              "error": null,
+              "high": 0.5,
+              "indicator_e": 1.1839914428667865e-12,
+              "limit": 128,
+              "low": -0.5,
+              "value_e": 106.6444684180943
+            }
+          ],
+          "value_e": 106.6444684180943,
+          "y_breaks": [
+            -0.5,
+            0.5
+          ]
+        },
+        "expected_fraction": "3752218658037923/35184372088832",
+        "kind": "literal-oracle",
+        "limit_e": 1e-07,
+        "name": "zero-fx",
+        "passed": true
+      }
+    ],
+    "schema": "m194g-independent-k0-private-controls-v1",
+    "status": "PASS_PRIVATE_K0_CONTROLS"
+  },
+  "error": null,
+  "execution_release": {
+    "bytes": 2786,
+    "path": "experiments/m194g-larger-pupil/independent-k0-target-release-1.json",
+    "sha256": "f4da2c57e4b312499fb3caf1ffc9ee05ee03874b68bc66fc72dedc8d9b1a8492"
+  },
+  "finalization_errors": [],
+  "float_commission": {
+    "bytes": 2981,
+    "path": "experiments/m194g-larger-pupil/independent-full-array-verification-1/float-commission.json",
+    "sha256": "3f18d8954347382b2dffe0ca501f93ef8da54c3b966a1a606851323d86277a2b"
+  },
+  "input_bindings": {
+    "experiments/m194e-joint-pupil/independent-model.py": {
+      "bytes": 11144,
+      "sha256": "0cd8ea2331b269e65befdee110560cbc345e89c12348cbe1dc3144f7c04443f0"
+    },
+    "experiments/m194g-larger-pupil/fixture.json": {
+      "bytes": 1985,
+      "sha256": "e84f0bbbda9bef039da86616c9f051d416929f4dbe78477cc5b3fc21206856bb"
+    },
+    "experiments/m194g-larger-pupil/independent-component-reader.py": {
+      "bytes": 70763,
+      "sha256": "8477478b12a1f47b7c119db875e448825e52b0878d43a5f37388e1d2b461b683"
+    },
+    "experiments/m194g-larger-pupil/independent-full-array-reader.py": {
+      "bytes": 48030,
+      "sha256": "a310518b7192059a5ce42326a6d05d93fa72ecf1046e177ea64b7b03272c1682"
+    },
+    "experiments/m194g-larger-pupil/independent-full-array-verification-1/float-commission.json": {
+      "bytes": 2981,
+      "sha256": "3f18d8954347382b2dffe0ca501f93ef8da54c3b966a1a606851323d86277a2b"
+    },
+    "experiments/m194g-larger-pupil/independent-full-float-authority-schema.md": {
+      "bytes": 7787,
+      "sha256": "3097142b76a796838a2b9ed50d8dcda972ba9945bbc0df75906901abe0e2c606"
+    },
+    "experiments/m194g-larger-pupil/independent-k0-target-design.md": {
+      "bytes": 8700,
+      "sha256": "f762e58b4c75abc57ec30760dc404389fb8cb7b567141ce89b3d028520e91138"
+    },
+    "experiments/m194g-larger-pupil/independent-k0-target-release-1.json": {
+      "bytes": 2786,
+      "sha256": "f4da2c57e4b312499fb3caf1ffc9ee05ee03874b68bc66fc72dedc8d9b1a8492"
+    },
+    "experiments/m194g-larger-pupil/independent-k0-target.py": {
+      "bytes": 27878,
+      "sha256": "da30c953916f90b940fe3aa9867460d50b4370857325717bcd0a114b739ffe91"
+    },
+    "experiments/m194g-larger-pupil/independent-quality-io.py": {
+      "bytes": 12486,
+      "sha256": "6efe4702aff2f883c63fed04a4570cd58fcd8e348158184d66f239c92d16e5e1"
+    },
+    "experiments/m194g-larger-pupil/independent-quality-metrics.py": {
+      "bytes": 16762,
+      "sha256": "5ea046cf35444bae210cbddbb7d0132904f456959a62a7a77ad9138b1cbbff12"
+    },
+    "experiments/m194g-larger-pupil/independent-quality-target-1/controls.json": {
+      "bytes": 2151,
+      "sha256": "007a64a84c7a3cdd9219b0c285e881401164ba72cece12d7792b70ffc457b169"
+    },
+    "experiments/m194g-larger-pupil/independent-quality-target-1/scalar.npy": {
+      "bytes": 614528,
+      "sha256": "91fbd5bf692f9411c4394d4a60e805d998eec0061553c5fcba2059f2e505e795"
+    },
+    "experiments/m194g-larger-pupil/independent-quality-target-1/sources/experiments/m194e-joint-pupil/independent-model.py": {
+      "bytes": 11144,
+      "sha256": "0cd8ea2331b269e65befdee110560cbc345e89c12348cbe1dc3144f7c04443f0"
+    },
+    "experiments/m194g-larger-pupil/independent-quality-target-1/sources/experiments/m194g-larger-pupil/independent-quality-io.py": {
+      "bytes": 12486,
+      "sha256": "6efe4702aff2f883c63fed04a4570cd58fcd8e348158184d66f239c92d16e5e1"
+    },
+    "experiments/m194g-larger-pupil/independent-quality-target-1/sources/experiments/m194g-larger-pupil/independent-quality-metrics.py": {
+      "bytes": 16762,
+      "sha256": "5ea046cf35444bae210cbddbb7d0132904f456959a62a7a77ad9138b1cbbff12"
+    },
+    "experiments/m194g-larger-pupil/independent-quality-target-1/sources/experiments/m194g-larger-pupil/independent-quality-target.py": {
+      "bytes": 13908,
+      "sha256": "b5ab97f65e31a82f5f59981e98c2c013e500f7ad7b4c62b64f8d4c2026d08005"
+    },
+    "experiments/m194g-larger-pupil/independent-quality-target-1/sources/experiments/m194g-larger-pupil/software-noise-authority.py": {
+      "bytes": 13041,
+      "sha256": "c02508370fd2706f81babe4f15d7961a4f2bbd5ae65b83ec7ccedb443000bac0"
+    },
+    "experiments/m194g-larger-pupil/independent-quality-target-1/target.json": {
+      "bytes": 5059,
+      "sha256": "e72eb2bf4f23e71bad1ce03ef1b9df44142a15107585a542462b6acfbbcf8c2f"
+    },
+    "experiments/m194g-larger-pupil/independent-quality-target-release-1.json": {
+      "bytes": 3143,
+      "sha256": "563c9159d3f30038267b07100101e160deca06e7a8c66fe0ad97e6da490c8325"
+    },
+    "experiments/m194g-larger-pupil/independent-quality-target.py": {
+      "bytes": 13908,
+      "sha256": "b5ab97f65e31a82f5f59981e98c2c013e500f7ad7b4c62b64f8d4c2026d08005"
+    },
+    "experiments/m194g-larger-pupil/next-quality-reader-preregister.md": {
+      "bytes": 12693,
+      "sha256": "f27ce21f6661abd903dc44ffb24f8df089e4a4507e3d634458579f8cb4df4407"
+    },
+    "experiments/m194g-larger-pupil/next-quality-source-review.md": {
+      "bytes": 2570,
+      "sha256": "8a220a9261cd328692bd8589f14dbd87b8bc83257a95c86614a77fb5e63ced89"
+    },
+    "experiments/m194g-larger-pupil/next-quality-target-interface.md": {
+      "bytes": 5774,
+      "sha256": "fd9ddb9f259c70013cace8394653d0b406f300ce2ec3524ac9c760ee7f736993"
+    },
+    "experiments/m194g-larger-pupil/software-noise-authority.py": {
+      "bytes": 13041,
+      "sha256": "c02508370fd2706f81babe4f15d7961a4f2bbd5ae65b83ec7ccedb443000bac0"
+    }
+  },
+  "invocation": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-X",
+    "utf8",
+    "-X",
+    "faulthandler",
+    "-X",
+    "pycache_prefix=experiments/m194g-larger-pupil/work/cache-independent-k0-target-1",
+    "experiments/m194g-larger-pupil/independent-k0-target.py",
+    "--target",
+    "experiments/m194g-larger-pupil/independent-quality-target-1/target.json",
+    "--target-sha256",
+    "e72eb2bf4f23e71bad1ce03ef1b9df44142a15107585a542462b6acfbbcf8c2f",
+    "--float-commission",
+    "experiments/m194g-larger-pupil/independent-full-array-verification-1/float-commission.json",
+    "--float-commission-sha256",
+    "3f18d8954347382b2dffe0ca501f93ef8da54c3b966a1a606851323d86277a2b",
+    "--execution-release",
+    "experiments/m194g-larger-pupil/independent-k0-target-release-1.json",
+    "--execution-release-sha256",
+    "f4da2c57e4b312499fb3caf1ffc9ee05ee03874b68bc66fc72dedc8d9b1a8492",
+    "--output",
+    "experiments/m194g-larger-pupil/independent-k0-target-1"
+  ],
+  "maximum_error_e": 6.002665031701326e-11,
+  "method": "analytic-x-split-y-quad-k0-v1",
+  "rms_error_e": 2.7569843395909545e-11,
+  "runtime": {
+    "cwd": "C:\\dev\\blog\\death-of-software\\projects\\strehl",
+    "executable": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "numpy": "2.4.4",
+    "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+    "scipy": "1.17.1",
+    "thread_environment": {
+      "MKL_NUM_THREADS": "2",
+      "NUMEXPR_NUM_THREADS": "2",
+      "OMP_NUM_THREADS": "2",
+      "OPENBLAS_NUM_THREADS": "2"
+    },
+    "xoptions": {
+      "faulthandler": true,
+      "pycache_prefix": "experiments/m194g-larger-pupil/work/cache-independent-k0-target-1",
+      "utf8": true
+    }
+  },
+  "scalar": {
+    "bytes": 614528,
+    "dtype": "<f8",
+    "path": "experiments/m194g-larger-pupil/independent-quality-target-1/scalar.npy",
+    "sha256": "91fbd5bf692f9411c4394d4a60e805d998eec0061553c5fcba2059f2e505e795",
+    "shape": [
+      240,
+      320
+    ]
+  },
+  "schema": "m194g-independent-k0-target-verification-v1",
+  "scope": "ten fixed scalar cells and private integration controls; no whole-target or quality admission",
+  "source_after": {
+    "experiments/m194g-larger-pupil/independent-component-reader.py": {
+      "bytes": 70763,
+      "sha256": "8477478b12a1f47b7c119db875e448825e52b0878d43a5f37388e1d2b461b683"
+    },
+    "experiments/m194g-larger-pupil/independent-full-array-reader.py": {
+      "bytes": 48030,
+      "sha256": "a310518b7192059a5ce42326a6d05d93fa72ecf1046e177ea64b7b03272c1682"
+    },
+    "experiments/m194g-larger-pupil/independent-k0-target-design.md": {
+      "bytes": 8700,
+      "sha256": "f762e58b4c75abc57ec30760dc404389fb8cb7b567141ce89b3d028520e91138"
+    },
+    "experiments/m194g-larger-pupil/independent-k0-target.py": {
+      "bytes": 27878,
+      "sha256": "da30c953916f90b940fe3aa9867460d50b4370857325717bcd0a114b739ffe91"
+    },
+    "experiments/m194g-larger-pupil/next-quality-target-interface.md": {
+      "bytes": 5774,
+      "sha256": "fd9ddb9f259c70013cace8394653d0b406f300ce2ec3524ac9c760ee7f736993"
+    }
+  },
+  "source_before": {
+    "experiments/m194g-larger-pupil/independent-component-reader.py": {
+      "bytes": 70763,
+      "sha256": "8477478b12a1f47b7c119db875e448825e52b0878d43a5f37388e1d2b461b683"
+    },
+    "experiments/m194g-larger-pupil/independent-full-array-reader.py": {
+      "bytes": 48030,
+      "sha256": "a310518b7192059a5ce42326a6d05d93fa72ecf1046e177ea64b7b03272c1682"
+    },
+    "experiments/m194g-larger-pupil/independent-k0-target-design.md": {
+      "bytes": 8700,
+      "sha256": "f762e58b4c75abc57ec30760dc404389fb8cb7b567141ce89b3d028520e91138"
+    },
+    "experiments/m194g-larger-pupil/independent-k0-target.py": {
+      "bytes": 27878,
+      "sha256": "da30c953916f90b940fe3aa9867460d50b4370857325717bcd0a114b739ffe91"
+    },
+    "experiments/m194g-larger-pupil/next-quality-target-interface.md": {
+      "bytes": 5774,
+      "sha256": "fd9ddb9f259c70013cace8394653d0b406f300ce2ec3524ac9c760ee7f736993"
+    }
+  },
+  "status": "PASS_TEN_CELL_K0_TARGET",
+  "target": {
+    "bytes": 5059,
+    "path": "experiments/m194g-larger-pupil/independent-quality-target-1/target.json",
+    "sha256": "e72eb2bf4f23e71bad1ce03ef1b9df44142a15107585a542462b6acfbbcf8c2f"
+  },
+  "work": {
+    "check_calls": 909,
+    "cpu_seconds": 1.84375,
+    "limits": {
+      "cpu_seconds": 120.0,
+      "named_array_bytes": 33554432,
+      "wall_seconds": 240.0
+    },
+    "scope": "live unique ndarray backings; not process RSS",
+    "tracked_peak_named_array_bytes": 691200,
+    "wall_seconds": 1.875
+  }
+}

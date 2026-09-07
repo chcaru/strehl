@@ -194,9 +194,12 @@ component/observer comparison under unchanged accuracy bars. All25 complete
 expected arrays and their independent full-image/refinement comparisons now
 pass, after79 private controls. The largest external absolute discrepancy is
 1.0743797247414477e-5 expected electrons against the unchanged .004 bar.
-The fixed numerical population is admitted; current work commissions the
-software-noise law, its actual90 emitted CFAs and the new three-band production
-bridge before the registered38-output quality comparison. See the
+The fixed numerical population and specified software-noise law are admitted.
+All90 saved sensor files now pass their independent reader and37 controls;
+69 quality/TIFF instruments and the separate ten-cell ideal-target check pass.
+The larger three-band bridge compiles after a retained two-return repair.
+Current work runs its private/intended production commissioning before the
+registered38-output quality comparison. See the
 [M194g record](../research/M194g-larger-pupil.md). Its [prospective protocol](../../experiments/m194g-larger-pupil/preregister.md)
 keeps later noise-law admission and the fixed M194d comparison on actual
 three-band production output separate from expected-image generation.
