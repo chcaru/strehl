@@ -1,0 +1,8 @@
+usage: consumer-run.py plan [-h] --build-record BUILD_RECORD --build-sha256
+                            BUILD_SHA256 --manifest MANIFEST --manifest-sha256
+                            MANIFEST_SHA256 --cfa-commission CFA_COMMISSION
+                            --cfa-commission-sha256 CFA_COMMISSION_SHA256
+                            --plan PLAN --observer {off,count,placebo}
+                            [--confidence] [--exposure {0,1}]
+                            [--wb-mode {baseline,red-double}] [--log LOG]
+consumer-run.py plan: error: argument --wb-mode: invalid choice: 'RedDouble' (choose from baseline, red-double)

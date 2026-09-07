@@ -1,0 +1,54 @@
+{
+  "schema": "m194f-consumer-command-v1",
+  "command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-driver-1\\eleven-tests-with-file\\stub-executable.bin",
+    "--exact",
+    "merge_cmd::known_scene_benchmark::joint_pupil_bridge::m194f_production_bridge",
+    "--ignored",
+    "--test-threads=1",
+    "--nocapture"
+  ],
+  "interpreter_argv": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-B",
+    "-X",
+    "faulthandler",
+    "-X",
+    "pycache_prefix=experiments/m194f-production-bridge/work/independent-driver-cache-1",
+    "experiments/m194f-production-bridge/independent-driver-controls.py",
+    "--output",
+    "experiments/m194f-production-bridge/independent-driver-1"
+  ],
+  "started_utc": "2026-09-07T15:17:16.309636+00:00",
+  "ended_utc": "2026-09-07T15:17:16.310635+00:00",
+  "exit_code": 0,
+  "passed": true,
+  "log": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-driver-1\\eleven-tests-with-file\\child.log",
+  "log_sha256": "571748694fd0325dee0791817f964e2c6c0cdc3d55c5b346235d7c7d1a687e3d",
+  "build_sha256": "6c7163559fa37ba5cf2d5da83a2bdc07889ca3f8837dc8a7bda0c19771fa14e7",
+  "driver_sha256": "15a3a27c9ee1a69e838086fa807c90cdc45ee0757fbe9dc35c3b001c1f198715",
+  "sources_unchanged": true,
+  "environment": {
+    "STREHL_DEFECT": "off",
+    "STREHL_FIX_CA": "off",
+    "STREHL_FULLRES_GATHER": "1",
+    "STREHL_PYRAMID_WORKERS": "2",
+    "RAYON_NUM_THREADS": "2",
+    "STREHL_M194F_MODE": "plan",
+    "STREHL_M194F_MANIFEST": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-driver-1\\eleven-tests-with-file\\private-manifest.json",
+    "STREHL_M194F_MANIFEST_SHA256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+    "STREHL_M194F_CFA_COMMISSION": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-driver-1\\eleven-tests-with-file\\private-gate.json",
+    "STREHL_M194F_CFA_COMMISSION_SHA256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+    "STREHL_M194F_PLAN": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-driver-1\\eleven-tests-with-file\\plan.json",
+    "STREHL_M194F_OBSERVER": "off",
+    "STREHL_M194F_CONFIDENCE": "0",
+    "STREHL_M194F_EXPOSURE": "0"
+  },
+  "xoptions": {
+    "faulthandler": true,
+    "pycache_prefix": "experiments/m194f-production-bridge/work/independent-driver-cache-1"
+  },
+  "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+  "result": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-driver-1\\eleven-tests-with-file\\plan.json",
+  "result_sha256": "4daac05136cc9ecd20f740a6bb7f7deaeeb1e3b81ca7e2e2d1f1d28394934426"
+}

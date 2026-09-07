@@ -1,0 +1,57 @@
+{
+  "schema": "m194f-independent-stage-read-v1",
+  "status": "PASS_BUILD_BINDING_ONLY",
+  "orig_argv": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-X",
+    "utf8",
+    "-X",
+    "pycache_prefix=experiments/m194f-production-bridge/work/cache-build-preflight-1",
+    "experiments/m194f-production-bridge/independent-stage-read.py",
+    "--build",
+    "experiments/m194f-production-bridge/build-3.json",
+    "--build-sha256",
+    "69a8979821c074d247514f1deae3fb38dce3b8246013a19dc2f9beb8eceb7fcc",
+    "--out",
+    "experiments/m194f-production-bridge/independent-build-preflight-1"
+  ],
+  "executable": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+  "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+  "xoptions": {
+    "utf8": true,
+    "pycache_prefix": "experiments/m194f-production-bridge/work/cache-build-preflight-1"
+  },
+  "source_before": {
+    "experiments/m194f-production-bridge/independent-stage-read.py": "240e0a8d5866707fb369e8b5f28cca8b7291dbff85e1e7d965c0b306e68963c5",
+    "experiments/m194f-production-bridge/independent-verify.py": "658b9aaf2453163b519e7d2256c9bff57abd47c33529567547c4dd8c93bacee5",
+    "experiments/m194f-production-bridge/independent-reader.py": "3fbaf526776fc85042861e1e7a90c06664c43519cef20d12310a67efd8eaff2d"
+  },
+  "thread_environment": {
+    "OMP_NUM_THREADS": "2",
+    "OPENBLAS_NUM_THREADS": "2",
+    "MKL_NUM_THREADS": "2"
+  },
+  "started_utc": "2026-09-07T15:37:57.448204+00:00",
+  "build": {
+    "path": "experiments/m194f-production-bridge/build-3.json",
+    "sha256": "69a8979821c074d247514f1deae3fb38dce3b8246013a19dc2f9beb8eceb7fcc",
+    "bytes": 28799
+  },
+  "external_build_sha256": "69a8979821c074d247514f1deae3fb38dce3b8246013a19dc2f9beb8eceb7fcc",
+  "scope": "component preflight only; no whole integration authority",
+  "compiled_executable": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\work\\consumer-binaries\\eeb85989df694f918070f52b6b32b837\\joint-pupil-bridge-tests.exe",
+    "sha256": "582ad20f937782abca6f90725e468a7d30cba0a783b33213705ba9d06a97a3a7",
+    "bytes": 11341824
+  },
+  "source_count": 109,
+  "source_after": {
+    "experiments/m194f-production-bridge/independent-stage-read.py": "240e0a8d5866707fb369e8b5f28cca8b7291dbff85e1e7d965c0b306e68963c5",
+    "experiments/m194f-production-bridge/independent-verify.py": "658b9aaf2453163b519e7d2256c9bff57abd47c33529567547c4dd8c93bacee5",
+    "experiments/m194f-production-bridge/independent-reader.py": "3fbaf526776fc85042861e1e7a90c06664c43519cef20d12310a67efd8eaff2d"
+  },
+  "wall_seconds": 0.04648240003734827,
+  "cpu_seconds": 0.046875,
+  "ended_utc": "2026-09-07T15:37:57.495239+00:00",
+  "source_unchanged": true
+}

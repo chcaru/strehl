@@ -1,0 +1,741 @@
+{
+  "schema": "m194f-independent-stage-read-v1",
+  "status": "PASS_FIVE_PRIVATE_TIFFS_ONLY",
+  "orig_argv": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-X",
+    "utf8",
+    "-X",
+    "pycache_prefix=experiments/m194f-production-bridge/work/cache-private-read-2",
+    "experiments/m194f-production-bridge/independent-stage-read.py",
+    "--build",
+    "experiments/m194f-production-bridge/build-3.json",
+    "--build-sha256",
+    "69a8979821c074d247514f1deae3fb38dce3b8246013a19dc2f9beb8eceb7fcc",
+    "--private-command",
+    "experiments/m194f-production-bridge/private-population-1-command.json",
+    "--private-command-sha256",
+    "f933147d7949623beb5a25b6fcff56df7ce722689162eebbf212961a374f0d3e",
+    "--out",
+    "experiments/m194f-production-bridge/independent-private-read-2"
+  ],
+  "executable": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+  "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+  "xoptions": {
+    "utf8": true,
+    "pycache_prefix": "experiments/m194f-production-bridge/work/cache-private-read-2"
+  },
+  "source_before": {
+    "experiments/m194f-production-bridge/independent-stage-read.py": "240e0a8d5866707fb369e8b5f28cca8b7291dbff85e1e7d965c0b306e68963c5",
+    "experiments/m194f-production-bridge/independent-verify.py": "62bb70a30715788d05145fcc4442cbbd8bd31ae1a9d9fa8dfd4289157f05890b",
+    "experiments/m194f-production-bridge/independent-reader.py": "3fbaf526776fc85042861e1e7a90c06664c43519cef20d12310a67efd8eaff2d"
+  },
+  "thread_environment": {
+    "OMP_NUM_THREADS": "2",
+    "OPENBLAS_NUM_THREADS": "2",
+    "MKL_NUM_THREADS": "2"
+  },
+  "started_utc": "2026-09-07T15:39:38.358157+00:00",
+  "build": {
+    "path": "experiments/m194f-production-bridge/build-3.json",
+    "sha256": "69a8979821c074d247514f1deae3fb38dce3b8246013a19dc2f9beb8eceb7fcc",
+    "bytes": 28799
+  },
+  "external_build_sha256": "69a8979821c074d247514f1deae3fb38dce3b8246013a19dc2f9beb8eceb7fcc",
+  "scope": "component preflight only; no whole integration authority",
+  "compiled_executable": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\work\\consumer-binaries\\eeb85989df694f918070f52b6b32b837\\joint-pupil-bridge-tests.exe",
+    "sha256": "582ad20f937782abca6f90725e468a7d30cba0a783b33213705ba9d06a97a3a7",
+    "bytes": 11341824
+  },
+  "source_count": 109,
+  "private": {
+    "constant": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\private-population-1\\constant.tif",
+      "bytes": 9819,
+      "sha256": "abbc3121768fd161424a2b6e98e03c732ef1d9050e96544202565a98bb10d9c0",
+      "pixel_sha256": "b95aa3fddc42de3c3aab0e3b83e239d0451d822ae8605e326a4a98832558eece",
+      "shape": [
+        32,
+        48,
+        3
+      ],
+      "kind": "rgb",
+      "endian": "<",
+      "strip_count": 1,
+      "tags": {
+        "256": {
+          "type": 4,
+          "count": 1,
+          "value": [
+            48
+          ]
+        },
+        "257": {
+          "type": 4,
+          "count": 1,
+          "value": [
+            32
+          ]
+        },
+        "258": {
+          "type": 3,
+          "count": 3,
+          "value": [
+            16,
+            16,
+            16
+          ]
+        },
+        "259": {
+          "type": 3,
+          "count": 1,
+          "value": [
+            1
+          ]
+        },
+        "262": {
+          "type": 3,
+          "count": 1,
+          "value": [
+            2
+          ]
+        },
+        "270": {
+          "type": 2,
+          "count": 356,
+          "value": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain."
+        },
+        "273": {
+          "type": 4,
+          "count": 1,
+          "value": [
+            393
+          ]
+        },
+        "277": {
+          "type": 3,
+          "count": 1,
+          "value": [
+            3
+          ]
+        },
+        "278": {
+          "type": 4,
+          "count": 1,
+          "value": [
+            3473
+          ]
+        },
+        "279": {
+          "type": 4,
+          "count": 1,
+          "value": [
+            9216
+          ]
+        },
+        "282": {
+          "type": 5,
+          "count": 1,
+          "value": [
+            1,
+            1
+          ]
+        },
+        "283": {
+          "type": 5,
+          "count": 1,
+          "value": [
+            1,
+            1
+          ]
+        },
+        "296": {
+          "type": 3,
+          "count": 1,
+          "value": [
+            1
+          ]
+        },
+        "305": {
+          "type": 2,
+          "count": 13,
+          "value": "strehl 0.0.0"
+        },
+        "317": {
+          "type": 3,
+          "count": 1,
+          "value": [
+            1
+          ]
+        },
+        "339": {
+          "type": 3,
+          "count": 3,
+          "value": [
+            1,
+            1,
+            1
+          ]
+        }
+      },
+      "oracle": {
+        "sites": 80,
+        "max_abs_dn": 0.10235608744028468,
+        "per_channel_max_dn": [
+          0.10235608744028468,
+          0.04016174563230379,
+          0.07116950956879009
+        ]
+      }
+    },
+    "affine": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\private-population-1\\affine.tif",
+      "bytes": 9819,
+      "sha256": "95a0ea23039e273cdf3d2dd2cf0c6c0be5561baab02134f8d05ff3b59dd8b13a",
+      "pixel_sha256": "429a3376e4efd7f9f8dcdfb52163ee715beef9fa804eef24beee1f45c52ba772",
+      "shape": [
+        32,
+        48,
+        3
+      ],
+      "kind": "rgb",
+      "endian": "<",
+      "strip_count": 1,
+      "tags": {
+        "256": {
+          "type": 4,
+          "count": 1,
+          "value": [
+            48
+          ]
+        },
+        "257": {
+          "type": 4,
+          "count": 1,
+          "value": [
+            32
+          ]
+        },
+        "258": {
+          "type": 3,
+          "count": 3,
+          "value": [
+            16,
+            16,
+            16
+          ]
+        },
+        "259": {
+          "type": 3,
+          "count": 1,
+          "value": [
+            1
+          ]
+        },
+        "262": {
+          "type": 3,
+          "count": 1,
+          "value": [
+            2
+          ]
+        },
+        "270": {
+          "type": 2,
+          "count": 356,
+          "value": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain."
+        },
+        "273": {
+          "type": 4,
+          "count": 1,
+          "value": [
+            393
+          ]
+        },
+        "277": {
+          "type": 3,
+          "count": 1,
+          "value": [
+            3
+          ]
+        },
+        "278": {
+          "type": 4,
+          "count": 1,
+          "value": [
+            3473
+          ]
+        },
+        "279": {
+          "type": 4,
+          "count": 1,
+          "value": [
+            9216
+          ]
+        },
+        "282": {
+          "type": 5,
+          "count": 1,
+          "value": [
+            1,
+            1
+          ]
+        },
+        "283": {
+          "type": 5,
+          "count": 1,
+          "value": [
+            1,
+            1
+          ]
+        },
+        "296": {
+          "type": 3,
+          "count": 1,
+          "value": [
+            1
+          ]
+        },
+        "305": {
+          "type": 2,
+          "count": 13,
+          "value": "strehl 0.0.0"
+        },
+        "317": {
+          "type": 3,
+          "count": 1,
+          "value": [
+            1
+          ]
+        },
+        "339": {
+          "type": 3,
+          "count": 3,
+          "value": [
+            1,
+            1,
+            1
+          ]
+        }
+      },
+      "oracle": {
+        "sites": 80,
+        "max_abs_dn": 0.11146333816304832,
+        "per_channel_max_dn": [
+          0.11146333816304832,
+          0.11139085984632402,
+          0.11125972962781816
+        ]
+      }
+    },
+    "mutation": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\private-population-1\\mutation.tif",
+      "bytes": 9819,
+      "sha256": "c668336bce333f22b2f54384d551bde298e4c9a899da4d7e8cdf0ab037cee0d1",
+      "pixel_sha256": "a3f272c62f3e603c78614082a3b14a3ef39f39d0178aa6cf05f801ec563012e5",
+      "shape": [
+        32,
+        48,
+        3
+      ],
+      "kind": "rgb",
+      "endian": "<",
+      "strip_count": 1,
+      "tags": {
+        "256": {
+          "type": 4,
+          "count": 1,
+          "value": [
+            48
+          ]
+        },
+        "257": {
+          "type": 4,
+          "count": 1,
+          "value": [
+            32
+          ]
+        },
+        "258": {
+          "type": 3,
+          "count": 3,
+          "value": [
+            16,
+            16,
+            16
+          ]
+        },
+        "259": {
+          "type": 3,
+          "count": 1,
+          "value": [
+            1
+          ]
+        },
+        "262": {
+          "type": 3,
+          "count": 1,
+          "value": [
+            2
+          ]
+        },
+        "270": {
+          "type": 2,
+          "count": 356,
+          "value": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain."
+        },
+        "273": {
+          "type": 4,
+          "count": 1,
+          "value": [
+            393
+          ]
+        },
+        "277": {
+          "type": 3,
+          "count": 1,
+          "value": [
+            3
+          ]
+        },
+        "278": {
+          "type": 4,
+          "count": 1,
+          "value": [
+            3473
+          ]
+        },
+        "279": {
+          "type": 4,
+          "count": 1,
+          "value": [
+            9216
+          ]
+        },
+        "282": {
+          "type": 5,
+          "count": 1,
+          "value": [
+            1,
+            1
+          ]
+        },
+        "283": {
+          "type": 5,
+          "count": 1,
+          "value": [
+            1,
+            1
+          ]
+        },
+        "296": {
+          "type": 3,
+          "count": 1,
+          "value": [
+            1
+          ]
+        },
+        "305": {
+          "type": 2,
+          "count": 13,
+          "value": "strehl 0.0.0"
+        },
+        "317": {
+          "type": 3,
+          "count": 1,
+          "value": [
+            1
+          ]
+        },
+        "339": {
+          "type": 3,
+          "count": 3,
+          "value": [
+            1,
+            1,
+            1
+          ]
+        }
+      },
+      "oracle": {
+        "native_xy": [
+          29,
+          26
+        ],
+        "output_xy": [
+          23,
+          16
+        ],
+        "increase_dn": 63.89159990844587
+      }
+    },
+    "rank": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\private-population-1\\rank.tif",
+      "bytes": 454,
+      "sha256": "f0670d6dbf0eaeff15b361df7c410e86a5d52e2ffbdbc513de4648d8587a12e9",
+      "pixel_sha256": "080e75246757598076b58f45b21396345d7a33622ff4218265f490ecd74632b5",
+      "shape": [
+        8,
+        16
+      ],
+      "kind": "gray",
+      "endian": "<",
+      "strip_count": 1,
+      "tags": {
+        "256": {
+          "type": 4,
+          "count": 1,
+          "value": [
+            16
+          ]
+        },
+        "257": {
+          "type": 4,
+          "count": 1,
+          "value": [
+            8
+          ]
+        },
+        "258": {
+          "type": 3,
+          "count": 1,
+          "value": [
+            16
+          ]
+        },
+        "259": {
+          "type": 3,
+          "count": 1,
+          "value": [
+            1
+          ]
+        },
+        "262": {
+          "type": 3,
+          "count": 1,
+          "value": [
+            1
+          ]
+        },
+        "273": {
+          "type": 4,
+          "count": 1,
+          "value": [
+            24
+          ]
+        },
+        "277": {
+          "type": 3,
+          "count": 1,
+          "value": [
+            1
+          ]
+        },
+        "278": {
+          "type": 4,
+          "count": 1,
+          "value": [
+            31250
+          ]
+        },
+        "279": {
+          "type": 4,
+          "count": 1,
+          "value": [
+            256
+          ]
+        },
+        "282": {
+          "type": 5,
+          "count": 1,
+          "value": [
+            1,
+            1
+          ]
+        },
+        "283": {
+          "type": 5,
+          "count": 1,
+          "value": [
+            1,
+            1
+          ]
+        },
+        "296": {
+          "type": 3,
+          "count": 1,
+          "value": [
+            1
+          ]
+        },
+        "317": {
+          "type": 3,
+          "count": 1,
+          "value": [
+            1
+          ]
+        },
+        "339": {
+          "type": 3,
+          "count": 1,
+          "value": [
+            1
+          ]
+        }
+      },
+      "oracle": {
+        "samples": 128,
+        "codes": [
+          0,
+          400,
+          800
+        ],
+        "unseen_index": null
+      }
+    },
+    "sentinel": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\private-population-1\\rank-sentinel.tif",
+      "bytes": 454,
+      "sha256": "c6ed7f09bb7f59644187bdb08c6d3975632b5b6dac34ac3bf9fe7ebe179ebb7d",
+      "pixel_sha256": "dff698e63131d152cdb305d6866c09c726589860490b056aa5780f1cd9ed49ce",
+      "shape": [
+        8,
+        16
+      ],
+      "kind": "gray",
+      "endian": "<",
+      "strip_count": 1,
+      "tags": {
+        "256": {
+          "type": 4,
+          "count": 1,
+          "value": [
+            16
+          ]
+        },
+        "257": {
+          "type": 4,
+          "count": 1,
+          "value": [
+            8
+          ]
+        },
+        "258": {
+          "type": 3,
+          "count": 1,
+          "value": [
+            16
+          ]
+        },
+        "259": {
+          "type": 3,
+          "count": 1,
+          "value": [
+            1
+          ]
+        },
+        "262": {
+          "type": 3,
+          "count": 1,
+          "value": [
+            1
+          ]
+        },
+        "273": {
+          "type": 4,
+          "count": 1,
+          "value": [
+            24
+          ]
+        },
+        "277": {
+          "type": 3,
+          "count": 1,
+          "value": [
+            1
+          ]
+        },
+        "278": {
+          "type": 4,
+          "count": 1,
+          "value": [
+            31250
+          ]
+        },
+        "279": {
+          "type": 4,
+          "count": 1,
+          "value": [
+            256
+          ]
+        },
+        "282": {
+          "type": 5,
+          "count": 1,
+          "value": [
+            1,
+            1
+          ]
+        },
+        "283": {
+          "type": 5,
+          "count": 1,
+          "value": [
+            1,
+            1
+          ]
+        },
+        "296": {
+          "type": 3,
+          "count": 1,
+          "value": [
+            1
+          ]
+        },
+        "317": {
+          "type": 3,
+          "count": 1,
+          "value": [
+            1
+          ]
+        },
+        "339": {
+          "type": 3,
+          "count": 1,
+          "value": [
+            1
+          ]
+        }
+      },
+      "oracle": {
+        "samples": 128,
+        "codes": [
+          0,
+          400,
+          800,
+          65535
+        ],
+        "unseen_index": 0
+      }
+    }
+  },
+  "private_command": {
+    "path": "experiments/m194f-production-bridge/private-population-1-command.json",
+    "sha256": "f933147d7949623beb5a25b6fcff56df7ce722689162eebbf212961a374f0d3e",
+    "bytes": 28335
+  },
+  "private_controls": {
+    "path": "experiments/m194f-production-bridge/private-population-1/private-controls.json",
+    "sha256": "8d5da5ece6692c5b0883dc1fa03bccdafcbcbd183159e3a14a899be1f63d90e1",
+    "bytes": 9719
+  },
+  "source_after": {
+    "experiments/m194f-production-bridge/independent-stage-read.py": "240e0a8d5866707fb369e8b5f28cca8b7291dbff85e1e7d965c0b306e68963c5",
+    "experiments/m194f-production-bridge/independent-verify.py": "62bb70a30715788d05145fcc4442cbbd8bd31ae1a9d9fa8dfd4289157f05890b",
+    "experiments/m194f-production-bridge/independent-reader.py": "3fbaf526776fc85042861e1e7a90c06664c43519cef20d12310a67efd8eaff2d"
+  },
+  "wall_seconds": 0.08428089995868504,
+  "cpu_seconds": 0.078125,
+  "ended_utc": "2026-09-07T15:39:38.442417+00:00",
+  "source_unchanged": true
+}

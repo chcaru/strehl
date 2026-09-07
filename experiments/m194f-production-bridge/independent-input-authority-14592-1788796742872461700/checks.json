@@ -1,0 +1,197 @@
+[
+  {
+    "evidence": null,
+    "name": "genuine-gate-validator",
+    "pass": true
+  },
+  {
+    "evidence": null,
+    "name": "genuine-child-validator",
+    "pass": true
+  },
+  {
+    "evidence": null,
+    "name": "complete-genuine-load",
+    "pass": true
+  },
+  {
+    "evidence": {
+      "refusal": "CFA authority schema/status/scope/count"
+    },
+    "name": "gate-schema",
+    "pass": true
+  },
+  {
+    "evidence": {
+      "refusal": "CFA authority schema/status/scope/count"
+    },
+    "name": "gate-status",
+    "pass": true
+  },
+  {
+    "evidence": {
+      "refusal": "CFA authority schema/status/scope/count"
+    },
+    "name": "gate-sample-count",
+    "pass": true
+  },
+  {
+    "evidence": {
+      "refusal": "invalid type: floating point `15360.0`, expected usize"
+    },
+    "name": "gate-float-sample-type",
+    "pass": true
+  },
+  {
+    "evidence": {
+      "refusal": "invalid type: boolean `true`, expected usize"
+    },
+    "name": "gate-bool-sample-type",
+    "pass": true
+  },
+  {
+    "evidence": {
+      "refusal": "CFA authority association mismatch"
+    },
+    "name": "gate-manifest-binding",
+    "pass": true
+  },
+  {
+    "evidence": {
+      "refusal": "CFA authority association mismatch"
+    },
+    "name": "gate-float-binding",
+    "pass": true
+  },
+  {
+    "evidence": {
+      "refusal": "CFA authority schema/status/scope/count"
+    },
+    "name": "gate-scope",
+    "pass": true
+  },
+  {
+    "evidence": {
+      "refusal": "independent CFA result status/scope/count"
+    },
+    "name": "child-schema",
+    "pass": true
+  },
+  {
+    "evidence": {
+      "refusal": "independent CFA result status/scope/count"
+    },
+    "name": "child-status",
+    "pass": true
+  },
+  {
+    "evidence": {
+      "refusal": "independent CFA result status/scope/count"
+    },
+    "name": "child-fixture",
+    "pass": true
+  },
+  {
+    "evidence": {
+      "refusal": "invalid type: integer `0`, expected a boolean"
+    },
+    "name": "child-fixture-integer",
+    "pass": true
+  },
+  {
+    "evidence": {
+      "refusal": "independent CFA result status/scope/count"
+    },
+    "name": "child-count",
+    "pass": true
+  },
+  {
+    "evidence": {
+      "refusal": "invalid type: floating point `15360.0`, expected usize"
+    },
+    "name": "child-count-float",
+    "pass": true
+  },
+  {
+    "evidence": {
+      "refusal": "independent CFA result authority association"
+    },
+    "name": "child-manifest-binding",
+    "pass": true
+  },
+  {
+    "evidence": {
+      "refusal": "independent CFA result authority association"
+    },
+    "name": "child-float-binding",
+    "pass": true
+  },
+  {
+    "evidence": {
+      "refusal": "independent source closure incomplete/changed"
+    },
+    "name": "child-source-changed",
+    "pass": true
+  },
+  {
+    "evidence": {
+      "refusal": "invalid type: integer `1`, expected a boolean"
+    },
+    "name": "child-source-boolean-type",
+    "pass": true
+  },
+  {
+    "evidence": {
+      "refusal": "independent source closure incomplete/changed"
+    },
+    "name": "child-source-before-missing",
+    "pass": true
+  },
+  {
+    "evidence": {
+      "refusal": "missing field `independent_verification`"
+    },
+    "name": "gate-missing-child",
+    "pass": true
+  },
+  {
+    "evidence": {
+      "refusal": "missing field `status`"
+    },
+    "name": "gate-missing-status",
+    "pass": true
+  },
+  {
+    "evidence": {
+      "refusal": "unknown field `candidate_authority`, expected one of `schema`, `status`, `scope`, `sample_count`, `manifest`, `float_commission`, `independent_verification`"
+    },
+    "name": "gate-unknown-key",
+    "pass": true
+  },
+  {
+    "evidence": {
+      "refusal": "unknown field `candidate_authority`, expected one of `schema`, `status`, `scope`, `fixture_only`, `sample_count`, `externally_trusted_manifest_sha256`, `externally_trusted_float_commission_sha256`, `source_before`, `source_after`, `source_unchanged`, `input_bindings`, `frames`, `units`, `command`, `interpreter_argv`, `completed_utc`, `cwd`, `executable`, `numpy`, `python`, `reader_controls`, `xoptions`"
+    },
+    "name": "child-unknown-key",
+    "pass": true
+  },
+  {
+    "evidence": {
+      "refusal": "registered verifier source names/hash mismatch"
+    },
+    "name": "child-coherent-omitted-source",
+    "pass": true
+  },
+  {
+    "evidence": null,
+    "name": "actual-source-binding-companion",
+    "pass": true
+  },
+  {
+    "evidence": {
+      "refusal": "bound file size/hash mismatch: \\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\model.py"
+    },
+    "name": "actual-source-false-hash",
+    "pass": true
+  }
+]

@@ -1,0 +1,63 @@
+{
+  "schema": "m194f-independent-stage-read-v1",
+  "status": "FAIL_STAGE_READ",
+  "orig_argv": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-X",
+    "utf8",
+    "-X",
+    "pycache_prefix=experiments/m194f-production-bridge/work/cache-private-read-1",
+    "experiments/m194f-production-bridge/independent-stage-read.py",
+    "--build",
+    "experiments/m194f-production-bridge/build-3.json",
+    "--build-sha256",
+    "69a8979821c074d247514f1deae3fb38dce3b8246013a19dc2f9beb8eceb7fcc",
+    "--private-command",
+    "experiments/m194f-production-bridge/private-population-1-command.json",
+    "--private-command-sha256",
+    "f933147d7949623beb5a25b6fcff56df7ce722689162eebbf212961a374f0d3e",
+    "--out",
+    "experiments/m194f-production-bridge/independent-private-read-1"
+  ],
+  "executable": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+  "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+  "xoptions": {
+    "utf8": true,
+    "pycache_prefix": "experiments/m194f-production-bridge/work/cache-private-read-1"
+  },
+  "source_before": {
+    "experiments/m194f-production-bridge/independent-stage-read.py": "240e0a8d5866707fb369e8b5f28cca8b7291dbff85e1e7d965c0b306e68963c5",
+    "experiments/m194f-production-bridge/independent-verify.py": "658b9aaf2453163b519e7d2256c9bff57abd47c33529567547c4dd8c93bacee5",
+    "experiments/m194f-production-bridge/independent-reader.py": "3fbaf526776fc85042861e1e7a90c06664c43519cef20d12310a67efd8eaff2d"
+  },
+  "thread_environment": {
+    "OMP_NUM_THREADS": "2",
+    "OPENBLAS_NUM_THREADS": "2",
+    "MKL_NUM_THREADS": "2"
+  },
+  "started_utc": "2026-09-07T15:38:25.179017+00:00",
+  "build": {
+    "path": "experiments/m194f-production-bridge/build-3.json",
+    "sha256": "69a8979821c074d247514f1deae3fb38dce3b8246013a19dc2f9beb8eceb7fcc",
+    "bytes": 28799
+  },
+  "external_build_sha256": "69a8979821c074d247514f1deae3fb38dce3b8246013a19dc2f9beb8eceb7fcc",
+  "scope": "component preflight only; no whole integration authority",
+  "compiled_executable": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\work\\consumer-binaries\\eeb85989df694f918070f52b6b32b837\\joint-pupil-bridge-tests.exe",
+    "sha256": "582ad20f937782abca6f90725e468a7d30cba0a783b33213705ba9d06a97a3a7",
+    "bytes": 11341824
+  },
+  "source_count": 109,
+  "error": "Refusal('artifact containment')",
+  "traceback": "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-stage-read.py\", line 51, in main\n    result.update(private=V.verify_private(V.load(command[\"result\"],command[\"result_sha256\"])),\n                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-verify.py\", line 310, in verify_private\n    arrays[scene], evidence[scene] = read_output(private[\"rgb\"][scene],\"rgb\",(32,48,3))\n                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-verify.py\", line 288, in read_output\n    path = artifact_path(record[\"path\"])\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-verify.py\", line 96, in artifact_path\n    R.require(path.is_relative_to(ROOT), \"artifact containment\")\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-reader.py\", line 29, in require\n    raise Refusal(message)\nm194f_independent_reader.Refusal: artifact containment\n",
+  "source_after": {
+    "experiments/m194f-production-bridge/independent-stage-read.py": "240e0a8d5866707fb369e8b5f28cca8b7291dbff85e1e7d965c0b306e68963c5",
+    "experiments/m194f-production-bridge/independent-verify.py": "658b9aaf2453163b519e7d2256c9bff57abd47c33529567547c4dd8c93bacee5",
+    "experiments/m194f-production-bridge/independent-reader.py": "3fbaf526776fc85042861e1e7a90c06664c43519cef20d12310a67efd8eaff2d"
+  },
+  "wall_seconds": 0.03607219993136823,
+  "cpu_seconds": 0.03125,
+  "ended_utc": "2026-09-07T15:38:25.215219+00:00",
+  "source_unchanged": true
+}

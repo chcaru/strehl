@@ -1,0 +1,34 @@
+{
+  "schema": "m194f-private-controls-v1",
+  "status": "complete",
+  "fixture_only": true,
+  "rgb": {
+    "constant": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-orchestrator-5\\private-zero-test\\private\\constant.private-bin",
+      "sha256": "fbc10bce0fe4ed41a56282bd2e73ec831ef4111da762f13ebc8f94d1e8f63d63",
+      "bytes": 3
+    },
+    "affine": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-orchestrator-5\\private-zero-test\\private\\affine.private-bin",
+      "sha256": "853c269c33dcf0a9f50c7b3e01543e96edfb03fa00803e0e5982bb9fa8c64e87",
+      "bytes": 3
+    },
+    "mutation": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-orchestrator-5\\private-zero-test\\private\\mutation.private-bin",
+      "sha256": "82a42d81cd22ae95bd04cbd1009ff6a5ed7cd1dd37550edc4f15fb8afcb567be",
+      "bytes": 3
+    }
+  },
+  "gray": {
+    "rank": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-orchestrator-5\\private-zero-test\\private\\rank.private-bin",
+      "sha256": "2a5eee23a845cfe1c0f4e25276b9a7414a9593fab88ddc32dd7c2cbc6f0a42ff",
+      "bytes": 3
+    },
+    "sentinel": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-orchestrator-5\\private-zero-test\\private\\sentinel.private-bin",
+      "sha256": "bf0db2105c6912f40e197213ee81e94b37309058bfed1b7b0bc867d51a5017fd",
+      "bytes": 3
+    }
+  }
+}

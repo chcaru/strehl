@@ -1,0 +1,166 @@
+{
+  "schema": "m194f-consumer-plan-v1",
+  "authority": {
+    "manifest_sha256": "f47c2b8720560fe9dbd777eeed3281ce2531f1f2287f5c88ef7b51a083d03299",
+    "cfa_commission_sha256": "706462ad18a5a3846cadd99e1ef24d6b92b77e064df2e34cbe72e45907fc06a6",
+    "float_commission_sha256": "4bd57b896be0b68c42fb1384a468a4f29cc54139a18a046a678dd97bad408217"
+  },
+  "full_native": [
+    64,
+    48
+  ],
+  "full_quad": [
+    32,
+    24
+  ],
+  "environment": {
+    "STREHL_DEFECT": "off",
+    "STREHL_FIX_CA": "off",
+    "STREHL_FULLRES_GATHER": "1",
+    "STREHL_PYRAMID_WORKERS": "2",
+    "RAYON_NUM_THREADS": "2"
+  },
+  "reference_original_index": 2,
+  "reference_local_index": 2,
+  "output_channels": 3,
+  "crop_quad": {
+    "x": 1,
+    "y": 1,
+    "width": 30,
+    "height": 22
+  },
+  "canonical_native_offset": [
+    2,
+    2
+  ],
+  "output_native": [
+    60,
+    44
+  ],
+  "cover_fit": {
+    "kind": "Crop"
+  },
+  "level_sizes": [
+    [
+      30,
+      22
+    ],
+    [
+      15,
+      11
+    ]
+  ],
+  "placements": [
+    {
+      "original_index": 0,
+      "local_index": 0,
+      "quad_similarity": {
+        "a_re": 1.0,
+        "a_im": 0.0,
+        "b_re": 0.0,
+        "b_im": 0.0
+      }
+    },
+    {
+      "original_index": 1,
+      "local_index": 1,
+      "quad_similarity": {
+        "a_re": 1.0,
+        "a_im": 0.0,
+        "b_re": 0.0,
+        "b_im": 0.0
+      }
+    },
+    {
+      "original_index": 2,
+      "local_index": 2,
+      "quad_similarity": {
+        "a_re": 1.0,
+        "a_im": 0.0,
+        "b_re": 0.0,
+        "b_im": 0.0
+      }
+    },
+    {
+      "original_index": 3,
+      "local_index": 3,
+      "quad_similarity": {
+        "a_re": 1.0,
+        "a_im": 0.0,
+        "b_re": 0.0,
+        "b_im": 0.0
+      }
+    },
+    {
+      "original_index": 4,
+      "local_index": 4,
+      "quad_similarity": {
+        "a_re": 1.0,
+        "a_im": 0.0,
+        "b_re": 0.0,
+        "b_im": 0.0
+      }
+    }
+  ],
+  "wb_f32": [
+    1.3333333730697632,
+    1.0,
+    1.6666666269302368
+  ],
+  "normalization": {
+    "tiff_u16_to_dn": 0.22656595712214847,
+    "second_black_subtraction": false,
+    "input_rounding": "ties-to-even",
+    "output_rounding": "half-up after clipping"
+  },
+  "noise": {
+    "gain_dn_per_e": 0.25,
+    "read_noise_e": 4,
+    "black": 512,
+    "white": 15360,
+    "iso": 160,
+    "prnu": false,
+    "provenance": "Fallback: injected synthetic algorithm coefficients; noise draws off"
+  },
+  "config": {
+    "merge": "Pyramid",
+    "bands": 3,
+    "gate": 2.0,
+    "exponent": 2.0,
+    "select": "SoftPower",
+    "base": "Mean",
+    "admission": "HardFloor",
+    "mean_coarse": 0,
+    "hull": "InputRange",
+    "resampler": "CatmullRom",
+    "demosaic": "MHC",
+    "space": "CameraLinear",
+    "fullres_gather": true,
+    "auto_exposure": false,
+    "photometric": "Off",
+    "gate_floor_enabled": true,
+    "measured_floor_bands": 0,
+    "floor_fallback": "empty measured beta; existing per-band fixed beta",
+    "ca": "off",
+    "defect": "off",
+    "restoration": "unset",
+    "confidence": false,
+    "exposure_stops": 0
+  },
+  "observer": {
+    "mode": "count",
+    "excludes_planning_reads": true,
+    "excludes_raw_prologue": true
+  },
+  "build": {
+    "test_executable_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+    "bytes": 123
+  },
+  "input_bindings": {
+    "fixture": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-record-controls-1\\fixtures\\binding.bin",
+      "sha256": "54dd5f1af4baebb25ab1d4edbcad1b72d62c3d92928e5f12d3c8ff41f7491009",
+      "bytes": 38
+    }
+  }
+}

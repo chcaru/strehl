@@ -1,0 +1,4 @@
+  File "C:\dev\blog\death-of-software\projects\strehl\experiments\m194f-production-bridge\independent-orchestrator-controls.py", line 205
+    ("duplicate-private-output-paths-rebound", dict(mutate=lambda p, c, f: mutate_private(p, lambda v: v["rgb"].update(affine=v["rgb"]["constant"])) ))),
+                                                                                                                                                       ^
+SyntaxError: closing parenthesis ')' does not match opening parenthesis '[' on line 188

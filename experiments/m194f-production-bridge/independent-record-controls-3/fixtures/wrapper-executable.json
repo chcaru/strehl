@@ -1,0 +1,48 @@
+{
+  "schema": "m194f-private-command-v1",
+  "command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-record-controls-3\\fixtures\\NOT-A-REAL-EXECUTABLE.exe",
+    "--exact",
+    "merge_cmd::known_scene_benchmark::joint_pupil_bridge::m194f_author_tests::m194f_private_coordinate_and_rank_controls",
+    "--ignored",
+    "--test-threads=1",
+    "--nocapture"
+  ],
+  "interpreter_argv": [
+    "FIXTURE ONLY"
+  ],
+  "started_utc": "fixture",
+  "ended_utc": "fixture",
+  "exit_code": 0,
+  "passed": true,
+  "log": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-record-controls-3\\fixtures\\fixture-only-command.log",
+  "log_sha256": "1d191c41c474729d74e9789a4c398c397fc5e83116c6dd6efc2d440db291d2fe",
+  "build_sha256": "6666666666666666666666666666666666666666666666666666666666666666",
+  "test_executable": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-record-controls-3\\fixtures\\NOT-A-REAL-EXECUTABLE.exe",
+    "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "bytes": 9
+  },
+  "sources_before": {
+    "fixture": "4444444444444444444444444444444444444444444444444444444444444444"
+  },
+  "sources_after": {
+    "fixture": "4444444444444444444444444444444444444444444444444444444444444444"
+  },
+  "driver_before": {
+    "fixture-driver": "5555555555555555555555555555555555555555555555555555555555555555"
+  },
+  "driver_after": {
+    "fixture-driver": "5555555555555555555555555555555555555555555555555555555555555555"
+  },
+  "environment": {
+    "STREHL_DEFECT": "off",
+    "STREHL_FIX_CA": "off",
+    "STREHL_FULLRES_GATHER": "1",
+    "STREHL_PYRAMID_WORKERS": "2",
+    "RAYON_NUM_THREADS": "2",
+    "STREHL_M194F_PRIVATE_OUTPUT": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-record-controls-3\\fixtures"
+  },
+  "result": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-record-controls-3\\fixtures\\valid.json",
+  "result_sha256": "efb195d582f43191bbf852ffd4e5417eece48c48c9027061a977f55576625cdb"
+}

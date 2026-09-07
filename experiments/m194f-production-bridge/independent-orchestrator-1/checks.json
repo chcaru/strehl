@@ -1,0 +1,761 @@
+[
+  {
+    "name": "private-valid-stub",
+    "passed": true,
+    "detail": {
+      "exit_code": 0
+    }
+  },
+  {
+    "name": "private-failed-result",
+    "passed": false,
+    "detail": {
+      "exit_code": 0
+    }
+  },
+  {
+    "name": "private-wrong-schema",
+    "passed": false,
+    "detail": {
+      "exit_code": 0
+    }
+  },
+  {
+    "name": "private-malformed-result",
+    "passed": false,
+    "detail": {
+      "exit_code": 0
+    }
+  },
+  {
+    "name": "private-missing-result",
+    "passed": true,
+    "detail": {
+      "exit_code": 1
+    }
+  },
+  {
+    "name": "private-zero-test",
+    "passed": true,
+    "detail": {
+      "exit_code": 1
+    }
+  },
+  {
+    "name": "private-nonzero-child",
+    "passed": true,
+    "detail": {
+      "exit_code": 1
+    }
+  },
+  {
+    "name": "renders-valid-fixed-five-schedule",
+    "passed": true,
+    "detail": {
+      "exit_code": 0,
+      "calls": [
+        {
+          "mode": "plan",
+          "observer": "off",
+          "confidence": false,
+          "exposure": 0
+        },
+        {
+          "mode": "render",
+          "observer": "off",
+          "confidence": false,
+          "exposure": 0
+        },
+        {
+          "mode": "plan",
+          "observer": "count",
+          "confidence": false,
+          "exposure": 0
+        },
+        {
+          "mode": "render",
+          "observer": "count",
+          "confidence": false,
+          "exposure": 0
+        },
+        {
+          "mode": "plan",
+          "observer": "placebo",
+          "confidence": false,
+          "exposure": 0
+        },
+        {
+          "mode": "render",
+          "observer": "placebo",
+          "confidence": false,
+          "exposure": 0
+        },
+        {
+          "mode": "plan",
+          "observer": "count",
+          "confidence": true,
+          "exposure": 0
+        },
+        {
+          "mode": "render",
+          "observer": "count",
+          "confidence": true,
+          "exposure": 0
+        },
+        {
+          "mode": "plan",
+          "observer": "count",
+          "confidence": false,
+          "exposure": 1
+        },
+        {
+          "mode": "render",
+          "observer": "count",
+          "confidence": false,
+          "exposure": 1
+        }
+      ],
+      "completed_index_exists": true
+    }
+  },
+  {
+    "name": "wrong-dependency-external-pin",
+    "passed": true,
+    "detail": {
+      "refusal": "ValueError: private_command_record external digest differs",
+      "calls": [],
+      "completed_index_exists": false
+    }
+  },
+  {
+    "name": "failed-controls-record",
+    "passed": true,
+    "detail": {
+      "refusal": "ValueError: controls_command_record did not complete on this build",
+      "calls": [],
+      "completed_index_exists": false
+    }
+  },
+  {
+    "name": "omitted-six-independent-results",
+    "passed": false,
+    "detail": {
+      "exit_code": 0,
+      "calls": [
+        {
+          "mode": "plan",
+          "observer": "off",
+          "confidence": false,
+          "exposure": 0
+        },
+        {
+          "mode": "render",
+          "observer": "off",
+          "confidence": false,
+          "exposure": 0
+        },
+        {
+          "mode": "plan",
+          "observer": "count",
+          "confidence": false,
+          "exposure": 0
+        },
+        {
+          "mode": "render",
+          "observer": "count",
+          "confidence": false,
+          "exposure": 0
+        },
+        {
+          "mode": "plan",
+          "observer": "placebo",
+          "confidence": false,
+          "exposure": 0
+        },
+        {
+          "mode": "render",
+          "observer": "placebo",
+          "confidence": false,
+          "exposure": 0
+        },
+        {
+          "mode": "plan",
+          "observer": "count",
+          "confidence": true,
+          "exposure": 0
+        },
+        {
+          "mode": "render",
+          "observer": "count",
+          "confidence": true,
+          "exposure": 0
+        },
+        {
+          "mode": "plan",
+          "observer": "count",
+          "confidence": false,
+          "exposure": 1
+        },
+        {
+          "mode": "render",
+          "observer": "count",
+          "confidence": false,
+          "exposure": 1
+        }
+      ],
+      "completed_index_exists": true
+    }
+  },
+  {
+    "name": "rehashed-failed-independent-child",
+    "passed": false,
+    "detail": {
+      "exit_code": 0,
+      "calls": [
+        {
+          "mode": "plan",
+          "observer": "off",
+          "confidence": false,
+          "exposure": 0
+        },
+        {
+          "mode": "render",
+          "observer": "off",
+          "confidence": false,
+          "exposure": 0
+        },
+        {
+          "mode": "plan",
+          "observer": "count",
+          "confidence": false,
+          "exposure": 0
+        },
+        {
+          "mode": "render",
+          "observer": "count",
+          "confidence": false,
+          "exposure": 0
+        },
+        {
+          "mode": "plan",
+          "observer": "placebo",
+          "confidence": false,
+          "exposure": 0
+        },
+        {
+          "mode": "render",
+          "observer": "placebo",
+          "confidence": false,
+          "exposure": 0
+        },
+        {
+          "mode": "plan",
+          "observer": "count",
+          "confidence": true,
+          "exposure": 0
+        },
+        {
+          "mode": "render",
+          "observer": "count",
+          "confidence": true,
+          "exposure": 0
+        },
+        {
+          "mode": "plan",
+          "observer": "count",
+          "confidence": false,
+          "exposure": 1
+        },
+        {
+          "mode": "render",
+          "observer": "count",
+          "confidence": false,
+          "exposure": 1
+        }
+      ],
+      "completed_index_exists": true
+    }
+  },
+  {
+    "name": "controls-zero-tests-rebound-log",
+    "passed": false,
+    "detail": {
+      "exit_code": 0,
+      "calls": [
+        {
+          "mode": "plan",
+          "observer": "off",
+          "confidence": false,
+          "exposure": 0
+        },
+        {
+          "mode": "render",
+          "observer": "off",
+          "confidence": false,
+          "exposure": 0
+        },
+        {
+          "mode": "plan",
+          "observer": "count",
+          "confidence": false,
+          "exposure": 0
+        },
+        {
+          "mode": "render",
+          "observer": "count",
+          "confidence": false,
+          "exposure": 0
+        },
+        {
+          "mode": "plan",
+          "observer": "placebo",
+          "confidence": false,
+          "exposure": 0
+        },
+        {
+          "mode": "render",
+          "observer": "placebo",
+          "confidence": false,
+          "exposure": 0
+        },
+        {
+          "mode": "plan",
+          "observer": "count",
+          "confidence": true,
+          "exposure": 0
+        },
+        {
+          "mode": "render",
+          "observer": "count",
+          "confidence": true,
+          "exposure": 0
+        },
+        {
+          "mode": "plan",
+          "observer": "count",
+          "confidence": false,
+          "exposure": 1
+        },
+        {
+          "mode": "render",
+          "observer": "count",
+          "confidence": false,
+          "exposure": 1
+        }
+      ],
+      "completed_index_exists": true
+    }
+  },
+  {
+    "name": "controls-wrong-filter",
+    "passed": false,
+    "detail": {
+      "exit_code": 0,
+      "calls": [
+        {
+          "mode": "plan",
+          "observer": "off",
+          "confidence": false,
+          "exposure": 0
+        },
+        {
+          "mode": "render",
+          "observer": "off",
+          "confidence": false,
+          "exposure": 0
+        },
+        {
+          "mode": "plan",
+          "observer": "count",
+          "confidence": false,
+          "exposure": 0
+        },
+        {
+          "mode": "render",
+          "observer": "count",
+          "confidence": false,
+          "exposure": 0
+        },
+        {
+          "mode": "plan",
+          "observer": "placebo",
+          "confidence": false,
+          "exposure": 0
+        },
+        {
+          "mode": "render",
+          "observer": "placebo",
+          "confidence": false,
+          "exposure": 0
+        },
+        {
+          "mode": "plan",
+          "observer": "count",
+          "confidence": true,
+          "exposure": 0
+        },
+        {
+          "mode": "render",
+          "observer": "count",
+          "confidence": true,
+          "exposure": 0
+        },
+        {
+          "mode": "plan",
+          "observer": "count",
+          "confidence": false,
+          "exposure": 1
+        },
+        {
+          "mode": "render",
+          "observer": "count",
+          "confidence": false,
+          "exposure": 1
+        }
+      ],
+      "completed_index_exists": true
+    }
+  },
+  {
+    "name": "controls-wrong-copied-executable",
+    "passed": false,
+    "detail": {
+      "exit_code": 0,
+      "calls": [
+        {
+          "mode": "plan",
+          "observer": "off",
+          "confidence": false,
+          "exposure": 0
+        },
+        {
+          "mode": "render",
+          "observer": "off",
+          "confidence": false,
+          "exposure": 0
+        },
+        {
+          "mode": "plan",
+          "observer": "count",
+          "confidence": false,
+          "exposure": 0
+        },
+        {
+          "mode": "render",
+          "observer": "count",
+          "confidence": false,
+          "exposure": 0
+        },
+        {
+          "mode": "plan",
+          "observer": "placebo",
+          "confidence": false,
+          "exposure": 0
+        },
+        {
+          "mode": "render",
+          "observer": "placebo",
+          "confidence": false,
+          "exposure": 0
+        },
+        {
+          "mode": "plan",
+          "observer": "count",
+          "confidence": true,
+          "exposure": 0
+        },
+        {
+          "mode": "render",
+          "observer": "count",
+          "confidence": true,
+          "exposure": 0
+        },
+        {
+          "mode": "plan",
+          "observer": "count",
+          "confidence": false,
+          "exposure": 1
+        },
+        {
+          "mode": "render",
+          "observer": "count",
+          "confidence": false,
+          "exposure": 1
+        }
+      ],
+      "completed_index_exists": true
+    }
+  },
+  {
+    "name": "private-wrong-test-command",
+    "passed": false,
+    "detail": {
+      "exit_code": 0,
+      "calls": [
+        {
+          "mode": "plan",
+          "observer": "off",
+          "confidence": false,
+          "exposure": 0
+        },
+        {
+          "mode": "render",
+          "observer": "off",
+          "confidence": false,
+          "exposure": 0
+        },
+        {
+          "mode": "plan",
+          "observer": "count",
+          "confidence": false,
+          "exposure": 0
+        },
+        {
+          "mode": "render",
+          "observer": "count",
+          "confidence": false,
+          "exposure": 0
+        },
+        {
+          "mode": "plan",
+          "observer": "placebo",
+          "confidence": false,
+          "exposure": 0
+        },
+        {
+          "mode": "render",
+          "observer": "placebo",
+          "confidence": false,
+          "exposure": 0
+        },
+        {
+          "mode": "plan",
+          "observer": "count",
+          "confidence": true,
+          "exposure": 0
+        },
+        {
+          "mode": "render",
+          "observer": "count",
+          "confidence": true,
+          "exposure": 0
+        },
+        {
+          "mode": "plan",
+          "observer": "count",
+          "confidence": false,
+          "exposure": 1
+        },
+        {
+          "mode": "render",
+          "observer": "count",
+          "confidence": false,
+          "exposure": 1
+        }
+      ],
+      "completed_index_exists": true
+    }
+  },
+  {
+    "name": "first-plan-refusal",
+    "passed": true,
+    "detail": {
+      "exit_code": 1,
+      "calls": [
+        {
+          "mode": "plan",
+          "observer": "off",
+          "confidence": false,
+          "exposure": 0
+        }
+      ],
+      "completed_index_exists": false
+    }
+  },
+  {
+    "name": "third-render-refusal",
+    "passed": true,
+    "detail": {
+      "exit_code": 1,
+      "calls": [
+        {
+          "mode": "plan",
+          "observer": "off",
+          "confidence": false,
+          "exposure": 0
+        },
+        {
+          "mode": "render",
+          "observer": "off",
+          "confidence": false,
+          "exposure": 0
+        },
+        {
+          "mode": "plan",
+          "observer": "count",
+          "confidence": false,
+          "exposure": 0
+        },
+        {
+          "mode": "render",
+          "observer": "count",
+          "confidence": false,
+          "exposure": 0
+        },
+        {
+          "mode": "plan",
+          "observer": "placebo",
+          "confidence": false,
+          "exposure": 0
+        },
+        {
+          "mode": "render",
+          "observer": "placebo",
+          "confidence": false,
+          "exposure": 0
+        }
+      ],
+      "completed_index_exists": false
+    }
+  },
+  {
+    "name": "last-render-refusal",
+    "passed": true,
+    "detail": {
+      "exit_code": 1,
+      "calls": [
+        {
+          "mode": "plan",
+          "observer": "off",
+          "confidence": false,
+          "exposure": 0
+        },
+        {
+          "mode": "render",
+          "observer": "off",
+          "confidence": false,
+          "exposure": 0
+        },
+        {
+          "mode": "plan",
+          "observer": "count",
+          "confidence": false,
+          "exposure": 0
+        },
+        {
+          "mode": "render",
+          "observer": "count",
+          "confidence": false,
+          "exposure": 0
+        },
+        {
+          "mode": "plan",
+          "observer": "placebo",
+          "confidence": false,
+          "exposure": 0
+        },
+        {
+          "mode": "render",
+          "observer": "placebo",
+          "confidence": false,
+          "exposure": 0
+        },
+        {
+          "mode": "plan",
+          "observer": "count",
+          "confidence": true,
+          "exposure": 0
+        },
+        {
+          "mode": "render",
+          "observer": "count",
+          "confidence": true,
+          "exposure": 0
+        },
+        {
+          "mode": "plan",
+          "observer": "count",
+          "confidence": false,
+          "exposure": 1
+        },
+        {
+          "mode": "render",
+          "observer": "count",
+          "confidence": false,
+          "exposure": 1
+        }
+      ],
+      "completed_index_exists": false
+    }
+  },
+  {
+    "name": "source-changed-after-population",
+    "passed": true,
+    "detail": {
+      "refusal": "ValueError: sources changed during intended population",
+      "calls": [
+        {
+          "mode": "plan",
+          "observer": "off",
+          "confidence": false,
+          "exposure": 0
+        },
+        {
+          "mode": "render",
+          "observer": "off",
+          "confidence": false,
+          "exposure": 0
+        },
+        {
+          "mode": "plan",
+          "observer": "count",
+          "confidence": false,
+          "exposure": 0
+        },
+        {
+          "mode": "render",
+          "observer": "count",
+          "confidence": false,
+          "exposure": 0
+        },
+        {
+          "mode": "plan",
+          "observer": "placebo",
+          "confidence": false,
+          "exposure": 0
+        },
+        {
+          "mode": "render",
+          "observer": "placebo",
+          "confidence": false,
+          "exposure": 0
+        },
+        {
+          "mode": "plan",
+          "observer": "count",
+          "confidence": true,
+          "exposure": 0
+        },
+        {
+          "mode": "render",
+          "observer": "count",
+          "confidence": true,
+          "exposure": 0
+        },
+        {
+          "mode": "plan",
+          "observer": "count",
+          "confidence": false,
+          "exposure": 1
+        },
+        {
+          "mode": "render",
+          "observer": "count",
+          "confidence": false,
+          "exposure": 1
+        }
+      ],
+      "completed_index_exists": false
+    }
+  }
+]

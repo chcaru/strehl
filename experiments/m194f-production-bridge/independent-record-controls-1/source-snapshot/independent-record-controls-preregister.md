@@ -1,0 +1,32 @@
+# Independent final-record adapter controls
+
+Prospective, before these controls or any actual M194f output read. The
+59-case parser/oracle commission remains frozen. The newly written
+`independent-verify.py` adds receipt/index orchestration. Its private component
+adapter must accept a complete synthetic record made with the previously
+commissioned independent TIFF writer. This fixture explicitly has no genuine
+M194e or compiler authority. It uses the actual intended unseen index0 and
+reached-zero1; the earlier independently re-chosen index53 remains separate.
+
+Call the actual `verify_private`, not copied predicates. Reject a missing
+private scene, duplicate-scene substitution, false same-size native offset,
+swapped crop axes, wrong window, wrong caller dimensions, changed tags or
+metadata, correctly rehashed wrong RGB values, a no-op green mutation,
+wrong decode counters, raw-below/seen faults, <= tie semantics, wrong rank
+scale, unseen/zero sentinel faults and false genuine status. Integer/floating
+representations of exact DN luma are both valid; booleans are not numbers.
+Check the correctly rehashed modified TIFF through the actual parser and
+then actual oracle. Retain both valid and rejected record and TIFF bytes.
+
+Separately commission the actual plan checker using a fixture-only complete
+record with the fixed actual settings and a private binding file. It must
+refuse a coordinate map inconsistent with its crop, wrong WB/normalization,
+noise, gauge, nonidentity placement, unsupported depth/level/config and
+observer/build bindings, while the exact record passes. These are contract
+controls only. They cannot grant build/optical/integration authority, and final
+actual-file reading still needs the externally supplied real index/build SHA.
+
+Before final completion, append controls for the root's finalized index and
+private-command record schema. No new data/model/tolerance choices follow.
+Exact original invocation, sources before/after and fresh cache accompany each
+run. Preserve a refused/mistaken first attempt rather than editing its evidence.

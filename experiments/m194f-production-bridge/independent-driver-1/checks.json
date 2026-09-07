@@ -1,0 +1,573 @@
+[
+  {
+    "name": "environment-clears-hostile-and-keeps-unrelated",
+    "pass_": true,
+    "detail": {
+      "KEEP_ME": "retained",
+      "STREHL_DEFECT": "off",
+      "STREHL_FIX_CA": "off",
+      "STREHL_FULLRES_GATHER": "1",
+      "STREHL_PYRAMID_WORKERS": "2",
+      "RAYON_NUM_THREADS": "2"
+    }
+  },
+  {
+    "name": "explicit-include-closure-valid",
+    "pass_": true,
+    "detail": {
+      "crates/strehl-cli/src/joint-pupil-bridge.rs": "94f8ffa668cf3a48dc8a901a24719ab6817b757578ef316925d8984421fdd06a",
+      "crates/strehl-cli/src/parent.rs": "2893a77b8be8b04bd2d2db63bffa28f33152a1d98550d8dfc518574f880e17e3",
+      "experiments/private/independent.rs": "91aed7c055a2520bb7df0d7db6953a2801f3a87775471326ba9d987383ea6266",
+      "experiments/private/nested.rs": "790a7fb92cb1d9eb17ee8a35e328c1b984b66e9deb00798a591817c9d4c1964b"
+    }
+  },
+  {
+    "name": "missing-included-source-refuses",
+    "pass_": true,
+    "detail": "invalid external Rust include C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-driver-1\\private-source-tree\\experiments\\private\\nested.rs"
+  },
+  {
+    "name": "valid-stub-companion",
+    "pass_": true,
+    "detail": {
+      "exit_code": 0,
+      "child_calls": 1,
+      "calls": [
+        {
+          "command": [
+            "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-driver-1\\valid-stub-companion\\stub-executable.bin",
+            "--exact",
+            "merge_cmd::known_scene_benchmark::joint_pupil_bridge::m194f_production_bridge",
+            "--ignored",
+            "--test-threads=1",
+            "--nocapture"
+          ],
+          "environment": {
+            "STREHL_DEFECT": "off",
+            "STREHL_FIX_CA": "off",
+            "STREHL_FULLRES_GATHER": "1",
+            "STREHL_PYRAMID_WORKERS": "2",
+            "RAYON_NUM_THREADS": "2",
+            "STREHL_M194F_MODE": "plan",
+            "STREHL_M194F_MANIFEST": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-driver-1\\valid-stub-companion\\private-manifest.json",
+            "STREHL_M194F_MANIFEST_SHA256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "STREHL_M194F_CFA_COMMISSION": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-driver-1\\valid-stub-companion\\private-gate.json",
+            "STREHL_M194F_CFA_COMMISSION_SHA256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+            "STREHL_M194F_PLAN": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-driver-1\\valid-stub-companion\\plan.json",
+            "STREHL_M194F_OBSERVER": "off",
+            "STREHL_M194F_CONFIDENCE": "0",
+            "STREHL_M194F_EXPOSURE": "0"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "name": "wrong-external-build-pin",
+    "pass_": true,
+    "detail": {
+      "refusal": "ValueError: external build SHA differs",
+      "child_calls": 0
+    }
+  },
+  {
+    "name": "wrong-current-driver-pin",
+    "pass_": true,
+    "detail": {
+      "refusal": "ValueError: build or driver not commissioned",
+      "child_calls": 0
+    }
+  },
+  {
+    "name": "source-before-after-disagree",
+    "pass_": true,
+    "detail": {
+      "refusal": "ValueError: build or driver not commissioned",
+      "child_calls": 0
+    }
+  },
+  {
+    "name": "coherent-omitted-included-source",
+    "pass_": true,
+    "detail": {
+      "refusal": "ValueError: compiled sources changed",
+      "child_calls": 0
+    }
+  },
+  {
+    "name": "wrong-executable-copy-hash",
+    "pass_": true,
+    "detail": {
+      "refusal": "ValueError: pinned executable changed",
+      "child_calls": 0
+    }
+  },
+  {
+    "name": "wrong-executable-copy-length",
+    "pass_": false,
+    "detail": {
+      "exit_code": 0,
+      "child_calls": 1,
+      "calls": [
+        {
+          "command": [
+            "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-driver-1\\wrong-executable-copy-length\\stub-executable.bin",
+            "--exact",
+            "merge_cmd::known_scene_benchmark::joint_pupil_bridge::m194f_production_bridge",
+            "--ignored",
+            "--test-threads=1",
+            "--nocapture"
+          ],
+          "environment": {
+            "STREHL_DEFECT": "off",
+            "STREHL_FIX_CA": "off",
+            "STREHL_FULLRES_GATHER": "1",
+            "STREHL_PYRAMID_WORKERS": "2",
+            "RAYON_NUM_THREADS": "2",
+            "STREHL_M194F_MODE": "plan",
+            "STREHL_M194F_MANIFEST": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-driver-1\\wrong-executable-copy-length\\private-manifest.json",
+            "STREHL_M194F_MANIFEST_SHA256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "STREHL_M194F_CFA_COMMISSION": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-driver-1\\wrong-executable-copy-length\\private-gate.json",
+            "STREHL_M194F_CFA_COMMISSION_SHA256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+            "STREHL_M194F_PLAN": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-driver-1\\wrong-executable-copy-length\\plan.json",
+            "STREHL_M194F_OBSERVER": "off",
+            "STREHL_M194F_CONFIDENCE": "0",
+            "STREHL_M194F_EXPOSURE": "0"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "name": "false-compiler-copy-binding",
+    "pass_": false,
+    "detail": {
+      "exit_code": 0,
+      "child_calls": 1,
+      "calls": [
+        {
+          "command": [
+            "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-driver-1\\false-compiler-copy-binding\\stub-executable.bin",
+            "--exact",
+            "merge_cmd::known_scene_benchmark::joint_pupil_bridge::m194f_production_bridge",
+            "--ignored",
+            "--test-threads=1",
+            "--nocapture"
+          ],
+          "environment": {
+            "STREHL_DEFECT": "off",
+            "STREHL_FIX_CA": "off",
+            "STREHL_FULLRES_GATHER": "1",
+            "STREHL_PYRAMID_WORKERS": "2",
+            "RAYON_NUM_THREADS": "2",
+            "STREHL_M194F_MODE": "plan",
+            "STREHL_M194F_MANIFEST": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-driver-1\\false-compiler-copy-binding\\private-manifest.json",
+            "STREHL_M194F_MANIFEST_SHA256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "STREHL_M194F_CFA_COMMISSION": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-driver-1\\false-compiler-copy-binding\\private-gate.json",
+            "STREHL_M194F_CFA_COMMISSION_SHA256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+            "STREHL_M194F_PLAN": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-driver-1\\false-compiler-copy-binding\\plan.json",
+            "STREHL_M194F_OBSERVER": "off",
+            "STREHL_M194F_CONFIDENCE": "0",
+            "STREHL_M194F_EXPOSURE": "0"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "name": "false-compiler-length",
+    "pass_": false,
+    "detail": {
+      "exit_code": 0,
+      "child_calls": 1,
+      "calls": [
+        {
+          "command": [
+            "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-driver-1\\false-compiler-length\\stub-executable.bin",
+            "--exact",
+            "merge_cmd::known_scene_benchmark::joint_pupil_bridge::m194f_production_bridge",
+            "--ignored",
+            "--test-threads=1",
+            "--nocapture"
+          ],
+          "environment": {
+            "STREHL_DEFECT": "off",
+            "STREHL_FIX_CA": "off",
+            "STREHL_FULLRES_GATHER": "1",
+            "STREHL_PYRAMID_WORKERS": "2",
+            "RAYON_NUM_THREADS": "2",
+            "STREHL_M194F_MODE": "plan",
+            "STREHL_M194F_MANIFEST": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-driver-1\\false-compiler-length\\private-manifest.json",
+            "STREHL_M194F_MANIFEST_SHA256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "STREHL_M194F_CFA_COMMISSION": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-driver-1\\false-compiler-length\\private-gate.json",
+            "STREHL_M194F_CFA_COMMISSION_SHA256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+            "STREHL_M194F_PLAN": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-driver-1\\false-compiler-length\\plan.json",
+            "STREHL_M194F_OBSERVER": "off",
+            "STREHL_M194F_CONFIDENCE": "0",
+            "STREHL_M194F_EXPOSURE": "0"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "name": "failed-copy-admission",
+    "pass_": false,
+    "detail": {
+      "exit_code": 0,
+      "child_calls": 1,
+      "calls": [
+        {
+          "command": [
+            "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-driver-1\\failed-copy-admission\\stub-executable.bin",
+            "--exact",
+            "merge_cmd::known_scene_benchmark::joint_pupil_bridge::m194f_production_bridge",
+            "--ignored",
+            "--test-threads=1",
+            "--nocapture"
+          ],
+          "environment": {
+            "STREHL_DEFECT": "off",
+            "STREHL_FIX_CA": "off",
+            "STREHL_FULLRES_GATHER": "1",
+            "STREHL_PYRAMID_WORKERS": "2",
+            "RAYON_NUM_THREADS": "2",
+            "STREHL_M194F_MODE": "plan",
+            "STREHL_M194F_MANIFEST": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-driver-1\\failed-copy-admission\\private-manifest.json",
+            "STREHL_M194F_MANIFEST_SHA256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "STREHL_M194F_CFA_COMMISSION": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-driver-1\\failed-copy-admission\\private-gate.json",
+            "STREHL_M194F_CFA_COMMISSION_SHA256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+            "STREHL_M194F_PLAN": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-driver-1\\failed-copy-admission\\plan.json",
+            "STREHL_M194F_OBSERVER": "off",
+            "STREHL_M194F_CONFIDENCE": "0",
+            "STREHL_M194F_EXPOSURE": "0"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "name": "zero-tests-with-file",
+    "pass_": true,
+    "detail": {
+      "exit_code": 1,
+      "child_calls": 1,
+      "calls": [
+        {
+          "command": [
+            "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-driver-1\\zero-tests-with-file\\stub-executable.bin",
+            "--exact",
+            "merge_cmd::known_scene_benchmark::joint_pupil_bridge::m194f_production_bridge",
+            "--ignored",
+            "--test-threads=1",
+            "--nocapture"
+          ],
+          "environment": {
+            "STREHL_DEFECT": "off",
+            "STREHL_FIX_CA": "off",
+            "STREHL_FULLRES_GATHER": "1",
+            "STREHL_PYRAMID_WORKERS": "2",
+            "RAYON_NUM_THREADS": "2",
+            "STREHL_M194F_MODE": "plan",
+            "STREHL_M194F_MANIFEST": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-driver-1\\zero-tests-with-file\\private-manifest.json",
+            "STREHL_M194F_MANIFEST_SHA256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "STREHL_M194F_CFA_COMMISSION": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-driver-1\\zero-tests-with-file\\private-gate.json",
+            "STREHL_M194F_CFA_COMMISSION_SHA256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+            "STREHL_M194F_PLAN": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-driver-1\\zero-tests-with-file\\plan.json",
+            "STREHL_M194F_OBSERVER": "off",
+            "STREHL_M194F_CONFIDENCE": "0",
+            "STREHL_M194F_EXPOSURE": "0"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "name": "eleven-tests-with-file",
+    "pass_": false,
+    "detail": {
+      "exit_code": 0,
+      "child_calls": 1,
+      "calls": [
+        {
+          "command": [
+            "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-driver-1\\eleven-tests-with-file\\stub-executable.bin",
+            "--exact",
+            "merge_cmd::known_scene_benchmark::joint_pupil_bridge::m194f_production_bridge",
+            "--ignored",
+            "--test-threads=1",
+            "--nocapture"
+          ],
+          "environment": {
+            "STREHL_DEFECT": "off",
+            "STREHL_FIX_CA": "off",
+            "STREHL_FULLRES_GATHER": "1",
+            "STREHL_PYRAMID_WORKERS": "2",
+            "RAYON_NUM_THREADS": "2",
+            "STREHL_M194F_MODE": "plan",
+            "STREHL_M194F_MANIFEST": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-driver-1\\eleven-tests-with-file\\private-manifest.json",
+            "STREHL_M194F_MANIFEST_SHA256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "STREHL_M194F_CFA_COMMISSION": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-driver-1\\eleven-tests-with-file\\private-gate.json",
+            "STREHL_M194F_CFA_COMMISSION_SHA256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+            "STREHL_M194F_PLAN": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-driver-1\\eleven-tests-with-file\\plan.json",
+            "STREHL_M194F_OBSERVER": "off",
+            "STREHL_M194F_CONFIDENCE": "0",
+            "STREHL_M194F_EXPOSURE": "0"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "name": "test-pass-text-without-summary",
+    "pass_": false,
+    "detail": {
+      "exit_code": 0,
+      "child_calls": 1,
+      "calls": [
+        {
+          "command": [
+            "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-driver-1\\test-pass-text-without-summary\\stub-executable.bin",
+            "--exact",
+            "merge_cmd::known_scene_benchmark::joint_pupil_bridge::m194f_production_bridge",
+            "--ignored",
+            "--test-threads=1",
+            "--nocapture"
+          ],
+          "environment": {
+            "STREHL_DEFECT": "off",
+            "STREHL_FIX_CA": "off",
+            "STREHL_FULLRES_GATHER": "1",
+            "STREHL_PYRAMID_WORKERS": "2",
+            "RAYON_NUM_THREADS": "2",
+            "STREHL_M194F_MODE": "plan",
+            "STREHL_M194F_MANIFEST": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-driver-1\\test-pass-text-without-summary\\private-manifest.json",
+            "STREHL_M194F_MANIFEST_SHA256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "STREHL_M194F_CFA_COMMISSION": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-driver-1\\test-pass-text-without-summary\\private-gate.json",
+            "STREHL_M194F_CFA_COMMISSION_SHA256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+            "STREHL_M194F_PLAN": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-driver-1\\test-pass-text-without-summary\\plan.json",
+            "STREHL_M194F_OBSERVER": "off",
+            "STREHL_M194F_CONFIDENCE": "0",
+            "STREHL_M194F_EXPOSURE": "0"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "name": "no-result-with-one-test",
+    "pass_": true,
+    "detail": {
+      "exit_code": 1,
+      "child_calls": 1,
+      "calls": [
+        {
+          "command": [
+            "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-driver-1\\no-result-with-one-test\\stub-executable.bin",
+            "--exact",
+            "merge_cmd::known_scene_benchmark::joint_pupil_bridge::m194f_production_bridge",
+            "--ignored",
+            "--test-threads=1",
+            "--nocapture"
+          ],
+          "environment": {
+            "STREHL_DEFECT": "off",
+            "STREHL_FIX_CA": "off",
+            "STREHL_FULLRES_GATHER": "1",
+            "STREHL_PYRAMID_WORKERS": "2",
+            "RAYON_NUM_THREADS": "2",
+            "STREHL_M194F_MODE": "plan",
+            "STREHL_M194F_MANIFEST": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-driver-1\\no-result-with-one-test\\private-manifest.json",
+            "STREHL_M194F_MANIFEST_SHA256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "STREHL_M194F_CFA_COMMISSION": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-driver-1\\no-result-with-one-test\\private-gate.json",
+            "STREHL_M194F_CFA_COMMISSION_SHA256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+            "STREHL_M194F_PLAN": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-driver-1\\no-result-with-one-test\\plan.json",
+            "STREHL_M194F_OBSERVER": "off",
+            "STREHL_M194F_CONFIDENCE": "0",
+            "STREHL_M194F_EXPOSURE": "0"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "name": "child-nonzero-with-file",
+    "pass_": true,
+    "detail": {
+      "exit_code": 1,
+      "child_calls": 1,
+      "calls": [
+        {
+          "command": [
+            "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-driver-1\\child-nonzero-with-file\\stub-executable.bin",
+            "--exact",
+            "merge_cmd::known_scene_benchmark::joint_pupil_bridge::m194f_production_bridge",
+            "--ignored",
+            "--test-threads=1",
+            "--nocapture"
+          ],
+          "environment": {
+            "STREHL_DEFECT": "off",
+            "STREHL_FIX_CA": "off",
+            "STREHL_FULLRES_GATHER": "1",
+            "STREHL_PYRAMID_WORKERS": "2",
+            "RAYON_NUM_THREADS": "2",
+            "STREHL_M194F_MODE": "plan",
+            "STREHL_M194F_MANIFEST": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-driver-1\\child-nonzero-with-file\\private-manifest.json",
+            "STREHL_M194F_MANIFEST_SHA256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "STREHL_M194F_CFA_COMMISSION": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-driver-1\\child-nonzero-with-file\\private-gate.json",
+            "STREHL_M194F_CFA_COMMISSION_SHA256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+            "STREHL_M194F_PLAN": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-driver-1\\child-nonzero-with-file\\plan.json",
+            "STREHL_M194F_OBSERVER": "off",
+            "STREHL_M194F_CONFIDENCE": "0",
+            "STREHL_M194F_EXPOSURE": "0"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "name": "source-changed-after-child",
+    "pass_": true,
+    "detail": {
+      "exit_code": 1,
+      "child_calls": 1,
+      "calls": [
+        {
+          "command": [
+            "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-driver-1\\source-changed-after-child\\stub-executable.bin",
+            "--exact",
+            "merge_cmd::known_scene_benchmark::joint_pupil_bridge::m194f_production_bridge",
+            "--ignored",
+            "--test-threads=1",
+            "--nocapture"
+          ],
+          "environment": {
+            "STREHL_DEFECT": "off",
+            "STREHL_FIX_CA": "off",
+            "STREHL_FULLRES_GATHER": "1",
+            "STREHL_PYRAMID_WORKERS": "2",
+            "RAYON_NUM_THREADS": "2",
+            "STREHL_M194F_MODE": "plan",
+            "STREHL_M194F_MANIFEST": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-driver-1\\source-changed-after-child\\private-manifest.json",
+            "STREHL_M194F_MANIFEST_SHA256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "STREHL_M194F_CFA_COMMISSION": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-driver-1\\source-changed-after-child\\private-gate.json",
+            "STREHL_M194F_CFA_COMMISSION_SHA256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+            "STREHL_M194F_PLAN": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-driver-1\\source-changed-after-child\\plan.json",
+            "STREHL_M194F_OBSERVER": "off",
+            "STREHL_M194F_CONFIDENCE": "0",
+            "STREHL_M194F_EXPOSURE": "0"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "name": "driver-changed-after-child",
+    "pass_": true,
+    "detail": {
+      "exit_code": 1,
+      "child_calls": 1,
+      "calls": [
+        {
+          "command": [
+            "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-driver-1\\driver-changed-after-child\\stub-executable.bin",
+            "--exact",
+            "merge_cmd::known_scene_benchmark::joint_pupil_bridge::m194f_production_bridge",
+            "--ignored",
+            "--test-threads=1",
+            "--nocapture"
+          ],
+          "environment": {
+            "STREHL_DEFECT": "off",
+            "STREHL_FIX_CA": "off",
+            "STREHL_FULLRES_GATHER": "1",
+            "STREHL_PYRAMID_WORKERS": "2",
+            "RAYON_NUM_THREADS": "2",
+            "STREHL_M194F_MODE": "plan",
+            "STREHL_M194F_MANIFEST": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-driver-1\\driver-changed-after-child\\private-manifest.json",
+            "STREHL_M194F_MANIFEST_SHA256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "STREHL_M194F_CFA_COMMISSION": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-driver-1\\driver-changed-after-child\\private-gate.json",
+            "STREHL_M194F_CFA_COMMISSION_SHA256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+            "STREHL_M194F_PLAN": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-driver-1\\driver-changed-after-child\\plan.json",
+            "STREHL_M194F_OBSERVER": "off",
+            "STREHL_M194F_CONFIDENCE": "0",
+            "STREHL_M194F_EXPOSURE": "0"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "name": "executable-changed-after-child",
+    "pass_": true,
+    "detail": {
+      "exit_code": 1,
+      "child_calls": 1,
+      "calls": [
+        {
+          "command": [
+            "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-driver-1\\executable-changed-after-child\\stub-executable.bin",
+            "--exact",
+            "merge_cmd::known_scene_benchmark::joint_pupil_bridge::m194f_production_bridge",
+            "--ignored",
+            "--test-threads=1",
+            "--nocapture"
+          ],
+          "environment": {
+            "STREHL_DEFECT": "off",
+            "STREHL_FIX_CA": "off",
+            "STREHL_FULLRES_GATHER": "1",
+            "STREHL_PYRAMID_WORKERS": "2",
+            "RAYON_NUM_THREADS": "2",
+            "STREHL_M194F_MODE": "plan",
+            "STREHL_M194F_MANIFEST": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-driver-1\\executable-changed-after-child\\private-manifest.json",
+            "STREHL_M194F_MANIFEST_SHA256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "STREHL_M194F_CFA_COMMISSION": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-driver-1\\executable-changed-after-child\\private-gate.json",
+            "STREHL_M194F_CFA_COMMISSION_SHA256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+            "STREHL_M194F_PLAN": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-driver-1\\executable-changed-after-child\\plan.json",
+            "STREHL_M194F_OBSERVER": "off",
+            "STREHL_M194F_CONFIDENCE": "0",
+            "STREHL_M194F_EXPOSURE": "0"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "name": "valid-stub-final-companion",
+    "pass_": true,
+    "detail": {
+      "exit_code": 0,
+      "child_calls": 1,
+      "calls": [
+        {
+          "command": [
+            "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-driver-1\\valid-stub-final-companion\\stub-executable.bin",
+            "--exact",
+            "merge_cmd::known_scene_benchmark::joint_pupil_bridge::m194f_production_bridge",
+            "--ignored",
+            "--test-threads=1",
+            "--nocapture"
+          ],
+          "environment": {
+            "STREHL_DEFECT": "off",
+            "STREHL_FIX_CA": "off",
+            "STREHL_FULLRES_GATHER": "1",
+            "STREHL_PYRAMID_WORKERS": "2",
+            "RAYON_NUM_THREADS": "2",
+            "STREHL_M194F_MODE": "plan",
+            "STREHL_M194F_MANIFEST": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-driver-1\\valid-stub-final-companion\\private-manifest.json",
+            "STREHL_M194F_MANIFEST_SHA256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "STREHL_M194F_CFA_COMMISSION": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-driver-1\\valid-stub-final-companion\\private-gate.json",
+            "STREHL_M194F_CFA_COMMISSION_SHA256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+            "STREHL_M194F_PLAN": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-driver-1\\valid-stub-final-companion\\plan.json",
+            "STREHL_M194F_OBSERVER": "off",
+            "STREHL_M194F_CONFIDENCE": "0",
+            "STREHL_M194F_EXPOSURE": "0"
+          }
+        }
+      ]
+    }
+  }
+]

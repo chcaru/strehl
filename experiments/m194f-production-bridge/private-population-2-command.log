@@ -1,0 +1,154 @@
+
+running 1 test
+test merge_cmd::known_scene_benchmark::joint_pupil_bridge::m194f_author_tests::m194f_private_coordinate_and_rank_controls ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 149 filtered out; finished in 0.18s
+
+frames          : 5 from M194F-NO-RAW-DIRECTORY  (first decode 0.00 s)
+planes          : 32 x 24 per CFA plane
+analysis domain : 24 x 16 at full-plane origin (3, 5) -- Crop is applied BEFORE luma, variance, weighting and accumulation
+--- the merge ---
+bands           : 1 Laplacian levels + 1 base, coarsest 12 x 8
+selection       : SOFT -- weight = (band power above the noise floor)^exponent, a convex combination.
+                  Sign coherence is free: a convex combination cannot take adjacent
+                  coefficients from opposite-signed frames, which is the ringing a
+                  coefficient-wise argmax produces.
+noise gate      : 2.00 x the modelled band-noise power. Below it, NO frame may win and the
+                  merge averages -- which is the correct estimator when there is no
+                  information, and the only operation that gets below single-frame noise.
+exponent        : 2.00
+per-band exp    : 2   (coarsest -> finest)
+                  sharpness ramps 1.4x per octave toward the fine bands. A wrong pick in a
+                  fine band is one high-frequency coefficient nobody can see; a wrong pick
+                  in a coarse band IS the rim.
+base band       : plain mean across frames
+not applied     : photometric gain, clip census, outlier rejection, halo correction, through-focus
+                  statistics. Those are the --merge estimator path's stages; this arm is the merge only.
+coverage mode   : crop -- as asked, --cover
+alignment       : ON (M194f supplied identity), reference frame 2, 5 placed / 0 refused, 0.0 s
+  held-out err  : NOT MEASURED   resampler: CatmullRom
+  coverage      : CROPPED to the region EVERY frame covers -- 24 x 16 plane px at (3, 5) of 32 x 24, emitted at UNITY SCALE. 0.0% of width dropped and NOT upsampled (k=1.0000), so the output is SMALLER than the plane by design and no placement carries a coverage scale. The reference frame's own placement reaches the gather unmodified.
+memory plan     : 5 canonical chunks, 1 reusable frame worker, 1 retained + 1 scratch accumulator, 2 execution threads
+                  CONSTANT in the frame count and reduction order. Chunks run serially; spatial work uses
+                  the execution pool. STREHL_PYRAMID_WORKERS=N changes threads, never arithmetic.
+
+folded          : 5 / 5 frames in 0.1 s (0.03 s per frame, 2 execution threads)
+band noise gain : 0.8894 0.0748
+                  (E[L_k^2] / sigma_0^2, MEASURED on these operators, not derived.)
+averaged        : 100.0% 100.0%
+                  per level, the fraction of coefficients where NO frame cleared the noise
+                  floor and the merge therefore averaged instead of selecting. Near 0%
+                  everywhere would mean the gate is not gating and this is a naive
+                  pyramid stacker.
+
+output domain    : compact Crop 24x16 from full-plane origin (3, 5); collapsed plane written directly (no second crop)
+
+wrote           : C:\dev\blog\death-of-software\projects\strehl\experiments\m194f-production-bridge\private-population-2\constant.tif (48 x 32, 16-bit RGB, linear camera-native RGB, Malvar-He-Cutler demosaic)
+                  Full sensor resolution: every CFA site estimated, one focus
+                  decision per quad. Interpolated -- do not measure resolution on it.
+collapse+write  : 0.0 s
+total           : 0.1 s
+frames          : 5 from M194F-NO-RAW-DIRECTORY  (first decode 0.00 s)
+planes          : 32 x 24 per CFA plane
+analysis domain : 24 x 16 at full-plane origin (3, 5) -- Crop is applied BEFORE luma, variance, weighting and accumulation
+--- the merge ---
+bands           : 1 Laplacian levels + 1 base, coarsest 12 x 8
+selection       : SOFT -- weight = (band power above the noise floor)^exponent, a convex combination.
+                  Sign coherence is free: a convex combination cannot take adjacent
+                  coefficients from opposite-signed frames, which is the ringing a
+                  coefficient-wise argmax produces.
+noise gate      : 2.00 x the modelled band-noise power. Below it, NO frame may win and the
+                  merge averages -- which is the correct estimator when there is no
+                  information, and the only operation that gets below single-frame noise.
+exponent        : 2.00
+per-band exp    : 2   (coarsest -> finest)
+                  sharpness ramps 1.4x per octave toward the fine bands. A wrong pick in a
+                  fine band is one high-frequency coefficient nobody can see; a wrong pick
+                  in a coarse band IS the rim.
+base band       : plain mean across frames
+not applied     : photometric gain, clip census, outlier rejection, halo correction, through-focus
+                  statistics. Those are the --merge estimator path's stages; this arm is the merge only.
+coverage mode   : crop -- as asked, --cover
+alignment       : ON (M194f supplied identity), reference frame 2, 5 placed / 0 refused, 0.0 s
+  held-out err  : NOT MEASURED   resampler: CatmullRom
+  coverage      : CROPPED to the region EVERY frame covers -- 24 x 16 plane px at (3, 5) of 32 x 24, emitted at UNITY SCALE. 0.0% of width dropped and NOT upsampled (k=1.0000), so the output is SMALLER than the plane by design and no placement carries a coverage scale. The reference frame's own placement reaches the gather unmodified.
+memory plan     : 5 canonical chunks, 1 reusable frame worker, 1 retained + 1 scratch accumulator, 2 execution threads
+                  CONSTANT in the frame count and reduction order. Chunks run serially; spatial work uses
+                  the execution pool. STREHL_PYRAMID_WORKERS=N changes threads, never arithmetic.
+
+folded          : 5 / 5 frames in 0.0 s (0.00 s per frame, 2 execution threads)
+band noise gain : 0.8894 0.0748
+                  (E[L_k^2] / sigma_0^2, MEASURED on these operators, not derived.)
+averaged        : 62.5% 100.0%
+                  per level, the fraction of coefficients where NO frame cleared the noise
+                  floor and the merge therefore averaged instead of selecting. Near 0%
+                  everywhere would mean the gate is not gating and this is a naive
+                  pyramid stacker.
+
+output domain    : compact Crop 24x16 from full-plane origin (3, 5); collapsed plane written directly (no second crop)
+
+wrote           : C:\dev\blog\death-of-software\projects\strehl\experiments\m194f-production-bridge\private-population-2\affine.tif (48 x 32, 16-bit RGB, linear camera-native RGB, Malvar-He-Cutler demosaic)
+                  Full sensor resolution: every CFA site estimated, one focus
+                  decision per quad. Interpolated -- do not measure resolution on it.
+collapse+write  : 0.0 s
+total           : 0.0 s
+frames          : 5 from M194F-NO-RAW-DIRECTORY  (first decode 0.00 s)
+planes          : 32 x 24 per CFA plane
+analysis domain : 24 x 16 at full-plane origin (3, 5) -- Crop is applied BEFORE luma, variance, weighting and accumulation
+--- the merge ---
+bands           : 1 Laplacian levels + 1 base, coarsest 12 x 8
+selection       : SOFT -- weight = (band power above the noise floor)^exponent, a convex combination.
+                  Sign coherence is free: a convex combination cannot take adjacent
+                  coefficients from opposite-signed frames, which is the ringing a
+                  coefficient-wise argmax produces.
+noise gate      : 2.00 x the modelled band-noise power. Below it, NO frame may win and the
+                  merge averages -- which is the correct estimator when there is no
+                  information, and the only operation that gets below single-frame noise.
+exponent        : 2.00
+per-band exp    : 2   (coarsest -> finest)
+                  sharpness ramps 1.4x per octave toward the fine bands. A wrong pick in a
+                  fine band is one high-frequency coefficient nobody can see; a wrong pick
+                  in a coarse band IS the rim.
+base band       : plain mean across frames
+not applied     : photometric gain, clip census, outlier rejection, halo correction, through-focus
+                  statistics. Those are the --merge estimator path's stages; this arm is the merge only.
+coverage mode   : crop -- as asked, --cover
+alignment       : ON (M194f supplied identity), reference frame 2, 5 placed / 0 refused, 0.0 s
+  held-out err  : NOT MEASURED   resampler: CatmullRom
+  coverage      : CROPPED to the region EVERY frame covers -- 24 x 16 plane px at (3, 5) of 32 x 24, emitted at UNITY SCALE. 0.0% of width dropped and NOT upsampled (k=1.0000), so the output is SMALLER than the plane by design and no placement carries a coverage scale. The reference frame's own placement reaches the gather unmodified.
+memory plan     : 5 canonical chunks, 1 reusable frame worker, 1 retained + 1 scratch accumulator, 2 execution threads
+                  CONSTANT in the frame count and reduction order. Chunks run serially; spatial work uses
+                  the execution pool. STREHL_PYRAMID_WORKERS=N changes threads, never arithmetic.
+
+folded          : 5 / 5 frames in 0.0 s (0.00 s per frame, 2 execution threads)
+band noise gain : 0.8894 0.0748
+                  (E[L_k^2] / sigma_0^2, MEASURED on these operators, not derived.)
+averaged        : 62.5% 100.0%
+                  per level, the fraction of coefficients where NO frame cleared the noise
+                  floor and the merge therefore averaged instead of selecting. Near 0%
+                  everywhere would mean the gate is not gating and this is a naive
+                  pyramid stacker.
+
+output domain    : compact Crop 24x16 from full-plane origin (3, 5); collapsed plane written directly (no second crop)
+
+wrote           : C:\dev\blog\death-of-software\projects\strehl\experiments\m194f-production-bridge\private-population-2\mutation.tif (48 x 32, 16-bit RGB, linear camera-native RGB, Malvar-He-Cutler demosaic)
+                  Full sensor resolution: every CFA site estimated, one focus
+                  decision per quad. Interpolated -- do not measure resolution on it.
+collapse+write  : 0.0 s
+total           : 0.0 s
+confidence map  : wrote C:\dev\blog\death-of-software\projects\strehl\experiments\m194f-production-bridge\private-population-2\rank.tif (16x8 u16 plane grid, milli-units, LOW IS GOOD)
+                  graded 128 + unreached 0 = 128 of 128 pixels
+                  mean 0.4000 over the 128 pixels a frame reached
+                  where the merged output sits inside the cloud of aligned observations.
+                  Zero means the merge committed to an extreme -- it elected a frame. One
+                  means it sat dead centre -- it averaged frames that disagreed and chose
+                  none of them, which is what veiled detail looks like from the inside.
+
+confidence map  : wrote C:\dev\blog\death-of-software\projects\strehl\experiments\m194f-production-bridge\private-population-2\rank-sentinel.tif (16x8 u16 plane grid, milli-units, LOW IS GOOD)
+                  graded 127 + unreached 1 = 128 of 128 pixels
+                  mean 0.4031 over the 127 pixels a frame reached
+                  where the merged output sits inside the cloud of aligned observations.
+                  Zero means the merge committed to an extreme -- it elected a frame. One
+                  means it sat dead centre -- it averaged frames that disagreed and chose
+                  none of them, which is what veiled detail looks like from the inside.
+

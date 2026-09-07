@@ -1,0 +1,204 @@
+
+running 9 tests
+test merge_cmd::known_scene_benchmark::joint_pupil_bridge::m194f_author_tests::m194f_author_default_and_configuration_controls ... ok
+test merge_cmd::known_scene_benchmark::joint_pupil_bridge::m194f_author_tests::m194f_private_coordinate_and_rank_controls ... ignored, M194f private intended five-TIFF component population, explicit fresh output
+test merge_cmd::known_scene_benchmark::joint_pupil_bridge::m194f_independent_tests::m194f_independent_bounded_json_and_payload ... ok
+test merge_cmd::known_scene_benchmark::joint_pupil_bridge::m194f_independent_tests::m194f_independent_gate_and_child_semantics ... ok
+test merge_cmd::known_scene_benchmark::joint_pupil_bridge::m194f_independent_tests::m194f_independent_manifest_semantics ... ok
+test merge_cmd::known_scene_benchmark::joint_pupil_bridge::m194f_independent_tests::m194f_independent_plan_and_actual_confidence_reread ... ok
+test merge_cmd::known_scene_benchmark::joint_pupil_bridge::m194f_independent_tests::m194f_independent_relocated_chain_and_live_corruption ... ok
+test merge_cmd::known_scene_benchmark::joint_pupil_bridge::m194f_independent_tests::m194f_independent_source_observer_and_second_file_read ... ok
+test merge_cmd::known_scene_benchmark::joint_pupil_bridge::m194f_production_bridge ... ignored, M194f explicit admitted manifest, plan and output only
+
+test result: ok. 7 passed; 0 failed; 2 ignored; 0 measured; 141 filtered out; finished in 1.04s
+
+M194F_INDEPENDENT_INPUT {"evidence":{"bytes":6144},"name":"exact-cfa-limit-buffer","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"bounded input exceeds 6144 bytes"},"name":"appended-cfa-bounded-read","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"bytes":1048576},"name":"exact-json-limit-valid","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"bounded input exceeds 1048576 bytes"},"name":"rehash-oversize-json","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"duplicate JSON key \"same\" at line 1 column 19"},"name":"duplicate-root","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"duplicate JSON key \"hash\" at line 1 column 29"},"name":"duplicate-deep-array-map","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"trailing characters at line 1 column 8"},"name":"trailing-json","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"expected value at line 1 column 6"},"name":"nonfinite-literal","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"number out of range at line 1 column 10"},"name":"infinite-exponent","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"EOF while parsing a list at line 1 column 9"},"name":"truncated-json","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"JSON SHA-256 mismatch"},"name":"wrong-json-hash","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"invalid external SHA-256"},"name":"malformed-json-hash","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"open C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments/m194f-production-bridge\\independent-input-bounded-40572-1788795430119443300: Access is denied. (os error 5)"},"name":"directory-as-json","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":null,"name":"genuine-gate-validator","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":null,"name":"genuine-child-validator","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":null,"name":"complete-genuine-load","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"CFA authority schema/status/scope/count"},"name":"gate-schema","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"CFA authority schema/status/scope/count"},"name":"gate-status","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"CFA authority schema/status/scope/count"},"name":"gate-sample-count","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"invalid type: floating point `15360.0`, expected usize"},"name":"gate-float-sample-type","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"invalid type: boolean `true`, expected usize"},"name":"gate-bool-sample-type","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"CFA authority association mismatch"},"name":"gate-manifest-binding","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"CFA authority association mismatch"},"name":"gate-float-binding","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"CFA authority schema/status/scope/count"},"name":"gate-scope","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"independent CFA result status/scope/count"},"name":"child-schema","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"independent CFA result status/scope/count"},"name":"child-status","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"independent CFA result status/scope/count"},"name":"child-fixture","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"invalid type: integer `0`, expected a boolean"},"name":"child-fixture-integer","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"independent CFA result status/scope/count"},"name":"child-count","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"invalid type: floating point `15360.0`, expected usize"},"name":"child-count-float","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"independent CFA result authority association"},"name":"child-manifest-binding","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"independent CFA result authority association"},"name":"child-float-binding","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"independent source closure incomplete/changed"},"name":"child-source-changed","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"invalid type: integer `1`, expected a boolean"},"name":"child-source-boolean-type","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"independent source closure incomplete/changed"},"name":"child-source-before-missing","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"missing field `independent_verification`"},"name":"gate-missing-child","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"missing field `status`"},"name":"gate-missing-status","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"unknown field `candidate_authority`, expected one of `schema`, `status`, `scope`, `sample_count`, `manifest`, `float_commission`, `independent_verification`"},"name":"gate-unknown-key","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"unknown field `candidate_authority`, expected one of `schema`, `status`, `scope`, `fixture_only`, `sample_count`, `externally_trusted_manifest_sha256`, `externally_trusted_float_commission_sha256`, `source_before`, `source_after`, `source_unchanged`, `input_bindings`, `frames`, `units`, `command`, `interpreter_argv`, `completed_utc`, `cwd`, `executable`, `numpy`, `python`, `reader_controls`, `xoptions`"},"name":"child-unknown-key","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"registered verifier source names/hash mismatch"},"name":"child-coherent-omitted-source","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":null,"name":"actual-source-binding-companion","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"bound file size/hash mismatch: \\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\model.py"},"name":"actual-source-false-hash","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":null,"name":"genuine-manifest-validator","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"wrong manifest schema/status"},"name":"manifest-schema","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"wrong manifest schema/status"},"name":"manifest-status","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"invalid type: boolean `false`, expected usize"},"name":"manifest-index-bool","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"invalid type: floating point `2.0`, expected usize"},"name":"manifest-index-float","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"frame geometry/index mismatch"},"name":"manifest-duplicate-index","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"invalid type: floating point `64.0`, expected usize"},"name":"manifest-width-float","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"invalid type: integer `0`, expected a boolean"},"name":"manifest-noise-integer","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"unsupported sensor contract"},"name":"manifest-noise-on","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"unsupported sensor contract"},"name":"manifest-cfa","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"unsupported sensor contract"},"name":"manifest-origin","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"unsupported sensor contract"},"name":"manifest-black","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"unsupported sensor contract"},"name":"manifest-white","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"unsupported sensor contract"},"name":"manifest-gain","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"unsupported sensor contract"},"name":"manifest-rounder","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"array reference type/shape/length mismatch"},"name":"manifest-size","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"invalid type: floating point `6144.0`, expected u64"},"name":"manifest-size-float","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"array reference type/shape/length mismatch"},"name":"manifest-dtype","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"invalid type: boolean `true`, expected usize"},"name":"manifest-shape-bool","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"array reference type/shape/length mismatch"},"name":"manifest-shape-swapped","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"frame geometry/index mismatch"},"name":"manifest-transform","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"frame geometry/index mismatch"},"name":"manifest-signed-focus","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"unsupported admitted model/numerical contract"},"name":"manifest-model","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"unsupported admitted model/numerical contract"},"name":"manifest-diffraction","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"array reference type/shape/length mismatch"},"name":"manifest-scalar-unit-dtype","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"invalid type: null, expected struct BridgeManifest"},"name":"manifest-null","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"invalid length 0, expected struct BridgeManifest with 8 elements"},"name":"manifest-array","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"invalid type: string \"PASS\", expected struct BridgeManifest"},"name":"manifest-string","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"unsupported sensor contract"},"name":"manifest-same-count-wrong-geometry","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"exactly five frames required"},"name":"manifest-missing-frame","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"frame geometry/index mismatch"},"name":"manifest-reordered-original-indices","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"unknown field `iso`, expected one of `width`, `height`, `active_origin`, `black`, `white`, `cell`, `cfa`, `channel_factors`, `gain_dn_per_e`, `noise`, `rounding`"},"name":"manifest-unknown-sensor-key","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"producer closure mismatch"},"name":"manifest-missing-producer-source","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"invalid relative reference"},"name":"path-parent","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"invalid relative reference"},"name":"path-absolute","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"invalid relative reference"},"name":"path-drive-relative","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"invalid relative reference"},"name":"path-unc","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"invalid relative reference"},"name":"path-backslash-parent","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"invalid relative reference"},"name":"path-empty","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"invalid relative reference"},"name":"path-embedded-parent","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":null,"name":"valid-nested-relative-companion","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"crop":{"height":17,"width":22,"x":5,"y":4},"levels":[[22,17],[11,9]],"offset":[10,8]},"name":"actual-recomputed-plan-valid","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"trusted plan/config/geometry mismatch"},"name":"same-size-wrong-native-offset","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"trusted plan/config/geometry mismatch"},"name":"changed-exposure-plan","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"trusted plan/config/geometry mismatch"},"name":"changed-observer-plan","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"trusted plan/config/geometry mismatch"},"name":"changed-effective-levels-plan","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"trusted plan/config/geometry mismatch"},"name":"changed-authority-plan","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"trusted plan/config/geometry mismatch"},"name":"unknown-plan-key","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"trusted plan/config/geometry mismatch"},"name":"missing-plan-source-binding","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"trusted plan/config/geometry mismatch"},"name":"coherent-looking-plan-source-substitution","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"counts":[2,2,2,2,2],"first_pass":"manual decode companion; separate failed arm below uses the real fold","hooks":10,"sites":374},"name":"actual-confidence-second-decode-valid","pass":true}
+frames          : 5 from M194F-NO-RAW-DIRECTORY  (first decode 0.00 s)
+planes          : 32 x 24 per CFA plane
+analysis domain : 22 x 17 at full-plane origin (5, 4) -- Crop is applied BEFORE luma, variance, weighting and accumulation
+--- the merge ---
+bands           : 1 Laplacian levels + 1 base, coarsest 11 x 9
+selection       : SOFT -- weight = (band power above the noise floor)^exponent, a convex combination.
+                  Sign coherence is free: a convex combination cannot take adjacent
+                  coefficients from opposite-signed frames, which is the ringing a
+                  coefficient-wise argmax produces.
+noise gate      : 2.00 x the modelled band-noise power. Below it, NO frame may win and the
+                  merge averages -- which is the correct estimator when there is no
+                  information, and the only operation that gets below single-frame noise.
+exponent        : 2.00
+per-band exp    : 2   (coarsest -> finest)
+                  sharpness ramps 1.4x per octave toward the fine bands. A wrong pick in a
+                  fine band is one high-frequency coefficient nobody can see; a wrong pick
+                  in a coarse band IS the rim.
+base band       : plain mean across frames
+not applied     : photometric gain, clip census, outlier rejection, halo correction, through-focus
+                  statistics. Those are the --merge estimator path's stages; this arm is the merge only.
+coverage mode   : crop -- as asked, --cover
+alignment       : ON (M194f supplied identity), reference frame 2, 5 placed / 0 refused, 0.0 s
+  held-out err  : NOT MEASURED   resampler: CatmullRom
+  coverage      : CROPPED to the region EVERY frame covers -- 22 x 17 plane px at (5, 4) of 32 x 24, emitted at UNITY SCALE. 27.3% of width dropped and NOT upsampled (k=0.7273), so the output is SMALLER than the plane by design and no placement carries a coverage scale. The reference frame's own placement reaches the gather unmodified.
+memory plan     : 5 canonical chunks, 1 reusable frame worker, 1 retained + 1 scratch accumulator, 2 execution threads
+                  CONSTANT in the frame count and reduction order. Chunks run serially; spatial work uses
+                  the execution pool. STREHL_PYRAMID_WORKERS=N changes threads, never arithmetic.
+
+folded          : 5 / 5 frames in 0.1 s (0.02 s per frame, 2 execution threads)
+band noise gain : 0.8894 0.0748
+                  (E[L_k^2] / sigma_0^2, MEASURED on these operators, not derived.)
+averaged        : 0.0% 100.0%
+                  per level, the fraction of coefficients where NO frame cleared the noise
+                  floor and the merge therefore averaged instead of selecting. Near 0%
+                  everywhere would mean the gate is not gating and this is a naive
+                  pyramid stacker.
+
+M194F_INDEPENDENT_INPUT {"evidence":{"attempts":[2,2,2,2,2],"error":"frame 3: M194f injected decode failure at index 3, attempt 2","hooks":9,"partial_gray_exists":false,"partial_rgb_exists":false,"scope":"private injected second-read fault, not intended render","successes":[2,2,2,1,2]},"name":"actual-fold-confidence-second-attempt-refuses","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":null,"name":"unchanged-relocated-genuine-chain","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"unregistered external authority"},"name":"unregistered-external-manifest","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"unregistered external authority"},"name":"unregistered-external-gate","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"bound file size/hash mismatch: \\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-input-chain-40572-1788795430759471500\\bundle\\frame-03.cfa"},"name":"same-length-copied-cfa-corruption","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":null,"name":"restored-cfa-valid-companion","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"bound file size/hash mismatch: \\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-input-chain-40572-1788795430759471500\\authority\\result.json"},"name":"copied-child-substitution-old-gate","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"bound file size/hash mismatch: \\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-input-chain-40572-1788795430759471500\\authority\\cfa-commission.json"},"name":"rehashed-child-and-gate-old-external-pin","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"unregistered external authority"},"name":"rehashed-child-and-untrusted-new-external-pin","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":null,"name":"restored-entire-chain-valid","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"index":3,"position":0,"samples":3072},"name":"Off-actual-frame-3","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"counts":[0,0,0,0,0],"hooks":0},"name":"Off-identity-indexed-count-0","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"index":0,"position":1,"samples":3072},"name":"Off-actual-frame-0","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"counts":[0,0,0,0,0],"hooks":0},"name":"Off-identity-indexed-count-1","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"index":4,"position":2,"samples":3072},"name":"Off-actual-frame-4","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"counts":[0,0,0,0,0],"hooks":0},"name":"Off-identity-indexed-count-2","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"index":1,"position":3,"samples":3072},"name":"Off-actual-frame-1","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"counts":[0,0,0,0,0],"hooks":0},"name":"Off-identity-indexed-count-3","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"index":2,"position":4,"samples":3072},"name":"Off-actual-frame-2","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"counts":[0,0,0,0,0],"hooks":0},"name":"Off-identity-indexed-count-4","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"counts":[0,0,0,0,0],"hooks":0},"name":"Off-second-complete-pass","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"bridge source index outside input"},"name":"Off-out-of-range-index","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"index":3,"position":0,"samples":3072},"name":"Count-actual-frame-3","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"counts":[0,0,0,1,0],"hooks":1},"name":"Count-identity-indexed-count-0","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"index":0,"position":1,"samples":3072},"name":"Count-actual-frame-0","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"counts":[1,0,0,1,0],"hooks":2},"name":"Count-identity-indexed-count-1","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"index":4,"position":2,"samples":3072},"name":"Count-actual-frame-4","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"counts":[1,0,0,1,1],"hooks":3},"name":"Count-identity-indexed-count-2","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"index":1,"position":3,"samples":3072},"name":"Count-actual-frame-1","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"counts":[1,1,0,1,1],"hooks":4},"name":"Count-identity-indexed-count-3","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"index":2,"position":4,"samples":3072},"name":"Count-actual-frame-2","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"counts":[1,1,1,1,1],"hooks":5},"name":"Count-identity-indexed-count-4","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"counts":[2,2,2,2,2],"hooks":10},"name":"Count-second-complete-pass","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"bridge source index outside input"},"name":"Count-out-of-range-index","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"index":3,"position":0,"samples":3072},"name":"Placebo-actual-frame-3","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"counts":[0,0,0,0,0],"hooks":1},"name":"Placebo-identity-indexed-count-0","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"index":0,"position":1,"samples":3072},"name":"Placebo-actual-frame-0","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"counts":[0,0,0,0,0],"hooks":2},"name":"Placebo-identity-indexed-count-1","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"index":4,"position":2,"samples":3072},"name":"Placebo-actual-frame-4","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"counts":[0,0,0,0,0],"hooks":3},"name":"Placebo-identity-indexed-count-2","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"index":1,"position":3,"samples":3072},"name":"Placebo-actual-frame-1","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"counts":[0,0,0,0,0],"hooks":4},"name":"Placebo-identity-indexed-count-3","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"index":2,"position":4,"samples":3072},"name":"Placebo-actual-frame-2","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"counts":[0,0,0,0,0],"hooks":5},"name":"Placebo-identity-indexed-count-4","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"counts":[0,0,0,0,0],"hooks":10},"name":"Placebo-second-complete-pass","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"bridge source index outside input"},"name":"Placebo-out-of-range-index","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"source CFA length/hash changed"},"name":"second-read-actual-file-corruption","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"counts":[0,0,0,1,0],"hooks":1},"name":"failed-read-not-success","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"scope":"private source API, not new optical admission"},"name":"changed-private-source-live-with-private-binding","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":null,"name":"restored-second-read-companion","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"source CFA length/hash changed"},"name":"short-rehashed-cfa","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":null,"name":"short-rehashed-cfa-no-success","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"bounded input exceeds 6144 bytes"},"name":"appended-rehashed-cfa","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":null,"name":"appended-rehashed-cfa-no-success","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"source CFA outside admitted rails"},"name":"below-black-rehashed-cfa","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":null,"name":"below-black-rehashed-cfa-no-success","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"source CFA outside admitted rails"},"name":"white-endpoint-rehashed-cfa","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":null,"name":"white-endpoint-rehashed-cfa-no-success","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"five source paths/hashes required"},"name":"short-source-count","pass":true}
+M194F_INDEPENDENT_INPUT {"evidence":{"refusal":"five source paths/hashes required"},"name":"bad-source-hash-syntax","pass":true}

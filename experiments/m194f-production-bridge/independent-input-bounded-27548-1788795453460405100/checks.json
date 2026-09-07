@@ -1,0 +1,93 @@
+[
+  {
+    "evidence": {
+      "bytes": 6144
+    },
+    "name": "exact-cfa-limit-buffer",
+    "pass": true
+  },
+  {
+    "evidence": {
+      "refusal": "bounded input exceeds 6144 bytes"
+    },
+    "name": "appended-cfa-bounded-read",
+    "pass": true
+  },
+  {
+    "evidence": {
+      "bytes": 1048576
+    },
+    "name": "exact-json-limit-valid",
+    "pass": true
+  },
+  {
+    "evidence": {
+      "refusal": "bounded input exceeds 1048576 bytes"
+    },
+    "name": "rehash-oversize-json",
+    "pass": true
+  },
+  {
+    "evidence": {
+      "refusal": "duplicate JSON key \"same\" at line 1 column 19"
+    },
+    "name": "duplicate-root",
+    "pass": true
+  },
+  {
+    "evidence": {
+      "refusal": "duplicate JSON key \"hash\" at line 1 column 29"
+    },
+    "name": "duplicate-deep-array-map",
+    "pass": true
+  },
+  {
+    "evidence": {
+      "refusal": "trailing characters at line 1 column 8"
+    },
+    "name": "trailing-json",
+    "pass": true
+  },
+  {
+    "evidence": {
+      "refusal": "expected value at line 1 column 6"
+    },
+    "name": "nonfinite-literal",
+    "pass": true
+  },
+  {
+    "evidence": {
+      "refusal": "number out of range at line 1 column 10"
+    },
+    "name": "infinite-exponent",
+    "pass": true
+  },
+  {
+    "evidence": {
+      "refusal": "EOF while parsing a list at line 1 column 9"
+    },
+    "name": "truncated-json",
+    "pass": true
+  },
+  {
+    "evidence": {
+      "refusal": "JSON SHA-256 mismatch"
+    },
+    "name": "wrong-json-hash",
+    "pass": true
+  },
+  {
+    "evidence": {
+      "refusal": "invalid external SHA-256"
+    },
+    "name": "malformed-json-hash",
+    "pass": true
+  },
+  {
+    "evidence": {
+      "refusal": "open C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments/m194f-production-bridge\\independent-input-bounded-27548-1788795453460405100: Access is denied. (os error 5)"
+    },
+    "name": "directory-as-json",
+    "pass": true
+  }
+]

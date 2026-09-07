@@ -73,6 +73,16 @@ def main():
     for key in ("input_green_dn","merged_luma_dn"):
         equivalent["confidence_component"][key]=[float(v) for v in equivalent["confidence_component"][key]]
     case("private-exact-float-DN-valid",lambda:exercise("float-dn",equivalent))
+    extended=copy.deepcopy(private)
+    for section in ("rgb","gray"):
+        for record in extended[section].values():record["path"]="\\\\?\\"+record["path"]
+    case("private-extended-Windows-paths-valid",lambda:exercise("extended-paths",extended))
+    local=files/"path-control.txt";local.write_text("private path fixture",encoding="utf-8")
+    case("extended-local-same-file",lambda:R.require(V.artifact_path("\\\\?\\"+str(local)) == local.resolve(),"extended path identity"))
+    outside=str(ROOT.parent/"OUTSIDE-M194F-PATH-CONTROL-NONEXISTENT")
+    case("ordinary-outside-root",lambda:V.artifact_path(outside),True)
+    case("extended-outside-root",lambda:V.artifact_path("\\\\?\\"+outside),True)
+    case("extended-UNC-refused",lambda:V.artifact_path("\\\\?\\UNC\\example\\share\\file"),True)
     mutations={
         "missing-scene":lambda p:p["rgb"].pop("constant"),
         "substitute-scene":lambda p:p["rgb"].update(constant=p["rgb"]["affine"]),
@@ -108,19 +118,20 @@ def main():
         case(name,lambda p=p,name=name:exercise(name,p),True)
     binding=files/"binding.bin";binding.write_bytes(b"PRIVATE CONTRACT FIXTURE, NO AUTHORITY")
     build=dict(test_executable=dict(sha256="1"*64,bytes=123))
-    run=dict(observer="count",confidence=False,exposure=0)
+    run=dict(observer="count",confidence=False,exposure=0,wb_mode="baseline")
     plan=dict(schema="m194f-consumer-plan-v1",authority=V.AUTHORITY,full_native=[64,48],full_quad=[32,24],
               environment=V.BASE_ENV,reference_original_index=2,reference_local_index=2,output_channels=3,
               crop_quad=dict(x=1,y=1,width=30,height=22),canonical_native_offset=[2,2],output_native=[60,44],cover_fit=dict(kind="Crop"),
               level_sizes=[[30,22],[15,11]],placements=[dict(original_index=i,local_index=i,quad_similarity=dict(a_re=1.0,a_im=0.0,b_re=0.0,b_im=0.0)) for i in range(5)],
+              wb_mode="baseline",frame_wb_f32=[float(np.float32(4/3)),1.0,float(np.float32(5/3))],
               wb_f32=[float(np.float32(4/3)),1.0,float(np.float32(5/3))],normalization=dict(tiff_u16_to_dn=R.RANGE/65535,second_black_subtraction=False,input_rounding="ties-to-even",output_rounding="half-up after clipping"),
               noise=dict(gain_dn_per_e=.25,read_noise_e=4,black=512,white=15360,iso=160,prnu=False,provenance="Fallback: injected synthetic algorithm coefficients; noise draws off"),
               config=dict(merge="Pyramid",bands=3,gate=2.0,exponent=2.0,select="SoftPower",base="Mean",admission="HardFloor",mean_coarse=0,hull="InputRange",resampler="CatmullRom",demosaic="MHC",space="CameraLinear",fullres_gather=True,auto_exposure=False,photometric="Off",gate_floor_enabled=True,measured_floor_bands=0,floor_fallback="empty measured beta; existing per-band fixed beta",ca="off",defect="off",restoration="unset",confidence=False,exposure_stops=0),
               observer=dict(mode="count",excludes_planning_reads=True,excludes_raw_prologue=True),
               build=dict(test_executable_sha256="1"*64,bytes=123),input_bindings=dict(fixture=dict(path=str(binding),sha256=V.sha(binding),bytes=binding.stat().st_size)))
-    def plan_case(name,p):
+    def plan_case(name,p,settings=None):
         (files/("plan-"+name+".json")).write_text(json.dumps(p,indent=2)+"\n",encoding="utf-8")
-        return V.check_plan(p,run,build)
+        return V.check_plan(p,run if settings is None else settings,build)
     case("plan-valid-fixture-only",lambda:plan_case("valid",plan))
     p_mutations={
         "origin":lambda p:p.update(canonical_native_offset=[3,2]),
@@ -142,6 +153,21 @@ def main():
     for name,mutate in p_mutations.items():
         p=copy.deepcopy(plan);mutate(p)
         case("plan-"+name,lambda p=p,name=name:plan_case(name,p),True)
+    red_plan=copy.deepcopy(plan);red_plan.update(wb_mode="red-double",wb_f32=[float(np.float32(8/3)),1.0,float(np.float32(5/3))])
+    red_run=dict(run,wb_mode="red-double")
+    case("plan-red-writer-WB-valid",lambda:plan_case("red-wb-valid",red_plan,red_run))
+    for name,mutate in {
+        "stale-prepared-WB":lambda p:p.update(wb_f32=plan["wb_f32"].copy()),
+        "changed-frame-WB":lambda p:p.update(frame_wb_f32=p["wb_f32"].copy()),
+        "stale-WB-mode":lambda p:p.update(wb_mode="baseline"),
+        "green-renormalization":lambda p:p["wb_f32"].__setitem__(1,2.0),
+    }.items():
+        p=copy.deepcopy(red_plan);mutate(p)
+        case("plan-"+name,lambda p=p,name=name:plan_case(name,p,red_run),True)
+    p=copy.deepcopy(plan);p["config"]["exposure_stops"]=1
+    case("plan-old-exposure-refuses",lambda:plan_case("old-exposure",p,dict(run,exposure=1)),True)
+    p=copy.deepcopy(plan);p["wb_mode"]="unknown"
+    case("plan-unknown-WB-mode",lambda:plan_case("unknown-wb",p,dict(run,wb_mode="unknown")),True)
     # Deliberately fake wrapper, never a real compiler/optical authority.
     private_path=files/"valid.json"
     private_ref=dict(path=private_path.relative_to(ROOT).as_posix(),sha256=V.sha(private_path),bytes=private_path.stat().st_size)

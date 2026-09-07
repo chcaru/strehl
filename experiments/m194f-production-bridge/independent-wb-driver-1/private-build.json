@@ -1,0 +1,34 @@
+{
+  "schema": "m194f-consumer-build-v1",
+  "pass": true,
+  "sources_before": {
+    "private-source-witness.rs": "1111111111111111111111111111111111111111111111111111111111111111"
+  },
+  "sources_after": {
+    "private-source-witness.rs": "1111111111111111111111111111111111111111111111111111111111111111"
+  },
+  "driver_sha256": "2dad7d6699492f17eb8610820763fad73f54a06b2d1f358c1c765ee4f553310b",
+  "copy_matches_compiler_artifact": true,
+  "rebuilt_cli": true,
+  "exit_code": 0,
+  "compiler_artifact": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-wb-driver-1\\private-compiler.bin",
+    "bytes": 33,
+    "sha256": "49ffb275a11d9d10b660d68ecbebdc3a5526186a248529573e13356ae2814da1"
+  },
+  "test_executable": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-wb-driver-1\\private-copied.bin",
+    "bytes": 33,
+    "sha256": "49ffb275a11d9d10b660d68ecbebdc3a5526186a248529573e13356ae2814da1"
+  },
+  "compiler_artifact_message": {
+    "reason": "compiler-artifact",
+    "target": {
+      "name": "strehl"
+    },
+    "profile": {
+      "test": true
+    },
+    "executable": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-wb-driver-1\\private-compiler.bin"
+  }
+}

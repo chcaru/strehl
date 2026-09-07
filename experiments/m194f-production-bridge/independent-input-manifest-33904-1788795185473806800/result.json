@@ -1,0 +1,291 @@
+{
+  "check_count": 41,
+  "checks": [
+    {
+      "evidence": null,
+      "name": "genuine-manifest-validator",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "refusal": "wrong manifest schema/status"
+      },
+      "name": "manifest-schema",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "refusal": "wrong manifest schema/status"
+      },
+      "name": "manifest-status",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "refusal": "invalid type: boolean `false`, expected usize"
+      },
+      "name": "manifest-index-bool",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "refusal": "invalid type: floating point `2.0`, expected usize"
+      },
+      "name": "manifest-index-float",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "refusal": "frame geometry/index mismatch"
+      },
+      "name": "manifest-duplicate-index",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "refusal": "invalid type: floating point `64.0`, expected usize"
+      },
+      "name": "manifest-width-float",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "refusal": "invalid type: integer `0`, expected a boolean"
+      },
+      "name": "manifest-noise-integer",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "refusal": "unsupported sensor contract"
+      },
+      "name": "manifest-noise-on",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "refusal": "unsupported sensor contract"
+      },
+      "name": "manifest-cfa",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "refusal": "unsupported sensor contract"
+      },
+      "name": "manifest-origin",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "refusal": "unsupported sensor contract"
+      },
+      "name": "manifest-black",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "refusal": "unsupported sensor contract"
+      },
+      "name": "manifest-white",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "refusal": "unsupported sensor contract"
+      },
+      "name": "manifest-gain",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "refusal": "unsupported sensor contract"
+      },
+      "name": "manifest-rounder",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "refusal": "array reference type/shape/length mismatch"
+      },
+      "name": "manifest-size",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "refusal": "invalid type: floating point `6144.0`, expected u64"
+      },
+      "name": "manifest-size-float",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "refusal": "array reference type/shape/length mismatch"
+      },
+      "name": "manifest-dtype",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "refusal": "invalid type: boolean `true`, expected usize"
+      },
+      "name": "manifest-shape-bool",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "refusal": "array reference type/shape/length mismatch"
+      },
+      "name": "manifest-shape-swapped",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "refusal": "frame geometry/index mismatch"
+      },
+      "name": "manifest-transform",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "refusal": "frame geometry/index mismatch"
+      },
+      "name": "manifest-signed-focus",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "refusal": "unsupported admitted model/numerical contract"
+      },
+      "name": "manifest-model",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "refusal": "unsupported admitted model/numerical contract"
+      },
+      "name": "manifest-diffraction",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "refusal": "array reference type/shape/length mismatch"
+      },
+      "name": "manifest-scalar-unit-dtype",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "refusal": "invalid type: null, expected struct BridgeManifest"
+      },
+      "name": "manifest-null",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "refusal": "invalid length 0, expected struct BridgeManifest with 8 elements"
+      },
+      "name": "manifest-array",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "refusal": "invalid type: string \"PASS\", expected struct BridgeManifest"
+      },
+      "name": "manifest-string",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "refusal": "unsupported sensor contract"
+      },
+      "name": "manifest-same-count-wrong-geometry",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "refusal": "exactly five frames required"
+      },
+      "name": "manifest-missing-frame",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "refusal": "frame geometry/index mismatch"
+      },
+      "name": "manifest-reordered-original-indices",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "refusal": "unknown field `iso`, expected one of `width`, `height`, `active_origin`, `black`, `white`, `cell`, `cfa`, `channel_factors`, `gain_dn_per_e`, `noise`, `rounding`"
+      },
+      "name": "manifest-unknown-sensor-key",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "refusal": "producer closure mismatch"
+      },
+      "name": "manifest-missing-producer-source",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "refusal": "invalid relative reference"
+      },
+      "name": "path-parent",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "refusal": "invalid relative reference"
+      },
+      "name": "path-absolute",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "refusal": "invalid relative reference"
+      },
+      "name": "path-drive-relative",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "refusal": "invalid relative reference"
+      },
+      "name": "path-unc",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "refusal": "invalid relative reference"
+      },
+      "name": "path-backslash-parent",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "refusal": "invalid relative reference"
+      },
+      "name": "path-empty",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "refusal": "invalid relative reference"
+      },
+      "name": "path-embedded-parent",
+      "pass": true
+    },
+    {
+      "evidence": null,
+      "name": "valid-nested-relative-companion",
+      "pass": true
+    }
+  ],
+  "pass": true,
+  "schema": "m194f-independent-input-controls-v1",
+  "scope": "private API and genuine input parsing; no optical or TIFF quality authority"
+}

@@ -1,0 +1,511 @@
+{
+  "check_count": 50,
+  "checks": [
+    {
+      "evidence": {
+        "index": 3,
+        "position": 0,
+        "samples": 3072
+      },
+      "name": "Off-actual-frame-3",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "counts": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "hooks": 0
+      },
+      "name": "Off-identity-indexed-count-0",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "index": 0,
+        "position": 1,
+        "samples": 3072
+      },
+      "name": "Off-actual-frame-0",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "counts": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "hooks": 0
+      },
+      "name": "Off-identity-indexed-count-1",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "index": 4,
+        "position": 2,
+        "samples": 3072
+      },
+      "name": "Off-actual-frame-4",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "counts": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "hooks": 0
+      },
+      "name": "Off-identity-indexed-count-2",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "index": 1,
+        "position": 3,
+        "samples": 3072
+      },
+      "name": "Off-actual-frame-1",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "counts": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "hooks": 0
+      },
+      "name": "Off-identity-indexed-count-3",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "index": 2,
+        "position": 4,
+        "samples": 3072
+      },
+      "name": "Off-actual-frame-2",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "counts": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "hooks": 0
+      },
+      "name": "Off-identity-indexed-count-4",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "counts": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "hooks": 0
+      },
+      "name": "Off-second-complete-pass",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "refusal": "bridge source index outside input"
+      },
+      "name": "Off-out-of-range-index",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "index": 3,
+        "position": 0,
+        "samples": 3072
+      },
+      "name": "Count-actual-frame-3",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "counts": [
+          0,
+          0,
+          0,
+          1,
+          0
+        ],
+        "hooks": 1
+      },
+      "name": "Count-identity-indexed-count-0",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "index": 0,
+        "position": 1,
+        "samples": 3072
+      },
+      "name": "Count-actual-frame-0",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "counts": [
+          1,
+          0,
+          0,
+          1,
+          0
+        ],
+        "hooks": 2
+      },
+      "name": "Count-identity-indexed-count-1",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "index": 4,
+        "position": 2,
+        "samples": 3072
+      },
+      "name": "Count-actual-frame-4",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "counts": [
+          1,
+          0,
+          0,
+          1,
+          1
+        ],
+        "hooks": 3
+      },
+      "name": "Count-identity-indexed-count-2",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "index": 1,
+        "position": 3,
+        "samples": 3072
+      },
+      "name": "Count-actual-frame-1",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "counts": [
+          1,
+          1,
+          0,
+          1,
+          1
+        ],
+        "hooks": 4
+      },
+      "name": "Count-identity-indexed-count-3",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "index": 2,
+        "position": 4,
+        "samples": 3072
+      },
+      "name": "Count-actual-frame-2",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "counts": [
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "hooks": 5
+      },
+      "name": "Count-identity-indexed-count-4",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "counts": [
+          2,
+          2,
+          2,
+          2,
+          2
+        ],
+        "hooks": 10
+      },
+      "name": "Count-second-complete-pass",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "refusal": "bridge source index outside input"
+      },
+      "name": "Count-out-of-range-index",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "index": 3,
+        "position": 0,
+        "samples": 3072
+      },
+      "name": "Placebo-actual-frame-3",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "counts": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "hooks": 1
+      },
+      "name": "Placebo-identity-indexed-count-0",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "index": 0,
+        "position": 1,
+        "samples": 3072
+      },
+      "name": "Placebo-actual-frame-0",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "counts": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "hooks": 2
+      },
+      "name": "Placebo-identity-indexed-count-1",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "index": 4,
+        "position": 2,
+        "samples": 3072
+      },
+      "name": "Placebo-actual-frame-4",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "counts": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "hooks": 3
+      },
+      "name": "Placebo-identity-indexed-count-2",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "index": 1,
+        "position": 3,
+        "samples": 3072
+      },
+      "name": "Placebo-actual-frame-1",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "counts": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "hooks": 4
+      },
+      "name": "Placebo-identity-indexed-count-3",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "index": 2,
+        "position": 4,
+        "samples": 3072
+      },
+      "name": "Placebo-actual-frame-2",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "counts": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "hooks": 5
+      },
+      "name": "Placebo-identity-indexed-count-4",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "counts": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "hooks": 10
+      },
+      "name": "Placebo-second-complete-pass",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "refusal": "bridge source index outside input"
+      },
+      "name": "Placebo-out-of-range-index",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "refusal": "source CFA length/hash changed"
+      },
+      "name": "second-read-actual-file-corruption",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "counts": [
+          0,
+          0,
+          0,
+          1,
+          0
+        ],
+        "hooks": 1
+      },
+      "name": "failed-read-not-success",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "scope": "private source API, not new optical admission"
+      },
+      "name": "changed-private-source-live-with-private-binding",
+      "pass": true
+    },
+    {
+      "evidence": null,
+      "name": "restored-second-read-companion",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "refusal": "source CFA length/hash changed"
+      },
+      "name": "short-rehashed-cfa",
+      "pass": true
+    },
+    {
+      "evidence": null,
+      "name": "short-rehashed-cfa-no-success",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "refusal": "bounded input exceeds 6144 bytes"
+      },
+      "name": "appended-rehashed-cfa",
+      "pass": true
+    },
+    {
+      "evidence": null,
+      "name": "appended-rehashed-cfa-no-success",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "refusal": "source CFA outside admitted rails"
+      },
+      "name": "below-black-rehashed-cfa",
+      "pass": true
+    },
+    {
+      "evidence": null,
+      "name": "below-black-rehashed-cfa-no-success",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "refusal": "source CFA outside admitted rails"
+      },
+      "name": "white-endpoint-rehashed-cfa",
+      "pass": true
+    },
+    {
+      "evidence": null,
+      "name": "white-endpoint-rehashed-cfa-no-success",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "refusal": "five source paths/hashes required"
+      },
+      "name": "short-source-count",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "refusal": "five source paths/hashes required"
+      },
+      "name": "bad-source-hash-syntax",
+      "pass": true
+    }
+  ],
+  "pass": true,
+  "schema": "m194f-independent-input-controls-v1",
+  "scope": "private API and genuine input parsing; no optical or TIFF quality authority"
+}

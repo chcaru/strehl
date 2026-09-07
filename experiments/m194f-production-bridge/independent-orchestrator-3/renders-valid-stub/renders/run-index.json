@@ -1,0 +1,193 @@
+{
+  "schema": "m194f-production-run-v1",
+  "status": "OUTPUTS_COMPLETE_UNVERIFIED",
+  "preregistration": {
+    "path": "experiments/m194f-production-bridge/preregister.md",
+    "sha256": "02ebf87b1a73aff39ab52ac9596b84542007e86c9bcc6f4357945441cf47dfb7",
+    "bytes": 16612
+  },
+  "build": {
+    "path": "experiments/m194f-production-bridge/independent-orchestrator-3/renders-valid-stub/stub-build.json",
+    "sha256": "a2d887be77b9681dbc235a0ddc07a798598bef443232526cb4bc55b377e05658",
+    "bytes": 28
+  },
+  "private_command_record": {
+    "path": "experiments/m194f-production-bridge/independent-orchestrator-3/renders-valid-stub/private-command.json",
+    "sha256": "1e8d46c271f7b16d72f818ba5959a7f097b86710642fb025fe8f59d0dc74ec7c",
+    "bytes": 2332
+  },
+  "private_controls": {
+    "path": "experiments/m194f-production-bridge/independent-orchestrator-3/renders-valid-stub/private-controls.json",
+    "sha256": "85bc23c36a844dff77a8273321890ae802bb8e22f3aff6f78af71803c5556856",
+    "bytes": 1655
+  },
+  "controls_command_record": {
+    "path": "experiments/m194f-production-bridge/independent-orchestrator-3/renders-valid-stub/controls-command.json",
+    "sha256": "e1d228a844f7d9ee9c438d3550923a5e97302d5551812be9094dec922af0689f",
+    "bytes": 3194
+  },
+  "runs": [
+    {
+      "name": "baseline-off",
+      "observer": "off",
+      "confidence": false,
+      "exposure": 0,
+      "plan": {
+        "path": "experiments/m194f-production-bridge/independent-orchestrator-3/renders-valid-stub/renders/baseline-off/plan.json",
+        "sha256": "4daac05136cc9ecd20f740a6bb7f7deaeeb1e3b81ca7e2e2d1f1d28394934426",
+        "bytes": 30
+      },
+      "receipt": {
+        "path": "experiments/m194f-production-bridge/independent-orchestrator-3/renders-valid-stub/renders/baseline-off/receipt.json",
+        "sha256": "4daac05136cc9ecd20f740a6bb7f7deaeeb1e3b81ca7e2e2d1f1d28394934426",
+        "bytes": 30
+      },
+      "command_record": {
+        "path": "experiments/m194f-production-bridge/independent-orchestrator-3/renders-valid-stub/renders/baseline-off/receipt.command.json",
+        "sha256": "4daac05136cc9ecd20f740a6bb7f7deaeeb1e3b81ca7e2e2d1f1d28394934426",
+        "bytes": 30
+      },
+      "plan_command_record": {
+        "path": "experiments/m194f-production-bridge/independent-orchestrator-3/renders-valid-stub/renders/baseline-off/plan.command.json",
+        "sha256": "4daac05136cc9ecd20f740a6bb7f7deaeeb1e3b81ca7e2e2d1f1d28394934426",
+        "bytes": 30
+      }
+    },
+    {
+      "name": "baseline-count",
+      "observer": "count",
+      "confidence": false,
+      "exposure": 0,
+      "plan": {
+        "path": "experiments/m194f-production-bridge/independent-orchestrator-3/renders-valid-stub/renders/baseline-count/plan.json",
+        "sha256": "4daac05136cc9ecd20f740a6bb7f7deaeeb1e3b81ca7e2e2d1f1d28394934426",
+        "bytes": 30
+      },
+      "receipt": {
+        "path": "experiments/m194f-production-bridge/independent-orchestrator-3/renders-valid-stub/renders/baseline-count/receipt.json",
+        "sha256": "4daac05136cc9ecd20f740a6bb7f7deaeeb1e3b81ca7e2e2d1f1d28394934426",
+        "bytes": 30
+      },
+      "command_record": {
+        "path": "experiments/m194f-production-bridge/independent-orchestrator-3/renders-valid-stub/renders/baseline-count/receipt.command.json",
+        "sha256": "4daac05136cc9ecd20f740a6bb7f7deaeeb1e3b81ca7e2e2d1f1d28394934426",
+        "bytes": 30
+      },
+      "plan_command_record": {
+        "path": "experiments/m194f-production-bridge/independent-orchestrator-3/renders-valid-stub/renders/baseline-count/plan.command.json",
+        "sha256": "4daac05136cc9ecd20f740a6bb7f7deaeeb1e3b81ca7e2e2d1f1d28394934426",
+        "bytes": 30
+      }
+    },
+    {
+      "name": "baseline-placebo",
+      "observer": "placebo",
+      "confidence": false,
+      "exposure": 0,
+      "plan": {
+        "path": "experiments/m194f-production-bridge/independent-orchestrator-3/renders-valid-stub/renders/baseline-placebo/plan.json",
+        "sha256": "4daac05136cc9ecd20f740a6bb7f7deaeeb1e3b81ca7e2e2d1f1d28394934426",
+        "bytes": 30
+      },
+      "receipt": {
+        "path": "experiments/m194f-production-bridge/independent-orchestrator-3/renders-valid-stub/renders/baseline-placebo/receipt.json",
+        "sha256": "4daac05136cc9ecd20f740a6bb7f7deaeeb1e3b81ca7e2e2d1f1d28394934426",
+        "bytes": 30
+      },
+      "command_record": {
+        "path": "experiments/m194f-production-bridge/independent-orchestrator-3/renders-valid-stub/renders/baseline-placebo/receipt.command.json",
+        "sha256": "4daac05136cc9ecd20f740a6bb7f7deaeeb1e3b81ca7e2e2d1f1d28394934426",
+        "bytes": 30
+      },
+      "plan_command_record": {
+        "path": "experiments/m194f-production-bridge/independent-orchestrator-3/renders-valid-stub/renders/baseline-placebo/plan.command.json",
+        "sha256": "4daac05136cc9ecd20f740a6bb7f7deaeeb1e3b81ca7e2e2d1f1d28394934426",
+        "bytes": 30
+      }
+    },
+    {
+      "name": "confidence-count",
+      "observer": "count",
+      "confidence": true,
+      "exposure": 0,
+      "plan": {
+        "path": "experiments/m194f-production-bridge/independent-orchestrator-3/renders-valid-stub/renders/confidence-count/plan.json",
+        "sha256": "4daac05136cc9ecd20f740a6bb7f7deaeeb1e3b81ca7e2e2d1f1d28394934426",
+        "bytes": 30
+      },
+      "receipt": {
+        "path": "experiments/m194f-production-bridge/independent-orchestrator-3/renders-valid-stub/renders/confidence-count/receipt.json",
+        "sha256": "4daac05136cc9ecd20f740a6bb7f7deaeeb1e3b81ca7e2e2d1f1d28394934426",
+        "bytes": 30
+      },
+      "command_record": {
+        "path": "experiments/m194f-production-bridge/independent-orchestrator-3/renders-valid-stub/renders/confidence-count/receipt.command.json",
+        "sha256": "4daac05136cc9ecd20f740a6bb7f7deaeeb1e3b81ca7e2e2d1f1d28394934426",
+        "bytes": 30
+      },
+      "plan_command_record": {
+        "path": "experiments/m194f-production-bridge/independent-orchestrator-3/renders-valid-stub/renders/confidence-count/plan.command.json",
+        "sha256": "4daac05136cc9ecd20f740a6bb7f7deaeeb1e3b81ca7e2e2d1f1d28394934426",
+        "bytes": 30
+      }
+    },
+    {
+      "name": "exposure-plus-one-count",
+      "observer": "count",
+      "confidence": false,
+      "exposure": 1,
+      "plan": {
+        "path": "experiments/m194f-production-bridge/independent-orchestrator-3/renders-valid-stub/renders/exposure-plus-one-count/plan.json",
+        "sha256": "4daac05136cc9ecd20f740a6bb7f7deaeeb1e3b81ca7e2e2d1f1d28394934426",
+        "bytes": 30
+      },
+      "receipt": {
+        "path": "experiments/m194f-production-bridge/independent-orchestrator-3/renders-valid-stub/renders/exposure-plus-one-count/receipt.json",
+        "sha256": "4daac05136cc9ecd20f740a6bb7f7deaeeb1e3b81ca7e2e2d1f1d28394934426",
+        "bytes": 30
+      },
+      "command_record": {
+        "path": "experiments/m194f-production-bridge/independent-orchestrator-3/renders-valid-stub/renders/exposure-plus-one-count/receipt.command.json",
+        "sha256": "4daac05136cc9ecd20f740a6bb7f7deaeeb1e3b81ca7e2e2d1f1d28394934426",
+        "bytes": 30
+      },
+      "plan_command_record": {
+        "path": "experiments/m194f-production-bridge/independent-orchestrator-3/renders-valid-stub/renders/exposure-plus-one-count/plan.command.json",
+        "sha256": "4daac05136cc9ecd20f740a6bb7f7deaeeb1e3b81ca7e2e2d1f1d28394934426",
+        "bytes": 30
+      }
+    }
+  ],
+  "sources_before": {
+    "private-source.rs": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  },
+  "sources_after": {
+    "private-source.rs": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  },
+  "driver_before": {
+    "experiments/m194f-production-bridge/run-commission.py": "a36b1a5919b7e3b20dc1b239a692d46eaf2cc34db2368be33d48e5e92804ff6e",
+    "experiments/m194f-production-bridge/consumer-run.py": "cafb3a1c6561b3b076964178fe3636f0e2f8c7c611b6cfb033c9b836ef562dfe"
+  },
+  "driver_after": {
+    "experiments/m194f-production-bridge/run-commission.py": "a36b1a5919b7e3b20dc1b239a692d46eaf2cc34db2368be33d48e5e92804ff6e",
+    "experiments/m194f-production-bridge/consumer-run.py": "cafb3a1c6561b3b076964178fe3636f0e2f8c7c611b6cfb033c9b836ef562dfe"
+  },
+  "command": [
+    "experiments/m194f-production-bridge/independent-orchestrator-controls.py",
+    "--output",
+    "experiments/m194f-production-bridge/independent-orchestrator-3"
+  ],
+  "interpreter_argv": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-B",
+    "-X",
+    "faulthandler",
+    "-X",
+    "pycache_prefix=experiments/m194f-production-bridge/work/independent-orchestrator-cache-3",
+    "experiments/m194f-production-bridge/independent-orchestrator-controls.py",
+    "--output",
+    "experiments/m194f-production-bridge/independent-orchestrator-3"
+  ],
+  "started_utc": "2026-09-07T15:35:19.957993+00:00",
+  "ended_utc": "2026-09-07T15:35:19.977797+00:00"
+}

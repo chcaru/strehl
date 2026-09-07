@@ -1,0 +1,48 @@
+{
+  "schema": "m194f-consumer-build-v1",
+  "sources_before": {
+    "crates/strehl-cli/src/joint-pupil-bridge.rs": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "experiments/m194f-production-bridge/independent-reader-controls.rs": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+  },
+  "sources_after": {
+    "crates/strehl-cli/src/joint-pupil-bridge.rs": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "experiments/m194f-production-bridge/independent-reader-controls.rs": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+  },
+  "driver_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+  "test_executable": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-driver-3\\wrong-current-driver-pin\\stub-executable.bin",
+    "sha256": "3674f3afa7228d888206d652e273fbfa33ee8a7f9b459e55390cef168373b049",
+    "bytes": 28
+  },
+  "compiler_artifact": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-driver-3\\wrong-current-driver-pin\\stub-compiler-artifact.bin",
+    "sha256": "3674f3afa7228d888206d652e273fbfa33ee8a7f9b459e55390cef168373b049",
+    "bytes": 28
+  },
+  "copy_matches_compiler_artifact": true,
+  "compiler_artifact_message": {
+    "reason": "compiler-artifact",
+    "target": {
+      "name": "strehl"
+    },
+    "profile": {
+      "test": true
+    },
+    "executable": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-driver-3\\wrong-current-driver-pin\\stub-compiler-artifact.bin"
+  },
+  "exit_code": 0,
+  "rebuilt_cli": true,
+  "command": [
+    "cargo",
+    "test",
+    "-p",
+    "strehl-cli",
+    "--bin",
+    "strehl",
+    "--target-dir",
+    "target/m194f-production-bridge",
+    "--no-run",
+    "--message-format=json-render-diagnostics"
+  ],
+  "pass": true
+}

@@ -1,0 +1,58 @@
+{
+  "schema": "m194f-private-command-v1",
+  "command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-orchestrator-3\\never-executed.bin",
+    "--exact",
+    "merge_cmd::known_scene_benchmark::joint_pupil_bridge::m194f_author_tests::m194f_private_coordinate_and_rank_controls",
+    "--ignored",
+    "--test-threads=1",
+    "--nocapture"
+  ],
+  "interpreter_argv": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-B",
+    "-X",
+    "faulthandler",
+    "-X",
+    "pycache_prefix=experiments/m194f-production-bridge/work/independent-orchestrator-cache-3",
+    "experiments/m194f-production-bridge/independent-orchestrator-controls.py",
+    "--output",
+    "experiments/m194f-production-bridge/independent-orchestrator-3"
+  ],
+  "started_utc": "2026-09-07T15:35:19.832906+00:00",
+  "ended_utc": "2026-09-07T15:35:19.840036+00:00",
+  "exit_code": 0,
+  "passed": true,
+  "log": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-orchestrator-3\\private-valid-stub\\private-command.log",
+  "log_sha256": "3d6c7ea047ec7baa0f1d02db0560103e2ae0708fb26b0354a5dbf1f54072ae57",
+  "build_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+  "test_executable": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-orchestrator-3\\never-executed.bin",
+    "sha256": "2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881",
+    "bytes": 1
+  },
+  "sources_before": {
+    "private-source.rs": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  },
+  "sources_after": {
+    "private-source.rs": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  },
+  "driver_before": {
+    "experiments/m194f-production-bridge/run-commission.py": "a36b1a5919b7e3b20dc1b239a692d46eaf2cc34db2368be33d48e5e92804ff6e",
+    "experiments/m194f-production-bridge/consumer-run.py": "cafb3a1c6561b3b076964178fe3636f0e2f8c7c611b6cfb033c9b836ef562dfe"
+  },
+  "driver_after": {
+    "experiments/m194f-production-bridge/run-commission.py": "a36b1a5919b7e3b20dc1b239a692d46eaf2cc34db2368be33d48e5e92804ff6e",
+    "experiments/m194f-production-bridge/consumer-run.py": "cafb3a1c6561b3b076964178fe3636f0e2f8c7c611b6cfb033c9b836ef562dfe"
+  },
+  "environment": {
+    "STREHL_DEFECT": "off",
+    "STREHL_FIX_CA": "off",
+    "STREHL_FULLRES_GATHER": "1",
+    "STREHL_PYRAMID_WORKERS": "2",
+    "RAYON_NUM_THREADS": "2",
+    "STREHL_M194F_PRIVATE_OUTPUT": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-orchestrator-3\\private-valid-stub\\private"
+  },
+  "result": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-orchestrator-3\\private-valid-stub\\private\\private-controls.json",
+  "result_sha256": "306a74eac6a4a64a452dea268380983b914b7b0f3844a744df05438e67e1e1ae"
+}

@@ -1,0 +1,65 @@
+{
+  "check_count": 9,
+  "checks": [
+    {
+      "evidence": null,
+      "name": "unchanged-relocated-genuine-chain",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "refusal": "unregistered external authority"
+      },
+      "name": "unregistered-external-manifest",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "refusal": "unregistered external authority"
+      },
+      "name": "unregistered-external-gate",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "refusal": "bound file size/hash mismatch: \\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-input-chain-33904-1788795186067137600\\bundle\\frame-03.cfa"
+      },
+      "name": "same-length-copied-cfa-corruption",
+      "pass": true
+    },
+    {
+      "evidence": null,
+      "name": "restored-cfa-valid-companion",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "refusal": "bound file size/hash mismatch: \\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-input-chain-33904-1788795186067137600\\authority\\result.json"
+      },
+      "name": "copied-child-substitution-old-gate",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "refusal": "bound file size/hash mismatch: \\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-input-chain-33904-1788795186067137600\\authority\\cfa-commission.json"
+      },
+      "name": "rehashed-child-and-gate-old-external-pin",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "refusal": "unregistered external authority"
+      },
+      "name": "rehashed-child-and-untrusted-new-external-pin",
+      "pass": true
+    },
+    {
+      "evidence": null,
+      "name": "restored-entire-chain-valid",
+      "pass": true
+    }
+  ],
+  "pass": true,
+  "schema": "m194f-independent-input-controls-v1",
+  "scope": "private API and genuine input parsing; no optical or TIFF quality authority"
+}

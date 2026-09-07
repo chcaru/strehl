@@ -1,0 +1,1 @@
+{"passed": true, "exit_code": 0, "groups": 6, "checks": 192, "result_sha256": "b1c76fca03cf7a0c0d6fd84a67dad585ca877685fd02101f5494c9324087bcc7", "test_summaries": ["test result: ok. 145 passed; 0 failed; 5 ignored; 0 measured; 0 filtered out; finished in 22.98s"]}

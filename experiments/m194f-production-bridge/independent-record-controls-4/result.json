@@ -1,0 +1,567 @@
+{
+  "schema": "m194f-independent-record-controls-v1",
+  "status": "PASS_RECORD_INSTRUMENT_ONLY",
+  "fixture_only": true,
+  "orig_argv": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-X",
+    "utf8",
+    "-X",
+    "pycache_prefix=experiments/m194f-production-bridge/work/cache-record-controls-4",
+    "experiments/m194f-production-bridge/independent-record-controls.py",
+    "--out",
+    "experiments/m194f-production-bridge/independent-record-controls-4"
+  ],
+  "executable": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+  "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+  "xoptions": {
+    "utf8": true,
+    "pycache_prefix": "experiments/m194f-production-bridge/work/cache-record-controls-4"
+  },
+  "numpy": "2.4.4",
+  "tifffile": "2026.5.2",
+  "source_before": {
+    "experiments/m194f-production-bridge/independent-record-controls.py": "a93fb629285221634114f50ce8615d40d78049689b45036391972ad99523447d",
+    "experiments/m194f-production-bridge/independent-verify.py": "62bb70a30715788d05145fcc4442cbbd8bd31ae1a9d9fa8dfd4289157f05890b",
+    "experiments/m194f-production-bridge/independent-reader.py": "3fbaf526776fc85042861e1e7a90c06664c43519cef20d12310a67efd8eaff2d",
+    "experiments/m194f-production-bridge/independent-record-controls-preregister.md": "abbbe52855fc221d4318b07e3aa475ba3c258d36f965b1a145f1c15de4e071ff"
+  },
+  "thread_environment": {
+    "OMP_NUM_THREADS": "2",
+    "OPENBLAS_NUM_THREADS": "2",
+    "MKL_NUM_THREADS": "2"
+  },
+  "started_utc": "2026-09-07T15:39:27.216016+00:00",
+  "cases": [
+    {
+      "name": "private-complete-valid",
+      "passed": true,
+      "expected_refusal": false,
+      "detail": {
+        "constant": {
+          "sites": 80,
+          "max_abs_dn": 0.10235608744028468,
+          "per_channel_max_dn": [
+            0.10235608744028468,
+            0.04016174563230379,
+            0.07116950956879009
+          ]
+        },
+        "affine": {
+          "sites": 80,
+          "max_abs_dn": 0.11146333816304832,
+          "per_channel_max_dn": [
+            0.11146333816304832,
+            0.11139085984632402,
+            0.11125972962781816
+          ]
+        },
+        "mutation": {
+          "native_xy": [
+            29,
+            26
+          ],
+          "output_xy": [
+            23,
+            16
+          ],
+          "increase_dn": 63.89159990844587
+        },
+        "rank": {
+          "samples": 128,
+          "codes": [
+            0,
+            400,
+            800
+          ],
+          "unseen_index": null
+        },
+        "sentinel": {
+          "samples": 128,
+          "codes": [
+            0,
+            400,
+            800,
+            65535
+          ],
+          "unseen_index": 0
+        }
+      }
+    },
+    {
+      "name": "private-exact-float-DN-valid",
+      "passed": true,
+      "expected_refusal": false,
+      "detail": {
+        "constant": {
+          "sites": 80,
+          "max_abs_dn": 0.10235608744028468,
+          "per_channel_max_dn": [
+            0.10235608744028468,
+            0.04016174563230379,
+            0.07116950956879009
+          ]
+        },
+        "affine": {
+          "sites": 80,
+          "max_abs_dn": 0.11146333816304832,
+          "per_channel_max_dn": [
+            0.11146333816304832,
+            0.11139085984632402,
+            0.11125972962781816
+          ]
+        },
+        "mutation": {
+          "native_xy": [
+            29,
+            26
+          ],
+          "output_xy": [
+            23,
+            16
+          ],
+          "increase_dn": 63.89159990844587
+        },
+        "rank": {
+          "samples": 128,
+          "codes": [
+            0,
+            400,
+            800
+          ],
+          "unseen_index": null
+        },
+        "sentinel": {
+          "samples": 128,
+          "codes": [
+            0,
+            400,
+            800,
+            65535
+          ],
+          "unseen_index": 0
+        }
+      }
+    },
+    {
+      "name": "private-extended-Windows-paths-valid",
+      "passed": true,
+      "expected_refusal": false,
+      "detail": {
+        "constant": {
+          "sites": 80,
+          "max_abs_dn": 0.10235608744028468,
+          "per_channel_max_dn": [
+            0.10235608744028468,
+            0.04016174563230379,
+            0.07116950956879009
+          ]
+        },
+        "affine": {
+          "sites": 80,
+          "max_abs_dn": 0.11146333816304832,
+          "per_channel_max_dn": [
+            0.11146333816304832,
+            0.11139085984632402,
+            0.11125972962781816
+          ]
+        },
+        "mutation": {
+          "native_xy": [
+            29,
+            26
+          ],
+          "output_xy": [
+            23,
+            16
+          ],
+          "increase_dn": 63.89159990844587
+        },
+        "rank": {
+          "samples": 128,
+          "codes": [
+            0,
+            400,
+            800
+          ],
+          "unseen_index": null
+        },
+        "sentinel": {
+          "samples": 128,
+          "codes": [
+            0,
+            400,
+            800,
+            65535
+          ],
+          "unseen_index": 0
+        }
+      }
+    },
+    {
+      "name": "extended-local-same-file",
+      "passed": true,
+      "expected_refusal": false,
+      "detail": null
+    },
+    {
+      "name": "ordinary-outside-root",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "artifact containment"
+    },
+    {
+      "name": "extended-outside-root",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "artifact containment"
+    },
+    {
+      "name": "extended-UNC-refused",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "extended path must be a local drive"
+    },
+    {
+      "name": "missing-scene",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "private RGB population keys"
+    },
+    {
+      "name": "substitute-scene",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "coordinate/value error 3180.0086046569068 DN"
+    },
+    {
+      "name": "false-origin",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "private native offset"
+    },
+    {
+      "name": "swap-crop",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "private unequal crop"
+    },
+    {
+      "name": "wrong-window",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "fixed80 sites"
+    },
+    {
+      "name": "wrong-dimensions",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "receipt actual TIFF agreement"
+    },
+    {
+      "name": "wrong-receipt-hash",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "receipt actual TIFF agreement"
+    },
+    {
+      "name": "wrong-gray-software",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "receipt software disposition"
+    },
+    {
+      "name": "mutation-noop",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "green mutation unpowered 0.0 DN"
+    },
+    {
+      "name": "rgb-decode-counter",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "actual private RGB one decode"
+    },
+    {
+      "name": "below-tie",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "actual strict-below counts"
+    },
+    {
+      "name": "seen-count",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "actual seen counts"
+    },
+    {
+      "name": "component-decode-counter",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "actual component one decode"
+    },
+    {
+      "name": "red-luma",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "green input luma"
+    },
+    {
+      "name": "luma-bool",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "direct merged-luma targets"
+    },
+    {
+      "name": "missing-unseen-state",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "actual seen counts"
+    },
+    {
+      "name": "relocated-unseen",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "actual sentinel/zero locations"
+    },
+    {
+      "name": "false-genuine",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "private component scope"
+    },
+    {
+      "name": "false-complete",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "private component scope"
+    },
+    {
+      "name": "rehashed-wrong-rgb",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "coordinate/value error 45.273027769586406 DN"
+    },
+    {
+      "name": "rehashed-gray-scale",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "actual rank/sentinel pixels"
+    },
+    {
+      "name": "rehashed-sentinel-missing",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "actual rank/sentinel pixels"
+    },
+    {
+      "name": "rehashed-reached-zero",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "actual rank/sentinel pixels"
+    },
+    {
+      "name": "plan-valid-fixture-only",
+      "passed": true,
+      "expected_refusal": false,
+      "detail": {
+        "x": 1,
+        "y": 1,
+        "width": 30,
+        "height": 22
+      }
+    },
+    {
+      "name": "plan-origin",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "quad-to-native origin"
+    },
+    {
+      "name": "plan-extent",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "quad-to-native size"
+    },
+    {
+      "name": "plan-gauge",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "frame2 gauge"
+    },
+    {
+      "name": "plan-wb",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "represented WB"
+    },
+    {
+      "name": "plan-noise",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "injected noise gain_dn_per_e"
+    },
+    {
+      "name": "plan-double-black",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "normalization convention"
+    },
+    {
+      "name": "plan-scale",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "normalization convention"
+    },
+    {
+      "name": "plan-nonidentity",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "identity placement"
+    },
+    {
+      "name": "plan-frame-count",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "five placements"
+    },
+    {
+      "name": "plan-floor",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "effective config measured_floor_bands"
+    },
+    {
+      "name": "plan-levels",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "one band plus base"
+    },
+    {
+      "name": "plan-admission",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "effective config admission"
+    },
+    {
+      "name": "plan-gate",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "effective config gate"
+    },
+    {
+      "name": "plan-observer",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "observer scope"
+    },
+    {
+      "name": "plan-build",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "actual plan executable"
+    },
+    {
+      "name": "wrapper-valid-fixture-only",
+      "passed": true,
+      "expected_refusal": false,
+      "detail": null
+    },
+    {
+      "name": "wrapper-test-name",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "private actual child command"
+    },
+    {
+      "name": "wrapper-executable",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "private compiled executable"
+    },
+    {
+      "name": "wrapper-build",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "private wrapper terminal build"
+    },
+    {
+      "name": "wrapper-source-before",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "run source-before build binding"
+    },
+    {
+      "name": "wrapper-source-after",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "run source-after build binding"
+    },
+    {
+      "name": "wrapper-driver-before",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "run driver-before binding"
+    },
+    {
+      "name": "wrapper-driver-after",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "run driver-after binding"
+    },
+    {
+      "name": "wrapper-result-hash",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "private actual result"
+    },
+    {
+      "name": "wrapper-output-root",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "private environment/output root"
+    },
+    {
+      "name": "wrapper-extra-env",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "private environment/output root"
+    },
+    {
+      "name": "wrapper-exit",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "private wrapper terminal build"
+    },
+    {
+      "name": "wrapper-partial",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "private wrapper terminal build"
+    },
+    {
+      "name": "wrapper-extra-key",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "private wrapper keys"
+    },
+    {
+      "name": "wrapper-actual-zero-tests",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "actual terminal test count"
+    }
+  ],
+  "source_after": {
+    "experiments/m194f-production-bridge/independent-record-controls.py": "a93fb629285221634114f50ce8615d40d78049689b45036391972ad99523447d",
+    "experiments/m194f-production-bridge/independent-verify.py": "62bb70a30715788d05145fcc4442cbbd8bd31ae1a9d9fa8dfd4289157f05890b",
+    "experiments/m194f-production-bridge/independent-reader.py": "3fbaf526776fc85042861e1e7a90c06664c43519cef20d12310a67efd8eaff2d",
+    "experiments/m194f-production-bridge/independent-record-controls-preregister.md": "abbbe52855fc221d4318b07e3aa475ba3c258d36f965b1a145f1c15de4e071ff"
+  },
+  "wall_seconds": 0.13545090006664395,
+  "cpu_seconds": 0.09375,
+  "ended_utc": "2026-09-07T15:39:27.351967+00:00",
+  "source_unchanged": true,
+  "passed": 61,
+  "count": 61
+}

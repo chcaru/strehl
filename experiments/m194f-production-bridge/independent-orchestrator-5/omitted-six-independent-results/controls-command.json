@@ -1,0 +1,33 @@
+{
+  "passed": true,
+  "exit_code": 0,
+  "build_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+  "sources_before": {
+    "private-source.rs": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  },
+  "sources_after": {
+    "private-source.rs": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  },
+  "test_executable": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-orchestrator-5\\never-executed.bin",
+    "sha256": "2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881",
+    "bytes": 1
+  },
+  "environment": {
+    "STREHL_DEFECT": "off",
+    "STREHL_FIX_CA": "off",
+    "STREHL_FULLRES_GATHER": "1",
+    "STREHL_PYRAMID_WORKERS": "2",
+    "RAYON_NUM_THREADS": "2"
+  },
+  "schema": "m194f-controls-command-v1",
+  "command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-orchestrator-5\\never-executed.bin",
+    "merge_cmd::known_scene_benchmark::joint_pupil_bridge::",
+    "--test-threads=1",
+    "--nocapture"
+  ],
+  "log": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-orchestrator-5\\omitted-six-independent-results\\controls.log",
+  "log_sha256": "2ca5d8b0336a9d9ec10691813f10b53a03b35859b752bf343635bc01b2f0bae6",
+  "unchanged": true
+}

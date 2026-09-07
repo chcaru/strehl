@@ -1,0 +1,5 @@
+{
+  "fixture_only": true,
+  "stub": "no Rust or image execution",
+  "wb_mode_received": "red-double"
+}

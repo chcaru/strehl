@@ -1,0 +1,44 @@
+{
+  "passed": true,
+  "exit_code": 0,
+  "build_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+  "sources_before": {
+    "private-source.rs": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  },
+  "sources_after": {
+    "private-source.rs": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  },
+  "test_executable": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-orchestrator-1\\never-executed.bin",
+    "sha256": "2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881",
+    "bytes": 1
+  },
+  "environment": {
+    "STREHL_DEFECT": "off",
+    "STREHL_FIX_CA": "off",
+    "STREHL_FULLRES_GATHER": "1",
+    "STREHL_PYRAMID_WORKERS": "2",
+    "RAYON_NUM_THREADS": "2"
+  },
+  "schema": "m194f-private-command-v1",
+  "result": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-orchestrator-1\\private-wrong-test-command\\private-controls.json",
+  "result_sha256": "d2ecf3859c62021c3124a7c521c5d6d684520e4088e012295da9b01bb57557d3",
+  "command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-orchestrator-1\\never-executed.bin",
+    "--exact",
+    "unknown_test",
+    "--ignored",
+    "--test-threads=1",
+    "--nocapture"
+  ],
+  "log": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-orchestrator-1\\private-wrong-test-command\\private.log",
+  "log_sha256": "3d6c7ea047ec7baa0f1d02db0560103e2ae0708fb26b0354a5dbf1f54072ae57",
+  "driver_before": {
+    "experiments/m194f-production-bridge/run-commission.py": "ed3045c393abd20c261cbb2039c8d517a658d7204fc5a996d79b8b9000e72ff0",
+    "experiments/m194f-production-bridge/consumer-run.py": "cafb3a1c6561b3b076964178fe3636f0e2f8c7c611b6cfb033c9b836ef562dfe"
+  },
+  "driver_after": {
+    "experiments/m194f-production-bridge/run-commission.py": "ed3045c393abd20c261cbb2039c8d517a658d7204fc5a996d79b8b9000e72ff0",
+    "experiments/m194f-production-bridge/consumer-run.py": "cafb3a1c6561b3b076964178fe3636f0e2f8c7c611b6cfb033c9b836ef562dfe"
+  }
+}

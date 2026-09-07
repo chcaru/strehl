@@ -1,0 +1,11 @@
+{
+  "schema": "m194f-independent-input-controls-v1",
+  "check_count": 1,
+  "checks": [
+    {
+      "name": "private-stub",
+      "pass": true
+    }
+  ],
+  "pass": true
+}

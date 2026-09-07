@@ -1,6 +1,7 @@
 # M194f — admitted joint-pupil CFA through production
 
-2026-09-07, root. **In progress; no production bridge pass yet.**
+2026-09-07, root. **COMPLETE: all eleven fresh delivered TIFFs independently
+pass their registered value, coordinate, observer and confidence controls.**
 The prospective [protocol](../../experiments/m194f-production-bridge/preregister.md)
 was allocated and committed at `9da113f5` before implementation. It consumes
 M194e's independently admitted five CFA images through the existing prepared
@@ -11,8 +12,8 @@ does not change merge arithmetic, defaults, the old parser or dependencies.
 ## Question and fixed population
 
 The consumer is delivered TIFF values and coordinates. Five genuine main RGB
-outputs exercise observer off/count/placebo, confidence rereading and exposure
-potency. The confidence run adds one Gray16 image. Three private RGB fixtures
+outputs exercise observer off/count/placebo, confidence rereading and red-WB
+potency under amendment1. The confidence run adds one Gray16 image. Three private RGB fixtures
 exercise constant/affine values, a nonzero unequal crop and an actual changed
 CFA sample. Two private Gray16 fixtures exercise strict input-rank centrality
 and the unseen sentinel. All eleven delivered files must be independently read.
@@ -21,11 +22,13 @@ Private fixtures supply no optical authority.
 The fixed coordinate oracle has 80 sites and a maximum error bar of .25 DN;
 the green input mutation must move its delivered sample by more than 63.5 DN.
 Complete baseline TIFF and pixel bytes must match across off/count/placebo
-and confidence off/on. Exposure +1 must change pixels. Strict malformed-input,
+and confidence off/on. Observed red sites must double within one u16 code;
+observed green and blue sites must remain exact. Exposure +1 is an asserted
+production refusal, following the retained protocol error below. Strict malformed-input,
 source-change and second-read refusal controls precede intended renders.
 
 This 64x48 fixture has only one Laplacian band plus its base and no measured
-floor band. A passing result would commission this input-to-writer path, not
+floor band. This result commissions this input-to-writer path, not
 a three-band quality comparison, physical optics, registration, or SOTA.
 
 ## Retained implementation and instrument results
@@ -71,7 +74,7 @@ python -X utf8 -X pycache_prefix=experiments/m194f-production-bridge/work/cache-
 
 All short experiment paths in this report are relative to
 `experiments/m194f-production-bridge/`. Subsequent builds, compiled refusal
-controls and the complete delivered-output read remain to be recorded.
+controls and the complete delivered-output read are recorded below.
 
 **MEASURED compiled controls:** the second build passed with a visible fresh
 `Compiling strehl-cli` line. Its record `build-2.json` has SHA
@@ -141,5 +144,76 @@ The original exposure restriction receives an explicit refusal regression.
 
 The other controls, eleven-image count, input authority and private numerical
 bars remain unchanged. The complete population must run afresh on the amended
-build; none of the earlier successful images is substituted into it. No final
-bridge admission or larger quality population has been claimed.
+build; none of the earlier successful images is substituted into it. The final
+fresh population and independent admission follow. No larger quality population
+is included in this result.
+
+## Final amended population
+
+**VERIFIED:** build4, source-checkpointed at `77fc14bf` before the final population,
+visibly rebuilt `strehl-cli`. Its build record SHA256 is
+`b1930156c50817df7d801f3ff6585fb9f6b965f047adfdcc61e8520192c362bd`.
+The compiler artifact and copied executable both have SHA256
+`9733e99f5571eb9fca51c21b0da7a5ea76d7079c2663d78b3c81dc470da13bbf`
+and 11,393,024 bytes. Seven focused tests pass with 192 independently chosen
+input/settings/MHC checks; the full CLI suite passes 145 tests, five ignored.
+These repeat the same 192 checks, not 384 distinct cases. Final independent
+launcher, scheduler and separate WB-driver controls pass 32, 27 and 10 cases.
+The direct TIFF instrument passes 59 cases, final record controls 68 and
+observed-channel WB controls 21. Strict clippy's historical failure remains
+as described above; the final diagnostic run completes with unchanged warnings.
+
+The new private five-image population passed its independent preflight before
+the five genuine main images and confidence auxiliary were run. The completed
+index, `production-population-2/run-index.json`, has SHA256
+`29a30879638f4198b3ec02a09d2120d33d5b713ae357c6d2aeb5cb4dcc1bfc2c`.
+Its status is correctly `OUTPUTS_COMPLETE_UNVERIFIED`; the separate actual-file
+read grants admission. That final read, `independent-delivered-read-1/result.json`,
+has SHA256 `87ecaec21d5e2a927660d26fe53bb31b7e7bcfbd4ac3a342dbb6b163f40ef8cf`,
+status `PASS_DELIVERED_TIFF_VALUES`, TIFF count 11 and unchanged source bindings.
+It reads every actual file and sample population, not an authored pixel summary.
+The [independent report](../../experiments/m194f-production-bridge/independent-final-report.md)
+records all individual hashes, source bindings and instrument limitations.
+
+**MEASURED delivered values:**
+
+| Consumer | Actual result | Fixed bar or meaning |
+| --- | --- | --- |
+| Observer and confidence null | All four baseline RGB TIFFs and complete sample arrays byte-identical | Exact; whole TIFF SHA256 `f6485b77f63a45dcd1a69707d141fde845a5de557713bbf0a3e96f40df74f65a` |
+| Private constant, 80 sites × RGB | Maximum absolute error 0.1023560874 DN | At most .25 DN |
+| Private affine, 80 sites × RGB | Maximum absolute error 0.1114633382 DN | At most .25 DN |
+| Actual green-CFA mutation | Delivered increase 63.89159991 DN at output (23,16) | More than 63.5 DN, unclipped |
+| Red WB, all 374 observed R sites | Every site increases; doubling residual −1..1 u16 code | Positive, unclipped; absolute residual at most 1 code |
+| Observed G1, G2 and B | Each 374-site population exactly unchanged | Exact |
+| Genuine confidence, 22×17 | Codes {0,400,800}; no unseen sentinel | Input-rank centrality, not optical confidence |
+| Two private Gray maps, each 16×8 | All 128 samples match; sentinel only at intended index 0, reached-zero index 1 stays 0 | Exact strict-less counts and encoding |
+
+Interpolated components have no scaling/identity acceptance bar. All 1122
+interpolated R components change (maximum movement 18436 codes); 374 of 748
+interpolated G components change (maximum 1229), and 374 of 1122 interpolated B
+components change (maximum 1843). These measurements retain the coupling that
+the rejected all-pixel WB rule would have mistaken for a defect. The sampled-site
+bar alone cannot establish WB ordering; the separate non-affine actual MHC
+component witness supplies that distinction. No optical-quality conclusion is
+drawn from these changes.
+
+## Actual final commands and next decision
+
+The following commands ran from the repository root, with distinct cache and
+output paths. Prerequisite records retain their own exact commands and logs.
+Repeat with new paths so the original evidence remains immutable.
+
+```powershell
+python -X utf8 -X pycache_prefix=experiments/m194f-production-bridge/work/cache-private-2 experiments/m194f-production-bridge/run-commission.py private --build-record experiments/m194f-production-bridge/build-4.json --build-sha256 b1930156c50817df7d801f3ff6585fb9f6b965f047adfdcc61e8520192c362bd --output experiments/m194f-production-bridge/private-population-2
+python -X utf8 -X pycache_prefix=experiments/m194f-production-bridge/work/cache-production-2 experiments/m194f-production-bridge/run-commission.py renders --build-record experiments/m194f-production-bridge/build-4.json --build-sha256 b1930156c50817df7d801f3ff6585fb9f6b965f047adfdcc61e8520192c362bd --output experiments/m194f-production-bridge/production-population-2 --private-command-record experiments/m194f-production-bridge/private-population-2-command.json --private-command-sha256 8a96ae17ea10781c962005a2665b95959c872bd8a48a9564221db7b56fd1294a --controls-command-record experiments/m194f-production-bridge/independent-input-run-3/result.json --controls-command-sha256 79a47aeb77641384e2c9091c2da1a4ab2c97ca8974cfccd40e792bb7d1ab6271
+python -X utf8 -X pycache_prefix=experiments/m194f-production-bridge/work/cache-delivered-read-1 experiments/m194f-production-bridge/independent-verify.py --index experiments/m194f-production-bridge/production-population-2/run-index.json --index-sha256 29a30879638f4198b3ec02a09d2120d33d5b713ae357c6d2aeb5cb4dcc1bfc2c --build-sha256 b1930156c50817df7d801f3ff6585fb9f6b965f047adfdcc61e8520192c362bd --reader-controls experiments/m194f-production-bridge/independent-reader-controls-1/result.json --reader-controls-sha256 f61e7b7990559e6368a676b70b16d1174c26a8b969fc9f56ad9403a5ffe9efc4 --out experiments/m194f-production-bridge/independent-delivered-read-1
+```
+
+The evidence supports proceeding to a separately registered larger joint-pupil
+fixture, with three actual Laplacian bands and an independently commissioned
+noise population, before comparing the fixed M194d admission candidate at a
+depth boundary. M194f changes no product default, merge arithmetic or optical
+model. Its [50-rule discharge](../../experiments/m194f-production-bridge/rule-checklist.md)
+retains the failed protocol, instruments and initial population alongside this
+bounded integration pass. No SOTA, physical-optics, alignment, calibration,
+noise-reduction or performance claim follows from it.

@@ -1,0 +1,3 @@
+{'command_record': {'path': 'experiments/m194f-production-bridge/independent-orchestrator-5/private-zero-test/private-command.json', 'sha256': 'fc3d7b262d4261ddfb90363a4cc61cf69c6f84f650123a84f591a8a4acd88417', 'bytes': 3012}, 'passed': False}
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+

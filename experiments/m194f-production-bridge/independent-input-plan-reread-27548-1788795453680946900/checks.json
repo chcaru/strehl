@@ -1,0 +1,125 @@
+[
+  {
+    "evidence": {
+      "crop": {
+        "height": 17,
+        "width": 22,
+        "x": 5,
+        "y": 4
+      },
+      "levels": [
+        [
+          22,
+          17
+        ],
+        [
+          11,
+          9
+        ]
+      ],
+      "offset": [
+        10,
+        8
+      ]
+    },
+    "name": "actual-recomputed-plan-valid",
+    "pass": true
+  },
+  {
+    "evidence": {
+      "refusal": "trusted plan/config/geometry mismatch"
+    },
+    "name": "same-size-wrong-native-offset",
+    "pass": true
+  },
+  {
+    "evidence": {
+      "refusal": "trusted plan/config/geometry mismatch"
+    },
+    "name": "changed-exposure-plan",
+    "pass": true
+  },
+  {
+    "evidence": {
+      "refusal": "trusted plan/config/geometry mismatch"
+    },
+    "name": "changed-observer-plan",
+    "pass": true
+  },
+  {
+    "evidence": {
+      "refusal": "trusted plan/config/geometry mismatch"
+    },
+    "name": "changed-effective-levels-plan",
+    "pass": true
+  },
+  {
+    "evidence": {
+      "refusal": "trusted plan/config/geometry mismatch"
+    },
+    "name": "changed-authority-plan",
+    "pass": true
+  },
+  {
+    "evidence": {
+      "refusal": "trusted plan/config/geometry mismatch"
+    },
+    "name": "unknown-plan-key",
+    "pass": true
+  },
+  {
+    "evidence": {
+      "refusal": "trusted plan/config/geometry mismatch"
+    },
+    "name": "missing-plan-source-binding",
+    "pass": true
+  },
+  {
+    "evidence": {
+      "refusal": "trusted plan/config/geometry mismatch"
+    },
+    "name": "coherent-looking-plan-source-substitution",
+    "pass": true
+  },
+  {
+    "evidence": {
+      "counts": [
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "first_pass": "manual decode companion; separate failed arm below uses the real fold",
+      "hooks": 10,
+      "sites": 374
+    },
+    "name": "actual-confidence-second-decode-valid",
+    "pass": true
+  },
+  {
+    "evidence": {
+      "attempts": [
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "error": "frame 3: M194f injected decode failure at index 3, attempt 2",
+      "hooks": 9,
+      "partial_gray_exists": false,
+      "partial_rgb_exists": false,
+      "scope": "private injected second-read fault, not intended render",
+      "successes": [
+        2,
+        2,
+        2,
+        1,
+        2
+      ]
+    },
+    "name": "actual-fold-confidence-second-attempt-refuses",
+    "pass": true
+  }
+]

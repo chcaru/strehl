@@ -1,0 +1,54 @@
+{
+  "schema": "m194f-consumer-command-v1",
+  "command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-wb-driver-1\\private-copied.bin",
+    "--exact",
+    "merge_cmd::known_scene_benchmark::joint_pupil_bridge::m194f_production_bridge",
+    "--ignored",
+    "--test-threads=1",
+    "--nocapture"
+  ],
+  "interpreter_argv": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-X",
+    "utf8",
+    "-X",
+    "pycache_prefix=experiments/m194f-production-bridge/work/independent-wb-driver-cache-1",
+    "experiments/m194f-production-bridge/independent-wb-driver-controls.py",
+    "--output",
+    "experiments/m194f-production-bridge/independent-wb-driver-1"
+  ],
+  "started_utc": "2026-09-07T15:58:57.101389+00:00",
+  "ended_utc": "2026-09-07T15:58:57.101389+00:00",
+  "exit_code": 0,
+  "passed": true,
+  "log": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-wb-driver-1\\plan-red-double\\child.log",
+  "log_sha256": "73785c48bd643bf1a0728ba3bf2c119f5a8f6311c85f67674861a5670ba74271",
+  "build_sha256": "310536027cd17bbb1ea3277a9b8cad450403481140fa0fee7135a2b986858778",
+  "driver_sha256": "2dad7d6699492f17eb8610820763fad73f54a06b2d1f358c1c765ee4f553310b",
+  "sources_unchanged": true,
+  "environment": {
+    "STREHL_DEFECT": "off",
+    "STREHL_FIX_CA": "off",
+    "STREHL_FULLRES_GATHER": "1",
+    "STREHL_PYRAMID_WORKERS": "2",
+    "RAYON_NUM_THREADS": "2",
+    "STREHL_M194F_MODE": "plan",
+    "STREHL_M194F_MANIFEST": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-wb-driver-1\\plan-red-double\\manifest.json",
+    "STREHL_M194F_MANIFEST_SHA256": "2222222222222222222222222222222222222222222222222222222222222222",
+    "STREHL_M194F_CFA_COMMISSION": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-wb-driver-1\\plan-red-double\\gate.json",
+    "STREHL_M194F_CFA_COMMISSION_SHA256": "3333333333333333333333333333333333333333333333333333333333333333",
+    "STREHL_M194F_PLAN": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-wb-driver-1\\plan-red-double\\plan.json",
+    "STREHL_M194F_OBSERVER": "count",
+    "STREHL_M194F_CONFIDENCE": "0",
+    "STREHL_M194F_EXPOSURE": "0",
+    "STREHL_M194F_WB_MODE": "red-double"
+  },
+  "xoptions": {
+    "utf8": true,
+    "pycache_prefix": "experiments/m194f-production-bridge/work/independent-wb-driver-cache-1"
+  },
+  "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+  "result": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-wb-driver-1\\plan-red-double\\plan.json",
+  "result_sha256": "e6d0c1b9ef93207f92d188dc2a9021e72547c8d9d4f7e000c73089fc0fb8bc21"
+}

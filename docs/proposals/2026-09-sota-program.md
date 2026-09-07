@@ -170,13 +170,14 @@ earlier full-run refusals and four prospective numerical amendments remain in
 0.00012419946 electrons against the unchanged0.004 limit; this commissions the
 fixed numerical model, not measured physical optics or merge quality.
 
-**Current next implementation: M194f**, preregistered at `9da113f5`, consumes
-those admitted CFA files through the existing prepared production Pyramid and
-actual TIFF writer. Its eleven-file population checks strict input/source/plan
-bindings, nonzero crop/colour values, off/count/placebo byte identity, confidence
-rereads and rank encoding. The small fixture has one Laplacian band plus a base;
-a separately registered larger boundary/noise comparison must follow before
-assessing M194d there. See the [M194f protocol](../../experiments/m194f-production-bridge/preregister.md).
+**M194f complete:** all eleven fresh TIFFs pass the independent actual-file
+reader after consuming admitted CFA through the prepared production Pyramid
+and writer. Crop/colour values, observer/confidence byte identity, rank encoding
+and the amended observed-channel WB control pass. The unsupported exposure arm
+and instrument failures remain in the [M194f report](../research/M194f-production-bridge.md).
+The small fixture has one Laplacian band plus a base. **Next:** separately
+register and commission the larger numerical boundary fixture and noise law,
+then compare the fixed M194d candidate on actual three-band production output.
 The one-plane M194b/M194d evidence cannot express depth-boundary dilution.
 The new mathematical model will not clear M25's failed physical/optics gates.
 Any later production bridge, noise population and quality comparison need an

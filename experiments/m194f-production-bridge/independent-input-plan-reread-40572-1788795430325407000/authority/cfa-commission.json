@@ -1,0 +1,18 @@
+{
+  "float_commission": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-full-comparison-1\\float-commission.json",
+    "sha256": "4bd57b896be0b68c42fb1384a468a4f29cc54139a18a046a678dd97bad408217"
+  },
+  "independent_verification": {
+    "path": "result.json",
+    "sha256": "8901be629a789d2959482baed15bef3e8cf23ba5f13418f66afdfb9fbf8bacdd"
+  },
+  "manifest": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\cfa-emission-1\\manifest.json",
+    "sha256": "f47c2b8720560fe9dbd777eeed3281ce2531f1f2287f5c88ef7b51a083d03299"
+  },
+  "sample_count": 15360,
+  "schema": "m194e-cfa-commission-v1",
+  "scope": "Exact noiseless CFA conversion and recorded provenance of the admitted geometric model; no camera calibration, diffraction, production merge, quality or SOTA claim",
+  "status": "PASS"
+}

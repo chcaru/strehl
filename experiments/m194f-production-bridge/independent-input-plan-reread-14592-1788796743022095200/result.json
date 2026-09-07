@@ -1,0 +1,525 @@
+{
+  "check_count": 50,
+  "checks": [
+    {
+      "evidence": {
+        "scope": "actual default dispatcher; exact non-affine witness below distinguishes MHC"
+      },
+      "name": "direct-mhc-component-environment-cleared",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "after_dn": 2128.0,
+        "before_dn": 1064.0,
+        "channel": 0,
+        "expected_after_dn": 2128.0,
+        "expected_before_dn": 1064.0,
+        "units": "unnormalized DN f32 component",
+        "x": 4,
+        "y": 4
+      },
+      "name": "actual-mhc-dn-known-red",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "after_dn": 1084.0,
+        "before_dn": 1052.0,
+        "channel": 1,
+        "expected_after_dn": 1084.0,
+        "expected_before_dn": 1052.0,
+        "units": "unnormalized DN f32 component",
+        "x": 4,
+        "y": 4
+      },
+      "name": "actual-mhc-dn-interpolated-green-at-red",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "after_dn": 1096.0,
+        "before_dn": 1048.0,
+        "channel": 2,
+        "expected_after_dn": 1096.0,
+        "expected_before_dn": 1048.0,
+        "units": "unnormalized DN f32 component",
+        "x": 4,
+        "y": 4
+      },
+      "name": "actual-mhc-dn-interpolated-blue-at-red",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "after_dn": 2114.0,
+        "before_dn": 1082.0,
+        "channel": 0,
+        "expected_after_dn": 2114.0,
+        "expected_before_dn": 1082.0,
+        "units": "unnormalized DN f32 component",
+        "x": 5,
+        "y": 4
+      },
+      "name": "actual-mhc-dn-interpolated-red-at-green",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "after_dn": 1080.0,
+        "before_dn": 1080.0,
+        "channel": 1,
+        "expected_after_dn": 1080.0,
+        "expected_before_dn": 1080.0,
+        "units": "unnormalized DN f32 component",
+        "x": 5,
+        "y": 4
+      },
+      "name": "actual-mhc-dn-known-green",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "wrong_oracle_delta_dn": -50.0
+      },
+      "name": "wrong-all-pixel-red-double-oracle-is-live",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "blue_delta_dn": 48.0,
+        "green_delta_dn": 32.0
+      },
+      "name": "wrong-all-pixel-gb-identity-oracle-is-live",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "baseline_rgb_dn": [
+          1000,
+          1000,
+          1000
+        ],
+        "pixels": 80,
+        "red_double_rgb_dn": [
+          2000,
+          1000,
+          1000
+        ],
+        "scope": "same actual dispatcher, including reflected borders"
+      },
+      "name": "actual-mhc-constant-null-all-pixels",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "scope": "retained original unsupported production control"
+      },
+      "name": "actual-camera-linear-exposure-one-needs-srgb",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "stops": 0
+      },
+      "name": "actual-camera-linear-exposure-zero-is-none",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "frame": [
+          1.3333333730697632,
+          1.0,
+          1.6666666269302368
+        ],
+        "mode": "baseline",
+        "writer": [
+          1.3333333730697632,
+          1.0,
+          1.6666666269302368
+        ]
+      },
+      "name": "baseline-plan-binds-actual-writer-and-frame-wb",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "frame": [
+          1.3333333730697632,
+          1.0,
+          1.6666666269302368
+        ],
+        "mode": "red-double",
+        "writer": [
+          2.6666667461395264,
+          1.0,
+          1.6666666269302368
+        ]
+      },
+      "name": "red-double-plan-valid-with-unchanged-frame-wb",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "baseline": [
+          1.3333333730697632,
+          1.0,
+          1.6666666269302368
+        ],
+        "red_double": [
+          2.6666667461395264,
+          1.0,
+          1.6666666269302368
+        ]
+      },
+      "name": "wb-mode-parser-valid-companions",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "refusal": "unregistered WB mode"
+      },
+      "name": "malformed-wb-mode-\"\"",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "refusal": "unregistered WB mode"
+      },
+      "name": "malformed-wb-mode-\"Baseline\"",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "refusal": "unregistered WB mode"
+      },
+      "name": "malformed-wb-mode-\"red_double\"",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "refusal": "unregistered WB mode"
+      },
+      "name": "malformed-wb-mode-\"red-double \"",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "refusal": "unregistered WB mode"
+      },
+      "name": "malformed-wb-mode-\"green-double\"",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "refusal": "CameraLinear bridge requires exposure0"
+      },
+      "name": "exposure-1-refuses-before-plan",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "refusal": "CameraLinear bridge requires exposure0"
+      },
+      "name": "exposure-2-refuses-before-plan",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "refusal": "CameraLinear bridge requires exposure0"
+      },
+      "name": "exposure-255-refuses-before-plan",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "refusal": "trusted plan/config/geometry mismatch"
+      },
+      "name": "baseline-plan-cannot-authorize-red-double",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "refusal": "trusted plan/config/geometry mismatch"
+      },
+      "name": "red-double-plan-cannot-authorize-baseline",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "refusal": "JSON SHA-256 mismatch"
+      },
+      "name": "red-plan-writer-wb-restored-stale-hash",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "refusal": "trusted plan/config/geometry mismatch"
+      },
+      "name": "red-plan-writer-wb-restored-rehashed",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "refusal": "JSON SHA-256 mismatch"
+      },
+      "name": "red-plan-frame-wb-changed-stale-hash",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "refusal": "trusted plan/config/geometry mismatch"
+      },
+      "name": "red-plan-frame-wb-changed-rehashed",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "refusal": "JSON SHA-256 mismatch"
+      },
+      "name": "red-plan-mode-restored-stale-hash",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "refusal": "trusted plan/config/geometry mismatch"
+      },
+      "name": "red-plan-mode-restored-rehashed",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "refusal": "JSON SHA-256 mismatch"
+      },
+      "name": "red-plan-wrong-green-wb-stale-hash",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "refusal": "trusted plan/config/geometry mismatch"
+      },
+      "name": "red-plan-wrong-green-wb-rehashed",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "refusal": "JSON SHA-256 mismatch"
+      },
+      "name": "red-plan-wrong-blue-wb-stale-hash",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "refusal": "trusted plan/config/geometry mismatch"
+      },
+      "name": "red-plan-wrong-blue-wb-rehashed",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "crop": {
+          "height": 17,
+          "width": 22,
+          "x": 5,
+          "y": 4
+        },
+        "levels": [
+          [
+            22,
+            17
+          ],
+          [
+            11,
+            9
+          ]
+        ],
+        "offset": [
+          10,
+          8
+        ]
+      },
+      "name": "actual-recomputed-plan-valid",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "refusal": "trusted plan/config/geometry mismatch"
+      },
+      "name": "same-size-wrong-native-offset",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "refusal": "trusted plan/config/geometry mismatch"
+      },
+      "name": "changed-exposure-plan",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "refusal": "trusted plan/config/geometry mismatch"
+      },
+      "name": "changed-observer-plan",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "refusal": "trusted plan/config/geometry mismatch"
+      },
+      "name": "changed-effective-levels-plan",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "refusal": "trusted plan/config/geometry mismatch"
+      },
+      "name": "changed-authority-plan",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "refusal": "trusted plan/config/geometry mismatch"
+      },
+      "name": "unknown-plan-key",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "refusal": "trusted plan/config/geometry mismatch"
+      },
+      "name": "missing-plan-source-binding",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "refusal": "trusted plan/config/geometry mismatch"
+      },
+      "name": "coherent-looking-plan-source-substitution",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "red_plan_frame_wb": [
+          1.3333333730697632,
+          1.0,
+          1.6666666269302368
+        ],
+        "wb": [
+          1.3333333730697632,
+          1.0,
+          1.6666666269302368
+        ]
+      },
+      "name": "actual-decoded-frame-3-baseline-wb",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "red_plan_frame_wb": [
+          1.3333333730697632,
+          1.0,
+          1.6666666269302368
+        ],
+        "wb": [
+          1.3333333730697632,
+          1.0,
+          1.6666666269302368
+        ]
+      },
+      "name": "actual-decoded-frame-0-baseline-wb",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "red_plan_frame_wb": [
+          1.3333333730697632,
+          1.0,
+          1.6666666269302368
+        ],
+        "wb": [
+          1.3333333730697632,
+          1.0,
+          1.6666666269302368
+        ]
+      },
+      "name": "actual-decoded-frame-4-baseline-wb",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "red_plan_frame_wb": [
+          1.3333333730697632,
+          1.0,
+          1.6666666269302368
+        ],
+        "wb": [
+          1.3333333730697632,
+          1.0,
+          1.6666666269302368
+        ]
+      },
+      "name": "actual-decoded-frame-1-baseline-wb",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "red_plan_frame_wb": [
+          1.3333333730697632,
+          1.0,
+          1.6666666269302368
+        ],
+        "wb": [
+          1.3333333730697632,
+          1.0,
+          1.6666666269302368
+        ]
+      },
+      "name": "actual-decoded-frame-2-baseline-wb",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "counts": [
+          2,
+          2,
+          2,
+          2,
+          2
+        ],
+        "first_pass": "manual decode companion; separate failed arm below uses the real fold",
+        "hooks": 10,
+        "sites": 374
+      },
+      "name": "actual-confidence-second-decode-valid",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "attempts": [
+          2,
+          2,
+          2,
+          2,
+          2
+        ],
+        "error": "frame 3: M194f injected decode failure at index 3, attempt 2",
+        "hooks": 9,
+        "partial_gray_exists": false,
+        "partial_rgb_exists": false,
+        "scope": "private injected second-read fault, not intended render",
+        "successes": [
+          2,
+          2,
+          2,
+          1,
+          2
+        ]
+      },
+      "name": "actual-fold-confidence-second-attempt-refuses",
+      "pass": true
+    }
+  ],
+  "pass": true,
+  "schema": "m194f-independent-input-controls-v1",
+  "scope": "private API and genuine input parsing; no optical or TIFF quality authority"
+}
