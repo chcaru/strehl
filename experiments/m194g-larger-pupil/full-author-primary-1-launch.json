@@ -1,0 +1,30 @@
+{
+  "schema": "m194g-root-full-numerical-launch-v1",
+  "status": "COMPLETE",
+  "source_commit": "9663ec614498c32822172429c82ba9dffa6cd6ff",
+  "release_sha256": "fc369e4c48fdd67dec32dbd22b9467e64ad89665961b1f422ae8abd484ce16c9",
+  "interpreter_argv": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-X",
+    "utf8",
+    "-X",
+    "faulthandler",
+    "-X",
+    "pycache_prefix=experiments/m194g-larger-pupil/work/cache-full-author-primary-1",
+    "experiments/m194g-larger-pupil/author-render.py",
+    "--arm",
+    "primary",
+    "--output",
+    "experiments/m194g-larger-pupil/full-author-primary-1",
+    "--execution-release",
+    "experiments/m194g-larger-pupil/full-author-release-1.json",
+    "--execution-release-sha256",
+    "fc369e4c48fdd67dec32dbd22b9467e64ad89665961b1f422ae8abd484ce16c9"
+  ],
+  "started_utc": "2026-09-07T19:30:13.0127031Z",
+  "finished_utc": "2026-09-07T19:35:20.4294956Z",
+  "exit_code": 0,
+  "parent_shell_pid": 36072,
+  "cwd": "C:\\dev\\blog\\death-of-software\\projects\\strehl",
+  "log": "experiments/m194g-larger-pupil/full-author-primary-1-launch.log"
+}

@@ -1,0 +1,1011 @@
+{
+  "schema": "m194g-geometry-preflight-v1",
+  "status": "PASS_COST_ONLY",
+  "scope": "cost only; no numerical/radiance authority",
+  "invocation": {
+    "orig_argv": [
+      "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+      "-X",
+      "utf8",
+      "-X",
+      "pycache_prefix=experiments/m194g-larger-pupil/work/cache-preflight-2",
+      "experiments/m194g-larger-pupil/preflight.py",
+      "--output",
+      "experiments/m194g-larger-pupil/preflight-2"
+    ],
+    "argv": [
+      "experiments/m194g-larger-pupil/preflight.py",
+      "--output",
+      "experiments/m194g-larger-pupil/preflight-2"
+    ],
+    "xoptions": {
+      "utf8": true,
+      "pycache_prefix": "experiments/m194g-larger-pupil/work/cache-preflight-2"
+    },
+    "executable": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "cwd": "C:\\dev\\blog\\death-of-software\\projects\\strehl"
+  },
+  "started_utc": "2026-09-07T17:32:35.001326+00:00",
+  "fixture": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\fixture.json",
+    "sha256": "e84f0bbbda9bef039da86616c9f051d416929f4dbe78477cc5b3fc21206856bb",
+    "bytes": 1985
+  },
+  "fixture_record": {
+    "schema": "m194g-expected-fixture-v1",
+    "scope": "continuous shared-pupil scalar expected electrons; no noise or CFA authority",
+    "width": 320,
+    "height": 240,
+    "cell": "integer-centre-unit-square",
+    "dtype": "<f8",
+    "scene": {
+      "depths": [
+        1.0,
+        2.0
+      ],
+      "mask_normal": [
+        1.0,
+        -0.15
+      ],
+      "mask_offset": 142.0,
+      "mask_state": "half-plane",
+      "foreground": {
+        "constant": 15000.0,
+        "affine": [
+          0.0,
+          0.0
+        ],
+        "waves": [
+          {
+            "amplitude": 1400.0,
+            "frequency": [
+              0.045,
+              0.095
+            ],
+            "phase": 0.7
+          },
+          {
+            "amplitude": 700.0,
+            "frequency": [
+              0.17,
+              0.01
+            ],
+            "phase": 0.3
+          }
+        ]
+      },
+      "background": {
+        "constant": 12000.0,
+        "affine": [
+          0.0,
+          0.0
+        ],
+        "waves": [
+          {
+            "amplitude": 3200.0,
+            "frequency": [
+              0.08,
+              0.015
+            ],
+            "phase": 0.2
+          },
+          {
+            "amplitude": 1800.0,
+            "frequency": [
+              -0.035,
+              0.12
+            ],
+            "phase": 1.1
+          }
+        ]
+      }
+    },
+    "frame_indices": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "inverse_foci": [
+      0.5,
+      0.625,
+      0.75,
+      0.875,
+      1.0
+    ],
+    "K": 12.0,
+    "forward_similarity": {
+      "scale": 1.0,
+      "rotation": 0.0,
+      "centre": [
+        0.0,
+        0.0
+      ],
+      "translation": [
+        0.0,
+        0.0
+      ]
+    },
+    "reference_index": 2,
+    "gauge": "reference-2 native pixels; identity placements",
+    "arms": [
+      "primary",
+      "angle-refined",
+      "cell-refined"
+    ],
+    "selector_intermediate_bit_limit": 4096,
+    "preflight_limits": {
+      "whole_run_cpu_seconds": 180.0,
+      "whole_run_wall_seconds": 240.0,
+      "tracked_owned_ndarray_bytes": 33554432,
+      "per_frame_points_strictly_below": 8000000,
+      "per_frame_angular_nodes_strictly_below": 1200000000
+    },
+    "future_render_limits": {
+      "per_frame_points": 16000000,
+      "per_frame_angular_nodes": 2400000000,
+      "per_arm_cpu_seconds": 1800.0,
+      "per_arm_wall_seconds": 3600.0,
+      "tracked_owned_ndarray_bytes": 33554432,
+      "live_scalar_frames": 1,
+      "node_pairs": 32768
+    },
+    "future_float_bars_e": {
+      "maximum": 0.004,
+      "rms": 0.0008,
+      "author_refinement_maximum": 0.001,
+      "independent_refinement_maximum": 0.0005,
+      "fixed_boundary_abs_mask_height": 8.0
+    }
+  },
+  "sources_before": {
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\amendment-1-counter-budget.md": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\amendment-1-counter-budget.md",
+      "sha256": "205ba1ac42e8325eb7d1ede41e05399776eddf7d80a99ecb3ba12b1931f73a99",
+      "bytes": 5367
+    },
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\author-controls.py": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\author-controls.py",
+      "sha256": "c1f29b6680ee5161559fe498a81f13738c3d30124fa71e5fb79dce4fbe750ff7",
+      "bytes": 14068
+    },
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\counter-profile.py": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\counter-profile.py",
+      "sha256": "fc1dd81cf3c6dbccdb46830dcffb98a91b21f05f2a89089d9f40c85f253d0020",
+      "bytes": 18325
+    },
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\design-sources.json": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\design-sources.json",
+      "sha256": "d7f488811494c4231b5cfc3ab2cb8ac672b6f0a481becc4e510b521e5a39f636",
+      "bytes": 2695
+    },
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\fixture.json": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\fixture.json",
+      "sha256": "e84f0bbbda9bef039da86616c9f051d416929f4dbe78477cc5b3fc21206856bb",
+      "bytes": 1985
+    },
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\geometry.py": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\geometry.py",
+      "sha256": "24b812071b8b6189423b9792a22c55abd9a4f4a78921a9d558ab24489f1923b3",
+      "bytes": 6591
+    },
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-budget-controls-design.md": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-budget-controls-design.md",
+      "sha256": "8c02b87686b7521ff2a216aee5567ce9557454a13764075bdd3251ad6896f5eb",
+      "bytes": 5498
+    },
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-budget-controls.py": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-budget-controls.py",
+      "sha256": "14fe92cca70b25ec98719ed5c8d0ae1f9c5f38f3642c6eb894b1222923e57b99",
+      "bytes": 18698
+    },
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-cost-1-read.py": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-cost-1-read.py",
+      "sha256": "da31e6fba6d5aa1eb1d5becd83f7e2e903d1918b294742e4e3fd41138ca91ff7",
+      "bytes": 9575
+    },
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-cost-2-review-design.md": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-cost-2-review-design.md",
+      "sha256": "78332ee546aaa6a1f1789e0bd9268c3ff6876739a120902b33b06da650e8237e",
+      "bytes": 2850
+    },
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-geometry-controls.py": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-geometry-controls.py",
+      "sha256": "0d258f9bccde6a2b64afc6d83a7105c7f6f12b2054fd9868fe4cad3eb32cb33d",
+      "bytes": 24616
+    },
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-geometry-preregister.md": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-geometry-preregister.md",
+      "sha256": "fecf46e8b79a87328d4e7e61ad975863cff082add8ed2154a3045a24c057fda7",
+      "bytes": 8327
+    },
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-preflight-controls-design.md": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-preflight-controls-design.md",
+      "sha256": "0dd8134ec6bb71e00c3a41369f4af549a0583e7395da3eea9b22e995a15cc6c7",
+      "bytes": 6909
+    },
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-preflight-controls.py": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-preflight-controls.py",
+      "sha256": "7d5872de9083359eaaadf5c6a2240ae14c76ca4c432b4b8b18d1db9cf47b1e9c",
+      "bytes": 32765
+    },
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-preflight-design-review.md": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-preflight-design-review.md",
+      "sha256": "fd8265226dec4fa398b8676eb6c0e79c150cf69bb24ec875bcd3c4a6bbae3e27",
+      "bytes": 7377
+    },
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-profile-1-read.py": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-profile-1-read.py",
+      "sha256": "16274c2e0cec491a07b3f0a34468104f8f18da5ec1fa1da20f67ab943d6386aa",
+      "bytes": 10777
+    },
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\pinned-loader.py": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\pinned-loader.py",
+      "sha256": "222fab4a932fe236c120d8a48e4521747474e2ef57ba58781bf5c59f644f4f76",
+      "bytes": 2939
+    },
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\preflight.py": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\preflight.py",
+      "sha256": "c162c2651b1fd3e8345f08c0c9cd5edf5e100d94d7958c5dedde1d791a18763c",
+      "bytes": 23049
+    },
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\preregister.md": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\preregister.md",
+      "sha256": "d0c570ec892a2c3e40b90c0f7eef2a9ff0649dd53bc34adee6b6bc65280f14c8",
+      "bytes": 10645
+    }
+  },
+  "frozen_imports": {
+    "model.py": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\model.py",
+      "sha256": "a74cd9bd61ea2f717a185e86f725b5ed192431056a447581db0f8562cf9f70b8",
+      "bytes": 8015
+    },
+    "render.py": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\render.py",
+      "sha256": "487c1727ca3aab05dd66a7056fb368712ccaabbbe604818fdc8b47eda77b6e97",
+      "bytes": 32791
+    }
+  },
+  "local_imports": {
+    "loader_sha256": "222fab4a932fe236c120d8a48e4521747474e2ef57ba58781bf5c59f644f4f76",
+    "geometry": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\geometry.py",
+      "sha256": "24b812071b8b6189423b9792a22c55abd9a4f4a78921a9d558ab24489f1923b3",
+      "bytes": 6591
+    }
+  },
+  "versions": {
+    "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+    "numpy": "2.4.4"
+  },
+  "thread_environment": {
+    "OMP_NUM_THREADS": "2",
+    "OPENBLAS_NUM_THREADS": "2",
+    "MKL_NUM_THREADS": "2",
+    "NUMEXPR_NUM_THREADS": "2"
+  },
+  "width": 320,
+  "height": 240,
+  "frame_indices": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "arms": [
+    "primary",
+    "angle-refined",
+    "cell-refined"
+  ],
+  "frames": [
+    {
+      "arm": "primary",
+      "frame_index": 0,
+      "visited_cells": 76800,
+      "branches": {
+        "foreground": 36708,
+        "background": 36912,
+        "numerical": 3180
+      },
+      "roots": 8016,
+      "low_points": 128256,
+      "high_points": 513024,
+      "angular_nodes": 184139136,
+      "maximum_intervals": 42,
+      "unsupported_selector_reason": null,
+      "integrator": {
+        "arm": "primary",
+        "angle_low": 16,
+        "angle_high": 32,
+        "cell_low": 4,
+        "cell_high": 8,
+        "pupil_tolerance": 0.00025,
+        "cell_tolerance": 0.00075,
+        "cell_point_tolerance": 4.6875e-05,
+        "angle_depth": 10,
+        "cell_depth": 6,
+        "point_limit": 4000000,
+        "angular_limit": 600000000,
+        "cpu_limit": 600,
+        "wall_limit": 1200,
+        "array_limit": 33554432,
+        "node_pair_limit": 32768
+      },
+      "status": "complete",
+      "last_coordinate": [
+        319,
+        239
+      ]
+    },
+    {
+      "arm": "primary",
+      "frame_index": 1,
+      "visited_cells": 76800,
+      "branches": {
+        "foreground": 37068,
+        "background": 37272,
+        "numerical": 2460
+      },
+      "roots": 6576,
+      "low_points": 105216,
+      "high_points": 420864,
+      "angular_nodes": 149075712,
+      "maximum_intervals": 40,
+      "unsupported_selector_reason": null,
+      "integrator": {
+        "arm": "primary",
+        "angle_low": 16,
+        "angle_high": 32,
+        "cell_low": 4,
+        "cell_high": 8,
+        "pupil_tolerance": 0.00025,
+        "cell_tolerance": 0.00075,
+        "cell_point_tolerance": 4.6875e-05,
+        "angle_depth": 10,
+        "cell_depth": 6,
+        "point_limit": 4000000,
+        "angular_limit": 600000000,
+        "cpu_limit": 600,
+        "wall_limit": 1200,
+        "array_limit": 33554432,
+        "node_pair_limit": 32768
+      },
+      "status": "complete",
+      "last_coordinate": [
+        319,
+        239
+      ]
+    },
+    {
+      "arm": "primary",
+      "frame_index": 2,
+      "visited_cells": 76800,
+      "branches": {
+        "foreground": 37428,
+        "background": 37632,
+        "numerical": 1740
+      },
+      "roots": 5136,
+      "low_points": 82176,
+      "high_points": 328704,
+      "angular_nodes": 113300352,
+      "maximum_intervals": 40,
+      "unsupported_selector_reason": null,
+      "integrator": {
+        "arm": "primary",
+        "angle_low": 16,
+        "angle_high": 32,
+        "cell_low": 4,
+        "cell_high": 8,
+        "pupil_tolerance": 0.00025,
+        "cell_tolerance": 0.00075,
+        "cell_point_tolerance": 4.6875e-05,
+        "angle_depth": 10,
+        "cell_depth": 6,
+        "point_limit": 4000000,
+        "angular_limit": 600000000,
+        "cpu_limit": 600,
+        "wall_limit": 1200,
+        "array_limit": 33554432,
+        "node_pair_limit": 32768
+      },
+      "status": "complete",
+      "last_coordinate": [
+        319,
+        239
+      ]
+    },
+    {
+      "arm": "primary",
+      "frame_index": 3,
+      "visited_cells": 76800,
+      "branches": {
+        "foreground": 37800,
+        "background": 38004,
+        "numerical": 996
+      },
+      "roots": 3648,
+      "low_points": 58368,
+      "high_points": 233472,
+      "angular_nodes": 74874240,
+      "maximum_intervals": 38,
+      "unsupported_selector_reason": null,
+      "integrator": {
+        "arm": "primary",
+        "angle_low": 16,
+        "angle_high": 32,
+        "cell_low": 4,
+        "cell_high": 8,
+        "pupil_tolerance": 0.00025,
+        "cell_tolerance": 0.00075,
+        "cell_point_tolerance": 4.6875e-05,
+        "angle_depth": 10,
+        "cell_depth": 6,
+        "point_limit": 4000000,
+        "angular_limit": 600000000,
+        "cpu_limit": 600,
+        "wall_limit": 1200,
+        "array_limit": 33554432,
+        "node_pair_limit": 32768
+      },
+      "status": "complete",
+      "last_coordinate": [
+        319,
+        239
+      ]
+    },
+    {
+      "arm": "primary",
+      "frame_index": 4,
+      "visited_cells": 76800,
+      "branches": {
+        "foreground": 38160,
+        "background": 38364,
+        "numerical": 276
+      },
+      "roots": 1104,
+      "low_points": 17664,
+      "high_points": 70656,
+      "angular_nodes": 4239360,
+      "maximum_intervals": 1,
+      "unsupported_selector_reason": null,
+      "integrator": {
+        "arm": "primary",
+        "angle_low": 16,
+        "angle_high": 32,
+        "cell_low": 4,
+        "cell_high": 8,
+        "pupil_tolerance": 0.00025,
+        "cell_tolerance": 0.00075,
+        "cell_point_tolerance": 4.6875e-05,
+        "angle_depth": 10,
+        "cell_depth": 6,
+        "point_limit": 4000000,
+        "angular_limit": 600000000,
+        "cpu_limit": 600,
+        "wall_limit": 1200,
+        "array_limit": 33554432,
+        "node_pair_limit": 32768
+      },
+      "status": "complete",
+      "last_coordinate": [
+        319,
+        239
+      ]
+    },
+    {
+      "arm": "angle-refined",
+      "frame_index": 0,
+      "visited_cells": 76800,
+      "branches": {
+        "foreground": 36708,
+        "background": 36912,
+        "numerical": 3180
+      },
+      "roots": 8016,
+      "low_points": 128256,
+      "high_points": 513024,
+      "angular_nodes": 368278272,
+      "maximum_intervals": 42,
+      "unsupported_selector_reason": null,
+      "integrator": {
+        "arm": "angle-refined",
+        "angle_low": 32,
+        "angle_high": 64,
+        "cell_low": 4,
+        "cell_high": 8,
+        "pupil_tolerance": 6.25e-05,
+        "cell_tolerance": 0.00075,
+        "cell_point_tolerance": 1.171875e-05,
+        "angle_depth": 10,
+        "cell_depth": 6,
+        "point_limit": 4000000,
+        "angular_limit": 600000000,
+        "cpu_limit": 600,
+        "wall_limit": 1200,
+        "array_limit": 33554432,
+        "node_pair_limit": 32768
+      },
+      "status": "complete",
+      "last_coordinate": [
+        319,
+        239
+      ]
+    },
+    {
+      "arm": "angle-refined",
+      "frame_index": 1,
+      "visited_cells": 76800,
+      "branches": {
+        "foreground": 37068,
+        "background": 37272,
+        "numerical": 2460
+      },
+      "roots": 6576,
+      "low_points": 105216,
+      "high_points": 420864,
+      "angular_nodes": 298151424,
+      "maximum_intervals": 40,
+      "unsupported_selector_reason": null,
+      "integrator": {
+        "arm": "angle-refined",
+        "angle_low": 32,
+        "angle_high": 64,
+        "cell_low": 4,
+        "cell_high": 8,
+        "pupil_tolerance": 6.25e-05,
+        "cell_tolerance": 0.00075,
+        "cell_point_tolerance": 1.171875e-05,
+        "angle_depth": 10,
+        "cell_depth": 6,
+        "point_limit": 4000000,
+        "angular_limit": 600000000,
+        "cpu_limit": 600,
+        "wall_limit": 1200,
+        "array_limit": 33554432,
+        "node_pair_limit": 32768
+      },
+      "status": "complete",
+      "last_coordinate": [
+        319,
+        239
+      ]
+    },
+    {
+      "arm": "angle-refined",
+      "frame_index": 2,
+      "visited_cells": 76800,
+      "branches": {
+        "foreground": 37428,
+        "background": 37632,
+        "numerical": 1740
+      },
+      "roots": 5136,
+      "low_points": 82176,
+      "high_points": 328704,
+      "angular_nodes": 226600704,
+      "maximum_intervals": 40,
+      "unsupported_selector_reason": null,
+      "integrator": {
+        "arm": "angle-refined",
+        "angle_low": 32,
+        "angle_high": 64,
+        "cell_low": 4,
+        "cell_high": 8,
+        "pupil_tolerance": 6.25e-05,
+        "cell_tolerance": 0.00075,
+        "cell_point_tolerance": 1.171875e-05,
+        "angle_depth": 10,
+        "cell_depth": 6,
+        "point_limit": 4000000,
+        "angular_limit": 600000000,
+        "cpu_limit": 600,
+        "wall_limit": 1200,
+        "array_limit": 33554432,
+        "node_pair_limit": 32768
+      },
+      "status": "complete",
+      "last_coordinate": [
+        319,
+        239
+      ]
+    },
+    {
+      "arm": "angle-refined",
+      "frame_index": 3,
+      "visited_cells": 76800,
+      "branches": {
+        "foreground": 37800,
+        "background": 38004,
+        "numerical": 996
+      },
+      "roots": 3648,
+      "low_points": 58368,
+      "high_points": 233472,
+      "angular_nodes": 149748480,
+      "maximum_intervals": 38,
+      "unsupported_selector_reason": null,
+      "integrator": {
+        "arm": "angle-refined",
+        "angle_low": 32,
+        "angle_high": 64,
+        "cell_low": 4,
+        "cell_high": 8,
+        "pupil_tolerance": 6.25e-05,
+        "cell_tolerance": 0.00075,
+        "cell_point_tolerance": 1.171875e-05,
+        "angle_depth": 10,
+        "cell_depth": 6,
+        "point_limit": 4000000,
+        "angular_limit": 600000000,
+        "cpu_limit": 600,
+        "wall_limit": 1200,
+        "array_limit": 33554432,
+        "node_pair_limit": 32768
+      },
+      "status": "complete",
+      "last_coordinate": [
+        319,
+        239
+      ]
+    },
+    {
+      "arm": "angle-refined",
+      "frame_index": 4,
+      "visited_cells": 76800,
+      "branches": {
+        "foreground": 38160,
+        "background": 38364,
+        "numerical": 276
+      },
+      "roots": 1104,
+      "low_points": 17664,
+      "high_points": 70656,
+      "angular_nodes": 8478720,
+      "maximum_intervals": 1,
+      "unsupported_selector_reason": null,
+      "integrator": {
+        "arm": "angle-refined",
+        "angle_low": 32,
+        "angle_high": 64,
+        "cell_low": 4,
+        "cell_high": 8,
+        "pupil_tolerance": 6.25e-05,
+        "cell_tolerance": 0.00075,
+        "cell_point_tolerance": 1.171875e-05,
+        "angle_depth": 10,
+        "cell_depth": 6,
+        "point_limit": 4000000,
+        "angular_limit": 600000000,
+        "cpu_limit": 600,
+        "wall_limit": 1200,
+        "array_limit": 33554432,
+        "node_pair_limit": 32768
+      },
+      "status": "complete",
+      "last_coordinate": [
+        319,
+        239
+      ]
+    },
+    {
+      "arm": "cell-refined",
+      "frame_index": 0,
+      "visited_cells": 76800,
+      "branches": {
+        "foreground": 36708,
+        "background": 36912,
+        "numerical": 3180
+      },
+      "roots": 8016,
+      "low_points": 513024,
+      "high_points": 2052096,
+      "angular_nodes": 741288960,
+      "maximum_intervals": 50,
+      "unsupported_selector_reason": null,
+      "integrator": {
+        "arm": "cell-refined",
+        "angle_low": 16,
+        "angle_high": 32,
+        "cell_low": 8,
+        "cell_high": 16,
+        "pupil_tolerance": 0.00025,
+        "cell_tolerance": 0.0001875,
+        "cell_point_tolerance": 4.6875e-05,
+        "angle_depth": 10,
+        "cell_depth": 6,
+        "point_limit": 4000000,
+        "angular_limit": 600000000,
+        "cpu_limit": 600,
+        "wall_limit": 1200,
+        "array_limit": 33554432,
+        "node_pair_limit": 32768
+      },
+      "status": "complete",
+      "last_coordinate": [
+        319,
+        239
+      ]
+    },
+    {
+      "arm": "cell-refined",
+      "frame_index": 1,
+      "visited_cells": 76800,
+      "branches": {
+        "foreground": 37068,
+        "background": 37272,
+        "numerical": 2460
+      },
+      "roots": 6576,
+      "low_points": 420864,
+      "high_points": 1683456,
+      "angular_nodes": 601070976,
+      "maximum_intervals": 48,
+      "unsupported_selector_reason": null,
+      "integrator": {
+        "arm": "cell-refined",
+        "angle_low": 16,
+        "angle_high": 32,
+        "cell_low": 8,
+        "cell_high": 16,
+        "pupil_tolerance": 0.00025,
+        "cell_tolerance": 0.0001875,
+        "cell_point_tolerance": 4.6875e-05,
+        "angle_depth": 10,
+        "cell_depth": 6,
+        "point_limit": 4000000,
+        "angular_limit": 600000000,
+        "cpu_limit": 600,
+        "wall_limit": 1200,
+        "array_limit": 33554432,
+        "node_pair_limit": 32768
+      },
+      "status": "complete",
+      "last_coordinate": [
+        319,
+        239
+      ]
+    },
+    {
+      "arm": "cell-refined",
+      "frame_index": 2,
+      "visited_cells": 76800,
+      "branches": {
+        "foreground": 37428,
+        "background": 37632,
+        "numerical": 1740
+      },
+      "roots": 5136,
+      "low_points": 328704,
+      "high_points": 1314816,
+      "angular_nodes": 457909632,
+      "maximum_intervals": 48,
+      "unsupported_selector_reason": null,
+      "integrator": {
+        "arm": "cell-refined",
+        "angle_low": 16,
+        "angle_high": 32,
+        "cell_low": 8,
+        "cell_high": 16,
+        "pupil_tolerance": 0.00025,
+        "cell_tolerance": 0.0001875,
+        "cell_point_tolerance": 4.6875e-05,
+        "angle_depth": 10,
+        "cell_depth": 6,
+        "point_limit": 4000000,
+        "angular_limit": 600000000,
+        "cpu_limit": 600,
+        "wall_limit": 1200,
+        "array_limit": 33554432,
+        "node_pair_limit": 32768
+      },
+      "status": "complete",
+      "last_coordinate": [
+        319,
+        239
+      ]
+    },
+    {
+      "arm": "cell-refined",
+      "frame_index": 3,
+      "visited_cells": 76800,
+      "branches": {
+        "foreground": 37800,
+        "background": 38004,
+        "numerical": 996
+      },
+      "roots": 3648,
+      "low_points": 233472,
+      "high_points": 933888,
+      "angular_nodes": 304189056,
+      "maximum_intervals": 46,
+      "unsupported_selector_reason": null,
+      "integrator": {
+        "arm": "cell-refined",
+        "angle_low": 16,
+        "angle_high": 32,
+        "cell_low": 8,
+        "cell_high": 16,
+        "pupil_tolerance": 0.00025,
+        "cell_tolerance": 0.0001875,
+        "cell_point_tolerance": 4.6875e-05,
+        "angle_depth": 10,
+        "cell_depth": 6,
+        "point_limit": 4000000,
+        "angular_limit": 600000000,
+        "cpu_limit": 600,
+        "wall_limit": 1200,
+        "array_limit": 33554432,
+        "node_pair_limit": 32768
+      },
+      "status": "complete",
+      "last_coordinate": [
+        319,
+        239
+      ]
+    },
+    {
+      "arm": "cell-refined",
+      "frame_index": 4,
+      "visited_cells": 76800,
+      "branches": {
+        "foreground": 38160,
+        "background": 38364,
+        "numerical": 276
+      },
+      "roots": 1104,
+      "low_points": 70656,
+      "high_points": 282624,
+      "angular_nodes": 16957440,
+      "maximum_intervals": 1,
+      "unsupported_selector_reason": null,
+      "integrator": {
+        "arm": "cell-refined",
+        "angle_low": 16,
+        "angle_high": 32,
+        "cell_low": 8,
+        "cell_high": 16,
+        "pupil_tolerance": 0.00025,
+        "cell_tolerance": 0.0001875,
+        "cell_point_tolerance": 4.6875e-05,
+        "angle_depth": 10,
+        "cell_depth": 6,
+        "point_limit": 4000000,
+        "angular_limit": 600000000,
+        "cpu_limit": 600,
+        "wall_limit": 1200,
+        "array_limit": 33554432,
+        "node_pair_limit": 32768
+      },
+      "status": "complete",
+      "last_coordinate": [
+        319,
+        239
+      ]
+    }
+  ],
+  "completed_frames": 15,
+  "completed_cells": 1152000,
+  "work": {
+    "limits": {
+      "whole_run_cpu_seconds": 180.0,
+      "whole_run_wall_seconds": 240.0,
+      "tracked_owned_ndarray_bytes": 33554432,
+      "per_frame_points_strictly_below": 8000000,
+      "per_frame_angular_nodes_strictly_below": 1200000000
+    },
+    "cpu_seconds": 113.9375,
+    "wall_seconds": 115.68799999996554,
+    "frame_points": 353280,
+    "frame_angular_nodes": 16957440,
+    "total_points": 11750400,
+    "total_angular_nodes": 3698302464,
+    "frame_count": 15,
+    "check_calls": 15035170,
+    "tracked_peak_ndarray_bytes": 91280,
+    "tracked_peak_ndarrays": 18,
+    "array_scope": "unique reachable wrapper-owned ndarray backing allocations; excludes Python objects/RSS/frozen-helper transient temporaries"
+  },
+  "ordered_stream_sha256": "74827222370a9d733c520adbe0515b71a3ca545e31e2d7e1c9457cf9de547e70",
+  "sources_after": {
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\amendment-1-counter-budget.md": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\amendment-1-counter-budget.md",
+      "sha256": "205ba1ac42e8325eb7d1ede41e05399776eddf7d80a99ecb3ba12b1931f73a99",
+      "bytes": 5367
+    },
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\author-controls.py": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\author-controls.py",
+      "sha256": "c1f29b6680ee5161559fe498a81f13738c3d30124fa71e5fb79dce4fbe750ff7",
+      "bytes": 14068
+    },
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\counter-profile.py": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\counter-profile.py",
+      "sha256": "fc1dd81cf3c6dbccdb46830dcffb98a91b21f05f2a89089d9f40c85f253d0020",
+      "bytes": 18325
+    },
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\design-sources.json": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\design-sources.json",
+      "sha256": "d7f488811494c4231b5cfc3ab2cb8ac672b6f0a481becc4e510b521e5a39f636",
+      "bytes": 2695
+    },
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\fixture.json": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\fixture.json",
+      "sha256": "e84f0bbbda9bef039da86616c9f051d416929f4dbe78477cc5b3fc21206856bb",
+      "bytes": 1985
+    },
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\geometry.py": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\geometry.py",
+      "sha256": "24b812071b8b6189423b9792a22c55abd9a4f4a78921a9d558ab24489f1923b3",
+      "bytes": 6591
+    },
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-budget-controls-design.md": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-budget-controls-design.md",
+      "sha256": "8c02b87686b7521ff2a216aee5567ce9557454a13764075bdd3251ad6896f5eb",
+      "bytes": 5498
+    },
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-budget-controls.py": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-budget-controls.py",
+      "sha256": "14fe92cca70b25ec98719ed5c8d0ae1f9c5f38f3642c6eb894b1222923e57b99",
+      "bytes": 18698
+    },
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-cost-1-read.py": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-cost-1-read.py",
+      "sha256": "da31e6fba6d5aa1eb1d5becd83f7e2e903d1918b294742e4e3fd41138ca91ff7",
+      "bytes": 9575
+    },
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-cost-2-review-design.md": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-cost-2-review-design.md",
+      "sha256": "78332ee546aaa6a1f1789e0bd9268c3ff6876739a120902b33b06da650e8237e",
+      "bytes": 2850
+    },
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-geometry-controls.py": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-geometry-controls.py",
+      "sha256": "0d258f9bccde6a2b64afc6d83a7105c7f6f12b2054fd9868fe4cad3eb32cb33d",
+      "bytes": 24616
+    },
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-geometry-preregister.md": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-geometry-preregister.md",
+      "sha256": "fecf46e8b79a87328d4e7e61ad975863cff082add8ed2154a3045a24c057fda7",
+      "bytes": 8327
+    },
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-preflight-controls-design.md": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-preflight-controls-design.md",
+      "sha256": "0dd8134ec6bb71e00c3a41369f4af549a0583e7395da3eea9b22e995a15cc6c7",
+      "bytes": 6909
+    },
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-preflight-controls.py": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-preflight-controls.py",
+      "sha256": "7d5872de9083359eaaadf5c6a2240ae14c76ca4c432b4b8b18d1db9cf47b1e9c",
+      "bytes": 32765
+    },
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-preflight-design-review.md": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-preflight-design-review.md",
+      "sha256": "fd8265226dec4fa398b8676eb6c0e79c150cf69bb24ec875bcd3c4a6bbae3e27",
+      "bytes": 7377
+    },
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-profile-1-read.py": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-profile-1-read.py",
+      "sha256": "16274c2e0cec491a07b3f0a34468104f8f18da5ec1fa1da20f67ab943d6386aa",
+      "bytes": 10777
+    },
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\pinned-loader.py": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\pinned-loader.py",
+      "sha256": "222fab4a932fe236c120d8a48e4521747474e2ef57ba58781bf5c59f644f4f76",
+      "bytes": 2939
+    },
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\preflight.py": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\preflight.py",
+      "sha256": "c162c2651b1fd3e8345f08c0c9cd5edf5e100d94d7958c5dedde1d791a18763c",
+      "bytes": 23049
+    },
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\preregister.md": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\preregister.md",
+      "sha256": "d0c570ec892a2c3e40b90c0f7eef2a9ff0649dd53bc34adee6b6bc65280f14c8",
+      "bytes": 10645
+    }
+  },
+  "ended_utc": "2026-09-07T17:34:30.242347+00:00"
+}
