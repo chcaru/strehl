@@ -1,0 +1,1757 @@
+{
+  "schema": "m194e-independent-allocation-controls-v1",
+  "status": "UNCOMMISSIONED_ALLOCATION_CONTROLS",
+  "command": [
+    "experiments/m194e-joint-pupil/independent-allocation-controls.py",
+    "--render-sha256",
+    "a22d49fd43a1bc8d0f807fc1d4417104d5b9ffe1d771b418be58d276d7804460",
+    "--output",
+    "experiments/m194e-joint-pupil/independent-allocation-controls-1"
+  ],
+  "sources": {
+    "model.py": "a74cd9bd61ea2f717a185e86f725b5ed192431056a447581db0f8562cf9f70b8",
+    "render.py": "a22d49fd43a1bc8d0f807fc1d4417104d5b9ffe1d771b418be58d276d7804460",
+    "independent-allocation-controls.py": "b2195790ac4bfadb394c1d6f18e2f326d40e5c4056a113548fcc4ee33a3a51fa",
+    "independent-amendment-3-review.md": "69dbcdae7485ecbba1665a728872080eeee8aeec94c1b839e110d4c90f336317"
+  },
+  "checks": [
+    {
+      "name": "flat-complete-no-split",
+      "passed": true
+    },
+    {
+      "name": "signed-cancellation-does-not-admit",
+      "passed": true,
+      "aggregate": {
+        "value": 20000.0,
+        "cell_error": 0.0011999999987892807,
+        "pupil_error": 0.0,
+        "cell_delta": 0.0011999999987892807,
+        "area": 1.0
+      }
+    },
+    {
+      "name": "signed-half-size-valid-companion",
+      "passed": true
+    },
+    {
+      "name": "both-pupil-errors-in-cell-total",
+      "passed": true,
+      "aggregate": {
+        "value": 20000.0004,
+        "cell_error": 0.0008000000008090865,
+        "pupil_error": 0.0002,
+        "cell_delta": 0.0004000000008090865,
+        "area": 1.0
+      }
+    },
+    {
+      "name": "pupil-errors-valid-companion",
+      "passed": true
+    },
+    {
+      "name": "separate-high-pupil-limit",
+      "passed": true,
+      "aggregate": {
+        "value": 20000.0,
+        "cell_error": 0.0003,
+        "pupil_error": 0.0003,
+        "cell_delta": 0.0,
+        "area": 1.0
+      }
+    },
+    {
+      "name": "separate-pupil-valid-companion",
+      "passed": true
+    },
+    {
+      "name": "final-indicator-keeps-repeated-high-pupil",
+      "passed": true
+    },
+    {
+      "name": "local-overallocation-global-pass",
+      "passed": true
+    },
+    {
+      "name": "capped-depth6-retained",
+      "passed": true
+    },
+    {
+      "name": "other-root-refined-after-cap",
+      "passed": true
+    },
+    {
+      "name": "all-capped-excess-refuses",
+      "passed": true,
+      "refusal": "UNCOMMISSIONED_NUMERICS: cell depth/global-error ceiling"
+    },
+    {
+      "name": "increase-does-not-abort",
+      "passed": true
+    },
+    {
+      "name": "canonical-priority-tie",
+      "passed": true
+    },
+    {
+      "name": "storage-order-invariance",
+      "passed": true
+    },
+    {
+      "name": "fault-valid-frontier-companion",
+      "passed": true
+    },
+    {
+      "name": "pupil_low-negative",
+      "passed": true,
+      "refusal": "UNCOMMISSIONED_NUMERICS: cell frontier nonfinite or negative indicator"
+    },
+    {
+      "name": "pupil_low-nan",
+      "passed": true,
+      "refusal": "UNCOMMISSIONED_NUMERICS: cell frontier nonfinite or negative indicator"
+    },
+    {
+      "name": "pupil_low-infinite",
+      "passed": true,
+      "refusal": "UNCOMMISSIONED_NUMERICS: cell frontier nonfinite or negative indicator"
+    },
+    {
+      "name": "pupil_high-negative",
+      "passed": true,
+      "refusal": "UNCOMMISSIONED_NUMERICS: cell frontier nonfinite or negative indicator"
+    },
+    {
+      "name": "pupil_high-nan",
+      "passed": true,
+      "refusal": "UNCOMMISSIONED_NUMERICS: cell frontier nonfinite or negative indicator"
+    },
+    {
+      "name": "pupil_high-infinite",
+      "passed": true,
+      "refusal": "UNCOMMISSIONED_NUMERICS: cell frontier nonfinite or negative indicator"
+    },
+    {
+      "name": "low-nan",
+      "passed": true,
+      "refusal": "UNCOMMISSIONED_NUMERICS: cell frontier nonfinite or negative indicator"
+    },
+    {
+      "name": "low-infinite",
+      "passed": true,
+      "refusal": "UNCOMMISSIONED_NUMERICS: cell frontier nonfinite or negative indicator"
+    },
+    {
+      "name": "high-nan",
+      "passed": true,
+      "refusal": "UNCOMMISSIONED_NUMERICS: cell frontier nonfinite or negative indicator"
+    },
+    {
+      "name": "high-infinite",
+      "passed": true,
+      "refusal": "UNCOMMISSIONED_NUMERICS: cell frontier nonfinite or negative indicator"
+    },
+    {
+      "name": "missing-root",
+      "passed": true,
+      "refusal": "UNCOMMISSIONED_NUMERICS: cell frontier incomplete binary coverage"
+    },
+    {
+      "name": "missing-child",
+      "passed": true,
+      "refusal": "UNCOMMISSIONED_NUMERICS: cell frontier incomplete binary coverage"
+    },
+    {
+      "name": "duplicate-path",
+      "passed": true,
+      "refusal": "UNCOMMISSIONED_NUMERICS: cell frontier duplicate or overlapping paths"
+    },
+    {
+      "name": "parent-with-descendant",
+      "passed": true,
+      "refusal": "UNCOMMISSIONED_NUMERICS: cell frontier duplicate or overlapping paths"
+    },
+    {
+      "name": "depth-seven",
+      "passed": true,
+      "refusal": "UNCOMMISSIONED_NUMERICS: cell frontier path/depth"
+    },
+    {
+      "name": "biased-area",
+      "passed": true,
+      "refusal": "UNCOMMISSIONED_NUMERICS: cell frontier root leaf-area coverage"
+    },
+    {
+      "name": "duplicated-spatial-half-real-boundary",
+      "passed": true,
+      "refusal": "UNCOMMISSIONED_NUMERICS: cell evaluator changed geometry/path"
+    },
+    {
+      "name": "in-place-geometry-mutation",
+      "passed": true,
+      "refusal": "UNCOMMISSIONED_NUMERICS: cell evaluator changed geometry/path"
+    },
+    {
+      "name": "callback-path-mutation",
+      "passed": true,
+      "refusal": "UNCOMMISSIONED_NUMERICS: cell evaluator changed geometry/path"
+    },
+    {
+      "name": "work-wall-exhaustion",
+      "passed": true,
+      "refusal": "UNCOMMISSIONED_NUMERICS: own-process time ceiling"
+    },
+    {
+      "name": "work-point-exhaustion",
+      "passed": true,
+      "refusal": "UNCOMMISSIONED_NUMERICS: evaluation ceiling"
+    },
+    {
+      "name": "work-valid-companion",
+      "passed": true
+    },
+    {
+      "name": "off-before-completion-zero",
+      "passed": true
+    },
+    {
+      "name": "off-allocation-counters-zero",
+      "passed": true
+    },
+    {
+      "name": "off-optional-hook-disposition",
+      "passed": true
+    },
+    {
+      "name": "off-new-frame-reset",
+      "passed": true
+    },
+    {
+      "name": "count-before-completion-zero",
+      "passed": true
+    },
+    {
+      "name": "count-matches-actual-frontiers",
+      "passed": false,
+      "actual": {
+        "cells": 2,
+        "leaves": 11,
+        "minimum_depth": 0,
+        "maximum_depth": 6,
+        "locally_overallocated_leaves": 1,
+        "cells_with_locally_overallocated_leaves": 1
+      },
+      "expected": {
+        "cells": 2,
+        "leaves": 20,
+        "minimum_depth": 0,
+        "maximum_depth": 6,
+        "locally_overallocated_leaves": 2,
+        "cells_with_locally_overallocated_leaves": 2
+      }
+    }
+  ],
+  "runs": [
+    {
+      "name": "flat-null-first",
+      "value": 20000.0,
+      "receipt": {
+        "value_error_indicator_e": 0.0,
+        "cell_indicator_e": 0.0,
+        "weighted_high_pupil_indicator_e": 0.0,
+        "cell_quadrature_delta_e": 0.0,
+        "area": 1.0,
+        "leaf_triangles": 2,
+        "work": {
+          "point_calls": 0,
+          "angular_nodes": 0,
+          "peak_node_pairs": 0,
+          "tracked_peak_ndarray_bytes": 144,
+          "tracked_peak_ndarrays": 3,
+          "peak_live_scalar_frames": 0,
+          "observer": "count",
+          "observer_events": 6,
+          "optional_hook_calls": 4,
+          "cell_allocation": {
+            "cells": 1,
+            "leaves": 2,
+            "minimum_depth": 0,
+            "maximum_depth": 0,
+            "locally_overallocated_leaves": 0,
+            "cells_with_locally_overallocated_leaves": 0
+          },
+          "cpu_seconds": 0.0,
+          "wall_seconds": 0.0
+        }
+      },
+      "evaluation_paths": [
+        [
+          0
+        ],
+        [
+          1
+        ]
+      ],
+      "accepted": [
+        {
+          "path": [
+            0
+          ],
+          "area": 0.5,
+          "indicator": 0.0,
+          "depth": 0
+        },
+        {
+          "path": [
+            1
+          ],
+          "area": 0.5,
+          "indicator": 0.0,
+          "depth": 0
+        }
+      ]
+    },
+    {
+      "name": "pupil-receipt",
+      "value": 20000.0,
+      "receipt": {
+        "value_error_indicator_e": 0.0004,
+        "cell_indicator_e": 0.0002,
+        "weighted_high_pupil_indicator_e": 0.0002,
+        "cell_quadrature_delta_e": 0.0,
+        "area": 1.0,
+        "leaf_triangles": 2,
+        "work": {
+          "point_calls": 0,
+          "angular_nodes": 0,
+          "peak_node_pairs": 0,
+          "tracked_peak_ndarray_bytes": 144,
+          "tracked_peak_ndarrays": 3,
+          "peak_live_scalar_frames": 0,
+          "observer": "count",
+          "observer_events": 6,
+          "optional_hook_calls": 4,
+          "cell_allocation": {
+            "cells": 1,
+            "leaves": 2,
+            "minimum_depth": 0,
+            "maximum_depth": 0,
+            "locally_overallocated_leaves": 0,
+            "cells_with_locally_overallocated_leaves": 0
+          },
+          "cpu_seconds": 0.0,
+          "wall_seconds": 0.0
+        }
+      },
+      "evaluation_paths": [
+        [
+          0
+        ],
+        [
+          1
+        ]
+      ],
+      "accepted": [
+        {
+          "path": [
+            0
+          ],
+          "area": 0.5,
+          "indicator": 0.0002,
+          "depth": 0
+        },
+        {
+          "path": [
+            1
+          ],
+          "area": 0.5,
+          "indicator": 0.0,
+          "depth": 0
+        }
+      ]
+    },
+    {
+      "name": "global-overallocation-valid",
+      "value": 20000.00015,
+      "receipt": {
+        "value_error_indicator_e": 0.00014999999984866008,
+        "cell_indicator_e": 0.00014999999984866008,
+        "weighted_high_pupil_indicator_e": 0.0,
+        "cell_quadrature_delta_e": 0.00014999999984866008,
+        "area": 1.0,
+        "leaf_triangles": 2,
+        "work": {
+          "point_calls": 0,
+          "angular_nodes": 0,
+          "peak_node_pairs": 0,
+          "tracked_peak_ndarray_bytes": 144,
+          "tracked_peak_ndarrays": 3,
+          "peak_live_scalar_frames": 0,
+          "observer": "count",
+          "observer_events": 6,
+          "optional_hook_calls": 4,
+          "cell_allocation": {
+            "cells": 1,
+            "leaves": 2,
+            "minimum_depth": 0,
+            "maximum_depth": 0,
+            "locally_overallocated_leaves": 1,
+            "cells_with_locally_overallocated_leaves": 1
+          },
+          "cpu_seconds": 0.0,
+          "wall_seconds": 0.0
+        }
+      },
+      "evaluation_paths": [
+        [
+          0
+        ],
+        [
+          1
+        ]
+      ],
+      "accepted": [
+        {
+          "path": [
+            0
+          ],
+          "area": 0.0625,
+          "indicator": 9.999999929277692e-05,
+          "depth": 0
+        },
+        {
+          "path": [
+            1
+          ],
+          "area": 0.9375,
+          "indicator": 5.000000055588316e-05,
+          "depth": 0
+        }
+      ]
+    },
+    {
+      "name": "capped-largest-stays-while-other-splits",
+      "value": 90000.00072,
+      "receipt": {
+        "value_error_indicator_e": 0.0007200000000011642,
+        "cell_indicator_e": 0.0007200000000011642,
+        "weighted_high_pupil_indicator_e": 0.0,
+        "cell_quadrature_delta_e": 0.0007200000000011642,
+        "area": 1.0,
+        "leaf_triangles": 9,
+        "work": {
+          "point_calls": 0,
+          "angular_nodes": 0,
+          "peak_node_pairs": 0,
+          "tracked_peak_ndarray_bytes": 576,
+          "tracked_peak_ndarrays": 12,
+          "peak_live_scalar_frames": 0,
+          "observer": "count",
+          "observer_events": 76,
+          "optional_hook_calls": 25,
+          "cell_allocation": {
+            "cells": 1,
+            "leaves": 9,
+            "minimum_depth": 1,
+            "maximum_depth": 6,
+            "locally_overallocated_leaves": 1,
+            "cells_with_locally_overallocated_leaves": 1
+          },
+          "cpu_seconds": 0.0,
+          "wall_seconds": 0.0
+        }
+      },
+      "evaluation_paths": [
+        [
+          0
+        ],
+        [
+          1
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "accepted": [
+        {
+          "path": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "area": 0.0078125,
+          "indicator": 0.0007000000005064066,
+          "depth": 6
+        },
+        {
+          "path": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ],
+          "area": 0.0078125,
+          "indicator": 0.0,
+          "depth": 6
+        },
+        {
+          "path": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ],
+          "area": 0.015625,
+          "indicator": 0.0,
+          "depth": 5
+        },
+        {
+          "path": [
+            0,
+            0,
+            0,
+            0,
+            1
+          ],
+          "area": 0.03125,
+          "indicator": 0.0,
+          "depth": 4
+        },
+        {
+          "path": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "area": 0.0625,
+          "indicator": 0.0,
+          "depth": 3
+        },
+        {
+          "path": [
+            0,
+            0,
+            1
+          ],
+          "area": 0.125,
+          "indicator": 0.0,
+          "depth": 2
+        },
+        {
+          "path": [
+            0,
+            1
+          ],
+          "area": 0.25,
+          "indicator": 0.0,
+          "depth": 1
+        },
+        {
+          "path": [
+            1,
+            0
+          ],
+          "area": 0.25,
+          "indicator": 9.999999747378752e-06,
+          "depth": 1
+        },
+        {
+          "path": [
+            1,
+            1
+          ],
+          "area": 0.25,
+          "indicator": 9.999999747378752e-06,
+          "depth": 1
+        }
+      ]
+    },
+    {
+      "name": "nonmonotone-parent-indicator",
+      "value": 40000.00072,
+      "receipt": {
+        "value_error_indicator_e": 0.0007200000000011642,
+        "cell_indicator_e": 0.0007200000000011642,
+        "weighted_high_pupil_indicator_e": 0.0,
+        "cell_quadrature_delta_e": 0.0007200000000011642,
+        "area": 1.0,
+        "leaf_triangles": 4,
+        "work": {
+          "point_calls": 0,
+          "angular_nodes": 0,
+          "peak_node_pairs": 0,
+          "tracked_peak_ndarray_bytes": 336,
+          "tracked_peak_ndarrays": 7,
+          "peak_live_scalar_frames": 0,
+          "observer": "count",
+          "observer_events": 21,
+          "optional_hook_calls": 10,
+          "cell_allocation": {
+            "cells": 1,
+            "leaves": 4,
+            "minimum_depth": 0,
+            "maximum_depth": 2,
+            "locally_overallocated_leaves": 1,
+            "cells_with_locally_overallocated_leaves": 1
+          },
+          "cpu_seconds": 0.0,
+          "wall_seconds": 0.0
+        }
+      },
+      "evaluation_paths": [
+        [
+          0
+        ],
+        [
+          1
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          1
+        ]
+      ],
+      "accepted": [
+        {
+          "path": [
+            0,
+            0,
+            0
+          ],
+          "area": 0.125,
+          "indicator": 9.999999747378752e-06,
+          "depth": 2
+        },
+        {
+          "path": [
+            0,
+            0,
+            1
+          ],
+          "area": 0.125,
+          "indicator": 9.999999747378752e-06,
+          "depth": 2
+        },
+        {
+          "path": [
+            0,
+            1
+          ],
+          "area": 0.25,
+          "indicator": 0.0007000000005064066,
+          "depth": 1
+        },
+        {
+          "path": [
+            1
+          ],
+          "area": 0.5,
+          "indicator": 0.0,
+          "depth": 0
+        }
+      ]
+    },
+    {
+      "name": "canonical-tie",
+      "value": 30000.0006,
+      "receipt": {
+        "value_error_indicator_e": 0.0005999999993946403,
+        "cell_indicator_e": 0.0005999999993946403,
+        "weighted_high_pupil_indicator_e": 0.0,
+        "cell_quadrature_delta_e": 0.0005999999993946403,
+        "area": 1.0,
+        "leaf_triangles": 3,
+        "work": {
+          "point_calls": 0,
+          "angular_nodes": 0,
+          "peak_node_pairs": 0,
+          "tracked_peak_ndarray_bytes": 240,
+          "tracked_peak_ndarrays": 5,
+          "peak_live_scalar_frames": 0,
+          "observer": "count",
+          "observer_events": 13,
+          "optional_hook_calls": 7,
+          "cell_allocation": {
+            "cells": 1,
+            "leaves": 3,
+            "minimum_depth": 0,
+            "maximum_depth": 1,
+            "locally_overallocated_leaves": 1,
+            "cells_with_locally_overallocated_leaves": 1
+          },
+          "cpu_seconds": 0.0,
+          "wall_seconds": 0.0
+        }
+      },
+      "evaluation_paths": [
+        [
+          0
+        ],
+        [
+          1
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "accepted": [
+        {
+          "path": [
+            0,
+            0
+          ],
+          "area": 0.25,
+          "indicator": 0.0,
+          "depth": 1
+        },
+        {
+          "path": [
+            0,
+            1
+          ],
+          "area": 0.25,
+          "indicator": 0.0,
+          "depth": 1
+        },
+        {
+          "path": [
+            1
+          ],
+          "area": 0.5,
+          "indicator": 0.0005999999993946403,
+          "depth": 0
+        }
+      ]
+    },
+    {
+      "name": "reversed-storage-tie",
+      "value": 30000.0006,
+      "receipt": {
+        "value_error_indicator_e": 0.0005999999993946403,
+        "cell_indicator_e": 0.0005999999993946403,
+        "weighted_high_pupil_indicator_e": 0.0,
+        "cell_quadrature_delta_e": 0.0005999999993946403,
+        "area": 1.0,
+        "leaf_triangles": 3,
+        "work": {
+          "point_calls": 0,
+          "angular_nodes": 0,
+          "peak_node_pairs": 0,
+          "tracked_peak_ndarray_bytes": 240,
+          "tracked_peak_ndarrays": 5,
+          "peak_live_scalar_frames": 0,
+          "observer": "count",
+          "observer_events": 13,
+          "optional_hook_calls": 7,
+          "cell_allocation": {
+            "cells": 1,
+            "leaves": 3,
+            "minimum_depth": 0,
+            "maximum_depth": 1,
+            "locally_overallocated_leaves": 1,
+            "cells_with_locally_overallocated_leaves": 1
+          },
+          "cpu_seconds": 0.0,
+          "wall_seconds": 0.0
+        }
+      },
+      "evaluation_paths": [
+        [
+          0
+        ],
+        [
+          1
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "accepted": [
+        {
+          "path": [
+            0,
+            0
+          ],
+          "area": 0.25,
+          "indicator": 0.0,
+          "depth": 1
+        },
+        {
+          "path": [
+            0,
+            1
+          ],
+          "area": 0.25,
+          "indicator": 0.0,
+          "depth": 1
+        },
+        {
+          "path": [
+            1
+          ],
+          "area": 0.5,
+          "indicator": 0.0005999999993946403,
+          "depth": 0
+        }
+      ]
+    },
+    {
+      "name": "work-valid",
+      "value": 20000.0,
+      "receipt": {
+        "value_error_indicator_e": 0.0,
+        "cell_indicator_e": 0.0,
+        "weighted_high_pupil_indicator_e": 0.0,
+        "cell_quadrature_delta_e": 0.0,
+        "area": 1.0,
+        "leaf_triangles": 2,
+        "work": {
+          "point_calls": 0,
+          "angular_nodes": 0,
+          "peak_node_pairs": 0,
+          "tracked_peak_ndarray_bytes": 144,
+          "tracked_peak_ndarrays": 3,
+          "peak_live_scalar_frames": 0,
+          "observer": "count",
+          "observer_events": 6,
+          "optional_hook_calls": 4,
+          "cell_allocation": {
+            "cells": 1,
+            "leaves": 2,
+            "minimum_depth": 0,
+            "maximum_depth": 0,
+            "locally_overallocated_leaves": 0,
+            "cells_with_locally_overallocated_leaves": 0
+          },
+          "cpu_seconds": 0.0,
+          "wall_seconds": 0.0
+        }
+      },
+      "evaluation_paths": [
+        [
+          0
+        ],
+        [
+          1
+        ]
+      ],
+      "accepted": [
+        {
+          "path": [
+            0
+          ],
+          "area": 0.5,
+          "indicator": 0.0,
+          "depth": 0
+        },
+        {
+          "path": [
+            1
+          ],
+          "area": 0.5,
+          "indicator": 0.0,
+          "depth": 0
+        }
+      ]
+    },
+    {
+      "name": "off-constant-first",
+      "value": 20000.0,
+      "receipt": {
+        "value_error_indicator_e": 0.0,
+        "cell_indicator_e": 0.0,
+        "weighted_high_pupil_indicator_e": 0.0,
+        "cell_quadrature_delta_e": 0.0,
+        "area": 1.0,
+        "leaf_triangles": 2,
+        "work": {
+          "point_calls": 0,
+          "angular_nodes": 0,
+          "peak_node_pairs": 0,
+          "tracked_peak_ndarray_bytes": 144,
+          "tracked_peak_ndarrays": 3,
+          "peak_live_scalar_frames": 0,
+          "observer": "off",
+          "observer_events": 0,
+          "optional_hook_calls": 0,
+          "cell_allocation": {
+            "cells": 0,
+            "leaves": 0,
+            "minimum_depth": 0,
+            "maximum_depth": 0,
+            "locally_overallocated_leaves": 0,
+            "cells_with_locally_overallocated_leaves": 0
+          },
+          "cpu_seconds": 0.0,
+          "wall_seconds": 0.0
+        }
+      },
+      "evaluation_paths": [
+        [
+          0
+        ],
+        [
+          1
+        ]
+      ],
+      "accepted": [
+        {
+          "path": [
+            0
+          ],
+          "area": 0.5,
+          "indicator": 0.0,
+          "depth": 0
+        },
+        {
+          "path": [
+            1
+          ],
+          "area": 0.5,
+          "indicator": 0.0,
+          "depth": 0
+        },
+        {
+          "path": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "area": 0.0078125,
+          "indicator": 0.0007000000005064066,
+          "depth": 6
+        },
+        {
+          "path": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ],
+          "area": 0.0078125,
+          "indicator": 0.0,
+          "depth": 6
+        },
+        {
+          "path": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ],
+          "area": 0.015625,
+          "indicator": 0.0,
+          "depth": 5
+        },
+        {
+          "path": [
+            0,
+            0,
+            0,
+            0,
+            1
+          ],
+          "area": 0.03125,
+          "indicator": 0.0,
+          "depth": 4
+        },
+        {
+          "path": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "area": 0.0625,
+          "indicator": 0.0,
+          "depth": 3
+        },
+        {
+          "path": [
+            0,
+            0,
+            1
+          ],
+          "area": 0.125,
+          "indicator": 0.0,
+          "depth": 2
+        },
+        {
+          "path": [
+            0,
+            1
+          ],
+          "area": 0.25,
+          "indicator": 0.0,
+          "depth": 1
+        },
+        {
+          "path": [
+            1,
+            0
+          ],
+          "area": 0.25,
+          "indicator": 9.999999747378752e-06,
+          "depth": 1
+        },
+        {
+          "path": [
+            1,
+            1
+          ],
+          "area": 0.25,
+          "indicator": 9.999999747378752e-06,
+          "depth": 1
+        }
+      ]
+    },
+    {
+      "name": "off-refined-second",
+      "value": 90000.00072,
+      "receipt": {
+        "value_error_indicator_e": 0.0007200000000011642,
+        "cell_indicator_e": 0.0007200000000011642,
+        "weighted_high_pupil_indicator_e": 0.0,
+        "cell_quadrature_delta_e": 0.0007200000000011642,
+        "area": 1.0,
+        "leaf_triangles": 9,
+        "work": {
+          "point_calls": 0,
+          "angular_nodes": 0,
+          "peak_node_pairs": 0,
+          "tracked_peak_ndarray_bytes": 576,
+          "tracked_peak_ndarrays": 12,
+          "peak_live_scalar_frames": 0,
+          "observer": "off",
+          "observer_events": 0,
+          "optional_hook_calls": 0,
+          "cell_allocation": {
+            "cells": 0,
+            "leaves": 0,
+            "minimum_depth": 0,
+            "maximum_depth": 0,
+            "locally_overallocated_leaves": 0,
+            "cells_with_locally_overallocated_leaves": 0
+          },
+          "cpu_seconds": 0.0,
+          "wall_seconds": 0.0
+        }
+      },
+      "evaluation_paths": [
+        [
+          0
+        ],
+        [
+          1
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "accepted": [
+        {
+          "path": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "area": 0.0078125,
+          "indicator": 0.0007000000005064066,
+          "depth": 6
+        },
+        {
+          "path": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ],
+          "area": 0.0078125,
+          "indicator": 0.0,
+          "depth": 6
+        },
+        {
+          "path": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ],
+          "area": 0.015625,
+          "indicator": 0.0,
+          "depth": 5
+        },
+        {
+          "path": [
+            0,
+            0,
+            0,
+            0,
+            1
+          ],
+          "area": 0.03125,
+          "indicator": 0.0,
+          "depth": 4
+        },
+        {
+          "path": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "area": 0.0625,
+          "indicator": 0.0,
+          "depth": 3
+        },
+        {
+          "path": [
+            0,
+            0,
+            1
+          ],
+          "area": 0.125,
+          "indicator": 0.0,
+          "depth": 2
+        },
+        {
+          "path": [
+            0,
+            1
+          ],
+          "area": 0.25,
+          "indicator": 0.0,
+          "depth": 1
+        },
+        {
+          "path": [
+            1,
+            0
+          ],
+          "area": 0.25,
+          "indicator": 9.999999747378752e-06,
+          "depth": 1
+        },
+        {
+          "path": [
+            1,
+            1
+          ],
+          "area": 0.25,
+          "indicator": 9.999999747378752e-06,
+          "depth": 1
+        }
+      ]
+    },
+    {
+      "name": "count-constant-first",
+      "value": 20000.0,
+      "receipt": {
+        "value_error_indicator_e": 0.0,
+        "cell_indicator_e": 0.0,
+        "weighted_high_pupil_indicator_e": 0.0,
+        "cell_quadrature_delta_e": 0.0,
+        "area": 1.0,
+        "leaf_triangles": 2,
+        "work": {
+          "point_calls": 0,
+          "angular_nodes": 0,
+          "peak_node_pairs": 0,
+          "tracked_peak_ndarray_bytes": 144,
+          "tracked_peak_ndarrays": 3,
+          "peak_live_scalar_frames": 0,
+          "observer": "count",
+          "observer_events": 6,
+          "optional_hook_calls": 4,
+          "cell_allocation": {
+            "cells": 1,
+            "leaves": 2,
+            "minimum_depth": 0,
+            "maximum_depth": 0,
+            "locally_overallocated_leaves": 0,
+            "cells_with_locally_overallocated_leaves": 0
+          },
+          "cpu_seconds": 0.0,
+          "wall_seconds": 0.0
+        }
+      },
+      "evaluation_paths": [
+        [
+          0
+        ],
+        [
+          1
+        ]
+      ],
+      "accepted": [
+        {
+          "path": [
+            0
+          ],
+          "area": 0.5,
+          "indicator": 0.0,
+          "depth": 0
+        },
+        {
+          "path": [
+            1
+          ],
+          "area": 0.5,
+          "indicator": 0.0,
+          "depth": 0
+        },
+        {
+          "path": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "area": 0.0078125,
+          "indicator": 0.0007000000005064066,
+          "depth": 6
+        },
+        {
+          "path": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ],
+          "area": 0.0078125,
+          "indicator": 0.0,
+          "depth": 6
+        },
+        {
+          "path": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ],
+          "area": 0.015625,
+          "indicator": 0.0,
+          "depth": 5
+        },
+        {
+          "path": [
+            0,
+            0,
+            0,
+            0,
+            1
+          ],
+          "area": 0.03125,
+          "indicator": 0.0,
+          "depth": 4
+        },
+        {
+          "path": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "area": 0.0625,
+          "indicator": 0.0,
+          "depth": 3
+        },
+        {
+          "path": [
+            0,
+            0,
+            1
+          ],
+          "area": 0.125,
+          "indicator": 0.0,
+          "depth": 2
+        },
+        {
+          "path": [
+            0,
+            1
+          ],
+          "area": 0.25,
+          "indicator": 0.0,
+          "depth": 1
+        },
+        {
+          "path": [
+            1,
+            0
+          ],
+          "area": 0.25,
+          "indicator": 9.999999747378752e-06,
+          "depth": 1
+        },
+        {
+          "path": [
+            1,
+            1
+          ],
+          "area": 0.25,
+          "indicator": 9.999999747378752e-06,
+          "depth": 1
+        }
+      ]
+    },
+    {
+      "name": "count-refined-second",
+      "value": 90000.00072,
+      "receipt": {
+        "value_error_indicator_e": 0.0007200000000011642,
+        "cell_indicator_e": 0.0007200000000011642,
+        "weighted_high_pupil_indicator_e": 0.0,
+        "cell_quadrature_delta_e": 0.0007200000000011642,
+        "area": 1.0,
+        "leaf_triangles": 9,
+        "work": {
+          "point_calls": 0,
+          "angular_nodes": 0,
+          "peak_node_pairs": 0,
+          "tracked_peak_ndarray_bytes": 576,
+          "tracked_peak_ndarrays": 12,
+          "peak_live_scalar_frames": 0,
+          "observer": "count",
+          "observer_events": 82,
+          "optional_hook_calls": 29,
+          "cell_allocation": {
+            "cells": 2,
+            "leaves": 11,
+            "minimum_depth": 0,
+            "maximum_depth": 6,
+            "locally_overallocated_leaves": 1,
+            "cells_with_locally_overallocated_leaves": 1
+          },
+          "cpu_seconds": 0.0,
+          "wall_seconds": 0.0
+        }
+      },
+      "evaluation_paths": [
+        [
+          0
+        ],
+        [
+          1
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "accepted": [
+        {
+          "path": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "area": 0.0078125,
+          "indicator": 0.0007000000005064066,
+          "depth": 6
+        },
+        {
+          "path": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ],
+          "area": 0.0078125,
+          "indicator": 0.0,
+          "depth": 6
+        },
+        {
+          "path": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ],
+          "area": 0.015625,
+          "indicator": 0.0,
+          "depth": 5
+        },
+        {
+          "path": [
+            0,
+            0,
+            0,
+            0,
+            1
+          ],
+          "area": 0.03125,
+          "indicator": 0.0,
+          "depth": 4
+        },
+        {
+          "path": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "area": 0.0625,
+          "indicator": 0.0,
+          "depth": 3
+        },
+        {
+          "path": [
+            0,
+            0,
+            1
+          ],
+          "area": 0.125,
+          "indicator": 0.0,
+          "depth": 2
+        },
+        {
+          "path": [
+            0,
+            1
+          ],
+          "area": 0.25,
+          "indicator": 0.0,
+          "depth": 1
+        },
+        {
+          "path": [
+            1,
+            0
+          ],
+          "area": 0.25,
+          "indicator": 9.999999747378752e-06,
+          "depth": 1
+        },
+        {
+          "path": [
+            1,
+            1
+          ],
+          "area": 0.25,
+          "indicator": 9.999999747378752e-06,
+          "depth": 1
+        }
+      ]
+    }
+  ],
+  "error": "ValueError('control failed: count-matches-actual-frontiers')",
+  "traceback": "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-allocation-controls.py\", line 196, in main\n    check(\"count-matches-actual-frontiers\", meter.cell_allocation == expected, actual=meter.cell_allocation, expected=expected)\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-allocation-controls.py\", line 47, in check\n    raise ValueError(\"control failed: \" + name)\nValueError: control failed: count-matches-actual-frontiers\n",
+  "source_unchanged": true
+}

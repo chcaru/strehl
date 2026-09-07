@@ -1,0 +1,92 @@
+{
+  "schema": "m194e-emission-launch-v1",
+  "status": "CHILD_COMPLETED",
+  "launcher_argv": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-X",
+    "utf8",
+    "-X",
+    "pycache_prefix=experiments/m194e-joint-pupil/work/cache-emission-launch-1",
+    "experiments/m194e-joint-pupil/emission-launch.py",
+    "--bundle",
+    "experiments/m194e-joint-pupil/float-run-4/float-bundle.json",
+    "--bundle-sha256",
+    "200da9731cc90b508b544658c4fb084f0b52d11cace116d525248a9a3812e8e1",
+    "--float-commission",
+    "experiments/m194e-joint-pupil/independent-full-comparison-1/float-commission.json",
+    "--trusted-float-sha256",
+    "4bd57b896be0b68c42fb1384a468a4f29cc54139a18a046a678dd97bad408217",
+    "--output",
+    "experiments/m194e-joint-pupil/cfa-emission-1",
+    "--cache-prefix",
+    "experiments/m194e-joint-pupil/work/cache-cfa-emission-1"
+  ],
+  "launcher_sha256": "3b32434ef147c768ed7660fd253adf99cb731c9dc634083f9652954077b82f7d",
+  "executable": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+  "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+  "xoptions": {
+    "utf8": true,
+    "pycache_prefix": "experiments/m194e-joint-pupil/work/cache-emission-launch-1"
+  },
+  "cwd": "C:\\dev\\blog\\death-of-software\\projects\\strehl",
+  "child_argv": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-X",
+    "utf8",
+    "-X",
+    "pycache_prefix=C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\work\\cache-cfa-emission-1",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\emit-cfa.py",
+    "--bundle",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\float-run-4\\float-bundle.json",
+    "--float-commission",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-full-comparison-1\\float-commission.json",
+    "--trusted-float-sha256",
+    "4bd57b896be0b68c42fb1384a468a4f29cc54139a18a046a678dd97bad408217",
+    "--output",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\cfa-emission-1"
+  ],
+  "cache_absent_before": true,
+  "started_utc": "2026-09-07T15:02:07.634979+00:00",
+  "inputs": {
+    "emitter": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\emit-cfa.py",
+      "sha256": "fbcdfa2c716f638e9aa8f9cf13ba3024a575feca0ad15d1a67012f51176c82fd",
+      "bytes": 8870
+    },
+    "bundle": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\float-run-4\\float-bundle.json",
+      "sha256": "200da9731cc90b508b544658c4fb084f0b52d11cace116d525248a9a3812e8e1",
+      "bytes": 19693
+    },
+    "float_commission": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-full-comparison-1\\float-commission.json",
+      "sha256": "4bd57b896be0b68c42fb1384a468a4f29cc54139a18a046a678dd97bad408217",
+      "bytes": 8348
+    }
+  },
+  "exit_code": 0,
+  "ended_utc": "2026-09-07T15:02:08.335973+00:00",
+  "inputs_unchanged": true,
+  "logs": {
+    "stdout": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\cfa-emission-1-stdout.log",
+      "sha256": "036f1f4feb15dadf841d027f76ff8eee2490823e80e797924c46405f8d9a3df5",
+      "bytes": 106
+    },
+    "stderr": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\cfa-emission-1-stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    }
+  },
+  "emission-run.json": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\cfa-emission-1\\emission-run.json",
+    "sha256": "9fe77f692ebed4287f77b9482338243207471c2324c127b00d41c5032b096c8d",
+    "bytes": 10265
+  },
+  "manifest.json": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\cfa-emission-1\\manifest.json",
+    "sha256": "f47c2b8720560fe9dbd777eeed3281ce2531f1f2287f5c88ef7b51a083d03299",
+    "bytes": 13388
+  }
+}

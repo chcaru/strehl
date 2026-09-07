@@ -1,0 +1,49 @@
+--- experiments\m194e-joint-pupil\independent-emission-api-3\sources\independent-emission-api-controls.py
++++ experiments\m194e-joint-pupil\independent-emission-api-controls.py
+@@ -38,13 +38,13 @@
+ E = load("m194e_independent_actual_emitter", HERE / "emit-cfa.py")
+ O = load("m194e_independent_scalar_oracle", HERE / "independent-cfa-oracle.py")
+ PINS = {
+-    "schema.py": "0bcc546634a748ee31fbd5095b6aae3a1eab18899a557dbed8aeeb8af102a82c",
++    "schema.py": "b3aee835d7bec9206ebff2401e3af5beb63fc66bf2aca3a32b272b69398edc54",
+     "emit-cfa.py": "fbcdfa2c716f638e9aa8f9cf13ba3024a575feca0ad15d1a67012f51176c82fd",
+-    "emission-contract.md": "95c5fa249bccb1c1603c094cdf6eceaf0b8b30cae7492d142122d8205b7669b9",
++    "emission-contract.md": "a8cbf1107004bdc61058e544f1efe88ebed83b7e6eac2381429ae4d150de1c40",
+ }
+ SCOPE = "FIXTURE ONLY: invented float arrays and gate; genuine author component control copied; no scientific float/CFA authority"
+-AUTHOR_CONTROL = HERE / "author-controls-6/result.json"
+-AUTHOR_CONTROL_SHA = "b7725860b8b7b21a812e97f01eba81d9aaf7bf0da3709edfe3c857b1f4807daf"
++AUTHOR_CONTROL = HERE / "author-controls-8/result.json"
++AUTHOR_CONTROL_SHA = "169e098024d80d23ca8f8166d12eb89c6dfb356f57caef6d7451cac67ab745c4"
+ 
+ 
+ def sha(path):
+@@ -105,7 +105,7 @@
+     bindings = {name: sha(HERE / name) for name in S.AUTHOR_SOURCES}
+     assert sha(AUTHOR_CONTROL) == AUTHOR_CONTROL_SHA
+     controls = read(AUTHOR_CONTROL)
+-    assert controls["status"] == "PASS" and len(controls["checks"]) == 135
++    assert controls["status"] == "PASS" and len(controls["checks"]) == 172
+     assert all(c["pass_"] is True for c in controls["checks"])
+     assert all(controls[k][name] == h for k in ("sources_before", "sources_after") for name, h in bindings.items())
+     shutil.copyfile(AUTHOR_CONTROL, folder / "fixture-only-author-controls.json")
+--- experiments\m194e-joint-pupil\independent-final-cfa-controls-2\sources\independent-verify-cfa.py
++++ experiments\m194e-joint-pupil\independent-verify-cfa.py
+@@ -26,13 +26,13 @@
+ import schema as S
+ 
+ PINS = {
+-    "schema.py": "0bcc546634a748ee31fbd5095b6aae3a1eab18899a557dbed8aeeb8af102a82c",
++    "schema.py": "b3aee835d7bec9206ebff2401e3af5beb63fc66bf2aca3a32b272b69398edc54",
+     "independent-cfa-oracle.py": "1b23d656481752fc3c34384c489fc6556e78a74925d8cd717f4faa350040d48a",
+-    "independent-emission-api-controls.py": "8231589e6e7d9ae9c16411ebe22675da794b60fc5755d8a0264e8a38164df58e",
++    "independent-emission-api-controls.py": "80e2621527990b9657bb8ffb1e2f4f7d9c87a1d0e69239244ddc3b22f9c51600",
+ }
+ REFERENCE_SHA = "8791700cdc969847ff75f9fbd9205739ee2135ac4bbbdbe445d00b6664c7eccc"
+-API_RESULT = HERE / "independent-emission-api-3/result.json"
+-API_RESULT_SHA = "d37270e2a3f1b990a69607e122b2c95beaa33238c0a1a6b77c721406e46e53f2"
++API_RESULT = HERE / "independent-emission-api-5/result.json"
++API_RESULT_SHA = "7a55a2507dad991f780b45e9aa6509306a3408e621acbfc44b3570c830062595"
+ ARMS = ("primary", "angle-refined", "cell-refined")
+ 
+ 

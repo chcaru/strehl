@@ -1,0 +1,112 @@
+{
+  "schema": "m194e-independent-comparison-controls-v1",
+  "status": "PASS_MATH_READER_ONLY",
+  "argv": [
+    "experiments/m194e-joint-pupil/independent-comparison-controls.py",
+    "--output",
+    "experiments/m194e-joint-pupil/independent-comparison-controls-1"
+  ],
+  "sources": {
+    "independent-comparison-math.py": "d9f95b67aaf03a20c70623e55b7d932b5d43dbaef041a8f69b6995a56b22c50f",
+    "independent-comparison-controls.py": "d4286e195b8fe8fbd7b6f48c2db655105864cfd84184b132791424774b4b65f4"
+  },
+  "checks": [
+    {
+      "name": "unchanged-null",
+      "statistics": {
+        "whole": {
+          "count": 3072,
+          "maximum_e": 0.0,
+          "rms_e": 0.0,
+          "maximum_pass": true,
+          "rms_pass": true
+        },
+        "edge": {
+          "count": 775,
+          "maximum_e": 0.0,
+          "rms_e": 0.0,
+          "maximum_pass": true,
+          "rms_pass": true
+        },
+        "pass": true
+      },
+      "passed": true
+    },
+    {
+      "name": "sparse-maximum-only-fault",
+      "statistics": {
+        "whole": {
+          "count": 3072,
+          "maximum_e": 0.005,
+          "rms_e": 9.021097956087903e-05,
+          "maximum_pass": false,
+          "rms_pass": true
+        },
+        "edge": {
+          "count": 775,
+          "maximum_e": 0.005,
+          "rms_e": 0.0001796053020267749,
+          "maximum_pass": false,
+          "rms_pass": true
+        },
+        "pass": false
+      },
+      "passed": true
+    },
+    {
+      "name": "dense-rms-only-fault",
+      "statistics": {
+        "whole": {
+          "count": 3072,
+          "maximum_e": 0.0009,
+          "rms_e": 0.0009000000000000001,
+          "maximum_pass": true,
+          "rms_pass": false
+        },
+        "edge": {
+          "count": 775,
+          "maximum_e": 0.0009,
+          "rms_e": 0.0009000000000000001,
+          "maximum_pass": true,
+          "rms_pass": false
+        },
+        "pass": false
+      },
+      "passed": true
+    },
+    {
+      "name": "outside-edge-still-in-whole-domain",
+      "statistics": {
+        "whole": {
+          "count": 3072,
+          "maximum_e": 0.005,
+          "rms_e": 9.021097956087903e-05,
+          "maximum_pass": false,
+          "rms_pass": true
+        },
+        "edge": {
+          "count": 775,
+          "maximum_e": 0.0,
+          "rms_e": 0.0,
+          "maximum_pass": true,
+          "rms_pass": true
+        },
+        "pass": false
+      },
+      "passed": true
+    },
+    {
+      "name": "wrong-shape",
+      "passed": true
+    },
+    {
+      "name": "wrong-dtype",
+      "passed": true
+    },
+    {
+      "name": "nonfinite",
+      "passed": true
+    }
+  ],
+  "source_unchanged": true
+}

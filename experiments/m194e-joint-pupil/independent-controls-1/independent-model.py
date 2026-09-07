@@ -1,0 +1,303 @@
+"""Independent Cartesian pupil / analytic clipped-cell reference, M194e.
+
+No author renderer imports. Cell Fourier integrals use the divergence theorem;
+one adaptive integration remains along the pulled-back mask normal.
+"""
+from __future__ import annotations
+
+from dataclasses import dataclass, field
+import cmath
+import math
+import time
+import warnings
+from scipy.integrate import quad, IntegrationWarning
+
+PI = math.pi
+SQUARE = ((-.5, -.5), (.5, -.5), (.5, .5), (-.5, .5))
+
+
+@dataclass(frozen=True)
+class Radiance:
+    constant: float
+    affine: tuple[float, float] = (0., 0.)
+    waves: tuple[tuple[float, float, float, float], ...] = ()
+
+    def value(self, q):
+        return (self.constant + self.affine[0]*q[0] + self.affine[1]*q[1]
+                + sum(a*math.cos(2*PI*(fx*q[0]+fy*q[1])+p)
+                      for a, fx, fy, p in self.waves))
+
+
+@dataclass(frozen=True)
+class Scene:
+    foreground_depth: float
+    background_depth: float
+    normal: tuple[float, float]
+    offset: float
+    foreground: Radiance
+    background: Radiance
+
+
+@dataclass(frozen=True)
+class Frame:
+    inverse_focus: float
+    K: float
+    # Direct native-to-canonical q=M*z+b. Deliberately not author's inverse API.
+    M: tuple[tuple[float, float], tuple[float, float]] = ((1., 0.), (0., 1.))
+    b: tuple[float, float] = (0., 0.)
+
+    def transform(self, z):
+        return (self.M[0][0]*z[0]+self.M[0][1]*z[1]+self.b[0],
+                self.M[1][0]*z[0]+self.M[1][1]*z[1]+self.b[1])
+
+    def pull(self, k):
+        return (self.M[0][0]*k[0]+self.M[1][0]*k[1],
+                self.M[0][1]*k[0]+self.M[1][1]*k[1])
+
+
+class Refusal(RuntimeError):
+    pass
+
+
+@dataclass
+class Budget:
+    max_evaluations: int = 30_000_000
+    max_cpu: float = 600.
+    max_wall: float = 1200.
+    evaluations: int = 0
+    start_cpu: float = field(default_factory=time.process_time)
+    start_wall: float = field(default_factory=time.monotonic)
+
+    def check(self):
+        if self.evaluations > self.max_evaluations:
+            raise Refusal("independent evaluation budget")
+        if time.process_time()-self.start_cpu > self.max_cpu:
+            raise Refusal("independent process CPU budget")
+        if time.monotonic()-self.start_wall > self.max_wall:
+            raise Refusal("independent wall budget")
+
+    def tick(self):
+        self.evaluations += 1
+        if self.evaluations % 64 == 0:
+            self.check()
+
+    def receipt(self):
+        return dict(evaluations=self.evaluations,
+                    cpu_seconds=time.process_time()-self.start_cpu,
+                    wall_seconds=time.monotonic()-self.start_wall,
+                    limits=dict(evaluations=self.max_evaluations,
+                                cpu_seconds=self.max_cpu, wall_seconds=self.max_wall))
+
+
+def dot(a, b):
+    return a[0]*b[0]+a[1]*b[1]
+
+
+def sinc(x):
+    if abs(x) < 1e-4:
+        x2 = x*x
+        return 1-x2/6+x2*x2/120-x2*x2*x2/5040
+    return math.sin(x)/x
+
+
+def clip(poly, normal, threshold):
+    """Sutherland-Hodgman clipping of CCW native offsets, normal dot x >= h."""
+    if not poly:
+        return ()
+    out = []
+    previous = poly[-1]
+    p_distance = dot(normal, previous)-threshold
+    for current in poly:
+        c_distance = dot(normal, current)-threshold
+        if (p_distance >= 0) != (c_distance >= 0):
+            fraction = p_distance/(p_distance-c_distance)
+            out.append((previous[0]+fraction*(current[0]-previous[0]),
+                        previous[1]+fraction*(current[1]-previous[1])))
+        if c_distance >= 0:
+            out.append(current)
+        previous, p_distance = current, c_distance
+    return tuple(out)
+
+
+def moments(poly):
+    """Area and unnormalized first moments in native square coordinates."""
+    if len(poly) < 3:
+        return 0., (0., 0.)
+    cross_sum = mx = my = 0.
+    for p, q in zip(poly, poly[1:]+poly[:1]):
+        cross = p[0]*q[1]-q[0]*p[1]
+        cross_sum += cross
+        mx += (p[0]+q[0])*cross
+        my += (p[1]+q[1])*cross
+    return cross_sum/2, (mx/6, my/6)
+
+
+def polygon_fourier(poly, k):
+    if len(poly) < 3:
+        return 0j
+    k2 = dot(k, k)
+    if k2 == 0:
+        return complex(moments(poly)[0])
+    boundary = 0j
+    for p, q in zip(poly, poly[1:]+poly[:1]):
+        edge = (q[0]-p[0], q[1]-p[1])
+        middle = ((q[0]+p[0])/2, (q[1]+p[1])/2)
+        normal_ds = k[0]*edge[1]-k[1]*edge[0]
+        boundary += normal_ds*cmath.exp(1j*dot(k, middle))*sinc(dot(k, edge)/2)
+    return boundary/(1j*k2)
+
+
+def validate(scene, frame):
+    vals = [scene.foreground_depth, scene.background_depth, scene.offset,
+            *scene.normal, frame.inverse_focus, frame.K, *frame.b,
+            *frame.M[0], *frame.M[1]]
+    for rad in (scene.foreground, scene.background):
+        vals.extend((rad.constant, *rad.affine))
+        if len(rad.waves) > 2:
+            raise Refusal("more than two waves")
+        for wave in rad.waves:
+            vals.extend(wave)
+    if not all(math.isfinite(v) for v in vals):
+        raise Refusal("nonfinite model")
+    if not 0 < scene.foreground_depth < scene.background_depth:
+        raise Refusal("unordered depths")
+    if frame.K < 0 or frame.inverse_focus <= 0 or dot(scene.normal, scene.normal) == 0:
+        raise Refusal("invalid geometric parameters")
+    det = frame.M[0][0]*frame.M[1][1]-frame.M[0][1]*frame.M[1][0]
+    if det <= 0:
+        raise Refusal("invalid orientation/scale")
+
+
+def evaluate_rays(scene, frame, xy, pupils, *, unsigned=False, chief_only=False):
+    """Direct geometric evaluator; wrong-law switches are labelled controls."""
+    validate(scene, frame)
+    ds = (frame.K*(frame.inverse_focus-1/scene.foreground_depth),
+          frame.K*(frame.inverse_focus-1/scene.background_depth))
+    if unsigned:
+        ds = tuple(abs(d) for d in ds)
+    out = []
+    for u in pupils:
+        if not all(math.isfinite(v) for v in u) or dot(u, u) > 1+1e-12:
+            raise Refusal("invalid pupil")
+        points = []
+        for d in ds:
+            if chief_only:
+                base = frame.transform(xy)
+                q = (base[0]+d*u[0], base[1]+d*u[1])
+            else:
+                q = frame.transform((xy[0]+d*u[0], xy[1]+d*u[1]))
+            points.append(q)
+        rad = (scene.foreground.value(points[0]) if dot(scene.normal, points[0]) >= scene.offset
+               else scene.background.value(points[1]))
+        if not math.isfinite(rad) or rad < 0:
+            raise Refusal("nonfinite or negative evaluated radiance")
+        out.append(rad)
+    return out
+
+
+def render(scene, frame, xy, *, cell=True, eps=0.000125, budget=None,
+           unsigned=False):
+    validate(scene, frame)
+    if budget is None:
+        budget = Budget()
+    budget.check()
+    q0 = frame.transform(xy)
+    n = frame.pull(scene.normal)
+    n_length = math.hypot(*n)
+    m = (n[0]/n_length, n[1]/n_length)
+    v = (-m[1], m[0])
+    chief_distance = (dot(scene.normal, q0)-scene.offset)/n_length
+    d_f = frame.K*(frame.inverse_focus-1/scene.foreground_depth)
+    d_b = frame.K*(frame.inverse_focus-1/scene.background_depth)
+    if unsigned:
+        d_f, d_b = abs(d_f), abs(d_b)
+    prepared = []
+    for rad, d in ((scene.foreground, d_f), (scene.background, d_b)):
+        gradient = frame.pull(rad.affine)
+        base = rad.constant+dot(rad.affine, q0)
+        waves = []
+        for amplitude, fx, fy, phase in rad.waves:
+            k = frame.pull((2*PI*fx, 2*PI*fy))
+            waves.append((amplitude, k, phase+2*PI*(fx*q0[0]+fy*q0[1])))
+        prepared.append((d, base, gradient, waves))
+    full_fourier = {k: complex(sinc(k[0]/2)*sinc(k[1]/2))
+                    for _, _, _, waves in prepared for _, k, _ in waves}
+
+    def value_at_t(t):
+        budget.tick()
+        h = math.sqrt(max(0., 1-t*t))
+        threshold = -chief_distance-d_f*t
+        if cell:
+            fg_poly = clip(SQUARE, m, threshold)
+            fg_area, fg_moment = moments(fg_poly)
+            fg_fourier = {k: polygon_fourier(fg_poly, k) for k in full_fourier}
+        else:
+            fg_area = float(threshold <= 0)
+            fg_moment = (0., 0.)
+            fg_fourier = {k: complex(fg_area) for k in full_fourier}
+        total = 0.
+        for index, (d, base, gradient, waves) in enumerate(prepared):
+            area = fg_area if index == 0 else 1-fg_area
+            moment = fg_moment if index == 0 else (-fg_moment[0], -fg_moment[1])
+            total += 2*h*((base+d*dot(gradient, m)*t)*area+dot(gradient, moment))
+            for amplitude, k, phase in waves:
+                if index == 0:
+                    poly_f = fg_fourier[k]
+                else:
+                    poly_f = (full_fourier[k] if cell else 1)-fg_fourier[k]
+                pupil_factor = 2*h*sinc(d*dot(k, v)*h)
+                total += amplitude*pupil_factor*(poly_f*cmath.exp(1j*(phase+d*dot(k, m)*t))).real
+        return total
+
+    offsets = [dot(m, p) for p in SQUARE] if cell else [0.]
+    breaks = [-1., 1.]
+    if d_f != 0:
+        breaks.extend((-chief_distance-o)/d_f for o in offsets
+                      if -1 < (-chief_distance-o)/d_f < 1)
+    breaks = sorted(set(breaks))
+    integral = estimated_error = 0.
+    requested = eps*PI/(len(breaks)-1)
+    for left, right in zip(breaks[:-1], breaks[1:]):
+        with warnings.catch_warnings(record=True) as caught:
+            warnings.simplefilter("always", IntegrationWarning)
+            value, error = quad(value_at_t, left, right, epsabs=requested,
+                                epsrel=0., limit=128)
+        if caught:
+            raise Refusal("independent quadrature warning: "+str(caught[0].message))
+        integral += value
+        estimated_error += error
+    value, error = integral/PI, estimated_error/PI
+    budget.check()
+    if not math.isfinite(value) or value < 0 or error > eps:
+        raise Refusal(f"independent invalid integral/error: {value=} {error=} {eps=}")
+    return value, dict(absolute_error_indicator_e=error, request_e=eps,
+                       intervals=len(breaks)-1, method="cartesian-pupil-analytic-cell-v1")
+
+
+def intended_scene():
+    return Scene(1., 2., (1., -.15), 28.4,
+                 Radiance(15000., waves=((1400., .045, .095, .7), (700., .17, .01, .3))),
+                 Radiance(12000., waves=((3200., .08, .015, .2), (1800., -.035, .12, 1.1))))
+
+
+def alternative_scene(kind="textured", slope=800., shift=0.):
+    n, c = (12/13, 5/13), (37.23, 24.61)
+    if kind == "affine":
+        fg = Radiance(12000.)
+        bg = Radiance(10000.-slope*dot(n, c), (slope*n[0], slope*n[1]))
+    elif kind == "constant":
+        fg, bg = Radiance(12000.), Radiance(9000.)
+    else:
+        fg = Radiance(12000., waves=((900., .073, .019, .41),))
+        bg = Radiance(10000., waves=((700., -.031, .087, 1.13),))
+    return Scene(1.25, 2.5, n, dot(n, c)+shift, fg, bg)
+
+
+def alternative_frame(transformed=False):
+    if not transformed:
+        return Frame(.53, 11.)
+    s, angle, c, offset = 1.037, .071, (37.23, 24.61), (.31, -.27)
+    M = ((s*math.cos(angle), -s*math.sin(angle)),
+         (s*math.sin(angle), s*math.cos(angle)))
+    b = tuple(c[i]-dot(M[i], c)+offset[i] for i in range(2))
+    return Frame(.53, 11., M, b)

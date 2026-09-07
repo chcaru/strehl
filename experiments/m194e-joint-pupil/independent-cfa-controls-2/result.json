@@ -1,0 +1,603 @@
+{
+  "schema": "m194e-independent-cfa-oracle-controls-v1",
+  "scope": "Independent oracle and private fixture reader controls only; no author emitter execution, no float/model authority, no final CFA commission.",
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "experiments/m194e-joint-pupil/independent-cfa-controls.py",
+    "--out",
+    "experiments/m194e-joint-pupil/independent-cfa-controls-2"
+  ],
+  "python": "3.12.10",
+  "numpy": "2.4.4",
+  "environment": {},
+  "sources_before": {
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-cfa-controls.py": "5dcb5505067b1c237b3d13efed53096c900d80fd5935af2f67de7073acd7e94f",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-cfa-oracle.py": "1c4c1b4f8deac557986a1c630bdbe2b6564ce05e1887f5bde2beef96eaa00246",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-emission-design.md": "e84890e77773043e4e893712e5debbcf76bf292fce4d81af959a857f61aadfcc"
+  },
+  "sources_after": {
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-cfa-controls.py": "5dcb5505067b1c237b3d13efed53096c900d80fd5935af2f67de7073acd7e94f",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-cfa-oracle.py": "1c4c1b4f8deac557986a1c630bdbe2b6564ce05e1887f5bde2beef96eaa00246",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-emission-design.md": "e84890e77773043e4e893712e5debbcf76bf292fce4d81af959a857f61aadfcc"
+  },
+  "fixture_hashes": {
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-cfa-controls-2\\fixture-scalar.npy": "380910d6c15119d9f12a3f7f448f0fa42fe03ede587a1630abcfcbf7a781953c",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-cfa-controls-2\\fixture-expected.npy": "482db747abab505be547eed683a7339443db859b6dd373b8d68cbe1b11d762ad",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-cfa-controls-2\\fixture.cfa": "15ce97b4fb5aefb7b14a6619775061c9400b167a7414f25991239d6ddf390cf5"
+  },
+  "records": [
+    {
+      "name": "constant20-all-four-parities",
+      "kind": "positive",
+      "pass": true,
+      "detail": {
+        "electron_tile": [
+          [
+            15,
+            20
+          ],
+          [
+            20,
+            12
+          ]
+        ],
+        "code_tile": [
+          [
+            516,
+            517
+          ],
+          [
+            517,
+            515
+          ]
+        ],
+        "minimum_half_integer_margin_dn_rgb": [
+          0.25,
+          0.5,
+          0.5
+        ],
+        "within_optical_discrepancy_allowance_rgb": [
+          0,
+          0,
+          0
+        ],
+        "maximum_quantization_error_dn_rgb": [
+          0.25,
+          0.0,
+          0.0
+        ],
+        "at_white_unquantized": 0,
+        "over_white_unquantized": 0,
+        "rail_endpoint_admission": "deferred to pinned emitter contract"
+      }
+    },
+    {
+      "name": "constant12000-distinct-high-bytes",
+      "kind": "positive",
+      "pass": true,
+      "detail": {
+        "electron_tile": [
+          [
+            9000,
+            12000
+          ],
+          [
+            12000,
+            7200
+          ]
+        ],
+        "code_tile": [
+          [
+            2762,
+            3512
+          ],
+          [
+            3512,
+            2312
+          ]
+        ],
+        "minimum_half_integer_margin_dn_rgb": [
+          0.5,
+          0.5,
+          0.5
+        ],
+        "within_optical_discrepancy_allowance_rgb": [
+          0,
+          0,
+          0
+        ],
+        "maximum_quantization_error_dn_rgb": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "at_white_unquantized": 0,
+        "over_white_unquantized": 0,
+        "rail_endpoint_admission": "deferred to pinned emitter contract"
+      }
+    },
+    {
+      "name": "tie-and-sides-red-low",
+      "kind": "positive",
+      "pass": true,
+      "detail": {
+        "native_xy": [
+          0,
+          0
+        ],
+        "scalar_e": 8,
+        "dn": [
+          513.4999998211861,
+          513.5,
+          513.5000001788139
+        ],
+        "codes": [
+          513,
+          514,
+          514
+        ]
+      }
+    },
+    {
+      "name": "tie-and-sides-red-high",
+      "kind": "positive",
+      "pass": true,
+      "detail": {
+        "native_xy": [
+          2,
+          0
+        ],
+        "scalar_e": 24,
+        "dn": [
+          516.4999998211861,
+          516.5,
+          516.5000001788139
+        ],
+        "codes": [
+          516,
+          516,
+          517
+        ]
+      }
+    },
+    {
+      "name": "tie-and-sides-green1-low",
+      "kind": "positive",
+      "pass": true,
+      "detail": {
+        "native_xy": [
+          1,
+          0
+        ],
+        "scalar_e": 2,
+        "dn": [
+          512.4999997615814,
+          512.5,
+          512.5000002384186
+        ],
+        "codes": [
+          512,
+          512,
+          513
+        ]
+      }
+    },
+    {
+      "name": "tie-and-sides-green1-high",
+      "kind": "positive",
+      "pass": true,
+      "detail": {
+        "native_xy": [
+          3,
+          0
+        ],
+        "scalar_e": 6,
+        "dn": [
+          513.4999997615814,
+          513.5,
+          513.5000002384186
+        ],
+        "codes": [
+          513,
+          514,
+          514
+        ]
+      }
+    },
+    {
+      "name": "tie-and-sides-green2-even",
+      "kind": "positive",
+      "pass": true,
+      "detail": {
+        "native_xy": [
+          0,
+          1
+        ],
+        "scalar_e": 10,
+        "dn": [
+          514.4999997615814,
+          514.5,
+          514.5000002384186
+        ],
+        "codes": [
+          514,
+          514,
+          515
+        ]
+      }
+    },
+    {
+      "name": "tie-and-sides-blue-low",
+      "kind": "positive",
+      "pass": true,
+      "detail": {
+        "native_xy": [
+          1,
+          1
+        ],
+        "scalar_e": 10,
+        "dn": [
+          513.4999998569489,
+          513.5,
+          513.5000001430511
+        ],
+        "codes": [
+          513,
+          514,
+          514
+        ]
+      }
+    },
+    {
+      "name": "tie-and-sides-blue-high",
+      "kind": "positive",
+      "pass": true,
+      "detail": {
+        "native_xy": [
+          3,
+          1
+        ],
+        "scalar_e": 30,
+        "dn": [
+          516.4999998569489,
+          516.5,
+          516.5000001430511
+        ],
+        "codes": [
+          516,
+          516,
+          517
+        ]
+      }
+    },
+    {
+      "name": "wrong-half-up-power-and-nontie-companion",
+      "kind": "destroyer",
+      "pass": true,
+      "detail": {
+        "wrong_half_up_rejected_cases": [
+          "red-high",
+          "green1-low",
+          "green2-even",
+          "blue-high"
+        ],
+        "tie_up_inert_cases": [
+          "red-low",
+          "green1-high",
+          "blue-low"
+        ],
+        "ordinary_companion": 513.25
+      }
+    },
+    {
+      "name": "actual-npy-and-raw-valid",
+      "kind": "positive",
+      "pass": true,
+      "detail": {
+        "sample_count": 3072,
+        "scalar_sha256": "380910d6c15119d9f12a3f7f448f0fa42fe03ede587a1630abcfcbf7a781953c",
+        "expected_cfa_sha256": "482db747abab505be547eed683a7339443db859b6dd373b8d68cbe1b11d762ad",
+        "cfa_sha256": "15ce97b4fb5aefb7b14a6619775061c9400b167a7414f25991239d6ddf390cf5",
+        "minimum_half_integer_margin_dn_rgb": [
+          0.0,
+          0.5,
+          0.09999999999990905
+        ],
+        "within_optical_discrepancy_allowance_rgb": [
+          384,
+          0,
+          0
+        ],
+        "maximum_quantization_error_dn_rgb": [
+          0.5,
+          0.0,
+          0.40000000000009095
+        ],
+        "at_white_unquantized": 0,
+        "over_white_unquantized": 0,
+        "rail_endpoint_admission": "deferred to pinned emitter contract"
+      }
+    },
+    {
+      "name": "wrong-phase",
+      "kind": "destroyer",
+      "pass": true,
+      "detail": {
+        "refusal": "ValueError",
+        "reason": "actual conversion mismatch: expected-electron samples=0, CFA samples=3072"
+      }
+    },
+    {
+      "name": "wrong-red-factor",
+      "kind": "destroyer",
+      "pass": true,
+      "detail": {
+        "refusal": "ValueError",
+        "reason": "actual conversion mismatch: expected-electron samples=0, CFA samples=768"
+      }
+    },
+    {
+      "name": "omitted-gain",
+      "kind": "destroyer",
+      "pass": true,
+      "detail": {
+        "refusal": "ValueError",
+        "reason": "actual conversion mismatch: expected-electron samples=0, CFA samples=3072"
+      }
+    },
+    {
+      "name": "added-wb",
+      "kind": "destroyer",
+      "pass": true,
+      "detail": {
+        "refusal": "ValueError",
+        "reason": "actual conversion mismatch: expected-electron samples=0, CFA samples=1536"
+      }
+    },
+    {
+      "name": "black-offset",
+      "kind": "destroyer",
+      "pass": true,
+      "detail": {
+        "refusal": "ValueError",
+        "reason": "actual conversion mismatch: expected-electron samples=0, CFA samples=3072"
+      }
+    },
+    {
+      "name": "added-balanced-noise",
+      "kind": "destroyer",
+      "pass": true,
+      "detail": {
+        "refusal": "ValueError",
+        "reason": "actual conversion mismatch: expected-electron samples=0, CFA samples=3072"
+      }
+    },
+    {
+      "name": "isolated-native-42-31",
+      "kind": "destroyer",
+      "pass": true,
+      "detail": {
+        "refusal": "ValueError",
+        "reason": "actual conversion mismatch: expected-electron samples=0, CFA samples=1"
+      }
+    },
+    {
+      "name": "rows-reversed",
+      "kind": "destroyer",
+      "pass": true,
+      "detail": {
+        "refusal": "ValueError",
+        "reason": "actual conversion mismatch: expected-electron samples=0, CFA samples=3072"
+      }
+    },
+    {
+      "name": "transpose-flatten",
+      "kind": "destroyer",
+      "pass": true,
+      "detail": {
+        "refusal": "ValueError",
+        "reason": "actual conversion mismatch: expected-electron samples=0, CFA samples=3056"
+      }
+    },
+    {
+      "name": "big-endian-payload",
+      "kind": "destroyer",
+      "pass": true,
+      "detail": {
+        "refusal": "ValueError",
+        "reason": "actual conversion mismatch: expected-electron samples=0, CFA samples=3056"
+      }
+    },
+    {
+      "name": "truncated-raw",
+      "kind": "destroyer",
+      "pass": true,
+      "detail": {
+        "refusal": "ValueError",
+        "reason": "CFA must contain exactly 6144 bytes"
+      }
+    },
+    {
+      "name": "appended-raw",
+      "kind": "destroyer",
+      "pass": true,
+      "detail": {
+        "refusal": "ValueError",
+        "reason": "CFA must contain exactly 6144 bytes"
+      }
+    },
+    {
+      "name": "expected-electron-isolated-change",
+      "kind": "destroyer",
+      "pass": true,
+      "detail": {
+        "refusal": "ValueError",
+        "reason": "actual conversion mismatch: expected-electron samples=1, CFA samples=0"
+      }
+    },
+    {
+      "name": "refuse-float32",
+      "kind": "malformed",
+      "pass": true,
+      "detail": {
+        "refusal": "ValueError",
+        "reason": "expected little-endian f64"
+      }
+    },
+    {
+      "name": "refuse-big-endian-float",
+      "kind": "malformed",
+      "pass": true,
+      "detail": {
+        "refusal": "ValueError",
+        "reason": "expected little-endian f64"
+      }
+    },
+    {
+      "name": "refuse-transposed-shape",
+      "kind": "malformed",
+      "pass": true,
+      "detail": {
+        "refusal": "ValueError",
+        "reason": "expected one 48 by 64 array"
+      }
+    },
+    {
+      "name": "refuse-complex",
+      "kind": "malformed",
+      "pass": true,
+      "detail": {
+        "refusal": "ValueError",
+        "reason": "expected little-endian f64"
+      }
+    },
+    {
+      "name": "refuse-bool",
+      "kind": "malformed",
+      "pass": true,
+      "detail": {
+        "refusal": "ValueError",
+        "reason": "expected little-endian f64"
+      }
+    },
+    {
+      "name": "refuse-nan",
+      "kind": "malformed",
+      "pass": true,
+      "detail": {
+        "refusal": "ValueError",
+        "reason": "nonfinite electron values"
+      }
+    },
+    {
+      "name": "refuse-infinity",
+      "kind": "malformed",
+      "pass": true,
+      "detail": {
+        "refusal": "ValueError",
+        "reason": "nonfinite electron values"
+      }
+    },
+    {
+      "name": "refuse-negative",
+      "kind": "malformed",
+      "pass": true,
+      "detail": {
+        "refusal": "ValueError",
+        "reason": "negative electron values"
+      }
+    },
+    {
+      "name": "npy-trailing",
+      "kind": "malformed",
+      "pass": true,
+      "detail": {
+        "refusal": "ValueError",
+        "reason": "trailing data after the NPY array"
+      }
+    },
+    {
+      "name": "npy-truncated",
+      "kind": "malformed",
+      "pass": true,
+      "detail": {
+        "refusal": "ValueError",
+        "reason": "Failed to read all data for array. Expected (48, 64) = 3072 elements, could only read 3071 elements. (file seems not fully written?)"
+      }
+    },
+    {
+      "name": "bad-container",
+      "kind": "malformed",
+      "pass": true,
+      "detail": {
+        "refusal": "ValueError",
+        "reason": "This file contains pickled (object) data. If you trust the file you can load it unsafely using the `allow_pickle=` keyword argument or `pickle.load()`."
+      }
+    },
+    {
+      "name": "refuse-bool-coordinate",
+      "kind": "malformed",
+      "pass": true,
+      "detail": {
+        "refusal": "ValueError",
+        "reason": "native indices must be nonnegative integers"
+      }
+    },
+    {
+      "name": "refuse-float-coordinate",
+      "kind": "malformed",
+      "pass": true,
+      "detail": {
+        "refusal": "ValueError",
+        "reason": "native indices must be nonnegative integers"
+      }
+    },
+    {
+      "name": "refuse-nonfinite-quantizer",
+      "kind": "malformed",
+      "pass": true,
+      "detail": {
+        "refusal": "ValueError",
+        "reason": "nonfinite DN"
+      }
+    },
+    {
+      "name": "actual-npy-and-raw-final-reread",
+      "kind": "positive",
+      "pass": true,
+      "detail": {
+        "sample_count": 3072,
+        "scalar_sha256": "380910d6c15119d9f12a3f7f448f0fa42fe03ede587a1630abcfcbf7a781953c",
+        "expected_cfa_sha256": "482db747abab505be547eed683a7339443db859b6dd373b8d68cbe1b11d762ad",
+        "cfa_sha256": "15ce97b4fb5aefb7b14a6619775061c9400b167a7414f25991239d6ddf390cf5",
+        "minimum_half_integer_margin_dn_rgb": [
+          0.0,
+          0.5,
+          0.09999999999990905
+        ],
+        "within_optical_discrepancy_allowance_rgb": [
+          384,
+          0,
+          0
+        ],
+        "maximum_quantization_error_dn_rgb": [
+          0.5,
+          0.0,
+          0.40000000000009095
+        ],
+        "at_white_unquantized": 0,
+        "over_white_unquantized": 0,
+        "rail_endpoint_admission": "deferred to pinned emitter contract"
+      }
+    }
+  ],
+  "check_count": 39,
+  "source_and_fixture_unchanged": true,
+  "deferred": [
+    "white-rail endpoint admission",
+    "receipt/source/float-commission API",
+    "author observer off/count/placebo execution",
+    "genuine final emitted CFA"
+  ],
+  "pass": true
+}

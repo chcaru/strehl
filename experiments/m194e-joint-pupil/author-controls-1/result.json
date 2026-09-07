@@ -1,0 +1,37 @@
+{
+  "checks": [
+    {
+      "first": [
+        30.0,
+        20.000000000000004
+      ],
+      "name": "actual-two-ray-covariance",
+      "pass_": false,
+      "reversed": [
+        30.0,
+        9.999999999999993
+      ]
+    }
+  ],
+  "command": [
+    "experiments/m194e-joint-pupil/author-controls.py",
+    "--output",
+    "experiments/m194e-joint-pupil/author-controls-1"
+  ],
+  "ended_utc": "2026-09-07T12:21:34.370968+00:00",
+  "error": "AssertionError('actual-two-ray-covariance')",
+  "schema": "m194e-author-controls-v1",
+  "sources_after": {
+    "author-controls.py": "274f566fbb15565ab3d750dd5a51fa07d4c1d6f982e26b05b9494910364a7f26",
+    "model.py": "a74cd9bd61ea2f717a185e86f725b5ed192431056a447581db0f8562cf9f70b8",
+    "render.py": "2320d2a24a8678da7d50795662bb34b54a41c5200abdc8d111d9457c86d599a5"
+  },
+  "sources_before": {
+    "author-controls.py": "274f566fbb15565ab3d750dd5a51fa07d4c1d6f982e26b05b9494910364a7f26",
+    "model.py": "a74cd9bd61ea2f717a185e86f725b5ed192431056a447581db0f8562cf9f70b8",
+    "render.py": "2320d2a24a8678da7d50795662bb34b54a41c5200abdc8d111d9457c86d599a5"
+  },
+  "started_utc": "2026-09-07T12:21:34.368675+00:00",
+  "status": "INSTRUMENT_INVALID",
+  "traceback": "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\author-controls.py\", line 53, in run\n    check(\"actual-two-ray-covariance\", np.array_equal(first, [30, 20]) and np.array_equal(reverse, [30, 10]), first=first.tolist(), reversed=reverse.tolist())\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\author-controls.py\", line 36, in check\n    raise AssertionError(name)\nAssertionError: actual-two-ray-covariance\n"
+}

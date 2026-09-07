@@ -1,0 +1,82 @@
+{
+  "error_indicator": {
+    "bytes": 24704,
+    "dtype": "<f8",
+    "path": "frame-03-indicator.npy",
+    "sha256": "ae4d5b473bb4aeb7e7d1632c36cb5e219c7a741dee653bd129f9ddf6a44007e1",
+    "shape": [
+      48,
+      64
+    ]
+  },
+  "expected_scalar": {
+    "bytes": 24704,
+    "dtype": "<f8",
+    "path": "frame-03-scalar.npy",
+    "sha256": "8999eabfaab674d650cb9d848511c9dcc35d0e11b33d4b14006df58364ae5809",
+    "shape": [
+      48,
+      64
+    ]
+  },
+  "frame": {
+    "K": 12.0,
+    "forward_similarity": {
+      "centre": [
+        0.0,
+        0.0
+      ],
+      "rotation": 0.0,
+      "scale": 1.0,
+      "translation": [
+        0.0,
+        0.0
+      ]
+    },
+    "index": 3,
+    "inverse_focus": 0.875
+  },
+  "integrator": {
+    "angle_depth": 10,
+    "angle_high": 32,
+    "angle_low": 16,
+    "angular_limit": 600000000,
+    "arm": "cell-refined",
+    "array_limit": 33554432,
+    "cell_depth": 6,
+    "cell_high": 16,
+    "cell_low": 8,
+    "cell_point_tolerance": 4.6875e-05,
+    "cell_tolerance": 0.0001875,
+    "cpu_limit": 600,
+    "node_pair_limit": 32768,
+    "point_limit": 4000000,
+    "pupil_tolerance": 0.00025,
+    "wall_limit": 1200
+  },
+  "max_error_indicator_e": 2.5416112807137196e-05,
+  "schema": "m194e-float-frame-v1",
+  "status": "uncommissioned",
+  "tile": 8,
+  "work": {
+    "angular_nodes": 242113152,
+    "cell_allocation": {
+      "cells": 3072,
+      "cells_with_locally_overallocated_leaves": 0,
+      "leaves": 6476,
+      "locally_overallocated_leaves": 0,
+      "maximum_depth": 0,
+      "minimum_depth": 0
+    },
+    "cpu_seconds": 235.1875,
+    "observer": "count",
+    "observer_events": 19509715,
+    "optional_hook_calls": 3019817,
+    "peak_live_scalar_frames": 1,
+    "peak_node_pairs": 32768,
+    "point_calls": 2072320,
+    "tracked_peak_ndarray_bytes": 6940800,
+    "tracked_peak_ndarrays": 52,
+    "wall_seconds": 236.26500000001397
+  }
+}
