@@ -1,0 +1,43 @@
+{
+  "schema": "m194b-producer-preregister-v1",
+  "status": "frozen-before-render",
+  "scope": "Synthetic flat, one scalar plane and analytic color only; numerical operation, not physical optics or camera calibration",
+  "m194_revision": "19e230fbd44f58badd0959906ae1f1eb5519c60a",
+  "sensor": {"width": 320, "height": 240, "active_origin": [2,4], "stride": 327, "buffer_height": 247, "black": 512.0, "white": 15360.0, "iso": 160.0, "wb": [1.3333333333333333,1.0,1.6666666666666667], "noise_gain_dn_per_e": 0.25, "read_noise_e": 4.0, "cfa": "RGGB"},
+  "optics": {"n_marked": 8.0, "magnification": 1.0, "pupil_ratio": 1.0, "n_eff": 16.0, "wavelength_nm": 535.0, "pixel_pitch_um": 5.12, "coc_diameter_px_per_focus": 1.5, "chromatic_diffraction": false, "channel_scale": [0.75,1.0,0.6], "with_diffraction": true, "resampler_order": 3},
+  "sampling": {"supersample": 4, "margin_native": 48, "coordinates": "active native pixel centers integer; latent q=(i+.5)/S-margin-.5", "roi_native": [64,64,256,176]},
+  "geometry": {"reference_index": 4, "scale_centre_native": [183.0,101.0], "rungs": [0,32,64,96,144,184,224,264,298], "scales": [1.0561223412120058,1.0420970365207105,1.0313351498637602,1.025943645311873,1.0,0.9806993642143506,0.9600891367255983,0.9289546501066683,0.9052447035464589], "focus": [0,1,2,3,4,5,6,7,8], "source": "experiments/M103-halfdrift/data/truth-dense.json", "source_sha256": "45b12d8c7106fa1c9c1ce3d5f663896a43992ff35f867fd3c6374131cb67be01", "map": "canonical q to source z=c+scale*(q-c); output reference4; no estimated registration"},
+  "scenes": {
+    "flat": {"electron_dc": 12000.0, "focus": 4.0, "noise_seeds": [701,709,719,727,733,739,743,751]},
+    "plane": {"electron_dc": 12000.0, "focus": 4.0, "waves": [[1800.0,0.0625,0.041666666666666664,0.2],[900.0,0.125,-0.0625,1.1]], "noise_seeds": [701,709,719,727,733,739,743,751]},
+    "color": {"units": "post-WB black-subtracted DN", "dc": 3000.0, "luminance_waves": [[450.0,0.08,0.03,0.2],[180.0,0.19,-0.07,1.1]], "red_blue_chroma": [[240.0,0.11,0.04,0.8]], "green_chroma": [[120.0,0.05,-0.09,2.0]], "channels": ["L+C","L+Q","L-C"], "noise_seeds": [], "optical_scope": "analytic band-limited sensor irradiance; no M25 chromatic defocus claim"},
+    "color-null": {"construction": "same analytic color fixture with C=Q=0", "noise_seeds": []}
+  },
+  "noise": {"shot": true, "read": true, "fpn": false, "hot": false, "prnu": false, "correlation": false, "quantization": "numpy rint ties-to-even, clamp [0,15360], little-endian uint16", "noise_off_keeps_product_model": true},
+  "product": {"bands": 3, "gate": 2.0, "resampler": "catmull-rom", "space": "camera-linear", "cover": "actual-crop", "workers_max": 2, "ca": false, "defect": false, "exposure_gain": 1.0},
+  "controls": {
+    "run_order": ["flat-dc", "aperture-cfa-quantization", "defocus-diffraction", "noise-law", "observer-on-off-placebo", "plane-numerical-convergence", "analytic-color-geometry"],
+    "dc_max_dn": 1e-8,
+    "transfer_absolute_error": 0.002,
+    "transfer_frequencies": [[0.0625,0.0],[0.125,0.125],[0.375,0.0]],
+    "defocus_diameters": [0.0,4.0],
+    "quadrature": {"disc_radial": 512, "disc_angular": 2048, "pupil_intervals": 16384, "convergence_factor": 2, "max_change": 0.0005},
+    "integration_exact_error": 1e-12,
+    "noise_shape": [96,128], "noise_repeats": 64, "noise_seed": 90210,
+    "noise_electron_levels": [0.0,4096.0,16384.0], "bright_variance_relative_error": 0.01, "dark_variance_relative_error": 0.02,
+    "null_abs_correlation": 0.02, "negative_planted_correlation": 0.25, "negative_min_correlation": 0.15,
+    "identical_noise_min_correlation": 0.99,
+    "observer_seed": 701, "observer_scenes": ["flat","plane"], "observer_modes": ["original","on","placebo"],
+    "convergence": {"scene": "plane", "noise": false, "frames": "all nine", "supersample_pair": [4,8], "margin_pair": [48,96], "roi_rms_dn_max": 1.0, "supersample_fallback": [8,16], "margin_fallback": [96,192], "refinement_requires_memory_review": true},
+    "negative_controls": ["defocus radius for diameter", "defocus negative-lobe clamp", "no diffraction", "double wavelength", "double effective f-number", "point aperture", "quad-pitch aperture", "swapped R/B", "omitted half-pixel phase", "factor-two noise gain", "read noise removed", "frame-identical noise", "correlated matched-variance noise", "wrong scale inverse", "wrong center", "straight chord scales"],
+    "failure_policy": "Preserve every outcome. Failed numerical optics blocks optical-reference claims only; no tolerance relaxation or scene retuning. Two-layer alpha is deferred. Scorer and production-consumer controls independently owned."
+  },
+  "frozen_m25_sha256": {
+    "config.py": "507d165e405812a9fdcffbf83a026e699f844dfd88bb2af9faec6e4c12c0ba59",
+    "optics.py": "ac5a2342d5ad3e6551ca3ddade5dba8feb9ea8f555f3aa36b71c774c6868fb93",
+    "render.py": "8b842d06ab1a550d1c66263dde2969e0e390a439938e57cb54c4095a6a36118c",
+    "scene.py": "9bea8539999ca64f893505337dbbe4c32c5765bc2368508275be43eed008351f",
+    "sensor.py": "d3057d2bfe3be5c832314e3a442941ef8269dd9a9c3b35e7e100a520e975957f"
+  },
+  "manifest_contract": {"schema": "m194b-known-scene-v1", "top_level_keys": ["schema","scene","noise_enabled","repeat","sensor","geometry","frames","producer"], "repeat": "null when noise-off; integer seed when noisy", "geometry_keys": ["reference_index","scale_centre_native","frames"], "geometry_frame_keys": ["index","focus","scale"], "frame_keys": ["index","path","bytes","sha256"], "producer_keys": ["preregistration_sha256","source_sha256","expected_electrons_sha256","command"], "paths": "relative child paths under each manifest directory, active CFA uint16 little-endian only", "storage": "consumer injects active CFA at nonzero origin into poisoned padding; files do not contain padding"}
+}
