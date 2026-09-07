@@ -278,9 +278,14 @@ this is an accepted correctness tradeoff, not a quality improvement. See the
 [M194c report](../research/M194c-probe-layout.md) for paired uncertainty,
 whole-image extremes, independent controls and retained failures.
 
-**M194d is the next bounded quality experiment:** audit the existing admission
-prototypes and withdrawn Phase-1 refutation, then commission one actual-output
-admission operator on the fixed truth/noise inputs. Preserve the prior Phase-1
+**M194d is the next bounded quality experiment:** the prior-art audit identifies
+a narrower first intervention than A1's selected-winner margin. Existing soft
+weights still assign exactly zero below the floor, allowing a tiny crossing by
+one frame to replace an all-frame mean. Test one fixed positive baseline weight
+through the actual production consumer, with explicit numerical refusals and
+80 new outputs:40 off-mode byte controls plus40 candidate outputs. This is a
+heuristic continuity experiment, with dilution/detail loss as a central
+falsifier; it is not calibrated statistical admission. Preserve the prior Phase-1
 and capture gates; this development experiment cannot substitute for them.
 Do not tune the probe seed or gate to hide M194c's flat regression. Keep both
 reference targets and the sparse flat-pixel failure visible. M25's physical
