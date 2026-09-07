@@ -84,8 +84,8 @@ tile comparison did not exercise a tile boundary and is not that evidence.
 **MEASURED and repaired metadata defect:** the independent emitter API first
 passed 106 of 107 controls. A nested numerical receipt could declare an integer
 dtype for the same floating-point array accepted by its parent. The schema now
-binds resolved path, dtype, shape, length and hash together. The final independent
-API run passes 109 controls. An intervening startup refusal came from root's
+binds resolved path, dtype, shape, length and hash together. That source
+revision's independent API run passes109 controls. An intervening startup refusal came from root's
 65-character transcription of a 64-character hash; source bytes were unchanged.
 Private API fixture gates are never scientific authority for their invented
 arrays. Details and preserved results are in the

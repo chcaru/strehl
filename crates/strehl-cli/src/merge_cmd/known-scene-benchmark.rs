@@ -798,3 +798,10 @@ mod band_admission_benchmark {
         "/src/merge_cmd/band-admission-benchmark.rs"
     ));
 }
+
+mod joint_pupil_bridge {
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/src/merge_cmd/joint-pupil-bridge.rs"
+    ));
+}
