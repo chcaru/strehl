@@ -85,6 +85,106 @@ def run(output):
                     maximum_dc = max(maximum_dc, abs(actual - dc))
         check("all-dc-focus-mask-states", maximum_dc <= 1e-8, max_abs_e=maximum_dc)
         p = primary_scene()
+        # Amendment4 keeps standalone points on their historical policy, while
+        # both cell quadrature batches consume the stricter family target.
+        original_global_path = HERE / "float-run-3" / "source" / "render.py"
+        check("inner-target-frozen-source-bound", sha256(original_global_path) == "a22d49fd43a1bc8d0f807fc1d4417104d5b9ffe1d771b418be58d276d7804460")
+        spec = importlib.util.spec_from_file_location("m194e_before_inner_target", original_global_path)
+        old4 = importlib.util.module_from_spec(spec)
+        sys.modules[spec.name] = old4
+        spec.loader.exec_module(old4)
+        family = {arm: renderer.integrator_for(arm) for arm in ("primary", "angle-refined", "cell-refined")}
+        check("inner-target-family-axis-isolation", family["primary"].cell_point_tolerance == family["cell-refined"].cell_point_tolerance == .000046875
+              and family["angle-refined"].cell_point_tolerance == .00001171875
+              and family["primary"].angle_low == family["cell-refined"].angle_low
+              and family["primary"].angle_high == family["cell-refined"].angle_high)
+        for arm, config in family.items():
+            for xy in ((4., 0.), (31., 7.)):
+                before, before_r = old4.render_point(p, primary_frames()[2], xy, old4.integrator_for(arm))
+                after, after_r = render_point(p, primary_frames()[2], xy, config)
+                a_bytes = np.array((before, before_r["value_error_indicator_e"]), dtype="<f8").tobytes()
+                b_bytes = np.array((after, after_r["value_error_indicator_e"]), dtype="<f8").tobytes()
+                check(f"standalone-point-policy-byte-null-{arm}-{xy}", a_bytes == b_bytes)
+        config = family["cell-refined"]
+        strict_meter = Meter(config)
+        strict_v, strict_e = renderer.render_points(p, primary_frames()[2], np.array(((4., 0.),)), config, strict_meter,
+                                                   point_tolerance=config.cell_point_tolerance)
+        ordinary_v, ordinary_r = render_point(p, primary_frames()[2], (4., 0.), config)
+        check("explicit-inner-target-actual-subdivision-power", strict_meter.nodes > ordinary_r["work"]["angular_nodes"]
+              and strict_e[0] <= config.cell_point_tolerance and ordinary_r["value_error_indicator_e"] > config.cell_point_tolerance,
+              strict_value=float(strict_v[0]), strict_indicator=float(strict_e[0]), strict_work=strict_meter.receipt(), ordinary=ordinary_r)
+        for label, target in (("zero",0.), ("negative",-1.), ("nan",float("nan")), ("infinite",float("inf")), ("boolean",True)):
+            refuses("inner-target-config-"+label, lambda target=target: replace(config, cell_point_tolerance=target))
+            refuses("explicit-point-target-"+label, lambda target=target: renderer.render_points(p, frame, np.array(((4.,0.),)),config,Meter(config),point_tolerance=target))
+        refuses("explicit-point-target-above-cap", lambda: renderer.render_points(p,frame,np.array(((4.,0.),)),config,Meter(config),point_tolerance=config.pupil_tolerance*2))
+        refuses("cell-inner-target-quarter-cap", lambda: render_cell(p,primary_frames()[2],(4.,0.),replace(config,cell_point_tolerance=config.cell_tolerance/2)))
+        refuses("cell-inner-target-standalone-cap", lambda: render_cell(p,primary_frames()[2],(4.,0.),replace(config,pupil_tolerance=config.cell_point_tolerance/2)))
+        strict_capped = replace(config, angle_low=1, angle_high=2, angle_depth=0)
+        refuses("explicit-inner-target-depth-refusal",lambda:renderer.render_points(p,frame,np.array(((32.,24.),)),strict_capped,Meter(strict_capped),point_tolerance=config.cell_point_tolerance),NumericalFailure)
+        point_call = renderer.render_points
+        trace = []
+        def traced_points(scene, frame, xy, integrator, meter, *, point_tolerance=None):
+            trace.append(dict(points=len(xy), target=point_tolerance))
+            return point_call(scene,frame,xy,integrator,meter,point_tolerance=point_tolerance)
+        try:
+            renderer.render_points = traced_points
+            inner_value, inner_r = render_cell(p,primary_frames()[2],(4.,0.),config)
+        finally:
+            renderer.render_points = point_call
+        check("inner-target-both-consuming-batches", len(trace)>0 and len(trace)%2==0
+              and all(item["target"]==config.cell_point_tolerance and item["points"]==(config.cell_low if i%2==0 else config.cell_high)**2 for i,item in enumerate(trace)),trace=trace)
+        check("inner-target-fixed-full3-cell", abs(inner_value-11383.252407088143)<=.004
+              and inner_r["cell_indicator_e"]<=config.cell_tolerance and inner_r["weighted_high_pupil_indicator_e"]<=config.pupil_tolerance,
+              value=inner_value,reference=11383.252407088143,receipt=inner_r)
+        try:
+            renderer.render_points = lambda scene,frame,xy,integrator,meter,**kwargs: point_call(scene,frame,xy,integrator,meter)
+            refuses("omitted-inner-target-retains-full3-refusal",lambda:render_cell(p,primary_frames()[2],(4.,0.),config),NumericalFailure)
+        finally:
+            renderer.render_points = point_call
+
+        # Relative mass is checked on actual returned rules, including tiny
+        # triangles for which an absolute area allowance would be powerless.
+        base_triangle=np.array(((0.,0.),(2.,0.),(0.,1.)))
+        for scale in (1.,.03125,math.ldexp(1.,-300)):
+            triangle=base_triangle*scale
+            for selected in ((),(0,1),(2,)):
+                for order in (4,8,16):
+                    xy,w=renderer.triangle_rule(triangle,order,selected)
+                    renderer.validate_cell_rule(triangle,w)
+                    check(f"relative-mass-valid-{scale}-{selected}-{order}",abs(math.fsum(w)/float(renderer.triangle_area(triangle))-1)<=1e-12)
+        for exponent in (-500,-535,-540):
+            triangle=base_triangle*math.ldexp(1.,exponent)
+            xy,w=renderer.triangle_rule(triangle,8,(2,))
+            area=float(renderer.triangle_area(triangle))
+            valid=math.isfinite(area) and area>0 and np.isfinite(w).all() and np.all(w>0)
+            valid=bool(valid and abs(math.fsum(w)/area-1)<=1e-12)
+            if valid:
+                renderer.validate_cell_rule(triangle,w)
+                check(f"tiny-mass-explicit-valid-{exponent}",True,area=area)
+            else:
+                refuses(f"tiny-mass-explicit-refusal-{exponent}",lambda triangle=triangle,w=w:renderer.validate_cell_rule(triangle,w),NumericalFailure)
+        tiny_triangle=base_triangle*math.ldexp(1.,-30)
+        tiny_area=float(renderer.triangle_area(tiny_triangle))
+        _,tiny_weights=renderer.triangle_rule(tiny_triangle,8)
+        for label,w in (("half",tiny_weights*.5),("biased",tiny_weights*(1+1e-8))):
+            check("tiny-mass-absolute-allowance-is-powerless-"+label,abs(math.fsum(w)-tiny_area)<1e-11)
+            refuses("tiny-relative-mass-"+label,lambda w=w:renderer.validate_cell_rule(tiny_triangle,w),NumericalFailure)
+        for label,value in (("zero",0.),("negative",-1.),("nan",float("nan")),("infinite",float("inf"))):
+            bad=tiny_weights.copy()
+            bad[0]=value
+            refuses("relative-mass-weight-"+label,lambda bad=bad:renderer.validate_cell_rule(tiny_triangle,bad),NumericalFailure)
+        for label,t in (("zero-area",np.zeros((3,2))),("nonfinite-area",np.full((3,2),np.nan))):
+            refuses("relative-mass-"+label,lambda t=t:renderer.validate_cell_rule(t,tiny_weights),NumericalFailure)
+        original_rule=renderer.triangle_rule
+        for target_order in (config.cell_low,config.cell_high):
+            def false_mass(t,order,indices=(),target_order=target_order):
+                xy,w=original_rule(t,order,indices)
+                return xy,w*.5 if order==target_order else w
+            try:
+                renderer.triangle_rule=false_mass
+                refuses(f"actual-consumed-mass-refusal-{target_order}",lambda:render_cell(p,primary_frames()[2],(4.,0.),config),NumericalFailure)
+            finally:
+                renderer.triangle_rule=original_rule
         full = replace(p, mask_state="full")
         absent = replace(p, mask_state="absent")
         a = render_point(full, frame, edge)[0]

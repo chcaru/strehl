@@ -12,7 +12,7 @@ from render import integrator_for
 HERE = Path(__file__).resolve().parent
 REPOSITORY = HERE.parents[1]
 AUTHOR_SOURCES = ("model.py", "render.py", "schema.py", "commission.py", "emit-cfa.py", "author-controls.py")
-DESIGNS = ("implementation-plan.md", "implementation-preregister.md", "independent-design.md", "numerical-amendment-1.md", "numerical-amendment-2.md", "numerical-amendment-3.md", "emission-contract.md")
+DESIGNS = ("implementation-plan.md", "implementation-preregister.md", "independent-design.md", "numerical-amendment-1.md", "numerical-amendment-2.md", "numerical-amendment-3.md", "numerical-amendment-4.md", "emission-contract.md")
 ARMS = ("primary", "angle-refined", "cell-refined")
 
 
@@ -110,9 +110,10 @@ def design_bindings():
 
 
 def numerical_contract():
-    return dict(method="polar-radial-ladder32-tangent-cell-global-v4", radial_crossing_levels=32,
+    return dict(method="polar-radial-ladder32-tangent-cell-global-inner-v5", radial_crossing_levels=32,
                 cell_map="predicate-square-distance-duffy-v1",
                 cell_allocation="global-absolute-leaf-priority-v1",
+                cell_point_policy="family-min-cell-budget-quarter-v1",
                 arms={arm: asdict(integrator_for(arm)) for arm in ARMS},
                 max_discrepancy_e=.004, rms_discrepancy_e=.0008, edge_distance_native=8,
                 author_refinement_max_e=.001, independent_refinement_max_e=.0005,

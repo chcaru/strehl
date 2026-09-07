@@ -26,6 +26,7 @@ class Integrator:
     cell_high: int = 8
     pupil_tolerance: float = .00025
     cell_tolerance: float = .00075
+    cell_point_tolerance: float = .00075 / 16
     angle_depth: int = 10
     cell_depth: int = 6
     point_limit: int = 4_000_000
@@ -44,7 +45,7 @@ class Integrator:
             v = getattr(self, name)
             if isinstance(v, bool) or not isinstance(v, int) or v < 0:
                 raise ValueError(f"nonnegative integer required: {name}")
-        for name in ("pupil_tolerance", "cell_tolerance", "cpu_limit", "wall_limit"):
+        for name in ("pupil_tolerance", "cell_tolerance", "cell_point_tolerance", "cpu_limit", "wall_limit"):
             v = getattr(self, name)
             if isinstance(v, bool) or not math.isfinite(v) or v <= 0:
                 raise ValueError(f"finite positive value required: {name}")
@@ -54,7 +55,8 @@ def integrator_for(arm):
     if arm == "primary":
         return Integrator()
     if arm == "angle-refined":
-        return Integrator(arm=arm, angle_low=32, angle_high=64, pupil_tolerance=.00025 / 4)
+        return Integrator(arm=arm, angle_low=32, angle_high=64, pupil_tolerance=.00025 / 4,
+                          cell_point_tolerance=.00075 / 64)
     if arm == "cell-refined":
         return Integrator(arm=arm, cell_low=8, cell_high=16, cell_tolerance=.00075 / 4)
     raise ValueError("unregistered integration arm")
@@ -259,7 +261,10 @@ def angular_cuts(height, radius, alpha, mask_state, include_ladder=True):
     return sorted(set(cuts))
 
 
-def render_points(scene, frame, xy, integrator, meter):
+def render_points(scene, frame, xy, integrator, meter, *, point_tolerance=None):
+    target = integrator.pupil_tolerance if point_tolerance is None else point_tolerance
+    if isinstance(target, bool) or not math.isfinite(target) or not 0 < target <= integrator.pupil_tolerance:
+        raise ValueError("finite positive point target within standalone cap required")
     xy = np.asarray(xy, dtype=np.float64).reshape(-1, 2)
     if not np.isfinite(xy).all():
         raise ValueError("finite point coordinates required")
@@ -284,7 +289,7 @@ def render_points(scene, frame, xy, integrator, meter):
     ids, left, right = np.array(ids), np.array(left), np.array(right)
     values, errors = np.zeros(len(xy)), np.zeros(len(xy))
     meter.watch(xy, q0, h, ids, left, right, values, errors)
-    budgets = integrator.pupil_tolerance * (right - left) / (2 * np.pi)
+    budgets = target * (right - left) / (2 * np.pi)
     pending = [(ids, left, right, budgets, 0)]
     low_nodes, low_weights = gauss(integrator.angle_low)
     high_nodes, high_weights = gauss(integrator.angle_high)
@@ -310,7 +315,7 @@ def render_points(scene, frame, xy, integrator, meter):
                     raise NumericalFailure("UNCOMMISSIONED_NUMERICS: unresolved unrepresentable angular midpoint")
                 pending.append((np.concatenate((ix[bad], ix[bad])), np.concatenate((a[bad], mid)),
                                 np.concatenate((mid, b[bad])), np.tile(budget[bad] / 2, 2), depth + 1))
-    if not np.isfinite(values).all() or np.any(values < 0) or np.any(errors > integrator.pupil_tolerance * (1 + 1e-12)):
+    if not np.isfinite(values).all() or np.any(values < 0) or np.any(errors > target * (1 + 1e-12)):
         raise NumericalFailure("UNCOMMISSIONED_NUMERICS: point result/error")
     return values, errors
 
@@ -516,12 +521,33 @@ def aggregate_frontier(leaves, root_areas, integrator):
     return result
 
 
+def validate_cell_rule(triangle, weights):
+    """Check actual consumed mass relatively, without renormalizing a rule."""
+    area = float(triangle_area(triangle))
+    if not math.isfinite(area) or area <= 0:
+        raise NumericalFailure("UNCOMMISSIONED_NUMERICS: finite positive cell rule area required")
+    if weights.ndim != 1 or not len(weights) or not np.isfinite(weights).all() or np.any(weights <= 0):
+        raise NumericalFailure("UNCOMMISSIONED_NUMERICS: finite positive cell rule weights required")
+    try:
+        mass = math.fsum(weights)
+    except (OverflowError, ValueError) as exc:
+        raise NumericalFailure("UNCOMMISSIONED_NUMERICS: nonfinite cell rule mass") from exc
+    ratio = mass / area
+    if not math.isfinite(mass) or mass <= 0 or not math.isfinite(ratio) or abs(ratio - 1) > 1e-12:
+        raise NumericalFailure("UNCOMMISSIONED_NUMERICS: relative cell rule mass")
+
+
 def evaluate_cell_leaf(scene, frame, triangle, path, integrator, meter):
+    target = integrator.cell_point_tolerance
+    if not 0 < target <= min(integrator.pupil_tolerance, integrator.cell_tolerance / 4):
+        raise ValueError("cell point target must fit standalone and quarter-cell caps")
     indices = tangent_indices(triangle, scene, frame)
     low_xy, low_w = triangle_rule(triangle, integrator.cell_low, indices)
     high_xy, high_w = triangle_rule(triangle, integrator.cell_high, indices)
-    low_v, low_e = render_points(scene, frame, low_xy, integrator, meter)
-    high_v, high_e = render_points(scene, frame, high_xy, integrator, meter)
+    validate_cell_rule(triangle, low_w)
+    validate_cell_rule(triangle, high_w)
+    low_v, low_e = render_points(scene, frame, low_xy, integrator, meter, point_tolerance=target)
+    high_v, high_e = render_points(scene, frame, high_xy, integrator, meter, point_tolerance=target)
     meter.watch(triangle, low_xy, low_w, high_xy, high_w, low_v, low_e, high_v, high_e)
     return CellLeaf(path, triangle, float(low_w @ low_v), float(high_w @ high_v),
                     float(low_w @ low_e), float(high_w @ high_e))

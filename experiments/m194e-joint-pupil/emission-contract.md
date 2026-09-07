@@ -20,22 +20,38 @@ resolve from this experiment's source directory. Frame references resolve from
 the float-bundle directory. Child references inside a numerical receipt resolve
 from that receipt's directory. This last distinction clarifies the earlier
 informal blanket description of bundle-relative references and was fixed before
-the first API tests. Following numerical amendment3's preregistration at
-`2a75e519`, the current numerical contract names
-`polar-radial-ladder32-tangent-cell-global-v4`,32 radial crossing levels,
+the first API tests. Following numerical amendment4's preregistration at
+`d32bd33a`, the current numerical contract names
+`polar-radial-ladder32-tangent-cell-global-inner-v5`,32 radial crossing levels,
 `cell_map: predicate-square-distance-duffy-v1` and
-`cell_allocation: global-absolute-leaf-priority-v1`, the three unchanged
-integrators and existing whole-cell/pupil/comparison/indicator limits. Design
-bindings include all three numerical amendments. The predicate selects a
+`cell_allocation: global-absolute-leaf-priority-v1`, plus
+`cell_point_policy: family-min-cell-budget-quarter-v1`. Every serialized
+integrator includes the actual cell_point_tolerance: .000046875 for primary
+and cell-refined, .00001171875 for angle-refined. These targets control both
+low/high consumed point batches and are distinct from unchanged standalone
+and global high-pupil caps. The three arms retain their original orders,
+global limits and refinement meaning. Design bindings include all four
+numerical amendments. The predicate selects a
 coordinate map without moving vertices. The new whole-cell allocator explicitly
 replaces the former per-leaf proportional admission rule. Earlier source-bound
 packages retain their original contract; their results do not commission this
 revision.
 
+At each actual low/high cell-rule consumption, the renderer additionally checks
+finite positive triangle area and finite positive weights, with finite positive
+mass and relative `abs(fsum(weights)/area-1)<=1e-12`. This is separate from the
+unchanged absolute1e-11 partition-area check. Tiny triangles obey the same rule;
+zero underflow or failed mass checks refuse, without renormalization. The
+combined cell indicator and separate high-pupil cap still determine admission;
+there is no new separate spatial half-budget gate. Metadata establishes the
+registered policy and source consistency; independent actual-call, mass and
+image controls establish its execution and accuracy.
+
 `work.cell_allocation` has six exact nonnegative-integer fields: cells, leaves,
 minimum_depth, maximum_depth, locally_overallocated_leaves and
-cells_with_locally_overallocated_leaves. Off/placebo and pre-completion snapshots
-have all six zero. Count records completed cells only; full intended frame
+cells_with_locally_overallocated_leaves. Off/placebo and snapshots before any
+cell completes have all six zero. A count-mode partial-frame snapshot retains
+the cells already completed. Count records completed cells only; full intended frame
 receipts require count mode and exactly3072 cells. Depths satisfy0≤min≤max≤6;
 the square has at least two root triangles. Complete frontiers and occurrence
 of the maximum depth give a lower bound2*cells*2^min+(max-min). The occurrence
