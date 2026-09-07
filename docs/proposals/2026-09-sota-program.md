@@ -165,7 +165,13 @@ its information advantage; a sharper-looking edge alone is not truth.
 **Current next implementation:** M194e commissions the missing joint-pupil
 two-depth geometric model before any new occlusion-quality comparison. Its
 preregistration is committed at `773f5762`; author and independent implementations
-are active. The one-plane M194b/M194d evidence cannot express depth-boundary dilution.
+are active. [M194e's current record](../research/M194e-joint-pupil.md) preserves
+two numerical refusals: the original angular integration limit, then a
+sensor-cell tangency limit in the first complete-image attempt after the
+angular remedy. Independent component checks pass, but the complete model
+remains uncommissioned. The next action is a prospectively reviewed cell
+integration correction with existing accuracy limits retained. The one-plane
+M194b/M194d evidence cannot express depth-boundary dilution.
 The new mathematical model will not clear M25's failed physical/optics gates.
 Any later production bridge, noise population and quality comparison need an
 explicit versioned contract and independently checked scope. A real-output

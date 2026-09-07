@@ -1,0 +1,39 @@
+{"event": "frame-start", "arm": "primary", "index": 0, "inverse_focus": 0.5}
+{"event": "frame-complete", "arm": "primary", "index": 0, "work": {"point_calls": 550240, "angular_nodes": 81094848, "peak_node_pairs": 32768, "tracked_peak_ndarray_bytes": 6736464, "tracked_peak_ndarrays": 80, "peak_live_scalar_frames": 1, "observer": "count", "observer_events": 4317289, "optional_hook_calls": 657215, "cpu_seconds": 23.84375, "wall_seconds": 23.969000000040978}}
+{"event": "frame-start", "arm": "primary", "index": 1, "inverse_focus": 0.625}
+{"event": "frame-complete", "arm": "primary", "index": 1, "work": {"point_calls": 580800, "angular_nodes": 82110912, "peak_node_pairs": 32768, "tracked_peak_ndarray_bytes": 6736464, "tracked_peak_ndarrays": 98, "peak_live_scalar_frames": 1, "observer": "count", "observer_events": 8864948, "optional_hook_calls": 1349488, "cpu_seconds": 48.3125, "wall_seconds": 48.5}}
+{"event": "frame-start", "arm": "primary", "index": 2, "inverse_focus": 0.75}
+{"event": "frame-complete", "arm": "primary", "index": 2, "work": {"point_calls": 621760, "angular_nodes": 90569088, "peak_node_pairs": 32768, "tracked_peak_ndarray_bytes": 6736464, "tracked_peak_ndarrays": 98, "peak_live_scalar_frames": 1, "observer": "count", "observer_events": 14464575, "optional_hook_calls": 2204181, "cpu_seconds": 76.3125, "wall_seconds": 76.625}}
+{"event": "frame-start", "arm": "primary", "index": 3, "inverse_focus": 0.875}
+Traceback (most recent call last):
+  File "C:\dev\blog\death-of-software\projects\strehl\experiments\m194e-joint-pupil\commission.py", line 63, in run
+    produced = render_frame(scene, frame, sensor, config, output / arm, meter=meter, tile=8)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\dev\blog\death-of-software\projects\strehl\experiments\m194e-joint-pupil\render.py", line 408, in render_frame
+    values[y, x], receipt = render_cell(scene, frame, (x, y), integrator, meter)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\dev\blog\death-of-software\projects\strehl\experiments\m194e-joint-pupil\render.py", line 381, in render_cell
+    results = [integrate_triangle(scene, frame, t, integrator, meter) for t in triangles]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\dev\blog\death-of-software\projects\strehl\experiments\m194e-joint-pupil\render.py", line 367, in integrate_triangle
+    first = integrate_triangle(scene, frame, np.array((a, midpoint, c)), integrator, meter, depth + 1)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\dev\blog\death-of-software\projects\strehl\experiments\m194e-joint-pupil\render.py", line 367, in integrate_triangle
+    first = integrate_triangle(scene, frame, np.array((a, midpoint, c)), integrator, meter, depth + 1)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\dev\blog\death-of-software\projects\strehl\experiments\m194e-joint-pupil\render.py", line 368, in integrate_triangle
+    second = integrate_triangle(scene, frame, np.array((midpoint, b, c)), integrator, meter, depth + 1)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\dev\blog\death-of-software\projects\strehl\experiments\m194e-joint-pupil\render.py", line 367, in integrate_triangle
+    first = integrate_triangle(scene, frame, np.array((a, midpoint, c)), integrator, meter, depth + 1)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\dev\blog\death-of-software\projects\strehl\experiments\m194e-joint-pupil\render.py", line 368, in integrate_triangle
+    second = integrate_triangle(scene, frame, np.array((midpoint, b, c)), integrator, meter, depth + 1)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\dev\blog\death-of-software\projects\strehl\experiments\m194e-joint-pupil\render.py", line 367, in integrate_triangle
+    first = integrate_triangle(scene, frame, np.array((a, midpoint, c)), integrator, meter, depth + 1)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\dev\blog\death-of-software\projects\strehl\experiments\m194e-joint-pupil\render.py", line 362, in integrate_triangle
+    raise NumericalFailure("UNCOMMISSIONED_NUMERICS: cell depth/error ceiling")
+render.NumericalFailure: UNCOMMISSIONED_NUMERICS: cell depth/error ceiling
+{"status": "UNCOMMISSIONED_NUMERICS", "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\float-run-1"}

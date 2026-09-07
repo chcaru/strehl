@@ -1,0 +1,18 @@
+{
+  "completed_cells": 192,
+  "status": "running",
+  "total_cells": 3072,
+  "work": {
+    "angular_nodes": 4368480,
+    "cpu_seconds": 77.90625,
+    "observer": "count",
+    "observer_events": 14859713,
+    "optional_hook_calls": 2265239,
+    "peak_live_scalar_frames": 1,
+    "peak_node_pairs": 32768,
+    "point_calls": 30720,
+    "tracked_peak_ndarray_bytes": 6736464,
+    "tracked_peak_ndarrays": 98,
+    "wall_seconds": 78.21900000004098
+  }
+}
