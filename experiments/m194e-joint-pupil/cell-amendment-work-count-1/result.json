@@ -1,0 +1,226 @@
+{
+  "argv": [
+    "experiments/m194e-joint-pupil/cell-amendment-work-count.py",
+    "experiments/m194e-joint-pupil/cell-amendment-work-count-1"
+  ],
+  "calculation_wall_seconds": 19.890999999945052,
+  "records": [
+    {
+      "angular_ceiling_remaining": 544292928,
+      "arm": "primary",
+      "frame": 0,
+      "max_intervals_per_point": 42,
+      "nominal_angular_nodes": 55707072,
+      "nominal_intervals": 1160564,
+      "nominal_point_calls": 518240,
+      "triangle_kinds": {
+        "edge": 222,
+        "none": 6064,
+        "vertex": 192
+      }
+    },
+    {
+      "angular_ceiling_remaining": 550249152,
+      "arm": "primary",
+      "frame": 1,
+      "max_intervals_per_point": 40,
+      "nominal_angular_nodes": 49750848,
+      "nominal_intervals": 1036476,
+      "nominal_point_calls": 518080,
+      "triangle_kinds": {
+        "edge": 220,
+        "none": 6064,
+        "vertex": 192
+      }
+    },
+    {
+      "angular_ceiling_remaining": 556261920,
+      "arm": "primary",
+      "frame": 2,
+      "max_intervals_per_point": 40,
+      "nominal_angular_nodes": 43738080,
+      "nominal_intervals": 911210,
+      "nominal_point_calls": 518240,
+      "triangle_kinds": {
+        "edge": 222,
+        "none": 6064,
+        "vertex": 192
+      }
+    },
+    {
+      "angular_ceiling_remaining": 562850784,
+      "arm": "primary",
+      "frame": 3,
+      "max_intervals_per_point": 38,
+      "nominal_angular_nodes": 37149216,
+      "nominal_intervals": 773942,
+      "nominal_point_calls": 518080,
+      "triangle_kinds": {
+        "edge": 220,
+        "none": 6064,
+        "vertex": 192
+      }
+    },
+    {
+      "angular_ceiling_remaining": 575976960,
+      "arm": "primary",
+      "frame": 4,
+      "max_intervals_per_point": 1,
+      "nominal_angular_nodes": 24023040,
+      "nominal_intervals": 500480,
+      "nominal_point_calls": 500480,
+      "triangle_kinds": {
+        "edge": 0,
+        "none": 6256,
+        "vertex": 0
+      }
+    },
+    {
+      "angular_ceiling_remaining": 488585856,
+      "arm": "angle-refined",
+      "frame": 0,
+      "max_intervals_per_point": 42,
+      "nominal_angular_nodes": 111414144,
+      "nominal_intervals": 1160564,
+      "nominal_point_calls": 518240,
+      "triangle_kinds": {
+        "edge": 222,
+        "none": 6064,
+        "vertex": 192
+      }
+    },
+    {
+      "angular_ceiling_remaining": 500498304,
+      "arm": "angle-refined",
+      "frame": 1,
+      "max_intervals_per_point": 40,
+      "nominal_angular_nodes": 99501696,
+      "nominal_intervals": 1036476,
+      "nominal_point_calls": 518080,
+      "triangle_kinds": {
+        "edge": 220,
+        "none": 6064,
+        "vertex": 192
+      }
+    },
+    {
+      "angular_ceiling_remaining": 512523840,
+      "arm": "angle-refined",
+      "frame": 2,
+      "max_intervals_per_point": 40,
+      "nominal_angular_nodes": 87476160,
+      "nominal_intervals": 911210,
+      "nominal_point_calls": 518240,
+      "triangle_kinds": {
+        "edge": 222,
+        "none": 6064,
+        "vertex": 192
+      }
+    },
+    {
+      "angular_ceiling_remaining": 525701568,
+      "arm": "angle-refined",
+      "frame": 3,
+      "max_intervals_per_point": 38,
+      "nominal_angular_nodes": 74298432,
+      "nominal_intervals": 773942,
+      "nominal_point_calls": 518080,
+      "triangle_kinds": {
+        "edge": 220,
+        "none": 6064,
+        "vertex": 192
+      }
+    },
+    {
+      "angular_ceiling_remaining": 551953920,
+      "arm": "angle-refined",
+      "frame": 4,
+      "max_intervals_per_point": 1,
+      "nominal_angular_nodes": 48046080,
+      "nominal_intervals": 500480,
+      "nominal_point_calls": 500480,
+      "triangle_kinds": {
+        "edge": 0,
+        "none": 6256,
+        "vertex": 0
+      }
+    },
+    {
+      "angular_ceiling_remaining": 376217952,
+      "arm": "cell-refined",
+      "frame": 0,
+      "max_intervals_per_point": 50,
+      "nominal_angular_nodes": 223782048,
+      "nominal_intervals": 4662126,
+      "nominal_point_calls": 2072960,
+      "triangle_kinds": {
+        "edge": 222,
+        "none": 6064,
+        "vertex": 192
+      }
+    },
+    {
+      "angular_ceiling_remaining": 400027200,
+      "arm": "cell-refined",
+      "frame": 1,
+      "max_intervals_per_point": 48,
+      "nominal_angular_nodes": 199972800,
+      "nominal_intervals": 4166100,
+      "nominal_point_calls": 2072320,
+      "triangle_kinds": {
+        "edge": 220,
+        "none": 6064,
+        "vertex": 192
+      }
+    },
+    {
+      "angular_ceiling_remaining": 424101984,
+      "arm": "cell-refined",
+      "frame": 2,
+      "max_intervals_per_point": 48,
+      "nominal_angular_nodes": 175898016,
+      "nominal_intervals": 3664542,
+      "nominal_point_calls": 2072960,
+      "triangle_kinds": {
+        "edge": 222,
+        "none": 6064,
+        "vertex": 192
+      }
+    },
+    {
+      "angular_ceiling_remaining": 450462048,
+      "arm": "cell-refined",
+      "frame": 3,
+      "max_intervals_per_point": 46,
+      "nominal_angular_nodes": 149537952,
+      "nominal_intervals": 3115374,
+      "nominal_point_calls": 2072320,
+      "triangle_kinds": {
+        "edge": 220,
+        "none": 6064,
+        "vertex": 192
+      }
+    },
+    {
+      "angular_ceiling_remaining": 503907840,
+      "arm": "cell-refined",
+      "frame": 4,
+      "max_intervals_per_point": 1,
+      "nominal_angular_nodes": 96092160,
+      "nominal_intervals": 2001920,
+      "nominal_point_calls": 2001920,
+      "triangle_kinds": {
+        "edge": 0,
+        "none": 6256,
+        "vertex": 0
+      }
+    }
+  ],
+  "schema": "m194e-prospective-cell-work-v1",
+  "sources": {
+    "cell-amendment-work-count.py": "13c4097e4bf2bcf3135806c1aee185d58f5de1ef856e82810962e7b8d737d733",
+    "model.py": "a74cd9bd61ea2f717a185e86f725b5ed192431056a447581db0f8562cf9f70b8",
+    "render.py": "ef52c45d28ec2dda5aa897cfd57dacc4b4a3e300d3a581c35f305c76e2dd03f8"
+  },
+  "status": "DERIVED_GEOMETRY_ONLY"
+}

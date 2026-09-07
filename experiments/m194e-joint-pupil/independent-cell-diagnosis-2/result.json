@@ -1,0 +1,68 @@
+{
+  "schema": "m194e-independent-cell-diagnosis-v1",
+  "status": "DIAGNOSTIC_INVALID_CAMPAIGN_UNCOMMISSIONED",
+  "command": [
+    "experiments/m194e-joint-pupil/independent-cell-diagnosis.py",
+    "--output",
+    "experiments/m194e-joint-pupil/independent-cell-diagnosis-2"
+  ],
+  "sources": {
+    "independent-model.py": "0cd8ea2331b269e65befdee110560cbc345e89c12348cbe1dc3144f7c04443f0",
+    "independent-cell-diagnosis.py": "7eb7d041f481e4a0937848583e4b496569127fe7b9975b1c8e74a132160c1991",
+    "independent-cell-diagnosis-preregister.md": "0b07a6115240fb9c7bc0b6a26b7eb88e007c892de0a48a1a941ea5d7b5c7b43a"
+  },
+  "checks": [
+    {
+      "name": "triangle-constant",
+      "value": 5000.000000000001,
+      "expected": 5000,
+      "tolerance": 1e-08,
+      "passed": true
+    },
+    {
+      "name": "triangle-affine",
+      "value": 6000.1666666667015,
+      "expected": 6000.166666666667,
+      "tolerance": 1e-08,
+      "passed": true
+    },
+    {
+      "name": "clipped-triangle-area",
+      "value": 10.624999999999996,
+      "expected": 10.625,
+      "tolerance": 1e-08,
+      "passed": true
+    },
+    {
+      "name": "triangle-fourier-real",
+      "value": 0.45647803704570333,
+      "expected": 0.4564780370457033,
+      "tolerance": 1e-12,
+      "passed": true
+    },
+    {
+      "name": "triangle-fourier-imag",
+      "value": 0.07558512813795155,
+      "expected": 0.07558512813795165,
+      "tolerance": 1e-12,
+      "passed": true
+    }
+  ],
+  "author_diagnosis": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\cell-diagnosis-1\\result.json",
+    "sha256": "f5d9fd0c2d719c9f6b991d6de817e0bf95266bc8d39867f515c1ba8e9b8a1cb4"
+  },
+  "error": "ValueError('diagnostic reference quadrature warning: Extremely bad integrand behavior occurs at some points of the\\n  integration interval.')",
+  "traceback": "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-cell-diagnosis.py\", line 126, in main\n    primary = polygon_integral(scene, frame, leaf[\"triangle\"], eps=1e-9, budget=budget)\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-cell-diagnosis.py\", line 77, in polygon_integral\n    raise ValueError(\"diagnostic reference quadrature warning: \" + str(seen[0].message))\nValueError: diagnostic reference quadrature warning: Extremely bad integrand behavior occurs at some points of the\n  integration interval.\n",
+  "budget": {
+    "evaluations": 2583,
+    "cpu_seconds": 0.015625,
+    "wall_seconds": 0.01600000006146729,
+    "limits": {
+      "evaluations": 30000000,
+      "cpu_seconds": 600.0,
+      "wall_seconds": 1200.0
+    }
+  },
+  "source_unchanged": true
+}

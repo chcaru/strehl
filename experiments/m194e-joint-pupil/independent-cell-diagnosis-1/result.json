@@ -1,0 +1,43 @@
+{
+  "schema": "m194e-independent-cell-diagnosis-v1",
+  "status": "DIAGNOSTIC_INVALID_CAMPAIGN_UNCOMMISSIONED",
+  "command": [
+    "experiments/m194e-joint-pupil/independent-cell-diagnosis.py",
+    "--output",
+    "experiments/m194e-joint-pupil/independent-cell-diagnosis-1"
+  ],
+  "sources": {
+    "independent-model.py": "0cd8ea2331b269e65befdee110560cbc345e89c12348cbe1dc3144f7c04443f0",
+    "independent-cell-diagnosis.py": "6de08a4be712d0b3d70c8bd1c8bc3930f14494fd1da2619f9e747d3d9457c1b9",
+    "independent-cell-diagnosis-preregister.md": "83dc686330feee86f7fb44e93a835ad4b40ac366e905930463ffdfefbdbd653e"
+  },
+  "checks": [
+    {
+      "name": "triangle-constant",
+      "value": 5000.000000000001,
+      "expected": 5000,
+      "tolerance": 1e-08,
+      "passed": true
+    },
+    {
+      "name": "triangle-affine",
+      "value": 6001.998720100441,
+      "expected": 6000.166666666667,
+      "tolerance": 1e-08,
+      "passed": false
+    }
+  ],
+  "error": "ValueError('control failed: triangle-affine')",
+  "traceback": "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-cell-diagnosis.py\", line 109, in main\n    check(name, value[\"integral_e_pixel2\"], expected)\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-cell-diagnosis.py\", line 103, in check\n    raise ValueError(\"control failed: \" + name)\nValueError: control failed: triangle-affine\n",
+  "budget": {
+    "evaluations": 1302,
+    "cpu_seconds": 0.0,
+    "wall_seconds": 0.01600000006146729,
+    "limits": {
+      "evaluations": 30000000,
+      "cpu_seconds": 600.0,
+      "wall_seconds": 1200.0
+    }
+  },
+  "source_unchanged": true
+}
