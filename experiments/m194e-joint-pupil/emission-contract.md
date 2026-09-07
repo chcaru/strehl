@@ -20,14 +20,32 @@ resolve from this experiment's source directory. Frame references resolve from
 the float-bundle directory. Child references inside a numerical receipt resolve
 from that receipt's directory. This last distinction clarifies the earlier
 informal blanket description of bundle-relative references and was fixed before
-the first API tests. Following numerical amendment2's preregistration at
-`d839ce9b`, the current numerical contract names
-`polar-radial-ladder32-tangent-cell-v3`,32 radial crossing levels,
-`cell_map: predicate-square-distance-duffy-v1`, the three unchanged integrators
-and existing comparison/indicator limits. Design bindings include both numerical
-amendments. The predicate selects a coordinate map without moving vertices or
-changing scene geometry. Earlier source-bound packages retain their original
-contract; their results do not commission this revision.
+the first API tests. Following numerical amendment3's preregistration at
+`2a75e519`, the current numerical contract names
+`polar-radial-ladder32-tangent-cell-global-v4`,32 radial crossing levels,
+`cell_map: predicate-square-distance-duffy-v1` and
+`cell_allocation: global-absolute-leaf-priority-v1`, the three unchanged
+integrators and existing whole-cell/pupil/comparison/indicator limits. Design
+bindings include all three numerical amendments. The predicate selects a
+coordinate map without moving vertices. The new whole-cell allocator explicitly
+replaces the former per-leaf proportional admission rule. Earlier source-bound
+packages retain their original contract; their results do not commission this
+revision.
+
+`work.cell_allocation` has six exact nonnegative-integer fields: cells, leaves,
+minimum_depth, maximum_depth, locally_overallocated_leaves and
+cells_with_locally_overallocated_leaves. Off/placebo and pre-completion snapshots
+have all six zero. Count records completed cells only; full intended frame
+receipts require count mode and exactly3072 cells. Depths satisfy0≤min≤max≤6;
+the square has at least two root triangles. Complete frontiers and occurrence
+of the maximum depth give a lower bound2*cells*2^min+(max-min). The occurrence
+of a minimum-depth leaf gives the upper bound8*cells*2^max-(2^(max-min)-1).
+Overallocated cells
+and leaves must have consistent zero/nonzero counts, with at least one and at
+most8*2^max such leaves per affected cell, never more than total cells/leaves.
+These are consistency checks on observations, not numerical or quality evidence;
+the actual allocator and independent image comparison establish their own
+claims. Local proportional over-allocation does not bar admission.
 
 The genuine independent float commission has exact keys schema, status,
 author_root, author_bundle, producer_sources, scene, ray_model,

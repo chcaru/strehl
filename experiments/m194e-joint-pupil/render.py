@@ -75,6 +75,29 @@ class Meter:
         self.observer_events = 0
         self.optional_hook_calls = 0
         self.arrays = {}
+        self.cell_allocation = self.empty_cell_allocation()
+
+    @staticmethod
+    def empty_cell_allocation():
+        return dict(cells=0, leaves=0, minimum_depth=0, maximum_depth=0,
+                    locally_overallocated_leaves=0, cells_with_locally_overallocated_leaves=0)
+
+    def observe_cell(self, leaves):
+        # Optional collection occurs after numerical acceptance. Placebo reaches
+        # this hook without collecting; off never enters the optional path.
+        if self.observer == "off":
+            return
+        self.optional_hook_calls += 1
+        if self.observer == "count":
+            stats = self.cell_allocation
+            depths = [leaf.depth for leaf in leaves]
+            over = sum(leaf.indicator > self.config.cell_tolerance * leaf.area for leaf in leaves)
+            stats["minimum_depth"] = min(depths) if stats["cells"] == 0 else min(stats["minimum_depth"], min(depths))
+            stats["maximum_depth"] = max(stats["maximum_depth"], max(depths))
+            stats["cells"] += 1
+            stats["leaves"] += len(leaves)
+            stats["locally_overallocated_leaves"] += over
+            stats["cells_with_locally_overallocated_leaves"] += int(over > 0)
 
     def _optional_observe(self, arrays):
         self.optional_hook_calls += 1
@@ -120,6 +143,7 @@ class Meter:
 
     def new_frame(self):
         self.points = self.nodes = 0
+        self.cell_allocation = self.empty_cell_allocation()
         self.check()
 
     def receipt(self):
@@ -127,6 +151,7 @@ class Meter:
                     tracked_peak_ndarray_bytes=self.peak_bytes, tracked_peak_ndarrays=self.peak_arrays,
                     peak_live_scalar_frames=self.peak_frames, observer=self.observer, observer_events=self.observer_events,
                     optional_hook_calls=self.optional_hook_calls,
+                    cell_allocation=dict(self.cell_allocation),
                     cpu_seconds=time.process_time() - self.started_cpu, wall_seconds=time.monotonic() - self.started_wall)
 
 
@@ -413,6 +438,137 @@ def integrate_triangle(scene, frame, triangle, integrator, meter, depth=0):
     return tuple(x + y for x, y in zip(first, second))
 
 
+@dataclass(frozen=True)
+class CellLeaf:
+    path: tuple[int, ...]
+    triangle: np.ndarray
+    low: float
+    high: float
+    pupil_low: float
+    pupil_high: float
+
+    @property
+    def depth(self):
+        return len(self.path) - 1
+
+    @property
+    def area(self):
+        return float(triangle_area(self.triangle))
+
+    @property
+    def indicator(self):
+        return abs(self.high - self.low) + self.pupil_low + self.pupil_high
+
+
+def aggregate_frontier(leaves, root_areas, integrator):
+    """Validate and sum a complete disjoint binary frontier, never signed errors."""
+    def refuse(reason):
+        raise NumericalFailure("UNCOMMISSIONED_NUMERICS: cell frontier " + reason)
+
+    def finite_sum(values):
+        try:
+            value = math.fsum(values)
+        except (OverflowError, ValueError) as exc:
+            raise NumericalFailure("UNCOMMISSIONED_NUMERICS: cell frontier nonfinite sum") from exc
+        if not math.isfinite(value):
+            refuse("nonfinite sum")
+        return value
+
+    if not root_areas or any(not math.isfinite(a) or a <= 0 for a in root_areas):
+        refuse("root areas")
+    root_area = finite_sum(root_areas)
+    if abs(root_area - 1) > 1e-11 or not leaves:
+        refuse("root coverage")
+    for leaf in leaves:
+        if (not isinstance(leaf.path, tuple) or not leaf.path
+                or any(type(i) is not int for i in leaf.path)
+                or not 0 <= leaf.path[0] < len(root_areas)
+                or any(i not in (0, 1) for i in leaf.path[1:])
+                or not 0 <= leaf.depth <= integrator.cell_depth):
+            refuse("path/depth")
+        if (leaf.triangle.shape != (3, 2) or not np.isfinite(leaf.triangle).all()
+                or not math.isfinite(leaf.area) or leaf.area <= 0):
+            refuse("triangle area")
+        if (any(not math.isfinite(v) for v in (leaf.low, leaf.high, leaf.pupil_low, leaf.pupil_high, leaf.indicator))
+                or leaf.pupil_low < 0 or leaf.pupil_high < 0):
+            refuse("nonfinite or negative indicator")
+    ordered = sorted(leaves, key=lambda leaf: leaf.path)
+    paths = [leaf.path for leaf in ordered]
+    for first, second in zip(paths, paths[1:]):
+        if second[:len(first)] == first:
+            refuse("duplicate or overlapping paths")
+    for root in range(len(root_areas)):
+        weight = sum(1 << (integrator.cell_depth - leaf.depth) for leaf in ordered if leaf.path[0] == root)
+        if weight != 1 << integrator.cell_depth:
+            refuse("incomplete binary coverage")
+        covered = finite_sum(leaf.area for leaf in ordered if leaf.path[0] == root)
+        if abs(covered - root_areas[root]) > 1e-11:
+            refuse("root leaf-area coverage")
+    area = finite_sum(leaf.area for leaf in ordered)
+    if abs(area - root_area) > 1e-11:
+        refuse("leaf-area coverage")
+    result = dict(value=finite_sum(leaf.high for leaf in ordered),
+                  cell_error=finite_sum(leaf.indicator for leaf in ordered),
+                  pupil_error=finite_sum(leaf.pupil_high for leaf in ordered),
+                  cell_delta=finite_sum(abs(leaf.high - leaf.low) for leaf in ordered), area=area)
+    if any(not math.isfinite(v) for v in result.values()):
+        refuse("nonfinite totals")
+    return result
+
+
+def evaluate_cell_leaf(scene, frame, triangle, path, integrator, meter):
+    indices = tangent_indices(triangle, scene, frame)
+    low_xy, low_w = triangle_rule(triangle, integrator.cell_low, indices)
+    high_xy, high_w = triangle_rule(triangle, integrator.cell_high, indices)
+    low_v, low_e = render_points(scene, frame, low_xy, integrator, meter)
+    high_v, high_e = render_points(scene, frame, high_xy, integrator, meter)
+    meter.watch(triangle, low_xy, low_w, high_xy, high_w, low_v, low_e, high_v, high_e)
+    return CellLeaf(path, triangle, float(low_w @ low_v), float(high_w @ high_v),
+                    float(low_w @ low_e), float(high_w @ high_e))
+
+
+def integrate_frontier(triangles, evaluate, integrator, meter):
+    """The actual bounded allocator; evaluate(triangle, path) returns CellLeaf."""
+    root_areas = [float(triangle_area(t)) for t in triangles]
+
+    def evaluate_checked(triangle, path):
+        meter.check()
+        expected = triangle.copy()
+        meter.watch(expected, triangle)
+        leaf = evaluate(triangle, path)
+        if leaf.path != path or not np.array_equal(leaf.triangle, expected) or not np.array_equal(triangle, expected):
+            raise NumericalFailure("UNCOMMISSIONED_NUMERICS: cell evaluator changed geometry/path")
+        return leaf
+
+    leaves = [evaluate_checked(t, (i,)) for i, t in enumerate(triangles)]
+    while True:
+        meter.check()
+        meter.watch(*(leaf.triangle for leaf in leaves))
+        sums = aggregate_frontier(leaves, root_areas, integrator)
+        if sums["cell_error"] <= integrator.cell_tolerance and sums["pupil_error"] <= integrator.pupil_tolerance:
+            leaves.sort(key=lambda leaf: leaf.path)
+            meter.observe_cell(leaves)
+            return sums["value"], dict(value_error_indicator_e=sums["cell_error"] + sums["pupil_error"],
+                                      cell_indicator_e=sums["cell_error"], weighted_high_pupil_indicator_e=sums["pupil_error"],
+                                      cell_quadrature_delta_e=sums["cell_delta"], area=sums["area"],
+                                      leaf_triangles=len(leaves), work=meter.receipt())
+        eligible = [leaf for leaf in leaves if leaf.depth < integrator.cell_depth]
+        if not eligible:
+            raise NumericalFailure("UNCOMMISSIONED_NUMERICS: cell depth/global-error ceiling")
+        parent = min(eligible, key=lambda leaf: (-leaf.indicator, leaf.path))
+        t = parent.triangle
+        lengths = [np.sum((t[(j + 1) % 3] - t[j]) ** 2) for j in range(3)]
+        j = int(np.argmax(lengths))
+        a, b, c = t[j], t[(j + 1) % 3], t[(j + 2) % 3]
+        midpoint = (a + b) / 2
+        children = [evaluate_checked(np.array((a, midpoint, c)), parent.path + (0,)),
+                    evaluate_checked(np.array((midpoint, b, c)), parent.path + (1,))]
+        # Keep the old parent until both children have evaluated successfully.
+        # Identity avoids ndarray equality in dataclass/list comparisons.
+        index = next(i for i, leaf in enumerate(leaves) if leaf is parent)
+        leaves[index:index + 1] = children
+
+
 def render_cell(scene, frame, native_xy, integrator=Integrator(), meter=None):
     xy = np.asarray(native_xy, dtype=np.float64)
     if xy.shape != (2,) or not np.isfinite(xy).all():
@@ -422,13 +578,9 @@ def render_cell(scene, frame, native_xy, integrator=Integrator(), meter=None):
     area = sum(triangle_area(t) for t in triangles)
     if abs(area - 1) > 1e-11:
         raise NumericalFailure("UNCOMMISSIONED_NUMERICS: cell partition area")
-    results = [integrate_triangle(scene, frame, t, integrator, meter) for t in triangles]
-    value, cell_error, pupil_error, delta, leaves = (sum(r[i] for r in results) for i in range(5))
-    if cell_error > integrator.cell_tolerance * (1 + 1e-11) or pupil_error > integrator.pupil_tolerance * (1 + 1e-11):
-        raise NumericalFailure("UNCOMMISSIONED_NUMERICS: final cell indicator")
-    return value, dict(value_error_indicator_e=cell_error + pupil_error, cell_indicator_e=cell_error,
-                       weighted_high_pupil_indicator_e=pupil_error, cell_quadrature_delta_e=delta,
-                       area=area, leaf_triangles=leaves, work=meter.receipt())
+    return integrate_frontier(triangles,
+                              lambda t, path: evaluate_cell_leaf(scene, frame, t, path, integrator, meter),
+                              integrator, meter)
 
 
 def render_frame(scene, frame, sensor, integrator, output_directory, *, meter=None, tile=8):

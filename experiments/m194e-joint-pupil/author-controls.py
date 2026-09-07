@@ -172,9 +172,77 @@ def run(output):
         original_selector = renderer.tangent_indices
         try:
             renderer.tangent_indices = lambda triangle, scene, frame: ()
-            refuses("linear-cell-map-retains-full-run-refusal", lambda: render_cell(p, primary_frames()[3], (30, 4)), NumericalFailure)
+            try:
+                ablated_value, ablated_receipt = render_cell(p, primary_frames()[3], (30, 4))
+            except NumericalFailure as exc:
+                record["global_linear_map_ablation"] = dict(disposition="refused", error=str(exc))
+            else:
+                record["global_linear_map_ablation"] = dict(disposition="returned", value_e=ablated_value, receipt=ablated_receipt)
+                check("returned-global-linear-map-ablation-within-bars", abs(ablated_value - 15204.412150777305) <= .004
+                      and ablated_receipt["value_error_indicator_e"] <= .001)
         finally:
             renderer.tangent_indices = original_selector
+
+        # Amendment3 replaces local admission, while retaining the old rule as
+        # an explicit historical control. It never commissions this old path.
+        def local_rule_failed_cell():
+            local_meter = Meter(Integrator())
+            for t in renderer.cell_triangles(p, primary_frames()[3], (31, 7)):
+                renderer.integrate_triangle(p, primary_frames()[3], t, Integrator(), local_meter)
+
+        refuses("archived-local-allocation-retains-full2-refusal", local_rule_failed_cell, NumericalFailure)
+        global_value, global_receipt = render_cell(p, primary_frames()[3], (31, 7))
+        stats = global_receipt["work"]["cell_allocation"]
+        check("global-allocation-fixed-full2-cell", abs(global_value - 15172.35081699726) <= .004
+              and global_receipt["cell_indicator_e"] <= .00075
+              and global_receipt["weighted_high_pupil_indicator_e"] <= .00025
+              and stats["locally_overallocated_leaves"] > 0 and stats["maximum_depth"] > 0,
+              actual=global_value, receipt=global_receipt)
+
+        roots = [np.array(((0.,0.),(1.,0.),(0.,1.))), np.array(((1.,0.),(1.,1.),(0.,1.)))]
+        cfg = Integrator()
+        def leaves_with(low=0., high=0., pl=0., ph=0.):
+            return [renderer.CellLeaf((i,), t, low, high, pl, ph) for i,t in enumerate(roots)]
+
+        valid = leaves_with(high=2.)
+        valid_sum = renderer.aggregate_frontier(valid, [.5,.5], cfg)
+        check("global-frontier-valid-shuffle-null", valid_sum == renderer.aggregate_frontier(valid[::-1], [.5,.5], cfg)
+              and valid_sum["value"] == 4 and valid_sum["cell_error"] == 4)
+        for label, bad in (("missing-root",valid[:1]), ("duplicate-path",[valid[0],valid[0]]),
+                           ("parent-with-child",valid+[replace(valid[0],path=(0,0))]),
+                           ("incomplete-child",[replace(valid[0],path=(0,0)),valid[1]]),
+                           ("biased-area",[replace(valid[0],triangle=roots[0]*.8),valid[1]]),
+                           ("negative-pupil",leaves_with(pl=-.1)), ("nan-low",leaves_with(low=float("nan"))),
+                           ("infinite-high",leaves_with(high=float("inf")))):
+            refuses("global-frontier-"+label, lambda bad=bad: renderer.aggregate_frontier(bad,[.5,.5],cfg), NumericalFailure)
+
+        faults = {
+            "signed-cancellation": [renderer.CellLeaf((0,),roots[0],0.,.0004,0.,0.), renderer.CellLeaf((1,),roots[1],0.,-.0004,0.,0.)],
+            "low-pupil-needed": leaves_with(high=.00015,pl=.00025),
+            "high-pupil-needed": leaves_with(high=.0003,ph=.0001),
+            "separate-high-pupil-cap": leaves_with(ph=.00015),
+        }
+        capped = replace(cfg,cell_depth=0)
+        for label, fixture in faults.items():
+            totals = renderer.aggregate_frontier(fixture,[.5,.5],capped)
+            check("global-"+label+"-exercises-error", totals["cell_error"] > .00075 or totals["pupil_error"] > .00025,
+                  totals=totals)
+            refuses("global-"+label+"-capped-refusal",
+                    lambda fixture=fixture:renderer.integrate_frontier(roots,lambda t,path:replace(fixture[path[0]],triangle=t,path=path),capped,Meter(capped)), NumericalFailure)
+
+        trace = []
+        def priority_fixture(t,path):
+            trace.append(path)
+            return renderer.CellLeaf(path,t,0.,.001 if len(path)==1 else 0.,0.,0.)
+        fixture_value, fixture_receipt = renderer.integrate_frontier(roots,priority_fixture,cfg,Meter(cfg))
+        check("global-canonical-tie-and-complete-children", trace == [(0,),(1,),(0,0),(0,1),(1,0),(1,1)]
+              and fixture_value == 0 and fixture_receipt["area"] == 1,
+              trace=trace, receipt=fixture_receipt)
+        refuses("global-evaluator-geometry-refusal",lambda:renderer.integrate_frontier(roots,
+                lambda t,path:renderer.CellLeaf(path,t+.1,0.,0.,0.,0.),cfg,Meter(cfg)),NumericalFailure)
+        exhausted = Meter(cfg)
+        exhausted.points = cfg.point_limit+1
+        refuses("global-work-exhaustion-refusal",lambda:renderer.integrate_frontier(roots,priority_fixture,cfg,exhausted),NumericalFailure)
 
         component = np.array(((0., 0.), (2., 0.), (0., 1.)))
         component_max = 0.
@@ -272,18 +340,41 @@ def run(output):
         # Small live fixture exercises frame lifetime and optional event observer
         # before the declared complete frame commission; no quality claim.
         small_sensor = dict(width=3, height=2)
-        hashes, events, hooks, peaks = [], [], [], []
+        hashes, indicator_hashes, events, hooks, peaks, allocation = [], [], [], [], [], []
         smallscene = replace(p, mask_offset=.7)
         for mode, tile in (("off", 8), ("count", 8), ("placebo", 8), ("count", 16)):
             dest = output / f"observer-{mode}-{tile}"
             meter = Meter(Integrator(), mode)
             result = render_frame(smallscene, frame, small_sensor, Integrator(), dest, meter=meter, tile=tile)
             hashes.append(result["expected_scalar"]["sha256"])
+            numerical = json.loads((dest/result["numerical_receipt"]["path"]).read_text())
+            indicator_hashes.append(numerical["error_indicator"]["sha256"])
             events.append(meter.observer_events)
             hooks.append(meter.optional_hook_calls)
             peaks.append(meter.peak_frames)
+            allocation.append(meter.receipt()["cell_allocation"])
         check("actual-frame-observer-tile-byte-null", len(set(hashes)) == 1 and events[0] == events[2] == 0 and events[1] > 0 and hooks[0] == 0 and hooks[1] > 0 and hooks[2] > 0,
               sha256=hashes, events=events, hook_calls=hooks, peak_live_frames=peaks)
+        check("actual-allocation-observer-collected-disabled-byte-null", len(set(indicator_hashes))==1
+              and all(v==0 for v in allocation[0].values()) and all(v==0 for v in allocation[2].values())
+              and allocation[1]["cells"]==6 and allocation[1]["leaves"]>=12
+              and allocation[1]["maximum_depth"]==0 and allocation[1]==allocation[3],
+              indicator_sha256=indicator_hashes, allocation=allocation)
+        # The small original scene has a measured inert depth control. Exercise
+        # refinement and local over-allocation on the already registered cell.
+        cell_hashes, cell_stats = [], []
+        for mode in ("off","count","placebo"):
+            cell_meter = Meter(cfg,mode)
+            cell_value, cell_receipt = render_cell(p,primary_frames()[3],(31,7),cfg,cell_meter)
+            pair_path = output/f"allocation-cell-{mode}-value-indicator.npy"
+            np.save(pair_path,np.asarray([cell_value,cell_receipt["value_error_indicator_e"]],dtype="<f8"),allow_pickle=False)
+            cell_hashes.append(sha256(pair_path))
+            cell_stats.append(cell_receipt["work"]["cell_allocation"])
+        check("refined-cell-allocation-observer-power-and-byte-null", len(set(cell_hashes))==1
+              and all(v==0 for v in cell_stats[0].values()) and all(v==0 for v in cell_stats[2].values())
+              and cell_stats[1]["cells"]==1 and cell_stats[1]["maximum_depth"]>0
+              and cell_stats[1]["locally_overallocated_leaves"]>0,
+              value_indicator_sha256=cell_hashes, allocation=cell_stats)
         meter = Meter(Integrator())
         reordered = []
         for i in (2, 0, 1):

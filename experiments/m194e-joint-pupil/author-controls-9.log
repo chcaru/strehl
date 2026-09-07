@@ -1,0 +1,189 @@
+{"name": "actual-two-ray-covariance", "pass_": true, "first": [30.0, 20.000000000000004], "reversed": [30.0, 9.999999999999993]}
+{"name": "separate-ray-means-destroyer", "pass_": true}
+{"name": "constant-background-covariance-null", "pass_": true}
+{"name": "continuous-half-disc-affine", "pass_": true, "actual": 11509.295817894064, "expected": 11509.295817894064, "receipt": {"value_error_indicator_e": 1.8189894035458565e-12, "work": {"point_calls": 1, "angular_nodes": 96, "peak_node_pairs": 64, "tracked_peak_ndarray_bytes": 6856, "tracked_peak_ndarrays": 23, "peak_live_scalar_frames": 0, "observer": "count", "observer_events": 107, "optional_hook_calls": 16, "cell_allocation": {"cells": 0, "leaves": 0, "minimum_depth": 0, "maximum_depth": 0, "locally_overallocated_leaves": 0, "cells_with_locally_overallocated_leaves": 0}, "cpu_seconds": 0.03125, "wall_seconds": 0.015999999945051968}}}
+{"name": "separate-means-and-unsigned-defocus-destroyers", "pass_": true}
+{"name": "global-sign-pupil-permutation", "pass_": true}
+{"name": "layer-order-destroyer", "pass_": true}
+{"name": "unordered-depth-refusal", "pass_": true, "refusal": "positive foreground depth must precede background"}
+{"name": "focus-zero-and-relative-sign", "pass_": true}
+{"name": "all-dc-focus-mask-states", "pass_": true, "max_abs_e": 0.0}
+{"name": "hidden-layer-mutation-inert", "pass_": true}
+{"name": "visible-texture-mutation-live", "pass_": true, "delta_e": 1845.7904738217549}
+{"name": "disc-segment-0", "pass_": true, "actual": 20.0, "expected": 20.0}
+{"name": "disc-segment-0.3", "pass_": true, "actual": 23.761623352189268, "expected": 23.761623352189268}
+{"name": "disc-segment--0.4", "pass_": true, "actual": 15.046315754686912, "expected": 15.04631575468691}
+{"name": "uniform-radius-and-pupil-centre-destroyers", "pass_": true, "uniform_radius": 25.517578125, "pupil_centre": 30.0, "expected": 23.761623352189268}
+{"name": "pinhole-joint-cell-moments", "pass_": true, "values": [17.52, 18.48], "receipt": {"value_error_indicator_e": 1.9628199706227168e-15, "cell_indicator_e": 1.9075503695165737e-15, "weighted_high_pupil_indicator_e": 5.5269601106142987e-17, "cell_quadrature_delta_e": 1.7763568394002505e-15, "area": 1.0, "leaf_triangles": 4, "work": {"point_calls": 320, "angular_nodes": 15360, "peak_node_pairs": 2048, "tracked_peak_ndarray_bytes": 221424, "tracked_peak_ndarrays": 30, "peak_live_scalar_frames": 0, "observer": "count", "observer_events": 888, "optional_hook_calls": 138, "cell_allocation": {"cells": 1, "leaves": 4, "minimum_depth": 0, "maximum_depth": 0, "locally_overallocated_leaves": 0, "cells_with_locally_overallocated_leaves": 0}, "cpu_seconds": 0.0, "wall_seconds": 0.0}}}
+{"name": "cell-centre-and-separate-cell-means-destroyers", "pass_": true}
+{"name": "shifted-coarse-cell-grid-diagnostic", "pass_": true, "coarse": [19.5, 19.605]}
+{"name": "inverse-similarity-pupil-and-cell-coordinate-contract", "pass_": true, "actual": 11077.746485474978, "expected": 11077.74648547498, "chief_only": 11087.853528586726}
+{"name": "forward-inverse-swap-destroyer", "pass_": true, "wrong": 11842.994082613679}
+{"name": "amended-fixed-cell-returns-with-registered-indicator", "pass_": true, "value_e": 11374.568793577932, "receipt": {"value_error_indicator_e": 1.5567984993929933e-08, "cell_indicator_e": 1.5566894788655766e-08, "weighted_high_pupil_indicator_e": 1.090205274165686e-12, "cell_quadrature_delta_e": 1.5564637578791007e-08, "area": 1.0, "leaf_triangles": 4, "work": {"point_calls": 320, "angular_nodes": 181824, "peak_node_pairs": 31488, "tracked_peak_ndarray_bytes": 3349888, "tracked_peak_ndarrays": 31, "peak_live_scalar_frames": 0, "observer": "count", "observer_events": 912, "optional_hook_calls": 138, "cell_allocation": {"cells": 1, "leaves": 4, "minimum_depth": 0, "maximum_depth": 0, "locally_overallocated_leaves": 0, "cells_with_locally_overallocated_leaves": 0}, "cpu_seconds": 0.0, "wall_seconds": 0.015000000013969839}}}
+{"name": "same-height-without-ladder-retains-refusal", "pass_": true, "refusal": "UNCOMMISSIONED_NUMERICS: angular depth/error ceiling"}
+{"name": "tangent-map-fixed-full-run-cell", "pass_": true, "actual": 15204.412150782977, "independent_reference": 15204.412150777305, "receipt": {"value_error_indicator_e": 0.0003667300924324998, "cell_indicator_e": 0.00036663299340708325, "weighted_high_pupil_indicator_e": 9.709902541659062e-08, "cell_quadrature_delta_e": 0.00036643873016828366, "area": 1.0, "leaf_triangles": 12, "work": {"point_calls": 1600, "angular_nodes": 312768, "peak_node_pairs": 10624, "tracked_peak_ndarray_bytes": 2166896, "tracked_peak_ndarrays": 57, "peak_live_scalar_frames": 0, "observer": "count", "observer_events": 10656, "optional_hook_calls": 1626, "cell_allocation": {"cells": 1, "leaves": 12, "minimum_depth": 0, "maximum_depth": 3, "locally_overallocated_leaves": 2, "cells_with_locally_overallocated_leaves": 1}, "cpu_seconds": 0.09375, "wall_seconds": 0.09399999992456287}}}
+{"name": "returned-global-linear-map-ablation-within-bars", "pass_": true}
+{"name": "archived-local-allocation-retains-full2-refusal", "pass_": true, "refusal": "UNCOMMISSIONED_NUMERICS: cell depth/error ceiling"}
+{"name": "global-allocation-fixed-full2-cell", "pass_": true, "actual": 15172.350816997267, "receipt": {"value_error_indicator_e": 0.0006586147849427334, "cell_indicator_e": 0.0006571524094194218, "weighted_high_pupil_indicator_e": 1.4623755233115732e-06, "cell_quadrature_delta_e": 0.0006542276619825316, "area": 1.0000000000000002, "leaf_triangles": 18, "work": {"point_calls": 2560, "angular_nodes": 399360, "peak_node_pairs": 8192, "tracked_peak_ndarray_bytes": 1672320, "tracked_peak_ndarrays": 64, "peak_live_scalar_frames": 0, "observer": "count", "observer_events": 16101, "optional_hook_calls": 2448, "cell_allocation": {"cells": 1, "leaves": 18, "minimum_depth": 1, "maximum_depth": 4, "locally_overallocated_leaves": 7, "cells_with_locally_overallocated_leaves": 1}, "cpu_seconds": 0.109375, "wall_seconds": 0.10999999998603016}}}
+{"name": "global-frontier-valid-shuffle-null", "pass_": true}
+{"name": "global-frontier-missing-root", "pass_": true, "refusal": "UNCOMMISSIONED_NUMERICS: cell frontier incomplete binary coverage"}
+{"name": "global-frontier-duplicate-path", "pass_": true, "refusal": "UNCOMMISSIONED_NUMERICS: cell frontier duplicate or overlapping paths"}
+{"name": "global-frontier-parent-with-child", "pass_": true, "refusal": "UNCOMMISSIONED_NUMERICS: cell frontier duplicate or overlapping paths"}
+{"name": "global-frontier-incomplete-child", "pass_": true, "refusal": "UNCOMMISSIONED_NUMERICS: cell frontier incomplete binary coverage"}
+{"name": "global-frontier-biased-area", "pass_": true, "refusal": "UNCOMMISSIONED_NUMERICS: cell frontier root leaf-area coverage"}
+{"name": "global-frontier-negative-pupil", "pass_": true, "refusal": "UNCOMMISSIONED_NUMERICS: cell frontier nonfinite or negative indicator"}
+{"name": "global-frontier-nan-low", "pass_": true, "refusal": "UNCOMMISSIONED_NUMERICS: cell frontier nonfinite or negative indicator"}
+{"name": "global-frontier-infinite-high", "pass_": true, "refusal": "UNCOMMISSIONED_NUMERICS: cell frontier nonfinite or negative indicator"}
+{"name": "global-signed-cancellation-exercises-error", "pass_": true, "totals": {"value": 0.0, "cell_error": 0.0008, "pupil_error": 0.0, "cell_delta": 0.0008, "area": 1.0}}
+{"name": "global-signed-cancellation-capped-refusal", "pass_": true, "refusal": "UNCOMMISSIONED_NUMERICS: cell depth/global-error ceiling"}
+{"name": "global-low-pupil-needed-exercises-error", "pass_": true, "totals": {"value": 0.0003, "cell_error": 0.0007999999999999999, "pupil_error": 0.0, "cell_delta": 0.0003, "area": 1.0}}
+{"name": "global-low-pupil-needed-capped-refusal", "pass_": true, "refusal": "UNCOMMISSIONED_NUMERICS: cell depth/global-error ceiling"}
+{"name": "global-high-pupil-needed-exercises-error", "pass_": true, "totals": {"value": 0.0006, "cell_error": 0.0007999999999999999, "pupil_error": 0.0002, "cell_delta": 0.0006, "area": 1.0}}
+{"name": "global-high-pupil-needed-capped-refusal", "pass_": true, "refusal": "UNCOMMISSIONED_NUMERICS: cell depth/global-error ceiling"}
+{"name": "global-separate-high-pupil-cap-exercises-error", "pass_": true, "totals": {"value": 0.0, "cell_error": 0.0003, "pupil_error": 0.0003, "cell_delta": 0.0, "area": 1.0}}
+{"name": "global-separate-high-pupil-cap-capped-refusal", "pass_": true, "refusal": "UNCOMMISSIONED_NUMERICS: cell depth/global-error ceiling"}
+{"name": "global-canonical-tie-and-complete-children", "pass_": true, "trace": [[0], [1], [0, 0], [0, 1], [1, 0], [1, 1]], "receipt": {"value_error_indicator_e": 0.0, "cell_indicator_e": 0.0, "weighted_high_pupil_indicator_e": 0.0, "cell_quadrature_delta_e": 0.0, "area": 1.0, "leaf_triangles": 4, "work": {"point_calls": 0, "angular_nodes": 0, "peak_node_pairs": 0, "tracked_peak_ndarray_bytes": 336, "tracked_peak_ndarrays": 7, "peak_live_scalar_frames": 0, "observer": "count", "observer_events": 21, "optional_hook_calls": 10, "cell_allocation": {"cells": 1, "leaves": 4, "minimum_depth": 1, "maximum_depth": 1, "locally_overallocated_leaves": 0, "cells_with_locally_overallocated_leaves": 0}, "cpu_seconds": 0.0, "wall_seconds": 0.0}}}
+{"name": "global-evaluator-geometry-refusal", "pass_": true, "refusal": "UNCOMMISSIONED_NUMERICS: cell evaluator changed geometry/path"}
+{"name": "global-work-exhaustion-refusal", "pass_": true, "refusal": "UNCOMMISSIONED_NUMERICS: evaluation ceiling"}
+{"name": "square-map-area-moment-(0, 1, 2)-edge", "pass_": true}
+{"name": "square-map-fractional-power-(0, 1, 2)-edge", "pass_": true, "value": 0.22857142857142862, "expected": 0.22857142857142856}
+{"name": "square-map-area-moment-(0, 1, 2)-vertex", "pass_": true}
+{"name": "square-map-fractional-power-(0, 1, 2)-vertex", "pass_": true, "value": 0.571428571428571, "expected": 0.5714285714285714}
+{"name": "square-map-area-moment-(0, 2, 1)-edge", "pass_": true}
+{"name": "square-map-fractional-power-(0, 2, 1)-edge", "pass_": true, "value": 0.22857142857142862, "expected": 0.22857142857142856}
+{"name": "square-map-area-moment-(0, 2, 1)-vertex", "pass_": true}
+{"name": "square-map-fractional-power-(0, 2, 1)-vertex", "pass_": true, "value": 0.571428571428571, "expected": 0.5714285714285714}
+{"name": "square-map-area-moment-(1, 0, 2)-edge", "pass_": true}
+{"name": "square-map-fractional-power-(1, 0, 2)-edge", "pass_": true, "value": 0.22857142857142862, "expected": 0.22857142857142856}
+{"name": "square-map-area-moment-(1, 0, 2)-vertex", "pass_": true}
+{"name": "square-map-fractional-power-(1, 0, 2)-vertex", "pass_": true, "value": 0.571428571428571, "expected": 0.5714285714285714}
+{"name": "square-map-area-moment-(1, 2, 0)-edge", "pass_": true}
+{"name": "square-map-fractional-power-(1, 2, 0)-edge", "pass_": true, "value": 0.22857142857142862, "expected": 0.22857142857142856}
+{"name": "square-map-area-moment-(1, 2, 0)-vertex", "pass_": true}
+{"name": "square-map-fractional-power-(1, 2, 0)-vertex", "pass_": true, "value": 0.571428571428571, "expected": 0.5714285714285714}
+{"name": "square-map-area-moment-(2, 0, 1)-edge", "pass_": true}
+{"name": "square-map-fractional-power-(2, 0, 1)-edge", "pass_": true, "value": 0.22857142857142862, "expected": 0.22857142857142856}
+{"name": "square-map-area-moment-(2, 0, 1)-vertex", "pass_": true}
+{"name": "square-map-fractional-power-(2, 0, 1)-vertex", "pass_": true, "value": 0.571428571428571, "expected": 0.5714285714285714}
+{"name": "square-map-area-moment-(2, 1, 0)-edge", "pass_": true}
+{"name": "square-map-fractional-power-(2, 1, 0)-edge", "pass_": true, "value": 0.22857142857142862, "expected": 0.22857142857142856}
+{"name": "square-map-area-moment-(2, 1, 0)-vertex", "pass_": true}
+{"name": "square-map-fractional-power-(2, 1, 0)-vertex", "pass_": true, "value": 0.571428571428571, "expected": 0.5714285714285714}
+{"name": "linear-map-fractional-power-destroyer", "pass_": true}
+{"name": "square-map-Fourier-(0, 1)", "pass_": true, "actual": 3653.6498452300602, "reference": 3653.6498452196147}
+{"name": "square-map-Fourier-(2,)", "pass_": true, "actual": 3653.649845215602, "reference": 3653.6498452196147}
+{"name": "near-predicate-whole-triangle--2.0", "pass_": true, "indices": [], "offset": -5.684341886080802e-14}
+{"name": "near-predicate-whole-triangle--0.5", "pass_": true, "indices": [0, 1], "offset": -1.4210854715202004e-14}
+{"name": "near-predicate-whole-triangle-0.0", "pass_": true, "indices": [0, 1], "offset": 0.0}
+{"name": "near-predicate-whole-triangle-0.5", "pass_": true, "indices": [0, 1], "offset": 1.4210854715202004e-14}
+{"name": "near-predicate-whole-triangle-2.0", "pass_": true, "indices": [], "offset": 5.684341886080802e-14}
+{"name": "zero-pupil-and-mask-null-map", "pass_": true}
+{"name": "nonfinite-triangle-map-refusal", "pass_": true, "refusal": "UNCOMMISSIONED_NUMERICS: finite triangle vertices required"}
+{"name": "radial-primitive-0.0-0.0", "pass_": true, "abs_error_e": 0.0}
+{"name": "radial-primitive-0.0-0.17", "pass_": true, "abs_error_e": 9.094947017729282e-13}
+{"name": "radial-primitive-0.0-0.5", "pass_": true, "abs_error_e": 0.0}
+{"name": "radial-primitive-1e-08-0.0", "pass_": true, "abs_error_e": 1.8189894035458565e-12}
+{"name": "radial-primitive-1e-08-0.17", "pass_": true, "abs_error_e": 1.8189894035458565e-12}
+{"name": "radial-primitive-1e-08-0.5", "pass_": true, "abs_error_e": 0.0}
+{"name": "radial-primitive--1e-08-0.0", "pass_": true, "abs_error_e": 1.8189894035458565e-12}
+{"name": "radial-primitive--1e-08-0.17", "pass_": true, "abs_error_e": 0.0}
+{"name": "radial-primitive--1e-08-0.5", "pass_": true, "abs_error_e": 0.0}
+{"name": "radial-primitive-0.01-0.0", "pass_": true, "abs_error_e": 0.0}
+{"name": "radial-primitive-0.01-0.17", "pass_": true, "abs_error_e": 1.8189894035458565e-12}
+{"name": "radial-primitive-0.01-0.5", "pass_": true, "abs_error_e": 0.0}
+{"name": "radial-primitive--0.01-0.0", "pass_": true, "abs_error_e": 0.0}
+{"name": "radial-primitive--0.01-0.17", "pass_": true, "abs_error_e": 1.8189894035458565e-12}
+{"name": "radial-primitive--0.01-0.5", "pass_": true, "abs_error_e": 0.0}
+{"name": "radial-primitive-0.3-0.0", "pass_": true, "abs_error_e": 3.637978807091713e-12}
+{"name": "radial-primitive-0.3-0.17", "pass_": true, "abs_error_e": 2.7284841053187847e-12}
+{"name": "radial-primitive-0.3-0.5", "pass_": true, "abs_error_e": 0.0}
+{"name": "radial-primitive--0.3-0.0", "pass_": true, "abs_error_e": 1.8189894035458565e-12}
+{"name": "radial-primitive--0.3-0.17", "pass_": true, "abs_error_e": 9.094947017729282e-13}
+{"name": "radial-primitive--0.3-0.5", "pass_": true, "abs_error_e": 0.0}
+{"name": "radial-primitive-3.0-0.0", "pass_": true, "abs_error_e": 1.6370904631912708e-11}
+{"name": "radial-primitive-3.0-0.17", "pass_": true, "abs_error_e": 7.275957614183426e-12}
+{"name": "radial-primitive-3.0-0.5", "pass_": true, "abs_error_e": 0.0}
+{"name": "radial-primitive--3.0-0.0", "pass_": true, "abs_error_e": 2.7853275241795927e-11}
+{"name": "radial-primitive--3.0-0.17", "pass_": true, "abs_error_e": 9.094947017729282e-12}
+{"name": "radial-primitive--3.0-0.5", "pass_": true, "abs_error_e": 0.0}
+{"name": "radial-primitive-9.0-0.0", "pass_": true, "abs_error_e": 3.5413449950283393e-11}
+{"name": "radial-primitive-9.0-0.17", "pass_": true, "abs_error_e": 2.9558577807620168e-12}
+{"name": "radial-primitive-9.0-0.5", "pass_": true, "abs_error_e": 0.0}
+{"name": "radial-primitive--9.0-0.0", "pass_": true, "abs_error_e": 2.955857780762017e-11}
+{"name": "radial-primitive--9.0-0.17", "pass_": true, "abs_error_e": 1.2732925824820995e-11}
+{"name": "radial-primitive--9.0-0.5", "pass_": true, "abs_error_e": 0.0}
+{"name": "missing-radial-Jacobian-destroyer", "pass_": true}
+{"name": "zero-width-reference-source-bound", "pass_": true}
+{"name": "unselected-cell-rule-byte-null", "pass_": true}
+{"name": "zero-width-bit-null-0", "pass_": true, "shape": []}
+{"name": "zero-width-bit-null-1", "pass_": true, "shape": []}
+{"name": "zero-width-bit-null-2", "pass_": true, "shape": []}
+{"name": "zero-width-bit-null-3", "pass_": true, "shape": []}
+{"name": "zero-width-bit-null-4", "pass_": true, "shape": []}
+{"name": "zero-width-bit-null-5", "pass_": true, "shape": []}
+{"name": "zero-width-bit-null-6", "pass_": true, "shape": []}
+{"name": "zero-width-bit-null-7", "pass_": true, "shape": []}
+{"name": "zero-width-bit-null-8", "pass_": true, "shape": []}
+{"name": "zero-width-bit-null-9", "pass_": true, "shape": []}
+{"name": "zero-width-bit-null-10", "pass_": true, "shape": []}
+{"name": "zero-width-bit-null-11", "pass_": true, "shape": []}
+{"name": "zero-width-bit-null-12", "pass_": true, "shape": []}
+{"name": "zero-width-bit-null-13", "pass_": true, "shape": []}
+{"name": "zero-width-bit-null-14", "pass_": true, "shape": []}
+{"name": "zero-width-bit-null-15", "pass_": true, "shape": []}
+{"name": "zero-width-bit-null-16", "pass_": true, "shape": []}
+{"name": "zero-width-bit-null-17", "pass_": true, "shape": []}
+{"name": "zero-width-bit-null-18", "pass_": true, "shape": []}
+{"name": "zero-width-bit-null-19", "pass_": true, "shape": []}
+{"name": "zero-width-bit-null-20", "pass_": true, "shape": []}
+{"name": "zero-width-bit-null-21", "pass_": true, "shape": []}
+{"name": "zero-width-bit-null-22", "pass_": true, "shape": []}
+{"name": "zero-width-bit-null-23", "pass_": true, "shape": []}
+{"name": "zero-width-bit-null-24", "pass_": true, "shape": []}
+{"name": "zero-width-bit-null-25", "pass_": true, "shape": []}
+{"name": "zero-width-bit-null-26", "pass_": true, "shape": []}
+{"name": "zero-width-bit-null-27", "pass_": true, "shape": [2, 3]}
+{"name": "zero-width-bit-null-28", "pass_": true, "shape": [2, 3]}
+{"name": "zero-width-bit-null-29", "pass_": true, "shape": [2, 3]}
+{"name": "zero-width-bit-null-30", "pass_": true, "shape": [2, 3]}
+{"name": "zero-width-bit-null-31", "pass_": true, "shape": [2, 3]}
+{"name": "zero-width-bit-null-32", "pass_": true, "shape": [2, 3]}
+{"name": "zero-width-bit-null-33", "pass_": true, "shape": [2, 3]}
+{"name": "zero-width-bit-null-34", "pass_": true, "shape": [2, 3]}
+{"name": "zero-width-bit-null-35", "pass_": true, "shape": [2, 3]}
+{"name": "zero-width-bit-null-36", "pass_": true, "shape": [2, 3]}
+{"name": "zero-width-bit-null-37", "pass_": true, "shape": [2, 3]}
+{"name": "zero-width-bit-null-38", "pass_": true, "shape": [2, 3]}
+{"name": "zero-width-bit-null-39", "pass_": true, "shape": [2, 3]}
+{"name": "zero-width-bit-null-40", "pass_": true, "shape": [2, 3]}
+{"name": "zero-width-bit-null-41", "pass_": true, "shape": [2, 3]}
+{"name": "zero-width-bit-null-42", "pass_": true, "shape": [2, 3]}
+{"name": "zero-width-bit-null-43", "pass_": true, "shape": [2, 3]}
+{"name": "zero-width-bit-null-44", "pass_": true, "shape": [2, 3]}
+{"name": "zero-width-bit-null-45", "pass_": true, "shape": [2, 3]}
+{"name": "zero-width-bit-null-46", "pass_": true, "shape": [2, 3]}
+{"name": "zero-width-bit-null-47", "pass_": true, "shape": [2, 3]}
+{"name": "zero-width-bit-null-48", "pass_": true, "shape": [2, 3]}
+{"name": "zero-width-bit-null-49", "pass_": true, "shape": [2, 3]}
+{"name": "zero-width-bit-null-50", "pass_": true, "shape": [2, 3]}
+{"name": "zero-width-bit-null-51", "pass_": true, "shape": [2, 3]}
+{"name": "zero-width-bit-null-52", "pass_": true, "shape": [2, 3]}
+{"name": "zero-width-bit-null-53", "pass_": true, "shape": [2, 3]}
+{"name": "invalid-pupil-refusal", "pass_": true, "refusal": "pupil coordinate outside unit disc"}
+{"name": "invalid-negative-scale-refusal", "pass_": true, "refusal": "positive scale required"}
+{"name": "duplicate-json-refusal", "pass_": true, "refusal": "duplicate JSON key: x"}
+{"name": "nonfinite-json-refusal", "pass_": true, "refusal": "nonfinite JSON value: NaN"}
+{"name": "point-work-limit-refusal", "pass_": true, "refusal": "UNCOMMISSIONED_NUMERICS: evaluation ceiling"}
+{"name": "angular-work-limit-refusal", "pass_": true, "refusal": "UNCOMMISSIONED_NUMERICS: evaluation ceiling"}
+{"name": "expired-own-cpu-limit-refusal", "pass_": true, "refusal": "UNCOMMISSIONED_NUMERICS: own-process time ceiling"}
+{"name": "expired-own-wall-limit-refusal", "pass_": true, "refusal": "UNCOMMISSIONED_NUMERICS: own-process time ceiling"}
+{"name": "array-byte-limit-refusal", "pass_": true, "refusal": "UNCOMMISSIONED_NUMERICS: tracked ndarray byte ceiling"}
+{"name": "depth-error-limit-refusal", "pass_": true, "refusal": "UNCOMMISSIONED_NUMERICS: angular depth/error ceiling"}
+{"name": "actual-frame-observer-tile-byte-null", "pass_": true, "sha256": ["530002d0d5915028d1d497a0311c5a0e33a1ac9209b4a3111588af4ce42455f9", "530002d0d5915028d1d497a0311c5a0e33a1ac9209b4a3111588af4ce42455f9", "530002d0d5915028d1d497a0311c5a0e33a1ac9209b4a3111588af4ce42455f9", "530002d0d5915028d1d497a0311c5a0e33a1ac9209b4a3111588af4ce42455f9"], "events": [0, 10524, 0, 10524], "hook_calls": [0, 1620, 1620, 1620], "peak_live_frames": [1, 1, 1, 1]}
+{"name": "actual-allocation-observer-collected-disabled-byte-null", "pass_": false, "indicator_sha256": ["ccf7e182d0dba7379a138f2b3f8ece0e576acb7ec38e4250d29d227bc012f4f7", "ccf7e182d0dba7379a138f2b3f8ece0e576acb7ec38e4250d29d227bc012f4f7", "ccf7e182d0dba7379a138f2b3f8ece0e576acb7ec38e4250d29d227bc012f4f7", "ccf7e182d0dba7379a138f2b3f8ece0e576acb7ec38e4250d29d227bc012f4f7"], "allocation": [{"cells": 0, "leaves": 0, "minimum_depth": 0, "maximum_depth": 0, "locally_overallocated_leaves": 0, "cells_with_locally_overallocated_leaves": 0}, {"cells": 6, "leaves": 16, "minimum_depth": 0, "maximum_depth": 0, "locally_overallocated_leaves": 0, "cells_with_locally_overallocated_leaves": 0}, {"cells": 0, "leaves": 0, "minimum_depth": 0, "maximum_depth": 0, "locally_overallocated_leaves": 0, "cells_with_locally_overallocated_leaves": 0}, {"cells": 6, "leaves": 16, "minimum_depth": 0, "maximum_depth": 0, "locally_overallocated_leaves": 0, "cells_with_locally_overallocated_leaves": 0}]}
+Traceback (most recent call last):
+  File "C:\dev\blog\death-of-software\projects\strehl\experiments\m194e-joint-pupil\author-controls.py", line 358, in run
+    check("actual-allocation-observer-collected-disabled-byte-null", len(set(indicator_hashes))==1
+  File "C:\dev\blog\death-of-software\projects\strehl\experiments\m194e-joint-pupil\author-controls.py", line 48, in check
+    raise AssertionError(name)
+AssertionError: actual-allocation-observer-collected-disabled-byte-null

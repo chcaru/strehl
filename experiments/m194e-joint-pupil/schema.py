@@ -12,7 +12,7 @@ from render import integrator_for
 HERE = Path(__file__).resolve().parent
 REPOSITORY = HERE.parents[1]
 AUTHOR_SOURCES = ("model.py", "render.py", "schema.py", "commission.py", "emit-cfa.py", "author-controls.py")
-DESIGNS = ("implementation-plan.md", "implementation-preregister.md", "independent-design.md", "numerical-amendment-1.md", "numerical-amendment-2.md", "emission-contract.md")
+DESIGNS = ("implementation-plan.md", "implementation-preregister.md", "independent-design.md", "numerical-amendment-1.md", "numerical-amendment-2.md", "numerical-amendment-3.md", "emission-contract.md")
 ARMS = ("primary", "angle-refined", "cell-refined")
 
 
@@ -110,8 +110,9 @@ def design_bindings():
 
 
 def numerical_contract():
-    return dict(method="polar-radial-ladder32-tangent-cell-v3", radial_crossing_levels=32,
+    return dict(method="polar-radial-ladder32-tangent-cell-global-v4", radial_crossing_levels=32,
                 cell_map="predicate-square-distance-duffy-v1",
+                cell_allocation="global-absolute-leaf-priority-v1",
                 arms={arm: asdict(integrator_for(arm)) for arm in ARMS},
                 max_discrepancy_e=.004, rms_discrepancy_e=.0008, edge_distance_native=8,
                 author_refinement_max_e=.001, independent_refinement_max_e=.0005,
@@ -131,6 +132,42 @@ def validate_sources(sources):
         path = relative_path(name, REPOSITORY)
         if path.stat().st_size != ref["bytes"] or sha256(path) != ref["sha256"]:
             raise ValueError("actual producer source changed")
+
+
+def validate_cell_allocation(work, full_frame=False):
+    """Check diagnostic consistency; counts do not establish numerical accuracy."""
+    allocation = work["cell_allocation"]
+    fields = ("cells", "leaves", "minimum_depth", "maximum_depth",
+              "locally_overallocated_leaves", "cells_with_locally_overallocated_leaves")
+    exact_keys(allocation, fields, "cell allocation")
+    for key in fields:
+        integer(allocation[key], "cell allocation " + key)
+    if work["observer"] not in ("off", "count", "placebo"):
+        raise ValueError("unknown allocation observer")
+    if full_frame and (work["observer"] != "count" or allocation["cells"] != 48 * 64):
+        raise ValueError("full frame requires count diagnostics for every cell")
+    if work["observer"] != "count" or allocation["cells"] == 0:
+        if any(allocation.values()):
+            raise ValueError("inactive or empty allocation diagnostics must be zero")
+        return
+    cells, leaves = allocation["cells"], allocation["leaves"]
+    minimum, maximum = allocation["minimum_depth"], allocation["maximum_depth"]
+    over = allocation["locally_overallocated_leaves"]
+    over_cells = allocation["cells_with_locally_overallocated_leaves"]
+    if not 0 <= minimum <= maximum <= 6:
+        raise ValueError("allocation depths exceed registered range")
+    # A square needs at least two root triangles. Beyond the uniform minimum
+    # depth, reaching the recorded maximum needs at least max-min more splits.
+    minimum_leaves = 2 * cells * (1 << minimum) + maximum - minimum
+    # At least one minimum-depth leaf also excludes its possible descendants
+    # from an otherwise fully expanded maximum-depth forest.
+    maximum_leaves = cells * 8 * (1 << maximum) - ((1 << (maximum - minimum)) - 1)
+    if not minimum_leaves <= leaves <= maximum_leaves:
+        raise ValueError("allocation leaf count contradicts depth/root bounds")
+    if not (over_cells <= cells and over_cells <= over <= leaves
+            and over <= 8 * (1 << maximum) * over_cells
+            and (over == 0) == (over_cells == 0)):
+        raise ValueError("local allocation diagnostic counts disagree")
 
 
 def validate_frames(frames, root, arm):
@@ -169,7 +206,8 @@ def validate_frames(frames, root, arm):
             raise ValueError("unregistered tile size")
         work = receipt["work"]
         exact_keys(work, ("point_calls", "angular_nodes", "peak_node_pairs", "tracked_peak_ndarray_bytes", "tracked_peak_ndarrays", "peak_live_scalar_frames",
-                         "observer", "observer_events", "optional_hook_calls", "cpu_seconds", "wall_seconds"), "work")
+                         "observer", "observer_events", "optional_hook_calls", "cell_allocation", "cpu_seconds", "wall_seconds"), "work")
+        validate_cell_allocation(work, full_frame=True)
         for key in ("point_calls", "angular_nodes", "peak_node_pairs", "tracked_peak_ndarray_bytes", "tracked_peak_ndarrays", "peak_live_scalar_frames", "observer_events", "optional_hook_calls"):
             integer(work[key], key)
         if not (work["point_calls"] <= 4_000_000 and work["angular_nodes"] <= 600_000_000 and work["peak_node_pairs"] <= 32768
