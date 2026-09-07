@@ -136,6 +136,44 @@ or that later radiance is affordable. No runtime extrapolation or speedup claim
 is made. Preserve the refusal and independently review a prospective
 counter-only repair before another intended count.
 
+## Bounded diagnostic stopped before profiling
+
+The counter-only diagnostic was preregistered at76b255db and its reviewed
+harness/commands committed at25a223f6. The fixed private9×6, five-frame,
+three-arm input has810 cells. Four separate fresh-process modes were planned:
+off, count, placebo and an actual cut mutation, each with10CPU/20wall and the
+unchanged work/storage bounds. The schedule stops at a failed mode.
+
+Off1 completed all15 rows and810 cells with167040 points and39819840 nominal
+angular nodes. Its result hash is
+`c4d3298dd64df03f092e5904b3dbf08c6ebbb8284f5e7ddb5e142d0193f75762`;
+canonical geometry payload hash is
+`b05e5f7f4b5d9d86c69cee4fd6eb7ba116781d7b997b49611b884d566df2e78a`.
+Eleven checks pass. Seven explicit direct radiance-trap calls prove those traps
+are active; all seven actual-counter radiance call counts are zero. Root
+observed exit0. Its1.546875-CPU/1.547-wall-second receipt is one diagnostic
+observation, not a speed comparison or intended-population estimate.
+
+Count1 then refused before any geometry work or profiler construction:
+`ValueError('baseline is not the same-source completed off mode')`.
+Its result hash is
+`d80f9f77b9bcb415eee5c423c30b4f114b6ecaaec6fcadc478bc7f7994c78bea`;
+root observed exit1. The actual saved input records and source bindings agree.
+The harness compares JSON-loaded lists directly with tuple fields preserved
+by the live dataclass serialization. The same representation mismatch exists
+at its later payload-input boundary. This is a diagnostic consumer defect,
+not changed geometry or a source mutation. The pre-execution source review
+did not catch it. Original source, both runs, exact arguments and failures are
+preserved; placebo and mutation were not launched.
+
+No profile attribution, profiling observer null or mutation-control pass was
+obtained. The diagnostic has ended rather than beginning an optimization loop.
+Amendment1 proposes one fresh intended count with180CPU/240wall as a finite
+resource allowance the program is willing to spend, preserving all geometry,
+coverage, work/storage and later accuracy requirements. It needs independent
+review, committed implementation and affected controls before that launch.
+The original60-second refusal will remain a refusal under its original bar.
+
 ## Onward design, not released experiments
 
 The independent spatial-reference plan avoids the author's Bessel primitive

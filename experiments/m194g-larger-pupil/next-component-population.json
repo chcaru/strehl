@@ -1,0 +1,793 @@
+{
+  "schema": "m194g-next-component-population-draft-v1",
+  "status": "PROSPECTIVE_NOT_RELEASED",
+  "derivation_label": "DERIVED parameter serialization and extraction of saved records; no model/reference execution",
+  "provenance": {
+    "reference_plan": {
+      "path": "experiments/m194g-larger-pupil/next-reference-plan.md",
+      "sha256": "685d1b5b7d7780c7dc7e9469b4be472b66c9d0ca4716c27de5579e0a303d2151"
+    },
+    "geometry_result": {
+      "path": "experiments/m194g-larger-pupil/independent-geometry-controls-2/result.json",
+      "sha256": "a178a9d32f49b8f2b2af8737f7285de89d9ea70abe0e3be7cf5bb9002c3796b4"
+    },
+    "geometry_preregister": {
+      "path": "experiments/m194g-larger-pupil/independent-geometry-preregister.md",
+      "sha256": "fecf46e8b79a87328d4e7e61ad975863cff082add8ed2154a3045a24c057fda7"
+    },
+    "root_preregister": {
+      "path": "experiments/m194g-larger-pupil/preregister.md",
+      "sha256": "d0c570ec892a2c3e40b90c0f7eef2a9ff0649dd53bc34adee6b6bc65280f14c8"
+    }
+  },
+  "counts": {
+    "saved_tangent": 112,
+    "saved_rotated": 8,
+    "transfer": 14,
+    "coordinate": 3,
+    "visibility_and_null": 8,
+    "joint": 2,
+    "preserved_whole_cell": 3,
+    "total_cases": 150,
+    "unique_ids": 150,
+    "cell_cases": 149,
+    "point_cases": 1
+  },
+  "fields": {
+    "fg-15000": {
+      "constant": 15000.0,
+      "affine": [
+        0.0,
+        0.0
+      ],
+      "waves": []
+    },
+    "bg-9000": {
+      "constant": 9000.0,
+      "affine": [
+        0.0,
+        0.0
+      ],
+      "waves": []
+    },
+    "equal-12000": {
+      "constant": 12000.0,
+      "affine": [
+        0.0,
+        0.0
+      ],
+      "waves": []
+    },
+    "wave-zero": {
+      "constant": 10000.0,
+      "affine": [
+        0.0,
+        0.0
+      ],
+      "waves": [
+        {
+          "amplitude": 1000.0,
+          "frequency": [
+            0.0,
+            0.0
+          ],
+          "phase": 0.0
+        }
+      ]
+    },
+    "wave-tiny": {
+      "constant": 10000.0,
+      "affine": [
+        0.0,
+        0.0
+      ],
+      "waves": [
+        {
+          "amplitude": 1000.0,
+          "frequency": [
+            4.553459446675167e-08,
+            6.071279262233556e-08
+          ],
+          "phase": 0.0
+        }
+      ]
+    },
+    "wave-small": {
+      "constant": 10000.0,
+      "affine": [
+        0.0,
+        0.0
+      ],
+      "waves": [
+        {
+          "amplitude": 1000.0,
+          "frequency": [
+            0.00018650969893581484,
+            0.00024867959858108647
+          ],
+          "phase": 0.0
+        }
+      ]
+    },
+    "wave-one-eighth": {
+      "constant": 10000.0,
+      "affine": [
+        0.0,
+        0.0
+      ],
+      "waves": [
+        {
+          "amplitude": 1000.0,
+          "frequency": [
+            0.005968310365946075,
+            0.007957747154594767
+          ],
+          "phase": 0.0
+        }
+      ]
+    },
+    "wave-negative-one": {
+      "constant": 10000.0,
+      "affine": [
+        0.0,
+        0.0
+      ],
+      "waves": [
+        {
+          "amplitude": 1000.0,
+          "frequency": [
+            0.22679579390595087,
+            0.30239439187460115
+          ],
+          "phase": 0.0
+        }
+      ]
+    },
+    "wave-negative-two": {
+      "constant": 10000.0,
+      "affine": [
+        0.0,
+        0.0
+      ],
+      "waves": [
+        {
+          "amplitude": 1000.0,
+          "frequency": [
+            0.2984155182973038,
+            0.3978873577297384
+          ],
+          "phase": 0.0
+        }
+      ]
+    },
+    "wave-positive-lobe": {
+      "constant": 10000.0,
+      "affine": [
+        0.0,
+        0.0
+      ],
+      "waves": [
+        {
+          "amplitude": 1000.0,
+          "frequency": [
+            0.4177817256162253,
+            0.5570423008216338
+          ],
+          "phase": 0.0
+        }
+      ]
+    },
+    "coordinate-centre-phase-zero": {
+      "constant": 10000.0,
+      "affine": [
+        0.0,
+        0.0
+      ],
+      "waves": [
+        {
+          "amplitude": 1000.0,
+          "frequency": [
+            0.3819718634205488,
+            0.12732395447351627
+          ],
+          "phase": -47.949999999999996
+        }
+      ]
+    },
+    "coordinate-literal-phase": {
+      "constant": 10000.0,
+      "affine": [
+        0.0,
+        0.0
+      ],
+      "waves": [
+        {
+          "amplitude": 1000.0,
+          "frequency": [
+            0.3819718634205488,
+            0.12732395447351627
+          ],
+          "phase": 0.37
+        }
+      ]
+    },
+    "coordinate-affine": {
+      "constant": 10000.0,
+      "affine": [
+        24.0,
+        -16.0
+      ],
+      "waves": []
+    },
+    "joint-fg": {
+      "constant": 12000.0,
+      "affine": [
+        0.0,
+        0.0
+      ],
+      "waves": []
+    },
+    "joint-affine-bg": {
+      "constant": 10000.0,
+      "affine": [
+        360.0,
+        480.0
+      ],
+      "waves": []
+    },
+    "cell-fg": {
+      "constant": 16000.0,
+      "affine": [
+        0.0,
+        0.0
+      ],
+      "waves": []
+    },
+    "cell-affine-bg": {
+      "constant": 9000.0,
+      "affine": [
+        800.0,
+        0.0
+      ],
+      "waves": []
+    },
+    "legacy-fg": {
+      "constant": 15000.0,
+      "affine": [
+        0.0,
+        0.0
+      ],
+      "waves": [
+        {
+          "amplitude": 1400.0,
+          "frequency": [
+            0.045,
+            0.095
+          ],
+          "phase": 0.7
+        },
+        {
+          "amplitude": 700.0,
+          "frequency": [
+            0.17,
+            0.01
+          ],
+          "phase": 0.3
+        }
+      ]
+    },
+    "legacy-bg": {
+      "constant": 12000.0,
+      "affine": [
+        0.0,
+        0.0
+      ],
+      "waves": [
+        {
+          "amplitude": 3200.0,
+          "frequency": [
+            0.08,
+            0.015
+          ],
+          "phase": 0.2
+        },
+        {
+          "amplitude": 1800.0,
+          "frequency": [
+            -0.035,
+            0.12
+          ],
+          "phase": 1.1
+        }
+      ]
+    }
+  },
+  "frames": {
+    "identity": {
+      "index": 0,
+      "inverse_focus": 0.625,
+      "K": 8.0,
+      "forward_similarity": {
+        "scale": 1.0,
+        "rotation": 0.0,
+        "centre": [
+          0.0,
+          0.0
+        ],
+        "translation": [
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "selected-abs-d2": {
+      "index": 0,
+      "inverse_focus": 0.75,
+      "K": 8.0,
+      "forward_similarity": {
+        "scale": 1.0,
+        "rotation": 0.0,
+        "centre": [
+          0.0,
+          0.0
+        ],
+        "translation": [
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "zero-aperture": {
+      "index": 0,
+      "inverse_focus": 0.625,
+      "K": 0.0,
+      "forward_similarity": {
+        "scale": 1.0,
+        "rotation": 0.0,
+        "centre": [
+          0.0,
+          0.0
+        ],
+        "translation": [
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "tangent-map-0-shift-0": {
+      "index": 0,
+      "inverse_focus": 0.625,
+      "K": 8.0,
+      "forward_similarity": {
+        "scale": 1.0,
+        "rotation": 0.0,
+        "centre": [
+          0.0,
+          0.0
+        ],
+        "translation": [
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "tangent-map-0-shift-1": {
+      "index": 0,
+      "inverse_focus": 0.625,
+      "K": 8.0,
+      "forward_similarity": {
+        "scale": 1.0,
+        "rotation": 0.0,
+        "centre": [
+          1048576.0,
+          -524288.0
+        ],
+        "translation": [
+          -1048576.0,
+          524288.0
+        ]
+      }
+    },
+    "tangent-map-1-shift-0": {
+      "index": 0,
+      "inverse_focus": 0.625,
+      "K": 8.0,
+      "forward_similarity": {
+        "scale": 2.0,
+        "rotation": 0.0,
+        "centre": [
+          1.0,
+          -2.0
+        ],
+        "translation": [
+          0.5,
+          -0.25
+        ]
+      }
+    },
+    "tangent-map-1-shift-1": {
+      "index": 0,
+      "inverse_focus": 0.625,
+      "K": 8.0,
+      "forward_similarity": {
+        "scale": 2.0,
+        "rotation": 0.0,
+        "centre": [
+          1048577.0,
+          -524290.0
+        ],
+        "translation": [
+          -1048575.5,
+          524287.75
+        ]
+      }
+    },
+    "rotated": {
+      "index": 0,
+      "inverse_focus": 0.625,
+      "K": 8.0,
+      "forward_similarity": {
+        "scale": 0.8,
+        "rotation": 0.9272952180016122,
+        "centre": [
+          2.25,
+          -1.5
+        ],
+        "translation": [
+          0.375,
+          -0.625
+        ]
+      }
+    },
+    "rotated-zero-aperture": {
+      "index": 0,
+      "inverse_focus": 0.625,
+      "K": 0.0,
+      "forward_similarity": {
+        "scale": 0.8,
+        "rotation": 0.9272952180016122,
+        "centre": [
+          2.25,
+          -1.5
+        ],
+        "translation": [
+          0.375,
+          -0.625
+        ]
+      }
+    },
+    "legacy-frame-3": {
+      "index": 3,
+      "inverse_focus": 0.875,
+      "K": 12.0,
+      "forward_similarity": {
+        "scale": 1.0,
+        "rotation": 0.0,
+        "centre": [
+          0.0,
+          0.0
+        ],
+        "translation": [
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "legacy-frame-2": {
+      "index": 2,
+      "inverse_focus": 0.75,
+      "K": 12.0,
+      "forward_similarity": {
+        "scale": 1.0,
+        "rotation": 0.0,
+        "centre": [
+          0.0,
+          0.0
+        ],
+        "translation": [
+          0.0,
+          0.0
+        ]
+      }
+    }
+  },
+  "cases": [
+    {"id":"geometry-000","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[3.0,4.0],"mask_offset":46.49999999999997,"mask_state":"half-plane"},"frame":"tangent-map-0-shift-0","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"foreground","source_geometry_record":"tangent-0-foreground-m1.0-shiftFalse-step-4","source_exact_height":{"numerator":"650910883643393","denominator":"35184372088832"},"coordinate_representation":{"canonical_shift":[0,0],"mask_multiplier":1.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-001","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[3.0,4.0],"mask_offset":46.499999999999986,"mask_state":"half-plane"},"frame":"tangent-map-0-shift-0","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"foreground","source_geometry_record":"tangent-0-foreground-m1.0-shiftFalse-step-2","source_exact_height":{"numerator":"1301821767286785","denominator":"70368744177664"},"coordinate_representation":{"canonical_shift":[0,0],"mask_multiplier":1.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-002","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[3.0,4.0],"mask_offset":46.49999999999999,"mask_state":"half-plane"},"frame":"tangent-map-0-shift-0","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"foreground","source_geometry_record":"tangent-0-foreground-m1.0-shiftFalse-step-1","source_exact_height":{"numerator":"2603643534573569","denominator":"140737488355328"},"coordinate_representation":{"canonical_shift":[0,0],"mask_multiplier":1.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-003","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[3.0,4.0],"mask_offset":46.5,"mask_state":"half-plane"},"frame":"tangent-map-0-shift-0","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"numerical","source_geometry_record":"tangent-0-foreground-m1.0-shiftFalse-step0","source_exact_height":{"numerator":"37","denominator":"2"},"coordinate_representation":{"canonical_shift":[0,0],"mask_multiplier":1.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-004","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[3.0,4.0],"mask_offset":46.50000000000001,"mask_state":"half-plane"},"frame":"tangent-map-0-shift-0","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"numerical","source_geometry_record":"tangent-0-foreground-m1.0-shiftFalse-step1","source_exact_height":{"numerator":"2603643534573567","denominator":"140737488355328"},"coordinate_representation":{"canonical_shift":[0,0],"mask_multiplier":1.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-005","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[3.0,4.0],"mask_offset":46.500000000000014,"mask_state":"half-plane"},"frame":"tangent-map-0-shift-0","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"numerical","source_geometry_record":"tangent-0-foreground-m1.0-shiftFalse-step2","source_exact_height":{"numerator":"1301821767286783","denominator":"70368744177664"},"coordinate_representation":{"canonical_shift":[0,0],"mask_multiplier":1.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-006","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[3.0,4.0],"mask_offset":46.50000000000003,"mask_state":"half-plane"},"frame":"tangent-map-0-shift-0","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"numerical","source_geometry_record":"tangent-0-foreground-m1.0-shiftFalse-step4","source_exact_height":{"numerator":"650910883643391","denominator":"35184372088832"},"coordinate_representation":{"canonical_shift":[0,0],"mask_multiplier":1.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-007","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[24.0,32.0],"mask_offset":371.9999999999998,"mask_state":"half-plane"},"frame":"tangent-map-0-shift-0","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"foreground","source_geometry_record":"tangent-0-foreground-m8.0-shiftFalse-step-4","source_exact_height":{"numerator":"650910883643393","denominator":"4398046511104"},"coordinate_representation":{"canonical_shift":[0,0],"mask_multiplier":8.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-008","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[24.0,32.0],"mask_offset":371.9999999999999,"mask_state":"half-plane"},"frame":"tangent-map-0-shift-0","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"foreground","source_geometry_record":"tangent-0-foreground-m8.0-shiftFalse-step-2","source_exact_height":{"numerator":"1301821767286785","denominator":"8796093022208"},"coordinate_representation":{"canonical_shift":[0,0],"mask_multiplier":8.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-009","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[24.0,32.0],"mask_offset":371.99999999999994,"mask_state":"half-plane"},"frame":"tangent-map-0-shift-0","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"foreground","source_geometry_record":"tangent-0-foreground-m8.0-shiftFalse-step-1","source_exact_height":{"numerator":"2603643534573569","denominator":"17592186044416"},"coordinate_representation":{"canonical_shift":[0,0],"mask_multiplier":8.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-010","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[24.0,32.0],"mask_offset":372.0,"mask_state":"half-plane"},"frame":"tangent-map-0-shift-0","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"numerical","source_geometry_record":"tangent-0-foreground-m8.0-shiftFalse-step0","source_exact_height":{"numerator":"148","denominator":"1"},"coordinate_representation":{"canonical_shift":[0,0],"mask_multiplier":8.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-011","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[24.0,32.0],"mask_offset":372.00000000000006,"mask_state":"half-plane"},"frame":"tangent-map-0-shift-0","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"numerical","source_geometry_record":"tangent-0-foreground-m8.0-shiftFalse-step1","source_exact_height":{"numerator":"2603643534573567","denominator":"17592186044416"},"coordinate_representation":{"canonical_shift":[0,0],"mask_multiplier":8.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-012","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[24.0,32.0],"mask_offset":372.0000000000001,"mask_state":"half-plane"},"frame":"tangent-map-0-shift-0","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"numerical","source_geometry_record":"tangent-0-foreground-m8.0-shiftFalse-step2","source_exact_height":{"numerator":"1301821767286783","denominator":"8796093022208"},"coordinate_representation":{"canonical_shift":[0,0],"mask_multiplier":8.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-013","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[24.0,32.0],"mask_offset":372.0000000000002,"mask_state":"half-plane"},"frame":"tangent-map-0-shift-0","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"numerical","source_geometry_record":"tangent-0-foreground-m8.0-shiftFalse-step4","source_exact_height":{"numerator":"650910883643391","denominator":"4398046511104"},"coordinate_representation":{"canonical_shift":[0,0],"mask_multiplier":8.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-014","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[3.0,4.0],"mask_offset":83.49999999999994,"mask_state":"half-plane"},"frame":"tangent-map-0-shift-0","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"numerical","source_geometry_record":"tangent-0-background-m1.0-shiftFalse-step-4","source_exact_height":{"numerator":"-325455441821695","denominator":"17592186044416"},"coordinate_representation":{"canonical_shift":[0,0],"mask_multiplier":1.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-015","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[3.0,4.0],"mask_offset":83.49999999999997,"mask_state":"half-plane"},"frame":"tangent-map-0-shift-0","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"numerical","source_geometry_record":"tangent-0-background-m1.0-shiftFalse-step-2","source_exact_height":{"numerator":"-650910883643391","denominator":"35184372088832"},"coordinate_representation":{"canonical_shift":[0,0],"mask_multiplier":1.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-016","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[3.0,4.0],"mask_offset":83.49999999999999,"mask_state":"half-plane"},"frame":"tangent-map-0-shift-0","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"numerical","source_geometry_record":"tangent-0-background-m1.0-shiftFalse-step-1","source_exact_height":{"numerator":"-1301821767286783","denominator":"70368744177664"},"coordinate_representation":{"canonical_shift":[0,0],"mask_multiplier":1.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-017","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[3.0,4.0],"mask_offset":83.5,"mask_state":"half-plane"},"frame":"tangent-map-0-shift-0","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"numerical","source_geometry_record":"tangent-0-background-m1.0-shiftFalse-step0","source_exact_height":{"numerator":"-37","denominator":"2"},"coordinate_representation":{"canonical_shift":[0,0],"mask_multiplier":1.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-018","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[3.0,4.0],"mask_offset":83.50000000000001,"mask_state":"half-plane"},"frame":"tangent-map-0-shift-0","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"background","source_geometry_record":"tangent-0-background-m1.0-shiftFalse-step1","source_exact_height":{"numerator":"-1301821767286785","denominator":"70368744177664"},"coordinate_representation":{"canonical_shift":[0,0],"mask_multiplier":1.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-019","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[3.0,4.0],"mask_offset":83.50000000000003,"mask_state":"half-plane"},"frame":"tangent-map-0-shift-0","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"background","source_geometry_record":"tangent-0-background-m1.0-shiftFalse-step2","source_exact_height":{"numerator":"-650910883643393","denominator":"35184372088832"},"coordinate_representation":{"canonical_shift":[0,0],"mask_multiplier":1.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-020","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[3.0,4.0],"mask_offset":83.50000000000006,"mask_state":"half-plane"},"frame":"tangent-map-0-shift-0","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"background","source_geometry_record":"tangent-0-background-m1.0-shiftFalse-step4","source_exact_height":{"numerator":"-325455441821697","denominator":"17592186044416"},"coordinate_representation":{"canonical_shift":[0,0],"mask_multiplier":1.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-021","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[24.0,32.0],"mask_offset":667.9999999999995,"mask_state":"half-plane"},"frame":"tangent-map-0-shift-0","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"numerical","source_geometry_record":"tangent-0-background-m8.0-shiftFalse-step-4","source_exact_height":{"numerator":"-325455441821695","denominator":"2199023255552"},"coordinate_representation":{"canonical_shift":[0,0],"mask_multiplier":8.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-022","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[24.0,32.0],"mask_offset":667.9999999999998,"mask_state":"half-plane"},"frame":"tangent-map-0-shift-0","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"numerical","source_geometry_record":"tangent-0-background-m8.0-shiftFalse-step-2","source_exact_height":{"numerator":"-650910883643391","denominator":"4398046511104"},"coordinate_representation":{"canonical_shift":[0,0],"mask_multiplier":8.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-023","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[24.0,32.0],"mask_offset":667.9999999999999,"mask_state":"half-plane"},"frame":"tangent-map-0-shift-0","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"numerical","source_geometry_record":"tangent-0-background-m8.0-shiftFalse-step-1","source_exact_height":{"numerator":"-1301821767286783","denominator":"8796093022208"},"coordinate_representation":{"canonical_shift":[0,0],"mask_multiplier":8.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-024","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[24.0,32.0],"mask_offset":668.0,"mask_state":"half-plane"},"frame":"tangent-map-0-shift-0","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"numerical","source_geometry_record":"tangent-0-background-m8.0-shiftFalse-step0","source_exact_height":{"numerator":"-148","denominator":"1"},"coordinate_representation":{"canonical_shift":[0,0],"mask_multiplier":8.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-025","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[24.0,32.0],"mask_offset":668.0000000000001,"mask_state":"half-plane"},"frame":"tangent-map-0-shift-0","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"background","source_geometry_record":"tangent-0-background-m8.0-shiftFalse-step1","source_exact_height":{"numerator":"-1301821767286785","denominator":"8796093022208"},"coordinate_representation":{"canonical_shift":[0,0],"mask_multiplier":8.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-026","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[24.0,32.0],"mask_offset":668.0000000000002,"mask_state":"half-plane"},"frame":"tangent-map-0-shift-0","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"background","source_geometry_record":"tangent-0-background-m8.0-shiftFalse-step2","source_exact_height":{"numerator":"-650910883643393","denominator":"4398046511104"},"coordinate_representation":{"canonical_shift":[0,0],"mask_multiplier":8.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-027","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[24.0,32.0],"mask_offset":668.0000000000005,"mask_state":"half-plane"},"frame":"tangent-map-0-shift-0","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"background","source_geometry_record":"tangent-0-background-m8.0-shiftFalse-step4","source_exact_height":{"numerator":"-325455441821697","denominator":"2199023255552"},"coordinate_representation":{"canonical_shift":[0,0],"mask_multiplier":8.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-028","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[3.0,4.0],"mask_offset":1048622.499999999,"mask_state":"half-plane"},"frame":"tangent-map-0-shift-1","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"foreground","source_geometry_record":"tangent-0-foreground-m1.0-shiftTrue-step-4","source_exact_height":{"numerator":"19864223745","denominator":"1073741824"},"coordinate_representation":{"canonical_shift":[1048576,-524288],"mask_multiplier":1.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-029","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[3.0,4.0],"mask_offset":1048622.4999999995,"mask_state":"half-plane"},"frame":"tangent-map-0-shift-1","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"foreground","source_geometry_record":"tangent-0-foreground-m1.0-shiftTrue-step-2","source_exact_height":{"numerator":"39728447489","denominator":"2147483648"},"coordinate_representation":{"canonical_shift":[1048576,-524288],"mask_multiplier":1.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-030","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[3.0,4.0],"mask_offset":1048622.4999999998,"mask_state":"half-plane"},"frame":"tangent-map-0-shift-1","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"foreground","source_geometry_record":"tangent-0-foreground-m1.0-shiftTrue-step-1","source_exact_height":{"numerator":"79456894977","denominator":"4294967296"},"coordinate_representation":{"canonical_shift":[1048576,-524288],"mask_multiplier":1.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-031","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[3.0,4.0],"mask_offset":1048622.5,"mask_state":"half-plane"},"frame":"tangent-map-0-shift-1","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"numerical","source_geometry_record":"tangent-0-foreground-m1.0-shiftTrue-step0","source_exact_height":{"numerator":"37","denominator":"2"},"coordinate_representation":{"canonical_shift":[1048576,-524288],"mask_multiplier":1.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-032","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[3.0,4.0],"mask_offset":1048622.5000000002,"mask_state":"half-plane"},"frame":"tangent-map-0-shift-1","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"numerical","source_geometry_record":"tangent-0-foreground-m1.0-shiftTrue-step1","source_exact_height":{"numerator":"79456894975","denominator":"4294967296"},"coordinate_representation":{"canonical_shift":[1048576,-524288],"mask_multiplier":1.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-033","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[3.0,4.0],"mask_offset":1048622.5000000005,"mask_state":"half-plane"},"frame":"tangent-map-0-shift-1","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"numerical","source_geometry_record":"tangent-0-foreground-m1.0-shiftTrue-step2","source_exact_height":{"numerator":"39728447487","denominator":"2147483648"},"coordinate_representation":{"canonical_shift":[1048576,-524288],"mask_multiplier":1.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-034","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[3.0,4.0],"mask_offset":1048622.500000001,"mask_state":"half-plane"},"frame":"tangent-map-0-shift-1","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"numerical","source_geometry_record":"tangent-0-foreground-m1.0-shiftTrue-step4","source_exact_height":{"numerator":"19864223743","denominator":"1073741824"},"coordinate_representation":{"canonical_shift":[1048576,-524288],"mask_multiplier":1.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-035","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[24.0,32.0],"mask_offset":8388979.999999993,"mask_state":"half-plane"},"frame":"tangent-map-0-shift-1","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"foreground","source_geometry_record":"tangent-0-foreground-m8.0-shiftTrue-step-4","source_exact_height":{"numerator":"19864223745","denominator":"134217728"},"coordinate_representation":{"canonical_shift":[1048576,-524288],"mask_multiplier":8.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-036","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[24.0,32.0],"mask_offset":8388979.999999996,"mask_state":"half-plane"},"frame":"tangent-map-0-shift-1","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"foreground","source_geometry_record":"tangent-0-foreground-m8.0-shiftTrue-step-2","source_exact_height":{"numerator":"39728447489","denominator":"268435456"},"coordinate_representation":{"canonical_shift":[1048576,-524288],"mask_multiplier":8.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-037","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[24.0,32.0],"mask_offset":8388979.999999998,"mask_state":"half-plane"},"frame":"tangent-map-0-shift-1","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"foreground","source_geometry_record":"tangent-0-foreground-m8.0-shiftTrue-step-1","source_exact_height":{"numerator":"79456894977","denominator":"536870912"},"coordinate_representation":{"canonical_shift":[1048576,-524288],"mask_multiplier":8.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-038","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[24.0,32.0],"mask_offset":8388980.0,"mask_state":"half-plane"},"frame":"tangent-map-0-shift-1","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"numerical","source_geometry_record":"tangent-0-foreground-m8.0-shiftTrue-step0","source_exact_height":{"numerator":"148","denominator":"1"},"coordinate_representation":{"canonical_shift":[1048576,-524288],"mask_multiplier":8.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-039","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[24.0,32.0],"mask_offset":8388980.000000002,"mask_state":"half-plane"},"frame":"tangent-map-0-shift-1","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"numerical","source_geometry_record":"tangent-0-foreground-m8.0-shiftTrue-step1","source_exact_height":{"numerator":"79456894975","denominator":"536870912"},"coordinate_representation":{"canonical_shift":[1048576,-524288],"mask_multiplier":8.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-040","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[24.0,32.0],"mask_offset":8388980.000000004,"mask_state":"half-plane"},"frame":"tangent-map-0-shift-1","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"numerical","source_geometry_record":"tangent-0-foreground-m8.0-shiftTrue-step2","source_exact_height":{"numerator":"39728447487","denominator":"268435456"},"coordinate_representation":{"canonical_shift":[1048576,-524288],"mask_multiplier":8.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-041","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[24.0,32.0],"mask_offset":8388980.000000007,"mask_state":"half-plane"},"frame":"tangent-map-0-shift-1","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"numerical","source_geometry_record":"tangent-0-foreground-m8.0-shiftTrue-step4","source_exact_height":{"numerator":"19864223743","denominator":"134217728"},"coordinate_representation":{"canonical_shift":[1048576,-524288],"mask_multiplier":8.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-042","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[3.0,4.0],"mask_offset":1048659.499999999,"mask_state":"half-plane"},"frame":"tangent-map-0-shift-1","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"numerical","source_geometry_record":"tangent-0-background-m1.0-shiftTrue-step-4","source_exact_height":{"numerator":"-19864223743","denominator":"1073741824"},"coordinate_representation":{"canonical_shift":[1048576,-524288],"mask_multiplier":1.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-043","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[3.0,4.0],"mask_offset":1048659.4999999995,"mask_state":"half-plane"},"frame":"tangent-map-0-shift-1","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"numerical","source_geometry_record":"tangent-0-background-m1.0-shiftTrue-step-2","source_exact_height":{"numerator":"-39728447487","denominator":"2147483648"},"coordinate_representation":{"canonical_shift":[1048576,-524288],"mask_multiplier":1.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-044","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[3.0,4.0],"mask_offset":1048659.4999999998,"mask_state":"half-plane"},"frame":"tangent-map-0-shift-1","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"numerical","source_geometry_record":"tangent-0-background-m1.0-shiftTrue-step-1","source_exact_height":{"numerator":"-79456894975","denominator":"4294967296"},"coordinate_representation":{"canonical_shift":[1048576,-524288],"mask_multiplier":1.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-045","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[3.0,4.0],"mask_offset":1048659.5,"mask_state":"half-plane"},"frame":"tangent-map-0-shift-1","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"numerical","source_geometry_record":"tangent-0-background-m1.0-shiftTrue-step0","source_exact_height":{"numerator":"-37","denominator":"2"},"coordinate_representation":{"canonical_shift":[1048576,-524288],"mask_multiplier":1.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-046","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[3.0,4.0],"mask_offset":1048659.5000000002,"mask_state":"half-plane"},"frame":"tangent-map-0-shift-1","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"background","source_geometry_record":"tangent-0-background-m1.0-shiftTrue-step1","source_exact_height":{"numerator":"-79456894977","denominator":"4294967296"},"coordinate_representation":{"canonical_shift":[1048576,-524288],"mask_multiplier":1.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-047","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[3.0,4.0],"mask_offset":1048659.5000000005,"mask_state":"half-plane"},"frame":"tangent-map-0-shift-1","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"background","source_geometry_record":"tangent-0-background-m1.0-shiftTrue-step2","source_exact_height":{"numerator":"-39728447489","denominator":"2147483648"},"coordinate_representation":{"canonical_shift":[1048576,-524288],"mask_multiplier":1.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-048","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[3.0,4.0],"mask_offset":1048659.500000001,"mask_state":"half-plane"},"frame":"tangent-map-0-shift-1","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"background","source_geometry_record":"tangent-0-background-m1.0-shiftTrue-step4","source_exact_height":{"numerator":"-19864223745","denominator":"1073741824"},"coordinate_representation":{"canonical_shift":[1048576,-524288],"mask_multiplier":1.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-049","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[24.0,32.0],"mask_offset":8389275.999999993,"mask_state":"half-plane"},"frame":"tangent-map-0-shift-1","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"numerical","source_geometry_record":"tangent-0-background-m8.0-shiftTrue-step-4","source_exact_height":{"numerator":"-19864223743","denominator":"134217728"},"coordinate_representation":{"canonical_shift":[1048576,-524288],"mask_multiplier":8.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-050","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[24.0,32.0],"mask_offset":8389275.999999996,"mask_state":"half-plane"},"frame":"tangent-map-0-shift-1","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"numerical","source_geometry_record":"tangent-0-background-m8.0-shiftTrue-step-2","source_exact_height":{"numerator":"-39728447487","denominator":"268435456"},"coordinate_representation":{"canonical_shift":[1048576,-524288],"mask_multiplier":8.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-051","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[24.0,32.0],"mask_offset":8389275.999999998,"mask_state":"half-plane"},"frame":"tangent-map-0-shift-1","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"numerical","source_geometry_record":"tangent-0-background-m8.0-shiftTrue-step-1","source_exact_height":{"numerator":"-79456894975","denominator":"536870912"},"coordinate_representation":{"canonical_shift":[1048576,-524288],"mask_multiplier":8.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-052","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[24.0,32.0],"mask_offset":8389276.0,"mask_state":"half-plane"},"frame":"tangent-map-0-shift-1","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"numerical","source_geometry_record":"tangent-0-background-m8.0-shiftTrue-step0","source_exact_height":{"numerator":"-148","denominator":"1"},"coordinate_representation":{"canonical_shift":[1048576,-524288],"mask_multiplier":8.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-053","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[24.0,32.0],"mask_offset":8389276.000000002,"mask_state":"half-plane"},"frame":"tangent-map-0-shift-1","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"background","source_geometry_record":"tangent-0-background-m8.0-shiftTrue-step1","source_exact_height":{"numerator":"-79456894977","denominator":"536870912"},"coordinate_representation":{"canonical_shift":[1048576,-524288],"mask_multiplier":8.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-054","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[24.0,32.0],"mask_offset":8389276.000000004,"mask_state":"half-plane"},"frame":"tangent-map-0-shift-1","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"background","source_geometry_record":"tangent-0-background-m8.0-shiftTrue-step2","source_exact_height":{"numerator":"-39728447489","denominator":"268435456"},"coordinate_representation":{"canonical_shift":[1048576,-524288],"mask_multiplier":8.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-055","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[24.0,32.0],"mask_offset":8389276.000000007,"mask_state":"half-plane"},"frame":"tangent-map-0-shift-1","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"background","source_geometry_record":"tangent-0-background-m8.0-shiftTrue-step4","source_exact_height":{"numerator":"-19864223745","denominator":"134217728"},"coordinate_representation":{"canonical_shift":[1048576,-524288],"mask_multiplier":8.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-056","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[3.0,4.0],"mask_offset":20.499999999999986,"mask_state":"half-plane"},"frame":"tangent-map-1-shift-0","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"foreground","source_geometry_record":"tangent-1-foreground-m1.0-shiftFalse-step-4","source_exact_height":{"numerator":"650910883643393","denominator":"70368744177664"},"coordinate_representation":{"canonical_shift":[0,0],"mask_multiplier":1.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-057","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[3.0,4.0],"mask_offset":20.499999999999993,"mask_state":"half-plane"},"frame":"tangent-map-1-shift-0","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"foreground","source_geometry_record":"tangent-1-foreground-m1.0-shiftFalse-step-2","source_exact_height":{"numerator":"1301821767286785","denominator":"140737488355328"},"coordinate_representation":{"canonical_shift":[0,0],"mask_multiplier":1.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-058","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[3.0,4.0],"mask_offset":20.499999999999996,"mask_state":"half-plane"},"frame":"tangent-map-1-shift-0","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"foreground","source_geometry_record":"tangent-1-foreground-m1.0-shiftFalse-step-1","source_exact_height":{"numerator":"2603643534573569","denominator":"281474976710656"},"coordinate_representation":{"canonical_shift":[0,0],"mask_multiplier":1.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-059","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[3.0,4.0],"mask_offset":20.5,"mask_state":"half-plane"},"frame":"tangent-map-1-shift-0","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"numerical","source_geometry_record":"tangent-1-foreground-m1.0-shiftFalse-step0","source_exact_height":{"numerator":"37","denominator":"4"},"coordinate_representation":{"canonical_shift":[0,0],"mask_multiplier":1.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-060","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[3.0,4.0],"mask_offset":20.500000000000004,"mask_state":"half-plane"},"frame":"tangent-map-1-shift-0","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"numerical","source_geometry_record":"tangent-1-foreground-m1.0-shiftFalse-step1","source_exact_height":{"numerator":"2603643534573567","denominator":"281474976710656"},"coordinate_representation":{"canonical_shift":[0,0],"mask_multiplier":1.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-061","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[3.0,4.0],"mask_offset":20.500000000000007,"mask_state":"half-plane"},"frame":"tangent-map-1-shift-0","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"numerical","source_geometry_record":"tangent-1-foreground-m1.0-shiftFalse-step2","source_exact_height":{"numerator":"1301821767286783","denominator":"140737488355328"},"coordinate_representation":{"canonical_shift":[0,0],"mask_multiplier":1.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-062","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[3.0,4.0],"mask_offset":20.500000000000014,"mask_state":"half-plane"},"frame":"tangent-map-1-shift-0","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"numerical","source_geometry_record":"tangent-1-foreground-m1.0-shiftFalse-step4","source_exact_height":{"numerator":"650910883643391","denominator":"70368744177664"},"coordinate_representation":{"canonical_shift":[0,0],"mask_multiplier":1.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-063","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[24.0,32.0],"mask_offset":163.9999999999999,"mask_state":"half-plane"},"frame":"tangent-map-1-shift-0","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"foreground","source_geometry_record":"tangent-1-foreground-m8.0-shiftFalse-step-4","source_exact_height":{"numerator":"650910883643393","denominator":"8796093022208"},"coordinate_representation":{"canonical_shift":[0,0],"mask_multiplier":8.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-064","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[24.0,32.0],"mask_offset":163.99999999999994,"mask_state":"half-plane"},"frame":"tangent-map-1-shift-0","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"foreground","source_geometry_record":"tangent-1-foreground-m8.0-shiftFalse-step-2","source_exact_height":{"numerator":"1301821767286785","denominator":"17592186044416"},"coordinate_representation":{"canonical_shift":[0,0],"mask_multiplier":8.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-065","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[24.0,32.0],"mask_offset":163.99999999999997,"mask_state":"half-plane"},"frame":"tangent-map-1-shift-0","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"foreground","source_geometry_record":"tangent-1-foreground-m8.0-shiftFalse-step-1","source_exact_height":{"numerator":"2603643534573569","denominator":"35184372088832"},"coordinate_representation":{"canonical_shift":[0,0],"mask_multiplier":8.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-066","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[24.0,32.0],"mask_offset":164.0,"mask_state":"half-plane"},"frame":"tangent-map-1-shift-0","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"numerical","source_geometry_record":"tangent-1-foreground-m8.0-shiftFalse-step0","source_exact_height":{"numerator":"74","denominator":"1"},"coordinate_representation":{"canonical_shift":[0,0],"mask_multiplier":8.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-067","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[24.0,32.0],"mask_offset":164.00000000000003,"mask_state":"half-plane"},"frame":"tangent-map-1-shift-0","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"numerical","source_geometry_record":"tangent-1-foreground-m8.0-shiftFalse-step1","source_exact_height":{"numerator":"2603643534573567","denominator":"35184372088832"},"coordinate_representation":{"canonical_shift":[0,0],"mask_multiplier":8.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-068","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[24.0,32.0],"mask_offset":164.00000000000006,"mask_state":"half-plane"},"frame":"tangent-map-1-shift-0","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"numerical","source_geometry_record":"tangent-1-foreground-m8.0-shiftFalse-step2","source_exact_height":{"numerator":"1301821767286783","denominator":"17592186044416"},"coordinate_representation":{"canonical_shift":[0,0],"mask_multiplier":8.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-069","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[24.0,32.0],"mask_offset":164.0000000000001,"mask_state":"half-plane"},"frame":"tangent-map-1-shift-0","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"numerical","source_geometry_record":"tangent-1-foreground-m8.0-shiftFalse-step4","source_exact_height":{"numerator":"650910883643391","denominator":"8796093022208"},"coordinate_representation":{"canonical_shift":[0,0],"mask_multiplier":8.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-070","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[3.0,4.0],"mask_offset":38.99999999999997,"mask_state":"half-plane"},"frame":"tangent-map-1-shift-0","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"numerical","source_geometry_record":"tangent-1-background-m1.0-shiftFalse-step-4","source_exact_height":{"numerator":"-325455441821695","denominator":"35184372088832"},"coordinate_representation":{"canonical_shift":[0,0],"mask_multiplier":1.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-071","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[3.0,4.0],"mask_offset":38.999999999999986,"mask_state":"half-plane"},"frame":"tangent-map-1-shift-0","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"numerical","source_geometry_record":"tangent-1-background-m1.0-shiftFalse-step-2","source_exact_height":{"numerator":"-650910883643391","denominator":"70368744177664"},"coordinate_representation":{"canonical_shift":[0,0],"mask_multiplier":1.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-072","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[3.0,4.0],"mask_offset":38.99999999999999,"mask_state":"half-plane"},"frame":"tangent-map-1-shift-0","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"numerical","source_geometry_record":"tangent-1-background-m1.0-shiftFalse-step-1","source_exact_height":{"numerator":"-1301821767286783","denominator":"140737488355328"},"coordinate_representation":{"canonical_shift":[0,0],"mask_multiplier":1.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-073","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[3.0,4.0],"mask_offset":39.0,"mask_state":"half-plane"},"frame":"tangent-map-1-shift-0","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"numerical","source_geometry_record":"tangent-1-background-m1.0-shiftFalse-step0","source_exact_height":{"numerator":"-37","denominator":"4"},"coordinate_representation":{"canonical_shift":[0,0],"mask_multiplier":1.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-074","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[3.0,4.0],"mask_offset":39.00000000000001,"mask_state":"half-plane"},"frame":"tangent-map-1-shift-0","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"background","source_geometry_record":"tangent-1-background-m1.0-shiftFalse-step1","source_exact_height":{"numerator":"-1301821767286785","denominator":"140737488355328"},"coordinate_representation":{"canonical_shift":[0,0],"mask_multiplier":1.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-075","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[3.0,4.0],"mask_offset":39.000000000000014,"mask_state":"half-plane"},"frame":"tangent-map-1-shift-0","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"background","source_geometry_record":"tangent-1-background-m1.0-shiftFalse-step2","source_exact_height":{"numerator":"-650910883643393","denominator":"70368744177664"},"coordinate_representation":{"canonical_shift":[0,0],"mask_multiplier":1.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-076","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[3.0,4.0],"mask_offset":39.00000000000003,"mask_state":"half-plane"},"frame":"tangent-map-1-shift-0","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"background","source_geometry_record":"tangent-1-background-m1.0-shiftFalse-step4","source_exact_height":{"numerator":"-325455441821697","denominator":"35184372088832"},"coordinate_representation":{"canonical_shift":[0,0],"mask_multiplier":1.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-077","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[24.0,32.0],"mask_offset":311.9999999999998,"mask_state":"half-plane"},"frame":"tangent-map-1-shift-0","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"numerical","source_geometry_record":"tangent-1-background-m8.0-shiftFalse-step-4","source_exact_height":{"numerator":"-325455441821695","denominator":"4398046511104"},"coordinate_representation":{"canonical_shift":[0,0],"mask_multiplier":8.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-078","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[24.0,32.0],"mask_offset":311.9999999999999,"mask_state":"half-plane"},"frame":"tangent-map-1-shift-0","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"numerical","source_geometry_record":"tangent-1-background-m8.0-shiftFalse-step-2","source_exact_height":{"numerator":"-650910883643391","denominator":"8796093022208"},"coordinate_representation":{"canonical_shift":[0,0],"mask_multiplier":8.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-079","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[24.0,32.0],"mask_offset":311.99999999999994,"mask_state":"half-plane"},"frame":"tangent-map-1-shift-0","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"numerical","source_geometry_record":"tangent-1-background-m8.0-shiftFalse-step-1","source_exact_height":{"numerator":"-1301821767286783","denominator":"17592186044416"},"coordinate_representation":{"canonical_shift":[0,0],"mask_multiplier":8.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-080","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[24.0,32.0],"mask_offset":312.0,"mask_state":"half-plane"},"frame":"tangent-map-1-shift-0","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"numerical","source_geometry_record":"tangent-1-background-m8.0-shiftFalse-step0","source_exact_height":{"numerator":"-74","denominator":"1"},"coordinate_representation":{"canonical_shift":[0,0],"mask_multiplier":8.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-081","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[24.0,32.0],"mask_offset":312.00000000000006,"mask_state":"half-plane"},"frame":"tangent-map-1-shift-0","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"background","source_geometry_record":"tangent-1-background-m8.0-shiftFalse-step1","source_exact_height":{"numerator":"-1301821767286785","denominator":"17592186044416"},"coordinate_representation":{"canonical_shift":[0,0],"mask_multiplier":8.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-082","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[24.0,32.0],"mask_offset":312.0000000000001,"mask_state":"half-plane"},"frame":"tangent-map-1-shift-0","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"background","source_geometry_record":"tangent-1-background-m8.0-shiftFalse-step2","source_exact_height":{"numerator":"-650910883643393","denominator":"8796093022208"},"coordinate_representation":{"canonical_shift":[0,0],"mask_multiplier":8.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-083","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[24.0,32.0],"mask_offset":312.0000000000002,"mask_state":"half-plane"},"frame":"tangent-map-1-shift-0","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"background","source_geometry_record":"tangent-1-background-m8.0-shiftFalse-step4","source_exact_height":{"numerator":"-325455441821697","denominator":"4398046511104"},"coordinate_representation":{"canonical_shift":[0,0],"mask_multiplier":8.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-084","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[3.0,4.0],"mask_offset":1048596.499999999,"mask_state":"half-plane"},"frame":"tangent-map-1-shift-1","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"foreground","source_geometry_record":"tangent-1-foreground-m1.0-shiftTrue-step-4","source_exact_height":{"numerator":"9932111873","denominator":"1073741824"},"coordinate_representation":{"canonical_shift":[1048576,-524288],"mask_multiplier":1.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-085","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[3.0,4.0],"mask_offset":1048596.4999999995,"mask_state":"half-plane"},"frame":"tangent-map-1-shift-1","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"foreground","source_geometry_record":"tangent-1-foreground-m1.0-shiftTrue-step-2","source_exact_height":{"numerator":"19864223745","denominator":"2147483648"},"coordinate_representation":{"canonical_shift":[1048576,-524288],"mask_multiplier":1.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-086","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[3.0,4.0],"mask_offset":1048596.4999999998,"mask_state":"half-plane"},"frame":"tangent-map-1-shift-1","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"foreground","source_geometry_record":"tangent-1-foreground-m1.0-shiftTrue-step-1","source_exact_height":{"numerator":"39728447489","denominator":"4294967296"},"coordinate_representation":{"canonical_shift":[1048576,-524288],"mask_multiplier":1.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-087","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[3.0,4.0],"mask_offset":1048596.5,"mask_state":"half-plane"},"frame":"tangent-map-1-shift-1","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"numerical","source_geometry_record":"tangent-1-foreground-m1.0-shiftTrue-step0","source_exact_height":{"numerator":"37","denominator":"4"},"coordinate_representation":{"canonical_shift":[1048576,-524288],"mask_multiplier":1.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-088","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[3.0,4.0],"mask_offset":1048596.5000000002,"mask_state":"half-plane"},"frame":"tangent-map-1-shift-1","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"numerical","source_geometry_record":"tangent-1-foreground-m1.0-shiftTrue-step1","source_exact_height":{"numerator":"39728447487","denominator":"4294967296"},"coordinate_representation":{"canonical_shift":[1048576,-524288],"mask_multiplier":1.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-089","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[3.0,4.0],"mask_offset":1048596.5000000005,"mask_state":"half-plane"},"frame":"tangent-map-1-shift-1","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"numerical","source_geometry_record":"tangent-1-foreground-m1.0-shiftTrue-step2","source_exact_height":{"numerator":"19864223743","denominator":"2147483648"},"coordinate_representation":{"canonical_shift":[1048576,-524288],"mask_multiplier":1.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-090","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[3.0,4.0],"mask_offset":1048596.500000001,"mask_state":"half-plane"},"frame":"tangent-map-1-shift-1","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"numerical","source_geometry_record":"tangent-1-foreground-m1.0-shiftTrue-step4","source_exact_height":{"numerator":"9932111871","denominator":"1073741824"},"coordinate_representation":{"canonical_shift":[1048576,-524288],"mask_multiplier":1.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-091","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[24.0,32.0],"mask_offset":8388771.999999993,"mask_state":"half-plane"},"frame":"tangent-map-1-shift-1","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"foreground","source_geometry_record":"tangent-1-foreground-m8.0-shiftTrue-step-4","source_exact_height":{"numerator":"9932111873","denominator":"134217728"},"coordinate_representation":{"canonical_shift":[1048576,-524288],"mask_multiplier":8.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-092","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[24.0,32.0],"mask_offset":8388771.999999996,"mask_state":"half-plane"},"frame":"tangent-map-1-shift-1","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"foreground","source_geometry_record":"tangent-1-foreground-m8.0-shiftTrue-step-2","source_exact_height":{"numerator":"19864223745","denominator":"268435456"},"coordinate_representation":{"canonical_shift":[1048576,-524288],"mask_multiplier":8.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-093","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[24.0,32.0],"mask_offset":8388771.999999998,"mask_state":"half-plane"},"frame":"tangent-map-1-shift-1","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"foreground","source_geometry_record":"tangent-1-foreground-m8.0-shiftTrue-step-1","source_exact_height":{"numerator":"39728447489","denominator":"536870912"},"coordinate_representation":{"canonical_shift":[1048576,-524288],"mask_multiplier":8.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-094","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[24.0,32.0],"mask_offset":8388772.0,"mask_state":"half-plane"},"frame":"tangent-map-1-shift-1","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"numerical","source_geometry_record":"tangent-1-foreground-m8.0-shiftTrue-step0","source_exact_height":{"numerator":"74","denominator":"1"},"coordinate_representation":{"canonical_shift":[1048576,-524288],"mask_multiplier":8.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-095","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[24.0,32.0],"mask_offset":8388772.000000002,"mask_state":"half-plane"},"frame":"tangent-map-1-shift-1","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"numerical","source_geometry_record":"tangent-1-foreground-m8.0-shiftTrue-step1","source_exact_height":{"numerator":"39728447487","denominator":"536870912"},"coordinate_representation":{"canonical_shift":[1048576,-524288],"mask_multiplier":8.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-096","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[24.0,32.0],"mask_offset":8388772.000000004,"mask_state":"half-plane"},"frame":"tangent-map-1-shift-1","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"numerical","source_geometry_record":"tangent-1-foreground-m8.0-shiftTrue-step2","source_exact_height":{"numerator":"19864223743","denominator":"268435456"},"coordinate_representation":{"canonical_shift":[1048576,-524288],"mask_multiplier":8.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-097","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[24.0,32.0],"mask_offset":8388772.000000007,"mask_state":"half-plane"},"frame":"tangent-map-1-shift-1","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"numerical","source_geometry_record":"tangent-1-foreground-m8.0-shiftTrue-step4","source_exact_height":{"numerator":"9932111871","denominator":"134217728"},"coordinate_representation":{"canonical_shift":[1048576,-524288],"mask_multiplier":8.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-098","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[3.0,4.0],"mask_offset":1048614.999999999,"mask_state":"half-plane"},"frame":"tangent-map-1-shift-1","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"numerical","source_geometry_record":"tangent-1-background-m1.0-shiftTrue-step-4","source_exact_height":{"numerator":"-9932111871","denominator":"1073741824"},"coordinate_representation":{"canonical_shift":[1048576,-524288],"mask_multiplier":1.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-099","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[3.0,4.0],"mask_offset":1048614.9999999995,"mask_state":"half-plane"},"frame":"tangent-map-1-shift-1","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"numerical","source_geometry_record":"tangent-1-background-m1.0-shiftTrue-step-2","source_exact_height":{"numerator":"-19864223743","denominator":"2147483648"},"coordinate_representation":{"canonical_shift":[1048576,-524288],"mask_multiplier":1.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-100","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[3.0,4.0],"mask_offset":1048614.9999999998,"mask_state":"half-plane"},"frame":"tangent-map-1-shift-1","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"numerical","source_geometry_record":"tangent-1-background-m1.0-shiftTrue-step-1","source_exact_height":{"numerator":"-39728447487","denominator":"4294967296"},"coordinate_representation":{"canonical_shift":[1048576,-524288],"mask_multiplier":1.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-101","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[3.0,4.0],"mask_offset":1048615.0,"mask_state":"half-plane"},"frame":"tangent-map-1-shift-1","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"numerical","source_geometry_record":"tangent-1-background-m1.0-shiftTrue-step0","source_exact_height":{"numerator":"-37","denominator":"4"},"coordinate_representation":{"canonical_shift":[1048576,-524288],"mask_multiplier":1.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-102","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[3.0,4.0],"mask_offset":1048615.0000000002,"mask_state":"half-plane"},"frame":"tangent-map-1-shift-1","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"background","source_geometry_record":"tangent-1-background-m1.0-shiftTrue-step1","source_exact_height":{"numerator":"-39728447489","denominator":"4294967296"},"coordinate_representation":{"canonical_shift":[1048576,-524288],"mask_multiplier":1.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-103","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[3.0,4.0],"mask_offset":1048615.0000000005,"mask_state":"half-plane"},"frame":"tangent-map-1-shift-1","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"background","source_geometry_record":"tangent-1-background-m1.0-shiftTrue-step2","source_exact_height":{"numerator":"-19864223745","denominator":"2147483648"},"coordinate_representation":{"canonical_shift":[1048576,-524288],"mask_multiplier":1.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-104","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[3.0,4.0],"mask_offset":1048615.000000001,"mask_state":"half-plane"},"frame":"tangent-map-1-shift-1","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"background","source_geometry_record":"tangent-1-background-m1.0-shiftTrue-step4","source_exact_height":{"numerator":"-9932111873","denominator":"1073741824"},"coordinate_representation":{"canonical_shift":[1048576,-524288],"mask_multiplier":1.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-105","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[24.0,32.0],"mask_offset":8388919.999999993,"mask_state":"half-plane"},"frame":"tangent-map-1-shift-1","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"numerical","source_geometry_record":"tangent-1-background-m8.0-shiftTrue-step-4","source_exact_height":{"numerator":"-9932111871","denominator":"134217728"},"coordinate_representation":{"canonical_shift":[1048576,-524288],"mask_multiplier":8.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-106","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[24.0,32.0],"mask_offset":8388919.999999996,"mask_state":"half-plane"},"frame":"tangent-map-1-shift-1","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"numerical","source_geometry_record":"tangent-1-background-m8.0-shiftTrue-step-2","source_exact_height":{"numerator":"-19864223743","denominator":"268435456"},"coordinate_representation":{"canonical_shift":[1048576,-524288],"mask_multiplier":8.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-107","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[24.0,32.0],"mask_offset":8388919.999999998,"mask_state":"half-plane"},"frame":"tangent-map-1-shift-1","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"numerical","source_geometry_record":"tangent-1-background-m8.0-shiftTrue-step-1","source_exact_height":{"numerator":"-39728447487","denominator":"536870912"},"coordinate_representation":{"canonical_shift":[1048576,-524288],"mask_multiplier":8.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-108","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[24.0,32.0],"mask_offset":8388920.0,"mask_state":"half-plane"},"frame":"tangent-map-1-shift-1","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"numerical","source_geometry_record":"tangent-1-background-m8.0-shiftTrue-step0","source_exact_height":{"numerator":"-74","denominator":"1"},"coordinate_representation":{"canonical_shift":[1048576,-524288],"mask_multiplier":8.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-109","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[24.0,32.0],"mask_offset":8388920.000000002,"mask_state":"half-plane"},"frame":"tangent-map-1-shift-1","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"background","source_geometry_record":"tangent-1-background-m8.0-shiftTrue-step1","source_exact_height":{"numerator":"-39728447489","denominator":"536870912"},"coordinate_representation":{"canonical_shift":[1048576,-524288],"mask_multiplier":8.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-110","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[24.0,32.0],"mask_offset":8388920.000000004,"mask_state":"half-plane"},"frame":"tangent-map-1-shift-1","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"background","source_geometry_record":"tangent-1-background-m8.0-shiftTrue-step2","source_exact_height":{"numerator":"-19864223745","denominator":"268435456"},"coordinate_representation":{"canonical_shift":[1048576,-524288],"mask_multiplier":8.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-111","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[24.0,32.0],"mask_offset":8388920.000000007,"mask_state":"half-plane"},"frame":"tangent-map-1-shift-1","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-tangency","expected_branch":"background","source_geometry_record":"tangent-1-background-m8.0-shiftTrue-step4","source_exact_height":{"numerator":"-9932111873","denominator":"134217728"},"coordinate_representation":{"canonical_shift":[1048576,-524288],"mask_multiplier":8.0,"field_action":"constant fields unchanged; no translated-wave equivalence claimed","equivalence_scope":"unperturbed tangent base only; nonzero nextafter steps applied afterward are separate fixed edge phases"}},
+    {"id":"geometry-112","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[3.0,4.0],"mask_offset":49.21874999999999,"mask_state":"half-plane"},"frame":"rotated","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-rotated-bracket","expected_branch":"foreground","source_geometry_record":"rotated-branch--1-0","source_exact_height":{"numerator":"815151532554060207","denominator":"36028797018963968"}},
+    {"id":"geometry-113","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[3.0,4.0],"mask_offset":49.21875,"mask_state":"half-plane"},"frame":"rotated","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-rotated-bracket","expected_branch":"foreground","source_geometry_record":"rotated-branch--1-1","source_exact_height":{"numerator":"815151532554059951","denominator":"36028797018963968"}},
+    {"id":"geometry-114","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[3.0,4.0],"mask_offset":49.21875000000001,"mask_state":"half-plane"},"frame":"rotated","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-rotated-bracket","expected_branch":"numerical","source_geometry_record":"rotated-branch--1-2","source_exact_height":{"numerator":"815151532554059695","denominator":"36028797018963968"}},
+    {"id":"geometry-115","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[3.0,4.0],"mask_offset":49.218750000000014,"mask_state":"half-plane"},"frame":"rotated","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-rotated-bracket","expected_branch":"numerical","source_geometry_record":"rotated-branch--1-3","source_exact_height":{"numerator":"815151532554059439","denominator":"36028797018963968"}},
+    {"id":"geometry-116","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[3.0,4.0],"mask_offset":94.46874999999999,"mask_state":"half-plane"},"frame":"rotated","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-rotated-bracket","expected_branch":"numerical","source_geometry_record":"rotated-branch-1-0","source_exact_height":{"numerator":"-815151532554059089","denominator":"36028797018963968"}},
+    {"id":"geometry-117","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[3.0,4.0],"mask_offset":94.46875,"mask_state":"half-plane"},"frame":"rotated","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-rotated-bracket","expected_branch":"numerical","source_geometry_record":"rotated-branch-1-1","source_exact_height":{"numerator":"-815151532554059601","denominator":"36028797018963968"}},
+    {"id":"geometry-118","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[3.0,4.0],"mask_offset":94.46875000000001,"mask_state":"half-plane"},"frame":"rotated","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-rotated-bracket","expected_branch":"background","source_geometry_record":"rotated-branch-1-2","source_exact_height":{"numerator":"-815151532554060113","denominator":"36028797018963968"}},
+    {"id":"geometry-119","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[3.0,4.0],"mask_offset":94.46875000000003,"mask_state":"half-plane"},"frame":"rotated","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"saved-rotated-bracket","expected_branch":"background","source_geometry_record":"rotated-branch-1-3","source_exact_height":{"numerator":"-815151532554060625","denominator":"36028797018963968"}},
+    {"id":"transfer-zero-full","call":"cell","scene":{"foreground_field":"wave-zero","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[3.0,4.0],"mask_offset":0.0,"mask_state":"full"},"frame":"selected-abs-d2","native_xy":[0.0,0.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"transfer","expected_branch":"foreground","nominal_disc_argument":0.0,"parameter_derivation":"omega=(argument/2)*(3/5,4/5); stored frequency=omega/(2*pi); all later integrals use stored finite frequency","radiance_bounds_e":[9000.0,15000.0]},
+    {"id":"transfer-zero-absent","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"wave-zero","depths":[1.0,2.0],"mask_normal":[3.0,4.0],"mask_offset":0.0,"mask_state":"absent"},"frame":"selected-abs-d2","native_xy":[0.0,0.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"transfer","expected_branch":"background","nominal_disc_argument":0.0,"parameter_derivation":"omega=(argument/2)*(3/5,4/5); stored frequency=omega/(2*pi); all later integrals use stored finite frequency","radiance_bounds_e":[9000.0,15000.0]},
+    {"id":"transfer-tiny-full","call":"cell","scene":{"foreground_field":"wave-tiny","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[3.0,4.0],"mask_offset":0.0,"mask_state":"full"},"frame":"selected-abs-d2","native_xy":[0.0,0.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"transfer","expected_branch":"foreground","nominal_disc_argument":9.5367431640625e-07,"parameter_derivation":"omega=(argument/2)*(3/5,4/5); stored frequency=omega/(2*pi); all later integrals use stored finite frequency","radiance_bounds_e":[9000.0,15000.0]},
+    {"id":"transfer-tiny-absent","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"wave-tiny","depths":[1.0,2.0],"mask_normal":[3.0,4.0],"mask_offset":0.0,"mask_state":"absent"},"frame":"selected-abs-d2","native_xy":[0.0,0.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"transfer","expected_branch":"background","nominal_disc_argument":9.5367431640625e-07,"parameter_derivation":"omega=(argument/2)*(3/5,4/5); stored frequency=omega/(2*pi); all later integrals use stored finite frequency","radiance_bounds_e":[9000.0,15000.0]},
+    {"id":"transfer-small-full","call":"cell","scene":{"foreground_field":"wave-small","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[3.0,4.0],"mask_offset":0.0,"mask_state":"full"},"frame":"selected-abs-d2","native_xy":[0.0,0.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"transfer","expected_branch":"foreground","nominal_disc_argument":0.00390625,"parameter_derivation":"omega=(argument/2)*(3/5,4/5); stored frequency=omega/(2*pi); all later integrals use stored finite frequency","radiance_bounds_e":[9000.0,15000.0]},
+    {"id":"transfer-small-absent","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"wave-small","depths":[1.0,2.0],"mask_normal":[3.0,4.0],"mask_offset":0.0,"mask_state":"absent"},"frame":"selected-abs-d2","native_xy":[0.0,0.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"transfer","expected_branch":"background","nominal_disc_argument":0.00390625,"parameter_derivation":"omega=(argument/2)*(3/5,4/5); stored frequency=omega/(2*pi); all later integrals use stored finite frequency","radiance_bounds_e":[9000.0,15000.0]},
+    {"id":"transfer-one-eighth-full","call":"cell","scene":{"foreground_field":"wave-one-eighth","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[3.0,4.0],"mask_offset":0.0,"mask_state":"full"},"frame":"selected-abs-d2","native_xy":[0.0,0.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"transfer","expected_branch":"foreground","nominal_disc_argument":0.125,"parameter_derivation":"omega=(argument/2)*(3/5,4/5); stored frequency=omega/(2*pi); all later integrals use stored finite frequency","radiance_bounds_e":[9000.0,15000.0]},
+    {"id":"transfer-one-eighth-absent","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"wave-one-eighth","depths":[1.0,2.0],"mask_normal":[3.0,4.0],"mask_offset":0.0,"mask_state":"absent"},"frame":"selected-abs-d2","native_xy":[0.0,0.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"transfer","expected_branch":"background","nominal_disc_argument":0.125,"parameter_derivation":"omega=(argument/2)*(3/5,4/5); stored frequency=omega/(2*pi); all later integrals use stored finite frequency","radiance_bounds_e":[9000.0,15000.0]},
+    {"id":"transfer-negative-one-full","call":"cell","scene":{"foreground_field":"wave-negative-one","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[3.0,4.0],"mask_offset":0.0,"mask_state":"full"},"frame":"selected-abs-d2","native_xy":[0.0,0.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"transfer","expected_branch":"foreground","nominal_disc_argument":4.75,"parameter_derivation":"omega=(argument/2)*(3/5,4/5); stored frequency=omega/(2*pi); all later integrals use stored finite frequency","radiance_bounds_e":[9000.0,15000.0]},
+    {"id":"transfer-negative-one-absent","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"wave-negative-one","depths":[1.0,2.0],"mask_normal":[3.0,4.0],"mask_offset":0.0,"mask_state":"absent"},"frame":"selected-abs-d2","native_xy":[0.0,0.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"transfer","expected_branch":"background","nominal_disc_argument":4.75,"parameter_derivation":"omega=(argument/2)*(3/5,4/5); stored frequency=omega/(2*pi); all later integrals use stored finite frequency","radiance_bounds_e":[9000.0,15000.0]},
+    {"id":"transfer-negative-two-full","call":"cell","scene":{"foreground_field":"wave-negative-two","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[3.0,4.0],"mask_offset":0.0,"mask_state":"full"},"frame":"selected-abs-d2","native_xy":[0.0,0.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"transfer","expected_branch":"foreground","nominal_disc_argument":6.25,"parameter_derivation":"omega=(argument/2)*(3/5,4/5); stored frequency=omega/(2*pi); all later integrals use stored finite frequency","radiance_bounds_e":[9000.0,15000.0]},
+    {"id":"transfer-negative-two-absent","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"wave-negative-two","depths":[1.0,2.0],"mask_normal":[3.0,4.0],"mask_offset":0.0,"mask_state":"absent"},"frame":"selected-abs-d2","native_xy":[0.0,0.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"transfer","expected_branch":"background","nominal_disc_argument":6.25,"parameter_derivation":"omega=(argument/2)*(3/5,4/5); stored frequency=omega/(2*pi); all later integrals use stored finite frequency","radiance_bounds_e":[9000.0,15000.0]},
+    {"id":"transfer-positive-lobe-full","call":"cell","scene":{"foreground_field":"wave-positive-lobe","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[3.0,4.0],"mask_offset":0.0,"mask_state":"full"},"frame":"selected-abs-d2","native_xy":[0.0,0.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"transfer","expected_branch":"foreground","nominal_disc_argument":8.75,"parameter_derivation":"omega=(argument/2)*(3/5,4/5); stored frequency=omega/(2*pi); all later integrals use stored finite frequency","radiance_bounds_e":[9000.0,15000.0]},
+    {"id":"transfer-positive-lobe-absent","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"wave-positive-lobe","depths":[1.0,2.0],"mask_normal":[3.0,4.0],"mask_offset":0.0,"mask_state":"absent"},"frame":"selected-abs-d2","native_xy":[0.0,0.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"transfer","expected_branch":"background","nominal_disc_argument":8.75,"parameter_derivation":"omega=(argument/2)*(3/5,4/5); stored frequency=omega/(2*pi); all later integrals use stored finite frequency","radiance_bounds_e":[9000.0,15000.0]},
+    {"id":"coordinate-centre-phase-zero","call":"cell","scene":{"foreground_field":"coordinate-centre-phase-zero","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[3.0,4.0],"mask_offset":0.0,"mask_state":"full"},"frame":"rotated-zero-aperture","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"coordinate","expected_branch":"foreground","derived_inverse_matrix":[[0.7500000000000001,0.9999999999999999],[-0.9999999999999999,0.7500000000000001]],"derived_centre":[18.65625,3.9687500000000027],"phase_derivation":"-2*pi*dot(stored_frequency,derived_centre)","radiance_bounds_e":[9000.0,11000.0]},
+    {"id":"coordinate-literal-phase","call":"cell","scene":{"foreground_field":"coordinate-literal-phase","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[3.0,4.0],"mask_offset":0.0,"mask_state":"full"},"frame":"rotated-zero-aperture","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"coordinate","expected_branch":"foreground","derived_inverse_matrix":[[0.7500000000000001,0.9999999999999999],[-0.9999999999999999,0.7500000000000001]],"derived_centre":[18.65625,3.9687500000000027],"phase_derivation":"literal .37","radiance_bounds_e":[9000.0,11000.0]},
+    {"id":"coordinate-affine","call":"cell","scene":{"foreground_field":"coordinate-affine","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[3.0,4.0],"mask_offset":0.0,"mask_state":"full"},"frame":"rotated-zero-aperture","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"coordinate","expected_branch":"foreground","evaluated_canonical_box":[[17.0,20.0],[3.0,5.0]],"radiance_bounds_e":[9000.0,11000.0]},
+    {"id":"visibility-h-16-contrast","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[3.0,4.0],"mask_offset":81.0,"mask_state":"half-plane"},"frame":"identity","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"visibility-fault-power","expected_branch":"numerical","radiance_bounds_e":[9000.0,15000.0]},
+    {"id":"visibility-h-16-equal-null","call":"cell","scene":{"foreground_field":"equal-12000","background_field":"equal-12000","depths":[1.0,2.0],"mask_normal":[3.0,4.0],"mask_offset":81.0,"mask_state":"half-plane"},"frame":"identity","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"visibility-fault-power","expected_branch":"numerical","radiance_bounds_e":[12000.0,12000.0]},
+    {"id":"visibility-h-12-contrast","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[3.0,4.0],"mask_offset":77.0,"mask_state":"half-plane"},"frame":"identity","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"visibility-fault-power","expected_branch":"numerical","radiance_bounds_e":[9000.0,15000.0]},
+    {"id":"visibility-h-12-equal-null","call":"cell","scene":{"foreground_field":"equal-12000","background_field":"equal-12000","depths":[1.0,2.0],"mask_normal":[3.0,4.0],"mask_offset":77.0,"mask_state":"half-plane"},"frame":"identity","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"visibility-fault-power","expected_branch":"numerical","radiance_bounds_e":[12000.0,12000.0]},
+    {"id":"visibility-h12-contrast","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[3.0,4.0],"mask_offset":53.0,"mask_state":"half-plane"},"frame":"identity","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"visibility-fault-power","expected_branch":"numerical","radiance_bounds_e":[9000.0,15000.0]},
+    {"id":"visibility-h12-equal-null","call":"cell","scene":{"foreground_field":"equal-12000","background_field":"equal-12000","depths":[1.0,2.0],"mask_normal":[3.0,4.0],"mask_offset":53.0,"mask_state":"half-plane"},"frame":"identity","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"visibility-fault-power","expected_branch":"numerical","radiance_bounds_e":[12000.0,12000.0]},
+    {"id":"visibility-h16-contrast","call":"cell","scene":{"foreground_field":"fg-15000","background_field":"bg-9000","depths":[1.0,2.0],"mask_normal":[3.0,4.0],"mask_offset":49.0,"mask_state":"half-plane"},"frame":"identity","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"visibility-fault-power","expected_branch":"numerical","radiance_bounds_e":[9000.0,15000.0]},
+    {"id":"visibility-h16-equal-null","call":"cell","scene":{"foreground_field":"equal-12000","background_field":"equal-12000","depths":[1.0,2.0],"mask_normal":[3.0,4.0],"mask_offset":49.0,"mask_state":"half-plane"},"frame":"identity","native_xy":[7.0,11.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"visibility-fault-power","expected_branch":"numerical","radiance_bounds_e":[12000.0,12000.0]},
+    {"id":"joint-relative-sign-point","call":"point","scene":{"foreground_field":"joint-fg","background_field":"joint-affine-bg","depths":[1.0,2.0],"mask_normal":[3.0,4.0],"mask_offset":0.0,"mask_state":"half-plane"},"frame":"identity","native_xy":[0.0,0.0],"author_arms":["primary"],"author_methods":["frozen-point"],"reference_arms":["primary","refined"],"group":"joint","expected":{"expression":"11000+400/pi","wrong_foreground_sign_expression":"11000-400/pi"},"evaluated_domain":"native point at origin; background unit disc; foreground radius3 disc","radiance_bounds_e":[9400.0,12000.0]},
+    {"id":"joint-zero-pupil-cell","call":"cell","scene":{"foreground_field":"cell-fg","background_field":"cell-affine-bg","depths":[1.0,2.0],"mask_normal":[1.0,0.0],"mask_offset":-0.2,"mask_state":"half-plane"},"frame":"zero-aperture","native_xy":[0.0,0.0],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"joint","expected_branch":"numerical","expected":{"value_e":13816.0,"separate_cell_means_e":13900.0},"evaluated_canonical_box":[[-0.5,0.5],[-0.5,0.5]],"radiance_bounds_e":[8600.0,16000.0]},
+    {"id":"legacy-30-4","call":"cell","scene":{"foreground_field":"legacy-fg","background_field":"legacy-bg","depths":[1.0,2.0],"mask_normal":[1.0,-0.15],"mask_offset":28.4,"mask_state":"half-plane"},"frame":"legacy-frame-3","native_xy":[30,4],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"preserved-whole-cell","retained_reference":{"array":{"path":"experiments/m194e-joint-pupil/independent-reference-1/refined-3.npy","sha256":"72c7842f7061fda599be011db3e89b12741876ed3ab9ba56137e2a916d9a0d82"},"index_yx":[4,30],"reference_result":{"path":"experiments/m194e-joint-pupil/independent-reference-1/result.json","sha256":"8791700cdc969847ff75f9fbd9205739ee2135ac4bbbdbe445d00b6664c7eccc"}},"radiance_bounds_e":[7000.0,17100.0]},
+    {"id":"legacy-31-7","call":"cell","scene":{"foreground_field":"legacy-fg","background_field":"legacy-bg","depths":[1.0,2.0],"mask_normal":[1.0,-0.15],"mask_offset":28.4,"mask_state":"half-plane"},"frame":"legacy-frame-3","native_xy":[31,7],"author_arms":["primary"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"preserved-whole-cell","retained_reference":{"array":{"path":"experiments/m194e-joint-pupil/independent-reference-1/refined-3.npy","sha256":"72c7842f7061fda599be011db3e89b12741876ed3ab9ba56137e2a916d9a0d82"},"index_yx":[7,31],"reference_result":{"path":"experiments/m194e-joint-pupil/independent-reference-1/result.json","sha256":"8791700cdc969847ff75f9fbd9205739ee2135ac4bbbdbe445d00b6664c7eccc"}},"radiance_bounds_e":[7000.0,17100.0]},
+    {"id":"legacy-4-0","call":"cell","scene":{"foreground_field":"legacy-fg","background_field":"legacy-bg","depths":[1.0,2.0],"mask_normal":[1.0,-0.15],"mask_offset":28.4,"mask_state":"half-plane"},"frame":"legacy-frame-2","native_xy":[4,0],"author_arms":["cell-refined"],"author_methods":["analytic-enabled","analytic-disabled"],"reference_arms":["primary","refined"],"group":"preserved-whole-cell","retained_reference":{"array":{"path":"experiments/m194e-joint-pupil/independent-reference-1/refined-2.npy","sha256":"580e77622eb612e2a45b65b8e6d45f5bf87b3b86960eaa7e0e9fe53ff804a11d"},"index_yx":[0,4],"reference_result":{"path":"experiments/m194e-joint-pupil/independent-reference-1/result.json","sha256":"8791700cdc969847ff75f9fbd9205739ee2135ac4bbbdbe445d00b6664c7eccc"}},"radiance_bounds_e":[7000.0,17100.0]}
+  ],
+  "numerical_targets": {
+    "reference_primary_e": 0.000125,
+    "reference_refined_e": 7.8125e-06,
+    "factor_request": "T/(16*max(1,sum(abs(layer_wave_amplitudes))))",
+    "relative_tolerance": 0.0,
+    "quadrature_limit_per_interval": 128,
+    "component_max_abs_e": 0.004,
+    "textured_component_rms_e": 0.0008,
+    "reference_refinement_max_e": 0.0005,
+    "author_complete_arm_refinement_max_e": 0.001,
+    "complete_image_max_e": 0.004,
+    "complete_image_rms_e": 0.0008,
+    "fixed_edge_height_limit": 8.0
+  },
+  "independent_budgets": {
+    "separate_scope_each": [
+      "complete-five-frame-primary-reference",
+      "complete-five-frame-refined-reference",
+      "complete-component-batch-including-cache-primes-and-faults"
+    ],
+    "actual_integrand_calls": 30000000,
+    "cpu_seconds": 600.0,
+    "wall_seconds": 1200.0,
+    "tracked_array_bytes": 33554432,
+    "workers": 1,
+    "library_threads_max": 2,
+    "check_clock_during_analytic_rows": true,
+    "borrowing_between_scopes": false
+  },
+  "author_component_budget_proposal": {
+    "scope": "all author component calls including enabled/disabled and named faults; root/author approval required before phase2 release",
+    "points": 16000000,
+    "angular_nodes": 2400000000,
+    "cpu_seconds": 600.0,
+    "wall_seconds": 1200.0,
+    "tracked_array_bytes": 33554432,
+    "angular_depth": 10,
+    "cell_depth": 6,
+    "node_pair_limit": 32768
+  },
+  "active_fault_targets": [
+    {
+      "id": "abs-disc-transfer",
+      "target_case": "transfer-negative-one-full",
+      "intervention": "replace signed disc transfer by abs(D)",
+      "required_abs_value_discrepancy_gt_e": 0.004
+    },
+    {
+      "id": "clamp-disc-transfer",
+      "target_case": "transfer-negative-two-absent",
+      "intervention": "replace signed disc transfer by max(D,0)",
+      "required_abs_value_discrepancy_gt_e": 0.004
+    },
+    {
+      "id": "omit-pupil-normalization",
+      "target_case": "transfer-negative-one-full",
+      "intervention": "omit factor1/pi from full-disc average; preserve integral otherwise",
+      "required_abs_value_discrepancy_gt_e": 0.004
+    },
+    {
+      "id": "omit-square-factor",
+      "target_case": "transfer-negative-two-full",
+      "intervention": "replace both native square factors by1",
+      "required_abs_value_discrepancy_gt_e": 0.004
+    },
+    {
+      "id": "always-unit-disc",
+      "target_case": "transfer-one-eighth-full",
+      "intervention": "replace D by1 at all arguments",
+      "required_abs_value_discrepancy_gt_e": 0.004
+    },
+    {
+      "id": "transpose-native-frequency",
+      "target_case": "coordinate-centre-phase-zero",
+      "intervention": "compute k=M*omega while correct centre/phase remains fixed",
+      "required_abs_value_discrepancy_gt_e": 0.004
+    },
+    {
+      "id": "chief-ray-native-as-canonical",
+      "target_case": "coordinate-literal-phase",
+      "intervention": "replace q0 by native xy while k remains correct",
+      "required_abs_value_discrepancy_gt_e": 0.004
+    },
+    {
+      "id": "wrong-background-visibility-radius",
+      "target_case": "visibility-h12-contrast",
+      "intervention": "use abs(dB) in visibility classifier instead of abs(dF)",
+      "required_abs_value_discrepancy_gt_e": 0.004
+    },
+    {
+      "id": "missing-cell-visibility-support",
+      "target_case": "visibility-h16-contrast",
+      "intervention": "use H=0 in full-layer classifier",
+      "required_abs_value_discrepancy_gt_e": 0.004
+    },
+    {
+      "id": "relative-sign",
+      "target_case": "joint-relative-sign-point",
+      "intervention": "replace only foreground signed defocus by its magnitude",
+      "required_abs_value_discrepancy_gt_e": 0.004
+    },
+    {
+      "id": "separate-cell-means",
+      "target_case": "joint-zero-pupil-cell",
+      "intervention": "multiply independent cell visibility and background means",
+      "required_abs_value_discrepancy_gt_e": 0.004
+    },
+    {
+      "id": "stale-frequency-cache",
+      "target_case": "transfer-negative-two-full",
+      "intervention": "reuse previously primed transfer-negative-one-full factors",
+      "required_abs_value_discrepancy_gt_e": 0.004
+    },
+    {
+      "id": "cached-phase-zero",
+      "target_case": "coordinate-literal-phase",
+      "intervention": "reuse centre-phase-zero phase from previous coordinate case",
+      "required_abs_value_discrepancy_gt_e": 0.004
+    },
+    {
+      "id": "swapped-field",
+      "target_case": "transfer-positive-lobe-absent",
+      "intervention": "use foreground constant15000 instead of selected background wave",
+      "required_abs_value_discrepancy_gt_e": 0.004
+    }
+  ],
+  "refusal_targets": [
+    {
+      "id": "zero-over-zero",
+      "target_case": "transfer-zero-full",
+      "intervention": "remove removable-zero branch and evaluate0/0",
+      "expected": "nonfinite refusal, never a finite commissioned value"
+    },
+    {
+      "id": "duplicate-case",
+      "target_case": "geometry-000",
+      "intervention": "repeat ID/record while removing geometry-001",
+      "expected": "population refusal before admission"
+    },
+    {
+      "id": "source-digest-mismatch",
+      "target_case": "legacy-30-4",
+      "intervention": "change one bound source/array byte while retaining expected digest",
+      "expected": "binding refusal before numeric admission"
+    }
+  ],
+  "fault_policy": "Each named actual consuming mutation must fail and its untouched/restored companion must pass; retain inert faults and withhold affected assertion; do not tune scene/threshold to rescue."
+}

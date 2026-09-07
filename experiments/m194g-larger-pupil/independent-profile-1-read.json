@@ -1,0 +1,103 @@
+{
+  "schema": "m194g-independent-stopped-profile-read-v1",
+  "evidence_consistent": true,
+  "disposition": "off population valid; count receipt comparison defective; profiling uncommissioned",
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-B",
+    "-X",
+    "faulthandler",
+    "-X",
+    "pycache_prefix=experiments/m194g-larger-pupil/work/cache-independent-profile-1-read",
+    "experiments/m194g-larger-pupil/independent-profile-1-read.py"
+  ],
+  "reader_sha256": "16274c2e0cec491a07b3f0a34468104f8f18da5ec1fa1da20f67ab943d6386aa",
+  "bound_results": {
+    "counter-profile-off-1/result.json": "c4d3298dd64df03f092e5904b3dbf08c6ebbb8284f5e7ddb5e142d0193f75762",
+    "counter-profile-count-1/result.json": "d80f9f77b9bcb415eee5c423c30b4f114b6ecaaec6fcadc478bc7f7994c78bea",
+    "counter-profile.py": "fc1dd81cf3c6dbccdb46830dcffb98a91b21f05f2a89089d9f40c85f253d0020"
+  },
+  "source_commit": "25a223f639b642b56b2d0c716ebe0abc54dca0aa",
+  "commit_time": "2026-09-07T10:14:16-07:00",
+  "off_payload_sha256": "b05e5f7f4b5d9d86c69cee4fd6eb7ba116781d7b997b49611b884d566df2e78a",
+  "complete_off_rows": 15,
+  "complete_off_cells": 810,
+  "off_points": 167040,
+  "off_nominal_nodes": 39819840,
+  "off_geometry_digest": "70a91137c45db1004ad3517995d8986fec94b115764b2f16dc09b79243ea0ee2",
+  "branch_oracle": "independent exact dyadic predicate plus retained private reference",
+  "refusal": "ValueError('baseline is not the same-source completed off mode')",
+  "baseline_predicates": {
+    "schema": true,
+    "status": true,
+    "mode": true,
+    "sources_before": true,
+    "sources_after": true,
+    "inputs": false,
+    "protocol": true
+  },
+  "tuple_paths": [
+    "inputs.scene.foreground.affine",
+    "inputs.scene.foreground.waves",
+    "inputs.scene.background.affine",
+    "inputs.scene.background.waves",
+    "inputs.scene.depths",
+    "inputs.scene.mask_normal",
+    "inputs.frames[0].forward_similarity.centre",
+    "inputs.frames[0].forward_similarity.translation",
+    "inputs.frames[1].forward_similarity.centre",
+    "inputs.frames[1].forward_similarity.translation",
+    "inputs.frames[2].forward_similarity.centre",
+    "inputs.frames[2].forward_similarity.translation",
+    "inputs.frames[3].forward_similarity.centre",
+    "inputs.frames[3].forward_similarity.translation",
+    "inputs.frames[4].forward_similarity.centre",
+    "inputs.frames[4].forward_similarity.translation"
+  ],
+  "json_only_normalized_companion_passes": true,
+  "numeric_changed_input_refuses": true,
+  "live_constructor_json_matches_both_actual_input_records": true,
+  "no_counter_or_mode_rerun": true,
+  "no_profiler_constructed_or_executed": true,
+  "author_frozen_sources_unchanged": true,
+  "off_work": {
+    "limits": {
+      "whole_run_cpu_seconds": 10.0,
+      "whole_run_wall_seconds": 20.0,
+      "tracked_owned_ndarray_bytes": 33554432,
+      "per_frame_points_strictly_below": 8000000,
+      "per_frame_angular_nodes_strictly_below": 1200000000
+    },
+    "cpu_seconds": 1.546875,
+    "wall_seconds": 1.547000000020489,
+    "frame_points": 28160,
+    "frame_angular_nodes": 6439488,
+    "total_points": 167040,
+    "total_angular_nodes": 39819840,
+    "frame_count": 15,
+    "check_calls": 182552,
+    "tracked_peak_ndarray_bytes": 14726,
+    "tracked_peak_ndarrays": 22,
+    "array_scope": "unique reachable wrapper-owned ndarray backing allocations; excludes Python objects/RSS/frozen-helper transient temporaries"
+  },
+  "failed_work": {
+    "limits": {
+      "whole_run_cpu_seconds": 10.0,
+      "whole_run_wall_seconds": 20.0,
+      "tracked_owned_ndarray_bytes": 33554432,
+      "per_frame_points_strictly_below": 8000000,
+      "per_frame_angular_nodes_strictly_below": 1200000000
+    },
+    "cpu_seconds": 0.484375,
+    "wall_seconds": 0.48400000005494803,
+    "frame_points": 0,
+    "frame_angular_nodes": 0,
+    "total_points": 0,
+    "total_angular_nodes": 0,
+    "frame_count": 0,
+    "check_calls": 3,
+    "tracked_peak_ndarray_bytes": 0,
+    "tracked_peak_ndarrays": 0,
+    "array_scope": "unique reachable wrapper-owned ndarray backing allocations; excludes Python objects/RSS/frozen-helper transient temporaries"
+  }
+}
