@@ -1,0 +1,59 @@
+{
+  "schema": "m194g-numerical-execution-release-v1",
+  "scope": "independent-quality-result-check",
+  "source_bindings": {
+    "experiments/m194g-larger-pupil/independent-quality-result-check.py": {
+      "sha256": "6c69efa777efccca740901edac9e633deb9a16f3dbe539d66c4e6337994e8539",
+      "bytes": 50432
+    }
+  },
+  "inputs": [
+    {
+      "path": "experiments/m194g-larger-pupil/independent-quality-result-check-design.md",
+      "sha256": "0a6efc5a3266f4c0b1cd9b3f35ea7927a7106ec5dd3dc6abdc9dcf2878ff1b2e",
+      "bytes": 8069
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/independent-quality-result-check-preparation.md",
+      "sha256": "c7b952414059d215ce0a77b7b90556880dc5007382cbf593f1e054a4952baa4f",
+      "bytes": 4738
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/independent-quality-result-check-root-review.md",
+      "sha256": "c16ca17a33f43019f42e8dadc8ca3086fe63b0417a7a1a289c5ef05607961821",
+      "bytes": 3223
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/milestone-rule-checklist.md",
+      "sha256": "2d8a3ff9584c84e357ce78590c85c6555020a44f853fe4e36bf615e992f488df",
+      "bytes": 29971
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/independent-quality-score-1/result.json",
+      "sha256": "7477f1553ac53dc87d554cee04117c536f7e5d3476b97ce9fde8f5d3b42b95df",
+      "bytes": 444640
+    }
+  ],
+  "commands": [
+    [
+      "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+      "-X",
+      "utf8",
+      "-X",
+      "faulthandler",
+      "-X",
+      "pycache_prefix=C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\work\\cache-independent-quality-result-check-1",
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-quality-result-check.py",
+      "--release",
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-quality-result-check-release-1.json",
+      "--release-sha256",
+      "ACTUAL_EXECUTION_RELEASE_SHA256",
+      "--score",
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-quality-score-1\\result.json",
+      "--score-sha256",
+      "7477f1553ac53dc87d554cee04117c536f7e5d3476b97ce9fde8f5d3b42b95df",
+      "--output",
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-quality-result-check-1"
+    ]
+  ]
+}
