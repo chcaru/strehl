@@ -36,8 +36,8 @@
   "arms": ["primary", "angle-refined", "cell-refined"],
   "selector_intermediate_bit_limit": 4096,
   "preflight_limits": {
-    "whole_run_cpu_seconds": 60.0,
-    "whole_run_wall_seconds": 120.0,
+    "whole_run_cpu_seconds": 180.0,
+    "whole_run_wall_seconds": 240.0,
     "tracked_owned_ndarray_bytes": 33554432,
     "per_frame_points_strictly_below": 8000000,
     "per_frame_angular_nodes_strictly_below": 1200000000

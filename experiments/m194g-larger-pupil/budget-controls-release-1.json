@@ -1,0 +1,58 @@
+{
+  "schema": "m194g-budget-controls-release-v1",
+  "preregister_commit": "01d4e52b",
+  "scope": "only affected injected-clock/source/input controls; no intended count or radiance",
+  "files": [
+    {
+      "path": "experiments/m194g-larger-pupil/preflight.py",
+      "sha256": "c162c2651b1fd3e8345f08c0c9cd5edf5e100d94d7958c5dedde1d791a18763c",
+      "bytes": 23049
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/fixture.json",
+      "sha256": "e84f0bbbda9bef039da86616c9f051d416929f4dbe78477cc5b3fc21206856bb",
+      "bytes": 1985
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/amendment-1-counter-budget.md",
+      "sha256": "205ba1ac42e8325eb7d1ede41e05399776eddf7d80a99ecb3ba12b1931f73a99",
+      "bytes": 5367
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/independent-budget-controls.py",
+      "sha256": "14fe92cca70b25ec98719ed5c8d0ae1f9c5f38f3642c6eb894b1222923e57b99",
+      "bytes": 18698
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/independent-budget-controls-design.md",
+      "sha256": "8c02b87686b7521ff2a216aee5567ce9557454a13764075bdd3251ad6896f5eb",
+      "bytes": 5498
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/amendment-1-implementation-note.md",
+      "sha256": "39ddbaf7dc69707dfde0891bab592dab39c67ba7c0e340da766112141696be06",
+      "bytes": 1792
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/geometry.py",
+      "sha256": "24b812071b8b6189423b9792a22c55abd9a4f4a78921a9d558ab24489f1923b3",
+      "bytes": 6591
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/pinned-loader.py",
+      "sha256": "222fab4a932fe236c120d8a48e4521747474e2ef57ba58781bf5c59f644f4f76",
+      "bytes": 2939
+    }
+  ],
+  "argv": [
+    "python",
+    "-B",
+    "-X",
+    "faulthandler",
+    "-X",
+    "pycache_prefix=experiments/m194g-larger-pupil/work/cache-independent-budget-1",
+    "experiments/m194g-larger-pupil/independent-budget-controls.py",
+    "--output",
+    "experiments/m194g-larger-pupil/independent-budget-1"
+  ]
+}
