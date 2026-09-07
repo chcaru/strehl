@@ -1,0 +1,61 @@
+{
+  "schema": "m194e-independent-comparison-v1",
+  "status": "UNCOMMISSIONED",
+  "command": [
+    "experiments/m194e-joint-pupil/independent-compare.py",
+    "--bundle",
+    "experiments/m194e-joint-pupil/reader-preflight-missing/float-bundle.json",
+    "--bundle-sha256",
+    "0000000000000000000000000000000000000000000000000000000000000000",
+    "--author-run",
+    "experiments/m194e-joint-pupil/reader-preflight-missing/result.json",
+    "--author-run-sha256",
+    "0000000000000000000000000000000000000000000000000000000000000000",
+    "--schema-sha256",
+    "0bcc546634a748ee31fbd5095b6aae3a1eab18899a557dbed8aeeb8af102a82c",
+    "--reader-controls",
+    "experiments/m194e-joint-pupil/independent-reader-controls-3/result.json",
+    "--reader-controls-sha256",
+    "0b2bf5e7c386bec00769a4405680011c43d1a9086efac9a380ee701cf41845bf",
+    "--output",
+    "experiments/m194e-joint-pupil/independent-reader-preflight-1"
+  ],
+  "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+  "numpy": "2.4.4",
+  "numerical_threads": 2,
+  "inputs": {
+    "reader_controls": {
+      "path": "experiments/m194e-joint-pupil/independent-reader-controls-3/result.json",
+      "bytes": 1829,
+      "sha256": "0b2bf5e7c386bec00769a4405680011c43d1a9086efac9a380ee701cf41845bf"
+    },
+    "observer": {
+      "path": "experiments/m194e-joint-pupil/independent-observer-1/result.json",
+      "bytes": 32410,
+      "sha256": "b399094afc2956ab2f2d38aa4c8470ce62eb1cbd54c4ecc3e25648dfc18b4385"
+    },
+    "controls": {
+      "path": "experiments/m194e-joint-pupil/independent-controls-1/result.json",
+      "bytes": 15809,
+      "sha256": "e122c38565184a0d1798a6e03cfdf3dd2fae9aab2ede6e7a0dae82b8f7cb10ab"
+    },
+    "author_api": {
+      "path": "experiments/m194e-joint-pupil/independent-author-api-3/result.json",
+      "bytes": 327636,
+      "sha256": "4c7d513a986b952e1f99f77ef283b3a62a44b548985e22e4a06f4410d39a48bb"
+    },
+    "reference": {
+      "path": "experiments/m194e-joint-pupil/independent-reference-1/result.json",
+      "bytes": 9119,
+      "sha256": "8791700cdc969847ff75f9fbd9205739ee2135ac4bbbdbe445d00b6664c7eccc"
+    }
+  },
+  "sources": {},
+  "frames": [],
+  "author_refinement": [],
+  "independent_refinement": [],
+  "error": "FileNotFoundError(2, 'No such file or directory')",
+  "traceback": "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-compare.py\", line 172, in main\n    bundle = read_json(args.bundle, args.bundle_sha256)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-compare.py\", line 46, in read_json\n    if digest is not None and sha(path) != digest:\n                              ^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-compare.py\", line 28, in sha\n    return hashlib.sha256(Path(path).read_bytes()).hexdigest()\n                          ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\pathlib.py\", line 1019, in read_bytes\n    with self.open(mode='rb') as f:\n         ^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\pathlib.py\", line 1013, in open\n    return io.open(self, mode, buffering, encoding, errors, newline)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nFileNotFoundError: [Errno 2] No such file or directory: 'C:\\\\dev\\\\blog\\\\death-of-software\\\\projects\\\\strehl\\\\experiments\\\\m194e-joint-pupil\\\\reader-preflight-missing\\\\float-bundle.json'\n",
+  "cpu_seconds": 0.015625,
+  "wall_seconds": 0.01671870006248355
+}

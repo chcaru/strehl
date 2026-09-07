@@ -162,25 +162,22 @@ owner sheet. No new photograph is requested by this takeover. First finish
 software commissioning on development inputs. A new reference must validate
 its information advantage; a sharper-looking edge alone is not truth.
 
-**Current next implementation:** M194e commissions the missing joint-pupil
-two-depth geometric model before any new occlusion-quality comparison. Its
-preregistration is committed at `773f5762`; author and independent implementations
-are active. [M194e's current record](../research/M194e-joint-pupil.md) preserves
-the original angular integration refusal and two subsequent complete-image
-attempts that stopped at local sensor-cell error allocations. Independent
-diagnosis of the second cell establishes that the complete-cell aggregate
-meets the existing limit despite the local refusal. Amendment3, preregistered
-at `2a75e519`, explicitly replaces area-proportional local admission with global
-absolute-error allocation while retaining whole-cell/pupil, independent image,
-refinement and resource limits. Its independent controls passed; the full
-rerun completed twelve of fifteen arrays before an inner/outer error-budget
-mismatch stopped the cell-refinement arm. The next prospective correction
-allocates a shared inner point target from the strongest existing cell budget,
-preserving isolated refinement arms and all global bars. The exact diagnostic,
-three failed complete runs and their source snapshots remain in the M194e
-record. All fifteen newly generated frames must still pass before the model is
-commissioned. The one-plane
-M194b/M194d evidence cannot express depth-boundary dilution.
+**M194e complete within its fixed geometric scope:** the fourth fifteen-image
+run passed independent whole-image/edge/refinement limits, then all15360 actual
+CFA samples passed separate exact conversion/provenance verification. The three
+earlier full-run refusals and four prospective numerical amendments remain in
+[M194e's record](../research/M194e-joint-pupil.md). Worst scalar discrepancy is
+0.00012419946 electrons against the unchanged0.004 limit; this commissions the
+fixed numerical model, not measured physical optics or merge quality.
+
+**Current next implementation: M194f**, preregistered at `9da113f5`, consumes
+those admitted CFA files through the existing prepared production Pyramid and
+actual TIFF writer. Its eleven-file population checks strict input/source/plan
+bindings, nonzero crop/colour values, off/count/placebo byte identity, confidence
+rereads and rank encoding. The small fixture has one Laplacian band plus a base;
+a separately registered larger boundary/noise comparison must follow before
+assessing M194d there. See the [M194f protocol](../../experiments/m194f-production-bridge/preregister.md).
+The one-plane M194b/M194d evidence cannot express depth-boundary dilution.
 The new mathematical model will not clear M25's failed physical/optics gates.
 Any later production bridge, noise population and quality comparison need an
 explicit versioned contract and independently checked scope. A real-output

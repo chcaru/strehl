@@ -1,0 +1,71 @@
+{
+  "schema": "m194e-independent-reader-controls-v1",
+  "status": "PASS_READER_CONTROLS_ONLY",
+  "command": [
+    "experiments/m194e-joint-pupil/independent-reader-controls.py",
+    "--output",
+    "experiments/m194e-joint-pupil/independent-reader-controls-5"
+  ],
+  "sources": {
+    "independent-reader-controls.py": "8d49d0e5c7db9e1ffd985f5d7023b025f340f91a57413c662785bba67e4e897f",
+    "independent-reader-preregister.md": "16a3a0d4fbacf8262e9e37aa6220e62a08ba533a6f820c7cc35584fc66c7ed53",
+    "independent-compare.py": "36b781b954b2717752ebb03660e9ea3d0e8decd6e43cbe8119f4d2faf2a99a6e",
+    "independent-comparison-math.py": "d9f95b67aaf03a20c70623e55b7d932b5d43dbaef041a8f69b6995a56b22c50f"
+  },
+  "checks": [
+    {
+      "name": "byte-copy-null",
+      "passed": true
+    },
+    {
+      "name": "identical-relocated-null",
+      "passed": true
+    },
+    {
+      "name": "false-digest",
+      "passed": true
+    },
+    {
+      "name": "bound-trailing-payload",
+      "passed": true
+    },
+    {
+      "name": "float32",
+      "passed": true
+    },
+    {
+      "name": "shape",
+      "passed": true
+    },
+    {
+      "name": "nan",
+      "passed": true
+    },
+    {
+      "name": "duplicate-keys",
+      "passed": true
+    },
+    {
+      "name": "bound-finite-change-reads-but-maximum-rejects",
+      "passed": true
+    }
+  ],
+  "mutation_statistics": {
+    "whole": {
+      "count": 3072,
+      "maximum_e": 0.004999999999199645,
+      "rms_e": 9.021097954643887e-05,
+      "maximum_pass": false,
+      "rms_pass": true
+    },
+    "edge": {
+      "count": 775,
+      "maximum_e": 0.004999999999199645,
+      "rms_e": 0.0001796053019980253,
+      "maximum_pass": false,
+      "rms_pass": true
+    },
+    "pass": false
+  },
+  "source_unchanged": true
+}

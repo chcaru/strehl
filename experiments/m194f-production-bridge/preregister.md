@@ -148,8 +148,9 @@ interpretations (red/blue luma, dropping the duplicate200,65535 normalization)
 must fail the fixed independent counts/codes. Keep exact valid companions.
 
 Write two additional16x8 Gray16 component TIFFs: the actual rank map, then
-the same map with one explicitly manually unseen Centrality entry. Only that
-entry becomes65535, while a reached-zero companion remains0. This second
+the same map with linear entry0 explicitly manually unseen, matching the bound
+independent acceptance review. Only entry0 becomes65535, while reached-zero
+entry1 remains0. This second
 file tests the writer's sentinel, not actual missing optical coverage. Together
 with eight main RGB outputs and the genuine auxiliary image, the complete
 prospective population is eleven TIFFs. Malformed and interrupted cases remain

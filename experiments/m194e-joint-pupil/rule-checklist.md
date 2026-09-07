@@ -1,7 +1,7 @@
 # M194e rule discharge
 
-Root, 2026-09-07. **Work in progress. Full-image and final-CFA admission remain
-pending; component passes below do not close those gates.** Exact commands,
+Root, 2026-09-07. **Complete within the fixed geometric/CFA scope. Full4's
+fifteen images and all15360 emitted CFA samples passed independent admission.** Exact commands,
 source snapshots and failures are retained with each result. NA means the
 milestone did not exercise that rule, not that a test passed.
 
@@ -17,9 +17,9 @@ milestone did not exercise that rule, not that a test passed.
 | 8 | Reports distinguish geometric derivations, actual controls and incomplete full-run outcomes. Every result records a command and source bytes. No speed or SOTA claim. |
 | 9 | No gradient/sharpness quality score. Constant/affine controls precede textured integration; future quality requires flat-noise controls. |
 | 10 | No spatial SD is called temporal noise. Five differently focused noiseless frames do not supply a temporal noise measurement. |
-| 11 | Separate-layer, sign/order, linear-map, missing-Jacobian, rounding and rehashed-value destroyers are retained. Full-image code-path admission is still required. |
+| 11 | Separate-layer, sign/order, linear-map, missing-Jacobian, rounding and rehashed-value destroyers are retained. Full4 passes the independent full-image code path; genuine CFA verification1 checks every emitted sample. |
 | 12 | Curie's numerical implementation is checked by Zeno's separate Cartesian reference; root's emitter/schema is checked by Socrates's scalar oracle/API controls. Root reviews independent reader choices and report fidelity. |
-| 13 | No quality-parameter sweep. The first two numerical amendments retain dimensions, scenes, orders/depths and tolerances. The prospective third explicitly replaces local area allocation while retaining whole-cell/pupil/full-image bars and resource limits; failures are preserved. |
+| 13 | No quality-parameter sweep. The first two numerical amendments retain dimensions, scenes, orders/depths and tolerances. Amendment3 explicitly replaces local area allocation; amendment4 derives a common consumed pupil target from the tightest cell budget. Whole-cell/pupil/full-image bars and resource limits remain fixed; failures are preserved. |
 | 14 | NA: no corpus census or corpus-write guarantee inferred from counts; no capture files used. |
 | 15 | Depth-boundary artifact scope is explicit. No plugin-halo margin is recast as an occlusion-quality metric. |
 | 16 | NA: no timing sweep or speed claim. Nominal work counts are labeled before-adaptation derivations. |
@@ -28,11 +28,11 @@ milestone did not exercise that rule, not that a test passed.
 | 19 | New experiment/script names are kebab-case. Indexed milestone reports retain repository naming conventions; no crate added. |
 | 20 | Independent designs name wrong inputs before use. Actual controls reject those inputs; unpowered tiny-tile and invalid affine controls are explicitly withdrawn from their intended evidence. |
 | 21 | No fitted constant gates its own relation. The64-epsilon predicate is a fixed engineering map choice, not a fitted physical threshold. |
-| 22 | This table maps every rule to scope/evidence; unfinished full-image/CFA gates stay unfinished. |
+| 22 | This table maps every rule to scope/evidence; terminal full-image/CFA results are read completely and historical refusals remain recorded. |
 | 23 | No separable image filter is applied over a frame axis. The independent reference integrates one cell/frame at a time. |
 | 24 | Independent reference changes integration coordinates/order, scene geometry and controls; CFA oracle separately re-chooses parity ties, finite values and file mutations. |
 | 25 | NA: no fact/discipline/question number block or SYNTHESIS fold. M194e identifier allocated in AGENTS before dispatch. |
-| 26 | Actual scalar/indicator hashes match with observer off/count/placebo. The19x11 supplement witnesses genuinely different complete tile traversals; a source change is live. Amendment2 repeats these controls. |
+| 26 | Actual scalar/indicator hashes match with observer off/count/placebo. The19x11 supplement witnesses genuinely different complete tile traversals; a source change is live. Later amendments refresh these controls on their source; amendment4 separately traces actual low/high target arguments with byte null/placebo companions. |
 | 27 | Healthy progress is judged from recorded cell/work activity, not absent final files. Registered numerical refusal terminates its own run; no renderer was killed. Git lock recovery preserved inspected empty locks only after checking ownership. |
 | 28 | NA: no SYNTHESIS fold or duplicate insertion. |
 | 29 | Root checks owned diffs/headings. Render changes replace registered angle/cell rules; historical failure snapshots retain old sources. No SYNTHESIS/table anchor was edited. |
@@ -40,7 +40,7 @@ milestone did not exercise that rule, not that a test passed.
 | 31 | No fold. Preregistrations/amendments are committed before their implementations; both full-run1 and full-run2 preceded their source commits, explicitly recorded beside exact before/after snapshots. Full2 ended13:27:51.720232 UTC; dd91182 committed13:32:46 UTC. |
 | 31b | NA: no fold script or qualifier/numeric fold to check. |
 | 32 | NA: no rawpy decode or LibRaw view lifetime. Actual NPY/raw-CFA readers validate complete payloads and independent values. |
-| 33 | No Rust source/build changed in this milestone. Full-float runs1–3 and the latest emission/reader refresh use fresh per-attempt bytecode prefixes; this does not describe every early author control. Amendment3 independent numerical drivers import snapshots from new, previously nonexistent directories; their reader-control run used ordinary current-source imports without an explicit cache prefix. Copied source bytes alone do not prove which bytecode executed. API1 used -B without an explicit fresh prefix; no stale execution was observed, and later source-bound API/reader controls supersede its passing results. Exact command limitations are in independent-evidence.md and author-report.md. No cargo -q result is cited. |
+| 33 | No Rust source/build changed in this milestone. Full-float runs1–4 and the amendment4 author/independent refresh use fresh per-attempt bytecode prefixes; this does not describe every early author control. Amendment3 independent numerical drivers import snapshots from new, previously nonexistent directories; their reader-control run used ordinary current-source imports without an explicit cache prefix. Copied source bytes alone do not prove which bytecode executed. API1 used -B without an explicit fresh prefix; no stale execution was observed, and later source-bound API/reader controls supersede its passing results. Exact command limitations are in independent-evidence.md and author-report.md. No cargo -q result is cited. |
 | 34 | Explicit synthetic gain/channel factors commission conversion only. The scalar model contains no independent camera calibration evidence. |
 | 35 | Independent rational area/cusp/rounding values and deliberate wrong answers test behavior, not a constant against itself. |
 | 36 | Map controls witness actual edge/vertex/old branches; traversal records209 visits in distinct orders; near-tie CFA controls produce actual reference-code differences. |
@@ -58,7 +58,8 @@ milestone did not exercise that rule, not that a test passed.
 | 48 | No visual quality verdict is made. Numerical comparisons read full-resolution values; no resampled display supplies evidence. |
 | 49 | Root coordinates implementation/source freezes. No agent stops another lane or terminates another lane's process. |
 
-Before publication, replace pending full-image and CFA dispositions with their
-actual results, retain any new failure, check final source/command bindings and
-have the result report independently reviewed. The existence of this checklist
-does not admit an incomplete numerical model.
+Final full-image/CFA dispositions are in the root report and independent
+full-comparison/CFA reports. All50 rule rows remain present. Root checked the
+complete result populations, source/command bindings and structural diff; the
+final report receives independent wording/scope review. The existence of this
+checklist is not itself scientific admission.

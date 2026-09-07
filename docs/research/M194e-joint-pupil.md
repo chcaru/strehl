@@ -1,11 +1,11 @@
 # M194e — joint-pupil depth-boundary model
 
-2026-09-07. **In progress; complete numerical commissioning has not passed.**
-Three full image attempts stopped at registered sensor-cell error limits. The
-first two each completed three primary frames. The third completed all five
-primary, all five angular-refinement and two cell-refinement frames before a
-new refusal. There is no admitted CFA package or merge-quality result from this
-milestone yet. Preserve all failures while investigating their causes.
+2026-09-07. **Complete and independently verified within the registered geometric scope.**
+The fourth full run completed all fifteen images and passed independent
+whole-image, edge-region and refinement comparisons at the original limits.
+Three earlier full-run refusals remain recorded below. Genuine CFA emission
+and separate verification passed for all15360 samples. No merge-quality,
+physical-calibration or SOTA result is claimed by this model commission.
 
 ## Purpose and scope
 
@@ -188,7 +188,7 @@ refinement limits, plus existing orders, depth and resource ceilings. The former
 local condition becomes a diagnostic. This is an explicit change to the former
 admission rule, and neither failed run is retroactively passed.
 
-## Numerical amendment 3: current implementation
+## Numerical amendment 3: global cell allocation
 
 The third amendment and independent prospective review are committed at
 `2a75e519`; implementation and exact author-control snapshots are committed at
@@ -250,12 +250,99 @@ preserved as a diagnostic-reader failure. It did not compute optical samples.
 **DERIVED allocation mismatch:** each inner point calculation may meet its
 0.00025 pupil target while the sum of both weighted pupil terms exceeds the
 stricter outer cell-refinement budget. Subdividing sensor cells cannot generally
-remove the integral of already accepted point indicators. The next prospective
-amendment must allocate compatible inner accuracy explicitly. A shared inner
-target derived from the strongest registered cell budget can preserve the
-primary-versus-cell-refinement angular policy while retaining every global
-accuracy, resource and full-population limit. No replacement has been
-implemented or admitted at this stage.
+remove the integral of already accepted point indicators. This diagnostic
+motivated the prospectively registered fourth amendment below; it did not
+retroactively admit any failed computation.
+
+## Numerical amendment 4: compatible inner targets
+
+The final design and independent review were committed at `d32bd33a` before
+implementation. Source and author-control snapshots were committed at
+`89ce6313`. Primary and cell-refined now consume the same pupil target
+.000046875 electrons, derived as one quarter of the tightest registered cell
+budget. Angle-refined uses .00001171875. The standalone point and separate
+global pupil caps remain unchanged; the new target reaches both the low and
+high cell quadrature batches, controlling interval allocation and summed point
+admission. The cell-only refinement remains isolated from angular refinement.
+
+Each consumed rule also checks positive finite area and weights, with relative
+`abs(fsum(weights)/area-1)<=1e-12`. This is a new engineering tolerance, distinct
+from the existing absolute1e-11 geometric coverage check. Tiny areas receive no
+exemption and underflowed zero weights refuse. There is no renormalization,
+separate spatial half-budget gate, or relaxation of actual global limits.
+
+**MEASURED component result:** author controls11 passes264 checks. The former
+full3 failing cell returns with two root leaves, combined indicator4.51558e-11
+and high-pupil indicator2.13086e-11 electrons. Omitting the consumed target on
+the same new source reproduces the old global refusal. Standalone point values
+and indicators retain their archived bytes. These are actual-path controls,
+not a successful full-image population.
+
+Independent target/mass controls pass62 checks on re-chosen analytic points,
+actual low/high call arguments, invalid weight masses and tiny triangles. An
+explicit1e-18 target on the fixed independent point consumes912 angular nodes,
+demonstrating that the target changes actual integration work. Its returned
+zero quadrature indicator is not claimed as zero true error. The independent
+emission API passes206 cases (original109, allocation82, new target/policy15),
+and the final CFA reader passes39 (original26, allocation10, target3). Their
+coherently rehashed false-target controls reject semantic contradictions, while
+the genuine CLI continues to refuse fixture-only authority.
+
+All fifteen arrays must be generated afresh and independently compared under
+the unchanged whole-image/edge and refinement limits. Author controls bind
+Python source bytes; the full controller separately binds the eight final
+design documents before and after execution. The last contract wording repair
+clarifies that a count-mode partial-frame record retains completed cells; it
+changes no numerical rule. These component checks do not themselves grant
+complete-model or CFA authority.
+
+## Complete numerical result
+
+**MEASURED and independently VERIFIED:** full4 completed at
+2026-09-07T14:59:42.248997Z, with all five frames in each of the three arms.
+Source/design bindings remained identical. Author-refinement maximum was
+0.000123580530271 electrons against the unchanged0.001 limit. Maximum tracked
+array storage was6,940,800 bytes with one live scalar frame; this is the named
+array-accounting bound, not process RSS or a comparative performance result.
+
+The independent reader compared all46080 scalar samples, including the775-site
+fixed edge band in every image. Maximum discrepancy over all images was
+0.000124199459606 electrons; worst whole-image RMS was2.24487674394e-6 and
+worst edge-band RMS4.46943118768e-6, against0.004 maximum/0.0008 RMS limits.
+All ten author-refinement and five independent-reference refinement checks
+passed. No partial image, selected frame or moved edge mask was substituted.
+
+The complete result is
+`independent-full-comparison-1/result.json`, SHA
+`00a6a877005bfc15c33d583f70e4ef6d4f4fb334667ebc00ae61f84e0e20f42f`;
+its genuine float commission is SHA
+`4bd57b896be0b68c42fb1384a468a4f29cc54139a18a046a678dd97bad408217`.
+The float bundle SHA is
+`200da9731cc90b508b544658c4fb084f0b52d11cace116d525248a9a3812e8e1`.
+The sibling invocation receipt records the exact fresh-cache interpreter
+command, external bindings, logs and unchanged sources. This is numerical
+commissioning of the fixed scalar geometric model only.
+
+Root's unchanged emitter then consumed that externally supplied float gate,
+with exact launch/source/input records in `cfa-emission-1-invocation.json`.
+It emitted five complete CFA payloads and a final manifest SHA
+`f47c2b8720560fe9dbd777eeed3281ce2531f1f2287f5c88ef7b51a083d03299`.
+The separate genuine CFA reader passed every one of15360 actual CFA samples
+and all five expected-electron arrays, preserving source/input bindings and
+the exact admitted scalar bytes. Its result is
+`independent-cfa-verification-1/result.json`, SHA
+`8901be629a789d2959482baed15bef3e8cf23ba5f13418f66afdfb9fbf8bacdd`;
+the genuine CFA commission SHA is
+`706462ad18a5a3846cadd99e1ef24d6b92b77e064df2e34cbe72e45907fc06a6`.
+The independently approximated optical reference's rounded codes also agree
+at all sites, but that is not the exact conversion authority. Twenty-four
+sites lie within the registered rounding allowance and remain explicitly
+classified; no half-integer tie allowance changes the float accuracy bars.
+
+This completes M194e's fixed geometric-model and CFA-conversion commission.
+It does not admit the model as calibrated physical optics or establish how
+well any merge preserves a depth boundary. The next consumer is the actual
+prepared production Pyramid and delivered TIFF, under a separate contract.
 
 ## Consequence for the following production experiment
 

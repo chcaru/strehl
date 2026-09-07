@@ -1,0 +1,1174 @@
+{
+  "schema": "m194e-independent-target-controls-v1",
+  "status": "PASS_TARGET_MASS_COMPONENTS_ONLY",
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-X",
+    "utf8",
+    "-X",
+    "pycache_prefix=experiments/m194e-joint-pupil/work/cache-independent-target-1",
+    "experiments/m194e-joint-pupil/independent-target-controls.py",
+    "--render-sha256",
+    "487c1727ca3aab05dd66a7056fb368712ccaabbbe604818fdc8b47eda77b6e97",
+    "--output",
+    "experiments/m194e-joint-pupil/independent-target-controls-1"
+  ],
+  "executable": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+  "xoptions": {
+    "utf8": true,
+    "pycache_prefix": "experiments/m194e-joint-pupil/work/cache-independent-target-1"
+  },
+  "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+  "numpy": "2.4.4",
+  "scipy": "1.17.1",
+  "numerical_threads": 2,
+  "sources": {
+    "model.py": "a74cd9bd61ea2f717a185e86f725b5ed192431056a447581db0f8562cf9f70b8",
+    "render.py": "487c1727ca3aab05dd66a7056fb368712ccaabbbe604818fdc8b47eda77b6e97",
+    "independent-target-controls.py": "602c9c7b759589255e8e1e836b67eae5b44a93009c44fc17b4b24c3e238ff770",
+    "independent-amendment-4-review.md": "828b4dfbae1abfae5f396355ddfa2bd304187a2ea5efdb253eb95075bc6ff055",
+    "independent-target-api-binding.md": "ef7cee4897bf05e02e8b5677394b725c42e0ac52018c8af9f3c4112d9117b26a"
+  },
+  "checks": [
+    {
+      "name": "flat-point-first",
+      "passed": true
+    },
+    {
+      "name": "flat-cell-first",
+      "passed": true
+    },
+    {
+      "name": "standalone-0-old-byte-null",
+      "passed": true
+    },
+    {
+      "name": "standalone-0-explicit-default-byte-null",
+      "passed": true
+    },
+    {
+      "name": "standalone-0-independent-disc-integral",
+      "passed": true,
+      "value": 10242.746547657092,
+      "expected": 10242.746547657092
+    },
+    {
+      "name": "standalone-1-old-byte-null",
+      "passed": true
+    },
+    {
+      "name": "standalone-1-explicit-default-byte-null",
+      "passed": true
+    },
+    {
+      "name": "standalone-1-independent-disc-integral",
+      "passed": true,
+      "value": 10209.896745507282,
+      "expected": 10209.896745507282
+    },
+    {
+      "name": "standalone-2-old-byte-null",
+      "passed": true
+    },
+    {
+      "name": "standalone-2-explicit-default-byte-null",
+      "passed": true
+    },
+    {
+      "name": "standalone-2-independent-disc-integral",
+      "passed": true,
+      "value": 9726.615786805429,
+      "expected": 9726.61578680543
+    },
+    {
+      "name": "standalone-3-old-byte-null",
+      "passed": true
+    },
+    {
+      "name": "standalone-3-explicit-default-byte-null",
+      "passed": true
+    },
+    {
+      "name": "standalone-3-independent-disc-integral",
+      "passed": true,
+      "value": 10286.134716618824,
+      "expected": 10286.134716618826
+    },
+    {
+      "name": "strict-point-target-more-actual-nodes",
+      "passed": true,
+      "work": {
+        "point_calls": 1,
+        "angular_nodes": 912,
+        "peak_node_pairs": 192,
+        "tracked_peak_ndarray_bytes": 37516,
+        "tracked_peak_ndarrays": 37,
+        "peak_live_scalar_frames": 0,
+        "observer": "count",
+        "observer_events": 818,
+        "optional_hook_calls": 127,
+        "cell_allocation": {
+          "cells": 0,
+          "leaves": 0,
+          "minimum_depth": 0,
+          "maximum_depth": 0,
+          "locally_overallocated_leaves": 0,
+          "cells_with_locally_overallocated_leaves": 0
+        },
+        "cpu_seconds": 0.0,
+        "wall_seconds": 0.0
+      }
+    },
+    {
+      "name": "strict-point-target-analytic-integral",
+      "passed": true
+    },
+    {
+      "name": "primary-target-observer-byte-null",
+      "passed": true
+    },
+    {
+      "name": "primary-both-actual-batches-observed",
+      "passed": true
+    },
+    {
+      "name": "primary-count-placebo-hook-power",
+      "passed": true
+    },
+    {
+      "name": "angle-refined-target-observer-byte-null",
+      "passed": true
+    },
+    {
+      "name": "angle-refined-both-actual-batches-observed",
+      "passed": true
+    },
+    {
+      "name": "angle-refined-count-placebo-hook-power",
+      "passed": true
+    },
+    {
+      "name": "cell-refined-target-observer-byte-null",
+      "passed": true
+    },
+    {
+      "name": "cell-refined-both-actual-batches-observed",
+      "passed": true
+    },
+    {
+      "name": "cell-refined-count-placebo-hook-power",
+      "passed": true
+    },
+    {
+      "name": "actual-family-target-isolation",
+      "passed": true
+    },
+    {
+      "name": "missing-actual-low-batch-binding",
+      "passed": true,
+      "refusal": "actual low batch used missing/wrong inner target"
+    },
+    {
+      "name": "missing-actual-high-batch-binding",
+      "passed": true,
+      "refusal": "actual high batch used missing/wrong inner target"
+    },
+    {
+      "name": "actual-full3-failed-cell-new-policy",
+      "passed": true,
+      "value": 11383.252407088126,
+      "reference": 11383.252407088143,
+      "receipt": {
+        "value_error_indicator_e": 6.646447376742722e-11,
+        "cell_indicator_e": 4.51558457159127e-11,
+        "weighted_high_pupil_indicator_e": 2.130862805151452e-11,
+        "cell_quadrature_delta_e": 2.7284841053187847e-12,
+        "area": 1.0,
+        "leaf_triangles": 2,
+        "work": {
+          "point_calls": 640,
+          "angular_nodes": 92160,
+          "peak_node_pairs": 16384,
+          "tracked_peak_ndarray_bytes": 3342736,
+          "tracked_peak_ndarrays": 44,
+          "peak_live_scalar_frames": 0,
+          "observer": "count",
+          "observer_events": 2064,
+          "optional_hook_calls": 322,
+          "cell_allocation": {
+            "cells": 1,
+            "leaves": 2,
+            "minimum_depth": 0,
+            "maximum_depth": 0,
+            "locally_overallocated_leaves": 0,
+            "cells_with_locally_overallocated_leaves": 0
+          },
+          "cpu_seconds": 0.03125,
+          "wall_seconds": 0.015000000013969839
+        }
+      }
+    },
+    {
+      "name": "archived-full3-cell-refusal",
+      "passed": true,
+      "refusal": "UNCOMMISSIONED_NUMERICS: cell depth/global-error ceiling"
+    },
+    {
+      "name": "old-target-ablation-disposition-recorded",
+      "passed": true
+    },
+    {
+      "name": "normal-constant-valid-mass-consumption",
+      "passed": true
+    },
+    {
+      "name": "normal-affine-valid-mass-consumption",
+      "passed": true
+    },
+    {
+      "name": "normal-actual-weight-negative",
+      "passed": true,
+      "refusal": "UNCOMMISSIONED_NUMERICS: finite positive cell rule weights required"
+    },
+    {
+      "name": "normal-actual-weight-zero",
+      "passed": true,
+      "refusal": "UNCOMMISSIONED_NUMERICS: finite positive cell rule weights required"
+    },
+    {
+      "name": "normal-actual-weight-nan",
+      "passed": true,
+      "refusal": "UNCOMMISSIONED_NUMERICS: finite positive cell rule weights required"
+    },
+    {
+      "name": "normal-actual-weight-infinite",
+      "passed": true,
+      "refusal": "UNCOMMISSIONED_NUMERICS: finite positive cell rule weights required"
+    },
+    {
+      "name": "normal-actual-weight-low-halfmass",
+      "passed": true,
+      "refusal": "UNCOMMISSIONED_NUMERICS: relative cell rule mass"
+    },
+    {
+      "name": "normal-actual-weight-high-overmass",
+      "passed": true,
+      "refusal": "UNCOMMISSIONED_NUMERICS: relative cell rule mass"
+    },
+    {
+      "name": "tiny-constant-valid-mass-consumption",
+      "passed": true
+    },
+    {
+      "name": "tiny-affine-valid-mass-consumption",
+      "passed": true
+    },
+    {
+      "name": "tiny-actual-weight-negative",
+      "passed": true,
+      "refusal": "UNCOMMISSIONED_NUMERICS: finite positive cell rule weights required"
+    },
+    {
+      "name": "tiny-actual-weight-zero",
+      "passed": true,
+      "refusal": "UNCOMMISSIONED_NUMERICS: finite positive cell rule weights required"
+    },
+    {
+      "name": "tiny-actual-weight-nan",
+      "passed": true,
+      "refusal": "UNCOMMISSIONED_NUMERICS: finite positive cell rule weights required"
+    },
+    {
+      "name": "tiny-actual-weight-infinite",
+      "passed": true,
+      "refusal": "UNCOMMISSIONED_NUMERICS: finite positive cell rule weights required"
+    },
+    {
+      "name": "tiny-actual-weight-low-halfmass",
+      "passed": true,
+      "refusal": "UNCOMMISSIONED_NUMERICS: relative cell rule mass"
+    },
+    {
+      "name": "tiny-actual-weight-high-overmass",
+      "passed": true,
+      "refusal": "UNCOMMISSIONED_NUMERICS: relative cell rule mass"
+    },
+    {
+      "name": "config-inner-target-negative",
+      "passed": true,
+      "refusal": "finite positive value required: cell_point_tolerance"
+    },
+    {
+      "name": "actual-point-target-negative",
+      "passed": true,
+      "refusal": "finite positive point target within standalone cap required"
+    },
+    {
+      "name": "config-inner-target-zero",
+      "passed": true,
+      "refusal": "finite positive value required: cell_point_tolerance"
+    },
+    {
+      "name": "actual-point-target-zero",
+      "passed": true,
+      "refusal": "finite positive point target within standalone cap required"
+    },
+    {
+      "name": "config-inner-target-nan",
+      "passed": true,
+      "refusal": "finite positive value required: cell_point_tolerance"
+    },
+    {
+      "name": "actual-point-target-nan",
+      "passed": true,
+      "refusal": "finite positive point target within standalone cap required"
+    },
+    {
+      "name": "config-inner-target-infinite",
+      "passed": true,
+      "refusal": "finite positive value required: cell_point_tolerance"
+    },
+    {
+      "name": "actual-point-target-infinite",
+      "passed": true,
+      "refusal": "finite positive point target within standalone cap required"
+    },
+    {
+      "name": "config-inner-target-false",
+      "passed": true,
+      "refusal": "finite positive value required: cell_point_tolerance"
+    },
+    {
+      "name": "actual-point-target-false",
+      "passed": true,
+      "refusal": "finite positive point target within standalone cap required"
+    },
+    {
+      "name": "config-inner-target-true",
+      "passed": true,
+      "refusal": "finite positive value required: cell_point_tolerance"
+    },
+    {
+      "name": "actual-point-target-true",
+      "passed": true,
+      "refusal": "finite positive point target within standalone cap required"
+    },
+    {
+      "name": "actual-point-target-above-cap",
+      "passed": true,
+      "refusal": "finite positive point target within standalone cap required"
+    },
+    {
+      "name": "cell-inner-target-above-quarter-cell-cap",
+      "passed": true,
+      "refusal": "cell point target must fit standalone and quarter-cell caps"
+    },
+    {
+      "name": "valid-inner-target-companion",
+      "passed": true
+    }
+  ],
+  "standalone": [
+    {
+      "xy": [
+        11.375,
+        7.625
+      ],
+      "value": 10242.746547657092,
+      "receipt": {
+        "value_error_indicator_e": 1.3351382222026587e-09,
+        "work": {
+          "point_calls": 1,
+          "angular_nodes": 144,
+          "peak_node_pairs": 64,
+          "tracked_peak_ndarray_bytes": 12537,
+          "tracked_peak_ndarrays": 37,
+          "peak_live_scalar_frames": 0,
+          "observer": "count",
+          "observer_events": 278,
+          "optional_hook_calls": 43,
+          "cell_allocation": {
+            "cells": 0,
+            "leaves": 0,
+            "minimum_depth": 0,
+            "maximum_depth": 0,
+            "locally_overallocated_leaves": 0,
+            "cells_with_locally_overallocated_leaves": 0
+          },
+          "cpu_seconds": 0.0,
+          "wall_seconds": 0.0
+        }
+      },
+      "old_receipt": {
+        "value_error_indicator_e": 1.3351382222026587e-09,
+        "work": {
+          "point_calls": 1,
+          "angular_nodes": 144,
+          "peak_node_pairs": 64,
+          "tracked_peak_ndarray_bytes": 12537,
+          "tracked_peak_ndarrays": 37,
+          "peak_live_scalar_frames": 0,
+          "observer": "count",
+          "observer_events": 278,
+          "optional_hook_calls": 43,
+          "cell_allocation": {
+            "cells": 0,
+            "leaves": 0,
+            "minimum_depth": 0,
+            "maximum_depth": 0,
+            "locally_overallocated_leaves": 0,
+            "cells_with_locally_overallocated_leaves": 0
+          },
+          "cpu_seconds": 0.0,
+          "wall_seconds": 0.0
+        }
+      }
+    },
+    {
+      "xy": [
+        3.125,
+        9.875
+      ],
+      "value": 10209.896745507282,
+      "receipt": {
+        "value_error_indicator_e": 1.1550582712516189e-09,
+        "work": {
+          "point_calls": 1,
+          "angular_nodes": 144,
+          "peak_node_pairs": 64,
+          "tracked_peak_ndarray_bytes": 12537,
+          "tracked_peak_ndarrays": 37,
+          "peak_live_scalar_frames": 0,
+          "observer": "count",
+          "observer_events": 278,
+          "optional_hook_calls": 43,
+          "cell_allocation": {
+            "cells": 0,
+            "leaves": 0,
+            "minimum_depth": 0,
+            "maximum_depth": 0,
+            "locally_overallocated_leaves": 0,
+            "cells_with_locally_overallocated_leaves": 0
+          },
+          "cpu_seconds": 0.0,
+          "wall_seconds": 0.0
+        }
+      },
+      "old_receipt": {
+        "value_error_indicator_e": 1.1550582712516189e-09,
+        "work": {
+          "point_calls": 1,
+          "angular_nodes": 144,
+          "peak_node_pairs": 64,
+          "tracked_peak_ndarray_bytes": 12537,
+          "tracked_peak_ndarrays": 37,
+          "peak_live_scalar_frames": 0,
+          "observer": "count",
+          "observer_events": 278,
+          "optional_hook_calls": 43,
+          "cell_allocation": {
+            "cells": 0,
+            "leaves": 0,
+            "minimum_depth": 0,
+            "maximum_depth": 0,
+            "locally_overallocated_leaves": 0,
+            "cells_with_locally_overallocated_leaves": 0
+          },
+          "cpu_seconds": 0.0,
+          "wall_seconds": 0.0
+        }
+      }
+    },
+    {
+      "xy": [
+        19.625,
+        2.375
+      ],
+      "value": 9726.615786805429,
+      "receipt": {
+        "value_error_indicator_e": 1.5043042367324233e-09,
+        "work": {
+          "point_calls": 1,
+          "angular_nodes": 144,
+          "peak_node_pairs": 64,
+          "tracked_peak_ndarray_bytes": 12537,
+          "tracked_peak_ndarrays": 37,
+          "peak_live_scalar_frames": 0,
+          "observer": "count",
+          "observer_events": 278,
+          "optional_hook_calls": 43,
+          "cell_allocation": {
+            "cells": 0,
+            "leaves": 0,
+            "minimum_depth": 0,
+            "maximum_depth": 0,
+            "locally_overallocated_leaves": 0,
+            "cells_with_locally_overallocated_leaves": 0
+          },
+          "cpu_seconds": 0.0,
+          "wall_seconds": 0.0
+        }
+      },
+      "old_receipt": {
+        "value_error_indicator_e": 1.5043042367324233e-09,
+        "work": {
+          "point_calls": 1,
+          "angular_nodes": 144,
+          "peak_node_pairs": 64,
+          "tracked_peak_ndarray_bytes": 12537,
+          "tracked_peak_ndarrays": 37,
+          "peak_live_scalar_frames": 0,
+          "observer": "count",
+          "observer_events": 278,
+          "optional_hook_calls": 43,
+          "cell_allocation": {
+            "cells": 0,
+            "leaves": 0,
+            "minimum_depth": 0,
+            "maximum_depth": 0,
+            "locally_overallocated_leaves": 0,
+            "cells_with_locally_overallocated_leaves": 0
+          },
+          "cpu_seconds": 0.0,
+          "wall_seconds": 0.0
+        }
+      }
+    },
+    {
+      "xy": [
+        6.875,
+        17.125
+      ],
+      "value": 10286.134716618824,
+      "receipt": {
+        "value_error_indicator_e": 1.572516339365393e-09,
+        "work": {
+          "point_calls": 1,
+          "angular_nodes": 144,
+          "peak_node_pairs": 64,
+          "tracked_peak_ndarray_bytes": 12537,
+          "tracked_peak_ndarrays": 37,
+          "peak_live_scalar_frames": 0,
+          "observer": "count",
+          "observer_events": 278,
+          "optional_hook_calls": 43,
+          "cell_allocation": {
+            "cells": 0,
+            "leaves": 0,
+            "minimum_depth": 0,
+            "maximum_depth": 0,
+            "locally_overallocated_leaves": 0,
+            "cells_with_locally_overallocated_leaves": 0
+          },
+          "cpu_seconds": 0.0,
+          "wall_seconds": 0.0
+        }
+      },
+      "old_receipt": {
+        "value_error_indicator_e": 1.572516339365393e-09,
+        "work": {
+          "point_calls": 1,
+          "angular_nodes": 144,
+          "peak_node_pairs": 64,
+          "tracked_peak_ndarray_bytes": 12537,
+          "tracked_peak_ndarrays": 37,
+          "peak_live_scalar_frames": 0,
+          "observer": "count",
+          "observer_events": 278,
+          "optional_hook_calls": 43,
+          "cell_allocation": {
+            "cells": 0,
+            "leaves": 0,
+            "minimum_depth": 0,
+            "maximum_depth": 0,
+            "locally_overallocated_leaves": 0,
+            "cells_with_locally_overallocated_leaves": 0
+          },
+          "cpu_seconds": 0.0,
+          "wall_seconds": 0.0
+        }
+      }
+    }
+  ],
+  "target_calls": [
+    {
+      "arm": "primary",
+      "observer": "off",
+      "calls": [],
+      "hook_calls": 0,
+      "value": 10235.8634585644,
+      "receipt": {
+        "value_error_indicator_e": 8.61180156887882e-07,
+        "cell_indicator_e": 8.598821466729365e-07,
+        "weighted_high_pupil_indicator_e": 1.298010214945495e-09,
+        "cell_quadrature_delta_e": 8.572869774070568e-07,
+        "area": 1.0,
+        "leaf_triangles": 2,
+        "work": {
+          "point_calls": 160,
+          "angular_nodes": 23040,
+          "peak_node_pairs": 4096,
+          "tracked_peak_ndarray_bytes": 803024,
+          "tracked_peak_ndarrays": 43,
+          "peak_live_scalar_frames": 0,
+          "observer": "off",
+          "observer_events": 0,
+          "optional_hook_calls": 0,
+          "cell_allocation": {
+            "cells": 0,
+            "leaves": 0,
+            "minimum_depth": 0,
+            "maximum_depth": 0,
+            "locally_overallocated_leaves": 0,
+            "cells_with_locally_overallocated_leaves": 0
+          },
+          "cpu_seconds": 0.0,
+          "wall_seconds": 0.015999999945051968
+        }
+      }
+    },
+    {
+      "arm": "primary",
+      "observer": "count",
+      "calls": [
+        {
+          "batch": "low",
+          "points": 16,
+          "target": 4.6875e-05
+        },
+        {
+          "batch": "high",
+          "points": 64,
+          "target": 4.6875e-05
+        },
+        {
+          "batch": "low",
+          "points": 16,
+          "target": 4.6875e-05
+        },
+        {
+          "batch": "high",
+          "points": 64,
+          "target": 4.6875e-05
+        }
+      ],
+      "hook_calls": 4,
+      "value": 10235.8634585644,
+      "receipt": {
+        "value_error_indicator_e": 8.61180156887882e-07,
+        "cell_indicator_e": 8.598821466729365e-07,
+        "weighted_high_pupil_indicator_e": 1.298010214945495e-09,
+        "cell_quadrature_delta_e": 8.572869774070568e-07,
+        "area": 1.0,
+        "leaf_triangles": 2,
+        "work": {
+          "point_calls": 160,
+          "angular_nodes": 23040,
+          "peak_node_pairs": 4096,
+          "tracked_peak_ndarray_bytes": 803024,
+          "tracked_peak_ndarrays": 43,
+          "peak_live_scalar_frames": 0,
+          "observer": "count",
+          "observer_events": 1136,
+          "optional_hook_calls": 178,
+          "cell_allocation": {
+            "cells": 1,
+            "leaves": 2,
+            "minimum_depth": 0,
+            "maximum_depth": 0,
+            "locally_overallocated_leaves": 0,
+            "cells_with_locally_overallocated_leaves": 0
+          },
+          "cpu_seconds": 0.0,
+          "wall_seconds": 0.0
+        }
+      }
+    },
+    {
+      "arm": "primary",
+      "observer": "placebo",
+      "calls": [],
+      "hook_calls": 4,
+      "value": 10235.8634585644,
+      "receipt": {
+        "value_error_indicator_e": 8.61180156887882e-07,
+        "cell_indicator_e": 8.598821466729365e-07,
+        "weighted_high_pupil_indicator_e": 1.298010214945495e-09,
+        "cell_quadrature_delta_e": 8.572869774070568e-07,
+        "area": 1.0,
+        "leaf_triangles": 2,
+        "work": {
+          "point_calls": 160,
+          "angular_nodes": 23040,
+          "peak_node_pairs": 4096,
+          "tracked_peak_ndarray_bytes": 803024,
+          "tracked_peak_ndarrays": 43,
+          "peak_live_scalar_frames": 0,
+          "observer": "placebo",
+          "observer_events": 0,
+          "optional_hook_calls": 178,
+          "cell_allocation": {
+            "cells": 0,
+            "leaves": 0,
+            "minimum_depth": 0,
+            "maximum_depth": 0,
+            "locally_overallocated_leaves": 0,
+            "cells_with_locally_overallocated_leaves": 0
+          },
+          "cpu_seconds": 0.015625,
+          "wall_seconds": 0.0
+        }
+      }
+    },
+    {
+      "arm": "angle-refined",
+      "observer": "off",
+      "calls": [],
+      "hook_calls": 0,
+      "value": 10235.863458564396,
+      "receipt": {
+        "value_error_indicator_e": 8.573256088460643e-07,
+        "cell_indicator_e": 8.573122229889158e-07,
+        "weighted_high_pupil_indicator_e": 1.3385857148508175e-11,
+        "cell_quadrature_delta_e": 8.572851584176533e-07,
+        "area": 1.0,
+        "leaf_triangles": 2,
+        "work": {
+          "point_calls": 160,
+          "angular_nodes": 15360,
+          "peak_node_pairs": 4096,
+          "tracked_peak_ndarray_bytes": 799888,
+          "tracked_peak_ndarrays": 42,
+          "peak_live_scalar_frames": 0,
+          "observer": "off",
+          "observer_events": 0,
+          "optional_hook_calls": 0,
+          "cell_allocation": {
+            "cells": 0,
+            "leaves": 0,
+            "minimum_depth": 0,
+            "maximum_depth": 0,
+            "locally_overallocated_leaves": 0,
+            "cells_with_locally_overallocated_leaves": 0
+          },
+          "cpu_seconds": 0.0,
+          "wall_seconds": 0.0
+        }
+      }
+    },
+    {
+      "arm": "angle-refined",
+      "observer": "count",
+      "calls": [
+        {
+          "batch": "low",
+          "points": 16,
+          "target": 1.171875e-05
+        },
+        {
+          "batch": "high",
+          "points": 64,
+          "target": 1.171875e-05
+        },
+        {
+          "batch": "low",
+          "points": 16,
+          "target": 1.171875e-05
+        },
+        {
+          "batch": "high",
+          "points": 64,
+          "target": 1.171875e-05
+        }
+      ],
+      "hook_calls": 4,
+      "value": 10235.863458564396,
+      "receipt": {
+        "value_error_indicator_e": 8.573256088460643e-07,
+        "cell_indicator_e": 8.573122229889158e-07,
+        "weighted_high_pupil_indicator_e": 1.3385857148508175e-11,
+        "cell_quadrature_delta_e": 8.572851584176533e-07,
+        "area": 1.0,
+        "leaf_triangles": 2,
+        "work": {
+          "point_calls": 160,
+          "angular_nodes": 15360,
+          "peak_node_pairs": 4096,
+          "tracked_peak_ndarray_bytes": 799888,
+          "tracked_peak_ndarrays": 42,
+          "peak_live_scalar_frames": 0,
+          "observer": "count",
+          "observer_events": 596,
+          "optional_hook_calls": 94,
+          "cell_allocation": {
+            "cells": 1,
+            "leaves": 2,
+            "minimum_depth": 0,
+            "maximum_depth": 0,
+            "locally_overallocated_leaves": 0,
+            "cells_with_locally_overallocated_leaves": 0
+          },
+          "cpu_seconds": 0.0,
+          "wall_seconds": 0.015000000013969839
+        }
+      }
+    },
+    {
+      "arm": "angle-refined",
+      "observer": "placebo",
+      "calls": [],
+      "hook_calls": 4,
+      "value": 10235.863458564396,
+      "receipt": {
+        "value_error_indicator_e": 8.573256088460643e-07,
+        "cell_indicator_e": 8.573122229889158e-07,
+        "weighted_high_pupil_indicator_e": 1.3385857148508175e-11,
+        "cell_quadrature_delta_e": 8.572851584176533e-07,
+        "area": 1.0,
+        "leaf_triangles": 2,
+        "work": {
+          "point_calls": 160,
+          "angular_nodes": 15360,
+          "peak_node_pairs": 4096,
+          "tracked_peak_ndarray_bytes": 799888,
+          "tracked_peak_ndarrays": 42,
+          "peak_live_scalar_frames": 0,
+          "observer": "placebo",
+          "observer_events": 0,
+          "optional_hook_calls": 94,
+          "cell_allocation": {
+            "cells": 0,
+            "leaves": 0,
+            "minimum_depth": 0,
+            "maximum_depth": 0,
+            "locally_overallocated_leaves": 0,
+            "cells_with_locally_overallocated_leaves": 0
+          },
+          "cpu_seconds": 0.0,
+          "wall_seconds": 0.0
+        }
+      }
+    },
+    {
+      "arm": "cell-refined",
+      "observer": "off",
+      "calls": [],
+      "hook_calls": 0,
+      "value": 10235.863458564396,
+      "receipt": {
+        "value_error_indicator_e": 3.896970732746749e-09,
+        "cell_indicator_e": 2.5988547158987818e-09,
+        "weighted_high_pupil_indicator_e": 1.298116016847968e-09,
+        "cell_quadrature_delta_e": 2.7284841053187847e-12,
+        "area": 1.0,
+        "leaf_triangles": 2,
+        "work": {
+          "point_calls": 640,
+          "angular_nodes": 92160,
+          "peak_node_pairs": 16384,
+          "tracked_peak_ndarray_bytes": 3211664,
+          "tracked_peak_ndarrays": 43,
+          "peak_live_scalar_frames": 0,
+          "observer": "off",
+          "observer_events": 0,
+          "optional_hook_calls": 0,
+          "cell_allocation": {
+            "cells": 0,
+            "leaves": 0,
+            "minimum_depth": 0,
+            "maximum_depth": 0,
+            "locally_overallocated_leaves": 0,
+            "cells_with_locally_overallocated_leaves": 0
+          },
+          "cpu_seconds": 0.015625,
+          "wall_seconds": 0.0
+        }
+      }
+    },
+    {
+      "arm": "cell-refined",
+      "observer": "count",
+      "calls": [
+        {
+          "batch": "low",
+          "points": 64,
+          "target": 4.6875e-05
+        },
+        {
+          "batch": "high",
+          "points": 256,
+          "target": 4.6875e-05
+        },
+        {
+          "batch": "low",
+          "points": 64,
+          "target": 4.6875e-05
+        },
+        {
+          "batch": "high",
+          "points": 256,
+          "target": 4.6875e-05
+        }
+      ],
+      "hook_calls": 4,
+      "value": 10235.863458564396,
+      "receipt": {
+        "value_error_indicator_e": 3.896970732746749e-09,
+        "cell_indicator_e": 2.5988547158987818e-09,
+        "weighted_high_pupil_indicator_e": 1.298116016847968e-09,
+        "cell_quadrature_delta_e": 2.7284841053187847e-12,
+        "area": 1.0,
+        "leaf_triangles": 2,
+        "work": {
+          "point_calls": 640,
+          "angular_nodes": 92160,
+          "peak_node_pairs": 16384,
+          "tracked_peak_ndarray_bytes": 3211664,
+          "tracked_peak_ndarrays": 43,
+          "peak_live_scalar_frames": 0,
+          "observer": "count",
+          "observer_events": 1136,
+          "optional_hook_calls": 178,
+          "cell_allocation": {
+            "cells": 1,
+            "leaves": 2,
+            "minimum_depth": 0,
+            "maximum_depth": 0,
+            "locally_overallocated_leaves": 0,
+            "cells_with_locally_overallocated_leaves": 0
+          },
+          "cpu_seconds": 0.0,
+          "wall_seconds": 0.01600000006146729
+        }
+      }
+    },
+    {
+      "arm": "cell-refined",
+      "observer": "placebo",
+      "calls": [],
+      "hook_calls": 4,
+      "value": 10235.863458564396,
+      "receipt": {
+        "value_error_indicator_e": 3.896970732746749e-09,
+        "cell_indicator_e": 2.5988547158987818e-09,
+        "weighted_high_pupil_indicator_e": 1.298116016847968e-09,
+        "cell_quadrature_delta_e": 2.7284841053187847e-12,
+        "area": 1.0,
+        "leaf_triangles": 2,
+        "work": {
+          "point_calls": 640,
+          "angular_nodes": 92160,
+          "peak_node_pairs": 16384,
+          "tracked_peak_ndarray_bytes": 3211664,
+          "tracked_peak_ndarrays": 43,
+          "peak_live_scalar_frames": 0,
+          "observer": "placebo",
+          "observer_events": 0,
+          "optional_hook_calls": 178,
+          "cell_allocation": {
+            "cells": 0,
+            "leaves": 0,
+            "minimum_depth": 0,
+            "maximum_depth": 0,
+            "locally_overallocated_leaves": 0,
+            "cells_with_locally_overallocated_leaves": 0
+          },
+          "cpu_seconds": 0.015625,
+          "wall_seconds": 0.015999999945051968
+        }
+      }
+    }
+  ],
+  "weight_faults": [
+    {
+      "fault": "negative",
+      "actual_orders": [
+        4
+      ],
+      "area": 1.875
+    },
+    {
+      "fault": "zero",
+      "actual_orders": [
+        4
+      ],
+      "area": 1.875
+    },
+    {
+      "fault": "nan",
+      "actual_orders": [
+        4
+      ],
+      "area": 1.875
+    },
+    {
+      "fault": "infinite",
+      "actual_orders": [
+        4
+      ],
+      "area": 1.875
+    },
+    {
+      "fault": "low-halfmass",
+      "actual_orders": [
+        4
+      ],
+      "area": 1.875
+    },
+    {
+      "fault": "high-overmass",
+      "actual_orders": [
+        8
+      ],
+      "area": 1.875
+    },
+    {
+      "fault": "negative",
+      "actual_orders": [
+        4
+      ],
+      "area": 4.440892098500626e-16
+    },
+    {
+      "fault": "zero",
+      "actual_orders": [
+        4
+      ],
+      "area": 4.440892098500626e-16
+    },
+    {
+      "fault": "nan",
+      "actual_orders": [
+        4
+      ],
+      "area": 4.440892098500626e-16
+    },
+    {
+      "fault": "infinite",
+      "actual_orders": [
+        4
+      ],
+      "area": 4.440892098500626e-16
+    },
+    {
+      "fault": "low-halfmass",
+      "actual_orders": [
+        4
+      ],
+      "area": 4.440892098500626e-16
+    },
+    {
+      "fault": "high-overmass",
+      "actual_orders": [
+        8
+      ],
+      "area": 4.440892098500626e-16
+    }
+  ],
+  "legacy_sha256": "a22d49fd43a1bc8d0f807fc1d4417104d5b9ffe1d771b418be58d276d7804460",
+  "fixture": {
+    "scene": {
+      "foreground": {
+        "constant": 8000.0,
+        "affine": [
+          0.0,
+          0.0
+        ],
+        "waves": []
+      },
+      "background": {
+        "constant": 10000.0,
+        "affine": [
+          0.0,
+          0.0
+        ],
+        "waves": [
+          {
+            "amplitude": 2700.0,
+            "frequency": [
+              0.11,
+              0.073
+            ],
+            "phase": 0.47
+          }
+        ]
+      },
+      "depths": [
+        1.3,
+        2.5
+      ],
+      "mask_normal": [
+        1.0,
+        0.0
+      ],
+      "mask_offset": 0.0,
+      "mask_state": "absent"
+    },
+    "frame": {
+      "index": 0,
+      "inverse_focus": 0.71,
+      "K": 13.0,
+      "forward_similarity": {
+        "scale": 1.0,
+        "rotation": 0.0,
+        "centre": [
+          0.0,
+          0.0
+        ],
+        "translation": [
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "points": [
+      [
+        11.375,
+        7.625
+      ],
+      [
+        3.125,
+        9.875
+      ],
+      [
+        19.625,
+        2.375
+      ],
+      [
+        6.875,
+        17.125
+      ]
+    ]
+  },
+  "strict_target": {
+    "status": "RETURNED",
+    "value": 10242.746547657092,
+    "indicator": 0.0,
+    "work": {
+      "point_calls": 1,
+      "angular_nodes": 912,
+      "peak_node_pairs": 192,
+      "tracked_peak_ndarray_bytes": 37516,
+      "tracked_peak_ndarrays": 37,
+      "peak_live_scalar_frames": 0,
+      "observer": "count",
+      "observer_events": 818,
+      "optional_hook_calls": 127,
+      "cell_allocation": {
+        "cells": 0,
+        "leaves": 0,
+        "minimum_depth": 0,
+        "maximum_depth": 0,
+        "locally_overallocated_leaves": 0,
+        "cells_with_locally_overallocated_leaves": 0
+      },
+      "cpu_seconds": 0.0,
+      "wall_seconds": 0.0
+    }
+  },
+  "same_source_old_target_ablation": {
+    "status": "REFUSED",
+    "refusal": "UNCOMMISSIONED_NUMERICS: cell depth/global-error ceiling"
+  },
+  "source_unchanged": true
+}
