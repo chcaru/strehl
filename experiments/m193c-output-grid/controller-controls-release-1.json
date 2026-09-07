@@ -1,0 +1,52 @@
+{
+  "schema": "m193c-execution-release-v1",
+  "scope": "controller-controls",
+  "source_bindings": {
+    "experiments/m193c-output-grid/controller-controls.py": {
+      "sha256": "9e7d6d0b8dabd3104365347f1973abf8c5f2469d9a3bde46e4ae82b2fbd0c7fc",
+      "bytes": 9825
+    },
+    "experiments/m193c-output-grid/controller-child.py": {
+      "sha256": "5bbbb5cd88015250e2999e9b02c2e6131d232e5378bbf45fd2f0764458815d69",
+      "bytes": 1415
+    },
+    "experiments/m193c-output-grid/bounded-process.py": {
+      "sha256": "0983606aa065a4d7f2b266082d16d88068bdfc5609336a0c53b3cd9a6f7b31df",
+      "bytes": 9622
+    },
+    "experiments/m12-scorecard/m12-harness.py": {
+      "sha256": "6cfb408992f37b225f102da4d62ba836f9c5b67c92bdd418ff460987866a1bb9",
+      "bytes": 117908
+    }
+  },
+  "inputs": [
+    {
+      "path": "experiments/m193c-output-grid/execution-preregister.md",
+      "sha256": "10511b44708fd3067698846006e71828c37f6d9c83a7d052556af8fdfb3fdbf1",
+      "bytes": 8721
+    },
+    {
+      "path": "experiments/m193c-output-grid/independent-parent-component-review.md",
+      "sha256": "5d508de58566ffec0bc3602d534290c4be966ac985b3056f41bf12b9a3932893",
+      "bytes": 18345
+    }
+  ],
+  "commands": [
+    [
+      "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+      "-X",
+      "utf8",
+      "-X",
+      "faulthandler",
+      "-X",
+      "pycache_prefix=C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\work\\cache-controller-controls-1",
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\controller-controls.py",
+      "--release",
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\controller-controls-release-1.json",
+      "--release-sha256",
+      "ACTUAL_EXECUTION_RELEASE_SHA256",
+      "--output",
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\controller-controls-1"
+    ]
+  ]
+}
