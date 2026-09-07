@@ -17,9 +17,12 @@ elif mode in ("exact-log", "overflow-log"):
     sys.stdout.buffer.flush()
 elif mode == "timeout":
     print("M193C_SLEEP_STARTED", flush=True)
+    print("M193C_SLEEP_PID=" + str(os.getpid()), flush=True)
     time.sleep(30)
 elif mode == "nested-timeout":
+    print("M193C_PARENT_PID=" + str(os.getpid()), flush=True)
     child = subprocess.Popen([sys.executable, str(Path(__file__).resolve()), "timeout"],
+                             stdin=subprocess.DEVNULL, stdout=sys.stdout.buffer, stderr=subprocess.STDOUT,
                              creationflags=subprocess.CREATE_NO_WINDOW)
     print("M193C_NESTED_PID=" + str(child.pid), flush=True)
     child.wait()

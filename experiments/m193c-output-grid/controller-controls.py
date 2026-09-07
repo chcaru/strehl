@@ -4,6 +4,7 @@ import hashlib
 import importlib.util
 import json
 import os
+import re
 from pathlib import Path
 import sys
 import time
@@ -119,7 +120,7 @@ def main():
                 helper.binding = unavailable_log
             try:
                 actual = helper.run(argv, env, ROOT, log, api=api,
-                                    wall_seconds=1 if mode in ("timeout", "nested-timeout") else 10,
+                                    wall_seconds=5 if mode == "nested-timeout" else 1 if mode == "timeout" else 10,
                                     cpu_seconds=10, log_bytes=65536, committed_bytes=64<<20,
                                     check=unchanged if mode in ("changed-input", "restored") else lambda: None)
             finally:
@@ -141,7 +142,19 @@ def main():
                 row["passed"] = ("child wall bound" in (actual["error"] or "")
                                  and b"M193C_SLEEP_STARTED" in text and actual["cleanup_errors"] == [])
                 if mode == "nested-timeout":
-                    row["passed"] &= b"M193C_NESTED_PID=" in text and actual["job_accounting"]["total_processes"] == 2
+                    parents = re.findall(rb"^M193C_PARENT_PID=(\d+)\r?$", text, re.M)
+                    children = re.findall(rb"^M193C_SLEEP_PID=(\d+)\r?$", text, re.M)
+                    requested = re.findall(rb"^M193C_NESTED_PID=(\d+)\r?$", text, re.M)
+                    baseline = result["cases"][0]["actual"]["job_accounting"]["total_processes"]
+                    row["nested_identity"] = dict(parent_pids=[int(v) for v in parents],
+                                                   executing_child_pids=[int(v) for v in children],
+                                                   requested_child_pids=[int(v) for v in requested],
+                                                   single_companion_processes=baseline,
+                                                   additional_job_processes=actual["job_accounting"]["total_processes"]-baseline)
+                    row["passed"] &= (len(parents) == len(children) == len(requested) == 1
+                                      and parents[0] != children[0]
+                                      and baseline > 0
+                                      and actual["job_accounting"]["total_processes"] > baseline)
             elif mode == "memory":
                 row["passed"] = clean and actual["exit_code"] == 7 and b"M193C_MEMORY_REFUSED" in text
             elif mode == "late-log-binding":
@@ -154,6 +167,7 @@ def main():
             if mode != "late-log-binding":
                 row["passed"] = row["passed"] and actual["cleanup_errors"] == []
             row["passed"] = row["passed"] and actual["terminal_job_accounting"] is True
+            row["passed"] = row["passed"] and actual["job_accounting"]["active_processes"] == 0
             need(row["passed"] is True, "controller case refused its intended oracle: " + mode)
         need(len(result["cases"]) == 10, "complete finite controller population")
         need(binding(watched) == watched_expected, "watched input restored")

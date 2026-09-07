@@ -1,0 +1,382 @@
+{
+  "artifacts": [
+    {
+      "bytes": 9825,
+      "path": "experiments/m193c-output-grid/controller-controls-1/sources/experiments/m193c-output-grid/controller-controls.py",
+      "sha256": "9e7d6d0b8dabd3104365347f1973abf8c5f2469d9a3bde46e4ae82b2fbd0c7fc"
+    },
+    {
+      "bytes": 1415,
+      "path": "experiments/m193c-output-grid/controller-controls-1/sources/experiments/m193c-output-grid/controller-child.py",
+      "sha256": "5bbbb5cd88015250e2999e9b02c2e6131d232e5378bbf45fd2f0764458815d69"
+    },
+    {
+      "bytes": 9622,
+      "path": "experiments/m193c-output-grid/controller-controls-1/sources/experiments/m193c-output-grid/bounded-process.py",
+      "sha256": "0983606aa065a4d7f2b266082d16d88068bdfc5609336a0c53b3cd9a6f7b31df"
+    },
+    {
+      "bytes": 117908,
+      "path": "experiments/m193c-output-grid/controller-controls-1/sources/experiments/m12-scorecard/m12-harness.py",
+      "sha256": "6cfb408992f37b225f102da4d62ba836f9c5b67c92bdd418ff460987866a1bb9"
+    },
+    {
+      "bytes": 19,
+      "path": "experiments/m193c-output-grid/controller-controls-1/00-valid.log",
+      "sha256": "07f1280c0bd3664c53d669c5d1d3ef35341dbbfea45b59f1d91ee5dea4083c65"
+    },
+    {
+      "bytes": 18,
+      "path": "experiments/m193c-output-grid/controller-controls-1/01-nonzero.log",
+      "sha256": "a06b7d243518affb9e73a1b3fe0744b2bb6be6b6a0160d537e4a33ae47dd7152"
+    },
+    {
+      "bytes": 65536,
+      "path": "experiments/m193c-output-grid/controller-controls-1/02-exact-log.log",
+      "sha256": "1f8745f0d2d1387ec1af2211a3cf417b2e9e885e853472649c1d979d0e9370e3"
+    },
+    {
+      "bytes": 65536,
+      "path": "experiments/m193c-output-grid/controller-controls-1/03-overflow-log.log",
+      "sha256": "1f8745f0d2d1387ec1af2211a3cf417b2e9e885e853472649c1d979d0e9370e3"
+    },
+    {
+      "bytes": 21,
+      "path": "experiments/m193c-output-grid/controller-controls-1/04-timeout.log",
+      "sha256": "61656fe8d4e645d3f923831bc9945c4a5b525ba4122fe16de0328a7260cf3701"
+    },
+    {
+      "bytes": 24,
+      "path": "experiments/m193c-output-grid/controller-controls-1/05-nested-timeout.log",
+      "sha256": "46786f88b680adb1e32c2e48fbdd95f3d8fb28fddc11dd03021d04ac58eb6b99"
+    }
+  ],
+  "cases": [
+    {
+      "actual": {
+        "cleanup_errors": [],
+        "command": [
+          "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+          "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\controller-child.py",
+          "valid"
+        ],
+        "error": null,
+        "exit_code": 0,
+        "job_accounting": {
+          "active_processes": 0,
+          "total_cpu_100ns": 625000,
+          "total_kernel_100ns": 312500,
+          "total_page_fault_count": 5813,
+          "total_processes": 2,
+          "total_terminated_processes": 0,
+          "total_user_100ns": 312500
+        },
+        "job_memory": {
+          "peak_job_memory_used_bytes": 9531392,
+          "peak_process_memory_used_bytes": 8253440
+        },
+        "limits": {
+          "committed_bytes": 67108864,
+          "cpu_seconds": 10,
+          "log_bytes": 65536,
+          "wall_seconds": 10
+        },
+        "log": {
+          "bytes": 19,
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\controller-controls-1\\00-valid.log",
+          "sha256": "07f1280c0bd3664c53d669c5d1d3ef35341dbbfea45b59f1d91ee5dea4083c65"
+        },
+        "log_bytes": 19,
+        "scope": "owned job tree; committed memory, observed user+kernel CPU; not RSS or a timing benchmark",
+        "terminal_job_accounting": true,
+        "wall_seconds": 0.0940000000409782
+      },
+      "index": 0,
+      "mode": "valid",
+      "passed": true,
+      "removed_environment_names": []
+    },
+    {
+      "actual": {
+        "cleanup_errors": [],
+        "command": [
+          "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+          "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\controller-child.py",
+          "nonzero"
+        ],
+        "error": null,
+        "exit_code": 7,
+        "job_accounting": {
+          "active_processes": 0,
+          "total_cpu_100ns": 468750,
+          "total_kernel_100ns": 468750,
+          "total_page_fault_count": 5824,
+          "total_processes": 2,
+          "total_terminated_processes": 0,
+          "total_user_100ns": 0
+        },
+        "job_memory": {
+          "peak_job_memory_used_bytes": 9596928,
+          "peak_process_memory_used_bytes": 8318976
+        },
+        "limits": {
+          "committed_bytes": 67108864,
+          "cpu_seconds": 10,
+          "log_bytes": 65536,
+          "wall_seconds": 10
+        },
+        "log": {
+          "bytes": 18,
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\controller-controls-1\\01-nonzero.log",
+          "sha256": "a06b7d243518affb9e73a1b3fe0744b2bb6be6b6a0160d537e4a33ae47dd7152"
+        },
+        "log_bytes": 18,
+        "scope": "owned job tree; committed memory, observed user+kernel CPU; not RSS or a timing benchmark",
+        "terminal_job_accounting": true,
+        "wall_seconds": 0.10899999993853271
+      },
+      "index": 1,
+      "mode": "nonzero",
+      "passed": true,
+      "removed_environment_names": []
+    },
+    {
+      "actual": {
+        "cleanup_errors": [],
+        "command": [
+          "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+          "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\controller-child.py",
+          "exact-log"
+        ],
+        "error": null,
+        "exit_code": 0,
+        "job_accounting": {
+          "active_processes": 0,
+          "total_cpu_100ns": 625000,
+          "total_kernel_100ns": 468750,
+          "total_page_fault_count": 5833,
+          "total_processes": 2,
+          "total_terminated_processes": 0,
+          "total_user_100ns": 156250
+        },
+        "job_memory": {
+          "peak_job_memory_used_bytes": 9666560,
+          "peak_process_memory_used_bytes": 8364032
+        },
+        "limits": {
+          "committed_bytes": 67108864,
+          "cpu_seconds": 10,
+          "log_bytes": 65536,
+          "wall_seconds": 10
+        },
+        "log": {
+          "bytes": 65536,
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\controller-controls-1\\02-exact-log.log",
+          "sha256": "1f8745f0d2d1387ec1af2211a3cf417b2e9e885e853472649c1d979d0e9370e3"
+        },
+        "log_bytes": 65536,
+        "scope": "owned job tree; committed memory, observed user+kernel CPU; not RSS or a timing benchmark",
+        "terminal_job_accounting": true,
+        "wall_seconds": 0.0940000000409782
+      },
+      "index": 2,
+      "mode": "exact-log",
+      "passed": true,
+      "removed_environment_names": []
+    },
+    {
+      "actual": {
+        "cleanup_errors": [],
+        "command": [
+          "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+          "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\controller-child.py",
+          "overflow-log"
+        ],
+        "error": "ValueError('child log bound')",
+        "exit_code": 3784556766,
+        "job_accounting": {
+          "active_processes": 0,
+          "total_cpu_100ns": 625000,
+          "total_kernel_100ns": 156250,
+          "total_page_fault_count": 5619,
+          "total_processes": 2,
+          "total_terminated_processes": 0,
+          "total_user_100ns": 468750
+        },
+        "job_memory": {
+          "peak_job_memory_used_bytes": 9510912,
+          "peak_process_memory_used_bytes": 8232960
+        },
+        "limits": {
+          "committed_bytes": 67108864,
+          "cpu_seconds": 10,
+          "log_bytes": 65536,
+          "wall_seconds": 10
+        },
+        "log": {
+          "bytes": 65536,
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\controller-controls-1\\03-overflow-log.log",
+          "sha256": "1f8745f0d2d1387ec1af2211a3cf417b2e9e885e853472649c1d979d0e9370e3"
+        },
+        "log_bytes": 65536,
+        "scope": "owned job tree; committed memory, observed user+kernel CPU; not RSS or a timing benchmark",
+        "terminal_job_accounting": true,
+        "wall_seconds": 0.0779999999795109
+      },
+      "index": 3,
+      "mode": "overflow-log",
+      "passed": true,
+      "removed_environment_names": []
+    },
+    {
+      "actual": {
+        "cleanup_errors": [],
+        "command": [
+          "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+          "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\controller-child.py",
+          "timeout"
+        ],
+        "error": "ValueError('child wall bound')",
+        "exit_code": 3784556766,
+        "job_accounting": {
+          "active_processes": 0,
+          "total_cpu_100ns": 625000,
+          "total_kernel_100ns": 468750,
+          "total_page_fault_count": 5626,
+          "total_processes": 2,
+          "total_terminated_processes": 0,
+          "total_user_100ns": 156250
+        },
+        "job_memory": {
+          "peak_job_memory_used_bytes": 9527296,
+          "peak_process_memory_used_bytes": 8249344
+        },
+        "limits": {
+          "committed_bytes": 67108864,
+          "cpu_seconds": 10,
+          "log_bytes": 65536,
+          "wall_seconds": 1
+        },
+        "log": {
+          "bytes": 21,
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\controller-controls-1\\04-timeout.log",
+          "sha256": "61656fe8d4e645d3f923831bc9945c4a5b525ba4122fe16de0328a7260cf3701"
+        },
+        "log_bytes": 21,
+        "scope": "owned job tree; committed memory, observed user+kernel CPU; not RSS or a timing benchmark",
+        "terminal_job_accounting": true,
+        "wall_seconds": 1.047000000020489
+      },
+      "index": 4,
+      "mode": "timeout",
+      "passed": true,
+      "removed_environment_names": []
+    },
+    {
+      "actual": {
+        "cleanup_errors": [],
+        "command": [
+          "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+          "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\controller-child.py",
+          "nested-timeout"
+        ],
+        "error": "ValueError('child wall bound')",
+        "exit_code": 3784556766,
+        "job_accounting": {
+          "active_processes": 0,
+          "total_cpu_100ns": 1250000,
+          "total_kernel_100ns": 312500,
+          "total_page_fault_count": 11355,
+          "total_processes": 4,
+          "total_terminated_processes": 0,
+          "total_user_100ns": 937500
+        },
+        "job_memory": {
+          "peak_job_memory_used_bytes": 19046400,
+          "peak_process_memory_used_bytes": 8224768
+        },
+        "limits": {
+          "committed_bytes": 67108864,
+          "cpu_seconds": 10,
+          "log_bytes": 65536,
+          "wall_seconds": 1
+        },
+        "log": {
+          "bytes": 24,
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\controller-controls-1\\05-nested-timeout.log",
+          "sha256": "46786f88b680adb1e32c2e48fbdd95f3d8fb28fddc11dd03021d04ac58eb6b99"
+        },
+        "log_bytes": 24,
+        "scope": "owned job tree; committed memory, observed user+kernel CPU; not RSS or a timing benchmark",
+        "terminal_job_accounting": true,
+        "wall_seconds": 1.047000000020489
+      },
+      "index": 5,
+      "mode": "nested-timeout",
+      "passed": false,
+      "removed_environment_names": []
+    }
+  ],
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-X",
+    "utf8",
+    "-X",
+    "faulthandler",
+    "-X",
+    "pycache_prefix=C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\work\\cache-controller-controls-1",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\controller-controls.py",
+    "--release",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\controller-controls-release-1.json",
+    "--release-sha256",
+    "8fb5686c322513f9a35a5eca6ef147d4b70b506d03ad2c9e4b8f1086458cd716",
+    "--output",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\controller-controls-1"
+  ],
+  "elapsed_seconds_before_result": 3.390999999945052,
+  "error": "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\controller-controls.py\", line 157, in main\n    need(row[\"passed\"] is True, \"controller case refused its intended oracle: \" + mode)\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\controller-controls.py\", line 19, in need\n    raise ValueError(reason)\nValueError: controller case refused its intended oracle: nested-timeout\n",
+  "finalization_errors": [],
+  "release": {
+    "bytes": 2035,
+    "path": "experiments/m193c-output-grid/controller-controls-release-1.json",
+    "sha256": "8fb5686c322513f9a35a5eca6ef147d4b70b506d03ad2c9e4b8f1086458cd716"
+  },
+  "schema": "m193c-controller-controls-v1",
+  "sources_after": {
+    "experiments/m12-scorecard/m12-harness.py": {
+      "bytes": 117908,
+      "sha256": "6cfb408992f37b225f102da4d62ba836f9c5b67c92bdd418ff460987866a1bb9"
+    },
+    "experiments/m193c-output-grid/bounded-process.py": {
+      "bytes": 9622,
+      "sha256": "0983606aa065a4d7f2b266082d16d88068bdfc5609336a0c53b3cd9a6f7b31df"
+    },
+    "experiments/m193c-output-grid/controller-child.py": {
+      "bytes": 1415,
+      "sha256": "5bbbb5cd88015250e2999e9b02c2e6131d232e5378bbf45fd2f0764458815d69"
+    },
+    "experiments/m193c-output-grid/controller-controls.py": {
+      "bytes": 9825,
+      "sha256": "9e7d6d0b8dabd3104365347f1973abf8c5f2469d9a3bde46e4ae82b2fbd0c7fc"
+    }
+  },
+  "sources_before": {
+    "experiments/m12-scorecard/m12-harness.py": {
+      "bytes": 117908,
+      "sha256": "6cfb408992f37b225f102da4d62ba836f9c5b67c92bdd418ff460987866a1bb9"
+    },
+    "experiments/m193c-output-grid/bounded-process.py": {
+      "bytes": 9622,
+      "sha256": "0983606aa065a4d7f2b266082d16d88068bdfc5609336a0c53b3cd9a6f7b31df"
+    },
+    "experiments/m193c-output-grid/controller-child.py": {
+      "bytes": 1415,
+      "sha256": "5bbbb5cd88015250e2999e9b02c2e6131d232e5378bbf45fd2f0764458815d69"
+    },
+    "experiments/m193c-output-grid/controller-controls.py": {
+      "bytes": 9825,
+      "sha256": "9e7d6d0b8dabd3104365347f1973abf8c5f2469d9a3bde46e4ae82b2fbd0c7fc"
+    }
+  },
+  "status": "UNCOMMISSIONED_CONTROLLER"
+}
