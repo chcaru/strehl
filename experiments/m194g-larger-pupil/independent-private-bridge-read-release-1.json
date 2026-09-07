@@ -1,0 +1,79 @@
+{
+  "schema": "m194g-quality-execution-release-v1",
+  "scope": "private-bridge-read",
+  "source_bindings": {
+    "experiments/m194g-larger-pupil/independent-private-bridge-read.py": {
+      "sha256": "5a51638950933392b244c5a069487f2d1e786058ffe23a3b9b0b92b9617432b5",
+      "bytes": 18768
+    },
+    "experiments/m194g-larger-pupil/independent-quality-io.py": {
+      "sha256": "6efe4702aff2f883c63fed04a4570cd58fcd8e348158184d66f239c92d16e5e1",
+      "bytes": 12486
+    },
+    "experiments/m194g-larger-pupil/independent-quality-metrics.py": {
+      "sha256": "5ea046cf35444bae210cbddbb7d0132904f456959a62a7a77ad9138b1cbbff12",
+      "bytes": 16762
+    },
+    "experiments/m194g-larger-pupil/independent-rgb-tiff.py": {
+      "sha256": "d01a74aefcfa15b2146256b54ea51876715ab203b7de123b3cff2b0af4a1b19c",
+      "bytes": 7305
+    }
+  },
+  "inputs": [
+    {
+      "path": "experiments/m194g-larger-pupil/production-private-controls-1/result.json",
+      "sha256": "eff686d8dcbf7346d09f9682d132d6b3ce958e145bf20e8ef758b0a81d99f6f9",
+      "bytes": 5814
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/production-private-outputs-1/result.json",
+      "sha256": "965438745b4288e852aa63d39dff99d22557d9d46bb175e6d599b96ec4415bbe",
+      "bytes": 6208
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/bridge-build-2/result.json",
+      "sha256": "04e7cf3915e77b83dbe8e7183249445e48ff451292bb16d4d926b3d6346f9be0",
+      "bytes": 42312
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/next-private-bridge-reader-design.md",
+      "sha256": "0eaba1eed69cdb6338db1d3c33f270b10028d24e67a697374f5adf8a54db425e",
+      "bytes": 3523
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/independent-quality-instruments-1/result.json",
+      "sha256": "cdb596da485a49acf835024bea6e44b21f55922dac804b14d56f26de61bd8ac4",
+      "bytes": 24896
+    }
+  ],
+  "commands": [
+    [
+      "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+      "-X",
+      "utf8",
+      "-X",
+      "faulthandler",
+      "-X",
+      "pycache_prefix=experiments/m194g-larger-pupil/work/cache-independent-private-bridge-read-1",
+      "experiments/m194g-larger-pupil/independent-private-bridge-read.py",
+      "--release",
+      "experiments/m194g-larger-pupil/independent-private-bridge-read-release-1.json",
+      "--release-sha256",
+      "ACTUAL_EXECUTION_RELEASE_SHA256",
+      "--build",
+      "experiments/m194g-larger-pupil/bridge-build-2/result.json",
+      "--build-sha256",
+      "04e7cf3915e77b83dbe8e7183249445e48ff451292bb16d4d926b3d6346f9be0",
+      "--private-tests",
+      "experiments/m194g-larger-pupil/production-private-controls-1/result.json",
+      "--private-tests-sha256",
+      "eff686d8dcbf7346d09f9682d132d6b3ce958e145bf20e8ef758b0a81d99f6f9",
+      "--private-outputs",
+      "experiments/m194g-larger-pupil/production-private-outputs-1/result.json",
+      "--private-outputs-sha256",
+      "965438745b4288e852aa63d39dff99d22557d9d46bb175e6d599b96ec4415bbe",
+      "--output",
+      "experiments/m194g-larger-pupil/independent-private-bridge-read-1"
+    ]
+  ]
+}

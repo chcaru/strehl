@@ -1,0 +1,789 @@
+{
+  "decode_fault": {
+    "attempt": 1,
+    "index": 3,
+    "output_absent": true,
+    "successful_decode_counts": [
+      1,
+      1,
+      1,
+      0,
+      0
+    ]
+  },
+  "environment": {
+    "RAYON_NUM_THREADS": "2",
+    "STREHL_DEFECT": "off",
+    "STREHL_FIX_CA": "off",
+    "STREHL_FULLRES_GATHER": "1",
+    "STREHL_PYRAMID_WORKERS": "2"
+  },
+  "fixture_only": true,
+  "outputs": [
+    {
+      "configuration": {
+        "admission": "HardFloor",
+        "observer": "off"
+      },
+      "geometry": {
+        "canonical_native_offset": [
+          10,
+          8
+        ],
+        "crop_quad": {
+          "height": 113,
+          "width": 150,
+          "x": 5,
+          "y": 4
+        },
+        "full_native": [
+          320,
+          240
+        ],
+        "full_quad": [
+          160,
+          120
+        ],
+        "level_sizes": [
+          [
+            150,
+            113
+          ],
+          [
+            75,
+            57
+          ],
+          [
+            38,
+            29
+          ],
+          [
+            19,
+            15
+          ]
+        ],
+        "output_native": [
+          300,
+          226
+        ],
+        "placements": [
+          {
+            "local_index": 0,
+            "original_index": 0,
+            "probe_seed_index": 0,
+            "quad_similarity": {
+              "a_im": 0.0,
+              "a_re": 1.0,
+              "b_im": 0.0,
+              "b_re": 0.0
+            }
+          },
+          {
+            "local_index": 1,
+            "original_index": 1,
+            "probe_seed_index": 1,
+            "quad_similarity": {
+              "a_im": 0.0,
+              "a_re": 1.0,
+              "b_im": 0.0,
+              "b_re": 0.0
+            }
+          },
+          {
+            "local_index": 2,
+            "original_index": 2,
+            "probe_seed_index": 2,
+            "quad_similarity": {
+              "a_im": 0.0,
+              "a_re": 1.0,
+              "b_im": 0.0,
+              "b_re": 0.0
+            }
+          },
+          {
+            "local_index": 3,
+            "original_index": 3,
+            "probe_seed_index": 3,
+            "quad_similarity": {
+              "a_im": 0.0,
+              "a_re": 1.0,
+              "b_im": 0.0,
+              "b_re": 0.0
+            }
+          },
+          {
+            "local_index": 4,
+            "original_index": 4,
+            "probe_seed_index": 4,
+            "quad_similarity": {
+              "a_im": 0.0,
+              "a_re": 1.0,
+              "b_im": 0.0,
+              "b_re": 0.0
+            }
+          }
+        ],
+        "reference_coordinate_gauge": 2,
+        "reference_local_index": 2
+      },
+      "hook_calls": 0,
+      "name": "constant-off",
+      "output": {
+        "bytes": 407403,
+        "channels": 3,
+        "height": 226,
+        "path": "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\production-private-outputs-1\\child-outputs\\private-outputs\\constant-off\\output.tiff",
+        "pixel_sha256_le": "4d35defe634df4dd7248186df2112f8223f6e1cae9635d95053495d2b40f5177",
+        "sample_type": "u16",
+        "sha256": "680790817c77bafd45e94556f9d2e5687e2fb8c56dc3538fa03ba3e5b54a2017",
+        "software": "strehl 0.0.0",
+        "width": 300
+      },
+      "successful_decode_counts": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "configuration": {
+        "admission": "HardFloor",
+        "observer": "count"
+      },
+      "geometry": {
+        "canonical_native_offset": [
+          10,
+          8
+        ],
+        "crop_quad": {
+          "height": 113,
+          "width": 150,
+          "x": 5,
+          "y": 4
+        },
+        "full_native": [
+          320,
+          240
+        ],
+        "full_quad": [
+          160,
+          120
+        ],
+        "level_sizes": [
+          [
+            150,
+            113
+          ],
+          [
+            75,
+            57
+          ],
+          [
+            38,
+            29
+          ],
+          [
+            19,
+            15
+          ]
+        ],
+        "output_native": [
+          300,
+          226
+        ],
+        "placements": [
+          {
+            "local_index": 0,
+            "original_index": 0,
+            "probe_seed_index": 0,
+            "quad_similarity": {
+              "a_im": 0.0,
+              "a_re": 1.0,
+              "b_im": 0.0,
+              "b_re": 0.0
+            }
+          },
+          {
+            "local_index": 1,
+            "original_index": 1,
+            "probe_seed_index": 1,
+            "quad_similarity": {
+              "a_im": 0.0,
+              "a_re": 1.0,
+              "b_im": 0.0,
+              "b_re": 0.0
+            }
+          },
+          {
+            "local_index": 2,
+            "original_index": 2,
+            "probe_seed_index": 2,
+            "quad_similarity": {
+              "a_im": 0.0,
+              "a_re": 1.0,
+              "b_im": 0.0,
+              "b_re": 0.0
+            }
+          },
+          {
+            "local_index": 3,
+            "original_index": 3,
+            "probe_seed_index": 3,
+            "quad_similarity": {
+              "a_im": 0.0,
+              "a_re": 1.0,
+              "b_im": 0.0,
+              "b_re": 0.0
+            }
+          },
+          {
+            "local_index": 4,
+            "original_index": 4,
+            "probe_seed_index": 4,
+            "quad_similarity": {
+              "a_im": 0.0,
+              "a_re": 1.0,
+              "b_im": 0.0,
+              "b_re": 0.0
+            }
+          }
+        ],
+        "reference_coordinate_gauge": 2,
+        "reference_local_index": 2
+      },
+      "hook_calls": 5,
+      "name": "constant-count",
+      "output": {
+        "bytes": 407403,
+        "channels": 3,
+        "height": 226,
+        "path": "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\production-private-outputs-1\\child-outputs\\private-outputs\\constant-count\\output.tiff",
+        "pixel_sha256_le": "4d35defe634df4dd7248186df2112f8223f6e1cae9635d95053495d2b40f5177",
+        "sample_type": "u16",
+        "sha256": "680790817c77bafd45e94556f9d2e5687e2fb8c56dc3538fa03ba3e5b54a2017",
+        "software": "strehl 0.0.0",
+        "width": 300
+      },
+      "successful_decode_counts": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "configuration": {
+        "admission": "HardFloor",
+        "observer": "placebo"
+      },
+      "geometry": {
+        "canonical_native_offset": [
+          10,
+          8
+        ],
+        "crop_quad": {
+          "height": 113,
+          "width": 150,
+          "x": 5,
+          "y": 4
+        },
+        "full_native": [
+          320,
+          240
+        ],
+        "full_quad": [
+          160,
+          120
+        ],
+        "level_sizes": [
+          [
+            150,
+            113
+          ],
+          [
+            75,
+            57
+          ],
+          [
+            38,
+            29
+          ],
+          [
+            19,
+            15
+          ]
+        ],
+        "output_native": [
+          300,
+          226
+        ],
+        "placements": [
+          {
+            "local_index": 0,
+            "original_index": 0,
+            "probe_seed_index": 0,
+            "quad_similarity": {
+              "a_im": 0.0,
+              "a_re": 1.0,
+              "b_im": 0.0,
+              "b_re": 0.0
+            }
+          },
+          {
+            "local_index": 1,
+            "original_index": 1,
+            "probe_seed_index": 1,
+            "quad_similarity": {
+              "a_im": 0.0,
+              "a_re": 1.0,
+              "b_im": 0.0,
+              "b_re": 0.0
+            }
+          },
+          {
+            "local_index": 2,
+            "original_index": 2,
+            "probe_seed_index": 2,
+            "quad_similarity": {
+              "a_im": 0.0,
+              "a_re": 1.0,
+              "b_im": 0.0,
+              "b_re": 0.0
+            }
+          },
+          {
+            "local_index": 3,
+            "original_index": 3,
+            "probe_seed_index": 3,
+            "quad_similarity": {
+              "a_im": 0.0,
+              "a_re": 1.0,
+              "b_im": 0.0,
+              "b_re": 0.0
+            }
+          },
+          {
+            "local_index": 4,
+            "original_index": 4,
+            "probe_seed_index": 4,
+            "quad_similarity": {
+              "a_im": 0.0,
+              "a_re": 1.0,
+              "b_im": 0.0,
+              "b_re": 0.0
+            }
+          }
+        ],
+        "reference_coordinate_gauge": 2,
+        "reference_local_index": 2
+      },
+      "hook_calls": 5,
+      "name": "constant-placebo",
+      "output": {
+        "bytes": 407403,
+        "channels": 3,
+        "height": 226,
+        "path": "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\production-private-outputs-1\\child-outputs\\private-outputs\\constant-placebo\\output.tiff",
+        "pixel_sha256_le": "4d35defe634df4dd7248186df2112f8223f6e1cae9635d95053495d2b40f5177",
+        "sample_type": "u16",
+        "sha256": "680790817c77bafd45e94556f9d2e5687e2fb8c56dc3538fa03ba3e5b54a2017",
+        "software": "strehl 0.0.0",
+        "width": 300
+      },
+      "successful_decode_counts": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "configuration": {
+        "admission": "HardFloor",
+        "observer": "off"
+      },
+      "geometry": {
+        "canonical_native_offset": [
+          10,
+          8
+        ],
+        "crop_quad": {
+          "height": 113,
+          "width": 150,
+          "x": 5,
+          "y": 4
+        },
+        "full_native": [
+          320,
+          240
+        ],
+        "full_quad": [
+          160,
+          120
+        ],
+        "level_sizes": [
+          [
+            150,
+            113
+          ],
+          [
+            75,
+            57
+          ],
+          [
+            38,
+            29
+          ],
+          [
+            19,
+            15
+          ]
+        ],
+        "output_native": [
+          300,
+          226
+        ],
+        "placements": [
+          {
+            "local_index": 0,
+            "original_index": 0,
+            "probe_seed_index": 0,
+            "quad_similarity": {
+              "a_im": 0.0,
+              "a_re": 1.0,
+              "b_im": 0.0,
+              "b_re": 0.0
+            }
+          },
+          {
+            "local_index": 1,
+            "original_index": 1,
+            "probe_seed_index": 1,
+            "quad_similarity": {
+              "a_im": 0.0,
+              "a_re": 1.0,
+              "b_im": 0.0,
+              "b_re": 0.0
+            }
+          },
+          {
+            "local_index": 2,
+            "original_index": 2,
+            "probe_seed_index": 2,
+            "quad_similarity": {
+              "a_im": 0.0,
+              "a_re": 1.0,
+              "b_im": 0.0,
+              "b_re": 0.0
+            }
+          },
+          {
+            "local_index": 3,
+            "original_index": 3,
+            "probe_seed_index": 3,
+            "quad_similarity": {
+              "a_im": 0.0,
+              "a_re": 1.0,
+              "b_im": 0.0,
+              "b_re": 0.0
+            }
+          },
+          {
+            "local_index": 4,
+            "original_index": 4,
+            "probe_seed_index": 4,
+            "quad_similarity": {
+              "a_im": 0.0,
+              "a_re": 1.0,
+              "b_im": 0.0,
+              "b_re": 0.0
+            }
+          }
+        ],
+        "reference_coordinate_gauge": 2,
+        "reference_local_index": 2
+      },
+      "hook_calls": 0,
+      "name": "affine-off",
+      "output": {
+        "bytes": 407403,
+        "channels": 3,
+        "height": 226,
+        "path": "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\production-private-outputs-1\\child-outputs\\private-outputs\\affine-off\\output.tiff",
+        "pixel_sha256_le": "cf09ddf1c498f1f066f9af6aa80d0c38efe3b7bb4125d0c207ee4c06d9b88d9e",
+        "sample_type": "u16",
+        "sha256": "f2d75219be245cbca566944a500d9d79f9e1ee07e2540de54933795fbb9ab91a",
+        "software": "strehl 0.0.0",
+        "width": 300
+      },
+      "successful_decode_counts": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "configuration": {
+        "admission": "HardFloor",
+        "observer": "off"
+      },
+      "geometry": {
+        "canonical_native_offset": [
+          10,
+          8
+        ],
+        "crop_quad": {
+          "height": 113,
+          "width": 150,
+          "x": 5,
+          "y": 4
+        },
+        "full_native": [
+          320,
+          240
+        ],
+        "full_quad": [
+          160,
+          120
+        ],
+        "level_sizes": [
+          [
+            150,
+            113
+          ],
+          [
+            75,
+            57
+          ],
+          [
+            38,
+            29
+          ],
+          [
+            19,
+            15
+          ]
+        ],
+        "output_native": [
+          300,
+          226
+        ],
+        "placements": [
+          {
+            "local_index": 0,
+            "original_index": 0,
+            "probe_seed_index": 0,
+            "quad_similarity": {
+              "a_im": 0.0,
+              "a_re": 1.0,
+              "b_im": 0.0,
+              "b_re": 0.0
+            }
+          },
+          {
+            "local_index": 1,
+            "original_index": 1,
+            "probe_seed_index": 1,
+            "quad_similarity": {
+              "a_im": 0.0,
+              "a_re": 1.0,
+              "b_im": 0.0,
+              "b_re": 0.0
+            }
+          },
+          {
+            "local_index": 2,
+            "original_index": 2,
+            "probe_seed_index": 2,
+            "quad_similarity": {
+              "a_im": 0.0,
+              "a_re": 1.0,
+              "b_im": 0.0,
+              "b_re": 0.0
+            }
+          },
+          {
+            "local_index": 3,
+            "original_index": 3,
+            "probe_seed_index": 3,
+            "quad_similarity": {
+              "a_im": 0.0,
+              "a_re": 1.0,
+              "b_im": 0.0,
+              "b_re": 0.0
+            }
+          },
+          {
+            "local_index": 4,
+            "original_index": 4,
+            "probe_seed_index": 4,
+            "quad_similarity": {
+              "a_im": 0.0,
+              "a_re": 1.0,
+              "b_im": 0.0,
+              "b_re": 0.0
+            }
+          }
+        ],
+        "reference_coordinate_gauge": 2,
+        "reference_local_index": 2
+      },
+      "hook_calls": 0,
+      "name": "green-change-off",
+      "output": {
+        "bytes": 407403,
+        "channels": 3,
+        "height": 226,
+        "path": "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\production-private-outputs-1\\child-outputs\\private-outputs\\green-change-off\\output.tiff",
+        "pixel_sha256_le": "6f1acd107cd2f4f9c1e22ae7a1ce6d77f345e0a3b7ff99ca264ac7c926665869",
+        "sample_type": "u16",
+        "sha256": "38cc59a1d80631d97de3e217ea99d52cc347f7d1de184b9a5960480d62b31b28",
+        "software": "strehl 0.0.0",
+        "width": 300
+      },
+      "successful_decode_counts": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "configuration": {
+        "admission": "FloorPedestalV1",
+        "observer": "off"
+      },
+      "geometry": {
+        "canonical_native_offset": [
+          10,
+          8
+        ],
+        "crop_quad": {
+          "height": 113,
+          "width": 150,
+          "x": 5,
+          "y": 4
+        },
+        "full_native": [
+          320,
+          240
+        ],
+        "full_quad": [
+          160,
+          120
+        ],
+        "level_sizes": [
+          [
+            150,
+            113
+          ],
+          [
+            75,
+            57
+          ],
+          [
+            38,
+            29
+          ],
+          [
+            19,
+            15
+          ]
+        ],
+        "output_native": [
+          300,
+          226
+        ],
+        "placements": [
+          {
+            "local_index": 0,
+            "original_index": 0,
+            "probe_seed_index": 0,
+            "quad_similarity": {
+              "a_im": 0.0,
+              "a_re": 1.0,
+              "b_im": 0.0,
+              "b_re": 0.0
+            }
+          },
+          {
+            "local_index": 1,
+            "original_index": 1,
+            "probe_seed_index": 1,
+            "quad_similarity": {
+              "a_im": 0.0,
+              "a_re": 1.0,
+              "b_im": 0.0,
+              "b_re": 0.0
+            }
+          },
+          {
+            "local_index": 2,
+            "original_index": 2,
+            "probe_seed_index": 2,
+            "quad_similarity": {
+              "a_im": 0.0,
+              "a_re": 1.0,
+              "b_im": 0.0,
+              "b_re": 0.0
+            }
+          },
+          {
+            "local_index": 3,
+            "original_index": 3,
+            "probe_seed_index": 3,
+            "quad_similarity": {
+              "a_im": 0.0,
+              "a_re": 1.0,
+              "b_im": 0.0,
+              "b_re": 0.0
+            }
+          },
+          {
+            "local_index": 4,
+            "original_index": 4,
+            "probe_seed_index": 4,
+            "quad_similarity": {
+              "a_im": 0.0,
+              "a_re": 1.0,
+              "b_im": 0.0,
+              "b_re": 0.0
+            }
+          }
+        ],
+        "reference_coordinate_gauge": 2,
+        "reference_local_index": 2
+      },
+      "hook_calls": 0,
+      "name": "constant-pedestal",
+      "output": {
+        "bytes": 407403,
+        "channels": 3,
+        "height": 226,
+        "path": "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\production-private-outputs-1\\child-outputs\\private-outputs\\constant-pedestal\\output.tiff",
+        "pixel_sha256_le": "4d35defe634df4dd7248186df2112f8223f6e1cae9635d95053495d2b40f5177",
+        "sample_type": "u16",
+        "sha256": "680790817c77bafd45e94556f9d2e5687e2fb8c56dc3538fa03ba3e5b54a2017",
+        "software": "strehl 0.0.0",
+        "width": 300
+      },
+      "successful_decode_counts": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    }
+  ],
+  "schema": "m194g-private-bridge-output-v1",
+  "scope": "private source and shared production path only; independent TIFF/config/log read required",
+  "status": "COMPLETE_PRIVATE_RGB_UNVERIFIED"
+}
