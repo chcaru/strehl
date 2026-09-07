@@ -1,0 +1,2434 @@
+{
+  "schema": "m192-input-manifest-v1",
+  "phase": "after",
+  "started_utc": "2026-09-07T07:30:42.207063+00:00",
+  "completed_utc": "2026-09-07T07:30:51.313999+00:00",
+  "selected_file_count": 404,
+  "selected_bytes": 15489310720,
+  "files": [
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00001.ARW",
+      "bytes": 37621760,
+      "mtime_ns": 1787510545240000000,
+      "sha256": "3ADBB7CE01A53CCFC880AD8DDA2837B7929D74F3D06F7DBBA36E920EA4C7C7E9"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00002.ARW",
+      "bytes": 37638144,
+      "mtime_ns": 1787510546230000000,
+      "sha256": "6CA99664EE48F6D06BD52E95B8A4DDDC9A9488EBB9333F44221F5B6630363987"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00003.ARW",
+      "bytes": 37638144,
+      "mtime_ns": 1787510547220000000,
+      "sha256": "CDC99C47170964F1948273C03A11A458191D2A91D9DE37CC2A4DCE22A70D20A8"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00004.ARW",
+      "bytes": 37642240,
+      "mtime_ns": 1787510548190000000,
+      "sha256": "F1D0CDBE2077EF30F47BAC9863F7AE1809C455EC5605A802FA168E3FA50F9DCB"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00005.ARW",
+      "bytes": 37646336,
+      "mtime_ns": 1787510549220000000,
+      "sha256": "F9823B8DC4809346513BA83035F205E368BF6789FF0EF990E4267DF5FC7E9F14"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00006.ARW",
+      "bytes": 37658624,
+      "mtime_ns": 1787510550240000000,
+      "sha256": "DB3BCBF7B38D6E26DA39E6EB0BE5C63D39A4E9192EA81219A4EB002329735457"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00007.ARW",
+      "bytes": 37658624,
+      "mtime_ns": 1787510551270000000,
+      "sha256": "153233ED7F9DEE9BFAAA270F795375936A38CF8C0A55F52FE514331889737E01"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00008.ARW",
+      "bytes": 37666816,
+      "mtime_ns": 1787510552290000000,
+      "sha256": "DA6855B93AF521B86D8D74EA1D490875BDB6ACE83864D325DE3AA608CAAEBB11"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00009.ARW",
+      "bytes": 37675008,
+      "mtime_ns": 1787510553290000000,
+      "sha256": "D3522BD1A77C7635F87CA5E0551DF1DC201FDDF260D5D36A000F595F8547B746"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00010.ARW",
+      "bytes": 37675008,
+      "mtime_ns": 1787510554250000000,
+      "sha256": "3355A57626F372310A672B6CD8540C40450A702AB26813A4C199A75B59B03703"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00011.ARW",
+      "bytes": 37683200,
+      "mtime_ns": 1787510555200000000,
+      "sha256": "7CA6EB8BF518F6F65C1A58F51BD983F39030B42ABA543E674FF087A858AD90EB"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00012.ARW",
+      "bytes": 37691392,
+      "mtime_ns": 1787510556190000000,
+      "sha256": "29B86B15A8487EFCAFA73EB19E0EA8F6125D5529C04E2AAFFF52DF283FE44BE0"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00013.ARW",
+      "bytes": 37695488,
+      "mtime_ns": 1787510557190000000,
+      "sha256": "76B93095BA34A138398F89A1C9F84582053F760B75CA53411ED3F60CCCE2534C"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00014.ARW",
+      "bytes": 37695488,
+      "mtime_ns": 1787510558160000000,
+      "sha256": "4B34DBB66287ABD085FD974E4597CD23944A0DE4D1158DCA9D054B72A02DC0CA"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00015.ARW",
+      "bytes": 37707776,
+      "mtime_ns": 1787510559120000000,
+      "sha256": "820F0CA726EE8CBDEA1904F872239024B1040D4D89A1B5E85A99739839B5B9BC"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00016.ARW",
+      "bytes": 37707776,
+      "mtime_ns": 1787510560120000000,
+      "sha256": "6D10F9AA63D2DDEF0B603BF85066641D9D4ACF58C57A7D4D09D03DD4394C42FA"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00017.ARW",
+      "bytes": 37715968,
+      "mtime_ns": 1787510561130000000,
+      "sha256": "BB30AF152C007FF048BC1526DD2CD7A3FF9A7AED6231F0001DDD0C67E81755B4"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00018.ARW",
+      "bytes": 37720064,
+      "mtime_ns": 1787510562130000000,
+      "sha256": "7E6FE3408782E4609EF4CAB1B0D1BA672F293C24B6CC0C40BAF53DD71B69CB41"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00019.ARW",
+      "bytes": 37732352,
+      "mtime_ns": 1787510563130000000,
+      "sha256": "AC0EE7BBD7AC987EA6F00CA5C91FD9930BB509CB4522FEBDB66414A92BCB8673"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00020.ARW",
+      "bytes": 37740544,
+      "mtime_ns": 1787510564090000000,
+      "sha256": "5C42E79F05A9C803BA6BCC09353F64819EB5D956E359E918234BD018EC9B3C91"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00021.ARW",
+      "bytes": 37748736,
+      "mtime_ns": 1787510565060000000,
+      "sha256": "163A69F5A461349A7F24CA273A951C91AAE46C09E66B8B9828A2A4743212A9EF"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00022.ARW",
+      "bytes": 37761024,
+      "mtime_ns": 1787510566060000000,
+      "sha256": "3C8FDE3EE5E3FC80FCB28B8BA397DF0535542A2721EA9EECD9A0C8B97F3586C5"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00023.ARW",
+      "bytes": 37769216,
+      "mtime_ns": 1787510567070000000,
+      "sha256": "75ABAA58BCA9AEB885BFDCE7B85AC8F7D5B4EB8AF4EC1F7F34039497151A0294"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00024.ARW",
+      "bytes": 37785600,
+      "mtime_ns": 1787510568070000000,
+      "sha256": "9288FDB5C7503A18D8F8AB89DD06F4EC28ABBCE65787DAC77257BA69F5440009"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00025.ARW",
+      "bytes": 37797888,
+      "mtime_ns": 1787510569060000000,
+      "sha256": "1A97CED128891D0C45CEE9EB0E1A88B338507DB61C6FDB6B91CA358B180566F7"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00026.ARW",
+      "bytes": 37814272,
+      "mtime_ns": 1787510570060000000,
+      "sha256": "0EEF27DA1EFCC5F26024BE20CF28E36E1580776C8FBA9B6F2D13C8F7D8B34208"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00027.ARW",
+      "bytes": 37814272,
+      "mtime_ns": 1787510571040000000,
+      "sha256": "4BF7CDA57E403102DE117C5D48833848D587A8BB2A2A774CAE48AAEE039414D7"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00028.ARW",
+      "bytes": 37838848,
+      "mtime_ns": 1787510572000000000,
+      "sha256": "8700AED4EE50B3D9E452E8E9FC67D05D362F96EEECED079891031DED3D04950F"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00029.ARW",
+      "bytes": 37863424,
+      "mtime_ns": 1787510572960000000,
+      "sha256": "A1EA967F6495C388AED3664F40AE33A5DBDD559DB478C2F327DACA6EEBD4FD40"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00030.ARW",
+      "bytes": 37879808,
+      "mtime_ns": 1787510573930000000,
+      "sha256": "F57782BA933F44AE8C72CC493FEE85CB20D9C84CD061BD4C0DF9449A271DF846"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00031.ARW",
+      "bytes": 37904384,
+      "mtime_ns": 1787510574900000000,
+      "sha256": "EBE96FEA7F9FD129ECDAD20265AAA2CABD15C63CDF48E3E93E9431621B13D179"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00032.ARW",
+      "bytes": 37949440,
+      "mtime_ns": 1787510575910000000,
+      "sha256": "78004EDAB70379AC9B4161ED0DBA5030FC8E4A62D5F33F3715FEC56A416D7266"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00033.ARW",
+      "bytes": 37957632,
+      "mtime_ns": 1787510576860000000,
+      "sha256": "CC9F98933A883CE800769CE9F7144B81402EAABB1762A788253358EF8B3B31C5"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00034.ARW",
+      "bytes": 38068224,
+      "mtime_ns": 1787510577870000000,
+      "sha256": "F9EED0CEEA5562E5FEA5AB7B82844407DC8F98BCF1A8D90B700E8999F8745F82"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00035.ARW",
+      "bytes": 38109184,
+      "mtime_ns": 1787510578880000000,
+      "sha256": "357A5C231BC1F49892F53C572D85972FEF655FA6A4A42DFD7CE205C0BABB2AF8"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00036.ARW",
+      "bytes": 38109184,
+      "mtime_ns": 1787510579880000000,
+      "sha256": "782475C7C1BC743F149B652FA15373A1C99E5F6AA27935B25C673DB2E19D076C"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00037.ARW",
+      "bytes": 38100992,
+      "mtime_ns": 1787510580910000000,
+      "sha256": "946D36CB2370EBAB7CFFE165C6F0D3D3E4F35CD2C232109E24417E26C8E0D0CC"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00038.ARW",
+      "bytes": 38100992,
+      "mtime_ns": 1787510581950000000,
+      "sha256": "D334B908E69D0592D438E3602C0CAC0721BA248F1FB084B9C1E711CB424359B8"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00039.ARW",
+      "bytes": 38125568,
+      "mtime_ns": 1787510582960000000,
+      "sha256": "2734F864987CC5351D14B038E5DA2539A0FC73CC3537EA3AB81AE9D04E859ED9"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00040.ARW",
+      "bytes": 38092800,
+      "mtime_ns": 1787510583990000000,
+      "sha256": "F4C4BC658904DF6E91E8E8D57212BAD68F1EE218F344621862B4A34EE6C21536"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00041.ARW",
+      "bytes": 38076416,
+      "mtime_ns": 1787510584960000000,
+      "sha256": "D773F239F7DFA8C529AB0A0C2DBEE843386A0244E637E5E2C515187D14490F4C"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00042.ARW",
+      "bytes": 38064128,
+      "mtime_ns": 1787510585950000000,
+      "sha256": "C01F89D02CB5313139FF66A7FD8B5B34FCDF38F58E6A0A913C773C95371912F2"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00043.ARW",
+      "bytes": 38117376,
+      "mtime_ns": 1787510586970000000,
+      "sha256": "3A51875A4347ABF3628643D0DB06270CE931E8E048DA1F58AD7687738F3D8973"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00044.ARW",
+      "bytes": 38092800,
+      "mtime_ns": 1787510587960000000,
+      "sha256": "ECF5E8F8FC573DB1845EFAE65F5AF89245D7DC609E5CB643B98F9689030202B5"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00045.ARW",
+      "bytes": 38113280,
+      "mtime_ns": 1787510589010000000,
+      "sha256": "259DCB306A5C7CA4A36AE2487D812D65B9397D80341C62C767EC101F2CBC96BE"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00046.ARW",
+      "bytes": 38051840,
+      "mtime_ns": 1787510589980000000,
+      "sha256": "7CAF642E2E7B0621878B7826A711BA07896E4A494CA4F3AB226F4071D745B295"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00047.ARW",
+      "bytes": 37994496,
+      "mtime_ns": 1787510590940000000,
+      "sha256": "92DA8A664A2FC466EBB87F65123846DB549B47A9AA88587F211CA97FCEC7B093"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00048.ARW",
+      "bytes": 37982208,
+      "mtime_ns": 1787510591900000000,
+      "sha256": "6F37F898844D0413E9114268F05317921916DC4804F7E258AFDF082C1548381C"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00049.ARW",
+      "bytes": 37957632,
+      "mtime_ns": 1787510592870000000,
+      "sha256": "0485BE81AC404D0C940CA17DAF5866FBF87365CD90C57061DBE09AE931650327"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00050.ARW",
+      "bytes": 37953536,
+      "mtime_ns": 1787510593830000000,
+      "sha256": "8182978ADBE5A1014195AEF83FDB0F1448D00CD5C485F0F4587B6FCB14F90203"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00051.ARW",
+      "bytes": 37945344,
+      "mtime_ns": 1787510594800000000,
+      "sha256": "1ECA43B2B92C2ED2F9C5473DCA5D8CBC318F1B0475062E328948E1EEFF659A97"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00052.ARW",
+      "bytes": 37937152,
+      "mtime_ns": 1787510595770000000,
+      "sha256": "1BBDC19AA6430C55553BDF96805D0B0D7070C820FB4B9DDF1012DFE400233A29"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00053.ARW",
+      "bytes": 37933056,
+      "mtime_ns": 1787510596760000000,
+      "sha256": "AE82D0EF1710027A7046E39F67AB799DA8CFA237AE875BD314A6DAB577138BF5"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00054.ARW",
+      "bytes": 37937152,
+      "mtime_ns": 1787510597710000000,
+      "sha256": "48D5C92A15EB55D84D651F05CFF7C112A6C8598A5148FC1EF74B0EAECACAB4E7"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00055.ARW",
+      "bytes": 37933056,
+      "mtime_ns": 1787510598670000000,
+      "sha256": "E3E0BE31699B83FB2A9F63F6DFADEC43A679CF4FB794492846F45C96D60D7577"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00056.ARW",
+      "bytes": 37941248,
+      "mtime_ns": 1787510599600000000,
+      "sha256": "FEE97F8641E4E283DA9A11B45C8113C91D86467C58B582F174CFC160D0A88777"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00057.ARW",
+      "bytes": 37949440,
+      "mtime_ns": 1787510600580000000,
+      "sha256": "202A80623FFFA058D9EAC1C2B728440FF3F9CAD4A39BB02AE3EC5BB14E09D1E5"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00058.ARW",
+      "bytes": 37961728,
+      "mtime_ns": 1787510601540000000,
+      "sha256": "E1677D1CD153225D5E7686E7D94D251D4877A7C5DB236F8F2FB205CB1F5C5D4A"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00059.ARW",
+      "bytes": 37974016,
+      "mtime_ns": 1787510602470000000,
+      "sha256": "8E4332D03FADA8710518E5A360D008C7AD6DB311AF55E595DF6D775FCC6FC51B"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00060.ARW",
+      "bytes": 37982208,
+      "mtime_ns": 1787510603400000000,
+      "sha256": "11154D83E4545A803A0EBB14C7AF3FBF8C86336C23F5E07A1E22E32A311AE165"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00061.ARW",
+      "bytes": 37998592,
+      "mtime_ns": 1787510604340000000,
+      "sha256": "75972FCD4F8586D1C88DA360084AE88A330BDABBD91D78908D54091ADF5E2AD4"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00062.ARW",
+      "bytes": 38006784,
+      "mtime_ns": 1787510605270000000,
+      "sha256": "1B3FCEE3315B7DD498D66F83F4804C04DE482DE093ED962A4A6528CF88A69804"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00063.ARW",
+      "bytes": 38031360,
+      "mtime_ns": 1787510606210000000,
+      "sha256": "33247418B32336FA31235F70077144085EB60DC2331BD98B7C67F6C6AEAE5843"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00064.ARW",
+      "bytes": 38043648,
+      "mtime_ns": 1787510607180000000,
+      "sha256": "CE92935751E057C7E3C5ADF95881082DC36E881892D2C9670D02E8DA89DD9601"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00065.ARW",
+      "bytes": 38055936,
+      "mtime_ns": 1787510608110000000,
+      "sha256": "D19FD755B1A44F5E4F5DC6BA47DBD1F864686583BD12799931F68FF8A6BC1F03"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00066.ARW",
+      "bytes": 38072320,
+      "mtime_ns": 1787510609050000000,
+      "sha256": "DD6EC20EACA164D7D4C4A11CB7BAE46EAC6B7FE4267D4ADC0BE81E3F3BB61748"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00067.ARW",
+      "bytes": 38080512,
+      "mtime_ns": 1787510610040000000,
+      "sha256": "8360B0935EC29AD2231310394097C6F97AB4556EB668C21CB557D12B7F15CCE9"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00068.ARW",
+      "bytes": 38084608,
+      "mtime_ns": 1787510610970000000,
+      "sha256": "0109D44FA092780DA9F1CC7AD0AF9B41A32E8300E92C5D07979B852DD53AE358"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00069.ARW",
+      "bytes": 38096896,
+      "mtime_ns": 1787510611910000000,
+      "sha256": "115580BBCB83A3B3539A613FCA5332E04F9DA273DB8953BE6B32F8B9EFFA1A15"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00070.ARW",
+      "bytes": 38100992,
+      "mtime_ns": 1787510612870000000,
+      "sha256": "300525F019FD1586D63E4D98795DABE4F2F4E6712F15A56EE606A7729995CDFF"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00071.ARW",
+      "bytes": 38100992,
+      "mtime_ns": 1787510613810000000,
+      "sha256": "627DC5C1D64C08A741C0DB9232FD879A705317BD6AF024FAFC7652976FA5C980"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00072.ARW",
+      "bytes": 38105088,
+      "mtime_ns": 1787510614750000000,
+      "sha256": "19518FBB0BB696FD54CD1E94A04A3491776E4F5E0C17B683EBD5095563EBFFB9"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00073.ARW",
+      "bytes": 38109184,
+      "mtime_ns": 1787510615710000000,
+      "sha256": "55A2103B6E82CBA7B499B178CFCBE11F3E07FEFD738D0607D9A965CC83F15F17"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00074.ARW",
+      "bytes": 38113280,
+      "mtime_ns": 1787510616640000000,
+      "sha256": "E21BF5B9B5B236710DCAF831066572C822600EAB0A285FE7B02FCD0EAF7F8EA7"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00075.ARW",
+      "bytes": 38113280,
+      "mtime_ns": 1787510617580000000,
+      "sha256": "5C9B5241C400C98B6FFB48CB92E62CE53928B6D0F6CF6AFD8B2187DC348C338C"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00076.ARW",
+      "bytes": 38117376,
+      "mtime_ns": 1787510618520000000,
+      "sha256": "4CDDA92206EFC19AA8EAC15631E9BB149EF066D2BD3C98A675E42F3D5F3B528C"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00077.ARW",
+      "bytes": 38109184,
+      "mtime_ns": 1787510619440000000,
+      "sha256": "681264315A89F0B41AB3DE70D50AEABF9586E722A679F6648BA0D4FB097A5732"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00078.ARW",
+      "bytes": 38100992,
+      "mtime_ns": 1787510620390000000,
+      "sha256": "341BD322F9E5C45927B555AAAFF15115BDA99BDEB58E615122E5D21996FCAFBE"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00079.ARW",
+      "bytes": 38088704,
+      "mtime_ns": 1787510621310000000,
+      "sha256": "489DB88C4782CC97A6515D6AD3481E89788D4D62860C70AD6AC2CA70FD063530"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00080.ARW",
+      "bytes": 38084608,
+      "mtime_ns": 1787510622240000000,
+      "sha256": "4F280D3C80051A0EFBBCA51593A302F8F5F11921383F99FA299A53DF0EC5A40F"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00081.ARW",
+      "bytes": 38076416,
+      "mtime_ns": 1787510623180000000,
+      "sha256": "9423F37571831B3BF592830A9BEDFC59F0014594C4262864210BB751FD79CD12"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00082.ARW",
+      "bytes": 38068224,
+      "mtime_ns": 1787510624110000000,
+      "sha256": "795A55A679E56AB21AF445EFF4AACE7C9C000716B96CFA6EB867DA0B013066A4"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00083.ARW",
+      "bytes": 38068224,
+      "mtime_ns": 1787510625040000000,
+      "sha256": "C76F4203E3936123879A07A082F12F69E967D09CB4E852A2CF8A71E2CBC8A58E"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00084.ARW",
+      "bytes": 38060032,
+      "mtime_ns": 1787510626030000000,
+      "sha256": "77170F0D4DF4E9F253B0F46B51DEA75B5F6FC2EC8B3CE74589D15BB344DD198E"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00085.ARW",
+      "bytes": 38047744,
+      "mtime_ns": 1787510626950000000,
+      "sha256": "F11E0466E4F035C1D0B13DEC7599900771A257FF9E7E06605C2C67EB05970638"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00086.ARW",
+      "bytes": 38051840,
+      "mtime_ns": 1787510627910000000,
+      "sha256": "C8383881CF83ECFEBF9D7B58726F0F4780805AFF9012A7A04E565DA07324B666"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00087.ARW",
+      "bytes": 38043648,
+      "mtime_ns": 1787510628890000000,
+      "sha256": "0A77F53F469156279312007ED5E431777BED36942976648264461EF8CFED6B6A"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00088.ARW",
+      "bytes": 38039552,
+      "mtime_ns": 1787510629820000000,
+      "sha256": "82B2334676475158041BFE003E740F0CDEF02E4A3AE8646F142B8B2714411480"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00089.ARW",
+      "bytes": 38027264,
+      "mtime_ns": 1787510630750000000,
+      "sha256": "A2C9E2CE1F525A31A73EAE221D1A701F0A488240108517AA067EF62FFB7C2583"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00090.ARW",
+      "bytes": 38023168,
+      "mtime_ns": 1787510631680000000,
+      "sha256": "7848B5748D6D56E6EB589302A3CC8DBB4295F54474D91F9E6470EEBFED05320F"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00091.ARW",
+      "bytes": 38023168,
+      "mtime_ns": 1787510632610000000,
+      "sha256": "F468E789DD66D3A5C621DF483A80905A5E4317DBC59726FAAD65D3692B958395"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00092.ARW",
+      "bytes": 38027264,
+      "mtime_ns": 1787510633590000000,
+      "sha256": "207AB580C68F921C9A44EF570CE9BCCED9E1BFABED507EECFC80552DE709F520"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00093.ARW",
+      "bytes": 38027264,
+      "mtime_ns": 1787510634510000000,
+      "sha256": "6853B5B338DB87252F87E483C344E749FC38D95FD9742C6A4F827F0B77A9D3FA"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00094.ARW",
+      "bytes": 38031360,
+      "mtime_ns": 1787510635500000000,
+      "sha256": "3ED82FF57EDE87AFC7852B820298BAD362962DC9A2B73E8EA7BD01A01466F5C7"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00095.ARW",
+      "bytes": 38023168,
+      "mtime_ns": 1787510636410000000,
+      "sha256": "602F807AE65C9148BDCB2CFF93A0576B07AB2A9BD4C13B5E2CE64C37DA6CEF90"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00096.ARW",
+      "bytes": 38027264,
+      "mtime_ns": 1787510637350000000,
+      "sha256": "61BDF2C99B4BF34050318D68FCF4AD2FF945D8C735D1CF8603BC6AE1B7BA545C"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00097.ARW",
+      "bytes": 38019072,
+      "mtime_ns": 1787510638280000000,
+      "sha256": "6367D36BCAC6BCEC3AC473FF5F1B85925C967EBBCDF84E900F247D501C35BB27"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00098.ARW",
+      "bytes": 38019072,
+      "mtime_ns": 1787510639210000000,
+      "sha256": "55BB9D47E5B32CA5A73E26A97FDB71C8569E33364671600D2FDDA9F7661FBE7C"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00099.ARW",
+      "bytes": 38006784,
+      "mtime_ns": 1787510640140000000,
+      "sha256": "10FA8ABCA5D682CB9C7F03BA96EE2973EB2326CF876D242AC74D15E4F571425A"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00100.ARW",
+      "bytes": 38002688,
+      "mtime_ns": 1787510641050000000,
+      "sha256": "630B5B7924EFCE7F28A4E1B06F3AB379684D4CC9253157924CAF1E5E4D9D64EE"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00101.ARW",
+      "bytes": 37990400,
+      "mtime_ns": 1787510641980000000,
+      "sha256": "BF433804480944FA5736216AF0DA2F6459CDDE949AFAA5FD3233EAC8E6ED7CEA"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00102.ARW",
+      "bytes": 37986304,
+      "mtime_ns": 1787510642920000000,
+      "sha256": "FF5EA104DB0E85060F60052FADD84EBB3F8879335B4E148495BEA8C95C92F809"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00103.ARW",
+      "bytes": 37982208,
+      "mtime_ns": 1787510643850000000,
+      "sha256": "C100F6EDEA9DEADD05F45D43A81177F3E4E2C40D4751BECE90EC9B87C6BCE76D"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00104.ARW",
+      "bytes": 37982208,
+      "mtime_ns": 1787510644750000000,
+      "sha256": "EF0C7DE114C4B4348238ABC1784986D0C62C8438851C0570ECFB05294A0AB6FC"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00105.ARW",
+      "bytes": 37978112,
+      "mtime_ns": 1787510645650000000,
+      "sha256": "37E40A81A9959C0DE29FDA8FECFEB5560F951A7FCB65E65DEAC721EEB9FC7998"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00106.ARW",
+      "bytes": 37982208,
+      "mtime_ns": 1787510646550000000,
+      "sha256": "EED8DEBB966A37364351D646EA0BA2ACC5AC4EADB06519736C99F5DFEC68A076"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00107.ARW",
+      "bytes": 37990400,
+      "mtime_ns": 1787510647450000000,
+      "sha256": "4E1E87015086183F2DFDBFB9253C6EA61FC354A8539540CF2F9B54F38CD86CC3"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00108.ARW",
+      "bytes": 37998592,
+      "mtime_ns": 1787510648360000000,
+      "sha256": "2440A6ECC6B441A714FAA3F9271A68F16A2C0AF6ABD181CF4A4A863F6220A6BD"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00109.ARW",
+      "bytes": 38006784,
+      "mtime_ns": 1787510649290000000,
+      "sha256": "31040A446498691A518887AD1F569BB0D456EEBFA284DD5C89C67A08B6888859"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00110.ARW",
+      "bytes": 38014976,
+      "mtime_ns": 1787510650190000000,
+      "sha256": "012353EFB085C6D4CF30CDD1B820BD5B8E70CD3D92F123EC2AA76341EDFE04AC"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00111.ARW",
+      "bytes": 38023168,
+      "mtime_ns": 1787510651080000000,
+      "sha256": "F146C3FCE4B6157EE3AB243596DFBEE2B1565531D2E5DB4093632F2846BC2AC5"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00112.ARW",
+      "bytes": 38031360,
+      "mtime_ns": 1787510651990000000,
+      "sha256": "FF21F2977A25F12B6D733706E90BCE0C99A5A37E308F7C3ADFB85D8761DC59F7"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00113.ARW",
+      "bytes": 38031360,
+      "mtime_ns": 1787510652890000000,
+      "sha256": "C3A8581ACA2373541D2DFF5805AF1F312F69C21D83AADE05D7FC555EB9F37644"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00114.ARW",
+      "bytes": 38039552,
+      "mtime_ns": 1787510653840000000,
+      "sha256": "F7C649EECB531B1FCF00436167551D44DBE0083C08E03E4033EA1399EF533DCA"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00115.ARW",
+      "bytes": 38043648,
+      "mtime_ns": 1787510654740000000,
+      "sha256": "D3D6E896E8069E90B277F57C653614960AE7F2CF41186B861B69675730113EE8"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00116.ARW",
+      "bytes": 38047744,
+      "mtime_ns": 1787510655710000000,
+      "sha256": "24F0BB5ACDC93C0C13049AA06C502F6AFEA1C0B50E7DD86D80BDCEF169811476"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00117.ARW",
+      "bytes": 38039552,
+      "mtime_ns": 1787510656620000000,
+      "sha256": "486FB4506BEF976AA34535B794277F84B1D4C4D5C1DF5C5B22A7FC3BADAC6CD8"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00118.ARW",
+      "bytes": 38039552,
+      "mtime_ns": 1787510657520000000,
+      "sha256": "B56E0F7F9BF33F6E02BC5B2CBA6660A3703DA7A2F37A6F29D9A9C23FB7348790"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00119.ARW",
+      "bytes": 38027264,
+      "mtime_ns": 1787510658420000000,
+      "sha256": "624F672AF2F18E8C8061A00F1CC2C0DF8BD8D2C972742A11DAE96477EAAD0FF1"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00120.ARW",
+      "bytes": 38014976,
+      "mtime_ns": 1787510659320000000,
+      "sha256": "975BF80F51437EDF644DAB91335D577FFF7B3D67040F725DEC9653EC3A718626"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00121.ARW",
+      "bytes": 38010880,
+      "mtime_ns": 1787510660220000000,
+      "sha256": "5F650D5D975DD36B04156154F75D76A481662D8FFF7861D3D685EE2849ADD053"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00122.ARW",
+      "bytes": 37994496,
+      "mtime_ns": 1787510661170000000,
+      "sha256": "7C878D1C961C871E65944F651A13622B45156FBBAF2C802C9DD097E562AB4F30"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00123.ARW",
+      "bytes": 37982208,
+      "mtime_ns": 1787510662090000000,
+      "sha256": "90E091742D36E44427BCA102A66462C0DF00C2FEED4FF7380359DAB607BC5459"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00124.ARW",
+      "bytes": 37982208,
+      "mtime_ns": 1787510663030000000,
+      "sha256": "05AD6D854338E3B3922AC6E2DD79FB1E5A81E7460AC6EB4D3E921DD8B4B8A1D5"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00125.ARW",
+      "bytes": 37969920,
+      "mtime_ns": 1787510663980000000,
+      "sha256": "CC40D69DF08DA86C5DAD9C245452BCC0C733451A8B9B958CEE314F57716F7618"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00126.ARW",
+      "bytes": 37953536,
+      "mtime_ns": 1787510664950000000,
+      "sha256": "0EDF6FF3B4C8E665008906D8113E74B4E18779656C7BC232F82156D40BE7D59F"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00127.ARW",
+      "bytes": 37949440,
+      "mtime_ns": 1787510665850000000,
+      "sha256": "1A0B649A425A515D59662810E01B0FD043A2EF0C5A8C2E8F459C0A957586D0F8"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00128.ARW",
+      "bytes": 37945344,
+      "mtime_ns": 1787510666760000000,
+      "sha256": "C2F1696E562E70EB7E47A59D32B86CA726EAA124BC5C2ED0F501A2C842B3AE08"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00129.ARW",
+      "bytes": 37937152,
+      "mtime_ns": 1787510667700000000,
+      "sha256": "82EE4C4FFD9E2C8BF0CF720B14AB0A342D1349642C142DF99F6E7881476F9B10"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00130.ARW",
+      "bytes": 37933056,
+      "mtime_ns": 1787510668610000000,
+      "sha256": "8CB2F498484623F0CC9018C6440FD8AB88BED5CC56898629A7B95925FD3619C6"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00131.ARW",
+      "bytes": 37928960,
+      "mtime_ns": 1787510669520000000,
+      "sha256": "1F0D16B3BFCF0555BFEF9368D188B4EBA57A6B621F6E1C45099AFC2A1CBD9A01"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00132.ARW",
+      "bytes": 37920768,
+      "mtime_ns": 1787510670430000000,
+      "sha256": "260AF6C0694B40454AB42CE83E834EF426850974FDC87292F64D0A69179C975F"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00133.ARW",
+      "bytes": 37920768,
+      "mtime_ns": 1787510671370000000,
+      "sha256": "3ED99A37EAFAC340E9CFFFCA22E4C374A3D0C66AD985B22D6854F615D37834E9"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00134.ARW",
+      "bytes": 37920768,
+      "mtime_ns": 1787510672290000000,
+      "sha256": "7ED3CBF1F25BA01A442161DFB1302C7F06ABB663D28F19FBBCEEB1195B7E4360"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00135.ARW",
+      "bytes": 37920768,
+      "mtime_ns": 1787510673190000000,
+      "sha256": "046AE59A4E98182826BE3BA5E0D8339DACE89C2A7C019947D5F3CD77A2D8D148"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00136.ARW",
+      "bytes": 37920768,
+      "mtime_ns": 1787510674090000000,
+      "sha256": "6CAF6AA4FC4D289C83C1B2268C5C5D0ACA9898C59A132C6E222CFCFC4C2FABDB"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00137.ARW",
+      "bytes": 37920768,
+      "mtime_ns": 1787510674990000000,
+      "sha256": "3EF613C222F8417DADEA6547AF3314265463E9E16D8E055424B71E0D59567883"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00138.ARW",
+      "bytes": 37920768,
+      "mtime_ns": 1787510675890000000,
+      "sha256": "33F361D24EBB369DABD739C726621F01C21DE02CF9AB5D70E5947AADB5239AB1"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00139.ARW",
+      "bytes": 37924864,
+      "mtime_ns": 1787510676790000000,
+      "sha256": "17A8823983AB3938E28487A9150B3EC62A30BEDFBDD5713C68B55143AD0F18BB"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00140.ARW",
+      "bytes": 37933056,
+      "mtime_ns": 1787510677690000000,
+      "sha256": "897CF9FC3BC7B3FD147ED7258757F75C26815FAD6B6D14717C3361D2D025EC1A"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00141.ARW",
+      "bytes": 37937152,
+      "mtime_ns": 1787510678590000000,
+      "sha256": "8CF7A9D1017DD1986327A43CE1D32A04B6ADDD3D06D1DF95FC7E316F9A185A65"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00142.ARW",
+      "bytes": 37937152,
+      "mtime_ns": 1787510679490000000,
+      "sha256": "2638DE14A7FEB704682704A4AAFBB310977EC0E5629705EA1CF91A0C6B7C6F67"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00143.ARW",
+      "bytes": 37945344,
+      "mtime_ns": 1787510680400000000,
+      "sha256": "B4F449B33EE0D703069F2D66653C422BABCCA0E24550E06716524C848BEA7DC7"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00144.ARW",
+      "bytes": 37957632,
+      "mtime_ns": 1787510681300000000,
+      "sha256": "3D6C2AA4FD0E4348766959F7762A19C272A9BED3072A56AB6E60088602405E12"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00145.ARW",
+      "bytes": 37957632,
+      "mtime_ns": 1787510682190000000,
+      "sha256": "0671374024D18015524C235C39C3AF25C129828EFD6746CD01D2D28B33C22C3F"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00146.ARW",
+      "bytes": 37965824,
+      "mtime_ns": 1787510683100000000,
+      "sha256": "B744490A5BEA842D644CE9C27976C8327DACE6F51110884B6BD03CDC27171D22"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00147.ARW",
+      "bytes": 37982208,
+      "mtime_ns": 1787510683990000000,
+      "sha256": "1D182FE8632385938B860DB9EB63436D369F75F116CBC1543BC4C669B3D4A312"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00148.ARW",
+      "bytes": 37978112,
+      "mtime_ns": 1787510684890000000,
+      "sha256": "F4D7D1E13787CE2A5B8F97F1507FE44EAC9601D2A40B12049424D4B3351480A5"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00149.ARW",
+      "bytes": 37982208,
+      "mtime_ns": 1787510685790000000,
+      "sha256": "36CAD544FC833D16DE7689FC348DB32E306607293098CD3416E2E45715543B00"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00150.ARW",
+      "bytes": 37982208,
+      "mtime_ns": 1787510686760000000,
+      "sha256": "1B40201B7086E56CB3251CF320F0614F8FA8A5169B5C5E8E6D48189AD3F90793"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00151.ARW",
+      "bytes": 37974016,
+      "mtime_ns": 1787510687660000000,
+      "sha256": "8B8E2653EB48248E9244B5B5EF467FABF63655A2868AD37B21B1194138F740D5"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00152.ARW",
+      "bytes": 37974016,
+      "mtime_ns": 1787510688570000000,
+      "sha256": "DA8F72BAC6014773C6101C7B410FCF16400891909024789E9184C9EB2705F5ED"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00153.ARW",
+      "bytes": 37961728,
+      "mtime_ns": 1787510689460000000,
+      "sha256": "40BF0E0675E195E10E646BB05339D413B494F747094A864E932FDCFABA57EB97"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00154.ARW",
+      "bytes": 37961728,
+      "mtime_ns": 1787510690370000000,
+      "sha256": "451728193DEDD2703C73E30424B713DB16262766FC08F14B2FC6C0EE59FC06B1"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00155.ARW",
+      "bytes": 37953536,
+      "mtime_ns": 1787510691270000000,
+      "sha256": "3482160795A7C5A5A1044F0DB6CBFA5C840029FB6C5E1834BDF4168D3D18F4C9"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00156.ARW",
+      "bytes": 37941248,
+      "mtime_ns": 1787510692160000000,
+      "sha256": "B66EAD19543C0967CDF64E04C4A75AF9B1D63E5A53CED8286B6F652B000A90E1"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00157.ARW",
+      "bytes": 37941248,
+      "mtime_ns": 1787510693060000000,
+      "sha256": "E3C17FBDA31D0E4E6BE22F124176376FFCCABA13CD0733704DEE14669FFDCC51"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00158.ARW",
+      "bytes": 37933056,
+      "mtime_ns": 1787510693940000000,
+      "sha256": "E698C332F56F0FBC9CC590C2705949FADBED936A905F1CA3A93D9C6718024237"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00159.ARW",
+      "bytes": 37924864,
+      "mtime_ns": 1787510694830000000,
+      "sha256": "283998FCA0B6E6A50CE17B5D789CAFDB2D97EEB6A0B80183166AC7D84840C54A"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00160.ARW",
+      "bytes": 37924864,
+      "mtime_ns": 1787510695730000000,
+      "sha256": "064D853DE01305051C1AB9E6E368FA284DB7CA1BCB09E9B6C4A1CE95C809CB91"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00161.ARW",
+      "bytes": 37928960,
+      "mtime_ns": 1787510696590000000,
+      "sha256": "EF880D33DA965927CCE91C62D1453D5EFA93AFF36905DA997D8467B2CDF4F757"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00162.ARW",
+      "bytes": 37924864,
+      "mtime_ns": 1787510697420000000,
+      "sha256": "B1945A6AE666DFA60DF9E57835A7D31745B9AD5A8A2512B16D964E0F3D24C37B"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00163.ARW",
+      "bytes": 37920768,
+      "mtime_ns": 1787510698310000000,
+      "sha256": "9A7E12861684D222FA69296B3ECF69DAF18CE8FE65178D34C4955175E0A28C12"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00164.ARW",
+      "bytes": 37924864,
+      "mtime_ns": 1787510699200000000,
+      "sha256": "44BE14953C9848C42ECE5B505584F6CDDD8C71F5D7B8BA3F90EB509656CB4DF4"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00165.ARW",
+      "bytes": 37924864,
+      "mtime_ns": 1787510700100000000,
+      "sha256": "FBF6F4E3682BF3FB3E8172807BDD710B04EBCA2D3FC0CD5F470FBE1982C99B39"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00166.ARW",
+      "bytes": 37912576,
+      "mtime_ns": 1787510700960000000,
+      "sha256": "DD5CD0676A1C68D568482548C829404E8C77D2DC0BCC42CE1E12AE569E39702B"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00167.ARW",
+      "bytes": 37912576,
+      "mtime_ns": 1787510701830000000,
+      "sha256": "7CF79472B13C790411384F3FD554E83B3CE12F0228962A91DB6C7078C98C6375"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00168.ARW",
+      "bytes": 37908480,
+      "mtime_ns": 1787510702730000000,
+      "sha256": "473E3D152AF0E8A4E76D32D5A1A746960A0F8296B343B4E3BA4F695BE0D63B0D"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00169.ARW",
+      "bytes": 37900288,
+      "mtime_ns": 1787510703660000000,
+      "sha256": "22F38885C8B6BCBD9A66E9DAD76AA8830F8EB7E0622942851A8C59D9A7202A79"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00170.ARW",
+      "bytes": 37896192,
+      "mtime_ns": 1787510704570000000,
+      "sha256": "BAAC2742CF9503C06BB71B83DC4EDE6B6A337370872FA4AF3D21CC0DB501CF71"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00171.ARW",
+      "bytes": 37892096,
+      "mtime_ns": 1787510705430000000,
+      "sha256": "20365C491286722E7018E08F2A46C43B30C8D948EA2FC86829873AAB6E9EB5AE"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00172.ARW",
+      "bytes": 37888000,
+      "mtime_ns": 1787510706330000000,
+      "sha256": "0B05B50F3AD7DFC63BAC4E860FAE9556E2D3317E8DEEE8CB69E1769E0A979270"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00173.ARW",
+      "bytes": 37883904,
+      "mtime_ns": 1787510707200000000,
+      "sha256": "B248DE2FFCF1F94052B6C29EDC11E0E6B4BFE0DC79EC448D61F8B9ECA974BF92"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00174.ARW",
+      "bytes": 37879808,
+      "mtime_ns": 1787510708020000000,
+      "sha256": "1C140B00F63D644813A4E003BB5CE0A158CC2F67BB3532AD273C1F88898D6DC4"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00175.ARW",
+      "bytes": 37875712,
+      "mtime_ns": 1787510708900000000,
+      "sha256": "F0628232995CF0632C5A9308C03A99AC6712C8A59128ED720C80E72272DC3B23"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00176.ARW",
+      "bytes": 37875712,
+      "mtime_ns": 1787510709770000000,
+      "sha256": "C7D407601F3C372B368F369B1D0FE12E972E86E671560E560191C596EF636600"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00177.ARW",
+      "bytes": 37879808,
+      "mtime_ns": 1787510710640000000,
+      "sha256": "D90E405BF2CCE5022E3DC41261008D843712B75EF7B7DDFA4ED15F4C6104E32F"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00178.ARW",
+      "bytes": 37875712,
+      "mtime_ns": 1787510711510000000,
+      "sha256": "2B601E197B3A2920190F3B05E1252E19D264BD5DA752607B1693CB85E88A728C"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00179.ARW",
+      "bytes": 37875712,
+      "mtime_ns": 1787510712370000000,
+      "sha256": "6D6773F9D7A6C82D57DF2809EA0DF08BB955AE53749F2822E2A5F7B2F7354C17"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00180.ARW",
+      "bytes": 37883904,
+      "mtime_ns": 1787510713240000000,
+      "sha256": "35E65B23936AAC8BA507AAE99039E47AFCF768AB9F5A255A7D3289A4982AD8D7"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00181.ARW",
+      "bytes": 37883904,
+      "mtime_ns": 1787510714140000000,
+      "sha256": "E8C3ABAE81DB4B28683D1835845A5782E2A6DD526A14217B415A1C901C90A5C9"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00182.ARW",
+      "bytes": 37888000,
+      "mtime_ns": 1787510715010000000,
+      "sha256": "882668CF9A9869E8DC62DC1A16B5F4A71E3BFC0E1CEA8605F2796ADA133CAFAC"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00183.ARW",
+      "bytes": 37888000,
+      "mtime_ns": 1787510715880000000,
+      "sha256": "34E731684B86609A102D308EB5FF88DFE98449F3F1702FA1803D857D02ED9FBD"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00184.ARW",
+      "bytes": 37896192,
+      "mtime_ns": 1787510716770000000,
+      "sha256": "C553EB00C47397668ECE05F066FB65101030A038AD3C8B13FDD8C5D9D16AAD8C"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00185.ARW",
+      "bytes": 37904384,
+      "mtime_ns": 1787510717640000000,
+      "sha256": "4338563B7010441025911694314EF6C9FBCB92971733B03C5C1755E20F2D1353"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00186.ARW",
+      "bytes": 37912576,
+      "mtime_ns": 1787510718510000000,
+      "sha256": "ECC943F064EDC68180808BD1A3C7BC3D4482B00B9AEE56A50A7DD374155137BF"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00187.ARW",
+      "bytes": 37920768,
+      "mtime_ns": 1787510719380000000,
+      "sha256": "DF3D449EDE2C8B6D6231D4B32B0D49B1208AA4008ECAFB174246D989AFE89376"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00188.ARW",
+      "bytes": 37933056,
+      "mtime_ns": 1787510720240000000,
+      "sha256": "004EFA805BFF5B56D79CF49602F022BA185F48D58B3225A400B45EC8E42C26E5"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00189.ARW",
+      "bytes": 37941248,
+      "mtime_ns": 1787510721120000000,
+      "sha256": "3A8B1855F87CF8F9C72777126EE218383DC90BA52605AC7DD925AFE7C4D00C68"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00190.ARW",
+      "bytes": 37933056,
+      "mtime_ns": 1787510721980000000,
+      "sha256": "D59784E8A946B2B99BF474886D0056ACB34BD4332E0470D0EFE85D4903BC6166"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00191.ARW",
+      "bytes": 37937152,
+      "mtime_ns": 1787510722860000000,
+      "sha256": "08915E57BD724AE3F25523661B1D83035210DDB7FE8342B2A21201E7EC0DFACE"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00192.ARW",
+      "bytes": 37933056,
+      "mtime_ns": 1787510723710000000,
+      "sha256": "DC8F11DD04BCD3BC12A270557852296B5BB5DE8E1690E490593785C1A2EF62A5"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00193.ARW",
+      "bytes": 37937152,
+      "mtime_ns": 1787510724580000000,
+      "sha256": "747A2ED74ED556AFFF31EB021B566B591976A7A479B2D5F5021A1ED3E2A9FA7C"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00194.ARW",
+      "bytes": 37941248,
+      "mtime_ns": 1787510725450000000,
+      "sha256": "083ACC67F2F9DCF5BC179CAC5C8A56449000CBE6B4EE27F05EF09E8618361846"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00195.ARW",
+      "bytes": 37949440,
+      "mtime_ns": 1787510726310000000,
+      "sha256": "2E405EB81E9603EFB5DAE75A77F9D34160FD348174085904208B335001522E0A"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00196.ARW",
+      "bytes": 37953536,
+      "mtime_ns": 1787510727180000000,
+      "sha256": "EA860512C473912076A469B247F2BB3A1E99C917288BF0E8186B541414646628"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00197.ARW",
+      "bytes": 37957632,
+      "mtime_ns": 1787510728050000000,
+      "sha256": "A16B7EEE509D23EE5B2CA8EEBB45B4B19D2E1DB449C35992E6D28606830B8FD5"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00198.ARW",
+      "bytes": 37957632,
+      "mtime_ns": 1787510728920000000,
+      "sha256": "10FF3206D1D6DD275DAF5D9A4A8AB3E981D85DEF60E78E562B7C9910AE51AD2C"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00199.ARW",
+      "bytes": 37949440,
+      "mtime_ns": 1787510729780000000,
+      "sha256": "DC304FCFFCFE1C2B012882E54F5866B67199B4B4797FC9F05255FA5C018C8457"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00200.ARW",
+      "bytes": 37945344,
+      "mtime_ns": 1787510730650000000,
+      "sha256": "41832D7219C7E0F45F7048D06CA260AA65B52282C34BC6A21BE2DBD0C3920086"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00201.ARW",
+      "bytes": 37928960,
+      "mtime_ns": 1787510731520000000,
+      "sha256": "144B0BCE16219A3CACF5AD8547DB165647E76D8868CAEED785A65D141DDC6A2D"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00202.ARW",
+      "bytes": 37928960,
+      "mtime_ns": 1787510732380000000,
+      "sha256": "468EA5A57F032F855BAEBA5A078F22A24A4F50985CCD530643B59B110A384001"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00203.ARW",
+      "bytes": 37912576,
+      "mtime_ns": 1787510733250000000,
+      "sha256": "D1D5D7B43FEF7060342C59420D86640D0778CC30E921F8D97797F68912C032C5"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00204.ARW",
+      "bytes": 37900288,
+      "mtime_ns": 1787510734110000000,
+      "sha256": "0CA7465A915FD08EDA15EE2D4864A5A9CF58E354779C3AC6225598FFB1B31A23"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00205.ARW",
+      "bytes": 37900288,
+      "mtime_ns": 1787510734990000000,
+      "sha256": "8A9CBB5E437CFD1260E135B83407A3C9AC00E4BB8AC48CD3AB4A6E75C914B1E6"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00206.ARW",
+      "bytes": 37896192,
+      "mtime_ns": 1787510735850000000,
+      "sha256": "190543D05523B32AC4FDDBBE4D28958CAA46AC28A9513665E769E7AB7B15109D"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00207.ARW",
+      "bytes": 37879808,
+      "mtime_ns": 1787510736720000000,
+      "sha256": "CF0EF5F5793100A1736FE4B744E7A43511B6DD507149AA39799B5685CF668B20"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00208.ARW",
+      "bytes": 37879808,
+      "mtime_ns": 1787510737610000000,
+      "sha256": "A6716116FD7DFF9D6953B45DB657E64C1970AC4ABA489988DC3C8F5D3A719742"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00209.ARW",
+      "bytes": 37867520,
+      "mtime_ns": 1787510738490000000,
+      "sha256": "F916D47299B480183EC5D1FD4AC1A67399CFFF4C9F9F1236085AB4A9AE2A40F5"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00210.ARW",
+      "bytes": 37859328,
+      "mtime_ns": 1787510739370000000,
+      "sha256": "139A15DE5503BD3E9F2F4349BA51E22826D306DD732E400B899C2E1A84472BDF"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00211.ARW",
+      "bytes": 37851136,
+      "mtime_ns": 1787510740170000000,
+      "sha256": "0D9C104E76D1A87A5AC878221354100248B4A0BE2444854F6BAF06F974413641"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00212.ARW",
+      "bytes": 37842944,
+      "mtime_ns": 1787510741040000000,
+      "sha256": "3B2C0FBC9497EB896FB30E005AE48A7BA8A6B532F48BEB6DA45A69EFE3F7BDDE"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00213.ARW",
+      "bytes": 37834752,
+      "mtime_ns": 1787510741890000000,
+      "sha256": "46CA342ED2B3A81FF6BD7D2B65B093F718564DD66E2D99A11982BD01E0D44F21"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00214.ARW",
+      "bytes": 37830656,
+      "mtime_ns": 1787510742760000000,
+      "sha256": "63799DB58E9ED28020F8DA82CA0B5293AC9CE8F4378A6D67E757568ED7D559A5"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00215.ARW",
+      "bytes": 37822464,
+      "mtime_ns": 1787510743630000000,
+      "sha256": "0F986415C13CDA7DBCA977FD9288E81BD52CBD23D709385D693303B569005CD9"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00216.ARW",
+      "bytes": 37822464,
+      "mtime_ns": 1787510744490000000,
+      "sha256": "14CC255CE2A0E8B8111E9A4CCDB4D3B5574FB7B412BA9FB6DEEB085568194986"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00217.ARW",
+      "bytes": 37818368,
+      "mtime_ns": 1787510745370000000,
+      "sha256": "519657C7FD3D812476B5C5540E99C8309FFA72EC07940B9D4158138053DFA503"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00218.ARW",
+      "bytes": 37818368,
+      "mtime_ns": 1787510746220000000,
+      "sha256": "04DE013406664F1B4A5265F1BBE624B8ED4FEB941169DC4BED2B33AB7CC9E952"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00219.ARW",
+      "bytes": 37822464,
+      "mtime_ns": 1787510747090000000,
+      "sha256": "94569AA2BAADB763D6D4FB96911C39EBCC00AF7AE17AA978946FB02D2FA9720E"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00220.ARW",
+      "bytes": 37814272,
+      "mtime_ns": 1787510748000000000,
+      "sha256": "671A1FC02EE21F5B94E2F2E7EDD29894358A3316BF5E3A40382E0F9F92B86F68"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00221.ARW",
+      "bytes": 37818368,
+      "mtime_ns": 1787510748870000000,
+      "sha256": "A266E411178D4537E6A24988FA845AF6886537DCE6A53EB0E9FAA45AB8B2D528"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00222.ARW",
+      "bytes": 37818368,
+      "mtime_ns": 1787510749730000000,
+      "sha256": "DF0826D117D6E950DB84F6A74423E103242CB3454B63DD6E7359BA54A769CDAA"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00223.ARW",
+      "bytes": 37822464,
+      "mtime_ns": 1787510750600000000,
+      "sha256": "8C207CCF8E86C1BFD878C10FB66D23C72551EC11A080F0B1CE93C8A9CB5748DE"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00224.ARW",
+      "bytes": 37814272,
+      "mtime_ns": 1787510751470000000,
+      "sha256": "CCE473DC42576A5FF9D3E8B667C120282BCC77C3A3787C44A5B82B7DB5F9A0EB"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00225.ARW",
+      "bytes": 37818368,
+      "mtime_ns": 1787510752340000000,
+      "sha256": "D227DC64038CB21D8C2149DECB4EB76F3C670EE40773F37C91BE168CC8331072"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00226.ARW",
+      "bytes": 37810176,
+      "mtime_ns": 1787510753200000000,
+      "sha256": "D61692492FC57463C02423A846862FB0BE7C52BD7A1E72DA36817D0E46169A66"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00227.ARW",
+      "bytes": 37810176,
+      "mtime_ns": 1787510754060000000,
+      "sha256": "3E64D7DAA626FFB14DB52A0042789456378F2B7D8E75B156C268582404C2F77F"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00228.ARW",
+      "bytes": 37806080,
+      "mtime_ns": 1787510754930000000,
+      "sha256": "C5ABAA2767AC2961756EE317F041E094BC9D2EE84D3FF95DB69E44A44E58C3C8"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00229.ARW",
+      "bytes": 37806080,
+      "mtime_ns": 1787510755800000000,
+      "sha256": "D4C07AD30126499D2BC1E158A49663B71AF1677C1A8156476AF66E83641045D1"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00230.ARW",
+      "bytes": 37801984,
+      "mtime_ns": 1787510756660000000,
+      "sha256": "146BABCA883EE23053B5EEECB15BE913296E6E39A9C02CB2778C1E7E02BEDC73"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00231.ARW",
+      "bytes": 37797888,
+      "mtime_ns": 1787510757510000000,
+      "sha256": "25885D245B2CB3E280D31C4AE98D0F97A3499EBD89DAC3660F9234865856B901"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00232.ARW",
+      "bytes": 37801984,
+      "mtime_ns": 1787510758370000000,
+      "sha256": "EBF4C86E3DF19E38FC84CAAAA2E26C9A4661EE6A5D9B5C1ABBA06817B85B82D0"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00233.ARW",
+      "bytes": 37793792,
+      "mtime_ns": 1787510759280000000,
+      "sha256": "826DD64DE1D552A793D39FF16B5AC09123F78A9B231D386BE8A1AE63C6724CF0"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00234.ARW",
+      "bytes": 37785600,
+      "mtime_ns": 1787510760160000000,
+      "sha256": "08C9704C5628841FDB70EEDDC5C0F7FA3F9F62BFE74E2E5B3BC79234A2D30AE9"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00235.ARW",
+      "bytes": 37785600,
+      "mtime_ns": 1787510761000000000,
+      "sha256": "0B71A738C0B3C7BE19014D3FADB2271D1094680FC889703D8D0303315068D807"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00236.ARW",
+      "bytes": 37781504,
+      "mtime_ns": 1787510761870000000,
+      "sha256": "E7073987AAC47A12D4C45DE5C7BE1D996B73BFDDBE774C78286EEC6A43A3E79F"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00237.ARW",
+      "bytes": 37781504,
+      "mtime_ns": 1787510762700000000,
+      "sha256": "1700CCF4459945DD3FADA7CCDA630BB01B627278CDCE119293A5D3A97DF660C2"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00238.ARW",
+      "bytes": 37769216,
+      "mtime_ns": 1787510763530000000,
+      "sha256": "712379AA9B671029C2AD9142CD040050C1B921F61C181E2D07C925FBF9684D7B"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00239.ARW",
+      "bytes": 37769216,
+      "mtime_ns": 1787510764370000000,
+      "sha256": "AAF17C47EE955F283BC0400BF4E3419D95BAA602641E722B8CD656D87BF721A9"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00240.ARW",
+      "bytes": 37769216,
+      "mtime_ns": 1787510765200000000,
+      "sha256": "5A1406388DAE4B02EEC86202FE158148EA7B1838F8BC30929C61C8B2730A87AD"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00241.ARW",
+      "bytes": 37769216,
+      "mtime_ns": 1787510766030000000,
+      "sha256": "A8A01AFA3356B88E0994B7205DA2DD5564F5F86F23E5C50342600C2C52D8EEF8"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00242.ARW",
+      "bytes": 37773312,
+      "mtime_ns": 1787510766900000000,
+      "sha256": "8CA6103C84EE9031E59F5BEF07580D9B2BB549322ED2E647F0E13050E949314C"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00243.ARW",
+      "bytes": 37773312,
+      "mtime_ns": 1787510767740000000,
+      "sha256": "5C9C48CE4EB3F92FD6CF5543C5C681EDCC19DA6AB79D700F7E1E7AC3BF0B25B6"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00244.ARW",
+      "bytes": 37769216,
+      "mtime_ns": 1787510768600000000,
+      "sha256": "AE36B5261054FBA9130E2FC7A2EF976B1293672FC187B81D15CBCC3B208131A0"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00245.ARW",
+      "bytes": 37765120,
+      "mtime_ns": 1787510769440000000,
+      "sha256": "C8F86B02596348944F0F0315C11B7EF66E8F652EAA32816244C93AA00275DB06"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00246.ARW",
+      "bytes": 37761024,
+      "mtime_ns": 1787510770280000000,
+      "sha256": "A6F9F6231D8A03E732C428C99CBD2D96BB24F636B2642DDFC758CBFFE7E44DC2"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00247.ARW",
+      "bytes": 37756928,
+      "mtime_ns": 1787510771140000000,
+      "sha256": "15FDB5ACF9DE8916D226882B7E62C24A21CD7E2BF5CC73EE121B22187DB58F25"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00248.ARW",
+      "bytes": 37756928,
+      "mtime_ns": 1787510771980000000,
+      "sha256": "FC3DF109140BC840ACB9072708CA495344BECD9B37324FDBB0E2D453BB6F0EEB"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00249.ARW",
+      "bytes": 37756928,
+      "mtime_ns": 1787510772810000000,
+      "sha256": "386F5445C17B4A225E25DEFE0D044DB365001307C78BD5C8D17EF6B3CE6D79EA"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00250.ARW",
+      "bytes": 37756928,
+      "mtime_ns": 1787510773720000000,
+      "sha256": "31BF744C0F7E56C4C42AAB66E6C19559B55A07202FAE8C5C35A20D33F7DE6D42"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00251.ARW",
+      "bytes": 37756928,
+      "mtime_ns": 1787510774570000000,
+      "sha256": "2CE491A01B9F8E80441EDA4EE4304B8E7E550E9DA67FC8BD2A3DFBC9B3BD771B"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00252.ARW",
+      "bytes": 37761024,
+      "mtime_ns": 1787510775420000000,
+      "sha256": "D23EC1D6F5541A396E820DB91C8D5B6EA069D655C588590194A6788D5C3CB0D8"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00253.ARW",
+      "bytes": 37765120,
+      "mtime_ns": 1787510776300000000,
+      "sha256": "065E75F53B31FDF71D79506C26618C918B72043208161060767A6B892DDA3D82"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00254.ARW",
+      "bytes": 37773312,
+      "mtime_ns": 1787510777190000000,
+      "sha256": "90FDA64D430393D58AFF22EAB417C351E5CDBA9E5C81BEB550C93D9DE7683FC7"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00255.ARW",
+      "bytes": 37773312,
+      "mtime_ns": 1787510778090000000,
+      "sha256": "0AEAE85063549E0946D4CB3DEBA44964C1C95D740BB38A8810A74838F450D993"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00256.ARW",
+      "bytes": 37777408,
+      "mtime_ns": 1787510778940000000,
+      "sha256": "76A02F846F7C4038AC9DDC80240BC240DDD258D3032CF94F31BE9C9DABD2FB1F"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00257.ARW",
+      "bytes": 37777408,
+      "mtime_ns": 1787510779780000000,
+      "sha256": "64DD0CE16DC31680FF92B283B8AD0FE995A699FEA8ACBDEF9984E1144B5EFF1F"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00258.ARW",
+      "bytes": 37777408,
+      "mtime_ns": 1787510780620000000,
+      "sha256": "76E2DAA3C7CD0218518581A4880F087DEE1361B06F1146363AA27A9E310150FF"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00259.ARW",
+      "bytes": 37777408,
+      "mtime_ns": 1787510781490000000,
+      "sha256": "DCEA7D9F3E43E4BE66CF8988734131410DBB9A04B4EEEA6BD1F0A0E21317D509"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00260.ARW",
+      "bytes": 37777408,
+      "mtime_ns": 1787510782340000000,
+      "sha256": "AFC9B55E08F822F6FD880E80396BC9266B5FE36B714F1F8E8F98EC9EA1156271"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00261.ARW",
+      "bytes": 37781504,
+      "mtime_ns": 1787510783210000000,
+      "sha256": "97674CF69663C50E442D73D243612AD6323E76CF54EAE8EE59AF0AD8A96D7A67"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00262.ARW",
+      "bytes": 37773312,
+      "mtime_ns": 1787510784040000000,
+      "sha256": "19BE2847623F02FDDCCE5616F816D5804E40DBBF59A058FD539DDDF2997BC840"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00263.ARW",
+      "bytes": 37781504,
+      "mtime_ns": 1787510784910000000,
+      "sha256": "24CF4725DD22F5035A62070DDB64B25F39F328188926286315682659DA2189A0"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00264.ARW",
+      "bytes": 37777408,
+      "mtime_ns": 1787510785750000000,
+      "sha256": "A368093A9F8B8F905E8607EBEC44694A9AD8F55FC2D93D536163C80E8DFE2D97"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00265.ARW",
+      "bytes": 37773312,
+      "mtime_ns": 1787510786610000000,
+      "sha256": "D4AD3107B91E2C271ABE6268C747DB9C8E00E6A561246FAA946D4213581B9EBF"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00266.ARW",
+      "bytes": 37773312,
+      "mtime_ns": 1787510787470000000,
+      "sha256": "4D9A377808B7A05BFC0554AE591F4075B6BB18367945D391AEA9F5BD06DD770C"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00267.ARW",
+      "bytes": 37761024,
+      "mtime_ns": 1787510788310000000,
+      "sha256": "EDA20F6A58FF315F5196DBD5103ADF443ACC73036A2EB95C616678DF7BAD68B6"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00268.ARW",
+      "bytes": 37761024,
+      "mtime_ns": 1787510789150000000,
+      "sha256": "6B92D76C702705F2BE170F1C678F87FEFA0B0B6A091C4CA0F4DDB0846AF0D182"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00269.ARW",
+      "bytes": 37748736,
+      "mtime_ns": 1787510789980000000,
+      "sha256": "E23971EA4F9C6968AA2D96F4D70E0A5A444EFE887ED48FFA16262788FABF3F8C"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00270.ARW",
+      "bytes": 37748736,
+      "mtime_ns": 1787510790830000000,
+      "sha256": "FB426E0F4C554F17B69320CE6C3F824DD8365BFF7AB4A24B945517745DE1C18A"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00271.ARW",
+      "bytes": 37744640,
+      "mtime_ns": 1787510791680000000,
+      "sha256": "D182E143550293E804D87BCA2387B9D0C15F8A44422CF897A45AD442EEBFC98A"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00272.ARW",
+      "bytes": 37736448,
+      "mtime_ns": 1787510792520000000,
+      "sha256": "475B80EC998E853988ACFF45CD9C236654896BAF242F819B2B1CAC8974DCF7CF"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00273.ARW",
+      "bytes": 37732352,
+      "mtime_ns": 1787510793380000000,
+      "sha256": "A5966CAC670E45F42489E1B13D9A3D9CF0FAAA16E3D899B2D49234F19138BF03"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00274.ARW",
+      "bytes": 37732352,
+      "mtime_ns": 1787510794220000000,
+      "sha256": "F5667A6091CDE4F37DD8D242F6CCF941CD6B1773AACD35364190B37060162730"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00275.ARW",
+      "bytes": 37728256,
+      "mtime_ns": 1787510795090000000,
+      "sha256": "65D0EE29DBAF97B63216D2AFA5509F16A64D2332101D34832BC26C05D9B0BD95"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00276.ARW",
+      "bytes": 37724160,
+      "mtime_ns": 1787510795920000000,
+      "sha256": "0840CD5266852110D63CE72429AD273511EB638F7392C91D8C1D9961B5CAB210"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00277.ARW",
+      "bytes": 37715968,
+      "mtime_ns": 1787510796800000000,
+      "sha256": "FD3F5D3B167A3B7D9FF1088B0A4F03AA81C3B833D4BB52C77CAD68597C4086BE"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00278.ARW",
+      "bytes": 37711872,
+      "mtime_ns": 1787510797650000000,
+      "sha256": "0709608E16E5C1697CE32E76C05649574A0B220018DC108D2608407E145B6469"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00279.ARW",
+      "bytes": 37703680,
+      "mtime_ns": 1787510798490000000,
+      "sha256": "81CCE0717B78CECA5018C2716C97574F56112C92B72544807E326C3EDB8904FF"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00280.ARW",
+      "bytes": 37703680,
+      "mtime_ns": 1787510799290000000,
+      "sha256": "FBDCA3494B17624BC2CF8439DC9B2B1984ABCFDB3D2268325172A6D387DC311F"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00281.ARW",
+      "bytes": 37691392,
+      "mtime_ns": 1787510800170000000,
+      "sha256": "4F4A4596691CF76269D230C6625CAA16DC3514543A5861DB47F07B419DB24B36"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00282.ARW",
+      "bytes": 37683200,
+      "mtime_ns": 1787510801020000000,
+      "sha256": "9935427F9ADA00160A072DD89C71D7EB51847C9805FFE703AA60B83FF44E7ABB"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00283.ARW",
+      "bytes": 37683200,
+      "mtime_ns": 1787510801860000000,
+      "sha256": "1B05D36FABEAD01D7A5384816F071BC29AA61DF611F2CDB33A8B2615EF43FC10"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00284.ARW",
+      "bytes": 37683200,
+      "mtime_ns": 1787510802740000000,
+      "sha256": "8D90E73853703B49B1D59ECCBB3BCA8CF106CA92289FDC54C6236B58D9ACE239"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00285.ARW",
+      "bytes": 37679104,
+      "mtime_ns": 1787510803570000000,
+      "sha256": "790105115BA930584C8F546BE2B102CA3B8C1BD506087EBB8E0B05C6754E6DF1"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00286.ARW",
+      "bytes": 37666816,
+      "mtime_ns": 1787510804400000000,
+      "sha256": "C74CE7F6FB030546CCC7A7EA38E0FF7AF97F37EAD5DD2BC0E86722E50AE92F41"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00287.ARW",
+      "bytes": 37666816,
+      "mtime_ns": 1787510805230000000,
+      "sha256": "D127006C0BDD53EB4A42B918C062DE673B30DCB5DEF5F77EC967C17E0428EDAB"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00288.ARW",
+      "bytes": 37662720,
+      "mtime_ns": 1787510806030000000,
+      "sha256": "F5E68E36F3384BC031DAB235952ABD90FB32D98956E7881BBE8C749B85C3C8CF"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00289.ARW",
+      "bytes": 37658624,
+      "mtime_ns": 1787510806860000000,
+      "sha256": "2D4E698C9B60A462E5140F82043FB3698A1B74042D36437F5873493133D3B37E"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00290.ARW",
+      "bytes": 37654528,
+      "mtime_ns": 1787510807730000000,
+      "sha256": "5CCEC11505C2131E19C3DC67548D8B425FEF5A07B684F9E8327938E69E325346"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00291.ARW",
+      "bytes": 37654528,
+      "mtime_ns": 1787510808560000000,
+      "sha256": "47EA053E55F5304CFE77DB77CCA83B2C68E371A08936775EF4D0422B35314ED3"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00292.ARW",
+      "bytes": 37650432,
+      "mtime_ns": 1787510809390000000,
+      "sha256": "062F30F749CC880AAA2B3CD89A21F9F9DD4236FC7DBA7E4EAC445E0C16C6A297"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00293.ARW",
+      "bytes": 37650432,
+      "mtime_ns": 1787510810230000000,
+      "sha256": "539D5D60580B5D0313726FA661BAE70BC2393684A133C84E4D9612A03016BE3C"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00294.ARW",
+      "bytes": 37646336,
+      "mtime_ns": 1787510811060000000,
+      "sha256": "80959ABC7AE272E1A67E14A6C088C2CFF445D717474CE93F864304317582F680"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00295.ARW",
+      "bytes": 37646336,
+      "mtime_ns": 1787510811940000000,
+      "sha256": "A4B6F389CD8081A94B5CF536A16EB5551133BD70016D3C58B6A2916C1E141F0E"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00296.ARW",
+      "bytes": 37646336,
+      "mtime_ns": 1787510812760000000,
+      "sha256": "8070FB3D50003EC46A6D4312BE9B379358FA168E336E3168DBA7A504BB5E0087"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00297.ARW",
+      "bytes": 37646336,
+      "mtime_ns": 1787510813600000000,
+      "sha256": "487FDFECF0F0CB7C7C31FCFA1B6B62BEA647EA083272209029EEE1484F0D0933"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00298.ARW",
+      "bytes": 37646336,
+      "mtime_ns": 1787510814440000000,
+      "sha256": "C12250FFE81D55D54F7D4D2EF9422F733A9AEB646AFD6802CFE1C2E6C4FF4DC6"
+    },
+    {
+      "path": "D:\\personal\\macro\\bee-1-cpl\\DSC00299.ARW",
+      "bytes": 37642240,
+      "mtime_ns": 1787510815260000000,
+      "sha256": "FDB7C34CE9E548A7E179AEDDA6E2E040017766028D406F32D5D5F292AC048A4F"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00016.ARW",
+      "bytes": 39030784,
+      "mtime_ns": 1778455869760000000,
+      "sha256": "35CCC60A2CADBCDC999FB6765A326F5BAAA298776FB951D12287E05C5892ED36"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00017.ARW",
+      "bytes": 39055360,
+      "mtime_ns": 1778455870990000000,
+      "sha256": "462EFC14E419BE2B8C982675E8D77CD8D2E7166410AA59373AA08E49E95555FE"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00018.ARW",
+      "bytes": 39071744,
+      "mtime_ns": 1778455872270000000,
+      "sha256": "A3A9CA2CA472D0DB45CCBEBF9170183F1D18ED419CDD58DD557219F8B9BF8DD9"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00019.ARW",
+      "bytes": 39092224,
+      "mtime_ns": 1778455873520000000,
+      "sha256": "EC80045E321F5B8501D5065754DFB451F2870C40B849BC14161A8C5368C3C32F"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00020.ARW",
+      "bytes": 39124992,
+      "mtime_ns": 1778455874810000000,
+      "sha256": "97F6A07F4F2F3C9BA87D4EA841C37A9911A122A953BBF806856E9209F793092B"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00021.ARW",
+      "bytes": 39157760,
+      "mtime_ns": 1778455876040000000,
+      "sha256": "894A6EF41243234FD54FEFF8BA56FD0A17F745816CA58B94B3F05F3B147B7A19"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00022.ARW",
+      "bytes": 39190528,
+      "mtime_ns": 1778455877250000000,
+      "sha256": "EAF0D3D7A79DB4AECB4C28B3CAC1533F32ACF6256C9A24321D090383E0B8D068"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00023.ARW",
+      "bytes": 39235584,
+      "mtime_ns": 1778455878490000000,
+      "sha256": "94D67C23D061DD036679FC965C7A428675156136719DA1AEDFA780B32167EE93"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00024.ARW",
+      "bytes": 39297024,
+      "mtime_ns": 1778455879720000000,
+      "sha256": "78D5AD33C1EC5212F2DA82127ECE21D6B131B181C8F73CC6A7B89A7B4A2F4628"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00025.ARW",
+      "bytes": 39374848,
+      "mtime_ns": 1778455880970000000,
+      "sha256": "D561DEF6ACDAF606D4392BD27A8ADA2C927EB12AEFDC5C00C7CC4315C7C3CE9D"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00026.ARW",
+      "bytes": 39485440,
+      "mtime_ns": 1778455882190000000,
+      "sha256": "4FD121C9278668E43D0F99512F15B63016ABD7E96E82D03E99826686D8FEE4C0"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00027.ARW",
+      "bytes": 39616512,
+      "mtime_ns": 1778455883420000000,
+      "sha256": "D394D7C8E4386CF5EBC6545C865C47531F0E9BB1D0E20F917F5973AE08C3F209"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00028.ARW",
+      "bytes": 39743488,
+      "mtime_ns": 1778455884700000000,
+      "sha256": "047FAFDD325F683D451646987CA62A46AA135E4F79B868FED5CA1B4FD98D36C2"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00029.ARW",
+      "bytes": 39878656,
+      "mtime_ns": 1778455885960000000,
+      "sha256": "B1334B732CB695A3C8C28D2A2B22F2C171FEE06083E3AB827DAF2C8621D07663"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00030.ARW",
+      "bytes": 39985152,
+      "mtime_ns": 1778455887190000000,
+      "sha256": "104A363822CBE608F92C0C66D931C7DA01F867872123BA10F3890414A869C474"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00031.ARW",
+      "bytes": 40099840,
+      "mtime_ns": 1778455888420000000,
+      "sha256": "BCA77932B9378F1ACD8B77BEC788D22F31670414E6F0E11D0A7CDB2A54514263"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00032.ARW",
+      "bytes": 40185856,
+      "mtime_ns": 1778455889630000000,
+      "sha256": "C6B3669F50806B9846F5B771094CEB248B3C0AA54BB03A27B23FBDE9AF0ABEE8"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00033.ARW",
+      "bytes": 40251392,
+      "mtime_ns": 1778455890910000000,
+      "sha256": "79692A2542C3DE099077EC2D3BA04346B9C7A793203464F64C11A8A283ADF496"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00034.ARW",
+      "bytes": 40325120,
+      "mtime_ns": 1778455892140000000,
+      "sha256": "874870D96E377BC1D49EB17639772636931005E0B844B479844C72CC24802621"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00035.ARW",
+      "bytes": 40325120,
+      "mtime_ns": 1778455893360000000,
+      "sha256": "D2BCE38E83C0E0167ED0D4C64FF90EE1875B002695A688A2EEE5F205445A040D"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00036.ARW",
+      "bytes": 40390656,
+      "mtime_ns": 1778455894570000000,
+      "sha256": "2ECE8C01068E9F0724C8DEFBA3EFD2D6D6C19A9E1F23D9C8CACB86401139D686"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00037.ARW",
+      "bytes": 40415232,
+      "mtime_ns": 1778455895790000000,
+      "sha256": "891C18CB7A15310AFD84714D5F4814D8C20D072ABFF58B1CC8C01F7F11968DF1"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00038.ARW",
+      "bytes": 40509440,
+      "mtime_ns": 1778455897030000000,
+      "sha256": "F92BF3F55D77C572A7D04AFDC96D0ABBBB4EEC5BC4B6043B56F1B2242051ACBA"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00039.ARW",
+      "bytes": 40583168,
+      "mtime_ns": 1778455898260000000,
+      "sha256": "752D3EAB6FE077498F7C1A984FA616804C101BEB937FE0F37001E8C7705EF994"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00040.ARW",
+      "bytes": 40574976,
+      "mtime_ns": 1778455899540000000,
+      "sha256": "C6919EE98F9078AAB1D202A25BBD9B2048AFBA6D242A34ACB8F335FC0E588641"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00041.ARW",
+      "bytes": 40611840,
+      "mtime_ns": 1778455900810000000,
+      "sha256": "5DBD4E5E645A0A86AC2F8CAF455DF12788B59E003F9BC75CF7FB0EE7C8941C51"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00042.ARW",
+      "bytes": 40873984,
+      "mtime_ns": 1778455902060000000,
+      "sha256": "5AAF520BB11A3BDC3AD2E4352B49A40221BCCCBFF9CF6C8548C2BDD7C631DC70"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00043.ARW",
+      "bytes": 40804352,
+      "mtime_ns": 1778455903360000000,
+      "sha256": "76B19318BB7D3882BFC430974A2508C006BA1D4705FFAD3D164C37554AF725AC"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00044.ARW",
+      "bytes": 40857600,
+      "mtime_ns": 1778455904660000000,
+      "sha256": "DE0A9CA11BFF77B86AD10F67C9C592DE05C125A9F41C215A5C9CFEE8EB01B1D5"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00045.ARW",
+      "bytes": 40906752,
+      "mtime_ns": 1778455905980000000,
+      "sha256": "7DD2A80E004E6D6838F72D9F11BEB8DF5227BB409A586EDD55989F378937430B"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00046.ARW",
+      "bytes": 40878080,
+      "mtime_ns": 1778455907320000000,
+      "sha256": "283E72215417BE54EFDB9424623033A3A726DD0818CF4A5D855E3ADC2A1865E9"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00047.ARW",
+      "bytes": 40833024,
+      "mtime_ns": 1778455908600000000,
+      "sha256": "4168EBF1EFC9B3CF64CF0E1188B91A6BCDC415436681E6937CCE59CFF8544E84"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00048.ARW",
+      "bytes": 40878080,
+      "mtime_ns": 1778455909890000000,
+      "sha256": "C7174BD0661141D89A38ED50F7406574C36D40111BC4DFA96A8A2FF3D4F5F61F"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00049.ARW",
+      "bytes": 40927232,
+      "mtime_ns": 1778455911210000000,
+      "sha256": "FCE0E4A23FF8730883816765FFD0B20F35F1F2F7FB7356349A8D8015AD3155AA"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00050.ARW",
+      "bytes": 40931328,
+      "mtime_ns": 1778455912500000000,
+      "sha256": "C598F5B87116DB4D7EDEEC2127D3BFD7151463A4DF95B5C0B0A666AF60A97E0D"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00051.ARW",
+      "bytes": 40869888,
+      "mtime_ns": 1778455913830000000,
+      "sha256": "6F34925816BF742B58B8FA8DCB91FCD261D2B60ED11DE208DED4BBE6465998E7"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00052.ARW",
+      "bytes": 40841216,
+      "mtime_ns": 1778455915160000000,
+      "sha256": "E2C9E23A9F1A57E856D92C9FCC9182759E22A477D22101B6E2F2871EC290C322"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00053.ARW",
+      "bytes": 40828928,
+      "mtime_ns": 1778455916420000000,
+      "sha256": "CECD0C70874126B8D4D482DD80A7C91966851E8C911E02ABF4BEAF94A7BCD32B"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00054.ARW",
+      "bytes": 40677376,
+      "mtime_ns": 1778455917690000000,
+      "sha256": "D7572EBA02E29BD9005C92F017D4BE035B47AEA1CEAB01C8F6B1DE915CB12FE8"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00055.ARW",
+      "bytes": 40669184,
+      "mtime_ns": 1778455918950000000,
+      "sha256": "2C312437407B7C1238096F01839065495051413858436CA7563F675A38299605"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00056.ARW",
+      "bytes": 40726528,
+      "mtime_ns": 1778455920220000000,
+      "sha256": "F03142EE0F37E41A4607FD00B5256997D1FEB52BC8446A15752F217935F8A451"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00057.ARW",
+      "bytes": 40550400,
+      "mtime_ns": 1778455921440000000,
+      "sha256": "8DCDE92F0736DEC17B7704E9A37174D6E07F616568C5CD4AD95A4D3F4136CBAA"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00058.ARW",
+      "bytes": 40407040,
+      "mtime_ns": 1778455922620000000,
+      "sha256": "40432A1FDB88417B0E44C1B6448B3D378E3FB9757FF1B350D3C714A74CA9D6DA"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00059.ARW",
+      "bytes": 40263680,
+      "mtime_ns": 1778455923780000000,
+      "sha256": "B94D04F9F87F95E937B8339B24A784522D443AECF8B8E172CAF412DDA771D4CD"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00060.ARW",
+      "bytes": 40153088,
+      "mtime_ns": 1778455924960000000,
+      "sha256": "D88A224717242C66CDEEE5CC1B285BBEE049069A54D725C51CD8150D883EC692"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00061.ARW",
+      "bytes": 40046592,
+      "mtime_ns": 1778455926160000000,
+      "sha256": "4D46D7CCCC78DCF6C3D1114C2B9A8E673A6FA735DC0BC2B4DFCE1B9E7AB74256"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00062.ARW",
+      "bytes": 39923712,
+      "mtime_ns": 1778455927360000000,
+      "sha256": "AB93C7459B2E84BD5DDF2216FD19BF09F752597D2C36511100303B992DF1A80F"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00063.ARW",
+      "bytes": 39837696,
+      "mtime_ns": 1778455928560000000,
+      "sha256": "1FC613709C2F6F3ED67C241B28A137F493CF90E0DFD48D58488606CF605C1FAF"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00064.ARW",
+      "bytes": 39747584,
+      "mtime_ns": 1778455929760000000,
+      "sha256": "56D7BF94AA6DB02657E2F4255092E698E4BD05C08A89E5DFF1D6464231D60C72"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00065.ARW",
+      "bytes": 39665664,
+      "mtime_ns": 1778455930920000000,
+      "sha256": "C950FEC35749AFCB84A50DA8463E6831F8DEE1F5B8028BFE45B84DBE1F3AEB59"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00066.ARW",
+      "bytes": 39604224,
+      "mtime_ns": 1778455932110000000,
+      "sha256": "3F76BCB79E2B87E21DEC641EA51233FE1FBA1BC842D580229F791C408E2BF9D3"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00067.ARW",
+      "bytes": 39538688,
+      "mtime_ns": 1778455933300000000,
+      "sha256": "CD36D172AF6B261C182D5B671115CA3ED981185D3B3D95DE693FC236C402CD95"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00068.ARW",
+      "bytes": 39497728,
+      "mtime_ns": 1778455934500000000,
+      "sha256": "F7E94BA8BE97F68660A4D27C470133F66ECAAE7FDAF6D849CF36681E969D32DB"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00069.ARW",
+      "bytes": 39456768,
+      "mtime_ns": 1778455935690000000,
+      "sha256": "CEB3D86F60A03236CEFB066F0A12AF3A48F12BF6222875527753BDCF9CB4587A"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00070.ARW",
+      "bytes": 39424000,
+      "mtime_ns": 1778455936850000000,
+      "sha256": "BCBD225F0C73193E3725A3F90AD23C064CEE6FAF86AE4C4960B495E9BD544D79"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00071.ARW",
+      "bytes": 39395328,
+      "mtime_ns": 1778455938040000000,
+      "sha256": "751D390057D147D283B0935DF0C94310DCC1A2D2BC36EAEE0E32C0FFC63E490D"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00072.ARW",
+      "bytes": 39366656,
+      "mtime_ns": 1778455939180000000,
+      "sha256": "AA4D312F7FF1A0DE82AB77AF2C167BB77560AA2AE9963058091C15D4BCA438C1"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00073.ARW",
+      "bytes": 39337984,
+      "mtime_ns": 1778455940350000000,
+      "sha256": "3198CEB394E1B27B0D0B071115824F53F64910D5E7F56CBE40B3159FFEAADE47"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00074.ARW",
+      "bytes": 39325696,
+      "mtime_ns": 1778455941520000000,
+      "sha256": "49A38C751A88AAC331CCA60AD574D60F79F334CB16CF4AA0F785A2FA2EB81FDC"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00075.ARW",
+      "bytes": 39305216,
+      "mtime_ns": 1778455942690000000,
+      "sha256": "809CBB3B46893BB6F4D2AD5503C697BB1BDF5D751F6F7449385FF5B648D45300"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00076.ARW",
+      "bytes": 39288832,
+      "mtime_ns": 1778455943850000000,
+      "sha256": "D47866409F002D659F6A605CBE5FE4EBEDBC1E3B9B129CFBB56D0DBDA41A2445"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00077.ARW",
+      "bytes": 39288832,
+      "mtime_ns": 1778455945040000000,
+      "sha256": "D571C548DD22BD6CD1D2077EBCDB50873F1F3525DD5F00EA582B5517FF9BE13D"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00078.ARW",
+      "bytes": 39268352,
+      "mtime_ns": 1778455946190000000,
+      "sha256": "2D40BA67C6D012C1B73CDCBCAE54DADAB3B452B3E3B2815EEB947412E5A35806"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00079.ARW",
+      "bytes": 39251968,
+      "mtime_ns": 1778455947350000000,
+      "sha256": "A92FDBE72495CA219505226DBBBBA77AF06627DE874CDA190C1E0B8E45F5878F"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00080.ARW",
+      "bytes": 39243776,
+      "mtime_ns": 1778455948540000000,
+      "sha256": "A602BD86D5C980183EBE0D87E6AEC81F7DF2A39FD8D98B6C90215A33D4DD1C65"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00081.ARW",
+      "bytes": 39235584,
+      "mtime_ns": 1778455949690000000,
+      "sha256": "9BA0D3E7DF3A3ADED6DB480DB4B9B0CA39733CD9BC3F519B9B2630ED17957D45"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00082.ARW",
+      "bytes": 39231488,
+      "mtime_ns": 1778455950870000000,
+      "sha256": "6E2832984426C1E7B23552FF7212A690D22555813A182653924E88637ABD3DF4"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00083.ARW",
+      "bytes": 39223296,
+      "mtime_ns": 1778455952020000000,
+      "sha256": "FEE1C43D10934AE12DCFEC99CC7746C6698C71D6E0C2CC883407ACF1905E297A"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00084.ARW",
+      "bytes": 39215104,
+      "mtime_ns": 1778455953220000000,
+      "sha256": "B9FAB1735BFE073506C79C40081D6891DA144B47A69AD156A7966B3E29AD053D"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00085.ARW",
+      "bytes": 39190528,
+      "mtime_ns": 1778455954350000000,
+      "sha256": "CDA0030F7924126A6639930986DE94D4A7092EF31D92B81953500667D287AF97"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00086.ARW",
+      "bytes": 39182336,
+      "mtime_ns": 1778455955520000000,
+      "sha256": "34198DD9B6D8217E80B49EF062A25DDCAFEDA5FF640640591ED2F299BE5D0A27"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00087.ARW",
+      "bytes": 39161856,
+      "mtime_ns": 1778455956650000000,
+      "sha256": "A2B5E7F98653FC2BABFFE979BE75B94721E8CC03C88239B74890365722652BA2"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00088.ARW",
+      "bytes": 39161856,
+      "mtime_ns": 1778455957820000000,
+      "sha256": "AB4FE019081D6160013011EA9F5DBE62728587F47C4048E57516600777220CD9"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00089.ARW",
+      "bytes": 39149568,
+      "mtime_ns": 1778455958950000000,
+      "sha256": "49D487F0B965CC3E1DF0EA89FC92A8B0BD2512FEC798F5304B80B39B515CE594"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00090.ARW",
+      "bytes": 39137280,
+      "mtime_ns": 1778455960080000000,
+      "sha256": "04A193AEEF5B79BD42D258D7A791159F738297ED4AB22CAE99611CE79486EC1F"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00091.ARW",
+      "bytes": 39124992,
+      "mtime_ns": 1778455961250000000,
+      "sha256": "766D969DE9F42D29BF90723458D971D42F5A608EE261447A1119774E054C50D0"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00092.ARW",
+      "bytes": 39112704,
+      "mtime_ns": 1778455962380000000,
+      "sha256": "9095B9F5CB93F243BD4DD764AAF8CB8BB8CDFFCDCEE2FD784667769C7F7531B8"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00093.ARW",
+      "bytes": 39100416,
+      "mtime_ns": 1778455963550000000,
+      "sha256": "2EBC6C1DDCAA56F28B470E7CEF34BB7918B1577AA9343932EE1E575368F424F5"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00094.ARW",
+      "bytes": 39096320,
+      "mtime_ns": 1778455964700000000,
+      "sha256": "56AFDCD42F70E1D41393C6413E1816E0849F477A6C8ECC7BACC099504FF011A1"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00095.ARW",
+      "bytes": 39079936,
+      "mtime_ns": 1778455965850000000,
+      "sha256": "9846C87FD45F988F29BEEC4AE855A6DDF61909C0C34FE2159DF641FBBC83CA60"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00096.ARW",
+      "bytes": 39075840,
+      "mtime_ns": 1778455966990000000,
+      "sha256": "C71781A4E0FDB49181F205D286BDAED3B85551265A8BCA638AC55694DBAE1191"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00097.ARW",
+      "bytes": 39071744,
+      "mtime_ns": 1778455968120000000,
+      "sha256": "E6358FE14DE50A0AF49DBE8CBAFD4722F31AA04A457E64814F563142A21A71F3"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00098.ARW",
+      "bytes": 39059456,
+      "mtime_ns": 1778455969250000000,
+      "sha256": "AFB1E947FB7F6EA2E9496E78819047279F0311E149E3A0BD3EDD75860968649B"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00099.ARW",
+      "bytes": 39043072,
+      "mtime_ns": 1778455970400000000,
+      "sha256": "72B05B21F532D7FCF72C238AB15791D5ED1F2F97AD61AB309FD7D13ADD5FEF9F"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00100.ARW",
+      "bytes": 39051264,
+      "mtime_ns": 1778455971550000000,
+      "sha256": "4E119799D29BA8F60C5CFAE8CE8A23B0113E27B34754818A3F9DA87BB264B259"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00101.ARW",
+      "bytes": 39043072,
+      "mtime_ns": 1778455972690000000,
+      "sha256": "6646353C93898CA4E72A93241EE97D1FE88359FE4CACE87681CF0484975CAB26"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00102.ARW",
+      "bytes": 39038976,
+      "mtime_ns": 1778455973820000000,
+      "sha256": "E91B1A7BA0A86C0FFA1D0EB41086165C0E89C739D8BDCE6DDEA4AFEA0DEFEAD7"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00103.ARW",
+      "bytes": 39026688,
+      "mtime_ns": 1778455974950000000,
+      "sha256": "9F5B8BA85FE5B9A22B0FD027EF2DC4D730B2F46217AC29FB6557EE00CD19F939"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00104.ARW",
+      "bytes": 39022592,
+      "mtime_ns": 1778455976120000000,
+      "sha256": "3298BD82FFE4C9D8590ECC4F2AD1F12F9C2F20981B1448007F4A6A03E42B1E3E"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00105.ARW",
+      "bytes": 39014400,
+      "mtime_ns": 1778455977250000000,
+      "sha256": "518517EEF77941CF0435721B4C7003052FC209278507683812A9BA0FBE304997"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00106.ARW",
+      "bytes": 39018496,
+      "mtime_ns": 1778455978380000000,
+      "sha256": "9C197A04BFBFABF2A1631B74F0BFC990D8445F98737B49775C2A1D57F4B8A90E"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00107.ARW",
+      "bytes": 39018496,
+      "mtime_ns": 1778455979520000000,
+      "sha256": "6AE62DA4EC7F14DB71A61B87DAA1F8B5284A16262FEEB15278642892B378A36C"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00108.ARW",
+      "bytes": 39010304,
+      "mtime_ns": 1778455980650000000,
+      "sha256": "CC52CADBD6FC5B28EFE4ABA8922C0550118DBE9005CEAFE213F55355EDBF9358"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00109.ARW",
+      "bytes": 39010304,
+      "mtime_ns": 1778455981780000000,
+      "sha256": "AF1DD40EB9F282FE2F4D82DD5A524E4F50068BE1B47B19FD81ABEFA2CADE2EFC"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00110.ARW",
+      "bytes": 39002112,
+      "mtime_ns": 1778455982920000000,
+      "sha256": "5E0D2518F1C2C647E662B1A3E3A71AA28F3AFDCAAEB9894B4CD223431A214786"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00111.ARW",
+      "bytes": 38998016,
+      "mtime_ns": 1778455984080000000,
+      "sha256": "8BD12F7E93B361032E9F1AAF8B4E1C84C2DEC5178A7A0F7A3525ED930D038E41"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00112.ARW",
+      "bytes": 38998016,
+      "mtime_ns": 1778455985190000000,
+      "sha256": "895727B1EE797593E4096B84F990030F57178789EDE20CF79627F5D4F4646568"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00113.ARW",
+      "bytes": 38993920,
+      "mtime_ns": 1778455986310000000,
+      "sha256": "6B312A6A4F3D777691D68379440D94357B0F3838C0B0AC0D43867E41D00B5184"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00114.ARW",
+      "bytes": 38989824,
+      "mtime_ns": 1778455987420000000,
+      "sha256": "0AEB5438DA47B44DE31C04E8845F23D854950BD71AC6A78142B5DF4B42C84899"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00115.ARW",
+      "bytes": 38989824,
+      "mtime_ns": 1778455988560000000,
+      "sha256": "688F17C5A55957633387AE407D2C4CCA56334EF2ED92E1D103EC45773DFA604E"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00116.ARW",
+      "bytes": 38985728,
+      "mtime_ns": 1778455989690000000,
+      "sha256": "25D9AFC0AAB02B5F2C88987F5E39DCF22D2D084EC21B7AB837161202B2BD9EFC"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00117.ARW",
+      "bytes": 38985728,
+      "mtime_ns": 1778455990820000000,
+      "sha256": "AB47B1B3EBB7BFA30F09E5D7C5A41DC506A5DF18E552B90842D87178259F36DB"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00118.ARW",
+      "bytes": 38977536,
+      "mtime_ns": 1778455991930000000,
+      "sha256": "915C72092406D971C4C4859508E2D63BB6C1DB784743B13DAE9DAB729EBB3B14"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00119.ARW",
+      "bytes": 38973440,
+      "mtime_ns": 1778455993050000000,
+      "sha256": "83F0FB3522A9699706833FA54C7360BF789DF3DCD27ECD83D8D05642F781E24D"
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00120.ARW",
+      "bytes": 38969344,
+      "mtime_ns": 1778455994150000000,
+      "sha256": "C12770E661ADC0225920EC98994C1EA9BAE5D988D7231ADE1440CFAA611EB03D"
+    }
+  ]
+}

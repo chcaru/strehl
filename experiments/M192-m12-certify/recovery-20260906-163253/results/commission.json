@@ -1,0 +1,888 @@
+{
+  "schema": "m192-commission-v1",
+  "status": "COMMISSIONED",
+  "generated_utc": "2026-09-06T23:37:16.807000+00:00",
+  "gates": {
+    "unrepaired_worker_gate_red": true,
+    "unrepaired_memory_gate_red": true,
+    "memory_null_green": true,
+    "memory_plant_red": true,
+    "file_lsb_red": true,
+    "pixel_lsb_red": true,
+    "verifier_self_test_green": true
+  },
+  "unrepaired": {
+    "commit": "1a6fd10c94dcb4b780f6af78c46c62a156c39b71",
+    "binary_sha256": "6A6E41D3066AF018B1136505E1D50E6871236FB5927035DEB1910E324BCE280E",
+    "n33_w1": {
+      "schema": "m192-run-v1",
+      "measured_commit": "1a6fd10c94dcb4b780f6af78c46c62a156c39b71",
+      "kind": "commission",
+      "started_utc": "2026-09-06T23:36:10.257713+00:00",
+      "completed_utc": "2026-09-06T23:36:38.678041+00:00",
+      "returncode": 0,
+      "wall_seconds": 28.420436599990353,
+      "stdout_log": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M192-m12-certify\\recovery-20260906-163253\\work\\outputs\\commission-pre-n33-w1.tiff.stdout.log",
+      "stderr_log": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M192-m12-certify\\recovery-20260906-163253\\work\\outputs\\commission-pre-n33-w1.tiff.stderr.log",
+      "memory": {
+        "sample_interval_ms": 10.0,
+        "process_discovery_interval_ms": 10.0,
+        "process_tree_membership_source": "Windows Job Object",
+        "sample_count": 2774,
+        "missed_intervals": 69,
+        "max_lateness_ms": 30.647987267002463,
+        "max_gap_ms": 40.26119993068278,
+        "median_gap_ms": 10.004899930208921,
+        "peak_process_tree_private_committed_bytes": 2411360256,
+        "peak_process_tree_working_set_bytes": 2258378752,
+        "peak_process_tree_page_fault_count": 11736086,
+        "peak_process_count": 1,
+        "peak_temp_file_bytes": 0,
+        "kernel_job_peak_memory": {
+          "peak_process_memory_used_bytes": 2411360256,
+          "peak_job_memory_used_bytes": 2411360256
+        },
+        "kernel_job_accounting": {
+          "total_user_100ns": 1629062500,
+          "total_kernel_100ns": 131406250,
+          "total_cpu_100ns": 1760468750,
+          "total_page_fault_count": 11736086,
+          "total_processes": 1,
+          "active_processes": 0,
+          "total_terminated_processes": 0
+        },
+        "process_lifetimes": [
+          {
+            "pid": 4620,
+            "created": 134332113702605394,
+            "parent_pid": 22556,
+            "name": "strehl.exe",
+            "first_seen_s": 0.007505999994464219,
+            "last_seen_s": 28.400451000081375,
+            "samples": 2772,
+            "max_cpu_100ns": 1760468750
+          }
+        ]
+      },
+      "host_load_during_run": {
+        "logical_processors": 32,
+        "system_total_cpu_seconds": 909.125,
+        "system_busy_cpu_seconds": 226.84375,
+        "process_tree_cpu_seconds": 176.046875,
+        "external_busy_cpu_seconds": 50.796875,
+        "external_busy_fraction_of_wall_capacity": 0.055854256079603606,
+        "external_busy_max": 1.0,
+        "pass": true,
+        "memory_start": {
+          "memory_load_percent": 25,
+          "total_physical_bytes": 66094223360,
+          "available_physical_bytes": 49069670400,
+          "total_page_file_bytes": 117633830912,
+          "available_page_file_bytes": 93967278080,
+          "total_virtual_bytes": 140737488224256,
+          "available_virtual_bytes": 140732201115648
+        },
+        "memory_end": {
+          "memory_load_percent": 25,
+          "total_physical_bytes": 66094223360,
+          "available_physical_bytes": 48989245440,
+          "total_page_file_bytes": 117633830912,
+          "available_page_file_bytes": 94260985856,
+          "total_virtual_bytes": 140737488224256,
+          "available_virtual_bytes": 140732201115648
+        }
+      },
+      "argv": [
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M192-m12-certify\\recovery-20260906-163253\\work\\builds\\unrepaired\\bin\\strehl.exe",
+        "stack",
+        "D:\\personal\\macro\\bee-1-cpl",
+        "--limit",
+        "33",
+        "--out",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M192-m12-certify\\recovery-20260906-163253\\work\\outputs\\commission-pre-n33-w1.tiff",
+        "--merge",
+        "pyramid",
+        "--pyramid-gate",
+        "2.0",
+        "--resampler",
+        "catmull-rom",
+        "--cover",
+        "scale",
+        "--linear-srgb",
+        "--demosaic"
+      ],
+      "environment": {
+        "MKL_NUM_THREADS": null,
+        "NUMEXPR_NUM_THREADS": null,
+        "OMP_NUM_THREADS": null,
+        "OPENBLAS_NUM_THREADS": null,
+        "RAYON_NUM_THREADS": null,
+        "STREHL_ACUITY": null,
+        "STREHL_ALIGN": null,
+        "STREHL_BIMODAL_DUMP": null,
+        "STREHL_BUILD_ID": null,
+        "STREHL_CACHE_DIR": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M192-m12-certify\\recovery-20260906-163253\\work\\cache\\commission\\n33",
+        "STREHL_CAPTURES": null,
+        "STREHL_CONFIDENCE_DEBUG": null,
+        "STREHL_CONFIDENCE_MAP": null,
+        "STREHL_COVER": null,
+        "STREHL_DEFECT": null,
+        "STREHL_DEFECT_ARM": null,
+        "STREHL_DEFECT_HOT_FLOOR": null,
+        "STREHL_DEFECT_MAP": null,
+        "STREHL_DEMOSAIC": null,
+        "STREHL_DUMP_ELECTION": null,
+        "STREHL_DUMP_MERGE_STATE": null,
+        "STREHL_DUMP_NEFF": null,
+        "STREHL_EDGE_AWARE": null,
+        "STREHL_EDGE_CONF": null,
+        "STREHL_EDGE_FEATHER": null,
+        "STREHL_EDGE_TAU": null,
+        "STREHL_FIX_CA": null,
+        "STREHL_FIX_HALO": null,
+        "STREHL_FIX_HALO_DELTA": null,
+        "STREHL_FREEZE_REQUIRE": null,
+        "STREHL_FULLRES_GATHER": null,
+        "STREHL_GATE_FLOOR": null,
+        "STREHL_HIGHLIGHT_KNEE": null,
+        "STREHL_MERGE": null,
+        "STREHL_ONLY_FRAME": null,
+        "STREHL_PHOTOMETRIC": null,
+        "STREHL_PYRAMID_MEAN_COARSE": null,
+        "STREHL_PYRAMID_WORKERS": "1",
+        "STREHL_RESTORE": null,
+        "STREHL_RESTORE_SIGMA": null,
+        "STREHL_ROBUST_ELECTION": null,
+        "STREHL_SMOOTH": null,
+        "STREHL_SMOOTH_HUBER": null,
+        "STREHL_SOFT_GATE": null,
+        "STREHL_VEIL": null,
+        "STREHL_VEIL_DISPERSION": null,
+        "STREHL_VEIL_FLOOR": null,
+        "STREHL_VEIL_MARGIN": null,
+        "STREHL_WARPMAP": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M192-m12-certify\\recovery-20260906-163253\\work\\sidecars\\n33.warpmap.txt",
+        "STREHL_WINDOW_RADIUS": null,
+        "TEMP": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M192-m12-certify\\recovery-20260906-163253\\work\\temp\\commission-pre-n33-w1",
+        "TMP": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M192-m12-certify\\recovery-20260906-163253\\work\\temp\\commission-pre-n33-w1"
+      },
+      "binary": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M192-m12-certify\\recovery-20260906-163253\\work\\builds\\unrepaired\\bin\\strehl.exe",
+        "bytes": 9866240,
+        "sha256": "6A6E41D3066AF018B1136505E1D50E6871236FB5927035DEB1910E324BCE280E"
+      },
+      "stack": "D:\\personal\\macro\\bee-1-cpl",
+      "limit": 33,
+      "workers": 1,
+      "repetition": null,
+      "sweep": "commission",
+      "output_bytes": 197798956,
+      "output_sha256": "70BD5376649EF9BF749C8E47C04A979233AFFE07DCD1915AA24AF37927DB122C",
+      "pixel_sha256": "D42D0552A5FB5710BA4AE33C305721F8E98C695B11C89CDFB34859B7982B9F1D",
+      "shape": [
+        4688,
+        7032,
+        3
+      ],
+      "dtype": "uint16",
+      "bits_per_sample": 16,
+      "samples_per_pixel": 3,
+      "software": "strehl 0.0.0 (1a6fd10c94dcb4b780f6af78c46c62a156c39b71)",
+      "valid": true,
+      "invalid_reasons": [],
+      "campaign_id": "4c72e520-b93e-4781-999f-0947486ddc44",
+      "run_id": "commission-pre-n33-w1",
+      "phase": "commission",
+      "order_index": 1,
+      "terminal_witness": {
+        "frames": true,
+        "alignment": true,
+        "worker": true,
+        "repair_banner": true,
+        "folded_all": true,
+        "wrote_exact_path": true,
+        "total_terminal": true,
+        "all": true
+      },
+      "sampling_coverage": 0.9757298628209637,
+      "whole_host_cpu_mean_percent": 24.951876804619825,
+      "log_artifacts": {
+        "stdout": {
+          "path": "logs/commission-pre-n33-w1.tiff.stdout.log",
+          "bytes": 10427,
+          "sha256": "5A572EA0203FAC3C0F371E41CA26ACBD658114F0E19A2435E879F00D7D62B645"
+        },
+        "stderr": {
+          "path": "logs/commission-pre-n33-w1.tiff.stderr.log",
+          "bytes": 5595,
+          "sha256": "08B5EFFE8B307A110E11E545E8CE980F3479A44F435E3A8833C143D1D9544C75"
+        }
+      },
+      "artifact_cleanup": {
+        "output_removed": true
+      }
+    },
+    "n33_w2": {
+      "schema": "m192-run-v1",
+      "measured_commit": "1a6fd10c94dcb4b780f6af78c46c62a156c39b71",
+      "kind": "commission",
+      "started_utc": "2026-09-06T23:36:38.945452+00:00",
+      "completed_utc": "2026-09-06T23:36:57.115366+00:00",
+      "returncode": 0,
+      "wall_seconds": 18.170421799994074,
+      "stdout_log": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M192-m12-certify\\recovery-20260906-163253\\work\\outputs\\commission-pre-n33-w2.tiff.stdout.log",
+      "stderr_log": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M192-m12-certify\\recovery-20260906-163253\\work\\outputs\\commission-pre-n33-w2.tiff.stderr.log",
+      "memory": {
+        "sample_interval_ms": 10.0,
+        "process_discovery_interval_ms": 10.0,
+        "process_tree_membership_source": "Windows Job Object",
+        "sample_count": 1717,
+        "missed_intervals": 101,
+        "max_lateness_ms": 31.861093710176647,
+        "max_gap_ms": 41.39859997667372,
+        "median_gap_ms": 10.010899975895882,
+        "peak_process_tree_private_committed_bytes": 4805029888,
+        "peak_process_tree_working_set_bytes": 4482371584,
+        "peak_process_tree_page_fault_count": 12002318,
+        "peak_process_count": 1,
+        "peak_temp_file_bytes": 0,
+        "kernel_job_peak_memory": {
+          "peak_process_memory_used_bytes": 4805029888,
+          "peak_job_memory_used_bytes": 4805029888
+        },
+        "kernel_job_accounting": {
+          "total_user_100ns": 1697343750,
+          "total_kernel_100ns": 117500000,
+          "total_cpu_100ns": 1814843750,
+          "total_page_fault_count": 12002318,
+          "total_processes": 1,
+          "active_processes": 0,
+          "total_terminated_processes": 0
+        },
+        "process_lifetimes": [
+          {
+            "pid": 45920,
+            "created": 134332113989466306,
+            "parent_pid": 22556,
+            "name": "strehl.exe",
+            "first_seen_s": 0.005159500055015087,
+            "last_seen_s": 18.150202200049534,
+            "samples": 1715,
+            "max_cpu_100ns": 1814843750
+          }
+        ]
+      },
+      "host_load_during_run": {
+        "logical_processors": 32,
+        "system_total_cpu_seconds": 581.65625,
+        "system_busy_cpu_seconds": 215.671875,
+        "process_tree_cpu_seconds": 181.484375,
+        "external_busy_cpu_seconds": 34.1875,
+        "external_busy_fraction_of_wall_capacity": 0.05879661940485875,
+        "external_busy_max": 1.0,
+        "pass": true,
+        "memory_start": {
+          "memory_load_percent": 25,
+          "total_physical_bytes": 66094223360,
+          "available_physical_bytes": 48991420416,
+          "total_page_file_bytes": 117633830912,
+          "available_page_file_bytes": 94261473280,
+          "total_virtual_bytes": 140737488224256,
+          "available_virtual_bytes": 140732201115648
+        },
+        "memory_end": {
+          "memory_load_percent": 26,
+          "total_physical_bytes": 66094223360,
+          "available_physical_bytes": 48764858368,
+          "total_page_file_bytes": 117633830912,
+          "available_page_file_bytes": 94098022400,
+          "total_virtual_bytes": 140737488224256,
+          "available_virtual_bytes": 140732201115648
+        }
+      },
+      "argv": [
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M192-m12-certify\\recovery-20260906-163253\\work\\builds\\unrepaired\\bin\\strehl.exe",
+        "stack",
+        "D:\\personal\\macro\\bee-1-cpl",
+        "--limit",
+        "33",
+        "--out",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M192-m12-certify\\recovery-20260906-163253\\work\\outputs\\commission-pre-n33-w2.tiff",
+        "--merge",
+        "pyramid",
+        "--pyramid-gate",
+        "2.0",
+        "--resampler",
+        "catmull-rom",
+        "--cover",
+        "scale",
+        "--linear-srgb",
+        "--demosaic"
+      ],
+      "environment": {
+        "MKL_NUM_THREADS": null,
+        "NUMEXPR_NUM_THREADS": null,
+        "OMP_NUM_THREADS": null,
+        "OPENBLAS_NUM_THREADS": null,
+        "RAYON_NUM_THREADS": null,
+        "STREHL_ACUITY": null,
+        "STREHL_ALIGN": null,
+        "STREHL_BIMODAL_DUMP": null,
+        "STREHL_BUILD_ID": null,
+        "STREHL_CACHE_DIR": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M192-m12-certify\\recovery-20260906-163253\\work\\cache\\commission\\n33",
+        "STREHL_CAPTURES": null,
+        "STREHL_CONFIDENCE_DEBUG": null,
+        "STREHL_CONFIDENCE_MAP": null,
+        "STREHL_COVER": null,
+        "STREHL_DEFECT": null,
+        "STREHL_DEFECT_ARM": null,
+        "STREHL_DEFECT_HOT_FLOOR": null,
+        "STREHL_DEFECT_MAP": null,
+        "STREHL_DEMOSAIC": null,
+        "STREHL_DUMP_ELECTION": null,
+        "STREHL_DUMP_MERGE_STATE": null,
+        "STREHL_DUMP_NEFF": null,
+        "STREHL_EDGE_AWARE": null,
+        "STREHL_EDGE_CONF": null,
+        "STREHL_EDGE_FEATHER": null,
+        "STREHL_EDGE_TAU": null,
+        "STREHL_FIX_CA": null,
+        "STREHL_FIX_HALO": null,
+        "STREHL_FIX_HALO_DELTA": null,
+        "STREHL_FREEZE_REQUIRE": null,
+        "STREHL_FULLRES_GATHER": null,
+        "STREHL_GATE_FLOOR": null,
+        "STREHL_HIGHLIGHT_KNEE": null,
+        "STREHL_MERGE": null,
+        "STREHL_ONLY_FRAME": null,
+        "STREHL_PHOTOMETRIC": null,
+        "STREHL_PYRAMID_MEAN_COARSE": null,
+        "STREHL_PYRAMID_WORKERS": "2",
+        "STREHL_RESTORE": null,
+        "STREHL_RESTORE_SIGMA": null,
+        "STREHL_ROBUST_ELECTION": null,
+        "STREHL_SMOOTH": null,
+        "STREHL_SMOOTH_HUBER": null,
+        "STREHL_SOFT_GATE": null,
+        "STREHL_VEIL": null,
+        "STREHL_VEIL_DISPERSION": null,
+        "STREHL_VEIL_FLOOR": null,
+        "STREHL_VEIL_MARGIN": null,
+        "STREHL_WARPMAP": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M192-m12-certify\\recovery-20260906-163253\\work\\sidecars\\n33.warpmap.txt",
+        "STREHL_WINDOW_RADIUS": null,
+        "TEMP": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M192-m12-certify\\recovery-20260906-163253\\work\\temp\\commission-pre-n33-w2",
+        "TMP": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M192-m12-certify\\recovery-20260906-163253\\work\\temp\\commission-pre-n33-w2"
+      },
+      "binary": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M192-m12-certify\\recovery-20260906-163253\\work\\builds\\unrepaired\\bin\\strehl.exe",
+        "bytes": 9866240,
+        "sha256": "6A6E41D3066AF018B1136505E1D50E6871236FB5927035DEB1910E324BCE280E"
+      },
+      "stack": "D:\\personal\\macro\\bee-1-cpl",
+      "limit": 33,
+      "workers": 2,
+      "repetition": null,
+      "sweep": "commission",
+      "output_bytes": 197798956,
+      "output_sha256": "4B923063AB4557366692FFE942649062E8BD9D6DC34B49854E25B70EE2D538D0",
+      "pixel_sha256": "78D78FC0A8C284C343EAB7472B34A3990BC3D8E18D21DDCFEF70A39E3BCBBB45",
+      "shape": [
+        4688,
+        7032,
+        3
+      ],
+      "dtype": "uint16",
+      "bits_per_sample": 16,
+      "samples_per_pixel": 3,
+      "software": "strehl 0.0.0 (1a6fd10c94dcb4b780f6af78c46c62a156c39b71)",
+      "valid": true,
+      "invalid_reasons": [],
+      "campaign_id": "4c72e520-b93e-4781-999f-0947486ddc44",
+      "run_id": "commission-pre-n33-w2",
+      "phase": "commission",
+      "order_index": 2,
+      "terminal_witness": {
+        "frames": true,
+        "alignment": true,
+        "worker": true,
+        "repair_banner": true,
+        "folded_all": true,
+        "wrote_exact_path": true,
+        "total_terminal": true,
+        "all": true
+      },
+      "sampling_coverage": 0.9444444444444444,
+      "whole_host_cpu_mean_percent": 37.07892333315425,
+      "log_artifacts": {
+        "stdout": {
+          "path": "logs/commission-pre-n33-w2.tiff.stdout.log",
+          "bytes": 10427,
+          "sha256": "27DD92E91C4F2BD71243333E1815D5230B461B4D2789DE9EB05940C189143BEB"
+        },
+        "stderr": {
+          "path": "logs/commission-pre-n33-w2.tiff.stderr.log",
+          "bytes": 5595,
+          "sha256": "61B420362424AA3D59DEACCD58E4B08480B879B78842376DFD3D0A780F3FAAF1"
+        }
+      },
+      "artifact_cleanup": {
+        "output_removed": true
+      }
+    },
+    "n33_w4": {
+      "schema": "m192-run-v1",
+      "measured_commit": "1a6fd10c94dcb4b780f6af78c46c62a156c39b71",
+      "kind": "commission",
+      "started_utc": "2026-09-06T23:36:57.410561+00:00",
+      "completed_utc": "2026-09-06T23:37:10.761027+00:00",
+      "returncode": 0,
+      "wall_seconds": 13.350541699910536,
+      "stdout_log": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M192-m12-certify\\recovery-20260906-163253\\work\\outputs\\commission-pre-n33-w4.tiff.stdout.log",
+      "stderr_log": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M192-m12-certify\\recovery-20260906-163253\\work\\outputs\\commission-pre-n33-w4.tiff.stderr.log",
+      "memory": {
+        "sample_interval_ms": 10.0,
+        "process_discovery_interval_ms": 10.0,
+        "process_tree_membership_source": "Windows Job Object",
+        "sample_count": 1212,
+        "missed_intervals": 124,
+        "max_lateness_ms": 33.84439880028367,
+        "max_gap_ms": 40.185999940149486,
+        "median_gap_ms": 10.009400080889463,
+        "peak_process_tree_private_committed_bytes": 9587408896,
+        "peak_process_tree_working_set_bytes": 8674263040,
+        "peak_process_tree_page_fault_count": 12633374,
+        "peak_process_count": 1,
+        "peak_temp_file_bytes": 0,
+        "kernel_job_peak_memory": {
+          "peak_process_memory_used_bytes": 9587433472,
+          "peak_job_memory_used_bytes": 9587433472
+        },
+        "kernel_job_accounting": {
+          "total_user_100ns": 1780156250,
+          "total_kernel_100ns": 118750000,
+          "total_cpu_100ns": 1898906250,
+          "total_page_fault_count": 12633374,
+          "total_processes": 1,
+          "active_processes": 0,
+          "total_terminated_processes": 0
+        },
+        "process_lifetimes": [
+          {
+            "pid": 15856,
+            "created": 134332114174117393,
+            "parent_pid": 22556,
+            "name": "strehl.exe",
+            "first_seen_s": 0.005118499975651503,
+            "last_seen_s": 13.330097099998966,
+            "samples": 1210,
+            "max_cpu_100ns": 1898750000
+          }
+        ]
+      },
+      "host_load_during_run": {
+        "logical_processors": 32,
+        "system_total_cpu_seconds": 427.734375,
+        "system_busy_cpu_seconds": 219.953125,
+        "process_tree_cpu_seconds": 189.890625,
+        "external_busy_cpu_seconds": 30.0625,
+        "external_busy_fraction_of_wall_capacity": 0.0703681652862292,
+        "external_busy_max": 1.0,
+        "pass": true,
+        "memory_start": {
+          "memory_load_percent": 25,
+          "total_physical_bytes": 66094223360,
+          "available_physical_bytes": 48969691136,
+          "total_page_file_bytes": 117633830912,
+          "available_page_file_bytes": 94101344256,
+          "total_virtual_bytes": 140737488224256,
+          "available_virtual_bytes": 140732201115648
+        },
+        "memory_end": {
+          "memory_load_percent": 26,
+          "total_physical_bytes": 66094223360,
+          "available_physical_bytes": 48809054208,
+          "total_page_file_bytes": 117633830912,
+          "available_page_file_bytes": 94007783424,
+          "total_virtual_bytes": 140737488224256,
+          "available_virtual_bytes": 140732201115648
+        }
+      },
+      "argv": [
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M192-m12-certify\\recovery-20260906-163253\\work\\builds\\unrepaired\\bin\\strehl.exe",
+        "stack",
+        "D:\\personal\\macro\\bee-1-cpl",
+        "--limit",
+        "33",
+        "--out",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M192-m12-certify\\recovery-20260906-163253\\work\\outputs\\commission-pre-n33-w4.tiff",
+        "--merge",
+        "pyramid",
+        "--pyramid-gate",
+        "2.0",
+        "--resampler",
+        "catmull-rom",
+        "--cover",
+        "scale",
+        "--linear-srgb",
+        "--demosaic"
+      ],
+      "environment": {
+        "MKL_NUM_THREADS": null,
+        "NUMEXPR_NUM_THREADS": null,
+        "OMP_NUM_THREADS": null,
+        "OPENBLAS_NUM_THREADS": null,
+        "RAYON_NUM_THREADS": null,
+        "STREHL_ACUITY": null,
+        "STREHL_ALIGN": null,
+        "STREHL_BIMODAL_DUMP": null,
+        "STREHL_BUILD_ID": null,
+        "STREHL_CACHE_DIR": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M192-m12-certify\\recovery-20260906-163253\\work\\cache\\commission\\n33",
+        "STREHL_CAPTURES": null,
+        "STREHL_CONFIDENCE_DEBUG": null,
+        "STREHL_CONFIDENCE_MAP": null,
+        "STREHL_COVER": null,
+        "STREHL_DEFECT": null,
+        "STREHL_DEFECT_ARM": null,
+        "STREHL_DEFECT_HOT_FLOOR": null,
+        "STREHL_DEFECT_MAP": null,
+        "STREHL_DEMOSAIC": null,
+        "STREHL_DUMP_ELECTION": null,
+        "STREHL_DUMP_MERGE_STATE": null,
+        "STREHL_DUMP_NEFF": null,
+        "STREHL_EDGE_AWARE": null,
+        "STREHL_EDGE_CONF": null,
+        "STREHL_EDGE_FEATHER": null,
+        "STREHL_EDGE_TAU": null,
+        "STREHL_FIX_CA": null,
+        "STREHL_FIX_HALO": null,
+        "STREHL_FIX_HALO_DELTA": null,
+        "STREHL_FREEZE_REQUIRE": null,
+        "STREHL_FULLRES_GATHER": null,
+        "STREHL_GATE_FLOOR": null,
+        "STREHL_HIGHLIGHT_KNEE": null,
+        "STREHL_MERGE": null,
+        "STREHL_ONLY_FRAME": null,
+        "STREHL_PHOTOMETRIC": null,
+        "STREHL_PYRAMID_MEAN_COARSE": null,
+        "STREHL_PYRAMID_WORKERS": "4",
+        "STREHL_RESTORE": null,
+        "STREHL_RESTORE_SIGMA": null,
+        "STREHL_ROBUST_ELECTION": null,
+        "STREHL_SMOOTH": null,
+        "STREHL_SMOOTH_HUBER": null,
+        "STREHL_SOFT_GATE": null,
+        "STREHL_VEIL": null,
+        "STREHL_VEIL_DISPERSION": null,
+        "STREHL_VEIL_FLOOR": null,
+        "STREHL_VEIL_MARGIN": null,
+        "STREHL_WARPMAP": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M192-m12-certify\\recovery-20260906-163253\\work\\sidecars\\n33.warpmap.txt",
+        "STREHL_WINDOW_RADIUS": null,
+        "TEMP": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M192-m12-certify\\recovery-20260906-163253\\work\\temp\\commission-pre-n33-w4",
+        "TMP": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M192-m12-certify\\recovery-20260906-163253\\work\\temp\\commission-pre-n33-w4"
+      },
+      "binary": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M192-m12-certify\\recovery-20260906-163253\\work\\builds\\unrepaired\\bin\\strehl.exe",
+        "bytes": 9866240,
+        "sha256": "6A6E41D3066AF018B1136505E1D50E6871236FB5927035DEB1910E324BCE280E"
+      },
+      "stack": "D:\\personal\\macro\\bee-1-cpl",
+      "limit": 33,
+      "workers": 4,
+      "repetition": null,
+      "sweep": "commission",
+      "output_bytes": 197798956,
+      "output_sha256": "12B5ABED0292AD42FA8B7B4673D6C1CE761162F6D3FFF206E012B9ECA7B4BF73",
+      "pixel_sha256": "6EFC261E892DCDB5D492AD3FD79BDC7E5A208D93D0227A41B258FB3B900F9B89",
+      "shape": [
+        4688,
+        7032,
+        3
+      ],
+      "dtype": "uint16",
+      "bits_per_sample": 16,
+      "samples_per_pixel": 3,
+      "software": "strehl 0.0.0 (1a6fd10c94dcb4b780f6af78c46c62a156c39b71)",
+      "valid": true,
+      "invalid_reasons": [],
+      "campaign_id": "4c72e520-b93e-4781-999f-0947486ddc44",
+      "run_id": "commission-pre-n33-w4",
+      "phase": "commission",
+      "order_index": 4,
+      "terminal_witness": {
+        "frames": true,
+        "alignment": true,
+        "worker": true,
+        "repair_banner": true,
+        "folded_all": true,
+        "wrote_exact_path": true,
+        "total_terminal": true,
+        "all": true
+      },
+      "sampling_coverage": 0.907185628742515,
+      "whole_host_cpu_mean_percent": 51.42283105022831,
+      "log_artifacts": {
+        "stdout": {
+          "path": "logs/commission-pre-n33-w4.tiff.stdout.log",
+          "bytes": 10427,
+          "sha256": "21437B64849EC6A6F5A26946B0173A7C76D41E6126A4763B629BDB41774CB426"
+        },
+        "stderr": {
+          "path": "logs/commission-pre-n33-w4.tiff.stderr.log",
+          "bytes": 5595,
+          "sha256": "F7BABD90C1B4FFAFB453090EA61E225C2415021B8F9C1434C75526FF1A8A5E3F"
+        }
+      },
+      "artifact_cleanup": {
+        "output_removed": true
+      }
+    },
+    "w1_w2_file_hashes_differ": true,
+    "w1_w2_pixel_hashes_differ": true,
+    "n33_w4_conservative_peak_bytes": 9587433472
+  },
+  "lsb_plant": {
+    "coordinate": [
+      2344,
+      3516,
+      1
+    ],
+    "before": 4571,
+    "after": 4570,
+    "baseline_file_sha256": "70BD5376649EF9BF749C8E47C04A979233AFFE07DCD1915AA24AF37927DB122C",
+    "planted_file_sha256": "F883A2137CE00E768F17ACEE85C8D8B91CE7E7A07CE5EDC03A79CA65494B2D29",
+    "baseline_pixel_sha256": "D42D0552A5FB5710BA4AE33C305721F8E98C695B11C89CDFB34859B7982B9F1D",
+    "planted_pixel_sha256": "0976D5096B676F293FB200255613DD4BEFDAABC4DF81E90EA602AEA6A4D79CE8"
+  },
+  "memory_plant": {
+    "null": {
+      "started_utc": "2026-09-06T23:37:11.682570+00:00",
+      "completed_utc": "2026-09-06T23:37:13.793101+00:00",
+      "returncode": 0,
+      "wall_seconds": 2.110573900048621,
+      "stdout_log": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M192-m12-certify\\recovery-20260906-163253\\work\\commission\\memory\\null-64mib.stdout.log",
+      "stderr_log": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M192-m12-certify\\recovery-20260906-163253\\work\\commission\\memory\\null-64mib.stderr.log",
+      "memory": {
+        "sample_interval_ms": 10.0,
+        "process_discovery_interval_ms": 10.0,
+        "process_tree_membership_source": "Windows Job Object",
+        "sample_count": 212,
+        "missed_intervals": 0,
+        "max_lateness_ms": 7.439500070177019,
+        "max_gap_ms": 10.65579999703914,
+        "median_gap_ms": 10.005699936300516,
+        "peak_process_tree_private_committed_bytes": 80855040,
+        "peak_process_tree_working_set_bytes": 92426240,
+        "peak_process_tree_page_fault_count": 23019,
+        "peak_process_count": 2,
+        "peak_temp_file_bytes": 0,
+        "kernel_job_peak_memory": {
+          "peak_process_memory_used_bytes": 73220096,
+          "peak_job_memory_used_bytes": 80883712
+        },
+        "kernel_job_accounting": {
+          "total_user_100ns": 156250,
+          "total_kernel_100ns": 625000,
+          "total_cpu_100ns": 781250,
+          "total_page_fault_count": 23019,
+          "total_processes": 2,
+          "active_processes": 0,
+          "total_terminated_processes": 0
+        },
+        "process_lifetimes": [
+          {
+            "pid": 7364,
+            "created": 134332114316848349,
+            "parent_pid": 22556,
+            "name": "python.exe",
+            "first_seen_s": 0.007439500070177019,
+            "last_seen_s": 2.0904391000512987,
+            "samples": 210,
+            "max_cpu_100ns": 312500
+          },
+          {
+            "pid": 31220,
+            "created": 134332114317337910,
+            "parent_pid": 7364,
+            "name": "python.exe",
+            "first_seen_s": 0.06004040001425892,
+            "last_seen_s": 2.0904391000512987,
+            "samples": 204,
+            "max_cpu_100ns": 312500
+          }
+        ]
+      },
+      "host_load_during_run": {
+        "logical_processors": 32,
+        "system_total_cpu_seconds": 67.765625,
+        "system_busy_cpu_seconds": 2.1875,
+        "process_tree_cpu_seconds": 0.078125,
+        "external_busy_cpu_seconds": 2.109375,
+        "external_busy_fraction_of_wall_capacity": 0.03123224860711177,
+        "external_busy_max": 1.0,
+        "pass": true,
+        "memory_start": {
+          "memory_load_percent": 25,
+          "total_physical_bytes": 66094223360,
+          "available_physical_bytes": 49074872320,
+          "total_page_file_bytes": 117633830912,
+          "available_page_file_bytes": 94021885952,
+          "total_virtual_bytes": 140737488224256,
+          "available_virtual_bytes": 140732201115648
+        },
+        "memory_end": {
+          "memory_load_percent": 25,
+          "total_physical_bytes": 66094223360,
+          "available_physical_bytes": 49099886592,
+          "total_page_file_bytes": 117633830912,
+          "available_page_file_bytes": 94095392768,
+          "total_virtual_bytes": 140737488224256,
+          "available_virtual_bytes": 140732201115648
+        }
+      }
+    },
+    "plant": {
+      "started_utc": "2026-09-06T23:37:13.794105+00:00",
+      "completed_utc": "2026-09-06T23:37:16.665266+00:00",
+      "returncode": 0,
+      "wall_seconds": 2.8706998999696225,
+      "stdout_log": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M192-m12-certify\\recovery-20260906-163253\\work\\commission\\memory\\plant-7gib.stdout.log",
+      "stderr_log": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M192-m12-certify\\recovery-20260906-163253\\work\\commission\\memory\\plant-7gib.stderr.log",
+      "memory": {
+        "sample_interval_ms": 10.0,
+        "process_discovery_interval_ms": 10.0,
+        "process_tree_membership_source": "Windows Job Object",
+        "sample_count": 288,
+        "missed_intervals": 0,
+        "max_lateness_ms": 6.423700018785894,
+        "max_gap_ms": 10.57450007647276,
+        "median_gap_ms": 10.00530004967004,
+        "peak_process_tree_private_committed_bytes": 7544700928,
+        "peak_process_tree_working_set_bytes": 7541673984,
+        "peak_process_tree_page_fault_count": 1845245,
+        "peak_process_count": 2,
+        "peak_temp_file_bytes": 0,
+        "kernel_job_peak_memory": {
+          "peak_process_memory_used_bytes": 7536902144,
+          "peak_job_memory_used_bytes": 7544754176
+        },
+        "kernel_job_accounting": {
+          "total_user_100ns": 4062500,
+          "total_kernel_100ns": 4375000,
+          "total_cpu_100ns": 8437500,
+          "total_page_fault_count": 1845245,
+          "total_processes": 2,
+          "active_processes": 0,
+          "total_terminated_processes": 0
+        },
+        "process_lifetimes": [
+          {
+            "pid": 43056,
+            "created": 134332114337959016,
+            "parent_pid": 22556,
+            "name": "python.exe",
+            "first_seen_s": 0.006423700018785894,
+            "last_seen_s": 2.850414999993518,
+            "samples": 286,
+            "max_cpu_100ns": 468750
+          },
+          {
+            "pid": 46884,
+            "created": 134332114338457403,
+            "parent_pid": 43056,
+            "name": "python.exe",
+            "first_seen_s": 0.06012779998127371,
+            "last_seen_s": 2.840382399968803,
+            "samples": 279,
+            "max_cpu_100ns": 7812500
+          }
+        ]
+      },
+      "host_load_during_run": {
+        "logical_processors": 32,
+        "system_total_cpu_seconds": 91.65625,
+        "system_busy_cpu_seconds": 3.34375,
+        "process_tree_cpu_seconds": 0.84375,
+        "external_busy_cpu_seconds": 2.5,
+        "external_busy_fraction_of_wall_capacity": 0.02721461759232538,
+        "external_busy_max": 1.0,
+        "pass": true,
+        "memory_start": {
+          "memory_load_percent": 25,
+          "total_physical_bytes": 66094223360,
+          "available_physical_bytes": 49099886592,
+          "total_page_file_bytes": 117633830912,
+          "available_page_file_bytes": 94095454208,
+          "total_virtual_bytes": 140737488224256,
+          "available_virtual_bytes": 140732201115648
+        },
+        "memory_end": {
+          "memory_load_percent": 25,
+          "total_physical_bytes": 66094223360,
+          "available_physical_bytes": 49104855040,
+          "total_page_file_bytes": 117633830912,
+          "available_page_file_bytes": 94127153152,
+          "total_virtual_bytes": 140737488224256,
+          "available_virtual_bytes": 140732201115648
+        }
+      }
+    },
+    "null_green": true,
+    "plant_red": true,
+    "null_peak_bytes": 80883712,
+    "plant_peak_bytes": 7544754176
+  },
+  "verifier_self_test": {
+    "schema": "m192-verifier-self-test-v1",
+    "status": "COMMISSIONED",
+    "controls": [
+      {
+        "name": "missing-terminal-record",
+        "caught": true,
+        "detail": "expected 133 records, got 132"
+      },
+      {
+        "name": "broken-hash-chain",
+        "caught": true,
+        "detail": "record 10: broken hash chain"
+      },
+      {
+        "name": "worker-hash-divergence",
+        "caught": true,
+        "detail": "FAIL"
+      },
+      {
+        "name": "memory-overrun",
+        "caught": true,
+        "detail": "FAIL"
+      },
+      {
+        "name": "ratio-overrun",
+        "caught": true,
+        "detail": "FAIL"
+      },
+      {
+        "name": "sampling-undercoverage",
+        "caught": true,
+        "detail": "UNMEASURED"
+      },
+      {
+        "name": "timing-overrun",
+        "caught": true,
+        "detail": "FAIL"
+      },
+      {
+        "name": "timing-contention-ambiguity",
+        "caught": true,
+        "detail": "UNMEASURED"
+      },
+      {
+        "name": "missing-sweep-cpu",
+        "caught": true,
+        "detail": "UNMEASURED"
+      }
+    ],
+    "caught": 9,
+    "total": 9,
+    "inert_label_survived": true
+  },
+  "verifier_self_test_log_sha256": "C1009C9D713FBF02A570BB3DF309EDF3E9177C2A7F26AFC9420D2A6FB25323AB"
+}

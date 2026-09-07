@@ -1,0 +1,390 @@
+{
+  "schema": "m192-m12-certificate-v1",
+  "campaign_id": "4c72e520-b93e-4781-999f-0947486ddc44",
+  "generated_utc": "2026-09-07T07:30:51.328978+00:00",
+  "lineage": {
+    "measured_commit": "e93f0bde695961d53cbd66587a060a41552b4a63",
+    "measured_tree": "27055ece0a5c9ad1d7b0c8bee380669ddf720cfe",
+    "binary_sha256": "89482ACD60C4E39A22F763B2E722754804430E955546EA96F7AE7CA4C7EA1032",
+    "binary_bytes": 10043904,
+    "version_output": "strehl 0.0.0 (e93f0bde695961d53cbd66587a060a41552b4a63)",
+    "d9_repair_commit": "fc2abb499126a56302de7f21f527de5613be34e7",
+    "bounded_memory_repair_commit": "a97275817c58e164f75c7cd3d80ca99444a2a145",
+    "repair_owned_diff_bytes": 0
+  },
+  "protocol_sha256_checkout": "E10723DDEF7D60D7A4C202E726ED998BB4CC7FF95FB3B6ABAA203D98219D9898",
+  "records": {
+    "count": 133,
+    "sha256": "790D87CA85DAAE79709769A7D6D1B249542B6B235647C5C5A5019B206D3B5568",
+    "last_record_sha256": "7848A3DED245B0D5250F2443D6C3AA741DE8B644115B6E924DE0B3F06D6ED69E"
+  },
+  "configuration": {
+    "arguments_after_output": [
+      "--merge",
+      "pyramid",
+      "--pyramid-gate",
+      "2.0",
+      "--resampler",
+      "catmull-rom",
+      "--cover",
+      "scale",
+      "--linear-srgb",
+      "--demosaic"
+    ],
+    "alignment": "on through a hash-pinned STREHL_WARPMAP outside the capture tree; the product reports sidecar-override",
+    "worker_control": "STREHL_PYRAMID_WORKERS",
+    "cache": "M192-local and N-isolated",
+    "temp": "M192-local and invocation-isolated",
+    "output": "uncompressed full-sensor 16-bit linear-sRGB TIFF",
+    "environment": "All STREHL_ and thread-control variables are cleared before the recorded worker, cache, temp, and sidecar variables are set."
+  },
+  "sampling_quality": {
+    "pass": false,
+    "minimum_coverage": 0.9903924269718484,
+    "maximum_gap_ms": 1163.6997000314295,
+    "failed_runs": [
+      "native-n299-w8-r3",
+      "native-n299-w8-r6"
+    ]
+  },
+  "bars": {
+    "warm_peak_process_tree_memory": {
+      "sampled_peak_bytes": 3077955584,
+      "job_peak_bytes": 3077963776,
+      "limit_bytes": 6442450944,
+      "sampling_minimum_coverage": 0.9903924269718484,
+      "sampling_maximum_gap_ms": 1163.6997000314295,
+      "verdict": "UNMEASURED_SAMPLING_COVERAGE"
+    },
+    "byte_identity": {
+      "fixed_worker": {
+        "N33-W1": {
+          "runs": 6,
+          "complete_file_hashes": [
+            "3309E33318C701FB75C55507BFB49AD279D8950492B592EC247DBE2D1193AC9E"
+          ],
+          "canonical_pixel_hashes": [
+            "6EFC261E892DCDB5D492AD3FD79BDC7E5A208D93D0227A41B258FB3B900F9B89"
+          ],
+          "pass": true
+        },
+        "N33-W2": {
+          "runs": 6,
+          "complete_file_hashes": [
+            "3309E33318C701FB75C55507BFB49AD279D8950492B592EC247DBE2D1193AC9E"
+          ],
+          "canonical_pixel_hashes": [
+            "6EFC261E892DCDB5D492AD3FD79BDC7E5A208D93D0227A41B258FB3B900F9B89"
+          ],
+          "pass": true
+        },
+        "N33-W4": {
+          "runs": 6,
+          "complete_file_hashes": [
+            "3309E33318C701FB75C55507BFB49AD279D8950492B592EC247DBE2D1193AC9E"
+          ],
+          "canonical_pixel_hashes": [
+            "6EFC261E892DCDB5D492AD3FD79BDC7E5A208D93D0227A41B258FB3B900F9B89"
+          ],
+          "pass": true
+        },
+        "N33-W8": {
+          "runs": 6,
+          "complete_file_hashes": [
+            "3309E33318C701FB75C55507BFB49AD279D8950492B592EC247DBE2D1193AC9E"
+          ],
+          "canonical_pixel_hashes": [
+            "6EFC261E892DCDB5D492AD3FD79BDC7E5A208D93D0227A41B258FB3B900F9B89"
+          ],
+          "pass": true
+        },
+        "N33-W16": {
+          "runs": 6,
+          "complete_file_hashes": [
+            "3309E33318C701FB75C55507BFB49AD279D8950492B592EC247DBE2D1193AC9E"
+          ],
+          "canonical_pixel_hashes": [
+            "6EFC261E892DCDB5D492AD3FD79BDC7E5A208D93D0227A41B258FB3B900F9B89"
+          ],
+          "pass": true
+        },
+        "N105-W1": {
+          "runs": 6,
+          "complete_file_hashes": [
+            "0CF09578B85028DD26D871696F01EEEA6D1675D903105008D66542B07E78DBC0"
+          ],
+          "canonical_pixel_hashes": [
+            "0E69277A3328A2BA4659444963E90560E87112701FF1088404BFA8E173FD18A9"
+          ],
+          "pass": true
+        },
+        "N105-W2": {
+          "runs": 6,
+          "complete_file_hashes": [
+            "0CF09578B85028DD26D871696F01EEEA6D1675D903105008D66542B07E78DBC0"
+          ],
+          "canonical_pixel_hashes": [
+            "0E69277A3328A2BA4659444963E90560E87112701FF1088404BFA8E173FD18A9"
+          ],
+          "pass": true
+        },
+        "N105-W4": {
+          "runs": 6,
+          "complete_file_hashes": [
+            "0CF09578B85028DD26D871696F01EEEA6D1675D903105008D66542B07E78DBC0"
+          ],
+          "canonical_pixel_hashes": [
+            "0E69277A3328A2BA4659444963E90560E87112701FF1088404BFA8E173FD18A9"
+          ],
+          "pass": true
+        },
+        "N105-W8": {
+          "runs": 6,
+          "complete_file_hashes": [
+            "0CF09578B85028DD26D871696F01EEEA6D1675D903105008D66542B07E78DBC0"
+          ],
+          "canonical_pixel_hashes": [
+            "0E69277A3328A2BA4659444963E90560E87112701FF1088404BFA8E173FD18A9"
+          ],
+          "pass": true
+        },
+        "N105-W16": {
+          "runs": 6,
+          "complete_file_hashes": [
+            "0CF09578B85028DD26D871696F01EEEA6D1675D903105008D66542B07E78DBC0"
+          ],
+          "canonical_pixel_hashes": [
+            "0E69277A3328A2BA4659444963E90560E87112701FF1088404BFA8E173FD18A9"
+          ],
+          "pass": true
+        },
+        "N299-W1": {
+          "runs": 6,
+          "complete_file_hashes": [
+            "FEFC8008BB030D303BB8C94598FA02BF651F743D35114F92595A3E8761BEA063"
+          ],
+          "canonical_pixel_hashes": [
+            "F3083E5395E23BC5A9F6D7A5E6DF01EDA28D3AF1B97B643A7A3A578E2B151E92"
+          ],
+          "pass": true
+        },
+        "N299-W2": {
+          "runs": 6,
+          "complete_file_hashes": [
+            "FEFC8008BB030D303BB8C94598FA02BF651F743D35114F92595A3E8761BEA063"
+          ],
+          "canonical_pixel_hashes": [
+            "F3083E5395E23BC5A9F6D7A5E6DF01EDA28D3AF1B97B643A7A3A578E2B151E92"
+          ],
+          "pass": true
+        },
+        "N299-W4": {
+          "runs": 6,
+          "complete_file_hashes": [
+            "FEFC8008BB030D303BB8C94598FA02BF651F743D35114F92595A3E8761BEA063"
+          ],
+          "canonical_pixel_hashes": [
+            "F3083E5395E23BC5A9F6D7A5E6DF01EDA28D3AF1B97B643A7A3A578E2B151E92"
+          ],
+          "pass": true
+        },
+        "N299-W8": {
+          "runs": 6,
+          "complete_file_hashes": [
+            "FEFC8008BB030D303BB8C94598FA02BF651F743D35114F92595A3E8761BEA063"
+          ],
+          "canonical_pixel_hashes": [
+            "F3083E5395E23BC5A9F6D7A5E6DF01EDA28D3AF1B97B643A7A3A578E2B151E92"
+          ],
+          "pass": true
+        },
+        "N299-W16": {
+          "runs": 6,
+          "complete_file_hashes": [
+            "FEFC8008BB030D303BB8C94598FA02BF651F743D35114F92595A3E8761BEA063"
+          ],
+          "canonical_pixel_hashes": [
+            "F3083E5395E23BC5A9F6D7A5E6DF01EDA28D3AF1B97B643A7A3A578E2B151E92"
+          ],
+          "pass": true
+        }
+      },
+      "cross_worker": {
+        "33": {
+          "runs": 30,
+          "complete_file_hashes": [
+            "3309E33318C701FB75C55507BFB49AD279D8950492B592EC247DBE2D1193AC9E"
+          ],
+          "canonical_pixel_hashes": [
+            "6EFC261E892DCDB5D492AD3FD79BDC7E5A208D93D0227A41B258FB3B900F9B89"
+          ],
+          "pass": true
+        },
+        "105": {
+          "runs": 30,
+          "complete_file_hashes": [
+            "0CF09578B85028DD26D871696F01EEEA6D1675D903105008D66542B07E78DBC0"
+          ],
+          "canonical_pixel_hashes": [
+            "0E69277A3328A2BA4659444963E90560E87112701FF1088404BFA8E173FD18A9"
+          ],
+          "pass": true
+        },
+        "299": {
+          "runs": 30,
+          "complete_file_hashes": [
+            "FEFC8008BB030D303BB8C94598FA02BF651F743D35114F92595A3E8761BEA063"
+          ],
+          "canonical_pixel_hashes": [
+            "F3083E5395E23BC5A9F6D7A5E6DF01EDA28D3AF1B97B643A7A3A578E2B151E92"
+          ],
+          "pass": true
+        }
+      },
+      "verdict": "PASS"
+    },
+    "peak_n299_over_peak_n33": {
+      "sampled_by_worker": {
+        "1": 1.000041388849577,
+        "2": 1.0001695177686656,
+        "4": 1.0000720248725894,
+        "8": 1.0001772988191633,
+        "16": 1.000796424347678
+      },
+      "job_by_worker": {
+        "1": 1.0000453934342404,
+        "2": 1.0001735207357279,
+        "4": 1.0000773596356094,
+        "8": 1.0001879624075185,
+        "16": 1.000789757918555
+      },
+      "sampled_max": 1.000796424347678,
+      "job_max": 1.000789757918555,
+      "conservative_max": 1.000796424347678,
+      "limit": 1.1,
+      "minimum_sampling_coverage": 0.9903924269718484,
+      "verdict": "UNMEASURED_SAMPLING_COVERAGE"
+    },
+    "n_mod_4_per_frame_spread": {
+      "complete": true,
+      "host_cpu_complete": true,
+      "best_wall_seconds_per_frame_by_n": {
+        "96": 0.7877150041664814,
+        "97": 0.7889721092789617,
+        "98": 0.7905168571433394,
+        "99": 0.7894002626264336
+      },
+      "all_wall_seconds_per_frame_by_n": {
+        "96": [
+          0.879797378124446,
+          0.7895860291670639,
+          0.7877150041664814,
+          0.7959418229159686,
+          0.7999000020827225,
+          0.7968771760412589
+        ],
+        "97": [
+          0.8812398432991612,
+          0.8805187628868506,
+          0.7889721092789617,
+          0.7961932649480697,
+          0.7960917237106729,
+          0.7960856835053005
+        ],
+        "98": [
+          0.8806147489789398,
+          0.8793946102045344,
+          0.7956182234694859,
+          0.7959213459184773,
+          0.7963352173469409,
+          0.7905168571433394
+        ],
+        "99": [
+          0.879800893940182,
+          0.8809134424240752,
+          0.796064794950206,
+          0.7954574232318937,
+          0.7947536262629479,
+          0.7894002626264336
+        ]
+      },
+      "registered_spread": 0.003556937422847176,
+      "reversal_pairs": [
+        {
+          "sweeps": [
+            1,
+            2
+          ],
+          "arithmetic_seconds_per_frame_by_n": {
+            "96": 0.834691703645755,
+            "97": 0.8808793030930059,
+            "98": 0.8800046795917371,
+            "99": 0.8803571681821286
+          },
+          "geometric_seconds_per_frame_by_n": {
+            "96": 0.8334720860741979,
+            "97": 0.8808792293092053,
+            "98": 0.880004468124281,
+            "99": 0.8803569924346739
+          },
+          "arithmetic_spread": 0.05533492096005431,
+          "geometric_spread": 0.05687910132456083,
+          "conservative_spread": 0.05687910132456083
+        },
+        {
+          "sweeps": [
+            3,
+            4
+          ],
+          "arithmetic_seconds_per_frame_by_n": {
+            "96": 0.791828413541225,
+            "97": 0.7925826871135158,
+            "98": 0.7957697846939815,
+            "99": 0.7957611090910499
+          },
+          "geometric_seconds_per_frame_by_n": {
+            "96": 0.7918177292499387,
+            "97": 0.7925744631514328,
+            "98": 0.7957697702609098,
+            "99": 0.795761051143317
+          },
+          "arithmetic_spread": 0.0049775571138320875,
+          "geometric_spread": 0.0049910994222303676,
+          "conservative_spread": 0.0049910994222303676
+        },
+        {
+          "sweeps": [
+            5,
+            6
+          ],
+          "arithmetic_seconds_per_frame_by_n": {
+            "96": 0.7983885890619906,
+            "97": 0.7960887036079867,
+            "98": 0.7934260372451402,
+            "99": 0.7920769444446907
+          },
+          "geometric_seconds_per_frame_by_n": {
+            "96": 0.7983871584482537,
+            "97": 0.7960887036022581,
+            "98": 0.7934207038196456,
+            "99": 0.7920724217489721
+          },
+          "arithmetic_spread": 0.00796847410036017,
+          "geometric_spread": 0.007972423386914639,
+          "conservative_spread": 0.007972423386914639
+        }
+      ],
+      "paired_envelope_lower": 0.0049910994222303676,
+      "paired_envelope_upper": 0.05687910132456083,
+      "verdict": "UNMEASURED_HOST_CONTENTION"
+    }
+  },
+  "partition": {
+    "pass": 1,
+    "fail": 0,
+    "unmeasured": 3,
+    "total": 4
+  },
+  "overall_verdict": "UNMEASURED",
+  "one_line_verdict": "M12 UNMEASURED — warm_peak_process_tree_memory, peak_n299_over_peak_n33, n_mod_4_per_frame_spread"
+}

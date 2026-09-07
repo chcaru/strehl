@@ -1,10 +1,12 @@
 # strehl — status and gaps
 
-> **Current execution entry point (2026-09-06):**
+> **Current execution entry point (2026-09-07):**
 > [SOTA program — current execution plan](proposals/2026-09-sota-program.md).
-> The takeover found an explicit M192 abort after 35/133 invocations, so older
-> descriptions of that campaign as running are superseded. M193's proposed
-> geometry closure failed independent review. M189 remains a restricted
+> The fresh M192 campaign completed all 133 invocations: byte identity PASS;
+> memory, memory scaling, and timing UNMEASURED under the registered admission
+> rules. [Independent terminal review](research/M192-terminal-verification.md).
+> The earlier aborted run is preserved. M193's proposed geometry closure failed
+> independent review. M189 remains a restricted
 > synthetic candidate; M189b confirms its directional-filter limitation.
 > No scorecard axis is promoted by these findings.
 

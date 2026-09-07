@@ -1,0 +1,76 @@
+{
+  "schema": "m192-sidecars-v1",
+  "source": "Byte-for-byte copies of M139's registered, N-isolated sidecars. Every scored invocation revalidates its stack identity and frame count; the M192 terminal witness requires alignment ON (sidecar-override) and N placed / 0 refused.",
+  "sidecars": [
+    {
+      "n": 33,
+      "source_path": "experiments/m12-scorecard/out/campaign-8009447e-m139/cache/n33/bee-1-cpl-1e602b3b331cbbea.warpmap.txt",
+      "artifact_path": "sidecars/n33.warpmap.txt",
+      "bytes": 4915,
+      "sha256": "A4B99B954EF98C0065FC35A36203545AEEF9A50997BC6B53F68BF859D9CE79DF",
+      "header_frames": 33,
+      "header_resampler": "catmull-rom",
+      "measured_executable_validation": "Every registered stack invocation must print alignment ON (sidecar), 33 placed / 0 refused; the terminal witness fails closed otherwise."
+    },
+    {
+      "n": 105,
+      "source_path": "experiments/m12-scorecard/out/campaign-8009447e-m139/cache/n105/coffee-bean-7f42aff657c4458b.warpmap.txt",
+      "artifact_path": "sidecars/n105.warpmap.txt",
+      "bytes": 14591,
+      "sha256": "B21B247944C257AB0FD3C767C879B9ABF4A5FB1112DDED97C87990A7D537274C",
+      "header_frames": 105,
+      "header_resampler": "catmull-rom",
+      "measured_executable_validation": "Every registered stack invocation must print alignment ON (sidecar), 105 placed / 0 refused; the terminal witness fails closed otherwise."
+    },
+    {
+      "n": 299,
+      "source_path": "experiments/m12-scorecard/out/campaign-8009447e-m139/cache/n299/bee-1-cpl-dc827948b70fc943.warpmap.txt",
+      "artifact_path": "sidecars/n299.warpmap.txt",
+      "bytes": 40907,
+      "sha256": "FCF607CC9381A10A29DB62F07223BA6B85E14498AA56C213212E55AD0BE2AE7F",
+      "header_frames": 299,
+      "header_resampler": "catmull-rom",
+      "measured_executable_validation": "Every registered stack invocation must print alignment ON (sidecar), 299 placed / 0 refused; the terminal witness fails closed otherwise."
+    },
+    {
+      "n": 96,
+      "source_path": "experiments/m12-scorecard/out/campaign-8009447e-m139/cache/n96/bee-1-cpl-bd55f708c61373be.warpmap.txt",
+      "artifact_path": "sidecars/n96.warpmap.txt",
+      "bytes": 13382,
+      "sha256": "D75F34686AAF5B60595582F9B05BEDFF6B8A1FA03F56C3A53DDD4B5AEA741643",
+      "header_frames": 96,
+      "header_resampler": "catmull-rom",
+      "measured_executable_validation": "Every registered stack invocation must print alignment ON (sidecar), 96 placed / 0 refused; the terminal witness fails closed otherwise."
+    },
+    {
+      "n": 97,
+      "source_path": "experiments/m12-scorecard/out/campaign-8009447e-m139/cache/n97/bee-1-cpl-bd55f708c61373be.warpmap.txt",
+      "artifact_path": "sidecars/n97.warpmap.txt",
+      "bytes": 13514,
+      "sha256": "885B2E273A08F3B12ECC199EA7286CED40D03364BA46472B0FE4ED38698D81B6",
+      "header_frames": 97,
+      "header_resampler": "catmull-rom",
+      "measured_executable_validation": "Every registered stack invocation must print alignment ON (sidecar), 97 placed / 0 refused; the terminal witness fails closed otherwise."
+    },
+    {
+      "n": 98,
+      "source_path": "experiments/m12-scorecard/out/campaign-8009447e-m139/cache/n98/bee-1-cpl-69ba470a1f472c0d.warpmap.txt",
+      "artifact_path": "sidecars/n98.warpmap.txt",
+      "bytes": 13652,
+      "sha256": "DAAC4C1803F6FE65F336CFE21D73C75FD82DEF91A81867B2360DB54C038E9AD6",
+      "header_frames": 98,
+      "header_resampler": "catmull-rom",
+      "measured_executable_validation": "Every registered stack invocation must print alignment ON (sidecar), 98 placed / 0 refused; the terminal witness fails closed otherwise."
+    },
+    {
+      "n": 99,
+      "source_path": "experiments/m12-scorecard/out/campaign-8009447e-m139/cache/n99/bee-1-cpl-69ba470a1f472c0d.warpmap.txt",
+      "artifact_path": "sidecars/n99.warpmap.txt",
+      "bytes": 13784,
+      "sha256": "2DAC7220B56EF459C2C0013BE247A5AC0A7F0AD838D0A5E5F814B9EC9ACCE64B",
+      "header_frames": 99,
+      "header_resampler": "catmull-rom",
+      "measured_executable_validation": "Every registered stack invocation must print alignment ON (sidecar), 99 placed / 0 refused; the terminal witness fails closed otherwise."
+    }
+  ]
+}

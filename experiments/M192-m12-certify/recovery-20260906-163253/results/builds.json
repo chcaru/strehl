@@ -1,0 +1,87 @@
+{
+  "schema": "m192-builds-v1",
+  "lineage_proof": {
+    "measured_commit": "e93f0bde695961d53cbd66587a060a41552b4a63",
+    "measured_tree": "27055ece0a5c9ad1d7b0c8bee380669ddf720cfe",
+    "ancestry": {
+      "fc2abb499126a56302de7f21f527de5613be34e7": true,
+      "a97275817c58e164f75c7cd3d80ca99444a2a145": true
+    },
+    "repair_owned_diff_bytes": 0,
+    "working_tree_crate_status_ignored_because_build_uses_git_archive": "",
+    "monitor": {
+      "path": "experiments/m12-scorecard/m12-harness.py",
+      "checkout_sha256_crlf": "6CFB408992F37B225F102DA4D62BA836F9C5B67C92BDD418FF460987866A1BB9",
+      "git_blob_sha256_lf": "1E701A80C02400E539264254476DD9A7C38E5A9FC9FEFC9D5407F904F6CEB7EE",
+      "git_blob_oid_lf": "a27688956e4c0f5cd079e12c8e25639911cc1b50"
+    }
+  },
+  "unrepaired": {
+    "label": "unrepaired",
+    "commit": "1a6fd10c94dcb4b780f6af78c46c62a156c39b71",
+    "tree": "0d4cce57dfa10a5aa9917df863a8bb4bc8c7ea9d",
+    "archive_sha256": "08FF3C86226BE0BE5115CA1CF333A592A567FE9D915627B44C50D06A0EE7DF08",
+    "archive_bytes": 372910080,
+    "binary_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M192-m12-certify\\recovery-20260906-163253\\work\\builds\\unrepaired\\bin\\strehl.exe",
+    "binary_bytes": 9866240,
+    "binary_sha256": "6A6E41D3066AF018B1136505E1D50E6871236FB5927035DEB1910E324BCE280E",
+    "version_output": "strehl 0.0.0 (1a6fd10c94dcb4b780f6af78c46c62a156c39b71)",
+    "build_command": [
+      "cargo",
+      "build",
+      "--release",
+      "--locked",
+      "--jobs",
+      "4",
+      "--package",
+      "strehl-cli",
+      "--manifest-path",
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M192-m12-certify\\recovery-20260906-163253\\work\\builds\\unrepaired\\source\\Cargo.toml"
+    ],
+    "build_environment": {
+      "CARGO_TARGET_DIR": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M192-m12-certify\\recovery-20260906-163253\\work\\builds\\unrepaired\\target",
+      "CARGO_INCREMENTAL": "0",
+      "CARGO_BUILD_JOBS": "4",
+      "STREHL_BUILD_ID": "1a6fd10c94dcb4b780f6af78c46c62a156c39b71"
+    },
+    "build_log_sha256": "94594945B86260F51A762750EBDB5AAB85673D3696B1A65DA1600D95808886E6",
+    "rustc_version": "rustc 1.98.0 (88d9e12ae 2026-08-18)",
+    "cargo_version": "cargo 1.98.0 (797e8a9bc 2026-08-05)",
+    "completed_utc": "2026-09-06T23:34:29.709459+00:00",
+    "build_log": "build-logs/unrepaired.log"
+  },
+  "measured": {
+    "label": "measured",
+    "commit": "e93f0bde695961d53cbd66587a060a41552b4a63",
+    "tree": "27055ece0a5c9ad1d7b0c8bee380669ddf720cfe",
+    "archive_sha256": "9DB3CBDCCD859F41C0057705CD1971BF62219B66D57FAF2694E72ED474AEBA46",
+    "archive_bytes": 557066240,
+    "binary_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M192-m12-certify\\recovery-20260906-163253\\work\\builds\\measured\\bin\\strehl.exe",
+    "binary_bytes": 10043904,
+    "binary_sha256": "89482ACD60C4E39A22F763B2E722754804430E955546EA96F7AE7CA4C7EA1032",
+    "version_output": "strehl 0.0.0 (e93f0bde695961d53cbd66587a060a41552b4a63)",
+    "build_command": [
+      "cargo",
+      "build",
+      "--release",
+      "--locked",
+      "--jobs",
+      "4",
+      "--package",
+      "strehl-cli",
+      "--manifest-path",
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M192-m12-certify\\recovery-20260906-163253\\work\\builds\\measured\\source\\Cargo.toml"
+    ],
+    "build_environment": {
+      "CARGO_TARGET_DIR": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M192-m12-certify\\recovery-20260906-163253\\work\\builds\\measured\\target",
+      "CARGO_INCREMENTAL": "0",
+      "CARGO_BUILD_JOBS": "4",
+      "STREHL_BUILD_ID": "e93f0bde695961d53cbd66587a060a41552b4a63"
+    },
+    "build_log_sha256": "F36A440BB14365E58C9D2C38AE760DCB6CD0A80B2946D084D773EA26BE196AF7",
+    "rustc_version": "rustc 1.98.0 (88d9e12ae 2026-08-18)",
+    "cargo_version": "cargo 1.98.0 (797e8a9bc 2026-08-05)",
+    "completed_utc": "2026-09-06T23:35:59.095700+00:00",
+    "build_log": "build-logs/measured.log"
+  }
+}

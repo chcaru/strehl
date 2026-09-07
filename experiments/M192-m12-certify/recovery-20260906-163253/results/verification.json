@@ -1,0 +1,15 @@
+{
+  "schema": "m192-verification-v1",
+  "status": "PASS",
+  "record_count": 133,
+  "binary_sha256": "89482ACD60C4E39A22F763B2E722754804430E955546EA96F7AE7CA4C7EA1032",
+  "minimum_sampling_coverage": 0.9903924269718484,
+  "maximum_sampling_gap_ms": 1163.6997000314295,
+  "partition": {
+    "pass": 1,
+    "fail": 0,
+    "unmeasured": 3,
+    "total": 4
+  },
+  "overall_verdict": "UNMEASURED"
+}

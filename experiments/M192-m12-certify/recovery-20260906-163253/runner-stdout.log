@@ -1,0 +1,551 @@
+[build] unrepaired 1a6fd10c94dc
+[build] measured e93f0bde6959
+[inputs] hashing pre-campaign selection
+[inputs:before] hashed 50/404
+[inputs:before] hashed 100/404
+[inputs:before] hashed 150/404
+[inputs:before] hashed 200/404
+[inputs:before] hashed 250/404
+[inputs:before] hashed 300/404
+[inputs:before] hashed 350/404
+[inputs:before] hashed 400/404
+[commission] all planted defects fired
+[run 001/133] native-n33-w1-warmup wall=110.29s peak=2.8573GiB coverage=0.999728 host_mean=6.4% hash=3309E33318C7
+[run 002/133] native-n33-w2-warmup wall=65.54s peak=2.8572GiB coverage=0.999542 host_mean=7.0% hash=3309E33318C7
+[run 003/133] native-n33-w4-warmup wall=42.67s peak=2.8592GiB coverage=0.999297 host_mean=10.3% hash=3309E33318C7
+[run 004/133] native-n33-w8-warmup wall=31.68s peak=2.8617GiB coverage=0.999369 host_mean=15.0% hash=3309E33318C7
+[run 005/133] native-n33-w16-warmup wall=26.59s peak=2.8634GiB coverage=0.998496 host_mean=22.1% hash=3309E33318C7
+[run 006/133] native-n33-w1-r1 wall=109.85s peak=2.8572GiB coverage=0.999727 host_mean=4.3% hash=3309E33318C7
+[run 007/133] native-n33-w2-r1 wall=65.33s peak=2.8571GiB coverage=0.999541 host_mean=6.9% hash=3309E33318C7
+[run 008/133] native-n33-w4-r1 wall=42.71s peak=2.8581GiB coverage=0.999298 host_mean=10.5% hash=3309E33318C7
+[run 009/133] native-n33-w8-r1 wall=31.71s peak=2.8607GiB coverage=0.998739 host_mean=14.9% hash=3309E33318C7
+[run 010/133] native-n33-w16-r1 wall=26.56s peak=2.8633GiB coverage=0.998495 host_mean=21.8% hash=3309E33318C7
+[run 011/133] native-n33-w16-r2 wall=26.50s peak=2.8639GiB coverage=0.999246 host_mean=22.3% hash=3309E33318C7
+[run 012/133] native-n33-w8-r2 wall=31.67s peak=2.8600GiB coverage=0.999369 host_mean=15.0% hash=3309E33318C7
+[run 013/133] native-n33-w4-r2 wall=42.69s peak=2.8591GiB coverage=0.999532 host_mean=10.6% hash=3309E33318C7
+[run 014/133] native-n33-w2-r2 wall=65.38s peak=2.8573GiB coverage=0.999694 host_mean=7.4% hash=3309E33318C7
+[run 015/133] native-n33-w1-r2 wall=109.62s peak=2.8569GiB coverage=0.999818 host_mean=4.5% hash=3309E33318C7
+[run 016/133] native-n33-w1-r3 wall=109.89s peak=2.8571GiB coverage=0.999818 host_mean=4.8% hash=3309E33318C7
+[run 017/133] native-n33-w2-r3 wall=65.37s peak=2.8579GiB coverage=0.999541 host_mean=6.9% hash=3309E33318C7
+[run 018/133] native-n33-w4-r3 wall=42.59s peak=2.8601GiB coverage=0.999765 host_mean=10.5% hash=3309E33318C7
+[run 019/133] native-n33-w8-r3 wall=31.69s peak=2.8614GiB coverage=0.999369 host_mean=15.0% hash=3309E33318C7
+[run 020/133] native-n33-w16-r3 wall=26.43s peak=2.8629GiB coverage=0.998487 host_mean=22.1% hash=3309E33318C7
+[run 021/133] native-n33-w16-r4 wall=26.48s peak=2.8643GiB coverage=0.999245 host_mean=21.9% hash=3309E33318C7
+[run 022/133] native-n33-w8-r4 wall=31.71s peak=2.8608GiB coverage=0.999054 host_mean=15.1% hash=3309E33318C7
+[run 023/133] native-n33-w4-r4 wall=42.66s peak=2.8588GiB coverage=0.999297 host_mean=10.7% hash=3309E33318C7
+[run 024/133] native-n33-w2-r4 wall=65.42s peak=2.8575GiB coverage=0.999694 host_mean=6.9% hash=3309E33318C7
+[run 025/133] native-n33-w1-r4 wall=109.87s peak=2.8572GiB coverage=0.999818 host_mean=4.5% hash=3309E33318C7
+[run 026/133] native-n33-w1-r5 wall=109.60s peak=2.8568GiB coverage=0.999726 host_mean=4.3% hash=3309E33318C7
+[run 027/133] native-n33-w2-r5 wall=65.38s peak=2.8576GiB coverage=0.999541 host_mean=6.9% hash=3309E33318C7
+[run 028/133] native-n33-w4-r5 wall=42.60s peak=2.8596GiB coverage=0.999296 host_mean=10.3% hash=3309E33318C7
+[run 029/133] native-n33-w8-r5 wall=31.64s peak=2.8616GiB coverage=0.999368 host_mean=15.1% hash=3309E33318C7
+[run 030/133] native-n33-w16-r5 wall=26.51s peak=2.8633GiB coverage=0.999246 host_mean=22.0% hash=3309E33318C7
+[run 031/133] native-n33-w16-r6 wall=26.56s peak=2.8639GiB coverage=0.998495 host_mean=22.1% hash=3309E33318C7
+[run 032/133] native-n33-w8-r6 wall=31.67s peak=2.8603GiB coverage=0.999053 host_mean=14.6% hash=3309E33318C7
+[run 033/133] native-n33-w4-r6 wall=42.63s peak=2.8588GiB coverage=0.999296 host_mean=10.4% hash=3309E33318C7
+[run 034/133] native-n33-w2-r6 wall=65.36s peak=2.8570GiB coverage=0.999694 host_mean=7.0% hash=3309E33318C7
+[run 035/133] native-n33-w1-r6 wall=109.70s peak=2.8571GiB coverage=0.999635 host_mean=4.5% hash=3309E33318C7
+[run 036/133] native-n105-w1-warmup wall=349.15s peak=2.8569GiB coverage=0.999914 host_mean=4.5% hash=0CF09578B850
+[run 037/133] native-n105-w2-warmup wall=203.76s peak=2.8570GiB coverage=0.999853 host_mean=6.8% hash=0CF09578B850
+[run 038/133] native-n105-w4-warmup wall=134.04s peak=2.8593GiB coverage=0.999776 host_mean=10.4% hash=0CF09578B850
+[run 039/133] native-n105-w8-warmup wall=99.06s peak=2.8601GiB coverage=0.999697 host_mean=14.9% hash=0CF09578B850
+[run 040/133] native-n105-w16-warmup wall=82.54s peak=2.8639GiB coverage=0.999637 host_mean=21.6% hash=0CF09578B850
+[run 041/133] native-n105-w1-r1 wall=349.22s peak=2.8570GiB coverage=0.999971 host_mean=4.3% hash=0CF09578B850
+[run 042/133] native-n105-w2-r1 wall=204.49s peak=2.8567GiB coverage=0.999804 host_mean=6.8% hash=0CF09578B850
+[run 043/133] native-n105-w4-r1 wall=134.02s peak=2.8593GiB coverage=0.999776 host_mean=10.3% hash=0CF09578B850
+[run 044/133] native-n105-w8-r1 wall=99.20s peak=2.8600GiB coverage=0.999698 host_mean=16.0% hash=0CF09578B850
+[run 045/133] native-n105-w16-r1 wall=82.14s peak=2.8637GiB coverage=0.999513 host_mean=21.8% hash=0CF09578B850
+[run 046/133] native-n105-w16-r2 wall=82.23s peak=2.8637GiB coverage=0.999878 host_mean=21.3% hash=0CF09578B850
+[run 047/133] native-n105-w8-r2 wall=99.13s peak=2.8608GiB coverage=0.999697 host_mean=14.8% hash=0CF09578B850
+[run 048/133] native-n105-w4-r2 wall=134.50s peak=2.8583GiB coverage=0.999703 host_mean=10.3% hash=0CF09578B850
+[run 049/133] native-n105-w2-r2 wall=206.94s peak=2.8574GiB coverage=0.999903 host_mean=6.8% hash=0CF09578B850
+[run 050/133] native-n105-w1-r2 wall=349.19s peak=2.8571GiB coverage=0.999914 host_mean=4.3% hash=0CF09578B850
+[run 051/133] native-n105-w1-r3 wall=348.70s peak=2.8567GiB coverage=0.999885 host_mean=4.3% hash=0CF09578B850
+[run 052/133] native-n105-w2-r3 wall=206.86s peak=2.8572GiB coverage=0.999855 host_mean=6.8% hash=0CF09578B850
+[run 053/133] native-n105-w4-r3 wall=134.07s peak=2.8585GiB coverage=0.999776 host_mean=10.2% hash=0CF09578B850
+[run 054/133] native-n105-w8-r3 wall=99.08s peak=2.8610GiB coverage=0.999596 host_mean=14.9% hash=0CF09578B850
+[run 055/133] native-n105-w16-r3 wall=82.50s peak=2.8641GiB coverage=0.999636 host_mean=22.2% hash=0CF09578B850
+[run 056/133] native-n105-w16-r4 wall=82.25s peak=2.8631GiB coverage=0.999514 host_mean=21.7% hash=0CF09578B850
+[run 057/133] native-n105-w8-r4 wall=99.06s peak=2.8613GiB coverage=0.999798 host_mean=15.0% hash=0CF09578B850
+[run 058/133] native-n105-w4-r4 wall=133.94s peak=2.8587GiB coverage=0.999776 host_mean=10.2% hash=0CF09578B850
+[run 059/133] native-n105-w2-r4 wall=205.26s peak=2.8572GiB coverage=0.999903 host_mean=6.7% hash=0CF09578B850
+[run 060/133] native-n105-w1-r4 wall=348.15s peak=2.8566GiB coverage=0.999914 host_mean=4.3% hash=0CF09578B850
+[run 061/133] native-n105-w1-r5 wall=348.15s peak=2.8568GiB coverage=0.999885 host_mean=4.3% hash=0CF09578B850
+[run 062/133] native-n105-w2-r5 wall=205.36s peak=2.8573GiB coverage=0.999903 host_mean=6.7% hash=0CF09578B850
+[run 063/133] native-n105-w4-r5 wall=133.75s peak=2.8590GiB coverage=0.999776 host_mean=10.2% hash=0CF09578B850
+[run 064/133] native-n105-w8-r5 wall=98.85s peak=2.8616GiB coverage=0.999697 host_mean=14.7% hash=0CF09578B850
+[run 065/133] native-n105-w16-r5 wall=82.28s peak=2.8638GiB coverage=0.999757 host_mean=21.3% hash=0CF09578B850
+[run 066/133] native-n105-w16-r6 wall=82.96s peak=2.8644GiB coverage=0.999759 host_mean=23.4% hash=0CF09578B850
+[run 067/133] native-n105-w8-r6 wall=99.22s peak=2.8604GiB coverage=0.999597 host_mean=16.0% hash=0CF09578B850
+[run 068/133] native-n105-w4-r6 wall=133.92s peak=2.8598GiB coverage=0.999701 host_mean=10.2% hash=0CF09578B850
+[run 069/133] native-n105-w2-r6 wall=204.17s peak=2.8574GiB coverage=0.999853 host_mean=6.7% hash=0CF09578B850
+[run 070/133] native-n105-w1-r6 wall=348.05s peak=2.8567GiB coverage=0.999914 host_mean=4.3% hash=0CF09578B850
+[run 071/133] native-n299-w1-warmup wall=984.39s peak=2.8572GiB coverage=0.999970 host_mean=4.2% hash=FEFC8008BB03
+[run 072/133] native-n299-w2-warmup wall=576.83s peak=2.8575GiB coverage=0.999965 host_mean=6.7% hash=FEFC8008BB03
+[run 073/133] native-n299-w4-warmup wall=377.61s peak=2.8604GiB coverage=0.999921 host_mean=10.2% hash=FEFC8008BB03
+[run 074/133] native-n299-w8-warmup wall=279.18s peak=2.8615GiB coverage=0.999857 host_mean=14.7% hash=FEFC8008BB03
+[run 075/133] native-n299-w16-warmup wall=231.94s peak=2.8668GiB coverage=0.999871 host_mean=21.8% hash=FEFC8008BB03
+[run 076/133] native-n299-w1-r1 wall=985.08s peak=2.8571GiB coverage=0.999970 host_mean=4.4% hash=FEFC8008BB03
+[run 077/133] native-n299-w2-r1 wall=581.59s peak=2.8580GiB coverage=0.999948 host_mean=7.9% hash=FEFC8008BB03
+[run 078/133] native-n299-w4-r1 wall=379.37s peak=2.8602GiB coverage=0.999921 host_mean=11.1% hash=FEFC8008BB03
+[run 079/133] native-n299-w8-r1 wall=280.85s peak=2.8621GiB coverage=0.999929 host_mean=15.7% hash=FEFC8008BB03
+[run 080/133] native-n299-w16-r1 wall=234.44s peak=2.8666GiB coverage=0.999872 host_mean=22.6% hash=FEFC8008BB03
+[run 081/133] native-n299-w16-r2 wall=235.76s peak=2.8648GiB coverage=0.999915 host_mean=23.9% hash=FEFC8008BB03
+[run 082/133] native-n299-w8-r2 wall=281.31s peak=2.8620GiB coverage=0.999893 host_mean=17.0% hash=FEFC8008BB03
+[run 083/133] native-n299-w4-r2 wall=382.47s peak=2.8595GiB coverage=0.999948 host_mean=11.4% hash=FEFC8008BB03
+[run 084/133] native-n299-w2-r2 wall=583.78s peak=2.8572GiB coverage=0.999966 host_mean=7.3% hash=FEFC8008BB03
+[run 085/133] native-n299-w1-r2 wall=985.94s peak=2.8572GiB coverage=0.999970 host_mean=4.3% hash=FEFC8008BB03
+[run 086/133] native-n299-w1-r3 wall=985.76s peak=2.8572GiB coverage=0.999970 host_mean=4.3% hash=FEFC8008BB03
+[run 087/133] native-n299-w2-r3 wall=578.31s peak=2.8582GiB coverage=0.999948 host_mean=6.7% hash=FEFC8008BB03
+[run 088/133] native-n299-w4-r3 wall=379.86s peak=2.8589GiB coverage=0.999921 host_mean=10.2% hash=FEFC8008BB03
+[run 089/133] native-n299-w8-r3 wall=283.10s peak=2.8616GiB coverage=0.990392 host_mean=16.0% hash=FEFC8008BB03
+[run 090/133] native-n299-w16-r3 wall=234.37s peak=2.8641GiB coverage=0.999872 host_mean=21.6% hash=FEFC8008BB03
+[run 091/133] native-n299-w16-r4 wall=234.29s peak=2.8639GiB coverage=0.999829 host_mean=21.7% hash=FEFC8008BB03
+[run 092/133] native-n299-w8-r4 wall=281.09s peak=2.8615GiB coverage=0.999929 host_mean=14.7% hash=FEFC8008BB03
+[run 093/133] native-n299-w4-r4 wall=379.74s peak=2.8603GiB coverage=0.999921 host_mean=10.5% hash=FEFC8008BB03
+[run 094/133] native-n299-w2-r4 wall=759.07s peak=2.8584GiB coverage=0.999947 host_mean=7.1% hash=FEFC8008BB03
+[run 095/133] native-n299-w1-r4 wall=1058.11s peak=2.8571GiB coverage=0.999991 host_mean=6.4% hash=FEFC8008BB03
+[run 096/133] native-n299-w1-r5 wall=1027.67s peak=2.8574GiB coverage=0.999971 host_mean=5.9% hash=FEFC8008BB03
+[run 097/133] native-n299-w2-r5 wall=627.05s peak=2.8582GiB coverage=0.999952 host_mean=10.5% hash=FEFC8008BB03
+[run 098/133] native-n299-w4-r5 wall=381.46s peak=2.8598GiB coverage=0.999948 host_mean=11.5% hash=FEFC8008BB03
+[run 099/133] native-n299-w8-r5 wall=333.67s peak=2.8621GiB coverage=0.999940 host_mean=16.9% hash=FEFC8008BB03
+[run 100/133] native-n299-w16-r5 wall=263.21s peak=2.8638GiB coverage=0.999962 host_mean=24.4% hash=FEFC8008BB03
+[run 101/133] native-n299-w16-r6 wall=263.43s peak=2.8655GiB coverage=1.000000 host_mean=24.3% hash=FEFC8008BB03
+[run 102/133] native-n299-w8-r6 wall=339.16s peak=2.8615GiB coverage=0.997140 host_mean=17.0% hash=FEFC8008BB03
+[run 103/133] native-n299-w4-r6 wall=487.94s peak=2.8593GiB coverage=0.999959 host_mean=10.8% hash=FEFC8008BB03
+[run 104/133] native-n299-w2-r6 wall=809.01s peak=2.8575GiB coverage=0.999975 host_mean=6.8% hash=FEFC8008BB03
+[run 105/133] native-n299-w1-r6 wall=1001.07s peak=2.8569GiB coverage=0.999990 host_mean=4.3% hash=FEFC8008BB03
+[run 106/133] modulo-n96-warmup wall=84.57s peak=2.8629GiB coverage=0.999882 host_mean=23.9% hash=BCE21DF4F707
+[run 107/133] modulo-n97-warmup wall=85.44s peak=2.8628GiB coverage=0.999766 host_mean=24.0% hash=6F4230B4AA98
+[run 108/133] modulo-n98-warmup wall=86.36s peak=2.8629GiB coverage=0.999884 host_mean=24.0% hash=723944FCB56A
+[run 109/133] modulo-n99-warmup wall=87.12s peak=2.8633GiB coverage=1.000000 host_mean=23.9% hash=E9CA0FBFD27A
+[sweep] modulo-warmup host mean=23.9% peak=29.5% external=1.7%
+[run 110/133] modulo-n96-r1 wall=84.46s peak=2.8631GiB coverage=0.999763 host_mean=23.8% hash=BCE21DF4F707
+[run 111/133] modulo-n97-r1 wall=85.48s peak=2.8633GiB coverage=0.999883 host_mean=23.9% hash=6F4230B4AA98
+[run 112/133] modulo-n98-r1 wall=86.30s peak=2.8637GiB coverage=0.999884 host_mean=23.9% hash=723944FCB56A
+[run 113/133] modulo-n99-r1 wall=87.10s peak=2.8635GiB coverage=0.999885 host_mean=23.7% hash=E9CA0FBFD27A
+[sweep] modulo-r1 host mean=23.8% peak=29.2% external=1.6%
+[run 114/133] modulo-n99-r2 wall=87.21s peak=2.8637GiB coverage=0.999771 host_mean=23.8% hash=E9CA0FBFD27A
+[run 115/133] modulo-n98-r2 wall=86.18s peak=2.8633GiB coverage=0.999884 host_mean=23.9% hash=723944FCB56A
+[run 116/133] modulo-n97-r2 wall=85.41s peak=2.8636GiB coverage=0.999766 host_mean=24.1% hash=6F4230B4AA98
+[run 117/133] modulo-n96-r2 wall=75.80s peak=2.8637GiB coverage=0.999736 host_mean=21.5% hash=BCE21DF4F707
+[sweep] modulo-r2 host mean=23.3% peak=29.9% external=1.7%
+[run 118/133] modulo-n96-r3 wall=75.62s peak=2.8635GiB coverage=0.999603 host_mean=21.8% hash=BCE21DF4F707
+[run 119/133] modulo-n97-r3 wall=76.53s peak=2.8645GiB coverage=0.999739 host_mean=21.4% hash=6F4230B4AA98
+[run 120/133] modulo-n98-r3 wall=77.97s peak=2.8647GiB coverage=0.999872 host_mean=23.1% hash=723944FCB56A
+[run 121/133] modulo-n99-r3 wall=78.81s peak=2.8643GiB coverage=0.999873 host_mean=23.4% hash=E9CA0FBFD27A
+[sweep] modulo-r3 host mean=22.4% peak=34.9% external=2.7%
+[run 122/133] modulo-n99-r4 wall=78.75s peak=2.8659GiB coverage=0.999746 host_mean=23.4% hash=E9CA0FBFD27A
+[run 123/133] modulo-n98-r4 wall=78.00s peak=2.8647GiB coverage=0.999615 host_mean=23.7% hash=723944FCB56A
+[run 124/133] modulo-n97-r4 wall=77.23s peak=2.8643GiB coverage=0.999741 host_mean=23.6% hash=6F4230B4AA98
+[run 125/133] modulo-n96-r4 wall=76.41s peak=2.8638GiB coverage=0.999607 host_mean=23.8% hash=BCE21DF4F707
+[sweep] modulo-r4 host mean=23.5% peak=31.3% external=3.8%
+[run 126/133] modulo-n96-r5 wall=76.79s peak=2.8635GiB coverage=0.999609 host_mean=23.5% hash=BCE21DF4F707
+[run 127/133] modulo-n97-r5 wall=77.22s peak=2.8635GiB coverage=0.999741 host_mean=23.5% hash=6F4230B4AA98
+[run 128/133] modulo-n98-r5 wall=78.04s peak=2.8639GiB coverage=0.999616 host_mean=23.7% hash=723944FCB56A
+[run 129/133] modulo-n99-r5 wall=78.68s peak=2.8650GiB coverage=0.999619 host_mean=24.0% hash=E9CA0FBFD27A
+[sweep] modulo-r5 host mean=23.6% peak=35.5% external=3.8%
+[run 130/133] modulo-n99-r6 wall=78.15s peak=2.8640GiB coverage=0.999616 host_mean=22.3% hash=E9CA0FBFD27A
+[run 131/133] modulo-n98-r6 wall=77.47s peak=2.8651GiB coverage=0.999613 host_mean=22.4% hash=723944FCB56A
+[run 132/133] modulo-n97-r6 wall=77.22s peak=2.8645GiB coverage=0.999741 host_mean=23.5% hash=6F4230B4AA98
+[run 133/133] modulo-n96-r6 wall=76.50s peak=2.8637GiB coverage=0.999608 host_mean=23.5% hash=BCE21DF4F707
+[sweep] modulo-r6 host mean=22.9% peak=33.9% external=3.2%
+[inputs] hashing post-campaign selection
+[inputs:after] hashed 50/404
+[inputs:after] hashed 100/404
+[inputs:after] hashed 150/404
+[inputs:after] hashed 200/404
+[inputs:after] hashed 250/404
+[inputs:after] hashed 300/404
+[inputs:after] hashed 350/404
+[inputs:after] hashed 400/404
+{
+  "schema": "m192-m12-certificate-v1",
+  "campaign_id": "4c72e520-b93e-4781-999f-0947486ddc44",
+  "generated_utc": "2026-09-07T07:30:51.328978+00:00",
+  "lineage": {
+    "measured_commit": "e93f0bde695961d53cbd66587a060a41552b4a63",
+    "measured_tree": "27055ece0a5c9ad1d7b0c8bee380669ddf720cfe",
+    "binary_sha256": "89482ACD60C4E39A22F763B2E722754804430E955546EA96F7AE7CA4C7EA1032",
+    "binary_bytes": 10043904,
+    "version_output": "strehl 0.0.0 (e93f0bde695961d53cbd66587a060a41552b4a63)",
+    "d9_repair_commit": "fc2abb499126a56302de7f21f527de5613be34e7",
+    "bounded_memory_repair_commit": "a97275817c58e164f75c7cd3d80ca99444a2a145",
+    "repair_owned_diff_bytes": 0
+  },
+  "protocol_sha256_checkout": "E10723DDEF7D60D7A4C202E726ED998BB4CC7FF95FB3B6ABAA203D98219D9898",
+  "records": {
+    "count": 133,
+    "sha256": "790D87CA85DAAE79709769A7D6D1B249542B6B235647C5C5A5019B206D3B5568",
+    "last_record_sha256": "7848A3DED245B0D5250F2443D6C3AA741DE8B644115B6E924DE0B3F06D6ED69E"
+  },
+  "configuration": {
+    "arguments_after_output": [
+      "--merge",
+      "pyramid",
+      "--pyramid-gate",
+      "2.0",
+      "--resampler",
+      "catmull-rom",
+      "--cover",
+      "scale",
+      "--linear-srgb",
+      "--demosaic"
+    ],
+    "alignment": "on through a hash-pinned STREHL_WARPMAP outside the capture tree; the product reports sidecar-override",
+    "worker_control": "STREHL_PYRAMID_WORKERS",
+    "cache": "M192-local and N-isolated",
+    "temp": "M192-local and invocation-isolated",
+    "output": "uncompressed full-sensor 16-bit linear-sRGB TIFF",
+    "environment": "All STREHL_ and thread-control variables are cleared before the recorded worker, cache, temp, and sidecar variables are set."
+  },
+  "sampling_quality": {
+    "pass": false,
+    "minimum_coverage": 0.9903924269718484,
+    "maximum_gap_ms": 1163.6997000314295,
+    "failed_runs": [
+      "native-n299-w8-r3",
+      "native-n299-w8-r6"
+    ]
+  },
+  "bars": {
+    "warm_peak_process_tree_memory": {
+      "sampled_peak_bytes": 3077955584,
+      "job_peak_bytes": 3077963776,
+      "limit_bytes": 6442450944,
+      "sampling_minimum_coverage": 0.9903924269718484,
+      "sampling_maximum_gap_ms": 1163.6997000314295,
+      "verdict": "UNMEASURED_SAMPLING_COVERAGE"
+    },
+    "byte_identity": {
+      "fixed_worker": {
+        "N33-W1": {
+          "runs": 6,
+          "complete_file_hashes": [
+            "3309E33318C701FB75C55507BFB49AD279D8950492B592EC247DBE2D1193AC9E"
+          ],
+          "canonical_pixel_hashes": [
+            "6EFC261E892DCDB5D492AD3FD79BDC7E5A208D93D0227A41B258FB3B900F9B89"
+          ],
+          "pass": true
+        },
+        "N33-W2": {
+          "runs": 6,
+          "complete_file_hashes": [
+            "3309E33318C701FB75C55507BFB49AD279D8950492B592EC247DBE2D1193AC9E"
+          ],
+          "canonical_pixel_hashes": [
+            "6EFC261E892DCDB5D492AD3FD79BDC7E5A208D93D0227A41B258FB3B900F9B89"
+          ],
+          "pass": true
+        },
+        "N33-W4": {
+          "runs": 6,
+          "complete_file_hashes": [
+            "3309E33318C701FB75C55507BFB49AD279D8950492B592EC247DBE2D1193AC9E"
+          ],
+          "canonical_pixel_hashes": [
+            "6EFC261E892DCDB5D492AD3FD79BDC7E5A208D93D0227A41B258FB3B900F9B89"
+          ],
+          "pass": true
+        },
+        "N33-W8": {
+          "runs": 6,
+          "complete_file_hashes": [
+            "3309E33318C701FB75C55507BFB49AD279D8950492B592EC247DBE2D1193AC9E"
+          ],
+          "canonical_pixel_hashes": [
+            "6EFC261E892DCDB5D492AD3FD79BDC7E5A208D93D0227A41B258FB3B900F9B89"
+          ],
+          "pass": true
+        },
+        "N33-W16": {
+          "runs": 6,
+          "complete_file_hashes": [
+            "3309E33318C701FB75C55507BFB49AD279D8950492B592EC247DBE2D1193AC9E"
+          ],
+          "canonical_pixel_hashes": [
+            "6EFC261E892DCDB5D492AD3FD79BDC7E5A208D93D0227A41B258FB3B900F9B89"
+          ],
+          "pass": true
+        },
+        "N105-W1": {
+          "runs": 6,
+          "complete_file_hashes": [
+            "0CF09578B85028DD26D871696F01EEEA6D1675D903105008D66542B07E78DBC0"
+          ],
+          "canonical_pixel_hashes": [
+            "0E69277A3328A2BA4659444963E90560E87112701FF1088404BFA8E173FD18A9"
+          ],
+          "pass": true
+        },
+        "N105-W2": {
+          "runs": 6,
+          "complete_file_hashes": [
+            "0CF09578B85028DD26D871696F01EEEA6D1675D903105008D66542B07E78DBC0"
+          ],
+          "canonical_pixel_hashes": [
+            "0E69277A3328A2BA4659444963E90560E87112701FF1088404BFA8E173FD18A9"
+          ],
+          "pass": true
+        },
+        "N105-W4": {
+          "runs": 6,
+          "complete_file_hashes": [
+            "0CF09578B85028DD26D871696F01EEEA6D1675D903105008D66542B07E78DBC0"
+          ],
+          "canonical_pixel_hashes": [
+            "0E69277A3328A2BA4659444963E90560E87112701FF1088404BFA8E173FD18A9"
+          ],
+          "pass": true
+        },
+        "N105-W8": {
+          "runs": 6,
+          "complete_file_hashes": [
+            "0CF09578B85028DD26D871696F01EEEA6D1675D903105008D66542B07E78DBC0"
+          ],
+          "canonical_pixel_hashes": [
+            "0E69277A3328A2BA4659444963E90560E87112701FF1088404BFA8E173FD18A9"
+          ],
+          "pass": true
+        },
+        "N105-W16": {
+          "runs": 6,
+          "complete_file_hashes": [
+            "0CF09578B85028DD26D871696F01EEEA6D1675D903105008D66542B07E78DBC0"
+          ],
+          "canonical_pixel_hashes": [
+            "0E69277A3328A2BA4659444963E90560E87112701FF1088404BFA8E173FD18A9"
+          ],
+          "pass": true
+        },
+        "N299-W1": {
+          "runs": 6,
+          "complete_file_hashes": [
+            "FEFC8008BB030D303BB8C94598FA02BF651F743D35114F92595A3E8761BEA063"
+          ],
+          "canonical_pixel_hashes": [
+            "F3083E5395E23BC5A9F6D7A5E6DF01EDA28D3AF1B97B643A7A3A578E2B151E92"
+          ],
+          "pass": true
+        },
+        "N299-W2": {
+          "runs": 6,
+          "complete_file_hashes": [
+            "FEFC8008BB030D303BB8C94598FA02BF651F743D35114F92595A3E8761BEA063"
+          ],
+          "canonical_pixel_hashes": [
+            "F3083E5395E23BC5A9F6D7A5E6DF01EDA28D3AF1B97B643A7A3A578E2B151E92"
+          ],
+          "pass": true
+        },
+        "N299-W4": {
+          "runs": 6,
+          "complete_file_hashes": [
+            "FEFC8008BB030D303BB8C94598FA02BF651F743D35114F92595A3E8761BEA063"
+          ],
+          "canonical_pixel_hashes": [
+            "F3083E5395E23BC5A9F6D7A5E6DF01EDA28D3AF1B97B643A7A3A578E2B151E92"
+          ],
+          "pass": true
+        },
+        "N299-W8": {
+          "runs": 6,
+          "complete_file_hashes": [
+            "FEFC8008BB030D303BB8C94598FA02BF651F743D35114F92595A3E8761BEA063"
+          ],
+          "canonical_pixel_hashes": [
+            "F3083E5395E23BC5A9F6D7A5E6DF01EDA28D3AF1B97B643A7A3A578E2B151E92"
+          ],
+          "pass": true
+        },
+        "N299-W16": {
+          "runs": 6,
+          "complete_file_hashes": [
+            "FEFC8008BB030D303BB8C94598FA02BF651F743D35114F92595A3E8761BEA063"
+          ],
+          "canonical_pixel_hashes": [
+            "F3083E5395E23BC5A9F6D7A5E6DF01EDA28D3AF1B97B643A7A3A578E2B151E92"
+          ],
+          "pass": true
+        }
+      },
+      "cross_worker": {
+        "33": {
+          "runs": 30,
+          "complete_file_hashes": [
+            "3309E33318C701FB75C55507BFB49AD279D8950492B592EC247DBE2D1193AC9E"
+          ],
+          "canonical_pixel_hashes": [
+            "6EFC261E892DCDB5D492AD3FD79BDC7E5A208D93D0227A41B258FB3B900F9B89"
+          ],
+          "pass": true
+        },
+        "105": {
+          "runs": 30,
+          "complete_file_hashes": [
+            "0CF09578B85028DD26D871696F01EEEA6D1675D903105008D66542B07E78DBC0"
+          ],
+          "canonical_pixel_hashes": [
+            "0E69277A3328A2BA4659444963E90560E87112701FF1088404BFA8E173FD18A9"
+          ],
+          "pass": true
+        },
+        "299": {
+          "runs": 30,
+          "complete_file_hashes": [
+            "FEFC8008BB030D303BB8C94598FA02BF651F743D35114F92595A3E8761BEA063"
+          ],
+          "canonical_pixel_hashes": [
+            "F3083E5395E23BC5A9F6D7A5E6DF01EDA28D3AF1B97B643A7A3A578E2B151E92"
+          ],
+          "pass": true
+        }
+      },
+      "verdict": "PASS"
+    },
+    "peak_n299_over_peak_n33": {
+      "sampled_by_worker": {
+        "1": 1.000041388849577,
+        "2": 1.0001695177686656,
+        "4": 1.0000720248725894,
+        "8": 1.0001772988191633,
+        "16": 1.000796424347678
+      },
+      "job_by_worker": {
+        "1": 1.0000453934342404,
+        "2": 1.0001735207357279,
+        "4": 1.0000773596356094,
+        "8": 1.0001879624075185,
+        "16": 1.000789757918555
+      },
+      "sampled_max": 1.000796424347678,
+      "job_max": 1.000789757918555,
+      "conservative_max": 1.000796424347678,
+      "limit": 1.1,
+      "minimum_sampling_coverage": 0.9903924269718484,
+      "verdict": "UNMEASURED_SAMPLING_COVERAGE"
+    },
+    "n_mod_4_per_frame_spread": {
+      "complete": true,
+      "host_cpu_complete": true,
+      "best_wall_seconds_per_frame_by_n": {
+        "96": 0.7877150041664814,
+        "97": 0.7889721092789617,
+        "98": 0.7905168571433394,
+        "99": 0.7894002626264336
+      },
+      "all_wall_seconds_per_frame_by_n": {
+        "96": [
+          0.879797378124446,
+          0.7895860291670639,
+          0.7877150041664814,
+          0.7959418229159686,
+          0.7999000020827225,
+          0.7968771760412589
+        ],
+        "97": [
+          0.8812398432991612,
+          0.8805187628868506,
+          0.7889721092789617,
+          0.7961932649480697,
+          0.7960917237106729,
+          0.7960856835053005
+        ],
+        "98": [
+          0.8806147489789398,
+          0.8793946102045344,
+          0.7956182234694859,
+          0.7959213459184773,
+          0.7963352173469409,
+          0.7905168571433394
+        ],
+        "99": [
+          0.879800893940182,
+          0.8809134424240752,
+          0.796064794950206,
+          0.7954574232318937,
+          0.7947536262629479,
+          0.7894002626264336
+        ]
+      },
+      "registered_spread": 0.003556937422847176,
+      "reversal_pairs": [
+        {
+          "sweeps": [
+            1,
+            2
+          ],
+          "arithmetic_seconds_per_frame_by_n": {
+            "96": 0.834691703645755,
+            "97": 0.8808793030930059,
+            "98": 0.8800046795917371,
+            "99": 0.8803571681821286
+          },
+          "geometric_seconds_per_frame_by_n": {
+            "96": 0.8334720860741979,
+            "97": 0.8808792293092053,
+            "98": 0.880004468124281,
+            "99": 0.8803569924346739
+          },
+          "arithmetic_spread": 0.05533492096005431,
+          "geometric_spread": 0.05687910132456083,
+          "conservative_spread": 0.05687910132456083
+        },
+        {
+          "sweeps": [
+            3,
+            4
+          ],
+          "arithmetic_seconds_per_frame_by_n": {
+            "96": 0.791828413541225,
+            "97": 0.7925826871135158,
+            "98": 0.7957697846939815,
+            "99": 0.7957611090910499
+          },
+          "geometric_seconds_per_frame_by_n": {
+            "96": 0.7918177292499387,
+            "97": 0.7925744631514328,
+            "98": 0.7957697702609098,
+            "99": 0.795761051143317
+          },
+          "arithmetic_spread": 0.0049775571138320875,
+          "geometric_spread": 0.0049910994222303676,
+          "conservative_spread": 0.0049910994222303676
+        },
+        {
+          "sweeps": [
+            5,
+            6
+          ],
+          "arithmetic_seconds_per_frame_by_n": {
+            "96": 0.7983885890619906,
+            "97": 0.7960887036079867,
+            "98": 0.7934260372451402,
+            "99": 0.7920769444446907
+          },
+          "geometric_seconds_per_frame_by_n": {
+            "96": 0.7983871584482537,
+            "97": 0.7960887036022581,
+            "98": 0.7934207038196456,
+            "99": 0.7920724217489721
+          },
+          "arithmetic_spread": 0.00796847410036017,
+          "geometric_spread": 0.007972423386914639,
+          "conservative_spread": 0.007972423386914639
+        }
+      ],
+      "paired_envelope_lower": 0.0049910994222303676,
+      "paired_envelope_upper": 0.05687910132456083,
+      "verdict": "UNMEASURED_HOST_CONTENTION"
+    }
+  },
+  "partition": {
+    "pass": 1,
+    "fail": 0,
+    "unmeasured": 3,
+    "total": 4
+  },
+  "overall_verdict": "UNMEASURED",
+  "one_line_verdict": "M12 UNMEASURED \u2014 warm_peak_process_tree_memory, peak_n299_over_peak_n33, n_mod_4_per_frame_spread"
+}

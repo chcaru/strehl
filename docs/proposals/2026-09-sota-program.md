@@ -46,32 +46,54 @@ and [August plan Amendments 3 and 7–8](2026-08-sota-path.md).
 
 ## Execution order
 
-The frozen systems run proceeds alongside cheap geometry/detail development.
-It does not reserve the host or prohibit useful work; its registered contention
-rule decides which timing observations are admissible.
+The frozen systems run is complete. Its remaining measurement work proceeds
+alongside geometry/detail development. It does not reserve the host or prohibit
+useful work; the registered admission rules decide which observations qualify.
 
 ### 1. Finish the systems repair already built
 
-Run `experiments/M192-m12-certify/campaign.py` from its preregistered lineage,
-with a new campaign directory and durable stdout/stderr files. Keep the old
-aborted `work/` intact. The recovery changes the runner, not `protocol.json`,
-the product binary, the corpus, or any bar.
+**COMPLETED, overall UNMEASURED:** the fresh campaign finished all 133 invocations
+at `2026-09-07T07:30:53Z`. The independent terminal review is
+[M192 terminal verification](../research/M192-terminal-verification.md).
+The old interrupted directory and the complete new evidence are preserved.
 
-The result must contain all 133 registered invocations, the intact record
-chain, before/after input hashes, all four bar verdicts, and a completion
-record. A different agent must run `verify.py --artifact <results>` and review
-what the verdict covers. Partial files, a live PID, and a green verifier
-self-test are not certificates.
+| Registered bar | Result on the frozen repaired lineage | Qualification |
+|---|---|---|
+| Complete TIFF and canonical pixel byte identity | **PASS** | All 15 fixed-worker six-repeat cells and all five workers at each of N=33/105/299 agree |
+| Warm peak process-tree memory, <=6 GiB | **UNMEASURED_SAMPLING_COVERAGE** | Recorded Job peak 2.866577 GiB; two scored runs exceed the 100 ms maximum sampling-gap rule |
+| Peak N299 / peak N33, <=1.10 | **UNMEASURED_SAMPLING_COVERAGE** | Recorded conservative ratio 1.000796; the same sampling admission failure applies |
+| N-mod-4 per-frame spread, <=2% | **UNMEASURED_HOST_CONTENTION** | Raw-minimum spread 0.355694%; reversal-pair envelope 0.499110%–5.687910%, so the pass rule is not met |
 
-**DERIVED scheduling estimate:** about 11 hours plus setup from the old partial
-timings; this is not a performance claim. The recovery report supplies the
-calculation. Monitor progress without changing the run, killing peer jobs, or
-declaring it dead merely because a long frame has not completed.
+These are **MEASURED readings with the registered dispositions**, not four
+passes. Minimum sampling coverage is 0.990392, but maximum gap is 1163.700 ms;
+coverage alone cannot admit the memory readings. The timing disposition names
+the protocol's inconclusive category, not a proven physical cause. A transition
+within the first mirrored sweep pair is visible in both wall and product CPU
+time; its cause remains unresolved.
 
-**Next action on completion:** report the four bars separately. If a bar fails,
-use this complete lineage to localize that defect; do not change the bar. If
-timing is inconclusive under the registered contention rule, preserve that
-verdict. A systems pass licenses only the systems claim.
+**Next executable systems action:** commission timestamped sampling-gap and
+per-query latency diagnostics on controlled allocation/null/stall plants,
+including a short child allocation that must be detected. Observe scheduling
+and frequency alongside a separate timing rehearsal. The present aggregates
+cannot locate the gap or attribute the timing transition. Determine whether
+instrumentation or the execution arrangement needs a prospective change before
+funding another full run. Compare observer overhead and output hashes with
+diagnostics on/off, including the placebo. The
+[measurement diagnosis](../../experiments/review-m192-measurement/findings.md)
+defines the phase-delay, child-lifetime, and timing controls. Any change must be
+frozen and independently verified;
+do not replace individual repeats, discard the first pair, relax 100 ms/2%, or
+reinterpret this certificate after the result. No new full campaign is launched.
+Carry the independent review's command, worker-environment, campaign-ID, and
+manifest-binding checks into the automated verifier before the next campaign.
+The review checked those bindings in this package; the generic validator's
+missing checks are hardening work, not an observed inconsistency here.
+
+This certificate covers the pinned native-RAW merge with prerecorded alignment
+sidecars. It does not test the live alignment solver, the comparative common-TIFF
+M11 output, or image quality. Preserve the scorecard's historical failing lineage;
+this repaired lineage adds one passed bar and three unmeasured bars, not a SOTA
+claim. Geometry consumer repair in step 2 remains the next product-facing work.
 
 ### 2. Make geometry executable before declaring it closed
 
@@ -174,7 +196,8 @@ Keep unrelated dirty files intact; commit only this program's named paths.
 
 ### Current campaign
 
-**STARTED, not certified:** `2026-09-06T23:32:53Z`, PID `22556`, under
+**COMPLETE; integrity verified, M12 overall UNMEASURED:** launched
+`2026-09-06T23:32:53Z`, PID `22556`, and completed `2026-09-07T07:30:53Z`, under
 `experiments/M192-m12-certify/recovery-20260906-163253/`. The complete command,
 process start identity, file hashes, and redirected log paths are in
 `launch-receipt.json`. Runner repair: `3b05ed2d`; measured product lineage:
@@ -185,8 +208,9 @@ The root independently ran `test-recovery.py` (nine tests) and the unchanged
 reproduced and then verified the actual-descriptor shutdown failure that the
 first mocked-stream tests missed. See the recovery report; none is an M12 score.
 
-An hourly task follow-up, `strehl-systems-certificate`, watches this exact
-campaign and requests independent terminal verification. It stays quiet while
-healthy and pauses after a verified outcome or actionable failure is reported.
-The next code work remains the geometry consumer validation and bounded
-constructor in step 2; the overnight certificate does not need to finish first.
+The hourly task follow-up, `strehl-systems-certificate`, is paused after terminal
+verification and recording this outcome. The evidence is in the campaign's
+`results/`, with independent checks in `experiments/review-m192-completed/` and
+measurement diagnosis in `experiments/review-m192-measurement/`. The next code
+work remains geometry consumer validation and the bounded constructor in step 2;
+systems measurement commissioning follows the bounded action in step 1.

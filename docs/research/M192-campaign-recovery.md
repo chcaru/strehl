@@ -116,3 +116,13 @@ the bounded runner repair, not a product certificate.
 
 The root owns the fresh full campaign launch. No certificate or scorecard
 promotion is claimed by this continuation.
+
+## Terminal outcome, 2026-09-07
+
+The fresh `recovery-20260906-163253` campaign completed all 133 invocations at
+`2026-09-07T07:30:53Z`. See [the independent terminal review](M192-terminal-verification.md)
+and [current execution plan](../proposals/2026-09-sota-program.md). Its overall
+verdict is **UNMEASURED**: byte identity passes; both memory bars are withheld
+by sampling gaps, and the timing bar by the registered reversal-pair rule.
+This is the terminal outcome of the recovered run, not a change to the frozen
+protocol or a promotion of the partial campaign described above.

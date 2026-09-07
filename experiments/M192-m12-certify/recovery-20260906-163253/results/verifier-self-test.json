@@ -1,0 +1,54 @@
+{
+  "schema": "m192-verifier-self-test-v1",
+  "status": "COMMISSIONED",
+  "controls": [
+    {
+      "name": "missing-terminal-record",
+      "caught": true,
+      "detail": "expected 133 records, got 132"
+    },
+    {
+      "name": "broken-hash-chain",
+      "caught": true,
+      "detail": "record 10: broken hash chain"
+    },
+    {
+      "name": "worker-hash-divergence",
+      "caught": true,
+      "detail": "FAIL"
+    },
+    {
+      "name": "memory-overrun",
+      "caught": true,
+      "detail": "FAIL"
+    },
+    {
+      "name": "ratio-overrun",
+      "caught": true,
+      "detail": "FAIL"
+    },
+    {
+      "name": "sampling-undercoverage",
+      "caught": true,
+      "detail": "UNMEASURED"
+    },
+    {
+      "name": "timing-overrun",
+      "caught": true,
+      "detail": "FAIL"
+    },
+    {
+      "name": "timing-contention-ambiguity",
+      "caught": true,
+      "detail": "UNMEASURED"
+    },
+    {
+      "name": "missing-sweep-cpu",
+      "caught": true,
+      "detail": "UNMEASURED"
+    }
+  ],
+  "caught": 9,
+  "total": 9,
+  "inert_label_survived": true
+}
