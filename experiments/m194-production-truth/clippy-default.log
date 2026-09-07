@@ -1,0 +1,279 @@
+   Compiling toml_edit v0.25.13+spec-1.1.0
+    Checking anstyle-query v1.1.5
+   Compiling serde v1.0.229
+    Checking libflate_lz77 v2.3.0
+    Checking anstyle-wincon v3.0.11
+    Checking regex-automata v0.4.18
+    Checking nu-ansi-term v0.50.3
+   Compiling strehl-cli v0.0.0 (C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli)
+    Checking num-integer v0.1.47
+    Checking moxcms v0.8.1
+    Checking num-complex v0.4.6
+    Checking chrono v0.4.45
+    Checking uuid v1.25.0
+    Checking rayon-core v1.13.0
+    Checking multiversion v0.8.0
+    Checking flate2 v1.1.9
+    Checking jxl-bitstream v1.1.0
+    Checking jxl-grid v0.6.2
+    Checking half v2.7.1
+    Checking libflate v2.3.1
+    Checking anstream v1.0.0
+warning: this `if` statement can be collapsed
+   --> crates\strehl-cli\build.rs:101:5
+    |
+101 | /     if let Ok(forced) = std::env::var("STREHL_BUILD_ID") {
+102 | |         if !forced.trim().is_empty() {
+103 | |             println!("cargo:rustc-env=STREHL_BUILD_ID={}", forced.trim());
+104 | |             return;
+105 | |         }
+106 | |     }
+    | |_____^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#collapsible_if
+    = note: `#[warn(clippy::collapsible_if)]` on by default
+help: collapse nested if block
+    |
+101 ~     if let Ok(forced) = std::env::var("STREHL_BUILD_ID")
+102 ~         && !forced.trim().is_empty() {
+103 |             println!("cargo:rustc-env=STREHL_BUILD_ID={}", forced.trim());
+104 |             return;
+105 ~         }
+    |
+
+    Checking num-bigint v0.4.8
+    Checking num-iter v0.1.46
+    Checking jxl-oxide-common v1.0.0
+    Checking jxl-coding v1.0.1
+    Checking clap_builder v4.6.6
+    Checking tiff v0.11.3
+    Checking jxl-image v0.13.0
+    Checking rayon v1.12.0
+   Compiling toml_datetime v0.6.11
+   Compiling serde_spanned v0.6.9
+   Compiling proc-macro-crate v3.5.0
+   Compiling toml_edit v0.22.27
+warning: `strehl-cli` (build script) generated 1 warning
+   Compiling num_enum_derive v0.7.6
+    Checking num-rational v0.4.2
+    Checking matchers v0.2.0
+    Checking tracing-subscriber v0.3.23
+    Checking num v0.4.3
+    Checking clap v4.6.6
+    Checking toml v0.8.23
+    Checking jxl-threadpool v1.0.0
+    Checking strehl-core v0.0.0 (C:\dev\blog\death-of-software\projects\strehl\crates\strehl-core)
+    Checking num_enum v0.7.6
+    Checking jxl-modular v0.11.3
+    Checking jxl-color v0.11.0
+    Checking image v0.25.10
+   Compiling rawler v0.7.2
+    Checking jxl-vardct v0.11.1
+    Checking jxl-frame v0.13.3
+    Checking jxl-render v0.12.4
+    Checking jxl-jbr v0.2.1
+    Checking strehl-plugin v0.0.0 (C:\dev\blog\death-of-software\projects\strehl\crates\strehl-plugin)
+    Checking jxl-oxide v0.12.6
+    Checking strehl-raw v0.0.0 (C:\dev\blog\death-of-software\projects\strehl\crates\strehl-raw)
+warning: the loop variable `i` is only used to index `planes`
+   --> crates\strehl-cli\src\bin\strehl-common-input.rs:143:14
+    |
+143 |     for i in 0..pixels {
+    |              ^^^^^^^^^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#needless_range_loop
+    = note: `#[warn(clippy::needless_range_loop)]` on by default
+help: consider using an iterator
+    |
+143 -     for i in 0..pixels {
+143 +     for <item> in planes.iter().take(pixels) {
+    |
+
+warning: `strehl-cli` (bin "strehl-common-input" test) generated 1 warning
+warning: the loop variable `r` is only used to index `m`
+   --> crates\strehl-cli\src\image_out.rs:355:18
+    |
+355 |         for r in 0..3 {
+    |                  ^^^^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#needless_range_loop
+    = note: `#[warn(clippy::needless_range_loop)]` on by default
+help: consider using an iterator
+    |
+355 -         for r in 0..3 {
+355 +         for <item> in &m {
+    |
+
+warning: the loop variable `c` is only used to index `v`
+    --> crates\strehl-cli\src\image_out.rs:1192:14
+     |
+1192 |     for c in 0..3 {
+     |              ^^^^
+     |
+     = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#needless_range_loop
+help: consider using an iterator
+     |
+1192 -     for c in 0..3 {
+1192 +     for <item> in &v {
+     |
+
+warning: very complex type used. Consider factoring parts into `type` definitions
+    --> crates\strehl-cli\src\merge_cmd.rs:2236:6
+     |
+2236 | ) -> Result<(Vec<u16>, Vec<f32>, Option<BimodalStats>, Timings)> {
+     |      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+     = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#type_complexity
+     = note: `#[warn(clippy::type_complexity)]` on by default
+
+warning: this `if` statement can be collapsed
+    --> crates\strehl-cli\src\merge_cmd.rs:3554:13
+     |
+3554 | /             if let Some(dir) = bimodal_dump() {
+3555 | |                 if let Some(m) = modes.as_ref() {
+3556 | |                     report_bimodality_scaled(m, &scale, &guide, geom, &dir)?;
+3557 | |                 }
+3558 | |             }
+     | |_____________^
+     |
+     = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#collapsible_if
+     = note: `#[warn(clippy::collapsible_if)]` on by default
+help: collapse nested if block
+     |
+3554 ~             if let Some(dir) = bimodal_dump()
+3555 ~                 && let Some(m) = modes.as_ref() {
+3556 |                     report_bimodality_scaled(m, &scale, &guide, geom, &dir)?;
+3557 ~                 }
+     |
+
+warning: this function has too many arguments (8/7)
+    --> crates\strehl-cli\src\merge_cmd.rs:5123:1
+     |
+5123 | / fn confidence_pass(
+5124 | |     source: &impl PyramidFrameSource,
+5125 | |     paths: &[PathBuf],
+5126 | |     domain: PyramidDomain,
+...    |
+5131 | |     per_chunk: usize,
+5132 | | ) -> Result<Centrality> {
+     | |_______________________^
+     |
+     = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#too_many_arguments
+     = note: `#[warn(clippy::too_many_arguments)]` on by default
+
+warning: this function has too many arguments (9/7)
+    --> crates\strehl-cli\src\merge_cmd.rs:5281:1
+     |
+5281 | / fn confidence_debug_pass(
+5282 | |     source: &impl PyramidFrameSource,
+5283 | |     paths: &[PathBuf],
+5284 | |     domain: PyramidDomain,
+...    |
+5290 | |     per_chunk: usize,
+5291 | | ) -> Result<Candidates> {
+     | |_______________________^
+     |
+     = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#too_many_arguments
+
+warning: this expression creates a reference which is immediately dereferenced by the compiler
+    --> crates\strehl-cli\src\merge_cmd.rs:6086:17
+     |
+6086 |                 &paths,
+     |                 ^^^^^^ help: change this to: `paths`
+     |
+     = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#needless_borrow
+     = note: `#[warn(clippy::needless_borrow)]` on by default
+
+warning: this expression creates a reference which is immediately dereferenced by the compiler
+    --> crates\strehl-cli\src\merge_cmd.rs:6103:17
+     |
+6103 |                 &paths,
+     |                 ^^^^^^ help: change this to: `paths`
+     |
+     = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#needless_borrow
+
+warning: large size difference between variants
+   --> crates\strehl-cli\src\main.rs:89:1
+    |
+ 89 | /  enum Command {
+ 90 | |      /// Solve a bracket's inter-frame geometry and write a warp sidecar.
+ 91 | |      ///
+ 92 | |      /// Focus breathing changes magnification frame to frame, so a deep bracket
+...   |
+ 96 | |      Align(align_cmd::AlignArgs),
+    | |      --------------------------- the second-largest variant contains at least 208 bytes
+...   |
+224 | |/     Stack {
+225 | ||         /// Directory containing RAW files.
+226 | ||         dir: PathBuf,
+227 | ||         /// Where to write the merged 16-bit RGB TIFF. Omit it to measure
+...   ||
+753 | ||         cover: Option<String>,
+754 | ||     },
+    | ||_____- the largest variant contains at least 547 bytes
+...   |
+866 | |      },
+867 | |  }
+    | |__^ the entire enum is at least 552 bytes
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#large_enum_variant
+    = note: `#[warn(clippy::large_enum_variant)]` on by default
+help: consider boxing the large fields or introducing indirection in some other way to reduce the total size of the enum
+    |
+516 ~         flat_roi: Box<Option<Roi>>,
+517 |         /// Detail region for the retention invariant, in PLANE coordinates.
+...
+520 |         #[arg(long, value_name = "X,Y,W,H", value_parser = parse_roi)]
+521 ~         detail_roi: Box<Option<Roi>>,
+522 |
+...
+561 |         #[arg(long, value_name = "PATH")]
+562 ~         n_eff_map: Box<Option<PathBuf>>,
+563 |
+...
+586 |         #[arg(long, value_name = "PATH")]
+587 ~         confidence_map: Box<Option<PathBuf>>,
+    |
+
+warning: `strehl-cli` (bin "strehl") generated 9 warnings (run `cargo clippy --fix --bin "strehl" -p strehl-cli -- --no-deps` to apply 3 suggestions)
+warning: manual implementation of `.is_multiple_of()`
+    --> crates\strehl-cli\src\image_out.rs:2641:25
+     |
+2641 |                 assert!(off % 4 == 0, "tag {sig:?} is not 4-byte aligned");
+     |                         ^^^^^^^^^^^^ help: replace with: `off.is_multiple_of(4)`
+     |
+     = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#manual_is_multiple_of
+     = note: `#[warn(clippy::manual_is_multiple_of)]` on by default
+
+warning: the loop variable `r` is used to index `want_m`
+    --> crates\strehl-cli\src\image_out.rs:2885:26
+     |
+2885 |                 for r in 0..3 {
+     |                          ^^^^
+     |
+     = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#needless_range_loop
+help: consider using an iterator and enumerate()
+     |
+2885 -                 for r in 0..3 {
+2885 +                 for (r, <item>) in want_m.iter().enumerate() {
+     |
+
+warning: manual `!Range::contains` implementation
+   --> crates\strehl-cli\src\merge_cmd\..\..\..\..\experiments\m194-production-truth\independent-controls.rs:147:37
+    |
+147 |             if x < 6 || x >= 214 || y < 2 || y >= 154 {
+    |                                     ^^^^^^^^^^^^^^^^^ help: use: `!(2..154).contains(&y)`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#manual_range_contains
+    = note: `#[warn(clippy::manual_range_contains)]` on by default
+
+warning: manual `!Range::contains` implementation
+   --> crates\strehl-cli\src\merge_cmd\..\..\..\..\experiments\m194-production-truth\independent-controls.rs:147:16
+    |
+147 |             if x < 6 || x >= 214 || y < 2 || y >= 154 {
+    |                ^^^^^^^^^^^^^^^^^ help: use: `!(6..214).contains(&x)`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#manual_range_contains
+
+warning: `strehl-cli` (bin "strehl" test) generated 13 warnings (9 duplicates) (run `cargo clippy --fix --bin "strehl" -p strehl-cli --tests -- --no-deps` to apply 3 suggestions)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 8.37s

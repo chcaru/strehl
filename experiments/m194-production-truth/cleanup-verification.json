@@ -1,0 +1,7 @@
+{
+  "pre_cleanup_sha256": "675bbd2a298c5ae9112c47559eaddeea8e6e48ee7368822627dd25eedd79bfde",
+  "final_sha256": "f62c8dd0cbfc7ef61cc52ed7880170952ea304f1e3b816380cc04c65a26dc425",
+  "comparison": "After reversing the two named needless borrows and two comment/lint-attribute insertions, all non-whitespace text is identical. This is a source-cleanup scope check, not a compiler or output proof.",
+  "scope_check": true,
+  "diff": "author-cleanup.diff"
+}

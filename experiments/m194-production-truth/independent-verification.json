@@ -1,0 +1,80 @@
+{
+  "schema": "m194-independent-synthetic-v1",
+  "started_utc": "2026-09-07T09:26:03.759720+00:00",
+  "sources_before": {
+    "crates\\strehl-cli\\src\\merge_cmd.rs": "f62c8dd0cbfc7ef61cc52ed7880170952ea304f1e3b816380cc04c65a26dc425",
+    "crates\\strehl-cli\\src\\merge_cmd\\production-truth.rs": "4ddd69b66cfbdad55443f3e0273aa60f188f3b5de314eddba5ef2378aee93955",
+    "experiments\\m194-production-truth\\independent-controls.rs": "bd5777f1f960e7db217fda4b4ce9f24a963cea9351d244acf8aac84ee68f718f"
+  },
+  "sources_after": {
+    "crates\\strehl-cli\\src\\merge_cmd.rs": "f62c8dd0cbfc7ef61cc52ed7880170952ea304f1e3b816380cc04c65a26dc425",
+    "crates\\strehl-cli\\src\\merge_cmd\\production-truth.rs": "4ddd69b66cfbdad55443f3e0273aa60f188f3b5de314eddba5ef2378aee93955",
+    "experiments\\m194-production-truth\\independent-controls.rs": "bd5777f1f960e7db217fda4b4ce9f24a963cea9351d244acf8aac84ee68f718f"
+  },
+  "runs": [
+    {
+      "label": "normal",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "strehl-cli",
+        "--bin",
+        "strehl",
+        "--target-dir",
+        "target/m194-production-truth",
+        "independent_m194_",
+        "--",
+        "--test-threads",
+        "1",
+        "--nocapture"
+      ],
+      "exit_code": 0,
+      "log": "independent-normal-test.log",
+      "log_sha256": "003abe0f6923f9d2215aa8d94118a52a7aeeabbfd4e9018f11c5e85e91716858",
+      "test_summary": [
+        "test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 123 filtered out; finished in 1.26s"
+      ],
+      "rebuilt_cli": true,
+      "environment": {
+        "STREHL_PYRAMID_WORKERS": "2",
+        "STREHL_DEFECT": "off",
+        "RAYON_NUM_THREADS": "2"
+      },
+      "cleared_environment_policy": "all inherited STREHL_*; RUSTFLAGS; CARGO_ENCODED_RUSTFLAGS"
+    },
+    {
+      "label": "debug",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "strehl-cli",
+        "--bin",
+        "strehl",
+        "--target-dir",
+        "target/m194-production-truth",
+        "independent_m194_",
+        "--",
+        "--test-threads",
+        "1",
+        "--nocapture"
+      ],
+      "exit_code": 0,
+      "log": "independent-debug-test.log",
+      "log_sha256": "3312b3dbd154def46f3a0f31b4d057de9d44c328b866fccd37515266af78c66f",
+      "test_summary": [
+        "test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 123 filtered out; finished in 1.28s"
+      ],
+      "rebuilt_cli": false,
+      "environment": {
+        "STREHL_PYRAMID_WORKERS": "2",
+        "STREHL_DEFECT": "off",
+        "RAYON_NUM_THREADS": "2",
+        "STREHL_CONFIDENCE_DEBUG": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194-production-truth\\work\\independent-debug-maps"
+      },
+      "cleared_environment_policy": "all inherited STREHL_*; RUSTFLAGS; CARGO_ENCODED_RUSTFLAGS"
+    }
+  ],
+  "pass": true
+}

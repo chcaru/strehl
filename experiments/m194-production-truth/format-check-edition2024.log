@@ -1,0 +1,565 @@
+Diff in \\?\C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli\src\merge_cmd.rs:39:
+ 
+ use anyhow::{Context, Result, bail, ensure};
+ use rayon::{ThreadPoolBuilder, prelude::*};
+-use strehl_core::photometric::{self, Flux, PhotometricMap, PhotometricMode};
+ use strehl_core::align::Resampler;
+ use strehl_core::clip::{CONTAINER_MAX_DN, ClipCensus};
+ use strehl_core::color::{self, AppliedExposure, Exposure};
+Diff in \\?\C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli\src\merge_cmd.rs:46:
+ use strehl_core::edgeaware::{self, BimodalStats, LayerSupport};
+ use strehl_core::flat_ratio::{self, FrameFlat};
+-use strehl_core::focus::FocusField;use strehl_core::merge::{
++use strehl_core::focus::FocusField;
++use strehl_core::merge::{
+     Estimator, FOCUS_NOISE_SD, FocusStats, Gate, REGULARISER_RADIUS, REGULARISER_WIDTH, regularise,
+     regularise_at, regularise_guided, regularise_layered,
+ };
+Diff in \\?\C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli\src\merge_cmd.rs:52:
+ use strehl_core::noise::{Levels, NoiseModel};
++use strehl_core::photometric::{self, Flux, PhotometricMap, PhotometricMode};
+ use strehl_core::plane::{PlaneGeometry, QuadSource, green_luma_with_clip};
+ use strehl_core::profile;
+ use strehl_core::pyramid::{
+Diff in \\?\C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli\src\merge_cmd.rs:676:
+     match v.trim().to_ascii_lowercase().as_str() {
+         "soft" | "soft-power" | "softpower" => Ok(SelectMode::SoftPower),
+         "hard" | "hard-max" | "hardmax" | "pmax" => Ok(SelectMode::HardMax),
+-        other => bail!("unknown --pyramid-select {other:?}; valid values are `soft` and `hard-max`"),
++        other => {
++            bail!("unknown --pyramid-select {other:?}; valid values are `soft` and `hard-max`")
++        }
+     }
+ }
+ 
+Diff in \\?\C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli\src\merge_cmd.rs:1647:
+                     // carry --focus for the flag to mean anything in the
+                     // shipping configuration.
+                     Some(op) => {
+-                        scratch
+-                            .field
+-                            .compute_scaled_with_measure(op.measure(), &scratch.luma, noise, s);
++                        scratch.field.compute_scaled_with_measure(
++                            op.measure(),
++                            &scratch.luma,
++                            noise,
++                            s,
++                        );
+                     }
+                     None => scratch.field.compute_scaled(&scratch.luma, noise, s),
+                 },
+Diff in \\?\C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli\src\merge_cmd.rs:1679:
+             // is bit-identical either way — pinned by
+             // `through_focus::tests::gathering_statistics_cannot_move_the_selection_field`
+             // — so turning statistics on cannot move the merge.
+-            scratch.field.compute_with_fine(
+-                &scratch.luma,
+-                noise,
+-                STATS_RADIUS,
+-                &mut scratch.fine,
+-            );
++            scratch
++                .field
++                .compute_with_fine(&scratch.luma, noise, STATS_RADIUS, &mut scratch.fine);
+         }
+         match self.support.filter(|_| self.guide_radius.is_none()) {
+             None if self.scale.is_some() && self.guide_radius.is_none() => {
+Diff in \\?\C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli\src\merge_cmd.rs:1943:
+     }
+ }
+ 
+-
+ /// Confidence the acuity term demands before it hands a pixel a smaller
+ /// window, in standard deviations of a difference of two responses.
+ ///
+Diff in \\?\C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli\src\merge_cmd.rs:2142:
+     let first = modes.first_mode_z();
+     let sep = modes.separation();
+     let blend = support.blend();
+-    std::fs::create_dir_all(dir)
+-        .with_context(|| format!("creating {}", dir.display()))?;
++    std::fs::create_dir_all(dir).with_context(|| format!("creating {}", dir.display()))?;
+ 
+     // Three populations, by how far the fix reaches. "Boundary" is the blob
+     // population: guards wanted it, the layer floor took it back.
+Diff in \\?\C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli\src\merge_cmd.rs:2204:
+     for (name, data) in [
+         ("bimodal-second-mode-z.tif", quant(&prom, 6553.5)),
+         ("bimodal-first-mode-z.tif", quant(&first, 6553.5)),
+-        ("bimodal-mode-balance.tif", quant(&modes.mode_balance(), 65535.0)),
+         (
++            "bimodal-mode-balance.tif",
++            quant(&modes.mode_balance(), 65535.0),
++        ),
++        (
+             "bimodal-separation.tif",
+             sep.iter().map(|&s| s.saturating_mul(256)).collect(),
+         ),
+Diff in \\?\C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli\src\merge_cmd.rs:2237:
+     let out = paths
+         .par_chunks(plan.chunk_len)
+         .enumerate()
+-        .map(|(ci, chunk)| -> Result<(FocusStats, Option<BimodalStats>, Timings)> {
+-            let first_index = (ci * plan.chunk_len) as u16;
+-            let mut stats = FocusStats::new(geom);
+-            // Rides the guide's decode. The detector needs the NARROW field
+-            // for the same reason the guide does: a 13 px window smears the
+-            // foreground and background modes into a single peak, which is
+-            // precisely the confusion under investigation.
+-            let mut modes = bimodal.then(|| BimodalStats::new(geom));
+-            let mut scratch = Scratch::new_with_warp(geom, false, ctx.warps.is_some());
+-            let mut t = Timings::default();
+-            for (offset, path) in chunk.iter().enumerate() {
+-                let index = first_index + offset as u16;
+-                // The guide must skip exactly the frames the merge skips, or it
+-                // would locate silhouettes in a bracket the election never sees.
+-                if ctx.is_refused(index) {
+-                    continue;
++        .map(
++            |(ci, chunk)| -> Result<(FocusStats, Option<BimodalStats>, Timings)> {
++                let first_index = (ci * plan.chunk_len) as u16;
++                let mut stats = FocusStats::new(geom);
++                // Rides the guide's decode. The detector needs the NARROW field
++                // for the same reason the guide does: a 13 px window smears the
++                // foreground and background modes into a single peak, which is
++                // precisely the confusion under investigation.
++                let mut modes = bimodal.then(|| BimodalStats::new(geom));
++                let mut scratch = Scratch::new_with_warp(geom, false, ctx.warps.is_some());
++                let mut t = Timings::default();
++                for (offset, path) in chunk.iter().enumerate() {
++                    let index = first_index + offset as u16;
++                    // The guide must skip exactly the frames the merge skips, or it
++                    // would locate silhouettes in a bracket the election never sees.
++                    if ctx.is_refused(index) {
++                        continue;
++                    }
++                    let frame = ctx.field_for(path, index, &mut scratch, &mut t)?;
++                    ctx.release(frame);
++                    stats
++                        .fold(index, &scratch.reg)
++                        .map_err(|e| map_dim_err(index, e))?;
++                    if let Some(m) = modes.as_mut() {
++                        m.fold(index, &scratch.reg)
++                            .map_err(|e| anyhow::anyhow!("frame {index}: {e}"))?;
++                    }
+                 }
+-                let frame = ctx.field_for(path, index, &mut scratch, &mut t)?;
+-                ctx.release(frame);
+-                stats
+-                    .fold(index, &scratch.reg)
+-                    .map_err(|e| map_dim_err(index, e))?;
+-                if let Some(m) = modes.as_mut() {
+-                    m.fold(index, &scratch.reg)
+-                        .map_err(|e| anyhow::anyhow!("frame {index}: {e}"))?;
+-                }
+-            }
+-            Ok((stats, modes, t))
+-        })
++                Ok((stats, modes, t))
++            },
++        )
+         .reduce_with(|a, b| match (a, b) {
+             (Ok((mut sa, mut ma, mut ta)), Ok((sb, mb, tb))) => {
+                 sa.absorb(&sb).map_err(|e| map_dim_err(0, e))?;
+Diff in \\?\C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli\src\merge_cmd.rs:2672:
+ /// keeps the reported provenance honest: a second, independent read could
+ /// disagree with the value in use, and a provenance line that disagrees with
+ /// its own run is worse than none.
+-pub fn resolve_photometric_mode(
+-    flag: Option<&str>,
+-) -> Result<(PhotometricMode, SettingSource)> {
++pub fn resolve_photometric_mode(flag: Option<&str>) -> Result<(PhotometricMode, SettingSource)> {
+     if let Some(v) = flag {
+         let mode =
+             PhotometricMode::parse(v).with_context(|| format!("reading --photometric {v:?}"))?;
+Diff in \\?\C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli\src\merge_cmd.rs:3432:
+             guide_winner_field(&paths, &plan, &ctx_guide, geom, true)?;
+         let tau = edge_tau(&guide);
+         eprintln!("--- pass zero: depth guide for the edge-aware election (MEASURED) ---");
++        eprintln!("guide radius    : {GUIDE_RADIUS} px box on |grad|, elected NARROW on purpose");
+         eprintln!(
+-            "guide radius    : {GUIDE_RADIUS} px box on |grad|, elected NARROW on purpose"
+-        );
+-        eprintln!(
+             "depth tolerance : tau = {tau:.1} frames{}",
+             if std::env::var(EDGE_TAU_ENV).is_ok() {
+                 "  (from the environment)"
+Diff in \\?\C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli\src\merge_cmd.rs:3486:
+                 eprintln!(
+                     "peak significance: p10 {:.2} p25 {:.2} p50 {:.2} p75 {:.2} p90 {:.2} \
+                      p99 {:.2} max {:.2} sigma  (diagnostic; the veil does NOT gate on this)",
+-                    q(0.10), q(0.25), q(0.50), q(0.75), q(0.90), q(0.99), q(1.0)
++                    q(0.10),
++                    q(0.25),
++                    q(0.50),
++                    q(0.75),
++                    q(0.90),
++                    q(0.99),
++                    q(1.0)
+                 );
+             }
+             let may: Vec<bool> = excess.iter().map(|&e| e > cut).collect();
+Diff in \\?\C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli\src\merge_cmd.rs:3578:
+                 "  by layer      : {}",
+                 hist.iter()
+                     .enumerate()
+-                    .map(|(l, n)| format!(
+-                        "L{l} {:.2}%",
+-                        100.0 * *n as f64 / geom.pixels() as f64
+-                    ))
++                    .map(|(l, n)| format!("L{l} {:.2}%", 100.0 * *n as f64 / geom.pixels() as f64))
+                     .collect::<Vec<_>>()
+                     .join("  ")
+             );
+Diff in \\?\C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli\src\merge_cmd.rs:3613:
+     // A refused frame is dropped, not merged unregistered. Counted once here so
+     // every pass agrees on the denominator; skipping is done per pass via
+     // `Ctx::is_refused`.
+-    let refused: Vec<u16> = (0..paths.len() as u16).filter(|i| ctx.is_refused(*i)).collect();
++    let refused: Vec<u16> = (0..paths.len() as u16)
++        .filter(|i| ctx.is_refused(*i))
++        .collect();
+     let expected = paths.len() - refused.len();
+     if !refused.is_empty() {
+         let shown: Vec<String> = refused.iter().take(8).map(|i| i.to_string()).collect();
+Diff in \\?\C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli\src\merge_cmd.rs:3693:
+             "mode            : {} ({})",
+             match photometric_mode {
+                 PhotometricMode::On => "on, unconditional",
+-                PhotometricMode::Auto =>
+-                    "auto, decides after pass one from this stack's drift",
++                PhotometricMode::Auto => "auto, decides after pass one from this stack's drift",
+                 PhotometricMode::Off => unreachable!("off does not build a region"),
+             },
+             photometric_source.describe("--photometric", PHOTOMETRIC_ENV),
+Diff in \\?\C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli\src\merge_cmd.rs:4167:
+                     let mut e = Estimator::new(&p1.stats, gate);
+                     if veil_on {
+                         e.enable_veil_from_incoherence(
+-                            veil_incoherence.as_deref().expect("refused above if absent"),
++                            veil_incoherence
++                                .as_deref()
++                                .expect("refused above if absent"),
+                             veil_lo,
+                             veil_hi,
+                             veil_margin,
+Diff in \\?\C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli\src\merge_cmd.rs:4684:
+                 .enumerate()
+                 .for_each(|(local_y, dst)| {
+                     let full_y = domain.rect.y + local_y;
+-                    let row = (active_y + 2 * full_y + dy) * stride
+-                        + active_x
+-                        + 2 * domain.rect.x
+-                        + dx;
++                    let row =
++                        (active_y + 2 * full_y + dy) * stride + active_x + 2 * domain.rect.x + dx;
+                     for (local_x, value) in dst.iter_mut().enumerate() {
+                         *value = (f32::from(data[row + 2 * local_x]) - black).max(0.0);
+                     }
+Diff in \\?\C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli\src\merge_cmd.rs:4811:
+     }
+ 
+     fn decode(&self, index: usize) -> Result<Frame> {
+-        let path = self.paths.get(index).context("Pyramid source index out of bounds")?;
++        let path = self
++            .paths
++            .get(index)
++            .context("Pyramid source index out of bounds")?;
+         Ok(strehl_raw::decode(path)?)
+     }
+ }
+Diff in \\?\C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli\src\merge_cmd.rs:4929:
+     luma: &mut [f32],
+ ) -> Result<bool> {
+     {
+-        let mut frame = source.decode(index).with_context(|| format!("frame {index}"))?;
++        let mut frame = source
++            .decode(index)
++            .with_context(|| format!("frame {index}"))?;
+         validate_pyramid_frame(&frame, domain.full, index)?;
+         ensure!(
+             frame.levels == levels,
+Diff in \\?\C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli\src\merge_cmd.rs:5029:
+     ensure!(
+         expected.width > 0 && expected.height > 0 && frame.geometry() == expected,
+         "frame {index} has active geometry {:?}, expected {:?}",
+-        frame.geometry(), expected
++        frame.geometry(),
++        expected
+     );
+-    let samples = frame.stride.checked_mul(frame.buffer_height)
++    let samples = frame
++        .stride
++        .checked_mul(frame.buffer_height)
+         .with_context(|| format!("frame {index} storage dimensions overflow"))?;
+     ensure!(
+         samples == frame.data.len(),
+Diff in \\?\C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli\src\merge_cmd.rs:5038:
+         "frame {index} storage length {} does not match stride {} x height {}",
+-        frame.data.len(), frame.stride, frame.buffer_height
++        frame.data.len(),
++        frame.stride,
++        frame.buffer_height
+     );
+-    let end_x = frame.active.x.checked_add(frame.active.width)
++    let end_x = frame
++        .active
++        .x
++        .checked_add(frame.active.width)
+         .with_context(|| format!("frame {index} active x extent overflow"))?;
+-    let end_y = frame.active.y.checked_add(frame.active.height)
++    let end_y = frame
++        .active
++        .y
++        .checked_add(frame.active.height)
+         .with_context(|| format!("frame {index} active y extent overflow"))?;
+     ensure!(
+         end_x <= frame.stride && end_y <= frame.buffer_height,
+Diff in \\?\C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli\src\merge_cmd.rs:5272:
+     for y in 1..h - 1 {
+         for x in 1..w - 1 {
+             let i = y * w + x;
+-            out[i] = 4.0f32.mul_add(luma[i], -(luma[i - 1] + luma[i + 1] + luma[i - w] + luma[i + w]))
++            out[i] = 4.0f32
++                .mul_add(
++                    luma[i],
++                    -(luma[i - 1] + luma[i + 1] + luma[i - w] + luma[i + w]),
++                )
+                 .abs();
+         }
+     }
+Diff in \\?\C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli\src\merge_cmd.rs:5752:
+     source: &impl PyramidFrameSource,
+ ) -> Result<()> {
+     let PreparedPyramid {
+-        paths, geom, levels, noise, wb, xyz_to_cam, frame_bytes, alignment,
+-        domain, sizes, defect_plan, prologue_secs, align_secs, t_start, exposure,
++        paths,
++        geom,
++        levels,
++        noise,
++        wb,
++        xyz_to_cam,
++        frame_bytes,
++        alignment,
++        domain,
++        sizes,
++        defect_plan,
++        prologue_secs,
++        align_secs,
++        t_start,
++        exposure,
+     } = prepared;
+     ensure!(!paths.is_empty(), "Pyramid source has no frames");
+-    ensure!(source.len() == paths.len(), "Pyramid source count differs from prepared inputs");
++    ensure!(
++        source.len() == paths.len(),
++        "Pyramid source count differs from prepared inputs"
++    );
+     let cfg = opts.pyramid;
+     let analysis_geom = domain.analysis();
+     let defect_tally = crate::stack::DefectTally::default();
+Diff in \\?\C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli\src\merge_cmd.rs:5763:
+-    let defect = defect_plan
+-        .as_ref()
+-        .map(|p| (p, &defect_tally));
++    let defect = defect_plan.as_ref().map(|p| (p, &defect_tally));
+     if let Some(p) = &defect_plan {
+         eprintln!("{}", p.describe());
+     }
+Diff in \\?\C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli\src\merge_cmd.rs:5951:
+                 None => {
+                     merged = Some(std::mem::replace(
+                         &mut worker.merge,
+-                        BandMerge::new(
+-                            analysis_geom.width,
+-                            analysis_geom.height,
+-                            BAND_PLANES,
+-                            cfg,
+-                        ),
++                        BandMerge::new(analysis_geom.width, analysis_geom.height, BAND_PLANES, cfg),
+                     ));
+                 }
+             }
+Diff in \\?\C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli\src\merge_cmd.rs:5994:
+             .join(" ")
+     );
+     eprintln!(
+-        "                  (E[L_k^2] / sigma_0^2, MEASURED on these operators, not derived.)"    );
++        "                  (E[L_k^2] / sigma_0^2, MEASURED on these operators, not derived.)"
++    );
+     if beta_n > 0 {
+         let white = merge.band_gain().all();
+         let gate_floor_env = gatefloor::GATE_FLOOR_ENV;
+Diff in \\?\C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli\src\merge_cmd.rs:7353:
+                 let neutral = strehl_core::color::neutral_response(*m);
+                 eprintln!(
+                     "colour          : camera RGB -> {} (BT.709 primaries, D65 white)",
+-                    if space.applies_curve() { "sRGB" } else { "LINEAR sRGB" }
++                    if space.applies_curve() {
++                        "sRGB"
++                    } else {
++                        "LINEAR sRGB"
++                    }
+                 );
+                 eprintln!("                  characterisation: {src}");
+                 eprintln!(
+Diff in \\?\C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli\src\merge_cmd.rs:7469:
+             color::AUTO_EXPOSURE_PERCENTILE,
+             color::AUTO_EXPOSURE_TARGET
+         );
+-        eprintln!(
+-            "                  To deviate deliberately from that rendering, use --exposure."
+-        );
++        eprintln!("                  To deviate deliberately from that rendering, use --exposure.");
+     }
+     if !applied.is_identity() || applied.automatic {
+         eprintln!(
+Diff in \\?\C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli\src\merge_cmd.rs:7583:
+                 };
+                 let scale = (gain * eg / range) as f64;
+                 let cfg = plan.config(plan.sigma2(p, mean_dn, scale));
+-                let rep = strehl_core::restore::restore_plane(&mut v, geom.width, geom.height, &cfg);
++                let rep =
++                    strehl_core::restore::restore_plane(&mut v, geom.width, geom.height, &cfg);
+                 // `max_gain` is the ONE-dimensional response, and this report
+                 // used to stop there. `restore_plane` convolves x and then y
+                 // with the same taps, so the picture receives `G(fx) * G(fy)`
+Diff in \\?\C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli\src\merge_cmd.rs:7752:
+         // this is the one path on which the flag still silently does nothing,
+         // and it is the reason the interim guard in `main.rs` existed.
+         eprintln!();
++        eprintln!("WARNING         : no colour characterisation for this body, so the requested");
+         eprintln!(
+-            "WARNING         : no colour characterisation for this body, so the requested"
+-        );
+-        eprintln!(
+             "                  colorimetric space could not be reached. Emitting camera-native"
+         );
+         eprintln!(
+Diff in \\?\C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli\src\merge_cmd.rs:9029:
+             let claims_default = line.contains("THE DEFAULT PATH");
+             let claims_not = line.contains("NOT the default");
+             assert_ne!(
+-                claims_default, claims_not,
++                claims_default,
++                claims_not,
+                 "`{}`'s banner must make exactly one claim about its role: {line:?}",
+                 backend.name()
+             );
+Diff in \\?\C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli\src\merge_cmd.rs:9133:
+     /// test pins which of the two owns it.
+     #[test]
+     fn merge_backend_parse_refuses_unknown_spellings() {
+-        for v in ["banana", "", "   ", "pyramidal", "est", "0", "1", "on", "off"] {
++        for v in [
++            "banana",
++            "",
++            "   ",
++            "pyramidal",
++            "est",
++            "0",
++            "1",
++            "on",
++            "off",
++        ] {
+             let err = MergeBackend::parse(v).unwrap_err().to_string();
+             assert!(
+                 err.contains("unknown merge backend"),
+Diff in \\?\C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli\src\merge_cmd.rs:9150:
+     #[test]
+     fn parse_select_mode_accepts_its_spellings_and_refuses_the_rest() {
+         for v in ["soft", "soft-power", "softpower", "SOFT", " Soft "] {
+-            assert_eq!(parse_select_mode(v).unwrap(), SelectMode::SoftPower, "{v:?}");
++            assert_eq!(
++                parse_select_mode(v).unwrap(),
++                SelectMode::SoftPower,
++                "{v:?}"
++            );
+         }
+         for v in ["hard", "hard-max", "hardmax", "pmax", "HARD"] {
+             assert_eq!(parse_select_mode(v).unwrap(), SelectMode::HardMax, "{v:?}");
+Diff in \\?\C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli\src\merge_cmd.rs:9221:
+             ("legacy", MergeBackend::Estimator),
+         ] {
+             unsafe { std::env::set_var(MERGE_BACKEND_ENV, v) };
+-            assert_eq!(
+-                resolved(None).unwrap(),
+-                want,
+-                "{MERGE_BACKEND_ENV}={v}"
+-            );
++            assert_eq!(resolved(None).unwrap(), want, "{MERGE_BACKEND_ENV}={v}");
+         }
+         unsafe { std::env::set_var(MERGE_BACKEND_ENV, "banana") };
+         assert!(
+Diff in \\?\C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli\src\merge_cmd.rs:9276:
+         // mean an exported-but-cleared variable. Pinned because the two
+         // channels genuinely differ and that is easy to "tidy" into a bug.
+         for v in ["", "   "] {
+-            assert!(
+-                resolved(Some(v)).is_err(),
+-                "--merge {v:?} was not an error"
+-            );
++            assert!(resolved(Some(v)).is_err(), "--merge {v:?} was not an error");
+             unsafe { std::env::set_var(MERGE_BACKEND_ENV, v) };
+             assert_eq!(
+                 resolved(None).unwrap(),
+Diff in \\?\C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli\src\merge_cmd.rs:9573:
+         //    configure one -- and the two ways of configuring one are `on` and
+         //    naming a map, so both are exercised. A refusal that only caught
+         //    `STREHL_DEFECT=on` would miss the more likely invocation.
+-        for (k, v) in [("STREHL_DEFECT", "on"), ("STREHL_DEFECT_MAP", "some-map.txt")] {
++        for (k, v) in [
++            ("STREHL_DEFECT", "on"),
++            ("STREHL_DEFECT_MAP", "some-map.txt"),
++        ] {
+             unsafe { std::env::remove_var("STREHL_DEFECT") };
+             unsafe { std::env::remove_var("STREHL_DEFECT_MAP") };
+             unsafe { std::env::set_var(k, v) };
+Diff in \\?\C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli\src\merge_cmd\production-truth.rs:245:
+     let dir = work_dir("author");
+     let frames: Vec<_> = (0..7).map(|k| fixture_frame(192, 136, k)).collect();
+     let warps = curved_placements(frames.len());
+-    let [FrameWarp::Placed(start), FrameWarp::Placed(mid), FrameWarp::Placed(end)] =
+-        [warps[0].clone(), warps[3].clone(), warps[6].clone()]
++    let [
++        FrameWarp::Placed(start),
++        FrameWarp::Placed(mid),
++        FrameWarp::Placed(end),
++    ] = [warps[0].clone(), warps[3].clone(), warps[6].clone()]
+     else {
+         panic!("the curved stimulus must place every selected frame")
+     };
+Diff in \\?\C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli\src\merge_cmd\production-truth.rs:348:
+     opts.out = Some(dir.join("source-failure.tif"));
+     let mut fail = FixtureSource::new(frames.clone());
+     fail.fail_at = Some(2);
+-    assert!(format!(
+-        "{:#}",
+-        run_fixture(&opts, &fail, Some(warps), Some(crop)).unwrap_err()
+-    )
+-    .contains("M194 injected source failure"));
++    assert!(
++        format!(
++            "{:#}",
++            run_fixture(&opts, &fail, Some(warps), Some(crop)).unwrap_err()
++        )
++        .contains("M194 injected source failure")
++    );
+     assert!(!opts.out.as_ref().unwrap().exists());
+     let mut count = FixtureSource::new(frames);
+     count.declared_len += 1;
+Diff in \\?\C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli\src\merge_cmd\production-truth.rs:359:
+-    assert!(run_fixture(&opts, &count, None, None)
+-        .unwrap_err()
+-        .to_string()
+-        .contains("source count"));
++    assert!(
++        run_fixture(&opts, &count, None, None)
++            .unwrap_err()
++            .to_string()
++            .contains("source count")
++    );
+     println!("M194 AUTHOR PATH CONTROLS PASS: {}", dir.display());
+ }
+ 

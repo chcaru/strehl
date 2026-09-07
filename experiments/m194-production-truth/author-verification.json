@@ -1,0 +1,39 @@
+{
+  "schema": "m194-author-regression-v1",
+  "started_utc": "2026-09-07T09:18:34.892903+00:00",
+  "command": [
+    "cargo",
+    "test",
+    "-p",
+    "strehl-cli",
+    "--bin",
+    "strehl",
+    "--target-dir",
+    "target/m194-production-truth",
+    "--",
+    "--test-threads=1"
+  ],
+  "cleared_environment_policy": "all inherited STREHL_* (case insensitive), RUSTFLAGS and CARGO_ENCODED_RUSTFLAGS",
+  "environment": {
+    "STREHL_PYRAMID_WORKERS": "2",
+    "RAYON_NUM_THREADS": "2"
+  },
+  "exit_code": 0,
+  "rebuilt_cli": true,
+  "summary": [
+    "test result: ok. 128 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 9.68s"
+  ],
+  "log": "author-final-test.log",
+  "log_sha256": "93175ceba4e3d14ad45d3181bfb61de4552328b92f3b5fe2f86f44d176526e18",
+  "sources_before": {
+    "crates\\strehl-cli\\src\\merge_cmd.rs": "675bbd2a298c5ae9112c47559eaddeea8e6e48ee7368822627dd25eedd79bfde",
+    "crates\\strehl-cli\\src\\merge_cmd\\production-truth.rs": "0fa1d3855b01a4d1aae3b520c1c360e064bd54b28c9e9fe5f1eaa3dce5c27daa",
+    "experiments\\m194-production-truth\\independent-controls.rs": "08b57836ba23212a1ae276a4628bd894b8ed95fbfecd74462d0a36862fc66456"
+  },
+  "sources_after": {
+    "crates\\strehl-cli\\src\\merge_cmd.rs": "675bbd2a298c5ae9112c47559eaddeea8e6e48ee7368822627dd25eedd79bfde",
+    "crates\\strehl-cli\\src\\merge_cmd\\production-truth.rs": "0fa1d3855b01a4d1aae3b520c1c360e064bd54b28c9e9fe5f1eaa3dce5c27daa",
+    "experiments\\m194-production-truth\\independent-controls.rs": "08b57836ba23212a1ae276a4628bd894b8ed95fbfecd74462d0a36862fc66456"
+  },
+  "pass": true
+}

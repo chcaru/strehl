@@ -1,0 +1,277 @@
+{
+  "schema": "m194-format-scope-v1",
+  "command_stdin": [
+    "rustfmt",
+    "--edition",
+    "2024",
+    "--config",
+    "skip_children=true"
+  ],
+  "production_sha256": "f62c8dd0cbfc7ef61cc52ed7880170952ea304f1e3b816380cc04c65a26dc425",
+  "full_production_file_formatted": false,
+  "remaining_production_deltas": [
+    {
+      "operation": "delete",
+      "source_line": 42,
+      "source_lines": 1,
+      "formatted_lines": 0,
+      "touches_changed_production_line": false
+    },
+    {
+      "operation": "replace",
+      "source_line": 48,
+      "source_lines": 1,
+      "formatted_lines": 2,
+      "touches_changed_production_line": false
+    },
+    {
+      "operation": "insert",
+      "source_line": 53,
+      "source_lines": 0,
+      "formatted_lines": 1,
+      "touches_changed_production_line": false
+    },
+    {
+      "operation": "replace",
+      "source_line": 679,
+      "source_lines": 1,
+      "formatted_lines": 3,
+      "touches_changed_production_line": false
+    },
+    {
+      "operation": "replace",
+      "source_line": 1650,
+      "source_lines": 3,
+      "formatted_lines": 6,
+      "touches_changed_production_line": false
+    },
+    {
+      "operation": "replace",
+      "source_line": 1682,
+      "source_lines": 6,
+      "formatted_lines": 3,
+      "touches_changed_production_line": false
+    },
+    {
+      "operation": "delete",
+      "source_line": 1946,
+      "source_lines": 1,
+      "formatted_lines": 0,
+      "touches_changed_production_line": false
+    },
+    {
+      "operation": "replace",
+      "source_line": 2145,
+      "source_lines": 2,
+      "formatted_lines": 1,
+      "touches_changed_production_line": false
+    },
+    {
+      "operation": "replace",
+      "source_line": 2207,
+      "source_lines": 1,
+      "formatted_lines": 4,
+      "touches_changed_production_line": false
+    },
+    {
+      "operation": "replace",
+      "source_line": 2240,
+      "source_lines": 16,
+      "formatted_lines": 27,
+      "touches_changed_production_line": false
+    },
+    {
+      "operation": "replace",
+      "source_line": 2257,
+      "source_lines": 12,
+      "formatted_lines": 3,
+      "touches_changed_production_line": false
+    },
+    {
+      "operation": "replace",
+      "source_line": 2675,
+      "source_lines": 3,
+      "formatted_lines": 1,
+      "touches_changed_production_line": false
+    },
+    {
+      "operation": "replace",
+      "source_line": 3435,
+      "source_lines": 3,
+      "formatted_lines": 1,
+      "touches_changed_production_line": false
+    },
+    {
+      "operation": "replace",
+      "source_line": 3489,
+      "source_lines": 1,
+      "formatted_lines": 7,
+      "touches_changed_production_line": false
+    },
+    {
+      "operation": "replace",
+      "source_line": 3581,
+      "source_lines": 4,
+      "formatted_lines": 1,
+      "touches_changed_production_line": false
+    },
+    {
+      "operation": "replace",
+      "source_line": 3616,
+      "source_lines": 1,
+      "formatted_lines": 3,
+      "touches_changed_production_line": false
+    },
+    {
+      "operation": "replace",
+      "source_line": 3696,
+      "source_lines": 2,
+      "formatted_lines": 1,
+      "touches_changed_production_line": false
+    },
+    {
+      "operation": "replace",
+      "source_line": 4170,
+      "source_lines": 1,
+      "formatted_lines": 3,
+      "touches_changed_production_line": false
+    },
+    {
+      "operation": "replace",
+      "source_line": 4687,
+      "source_lines": 4,
+      "formatted_lines": 2,
+      "touches_changed_production_line": false
+    },
+    {
+      "operation": "replace",
+      "source_line": 5293,
+      "source_lines": 1,
+      "formatted_lines": 5,
+      "touches_changed_production_line": false
+    },
+    {
+      "operation": "replace",
+      "source_line": 5799,
+      "source_lines": 3,
+      "formatted_lines": 1,
+      "touches_changed_production_line": false
+    },
+    {
+      "operation": "replace",
+      "source_line": 5990,
+      "source_lines": 6,
+      "formatted_lines": 1,
+      "touches_changed_production_line": false
+    },
+    {
+      "operation": "replace",
+      "source_line": 6033,
+      "source_lines": 1,
+      "formatted_lines": 2,
+      "touches_changed_production_line": false
+    },
+    {
+      "operation": "replace",
+      "source_line": 7392,
+      "source_lines": 1,
+      "formatted_lines": 5,
+      "touches_changed_production_line": false
+    },
+    {
+      "operation": "replace",
+      "source_line": 7508,
+      "source_lines": 3,
+      "formatted_lines": 1,
+      "touches_changed_production_line": false
+    },
+    {
+      "operation": "replace",
+      "source_line": 7622,
+      "source_lines": 1,
+      "formatted_lines": 2,
+      "touches_changed_production_line": false
+    },
+    {
+      "operation": "replace",
+      "source_line": 7791,
+      "source_lines": 3,
+      "formatted_lines": 1,
+      "touches_changed_production_line": false
+    },
+    {
+      "operation": "replace",
+      "source_line": 9068,
+      "source_lines": 1,
+      "formatted_lines": 2,
+      "touches_changed_production_line": false
+    },
+    {
+      "operation": "replace",
+      "source_line": 9172,
+      "source_lines": 1,
+      "formatted_lines": 11,
+      "touches_changed_production_line": false
+    },
+    {
+      "operation": "replace",
+      "source_line": 9189,
+      "source_lines": 1,
+      "formatted_lines": 5,
+      "touches_changed_production_line": false
+    },
+    {
+      "operation": "replace",
+      "source_line": 9260,
+      "source_lines": 5,
+      "formatted_lines": 1,
+      "touches_changed_production_line": false
+    },
+    {
+      "operation": "replace",
+      "source_line": 9315,
+      "source_lines": 4,
+      "formatted_lines": 1,
+      "touches_changed_production_line": false
+    },
+    {
+      "operation": "replace",
+      "source_line": 9612,
+      "source_lines": 1,
+      "formatted_lines": 4,
+      "touches_changed_production_line": false
+    }
+  ],
+  "changed_production_lines_formatted": true,
+  "test_files": [
+    {
+      "path": "crates\\strehl-cli\\src\\merge_cmd\\production-truth.rs",
+      "command": [
+        "rustfmt",
+        "--edition",
+        "2024",
+        "--config",
+        "skip_children=true",
+        "--check",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-cli\\src\\merge_cmd\\production-truth.rs"
+      ],
+      "exit_code": 0,
+      "log": "production-truth-format.log"
+    },
+    {
+      "path": "experiments\\m194-production-truth\\independent-controls.rs",
+      "command": [
+        "rustfmt",
+        "--edition",
+        "2024",
+        "--config",
+        "skip_children=true",
+        "--check",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194-production-truth\\independent-controls.rs"
+      ],
+      "exit_code": 0,
+      "log": "independent-controls-format.log"
+    }
+  ],
+  "owned_scope_pass": true
+}

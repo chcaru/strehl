@@ -1,0 +1,19 @@
+   Compiling strehl-cli v0.0.0 (C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli)
+error[E0308]: mismatched types
+   --> crates\strehl-cli\src\merge_cmd\production_truth.rs:254:32
+    |
+254 |         a: (start.a + end.a) * 0.5,
+    |            -----------------   ^^^ expected `Cx`, found floating-point number
+    |            |
+    |            expected because this is `Cx`
+
+error[E0308]: mismatched types
+   --> crates\strehl-cli\src\merge_cmd\production_truth.rs:255:32
+    |
+255 |         b: (start.b + end.b) * 0.5,
+    |            -----------------   ^^^ expected `Cx`, found floating-point number
+    |            |
+    |            expected because this is `Cx`
+
+For more information about this error, try `rustc --explain E0308`.
+error: could not compile `strehl-cli` (bin "strehl" test) due to 2 previous errors

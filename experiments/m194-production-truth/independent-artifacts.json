@@ -1,0 +1,988 @@
+{
+  "schema": "m194-independent-tiff-artifacts-v1",
+  "pass_": true,
+  "artifact_count": 54,
+  "normal_debug_common_files": 22,
+  "artifacts": [
+    {
+      "mode": "normal",
+      "group": "coordinates",
+      "name": "crop.tif",
+      "path": "experiments\\m194-production-truth\\work\\independent-coordinates-40912-0\\crop.tif",
+      "bytes": 34395,
+      "sha256": "b577592e7403a32442c1209a6cca5c28fce3429e1593b3ba87cea262639c34ba",
+      "shape": [
+        64,
+        88,
+        3
+      ],
+      "dtype": "uint16",
+      "pixels_sha256": "a96b56761ce7554fa90b21dd57660f38432f804df993006dbe783c5934814ab8",
+      "software": "strehl 0.0.0"
+    },
+    {
+      "mode": "normal",
+      "group": "coordinates",
+      "name": "demosaic.tif",
+      "path": "experiments\\m194-production-truth\\work\\independent-coordinates-40912-0\\demosaic.tif",
+      "bytes": 135771,
+      "sha256": "b8bcb3a8992e3efa29e23e4c4a70232d32cb450e68cc3b786496e70edeb61e47",
+      "shape": [
+        128,
+        176,
+        3
+      ],
+      "dtype": "uint16",
+      "pixels_sha256": "affd5a57f95e462dd8385152f6187eca73e818e4d6b390e61baea1ea830f64b5",
+      "software": "strehl 0.0.0"
+    },
+    {
+      "mode": "normal",
+      "group": "coordinates",
+      "name": "padding-placebo.tif",
+      "path": "experiments\\m194-production-truth\\work\\independent-coordinates-40912-0\\padding-placebo.tif",
+      "bytes": 48027,
+      "sha256": "57920ffec48bc314150926844455a2f0c2e6c6517ec560e71b84a2d41ecc3b00",
+      "shape": [
+        76,
+        104,
+        3
+      ],
+      "dtype": "uint16",
+      "pixels_sha256": "4064905fed0ff597374680fffc865057501a3795ff8a4aa1598d413ced186511",
+      "software": "strehl 0.0.0"
+    },
+    {
+      "mode": "normal",
+      "group": "coordinates",
+      "name": "whole.tif",
+      "path": "experiments\\m194-production-truth\\work\\independent-coordinates-40912-0\\whole.tif",
+      "bytes": 48027,
+      "sha256": "57920ffec48bc314150926844455a2f0c2e6c6517ec560e71b84a2d41ecc3b00",
+      "shape": [
+        76,
+        104,
+        3
+      ],
+      "dtype": "uint16",
+      "pixels_sha256": "4064905fed0ff597374680fffc865057501a3795ff8a4aa1598d413ced186511",
+      "software": "strehl 0.0.0"
+    },
+    {
+      "mode": "normal",
+      "group": "confidence",
+      "name": "null-confidence.tif",
+      "path": "experiments\\m194-production-truth\\work\\independent-confidence-40912-1\\null-confidence.tif",
+      "bytes": 16006,
+      "sha256": "0ea1543051c9748e46ee88ef6e5cc15691da63010fae085ad5636313ca03a58b",
+      "shape": [
+        76,
+        104
+      ],
+      "dtype": "uint16",
+      "pixels_sha256": "c481da04c0fa44922b348e3e572215cdee615d502d7a99f0b404646d9d4eb329",
+      "software": null
+    },
+    {
+      "mode": "normal",
+      "group": "confidence",
+      "name": "null-off.tif",
+      "path": "experiments\\m194-production-truth\\work\\independent-confidence-40912-1\\null-off.tif",
+      "bytes": 190299,
+      "sha256": "6b33b5a0f517a698726d84470f16946bc20a11c68f2d3856420d8bb49f73dc34",
+      "shape": [
+        152,
+        208,
+        3
+      ],
+      "dtype": "uint16",
+      "pixels_sha256": "48a1d3782aeab8cceef41b549b5ecc66a0d7d88609ca90f91ec0b7c88a13e7d6",
+      "software": "strehl 0.0.0"
+    },
+    {
+      "mode": "normal",
+      "group": "confidence",
+      "name": "null-on.tif",
+      "path": "experiments\\m194-production-truth\\work\\independent-confidence-40912-1\\null-on.tif",
+      "bytes": 190299,
+      "sha256": "6b33b5a0f517a698726d84470f16946bc20a11c68f2d3856420d8bb49f73dc34",
+      "shape": [
+        152,
+        208,
+        3
+      ],
+      "dtype": "uint16",
+      "pixels_sha256": "48a1d3782aeab8cceef41b549b5ecc66a0d7d88609ca90f91ec0b7c88a13e7d6",
+      "software": "strehl 0.0.0"
+    },
+    {
+      "mode": "normal",
+      "group": "confidence",
+      "name": "texture-confidence.tif",
+      "path": "experiments\\m194-production-truth\\work\\independent-confidence-40912-1\\texture-confidence.tif",
+      "bytes": 16006,
+      "sha256": "e1f954ab70602524b3b2ddd2a24d749e40fce5b55423d7833279f91d3657e134",
+      "shape": [
+        76,
+        104
+      ],
+      "dtype": "uint16",
+      "pixels_sha256": "110fa057701d4e1294f2e5240e7d8b6cb46e6afc9f3beaf8bb80edb9bf2e16fc",
+      "software": null
+    },
+    {
+      "mode": "normal",
+      "group": "confidence",
+      "name": "texture-off.tif",
+      "path": "experiments\\m194-production-truth\\work\\independent-confidence-40912-1\\texture-off.tif",
+      "bytes": 190299,
+      "sha256": "b9965fe081dfb01fdb8ad0d91317f011770afae795a3f3f9ee1407fc5c718387",
+      "shape": [
+        152,
+        208,
+        3
+      ],
+      "dtype": "uint16",
+      "pixels_sha256": "8f4452f2d8a1fc1041454edfd074c5a81df2f806f40706d9bbc6a82fa6e6d31a",
+      "software": "strehl 0.0.0"
+    },
+    {
+      "mode": "normal",
+      "group": "confidence",
+      "name": "texture-on.tif",
+      "path": "experiments\\m194-production-truth\\work\\independent-confidence-40912-1\\texture-on.tif",
+      "bytes": 190299,
+      "sha256": "b9965fe081dfb01fdb8ad0d91317f011770afae795a3f3f9ee1407fc5c718387",
+      "shape": [
+        152,
+        208,
+        3
+      ],
+      "dtype": "uint16",
+      "pixels_sha256": "8f4452f2d8a1fc1041454edfd074c5a81df2f806f40706d9bbc6a82fa6e6d31a",
+      "software": "strehl 0.0.0"
+    },
+    {
+      "mode": "normal",
+      "group": "live",
+      "name": "baseline.tif",
+      "path": "experiments\\m194-production-truth\\work\\independent-live-40912-2\\baseline.tif",
+      "bytes": 135771,
+      "sha256": "718a8445270234d7458f4254a99d2f0724afb95b9e7c6a7dd6da40852a1bc037",
+      "shape": [
+        128,
+        176,
+        3
+      ],
+      "dtype": "uint16",
+      "pixels_sha256": "4e754cb7c61604dc36573eea21cef5947505754e583646987a3a9bd2e67a1dc7",
+      "software": "strehl 0.0.0"
+    },
+    {
+      "mode": "normal",
+      "group": "live",
+      "name": "changed-input.tif",
+      "path": "experiments\\m194-production-truth\\work\\independent-live-40912-2\\changed-input.tif",
+      "bytes": 135771,
+      "sha256": "c198a130d31e50c3ccdfbefd1c8047cd7bdbedfb6b4ee0b8d9752db2a75a9fe1",
+      "shape": [
+        128,
+        176,
+        3
+      ],
+      "dtype": "uint16",
+      "pixels_sha256": "c9a7f856b632e599678085e5a7f7152be70869092aafc892c1e4b2e66ad330ac",
+      "software": "strehl 0.0.0"
+    },
+    {
+      "mode": "normal",
+      "group": "live",
+      "name": "changed-interior-track.tif",
+      "path": "experiments\\m194-production-truth\\work\\independent-live-40912-2\\changed-interior-track.tif",
+      "bytes": 135771,
+      "sha256": "7af61f7360998c20d7521f868e03d8d3b20777b166420a09afadfc5d21d21014",
+      "shape": [
+        128,
+        176,
+        3
+      ],
+      "dtype": "uint16",
+      "pixels_sha256": "87b338d89dc6a4c269cfc3fcb27512dfcc0b6a43374a7a82396a75f7034317af",
+      "software": "strehl 0.0.0"
+    },
+    {
+      "mode": "normal",
+      "group": "live",
+      "name": "delegate.tif",
+      "path": "experiments\\m194-production-truth\\work\\independent-live-40912-2\\delegate.tif",
+      "bytes": 135771,
+      "sha256": "718a8445270234d7458f4254a99d2f0724afb95b9e7c6a7dd6da40852a1bc037",
+      "shape": [
+        128,
+        176,
+        3
+      ],
+      "dtype": "uint16",
+      "pixels_sha256": "4e754cb7c61604dc36573eea21cef5947505754e583646987a3a9bd2e67a1dc7",
+      "software": "strehl 0.0.0"
+    },
+    {
+      "mode": "normal",
+      "group": "live",
+      "name": "display.tif",
+      "path": "experiments\\m194-production-truth\\work\\independent-live-40912-2\\display.tif",
+      "bytes": 138800,
+      "sha256": "2b5392d9a864dd024a9baf5ba115f8389ce3fc16efdc12e0be60e13610084b88",
+      "shape": [
+        128,
+        176,
+        3
+      ],
+      "dtype": "uint16",
+      "pixels_sha256": "0279a2893ca1dee0018038a12b3a0ad34af859fef348f95205bdad7e54f8a622",
+      "software": "strehl 0.0.0 (c8beaf8c79dd-dirty)"
+    },
+    {
+      "mode": "normal",
+      "group": "live",
+      "name": "identity.tif",
+      "path": "experiments\\m194-production-truth\\work\\independent-live-40912-2\\identity.tif",
+      "bytes": 135771,
+      "sha256": "6132969ee3c5970f82b0c9184bba037cf473fea33668d51f92ae7ee16c60915f",
+      "shape": [
+        128,
+        176,
+        3
+      ],
+      "dtype": "uint16",
+      "pixels_sha256": "dc76432630c2a42637f514f3ab487e30d2666911d1d1dca94ebf51d0609b1b1a",
+      "software": "strehl 0.0.0"
+    },
+    {
+      "mode": "normal",
+      "group": "storage",
+      "name": "odd-tail.tif",
+      "path": "experiments\\m194-production-truth\\work\\independent-storage-40912-3\\odd-tail.tif",
+      "bytes": 190299,
+      "sha256": "55585612c4214a0b52094ce6cd37aa04eb85c558e67e49534f818d1bdae8f680",
+      "shape": [
+        152,
+        208,
+        3
+      ],
+      "dtype": "uint16",
+      "pixels_sha256": "7918367fda6b364ec7328c871da95108453a78093a7d1f6d9d95cb30f99d4aac",
+      "software": "strehl 0.0.0"
+    },
+    {
+      "mode": "normal",
+      "group": "storage",
+      "name": "valid.tif",
+      "path": "experiments\\m194-production-truth\\work\\independent-storage-40912-3\\valid.tif",
+      "bytes": 190299,
+      "sha256": "55585612c4214a0b52094ce6cd37aa04eb85c558e67e49534f818d1bdae8f680",
+      "shape": [
+        152,
+        208,
+        3
+      ],
+      "dtype": "uint16",
+      "pixels_sha256": "7918367fda6b364ec7328c871da95108453a78093a7d1f6d9d95cb30f99d4aac",
+      "software": "strehl 0.0.0"
+    },
+    {
+      "mode": "normal",
+      "group": "refusals",
+      "name": "partial-confidence.tif",
+      "path": "experiments\\m194-production-truth\\work\\independent-refusals-40912-4\\partial-confidence.tif",
+      "bytes": 11462,
+      "sha256": "6d2940e775b954ed601db13ddf3ef53456fab006ed0f22d3975a744ed93cc7c5",
+      "shape": [
+        64,
+        88
+      ],
+      "dtype": "uint16",
+      "pixels_sha256": "32630e1d96a6491b98d0a205d6ac0bd34d69241f90fe017b56838a6db913760f",
+      "software": null
+    },
+    {
+      "mode": "normal",
+      "group": "refusals",
+      "name": "partial.tif",
+      "path": "experiments\\m194-production-truth\\work\\independent-refusals-40912-4\\partial.tif",
+      "bytes": 135771,
+      "sha256": "dee7cdc3144f73afa3839900bae3b4a96b014c3277fb3c4881e70ee9c0725d9f",
+      "shape": [
+        128,
+        176,
+        3
+      ],
+      "dtype": "uint16",
+      "pixels_sha256": "5f7c21cc47c039dfbf494eeb0c36cd862e7a195a732b80d4209a5bf82bddd6a9",
+      "software": "strehl 0.0.0"
+    },
+    {
+      "mode": "normal",
+      "group": "refusals",
+      "name": "refused-frame-placebo-confidence.tif",
+      "path": "experiments\\m194-production-truth\\work\\independent-refusals-40912-4\\refused-frame-placebo-confidence.tif",
+      "bytes": 11462,
+      "sha256": "6d2940e775b954ed601db13ddf3ef53456fab006ed0f22d3975a744ed93cc7c5",
+      "shape": [
+        64,
+        88
+      ],
+      "dtype": "uint16",
+      "pixels_sha256": "32630e1d96a6491b98d0a205d6ac0bd34d69241f90fe017b56838a6db913760f",
+      "software": null
+    },
+    {
+      "mode": "normal",
+      "group": "refusals",
+      "name": "refused-frame-placebo.tif",
+      "path": "experiments\\m194-production-truth\\work\\independent-refusals-40912-4\\refused-frame-placebo.tif",
+      "bytes": 135771,
+      "sha256": "dee7cdc3144f73afa3839900bae3b4a96b014c3277fb3c4881e70ee9c0725d9f",
+      "shape": [
+        128,
+        176,
+        3
+      ],
+      "dtype": "uint16",
+      "pixels_sha256": "5f7c21cc47c039dfbf494eeb0c36cd862e7a195a732b80d4209a5bf82bddd6a9",
+      "software": "strehl 0.0.0"
+    },
+    {
+      "mode": "debug",
+      "group": "coordinates",
+      "name": "crop.tif",
+      "path": "experiments\\m194-production-truth\\work\\independent-coordinates-8780-0\\crop.tif",
+      "bytes": 34395,
+      "sha256": "b577592e7403a32442c1209a6cca5c28fce3429e1593b3ba87cea262639c34ba",
+      "shape": [
+        64,
+        88,
+        3
+      ],
+      "dtype": "uint16",
+      "pixels_sha256": "a96b56761ce7554fa90b21dd57660f38432f804df993006dbe783c5934814ab8",
+      "software": "strehl 0.0.0"
+    },
+    {
+      "mode": "debug",
+      "group": "coordinates",
+      "name": "demosaic.tif",
+      "path": "experiments\\m194-production-truth\\work\\independent-coordinates-8780-0\\demosaic.tif",
+      "bytes": 135771,
+      "sha256": "b8bcb3a8992e3efa29e23e4c4a70232d32cb450e68cc3b786496e70edeb61e47",
+      "shape": [
+        128,
+        176,
+        3
+      ],
+      "dtype": "uint16",
+      "pixels_sha256": "affd5a57f95e462dd8385152f6187eca73e818e4d6b390e61baea1ea830f64b5",
+      "software": "strehl 0.0.0"
+    },
+    {
+      "mode": "debug",
+      "group": "coordinates",
+      "name": "padding-placebo.tif",
+      "path": "experiments\\m194-production-truth\\work\\independent-coordinates-8780-0\\padding-placebo.tif",
+      "bytes": 48027,
+      "sha256": "57920ffec48bc314150926844455a2f0c2e6c6517ec560e71b84a2d41ecc3b00",
+      "shape": [
+        76,
+        104,
+        3
+      ],
+      "dtype": "uint16",
+      "pixels_sha256": "4064905fed0ff597374680fffc865057501a3795ff8a4aa1598d413ced186511",
+      "software": "strehl 0.0.0"
+    },
+    {
+      "mode": "debug",
+      "group": "coordinates",
+      "name": "whole.tif",
+      "path": "experiments\\m194-production-truth\\work\\independent-coordinates-8780-0\\whole.tif",
+      "bytes": 48027,
+      "sha256": "57920ffec48bc314150926844455a2f0c2e6c6517ec560e71b84a2d41ecc3b00",
+      "shape": [
+        76,
+        104,
+        3
+      ],
+      "dtype": "uint16",
+      "pixels_sha256": "4064905fed0ff597374680fffc865057501a3795ff8a4aa1598d413ced186511",
+      "software": "strehl 0.0.0"
+    },
+    {
+      "mode": "debug",
+      "group": "confidence",
+      "name": "null-confidence.tif",
+      "path": "experiments\\m194-production-truth\\work\\independent-confidence-8780-1\\null-confidence.tif",
+      "bytes": 16006,
+      "sha256": "0ea1543051c9748e46ee88ef6e5cc15691da63010fae085ad5636313ca03a58b",
+      "shape": [
+        76,
+        104
+      ],
+      "dtype": "uint16",
+      "pixels_sha256": "c481da04c0fa44922b348e3e572215cdee615d502d7a99f0b404646d9d4eb329",
+      "software": null
+    },
+    {
+      "mode": "debug",
+      "group": "confidence",
+      "name": "null-debug-centrality.tif",
+      "path": "experiments\\m194-production-truth\\work\\independent-confidence-8780-1\\null-debug-centrality.tif",
+      "bytes": 16006,
+      "sha256": "0ea1543051c9748e46ee88ef6e5cc15691da63010fae085ad5636313ca03a58b",
+      "shape": [
+        76,
+        104
+      ],
+      "dtype": "uint16",
+      "pixels_sha256": "c481da04c0fa44922b348e3e572215cdee615d502d7a99f0b404646d9d4eb329",
+      "software": null
+    },
+    {
+      "mode": "debug",
+      "group": "confidence",
+      "name": "null-debug-dmin.tif",
+      "path": "experiments\\m194-production-truth\\work\\independent-confidence-8780-1\\null-debug-dmin.tif",
+      "bytes": 16006,
+      "sha256": "0ea1543051c9748e46ee88ef6e5cc15691da63010fae085ad5636313ca03a58b",
+      "shape": [
+        76,
+        104
+      ],
+      "dtype": "uint16",
+      "pixels_sha256": "c481da04c0fa44922b348e3e572215cdee615d502d7a99f0b404646d9d4eb329",
+      "software": null
+    },
+    {
+      "mode": "debug",
+      "group": "confidence",
+      "name": "null-debug-dsharp.tif",
+      "path": "experiments\\m194-production-truth\\work\\independent-confidence-8780-1\\null-debug-dsharp.tif",
+      "bytes": 16006,
+      "sha256": "0ea1543051c9748e46ee88ef6e5cc15691da63010fae085ad5636313ca03a58b",
+      "shape": [
+        76,
+        104
+      ],
+      "dtype": "uint16",
+      "pixels_sha256": "c481da04c0fa44922b348e3e572215cdee615d502d7a99f0b404646d9d4eb329",
+      "software": null
+    },
+    {
+      "mode": "debug",
+      "group": "confidence",
+      "name": "null-debug-spread.tif",
+      "path": "experiments\\m194-production-truth\\work\\independent-confidence-8780-1\\null-debug-spread.tif",
+      "bytes": 16006,
+      "sha256": "0ea1543051c9748e46ee88ef6e5cc15691da63010fae085ad5636313ca03a58b",
+      "shape": [
+        76,
+        104
+      ],
+      "dtype": "uint16",
+      "pixels_sha256": "c481da04c0fa44922b348e3e572215cdee615d502d7a99f0b404646d9d4eb329",
+      "software": null
+    },
+    {
+      "mode": "debug",
+      "group": "confidence",
+      "name": "null-debug-withinfrac.tif",
+      "path": "experiments\\m194-production-truth\\work\\independent-confidence-8780-1\\null-debug-withinfrac.tif",
+      "bytes": 16006,
+      "sha256": "cedd4bff3cfc3b233889a8d7c522606fa9b22e746063467dce989fd97a1ece5c",
+      "shape": [
+        76,
+        104
+      ],
+      "dtype": "uint16",
+      "pixels_sha256": "17df8a845d41f6153a90821b4ed71574e14581aea4a719f52ca302b9e356e77e",
+      "software": null
+    },
+    {
+      "mode": "debug",
+      "group": "confidence",
+      "name": "null-off.tif",
+      "path": "experiments\\m194-production-truth\\work\\independent-confidence-8780-1\\null-off.tif",
+      "bytes": 190299,
+      "sha256": "6b33b5a0f517a698726d84470f16946bc20a11c68f2d3856420d8bb49f73dc34",
+      "shape": [
+        152,
+        208,
+        3
+      ],
+      "dtype": "uint16",
+      "pixels_sha256": "48a1d3782aeab8cceef41b549b5ecc66a0d7d88609ca90f91ec0b7c88a13e7d6",
+      "software": "strehl 0.0.0"
+    },
+    {
+      "mode": "debug",
+      "group": "confidence",
+      "name": "null-on.tif",
+      "path": "experiments\\m194-production-truth\\work\\independent-confidence-8780-1\\null-on.tif",
+      "bytes": 190299,
+      "sha256": "6b33b5a0f517a698726d84470f16946bc20a11c68f2d3856420d8bb49f73dc34",
+      "shape": [
+        152,
+        208,
+        3
+      ],
+      "dtype": "uint16",
+      "pixels_sha256": "48a1d3782aeab8cceef41b549b5ecc66a0d7d88609ca90f91ec0b7c88a13e7d6",
+      "software": "strehl 0.0.0"
+    },
+    {
+      "mode": "debug",
+      "group": "confidence",
+      "name": "texture-confidence.tif",
+      "path": "experiments\\m194-production-truth\\work\\independent-confidence-8780-1\\texture-confidence.tif",
+      "bytes": 16006,
+      "sha256": "e1f954ab70602524b3b2ddd2a24d749e40fce5b55423d7833279f91d3657e134",
+      "shape": [
+        76,
+        104
+      ],
+      "dtype": "uint16",
+      "pixels_sha256": "110fa057701d4e1294f2e5240e7d8b6cb46e6afc9f3beaf8bb80edb9bf2e16fc",
+      "software": null
+    },
+    {
+      "mode": "debug",
+      "group": "confidence",
+      "name": "texture-debug-centrality.tif",
+      "path": "experiments\\m194-production-truth\\work\\independent-confidence-8780-1\\texture-debug-centrality.tif",
+      "bytes": 16006,
+      "sha256": "e1f954ab70602524b3b2ddd2a24d749e40fce5b55423d7833279f91d3657e134",
+      "shape": [
+        76,
+        104
+      ],
+      "dtype": "uint16",
+      "pixels_sha256": "110fa057701d4e1294f2e5240e7d8b6cb46e6afc9f3beaf8bb80edb9bf2e16fc",
+      "software": null
+    },
+    {
+      "mode": "debug",
+      "group": "confidence",
+      "name": "texture-debug-dmin.tif",
+      "path": "experiments\\m194-production-truth\\work\\independent-confidence-8780-1\\texture-debug-dmin.tif",
+      "bytes": 16006,
+      "sha256": "b8d3d009964338898eef05ce90fa470f6d766738ad6b5e2aef5c998e307c1e94",
+      "shape": [
+        76,
+        104
+      ],
+      "dtype": "uint16",
+      "pixels_sha256": "962718d726ad2040b448d96198601deffed0bcd833731a349a78f30f88222ff5",
+      "software": null
+    },
+    {
+      "mode": "debug",
+      "group": "confidence",
+      "name": "texture-debug-dsharp.tif",
+      "path": "experiments\\m194-production-truth\\work\\independent-confidence-8780-1\\texture-debug-dsharp.tif",
+      "bytes": 16006,
+      "sha256": "9e740cff99fd293054276d1faf5ac5d09b31297909a5e412e21ed3c9722b827b",
+      "shape": [
+        76,
+        104
+      ],
+      "dtype": "uint16",
+      "pixels_sha256": "169b5422b736097a4d8bc1f5caa3a9e1f5736751c73d692124b6b7abe7d4ece3",
+      "software": null
+    },
+    {
+      "mode": "debug",
+      "group": "confidence",
+      "name": "texture-debug-spread.tif",
+      "path": "experiments\\m194-production-truth\\work\\independent-confidence-8780-1\\texture-debug-spread.tif",
+      "bytes": 16006,
+      "sha256": "d7f852329271ad703f284bd1f2d0d0f553f7a2b9dc15ce41c67bc672253accab",
+      "shape": [
+        76,
+        104
+      ],
+      "dtype": "uint16",
+      "pixels_sha256": "defc4a38e725073c9c5a0f18c4a0b25b09146dd170cb7ca52c552167012b19c6",
+      "software": null
+    },
+    {
+      "mode": "debug",
+      "group": "confidence",
+      "name": "texture-debug-withinfrac.tif",
+      "path": "experiments\\m194-production-truth\\work\\independent-confidence-8780-1\\texture-debug-withinfrac.tif",
+      "bytes": 16006,
+      "sha256": "b2cc0e2d2d50d364e9be8399c60147e3b5d60ee9d082e376151c89013f220a30",
+      "shape": [
+        76,
+        104
+      ],
+      "dtype": "uint16",
+      "pixels_sha256": "f06fa811dd2377b419152f782ccc3cc454b1335b441ac3644a7a5806ca25b116",
+      "software": null
+    },
+    {
+      "mode": "debug",
+      "group": "confidence",
+      "name": "texture-off.tif",
+      "path": "experiments\\m194-production-truth\\work\\independent-confidence-8780-1\\texture-off.tif",
+      "bytes": 190299,
+      "sha256": "b9965fe081dfb01fdb8ad0d91317f011770afae795a3f3f9ee1407fc5c718387",
+      "shape": [
+        152,
+        208,
+        3
+      ],
+      "dtype": "uint16",
+      "pixels_sha256": "8f4452f2d8a1fc1041454edfd074c5a81df2f806f40706d9bbc6a82fa6e6d31a",
+      "software": "strehl 0.0.0"
+    },
+    {
+      "mode": "debug",
+      "group": "confidence",
+      "name": "texture-on.tif",
+      "path": "experiments\\m194-production-truth\\work\\independent-confidence-8780-1\\texture-on.tif",
+      "bytes": 190299,
+      "sha256": "b9965fe081dfb01fdb8ad0d91317f011770afae795a3f3f9ee1407fc5c718387",
+      "shape": [
+        152,
+        208,
+        3
+      ],
+      "dtype": "uint16",
+      "pixels_sha256": "8f4452f2d8a1fc1041454edfd074c5a81df2f806f40706d9bbc6a82fa6e6d31a",
+      "software": "strehl 0.0.0"
+    },
+    {
+      "mode": "debug",
+      "group": "live",
+      "name": "baseline.tif",
+      "path": "experiments\\m194-production-truth\\work\\independent-live-8780-2\\baseline.tif",
+      "bytes": 135771,
+      "sha256": "718a8445270234d7458f4254a99d2f0724afb95b9e7c6a7dd6da40852a1bc037",
+      "shape": [
+        128,
+        176,
+        3
+      ],
+      "dtype": "uint16",
+      "pixels_sha256": "4e754cb7c61604dc36573eea21cef5947505754e583646987a3a9bd2e67a1dc7",
+      "software": "strehl 0.0.0"
+    },
+    {
+      "mode": "debug",
+      "group": "live",
+      "name": "changed-input.tif",
+      "path": "experiments\\m194-production-truth\\work\\independent-live-8780-2\\changed-input.tif",
+      "bytes": 135771,
+      "sha256": "c198a130d31e50c3ccdfbefd1c8047cd7bdbedfb6b4ee0b8d9752db2a75a9fe1",
+      "shape": [
+        128,
+        176,
+        3
+      ],
+      "dtype": "uint16",
+      "pixels_sha256": "c9a7f856b632e599678085e5a7f7152be70869092aafc892c1e4b2e66ad330ac",
+      "software": "strehl 0.0.0"
+    },
+    {
+      "mode": "debug",
+      "group": "live",
+      "name": "changed-interior-track.tif",
+      "path": "experiments\\m194-production-truth\\work\\independent-live-8780-2\\changed-interior-track.tif",
+      "bytes": 135771,
+      "sha256": "7af61f7360998c20d7521f868e03d8d3b20777b166420a09afadfc5d21d21014",
+      "shape": [
+        128,
+        176,
+        3
+      ],
+      "dtype": "uint16",
+      "pixels_sha256": "87b338d89dc6a4c269cfc3fcb27512dfcc0b6a43374a7a82396a75f7034317af",
+      "software": "strehl 0.0.0"
+    },
+    {
+      "mode": "debug",
+      "group": "live",
+      "name": "delegate.tif",
+      "path": "experiments\\m194-production-truth\\work\\independent-live-8780-2\\delegate.tif",
+      "bytes": 135771,
+      "sha256": "718a8445270234d7458f4254a99d2f0724afb95b9e7c6a7dd6da40852a1bc037",
+      "shape": [
+        128,
+        176,
+        3
+      ],
+      "dtype": "uint16",
+      "pixels_sha256": "4e754cb7c61604dc36573eea21cef5947505754e583646987a3a9bd2e67a1dc7",
+      "software": "strehl 0.0.0"
+    },
+    {
+      "mode": "debug",
+      "group": "live",
+      "name": "display.tif",
+      "path": "experiments\\m194-production-truth\\work\\independent-live-8780-2\\display.tif",
+      "bytes": 138800,
+      "sha256": "2b5392d9a864dd024a9baf5ba115f8389ce3fc16efdc12e0be60e13610084b88",
+      "shape": [
+        128,
+        176,
+        3
+      ],
+      "dtype": "uint16",
+      "pixels_sha256": "0279a2893ca1dee0018038a12b3a0ad34af859fef348f95205bdad7e54f8a622",
+      "software": "strehl 0.0.0 (c8beaf8c79dd-dirty)"
+    },
+    {
+      "mode": "debug",
+      "group": "live",
+      "name": "identity.tif",
+      "path": "experiments\\m194-production-truth\\work\\independent-live-8780-2\\identity.tif",
+      "bytes": 135771,
+      "sha256": "6132969ee3c5970f82b0c9184bba037cf473fea33668d51f92ae7ee16c60915f",
+      "shape": [
+        128,
+        176,
+        3
+      ],
+      "dtype": "uint16",
+      "pixels_sha256": "dc76432630c2a42637f514f3ab487e30d2666911d1d1dca94ebf51d0609b1b1a",
+      "software": "strehl 0.0.0"
+    },
+    {
+      "mode": "debug",
+      "group": "storage",
+      "name": "odd-tail.tif",
+      "path": "experiments\\m194-production-truth\\work\\independent-storage-8780-3\\odd-tail.tif",
+      "bytes": 190299,
+      "sha256": "55585612c4214a0b52094ce6cd37aa04eb85c558e67e49534f818d1bdae8f680",
+      "shape": [
+        152,
+        208,
+        3
+      ],
+      "dtype": "uint16",
+      "pixels_sha256": "7918367fda6b364ec7328c871da95108453a78093a7d1f6d9d95cb30f99d4aac",
+      "software": "strehl 0.0.0"
+    },
+    {
+      "mode": "debug",
+      "group": "storage",
+      "name": "valid.tif",
+      "path": "experiments\\m194-production-truth\\work\\independent-storage-8780-3\\valid.tif",
+      "bytes": 190299,
+      "sha256": "55585612c4214a0b52094ce6cd37aa04eb85c558e67e49534f818d1bdae8f680",
+      "shape": [
+        152,
+        208,
+        3
+      ],
+      "dtype": "uint16",
+      "pixels_sha256": "7918367fda6b364ec7328c871da95108453a78093a7d1f6d9d95cb30f99d4aac",
+      "software": "strehl 0.0.0"
+    },
+    {
+      "mode": "debug",
+      "group": "refusals",
+      "name": "partial-confidence.tif",
+      "path": "experiments\\m194-production-truth\\work\\independent-refusals-8780-4\\partial-confidence.tif",
+      "bytes": 11462,
+      "sha256": "6d2940e775b954ed601db13ddf3ef53456fab006ed0f22d3975a744ed93cc7c5",
+      "shape": [
+        64,
+        88
+      ],
+      "dtype": "uint16",
+      "pixels_sha256": "32630e1d96a6491b98d0a205d6ac0bd34d69241f90fe017b56838a6db913760f",
+      "software": null
+    },
+    {
+      "mode": "debug",
+      "group": "refusals",
+      "name": "partial.tif",
+      "path": "experiments\\m194-production-truth\\work\\independent-refusals-8780-4\\partial.tif",
+      "bytes": 135771,
+      "sha256": "dee7cdc3144f73afa3839900bae3b4a96b014c3277fb3c4881e70ee9c0725d9f",
+      "shape": [
+        128,
+        176,
+        3
+      ],
+      "dtype": "uint16",
+      "pixels_sha256": "5f7c21cc47c039dfbf494eeb0c36cd862e7a195a732b80d4209a5bf82bddd6a9",
+      "software": "strehl 0.0.0"
+    },
+    {
+      "mode": "debug",
+      "group": "refusals",
+      "name": "refused-frame-placebo-confidence.tif",
+      "path": "experiments\\m194-production-truth\\work\\independent-refusals-8780-4\\refused-frame-placebo-confidence.tif",
+      "bytes": 11462,
+      "sha256": "6d2940e775b954ed601db13ddf3ef53456fab006ed0f22d3975a744ed93cc7c5",
+      "shape": [
+        64,
+        88
+      ],
+      "dtype": "uint16",
+      "pixels_sha256": "32630e1d96a6491b98d0a205d6ac0bd34d69241f90fe017b56838a6db913760f",
+      "software": null
+    },
+    {
+      "mode": "debug",
+      "group": "refusals",
+      "name": "refused-frame-placebo.tif",
+      "path": "experiments\\m194-production-truth\\work\\independent-refusals-8780-4\\refused-frame-placebo.tif",
+      "bytes": 135771,
+      "sha256": "dee7cdc3144f73afa3839900bae3b4a96b014c3277fb3c4881e70ee9c0725d9f",
+      "shape": [
+        128,
+        176,
+        3
+      ],
+      "dtype": "uint16",
+      "pixels_sha256": "5f7c21cc47c039dfbf494eeb0c36cd862e7a195a732b80d4209a5bf82bddd6a9",
+      "software": "strehl 0.0.0"
+    }
+  ],
+  "normal_debug_comparisons": [
+    {
+      "group": "coordinates",
+      "name": "crop.tif",
+      "sha256": "b577592e7403a32442c1209a6cca5c28fce3429e1593b3ba87cea262639c34ba",
+      "byte_exact": true
+    },
+    {
+      "group": "coordinates",
+      "name": "demosaic.tif",
+      "sha256": "b8bcb3a8992e3efa29e23e4c4a70232d32cb450e68cc3b786496e70edeb61e47",
+      "byte_exact": true
+    },
+    {
+      "group": "coordinates",
+      "name": "padding-placebo.tif",
+      "sha256": "57920ffec48bc314150926844455a2f0c2e6c6517ec560e71b84a2d41ecc3b00",
+      "byte_exact": true
+    },
+    {
+      "group": "coordinates",
+      "name": "whole.tif",
+      "sha256": "57920ffec48bc314150926844455a2f0c2e6c6517ec560e71b84a2d41ecc3b00",
+      "byte_exact": true
+    },
+    {
+      "group": "confidence",
+      "name": "null-confidence.tif",
+      "sha256": "0ea1543051c9748e46ee88ef6e5cc15691da63010fae085ad5636313ca03a58b",
+      "byte_exact": true
+    },
+    {
+      "group": "confidence",
+      "name": "null-off.tif",
+      "sha256": "6b33b5a0f517a698726d84470f16946bc20a11c68f2d3856420d8bb49f73dc34",
+      "byte_exact": true
+    },
+    {
+      "group": "confidence",
+      "name": "null-on.tif",
+      "sha256": "6b33b5a0f517a698726d84470f16946bc20a11c68f2d3856420d8bb49f73dc34",
+      "byte_exact": true
+    },
+    {
+      "group": "confidence",
+      "name": "texture-confidence.tif",
+      "sha256": "e1f954ab70602524b3b2ddd2a24d749e40fce5b55423d7833279f91d3657e134",
+      "byte_exact": true
+    },
+    {
+      "group": "confidence",
+      "name": "texture-off.tif",
+      "sha256": "b9965fe081dfb01fdb8ad0d91317f011770afae795a3f3f9ee1407fc5c718387",
+      "byte_exact": true
+    },
+    {
+      "group": "confidence",
+      "name": "texture-on.tif",
+      "sha256": "b9965fe081dfb01fdb8ad0d91317f011770afae795a3f3f9ee1407fc5c718387",
+      "byte_exact": true
+    },
+    {
+      "group": "live",
+      "name": "baseline.tif",
+      "sha256": "718a8445270234d7458f4254a99d2f0724afb95b9e7c6a7dd6da40852a1bc037",
+      "byte_exact": true
+    },
+    {
+      "group": "live",
+      "name": "changed-input.tif",
+      "sha256": "c198a130d31e50c3ccdfbefd1c8047cd7bdbedfb6b4ee0b8d9752db2a75a9fe1",
+      "byte_exact": true
+    },
+    {
+      "group": "live",
+      "name": "changed-interior-track.tif",
+      "sha256": "7af61f7360998c20d7521f868e03d8d3b20777b166420a09afadfc5d21d21014",
+      "byte_exact": true
+    },
+    {
+      "group": "live",
+      "name": "delegate.tif",
+      "sha256": "718a8445270234d7458f4254a99d2f0724afb95b9e7c6a7dd6da40852a1bc037",
+      "byte_exact": true
+    },
+    {
+      "group": "live",
+      "name": "display.tif",
+      "sha256": "2b5392d9a864dd024a9baf5ba115f8389ce3fc16efdc12e0be60e13610084b88",
+      "byte_exact": true
+    },
+    {
+      "group": "live",
+      "name": "identity.tif",
+      "sha256": "6132969ee3c5970f82b0c9184bba037cf473fea33668d51f92ae7ee16c60915f",
+      "byte_exact": true
+    },
+    {
+      "group": "storage",
+      "name": "odd-tail.tif",
+      "sha256": "55585612c4214a0b52094ce6cd37aa04eb85c558e67e49534f818d1bdae8f680",
+      "byte_exact": true
+    },
+    {
+      "group": "storage",
+      "name": "valid.tif",
+      "sha256": "55585612c4214a0b52094ce6cd37aa04eb85c558e67e49534f818d1bdae8f680",
+      "byte_exact": true
+    },
+    {
+      "group": "refusals",
+      "name": "partial-confidence.tif",
+      "sha256": "6d2940e775b954ed601db13ddf3ef53456fab006ed0f22d3975a744ed93cc7c5",
+      "byte_exact": true
+    },
+    {
+      "group": "refusals",
+      "name": "partial.tif",
+      "sha256": "dee7cdc3144f73afa3839900bae3b4a96b014c3277fb3c4881e70ee9c0725d9f",
+      "byte_exact": true
+    },
+    {
+      "group": "refusals",
+      "name": "refused-frame-placebo-confidence.tif",
+      "sha256": "6d2940e775b954ed601db13ddf3ef53456fab006ed0f22d3975a744ed93cc7c5",
+      "byte_exact": true
+    },
+    {
+      "group": "refusals",
+      "name": "refused-frame-placebo.tif",
+      "sha256": "dee7cdc3144f73afa3839900bae3b4a96b014c3277fb3c4881e70ee9c0725d9f",
+      "byte_exact": true
+    }
+  ]
+}

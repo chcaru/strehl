@@ -1,0 +1,18 @@
+   Compiling strehl-cli v0.0.0 (C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli)
+warning: unused import: `super::*`
+ --> crates\strehl-cli\src\merge_cmd\..\..\..\..\experiments\m194-production-truth\independent-controls.rs:4:5
+  |
+4 | use super::*;
+  |     ^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: `strehl-cli` (bin "strehl" test) generated 1 warning (run `cargo fix --bin "strehl" -p strehl-cli --tests` to apply 1 suggestion)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 3.53s
+     Running unittests src\main.rs (target\m194-production-truth\debug\deps\strehl-0b1ed4ee4c262c24.exe)
+
+running 1 test
+test merge_cmd::production_truth::m194_actual_source_gather_fold_writer_controls ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 122 filtered out; finished in 0.90s
+

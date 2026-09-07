@@ -247,16 +247,28 @@ mutations and 12 independently chosen contradictions with hashes recomputed.
 It accepts valid controls and a correctly recorded product failure. Its
 baseline retains one PASS and three UNMEASURED bars.
 
-**M194 dispatched:** the
+**M194 complete and independently verified:** the
 [production-path audit](../../experiments/review-production-truth/audit.md)
 identified reusable scene renderers but no complete synthetic CFA-to-production
-Pyramid-to-TIFF path among the inspected executables. Implement a private input
-seam through the existing production code and commission it with small
-synthetic fixtures and unchanged-output controls. The author and independent
-reviewer are assigned. Preserve M25's optics/occlusion limits and the old
-blend-truth scene refusal; passing process exit alone is not scene acceptance.
-The actual output-grid adapter audit proceeds in parallel. These are the next
-product-facing work, not a new metric search or a request for new photographs.
+Pyramid-to-TIFF path among the inspected executables. The private decoded-CFA
+source now feeds one shared production gather, fold, confidence and writer body.
+Independent controls re-choose scene dimensions, CFA/crop addresses, source
+errors and confidence rereads. The final source passes both synthetic suites
+and preserves complete native TIFF bytes with alignment off, pinned alignment,
+and full-resolution linear-sRGB development. See the
+[M194 report](../research/M194-production-truth.md) for the checked scope and
+retained build/lint failures. This commissions a source path, not scene truth.
+
+**M194b allocated as the next implementation:** the
+[forward-model brief](../../experiments/review-production-truth/forward-model-plan.md)
+starts with flat, single textured plane and analytic colour fixtures. Fixed
+curved placements, crop coordinates, explicit synthetic noise and independently
+constructed targets will exercise M194's actual production path. Commission the
+finite controls first, then record reconstruction error, wave response and
+repeat temporal variance for one pinned production baseline. Preserve M25's
+optics/occlusion limits and BUILD-BLEND's scene refusal. The later two-layer
+extension has its own controls; it does not delay the first supported software
+measurements. No new capture or SOTA admission is claimed.
 
 **M192d complete and independently verified:** the
 [native observer rehearsal](../research/M192d-production-rehearsal.md) ran all

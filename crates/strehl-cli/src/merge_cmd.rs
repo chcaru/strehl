@@ -72,6 +72,9 @@ use crate::image_out;
 pub(crate) mod dump;
 pub(crate) mod gatefloor;
 pub(crate) mod halo;
+#[cfg(test)]
+#[path = "merge_cmd/production-truth.rs"]
+mod production_truth;
 use crate::stack::{
     MEMORY_BUDGET_BYTES, Roi, flat_roi_stats, mean_and_sigma, provenance_line, report_hp_reference,
     roi_green, srgb_encode,
@@ -4790,6 +4793,32 @@ struct BandWorker {
     beta_n: usize,
 }
 
+/// One decoded-CFA source shared by the fold and every confidence reread.
+/// The production implementation delegates to the existing RAW decoder; the
+/// test implementation supplies already-decoded fixtures, never a second merge.
+trait PyramidFrameSource: Sync {
+    fn len(&self) -> usize;
+    fn decode(&self, index: usize) -> Result<Frame>;
+}
+
+struct RawPyramidSource<'a> {
+    paths: &'a [PathBuf],
+}
+
+impl PyramidFrameSource for RawPyramidSource<'_> {
+    fn len(&self) -> usize {
+        self.paths.len()
+    }
+
+    fn decode(&self, index: usize) -> Result<Frame> {
+        let path = self
+            .paths
+            .get(index)
+            .context("Pyramid source index out of bounds")?;
+        Ok(strehl_raw::decode(path)?)
+    }
+}
+
 impl BandWorker {
     fn new(domain: PyramidDomain, cfg: MergeConfig) -> Self {
         let geom = domain.analysis();
@@ -4823,7 +4852,7 @@ impl BandWorker {
     /// refused this frame, so it was skipped rather than merged unregistered.
     fn fold(
         &mut self,
-        path: &Path,
+        source: &impl PyramidFrameSource,
         index: usize,
         levels: Levels,
         noise: &NoiseModel,
@@ -4835,7 +4864,7 @@ impl BandWorker {
             p.invalidate();
         }
         if !load_frame(
-            path,
+            source,
             index,
             self.domain,
             levels,
@@ -4891,7 +4920,7 @@ impl BandWorker {
 /// first.
 #[allow(clippy::too_many_arguments)]
 fn load_frame(
-    path: &Path,
+    source: &impl PyramidFrameSource,
     index: usize,
     domain: PyramidDomain,
     levels: Levels,
@@ -4903,7 +4932,10 @@ fn load_frame(
     luma: &mut [f32],
 ) -> Result<bool> {
     {
-        let mut frame = strehl_raw::decode(path).with_context(|| format!("frame {index}"))?;
+        let mut frame = source
+            .decode(index)
+            .with_context(|| format!("frame {index}"))?;
+        validate_pyramid_frame(&frame, domain.full, index)?;
         ensure!(
             frame.levels == levels,
             "frame {index} has levels black {} white {}, but the stack was calibrated at \
@@ -4995,6 +5027,44 @@ fn load_frame(
     Ok(true)
 }
 
+/// Check source-owned storage before any kernel can index it. Different valid
+/// padding/origins are allowed; odd trailing sensels retain PlaneGeometry's
+/// existing whole-quad semantics rather than imposing a new sensor restriction.
+fn validate_pyramid_frame(frame: &Frame, expected: PlaneGeometry, index: usize) -> Result<()> {
+    ensure!(
+        expected.width > 0 && expected.height > 0 && frame.geometry() == expected,
+        "frame {index} has active geometry {:?}, expected {:?}",
+        frame.geometry(),
+        expected
+    );
+    let samples = frame
+        .stride
+        .checked_mul(frame.buffer_height)
+        .with_context(|| format!("frame {index} storage dimensions overflow"))?;
+    ensure!(
+        samples == frame.data.len(),
+        "frame {index} storage length {} does not match stride {} x height {}",
+        frame.data.len(),
+        frame.stride,
+        frame.buffer_height
+    );
+    let end_x = frame
+        .active
+        .x
+        .checked_add(frame.active.width)
+        .with_context(|| format!("frame {index} active x extent overflow"))?;
+    let end_y = frame
+        .active
+        .y
+        .checked_add(frame.active.height)
+        .with_context(|| format!("frame {index} active y extent overflow"))?;
+    ensure!(
+        end_x <= frame.stride && end_y <= frame.buffer_height,
+        "frame {index} active area exceeds decoded storage"
+    );
+    Ok(())
+}
+
 /// Environment control used by the registered Pyramid worker ladder.
 ///
 /// This controls execution threads, not reduction boundaries. Conflating those
@@ -5066,7 +5136,10 @@ struct Centrality {
     seen: Vec<u32>,
 }
 
+// Keep the existing confidence inputs explicit when adding the shared source.
+#[allow(clippy::too_many_arguments)]
 fn confidence_pass(
+    source: &impl PyramidFrameSource,
     paths: &[PathBuf],
     domain: PyramidDomain,
     levels: Levels,
@@ -5088,9 +5161,9 @@ fn confidence_pass(
                 below: vec![0; px],
                 seen: vec![0; px],
             };
-            for (i, p) in chunk {
+            for (i, _path) in chunk {
                 if !load_frame(
-                    p,
+                    source,
                     *i,
                     domain,
                     levels,
@@ -5223,7 +5296,10 @@ fn laplacian_abs(luma: &[f32], w: usize, h: usize, out: &mut [f32]) {
     }
 }
 
+// Same explicit inputs as the normal pass, plus the debug candidates.
+#[allow(clippy::too_many_arguments)]
 fn confidence_debug_pass(
+    source: &impl PyramidFrameSource,
     paths: &[PathBuf],
     domain: PyramidDomain,
     levels: Levels,
@@ -5245,9 +5321,9 @@ fn confidence_debug_pass(
             let mut luma = vec![0.0f32; px];
             let mut sharp = vec![0.0f32; px];
             let mut c = Candidates::new(px);
-            for (i, p) in chunk {
+            for (i, _path) in chunk {
                 if !load_frame(
-                    p,
+                    source,
                     *i,
                     domain,
                     levels,
@@ -5532,6 +5608,26 @@ fn ca_status_line(first_frame: &Path) -> String {
     }
 }
 
+/// Prepared input/configuration state. RAW preparation remains in run_pyramid;
+/// all pixel arithmetic below this boundary is shared with decoded-CFA tests.
+struct PreparedPyramid<'a> {
+    paths: &'a [PathBuf],
+    geom: PlaneGeometry,
+    levels: Levels,
+    noise: NoiseModel,
+    wb: Option<[f32; 3]>,
+    xyz_to_cam: Option<([[f32; 3]; 3], String)>,
+    frame_bytes: usize,
+    alignment: Option<(WarpMap, &'static str, align_cmd::CoverFit)>,
+    domain: PyramidDomain,
+    sizes: Vec<strehl_core::pyramid::LevelSize>,
+    defect_plan: Option<crate::stack::DefectPlan>,
+    prologue_secs: f64,
+    align_secs: f64,
+    t_start: Instant,
+    exposure: Exposure,
+}
+
 /// `strehl stack --merge pyramid`: the Laplacian multi-band merge, on the
 /// shipped path.
 ///
@@ -5646,6 +5742,59 @@ fn run_pyramid(opts: &MergeOptions) -> Result<()> {
     // default", contradicting the function it cites.
     let defect_request = crate::stack::defect_request_from_env()?;
     let defect_plan = crate::stack::defect_preflight(&defect_request, &noise, &paths)?;
+    let source = RawPyramidSource { paths: &paths };
+    run_pyramid_prepared(
+        opts,
+        PreparedPyramid {
+            paths: &paths,
+            geom,
+            levels,
+            noise,
+            wb,
+            xyz_to_cam,
+            frame_bytes,
+            alignment,
+            domain,
+            sizes,
+            defect_plan,
+            prologue_secs,
+            align_secs,
+            t_start,
+            exposure,
+        },
+        &source,
+    )
+}
+
+fn run_pyramid_prepared(
+    opts: &MergeOptions,
+    prepared: PreparedPyramid<'_>,
+    source: &impl PyramidFrameSource,
+) -> Result<()> {
+    let PreparedPyramid {
+        paths,
+        geom,
+        levels,
+        noise,
+        wb,
+        xyz_to_cam,
+        frame_bytes,
+        alignment,
+        domain,
+        sizes,
+        defect_plan,
+        prologue_secs,
+        align_secs,
+        t_start,
+        exposure,
+    } = prepared;
+    ensure!(!paths.is_empty(), "Pyramid source has no frames");
+    ensure!(
+        source.len() == paths.len(),
+        "Pyramid source count differs from prepared inputs"
+    );
+    let cfg = opts.pyramid;
+    let analysis_geom = domain.analysis();
     let defect_tally = crate::stack::DefectTally::default();
     let defect = defect_plan
         .as_ref()
@@ -5819,9 +5968,9 @@ fn run_pyramid(opts: &MergeOptions) -> Result<()> {
         let mut chunks = paths.chunks(per_chunk).enumerate().peekable();
         while let Some((chunk_index, chunk)) = chunks.next() {
             let mut folded = 0usize;
-            for (offset, path) in chunk.iter().enumerate() {
+            for (offset, _path) in chunk.iter().enumerate() {
                 let index = chunk_index * per_chunk + offset;
-                if worker.fold(path, index, levels, &noise, warps, defect)? {
+                if worker.fold(source, index, levels, &noise, warps, defect)? {
                     folded += 1;
                 }
             }
@@ -5969,7 +6118,8 @@ fn run_pyramid(opts: &MergeOptions) -> Result<()> {
             luma_variance(&merged_luma, &noise, &mut var);
             let sigma: Vec<f32> = var.iter().map(|v| v.max(1.0).sqrt()).collect();
             let c = confidence_debug_pass(
-                &paths,
+                source,
+                paths,
                 domain,
                 levels,
                 warps,
@@ -5985,7 +6135,8 @@ fn run_pyramid(opts: &MergeOptions) -> Result<()> {
             }
         } else {
             confidence_pass(
-                &paths,
+                source,
+                paths,
                 domain,
                 levels,
                 warps,

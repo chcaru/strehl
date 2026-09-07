@@ -1,0 +1,63 @@
+Diff in \\?\C:\dev\blog\death-of-software\projects\strehl\experiments\m194-production-truth\independent-controls.rs:318:
+     let mut malformed = frames.clone();
+     malformed[3].levels.white += 1.0;
+     opts.out = Some(dir.join("levels-failure.tif"));
+-    assert!(
+-        format!(
+-            "{:#}",
+-            run_fixture(&opts, &FixtureSource::new(malformed), None, Some(crop)).unwrap_err()
+-        )
+-        .contains("stack was calibrated")
+-    );
++    assert!(format!(
++        "{:#}",
++        run_fixture(&opts, &FixtureSource::new(malformed), None, Some(crop)).unwrap_err()
++    )
++    .contains("stack was calibrated"));
+     assert!(!opts.out.as_ref().unwrap().exists());
+     let mut count = FixtureSource::new(frames.clone());
+     count.declared_len -= 1;
+Diff in \\?\C:\dev\blog\death-of-software\projects\strehl\experiments\m194-production-truth\independent-controls.rs:331:
+-    assert!(
+-        run_fixture(&opts, &count, None, None)
+-            .unwrap_err()
+-            .to_string()
+-            .contains("source count")
+-    );
++    assert!(run_fixture(&opts, &count, None, None)
++        .unwrap_err()
++        .to_string()
++        .contains("source count"));
+     assert_eq!(count.counts(), vec![0; 5]);
+     let mut track = independent_track(5);
+     track[2] = FrameWarp::Refused("independent deliberate unplaced interior".into());
+error: let chains are only allowed in Rust 2024 or later
+    --> \\?\C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli\src\merge_cmd.rs:3346:16
+     |
+3346 |             if let Some(e) = p.heldout_px
+     |                ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: let chains are only allowed in Rust 2024 or later
+    --> \\?\C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli\src\merge_cmd.rs:4206:24
+     |
+4206 |                     && let Some(selector) = selector.as_mut()
+     |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: let chains are only allowed in Rust 2024 or later
+    --> \\?\C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli\src\merge_cmd.rs:5530:8
+     |
+5530 |     if let Ok(v) = std::env::var(BAND_WORKERS_ENV)
+     |        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: let chains are only allowed in Rust 2024 or later
+    --> \\?\C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli\src\merge_cmd.rs:7309:8
+     |
+7309 |     if let Merged::Bands { domain, .. } = &merged
+     |        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: let chains are only allowed in Rust 2024 or later
+    --> \\?\C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli\src\merge_cmd.rs:7506:12
+     |
+7506 |         if let Some(would) = choose()
+     |            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+

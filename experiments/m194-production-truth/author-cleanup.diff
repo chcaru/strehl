@@ -1,0 +1,129 @@
+--- pre-cleanup-source
++++ final-source
+@@ -4811,7 +4811,10 @@
+     }
+ 
+     fn decode(&self, index: usize) -> Result<Frame> {
+-        let path = self.paths.get(index).context("Pyramid source index out of bounds")?;
++        let path = self
++            .paths
++            .get(index)
++            .context("Pyramid source index out of bounds")?;
+         Ok(strehl_raw::decode(path)?)
+     }
+ }
+@@ -4929,7 +4932,9 @@
+     luma: &mut [f32],
+ ) -> Result<bool> {
+     {
+-        let mut frame = source.decode(index).with_context(|| format!("frame {index}"))?;
++        let mut frame = source
++            .decode(index)
++            .with_context(|| format!("frame {index}"))?;
+         validate_pyramid_frame(&frame, domain.full, index)?;
+         ensure!(
+             frame.levels == levels,
+@@ -5029,18 +5034,29 @@
+     ensure!(
+         expected.width > 0 && expected.height > 0 && frame.geometry() == expected,
+         "frame {index} has active geometry {:?}, expected {:?}",
+-        frame.geometry(), expected
+-    );
+-    let samples = frame.stride.checked_mul(frame.buffer_height)
++        frame.geometry(),
++        expected
++    );
++    let samples = frame
++        .stride
++        .checked_mul(frame.buffer_height)
+         .with_context(|| format!("frame {index} storage dimensions overflow"))?;
+     ensure!(
+         samples == frame.data.len(),
+         "frame {index} storage length {} does not match stride {} x height {}",
+-        frame.data.len(), frame.stride, frame.buffer_height
+-    );
+-    let end_x = frame.active.x.checked_add(frame.active.width)
++        frame.data.len(),
++        frame.stride,
++        frame.buffer_height
++    );
++    let end_x = frame
++        .active
++        .x
++        .checked_add(frame.active.width)
+         .with_context(|| format!("frame {index} active x extent overflow"))?;
+-    let end_y = frame.active.y.checked_add(frame.active.height)
++    let end_y = frame
++        .active
++        .y
++        .checked_add(frame.active.height)
+         .with_context(|| format!("frame {index} active y extent overflow"))?;
+     ensure!(
+         end_x <= frame.stride && end_y <= frame.buffer_height,
+@@ -5120,6 +5136,8 @@
+     seen: Vec<u32>,
+ }
+ 
++// Keep the existing confidence inputs explicit when adding the shared source.
++#[allow(clippy::too_many_arguments)]
+ fn confidence_pass(
+     source: &impl PyramidFrameSource,
+     paths: &[PathBuf],
+@@ -5278,6 +5296,8 @@
+     }
+ }
+ 
++// Same explicit inputs as the normal pass, plus the debug candidates.
++#[allow(clippy::too_many_arguments)]
+ fn confidence_debug_pass(
+     source: &impl PyramidFrameSource,
+     paths: &[PathBuf],
+@@ -5752,11 +5772,27 @@
+     source: &impl PyramidFrameSource,
+ ) -> Result<()> {
+     let PreparedPyramid {
+-        paths, geom, levels, noise, wb, xyz_to_cam, frame_bytes, alignment,
+-        domain, sizes, defect_plan, prologue_secs, align_secs, t_start, exposure,
++        paths,
++        geom,
++        levels,
++        noise,
++        wb,
++        xyz_to_cam,
++        frame_bytes,
++        alignment,
++        domain,
++        sizes,
++        defect_plan,
++        prologue_secs,
++        align_secs,
++        t_start,
++        exposure,
+     } = prepared;
+     ensure!(!paths.is_empty(), "Pyramid source has no frames");
+-    ensure!(source.len() == paths.len(), "Pyramid source count differs from prepared inputs");
++    ensure!(
++        source.len() == paths.len(),
++        "Pyramid source count differs from prepared inputs"
++    );
+     let cfg = opts.pyramid;
+     let analysis_geom = domain.analysis();
+     let defect_tally = crate::stack::DefectTally::default();
+@@ -6083,7 +6119,7 @@
+             let sigma: Vec<f32> = var.iter().map(|v| v.max(1.0).sqrt()).collect();
+             let c = confidence_debug_pass(
+                 source,
+-                &paths,
++                paths,
+                 domain,
+                 levels,
+                 warps,
+@@ -6100,7 +6136,7 @@
+         } else {
+             confidence_pass(
+                 source,
+-                &paths,
++                paths,
+                 domain,
+                 levels,
+                 warps,
