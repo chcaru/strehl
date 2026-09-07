@@ -8,7 +8,7 @@ use std::collections::BTreeMap;
 use std::io::{Read, Write};
 use std::sync::Mutex;
 use strehl_core::align::Cx;
-use strehl_core::noise::{NoiseProvenance, PlaneNoise};
+use strehl_core::noise::{PlaneNoise, Provenance as NoiseProvenance};
 use strehl_core::pyramid::{Fallback, Hull};
 
 const WIDTH: usize = 320;

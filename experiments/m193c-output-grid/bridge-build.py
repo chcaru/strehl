@@ -118,7 +118,7 @@ def main():
     for ref in release["inputs"]:
         need(file_binding(ROOT/ref["path"]) == {k: ref[k] for k in ("sha256", "bytes")}, "build input changed")
     command = release["build_command"]
-    need(command == ["cargo", "test", "-p", "strehl-cli", "--bin", "strehl", "--target-dir", "target/m193c-output-grid-build-1", "--no-run", "--message-format=json-render-diagnostics"], "exact build command")
+    need(command == ["cargo", "test", "-p", "strehl-cli", "--bin", "strehl", "--target-dir", "target/m193c-output-grid-build-2", "--no-run", "--message-format=json-render-diagnostics"], "exact build command")
     output = args.output.resolve()
     need(output.is_relative_to(ROOT), "build output outside repository")
     output.mkdir(parents=True, exist_ok=False)
@@ -136,7 +136,7 @@ def main():
     started = time.monotonic()
     log = output/"compiler.log"
     try:
-        need(not (ROOT/"target/m193c-output-grid-build-1").exists(), "replacement build target must be fresh")
+        need(not (ROOT/"target/m193c-output-grid-build-2").exists(), "replacement build target must be fresh")
         proc_spec = importlib.util.spec_from_file_location("m193c_build_process", PROCESS)
         process_api = importlib.util.module_from_spec(proc_spec)
         process_raw = PROCESS.read_bytes()
