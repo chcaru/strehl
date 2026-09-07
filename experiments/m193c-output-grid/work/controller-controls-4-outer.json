@@ -1,0 +1,22 @@
+{
+  "release_sha256": "63e229c90510650678b52f384572498125543ebb662ff63ace1c635c1d48dd16",
+  "elapsed_wall_seconds": 17.2566174,
+  "scope": "Actual PowerShell direct invocation and terminal wall observation",
+  "exit_code": 0,
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-X",
+    "utf8",
+    "-X",
+    "faulthandler",
+    "-X",
+    "pycache_prefix=C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\work\\cache-controller-controls-4",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\controller-controls.py",
+    "--release",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\controller-controls-release-4.json",
+    "--release-sha256",
+    "63e229c90510650678b52f384572498125543ebb662ff63ace1c635c1d48dd16",
+    "--output",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\controller-controls-4"
+  ]
+}

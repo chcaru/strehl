@@ -1,0 +1,1973 @@
+{
+  "artifact_scope": "all retained output files except terminal result, including failed and pending markers",
+  "artifacts": [
+    {
+      "bytes": 18455,
+      "path": "experiments/m193c-output-grid/controller-controls-4/sources/experiments/m193c-output-grid/controller-controls.py",
+      "sha256": "217999b5969a29224868fe731284493e04ce0ef33bd225fc4c9f3bc3f8b5b84c"
+    },
+    {
+      "bytes": 4416,
+      "path": "experiments/m193c-output-grid/controller-controls-4/sources/experiments/m193c-output-grid/controller-child.py",
+      "sha256": "8944b1387990a262d1ad47c44ee2bbd7de281323185a0758802f1637289d2788"
+    },
+    {
+      "bytes": 12664,
+      "path": "experiments/m193c-output-grid/controller-controls-4/sources/experiments/m193c-output-grid/bounded-process.py",
+      "sha256": "47b9f8d848759eba61f055b9fdca1f8ac400f134dcd7636f0e0eaaa955704e0b"
+    },
+    {
+      "bytes": 117908,
+      "path": "experiments/m193c-output-grid/controller-controls-4/sources/experiments/m12-scorecard/m12-harness.py",
+      "sha256": "6cfb408992f37b225f102da4d62ba836f9c5b67c92bdd418ff460987866a1bb9"
+    },
+    {
+      "bytes": 19,
+      "path": "experiments/m193c-output-grid/controller-controls-4/00-valid.log",
+      "sha256": "07f1280c0bd3664c53d669c5d1d3ef35341dbbfea45b59f1d91ee5dea4083c65"
+    },
+    {
+      "bytes": 18,
+      "path": "experiments/m193c-output-grid/controller-controls-4/01-nonzero.log",
+      "sha256": "a06b7d243518affb9e73a1b3fe0744b2bb6be6b6a0160d537e4a33ae47dd7152"
+    },
+    {
+      "bytes": 65536,
+      "path": "experiments/m193c-output-grid/controller-controls-4/02-exact-log.log",
+      "sha256": "1f8745f0d2d1387ec1af2211a3cf417b2e9e885e853472649c1d979d0e9370e3"
+    },
+    {
+      "bytes": 65536,
+      "path": "experiments/m193c-output-grid/controller-controls-4/03-overflow-log.log",
+      "sha256": "1f8745f0d2d1387ec1af2211a3cf417b2e9e885e853472649c1d979d0e9370e3"
+    },
+    {
+      "bytes": 44,
+      "path": "experiments/m193c-output-grid/controller-controls-4/04-timeout.log",
+      "sha256": "d8cbe19c0b7ccda6a98f82d813a0439281dd44dab465769846132120051fe1b2"
+    },
+    {
+      "bytes": 91,
+      "path": "experiments/m193c-output-grid/controller-controls-4/05-nested-timeout.log",
+      "sha256": "9b296931ca5a6d5e35f47bfd220d1dff105db4e5e40326eacfec8316bcecc785"
+    },
+    {
+      "bytes": 32,
+      "path": "experiments/m193c-output-grid/controller-controls-4/06-memory-allowed.log",
+      "sha256": "069b403264accdc8e29af4e6542150a9538723d8a1fa9201f04f4997327c2106"
+    },
+    {
+      "bytes": 22,
+      "path": "experiments/m193c-output-grid/controller-controls-4/07-memory.log",
+      "sha256": "1128b5db9d7ca34bd50a8740f673da48cbb4f4ed3b94034db230cc2a9fc2cd18"
+    },
+    {
+      "bytes": 65536,
+      "path": "experiments/m193c-output-grid/controller-controls-4/08-late-log-binding.log",
+      "sha256": "1f8745f0d2d1387ec1af2211a3cf417b2e9e885e853472649c1d979d0e9370e3"
+    },
+    {
+      "bytes": 29,
+      "path": "experiments/m193c-output-grid/controller-controls-4/09-changed-input.log",
+      "sha256": "2e75a0c920b25162b66f377ffd56008cfe4e23f77a03e7eea1f39910e2ecfdf1"
+    },
+    {
+      "bytes": 19,
+      "path": "experiments/m193c-output-grid/controller-controls-4/10-restored.log",
+      "sha256": "07f1280c0bd3664c53d669c5d1d3ef35341dbbfea45b59f1d91ee5dea4083c65"
+    },
+    {
+      "bytes": 204,
+      "path": "experiments/m193c-output-grid/controller-controls-4/11-drain-finish.log",
+      "sha256": "a084a0600252b33803044d0a75d781f3dfbadca0bb4f9b591a74b4955fe8a357"
+    },
+    {
+      "bytes": 206,
+      "path": "experiments/m193c-output-grid/controller-controls-4/12-drain-persist.log",
+      "sha256": "2a42f5885a1912c8ca0bfa735c16f3b80e9581ac0c20015e32c5119444d6c72d"
+    },
+    {
+      "bytes": 206,
+      "path": "experiments/m193c-output-grid/controller-controls-4/13-drain-restored.log",
+      "sha256": "0564f56a9c1696f600b1680025e730bed89d79ab560b6b735989b0c4132a7798"
+    },
+    {
+      "bytes": 22,
+      "path": "experiments/m193c-output-grid/controller-controls-4/watched-input.txt",
+      "sha256": "d7a6fb6663933dea81270712039f4a3a56bb368d9e54f1d3f9f447b4d213ddee"
+    },
+    {
+      "bytes": 217,
+      "path": "experiments/m193c-output-grid/controller-controls-4/11-drain-finish/completion.json",
+      "sha256": "d2eb598e1598ec5623531ca52a3944b8a981ccb518c3c7d1ed0b7ce64adc3504"
+    },
+    {
+      "bytes": 151,
+      "path": "experiments/m193c-output-grid/controller-controls-4/11-drain-finish/startup.json",
+      "sha256": "fc6eb65d200d7d6d421243b99dbe4fc998e645fd30a5ea80959d830e820a7d3b"
+    },
+    {
+      "bytes": 153,
+      "path": "experiments/m193c-output-grid/controller-controls-4/12-drain-persist/startup.json",
+      "sha256": "4ec4b7b91c40ceb04b233b14c623c251eaf99e10de376353fd9df013dc54dc9e"
+    },
+    {
+      "bytes": 220,
+      "path": "experiments/m193c-output-grid/controller-controls-4/13-drain-restored/completion.json",
+      "sha256": "9ec6dc7e4286ab68904b1bf8cdc4ba1c7cfd8c99ae02047b46b75a8395dcc91a"
+    },
+    {
+      "bytes": 154,
+      "path": "experiments/m193c-output-grid/controller-controls-4/13-drain-restored/startup.json",
+      "sha256": "c8abe5b0eba6e04c7ae622a552dae20135ab7440032e7b374853402bad184d95"
+    }
+  ],
+  "cases": [
+    {
+      "actual": {
+        "cleanup_errors": [],
+        "command": [
+          "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+          "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\controller-child.py",
+          "valid"
+        ],
+        "configured_job_limits": {
+          "committed_bytes": 67108864,
+          "flags": 8704
+        },
+        "direct_exit_observed": true,
+        "error": null,
+        "exit_code": 0,
+        "job_accounting": {
+          "active_processes": 0,
+          "total_cpu_100ns": 625000,
+          "total_kernel_100ns": 312500,
+          "total_page_fault_count": 6542,
+          "total_processes": 2,
+          "total_terminated_processes": 0,
+          "total_user_100ns": 312500
+        },
+        "job_memory": {
+          "peak_job_memory_used_bytes": 10088448,
+          "peak_process_memory_used_bytes": 8794112
+        },
+        "limits": {
+          "committed_bytes": 67108864,
+          "cpu_seconds": 10,
+          "log_bytes": 65536,
+          "wall_seconds": 10
+        },
+        "log": {
+          "bytes": 19,
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\controller-controls-4\\00-valid.log",
+          "sha256": "07f1280c0bd3664c53d669c5d1d3ef35341dbbfea45b59f1d91ee5dea4083c65"
+        },
+        "log_bytes": 19,
+        "pipe_eof_observed": true,
+        "post_exit_drain": {
+          "completed": true,
+          "ended_wall_seconds": 0.0940000000409782,
+          "initial_accounting": {
+            "active_processes": 0,
+            "total_cpu_100ns": 625000,
+            "total_kernel_100ns": 312500,
+            "total_page_fault_count": 6542,
+            "total_processes": 2,
+            "total_terminated_processes": 0,
+            "total_user_100ns": 312500
+          },
+          "last_accounting": {
+            "active_processes": 0,
+            "total_cpu_100ns": 625000,
+            "total_kernel_100ns": 312500,
+            "total_page_fault_count": 6542,
+            "total_processes": 2,
+            "total_terminated_processes": 0,
+            "total_user_100ns": 312500
+          },
+          "observation_count": 1,
+          "observations": [
+            {
+              "accounting": {
+                "active_processes": 0,
+                "total_cpu_100ns": 625000,
+                "total_kernel_100ns": 312500,
+                "total_page_fault_count": 6542,
+                "total_processes": 2,
+                "total_terminated_processes": 0,
+                "total_user_100ns": 312500
+              },
+              "wall_seconds": 0.0940000000409782
+            }
+          ],
+          "started_wall_seconds": 0.0940000000409782
+        },
+        "scope": "owned job tree; committed memory, observed user+kernel CPU; not RSS or a timing benchmark",
+        "terminal_job_accounting": true,
+        "termination": {
+          "attempted": false,
+          "before_accounting": null,
+          "succeeded": false
+        },
+        "wall_seconds": 0.0940000000409782
+      },
+      "index": 0,
+      "mode": "valid",
+      "passed": true,
+      "removed_environment_names": []
+    },
+    {
+      "actual": {
+        "cleanup_errors": [],
+        "command": [
+          "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+          "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\controller-child.py",
+          "nonzero"
+        ],
+        "configured_job_limits": {
+          "committed_bytes": 67108864,
+          "flags": 8704
+        },
+        "direct_exit_observed": true,
+        "error": null,
+        "exit_code": 7,
+        "job_accounting": {
+          "active_processes": 0,
+          "total_cpu_100ns": 312500,
+          "total_kernel_100ns": 312500,
+          "total_page_fault_count": 6631,
+          "total_processes": 2,
+          "total_terminated_processes": 0,
+          "total_user_100ns": 0
+        },
+        "job_memory": {
+          "peak_job_memory_used_bytes": 10395648,
+          "peak_process_memory_used_bytes": 9093120
+        },
+        "limits": {
+          "committed_bytes": 67108864,
+          "cpu_seconds": 10,
+          "log_bytes": 65536,
+          "wall_seconds": 10
+        },
+        "log": {
+          "bytes": 18,
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\controller-controls-4\\01-nonzero.log",
+          "sha256": "a06b7d243518affb9e73a1b3fe0744b2bb6be6b6a0160d537e4a33ae47dd7152"
+        },
+        "log_bytes": 18,
+        "pipe_eof_observed": true,
+        "post_exit_drain": {
+          "completed": true,
+          "ended_wall_seconds": 0.10899999993853271,
+          "initial_accounting": {
+            "active_processes": 0,
+            "total_cpu_100ns": 312500,
+            "total_kernel_100ns": 312500,
+            "total_page_fault_count": 6631,
+            "total_processes": 2,
+            "total_terminated_processes": 0,
+            "total_user_100ns": 0
+          },
+          "last_accounting": {
+            "active_processes": 0,
+            "total_cpu_100ns": 312500,
+            "total_kernel_100ns": 312500,
+            "total_page_fault_count": 6631,
+            "total_processes": 2,
+            "total_terminated_processes": 0,
+            "total_user_100ns": 0
+          },
+          "observation_count": 1,
+          "observations": [
+            {
+              "accounting": {
+                "active_processes": 0,
+                "total_cpu_100ns": 312500,
+                "total_kernel_100ns": 312500,
+                "total_page_fault_count": 6631,
+                "total_processes": 2,
+                "total_terminated_processes": 0,
+                "total_user_100ns": 0
+              },
+              "wall_seconds": 0.10899999993853271
+            }
+          ],
+          "started_wall_seconds": 0.10899999993853271
+        },
+        "scope": "owned job tree; committed memory, observed user+kernel CPU; not RSS or a timing benchmark",
+        "terminal_job_accounting": true,
+        "termination": {
+          "attempted": false,
+          "before_accounting": null,
+          "succeeded": false
+        },
+        "wall_seconds": 0.10899999993853271
+      },
+      "index": 1,
+      "mode": "nonzero",
+      "passed": true,
+      "removed_environment_names": []
+    },
+    {
+      "actual": {
+        "cleanup_errors": [],
+        "command": [
+          "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+          "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\controller-child.py",
+          "exact-log"
+        ],
+        "configured_job_limits": {
+          "committed_bytes": 67108864,
+          "flags": 8704
+        },
+        "direct_exit_observed": true,
+        "error": null,
+        "exit_code": 0,
+        "job_accounting": {
+          "active_processes": 0,
+          "total_cpu_100ns": 625000,
+          "total_kernel_100ns": 468750,
+          "total_page_fault_count": 6599,
+          "total_processes": 2,
+          "total_terminated_processes": 0,
+          "total_user_100ns": 156250
+        },
+        "job_memory": {
+          "peak_job_memory_used_bytes": 10412032,
+          "peak_process_memory_used_bytes": 9125888
+        },
+        "limits": {
+          "committed_bytes": 67108864,
+          "cpu_seconds": 10,
+          "log_bytes": 65536,
+          "wall_seconds": 10
+        },
+        "log": {
+          "bytes": 65536,
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\controller-controls-4\\02-exact-log.log",
+          "sha256": "1f8745f0d2d1387ec1af2211a3cf417b2e9e885e853472649c1d979d0e9370e3"
+        },
+        "log_bytes": 65536,
+        "pipe_eof_observed": true,
+        "post_exit_drain": {
+          "completed": true,
+          "ended_wall_seconds": 0.0940000000409782,
+          "initial_accounting": {
+            "active_processes": 0,
+            "total_cpu_100ns": 625000,
+            "total_kernel_100ns": 468750,
+            "total_page_fault_count": 6599,
+            "total_processes": 2,
+            "total_terminated_processes": 0,
+            "total_user_100ns": 156250
+          },
+          "last_accounting": {
+            "active_processes": 0,
+            "total_cpu_100ns": 625000,
+            "total_kernel_100ns": 468750,
+            "total_page_fault_count": 6599,
+            "total_processes": 2,
+            "total_terminated_processes": 0,
+            "total_user_100ns": 156250
+          },
+          "observation_count": 1,
+          "observations": [
+            {
+              "accounting": {
+                "active_processes": 0,
+                "total_cpu_100ns": 625000,
+                "total_kernel_100ns": 468750,
+                "total_page_fault_count": 6599,
+                "total_processes": 2,
+                "total_terminated_processes": 0,
+                "total_user_100ns": 156250
+              },
+              "wall_seconds": 0.0940000000409782
+            }
+          ],
+          "started_wall_seconds": 0.0940000000409782
+        },
+        "scope": "owned job tree; committed memory, observed user+kernel CPU; not RSS or a timing benchmark",
+        "terminal_job_accounting": true,
+        "termination": {
+          "attempted": false,
+          "before_accounting": null,
+          "succeeded": false
+        },
+        "wall_seconds": 0.0940000000409782
+      },
+      "index": 2,
+      "mode": "exact-log",
+      "passed": true,
+      "removed_environment_names": []
+    },
+    {
+      "actual": {
+        "cleanup_errors": [],
+        "command": [
+          "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+          "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\controller-child.py",
+          "overflow-log"
+        ],
+        "configured_job_limits": {
+          "committed_bytes": 67108864,
+          "flags": 8704
+        },
+        "direct_exit_observed": false,
+        "error": "ValueError('child log bound')",
+        "exit_code": 3784556766,
+        "job_accounting": {
+          "active_processes": 0,
+          "total_cpu_100ns": 625000,
+          "total_kernel_100ns": 312500,
+          "total_page_fault_count": 6411,
+          "total_processes": 2,
+          "total_terminated_processes": 0,
+          "total_user_100ns": 312500
+        },
+        "job_memory": {
+          "peak_job_memory_used_bytes": 10383360,
+          "peak_process_memory_used_bytes": 9101312
+        },
+        "limits": {
+          "committed_bytes": 67108864,
+          "cpu_seconds": 10,
+          "log_bytes": 65536,
+          "wall_seconds": 10
+        },
+        "log": {
+          "bytes": 65536,
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\controller-controls-4\\03-overflow-log.log",
+          "sha256": "1f8745f0d2d1387ec1af2211a3cf417b2e9e885e853472649c1d979d0e9370e3"
+        },
+        "log_bytes": 65536,
+        "pipe_eof_observed": false,
+        "post_exit_drain": null,
+        "scope": "owned job tree; committed memory, observed user+kernel CPU; not RSS or a timing benchmark",
+        "terminal_job_accounting": true,
+        "termination": {
+          "attempted": true,
+          "before_accounting": {
+            "active_processes": 2,
+            "total_cpu_100ns": 625000,
+            "total_kernel_100ns": 312500,
+            "total_page_fault_count": 6411,
+            "total_processes": 2,
+            "total_terminated_processes": 0,
+            "total_user_100ns": 312500
+          },
+          "succeeded": true
+        },
+        "wall_seconds": 0.0779999999795109
+      },
+      "index": 3,
+      "mode": "overflow-log",
+      "passed": true,
+      "removed_environment_names": []
+    },
+    {
+      "actual": {
+        "cleanup_errors": [],
+        "command": [
+          "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+          "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\controller-child.py",
+          "timeout"
+        ],
+        "configured_job_limits": {
+          "committed_bytes": 67108864,
+          "flags": 8704
+        },
+        "direct_exit_observed": false,
+        "error": "ValueError('child wall bound')",
+        "exit_code": 3784556766,
+        "job_accounting": {
+          "active_processes": 0,
+          "total_cpu_100ns": 625000,
+          "total_kernel_100ns": 156250,
+          "total_page_fault_count": 6318,
+          "total_processes": 2,
+          "total_terminated_processes": 0,
+          "total_user_100ns": 468750
+        },
+        "job_memory": {
+          "peak_job_memory_used_bytes": 9973760,
+          "peak_process_memory_used_bytes": 8695808
+        },
+        "limits": {
+          "committed_bytes": 67108864,
+          "cpu_seconds": 10,
+          "log_bytes": 65536,
+          "wall_seconds": 1
+        },
+        "log": {
+          "bytes": 44,
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\controller-controls-4\\04-timeout.log",
+          "sha256": "d8cbe19c0b7ccda6a98f82d813a0439281dd44dab465769846132120051fe1b2"
+        },
+        "log_bytes": 44,
+        "pipe_eof_observed": false,
+        "post_exit_drain": null,
+        "scope": "owned job tree; committed memory, observed user+kernel CPU; not RSS or a timing benchmark",
+        "terminal_job_accounting": true,
+        "termination": {
+          "attempted": true,
+          "before_accounting": {
+            "active_processes": 2,
+            "total_cpu_100ns": 625000,
+            "total_kernel_100ns": 156250,
+            "total_page_fault_count": 6318,
+            "total_processes": 2,
+            "total_terminated_processes": 0,
+            "total_user_100ns": 468750
+          },
+          "succeeded": true
+        },
+        "wall_seconds": 1.0309999999590218
+      },
+      "index": 4,
+      "mode": "timeout",
+      "passed": true,
+      "removed_environment_names": []
+    },
+    {
+      "actual": {
+        "cleanup_errors": [],
+        "command": [
+          "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+          "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\controller-child.py",
+          "nested-timeout"
+        ],
+        "configured_job_limits": {
+          "committed_bytes": 67108864,
+          "flags": 8704
+        },
+        "direct_exit_observed": false,
+        "error": "ValueError('child wall bound')",
+        "exit_code": 3784556766,
+        "job_accounting": {
+          "active_processes": 0,
+          "total_cpu_100ns": 1406250,
+          "total_kernel_100ns": 625000,
+          "total_page_fault_count": 12805,
+          "total_processes": 4,
+          "total_terminated_processes": 0,
+          "total_user_100ns": 781250
+        },
+        "job_memory": {
+          "peak_job_memory_used_bytes": 20410368,
+          "peak_process_memory_used_bytes": 9076736
+        },
+        "limits": {
+          "committed_bytes": 67108864,
+          "cpu_seconds": 10,
+          "log_bytes": 65536,
+          "wall_seconds": 5
+        },
+        "log": {
+          "bytes": 91,
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\controller-controls-4\\05-nested-timeout.log",
+          "sha256": "9b296931ca5a6d5e35f47bfd220d1dff105db4e5e40326eacfec8316bcecc785"
+        },
+        "log_bytes": 91,
+        "pipe_eof_observed": false,
+        "post_exit_drain": null,
+        "scope": "owned job tree; committed memory, observed user+kernel CPU; not RSS or a timing benchmark",
+        "terminal_job_accounting": true,
+        "termination": {
+          "attempted": true,
+          "before_accounting": {
+            "active_processes": 4,
+            "total_cpu_100ns": 1406250,
+            "total_kernel_100ns": 625000,
+            "total_page_fault_count": 12805,
+            "total_processes": 4,
+            "total_terminated_processes": 0,
+            "total_user_100ns": 781250
+          },
+          "succeeded": true
+        },
+        "wall_seconds": 5.015999999945052
+      },
+      "index": 5,
+      "mode": "nested-timeout",
+      "nested_identity": {
+        "additional_job_processes": 2,
+        "executing_child_pids": [
+          29772
+        ],
+        "parent_pids": [
+          7476
+        ],
+        "requested_child_pids": [
+          29772
+        ],
+        "single_companion_processes": 2
+      },
+      "passed": true,
+      "removed_environment_names": []
+    },
+    {
+      "actual": {
+        "cleanup_errors": [],
+        "command": [
+          "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+          "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\controller-child.py",
+          "memory-allowed"
+        ],
+        "configured_job_limits": {
+          "committed_bytes": 268435456,
+          "flags": 8704
+        },
+        "direct_exit_observed": true,
+        "error": null,
+        "exit_code": 0,
+        "job_accounting": {
+          "active_processes": 0,
+          "total_cpu_100ns": 781250,
+          "total_kernel_100ns": 312500,
+          "total_page_fault_count": 39357,
+          "total_processes": 2,
+          "total_terminated_processes": 0,
+          "total_user_100ns": 468750
+        },
+        "job_memory": {
+          "peak_job_memory_used_bytes": 144588800,
+          "peak_process_memory_used_bytes": 143306752
+        },
+        "limits": {
+          "committed_bytes": 268435456,
+          "cpu_seconds": 10,
+          "log_bytes": 65536,
+          "wall_seconds": 10
+        },
+        "log": {
+          "bytes": 32,
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\controller-controls-4\\06-memory-allowed.log",
+          "sha256": "069b403264accdc8e29af4e6542150a9538723d8a1fa9201f04f4997327c2106"
+        },
+        "log_bytes": 32,
+        "pipe_eof_observed": true,
+        "post_exit_drain": {
+          "completed": true,
+          "ended_wall_seconds": 0.125,
+          "initial_accounting": {
+            "active_processes": 0,
+            "total_cpu_100ns": 781250,
+            "total_kernel_100ns": 312500,
+            "total_page_fault_count": 39357,
+            "total_processes": 2,
+            "total_terminated_processes": 0,
+            "total_user_100ns": 468750
+          },
+          "last_accounting": {
+            "active_processes": 0,
+            "total_cpu_100ns": 781250,
+            "total_kernel_100ns": 312500,
+            "total_page_fault_count": 39357,
+            "total_processes": 2,
+            "total_terminated_processes": 0,
+            "total_user_100ns": 468750
+          },
+          "observation_count": 1,
+          "observations": [
+            {
+              "accounting": {
+                "active_processes": 0,
+                "total_cpu_100ns": 781250,
+                "total_kernel_100ns": 312500,
+                "total_page_fault_count": 39357,
+                "total_processes": 2,
+                "total_terminated_processes": 0,
+                "total_user_100ns": 468750
+              },
+              "wall_seconds": 0.125
+            }
+          ],
+          "started_wall_seconds": 0.125
+        },
+        "scope": "owned job tree; committed memory, observed user+kernel CPU; not RSS or a timing benchmark",
+        "terminal_job_accounting": true,
+        "termination": {
+          "attempted": false,
+          "before_accounting": null,
+          "succeeded": false
+        },
+        "wall_seconds": 0.125
+      },
+      "index": 6,
+      "mode": "memory-allowed",
+      "passed": true,
+      "removed_environment_names": []
+    },
+    {
+      "actual": {
+        "cleanup_errors": [],
+        "command": [
+          "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+          "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\controller-child.py",
+          "memory"
+        ],
+        "configured_job_limits": {
+          "committed_bytes": 67108864,
+          "flags": 8704
+        },
+        "direct_exit_observed": false,
+        "error": "ValueError('child committed-memory bound')",
+        "exit_code": 3784556766,
+        "job_accounting": {
+          "active_processes": 0,
+          "total_cpu_100ns": 625000,
+          "total_kernel_100ns": 156250,
+          "total_page_fault_count": 6364,
+          "total_processes": 2,
+          "total_terminated_processes": 0,
+          "total_user_100ns": 468750
+        },
+        "job_memory": {
+          "peak_job_memory_used_bytes": 144863232,
+          "peak_process_memory_used_bytes": 143568896
+        },
+        "limits": {
+          "committed_bytes": 67108864,
+          "cpu_seconds": 10,
+          "log_bytes": 65536,
+          "wall_seconds": 10
+        },
+        "log": {
+          "bytes": 22,
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\controller-controls-4\\07-memory.log",
+          "sha256": "1128b5db9d7ca34bd50a8740f673da48cbb4f4ed3b94034db230cc2a9fc2cd18"
+        },
+        "log_bytes": 22,
+        "pipe_eof_observed": false,
+        "post_exit_drain": null,
+        "scope": "owned job tree; committed memory, observed user+kernel CPU; not RSS or a timing benchmark",
+        "terminal_job_accounting": true,
+        "termination": {
+          "attempted": true,
+          "before_accounting": {
+            "active_processes": 2,
+            "total_cpu_100ns": 625000,
+            "total_kernel_100ns": 156250,
+            "total_page_fault_count": 6364,
+            "total_processes": 2,
+            "total_terminated_processes": 0,
+            "total_user_100ns": 468750
+          },
+          "succeeded": true
+        },
+        "wall_seconds": 0.07900000002700835
+      },
+      "index": 7,
+      "memory_refusal_route": "parent-observed-peak",
+      "mode": "memory",
+      "passed": true,
+      "removed_environment_names": []
+    },
+    {
+      "actual": {
+        "cleanup_errors": [
+          "final child log binding: OSError('M193C_PRIVATE_LATE_LOG_READ')"
+        ],
+        "command": [
+          "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+          "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\controller-child.py",
+          "overflow-log"
+        ],
+        "configured_job_limits": {
+          "committed_bytes": 67108864,
+          "flags": 8704
+        },
+        "direct_exit_observed": false,
+        "error": "ValueError('child log bound')",
+        "exit_code": 3784556766,
+        "job_accounting": {
+          "active_processes": 0,
+          "total_cpu_100ns": 468750,
+          "total_kernel_100ns": 156250,
+          "total_page_fault_count": 6331,
+          "total_processes": 2,
+          "total_terminated_processes": 0,
+          "total_user_100ns": 312500
+        },
+        "job_memory": {
+          "peak_job_memory_used_bytes": 10158080,
+          "peak_process_memory_used_bytes": 8880128
+        },
+        "limits": {
+          "committed_bytes": 67108864,
+          "cpu_seconds": 10,
+          "log_bytes": 65536,
+          "wall_seconds": 10
+        },
+        "log_bytes": 65536,
+        "pipe_eof_observed": false,
+        "post_exit_drain": null,
+        "scope": "owned job tree; committed memory, observed user+kernel CPU; not RSS or a timing benchmark",
+        "terminal_job_accounting": true,
+        "termination": {
+          "attempted": true,
+          "before_accounting": {
+            "active_processes": 2,
+            "total_cpu_100ns": 468750,
+            "total_kernel_100ns": 156250,
+            "total_page_fault_count": 6331,
+            "total_processes": 2,
+            "total_terminated_processes": 0,
+            "total_user_100ns": 312500
+          },
+          "succeeded": true
+        },
+        "wall_seconds": 0.0779999999795109
+      },
+      "index": 8,
+      "mode": "late-log-binding",
+      "passed": true,
+      "removed_environment_names": []
+    },
+    {
+      "actual": {
+        "cleanup_errors": [],
+        "command": [
+          "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+          "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\controller-child.py",
+          "changed-input",
+          "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\controller-controls-4\\watched-input.txt"
+        ],
+        "configured_job_limits": {
+          "committed_bytes": 67108864,
+          "flags": 8704
+        },
+        "direct_exit_observed": false,
+        "error": "ValueError('watched input changed')",
+        "exit_code": 3784556766,
+        "job_accounting": {
+          "active_processes": 0,
+          "total_cpu_100ns": 625000,
+          "total_kernel_100ns": 625000,
+          "total_page_fault_count": 6389,
+          "total_processes": 2,
+          "total_terminated_processes": 0,
+          "total_user_100ns": 0
+        },
+        "job_memory": {
+          "peak_job_memory_used_bytes": 10371072,
+          "peak_process_memory_used_bytes": 9084928
+        },
+        "limits": {
+          "committed_bytes": 67108864,
+          "cpu_seconds": 10,
+          "log_bytes": 65536,
+          "wall_seconds": 10
+        },
+        "log": {
+          "bytes": 29,
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\controller-controls-4\\09-changed-input.log",
+          "sha256": "2e75a0c920b25162b66f377ffd56008cfe4e23f77a03e7eea1f39910e2ecfdf1"
+        },
+        "log_bytes": 29,
+        "pipe_eof_observed": false,
+        "post_exit_drain": null,
+        "scope": "owned job tree; committed memory, observed user+kernel CPU; not RSS or a timing benchmark",
+        "terminal_job_accounting": true,
+        "termination": {
+          "attempted": true,
+          "before_accounting": {
+            "active_processes": 2,
+            "total_cpu_100ns": 625000,
+            "total_kernel_100ns": 625000,
+            "total_page_fault_count": 6389,
+            "total_processes": 2,
+            "total_terminated_processes": 0,
+            "total_user_100ns": 0
+          },
+          "succeeded": true
+        },
+        "wall_seconds": 0.0779999999795109
+      },
+      "index": 9,
+      "mode": "changed-input",
+      "passed": true,
+      "removed_environment_names": []
+    },
+    {
+      "actual": {
+        "cleanup_errors": [],
+        "command": [
+          "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+          "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\controller-child.py",
+          "valid"
+        ],
+        "configured_job_limits": {
+          "committed_bytes": 67108864,
+          "flags": 8704
+        },
+        "direct_exit_observed": true,
+        "error": null,
+        "exit_code": 0,
+        "job_accounting": {
+          "active_processes": 0,
+          "total_cpu_100ns": 625000,
+          "total_kernel_100ns": 156250,
+          "total_page_fault_count": 6620,
+          "total_processes": 2,
+          "total_terminated_processes": 0,
+          "total_user_100ns": 468750
+        },
+        "job_memory": {
+          "peak_job_memory_used_bytes": 10399744,
+          "peak_process_memory_used_bytes": 9109504
+        },
+        "limits": {
+          "committed_bytes": 67108864,
+          "cpu_seconds": 10,
+          "log_bytes": 65536,
+          "wall_seconds": 10
+        },
+        "log": {
+          "bytes": 19,
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\controller-controls-4\\10-restored.log",
+          "sha256": "07f1280c0bd3664c53d669c5d1d3ef35341dbbfea45b59f1d91ee5dea4083c65"
+        },
+        "log_bytes": 19,
+        "pipe_eof_observed": true,
+        "post_exit_drain": {
+          "completed": true,
+          "ended_wall_seconds": 0.0940000000409782,
+          "initial_accounting": {
+            "active_processes": 0,
+            "total_cpu_100ns": 625000,
+            "total_kernel_100ns": 156250,
+            "total_page_fault_count": 6620,
+            "total_processes": 2,
+            "total_terminated_processes": 0,
+            "total_user_100ns": 468750
+          },
+          "last_accounting": {
+            "active_processes": 0,
+            "total_cpu_100ns": 625000,
+            "total_kernel_100ns": 156250,
+            "total_page_fault_count": 6620,
+            "total_processes": 2,
+            "total_terminated_processes": 0,
+            "total_user_100ns": 468750
+          },
+          "observation_count": 1,
+          "observations": [
+            {
+              "accounting": {
+                "active_processes": 0,
+                "total_cpu_100ns": 625000,
+                "total_kernel_100ns": 156250,
+                "total_page_fault_count": 6620,
+                "total_processes": 2,
+                "total_terminated_processes": 0,
+                "total_user_100ns": 468750
+              },
+              "wall_seconds": 0.0940000000409782
+            }
+          ],
+          "started_wall_seconds": 0.0940000000409782
+        },
+        "scope": "owned job tree; committed memory, observed user+kernel CPU; not RSS or a timing benchmark",
+        "terminal_job_accounting": true,
+        "termination": {
+          "attempted": false,
+          "before_accounting": null,
+          "succeeded": false
+        },
+        "wall_seconds": 0.0940000000409782
+      },
+      "index": 10,
+      "mode": "restored",
+      "passed": true,
+      "removed_environment_names": []
+    },
+    {
+      "actual": {
+        "cleanup_errors": [],
+        "command": [
+          "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+          "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\controller-child.py",
+          "drain-finish",
+          "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\controller-controls-4\\11-drain-finish"
+        ],
+        "configured_job_limits": {
+          "committed_bytes": 67108864,
+          "flags": 8704
+        },
+        "direct_exit_observed": true,
+        "error": null,
+        "exit_code": 0,
+        "job_accounting": {
+          "active_processes": 0,
+          "total_cpu_100ns": 1093750,
+          "total_kernel_100ns": 937500,
+          "total_page_fault_count": 13199,
+          "total_processes": 4,
+          "total_terminated_processes": 0,
+          "total_user_100ns": 156250
+        },
+        "job_memory": {
+          "peak_job_memory_used_bytes": 20135936,
+          "peak_process_memory_used_bytes": 8814592
+        },
+        "limits": {
+          "committed_bytes": 67108864,
+          "cpu_seconds": 10,
+          "log_bytes": 65536,
+          "wall_seconds": 10
+        },
+        "log": {
+          "bytes": 204,
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\controller-controls-4\\11-drain-finish.log",
+          "sha256": "a084a0600252b33803044d0a75d781f3dfbadca0bb4f9b591a74b4955fe8a357"
+        },
+        "log_bytes": 204,
+        "pipe_eof_observed": true,
+        "post_exit_drain": {
+          "completed": true,
+          "ended_wall_seconds": 2.155999999959022,
+          "initial_accounting": {
+            "active_processes": 2,
+            "total_cpu_100ns": 1093750,
+            "total_kernel_100ns": 937500,
+            "total_page_fault_count": 12989,
+            "total_processes": 4,
+            "total_terminated_processes": 0,
+            "total_user_100ns": 156250
+          },
+          "last_accounting": {
+            "active_processes": 0,
+            "total_cpu_100ns": 1093750,
+            "total_kernel_100ns": 937500,
+            "total_page_fault_count": 13199,
+            "total_processes": 4,
+            "total_terminated_processes": 0,
+            "total_user_100ns": 156250
+          },
+          "observation_count": 192,
+          "observations": [
+            {
+              "accounting": {
+                "active_processes": 2,
+                "total_cpu_100ns": 1093750,
+                "total_kernel_100ns": 937500,
+                "total_page_fault_count": 12989,
+                "total_processes": 4,
+                "total_terminated_processes": 0,
+                "total_user_100ns": 156250
+              },
+              "wall_seconds": 0.18799999996554106
+            },
+            {
+              "accounting": {
+                "active_processes": 2,
+                "total_cpu_100ns": 1093750,
+                "total_kernel_100ns": 937500,
+                "total_page_fault_count": 12989,
+                "total_processes": 4,
+                "total_terminated_processes": 0,
+                "total_user_100ns": 156250
+              },
+              "wall_seconds": 0.2029999999795109
+            },
+            {
+              "accounting": {
+                "active_processes": 2,
+                "total_cpu_100ns": 1093750,
+                "total_kernel_100ns": 937500,
+                "total_page_fault_count": 12989,
+                "total_processes": 4,
+                "total_terminated_processes": 0,
+                "total_user_100ns": 156250
+              },
+              "wall_seconds": 0.2029999999795109
+            },
+            {
+              "accounting": {
+                "active_processes": 2,
+                "total_cpu_100ns": 1093750,
+                "total_kernel_100ns": 937500,
+                "total_page_fault_count": 12989,
+                "total_processes": 4,
+                "total_terminated_processes": 0,
+                "total_user_100ns": 156250
+              },
+              "wall_seconds": 0.2190000000409782
+            },
+            {
+              "accounting": {
+                "active_processes": 2,
+                "total_cpu_100ns": 1093750,
+                "total_kernel_100ns": 937500,
+                "total_page_fault_count": 12989,
+                "total_processes": 4,
+                "total_terminated_processes": 0,
+                "total_user_100ns": 156250
+              },
+              "wall_seconds": 0.23499999998603016
+            },
+            {
+              "accounting": {
+                "active_processes": 2,
+                "total_cpu_100ns": 1093750,
+                "total_kernel_100ns": 937500,
+                "total_page_fault_count": 12989,
+                "total_processes": 4,
+                "total_terminated_processes": 0,
+                "total_user_100ns": 156250
+              },
+              "wall_seconds": 0.23499999998603016
+            },
+            {
+              "accounting": {
+                "active_processes": 2,
+                "total_cpu_100ns": 1093750,
+                "total_kernel_100ns": 937500,
+                "total_page_fault_count": 12989,
+                "total_processes": 4,
+                "total_terminated_processes": 0,
+                "total_user_100ns": 156250
+              },
+              "wall_seconds": 0.25
+            },
+            {
+              "accounting": {
+                "active_processes": 2,
+                "total_cpu_100ns": 1093750,
+                "total_kernel_100ns": 937500,
+                "total_page_fault_count": 12989,
+                "total_processes": 4,
+                "total_terminated_processes": 0,
+                "total_user_100ns": 156250
+              },
+              "wall_seconds": 0.26599999994505197
+            },
+            {
+              "accounting": {
+                "active_processes": 2,
+                "total_cpu_100ns": 1093750,
+                "total_kernel_100ns": 937500,
+                "total_page_fault_count": 12989,
+                "total_processes": 4,
+                "total_terminated_processes": 0,
+                "total_user_100ns": 156250
+              },
+              "wall_seconds": 0.26599999994505197
+            },
+            {
+              "accounting": {
+                "active_processes": 2,
+                "total_cpu_100ns": 1093750,
+                "total_kernel_100ns": 937500,
+                "total_page_fault_count": 12989,
+                "total_processes": 4,
+                "total_terminated_processes": 0,
+                "total_user_100ns": 156250
+              },
+              "wall_seconds": 0.2809999999590218
+            },
+            {
+              "accounting": {
+                "active_processes": 2,
+                "total_cpu_100ns": 1093750,
+                "total_kernel_100ns": 937500,
+                "total_page_fault_count": 12989,
+                "total_processes": 4,
+                "total_terminated_processes": 0,
+                "total_user_100ns": 156250
+              },
+              "wall_seconds": 0.2970000000204891
+            },
+            {
+              "accounting": {
+                "active_processes": 2,
+                "total_cpu_100ns": 1093750,
+                "total_kernel_100ns": 937500,
+                "total_page_fault_count": 12989,
+                "total_processes": 4,
+                "total_terminated_processes": 0,
+                "total_user_100ns": 156250
+              },
+              "wall_seconds": 0.2970000000204891
+            },
+            {
+              "accounting": {
+                "active_processes": 2,
+                "total_cpu_100ns": 1093750,
+                "total_kernel_100ns": 937500,
+                "total_page_fault_count": 12989,
+                "total_processes": 4,
+                "total_terminated_processes": 0,
+                "total_user_100ns": 156250
+              },
+              "wall_seconds": 0.31299999996554106
+            },
+            {
+              "accounting": {
+                "active_processes": 2,
+                "total_cpu_100ns": 1093750,
+                "total_kernel_100ns": 937500,
+                "total_page_fault_count": 12989,
+                "total_processes": 4,
+                "total_terminated_processes": 0,
+                "total_user_100ns": 156250
+              },
+              "wall_seconds": 0.3279999999795109
+            },
+            {
+              "accounting": {
+                "active_processes": 2,
+                "total_cpu_100ns": 1093750,
+                "total_kernel_100ns": 937500,
+                "total_page_fault_count": 12989,
+                "total_processes": 4,
+                "total_terminated_processes": 0,
+                "total_user_100ns": 156250
+              },
+              "wall_seconds": 0.3279999999795109
+            },
+            {
+              "accounting": {
+                "active_processes": 2,
+                "total_cpu_100ns": 1093750,
+                "total_kernel_100ns": 937500,
+                "total_page_fault_count": 12989,
+                "total_processes": 4,
+                "total_terminated_processes": 0,
+                "total_user_100ns": 156250
+              },
+              "wall_seconds": 0.3440000000409782
+            }
+          ],
+          "started_wall_seconds": 0.18799999996554106
+        },
+        "scope": "owned job tree; committed memory, observed user+kernel CPU; not RSS or a timing benchmark",
+        "terminal_job_accounting": true,
+        "termination": {
+          "attempted": false,
+          "before_accounting": null,
+          "succeeded": false
+        },
+        "wall_seconds": 2.155999999959022
+      },
+      "drain_identity": {
+        "completion": {
+          "child_pid": 3668,
+          "completed_monotonic_ns": 795821906000000,
+          "delay_seconds": 2,
+          "mode": "drain-finish",
+          "parent_pid": 44472,
+          "schema": "m193c-controller-drain-complete-v1",
+          "started_monotonic_ns": 795819906000000
+        },
+        "completion_ref": {
+          "bytes": 217,
+          "path": "experiments/m193c-output-grid/controller-controls-4/11-drain-finish/completion.json",
+          "sha256": "d2eb598e1598ec5623531ca52a3944b8a981ccb518c3c7d1ed0b7ce64adc3504"
+        },
+        "parent": {
+          "child_live": true,
+          "parent_pid": 44472,
+          "requested_child_pid": 3668,
+          "started_child_pid": 3668,
+          "startup_sha256": "fc6eb65d200d7d6d421243b99dbe4fc998e645fd30a5ea80959d830e820a7d3b"
+        },
+        "startup": {
+          "child_pid": 3668,
+          "mode": "drain-finish",
+          "parent_pid": 44472,
+          "schema": "m193c-controller-drain-start-v1",
+          "started_monotonic_ns": 795819906000000
+        },
+        "startup_ref": {
+          "bytes": 151,
+          "path": "experiments/m193c-output-grid/controller-controls-4/11-drain-finish/startup.json",
+          "sha256": "fc6eb65d200d7d6d421243b99dbe4fc998e645fd30a5ea80959d830e820a7d3b"
+        }
+      },
+      "index": 11,
+      "mode": "drain-finish",
+      "passed": true,
+      "removed_environment_names": []
+    },
+    {
+      "actual": {
+        "cleanup_errors": [],
+        "command": [
+          "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+          "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\controller-child.py",
+          "drain-persist",
+          "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\controller-controls-4\\12-drain-persist"
+        ],
+        "configured_job_limits": {
+          "committed_bytes": 67108864,
+          "flags": 8704
+        },
+        "direct_exit_observed": true,
+        "error": "ValueError('child wall bound')",
+        "exit_code": 0,
+        "job_accounting": {
+          "active_processes": 0,
+          "total_cpu_100ns": 1093750,
+          "total_kernel_100ns": 468750,
+          "total_page_fault_count": 12991,
+          "total_processes": 4,
+          "total_terminated_processes": 0,
+          "total_user_100ns": 625000
+        },
+        "job_memory": {
+          "peak_job_memory_used_bytes": 20217856,
+          "peak_process_memory_used_bytes": 8904704
+        },
+        "limits": {
+          "committed_bytes": 67108864,
+          "cpu_seconds": 10,
+          "log_bytes": 65536,
+          "wall_seconds": 5
+        },
+        "log": {
+          "bytes": 206,
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\controller-controls-4\\12-drain-persist.log",
+          "sha256": "2a42f5885a1912c8ca0bfa735c16f3b80e9581ac0c20015e32c5119444d6c72d"
+        },
+        "log_bytes": 206,
+        "pipe_eof_observed": true,
+        "post_exit_drain": {
+          "completed": false,
+          "ended_wall_seconds": 5.016000000061467,
+          "initial_accounting": {
+            "active_processes": 2,
+            "total_cpu_100ns": 1093750,
+            "total_kernel_100ns": 468750,
+            "total_page_fault_count": 12991,
+            "total_processes": 4,
+            "total_terminated_processes": 0,
+            "total_user_100ns": 625000
+          },
+          "last_accounting": {
+            "active_processes": 2,
+            "total_cpu_100ns": 1093750,
+            "total_kernel_100ns": 468750,
+            "total_page_fault_count": 12991,
+            "total_processes": 4,
+            "total_terminated_processes": 0,
+            "total_user_100ns": 625000
+          },
+          "observation_count": 470,
+          "observations": [
+            {
+              "accounting": {
+                "active_processes": 2,
+                "total_cpu_100ns": 1093750,
+                "total_kernel_100ns": 468750,
+                "total_page_fault_count": 12991,
+                "total_processes": 4,
+                "total_terminated_processes": 0,
+                "total_user_100ns": 625000
+              },
+              "wall_seconds": 0.1720000000204891
+            },
+            {
+              "accounting": {
+                "active_processes": 2,
+                "total_cpu_100ns": 1093750,
+                "total_kernel_100ns": 468750,
+                "total_page_fault_count": 12991,
+                "total_processes": 4,
+                "total_terminated_processes": 0,
+                "total_user_100ns": 625000
+              },
+              "wall_seconds": 0.1880000000819564
+            },
+            {
+              "accounting": {
+                "active_processes": 2,
+                "total_cpu_100ns": 1093750,
+                "total_kernel_100ns": 468750,
+                "total_page_fault_count": 12991,
+                "total_processes": 4,
+                "total_terminated_processes": 0,
+                "total_user_100ns": 625000
+              },
+              "wall_seconds": 0.1880000000819564
+            },
+            {
+              "accounting": {
+                "active_processes": 2,
+                "total_cpu_100ns": 1093750,
+                "total_kernel_100ns": 468750,
+                "total_page_fault_count": 12991,
+                "total_processes": 4,
+                "total_terminated_processes": 0,
+                "total_user_100ns": 625000
+              },
+              "wall_seconds": 0.20400000002700835
+            },
+            {
+              "accounting": {
+                "active_processes": 2,
+                "total_cpu_100ns": 1093750,
+                "total_kernel_100ns": 468750,
+                "total_page_fault_count": 12991,
+                "total_processes": 4,
+                "total_terminated_processes": 0,
+                "total_user_100ns": 625000
+              },
+              "wall_seconds": 0.20400000002700835
+            },
+            {
+              "accounting": {
+                "active_processes": 2,
+                "total_cpu_100ns": 1093750,
+                "total_kernel_100ns": 468750,
+                "total_page_fault_count": 12991,
+                "total_processes": 4,
+                "total_terminated_processes": 0,
+                "total_user_100ns": 625000
+              },
+              "wall_seconds": 0.2190000000409782
+            },
+            {
+              "accounting": {
+                "active_processes": 2,
+                "total_cpu_100ns": 1093750,
+                "total_kernel_100ns": 468750,
+                "total_page_fault_count": 12991,
+                "total_processes": 4,
+                "total_terminated_processes": 0,
+                "total_user_100ns": 625000
+              },
+              "wall_seconds": 0.23499999998603016
+            },
+            {
+              "accounting": {
+                "active_processes": 2,
+                "total_cpu_100ns": 1093750,
+                "total_kernel_100ns": 468750,
+                "total_page_fault_count": 12991,
+                "total_processes": 4,
+                "total_terminated_processes": 0,
+                "total_user_100ns": 625000
+              },
+              "wall_seconds": 0.23499999998603016
+            },
+            {
+              "accounting": {
+                "active_processes": 2,
+                "total_cpu_100ns": 1093750,
+                "total_kernel_100ns": 468750,
+                "total_page_fault_count": 12991,
+                "total_processes": 4,
+                "total_terminated_processes": 0,
+                "total_user_100ns": 625000
+              },
+              "wall_seconds": 0.25
+            },
+            {
+              "accounting": {
+                "active_processes": 2,
+                "total_cpu_100ns": 1093750,
+                "total_kernel_100ns": 468750,
+                "total_page_fault_count": 12991,
+                "total_processes": 4,
+                "total_terminated_processes": 0,
+                "total_user_100ns": 625000
+              },
+              "wall_seconds": 0.2660000000614673
+            },
+            {
+              "accounting": {
+                "active_processes": 2,
+                "total_cpu_100ns": 1093750,
+                "total_kernel_100ns": 468750,
+                "total_page_fault_count": 12991,
+                "total_processes": 4,
+                "total_terminated_processes": 0,
+                "total_user_100ns": 625000
+              },
+              "wall_seconds": 0.2660000000614673
+            },
+            {
+              "accounting": {
+                "active_processes": 2,
+                "total_cpu_100ns": 1093750,
+                "total_kernel_100ns": 468750,
+                "total_page_fault_count": 12991,
+                "total_processes": 4,
+                "total_terminated_processes": 0,
+                "total_user_100ns": 625000
+              },
+              "wall_seconds": 0.28200000000651926
+            },
+            {
+              "accounting": {
+                "active_processes": 2,
+                "total_cpu_100ns": 1093750,
+                "total_kernel_100ns": 468750,
+                "total_page_fault_count": 12991,
+                "total_processes": 4,
+                "total_terminated_processes": 0,
+                "total_user_100ns": 625000
+              },
+              "wall_seconds": 0.2970000000204891
+            },
+            {
+              "accounting": {
+                "active_processes": 2,
+                "total_cpu_100ns": 1093750,
+                "total_kernel_100ns": 468750,
+                "total_page_fault_count": 12991,
+                "total_processes": 4,
+                "total_terminated_processes": 0,
+                "total_user_100ns": 625000
+              },
+              "wall_seconds": 0.2970000000204891
+            },
+            {
+              "accounting": {
+                "active_processes": 2,
+                "total_cpu_100ns": 1093750,
+                "total_kernel_100ns": 468750,
+                "total_page_fault_count": 12991,
+                "total_processes": 4,
+                "total_terminated_processes": 0,
+                "total_user_100ns": 625000
+              },
+              "wall_seconds": 0.3130000000819564
+            },
+            {
+              "accounting": {
+                "active_processes": 2,
+                "total_cpu_100ns": 1093750,
+                "total_kernel_100ns": 468750,
+                "total_page_fault_count": 12991,
+                "total_processes": 4,
+                "total_terminated_processes": 0,
+                "total_user_100ns": 625000
+              },
+              "wall_seconds": 0.32900000002700835
+            }
+          ],
+          "started_wall_seconds": 0.1720000000204891
+        },
+        "scope": "owned job tree; committed memory, observed user+kernel CPU; not RSS or a timing benchmark",
+        "terminal_job_accounting": true,
+        "termination": {
+          "attempted": true,
+          "before_accounting": {
+            "active_processes": 2,
+            "total_cpu_100ns": 1093750,
+            "total_kernel_100ns": 468750,
+            "total_page_fault_count": 12991,
+            "total_processes": 4,
+            "total_terminated_processes": 0,
+            "total_user_100ns": 625000
+          },
+          "succeeded": true
+        },
+        "wall_seconds": 5.032000000006519
+      },
+      "drain_identity": {
+        "completion": null,
+        "completion_ref": null,
+        "parent": {
+          "child_live": true,
+          "parent_pid": 25588,
+          "requested_child_pid": 14372,
+          "started_child_pid": 14372,
+          "startup_sha256": "4ec4b7b91c40ceb04b233b14c623c251eaf99e10de376353fd9df013dc54dc9e"
+        },
+        "startup": {
+          "child_pid": 14372,
+          "mode": "drain-persist",
+          "parent_pid": 25588,
+          "schema": "m193c-controller-drain-start-v1",
+          "started_monotonic_ns": 795822062000000
+        },
+        "startup_ref": {
+          "bytes": 153,
+          "path": "experiments/m193c-output-grid/controller-controls-4/12-drain-persist/startup.json",
+          "sha256": "4ec4b7b91c40ceb04b233b14c623c251eaf99e10de376353fd9df013dc54dc9e"
+        }
+      },
+      "index": 12,
+      "mode": "drain-persist",
+      "passed": true,
+      "removed_environment_names": []
+    },
+    {
+      "actual": {
+        "cleanup_errors": [],
+        "command": [
+          "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+          "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\controller-child.py",
+          "drain-restored",
+          "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\controller-controls-4\\13-drain-restored"
+        ],
+        "configured_job_limits": {
+          "committed_bytes": 67108864,
+          "flags": 8704
+        },
+        "direct_exit_observed": true,
+        "error": null,
+        "exit_code": 0,
+        "job_accounting": {
+          "active_processes": 0,
+          "total_cpu_100ns": 1250000,
+          "total_kernel_100ns": 625000,
+          "total_page_fault_count": 13271,
+          "total_processes": 4,
+          "total_terminated_processes": 0,
+          "total_user_100ns": 625000
+        },
+        "job_memory": {
+          "peak_job_memory_used_bytes": 20398080,
+          "peak_process_memory_used_bytes": 9043968
+        },
+        "limits": {
+          "committed_bytes": 67108864,
+          "cpu_seconds": 10,
+          "log_bytes": 65536,
+          "wall_seconds": 10
+        },
+        "log": {
+          "bytes": 206,
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\controller-controls-4\\13-drain-restored.log",
+          "sha256": "0564f56a9c1696f600b1680025e730bed89d79ab560b6b735989b0c4132a7798"
+        },
+        "log_bytes": 206,
+        "pipe_eof_observed": true,
+        "post_exit_drain": {
+          "completed": true,
+          "ended_wall_seconds": 2.14000000001397,
+          "initial_accounting": {
+            "active_processes": 2,
+            "total_cpu_100ns": 1250000,
+            "total_kernel_100ns": 625000,
+            "total_page_fault_count": 13069,
+            "total_processes": 4,
+            "total_terminated_processes": 0,
+            "total_user_100ns": 625000
+          },
+          "last_accounting": {
+            "active_processes": 0,
+            "total_cpu_100ns": 1250000,
+            "total_kernel_100ns": 625000,
+            "total_page_fault_count": 13271,
+            "total_processes": 4,
+            "total_terminated_processes": 0,
+            "total_user_100ns": 625000
+          },
+          "observation_count": 192,
+          "observations": [
+            {
+              "accounting": {
+                "active_processes": 2,
+                "total_cpu_100ns": 1250000,
+                "total_kernel_100ns": 625000,
+                "total_page_fault_count": 13069,
+                "total_processes": 4,
+                "total_terminated_processes": 0,
+                "total_user_100ns": 625000
+              },
+              "wall_seconds": 0.1720000000204891
+            },
+            {
+              "accounting": {
+                "active_processes": 2,
+                "total_cpu_100ns": 1250000,
+                "total_kernel_100ns": 625000,
+                "total_page_fault_count": 13069,
+                "total_processes": 4,
+                "total_terminated_processes": 0,
+                "total_user_100ns": 625000
+              },
+              "wall_seconds": 0.18700000003445894
+            },
+            {
+              "accounting": {
+                "active_processes": 2,
+                "total_cpu_100ns": 1250000,
+                "total_kernel_100ns": 625000,
+                "total_page_fault_count": 13069,
+                "total_processes": 4,
+                "total_terminated_processes": 0,
+                "total_user_100ns": 625000
+              },
+              "wall_seconds": 0.2029999999795109
+            },
+            {
+              "accounting": {
+                "active_processes": 2,
+                "total_cpu_100ns": 1250000,
+                "total_kernel_100ns": 625000,
+                "total_page_fault_count": 13069,
+                "total_processes": 4,
+                "total_terminated_processes": 0,
+                "total_user_100ns": 625000
+              },
+              "wall_seconds": 0.2029999999795109
+            },
+            {
+              "accounting": {
+                "active_processes": 2,
+                "total_cpu_100ns": 1250000,
+                "total_kernel_100ns": 625000,
+                "total_page_fault_count": 13069,
+                "total_processes": 4,
+                "total_terminated_processes": 0,
+                "total_user_100ns": 625000
+              },
+              "wall_seconds": 0.21799999999348074
+            },
+            {
+              "accounting": {
+                "active_processes": 2,
+                "total_cpu_100ns": 1250000,
+                "total_kernel_100ns": 625000,
+                "total_page_fault_count": 13069,
+                "total_processes": 4,
+                "total_terminated_processes": 0,
+                "total_user_100ns": 625000
+              },
+              "wall_seconds": 0.23400000005494803
+            },
+            {
+              "accounting": {
+                "active_processes": 2,
+                "total_cpu_100ns": 1250000,
+                "total_kernel_100ns": 625000,
+                "total_page_fault_count": 13069,
+                "total_processes": 4,
+                "total_terminated_processes": 0,
+                "total_user_100ns": 625000
+              },
+              "wall_seconds": 0.23400000005494803
+            },
+            {
+              "accounting": {
+                "active_processes": 2,
+                "total_cpu_100ns": 1250000,
+                "total_kernel_100ns": 625000,
+                "total_page_fault_count": 13069,
+                "total_processes": 4,
+                "total_terminated_processes": 0,
+                "total_user_100ns": 625000
+              },
+              "wall_seconds": 0.25
+            },
+            {
+              "accounting": {
+                "active_processes": 2,
+                "total_cpu_100ns": 1250000,
+                "total_kernel_100ns": 625000,
+                "total_page_fault_count": 13069,
+                "total_processes": 4,
+                "total_terminated_processes": 0,
+                "total_user_100ns": 625000
+              },
+              "wall_seconds": 0.25
+            },
+            {
+              "accounting": {
+                "active_processes": 2,
+                "total_cpu_100ns": 1250000,
+                "total_kernel_100ns": 625000,
+                "total_page_fault_count": 13069,
+                "total_processes": 4,
+                "total_terminated_processes": 0,
+                "total_user_100ns": 625000
+              },
+              "wall_seconds": 0.26500000001396984
+            },
+            {
+              "accounting": {
+                "active_processes": 2,
+                "total_cpu_100ns": 1250000,
+                "total_kernel_100ns": 625000,
+                "total_page_fault_count": 13069,
+                "total_processes": 4,
+                "total_terminated_processes": 0,
+                "total_user_100ns": 625000
+              },
+              "wall_seconds": 0.28100000007543713
+            },
+            {
+              "accounting": {
+                "active_processes": 2,
+                "total_cpu_100ns": 1250000,
+                "total_kernel_100ns": 625000,
+                "total_page_fault_count": 13069,
+                "total_processes": 4,
+                "total_terminated_processes": 0,
+                "total_user_100ns": 625000
+              },
+              "wall_seconds": 0.28100000007543713
+            },
+            {
+              "accounting": {
+                "active_processes": 2,
+                "total_cpu_100ns": 1250000,
+                "total_kernel_100ns": 625000,
+                "total_page_fault_count": 13069,
+                "total_processes": 4,
+                "total_terminated_processes": 0,
+                "total_user_100ns": 625000
+              },
+              "wall_seconds": 0.2970000000204891
+            },
+            {
+              "accounting": {
+                "active_processes": 2,
+                "total_cpu_100ns": 1250000,
+                "total_kernel_100ns": 625000,
+                "total_page_fault_count": 13069,
+                "total_processes": 4,
+                "total_terminated_processes": 0,
+                "total_user_100ns": 625000
+              },
+              "wall_seconds": 0.31200000003445894
+            },
+            {
+              "accounting": {
+                "active_processes": 2,
+                "total_cpu_100ns": 1250000,
+                "total_kernel_100ns": 625000,
+                "total_page_fault_count": 13069,
+                "total_processes": 4,
+                "total_terminated_processes": 0,
+                "total_user_100ns": 625000
+              },
+              "wall_seconds": 0.31200000003445894
+            },
+            {
+              "accounting": {
+                "active_processes": 2,
+                "total_cpu_100ns": 1250000,
+                "total_kernel_100ns": 625000,
+                "total_page_fault_count": 13069,
+                "total_processes": 4,
+                "total_terminated_processes": 0,
+                "total_user_100ns": 625000
+              },
+              "wall_seconds": 0.3279999999795109
+            }
+          ],
+          "started_wall_seconds": 0.1720000000204891
+        },
+        "scope": "owned job tree; committed memory, observed user+kernel CPU; not RSS or a timing benchmark",
+        "terminal_job_accounting": true,
+        "termination": {
+          "attempted": false,
+          "before_accounting": null,
+          "succeeded": false
+        },
+        "wall_seconds": 2.14000000001397
+      },
+      "drain_identity": {
+        "completion": {
+          "child_pid": 24088,
+          "completed_monotonic_ns": 795829078000000,
+          "delay_seconds": 2,
+          "mode": "drain-restored",
+          "parent_pid": 26348,
+          "schema": "m193c-controller-drain-complete-v1",
+          "started_monotonic_ns": 795827078000000
+        },
+        "completion_ref": {
+          "bytes": 220,
+          "path": "experiments/m193c-output-grid/controller-controls-4/13-drain-restored/completion.json",
+          "sha256": "9ec6dc7e4286ab68904b1bf8cdc4ba1c7cfd8c99ae02047b46b75a8395dcc91a"
+        },
+        "parent": {
+          "child_live": true,
+          "parent_pid": 26348,
+          "requested_child_pid": 24088,
+          "started_child_pid": 24088,
+          "startup_sha256": "c8abe5b0eba6e04c7ae622a552dae20135ab7440032e7b374853402bad184d95"
+        },
+        "startup": {
+          "child_pid": 24088,
+          "mode": "drain-restored",
+          "parent_pid": 26348,
+          "schema": "m193c-controller-drain-start-v1",
+          "started_monotonic_ns": 795827078000000
+        },
+        "startup_ref": {
+          "bytes": 154,
+          "path": "experiments/m193c-output-grid/controller-controls-4/13-drain-restored/startup.json",
+          "sha256": "c8abe5b0eba6e04c7ae622a552dae20135ab7440032e7b374853402bad184d95"
+        }
+      },
+      "index": 13,
+      "mode": "drain-restored",
+      "passed": true,
+      "removed_environment_names": []
+    }
+  ],
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-X",
+    "utf8",
+    "-X",
+    "faulthandler",
+    "-X",
+    "pycache_prefix=C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\work\\cache-controller-controls-4",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\controller-controls.py",
+    "--release",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\controller-controls-release-4.json",
+    "--release-sha256",
+    "63e229c90510650678b52f384572498125543ebb662ff63ace1c635c1d48dd16",
+    "--output",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\controller-controls-4"
+  ],
+  "elapsed_seconds_before_result": 17.07900000002701,
+  "error": null,
+  "finalization_errors": [],
+  "release": {
+    "bytes": 4369,
+    "path": "experiments/m193c-output-grid/controller-controls-release-4.json",
+    "sha256": "63e229c90510650678b52f384572498125543ebb662ff63ace1c635c1d48dd16"
+  },
+  "schema": "m193c-controller-controls-v1",
+  "sources_after": {
+    "experiments/m12-scorecard/m12-harness.py": {
+      "bytes": 117908,
+      "sha256": "6cfb408992f37b225f102da4d62ba836f9c5b67c92bdd418ff460987866a1bb9"
+    },
+    "experiments/m193c-output-grid/bounded-process.py": {
+      "bytes": 12664,
+      "sha256": "47b9f8d848759eba61f055b9fdca1f8ac400f134dcd7636f0e0eaaa955704e0b"
+    },
+    "experiments/m193c-output-grid/controller-child.py": {
+      "bytes": 4416,
+      "sha256": "8944b1387990a262d1ad47c44ee2bbd7de281323185a0758802f1637289d2788"
+    },
+    "experiments/m193c-output-grid/controller-controls.py": {
+      "bytes": 18455,
+      "sha256": "217999b5969a29224868fe731284493e04ce0ef33bd225fc4c9f3bc3f8b5b84c"
+    }
+  },
+  "sources_before": {
+    "experiments/m12-scorecard/m12-harness.py": {
+      "bytes": 117908,
+      "sha256": "6cfb408992f37b225f102da4d62ba836f9c5b67c92bdd418ff460987866a1bb9"
+    },
+    "experiments/m193c-output-grid/bounded-process.py": {
+      "bytes": 12664,
+      "sha256": "47b9f8d848759eba61f055b9fdca1f8ac400f134dcd7636f0e0eaaa955704e0b"
+    },
+    "experiments/m193c-output-grid/controller-child.py": {
+      "bytes": 4416,
+      "sha256": "8944b1387990a262d1ad47c44ee2bbd7de281323185a0758802f1637289d2788"
+    },
+    "experiments/m193c-output-grid/controller-controls.py": {
+      "bytes": 18455,
+      "sha256": "217999b5969a29224868fe731284493e04ce0ef33bd225fc4c9f3bc3f8b5b84c"
+    }
+  },
+  "status": "PASS_OWNED_PROCESS_CONTROLS_ONLY"
+}

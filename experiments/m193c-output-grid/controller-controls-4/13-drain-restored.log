@@ -1,0 +1,1 @@
+M193C_DRAIN_PARENT={"child_live": true, "parent_pid": 26348, "requested_child_pid": 24088, "started_child_pid": 24088, "startup_sha256": "c8abe5b0eba6e04c7ae622a552dae20135ab7440032e7b374853402bad184d95"}
