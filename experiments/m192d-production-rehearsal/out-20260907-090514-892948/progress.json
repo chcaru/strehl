@@ -1,0 +1,26 @@
+{
+  "active": 6,
+  "sweep": "reverse",
+  "mode": "off",
+  "completed": 6,
+  "argv": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M192-m12-certify\\recovery-20260906-163253\\work\\builds\\measured\\bin\\strehl.exe",
+    "stack",
+    "D:\\personal\\macro\\bee-1-cpl",
+    "--limit",
+    "33",
+    "--out",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m192d-production-rehearsal\\work\\out-20260907-090514-892948\\06-reverse-off\\output.tiff",
+    "--merge",
+    "pyramid",
+    "--pyramid-gate",
+    "2.0",
+    "--resampler",
+    "catmull-rom",
+    "--cover",
+    "scale",
+    "--linear-srgb",
+    "--demosaic"
+  ],
+  "started_utc": "2026-09-07T09:08:30.367474+00:00"
+}

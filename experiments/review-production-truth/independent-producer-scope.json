@@ -1,0 +1,83 @@
+{
+  "status": "PASS",
+  "scope": "Independent API dimensionality check only; no optics or full-render commission",
+  "source_hashes": {
+    "experiments\\m25-simulator\\src\\strehl_sim\\render.py": "8b842d06ab1a550d1c66263dde2969e0e390a439938e57cb54c4095a6a36118c",
+    "experiments\\m25-simulator\\src\\strehl_sim\\scene.py": "9bea8539999ca64f893505337dbbe4c32c5765bc2368508275be43eed008351f"
+  },
+  "independent_source_sha256": "54f193008b355007005723c4fcc580d6560e7efbb95d9d8efb76f58e5045fa0d",
+  "command": "python -B experiments/review-production-truth/independent-producer-scope.py",
+  "choices": {
+    "shape": [
+      17,
+      26
+    ],
+    "center": [
+      10.25,
+      6.75
+    ],
+    "scale": 1.0,
+    "order": 1,
+    "translation": [
+      2.0,
+      -1.0
+    ],
+    "rotation_radians": -0.07
+  },
+  "rows": [
+    {
+      "kind": "scalar",
+      "arm": "identity",
+      "accepted": true,
+      "shape": [
+        17,
+        26
+      ],
+      "max_absolute_change": 0.0
+    },
+    {
+      "kind": "rgb",
+      "arm": "identity",
+      "accepted": true,
+      "shape": [
+        17,
+        26,
+        3
+      ],
+      "max_absolute_change": 0.0
+    },
+    {
+      "kind": "scalar",
+      "arm": "translation",
+      "accepted": true,
+      "shape": [
+        17,
+        26
+      ],
+      "max_absolute_change": 3.0
+    },
+    {
+      "kind": "rgb",
+      "arm": "translation",
+      "accepted": false,
+      "error": "too many values to unpack (expected 2)"
+    },
+    {
+      "kind": "scalar",
+      "arm": "rotation",
+      "accepted": true,
+      "shape": [
+        17,
+        26
+      ],
+      "max_absolute_change": 3.373175170555257
+    },
+    {
+      "kind": "rgb",
+      "arm": "rotation",
+      "accepted": false,
+      "error": "too many values to unpack (expected 2)"
+    }
+  ],
+  "original_sources_unchanged": true
+}

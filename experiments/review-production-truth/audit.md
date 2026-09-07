@@ -259,3 +259,31 @@ the third is a real-RAW integration test. The first prints a failed-scene warnin
 without failing the process. None is the requested commissioned complete
 synthetic production benchmark today. No compilation, timing, image-quality or
 render-memory result is claimed from this read-only audit.
+
+## Root continuation: producer channel scope
+
+**MEASURED exploratory API control, 2026-09-07:**
+`python -B experiments/review-production-truth/producer-scope.py` exits zero
+with the expected four dispositions in `producer-scope.json`. A 9x13 scalar
+scene works with identity and scale1.01. A spatial RGB array passes the early
+identity return but fails scale1.01 with `ValueError: too many values to unpack`.
+`similarity_warp` unpacks two dimensions; `render_stack` then applies its fixed
+`channel_scale` to the same radiance array at three wavelengths. Thus selecting
+`channels="rgb"` does not establish arbitrary spatial RGB scene support.
+
+The fixture's three channels are deliberately distinct. An identity-only API
+test would miss this failure. This is an exploratory compatibility observation,
+not optical or full-renderer commissioning. Reuse the current producer only
+within its scalar-radiance scene scope, add separately commissioned chromatic
+controls, or explicitly implement and verify a prospective channel extension.
+Do not silently promote the `Layer` docstring's advertised 3D shape into an
+executed RGB-bracket capability. The frozen M25 source remains unchanged.
+
+**VERIFIED separately by directional_detail:**
+`python -B experiments/review-production-truth/independent-producer-scope.py`
+re-chooses 17x26 dimensions, spatially distinct RGB channels, a different centre,
+linear interpolation, translation and rotation. Scalar nonidentity controls
+produce finite changed outputs; the translated ramp has its independently
+predicted interior value. Both nonidentity RGB calls raise the same dimension
+error; identity returns the supplied array. The independent JSON retains all
+dispositions and unchanged M25 source hashes. This corroborates API scope only.

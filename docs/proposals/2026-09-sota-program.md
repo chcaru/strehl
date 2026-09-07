@@ -257,3 +257,22 @@ reviewer are assigned. Preserve M25's optics/occlusion limits and the old
 blend-truth scene refusal; passing process exit alone is not scene acceptance.
 The actual output-grid adapter audit proceeds in parallel. These are the next
 product-facing work, not a new metric search or a request for new photographs.
+
+**M192d complete and independently verified:** the
+[native observer rehearsal](../research/M192d-production-rehearsal.md) ran all
+seven registered N33/worker8 invocations on the frozen M192 executable. Complete
+TIFF and pixel hashes match the archived M192 output in every arm, including
+diagnostics off/on/placebo. All seven sampling observations pass; maximum
+complete interval is 42.4173 ms. The independent reviewer parsed the actual TIFF
+strips separately and re-chose metadata/pixel and telemetry mutations. No long
+stall occurred, so this neither identifies the historical cause nor admits a
+new full M12 result. Durable observer integration and a frozen prospective
+protocol remain systems work; no full rerun has been launched.
+
+The [output adapter audit](../../experiments/review-output-adapter/audit.md)
+locates a native pre-render plan and writer contract as the next geometry seam.
+M130 already applies Crop before Pyramid analysis. M165's one-frame common-TIFF
+consumer is not a full rendered common-TIFF stack, and M193b's valid descriptors
+do not yet authenticate actual output mapping. Use the new M194 source seam to
+commission that mapping, including same-size false translations and nonzero
+crop origins, before claiming adapter coverage.

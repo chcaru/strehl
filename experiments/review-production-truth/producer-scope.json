@@ -1,0 +1,36 @@
+{
+  "scope": "Exploratory API-shape control, not scene/optics commissioning",
+  "source_sha256": "8b842d06ab1a550d1c66263dde2969e0e390a439938e57cb54c4095a6a36118c",
+  "controls": [
+    {
+      "name": "scalar-identity",
+      "accepted": true,
+      "shape": [
+        9,
+        13
+      ]
+    },
+    {
+      "name": "scalar-scale",
+      "accepted": true,
+      "shape": [
+        9,
+        13
+      ]
+    },
+    {
+      "name": "rgb-identity",
+      "accepted": true,
+      "shape": [
+        9,
+        13,
+        3
+      ]
+    },
+    {
+      "name": "rgb-scale",
+      "accepted": false,
+      "error": "too many values to unpack (expected 2)"
+    }
+  ]
+}

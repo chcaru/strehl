@@ -1,0 +1,43 @@
+{
+  "schema": "m192d-rehearsal-v1",
+  "status": "NONPERTURBATION_VERIFIED",
+  "completed": 7,
+  "identity_and_execution": true,
+  "sampling_passes": 7,
+  "max_interval_ms": 42.4173,
+  "file_mutation_rejected": true,
+  "pixel_mutation_rejected": true,
+  "timing_descriptive_only": {
+    "off": {
+      "minimum_wall_seconds": 31.8704516,
+      "paired_delta_seconds": [
+        0.0,
+        0.0
+      ],
+      "paired_mean_seconds": 0.0,
+      "paired_sem_seconds": 0.0
+    },
+    "on": {
+      "minimum_wall_seconds": 31.9202961,
+      "paired_delta_seconds": [
+        0.05985529999999528,
+        0.04984450000000251
+      ],
+      "paired_mean_seconds": 0.0548498999999989,
+      "paired_sem_seconds": 0.005005399999996384
+    },
+    "placebo": {
+      "minimum_wall_seconds": 31.9202851,
+      "paired_delta_seconds": [
+        -0.0202896999999993,
+        0.04983350000000186
+      ],
+      "paired_mean_seconds": 0.014771900000001281,
+      "paired_sem_seconds": 0.03506160000000058
+    }
+  },
+  "inputs_unchanged": 33,
+  "original_artifacts_unchanged": 300,
+  "source_freeze_unchanged": true,
+  "completed_utc": "2026-09-07T09:09:03.529973+00:00"
+}
