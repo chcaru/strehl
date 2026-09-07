@@ -1,0 +1,181 @@
+{
+  "argv": [
+    "experiments/m194e-joint-pupil/amendment-work-count.py",
+    "experiments/m194e-joint-pupil/amendment-work-count-2"
+  ],
+  "calculation_wall_seconds": 20.625,
+  "records": [
+    {
+      "arm": "primary",
+      "frame": 0,
+      "nominal_point_calls": 518240,
+      "nominal_triangles": 6478,
+      "original_nominal_intervals": 850880,
+      "proposed_max_intervals_per_point": 42,
+      "proposed_nominal_angular_nodes": 55707072,
+      "proposed_nominal_intervals": 1160564,
+      "remaining_node_ceiling": 544292928
+    },
+    {
+      "arm": "primary",
+      "frame": 1,
+      "nominal_point_calls": 518080,
+      "nominal_triangles": 6476,
+      "original_nominal_intervals": 780640,
+      "proposed_max_intervals_per_point": 40,
+      "proposed_nominal_angular_nodes": 49750848,
+      "proposed_nominal_intervals": 1036476,
+      "remaining_node_ceiling": 550249152
+    },
+    {
+      "arm": "primary",
+      "frame": 2,
+      "nominal_point_calls": 518240,
+      "nominal_triangles": 6478,
+      "original_nominal_intervals": 712640,
+      "proposed_max_intervals_per_point": 40,
+      "proposed_nominal_angular_nodes": 43738080,
+      "proposed_nominal_intervals": 911210,
+      "remaining_node_ceiling": 556261920
+    },
+    {
+      "arm": "primary",
+      "frame": 3,
+      "nominal_point_calls": 518080,
+      "nominal_triangles": 6476,
+      "original_nominal_intervals": 640480,
+      "proposed_max_intervals_per_point": 38,
+      "proposed_nominal_angular_nodes": 37183200,
+      "proposed_nominal_intervals": 774650,
+      "remaining_node_ceiling": 562816800
+    },
+    {
+      "arm": "primary",
+      "frame": 4,
+      "nominal_point_calls": 500480,
+      "nominal_triangles": 6256,
+      "original_nominal_intervals": 500480,
+      "proposed_max_intervals_per_point": 1,
+      "proposed_nominal_angular_nodes": 24023040,
+      "proposed_nominal_intervals": 500480,
+      "remaining_node_ceiling": 575976960
+    },
+    {
+      "arm": "angle-refined",
+      "frame": 0,
+      "nominal_point_calls": 518240,
+      "nominal_triangles": 6478,
+      "original_nominal_intervals": 850880,
+      "proposed_max_intervals_per_point": 42,
+      "proposed_nominal_angular_nodes": 111414144,
+      "proposed_nominal_intervals": 1160564,
+      "remaining_node_ceiling": 488585856
+    },
+    {
+      "arm": "angle-refined",
+      "frame": 1,
+      "nominal_point_calls": 518080,
+      "nominal_triangles": 6476,
+      "original_nominal_intervals": 780640,
+      "proposed_max_intervals_per_point": 40,
+      "proposed_nominal_angular_nodes": 99501696,
+      "proposed_nominal_intervals": 1036476,
+      "remaining_node_ceiling": 500498304
+    },
+    {
+      "arm": "angle-refined",
+      "frame": 2,
+      "nominal_point_calls": 518240,
+      "nominal_triangles": 6478,
+      "original_nominal_intervals": 712640,
+      "proposed_max_intervals_per_point": 40,
+      "proposed_nominal_angular_nodes": 87476160,
+      "proposed_nominal_intervals": 911210,
+      "remaining_node_ceiling": 512523840
+    },
+    {
+      "arm": "angle-refined",
+      "frame": 3,
+      "nominal_point_calls": 518080,
+      "nominal_triangles": 6476,
+      "original_nominal_intervals": 640480,
+      "proposed_max_intervals_per_point": 38,
+      "proposed_nominal_angular_nodes": 74366400,
+      "proposed_nominal_intervals": 774650,
+      "remaining_node_ceiling": 525633600
+    },
+    {
+      "arm": "angle-refined",
+      "frame": 4,
+      "nominal_point_calls": 500480,
+      "nominal_triangles": 6256,
+      "original_nominal_intervals": 500480,
+      "proposed_max_intervals_per_point": 1,
+      "proposed_nominal_angular_nodes": 48046080,
+      "proposed_nominal_intervals": 500480,
+      "remaining_node_ceiling": 551953920
+    },
+    {
+      "arm": "cell-refined",
+      "frame": 0,
+      "nominal_point_calls": 2072960,
+      "nominal_triangles": 6478,
+      "original_nominal_intervals": 3403520,
+      "proposed_max_intervals_per_point": 50,
+      "proposed_nominal_angular_nodes": 223782048,
+      "proposed_nominal_intervals": 4662126,
+      "remaining_node_ceiling": 376217952
+    },
+    {
+      "arm": "cell-refined",
+      "frame": 1,
+      "nominal_point_calls": 2072320,
+      "nominal_triangles": 6476,
+      "original_nominal_intervals": 3122560,
+      "proposed_max_intervals_per_point": 48,
+      "proposed_nominal_angular_nodes": 199972800,
+      "proposed_nominal_intervals": 4166100,
+      "remaining_node_ceiling": 400027200
+    },
+    {
+      "arm": "cell-refined",
+      "frame": 2,
+      "nominal_point_calls": 2072960,
+      "nominal_triangles": 6478,
+      "original_nominal_intervals": 2850560,
+      "proposed_max_intervals_per_point": 48,
+      "proposed_nominal_angular_nodes": 175898016,
+      "proposed_nominal_intervals": 3664542,
+      "remaining_node_ceiling": 424101984
+    },
+    {
+      "arm": "cell-refined",
+      "frame": 3,
+      "nominal_point_calls": 2072320,
+      "nominal_triangles": 6476,
+      "original_nominal_intervals": 2561920,
+      "proposed_max_intervals_per_point": 46,
+      "proposed_nominal_angular_nodes": 149684448,
+      "proposed_nominal_intervals": 3118426,
+      "remaining_node_ceiling": 450315552
+    },
+    {
+      "arm": "cell-refined",
+      "frame": 4,
+      "nominal_point_calls": 2001920,
+      "nominal_triangles": 6256,
+      "original_nominal_intervals": 2001920,
+      "proposed_max_intervals_per_point": 1,
+      "proposed_nominal_angular_nodes": 96092160,
+      "proposed_nominal_intervals": 2001920,
+      "remaining_node_ceiling": 503907840
+    }
+  ],
+  "schema": "m194e-prospective-geometric-work-v1",
+  "source_hashes": {
+    "amendment-work-count.py": "daed16f9b19a5e9580f094e07ec37ebf61c14c09729c94289aae8696e49e3e9b",
+    "model.py": "a74cd9bd61ea2f717a185e86f725b5ed192431056a447581db0f8562cf9f70b8",
+    "render.py": "2320d2a24a8678da7d50795662bb34b54a41c5200abdc8d111d9457c86d599a5"
+  },
+  "status": "DERIVED_FROM_GEOMETRY_NOT_TIMING"
+}
