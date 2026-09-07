@@ -1,0 +1,11 @@
+terms: joint-pupil, uniform-disc, sensor-cell, boundary noise
+==============================================================================
+CITE THESE IN THE BRIEF (rule 40):
+
+  M194e-joint-pupil.md                 score    50  <-- HEADLINE MATCH
+      M194e — joint-pupil depth-boundary model
+  M194f-production-bridge.md           score    42  <-- HEADLINE MATCH
+      M194f — admitted joint-pupil CFA through production
+
+  also mentions it: M194b-known-scene.md
+==============================================================================

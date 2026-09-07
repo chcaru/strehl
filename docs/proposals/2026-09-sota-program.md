@@ -175,9 +175,11 @@ reader after consuming admitted CFA through the prepared production Pyramid
 and writer. Crop/colour values, observer/confidence byte identity, rank encoding
 and the amended observed-channel WB control pass. The unsupported exposure arm
 and instrument failures remain in the [M194f report](../research/M194f-production-bridge.md).
-The small fixture has one Laplacian band plus a base. **Next:** separately
-register and commission the larger numerical boundary fixture and noise law,
-then compare the fixed M194d candidate on actual three-band production output.
+The small fixture has one Laplacian band plus a base. **Current next: M194g**
+commissions the larger numerical boundary fixture, starting with geometry-only
+cost and coverage checks. Its [prospective protocol](../../experiments/m194g-larger-pupil/preregister.md)
+keeps later noise-law admission and the fixed M194d comparison on actual
+three-band production output separate from expected-image generation.
 The one-plane M194b/M194d evidence cannot express depth-boundary dilution.
 The new mathematical model will not clear M25's failed physical/optics gates.
 Any later production bridge, noise population and quality comparison need an
