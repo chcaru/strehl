@@ -1,0 +1,54 @@
+{
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-B",
+    "-X",
+    "faulthandler",
+    "-X",
+    "pycache_prefix=C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\private-campaign-1\\cache-worker",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\private-campaign.py",
+    "--worker",
+    "--release",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\private-campaign-release-1.json",
+    "--release-sha256",
+    "ab81a017f159e411e0fdcea1f65c248ff575cc23f7aa16b42b6a112df35923a0",
+    "--output",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\private-campaign-1\\worker"
+  ],
+  "error": "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\private-campaign.py\", line 581, in worker\n    need(actual[\"status\"] == \"COMPLETE_CHILD_EXIT_ZERO\", \"first stage refusal:\\n\" + str(actual[\"error\"]))\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\private-campaign.py\", line 52, in need\n    raise ValueError(message)\nValueError: first stage refusal:\nTraceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\private-campaign.py\", line 405, in launch\n    successful(observation, command)\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\private-campaign.py\", line 248, in successful\n    need(observation.get(\"command\") == command and type(observation.get(\"exit_code\")) is int and\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\private-campaign.py\", line 52, in need\n    raise ValueError(message)\nValueError: actual exact zero exit\n\n",
+  "execution_release": {
+    "bytes": 31180,
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\private-campaign-release-1.json",
+    "sha256": "ab81a017f159e411e0fdcea1f65c248ff575cc23f7aa16b42b6a112df35923a0"
+  },
+  "finalization_errors": [],
+  "products": [],
+  "schema": "m193c-private-worker-v1",
+  "stages": [
+    {
+      "launch": {
+        "bytes": 4928,
+        "path": "experiments/m193c-output-grid/private-campaign-1/worker/grid_producer-launch.json",
+        "sha256": "644d46a122f6afc29d764c1fcec9ffdb7add5c3f02fc95af4162994d0c4fa7ea"
+      },
+      "request": null,
+      "result": null,
+      "stage": "grid_producer"
+    }
+  ],
+  "status": "REFUSED_PRIVATE_WORKER",
+  "unvisited": [
+    "grid_reader",
+    "derivative_producer",
+    "derivative_reader"
+  ],
+  "work": {
+    "artifact_bytes": 136085,
+    "byte_scope": "cumulative observed per-path high-water extents; deleted paths remain charged",
+    "cpu_seconds": 3.828125,
+    "observed_child_cpu_seconds": 2.703125,
+    "owner_or_worker_cpu_seconds": 1.125,
+    "scope": "worker-local only; encompassing parent Job is admission authority",
+    "wall_seconds": 3.797000000020489
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "excluded": [
+    "experiments/m193c-output-grid/private-campaign-1/artifact-index.json",
+    "experiments/m193c-output-grid/private-campaign-1/result.json"
+  ],
+  "file_count": 8,
+  "files": [
+    {
+      "bytes": 1223,
+      "path": "experiments/m193c-output-grid/private-campaign-1/worker.log",
+      "sha256": "8700729606cafa7919755f2e63c9f58dad418a6b41a8785fb7dd02d3f5676257"
+    },
+    {
+      "bytes": 3506,
+      "path": "experiments/m193c-output-grid/private-campaign-1/worker/grid/00-plan-launch.json",
+      "sha256": "65967fd8f44fac4afbf428d68fe0c5ed0d7711da74df2722874a27139010287d"
+    },
+    {
+      "bytes": 9824,
+      "path": "experiments/m193c-output-grid/private-campaign-1/worker/grid/00-plan.json",
+      "sha256": "e26d8a6f57a1f22b69dc8112e75c126283bc52938b7b5462f1810bd81c094371"
+    },
+    {
+      "bytes": 200,
+      "path": "experiments/m193c-output-grid/private-campaign-1/worker/grid/00-plan.log",
+      "sha256": "f9fe8648b414f63050f7613c9b36af551efeb6fc7a3be5733914a0ad95f9ad0d"
+    },
+    {
+      "bytes": 116697,
+      "path": "experiments/m193c-output-grid/private-campaign-1/worker/grid/run-index.json",
+      "sha256": "c3285bcbf9c427b4e7de6eb6809897b65f854d1dd21fec7a27e4f3c2278bcad4"
+    },
+    {
+      "bytes": 4928,
+      "path": "experiments/m193c-output-grid/private-campaign-1/worker/grid_producer-launch.json",
+      "sha256": "644d46a122f6afc29d764c1fcec9ffdb7add5c3f02fc95af4162994d0c4fa7ea"
+    },
+    {
+      "bytes": 929,
+      "path": "experiments/m193c-output-grid/private-campaign-1/worker/grid_producer.log",
+      "sha256": "76de70e781fbe5e9b42a868e874340dc344273ec60ae274f70af0a45cf2a30e2"
+    },
+    {
+      "bytes": 3151,
+      "path": "experiments/m193c-output-grid/private-campaign-1/worker/result.json",
+      "sha256": "1d216511cc4f55da6d8a2cb26624fc96c8dbbfc6bae222220ba6f784696d2140"
+    }
+  ],
+  "observed_high_water_bytes": 140459,
+  "retained_bytes": 140458,
+  "schema": "m193c-private-artifact-index-v1",
+  "scope": "all retained owned files except this index and terminal result, externally bound in final stdout"
+}

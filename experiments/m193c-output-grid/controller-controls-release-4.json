@@ -1,0 +1,112 @@
+{
+  "schema": "m193c-execution-release-v1",
+  "scope": "controller-controls",
+  "source_bindings": {
+    "experiments/m193c-output-grid/controller-controls.py": {
+      "sha256": "217999b5969a29224868fe731284493e04ce0ef33bd225fc4c9f3bc3f8b5b84c",
+      "bytes": 18455
+    },
+    "experiments/m193c-output-grid/controller-child.py": {
+      "sha256": "8944b1387990a262d1ad47c44ee2bbd7de281323185a0758802f1637289d2788",
+      "bytes": 4416
+    },
+    "experiments/m193c-output-grid/bounded-process.py": {
+      "sha256": "47b9f8d848759eba61f055b9fdca1f8ac400f134dcd7636f0e0eaaa955704e0b",
+      "bytes": 12664
+    },
+    "experiments/m12-scorecard/m12-harness.py": {
+      "sha256": "6cfb408992f37b225f102da4d62ba836f9c5b67c92bdd418ff460987866a1bb9",
+      "bytes": 117908
+    }
+  },
+  "inputs": [
+    {
+      "path": "experiments/m193c-output-grid/execution-preregister.md",
+      "sha256": "10511b44708fd3067698846006e71828c37f6d9c83a7d052556af8fdfb3fdbf1",
+      "bytes": 8721
+    },
+    {
+      "path": "experiments/m193c-output-grid/independent-parent-component-review.md",
+      "sha256": "5d508de58566ffec0bc3602d534290c4be966ac985b3056f41bf12b9a3932893",
+      "bytes": 18345
+    },
+    {
+      "path": "experiments/m193c-output-grid/controller-amendment-1.md",
+      "sha256": "a6689921a17c08523e50faf85bb67ed87c3b410ca4395ba12652577a812297c8",
+      "bytes": 2444
+    },
+    {
+      "path": "experiments/m193c-output-grid/controller-amendment-1-review.md",
+      "sha256": "e4b7d54561275b00d152d6e155031c873cd55def0002724048547b6e8977f9dd",
+      "bytes": 6742
+    },
+    {
+      "path": "experiments/m193c-output-grid/controller-controls-1/result.json",
+      "sha256": "e64683aaab93aca3590607e7d6f3d1d0d80a7ed710beb178ccb3a7bb01139889",
+      "bytes": 14891
+    },
+    {
+      "path": "experiments/m193c-output-grid/controller-amendment-2.md",
+      "sha256": "e2cf41d846baa5bb4adf1da3606cd6662d8b61d2c367fbd79dc702be6740db68",
+      "bytes": 2637
+    },
+    {
+      "path": "experiments/m193c-output-grid/controller-amendment-2-review.md",
+      "sha256": "06faa91c79dba68cb9a5e425af558f66ee97da2c28cb3fb133855a438f9305de",
+      "bytes": 7387
+    },
+    {
+      "path": "experiments/m193c-output-grid/controller-controls-2/result.json",
+      "sha256": "c68f94e71a2ad95018a91b060a87a8afa9ac828c185893e0041bd494ec029244",
+      "bytes": 16988
+    },
+    {
+      "path": "experiments/m193c-output-grid/controller-amendment-3.md",
+      "sha256": "0c4d13c6520512785918661b61daa2a4ada5ab7fcf3fe8cb89f02e8b51e00e7e",
+      "bytes": 10792
+    },
+    {
+      "path": "experiments/m193c-output-grid/independent-controller-amendment-3-review.md",
+      "sha256": "d81af100167d0f15777fd785ee16a5f41bcd3185f9b13c28a0c209b8e77177a8",
+      "bytes": 7426
+    },
+    {
+      "path": "experiments/m193c-output-grid/controller-controls-3/result.json",
+      "sha256": "39a6f6e93e3b8df83834ab4046c7f30d6f42612df0cb0ec57ea158815baa7cfd",
+      "bytes": 25150
+    },
+    {
+      "path": "experiments/m193c-output-grid/independent-private-campaign-1-read.md",
+      "sha256": "2d5d431ffe6c9f168b9afdea1415bf6be4811b5b662cca0c8973dfa5b2f4bc18",
+      "bytes": 11952
+    },
+    {
+      "path": "experiments/m193c-output-grid/private-campaign-1/result.json",
+      "sha256": "415b2b6032bd59bf81b7e2e499e430ddbabc7d8395f1aaa1858af05b9eee15d4",
+      "bytes": 30532
+    },
+    {
+      "path": "experiments/m193c-output-grid/private-campaign-1/worker/grid/run-index.json",
+      "sha256": "c3285bcbf9c427b4e7de6eb6809897b65f854d1dd21fec7a27e4f3c2278bcad4",
+      "bytes": 116697
+    }
+  ],
+  "commands": [
+    [
+      "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+      "-X",
+      "utf8",
+      "-X",
+      "faulthandler",
+      "-X",
+      "pycache_prefix=C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\work\\cache-controller-controls-4",
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\controller-controls.py",
+      "--release",
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\controller-controls-release-4.json",
+      "--release-sha256",
+      "ACTUAL_EXECUTION_RELEASE_SHA256",
+      "--output",
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\controller-controls-4"
+    ]
+  ]
+}

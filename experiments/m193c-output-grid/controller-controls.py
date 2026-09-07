@@ -98,7 +98,8 @@ def main():
         watched = a.output/"watched-input.txt"
         watched.write_bytes(b"original-private-input")
         watched_expected = binding(watched)
-        modes = ("valid", "nonzero", "exact-log", "overflow-log", "timeout", "nested-timeout", "memory-allowed", "memory", "late-log-binding", "changed-input", "restored")
+        modes = ("valid", "nonzero", "exact-log", "overflow-log", "timeout", "nested-timeout", "memory-allowed", "memory", "late-log-binding", "changed-input", "restored",
+                 "drain-finish", "drain-persist", "drain-restored")
         for index, mode in enumerate(modes):
             check_sources()
             if mode == "restored":
@@ -108,6 +109,11 @@ def main():
             argv = [sys.executable, str(HERE/"controller-child.py"), child_mode]
             if mode == "changed-input":
                 argv.append(str(watched))
+            drain_directory = None
+            if mode.startswith("drain-"):
+                drain_directory = a.output / f"{index:02}-{mode}"
+                drain_directory.mkdir()
+                argv.append(str(drain_directory))
             def unchanged():
                 need(binding(watched) == watched_expected, "watched input changed")
             env, removed = helper.clean_environment()
@@ -120,7 +126,7 @@ def main():
                 helper.binding = unavailable_log
             try:
                 actual = helper.run(argv, env, ROOT, log, api=api,
-                                    wall_seconds=5 if mode == "nested-timeout" else 1 if mode == "timeout" else 10,
+                                    wall_seconds=5 if mode in ("nested-timeout", "drain-persist") else 1 if mode == "timeout" else 10,
                                     cpu_seconds=10, log_bytes=65536,
                                     committed_bytes=(256 if mode == "memory-allowed" else 64)<<20,
                                     check=unchanged if mode in ("changed-input", "restored") else lambda: None)
@@ -171,6 +177,66 @@ def main():
             elif mode == "changed-input":
                 row["passed"] = ("watched input changed" in (actual["error"] or "")
                                  and watched.read_bytes() == b"changed-private-input")
+            elif mode.startswith("drain-"):
+                starts = re.findall(rb"^M193C_DRAIN_PARENT=(.+)\r?$", text, re.M)
+                need(len(starts) == 1, "one actual direct-parent drain identity")
+                parent = json.loads(starts[0])
+                startup_path = drain_directory / "startup.json"
+                with startup_path.open("rb") as stream:
+                    startup_raw = stream.read(1025)
+                need(len(startup_raw) <= 1024, "bounded actual startup marker")
+                startup = json.loads(startup_raw)
+                completion_path = drain_directory / "completion.json"
+                row["drain_identity"] = dict(parent=parent, startup=startup, startup_ref=file_ref(startup_path),
+                                              completion=None, completion_ref=None)
+                need(set(parent) == {"parent_pid", "requested_child_pid", "started_child_pid", "child_live", "startup_sha256"}
+                     and set(startup) == {"schema", "mode", "parent_pid", "child_pid", "started_monotonic_ns"},
+                     "closed actual drain identities")
+                need(all(type(parent[k]) is int and parent[k] > 0 for k in
+                         ("parent_pid", "requested_child_pid", "started_child_pid")) and
+                     type(startup["parent_pid"]) is int and type(startup["child_pid"]) is int and
+                     type(startup["started_monotonic_ns"]) is int and startup["started_monotonic_ns"] > 0 and
+                     parent["parent_pid"] == startup["parent_pid"] and parent["requested_child_pid"] ==
+                     parent["started_child_pid"] == startup["child_pid"] != parent["parent_pid"] and
+                     parent["child_live"] is True and parent["startup_sha256"] == hashlib.sha256(startup_raw).hexdigest()
+                     and startup["schema"] == "m193c-controller-drain-start-v1" and startup["mode"] == mode,
+                     "live actual descendant/startup association")
+                drain, termination = actual["post_exit_drain"], actual["termination"]
+                need(actual["direct_exit_observed"] is True and actual["pipe_eof_observed"] is True and
+                     type(actual["exit_code"]) is int and actual["exit_code"] == 0 and
+                     type(drain["observation_count"]) is int and drain["observation_count"] > 0 and
+                     0 < len(drain["observations"]) <= min(16, drain["observation_count"]) and
+                     type(drain["initial_accounting"]["active_processes"]) is int and
+                     drain["initial_accounting"]["active_processes"] > 0 and
+                     drain["observations"][0]["accounting"]["active_processes"] > 0 and
+                     0 <= drain["started_wall_seconds"] <= drain["ended_wall_seconds"] <= actual["wall_seconds"],
+                     "actual post-exit EOF drain was exercised on original helper clock")
+                need(all(set(observation) == {"wall_seconds", "accounting"} and
+                         drain["started_wall_seconds"] <= observation["wall_seconds"] <= drain["ended_wall_seconds"]
+                         for observation in drain["observations"]), "timed actual drain observations")
+                if mode == "drain-persist":
+                    row["passed"] = (actual["error"] == "ValueError('child wall bound')" and
+                                     actual["limits"]["wall_seconds"] == 5 and not completion_path.exists() and
+                                     drain["completed"] is False and drain["last_accounting"]["active_processes"] > 0 and
+                                     termination["attempted"] is True and termination["succeeded"] is True and
+                                     termination["before_accounting"]["active_processes"] > 0)
+                else:
+                    with completion_path.open("rb") as stream:
+                        completion_raw = stream.read(1025)
+                    need(len(completion_raw) <= 1024, "bounded actual completion marker")
+                    completion = json.loads(completion_raw)
+                    row["drain_identity"].update(completion=completion, completion_ref=file_ref(completion_path))
+                    need(set(completion) == set(startup) | {"delay_seconds", "completed_monotonic_ns"} and
+                         completion["schema"] == "m193c-controller-drain-complete-v1" and
+                         all(completion[k] == startup[k] for k in startup if k != "schema") and
+                         type(completion["delay_seconds"]) is int and completion["delay_seconds"] == 2 and
+                         type(completion["completed_monotonic_ns"]) is int and
+                         completion["completed_monotonic_ns"] - startup["started_monotonic_ns"] >= 2_000_000_000,
+                         "same actual child completed the fixed delayed marker")
+                    row["passed"] = (clean and actual["limits"]["wall_seconds"] == 10 and drain["completed"] is True and
+                                     drain["last_accounting"]["active_processes"] == 0 and
+                                     termination["attempted"] is False and termination["succeeded"] is False and
+                                     termination["before_accounting"] is None)
             if mode != "late-log-binding":
                 row["passed"] = row["passed"] and actual["cleanup_errors"] == []
             row["passed"] = row["passed"] and actual["terminal_job_accounting"] is True
@@ -178,12 +244,26 @@ def main():
             row["passed"] = (row["passed"] and actual["configured_job_limits"]["flags"] & 0x200 != 0
                              and actual["configured_job_limits"]["committed_bytes"] == actual["limits"]["committed_bytes"])
             need(row["passed"] is True, "controller case refused its intended oracle: " + mode)
-        need(len(result["cases"]) == 11, "complete finite controller population")
+        need(len(result["cases"]) == 14, "complete finite controller population")
         need(binding(watched) == watched_expected, "watched input restored")
         produced.append(file_ref(watched))
         result["status"] = "PASS_OWNED_PROCESS_CONTROLS_ONLY"
     except Exception:
         result["error"] = traceback.format_exc()
+    # Complete retained artifacts, including startup/completion or partial markers
+    # on failure. The terminal result is excluded from its own recursive digest.
+    try:
+        observed = {ref["path"]: ref for ref in produced}
+        for path in sorted(a.output.rglob("*")):
+            if path.is_file() and path != a.output / "result.json":
+                ref = file_ref(path)
+                need(observed.setdefault(ref["path"], ref) == ref, "previous controller artifact changed")
+        produced = list(observed.values())
+        result["artifacts"] = produced
+        result["artifact_scope"] = "all retained output files except terminal result, including failed and pending markers"
+    except Exception:
+        result["status"] = "UNCOMMISSIONED_CONTROLLER"
+        result["finalization_errors"].append("complete retained artifact inventory: " + traceback.format_exc())
     try:
         check_sources()
         for ref in produced:

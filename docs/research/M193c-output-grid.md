@@ -1,7 +1,8 @@
 # M193c: native output coordinates and complementary-focus coverage
 
-**IN PROGRESS.** The process controls and test build are complete. Private image
-coordinates, RAW derivatives and real registration coverage remain unmeasured
+**IN PROGRESS.** The first private execution stopped on a process-control
+refusal after its first plan test. Private image coordinates, RAW derivatives
+and real registration coverage remain unmeasured
 in this milestone. HardFloor remains the default; no quality promotion follows
 from this work. The [charter](../../experiments/m193c-output-grid/charter.md)
 names the actual sampling-coordinate consumer and the fixed historical inputs.
@@ -37,6 +38,28 @@ reconstructed MHC/Catmull samples with actual Rust kernel and warp values.
 Those are prepared instruments, not yet geometric findings. Their fixed
 45 controls must run before all ten private outputs can be admitted.
 
+**MEASURED, independently inspected:** private attempt 1, frozen at `f9ee06a4`,
+returned actual outer exit 1 after 4.9988203 wall seconds. The first Rust plan
+test returned 0 with one test passed and saved a 9,824-byte plan. Its enclosing
+helper then rejected an active-process observation immediately after direct
+exit and pipe EOF. The original nonzero observation was overwritten during
+cleanup, so the retained record cannot distinguish natural shutdown from an
+explicit cleanup termination. The final termination counter counts limit
+violations; its zero value cannot supply that missing observation. The
+[independent read](../../experiments/m193c-output-grid/independent-private-campaign-1-read.md)
+preserves this uncertainty and the actual chain of refusals.
+
+This attempt produced zero TIFFs and ran no precision component, independent
+image reader, derivative or RAW operation. No admission gate exists. Actual
+encompassing child CPU plus owner CPU was 4.890625 seconds; the observation is
+operational accounting, not a performance result. The prospective repair keeps
+the original resource limits while observing the owned process tree through
+completion, retains the first shutdown observation and explicit termination
+attempts, and adds a delayed-descendant success/refusal/restoration group to
+the unchanged eleven process controls. It needs its own execution and a new
+build before another private attempt, since the build source closure includes
+the process helper. No image bar or image population changes.
+
 ## Reproduction and preserved attempts
 
 Each release contains the complete actual argument array, input references and
@@ -51,6 +74,7 @@ these attempts when reproducing them.
 | Process controls 3 | `e1488da8` | [release 3](../../experiments/m193c-output-grid/controller-controls-release-3.json) | [eleven controls passed](../../experiments/m193c-output-grid/controller-controls-3/result.json) |
 | Test build 1 | `1e5e100a` | [build release 1](../../experiments/m193c-output-grid/bridge-build-release-1.json) | [retained compiler refusal](../../experiments/m193c-output-grid/bridge-build-1/result.json) |
 | Test build 2 | `7b861935` | [build release 2](../../experiments/m193c-output-grid/bridge-build-release-2.json) | [compiled tests only](../../experiments/m193c-output-grid/bridge-build-2/result.json) |
+| Private attempt 1 | `f9ee06a4` | [private release 1](../../experiments/m193c-output-grid/private-campaign-release-1.json) | [first-plan process refusal](../../experiments/m193c-output-grid/private-campaign-1/result.json) |
 
 Final control result SHA256:
 `39a6f6e93e3b8df83834ab4046c7f30d6f42612df0cb0ec57ea158815baa7cfd`.
@@ -59,7 +83,8 @@ Build 2 result SHA256:
 
 ## Next decisions
 
-Finish the independently reviewed encompassing private campaign. It owns one
+Commission the process shutdown repair, rebuild, then execute a new frozen
+encompassing private attempt. It owns one
 600 CPU second / 1200 wall second / 128 MiB artifact allowance across the grid
 producer, independent reader and two derivative fixtures. Local child samples
 cannot reset that allowance. Failed children retain their partial artifacts

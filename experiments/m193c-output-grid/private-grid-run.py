@@ -207,7 +207,8 @@ def main():
         need(control["schema"] == "m193c-controller-controls-v1" and control["status"] == "PASS_OWNED_PROCESS_CONTROLS_ONLY"
              and control["error"] is None and control["finalization_errors"] == []
              and [r["mode"] for r in control["cases"]] == ["valid", "nonzero", "exact-log", "overflow-log", "timeout",
-                 "nested-timeout", "memory-allowed", "memory", "late-log-binding", "changed-input", "restored"]
+                 "nested-timeout", "memory-allowed", "memory", "late-log-binding", "changed-input", "restored",
+                 "drain-finish", "drain-persist", "drain-restored"]
              and all(r["passed"] is True and r["actual"]["terminal_job_accounting"] is True
                      and r["actual"]["job_accounting"]["active_processes"] == 0 for r in control["cases"]),
              "complete controller instruments")

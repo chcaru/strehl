@@ -75,6 +75,8 @@ def run(command, env, cwd, log, *, api, wall_seconds, cpu_seconds,
     result = dict(command=command, exit_code=None, error=None, cleanup_errors=[],
                   wall_seconds=None, log_bytes=0, job_accounting=None, job_memory=None,
                   terminal_job_accounting=False, configured_job_limits=None,
+                  direct_exit_observed=False, pipe_eof_observed=False, post_exit_drain=None,
+                  termination=dict(attempted=False, before_accounting=None, succeeded=False),
                   limits=dict(wall_seconds=wall_seconds, cpu_seconds=cpu_seconds,
                               log_bytes=log_bytes, committed_bytes=committed_bytes),
                   scope="owned job tree; committed memory, observed user+kernel CPU; not RSS or a timing benchmark")
@@ -105,6 +107,15 @@ def run(command, env, cwd, log, *, api, wall_seconds, cpu_seconds,
 
     def observe():
         result["job_accounting"] = api.job_accounting(job)
+        drain = result["post_exit_drain"]
+        if drain is not None:
+            actual = dict(result["job_accounting"])
+            if drain["initial_accounting"] is None:
+                drain["initial_accounting"] = actual
+            drain["last_accounting"] = actual
+            drain["observation_count"] += 1
+            if len(drain["observations"]) < 16:
+                drain["observations"].append(dict(wall_seconds=time.monotonic() - started, accounting=actual))
         result["job_memory"] = api.job_memory(job)
         need(result["job_accounting"]["total_cpu_100ns"] / 1e7 <= cpu_seconds, "child CPU bound")
         need(result["job_memory"]["peak_job_memory_used_bytes"] <= committed_bytes, "child committed-memory bound")
@@ -147,7 +158,9 @@ def run(command, env, cwd, log, *, api, wall_seconds, cpu_seconds,
                 except queue.Empty:
                     continue
                 if kind == "eof":
-                    eof = True; continue
+                    eof = True
+                    result["pipe_eof_observed"] = True
+                    continue
                 need(kind != "error", "child log read: " + str(value))
                 remaining = log_bytes - result["log_bytes"]
                 kept = value[:remaining]
@@ -156,9 +169,22 @@ def run(command, env, cwd, log, *, api, wall_seconds, cpu_seconds,
                 need(written == len(kept), "short child log write")
                 need(len(value) <= remaining, "child log bound")
             result["exit_code"] = process.wait(timeout=1)
+            result["direct_exit_observed"] = True
             stream.flush(); os.fsync(stream.fileno())
-        observe(); check()
-        need(result["job_accounting"]["active_processes"] == 0, "child left an active descendant")
+        result["post_exit_drain"] = dict(initial_accounting=None, last_accounting=None,
+            observations=[], observation_count=0, completed=False,
+            started_wall_seconds=time.monotonic() - started, ended_wall_seconds=None)
+        try:
+            while True:
+                # Direct exit and pipe EOF do not establish complete Job exit.
+                # Retain the first observation and spend only the original bounds.
+                observe(); check()
+                if result["job_accounting"]["active_processes"] == 0:
+                    result["post_exit_drain"]["completed"] = True
+                    break
+                time.sleep(.01)
+        finally:
+            result["post_exit_drain"]["ended_wall_seconds"] = time.monotonic() - started
     except Exception as exc:
         result["error"] = repr(exc)
     finally:
@@ -167,10 +193,13 @@ def run(command, env, cwd, log, *, api, wall_seconds, cpu_seconds,
             try:
                 result["job_accounting"] = api.job_accounting(job)
                 if result["job_accounting"]["active_processes"]:
+                    result["termination"]["attempted"] = True
+                    result["termination"]["before_accounting"] = dict(result["job_accounting"])
                     api.kernel32.TerminateJobObject.argtypes = [api.wt.HANDLE, api.wt.UINT]
                     api.kernel32.TerminateJobObject.restype = api.wt.BOOL
                     if not api.kernel32.TerminateJobObject(job, 0xE193C0DE):
                         raise ctypes.WinError(ctypes.get_last_error())
+                    result["termination"]["succeeded"] = True
                     termination_deadline = time.monotonic() + 5
                     while result["job_accounting"]["active_processes"]:
                         need(time.monotonic() <= termination_deadline, "owned job termination did not complete")
@@ -213,4 +242,10 @@ def run(command, env, cwd, log, *, api, wall_seconds, cpu_seconds,
         result["wall_seconds"] = time.monotonic() - started
         if result["wall_seconds"] > wall_seconds and result["error"] is None:
             result["error"] = "child wall bound through final observation"
+        if result["error"] is None and result["job_accounting"] is not None:
+            if result["job_accounting"]["total_cpu_100ns"] / 1e7 > cpu_seconds:
+                result["error"] = "child CPU bound through final observation"
+        if result["error"] is None and result["job_memory"] is not None:
+            if result["job_memory"]["peak_job_memory_used_bytes"] > committed_bytes:
+                result["error"] = "child committed-memory bound through final observation"
     return result

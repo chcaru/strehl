@@ -1,0 +1,102 @@
+{
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-X",
+    "pycache_prefix=C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\private-campaign-1\\cache-grid-producer",
+    "-B",
+    "-X",
+    "utf8",
+    "-X",
+    "faulthandler",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\private-grid-run.py",
+    "--release",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\private-grid-release-1.json",
+    "--release-sha256",
+    "e690478aab676eb1d7b4d5f508665c3bbd796c48683314ee9cf888b42f2cf8fc",
+    "--build",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\bridge-build-2\\result.json",
+    "--build-sha256",
+    "05154982aefcab418427c5311fb27ea499a42f1a1c6e9f714d9c46cb8e45c907",
+    "--controls",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\controller-controls-3\\result.json",
+    "--controls-sha256",
+    "39a6f6e93e3b8df83834ab4046c7f30d6f42612df0cb0ec57ea158815baa7cfd",
+    "--output",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\private-campaign-1\\worker\\grid"
+  ],
+  "ended_monotonic_ns": 794935453000000,
+  "environment": {},
+  "error": "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\private-campaign.py\", line 405, in launch\n    successful(observation, command)\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\private-campaign.py\", line 248, in successful\n    need(observation.get(\"command\") == command and type(observation.get(\"exit_code\")) is int and\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\private-campaign.py\", line 52, in need\n    raise ValueError(message)\nValueError: actual exact zero exit\n",
+  "log": {
+    "bytes": 929,
+    "path": "experiments/m193c-output-grid/private-campaign-1/worker/grid_producer.log",
+    "sha256": "76de70e781fbe5e9b42a868e874340dc344273ec60ae274f70af0a45cf2a30e2"
+  },
+  "observation": {
+    "cleanup_errors": [],
+    "command": [
+      "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+      "-X",
+      "pycache_prefix=C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\private-campaign-1\\cache-grid-producer",
+      "-B",
+      "-X",
+      "utf8",
+      "-X",
+      "faulthandler",
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\private-grid-run.py",
+      "--release",
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\private-grid-release-1.json",
+      "--release-sha256",
+      "e690478aab676eb1d7b4d5f508665c3bbd796c48683314ee9cf888b42f2cf8fc",
+      "--build",
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\bridge-build-2\\result.json",
+      "--build-sha256",
+      "05154982aefcab418427c5311fb27ea499a42f1a1c6e9f714d9c46cb8e45c907",
+      "--controls",
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\controller-controls-3\\result.json",
+      "--controls-sha256",
+      "39a6f6e93e3b8df83834ab4046c7f30d6f42612df0cb0ec57ea158815baa7cfd",
+      "--output",
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\private-campaign-1\\worker\\grid"
+    ],
+    "configured_job_limits": {
+      "committed_bytes": 8589934592,
+      "flags": 8704
+    },
+    "error": null,
+    "exit_code": 1,
+    "job_accounting": {
+      "active_processes": 0,
+      "total_cpu_100ns": 27031250,
+      "total_kernel_100ns": 11250000,
+      "total_page_fault_count": 1104221,
+      "total_processes": 6,
+      "total_terminated_processes": 0,
+      "total_user_100ns": 15781250
+    },
+    "job_memory": {
+      "peak_job_memory_used_bytes": 814342144,
+      "peak_process_memory_used_bytes": 813043712
+    },
+    "limits": {
+      "committed_bytes": 8589934592,
+      "cpu_seconds": 598.890625,
+      "log_bytes": 16777216,
+      "wall_seconds": 1198.921999999904
+    },
+    "log": {
+      "bytes": 929,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\private-campaign-1\\worker\\grid_producer.log",
+      "sha256": "76de70e781fbe5e9b42a868e874340dc344273ec60ae274f70af0a45cf2a30e2"
+    },
+    "log_bytes": 929,
+    "scope": "owned job tree; committed memory, observed user+kernel CPU; not RSS or a timing benchmark",
+    "terminal_job_accounting": true,
+    "wall_seconds": 2.718999999924563
+  },
+  "removed_environment_names": [],
+  "schema": "m193c-campaign-child-launch-v1",
+  "stage": "grid_producer",
+  "started_monotonic_ns": 794932656000000,
+  "status": "FAILED_CHILD"
+}

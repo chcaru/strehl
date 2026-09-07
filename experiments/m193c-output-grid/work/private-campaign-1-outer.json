@@ -1,0 +1,21 @@
+{
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-B",
+    "-X",
+    "faulthandler",
+    "-X",
+    "pycache_prefix=C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\private-campaign-1\\cache-owner",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\private-campaign.py",
+    "--release",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\private-campaign-release-1.json",
+    "--release-sha256",
+    "ab81a017f159e411e0fdcea1f65c248ff575cc23f7aa16b42b6a112df35923a0",
+    "--output",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\private-campaign-1"
+  ],
+  "scope": "Actual PowerShell direct invocation and terminal wall observation; encompassing Job owns child CPU",
+  "release_sha256": "ab81a017f159e411e0fdcea1f65c248ff575cc23f7aa16b42b6a112df35923a0",
+  "exit_code": 1,
+  "elapsed_wall_seconds": 4.9988203
+}

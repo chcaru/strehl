@@ -391,8 +391,12 @@ The ten-render coordinate prototype and separate registration derivative
 have passed independent source review and a fresh test-only build. The final
 eleven process controls passed; two earlier instrument refusals and the first
 compiler failure remain preserved. The encompassing private campaign and
-independent image readers are being completed before any new image or RAW
-experiment. See the [M193c progress record](../research/M193c-output-grid.md).
+independent image readers were frozen for the first private attempt. That
+attempt stopped after one successful plan test on an immediate active-process
+refusal, before any TIFF, precision component or RAW operation. The original
+shutdown observation was not retained, so its cause is unknown. A bounded
+process-drain repair and three added process controls precede a new build and
+private release. See the [M193c progress record](../research/M193c-output-grid.md).
 Existing owned RAW decode may
 allocate before exposing shape: enforce a process committed-memory limit and
 check the returned geometry before further owned image allocations, without
