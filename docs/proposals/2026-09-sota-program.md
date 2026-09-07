@@ -190,10 +190,13 @@ normalized-interval reference now returns all300 values and passes66 producer
 checks; the complete author rerun passes511. The refreshed193 controls passed,
 then the complete reader exposed a Markdown-versus-JSON entry bug. The narrow
 repair and197 powered controls now pass, followed by the complete independent
-component/observer comparison under unchanged accuracy bars. Current work is
-all25 complete expected arrays, their independent reader, and source-only
-preparation of the fixed software-noise stage. No full expected-image
-population is admitted. See the
+component/observer comparison under unchanged accuracy bars. All25 complete
+expected arrays and their independent full-image/refinement comparisons now
+pass, after79 private controls. The largest external absolute discrepancy is
+1.0743797247414477e-5 expected electrons against the unchanged .004 bar.
+The fixed numerical population is admitted; current work commissions the
+software-noise law, its actual90 emitted CFAs and the new three-band production
+bridge before the registered38-output quality comparison. See the
 [M194g record](../research/M194g-larger-pupil.md). Its [prospective protocol](../../experiments/m194g-larger-pupil/preregister.md)
 keeps later noise-law admission and the fixed M194d comparison on actual
 three-band production output separate from expected-image generation.

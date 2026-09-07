@@ -1,0 +1,26 @@
+{
+  "schema": "m194g-static-source-only-v1",
+  "imports_or_numerical_calls": false,
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-B",
+    "-X",
+    "faulthandler",
+    "-c",
+    "import ast,hashlib,json,pathlib,sys; base=pathlib.Path('experiments/m194g-larger-pupil'); files=['independent-component-reader.py','independent-component-controls.py']; rows=[dict(path=str(base/n),sha256=hashlib.sha256((base/n).read_bytes()).hexdigest(),bytes=len((base/n).read_bytes()),parsed=isinstance(ast.parse((base/n).read_bytes(),filename=str(base/n)),ast.Module)) for n in files]; result=dict(schema='m194g-static-source-only-v1',imports_or_numerical_calls=False,command=sys.orig_argv,files=rows); (base/'independent-component-static-check-4.json').write_text(json.dumps(result,indent=2)+'\\n',encoding='utf-8'); print(json.dumps(result,indent=2))"
+  ],
+  "files": [
+    {
+      "path": "experiments\\m194g-larger-pupil\\independent-component-reader.py",
+      "sha256": "8477478b12a1f47b7c119db875e448825e52b0878d43a5f37388e1d2b461b683",
+      "bytes": 70763,
+      "parsed": true
+    },
+    {
+      "path": "experiments\\m194g-larger-pupil\\independent-component-controls.py",
+      "sha256": "d4ced14831b8fc4b4d9a5126ae0e45e92481fc46ecb5b72a67835c8c61108cce",
+      "bytes": 58491,
+      "parsed": true
+    }
+  ]
+}

@@ -480,3 +480,70 @@ ndarray bytes and zero live scalar frames at terminal. These are completed
 arm readings under their allowances, not a speed comparison. The producer's
 values and receipts still require the complete independent array consumer;
 successful reference arms alone do not grant full float or noise authority.
+
+## Independent complete expected-image admission
+
+**MEASURED:** the author family also completed all three five-frame arms,
+with root collecting exit0 from session87903. Primary, angle-refined and
+cell-refined result hashes are respectively
+`bdb95d23eb4eb97802557bf9683e6e7e95ea1ff32cd951d495efe43c675a0f19`,
+`dab51375c68bb5f7fa42ec7933368e3b53f15537d0b1d44d818074e928949a6b`,
+and `a385f8e070cbc9019e798ee13e9c2dead2fae50f84a27de386333fc84daa538f`.
+All have complete frames, unchanged source snapshots and null errors. Their
+recorded CPU/wall seconds are306.703125/307.344000000041,
+421.53125/422.31199999991804 and587.578125/588.688000000082.
+These are completion/resource readings, not comparative performance results.
+The completed author artifacts and independently authored reader/control
+sources were committed atd0647ce9.
+
+**MEASURED private reader commissioning:** the actual command in
+`independent-full-array-controls-release-1.json`, SHA256
+`d1c7fce1c5a639e003e98add5e619905682436d90e729c4870d27dec95f1d558`,
+returned exit0 with79 passed checks:51 intended refusals and28 valid/restored
+companions. Result SHA256 is
+`e549d13cd6acfa40d186c8cc33bfa7c9a420c0abf93aa54588ae2daae3aa988d`.
+Actual shared comparison loops reject errors confined to one frame or arm,
+and actual payload consumers reject stale/rehashed bad arrays, incorrect
+diagnostics, reset/cumulative-work defects and file-identity aliasing.
+The genuine full entry is exercised through the complete component authority;
+private downstream stops remain explicitly private. Persistence controls
+revoke authority after a final check fails. Source closure and all expected
+exception types/boundaries were reread by root.
+
+**MEASURED independent full admission:** command/source commit01ded5d8
+released `independent-full-array-reader-release-1.json`, SHA256
+`bad71e7b1bebe66ae8ddba45fa917d59820079fc865c49c92c5e35e58ecf520d`.
+The actual command returned exit0. Its344512-byte result is SHA256
+`042893c976ecc99845c98e894afd359852d428a8a87d4028d09c03bef3dfcedb`,
+status `PASS_COMPLETE_FLOAT_MODEL`, null error, no finalization errors and
+unchanged sources. All25 arrays and1178 deciding file bindings were read.
+Each of the30 external comparisons independently meets max<=.004e and
+RMS<=.0008e on its own whole-image or fixed-band population. The fixed band
+contains3852 sites and its complement72948. Largest external max/RMS across
+these separately admitted rows are1.0743797247414477e-5e and
+3.966221413918554e-7e. These are expected-electron discrepancies, not quality
+scores; agreeing implementations could share a physical-model error.
+
+All15 whole-image refinement comparisons independently pass. Maximum absolute
+changes are4.261892172507942e-9e for angle refinement,
+1.025840720103588e-5e for cell refinement, and2.5234567146981135e-6e
+for independent-reference refinement. The existing bars are respectively
+.001e,.001e and.0005e. Author fallback and independent boundary masks retain
+separate descriptive counts/discrepancies; neither changes admission or
+claims mask agreement. The reader records7.515625CPU/7.734000000054948wall
+seconds and7609704 peak live named-array bytes under120/240seconds/32MiB.
+
+The2981-byte `float-commission.json`, SHA256
+`3f18d8954347382b2dffe0ca501f93ef8da54c3b966a1a606851323d86277a2b`,
+binds the five original primary expected arrays and the acyclic comparison
+authority. This admits the fixed continuous shared-pupil numerical population
+only. Software noise, final CFA files, the production bridge and the38-output
+quality matrix remain separate consumers with their own controls.
+
+The next software-noise command is released against the frozen contract and
+the actual runtime snapshot. Runtime capture imported core, authority helper
+and independent private-noise reader in actual runner startup order, with no
+sampling/encoding calls. It returned exit0; `runtime.json` is10162 bytes,
+SHA256 `5785be482f28d097e0fb9bd7111b2655502485951fc52b08b6cc2ac01d9d49c3`.
+This snapshot authenticates the runtime bytes used by the next command; it
+does not itself commission a noise law.

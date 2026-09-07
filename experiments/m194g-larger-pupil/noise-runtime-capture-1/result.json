@@ -1,0 +1,60 @@
+{
+  "schema": "m194g-noise-runtime-capture-v1",
+  "status": "COMPLETE_RUNTIME_SNAPSHOT_ONLY",
+  "invocation": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-X",
+    "utf8",
+    "-X",
+    "faulthandler",
+    "-X",
+    "pycache_prefix=experiments/m194g-larger-pupil/work/cache-noise-runtime-capture-1",
+    "experiments/m194g-larger-pupil/capture-noise-runtime.py",
+    "--release",
+    "experiments/m194g-larger-pupil/noise-runtime-capture-release-1.json",
+    "--release-sha256",
+    "873f9b04e189e13b21c3dde4005d6dbbf61a534f93171d6eb3a665094a1185fa",
+    "--output",
+    "experiments/m194g-larger-pupil/noise-runtime-capture-1"
+  ],
+  "release_sha256": "873f9b04e189e13b21c3dde4005d6dbbf61a534f93171d6eb3a665094a1185fa",
+  "sources": {
+    "experiments/m194g-larger-pupil/capture-noise-runtime.py": {
+      "sha256": "81715f227a6f235301812431bd5f1daa63857eaa4dd1a1cc0e069bdf6669f77e",
+      "bytes": 5238
+    },
+    "experiments/m194g-larger-pupil/software-noise.py": {
+      "sha256": "abe9d712cbf9caf07f8dfc276a0e0ab4474366db039fd3b1fc2f25cb7a057292",
+      "bytes": 35805
+    },
+    "experiments/m194g-larger-pupil/next-noise-contract.md": {
+      "sha256": "4e92e176d0cfae6dcdc9fedab3ff8f5d40f858c47eb0fcddbd14877d894d29f2",
+      "bytes": 30515
+    },
+    "experiments/m194g-larger-pupil/software-noise-authority.py": {
+      "sha256": "c02508370fd2706f81babe4f15d7961a4f2bbd5ae65b83ec7ccedb443000bac0",
+      "bytes": 13041
+    },
+    "experiments/m194g-larger-pupil/independent-noise-reader.py": {
+      "sha256": "aba1bc507a9236d55ad4799b786a56bc995d08eb33585f66280981e483d72138",
+      "bytes": 72676
+    },
+    "experiments/m194g-larger-pupil/software-noise-interface.md": {
+      "sha256": "98048ba64d9f984e6dbba17607b40d6c5899057aa88708b9354e98a40fa131c2",
+      "bytes": 8242
+    },
+    "experiments/m194g-larger-pupil/software-noise-run.py": {
+      "sha256": "5f3b8e35ee641426d2d225f0724e457fe956861f87c8e3b1f04bcfe9eaa05c96",
+      "bytes": 38301
+    }
+  },
+  "runtime": {
+    "path": "experiments/m194g-larger-pupil/noise-runtime-capture-1/runtime.json",
+    "sha256": "5785be482f28d097e0fb9bd7111b2655502485951fc52b08b6cc2ac01d9d49c3",
+    "bytes": 10162
+  },
+  "cpu_seconds": 0.59375,
+  "wall_seconds": 0.6089999999385327,
+  "scope": "runtime and source bytes only; no noise-law or emitted-CFA admission",
+  "error": null
+}
