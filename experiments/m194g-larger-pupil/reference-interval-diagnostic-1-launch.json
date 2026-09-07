@@ -1,0 +1,28 @@
+{
+  "schema": "m194g-root-diagnostic-launch-v1",
+  "status": "COMPLETE",
+  "source_commit": "2c0563f65ae3c92b99e0571abe3044888a67dc48",
+  "release_sha256": "cec6cb4fcb803b57b04b736777e8160264ce45e0e8e5b4fb8fb49048bbcca6e1",
+  "interpreter_argv": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-X",
+    "utf8",
+    "-X",
+    "faulthandler",
+    "-X",
+    "pycache_prefix=experiments/m194g-larger-pupil/work/cache-reference-interval-diagnostic-1",
+    "experiments/m194g-larger-pupil/reference-interval-diagnostic.py",
+    "--output",
+    "experiments/m194g-larger-pupil/reference-interval-diagnostic-1",
+    "--execution-release",
+    "experiments/m194g-larger-pupil/reference-interval-diagnostic-release-1.json",
+    "--execution-release-sha256",
+    "cec6cb4fcb803b57b04b736777e8160264ce45e0e8e5b4fb8fb49048bbcca6e1"
+  ],
+  "started_utc": "2026-09-07T18:32:59.0401661Z",
+  "finished_utc": "2026-09-07T18:33:01.5454206Z",
+  "exit_code": 0,
+  "parent_shell_pid": 29644,
+  "cwd": "C:\\dev\\blog\\death-of-software\\projects\\strehl",
+  "log": "experiments/m194g-larger-pupil/reference-interval-diagnostic-1-launch.log"
+}

@@ -1,0 +1,1512 @@
+{
+  "schema": "m194g-private-controls-artifact-read-v1",
+  "scope": "read-only terminal review; no numerical rerun or full admission",
+  "result_sha256": "258d5b9de1966a346581ac4329bd2fbdaecf83a2f904e74473e73c326b6dfce1",
+  "result_bytes": 495347,
+  "release_sha256": "7cc77389df8a55f016e73b2c584a176b72cdf3fbaccc0f3a19a4f4283893e0a9",
+  "commit": "1f6db1d0",
+  "source_rows": [
+    {
+      "path": "experiments/m194e-joint-pupil/independent-model.py",
+      "sha256": "0cd8ea2331b269e65befdee110560cbc345e89c12348cbe1dc3144f7c04443f0",
+      "bytes": 11144,
+      "bound": true,
+      "snapshot": true,
+      "committed": true,
+      "release": true
+    },
+    {
+      "path": "experiments/m194e-joint-pupil/model.py",
+      "sha256": "a74cd9bd61ea2f717a185e86f725b5ed192431056a447581db0f8562cf9f70b8",
+      "bytes": 8015,
+      "bound": true,
+      "snapshot": true,
+      "committed": true,
+      "release": true
+    },
+    {
+      "path": "experiments/m194e-joint-pupil/render.py",
+      "sha256": "487c1727ca3aab05dd66a7056fb368712ccaabbbe604818fdc8b47eda77b6e97",
+      "bytes": 32791,
+      "bound": true,
+      "snapshot": true,
+      "committed": true,
+      "release": true
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/amendment-1-counter-budget.md",
+      "sha256": "205ba1ac42e8325eb7d1ede41e05399776eddf7d80a99ecb3ba12b1931f73a99",
+      "bytes": 5367,
+      "bound": true,
+      "snapshot": true,
+      "committed": true,
+      "release": true
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/author-components.py",
+      "sha256": "29b20c8d903af50dfcbbd9a11b05222b151d8210502a22426e182fbb27fde31f",
+      "bytes": 26996,
+      "bound": true,
+      "snapshot": true,
+      "committed": true,
+      "release": true
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/author-render.py",
+      "sha256": "303e2598612cc71653bd6273725682e4e5eb1319f39f119920c0ee5982254234",
+      "bytes": 7703,
+      "bound": true,
+      "snapshot": true,
+      "committed": true,
+      "release": true
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/component-population.json",
+      "sha256": "3814eeaf459e14a0a32e90ceeab6fc9d2994c92ee55bf17c824478accc3cbd41",
+      "bytes": 210899,
+      "bound": true,
+      "snapshot": true,
+      "committed": true,
+      "release": true
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/fixture.json",
+      "sha256": "e84f0bbbda9bef039da86616c9f051d416929f4dbe78477cc5b3fc21206856bb",
+      "bytes": 1985,
+      "bound": true,
+      "snapshot": true,
+      "committed": true,
+      "release": true
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/geometry.py",
+      "sha256": "24b812071b8b6189423b9792a22c55abd9a4f4a78921a9d558ab24489f1923b3",
+      "bytes": 6591,
+      "bound": true,
+      "snapshot": true,
+      "committed": true,
+      "release": true
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/hybrid.py",
+      "sha256": "89e71eb1a89a0236299af2f0408f58bcc50a3aa3f6cb70a2aedeb174818de885",
+      "bytes": 29261,
+      "bound": true,
+      "snapshot": true,
+      "committed": true,
+      "release": true
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/independent-component-controls.py",
+      "sha256": "885f40c88b031e5323de8cbcc98ba3c430353c47ab8b3e64930975502b45619a",
+      "bytes": 41570,
+      "bound": true,
+      "snapshot": true,
+      "committed": true,
+      "release": true
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/independent-component-reader-design.md",
+      "sha256": "176fc147e26b14d7eb7415b9ec5f33a57497927bb6e46e773a01c1b27bf08fff",
+      "bytes": 11584,
+      "bound": true,
+      "snapshot": true,
+      "committed": true,
+      "release": true
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/independent-component-reader.py",
+      "sha256": "cd69c42a223ce3f859b5f546729234f433a134282fc7e401711ec265265a23a3",
+      "bytes": 57678,
+      "bound": true,
+      "snapshot": true,
+      "committed": true,
+      "release": true
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/independent-component-static-check.json",
+      "sha256": "4b29c48db4b7bbd84161a3c47a8dd92fc51d94cc1718fa5d5f97aed21f705ee8",
+      "bytes": 571,
+      "bound": true,
+      "snapshot": true,
+      "committed": true,
+      "release": true
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/independent-cost-2-read.json",
+      "sha256": "a29b4fb9d95e668ebda8da14d97afc9e5a24875e58bb9858f017db95ca006715",
+      "bytes": 8309,
+      "bound": true,
+      "snapshot": true,
+      "committed": true,
+      "release": true
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/independent-cost-2-review.md",
+      "sha256": "54c40872716c32d488821711fecebdf2d4c3efeb7992300dba9eb289ccfa1d26",
+      "bytes": 6750,
+      "bound": true,
+      "snapshot": true,
+      "committed": true,
+      "release": true
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/independent-reference-components.py",
+      "sha256": "3a318c80d52cf49368edaf7b6486578df1dbf7720a358a2d91ebedde79360fbc",
+      "bytes": 23861,
+      "bound": true,
+      "snapshot": true,
+      "committed": true,
+      "release": true
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/independent-reference.py",
+      "sha256": "40199977f0f7f2d2e487ccacae59f04b60c67a6e7b636eea092c2365483c2de3",
+      "bytes": 32331,
+      "bound": true,
+      "snapshot": true,
+      "committed": true,
+      "release": true
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/next-component-schema-notes.md",
+      "sha256": "d01d99094cdc6c7efba0c62c9c06b11555e9c9cf87f25b07ddcdbcc6a5b9d370",
+      "bytes": 6062,
+      "bound": true,
+      "snapshot": true,
+      "committed": true,
+      "release": true
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/next-numerical-release-review.md",
+      "sha256": "a15edf35c5416dfe479f59a0acd9cbdc016c4aa5f91fbdbab70f0cbd44ef3d01",
+      "bytes": 6655,
+      "bound": true,
+      "snapshot": true,
+      "committed": true,
+      "release": true
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/next-numerical-release.md",
+      "sha256": "b8fd755f53f7172405b398744915a344c09f72977c37b1eff2e73999478e314a",
+      "bytes": 6525,
+      "bound": true,
+      "snapshot": true,
+      "committed": true,
+      "release": true
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/next-reference-plan.md",
+      "sha256": "685d1b5b7d7780c7dc7e9469b4be472b66c9d0ca4716c27de5579e0a303d2151",
+      "bytes": 12396,
+      "bound": true,
+      "snapshot": true,
+      "committed": true,
+      "release": true
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/numerical-implementation-release-1.json",
+      "sha256": "77efbefaa876fe7d222a6a968d3233f0859df87924d49245431ba32eff239ba2",
+      "bytes": 3072,
+      "bound": true,
+      "snapshot": true,
+      "committed": true,
+      "release": true
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/numerical-source-review-1.md",
+      "sha256": "44a94f2ab1a09b7493fdf47f818d1c4090cfc0ddd83b7c9456d8ca4f2be2d2f1",
+      "bytes": 6822,
+      "bound": true,
+      "snapshot": true,
+      "committed": true,
+      "release": true
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/pinned-loader.py",
+      "sha256": "222fab4a932fe236c120d8a48e4521747474e2ef57ba58781bf5c59f644f4f76",
+      "bytes": 2939,
+      "bound": true,
+      "snapshot": true,
+      "committed": true,
+      "release": true
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/preflight-2/result.json",
+      "sha256": "c9e9154fd395a06a5d1cbb28123ac84f92ee1ac61b1a97216f8904b8b6261677",
+      "bytes": 34957,
+      "bound": true,
+      "snapshot": true,
+      "committed": true,
+      "release": true
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/preregister.md",
+      "sha256": "d0c570ec892a2c3e40b90c0f7eef2a9ff0649dd53bc34adee6b6bc65280f14c8",
+      "bytes": 10645,
+      "bound": true,
+      "snapshot": true,
+      "committed": true,
+      "release": true
+    }
+  ],
+  "input_rows": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-model.py",
+      "sha256": "0cd8ea2331b269e65befdee110560cbc345e89c12348cbe1dc3144f7c04443f0",
+      "bytes": 11144,
+      "matches": true
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-reference-1\\refined-2.npy",
+      "sha256": "580e77622eb612e2a45b65b8e6d45f5bf87b3b86960eaa7e0e9fe53ff804a11d",
+      "bytes": 24704,
+      "matches": true
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-reference-1\\refined-3.npy",
+      "sha256": "72c7842f7061fda599be011db3e89b12741876ed3ab9ba56137e2a916d9a0d82",
+      "bytes": 24704,
+      "matches": true
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\independent-reference-1\\result.json",
+      "sha256": "8791700cdc969847ff75f9fbd9205739ee2135ac4bbbdbe445d00b6664c7eccc",
+      "bytes": 9119,
+      "matches": true
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\model.py",
+      "sha256": "a74cd9bd61ea2f717a185e86f725b5ed192431056a447581db0f8562cf9f70b8",
+      "bytes": 8015,
+      "matches": true
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\render.py",
+      "sha256": "487c1727ca3aab05dd66a7056fb368712ccaabbbe604818fdc8b47eda77b6e97",
+      "bytes": 32791,
+      "matches": true
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\amendment-1-counter-budget.md",
+      "sha256": "205ba1ac42e8325eb7d1ede41e05399776eddf7d80a99ecb3ba12b1931f73a99",
+      "bytes": 5367,
+      "matches": true
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\author-components-1\\result.json",
+      "sha256": "358aebe2292a8c1aa920763481cae36ce43ebe2d756a5d2e0b8e8fde20fb080e",
+      "bytes": 1253257,
+      "matches": true
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\author-components.py",
+      "sha256": "29b20c8d903af50dfcbbd9a11b05222b151d8210502a22426e182fbb27fde31f",
+      "bytes": 26996,
+      "matches": true
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\author-render.py",
+      "sha256": "303e2598612cc71653bd6273725682e4e5eb1319f39f119920c0ee5982254234",
+      "bytes": 7703,
+      "matches": true
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\component-population.json",
+      "sha256": "3814eeaf459e14a0a32e90ceeab6fc9d2994c92ee55bf17c824478accc3cbd41",
+      "bytes": 210899,
+      "matches": true
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\fixture.json",
+      "sha256": "e84f0bbbda9bef039da86616c9f051d416929f4dbe78477cc5b3fc21206856bb",
+      "bytes": 1985,
+      "matches": true
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\geometry.py",
+      "sha256": "24b812071b8b6189423b9792a22c55abd9a4f4a78921a9d558ab24489f1923b3",
+      "bytes": 6591,
+      "matches": true
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\hybrid.py",
+      "sha256": "89e71eb1a89a0236299af2f0408f58bcc50a3aa3f6cb70a2aedeb174818de885",
+      "bytes": 29261,
+      "matches": true
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-component-controls-release-1.json",
+      "sha256": "7cc77389df8a55f016e73b2c584a176b72cdf3fbaccc0f3a19a4f4283893e0a9",
+      "bytes": 8485,
+      "matches": true
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-component-controls.py",
+      "sha256": "885f40c88b031e5323de8cbcc98ba3c430353c47ab8b3e64930975502b45619a",
+      "bytes": 41570,
+      "matches": true
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-component-reader-design.md",
+      "sha256": "176fc147e26b14d7eb7415b9ec5f33a57497927bb6e46e773a01c1b27bf08fff",
+      "bytes": 11584,
+      "matches": true
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-component-reader.py",
+      "sha256": "cd69c42a223ce3f859b5f546729234f433a134282fc7e401711ec265265a23a3",
+      "bytes": 57678,
+      "matches": true
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-component-static-check.json",
+      "sha256": "4b29c48db4b7bbd84161a3c47a8dd92fc51d94cc1718fa5d5f97aed21f705ee8",
+      "bytes": 571,
+      "matches": true
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-cost-2-read.json",
+      "sha256": "a29b4fb9d95e668ebda8da14d97afc9e5a24875e58bb9858f017db95ca006715",
+      "bytes": 8309,
+      "matches": true
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-cost-2-review.md",
+      "sha256": "54c40872716c32d488821711fecebdf2d4c3efeb7992300dba9eb289ccfa1d26",
+      "bytes": 6750,
+      "matches": true
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-geometry-controls-2\\result.json",
+      "sha256": "a178a9d32f49b8f2b2af8737f7285de89d9ea70abe0e3be7cf5bb9002c3796b4",
+      "bytes": 480044,
+      "matches": true
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-geometry-preregister.md",
+      "sha256": "fecf46e8b79a87328d4e7e61ad975863cff082add8ed2154a3045a24c057fda7",
+      "bytes": 8327,
+      "matches": true
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-reference-components.py",
+      "sha256": "3a318c80d52cf49368edaf7b6486578df1dbf7720a358a2d91ebedde79360fbc",
+      "bytes": 23861,
+      "matches": true
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-reference.py",
+      "sha256": "40199977f0f7f2d2e487ccacae59f04b60c67a6e7b636eea092c2365483c2de3",
+      "bytes": 32331,
+      "matches": true
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\next-component-population.json",
+      "sha256": "4344d04234e3d0849c4cccdc5cf0af4347dec5f2133c680e145f0288bff82a45",
+      "bytes": 137590,
+      "matches": true
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\next-component-schema-notes.md",
+      "sha256": "d01d99094cdc6c7efba0c62c9c06b11555e9c9cf87f25b07ddcdbcc6a5b9d370",
+      "bytes": 6062,
+      "matches": true
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\next-numerical-release-review.md",
+      "sha256": "a15edf35c5416dfe479f59a0acd9cbdc016c4aa5f91fbdbab70f0cbd44ef3d01",
+      "bytes": 6655,
+      "matches": true
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\next-numerical-release.md",
+      "sha256": "b8fd755f53f7172405b398744915a344c09f72977c37b1eff2e73999478e314a",
+      "bytes": 6525,
+      "matches": true
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\next-reference-plan.md",
+      "sha256": "685d1b5b7d7780c7dc7e9469b4be472b66c9d0ca4716c27de5579e0a303d2151",
+      "bytes": 12396,
+      "matches": true
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\numerical-components-release-1.json",
+      "sha256": "99895afd4cd99151708b7fa0e462297a273bd5fceabf205c0228f0bb197847fa",
+      "bytes": 7991,
+      "matches": true
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\numerical-implementation-release-1.json",
+      "sha256": "77efbefaa876fe7d222a6a968d3233f0859df87924d49245431ba32eff239ba2",
+      "bytes": 3072,
+      "matches": true
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\numerical-source-review-1.md",
+      "sha256": "44a94f2ab1a09b7493fdf47f818d1c4090cfc0ddd83b7c9456d8ca4f2be2d2f1",
+      "bytes": 6822,
+      "matches": true
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\pinned-loader.py",
+      "sha256": "222fab4a932fe236c120d8a48e4521747474e2ef57ba58781bf5c59f644f4f76",
+      "bytes": 2939,
+      "matches": true
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\preflight-2\\result.json",
+      "sha256": "c9e9154fd395a06a5d1cbb28123ac84f92ee1ac61b1a97216f8904b8b6261677",
+      "bytes": 34957,
+      "matches": true
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\preregister.md",
+      "sha256": "d0c570ec892a2c3e40b90c0f7eef2a9ff0649dd53bc34adee6b6bc65280f14c8",
+      "bytes": 10645,
+      "matches": true
+    }
+  ],
+  "groups": [
+    {
+      "schema": "m194g-independent-component-private-controls-v1",
+      "status": "PASS_PRIVATE_CONTROLS",
+      "check_count": 94
+    },
+    {
+      "schema": "m194g-independent-component-resource-controls-v1",
+      "status": "PASS_PRIVATE_CONTROLS",
+      "check_count": 36
+    },
+    {
+      "schema": "m194g-independent-component-entry-controls-v1",
+      "status": "PASS_PRIVATE_CONTROLS",
+      "check_count": 15
+    }
+  ],
+  "check_rows": [
+    {
+      "name": "payload-valid-different-aspect",
+      "pass": true,
+      "expected_refusal": false,
+      "error": null,
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "payload-valid-memory-copy",
+      "pass": true,
+      "expected_refusal": false,
+      "error": null,
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "payload-scalar-plus-one-analytic",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "ValueError: same-method payload bytes differ: scalar",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "payload-numerical-delta-plus-point01",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "ValueError: same-method payload bytes differ: diagnostics",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "payload-missing-numerical-row",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "ValueError: numerical indices must exactly cover sorted numerical sites",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "payload-analytic-extra-row",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "ValueError: numerical indices must exactly cover sorted numerical sites",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "payload-duplicate-index",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "ValueError: numerical indices must exactly cover sorted numerical sites",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "payload-unsorted-index",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "ValueError: numerical indices must exactly cover sorted numerical sites",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "payload-index-outside-frame",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "ValueError: numerical indices must exactly cover sorted numerical sites",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "payload-invalid-branch",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "ValueError: invalid branch code",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "payload-missing-branch-site",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "ValueError: numerical indices must exactly cover sorted numerical sites",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "payload-scalar-nan",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "ValueError: finite nonempty scalar required",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "payload-scalar-inf",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "ValueError: finite nonempty scalar required",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "payload-negative-indicator",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "ValueError: finite nonnegative diagnostics required",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "payload-nan-indicator",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "ValueError: finite nonnegative diagnostics required",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "payload-swapped-sum-preserving-columns",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "ValueError: same-method payload bytes differ: diagnostics",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "payload-false-sum",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "ValueError: direct receipt value-indicator sum differs",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "payload-wrong-scalar-endianness",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "ValueError: scalar must be 2D little-endian f64",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "payload-f32-scalar",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "ValueError: scalar must be 2D little-endian f64",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "payload-u64-indices",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "ValueError: numerical indices must be little-endian u32",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "payload-wrong-diagnostic-shape",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "ValueError: fallback diagnostic interpretation differs",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "payload-restored-after-mutations",
+      "pass": true,
+      "expected_refusal": false,
+      "error": null,
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "maximum-below",
+      "pass": true,
+      "expected_refusal": false,
+      "error": null,
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "maximum-equal",
+      "pass": true,
+      "expected_refusal": false,
+      "error": null,
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "maximum-above",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "ValueError: numerical comparison bar failed",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "rms-equal",
+      "pass": true,
+      "expected_refusal": false,
+      "error": null,
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "rms-above-while-every-max-pass",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "ValueError: numerical comparison bar failed",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "single-maximum-hidden-in-aggregate",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "ValueError: numerical comparison bar failed",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "fault-power-below",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "ValueError: actual fixed fault lacks required power against both references",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "fault-power-equality-is-not-power",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "ValueError: actual fixed fault lacks required power against both references",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "fault-power-above",
+      "pass": true,
+      "expected_refusal": false,
+      "error": null,
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "fault-power-one-reference-only",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "ValueError: actual fixed fault lacks required power against both references",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "numeric-overflow-refuses",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "ValueError: nonfinite value difference",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "numeric-bool-refuses",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "ValueError: finite real: value",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "catalog-299-and300-valid-toy-values",
+      "pass": true,
+      "expected_refusal": false,
+      "error": null,
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "catalog-missing-author",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "ValueError: required component population differs",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "catalog-duplicate-replaces-author",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "ValueError: duplicate/invalid author key",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "catalog-wrong-author-method",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "ValueError: required component population differs",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "catalog-wrong-author-arm",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "ValueError: required component population differs",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "catalog-unknown-row-key",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "ValueError: closed keys: normalized author row",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "catalog-missing-reference-arm",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "ValueError: required component population differs",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "catalog-duplicate-reference-arm",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "ValueError: duplicate/invalid reference key",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "catalog-nonfinite-reference",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "ValueError: finite real: reference scalar",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "catalog-reference-refinement-fails",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "ValueError: numerical comparison bar failed",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "catalog-one-value-max-fails",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "ValueError: numerical comparison bar failed",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "catalog-one-method-rms-cannot-be-diluted",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "ValueError: numerical comparison bar failed",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "catalog-restored-reopened-toy-values",
+      "pass": true,
+      "expected_refusal": false,
+      "error": null,
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "json-reopened-valid",
+      "pass": true,
+      "expected_refusal": false,
+      "error": null,
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "json-duplicate",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "ValueError: duplicate JSON key: a",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "json-nan",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "ValueError: nonfinite JSON token: NaN",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "json-infinity",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "ValueError: nonfinite JSON token: Infinity",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "json-overflow",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "ValueError: nonfinite parsed JSON number",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "json-top-list",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "ValueError: top-level JSON object required",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "input-tuple-json-normalizes",
+      "pass": true,
+      "expected_refusal": false,
+      "error": null,
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "input-bool-not-integer",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "ValueError: record differs: typed index",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "input-float-not-integer",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "ValueError: record differs: typed index",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "input-changed-phase",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "ValueError: record differs: phase",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "actual-npy-valid",
+      "pass": true,
+      "expected_refusal": false,
+      "error": null,
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "actual-npy-all-four-reopened-byte-companion",
+      "pass": true,
+      "expected_refusal": false,
+      "error": null,
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "actual-npy-float-shape",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "ValueError: typed declared shape required",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "actual-npy-bool-length",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "ValueError: integer: file length",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "actual-npy-wrong-declared-dtype",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "ValueError: declared dtype differs",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "actual-npy-unknown-ref-key",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "ValueError: closed keys: ArrayRef",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "actual-npy-traversal",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "ValueError: relative child path required",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "actual-npy-absolute",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "ValueError: portable relative path required",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "actual-npy-rehashed-wrong-endian",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "ValueError: actual NPY interpretation differs",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "actual-npy-rehashed-wrong-shape",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "ValueError: actual NPY interpretation differs",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "actual-npy-rehashed-fortran",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "ValueError: actual NPY interpretation differs",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "actual-npy-rehashed-trailing-byte",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "ValueError: exact bounded numeric NPY payload required",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "actual-npy-restored",
+      "pass": true,
+      "expected_refusal": false,
+      "error": null,
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "actual-author-all331-persisted-call-rows",
+      "pass": true,
+      "expected_refusal": false,
+      "error": null,
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "actual-author-all60-observer-frames",
+      "pass": true,
+      "expected_refusal": false,
+      "error": null,
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "actual-author-private-relocated-frame-companion",
+      "pass": true,
+      "expected_refusal": false,
+      "error": null,
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "actual-author-rehashed-unknown-schema",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "ValueError: author frame status/schema",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "actual-author-rehashed-unknown-field",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "ValueError: closed keys: author frame receipt",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "actual-author-rehashed-missing-status",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "ValueError: closed keys: author frame receipt",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "actual-author-rehashed-nonterminal",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "ValueError: author frame status/schema",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "actual-author-rehashed-changed-source-digest",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "ValueError: frame exercised-source digest differs",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "actual-author-rehashed-bool-branch-code",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "ValueError: record differs: branch code map",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "actual-author-rehashed-float-branch-code",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "ValueError: record differs: branch code map",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "actual-author-rehashed-float-completed",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "ValueError: integer: completed cells",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "actual-author-rehashed-bool-frame-index",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "ValueError: record differs: actual observer inputs",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "actual-author-rehashed-changed-phase",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "ValueError: record differs: actual observer inputs",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "actual-author-rehashed-changed-arm",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "ValueError: record differs: actual observer inputs",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "actual-author-rehashed-false-traversal-digest",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "ValueError: actual traversal witness differs",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "actual-author-rehashed-duplicated-array-path",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "ValueError: distinct frame payload paths required",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "actual-author-rehashed-unknown-diagnostic-column",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "ValueError: record differs: diagnostic columns",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "actual-author-rehashed-false-cumulative-work",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "ValueError: component cumulative work bound",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "actual-author-private-frame-restored",
+      "pass": true,
+      "expected_refusal": false,
+      "error": null,
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "actual-author-missing-observer-execution",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "ValueError: all four observer executions required",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "actual-author-duplicate-frame-replaces-required-frame",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "ValueError: fixed observer frame/arm order differs",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "actual-reference-bounded-array-valid",
+      "pass": true,
+      "expected_refusal": false,
+      "error": null,
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "actual-reference-rehashed-huge-header-before-allocation",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "Refusal: bounded NPY header/extent mismatch",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "actual-reference-bounded-array-restored",
+      "pass": true,
+      "expected_refusal": false,
+      "error": null,
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "author-cpu-below",
+      "pass": true,
+      "expected_refusal": false,
+      "error": null,
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "reference-cpu-below",
+      "pass": true,
+      "expected_refusal": false,
+      "error": null,
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "author-cpu-equal",
+      "pass": true,
+      "expected_refusal": false,
+      "error": null,
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "reference-cpu-equal",
+      "pass": true,
+      "expected_refusal": false,
+      "error": null,
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "author-cpu-above",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "NumericalFailure: UNCOMMISSIONED_NUMERICS: own-process time ceiling",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "reference-cpu-above",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "Refusal: independent process CPU budget",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "author-wall-below",
+      "pass": true,
+      "expected_refusal": false,
+      "error": null,
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "reference-wall-below",
+      "pass": true,
+      "expected_refusal": false,
+      "error": null,
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "author-wall-equal",
+      "pass": true,
+      "expected_refusal": false,
+      "error": null,
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "reference-wall-equal",
+      "pass": true,
+      "expected_refusal": false,
+      "error": null,
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "author-wall-above",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "NumericalFailure: UNCOMMISSIONED_NUMERICS: own-process time ceiling",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "reference-wall-above",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "Refusal: independent wall budget",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "author-points-below",
+      "pass": true,
+      "expected_refusal": false,
+      "error": null,
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "author-points-equal",
+      "pass": true,
+      "expected_refusal": false,
+      "error": null,
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "author-points-above",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "NumericalFailure: UNCOMMISSIONED_NUMERICS: evaluation ceiling",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "author-nodes-below",
+      "pass": true,
+      "expected_refusal": false,
+      "error": null,
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "author-nodes-equal",
+      "pass": true,
+      "expected_refusal": false,
+      "error": null,
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "author-nodes-above",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "NumericalFailure: UNCOMMISSIONED_NUMERICS: evaluation ceiling",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "author-pairs-below",
+      "pass": true,
+      "expected_refusal": false,
+      "error": null,
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "author-pairs-equal",
+      "pass": true,
+      "expected_refusal": false,
+      "error": null,
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "author-pairs-above",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "NumericalFailure: UNCOMMISSIONED_NUMERICS: evaluation ceiling",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "reference-integrands-below",
+      "pass": true,
+      "expected_refusal": false,
+      "error": null,
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "reference-integrands-equal",
+      "pass": true,
+      "expected_refusal": false,
+      "error": null,
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "reference-integrands-above",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "Refusal: independent evaluation budget",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "author-cumulative-work-survives-frames-methods-observers",
+      "pass": true,
+      "expected_refusal": false,
+      "error": null,
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "author-cumulative-one-more-refuses",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "NumericalFailure: UNCOMMISSIONED_NUMERICS: evaluation ceiling",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "author-actual-analytic-cache-clock-equality",
+      "pass": true,
+      "expected_refusal": false,
+      "error": null,
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "author-actual-analytic-cache-clock-crossing",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "NumericalFailure: UNCOMMISSIONED_NUMERICS: own-process time ceiling",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "author-live-owner-storage-equality",
+      "pass": true,
+      "expected_refusal": false,
+      "error": null,
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "author-live-owner-storage-one-byte-over",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "NumericalFailure: UNCOMMISSIONED_NUMERICS: tracked ndarray byte ceiling",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "reference-live-owner-storage-equality",
+      "pass": true,
+      "expected_refusal": false,
+      "error": null,
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "reference-live-owner-storage-one-byte-over",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "Refusal: independent explicit array budget",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "author-second-live-scalar-refuses",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "NumericalFailure: UNCOMMISSIONED_NUMERICS: more than one scalar frame retained",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "author-released-scalar-companion",
+      "pass": true,
+      "expected_refusal": false,
+      "error": null,
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "reference-second-live-scalar-refuses",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "Refusal: second live scalar reference frame",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "reference-released-scalar-companion",
+      "pass": true,
+      "expected_refusal": false,
+      "error": null,
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "entry-valid-reopened-private-release",
+      "pass": true,
+      "expected_refusal": false,
+      "error": null,
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "entry-rehashed-schema",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "ValueError: exact execution release schema/scope required",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "entry-rehashed-scope",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "ValueError: exact execution release schema/scope required",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "entry-rehashed-unknown-key",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "ValueError: exact execution release schema/scope required",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "entry-rehashed-source-bool-bytes",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "ValueError: typed source binding required",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "entry-rehashed-changed-source-hash",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "ValueError: execution source mismatch: experiments/m194e-joint-pupil/independent-model.py",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "entry-rehashed-omitted-loader",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "ValueError: execution source closure omits an actual compiler/import input",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "entry-rehashed-omitted-model",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "ValueError: execution source closure omits an actual compiler/import input",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "entry-rehashed-omitted-controller",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "ValueError: execution source closure omits an actual compiler/import input",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "entry-rehashed-duplicate-input",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "ValueError: unique typed input binding required",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "entry-rehashed-changed-input-byte-count",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "ValueError: execution input mismatch",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "entry-unreleased-actual-argv",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "ValueError: actual orig_argv is not released",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "entry-wrong-external-release-pin",
+      "pass": true,
+      "expected_refusal": true,
+      "error": "ValueError: external execution release digest mismatch",
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "entry-restored-private-release",
+      "pass": true,
+      "expected_refusal": false,
+      "error": null,
+      "matches_intended_boundary": true
+    },
+    {
+      "name": "entry-actual-run-preserves-primary-and-secondary-errors",
+      "pass": true,
+      "expected_refusal": false,
+      "error": null,
+      "matches_intended_boundary": true
+    }
+  ],
+  "check_count": 145,
+  "intended_refusals": 100,
+  "valid_companions": 45,
+  "invocation_exact": true,
+  "sources_all_match": true,
+  "inputs_all_match": true,
+  "checks_all_match": true
+}

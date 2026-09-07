@@ -182,10 +182,12 @@ rows and1152000 cells within the prospectively chosen180CPU/240wall allowance.
 The original60-second refusal and stopped profiling instrument are retained.
 The first author component/observer batch completed its331 calls and60 normal
 observer frames. The separate reference attempted all300 rows but refused28
-near-tangent evaluations on quadrature warnings, so numerical admission remains
-blocked on that incomplete reference and the independent reader/resource checks.
-Current work is its bounded interval diagnosis; no full expected-image population
-is admitted. See the
+near-tangent evaluations on quadrature warnings. All145 independent private
+payload/resource/entry controls now pass. The96-call diagnostic preserves the
+original numerical signatures in off/count/placebo and locates all28 warnings
+on endpoint intervals5–16 binary64 steps wide. Current work is a prospective
+normalized-interval adapter and complete renewed component comparison under
+unchanged accuracy bars; no full expected-image population is admitted. See the
 [M194g record](../research/M194g-larger-pupil.md). Its [prospective protocol](../../experiments/m194g-larger-pupil/preregister.md)
 keeps later noise-law admission and the fixed M194d comparison on actual
 three-band production output separate from expected-image generation.

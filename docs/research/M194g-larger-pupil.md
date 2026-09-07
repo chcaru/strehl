@@ -301,7 +301,8 @@ All52 separately recorded literal/series/retained-array oracle comparisons and
 all14 deliberate fault/restored comparisons report pass. Of150 required
 reference refinement comparisons,136 have values and pass;14 lack values.
 The completed-values requirement is the one failing check among55. Its
-120372 integrand calls and8.890625CPU/8.937000000034459wall seconds do not
+120372 integrand calls and the launch log's post-persistence reading of
+8.890625CPU/8.937000000034459wall seconds do not
 approach the declared allowance. This is a numerical completeness failure,
 not a cost refusal, and the272-value subset cannot authorize expected images.
 
@@ -311,3 +312,47 @@ cuts only a few binary64 steps from a pupil endpoint. The next task is a
 bounded diagnostic and prospectively specified integration correction if that
 mechanism is confirmed. Keep the first population, all inputs, accuracy bars
 and original helper source. No warning suppression or omitted case is released.
+
+## Independent payload/resource controls and interval diagnosis
+
+**MEASURED, scoped private-control pass:** source/command commit `1f6db1d0`
+preceded the first independent private-control run. The exact release is
+`independent-component-controls-release-1.json`, SHA256
+`7cc77389df8a55f016e73b2c584a176b72cdf3fbaccc0f3a19a4f4283893e0a9`.
+Root collected exit0; the terminal result is
+`258d5b9de1966a346581ac4329bd2fbdaecf83a2f904e74473e73c326b6dfce1`.
+All145 controls pass:94 payload/reader checks,36 actual resource checks and15
+entry checks. This includes independent consumption of all331 saved author
+call rows and60 completed observer frames, coherently rehashed private
+metadata/array mutations, cumulative limits and original/secondary failure
+retention. The deliberately refused private author invocation printed
+`UNCOMMISSIONED_NUMERICS` before the successful controller terminal line.
+It is a powered negative control, not a failed private-control run.
+Source bytes are unchanged. These checks admit their instruments and saved
+author payload semantics; they supply none of the28 missing reference values.
+
+**MEASURED diagnostic support:** source/command commit `2c0563f6` preceded the
+first96-call interval diagnostic. Its exact release is
+`reference-interval-diagnostic-release-1.json`, SHA256
+`cec6cb4fcb803b57b04b736777e8160264ce45e0e8e5b4fb8fb49048bbcca6e1`.
+Root collected exit0, with result
+`194dbdb0454a02db985b4e28305c9f5a0f5f42fe4223829b3ea8db0f21e5e1f0`.
+The14 refused cases and two fixed successful companions were replayed at both
+original targets in off/count/placebo modes. Each mode's full numerical
+signature, including refusal/scalar receipts and actual integrand counts,
+is byte-identical to the original signature, SHA256
+`0a3e0c9732216609e94d0605f55eb7c9c21dc598fa196f9492c8e9b0ec644375`.
+All11 diagnostic checks pass, including reopened callback correspondence,
+stale-bound and coherently changed sample-range faults and restored companions.
+
+All28 warning intervals touch exactly one pupil endpoint and span5,13 or16
+binary64 steps, inside the prospectively fixed256-step diagnostic class.
+Each made63 callback evaluations at6,14 or17 distinct coordinates; repeated
+coordinates are directly retained. No warning lies outside the declared
+class; all four ordinary-width positive-companion intervals are warning-free.
+The cumulative diagnostic used31878 actual integrand calls and its persisted
+receipt records2.25CPU/2.405999999959022wall seconds. It changed no integration
+formula, tolerance, split or warning disposition. This localizes the warning
+mechanism; it does not measure a true scalar error or admit expected images.
+The next work is a separately specified and commissioned normalized-interval
+adapter, followed by complete component populations under unchanged bars.

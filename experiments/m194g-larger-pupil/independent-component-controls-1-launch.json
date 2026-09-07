@@ -1,0 +1,32 @@
+{
+  "schema": "m194g-root-private-control-launch-v1",
+  "status": "COMPLETE",
+  "source_commit": "1f6db1d0a346cc6cb9266e6721c73b759004eeb4",
+  "release_sha256": "7cc77389df8a55f016e73b2c584a176b72cdf3fbaccc0f3a19a4f4283893e0a9",
+  "interpreter_argv": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-X",
+    "utf8",
+    "-X",
+    "faulthandler",
+    "-X",
+    "pycache_prefix=experiments/m194g-larger-pupil/work/cache-independent-component-controls-1",
+    "experiments/m194g-larger-pupil/independent-component-controls.py",
+    "--output",
+    "experiments/m194g-larger-pupil/independent-component-controls-1",
+    "--execution-release",
+    "experiments/m194g-larger-pupil/independent-component-controls-release-1.json",
+    "--execution-release-sha256",
+    "7cc77389df8a55f016e73b2c584a176b72cdf3fbaccc0f3a19a4f4283893e0a9",
+    "--author-fixture",
+    "experiments/m194g-larger-pupil/author-components-1/result.json",
+    "--author-fixture-sha256",
+    "358aebe2292a8c1aa920763481cae36ce43ebe2d756a5d2e0b8e8fde20fb080e"
+  ],
+  "started_utc": "2026-09-07T18:25:13.0954144Z",
+  "finished_utc": "2026-09-07T18:25:20.1590698Z",
+  "exit_code": 0,
+  "parent_shell_pid": 15212,
+  "cwd": "C:\\dev\\blog\\death-of-software\\projects\\strehl",
+  "log": "experiments/m194g-larger-pupil/independent-component-controls-1-launch.log"
+}
