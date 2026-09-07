@@ -1,0 +1,8 @@
+{
+  "error": "bridge output changed before completion",
+  "schema": "m194g-noise-consumer-receipt-v1",
+  "secondary_errors": [
+    "rejected receipt path already exists"
+  ],
+  "status": "UNCOMMISSIONED_BRIDGE"
+}

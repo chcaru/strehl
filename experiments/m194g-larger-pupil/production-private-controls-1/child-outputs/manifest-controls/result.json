@@ -1,0 +1,33 @@
+{
+  "fixture_only": true,
+  "missing_bundle_refused": true,
+  "rejected_pointers": [
+    "/schema",
+    "/extra",
+    "/geometry/width",
+    "/geometry/width",
+    "/geometry/reference_index",
+    "/geometry/reference_index",
+    "/geometry/cfa_origin/0",
+    "/geometry/forward_similarity/scale",
+    "/sensor/gain_dn_per_e/0",
+    "/sensor/read_noise_e/3",
+    "/sensor/factors_f64/0",
+    "/sensor/wb_rgb_f32/0",
+    "/sensor/black/0",
+    "/sensor/white/2",
+    "/bundles/0/seed",
+    "/bundles/1/seed",
+    "/bundles/1/noise_enabled",
+    "/bundles/2/scene",
+    "/bundles/0/frames/1/index",
+    "/bundles/0/frames/1/index",
+    "/bundles/0/frames/2/cfa/bytes",
+    "/bundles/0/frames/2/cfa/shape/1",
+    "/bundles/0/frames/3/cfa/dtype",
+    "/bundles/0/frames/4/inverse_focus"
+  ],
+  "restored": true,
+  "schema": "m194g-bridge-private-manifest-v1",
+  "status": "PASS_PRIVATE_SCHEMA_ONLY"
+}

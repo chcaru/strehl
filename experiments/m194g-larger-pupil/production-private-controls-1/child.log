@@ -1,0 +1,12 @@
+
+running 7 tests
+test merge_cmd::known_scene_benchmark::noise_pupil_bridge::private_controls::m194g_private_actual_plan_controls ... ok
+test merge_cmd::known_scene_benchmark::noise_pupil_bridge::private_controls::m194g_private_bounded_json_paths_aliases ... ok
+test merge_cmd::known_scene_benchmark::noise_pupil_bridge::private_controls::m194g_private_ledger_changed_input ... ok
+test merge_cmd::known_scene_benchmark::noise_pupil_bridge::private_controls::m194g_private_manifest_schema_tuple_controls ... ok
+test merge_cmd::known_scene_benchmark::noise_pupil_bridge::private_controls::m194g_private_production_outputs ... ignored, private six RGB outputs; root freezes exact command before execution
+test merge_cmd::known_scene_benchmark::noise_pupil_bridge::private_controls::m194g_private_settings_geometry ... ok
+test merge_cmd::known_scene_benchmark::noise_pupil_bridge::private_controls::m194g_private_source_rails_and_fault ... ok
+
+test result: ok. 6 passed; 0 failed; 1 ignored; 0 measured; 151 filtered out; finished in 0.45s
+
