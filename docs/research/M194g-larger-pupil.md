@@ -547,3 +547,59 @@ sampling/encoding calls. It returned exit0; `runtime.json` is10162 bytes,
 SHA256 `5785be482f28d097e0fb9bd7111b2655502485951fc52b08b6cc2ac01d9d49c3`.
 This snapshot authenticates the runtime bytes used by the next command; it
 does not itself commission a noise law.
+
+## Fixed software-noise private commission
+
+**MEASURED:** the exact command in
+`software-noise-commission-release-1.json`, SHA256
+`3ab62bf38a05e2e46d57255071555714ecdaa428a0984d2d3a137b89f6fb5a3b`,
+was frozen at561f58f3 and returned exit0 (root session99412). Its result is
+6571 bytes, SHA256
+`5ce444627af4787b404318bc4d78f4b9332f0081234e107ab597d269849a81c7`,
+status `PASS_SOFTWARE_NOISE_COMMISSION`, null error, no finalization errors,
+and identical initial/final source and input bindings. The fixed1186 noisy
+calls,17 deterministic records and independent reader all ran within the
+original shared budget. There was no changed seed, resampling or bar revision.
+
+The independent394120-byte read, SHA256
+`363dd1e91c45cf4ede50607f1a18a1df5b959de80fa08b73e8945abe71a39a0c`,
+passes all four baseline levels, all seven restored groups and all seven
+named fault instruments. It retains18 temporal groups,1976 replay checks,
+all10 healthy and10 deliberately shared-key cross-frame comparisons, and
+the17 deterministic outcomes. Actual final rereads cover1186 records,
+5000 noisy arrays and25 deterministic arrays. Baseline nonzero P/R/E/X
+temporal variance ratios span0.9941588455971452 to1.0081427742460436;
+the all10 healthy pooled cross-frame maximum absolute correlation is
+0.009195148986548198. The shared-key fault's minimum pooled correlation is
+0.32563818966869973. The .02 healthy correlation and2% variance bars remain
+fixed engineering checks, not universal-independence or physical-calibration
+proofs. Zero-photon ratios/correlations remain undefined with exact-zero
+photon checks, rather than being counted as independence passes.
+
+The separate5178-byte reader-control result, SHA256
+`92886d9cb9afb3b7913361c28dbbb69f8dae000931a78796495203176cc45040`,
+passes36 controls:29 intended reader refusals and7 valid/restored companions.
+They exercise actual complete-entry/index, consumed trace, typed payload,
+override, rounding, runtime and key-interpretation paths without new draws.
+The bound wrapper is SHA256
+`5aae94ee1d4d4e99db60a065d7bb6e3bbd7e63579715aea5a3ac10fdf5b1bb01`.
+Independent source review also re-chose the quantized-normal oracle,
+per-site temporal estimator, exact pair populations and consumed fault stages;
+see `next-noise-statistical-source-review.md` for that separate review scope.
+
+The stage requested exactly29147136 variates through2372 generator
+constructions. Its last pre-terminal receipt records45.4375CPU and
+73.67051520000678wall seconds,2826240 peak live named-array bytes,1195
+started and1194 completed frames (the difference is the registered
+pre-draw refused-key case). These counts include private deterministic calls,
+so they are not the1186 trace population. Recorded pre-terminal output is
+412562043 bytes; the actual final6261-file package is412568614 bytes,
+including the6571-byte terminal result. The controller checks the complete
+extent, runtime, inputs and elapsed budget after that terminal write.
+
+This commissions the specified software noise law and private reader only.
+Before intended emission, the actual `FloatAuthority` constructor/scalar/final
+read paths need their own controlled failures. The final90 emitted CFAs also
+need their separate independent reader and five-reference admission record.
+Neither gate is supplied by this private-trace pass. Those implementations
+and the larger production adapter are the current next work.

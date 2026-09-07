@@ -1,0 +1,1 @@
+{"controls":{"bytes":5178,"path":"independent-reader-controls.json","sha256":"92886d9cb9afb3b7913361c28dbbb69f8dae000931a78796495203176cc45040"},"read":{"bytes":394120,"path":"independent-private-read.json","sha256":"363dd1e91c45cf4ede50607f1a18a1df5b959de80fa08b73e8945abe71a39a0c"},"schema":"m194g-software-noise-reader-command-v1","status":"PASS_SOFTWARE_NOISE_PRIVATE_TRACES"}
