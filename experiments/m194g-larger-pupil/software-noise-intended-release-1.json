@@ -1,0 +1,115 @@
+{
+  "schema": "m194g-numerical-execution-release-v1",
+  "scope": "noise-emission",
+  "source_bindings": {
+    "experiments/m194g-larger-pupil/software-noise.py": {
+      "sha256": "abe9d712cbf9caf07f8dfc276a0e0ab4474366db039fd3b1fc2f25cb7a057292",
+      "bytes": 35805
+    },
+    "experiments/m194g-larger-pupil/software-noise-run.py": {
+      "sha256": "5f3b8e35ee641426d2d225f0724e457fe956861f87c8e3b1f04bcfe9eaa05c96",
+      "bytes": 38301
+    },
+    "experiments/m194g-larger-pupil/software-noise-authority.py": {
+      "sha256": "c02508370fd2706f81babe4f15d7961a4f2bbd5ae65b83ec7ccedb443000bac0",
+      "bytes": 13041
+    },
+    "experiments/m194g-larger-pupil/independent-noise-reader.py": {
+      "sha256": "aba1bc507a9236d55ad4799b786a56bc995d08eb33585f66280981e483d72138",
+      "bytes": 72676
+    },
+    "experiments/m194g-larger-pupil/software-noise-interface.md": {
+      "sha256": "98048ba64d9f984e6dbba17607b40d6c5899057aa88708b9354e98a40fa131c2",
+      "bytes": 8242
+    },
+    "experiments/m194g-larger-pupil/next-noise-contract.md": {
+      "sha256": "4e92e176d0cfae6dcdc9fedab3ff8f5d40f858c47eb0fcddbd14877d894d29f2",
+      "bytes": 30515
+    },
+    "experiments/m194g-larger-pupil/independent-full-float-authority-schema.md": {
+      "sha256": "3097142b76a796838a2b9ed50d8dcda972ba9945bbc0df75906901abe0e2c606",
+      "bytes": 7787
+    },
+    "experiments/m194g-larger-pupil/next-noise-core-static-review.md": {
+      "sha256": "5515d304fb9e35f1f0b11cad70a0ba2923242fd57b52175da44808a5e240795c",
+      "bytes": 5477
+    },
+    "experiments/m194g-larger-pupil/next-software-noise-run-implementation.md": {
+      "sha256": "c5ceebefd2c0ecd39e76c57f33c89e2322c1de76fafbf852b9fac8f89934e13c",
+      "bytes": 3810
+    },
+    "experiments/m194g-larger-pupil/next-noise-reader-implementation.md": {
+      "sha256": "8d323666c01329f378183688dbf58494e060d3d99c525a82a04dada6832bd403",
+      "bytes": 6358
+    }
+  },
+  "inputs": [
+    {
+      "path": "experiments/m194g-larger-pupil/noise-runtime-capture-1/runtime.json",
+      "sha256": "5785be482f28d097e0fb9bd7111b2655502485951fc52b08b6cc2ac01d9d49c3",
+      "bytes": 10162
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/noise-runtime-capture-1/result.json",
+      "sha256": "95357e909267355992d58062ffca74729e7108716f52b867084f1d9d57ae145e",
+      "bytes": 2446
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/independent-full-array-verification-1/float-commission.json",
+      "sha256": "3f18d8954347382b2dffe0ca501f93ef8da54c3b966a1a606851323d86277a2b",
+      "bytes": 2981
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/independent-full-array-verification-1/result.json",
+      "sha256": "042893c976ecc99845c98e894afd359852d428a8a87d4028d09c03bef3dfcedb",
+      "bytes": 344512
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/software-noise-commission-1/result.json",
+      "sha256": "5ce444627af4787b404318bc4d78f4b9332f0081234e107ab597d269849a81c7",
+      "bytes": 6571
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/independent-noise-authority-controls-1/result.json",
+      "sha256": "d7b5bd9a321dff4fc5e9b51e2d9f58c4c726dbca7954f7e32f8bb4a607f24435",
+      "bytes": 22698
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/next-noise-files-verifier-design.md",
+      "sha256": "375dd381d821c8805a94b72845d8c4b588d2a10fa377407638c92aa57035a510",
+      "bytes": 13391
+    }
+  ],
+  "commands": [
+    [
+      "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+      "-X",
+      "utf8",
+      "-X",
+      "faulthandler",
+      "-X",
+      "pycache_prefix=experiments/m194g-larger-pupil/work/cache-software-noise-intended-1",
+      "experiments/m194g-larger-pupil/software-noise-run.py",
+      "--mode",
+      "intended",
+      "--output",
+      "experiments/m194g-larger-pupil/software-noise-intended-1",
+      "--runtime",
+      "experiments/m194g-larger-pupil/noise-runtime-capture-1/runtime.json",
+      "--runtime-sha256",
+      "5785be482f28d097e0fb9bd7111b2655502485951fc52b08b6cc2ac01d9d49c3",
+      "--execution-release",
+      "experiments/m194g-larger-pupil/software-noise-intended-release-1.json",
+      "--execution-release-sha256",
+      "ACTUAL_EXECUTION_RELEASE_SHA256",
+      "--float-commission",
+      "experiments/m194g-larger-pupil/independent-full-array-verification-1/float-commission.json",
+      "--float-commission-sha256",
+      "3f18d8954347382b2dffe0ca501f93ef8da54c3b966a1a606851323d86277a2b",
+      "--noise-commission",
+      "experiments/m194g-larger-pupil/software-noise-commission-1/result.json",
+      "--noise-commission-sha256",
+      "5ce444627af4787b404318bc4d78f4b9332f0081234e107ab597d269849a81c7"
+    ]
+  ]
+}

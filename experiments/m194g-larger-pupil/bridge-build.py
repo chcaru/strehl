@@ -115,7 +115,7 @@ def main():
     for ref in release["inputs"]:
         need(file_binding(ROOT/ref["path"]) == {k: ref[k] for k in ("sha256", "bytes")}, "build input changed")
     command = release["build_command"]
-    need(command == ["cargo", "test", "-p", "strehl-cli", "--bin", "strehl", "--target-dir", "target/m194g-noisy-bridge", "--no-run", "--message-format=json-render-diagnostics"], "exact build command")
+    need(command == ["cargo", "test", "-p", "strehl-cli", "--bin", "strehl", "--target-dir", "target/m194g-noisy-bridge-2", "--no-run", "--message-format=json-render-diagnostics"], "exact build command")
     output = args.output.resolve()
     need(output.is_relative_to(ROOT), "build output outside repository")
     output.mkdir(parents=True, exist_ok=False)
@@ -131,7 +131,7 @@ def main():
     started = time.monotonic()
     log = output/"compiler.log"
     try:
-        need(not (ROOT/"target/m194g-noisy-bridge").exists(), "first build target must be fresh")
+        need(not (ROOT/"target/m194g-noisy-bridge-2").exists(), "replacement build target must be fresh")
         SOURCE.touch(); PARENT.touch()
         # Build only. Compiler output is retained directly rather than in a pipe
         # buffer. The build has its own1800-second operational wall allowance.

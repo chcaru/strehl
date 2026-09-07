@@ -379,12 +379,14 @@ fn run_record(v: &Value, mode: &str, status: &str) -> Result<()> {
             && v["inputs_before"] == v["inputs_after"],
         "bridge run source/input closure"
     );
+    Ok(())
 }
 fn bind_run_maps(v: &Value, ledger: &mut Ledger, root: &Path) -> Result<()> {
     for k in ["sources_before", "inputs_before"] {
         let m: BTreeMap<String, Binding> = serde_json::from_value(v[k].clone())?;
         ledger.sources(root, &m)?;
     }
+    Ok(())
 }
 
 #[derive(Clone, Debug, Deserialize)]
