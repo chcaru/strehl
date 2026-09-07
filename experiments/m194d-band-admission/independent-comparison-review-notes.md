@@ -115,3 +115,140 @@ not replace the full fixed-ROI read or tune an acceptance cutoff.
 No additional pre-freeze design blocker was found in these initial adapter
 interfaces after the two corrections. This statement does not assert the
 unfinished joint controller or future Rust implementation has passed tests.
+
+## Sparse component commissioning
+
+**VERIFIED, pure component scope.** The final `sparse-error.py` at SHA-256
+`cdceca7a9232489223dc9395f2131d02642d365b111850d7caa4addb742169cd`
+passes ten numerical, null and power checks plus sixteen malformed-input
+refusals. `independent-sparse-controls.json` records all 26 results and
+unchanged subject bytes. Exact command, from the repository root:
+
+```powershell
+python -B experiments/m194d-band-admission/independent-sparse-controls.py > experiments/m194d-band-admission/independent-sparse-controls.log 2>&1
+```
+
+The independent script chooses a 4-by-7 RGB array with eight irregularly
+masked sites, nonconstant truth, signed residuals and ties. Decreasing native
+x coordinates distinguish first row-major tie handling from choosing the
+smallest coordinate. Fraction-based interpolation of manually sorted lists
+checks the declared linear quantiles without calling NumPy's quantile as its
+oracle. The red p99.9 is 22.916 DN by linear interpolation and 23 DN by the
+separately declared nearest-rank description. This is the expected convention
+difference, not an instrument failure.
+
+The live choices also distinguish movement from harm: a 60 DN movement from
+signed error +30 to -30 has exactly zero absolute-error change; moving one
+20 DN isolated error to another site leaves the marginal error distribution
+unchanged but exposes the new harmed site. The same-output companion is
+exactly zero. All-improving and all-worsening arms preserve the signed meaning
+of their extrema. Values and coordinates outside the mask are deliberately
+inert; the inputs remain unchanged.
+
+The initial helper passed all ten ordinary-domain checks but silently
+accepted complex RGB, complex coordinates, an integer-valued coordinate
+outside int64, finite inputs whose residual overflowed, and finite paired
+residuals whose output movement overflowed. The first run contained fifteen
+malformed cases; the paired-overflow companion was added before the final
+sixteen-case rerun. Both failed receipts and logs are retained as
+`independent-sparse-controls-first.*` and
+`independent-sparse-controls-before-hardening.*`, with the original helper
+saved in `independent-sparse-subject-first.py`. Its SHA-256 is
+`1da7c8835f43d407243adccb60f23914b2052c36fb5d0e112bc291d0e8d3a749`.
+These five findings concern malformed values outside the bounded u16 image
+and small canonical-coordinate domain; they do not refute an image result.
+Root repaired refusal checks before any scored image output, preserving the
+normal arithmetic, quantile and tie conventions. The final sixteen cases all
+refuse. No product code or threshold was changed by this review.
+
+## Concrete outer controller review
+
+**VERIFIED source contracts; runtime execution remains pending.** The final
+pre-build review finds no additional design blocker in `run-experiment.py`
+and `compare-experiment.py`. The inexpensive source-set read is retained in
+`independent-adapter-source-review.json`, including the six actual adapter
+hashes reviewed. Calling `fixed_sources()`, `frozen_artifacts()` and
+`validate_external_includes(consumer.sources())` succeeds against the current
+tree. The latter resolves explicit includes using the including crate root
+and requires the reached external Rust set to match the attested set. It is
+an explicit-form check for this source tree, not a general Rust dependency
+parser.
+
+The controller now pins prospective documents to commit
+`5f55c9ee7dc15d47e04ded53cd11eea929e28fc2`, fixed M194b artifacts to
+`444eb759`, and reused M194c comparison/controller functions to `04128e`.
+Both mode indices must reference the same build and original producer
+artifacts. The complete current source map and archived snapshots are checked;
+source checks surround each child invocation. The comparator reopens bound
+indices, replays each actual-TIFF score, checks the exact five outer child
+commands and their terminal logs, and requires all forty explicit hard-floor
+TIFFs and decoded pixel arrays to equal the committed M194c outputs before it
+returns candidate comparisons.
+
+The versioned score reader calls the unchanged M194b numerical functions and
+adds `SP.summarize` only after actual TIFF, manifest, plan, crop and output
+interpretation validation. `SP.compare` receives actual candidate and baseline
+pixels under the same target and mask. Its signed error change is candidate
+minus baseline absolute truth error; paired temporal statistics use the
+unchanged `S.paired_error` with an explicit across-mode direction. Neither
+the added summaries nor a mode label substitutes for actual output
+verification. The build-backed mode/schema/environment/source refusals and
+the planned 120 actual TIFF reads remain pending; no image-quality or default
+claim follows from this source review.
+
+## Bounded runtime mode verification
+
+**VERIFIED, first execution:** `independent-mode-controls.py` passes 46 checks
+across 29 subprocesses. It generates three actual TIFFs and exercises 22
+refusal cases. Command:
+
+```powershell
+python -B experiments/m194d-band-admission/independent-mode-controls.py --build-record experiments/m194d-band-admission/author-run-2/versioned-cli-build.json --build-sha256 973a0fb48edb88d52b9a6e1037e0fc75e58c495af1aa0e1e9f8e74ca8f2005b0 --out experiments/m194d-band-admission/independent-mode-run-1 > experiments/m194d-band-admission/independent-mode-run-1.log 2>&1
+```
+
+The independently chosen case is the existing `flat/seed-709/full9`. Both
+actual admission modes produce the expected versioned plan and receipt. The
+explicit hard-floor TIFF matches its committed M194c counterpart byte for
+byte, and a second hard-floor render is the exact byte null. The candidate
+changes 151,028 image components, with maximum movement 530 TIFF LSB. This is
+positive evidence that the mode reaches the delivered pixels, not a finding
+that those changes improve truth error.
+
+The valid direct-child plan matches the driver's plan. A valid driver plan
+also remains identical when its parent environment contains the opposite
+admission value and an unrelated gate override: the driver clears them and
+sets its declared values. Exact child argv, environment, build digest,
+terminal log, manifest and plan bindings are checked for the successful
+driver calls. Independent TIFF decoding verifies u16 RGB dimensions and
+pixel hashes, while receipts report the nine original input indices and one
+decode each.
+
+All 22 negative cases refuse without producing their target output. They
+cover missing/invalid admission, missing/wrong required settings, an
+unexpected gate setting, the forbidden white-floor diagnostic, a valid
+off-plan used by the on-mode, and rehashed plan edits to schema, admission,
+formula, type, unknown field, gate and coherently shifted crop/offset. A
+duplicate schema key also refuses. Private rehashed build records omitting
+the core operator or the included independent consumer test refuse; a
+record pointing at the real historical executable cannot satisfy the new
+test execution. The latter is a functional driver refusal, not an assertion
+that a digest authenticates arbitrarily forged compiler history.
+
+The final result is `independent-mode-run-1/result.json`, SHA-256
+`fa91ecc03f506bd25eaf2c0d113e00bc17331c5f4dd6e7c6744b26f5dc5418b4`.
+It records the script SHA-256
+`f5b4e9e9779ff5add9d7a26f2a7e15c2508ef6fdcf9e6c8ba6b6a54d55a6c873`
+and the copied executable SHA-256
+`8fe0f83b263424338c704388dfe20219a6ae77ac607ad1e12300d5d4a3bbe46c`.
+The compiler artifact matched that copy, and its bound log contains
+`Compiling strehl-cli`. All 106 compiler-input bindings and the ten input
+files (nine CFA files plus manifest) remain unchanged. Raw child logs and
+every private mutant are retained. No test assumption or product change was
+needed after the first runtime execution.
+
+These checks clear the mode plumbing for the fixed complete experiment.
+They do not replace the forty off-mode identity checks, the paired quality
+comparison, or the downstream receipt/index admission controls. Those still
+await the complete outer package. Ordinary default-call coverage is Curie's
+separate responsibility; explicit hard-floor execution alone is not that
+claim.

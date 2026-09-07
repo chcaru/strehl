@@ -1,0 +1,34 @@
+{
+  "schema": "m194d-consumer-command-v1",
+  "command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\work\\consumer-binaries\\8dc16254cef9498fb9b9f3ad81b9ac37\\known-scene-tests.exe",
+    "--exact",
+    "merge_cmd::known_scene_benchmark::band_admission_benchmark::m194d_known_scene_consumer",
+    "--ignored",
+    "--test-threads=1",
+    "--nocapture"
+  ],
+  "exit_code": 0,
+  "pass_": true,
+  "log": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\experiment-1\\floor-pedestal-v1\\logs\\flat-seed-701-full9.command.log",
+  "log_sha256": "e38e80a6dfa04933c75ce7d073d107bebf59aa4c1c5e6f2d7659a0fb0d3e3dff",
+  "build_sha256": "7e3567a176e66dd7b8db3ebb16f2e4d2d5774216e0c3530b990df80a15fd7559",
+  "environment": {
+    "STREHL_DEFECT": "off",
+    "STREHL_FIX_CA": "off",
+    "STREHL_FULLRES_GATHER": "1",
+    "STREHL_PYRAMID_WORKERS": "2",
+    "RAYON_NUM_THREADS": "2",
+    "STREHL_M194D_ADMISSION": "floor-pedestal-v1",
+    "STREHL_M194B_MODE": "render",
+    "STREHL_M194B_MANIFEST": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\flat\\seed-701\\manifest.json",
+    "STREHL_M194B_MANIFEST_SHA256": "6b505c8b3459c36f1d8c423500a8fb05d9fd0989e8ad8e7ad8d7481e8dfc79bf",
+    "STREHL_M194B_PLAN": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\experiment-1\\floor-pedestal-v1\\plans\\flat-seed-701.json",
+    "STREHL_M194B_PLAN_SHA256": "503a9c7e810119fddb61b30c30549700b7aceb8e03e19198423ed4bdbc3647da",
+    "STREHL_M194B_SUBSET": "all",
+    "STREHL_M194B_OUTPUT": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\experiment-1\\floor-pedestal-v1\\tiffs\\flat-seed-701-full9.tif",
+    "STREHL_M194B_RECEIPT": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\experiment-1\\floor-pedestal-v1\\receipts\\flat-seed-701-full9.json"
+  },
+  "result": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\experiment-1\\floor-pedestal-v1\\receipts\\flat-seed-701-full9.json",
+  "result_sha256": "c4f7ce6c42e9c87ad2fd3044df5df57ff95c5d4b9b4f1944245f09050223bb46"
+}

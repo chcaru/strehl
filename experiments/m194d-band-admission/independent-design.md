@@ -78,8 +78,10 @@ and the limits of what the proposed intervention can establish.
    excess, the proposed law is algebraically the same shape as that function
    with `r_floor=1/64`, before floating-point fast-path differences and clamping.
    The corresponding old significance multiplier would be
-   `gate/sqrt(2/NU_SMOOTH)`, about5.17 at gate2; it still leaves zero excess at
-   zero weight. The saved Gaussian softgate proposal also keeps that rejection.
+   `gate/sqrt(2/NU_SMOOTH)`, about 5.17 at gate 2; it still leaves zero excess at
+   zero weight. The saved `experiments/BUILD-SOFTGATE/pyramid-softgate.patch`,
+   lines152-164, also keeps that rejection by mapping nonpositive excess to
+   negative infinity.
    Neither mode already supplies the proposed positive below-floor baseline.
 2. **The singleton mechanism has a closed-form control.** With one positive
    normalized excess a and N-1 zero excesses, write
@@ -312,7 +314,7 @@ These last two are labelled fault-injection checks, not reachable-noise claims.
 | Threshold participation and cutoff placebo | The five-frame stripe test above must establish actual q>0, q=0 and q clamped to0. Every valid candidate weight is positive; there is no rejected nonwinner or winner tie to commission. Require actual normalized output, not only helper weights. The zero-cutoff placebo isolates the discontinuity claim. |
 | Flat/noisy null | Score the unchanged eight flat repeats first, including frame-specific beta/warp effects. The constant mean can appear good while rare coefficients fail. Whole-ROI temporal variance, truth-error tails and fixed-single comparison remain separate readouts; shared noise constants do not validate calibration. |
 | Coupling attribution boundary | Removing the zero cutoff proves a component mechanism. Better actual flat pixels do not by themselves prove every old excursion was caused by that mechanism. No independent decision-replay observer is currently added; broad selection-noise attribution therefore remains unmeasured. A future replay would need its own prospective input and on/off/placebo proof. |
-| Known signal and known destroyers | A noiseless surviving detail component plus a changed-amplitude/phase or deliberately blurred control must lower the fixed truth/wave readout; known flat temporal-noise inflation must raise temporal power. Replay the existing scorer commissioning instead of calling duplicated code independent confirmation. |
+| Known signal and known destroyers | Deliberately distort exact truth by a known amplitude/phase change or blur: the truth error or known complex-wave discrepancy must increase. Known flat temporal-noise inflation must raise temporal power. Replay the existing scorer commissioning instead of calling duplicated code independent confirmation. |
 | Heterogeneous noise/model law | With equal positive energy and different finite floors above1, weights must follow the declared formula and ordering. Equal q=0 has equal baseline weight even with different F. A wrong model must change a powered actual output. Use a factor3 DN rescaling (variance/floor factor9) for F>=1; separately retain F0.25 versus scaled2.25 as an expected failure of global scale invariance from max(F,1). Nonfinite input refusal is distinct from valid zero/clamped variance. These checks do not calibrate the common physical constant. |
 | Numerics beyond weight positivity | Exercise p1,2,8 and the actual3.92/2.8 schedule, tiny a that can round to zero response difference, and a deliberately clamped large ratio. Require nondecreasing weights, not impossible strict increments. Inspect actual numerator/denominator and collapsed output separately. A finite helper with an infinite numerator is an instrument/product boundary failure, not a finite-output pass. No arbitrary-N safety inference follows. |
 | Colour blindness | Fixed analytic colour versus its achromatic null, plus a separately labelled component stimulus with green-constant red/blue structure if needed to test the assumption directly. Do not change the scored colour target or claim this is physical chromatic defocus. |
@@ -356,8 +358,8 @@ power and actual consumer semantics.
 There is no remaining design blocker to this bounded experiment under the
 numeric/refusal and mode restrictions above. Root must freeze this one
 implementation plan before product edits or build. Independent controls then
-review the new consumer and
-binding; Socrates owns the complementary actual-output comparison. If the
+review the new consumer and binding; Socrates owns the complementary
+actual-output comparison. If the
 experiment loses detail, colour, temporal noise or sparse truth fidelity, keep
 the result and identify the failed claim. Do not rescue it by selecting seeds,
 changing the probe, shifting the ROI, or quietly promoting a different target.

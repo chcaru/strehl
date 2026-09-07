@@ -1,0 +1,22 @@
+All 20 plans frozen before production TIFFs
+Rendered flat-noise-off: full9 and single4
+Rendered flat-seed-701: full9 and single4
+Rendered flat-seed-709: full9 and single4
+Rendered flat-seed-719: full9 and single4
+Rendered flat-seed-727: full9 and single4
+Rendered flat-seed-733: full9 and single4
+Rendered flat-seed-739: full9 and single4
+Rendered flat-seed-743: full9 and single4
+Rendered flat-seed-751: full9 and single4
+Rendered plane-noise-off: full9 and single4
+Rendered plane-seed-701: full9 and single4
+Rendered plane-seed-709: full9 and single4
+Rendered plane-seed-719: full9 and single4
+Rendered plane-seed-727: full9 and single4
+Rendered plane-seed-733: full9 and single4
+Rendered plane-seed-739: full9 and single4
+Rendered plane-seed-743: full9 and single4
+Rendered plane-seed-751: full9 and single4
+Rendered color-noise-off: full9 and single4
+Rendered color-null-noise-off: full9 and single4
+{"status": "complete", "outputs": 40, "index": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\experiment-1\\floor-pedestal-v1\\run-index.json", "index_sha256": "6d2ccccb1096f1e1974c6d618620f59abb89d6358e1a13c14f703e744c750c05"}

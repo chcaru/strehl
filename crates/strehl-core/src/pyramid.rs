@@ -589,6 +589,15 @@ pub enum SelectMode {
     HardMax,
 }
 
+/// How band energy becomes a weight. Experimental modes require explicit API use.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum AdmissionMode {
+    /// Existing exact rejection below the measured floor.
+    HardFloor,
+    /// M194d's uncalibrated positive baseline weight, never enabled by default.
+    FloorPedestalV1,
+}
+
 /// How the coarsest residual — the band that carries overall tone — is merged.
 ///
 /// This was the one design decision here taken on argument rather than
@@ -1045,6 +1054,8 @@ pub struct MergeConfig {
     /// `1.0` disables the ramp and restores a single global exponent.
     pub sharpen_per_octave: f32,
     pub select: SelectMode,
+    /// Explicit experimental admission; independent of the coefficient selector.
+    pub admission: AdmissionMode,
     pub base: BaseBand,
     /// See [`DEFAULT_MEAN_COARSE`]. Number of coarsest Laplacian bands merged
     /// as a plain mean instead of by selection. The base residual is separate.
@@ -1278,6 +1289,7 @@ impl Default for MergeConfig {
             // being traded against sits in the coarse bands.
             sharpen_per_octave: 1.4,
             select: SelectMode::SoftPower,
+            admission: AdmissionMode::HardFloor,
             // Measured, not argued -- see `BaseBand`. Weighting the base band
             // cost -475 DN of global level and 835 DN of position-dependent
             // structure on flower-bud-alone-cpl, against +11 DN and 45 DN for
@@ -1418,6 +1430,24 @@ pub struct BandMerge {
 impl BandMerge {
     pub fn new(width: usize, height: usize, planes: usize, cfg: MergeConfig) -> Self {
         assert!(planes > 0, "a merge needs at least one plane");
+        if cfg.admission == AdmissionMode::FloorPedestalV1 {
+            assert!(
+                cfg.select == SelectMode::SoftPower
+                    && cfg.gate.is_finite()
+                    && cfg.gate > 0.0
+                    && cfg.exponent.is_finite()
+                    && cfg.exponent > 0.0
+                    && cfg.exponent <= MAX_EXPONENT
+                    && cfg.sharpen_per_octave.is_finite()
+                    && cfg.sharpen_per_octave > 0.0
+                    && cfg.significance_scale == 0.0
+                    && cfg.base == BaseBand::Mean
+                    && cfg.fallback == Fallback::Mean
+                    && cfg.mean_coarse == 0
+                    && !cfg.hull.bounds_each_level(),
+                "FloorPedestalV1: unsupported experimental configuration"
+            );
+        }
         let sizes = level_sizes(width, height, cfg.bands);
         let nl = sizes.len();
         let per_level = || -> Vec<Vec<f32>> { sizes.iter().map(|s| vec![0.0; s.pixels()]).collect() };
@@ -1622,6 +1652,22 @@ impl BandMerge {
         }
     }
 
+    /// The weight cap bounds weights, not weighted sums. Refuse overflow before
+    /// a hull clamp or writer could turn unsupported arithmetic into an image.
+    fn assert_pedestal_accumulators_finite(&self) {
+        if self.cfg.admission == AdmissionMode::FloorPedestalV1 {
+            assert!(
+                self.num
+                    .iter()
+                    .chain(&self.den)
+                    .chain(&self.usum)
+                    .flatten()
+                    .all(|v| v.is_finite()),
+                "FloorPedestalV1: nonfinite accumulator"
+            );
+        }
+    }
+
     /// Fold one frame in.
     ///
     /// `planes` are the frame's colour planes, black-subtracted, all at level-0
@@ -1736,13 +1782,24 @@ impl BandMerge {
                 // weight bit for bit: see `select_weight`.
                 let r_floor = significance_floor(gate) * self.cfg.significance_scale;
                 let vv = ws.var.level(k);
-                w.par_iter_mut().zip(sq.par_iter()).zip(vv).for_each(|((w, e), v)| {
-                    // The floor at this band's scale: the level-0 variance
-                    // carried down to this grid, times the measured band gain.
-                    let floor = gate * beta * v.max(0.0);
-                    let excess = (*e - floor).max(0.0);
-                    *w = select_weight(excess, floor, p, r_floor);
-                });
+                w.par_iter_mut()
+                    .zip(sq.par_iter())
+                    .zip(vv)
+                    .for_each(|((w, e), v)| {
+                        // The floor at this band's scale: the level-0 variance
+                        // carried down to this grid, times the measured band gain.
+                        let floor = gate * beta * v.max(0.0);
+                        match self.cfg.admission {
+                            AdmissionMode::HardFloor => {
+                                let excess = (*e - floor).max(0.0);
+                                *w = select_weight(excess, floor, p, r_floor);
+                            }
+                            AdmissionMode::FloorPedestalV1 => {
+                                assert!(v.is_finite(), "FloorPedestalV1: invalid variance");
+                                *w = pedestal_weight(*e, floor, p);
+                            }
+                        }
+                    });
             }
             self.accumulate_level(k, planes, &mut ws.plane, w);
         }
@@ -1839,6 +1896,7 @@ impl BandMerge {
             }
         }
 
+        self.assert_pedestal_accumulators_finite();
         self.frames += 1;
     }
 
@@ -2006,8 +2064,18 @@ impl BandMerge {
     /// zero, in which case the fallback mean is used and the tie does not reach
     /// the output.
     pub fn absorb(&mut self, other: &BandMerge) {
-        assert_eq!(self.sizes, other.sizes, "cannot absorb a differently shaped merge");
-        assert_eq!(self.planes, other.planes, "cannot absorb a different plane count");
+        assert_eq!(
+            self.sizes, other.sizes,
+            "cannot absorb a differently shaped merge"
+        );
+        assert_eq!(
+            self.planes, other.planes,
+            "cannot absorb a different plane count"
+        );
+        assert_eq!(
+            self.cfg.admission, other.cfg.admission,
+            "cannot absorb a different admission mode"
+        );
         if self.cfg.fallback != Fallback::Mean {
             assert_eq!(
                 other.cfg.fallback, self.cfg.fallback,
@@ -2178,6 +2246,7 @@ impl BandMerge {
                 }
             }
         }
+        self.assert_pedestal_accumulators_finite();
         self.frames += other.frames;
     }
 
@@ -2278,6 +2347,7 @@ impl BandMerge {
     /// to [`add_frame`](Self::add_frame).
     pub fn finish(&self, ws: &mut Workspace) -> Vec<Vec<f32>> {
         assert!(self.frames > 0, "cannot finish a merge with no frames");
+        self.assert_pedestal_accumulators_finite();
         self.dump_weights();
         let inv_n = 1.0 / self.frames as f32;
         (0..self.planes)
@@ -2333,6 +2403,12 @@ impl BandMerge {
                             }
                         }
                     }
+                    if self.cfg.admission == AdmissionMode::FloorPedestalV1 {
+                        assert!(
+                            out.iter().all(|v| v.is_finite()),
+                            "FloorPedestalV1: nonfinite resolved coefficient"
+                        );
+                    }
                 }
                 let mut img = if self.cfg.hull.bounds_each_level() {
                     // Bound the partial reconstruction at every level on the way
@@ -2344,6 +2420,12 @@ impl BandMerge {
                 } else {
                     pyr.collapse(ws)
                 };
+                if self.cfg.admission == AdmissionMode::FloorPedestalV1 {
+                    assert!(
+                        img.iter().all(|v| v.is_finite()),
+                        "FloorPedestalV1: nonfinite reconstruction before hull"
+                    );
+                }
                 // Confine the reconstruction to what the inputs support. See
                 // [`Hull`]: per-band convexity does not imply reconstruction
                 // convexity, so this is the only stage that can make the
@@ -2776,6 +2858,43 @@ fn select_weight(excess: f32, floor: f32, p: f32, r_floor: f32) -> f32 {
         // being centred, effectively never binds.
         (p * r.ln()).clamp(-80.0, 80.0).exp()
     }
+}
+
+/// M194d's fixed continuous weight. E and F are both in DN²; this is a
+/// heuristic floor ratio, not an energy standard error or admission probability.
+/// Every frame gets positive weight, including those with no positive excess.
+#[inline]
+fn pedestal_weight(energy: f32, floor: f32, p: f32) -> f32 {
+    assert!(
+        energy.is_finite()
+            && energy >= 0.0
+            && floor.is_finite()
+            && floor >= 0.0
+            && p.is_finite()
+            && p > 0.0
+            && p <= MAX_EXPONENT,
+        "FloorPedestalV1: invalid energy, floor or exponent"
+    );
+    let excess = (energy - floor).max(0.0);
+    let a = excess / floor.max(1.0);
+    let r = a.hypot(1.0) / SNR_REF;
+    (p * r.ln()).clamp(-80.0, 80.0).exp()
+}
+
+#[cfg(test)]
+mod m194d_author_tests {
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/m194d-band-admission/author-core-tests.rs"
+    ));
+}
+
+#[cfg(test)]
+mod m194d_independent_tests {
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/m194d-band-admission/independent-core-tests.rs"
+    ));
 }
 
 #[cfg(test)]

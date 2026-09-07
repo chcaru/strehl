@@ -1,0 +1,11 @@
+{
+  "schema": "m194d-independent-stale-bundle-control-v1",
+  "predeclared_failure": "first build predates observer source change and target rebuild; the strict reader must refuse, not execute it",
+  "scope": "one multiply-stale bundle refusal; not separate causal proof for every binding check",
+  "build": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\author-run-1\\core-build.json",
+  "build_sha256": "2486a25b8d9d2396d202543d9d64138933a57638f619958004f7188d2b3c486b",
+  "runner_sha256": "4bed6490c83d2fc77ecfc31b4a3dd8c542ba4168d7f84a5f15381d6f3120e6e4",
+  "refused": true,
+  "reason": "compiler_artifact no longer matches build",
+  "pass_": true
+}

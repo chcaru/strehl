@@ -1,0 +1,73 @@
+{
+  "read_sha256": "763174a931e3a953189c20ed2404eefd18f5e51f2cb57fc8dd1b043a5afe2b4f",
+  "bindings_sha256": "04f96184beb98440d5ac05c86197110e892a609a1a03fb2635346479ffdb470c",
+  "flat8_full9_harmed_over10_per_channel": [
+    858,
+    312,
+    988
+  ],
+  "flat8_full9_improved_over10_per_channel": [
+    13651,
+    14693,
+    14006
+  ],
+  "flat8_full9_denominator_per_channel": 172032,
+  "maximum_roi_adverse_point": {
+    "repeat": 743,
+    "channel": "R",
+    "native_xy": [
+      203,
+      146
+    ],
+    "baseline_dn": 2999.5067063401234,
+    "candidate_dn": 3033.9447318226903,
+    "truth_dn": 3000.000089406967,
+    "baseline_signed_error_dn": -0.4933830668437622,
+    "candidate_signed_error_dn": 33.94464241572314,
+    "absolute_error_change_dn": 33.451259348879375,
+    "output_movement_dn": 34.4380254825669
+  },
+  "largest_sparse_tail_ratio_per_channel": [
+    0.4335791057811225,
+    0.33395911523423943,
+    0.432301910313236
+  ],
+  "smallest_sparse_tail_ratio_per_channel": [
+    0.3859121576834892,
+    0.30971407232740134,
+    0.3928472282024378
+  ],
+  "plane_full9_observation_paired": [
+    {
+      "scene": "plane",
+      "arm": "full9",
+      "target": "observation",
+      "mse_difference_dn2": [
+        -0.0004091950323932281,
+        -7.405362836365725e-05,
+        -0.006283664404236333
+      ],
+      "mse_difference_sem_dn2": [
+        0.001507675585317639,
+        0.0019450638129106597,
+        0.0020336380711816265
+      ],
+      "temporal_variance_difference_dn2": [
+        -0.02904108054445942,
+        -0.023448538645055805,
+        -0.030280452758177034
+      ],
+      "variance_ratio": [
+        0.9997857912333177,
+        0.9997526233304467,
+        0.9997955439709879
+      ],
+      "variance_jackknife_se_dn2": [
+        0.0015651854193957362,
+        0.0018471279843899535,
+        0.002557778633125085
+      ]
+    }
+  ],
+  "unchanged_pairs": 21
+}

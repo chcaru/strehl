@@ -1,0 +1,46 @@
+{
+  "command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\author-run-2\\core-tests.exe",
+    "pyramid::m194d_independent_tests::",
+    "--test-threads=1",
+    "--nocapture"
+  ],
+  "exit_code": 0,
+  "started_utc": "2026-09-07T11:34:17.846278+00:00",
+  "ended_utc": "2026-09-07T11:34:18.193242+00:00",
+  "log": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\independent-run-1\\core.log",
+  "log_sha256": "d859e0a1f437b585fdcca273192828f177a682a2c6ae3226222cd0ae7f135310",
+  "environment": {
+    "STREHL_DEFECT": "off",
+    "STREHL_FIX_CA": "off",
+    "STREHL_PYRAMID_WORKERS": "2",
+    "RAYON_NUM_THREADS": "2"
+  },
+  "evidence": [
+    "test pyramid::m194d_independent_tests::independent_config_refusal_and_storage_bound ... M194D_INDEPENDENT_CORE refused=unsupported-config-0 reason=\"FloorPedestalV1: unsupported experimental configuration\"",
+    "M194D_INDEPENDENT_CORE refused=unsupported-config-1 reason=\"FloorPedestalV1: unsupported experimental configuration\"",
+    "M194D_INDEPENDENT_CORE refused=unsupported-config-2 reason=\"FloorPedestalV1: unsupported experimental configuration\"",
+    "M194D_INDEPENDENT_CORE refused=unsupported-config-3 reason=\"FloorPedestalV1: unsupported experimental configuration\"",
+    "M194D_INDEPENDENT_CORE refused=unsupported-config-4 reason=\"FloorPedestalV1: unsupported experimental configuration\"",
+    "M194D_INDEPENDENT_CORE refused=unsupported-config-5 reason=\"FloorPedestalV1: unsupported experimental configuration\"",
+    "M194D_INDEPENDENT_CORE refused=unsupported-config-6 reason=\"FloorPedestalV1: unsupported experimental configuration\"",
+    "M194D_INDEPENDENT_CORE refused=unsupported-config-7 reason=\"FloorPedestalV1: unsupported experimental configuration\"",
+    "M194D_INDEPENDENT_CORE refused=unsupported-config-8 reason=\"FloorPedestalV1: unsupported experimental configuration\"",
+    "M194D_INDEPENDENT_CORE refused=unsupported-config-9 reason=\"FloorPedestalV1: unsupported experimental configuration\"",
+    "M194D_INDEPENDENT_CORE refused=mixed-mode-absorb reason=\"assertion `left == right` failed: cannot absorb a different admission mode\\n  left: FloorPedestalV1\\n right: HardFloor\"",
+    "M194D_INDEPENDENT_CORE config_refusals=11 unchanged_retained_array_counts=true",
+    "test pyramid::m194d_independent_tests::independent_numeric_refusal_before_hull ... M194D_INDEPENDENT_CORE refused=finite-input-weighted-product reason=\"FloorPedestalV1: nonfinite accumulator\"",
+    "M194D_INDEPENDENT_CORE refused=finite-partial-numerator-absorb reason=\"FloorPedestalV1: nonfinite accumulator\"",
+    "M194D_INDEPENDENT_CORE refused=nonfinite-num-absorb reason=\"FloorPedestalV1: nonfinite accumulator\"",
+    "M194D_INDEPENDENT_CORE refused=nonfinite-den-absorb reason=\"FloorPedestalV1: nonfinite accumulator\"",
+    "M194D_INDEPENDENT_CORE refused=nonfinite-usum-absorb reason=\"FloorPedestalV1: nonfinite accumulator\"",
+    "M194D_INDEPENDENT_CORE refused=finite-state-resolved-division reason=\"FloorPedestalV1: nonfinite resolved coefficient\"",
+    "M194D_INDEPENDENT_CORE refused=finite-coefficients-collapse-before-hull reason=\"FloorPedestalV1: nonfinite reconstruction before hull\"",
+    "test pyramid::m194d_independent_tests::independent_threshold_cutoff_and_strong_detail ... M194D_INDEPENDENT_CORE boundary floor=99.9375 share=0.200000062578 max_error=0.0000006257824 candidate_even=4098 legacy_even=4106 cutoff_even=4106",
+    "M194D_INDEPENDENT_CORE boundary floor=100 share=0.200000000000 max_error=0 candidate_even=4098 legacy_even=4098 cutoff_even=4098",
+    "M194D_INDEPENDENT_CORE boundary floor=100.0625 share=0.200000000000 max_error=0 candidate_even=4098 legacy_even=4098 cutoff_even=4098",
+    "M194D_INDEPENDENT_CORE strong share=0.999519557443 error=0.00022404801 mean_destroyer_error=76.754105",
+    "test pyramid::m194d_independent_tests::independent_units_order_and_numerical_edges ... M194D_INDEPENDENT_CORE units helper_cases=30 expected_below_one_noninvariance=true cap_product_overflow=true invalid_inputs_refused=8"
+  ],
+  "pass": true
+}

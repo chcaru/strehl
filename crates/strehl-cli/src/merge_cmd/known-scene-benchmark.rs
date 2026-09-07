@@ -198,6 +198,10 @@ fn valid_hash(s: &str) -> Result<()> {
 }
 
 fn controlled_environment() -> Result<BTreeMap<String, String>> {
+    controlled_environment_for(false)
+}
+
+fn controlled_environment_for(m194d: bool) -> Result<BTreeMap<String, String>> {
     let diagnostic = std::env::var(format!("{PREFIX}DIAGNOSTIC")).ok();
     ensure!(
         diagnostic
@@ -235,6 +239,7 @@ fn controlled_environment() -> Result<BTreeMap<String, String>> {
         if key.to_ascii_uppercase().starts_with("STREHL_") {
             ensure!(
                 key.starts_with(PREFIX)
+                    || (m194d && key == "STREHL_M194D_ADMISSION")
                     || key == "STREHL_BUILD_ID"
                     || (white_floor_diagnostic && key == gatefloor::GATE_FLOOR_ENV)
                     || required.iter().any(|(k, _)| key == *k),
@@ -494,9 +499,25 @@ fn options(out: PathBuf) -> MergeOptions {
     }
 }
 
+fn options_with_admission(out: PathBuf, admission: Option<AdmissionMode>) -> MergeOptions {
+    let mut opts = options(out);
+    if let Some(mode) = admission {
+        opts.pyramid.admission = mode;
+    }
+    opts
+}
+
 fn prepare(
     inputs: &Inputs,
     environment: &BTreeMap<String, String>,
+) -> Result<(PyramidDomain, align_cmd::CoverFit, Value)> {
+    prepare_with_admission(inputs, environment, None)
+}
+
+fn prepare_with_admission(
+    inputs: &Inputs,
+    environment: &BTreeMap<String, String>,
+    admission: Option<AdmissionMode>,
 ) -> Result<(PyramidDomain, align_cmd::CoverFit, Value)> {
     let full = inputs.full();
     let indices: Vec<_> = (0..9).collect();
@@ -518,12 +539,12 @@ fn prepare(
         let p=t.to_params();
         json!({"original_index":i,"scale":inputs.manifest.geometry.frames[i].scale,"quad_similarity":{"a_re":t.a.re,"a_im":t.a.im,"b_re":t.b.re,"b_im":t.b.im},"params":{"ax":p.ax,"ay":p.ay,"g":p.g,"rot":p.rot}})
     }).collect();
-    let cfg = options(PathBuf::new()).pyramid;
+    let cfg = options_with_admission(PathBuf::new(), admission).pyramid;
     let noise = inputs.noise();
     let plane = noise.plane(CfaPlane::R);
     let rect = domain.rect;
     let config_receipt = json!({"merge":"Pyramid","bands":cfg.bands,"gate":cfg.gate,"exponent":cfg.exponent,"sharpen_per_octave":cfg.sharpen_per_octave,"select":format!("{:?}",cfg.select),"base":format!("{:?}",cfg.base),"mean_coarse":cfg.mean_coarse,"hull":format!("{:?}",cfg.hull),"hull_lambda":cfg.hull_lambda,"hull_low_only":cfg.hull_low_only,"hull_from_level":cfg.hull_from_level,"fallback":format!("{:?}",cfg.fallback),"fallback_k":cfg.fallback_k,"fallback_power":cfg.fallback_power,"significance_scale":cfg.significance_scale,"resampler":"CatmullRom","demosaic":true,"space":"CameraLinear","exposure_stops":0,"auto_exposure":false,"photometric":"Off","gate_floor_enabled":gatefloor::enabled(),"ca":"off","defect":"off","restoration":"unset"});
-    let plan = json!({
+    let mut plan = json!({
         "schema":"m194b-consumer-plan-v1","manifest_sha256":inputs.manifest_sha256,
         "scene":inputs.manifest.scene,"noise_enabled":inputs.manifest.noise_enabled,"repeat":inputs.manifest.repeat,
         "sensor":inputs.manifest.sensor,"producer":inputs.manifest.producer,"inputs":inputs.manifest.frames,
@@ -540,6 +561,16 @@ fn prepare(
         "level_sizes":level_sizes(rect.width,rect.height,cfg.bands).iter().map(|s|[s.width,s.height]).collect::<Vec<_>>(),
         "environment":environment,"software":crate::SOFTWARE,
     });
+    if let Some(mode) = admission {
+        plan["schema"] = json!("m194d-consumer-plan-v1");
+        plan["config"]["admission"] = json!(format!("{:?}", cfg.admission));
+        plan["config"]["admission_formula"] = json!(match mode {
+            AdmissionMode::HardFloor => "hard-floor-v1",
+            AdmissionMode::FloorPedestalV1 => {
+                "floor-pedestal-v1: q=max(E-F,0); w=(hypot(q/max(F,1),1)/64)^p"
+            }
+        });
+    }
     Ok((domain, fit, plan))
 }
 
@@ -619,10 +650,32 @@ fn env(name: &str) -> Result<String> {
 #[test]
 #[ignore = "explicit generated fixture manifest and external hash bindings required"]
 fn m194b_known_scene_consumer() -> Result<()> {
-    let environment = controlled_environment()?;
+    run_known_scene_consumer(None)
+}
+
+fn run_known_scene_consumer(admission: Option<AdmissionMode>) -> Result<()> {
+    if let Some(mode) = admission {
+        let expected = match mode {
+            AdmissionMode::HardFloor => "hard-floor",
+            AdmissionMode::FloorPedestalV1 => "floor-pedestal-v1",
+        };
+        ensure!(
+            std::env::var("STREHL_M194D_ADMISSION").as_deref() == Ok(expected),
+            "M194d supplied mode disagrees with actual configuration"
+        );
+    }
+    let environment = if admission.is_some() {
+        controlled_environment_for(true)?
+    } else {
+        controlled_environment()?
+    };
     let manifest_path = PathBuf::from(env("MANIFEST")?);
     let inputs = Inputs::load(&manifest_path, &env("MANIFEST_SHA256")?)?;
-    let (domain, fit, plan) = prepare(&inputs, &environment)?;
+    let (domain, fit, plan) = if admission.is_some() {
+        prepare_with_admission(&inputs, &environment, admission)?
+    } else {
+        prepare(&inputs, &environment)?
+    };
     let plan_path = PathBuf::from(env("PLAN")?);
     let mode = env("MODE")?;
     if mode == "plan" {
@@ -647,7 +700,7 @@ fn m194b_known_scene_consumer() -> Result<()> {
         !output.exists() && !receipt.exists(),
         "output/receipt already exists"
     );
-    let mut opts = options(output.clone());
+    let mut opts = options_with_admission(output.clone(), admission);
     let confidence = std::env::var(format!("{PREFIX}CONFIDENCE"))
         .ok()
         .map(PathBuf::from);
@@ -725,11 +778,23 @@ fn m194b_known_scene_consumer() -> Result<()> {
         Some(p) => Some(json!({"path":p.to_string_lossy(),"sha256":hash_file(&p)?})),
         None => None,
     };
-    let result = json!({"schema":"m194b-consumer-receipt-v1","manifest_sha256":inputs.manifest_sha256,"plan_sha256":plan_hash,"plan":plan,
+    let receipt_schema = if admission.is_some() {
+        "m194d-consumer-receipt-v1"
+    } else {
+        "m194b-consumer-receipt-v1"
+    };
+    let result = json!({"schema":receipt_schema,"manifest_sha256":inputs.manifest_sha256,"plan_sha256":plan_hash,"plan":plan,
         "frame_subset_original":indices,"reference_original_index":4,"reference_local_index":local_reference,"decode_counts":calls,
         "output":{"path":output.canonicalize()?.to_string_lossy(),"sha256":hash_file(&output)?,"bytes":fs::metadata(&output)?.len(),"width":width,"height":height,"channels":3,"sample_type":"u16","pixel_sha256_le":hex(&pixel_hash.finalize()),"software":software},
         "confidence":confidence_receipt,
     });
     write_json_new(&receipt, &result)?;
     Ok(())
+}
+
+mod band_admission_benchmark {
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/src/merge_cmd/band-admission-benchmark.rs"
+    ));
 }

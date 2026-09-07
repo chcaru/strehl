@@ -1,0 +1,30 @@
+{
+  "schema": "m194d-consumer-command-v1",
+  "command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\work\\consumer-binaries\\8dc16254cef9498fb9b9f3ad81b9ac37\\known-scene-tests.exe",
+    "--exact",
+    "merge_cmd::known_scene_benchmark::band_admission_benchmark::m194d_known_scene_consumer",
+    "--ignored",
+    "--test-threads=1",
+    "--nocapture"
+  ],
+  "exit_code": 0,
+  "pass_": true,
+  "log": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\experiment-1\\floor-pedestal-v1\\logs\\plane-seed-719-plan.command.log",
+  "log_sha256": "2d2ce837a1975d82c0410cb4efc65e61d4dbe45d7601f7214ad3b8c6611ca9ec",
+  "build_sha256": "7e3567a176e66dd7b8db3ebb16f2e4d2d5774216e0c3530b990df80a15fd7559",
+  "environment": {
+    "STREHL_DEFECT": "off",
+    "STREHL_FIX_CA": "off",
+    "STREHL_FULLRES_GATHER": "1",
+    "STREHL_PYRAMID_WORKERS": "2",
+    "RAYON_NUM_THREADS": "2",
+    "STREHL_M194D_ADMISSION": "floor-pedestal-v1",
+    "STREHL_M194B_MODE": "plan",
+    "STREHL_M194B_MANIFEST": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\plane\\seed-719\\manifest.json",
+    "STREHL_M194B_MANIFEST_SHA256": "f81ba272154bf96535cef72f2340da6d1b36c2b25d5a5cf0e50f5f61d0e574e0",
+    "STREHL_M194B_PLAN": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\experiment-1\\floor-pedestal-v1\\plans\\plane-seed-719.json"
+  },
+  "result": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\experiment-1\\floor-pedestal-v1\\plans\\plane-seed-719.json",
+  "result_sha256": "c5ab102e2b2da17779f480ddef906cd5237c87bfed32ad9e9f304ad9c0faa1d6"
+}

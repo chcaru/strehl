@@ -1,0 +1,153 @@
+{
+  "pass_": false,
+  "source_sha256": "1da7c8835f43d407243adccb60f23914b2052c36fb5d0e112bc291d0e8d3a749",
+  "checks": [
+    {
+      "name": "known-signed-tied-residual-lists-and-manual-linear-quantiles",
+      "pass_": true
+    },
+    {
+      "name": "nearest-rank-alternate-is-explicitly-distinct",
+      "pass_": true
+    },
+    {
+      "name": "outside-mask-values-and-coordinates-are-inert",
+      "pass_": true
+    },
+    {
+      "name": "paired-signs-ties-and-largest-movement-do-not-mean-harm",
+      "pass_": true
+    },
+    {
+      "name": "sixty-DN-sign-flip-has-zero-absolute-error-change",
+      "pass_": true
+    },
+    {
+      "name": "same-output-exact-null",
+      "pass_": true
+    },
+    {
+      "name": "moved-isolated-error-preserves-marginals-but-exposes-harm",
+      "pass_": true
+    },
+    {
+      "name": "all-improving-maximum-remains-negative",
+      "pass_": true
+    },
+    {
+      "name": "all-worsening-minimum-remains-positive",
+      "pass_": true
+Traceback (most recent call last):
+  File "C:\dev\blog\death-of-software\projects\strehl\experiments\m194d-band-admission\independent-sparse-controls.py", line 145, in <module>
+    if __name__=="__main__":main()
+                            ^^^^^^
+  File "C:\dev\blog\death-of-software\projects\strehl\experiments\m194d-band-admission\independent-sparse-controls.py", line 142, in main
+    print(json.dumps({k:out[k] for k in ["pass_","source_sha256","checks","malformed"]},indent=2));assert out["pass_"]
+                                                                                                          ~~~^^^^^^^^^
+AssertionError
+    },
+    {
+      "name": "source-input-arrays-unchanged",
+      "pass_": true
+    }
+  ],
+  "malformed": [
+    {
+      "name": "wrong-RGB-shape",
+      "rejected": true,
+      "error": "ValueError: sparse-error requires matching RGB, nonempty bool mask and coordinate grids",
+      "warnings": []
+    },
+    {
+      "name": "wrong-reference-shape",
+      "rejected": true,
+      "error": "ValueError: sparse-error requires matching RGB, nonempty bool mask and coordinate grids",
+      "warnings": []
+    },
+    {
+      "name": "integer-mask",
+      "rejected": true,
+      "error": "ValueError: sparse-error requires matching RGB, nonempty bool mask and coordinate grids",
+      "warnings": []
+    },
+    {
+      "name": "empty-mask",
+      "rejected": true,
+      "error": "ValueError: sparse-error requires matching RGB, nonempty bool mask and coordinate grids",
+      "warnings": []
+    },
+    {
+      "name": "wrong-mask-shape",
+      "rejected": true,
+      "error": "ValueError: sparse-error requires matching RGB, nonempty bool mask and coordinate grids",
+      "warnings": []
+    },
+    {
+      "name": "wrong-coordinate-shape",
+      "rejected": true,
+      "error": "ValueError: sparse-error requires matching RGB, nonempty bool mask and coordinate grids",
+      "warnings": []
+    },
+    {
+      "name": "RGB-nan",
+      "rejected": true,
+      "error": "ValueError: nonfinite samples or noninteger canonical sites in scored ROI",
+      "warnings": []
+    },
+    {
+      "name": "truth-infinity",
+      "rejected": true,
+      "error": "ValueError: nonfinite samples or noninteger canonical sites in scored ROI",
+      "warnings": []
+    },
+    {
+      "name": "coordinate-nan",
+      "rejected": true,
+      "error": "ValueError: nonfinite samples or noninteger canonical sites in scored ROI",
+      "warnings": []
+    },
+    {
+      "name": "coordinate-fraction",
+      "rejected": true,
+      "error": "ValueError: nonfinite samples or noninteger canonical sites in scored ROI",
+      "warnings": []
+    },
+    {
+      "name": "coordinate-outside-int64",
+      "rejected": false,
+      "warnings": [
+        "invalid value encountered in cast"
+      ]
+    },
+    {
+      "name": "complex-samples-must-not-lose-imaginary-part",
+      "rejected": false,
+      "warnings": [
+        "Casting complex values to real discards the imaginary part"
+      ]
+    },
+    {
+      "name": "complex-coordinates-must-not-lose-imaginary-part",
+      "rejected": false,
+      "warnings": [
+        "Casting complex values to real discards the imaginary part"
+      ]
+    },
+    {
+      "name": "compare-nonfinite-candidate",
+      "rejected": true,
+      "error": "ValueError: nonfinite samples or noninteger canonical sites in scored ROI",
+      "warnings": []
+    },
+    {
+      "name": "finite-input-residual-overflow",
+      "rejected": false,
+      "warnings": [
+        "overflow encountered in subtract",
+        "invalid value encountered in subtract",
+        "invalid value encountered in subtract",
+        "invalid value encountered in subtract"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "schema": "m194d-author-controls-v1",
+  "core_build": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\author-run-2\\core-build.json",
+  "core_build_sha256": "930f82d7bd19f6dfcc61b4fd0cbf24a54de093971f791aa934f680827200d5e3",
+  "cli_build": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\author-run-2\\cli-build.json",
+  "cli_build_sha256": "89a7fab55699b90f380c6a3658d9c580c23f67bf777aec8c7f12cb68024182a6",
+  "checks": [
+    {
+      "command": [
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\author-run-2\\core-tests.exe",
+        "pyramid::m194d_author_tests::",
+        "--test-threads=1",
+        "--nocapture"
+      ],
+      "started_utc": "2026-09-07T11:33:44.341626+00:00",
+      "ended_utc": "2026-09-07T11:33:44.658998+00:00",
+      "exit_code": 0,
+      "log": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\author-run-2\\core-author-tests.log",
+      "log_sha256": "550bfe6c0dbc2a4ea0f0579e4ea39ac0dd534ae1faa81eae15923809bffc82fd",
+      "environment": {
+        "STREHL_DEFECT": "off",
+        "STREHL_FIX_CA": "off",
+        "STREHL_FULLRES_GATHER": "1",
+        "STREHL_PYRAMID_WORKERS": "2",
+        "RAYON_NUM_THREADS": "2"
+      },
+      "pass": true
+    },
+    {
+      "command": [
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\author-run-2\\cli-tests.exe",
+        "merge_cmd::known_scene_benchmark::band_admission_benchmark::m194d_defaults_and_explicit_option",
+        "--test-threads=1",
+        "--nocapture"
+      ],
+      "started_utc": "2026-09-07T11:33:44.664674+00:00",
+      "ended_utc": "2026-09-07T11:33:44.818246+00:00",
+      "exit_code": 0,
+      "log": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\author-run-2\\cli-author-tests.log",
+      "log_sha256": "c74c61e4657bd54f2055b54298021c684cea12f33399504de1baa0d7fa8b2aea",
+      "environment": {
+        "STREHL_DEFECT": "off",
+        "STREHL_FIX_CA": "off",
+        "STREHL_FULLRES_GATHER": "1",
+        "STREHL_PYRAMID_WORKERS": "2",
+        "RAYON_NUM_THREADS": "2"
+      },
+      "pass": true
+    }
+  ],
+  "sources_unchanged": true,
+  "pass": true
+}

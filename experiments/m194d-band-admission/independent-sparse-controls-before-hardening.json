@@ -1,0 +1,399 @@
+{
+  "schema": "m194d-independent-sparse-controls-v1",
+  "pass_": false,
+  "source_sha256": "1da7c8835f43d407243adccb60f23914b2052c36fb5d0e112bc291d0e8d3a749",
+  "source_unchanged": true,
+  "script_sha256": "7562d9d7247b2095c65ac1259cd33a822e188bcc52c90711175b11e378b432f4",
+  "checks": [
+    {
+      "name": "known-signed-tied-residual-lists-and-manual-linear-quantiles",
+      "pass_": true
+    },
+    {
+      "name": "nearest-rank-alternate-is-explicitly-distinct",
+      "pass_": true
+    },
+    {
+      "name": "outside-mask-values-and-coordinates-are-inert",
+      "pass_": true
+    },
+    {
+      "name": "paired-signs-ties-and-largest-movement-do-not-mean-harm",
+      "pass_": true
+    },
+    {
+      "name": "sixty-DN-sign-flip-has-zero-absolute-error-change",
+      "pass_": true
+    },
+    {
+      "name": "same-output-exact-null",
+      "pass_": true
+    },
+    {
+      "name": "moved-isolated-error-preserves-marginals-but-exposes-harm",
+      "pass_": true
+    },
+    {
+      "name": "all-improving-maximum-remains-negative",
+      "pass_": true
+    },
+    {
+      "name": "all-worsening-minimum-remains-positive",
+      "pass_": true
+    },
+    {
+      "name": "source-input-arrays-unchanged",
+      "pass_": true
+    }
+  ],
+  "malformed": [
+    {
+      "name": "wrong-RGB-shape",
+      "rejected": true,
+      "error": "ValueError: sparse-error requires matching RGB, nonempty bool mask and coordinate grids",
+      "warnings": []
+    },
+    {
+      "name": "wrong-reference-shape",
+      "rejected": true,
+      "error": "ValueError: sparse-error requires matching RGB, nonempty bool mask and coordinate grids",
+      "warnings": []
+    },
+    {
+      "name": "integer-mask",
+      "rejected": true,
+      "error": "ValueError: sparse-error requires matching RGB, nonempty bool mask and coordinate grids",
+      "warnings": []
+    },
+    {
+      "name": "empty-mask",
+      "rejected": true,
+      "error": "ValueError: sparse-error requires matching RGB, nonempty bool mask and coordinate grids",
+      "warnings": []
+    },
+    {
+      "name": "wrong-mask-shape",
+      "rejected": true,
+      "error": "ValueError: sparse-error requires matching RGB, nonempty bool mask and coordinate grids",
+      "warnings": []
+    },
+    {
+      "name": "wrong-coordinate-shape",
+      "rejected": true,
+      "error": "ValueError: sparse-error requires matching RGB, nonempty bool mask and coordinate grids",
+      "warnings": []
+    },
+    {
+      "name": "RGB-nan",
+      "rejected": true,
+      "error": "ValueError: nonfinite samples or noninteger canonical sites in scored ROI",
+      "warnings": []
+    },
+    {
+      "name": "truth-infinity",
+      "rejected": true,
+      "error": "ValueError: nonfinite samples or noninteger canonical sites in scored ROI",
+      "warnings": []
+    },
+    {
+      "name": "coordinate-nan",
+      "rejected": true,
+      "error": "ValueError: nonfinite samples or noninteger canonical sites in scored ROI",
+      "warnings": []
+    },
+    {
+      "name": "coordinate-fraction",
+      "rejected": true,
+      "error": "ValueError: nonfinite samples or noninteger canonical sites in scored ROI",
+      "warnings": []
+    },
+    {
+      "name": "coordinate-outside-int64",
+      "rejected": false,
+      "warnings": [
+        "invalid value encountered in cast"
+      ]
+    },
+    {
+      "name": "complex-samples-must-not-lose-imaginary-part",
+      "rejected": false,
+      "warnings": [
+        "Casting complex values to real discards the imaginary part"
+      ]
+    },
+    {
+      "name": "complex-coordinates-must-not-lose-imaginary-part",
+      "rejected": false,
+      "warnings": [
+        "Casting complex values to real discards the imaginary part"
+      ]
+    },
+    {
+      "name": "compare-nonfinite-candidate",
+      "rejected": true,
+      "error": "ValueError: nonfinite samples or noninteger canonical sites in scored ROI",
+      "warnings": []
+    },
+    {
+      "name": "finite-input-residual-overflow",
+      "rejected": false,
+      "warnings": [
+        "overflow encountered in subtract",
+        "invalid value encountered in subtract",
+        "invalid value encountered in subtract",
+        "invalid value encountered in subtract"
+      ]
+    },
+    {
+      "name": "finite-residuals-but-movement-overflow",
+      "rejected": false,
+      "warnings": [
+        "overflow encountered in subtract"
+      ]
+    }
+  ],
+  "details": {
+    "summary": {
+      "mask_pixels": 8,
+      "quantile_method": "linear",
+      "tie": "first row-major site",
+      "channels": [
+        {
+          "channel": "R",
+          "minimum_signed_error": {
+            "native_xy": [
+              298,
+              109
+            ],
+            "value_dn": 1029.0,
+            "truth_dn": 1040.0,
+            "signed_error_dn": -11.0
+          },
+          "maximum_signed_error": {
+            "native_xy": [
+              292,
+              109
+            ],
+            "value_dn": 1084.0,
+            "truth_dn": 1061.0,
+            "signed_error_dn": 23.0
+          },
+          "maximum_absolute_error": {
+            "native_xy": [
+              292,
+              109
+            ],
+            "value_dn": 1084.0,
+            "truth_dn": 1061.0,
+            "signed_error_dn": 23.0
+          },
+          "absolute_error_p99_dn": 22.159999999999997,
+          "absolute_error_p999_dn": 22.916000000000004
+        },
+        {
+          "channel": "G",
+          "minimum_signed_error": {
+            "native_xy": [
+              300,
+              103
+            ],
+            "value_dn": 1024.0,
+            "truth_dn": 1030.0,
+            "signed_error_dn": -6.0
+          },
+          "maximum_signed_error": {
+            "native_xy": [
+              294,
+              103
+            ],
+            "value_dn": 1059.0,
+            "truth_dn": 1051.0,
+            "signed_error_dn": 8.0
+          },
+          "maximum_absolute_error": {
+            "native_xy": [
+              294,
+              103
+            ],
+            "value_dn": 1059.0,
+            "truth_dn": 1051.0,
+            "signed_error_dn": 8.0
+          },
+          "absolute_error_p99_dn": 8.0,
+          "absolute_error_p999_dn": 8.0
+        },
+        {
+          "channel": "B",
+          "minimum_signed_error": {
+            "native_xy": [
+              290,
+              100
+            ],
+            "value_dn": 1043.0,
+            "truth_dn": 1073.0,
+            "signed_error_dn": -30.0
+          },
+          "maximum_signed_error": {
+            "native_xy": [
+              294,
+              103
+            ],
+            "value_dn": 1100.0,
+            "truth_dn": 1070.0,
+            "signed_error_dn": 30.0
+          },
+          "maximum_absolute_error": {
+            "native_xy": [
+              290,
+              100
+            ],
+            "value_dn": 1043.0,
+            "truth_dn": 1073.0,
+            "signed_error_dn": -30.0
+          },
+          "absolute_error_p99_dn": 30.0,
+          "absolute_error_p999_dn": 30.0
+        }
+      ]
+    },
+    "nearest_rank_p999_dn": [
+      23.0,
+      8.0,
+      30.0
+    ],
+    "comparison": {
+      "mask_pixels": 8,
+      "error_change_sign": "positive worsens truth error; negative improves it",
+      "tie": "first row-major site",
+      "channels": [
+        {
+          "channel": "R",
+          "maximum_absolute_error_change": {
+            "native_xy": [
+              290,
+              100
+            ],
+            "baseline_dn": 1040.0,
+            "candidate_dn": 1055.0,
+            "truth_dn": 1035.0,
+            "baseline_signed_error_dn": 5.0,
+            "candidate_signed_error_dn": 20.0,
+            "absolute_error_change_dn": 15.0,
+            "output_movement_dn": 15.0
+          },
+          "minimum_absolute_error_change": {
+            "native_xy": [
+              298,
+              109
+            ],
+            "baseline_dn": 1052.0,
+            "candidate_dn": 1044.0,
+            "truth_dn": 1040.0,
+            "baseline_signed_error_dn": 12.0,
+            "candidate_signed_error_dn": 4.0,
+            "absolute_error_change_dn": -8.0,
+            "output_movement_dn": -8.0
+          },
+          "largest_absolute_output_movement": {
+            "native_xy": [
+              298,
+              100
+            ],
+            "baseline_dn": 1037.0,
+            "candidate_dn": 977.0,
+            "truth_dn": 1007.0,
+            "baseline_signed_error_dn": 30.0,
+            "candidate_signed_error_dn": -30.0,
+            "absolute_error_change_dn": 0.0,
+            "output_movement_dn": -60.0
+          }
+        },
+        {
+          "channel": "G",
+          "maximum_absolute_error_change": {
+            "native_xy": [
+              290,
+              100
+            ],
+            "baseline_dn": 1054.0,
+            "candidate_dn": 1068.0,
+            "truth_dn": 1054.0,
+            "baseline_signed_error_dn": 0.0,
+            "candidate_signed_error_dn": 14.0,
+            "absolute_error_change_dn": 14.0,
+            "output_movement_dn": 14.0
+          },
+          "minimum_absolute_error_change": {
+            "native_xy": [
+              298,
+              100
+            ],
+            "baseline_dn": 1014.0,
+            "candidate_dn": 1024.0,
+            "truth_dn": 1026.0,
+            "baseline_signed_error_dn": -12.0,
+            "candidate_signed_error_dn": -2.0,
+            "absolute_error_change_dn": -10.0,
+            "output_movement_dn": 10.0
+          },
+          "largest_absolute_output_movement": {
+            "native_xy": [
+              290,
+              100
+            ],
+            "baseline_dn": 1054.0,
+            "candidate_dn": 1068.0,
+            "truth_dn": 1054.0,
+            "baseline_signed_error_dn": 0.0,
+            "candidate_signed_error_dn": 14.0,
+            "absolute_error_change_dn": 14.0,
+            "output_movement_dn": 14.0
+          }
+        },
+        {
+          "channel": "B",
+          "maximum_absolute_error_change": {
+            "native_xy": [
+              290,
+              100
+            ],
+            "baseline_dn": 1073.0,
+            "candidate_dn": 1064.0,
+            "truth_dn": 1073.0,
+            "baseline_signed_error_dn": 0.0,
+            "candidate_signed_error_dn": -9.0,
+            "absolute_error_change_dn": 9.0,
+            "output_movement_dn": -9.0
+          },
+          "minimum_absolute_error_change": {
+            "native_xy": [
+              300,
+              103
+            ],
+            "baseline_dn": 1049.0,
+            "candidate_dn": 1049.0,
+            "truth_dn": 1049.0,
+            "baseline_signed_error_dn": 0.0,
+            "candidate_signed_error_dn": 0.0,
+            "absolute_error_change_dn": 0.0,
+            "output_movement_dn": 0.0
+          },
+          "largest_absolute_output_movement": {
+            "native_xy": [
+              290,
+              100
+            ],
+            "baseline_dn": 1073.0,
+            "candidate_dn": 1064.0,
+            "truth_dn": 1073.0,
+            "baseline_signed_error_dn": 0.0,
+            "candidate_signed_error_dn": -9.0,
+            "absolute_error_change_dn": 9.0,
+            "output_movement_dn": -9.0
+          }
+        }
+      ]
+    }
+  },
+  "scope": "pure API controls; malformed out-of-domain numeric values do not describe actual bounded u16 benchmark data"
+}

@@ -1,0 +1,20 @@
+{
+  "command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\author-run-1\\core-tests.exe",
+    "pyramid::m194d_author_tests::",
+    "--test-threads=1",
+    "--nocapture"
+  ],
+  "started_utc": "2026-09-07T11:25:26.920847+00:00",
+  "ended_utc": "2026-09-07T11:25:27.233598+00:00",
+  "exit_code": 0,
+  "log": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\author-run-1\\core-author-tests.log",
+  "log_sha256": "5bf27b4b310363bbe0c740403cd3237582bd9f7275689a9285b3593dc367c1a1",
+  "environment": {
+    "STREHL_DEFECT": "off",
+    "STREHL_FIX_CA": "off",
+    "STREHL_FULLRES_GATHER": "1",
+    "STREHL_PYRAMID_WORKERS": "2",
+    "RAYON_NUM_THREADS": "2"
+  }
+}

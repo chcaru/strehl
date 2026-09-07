@@ -1,0 +1,34 @@
+{
+  "schema": "m194d-consumer-command-v1",
+  "command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\work\\consumer-binaries\\8dc16254cef9498fb9b9f3ad81b9ac37\\known-scene-tests.exe",
+    "--exact",
+    "merge_cmd::known_scene_benchmark::band_admission_benchmark::m194d_known_scene_consumer",
+    "--ignored",
+    "--test-threads=1",
+    "--nocapture"
+  ],
+  "exit_code": 0,
+  "pass_": true,
+  "log": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\experiment-1\\hard-floor\\logs\\plane-seed-727-single4.command.log",
+  "log_sha256": "176c5dc1b1f1da148576cf0d41c59ddca1ae0d6c79e72fbec4ca4ea02b958612",
+  "build_sha256": "7e3567a176e66dd7b8db3ebb16f2e4d2d5774216e0c3530b990df80a15fd7559",
+  "environment": {
+    "STREHL_DEFECT": "off",
+    "STREHL_FIX_CA": "off",
+    "STREHL_FULLRES_GATHER": "1",
+    "STREHL_PYRAMID_WORKERS": "2",
+    "RAYON_NUM_THREADS": "2",
+    "STREHL_M194D_ADMISSION": "hard-floor",
+    "STREHL_M194B_MODE": "render",
+    "STREHL_M194B_MANIFEST": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\plane\\seed-727\\manifest.json",
+    "STREHL_M194B_MANIFEST_SHA256": "502dfc93f59c89bc084f9966ca710aad595987923da191a694fb9b673cfb3740",
+    "STREHL_M194B_PLAN": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\experiment-1\\hard-floor\\plans\\plane-seed-727.json",
+    "STREHL_M194B_PLAN_SHA256": "6934632def5d5aa8a3d71661f6e96ade1b9049dfa0b643cb05334b19642d80fa",
+    "STREHL_M194B_SUBSET": "best",
+    "STREHL_M194B_OUTPUT": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\experiment-1\\hard-floor\\tiffs\\plane-seed-727-single4.tif",
+    "STREHL_M194B_RECEIPT": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\experiment-1\\hard-floor\\receipts\\plane-seed-727-single4.json"
+  },
+  "result": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\experiment-1\\hard-floor\\receipts\\plane-seed-727-single4.json",
+  "result_sha256": "843e4b4fecdf52b50b34ecabb78d0a7d14771445b5ad0b6f9ca83ab2d3d2d7a7"
+}

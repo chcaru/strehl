@@ -1,0 +1,42 @@
+{
+  "schema": "m194d-original-entry-recheck-v1",
+  "passed": true,
+  "original_result": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\original-entry-1\\result.json",
+  "original_result_sha256": "a80e871baaa2c0019276935da11104e045c82aeb0667117bdc83e1a7388d3523",
+  "original_whole_plan_failure_preserved": true,
+  "no_rerender": true,
+  "driver_sha256": "3763cde22e30a7d9c85eb77324dd1ee884786e9f94a73199d1b9bb44dc05c925",
+  "differences": {
+    "software": {
+      "current": "strehl 0.0.0 (5f55c9ee7dc1-dirty)",
+      "baseline": "strehl 0.0.0 (444eb759be03-dirty)"
+    }
+  },
+  "scope": "Original unselected entry default pixels; recorded executable build stamp is permitted to identify the new build.",
+  "checks": {
+    "original_plan_schema": true,
+    "original_receipt_schema": true,
+    "whole_tiff_identical": true,
+    "decoded_pixel_hash_identical": true,
+    "output_metadata_identical": true,
+    "unselected_admission_environment": true,
+    "each_original_frame_decoded_once": true,
+    "sources_unchanged": true,
+    "baseline_tiff_unchanged": true,
+    "all_plan_fields_other_than_build_stamp_identical": true,
+    "receipt_and_actual_tiff_bindings_rechecked": true
+  },
+  "output": {
+    "bytes": 361851,
+    "channels": 3,
+    "height": 212,
+    "path": "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\original-entry-1\\output.tiff",
+    "pixel_sha256_le": "329755283fe504888822daa94e3d0bebc80909ccc8a76ad319b687222f355a00",
+    "sample_type": "u16",
+    "sha256": "c260d5943de5b7d2127e763541a428c8bdfea7f01cc9284ae308e3520c0eb65f",
+    "software": "strehl 0.0.0",
+    "width": 284
+  },
+  "build_record": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\experiment-1\\build.json",
+  "build_sha256": "7e3567a176e66dd7b8db3ebb16f2e4d2d5774216e0c3530b990df80a15fd7559"
+}

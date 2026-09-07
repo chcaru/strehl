@@ -1,0 +1,31 @@
+{
+  "command": [
+    "cargo",
+    "clippy",
+    "-p",
+    "strehl-core",
+    "-p",
+    "strehl-cli",
+    "--lib",
+    "--bins",
+    "--tests",
+    "--target-dir",
+    "target/m194d-band-admission"
+  ],
+  "started_utc": "2026-09-07T11:33:31.511172+00:00",
+  "ended_utc": "2026-09-07T11:33:32.903490+00:00",
+  "exit_code": 0,
+  "log": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\checks-2\\clippy.log",
+  "log_sha256": "9e5952758b45920c0c138dd9e63f824ab141afcd19753e99c054743281992012",
+  "rebuilt": true,
+  "environment": {
+    "STREHL_DEFECT": "off",
+    "STREHL_FIX_CA": "off",
+    "STREHL_FULLRES_GATHER": "1",
+    "STREHL_PYRAMID_WORKERS": "2",
+    "RAYON_NUM_THREADS": "2",
+    "STREHL_BUILD_ID": "m194d-lint-only"
+  },
+  "checked_cli": true,
+  "pass": true
+}

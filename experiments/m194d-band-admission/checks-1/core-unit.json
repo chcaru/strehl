@@ -1,0 +1,27 @@
+{
+  "command": [
+    "cargo",
+    "test",
+    "-p",
+    "strehl-core",
+    "--lib",
+    "--target-dir",
+    "target/m194d-band-admission",
+    "--",
+    "--test-threads=1"
+  ],
+  "started_utc": "2026-09-07T11:28:00.332079+00:00",
+  "ended_utc": "2026-09-07T11:28:36.317041+00:00",
+  "exit_code": 0,
+  "log": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\checks-1\\core-unit.log",
+  "log_sha256": "da5af5e784ce497697e1a7b56130fff7d5aea9c99df2a43120792bae1f1568b4",
+  "rebuilt": true,
+  "environment": {
+    "STREHL_DEFECT": "off",
+    "STREHL_FIX_CA": "off",
+    "STREHL_FULLRES_GATHER": "1",
+    "STREHL_PYRAMID_WORKERS": "2",
+    "RAYON_NUM_THREADS": "2"
+  },
+  "pass": true
+}

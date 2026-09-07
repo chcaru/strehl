@@ -1,0 +1,12 @@
+
+running 1 test
+test merge_cmd::known_scene_benchmark::band_admission_benchmark::m194d_known_scene_consumer ... FAILED
+
+failures:
+
+failures:
+    merge_cmd::known_scene_benchmark::band_admission_benchmark::m194d_known_scene_consumer
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 140 filtered out; finished in 0.00s
+
+Error: STREHL_M194D_ADMISSION: unsupported admission mode ""

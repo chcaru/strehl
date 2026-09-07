@@ -53,8 +53,8 @@ use strehl_core::noise::{Levels, NoiseModel};
 use strehl_core::plane::{PlaneGeometry, QuadSource, green_luma_with_clip};
 use strehl_core::profile;
 use strehl_core::pyramid::{
-    BandMerge, BaseBand, FrameWorkspace, MergeConfig, SelectMode, Workspace, level_sizes,
-    luma_variance,
+    AdmissionMode, BandMerge, BaseBand, FrameWorkspace, MergeConfig, SelectMode, Workspace,
+    level_sizes, luma_variance,
 };
 use strehl_core::stack::{DEFAULT_SPECKLE_TOLERANCE as SPECKLE_TOLERANCE, speckle_fraction};
 use strehl_core::through_focus::{
@@ -6063,7 +6063,12 @@ fn run_pyramid_prepared(
         );
     }
     eprintln!(
-        "averaged        : {}",
+        "{} : {}",
+        if opts.pyramid.admission == AdmissionMode::FloorPedestalV1 {
+            "weight fallback"
+        } else {
+            "averaged       "
+        },
         merge
             .averaged_fraction()
             .iter()
@@ -6071,12 +6076,19 @@ fn run_pyramid_prepared(
             .collect::<Vec<_>>()
             .join(" ")
     );
-    eprintln!(
-        "                  per level, the fraction of coefficients where NO frame cleared the \
+    if opts.pyramid.admission == AdmissionMode::FloorPedestalV1 {
+        eprintln!(
+            "                  FloorPedestalV1 experimental: zero-total-weight fallback fraction.\n\
+                              Positive equal weights also average; this is not an averaging fraction."
+        );
+    } else {
+        eprintln!(
+            "                  per level, the fraction of coefficients where NO frame cleared the \
          noise\n                  floor and the merge therefore averaged instead of selecting. \
          Near 0%\n                  everywhere would mean the gate is not gating and this is a \
          naive\n                  pyramid stacker."
-    );
+        );
+    }
     eprintln!();
 
     // ---- collapse and write ----------------------------------------------

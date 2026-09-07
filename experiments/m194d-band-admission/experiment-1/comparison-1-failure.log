@@ -1,0 +1,16 @@
+Traceback (most recent call last):
+  File "C:\dev\blog\death-of-software\projects\strehl\experiments\m194d-band-admission\compare-experiment.py", line 190, in <module>
+    main()
+  File "C:\dev\blog\death-of-software\projects\strehl\experiments\m194d-band-admission\compare-experiment.py", line 182, in main
+    result = compare(args.controller.resolve(), args.controller_sha)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\dev\blog\death-of-software\projects\strehl\experiments\m194d-band-admission\compare-experiment.py", line 109, in compare
+    record, scores, indices, prior = validate_controller(path, digest)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\dev\blog\death-of-software\projects\strehl\experiments\m194d-band-admission\compare-experiment.py", line 89, in validate_controller
+    SB.require(S.sha256(command["log"]) == command["log_sha256"], "outer command log changed")
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\dev\blog\death-of-software\projects\strehl\experiments\m194b-known-scene\score.py", line 39, in sha256
+    with path.open("rb") as f:
+         ^^^^^^^^^
+AttributeError: 'str' object has no attribute 'open'

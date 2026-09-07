@@ -1,0 +1,28 @@
+{
+  "schema": "m194d-root-adapter-freeze-v1",
+  "utc": "2026-09-07T11:24:21.028221+00:00",
+  "sources": {
+    "experiments/m194d-band-admission/consumer-run.py": "15fa40c44ea7b611a417e616566ac840a1dcee4b3f01505bf1af0ac77709a1f5",
+    "experiments/m194d-band-admission/run-matrix.py": "88600fb917a2d3e0f9c82fad914f661b2b997d77bd1fada33723aa50d4c72d06",
+    "experiments/m194d-band-admission/score-benchmark.py": "c124a983f5432b5677d8ac476f119f7d57cab4db67eb6cb5c26352d80ebfff9e",
+    "experiments/m194d-band-admission/run-experiment.py": "4400976f22d50c0e916bbd58e2712251bc41ac5ceb38cd391ede54ea47872542",
+    "experiments/m194d-band-admission/compare-experiment.py": "bf229ec79a9241da28ec0813ac4e4da5ea6490a09addee8afd5a3304dedef717",
+    "experiments/m194d-band-admission/sparse-error.py": "cdceca7a9232489223dc9395f2131d02642d365b111850d7caa4addb742169cd",
+    "experiments/m194d-band-admission/implementation-plan.md": "a23a9f665ef49a38686caf6d5db58eabd9839c90a095afa0ad9b184e9fc58c3e",
+    "experiments/m194d-band-admission/implementation-preregister.md": "9c19e77c658111e52e8fac725c9949cad42d3ee4f754ee5ba29d51a20a58bbea",
+    "experiments/m194d-band-admission/comparison-preregister.md": "465d06eb296df33142c50039dcc5f1ef31502d998b42faf2dc60a51b6d211035",
+    "experiments/m194d-band-admission/adapter-lineage.json": "4197b328c1da7deb1bd7b1f8861f2f75c7fd3845e57e5086083802e0de68df7c",
+    "experiments/m194c-probe-layout/compare-candidate.py": "71991f3296f85d3e0343a87d1c8c50b0b38141de7be9d70d9e26c02c4b86422a",
+    "experiments/m194c-probe-layout/run-candidate.py": "c47cc1d52cc4a9f5756e8dc1fd39d4e2d601c574a9f5ea815aba131de19f9c23"
+  },
+  "fixed_artifacts": {
+    "experiments/m194b-known-scene/consumer-run.py": "ca2e635e4bae833b29c8254a4c4932adc3f46fd86e2a6e60587630b1cd23572c",
+    "experiments/m194b-known-scene/run-baseline.py": "3b813f181ad1fe4f6cf8801ce66cc2349f45e8f7d7fdaa42a08a18890b68e8ae",
+    "experiments/m194b-known-scene/score.py": "d292c8623827eb960bc28dc341398c7e164f5c14cd31af74663ee24c1ff5b5dd",
+    "experiments/m194b-known-scene/score-benchmark.py": "eccbd41383ebcb46d865aef6745b39cafe91dab9294ea109b3a83981388fa80b",
+    "experiments/m194b-known-scene/producer-output-1/producer-result.json": "544d47dbc0fdebcf220094ca53434ca49abfee62f55febec27b36f58c24087cc",
+    "experiments/m194b-known-scene/producer-commission-1/commission.json": "0a8eb43a53d8f44a6e803f531fd2e83d12b7a59e280440e730dc6ea6523b50d5"
+  },
+  "review": "independent-comparison-review-notes.md; independent-adapter-source-review.json",
+  "scope": "root adapters only; product and test source freeze follows component commissioning"
+}

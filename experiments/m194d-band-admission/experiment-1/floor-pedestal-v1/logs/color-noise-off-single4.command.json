@@ -1,0 +1,34 @@
+{
+  "schema": "m194d-consumer-command-v1",
+  "command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\work\\consumer-binaries\\8dc16254cef9498fb9b9f3ad81b9ac37\\known-scene-tests.exe",
+    "--exact",
+    "merge_cmd::known_scene_benchmark::band_admission_benchmark::m194d_known_scene_consumer",
+    "--ignored",
+    "--test-threads=1",
+    "--nocapture"
+  ],
+  "exit_code": 0,
+  "pass_": true,
+  "log": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\experiment-1\\floor-pedestal-v1\\logs\\color-noise-off-single4.command.log",
+  "log_sha256": "1b163e21e113f370f2169ceac01f230f5b27123035243c00335764b89ba61392",
+  "build_sha256": "7e3567a176e66dd7b8db3ebb16f2e4d2d5774216e0c3530b990df80a15fd7559",
+  "environment": {
+    "STREHL_DEFECT": "off",
+    "STREHL_FIX_CA": "off",
+    "STREHL_FULLRES_GATHER": "1",
+    "STREHL_PYRAMID_WORKERS": "2",
+    "RAYON_NUM_THREADS": "2",
+    "STREHL_M194D_ADMISSION": "floor-pedestal-v1",
+    "STREHL_M194B_MODE": "render",
+    "STREHL_M194B_MANIFEST": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\color\\noise-off\\manifest.json",
+    "STREHL_M194B_MANIFEST_SHA256": "21fffbadd35149150f98634ff3394c2e4ef6bb0a879ab5fcdebd0336f35fac51",
+    "STREHL_M194B_PLAN": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\experiment-1\\floor-pedestal-v1\\plans\\color-noise-off.json",
+    "STREHL_M194B_PLAN_SHA256": "4e64e2c0fa8d8c09e87e5701f3883d4ae7b434ac5c6290724cc7906f8640976d",
+    "STREHL_M194B_SUBSET": "best",
+    "STREHL_M194B_OUTPUT": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\experiment-1\\floor-pedestal-v1\\tiffs\\color-noise-off-single4.tif",
+    "STREHL_M194B_RECEIPT": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\experiment-1\\floor-pedestal-v1\\receipts\\color-noise-off-single4.json"
+  },
+  "result": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\experiment-1\\floor-pedestal-v1\\receipts\\color-noise-off-single4.json",
+  "result_sha256": "54b625271deb89ccda59df211906367987a8e52689b667def0e8bb3e405a0d0f"
+}

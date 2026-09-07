@@ -1,0 +1,5614 @@
+{
+  "schema": "m194d-independent-comparison-read-v1",
+  "pass_": true,
+  "checks": {
+    "complete_120_actual_tiffs": true,
+    "all40_off_whole_tiff_and_pixels_identical": true,
+    "same_actual_inputs_and_narrow_plan_delta": true,
+    "engineering_trigger_count_agrees": true,
+    "original_artifact_bytes_unchanged": true,
+    "reused_independent_source_bytes_unchanged": true,
+    "pixel_agreement": true,
+    "rmse_agreement": true,
+    "wave_agreement": true,
+    "sparse_agreement": true,
+    "variance_agreement": true,
+    "paired_mean_agreement": true,
+    "paired_sem_agreement": true,
+    "jackknife_agreement": true
+  },
+  "command": [
+    "experiments/m194d-band-admission/independent-comparison-read.py",
+    "--controller",
+    "experiments/m194d-band-admission/experiment-1/controller.json",
+    "--controller-sha",
+    "b3e9a71a538d16f6e0f2c399cb530c71a00fa74cd1194362d41417610f5a1e59",
+    "--comparison",
+    "experiments/m194d-band-admission/experiment-1/comparison-2.json",
+    "--comparison-sha",
+    "a64df70677d1dc66c81f6e088b0196a23883bc9c480cbe156c6b104e0cadc306",
+    "--out",
+    "experiments/m194d-band-admission/independent-comparison-read-1.json"
+  ],
+  "script_sha256": "9b06fa067049c22008eab450df2bef112a235b9b4c892a9f523b4ad0fb4591fc",
+  "reused_sources": {
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\independent-optics.py": "fbe79c63230e1323df32dfe83b55d0bdf10622d6a3eafbfdb962fc8e1a8d1f78",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194c-probe-layout\\independent-comparison-controls.py": "d6b5c98b8f247ac26073f6fb55a1069939a9c17254d1a3cd326e6566a34968fd"
+  },
+  "controller_sha256": "b3e9a71a538d16f6e0f2c399cb530c71a00fa74cd1194362d41417610f5a1e59",
+  "comparison_sha256": "a64df70677d1dc66c81f6e088b0196a23883bc9c480cbe156c6b104e0cadc306",
+  "max_disagreements": {
+    "pixel": 0.0,
+    "rmse": 1.701536689324712e-10,
+    "wave": 7.389644451905042e-13,
+    "sparse": 0.0,
+    "variance": 9.521272659185342e-13,
+    "paired_mean": 3.114866586884091e-09,
+    "paired_sem": 4.667632187878301e-11,
+    "jackknife": 2.681410649074678e-12
+  },
+  "rows": [
+    {
+      "scene": "color",
+      "repeat": null,
+      "arm": "full9",
+      "changed_components": 238,
+      "roi_pixel_rms_dn": [
+        0.0070801861600671145,
+        0.008739971542828767,
+        0.008739971542828767
+      ],
+      "whole_image_maximum": {
+        "native_xy": [
+          106,
+          14
+        ],
+        "channel": "R",
+        "signed_movement_dn": 0.22656595712214767,
+        "inside_fixed_roi": false
+      },
+      "ideal": {
+        "bias_dn": [
+          7.375193916736578e-05,
+          -6.32159478577421e-05,
+          4.214396523849473e-05
+        ],
+        "mse_dn2": [
+          -0.006864896289698663,
+          -0.01664860521736955,
+          -0.02165738951316598
+        ],
+        "rmse_dn": [
+          -4.430042218928065e-05,
+          -0.000217385507966128,
+          -0.00013948357430138003
+        ],
+        "nearest_rank_p999_before_dn": [
+          230.10312566949506,
+          134.60490167667876,
+          232.34872670316918
+        ],
+        "nearest_rank_p999_after_dn": [
+          230.10312566949506,
+          134.60490167667876,
+          232.34872670316918
+        ],
+        "harmed_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "improved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "moved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "maximum_paired_error_increase_dn": [
+          0.22656595712214767,
+          0.22656595712214767,
+          0.22656595712214767
+        ],
+        "maximum_paired_error_decrease_dn": [
+          -0.22656595712214767,
+          -0.22656595712214767,
+          -0.22656595712214767
+        ]
+      }
+    },
+    {
+      "scene": "color",
+      "repeat": null,
+      "arm": "single4",
+      "changed_components": 0,
+      "roi_pixel_rms_dn": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "whole_image_maximum": {
+        "native_xy": [
+          18,
+          14
+        ],
+        "channel": "R",
+        "signed_movement_dn": 0.0,
+        "inside_fixed_roi": false
+      },
+      "ideal": {
+        "bias_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "mse_dn2": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rmse_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "nearest_rank_p999_before_dn": [
+          183.8975526841491,
+          114.3608161382599,
+          183.8965300417185
+        ],
+        "nearest_rank_p999_after_dn": [
+          183.8975526841491,
+          114.3608161382599,
+          183.8965300417185
+        ],
+        "harmed_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "improved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "moved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "maximum_paired_error_increase_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "maximum_paired_error_decrease_dn": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    {
+      "scene": "color-null",
+      "repeat": null,
+      "arm": "full9",
+      "changed_components": 171,
+      "roi_pixel_rms_dn": [
+        0.0070801861600671145,
+        0.00598384945745068,
+        0.007725116431640211
+      ],
+      "whole_image_maximum": {
+        "native_xy": [
+          247,
+          140
+        ],
+        "channel": "B",
+        "signed_movement_dn": 0.2265659571226024,
+        "inside_fixed_roi": true
+      },
+      "ideal": {
+        "bias_dn": [
+          -7.375193916736578e-05,
+          -1.0535991309623682e-05,
+          -1.0535991309602866e-05
+        ],
+        "mse_dn2": [
+          -0.0004927036115986994,
+          -0.00814667782253764,
+          -0.00775791834064421
+        ],
+        "rmse_dn": [
+          -8.997780131636546e-06,
+          -0.00013851761490002445,
+          -0.0001416832135063828
+        ],
+        "nearest_rank_p999_before_dn": [
+          73.43693074840212,
+          83.71387512460751,
+          73.60151013472387
+        ],
+        "nearest_rank_p999_after_dn": [
+          73.43693074840212,
+          83.69372814380358,
+          73.60151013472387
+        ],
+        "harmed_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "improved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "moved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "maximum_paired_error_increase_dn": [
+          0.22656595712214767,
+          0.22656595712214767,
+          0.2265659571226024
+        ],
+        "maximum_paired_error_decrease_dn": [
+          -0.22656595712214767,
+          -0.22656595712214767,
+          -0.22656595712214767
+        ]
+      }
+    },
+    {
+      "scene": "color-null",
+      "repeat": null,
+      "arm": "single4",
+      "changed_components": 0,
+      "roi_pixel_rms_dn": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "whole_image_maximum": {
+        "native_xy": [
+          18,
+          14
+        ],
+        "channel": "R",
+        "signed_movement_dn": 0.0,
+        "inside_fixed_roi": false
+      },
+      "ideal": {
+        "bias_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "mse_dn2": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rmse_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "nearest_rank_p999_before_dn": [
+          46.62182431672454,
+          54.69271340400928,
+          46.533007563776664
+        ],
+        "nearest_rank_p999_after_dn": [
+          46.62182431672454,
+          54.69271340400928,
+          46.533007563776664
+        ],
+        "harmed_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "improved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "moved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "maximum_paired_error_increase_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "maximum_paired_error_decrease_dn": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    {
+      "scene": "flat",
+      "repeat": 701,
+      "arm": "full9",
+      "changed_components": 157821,
+      "roi_pixel_rms_dn": [
+        10.078750839308434,
+        10.814660528978333,
+        10.435190559033426
+      ],
+      "whole_image_maximum": {
+        "native_xy": [
+          102,
+          44
+        ],
+        "channel": "R",
+        "signed_movement_dn": 99.00932326237898,
+        "inside_fixed_roi": false
+      },
+      "ideal": {
+        "bias_dn": [
+          -0.23711248442310054,
+          0.27489454925929113,
+          0.26260958339222756
+        ],
+        "mse_dn2": [
+          -107.3017952018225,
+          -140.9221277602357,
+          -119.39408166006717
+        ],
+        "rmse_dn": [
+          -4.614795163732865,
+          -6.44479922363505,
+          -4.926465916708462
+        ],
+        "nearest_rank_p999_before_dn": [
+          76.39297870276323,
+          81.07045090409702,
+          79.93769264406001
+        ],
+        "nearest_rank_p999_after_dn": [
+          29.72039153560081,
+          25.108659494926542,
+          32.43902208852569
+        ],
+        "harmed_over10_dn": [
+          133,
+          36,
+          135
+        ],
+        "improved_over10_dn": [
+          1828,
+          2025,
+          1901
+        ],
+        "moved_over10_dn": [
+          2403,
+          2372,
+          2524
+        ],
+        "maximum_paired_error_increase_dn": [
+          24.77619163151303,
+          19.630914778362694,
+          21.89671740073163
+        ],
+        "maximum_paired_error_decrease_dn": [
+          -91.75921263447026,
+          -85.41536583505012,
+          -93.34517433432529
+        ]
+      },
+      "observation": {
+        "bias_dn": [
+          -0.23711248442310054,
+          0.27489454925929113,
+          0.26260958339222756
+        ],
+        "mse_dn2": [
+          -107.3017952018225,
+          -140.9221277602357,
+          -119.39408166006717
+        ],
+        "rmse_dn": [
+          -4.614795163732865,
+          -6.44479922363505,
+          -4.926465916708462
+        ],
+        "nearest_rank_p999_before_dn": [
+          76.39297870276323,
+          81.07045090409702,
+          79.93769264406001
+        ],
+        "nearest_rank_p999_after_dn": [
+          29.72039153560081,
+          25.108659494926542,
+          32.43902208852569
+        ],
+        "harmed_over10_dn": [
+          133,
+          36,
+          135
+        ],
+        "improved_over10_dn": [
+          1828,
+          2025,
+          1901
+        ],
+        "moved_over10_dn": [
+          2403,
+          2372,
+          2524
+        ],
+        "maximum_paired_error_increase_dn": [
+          24.77619163151303,
+          19.630914778362694,
+          21.89671740073163
+        ],
+        "maximum_paired_error_decrease_dn": [
+          -91.75921263447026,
+          -85.41536583505012,
+          -93.34517433432529
+        ]
+      }
+    },
+    {
+      "scene": "flat",
+      "repeat": 701,
+      "arm": "single4",
+      "changed_components": 0,
+      "roi_pixel_rms_dn": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "whole_image_maximum": {
+        "native_xy": [
+          18,
+          14
+        ],
+        "channel": "R",
+        "signed_movement_dn": 0.0,
+        "inside_fixed_roi": false
+      },
+      "ideal": {
+        "bias_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "mse_dn2": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rmse_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "nearest_rank_p999_before_dn": [
+          100.18240420058873,
+          87.6408636606393,
+          107.12560749871773
+        ],
+        "nearest_rank_p999_after_dn": [
+          100.18240420058873,
+          87.6408636606393,
+          107.12560749871773
+        ],
+        "harmed_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "improved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "moved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "maximum_paired_error_increase_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "maximum_paired_error_decrease_dn": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "observation": {
+        "bias_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "mse_dn2": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rmse_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "nearest_rank_p999_before_dn": [
+          100.18240420058873,
+          87.6408636606393,
+          107.12560749871773
+        ],
+        "nearest_rank_p999_after_dn": [
+          100.18240420058873,
+          87.6408636606393,
+          107.12560749871773
+        ],
+        "harmed_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "improved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "moved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "maximum_paired_error_increase_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "maximum_paired_error_decrease_dn": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    {
+      "scene": "flat",
+      "repeat": 709,
+      "arm": "full9",
+      "changed_components": 151028,
+      "roi_pixel_rms_dn": [
+        9.781632842498022,
+        10.029709870353427,
+        10.031359687637048
+      ],
+      "whole_image_maximum": {
+        "native_xy": [
+          51,
+          14
+        ],
+        "channel": "B",
+        "signed_movement_dn": 120.07995727473872,
+        "inside_fixed_roi": false
+      },
+      "ideal": {
+        "bias_dn": [
+          0.05541931428860387,
+          0.4615923152658302,
+          0.04277612471701453
+        ],
+        "mse_dn2": [
+          -105.0834476771684,
+          -122.17087055287223,
+          -112.80167655972706
+        ],
+        "rmse_dn": [
+          -4.538458785450025,
+          -5.781713807810876,
+          -4.71452528688584
+        ],
+        "nearest_rank_p999_before_dn": [
+          76.39297870276323,
+          81.9767147325856,
+          80.471004998421
+        ],
+        "nearest_rank_p999_after_dn": [
+          30.546153058890923,
+          25.415548943312842,
+          32.66558804564784
+        ],
+        "harmed_over10_dn": [
+          92,
+          30,
+          104
+        ],
+        "improved_over10_dn": [
+          1680,
+          1744,
+          1722
+        ],
+        "moved_over10_dn": [
+          2178,
+          2073,
+          2195
+        ],
+        "maximum_paired_error_increase_dn": [
+          22.65659571221522,
+          20.08404669260699,
+          21.750331883726176
+        ],
+        "maximum_paired_error_decrease_dn": [
+          -97.11629330020287,
+          -96.97022964827966,
+          -102.40781261921074
+        ]
+      },
+      "observation": {
+        "bias_dn": [
+          0.05541931428860387,
+          0.4615923152658302,
+          0.04277612471701453
+        ],
+        "mse_dn2": [
+          -105.0834476771684,
+          -122.17087055287223,
+          -112.80167655972706
+        ],
+        "rmse_dn": [
+          -4.538458785450025,
+          -5.781713807810876,
+          -4.71452528688584
+        ],
+        "nearest_rank_p999_before_dn": [
+          76.39297870276323,
+          81.9767147325856,
+          80.471004998421
+        ],
+        "nearest_rank_p999_after_dn": [
+          30.546153058890923,
+          25.415548943312842,
+          32.66558804564784
+        ],
+        "harmed_over10_dn": [
+          92,
+          30,
+          104
+        ],
+        "improved_over10_dn": [
+          1680,
+          1744,
+          1722
+        ],
+        "moved_over10_dn": [
+          2178,
+          2073,
+          2195
+        ],
+        "maximum_paired_error_increase_dn": [
+          22.65659571221522,
+          20.08404669260699,
+          21.750331883726176
+        ],
+        "maximum_paired_error_decrease_dn": [
+          -97.11629330020287,
+          -96.97022964827966,
+          -102.40781261921074
+        ]
+      }
+    },
+    {
+      "scene": "flat",
+      "repeat": 709,
+      "arm": "single4",
+      "changed_components": 0,
+      "roi_pixel_rms_dn": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "whole_image_maximum": {
+        "native_xy": [
+          18,
+          14
+        ],
+        "channel": "R",
+        "signed_movement_dn": 0.0,
+        "inside_fixed_roi": false
+      },
+      "ideal": {
+        "bias_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "mse_dn2": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rmse_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "nearest_rank_p999_before_dn": [
+          103.12776164317665,
+          87.04148928053701,
+          110.07096494130565
+        ],
+        "nearest_rank_p999_after_dn": [
+          103.12776164317665,
+          87.04148928053701,
+          110.07096494130565
+        ],
+        "harmed_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "improved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "moved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "maximum_paired_error_increase_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "maximum_paired_error_decrease_dn": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "observation": {
+        "bias_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "mse_dn2": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rmse_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "nearest_rank_p999_before_dn": [
+          103.12776164317665,
+          87.04148928053701,
+          110.07096494130565
+        ],
+        "nearest_rank_p999_after_dn": [
+          103.12776164317665,
+          87.04148928053701,
+          110.07096494130565
+        ],
+        "harmed_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "improved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "moved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "maximum_paired_error_increase_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "maximum_paired_error_decrease_dn": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    {
+      "scene": "flat",
+      "repeat": 719,
+      "arm": "full9",
+      "changed_components": 150466,
+      "roi_pixel_rms_dn": [
+        9.305806719407437,
+        10.222461602683104,
+        9.6639381167339
+      ],
+      "whole_image_maximum": {
+        "native_xy": [
+          230,
+          153
+        ],
+        "channel": "B",
+        "signed_movement_dn": -114.41580834668503,
+        "inside_fixed_roi": true
+      },
+      "ideal": {
+        "bias_dn": [
+          0.22403731920775766,
+          0.4285619825100142,
+          -0.08088480528405553
+        ],
+        "mse_dn2": [
+          -98.70984262100625,
+          -129.95209899950868,
+          -104.9673612299302
+        ],
+        "rmse_dn": [
+          -4.27499155278759,
+          -6.084974651231044,
+          -4.431525405364525
+        ],
+        "nearest_rank_p999_before_dn": [
+          72.54135743168672,
+          79.11168078126184,
+          81.2970883867929
+        ],
+        "nearest_rank_p999_after_dn": [
+          31.452416887379513,
+          25.188982986190695,
+          31.985890174281394
+        ],
+        "harmed_over10_dn": [
+          93,
+          30,
+          115
+        ],
+        "improved_over10_dn": [
+          1701,
+          1841,
+          1705
+        ],
+        "moved_over10_dn": [
+          2160,
+          2161,
+          2210
+        ],
+        "maximum_paired_error_increase_dn": [
+          22.883161669336914,
+          20.08404669260699,
+          25.455567637797685
+        ],
+        "maximum_paired_error_decrease_dn": [
+          -106.9391317616537,
+          -95.38426794842417,
+          -114.41580834668503
+        ]
+      },
+      "observation": {
+        "bias_dn": [
+          0.22403731920775766,
+          0.4285619825100142,
+          -0.08088480528405553
+        ],
+        "mse_dn2": [
+          -98.70984262100625,
+          -129.95209899950868,
+          -104.9673612299302
+        ],
+        "rmse_dn": [
+          -4.27499155278759,
+          -6.084974651231044,
+          -4.431525405364525
+        ],
+        "nearest_rank_p999_before_dn": [
+          72.54135743168672,
+          79.11168078126184,
+          81.2970883867929
+        ],
+        "nearest_rank_p999_after_dn": [
+          31.452416887379513,
+          25.188982986190695,
+          31.985890174281394
+        ],
+        "harmed_over10_dn": [
+          93,
+          30,
+          115
+        ],
+        "improved_over10_dn": [
+          1701,
+          1841,
+          1705
+        ],
+        "moved_over10_dn": [
+          2160,
+          2161,
+          2210
+        ],
+        "maximum_paired_error_increase_dn": [
+          22.883161669336914,
+          20.08404669260699,
+          25.455567637797685
+        ],
+        "maximum_paired_error_decrease_dn": [
+          -106.9391317616537,
+          -95.38426794842417,
+          -114.41580834668503
+        ]
+      }
+    },
+    {
+      "scene": "flat",
+      "repeat": 719,
+      "arm": "single4",
+      "changed_components": 0,
+      "roi_pixel_rms_dn": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "whole_image_maximum": {
+        "native_xy": [
+          18,
+          14
+        ],
+        "channel": "R",
+        "signed_movement_dn": 0.0,
+        "inside_fixed_roi": false
+      },
+      "ideal": {
+        "bias_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "mse_dn2": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rmse_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "nearest_rank_p999_before_dn": [
+          102.14099550948958,
+          86.96116578927285,
+          109.69801346717804
+        ],
+        "nearest_rank_p999_after_dn": [
+          102.14099550948958,
+          86.96116578927285,
+          109.69801346717804
+        ],
+        "harmed_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "improved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "moved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "maximum_paired_error_increase_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "maximum_paired_error_decrease_dn": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "observation": {
+        "bias_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "mse_dn2": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rmse_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "nearest_rank_p999_before_dn": [
+          102.14099550948958,
+          86.96116578927285,
+          109.69801346717804
+        ],
+        "nearest_rank_p999_after_dn": [
+          102.14099550948958,
+          86.96116578927285,
+          109.69801346717804
+        ],
+        "harmed_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "improved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "moved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "maximum_paired_error_increase_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "maximum_paired_error_decrease_dn": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    {
+      "scene": "flat",
+      "repeat": 727,
+      "arm": "full9",
+      "changed_components": 151330,
+      "roi_pixel_rms_dn": [
+        9.555950665498395,
+        10.220431689750743,
+        9.571671397295328
+      ],
+      "whole_image_maximum": {
+        "native_xy": [
+          30,
+          100
+        ],
+        "channel": "R",
+        "signed_movement_dn": 112.3767147325857,
+        "inside_fixed_roi": false
+      },
+      "ideal": {
+        "bias_dn": [
+          0.30122399154188506,
+          0.21645140546488462,
+          0.18036563522936527
+        ],
+        "mse_dn2": [
+          -101.50416647307065,
+          -126.65523806278989,
+          -100.63123104241545
+        ],
+        "rmse_dn": [
+          -4.431676082798843,
+          -5.947096677163789,
+          -4.243718575768545
+        ],
+        "nearest_rank_p999_before_dn": [
+          74.95308065483187,
+          75.93975738155177,
+          76.0860713729835
+        ],
+        "nearest_rank_p999_after_dn": [
+          30.319587101768775,
+          24.882093537804394,
+          32.892154002769985
+        ],
+        "harmed_over10_dn": [
+          95,
+          52,
+          119
+        ],
+        "improved_over10_dn": [
+          1623,
+          1823,
+          1648
+        ],
+        "moved_over10_dn": [
+          2085,
+          2182,
+          2184
+        ],
+        "maximum_paired_error_increase_dn": [
+          29.53407673107813,
+          15.633051041428189,
+          25.90869955204198
+        ],
+        "maximum_paired_error_decrease_dn": [
+          -94.93113603417987,
+          -84.73566796368323,
+          -89.49355306324878
+        ]
+      },
+      "observation": {
+        "bias_dn": [
+          0.30122399154188506,
+          0.21645140546488462,
+          0.18036563522936527
+        ],
+        "mse_dn2": [
+          -101.50416647307065,
+          -126.65523806278989,
+          -100.63123104241545
+        ],
+        "rmse_dn": [
+          -4.431676082798843,
+          -5.947096677163789,
+          -4.243718575768545
+        ],
+        "nearest_rank_p999_before_dn": [
+          74.95308065483187,
+          75.93975738155177,
+          76.0860713729835
+        ],
+        "nearest_rank_p999_after_dn": [
+          30.319587101768775,
+          24.882093537804394,
+          32.892154002769985
+        ],
+        "harmed_over10_dn": [
+          95,
+          52,
+          119
+        ],
+        "improved_over10_dn": [
+          1623,
+          1823,
+          1648
+        ],
+        "moved_over10_dn": [
+          2085,
+          2182,
+          2184
+        ],
+        "maximum_paired_error_increase_dn": [
+          29.53407673107813,
+          15.633051041428189,
+          25.90869955204198
+        ],
+        "maximum_paired_error_decrease_dn": [
+          -94.93113603417987,
+          -84.73566796368323,
+          -89.49355306324878
+        ]
+      }
+    },
+    {
+      "scene": "flat",
+      "repeat": 727,
+      "arm": "single4",
+      "changed_components": 0,
+      "roi_pixel_rms_dn": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "whole_image_maximum": {
+        "native_xy": [
+          18,
+          14
+        ],
+        "channel": "R",
+        "signed_movement_dn": 0.0,
+        "inside_fixed_roi": false
+      },
+      "ideal": {
+        "bias_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "mse_dn2": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rmse_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "nearest_rank_p999_before_dn": [
+          102.59412742373388,
+          85.00239566643768,
+          109.92457942430019
+        ],
+        "nearest_rank_p999_after_dn": [
+          102.59412742373388,
+          85.00239566643768,
+          109.92457942430019
+        ],
+        "harmed_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "improved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "moved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "maximum_paired_error_increase_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "maximum_paired_error_decrease_dn": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "observation": {
+        "bias_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "mse_dn2": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rmse_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "nearest_rank_p999_before_dn": [
+          102.59412742373388,
+          85.00239566643768,
+          109.92457942430019
+        ],
+        "nearest_rank_p999_after_dn": [
+          102.59412742373388,
+          85.00239566643768,
+          109.92457942430019
+        ],
+        "harmed_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "improved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "moved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "maximum_paired_error_increase_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "maximum_paired_error_decrease_dn": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    {
+      "scene": "flat",
+      "repeat": 733,
+      "arm": "full9",
+      "changed_components": 152301,
+      "roi_pixel_rms_dn": [
+        9.925538278567192,
+        10.438007633769935,
+        9.951155081107697
+      ],
+      "whole_image_maximum": {
+        "native_xy": [
+          155,
+          51
+        ],
+        "channel": "B",
+        "signed_movement_dn": 125.97067215991456,
+        "inside_fixed_roi": false
+      },
+      "ideal": {
+        "bias_dn": [
+          0.2921314310417674,
+          0.20817011629533805,
+          0.07551144971596463
+        ],
+        "mse_dn2": [
+          -109.81576203484717,
+          -133.07371052902303,
+          -110.61464351346551
+        ],
+        "rmse_dn": [
+          -4.718796069884203,
+          -6.199335990168421,
+          -4.590772498495065
+        ],
+        "nearest_rank_p999_before_dn": [
+          77.97894040261826,
+          77.5257190814068,
+          76.53920328722779
+        ],
+        "nearest_rank_p999_after_dn": [
+          30.093021144646627,
+          25.188982986190695,
+          32.43902208852569
+        ],
+        "harmed_over10_dn": [
+          107,
+          48,
+          143
+        ],
+        "improved_over10_dn": [
+          1801,
+          1935,
+          1807
+        ],
+        "moved_over10_dn": [
+          2333,
+          2283,
+          2371
+        ],
+        "maximum_paired_error_increase_dn": [
+          24.77619163151303,
+          17.219012741283223,
+          22.883161669336914
+        ],
+        "maximum_paired_error_decrease_dn": [
+          -108.52509346150919,
+          -92.2123445487141,
+          -91.30608072022551
+        ]
+      },
+      "observation": {
+        "bias_dn": [
+          0.2921314310417674,
+          0.20817011629533805,
+          0.07551144971596463
+        ],
+        "mse_dn2": [
+          -109.81576203484717,
+          -133.07371052902303,
+          -110.61464351346551
+        ],
+        "rmse_dn": [
+          -4.718796069884203,
+          -6.199335990168421,
+          -4.590772498495065
+        ],
+        "nearest_rank_p999_before_dn": [
+          77.97894040261826,
+          77.5257190814068,
+          76.53920328722779
+        ],
+        "nearest_rank_p999_after_dn": [
+          30.093021144646627,
+          25.188982986190695,
+          32.43902208852569
+        ],
+        "harmed_over10_dn": [
+          107,
+          48,
+          143
+        ],
+        "improved_over10_dn": [
+          1801,
+          1935,
+          1807
+        ],
+        "moved_over10_dn": [
+          2333,
+          2283,
+          2371
+        ],
+        "maximum_paired_error_increase_dn": [
+          24.77619163151303,
+          17.219012741283223,
+          22.883161669336914
+        ],
+        "maximum_paired_error_decrease_dn": [
+          -108.52509346150919,
+          -92.2123445487141,
+          -91.30608072022551
+        ]
+      }
+    },
+    {
+      "scene": "flat",
+      "repeat": 733,
+      "arm": "single4",
+      "changed_components": 0,
+      "roi_pixel_rms_dn": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "whole_image_maximum": {
+        "native_xy": [
+          18,
+          14
+        ],
+        "channel": "R",
+        "signed_movement_dn": 0.0,
+        "inside_fixed_roi": false
+      },
+      "ideal": {
+        "bias_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "mse_dn2": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rmse_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "nearest_rank_p999_before_dn": [
+          103.58089355742095,
+          87.04148928053701,
+          108.25843728432847
+        ],
+        "nearest_rank_p999_after_dn": [
+          103.58089355742095,
+          87.04148928053701,
+          108.25843728432847
+        ],
+        "harmed_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "improved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "moved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "maximum_paired_error_increase_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "maximum_paired_error_decrease_dn": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "observation": {
+        "bias_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "mse_dn2": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rmse_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "nearest_rank_p999_before_dn": [
+          103.58089355742095,
+          87.04148928053701,
+          108.25843728432847
+        ],
+        "nearest_rank_p999_after_dn": [
+          103.58089355742095,
+          87.04148928053701,
+          108.25843728432847
+        ],
+        "harmed_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "improved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "moved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "maximum_paired_error_increase_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "maximum_paired_error_decrease_dn": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    {
+      "scene": "flat",
+      "repeat": 739,
+      "arm": "full9",
+      "changed_components": 150711,
+      "roi_pixel_rms_dn": [
+        9.092077810752427,
+        9.793048900103113,
+        9.355367460315168
+      ],
+      "whole_image_maximum": {
+        "native_xy": [
+          286,
+          105
+        ],
+        "channel": "G",
+        "signed_movement_dn": 108.52509346150873,
+        "inside_fixed_roi": false
+      },
+      "ideal": {
+        "bias_dn": [
+          -0.10508597732231023,
+          0.4714434671402065,
+          0.09294851533346321
+        ],
+        "mse_dn2": [
+          -96.39593087630593,
+          -117.46213676480939,
+          -97.29883590504518
+        ],
+        "rmse_dn": [
+          -4.22782293561013,
+          -5.62279788031746,
+          -4.149359686218036
+        ],
+        "nearest_rank_p999_before_dn": [
+          77.07267657412967,
+          77.89852750438695,
+          74.35372415612301
+        ],
+        "nearest_rank_p999_after_dn": [
+          31.225850930257366,
+          26.014923323415132,
+          31.905709734164702
+        ],
+        "harmed_over10_dn": [
+          82,
+          42,
+          92
+        ],
+        "improved_over10_dn": [
+          1561,
+          1629,
+          1635
+        ],
+        "moved_over10_dn": [
+          2009,
+          1932,
+          2064
+        ],
+        "maximum_paired_error_increase_dn": [
+          22.88316166933737,
+          19.85748073548484,
+          31.94579995422282
+        ],
+        "maximum_paired_error_decrease_dn": [
+          -108.52509346150873,
+          -97.87649347676779,
+          -95.83739986266846
+        ]
+      },
+      "observation": {
+        "bias_dn": [
+          -0.10508597732231023,
+          0.4714434671402065,
+          0.09294851533346321
+        ],
+        "mse_dn2": [
+          -96.39593087630593,
+          -117.46213676480939,
+          -97.29883590504518
+        ],
+        "rmse_dn": [
+          -4.22782293561013,
+          -5.62279788031746,
+          -4.149359686218036
+        ],
+        "nearest_rank_p999_before_dn": [
+          77.07267657412967,
+          77.89852750438695,
+          74.35372415612301
+        ],
+        "nearest_rank_p999_after_dn": [
+          31.225850930257366,
+          26.014923323415132,
+          31.905709734164702
+        ],
+        "harmed_over10_dn": [
+          82,
+          42,
+          92
+        ],
+        "improved_over10_dn": [
+          1561,
+          1629,
+          1635
+        ],
+        "moved_over10_dn": [
+          2009,
+          1932,
+          2064
+        ],
+        "maximum_paired_error_increase_dn": [
+          22.88316166933737,
+          19.85748073548484,
+          31.94579995422282
+        ],
+        "maximum_paired_error_decrease_dn": [
+          -108.52509346150873,
+          -97.87649347676779,
+          -95.83739986266846
+        ]
+      }
+    },
+    {
+      "scene": "flat",
+      "repeat": 739,
+      "arm": "single4",
+      "changed_components": 0,
+      "roi_pixel_rms_dn": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "whole_image_maximum": {
+        "native_xy": [
+          18,
+          14
+        ],
+        "channel": "R",
+        "signed_movement_dn": 0.0,
+        "inside_fixed_roi": false
+      },
+      "ideal": {
+        "bias_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "mse_dn2": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rmse_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "nearest_rank_p999_before_dn": [
+          102.82069338085603,
+          81.60390630960546,
+          109.92457942430019
+        ],
+        "nearest_rank_p999_after_dn": [
+          102.82069338085603,
+          81.60390630960546,
+          109.92457942430019
+        ],
+        "harmed_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "improved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "moved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "maximum_paired_error_increase_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "maximum_paired_error_decrease_dn": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "observation": {
+        "bias_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "mse_dn2": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rmse_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "nearest_rank_p999_before_dn": [
+          102.82069338085603,
+          81.60390630960546,
+          109.92457942430019
+        ],
+        "nearest_rank_p999_after_dn": [
+          102.82069338085603,
+          81.60390630960546,
+          109.92457942430019
+        ],
+        "harmed_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "improved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "moved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "maximum_paired_error_increase_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "maximum_paired_error_decrease_dn": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    {
+      "scene": "flat",
+      "repeat": 743,
+      "arm": "full9",
+      "changed_components": 152981,
+      "roi_pixel_rms_dn": [
+        9.503912329263114,
+        10.130275048578778,
+        9.743239024368863
+      ],
+      "whole_image_maximum": {
+        "native_xy": [
+          83,
+          133
+        ],
+        "channel": "B",
+        "signed_movement_dn": 113.50954451819644,
+        "inside_fixed_roi": true
+      },
+      "ideal": {
+        "bias_dn": [
+          0.05147885353875603,
+          0.23339327949067243,
+          0.17430744022642508
+        ],
+        "mse_dn2": [
+          -95.51661025133839,
+          -125.07390586996034,
+          -105.25438738639176
+        ],
+        "rmse_dn": [
+          -4.187376888232507,
+          -5.905053121858396,
+          -4.400553879305406
+        ],
+        "nearest_rank_p999_before_dn": [
+          77.97894040261826,
+          79.93762111848628,
+          78.12516498708283
+        ],
+        "nearest_rank_p999_after_dn": [
+          30.999284973135218,
+          25.108659494926542,
+          32.13227569128685
+        ],
+        "harmed_over10_dn": [
+          131,
+          28,
+          140
+        ],
+        "improved_over10_dn": [
+          1643,
+          1787,
+          1685
+        ],
+        "moved_over10_dn": [
+          2219,
+          2100,
+          2255
+        ],
+        "maximum_paired_error_increase_dn": [
+          33.451259348879375,
+          20.39093614099329,
+          23.109727626459062
+        ],
+        "maximum_paired_error_decrease_dn": [
+          -97.1967956054018,
+          -85.64193179217182,
+          -109.43135728999778
+        ]
+      },
+      "observation": {
+        "bias_dn": [
+          0.05147885353875603,
+          0.23339327949067243,
+          0.17430744022642508
+        ],
+        "mse_dn2": [
+          -95.51661025133839,
+          -125.07390586996034,
+          -105.25438738639176
+        ],
+        "rmse_dn": [
+          -4.187376888232507,
+          -5.905053121858396,
+          -4.400553879305406
+        ],
+        "nearest_rank_p999_before_dn": [
+          77.97894040261826,
+          79.93762111848628,
+          78.12516498708283
+        ],
+        "nearest_rank_p999_after_dn": [
+          30.999284973135218,
+          25.108659494926542,
+          32.13227569128685
+        ],
+        "harmed_over10_dn": [
+          131,
+          28,
+          140
+        ],
+        "improved_over10_dn": [
+          1643,
+          1787,
+          1685
+        ],
+        "moved_over10_dn": [
+          2219,
+          2100,
+          2255
+        ],
+        "maximum_paired_error_increase_dn": [
+          33.451259348879375,
+          20.39093614099329,
+          23.109727626459062
+        ],
+        "maximum_paired_error_decrease_dn": [
+          -97.1967956054018,
+          -85.64193179217182,
+          -109.43135728999778
+        ]
+      }
+    },
+    {
+      "scene": "flat",
+      "repeat": 743,
+      "arm": "single4",
+      "changed_components": 0,
+      "roi_pixel_rms_dn": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "whole_image_maximum": {
+        "native_xy": [
+          18,
+          14
+        ],
+        "channel": "R",
+        "signed_movement_dn": 0.0,
+        "inside_fixed_roi": false
+      },
+      "ideal": {
+        "bias_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "mse_dn2": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rmse_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "nearest_rank_p999_before_dn": [
+          105.31291890919965,
+          84.09613183794909,
+          108.25843728432847
+        ],
+        "nearest_rank_p999_after_dn": [
+          105.31291890919965,
+          84.09613183794909,
+          108.25843728432847
+        ],
+        "harmed_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "improved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "moved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "maximum_paired_error_increase_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "maximum_paired_error_decrease_dn": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "observation": {
+        "bias_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "mse_dn2": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rmse_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "nearest_rank_p999_before_dn": [
+          105.31291890919965,
+          84.09613183794909,
+          108.25843728432847
+        ],
+        "nearest_rank_p999_after_dn": [
+          105.31291890919965,
+          84.09613183794909,
+          108.25843728432847
+        ],
+        "harmed_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "improved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "moved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "maximum_paired_error_increase_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "maximum_paired_error_decrease_dn": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    {
+      "scene": "flat",
+      "repeat": 751,
+      "arm": "full9",
+      "changed_components": 148731,
+      "roi_pixel_rms_dn": [
+        9.965405227122197,
+        10.646616455682079,
+        10.188208997887948
+      ],
+      "whole_image_maximum": {
+        "native_xy": [
+          273,
+          197
+        ],
+        "channel": "B",
+        "signed_movement_dn": -110.11105516136377,
+        "inside_fixed_roi": false
+      },
+      "ideal": {
+        "bias_dn": [
+          0.3006129040459948,
+          0.18651865415418784,
+          0.37933783111146274
+        ],
+        "mse_dn2": [
+          -107.11944299545792,
+          -136.95238608948554,
+          -114.58293500372379
+        ],
+        "rmse_dn": [
+          -4.575988174741948,
+          -6.29060120989564,
+          -4.755629635381849
+        ],
+        "nearest_rank_p999_before_dn": [
+          76.84611061700753,
+          79.48448920424198,
+          80.8439564725486
+        ],
+        "nearest_rank_p999_after_dn": [
+          30.400089406967254,
+          25.788357366292985,
+          31.759324217159246
+        ],
+        "harmed_over10_dn": [
+          125,
+          46,
+          140
+        ],
+        "improved_over10_dn": [
+          1814,
+          1909,
+          1903
+        ],
+        "moved_over10_dn": [
+          2365,
+          2301,
+          2530
+        ],
+        "maximum_paired_error_increase_dn": [
+          24.922255283436698,
+          18.351842526894416,
+          26.734782940413425
+        ],
+        "maximum_paired_error_decrease_dn": [
+          -94.70457007705772,
+          -95.38426794842417,
+          -90.47999733185407
+        ]
+      },
+      "observation": {
+        "bias_dn": [
+          0.3006129040459948,
+          0.18651865415418784,
+          0.37933783111146274
+        ],
+        "mse_dn2": [
+          -107.11944299545792,
+          -136.95238608948554,
+          -114.58293500372379
+        ],
+        "rmse_dn": [
+          -4.575988174741948,
+          -6.29060120989564,
+          -4.755629635381849
+        ],
+        "nearest_rank_p999_before_dn": [
+          76.84611061700753,
+          79.48448920424198,
+          80.8439564725486
+        ],
+        "nearest_rank_p999_after_dn": [
+          30.400089406967254,
+          25.788357366292985,
+          31.759324217159246
+        ],
+        "harmed_over10_dn": [
+          125,
+          46,
+          140
+        ],
+        "improved_over10_dn": [
+          1814,
+          1909,
+          1903
+        ],
+        "moved_over10_dn": [
+          2365,
+          2301,
+          2530
+        ],
+        "maximum_paired_error_increase_dn": [
+          24.922255283436698,
+          18.351842526894416,
+          26.734782940413425
+        ],
+        "maximum_paired_error_decrease_dn": [
+          -94.70457007705772,
+          -95.38426794842417,
+          -90.47999733185407
+        ]
+      }
+    },
+    {
+      "scene": "flat",
+      "repeat": 751,
+      "arm": "single4",
+      "changed_components": 0,
+      "roi_pixel_rms_dn": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "whole_image_maximum": {
+        "native_xy": [
+          18,
+          14
+        ],
+        "channel": "R",
+        "signed_movement_dn": 0.0,
+        "inside_fixed_roi": false
+      },
+      "ideal": {
+        "bias_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "mse_dn2": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rmse_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "nearest_rank_p999_before_dn": [
+          105.31291890919965,
+          84.92207217517353,
+          104.94012836761294
+        ],
+        "nearest_rank_p999_after_dn": [
+          105.31291890919965,
+          84.92207217517353,
+          104.94012836761294
+        ],
+        "harmed_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "improved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "moved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "maximum_paired_error_increase_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "maximum_paired_error_decrease_dn": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "observation": {
+        "bias_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "mse_dn2": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rmse_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "nearest_rank_p999_before_dn": [
+          105.31291890919965,
+          84.92207217517353,
+          104.94012836761294
+        ],
+        "nearest_rank_p999_after_dn": [
+          105.31291890919965,
+          84.92207217517353,
+          104.94012836761294
+        ],
+        "harmed_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "improved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "moved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "maximum_paired_error_increase_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "maximum_paired_error_decrease_dn": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    {
+      "scene": "flat",
+      "repeat": null,
+      "arm": "full9",
+      "changed_components": 0,
+      "roi_pixel_rms_dn": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "whole_image_maximum": {
+        "native_xy": [
+          18,
+          14
+        ],
+        "channel": "R",
+        "signed_movement_dn": 0.0,
+        "inside_fixed_roi": false
+      },
+      "ideal": {
+        "bias_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "mse_dn2": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rmse_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "nearest_rank_p999_before_dn": [
+          0.04025115259946688,
+          0.04016174563230379,
+          0.04009022005857332
+        ],
+        "nearest_rank_p999_after_dn": [
+          0.04025115259946688,
+          0.04016174563230379,
+          0.04009022005857332
+        ],
+        "harmed_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "improved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "moved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "maximum_paired_error_increase_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "maximum_paired_error_decrease_dn": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "observation": {
+        "bias_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "mse_dn2": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rmse_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "nearest_rank_p999_before_dn": [
+          0.04025115259946688,
+          0.04016174563230379,
+          0.04009022005857332
+        ],
+        "nearest_rank_p999_after_dn": [
+          0.04025115259946688,
+          0.04016174563230379,
+          0.04009022005857332
+        ],
+        "harmed_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "improved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "moved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "maximum_paired_error_increase_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "maximum_paired_error_decrease_dn": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    {
+      "scene": "flat",
+      "repeat": null,
+      "arm": "single4",
+      "changed_components": 0,
+      "roi_pixel_rms_dn": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "whole_image_maximum": {
+        "native_xy": [
+          18,
+          14
+        ],
+        "channel": "R",
+        "signed_movement_dn": 0.0,
+        "inside_fixed_roi": false
+      },
+      "ideal": {
+        "bias_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "mse_dn2": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rmse_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "nearest_rank_p999_before_dn": [
+          0.04025115259946688,
+          0.04016174563230379,
+          0.04009022005857332
+        ],
+        "nearest_rank_p999_after_dn": [
+          0.04025115259946688,
+          0.04016174563230379,
+          0.04009022005857332
+        ],
+        "harmed_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "improved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "moved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "maximum_paired_error_increase_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "maximum_paired_error_decrease_dn": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "observation": {
+        "bias_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "mse_dn2": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rmse_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "nearest_rank_p999_before_dn": [
+          0.04025115259946688,
+          0.04016174563230379,
+          0.04009022005857332
+        ],
+        "nearest_rank_p999_after_dn": [
+          0.04025115259946688,
+          0.04016174563230379,
+          0.04009022005857332
+        ],
+        "harmed_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "improved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "moved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "maximum_paired_error_increase_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "maximum_paired_error_decrease_dn": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    {
+      "scene": "plane",
+      "repeat": 701,
+      "arm": "full9",
+      "changed_components": 4805,
+      "roi_pixel_rms_dn": [
+        0.03659455412927965,
+        0.03620105286393246,
+        0.03513017400878875
+      ],
+      "whole_image_maximum": {
+        "native_xy": [
+          31,
+          55
+        ],
+        "channel": "B",
+        "signed_movement_dn": 0.2265659571226024,
+        "inside_fixed_roi": false
+      },
+      "ideal": {
+        "bias_dn": [
+          -0.0005373355567914184,
+          -0.000642695469888932,
+          -0.00041090366107504606
+        ],
+        "mse_dn2": [
+          0.7090343771678818,
+          0.7306319201716178,
+          0.6297990143648349
+        ],
+        "rmse_dn": [
+          0.005033055339339398,
+          0.0052206941954864305,
+          0.004440790697202601
+        ],
+        "nearest_rank_p999_before_dn": [
+          172.01661187770196,
+          171.85176822439917,
+          176.18878284056518
+        ],
+        "nearest_rank_p999_after_dn": [
+          172.01661187770196,
+          171.85176822439917,
+          176.18878284056518
+        ],
+        "harmed_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "improved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "moved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "maximum_paired_error_increase_dn": [
+          0.22656595712214767,
+          0.22656595712214767,
+          0.22656595712214767
+        ],
+        "maximum_paired_error_decrease_dn": [
+          -0.22656595712214767,
+          -0.22656595712214767,
+          -0.22656595712214767
+        ]
+      },
+      "observation": {
+        "bias_dn": [
+          -0.0005373355567909743,
+          -0.0006426954698846021,
+          -0.00041090366107554566
+        ],
+        "mse_dn2": [
+          -0.004730165759212923,
+          0.0038113174244926995,
+          -0.01029583635474296
+        ],
+        "rmse_dn": [
+          -0.00016665807672922028,
+          0.00013465751823638072,
+          -0.0003513523769598237
+        ],
+        "nearest_rank_p999_before_dn": [
+          52.07048469856045,
+          46.219667749540804,
+          51.96987328969544
+        ],
+        "nearest_rank_p999_after_dn": [
+          52.07048469856045,
+          46.219667749540804,
+          51.96987328969544
+        ],
+        "harmed_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "improved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "moved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "maximum_paired_error_increase_dn": [
+          0.22656595712214767,
+          0.22656595712214767,
+          0.22656595712214767
+        ],
+        "maximum_paired_error_decrease_dn": [
+          -0.22656595712214767,
+          -0.22656595712214767,
+          -0.22656595712214767
+        ]
+      },
+      "waves": [
+        {
+          "amplitude_change_dn": [
+            -0.002786599099351861,
+            -0.002938320779890091,
+            -0.0023459277596771244
+          ],
+          "phase_change_rad": [
+            1.0139836667521004e-06,
+            1.0555566347303573e-06,
+            -3.919154377524137e-07
+          ]
+        },
+        {
+          "amplitude_change_dn": [
+            -0.008078463645006195,
+            -0.008113992788395308,
+            -0.007414246962127891
+          ],
+          "phase_change_rad": [
+            -2.225300362054825e-06,
+            5.858826676014694e-07,
+            2.9323391330053205e-06
+          ]
+        }
+      ]
+    },
+    {
+      "scene": "plane",
+      "repeat": 701,
+      "arm": "single4",
+      "changed_components": 0,
+      "roi_pixel_rms_dn": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "whole_image_maximum": {
+        "native_xy": [
+          18,
+          14
+        ],
+        "channel": "R",
+        "signed_movement_dn": 0.0,
+        "inside_fixed_roi": false
+      },
+      "ideal": {
+        "bias_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "mse_dn2": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rmse_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "nearest_rank_p999_before_dn": [
+          193.77594878768377,
+          182.12538555403125,
+          201.7779060217872
+        ],
+        "nearest_rank_p999_after_dn": [
+          193.77594878768377,
+          182.12538555403125,
+          201.7779060217872
+        ],
+        "harmed_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "improved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "moved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "maximum_paired_error_increase_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "maximum_paired_error_decrease_dn": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "observation": {
+        "bias_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "mse_dn2": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rmse_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "nearest_rank_p999_before_dn": [
+          116.5520391564537,
+          96.49448939373178,
+          117.88616670297961
+        ],
+        "nearest_rank_p999_after_dn": [
+          116.5520391564537,
+          96.49448939373178,
+          117.88616670297961
+        ],
+        "harmed_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "improved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "moved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "maximum_paired_error_increase_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "maximum_paired_error_decrease_dn": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "waves": [
+        {
+          "amplitude_change_dn": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "phase_change_rad": [
+            7.298475290017478e-18,
+            -6.617751863382551e-19,
+            -1.4994692270247853e-18
+          ]
+        },
+        {
+          "amplitude_change_dn": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "phase_change_rad": [
+            -2.252708292071227e-17,
+            -3.306195586345997e-17,
+            1.130901338872792e-17
+          ]
+        }
+      ]
+    },
+    {
+      "scene": "plane",
+      "repeat": 709,
+      "arm": "full9",
+      "changed_components": 4818,
+      "roi_pixel_rms_dn": [
+        0.035969522512401715,
+        0.037048356904118104,
+        0.03593632497647566
+      ],
+      "whole_image_maximum": {
+        "native_xy": [
+          21,
+          39
+        ],
+        "channel": "B",
+        "signed_movement_dn": -0.2265659571226024,
+        "inside_fixed_roi": false
+      },
+      "ideal": {
+        "bias_dn": [
+          -0.0008007353395313999,
+          -0.0003055437479791978,
+          -0.0003266157305984452
+        ],
+        "mse_dn2": [
+          0.6743739159501274,
+          0.7525058580076802,
+          0.637877764107543
+        ],
+        "rmse_dn": [
+          0.004777353510121429,
+          0.005367037006905662,
+          0.004481531618807821
+        ],
+        "nearest_rank_p999_before_dn": [
+          168.94807555483703,
+          171.6176610469729,
+          174.41916079194516
+        ],
+        "nearest_rank_p999_after_dn": [
+          168.94807555483703,
+          171.6176610469729,
+          174.41916079194516
+        ],
+        "harmed_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "improved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "moved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "maximum_paired_error_increase_dn": [
+          0.2265659571226024,
+          0.22656595712214767,
+          0.22656595712214767
+        ],
+        "maximum_paired_error_decrease_dn": [
+          -0.22656595712214767,
+          -0.22656595712214767,
+          -0.22656595712214767
+        ]
+      },
+      "observation": {
+        "bias_dn": [
+          -0.0008007353395313999,
+          -0.00030554374797797657,
+          -0.0003266157305984452
+        ],
+        "mse_dn2": [
+          -0.002950336700536127,
+          0.009555449235278957,
+          -0.006692217753595742
+        ],
+        "rmse_dn": [
+          -0.00010510093933113751,
+          0.00033744110588607157,
+          -0.0002283707403396562
+        ],
+        "nearest_rank_p999_before_dn": [
+          47.77539364334916,
+          46.691040834104115,
+          51.63432981070537
+        ],
+        "nearest_rank_p999_after_dn": [
+          47.77539364334916,
+          46.691040834104115,
+          51.63432981070537
+        ],
+        "harmed_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "improved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "moved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "maximum_paired_error_increase_dn": [
+          0.2265659571226024,
+          0.22656595712214767,
+          0.22656595712214767
+        ],
+        "maximum_paired_error_decrease_dn": [
+          -0.22656595712214767,
+          -0.22656595712214767,
+          -0.22656595712214767
+        ]
+      },
+      "waves": [
+        {
+          "amplitude_change_dn": [
+            -0.0023670906063557595,
+            -0.002788498597965372,
+            -0.0022740637583069656
+          ],
+          "phase_change_rad": [
+            1.8631658115225416e-06,
+            8.621891364628725e-07,
+            -3.2660636756147816e-06
+          ]
+        },
+        {
+          "amplitude_change_dn": [
+            -0.007972572865469374,
+            -0.00853268819955133,
+            -0.0075633802153447505
+          ],
+          "phase_change_rad": [
+            -2.482726036958528e-06,
+            -1.166335014897788e-06,
+            1.1636693097525097e-06
+          ]
+        }
+      ]
+    },
+    {
+      "scene": "plane",
+      "repeat": 709,
+      "arm": "single4",
+      "changed_components": 0,
+      "roi_pixel_rms_dn": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "whole_image_maximum": {
+        "native_xy": [
+          18,
+          14
+        ],
+        "channel": "R",
+        "signed_movement_dn": 0.0,
+        "inside_fixed_roi": false
+      },
+      "ideal": {
+        "bias_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "mse_dn2": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rmse_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "nearest_rank_p999_before_dn": [
+          187.00376466581974,
+          187.86308749211685,
+          193.6136589600692
+        ],
+        "nearest_rank_p999_after_dn": [
+          187.00376466581974,
+          187.86308749211685,
+          193.6136589600692
+        ],
+        "harmed_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "improved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "moved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "maximum_paired_error_increase_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "maximum_paired_error_decrease_dn": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "observation": {
+        "bias_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "mse_dn2": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rmse_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "nearest_rank_p999_before_dn": [
+          117.11080408987937,
+          96.87692779550707,
+          119.40394202344123
+        ],
+        "nearest_rank_p999_after_dn": [
+          117.11080408987937,
+          96.87692779550707,
+          119.40394202344123
+        ],
+        "harmed_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "improved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "moved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "maximum_paired_error_increase_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "maximum_paired_error_decrease_dn": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "waves": [
+        {
+          "amplitude_change_dn": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "phase_change_rad": [
+            8.015754798906282e-19,
+            1.2949975225498348e-18,
+            -2.180846009483637e-18
+          ]
+        },
+        {
+          "amplitude_change_dn": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "phase_change_rad": [
+            -2.9774952308534662e-18,
+            -2.1385249948336014e-17,
+            -2.8639567487398107e-17
+          ]
+        }
+      ]
+    },
+    {
+      "scene": "plane",
+      "repeat": 719,
+      "arm": "full9",
+      "changed_components": 4869,
+      "roi_pixel_rms_dn": [
+        0.036102007390051684,
+        0.0364311118021987,
+        0.03600268943739438
+      ],
+      "whole_image_maximum": {
+        "native_xy": [
+          216,
+          123
+        ],
+        "channel": "B",
+        "signed_movement_dn": 0.2265659571226024,
+        "inside_fixed_roi": true
+      },
+      "ideal": {
+        "bias_dn": [
+          -0.0007164474090544104,
+          -0.00035822370452487373,
+          -0.0007901993482220537
+        ],
+        "mse_dn2": [
+          0.6859689292059556,
+          0.7309830610029167,
+          0.6702556228638059
+        ],
+        "rmse_dn": [
+          0.004838227624588853,
+          0.005214648740135885,
+          0.004766032485221672
+        ],
+        "nearest_rank_p999_before_dn": [
+          170.70370889779224,
+          171.7909627080835,
+          172.396639430704
+        ],
+        "nearest_rank_p999_after_dn": [
+          170.70370889779224,
+          171.7909627080835,
+          172.396639430704
+        ],
+        "harmed_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "improved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "moved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "maximum_paired_error_increase_dn": [
+          0.22656595712214767,
+          0.22656595712214767,
+          0.2265659571226024
+        ],
+        "maximum_paired_error_decrease_dn": [
+          -0.22656595712214767,
+          -0.22656595712214767,
+          -0.22656595712214767
+        ]
+      },
+      "observation": {
+        "bias_dn": [
+          -0.0007164474090550765,
+          -0.0003582237045292036,
+          -0.0007901993482217762
+        ],
+        "mse_dn2": [
+          0.001621013879145039,
+          -0.003760682521971148,
+          -0.011875176015365696
+        ],
+        "rmse_dn": [
+          5.7667696131247226e-05,
+          -0.0001338137596977873,
+          -0.0004094286216798082
+        ],
+        "nearest_rank_p999_before_dn": [
+          50.6437159856996,
+          45.19043311847463,
+          50.56402850488939
+        ],
+        "nearest_rank_p999_after_dn": [
+          50.6437159856996,
+          45.19043311847463,
+          50.56402850488939
+        ],
+        "harmed_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "improved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "moved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "maximum_paired_error_increase_dn": [
+          0.22656595712214767,
+          0.22656595712214767,
+          0.22656595712214767
+        ],
+        "maximum_paired_error_decrease_dn": [
+          -0.22656595712214767,
+          -0.22656595712214767,
+          -0.2265659571226024
+        ]
+      },
+      "waves": [
+        {
+          "amplitude_change_dn": [
+            -0.002446461716488102,
+            -0.0029323764905484495,
+            -0.002640291945908757
+          ],
+          "phase_change_rad": [
+            1.6442471902127037e-06,
+            -1.5852528176948774e-06,
+            -1.9498175450789544e-06
+          ]
+        },
+        {
+          "amplitude_change_dn": [
+            -0.007995370443836691,
+            -0.008244602076871388,
+            -0.00774655291900217
+          ],
+          "phase_change_rad": [
+            8.296632912547948e-07,
+            -1.3758037173660115e-06,
+            4.751156196883792e-06
+          ]
+        }
+      ]
+    },
+    {
+      "scene": "plane",
+      "repeat": 719,
+      "arm": "single4",
+      "changed_components": 0,
+      "roi_pixel_rms_dn": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "whole_image_maximum": {
+        "native_xy": [
+          18,
+          14
+        ],
+        "channel": "R",
+        "signed_movement_dn": 0.0,
+        "inside_fixed_roi": false
+      },
+      "ideal": {
+        "bias_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "mse_dn2": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rmse_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "nearest_rank_p999_before_dn": [
+          191.5555737508771,
+          180.83580003960014,
+          192.69574969219275
+        ],
+        "nearest_rank_p999_after_dn": [
+          191.5555737508771,
+          180.83580003960014,
+          192.69574969219275
+        ],
+        "harmed_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "improved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "moved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "maximum_paired_error_increase_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "maximum_paired_error_decrease_dn": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "observation": {
+        "bias_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "mse_dn2": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rmse_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "nearest_rank_p999_before_dn": [
+          112.77899780833013,
+          95.7040441064355,
+          112.57049658503774
+        ],
+        "nearest_rank_p999_after_dn": [
+          112.77899780833013,
+          95.7040441064355,
+          112.57049658503774
+        ],
+        "harmed_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "improved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "moved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "maximum_paired_error_increase_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "maximum_paired_error_decrease_dn": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "waves": [
+        {
+          "amplitude_change_dn": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "phase_change_rad": [
+            -1.1180291637925877e-17,
+            1.0424116713108739e-17,
+            9.59280205058813e-19
+          ]
+        },
+        {
+          "amplitude_change_dn": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "phase_change_rad": [
+            1.6628758125830754e-17,
+            -2.4572784510938692e-17,
+            2.4275738292646048e-17
+          ]
+        }
+      ]
+    },
+    {
+      "scene": "plane",
+      "repeat": 727,
+      "arm": "full9",
+      "changed_components": 4783,
+      "roi_pixel_rms_dn": [
+        0.03636552918951833,
+        0.03720908805750812,
+        0.03790820975841399
+      ],
+      "whole_image_maximum": {
+        "native_xy": [
+          52,
+          96
+        ],
+        "channel": "B",
+        "signed_movement_dn": 0.2265659571226024,
+        "inside_fixed_roi": false
+      },
+      "ideal": {
+        "bias_dn": [
+          -0.0004846556002442437,
+          -0.000526799565480518,
+          -0.00027393577405021574
+        ],
+        "mse_dn2": [
+          0.6855495043691917,
+          0.7220470508491417,
+          0.7430314770026598
+        ],
+        "rmse_dn": [
+          0.004828392989793429,
+          0.0051535310089008135,
+          0.005227999817961404
+        ],
+        "nearest_rank_p999_before_dn": [
+          174.13620779700068,
+          171.41815428510245,
+          175.10260094259093
+        ],
+        "nearest_rank_p999_after_dn": [
+          174.13620779700068,
+          171.41815428510245,
+          175.10260094259093
+        ],
+        "harmed_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "improved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "moved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "maximum_paired_error_increase_dn": [
+          0.22656595712214767,
+          0.22656595712214767,
+          0.2265659571226024
+        ],
+        "maximum_paired_error_decrease_dn": [
+          -0.22656595712214767,
+          -0.22656595712214767,
+          -0.22656595712214767
+        ]
+      },
+      "observation": {
+        "bias_dn": [
+          -0.00048465560024602006,
+          -0.0005267995654801849,
+          -0.0002739357740498827
+        ],
+        "mse_dn2": [
+          0.002724642274273492,
+          0.004233721379762301,
+          -0.009874206418828635
+        ],
+        "rmse_dn": [
+          9.458563719810797e-05,
+          0.00014968852254249043,
+          -0.00033368870705174913
+        ],
+        "nearest_rank_p999_before_dn": [
+          48.73547652352818,
+          46.87636077275056,
+          53.169460508014254
+        ],
+        "nearest_rank_p999_after_dn": [
+          48.73547652352818,
+          46.87636077275056,
+          53.169460508014254
+        ],
+        "harmed_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "improved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "moved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "maximum_paired_error_increase_dn": [
+          0.22656595712214767,
+          0.22656595712214767,
+          0.2265659571226024
+        ],
+        "maximum_paired_error_decrease_dn": [
+          -0.22656595712214767,
+          -0.22656595712214767,
+          -0.2265659571226024
+        ]
+      },
+      "waves": [
+        {
+          "amplitude_change_dn": [
+            -0.0025957785822470214,
+            -0.002483225223613772,
+            -0.0026891806471667223
+          ],
+          "phase_change_rad": [
+            2.3070287444871996e-06,
+            -6.0881878623417e-07,
+            1.7842930098993537e-07
+          ]
+        },
+        {
+          "amplitude_change_dn": [
+            -0.007804697371653901,
+            -0.00847850790131588,
+            -0.008797585244906259
+          ],
+          "phase_change_rad": [
+            -2.4221881476436525e-06,
+            -3.690631550026886e-06,
+            2.689739734883091e-06
+          ]
+        }
+      ]
+    },
+    {
+      "scene": "plane",
+      "repeat": 727,
+      "arm": "single4",
+      "changed_components": 0,
+      "roi_pixel_rms_dn": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "whole_image_maximum": {
+        "native_xy": [
+          18,
+          14
+        ],
+        "channel": "R",
+        "signed_movement_dn": 0.0,
+        "inside_fixed_roi": false
+      },
+      "ideal": {
+        "bias_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "mse_dn2": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rmse_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "nearest_rank_p999_before_dn": [
+          190.88876312203365,
+          183.23413099048503,
+          191.10486117886785
+        ],
+        "nearest_rank_p999_after_dn": [
+          190.88876312203365,
+          183.23413099048503,
+          191.10486117886785
+        ],
+        "harmed_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "improved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "moved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "maximum_paired_error_increase_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "maximum_paired_error_decrease_dn": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "observation": {
+        "bias_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "mse_dn2": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rmse_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "nearest_rank_p999_before_dn": [
+          112.51196595210467,
+          96.77470994349369,
+          112.5046284023174
+        ],
+        "nearest_rank_p999_after_dn": [
+          112.51196595210467,
+          96.77470994349369,
+          112.5046284023174
+        ],
+        "harmed_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "improved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "moved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "maximum_paired_error_increase_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "maximum_paired_error_decrease_dn": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "waves": [
+        {
+          "amplitude_change_dn": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "phase_change_rad": [
+            1.1324544334535554e-19,
+            1.0768639197902387e-17,
+            -5.096610686370383e-18
+          ]
+        },
+        {
+          "amplitude_change_dn": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "phase_change_rad": [
+            7.596258407348232e-18,
+            -1.3070572572318086e-17,
+            1.713601943654063e-17
+          ]
+        }
+      ]
+    },
+    {
+      "scene": "plane",
+      "repeat": 733,
+      "arm": "full9",
+      "changed_components": 4852,
+      "roi_pixel_rms_dn": [
+        0.037209088057508506,
+        0.03662715507483612,
+        0.03781363611479353
+      ],
+      "whole_image_maximum": {
+        "native_xy": [
+          268,
+          25
+        ],
+        "channel": "G",
+        "signed_movement_dn": -0.2265659571226024,
+        "inside_fixed_roi": false
+      },
+      "ideal": {
+        "bias_dn": [
+          -0.0006953754264354961,
+          -0.0003792956871475628,
+          -0.0006005515046479393
+        ],
+        "mse_dn2": [
+          0.7007758287973047,
+          0.7372552370788981,
+          0.7335479281609878
+        ],
+        "rmse_dn": [
+          0.004951116935316691,
+          0.005245886032085423,
+          0.005172705027860047
+        ],
+        "nearest_rank_p999_before_dn": [
+          173.36212787504292,
+          170.6909068510913,
+          172.37849232505505
+        ],
+        "nearest_rank_p999_after_dn": [
+          173.36212787504292,
+          170.6909068510913,
+          172.37849232505505
+        ],
+        "harmed_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "improved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "moved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "maximum_paired_error_increase_dn": [
+          0.2265659571226024,
+          0.2265659571226024,
+          0.2265659571226024
+        ],
+        "maximum_paired_error_decrease_dn": [
+          -0.22656595712214767,
+          -0.22656595712214767,
+          -0.22656595712214767
+        ]
+      },
+      "observation": {
+        "bias_dn": [
+          -0.0006953754264368284,
+          -0.0003792956871470077,
+          -0.0006005515046477727
+        ],
+        "mse_dn2": [
+          -0.0029894716722935755,
+          -0.005927588682453688,
+          0.002514795639172007
+        ],
+        "rmse_dn": [
+          -0.000105345915756061,
+          -0.00020946604378657696,
+          8.46175269106908e-05
+        ],
+        "nearest_rank_p999_before_dn": [
+          50.03646323557541,
+          47.027079349784344,
+          51.503886373625846
+        ],
+        "nearest_rank_p999_after_dn": [
+          50.03646323557541,
+          47.027079349784344,
+          51.503886373625846
+        ],
+        "harmed_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "improved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "moved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "maximum_paired_error_increase_dn": [
+          0.2265659571226024,
+          0.2265659571226024,
+          0.22656595712214767
+        ],
+        "maximum_paired_error_decrease_dn": [
+          -0.2265659571226024,
+          -0.2265659571226024,
+          -0.2265659571226024
+        ]
+      },
+      "waves": [
+        {
+          "amplitude_change_dn": [
+            -0.00237536233373703,
+            -0.003023279589399408,
+            -0.002378172537419232
+          ],
+          "phase_change_rad": [
+            7.442458110739149e-07,
+            -3.681413054647127e-07,
+            4.1172206186554887e-07
+          ]
+        },
+        {
+          "amplitude_change_dn": [
+            -0.008377744393897046,
+            -0.008276929947413691,
+            -0.008800262760786381
+          ],
+          "phase_change_rad": [
+            -1.0102947219126452e-07,
+            4.7777215561551975e-06,
+            -2.1182107423732575e-06
+          ]
+        }
+      ]
+    },
+    {
+      "scene": "plane",
+      "repeat": 733,
+      "arm": "single4",
+      "changed_components": 0,
+      "roi_pixel_rms_dn": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "whole_image_maximum": {
+        "native_xy": [
+          18,
+          14
+        ],
+        "channel": "R",
+        "signed_movement_dn": 0.0,
+        "inside_fixed_roi": false
+      },
+      "ideal": {
+        "bias_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "mse_dn2": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rmse_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "nearest_rank_p999_before_dn": [
+          188.18329713857338,
+          181.32043656140786,
+          196.8061984437295
+        ],
+        "nearest_rank_p999_after_dn": [
+          188.18329713857338,
+          181.32043656140786,
+          196.8061984437295
+        ],
+        "harmed_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "improved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "moved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "maximum_paired_error_increase_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "maximum_paired_error_decrease_dn": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "observation": {
+        "bias_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "mse_dn2": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rmse_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "nearest_rank_p999_before_dn": [
+          114.34790183645237,
+          96.31331238724806,
+          117.42978559103403
+        ],
+        "nearest_rank_p999_after_dn": [
+          114.34790183645237,
+          96.31331238724806,
+          117.42978559103403
+        ],
+        "harmed_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "improved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "moved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "maximum_paired_error_increase_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "maximum_paired_error_decrease_dn": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "waves": [
+        {
+          "amplitude_change_dn": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "phase_change_rad": [
+            -4.127560210434024e-18,
+            1.930161416424809e-18,
+            1.8160918207336353e-18
+          ]
+        },
+        {
+          "amplitude_change_dn": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "phase_change_rad": [
+            3.318936808815687e-17,
+            -1.2644210432373684e-17,
+            -7.388166373421813e-19
+          ]
+        }
+      ]
+    },
+    {
+      "scene": "plane",
+      "repeat": 739,
+      "arm": "full9",
+      "changed_components": 4811,
+      "roi_pixel_rms_dn": [
+        0.035602647138406905,
+        0.037273186447928,
+        0.03809665272461174
+      ],
+      "whole_image_maximum": {
+        "native_xy": [
+          60,
+          24
+        ],
+        "channel": "B",
+        "signed_movement_dn": -0.2265659571226024,
+        "inside_fixed_roi": false
+      },
+      "ideal": {
+        "bias_dn": [
+          -0.0005584075394122756,
+          -0.0004003676697679204,
+          -0.0006532314611967793
+        ],
+        "mse_dn2": [
+          0.6629254227427737,
+          0.722371027475674,
+          0.7604564568246133
+        ],
+        "rmse_dn": [
+          0.004682224027320103,
+          0.005144531371328753,
+          0.0053867046991200596
+        ],
+        "nearest_rank_p999_before_dn": [
+          170.5576452458672,
+          173.92321033831104,
+          174.58624888785016
+        ],
+        "nearest_rank_p999_after_dn": [
+          170.5576452458672,
+          173.92321033831104,
+          174.58624888785016
+        ],
+        "harmed_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "improved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "moved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "maximum_paired_error_increase_dn": [
+          0.22656595712214767,
+          0.2265659571226024,
+          0.22656595712214767
+        ],
+        "maximum_paired_error_decrease_dn": [
+          -0.22656595712214767,
+          -0.22656595712214767,
+          -0.22656595712214767
+        ]
+      },
+      "observation": {
+        "bias_dn": [
+          -0.0005584075394111654,
+          -0.0004003676697695857,
+          -0.0006532314611963352
+        ],
+        "mse_dn2": [
+          0.007493866789133108,
+          -0.005606015573988543,
+          -0.0025313078576800763
+        ],
+        "rmse_dn": [
+          0.0002643667608541733,
+          -0.00019819478656479816,
+          -8.675628497911703e-05
+        ],
+        "nearest_rank_p999_before_dn": [
+          50.37527433697824,
+          47.99380420328998,
+          50.345328487645475
+        ],
+        "nearest_rank_p999_after_dn": [
+          50.37527433697824,
+          47.99380420328998,
+          50.345328487645475
+        ],
+        "harmed_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "improved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "moved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "maximum_paired_error_increase_dn": [
+          0.22656595712214767,
+          0.22656595712214767,
+          0.22656595712214767
+        ],
+        "maximum_paired_error_decrease_dn": [
+          -0.22656595712214767,
+          -0.2265659571226024,
+          -0.22656595712214767
+        ]
+      },
+      "waves": [
+        {
+          "amplitude_change_dn": [
+            -0.0019210921485068866,
+            -0.002517095627524668,
+            -0.002499018902426542
+          ],
+          "phase_change_rad": [
+            4.752151814160854e-07,
+            5.849501782291484e-07,
+            -7.283311582298352e-07
+          ]
+        },
+        {
+          "amplitude_change_dn": [
+            -0.008125248901620807,
+            -0.0085996488697333,
+            -0.009167237583568522
+          ],
+          "phase_change_rad": [
+            2.873161592222764e-06,
+            -1.045051354809364e-06,
+            -1.430224116703812e-06
+          ]
+        }
+      ]
+    },
+    {
+      "scene": "plane",
+      "repeat": 739,
+      "arm": "single4",
+      "changed_components": 0,
+      "roi_pixel_rms_dn": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "whole_image_maximum": {
+        "native_xy": [
+          18,
+          14
+        ],
+        "channel": "R",
+        "signed_movement_dn": 0.0,
+        "inside_fixed_roi": false
+      },
+      "ideal": {
+        "bias_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "mse_dn2": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rmse_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "nearest_rank_p999_before_dn": [
+          191.85737540941682,
+          181.69514059846324,
+          193.6628759199648
+        ],
+        "nearest_rank_p999_after_dn": [
+          191.85737540941682,
+          181.69514059846324,
+          193.6628759199648
+        ],
+        "harmed_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "improved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "moved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "maximum_paired_error_increase_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "maximum_paired_error_decrease_dn": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "observation": {
+        "bias_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "mse_dn2": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rmse_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "nearest_rank_p999_before_dn": [
+          114.56548305485376,
+          93.50142355702474,
+          117.86722609815752
+        ],
+        "nearest_rank_p999_after_dn": [
+          114.56548305485376,
+          93.50142355702474,
+          117.86722609815752
+        ],
+        "harmed_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "improved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "moved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "maximum_paired_error_increase_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "maximum_paired_error_decrease_dn": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "waves": [
+        {
+          "amplitude_change_dn": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "phase_change_rad": [
+            -1.2067158162633557e-17,
+            1.0247314027722605e-17,
+            -6.6385278364734746e-18
+          ]
+        },
+        {
+          "amplitude_change_dn": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "phase_change_rad": [
+            1.822397791311263e-17,
+            1.6644255088573206e-17,
+            -9.970793600062478e-18
+          ]
+        }
+      ]
+    },
+    {
+      "scene": "plane",
+      "repeat": 743,
+      "arm": "full9",
+      "changed_components": 4955,
+      "roi_pixel_rms_dn": [
+        0.036266932905442154,
+        0.03806531034766945,
+        0.03639833526672635
+      ],
+      "whole_image_maximum": {
+        "native_xy": [
+          165,
+          67
+        ],
+        "channel": "G",
+        "signed_movement_dn": 0.2265659571226024,
+        "inside_fixed_roi": true
+      },
+      "ideal": {
+        "bias_dn": [
+          -0.000326615730599944,
+          -0.0009166312439348179,
+          -0.0006848394351257614
+        ],
+        "mse_dn2": [
+          0.6476037089669262,
+          0.8088673710717558,
+          0.6785881395599063
+        ],
+        "rmse_dn": [
+          0.004566334306360886,
+          0.005771375524105338,
+          0.004774215753400313
+        ],
+        "nearest_rank_p999_before_dn": [
+          171.6229583626373,
+          172.29988981456063,
+          175.94151430454212
+        ],
+        "nearest_rank_p999_after_dn": [
+          171.6229583626373,
+          172.29988981456063,
+          175.94151430454212
+        ],
+        "harmed_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "improved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "moved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "maximum_paired_error_increase_dn": [
+          0.2265659571226024,
+          0.2265659571226024,
+          0.2265659571226024
+        ],
+        "maximum_paired_error_decrease_dn": [
+          -0.2265659571226024,
+          -0.22656595712214767,
+          -0.22656595712214767
+        ]
+      },
+      "observation": {
+        "bias_dn": [
+          -0.00032661573059772353,
+          -0.0009166312439335966,
+          -0.0006848394351255394
+        ],
+        "mse_dn2": [
+          0.000282084460451415,
+          -0.0001760230676950414,
+          0.0005324069153118671
+        ],
+        "rmse_dn": [
+          9.905009068944537e-06,
+          -6.2128495397217876e-06,
+          1.8102629766758582e-05
+        ],
+        "nearest_rank_p999_before_dn": [
+          48.654937669990886,
+          48.55543155856276,
+          53.3762715768612
+        ],
+        "nearest_rank_p999_after_dn": [
+          48.604622371600726,
+          48.55543155856276,
+          53.3762715768612
+        ],
+        "harmed_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "improved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "moved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "maximum_paired_error_increase_dn": [
+          0.2265659571226024,
+          0.2265659571226024,
+          0.22656595712214767
+        ],
+        "maximum_paired_error_decrease_dn": [
+          -0.2265659571226024,
+          -0.2265659571226024,
+          -0.2265659571226024
+        ]
+      },
+      "waves": [
+        {
+          "amplitude_change_dn": [
+            -0.0016082078449244364,
+            -0.003180396507673322,
+            -0.002379467313915029
+          ],
+          "phase_change_rad": [
+            1.6059018950894924e-06,
+            2.7929809900090656e-08,
+            -4.529936908985158e-07
+          ]
+        },
+        {
+          "amplitude_change_dn": [
+            -0.008345904642737878,
+            -0.009132316073475977,
+            -0.007972096192219169
+          ],
+          "phase_change_rad": [
+            7.63656256815289e-07,
+            1.4732729483774593e-06,
+            4.491007128557065e-06
+          ]
+        }
+      ]
+    },
+    {
+      "scene": "plane",
+      "repeat": 743,
+      "arm": "single4",
+      "changed_components": 0,
+      "roi_pixel_rms_dn": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "whole_image_maximum": {
+        "native_xy": [
+          18,
+          14
+        ],
+        "channel": "R",
+        "signed_movement_dn": 0.0,
+        "inside_fixed_roi": false
+      },
+      "ideal": {
+        "bias_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "mse_dn2": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rmse_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "nearest_rank_p999_before_dn": [
+          184.83130054456433,
+          185.8239938780166,
+          195.83573100141075
+        ],
+        "nearest_rank_p999_after_dn": [
+          184.83130054456433,
+          185.8239938780166,
+          195.83573100141075
+        ],
+        "harmed_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "improved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "moved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "maximum_paired_error_increase_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "maximum_paired_error_decrease_dn": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "observation": {
+        "bias_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "mse_dn2": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rmse_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "nearest_rank_p999_before_dn": [
+          117.96397241168552,
+          99.40563618591705,
+          114.61124568627656
+        ],
+        "nearest_rank_p999_after_dn": [
+          117.96397241168552,
+          99.40563618591705,
+          114.61124568627656
+        ],
+        "harmed_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "improved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "moved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "maximum_paired_error_increase_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "maximum_paired_error_decrease_dn": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "waves": [
+        {
+          "amplitude_change_dn": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "phase_change_rad": [
+            1.1016023097878356e-17,
+            1.359035758057172e-18,
+            -1.0488731282874232e-17
+          ]
+        },
+        {
+          "amplitude_change_dn": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "phase_change_rad": [
+            3.1104884779392686e-17,
+            -1.458080008991544e-17,
+            -2.1128861713644035e-17
+          ]
+        }
+      ]
+    },
+    {
+      "scene": "plane",
+      "repeat": 751,
+      "arm": "full9",
+      "changed_components": 4906,
+      "roi_pixel_rms_dn": [
+        0.03781363611479353,
+        0.03646385887559921,
+        0.03629982808944332
+      ],
+      "whole_image_maximum": {
+        "native_xy": [
+          74,
+          81
+        ],
+        "channel": "B",
+        "signed_movement_dn": 0.2265659571226024,
+        "inside_fixed_roi": true
+      },
+      "ideal": {
+        "bias_dn": [
+          -0.0005373355567903637,
+          -0.0002633997827417023,
+          -0.0002950077566694631
+        ],
+        "mse_dn2": [
+          0.7435333057073876,
+          0.7102770571982546,
+          0.6661057419241843
+        ],
+        "rmse_dn": [
+          0.005258173410680911,
+          0.0050533228072282554,
+          0.004705519414130777
+        ],
+        "nearest_rank_p999_before_dn": [
+          170.73771844016755,
+          171.7434131454388,
+          173.4492887761985
+        ],
+        "nearest_rank_p999_after_dn": [
+          170.73771844016755,
+          171.7434131454388,
+          173.4492887761985
+        ],
+        "harmed_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "improved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "moved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "maximum_paired_error_increase_dn": [
+          0.2265659571226024,
+          0.2265659571226024,
+          0.2265659571226024
+        ],
+        "maximum_paired_error_decrease_dn": [
+          -0.22656595712214767,
+          -0.22656595712214767,
+          -0.2265659571226024
+        ]
+      },
+      "observation": {
+        "bias_dn": [
+          -0.0005373355567907523,
+          -0.0002633997827389267,
+          -0.00029500775666979617
+        ],
+        "mse_dn2": [
+          -0.004725193530106253,
+          -0.002722607220334794,
+          -0.012047773388161431
+        ],
+        "rmse_dn": [
+          -0.0001664469375093347,
+          -9.666156061882702e-05,
+          -0.0004176885702538158
+        ],
+        "nearest_rank_p999_before_dn": [
+          48.207700028513955,
+          47.11874768826874,
+          51.05258608162603
+        ],
+        "nearest_rank_p999_after_dn": [
+          48.08673182421353,
+          47.11874768826874,
+          51.05258608162603
+        ],
+        "harmed_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "improved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "moved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "maximum_paired_error_increase_dn": [
+          0.2265659571226024,
+          0.2265659571226024,
+          0.22656595712214767
+        ],
+        "maximum_paired_error_decrease_dn": [
+          -0.22656595712214767,
+          -0.2265659571226024,
+          -0.2265659571226024
+        ]
+      },
+      "waves": [
+        {
+          "amplitude_change_dn": [
+            -0.0026611984907845,
+            -0.002568053467939535,
+            -0.0025655700330275977
+          ],
+          "phase_change_rad": [
+            1.602311213483743e-06,
+            -7.481279448836782e-07,
+            -1.9630510201974477e-06
+          ]
+        },
+        {
+          "amplitude_change_dn": [
+            -0.008755953246776471,
+            -0.008308687421163086,
+            -0.007765326605635892
+          ],
+          "phase_change_rad": [
+            -2.6100904566327835e-06,
+            5.435514884110568e-07,
+            1.8180911580474678e-06
+          ]
+        }
+      ]
+    },
+    {
+      "scene": "plane",
+      "repeat": 751,
+      "arm": "single4",
+      "changed_components": 0,
+      "roi_pixel_rms_dn": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "whole_image_maximum": {
+        "native_xy": [
+          18,
+          14
+        ],
+        "channel": "R",
+        "signed_movement_dn": 0.0,
+        "inside_fixed_roi": false
+      },
+      "ideal": {
+        "bias_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "mse_dn2": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rmse_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "nearest_rank_p999_before_dn": [
+          187.18265125949347,
+          186.83746989427345,
+          194.35696501869324
+        ],
+        "nearest_rank_p999_after_dn": [
+          187.18265125949347,
+          186.83746989427345,
+          194.35696501869324
+        ],
+        "harmed_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "improved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "moved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "maximum_paired_error_increase_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "maximum_paired_error_decrease_dn": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "observation": {
+        "bias_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "mse_dn2": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rmse_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "nearest_rank_p999_before_dn": [
+          114.47707217529523,
+          94.22497164771221,
+          116.13912602326809
+        ],
+        "nearest_rank_p999_after_dn": [
+          114.47707217529523,
+          94.22497164771221,
+          116.13912602326809
+        ],
+        "harmed_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "improved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "moved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "maximum_paired_error_increase_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "maximum_paired_error_decrease_dn": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "waves": [
+        {
+          "amplitude_change_dn": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "phase_change_rad": [
+            -1.1232897244071723e-17,
+            -7.339186768645874e-18,
+            -2.9013279104821017e-18
+          ]
+        },
+        {
+          "amplitude_change_dn": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "phase_change_rad": [
+            1.4882798937220916e-17,
+            2.4347051653749348e-17,
+            -7.77434322284153e-18
+          ]
+        }
+      ]
+    },
+    {
+      "scene": "plane",
+      "repeat": null,
+      "arm": "full9",
+      "changed_components": 4578,
+      "roi_pixel_rms_dn": [
+        0.03613505271265896,
+        0.03516413261894969,
+        0.0362340078574333
+      ],
+      "whole_image_maximum": {
+        "native_xy": [
+          73,
+          46
+        ],
+        "channel": "B",
+        "signed_movement_dn": 0.2265659571226024,
+        "inside_fixed_roi": false
+      },
+      "ideal": {
+        "bias_dn": [
+          -0.00041090366107610077,
+          -0.0002950077566699627,
+          -0.000400367669766144
+        ],
+        "mse_dn2": [
+          0.7239221091613217,
+          0.6898499137587351,
+          0.743610319956133
+        ],
+        "rmse_dn": [
+          0.005168287324451626,
+          0.004910710155670017,
+          0.005309785085245267
+        ],
+        "nearest_rank_p999_before_dn": [
+          159.07667354061414,
+          162.59491248220502,
+          161.29490753171922
+        ],
+        "nearest_rank_p999_after_dn": [
+          159.07667354061414,
+          162.59491248220502,
+          161.29490753171922
+        ],
+        "harmed_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "improved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "moved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "maximum_paired_error_increase_dn": [
+          0.22656595712214767,
+          0.2265659571226024,
+          0.2265659571226024
+        ],
+        "maximum_paired_error_decrease_dn": [
+          -0.22656595712214767,
+          -0.22656595712214767,
+          -0.22656595712214767
+        ]
+      },
+      "observation": {
+        "bias_dn": [
+          -0.0004109036610747685,
+          -0.0002950077566702958,
+          -0.00040036766976569993
+        ],
+        "mse_dn2": [
+          0.03028107518626655,
+          0.02301659420980684,
+          0.02766601916168554
+        ],
+        "rmse_dn": [
+          0.001855209766803867,
+          0.001113278690249686,
+          0.001693346332970691
+        ],
+        "nearest_rank_p999_before_dn": [
+          31.671735353234,
+          31.827907468793455,
+          31.569375395625684
+        ],
+        "nearest_rank_p999_after_dn": [
+          31.671735353234,
+          31.827907468793455,
+          31.569375395625684
+        ],
+        "harmed_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "improved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "moved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "maximum_paired_error_increase_dn": [
+          0.22656595712214767,
+          0.22656595712214767,
+          0.2265659571226024
+        ],
+        "maximum_paired_error_decrease_dn": [
+          -0.22656595712214767,
+          -0.2265659571226024,
+          -0.22656595712214767
+        ]
+      },
+      "waves": [
+        {
+          "amplitude_change_dn": [
+            -0.0019707174939753713,
+            -0.0023299675888779348,
+            -0.0026749303760311705
+          ],
+          "phase_change_rad": [
+            6.075240675389079e-07,
+            -2.3866166952237766e-06,
+            -1.1785965560733613e-06
+          ]
+        },
+        {
+          "amplitude_change_dn": [
+            -0.008668187497164581,
+            -0.007850153960561101,
+            -0.008235337045789493
+          ],
+          "phase_change_rad": [
+            9.087593265383331e-07,
+            1.2927097825733886e-06,
+            -3.613771003562496e-06
+          ]
+        }
+      ]
+    },
+    {
+      "scene": "plane",
+      "repeat": null,
+      "arm": "single4",
+      "changed_components": 0,
+      "roi_pixel_rms_dn": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "whole_image_maximum": {
+        "native_xy": [
+          18,
+          14
+        ],
+        "channel": "R",
+        "signed_movement_dn": 0.0,
+        "inside_fixed_roi": false
+      },
+      "ideal": {
+        "bias_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "mse_dn2": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rmse_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "nearest_rank_p999_before_dn": [
+          132.221505729402,
+          134.23964510999303,
+          133.6538607628163
+        ],
+        "nearest_rank_p999_after_dn": [
+          132.221505729402,
+          134.23964510999303,
+          133.6538607628163
+        ],
+        "harmed_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "improved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "moved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "maximum_paired_error_increase_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "maximum_paired_error_decrease_dn": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "observation": {
+        "bias_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "mse_dn2": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rmse_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "nearest_rank_p999_before_dn": [
+          41.55467522539493,
+          41.18197193126207,
+          39.8364697143993
+        ],
+        "nearest_rank_p999_after_dn": [
+          41.55467522539493,
+          41.18197193126207,
+          39.8364697143993
+        ],
+        "harmed_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "improved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "moved_over10_dn": [
+          0,
+          0,
+          0
+        ],
+        "maximum_paired_error_increase_dn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "maximum_paired_error_decrease_dn": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "waves": [
+        {
+          "amplitude_change_dn": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "phase_change_rad": [
+            1.1272391681929247e-17,
+            -7.510557744848135e-18,
+            5.730330152306365e-18
+          ]
+        },
+        {
+          "amplitude_change_dn": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "phase_change_rad": [
+            9.943358424431669e-20,
+            -8.150783743221527e-18,
+            3.303601469881681e-17
+          ]
+        }
+      ]
+    }
+  ],
+  "paired": [
+    {
+      "scene": "flat",
+      "arm": "full9",
+      "target": "ideal",
+      "mse_difference_dn2": [
+        -102.68087476637714,
+        -129.0328093285856,
+        -108.19314403759576
+      ],
+      "mse_difference_sem_dn2": [
+        1.9166270175672901,
+        2.750136340484317,
+        2.6332459163798583
+      ],
+      "temporal_variance_difference_dn2": [
+        -102.65819444275279,
+        -129.12369954853887,
+        -108.13282798943449
+      ],
+      "variance_ratio": [
+        0.4579363731714544,
+        0.3129558011129392,
+        0.46466364763431134
+      ],
+      "variance_jackknife_se_dn2": [
+        2.1180408648755296,
+        2.7498126757252934,
+        2.4342233318924142
+      ]
+    },
+    {
+      "scene": "flat",
+      "arm": "full9",
+      "target": "observation",
+      "mse_difference_dn2": [
+        -102.68087476637714,
+        -129.0328093285856,
+        -108.19314403759576
+      ],
+      "mse_difference_sem_dn2": [
+        1.9166270175672901,
+        2.750136340484317,
+        2.6332459163798583
+      ],
+      "temporal_variance_difference_dn2": [
+        -102.65819444275279,
+        -129.12369954853887,
+        -108.13282798943449
+      ],
+      "variance_ratio": [
+        0.4579363731714544,
+        0.3129558011129392,
+        0.46466364763431134
+      ],
+      "variance_jackknife_se_dn2": [
+        2.1180408648755296,
+        2.7498126757252934,
+        2.4342233318924142
+      ]
+    },
+    {
+      "scene": "flat",
+      "arm": "single4",
+      "target": "ideal",
+      "mse_difference_dn2": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mse_difference_sem_dn2": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "temporal_variance_difference_dn2": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "variance_ratio": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "variance_jackknife_se_dn2": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "scene": "flat",
+      "arm": "single4",
+      "target": "observation",
+      "mse_difference_dn2": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mse_difference_sem_dn2": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "temporal_variance_difference_dn2": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "variance_ratio": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "variance_jackknife_se_dn2": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "scene": "plane",
+      "arm": "full9",
+      "target": "ideal",
+      "mse_difference_dn2": [
+        0.6887206241134436,
+        0.7393673228569924,
+        0.6899577681010669
+      ],
+      "mse_difference_sem_dn2": [
+        0.010472630632122322,
+        0.010847194548607109,
+        0.017476898191550964
+      ],
+      "temporal_variance_difference_dn2": [
+        -0.02904108054445942,
+        -0.023448538645055805,
+        -0.030280452758177034
+      ],
+      "variance_ratio": [
+        0.9997857912333177,
+        0.9997526233304467,
+        0.9997955439709879
+      ],
+      "variance_jackknife_se_dn2": [
+        0.0015651854193957362,
+        0.0018471279843899535,
+        0.002557778633125085
+      ]
+    },
+    {
+      "scene": "plane",
+      "arm": "full9",
+      "target": "observation",
+      "mse_difference_dn2": [
+        -0.0004091950323932281,
+        -7.405362836365725e-05,
+        -0.006283664404236333
+      ],
+      "mse_difference_sem_dn2": [
+        0.001507675585317639,
+        0.0019450638129106597,
+        0.0020336380711816265
+      ],
+      "temporal_variance_difference_dn2": [
+        -0.02904108054445942,
+        -0.023448538645055805,
+        -0.030280452758177034
+      ],
+      "variance_ratio": [
+        0.9997857912333177,
+        0.9997526233304467,
+        0.9997955439709879
+      ],
+      "variance_jackknife_se_dn2": [
+        0.0015651854193957362,
+        0.0018471279843899535,
+        0.002557778633125085
+      ]
+    },
+    {
+      "scene": "plane",
+      "arm": "single4",
+      "target": "ideal",
+      "mse_difference_dn2": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mse_difference_sem_dn2": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "temporal_variance_difference_dn2": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "variance_ratio": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "variance_jackknife_se_dn2": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "scene": "plane",
+      "arm": "single4",
+      "target": "observation",
+      "mse_difference_dn2": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mse_difference_sem_dn2": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "temporal_variance_difference_dn2": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "variance_ratio": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "variance_jackknife_se_dn2": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    }
+  ],
+  "historical_site": [
+    {
+      "repeat": 701,
+      "native_xy": [
+        142,
+        170
+      ],
+      "channel": "R",
+      "before_dn": 2987.2721446555274,
+      "after_dn": 2987.0455786984053,
+      "truth_dn": 3000.000089406967,
+      "absolute_error_change_dn": 0.22656595712214767
+    },
+    {
+      "repeat": 709,
+      "native_xy": [
+        142,
+        170
+      ],
+      "channel": "R",
+      "before_dn": 3101.4613870450903,
+      "after_dn": 2995.655085069047,
+      "truth_dn": 3000.000089406967,
+      "absolute_error_change_dn": -97.11629330020287
+    },
+    {
+      "repeat": 719,
+      "native_xy": [
+        142,
+        170
+      ],
+      "channel": "R",
+      "before_dn": 2986.365880827039,
+      "after_dn": 2984.779919127184,
+      "truth_dn": 3000.000089406967,
+      "absolute_error_change_dn": 1.5859616998550337
+    },
+    {
+      "repeat": 727,
+      "native_xy": [
+        142,
+        170
+      ],
+      "channel": "R",
+      "before_dn": 3000.639536125734,
+      "after_dn": 3001.998931868467,
+      "truth_dn": 3000.000089406967,
+      "absolute_error_change_dn": 1.359395742732886
+    },
+    {
+      "repeat": 733,
+      "native_xy": [
+        142,
+        170
+      ],
+      "channel": "R",
+      "before_dn": 2995.881651026169,
+      "after_dn": 2996.108216983291,
+      "truth_dn": 3000.000089406967,
+      "absolute_error_change_dn": -0.22656595712214767
+    },
+    {
+      "repeat": 739,
+      "native_xy": [
+        142,
+        170
+      ],
+      "channel": "R",
+      "before_dn": 2997.694178683146,
+      "after_dn": 2996.5613488975355,
+      "truth_dn": 3000.000089406967,
+      "absolute_error_change_dn": 1.1328297856107383
+    },
+    {
+      "repeat": 743,
+      "native_xy": [
+        142,
+        170
+      ],
+      "channel": "R",
+      "before_dn": 3001.3192339971006,
+      "after_dn": 3001.3192339971006,
+      "truth_dn": 3000.000089406967,
+      "absolute_error_change_dn": 0.0
+    },
+    {
+      "repeat": 751,
+      "native_xy": [
+        142,
+        170
+      ],
+      "channel": "R",
+      "before_dn": 2979.3423361562523,
+      "after_dn": 2983.420523384451,
+      "truth_dn": 3000.000089406967,
+      "absolute_error_change_dn": -4.078187228198658
+    }
+  ],
+  "independent_engineering_triggers": [],
+  "scope": "same-input software-model differences; repeat uncertainty only; no calibration, occlusion or SOTA admission"
+}

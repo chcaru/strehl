@@ -1,0 +1,20 @@
+{
+  "command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\author-run-2\\cli-tests.exe",
+    "merge_cmd::known_scene_benchmark::band_admission_benchmark::m194d_defaults_and_explicit_option",
+    "--test-threads=1",
+    "--nocapture"
+  ],
+  "started_utc": "2026-09-07T11:33:44.664674+00:00",
+  "ended_utc": "2026-09-07T11:33:44.818246+00:00",
+  "exit_code": 0,
+  "log": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\author-run-2\\cli-author-tests.log",
+  "log_sha256": "c74c61e4657bd54f2055b54298021c684cea12f33399504de1baa0d7fa8b2aea",
+  "environment": {
+    "STREHL_DEFECT": "off",
+    "STREHL_FIX_CA": "off",
+    "STREHL_FULLRES_GATHER": "1",
+    "STREHL_PYRAMID_WORKERS": "2",
+    "RAYON_NUM_THREADS": "2"
+  }
+}

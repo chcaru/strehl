@@ -1,0 +1,26 @@
+{
+  "command": [
+    "python",
+    "-X",
+    "utf8",
+    "experiments\\m194d-band-admission\\original-entry-control.py",
+    "--build-record",
+    "experiments\\m194d-band-admission\\author-run-2\\versioned-cli-build.json",
+    "--build-sha256",
+    "973a0fb48edb88d52b9a6e1037e0fc75e58c495af1aa0e1e9f8e74ca8f2005b0",
+    "--output",
+    "experiments\\m194d-band-admission\\original-entry-1"
+  ],
+  "started_utc": "2026-09-07T11:36:39.902352+00:00",
+  "ended_utc": "2026-09-07T11:36:40.065470+00:00",
+  "exit_code": 1,
+  "log": "experiments\\m194d-band-admission\\original-entry-preflight-refusal-1\\preflight.log",
+  "log_sha256": "72e82679b2795d20a46fda08f4daacb8890ccb7642c36ae8c609eda43debc35a",
+  "environment": {
+    "STREHL_DEFECT": "off",
+    "STREHL_FIX_CA": "off",
+    "STREHL_FULLRES_GATHER": "1",
+    "STREHL_PYRAMID_WORKERS": "2",
+    "RAYON_NUM_THREADS": "2"
+  }
+}

@@ -1,0 +1,118 @@
+
+running 5 tests
+test pyramid::m194d_independent_tests::independent_config_refusal_and_storage_bound ... M194D_INDEPENDENT_CORE refused=unsupported-config-0 reason="FloorPedestalV1: unsupported experimental configuration"
+M194D_INDEPENDENT_CORE refused=unsupported-config-1 reason="FloorPedestalV1: unsupported experimental configuration"
+M194D_INDEPENDENT_CORE refused=unsupported-config-2 reason="FloorPedestalV1: unsupported experimental configuration"
+M194D_INDEPENDENT_CORE refused=unsupported-config-3 reason="FloorPedestalV1: unsupported experimental configuration"
+M194D_INDEPENDENT_CORE refused=unsupported-config-4 reason="FloorPedestalV1: unsupported experimental configuration"
+M194D_INDEPENDENT_CORE refused=unsupported-config-5 reason="FloorPedestalV1: unsupported experimental configuration"
+M194D_INDEPENDENT_CORE refused=unsupported-config-6 reason="FloorPedestalV1: unsupported experimental configuration"
+M194D_INDEPENDENT_CORE refused=unsupported-config-7 reason="FloorPedestalV1: unsupported experimental configuration"
+M194D_INDEPENDENT_CORE refused=unsupported-config-8 reason="FloorPedestalV1: unsupported experimental configuration"
+M194D_INDEPENDENT_CORE refused=unsupported-config-9 reason="FloorPedestalV1: unsupported experimental configuration"
+M194D_INDEPENDENT_CORE refused=mixed-mode-absorb reason="assertion `left == right` failed: cannot absorb a different admission mode\n  left: FloorPedestalV1\n right: HardFloor"
+M194D_INDEPENDENT_CORE config_refusals=11 unchanged_retained_array_counts=true
+ok
+test pyramid::m194d_independent_tests::independent_missing_reset_failure_retained - should panic ... ok
+test pyramid::m194d_independent_tests::independent_numeric_refusal_before_hull ... M194D_INDEPENDENT_CORE refused=finite-input-weighted-product reason="FloorPedestalV1: nonfinite accumulator"
+M194D_INDEPENDENT_CORE refused=finite-partial-numerator-absorb reason="FloorPedestalV1: nonfinite accumulator"
+M194D_INDEPENDENT_CORE refused=nonfinite-num-absorb reason="FloorPedestalV1: nonfinite accumulator"
+M194D_INDEPENDENT_CORE refused=nonfinite-den-absorb reason="FloorPedestalV1: nonfinite accumulator"
+M194D_INDEPENDENT_CORE refused=nonfinite-usum-absorb reason="FloorPedestalV1: nonfinite accumulator"
+M194D_INDEPENDENT_CORE refused=finite-state-resolved-division reason="FloorPedestalV1: nonfinite resolved coefficient"
+M194D_INDEPENDENT_CORE refused=finite-coefficients-collapse-before-hull reason="FloorPedestalV1: nonfinite reconstruction before hull"
+ok
+test pyramid::m194d_independent_tests::independent_threshold_cutoff_and_strong_detail ... M194D_INDEPENDENT_CORE boundary floor=99.9375 share=0.200000062578 max_error=0.0000006257824 candidate_even=4098 legacy_even=4106 cutoff_even=4106
+M194D_INDEPENDENT_CORE boundary floor=100 share=0.200000000000 max_error=0 candidate_even=4098 legacy_even=4098 cutoff_even=4098
+M194D_INDEPENDENT_CORE boundary floor=100.0625 share=0.200000000000 max_error=0 candidate_even=4098 legacy_even=4098 cutoff_even=4098
+M194D_INDEPENDENT_CORE strong share=0.999519557443 error=0.00022404801 mean_destroyer_error=76.754105
+ok
+test pyramid::m194d_independent_tests::independent_units_order_and_numerical_edges ... M194D_INDEPENDENT_CORE units helper_cases=30 expected_below_one_noninvariance=true cap_product_overflow=true invalid_inputs_refused=8
+ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 554 filtered out; finished in 0.33s
+
+
+thread 'pyramid::m194d_independent_tests::independent_config_refusal_and_storage_bound' (19568) panicked at crates\strehl-core\src\pyramid.rs:1434:13:
+FloorPedestalV1: unsupported experimental configuration
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread 'pyramid::m194d_independent_tests::independent_config_refusal_and_storage_bound' (19568) panicked at crates\strehl-core\src\pyramid.rs:1434:13:
+FloorPedestalV1: unsupported experimental configuration
+
+thread 'pyramid::m194d_independent_tests::independent_config_refusal_and_storage_bound' (19568) panicked at crates\strehl-core\src\pyramid.rs:1434:13:
+FloorPedestalV1: unsupported experimental configuration
+
+thread 'pyramid::m194d_independent_tests::independent_config_refusal_and_storage_bound' (19568) panicked at crates\strehl-core\src\pyramid.rs:1434:13:
+FloorPedestalV1: unsupported experimental configuration
+
+thread 'pyramid::m194d_independent_tests::independent_config_refusal_and_storage_bound' (19568) panicked at crates\strehl-core\src\pyramid.rs:1434:13:
+FloorPedestalV1: unsupported experimental configuration
+
+thread 'pyramid::m194d_independent_tests::independent_config_refusal_and_storage_bound' (19568) panicked at crates\strehl-core\src\pyramid.rs:1434:13:
+FloorPedestalV1: unsupported experimental configuration
+
+thread 'pyramid::m194d_independent_tests::independent_config_refusal_and_storage_bound' (19568) panicked at crates\strehl-core\src\pyramid.rs:1434:13:
+FloorPedestalV1: unsupported experimental configuration
+
+thread 'pyramid::m194d_independent_tests::independent_config_refusal_and_storage_bound' (19568) panicked at crates\strehl-core\src\pyramid.rs:1434:13:
+FloorPedestalV1: unsupported experimental configuration
+
+thread 'pyramid::m194d_independent_tests::independent_config_refusal_and_storage_bound' (19568) panicked at crates\strehl-core\src\pyramid.rs:1434:13:
+FloorPedestalV1: unsupported experimental configuration
+
+thread 'pyramid::m194d_independent_tests::independent_config_refusal_and_storage_bound' (19568) panicked at crates\strehl-core\src\pyramid.rs:1434:13:
+FloorPedestalV1: unsupported experimental configuration
+
+thread 'pyramid::m194d_independent_tests::independent_config_refusal_and_storage_bound' (19568) panicked at crates\strehl-core\src\pyramid.rs:2075:9:
+assertion `left == right` failed: cannot absorb a different admission mode
+  left: FloorPedestalV1
+ right: HardFloor
+
+thread 'pyramid::m194d_independent_tests::independent_missing_reset_failure_retained' (20356) panicked at C:\dev\blog\death-of-software\projects\strehl\crates\strehl-core/../../experiments/m194d-band-admission/independent-core-tests.rs:146:5:
+M194d missing-reset lifecycle control loses the live stripe
+
+thread 'pyramid::m194d_independent_tests::independent_numeric_refusal_before_hull' (12404) panicked at crates\strehl-core\src\pyramid.rs:1659:13:
+FloorPedestalV1: nonfinite accumulator
+
+thread 'pyramid::m194d_independent_tests::independent_numeric_refusal_before_hull' (12404) panicked at crates\strehl-core\src\pyramid.rs:1659:13:
+FloorPedestalV1: nonfinite accumulator
+
+thread 'pyramid::m194d_independent_tests::independent_numeric_refusal_before_hull' (12404) panicked at crates\strehl-core\src\pyramid.rs:1659:13:
+FloorPedestalV1: nonfinite accumulator
+
+thread 'pyramid::m194d_independent_tests::independent_numeric_refusal_before_hull' (12404) panicked at crates\strehl-core\src\pyramid.rs:1659:13:
+FloorPedestalV1: nonfinite accumulator
+
+thread 'pyramid::m194d_independent_tests::independent_numeric_refusal_before_hull' (12404) panicked at crates\strehl-core\src\pyramid.rs:1659:13:
+FloorPedestalV1: nonfinite accumulator
+
+thread 'pyramid::m194d_independent_tests::independent_numeric_refusal_before_hull' (12404) panicked at crates\strehl-core\src\pyramid.rs:2407:25:
+FloorPedestalV1: nonfinite resolved coefficient
+
+thread 'pyramid::m194d_independent_tests::independent_numeric_refusal_before_hull' (12404) panicked at crates\strehl-core\src\pyramid.rs:2424:21:
+FloorPedestalV1: nonfinite reconstruction before hull
+
+thread 'pyramid::m194d_independent_tests::independent_units_order_and_numerical_edges' (24088) panicked at crates\strehl-core\src\pyramid.rs:2868:5:
+FloorPedestalV1: invalid energy, floor or exponent
+
+thread 'pyramid::m194d_independent_tests::independent_units_order_and_numerical_edges' (24088) panicked at crates\strehl-core\src\pyramid.rs:2868:5:
+FloorPedestalV1: invalid energy, floor or exponent
+
+thread 'pyramid::m194d_independent_tests::independent_units_order_and_numerical_edges' (24088) panicked at crates\strehl-core\src\pyramid.rs:2868:5:
+FloorPedestalV1: invalid energy, floor or exponent
+
+thread 'pyramid::m194d_independent_tests::independent_units_order_and_numerical_edges' (24088) panicked at crates\strehl-core\src\pyramid.rs:2868:5:
+FloorPedestalV1: invalid energy, floor or exponent
+
+thread 'pyramid::m194d_independent_tests::independent_units_order_and_numerical_edges' (24088) panicked at crates\strehl-core\src\pyramid.rs:2868:5:
+FloorPedestalV1: invalid energy, floor or exponent
+
+thread 'pyramid::m194d_independent_tests::independent_units_order_and_numerical_edges' (24088) panicked at crates\strehl-core\src\pyramid.rs:2868:5:
+FloorPedestalV1: invalid energy, floor or exponent
+
+thread 'pyramid::m194d_independent_tests::independent_units_order_and_numerical_edges' (24088) panicked at crates\strehl-core\src\pyramid.rs:2868:5:
+FloorPedestalV1: invalid energy, floor or exponent
+
+thread 'pyramid::m194d_independent_tests::independent_units_order_and_numerical_edges' (24088) panicked at crates\strehl-core\src\pyramid.rs:2868:5:
+FloorPedestalV1: invalid energy, floor or exponent

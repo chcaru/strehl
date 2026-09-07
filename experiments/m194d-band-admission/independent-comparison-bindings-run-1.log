@@ -1,0 +1,19 @@
+PASS unchanged-complete-controller
+PASS missing-candidate-mode: ValueError: incomplete or unexpected mode matrix
+PASS duplicate-mode-index: ValueError: mode or shared binary changed
+PASS missing-new-included-source: ValueError: missing, extra or changed experiment source binding
+PASS coherently-changed-reader-source: ValueError: missing, extra or changed experiment source binding
+PASS false-registered-source-delta: ValueError: false product source delta
+PASS failed-final-score-command: ValueError: incorrect/incomplete outer execution chain
+PASS unchanged-complete-absolute-index
+PASS unknown-index-mode: ValueError: unknown indexed admission mode
+PASS rehashed-legacy-plan-schema: ValueError: wrong plan schema
+PASS rehashed-plan-mode: ValueError: wrong complete baseline configuration
+PASS rehashed-plan-formula: ValueError: wrong complete baseline configuration
+PASS rehashed-plan-environment: ValueError: wrong complete consumer environment
+PASS rehashed-legacy-receipt-schema: ValueError: consumer differs from trusted plan
+PASS rehashed-receipt-mode: ValueError: consumer differs from trusted plan
+PASS missing-paired-output: ValueError: incomplete comparison
+PASS duplicate-paired-output: ValueError: incomplete comparison
+PASS rehashed-child-mode-environment: ValueError: wrong complete invoked environment
+{"pass_": true, "cases": 18, "refusals": 16}

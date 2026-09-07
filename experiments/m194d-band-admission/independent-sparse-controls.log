@@ -1,0 +1,142 @@
+{
+  "pass_": true,
+  "source_sha256": "cdceca7a9232489223dc9395f2131d02642d365b111850d7caa4addb742169cd",
+  "checks": [
+    {
+      "name": "known-signed-tied-residual-lists-and-manual-linear-quantiles",
+      "pass_": true
+    },
+    {
+      "name": "nearest-rank-alternate-is-explicitly-distinct",
+      "pass_": true
+    },
+    {
+      "name": "outside-mask-values-and-coordinates-are-inert",
+      "pass_": true
+    },
+    {
+      "name": "paired-signs-ties-and-largest-movement-do-not-mean-harm",
+      "pass_": true
+    },
+    {
+      "name": "sixty-DN-sign-flip-has-zero-absolute-error-change",
+      "pass_": true
+    },
+    {
+      "name": "same-output-exact-null",
+      "pass_": true
+    },
+    {
+      "name": "moved-isolated-error-preserves-marginals-but-exposes-harm",
+      "pass_": true
+    },
+    {
+      "name": "all-improving-maximum-remains-negative",
+      "pass_": true
+    },
+    {
+      "name": "all-worsening-minimum-remains-positive",
+      "pass_": true
+    },
+    {
+      "name": "source-input-arrays-unchanged",
+      "pass_": true
+    }
+  ],
+  "malformed": [
+    {
+      "name": "wrong-RGB-shape",
+      "rejected": true,
+      "error": "ValueError: sparse-error requires matching RGB, nonempty bool mask and coordinate grids",
+      "warnings": []
+    },
+    {
+      "name": "wrong-reference-shape",
+      "rejected": true,
+      "error": "ValueError: sparse-error requires matching RGB, nonempty bool mask and coordinate grids",
+      "warnings": []
+    },
+    {
+      "name": "integer-mask",
+      "rejected": true,
+      "error": "ValueError: sparse-error requires matching RGB, nonempty bool mask and coordinate grids",
+      "warnings": []
+    },
+    {
+      "name": "empty-mask",
+      "rejected": true,
+      "error": "ValueError: sparse-error requires matching RGB, nonempty bool mask and coordinate grids",
+      "warnings": []
+    },
+    {
+      "name": "wrong-mask-shape",
+      "rejected": true,
+      "error": "ValueError: sparse-error requires matching RGB, nonempty bool mask and coordinate grids",
+      "warnings": []
+    },
+    {
+      "name": "wrong-coordinate-shape",
+      "rejected": true,
+      "error": "ValueError: sparse-error requires matching RGB, nonempty bool mask and coordinate grids",
+      "warnings": []
+    },
+    {
+      "name": "RGB-nan",
+      "rejected": true,
+      "error": "ValueError: nonfinite samples or noninteger canonical sites in scored ROI",
+      "warnings": []
+    },
+    {
+      "name": "truth-infinity",
+      "rejected": true,
+      "error": "ValueError: nonfinite samples or noninteger canonical sites in scored ROI",
+      "warnings": []
+    },
+    {
+      "name": "coordinate-nan",
+      "rejected": true,
+      "error": "ValueError: nonfinite samples or noninteger canonical sites in scored ROI",
+      "warnings": []
+    },
+    {
+      "name": "coordinate-fraction",
+      "rejected": true,
+      "error": "ValueError: nonfinite samples or noninteger canonical sites in scored ROI",
+      "warnings": []
+    },
+    {
+      "name": "coordinate-outside-int64",
+      "rejected": true,
+      "error": "ValueError: nonfinite samples or noninteger canonical sites in scored ROI",
+      "warnings": []
+    },
+    {
+      "name": "complex-samples-must-not-lose-imaginary-part",
+      "rejected": true,
+      "error": "ValueError: sparse-error requires real numeric samples and coordinates",
+      "warnings": []
+    },
+    {
+      "name": "complex-coordinates-must-not-lose-imaginary-part",
+      "rejected": true,
+      "error": "ValueError: sparse-error requires real numeric samples and coordinates",
+      "warnings": []
+    },
+    {
+      "name": "compare-nonfinite-candidate",
+      "rejected": true,
+      "error": "ValueError: nonfinite samples or noninteger canonical sites in scored ROI",
+      "warnings": []
+    },
+    {
+      "name": "finite-input-residual-overflow",
+      "rejected": true,
+      "error": "ValueError: nonfinite computed truth residual"
+    },
+    {
+      "name": "finite-residuals-but-movement-overflow",
+      "rejected": true,
+      "error": "ValueError: nonfinite computed paired residual or movement"
+    }
+  ]
+}

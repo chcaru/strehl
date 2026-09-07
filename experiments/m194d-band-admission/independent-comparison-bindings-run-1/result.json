@@ -1,0 +1,186 @@
+{
+  "schema": "m194d-independent-comparison-bindings-v1",
+  "pass_": true,
+  "command": [
+    "experiments/m194d-band-admission/independent-comparison-bindings.py",
+    "--controller",
+    "experiments/m194d-band-admission/experiment-1/controller.json",
+    "--controller-sha",
+    "b3e9a71a538d16f6e0f2c399cb530c71a00fa74cd1194362d41417610f5a1e59",
+    "--out",
+    "experiments/m194d-band-admission/independent-comparison-bindings-run-1"
+  ],
+  "script_sha256": "e99cfdd4c5f6879eddfabded366d2563d433f2535f27549044ec6ce78087eb07",
+  "comparison_reader_sha256": "9cc3fd5652a4e17d9036e6b69300b4e0bef50089893c3ba0fa40424e15b00fb1",
+  "predecessor_sha256": "bf229ec79a9241da28ec0813ac4e4da5ea6490a09addee8afd5a3304dedef717",
+  "exact_reader_repair_verified": true,
+  "controller_sha256": "b3e9a71a538d16f6e0f2c399cb530c71a00fa74cd1194362d41417610f5a1e59",
+  "cases": [
+    {
+      "name": "unchanged-complete-controller",
+      "accepted": true,
+      "expected_pass": true,
+      "pass_": true,
+      "error": null,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\independent-comparison-bindings-run-1\\unchanged-complete-controller.json",
+      "sha256": "b3e9a71a538d16f6e0f2c399cb530c71a00fa74cd1194362d41417610f5a1e59"
+    },
+    {
+      "name": "missing-candidate-mode",
+      "accepted": false,
+      "expected_pass": false,
+      "pass_": true,
+      "error": "ValueError: incomplete or unexpected mode matrix",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\independent-comparison-bindings-run-1\\missing-candidate-mode.json",
+      "sha256": "a7a61a0f2b76dafc41e9477f7e8d9b1feccf342af45207326f7b021772979d8a"
+    },
+    {
+      "name": "duplicate-mode-index",
+      "accepted": false,
+      "expected_pass": false,
+      "pass_": true,
+      "error": "ValueError: mode or shared binary changed",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\independent-comparison-bindings-run-1\\duplicate-mode-index.json",
+      "sha256": "5fc5c5fb842b92c05a1405db4910a2db05f737896719fbd5b2ecdd8e450a44ad"
+    },
+    {
+      "name": "missing-new-included-source",
+      "accepted": false,
+      "expected_pass": false,
+      "pass_": true,
+      "error": "ValueError: missing, extra or changed experiment source binding",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\independent-comparison-bindings-run-1\\missing-new-included-source.json",
+      "sha256": "a2e99549c8faf6cf0ee03fd05da809c1071a4d11410e5281b72f4f0cf11948d5"
+    },
+    {
+      "name": "coherently-changed-reader-source",
+      "accepted": false,
+      "expected_pass": false,
+      "pass_": true,
+      "error": "ValueError: missing, extra or changed experiment source binding",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\independent-comparison-bindings-run-1\\coherently-changed-reader-source.json",
+      "sha256": "036a1c6ad37cc56eab340d3d3b884ea91820273d67120b0599c18cd3a8dff72d"
+    },
+    {
+      "name": "false-registered-source-delta",
+      "accepted": false,
+      "expected_pass": false,
+      "pass_": true,
+      "error": "ValueError: false product source delta",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\independent-comparison-bindings-run-1\\false-registered-source-delta.json",
+      "sha256": "c75a201474dea47672143f91f1d6a797611dd70de6dfe71c90f8150b94327665"
+    },
+    {
+      "name": "failed-final-score-command",
+      "accepted": false,
+      "expected_pass": false,
+      "pass_": true,
+      "error": "ValueError: incorrect/incomplete outer execution chain",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\independent-comparison-bindings-run-1\\failed-final-score-command.json",
+      "sha256": "a31417f9199aa1087e9c312e95e8013bc54f5e19a392f563d9ba38919358d6f5"
+    },
+    {
+      "name": "unchanged-complete-absolute-index",
+      "accepted": true,
+      "expected_pass": true,
+      "pass_": true,
+      "error": null,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\independent-comparison-bindings-run-1\\unchanged-complete-absolute-index.json",
+      "sha256": "1fd9a8483a9319a179c303dfef6b9c732c6f62cb63c0b7decbe320eff95ed09d"
+    },
+    {
+      "name": "unknown-index-mode",
+      "accepted": false,
+      "expected_pass": false,
+      "pass_": true,
+      "error": "ValueError: unknown indexed admission mode",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\independent-comparison-bindings-run-1\\unknown-index-mode.json",
+      "sha256": "3f7338c69501ba574305df690f2487d745c0f4748be20ffe9d78e9c52b37383f"
+    },
+    {
+      "name": "rehashed-legacy-plan-schema",
+      "accepted": false,
+      "expected_pass": false,
+      "pass_": true,
+      "error": "ValueError: wrong plan schema",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\independent-comparison-bindings-run-1\\rehashed-legacy-plan-schema.json",
+      "sha256": "053515152570eb07d57c82fcdb260e6e399c9b9a42790455c0fbf748c1bc3180"
+    },
+    {
+      "name": "rehashed-plan-mode",
+      "accepted": false,
+      "expected_pass": false,
+      "pass_": true,
+      "error": "ValueError: wrong complete baseline configuration",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\independent-comparison-bindings-run-1\\rehashed-plan-mode.json",
+      "sha256": "6d0b8fa152f40c8fbc278897cebf544e13c56c66e37829744d4cf4a95670b1e2"
+    },
+    {
+      "name": "rehashed-plan-formula",
+      "accepted": false,
+      "expected_pass": false,
+      "pass_": true,
+      "error": "ValueError: wrong complete baseline configuration",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\independent-comparison-bindings-run-1\\rehashed-plan-formula.json",
+      "sha256": "39f35bcd9ce902a222980b83fc58fcf00fd3629d6b2a388b92133459ff6409ae"
+    },
+    {
+      "name": "rehashed-plan-environment",
+      "accepted": false,
+      "expected_pass": false,
+      "pass_": true,
+      "error": "ValueError: wrong complete consumer environment",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\independent-comparison-bindings-run-1\\rehashed-plan-environment.json",
+      "sha256": "095feb1fb58a43c60e1573d6fd6775ff7030124b3ac6431a4d3cbca0e0f21540"
+    },
+    {
+      "name": "rehashed-legacy-receipt-schema",
+      "accepted": false,
+      "expected_pass": false,
+      "pass_": true,
+      "error": "ValueError: consumer differs from trusted plan",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\independent-comparison-bindings-run-1\\rehashed-legacy-receipt-schema.json",
+      "sha256": "577e935a3ae16b1a04f603060e645d6493342bcd4269057963c86df247472428"
+    },
+    {
+      "name": "rehashed-receipt-mode",
+      "accepted": false,
+      "expected_pass": false,
+      "pass_": true,
+      "error": "ValueError: consumer differs from trusted plan",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\independent-comparison-bindings-run-1\\rehashed-receipt-mode.json",
+      "sha256": "ee250607279d678bbc96d7d2912a3b34f5178e1e0cec59229022fb3e338f3e6d"
+    },
+    {
+      "name": "missing-paired-output",
+      "accepted": false,
+      "expected_pass": false,
+      "pass_": true,
+      "error": "ValueError: incomplete comparison",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\independent-comparison-bindings-run-1\\missing-paired-output.json",
+      "sha256": "8733868e03225cc71da334fbf82a956aa6a0c197253f432f86a9dfb8412d6390"
+    },
+    {
+      "name": "duplicate-paired-output",
+      "accepted": false,
+      "expected_pass": false,
+      "pass_": true,
+      "error": "ValueError: incomplete comparison",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\independent-comparison-bindings-run-1\\duplicate-paired-output.json",
+      "sha256": "a8e2432602afe9a387d0318ba7f24a5721711568037591d4a585ed77ba094725"
+    },
+    {
+      "name": "rehashed-child-mode-environment",
+      "accepted": false,
+      "expected_pass": false,
+      "pass_": true,
+      "error": "ValueError: wrong complete invoked environment",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\independent-comparison-bindings-run-1\\rehashed-child-mode-environment.json",
+      "sha256": "90963dc42751f030304e29665a90a233cbf8d0712bf6d5e82cab7be4c863ab64"
+    }
+  ],
+  "unchanged_final_controller": true,
+  "original_mode_index_unchanged": true,
+  "subject_source_unchanged": true,
+  "scope": "private rehashed metadata contradictions; no output generation or original evidence edits; not authentication of wholly forged histories"
+}

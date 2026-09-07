@@ -1,0 +1,1029 @@
+{
+  "schema": "m194d-independent-recheck-v1",
+  "source_run": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\independent-run-1",
+  "source_run_sha256": "58c49988eb1c90bf79191e876209b8ab1a7244cced002b333bf44e30f28a864f",
+  "original_reader_sha256": "4bed6490c83d2fc77ecfc31b4a3dd8c542ba4168d7f84a5f15381d6f3120e6e4",
+  "reader_sha256": "9e0ddc2609218136a3eb11b4bc2fd4fc43e2cc0fe6af9cf43ba3118fdf3c2751",
+  "recheck_sha256": "cf0fd942d7bdf9f3391a34605567c8dbd5378e6fecbb622321ca41b4e4be9b29",
+  "correction": "accept the exact libtest test-name preamble on its first stdout JSON line",
+  "product_or_fixture_changes": false,
+  "new_native_execution": false,
+  "core_pass": true,
+  "checks": [
+    {
+      "gather": "0",
+      "source_log_sha256": "c542ccafa21c0144efbeebaff3e9675de62fa63023fc4d49486335142c5b9d9a",
+      "tiffs": {
+        "whole-baseline": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\independent-run-1\\gather-0-tiffs\\whole-baseline.tif",
+          "sha256": "66bf8c14658f88df4e8a37757e5d18b135c964bca69f7f76f695ba32d76b6d6f",
+          "bytes": 312963,
+          "shape": [
+            190,
+            274,
+            3
+          ],
+          "pixel_sha256": "81e93696c892f05f4487d89d280f6fdf0b1d0ff73c8893841f7b110bd1ca896d",
+          "minimum": 0,
+          "maximum": 28547,
+          "software": "strehl 0.0.0",
+          "description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+          "reads": [
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "observer": "Count",
+          "placebo_count": 0,
+          "admission": "FloorPedestalV1"
+        },
+        "whole-counter-off": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\independent-run-1\\gather-0-tiffs\\whole-counter-off.tif",
+          "sha256": "66bf8c14658f88df4e8a37757e5d18b135c964bca69f7f76f695ba32d76b6d6f",
+          "bytes": 312963,
+          "shape": [
+            190,
+            274,
+            3
+          ],
+          "pixel_sha256": "81e93696c892f05f4487d89d280f6fdf0b1d0ff73c8893841f7b110bd1ca896d",
+          "minimum": 0,
+          "maximum": 28547,
+          "software": "strehl 0.0.0",
+          "description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+          "reads": [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "observer": "Off",
+          "placebo_count": 0,
+          "admission": "FloorPedestalV1"
+        },
+        "whole-counter-placebo": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\independent-run-1\\gather-0-tiffs\\whole-counter-placebo.tif",
+          "sha256": "66bf8c14658f88df4e8a37757e5d18b135c964bca69f7f76f695ba32d76b6d6f",
+          "bytes": 312963,
+          "shape": [
+            190,
+            274,
+            3
+          ],
+          "pixel_sha256": "81e93696c892f05f4487d89d280f6fdf0b1d0ff73c8893841f7b110bd1ca896d",
+          "minimum": 0,
+          "maximum": 28547,
+          "software": "strehl 0.0.0",
+          "description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+          "reads": [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "observer": "Placebo",
+          "placebo_count": 5,
+          "admission": "FloorPedestalV1"
+        },
+        "whole-layout1": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\independent-run-1\\gather-0-tiffs\\whole-layout1.tif",
+          "sha256": "66bf8c14658f88df4e8a37757e5d18b135c964bca69f7f76f695ba32d76b6d6f",
+          "bytes": 312963,
+          "shape": [
+            190,
+            274,
+            3
+          ],
+          "pixel_sha256": "81e93696c892f05f4487d89d280f6fdf0b1d0ff73c8893841f7b110bd1ca896d",
+          "minimum": 0,
+          "maximum": 28547,
+          "software": "strehl 0.0.0",
+          "description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+          "reads": [
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "observer": "Count",
+          "placebo_count": 0,
+          "admission": "FloorPedestalV1"
+        },
+        "whole-poison1": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\independent-run-1\\gather-0-tiffs\\whole-poison1.tif",
+          "sha256": "66bf8c14658f88df4e8a37757e5d18b135c964bca69f7f76f695ba32d76b6d6f",
+          "bytes": 312963,
+          "shape": [
+            190,
+            274,
+            3
+          ],
+          "pixel_sha256": "81e93696c892f05f4487d89d280f6fdf0b1d0ff73c8893841f7b110bd1ca896d",
+          "minimum": 0,
+          "maximum": 28547,
+          "software": "strehl 0.0.0",
+          "description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+          "reads": [
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "observer": "Count",
+          "placebo_count": 0,
+          "admission": "FloorPedestalV1"
+        },
+        "whole-layout2": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\independent-run-1\\gather-0-tiffs\\whole-layout2.tif",
+          "sha256": "66bf8c14658f88df4e8a37757e5d18b135c964bca69f7f76f695ba32d76b6d6f",
+          "bytes": 312963,
+          "shape": [
+            190,
+            274,
+            3
+          ],
+          "pixel_sha256": "81e93696c892f05f4487d89d280f6fdf0b1d0ff73c8893841f7b110bd1ca896d",
+          "minimum": 0,
+          "maximum": 28547,
+          "software": "strehl 0.0.0",
+          "description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+          "reads": [
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "observer": "Count",
+          "placebo_count": 0,
+          "admission": "FloorPedestalV1"
+        },
+        "whole-poison2": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\independent-run-1\\gather-0-tiffs\\whole-poison2.tif",
+          "sha256": "66bf8c14658f88df4e8a37757e5d18b135c964bca69f7f76f695ba32d76b6d6f",
+          "bytes": 312963,
+          "shape": [
+            190,
+            274,
+            3
+          ],
+          "pixel_sha256": "81e93696c892f05f4487d89d280f6fdf0b1d0ff73c8893841f7b110bd1ca896d",
+          "minimum": 0,
+          "maximum": 28547,
+          "software": "strehl 0.0.0",
+          "description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+          "reads": [
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "observer": "Count",
+          "placebo_count": 0,
+          "admission": "FloorPedestalV1"
+        },
+        "whole-single-site": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\independent-run-1\\gather-0-tiffs\\whole-single-site.tif",
+          "sha256": "defbfb303b8e762c5b871e829e09784189b493c5ec72b0ce82d0f3afc207e8c7",
+          "bytes": 312963,
+          "shape": [
+            190,
+            274,
+            3
+          ],
+          "pixel_sha256": "8b10b535376106de97b71e696c5a8a1d7208fa2e9834102f2aa19f2ee1e6ae22",
+          "minimum": 0,
+          "maximum": 28547,
+          "software": "strehl 0.0.0",
+          "description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+          "reads": [
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "observer": "Count",
+          "placebo_count": 0,
+          "admission": "FloorPedestalV1"
+        },
+        "whole-noise": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\independent-run-1\\gather-0-tiffs\\whole-noise.tif",
+          "sha256": "80942d5c0890db11da3ca06c0c87c73dd45ec227613abed088f22ab621bb6c9f",
+          "bytes": 312963,
+          "shape": [
+            190,
+            274,
+            3
+          ],
+          "pixel_sha256": "e05a09456e1b0cf5aefc3e56b9652bbadb4e0e5585448b6129d59135907623d7",
+          "minimum": 0,
+          "maximum": 28423,
+          "software": "strehl 0.0.0",
+          "description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+          "reads": [
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "observer": "Count",
+          "placebo_count": 0,
+          "admission": "FloorPedestalV1"
+        },
+        "whole-warp": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\independent-run-1\\gather-0-tiffs\\whole-warp.tif",
+          "sha256": "05cb5b357591debf57d6e435704a3401f61cac23718be163b74d32f3bc9c9237",
+          "bytes": 312963,
+          "shape": [
+            190,
+            274,
+            3
+          ],
+          "pixel_sha256": "1caa3144d449cdb2157c36b928d79770649e7ef234634bf1089b451ac02a439f",
+          "minimum": 0,
+          "maximum": 28551,
+          "software": "strehl 0.0.0",
+          "description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+          "reads": [
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "observer": "Count",
+          "placebo_count": 0,
+          "admission": "FloorPedestalV1"
+        },
+        "crop-baseline": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\independent-run-1\\gather-0-tiffs\\crop-baseline.tif",
+          "sha256": "ff16552083c6f8e3a427eab48e98334c97fb72651637f216b119b86899187782",
+          "bytes": 210267,
+          "shape": [
+            156,
+            224,
+            3
+          ],
+          "pixel_sha256": "564a3ba6dc5a4299683d969cd161f892cae696e42dd18ca2599fb12528a6e9e1",
+          "minimum": 12144,
+          "maximum": 25047,
+          "software": "strehl 0.0.0",
+          "description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+          "reads": [
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "observer": "Count",
+          "placebo_count": 0,
+          "admission": "FloorPedestalV1"
+        },
+        "crop-counter-off": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\independent-run-1\\gather-0-tiffs\\crop-counter-off.tif",
+          "sha256": "ff16552083c6f8e3a427eab48e98334c97fb72651637f216b119b86899187782",
+          "bytes": 210267,
+          "shape": [
+            156,
+            224,
+            3
+          ],
+          "pixel_sha256": "564a3ba6dc5a4299683d969cd161f892cae696e42dd18ca2599fb12528a6e9e1",
+          "minimum": 12144,
+          "maximum": 25047,
+          "software": "strehl 0.0.0",
+          "description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+          "reads": [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "observer": "Off",
+          "placebo_count": 0,
+          "admission": "FloorPedestalV1"
+        },
+        "crop-counter-placebo": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\independent-run-1\\gather-0-tiffs\\crop-counter-placebo.tif",
+          "sha256": "ff16552083c6f8e3a427eab48e98334c97fb72651637f216b119b86899187782",
+          "bytes": 210267,
+          "shape": [
+            156,
+            224,
+            3
+          ],
+          "pixel_sha256": "564a3ba6dc5a4299683d969cd161f892cae696e42dd18ca2599fb12528a6e9e1",
+          "minimum": 12144,
+          "maximum": 25047,
+          "software": "strehl 0.0.0",
+          "description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+          "reads": [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "observer": "Placebo",
+          "placebo_count": 5,
+          "admission": "FloorPedestalV1"
+        },
+        "crop-layout1": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\independent-run-1\\gather-0-tiffs\\crop-layout1.tif",
+          "sha256": "ff16552083c6f8e3a427eab48e98334c97fb72651637f216b119b86899187782",
+          "bytes": 210267,
+          "shape": [
+            156,
+            224,
+            3
+          ],
+          "pixel_sha256": "564a3ba6dc5a4299683d969cd161f892cae696e42dd18ca2599fb12528a6e9e1",
+          "minimum": 12144,
+          "maximum": 25047,
+          "software": "strehl 0.0.0",
+          "description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+          "reads": [
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "observer": "Count",
+          "placebo_count": 0,
+          "admission": "FloorPedestalV1"
+        },
+        "crop-poison1": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\independent-run-1\\gather-0-tiffs\\crop-poison1.tif",
+          "sha256": "ff16552083c6f8e3a427eab48e98334c97fb72651637f216b119b86899187782",
+          "bytes": 210267,
+          "shape": [
+            156,
+            224,
+            3
+          ],
+          "pixel_sha256": "564a3ba6dc5a4299683d969cd161f892cae696e42dd18ca2599fb12528a6e9e1",
+          "minimum": 12144,
+          "maximum": 25047,
+          "software": "strehl 0.0.0",
+          "description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+          "reads": [
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "observer": "Count",
+          "placebo_count": 0,
+          "admission": "FloorPedestalV1"
+        },
+        "crop-layout2": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\independent-run-1\\gather-0-tiffs\\crop-layout2.tif",
+          "sha256": "ff16552083c6f8e3a427eab48e98334c97fb72651637f216b119b86899187782",
+          "bytes": 210267,
+          "shape": [
+            156,
+            224,
+            3
+          ],
+          "pixel_sha256": "564a3ba6dc5a4299683d969cd161f892cae696e42dd18ca2599fb12528a6e9e1",
+          "minimum": 12144,
+          "maximum": 25047,
+          "software": "strehl 0.0.0",
+          "description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+          "reads": [
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "observer": "Count",
+          "placebo_count": 0,
+          "admission": "FloorPedestalV1"
+        },
+        "crop-poison2": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\independent-run-1\\gather-0-tiffs\\crop-poison2.tif",
+          "sha256": "ff16552083c6f8e3a427eab48e98334c97fb72651637f216b119b86899187782",
+          "bytes": 210267,
+          "shape": [
+            156,
+            224,
+            3
+          ],
+          "pixel_sha256": "564a3ba6dc5a4299683d969cd161f892cae696e42dd18ca2599fb12528a6e9e1",
+          "minimum": 12144,
+          "maximum": 25047,
+          "software": "strehl 0.0.0",
+          "description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+          "reads": [
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "observer": "Count",
+          "placebo_count": 0,
+          "admission": "FloorPedestalV1"
+        },
+        "crop-single-site": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\independent-run-1\\gather-0-tiffs\\crop-single-site.tif",
+          "sha256": "c7ffa39f2eaac924f3237cbcf8496d1e5ca9d93ad5ef43cfcd2d1504ca7f7058",
+          "bytes": 210267,
+          "shape": [
+            156,
+            224,
+            3
+          ],
+          "pixel_sha256": "faaeadb46eb2249aa83301e0474cf4568912fb89882d9190c7332d16704c3900",
+          "minimum": 12144,
+          "maximum": 25144,
+          "software": "strehl 0.0.0",
+          "description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+          "reads": [
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "observer": "Count",
+          "placebo_count": 0,
+          "admission": "FloorPedestalV1"
+        },
+        "crop-noise": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\independent-run-1\\gather-0-tiffs\\crop-noise.tif",
+          "sha256": "a484c7598eb7412ea618e6500768aefbb79ac42524a1dd9d285eacf27172aa0b",
+          "bytes": 210267,
+          "shape": [
+            156,
+            224,
+            3
+          ],
+          "pixel_sha256": "4deb389e85eb8acd436a901f5158d25ae6bf45a3d59b4b01e405c3ad910cfc6e",
+          "minimum": 12370,
+          "maximum": 24553,
+          "software": "strehl 0.0.0",
+          "description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+          "reads": [
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "observer": "Count",
+          "placebo_count": 0,
+          "admission": "FloorPedestalV1"
+        },
+        "crop-warp": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\independent-run-1\\gather-0-tiffs\\crop-warp.tif",
+          "sha256": "ddf9d19a6c4473653085649377c3441285469ae4183c50e44f7abf535dd383f7",
+          "bytes": 210267,
+          "shape": [
+            156,
+            224,
+            3
+          ],
+          "pixel_sha256": "4c01be0a57ac891a289612ad6ea9a3d2c7fb8f5136880fa8739ee3b8a907c445",
+          "minimum": 12141,
+          "maximum": 25044,
+          "software": "strehl 0.0.0",
+          "description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+          "reads": [
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "observer": "Count",
+          "placebo_count": 0,
+          "admission": "FloorPedestalV1"
+        }
+      },
+      "pass_": true
+    },
+    {
+      "gather": "1",
+      "source_log_sha256": "f3a1b73e3aca2910e2e36f8bad6644b415145f461f6b7833291301396343ba91",
+      "tiffs": {
+        "whole-baseline": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\independent-run-1\\gather-1-tiffs\\whole-baseline.tif",
+          "sha256": "c0e994d4ca050c2738bfe1eb15c7d6733c385f566f6d829135fd2039446ac396",
+          "bytes": 312963,
+          "shape": [
+            190,
+            274,
+            3
+          ],
+          "pixel_sha256": "5db2aa3606587cce38d40caf3af3b3bd73871dcea844c9705619ad0f0214c86a",
+          "minimum": 0,
+          "maximum": 27375,
+          "software": "strehl 0.0.0",
+          "description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+          "reads": [
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "observer": "Count",
+          "placebo_count": 0,
+          "admission": "FloorPedestalV1"
+        },
+        "whole-counter-off": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\independent-run-1\\gather-1-tiffs\\whole-counter-off.tif",
+          "sha256": "c0e994d4ca050c2738bfe1eb15c7d6733c385f566f6d829135fd2039446ac396",
+          "bytes": 312963,
+          "shape": [
+            190,
+            274,
+            3
+          ],
+          "pixel_sha256": "5db2aa3606587cce38d40caf3af3b3bd73871dcea844c9705619ad0f0214c86a",
+          "minimum": 0,
+          "maximum": 27375,
+          "software": "strehl 0.0.0",
+          "description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+          "reads": [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "observer": "Off",
+          "placebo_count": 0,
+          "admission": "FloorPedestalV1"
+        },
+        "whole-counter-placebo": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\independent-run-1\\gather-1-tiffs\\whole-counter-placebo.tif",
+          "sha256": "c0e994d4ca050c2738bfe1eb15c7d6733c385f566f6d829135fd2039446ac396",
+          "bytes": 312963,
+          "shape": [
+            190,
+            274,
+            3
+          ],
+          "pixel_sha256": "5db2aa3606587cce38d40caf3af3b3bd73871dcea844c9705619ad0f0214c86a",
+          "minimum": 0,
+          "maximum": 27375,
+          "software": "strehl 0.0.0",
+          "description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+          "reads": [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "observer": "Placebo",
+          "placebo_count": 5,
+          "admission": "FloorPedestalV1"
+        },
+        "whole-layout1": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\independent-run-1\\gather-1-tiffs\\whole-layout1.tif",
+          "sha256": "c0e994d4ca050c2738bfe1eb15c7d6733c385f566f6d829135fd2039446ac396",
+          "bytes": 312963,
+          "shape": [
+            190,
+            274,
+            3
+          ],
+          "pixel_sha256": "5db2aa3606587cce38d40caf3af3b3bd73871dcea844c9705619ad0f0214c86a",
+          "minimum": 0,
+          "maximum": 27375,
+          "software": "strehl 0.0.0",
+          "description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+          "reads": [
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "observer": "Count",
+          "placebo_count": 0,
+          "admission": "FloorPedestalV1"
+        },
+        "whole-poison1": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\independent-run-1\\gather-1-tiffs\\whole-poison1.tif",
+          "sha256": "c0e994d4ca050c2738bfe1eb15c7d6733c385f566f6d829135fd2039446ac396",
+          "bytes": 312963,
+          "shape": [
+            190,
+            274,
+            3
+          ],
+          "pixel_sha256": "5db2aa3606587cce38d40caf3af3b3bd73871dcea844c9705619ad0f0214c86a",
+          "minimum": 0,
+          "maximum": 27375,
+          "software": "strehl 0.0.0",
+          "description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+          "reads": [
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "observer": "Count",
+          "placebo_count": 0,
+          "admission": "FloorPedestalV1"
+        },
+        "whole-layout2": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\independent-run-1\\gather-1-tiffs\\whole-layout2.tif",
+          "sha256": "c0e994d4ca050c2738bfe1eb15c7d6733c385f566f6d829135fd2039446ac396",
+          "bytes": 312963,
+          "shape": [
+            190,
+            274,
+            3
+          ],
+          "pixel_sha256": "5db2aa3606587cce38d40caf3af3b3bd73871dcea844c9705619ad0f0214c86a",
+          "minimum": 0,
+          "maximum": 27375,
+          "software": "strehl 0.0.0",
+          "description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+          "reads": [
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "observer": "Count",
+          "placebo_count": 0,
+          "admission": "FloorPedestalV1"
+        },
+        "whole-poison2": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\independent-run-1\\gather-1-tiffs\\whole-poison2.tif",
+          "sha256": "c0e994d4ca050c2738bfe1eb15c7d6733c385f566f6d829135fd2039446ac396",
+          "bytes": 312963,
+          "shape": [
+            190,
+            274,
+            3
+          ],
+          "pixel_sha256": "5db2aa3606587cce38d40caf3af3b3bd73871dcea844c9705619ad0f0214c86a",
+          "minimum": 0,
+          "maximum": 27375,
+          "software": "strehl 0.0.0",
+          "description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+          "reads": [
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "observer": "Count",
+          "placebo_count": 0,
+          "admission": "FloorPedestalV1"
+        },
+        "whole-single-site": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\independent-run-1\\gather-1-tiffs\\whole-single-site.tif",
+          "sha256": "9fbfc19d2c5692ac59e558588af323903c8526df712e15dc1499c61dc67e6533",
+          "bytes": 312963,
+          "shape": [
+            190,
+            274,
+            3
+          ],
+          "pixel_sha256": "2453e826b1897373446c5c979ed9875dba068a2ffe1ba624fd2882e8b1171a9a",
+          "minimum": 0,
+          "maximum": 27375,
+          "software": "strehl 0.0.0",
+          "description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+          "reads": [
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "observer": "Count",
+          "placebo_count": 0,
+          "admission": "FloorPedestalV1"
+        },
+        "whole-noise": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\independent-run-1\\gather-1-tiffs\\whole-noise.tif",
+          "sha256": "4ae70a01e788d6bc750616d2f95db9a91531d74371491a341918265a83fbfe62",
+          "bytes": 312963,
+          "shape": [
+            190,
+            274,
+            3
+          ],
+          "pixel_sha256": "fcdf5305f58027fe4904dd51a6c98c4f15cf3b848b72b3f7b9fa9954fc945f20",
+          "minimum": 0,
+          "maximum": 27337,
+          "software": "strehl 0.0.0",
+          "description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+          "reads": [
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "observer": "Count",
+          "placebo_count": 0,
+          "admission": "FloorPedestalV1"
+        },
+        "whole-warp": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\independent-run-1\\gather-1-tiffs\\whole-warp.tif",
+          "sha256": "564b4884660820c6e288f8740d2c4887afe784a877341d05d0aac040e073bc4a",
+          "bytes": 312963,
+          "shape": [
+            190,
+            274,
+            3
+          ],
+          "pixel_sha256": "c6e7305f7c6c5f1f44aa708fc02af3e4ec1b79b1e5d31a256fbcda3fe86bcd35",
+          "minimum": 0,
+          "maximum": 27404,
+          "software": "strehl 0.0.0",
+          "description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+          "reads": [
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "observer": "Count",
+          "placebo_count": 0,
+          "admission": "FloorPedestalV1"
+        },
+        "crop-baseline": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\independent-run-1\\gather-1-tiffs\\crop-baseline.tif",
+          "sha256": "dcbbb31ea055e0bc8f181c071360eba893d30828f5e3aa92979aeaf4e4720e9f",
+          "bytes": 210267,
+          "shape": [
+            156,
+            224,
+            3
+          ],
+          "pixel_sha256": "1477d5c892e81bdc3f6b3f322bb0d495ad49e2d31864063a43c7ab08d218bb8c",
+          "minimum": 12199,
+          "maximum": 24867,
+          "software": "strehl 0.0.0",
+          "description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+          "reads": [
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "observer": "Count",
+          "placebo_count": 0,
+          "admission": "FloorPedestalV1"
+        },
+        "crop-counter-off": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\independent-run-1\\gather-1-tiffs\\crop-counter-off.tif",
+          "sha256": "dcbbb31ea055e0bc8f181c071360eba893d30828f5e3aa92979aeaf4e4720e9f",
+          "bytes": 210267,
+          "shape": [
+            156,
+            224,
+            3
+          ],
+          "pixel_sha256": "1477d5c892e81bdc3f6b3f322bb0d495ad49e2d31864063a43c7ab08d218bb8c",
+          "minimum": 12199,
+          "maximum": 24867,
+          "software": "strehl 0.0.0",
+          "description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+          "reads": [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "observer": "Off",
+          "placebo_count": 0,
+          "admission": "FloorPedestalV1"
+        },
+        "crop-counter-placebo": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\independent-run-1\\gather-1-tiffs\\crop-counter-placebo.tif",
+          "sha256": "dcbbb31ea055e0bc8f181c071360eba893d30828f5e3aa92979aeaf4e4720e9f",
+          "bytes": 210267,
+          "shape": [
+            156,
+            224,
+            3
+          ],
+          "pixel_sha256": "1477d5c892e81bdc3f6b3f322bb0d495ad49e2d31864063a43c7ab08d218bb8c",
+          "minimum": 12199,
+          "maximum": 24867,
+          "software": "strehl 0.0.0",
+          "description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+          "reads": [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "observer": "Placebo",
+          "placebo_count": 5,
+          "admission": "FloorPedestalV1"
+        },
+        "crop-layout1": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\independent-run-1\\gather-1-tiffs\\crop-layout1.tif",
+          "sha256": "dcbbb31ea055e0bc8f181c071360eba893d30828f5e3aa92979aeaf4e4720e9f",
+          "bytes": 210267,
+          "shape": [
+            156,
+            224,
+            3
+          ],
+          "pixel_sha256": "1477d5c892e81bdc3f6b3f322bb0d495ad49e2d31864063a43c7ab08d218bb8c",
+          "minimum": 12199,
+          "maximum": 24867,
+          "software": "strehl 0.0.0",
+          "description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+          "reads": [
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "observer": "Count",
+          "placebo_count": 0,
+          "admission": "FloorPedestalV1"
+        },
+        "crop-poison1": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\independent-run-1\\gather-1-tiffs\\crop-poison1.tif",
+          "sha256": "dcbbb31ea055e0bc8f181c071360eba893d30828f5e3aa92979aeaf4e4720e9f",
+          "bytes": 210267,
+          "shape": [
+            156,
+            224,
+            3
+          ],
+          "pixel_sha256": "1477d5c892e81bdc3f6b3f322bb0d495ad49e2d31864063a43c7ab08d218bb8c",
+          "minimum": 12199,
+          "maximum": 24867,
+          "software": "strehl 0.0.0",
+          "description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+          "reads": [
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "observer": "Count",
+          "placebo_count": 0,
+          "admission": "FloorPedestalV1"
+        },
+        "crop-layout2": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\independent-run-1\\gather-1-tiffs\\crop-layout2.tif",
+          "sha256": "dcbbb31ea055e0bc8f181c071360eba893d30828f5e3aa92979aeaf4e4720e9f",
+          "bytes": 210267,
+          "shape": [
+            156,
+            224,
+            3
+          ],
+          "pixel_sha256": "1477d5c892e81bdc3f6b3f322bb0d495ad49e2d31864063a43c7ab08d218bb8c",
+          "minimum": 12199,
+          "maximum": 24867,
+          "software": "strehl 0.0.0",
+          "description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+          "reads": [
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "observer": "Count",
+          "placebo_count": 0,
+          "admission": "FloorPedestalV1"
+        },
+        "crop-poison2": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\independent-run-1\\gather-1-tiffs\\crop-poison2.tif",
+          "sha256": "dcbbb31ea055e0bc8f181c071360eba893d30828f5e3aa92979aeaf4e4720e9f",
+          "bytes": 210267,
+          "shape": [
+            156,
+            224,
+            3
+          ],
+          "pixel_sha256": "1477d5c892e81bdc3f6b3f322bb0d495ad49e2d31864063a43c7ab08d218bb8c",
+          "minimum": 12199,
+          "maximum": 24867,
+          "software": "strehl 0.0.0",
+          "description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+          "reads": [
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "observer": "Count",
+          "placebo_count": 0,
+          "admission": "FloorPedestalV1"
+        },
+        "crop-single-site": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\independent-run-1\\gather-1-tiffs\\crop-single-site.tif",
+          "sha256": "385f1513a2917985ba8163eea91b2566417964b55a11b5b8fdacd7f5111132fc",
+          "bytes": 210267,
+          "shape": [
+            156,
+            224,
+            3
+          ],
+          "pixel_sha256": "c1df252543ce1c143f316675c6b3fc33cd6224e733d3f501b3f57032faa590f6",
+          "minimum": 12199,
+          "maximum": 25313,
+          "software": "strehl 0.0.0",
+          "description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+          "reads": [
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "observer": "Count",
+          "placebo_count": 0,
+          "admission": "FloorPedestalV1"
+        },
+        "crop-noise": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\independent-run-1\\gather-1-tiffs\\crop-noise.tif",
+          "sha256": "c67e189b4238cc921fd740f2603c2600082a8ac40891fb6e007d6f23872b8694",
+          "bytes": 210267,
+          "shape": [
+            156,
+            224,
+            3
+          ],
+          "pixel_sha256": "3d1353777cf9821b48ef39ede294b0ddc920313e8f928ca2f8b1d08bfd37bb4a",
+          "minimum": 12543,
+          "maximum": 24370,
+          "software": "strehl 0.0.0",
+          "description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+          "reads": [
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "observer": "Count",
+          "placebo_count": 0,
+          "admission": "FloorPedestalV1"
+        },
+        "crop-warp": {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\independent-run-1\\gather-1-tiffs\\crop-warp.tif",
+          "sha256": "d338ec435229ff3f1991b3d546c6b97819d1a0aacb6172771b2d298a7120ce36",
+          "bytes": 210267,
+          "shape": [
+            156,
+            224,
+            3
+          ],
+          "pixel_sha256": "cad20c59ed2e066d936a1d7e65da1b8a7bb8ae34ba5eb49e65ad9a48b131c026",
+          "minimum": 12224,
+          "maximum": 24912,
+          "software": "strehl 0.0.0",
+          "description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+          "reads": [
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "observer": "Count",
+          "placebo_count": 0,
+          "admission": "FloorPedestalV1"
+        }
+      },
+      "pass_": true
+    }
+  ],
+  "pass_": true
+}

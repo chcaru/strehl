@@ -278,19 +278,28 @@ this is an accepted correctness tradeoff, not a quality improvement. See the
 [M194c report](../research/M194c-probe-layout.md) for paired uncertainty,
 whole-image extremes, independent controls and retained failures.
 
-**M194d is the next bounded quality experiment:** the prior-art audit identifies
-a narrower first intervention than A1's selected-winner margin. Existing soft
-weights still assign exactly zero below the floor, allowing a tiny crossing by
-one frame to replace an all-frame mean. Test one fixed positive baseline weight
-through the actual production consumer, with explicit numerical refusals and
-80 new outputs:40 off-mode byte controls plus40 candidate outputs. This is a
-heuristic continuity experiment, with dilution/detail loss as a central
-falsifier; it is not calibrated statistical admission. Preserve the prior Phase-1
-and capture gates; this development experiment cannot substitute for them.
-Do not tune the probe seed or gate to hide M194c's flat regression. Keep both
-reference targets and the sparse flat-pixel failure visible. M25's physical
-optics/occlusion limits remain; the later two-layer extension has its own
-controls. No new capture, SOTA admission or default quality promotion is claimed.
+**M194d complete as a promising experimental tradeoff:** one fixed positive
+band-weight baseline reduces flat temporal variance by 54.21%/68.70%/53.53%
+in R/G/B on the eight-repeat software fixture. All40 off-mode TIFFs reproduce
+M194c exactly. The noise-off plane becomes slightly less accurate against both
+targets; its maximum wave-amplitude loss is0.008669 DN. No registered engineering
+trigger fires, but individual truth errors still worsen, up to33.451259 DN
+inside the fixed ROI. Independent readers verify all120 TIFFs and retain the
+sparse costs. See [M194d](../research/M194d-band-admission.md). Keep the new
+weighting experimental, with HardFloor still the default. This is not calibrated
+statistical admission, Phase-1 clearance or a SOTA result. No seed/gate tuning.
+
+**M194e starts the next quality prerequisite:** commission a small geometric
+two-layer renderer that evaluates foreground visibility and background radiance
+at the same pupil sample. Separate blurred-layer means can miss that coupling.
+The existing one-plane benchmark cannot express depth-boundary dilution, and
+M25's failed physical-occlusion/optics gates remain failed. Independently check
+analytic limits, wrong-order controls, coordinate/cell integration and numerical
+convergence before producing a new comparison population. Diffraction, real
+camera calibration and capture-based validation remain outside this step. The
+[charter](../../experiments/m194e-joint-pupil/charter.md) fixes that boundary;
+no default change, full quality matrix or historical artifact edit follows from
+the generator commission alone.
 
 **M192d complete and independently verified:** the
 [native observer rehearsal](../research/M192d-production-rehearsal.md) ran all

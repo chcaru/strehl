@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "C:\dev\blog\death-of-software\projects\strehl\experiments\m194d-band-admission\consumer-run.py", line 216, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "C:\dev\blog\death-of-software\projects\strehl\experiments\m194d-band-admission\consumer-run.py", line 212, in main
+    return build(args) if args.mode == "build" else invoke(args)
+                                                    ^^^^^^^^^^^^
+  File "C:\dev\blog\death-of-software\projects\strehl\experiments\m194d-band-admission\consumer-run.py", line 142, in invoke
+    raise ValueError("compiled source binding changed")
+ValueError: compiled source binding changed

@@ -1,0 +1,14 @@
+[package]
+name = "strehl-core"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+description = "Core types for strehl: noise model, CFA planes, geometry."
+
+[dependencies]
+thiserror.workspace = true
+anyhow.workspace = true
+rayon.workspace = true

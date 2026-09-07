@@ -1,0 +1,60 @@
+
+running 4 tests
+test pyramid::m194d_author_tests::author_actual_near_threshold_and_high_contrast ... ok
+test pyramid::m194d_author_tests::author_equal_below_floor_mean_and_bounded_state ... ok
+test pyramid::m194d_author_tests::author_overflow_refuses_before_clamp_and_configuration_is_explicit ... ok
+test pyramid::m194d_author_tests::author_weight_formula_domain_and_caps ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 555 filtered out; finished in 0.19s
+
+
+thread 'pyramid::m194d_author_tests::author_overflow_refuses_before_clamp_and_configuration_is_explicit' (46644) panicked at crates\strehl-core\src\pyramid.rs:1659:13:
+FloorPedestalV1: nonfinite accumulator
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread 'pyramid::m194d_author_tests::author_overflow_refuses_before_clamp_and_configuration_is_explicit' (46644) panicked at crates\strehl-core\src\pyramid.rs:1659:13:
+FloorPedestalV1: nonfinite accumulator
+
+thread 'pyramid::m194d_author_tests::author_overflow_refuses_before_clamp_and_configuration_is_explicit' (46644) panicked at crates\strehl-core\src\pyramid.rs:2424:21:
+FloorPedestalV1: nonfinite reconstruction before hull
+
+thread 'pyramid::m194d_author_tests::author_overflow_refuses_before_clamp_and_configuration_is_explicit' (46644) panicked at crates\strehl-core\src\pyramid.rs:2407:25:
+FloorPedestalV1: nonfinite resolved coefficient
+
+thread 'pyramid::m194d_author_tests::author_overflow_refuses_before_clamp_and_configuration_is_explicit' (46644) panicked at crates\strehl-core\src\pyramid.rs:1434:13:
+FloorPedestalV1: unsupported experimental configuration
+
+thread 'pyramid::m194d_author_tests::author_overflow_refuses_before_clamp_and_configuration_is_explicit' (46644) panicked at crates\strehl-core\src\pyramid.rs:1434:13:
+FloorPedestalV1: unsupported experimental configuration
+
+thread 'pyramid::m194d_author_tests::author_overflow_refuses_before_clamp_and_configuration_is_explicit' (46644) panicked at crates\strehl-core\src\pyramid.rs:1434:13:
+FloorPedestalV1: unsupported experimental configuration
+
+thread 'pyramid::m194d_author_tests::author_overflow_refuses_before_clamp_and_configuration_is_explicit' (46644) panicked at crates\strehl-core\src\pyramid.rs:1434:13:
+FloorPedestalV1: unsupported experimental configuration
+
+thread 'pyramid::m194d_author_tests::author_overflow_refuses_before_clamp_and_configuration_is_explicit' (46644) panicked at crates\strehl-core\src\pyramid.rs:2075:9:
+assertion `left == right` failed: cannot absorb a different admission mode
+  left: HardFloor
+ right: FloorPedestalV1
+
+thread 'pyramid::m194d_author_tests::author_weight_formula_domain_and_caps' (43928) panicked at crates\strehl-core\src\pyramid.rs:2868:5:
+FloorPedestalV1: invalid energy, floor or exponent
+
+thread 'pyramid::m194d_author_tests::author_weight_formula_domain_and_caps' (43928) panicked at crates\strehl-core\src\pyramid.rs:2868:5:
+FloorPedestalV1: invalid energy, floor or exponent
+
+thread 'pyramid::m194d_author_tests::author_weight_formula_domain_and_caps' (43928) panicked at crates\strehl-core\src\pyramid.rs:2868:5:
+FloorPedestalV1: invalid energy, floor or exponent
+
+thread 'pyramid::m194d_author_tests::author_weight_formula_domain_and_caps' (43928) panicked at crates\strehl-core\src\pyramid.rs:2868:5:
+FloorPedestalV1: invalid energy, floor or exponent
+
+thread 'pyramid::m194d_author_tests::author_weight_formula_domain_and_caps' (43928) panicked at crates\strehl-core\src\pyramid.rs:2868:5:
+FloorPedestalV1: invalid energy, floor or exponent
+
+thread 'pyramid::m194d_author_tests::author_weight_formula_domain_and_caps' (43928) panicked at crates\strehl-core\src\pyramid.rs:2868:5:
+FloorPedestalV1: invalid energy, floor or exponent
+
+thread 'pyramid::m194d_author_tests::author_weight_formula_domain_and_caps' (43928) panicked at crates\strehl-core\src\pyramid.rs:2868:5:
+FloorPedestalV1: invalid energy, floor or exponent

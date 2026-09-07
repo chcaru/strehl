@@ -1,0 +1,230 @@
+{
+  "schema": "m194d-adapter-origin-v1",
+  "source_commit": "444eb759be0358cda25e97d4375f977a039efe6a",
+  "files": [
+    {
+      "source": "experiments/m194b-known-scene/consumer-run.py",
+      "source_sha256": "ca2e635e4bae833b29c8254a4c4932adc3f46fd86e2a6e60587630b1cd23572c",
+      "destination": "experiments/m194d-band-admission/consumer-run.py",
+      "initial_destination_sha256": "15fa40c44ea7b611a417e616566ac840a1dcee4b3f01505bf1af0ac77709a1f5",
+      "initial_edits": [
+        {
+          "old": "Build once, then invoke the ignored known-scene test with pinned artifacts.",
+          "new": "M194d explicit-mode adapter derived from the frozen M194b consumer driver.",
+          "occurrences": 1
+        },
+        {
+          "old": "HERE = Path(__file__).resolve().parent",
+          "new": "HERE = Path(__file__).resolve().parent\nFIXED = ROOT / \"experiments/m194b-known-scene\"",
+          "occurrences": 1
+        },
+        {
+          "old": "TEST = \"merge_cmd::known_scene_benchmark::m194b_known_scene_consumer\"",
+          "new": "TEST = \"merge_cmd::known_scene_benchmark::band_admission_benchmark::m194d_known_scene_consumer\"",
+          "occurrences": 1
+        },
+        {
+          "old": "    return {p.relative_to(ROOT).as_posix(): sha(p) for p in sorted(paths)}",
+          "new": "    paths.update((ROOT / \"experiments/m194c-probe-layout\").glob(\"*.rs\"))\n    paths.update(HERE.glob(\"*.rs\"))\n    paths.add(SOURCE.parent / \"band-admission-benchmark.rs\")\n    return {p.relative_to(ROOT).as_posix(): sha(p) for p in sorted(paths)}",
+          "occurrences": 1
+        },
+        {
+          "old": "\"target/m194b-known-scene\"",
+          "new": "\"target/m194d-band-admission\"",
+          "occurrences": 1
+        },
+        {
+          "old": "m194b-consumer-build-v1",
+          "new": "m194d-consumer-build-v1",
+          "occurrences": 2
+        },
+        {
+          "old": "m194b-consumer-command-v1",
+          "new": "m194d-consumer-command-v1",
+          "occurrences": 1
+        },
+        {
+          "old": "    env.update(STREHL_M194B_MODE=args.mode,",
+          "new": "    env.update(STREHL_M194D_ADMISSION=args.admission,\n               STREHL_M194B_MODE=args.mode,",
+          "occurrences": 1
+        },
+        {
+          "old": "        p.add_argument(\"--build-record\", type=Path, required=True)",
+          "new": "        p.add_argument(\"--admission\", choices=[\"hard-floor\", \"floor-pedestal-v1\"], required=True)\n        p.add_argument(\"--build-record\", type=Path, required=True)",
+          "occurrences": 1
+        }
+      ]
+    },
+    {
+      "source": "experiments/m194b-known-scene/run-baseline.py",
+      "source_sha256": "3b813f181ad1fe4f6cf8801ce66cc2349f45e8f7d7fdaa42a08a18890b68e8ae",
+      "destination": "experiments/m194d-band-admission/run-matrix.py",
+      "initial_destination_sha256": "fe9e521974b059756bb8f9640863680d351b7440cf6c7c091fd472d071010b55",
+      "initial_edits": [
+        {
+          "old": "Produce all fixed M194b plans first, then exactly forty baseline TIFFs.",
+          "new": "Produce one explicitly named M194d mode on all fixed twenty M194b inputs.",
+          "occurrences": 1
+        },
+        {
+          "old": "ROOT = HERE.parents[1]",
+          "new": "ROOT = HERE.parents[1]\nFIXED = ROOT / \"experiments/m194b-known-scene\"",
+          "occurrences": 1
+        },
+        {
+          "old": "    parser.add_argument(\"--out\", type=Path, required=True)",
+          "new": "    parser.add_argument(\"--admission\", choices=[\"hard-floor\", \"floor-pedestal-v1\"], required=True)\n    parser.add_argument(\"--out\", type=Path, required=True)",
+          "occurrences": 1
+        },
+        {
+          "old": "    for name in (\"run-baseline.py\", \"consumer-run.py\", \"commission-forward.py\", \"score.py\", \"score-benchmark.py\",\n                 \"preregister.md\", \"scorer-preregister.md\", \"producer-preregister.json\"):\n        p = HERE / name\n        source_map[p.relative_to(ROOT).as_posix()] = sha(p)",
+          "new": "    for name in (\"run-baseline.py\", \"consumer-run.py\", \"commission-forward.py\", \"score.py\", \"score-benchmark.py\",\n                 \"preregister.md\", \"scorer-preregister.md\", \"producer-preregister.json\"):\n        p = FIXED / name\n        source_map[p.relative_to(ROOT).as_posix()] = sha(p)\n    for p in sorted(HERE.glob(\"*.py\")):\n        source_map[p.relative_to(ROOT).as_posix()] = sha(p)\n    for name in (\"comparison-preregister.md\", \"implementation-preregister.md\", \"adapter-lineage.json\"):\n        p = HERE / name\n        source_map[p.relative_to(ROOT).as_posix()] = sha(p)",
+          "occurrences": 1
+        },
+        {
+          "old": "\"schema\": \"m194b-benchmark-run-v1\", \"status\": \"planning\",",
+          "new": "\"schema\": \"m194d-benchmark-run-v1\", \"admission\": args.admission, \"status\": \"planning\",",
+          "occurrences": 1
+        },
+        {
+          "old": "    bindings = [\"--build-record\",",
+          "new": "    bindings = [\"--admission\", args.admission, \"--build-record\",",
+          "occurrences": 1
+        }
+      ]
+    },
+    {
+      "source": "experiments/m194b-known-scene/score-benchmark.py",
+      "source_sha256": "eccbd41383ebcb46d865aef6745b39cafe91dab9294ea109b3a83981388fa80b",
+      "destination": "experiments/m194d-band-admission/score-benchmark.py",
+      "initial_destination_sha256": "ca277f9abec9356939193c2ccc04388f119c2602689091d263e636dedd7e6d00",
+      "initial_edits": [
+        {
+          "old": "Read a trusted M194b run index, actual CFA bindings and actual TIFF pixels.",
+          "new": "Read an explicit M194d mode with unchanged M194b numerical scoring.",
+          "occurrences": 1
+        },
+        {
+          "old": "spec = importlib.util.spec_from_file_location(\"m194b_score\", HERE / \"score.py\")",
+          "new": "ROOT = HERE.parents[1]\nFIXED = ROOT / \"experiments/m194b-known-scene\"\nspec = importlib.util.spec_from_file_location(\"m194b_score\", FIXED / \"score.py\")",
+          "occurrences": 1
+        },
+        {
+          "old": "def require(condition, message):",
+          "new": "MODES = {\"hard-floor\": (\"HardFloor\", \"hard-floor-v1\"),\n         \"floor-pedestal-v1\": (\"FloorPedestalV1\", \"floor-pedestal-v1: q=max(E-F,0); w=(hypot(q/max(F,1),1)/64)^p\")}\n\n\ndef configuration(admission):\n    require(admission in MODES, \"unknown admission mode\")\n    name, formula = MODES[admission]\n    return dict(CONFIG, admission=name, admission_formula=formula)\n\n\ndef environment(admission):\n    require(admission in MODES, \"unknown admission mode\")\n    return dict(ENVIRONMENT, STREHL_M194D_ADMISSION=admission)\n\n\ndef require(condition, message):",
+          "occurrences": 1
+        },
+        {
+          "old": "def validate_plan(plan, manifest, manifest_sha):",
+          "new": "def validate_plan(plan, manifest, manifest_sha, admission):",
+          "occurrences": 1
+        },
+        {
+          "old": "\"m194b-consumer-plan-v1\"",
+          "new": "\"m194d-consumer-plan-v1\"",
+          "occurrences": 1
+        },
+        {
+          "old": "plan[\"config\"] == CONFIG",
+          "new": "plan[\"config\"] == configuration(admission)",
+          "occurrences": 1
+        },
+        {
+          "old": "plan[\"environment\"] == ENVIRONMENT",
+          "new": "plan[\"environment\"] == environment(admission)",
+          "occurrences": 1
+        },
+        {
+          "old": "\"merge_cmd::known_scene_benchmark::m194b_known_scene_consumer\"",
+          "new": "\"merge_cmd::known_scene_benchmark::band_admission_benchmark::m194d_known_scene_consumer\"",
+          "occurrences": 2
+        },
+        {
+          "old": "m194b-consumer-command-v1",
+          "new": "m194d-consumer-command-v1",
+          "occurrences": 1
+        },
+        {
+          "old": "        environment = dict(ENVIRONMENT, STREHL_M194B_MODE=mode,",
+          "new": "        expected_env = dict(environment(index[\"admission\"]), STREHL_M194B_MODE=mode,",
+          "occurrences": 1
+        },
+        {
+          "old": "            environment.update(STREHL_M194B_PLAN_SHA256=case[\"plan_sha256\"],",
+          "new": "            expected_env.update(STREHL_M194B_PLAN_SHA256=case[\"plan_sha256\"],",
+          "occurrences": 1
+        },
+        {
+          "old": "got_env == environment,",
+          "new": "got_env == expected_env,",
+          "occurrences": 1
+        },
+        {
+          "old": "wanted_flags = {\"--build-record\":",
+          "new": "wanted_flags = {\"--admission\": index[\"admission\"], \"--build-record\":",
+          "occurrences": 1
+        },
+        {
+          "old": "environment[\"STREHL_M194B_SUBSET\"]",
+          "new": "expected_env[\"STREHL_M194B_SUBSET\"]",
+          "occurrences": 1
+        },
+        {
+          "old": "index[\"schema\"] == \"m194b-benchmark-run-v1\"",
+          "new": "index[\"schema\"] == \"m194d-benchmark-run-v1\"",
+          "occurrences": 1
+        },
+        {
+          "old": "    require(index[\"sources_before\"] == index[\"sources_after\"],",
+          "new": "    require(index[\"admission\"] in MODES, \"unknown indexed admission mode\")\n    require(index[\"sources_before\"] == index[\"sources_after\"],",
+          "occurrences": 1
+        },
+        {
+          "old": "scorer_paths = {f\"experiments/m194b-known-scene/{name}\" for name in (\"score.py\", \"score-benchmark.py\")}\n    actual_readers = {p: S.sha256(HERE / Path(p).name) for p in scorer_paths}",
+          "new": "scorer_paths = {\"experiments/m194b-known-scene/score.py\",\n                    \"experiments/m194d-band-admission/score-benchmark.py\"}\n    actual_readers = {p: S.sha256(ROOT / p) for p in scorer_paths}",
+          "occurrences": 1
+        },
+        {
+          "old": "m194b-reader-revision-v1",
+          "new": "m194d-reader-revision-v1",
+          "occurrences": 1
+        },
+        {
+          "old": "m194b-consumer-build-v1",
+          "new": "m194d-consumer-build-v1",
+          "occurrences": 1
+        },
+        {
+          "old": "\"crates/strehl-cli/src/merge_cmd/known-scene-benchmark.rs\"}",
+          "new": "\"crates/strehl-cli/src/merge_cmd/known-scene-benchmark.rs\",\n                        \"crates/strehl-cli/src/merge_cmd/band-admission-benchmark.rs\",\n                        \"crates/strehl-core/src/pyramid.rs\"}",
+          "occurrences": 1
+        },
+        {
+          "old": "\"target/m194b-known-scene\"",
+          "new": "\"target/m194d-band-admission\"",
+          "occurrences": 1
+        },
+        {
+          "old": "validate_plan(plan, manifest, case[\"manifest_sha256\"])",
+          "new": "validate_plan(plan, manifest, case[\"manifest_sha256\"], index[\"admission\"])",
+          "occurrences": 1
+        },
+        {
+          "old": "m194b-consumer-receipt-v1",
+          "new": "m194d-consumer-receipt-v1",
+          "occurrences": 1
+        },
+        {
+          "old": "\"schema\": \"m194b-baseline-score-v1\",",
+          "new": "\"schema\": \"m194d-mode-score-v1\", \"admission\": index[\"admission\"],",
+          "occurrences": 1
+        },
+        {
+          "old": "\"scorer_sha256\": S.sha256(HERE / \"score.py\")",
+          "new": "\"scorer_sha256\": S.sha256(FIXED / \"score.py\")",
+          "occurrences": 1
+        }
+      ]
+    }
+  ]
+}

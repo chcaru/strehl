@@ -1,0 +1,1308 @@
+{
+  "schema": "m194d-scoped-format-v1",
+  "fix": true,
+  "files": [
+    {
+      "path": "crates/strehl-core/src/pyramid.rs",
+      "command": [
+        "rustfmt",
+        "--edition",
+        "2024",
+        "--config",
+        "skip_children=true",
+        "--emit",
+        "stdout",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-core\\src\\pyramid.rs"
+      ],
+      "owned_format_changes": 5,
+      "inherited_differences": [
+        {
+          "current_lines": [
+            156,
+            157
+          ],
+          "lines": [
+            "    assert_eq!(src.len(), src_size.pixels(), \"reduce: source is not level-sized\");",
+            "    assert_eq!(dst.len(), dst_size.pixels(), \"reduce: destination is not level-sized\");"
+          ]
+        },
+        {
+          "current_lines": [
+            223,
+            224
+          ],
+          "lines": [
+            "    assert_eq!(src.len(), src_size.pixels(), \"expand: source is not level-sized\");",
+            "    assert_eq!(dst.len(), dst_size.pixels(), \"expand: destination is not level-sized\");"
+          ]
+        },
+        {
+          "current_lines": [
+            272,
+            272
+          ],
+          "lines": [
+            "        0.125 * row[clamp_idx(c as isize - 1, n)] + 0.75 * row[c] + 0.125 * row[clamp_idx(c as isize + 1, n)]"
+          ]
+        },
+        {
+          "current_lines": [
+            330,
+            330
+          ],
+          "lines": [
+            "        assert_eq!(src.len(), self.sizes[0].pixels(), \"pyramid: source is not level-0 sized\");"
+          ]
+        },
+        {
+          "current_lines": [
+            372,
+            372
+          ],
+          "lines": [
+            "            acc.par_iter_mut().zip(&self.data[k]).for_each(|(a, l)| *a += l);"
+          ]
+        },
+        {
+          "current_lines": [
+            384,
+            384
+          ],
+          "lines": [
+            "        assert_eq!(src.len(), self.sizes[0].pixels(), \"pyramid: source is not level-0 sized\");"
+          ]
+        },
+        {
+          "current_lines": [
+            469,
+            469
+          ],
+          "lines": [
+            "        debug_assert_eq!(sizes.len(), bands + 1, \"the probe is too small for {bands} bands\");"
+          ]
+        },
+        {
+          "current_lines": [
+            485,
+            485
+          ],
+          "lines": [
+            "            let mut state: u64 = 0x2545_F491_4F6C_DD1D ^ (r as u64).wrapping_mul(0x9E37_79B9_7F4A_7C15);"
+          ]
+        },
+        {
+          "current_lines": [
+            1453,
+            1453
+          ],
+          "lines": [
+            "        let per_level = || -> Vec<Vec<f32>> { sizes.iter().map(|s| vec![0.0; s.pixels()]).collect() };"
+          ]
+        },
+        {
+          "current_lines": [
+            1457,
+            1458
+          ],
+          "lines": [
+            "            num: (0..nl * planes).map(|i| vec![0.0; sizes[i / planes].pixels()]).collect(),",
+            "            usum: (0..nl * planes).map(|i| vec![0.0; sizes[i / planes].pixels()]).collect(),"
+          ]
+        },
+        {
+          "current_lines": [
+            1483,
+            1483
+          ],
+          "lines": [
+            "                true => (0..planes).map(|_| vec![f32::INFINITY; sizes[0].pixels()]).collect(),"
+          ]
+        },
+        {
+          "current_lines": [
+            1487,
+            1489
+          ],
+          "lines": [
+            "                true => {",
+            "                    (0..planes).map(|_| vec![f32::NEG_INFINITY; sizes[0].pixels()]).collect()",
+            "                }"
+          ]
+        },
+        {
+          "current_lines": [
+            1581,
+            1583
+          ],
+          "lines": [
+            "                + usize::from(cfg.fallback != Fallback::Mean)",
+            "                    * cfg.fallback_slots()",
+            "                    * (planes + 1))"
+          ]
+        },
+        {
+          "current_lines": [
+            1865,
+            1868
+          ],
+          "lines": [
+            "                    lo.par_iter_mut().zip(hi.par_iter_mut()).zip(g).for_each(|((l, h), v)| {",
+            "                        *l = l.min(*v);",
+            "                        *h = h.max(*v);",
+            "                    });"
+          ]
+        },
+        {
+          "current_lines": [
+            1884,
+            1888
+          ],
+          "lines": [
+            "                    let beta = Self::beta_for(",
+            "                        &self.gain,",
+            "                        frame_beta,",
+            "                        k.min(self.sizes.len() - 2),",
+            "                    );"
+          ]
+        },
+        {
+          "current_lines": [
+            1981,
+            1981
+          ],
+          "lines": [
+            "                den.par_iter_mut().zip(w).for_each(|(d, wv)| *d = d.max(*wv));"
+          ]
+        },
+        {
+          "current_lines": [
+            2107,
+            2108
+          ],
+          "lines": [
+            "                            let take_b = ia >= slots",
+            "                                || (ib < slots && bk[base + ib] > ak[base + ia]);"
+          ]
+        },
+        {
+          "current_lines": [
+            2233,
+            2234
+          ],
+          "lines": [
+            "                        self.darg[k][i] =",
+            "                            if other.darg[k][i] < 0 { -1 } else { other.darg[k][i] + base };"
+          ]
+        },
+        {
+          "current_lines": [
+            2308,
+            2308
+          ],
+          "lines": [
+            "                let share = if d > 0.0 { self.dmax[k][i] / d } else { f32::NAN };"
+          ]
+        },
+        {
+          "current_lines": [
+            2461,
+            2461
+          ],
+          "lines": [
+            "            expand(&acc, pyr.sizes()[k + 1], &mut up, pyr.sizes()[k], &mut ws.scratch);"
+          ]
+        },
+        {
+          "current_lines": [
+            2527,
+            2527
+          ],
+          "lines": [
+            "            cfg: MergeConfig { hull: Hull::Unclamped, ..self.cfg },"
+          ]
+        },
+        {
+          "current_lines": [
+            2593,
+            2593
+          ],
+          "lines": [
+            "            + self.plane.pyramids.iter().map(Pyramid::floats).sum::<usize>()"
+          ]
+        },
+        {
+          "current_lines": [
+            2890,
+            2890
+          ],
+          "lines": [
+            "        (0..w * h).map(|i| (i % 97) as f32 * 0.37 + (i / 97) as f32 * 0.11).collect()"
+          ]
+        },
+        {
+          "current_lines": [
+            2895,
+            2895
+          ],
+          "lines": [
+            "        assert_eq!(KERNEL, [1.0 / 16.0, 4.0 / 16.0, 6.0 / 16.0, 4.0 / 16.0, 1.0 / 16.0]);"
+          ]
+        },
+        {
+          "current_lines": [
+            2901,
+            2901
+          ],
+          "lines": [
+            "        let size = LevelSize { width: 37, height: 23 };"
+          ]
+        },
+        {
+          "current_lines": [
+            2923,
+            2923
+          ],
+          "lines": [
+            "        let ss = LevelSize { width: 16, height: 1 };"
+          ]
+        },
+        {
+          "current_lines": [
+            2925,
+            2925
+          ],
+          "lines": [
+            "        let ds = LevelSize { width: 32, height: 1 };"
+          ]
+        },
+        {
+          "current_lines": [
+            2982,
+            2982
+          ],
+          "lines": [
+            "        assert_eq!(sizes[0], LevelSize { width: 3516, height: 2344 });"
+          ]
+        },
+        {
+          "current_lines": [
+            3001,
+            3001
+          ],
+          "lines": [
+            "        assert!(g.beta(0) > g.beta(1), \"the finest band must carry the most noise\");"
+          ]
+        },
+        {
+          "current_lines": [
+            3008,
+            3008
+          ],
+          "lines": [
+            "        assert_eq!(g.all(), again.all(), \"the band gain probe is not reproducible\");"
+          ]
+        },
+        {
+          "current_lines": [
+            3079,
+            3079
+          ],
+          "lines": [
+            "        let flat = MergeConfig { sharpen_per_octave: 1.0, ..MergeConfig::default() };"
+          ]
+        },
+        {
+          "current_lines": [
+            3287,
+            3287
+          ],
+          "lines": [
+            "            let w: Vec<f32> = excesses.iter().map(|e| select_weight(*e, floor, p, rf)).collect();"
+          ]
+        },
+        {
+          "current_lines": [
+            3306,
+            3306
+          ],
+          "lines": [
+            "        assert!(real > noise * 4.0, \"improvement {real:.3} vs noise {noise:.3}\");"
+          ]
+        },
+        {
+          "current_lines": [
+            3326,
+            3326
+          ],
+          "lines": [
+            "                assert!(rf.is_finite() && rf > 0.0, \"significance_floor({gate}) = {rf}\");"
+          ]
+        },
+        {
+          "current_lines": [
+            3405,
+            3405
+          ],
+          "lines": [
+            "        assert!(on > off * 1.01, \"enabled at 1000x, the fix moved the weight {off:e} -> {on:e}\");"
+          ]
+        },
+        {
+          "current_lines": [
+            3416,
+            3416
+          ],
+          "lines": [
+            "        assert_eq!(select_weight(e, floor, p, base * 0.0), select_weight(e, floor, p, 0.0));"
+          ]
+        },
+        {
+          "current_lines": [
+            3421,
+            3421
+          ],
+          "lines": [
+            "            assert!(w >= prev, \"a larger floor lowered the weight at scale {scale}\");"
+          ]
+        },
+        {
+          "current_lines": [
+            3427,
+            3427
+          ],
+          "lines": [
+            "        assert!(moved >= 3, \"turning the scale up 1000x moved the weight {moved} times\");"
+          ]
+        },
+        {
+          "current_lines": [
+            3437,
+            3437
+          ],
+          "lines": [
+            "        let cfg = MergeConfig { sharpen_per_octave: 2.0, ..MergeConfig::default() };"
+          ]
+        },
+        {
+          "current_lines": [
+            3479,
+            3479
+          ],
+          "lines": [
+            "        let cfg = MergeConfig { bands: 4, ..Default::default() };"
+          ]
+        },
+        {
+          "current_lines": [
+            3500,
+            3500
+          ],
+          "lines": [
+            "                    let m = 0.25 * (img[y * w + x - 1] + img[y * w + x + 1] + img[(y - 1) * w + x] + img[(y + 1) * w + x]);"
+          ]
+        },
+        {
+          "current_lines": [
+            3531,
+            3531
+          ],
+          "lines": [
+            "        let cfg = MergeConfig { bands: 4, ..Default::default() };"
+          ]
+        },
+        {
+          "current_lines": [
+            3548,
+            3548
+          ],
+          "lines": [
+            "            let s = LevelSize { width: w, height: h };"
+          ]
+        },
+        {
+          "current_lines": [
+            3578,
+            3578
+          ],
+          "lines": [
+            "        assert!(seam < away + 0.01 * bg, \"the seam is worse than a non-seam column\");"
+          ]
+        },
+        {
+          "current_lines": [
+            3593,
+            3593
+          ],
+          "lines": [
+            "            state = state.wrapping_mul(6364136223846793005).wrapping_add(1442695040888963407);"
+          ]
+        },
+        {
+          "current_lines": [
+            3599,
+            3599
+          ],
+          "lines": [
+            "        let cfg = MergeConfig { bands: 4, ..Default::default() };"
+          ]
+        },
+        {
+          "current_lines": [
+            3638,
+            3638
+          ],
+          "lines": [
+            "        let cfg = MergeConfig { bands: 3, ..Default::default() };"
+          ]
+        },
+        {
+          "current_lines": [
+            3671,
+            3671
+          ],
+          "lines": [
+            "        let err = one.iter().zip(&three).map(|(a, b)| (a - b).abs()).fold(0.0f32, f32::max);"
+          ]
+        },
+        {
+          "current_lines": [
+            3677,
+            3677
+          ],
+          "lines": [
+            "        assert!(err < 1e-3 * scale, \"chunking changed the merge: {err} on a scale of {scale}\");"
+          ]
+        },
+        {
+          "current_lines": [
+            3683,
+            3683
+          ],
+          "lines": [
+            "        let cfg = MergeConfig { bands: 3, ..Default::default() };"
+          ]
+        },
+        {
+          "current_lines": [
+            3804,
+            3804
+          ],
+          "lines": [
+            "        let cfg = MergeConfig { bands: 3, ..Default::default() };"
+          ]
+        },
+        {
+          "current_lines": [
+            3818,
+            3820
+          ],
+          "lines": [
+            "        let fold_into = |merge: &mut BandMerge,",
+            "                         fws: &mut FrameWorkspace,",
+            "                         chunk: &[Vec<f32>]| {"
+          ]
+        },
+        {
+          "current_lines": [
+            3852,
+            3853
+          ],
+          "lines": [
+            "                    recycled_acc =",
+            "                        Some(std::mem::replace(&mut scratch, BandMerge::new(w, h, 1, cfg)));"
+          ]
+        },
+        {
+          "current_lines": [
+            3911,
+            3911
+          ],
+          "lines": [
+            "        let base = MergeConfig { bands: 3, gate: 1e9, ..Default::default() };"
+          ]
+        },
+        {
+          "current_lines": [
+            3915,
+            3916
+          ],
+          "lines": [
+            "            (\"Best\", true, MergeConfig { fallback: Fallback::Best, ..base }),",
+            "            (\"TopK\", true, MergeConfig { fallback: Fallback::TopK, fallback_k: 3, ..base }),"
+          ]
+        },
+        {
+          "current_lines": [
+            3923,
+            3923
+          ],
+          "lines": [
+            "            (\"Power\", false, MergeConfig { fallback: Fallback::Power, ..base }),"
+          ]
+        },
+        {
+          "current_lines": [
+            3934,
+            3936
+          ],
+          "lines": [
+            "                    let e =",
+            "                        one.iter().zip(other).map(|(a, b)| (a - b).abs()).fold(0.0f32, f32::max);",
+            "                    assert!(e < 1e-5 * scale, \"chunking 1 vs {n} moved {name} by {e}/{scale}\");"
+          ]
+        },
+        {
+          "current_lines": [
+            3955,
+            3955
+          ],
+          "lines": [
+            "        let flat = MergeConfig { fallback: Fallback::Power, fallback_power: 0.0, ..base };"
+          ]
+        },
+        {
+          "current_lines": [
+            3957,
+            3957
+          ],
+          "lines": [
+            "        let err = flat_out.iter().zip(&mean).map(|(a, b)| (a - b).abs()).fold(0.0f32, f32::max);"
+          ]
+        },
+        {
+          "current_lines": [
+            3959,
+            3959
+          ],
+          "lines": [
+            "        assert!(err <= 1e-4 * scale, \"Power(p=0) is not the mean: {err} on a scale of {scale}\");"
+          ]
+        },
+        {
+          "current_lines": [
+            3968,
+            3968
+          ],
+          "lines": [
+            "        let cfg = MergeConfig { bands: 3, ..Default::default() };"
+          ]
+        },
+        {
+          "current_lines": [
+            3989,
+            3989
+          ],
+          "lines": [
+            "        assert!(err < 1e-3 * scale, \"planes did not share one selection: {err} of {scale}\");"
+          ]
+        },
+        {
+          "current_lines": [
+            4011,
+            4012
+          ],
+          "lines": [
+            "        let err = src.iter().zip(&out).map(|(a, b)| (a - b).abs()).fold(0.0f32, f32::max);",
+            "        assert!(err < 1e-2, \"merging a frame with itself moved it by {err} DN\");"
+          ]
+        },
+        {
+          "current_lines": [
+            4020,
+            4020
+          ],
+          "lines": [
+            "        let cfg = MergeConfig { bands: 3, select: SelectMode::HardMax, ..Default::default() };"
+          ]
+        },
+        {
+          "current_lines": [
+            4039,
+            4039
+          ],
+          "lines": [
+            "        let cfg = MergeConfig { bands: 3, ..Default::default() };"
+          ]
+        },
+        {
+          "current_lines": [
+            4053,
+            4053
+          ],
+          "lines": [
+            "            assert!(*f > 0.999, \"level {k} claims it selected on pure noise: {f}\");"
+          ]
+        },
+        {
+          "current_lines": [
+            4082,
+            4082
+          ],
+          "lines": [
+            "                let coarse = if x >= coarse_lo && x < coarse_lo + stripe { 700.0 } else { 0.0 };"
+          ]
+        },
+        {
+          "current_lines": [
+            4099,
+            4099
+          ],
+          "lines": [
+            "        let cfg = MergeConfig { hull, ..MergeConfig::default() };"
+          ]
+        },
+        {
+          "current_lines": [
+            4137,
+            4137
+          ],
+          "lines": [
+            "        assert!(worst > 0.01, \"violations are trivially small (worst {worst} of span)\");"
+          ]
+        },
+        {
+          "current_lines": [
+            4143,
+            4143
+          ],
+          "lines": [
+            "        assert_eq!(bad, 0, \"{bad}/{n} output pixels outside the input hull, worst {worst} of span\");"
+          ]
+        },
+        {
+          "current_lines": [
+            4151,
+            4151
+          ],
+          "lines": [
+            "        assert_eq!(bad, 0, \"{bad}/{n} output pixels outside the input hull, worst {worst} of span\");"
+          ]
+        },
+        {
+          "current_lines": [
+            4166,
+            4166
+          ],
+          "lines": [
+            "        let cfg = MergeConfig { hull, ..MergeConfig::default() };"
+          ]
+        },
+        {
+          "current_lines": [
+            4203,
+            4203
+          ],
+          "lines": [
+            "        a.iter().zip(b).filter(|(x, y)| (*x - *y).abs() > 1e-3).count()"
+          ]
+        },
+        {
+          "current_lines": [
+            4219,
+            4222
+          ],
+          "lines": [
+            "        let base = MergeConfig { hull: Hull::PerLevel, ..MergeConfig::default() };",
+            "        let all = render_cfg(MergeConfig { hull_from_level: 1, ..base });",
+            "        let none = render_cfg(MergeConfig { hull_from_level: 999, ..base });",
+            "        let flat = render_cfg(MergeConfig { hull: Hull::InputRange, ..MergeConfig::default() });"
+          ]
+        },
+        {
+          "current_lines": [
+            4238,
+            4238
+          ],
+          "lines": [
+            "    fn hull_low_only_bounds_the_dark_side_alone() {        // ORCH's acceptance data is one-sided -- 3.01% clipped at hard black"
+          ]
+        },
+        {
+          "current_lines": [
+            4243,
+            4246
+          ],
+          "lines": [
+            "        let base = MergeConfig { hull: Hull::PerLevel, ..MergeConfig::default() };",
+            "        let sym = render_cfg(MergeConfig { hull_low_only: false, ..base });",
+            "        let low = render_cfg(MergeConfig { hull_low_only: true, ..base });",
+            "        let off = render_cfg(MergeConfig { hull_from_level: 999, ..base });"
+          ]
+        },
+        {
+          "current_lines": [
+            4310,
+            4310
+          ],
+          "lines": [
+            "        let cfg = MergeConfig { hull: Hull::PerLevel, ..MergeConfig::default() };"
+          ]
+        },
+        {
+          "current_lines": [
+            4324,
+            4324
+          ],
+          "lines": [
+            "        assert!(worst < 1e-2, \"identical frames did not reconstruct themselves: worst {worst} DN\");"
+          ]
+        },
+        {
+          "current_lines": [
+            4340,
+            4340
+          ],
+          "lines": [
+            "            assert_eq!(*a, *b, \"pixel {i}: clamped to {a} from a single input of {b}\");"
+          ]
+        },
+        {
+          "current_lines": [
+            4366,
+            4367
+          ],
+          "lines": [
+            "            assert_eq!(serial.lo[0][i], chunked.lo[0][i], \"hull floor differs at {i}\");",
+            "            assert_eq!(serial.hi[0][i], chunked.hi[0][i], \"hull ceiling differs at {i}\");"
+          ]
+        },
+        {
+          "current_lines": [
+            4386,
+            4386
+          ],
+          "lines": [
+            "        assert!(frac[0] > 0.0, \"the clamp bound on this stack but reported {}\", frac[0]);"
+          ]
+        },
+        {
+          "current_lines": [
+            4399,
+            4400
+          ],
+          "lines": [
+            "        let worst = flat",
+            "            .finish(&mut Workspace::new(&sizes))[0]"
+          ]
+        },
+        {
+          "current_lines": [
+            4404,
+            4405
+          ],
+          "lines": [
+            "        assert!(worst < 1.0, \"identical frames reconstructed {worst} DN off, which is not dust\");",
+            "        assert!(raw[0] > 0.0, \"no dust at tol=0, so this test is not exercising the tolerance\");"
+          ]
+        },
+        {
+          "current_lines": [
+            4407,
+            4407
+          ],
+          "lines": [
+            "        assert_eq!(q[0], 0.0, \"the clamp bound on identical frames, reporting {}\", q[0]);"
+          ]
+        },
+        {
+          "current_lines": [
+            4441,
+            4441
+          ],
+          "lines": [
+            "            let cfg = MergeConfig { bands: 3, base, ..Default::default() };"
+          ]
+        },
+        {
+          "current_lines": [
+            4481,
+            4481
+          ],
+          "lines": [
+            "            run_merge(w, h, bands, &a, &b, MergeConfig {"
+          ]
+        },
+        {
+          "current_lines": [
+            4483,
+            4485
+          ],
+          "lines": [
+            "                mean_coarse,",
+            "                ..Default::default()",
+            "            })"
+          ]
+        },
+        {
+          "current_lines": [
+            4513,
+            4513
+          ],
+          "lines": [
+            "        let got = run_merge(w, h, bands, &a, &b, MergeConfig {"
+          ]
+        },
+        {
+          "current_lines": [
+            4515,
+            4518
+          ],
+          "lines": [
+            "            // Every Laplacian band averaged; the base is `Mean` by default.",
+            "            mean_coarse: bands,",
+            "            ..Default::default()",
+            "        });"
+          ]
+        }
+      ],
+      "sha256_before": "d76f88dabb20110a2b65a240cb57ee5884a006b84e6a3b4ccb8410f0dc07e89f",
+      "sha256_after": "848b485271abc48ee496ee69d70a1e01f45074bfbccde7a7ca076ded90f77d9e"
+    },
+    {
+      "path": "crates/strehl-cli/src/merge_cmd.rs",
+      "command": [
+        "rustfmt",
+        "--edition",
+        "2024",
+        "--config",
+        "skip_children=true",
+        "--emit",
+        "stdout",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-cli\\src\\merge_cmd.rs"
+      ],
+      "owned_format_changes": 1,
+      "inherited_differences": [
+        {
+          "current_lines": [
+            42,
+            42
+          ],
+          "lines": [
+            "use strehl_core::photometric::{self, Flux, PhotometricMap, PhotometricMode};"
+          ]
+        },
+        {
+          "current_lines": [
+            48,
+            48
+          ],
+          "lines": [
+            "use strehl_core::focus::FocusField;use strehl_core::merge::{"
+          ]
+        },
+        {
+          "current_lines": [
+            53,
+            52
+          ],
+          "lines": []
+        },
+        {
+          "current_lines": [
+            76,
+            75
+          ],
+          "lines": []
+        },
+        {
+          "current_lines": [
+            78,
+            80
+          ],
+          "lines": [
+            "#[cfg(test)]",
+            "#[path = \"merge_cmd/known-scene-benchmark.rs\"]",
+            "mod known_scene_benchmark;"
+          ]
+        },
+        {
+          "current_lines": [
+            682,
+            682
+          ],
+          "lines": [
+            "        other => bail!(\"unknown --pyramid-select {other:?}; valid values are `soft` and `hard-max`\"),"
+          ]
+        },
+        {
+          "current_lines": [
+            1653,
+            1655
+          ],
+          "lines": [
+            "                        scratch",
+            "                            .field",
+            "                            .compute_scaled_with_measure(op.measure(), &scratch.luma, noise, s);"
+          ]
+        },
+        {
+          "current_lines": [
+            1685,
+            1690
+          ],
+          "lines": [
+            "            scratch.field.compute_with_fine(",
+            "                &scratch.luma,",
+            "                noise,",
+            "                STATS_RADIUS,",
+            "                &mut scratch.fine,",
+            "            );"
+          ]
+        },
+        {
+          "current_lines": [
+            1949,
+            1949
+          ],
+          "lines": [
+            ""
+          ]
+        },
+        {
+          "current_lines": [
+            2148,
+            2149
+          ],
+          "lines": [
+            "    std::fs::create_dir_all(dir)",
+            "        .with_context(|| format!(\"creating {}\", dir.display()))?;"
+          ]
+        },
+        {
+          "current_lines": [
+            2210,
+            2210
+          ],
+          "lines": [
+            "        (\"bimodal-mode-balance.tif\", quant(&modes.mode_balance(), 65535.0)),"
+          ]
+        },
+        {
+          "current_lines": [
+            2243,
+            2258
+          ],
+          "lines": [
+            "        .map(|(ci, chunk)| -> Result<(FocusStats, Option<BimodalStats>, Timings)> {",
+            "            let first_index = (ci * plan.chunk_len) as u16;",
+            "            let mut stats = FocusStats::new(geom);",
+            "            // Rides the guide's decode. The detector needs the NARROW field",
+            "            // for the same reason the guide does: a 13 px window smears the",
+            "            // foreground and background modes into a single peak, which is",
+            "            // precisely the confusion under investigation.",
+            "            let mut modes = bimodal.then(|| BimodalStats::new(geom));",
+            "            let mut scratch = Scratch::new_with_warp(geom, false, ctx.warps.is_some());",
+            "            let mut t = Timings::default();",
+            "            for (offset, path) in chunk.iter().enumerate() {",
+            "                let index = first_index + offset as u16;",
+            "                // The guide must skip exactly the frames the merge skips, or it",
+            "                // would locate silhouettes in a bracket the election never sees.",
+            "                if ctx.is_refused(index) {",
+            "                    continue;"
+          ]
+        },
+        {
+          "current_lines": [
+            2260,
+            2271
+          ],
+          "lines": [
+            "                let frame = ctx.field_for(path, index, &mut scratch, &mut t)?;",
+            "                ctx.release(frame);",
+            "                stats",
+            "                    .fold(index, &scratch.reg)",
+            "                    .map_err(|e| map_dim_err(index, e))?;",
+            "                if let Some(m) = modes.as_mut() {",
+            "                    m.fold(index, &scratch.reg)",
+            "                        .map_err(|e| anyhow::anyhow!(\"frame {index}: {e}\"))?;",
+            "                }",
+            "            }",
+            "            Ok((stats, modes, t))",
+            "        })"
+          ]
+        },
+        {
+          "current_lines": [
+            2678,
+            2680
+          ],
+          "lines": [
+            "pub fn resolve_photometric_mode(",
+            "    flag: Option<&str>,",
+            ") -> Result<(PhotometricMode, SettingSource)> {"
+          ]
+        },
+        {
+          "current_lines": [
+            3438,
+            3440
+          ],
+          "lines": [
+            "        eprintln!(",
+            "            \"guide radius    : {GUIDE_RADIUS} px box on |grad|, elected NARROW on purpose\"",
+            "        );"
+          ]
+        },
+        {
+          "current_lines": [
+            3492,
+            3492
+          ],
+          "lines": [
+            "                    q(0.10), q(0.25), q(0.50), q(0.75), q(0.90), q(0.99), q(1.0)"
+          ]
+        },
+        {
+          "current_lines": [
+            3584,
+            3587
+          ],
+          "lines": [
+            "                    .map(|(l, n)| format!(",
+            "                        \"L{l} {:.2}%\",",
+            "                        100.0 * *n as f64 / geom.pixels() as f64",
+            "                    ))"
+          ]
+        },
+        {
+          "current_lines": [
+            3619,
+            3619
+          ],
+          "lines": [
+            "    let refused: Vec<u16> = (0..paths.len() as u16).filter(|i| ctx.is_refused(*i)).collect();"
+          ]
+        },
+        {
+          "current_lines": [
+            3699,
+            3700
+          ],
+          "lines": [
+            "                PhotometricMode::Auto =>",
+            "                    \"auto, decides after pass one from this stack's drift\","
+          ]
+        },
+        {
+          "current_lines": [
+            4173,
+            4173
+          ],
+          "lines": [
+            "                            veil_incoherence.as_deref().expect(\"refused above if absent\"),"
+          ]
+        },
+        {
+          "current_lines": [
+            4690,
+            4693
+          ],
+          "lines": [
+            "                    let row = (active_y + 2 * full_y + dy) * stride",
+            "                        + active_x",
+            "                        + 2 * domain.rect.x",
+            "                        + dx;"
+          ]
+        },
+        {
+          "current_lines": [
+            5296,
+            5296
+          ],
+          "lines": [
+            "            out[i] = 4.0f32.mul_add(luma[i], -(luma[i - 1] + luma[i + 1] + luma[i - w] + luma[i + w]))"
+          ]
+        },
+        {
+          "current_lines": [
+            5802,
+            5804
+          ],
+          "lines": [
+            "    let defect = defect_plan",
+            "        .as_ref()",
+            "        .map(|p| (p, &defect_tally));"
+          ]
+        },
+        {
+          "current_lines": [
+            5993,
+            5998
+          ],
+          "lines": [
+            "                        BandMerge::new(",
+            "                            analysis_geom.width,",
+            "                            analysis_geom.height,",
+            "                            BAND_PLANES,",
+            "                            cfg,",
+            "                        ),"
+          ]
+        },
+        {
+          "current_lines": [
+            6036,
+            6036
+          ],
+          "lines": [
+            "        \"                  (E[L_k^2] / sigma_0^2, MEASURED on these operators, not derived.)\"    );"
+          ]
+        },
+        {
+          "current_lines": [
+            7407,
+            7407
+          ],
+          "lines": [
+            "                    if space.applies_curve() { \"sRGB\" } else { \"LINEAR sRGB\" }"
+          ]
+        },
+        {
+          "current_lines": [
+            7523,
+            7525
+          ],
+          "lines": [
+            "        eprintln!(",
+            "            \"                  To deviate deliberately from that rendering, use --exposure.\"",
+            "        );"
+          ]
+        },
+        {
+          "current_lines": [
+            7637,
+            7637
+          ],
+          "lines": [
+            "                let rep = strehl_core::restore::restore_plane(&mut v, geom.width, geom.height, &cfg);"
+          ]
+        },
+        {
+          "current_lines": [
+            7806,
+            7808
+          ],
+          "lines": [
+            "        eprintln!(",
+            "            \"WARNING         : no colour characterisation for this body, so the requested\"",
+            "        );"
+          ]
+        },
+        {
+          "current_lines": [
+            9083,
+            9083
+          ],
+          "lines": [
+            "                claims_default, claims_not,"
+          ]
+        },
+        {
+          "current_lines": [
+            9187,
+            9187
+          ],
+          "lines": [
+            "        for v in [\"banana\", \"\", \"   \", \"pyramidal\", \"est\", \"0\", \"1\", \"on\", \"off\"] {"
+          ]
+        },
+        {
+          "current_lines": [
+            9204,
+            9204
+          ],
+          "lines": [
+            "            assert_eq!(parse_select_mode(v).unwrap(), SelectMode::SoftPower, \"{v:?}\");"
+          ]
+        },
+        {
+          "current_lines": [
+            9275,
+            9279
+          ],
+          "lines": [
+            "            assert_eq!(",
+            "                resolved(None).unwrap(),",
+            "                want,",
+            "                \"{MERGE_BACKEND_ENV}={v}\"",
+            "            );"
+          ]
+        },
+        {
+          "current_lines": [
+            9330,
+            9333
+          ],
+          "lines": [
+            "            assert!(",
+            "                resolved(Some(v)).is_err(),",
+            "                \"--merge {v:?} was not an error\"",
+            "            );"
+          ]
+        },
+        {
+          "current_lines": [
+            9627,
+            9627
+          ],
+          "lines": [
+            "        for (k, v) in [(\"STREHL_DEFECT\", \"on\"), (\"STREHL_DEFECT_MAP\", \"some-map.txt\")] {"
+          ]
+        }
+      ],
+      "sha256_before": "ba16f4d366c1522adf796c3b02627d81fc1a55c7badd3b5ac1ba67a2f14f4c31",
+      "sha256_after": "ca829e45c7021c5c5df7b51da85859e3763a9a95d01d302a91ab7cd0687b2dcf"
+    },
+    {
+      "path": "crates/strehl-cli/src/merge_cmd/known-scene-benchmark.rs",
+      "command": [
+        "rustfmt",
+        "--edition",
+        "2024",
+        "--config",
+        "skip_children=true",
+        "--emit",
+        "stdout",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-cli\\src\\merge_cmd\\known-scene-benchmark.rs"
+      ],
+      "owned_format_changes": 0,
+      "inherited_differences": [],
+      "sha256_before": "92febefaaae87849d689ac59390e8c0170a409f5ecf31f3f4102b5288537b5f7",
+      "sha256_after": "92febefaaae87849d689ac59390e8c0170a409f5ecf31f3f4102b5288537b5f7"
+    },
+    {
+      "path": "crates/strehl-cli/src/merge_cmd/band-admission-benchmark.rs",
+      "command": [
+        "rustfmt",
+        "--edition",
+        "2024",
+        "--config",
+        "skip_children=true",
+        "--emit",
+        "stdout",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-cli\\src\\merge_cmd\\band-admission-benchmark.rs"
+      ],
+      "owned_format_changes": 2,
+      "inherited_differences": [],
+      "sha256_before": "8896fcfc1062fb0124e37f36d1844aa11f94940b98de90b72c77e227a19900a0",
+      "sha256_after": "d275b189d374117de2f6d5d9aa163417d675adba1820d96f42e9dfe0d322c2c3"
+    },
+    {
+      "path": "experiments/m194d-band-admission/author-core-tests.rs",
+      "command": [
+        "rustfmt",
+        "--edition",
+        "2024",
+        "--config",
+        "skip_children=true",
+        "--emit",
+        "stdout",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194d-band-admission\\author-core-tests.rs"
+      ],
+      "owned_format_changes": 10,
+      "inherited_differences": [],
+      "sha256_before": "a96c0a1de7d508f75417090771a57d16d1f5d27479f862162e8e8792474c4b62",
+      "sha256_after": "13b5a1d12df5f94538250fed3dacf14d72b08ef18ad37ad5265dd101f9789834"
+    }
+  ],
+  "passed": true
+}
