@@ -1,0 +1,1059 @@
+{
+  "schema": "m194f-independent-reader-controls-v1",
+  "status": "PASS_READER_INSTRUMENT_ONLY",
+  "fixture_only": true,
+  "started_utc": "2026-09-07T15:18:40.014209+00:00",
+  "orig_argv": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-X",
+    "utf8",
+    "-X",
+    "pycache_prefix=experiments/m194f-production-bridge/work/cache-reader-controls-1",
+    "experiments/m194f-production-bridge/independent-reader-controls.py",
+    "--out",
+    "experiments/m194f-production-bridge/independent-reader-controls-1"
+  ],
+  "executable": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+  "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "xoptions": {
+    "utf8": true,
+    "pycache_prefix": "experiments/m194f-production-bridge/work/cache-reader-controls-1"
+  },
+  "numpy": "2.4.4",
+  "tifffile": "2026.5.2",
+  "thread_environment": {
+    "OMP_NUM_THREADS": "2",
+    "OPENBLAS_NUM_THREADS": "2",
+    "MKL_NUM_THREADS": "2"
+  },
+  "source_before": {
+    "experiments\\m194f-production-bridge\\independent-reader-controls.py": "9e1a065d2dd193b14996591304f2c21a8ead0a0046d97b635c644ce95aee0256",
+    "experiments\\m194f-production-bridge\\independent-reader.py": "3fbaf526776fc85042861e1e7a90c06664c43519cef20d12310a67efd8eaff2d",
+    "experiments\\m194f-production-bridge\\independent-reader-preregister.md": "4828397cb0e5af0ed7477b8ca1406f610663a71a4172ae9a4d35f76cd3c9ab2a",
+    "experiments\\m194f-production-bridge\\preregister.md": "02ebf87b1a73aff39ab52ac9596b84542007e86c9bcc6f4357945441cf47dfb7"
+  },
+  "cases": [
+    {
+      "name": "constant-rgb-little-endian-multistrip",
+      "passed": true,
+      "expected_refusal": false,
+      "detail": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-reader-controls-1\\files\\constant.tiff",
+        "bytes": 9840,
+        "sha256": "09d4a1d9ec46682eee2160f3ce32633ced3e369c6283420d18c2f682c7d2adc1",
+        "pixel_sha256": "b95aa3fddc42de3c3aab0e3b83e239d0451d822ae8605e326a4a98832558eece",
+        "shape": [
+          32,
+          48,
+          3
+        ],
+        "kind": "rgb",
+        "endian": "<",
+        "strip_count": 5,
+        "tags": {
+          "256": {
+            "type": 4,
+            "count": 1,
+            "value": [
+              48
+            ]
+          },
+          "257": {
+            "type": 4,
+            "count": 1,
+            "value": [
+              32
+            ]
+          },
+          "258": {
+            "type": 3,
+            "count": 3,
+            "value": [
+              16,
+              16,
+              16
+            ]
+          },
+          "259": {
+            "type": 3,
+            "count": 1,
+            "value": [
+              1
+            ]
+          },
+          "262": {
+            "type": 3,
+            "count": 1,
+            "value": [
+              2
+            ]
+          },
+          "270": {
+            "type": 2,
+            "count": 356,
+            "value": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain."
+          },
+          "273": {
+            "type": 4,
+            "count": 5,
+            "value": [
+              624,
+              2640,
+              4656,
+              6672,
+              8688
+            ]
+          },
+          "277": {
+            "type": 3,
+            "count": 1,
+            "value": [
+              3
+            ]
+          },
+          "278": {
+            "type": 4,
+            "count": 1,
+            "value": [
+              7
+            ]
+          },
+          "279": {
+            "type": 3,
+            "count": 5,
+            "value": [
+              2016,
+              2016,
+              2016,
+              2016,
+              1152
+            ]
+          },
+          "282": {
+            "type": 5,
+            "count": 1,
+            "value": [
+              1,
+              1
+            ]
+          },
+          "283": {
+            "type": 5,
+            "count": 1,
+            "value": [
+              1,
+              1
+            ]
+          },
+          "284": {
+            "type": 3,
+            "count": 1,
+            "value": [
+              1
+            ]
+          },
+          "296": {
+            "type": 3,
+            "count": 1,
+            "value": [
+              1
+            ]
+          },
+          "305": {
+            "type": 2,
+            "count": 13,
+            "value": "strehl 0.0.0"
+          }
+        },
+        "oracle": {
+          "sites": 80,
+          "max_abs_dn": 0.10235608744028468,
+          "per_channel_max_dn": [
+            0.10235608744028468,
+            0.04016174563230379,
+            0.07116950956879009
+          ]
+        }
+      }
+    },
+    {
+      "name": "affine-rgb-big-endian-explicit-orientation",
+      "passed": true,
+      "expected_refusal": false,
+      "detail": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-reader-controls-1\\files\\affine-big.tiff",
+        "bytes": 9856,
+        "sha256": "10c5eaa5881f8efe9640e02acfbcbd0f2ec05cc084d7ed8e4b9a6162fadb736d",
+        "pixel_sha256": "e4f5376b81a4ca23fe63a38b65cf3d63844fa09fd6e181b8eecc82fd0e57c317",
+        "shape": [
+          32,
+          48,
+          3
+        ],
+        "kind": "rgb",
+        "endian": ">",
+        "strip_count": 5,
+        "tags": {
+          "256": {
+            "type": 4,
+            "count": 1,
+            "value": [
+              48
+            ]
+          },
+          "257": {
+            "type": 4,
+            "count": 1,
+            "value": [
+              32
+            ]
+          },
+          "258": {
+            "type": 3,
+            "count": 3,
+            "value": [
+              16,
+              16,
+              16
+            ]
+          },
+          "259": {
+            "type": 3,
+            "count": 1,
+            "value": [
+              1
+            ]
+          },
+          "262": {
+            "type": 3,
+            "count": 1,
+            "value": [
+              2
+            ]
+          },
+          "270": {
+            "type": 2,
+            "count": 356,
+            "value": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain."
+          },
+          "273": {
+            "type": 4,
+            "count": 5,
+            "value": [
+              640,
+              2656,
+              4672,
+              6688,
+              8704
+            ]
+          },
+          "274": {
+            "type": 3,
+            "count": 1,
+            "value": [
+              1
+            ]
+          },
+          "277": {
+            "type": 3,
+            "count": 1,
+            "value": [
+              3
+            ]
+          },
+          "278": {
+            "type": 4,
+            "count": 1,
+            "value": [
+              7
+            ]
+          },
+          "279": {
+            "type": 3,
+            "count": 5,
+            "value": [
+              2016,
+              2016,
+              2016,
+              2016,
+              1152
+            ]
+          },
+          "282": {
+            "type": 5,
+            "count": 1,
+            "value": [
+              1,
+              1
+            ]
+          },
+          "283": {
+            "type": 5,
+            "count": 1,
+            "value": [
+              1,
+              1
+            ]
+          },
+          "284": {
+            "type": 3,
+            "count": 1,
+            "value": [
+              1
+            ]
+          },
+          "296": {
+            "type": 3,
+            "count": 1,
+            "value": [
+              1
+            ]
+          },
+          "305": {
+            "type": 2,
+            "count": 13,
+            "value": "strehl 0.0.0"
+          }
+        },
+        "oracle": {
+          "sites": 80,
+          "max_abs_dn": 0.11146333816304832,
+          "per_channel_max_dn": [
+            0.11146333816304832,
+            0.11139085984632402,
+            0.11125972962781816
+          ]
+        }
+      }
+    },
+    {
+      "name": "affine-rgb-single-strip",
+      "passed": true,
+      "expected_refusal": false,
+      "detail": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-reader-controls-1\\files\\affine-single.tiff",
+        "bytes": 9808,
+        "sha256": "8c2ae2d7d1be37999364b734124d43d4a9bfda08f1b136623645559e043053f7",
+        "pixel_sha256": "e4f5376b81a4ca23fe63a38b65cf3d63844fa09fd6e181b8eecc82fd0e57c317",
+        "shape": [
+          32,
+          48,
+          3
+        ],
+        "kind": "rgb",
+        "endian": "<",
+        "strip_count": 1,
+        "tags": {
+          "256": {
+            "type": 4,
+            "count": 1,
+            "value": [
+              48
+            ]
+          },
+          "257": {
+            "type": 4,
+            "count": 1,
+            "value": [
+              32
+            ]
+          },
+          "258": {
+            "type": 3,
+            "count": 3,
+            "value": [
+              16,
+              16,
+              16
+            ]
+          },
+          "259": {
+            "type": 3,
+            "count": 1,
+            "value": [
+              1
+            ]
+          },
+          "262": {
+            "type": 3,
+            "count": 1,
+            "value": [
+              2
+            ]
+          },
+          "270": {
+            "type": 2,
+            "count": 356,
+            "value": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain."
+          },
+          "273": {
+            "type": 4,
+            "count": 1,
+            "value": [
+              592
+            ]
+          },
+          "277": {
+            "type": 3,
+            "count": 1,
+            "value": [
+              3
+            ]
+          },
+          "278": {
+            "type": 4,
+            "count": 1,
+            "value": [
+              32
+            ]
+          },
+          "279": {
+            "type": 4,
+            "count": 1,
+            "value": [
+              9216
+            ]
+          },
+          "282": {
+            "type": 5,
+            "count": 1,
+            "value": [
+              1,
+              1
+            ]
+          },
+          "283": {
+            "type": 5,
+            "count": 1,
+            "value": [
+              1,
+              1
+            ]
+          },
+          "284": {
+            "type": 3,
+            "count": 1,
+            "value": [
+              1
+            ]
+          },
+          "296": {
+            "type": 3,
+            "count": 1,
+            "value": [
+              1
+            ]
+          },
+          "305": {
+            "type": 2,
+            "count": 13,
+            "value": "strehl 0.0.0"
+          }
+        },
+        "oracle": {
+          "sites": 80,
+          "max_abs_dn": 0.11146333816304832,
+          "per_channel_max_dn": [
+            0.11146333816304832,
+            0.11139085984632402,
+            0.11125972962781816
+          ]
+        }
+      }
+    },
+    {
+      "name": "rank-gray-big-endian-multistrip",
+      "passed": true,
+      "expected_refusal": false,
+      "detail": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-reader-controls-1\\files\\rank-big.tiff",
+        "bytes": 448,
+        "sha256": "241cfb28678e2c10d51f301d058a24ff22a7f425c73dd46df31cb084d7d9d542",
+        "pixel_sha256": "080e75246757598076b58f45b21396345d7a33622ff4218265f490ecd74632b5",
+        "shape": [
+          8,
+          16
+        ],
+        "kind": "gray",
+        "endian": ">",
+        "strip_count": 3,
+        "tags": {
+          "256": {
+            "type": 4,
+            "count": 1,
+            "value": [
+              16
+            ]
+          },
+          "257": {
+            "type": 4,
+            "count": 1,
+            "value": [
+              8
+            ]
+          },
+          "258": {
+            "type": 3,
+            "count": 1,
+            "value": [
+              16
+            ]
+          },
+          "259": {
+            "type": 3,
+            "count": 1,
+            "value": [
+              1
+            ]
+          },
+          "262": {
+            "type": 3,
+            "count": 1,
+            "value": [
+              1
+            ]
+          },
+          "273": {
+            "type": 4,
+            "count": 3,
+            "value": [
+              192,
+              288,
+              384
+            ]
+          },
+          "277": {
+            "type": 3,
+            "count": 1,
+            "value": [
+              1
+            ]
+          },
+          "278": {
+            "type": 4,
+            "count": 1,
+            "value": [
+              3
+            ]
+          },
+          "279": {
+            "type": 3,
+            "count": 3,
+            "value": [
+              96,
+              96,
+              64
+            ]
+          },
+          "282": {
+            "type": 5,
+            "count": 1,
+            "value": [
+              1,
+              1
+            ]
+          },
+          "283": {
+            "type": 5,
+            "count": 1,
+            "value": [
+              1,
+              1
+            ]
+          },
+          "296": {
+            "type": 3,
+            "count": 1,
+            "value": [
+              1
+            ]
+          }
+        },
+        "oracle": {
+          "samples": 128,
+          "codes": [
+            0,
+            400,
+            800
+          ],
+          "unseen_index": null
+        }
+      }
+    },
+    {
+      "name": "rank-raw-oracle-predeclared",
+      "passed": true,
+      "expected_refusal": false,
+      "detail": null
+    },
+    {
+      "name": "sentinel-rechosen-valid",
+      "passed": true,
+      "expected_refusal": false,
+      "detail": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194f-production-bridge\\independent-reader-controls-1\\files\\sentinel-rechosen.tiff",
+        "bytes": 448,
+        "sha256": "9c156e2ef48c5c1bca03f980effddaf4c6049c59b8c643348ec9ebf9b14f9ebe",
+        "pixel_sha256": "a40bde91774a76b0657e9d98fcbd9a9949e684b45efbd91666655d5d48874959",
+        "shape": [
+          8,
+          16
+        ],
+        "kind": "gray",
+        "endian": "<",
+        "strip_count": 2,
+        "tags": {
+          "256": {
+            "type": 4,
+            "count": 1,
+            "value": [
+              16
+            ]
+          },
+          "257": {
+            "type": 4,
+            "count": 1,
+            "value": [
+              8
+            ]
+          },
+          "258": {
+            "type": 3,
+            "count": 1,
+            "value": [
+              16
+            ]
+          },
+          "259": {
+            "type": 3,
+            "count": 1,
+            "value": [
+              1
+            ]
+          },
+          "262": {
+            "type": 3,
+            "count": 1,
+            "value": [
+              1
+            ]
+          },
+          "273": {
+            "type": 4,
+            "count": 2,
+            "value": [
+              192,
+              320
+            ]
+          },
+          "277": {
+            "type": 3,
+            "count": 1,
+            "value": [
+              1
+            ]
+          },
+          "278": {
+            "type": 4,
+            "count": 1,
+            "value": [
+              4
+            ]
+          },
+          "279": {
+            "type": 3,
+            "count": 2,
+            "value": [
+              128,
+              128
+            ]
+          },
+          "282": {
+            "type": 5,
+            "count": 1,
+            "value": [
+              1,
+              1
+            ]
+          },
+          "283": {
+            "type": 5,
+            "count": 1,
+            "value": [
+              1,
+              1
+            ]
+          },
+          "296": {
+            "type": 3,
+            "count": 1,
+            "value": [
+              1
+            ]
+          }
+        },
+        "oracle": {
+          "samples": 128,
+          "codes": [
+            0,
+            400,
+            800,
+            65535
+          ],
+          "unseen_index": 53
+        }
+      }
+    },
+    {
+      "name": "reject-orientation8",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "orientation"
+    },
+    {
+      "name": "reject-icc",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "unknown or forbidden tag 34675"
+    },
+    {
+      "name": "reject-transfer-table",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "unknown or forbidden tag 301"
+    },
+    {
+      "name": "reject-unknown-tag",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "unknown or forbidden tag 65000"
+    },
+    {
+      "name": "reject-duplicate-width",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "duplicate tag 256"
+    },
+    {
+      "name": "reject-sample-float",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "unsigned sample format"
+    },
+    {
+      "name": "reject-description",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "CameraLinear description"
+    },
+    {
+      "name": "reject-software",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "measurement software"
+    },
+    {
+      "name": "reject-photometric",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "photometric"
+    },
+    {
+      "name": "reject-compression",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "compression"
+    },
+    {
+      "name": "reject-planar",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "planar config"
+    },
+    {
+      "name": "reject-predictor",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "predictor"
+    },
+    {
+      "name": "reject-bits",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "bits per sample"
+    },
+    {
+      "name": "reject-width",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "expected TIFF dimensions/channels"
+    },
+    {
+      "name": "reject-strip-offset",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "strip outside file"
+    },
+    {
+      "name": "reject-strip-bytecount",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "strip byte count"
+    },
+    {
+      "name": "reject-truncated",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "strip outside file"
+    },
+    {
+      "name": "reject-appended",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "unreferenced trailing bytes"
+    },
+    {
+      "name": "reject-ifd-at-header",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "IFD overlaps header"
+    },
+    {
+      "name": "reject-wrong-magic",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "classic TIFF magic"
+    },
+    {
+      "name": "reject-extra-ifd",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "multiple IFDs forbidden"
+    },
+    {
+      "name": "reject-overlapping-strips",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "referenced regions overlap"
+    },
+    {
+      "name": "wrong-external-sha",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "external TIFF SHA mismatch"
+    },
+    {
+      "name": "wrong-caller-shape",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "expected TIFF dimensions/channels"
+    },
+    {
+      "name": "oversize-before-parse",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "bounded TIFF size"
+    },
+    {
+      "name": "oracle-destroyer-omit-crop",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "coordinate/value error 1000.0307621881439 DN"
+    },
+    {
+      "name": "oracle-destroyer-double-crop",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "coordinate/value error 1000.1113908598463 DN"
+    },
+    {
+      "name": "oracle-destroyer-half-x",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "coordinate/value error 40.111464530255944 DN"
+    },
+    {
+      "name": "oracle-destroyer-half-y",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "coordinate/value error 50.111390859846324 DN"
+    },
+    {
+      "name": "oracle-destroyer-swap-offsets",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "coordinate/value error 400.03076218814385 DN"
+    },
+    {
+      "name": "oracle-destroyer-transpose",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "coordinate/value error 1500.0269779507134 DN"
+    },
+    {
+      "name": "oracle-destroyer-reflect-x",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "coordinate/value error 1840.0936694108168 DN"
+    },
+    {
+      "name": "oracle-destroyer-reflect-y",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "coordinate/value error 699.946349279011 DN"
+    },
+    {
+      "name": "oracle-destroyer-swap-red-blue",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "coordinate/value error 1320.1062175762154 DN"
+    },
+    {
+      "name": "oracle-destroyer-omit-wb",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "coordinate/value error 2272.008545052262 DN"
+    },
+    {
+      "name": "oracle-destroyer-second-black",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "coordinate/value error 512.1107318625113 DN"
+    },
+    {
+      "name": "oracle-destroyer-concrete-rggb-grbg",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "coordinate/value error 2699.9730220492866 DN"
+    },
+    {
+      "name": "rehashed-valid-payload-wrong-value",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "coordinate/value error 22.56298113767116 DN"
+    },
+    {
+      "name": "green-plus64-valid",
+      "passed": true,
+      "expected_refusal": false,
+      "detail": {
+        "native_xy": [
+          29,
+          26
+        ],
+        "output_xy": [
+          23,
+          16
+        ],
+        "increase_dn": 63.89159990844587
+      }
+    },
+    {
+      "name": "green-plus64-noop-refused",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "green mutation unpowered 0.0 DN"
+    },
+    {
+      "name": "green-plus64-clipped-refused",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "mutation clipping"
+    },
+    {
+      "name": "half-up-versus-even-power",
+      "passed": true,
+      "expected_refusal": false,
+      "detail": null
+    },
+    {
+      "name": "rank-count-destroyer-less-equal",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "actual strict-below counts"
+    },
+    {
+      "name": "rank-count-destroyer-red-luma",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "actual strict-below counts"
+    },
+    {
+      "name": "rank-count-destroyer-blue-luma",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "actual strict-below counts"
+    },
+    {
+      "name": "rank-count-destroyer-drop-duplicate",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "actual strict-below counts"
+    },
+    {
+      "name": "rank-65535-scale",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "actual rank/sentinel pixels"
+    },
+    {
+      "name": "sentinel-omitted",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "actual rank/sentinel pixels"
+    },
+    {
+      "name": "sentinel-moved",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "actual rank/sentinel pixels"
+    },
+    {
+      "name": "reached-zero-corrupt",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "actual rank/sentinel pixels"
+    },
+    {
+      "name": "genuine-confidence-valid",
+      "passed": true,
+      "expected_refusal": false,
+      "detail": {
+        "shape": [
+          8,
+          16
+        ],
+        "codes": [
+          0,
+          400,
+          800
+        ]
+      }
+    },
+    {
+      "name": "genuine-confidence-unseen",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "genuine confidence code/coverage"
+    },
+    {
+      "name": "genuine-confidence-wrong-scale",
+      "passed": true,
+      "expected_refusal": true,
+      "refusal": "genuine confidence code/coverage"
+    }
+  ],
+  "source_after": {
+    "experiments\\m194f-production-bridge\\independent-reader-controls.py": "9e1a065d2dd193b14996591304f2c21a8ead0a0046d97b635c644ce95aee0256",
+    "experiments\\m194f-production-bridge\\independent-reader.py": "3fbaf526776fc85042861e1e7a90c06664c43519cef20d12310a67efd8eaff2d",
+    "experiments\\m194f-production-bridge\\independent-reader-preregister.md": "4828397cb0e5af0ed7477b8ca1406f610663a71a4172ae9a4d35f76cd3c9ab2a",
+    "experiments\\m194f-production-bridge\\preregister.md": "02ebf87b1a73aff39ab52ac9596b84542007e86c9bcc6f4357945441cf47dfb7"
+  },
+  "wall_seconds": 0.14620239997748286,
+  "cpu_seconds": 0.09375,
+  "ended_utc": "2026-09-07T15:18:40.249754+00:00",
+  "source_unchanged": true,
+  "passed": 59,
+  "count": 59
+}
