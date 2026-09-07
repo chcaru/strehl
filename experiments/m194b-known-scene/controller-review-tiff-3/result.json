@@ -1,0 +1,126 @@
+{
+  "scope": "actual TIFF reader orientation/profile admission; no benchmark launched",
+  "reader_sha256": "0d222a9685ada1cb170736b97d8a65502720cae28801dc5a29e354c81af78b4d",
+  "receipt_sha256": "0e4bcabf9e1e0fa3cc80fea2931a45bf51df771997bf21322369ee1ddd4c667b",
+  "source_tiff_sha256": "b528eb1e3facff16cbc541727c040742c2268dba7c74511a0d4990593a34cdb1",
+  "source_unchanged": true,
+  "cases": [
+    {
+      "name": "unchanged-copy",
+      "admitted": true,
+      "same_numerical_pixels": true,
+      "sha256": "b528eb1e3facff16cbc541727c040742c2268dba7c74511a0d4990593a34cdb1",
+      "reader_metadata": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\controller-review-tiff-3\\unchanged-copy.tif",
+        "bytes": 361851,
+        "file_sha256": "b528eb1e3facff16cbc541727c040742c2268dba7c74511a0d4990593a34cdb1",
+        "pixel_sha256": "1da243b458bf468cda17fc1d4a20b1000577437ce5b38e0fbc44d788ec845b8d",
+        "width": 284,
+        "height": 212,
+        "channels": 3,
+        "dtype": "uint16",
+        "orientation": 1,
+        "icc": "absent",
+        "transfer_tags": "absent",
+        "tag_codes": [
+          256,
+          257,
+          258,
+          259,
+          262,
+          270,
+          273,
+          277,
+          278,
+          279,
+          282,
+          283,
+          296,
+          305,
+          317,
+          339
+        ],
+        "rail_zero_by_channel": [
+          0,
+          0,
+          0
+        ],
+        "rail_max_by_channel": [
+          0,
+          0,
+          0
+        ],
+        "software": "strehl 0.0.0"
+      },
+      "expected_admitted": true,
+      "correct_disposition": true
+    },
+    {
+      "name": "orientation-eight",
+      "admitted": false,
+      "exception": "ValueError('TIFF orientation changes the declared canonical map')",
+      "sha256": "b9220551ae55dce891aa0d1d87328dacc955b0154acaa5dd87cf4a640455661b",
+      "expected_admitted": false,
+      "correct_disposition": true
+    },
+    {
+      "name": "unexpected-icc",
+      "admitted": false,
+      "exception": "ValueError('unsupported CameraLinear TIFF metadata: [34675]')",
+      "sha256": "d15b7b9330298f9e6818bd263111c6c35c766b12ecc7faf0573f802b00dc74e3",
+      "expected_admitted": false,
+      "correct_disposition": true
+    },
+    {
+      "name": "wrong-color-description",
+      "admitted": true,
+      "same_numerical_pixels": true,
+      "sha256": "f3b848663d2d745c64f06a7b8d358d6909f9322b3dd3ec421f2c29bd5cfb97f5",
+      "reader_metadata": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\controller-review-tiff-3\\wrong-color-description.tif",
+        "bytes": 361851,
+        "file_sha256": "f3b848663d2d745c64f06a7b8d358d6909f9322b3dd3ec421f2c29bd5cfb97f5",
+        "pixel_sha256": "1da243b458bf468cda17fc1d4a20b1000577437ce5b38e0fbc44d788ec845b8d",
+        "width": 284,
+        "height": 212,
+        "channels": 3,
+        "dtype": "uint16",
+        "orientation": 1,
+        "icc": "absent",
+        "transfer_tags": "absent",
+        "tag_codes": [
+          256,
+          257,
+          258,
+          259,
+          262,
+          270,
+          273,
+          277,
+          278,
+          279,
+          282,
+          283,
+          296,
+          305,
+          317,
+          339
+        ],
+        "rail_zero_by_channel": [
+          0,
+          0,
+          0
+        ],
+        "rail_max_by_channel": [
+          0,
+          0,
+          0
+        ],
+        "software": "strehl 0.0.0"
+      },
+      "expected_admitted": false,
+      "correct_disposition": false
+    }
+  ],
+  "pass": false
+}

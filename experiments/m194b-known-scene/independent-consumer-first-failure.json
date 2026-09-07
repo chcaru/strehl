@@ -1,0 +1,9 @@
+{
+  "schema": "m194b-independent-preserved-attempt-v1",
+  "command": "python -B experiments/m194b-known-scene/independent-consumer.py",
+  "work": "work/independent-consumer-8240dcbdf7",
+  "first_failure": "Verifier assumed endpoint-preserving interior scale mutation kept the crop. Adding0.025 to index1 made its scale exceed the original endpoint and legitimate cover changed. scorer.error correctly refused the original-size mask.",
+  "correction": "Resume preserved completed invocations; compare identical canonical ROI coordinates using each plan's actual crop. No source edit, tolerance change, or replacement render.",
+  "second_attempt": "python -B experiments/m194b-known-scene/independent-consumer.py experiments/m194b-known-scene/work/independent-consumer-8240dcbdf7",
+  "second_result": "All completed checks except alternate-padding byte invariance pass. The padding result is an observed live failure, not excused as the crop comparison assumption. Requested author diagnosis before final disposition."
+}

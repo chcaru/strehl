@@ -1,0 +1,89 @@
+{
+  "schema": "m194b-independent-integration-v1",
+  "pass_": false,
+  "checks": {
+    "original-40-actual-TIFFs": true,
+    "coherent-relocated-noop-accepted": true,
+    "coherent-relocated-noop-numeric-equality": true,
+    "all-ten-resealed-mutations-refused": false,
+    "final-original-reread-unchanged": true,
+    "final-compiled-baseline-preserves-independent-plane-bytes": true
+  },
+  "index_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\baseline-1\\run-index.json",
+  "index_sha256": "37f99736bd32dfb4891bd8fa2b033cacc2c58e9265515fa53cb5921dd80d9c08",
+  "work": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\work\\independent-integration-7cbf1b5475",
+  "reader_revision_sha256": "e46f0ddc09a7894ae4d1899e648977b9aace84da7b2dc45e3d95f049afafa363",
+  "sources": {
+    "score.py": "d292c8623827eb960bc28dc341398c7e164f5c14cd31af74663ee24c1ff5b5dd",
+    "score-benchmark.py": "7ec0b8b5b2d18987165aecb461725d95cb789bbaf4bfd43ec40d9a70b6093a29"
+  },
+  "cases": [
+    {
+      "name": "no-op",
+      "accepted": true,
+      "index_sha256": "b7228311e242d93c3fd8bb765519f0364f51e7974b7dfeb4a6498f44af19763e",
+      "result_output_count": 40
+    },
+    {
+      "name": "translated-all-case-crop",
+      "accepted": false,
+      "index_sha256": "9d2f37b9f8e782374663c1cf2ccadf584fe55c8b7155ccfac9d8114b30567302",
+      "error": "ValueError: crop differs from frozen registered domain"
+    },
+    {
+      "name": "changed-DN-normalization",
+      "accepted": false,
+      "index_sha256": "be7157c053bb7b63d7b85a36e13ab4c469ff549719dedfeed9fa18e3b12bab30",
+      "error": "ValueError: wrong delivered-DN conversion"
+    },
+    {
+      "name": "changed-consumed-WB",
+      "accepted": false,
+      "index_sha256": "1b43c035c78a1b212d31ddb86f10e1eb682bb568697dd597188c2f92347a5faf",
+      "error": "ValueError: wrong white balance"
+    },
+    {
+      "name": "changed-interior-map",
+      "accepted": false,
+      "index_sha256": "9d7dee7328f20d95f33455c97f57f98b9b24dac482cacc1bc564f7c5f34c27be",
+      "error": "ValueError: wrong pull direction/centre/scale"
+    },
+    {
+      "name": "disabled-measured-floor",
+      "accepted": false,
+      "index_sha256": "2ae16036ba76159e3f07d26aa5e204a6a12e3abfb72e830c28789a6dc3222485",
+      "error": "ValueError: wrong complete baseline configuration"
+    },
+    {
+      "name": "changed-soft-exponent",
+      "accepted": false,
+      "index_sha256": "72d76225dde7b718e7cdb5501b99dc99019c499d785579d45eae9e4185f797d8",
+      "error": "ValueError: wrong complete baseline configuration"
+    },
+    {
+      "name": "diagnostic-marked-as-baseline",
+      "accepted": false,
+      "index_sha256": "cbed6313fa942caf40b040fc3f7ed9ed65ac23a79e449313ff09edf9c9a94eb0",
+      "error": "ValueError: diagnostic control is not a baseline output"
+    },
+    {
+      "name": "unknown-plan-field",
+      "accepted": true,
+      "index_sha256": "db536cf916898bee8b7c68501dd923fa11f1d7c40ee1c3e9e858fa2fc9b231a4",
+      "result_output_count": 40
+    },
+    {
+      "name": "wrong-sample-type",
+      "accepted": false,
+      "index_sha256": "d0c8d7b68b2b666a94945a913e0ef56df30a585339a77ffc22227b56e7ace19d",
+      "error": "ValueError: wrong sample type"
+    },
+    {
+      "name": "wrong-observer-read-count",
+      "accepted": false,
+      "index_sha256": "05c6898089d3d7360c0e81eb78e853cc6380976b6fc8c71c7fdbd1823ab99183",
+      "error": "ValueError: unexpected baseline observer/source reads"
+    }
+  ],
+  "scope": "recorded artifact consistency and fixed benchmark readout, not authenticity of fully fabricated replacement telemetry"
+}

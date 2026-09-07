@@ -1,0 +1,8 @@
+{
+  "scope": "Author reader implementation error before production baseline; not a product defect",
+  "input": "experiments/m194b-known-scene/work/consumer-author/full9.tif",
+  "operation": "score.read_tiff",
+  "failure": "TypeError: '<' not supported between instances of 'TiffTag' and 'TiffTag'",
+  "cause": "Iterating tifffile.TiffTags yields tag objects; the allowed-code check must use .keys().",
+  "disposition": "Changed set(page.tags) to set(page.tags.keys()); original TIFF untouched."
+}

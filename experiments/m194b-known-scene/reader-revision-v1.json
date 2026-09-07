@@ -1,0 +1,13 @@
+{
+  "schema": "m194b-reader-revision-v1",
+  "render_index_sha256": "37f99736bd32dfb4891bd8fa2b033cacc2c58e9265515fa53cb5921dd80d9c08",
+  "previous": {
+    "experiments/m194b-known-scene/score.py": "0d222a9685ada1cb170736b97d8a65502720cae28801dc5a29e354c81af78b4d",
+    "experiments/m194b-known-scene/score-benchmark.py": "5e718deba7d4bf1ab9e39d99f7df595b25e71a710e7a43f9819ee679850b990d"
+  },
+  "current": {
+    "experiments/m194b-known-scene/score.py": "d292c8623827eb960bc28dc341398c7e164f5c14cd31af74663ee24c1ff5b5dd",
+    "experiments/m194b-known-scene/score-benchmark.py": "a2d289eb29a0d879a5305e8f6cb9a5b0b4d6eb168baf1fe3276ac8c184d45cf8"
+  },
+  "reason": "Post-render reader repair: platform-equivalent Cargo artifact paths, actual executable byte size, exact CameraLinear ImageDescription. Producer/consumer/pixels/targets/settings unchanged. See reader-revision.md."
+}

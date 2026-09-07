@@ -1,2 +1,5 @@
 /work/
 /__pycache__/
+*.cfa
+*.npy
+*.tif

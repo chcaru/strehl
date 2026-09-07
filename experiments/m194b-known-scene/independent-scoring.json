@@ -1,0 +1,345 @@
+{
+  "schema": "m194b-independent-scorer-v1",
+  "pass_": true,
+  "source_sha256": "d292c8623827eb960bc28dc341398c7e164f5c14cd31af74663ee24c1ff5b5dd",
+  "checks": {
+    "copy-noop": true,
+    "signed-known-offset": true,
+    "spatial-color-swap": true,
+    "independent-phase-and-amplitude": true,
+    "actual-spatial-blur": true,
+    "flat-spatial-blur-placebo": true,
+    "seven-repeat-closed-moments-and-negative-correction": true,
+    "structured-signal-not-temporal-noise": true,
+    "independent-cell-and-pupil-targets": true,
+    "strict-reader-refuses-unlabelled-color-contract": true,
+    "actual-TIFF-normalization-file-and-pixel-mutations": true,
+    "empty-mask": true,
+    "float-mask": true,
+    "nan-rgb": true,
+    "one-repeat": true,
+    "rank-deficient-waves": true,
+    "unsupported-color-observation": true
+  },
+  "temporal": {
+    "repeats": 7,
+    "pixels": 27744,
+    "mse_each_dn2": [
+      [
+        2.25,
+        49.0,
+        361.0
+      ],
+      [
+        1.0,
+        81.0,
+        225.0
+      ],
+      [
+        0.25,
+        121.0,
+        121.0
+      ],
+      [
+        0.0,
+        169.0,
+        49.0
+      ],
+      [
+        0.25,
+        225.0,
+        9.0
+      ],
+      [
+        1.0,
+        289.0,
+        1.0
+      ],
+      [
+        2.25,
+        361.0,
+        25.0
+      ]
+    ],
+    "mse_mean_dn2": [
+      1.0,
+      185.0,
+      113.0
+    ],
+    "mse_sem_dn2": [
+      0.35355339059327373,
+      42.833009077890694,
+      51.01633725255731
+    ],
+    "rmse_from_mean_mse_dn": [
+      1.0,
+      13.601470508735444,
+      10.63014581273465
+    ],
+    "bias_of_repeat_mean_dn": [
+      -1.1424412614182003e-14,
+      13.0,
+      -7.000000000000001
+    ],
+    "temporal_variance_dn2": [
+      1.1666666666671428,
+      18.666666666674285,
+      74.66666666669714
+    ],
+    "temporal_sigma_dn": [
+      1.0801234497348637,
+      4.320493798939455,
+      8.64098759787891
+    ],
+    "repeat_mean_mse_dn2": [
+      7.749600660245304e-26,
+      169.0,
+      49.0
+    ],
+    "finite_repeat_subtraction_dn2": [
+      0.1666666666667347,
+      2.666666666667755,
+      10.66666666667102
+    ],
+    "unclipped_squared_bias_estimate_dn2": [
+      -0.1666666666667347,
+      166.33333333333223,
+      38.33333333332898
+    ],
+    "arithmetic_decomposition_residual_dn2": [
+      -4.0811798385220754e-13,
+      -6.536993168992922e-12,
+      -2.6119550966541283e-11
+    ],
+    "decomposition_status": "DERIVED arithmetic identity, not independent evidence",
+    "uncertainty_scope": "SEM across independent whole-image repeat MSEs; no pixel independence assumption"
+  },
+  "wave_readout": {
+    "constant_dn": [
+      2400.0000000000027,
+      2400.0000000000045,
+      2399.999999999999
+    ],
+    "waves": [
+      {
+        "frequency_native": [
+          0.058823529411764705,
+          0.125
+        ],
+        "amplitude_dn": [
+          190.9999999999989,
+          283.00000000000045,
+          136.99999999999827
+        ],
+        "phase_rad": [
+          0.7299999999999928,
+          -0.4599999999999933,
+          1.2700000000000045
+        ]
+      }
+    ],
+    "design_condition": 1.414213562373097,
+    "scope": "joint readout of registered waves, not output normalization"
+  },
+  "blur": {
+    "transfer": 0.8766299459304345,
+    "readout": {
+      "constant_dn": [
+        2399.999999999996,
+        2400.000000000004,
+        2400.000000000002
+      ],
+      "waves": [
+        {
+          "frequency_native": [
+            0.058823529411764705,
+            0.125
+          ],
+          "amplitude_dn": [
+            167.43631967271202,
+            248.08627469831336,
+            120.09830259246802
+          ],
+          "phase_rad": [
+            0.7299999999999909,
+            -0.4599999999999939,
+            1.2700000000000042
+          ]
+        }
+      ],
+      "design_condition": 1.414213562373097,
+      "scope": "joint readout of registered waves, not output normalization"
+    }
+  },
+  "tiffs": {
+    "base": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\work\\independent-scorer-b0e00edc67\\base.tif",
+      "bytes": 208672,
+      "file_sha256": "7642d4e1810455dccfce0a6bd565354ea89216dfa63839fea556bb63be2d2b20",
+      "pixel_sha256": "f42c2468257930111eae1aa1c33ecdedeeb4f383e32f249c702c294e74428872",
+      "width": 255,
+      "height": 136,
+      "channels": 3,
+      "dtype": "uint16",
+      "orientation": 1,
+      "icc": "absent",
+      "transfer_tags": "absent",
+      "image_description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+      "tag_codes": [
+        256,
+        257,
+        258,
+        259,
+        262,
+        270,
+        273,
+        277,
+        278,
+        279,
+        282,
+        283,
+        284,
+        296,
+        305
+      ],
+      "rail_zero_by_channel": [
+        0,
+        0,
+        0
+      ],
+      "rail_max_by_channel": [
+        0,
+        0,
+        0
+      ],
+      "software": "independent-M194b-A"
+    },
+    "metadata": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\work\\independent-scorer-b0e00edc67\\metadata.tif",
+      "bytes": 208672,
+      "file_sha256": "82fc6530ed9c9e576716476d8907cf4e9b1078dea0da679d7eaf3ff3734158fa",
+      "pixel_sha256": "f42c2468257930111eae1aa1c33ecdedeeb4f383e32f249c702c294e74428872",
+      "width": 255,
+      "height": 136,
+      "channels": 3,
+      "dtype": "uint16",
+      "orientation": 1,
+      "icc": "absent",
+      "transfer_tags": "absent",
+      "image_description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+      "tag_codes": [
+        256,
+        257,
+        258,
+        259,
+        262,
+        270,
+        273,
+        277,
+        278,
+        279,
+        282,
+        283,
+        284,
+        296,
+        305
+      ],
+      "rail_zero_by_channel": [
+        0,
+        0,
+        0
+      ],
+      "rail_max_by_channel": [
+        0,
+        0,
+        0
+      ],
+      "software": "independent-M194b-B"
+    },
+    "copied": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\work\\independent-scorer-b0e00edc67\\copied.tif",
+      "bytes": 208672,
+      "file_sha256": "7642d4e1810455dccfce0a6bd565354ea89216dfa63839fea556bb63be2d2b20",
+      "pixel_sha256": "f42c2468257930111eae1aa1c33ecdedeeb4f383e32f249c702c294e74428872",
+      "width": 255,
+      "height": 136,
+      "channels": 3,
+      "dtype": "uint16",
+      "orientation": 1,
+      "icc": "absent",
+      "transfer_tags": "absent",
+      "image_description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+      "tag_codes": [
+        256,
+        257,
+        258,
+        259,
+        262,
+        270,
+        273,
+        277,
+        278,
+        279,
+        282,
+        283,
+        284,
+        296,
+        305
+      ],
+      "rail_zero_by_channel": [
+        0,
+        0,
+        0
+      ],
+      "rail_max_by_channel": [
+        0,
+        0,
+        0
+      ],
+      "software": "independent-M194b-A"
+    },
+    "pixel": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\work\\independent-scorer-b0e00edc67\\pixel.tif",
+      "bytes": 208672,
+      "file_sha256": "10e030359069f0517cbb716a80166115fcf1deb070bace3232d96397dcf8cb58",
+      "pixel_sha256": "ae329d2e80c6488eaa253389ad1efad4ee97402064fd6aa100f0713afd9f75ac",
+      "width": 255,
+      "height": 136,
+      "channels": 3,
+      "dtype": "uint16",
+      "orientation": 1,
+      "icc": "absent",
+      "transfer_tags": "absent",
+      "image_description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+      "tag_codes": [
+        256,
+        257,
+        258,
+        259,
+        262,
+        270,
+        273,
+        277,
+        278,
+        279,
+        282,
+        283,
+        284,
+        296,
+        305
+      ],
+      "rail_zero_by_channel": [
+        0,
+        0,
+        0
+      ],
+      "rail_max_by_channel": [
+        0,
+        0,
+        0
+      ],
+      "software": "independent-M194b-A"
+    }
+  },
+  "scope": "component mathematics and TIFF decoding; final plan/receipt admission not yet tested"
+}

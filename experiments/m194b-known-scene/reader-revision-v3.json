@@ -1,0 +1,14 @@
+{
+  "schema": "m194b-reader-revision-v1",
+  "render_index_sha256": "37f99736bd32dfb4891bd8fa2b033cacc2c58e9265515fa53cb5921dd80d9c08",
+  "previous": {
+    "experiments/m194b-known-scene/score.py": "0d222a9685ada1cb170736b97d8a65502720cae28801dc5a29e354c81af78b4d",
+    "experiments/m194b-known-scene/score-benchmark.py": "5e718deba7d4bf1ab9e39d99f7df595b25e71a710e7a43f9819ee679850b990d"
+  },
+  "current": {
+    "experiments/m194b-known-scene/score.py": "d292c8623827eb960bc28dc341398c7e164f5c14cd31af74663ee24c1ff5b5dd",
+    "experiments/m194b-known-scene/score-benchmark.py": "eccbd41383ebcb46d865aef6745b39cafe91dab9294ea109b3a83981388fa80b"
+  },
+  "reason": "Post-render reader repair: platform-equivalent Cargo artifact paths, actual executable byte size, exact CameraLinear ImageDescription. Producer/consumer/pixels/targets/settings unchanged. See reader-revision.md. V2 uses filesystem same-file identity for ordinary/extended Windows TIFF paths. V3 rejects unknown/missing plan fields after independent schema control.",
+  "prior_reader_revision_sha256": "e46f0ddc09a7894ae4d1899e648977b9aace84da7b2dc45e3d95f049afafa363"
+}

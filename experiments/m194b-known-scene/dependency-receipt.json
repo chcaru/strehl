@@ -1,0 +1,104 @@
+{
+  "schema": "m194b-dev-dependency-receipt-v1",
+  "resolved": [
+    {
+      "name": "block-buffer",
+      "version": "0.12.1",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index"
+    },
+    {
+      "name": "const-oid",
+      "version": "0.10.2",
+      "license": "Apache-2.0 OR MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index"
+    },
+    {
+      "name": "cpufeatures",
+      "version": "0.3.1",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index"
+    },
+    {
+      "name": "crypto-common",
+      "version": "0.2.2",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index"
+    },
+    {
+      "name": "digest",
+      "version": "0.11.3",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index"
+    },
+    {
+      "name": "hybrid-array",
+      "version": "0.4.14",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index"
+    },
+    {
+      "name": "itoa",
+      "version": "1.0.18",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index"
+    },
+    {
+      "name": "serde",
+      "version": "1.0.229",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index"
+    },
+    {
+      "name": "serde_json",
+      "version": "1.0.151",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index"
+    },
+    {
+      "name": "sha2",
+      "version": "0.11.0",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index"
+    },
+    {
+      "name": "typenum",
+      "version": "1.20.1",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index"
+    },
+    {
+      "name": "zmij",
+      "version": "1.0.23",
+      "license": "MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index"
+    }
+  ],
+  "production_direct_dependencies_unchanged": true,
+  "dev_dependencies": {
+    "serde": {
+      "version": "=1.0.229",
+      "features": [
+        "derive"
+      ]
+    },
+    "serde_json": {
+      "version": "=1.0.151",
+      "features": [
+        "float_roundtrip"
+      ]
+    },
+    "sha2": "=0.11.0"
+  },
+  "official_metadata_commands": [
+    "cargo info serde --registry crates-io",
+    "cargo info serde_json --registry crates-io --config net.offline=false --config net.retry=0",
+    "cargo info sha2 --registry crates-io --config net.offline=false --config net.retry=0"
+  ],
+  "official_license_pages": [
+    "https://crates.io/crates/serde/1.0.229",
+    "https://crates.io/crates/serde_json/1.0.151",
+    "https://crates.io/crates/sha2/0.11.0"
+  ],
+  "dependency_source_read": false
+}

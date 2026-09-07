@@ -75,6 +75,9 @@ pub(crate) mod halo;
 #[cfg(test)]
 #[path = "merge_cmd/production-truth.rs"]
 mod production_truth;
+#[cfg(test)]
+#[path = "merge_cmd/known-scene-benchmark.rs"]
+mod known_scene_benchmark;
 use crate::stack::{
     MEMORY_BUDGET_BYTES, Roi, flat_roi_stats, mean_and_sigma, provenance_line, report_hp_reference,
     roi_green, srgb_encode,

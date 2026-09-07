@@ -259,16 +259,24 @@ and full-resolution linear-sRGB development. See the
 [M194 report](../research/M194-production-truth.md) for the checked scope and
 retained build/lint failures. This commissions a source path, not scene truth.
 
-**M194b allocated as the next implementation:** the
+**M194b complete within its fixed registered layout:** the
 [forward-model brief](../../experiments/review-production-truth/forward-model-plan.md)
-starts with flat, single textured plane and analytic colour fixtures. Fixed
-curved placements, crop coordinates, explicit synthetic noise and independently
-constructed targets will exercise M194's actual production path. Commission the
-finite controls first, then record reconstruction error, wave response and
-repeat temporal variance for one pinned production baseline. Preserve M25's
-optics/occlusion limits and BUILD-BLEND's scene refusal. The later two-layer
-extension has its own controls; it does not delay the first supported software
-measurements. No new capture or SOTA admission is claimed.
+led to forty actual production TIFFs on flat, single textured plane and analytic
+colour fixtures, with fixed curved geometry, crop and synthetic noise. Independent
+reference calculations and actual TIFF reads confirm a detail/noise tradeoff:
+the stack is quieter and closer to the specified optical observation, but farther
+from the ideal plane and less accurate on the analytic colour component. Keep
+both targets and the single-frame comparator distinct. See the
+[M194b report](../research/M194b-known-scene.md) and its retained controls/failures.
+
+**M194c is the next product repair:** M194b's independent padding control failed.
+Identical image pixels in different decoded-buffer storage produced different
+measured probe floors and output pixels; switching to the white floor eliminated
+the difference. Repair the probe's dependence on unused storage, preserve its
+statistical law and measured-floor consumer, and quantify the change on the same
+known-scene inputs. This concrete defect takes priority over another parameter
+sweep. M25's physical optics/occlusion limits remain; the later two-layer
+extension has its own controls. No new capture or SOTA admission is claimed.
 
 **M192d complete and independently verified:** the
 [native observer rehearsal](../research/M192d-production-rehearsal.md) ran all

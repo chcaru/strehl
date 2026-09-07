@@ -1,0 +1,422 @@
+{
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-B",
+    "experiments\\m194b-known-scene\\produce.py",
+    "--commission",
+    "experiments\\m194b-known-scene\\producer-commission-1\\commission-optics-refusal-control.json",
+    "--out",
+    "experiments\\m194b-known-scene\\producer-refusal-control-2"
+  ],
+  "returncode": 2,
+  "stdout": "produced flat: 9 variants\nrefused plane: ['defocus-diffraction', 'plane-numerical-convergence']\nproduced color: 1 variants\nproduced color-null: 1 variants\n{\"status\": \"partial-refusal\", \"manifests\": 11, \"output\": \"C:\\\\dev\\\\blog\\\\death-of-software\\\\projects\\\\strehl\\\\experiments\\\\m194b-known-scene\\\\producer-refusal-control-2\"}\n",
+  "stderr": "",
+  "status": "partial-refusal",
+  "manifests": 11,
+  "refused_scenes": {
+    "plane": [
+      "defocus-diffraction",
+      "plane-numerical-convergence"
+    ]
+  },
+  "frame_comparisons": [
+    {
+      "path": "color/noise-off/frames/frame-00.cfa",
+      "equal": true
+    },
+    {
+      "path": "color/noise-off/frames/frame-01.cfa",
+      "equal": true
+    },
+    {
+      "path": "color/noise-off/frames/frame-02.cfa",
+      "equal": true
+    },
+    {
+      "path": "color/noise-off/frames/frame-03.cfa",
+      "equal": true
+    },
+    {
+      "path": "color/noise-off/frames/frame-04.cfa",
+      "equal": true
+    },
+    {
+      "path": "color/noise-off/frames/frame-05.cfa",
+      "equal": true
+    },
+    {
+      "path": "color/noise-off/frames/frame-06.cfa",
+      "equal": true
+    },
+    {
+      "path": "color/noise-off/frames/frame-07.cfa",
+      "equal": true
+    },
+    {
+      "path": "color/noise-off/frames/frame-08.cfa",
+      "equal": true
+    },
+    {
+      "path": "color-null/noise-off/frames/frame-00.cfa",
+      "equal": true
+    },
+    {
+      "path": "color-null/noise-off/frames/frame-01.cfa",
+      "equal": true
+    },
+    {
+      "path": "color-null/noise-off/frames/frame-02.cfa",
+      "equal": true
+    },
+    {
+      "path": "color-null/noise-off/frames/frame-03.cfa",
+      "equal": true
+    },
+    {
+      "path": "color-null/noise-off/frames/frame-04.cfa",
+      "equal": true
+    },
+    {
+      "path": "color-null/noise-off/frames/frame-05.cfa",
+      "equal": true
+    },
+    {
+      "path": "color-null/noise-off/frames/frame-06.cfa",
+      "equal": true
+    },
+    {
+      "path": "color-null/noise-off/frames/frame-07.cfa",
+      "equal": true
+    },
+    {
+      "path": "color-null/noise-off/frames/frame-08.cfa",
+      "equal": true
+    },
+    {
+      "path": "flat/noise-off/frames/frame-00.cfa",
+      "equal": true
+    },
+    {
+      "path": "flat/noise-off/frames/frame-01.cfa",
+      "equal": true
+    },
+    {
+      "path": "flat/noise-off/frames/frame-02.cfa",
+      "equal": true
+    },
+    {
+      "path": "flat/noise-off/frames/frame-03.cfa",
+      "equal": true
+    },
+    {
+      "path": "flat/noise-off/frames/frame-04.cfa",
+      "equal": true
+    },
+    {
+      "path": "flat/noise-off/frames/frame-05.cfa",
+      "equal": true
+    },
+    {
+      "path": "flat/noise-off/frames/frame-06.cfa",
+      "equal": true
+    },
+    {
+      "path": "flat/noise-off/frames/frame-07.cfa",
+      "equal": true
+    },
+    {
+      "path": "flat/noise-off/frames/frame-08.cfa",
+      "equal": true
+    },
+    {
+      "path": "flat/seed-701/frames/frame-00.cfa",
+      "equal": true
+    },
+    {
+      "path": "flat/seed-701/frames/frame-01.cfa",
+      "equal": true
+    },
+    {
+      "path": "flat/seed-701/frames/frame-02.cfa",
+      "equal": true
+    },
+    {
+      "path": "flat/seed-701/frames/frame-03.cfa",
+      "equal": true
+    },
+    {
+      "path": "flat/seed-701/frames/frame-04.cfa",
+      "equal": true
+    },
+    {
+      "path": "flat/seed-701/frames/frame-05.cfa",
+      "equal": true
+    },
+    {
+      "path": "flat/seed-701/frames/frame-06.cfa",
+      "equal": true
+    },
+    {
+      "path": "flat/seed-701/frames/frame-07.cfa",
+      "equal": true
+    },
+    {
+      "path": "flat/seed-701/frames/frame-08.cfa",
+      "equal": true
+    },
+    {
+      "path": "flat/seed-709/frames/frame-00.cfa",
+      "equal": true
+    },
+    {
+      "path": "flat/seed-709/frames/frame-01.cfa",
+      "equal": true
+    },
+    {
+      "path": "flat/seed-709/frames/frame-02.cfa",
+      "equal": true
+    },
+    {
+      "path": "flat/seed-709/frames/frame-03.cfa",
+      "equal": true
+    },
+    {
+      "path": "flat/seed-709/frames/frame-04.cfa",
+      "equal": true
+    },
+    {
+      "path": "flat/seed-709/frames/frame-05.cfa",
+      "equal": true
+    },
+    {
+      "path": "flat/seed-709/frames/frame-06.cfa",
+      "equal": true
+    },
+    {
+      "path": "flat/seed-709/frames/frame-07.cfa",
+      "equal": true
+    },
+    {
+      "path": "flat/seed-709/frames/frame-08.cfa",
+      "equal": true
+    },
+    {
+      "path": "flat/seed-719/frames/frame-00.cfa",
+      "equal": true
+    },
+    {
+      "path": "flat/seed-719/frames/frame-01.cfa",
+      "equal": true
+    },
+    {
+      "path": "flat/seed-719/frames/frame-02.cfa",
+      "equal": true
+    },
+    {
+      "path": "flat/seed-719/frames/frame-03.cfa",
+      "equal": true
+    },
+    {
+      "path": "flat/seed-719/frames/frame-04.cfa",
+      "equal": true
+    },
+    {
+      "path": "flat/seed-719/frames/frame-05.cfa",
+      "equal": true
+    },
+    {
+      "path": "flat/seed-719/frames/frame-06.cfa",
+      "equal": true
+    },
+    {
+      "path": "flat/seed-719/frames/frame-07.cfa",
+      "equal": true
+    },
+    {
+      "path": "flat/seed-719/frames/frame-08.cfa",
+      "equal": true
+    },
+    {
+      "path": "flat/seed-727/frames/frame-00.cfa",
+      "equal": true
+    },
+    {
+      "path": "flat/seed-727/frames/frame-01.cfa",
+      "equal": true
+    },
+    {
+      "path": "flat/seed-727/frames/frame-02.cfa",
+      "equal": true
+    },
+    {
+      "path": "flat/seed-727/frames/frame-03.cfa",
+      "equal": true
+    },
+    {
+      "path": "flat/seed-727/frames/frame-04.cfa",
+      "equal": true
+    },
+    {
+      "path": "flat/seed-727/frames/frame-05.cfa",
+      "equal": true
+    },
+    {
+      "path": "flat/seed-727/frames/frame-06.cfa",
+      "equal": true
+    },
+    {
+      "path": "flat/seed-727/frames/frame-07.cfa",
+      "equal": true
+    },
+    {
+      "path": "flat/seed-727/frames/frame-08.cfa",
+      "equal": true
+    },
+    {
+      "path": "flat/seed-733/frames/frame-00.cfa",
+      "equal": true
+    },
+    {
+      "path": "flat/seed-733/frames/frame-01.cfa",
+      "equal": true
+    },
+    {
+      "path": "flat/seed-733/frames/frame-02.cfa",
+      "equal": true
+    },
+    {
+      "path": "flat/seed-733/frames/frame-03.cfa",
+      "equal": true
+    },
+    {
+      "path": "flat/seed-733/frames/frame-04.cfa",
+      "equal": true
+    },
+    {
+      "path": "flat/seed-733/frames/frame-05.cfa",
+      "equal": true
+    },
+    {
+      "path": "flat/seed-733/frames/frame-06.cfa",
+      "equal": true
+    },
+    {
+      "path": "flat/seed-733/frames/frame-07.cfa",
+      "equal": true
+    },
+    {
+      "path": "flat/seed-733/frames/frame-08.cfa",
+      "equal": true
+    },
+    {
+      "path": "flat/seed-739/frames/frame-00.cfa",
+      "equal": true
+    },
+    {
+      "path": "flat/seed-739/frames/frame-01.cfa",
+      "equal": true
+    },
+    {
+      "path": "flat/seed-739/frames/frame-02.cfa",
+      "equal": true
+    },
+    {
+      "path": "flat/seed-739/frames/frame-03.cfa",
+      "equal": true
+    },
+    {
+      "path": "flat/seed-739/frames/frame-04.cfa",
+      "equal": true
+    },
+    {
+      "path": "flat/seed-739/frames/frame-05.cfa",
+      "equal": true
+    },
+    {
+      "path": "flat/seed-739/frames/frame-06.cfa",
+      "equal": true
+    },
+    {
+      "path": "flat/seed-739/frames/frame-07.cfa",
+      "equal": true
+    },
+    {
+      "path": "flat/seed-739/frames/frame-08.cfa",
+      "equal": true
+    },
+    {
+      "path": "flat/seed-743/frames/frame-00.cfa",
+      "equal": true
+    },
+    {
+      "path": "flat/seed-743/frames/frame-01.cfa",
+      "equal": true
+    },
+    {
+      "path": "flat/seed-743/frames/frame-02.cfa",
+      "equal": true
+    },
+    {
+      "path": "flat/seed-743/frames/frame-03.cfa",
+      "equal": true
+    },
+    {
+      "path": "flat/seed-743/frames/frame-04.cfa",
+      "equal": true
+    },
+    {
+      "path": "flat/seed-743/frames/frame-05.cfa",
+      "equal": true
+    },
+    {
+      "path": "flat/seed-743/frames/frame-06.cfa",
+      "equal": true
+    },
+    {
+      "path": "flat/seed-743/frames/frame-07.cfa",
+      "equal": true
+    },
+    {
+      "path": "flat/seed-743/frames/frame-08.cfa",
+      "equal": true
+    },
+    {
+      "path": "flat/seed-751/frames/frame-00.cfa",
+      "equal": true
+    },
+    {
+      "path": "flat/seed-751/frames/frame-01.cfa",
+      "equal": true
+    },
+    {
+      "path": "flat/seed-751/frames/frame-02.cfa",
+      "equal": true
+    },
+    {
+      "path": "flat/seed-751/frames/frame-03.cfa",
+      "equal": true
+    },
+    {
+      "path": "flat/seed-751/frames/frame-04.cfa",
+      "equal": true
+    },
+    {
+      "path": "flat/seed-751/frames/frame-05.cfa",
+      "equal": true
+    },
+    {
+      "path": "flat/seed-751/frames/frame-06.cfa",
+      "equal": true
+    },
+    {
+      "path": "flat/seed-751/frames/frame-07.cfa",
+      "equal": true
+    },
+    {
+      "path": "flat/seed-751/frames/frame-08.cfa",
+      "equal": true
+    }
+  ],
+  "prior_shell_tool_reported_exit": 1,
+  "pass": true
+}

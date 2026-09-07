@@ -1,0 +1,33 @@
+{
+  "schema": "m194b-consumer-command-v1",
+  "command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\work\\consumer-binaries\\9a6587d4130c40569aad43ae56d86928\\known-scene-tests.exe",
+    "--exact",
+    "merge_cmd::known_scene_benchmark::m194b_known_scene_consumer",
+    "--ignored",
+    "--test-threads=1",
+    "--nocapture"
+  ],
+  "exit_code": 0,
+  "pass_": true,
+  "log": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\baseline-1\\logs\\plane-seed-733-full9.command.log",
+  "log_sha256": "da7550ebd22ac0ad2611217ff8e4171ef78e85689b7d88277dc718d44df492fe",
+  "build_sha256": "43e54bd99827b287b78fe44f37315fe6cae89e26234927409df2aa2449ac5078",
+  "environment": {
+    "STREHL_DEFECT": "off",
+    "STREHL_FIX_CA": "off",
+    "STREHL_FULLRES_GATHER": "1",
+    "STREHL_PYRAMID_WORKERS": "2",
+    "RAYON_NUM_THREADS": "2",
+    "STREHL_M194B_MODE": "render",
+    "STREHL_M194B_MANIFEST": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\plane\\seed-733\\manifest.json",
+    "STREHL_M194B_MANIFEST_SHA256": "fbd50e1c16ce11145025b656d8a42178159af5d476f58e611b135e522e05e1fa",
+    "STREHL_M194B_PLAN": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\baseline-1\\plans\\plane-seed-733.json",
+    "STREHL_M194B_PLAN_SHA256": "c08f8597c63764ddf199f8bc2f50c1bb8f11baa27aefc9860cc6941734e67638",
+    "STREHL_M194B_SUBSET": "all",
+    "STREHL_M194B_OUTPUT": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\baseline-1\\tiffs\\plane-seed-733-full9.tif",
+    "STREHL_M194B_RECEIPT": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\baseline-1\\receipts\\plane-seed-733-full9.json"
+  },
+  "result": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\baseline-1\\receipts\\plane-seed-733-full9.json",
+  "result_sha256": "9719f06a0897384e6300dfd4300bb0292f3b03a301a7e4a357aa6068fb87460a"
+}

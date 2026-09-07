@@ -1,0 +1,33 @@
+{
+  "schema": "m194b-consumer-command-v1",
+  "command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\work\\consumer-binaries\\9a6587d4130c40569aad43ae56d86928\\known-scene-tests.exe",
+    "--exact",
+    "merge_cmd::known_scene_benchmark::m194b_known_scene_consumer",
+    "--ignored",
+    "--test-threads=1",
+    "--nocapture"
+  ],
+  "exit_code": 0,
+  "pass_": true,
+  "log": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\baseline-1\\logs\\flat-seed-701-full9.command.log",
+  "log_sha256": "3001a52373fe1347517666c871d1fce2bf9aa95ea4ffa13551ec35df99c99433",
+  "build_sha256": "43e54bd99827b287b78fe44f37315fe6cae89e26234927409df2aa2449ac5078",
+  "environment": {
+    "STREHL_DEFECT": "off",
+    "STREHL_FIX_CA": "off",
+    "STREHL_FULLRES_GATHER": "1",
+    "STREHL_PYRAMID_WORKERS": "2",
+    "RAYON_NUM_THREADS": "2",
+    "STREHL_M194B_MODE": "render",
+    "STREHL_M194B_MANIFEST": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\flat\\seed-701\\manifest.json",
+    "STREHL_M194B_MANIFEST_SHA256": "6b505c8b3459c36f1d8c423500a8fb05d9fd0989e8ad8e7ad8d7481e8dfc79bf",
+    "STREHL_M194B_PLAN": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\baseline-1\\plans\\flat-seed-701.json",
+    "STREHL_M194B_PLAN_SHA256": "a002383e68ad14ab18a5ebe7e6d909d5a4a3ffaadfe00e3f98e07af049b862d5",
+    "STREHL_M194B_SUBSET": "all",
+    "STREHL_M194B_OUTPUT": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\baseline-1\\tiffs\\flat-seed-701-full9.tif",
+    "STREHL_M194B_RECEIPT": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\baseline-1\\receipts\\flat-seed-701-full9.json"
+  },
+  "result": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\baseline-1\\receipts\\flat-seed-701-full9.json",
+  "result_sha256": "32602fd6a11a7a43a2b31d577d04ae624a8685df3ed2cb2d1d463d70f301c308"
+}

@@ -1,0 +1,11 @@
+{
+  "scope": "Author commissioning of already-requested selective refusal behavior; no scientific fixture or tolerance change",
+  "before_execution": true,
+  "source_commission": "producer-commission-1/commission.json",
+  "mutation": "Copy commission, set defocus-diffraction and plane-numerical-convergence group status to fail; preserve all cache/source bindings and other groups",
+  "expected": {"process_exit": 2, "producer_status": "partial-refusal", "refused_scene": "plane", "manifests": 11, "other_scenes": ["flat","color","color-null"], "retained_CFA_bytes": "identical to corresponding producer-output-1 files"},
+  "null": "Untreated original commission already produced20 manifests, exit0 complete",
+  "failure_power": "A global all-or-none stop produces0 manifests; ignored optics failure produces20; either fails this control",
+  "output": "producer-refusal-control-1",
+  "do_not_substitute_for_benchmark": true
+}

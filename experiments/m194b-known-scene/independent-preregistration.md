@@ -114,3 +114,20 @@ status/logs; Cargo invocations need explicit rebuild evidence after source
 changes. New scripts/artifacts stay in `independent-*`; implementation changes
 belong to their assigned authors. This is a bounded verification of one fixed
 first-scope benchmark, not a new optical research or capture campaign.
+
+### API addendum, before producer component runs
+
+The producer exposes `build_scalar`, `render_scalar`, `observe_exposure`,
+`analytic_color_rgb`, `color_electrons` and `expose_cached`. Its scalar API
+preserves the two frozen wave frequencies and applies a common phase offset.
+The earlier independent OTF/FFT control already uses the different frequencies
+and phases in item2. The actual-producer control instead uses288x192,
+center(157,89), common phase shift0.53 (wave phases0.73 and1.63), three frames
+with the frozen first/middle/last scales and focuses0/4/8. This is a component
+re-choice, not a replacement benchmark. Run S4/S8 and the three observer modes;
+compare actual cached electrons to independent finite-aperture pupil/disc
+predictions on a fixed interior window, with0.5-DN RMS component budget and the
+registered1-DN S4/S8 budget. Analytic-color checks use phase shift-0.46 and
+independent continuous cell quadrature. Same-size wrong phase/map/center/CFA
+and point/quad-pitch apertures are named rejecting inputs. No benchmark wave,
+phase, numerical tolerance or acceptance mask is changed by this addendum.

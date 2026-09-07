@@ -1,0 +1,37 @@
+{
+  "scores_sha256": "ecca571832e696cd72b491dff4a2d2c195d6ab64258ac6b480aef2d7eb4bbedb",
+  "source_sha256": "e011187a58dd86e2347acb04adf73fde0340306acd2435fd824f0c925d542f96",
+  "figures": [
+    {
+      "path": "experiments\\m194b-known-scene\\figures-1\\flat-comparison.png",
+      "sha256": "d12cb35bfc6cd448e7c4b14ed97a8fa82a92210f1c0daab5598e658e2f0e40cd",
+      "scene": "flat",
+      "repeat": 701,
+      "actual_file_sha256": [
+        "32f089cdca7a0e34fb4cbf75784a014975408957b9048c3dc1f0956d4a16fd6f",
+        "6622cd9bfd2eb3db3332e84b919dd12a2c2a7264dfbe2ef627df8f4497f8942d"
+      ]
+    },
+    {
+      "path": "experiments\\m194b-known-scene\\figures-1\\plane-comparison.png",
+      "sha256": "357f066d0bbc6fd1313121559b1cbb57f8a3e871dbe5434c906bd9c31a024515",
+      "scene": "plane",
+      "repeat": 701,
+      "actual_file_sha256": [
+        "484c983d0863651ab6e9ace7408c8aa9ff32b0f1c5a49673c0279a1c0ac6d4e9",
+        "8c8985a106884e4c595fe2fcb8219d235b3fe006f7157a982140f03d58e14347"
+      ]
+    },
+    {
+      "path": "experiments\\m194b-known-scene\\figures-1\\color-comparison.png",
+      "sha256": "3e60975dd78cc7f94c83594135565f8adf8dcf9f3a006a5bef73aeb25c8e9dca",
+      "scene": "color",
+      "repeat": null,
+      "actual_file_sha256": [
+        "aabf14ab28e76449fe53163404a3fc72751dd58f1a82c9f50cb5ae61d588f6ad",
+        "f5c0b569bd4479decb519e9712d06869c0f26e486c7ee69f1603385b81089439"
+      ]
+    }
+  ],
+  "display_scope": "pixel-nearest scientific figure; assess detail on original192x112 crops, not scaled screenshot"
+}

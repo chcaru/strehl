@@ -1,0 +1,35 @@
+{
+  "schema": "m194b-consumer-author-controls-v1",
+  "pass": true,
+  "checks": {
+    "same_plan": true,
+    "full9_decodes": true,
+    "single4_decodes": true,
+    "confidence_decodes": true,
+    "observer_main_bytes_identical": true,
+    "flat_full_single_bytes_identical": true,
+    "actual_crop": true,
+    "noise_variance": true
+  },
+  "build_record": "experiments/m194b-known-scene/consumer-build-1.json",
+  "build_record_sha256": "9f740a831cbb4c4c0446fc4af99802bb1953f99f974e77d56308927cd538688b",
+  "artifacts": {
+    "experiments/m194b-known-scene/work/consumer-author/confidence-map.tif": "89b77cefa89b2c23ef51480d12304c823e25a576b48432626ccf7e23c1756a26",
+    "experiments/m194b-known-scene/work/consumer-author/confidence.command.json": "4a231ba86728f1c792c26cdac94cb4700177b62413d89212989858385aab7030",
+    "experiments/m194b-known-scene/work/consumer-author/confidence.command.log": "9a094ecf699946020160a8bb6486609da4b706fcd844e889c0af3f7d845de24f",
+    "experiments/m194b-known-scene/work/consumer-author/confidence.json": "79c3327ab9957a862008c55c813dc36453771fd33d2387d2a27bb56b30e3d16e",
+    "experiments/m194b-known-scene/work/consumer-author/confidence.tif": "4cf945da51c2fc41715c07c20188b0329c6de60d17f5a8aa3c2928b5ae86bfcd",
+    "experiments/m194b-known-scene/work/consumer-author/flat-plan.command.json": "d50e32e35db32b4ae3d4d2f43303530b65bb7f4a7fd315444f2bba7e355a5806",
+    "experiments/m194b-known-scene/work/consumer-author/flat-plan.command.log": "3e576d46fd054c89b8d9ef5d888e554fd1d152007412091299b3746cb9e791c8",
+    "experiments/m194b-known-scene/work/consumer-author/flat-plan.json": "82b2bd630f5c6dfedf63fbf7968c6a126f98195c02d95a270cbc1774ec689e81",
+    "experiments/m194b-known-scene/work/consumer-author/full9.command.json": "788eabd0c5e96136e2f13224cb1586b6f6449746e48fdf8430e7149d272daee5",
+    "experiments/m194b-known-scene/work/consumer-author/full9.command.log": "819023ad10b8aa0febab39b8ef7132f3b5fb07a6eb03e17ea67a53e722e9e597",
+    "experiments/m194b-known-scene/work/consumer-author/full9.json": "bb31ff0a1b6de51aff5727f9322548e686b6c765648739a59fc8c226fc213307",
+    "experiments/m194b-known-scene/work/consumer-author/full9.tif": "4cf945da51c2fc41715c07c20188b0329c6de60d17f5a8aa3c2928b5ae86bfcd",
+    "experiments/m194b-known-scene/work/consumer-author/single4.command.json": "37cf3cf3ebccd1a726804c802d322fbc32babe9eb6a41d6c10f28e3ce7d79913",
+    "experiments/m194b-known-scene/work/consumer-author/single4.command.log": "5b3dcc5965b3947251e265aba500f5e4dd45d605a3688f0bb2608d713ca46dda",
+    "experiments/m194b-known-scene/work/consumer-author/single4.json": "4e640469e3e48395ba4c32f4f71491a43555ad9545fa80d66934da62d3cf1fdc",
+    "experiments/m194b-known-scene/work/consumer-author/single4.tif": "4cf945da51c2fc41715c07c20188b0329c6de60d17f5a8aa3c2928b5ae86bfcd"
+  },
+  "scope": "Flat noise-off source/domain/writer and optional confidence observer controls only. Not a quality claim; independent verification is separate. Initial build record started_utc was assigned after compilation and denotes record-assembly time; subsequent build records repair chronology."
+}

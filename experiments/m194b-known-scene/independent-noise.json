@@ -1,0 +1,135 @@
+{
+  "schema": "m194b-independent-noise-v1",
+  "pass_": true,
+  "source_sha256": "d3057d2bfe3be5c832314e3a442941ef8269dd9a9c3b35e7e100a520e975957f",
+  "scope": "synthetic exposure primitive; not full producer interception or real camera calibration",
+  "repeats": 80,
+  "shape": [
+    80,
+    96
+  ],
+  "seed": 90217,
+  "rows": [
+    {
+      "electrons": 0,
+      "expected_variance_dn2": 1.0833333223611195,
+      "parity_variance_dn2": [
+        1.0868950257120256,
+        1.0849653052478905,
+        1.0760533689345992,
+        1.0817489121835446
+      ],
+      "relative_errors": [
+        0.003287726203365926,
+        0.001506445756892294,
+        0.006719957077156669,
+        0.0014625324864203648
+      ],
+      "correlation": {
+        "temporal": 0.00042814738816504,
+        "x": 0.0015771761960611211,
+        "y": -0.0007225762710205784
+      }
+    },
+    {
+      "electrons": 1024,
+      "expected_variance_dn2": 65.08333333333333,
+      "parity_variance_dn2": [
+        65.07068672534282,
+        65.32164367418248,
+        65.23561436906645,
+        65.21387303863396
+      ],
+      "relative_errors": [
+        0.0001943140792395326,
+        0.003661618553379986,
+        0.002339785440201636,
+        0.002005731707564129
+      ],
+      "correlation": {
+        "temporal": -0.0014707787062770803,
+        "x": -0.0003779667455494894,
+        "y": 0.0008265195217461841
+      }
+    },
+    {
+      "electrons": 8192,
+      "expected_variance_dn2": 513.0833333333334,
+      "parity_variance_dn2": [
+        511.36524187434065,
+        511.38966516679847,
+        510.556543215981,
+        512.3279235067247
+      ],
+      "relative_errors": [
+        0.003348562206904715,
+        0.0033009611821371854,
+        0.00492471681147133,
+        0.0014722946108988166
+      ],
+      "correlation": {
+        "temporal": 0.0001391534532177668,
+        "x": 0.000706608499974373,
+        "y": 0.0006014683854878795
+      }
+    },
+    {
+      "electrons": 32768,
+      "expected_variance_dn2": 2049.0833333333335,
+      "parity_variance_dn2": [
+        2041.1724807983915,
+        2049.25807868539,
+        2043.5877508570675,
+        2042.1753243670887
+      ],
+      "relative_errors": [
+        0.0038606787758470595,
+        8.527976837924278e-05,
+        0.0026819711950544223,
+        0.003371267948876988
+      ],
+      "correlation": {
+        "temporal": 0.0003396513099109568,
+        "x": -0.0016710282549867376,
+        "y": -0.0012020420097436989
+      }
+    }
+  ],
+  "negative_controls": {
+    "same-mean-gain-noise-mismatch": {
+      "variance_ratio": [
+        2.015497024361743,
+        2.006917478761181,
+        2.0067560957361996,
+        2.0095766542545483
+      ],
+      "mean_dn": 2559.950234375,
+      "rejected": true
+    },
+    "removed-dark-read-noise": {
+      "variance_dn2": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "rejected": true
+    },
+    "identical-noise-frames": {
+      "correlation": 1.0,
+      "variance_dn2": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "rejected": true
+    },
+    "matched-marginal-correlated-noise": {
+      "correlation_x": 0.2483871774687368,
+      "variance": 0.9999210618322887,
+      "rejected": true
+    }
+  },
+  "delegate_placebo_sha256": "3f22d6993a815b70e41bce7a936e5447325a12ce3673aaa2d9ba2aed54a2aee0"
+}

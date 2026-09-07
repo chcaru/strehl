@@ -1,0 +1,274 @@
+{
+  "schema": "m194b-independent-optics-v1",
+  "pass_": true,
+  "scope": "declared scalar numerical OTF and FFT component only; not full producer or camera",
+  "source_sha256": "ac5a2342d5ad3e6551ca3ddade5dba8feb9ea8f555f3aa36b71c774c6868fb93",
+  "grid": {
+    "active": [
+      288,
+      192
+    ],
+    "margin": 48,
+    "supersample": 4
+  },
+  "rows": [
+    {
+      "frequency": 0.0,
+      "diameter": 0.0,
+      "disc_integral": 1.0000000038952888,
+      "pupil_integral": 1.0000000013771915,
+      "actual_disc": 1.0,
+      "actual_pupil": 1.0,
+      "quadrature_change": 2.7176358496916464e-08
+    },
+    {
+      "frequency": 0.02,
+      "diameter": 0.0,
+      "disc_integral": 1.0000000038952888,
+      "pupil_integral": 0.9574339887793653,
+      "actual_disc": 1.0,
+      "actual_pupil": 0.9574339874706679,
+      "quadrature_change": 2.7176358496916464e-08
+    },
+    {
+      "frequency": 0.08,
+      "diameter": 0.0,
+      "disc_integral": 1.0000000038952888,
+      "pupil_integral": 0.8302133218975556,
+      "actual_disc": 1.0,
+      "actual_pupil": 0.8302133207872074,
+      "quadrature_change": 2.7176358496916464e-08
+    },
+    {
+      "frequency": 0.16,
+      "diameter": 0.0,
+      "disc_integral": 1.0000000038952888,
+      "pupil_integral": 0.6635150848587449,
+      "actual_disc": 1.0,
+      "actual_pupil": 0.6635150839953574,
+      "quadrature_change": 2.7176358496916464e-08
+    },
+    {
+      "frequency": 0.29,
+      "diameter": 0.0,
+      "disc_integral": 1.0000000038952888,
+      "pupil_integral": 0.4077976788248747,
+      "actual_disc": 1.0,
+      "actual_pupil": 0.40779767831565794,
+      "quadrature_change": 2.7176358496916464e-08
+    },
+    {
+      "frequency": 0.5,
+      "diameter": 0.0,
+      "disc_integral": 1.0000000038952888,
+      "pupil_integral": 0.07777867427004635,
+      "actual_disc": 1.0,
+      "actual_pupil": 0.07777867417852802,
+      "quadrature_change": 2.7176358496916464e-08
+    },
+    {
+      "frequency": 0.5981308411214953,
+      "diameter": 0.0,
+      "disc_integral": 1.0000000038952888,
+      "pupil_integral": 0.0,
+      "actual_disc": 1.0,
+      "actual_pupil": 0.0,
+      "quadrature_change": 2.7176358496916464e-08
+    },
+    {
+      "frequency": 0.6579439252336449,
+      "diameter": 0.0,
+      "disc_integral": 1.0000000038952888,
+      "pupil_integral": 0.0,
+      "actual_disc": 1.0,
+      "actual_pupil": 0.0,
+      "quadrature_change": 2.7176358496916464e-08
+    },
+    {
+      "frequency": 0.0,
+      "diameter": 4.0,
+      "disc_integral": 1.0000000038952888,
+      "pupil_integral": 1.0000000013771915,
+      "actual_disc": 1.0,
+      "actual_pupil": 1.0,
+      "quadrature_change": 2.7176358496916464e-08
+    },
+    {
+      "frequency": 0.02,
+      "diameter": 4.0,
+      "disc_integral": 0.9921250735335242,
+      "pupil_integral": 0.9574339887793653,
+      "actual_disc": 0.9921250697606145,
+      "actual_pupil": 0.9574339874706679,
+      "quadrature_change": 2.6322517499011155e-08
+    },
+    {
+      "frequency": 0.08,
+      "diameter": 4.0,
+      "disc_integral": 0.8788782941383085,
+      "pupil_integral": 0.8302133218975556,
+      "actual_disc": 0.8788782920511296,
+      "actual_pupil": 0.8302133207872074,
+      "quadrature_change": 1.4561200911700212e-08
+    },
+    {
+      "frequency": 0.16,
+      "diameter": 4.0,
+      "disc_integral": 0.5729753113217606,
+      "pupil_integral": 0.6635150848587449,
+      "actual_disc": 0.5729753129803403,
+      "actual_pupil": 0.6635150839953574,
+      "quadrature_change": 1.1572458546993403e-08
+    },
+    {
+      "frequency": 0.29,
+      "diameter": 4.0,
+      "disc_integral": 0.04225279050658816,
+      "pupil_integral": 0.4077976788248747,
+      "actual_disc": 0.0422527939200166,
+      "actual_pupil": 0.40779767831565794,
+      "quadrature_change": 2.3813536205452568e-08
+    },
+    {
+      "frequency": 0.5,
+      "diameter": 4.0,
+      "disc_integral": -0.06760345508074202,
+      "pupil_integral": 0.07777867427004635,
+      "actual_disc": -0.06760345897603456,
+      "actual_pupil": 0.07777867417852802,
+      "quadrature_change": 2.717635383397976e-08
+    },
+    {
+      "frequency": 0.5981308411214953,
+      "diameter": 4.0,
+      "disc_integral": 0.037061135397429404,
+      "pupil_integral": 0.0,
+      "actual_disc": 0.037061134107210285,
+      "actual_pupil": 0.0,
+      "quadrature_change": 8.997483161299336e-09
+    },
+    {
+      "frequency": 0.6579439252336449,
+      "diameter": 4.0,
+      "disc_integral": 0.0637524067452,
+      "pupil_integral": 0.0,
+      "actual_disc": 0.0637524083123063,
+      "actual_pupil": 0.0,
+      "quadrature_change": 1.0937537944788467e-08
+    },
+    {
+      "frequency": 0.0,
+      "diameter": 12.0,
+      "disc_integral": 1.0000000038952888,
+      "pupil_integral": 1.0000000013771915,
+      "actual_disc": 1.0,
+      "actual_pupil": 1.0,
+      "quadrature_change": 2.7176358496916464e-08
+    },
+    {
+      "frequency": 0.02,
+      "diameter": 12.0,
+      "disc_integral": 0.930602285872595,
+      "pupil_integral": 0.9574339887793653,
+      "actual_disc": 0.9306022830330646,
+      "actual_pupil": 0.9574339874706679,
+      "quadrature_change": 1.9810335927239464e-08
+    },
+    {
+      "frequency": 0.08,
+      "diameter": 12.0,
+      "disc_integral": 0.22088986857991091,
+      "pupil_integral": 0.8302133218975556,
+      "actual_disc": 0.22088987244449695,
+      "actual_pupil": 0.8302133207872074,
+      "quadrature_change": 2.696233708521234e-08
+    },
+    {
+      "frequency": 0.16,
+      "diameter": 12.0,
+      "disc_integral": -0.08962308427215948,
+      "pupil_integral": 0.6635150848587449,
+      "actual_disc": -0.08962308804511007,
+      "actual_pupil": 0.6635150839953574,
+      "quadrature_change": 2.6323656560078845e-08
+    },
+    {
+      "frequency": 0.29,
+      "diameter": 12.0,
+      "disc_integral": -0.030354868658352536,
+      "pupil_integral": 0.4077976788248747,
+      "actual_disc": -0.030354868414024662,
+      "actual_pupil": 0.40779767831565794,
+      "quadrature_change": 3.552651006710761e-09
+    },
+    {
+      "frequency": 0.5,
+      "diameter": 12.0,
+      "disc_integral": -0.013518499482434615,
+      "pupil_integral": 0.07777867427004635,
+      "actual_disc": -0.013518503377727146,
+      "actual_pupil": 0.07777867417852802,
+      "quadrature_change": 2.7176348248170168e-08
+    },
+    {
+      "frequency": 0.5981308411214953,
+      "diameter": 12.0,
+      "disc_integral": 0.0031214018494607997,
+      "pupil_integral": 0.0,
+      "actual_disc": 0.0031214051539188306,
+      "actual_pupil": 0.0,
+      "quadrature_change": 2.3047503316421525e-08
+    },
+    {
+      "frequency": 0.6579439252336449,
+      "diameter": 12.0,
+      "disc_integral": -0.011510872954066623,
+      "pupil_integral": 0.0,
+      "actual_disc": -0.011510876640830862,
+      "actual_pupil": 0.0,
+      "quadrature_change": 2.5726034297637868e-08
+    }
+  ],
+  "negative_controls": {
+    "disc-radius-substitution": {
+      "max_absolute_error": 0.6098254839033324,
+      "rejected": true
+    },
+    "absolute-disc": {
+      "max_absolute_error": 0.17924617231726955,
+      "rejected": true
+    },
+    "deleted-diffraction": {
+      "max_absolute_error": 1.0,
+      "rejected": true
+    },
+    "doubled-aperture": {
+      "max_absolute_error": 0.4014912731425491,
+      "rejected": true
+    },
+    "changed-wavelength": {
+      "max_absolute_error": 0.07395493876164516,
+      "rejected": true
+    }
+  },
+  "periodic": [
+    {
+      "diameter": 0.0,
+      "rms_electrons": 5.827115530963825e-06,
+      "rms_dn": 1.4567788827409563e-06,
+      "dc_error_electrons": 0.0
+    },
+    {
+      "diameter": 4.0,
+      "rms_electrons": 2.6897591203144826e-06,
+      "rms_dn": 6.724397800786206e-07,
+      "dc_error_electrons": 0.0
+    },
+    {
+      "diameter": 12.0,
+      "rms_electrons": 3.7037218611506594e-06,
+      "rms_dn": 9.259304652876649e-07,
+      "dc_error_electrons": 0.0
+    }
+  ]
+}

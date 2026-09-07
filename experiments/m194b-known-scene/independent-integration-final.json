@@ -1,0 +1,96 @@
+{
+  "schema": "m194b-independent-integration-final-v1",
+  "pass_": true,
+  "checks": {
+    "original40": true,
+    "no_op_accepted": true,
+    "ten_same_mutations_refused": true,
+    "original_reread_unchanged": true
+  },
+  "preserved_initial_result_sha256": "605ba8910460d9fa7f1a0e01a5aa72f063492ac9ae120b88cf7a03828a9dfa9d",
+  "index_sha256": "37f99736bd32dfb4891bd8fa2b033cacc2c58e9265515fa53cb5921dd80d9c08",
+  "reader_revision_sha256": "f8740c75c5d65842d8b1993807ad99b27e988c7fb659e6f52fcd3848a6f65f00",
+  "cases": [
+    {
+      "name": "no-op",
+      "accepted": true,
+      "error": null,
+      "index_sha256": "b7228311e242d93c3fd8bb765519f0364f51e7974b7dfeb4a6498f44af19763e",
+      "same_fixture_bytes": true
+    },
+    {
+      "name": "translated-all-case-crop",
+      "accepted": false,
+      "error": "ValueError: crop differs from frozen registered domain",
+      "index_sha256": "9d2f37b9f8e782374663c1cf2ccadf584fe55c8b7155ccfac9d8114b30567302",
+      "same_fixture_bytes": true
+    },
+    {
+      "name": "changed-DN-normalization",
+      "accepted": false,
+      "error": "ValueError: wrong delivered-DN conversion",
+      "index_sha256": "be7157c053bb7b63d7b85a36e13ab4c469ff549719dedfeed9fa18e3b12bab30",
+      "same_fixture_bytes": true
+    },
+    {
+      "name": "changed-consumed-WB",
+      "accepted": false,
+      "error": "ValueError: wrong white balance",
+      "index_sha256": "1b43c035c78a1b212d31ddb86f10e1eb682bb568697dd597188c2f92347a5faf",
+      "same_fixture_bytes": true
+    },
+    {
+      "name": "changed-interior-map",
+      "accepted": false,
+      "error": "ValueError: wrong pull direction/centre/scale",
+      "index_sha256": "9d7dee7328f20d95f33455c97f57f98b9b24dac482cacc1bc564f7c5f34c27be",
+      "same_fixture_bytes": true
+    },
+    {
+      "name": "disabled-measured-floor",
+      "accepted": false,
+      "error": "ValueError: wrong complete baseline configuration",
+      "index_sha256": "2ae16036ba76159e3f07d26aa5e204a6a12e3abfb72e830c28789a6dc3222485",
+      "same_fixture_bytes": true
+    },
+    {
+      "name": "changed-soft-exponent",
+      "accepted": false,
+      "error": "ValueError: wrong complete baseline configuration",
+      "index_sha256": "72d76225dde7b718e7cdb5501b99dc99019c499d785579d45eae9e4185f797d8",
+      "same_fixture_bytes": true
+    },
+    {
+      "name": "diagnostic-marked-as-baseline",
+      "accepted": false,
+      "error": "ValueError: diagnostic control is not a baseline output",
+      "index_sha256": "cbed6313fa942caf40b040fc3f7ed9ed65ac23a79e449313ff09edf9c9a94eb0",
+      "same_fixture_bytes": true
+    },
+    {
+      "name": "unknown-plan-field",
+      "accepted": false,
+      "error": "ValueError: unknown/missing fields in frozen plan schema",
+      "index_sha256": "db536cf916898bee8b7c68501dd923fa11f1d7c40ee1c3e9e858fa2fc9b231a4",
+      "same_fixture_bytes": true
+    },
+    {
+      "name": "wrong-sample-type",
+      "accepted": false,
+      "error": "ValueError: wrong sample type",
+      "index_sha256": "d0c8d7b68b2b666a94945a913e0ef56df30a585339a77ffc22227b56e7ace19d",
+      "same_fixture_bytes": true
+    },
+    {
+      "name": "wrong-observer-read-count",
+      "accepted": false,
+      "error": "ValueError: unexpected baseline observer/source reads",
+      "index_sha256": "05c6898089d3d7360c0e81eb78e853cc6380976b6fc8c71c7fdbd1823ab99183",
+      "same_fixture_bytes": true
+    }
+  ],
+  "source_sha256": {
+    "score.py": "d292c8623827eb960bc28dc341398c7e164f5c14cd31af74663ee24c1ff5b5dd",
+    "score-benchmark.py": "eccbd41383ebcb46d865aef6745b39cafe91dab9294ea109b3a83981388fa80b"
+  }
+}

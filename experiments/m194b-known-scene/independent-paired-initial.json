@@ -1,0 +1,157 @@
+{
+  "schema": "m194b-independent-paired-v1",
+  "pass_": true,
+  "checks": {
+    "paired-finite-deltas": true,
+    "paired-finite-mean": true,
+    "paired-finite-SEM": true,
+    "finite-temporal-variance-difference": true,
+    "finite-leave-one-out-variance": true,
+    "finite-jackknife-uncertainty": true,
+    "identical-arm-null": true,
+    "pair-permutation-preserves-marginal-mean": true,
+    "pair-permutation-changes-uncertainty": true
+  },
+  "scorer_sha256": "0d222a9685ada1cb170736b97d8a65502720cae28801dc5a29e354c81af78b4d",
+  "expected": {
+    "mean": [
+      29.52777777777778,
+      -27.65972222222222,
+      81.77777777777777
+    ],
+    "sem": [
+      24.58151280139077,
+      26.563070073766454,
+      59.348728755873715
+    ],
+    "variance_delta": [
+      28.583333333333336,
+      -35.72916666666667,
+      76.22222222222223
+    ],
+    "jackknife": [
+      15.212166370012334,
+      19.015207962515415,
+      40.565776986699554
+    ]
+  },
+  "actual": {
+    "direction": "full9 minus single4; negative error/variance difference favors full9 on that component",
+    "repeat_mse_difference_dn2": [
+      [
+        -11.0,
+        5.25,
+        0.0
+      ],
+      [
+        -16.0,
+        16.0,
+        -20.0
+      ],
+      [
+        -15.0,
+        19.25,
+        -24.0
+      ],
+      [
+        -8.0,
+        15.0,
+        -12.0
+      ],
+      [
+        -2.25,
+        10.0625,
+        0.0
+      ],
+      [
+        5.0,
+        3.25,
+        16.0
+      ],
+      [
+        24.0,
+        -16.0,
+        60.0
+      ],
+      [
+        80.0,
+        -77.0,
+        196.0
+      ],
+      [
+        209.0,
+        -224.75,
+        520.0
+      ]
+    ],
+    "mean_mse_difference_dn2": [
+      29.52777777777778,
+      -27.65972222222222,
+      81.77777777777777
+    ],
+    "mse_difference_sem_dn2": [
+      24.58151280139077,
+      26.563070073766454,
+      59.348728755873715
+    ],
+    "temporal_variance_difference_dn2": [
+      28.583333333333456,
+      -35.72916666666682,
+      76.22222222222217
+    ],
+    "variance_difference_jackknife_se_dn2": [
+      15.212166370012266,
+      19.015207962515333,
+      40.56577698669969
+    ],
+    "leave_one_out_variance_difference_dn2": [
+      [
+        25.1651785714284,
+        -31.456473214285495,
+        67.10714285714323
+      ],
+      [
+        28.486607142857263,
+        -35.60825892857158,
+        75.96428571428602
+      ],
+      [
+        30.84375,
+        -38.5546875,
+        82.25
+      ],
+      [
+        32.23660714285726,
+        -40.29575892857157,
+        85.96428571428609
+      ],
+      [
+        32.57142857142833,
+        -40.71428571428541,
+        86.85714285714285
+      ],
+      [
+        32.665178571428335,
+        -40.83147321428542,
+        87.10714285714283
+      ],
+      [
+        32.12946428571441,
+        -40.16183035714302,
+        85.67857142857102
+      ],
+      [
+        28.165178571428356,
+        -35.206473214285445,
+        75.10714285714326
+      ],
+      [
+        14.9866071428572,
+        -18.733258928571498,
+        39.964285714285424
+      ]
+    ],
+    "uncertainty_scope": "paired whole-image repeats; delete-one-repeat variance uncertainty is a small-sample diagnostic"
+  },
+  "scope": "finite component uncertainty under matched repeats; jackknife is not a calibrated eight-repeat confidence interval"
+}

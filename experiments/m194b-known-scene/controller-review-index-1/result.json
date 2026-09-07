@@ -1,0 +1,131 @@
+{
+  "scope": "independent actual run-index contradiction checks; no native calls",
+  "original_index": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\baseline-1\\run-index.json",
+  "original_index_sha256": "37f99736bd32dfb4891bd8fa2b033cacc2c58e9265515fa53cb5921dd80d9c08",
+  "original_unchanged": true,
+  "sources_before": {
+    "score-benchmark.py": "a2d289eb29a0d879a5305e8f6cb9a5b0b4d6eb168baf1fe3276ac8c184d45cf8",
+    "score.py": "d292c8623827eb960bc28dc341398c7e164f5c14cd31af74663ee24c1ff5b5dd",
+    "run-baseline.py": "3b813f181ad1fe4f6cf8801ce66cc2349f45e8f7d7fdaa42a08a18890b68e8ae"
+  },
+  "sources_after": {
+    "score-benchmark.py": "a2d289eb29a0d879a5305e8f6cb9a5b0b4d6eb168baf1fe3276ac8c184d45cf8",
+    "score.py": "d292c8623827eb960bc28dc341398c7e164f5c14cd31af74663ee24c1ff5b5dd",
+    "run-baseline.py": "3b813f181ad1fe4f6cf8801ce66cc2349f45e8f7d7fdaa42a08a18890b68e8ae"
+  },
+  "cases": [
+    {
+      "name": "unchanged-absolute-path-control",
+      "expected_admitted": true,
+      "admitted": false,
+      "correct_disposition": false,
+      "index_sha256": "474b30d173fe87aab7e29e082b9ce2c95919bdb5d12c2e5845cc6e30b01a96a8",
+      "exception": "ValueError('active scorer differs; an explicit bound reader revision is required')"
+    },
+    {
+      "name": "missing-final-plan-command",
+      "expected_admitted": false,
+      "admitted": false,
+      "correct_disposition": true,
+      "index_sha256": "316c02d0a33176ae93fdb013e9ae3da88cb107523ca366780941295584dee2e2",
+      "exception": "ValueError('active scorer differs; an explicit bound reader revision is required')"
+    },
+    {
+      "name": "render-before-last-plan",
+      "expected_admitted": false,
+      "admitted": false,
+      "correct_disposition": true,
+      "index_sha256": "4e02572bf28336564bc79a186f4a5cb7ce17b6eaaea670c16cf14ca53048c0c3",
+      "exception": "ValueError('active scorer differs; an explicit bound reader revision is required')"
+    },
+    {
+      "name": "failed-final-controller-command",
+      "expected_admitted": false,
+      "admitted": false,
+      "correct_disposition": true,
+      "index_sha256": "cbda020312f77846362fe8dacd09d299959f23c4fad383c95c306c5434c86d7a",
+      "exception": "ValueError('active scorer differs; an explicit bound reader revision is required')"
+    },
+    {
+      "name": "missing-child-binding",
+      "expected_admitted": false,
+      "admitted": false,
+      "correct_disposition": true,
+      "index_sha256": "a9657967e70125a030fbf03f0b0aeb1e97f5a9ab65b579d995af1a7c30d0f4e3",
+      "exception": "ValueError('active scorer differs; an explicit bound reader revision is required')"
+    },
+    {
+      "name": "missing-source-snapshot",
+      "expected_admitted": false,
+      "admitted": false,
+      "correct_disposition": true,
+      "index_sha256": "849f5cfcc9f8be40fc86e87791c0a2b13fb6e63773eb530feb23405dc0849773",
+      "exception": "ValueError('source snapshots do not cover exact indexed source map')"
+    },
+    {
+      "name": "failed-completion-with-pixels",
+      "expected_admitted": false,
+      "admitted": false,
+      "correct_disposition": true,
+      "index_sha256": "033666e8d195819dac3cb1ddd131300880594a21166f785ce77498dbde4d016f",
+      "exception": "ValueError('incomplete/wrong benchmark index')"
+    },
+    {
+      "name": "duplicate-paired-repeat",
+      "expected_admitted": false,
+      "admitted": false,
+      "correct_disposition": true,
+      "index_sha256": "5dc8f4938499018aebf74f2602a74b08861abeb38dd4b738eaa0619a227b92b0",
+      "exception": "ValueError('active scorer differs; an explicit bound reader revision is required')"
+    },
+    {
+      "name": "swapped-full-and-single-labels",
+      "expected_admitted": false,
+      "admitted": false,
+      "correct_disposition": true,
+      "index_sha256": "d8e635ab22f067d9d39721d9a2b737a44bffa1fe09cd3439d14fc0c7db6e45b5",
+      "exception": "ValueError('active scorer differs; an explicit bound reader revision is required')"
+    },
+    {
+      "name": "false-parent-argv",
+      "expected_admitted": false,
+      "admitted": false,
+      "correct_disposition": true,
+      "index_sha256": "c87f6809e3b974e8c40e725f1247cff9f5445e19c7a6b34476570f99a42287c5",
+      "exception": "ValueError('active scorer differs; an explicit bound reader revision is required')"
+    },
+    {
+      "name": "changed-child-executable",
+      "expected_admitted": false,
+      "admitted": false,
+      "correct_disposition": true,
+      "index_sha256": "d5a3f0301ba98c5216810e5b5485bee9e2f6c43a27fd1e3f04b5e7c5bee759e3",
+      "exception": "ValueError('active scorer differs; an explicit bound reader revision is required')"
+    },
+    {
+      "name": "changed-child-subset",
+      "expected_admitted": false,
+      "admitted": false,
+      "correct_disposition": true,
+      "index_sha256": "1b3035819fdf8c815d0f0886f7e35b82272d9dd40390a2b286b04a28679b4eba",
+      "exception": "ValueError('active scorer differs; an explicit bound reader revision is required')"
+    },
+    {
+      "name": "changed-child-result-hash",
+      "expected_admitted": false,
+      "admitted": false,
+      "correct_disposition": true,
+      "index_sha256": "a3913b118ec94e7707828048122104c6cde1b2e2d00dc9db2dcea4ab3556fc22",
+      "exception": "ValueError('active scorer differs; an explicit bound reader revision is required')"
+    },
+    {
+      "name": "final-unchanged-control",
+      "expected_admitted": true,
+      "admitted": false,
+      "correct_disposition": false,
+      "index_sha256": "474b30d173fe87aab7e29e082b9ce2c95919bdb5d12c2e5845cc6e30b01a96a8",
+      "exception": "ValueError('active scorer differs; an explicit bound reader revision is required')"
+    }
+  ],
+  "pass": false
+}

@@ -1,0 +1,11 @@
+{
+  "command": "python -B experiments/m194b-known-scene/independent-scoring.py",
+  "exit_code": 1,
+  "failed_assertion": "ideal target agreement <1e-8",
+  "cause": "Verifier reference multiplied a NumPy float32 WB scalar by Python float, which retained float32 multiplication. It prematurely rounded channel_scale*WB to unity. The scorer explicitly promotes the consumed f32 WB coefficients to float64 before target calculation, as preregistered.",
+  "independent_diagnostic": {
+    "reference_channel_factors_before": [0.25, 0.25, 0.25],
+    "dc_error_implied_dn": [-0.0000894069672, 0.0, 0.0000715255738]
+  },
+  "remedy": "Promote each already-rounded f32 WB coefficient to Python float before multiplying in the independent reference. No scorer/product change or tolerance relaxation."
+}

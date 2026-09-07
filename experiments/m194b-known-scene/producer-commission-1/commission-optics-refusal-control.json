@@ -1,0 +1,1271 @@
+{
+  "schema": "m194b-producer-commission-v1",
+  "status": "pass",
+  "preregistration_sha256": "b8295044614f55db45e715d7c5ffc985e676f3104443e6fe5dcf20193e9c0129",
+  "producer_sha256": "c17391b26199ea70b29e4f0da12667fe1b8ca9dc355053ea49b3e8a87cc6c4a0",
+  "commission_source_sha256": "b29160d462c5f340fffeb10c772cd5bb8a5629536837d57ac059bccd4fd01775",
+  "command": [
+    "experiments/m194b-known-scene/commission-forward.py",
+    "--out",
+    "experiments/m194b-known-scene/producer-commission-1"
+  ],
+  "source_before": {
+    "experiments/m25-simulator/src/strehl_sim/config.py": "507d165e405812a9fdcffbf83a026e699f844dfd88bb2af9faec6e4c12c0ba59",
+    "experiments/m25-simulator/src/strehl_sim/optics.py": "ac5a2342d5ad3e6551ca3ddade5dba8feb9ea8f555f3aa36b71c774c6868fb93",
+    "experiments/m25-simulator/src/strehl_sim/render.py": "8b842d06ab1a550d1c66263dde2969e0e390a439938e57cb54c4095a6a36118c",
+    "experiments/m25-simulator/src/strehl_sim/scene.py": "9bea8539999ca64f893505337dbbe4c32c5765bc2368508275be43eed008351f",
+    "experiments/m25-simulator/src/strehl_sim/sensor.py": "d3057d2bfe3be5c832314e3a442941ef8269dd9a9c3b35e7e100a520e975957f",
+    "experiments/M103-halfdrift/data/truth-dense.json": "45b12d8c7106fa1c9c1ce3d5f663896a43992ff35f867fd3c6374131cb67be01",
+    "experiments/m194b-known-scene/produce.py": "c17391b26199ea70b29e4f0da12667fe1b8ca9dc355053ea49b3e8a87cc6c4a0"
+  },
+  "groups": {
+    "flat-dc": {
+      "status": "pass",
+      "checks": [
+        {
+          "name": "constant preserved at all nine focus/scales",
+          "value": 1.3642420526593924e-12,
+          "pass": true,
+          "expected": 0.0
+        }
+      ],
+      "artifact": {
+        "path": "flat-dc-expected-electrons.npy",
+        "sha256": "b167ab9ccb763fc0ccfc66c940db08dd125939ef9d90a0c6d5b5fe8c1370455f",
+        "shape": [
+          9,
+          240,
+          320
+        ],
+        "dtype": "float64",
+        "array_sha256": "7b8e92513628bca8c742a8a0a4223b3cf7729dc093e4eeeb17eaddbbb2e03019"
+      },
+      "raw_array_sha256": "bb07c6a8b0c65482b89b0495ef47751878a160df7ccd0654175ee0c42927d271",
+      "elapsed_seconds": 4.56663340004161
+    },
+    "aperture-cfa-quantization": {
+      "status": "pass",
+      "checks": [
+        {
+          "name": "affine cell midpoint",
+          "value": 0.0,
+          "pass": true
+        },
+        {
+          "name": "literal finite midpoint sum",
+          "value": 1.1102230246251565e-16,
+          "pass": true
+        },
+        {
+          "name": "finite aperture amplitude",
+          "value": 4.440892098500626e-16,
+          "pass": true
+        },
+        {
+          "name": "reject point aperture",
+          "value": 0.02107710331991844,
+          "pass": true
+        },
+        {
+          "name": "reject quad pitch aperture",
+          "value": 0.0656466646259345,
+          "pass": true
+        },
+        {
+          "name": "reject omitted half-pixel phase",
+          "value": 0.39828780725299434,
+          "pass": true
+        },
+        {
+          "name": "all CFA sites independently addressed",
+          "value": 0.0,
+          "pass": true
+        },
+        {
+          "name": "reject R/B channel swap",
+          "value": 200.0,
+          "pass": true
+        },
+        {
+          "name": "rounding ties and saturation",
+          "value": [
+            512,
+            512,
+            512,
+            513,
+            514,
+            15360,
+            15360
+          ],
+          "pass": true,
+          "expected": [
+            512,
+            512,
+            512,
+            513,
+            514,
+            15360,
+            15360
+          ]
+        },
+        {
+          "name": "nonzero saturated-control rails",
+          "value": 2,
+          "pass": true
+        }
+      ],
+      "continuous_aperture_factor": 0.9682457746117045,
+      "finite_midpoint_factor": 0.9701924746294324,
+      "elapsed_seconds": 0.0007171999895945191
+    },
+    "defocus-diffraction": {
+      "status": "fail",
+      "checks": [
+        {
+          "name": "disc c=0.0, f=(0.0625,0.0)",
+          "value": 4.021026247224852e-16,
+          "pass": true
+        },
+        {
+          "name": "disc c=0.0, f=(0.0625,0.0) independent quadrature convergence",
+          "value": 0.0,
+          "pass": true
+        },
+        {
+          "name": "disc c=0.0, f=(0.0625,0.0) DC",
+          "value": 0.0,
+          "pass": true
+        },
+        {
+          "name": "disc c=4.0, f=(0.0625,0.0)",
+          "value": 4.6050685487169296e-10,
+          "pass": true
+        },
+        {
+          "name": "disc c=4.0, f=(0.0625,0.0) independent quadrature convergence",
+          "value": 1.3815208976808435e-09,
+          "pass": true
+        },
+        {
+          "name": "disc c=4.0, f=(0.0625,0.0) DC",
+          "value": 0.0,
+          "pass": true
+        },
+        {
+          "name": "disc c=4.0, f=(0.0625,0.0) reject radius/diameter",
+          "value": 0.20314739053628095,
+          "pass": true
+        },
+        {
+          "name": "disc c=0.0, f=(0.125,0.125)",
+          "value": 2.2096717901612384e-16,
+          "pass": true
+        },
+        {
+          "name": "disc c=0.0, f=(0.125,0.125) independent quadrature convergence",
+          "value": 0.0,
+          "pass": true
+        },
+        {
+          "name": "disc c=0.0, f=(0.125,0.125) DC",
+          "value": 0.0,
+          "pass": true
+        },
+        {
+          "name": "disc c=4.0, f=(0.125,0.125)",
+          "value": 2.4623345584728895e-08,
+          "pass": true
+        },
+        {
+          "name": "disc c=4.0, f=(0.125,0.125) independent quadrature convergence",
+          "value": 7.38700349223187e-08,
+          "pass": true
+        },
+        {
+          "name": "disc c=4.0, f=(0.125,0.125) DC",
+          "value": 0.0,
+          "pass": true
+        },
+        {
+          "name": "disc c=4.0, f=(0.125,0.125) reject radius/diameter",
+          "value": 0.5946066938321982,
+          "pass": true
+        },
+        {
+          "name": "disc c=0.0, f=(0.375,0.0)",
+          "value": 1.4376887109107598e-15,
+          "pass": true
+        },
+        {
+          "name": "disc c=0.0, f=(0.375,0.0) independent quadrature convergence",
+          "value": 0.0,
+          "pass": true
+        },
+        {
+          "name": "disc c=0.0, f=(0.375,0.0) DC",
+          "value": 0.0,
+          "pass": true
+        },
+        {
+          "name": "disc c=4.0, f=(0.375,0.0)",
+          "value": 2.469735406185336e-07,
+          "pass": true
+        },
+        {
+          "name": "disc c=4.0, f=(0.375,0.0) independent quadrature convergence",
+          "value": 7.409203124780772e-07,
+          "pass": true
+        },
+        {
+          "name": "disc c=4.0, f=(0.375,0.0) DC",
+          "value": 0.0,
+          "pass": true
+        },
+        {
+          "name": "disc c=4.0, f=(0.375,0.0) reject radius/diameter",
+          "value": 0.15704182815306228,
+          "pass": true
+        },
+        {
+          "name": "disc c=4.0, f=(0.375,0.0) reject clipped negative lobe",
+          "value": 0.11953957614306326,
+          "pass": true
+        },
+        {
+          "name": "diffraction f=0.0",
+          "value": 0.0,
+          "pass": true
+        },
+        {
+          "name": "pupil quadrature f=0.0",
+          "value": 0.0,
+          "pass": true
+        },
+        {
+          "name": "diffraction f=0.125",
+          "value": 3.675312409967546e-08,
+          "pass": true
+        },
+        {
+          "name": "pupil quadrature f=0.125",
+          "value": 6.71691077203107e-08,
+          "pass": true
+        },
+        {
+          "name": "reject diffraction deleted f=0.125",
+          "value": 0.26413737342532906,
+          "pass": true
+        },
+        {
+          "name": "reject diffraction double wavelength f=0.125",
+          "value": 0.25210824520658104,
+          "pass": true
+        },
+        {
+          "name": "reject diffraction double effective f-number f=0.125",
+          "value": 0.25210824520658104,
+          "pass": true
+        },
+        {
+          "name": "diffraction f=0.375",
+          "value": 1.1889592199665382e-08,
+          "pass": true
+        },
+        {
+          "name": "pupil quadrature f=0.375",
+          "value": 2.171326940469953e-08,
+          "pass": true
+        },
+        {
+          "name": "reject diffraction deleted f=0.375",
+          "value": 0.7423420968032763,
+          "pass": true
+        },
+        {
+          "name": "reject diffraction double wavelength f=0.375",
+          "value": 0.2576579031967228,
+          "pass": true
+        },
+        {
+          "name": "reject diffraction double effective f-number f=0.375",
+          "value": 0.2576579031967228,
+          "pass": true
+        },
+        {
+          "name": "diffraction f=0.75",
+          "value": 3.004621628245442e-29,
+          "pass": true
+        },
+        {
+          "name": "pupil quadrature f=0.75",
+          "value": 0.0,
+          "pass": true
+        }
+      ],
+      "transfers": [
+        {
+          "kind": "disc",
+          "diameter": 0.0,
+          "frequency": [
+            0.0625,
+            0.0
+          ],
+          "independent": 1.0,
+          "measured": [
+            0.9999999999999998,
+            -3.3523531173251797e-16
+          ]
+        },
+        {
+          "kind": "disc",
+          "diameter": 4.0,
+          "frequency": [
+            0.0625,
+            0.0
+          ],
+          "independent": 0.9248502354397193,
+          "measured": [
+            0.9248502359002262,
+            -5.922996468288311e-16
+          ]
+        },
+        {
+          "kind": "disc",
+          "diameter": 0.0,
+          "frequency": [
+            0.125,
+            0.125
+          ],
+          "independent": 1.0,
+          "measured": [
+            1.0,
+            -2.2096717901612384e-16
+          ]
+        },
+        {
+          "kind": "disc",
+          "diameter": 4.0,
+          "frequency": [
+            0.125,
+            0.125
+          ],
+          "independent": 0.49771700441649064,
+          "measured": [
+            0.4977170290398362,
+            1.6545772185076052e-16
+          ]
+        },
+        {
+          "kind": "disc",
+          "diameter": 0.0,
+          "frequency": [
+            0.375,
+            0.0
+          ],
+          "independent": 1.0,
+          "measured": [
+            0.9999999999999992,
+            -1.2095359436248287e-15
+          ]
+        },
+        {
+          "kind": "disc",
+          "diameter": 4.0,
+          "frequency": [
+            0.375,
+            0.0
+          ],
+          "independent": -0.11953957614306326,
+          "measured": [
+            -0.11953932916952265,
+            4.794884107817143e-16
+          ]
+        },
+        {
+          "kind": "diffraction",
+          "frequency": 0.0,
+          "independent": 1.0,
+          "measured": [
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "kind": "diffraction",
+          "frequency": 0.125,
+          "independent": 0.7358626265746706,
+          "measured": [
+            0.7358625898215465,
+            3.664603343001005e-16
+          ]
+        },
+        {
+          "kind": "diffraction",
+          "frequency": 0.375,
+          "independent": 0.2576579031967228,
+          "measured": [
+            0.2576578913071306,
+            -9.431474698451403e-16
+          ]
+        },
+        {
+          "kind": "diffraction",
+          "frequency": 0.75,
+          "independent": 0.0,
+          "measured": [
+            3.004450713244088e-29,
+            -3.2047474274603605e-31
+          ]
+        }
+      ],
+      "scope": "numerical disc/circular-pupil operations; no physical optics validation",
+      "elapsed_seconds": 0.08140939997974783
+    },
+    "noise-law": {
+      "status": "pass",
+      "checks": [
+        {
+          "name": "noise E=0.0 R",
+          "value": 0.003825401626610603,
+          "pass": true,
+          "expected": 1.0833333223611195
+        },
+        {
+          "name": "noise E=0.0 G1",
+          "value": 0.000581500652073963,
+          "pass": true,
+          "expected": 1.0833333223611195
+        },
+        {
+          "name": "noise E=0.0 G2",
+          "value": 0.005041314971511168,
+          "pass": true,
+          "expected": 1.0833333223611195
+        },
+        {
+          "name": "noise E=0.0 B",
+          "value": 0.0013079606144071887,
+          "pass": true,
+          "expected": 1.0833333223611195
+        },
+        {
+          "name": "spatial noise null E=0.0",
+          "value": 0.0010261660884256405,
+          "pass": true
+        },
+        {
+          "name": "temporal noise null E=0.0",
+          "value": -0.00015665179514154937,
+          "pass": true
+        },
+        {
+          "name": "noise E=4096.0 R",
+          "value": 0.0005712872410705838,
+          "pass": true,
+          "expected": 257.0833333333333
+        },
+        {
+          "name": "noise E=4096.0 G1",
+          "value": 0.0026301581498137105,
+          "pass": true,
+          "expected": 257.0833333333333
+        },
+        {
+          "name": "noise E=4096.0 G2",
+          "value": 0.002188544432727202,
+          "pass": true,
+          "expected": 257.0833333333333
+        },
+        {
+          "name": "noise E=4096.0 B",
+          "value": 0.00228639256089036,
+          "pass": true,
+          "expected": 257.0833333333333
+        },
+        {
+          "name": "spatial noise null E=4096.0",
+          "value": 0.0001313468101000177,
+          "pass": true
+        },
+        {
+          "name": "temporal noise null E=4096.0",
+          "value": -0.0011706405920342757,
+          "pass": true
+        },
+        {
+          "name": "noise E=16384.0 R",
+          "value": 0.0032794498195497512,
+          "pass": true,
+          "expected": 1025.0833333333333
+        },
+        {
+          "name": "noise E=16384.0 G1",
+          "value": 0.0010425556802540203,
+          "pass": true,
+          "expected": 1025.0833333333333
+        },
+        {
+          "name": "noise E=16384.0 G2",
+          "value": 0.00508112290648266,
+          "pass": true,
+          "expected": 1025.0833333333333
+        },
+        {
+          "name": "noise E=16384.0 B",
+          "value": 0.005977991502825075,
+          "pass": true,
+          "expected": 1025.0833333333333
+        },
+        {
+          "name": "spatial noise null E=16384.0",
+          "value": 0.0004110184545667417,
+          "pass": true
+        },
+        {
+          "name": "temporal noise null E=16384.0",
+          "value": 0.0005642811362845371,
+          "pass": true
+        },
+        {
+          "name": "reject factor-two gain",
+          "value": 3.9916433219873357,
+          "pass": true
+        },
+        {
+          "name": "reject absent read noise at dark",
+          "value": 0.0,
+          "pass": true
+        },
+        {
+          "name": "reject frame-identical variance",
+          "value": 0.0,
+          "pass": true
+        },
+        {
+          "name": "detect frame-identical covariance",
+          "value": 1.0,
+          "pass": true
+        },
+        {
+          "name": "matched-variance correlated control",
+          "value": 0.0029557065342400435,
+          "pass": true
+        },
+        {
+          "name": "reject correlated noise",
+          "value": 0.23214383839006172,
+          "pass": true
+        }
+      ],
+      "variance_rows": [
+        {
+          "electrons": 0.0,
+          "parity": "R",
+          "measured_variance_dn2": 1.0874775074146412,
+          "expected_variance_dn2": 1.0833333223611195,
+          "relative_error": 0.003825401626610603
+        },
+        {
+          "electrons": 0.0,
+          "parity": "G1",
+          "measured_variance_dn2": 1.082703363327753,
+          "expected_variance_dn2": 1.0833333223611195,
+          "relative_error": 0.000581500652073963
+        },
+        {
+          "electrons": 0.0,
+          "parity": "G2",
+          "measured_variance_dn2": 1.0778718978639634,
+          "expected_variance_dn2": 1.0833333223611195,
+          "relative_error": 0.005041314971511168
+        },
+        {
+          "electrons": 0.0,
+          "parity": "B",
+          "measured_variance_dn2": 1.0819163650431962,
+          "expected_variance_dn2": 1.0833333223611195,
+          "relative_error": 0.0013079606144071887
+        },
+        {
+          "electrons": 4096.0,
+          "parity": "R",
+          "measured_variance_dn2": 256.9364649051081,
+          "expected_variance_dn2": 257.0833333333333,
+          "relative_error": 0.0005712872410705838
+        },
+        {
+          "electrons": 4096.0,
+          "parity": "G1",
+          "measured_variance_dn2": 256.4071635089854,
+          "expected_variance_dn2": 257.0833333333333,
+          "relative_error": 0.0026301581498137105
+        },
+        {
+          "electrons": 4096.0,
+          "parity": "G2",
+          "measured_variance_dn2": 257.64597163124694,
+          "expected_variance_dn2": 257.0833333333333,
+          "relative_error": 0.002188544432727202
+        },
+        {
+          "electrons": 4096.0,
+          "parity": "B",
+          "measured_variance_dn2": 256.4955399124711,
+          "expected_variance_dn2": 257.0833333333333,
+          "relative_error": 0.00228639256089036
+        },
+        {
+          "electrons": 16384.0,
+          "parity": "R",
+          "measured_variance_dn2": 1021.7216239808098,
+          "expected_variance_dn2": 1025.0833333333333,
+          "relative_error": 0.0032794498195497512
+        },
+        {
+          "electrons": 16384.0,
+          "parity": "G1",
+          "measured_variance_dn2": 1026.1520397852337,
+          "expected_variance_dn2": 1025.0833333333333,
+          "relative_error": 0.0010425556802540203
+        },
+        {
+          "electrons": 16384.0,
+          "parity": "G2",
+          "measured_variance_dn2": 1030.291907739387,
+          "expected_variance_dn2": 1025.0833333333333,
+          "relative_error": 0.00508112290648266
+        },
+        {
+          "electrons": 16384.0,
+          "parity": "B",
+          "measured_variance_dn2": 1018.955393876979,
+          "expected_variance_dn2": 1025.0833333333333,
+          "relative_error": 0.005977991502825075
+        }
+      ],
+      "dark_exact_rounded_variance": 1.0833333223611195,
+      "bright_quantization_note": "+1/12; unit-DN Gaussian read smoothing leaves <1e-7 DN2 lattice correction",
+      "artifact": {
+        "path": "noise-controls-dark.npy",
+        "sha256": "ec2265019f389ec53d458651328861a582394136752e51e8b3cf017def09e7eb",
+        "shape": [
+          64,
+          96,
+          128
+        ],
+        "dtype": "uint16",
+        "array_sha256": "880066344f7cadf5e892fd1412a5ace99a9af592839eb91dc36753ab48e19355"
+      },
+      "calibration_scope": "explicit synthetic law only; coefficients shared with product are not camera calibration",
+      "elapsed_seconds": 0.14767470001243055
+    },
+    "observer-on-off-placebo": {
+      "status": "pass",
+      "checks": [
+        {
+          "name": "flat original byte identity",
+          "value": "abd36841697e0c7f870383fdd1d9bf85eb731e951e3b67b8e0ea18c1d33f919c",
+          "pass": true
+        },
+        {
+          "name": "flat on byte identity",
+          "value": "abd36841697e0c7f870383fdd1d9bf85eb731e951e3b67b8e0ea18c1d33f919c",
+          "pass": true
+        },
+        {
+          "name": "flat cached exposure replay",
+          "value": "abd36841697e0c7f870383fdd1d9bf85eb731e951e3b67b8e0ea18c1d33f919c",
+          "pass": true
+        },
+        {
+          "name": "flat observes every frame",
+          "value": 9,
+          "pass": true
+        },
+        {
+          "name": "flat placebo byte identity",
+          "value": "abd36841697e0c7f870383fdd1d9bf85eb731e951e3b67b8e0ea18c1d33f919c",
+          "pass": true
+        },
+        {
+          "name": "flat disabled placebo every frame",
+          "value": 9,
+          "pass": true
+        },
+        {
+          "name": "plane original byte identity",
+          "value": "45f72558234af120fae2f6b87f79d40124d484cfeb11da13b1fc28957aad810d",
+          "pass": true
+        },
+        {
+          "name": "plane on byte identity",
+          "value": "45f72558234af120fae2f6b87f79d40124d484cfeb11da13b1fc28957aad810d",
+          "pass": true
+        },
+        {
+          "name": "plane cached exposure replay",
+          "value": "45f72558234af120fae2f6b87f79d40124d484cfeb11da13b1fc28957aad810d",
+          "pass": true
+        },
+        {
+          "name": "plane observes every frame",
+          "value": 9,
+          "pass": true
+        },
+        {
+          "name": "plane placebo byte identity",
+          "value": "45f72558234af120fae2f6b87f79d40124d484cfeb11da13b1fc28957aad810d",
+          "pass": true
+        },
+        {
+          "name": "plane disabled placebo every frame",
+          "value": 9,
+          "pass": true
+        }
+      ],
+      "scenes": {
+        "flat": {
+          "original": {
+            "path": "observer-flat-original-raw.npy",
+            "sha256": "99b69b5d77e6b1edc94afa65ab6566c6ae087ea7bc61c48e0107e1579084b449",
+            "shape": [
+              9,
+              240,
+              320
+            ],
+            "dtype": "uint16",
+            "array_sha256": "abd36841697e0c7f870383fdd1d9bf85eb731e951e3b67b8e0ea18c1d33f919c",
+            "visits": []
+          },
+          "on": {
+            "path": "observer-flat-on-raw.npy",
+            "sha256": "99b69b5d77e6b1edc94afa65ab6566c6ae087ea7bc61c48e0107e1579084b449",
+            "shape": [
+              9,
+              240,
+              320
+            ],
+            "dtype": "uint16",
+            "array_sha256": "abd36841697e0c7f870383fdd1d9bf85eb731e951e3b67b8e0ea18c1d33f919c",
+            "visits": [
+              {
+                "shape": [
+                  240,
+                  320
+                ],
+                "dtype": "float64"
+              },
+              {
+                "shape": [
+                  240,
+                  320
+                ],
+                "dtype": "float64"
+              },
+              {
+                "shape": [
+                  240,
+                  320
+                ],
+                "dtype": "float64"
+              },
+              {
+                "shape": [
+                  240,
+                  320
+                ],
+                "dtype": "float64"
+              },
+              {
+                "shape": [
+                  240,
+                  320
+                ],
+                "dtype": "float64"
+              },
+              {
+                "shape": [
+                  240,
+                  320
+                ],
+                "dtype": "float64"
+              },
+              {
+                "shape": [
+                  240,
+                  320
+                ],
+                "dtype": "float64"
+              },
+              {
+                "shape": [
+                  240,
+                  320
+                ],
+                "dtype": "float64"
+              },
+              {
+                "shape": [
+                  240,
+                  320
+                ],
+                "dtype": "float64"
+              }
+            ]
+          },
+          "placebo": {
+            "path": "observer-flat-placebo-raw.npy",
+            "sha256": "99b69b5d77e6b1edc94afa65ab6566c6ae087ea7bc61c48e0107e1579084b449",
+            "shape": [
+              9,
+              240,
+              320
+            ],
+            "dtype": "uint16",
+            "array_sha256": "abd36841697e0c7f870383fdd1d9bf85eb731e951e3b67b8e0ea18c1d33f919c",
+            "visits": [
+              {
+                "shape": [
+                  240,
+                  320
+                ],
+                "dtype": "float64"
+              },
+              {
+                "shape": [
+                  240,
+                  320
+                ],
+                "dtype": "float64"
+              },
+              {
+                "shape": [
+                  240,
+                  320
+                ],
+                "dtype": "float64"
+              },
+              {
+                "shape": [
+                  240,
+                  320
+                ],
+                "dtype": "float64"
+              },
+              {
+                "shape": [
+                  240,
+                  320
+                ],
+                "dtype": "float64"
+              },
+              {
+                "shape": [
+                  240,
+                  320
+                ],
+                "dtype": "float64"
+              },
+              {
+                "shape": [
+                  240,
+                  320
+                ],
+                "dtype": "float64"
+              },
+              {
+                "shape": [
+                  240,
+                  320
+                ],
+                "dtype": "float64"
+              },
+              {
+                "shape": [
+                  240,
+                  320
+                ],
+                "dtype": "float64"
+              }
+            ]
+          }
+        },
+        "plane": {
+          "original": {
+            "path": "observer-plane-original-raw.npy",
+            "sha256": "108852930b3c32eb6607c463888a9a2c1186806134f747b9e37fabf841ca5d89",
+            "shape": [
+              9,
+              240,
+              320
+            ],
+            "dtype": "uint16",
+            "array_sha256": "45f72558234af120fae2f6b87f79d40124d484cfeb11da13b1fc28957aad810d",
+            "visits": []
+          },
+          "on": {
+            "path": "observer-plane-on-raw.npy",
+            "sha256": "108852930b3c32eb6607c463888a9a2c1186806134f747b9e37fabf841ca5d89",
+            "shape": [
+              9,
+              240,
+              320
+            ],
+            "dtype": "uint16",
+            "array_sha256": "45f72558234af120fae2f6b87f79d40124d484cfeb11da13b1fc28957aad810d",
+            "visits": [
+              {
+                "shape": [
+                  240,
+                  320
+                ],
+                "dtype": "float64"
+              },
+              {
+                "shape": [
+                  240,
+                  320
+                ],
+                "dtype": "float64"
+              },
+              {
+                "shape": [
+                  240,
+                  320
+                ],
+                "dtype": "float64"
+              },
+              {
+                "shape": [
+                  240,
+                  320
+                ],
+                "dtype": "float64"
+              },
+              {
+                "shape": [
+                  240,
+                  320
+                ],
+                "dtype": "float64"
+              },
+              {
+                "shape": [
+                  240,
+                  320
+                ],
+                "dtype": "float64"
+              },
+              {
+                "shape": [
+                  240,
+                  320
+                ],
+                "dtype": "float64"
+              },
+              {
+                "shape": [
+                  240,
+                  320
+                ],
+                "dtype": "float64"
+              },
+              {
+                "shape": [
+                  240,
+                  320
+                ],
+                "dtype": "float64"
+              }
+            ]
+          },
+          "placebo": {
+            "path": "observer-plane-placebo-raw.npy",
+            "sha256": "108852930b3c32eb6607c463888a9a2c1186806134f747b9e37fabf841ca5d89",
+            "shape": [
+              9,
+              240,
+              320
+            ],
+            "dtype": "uint16",
+            "array_sha256": "45f72558234af120fae2f6b87f79d40124d484cfeb11da13b1fc28957aad810d",
+            "visits": [
+              {
+                "shape": [
+                  240,
+                  320
+                ],
+                "dtype": "float64"
+              },
+              {
+                "shape": [
+                  240,
+                  320
+                ],
+                "dtype": "float64"
+              },
+              {
+                "shape": [
+                  240,
+                  320
+                ],
+                "dtype": "float64"
+              },
+              {
+                "shape": [
+                  240,
+                  320
+                ],
+                "dtype": "float64"
+              },
+              {
+                "shape": [
+                  240,
+                  320
+                ],
+                "dtype": "float64"
+              },
+              {
+                "shape": [
+                  240,
+                  320
+                ],
+                "dtype": "float64"
+              },
+              {
+                "shape": [
+                  240,
+                  320
+                ],
+                "dtype": "float64"
+              },
+              {
+                "shape": [
+                  240,
+                  320
+                ],
+                "dtype": "float64"
+              },
+              {
+                "shape": [
+                  240,
+                  320
+                ],
+                "dtype": "float64"
+              }
+            ]
+          }
+        }
+      },
+      "elapsed_seconds": 27.730174000025727
+    },
+    "plane-numerical-convergence": {
+      "status": "fail",
+      "checks": [
+        {
+          "name": "s8-margin48 ROI per-frame RMS DN",
+          "value": [
+            0.10226160869641343,
+            0.13289583492027376,
+            0.16286370990276458,
+            0.18460243327234485,
+            0.20038797440814718,
+            0.19779691631089844,
+            0.17882316866364908,
+            0.14764962553760955,
+            0.11081814045531717
+          ],
+          "pass": true
+        },
+        {
+          "name": "s4-margin96 ROI per-frame RMS DN",
+          "value": [
+            0.0001990679494494916,
+            4.2755450214619566e-05,
+            0.0002004428698535469,
+            0.000180738450223732,
+            4.827769208248097e-13,
+            0.00013668459207535715,
+            0.000585346813371037,
+            0.0018626797357006503,
+            0.0033296185018043844
+          ],
+          "pass": true
+        }
+      ],
+      "variants": {
+        "s8-margin48": {
+          "path": "plane-s8-margin48-expected-electrons.npy",
+          "sha256": "7d093774b970bf358797d1a35c394f85a1282bbff7265a775c9ce3ff7ac826e7",
+          "shape": [
+            9,
+            240,
+            320
+          ],
+          "dtype": "float64",
+          "array_sha256": "48b4031bf4f18f4517a789afc63bb87eb7e2e45f63e2d2021ff947a0d0e9ff2a",
+          "max_abs_roi_dn": 0.39383634606383566,
+          "whole_frame_rms_dn": 0.1612656387179514,
+          "max_roi_frame_rms_dn": 0.20038797440814718,
+          "per_frame_roi_rms_dn": [
+            0.10226160869641343,
+            0.13289583492027376,
+            0.16286370990276458,
+            0.18460243327234485,
+            0.20038797440814718,
+            0.19779691631089844,
+            0.17882316866364908,
+            0.14764962553760955,
+            0.11081814045531717
+          ]
+        },
+        "s4-margin96": {
+          "path": "plane-s4-margin96-expected-electrons.npy",
+          "sha256": "bae19b493548ff9742e460657e5cdc42db2f6bc570498ef4f864da5ef5c82205",
+          "shape": [
+            9,
+            240,
+            320
+          ],
+          "dtype": "float64",
+          "array_sha256": "335cf48143598049bf336808c0c129c2629dfe71cbfb210af055c10f78f472a3",
+          "max_abs_roi_dn": 0.0062779452209724695,
+          "whole_frame_rms_dn": 0.005209764247374276,
+          "max_roi_frame_rms_dn": 0.0033296185018043844,
+          "per_frame_roi_rms_dn": [
+            0.0001990679494494916,
+            4.2755450214619566e-05,
+            0.0002004428698535469,
+            0.000180738450223732,
+            4.827769208248097e-13,
+            0.00013668459207535715,
+            0.000585346813371037,
+            0.0018626797357006503,
+            0.0033296185018043844
+          ]
+        }
+      },
+      "effect_resolution_rule": "Do not rank effects smaller than twice observed numerical difference",
+      "refinement": "On failure retain this package; predeclared S16/margin192 requires root memory review, no auto large allocation",
+      "elapsed_seconds": 26.698932999977842
+    },
+    "analytic-color-geometry": {
+      "status": "pass",
+      "checks": [
+        {
+          "name": "achromatic component null",
+          "value": 0.0,
+          "pass": true
+        },
+        {
+          "name": "genuine spatial chroma present",
+          "value": 331.81471706980926,
+          "pass": true
+        },
+        {
+          "name": "independent integrated color/CFA at all scales",
+          "value": 1.318767317570746e-11,
+          "pass": true
+        },
+        {
+          "name": "reject color inverse scale",
+          "value": 1074.1860612185064,
+          "pass": true
+        },
+        {
+          "name": "reject color center",
+          "value": 525.04111406628,
+          "pass": true
+        },
+        {
+          "name": "reject color point sampling",
+          "value": 21.365495666856077,
+          "pass": true
+        },
+        {
+          "name": "curvature changes interior placement",
+          "value": 4.234414895571916,
+          "pass": true
+        },
+        {
+          "name": "chord control leaves endpoints fixed",
+          "value": [
+            0.0,
+            0.0
+          ],
+          "pass": true
+        }
+      ],
+      "canonical_rgb": {
+        "path": "color-canonical-rgb-dn.npy",
+        "sha256": "ccf07e3bca36ca8a1d472f1c705ad2e6a780bffdcbac203918557ceb46c85a0b",
+        "shape": [
+          240,
+          320,
+          3
+        ],
+        "dtype": "float64",
+        "array_sha256": "a4a2e9faa6ad6c6d8f551355b703715a4ca1eab490b8e93ba402e1f7dd71133f"
+      },
+      "canonical_null": {
+        "path": "color-null-canonical-rgb-dn.npy",
+        "sha256": "6faa2ae84240f237906656db8d8ec8b050d77facc71565103a7e8b5d77b12d13",
+        "shape": [
+          240,
+          320,
+          3
+        ],
+        "dtype": "float64",
+        "array_sha256": "a45f2c6d5f2aadd3be5aafdbae4140b6673542371e39635e3b3ac90210af745a"
+      },
+      "expected": {
+        "path": "color-expected-electrons.npy",
+        "sha256": "49c0e2a92c0672bf83dfb44010c89056ead1102932131879bd6cdf7686b7f401",
+        "shape": [
+          9,
+          240,
+          320
+        ],
+        "dtype": "float64",
+        "array_sha256": "74f14d99c7c987be30d6890916a3ca8e3c9149467fe7f2ed778f3115bb9541f6"
+      },
+      "geometry_scope": "Known forward map in native active frame4 gauge; independent consumer still must check actual crop and emitted TIFF",
+      "elapsed_seconds": 0.07458859996404499
+    }
+  },
+  "cache": {
+    "flat": {
+      "path": "flat-expected-electrons.npy",
+      "sha256": "b167ab9ccb763fc0ccfc66c940db08dd125939ef9d90a0c6d5b5fe8c1370455f",
+      "shape": [
+        9,
+        240,
+        320
+      ],
+      "dtype": "float64",
+      "array_sha256": "7b8e92513628bca8c742a8a0a4223b3cf7729dc093e4eeeb17eaddbbb2e03019"
+    },
+    "plane": {
+      "path": "plane-expected-electrons.npy",
+      "sha256": "78382203f39f45a6d2755972c53144c7015aa46575cf9f8b33c4fc637aadb33f",
+      "shape": [
+        9,
+        240,
+        320
+      ],
+      "dtype": "float64",
+      "array_sha256": "417264827837e25eda9af005cf2f07163ded4476d1827233966cce3fa91e4fc0"
+    }
+  },
+  "scope": "author numerical commissioning; independent verifier separately re-chooses",
+  "source_after": {
+    "experiments/m25-simulator/src/strehl_sim/config.py": "507d165e405812a9fdcffbf83a026e699f844dfd88bb2af9faec6e4c12c0ba59",
+    "experiments/m25-simulator/src/strehl_sim/optics.py": "ac5a2342d5ad3e6551ca3ddade5dba8feb9ea8f555f3aa36b71c774c6868fb93",
+    "experiments/m25-simulator/src/strehl_sim/render.py": "8b842d06ab1a550d1c66263dde2969e0e390a439938e57cb54c4095a6a36118c",
+    "experiments/m25-simulator/src/strehl_sim/scene.py": "9bea8539999ca64f893505337dbbe4c32c5765bc2368508275be43eed008351f",
+    "experiments/m25-simulator/src/strehl_sim/sensor.py": "d3057d2bfe3be5c832314e3a442941ef8269dd9a9c3b35e7e100a520e975957f",
+    "experiments/M103-halfdrift/data/truth-dense.json": "45b12d8c7106fa1c9c1ce3d5f663896a43992ff35f867fd3c6374131cb67be01",
+    "experiments/m194b-known-scene/produce.py": "c17391b26199ea70b29e4f0da12667fe1b8ca9dc355053ea49b3e8a87cc6c4a0"
+  },
+  "source_unchanged": true
+}

@@ -1,0 +1,157 @@
+{
+  "schema": "m194b-known-scene-v1",
+  "scene": "plane",
+  "noise_enabled": false,
+  "repeat": null,
+  "sensor": {
+    "width": 320,
+    "height": 240,
+    "active_origin": [
+      2,
+      4
+    ],
+    "stride": 327,
+    "buffer_height": 247,
+    "black": 512.0,
+    "white": 15360.0,
+    "iso": 160.0,
+    "wb": [
+      1.3333333333333333,
+      1.0,
+      1.6666666666666667
+    ],
+    "noise_gain_dn_per_e": 0.25,
+    "read_noise_e": 4.0,
+    "cfa": "RGGB"
+  },
+  "geometry": {
+    "reference_index": 4,
+    "scale_centre_native": [
+      183.0,
+      101.0
+    ],
+    "frames": [
+      {
+        "index": 0,
+        "focus": 0.0,
+        "scale": 1.0561223412120058
+      },
+      {
+        "index": 1,
+        "focus": 1.0,
+        "scale": 1.0420970365207105
+      },
+      {
+        "index": 2,
+        "focus": 2.0,
+        "scale": 1.0313351498637602
+      },
+      {
+        "index": 3,
+        "focus": 3.0,
+        "scale": 1.025943645311873
+      },
+      {
+        "index": 4,
+        "focus": 4.0,
+        "scale": 1.0
+      },
+      {
+        "index": 5,
+        "focus": 5.0,
+        "scale": 0.9806993642143506
+      },
+      {
+        "index": 6,
+        "focus": 6.0,
+        "scale": 0.9600891367255983
+      },
+      {
+        "index": 7,
+        "focus": 7.0,
+        "scale": 0.9289546501066683
+      },
+      {
+        "index": 8,
+        "focus": 8.0,
+        "scale": 0.9052447035464589
+      }
+    ]
+  },
+  "frames": [
+    {
+      "index": 0,
+      "path": "frames/frame-00.cfa",
+      "bytes": 153600,
+      "sha256": "6f554aabb77c2025f6c3f76cd7c8b11001f55430b7751845e5d74a4d84d5885f"
+    },
+    {
+      "index": 1,
+      "path": "frames/frame-01.cfa",
+      "bytes": 153600,
+      "sha256": "704fff02146bb49c28acfd9de419c0ad9028b1273bb30b51ac052b347487a2df"
+    },
+    {
+      "index": 2,
+      "path": "frames/frame-02.cfa",
+      "bytes": 153600,
+      "sha256": "d9df815c956247385c302316e17992467156ad03992628a85e0c4d9c1b3171f3"
+    },
+    {
+      "index": 3,
+      "path": "frames/frame-03.cfa",
+      "bytes": 153600,
+      "sha256": "15437935fcf56364cd16938f7b7513fd242f39bd65ce6ed650feb700ac50dff9"
+    },
+    {
+      "index": 4,
+      "path": "frames/frame-04.cfa",
+      "bytes": 153600,
+      "sha256": "a158e51b8972aa685355092b9850e4d598f0318031144faa2f2928557fce69e5"
+    },
+    {
+      "index": 5,
+      "path": "frames/frame-05.cfa",
+      "bytes": 153600,
+      "sha256": "5210b397a4ee4c8d22eac19aa867fb5fca504dc3ed1ff294cc1c5a5f5d04ac8e"
+    },
+    {
+      "index": 6,
+      "path": "frames/frame-06.cfa",
+      "bytes": 153600,
+      "sha256": "c51836748db9843c91ea14e59a4938943fc282c5eee498f8679024e18020287a"
+    },
+    {
+      "index": 7,
+      "path": "frames/frame-07.cfa",
+      "bytes": 153600,
+      "sha256": "0a06d2c25606f9c9667389132ab7a5c7aea2e8b3b9b069e46623e6e6aeffd7f2"
+    },
+    {
+      "index": 8,
+      "path": "frames/frame-08.cfa",
+      "bytes": 153600,
+      "sha256": "a1021b66a6f7a77500ef5896be29aaaf1afe80babf50757a8539eed7c0bd4076"
+    }
+  ],
+  "producer": {
+    "preregistration_sha256": "b8295044614f55db45e715d7c5ffc985e676f3104443e6fe5dcf20193e9c0129",
+    "source_sha256": {
+      "experiments/m25-simulator/src/strehl_sim/config.py": "507d165e405812a9fdcffbf83a026e699f844dfd88bb2af9faec6e4c12c0ba59",
+      "experiments/m25-simulator/src/strehl_sim/optics.py": "ac5a2342d5ad3e6551ca3ddade5dba8feb9ea8f555f3aa36b71c774c6868fb93",
+      "experiments/m25-simulator/src/strehl_sim/render.py": "8b842d06ab1a550d1c66263dde2969e0e390a439938e57cb54c4095a6a36118c",
+      "experiments/m25-simulator/src/strehl_sim/scene.py": "9bea8539999ca64f893505337dbbe4c32c5765bc2368508275be43eed008351f",
+      "experiments/m25-simulator/src/strehl_sim/sensor.py": "d3057d2bfe3be5c832314e3a442941ef8269dd9a9c3b35e7e100a520e975957f",
+      "experiments/M103-halfdrift/data/truth-dense.json": "45b12d8c7106fa1c9c1ce3d5f663896a43992ff35f867fd3c6374131cb67be01",
+      "experiments/m194b-known-scene/produce.py": "c17391b26199ea70b29e4f0da12667fe1b8ca9dc355053ea49b3e8a87cc6c4a0"
+    },
+    "expected_electrons_sha256": "78382203f39f45a6d2755972c53144c7015aa46575cf9f8b33c4fc637aadb33f",
+    "command": [
+      "experiments/m194b-known-scene/produce.py",
+      "--commission",
+      "experiments/m194b-known-scene/producer-commission-1/commission.json",
+      "--out",
+      "experiments/m194b-known-scene/producer-output-1"
+    ]
+  }
+}

@@ -1,0 +1,238 @@
+{
+  "schema": "m194b-independent-producer-v1",
+  "pass_": true,
+  "checks": {
+    "original-no-cache": true,
+    "observer-all-indices": true,
+    "placebo-no-cache": true,
+    "observer-three-mode-byte-identity": true,
+    "cached-exposure-reproduces-actual-noisy-raw": true,
+    "observer-exception-restores": true,
+    "actual-noiseoff-quantization": true,
+    "actual-cached-scene-pupil-disc-cell-agreement": true,
+    "rechosen-S4-S8-convergence": true,
+    "reject-wrong-center": true,
+    "reject-wrong-inverse": true,
+    "reject-half-pixel-phase": true,
+    "reject-point-aperture": true,
+    "reject-quad-aperture": true,
+    "reject-swapped-CFA": true,
+    "color-mosaic-1.0561223412120058": true,
+    "color-mosaic-1.0": true,
+    "color-mosaic-0.9052447035464589": true,
+    "actual-analytic-color-cell-quadrature": true,
+    "sources-unchanged": true
+  },
+  "source_before": {
+    "experiments/m25-simulator/src/strehl_sim/config.py": "507d165e405812a9fdcffbf83a026e699f844dfd88bb2af9faec6e4c12c0ba59",
+    "experiments/m25-simulator/src/strehl_sim/optics.py": "ac5a2342d5ad3e6551ca3ddade5dba8feb9ea8f555f3aa36b71c774c6868fb93",
+    "experiments/m25-simulator/src/strehl_sim/render.py": "8b842d06ab1a550d1c66263dde2969e0e390a439938e57cb54c4095a6a36118c",
+    "experiments/m25-simulator/src/strehl_sim/scene.py": "9bea8539999ca64f893505337dbbe4c32c5765bc2368508275be43eed008351f",
+    "experiments/m25-simulator/src/strehl_sim/sensor.py": "d3057d2bfe3be5c832314e3a442941ef8269dd9a9c3b35e7e100a520e975957f",
+    "experiments/M103-halfdrift/data/truth-dense.json": "45b12d8c7106fa1c9c1ce3d5f663896a43992ff35f867fd3c6374131cb67be01",
+    "experiments/m194b-known-scene/produce.py": "c17391b26199ea70b29e4f0da12667fe1b8ca9dc355053ea49b3e8a87cc6c4a0"
+  },
+  "source_after": {
+    "experiments/m25-simulator/src/strehl_sim/config.py": "507d165e405812a9fdcffbf83a026e699f844dfd88bb2af9faec6e4c12c0ba59",
+    "experiments/m25-simulator/src/strehl_sim/optics.py": "ac5a2342d5ad3e6551ca3ddade5dba8feb9ea8f555f3aa36b71c774c6868fb93",
+    "experiments/m25-simulator/src/strehl_sim/render.py": "8b842d06ab1a550d1c66263dde2969e0e390a439938e57cb54c4095a6a36118c",
+    "experiments/m25-simulator/src/strehl_sim/scene.py": "9bea8539999ca64f893505337dbbe4c32c5765bc2368508275be43eed008351f",
+    "experiments/m25-simulator/src/strehl_sim/sensor.py": "d3057d2bfe3be5c832314e3a442941ef8269dd9a9c3b35e7e100a520e975957f",
+    "experiments/M103-halfdrift/data/truth-dense.json": "45b12d8c7106fa1c9c1ce3d5f663896a43992ff35f867fd3c6374131cb67be01",
+    "experiments/m194b-known-scene/produce.py": "c17391b26199ea70b29e4f0da12667fe1b8ca9dc355053ea49b3e8a87cc6c4a0"
+  },
+  "rows": {
+    "original": {
+      "raw_sha256": "1fe7720b4c033cf7f91a2660fe10f9c7840437e32c4aad2d2e6f0290429dd249",
+      "visits": []
+    },
+    "on": {
+      "raw_sha256": "1fe7720b4c033cf7f91a2660fe10f9c7840437e32c4aad2d2e6f0290429dd249",
+      "visits": [
+        {
+          "shape": [
+            192,
+            288
+          ],
+          "dtype": "float64"
+        },
+        {
+          "shape": [
+            192,
+            288
+          ],
+          "dtype": "float64"
+        },
+        {
+          "shape": [
+            192,
+            288
+          ],
+          "dtype": "float64"
+        }
+      ]
+    },
+    "placebo": {
+      "raw_sha256": "1fe7720b4c033cf7f91a2660fe10f9c7840437e32c4aad2d2e6f0290429dd249",
+      "visits": [
+        {
+          "shape": [
+            192,
+            288
+          ],
+          "dtype": "float64"
+        },
+        {
+          "shape": [
+            192,
+            288
+          ],
+          "dtype": "float64"
+        },
+        {
+          "shape": [
+            192,
+            288
+          ],
+          "dtype": "float64"
+        }
+      ]
+    }
+  },
+  "agreement": [
+    {
+      "index": 0,
+      "scale": 1.0561223412120058,
+      "focus": 0.0,
+      "parity": [
+        {
+          "rms_dn": 0.0003316719693691093,
+          "max_abs_dn": 0.0006483032241190807
+        },
+        {
+          "rms_dn": 0.0003319107470049975,
+          "max_abs_dn": 0.0006552953263962991
+        },
+        {
+          "rms_dn": 0.0003317033404922952,
+          "max_abs_dn": 0.0006623424465033168
+        },
+        {
+          "rms_dn": 0.00033194162217601864,
+          "max_abs_dn": 0.0006425289122851818
+        }
+      ]
+    },
+    {
+      "index": 1,
+      "scale": 1.0,
+      "focus": 4.0,
+      "parity": [
+        {
+          "rms_dn": 1.4991917964598568e-06,
+          "max_abs_dn": 2.7598435648856605e-06
+        },
+        {
+          "rms_dn": 1.4991917325167717e-06,
+          "max_abs_dn": 2.7572623366722837e-06
+        },
+        {
+          "rms_dn": 1.4991917718303264e-06,
+          "max_abs_dn": 2.717095867410535e-06
+        },
+        {
+          "rms_dn": 1.4991917644869594e-06,
+          "max_abs_dn": 2.714515338848839e-06
+        }
+      ]
+    },
+    {
+      "index": 2,
+      "scale": 0.9052447035464589,
+      "focus": 8.0,
+      "parity": [
+        {
+          "rms_dn": 0.011999975712386113,
+          "max_abs_dn": 0.016837971946260934
+        },
+        {
+          "rms_dn": 0.01200114218672072,
+          "max_abs_dn": 0.017022877508679812
+        },
+        {
+          "rms_dn": 0.012000802187811082,
+          "max_abs_dn": 0.016953954816017358
+        },
+        {
+          "rms_dn": 0.012001923955543992,
+          "max_abs_dn": 0.016969196705982553
+        }
+      ]
+    }
+  ],
+  "s4_s8_rms_dn": [
+    0.10224514631306071,
+    0.20038797440813422,
+    0.1108233454685541
+  ],
+  "negative_rms_dn": {
+    "wrong-center": [
+      47.594782176705,
+      1.4991917663234789e-06,
+      72.10302090601984
+    ],
+    "wrong-inverse": [
+      325.48339196047675,
+      1.4991917663234789e-06,
+      265.2001594828778
+    ],
+    "half-pixel-phase": [
+      69.67103187029299,
+      88.97492820491128,
+      61.38700110346103
+    ],
+    "point-aperture": [
+      2.0663500614780426,
+      4.070190320326195,
+      2.240613998160801
+    ],
+    "quad-aperture": [
+      6.072644760654765,
+      11.82276106584998,
+      6.571677075957718
+    ],
+    "swapped-CFA": [
+      481.53913546225147,
+      482.4209550378391,
+      481.1453982262277
+    ]
+  },
+  "color_max_abs_dn": [
+    1.3642420526593924e-12,
+    9.094947017729282e-13,
+    9.094947017729282e-13
+  ],
+  "arrays": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\work\\independent-producer-c501745d4c\\on-expected.npy",
+      "sha256": "cc93af3bb6a2eb129c011ec70a2a4b6bfcc6f6043628c311691aa2e3b53833e2"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\work\\independent-producer-c501745d4c\\on-raw.npy",
+      "sha256": "549a1b01bd331eb5ff116bca126bac9d3044ba36d52c0aaf42c22f0a909376dd"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\work\\independent-producer-c501745d4c\\original-raw.npy",
+      "sha256": "549a1b01bd331eb5ff116bca126bac9d3044ba36d52c0aaf42c22f0a909376dd"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\work\\independent-producer-c501745d4c\\placebo-raw.npy",
+      "sha256": "549a1b01bd331eb5ff116bca126bac9d3044ba36d52c0aaf42c22f0a909376dd"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\work\\independent-producer-c501745d4c\\s8-expected.npy",
+      "sha256": "9e69ff42864a7d2dd321020acfbac7ef08a67d478a8a87ddb0207c7276727675"
+    }
+  ],
+  "scope": "rechosen component producer arrays, not final consumer or benchmark admission"
+}

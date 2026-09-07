@@ -1,0 +1,35 @@
+[
+  {
+    "command": [
+      "rustfmt",
+      "--check",
+      "--edition",
+      "2024",
+      "--config",
+      "skip_children=true",
+      "crates\\strehl-cli\\src\\merge_cmd\\known-scene-benchmark.rs"
+    ],
+    "exit_code": 0,
+    "log": "consumer-format-final.log",
+    "checking_cli": false,
+    "new_file_warning": false
+  },
+  {
+    "command": [
+      "cargo",
+      "clippy",
+      "-p",
+      "strehl-cli",
+      "--bin",
+      "strehl",
+      "--tests",
+      "--no-deps",
+      "--target-dir",
+      "target/m194b-known-scene"
+    ],
+    "exit_code": 0,
+    "log": "consumer-clippy-build-2.log",
+    "checking_cli": true,
+    "new_file_warning": false
+  }
+]

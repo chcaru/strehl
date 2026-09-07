@@ -1,0 +1,8 @@
+{
+  "render_index_sha256": "37f99736bd32dfb4891bd8fa2b033cacc2c58e9265515fa53cb5921dd80d9c08",
+  "attempts": [
+    {"reader_revision": null, "exit_code": 1, "failure": "copied executable differs from compiler artifact", "cause": "Equivalent Windows paths used slash and backslash spellings."},
+    {"reader_revision": "reader-revision-v1.json", "exit_code": 1, "failure": "command wrote a different TIFF", "cause": "Rust extended-length and ordinary Windows paths referred to the identical existing TIFF; pathlib.resolve retained the spelling difference."}
+  ],
+  "disposition": "Reader representation errors, not product defects; no score file was produced by either attempt. Original render index, inputs and TIFFs unchanged."
+}

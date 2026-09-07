@@ -1,0 +1,21 @@
+{
+  "command": [
+    "cargo",
+    "test",
+    "-p",
+    "strehl-cli",
+    "--bin",
+    "strehl",
+    "--target-dir",
+    "target/m194b-known-scene",
+    "--",
+    "--test-threads=1"
+  ],
+  "exit_code": 0,
+  "rebuilt_cli": true,
+  "result_lines": [
+    "test result: ok. 128 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 8.54s"
+  ],
+  "log": "consumer-unit-tests.log",
+  "scope": "CLI unit tests only; ignored M194b requires explicit external fixture bindings."
+}

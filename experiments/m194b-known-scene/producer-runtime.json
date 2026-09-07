@@ -1,0 +1,20 @@
+{
+  "record_scope": "subsequent read using same Python executable and producer import; not a sampler or performance claim",
+  "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+  "executable": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+  "numpy": "2.4.4",
+  "scipy": "1.17.1",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "forced_environment": {
+    "OMP_NUM_THREADS": "2",
+    "OPENBLAS_NUM_THREADS": "2",
+    "MKL_NUM_THREADS": "2",
+    "NUMEXPR_NUM_THREADS": "2"
+  },
+  "commands": [
+    "python -B experiments/m194b-known-scene/commission-forward.py --out experiments/m194b-known-scene/producer-commission-1",
+    "python -B experiments/m194b-known-scene/produce.py --commission experiments/m194b-known-scene/producer-commission-1/commission.json --out experiments/m194b-known-scene/producer-output-1"
+  ],
+  "preregister_sha256": "b8295044614f55db45e715d7c5ffc985e676f3104443e6fe5dcf20193e9c0129",
+  "producer_sha256": "c17391b26199ea70b29e4f0da12667fe1b8ca9dc355053ea49b3e8a87cc6c4a0"
+}

@@ -26,3 +26,8 @@ rayon.workspace = true
 tracing.workspace = true
 tracing-subscriber.workspace = true
 tiff.workspace = true
+
+[dev-dependencies]
+serde = { version = "=1.0.229", features = ["derive"] }
+serde_json = { version = "=1.0.151", features = ["float_roundtrip"] }
+sha2 = "=0.11.0"

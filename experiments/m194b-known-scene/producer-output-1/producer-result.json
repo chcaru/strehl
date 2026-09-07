@@ -1,0 +1,127 @@
+{
+  "schema": "m194b-producer-result-v1",
+  "status": "complete",
+  "manifests": [
+    {
+      "path": "flat/noise-off/manifest.json",
+      "sha256": "60ae007752236191358ee45f015e04a5b5243fb7c0704d065af88fb3f74ddb44",
+      "source_rail_count": 0
+    },
+    {
+      "path": "flat/seed-701/manifest.json",
+      "sha256": "6b505c8b3459c36f1d8c423500a8fb05d9fd0989e8ad8e7ad8d7481e8dfc79bf",
+      "source_rail_count": 0
+    },
+    {
+      "path": "flat/seed-709/manifest.json",
+      "sha256": "0966990a3ea3ce057d91ebbeb5e8d650176292e20f04132e69cef5c26c75a5aa",
+      "source_rail_count": 0
+    },
+    {
+      "path": "flat/seed-719/manifest.json",
+      "sha256": "0e4da023ff155be030ebd7336f753b736fe7f4dd3c8fe1b97b37121ca36111e7",
+      "source_rail_count": 0
+    },
+    {
+      "path": "flat/seed-727/manifest.json",
+      "sha256": "4bb5464883fc7a9230fb38fee010e3df93a80967f024c7c4eff380f88c356027",
+      "source_rail_count": 0
+    },
+    {
+      "path": "flat/seed-733/manifest.json",
+      "sha256": "05f9fbb85b1e60a13181e55e55faa733c9cb1d88bdd915ed453f7f4bdef05681",
+      "source_rail_count": 0
+    },
+    {
+      "path": "flat/seed-739/manifest.json",
+      "sha256": "2914f07d3e849954c08a6485bcc1ee6492766222d61b1ea7580a18578362b661",
+      "source_rail_count": 0
+    },
+    {
+      "path": "flat/seed-743/manifest.json",
+      "sha256": "7bcf0e1987fc118344711b3d1113ae35c27adfb26142b089f6a25c2034f007e1",
+      "source_rail_count": 0
+    },
+    {
+      "path": "flat/seed-751/manifest.json",
+      "sha256": "d0d40adfd8693a128653d400ea9c17912a8e0bcb0a5dddadd4b550e91c335788",
+      "source_rail_count": 0
+    },
+    {
+      "path": "plane/noise-off/manifest.json",
+      "sha256": "ff9b676ff948270b54a9b1d987f0309ea61edaf13e390941463d9a2d5e4222df",
+      "source_rail_count": 0
+    },
+    {
+      "path": "plane/seed-701/manifest.json",
+      "sha256": "9b1754be33bf2879c57ad0239c9340f06c35a383b922414096796b1dfea9fc1b",
+      "source_rail_count": 0
+    },
+    {
+      "path": "plane/seed-709/manifest.json",
+      "sha256": "cc6bd65bdfe773ffef60b8c0d10b300cbae778c7c13de1aa084d4336634e2a8c",
+      "source_rail_count": 0
+    },
+    {
+      "path": "plane/seed-719/manifest.json",
+      "sha256": "f81ba272154bf96535cef72f2340da6d1b36c2b25d5a5cf0e50f5f61d0e574e0",
+      "source_rail_count": 0
+    },
+    {
+      "path": "plane/seed-727/manifest.json",
+      "sha256": "502dfc93f59c89bc084f9966ca710aad595987923da191a694fb9b673cfb3740",
+      "source_rail_count": 0
+    },
+    {
+      "path": "plane/seed-733/manifest.json",
+      "sha256": "fbd50e1c16ce11145025b656d8a42178159af5d476f58e611b135e522e05e1fa",
+      "source_rail_count": 0
+    },
+    {
+      "path": "plane/seed-739/manifest.json",
+      "sha256": "e86c62ddd41bd4ad098d12d39470b47fd37356eb548e407bc878b2d1aec032b6",
+      "source_rail_count": 0
+    },
+    {
+      "path": "plane/seed-743/manifest.json",
+      "sha256": "80f07e72a4d9aee94c0c7ce24063d563b2bc120d5b904c403218008126eeaa7a",
+      "source_rail_count": 0
+    },
+    {
+      "path": "plane/seed-751/manifest.json",
+      "sha256": "25d25f4d64daccb5e2906040c46f8c6e1b99aaf67ac35c1370cab0c8acf7b16e",
+      "source_rail_count": 0
+    },
+    {
+      "path": "color/noise-off/manifest.json",
+      "sha256": "21fffbadd35149150f98634ff3394c2e4ef6bb0a879ab5fcdebd0336f35fac51",
+      "source_rail_count": 0
+    },
+    {
+      "path": "color-null/noise-off/manifest.json",
+      "sha256": "546dbb3b37a02db0240a13392e187a344d644dcfae887f97682165794fd4ab23",
+      "source_rail_count": 0
+    }
+  ],
+  "refused_scenes": {},
+  "commission_sha256": "0a8eb43a53d8f44a6e803f531fd2e83d12b7a59e280440e730dc6ea6523b50d5",
+  "sources_before": {
+    "experiments/m25-simulator/src/strehl_sim/config.py": "507d165e405812a9fdcffbf83a026e699f844dfd88bb2af9faec6e4c12c0ba59",
+    "experiments/m25-simulator/src/strehl_sim/optics.py": "ac5a2342d5ad3e6551ca3ddade5dba8feb9ea8f555f3aa36b71c774c6868fb93",
+    "experiments/m25-simulator/src/strehl_sim/render.py": "8b842d06ab1a550d1c66263dde2969e0e390a439938e57cb54c4095a6a36118c",
+    "experiments/m25-simulator/src/strehl_sim/scene.py": "9bea8539999ca64f893505337dbbe4c32c5765bc2368508275be43eed008351f",
+    "experiments/m25-simulator/src/strehl_sim/sensor.py": "d3057d2bfe3be5c832314e3a442941ef8269dd9a9c3b35e7e100a520e975957f",
+    "experiments/M103-halfdrift/data/truth-dense.json": "45b12d8c7106fa1c9c1ce3d5f663896a43992ff35f867fd3c6374131cb67be01",
+    "experiments/m194b-known-scene/produce.py": "c17391b26199ea70b29e4f0da12667fe1b8ca9dc355053ea49b3e8a87cc6c4a0"
+  },
+  "preregistration_sha256": "b8295044614f55db45e715d7c5ffc985e676f3104443e6fe5dcf20193e9c0129",
+  "sources_after": {
+    "experiments/m25-simulator/src/strehl_sim/config.py": "507d165e405812a9fdcffbf83a026e699f844dfd88bb2af9faec6e4c12c0ba59",
+    "experiments/m25-simulator/src/strehl_sim/optics.py": "ac5a2342d5ad3e6551ca3ddade5dba8feb9ea8f555f3aa36b71c774c6868fb93",
+    "experiments/m25-simulator/src/strehl_sim/render.py": "8b842d06ab1a550d1c66263dde2969e0e390a439938e57cb54c4095a6a36118c",
+    "experiments/m25-simulator/src/strehl_sim/scene.py": "9bea8539999ca64f893505337dbbe4c32c5765bc2368508275be43eed008351f",
+    "experiments/m25-simulator/src/strehl_sim/sensor.py": "d3057d2bfe3be5c832314e3a442941ef8269dd9a9c3b35e7e100a520e975957f",
+    "experiments/M103-halfdrift/data/truth-dense.json": "45b12d8c7106fa1c9c1ce3d5f663896a43992ff35f867fd3c6374131cb67be01",
+    "experiments/m194b-known-scene/produce.py": "c17391b26199ea70b29e4f0da12667fe1b8ca9dc355053ea49b3e8a87cc6c4a0"
+  }
+}

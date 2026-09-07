@@ -1,0 +1,33 @@
+{
+  "schema": "m194b-consumer-command-v1",
+  "command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\work\\consumer-binaries\\9a6587d4130c40569aad43ae56d86928\\known-scene-tests.exe",
+    "--exact",
+    "merge_cmd::known_scene_benchmark::m194b_known_scene_consumer",
+    "--ignored",
+    "--test-threads=1",
+    "--nocapture"
+  ],
+  "exit_code": 0,
+  "pass_": true,
+  "log": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\baseline-1\\logs\\plane-seed-743-single4.command.log",
+  "log_sha256": "56eca9ffca9f68216a0ed1cda21d64d20bc225b57fd53f33abdf753c83eb9ef7",
+  "build_sha256": "43e54bd99827b287b78fe44f37315fe6cae89e26234927409df2aa2449ac5078",
+  "environment": {
+    "STREHL_DEFECT": "off",
+    "STREHL_FIX_CA": "off",
+    "STREHL_FULLRES_GATHER": "1",
+    "STREHL_PYRAMID_WORKERS": "2",
+    "RAYON_NUM_THREADS": "2",
+    "STREHL_M194B_MODE": "render",
+    "STREHL_M194B_MANIFEST": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\plane\\seed-743\\manifest.json",
+    "STREHL_M194B_MANIFEST_SHA256": "80f07e72a4d9aee94c0c7ce24063d563b2bc120d5b904c403218008126eeaa7a",
+    "STREHL_M194B_PLAN": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\baseline-1\\plans\\plane-seed-743.json",
+    "STREHL_M194B_PLAN_SHA256": "5855fd85ebadc2f66530db891070272f4742ce2b404a9451c033a3b3939395e1",
+    "STREHL_M194B_SUBSET": "best",
+    "STREHL_M194B_OUTPUT": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\baseline-1\\tiffs\\plane-seed-743-single4.tif",
+    "STREHL_M194B_RECEIPT": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\baseline-1\\receipts\\plane-seed-743-single4.json"
+  },
+  "result": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\baseline-1\\receipts\\plane-seed-743-single4.json",
+  "result_sha256": "c1372f53595b1dc0bd003f6d6af453232eb5eb99cc2875521e2e30a3e6869277"
+}
