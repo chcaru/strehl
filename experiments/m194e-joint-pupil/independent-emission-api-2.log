@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "C:\dev\blog\death-of-software\projects\strehl\experiments\m194e-joint-pupil\independent-emission-api-controls.py", line 530, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "C:\dev\blog\death-of-software\projects\strehl\experiments\m194e-joint-pupil\independent-emission-api-controls.py", line 224, in main
+    assert all(before[k] == v for k, v in PINS.items()), "root source pin mismatch"
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: root source pin mismatch
