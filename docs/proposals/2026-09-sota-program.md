@@ -174,6 +174,11 @@ applying a RAW scalar PTC gain to adaptive demosaiced output is insufficient.
 The development benchmark can improve code while physical-reference work is
 pending; it cannot license a real-capture SOTA claim.
 
+The [current comparator refresh](../../experiments/review-current-comparators/findings.md)
+retains learned stack-fusion methods as candidates for later development
+comparisons. It supplies no substitute for actual-output commissioning and no
+formal comparator substitution.
+
 ### 4. Ship one measured quality change at a time
 
 **First scoped comparison complete:** M194d measures reconstructed production
