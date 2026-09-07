@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "C:\dev\blog\death-of-software\projects\strehl\experiments\m194g-larger-pupil\independent-cost-1-read.py", line 163, in <module>
+    main()
+  File "C:\dev\blog\death-of-software\projects\strehl\experiments\m194g-larger-pupil\independent-cost-1-read.py", line 91, in main
+    assert record["passed"] is True and len(record["checks"]) == ref["checks"]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

@@ -1,0 +1,184 @@
+{
+  "schema": "m194g-independent-cost-1-read-v1",
+  "evidence_consistent": true,
+  "disposition": "UNCOMMISSIONED_COST; incomplete population; no subset or numerical admission",
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-B",
+    "-X",
+    "faulthandler",
+    "-X",
+    "pycache_prefix=experiments/m194g-larger-pupil/work/cache-independent-cost-1-read-2",
+    "experiments/m194g-larger-pupil/independent-cost-1-read.py"
+  ],
+  "reader_sha256": "da31e6fba6d5aa1eb1d5becd83f7e2e903d1918b294742e4e3fd41138ca91ff7",
+  "result_sha256": "f23b5b1d24ba3e9516b246dce452c336749a3824c373484018a63c68ba66d010",
+  "progress_sha256": "b33673f3daa52ce45733cd275fc42c48c2e63e904a27ae3feeb5b22d326315fc",
+  "release_sha256": "e336c1d9829c201b690f7c2e14dc4f8bed487a314b99728b09e99941292b0eff",
+  "release_commit": "0e125df2eb0319982a0cbf97c9f85608d68ab01e",
+  "release_commit_time": "2026-09-07T09:51:05-07:00",
+  "start": "2026-09-07T16:51:21.596748+00:00",
+  "end": "2026-09-07T16:52:21.989309+00:00",
+  "sources_and_snapshots": 14,
+  "controls": [
+    {
+      "path": "experiments/m194g-larger-pupil/author-controls-2/result.json",
+      "checks": 41,
+      "sha256": "d6451d9a854f4d7b90e4eae5e391be5b966a902c65b87af377530b65d0934f04"
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/independent-geometry-controls-2/result.json",
+      "checks": 373,
+      "sha256": "a178a9d32f49b8f2b2af8737f7285de89d9ea70abe0e3be7cf5bb9002c3796b4"
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/independent-preflight-3/result.json",
+      "checks": 94,
+      "sha256": "4b7320ed7382b61a8c581d93bd565283a749394530540ca23c7503db5372594d"
+    }
+  ],
+  "branch_rows": [
+    {
+      "arm": "primary",
+      "index": 0,
+      "completed_cells": 76800,
+      "branch_records": 76800,
+      "independent_branches": {
+        "foreground": 36708,
+        "background": 36912,
+        "numerical": 3180
+      }
+    },
+    {
+      "arm": "primary",
+      "index": 1,
+      "completed_cells": 76800,
+      "branch_records": 76800,
+      "independent_branches": {
+        "foreground": 37068,
+        "background": 37272,
+        "numerical": 2460
+      }
+    },
+    {
+      "arm": "primary",
+      "index": 2,
+      "completed_cells": 76800,
+      "branch_records": 76800,
+      "independent_branches": {
+        "foreground": 37428,
+        "background": 37632,
+        "numerical": 1740
+      }
+    },
+    {
+      "arm": "primary",
+      "index": 3,
+      "completed_cells": 76800,
+      "branch_records": 76800,
+      "independent_branches": {
+        "foreground": 37800,
+        "background": 38004,
+        "numerical": 996
+      }
+    },
+    {
+      "arm": "primary",
+      "index": 4,
+      "completed_cells": 76800,
+      "branch_records": 76800,
+      "independent_branches": {
+        "foreground": 38160,
+        "background": 38364,
+        "numerical": 276
+      }
+    },
+    {
+      "arm": "angle-refined",
+      "index": 0,
+      "completed_cells": 76800,
+      "branch_records": 76800,
+      "independent_branches": {
+        "foreground": 36708,
+        "background": 36912,
+        "numerical": 3180
+      }
+    },
+    {
+      "arm": "angle-refined",
+      "index": 1,
+      "completed_cells": 76800,
+      "branch_records": 76800,
+      "independent_branches": {
+        "foreground": 37068,
+        "background": 37272,
+        "numerical": 2460
+      }
+    },
+    {
+      "arm": "angle-refined",
+      "index": 2,
+      "completed_cells": 76800,
+      "branch_records": 76800,
+      "independent_branches": {
+        "foreground": 37428,
+        "background": 37632,
+        "numerical": 1740
+      }
+    },
+    {
+      "arm": "angle-refined",
+      "index": 3,
+      "completed_cells": 76800,
+      "branch_records": 76800,
+      "independent_branches": {
+        "foreground": 37800,
+        "background": 38004,
+        "numerical": 996
+      }
+    },
+    {
+      "arm": "angle-refined",
+      "index": 4,
+      "completed_cells": 76800,
+      "branch_records": 76800,
+      "independent_branches": {
+        "foreground": 38160,
+        "background": 38364,
+        "numerical": 276
+      }
+    },
+    {
+      "arm": "cell-refined",
+      "index": 0,
+      "completed_cells": 53287,
+      "branch_records": 53288,
+      "independent_branches": {
+        "foreground": 26311,
+        "background": 24770,
+        "numerical": 2207
+      }
+    }
+  ],
+  "work": {
+    "limits": {
+      "whole_run_cpu_seconds": 60.0,
+      "whole_run_wall_seconds": 120.0,
+      "tracked_owned_ndarray_bytes": 33554432,
+      "per_frame_points_strictly_below": 8000000,
+      "per_frame_angular_nodes_strictly_below": 1200000000
+    },
+    "cpu_seconds": 60.015625,
+    "wall_seconds": 60.828000000095926,
+    "frame_points": 1780160,
+    "frame_angular_nodes": 514394112,
+    "total_points": 5696960,
+    "total_angular_nodes": 2091280512,
+    "frame_count": 11,
+    "check_calls": 8067657,
+    "tracked_peak_ndarray_bytes": 91280,
+    "tracked_peak_ndarrays": 18,
+    "array_scope": "unique reachable wrapper-owned ndarray backing allocations; excludes Python objects/RSS/frozen-helper transient temporaries"
+  },
+  "scope": "artifact read plus independent exact row-boundary searches; no counter/model import or rerun"
+}

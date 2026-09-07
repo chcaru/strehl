@@ -97,6 +97,26 @@ invariance. The fixed boundary band uses algebraic height
 `abs(x-.15*y-142)<=8`, not an eight-pixel Euclidean-distance claim. Define layer
 detail masks prospectively outside that band within the supported window.
 Masks come from the input geometry, never a focus winner or output error.
+The independent support review corrected the endpoint observation masks before
+registration: outside the eight-height-unit band does not establish complete
+background visibility. With H=.575 and the actual MHC tap-union support
+D=2*max(abs(n_x),abs(n_y))=2, require strictly
+`h < -(.575 + 6*sqrt(1.0225) + 2)` for endpoint0 background, and
+`h > .575 + 2` for endpoint4 foreground. The former is approximately -8.6421.
+The old mask incorrectly admitted native (150,110), h=-8.5; its nonzero MHC
+(+2,0) tap reaches a partially foreground-covered cell. Require this live
+destroyer to be excluded and farther valid companions to be admitted.
+These sufficient bounds depend on actual integer identity gather, disabled CA
+and single-input Hull::InputRange preservation; commission those dependencies
+before reusing the reduced MHC support. Equality is excluded. Nonidentity
+inputs require the actual transformed tap and resampler supports.
+
+These endpoint masks and the 74-native output-border guard have different
+purposes. Neither makes the multi-frame surface diagnostic independent of the
+depth boundary: adding that whole local merge support would add85.1 in height,
+leaving no such pure-layer region in the proposed central window. Call the
+outside-band masks input-defined surface diagnostics, not boundary-free merge
+regions. See next-quality-independent-review.md for the derivation and sources.
 Retain whole-output and all-site sparse diagnostics, even when the guarded
 window passes; the window cannot hide large adverse changes elsewhere.
 
@@ -109,8 +129,11 @@ window passes; the window cannot hide large adverse changes elsewhere.
   each surface's registered two waves on its fixed mask. Compare complex
   coefficients with the corresponding target coefficients, including phase
   and residual error. More amplitude is not automatically better. Run the
-  same readout on a flat field first, and commission blur, phase shift and
-  extra-wave destroyers. A local fitted wave readout is a restricted detail
+  same readout on a flat field first, and commission blur, phase shift,
+  amplitude-increase and extra-wave destroyers. Use an intercept and both
+  sine/cosine pairs together, with explicit coordinate and rank/condition
+  guards; the masked-window columns need not be orthogonal. Do not remove a
+  fitted gain or phase from the target error. A local fitted wave readout is a restricted detail
   diagnostic, not a general texture-quality score or a licence to ignore
   boundary error.
 - Estimate temporal variance across eight independent draws at each pixel,
@@ -119,7 +142,10 @@ window passes; the window cannot hide large adverse changes elsewhere.
   uncertainty and delete-one-repeat variance uncertainty. Eight repeats are
   eight independent draws, not millions of independent pixel observations.
   Preserve finite-repeat bias estimates, including negative estimates where
-  an unbiased decomposition gives them; do not clip them into zero.
+  an unbiased decomposition gives them; do not clip them into zero. The
+  squared-bias estimator is mean(error)^2-sample_variance/8. Its sum with
+  sample_variance equals the per-repeat MSE algebraically, so that equality
+  is an arithmetic check, not independent evidence.
 - Retain per-channel nearest-rank99.9th-percentile and maximum absolute truth
   errors, signed worst-site before/after/target values, and counts of absolute
   error worsening by>10 DN and improving by>10 DN. Movement alone is not harm;

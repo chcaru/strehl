@@ -1,0 +1,21 @@
+{
+  "scope": "Root recording original tool launch-session observation; not independently observed OS exit",
+  "exec_session_id": 83512,
+  "observed_exit_code": 1,
+  "terminal_lines": [
+    "{\"status\": \"UNCOMMISSIONED_COST\", \"output\": \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\preflight-1\"}",
+    "PREFLIGHT_EXIT=1"
+  ],
+  "result_sha256": "f23b5b1d24ba3e9516b246dce452c336749a3824c373484018a63c68ba66d010",
+  "launch_log_sha256": "faa1a697010eb105f69b74190929ae9ffe62935c34c4d01f4d4f4faf3a203aad",
+  "orig_argv": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-X",
+    "utf8",
+    "-X",
+    "pycache_prefix=experiments/m194g-larger-pupil/work/cache-preflight-1",
+    "experiments/m194g-larger-pupil/preflight.py",
+    "--output",
+    "experiments/m194g-larger-pupil/preflight-1"
+  ]
+}
