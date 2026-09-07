@@ -372,3 +372,27 @@ fn m194_actual_source_gather_fold_writer_controls() {
 
 #[path = "../../../../experiments/m194-production-truth/independent-controls.rs"]
 mod independent;
+
+// Private output-coordinate and interpolation commissioning. These ignored
+// tests use generated CFA sources and never participate in the product CLI.
+mod m193c_output_grid {
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/m193c-output-grid/private-adapter.rs"
+    ));
+
+    mod precision_witness {
+        include!(concat!(
+            env!("CARGO_MANIFEST_DIR"),
+            "/../../experiments/m193c-output-grid/precision-witness.rs"
+        ));
+    }
+}
+
+// Full native active-CFA derivatives for the separately released experiment.
+mod m193c_registration_derivative {
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/m193c-output-grid/registration-derivative.rs"
+    ));
+}
