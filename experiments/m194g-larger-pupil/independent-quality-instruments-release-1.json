@@ -1,0 +1,71 @@
+{
+  "schema": "m194g-quality-execution-release-v1",
+  "scope": "instruments",
+  "source_bindings": {
+    "experiments/m194g-larger-pupil/independent-quality-instruments.py": {
+      "sha256": "567078841987fb42aaf799db143fb15b17420cb0d863d8f6aed5c36b28a2c115",
+      "bytes": 21044
+    },
+    "experiments/m194g-larger-pupil/independent-quality-io.py": {
+      "sha256": "6efe4702aff2f883c63fed04a4570cd58fcd8e348158184d66f239c92d16e5e1",
+      "bytes": 12486
+    },
+    "experiments/m194g-larger-pupil/independent-quality-metrics.py": {
+      "sha256": "5ea046cf35444bae210cbddbb7d0132904f456959a62a7a77ad9138b1cbbff12",
+      "bytes": 16762
+    },
+    "experiments/m194g-larger-pupil/independent-rgb-tiff.py": {
+      "sha256": "d01a74aefcfa15b2146256b54ea51876715ab203b7de123b3cff2b0af4a1b19c",
+      "bytes": 7305
+    },
+    "experiments/m194f-production-bridge/independent-reader.py": {
+      "sha256": "3fbaf526776fc85042861e1e7a90c06664c43519cef20d12310a67efd8eaff2d",
+      "bytes": 9627
+    }
+  },
+  "inputs": [
+    {
+      "path": "experiments/m194g-larger-pupil/fixture.json",
+      "sha256": "e84f0bbbda9bef039da86616c9f051d416929f4dbe78477cc5b3fc21206856bb",
+      "bytes": 1985
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/next-quality-reader-preregister.md",
+      "sha256": "f27ce21f6661abd903dc44ffb24f8df089e4a4507e3d634458579f8cb4df4407",
+      "bytes": 12693
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/next-rgb-tiff-reader-design.md",
+      "sha256": "0c90a8f2e0fa4d418b71b514cef9814efe256eda914e221e50dd78aa493017aa",
+      "bytes": 2800
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/next-quality-instrument-interface.md",
+      "sha256": "896074349b636fbb257519b0dec991a3d4ed80b1f3bb7e833ee6055a3d7546d0",
+      "bytes": 2895
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/next-quality-source-review.md",
+      "sha256": "8a220a9261cd328692bd8589f14dbd87b8bc83257a95c86614a77fb5e63ced89",
+      "bytes": 2570
+    }
+  ],
+  "commands": [
+    [
+      "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+      "-X",
+      "utf8",
+      "-X",
+      "faulthandler",
+      "-X",
+      "pycache_prefix=experiments/m194g-larger-pupil/work/cache-independent-quality-instruments-1",
+      "experiments/m194g-larger-pupil/independent-quality-instruments.py",
+      "--release",
+      "experiments/m194g-larger-pupil/independent-quality-instruments-release-1.json",
+      "--release-sha256",
+      "ACTUAL_EXECUTION_RELEASE_SHA256",
+      "--output",
+      "experiments/m194g-larger-pupil/independent-quality-instruments-1"
+    ]
+  ]
+}
