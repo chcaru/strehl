@@ -180,6 +180,13 @@ def main():
                 for child in value:
                     verify_refs(child)
         verify_refs(catalog)
+        interval_controls_path = HERE / "independent-normalized-interval-controls.py"
+        interval_controls_key = interval_controls_path.relative_to(r.ROOT).as_posix()
+        interval_controls = r.load_source(interval_controls_path, "m194g_independent_interval_controls",
+                                         result["sources_before"][interval_controls_key]["sha256"])
+        interval_result = interval_controls.run(r, budget, catalog, args.output, check)
+        if interval_result["status"] != "PASS_NORMALIZED_INTERVAL_CONTROLS_ONLY":
+            raise r.Refusal("additive normalized-interval controls did not pass")
         engines = {name: r.Engine(budget, target) for name, target in r.TARGETS.items()}
         # All150 registered cases, both targets: exactly300 baseline calls, no subset.
         for case in cases:

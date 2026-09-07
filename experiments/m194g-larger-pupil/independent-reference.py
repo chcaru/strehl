@@ -39,7 +39,9 @@ OLD_SHA = "0cd8ea2331b269e65befdee110560cbc345e89c12348cbe1dc3144f7c04443f0"
 CATALOG_SHA = "3814eeaf459e14a0a32e90ceeab6fc9d2994c92ee55bf17c824478accc3cbd41"
 FIXTURE_SHA = "e84f0bbbda9bef039da86616c9f051d416929f4dbe78477cc5b3fc21206856bb"
 TARGETS = {"primary": .000125, "refined": .0000078125}
-METHOD = "m194g-independent-spatial-cache-v1"
+METHOD = "m194g-independent-spatial-cache-v2"
+NORMALIZER_PATH = HERE / "independent-normalized-interval.py"
+NORMALIZER_SHA = "0db00d10d31af75818187542470b455be863b39d834cb0f95f8d2f2281c9df52"
 BRANCHES = {"foreground": 0, "background": 1, "numerical": 2, "point": 3}
 
 
@@ -65,6 +67,7 @@ def load_source(path, name, expected):
 
 m = load_source(OLD, "m194g_frozen_independent_model", OLD_SHA)
 Refusal = m.Refusal
+ni = load_source(NORMALIZER_PATH, "m194g_independent_normalized_interval", NORMALIZER_SHA)
 
 
 def pairs(items):
@@ -339,6 +342,7 @@ class Engine:
         self.transfer_consumptions = 0
         self.branch_counts = {k: 0 for k in BRANCHES}
         self.last_entry = None
+        self.normalizer = ni.Normalizer(target)
 
     def factors(self, p, layer, cell=True):
         rad = p.scene.foreground if layer == "foreground" else p.scene.background
@@ -417,6 +421,10 @@ class Engine:
 
     def render(self, p, xy, *, cell=True):
         self.budget.check()
+        if self.target not in TARGETS.values():
+            raise Refusal("unregistered reference target")
+        before_intervals = self.normalizer.intervals
+        before_calls = self.normalizer.integrand_calls
         branch = select(p, xy) if cell else "point"
         self.branch_counts[branch] += 1
         if branch in ("foreground", "background"):
@@ -424,10 +432,18 @@ class Engine:
         else:
             if p.mask_state != "half-plane":
                 raise Refusal("point full/absent case outside registered population")
-            value, receipt = m.render(p.scene, p.frame, xy, cell=cell,
-                                      eps=self.target, budget=self.budget)
+            try:
+                with self.normalizer.installed(m):
+                    value, receipt = m.render(p.scene, p.frame, xy, cell=cell,
+                                              eps=self.target, budget=self.budget)
+            except ni.IntervalRefusal as exc:
+                raise Refusal(str(exc)) from exc
             receipt = dict(receipt, branch=branch,
                            indicator_scope="frozen independent Cartesian quadrature estimate")
+        receipt = dict(receipt, normalization=self.normalizer.receipt(
+            intervals=self.normalizer.intervals-before_intervals,
+            integrand_calls=self.normalizer.integrand_calls-before_calls,
+            target_e=self.target))
         self.budget.check()
         return value, receipt
 
@@ -435,7 +451,8 @@ class Engine:
         return dict(method=METHOD, target_e=self.target, cache_entries=len(self.cache),
                     cache_hits=self.cache_hits, cache_misses=self.cache_misses,
                     cache_evictions=self.cache_evictions, transfer_consumptions=self.transfer_consumptions,
-                    branch_counts=dict(self.branch_counts))
+                    branch_counts=dict(self.branch_counts),
+                    normalization=self.normalizer.receipt(target_e=self.target))
 
 
 def file_ref(path, *, array=None):
@@ -450,6 +467,8 @@ def file_ref(path, *, array=None):
 
 def source_map():
     paths = [Path(__file__).resolve(), HERE / "independent-reference-components.py", OLD,
+             NORMALIZER_PATH, HERE / "independent-normalized-interval-controls.py",
+             HERE / "reference-interval-amendment-1.md",
              HERE / "component-population.json", HERE / "fixture.json",
              HERE / "next-reference-plan.md", HERE / "next-numerical-release.md",
              HERE / "numerical-implementation-release-1.json"]
