@@ -187,9 +187,13 @@ payload/resource/entry controls now pass. The96-call diagnostic preserves the
 original numerical signatures in off/count/placebo and locates all28 warnings
 on endpoint intervals5–16 binary64 steps wide. The separately released
 normalized-interval reference now returns all300 values and passes66 producer
-checks; the complete author rerun passes511. Current work is the refreshed193
-private consumer controls and complete independent comparison under unchanged
-accuracy bars; no full expected-image population is admitted. See the
+checks; the complete author rerun passes511. The refreshed193 controls passed,
+then the complete reader exposed a Markdown-versus-JSON entry bug. The narrow
+repair and197 powered controls now pass, followed by the complete independent
+component/observer comparison under unchanged accuracy bars. Current work is
+all25 complete expected arrays, their independent reader, and source-only
+preparation of the fixed software-noise stage. No full expected-image
+population is admitted. See the
 [M194g record](../research/M194g-larger-pupil.md). Its [prospective protocol](../../experiments/m194g-larger-pupil/preregister.md)
 keeps later noise-law admission and the fixed M194d comparison on actual
 three-band production output separate from expected-image generation.

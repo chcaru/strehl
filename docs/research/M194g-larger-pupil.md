@@ -409,3 +409,45 @@ were added before any v2 consumer execution so a self-reported passing group
 cannot substitute for reading its scalar errors, requests and restored data.
 The earlier source-review note's183 was the then-current prospective count.
 No private193 pass or full expected-image authority is claimed here.
+
+## Independent complete component admission
+
+**MEASURED:** private193 passed under74a470cb, but the first complete reader
+under4a613525 refused before comparison: it attempted JSON parsing on the
+correctly pinned Markdown amendment. Its actual failed result and traceback
+are preserved at `independent-component-verification-2/result.json`, SHA256
+`10d980673b7510f9ba9f7d4961ab7ec03dc29fa99dfe55d43eaf4c271bb9b5ee`.
+The193 controls had tested individual consumers and the author's entry, not
+this reader entry. This was a reader defect, not missing numerical evidence.
+
+The narrow input-type repair and four powered entry controls were frozen
+at15ece1f1. Root collected exit0 from the new197-control command, result
+`dcae9307a2e3e5a7c9ac81d71e7ccf6e71cfee867fd9d08d26b9f60918019348`.
+All146 payload/reader,36 resource and15 entry checks pass, including139
+intended refusals and58 valid/restored companions. The new entry checks
+reproduce the old JSON failure, reject a false amendment pin, and show genuine
+Markdown/result reads reaching their explicitly private downstream boundary.
+That sentinel does not claim the complete comparison ran.
+
+**MEASURED independent admission:** the subsequent actual complete command
+was frozen at6e4ca40d and returned exit0. Result
+`independent-component-verification-3/result.json` is472315 bytes, SHA256
+`a652837ff7f7db4b6ca21ca1c5afedfc2f572920bd2f626aca29679faca8c139`.
+Both wrapper and nested result report `PASS_COMPONENTS_AND_OBSERVER_ONLY`;
+exception/traceback are null and inputs are unchanged. It reopens781 deciding
+input bindings and both source closures, including the current197 controls.
+All598 component comparisons pass, with largest absolute discrepancy
+8.387360139749944e-9 expected electrons at geometry-034, disabled analytic
+author versus refined reference. All150 independent refinements pass with
+maximum1.0068106348626316e-8. The52 literal-oracle comparisons have maximum
+1.0186340659856796e-10. All14 optical fault/restored groups are read, with
+minimum active discrepancy1.9515361838148237e against the strict>.004e bar.
+The72 direct interval records and12 scalar/request interventions are read;
+request interventions remain call-contract evidence rather than scalar error.
+All60 observer-frame packages retain their required byte identities and
+complete metadata. These are fixed component and small-frame results, not a
+physical-model, all-image, camera-noise, production-quality or SOTA claim.
+
+The next commands render all25 complete scalar images across three author
+and two independent reference arms. The separate full-array reader must
+consume every frame under the unchanged numerical bars before noise emission.
