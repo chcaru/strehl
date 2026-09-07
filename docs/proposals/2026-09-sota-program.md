@@ -175,8 +175,8 @@ reader after consuming admitted CFA through the prepared production Pyramid
 and writer. Crop/colour values, observer/confidence byte identity, rank encoding
 and the amended observed-channel WB control pass. The unsupported exposure arm
 and instrument failures remain in the [M194f report](../research/M194f-production-bridge.md).
-The small fixture has one Laplacian band plus a base. **Current next: M194g**
-commissions the larger numerical boundary fixture, starting with geometry-only
+The small fixture has one Laplacian band plus a base. **Completed follow-through: M194g**
+commissioned the larger numerical boundary fixture, starting with geometry-only
 cost and coverage checks. Its amended full count independently passes all15
 rows and1152000 cells within the prospectively chosen180CPU/240wall allowance.
 The original60-second refusal and stopped profiling instrument are retained.
@@ -200,10 +200,15 @@ All90 saved sensor files now pass their independent reader and37 controls;
 The larger three-band bridge compiles after a retained two-return repair.
 Its six private colour outputs and12 intended bridge outputs independently
 pass, including59 association/reducer controls. All38 registered comparison
-outputs and their108-read quality diagnostics are now complete; separate
-numerical verification is next. The first reading retains a substantial flat
-noise benefit and sparse costs, with no default change or candidate-quality
-pass. See the
+outputs and their108-read quality diagnostics are complete. The separate
+independent decoder/batch-statistic check now passes21 private controls and
+18,942 comparisons with zero mismatches, reopening all38 outputs in70 genuine
+reads (79 attempts including private parser controls). The fixed window's flat
+variance ratios are0.6512/0.4858/0.6477 for R/G/B; the textured ratios are
+0.9993/0.9987/0.9998. Sparse individual-pixel costs remain. This verified fixed
+experiment supports retaining the new weighting as experimental, with no
+default change or candidate-quality pass. Next implementation is M193c below;
+do not rerun the completed fixed38 matrix. See the
 [M194g record](../research/M194g-larger-pupil.md). Its [prospective protocol](../../experiments/m194g-larger-pupil/preregister.md)
 keeps later noise-law admission and the fixed M194d comparison on actual
 three-band production output separate from expected-image generation.
@@ -379,5 +384,15 @@ M165's one-file identity test cannot supply that route or its colour/noise
 contract. Exact private coordinate plants, production seam and execution limits
 must be frozen before builds or real renders. The outcome will guide a concrete
 registration change if support fails, without assuming a graph solve can create
-missing correspondences. M194g verification completes before any held product
-source is changed.
+missing correspondences. M194g verification has completed from committed
+`b11cea39`; its actual check result is
+`5a0c6dcc84608a64e7545ee9ac751441c468194347eb0cf7534793b0c971a4c5`.
+The held ten-render coordinate prototype and separate registration derivative
+design are now in independent source review. Existing owned RAW decode may
+allocate before exposing shape: enforce a process committed-memory limit and
+check the returned geometry before further owned image allocations, without
+claiming a predecode shape proof or an exact RSS bound. Preserve resolved
+level fallback provenance and require independent active-payload/level
+agreement. CameraLinear derivatives use the frozen registrar's channel
+projection only as an intensity proxy. A first registration refusal leaves
+later frames unvisited; it cannot create a complete coverage statement.

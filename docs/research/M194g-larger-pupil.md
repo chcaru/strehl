@@ -1,10 +1,11 @@
 # M194g — larger shared-pupil expected images
 
-2026-09-07. **IN PROGRESS: fixed38 diagnostics complete; separate numerical
-verification pending.** The full expected arrays, specified software noise,
+2026-09-07. **COMPLETE within the registered software/model scope: fixed38
+diagnostics independently verified.** The full expected arrays, specified software noise,
 saved90 CFA files and larger production bridge have independently passed their
 staged commissions. All38 registered production outputs and the frozen quality
-reader completed. The experimental weighting remains experimental; no default,
+reader completed, followed by the separate decoder and numerical result check
+recorded in the final addendum below. The experimental weighting remains experimental; no default,
 physical-camera calibration or SOTA claim changes. Earlier phase statuses below
 are historical observations, superseded only by the later explicit releases.
 
@@ -821,3 +822,101 @@ physical or cross-capture generalization. A separate decoder, temporal estimator
 and least-squares implementation will verify the full fixed diagnostics before
 the milestone is declared complete. No parameter sweep or new quality bar has
 been introduced after these readings.
+
+## Independent fixed38 verification and final disposition
+
+**MEASURED / independently VERIFIED, within the declared software fixture:**
+the separate result check was committed and released at
+`b11cea39bcf73886eaa1c9f7388cb9cb95be3531` before execution. Its exact command is
+in [independent-quality-result-check-release-1.json](../../experiments/m194g-larger-pupil/independent-quality-result-check-release-1.json),
+SHA256 `34fcd70921dc6011dcb327dfb7f91c1cd10e1c4bcd350eaa1867eab39f1efdc9`.
+Root launched that command and observed exit0. The actual argument record is:
+
+```powershell
+& 'C:\Users\chris\AppData\Local\Programs\Python\Python312\python.exe' `
+  -X utf8 -X faulthandler `
+  -X 'pycache_prefix=C:\dev\blog\death-of-software\projects\strehl\experiments\m194g-larger-pupil\work\cache-independent-quality-result-check-1' `
+  'C:\dev\blog\death-of-software\projects\strehl\experiments\m194g-larger-pupil\independent-quality-result-check.py' `
+  --release 'C:\dev\blog\death-of-software\projects\strehl\experiments\m194g-larger-pupil\independent-quality-result-check-release-1.json' `
+  --release-sha256 34fcd70921dc6011dcb327dfb7f91c1cd10e1c4bcd350eaa1867eab39f1efdc9 `
+  --score 'C:\dev\blog\death-of-software\projects\strehl\experiments\m194g-larger-pupil\independent-quality-score-1\result.json' `
+  --score-sha256 7477f1553ac53dc87d554cee04117c536f7e5d3476b97ce9fde8f5d3b42b95df `
+  --output 'C:\dev\blog\death-of-software\projects\strehl\experiments\m194g-larger-pupil\independent-quality-result-check-1'
+```
+
+The [317942-byte result](../../experiments/m194g-larger-pupil/independent-quality-result-check-1/result.json)
+has SHA256 `5a0c6dcc84608a64e7545ee9ac751441c468194347eb0cf7534793b0c971a4c5`
+and status `PASS_INDEPENDENT_FIXED_DIAGNOSTICS_ONLY`. The released verifier
+source is50432 bytes, SHA256
+`6c69efa777efccca740901edac9e633deb9a16f3dbe539d66c4e6337994e8539`.
+Its21 private controls pass; all18942 field/scalar comparisons pass with zero
+mismatches and zero numerical coordinate-tie allowances used. These comparison
+counts are not independent statistical replicates. Error is null, finalization
+errors are empty, and the recorded source/input bindings agree before and after
+the run. Root separately inspected the completed calculation receipt and its
+control/comparison records after reviewing the frozen source. This is not the
+quality implementation author verifying their own numbers: Curie authored the
+quality implementation, Socrates authored this distinct result check, and root
+inspected the latter's executed evidence. Root's receipt inspection is not
+claimed as a third numerical recomputation.
+
+The verifier uses its own classic-TIFF parser, not the earlier TIFF reader,
+and reconstructs all38 actual file/pixel identities. It visits those38 files
+70 times for the streaming calculations; nine private parser attempts bring
+the total to79. Legal changed-green bytes decode to the independently expected
+changed value/hash, while five malformed/hash cases refuse at their intended
+boundaries. Constant, structured-flat, literal offset/half-offset, sparse-spike,
+two-wave, wrong-axis and lost-native-offset controls exercise the actual new
+functions before actual output calculations. No image was rerendered and no
+eight-repeat image volume was stored.
+
+Temporal estimates use first-repeat-centered batch sums rather than the
+scorer's Welford calculation. Independent error reductions check all378 flat
+and486 textured individual rows, including noise-off, every seed and both
+modes, followed by the eight paired MSE differences/SE and matched delete-one
+variance statistics. All original seven masks and separately applicable
+endpoint references stay fixed. Every individual/mean whole-output and window
+sparse maximum, quantile, signed site value, improvement/worsening count and
+native coordinate is checked. Independent least squares checks both surface
+wave fits and full-signal errors. Mean-repeat decomposition is labeled
+arithmetic consistency, not another independent measurement.
+
+The [flat](../../experiments/m194g-larger-pupil/independent-quality-result-check-1/flat-independent.json)
+and [textured](../../experiments/m194g-larger-pupil/independent-quality-result-check-1/textured-independent.json)
+independent readouts retain the complete calculated values. They corroborate
+the six window variance ratios and paired ideal-error changes/SE in the table
+above, the noise-off RMSE statements, and all four stated extreme worsening
+locations and magnitudes. Agreement with the scorer does not establish that
+the target represents a physical camera. This check consumes the same admitted
+ideal array; its independent K=0 integration remains the separate ten-cell
+scope. Own-noise-off error is retained as a mode-specific nuisance reference,
+separate from ideal fidelity and the two endpoint observations.
+
+| Recorded verifier work | Actual sample | Fixed ceiling |
+| --- | ---: | ---: |
+| CPU seconds | 2.1875 | 120 |
+| Wall seconds | 2.2660000000614673 | 240 |
+| Peak registered live ndarray bytes | 28751424 | 33554432 |
+| Cumulative artifact bytes at the recorded work sample | 852900 | 33554432 |
+| TIFF parser attempts, private plus genuine | 79 | 96 |
+
+The same clock and named-allocation/output accounting cover private work,
+actual reads and final checks. The persisted work sample precedes the final
+terminal rewrite and remaining checks; it is not OS process-exit timing or
+complete process RSS, and gives no speed ranking. Runtime records Python3.12.10,
+NumPy2.4.4, Windows/AMD64, the actual interpreter and four explicit thread
+settings of2. These are dependency observations, not a hermetic-runtime claim.
+
+**Final disposition: the bounded M194g software/model milestone is complete;
+HardFloor remains the default and FloorPedestalV1 remains experimental.**
+The verified fixed comparison shows substantial flat-region noise reduction,
+much smaller textured-region changes and real sparse costs. The486 untriggered
+engineering flags are not GO authority. There is no real-capture, physical
+optics/calibration, alignment, cross-scene, SOTA or product-promotion claim.
+All earlier refusals, the failed profiling schedule and later prospective
+repairs retain their original scopes and artifacts. The
+[updated rule inventory](../../experiments/m194g-larger-pupil/milestone-rule-checklist.md)
+records this final boundary. This addendum and inventory update were written
+only after the checker terminated; the earlier inventory bytes bound by its
+release remain available at commit `b11cea39`. No recorded binding was revised
+retroactively and no scientific rerun was requested for these editorial updates.
