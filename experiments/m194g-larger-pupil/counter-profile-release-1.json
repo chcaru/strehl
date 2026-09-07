@@ -1,0 +1,127 @@
+{
+  "schema": "m194g-counter-profile-release-v1",
+  "scope": "single private diagnostic only; no intended population/radiance admission",
+  "preregister_commit": "76b255db",
+  "files": [
+    {
+      "path": "experiments/m194g-larger-pupil/counter-profile.py",
+      "sha256": "fc1dd81cf3c6dbccdb46830dcffb98a91b21f05f2a89089d9f40c85f253d0020",
+      "bytes": 18325
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/counter-profile-preregister.md",
+      "sha256": "eadf399b5998fa4d458b44ea565e1f27d29eaaab39f65751c25739df67412f3e",
+      "bytes": 3656
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/counter-profile-implementation-notes.md",
+      "sha256": "c14ddfb44ee23457dbb7bb0324b5158a322ad9d5efae493bf6e266380236da14",
+      "bytes": 4038
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/preflight.py",
+      "sha256": "829669612359e5f60a1610fbc36604eb4cef5647911df604124de9e13160b485",
+      "bytes": 22826
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/geometry.py",
+      "sha256": "24b812071b8b6189423b9792a22c55abd9a4f4a78921a9d558ab24489f1923b3",
+      "bytes": 6591
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/pinned-loader.py",
+      "sha256": "222fab4a932fe236c120d8a48e4521747474e2ef57ba58781bf5c59f644f4f76",
+      "bytes": 2939
+    },
+    {
+      "path": "experiments/m194e-joint-pupil/model.py",
+      "sha256": "a74cd9bd61ea2f717a185e86f725b5ed192431056a447581db0f8562cf9f70b8",
+      "bytes": 8015
+    },
+    {
+      "path": "experiments/m194e-joint-pupil/render.py",
+      "sha256": "487c1727ca3aab05dd66a7056fb368712ccaabbbe604818fdc8b47eda77b6e97",
+      "bytes": 32791
+    }
+  ],
+  "commands": [
+    {
+      "mode": "off",
+      "argv": [
+        "python",
+        "-X",
+        "utf8",
+        "-X",
+        "pycache_prefix=experiments/m194g-larger-pupil/work/cache-profile-off-1",
+        "experiments/m194g-larger-pupil/counter-profile.py",
+        "--mode",
+        "off",
+        "--output",
+        "experiments/m194g-larger-pupil/counter-profile-off-1"
+      ]
+    },
+    {
+      "mode": "count",
+      "argv": [
+        "python",
+        "-X",
+        "utf8",
+        "-X",
+        "pycache_prefix=experiments/m194g-larger-pupil/work/cache-profile-count-1",
+        "experiments/m194g-larger-pupil/counter-profile.py",
+        "--mode",
+        "count",
+        "--output",
+        "experiments/m194g-larger-pupil/counter-profile-count-1",
+        "--baseline-result",
+        "experiments/m194g-larger-pupil/counter-profile-off-1/result.json",
+        "--baseline-result-sha256",
+        "ACTUAL_COMPLETED_OFF_RESULT_SHA256"
+      ]
+    },
+    {
+      "mode": "placebo",
+      "argv": [
+        "python",
+        "-X",
+        "utf8",
+        "-X",
+        "pycache_prefix=experiments/m194g-larger-pupil/work/cache-profile-placebo-1",
+        "experiments/m194g-larger-pupil/counter-profile.py",
+        "--mode",
+        "placebo",
+        "--output",
+        "experiments/m194g-larger-pupil/counter-profile-placebo-1",
+        "--baseline-result",
+        "experiments/m194g-larger-pupil/counter-profile-off-1/result.json",
+        "--baseline-result-sha256",
+        "ACTUAL_COMPLETED_OFF_RESULT_SHA256"
+      ]
+    },
+    {
+      "mode": "mutated-cut",
+      "argv": [
+        "python",
+        "-X",
+        "utf8",
+        "-X",
+        "pycache_prefix=experiments/m194g-larger-pupil/work/cache-profile-mutated-cut-1",
+        "experiments/m194g-larger-pupil/counter-profile.py",
+        "--mode",
+        "mutated-cut",
+        "--output",
+        "experiments/m194g-larger-pupil/counter-profile-mutated-cut-1",
+        "--baseline-result",
+        "experiments/m194g-larger-pupil/counter-profile-off-1/result.json",
+        "--baseline-result-sha256",
+        "ACTUAL_COMPLETED_OFF_RESULT_SHA256"
+      ]
+    }
+  ],
+  "schedule": "Sequential; stop on any nonzero result or failed independent mode read. Substitute only the SHA256 of the completed first off result at the explicit placeholder; preserve actual argv.",
+  "budget_per_process": {
+    "cpu_seconds": 10,
+    "wall_seconds": 20
+  },
+  "radiance_release": false
+}
