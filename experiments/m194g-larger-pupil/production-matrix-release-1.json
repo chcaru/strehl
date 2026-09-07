@@ -1,0 +1,95 @@
+{
+  "schema": "m194g-numerical-execution-release-v1",
+  "scope": "quality-production-matrix",
+  "source_bindings": {
+    "experiments/m194g-larger-pupil/production-matrix.py": {
+      "sha256": "6f57fb166bb2d18189157cdcac3e00d17c493cfd1a4954393d78578ca06f32f2",
+      "bytes": 16324
+    },
+    "experiments/m194g-larger-pupil/production-command.py": {
+      "sha256": "a41ecd45c841e82f5cede848765cb1afce675805d41e50f4e8fe93004120e7f2",
+      "bytes": 38100
+    },
+    "experiments/m194g-larger-pupil/bridge-build.py": {
+      "sha256": "030c85a9bdbe5a32339dc503f306938f3b3cf719a2ebf7c5cdb1b5ec154a2713",
+      "bytes": 12358
+    },
+    "experiments/m194g-larger-pupil/next-quality-matrix-design.md": {
+      "sha256": "2d48d991898b8a5e478830b95652a4e671cbb84fc9834ba442fd812ad2f362fd",
+      "bytes": 7177
+    },
+    "experiments/m194g-larger-pupil/next-production-controller-design.md": {
+      "sha256": "cada40fba5339a56a3c792f268e7fdb89187f3a5b4be3dcf8a059cf51789ba44",
+      "bytes": 9085
+    },
+    "experiments/m194g-larger-pupil/production-controller-amendment-1.md": {
+      "sha256": "851683da6e547777ebfdc5a25f20c78922429fac4a758816f19303f13c48a878",
+      "bytes": 2366
+    },
+    "experiments/m194g-larger-pupil/independent-production-matrix-review.md": {
+      "sha256": "953b4d9df094a4ce315a09649511e968bc814b60c007fe957237faa1bbd40c88",
+      "bytes": 6168
+    }
+  },
+  "inputs": [
+    {
+      "path": "experiments/m194g-larger-pupil/bridge-build-2/result.json",
+      "sha256": "04e7cf3915e77b83dbe8e7183249445e48ff451292bb16d4d926b3d6346f9be0",
+      "bytes": 42312
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/independent-noise-files-1/noise-admission.json",
+      "sha256": "088272bfbeca6d00a816a5de72eeaf7aac8f8ca6e0ef68941ab236655fa298e7",
+      "bytes": 1082
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/independent-production-bridge-read-2/bridge-commission.json",
+      "sha256": "58ea0340b2961b72d5e489b6945b6eb9363c7f05a3e2980b26916a61095dfa79",
+      "bytes": 168417
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/independent-quality-instruments-1/result.json",
+      "sha256": "cdb596da485a49acf835024bea6e44b21f55922dac804b14d56f26de61bd8ac4",
+      "bytes": 24896
+    },
+    {
+      "path": "experiments/m194g-larger-pupil/production-launcher-controls-2/result.json",
+      "sha256": "8755af9ad11c2a0513dae2b004752c5ed55acb558180cd6d1e0f92f0f76bbe0d",
+      "bytes": 11645
+    }
+  ],
+  "commands": [
+    [
+      "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+      "-X",
+      "utf8",
+      "-X",
+      "faulthandler",
+      "-X",
+      "pycache_prefix=experiments/m194g-larger-pupil/work/cache-production-matrix-1",
+      "experiments/m194g-larger-pupil/production-matrix.py",
+      "--release",
+      "experiments/m194g-larger-pupil/production-matrix-release-1.json",
+      "--release-sha256",
+      "ACTUAL_EXECUTION_RELEASE_SHA256",
+      "--build",
+      "experiments/m194g-larger-pupil/bridge-build-2/result.json",
+      "--build-sha256",
+      "04e7cf3915e77b83dbe8e7183249445e48ff451292bb16d4d926b3d6346f9be0",
+      "--noise-admission",
+      "experiments/m194g-larger-pupil/independent-noise-files-1/noise-admission.json",
+      "--noise-admission-sha256",
+      "088272bfbeca6d00a816a5de72eeaf7aac8f8ca6e0ef68941ab236655fa298e7",
+      "--bridge-commission",
+      "experiments/m194g-larger-pupil/independent-production-bridge-read-2/bridge-commission.json",
+      "--bridge-commission-sha256",
+      "58ea0340b2961b72d5e489b6945b6eb9363c7f05a3e2980b26916a61095dfa79",
+      "--instrument-commission",
+      "experiments/m194g-larger-pupil/independent-quality-instruments-1/result.json",
+      "--instrument-commission-sha256",
+      "cdb596da485a49acf835024bea6e44b21f55922dac804b14d56f26de61bd8ac4",
+      "--output",
+      "experiments/m194g-larger-pupil/production-matrix-1"
+    ]
+  ]
+}
