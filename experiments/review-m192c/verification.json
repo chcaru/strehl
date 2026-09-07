@@ -1,0 +1,83 @@
+{
+  "status": "VERIFIED",
+  "sources": {
+    "experiments\\m192c-sampler\\sampler.py": "3e5f8d45201176f904ac9c14177108d409d3c6e24a7ab6ead60c1655fc662aa6",
+    "experiments\\review-m192c\\child.py": "f4657933707c29ea99fe0538d43ef24a7b003f55ba4b049f1bf094aae37d71ef",
+    "experiments\\review-m192c\\verify.py": "4172ee4d1dbaf3431dda756618b6048f24881f8f0639c5e3800d1e19b0ab7a76",
+    "experiments\\m12-scorecard\\m12-harness.py": "6cfb408992f37b225f102da4d62ba836f9c5b67c92bdd418ff460987866a1bb9"
+  },
+  "output_directory": "experiments\\review-m192c\\out-bf913a6f8d8b418f9b903f7772fc7a44",
+  "controls": [
+    {
+      "mode": "placebo",
+      "max_gap_ms": 17.2964,
+      "levels": {
+        "before": 8933376.0,
+        "plateau": 46755840.0,
+        "after": 8933376.0
+      },
+      "sha256": "e11360251d1173650cdcd20f111d8f1ca2e412f572e8b36a4dc067121c1799b8"
+    },
+    {
+      "mode": "on",
+      "max_gap_ms": 17.2915,
+      "levels": {
+        "before": 8667136.0,
+        "plateau": 46489600.0,
+        "after": 8667136.0
+      },
+      "sha256": "e11360251d1173650cdcd20f111d8f1ca2e412f572e8b36a4dc067121c1799b8"
+    },
+    {
+      "mode": "off",
+      "max_gap_ms": 17.1234,
+      "levels": {
+        "before": 8945664.0,
+        "plateau": 46772224.0,
+        "after": 8945664.0
+      },
+      "sha256": "e11360251d1173650cdcd20f111d8f1ca2e412f572e8b36a4dc067121c1799b8"
+    },
+    {
+      "mode": "on",
+      "max_gap_ms": 17.3173,
+      "levels": {
+        "before": 8826880.0,
+        "plateau": 46653440.0,
+        "after": 8826880.0
+      },
+      "sha256": "e11360251d1173650cdcd20f111d8f1ca2e412f572e8b36a4dc067121c1799b8"
+    }
+  ],
+  "unlabeled_stalls": [
+    {
+      "phase": "process-table",
+      "active_cpu": false,
+      "cpu_fraction": 0.0,
+      "max_gap_ms": 138.2876,
+      "unlabeled_stall_caught": true
+    },
+    {
+      "phase": "process-table",
+      "active_cpu": true,
+      "cpu_fraction": 0.9475073356017923,
+      "max_gap_ms": 137.6891,
+      "unlabeled_stall_caught": true
+    },
+    {
+      "phase": "final-memory",
+      "active_cpu": false,
+      "cpu_fraction": 0.0,
+      "max_gap_ms": 125.5665,
+      "unlabeled_stall_caught": true
+    }
+  ],
+  "bounded_overflow": {
+    "events": 904,
+    "observations": 4000,
+    "incidents": 18,
+    "telemetry": 0
+  },
+  "output_mutation_rejected": true,
+  "original_files_unchanged": 300
+}

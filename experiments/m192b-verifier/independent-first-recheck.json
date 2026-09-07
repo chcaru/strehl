@@ -1,0 +1,88 @@
+{
+  "status": "INDEPENDENT_MUTATION_OBSERVATIONS",
+  "verifier_sha256": "3F45AD923EC55B0E13A147803E0C0B67A2A31D20412564314E307C02C99A66D9",
+  "baseline": {
+    "schema": "m192b-semantic-verification-v1",
+    "status": "PASS",
+    "record_count": 133,
+    "binary_sha256": "89482ACD60C4E39A22F763B2E722754804430E955546EA96F7AE7CA4C7EA1032",
+    "minimum_sampling_coverage": 0.9903924269718484,
+    "maximum_sampling_gap_ms": 1163.6997000314295,
+    "partition": {
+      "pass": 1,
+      "fail": 0,
+      "unmeasured": 3,
+      "total": 4
+    },
+    "overall_verdict": "UNMEASURED",
+    "semantic_bindings": {
+      "campaign_id": "4c72e520-b93e-4781-999f-0947486ddc44",
+      "record_count": 133,
+      "artifact_files": 300,
+      "recorded_parent_pid": 22556,
+      "input_files": 404
+    },
+    "scope": "Recorded artifact consistency; unchanged M192 product-bar dispositions."
+  },
+  "cases": [
+    {
+      "name": "inert_reseal",
+      "accepted": true,
+      "partition": {
+        "pass": 1,
+        "fail": 0,
+        "unmeasured": 3,
+        "total": 4
+      }
+    },
+    {
+      "name": "omitted_cleared_environment_key",
+      "accepted": false,
+      "error": "missing environment record",
+      "exception": "VerificationError"
+    },
+    {
+      "name": "commission_failed_w1_exit",
+      "accepted": false,
+      "error": "commission process failed",
+      "exception": "VerificationError"
+    },
+    {
+      "name": "commission_wrong_gate",
+      "accepted": false,
+      "error": "unrepaired commission configuration",
+      "exception": "VerificationError"
+    },
+    {
+      "name": "commission_log_binding_disagrees",
+      "accepted": false,
+      "error": "commission embedded log binding",
+      "exception": "VerificationError"
+    },
+    {
+      "name": "cpu_trace_schema_unknown",
+      "accepted": false,
+      "error": "CPU sweep schema",
+      "exception": "VerificationError"
+    },
+    {
+      "name": "cpu_zero_boundary_mean_with_busy_trace",
+      "accepted": false,
+      "error": "boundary CPU mean contradicts trace",
+      "exception": "VerificationError"
+    },
+    {
+      "name": "extra_archive_file",
+      "accepted": false,
+      "error": "package file membership",
+      "exception": "VerificationError"
+    },
+    {
+      "name": "empty_cpu_trace",
+      "accepted": false,
+      "error": "missing CPU trace",
+      "exception": "VerificationError"
+    }
+  ],
+  "original_300_files_unchanged": true
+}

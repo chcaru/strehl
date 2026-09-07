@@ -97,6 +97,18 @@ claim. Geometry consumer repair in step 2 remains the next product-facing work.
 
 ### 2. Make geometry executable before declaring it closed
 
+**COMPLETED within supported-fixture scope:**
+[M193b](../research/M193b-geometry-consumer.md) supplies the strict consumer
+and bounded path constructor. Independent verification rejected 46 malformed
+or untrusted cases, including coherently rehashed denominator substitutions.
+The original identity/crop results are unchanged. Actual decoded-array lifetime
+fell from twelve to one on the controlled twelve-file fixture. This establishes
+the retention property, not native-size memory usage or registration coverage.
+The next geometry implementation is a commissioned actual-output adapter and
+complementary-focus registration development; neither is closed by this repair.
+
+The completed repair addressed these takeover findings:
+
 M193's review is an acceptance failure for the proposed apparatus. A modified
 overlap rectangle can retain the old manifest hash and turn a failing crop
 into a passing one. The fix needs consumer-side schema, hash, rectangle, and
@@ -212,5 +224,36 @@ The hourly task follow-up, `strehl-systems-certificate`, is paused after termina
 verification and recording this outcome. The evidence is in the campaign's
 `results/`, with independent checks in `experiments/review-m192-completed/` and
 measurement diagnosis in `experiments/review-m192-measurement/`. The next code
-work remains geometry consumer validation and the bounded constructor in step 2;
-systems measurement commissioning follows the bounded action in step 1.
+work has progressed to the independently verified repairs and next actions
+recorded below.
+
+### Autonomous continuation, 2026-09-07
+
+The owner explicitly requested continued work while asleep, moving to the next
+task after each result. The hourly `strehl-sota-program` task follow-up is active
+for that continuation; the old single-campaign monitor stays paused. Inspect
+live work before dispatching duplicates and surface substantive outcomes.
+
+**M192c complete and independently verified on synthetic controls:**
+[phase diagnostics](../research/M192c-sampler.md) passed the amended 64-arm
+commission, retaining its initial launch-confounded failure. An independent
+shorter allocation plant, unlabelled waiting/CPU-active stalls, final-memory
+delay, output placebo/mutation and bounded overflow checks also passed. This
+permits a bounded production rehearsal, not a retrospective change to M192.
+
+**M192b complete and independently verified:** the
+[stricter artifact verifier](../research/M192b-verifier.md) rejects 24 author
+mutations and 12 independently chosen contradictions with hashes recomputed.
+It accepts valid controls and a correctly recorded product failure. Its
+baseline retains one PASS and three UNMEASURED bars.
+
+**M194 dispatched:** the
+[production-path audit](../../experiments/review-production-truth/audit.md)
+identified reusable scene renderers but no complete synthetic CFA-to-production
+Pyramid-to-TIFF path among the inspected executables. Implement a private input
+seam through the existing production code and commission it with small
+synthetic fixtures and unchanged-output controls. The author and independent
+reviewer are assigned. Preserve M25's optics/occlusion limits and the old
+blend-truth scene refusal; passing process exit alone is not scene acceptance.
+The actual output-grid adapter audit proceeds in parallel. These are the next
+product-facing work, not a new metric search or a request for new photographs.

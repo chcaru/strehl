@@ -1,0 +1,148 @@
+{
+  "status": "COMMISSIONED",
+  "public_entry_point": "verify_artifact",
+  "negative_controls": 24,
+  "controls": [
+    {
+      "name": "wrong-gate",
+      "rejected": true,
+      "reason": "record command: native-n33-w1-r1"
+    },
+    {
+      "name": "wrong-worker",
+      "rejected": true,
+      "reason": "worker environment mismatch"
+    },
+    {
+      "name": "uncleared-environment",
+      "rejected": true,
+      "reason": "uncleared environment"
+    },
+    {
+      "name": "missing-environment-key",
+      "rejected": true,
+      "reason": "missing environment record"
+    },
+    {
+      "name": "missing-campaign-id",
+      "rejected": true,
+      "reason": "campaign ID disagreement"
+    },
+    {
+      "name": "foreign-campaign-id",
+      "rejected": true,
+      "reason": "campaign ID disagreement"
+    },
+    {
+      "name": "missing-terminal-key",
+      "rejected": true,
+      "reason": "terminal manifest membership"
+    },
+    {
+      "name": "duplicate-input",
+      "rejected": true,
+      "reason": "input file membership"
+    },
+    {
+      "name": "input-total",
+      "rejected": true,
+      "reason": "input aggregates"
+    },
+    {
+      "name": "unknown-schema",
+      "rejected": true,
+      "reason": "artifact schema: inputs-before.json"
+    },
+    {
+      "name": "binary-drift",
+      "rejected": true,
+      "reason": "record binary binding"
+    },
+    {
+      "name": "worker-cache-alias",
+      "rejected": true,
+      "reason": "environment path: STREHL_CACHE_DIR"
+    },
+    {
+      "name": "sidecar-alias",
+      "rejected": true,
+      "reason": "environment path: STREHL_WARPMAP"
+    },
+    {
+      "name": "commission-log-corrupt",
+      "rejected": true,
+      "reason": "artifact byte count"
+    },
+    {
+      "name": "commission-log-omitted",
+      "rejected": true,
+      "reason": "log count"
+    },
+    {
+      "name": "commission-label-lie",
+      "rejected": true,
+      "reason": "commission labels unsupported by observations"
+    },
+    {
+      "name": "commission-allocation-lie",
+      "rejected": true,
+      "reason": "allocation log evidence"
+    },
+    {
+      "name": "truncated-cpu",
+      "rejected": true,
+      "reason": "CPU trace gap/order"
+    },
+    {
+      "name": "duplicate-cpu",
+      "rejected": true,
+      "reason": "CPU trace gap/order"
+    },
+    {
+      "name": "cpu-summary-drift",
+      "rejected": true,
+      "reason": "inconsistent CPU trace mean"
+    },
+    {
+      "name": "cpu-run-drift",
+      "rejected": true,
+      "reason": "CPU sweep/run binding"
+    },
+    {
+      "name": "sampling-summary-lie",
+      "rejected": true,
+      "reason": "certificate sampling quality"
+    },
+    {
+      "name": "extra-artifact",
+      "rejected": true,
+      "reason": "package file membership"
+    },
+    {
+      "name": "path-escape",
+      "rejected": true,
+      "reason": "record log path"
+    },
+    {
+      "name": "inert-label",
+      "accepted": true,
+      "overall_verdict": "UNMEASURED"
+    },
+    {
+      "name": "valid-product-failure",
+      "accepted": true,
+      "overall_verdict": "FAIL"
+    }
+  ],
+  "original_artifact_files_unchanged": 300,
+  "baseline_partition": {
+    "pass": 1,
+    "fail": 0,
+    "unmeasured": 3,
+    "total": 4
+  },
+  "source_sha256": {
+    "verify.py": "A06C918F8171F0825FCF6AB1426F973F1570D67BF570E4A69CE5E76C77CBBBE4",
+    "commission.py": "F808F6A4264705532D35F078CA7B03F5C9C2FF13B3245732A558CA8CF23BF309"
+  }
+}

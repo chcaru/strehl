@@ -1,0 +1,130 @@
+{
+  "argv": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-B",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m192c-sampler\\child.py",
+    "--mode",
+    "null",
+    "--output",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m192c-sampler\\out-20260907-084426-145611\\overhead-null-s2-original\\output.bin",
+    "--receipt",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m192c-sampler\\out-20260907-084426-145611\\overhead-null-s2-original\\child-receipt.json"
+  ],
+  "child_cpu_seconds": 0.0,
+  "child_receipt": [
+    {
+      "cpu_number": 16,
+      "cpu_s": 0.0625,
+      "event": "start",
+      "mode": "null",
+      "parent_pid": 15444,
+      "pid": 3292,
+      "qpc_ns": 741341952221600
+    },
+    {
+      "cpu_number": 28,
+      "cpu_s": 0.0625,
+      "event": "end",
+      "output_bytes": 4138,
+      "pid": 3292,
+      "qpc_ns": 741342503269900
+    }
+  ],
+  "child_wall_seconds": 0.5510483,
+  "completed_utc": "2026-09-07T08:44:52.544179+00:00",
+  "coverage": 1.0,
+  "environment": {
+    "MKL_NUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "TEMP": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m192c-sampler\\out-20260907-084426-145611\\overhead-null-s2-original\\temp",
+    "TMP": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m192c-sampler\\out-20260907-084426-145611\\overhead-null-s2-original\\temp"
+  },
+  "host_busy_cpu_seconds": 2.328125,
+  "host_load_during_run": {
+    "external_busy_cpu_seconds": 2.265625,
+    "external_busy_fraction_of_wall_capacity": 0.10887091536699102,
+    "external_busy_max": 0.1,
+    "logical_processors": 32,
+    "memory_end": {
+      "available_page_file_bytes": 93642883072,
+      "available_physical_bytes": 46886219776,
+      "available_virtual_bytes": 140732998492160,
+      "memory_load_percent": 29,
+      "total_page_file_bytes": 117633830912,
+      "total_physical_bytes": 66094223360,
+      "total_virtual_bytes": 140737488224256
+    },
+    "memory_start": {
+      "available_page_file_bytes": 93631651840,
+      "available_physical_bytes": 46880415744,
+      "available_virtual_bytes": 140732998492160,
+      "memory_load_percent": 29,
+      "total_page_file_bytes": 117633830912,
+      "total_physical_bytes": 66094223360,
+      "total_virtual_bytes": 140737488224256
+    },
+    "pass": false,
+    "process_tree_cpu_seconds": 0.0625,
+    "system_busy_cpu_seconds": 2.328125,
+    "system_total_cpu_seconds": 20.3125
+  },
+  "max_interval_ms_including_final": null,
+  "memory": {
+    "kernel_job_accounting": {
+      "active_processes": 0,
+      "total_cpu_100ns": 625000,
+      "total_kernel_100ns": 625000,
+      "total_page_fault_count": 5136,
+      "total_processes": 1,
+      "total_terminated_processes": 0,
+      "total_user_100ns": 0
+    },
+    "kernel_job_peak_memory": {
+      "peak_job_memory_used_bytes": 10498048,
+      "peak_process_memory_used_bytes": 10498048
+    },
+    "max_gap_ms": 10.325299925170839,
+    "max_lateness_ms": 6.062499945983291,
+    "median_gap_ms": 10.01000008545816,
+    "missed_intervals": 0,
+    "peak_process_count": 1,
+    "peak_process_tree_page_fault_count": 5136,
+    "peak_process_tree_private_committed_bytes": 10493952,
+    "peak_process_tree_working_set_bytes": 19746816,
+    "peak_temp_file_bytes": 4096,
+    "process_discovery_interval_ms": 10.0,
+    "process_lifetimes": [
+      {
+        "created": 134332442918951270,
+        "first_seen_s": 0.006062499945983291,
+        "last_seen_s": 0.6301245999056846,
+        "max_cpu_100ns": 625000,
+        "name": "python.exe",
+        "parent_pid": 15444,
+        "pid": 3292,
+        "samples": 64
+      }
+    ],
+    "process_tree_membership_source": "Windows Job Object",
+    "sample_count": 66,
+    "sample_interval_ms": 10.0
+  },
+  "mode": "original",
+  "name": "overhead-null-s2-original",
+  "observer_cpu_seconds": 0.015625,
+  "output": {
+    "bytes": 4138,
+    "sha256": "9a49c14c5d46f8d541fc6b6629d1728294fdfa999d64fbe8405a4170ca489baa"
+  },
+  "product_cpu_seconds": 0.0625,
+  "returncode": 0,
+  "sampling_pass": true,
+  "started_utc": "2026-09-07T08:44:51.893580+00:00",
+  "stderr_log": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m192c-sampler\\out-20260907-084426-145611\\overhead-null-s2-original\\stderr.log",
+  "stdout_log": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m192c-sampler\\out-20260907-084426-145611\\overhead-null-s2-original\\stdout.log",
+  "wall_seconds": 0.6503185998881236,
+  "workload": "null"
+}

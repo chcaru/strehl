@@ -1,0 +1,87 @@
+{
+  "status": "AUTHOR_REGRESSION_PASS",
+  "records": [
+    {
+      "case": "frozen-manifest-exact",
+      "pass": true,
+      "manifest_sha256": "a1cdb836fb8806398a0c5031bdff5844b63888376542d5cc78b37d0149c77265"
+    },
+    {
+      "case": "frozen-identity",
+      "pass": true,
+      "result": {
+        "arm_id": "identity-grid",
+        "retained_pixels": 99918,
+        "denominator_pixels": 99918,
+        "retained_fraction_numerator": 1,
+        "retained_fraction_denominator": 1,
+        "retained_percent": "100.000000000",
+        "field_of_view_verdict": "PASS"
+      }
+    },
+    {
+      "case": "frozen-cropped",
+      "pass": true,
+      "result": {
+        "arm_id": "cropped-grid",
+        "retained_pixels": 97188,
+        "denominator_pixels": 99918,
+        "retained_fraction_numerator": 178,
+        "retained_fraction_denominator": 183,
+        "retained_percent": "97.267759563",
+        "field_of_view_verdict": "FAIL_GEOMETRY_FIELD_OF_VIEW"
+      }
+    },
+    {
+      "case": "stale-small-denominator",
+      "pass": true,
+      "legacy_result": {
+        "arm_id": "cropped-grid",
+        "retained_pixels": 400,
+        "denominator_pixels": 400,
+        "retained_fraction_numerator": 1,
+        "retained_fraction_denominator": 1,
+        "retained_percent": "100.000000000",
+        "field_of_view_verdict": "PASS"
+      },
+      "refusal": "UNMEASURED_DENOMINATOR_UNDEFINED: manifest differs from trusted input registration"
+    },
+    {
+      "case": "rehash-small-denominator",
+      "pass": true,
+      "legacy_result": {
+        "arm_id": "cropped-grid",
+        "retained_pixels": 400,
+        "denominator_pixels": 400,
+        "retained_fraction_numerator": 1,
+        "retained_fraction_denominator": 1,
+        "retained_percent": "100.000000000",
+        "field_of_view_verdict": "PASS"
+      },
+      "refusal": "UNMEASURED_DENOMINATOR_UNDEFINED: manifest differs from trusted input registration"
+    },
+    {
+      "case": "private-geometry-replay-negative",
+      "pass": true,
+      "refusal": "UNMEASURED_DENOMINATOR_UNDEFINED: common overlap differs from maximal input-support rectangle"
+    },
+    {
+      "case": "validated-snapshot-detached",
+      "pass": true
+    },
+    {
+      "case": "forced-collision-byte-tiebreak",
+      "pass": true
+    },
+    {
+      "case": "changed-source-refused",
+      "pass": true,
+      "refusal": "UNMEASURED_INPUT_CONTRACT_INVALID: input changed during construction: C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193b-geometry-consumer\\author-inputs-508e398b878b4e54bad71b0e29d8ac3b\\fixture-0.tif"
+    }
+  ],
+  "frozen_files_before_after_sha256": {
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M193-cover-overlap\\reference.py": "c08340f6f0658fae048dda92629a543b5a539462a93db196aaae29e1862ba790",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M193-cover-overlap\\fixtures.json": "8f5ebcba9688f0d08e71d74f1e8c881702c932ba7d3386e1f9131ffa882ac693",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M193-cover-overlap\\contract-v1.json": "19421729ac39273a5f61cda5068026f3458ba08c98f0aa954de7c219cbfabf47"
+  }
+}

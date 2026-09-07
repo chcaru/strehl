@@ -1,0 +1,36 @@
+[
+  {
+    "event": "start",
+    "qpc_ns": 741523713824700,
+    "cpu_s": 0.0625,
+    "cpu_number": 18,
+    "pid": 16484,
+    "parent_pid": 42312,
+    "mode": "fixed"
+  },
+  {
+    "event": "fixed-work-begin",
+    "qpc_ns": 741523713945700,
+    "cpu_s": 0.0625,
+    "cpu_number": 18,
+    "pid": 16484,
+    "rounds": 512,
+    "block_bytes": 1048576
+  },
+  {
+    "event": "fixed-work-end",
+    "qpc_ns": 741523906277000,
+    "cpu_s": 0.25,
+    "cpu_number": 24,
+    "pid": 16484,
+    "digest": "fbbab289f7f94b25736c58be46a994c441fd02552cc6022352e3d86d2fab7c83"
+  },
+  {
+    "event": "end",
+    "qpc_ns": 741523906956200,
+    "cpu_s": 0.265625,
+    "cpu_number": 30,
+    "pid": 16484,
+    "output_bytes": 4139
+  }
+]

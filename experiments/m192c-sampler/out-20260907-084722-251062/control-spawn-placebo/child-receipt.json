@@ -1,0 +1,43 @@
+[
+  {
+    "event": "start",
+    "qpc_ns": 741497135319100,
+    "cpu_s": 0.046875,
+    "cpu_number": 18,
+    "pid": 38672,
+    "parent_pid": 42312,
+    "mode": "spawn"
+  },
+  {
+    "event": "spawn-begin",
+    "qpc_ns": 741497135332900,
+    "cpu_s": 0.046875,
+    "cpu_number": 18,
+    "pid": 38672
+  },
+  {
+    "event": "spawned",
+    "qpc_ns": 741497141204800,
+    "cpu_s": 0.0625,
+    "cpu_number": 16,
+    "pid": 38672,
+    "child_pid": 39368
+  },
+  {
+    "event": "child-exited",
+    "qpc_ns": 741497311088500,
+    "cpu_s": 0.0625,
+    "cpu_number": 18,
+    "pid": 38672,
+    "child_pid": 39368,
+    "returncode": 0
+  },
+  {
+    "event": "end",
+    "qpc_ns": 741497511885100,
+    "cpu_s": 0.0625,
+    "cpu_number": 16,
+    "pid": 38672,
+    "output_bytes": 4139
+  }
+]

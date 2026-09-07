@@ -1,0 +1,439 @@
+{
+  "status": "VERIFIED_SCOPED_CONSUMER_AND_BOUNDED_DECODE_LIFETIME",
+  "controls": {
+    "frozen_identity": {
+      "arm_id": "independent-identity",
+      "retained_pixels": 99918,
+      "denominator_pixels": 99918,
+      "retained_fraction_numerator": 1,
+      "retained_fraction_denominator": 1,
+      "retained_percent": "100.000000000",
+      "field_of_view_verdict": "PASS"
+    },
+    "frozen_crop": {
+      "arm_id": "independent-crop",
+      "retained_pixels": 97188,
+      "denominator_pixels": 99918,
+      "retained_fraction_numerator": 178,
+      "retained_fraction_denominator": 183,
+      "retained_percent": "97.267759563",
+      "field_of_view_verdict": "FAIL_GEOMETRY_FIELD_OF_VIEW"
+    },
+    "v1_stale_denominator_false_pass": {
+      "arm_id": "independent-crop",
+      "retained_pixels": 400,
+      "denominator_pixels": 400,
+      "retained_fraction_numerator": 1,
+      "retained_fraction_denominator": 1,
+      "retained_percent": "100.000000000",
+      "field_of_view_verdict": "PASS"
+    },
+    "binding_survives_returned_snapshot_mutation": {
+      "arm_id": "independent-identity",
+      "retained_pixels": 99918,
+      "denominator_pixels": 99918,
+      "retained_fraction_numerator": 1,
+      "retained_fraction_denominator": 1,
+      "retained_percent": "100.000000000",
+      "field_of_view_verdict": "PASS"
+    },
+    "order_invariant": true,
+    "duplicate_and_changed_content": {
+      "single": "7d3bd409eeac62e9b74ccb1c310fb68ebbb128e0b6e6a227da1419c53cb6c4de",
+      "triplicate": "988458c015a523bfb318701c65cb671912180f2225b6f529d410c843bb240e8e",
+      "one_pixel_changed": "a7d2353fa120cde13b15d27eede26018623626ca0cd04317f1abb9ed7949ade4"
+    },
+    "alternate_identity": {
+      "arm_id": "independent-identity",
+      "retained_pixels": 73644,
+      "denominator_pixels": 73644,
+      "retained_fraction_numerator": 1,
+      "retained_fraction_denominator": 1,
+      "retained_percent": "100.000000000",
+      "field_of_view_verdict": "PASS"
+    },
+    "alternate_fractional_map_crop": {
+      "arm_id": "independent-crop",
+      "retained_pixels": 68731,
+      "denominator_pixels": 73644,
+      "retained_fraction_numerator": 4043,
+      "retained_fraction_denominator": 4332,
+      "retained_percent": "93.328716528",
+      "field_of_view_verdict": "FAIL_GEOMETRY_FIELD_OF_VIEW"
+    },
+    "alternate_registration": {
+      "input_hashes": [
+        "6cc8f950d5da4ad78d81dd0daccc9640787dca9a7c41e0fa9d12ff2bd7bbe4e6",
+        "fdf05cd91368a766ff401bf975776dbf9c11c8429d766844412884aef50cf230"
+      ],
+      "overlap": {
+        "x": 4,
+        "y": 0,
+        "width": 323,
+        "height": 228,
+        "area_pixels": 73644
+      },
+      "sources": [
+        {
+          "source_sha256": "6cc8f950d5da4ad78d81dd0daccc9640787dca9a7c41e0fa9d12ff2bd7bbe4e6",
+          "byte_length": 456800,
+          "multiplicity": 1,
+          "reference": true,
+          "source_to_reference_q32": {
+            "a": 4294967296,
+            "b": 0,
+            "tx": 0,
+            "ty": 0
+          },
+          "valid_center_guard_q8": 0,
+          "registration": {
+            "reference": true,
+            "heldout_rms_reference_px": "0.000000000",
+            "heldout_max_source_px_ceil_q8": 0,
+            "coordinate_quantization_guard_q8": 0,
+            "valid_support_continuous_margin_q8": 128
+          }
+        },
+        {
+          "source_sha256": "fdf05cd91368a766ff401bf975776dbf9c11c8429d766844412884aef50cf230",
+          "byte_length": 456800,
+          "multiplicity": 1,
+          "reference": false,
+          "source_to_reference_q32": {
+            "a": 4264675289,
+            "b": 13287969,
+            "tx": 11846373535,
+            "ty": -6809956712
+          },
+          "valid_center_guard_q8": 144,
+          "registration": {
+            "mutual_match_count": 256,
+            "calibration_count": 128,
+            "calibration_inlier_count": 128,
+            "holdout_count": 128,
+            "holdout_inlier_count": 128,
+            "heldout_rms_reference_px": "0.128567234",
+            "heldout_max_source_px_ceil_q8": 143,
+            "coordinate_quantization_guard_q8": 1,
+            "valid_support_continuous_margin_q8": 272,
+            "reference": false
+          }
+        }
+      ]
+    },
+    "matched_focus_feature_control": {
+      "mutual_match_count": 256,
+      "calibration_count": 128,
+      "calibration_inlier_count": 128,
+      "holdout_count": 128,
+      "holdout_inlier_count": 128,
+      "heldout_rms_reference_px": "0.000000000",
+      "heldout_max_source_px_ceil_q8": 0,
+      "coordinate_quantization_guard_q8": 1,
+      "valid_support_continuous_margin_q8": 129
+    }
+  },
+  "rejections": [
+    {
+      "name": "stale_smaller_rectangle",
+      "rejected": true,
+      "code": "UNMEASURED_DENOMINATOR_UNDEFINED",
+      "exception": "ContractError"
+    },
+    {
+      "name": "rehashed_smaller_but_in_bounds",
+      "rejected": true,
+      "code": "UNMEASURED_DENOMINATOR_UNDEFINED",
+      "exception": "ContractError"
+    },
+    {
+      "name": "rehashed_area_disagrees",
+      "rejected": true,
+      "code": "UNMEASURED_DENOMINATOR_UNDEFINED",
+      "exception": "ContractError"
+    },
+    {
+      "name": "rehashed_foreign_input_bundle",
+      "rejected": true,
+      "code": "UNMEASURED_DENOMINATOR_UNDEFINED",
+      "exception": "ContractError"
+    },
+    {
+      "name": "rehashed_foreign_reference",
+      "rejected": true,
+      "code": "UNMEASURED_DENOMINATOR_UNDEFINED",
+      "exception": "ContractError"
+    },
+    {
+      "name": "rehashed_coherent_geometry_uncertainty_rectangle",
+      "rejected": true,
+      "code": "UNMEASURED_DENOMINATOR_UNDEFINED",
+      "exception": "ContractError"
+    },
+    {
+      "name": "rehashed_unknown_schema",
+      "rejected": true,
+      "code": "UNMEASURED_DENOMINATOR_UNDEFINED",
+      "exception": "ContractError"
+    },
+    {
+      "name": "rehashed_unknown_field",
+      "rejected": true,
+      "code": "UNMEASURED_DENOMINATOR_UNDEFINED",
+      "exception": "ContractError"
+    },
+    {
+      "name": "rehashed_missing_sources",
+      "rejected": true,
+      "code": "UNMEASURED_DENOMINATOR_UNDEFINED",
+      "exception": "ContractError"
+    },
+    {
+      "name": "rehashed_bool_native_width",
+      "rejected": true,
+      "code": "UNMEASURED_DENOMINATOR_UNDEFINED",
+      "exception": "ContractError"
+    },
+    {
+      "name": "rehashed_float_native_width",
+      "rejected": true,
+      "code": "UNMEASURED_DENOMINATOR_UNDEFINED",
+      "exception": "ContractError"
+    },
+    {
+      "name": "rehashed_bool_rectangle_x",
+      "rejected": true,
+      "code": "UNMEASURED_DENOMINATOR_UNDEFINED",
+      "exception": "ContractError"
+    },
+    {
+      "name": "rehashed_float_rectangle_width",
+      "rejected": true,
+      "code": "UNMEASURED_DENOMINATOR_UNDEFINED",
+      "exception": "ContractError"
+    },
+    {
+      "name": "rehashed_negative_rectangle_x",
+      "rejected": true,
+      "code": "UNMEASURED_DENOMINATOR_UNDEFINED",
+      "exception": "ContractError"
+    },
+    {
+      "name": "rehashed_zero_rectangle_width",
+      "rejected": true,
+      "code": "UNMEASURED_DENOMINATOR_UNDEFINED",
+      "exception": "ContractError"
+    },
+    {
+      "name": "rehashed_outside_rectangle",
+      "rejected": true,
+      "code": "UNMEASURED_DENOMINATOR_UNDEFINED",
+      "exception": "ContractError"
+    },
+    {
+      "name": "rehashed_bool_source_multiplicity",
+      "rejected": true,
+      "code": "UNMEASURED_DENOMINATOR_UNDEFINED",
+      "exception": "ContractError"
+    },
+    {
+      "name": "rehashed_float_source_transform",
+      "rejected": true,
+      "code": "UNMEASURED_DENOMINATOR_UNDEFINED",
+      "exception": "ContractError"
+    },
+    {
+      "name": "rehashed_bool_source_guard",
+      "rejected": true,
+      "code": "UNMEASURED_DENOMINATOR_UNDEFINED",
+      "exception": "ContractError"
+    },
+    {
+      "name": "rehashed_bool_registration_count",
+      "rejected": true,
+      "code": "UNMEASURED_DENOMINATOR_UNDEFINED",
+      "exception": "ContractError"
+    },
+    {
+      "name": "rehashed_nonfinite_registration_residual",
+      "rejected": true,
+      "code": "UNMEASURED_DENOMINATOR_UNDEFINED",
+      "exception": "ContractError"
+    },
+    {
+      "name": "absent_binding",
+      "rejected": true,
+      "code": "UNMEASURED_DENOMINATOR_UNDEFINED",
+      "exception": "ContractError"
+    },
+    {
+      "name": "dictionary_binding",
+      "rejected": true,
+      "code": "UNMEASURED_DENOMINATOR_UNDEFINED",
+      "exception": "ContractError"
+    },
+    {
+      "name": "json_truncated",
+      "rejected": true,
+      "code": "UNMEASURED_DENOMINATOR_UNDEFINED",
+      "exception": "ContractError"
+    },
+    {
+      "name": "json_duplicate_key",
+      "rejected": true,
+      "code": "UNMEASURED_DENOMINATOR_UNDEFINED",
+      "exception": "ContractError"
+    },
+    {
+      "name": "json_NaN",
+      "rejected": true,
+      "code": "UNMEASURED_DENOMINATOR_UNDEFINED",
+      "exception": "ContractError"
+    },
+    {
+      "name": "json_Infinity",
+      "rejected": true,
+      "code": "UNMEASURED_DENOMINATOR_UNDEFINED",
+      "exception": "ContractError"
+    },
+    {
+      "name": "json_root_list",
+      "rejected": true,
+      "code": "UNMEASURED_DENOMINATOR_UNDEFINED",
+      "exception": "ContractError"
+    },
+    {
+      "name": "json_invalid_utf8",
+      "rejected": true,
+      "code": "UNMEASURED_DENOMINATOR_UNDEFINED",
+      "exception": "ContractError"
+    },
+    {
+      "name": "descriptor_bool_width",
+      "rejected": true,
+      "code": "UNMEASURED_OUTPUT_GRID_UNDEFINED",
+      "exception": "ContractError"
+    },
+    {
+      "name": "descriptor_float_width",
+      "rejected": true,
+      "code": "UNMEASURED_OUTPUT_GRID_UNDEFINED",
+      "exception": "ContractError"
+    },
+    {
+      "name": "descriptor_bool_guard",
+      "rejected": true,
+      "code": "UNMEASURED_OUTPUT_GRID_UNDEFINED",
+      "exception": "ContractError"
+    },
+    {
+      "name": "descriptor_bool_translation",
+      "rejected": true,
+      "code": "UNMEASURED_OUTPUT_GRID_UNDEFINED",
+      "exception": "ContractError"
+    },
+    {
+      "name": "descriptor_float_residual",
+      "rejected": true,
+      "code": "UNMEASURED_OUTPUT_GRID_UNDEFINED",
+      "exception": "ContractError"
+    },
+    {
+      "name": "descriptor_unknown_schema",
+      "rejected": true,
+      "code": "UNMEASURED_OUTPUT_GRID_UNDEFINED",
+      "exception": "ContractError"
+    },
+    {
+      "name": "descriptor_unknown_field",
+      "rejected": true,
+      "code": "UNMEASURED_OUTPUT_GRID_UNDEFINED",
+      "exception": "ContractError"
+    },
+    {
+      "name": "descriptor_list_derivation_kind",
+      "rejected": true,
+      "code": "UNMEASURED_OUTPUT_GRID_UNDEFINED",
+      "exception": "ContractError"
+    },
+    {
+      "name": "descriptor_bool_arm_id",
+      "rejected": true,
+      "code": "UNMEASURED_OUTPUT_GRID_UNDEFINED",
+      "exception": "ContractError"
+    },
+    {
+      "name": "descriptor_singular_transform",
+      "rejected": true,
+      "code": "UNMEASURED_OUTPUT_GRID_UNDEFINED",
+      "exception": "ContractError"
+    },
+    {
+      "name": "descriptor_negative_residual",
+      "rejected": true,
+      "code": "UNMEASURED_OUTPUT_GRID_UNDEFINED",
+      "exception": "ContractError"
+    },
+    {
+      "name": "foreign_multiplicity_binding",
+      "rejected": true,
+      "code": "UNMEASURED_DENOMINATOR_UNDEFINED",
+      "exception": "ContractError"
+    },
+    {
+      "name": "foreign_content_binding",
+      "rejected": true,
+      "code": "UNMEASURED_DENOMINATOR_UNDEFINED",
+      "exception": "ContractError"
+    },
+    {
+      "name": "v1_complementary_focus",
+      "rejected": true,
+      "code": "UNMEASURED_INPUT_REGISTRATION_INADEQUATE",
+      "exception": "ContractError"
+    },
+    {
+      "name": "prospective_complementary_focus",
+      "rejected": true,
+      "code": "UNMEASURED_INPUT_REGISTRATION_INADEQUATE",
+      "exception": "ContractError"
+    },
+    {
+      "name": "v1_compressed_tiff",
+      "rejected": true,
+      "code": "UNMEASURED_INPUT_CONTRACT_INVALID",
+      "exception": "ContractError"
+    },
+    {
+      "name": "prospective_compressed_tiff",
+      "rejected": true,
+      "code": "UNMEASURED_INPUT_CONTRACT_INVALID",
+      "exception": "ContractError"
+    }
+  ],
+  "decoded_lifetimes": {
+    "v1_retained": {
+      "decoded_count": 12,
+      "peak_live_decoded_arrays": 12,
+      "peak_live_decoded_payload_bytes": 2156544,
+      "live_arrays_after_return": 0,
+      "manifest_sha256": "ae2b02cbda28d7bcd25eeef32c1c88a1f8c14fa43ec82722ea147000478a0b72"
+    },
+    "prospective_bounded": {
+      "decoded_count": 12,
+      "peak_live_decoded_arrays": 1,
+      "peak_live_decoded_payload_bytes": 179712,
+      "live_arrays_after_return": 0,
+      "manifest_sha256": "ae2b02cbda28d7bcd25eeef32c1c88a1f8c14fa43ec82722ea147000478a0b72"
+    }
+  },
+  "frozen_v1_unchanged": true,
+  "source_sha256": {
+    "reference.py": "c08340f6f0658fae048dda92629a543b5a539462a93db196aaae29e1862ba790",
+    "fixtures.json": "8f5ebcba9688f0d08e71d74f1e8c881702c932ba7d3386e1f9131ffa882ac693",
+    "contract-v1.json": "19421729ac39273a5f61cda5068026f3458ba08c98f0aa954de7c219cbfabf47",
+    "consumer.py": "41e087797866505cc30384888ed83cd7a94dbcd7b757054433186003b37d2b26",
+    "independent-verify.py": "bbf25cd571a33d4987141032c18105c8a4baf6106bd8eb06365a7580d7b9e0a7"
+  },
+  "scope": "Synthetic and structural consumer verification; no real adapters, deep-focus coverage, RAW or scorecard closure."
+}

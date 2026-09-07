@@ -1,0 +1,50 @@
+[
+  {
+    "event": "start",
+    "qpc_ns": 741496252468100,
+    "cpu_s": 0.0625,
+    "cpu_number": 18,
+    "pid": 24156,
+    "parent_pid": 10864,
+    "mode": "short"
+  },
+  {
+    "event": "allocate-begin",
+    "qpc_ns": 741496252482200,
+    "cpu_s": 0.0625,
+    "cpu_number": 18,
+    "pid": 24156,
+    "requested_bytes": 25165824
+  },
+  {
+    "event": "allocated-touched",
+    "qpc_ns": 741496254754300,
+    "cpu_s": 0.0625,
+    "cpu_number": 18,
+    "pid": 24156,
+    "committed_bytes": 25165824
+  },
+  {
+    "event": "release-begin",
+    "qpc_ns": 741496335353300,
+    "cpu_s": 0.0625,
+    "cpu_number": 24,
+    "pid": 24156
+  },
+  {
+    "event": "released",
+    "qpc_ns": 741496336188900,
+    "cpu_s": 0.0625,
+    "cpu_number": 24,
+    "pid": 24156,
+    "released_bytes": 25165824
+  },
+  {
+    "event": "end",
+    "qpc_ns": 741496352098900,
+    "cpu_s": 0.0625,
+    "cpu_number": 20,
+    "pid": 24156,
+    "output_bytes": 4139
+  }
+]

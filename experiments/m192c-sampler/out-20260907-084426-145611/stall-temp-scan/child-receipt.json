@@ -1,0 +1,19 @@
+[
+  {
+    "event": "start",
+    "qpc_ns": 741329581609300,
+    "cpu_s": 0.046875,
+    "cpu_number": 18,
+    "pid": 17064,
+    "parent_pid": 15444,
+    "mode": "null"
+  },
+  {
+    "event": "end",
+    "qpc_ns": 741330132576200,
+    "cpu_s": 0.046875,
+    "cpu_number": 24,
+    "pid": 17064,
+    "output_bytes": 4138
+  }
+]

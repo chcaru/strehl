@@ -1,0 +1,130 @@
+[
+  {
+    "outer_create_no_window": false,
+    "inner_create_no_window": false,
+    "accounting": {
+      "total_user_100ns": 0,
+      "total_kernel_100ns": 468750,
+      "total_cpu_100ns": 468750,
+      "total_page_fault_count": 6611,
+      "total_processes": 2,
+      "active_processes": 0,
+      "total_terminated_processes": 0
+    },
+    "observed": [
+      {
+        "pid": 31364,
+        "parent_pid": 21168,
+        "name": "python.exe",
+        "created": 134332443910415331
+      },
+      {
+        "pid": 25112,
+        "parent_pid": 31364,
+        "name": "python.exe",
+        "created": 134332443910897620
+      }
+    ]
+  },
+  {
+    "outer_create_no_window": false,
+    "inner_create_no_window": true,
+    "accounting": {
+      "total_user_100ns": 312500,
+      "total_kernel_100ns": 625000,
+      "total_cpu_100ns": 937500,
+      "total_page_fault_count": 8676,
+      "total_processes": 3,
+      "active_processes": 0,
+      "total_terminated_processes": 0
+    },
+    "observed": [
+      {
+        "pid": 40068,
+        "created": 134332443912783543
+      },
+      {
+        "pid": 36376,
+        "parent_pid": 40068,
+        "name": "python.exe",
+        "created": 134332443913232000
+      },
+      {
+        "pid": 19000,
+        "parent_pid": 36376,
+        "name": "conhost.exe",
+        "created": 134332443913288112
+      }
+    ]
+  },
+  {
+    "outer_create_no_window": true,
+    "inner_create_no_window": false,
+    "accounting": {
+      "total_user_100ns": 468750,
+      "total_kernel_100ns": 156250,
+      "total_cpu_100ns": 625000,
+      "total_page_fault_count": 8693,
+      "total_processes": 3,
+      "active_processes": 0,
+      "total_terminated_processes": 0
+    },
+    "observed": [
+      {
+        "pid": 6000,
+        "parent_pid": 21168,
+        "name": "python.exe",
+        "created": 134332443915216384
+      },
+      {
+        "pid": 8960,
+        "parent_pid": 6000,
+        "name": "conhost.exe",
+        "created": 134332443915256912
+      },
+      {
+        "pid": 22244,
+        "parent_pid": 6000,
+        "name": "python.exe",
+        "created": 134332443915728328
+      }
+    ]
+  },
+  {
+    "outer_create_no_window": true,
+    "inner_create_no_window": true,
+    "accounting": {
+      "total_user_100ns": 468750,
+      "total_kernel_100ns": 156250,
+      "total_cpu_100ns": 625000,
+      "total_page_fault_count": 10731,
+      "total_processes": 4,
+      "active_processes": 0,
+      "total_terminated_processes": 0
+    },
+    "observed": [
+      {
+        "pid": 11412,
+        "created": 134332443917640673
+      },
+      {
+        "pid": 4384,
+        "parent_pid": 11412,
+        "name": "conhost.exe",
+        "created": 134332443917679609
+      },
+      {
+        "pid": 7852,
+        "parent_pid": 11412,
+        "name": "python.exe",
+        "created": 134332443918142162
+      },
+      {
+        "pid": 9888,
+        "parent_pid": 7852,
+        "name": "conhost.exe",
+        "created": 134332443918204961
+      }
+    ]
+  }
+]

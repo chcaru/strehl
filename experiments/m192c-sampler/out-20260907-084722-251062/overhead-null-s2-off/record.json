@@ -1,0 +1,1168 @@
+{
+  "argv": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-B",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m192c-sampler\\child.py",
+    "--mode",
+    "null",
+    "--output",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m192c-sampler\\out-20260907-084722-251062\\overhead-null-s2-off\\output.bin",
+    "--receipt",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m192c-sampler\\out-20260907-084722-251062\\overhead-null-s2-off\\child-receipt.json"
+  ],
+  "child_cpu_seconds": 0.0,
+  "child_receipt": [
+    {
+      "cpu_number": 19,
+      "cpu_s": 0.078125,
+      "event": "start",
+      "mode": "null",
+      "parent_pid": 42312,
+      "pid": 26952,
+      "qpc_ns": 741518278179100
+    },
+    {
+      "cpu_number": 18,
+      "cpu_s": 0.078125,
+      "event": "end",
+      "output_bytes": 4138,
+      "pid": 26952,
+      "qpc_ns": 741518828799000
+    }
+  ],
+  "child_wall_seconds": 0.5506199,
+  "coverage": 1.0,
+  "end_ns": 741518848948800,
+  "environment": {
+    "MKL_NUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "TEMP": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m192c-sampler\\out-20260907-084722-251062\\overhead-null-s2-off\\temp",
+    "TMP": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m192c-sampler\\out-20260907-084722-251062\\overhead-null-s2-off\\temp"
+  },
+  "external_busy_fraction": 0.09379260471878739,
+  "final_interval_ms": 0.0242,
+  "frequency_semantics": "OS CurrentMhz = specified maximum times throttle; not effective cycles/wall",
+  "host_busy_cpu_seconds": 2.03125,
+  "host_end": {
+    "busy_100ns": 15414647812500,
+    "idle_100ns": 154736623125000,
+    "kernel_100ns": 157509890625000,
+    "total_100ns": 170151270937500,
+    "user_100ns": 12641380312500
+  },
+  "host_start": {
+    "busy_100ns": 15414627500000,
+    "idle_100ns": 154736438125000,
+    "kernel_100ns": 157509698281250,
+    "total_100ns": 170151065625000,
+    "user_100ns": 12641367343750
+  },
+  "job_accounting": {
+    "active_processes": 0,
+    "total_cpu_100ns": 781250,
+    "total_kernel_100ns": 468750,
+    "total_page_fault_count": 5161,
+    "total_processes": 1,
+    "total_terminated_processes": 0,
+    "total_user_100ns": 312500
+  },
+  "job_peak_bytes": 10592256,
+  "launch_flags": {
+    "job_kill_on_close": false,
+    "nested_creationflags": 0,
+    "root_create_no_window": false,
+    "root_create_suspended": true
+  },
+  "legacy_start_max_gap_ms": 10.4289,
+  "max_interval_ms_including_final": 13.7248,
+  "memory_start": {
+    "available_page_file_bytes": 92786483200,
+    "available_physical_bytes": 46823432192,
+    "available_virtual_bytes": 140733000589312,
+    "memory_load_percent": 29,
+    "total_page_file_bytes": 117633830912,
+    "total_physical_bytes": 66094223360,
+    "total_virtual_bytes": 140737488224256
+  },
+  "missed_intervals": 0,
+  "mode": "off",
+  "name": "overhead-null-s2-off",
+  "observer_cpu_seconds": 0.03125,
+  "output": {
+    "bytes": 4138,
+    "sha256": "9a49c14c5d46f8d541fc6b6629d1728294fdfa999d64fbe8405a4170ca489baa"
+  },
+  "peak_private_bytes": 10588160,
+  "processes": [
+    {
+      "created": 134332444682225357,
+      "first_seen_ns": 741518215095400,
+      "last_seen_ns": 741518828831200,
+      "max_cpu_100ns": 781250,
+      "name": "python.exe",
+      "parent_pid": 42312,
+      "peak_private_bytes": 10588160,
+      "pid": 26952
+    }
+  ],
+  "product_cpu_seconds": 0.078125,
+  "returncode": 0,
+  "sample_count": 65,
+  "sampling_pass": true,
+  "start_ns": 741518208614800,
+  "telemetry": [],
+  "temp_peak_bytes": 4096,
+  "trace": {
+    "dropped": {
+      "events": 0,
+      "incidents": 0,
+      "observations": 0,
+      "telemetry": 0
+    },
+    "enabled": false,
+    "events": [],
+    "incidents": [],
+    "injected": false,
+    "injection": null,
+    "observations": [
+      {
+        "observed_ns": 741518222339600,
+        "poll": 0,
+        "private_bytes": 4149248,
+        "processes": [
+          {
+            "cpu_100ns": 312500,
+            "created": 134332444682225357,
+            "page_faults": 1990,
+            "pid": 26952,
+            "private": 4149248,
+            "working_set": 7774208
+          }
+        ],
+        "start_ns": 741518215095400
+      },
+      {
+        "observed_ns": 741518222551700,
+        "poll": 1,
+        "private_bytes": 4239360,
+        "processes": [
+          {
+            "cpu_100ns": 312500,
+            "created": 134332444682225357,
+            "page_faults": 2005,
+            "pid": 26952,
+            "private": 4239360,
+            "working_set": 7835648
+          }
+        ],
+        "start_ns": 741518222515200
+      },
+      {
+        "observed_ns": 741518229161100,
+        "poll": 2,
+        "private_bytes": 5726208,
+        "processes": [
+          {
+            "cpu_100ns": 312500,
+            "created": 134332444682225357,
+            "page_faults": 2744,
+            "pid": 26952,
+            "private": 5726208,
+            "working_set": 10805248
+          }
+        ],
+        "start_ns": 741518229122200
+      },
+      {
+        "observed_ns": 741518238800300,
+        "poll": 3,
+        "private_bytes": 6283264,
+        "processes": [
+          {
+            "cpu_100ns": 468750,
+            "created": 134332444682225357,
+            "page_faults": 3028,
+            "pid": 26952,
+            "private": 6283264,
+            "working_set": 11968512
+          }
+        ],
+        "start_ns": 741518238760200
+      },
+      {
+        "observed_ns": 741518248710600,
+        "poll": 4,
+        "private_bytes": 6807552,
+        "processes": [
+          {
+            "cpu_100ns": 468750,
+            "created": 134332444682225357,
+            "page_faults": 3387,
+            "pid": 26952,
+            "private": 6807552,
+            "working_set": 13340672
+          }
+        ],
+        "start_ns": 741518248664800
+      },
+      {
+        "observed_ns": 741518258718700,
+        "poll": 5,
+        "private_bytes": 8609792,
+        "processes": [
+          {
+            "cpu_100ns": 625000,
+            "created": 134332444682225357,
+            "page_faults": 4139,
+            "pid": 26952,
+            "private": 8609792,
+            "working_set": 16359424
+          }
+        ],
+        "start_ns": 741518258668900
+      },
+      {
+        "observed_ns": 741518268921800,
+        "poll": 6,
+        "private_bytes": 9240576,
+        "processes": [
+          {
+            "cpu_100ns": 781250,
+            "created": 134332444682225357,
+            "page_faults": 4736,
+            "pid": 26952,
+            "private": 9240576,
+            "working_set": 18788352
+          }
+        ],
+        "start_ns": 741518268875000
+      },
+      {
+        "observed_ns": 741518278935400,
+        "poll": 7,
+        "private_bytes": 10588160,
+        "processes": [
+          {
+            "cpu_100ns": 781250,
+            "created": 134332444682225357,
+            "page_faults": 4997,
+            "pid": 26952,
+            "private": 10588160,
+            "working_set": 19841024
+          }
+        ],
+        "start_ns": 741518278891600
+      },
+      {
+        "observed_ns": 741518288992300,
+        "poll": 8,
+        "private_bytes": 10588160,
+        "processes": [
+          {
+            "cpu_100ns": 781250,
+            "created": 134332444682225357,
+            "page_faults": 4997,
+            "pid": 26952,
+            "private": 10588160,
+            "working_set": 19841024
+          }
+        ],
+        "start_ns": 741518288954600
+      },
+      {
+        "observed_ns": 741518298993600,
+        "poll": 9,
+        "private_bytes": 10588160,
+        "processes": [
+          {
+            "cpu_100ns": 781250,
+            "created": 134332444682225357,
+            "page_faults": 4997,
+            "pid": 26952,
+            "private": 10588160,
+            "working_set": 19841024
+          }
+        ],
+        "start_ns": 741518298957900
+      },
+      {
+        "observed_ns": 741518308920100,
+        "poll": 10,
+        "private_bytes": 10588160,
+        "processes": [
+          {
+            "cpu_100ns": 781250,
+            "created": 134332444682225357,
+            "page_faults": 4997,
+            "pid": 26952,
+            "private": 10588160,
+            "working_set": 19841024
+          }
+        ],
+        "start_ns": 741518308850600
+      },
+      {
+        "observed_ns": 741518318973900,
+        "poll": 11,
+        "private_bytes": 10588160,
+        "processes": [
+          {
+            "cpu_100ns": 781250,
+            "created": 134332444682225357,
+            "page_faults": 4997,
+            "pid": 26952,
+            "private": 10588160,
+            "working_set": 19841024
+          }
+        ],
+        "start_ns": 741518318937900
+      },
+      {
+        "observed_ns": 741518328964200,
+        "poll": 12,
+        "private_bytes": 10588160,
+        "processes": [
+          {
+            "cpu_100ns": 781250,
+            "created": 134332444682225357,
+            "page_faults": 4997,
+            "pid": 26952,
+            "private": 10588160,
+            "working_set": 19841024
+          }
+        ],
+        "start_ns": 741518328928200
+      },
+      {
+        "observed_ns": 741518339135700,
+        "poll": 13,
+        "private_bytes": 10588160,
+        "processes": [
+          {
+            "cpu_100ns": 781250,
+            "created": 134332444682225357,
+            "page_faults": 4997,
+            "pid": 26952,
+            "private": 10588160,
+            "working_set": 19841024
+          }
+        ],
+        "start_ns": 741518339067400
+      },
+      {
+        "observed_ns": 741518349136600,
+        "poll": 14,
+        "private_bytes": 10588160,
+        "processes": [
+          {
+            "cpu_100ns": 781250,
+            "created": 134332444682225357,
+            "page_faults": 4997,
+            "pid": 26952,
+            "private": 10588160,
+            "working_set": 19841024
+          }
+        ],
+        "start_ns": 741518349068400
+      },
+      {
+        "observed_ns": 741518359128800,
+        "poll": 15,
+        "private_bytes": 10588160,
+        "processes": [
+          {
+            "cpu_100ns": 781250,
+            "created": 134332444682225357,
+            "page_faults": 4997,
+            "pid": 26952,
+            "private": 10588160,
+            "working_set": 19841024
+          }
+        ],
+        "start_ns": 741518359092600
+      },
+      {
+        "observed_ns": 741518368898200,
+        "poll": 16,
+        "private_bytes": 10588160,
+        "processes": [
+          {
+            "cpu_100ns": 781250,
+            "created": 134332444682225357,
+            "page_faults": 4997,
+            "pid": 26952,
+            "private": 10588160,
+            "working_set": 19841024
+          }
+        ],
+        "start_ns": 741518368862200
+      },
+      {
+        "observed_ns": 741518378866000,
+        "poll": 17,
+        "private_bytes": 10588160,
+        "processes": [
+          {
+            "cpu_100ns": 781250,
+            "created": 134332444682225357,
+            "page_faults": 4997,
+            "pid": 26952,
+            "private": 10588160,
+            "working_set": 19841024
+          }
+        ],
+        "start_ns": 741518378798900
+      },
+      {
+        "observed_ns": 741518389101800,
+        "poll": 18,
+        "private_bytes": 10588160,
+        "processes": [
+          {
+            "cpu_100ns": 781250,
+            "created": 134332444682225357,
+            "page_faults": 4997,
+            "pid": 26952,
+            "private": 10588160,
+            "working_set": 19841024
+          }
+        ],
+        "start_ns": 741518389034400
+      },
+      {
+        "observed_ns": 741518399059300,
+        "poll": 19,
+        "private_bytes": 10588160,
+        "processes": [
+          {
+            "cpu_100ns": 781250,
+            "created": 134332444682225357,
+            "page_faults": 4997,
+            "pid": 26952,
+            "private": 10588160,
+            "working_set": 19841024
+          }
+        ],
+        "start_ns": 741518399022800
+      },
+      {
+        "observed_ns": 741518409352500,
+        "poll": 20,
+        "private_bytes": 10588160,
+        "processes": [
+          {
+            "cpu_100ns": 781250,
+            "created": 134332444682225357,
+            "page_faults": 4997,
+            "pid": 26952,
+            "private": 10588160,
+            "working_set": 19841024
+          }
+        ],
+        "start_ns": 741518409316700
+      },
+      {
+        "observed_ns": 741518418809300,
+        "poll": 21,
+        "private_bytes": 10588160,
+        "processes": [
+          {
+            "cpu_100ns": 781250,
+            "created": 134332444682225357,
+            "page_faults": 4997,
+            "pid": 26952,
+            "private": 10588160,
+            "working_set": 19841024
+          }
+        ],
+        "start_ns": 741518418741900
+      },
+      {
+        "observed_ns": 741518428756100,
+        "poll": 22,
+        "private_bytes": 10588160,
+        "processes": [
+          {
+            "cpu_100ns": 781250,
+            "created": 134332444682225357,
+            "page_faults": 4997,
+            "pid": 26952,
+            "private": 10588160,
+            "working_set": 19841024
+          }
+        ],
+        "start_ns": 741518428688800
+      },
+      {
+        "observed_ns": 741518439157700,
+        "poll": 23,
+        "private_bytes": 10588160,
+        "processes": [
+          {
+            "cpu_100ns": 781250,
+            "created": 134332444682225357,
+            "page_faults": 4997,
+            "pid": 26952,
+            "private": 10588160,
+            "working_set": 19841024
+          }
+        ],
+        "start_ns": 741518439117700
+      },
+      {
+        "observed_ns": 741518449045500,
+        "poll": 24,
+        "private_bytes": 10588160,
+        "processes": [
+          {
+            "cpu_100ns": 781250,
+            "created": 134332444682225357,
+            "page_faults": 4997,
+            "pid": 26952,
+            "private": 10588160,
+            "working_set": 19841024
+          }
+        ],
+        "start_ns": 741518448993500
+      },
+      {
+        "observed_ns": 741518458931800,
+        "poll": 25,
+        "private_bytes": 10588160,
+        "processes": [
+          {
+            "cpu_100ns": 781250,
+            "created": 134332444682225357,
+            "page_faults": 4997,
+            "pid": 26952,
+            "private": 10588160,
+            "working_set": 19841024
+          }
+        ],
+        "start_ns": 741518458881900
+      },
+      {
+        "observed_ns": 741518468822300,
+        "poll": 26,
+        "private_bytes": 10588160,
+        "processes": [
+          {
+            "cpu_100ns": 781250,
+            "created": 134332444682225357,
+            "page_faults": 4997,
+            "pid": 26952,
+            "private": 10588160,
+            "working_set": 19841024
+          }
+        ],
+        "start_ns": 741518468768400
+      },
+      {
+        "observed_ns": 741518479111000,
+        "poll": 27,
+        "private_bytes": 10588160,
+        "processes": [
+          {
+            "cpu_100ns": 781250,
+            "created": 134332444682225357,
+            "page_faults": 4997,
+            "pid": 26952,
+            "private": 10588160,
+            "working_set": 19841024
+          }
+        ],
+        "start_ns": 741518479058400
+      },
+      {
+        "observed_ns": 741518489195100,
+        "poll": 28,
+        "private_bytes": 10588160,
+        "processes": [
+          {
+            "cpu_100ns": 781250,
+            "created": 134332444682225357,
+            "page_faults": 4997,
+            "pid": 26952,
+            "private": 10588160,
+            "working_set": 19841024
+          }
+        ],
+        "start_ns": 741518489106500
+      },
+      {
+        "observed_ns": 741518499170000,
+        "poll": 29,
+        "private_bytes": 10588160,
+        "processes": [
+          {
+            "cpu_100ns": 781250,
+            "created": 134332444682225357,
+            "page_faults": 4997,
+            "pid": 26952,
+            "private": 10588160,
+            "working_set": 19841024
+          }
+        ],
+        "start_ns": 741518499117500
+      },
+      {
+        "observed_ns": 741518508921700,
+        "poll": 30,
+        "private_bytes": 10588160,
+        "processes": [
+          {
+            "cpu_100ns": 781250,
+            "created": 134332444682225357,
+            "page_faults": 4997,
+            "pid": 26952,
+            "private": 10588160,
+            "working_set": 19841024
+          }
+        ],
+        "start_ns": 741518508870600
+      },
+      {
+        "observed_ns": 741518518792600,
+        "poll": 31,
+        "private_bytes": 10588160,
+        "processes": [
+          {
+            "cpu_100ns": 781250,
+            "created": 134332444682225357,
+            "page_faults": 4997,
+            "pid": 26952,
+            "private": 10588160,
+            "working_set": 19841024
+          }
+        ],
+        "start_ns": 741518518741500
+      },
+      {
+        "observed_ns": 741518529127500,
+        "poll": 32,
+        "private_bytes": 10588160,
+        "processes": [
+          {
+            "cpu_100ns": 781250,
+            "created": 134332444682225357,
+            "page_faults": 4997,
+            "pid": 26952,
+            "private": 10588160,
+            "working_set": 19841024
+          }
+        ],
+        "start_ns": 741518529067200
+      },
+      {
+        "observed_ns": 741518539077500,
+        "poll": 33,
+        "private_bytes": 10588160,
+        "processes": [
+          {
+            "cpu_100ns": 781250,
+            "created": 134332444682225357,
+            "page_faults": 4997,
+            "pid": 26952,
+            "private": 10588160,
+            "working_set": 19841024
+          }
+        ],
+        "start_ns": 741518538992200
+      },
+      {
+        "observed_ns": 741518548921600,
+        "poll": 34,
+        "private_bytes": 10588160,
+        "processes": [
+          {
+            "cpu_100ns": 781250,
+            "created": 134332444682225357,
+            "page_faults": 4997,
+            "pid": 26952,
+            "private": 10588160,
+            "working_set": 19841024
+          }
+        ],
+        "start_ns": 741518548843900
+      },
+      {
+        "observed_ns": 741518558680200,
+        "poll": 35,
+        "private_bytes": 10588160,
+        "processes": [
+          {
+            "cpu_100ns": 781250,
+            "created": 134332444682225357,
+            "page_faults": 4997,
+            "pid": 26952,
+            "private": 10588160,
+            "working_set": 19841024
+          }
+        ],
+        "start_ns": 741518558637700
+      },
+      {
+        "observed_ns": 741518569034300,
+        "poll": 36,
+        "private_bytes": 10588160,
+        "processes": [
+          {
+            "cpu_100ns": 781250,
+            "created": 134332444682225357,
+            "page_faults": 4997,
+            "pid": 26952,
+            "private": 10588160,
+            "working_set": 19841024
+          }
+        ],
+        "start_ns": 741518568992800
+      },
+      {
+        "observed_ns": 741518579247000,
+        "poll": 37,
+        "private_bytes": 10588160,
+        "processes": [
+          {
+            "cpu_100ns": 781250,
+            "created": 134332444682225357,
+            "page_faults": 4997,
+            "pid": 26952,
+            "private": 10588160,
+            "working_set": 19841024
+          }
+        ],
+        "start_ns": 741518579177600
+      },
+      {
+        "observed_ns": 741518588768100,
+        "poll": 38,
+        "private_bytes": 10588160,
+        "processes": [
+          {
+            "cpu_100ns": 781250,
+            "created": 134332444682225357,
+            "page_faults": 4997,
+            "pid": 26952,
+            "private": 10588160,
+            "working_set": 19841024
+          }
+        ],
+        "start_ns": 741518588699800
+      },
+      {
+        "observed_ns": 741518598738300,
+        "poll": 39,
+        "private_bytes": 10588160,
+        "processes": [
+          {
+            "cpu_100ns": 781250,
+            "created": 134332444682225357,
+            "page_faults": 4997,
+            "pid": 26952,
+            "private": 10588160,
+            "working_set": 19841024
+          }
+        ],
+        "start_ns": 741518598702200
+      },
+      {
+        "observed_ns": 741518608746000,
+        "poll": 40,
+        "private_bytes": 10588160,
+        "processes": [
+          {
+            "cpu_100ns": 781250,
+            "created": 134332444682225357,
+            "page_faults": 4997,
+            "pid": 26952,
+            "private": 10588160,
+            "working_set": 19841024
+          }
+        ],
+        "start_ns": 741518608708200
+      },
+      {
+        "observed_ns": 741518618791200,
+        "poll": 41,
+        "private_bytes": 10588160,
+        "processes": [
+          {
+            "cpu_100ns": 781250,
+            "created": 134332444682225357,
+            "page_faults": 4997,
+            "pid": 26952,
+            "private": 10588160,
+            "working_set": 19841024
+          }
+        ],
+        "start_ns": 741518618722200
+      },
+      {
+        "observed_ns": 741518628753600,
+        "poll": 42,
+        "private_bytes": 10588160,
+        "processes": [
+          {
+            "cpu_100ns": 781250,
+            "created": 134332444682225357,
+            "page_faults": 4997,
+            "pid": 26952,
+            "private": 10588160,
+            "working_set": 19841024
+          }
+        ],
+        "start_ns": 741518628718000
+      },
+      {
+        "observed_ns": 741518638890600,
+        "poll": 43,
+        "private_bytes": 10588160,
+        "processes": [
+          {
+            "cpu_100ns": 781250,
+            "created": 134332444682225357,
+            "page_faults": 4997,
+            "pid": 26952,
+            "private": 10588160,
+            "working_set": 19841024
+          }
+        ],
+        "start_ns": 741518638846000
+      },
+      {
+        "observed_ns": 741518649128300,
+        "poll": 44,
+        "private_bytes": 10588160,
+        "processes": [
+          {
+            "cpu_100ns": 781250,
+            "created": 134332444682225357,
+            "page_faults": 4997,
+            "pid": 26952,
+            "private": 10588160,
+            "working_set": 19841024
+          }
+        ],
+        "start_ns": 741518649063600
+      },
+      {
+        "observed_ns": 741518659124900,
+        "poll": 45,
+        "private_bytes": 10588160,
+        "processes": [
+          {
+            "cpu_100ns": 781250,
+            "created": 134332444682225357,
+            "page_faults": 4997,
+            "pid": 26952,
+            "private": 10588160,
+            "working_set": 19841024
+          }
+        ],
+        "start_ns": 741518659064400
+      },
+      {
+        "observed_ns": 741518669227900,
+        "poll": 46,
+        "private_bytes": 10588160,
+        "processes": [
+          {
+            "cpu_100ns": 781250,
+            "created": 134332444682225357,
+            "page_faults": 4997,
+            "pid": 26952,
+            "private": 10588160,
+            "working_set": 19841024
+          }
+        ],
+        "start_ns": 741518669126200
+      },
+      {
+        "observed_ns": 741518678894900,
+        "poll": 47,
+        "private_bytes": 10588160,
+        "processes": [
+          {
+            "cpu_100ns": 781250,
+            "created": 134332444682225357,
+            "page_faults": 4997,
+            "pid": 26952,
+            "private": 10588160,
+            "working_set": 19841024
+          }
+        ],
+        "start_ns": 741518678813400
+      },
+      {
+        "observed_ns": 741518688870400,
+        "poll": 48,
+        "private_bytes": 10588160,
+        "processes": [
+          {
+            "cpu_100ns": 781250,
+            "created": 134332444682225357,
+            "page_faults": 4997,
+            "pid": 26952,
+            "private": 10588160,
+            "working_set": 19841024
+          }
+        ],
+        "start_ns": 741518688800000
+      },
+      {
+        "observed_ns": 741518699070300,
+        "poll": 49,
+        "private_bytes": 10588160,
+        "processes": [
+          {
+            "cpu_100ns": 781250,
+            "created": 134332444682225357,
+            "page_faults": 4997,
+            "pid": 26952,
+            "private": 10588160,
+            "working_set": 19841024
+          }
+        ],
+        "start_ns": 741518699008800
+      },
+      {
+        "observed_ns": 741518709004900,
+        "poll": 50,
+        "private_bytes": 10588160,
+        "processes": [
+          {
+            "cpu_100ns": 781250,
+            "created": 134332444682225357,
+            "page_faults": 4997,
+            "pid": 26952,
+            "private": 10588160,
+            "working_set": 19841024
+          }
+        ],
+        "start_ns": 741518708946100
+      },
+      {
+        "observed_ns": 741518718737000,
+        "poll": 51,
+        "private_bytes": 10588160,
+        "processes": [
+          {
+            "cpu_100ns": 781250,
+            "created": 134332444682225357,
+            "page_faults": 4997,
+            "pid": 26952,
+            "private": 10588160,
+            "working_set": 19841024
+          }
+        ],
+        "start_ns": 741518718671300
+      },
+      {
+        "observed_ns": 741518729102400,
+        "poll": 52,
+        "private_bytes": 10588160,
+        "processes": [
+          {
+            "cpu_100ns": 781250,
+            "created": 134332444682225357,
+            "page_faults": 4997,
+            "pid": 26952,
+            "private": 10588160,
+            "working_set": 19841024
+          }
+        ],
+        "start_ns": 741518729008000
+      },
+      {
+        "observed_ns": 741518739083900,
+        "poll": 53,
+        "private_bytes": 10588160,
+        "processes": [
+          {
+            "cpu_100ns": 781250,
+            "created": 134332444682225357,
+            "page_faults": 4997,
+            "pid": 26952,
+            "private": 10588160,
+            "working_set": 19841024
+          }
+        ],
+        "start_ns": 741518739010400
+      },
+      {
+        "observed_ns": 741518748750700,
+        "poll": 54,
+        "private_bytes": 10588160,
+        "processes": [
+          {
+            "cpu_100ns": 781250,
+            "created": 134332444682225357,
+            "page_faults": 4997,
+            "pid": 26952,
+            "private": 10588160,
+            "working_set": 19841024
+          }
+        ],
+        "start_ns": 741518748681200
+      },
+      {
+        "observed_ns": 741518759023000,
+        "poll": 55,
+        "private_bytes": 10588160,
+        "processes": [
+          {
+            "cpu_100ns": 781250,
+            "created": 134332444682225357,
+            "page_faults": 4997,
+            "pid": 26952,
+            "private": 10588160,
+            "working_set": 19841024
+          }
+        ],
+        "start_ns": 741518758946700
+      },
+      {
+        "observed_ns": 741518768822800,
+        "poll": 56,
+        "private_bytes": 10588160,
+        "processes": [
+          {
+            "cpu_100ns": 781250,
+            "created": 134332444682225357,
+            "page_faults": 4997,
+            "pid": 26952,
+            "private": 10588160,
+            "working_set": 19841024
+          }
+        ],
+        "start_ns": 741518768748600
+      },
+      {
+        "observed_ns": 741518779020400,
+        "poll": 57,
+        "private_bytes": 10588160,
+        "processes": [
+          {
+            "cpu_100ns": 781250,
+            "created": 134332444682225357,
+            "page_faults": 4997,
+            "pid": 26952,
+            "private": 10588160,
+            "working_set": 19841024
+          }
+        ],
+        "start_ns": 741518778947000
+      },
+      {
+        "observed_ns": 741518788868400,
+        "poll": 58,
+        "private_bytes": 10588160,
+        "processes": [
+          {
+            "cpu_100ns": 781250,
+            "created": 134332444682225357,
+            "page_faults": 4997,
+            "pid": 26952,
+            "private": 10588160,
+            "working_set": 19841024
+          }
+        ],
+        "start_ns": 741518788806300
+      },
+      {
+        "observed_ns": 741518799031100,
+        "poll": 59,
+        "private_bytes": 10588160,
+        "processes": [
+          {
+            "cpu_100ns": 781250,
+            "created": 134332444682225357,
+            "page_faults": 4997,
+            "pid": 26952,
+            "private": 10588160,
+            "working_set": 19841024
+          }
+        ],
+        "start_ns": 741518798970500
+      },
+      {
+        "observed_ns": 741518808722200,
+        "poll": 60,
+        "private_bytes": 10588160,
+        "processes": [
+          {
+            "cpu_100ns": 781250,
+            "created": 134332444682225357,
+            "page_faults": 4997,
+            "pid": 26952,
+            "private": 10588160,
+            "working_set": 19841024
+          }
+        ],
+        "start_ns": 741518808659500
+      },
+      {
+        "observed_ns": 741518818826200,
+        "poll": 61,
+        "private_bytes": 10588160,
+        "processes": [
+          {
+            "cpu_100ns": 781250,
+            "created": 134332444682225357,
+            "page_faults": 4997,
+            "pid": 26952,
+            "private": 10588160,
+            "working_set": 19841024
+          }
+        ],
+        "start_ns": 741518818740300
+      },
+      {
+        "observed_ns": 741518828925300,
+        "poll": 62,
+        "private_bytes": 10588160,
+        "processes": [
+          {
+            "cpu_100ns": 781250,
+            "created": 134332444682225357,
+            "page_faults": 5003,
+            "pid": 26952,
+            "private": 10588160,
+            "working_set": 19865600
+          }
+        ],
+        "start_ns": 741518828831200
+      },
+      {
+        "observed_ns": 741518839175400,
+        "poll": 63,
+        "private_bytes": 0,
+        "processes": [],
+        "start_ns": 741518839136600
+      },
+      {
+        "observed_ns": 741518848837700,
+        "poll": 64,
+        "private_bytes": 0,
+        "processes": [],
+        "start_ns": 741518848795900
+      }
+    ],
+    "phase_counts": {},
+    "phase_max_ms": {},
+    "placebo": false
+  },
+  "unavailable": [
+    "effective CPU frequency",
+    "per-core residency",
+    "all-thread migration history",
+    "ready-queue latency",
+    "spin versus useful CPU",
+    "thermal sensor telemetry"
+  ],
+  "wall_seconds": 0.640334,
+  "workload": "null"
+}
