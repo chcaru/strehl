@@ -1,0 +1,249 @@
+{
+  "arms": {
+    "primary": {
+      "frames": [
+        {
+          "K": 12.0,
+          "expected_scalar": {
+            "bytes": 24704,
+            "dtype": "<f8",
+            "path": "primary/frame-00-scalar.npy",
+            "sha256": "eed5cc8224f76a200eb22dc525c704d104126eca626be5d4e6e5301e08417bd0",
+            "shape": [
+              48,
+              64
+            ]
+          },
+          "forward_similarity": {
+            "centre": [
+              0.0,
+              0.0
+            ],
+            "rotation": 0.0,
+            "scale": 1.0,
+            "translation": [
+              0.0,
+              0.0
+            ]
+          },
+          "index": 0,
+          "inverse_focus": 0.5,
+          "numerical_receipt": {
+            "bytes": 1687,
+            "path": "primary/frame-00-numerical.json",
+            "sha256": "bb2e804653f9a9df006a4d7a0ebc628552bfc42c81a65b72a224da97fe37fbf6"
+          }
+        },
+        {
+          "K": 12.0,
+          "expected_scalar": {
+            "bytes": 24704,
+            "dtype": "<f8",
+            "path": "primary/frame-01-scalar.npy",
+            "sha256": "1e564ad51cf274f12b4b5d5cac76d57be3f93f4dd759dac7af64b36ae7d2383e",
+            "shape": [
+              48,
+              64
+            ]
+          },
+          "forward_similarity": {
+            "centre": [
+              0.0,
+              0.0
+            ],
+            "rotation": 0.0,
+            "scale": 1.0,
+            "translation": [
+              0.0,
+              0.0
+            ]
+          },
+          "index": 1,
+          "inverse_focus": 0.625,
+          "numerical_receipt": {
+            "bytes": 1694,
+            "path": "primary/frame-01-numerical.json",
+            "sha256": "9c949fdb4e66d721254fe3673c3906601d22b8b84d3e03969f0d0b188c0ee89f"
+          }
+        },
+        {
+          "K": 12.0,
+          "expected_scalar": {
+            "bytes": 24704,
+            "dtype": "<f8",
+            "path": "primary/frame-02-scalar.npy",
+            "sha256": "a81528cd3bcd3aa7b11a5d9d8fe85aca3c85b3e432c1ea258a16a4814bb7163d",
+            "shape": [
+              48,
+              64
+            ]
+          },
+          "forward_similarity": {
+            "centre": [
+              0.0,
+              0.0
+            ],
+            "rotation": 0.0,
+            "scale": 1.0,
+            "translation": [
+              0.0,
+              0.0
+            ]
+          },
+          "index": 2,
+          "inverse_focus": 0.75,
+          "numerical_receipt": {
+            "bytes": 1694,
+            "path": "primary/frame-02-numerical.json",
+            "sha256": "e98d5e3610b3b9799fdc66578ed47175e58f2046ba26c011de849b6bd5dfed4f"
+          }
+        }
+      ],
+      "status": "running"
+    }
+  },
+  "command": [
+    "experiments/m194e-joint-pupil/commission.py",
+    "--output",
+    "experiments/m194e-joint-pupil/float-run-2",
+    "--controls",
+    "experiments/m194e-joint-pupil/author-controls-8/result.json"
+  ],
+  "comparisons": {},
+  "designs_after": {
+    "emission-contract.md": {
+      "bytes": 5349,
+      "sha256": "a8cbf1107004bdc61058e544f1efe88ebed83b7e6eac2381429ae4d150de1c40"
+    },
+    "implementation-plan.md": {
+      "bytes": 13889,
+      "sha256": "dbac8c9ce4ff2d555bd49291de325e3f3494459b23b9cd83ec4ff180cf93f1a0"
+    },
+    "implementation-preregister.md": {
+      "bytes": 11524,
+      "sha256": "2196166ee9a36af8cc73e272e97d430d4478b2b8e05fc3af2215afc64de0e500"
+    },
+    "independent-design.md": {
+      "bytes": 21428,
+      "sha256": "5d98f9e949b77da629cc32e1cc3f35d2bcf9cb0b7fbdad28d58476e35509bf87"
+    },
+    "numerical-amendment-1.md": {
+      "bytes": 7279,
+      "sha256": "79bfd4a45167e6442f852557ff8d1a7641e200fade53127deb964f17805fbff9"
+    },
+    "numerical-amendment-2.md": {
+      "bytes": 8067,
+      "sha256": "4f07b4afff3760567021c3e9c27227682630fcef2a40e230e267a7528e69bc4f"
+    }
+  },
+  "designs_before": {
+    "emission-contract.md": {
+      "bytes": 5349,
+      "sha256": "a8cbf1107004bdc61058e544f1efe88ebed83b7e6eac2381429ae4d150de1c40"
+    },
+    "implementation-plan.md": {
+      "bytes": 13889,
+      "sha256": "dbac8c9ce4ff2d555bd49291de325e3f3494459b23b9cd83ec4ff180cf93f1a0"
+    },
+    "implementation-preregister.md": {
+      "bytes": 11524,
+      "sha256": "2196166ee9a36af8cc73e272e97d430d4478b2b8e05fc3af2215afc64de0e500"
+    },
+    "independent-design.md": {
+      "bytes": 21428,
+      "sha256": "5d98f9e949b77da629cc32e1cc3f35d2bcf9cb0b7fbdad28d58476e35509bf87"
+    },
+    "numerical-amendment-1.md": {
+      "bytes": 7279,
+      "sha256": "79bfd4a45167e6442f852557ff8d1a7641e200fade53127deb964f17805fbff9"
+    },
+    "numerical-amendment-2.md": {
+      "bytes": 8067,
+      "sha256": "4f07b4afff3760567021c3e9c27227682630fcef2a40e230e267a7528e69bc4f"
+    }
+  },
+  "ended_utc": "2026-09-07T13:27:51.720232+00:00",
+  "environment": {
+    "numerical_threads": 2,
+    "numpy": "2.4.4",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]"
+  },
+  "error": "NumericalFailure('UNCOMMISSIONED_NUMERICS: cell depth/error ceiling')",
+  "invocation": {
+    "cwd": "C:\\dev\\blog\\death-of-software\\projects\\strehl",
+    "executable": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "orig_argv": [
+      "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+      "-X",
+      "utf8",
+      "-X",
+      "pycache_prefix=experiments/m194e-joint-pupil/work/cache-float-run-2",
+      "experiments/m194e-joint-pupil/commission.py",
+      "--output",
+      "experiments/m194e-joint-pupil/float-run-2",
+      "--controls",
+      "experiments/m194e-joint-pupil/author-controls-8/result.json"
+    ],
+    "xoptions": {
+      "pycache_prefix": "experiments/m194e-joint-pupil/work/cache-float-run-2",
+      "utf8": true
+    }
+  },
+  "schema": "m194e-author-float-run-v1",
+  "sources_after": {
+    "experiments/m194e-joint-pupil/author-controls.py": {
+      "bytes": 20828,
+      "sha256": "e3c5ceefcf81c8bf903f53a626573703e1091ab71321f63ca3fa4d81f2893fec"
+    },
+    "experiments/m194e-joint-pupil/commission.py": {
+      "bytes": 6369,
+      "sha256": "bca12a5c0f4d995d60133780687874b1bd6c21d7cf7746f6232e2063516aab18"
+    },
+    "experiments/m194e-joint-pupil/emit-cfa.py": {
+      "bytes": 8870,
+      "sha256": "fbcdfa2c716f638e9aa8f9cf13ba3024a575feca0ad15d1a67012f51176c82fd"
+    },
+    "experiments/m194e-joint-pupil/model.py": {
+      "bytes": 8015,
+      "sha256": "a74cd9bd61ea2f717a185e86f725b5ed192431056a447581db0f8562cf9f70b8"
+    },
+    "experiments/m194e-joint-pupil/render.py": {
+      "bytes": 23899,
+      "sha256": "a59e9686823d6f4ab2749dd8ca0f1a0bbf6cd847ee32ed04eef44dc78a87aba5"
+    },
+    "experiments/m194e-joint-pupil/schema.py": {
+      "bytes": 14903,
+      "sha256": "b3aee835d7bec9206ebff2401e3af5beb63fc66bf2aca3a32b272b69398edc54"
+    }
+  },
+  "sources_before": {
+    "experiments/m194e-joint-pupil/author-controls.py": {
+      "bytes": 20828,
+      "sha256": "e3c5ceefcf81c8bf903f53a626573703e1091ab71321f63ca3fa4d81f2893fec"
+    },
+    "experiments/m194e-joint-pupil/commission.py": {
+      "bytes": 6369,
+      "sha256": "bca12a5c0f4d995d60133780687874b1bd6c21d7cf7746f6232e2063516aab18"
+    },
+    "experiments/m194e-joint-pupil/emit-cfa.py": {
+      "bytes": 8870,
+      "sha256": "fbcdfa2c716f638e9aa8f9cf13ba3024a575feca0ad15d1a67012f51176c82fd"
+    },
+    "experiments/m194e-joint-pupil/model.py": {
+      "bytes": 8015,
+      "sha256": "a74cd9bd61ea2f717a185e86f725b5ed192431056a447581db0f8562cf9f70b8"
+    },
+    "experiments/m194e-joint-pupil/render.py": {
+      "bytes": 23899,
+      "sha256": "a59e9686823d6f4ab2749dd8ca0f1a0bbf6cd847ee32ed04eef44dc78a87aba5"
+    },
+    "experiments/m194e-joint-pupil/schema.py": {
+      "bytes": 14903,
+      "sha256": "b3aee835d7bec9206ebff2401e3af5beb63fc66bf2aca3a32b272b69398edc54"
+    }
+  },
+  "started_utc": "2026-09-07T13:26:13.832569+00:00",
+  "status": "UNCOMMISSIONED_NUMERICS",
+  "traceback": "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\commission.py\", line 64, in run\n    produced = render_frame(scene, frame, sensor, config, output / arm, meter=meter, tile=8)\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\render.py\", line 452, in render_frame\n    values[y, x], receipt = render_cell(scene, frame, (x, y), integrator, meter)\n                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\render.py\", line 425, in render_cell\n    results = [integrate_triangle(scene, frame, t, integrator, meter) for t in triangles]\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\render.py\", line 412, in integrate_triangle\n    second = integrate_triangle(scene, frame, np.array((midpoint, b, c)), integrator, meter, depth + 1)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\render.py\", line 412, in integrate_triangle\n    second = integrate_triangle(scene, frame, np.array((midpoint, b, c)), integrator, meter, depth + 1)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\render.py\", line 411, in integrate_triangle\n    first = integrate_triangle(scene, frame, np.array((a, midpoint, c)), integrator, meter, depth + 1)\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\render.py\", line 411, in integrate_triangle\n    first = integrate_triangle(scene, frame, np.array((a, midpoint, c)), integrator, meter, depth + 1)\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\render.py\", line 411, in integrate_triangle\n    first = integrate_triangle(scene, frame, np.array((a, midpoint, c)), integrator, meter, depth + 1)\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\render.py\", line 412, in integrate_triangle\n    second = integrate_triangle(scene, frame, np.array((midpoint, b, c)), integrator, meter, depth + 1)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194e-joint-pupil\\render.py\", line 406, in integrate_triangle\n    raise NumericalFailure(\"UNCOMMISSIONED_NUMERICS: cell depth/error ceiling\")\nrender.NumericalFailure: UNCOMMISSIONED_NUMERICS: cell depth/error ceiling\n"
+}

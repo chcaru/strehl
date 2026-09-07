@@ -1,10 +1,10 @@
 # M194e — joint-pupil depth-boundary model
 
 2026-09-07. **In progress; complete numerical commissioning has not passed.**
-The first full image run stopped at its registered sensor-cell error limit.
-Three primary frames completed; the fourth refused, and neither refinement
+Both full image attempts stopped at registered sensor-cell error limits.
+Each completed three primary frames; the fourth refused, and neither refinement
 arm ran. There is no admitted CFA package or merge-quality result from this
-milestone yet. Preserve that failure while investigating its cause.
+milestone yet. Preserve both failures while investigating their causes.
 
 ## Purpose and scope
 
@@ -125,6 +125,68 @@ Both attempts are retained. They do not invalidate the previously frozen
 whole-cell reference, and they do not establish the true local leaf error.
 The proposed numerical correction must therefore still pass independent
 whole-cell and complete-image comparisons.
+
+## Numerical amendment 2: current implementation
+
+The squared-distance cell-coordinate amendment and independent prospective
+review were committed at `d839ce9b` before implementation. It changes variables
+near a pupil tangency, with separately derived edge/vertex Jacobians. Its
+fixed finite-arithmetic predicate only selects quadrature coordinates; it does
+not snap vertices, discard slivers or establish exact physical incidence.
+Orders, depths, error bars and work limits remain unchanged.
+
+On numerical source
+`a59e9686823d6f4ab2749dd8ca0f1a0bbf6cd847ee32ed04eef44dc78a87aba5`,
+the independently chosen map controls pass all 399 cases. The original failed
+cell returns 15204.412150780796 electrons, differing from the frozen independent
+reference by about 3.49e-9. The linear-map ablation still refuses. Independent
+API4 passes the unchanged 31 analytic and 336 textured point/cell cases;
+the textured maximum is 2.06892e-7 electrons and RMS 1.23375e-8. These are
+component results, not admission of the subsequently incomplete image rerun.
+
+Evidence is in `independent-map-controls-1/result.json`,
+`independent-author-api-4/result.json` and the corresponding exact source
+snapshots under the experiment. Updated observer/traversal controls likewise
+remain separate from image-accuracy admission. Before the full rerun, root's
+controller audit also requires freezing design bindings at entry and checking
+them at exit; computing them only at exit would not establish which design
+bytes accompanied the run. That administrative correction changes no renderer
+arithmetic. Author controls8 bind the corrected controller and pass172/172;
+the final independent emission API5 and CFA-reader controls3 pass109/109 and
+26/26 respectively. The genuine reader again refuses fixture-only authority.
+
+**Second complete-run outcome:** `float-run-2` also terminates
+`UNCOMMISSIONED_NUMERICS`. It completes primary frames0,1,2 and refuses in
+frame3 after255 cells, at (31,7). Its failing leaf correctly selects the vertex
+map; the cell-order indicator3.44316831757e-6 exceeds its area-proportional
+allocation3.17449881569e-6. The weighted pupil terms sum to about1.30e-14.
+This is not a missed tangency predicate. The whole-cell independent reference
+is15172.35081699726 electrons; no value from the refused author cell is admitted.
+Source and design bindings are unchanged across this failed run. Its97.48-second
+CPU observation is run provenance, not a comparative speed result.
+Source commit `dd91182bc42b1fd7cd3fa4b6d5d52ba4cf8212fe` at 13:32:46 UTC
+followed the run's 13:27:51.720232 UTC completion. The amendment preregistration
+at `d839ce9b` preceded implementation; exact before/after source and design
+snapshots identify the bytes used by the run.
+
+**VERIFIED diagnostic, not admission:** `cell-allocation-2` retains all 508
+nodes through depth 6. The independent reader reconstructs child geometry and
+complete, disjoint frontiers. The original 34-leaf stopping frontier, including
+the locally refusing leaf, has summed absolute-difference-plus-pupil indicator
+8.85677475546e-5 and high-pupil sum 1.46237557330e-6, within the existing
+whole-cell limits. Its value differs from the independent reference by
+9.09e-12 electrons. The initial frontier instead fails at 0.02088286, so the
+aggregate criterion can reject this input. A diagnostic global-priority sequence
+reaches 18 leaves after 14 splits, with indicator 0.0006571524094. These are
+one-cell observations, not full-image admission or a performance forecast.
+
+The prospective third amendment replaces the area-proportional local allocation
+with a complete-frontier, absolute-error aggregate and deterministic refinement
+priority. It retains the whole-cell, separate pupil, independent full-image and
+refinement limits, plus existing orders, depth and resource ceilings. The former
+local condition becomes a diagnostic. This is an explicit change to the former
+admission rule, and neither failed run is retroactively passed. Implementation
+and new full-image evidence remain pending at this stage.
 
 ## Consequence for the following production experiment
 

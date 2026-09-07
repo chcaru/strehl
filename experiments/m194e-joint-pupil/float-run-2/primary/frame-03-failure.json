@@ -1,0 +1,52 @@
+{
+  "completed_cells": 255,
+  "error": "NumericalFailure('UNCOMMISSIONED_NUMERICS: cell depth/error ceiling')",
+  "frame": {
+    "K": 12.0,
+    "forward_similarity": {
+      "centre": [
+        0.0,
+        0.0
+      ],
+      "rotation": 0.0,
+      "scale": 1.0,
+      "translation": [
+        0.0,
+        0.0
+      ]
+    },
+    "index": 3,
+    "inverse_focus": 0.875
+  },
+  "integrator": {
+    "angle_depth": 10,
+    "angle_high": 32,
+    "angle_low": 16,
+    "angular_limit": 600000000,
+    "arm": "primary",
+    "array_limit": 33554432,
+    "cell_depth": 6,
+    "cell_high": 8,
+    "cell_low": 4,
+    "cell_tolerance": 0.00075,
+    "cpu_limit": 600,
+    "node_pair_limit": 32768,
+    "point_limit": 4000000,
+    "pupil_tolerance": 0.00025,
+    "wall_limit": 1200
+  },
+  "status": "UNCOMMISSIONED_NUMERICS",
+  "work": {
+    "angular_nodes": 16878528,
+    "cpu_seconds": 97.484375,
+    "observer": "count",
+    "observer_events": 17946362,
+    "optional_hook_calls": 2736422,
+    "peak_live_scalar_frames": 1,
+    "peak_node_pairs": 32768,
+    "point_calls": 99600,
+    "tracked_peak_ndarray_bytes": 6736464,
+    "tracked_peak_ndarrays": 99,
+    "wall_seconds": 97.78099999995902
+  }
+}

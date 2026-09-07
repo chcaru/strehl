@@ -1,0 +1,73 @@
+{
+  "error_indicator": {
+    "bytes": 24704,
+    "dtype": "<f8",
+    "path": "frame-02-indicator.npy",
+    "sha256": "7d6a4a2853cb917b511ded9268c41702e6c3a293fe6ce09369e22089f7be6d0b",
+    "shape": [
+      48,
+      64
+    ]
+  },
+  "expected_scalar": {
+    "bytes": 24704,
+    "dtype": "<f8",
+    "path": "frame-02-scalar.npy",
+    "sha256": "a81528cd3bcd3aa7b11a5d9d8fe85aca3c85b3e432c1ea258a16a4814bb7163d",
+    "shape": [
+      48,
+      64
+    ]
+  },
+  "frame": {
+    "K": 12.0,
+    "forward_similarity": {
+      "centre": [
+        0.0,
+        0.0
+      ],
+      "rotation": 0.0,
+      "scale": 1.0,
+      "translation": [
+        0.0,
+        0.0
+      ]
+    },
+    "index": 2,
+    "inverse_focus": 0.75
+  },
+  "integrator": {
+    "angle_depth": 10,
+    "angle_high": 32,
+    "angle_low": 16,
+    "angular_limit": 600000000,
+    "arm": "primary",
+    "array_limit": 33554432,
+    "cell_depth": 6,
+    "cell_high": 8,
+    "cell_low": 4,
+    "cell_tolerance": 0.00075,
+    "cpu_limit": 600,
+    "node_pair_limit": 32768,
+    "point_limit": 4000000,
+    "pupil_tolerance": 0.00025,
+    "wall_limit": 1200
+  },
+  "max_error_indicator_e": 0.0005781755141335927,
+  "schema": "m194e-float-frame-v1",
+  "status": "uncommissioned",
+  "tile": 8,
+  "work": {
+    "angular_nodes": 102689472,
+    "cpu_seconds": 91.96875,
+    "observer": "count",
+    "observer_events": 16989895,
+    "optional_hook_calls": 2589861,
+    "peak_live_scalar_frames": 1,
+    "peak_node_pairs": 32768,
+    "point_calls": 723040,
+    "tracked_peak_ndarray_bytes": 6736464,
+    "tracked_peak_ndarrays": 97,
+    "wall_seconds": 92.23399999993853
+  }
+}
