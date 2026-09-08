@@ -1,0 +1,123 @@
+{
+  "scope": "Conservative AREA4 preparation metadata; all1MiB charged",
+  "files": [
+    {
+      "path": "experiments/m193c-output-grid/area-four-plan-1.json",
+      "bytes": 39877,
+      "sha256": "7c83db049cc869b2428b7e0aa321ece23b91c0b05c6143c3414591479afa41d6"
+    },
+    {
+      "path": "experiments/m193c-output-grid/area-four-preregister.md",
+      "bytes": 14404,
+      "sha256": "2e908273a5c7b21c25aed0568b5c87901ac95997f223714fb055e09753e23282"
+    },
+    {
+      "path": "experiments/m193c-output-grid/area-four-prototype.py",
+      "bytes": 2438,
+      "sha256": "136e35bc25f05cc94ecde67a179a755cbe6cf168596ecae97c97b486d4351308"
+    },
+    {
+      "path": "experiments/m193c-output-grid/area-four-run.py",
+      "bytes": 27409,
+      "sha256": "2fda937bbf9e37f16bd3bc2fa8de5d5348d0d253432e22fa9366dbf9f798a7d6"
+    },
+    {
+      "path": "experiments/m193c-output-grid/independent-area-four-source-review.md",
+      "bytes": 7274,
+      "sha256": "05835a4be6dfb0a97f7752171d6a06b35cc3651fd989b9b6c16404220a7600bd"
+    },
+    {
+      "path": "experiments/m193c-output-grid/independent-refusal-trace-1-read.md",
+      "bytes": 10259,
+      "sha256": "5d04b806e899ee37c0c7cb47e60b5d2c3bd57cbf5e6182d84176efc584fb0560"
+    },
+    {
+      "path": "experiments/m193c-output-grid/refusal-trace-1/result.json",
+      "bytes": 55306,
+      "sha256": "cca664d2941581463966707aec16236998bd670058deaa7f6d4ebd1d11d3ba9d"
+    },
+    {
+      "path": "experiments/m193c-output-grid/refusal-trace-plan-1.json",
+      "bytes": 38628,
+      "sha256": "327ffd9e27270542e8f7c93ee37827a4beb5eb9291394924f66590dcf3baaeef"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/archive-area-four-plan-1.py",
+      "bytes": 1056,
+      "sha256": "a47af7ff546cadadbbb4e4ea705bec5a5026671ba64f229fbc94951808bd4912"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/area-four-plan-1-review.md",
+      "bytes": 2301,
+      "sha256": "f2ae85f8f03657cfa3fe72eb2e8454c28c6ec8ac689c29b28dd01bdf2ee280e9"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/area-four-preparation-1-console.txt",
+      "bytes": 467,
+      "sha256": "4ad248451995847e5854a88b0f4ccc90e433e0461d18e95251466f2492619331"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/area-four-preparation-1-exit.txt",
+      "bytes": 3,
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/area-four-preparation-1-outer.json",
+      "bytes": 1470,
+      "sha256": "f93dd707049fbca19bce18c6aa557301f297bbd0a99df00a37291f5645a883c4"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/area-four-prior-work-1.json",
+      "bytes": 103,
+      "sha256": "8dc9aa6eb2f2f7c8cd6670ddb18ea0aa462c22c0185f53e3baeb5749fa596f93"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/independent-area-four-1-audit.py",
+      "bytes": 47147,
+      "sha256": "7826aa80ded536c1383d04232f99fd14c97f67667105bf6f0b142e180e0793ae"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/independent-area-four-plan-preparation-read.md",
+      "bytes": 4431,
+      "sha256": "bf854b4f8af26addbc15befab0955c896d36450ffa812ddbbf52a187a78df135"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/independent-refusal-trace-1-audit.json",
+      "bytes": 118456,
+      "sha256": "eed8b4949d7f1ec4def3defccb7cad24f8ef971e34e027b5247b618273c15428"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/independent-refusal-trace-1-audit.py",
+      "bytes": 43271,
+      "sha256": "18093725797dea574ada23053fb3cebaff22734811d48ff41276a1908f6389ac"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/prepare-area-four-plan-1.py",
+      "bytes": 4847,
+      "sha256": "667ace89ceaa460795133e8b731f96ba134bbcd66f89f89e26a1deaf047964f6"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/refusal-trace-1-console.txt",
+      "bytes": 397,
+      "sha256": "570f7669d507ba85f8110061b6d5db6dda37891ab68d5e6199c0e875e9b2e86b"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/refusal-trace-1-exit.txt",
+      "bytes": 3,
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/refusal-trace-1-outer.json",
+      "bytes": 1051,
+      "sha256": "5335077f1f96a283d9caa9024cf13b4d537b615e8be13418e71ed702f4317a59"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/registration-2025-2026-followup.md",
+      "bytes": 4252,
+      "sha256": "37e1a401e357dc1d744f5c5782e25d3b3b0d012b7c2b2d6027702a7f76b66ec8"
+    }
+  ],
+  "total_bytes": 424850,
+  "future_audit_reserve_bytes": 200704,
+  "allowance_bytes": 1048576
+}

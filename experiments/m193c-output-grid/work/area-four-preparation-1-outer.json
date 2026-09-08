@@ -1,0 +1,31 @@
+{
+  "scope": "Actual metadata-only fixed AREA4 precise preparation",
+  "command": [
+    "C:/Users/chris/AppData/Local/Programs/Python/Python312/python.exe",
+    "-B",
+    "experiments\\m193c-output-grid\\work\\prepare-area-four-plan-1.py",
+    "--audit-sha256",
+    "eed8b4949d7f1ec4def3defccb7cad24f8ef971e34e027b5247b618273c15428",
+    "--source",
+    "experiments/m193c-output-grid/area-four-run.py",
+    "2fda937bbf9e37f16bd3bc2fa8de5d5348d0d253432e22fa9366dbf9f798a7d6",
+    "--source",
+    "experiments/m193c-output-grid/area-four-prototype.py",
+    "136e35bc25f05cc94ecde67a179a755cbe6cf168596ecae97c97b486d4351308",
+    "--source",
+    "experiments/m193c-output-grid/area-four-preregister.md",
+    "2e908273a5c7b21c25aed0568b5c87901ac95997f223714fb055e09753e23282",
+    "--source",
+    "experiments/m193c-output-grid/independent-area-four-source-review.md",
+    "05835a4be6dfb0a97f7752171d6a06b35cc3651fd989b9b6c16404220a7600bd",
+    "--source",
+    "experiments/m193c-output-grid/work/independent-area-four-plan-preparation-read.md",
+    "bf854b4f8af26addbc15befab0955c896d36450ffa812ddbbf52a187a78df135",
+    "--source",
+    "experiments/m193c-output-grid/work/independent-refusal-trace-1-audit.py",
+    "18093725797dea574ada23053fb3cebaff22734811d48ff41276a1908f6389ac"
+  ],
+  "exit_code": 0,
+  "elapsed_wall_seconds": 0.10900000000037835,
+  "source_sha256": "667ace89ceaa460795133e8b731f96ba134bbcd66f89f89e26a1deaf047964f6"
+}
