@@ -880,7 +880,7 @@ its own reviewed controller, observer checks and complete23-pair outcome.
 
 ## First real LightGlue attempt: resource refusal
 
-**MEASURED operational outcome; saved-prefix audit pending:** the reviewed
+**MEASURED operational outcome; retained metadata independently VERIFIED:** the reviewed
 controller from `f01eb85c5a28af047904c1341c3032dc4d8c3d3d` ran once under
 release `6e0c0b0d79b4365e2c457f34696ca9b20d71caa1`. Its
 [actual outer receipt](../../experiments/m193c-output-grid/work/sift-lightglue-real-1-outer.json)
@@ -894,7 +894,8 @@ learned matching arm.
 
 Hidden-inclusive enumeration finds63 files and750,878 physical bytes. Retained
 records include the seven linked publisher groups, ten codec groups and the
-model-loading witness; independent validation of this prefix remains pending.
+model-loading witness. The separate prefix audit now verifies these retained
+records, with the limits below.
 The source places model-loading immediately before runtime acquisition, which
 precedes input normalization and inference. The saved artifacts do not identify
 the exact first exception or provide a measured phase profile. Both CPU
@@ -907,18 +908,48 @@ classification even when an override exists. This is redundant work, but its
 contribution to the observed refusal is unmeasured. A separate terminal defect
 can hide the cause: the parent adds terminal child CPU before saving the Job
 receipt, so an aggregate limit failure can block that save and later detailed
-refusal publication. A bounded callback comparison and an explicit combined
-parent/child overrun control are the next operational checks.
+refusal publication. A separate callback comparison now passes all13 fixed
+cases on the exact retained bookkeeping path; terminal transport remains to
+be repaired and commissioned.
 
 The prospective general auditor from `62dc2a1cef725776e96dd0cf1fe104dc04626e74`
 remains unchanged and **unexecuted**. Source applicability review found that it
 requires a parent request reference absent from the emergency default, although
 the worker and actual request file retain their association. It also incorrectly
 expects an old runner-added loader field in the new loader-return witness.
-A separate narrow prefix audit must preserve those differences, not rewrite
-the failed subject into a completed one. The previously admitted private
-geometry result remains valid; all real geometry and consumer admission remain
-unmeasured.
+The separate [prefix auditor](../../experiments/m193c-output-grid/work/independent-sift-lightglue-real-prefix-audit.py)
+from `0c168ec060ad2ff622b25804a7ecf47ca98ddca4` ran once and passed; its
+[actual output](../../experiments/m193c-output-grid/work/independent-sift-lightglue-real-prefix-audit.json)
+and outer/progress records are archived at `30570399362a364ccbd70319ed4d16ccde071853`.
+Independent review verifies all63 retained files, seven publisher groups, ten
+cached-prediction codec groups and13 loader-return compatibility fields. The
+parent's null request is preserved; association uses the separately pinned
+actual worker request. Loader metadata is a retained witness, not verification
+of current model parameters or runtime. Scientific counters remain absent,
+all23 real observations remain unvisited, and both CPU completeness flags stay
+false. The previously admitted private geometry result remains valid.
+
+**MEASURED bookkeeping comparison only:** the independently reviewed callback
+probe from `a56273c9e8c6e16bf9d909263901e6b2860e98a6` ran once and passed all13
+cases; its [actual result](../../experiments/m193c-output-grid/work/accounting-callback-comparison-1/result.json)
+is archived at `a67ac8387f6578bedc05b729dba675fd00622824`. On the named successful
+single-block hash callback, totals computations fall9 to1 and path classifications
+585 to33, while both versions still scan once. All13 complete intrinsic runtime
+hash witnesses agree, including cap refusals and the combined parent/child case. These operation
+counts do not establish a speedup or explain the original failure. The injected
+parent6 plus child95 CPU case refuses101 under the100-second cap in both
+versions; it does not test durable terminal transport.
+
+The prefix audit's actual0.4128223-second outer fits its sampled wall plus the
+explicit publication tail. Its accepted conservative carry is1170.209303 CPU
+seconds,1162.3484670000043 wall seconds,4,058,327,085 file bytes and67,066,151
+metadata bytes. This charges the failed subject's full102 CPU and8MiB policy
+reservations and the callback probe's full10 CPU/20 wall reservation; it does
+not invent measured historical CPU. A new100-CPU attempt cannot fit the old
+1200-CPU envelope. The operational replacement must retain that spending,
+state an explicit finite extension and commission live combined accounting plus
+durable final Job evidence before another fixed23-pair attempt. Real geometry
+and consumer admission remain unmeasured.
 
 ## Reproduction and preserved attempts
 
@@ -960,9 +991,10 @@ Build 2 result SHA256:
 
 ## Next decisions
 
-The saved-value private prerequisite is independently admitted. Audit the
-retained first real-attempt prefix, then commission the narrow operational
-repair before releasing another fixed23-pair experiment. Preserve the consumed
+The saved-value private prerequisite and retained first real-attempt metadata
+prefix are independently admitted within their respective scopes. Commission
+the remaining live-accounting and terminal-transport repair before releasing
+another fixed23-pair experiment. Preserve the consumed
 budget and give any further experiment an explicit reviewed resource envelope.
 Both completed fixed representations retain zero real fits. Preserve all23 pairs, native limits and
 physical-truth controls; no learned confidence or registrar split can substitute
