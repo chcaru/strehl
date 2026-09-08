@@ -1,0 +1,21 @@
+{
+  "evidence": {
+    "arm": {
+      "bytes": 154411,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\precise-upscale-1\\worker\\explicit-false-arm.json",
+      "sha256": "c58531196a76d3bc2a12d783c9745c29d15781758019e2bfe4e0e62473c14147"
+    },
+    "cached_control": {
+      "bytes": 171509,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\factor-eight-1\\worker\\control-native-rotation-positive.json",
+      "sha256": "087e9ae3d844ed7e397417b6101b642b84610fd6005d689d7ca063ac6981fe00"
+    },
+    "cached_features": {
+      "bytes": 193074,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\factor-eight-1\\worker\\rotation-feature-record.json",
+      "sha256": "93803e508f1be6116b9647a98451c798ada20a5d75f56b8e3110812843deea56"
+    }
+  },
+  "id": "explicit-false-reproduction",
+  "passed": false
+}

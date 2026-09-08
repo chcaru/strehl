@@ -1,0 +1,31 @@
+{
+  "inputs": {
+    "cached_control": {
+      "bytes": 171509,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\factor-eight-1\\worker\\control-native-rotation-positive.json",
+      "sha256": "087e9ae3d844ed7e397417b6101b642b84610fd6005d689d7ca063ac6981fe00"
+    },
+    "cached_features": {
+      "bytes": 193074,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\factor-eight-1\\worker\\rotation-feature-record.json",
+      "sha256": "93803e508f1be6116b9647a98451c798ada20a5d75f56b8e3110812843deea56"
+    },
+    "fixture": {
+      "bytes": 663776,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sensor-white-coverage-1\\worker\\fixture-1.tiff",
+      "sha256": "325704a7ecd23d4428b3d0417f9a76142b67ba6651caf4c5ef98a1fcc1b6c94e"
+    }
+  },
+  "plan": {
+    "bytes": 35176,
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\precise-upscale-plan-1.json",
+    "sha256": "128919ba8369df7c0756e7ee6a4fbfb5ff0282850858088ef3eafd5f7ea79ec9"
+  },
+  "prior_work": {
+    "cpu_seconds": 480.765625,
+    "file_bytes": 3952852624,
+    "metadata_bytes": 27651978,
+    "wall_seconds": 556.5922624000004
+  },
+  "schema": "m193c-precise-upscale-request-v1"
+}

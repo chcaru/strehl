@@ -1,0 +1,22 @@
+{
+  "scope": "Actual private precise-upscale false true restored-false; no real images or product admission",
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-B",
+    "-X",
+    "faulthandler",
+    "-X",
+    "pycache_prefix=C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\precise-upscale-1\\parent-cache",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\precise-upscale-run.py",
+    "--plan",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\precise-upscale-plan-1.json",
+    "--sha256",
+    "128919ba8369df7c0756e7ee6a4fbfb5ff0282850858088ef3eafd5f7ea79ec9",
+    "--output",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\precise-upscale-1"
+  ],
+  "plan_sha256": "128919ba8369df7c0756e7ee6a4fbfb5ff0282850858088ef3eafd5f7ea79ec9",
+  "exit_code": 1,
+  "elapsed_wall_seconds": 3.5949191,
+  "admissible_parent_exit": false
+}
