@@ -1,0 +1,253 @@
+{
+  "area8_precise_baseline": {
+    "bytes": 20446,
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\real-precise-1\\worker\\pair-3-7.json",
+    "sha256": "0bff7bf6983602752cf0a2c975653d588b4bf600e07adfcb0f4a3d39f17d5d1a"
+  },
+  "outcome": {
+    "error": {
+      "code": "UNMEASURED_INPUT_REGISTRATION_INADEQUATE",
+      "message": "UNMEASURED_INPUT_REGISTRATION_INADEQUATE: too few total mutual landmarks",
+      "traceback": "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-run.py\", line 161, in observe_pair\n    transform,metrics,guard=v1.register_to_reference(ref,src)\n                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M193-cover-overlap\\reference.py\", line 542, in register_to_reference\n    require(\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M193-cover-overlap\\reference.py\", line 46, in require\n    raise ContractError(code, message)\nm193b_frozen_reference.ContractError: UNMEASURED_INPUT_REGISTRATION_INADEQUATE: too few total mutual landmarks\n",
+      "type": "ContractError"
+    },
+    "guard": null,
+    "heldout_bbox_q8": null,
+    "landmarks": [
+      {
+        "digest": "287d54a0511f07ee8b2708e668202003ffb00fd7671989b9eb987685b0f71c92",
+        "inlier": null,
+        "reference_q8": [
+          341284,
+          834228
+        ],
+        "source_q8": [
+          957996,
+          1137384
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "401415e317134fd983d0f9076cecf470933eae0953ec048613e4c9e0354dfc5d",
+        "inlier": null,
+        "reference_q8": [
+          241172,
+          1168160
+        ],
+        "source_q8": [
+          1532556,
+          1080268
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "6e5d2ac548268f6fc905b3b38e5696f27d4f43ec4f9cd180debcddf7c2949ab8",
+        "inlier": null,
+        "reference_q8": [
+          1332212,
+          815556
+        ],
+        "source_q8": [
+          1354940,
+          1063760
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "79d0fb0ae4d7cb05e67de5de6c8288750ad82b1ce60da9b7d99e93115e386d52",
+        "inlier": null,
+        "reference_q8": [
+          1252612,
+          887388
+        ],
+        "source_q8": [
+          1237340,
+          875228
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "7f3c365a18217ced4f77329f9e4f2c1c9d08c5eff5fb741f50e40fa65ecf73d9",
+        "inlier": null,
+        "reference_q8": [
+          796772,
+          577624
+        ],
+        "source_q8": [
+          802868,
+          575224
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "85f743611d22d76c29d6dbb7fab036d3c548d9850d279c3607eae4714336b1c8",
+        "inlier": null,
+        "reference_q8": [
+          1401636,
+          725092
+        ],
+        "source_q8": [
+          1382424,
+          717804
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "93b90a9fb55d6b77bcf9cc5b0b54a1c8054b17985ed0901cbcc4b3c734aeef6f",
+        "inlier": null,
+        "reference_q8": [
+          1360304,
+          937472
+        ],
+        "source_q8": [
+          1345276,
+          919488
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "a75431ca66686f1cb8a8847d0c80968b0e64b410c551f1c7b7ccecf5fc1f8d71",
+        "inlier": null,
+        "reference_q8": [
+          1160288,
+          430688
+        ],
+        "source_q8": [
+          316924,
+          842912
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "ac2a85740e93647634772d304b14bd36c6ccdb1b753d6c0fced16a602158df41",
+        "inlier": null,
+        "reference_q8": [
+          369828,
+          833832
+        ],
+        "source_q8": [
+          377912,
+          862008
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "b888edce661359c8ec7f79830cea62d4586a09c5f9c88c57b93afe390d3d4734",
+        "inlier": null,
+        "reference_q8": [
+          139980,
+          736272
+        ],
+        "source_q8": [
+          147404,
+          707400
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "b88abedb24173843ba5f2d46e563a0fb9d5062ad49638fcb9612079308b6156d",
+        "inlier": null,
+        "reference_q8": [
+          1035708,
+          1097480
+        ],
+        "source_q8": [
+          1027416,
+          1076772
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "c101035db8bd5b3557d1262931a94e2a2c3924728f82227ffa45ad2c8b3af596",
+        "inlier": null,
+        "reference_q8": [
+          188236,
+          1138792
+        ],
+        "source_q8": [
+          1659768,
+          1078552
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "dc0eb82c31f1297e17143470f3bbd325c3cbd0fab5fc6c0e186884ba0ea82465",
+        "inlier": null,
+        "reference_q8": [
+          732836,
+          649172
+        ],
+        "source_q8": [
+          738328,
+          649204
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "df1520d8acaa97ac42a2510ab5ac170b53a6a2160fcf85748050e5ee13bf4736",
+        "inlier": null,
+        "reference_q8": [
+          1002632,
+          959752
+        ],
+        "source_q8": [
+          1006416,
+          941000
+        ],
+        "split": "holdout"
+      }
+    ],
+    "metrics": null,
+    "qualification": {
+      "coordinate_gauge": "native pixel centres; q_native=4*q_coarse+384",
+      "coordinate_lattice_step_q8": 4,
+      "guard_status": "UNQUALIFIED_FOR_COARSE_LATTICE",
+      "inherited_quantization_guard_q8": 1,
+      "scope": "Diagnostic direct fit only; no support, overlap, placement or quality admission"
+    },
+    "site_evidence": {
+      "descriptor_match_count": 14,
+      "exact_joint_groups": 14,
+      "repeated_joint_groups": [],
+      "scope": "descriptive exact coordinate groups; no independence or coverage acceptance claim",
+      "sides": {
+        "reference_q8": {
+          "bbox_q8": [
+            139980,
+            430688,
+            1401636,
+            1168160
+          ],
+          "calibration_unique": 7,
+          "exact_locations_shared_between_splits": [],
+          "holdout_unique": 7,
+          "unique_total": 14
+        },
+        "source_q8": {
+          "bbox_q8": [
+            147404,
+            575224,
+            1659768,
+            1137384
+          ],
+          "calibration_unique": 7,
+          "exact_locations_shared_between_splits": [],
+          "holdout_unique": 7,
+          "unique_total": 14
+        }
+      }
+    },
+    "status": "REGISTRATION_REFUSED",
+    "transform": null
+  },
+  "pair": {
+    "id": "pair-3-7",
+    "local_span": 4,
+    "reference": 3,
+    "reference_original": 39,
+    "source": 7,
+    "source_original": 91,
+    "star": false
+  },
+  "schema": "m193c-area-four-diagnostic-pair-v1"
+}

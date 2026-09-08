@@ -20,8 +20,9 @@ Its independent audit confirms the finite result. The fixed real AREA8/precise
 follow-up now completes all23 pairs, but all23 still refuse: more tentative
 correspondences do not yet supply accepted geometry. Its complete audit passes.
 The saved-coordinate trace now also completes and passes its independent audit:
-21 pairs stop before refinement; two reach the later held-out gates. The next
-fixed experiment tests AREA4 with precise upscale at unchanged native limits.
+21 pairs stop before refinement; two reach the later held-out gates. The fixed
+AREA4/precise follow-up now also completes with independent verification and
+still returns zero real fits. A bounded learned-matching branch is next.
 HardFloor remains the default; no quality promotion follows
 from this work. The [charter](../../experiments/m193c-output-grid/charter.md)
 names the actual sampling-coordinate consumer and the fixed historical inputs.
@@ -647,6 +648,63 @@ failures remain part of the fixed population. See the
 [primary alternatives memo](../../experiments/m193c-output-grid/work/registration-primary-alternatives.md)
 for conditional learned-matcher alternatives and their actual input/licence limits.
 
+## Fixed AREA4 result: no diagnostic real maps
+
+**MEASURED, independently verified:** release `fb955db0` passes all14 controls,
+returns all nine feature records and visits every one of the23 fixed real pairs.
+All23 refuse at the unchanged native gates. The preregistered development outcome
+is `ZERO_RETURNED_EDGES_AT_FIXED_AREA4`; reject this fixed arm for obtaining
+diagnostic real maps on this population. The
+[independent report](../../experiments/m193c-output-grid/independent-area-four-1-read.md)
+contains the full paired table and the
+[held audit](../../experiments/m193c-output-grid/work/independent-area-four-1-audit.json)
+checks the complete result, using a source committed before execution.
+
+Every pair has fewer tentative matches than its actual AREA8/precise counterpart:
+14–102 versus29–252. All nine feature counts nevertheless equal or exceed their
+AREA8 counts. Counts are representation-dependent observations, not quality.
+There are16 calibration-consensus refusals,3 too-few-match refusals
+(local0-5,3-7,4-8),3 held-out-consensus refusals (1-2,5-6,7-8), and1 held-out RMS
+refusal (2-3). The last error records1.238896564 native pixels versus the unchanged
+1.0 bar, compared with AREA8's recorded1.035343942. No rejected AREA4 fit map is
+retained, so these messages are saved registrar observations, not an independent
+refit or evidence about an unvisited stage. No extra trace or scale sweep follows.
+
+The exact-site re-choice finds14–84 joint sites and18/23 pairs with a joint site
+crossing the split. Radius-one-native grouping adds no real merges. All returned
+edges are absent: nine singleton components, zero cycle rank, separate anchor
+original52 and matching reference original65. Neither graph nor site counts
+establish independent physical support. The4-Q8 lattice/1-Q8 guard is unqualified.
+
+Private literal truth remains useful and insufficient for real transfer. AREA4
+has256/256 private matches within2 native pixels and all-row truth RMS0.066750029;
+AREA8 has255/256 and0.201947836 on a different selected correspondence population
+from the same native fixture. AREA4 whole-source corner errors are0.010343–0.024370
+native pixels. The omitted-centre fit returns a wrong map with approximately3
+native pixels of corner error despite low fitted residuals; the+2-pixel map
+mutation also fails the oracle. Restored outcomes and saved off/count/placebo
+signatures agree. Restored feature equality is a retained hash witness: its full
+second feature record is not saved. All11 scoped true factory calls are restored.
+
+Parent/worker exit0 with clean finalization and terminal Job accounting. The audit
+runs once with no repair, checks382 metadata hashes, and independently inventories
+53 files/3,305,129 bytes including hidden files. Final carry is639.9375 CPU seconds,
+757.91908599999914 conservative outer-wall seconds,3,969,447,612 file bytes and
+44,246,966 metadata bytes. These are budget receipts, not performance results.
+The audit source/result/report total154,919 bytes stays within its196KiB reserve.
+No RAW conversion, output image, real placement or consumer admission is produced.
+
+**ARGUED next:** investigate SIFT-input LightGlue on the completed AREA8/precise
+representation, preserving detection coordinates while changing the matching
+pipeline. First capture the missing descriptors, scales and orientations through
+a separately reviewed export that reproduces current feature hashes. Pin the
+permissive source subset, checkpoint and actual runtime before inference. RootSIFT,
+additional attributes and pair-conditioned matching make this a pipeline change,
+not attention alone. Learned confidence is not the old ratio test or physical
+truth; the registrar split cannot be called independent of a model that conditions
+on all features. Keep all23 pairs, native fit limits, literal geometry/destructive
+controls and the zero-return falsifier. No model has yet been downloaded or run.
+
 ## Reproduction and preserved attempts
 
 Each release contains the complete actual argument array, input references and
@@ -678,6 +736,7 @@ these attempts when reproducing them.
 | Canonical private precise-upscale 1 | `77082d3a` | [canonical plan1](../../experiments/m193c-output-grid/precise-upscale-canonical-plan-1.json) | [private controls and option comparison completed](../../experiments/m193c-output-grid/precise-upscale-canonical-1/result.json) |
 | Real AREA8/precise 1 | `5a3739f7` | [real precise plan1](../../experiments/m193c-output-grid/real-precise-plan-1.json) | [all23 observed; all23 refused](../../experiments/m193c-output-grid/real-precise-1/result.json) |
 | Saved refusal trace1 | `f43b966e` | [trace plan1](../../experiments/m193c-output-grid/refusal-trace-plan-1.json) | [77 replays complete; exact refusals preserved](../../experiments/m193c-output-grid/refusal-trace-1/result.json) |
+| Fixed AREA4/precise1 | `fb955db0` | [AREA4 plan1](../../experiments/m193c-output-grid/area-four-plan-1.json) | [all23 observed; all23 refused](../../experiments/m193c-output-grid/area-four-1/result.json) |
 
 Final control result SHA256:
 `39a6f6e93e3b8df83834ab4046c7f30d6f42612df0cb0ec57ea158815baa7cfd`.
@@ -686,10 +745,10 @@ Build 2 result SHA256:
 
 ## Next decisions
 
-Implement and independently review the single fixed AREA4/precise experiment
-selected from the completed saved-coordinate trace. Preserve all23 pairs, the
-original native limits and all earlier refusals. A returned diagnostic fit is
-not physical truth; the support guard and real placement still require their own
-qualification before any graph solve or cover-mode render.
+Prepare the bounded SIFT-input LightGlue branch on AREA8/precise, starting with
+feature-export and actual dependency/runtime authority. Both completed fixed
+representations retain zero real fits. Preserve all23 pairs, native limits and
+physical-truth controls; no learned confidence or registrar split can substitute
+for independent placement and consumer qualification.
 The [next-decision memo](../../experiments/m193c-output-grid/next-program-decision.md)
 keeps real cover-mode renders conditional on usable input geometry.

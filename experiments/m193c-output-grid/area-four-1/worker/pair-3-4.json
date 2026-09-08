@@ -1,0 +1,1226 @@
+{
+  "area8_precise_baseline": {
+    "bytes": 140096,
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\real-precise-1\\worker\\pair-3-4.json",
+    "sha256": "eb46c35f017ade5986a30cf55e056175dca7380ca1f3115b4cbd0e7c160864c3"
+  },
+  "outcome": {
+    "error": {
+      "code": "UNMEASURED_INPUT_REGISTRATION_INADEQUATE",
+      "message": "UNMEASURED_INPUT_REGISTRATION_INADEQUATE: no majority landmark consensus",
+      "traceback": "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-run.py\", line 161, in observe_pair\n    transform,metrics,guard=v1.register_to_reference(ref,src)\n                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M193-cover-overlap\\reference.py\", line 549, in register_to_reference\n    transform, calibration_inliers = choose_similarity(calibration)\n                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M193-cover-overlap\\reference.py\", line 503, in choose_similarity\n    require(\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M193-cover-overlap\\reference.py\", line 46, in require\n    raise ContractError(code, message)\nm193b_frozen_reference.ContractError: UNMEASURED_INPUT_REGISTRATION_INADEQUATE: no majority landmark consensus\n",
+      "type": "ContractError"
+    },
+    "guard": null,
+    "heldout_bbox_q8": null,
+    "landmarks": [
+      {
+        "digest": "00729db8b3299ff0deeacf913bd18ee96a8497246b6c8d24cb38fc21421694d3",
+        "inlier": null,
+        "reference_q8": [
+          1252612,
+          887388
+        ],
+        "source_q8": [
+          1250052,
+          884544
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "0338458b6cf907a206e755d83e3a8dd16c1d5fb97eb52f230b918ec68e9983cb",
+        "inlier": null,
+        "reference_q8": [
+          1051304,
+          688216
+        ],
+        "source_q8": [
+          1049792,
+          687588
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "049eca800623b9e14696dc17a898f10f5c5790bed00219105afe7010c641e4f9",
+        "inlier": null,
+        "reference_q8": [
+          1162556,
+          1068740
+        ],
+        "source_q8": [
+          1159624,
+          1063664
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "06f405f620d72c44525c59f1b03e2d714792830ea437ee5656ba0a275afc16ea",
+        "inlier": null,
+        "reference_q8": [
+          775836,
+          101100
+        ],
+        "source_q8": [
+          1096072,
+          210228
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "0a4ecd9618348bcc209f8ec76e081d1107ed84a7df293406060c47ba6b55a96c",
+        "inlier": null,
+        "reference_q8": [
+          1262924,
+          825912
+        ],
+        "source_q8": [
+          1258080,
+          824376
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "0e25a110fdd49ea87e657ec1c8657c4eb646dee868a60eda6263014353b67b15",
+        "inlier": null,
+        "reference_q8": [
+          1056100,
+          693796
+        ],
+        "source_q8": [
+          1056780,
+          691284
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "0f0c88948cac832dc0420ab76ead3cd915fbbf8991fe2961ccaebb1ba3d9ecf6",
+        "inlier": null,
+        "reference_q8": [
+          1278384,
+          540080
+        ],
+        "source_q8": [
+          590284,
+          1162312
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "0f312d8b38c05e4c595e918e2e49d5d99640811aac8b36afb4542eec6442500e",
+        "inlier": null,
+        "reference_q8": [
+          732836,
+          649172
+        ],
+        "source_q8": [
+          734764,
+          649116
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "1042248291c3b53d13327bb3cd47196c0beaed5f1aa8307879dc64d9c1d3feb9",
+        "inlier": null,
+        "reference_q8": [
+          1313812,
+          683304
+        ],
+        "source_q8": [
+          1309272,
+          682232
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "1231c15b36bfbe3717a13599ed2944b1ed73dd8dfd169071f8d0a4b6b4732926",
+        "inlier": null,
+        "reference_q8": [
+          1337380,
+          655096
+        ],
+        "source_q8": [
+          1333080,
+          654252
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "12f54b61acc99b4ce51d2abac71269ab1f1bb14fdf37b241d67c86810c1db14b",
+        "inlier": null,
+        "reference_q8": [
+          1341496,
+          622224
+        ],
+        "source_q8": [
+          1336956,
+          621852
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "183a5f50d175005d97ecb3d691e957cadeb5927a71e5b8dc8dd5901800ba1a6e",
+        "inlier": null,
+        "reference_q8": [
+          950220,
+          198780
+        ],
+        "source_q8": [
+          400028,
+          1084512
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "18d979a367e07752244e7631f22d82cba19f51c860379c57be7771e280ace471",
+        "inlier": null,
+        "reference_q8": [
+          1310816,
+          962488
+        ],
+        "source_q8": [
+          1304568,
+          958504
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "198565c5e3012865f779f202dfd762732f42737ca8693187fd0f91335ee1dc1c",
+        "inlier": null,
+        "reference_q8": [
+          1065260,
+          1104288
+        ],
+        "source_q8": [
+          1067856,
+          1101108
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "1cff482ff7212741f09d77bf6b5705ec214afed94ae37fcc54dc9c73d124f833",
+        "inlier": null,
+        "reference_q8": [
+          365552,
+          1151892
+        ],
+        "source_q8": [
+          370820,
+          1145912
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "214b71b651f1f29c342826ef69b3eeeaa8de2ebc75f5c3b5a521d68a30656306",
+        "inlier": null,
+        "reference_q8": [
+          896512,
+          618476
+        ],
+        "source_q8": [
+          896848,
+          617356
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "259642d4102c8f5ca999628497079aeeb86467252712f692a2804352d0909930",
+        "inlier": null,
+        "reference_q8": [
+          800920,
+          459256
+        ],
+        "source_q8": [
+          802176,
+          459988
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "2858444efff0894e74089cd3b1f0205a1b6e557e5c8beb59334ce564ccaaa77e",
+        "inlier": null,
+        "reference_q8": [
+          1389012,
+          645868
+        ],
+        "source_q8": [
+          1384212,
+          645388
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "28ca7ad88bceed8bea7c78a4ac70ab98fe9597a2fc4efd8186cd07a6bd4cc9b3",
+        "inlier": null,
+        "reference_q8": [
+          796772,
+          577624
+        ],
+        "source_q8": [
+          797716,
+          577496
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "28fd16b62408085729ff2cd74a66f7a73eee311da859640cab0db66eb483f104",
+        "inlier": null,
+        "reference_q8": [
+          1205064,
+          311260
+        ],
+        "source_q8": [
+          1190880,
+          312064
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "2eb121946735f939502fff4325ff3d8f2e99df03750a85b7a4f251dce6fbf19b",
+        "inlier": null,
+        "reference_q8": [
+          534452,
+          1181376
+        ],
+        "source_q8": [
+          537960,
+          1174992
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "2f7f49dafc852272ed0debf11074a70399180821f4904e6febf75d34c27370a4",
+        "inlier": null,
+        "reference_q8": [
+          1348584,
+          587168
+        ],
+        "source_q8": [
+          1343748,
+          588092
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "36e129c196dcad37f71815ac2269df11edeaecd3ddc5c5fad1c57f72e1cec2f3",
+        "inlier": null,
+        "reference_q8": [
+          1033496,
+          690804
+        ],
+        "source_q8": [
+          1032356,
+          689756
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "37d1dd9497e74a70b41e925ee6fca87c17a6cae0ead53e8caef4a284edc61edc",
+        "inlier": null,
+        "reference_q8": [
+          1365244,
+          662040
+        ],
+        "source_q8": [
+          1360416,
+          661312
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "3b2569c7a41b61cc9a29ff70ef64a0b72339e5262b9815a2bfc8d6f03bd89b8d",
+        "inlier": null,
+        "reference_q8": [
+          326244,
+          480916
+        ],
+        "source_q8": [
+          342340,
+          482972
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "3e1b6e7092a53a24715ed736326d4802cffa7ff433271f8793297c66153d7a4b",
+        "inlier": null,
+        "reference_q8": [
+          1384076,
+          812368
+        ],
+        "source_q8": [
+          1381820,
+          810616
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "408ffde12dc7c82910a65877f61bc7b840b2909e7bfd3c0b6e3364a233cd40d9",
+        "inlier": null,
+        "reference_q8": [
+          81140,
+          1142308
+        ],
+        "source_q8": [
+          477612,
+          1104864
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "469177f45f3fce582842e2a77ce904ffd46d0d07bbd64a37867e3666c1d9909b",
+        "inlier": null,
+        "reference_q8": [
+          1169396,
+          501012
+        ],
+        "source_q8": [
+          557536,
+          1138000
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "4733cd794b9d46c33a433031b022aeeef1ea71a3f9e6f6a55606b275ea7a0db4",
+        "inlier": null,
+        "reference_q8": [
+          1049832,
+          694748
+        ],
+        "source_q8": [
+          1050968,
+          692524
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "490e29cd1565398e88d96309ece064d74abb4421e93fbe5feac956f2c35c4527",
+        "inlier": null,
+        "reference_q8": [
+          480228,
+          875156
+        ],
+        "source_q8": [
+          484912,
+          872924
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "4cd695e19db12b3312cb55138e8802822b695cbba36d217ece49be017246c114",
+        "inlier": null,
+        "reference_q8": [
+          1191220,
+          620832
+        ],
+        "source_q8": [
+          1057324,
+          686836
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "4ebd8ebff91f3fd1bdfc64046578d30e6ea7d3f98d971777dc719c1342924d30",
+        "inlier": null,
+        "reference_q8": [
+          1315572,
+          649004
+        ],
+        "source_q8": [
+          1311196,
+          647848
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "505b2c007f0b326ceee59898eded5bfe3de6be2953b02db19c7952419361c19f",
+        "inlier": null,
+        "reference_q8": [
+          1222092,
+          939140
+        ],
+        "source_q8": [
+          410064,
+          1139156
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "50b4507c122b0b51c1a8f58015032108df6ae320f66bfe2e8871a76152d5da24",
+        "inlier": null,
+        "reference_q8": [
+          1225840,
+          1061772
+        ],
+        "source_q8": [
+          1225308,
+          1058684
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "51c86f2a4c8717b70cc00550a2377688ab62cb1d883bd1b1f7f139d867aa0cf1",
+        "inlier": null,
+        "reference_q8": [
+          844384,
+          377784
+        ],
+        "source_q8": [
+          844784,
+          378568
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "52d8c9983388b5dcbb7ef24abac588edf36a0510a5cecac182d67a0833ce4d16",
+        "inlier": null,
+        "reference_q8": [
+          428036,
+          1153784
+        ],
+        "source_q8": [
+          432988,
+          1147592
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "5b7476dcace2e8718c47956d401c38f32b263e45db71c68bab161b52ecf3aa38",
+        "inlier": null,
+        "reference_q8": [
+          895588,
+          585544
+        ],
+        "source_q8": [
+          895340,
+          585288
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "66e8db56bb60088381afb20cf16ac3f7e4e3d96c38e95cf88b06169cbbd7b049",
+        "inlier": null,
+        "reference_q8": [
+          1177352,
+          773732
+        ],
+        "source_q8": [
+          1173788,
+          772248
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "673dea309157307cbc19f715bdfe08e0873651dcbc50a86edd6e885b544f03cb",
+        "inlier": null,
+        "reference_q8": [
+          357800,
+          513172
+        ],
+        "source_q8": [
+          362348,
+          512484
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "70c6ddb089cfaabcb336643c752a533de0627ef4bf6205e442dbed7547e68515",
+        "inlier": null,
+        "reference_q8": [
+          1351916,
+          811780
+        ],
+        "source_q8": [
+          1347440,
+          809208
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "749cb590bbf8b07eff831dcc52b9d9a57fa0371d500ef21d90e26d21828aaf82",
+        "inlier": null,
+        "reference_q8": [
+          1055140,
+          681648
+        ],
+        "source_q8": [
+          1054304,
+          682480
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "750e80e3c48b4c6da7c816fe4abfcf1edabd1c20e0c041a7b8efafdd5f4066f2",
+        "inlier": null,
+        "reference_q8": [
+          152232,
+          1116108
+        ],
+        "source_q8": [
+          159964,
+          1109956
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "79ee7b1e7f38f574bc69b91a68eeb49dd03a93009158dffe642d712d46724ad0",
+        "inlier": null,
+        "reference_q8": [
+          1051304,
+          688216
+        ],
+        "source_q8": [
+          1049792,
+          687588
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "7b250ebcfbaf80bd947d34c97a32335dbfe048c7a5f817bb0fab18fbae636df8",
+        "inlier": null,
+        "reference_q8": [
+          1199496,
+          375576
+        ],
+        "source_q8": [
+          863300,
+          1184956
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "7fc5af297c53ae4a461f472da32aaeb1bac7d8b1d64820bdbca0523e5dccad2f",
+        "inlier": null,
+        "reference_q8": [
+          1115456,
+          1090048
+        ],
+        "source_q8": [
+          1112988,
+          1085104
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "848afc2a32ee355b2bc3254d2ba93b204b4b70bec5f3363956f4dfbbec7bf0e2",
+        "inlier": null,
+        "reference_q8": [
+          324288,
+          610556
+        ],
+        "source_q8": [
+          329784,
+          609808
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "8803bf0b903a5a85f8f9e5108aa884257fbdb55bdf0fdef4ebaf5562a7afaff8",
+        "inlier": null,
+        "reference_q8": [
+          849036,
+          582116
+        ],
+        "source_q8": [
+          849312,
+          582060
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "8925644ca1574997fb60793603283f58afe926780b637195cd75965bf197b49b",
+        "inlier": null,
+        "reference_q8": [
+          391580,
+          1164860
+        ],
+        "source_q8": [
+          397072,
+          1157548
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "8bcb75f47ad204c20d7374e74247bce84cc016dec1e5de765ed51f95c96351f0",
+        "inlier": null,
+        "reference_q8": [
+          1002632,
+          959752
+        ],
+        "source_q8": [
+          1001952,
+          955640
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "909001e8804352290bf956fb223825900f4a4dc2c72b0e86929a8311a3675396",
+        "inlier": null,
+        "reference_q8": [
+          1188948,
+          385688
+        ],
+        "source_q8": [
+          1185796,
+          387944
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "9da5924c8021e4f7d016a2b97ac3a16f0d63176bfab0791027558c3eaea4a8e5",
+        "inlier": null,
+        "reference_q8": [
+          1360304,
+          937472
+        ],
+        "source_q8": [
+          1352564,
+          931780
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "a24d1bb3ab05bb1861da41f6b2b35958329f77883e572c0021c5e3b5f05b6a09",
+        "inlier": null,
+        "reference_q8": [
+          119132,
+          1115920
+        ],
+        "source_q8": [
+          127184,
+          1110496
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "ae1f2d62beef70c8fe8c6a3165c605d275ecae06e506c3310b6fc0f1e548a803",
+        "inlier": null,
+        "reference_q8": [
+          1341496,
+          622224
+        ],
+        "source_q8": [
+          1336956,
+          621852
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "b41d7b958d3f55946281506943b6a9f5238b388ea074840076c9c4101fcd296f",
+        "inlier": null,
+        "reference_q8": [
+          1324876,
+          945476
+        ],
+        "source_q8": [
+          1322580,
+          941348
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "b43fd7e54e624189be8c73b66d974f57c610e978ab453e76496cb2aad637dba1",
+        "inlier": null,
+        "reference_q8": [
+          1351916,
+          811780
+        ],
+        "source_q8": [
+          1347440,
+          809208
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "b815d6a215483a9465d6c2a3d4c0270e2e5a998c355eaecb72d02aab8d625cc8",
+        "inlier": null,
+        "reference_q8": [
+          1281904,
+          768388
+        ],
+        "source_q8": [
+          786916,
+          575220
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "be9233739c613195c35fb8bfc073d393915a6fee857ef8f302ff9d9c40179857",
+        "inlier": null,
+        "reference_q8": [
+          1345992,
+          831520
+        ],
+        "source_q8": [
+          1343412,
+          828524
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "bef6eae38d231d170bf4c346a62f3a065a7de92d258ea781957f4a027929c117",
+        "inlier": null,
+        "reference_q8": [
+          809668,
+          301932
+        ],
+        "source_q8": [
+          811220,
+          304964
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "c6a06258db554a747fca4230e4d9cf01bd71ccd6503364282192e06c83d1eee1",
+        "inlier": null,
+        "reference_q8": [
+          852168,
+          1081968
+        ],
+        "source_q8": [
+          1375676,
+          719964
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "c7213fd38063b0a5de447cf8b699bcd1696fe6f2f79c6ba871c6139aa04b16b7",
+        "inlier": null,
+        "reference_q8": [
+          1155188,
+          1029232
+        ],
+        "source_q8": [
+          1152524,
+          1024436
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "ced6f90cad6ce0783c38d48e843683eebf58a107fbcbe2c5ba99ce1813915c07",
+        "inlier": null,
+        "reference_q8": [
+          173552,
+          1129856
+        ],
+        "source_q8": [
+          676880,
+          1180028
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "d1e58256c162bcaa073c662b1fe4d76970c7ee2ed3e14bd3d9faeca7591ca3be",
+        "inlier": null,
+        "reference_q8": [
+          1239864,
+          786460
+        ],
+        "source_q8": [
+          1236040,
+          783952
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "d56487b22c0b088d87afabf767b7097f2c0c84b8d5a63386ca4dd8e377b4d9bc",
+        "inlier": null,
+        "reference_q8": [
+          1030064,
+          1129172
+        ],
+        "source_q8": [
+          1029448,
+          1124012
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "d6a3add5ed8a16672242f4bdd1629e46e716ca4001567b1f0b9cbbb722e2441f",
+        "inlier": null,
+        "reference_q8": [
+          252512,
+          1106788
+        ],
+        "source_q8": [
+          259336,
+          1101420
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "da8f3dbe78a2074cef953f440ed5197270cd10673fbd8488f57aec1eb2bf6742",
+        "inlier": null,
+        "reference_q8": [
+          1191220,
+          620832
+        ],
+        "source_q8": [
+          1057324,
+          686836
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "dab1da44a2a498f2dce7785804f6d55e46fff289a0103e2aa991ef7e72447178",
+        "inlier": null,
+        "reference_q8": [
+          528012,
+          1188436
+        ],
+        "source_q8": [
+          531824,
+          1181784
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "dd150fb2ca17010c62ac60f3b936798cb6a09cde9940568621d6143cf01e9813",
+        "inlier": null,
+        "reference_q8": [
+          1155188,
+          1029232
+        ],
+        "source_q8": [
+          1152524,
+          1024436
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "e0be58aba822ed2fe47c8abb743a94bb35c8a60d4dca528eaeb8969ea44447be",
+        "inlier": null,
+        "reference_q8": [
+          982228,
+          684372
+        ],
+        "source_q8": [
+          979500,
+          684272
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "e3c47fa6f81b1a3dca5be8dfe3316e223c8487069322bf0d7c5b78db6c47c82b",
+        "inlier": null,
+        "reference_q8": [
+          724076,
+          322360
+        ],
+        "source_q8": [
+          724520,
+          323972
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "e406de64edfc1e3e7e43f4b96e509cd8c440085da1188ad3b26aeecc9a1e0a25",
+        "inlier": null,
+        "reference_q8": [
+          1081748,
+          1131744
+        ],
+        "source_q8": [
+          1078192,
+          1124664
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "e5225cba293d7c7c3f91cbd3de44eed4a8560564eb4c5e2ce20ee1f5a860c09d",
+        "inlier": null,
+        "reference_q8": [
+          272300,
+          1139804
+        ],
+        "source_q8": [
+          278116,
+          1133508
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "e9e6cc926eea30505066f10d6a96c2d3a39d0434622b982304b02e980950f538",
+        "inlier": null,
+        "reference_q8": [
+          245360,
+          1134924
+        ],
+        "source_q8": [
+          251624,
+          1128524
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "eecb531d0d568d84034eaa0ae41533e5aebb890eba00f165d3b13e4c195ca5bd",
+        "inlier": null,
+        "reference_q8": [
+          242128,
+          1127096
+        ],
+        "source_q8": [
+          248528,
+          1121596
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "f1746cb5f2b92bc88c7de47cd4de408e1be0dcd1052e1bc43d5ddb14416899d9",
+        "inlier": null,
+        "reference_q8": [
+          941940,
+          963184
+        ],
+        "source_q8": [
+          942020,
+          959360
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "f232e430ba4a529857dc108a5632eefa526f3652d9cd233bed2c72f3dbcd08eb",
+        "inlier": null,
+        "reference_q8": [
+          409816,
+          1178548
+        ],
+        "source_q8": [
+          720644,
+          1145132
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "f4d896da1c5063e4a108d451fc0b75101d01d6d6026c7073aa31f6e5976172c4",
+        "inlier": null,
+        "reference_q8": [
+          284872,
+          1117196
+        ],
+        "source_q8": [
+          291428,
+          1110960
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "f8d79b7924c013582f4fbc48570cbc215a74d9c5a4e2c66430d230d11e2cd0bd",
+        "inlier": null,
+        "reference_q8": [
+          252512,
+          1106788
+        ],
+        "source_q8": [
+          259336,
+          1101420
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "fb0e3462d872c1d38eeec72af23ccc78efb9f5e808e2ad2c9eeb3eb6c4c40f9a",
+        "inlier": null,
+        "reference_q8": [
+          997844,
+          1132072
+        ],
+        "source_q8": [
+          995416,
+          1128552
+        ],
+        "split": "holdout"
+      }
+    ],
+    "metrics": null,
+    "qualification": {
+      "coordinate_gauge": "native pixel centres; q_native=4*q_coarse+384",
+      "coordinate_lattice_step_q8": 4,
+      "guard_status": "UNQUALIFIED_FOR_COARSE_LATTICE",
+      "inherited_quantization_guard_q8": 1,
+      "scope": "Diagnostic direct fit only; no support, overlap, placement or quality admission"
+    },
+    "site_evidence": {
+      "descriptor_match_count": 78,
+      "exact_joint_groups": 72,
+      "repeated_joint_groups": [
+        {
+          "ordinals": [
+            63,
+            76
+          ],
+          "reference_q8": [
+            252512,
+            1106788
+          ],
+          "source_q8": [
+            259336,
+            1101420
+          ],
+          "split_membership": [
+            "calibration",
+            "holdout"
+          ]
+        },
+        {
+          "ordinals": [
+            1,
+            42
+          ],
+          "reference_q8": [
+            1051304,
+            688216
+          ],
+          "source_q8": [
+            1049792,
+            687588
+          ],
+          "split_membership": [
+            "calibration",
+            "holdout"
+          ]
+        },
+        {
+          "ordinals": [
+            59,
+            66
+          ],
+          "reference_q8": [
+            1155188,
+            1029232
+          ],
+          "source_q8": [
+            1152524,
+            1024436
+          ],
+          "split_membership": [
+            "calibration",
+            "holdout"
+          ]
+        },
+        {
+          "ordinals": [
+            30,
+            64
+          ],
+          "reference_q8": [
+            1191220,
+            620832
+          ],
+          "source_q8": [
+            1057324,
+            686836
+          ],
+          "split_membership": [
+            "calibration"
+          ]
+        },
+        {
+          "ordinals": [
+            10,
+            52
+          ],
+          "reference_q8": [
+            1341496,
+            622224
+          ],
+          "source_q8": [
+            1336956,
+            621852
+          ],
+          "split_membership": [
+            "calibration"
+          ]
+        },
+        {
+          "ordinals": [
+            39,
+            54
+          ],
+          "reference_q8": [
+            1351916,
+            811780
+          ],
+          "source_q8": [
+            1347440,
+            809208
+          ],
+          "split_membership": [
+            "calibration",
+            "holdout"
+          ]
+        }
+      ],
+      "scope": "descriptive exact coordinate groups; no independence or coverage acceptance claim",
+      "sides": {
+        "reference_q8": {
+          "bbox_q8": [
+            81140,
+            101100,
+            1389012,
+            1188436
+          ],
+          "calibration_unique": 37,
+          "exact_locations_shared_between_splits": [
+            [
+              252512,
+              1106788
+            ],
+            [
+              1051304,
+              688216
+            ],
+            [
+              1155188,
+              1029232
+            ],
+            [
+              1351916,
+              811780
+            ]
+          ],
+          "holdout_unique": 39,
+          "unique_total": 72
+        },
+        "source_q8": {
+          "bbox_q8": [
+            127184,
+            210228,
+            1384212,
+            1184956
+          ],
+          "calibration_unique": 37,
+          "exact_locations_shared_between_splits": [
+            [
+              259336,
+              1101420
+            ],
+            [
+              1049792,
+              687588
+            ],
+            [
+              1152524,
+              1024436
+            ],
+            [
+              1347440,
+              809208
+            ]
+          ],
+          "holdout_unique": 39,
+          "unique_total": 72
+        }
+      }
+    },
+    "status": "REGISTRATION_REFUSED",
+    "transform": null
+  },
+  "pair": {
+    "id": "pair-3-4",
+    "local_span": 1,
+    "reference": 3,
+    "reference_original": 39,
+    "source": 4,
+    "source_original": 52,
+    "star": false
+  },
+  "schema": "m193c-area-four-diagnostic-pair-v1"
+}

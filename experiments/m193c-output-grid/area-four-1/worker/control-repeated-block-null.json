@@ -1,0 +1,53 @@
+{
+  "evidence": {
+    "actual_sha256": {
+      "coarse_reference": "65c310260882bf9885bc5dcfcc996b7ee55e22233a001654909a4ff8dbae3e1a",
+      "coarse_source": "d5f30b6434f2e9f9765102e434b5f8397876fb7ad2dce06535c1dca545ad3760",
+      "expected_reference": "65c310260882bf9885bc5dcfcc996b7ee55e22233a001654909a4ff8dbae3e1a",
+      "expected_rotation": "d5f30b6434f2e9f9765102e434b5f8397876fb7ad2dce06535c1dca545ad3760"
+    },
+    "expected_coarse_repeat_factor": 2,
+    "fixture": {
+      "bytes": 663776,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sensor-white-coverage-1\\worker\\fixture-1.tiff",
+      "sha256": "325704a7ecd23d4428b3d0417f9a76142b67ba6651caf4c5ef98a1fcc1b6c94e"
+    },
+    "native_repeat_factor": 8,
+    "reference": {
+      "centre_q8": 384,
+      "coarse_rgb_sha256_u16_le": "65c310260882bf9885bc5dcfcc996b7ee55e22233a001654909a4ff8dbae3e1a",
+      "coarse_shape": [
+        576,
+        768,
+        3
+      ],
+      "factor": 4,
+      "key_coordinate_gauge": "coarse Q8; unchanged detector keys",
+      "method": "m193c-area4-native-centres-v1",
+      "native_shape": [
+        2304,
+        3072,
+        3
+      ]
+    },
+    "source": {
+      "centre_q8": 384,
+      "coarse_rgb_sha256_u16_le": "d5f30b6434f2e9f9765102e434b5f8397876fb7ad2dce06535c1dca545ad3760",
+      "coarse_shape": [
+        768,
+        576,
+        3
+      ],
+      "factor": 4,
+      "key_coordinate_gauge": "coarse Q8; unchanged detector keys",
+      "method": "m193c-area4-native-centres-v1",
+      "native_shape": [
+        3072,
+        2304,
+        3
+      ]
+    }
+  },
+  "id": "repeated-block-null",
+  "passed": true
+}

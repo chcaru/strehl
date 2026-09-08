@@ -1,0 +1,37 @@
+# Independent SIFT-input LightGlue arm choice
+
+2026-09-08. SOURCE RESEARCH ONLY. No model downloads, package/source imports, image decoding, feature extraction, inference, matching or numerical controls. This recommends a bounded experiment; it is not approval of an unwritten runner or evidence of performance. AREA4's complete 0/23 result was reported by root; its independent saved-outcome audit was still pending during this review.
+
+ARGUED: proceed toward one complete AREA8+precise SIFT-input LightGlue experiment, after concrete artifact/runtime preparation. This is a narrower next intervention than replacing sparse detection or another image-scale variant. The existing residuals do not identify bad associations as the cause. A valid-controls 0/23 result would reject useful registrar coverage for this fixed configuration/population, not all learned matching. Do not widen native gates, add AREA2, or launch another 77-replay trace.
+
+## Input and intervention boundaries
+
+UPSTREAM SOURCE FINDINGS: the SIFT matcher configuration uses 128-D descriptors plus scale and orientation. Its forward accepts explicit image_size; absent dimensions trigger feature-extent normalization. Matching produces indices and scores, not refined points. The constructor downloads weights automatically and loads them non-strictly. The GPU flash path casts Q/K/V to half even with mixed precision disabled. [Official matcher](https://github.com/cvg/LightGlue/blob/main/lightglue/lightglue.py).
+
+The official SIFT adapter uses OpenCV keypoint.size directly and angles in radians. RootSIFT uses L1 normalization, an epsilon clamp and square root, then L2 normalization. That adapter also changes detector defaults, resizes and filters duplicate sites, so invoking its extractor would change the experiment. [Official SIFT adapter](https://github.com/cvg/LightGlue/blob/main/lightglue/sift.py).
+
+VERIFIED LOCAL SOURCE: reference.py retains detector keys containing quantized size/angle and descriptor bytes in memory; existing saved feature JSONs retain only key/descriptor digests, not those payloads. The retained descriptor matrix is rounded/clipped SIFT, not RootSIFT. New export must reproduce cached counts, coarse/native Q8 arrays, key hashes and descriptor hashes before learned use. Export enough exact data to reconstruct every actual model input, with array shape/dtype/order and byte hashes. Do not infer descriptors from their digests or silently substitute the upstream extractor.
+
+RECOMMENDATION: preserve the two existing private and nine real AREA8+precise feature populations. Feed coarse coordinates with explicit coarse [width,height], coarse detector size and radians; send unchanged lifted native Q8 points to the frozen fit. State whether ancillary size/orientation are exact detector fields or values reconstructed from quantized keys. If capturing raw fields, retain their association through original deterministic sorting/capping and prove the old extraction output is unchanged. RootSIFT normalization must operate on a separate copy so it cannot overwrite the original descriptor/digest path.
+
+The intervention is the matching pipeline: descriptor normalization, added scale/orientation and pair-conditioned learned assignment. It is not attention alone. Confidence is not the old ratio statistic, and match count is not physical truth. Because pair attention has already used both complete feature sets, digest holdout is a check on subsequent fitting; it is not independent model validation or unseen geometry.
+
+## Minimal controls and real observations
+
+Require the exact existing private rotation to pass both unchanged registrar bars and the independently literal native corner oracle before real learned matching. Report literal-truth errors/counts for all returned correspondences, as well as fitted inliers: a coherent wrong map can look excellent by its own residual. The actual positive map plus two native pixels must fail the oracle.
+
+Use one predeclared source-association permutation preserving endpoint marginals, verify that the fixture actually loses literal correspondence, and require restoration of the complete signature. If the permutation is applied after inference, call it an adapter/registrar test; it does not demonstrate the learned model knows when to abstain. Do not tune the permutation or confidence cutoff until failure occurs. Preserve observer off/count/placebo equality and hashes on the actual diagnostic path. Cache reuse alone cannot establish inference non-perturbation if the observer wraps inference.
+
+Retain each actual model output's uncapped index pairs and scores, then the exact fixed hash-sorted/capped registrar rows. Keep the original digest recipe, split, 256 cap and native 2/1-pixel gates; no confidence-top-K substitute or weighting inside fitting. Assert valid in-range, one-to-one indices and that admitted coordinates are the original feature points. Retain model inputs/outputs and any rejected observations before downstream assertions.
+
+After valid controls and authenticated feature reproduction, visit all 23 directions exactly once for learned pair inference. Scientific refusals continue; operational/model-loading failures retain the prefix and are not 0/23 geometry evidence. Count and preregister private inference separately from private fitting; saved outputs can feed limited observer/refusal controls without re-extraction. The maximum must name both operations. No real selection based on confidence or an early good edge is admissible.
+
+Returned edges remain diagnostic, with the AREA8 8-Q8 lattice versus inherited 1-Q8 guard explicitly unqualified. Require later independent real geometry and merge-gauge per-frame validation; learned confidence, a connected graph and the private rotation do not provide it.
+
+## Licence and runtime release
+
+The official README explicitly licenses LightGlue code and weights under Apache-2.0 while excluding restrictive SuperPoint code/weights. Use only the SIFT-weight matcher path; do not import a convenience package that pulls in excluded extractors. Preserve applicable licence/attribution notices with staged source. [README](https://github.com/cvg/LightGlue#license), [licence](https://github.com/cvg/LightGlue/blob/main/LICENSE).
+
+RECOMMENDATION: stage only pinned necessary code and the exact official SIFT checkpoint, with origin, SHA and extent. Prevent constructor network/cache fallback; inspect and assert complete parameter loading after the documented key renaming, rather than accepting silent missing tensors. Freeze one CPU float32 eager, flash-disabled runtime unless a GPU-specific precision/runtime is deliberately preregistered. Pin configuration, threads, evaluation/inference mode, package/binary identity and device; installed distribution metadata alone is not successful import or a timing claim.
+
+Acquisition/model storage needs its own fixed allowance and actual accounting. It cannot disappear into the inherited 8 MiB run-output cap. Keep tensor evidence compact and avoid repeatedly serializing descriptors or weights into JSON. Preserve global prior costs; charge preparation/import/control work and failures. If artifacts or bounded runtime cannot be qualified, retain a preparation refusal instead of interpreting an incomplete scientific arm. That conditional gate should lead to a complete controlled experiment when satisfied, not an indefinite information-only freeze.

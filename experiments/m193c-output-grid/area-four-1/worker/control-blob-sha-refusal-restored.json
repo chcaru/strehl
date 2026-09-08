@@ -1,0 +1,9 @@
+{
+  "evidence": {
+    "exception": "authenticated same TIFF blob",
+    "refused_decoder_calls": 0,
+    "restored_decoder_calls": 1
+  },
+  "id": "blob-sha-refusal-restored",
+  "passed": true
+}

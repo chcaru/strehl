@@ -1,0 +1,22 @@
+{
+  "scope": "Actual fixed9 inputs23 direct-pair AREA4 precise diagnostic; no support or product admission",
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-B",
+    "-X",
+    "faulthandler",
+    "-X",
+    "pycache_prefix=C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\area-four-1\\parent-cache",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\area-four-run.py",
+    "--plan",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\area-four-plan-1.json",
+    "--sha256",
+    "7c83db049cc869b2428b7e0aa321ece23b91c0b05c6143c3414591479afa41d6",
+    "--output",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\area-four-1"
+  ],
+  "plan_sha256": "7c83db049cc869b2428b7e0aa321ece23b91c0b05c6143c3414591479afa41d6",
+  "exit_code": 0,
+  "elapsed_wall_seconds": 30.34399999999914,
+  "admissible_parent_exit": true
+}
