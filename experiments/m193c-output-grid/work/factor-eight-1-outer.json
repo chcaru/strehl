@@ -1,0 +1,22 @@
+{
+  "scope": "Actual fixed factor-eight controls and conditional23 direct pairs; no placement or quality admission",
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-B",
+    "-X",
+    "faulthandler",
+    "-X",
+    "pycache_prefix=C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\factor-eight-1\\parent-cache",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\factor-eight-run.py",
+    "--plan",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\factor-eight-plan-1.json",
+    "--sha256",
+    "3d8b2c4e2e7e21d3bdc59994b2cffef3cf2687e6cf914b4a6992f52357d2e994",
+    "--output",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\factor-eight-1"
+  ],
+  "plan_sha256": "3d8b2c4e2e7e21d3bdc59994b2cffef3cf2687e6cf914b4a6992f52357d2e994",
+  "exit_code": 1,
+  "elapsed_wall_seconds": 9.1747428,
+  "admissible_parent_exit": false
+}

@@ -9,8 +9,10 @@ feature extractions returned, but all23 pairs refused. Independent actual audits
 verify both outcomes; there are zero accepted direct edges.
 Private attempt2 and the preceding domain/white investigations are independently
 verified within their reported scopes. Earlier decoder-domain, white-level and
-source-artifact refusals remain preserved. The next experiment tests one fixed
-factor-eight representation with the original native-pixel fitting limits.
+source-artifact refusals remain preserved. The factor-eight experiment then
+failed its known-rotation positive before any real input: low fitted residuals
+coexisted with a four-native-pixel truth error. Independent inspection confirms
+that failure. Next is a private detector-localization option comparison.
 HardFloor remains the default; no quality promotion follows
 from this work. The [charter](../../experiments/m193c-output-grid/charter.md)
 names the actual sampling-coordinate consumer and the fixed historical inputs.
@@ -373,6 +375,53 @@ support margins are unqualified. The [decision memo](../../experiments/m193c-out
 keeps spatially balanced selection and local translation probes conditional.
 This changes no product default or quality acceptance bar.
 
+## Factor-eight known-rotation refusal
+
+**MEASURED, independently inspected:** the run frozen at `781cd9fc` passed
+its first nine control groups, then failed `native-rotation-positive`. The
+actual matcher returned256 landmarks with128 calibration and128 holdout inliers
+and held-out RMS0.187776034 native pixels. Its map nevertheless missed the
+literal rotated-image corners by3.975505395 to4.049269136 native pixels against
+the unchanged1-pixel oracle. A low correspondence residual is self-consistency,
+not accuracy against a known image mapping.
+
+The independent reader additionally scored all256 saved correspondences against
+the literal rotation, without fitting or selecting inliers: **0 of256** lie
+within2 native pixels of truth, and their RMS is4.003144935 native pixels.
+The median reference-minus-truth offset is exactly(4,0) native pixels. Exact
+and shifted known-coordinate controls exercise this reader first. Actual coarse
+and lifted arrays satisfy8q+896, so a missing recorded centre lift is not the
+explanation of this control failure. A physical or universal detector-bias law
+has not been established by these saved coordinates.
+
+The worker and parent both exit1 and remain `REFUSED`. All four later control
+groups are unvisited. There are zero real decode attempts, no real feature/pair
+records and all23 scheduled real pairs are unvisited. This experiment supplies
+no comparison of native versus coarse real-image registration. Both finalization
+lists are empty; terminal Job accounting is complete and no termination was
+attempted. The [independent outcome audit](../../experiments/m193c-output-grid/work/independent-factor-eight-1-audit.json)
+confirms the failed subject, rather than converting audit success into a pass.
+
+Actual parent37810B SHA256
+`36c8efcacaad8f946c01557788286dca3a7b3b791ed895491a5e2d2f4093e6ce`;
+worker248234B SHA256
+`f86eb887baa0a45eef65a9e9949be2f40c612369b8490b28aca0ac965bd3fa14`.
+The17 new files total728511 bytes; no TIFF or RAW was written. Cumulative
+console accounting is460.390625 CPU seconds,3951804048 file bytes and26603402
+metadata bytes. Actual outer9.1747428 seconds yields conservative next wall
+526.2322624 seconds. Prior charges remain intact; these are accounting values,
+not a performance comparison.
+
+**ARGUED follow-up:** before seeing this result, the
+[localization hypothesis](../../experiments/m193c-output-grid/work/factor-eight-localization-hypothesis.md)
+recorded OpenCV's documented precise-upscale option and an illustrative4-pixel
+rotation error. The resemblance does not establish its cause. Test explicit
+false, true and restored false on the same private image, requiring false to
+reproduce the complete cached feature/outcome records before true. Keep every
+other detector argument, the native-coordinate oracle and the output limits.
+A successful toggle would establish this finite pipeline effect; changed
+candidate/descriptor sets prevent claiming an isolated universal offset law.
+
 ## Reproduction and preserved attempts
 
 Each release contains the complete actual argument array, input references and
@@ -399,6 +448,7 @@ these attempts when reproducing them.
 | Artifact-contract native derivatives 1 | `79d75c40` | [artifact-parent release](../../experiments/m193c-output-grid/native-sensor-white-artifact-derivative-release-1.json) | [nine native readers completed](../../experiments/m193c-output-grid/native-sensor-white-artifact-derivative-1/result.json) |
 | Nine-input registration coverage 1 | `1f3c6bd7` | [coverage release 2](../../experiments/m193c-output-grid/sensor-white-coverage-release-2.json) | [first nonreference registration refused](../../experiments/m193c-output-grid/sensor-white-coverage-1/result.json) |
 | Fixed direct-pair support 1 | `e4d4b894` | [direct-pair plan 1](../../experiments/m193c-output-grid/direct-pair-plan-1.json) | [all23 observed; all23 refused](../../experiments/m193c-output-grid/direct-pair-1/result.json) |
+| Factor-eight representation 1 | `781cd9fc` | [factor-eight plan 1](../../experiments/m193c-output-grid/factor-eight-plan-1.json) | [known-rotation positive refused; zero real inputs](../../experiments/m193c-output-grid/factor-eight-1/result.json) |
 
 Final control result SHA256:
 `39a6f6e93e3b8df83834ab4046c7f30d6f42612df0cb0ec57ea158815baa7cfd`.
@@ -407,10 +457,10 @@ Build 2 result SHA256:
 
 ## Next decisions
 
-Commission the fixed factor-eight representation with powered coordinate
-controls, then observe the same23 pairs only if the positive passes. Keep native
-accuracy limits and preserve the all-refused native baseline. Distinct-site
-counts are descriptive; accepted residuals do not establish whole-frame
-placement accuracy. No graph solve or real cover-mode render is yet admitted.
+Run the bounded private precise-upscale false/true/restored-false comparison.
+Preserve the factor-eight failed positive and all unvisited real inputs. Keep
+the known native-coordinate oracle and require actual default reproduction,
+restoration and a powered map destroyer. A real coarse comparison remains
+conditional; no graph solve or cover-mode render is yet admitted.
 The [next-decision memo](../../experiments/m193c-output-grid/next-program-decision.md)
 keeps real cover-mode renders conditional on usable input geometry.
