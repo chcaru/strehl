@@ -1,0 +1,46 @@
+{
+  "already_charged_helpers": "No modules imported. source_structure/proof text derived from immutable startup-attribution-audit-2.py; all original source/prerequisite files read in place and not copied.",
+  "audit_allowance": {
+    "cpu_seconds": 30,
+    "file_bytes": 16777216,
+    "wall_seconds": 60
+  },
+  "choice": "Current outputs remain in place. Terminal slot includes a full bounded128KiB child error; controls slot includes all five16KiB startup copies if a comparison fails before compaction. Three row slots include all eight phases and compact interval/checkpoint/TIFF summaries, never full observation arrays.",
+  "family_bytes": 2920448,
+  "family_kib": {
+    "exit": 4,
+    "final": 1024,
+    "final_note": 16,
+    "outer": 16,
+    "progress": 256,
+    "protocol": 32,
+    "simultaneous_stage": 256,
+    "sizing_ledger": 16,
+    "source": 128,
+    "source_review": 16,
+    "stderr": 64,
+    "stdout": 1024
+  },
+  "final_cap_bytes": 1048576,
+  "final_proxy_bytes": 694547,
+  "final_section_slots_kib": {
+    "authored_verifier": 4,
+    "authority_header": 4,
+    "current_controls_including_error_copies": 128,
+    "exceptions_and_errors": 16,
+    "external": 24,
+    "framing": 4,
+    "preservation": 4,
+    "publication": 8,
+    "source_structure": 4,
+    "terminal": 256,
+    "three_rows": 96,
+    "timing": 2,
+    "unlinked_prefix_receipts": 128
+  },
+  "progress_cap_bytes": 262144,
+  "progress_proxy_bytes": 41874,
+  "remaining_bytes": 13856768,
+  "schema": "m192e-independent-startup-production-audit-capacity-v1",
+  "scope": "SOURCE-ONLY metadata allocation construction; no checker, subject, TIFF, controls or source functions executed. Section slots are conservative prospective allocations; runtime whole final/progress guards remain authoritative."
+}
