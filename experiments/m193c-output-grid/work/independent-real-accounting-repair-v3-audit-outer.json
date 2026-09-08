@@ -1,0 +1,27 @@
+{
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-B",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\work\\independent-real-accounting-repair-v3-audit.py",
+    "--source-sha256",
+    "eef326720fbf87888c688932f86568081f9b1c416c0be04acb04cc01dd033bdc",
+    "--ledger-sha256",
+    "22575dfb9d01e0677643695180187e5674ae843bf8879904f0dc91e6e262dade",
+    "--plan-sha256",
+    "362ed32da1459334d1066ddde9826afc75195050aa7eb5d8263db46f7362d478",
+    "--result-sha256",
+    "97f60a760aea2614d1b69342ea4fa51295f2c8ad2a2af25d6ef6b93bc64dfa21",
+    "--outer-sha256",
+    "12ff1fdf0a148187d2d91df7133e3aba5fa6339d5b84ab475c4189859f96e1fa",
+    "--console-sha256",
+    "3d56bb3de44d6db1f4bd63ecc00f9e9c7f3da6dfb886eae1d5a9e6a35e739451",
+    "--exit-sha256",
+    "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "--worker-result-sha256",
+    "46f5509663fe0d43f085409cc9c1947f2cf28c482b254753f88e24d99cb2fd6b"
+  ],
+  "exit_code": 0,
+  "elapsed_wall_seconds": 10.156000000002678,
+  "stdout_bytes": 95373,
+  "stderr_bytes": 0
+}

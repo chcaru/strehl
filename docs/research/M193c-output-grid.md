@@ -993,6 +993,69 @@ bytes and 68,401,447 metadata bytes. A subsequent attempt needs a fresh,
 explicit finite allowance and preserves these charges. No real geometry,
 support, placement or SOTA claim follows from this operational result.
 
+## Completed fixed LightGlue diagnostic: no real geometry
+
+**MEASURED, independently verified:** the v2 controller from
+`ac7fea333a386a1516ea4e9b988878f47b45f794`, released at
+`20d05a06cf3d27d1bbc342dad1ee102a8d3bb830`, completed its single actual
+[invocation](../../experiments/m193c-output-grid/work/real-accounting-repair-2-outer.json)
+with exit0 in47.73400000000038 wall seconds. All23 real pairs were visited,
+with26 model forwards (three private),28 registrar calls (five private), nine
+normalizations and zero new image reads/extractions. Operational receipts and
+source/evidence controls completed; scientific settings stayed fixed.
+
+The [final independent audit](../../experiments/m193c-output-grid/work/independent-real-accounting-repair-v3-audit.json)
+verifies the full scientific population, current runtime/Job/terminal evidence,
+source bindings and resource limits, with no operational exceptions. Every real
+pair refused:22 calibration-majority failures and one held-out-majority failure
+at local3-to4/original39-to52. The verified graph has zero edges and nine
+singleton components, including isolated anchor local4/original52. This rejects
+the fixed SIFT-input LightGlue arm for obtaining diagnostic maps on these inputs.
+It does not establish absent scene correspondence or identify a physical cause.
+
+| Fixed saved arm | Too few total | Calibration majority | Held-out majority | Held-out RMS | Returned |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Native mutual ratio |15|8|0|0|0|
+| AREA8/precise mutual ratio |0|21|1|1|0|
+| AREA8/precise LightGlue |0|22|1|0|0|
+
+Learned matches range29–344 before the fixed cap and29–256 afterward. More
+candidate associations did not yield an accepted edge. The earlier local2-to3
+near-RMS failure now stops at calibration consensus. These are saved algorithm
+outcomes, not evidence that spatial concentration, localization, defocus or
+similarity-model error is the sole cause. The existing native2-pixel inlier and
+1-pixel selected-held-out RMS gates were not relaxed. Inlier RMS can be fooled
+by coherent wrong associations and optimistic selection; it is not physical
+placement truth. Whole-pair learned association also precedes geometric holdout.
+
+The initial v2 auditor failed after its scientific prefix while saving a2351-byte
+progress summary into a2048-byte slot. Its zero-byte final stdout, stderr and
+partial progress remain at `2d62f7848a036c40946e4c1eff33d7c66b70dab7`; it is not
+called a completed audit. The minimal v3 reporting adapter, independently reviewed
+and frozen at `116bb174ee5528338c1b516dc94ed234c0194969`, preserves all scientific
+comparisons and changes only two progress copies and failed-audit cost carry.
+Its single actual invocation exits0 in10.156000000002678 wall seconds, within
+its sampled10.074034799996298 plus0.5 publication allowance. See the separate
+[actual-outcome read](../../experiments/m193c-output-grid/work/independent-real-accounting-repair-v3-outcome-read.md)
+for exact commands, hashes, choice points and final associations. No subject or
+model replay was performed to repair reporting.
+
+Final conservative carry is1418.443678 CPU seconds,1321.9278447999966 wall
+seconds,4,068,213,529 file bytes and76,952,595 metadata bytes. It retains the full
+failed-audit25CPU/40wall reservation. Current subject CPU accounting is complete;
+historical gaps remain incomplete. These receipts are not performance benchmarks.
+No support guard, physical placement, overlap, merge-quality or SOTA admission
+follows. The native8-Q8 coordinate lattice still has an unqualified inherited
+1-Q8 support guard.
+
+**ARGUED next:** investigate fixed disjoint local-image displacements on two
+prospectively chosen real pairs, with nonwrapping fractional-shift/blur positives
+and flat/mismatch/periodic negatives. The [next implementation brief](../../experiments/m193c-output-grid/work/local-image-displacement-next.md)
+uses evidence outside detector coordinates. Counts do not justify immediately
+running the proposed4-by4 feature-selection arm; another seed trace could repeat
+the ambiguity already exposed by77 saved AREA8 replays. This is a bounded new
+hypothesis, not a claimed correction or a request to rerun the23-pair arm.
+
 ## Reproduction and preserved attempts
 
 Each release contains the complete actual argument array, input references and
@@ -1025,6 +1088,9 @@ these attempts when reproducing them.
 | Real AREA8/precise 1 | `5a3739f7` | [real precise plan1](../../experiments/m193c-output-grid/real-precise-plan-1.json) | [all23 observed; all23 refused](../../experiments/m193c-output-grid/real-precise-1/result.json) |
 | Saved refusal trace1 | `f43b966e` | [trace plan1](../../experiments/m193c-output-grid/refusal-trace-plan-1.json) | [77 replays complete; exact refusals preserved](../../experiments/m193c-output-grid/refusal-trace-1/result.json) |
 | Fixed AREA4/precise1 | `fb955db0` | [AREA4 plan1](../../experiments/m193c-output-grid/area-four-plan-1.json) | [all23 observed; all23 refused](../../experiments/m193c-output-grid/area-four-1/result.json) |
+| First real LightGlue | `f01eb85c` | [real plan1](../../experiments/m193c-output-grid/sift-lightglue-real-plan-1.json) | [retained resource refusal](../../experiments/m193c-output-grid/sift-lightglue-real-1/result.json) |
+| Accounting repair1 | `c315c127` | [repair plan1](../../experiments/m193c-output-grid/real-accounting-repair-plan-1.json) | [empty-source prelaunch refusal](../../experiments/m193c-output-grid/real-accounting-repair-1/result.json) |
+| Accounting repair2 | `ac7fea33` | [repair plan2](../../experiments/m193c-output-grid/real-accounting-repair-plan-2.json) | [complete fixed23 diagnostic; zero edges](../../experiments/m193c-output-grid/real-accounting-repair-2/result.json) |
 
 Final control result SHA256:
 `39a6f6e93e3b8df83834ab4046c7f30d6f42612df0cb0ec57ea158815baa7cfd`.
@@ -1033,13 +1099,10 @@ Build 2 result SHA256:
 
 ## Next decisions
 
-The saved-value private prerequisite and retained first real-attempt metadata
-prefix are independently admitted within their respective scopes. Commission
-the remaining live-accounting and terminal-transport repair before releasing
-another fixed23-pair experiment. Preserve the consumed
-budget and give any further experiment an explicit reviewed resource envelope.
-Both completed fixed representations retain zero real fits. Preserve all23 pairs, native limits and
-physical-truth controls; no learned confidence or registrar split can substitute
-for independent placement and consumer qualification.
-The [next-decision memo](../../experiments/m193c-output-grid/next-program-decision.md)
+The fixed23-pair LightGlue diagnostic and its independent saved-output audit
+are complete. Move to the bounded local-image displacement branch described
+above; retain every previous refusal and all costs. Further execution needs a
+fresh finite plan and independent review, not a rerun of completed controls.
+Native limits and physical-truth qualifications remain. The
+[next-decision memo](../../experiments/m193c-output-grid/next-program-decision.md)
 keeps real cover-mode renders conditional on usable input geometry.
