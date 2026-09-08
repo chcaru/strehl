@@ -1,0 +1,36 @@
+{
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-I",
+    "-S",
+    "-B",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194h-pedestal-causality\\prepare-stage.py",
+    "components"
+  ],
+  "source": {
+    "path": "experiments/m194h-pedestal-causality/prepare-stage.py",
+    "bytes": 12105,
+    "sha256": "d1892a2d5eb15492c3ff24d23a8d197bb44b9b759e5fb8f79cfd585e29bbcfd2"
+  },
+  "exit_code": 0,
+  "elapsed_wall_seconds": 2.4060000000026776,
+  "timeout_terminated": false,
+  "stdout": {
+    "path": "experiments/m194h-pedestal-causality/work/components-preparation-external-4-stdout.bin",
+    "bytes": 918,
+    "sha256": "dae7d5fb30f4915361c2d76224cc34c9343f258dcc00a554ad2613180acd5736"
+  },
+  "stderr": {
+    "path": "experiments/m194h-pedestal-causality/work/components-preparation-external-4-stderr.bin",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "exit": {
+    "path": "experiments/m194h-pedestal-causality/work/components-preparation-external-4-exit.txt",
+    "bytes": 2,
+    "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+  },
+  "stdout_bytes": 918,
+  "stderr_bytes": 0,
+  "scope": "Complete directly launched process interval and actual exit; raw byte streams. No complete CPU inference from elapsed wall. Source is fixed; this process does not launch children."
+}

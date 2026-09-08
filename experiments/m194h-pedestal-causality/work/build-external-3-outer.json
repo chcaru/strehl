@@ -1,0 +1,40 @@
+{
+  "schema": "m194h-stage-external-v1",
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-I",
+    "-S",
+    "-B",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194h-pedestal-causality\\build-and-run.py",
+    "--release",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194h-pedestal-causality\\work\\build-release-3.json",
+    "--release-sha256",
+    "bb63d063fce74149ae816f7ce2014f9127af709b4e38746806d3b88b1af2a815"
+  ],
+  "source": {
+    "path": "experiments/m194h-pedestal-causality/build-and-run.py",
+    "bytes": 40626,
+    "sha256": "b505a2fff0024691d98088c599f7f554c1543268de09c836a6bc1fe6c17b7410"
+  },
+  "exit_code": 0,
+  "timeout_terminated": false,
+  "elapsed_wall_seconds": 56.125,
+  "stdout": {
+    "path": "experiments/m194h-pedestal-causality/work/build-external-3-stdout.bin",
+    "bytes": 484,
+    "sha256": "293ff017389f62b1c92fc666a1a94e1ebda9695c14531ba1f644c529f965fe72"
+  },
+  "stderr": {
+    "path": "experiments/m194h-pedestal-causality/work/build-external-3-stderr.bin",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "exit": {
+    "path": "experiments/m194h-pedestal-causality/work/build-external-3-exit.txt",
+    "bytes": 2,
+    "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+  },
+  "stdout_bytes": 484,
+  "stderr_bytes": 0,
+  "scope": "Complete directly launched controller interval and actual exit when observed; raw streams. Inner controller owns child Jobs. No complete parent CPU inference from wall. Failure=None"
+}
