@@ -1,0 +1,88 @@
+{
+  "failed_audit_charge": {
+    "cpu_seconds": 25,
+    "wall_seconds": 40
+  },
+  "final_section_caps_bytes": {
+    "accounting": 6144,
+    "authority": 18432,
+    "normalization": 8192,
+    "operational": 5120,
+    "other": 4096,
+    "publication": 5120,
+    "runtime": 4096,
+    "science": 69632,
+    "terminal": 10240
+  },
+  "held_failed_attempt": {
+    "independent-real-accounting-repair-v2-audit-ledger.json": {
+      "bytes": 3797,
+      "sha256": "e7b3447cb4ad70f1ef42d393b738e26f7a2cdc2fbfa66cb567cf95fbcadba555"
+    },
+    "independent-real-accounting-repair-v2-audit-outer.json": {
+      "bytes": 1155,
+      "sha256": "140cf71a59cbcb5b29d4578f38ad1f417b2d6cafa556db7fd6dcf74352e4f456"
+    },
+    "independent-real-accounting-repair-v2-audit-progress.json": {
+      "bytes": 18754,
+      "sha256": "3f26ded0ba6cc780e01a48c70df32a93d4659a2dded8caea7ad813aed936b6df"
+    },
+    "independent-real-accounting-repair-v2-audit-stderr.txt": {
+      "bytes": 1569,
+      "sha256": "8044ee4dc477212c60265634e09f33d8dcb9255657b6609b496533e961b58697"
+    },
+    "independent-real-accounting-repair-v2-audit.json": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "independent-real-accounting-repair-v2-audit.py": {
+      "bytes": 81800,
+      "sha256": "a97d00094ec0c1442354e0401f7894e9d6ca52bca7c21324642568a696e52dc0"
+    },
+    "independent-real-accounting-repair-v2-auditor-source-review.md": {
+      "bytes": 6097,
+      "sha256": "0e1eaa7e622e4143199021d7baf9d1cc478adb78b04b4fe205775a6c04db6473"
+    },
+    "independent-real-accounting-repair-v2-outcome-read.md": {
+      "bytes": 8008,
+      "sha256": "b5f764b379d1855da4fd61340a81aa427f0f7cc2824b85e058be0e0542a414cf"
+    }
+  },
+  "limit_bytes": 393216,
+  "maximum_family_bytes": 375132,
+  "metadata_only_derived_actual_shapes": {
+    "final_accounting_proxy": 5740,
+    "final_authority_proxy": 17870,
+    "new_runtime_job_proxy": 2988,
+    "new_worker_phase_proxy": 1663,
+    "original_runtime_job_phase": 4066,
+    "original_worker_science_phase": 2351,
+    "proxy_ref_chars": 167,
+    "proxy_ref_extent_digits": 10,
+    "resource_phase_proxy": 392,
+    "unchanged_final_runtime": 2945,
+    "unchanged_final_terminal": 10181
+  },
+  "new_reservations": {
+    "final": 131072,
+    "ledger": 4096,
+    "outer": 4096,
+    "progress": 32768,
+    "report": 8192,
+    "source": 24576,
+    "source_review": 8192,
+    "staging": 32768,
+    "stderr": 8192
+  },
+  "own_audit_caps_including_tail": {
+    "cpu_seconds": 25,
+    "wall_seconds": 40
+  },
+  "own_publication_allowance": {
+    "cpu_seconds": 0.25,
+    "wall_seconds": 0.5
+  },
+  "phase_shape_policy": "REF_COUNT_HASH_ONLY_FOR_RUNTIME_IN_TWO_FRESH_PHASE_COPIES",
+  "schema": "m193c-real-accounting-repair-v3-audit-family-v1",
+  "scope": "Eight immutable failed-v2 source/evidence/report files plus all new maximum extents fit the existing384KiB family. This is a simultaneous retained/reserved-extent bound: prior v2 atomic stage is absent; its retained progress is counted, and a fresh32KiB v3 stage is reserved separately. The original384KiB preparation charge is not refunded; repeated writes are not newly interpreted as cumulative payload extents. Full failed25CPU/40wall is retained, not measured CPU. Every original check remains; only two fresh phase runtime copies become ref/count/hash summaries and one reverse-checked AST carry initializer adds prior audit cost. Internal v2 source/ledger flags preserve frozen subject-plan binding; final source is separately authenticated v3. Full runtime summaries remain in final. Own25CPU/40wall includes.25/.5 tail. Metadata-only shape constructors execute no helper/metric/model/fit. No subject rerun."
+}
