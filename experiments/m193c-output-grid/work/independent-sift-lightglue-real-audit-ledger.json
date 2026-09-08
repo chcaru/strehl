@@ -1,0 +1,41 @@
+{
+  "full_new_preparation_bound": {
+    "additional_previous_audit_closure_bound_bytes": 131072,
+    "auditor_source_reservation_bytes": 98304,
+    "held_controller_nine_files_bytes": 152265,
+    "new_plan_bytes": 262144,
+    "new_prior_bytes": 4096,
+    "preparation_console_bytes": 16384,
+    "preparation_outer_bytes": 8192,
+    "remaining_audit_family_reservations_bytes": 229376
+  },
+  "full_new_preparation_bound_total_bytes": 901833,
+  "full_new_preparation_limit_bytes": 1048576,
+  "limit_bytes": 393216,
+  "reservations": {
+    "final": 114688,
+    "ledger": 8192,
+    "outer": 8192,
+    "progress": 32768,
+    "report": 8192,
+    "source": 98304,
+    "source_review": 8192,
+    "staging": 32768,
+    "stderr": 16384
+  },
+  "reserved_total_bytes": 327680,
+  "reused_previously_charged_helpers": [
+    {
+      "bytes": 59052,
+      "path": "experiments/m193c-output-grid/work/independent-sift-lightglue-saved-completion-audit.py",
+      "sha256": "7c93287992515235438912569520513eb7d2573742304a253d00104d96e044fa"
+    },
+    {
+      "bytes": 62292,
+      "path": "experiments/m193c-output-grid/work/independent-sift-lightglue-commission-audit.py",
+      "sha256": "ccb78254596b6402139bb4ff4541a5bb6f0597175268a426bef66ba5e4f7c03c"
+    }
+  ],
+  "schema": "m193c-real-audit-family-v1",
+  "scope": "New real audit family only, source96KiB and other224KiB equals320KiB inside384KiB. Source is pinned by the new actual plan; this ledger is in that same pre-outcome source closure. Both32KiB partial and32KiB staging are simultaneously reserved. Previously charged helper sources are separately pinned, never newly imported subject/model/fit code. Whole new preparation is conservatively bounded, including actual prior-audit closure as an extra128KiB and plan256KiB; no family or program limit increases."
+}
