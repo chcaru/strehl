@@ -1,0 +1,14 @@
+{
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-B",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\work\\independent-sift-lightglue-runtime-link-census.py"
+  ],
+  "error": "AssertionError at len(b)<=64*1024 and not OUT.exists()",
+  "exit_code": 1,
+  "result_created": false,
+  "scope": "Preserved observed first metadata census prewrite refusal; no numerical audit/model/fit/runtime-payload read. Tool interval includes source creation and metadata subprocess command; not measured CPU.",
+  "source": "experiments\\m193c-output-grid\\work\\independent-sift-lightglue-runtime-link-census.py",
+  "status": "METADATA_CENSUS_FORMAT_REFUSED_BEFORE_RESULT_WRITE",
+  "tool_command_wall_seconds": 0.6734963
+}

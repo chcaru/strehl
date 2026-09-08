@@ -1,0 +1,115 @@
+{
+  "held_files": [
+    {
+      "bytes": 62292,
+      "path": "experiments/m193c-output-grid/work/independent-sift-lightglue-commission-audit.py",
+      "sha256": "ccb78254596b6402139bb4ff4541a5bb6f0597175268a426bef66ba5e4f7c03c"
+    },
+    {
+      "bytes": 16742,
+      "path": "experiments/m193c-output-grid/work/independent-sift-lightglue-commission-prefix-audit.py",
+      "sha256": "f2665e50742c6aa689dbdc20b0917ed4093368cff130417af6cdf565b0a11845"
+    },
+    {
+      "bytes": 0,
+      "path": "experiments/m193c-output-grid/work/independent-sift-lightglue-commission-prefix-audit.json",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 1215,
+      "path": "experiments/m193c-output-grid/work/independent-sift-lightglue-commission-prefix-audit-stderr.txt",
+      "sha256": "126e47d6299a4bcfc732a0323271bacc3d9cddc45d050dbb7e25cf357b6a0f55"
+    },
+    {
+      "bytes": 987,
+      "path": "experiments/m193c-output-grid/work/independent-sift-lightglue-commission-prefix-audit-outer.json",
+      "sha256": "5e7d5ed4990353a4edc90f2c611c23e63294890136635bc7993781fb30e8c16d"
+    },
+    {
+      "bytes": 3844,
+      "path": "experiments/m193c-output-grid/work/independent-sift-lightglue-request-diagnosis.py",
+      "sha256": "4f0ad636e550b216e9d65caea8f74609e0349f3ab8920740ad2e699988385eb1"
+    },
+    {
+      "bytes": 9137,
+      "path": "experiments/m193c-output-grid/work/independent-sift-lightglue-request-diagnosis.json",
+      "sha256": "e44fd6061c0d800e8d74278b6f3012565ce3d90e8dfc1096521237eeba1e8b6f"
+    },
+    {
+      "bytes": 23690,
+      "path": "experiments/m193c-output-grid/work/independent-sift-lightglue-commission-prefix-v2-audit.py",
+      "sha256": "d9a8d411c1eae75bff5d1b6b1037325a6e81a3e304e0fe2d01429a548b034579"
+    },
+    {
+      "bytes": 0,
+      "path": "experiments/m193c-output-grid/work/independent-sift-lightglue-commission-prefix-v2-audit.json",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 3672,
+      "path": "experiments/m193c-output-grid/work/independent-sift-lightglue-commission-prefix-v2-audit-stderr.txt",
+      "sha256": "7a941c81190ffbeee757bdfdaf1accffad8649c6003a4686a4b669a10728c318"
+    },
+    {
+      "bytes": 979,
+      "path": "experiments/m193c-output-grid/work/independent-sift-lightglue-commission-prefix-v2-audit-outer.json",
+      "sha256": "30e8e092bc2f2c571c9b89f7df25b544abcd04962b63c7576b1fec60a5d9b03e"
+    },
+    {
+      "bytes": 2572,
+      "path": "experiments/m193c-output-grid/work/independent-sift-lightglue-audit-family-ledger.json",
+      "sha256": "fd32e12cfecde6f6d65e5ce6ca7fbb7726848fc9924ebad4ef8803702e881b26"
+    },
+    {
+      "bytes": 3973,
+      "path": "experiments/m193c-output-grid/work/independent-sift-lightglue-prefix-v2-source-review.md",
+      "sha256": "584c01ea57bf425c6186c28bf6711d548231e2490d91024c5fa05e86e4ddaa16"
+    },
+    {
+      "bytes": 4251,
+      "path": "experiments/m193c-output-grid/work/independent-sift-lightglue-runtime-link-census.py",
+      "sha256": "bf7c7b8724001f41a8b78d0e2185a90f5b1c2cae151d33a9b62915992838e494"
+    },
+    {
+      "bytes": 799,
+      "path": "experiments/m193c-output-grid/work/independent-sift-lightglue-runtime-link-census-format-refusal.json",
+      "sha256": "1102efc54937fbcc778497a5dc8d1c5dc877d42f87d4f805157b262d3bf0f0c8"
+    },
+    {
+      "bytes": 4805,
+      "path": "experiments/m193c-output-grid/work/independent-sift-lightglue-runtime-link-census-v2.py",
+      "sha256": "bb26414332dda397891e8415245bbf2d49eada1054e6c8f01a916d27a6256642"
+    },
+    {
+      "bytes": 45589,
+      "path": "experiments/m193c-output-grid/work/independent-sift-lightglue-runtime-link-census-v2.json",
+      "sha256": "43e314c6c3ccd5bffb108a7e62ca41b8a9e6b71423c092fb653010f3ae44b227"
+    },
+    {
+      "bytes": 11774,
+      "path": "experiments/m193c-output-grid/work/independent-sift-lightglue-prefix-v3-runtime.py",
+      "sha256": "510c0d352f9720c4cda3a566e40066a0206412b4654f0bbc11b1ab53900a01ba"
+    },
+    {
+      "bytes": 28748,
+      "path": "experiments/m193c-output-grid/work/independent-sift-lightglue-commission-prefix-v3-audit.py",
+      "sha256": "a903e59f6927f9a671a6745273514c634c8b49682f8eeca761b5c616c3fa59b5"
+    }
+  ],
+  "limit_bytes": 524288,
+  "maximum_total_bytes": 440109,
+  "original_preparation_other_bytes": 214766,
+  "previous_limit_bytes": 262144,
+  "reserved_outputs": {
+    "family_ledger": 8192,
+    "independent_read_report": 8192,
+    "independent_v3_source_review": 8192,
+    "phase_partial": 32768,
+    "phase_staging": 32768,
+    "v3_json": 114688,
+    "v3_outer": 2048,
+    "v3_stderr": 8192
+  },
+  "schema": "m193c-sift-lightglue-audit-family-reservation-v3",
+  "scope": "Complete immutable original auditor and two failed audit attempts; original ledger and v2 review; both metadata census sources, first formatter refusal, complete compressed census; new independent main/runtime sources; bounded future stdout/stderr/outer/partial/staging/read report/source review/this ledger. Partial and staging have fixed separate slots before helper work. Fixed512 KiB family is inside original nonrefundable1 MiB preparation; no new global cap or scientific threshold."
+}
