@@ -1,0 +1,21 @@
+{
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-B",
+    "-X",
+    "faulthandler",
+    "-X",
+    "pycache_prefix=C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\real-accounting-repair-1\\parent-cache",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\real-accounting-repair-run.py",
+    "--plan",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\real-accounting-repair-plan-1.json",
+    "--sha256",
+    "cdd83fa172486607ed8fd77798369327a6498a9f64d10950757a97f943462b32",
+    "--output",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\real-accounting-repair-1"
+  ],
+  "plan_sha256": "cdd83fa172486607ed8fd77798369327a6498a9f64d10950757a97f943462b32",
+  "exit_code": 1,
+  "admissible_parent_exit": true,
+  "elapsed_wall_seconds": 0.47931079999762005
+}
