@@ -31,7 +31,7 @@ The saved local-image probe still awaits numerical verification after two checke
 
 First recover the existing saved-data checks in a deterministic, declared checker environment, retaining the refused original subject and all costs. Do not rerun image extraction or tune the fixed patch population to repair audit metadata. Then choose the next geometric experiment from the verified local outcomes. Any returned local translation remains a diagnostic until a separately tested direct-edge/per-frame consumer validates it. Keep source-only systems integration moving independently.
 
-This review changes the research queue only by ruling out an unsupported shortcut: neither a depth model requiring aligned inputs nor an appearance-preserving warp supplies the missing physical registration. It does not select a new production alignment implementation.
+This review changes the research queue only by ruling out an unsupported shortcut for M193c's existing captures: neither a depth model requiring aligned inputs nor an appearance-preserving warp supplies their missing physical registration. A separately validated acquisition-time geometry route remains possible. This review does not select a new production alignment implementation.
 
 ## Read record
 
