@@ -1,0 +1,358 @@
+{
+  "admitted_rows": [
+    {
+      "original_index": 0,
+      "primary": {
+        "bytes": 350873,
+        "path": "experiments/m193c-output-grid/native-derivative-1/frame-00/native/result.json",
+        "sha256": "e02482a38f3f15a2cc89ee83a809fdbdc590568db8a439754e956f20f8251427"
+      },
+      "primary_reused": true,
+      "reader": {
+        "bytes": 439403,
+        "path": "experiments/m193c-output-grid/native-sensor-white-artifact-derivative-1/frame-00/independent/result.json",
+        "sha256": "c95e57b8acd7eaedc4ef881819b3d76044a86a9900ddebe5bea786f603e0ae07"
+      },
+      "request": {
+        "bytes": 2403,
+        "path": "experiments/m193c-output-grid/native-sensor-white-artifact-derivative-1/frame-00/read-request.json",
+        "sha256": "bd42a3b1df497e33fe183911dad62bf11fad8277abdfdebb842e215ea98db008"
+      },
+      "tiff": {
+        "bytes": 197798267,
+        "path": "experiments/m193c-output-grid/native-derivative-1/frame-00/native/DSC00016-registration.tiff",
+        "sha256": "97af13814d35ca2bf5320587268c722903ef5204ae3d9b379eef2bb384753d5f"
+      }
+    },
+    {
+      "original_index": 13,
+      "primary": {
+        "bytes": 351008,
+        "path": "experiments/m193c-output-grid/native-sensor-white-artifact-derivative-1/frame-01/native/result.json",
+        "sha256": "34203668550e8b6622785517e3b31e6cd344aa84884e3403325ab134c3da0df5"
+      },
+      "primary_reused": false,
+      "reader": {
+        "bytes": 439467,
+        "path": "experiments/m193c-output-grid/native-sensor-white-artifact-derivative-1/frame-01/independent/result.json",
+        "sha256": "24211f8aa98dfab61d58ae4a8b2308fc33bdccb768320b57f0015a7bbd8e39df"
+      },
+      "request": {
+        "bytes": 2492,
+        "path": "experiments/m193c-output-grid/native-sensor-white-artifact-derivative-1/frame-01/read-request.json",
+        "sha256": "3abd0ce4834491c1f8c867a69ef4ecb62f8f206218010530c6647fa00cbbb41d"
+      },
+      "tiff": {
+        "bytes": 197798267,
+        "path": "experiments/m193c-output-grid/native-sensor-white-artifact-derivative-1/frame-01/native/DSC00029-registration.tiff",
+        "sha256": "68082002b84288bf4db8e0f925a4b82ccdbd61c3f8388b5edcb0d2828bbf0e04"
+      }
+    },
+    {
+      "original_index": 26,
+      "primary": {
+        "bytes": 351008,
+        "path": "experiments/m193c-output-grid/native-sensor-white-artifact-derivative-1/frame-02/native/result.json",
+        "sha256": "16714d43204af0a20eb265d7cdeada1333729f9b3d136fe1712f58dad147841a"
+      },
+      "primary_reused": false,
+      "reader": {
+        "bytes": 439473,
+        "path": "experiments/m193c-output-grid/native-sensor-white-artifact-derivative-1/frame-02/independent/result.json",
+        "sha256": "3e0f05796cf56a5b72ea87448f7d2cb8929ea893609b83510e60a7769541412b"
+      },
+      "request": {
+        "bytes": 2491,
+        "path": "experiments/m193c-output-grid/native-sensor-white-artifact-derivative-1/frame-02/read-request.json",
+        "sha256": "19b14a162568997a5b029db0c70b1b613a71908905666bd10f9dd239c07e5e56"
+      },
+      "tiff": {
+        "bytes": 197798267,
+        "path": "experiments/m193c-output-grid/native-sensor-white-artifact-derivative-1/frame-02/native/DSC00042-registration.tiff",
+        "sha256": "f58c3b75bae43325d039bf952c8a7495d5344a000f20d950bd171d49e016ccdd"
+      }
+    },
+    {
+      "original_index": 39,
+      "primary": {
+        "bytes": 351008,
+        "path": "experiments/m193c-output-grid/native-sensor-white-artifact-derivative-1/frame-03/native/result.json",
+        "sha256": "07cd2270feee49b486f26eba57d3b4078c3bf9316292e5ed2711a04d34271f92"
+      },
+      "primary_reused": false,
+      "reader": {
+        "bytes": 439474,
+        "path": "experiments/m193c-output-grid/native-sensor-white-artifact-derivative-1/frame-03/independent/result.json",
+        "sha256": "f877c99df9a5cb56244df1c0deac6562f94b164f94e6f1822861e1ce0040e759"
+      },
+      "request": {
+        "bytes": 2492,
+        "path": "experiments/m193c-output-grid/native-sensor-white-artifact-derivative-1/frame-03/read-request.json",
+        "sha256": "98d2e02157c665fc4987f13d838e663400d74730466493bd27475fffce10a3f2"
+      },
+      "tiff": {
+        "bytes": 197798267,
+        "path": "experiments/m193c-output-grid/native-sensor-white-artifact-derivative-1/frame-03/native/DSC00055-registration.tiff",
+        "sha256": "cd390f1866aaa74b1589426b74761626ca1ca2b845e4c9bfd9b078f5e673f2d3"
+      }
+    },
+    {
+      "original_index": 52,
+      "primary": {
+        "bytes": 351008,
+        "path": "experiments/m193c-output-grid/native-sensor-white-artifact-derivative-1/frame-04/native/result.json",
+        "sha256": "06713431dc4eb743d739a904cd8ccc40b32292329ac3d44bab58aeea8934615c"
+      },
+      "primary_reused": false,
+      "reader": {
+        "bytes": 439472,
+        "path": "experiments/m193c-output-grid/native-sensor-white-artifact-derivative-1/frame-04/independent/result.json",
+        "sha256": "6956fee90aafab901eea0cd31212a1419a4b80e32e8224651f4cdf729ac7460f"
+      },
+      "request": {
+        "bytes": 2492,
+        "path": "experiments/m193c-output-grid/native-sensor-white-artifact-derivative-1/frame-04/read-request.json",
+        "sha256": "2ff3e86d6ebf3b1ccd745e819d96b819f2216a1652f8efc00ebf5c8f79125b57"
+      },
+      "tiff": {
+        "bytes": 197798267,
+        "path": "experiments/m193c-output-grid/native-sensor-white-artifact-derivative-1/frame-04/native/DSC00068-registration.tiff",
+        "sha256": "88ddd13d5e216345b75fea78163ee017396113a82c6a65dfc3532d0928a75d88"
+      }
+    },
+    {
+      "original_index": 65,
+      "primary": {
+        "bytes": 351008,
+        "path": "experiments/m193c-output-grid/native-sensor-white-artifact-derivative-1/frame-05/native/result.json",
+        "sha256": "ec26fccf26c9155a9e9015d9fcae5fe80ead1ff94c1e590676add66880aae314"
+      },
+      "primary_reused": false,
+      "reader": {
+        "bytes": 439473,
+        "path": "experiments/m193c-output-grid/native-sensor-white-artifact-derivative-1/frame-05/independent/result.json",
+        "sha256": "4728894c0d37af57801b538c8af3496bca34fe468c5885c577f1515b5fb3a9e3"
+      },
+      "request": {
+        "bytes": 2492,
+        "path": "experiments/m193c-output-grid/native-sensor-white-artifact-derivative-1/frame-05/read-request.json",
+        "sha256": "908d24afd441585475aa45c907e458309cd850a70d0d33919ce595512edd01d8"
+      },
+      "tiff": {
+        "bytes": 197798267,
+        "path": "experiments/m193c-output-grid/native-sensor-white-artifact-derivative-1/frame-05/native/DSC00081-registration.tiff",
+        "sha256": "458b8a2180ea4ee135364db2b79f850a01d3cf7dca2df9f3e6f6baa8a86159da"
+      }
+    },
+    {
+      "original_index": 78,
+      "primary": {
+        "bytes": 351008,
+        "path": "experiments/m193c-output-grid/native-sensor-white-artifact-derivative-1/frame-06/native/result.json",
+        "sha256": "5cb908187690ffb9fb3c319c4e098249aec71aac310097c795d0a46cefd4e6b5"
+      },
+      "primary_reused": false,
+      "reader": {
+        "bytes": 439473,
+        "path": "experiments/m193c-output-grid/native-sensor-white-artifact-derivative-1/frame-06/independent/result.json",
+        "sha256": "27af0408f5ac843900b5f38710991f9023b33bc07e4d44f960492d9a425a1aa5"
+      },
+      "request": {
+        "bytes": 2490,
+        "path": "experiments/m193c-output-grid/native-sensor-white-artifact-derivative-1/frame-06/read-request.json",
+        "sha256": "94448492aebb9cf882ca231b3bc3245c3942c1f432f8fe1f57c6fb37adc1473f"
+      },
+      "tiff": {
+        "bytes": 197798267,
+        "path": "experiments/m193c-output-grid/native-sensor-white-artifact-derivative-1/frame-06/native/DSC00094-registration.tiff",
+        "sha256": "6ef640cb6551f96ba6fefaa5520ddfcec463cc698f2d4c8c204633a7ee4530c3"
+      }
+    },
+    {
+      "original_index": 91,
+      "primary": {
+        "bytes": 351008,
+        "path": "experiments/m193c-output-grid/native-sensor-white-artifact-derivative-1/frame-07/native/result.json",
+        "sha256": "b26d3fcd0e4439be1333301d990b15e36247af1bdfb0ae6dcdd4f61d4245a7f0"
+      },
+      "primary_reused": false,
+      "reader": {
+        "bytes": 439471,
+        "path": "experiments/m193c-output-grid/native-sensor-white-artifact-derivative-1/frame-07/independent/result.json",
+        "sha256": "680d231e85fde01b3f5673ecca2302f855c6b83e0bffa81f81f6e35cf5768782"
+      },
+      "request": {
+        "bytes": 2491,
+        "path": "experiments/m193c-output-grid/native-sensor-white-artifact-derivative-1/frame-07/read-request.json",
+        "sha256": "b4a62bc5cce475e5993c9ac27d2d7029a2d63c7b73f0b667d5a217a1675e667b"
+      },
+      "tiff": {
+        "bytes": 197798267,
+        "path": "experiments/m193c-output-grid/native-sensor-white-artifact-derivative-1/frame-07/native/DSC00107-registration.tiff",
+        "sha256": "9726b4287c20506f7082c35877cf317dfbef37644e136d9ee9ab4f9a1b29a347"
+      }
+    },
+    {
+      "original_index": 104,
+      "primary": {
+        "bytes": 351009,
+        "path": "experiments/m193c-output-grid/native-sensor-white-artifact-derivative-1/frame-08/native/result.json",
+        "sha256": "9ff2f748015b7dd8fa78cad468974e167913dd3b028f4e267fa4e93e6454be11"
+      },
+      "primary_reused": false,
+      "reader": {
+        "bytes": 439461,
+        "path": "experiments/m193c-output-grid/native-sensor-white-artifact-derivative-1/frame-08/independent/result.json",
+        "sha256": "fa5f656ae6d72b20b5be34e329fd13b4b5872b8471c13e229d6b9cc5524c39a3"
+      },
+      "request": {
+        "bytes": 2490,
+        "path": "experiments/m193c-output-grid/native-sensor-white-artifact-derivative-1/frame-08/read-request.json",
+        "sha256": "81bb4bf04a3c11d55f366d047a76fcecdf86289a19efc9a5f73750beadc20d3b"
+      },
+      "tiff": {
+        "bytes": 197798267,
+        "path": "experiments/m193c-output-grid/native-sensor-white-artifact-derivative-1/frame-08/native/DSC00120-registration.tiff",
+        "sha256": "669de9f7ac88f6a373e32b36044474fc6d80a84b4ea4ca19b0870f37e161fe33"
+      }
+    }
+  ],
+  "artifact_controls": {
+    "bytes": 18852,
+    "path": "experiments/m193c-output-grid/native-sensor-white-artifact-derivative-1/artifact-contract-controls.json",
+    "sha256": "8a1257f60c1cc2684e36f89d4bea0c3f43e608802e6a42fcbf26632afd82ed64"
+  },
+  "audit": {
+    "bytes": 27399,
+    "path": "experiments/m193c-output-grid/work/independent-native-sensor-white-artifact-1-audit.json",
+    "sha256": "bb53b2437a0c6f0cbe45c9f4ee2a40e9fee540df9a4cc708d6acf60326094c28"
+  },
+  "audit_report": {
+    "bytes": 14500,
+    "path": "experiments/m193c-output-grid/independent-native-sensor-white-artifact-1-read.md",
+    "sha256": "9918bb55a20a3df60b60f98615e82bbf552069377bb3fe7b380b68ae40b00334"
+  },
+  "audit_source": {
+    "bytes": 43768,
+    "path": "experiments/m193c-output-grid/work/independent-native-sensor-white-artifact-1-audit.py",
+    "sha256": "64c7c94d17173e32509a458fd9561fcae971ea4767377ebf9e18185d980d7c5f"
+  },
+  "carry": {
+    "cpu_seconds": 324.453125,
+    "file_bytes": 2157421716,
+    "metadata_bytes": 20967233,
+    "wall_seconds": 347.4812478
+  },
+  "commands": {
+    "parent": [
+      "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+      "-B",
+      "-X",
+      "faulthandler",
+      "-X",
+      "pycache_prefix=C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sensor-white-coverage-1\\parent-cache",
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\coverage-sensor-white-run.py",
+      "--release",
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sensor-white-coverage-release-2.json",
+      "--sha256",
+      "ACTUAL_EXECUTION_RELEASE_SHA256",
+      "--output",
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sensor-white-coverage-1"
+    ],
+    "worker": [
+      "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+      "-B",
+      "-X",
+      "faulthandler",
+      "-X",
+      "pycache_prefix=C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sensor-white-coverage-1\\worker-cache",
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\coverage-sensor-white-run.py",
+      "--release",
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sensor-white-coverage-release-2.json",
+      "--sha256",
+      "ACTUAL_EXECUTION_RELEASE_SHA256",
+      "--output",
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sensor-white-coverage-1\\worker",
+      "--worker",
+      "--request",
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sensor-white-coverage-1\\request.json",
+      "--request-sha256",
+      "ACTUAL_COVERAGE_REQUEST_SHA256"
+    ]
+  },
+  "expected_runtime": {
+    "numpy": "2.4.4",
+    "opencv": "4.13.0",
+    "opencv_build_information_sha256": "8a55f551e40cf84d0fa7e2509bb9544da66782a8cbc017d7ce27a9de0ef9c1ac",
+    "python": "3.12.10",
+    "tifffile": "2026.5.2"
+  },
+  "failed_preparation": {
+    "console": {
+      "bytes": 1137,
+      "path": "experiments/m193c-output-grid/work/sensor-white-coverage-preparation-1-console.txt",
+      "sha256": "673bdcaebef2db173ac53269c2bed7eb76dfce41d31c325eebc7b9331a6d0380"
+    },
+    "exit": {
+      "bytes": 3,
+      "path": "experiments/m193c-output-grid/work/sensor-white-coverage-preparation-1-exit.txt",
+      "sha256": "f1b2f662800122bed0ff255693df89c4487fbdcf453d3524a42d4ec20c3d9c04"
+    },
+    "outer": {
+      "bytes": 2469,
+      "path": "experiments/m193c-output-grid/work/sensor-white-coverage-preparation-1-outer.json",
+      "sha256": "788e4f605e34ebc30f2407bd3f5135f267804f452b17b42dcc86982f932559fb"
+    },
+    "source": {
+      "bytes": 33553,
+      "path": "experiments/m193c-output-grid/work/prepare-sensor-white-coverage-release-1.py",
+      "sha256": "db33e171b786cbdef81fc8863aa2e77d9cb132075d6910a473e419066991cbfe"
+    }
+  },
+  "historical_failure_scope": "Combined identity predicate refused; access-time cause not established",
+  "image_scope": "TIFF refs from independently admitted records; actual extent/stat checked; payloads not opened; coverage authenticates bytes",
+  "metadata_controls": {
+    "bytes": 7290,
+    "path": "experiments/m193c-output-grid/work/sensor-white-coverage-preparation-2-controls/result.json",
+    "sha256": "060b1a11566af2485a0006a76f6c28ac8dd3f50654d23da5a22894311adac643"
+  },
+  "native": {
+    "bytes": 229980,
+    "path": "experiments/m193c-output-grid/native-sensor-white-artifact-derivative-1/result.json",
+    "sha256": "2cdf0f949100a8a0400579dcf5689dbc671d15362f51b3e8ebf363a972b079c4"
+  },
+  "preparation_reserved_not_measured": {
+    "cpu_seconds": 30,
+    "file_bytes": 2097152,
+    "metadata_bytes": 2097152,
+    "wall_seconds": 60
+  },
+  "prior_preparation_work": {
+    "bytes": 121,
+    "path": "experiments/m193c-output-grid/work/sensor-white-coverage-prior-work-1.json",
+    "sha256": "caed0c531189417de52253ba927338c264105d29589c26335494b9dd54a01146"
+  },
+  "reviews": [
+    {
+      "bytes": 8120,
+      "path": "experiments/m193c-output-grid/independent-sensor-white-coverage-preparation-2-source-review.md",
+      "sha256": "c2c85ebdde27efc4aacf396d7dd1089cfa49dd347a3e51790675e3c83f764983"
+    }
+  ],
+  "root_carry_basis": {
+    "bytes": 3119,
+    "path": "experiments/m193c-output-grid/work/sensor-white-coverage-carry-2-basis.json",
+    "sha256": "7d4488a50b3ed1903aff12616e25edbda3065dcf2dcaffc3fc1e009806873cae"
+  },
+  "root_prior_work": {
+    "bytes": 121,
+    "path": "experiments/m193c-output-grid/work/sensor-white-coverage-prior-work-2.json",
+    "sha256": "bfb9e487816ab22161e983a91dc00f4b00ecf984b635928518ef5175ff027ae4"
+  },
+  "runtime_scope": "OpenCV build/tifffile remain actual worker gates; no subject imports here",
+  "schema": "m193c-sensor-white-coverage-preparation-v2",
+  "snapshot_reservation_bytes": 1785427283,
+  "snapshot_scope": "nonrefundable upper-bound charge by coverage; not charged twice by this preparer",
+  "source_count": 165,
+  "status": "PROPOSED_COMMANDS_ONLY"
+}

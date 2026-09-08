@@ -1,0 +1,67 @@
+{
+  "schema": "m193c-coverage-carry-basis-v2",
+  "scope": "First failed preparation keeps its entire30CPU/60wall/2MiB reservation; add a fresh bounded allowance for successor, no refund or global cap change. Native all-nine admission remains unchanged; no registration has run.",
+  "native_console": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\work\\native-sensor-white-artifact-1-console.txt",
+    "bytes": 414,
+    "sha256": "ee3416319438f0fbb90510798defeee89ff82c071e081db8c7230cc20b327602"
+  },
+  "native_outer": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\work\\native-sensor-white-artifact-1-outer.json",
+    "bytes": 2393,
+    "sha256": "078747cc22ec8e74101ea173075182ad09151723d7ca0854328ef08d13cd0fc1"
+  },
+  "native_actual_and_conservative_outer": {
+    "cpu_seconds": 264.453125,
+    "wall_seconds": 227.4812478,
+    "file_bytes": 2153227412,
+    "metadata_bytes": 16772929
+  },
+  "nonrefundable_preparation_allowance": {
+    "cpu_seconds": 30,
+    "wall_seconds": 60,
+    "file_bytes": 2097152,
+    "metadata_bytes": 2097152
+  },
+  "prior_work": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\work\\sensor-white-coverage-prior-work-2.json",
+    "bytes": 121,
+    "sha256": "bfb9e487816ab22161e983a91dc00f4b00ecf984b635928518ef5175ff027ae4"
+  },
+  "snapshot_reservation_separate_bytes": 1785427283,
+  "combined_file_charge_before_worker": 3942848999,
+  "file_cap": 4294967296,
+  "prior_preparation_work": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\work\\sensor-white-coverage-prior-work-1.json",
+    "bytes": 121,
+    "sha256": "caed0c531189417de52253ba927338c264105d29589c26335494b9dd54a01146"
+  },
+  "prior_preparation_allowance": {
+    "cpu_seconds": 30,
+    "wall_seconds": 60,
+    "file_bytes": 2097152,
+    "metadata_bytes": 2097152
+  },
+  "failed_preparation": {
+    "source": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\work\\prepare-sensor-white-coverage-release-1.py",
+      "bytes": 33553,
+      "sha256": "db33e171b786cbdef81fc8863aa2e77d9cb132075d6910a473e419066991cbfe"
+    },
+    "console": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\work\\sensor-white-coverage-preparation-1-console.txt",
+      "bytes": 1137,
+      "sha256": "673bdcaebef2db173ac53269c2bed7eb76dfce41d31c325eebc7b9331a6d0380"
+    },
+    "exit": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\work\\sensor-white-coverage-preparation-1-exit.txt",
+      "bytes": 3,
+      "sha256": "f1b2f662800122bed0ff255693df89c4487fbdcf453d3524a42d4ec20c3d9c04"
+    },
+    "outer": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\work\\sensor-white-coverage-preparation-1-outer.json",
+      "bytes": 2469,
+      "sha256": "788e4f605e34ebc30f2407bd3f5135f267804f452b17b42dcc86982f932559fb"
+    }
+  }
+}

@@ -1,0 +1,196 @@
+{
+  "checks": [
+    {
+      "access_time_after_ns": 1788836403961392800,
+      "access_time_before_ns": 1788836403960393400,
+      "actual_exception": null,
+      "actual_sha256": "6cd659bff5d94784571d690c8c8c5e03a67824a1661eeddc28a129a7cc6803ff",
+      "after": {
+        "st_dev": 645901345302496490,
+        "st_file_attributes": 32,
+        "st_ino": 844424933091557,
+        "st_mtime_ns": 1600000002000000000,
+        "st_size": 14
+      },
+      "before": {
+        "st_dev": 645901345302496490,
+        "st_file_attributes": 32,
+        "st_ino": 844424933091557,
+        "st_mtime_ns": 1600000002000000000,
+        "st_size": 14
+      },
+      "expected_exception": null,
+      "id": "baseline",
+      "original_sha256": "6cd659bff5d94784571d690c8c8c5e03a67824a1661eeddc28a129a7cc6803ff",
+      "passed": true,
+      "returned_sha256": "6cd659bff5d94784571d690c8c8c5e03a67824a1661eeddc28a129a7cc6803ff"
+    },
+    {
+      "access_time_after_ns": 1788836405962394200,
+      "access_time_before_ns": 1788836403962394200,
+      "actual_exception": null,
+      "actual_sha256": "6cd659bff5d94784571d690c8c8c5e03a67824a1661eeddc28a129a7cc6803ff",
+      "after": {
+        "st_dev": 645901345302496490,
+        "st_file_attributes": 32,
+        "st_ino": 844424933091558,
+        "st_mtime_ns": 1600000002000000000,
+        "st_size": 14
+      },
+      "before": {
+        "st_dev": 645901345302496490,
+        "st_file_attributes": 32,
+        "st_ino": 844424933091558,
+        "st_mtime_ns": 1600000002000000000,
+        "st_size": 14
+      },
+      "expected_exception": null,
+      "id": "access-time-only",
+      "original_sha256": "6cd659bff5d94784571d690c8c8c5e03a67824a1661eeddc28a129a7cc6803ff",
+      "passed": true,
+      "returned_sha256": "6cd659bff5d94784571d690c8c8c5e03a67824a1661eeddc28a129a7cc6803ff"
+    },
+    {
+      "access_time_after_ns": 1788836403968781900,
+      "access_time_before_ns": 1788836403964307900,
+      "actual_exception": "same-buffer metadata SHA256",
+      "actual_sha256": "4a311df550685c41334287cb7bb77431d6d188f0a0d072a243dadef7c6bc88dc",
+      "after": {
+        "st_dev": 645901345302496490,
+        "st_file_attributes": 32,
+        "st_ino": 844424933091559,
+        "st_mtime_ns": 1600000002000000000,
+        "st_size": 14
+      },
+      "before": {
+        "st_dev": 645901345302496490,
+        "st_file_attributes": 32,
+        "st_ino": 844424933091559,
+        "st_mtime_ns": 1600000002000000000,
+        "st_size": 14
+      },
+      "expected_exception": "same-buffer metadata SHA256",
+      "id": "changed-content",
+      "original_sha256": "6cd659bff5d94784571d690c8c8c5e03a67824a1661eeddc28a129a7cc6803ff",
+      "passed": true,
+      "returned_sha256": null
+    },
+    {
+      "access_time_after_ns": 1788836403970783300,
+      "access_time_before_ns": 1788836403970783300,
+      "actual_exception": "stable same-buffer metadata identity",
+      "actual_sha256": "6cd659bff5d94784571d690c8c8c5e03a67824a1661eeddc28a129a7cc6803ff",
+      "after": {
+        "st_dev": 645901345302496490,
+        "st_file_attributes": 32,
+        "st_ino": 844424933091560,
+        "st_mtime_ns": 1600000004000000000,
+        "st_size": 14
+      },
+      "before": {
+        "st_dev": 645901345302496490,
+        "st_file_attributes": 32,
+        "st_ino": 844424933091560,
+        "st_mtime_ns": 1600000002000000000,
+        "st_size": 14
+      },
+      "expected_exception": "stable same-buffer metadata identity",
+      "id": "mtime-only",
+      "original_sha256": "6cd659bff5d94784571d690c8c8c5e03a67824a1661eeddc28a129a7cc6803ff",
+      "passed": true,
+      "returned_sha256": null
+    },
+    {
+      "access_time_after_ns": 1788836403972782400,
+      "access_time_before_ns": 1788836403972782400,
+      "actual_exception": "stable same-buffer metadata identity",
+      "actual_sha256": "6cd659bff5d94784571d690c8c8c5e03a67824a1661eeddc28a129a7cc6803ff",
+      "after": {
+        "st_dev": 645901345302496490,
+        "st_file_attributes": 32,
+        "st_ino": 844424933091562,
+        "st_mtime_ns": 1600000002000000000,
+        "st_size": 14
+      },
+      "before": {
+        "st_dev": 645901345302496490,
+        "st_file_attributes": 32,
+        "st_ino": 844424933091561,
+        "st_mtime_ns": 1600000002000000000,
+        "st_size": 14
+      },
+      "expected_exception": "stable same-buffer metadata identity",
+      "id": "replaced-inode",
+      "original_sha256": "6cd659bff5d94784571d690c8c8c5e03a67824a1661eeddc28a129a7cc6803ff",
+      "passed": true,
+      "returned_sha256": null
+    },
+    {
+      "access_time_after_ns": 1788836403976782400,
+      "access_time_before_ns": 1788836403976782400,
+      "actual_exception": null,
+      "actual_sha256": "6cd659bff5d94784571d690c8c8c5e03a67824a1661eeddc28a129a7cc6803ff",
+      "after": {
+        "st_dev": 645901345302496490,
+        "st_file_attributes": 32,
+        "st_ino": 562949956380907,
+        "st_mtime_ns": 1600000002000000000,
+        "st_size": 14
+      },
+      "before": {
+        "st_dev": 645901345302496490,
+        "st_file_attributes": 32,
+        "st_ino": 562949956380907,
+        "st_mtime_ns": 1600000002000000000,
+        "st_size": 14
+      },
+      "expected_exception": null,
+      "id": "restored",
+      "original_sha256": "6cd659bff5d94784571d690c8c8c5e03a67824a1661eeddc28a129a7cc6803ff",
+      "passed": true,
+      "returned_sha256": "6cd659bff5d94784571d690c8c8c5e03a67824a1661eeddc28a129a7cc6803ff"
+    }
+  ],
+  "error": null,
+  "files": [
+    {
+      "bytes": 14,
+      "path": "experiments/m193c-output-grid/work/sensor-white-coverage-preparation-2-controls/access-time-only.json",
+      "sha256": "6cd659bff5d94784571d690c8c8c5e03a67824a1661eeddc28a129a7cc6803ff"
+    },
+    {
+      "bytes": 14,
+      "path": "experiments/m193c-output-grid/work/sensor-white-coverage-preparation-2-controls/baseline.json",
+      "sha256": "6cd659bff5d94784571d690c8c8c5e03a67824a1661eeddc28a129a7cc6803ff"
+    },
+    {
+      "bytes": 14,
+      "path": "experiments/m193c-output-grid/work/sensor-white-coverage-preparation-2-controls/changed-content.json",
+      "sha256": "4a311df550685c41334287cb7bb77431d6d188f0a0d072a243dadef7c6bc88dc"
+    },
+    {
+      "bytes": 14,
+      "path": "experiments/m193c-output-grid/work/sensor-white-coverage-preparation-2-controls/mtime-only.json",
+      "sha256": "6cd659bff5d94784571d690c8c8c5e03a67824a1661eeddc28a129a7cc6803ff"
+    },
+    {
+      "bytes": 14,
+      "path": "experiments/m193c-output-grid/work/sensor-white-coverage-preparation-2-controls/replaced-inode-original.json",
+      "sha256": "6cd659bff5d94784571d690c8c8c5e03a67824a1661eeddc28a129a7cc6803ff"
+    },
+    {
+      "bytes": 14,
+      "path": "experiments/m193c-output-grid/work/sensor-white-coverage-preparation-2-controls/replaced-inode.json",
+      "sha256": "6cd659bff5d94784571d690c8c8c5e03a67824a1661eeddc28a129a7cc6803ff"
+    },
+    {
+      "bytes": 14,
+      "path": "experiments/m193c-output-grid/work/sensor-white-coverage-preparation-2-controls/restored.json",
+      "sha256": "6cd659bff5d94784571d690c8c8c5e03a67824a1661eeddc28a129a7cc6803ff"
+    }
+  ],
+  "finalization_errors": [],
+  "requested_write_bytes": 112,
+  "schema": "m193c-coverage-preparation-metadata-controls-v1",
+  "status": "PASS_STABLE_METADATA_IDENTITY_ONLY"
+}
