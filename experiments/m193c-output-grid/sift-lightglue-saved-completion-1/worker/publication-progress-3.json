@@ -1,0 +1,57 @@
+{
+  "earlier": [
+    {
+      "bytes": 1905,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sift-lightglue-saved-completion-1\\worker\\publication-progress-1.json",
+      "sha256": "98fc9176fd838391f2d26ca7c663d9bac44e79b5c853533cc11eaee84c8781ae"
+    },
+    {
+      "bytes": 2065,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sift-lightglue-saved-completion-1\\worker\\publication-progress-2.json",
+      "sha256": "bc28ca2856fca6c6206983697c76de1c572001678ad3039bbce7e3c00e7a2f6e"
+    }
+  ],
+  "ordinal": 3,
+  "row": {
+    "after": {
+      "emergency-refusal.json": {
+        "bytes": 4096,
+        "sha256": "54b2ad071922351dc564d311bf95fd1e1daeaafffb2124bcefa8daa3f3eeac13"
+      },
+      "first-publication.json": {
+        "bytes": 4096,
+        "sha256": "54b2ad071922351dc564d311bf95fd1e1daeaafffb2124bcefa8daa3f3eeac13"
+      },
+      "result.json": {
+        "bytes": 4096,
+        "sha256": "ec731a44cbbb8b2df72f12207266cdfcfacafa3657080ce4ff3c5967e068f6ba"
+      }
+    },
+    "before": {
+      "emergency-refusal.json": "54b2ad071922351dc564d311bf95fd1e1daeaafffb2124bcefa8daa3f3eeac13",
+      "first-publication.json": "54b2ad071922351dc564d311bf95fd1e1daeaafffb2124bcefa8daa3f3eeac13",
+      "publication-stage.json": "54b2ad071922351dc564d311bf95fd1e1daeaafffb2124bcefa8daa3f3eeac13",
+      "result.json": "54b2ad071922351dc564d311bf95fd1e1daeaafffb2124bcefa8daa3f3eeac13"
+    },
+    "id": "oversized",
+    "passed": true,
+    "result": {
+      "canonical": {
+        "bytes": 4096,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sift-lightglue-saved-completion-1\\worker\\publication-controls\\oversized\\result.json",
+        "sha256": "ec731a44cbbb8b2df72f12207266cdfcfacafa3657080ce4ff3c5967e068f6ba"
+      },
+      "canonical_refusal_verified": true,
+      "error": {
+        "message": "terminal slot capacity",
+        "phase": "ENCODING",
+        "type": "ValueError"
+      },
+      "first_positive": null,
+      "passed": false,
+      "phase": "TERMINAL_REFUSAL",
+      "revocation_errors": []
+    }
+  },
+  "schema": "m193c-publication-progress-v1"
+}

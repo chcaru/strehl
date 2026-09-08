@@ -1,0 +1,43 @@
+{
+  "captured_rows": {
+    "count": 0,
+    "empty_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file": null,
+    "full_rows_canonical_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+    "radius_membership": "0 unknown;1 outside;2 within returned-map2-native radius; not refinement subset",
+    "row_bytes": 56
+  },
+  "full_outcome_canonical_sha256": "ba45487ba7f5733bcc9ba2aa5715704cdd2bc91c77b74663b1751ef90adfa9f1",
+  "heldout_bbox_q8": null,
+  "intrinsic": {
+    "error": null,
+    "guard": 139,
+    "metrics": {
+      "calibration_count": 128,
+      "calibration_inlier_count": 128,
+      "coordinate_quantization_guard_q8": 1,
+      "heldout_max_source_px_ceil_q8": 138,
+      "heldout_rms_reference_px": "0.047367335",
+      "holdout_count": 128,
+      "holdout_inlier_count": 128,
+      "mutual_match_count": 256,
+      "valid_support_continuous_margin_q8": 267
+    },
+    "status": "RETURNED",
+    "transform": {
+      "a": 3946,
+      "b": 4294969309,
+      "tx": 13189844291079,
+      "ty": -14944663
+    }
+  },
+  "mode": "placebo",
+  "qualification": {
+    "coordinate_gauge": "native pixel centres; q_native=8*q_coarse+896",
+    "coordinate_lattice_step_q8": 8,
+    "guard_status": "UNQUALIFIED_FOR_COARSE_LATTICE",
+    "inherited_quantization_guard_q8": 1,
+    "scope": "Private compatibility/known geometry only; no real model pairs, support, overlap, placement or quality admission"
+  },
+  "schema": "m193c-saved-learned-fit-v1"
+}

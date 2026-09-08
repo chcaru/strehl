@@ -1,0 +1,53 @@
+{
+  "earlier": [
+    {
+      "bytes": 1905,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sift-lightglue-saved-completion-1\\worker\\publication-progress-1.json",
+      "sha256": "98fc9176fd838391f2d26ca7c663d9bac44e79b5c853533cc11eaee84c8781ae"
+    }
+  ],
+  "ordinal": 2,
+  "row": {
+    "after": {
+      "emergency-refusal.json": {
+        "bytes": 4096,
+        "sha256": "122f9d833d09ec66ae53238ad89568ced9971a3d0f525359544e096181d56236"
+      },
+      "filled.txt": {
+        "bytes": 4096,
+        "sha256": "a2e659dacb4691e887ac0139f8893d04764ee197d70fb73d3190d56113d18e3e"
+      },
+      "first-publication.json": {
+        "bytes": 4096,
+        "sha256": "122f9d833d09ec66ae53238ad89568ced9971a3d0f525359544e096181d56236"
+      },
+      "result.json": {
+        "bytes": 4096,
+        "sha256": "ee4f679ebfea6554b19c5c648dc826e20ed67969d752b9ddfb59e4d64aaab7dd"
+      }
+    },
+    "before": {
+      "emergency-refusal.json": "122f9d833d09ec66ae53238ad89568ced9971a3d0f525359544e096181d56236",
+      "first-publication.json": "122f9d833d09ec66ae53238ad89568ced9971a3d0f525359544e096181d56236",
+      "publication-stage.json": "122f9d833d09ec66ae53238ad89568ced9971a3d0f525359544e096181d56236",
+      "result.json": "122f9d833d09ec66ae53238ad89568ced9971a3d0f525359544e096181d56236"
+    },
+    "error": "ordinary quota capacity",
+    "id": "capacity",
+    "passed": true,
+    "payload_sha256": "a2e659dacb4691e887ac0139f8893d04764ee197d70fb73d3190d56113d18e3e",
+    "result": {
+      "canonical": {
+        "bytes": 4096,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sift-lightglue-saved-completion-1\\worker\\publication-controls\\capacity\\result.json",
+        "sha256": "ee4f679ebfea6554b19c5c648dc826e20ed67969d752b9ddfb59e4d64aaab7dd"
+      },
+      "canonical_refusal_verified": true,
+      "error": null,
+      "first_positive": null,
+      "passed": false,
+      "phase": "TERMINAL"
+    }
+  },
+  "schema": "m193c-publication-progress-v1"
+}

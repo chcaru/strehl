@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "C:\dev\blog\death-of-software\projects\strehl\experiments\m193c-output-grid\work\independent-sift-lightglue-saved-completion-audit.py", line 570, in <module>
+    try:main()
+        ^^^^^^
+  File "C:\dev\blog\death-of-software\projects\strehl\experiments\m193c-output-grid\work\independent-sift-lightglue-saved-completion-audit.py", line 554, in main
+    need(parent['counters']==worker['counters'] and parent['saved_feature_checks']==11 and len(runtime)==2 and read(worker['runtime_before'])==read(worker['runtime_after']),'exact parent counters and stable worker runtime')
+  File "C:\dev\blog\death-of-software\projects\strehl\experiments\m193c-output-grid\work\independent-sift-lightglue-saved-completion-audit.py", line 46, in need
+    if not ok:raise ValueError(message)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: exact parent counters and stable worker runtime

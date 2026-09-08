@@ -1,0 +1,102 @@
+{
+  "cleanup_errors": [],
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-B",
+    "-X",
+    "faulthandler",
+    "-X",
+    "pycache_prefix=C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sift-lightglue-saved-completion-1\\worker-cache",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sift-lightglue-saved-completion-run.py",
+    "--plan",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sift-lightglue-saved-completion-plan-1.json",
+    "--sha256",
+    "e32172b9d4371f4e88e69e399eaaa34be63ab7c8c2251a9ccfaab12af982a59f",
+    "--output",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sift-lightglue-saved-completion-1\\worker",
+    "--worker",
+    "--request",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sift-lightglue-saved-completion-1\\request.json",
+    "--request-sha256",
+    "bb892e1265baf7907bd95568e6b3eeed5371689ef2847de2805c894800b3e204"
+  ],
+  "configured_job_limits": {
+    "committed_bytes": 8589934592,
+    "flags": 8704
+  },
+  "direct_exit_observed": true,
+  "error": null,
+  "exit_code": 0,
+  "job_accounting": {
+    "active_processes": 0,
+    "total_cpu_100ns": 58281250,
+    "total_kernel_100ns": 16250000,
+    "total_page_fault_count": 708602,
+    "total_processes": 2,
+    "total_terminated_processes": 0,
+    "total_user_100ns": 42031250
+  },
+  "job_memory": {
+    "peak_job_memory_used_bytes": 33640448,
+    "peak_process_memory_used_bytes": 32395264
+  },
+  "limits": {
+    "committed_bytes": 8589934592,
+    "cpu_seconds": 55.453125,
+    "log_bytes": 1048576,
+    "wall_seconds": 90
+  },
+  "log": {
+    "bytes": 630,
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sift-lightglue-saved-completion-1\\worker.log",
+    "sha256": "e13a1fc83709d27fb96a70d888c37093dcf90c0dd61c3c985e5fae64ddb527c8"
+  },
+  "log_bytes": 630,
+  "pipe_eof_observed": true,
+  "post_exit_drain": {
+    "completed": true,
+    "ended_wall_seconds": 6.063000000001921,
+    "initial_accounting": {
+      "active_processes": 0,
+      "total_cpu_100ns": 58281250,
+      "total_kernel_100ns": 16250000,
+      "total_page_fault_count": 708602,
+      "total_processes": 2,
+      "total_terminated_processes": 0,
+      "total_user_100ns": 42031250
+    },
+    "last_accounting": {
+      "active_processes": 0,
+      "total_cpu_100ns": 58281250,
+      "total_kernel_100ns": 16250000,
+      "total_page_fault_count": 708602,
+      "total_processes": 2,
+      "total_terminated_processes": 0,
+      "total_user_100ns": 42031250
+    },
+    "observation_count": 1,
+    "observations": [
+      {
+        "accounting": {
+          "active_processes": 0,
+          "total_cpu_100ns": 58281250,
+          "total_kernel_100ns": 16250000,
+          "total_page_fault_count": 708602,
+          "total_processes": 2,
+          "total_terminated_processes": 0,
+          "total_user_100ns": 42031250
+        },
+        "wall_seconds": 6.063000000001921
+      }
+    ],
+    "started_wall_seconds": 6.063000000001921
+  },
+  "scope": "owned job tree; committed memory, observed user+kernel CPU; not RSS or a timing benchmark",
+  "terminal_job_accounting": true,
+  "termination": {
+    "attempted": false,
+    "before_accounting": null,
+    "succeeded": false
+  },
+  "wall_seconds": 6.063000000001921
+}

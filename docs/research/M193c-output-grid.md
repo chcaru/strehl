@@ -28,8 +28,9 @@ all eleven exports and one model output, but refused an evidence write before
 any registrar call. Its parent terminal record is missing after the same storage
 limit blocked publication. Independent saved-prefix review now verifies all914
 private matches against the known rotation, with0.050891 native-pixel all-row RMS.
-A separate saved-data completion is in progress; no learned-match registrar gate
-has yet been executed.
+A separate saved-data completion now reports all five fitting/control groups
+passed. Its independent audit stopped on a runtime-stage comparison; a narrow
+audit correction is in progress, with no repeated subject work.
 HardFloor remains the default; no quality promotion follows
 from this work. The [charter](../../experiments/m193c-output-grid/charter.md)
 names the actual sampling-coordinate consumer and the fixed historical inputs.
@@ -822,6 +823,38 @@ actual capacity, oversized-record and late-publication failures before science.
 Preserve the original refused directory and incomplete historical CPU status.
 The conditional fixed23 real-pair model arm remains unreleased until this
 separate private completion also passes independent actual-outcome review.
+
+## Saved-value private completion
+
+**OBSERVED in the retained complete run; independent final audit pending:** the
+separately frozen controller from `56fc0fe3e91ae4b2bc4b2a4451eda0569057a943`
+ran once under release `26fa4faca1a7270d4abc556fc2bf02381996a9ff`, exited0 and
+retained both parent and worker terminal records. The [parent](../../experiments/m193c-output-grid/sift-lightglue-saved-completion-1/result.json)
+and [worker](../../experiments/m193c-output-grid/sift-lightglue-saved-completion-1/worker/result.json)
+records report five registrar calls, zero images/extractions/normalizations/model
+calls, all seven actual publication controls and all five private scientific/control
+groups completed. The known-rotation fit returns; the within-split association
+fault refuses; observer off/on/placebo intrinsic outcomes and the complete
+restored outcome agree. These are subject-record observations pending the final
+independent disposition, not new real-stack evidence.
+
+The actual [outer receipt](../../experiments/m193c-output-grid/work/sift-lightglue-saved-completion-1-outer.json)
+records8.309214800 seconds. Hidden-inclusive enumeration finds60 retained files
+and673,876 physical bytes, while the monotone reservation ledger charges1,885,662
+bytes including log capacity and consumed staging paths. The two quantities
+answer different questions. The current run records complete owned Job CPU;
+the incomplete historical CPU account remains explicitly false.
+
+The first prospective [independent audit](../../experiments/m193c-output-grid/work/independent-sift-lightglue-saved-completion-audit.py)
+ran once and exited1 after checking the saved scientific controls. Its extra
+raw before/after runtime equality rejected the five intended staged additions:
+four source-bound pure helper modules and Python's `__future__`. Separate source
+and saved-metadata readers confirm no removed or rebound existing module, and
+all33 resolved native files are unchanged; only their sorted-table indices shift.
+The complete subject and failed audit artifacts remain unchanged. A separately
+reviewed adapter must authenticate both snapshots and this exact declared delta,
+then finish the unvisited accounting/inventory checks. No subject rerun follows
+from an auditor's extra invariant, and the real-pair branch remains conditional.
 
 ## Reproduction and preserved attempts
 

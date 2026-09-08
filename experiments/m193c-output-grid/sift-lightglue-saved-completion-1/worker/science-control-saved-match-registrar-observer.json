@@ -1,0 +1,30 @@
+{
+  "evidence": {
+    "comparisons": [
+      {
+        "equal": true,
+        "left_sha256": "435f873780db838a609f38f24b9cb2d2835024daa0c503cff12888576329bffd",
+        "name": "off",
+        "right_sha256": "435f873780db838a609f38f24b9cb2d2835024daa0c503cff12888576329bffd"
+      },
+      {
+        "equal": true,
+        "left_sha256": "435f873780db838a609f38f24b9cb2d2835024daa0c503cff12888576329bffd",
+        "name": "placebo",
+        "right_sha256": "435f873780db838a609f38f24b9cb2d2835024daa0c503cff12888576329bffd"
+      }
+    ],
+    "off": {
+      "bytes": 1507,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sift-lightglue-saved-completion-1\\worker\\science-off-fit.json",
+      "sha256": "9f67c228196414ed798e9d8a458d5912be375698e553a38bff9c7bb9a338895c"
+    },
+    "placebo": {
+      "bytes": 1511,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sift-lightglue-saved-completion-1\\worker\\science-placebo-fit.json",
+      "sha256": "5947e6f70a397bff6ba5fb0d725409412c322d41c04a28d55d56de829b893928"
+    }
+  },
+  "id": "saved-match-registrar-observer",
+  "passed": true
+}

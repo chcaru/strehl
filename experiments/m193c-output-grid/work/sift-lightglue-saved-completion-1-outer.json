@@ -1,0 +1,22 @@
+{
+  "scope": "Saved private LightGlue completion only: five fixed registrar calls, no images or model invocation",
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-B",
+    "-X",
+    "faulthandler",
+    "-X",
+    "pycache_prefix=C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sift-lightglue-saved-completion-1\\parent-cache",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sift-lightglue-saved-completion-run.py",
+    "--plan",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sift-lightglue-saved-completion-plan-1.json",
+    "--sha256",
+    "e32172b9d4371f4e88e69e399eaaa34be63ab7c8c2251a9ccfaab12af982a59f",
+    "--output",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sift-lightglue-saved-completion-1"
+  ],
+  "plan_sha256": "e32172b9d4371f4e88e69e399eaaa34be63ab7c8c2251a9ccfaab12af982a59f",
+  "exit_code": 0,
+  "elapsed_wall_seconds": 8.309214799999609,
+  "admissible_parent_exit": true
+}

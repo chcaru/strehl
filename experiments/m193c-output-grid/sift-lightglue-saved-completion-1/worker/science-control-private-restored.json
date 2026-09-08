@@ -1,0 +1,17 @@
+{
+  "evidence": {
+    "comparison": {
+      "equal": true,
+      "left_sha256": "8aef892712c74d3732aaccee8c7994afa0f97e1e299726fe6c1a26c128b702c3",
+      "name": "entire-restored-outcome",
+      "right_sha256": "8aef892712c74d3732aaccee8c7994afa0f97e1e299726fe6c1a26c128b702c3"
+    },
+    "fit": {
+      "bytes": 1888,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sift-lightglue-saved-completion-1\\worker\\science-restored-fit.json",
+      "sha256": "3ebb6ee4f78e2087b057bf100e99444a257d939ffbb19cf638b80791c452344d"
+    }
+  },
+  "id": "private-restored",
+  "passed": true
+}

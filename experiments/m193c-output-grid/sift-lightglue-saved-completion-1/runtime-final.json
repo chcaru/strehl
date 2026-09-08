@@ -1,0 +1,844 @@
+{
+  "empty_current_files": [
+    {
+      "bytes": 0,
+      "metadata": {
+        "attributes": 32,
+        "bytes": 0,
+        "device": 645901345302496490,
+        "file_id": 44473046320557407,
+        "mtime_ns": 1744145814000000000,
+        "mtime_utc": "2025-04-08T20:56:54.000000000Z"
+      },
+      "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\urllib\\__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "entries": [
+    {
+      "prior_runtime_index": 2
+    },
+    {
+      "prior_runtime_index": 3
+    },
+    {
+      "prior_runtime_index": 4
+    },
+    {
+      "prior_runtime_index": 5
+    },
+    {
+      "prior_runtime_index": 6
+    },
+    {
+      "prior_runtime_index": 9
+    },
+    {
+      "prior_runtime_index": 14
+    },
+    {
+      "prior_runtime_index": 15
+    },
+    {
+      "prior_runtime_index": 19
+    },
+    {
+      "prior_runtime_index": 20
+    },
+    {
+      "prior_runtime_index": 22
+    },
+    {
+      "prior_runtime_index": 23
+    },
+    {
+      "prior_runtime_index": 24
+    },
+    {
+      "prior_runtime_index": 25
+    },
+    {
+      "prior_runtime_index": 26
+    },
+    {
+      "prior_runtime_index": 27
+    },
+    {
+      "prior_runtime_index": 61
+    },
+    {
+      "prior_runtime_index": 64
+    },
+    {
+      "prior_runtime_index": 65
+    },
+    {
+      "prior_runtime_index": 66
+    },
+    {
+      "prior_runtime_index": 72
+    },
+    {
+      "prior_runtime_index": 74
+    },
+    {
+      "prior_runtime_index": 75
+    },
+    {
+      "prior_runtime_index": 77
+    },
+    {
+      "prior_runtime_index": 78
+    },
+    {
+      "prior_runtime_index": 80
+    },
+    {
+      "prior_runtime_index": 81
+    },
+    {
+      "prior_runtime_index": 82
+    },
+    {
+      "prior_runtime_index": 83
+    },
+    {
+      "prior_runtime_index": 85
+    },
+    {
+      "prior_runtime_index": 101
+    },
+    {
+      "prior_runtime_index": 102
+    },
+    {
+      "prior_runtime_index": 103
+    },
+    {
+      "prior_runtime_index": 104
+    },
+    {
+      "prior_runtime_index": 105
+    },
+    {
+      "prior_runtime_index": 106
+    },
+    {
+      "prior_runtime_index": 107
+    },
+    {
+      "prior_runtime_index": 108
+    },
+    {
+      "prior_runtime_index": 109
+    },
+    {
+      "prior_runtime_index": 110
+    },
+    {
+      "prior_runtime_index": 112
+    },
+    {
+      "prior_runtime_index": 115
+    },
+    {
+      "prior_runtime_index": 116
+    },
+    {
+      "prior_runtime_index": 120
+    },
+    {
+      "prior_runtime_index": 121
+    },
+    {
+      "prior_runtime_index": 122
+    },
+    {
+      "prior_runtime_index": 123
+    },
+    {
+      "prior_runtime_index": 125
+    },
+    {
+      "prior_runtime_index": 138
+    },
+    {
+      "prior_runtime_index": 139
+    },
+    {
+      "prior_runtime_index": 140
+    },
+    {
+      "prior_runtime_index": 141
+    },
+    {
+      "prior_runtime_index": 142
+    },
+    {
+      "prior_runtime_index": 143
+    },
+    {
+      "prior_runtime_index": 144
+    },
+    {
+      "prior_runtime_index": 145
+    },
+    {
+      "prior_runtime_index": 146
+    },
+    {
+      "prior_runtime_index": 147
+    },
+    {
+      "prior_runtime_index": 148
+    },
+    {
+      "prior_runtime_index": 150
+    },
+    {
+      "prior_runtime_index": 160
+    },
+    {
+      "prior_runtime_index": 162
+    },
+    {
+      "prior_runtime_index": 163
+    },
+    {
+      "prior_runtime_index": 164
+    },
+    {
+      "prior_runtime_index": 165
+    },
+    {
+      "prior_runtime_index": 166
+    },
+    {
+      "prior_runtime_index": 171
+    },
+    {
+      "prior_runtime_index": 175
+    },
+    {
+      "prior_runtime_index": 178
+    },
+    {
+      "prior_runtime_index": 179
+    },
+    {
+      "prior_runtime_index": 180
+    },
+    {
+      "prior_runtime_index": 181
+    },
+    {
+      "prior_runtime_index": 182
+    },
+    {
+      "prior_runtime_index": 183
+    },
+    {
+      "prior_runtime_index": 188
+    },
+    {
+      "prior_runtime_index": 189
+    },
+    {
+      "prior_runtime_index": 190
+    },
+    {
+      "prior_runtime_index": 1866
+    },
+    {
+      "prior_runtime_index": 1867
+    },
+    {
+      "prior_runtime_index": 1870
+    },
+    {
+      "prior_runtime_index": 1873
+    },
+    {
+      "prior_runtime_index": 1874
+    },
+    {
+      "prior_runtime_index": 1878
+    },
+    {
+      "prior_runtime_index": 1879
+    },
+    {
+      "prior_runtime_index": 1881
+    },
+    {
+      "prior_runtime_index": 1882
+    },
+    {
+      "prior_runtime_index": 1883
+    },
+    {
+      "prior_runtime_index": 1884
+    },
+    {
+      "prior_runtime_index": 1885
+    },
+    {
+      "empty_runtime_index": 24
+    },
+    {
+      "prior_runtime_index": 1897
+    },
+    {
+      "prior_runtime_index": 1901
+    },
+    {
+      "prior_runtime_index": 1902
+    },
+    {
+      "prior_runtime_index": 1906
+    },
+    {
+      "prior_runtime_index": 1907
+    },
+    {
+      "prior_runtime_index": 1908
+    },
+    {
+      "prior_runtime_index": 1909
+    },
+    {
+      "prior_runtime_index": 1910
+    },
+    {
+      "prior_runtime_index": 1914
+    },
+    {
+      "prior_runtime_index": 1917
+    },
+    {
+      "prior_runtime_index": 1919
+    },
+    {
+      "prior_runtime_index": 1920
+    },
+    {
+      "prior_runtime_index": 1923
+    },
+    {
+      "prior_runtime_index": 1930
+    },
+    {
+      "prior_runtime_index": 1931
+    },
+    {
+      "prior_runtime_index": 1933
+    },
+    {
+      "prior_runtime_index": 1934
+    },
+    {
+      "prior_runtime_index": 1935
+    },
+    {
+      "prior_runtime_index": 1942
+    },
+    {
+      "prior_runtime_index": 1943
+    },
+    {
+      "prior_runtime_index": 1945
+    },
+    {
+      "prior_runtime_index": 1947
+    },
+    {
+      "prior_runtime_index": 1948
+    },
+    {
+      "prior_runtime_index": 1952
+    },
+    {
+      "prior_runtime_index": 1953
+    },
+    {
+      "prior_runtime_index": 1954
+    },
+    {
+      "prior_runtime_index": 1958
+    },
+    {
+      "prior_runtime_index": 1960
+    },
+    {
+      "prior_runtime_index": 1963
+    },
+    {
+      "prior_runtime_index": 1964
+    },
+    {
+      "prior_runtime_index": 1966
+    },
+    {
+      "local_source": "experiments/m12-scorecard/m12-harness.py"
+    },
+    {
+      "local_source": "experiments/m193c-output-grid/bounded-process.py"
+    },
+    {
+      "local_source": "experiments/m193c-output-grid/native-derivative-run.py"
+    },
+    {
+      "local_source": "experiments/m193c-output-grid/saved-completion-publication.py"
+    },
+    {
+      "local_source": "experiments/m193c-output-grid/sift-lightglue-saved-completion-run.py"
+    }
+  ],
+  "native_module_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    94,
+    95,
+    96,
+    97,
+    98,
+    99,
+    100,
+    101,
+    102,
+    103,
+    104,
+    105,
+    106,
+    107,
+    108,
+    109,
+    110,
+    111,
+    112,
+    113,
+    114,
+    115,
+    116,
+    117,
+    118,
+    119,
+    120
+  ],
+  "prior_registry": {
+    "bytes": 870631,
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sift-lightglue-commission-1\\worker\\runtime-before.json",
+    "sha256": "17e19d0b91e66a14268527757a371af4fa9f68d6205b4d5f75e83c79cc6f6ab4"
+  },
+  "python_modules": [
+    [
+      "__future__",
+      8
+    ],
+    [
+      "__main__",
+      125
+    ],
+    [
+      "_bz2",
+      0
+    ],
+    [
+      "_collections_abc",
+      9
+    ],
+    [
+      "_compression",
+      10
+    ],
+    [
+      "_ctypes",
+      1
+    ],
+    [
+      "_decimal",
+      2
+    ],
+    [
+      "_distutils_hack",
+      76
+    ],
+    [
+      "_frozen_importlib",
+      45
+    ],
+    [
+      "_frozen_importlib_external",
+      46
+    ],
+    [
+      "_hashlib",
+      3
+    ],
+    [
+      "_lzma",
+      4
+    ],
+    [
+      "_queue",
+      5
+    ],
+    [
+      "_sitebuiltins",
+      11
+    ],
+    [
+      "_weakrefset",
+      12
+    ],
+    [
+      "abc",
+      13
+    ],
+    [
+      "argparse",
+      14
+    ],
+    [
+      "ast",
+      15
+    ],
+    [
+      "bz2",
+      16
+    ],
+    [
+      "codecs",
+      17
+    ],
+    [
+      "collections",
+      18
+    ],
+    [
+      "collections.abc",
+      19
+    ],
+    [
+      "contextlib",
+      20
+    ],
+    [
+      "copy",
+      21
+    ],
+    [
+      "copyreg",
+      22
+    ],
+    [
+      "ctypes",
+      23
+    ],
+    [
+      "ctypes._endian",
+      24
+    ],
+    [
+      "ctypes.wintypes",
+      25
+    ],
+    [
+      "dataclasses",
+      26
+    ],
+    [
+      "datetime",
+      27
+    ],
+    [
+      "decimal",
+      28
+    ],
+    [
+      "dis",
+      29
+    ],
+    [
+      "encodings",
+      30
+    ],
+    [
+      "encodings.aliases",
+      31
+    ],
+    [
+      "encodings.cp1252",
+      32
+    ],
+    [
+      "encodings.utf_8",
+      33
+    ],
+    [
+      "encodings.utf_8_sig",
+      34
+    ],
+    [
+      "enum",
+      35
+    ],
+    [
+      "fnmatch",
+      36
+    ],
+    [
+      "fractions",
+      37
+    ],
+    [
+      "functools",
+      38
+    ],
+    [
+      "genericpath",
+      39
+    ],
+    [
+      "gettext",
+      40
+    ],
+    [
+      "hashlib",
+      41
+    ],
+    [
+      "heapq",
+      42
+    ],
+    [
+      "importlib",
+      43
+    ],
+    [
+      "importlib._abc",
+      44
+    ],
+    [
+      "importlib._bootstrap",
+      45
+    ],
+    [
+      "importlib._bootstrap_external",
+      46
+    ],
+    [
+      "importlib.machinery",
+      47
+    ],
+    [
+      "importlib.util",
+      48
+    ],
+    [
+      "inspect",
+      49
+    ],
+    [
+      "io",
+      50
+    ],
+    [
+      "ipaddress",
+      51
+    ],
+    [
+      "json",
+      52
+    ],
+    [
+      "json.decoder",
+      53
+    ],
+    [
+      "json.encoder",
+      54
+    ],
+    [
+      "json.scanner",
+      55
+    ],
+    [
+      "keyword",
+      56
+    ],
+    [
+      "linecache",
+      57
+    ],
+    [
+      "locale",
+      58
+    ],
+    [
+      "lzma",
+      59
+    ],
+    [
+      "m193c_saved_process",
+      122
+    ],
+    [
+      "m193c_saved_publication",
+      124
+    ],
+    [
+      "m193c_saved_pure_m12_harness",
+      121
+    ],
+    [
+      "m193c_saved_reader",
+      123
+    ],
+    [
+      "ntpath",
+      60
+    ],
+    [
+      "numbers",
+      61
+    ],
+    [
+      "opcode",
+      62
+    ],
+    [
+      "operator",
+      63
+    ],
+    [
+      "os",
+      64
+    ],
+    [
+      "os.path",
+      60
+    ],
+    [
+      "pathlib",
+      65
+    ],
+    [
+      "posixpath",
+      66
+    ],
+    [
+      "pywin32_bootstrap",
+      77
+    ],
+    [
+      "queue",
+      67
+    ],
+    [
+      "re",
+      68
+    ],
+    [
+      "re._casefix",
+      69
+    ],
+    [
+      "re._compiler",
+      70
+    ],
+    [
+      "re._constants",
+      71
+    ],
+    [
+      "re._parser",
+      72
+    ],
+    [
+      "reprlib",
+      73
+    ],
+    [
+      "shutil",
+      74
+    ],
+    [
+      "signal",
+      75
+    ],
+    [
+      "site",
+      78
+    ],
+    [
+      "stat",
+      79
+    ],
+    [
+      "struct",
+      80
+    ],
+    [
+      "subprocess",
+      81
+    ],
+    [
+      "textwrap",
+      82
+    ],
+    [
+      "threading",
+      83
+    ],
+    [
+      "token",
+      84
+    ],
+    [
+      "tokenize",
+      85
+    ],
+    [
+      "traceback",
+      86
+    ],
+    [
+      "types",
+      87
+    ],
+    [
+      "typing",
+      88
+    ],
+    [
+      "urllib",
+      89
+    ],
+    [
+      "urllib.parse",
+      90
+    ],
+    [
+      "warnings",
+      91
+    ],
+    [
+      "weakref",
+      92
+    ],
+    [
+      "zipimport",
+      93
+    ]
+  ],
+  "python_version": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+  "schema": "m193c-saved-completion-runtime-presence-v1",
+  "scope": "actual current stdlib/native presence; no model or image imports"
+}

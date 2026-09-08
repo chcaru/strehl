@@ -1,0 +1,87 @@
+{
+  "earlier": [
+    {
+      "bytes": 1905,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sift-lightglue-saved-completion-1\\worker\\publication-progress-1.json",
+      "sha256": "98fc9176fd838391f2d26ca7c663d9bac44e79b5c853533cc11eaee84c8781ae"
+    },
+    {
+      "bytes": 2065,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sift-lightglue-saved-completion-1\\worker\\publication-progress-2.json",
+      "sha256": "bc28ca2856fca6c6206983697c76de1c572001678ad3039bbce7e3c00e7a2f6e"
+    },
+    {
+      "bytes": 2234,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sift-lightglue-saved-completion-1\\worker\\publication-progress-3.json",
+      "sha256": "367826dfd99a5960e1b0846a126336fe51251a5e92774d888270c8f3f6aa55e6"
+    },
+    {
+      "bytes": 2890,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sift-lightglue-saved-completion-1\\worker\\publication-progress-4.json",
+      "sha256": "b174cda9052da5bee5a9e6ea23fbcbe758f1e3030a6e8a485eeffb0c2a7ad0de"
+    },
+    {
+      "bytes": 4469,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sift-lightglue-saved-completion-1\\worker\\publication-progress-5.json",
+      "sha256": "af223c9846ef1428228d2b91fe93af4460b1b8f31adbabddc9a81f551c388f48"
+    }
+  ],
+  "ordinal": 6,
+  "row": {
+    "after": {
+      "emergency-refusal.json": {
+        "bytes": 4096,
+        "sha256": "c321cb5c995b69cea6013527b41f7f77039eba37c6bcc78bf081180ce684bc82"
+      },
+      "first-publication.json": {
+        "bytes": 4096,
+        "sha256": "c7ca8e291ccfd42fa64d44aac2ce3acb668cce1e0f1d13551bdeab06e8cce69f"
+      },
+      "result.json": {
+        "bytes": 4096,
+        "sha256": "329b442c7f264efa2935c3eb6726a1b1f6e3435839c070fc4814e6bb150f2cbe"
+      }
+    },
+    "before": {
+      "emergency-refusal.json": "c321cb5c995b69cea6013527b41f7f77039eba37c6bcc78bf081180ce684bc82",
+      "first-publication.json": "c321cb5c995b69cea6013527b41f7f77039eba37c6bcc78bf081180ce684bc82",
+      "publication-stage.json": "c321cb5c995b69cea6013527b41f7f77039eba37c6bcc78bf081180ce684bc82",
+      "result.json": "c321cb5c995b69cea6013527b41f7f77039eba37c6bcc78bf081180ce684bc82"
+    },
+    "escaped_stdout_witness": [
+      {
+        "receipt": {
+          "bytes": 4096,
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sift-lightglue-saved-completion-1\\worker\\publication-controls\\stdout-after-escape\\result.json",
+          "sha256": "c7ca8e291ccfd42fa64d44aac2ce3acb668cce1e0f1d13551bdeab06e8cce69f"
+        },
+        "status": "COMPLETE"
+      }
+    ],
+    "id": "stdout-after-escape",
+    "passed": true,
+    "result": {
+      "canonical": {
+        "bytes": 4096,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sift-lightglue-saved-completion-1\\worker\\publication-controls\\stdout-after-escape\\result.json",
+        "sha256": "329b442c7f264efa2935c3eb6726a1b1f6e3435839c070fc4814e6bb150f2cbe"
+      },
+      "canonical_refusal_verified": true,
+      "error": {
+        "message": "DECLARED_STDOUT_FAILURE_AFTER_ESCAPE",
+        "phase": "STDOUT",
+        "type": "OSError"
+      },
+      "first_positive": {
+        "bytes": 4096,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sift-lightglue-saved-completion-1\\worker\\publication-controls\\stdout-after-escape\\first-publication.json",
+        "sha256": "c7ca8e291ccfd42fa64d44aac2ce3acb668cce1e0f1d13551bdeab06e8cce69f"
+      },
+      "passed": false,
+      "phase": "TERMINAL_REFUSAL",
+      "revocation_errors": []
+    },
+    "scope": "injected emit failure; no claim of retracting bytes"
+  },
+  "schema": "m193c-publication-progress-v1"
+}

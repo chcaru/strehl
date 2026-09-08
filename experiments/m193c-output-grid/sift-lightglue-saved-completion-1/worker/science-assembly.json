@@ -1,0 +1,71 @@
+{
+  "capped": {
+    "count": 256,
+    "original_rows_canonical_sha256": "8c608a6645069469fab708389e236ca4c1a389d005a81dc79dd2ef3fc9588a4c",
+    "passes": true,
+    "rms_native_pixels": 0.035372598195849286,
+    "row_layout": "<6iQ:reference/source/offset Q8;squared_error Q16",
+    "rows": {
+      "bytes": 8192,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sift-lightglue-saved-completion-1\\worker\\science-capped-truth.bin",
+      "sha256": "f2a670b8b2af8323d9c2a9b217269b3b55f72e8bd15f9a66eff9228376af3bac"
+    },
+    "scope": "every supplied correspondence versus literal native rotation, no fitted subset",
+    "sum_squared_error_q16": 20992,
+    "within_two_native_pixels": 256
+  },
+  "full_landmarks_canonical_sha256": "e8591422504c4c214483d80da2eb002f2be6fd57f1f1aebbe0d9303d9553384f",
+  "learned_output": {
+    "bytes": 174892,
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sift-lightglue-commission-1\\worker\\private-learned-output.json",
+    "sha256": "789d19ece33ca3cf931b5876f8d2b315566e81145ce1cb8437cd073edf4d7eb0"
+  },
+  "population_relation": "UNCAPPED_AND_HASH_CAPPED_POPULATIONS",
+  "private_exports": [
+    {
+      "bytes": 98861,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sift-lightglue-commission-1\\worker\\private-reference.json",
+      "sha256": "7071a0bfce174dee96d05d52429f5338201846da0369eb0e5e93d2c688cef48a"
+    },
+    {
+      "bytes": 98822,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sift-lightglue-commission-1\\worker\\private-source.json",
+      "sha256": "f5c0b288c49ae8d1755231a80da9e4ee9cf95ecb14b0d1a37ea6e4b824adceee"
+    }
+  ],
+  "qualification": {
+    "coordinate_gauge": "native pixel centres; q_native=8*q_coarse+896",
+    "coordinate_lattice_step_q8": 8,
+    "guard_status": "UNQUALIFIED_FOR_COARSE_LATTICE",
+    "inherited_quantization_guard_q8": 1,
+    "scope": "Private compatibility/known geometry only; no real model pairs, support, overlap, placement or quality admission"
+  },
+  "rows": {
+    "count": 256,
+    "empty_sha256": null,
+    "file": {
+      "bytes": 14336,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sift-lightglue-saved-completion-1\\worker\\science-supplied-rows.bin",
+      "sha256": "d986c3539ec1594b8b560b6f065fb08639c762fd7c9b0f905bd78075d46ce717"
+    },
+    "full_rows_canonical_sha256": "e8591422504c4c214483d80da2eb002f2be6fd57f1f1aebbe0d9303d9553384f",
+    "radius_membership": "0 unknown;1 outside;2 within returned-map2-native radius; not refinement subset",
+    "row_bytes": 56
+  },
+  "schema": "m193c-saved-learned-assembly-v1",
+  "uncapped": {
+    "count": 914,
+    "original_rows_canonical_sha256": "5cf823d869ecf64f05237a46bc7204cbf283795dc97639b321cba4d6f9906402",
+    "passes": true,
+    "rms_native_pixels": 0.050891263281009055,
+    "row_layout": "<6iQ:reference/source/offset Q8;squared_error Q16",
+    "rows": {
+      "bytes": 29248,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sift-lightglue-saved-completion-1\\worker\\science-uncapped-truth.bin",
+      "sha256": "e4c15cef3a45fb89dbc5373518833c9714dd45512ffbecbc48878612d2b2269f"
+    },
+    "scope": "every supplied correspondence versus literal native rotation, no fitted subset",
+    "sum_squared_error_q16": 155136,
+    "within_two_native_pixels": 914
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "captured_rows": {
+    "count": 256,
+    "empty_sha256": null,
+    "file": {
+      "bytes": 14336,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sift-lightglue-saved-completion-1\\worker\\science-fault-rows.bin",
+      "sha256": "bcae0adf232df3b341b88d8a149e0014a3ab83f598dca8b363abeae880467a54"
+    },
+    "full_rows_canonical_sha256": "ca0264fb2fe23dd3b8efded8e7b2bc74f059c480288521481cf5a96c6c89c4d1",
+    "radius_membership": "0 unknown;1 outside;2 within returned-map2-native radius; not refinement subset",
+    "row_bytes": 56
+  },
+  "full_outcome_canonical_sha256": "100338cd0e1183930c2ee75efd5c99e6161d3cdf603817d7ad3f188e053880f1",
+  "heldout_bbox_q8": null,
+  "intrinsic": {
+    "error": {
+      "code": "UNMEASURED_INPUT_REGISTRATION_INADEQUATE",
+      "message": "UNMEASURED_INPUT_REGISTRATION_INADEQUATE: no majority landmark consensus",
+      "type": "ContractError"
+    },
+    "guard": null,
+    "metrics": null,
+    "status": "REGISTRATION_REFUSED",
+    "transform": null
+  },
+  "mode": "count",
+  "qualification": {
+    "coordinate_gauge": "native pixel centres; q_native=8*q_coarse+896",
+    "coordinate_lattice_step_q8": 8,
+    "guard_status": "UNQUALIFIED_FOR_COARSE_LATTICE",
+    "inherited_quantization_guard_q8": 1,
+    "scope": "Private compatibility/known geometry only; no real model pairs, support, overlap, placement or quality admission"
+  },
+  "schema": "m193c-saved-learned-fit-v1"
+}

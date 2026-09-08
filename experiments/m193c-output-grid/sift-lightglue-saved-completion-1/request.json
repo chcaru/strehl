@@ -1,0 +1,14 @@
+{
+  "plan": {
+    "bytes": 48518,
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sift-lightglue-saved-completion-plan-1.json",
+    "sha256": "e32172b9d4371f4e88e69e399eaaa34be63ab7c8c2251a9ccfaab12af982a59f"
+  },
+  "prior_work": {
+    "cpu_seconds": 1023.467194,
+    "file_bytes": 4047266383,
+    "metadata_bytes": 56005449,
+    "wall_seconds": 1002.7593990000023
+  },
+  "schema": "m193c-saved-completion-request-v1"
+}

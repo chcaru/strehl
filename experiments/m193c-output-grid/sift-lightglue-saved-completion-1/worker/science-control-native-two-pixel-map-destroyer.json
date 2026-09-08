@@ -1,0 +1,73 @@
+{
+  "evidence": {
+    "corners": [
+      {
+        "error_native_px": 1.9999390131973431,
+        "expected": [
+          3071,
+          0
+        ],
+        "source": [
+          0,
+          0
+        ],
+        "squared_error_denominator": 9223372036854775808,
+        "squared_error_numerator": 36891238165843451297
+      },
+      {
+        "error_native_px": 2.002053305593804,
+        "expected": [
+          3071,
+          2303
+        ],
+        "source": [
+          2303,
+          0
+        ],
+        "squared_error_denominator": 18446744073709551616,
+        "squared_error_numerator": 73938561278665336025
+      },
+      {
+        "error_native_px": 1.9984967534839566,
+        "expected": [
+          0,
+          0
+        ],
+        "source": [
+          0,
+          3071
+        ],
+        "squared_error_denominator": 18446744073709551616,
+        "squared_error_numerator": 73676097964825154833
+      },
+      {
+        "error_native_px": 2.0006125700935273,
+        "expected": [
+          0,
+          2303
+        ],
+        "source": [
+          2303,
+          3071
+        ],
+        "squared_error_denominator": 2305843009213693952,
+        "squared_error_numerator": 9229022863975448533
+      }
+    ],
+    "qualification": {
+      "coordinate_gauge": "native pixel centres; q_native=8*q_coarse+896",
+      "coordinate_lattice_step_q8": 8,
+      "guard_status": "UNQUALIFIED_FOR_COARSE_LATTICE",
+      "inherited_quantization_guard_q8": 1,
+      "scope": "Private compatibility/known geometry only; no real model pairs, support, overlap, placement or quality admission"
+    },
+    "transform": {
+      "a": 3946,
+      "b": 4294969309,
+      "tx": 13198434225671,
+      "ty": -14944663
+    }
+  },
+  "id": "native-two-pixel-map-destroyer",
+  "passed": true
+}

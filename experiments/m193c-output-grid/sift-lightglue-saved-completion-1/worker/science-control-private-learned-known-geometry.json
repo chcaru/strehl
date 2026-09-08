@@ -1,0 +1,70 @@
+{
+  "evidence": {
+    "corners": [
+      {
+        "error_native_px": 0.0034801642862998853,
+        "expected": [
+          3071,
+          0
+        ],
+        "source": [
+          0,
+          0
+        ],
+        "squared_error_denominator": 9223372036854775808,
+        "squared_error_numerator": 111709271268769
+      },
+      {
+        "error_native_px": 0.0031576976488090318,
+        "expected": [
+          3071,
+          2303
+        ],
+        "source": [
+          2303,
+          0
+        ],
+        "squared_error_denominator": 18446744073709551616,
+        "squared_error_numerator": 183933489423577
+      },
+      {
+        "error_native_px": 0.0016410865443157565,
+        "expected": [
+          0,
+          0
+        ],
+        "source": [
+          0,
+          3071
+        ],
+        "squared_error_denominator": 18446744073709551616,
+        "squared_error_numerator": 49680126350609
+      },
+      {
+        "error_native_px": 0.0007434218369076397,
+        "expected": [
+          0,
+          2303
+        ],
+        "source": [
+          2303,
+          3071
+        ],
+        "squared_error_denominator": 2305843009213693952,
+        "squared_error_numerator": 1274384154581
+      }
+    ],
+    "fit": {
+      "bytes": 1888,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sift-lightglue-saved-completion-1\\worker\\science-baseline-fit.json",
+      "sha256": "2b70752caaf2fe75e7be6b11ed80682825d04e3c68b57de7d190665b9f714d49"
+    },
+    "truth": {
+      "bytes": 3532,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sift-lightglue-saved-completion-1\\worker\\science-assembly.json",
+      "sha256": "0c2ba3771a94dfd47592b147d07aada6a323772a5eeae70664ab1a6b40028a2a"
+    }
+  },
+  "id": "private-learned-known-geometry",
+  "passed": true
+}
