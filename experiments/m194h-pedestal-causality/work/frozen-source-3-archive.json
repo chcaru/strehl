@@ -1,0 +1,18 @@
+{
+  "schema": "m194h-exact-source-archive-v1",
+  "status": "VERIFIED_BYTE_ARCHIVE_ONLY",
+  "source_count": 140,
+  "source_bytes": 5005692,
+  "archive": {
+    "path": "experiments/m194h-pedestal-causality/work/frozen-source-3.zip",
+    "bytes": 5048639,
+    "sha256": "7d42366db16300b7c4419ddc855e539b3f61d5212bed33ab1e80438f0af6991f"
+  },
+  "source_freeze": {
+    "path": "experiments/m194h-pedestal-causality/work/source-freeze-3.json",
+    "bytes": 19661,
+    "sha256": "303d51d622e2c00f0c9763915cf1c97f986affac7642f6e337ecdfab04bec15e"
+  },
+  "wall_seconds": 0.046999999991385266,
+  "note": "All 140 actual source buffers verified before archiving and after ZIP readback. Preserves dirty working bytes without committing unrelated working-tree files. No executable, corpus, image decoder or science rerun."
+}

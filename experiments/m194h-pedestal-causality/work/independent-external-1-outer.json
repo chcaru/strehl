@@ -1,0 +1,39 @@
+{
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-I",
+    "-S",
+    "-B",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194h-pedestal-causality\\work\\check-run.py",
+    "--release",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194h-pedestal-causality\\work\\independent-release-1.json",
+    "--release-sha256",
+    "79a8aa4ae9f5fe97115475f8365683c418e331fdede80b4fa7812c9e9b096e09"
+  ],
+  "source": {
+    "path": "experiments/m194h-pedestal-causality/work/check-run.py",
+    "bytes": 5859,
+    "sha256": "beb4472383f6193f936342ad1a3bdfc86feeeb29fc541b5ebc0c072011c3b877"
+  },
+  "exit_code": 0,
+  "elapsed_wall_seconds": 4.672000000005937,
+  "timeout_terminated": false,
+  "stdout": {
+    "path": "experiments/m194h-pedestal-causality/work/independent-external-1-stdout.bin",
+    "bytes": 518,
+    "sha256": "75a9486ea5cf1cab4c7448fc633a5e5e391833f2cc964f331a3898d7e043cf15"
+  },
+  "stderr": {
+    "path": "experiments/m194h-pedestal-causality/work/independent-external-1-stderr.bin",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "exit": {
+    "path": "experiments/m194h-pedestal-causality/work/independent-external-1-exit.txt",
+    "bytes": 2,
+    "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+  },
+  "stdout_bytes": 518,
+  "stderr_bytes": 0,
+  "scope": "Complete directly launched process interval and actual exit; raw byte streams. No complete CPU inference from elapsed wall. Source is fixed; this wrapper owns and bounds its checker child through the strict Job helper. No complete parent CPU inference."
+}
