@@ -1,0 +1,203 @@
+{
+  "actual_plan": {
+    "bytes": 33990,
+    "path": "experiments/m193c-output-grid/factor-eight-plan-1.json",
+    "sha256": "3d8b2c4e2e7e21d3bdc59994b2cffef3cf2687e6cf914b4a6992f52357d2e994"
+  },
+  "actual_prior": {
+    "bytes": 104,
+    "path": "experiments/m193c-output-grid/work/factor-eight-prior-work-1.json",
+    "sha256": "54eea0593af29e7ae5f4a8d6498fa8068405bddcf8a1fb71248e017d20bc1566"
+  },
+  "charged_allowance": 2097152,
+  "files": [
+    {
+      "bytes": 6034,
+      "path": "experiments/m193c-output-grid/independent-direct-pair-1-read.md",
+      "sha256": "13006ca847af0b78b790061ecd9ca3cedaa6ec1910ded8c9853adc9e9c46fc4e"
+    },
+    {
+      "bytes": 20396,
+      "path": "experiments/m193c-output-grid/work/independent-direct-pair-1-audit.py",
+      "sha256": "df7d49229ca1d7dd50b88ba83665e32932571b2a2d6ab175dfa31c6bef2404ad"
+    },
+    {
+      "bytes": 13711,
+      "path": "experiments/m193c-output-grid/work/independent-direct-pair-1-audit.json",
+      "sha256": "2b8b4a6ce4e2f245c95249555bdc3911f0802385fcc781b1427f2dc83bb9bef1"
+    },
+    {
+      "bytes": 12380,
+      "path": "experiments/m193c-output-grid/work/independent-direct-pair-1-inventory.json",
+      "sha256": "3a242820af33b3dd9639382764d24df7e425c27b4dbda283f5180d4c4458a60a"
+    },
+    {
+      "bytes": 7439,
+      "path": "experiments/m193c-output-grid/work/direct-pair-coordinate-diagnosis.py",
+      "sha256": "72771196d42908d27513a2ffb93279be85cc4014d735a8f7ab388bf94e40f8bd"
+    },
+    {
+      "bytes": 52266,
+      "path": "experiments/m193c-output-grid/work/direct-pair-coordinate-diagnosis.json",
+      "sha256": "78c9a4556876cb4aa52f1af2961b4fa71d619c5645a8a065a328f7d9ec6c2510"
+    },
+    {
+      "bytes": 12370,
+      "path": "experiments/m193c-output-grid/work/direct-pair-coordinate-diagnosis.md",
+      "sha256": "8325027025aa6cac9652dcf631cb25b96926ba7206ee34920836bae6cd415e0e"
+    },
+    {
+      "bytes": 4143,
+      "path": "experiments/m193c-output-grid/work/direct-pair-coordinate-details.py",
+      "sha256": "031a8ee29f1cc5b840f181d740c54c2ac7480a083cb7745396b8238470213c4c"
+    },
+    {
+      "bytes": 19353,
+      "path": "experiments/m193c-output-grid/work/direct-pair-coordinate-details.json",
+      "sha256": "7d95a121b81bacc77540722175612b5e5e9cbf6018d84e1547719df71aab5182"
+    },
+    {
+      "bytes": 491896,
+      "path": "experiments/m193c-output-grid/work/direct-pair-input-previews.png",
+      "sha256": "2afd388bf7cdbaa20971c96b5dd2286bd559862e64116fdc67b888cdfa7df369"
+    },
+    {
+      "bytes": 1416,
+      "path": "experiments/m193c-output-grid/work/direct-pair-input-previews.json",
+      "sha256": "54b87b2981ab8946f8d14fa4f0d97e9dcdcb204daaeb0539993e19af8808d997"
+    },
+    {
+      "bytes": 248390,
+      "path": "experiments/m193c-output-grid/work/direct-pair-fixed-site-previews.png",
+      "sha256": "1c9d1b72f4b57827b9fff69f4cf009e48a7b51e3b7f71f2870e065eff51646db"
+    },
+    {
+      "bytes": 1562,
+      "path": "experiments/m193c-output-grid/work/direct-pair-fixed-site-previews.json",
+      "sha256": "f5f9452ee3c407d7f76a4b83f8aee66354ad5a071bc509d223aca8b2792a7a1d"
+    },
+    {
+      "bytes": 9064,
+      "path": "experiments/m193c-output-grid/work/independent-coordinate-sites-1.py",
+      "sha256": "2f65e2cc3dfebaa74cb96b907a5963da47c43e19ca9edc7821991a885462cf9b"
+    },
+    {
+      "bytes": 96741,
+      "path": "experiments/m193c-output-grid/work/independent-coordinate-sites-1.json",
+      "sha256": "d7e096fd9c9d59da8db8bf666d5900c1a563ae682a2465dbc279dcfcefc44bd3"
+    },
+    {
+      "bytes": 7778,
+      "path": "experiments/m193c-output-grid/work/independent-coordinate-sites-1.md",
+      "sha256": "b3186a5e223c237fe989e242c78b23d4fa09eca61ea4f1413a7c54ed49aa4c84"
+    },
+    {
+      "bytes": 8167,
+      "path": "experiments/m193c-output-grid/next-registration-diagnostic-decision.md",
+      "sha256": "2214713c09f1b45bac675450d8ee0533f47fd1cc9b9f8ab8a58014008228fabf"
+    },
+    {
+      "bytes": 5790,
+      "path": "experiments/m193c-output-grid/factor-eight-prototype.py",
+      "sha256": "86111beb318f270c4532d4a5299d8b6a14413845c5eb384790f3e8d21d959d6f"
+    },
+    {
+      "bytes": 8659,
+      "path": "experiments/m193c-output-grid/factor-eight-proposal.md",
+      "sha256": "c65a94a2ea0378f1bcdded0377392411bcc660bb395450001b37f9648ba8fd1b"
+    },
+    {
+      "bytes": 24036,
+      "path": "experiments/m193c-output-grid/factor-eight-run.py",
+      "sha256": "3699b85aceed462edb8a5641a3847e5a3676a0166cff7a03f630fa670dff6082"
+    },
+    {
+      "bytes": 12497,
+      "path": "experiments/m193c-output-grid/factor-eight-preregister.md",
+      "sha256": "7ba4e7542963423239949aa925ac82fbb8dcfec9c1c185a12d47c10865dedb79"
+    },
+    {
+      "bytes": 6627,
+      "path": "experiments/m193c-output-grid/independent-factor-eight-source-review.md",
+      "sha256": "4a85d1d4c3d4c9c7eeb06ddb210d71663e9a9f016f48a0c05fbf0360722fa1ed"
+    },
+    {
+      "bytes": 8003,
+      "path": "experiments/m193c-output-grid/independent-factor-eight-runner-review.md",
+      "sha256": "d9a24a8c5f6d387564004d6c5e06a34e67da820b286fd05d6d0bfdaf573cc691"
+    },
+    {
+      "bytes": 3996,
+      "path": "experiments/m193c-output-grid/work/independent-factor-eight-plan-preparation-read.md",
+      "sha256": "0912ff948caa7e00d212be18d59a7ec18eec8406a0efd780709e5b6643d954b0"
+    },
+    {
+      "bytes": 4575,
+      "path": "experiments/m193c-output-grid/work/prepare-factor-eight-plan-1.py",
+      "sha256": "f4893132b02d6a8f2246e9d5956ce2fad192883ff70c5c9b946b73c2bf5d9af1"
+    },
+    {
+      "bytes": 33990,
+      "path": "experiments/m193c-output-grid/factor-eight-plan-1.json",
+      "sha256": "3d8b2c4e2e7e21d3bdc59994b2cffef3cf2687e6cf914b4a6992f52357d2e994"
+    },
+    {
+      "bytes": 104,
+      "path": "experiments/m193c-output-grid/work/factor-eight-prior-work-1.json",
+      "sha256": "54eea0593af29e7ae5f4a8d6498fa8068405bddcf8a1fb71248e017d20bc1566"
+    },
+    {
+      "bytes": 472,
+      "path": "experiments/m193c-output-grid/work/factor-eight-preparation-1-console.txt",
+      "sha256": "501bc36c1214434f7edc789b3aed01984a4cc5e88e15a5a1442e53e1f4b4ddf0"
+    },
+    {
+      "bytes": 3,
+      "path": "experiments/m193c-output-grid/work/factor-eight-preparation-1-exit.txt",
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354"
+    },
+    {
+      "bytes": 1697,
+      "path": "experiments/m193c-output-grid/work/factor-eight-preparation-1-outer.json",
+      "sha256": "a35fb7d9cf10ca24306b9b095256b494e65343dd613dcabf77feac831b4a6a9a"
+    },
+    {
+      "bytes": 1614,
+      "path": "experiments/m193c-output-grid/work/factor-eight-localization-hypothesis.md",
+      "sha256": "8fbcd0a957272532576db2bbf10da426cf1340f540166cc2f5c4301e0c836ae3"
+    },
+    {
+      "bytes": 1956,
+      "path": "experiments/m193c-output-grid/work/archive-direct-pair-outcome-1.py",
+      "sha256": "b8c69821a8dcb7073cc92764c0b22d442dd8bd92f0134e9a9d7cf11015a9711d"
+    },
+    {
+      "bytes": 3752,
+      "path": "experiments/m193c-output-grid/work/continuation-2026-09-07-direct-pairs.md",
+      "sha256": "5b11a5194b7425ace90e9b162204e548efb842564c248341e62d1596bab9a819"
+    },
+    {
+      "bytes": 305588,
+      "path": "AGENTS.md",
+      "sha256": "b0f21f2ac52f0f8795df6d2355cbe20dc66024f9c4733161091864aba31a5e44"
+    },
+    {
+      "bytes": 29499,
+      "path": "docs/research/M193c-output-grid.md",
+      "sha256": "cff5d683c862fb02d7129186081725ccecbc23517a25327d498725ecb403abd1"
+    },
+    {
+      "bytes": 29340,
+      "path": "docs/proposals/2026-09-sota-program.md",
+      "sha256": "38077cadabecd7315357d3e74e2ed192f5fa2506ed82d1d41fe17d441629b456"
+    }
+  ],
+  "future_saved_outcome_audit_allowance": 200704,
+  "images_decoded": 0,
+  "metadata_files_checked": 211,
+  "observed_file_bytes": 1495304,
+  "old_source_count": 170,
+  "remaining_for_root_review_archive_and_metadata": 401144,
+  "scope": "Conservative whole-file preparation inventory; old subject output remains charged separately; future audit reserved, no refund",
+  "source_count": 179
+}

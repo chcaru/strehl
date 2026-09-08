@@ -354,6 +354,15 @@ conservative next wall457.0575196 seconds. The46 new files total1417587 bytes;
 no TIFF or RAW was written. All old reservations and failed-work charges remain.
 These are operational observations, not a performance comparison.
 
+**VERIFIED saved-coordinate diagnostic:** an independent reader re-chose the
+population from eight higher-count pairs to all23 and compared exact grouping
+with a one-native-pixel alternative. Repeated joint endpoint groups cross the
+fitting/validation split in14 of23 pairs. Nine identical-source groups across
+five pairs have incompatible reference destinations. Seven powered controls
+passed; the grouping alternative gives the same counts without hidden chaining.
+These are facts about saved correspondences, not physical landmark identity or
+placement accuracy. See the [independent site review](../../experiments/m193c-output-grid/work/independent-coordinate-sites-1.md).
+
 **ARGUED next decision:** test exact8-by-8 RGB block averaging before the same
 feature extractor, retaining the existing23 native outcomes as the baseline.
 A nonidentity private rotation must pass a known native-coordinate oracle before

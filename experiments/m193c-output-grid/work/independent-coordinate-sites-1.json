@@ -1,0 +1,4454 @@
+{
+  "controls": {
+    "cases": [
+      "twelve_rows_two_sites_mixed_splits",
+      "twelve_distinct_sites_disjoint_splits",
+      "five_pixel_destination_contradiction",
+      "four_pixel_boundary_companion",
+      "radius_one_chains_to_one_point_five",
+      "joint_translation_placebo",
+      "row_reversal_contradiction_preserved"
+    ],
+    "status": "PASS"
+  },
+  "image_feature_fit_calls": 0,
+  "inputs": [
+    {
+      "bytes": 3410,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\pair-0-1.json",
+      "sha256": "fd108eda9ca959a5f66ee43f820daaf12462b6fa419895ec21511ed6738001ca"
+    },
+    {
+      "bytes": 3409,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\pair-0-2.json",
+      "sha256": "830b8e806ab45ddf33abf898924cae7bc7be6f9ac975a95f12ca6d3e6ff3b7ed"
+    },
+    {
+      "bytes": 5789,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\pair-0-4.json",
+      "sha256": "becef70db38e5bb1719fbd1e6c5274090137193c90d476ebb71e2c85a94cb34d"
+    },
+    {
+      "bytes": 6380,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\pair-0-5.json",
+      "sha256": "52d57c0cd1579711e532caff730e653bf17333cbd9a9e9de0a4fc1600cb3f11f"
+    },
+    {
+      "bytes": 9329,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\pair-1-2.json",
+      "sha256": "6c28c3d9c72b4ad28b34c11b3afba101453ae9cf09c0ea44f986b1d4af4885ae"
+    },
+    {
+      "bytes": 5494,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\pair-1-3.json",
+      "sha256": "a371fd1ed43a76cd698cfc53ad402cfbc3334c5ddb44a55f91b554a9e0902d87"
+    },
+    {
+      "bytes": 3411,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\pair-1-5.json",
+      "sha256": "85b0909fdc00a85c691cfecb9321739dcee0dc2b1a61ee3af08ec95948e2e6aa"
+    },
+    {
+      "bytes": 5496,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\pair-2-3.json",
+      "sha256": "08d06affc47ead99958c2c4de2f4316045f4331c7a6878ea1dc63ad91ad5f9fd"
+    },
+    {
+      "bytes": 6685,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\pair-2-4.json",
+      "sha256": "7732bff77f2f21934c3b10bfb3883864ebe8383074a873f27110e29a86c8f692"
+    },
+    {
+      "bytes": 6093,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\pair-2-5.json",
+      "sha256": "ad12dc6d0b62340a1ea74ffaa3ae33ff62b097dc1ec5a0c05a624d4d77d6416b"
+    },
+    {
+      "bytes": 7594,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\pair-2-6.json",
+      "sha256": "c2082b53b56a9b7c8c9a9745ffe8a79f324a42ade1fed7cc8297ec114e486e5b"
+    },
+    {
+      "bytes": 9073,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\pair-3-4.json",
+      "sha256": "eb5de610a0ef94841494b9a342d34e7a707f5ada83d175d05eebd2ea0a1d68da"
+    },
+    {
+      "bytes": 5804,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\pair-3-5.json",
+      "sha256": "71029cd5527465a431b03aa5feb08a2c68df827dcaffa6e99b78daef0441b3b5"
+    },
+    {
+      "bytes": 6719,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\pair-3-7.json",
+      "sha256": "44df526b96fb9e3764d52c5a856a526472211ab5722682e506175e3fbb4bcd85"
+    },
+    {
+      "bytes": 15349,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\pair-4-5.json",
+      "sha256": "c3c1c24e3e9c0d93e0e9dbb84d500740057250ec5f6410c3dfd7d69c531f8b2a"
+    },
+    {
+      "bytes": 8769,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\pair-4-6.json",
+      "sha256": "3780f838f7968e1544eebd62f3296c72da973b9a90bee16e566212f56f031964"
+    },
+    {
+      "bytes": 6403,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\pair-4-8.json",
+      "sha256": "e009edf54cebf831f1885232a39f7fdffd8f2911d962faa629d9f09af3ebe792"
+    },
+    {
+      "bytes": 17443,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\pair-5-6.json",
+      "sha256": "29fb94ef48c5b234163b2e5ca9de53046041c6ab96475510efecb17321af74a9"
+    },
+    {
+      "bytes": 10266,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\pair-5-7.json",
+      "sha256": "1f37d218ab1d2a42b0ac1e30775b24073e4b23e3e58579613145cf2b3d07632f"
+    },
+    {
+      "bytes": 7902,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\pair-5-8.json",
+      "sha256": "42770e13277edef275e4cec0de58321ef685e4055427cbfd4ffb3b1268378fa1"
+    },
+    {
+      "bytes": 16553,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\pair-6-7.json",
+      "sha256": "d3dff7f520c0b220a578e47a70c4d0d65e64f1fca721d0ad0b76d82550821373"
+    },
+    {
+      "bytes": 7894,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\pair-6-8.json",
+      "sha256": "10562d91ecb9e3c9252ee8e81dd0c0a8abfe8e69e2a0b98dcc11652078a9e554"
+    },
+    {
+      "bytes": 14785,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\pair-7-8.json",
+      "sha256": "9dc51c37e30e088ca291fa874348efb20cec776e0a6b1b5e00ef4d67dc60037b"
+    }
+  ],
+  "pairs": [
+    {
+      "exact_source_conflicts": [],
+      "groups": {
+        "joint:0": {
+          "chained_components": [],
+          "direct_cross_split_edges": [],
+          "groups": 7,
+          "mixed_split_groups": [],
+          "repeated_groups": 0
+        },
+        "joint:256": {
+          "chained_components": [],
+          "direct_cross_split_edges": [],
+          "groups": 7,
+          "mixed_split_groups": [],
+          "repeated_groups": 0
+        },
+        "reference_q8:0": {
+          "chained_components": [],
+          "direct_cross_split_edges": [],
+          "groups": 7,
+          "mixed_split_groups": [],
+          "repeated_groups": 0
+        },
+        "reference_q8:256": {
+          "chained_components": [],
+          "direct_cross_split_edges": [],
+          "groups": 7,
+          "mixed_split_groups": [],
+          "repeated_groups": 0
+        },
+        "source_q8:0": {
+          "chained_components": [],
+          "direct_cross_split_edges": [],
+          "groups": 7,
+          "mixed_split_groups": [],
+          "repeated_groups": 0
+        },
+        "source_q8:256": {
+          "chained_components": [],
+          "direct_cross_split_edges": [],
+          "groups": 7,
+          "mixed_split_groups": [],
+          "repeated_groups": 0
+        }
+      },
+      "identity_within_two_native_px": {
+        "count": 0,
+        "reference_exact_sites": 0,
+        "reference_radius_one_sites": 0,
+        "rows": []
+      },
+      "pair": {
+        "id": "pair-0-1",
+        "local_span": 1,
+        "reference": 0,
+        "reference_original": 0,
+        "source": 1,
+        "source_original": 13,
+        "star": false
+      },
+      "rows": 7
+    },
+    {
+      "exact_source_conflicts": [],
+      "groups": {
+        "joint:0": {
+          "chained_components": [],
+          "direct_cross_split_edges": [],
+          "groups": 7,
+          "mixed_split_groups": [],
+          "repeated_groups": 0
+        },
+        "joint:256": {
+          "chained_components": [],
+          "direct_cross_split_edges": [],
+          "groups": 7,
+          "mixed_split_groups": [],
+          "repeated_groups": 0
+        },
+        "reference_q8:0": {
+          "chained_components": [],
+          "direct_cross_split_edges": [],
+          "groups": 7,
+          "mixed_split_groups": [],
+          "repeated_groups": 0
+        },
+        "reference_q8:256": {
+          "chained_components": [],
+          "direct_cross_split_edges": [],
+          "groups": 7,
+          "mixed_split_groups": [],
+          "repeated_groups": 0
+        },
+        "source_q8:0": {
+          "chained_components": [],
+          "direct_cross_split_edges": [],
+          "groups": 7,
+          "mixed_split_groups": [],
+          "repeated_groups": 0
+        },
+        "source_q8:256": {
+          "chained_components": [],
+          "direct_cross_split_edges": [],
+          "groups": 7,
+          "mixed_split_groups": [],
+          "repeated_groups": 0
+        }
+      },
+      "identity_within_two_native_px": {
+        "count": 0,
+        "reference_exact_sites": 0,
+        "reference_radius_one_sites": 0,
+        "rows": []
+      },
+      "pair": {
+        "id": "pair-0-2",
+        "local_span": 2,
+        "reference": 0,
+        "reference_original": 0,
+        "source": 2,
+        "source_original": 26,
+        "star": false
+      },
+      "rows": 7
+    },
+    {
+      "exact_source_conflicts": [],
+      "groups": {
+        "joint:0": {
+          "chained_components": [],
+          "direct_cross_split_edges": [
+            [
+              5,
+              14
+            ]
+          ],
+          "groups": 13,
+          "mixed_split_groups": [
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                5,
+                14
+              ]
+            }
+          ],
+          "repeated_groups": 2
+        },
+        "joint:256": {
+          "chained_components": [],
+          "direct_cross_split_edges": [
+            [
+              5,
+              14
+            ]
+          ],
+          "groups": 13,
+          "mixed_split_groups": [
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                5,
+                14
+              ]
+            }
+          ],
+          "repeated_groups": 2
+        },
+        "reference_q8:0": {
+          "chained_components": [],
+          "direct_cross_split_edges": [
+            [
+              5,
+              14
+            ]
+          ],
+          "groups": 13,
+          "mixed_split_groups": [
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                5,
+                14
+              ]
+            }
+          ],
+          "repeated_groups": 2
+        },
+        "reference_q8:256": {
+          "chained_components": [],
+          "direct_cross_split_edges": [
+            [
+              5,
+              14
+            ]
+          ],
+          "groups": 13,
+          "mixed_split_groups": [
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                5,
+                14
+              ]
+            }
+          ],
+          "repeated_groups": 2
+        },
+        "source_q8:0": {
+          "chained_components": [],
+          "direct_cross_split_edges": [
+            [
+              5,
+              14
+            ]
+          ],
+          "groups": 13,
+          "mixed_split_groups": [
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                5,
+                14
+              ]
+            }
+          ],
+          "repeated_groups": 2
+        },
+        "source_q8:256": {
+          "chained_components": [],
+          "direct_cross_split_edges": [
+            [
+              5,
+              14
+            ]
+          ],
+          "groups": 13,
+          "mixed_split_groups": [
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                5,
+                14
+              ]
+            }
+          ],
+          "repeated_groups": 2
+        }
+      },
+      "identity_within_two_native_px": {
+        "count": 2,
+        "reference_exact_sites": 1,
+        "reference_radius_one_sites": 1,
+        "rows": [
+          3,
+          9
+        ]
+      },
+      "pair": {
+        "id": "pair-0-4",
+        "local_span": 4,
+        "reference": 0,
+        "reference_original": 0,
+        "source": 4,
+        "source_original": 52,
+        "star": false
+      },
+      "rows": 15
+    },
+    {
+      "exact_source_conflicts": [],
+      "groups": {
+        "joint:0": {
+          "chained_components": [],
+          "direct_cross_split_edges": [
+            [
+              5,
+              12
+            ]
+          ],
+          "groups": 16,
+          "mixed_split_groups": [
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                5,
+                12
+              ]
+            }
+          ],
+          "repeated_groups": 1
+        },
+        "joint:256": {
+          "chained_components": [],
+          "direct_cross_split_edges": [
+            [
+              5,
+              12
+            ]
+          ],
+          "groups": 16,
+          "mixed_split_groups": [
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                5,
+                12
+              ]
+            }
+          ],
+          "repeated_groups": 1
+        },
+        "reference_q8:0": {
+          "chained_components": [],
+          "direct_cross_split_edges": [
+            [
+              5,
+              12
+            ]
+          ],
+          "groups": 16,
+          "mixed_split_groups": [
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                5,
+                12
+              ]
+            }
+          ],
+          "repeated_groups": 1
+        },
+        "reference_q8:256": {
+          "chained_components": [],
+          "direct_cross_split_edges": [
+            [
+              5,
+              12
+            ]
+          ],
+          "groups": 16,
+          "mixed_split_groups": [
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                5,
+                12
+              ]
+            }
+          ],
+          "repeated_groups": 1
+        },
+        "source_q8:0": {
+          "chained_components": [],
+          "direct_cross_split_edges": [
+            [
+              5,
+              12
+            ]
+          ],
+          "groups": 16,
+          "mixed_split_groups": [
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                5,
+                12
+              ]
+            }
+          ],
+          "repeated_groups": 1
+        },
+        "source_q8:256": {
+          "chained_components": [],
+          "direct_cross_split_edges": [
+            [
+              5,
+              12
+            ]
+          ],
+          "groups": 16,
+          "mixed_split_groups": [
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                5,
+                12
+              ]
+            }
+          ],
+          "repeated_groups": 1
+        }
+      },
+      "identity_within_two_native_px": {
+        "count": 2,
+        "reference_exact_sites": 1,
+        "reference_radius_one_sites": 1,
+        "rows": [
+          5,
+          12
+        ]
+      },
+      "pair": {
+        "id": "pair-0-5",
+        "local_span": 5,
+        "reference": 5,
+        "reference_original": 65,
+        "source": 0,
+        "source_original": 0,
+        "star": true
+      },
+      "rows": 17
+    },
+    {
+      "exact_source_conflicts": [],
+      "groups": {
+        "joint:0": {
+          "chained_components": [],
+          "direct_cross_split_edges": [
+            [
+              0,
+              19
+            ],
+            [
+              6,
+              17
+            ]
+          ],
+          "groups": 24,
+          "mixed_split_groups": [
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                0,
+                19
+              ]
+            },
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                6,
+                17
+              ]
+            }
+          ],
+          "repeated_groups": 2
+        },
+        "joint:256": {
+          "chained_components": [],
+          "direct_cross_split_edges": [
+            [
+              0,
+              19
+            ],
+            [
+              6,
+              17
+            ]
+          ],
+          "groups": 24,
+          "mixed_split_groups": [
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                0,
+                19
+              ]
+            },
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                6,
+                17
+              ]
+            }
+          ],
+          "repeated_groups": 2
+        },
+        "reference_q8:0": {
+          "chained_components": [],
+          "direct_cross_split_edges": [
+            [
+              0,
+              19
+            ],
+            [
+              6,
+              17
+            ]
+          ],
+          "groups": 24,
+          "mixed_split_groups": [
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                0,
+                19
+              ]
+            },
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                6,
+                17
+              ]
+            }
+          ],
+          "repeated_groups": 2
+        },
+        "reference_q8:256": {
+          "chained_components": [],
+          "direct_cross_split_edges": [
+            [
+              0,
+              19
+            ],
+            [
+              6,
+              17
+            ]
+          ],
+          "groups": 24,
+          "mixed_split_groups": [
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                0,
+                19
+              ]
+            },
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                6,
+                17
+              ]
+            }
+          ],
+          "repeated_groups": 2
+        },
+        "source_q8:0": {
+          "chained_components": [],
+          "direct_cross_split_edges": [
+            [
+              0,
+              19
+            ],
+            [
+              6,
+              17
+            ]
+          ],
+          "groups": 24,
+          "mixed_split_groups": [
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                0,
+                19
+              ]
+            },
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                6,
+                17
+              ]
+            }
+          ],
+          "repeated_groups": 2
+        },
+        "source_q8:256": {
+          "chained_components": [],
+          "direct_cross_split_edges": [
+            [
+              0,
+              19
+            ],
+            [
+              6,
+              17
+            ]
+          ],
+          "groups": 24,
+          "mixed_split_groups": [
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                0,
+                19
+              ]
+            },
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                6,
+                17
+              ]
+            }
+          ],
+          "repeated_groups": 2
+        }
+      },
+      "identity_within_two_native_px": {
+        "count": 0,
+        "reference_exact_sites": 0,
+        "reference_radius_one_sites": 0,
+        "rows": []
+      },
+      "pair": {
+        "id": "pair-1-2",
+        "local_span": 1,
+        "reference": 1,
+        "reference_original": 13,
+        "source": 2,
+        "source_original": 26,
+        "star": false
+      },
+      "rows": 26
+    },
+    {
+      "exact_source_conflicts": [],
+      "groups": {
+        "joint:0": {
+          "chained_components": [],
+          "direct_cross_split_edges": [],
+          "groups": 14,
+          "mixed_split_groups": [],
+          "repeated_groups": 0
+        },
+        "joint:256": {
+          "chained_components": [],
+          "direct_cross_split_edges": [],
+          "groups": 14,
+          "mixed_split_groups": [],
+          "repeated_groups": 0
+        },
+        "reference_q8:0": {
+          "chained_components": [],
+          "direct_cross_split_edges": [],
+          "groups": 14,
+          "mixed_split_groups": [],
+          "repeated_groups": 0
+        },
+        "reference_q8:256": {
+          "chained_components": [],
+          "direct_cross_split_edges": [],
+          "groups": 14,
+          "mixed_split_groups": [],
+          "repeated_groups": 0
+        },
+        "source_q8:0": {
+          "chained_components": [],
+          "direct_cross_split_edges": [],
+          "groups": 14,
+          "mixed_split_groups": [],
+          "repeated_groups": 0
+        },
+        "source_q8:256": {
+          "chained_components": [],
+          "direct_cross_split_edges": [],
+          "groups": 14,
+          "mixed_split_groups": [],
+          "repeated_groups": 0
+        }
+      },
+      "identity_within_two_native_px": {
+        "count": 0,
+        "reference_exact_sites": 0,
+        "reference_radius_one_sites": 0,
+        "rows": []
+      },
+      "pair": {
+        "id": "pair-1-3",
+        "local_span": 2,
+        "reference": 1,
+        "reference_original": 13,
+        "source": 3,
+        "source_original": 39,
+        "star": false
+      },
+      "rows": 14
+    },
+    {
+      "exact_source_conflicts": [],
+      "groups": {
+        "joint:0": {
+          "chained_components": [],
+          "direct_cross_split_edges": [],
+          "groups": 7,
+          "mixed_split_groups": [],
+          "repeated_groups": 0
+        },
+        "joint:256": {
+          "chained_components": [],
+          "direct_cross_split_edges": [],
+          "groups": 7,
+          "mixed_split_groups": [],
+          "repeated_groups": 0
+        },
+        "reference_q8:0": {
+          "chained_components": [],
+          "direct_cross_split_edges": [],
+          "groups": 7,
+          "mixed_split_groups": [],
+          "repeated_groups": 0
+        },
+        "reference_q8:256": {
+          "chained_components": [],
+          "direct_cross_split_edges": [],
+          "groups": 7,
+          "mixed_split_groups": [],
+          "repeated_groups": 0
+        },
+        "source_q8:0": {
+          "chained_components": [],
+          "direct_cross_split_edges": [],
+          "groups": 7,
+          "mixed_split_groups": [],
+          "repeated_groups": 0
+        },
+        "source_q8:256": {
+          "chained_components": [],
+          "direct_cross_split_edges": [],
+          "groups": 7,
+          "mixed_split_groups": [],
+          "repeated_groups": 0
+        }
+      },
+      "identity_within_two_native_px": {
+        "count": 0,
+        "reference_exact_sites": 0,
+        "reference_radius_one_sites": 0,
+        "rows": []
+      },
+      "pair": {
+        "id": "pair-1-5",
+        "local_span": 4,
+        "reference": 5,
+        "reference_original": 65,
+        "source": 1,
+        "source_original": 13,
+        "star": true
+      },
+      "rows": 7
+    },
+    {
+      "exact_source_conflicts": [],
+      "groups": {
+        "joint:0": {
+          "chained_components": [],
+          "direct_cross_split_edges": [],
+          "groups": 14,
+          "mixed_split_groups": [],
+          "repeated_groups": 0
+        },
+        "joint:256": {
+          "chained_components": [],
+          "direct_cross_split_edges": [],
+          "groups": 14,
+          "mixed_split_groups": [],
+          "repeated_groups": 0
+        },
+        "reference_q8:0": {
+          "chained_components": [],
+          "direct_cross_split_edges": [],
+          "groups": 14,
+          "mixed_split_groups": [],
+          "repeated_groups": 0
+        },
+        "reference_q8:256": {
+          "chained_components": [],
+          "direct_cross_split_edges": [],
+          "groups": 14,
+          "mixed_split_groups": [],
+          "repeated_groups": 0
+        },
+        "source_q8:0": {
+          "chained_components": [],
+          "direct_cross_split_edges": [],
+          "groups": 14,
+          "mixed_split_groups": [],
+          "repeated_groups": 0
+        },
+        "source_q8:256": {
+          "chained_components": [],
+          "direct_cross_split_edges": [],
+          "groups": 14,
+          "mixed_split_groups": [],
+          "repeated_groups": 0
+        }
+      },
+      "identity_within_two_native_px": {
+        "count": 0,
+        "reference_exact_sites": 0,
+        "reference_radius_one_sites": 0,
+        "rows": []
+      },
+      "pair": {
+        "id": "pair-2-3",
+        "local_span": 1,
+        "reference": 2,
+        "reference_original": 26,
+        "source": 3,
+        "source_original": 39,
+        "star": false
+      },
+      "rows": 14
+    },
+    {
+      "exact_source_conflicts": [
+        {
+          "reference_q8": [
+            [
+              849801,
+              393929
+            ],
+            [
+              852199,
+              419621
+            ]
+          ],
+          "reference_separation_native_px": 100.79557704607272,
+          "rows": [
+            7,
+            13
+          ],
+          "source_q8": [
+            1375344,
+            856443
+          ],
+          "splits": [
+            "holdout",
+            "holdout"
+          ]
+        },
+        {
+          "reference_q8": [
+            [
+              1187598,
+              619454
+            ],
+            [
+              842399,
+              457726
+            ]
+          ],
+          "reference_separation_native_px": 1489.0873779780486,
+          "rows": [
+            10,
+            16
+          ],
+          "source_q8": [
+            1182400,
+            618541
+          ],
+          "splits": [
+            "calibration",
+            "calibration"
+          ]
+        }
+      ],
+      "groups": {
+        "joint:0": {
+          "chained_components": [],
+          "direct_cross_split_edges": [],
+          "groups": 18,
+          "mixed_split_groups": [],
+          "repeated_groups": 0
+        },
+        "joint:256": {
+          "chained_components": [],
+          "direct_cross_split_edges": [],
+          "groups": 18,
+          "mixed_split_groups": [],
+          "repeated_groups": 0
+        },
+        "reference_q8:0": {
+          "chained_components": [],
+          "direct_cross_split_edges": [],
+          "groups": 18,
+          "mixed_split_groups": [],
+          "repeated_groups": 0
+        },
+        "reference_q8:256": {
+          "chained_components": [],
+          "direct_cross_split_edges": [],
+          "groups": 18,
+          "mixed_split_groups": [],
+          "repeated_groups": 0
+        },
+        "source_q8:0": {
+          "chained_components": [],
+          "direct_cross_split_edges": [],
+          "groups": 16,
+          "mixed_split_groups": [],
+          "repeated_groups": 2
+        },
+        "source_q8:256": {
+          "chained_components": [],
+          "direct_cross_split_edges": [],
+          "groups": 16,
+          "mixed_split_groups": [],
+          "repeated_groups": 2
+        }
+      },
+      "identity_within_two_native_px": {
+        "count": 0,
+        "reference_exact_sites": 0,
+        "reference_radius_one_sites": 0,
+        "rows": []
+      },
+      "pair": {
+        "id": "pair-2-4",
+        "local_span": 2,
+        "reference": 2,
+        "reference_original": 26,
+        "source": 4,
+        "source_original": 52,
+        "star": false
+      },
+      "rows": 18
+    },
+    {
+      "exact_source_conflicts": [],
+      "groups": {
+        "joint:0": {
+          "chained_components": [],
+          "direct_cross_split_edges": [
+            [
+              11,
+              14
+            ]
+          ],
+          "groups": 15,
+          "mixed_split_groups": [
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                11,
+                14
+              ]
+            }
+          ],
+          "repeated_groups": 1
+        },
+        "joint:256": {
+          "chained_components": [],
+          "direct_cross_split_edges": [
+            [
+              11,
+              14
+            ]
+          ],
+          "groups": 15,
+          "mixed_split_groups": [
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                11,
+                14
+              ]
+            }
+          ],
+          "repeated_groups": 1
+        },
+        "reference_q8:0": {
+          "chained_components": [],
+          "direct_cross_split_edges": [
+            [
+              11,
+              14
+            ]
+          ],
+          "groups": 15,
+          "mixed_split_groups": [
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                11,
+                14
+              ]
+            }
+          ],
+          "repeated_groups": 1
+        },
+        "reference_q8:256": {
+          "chained_components": [],
+          "direct_cross_split_edges": [
+            [
+              11,
+              14
+            ]
+          ],
+          "groups": 15,
+          "mixed_split_groups": [
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                11,
+                14
+              ]
+            }
+          ],
+          "repeated_groups": 1
+        },
+        "source_q8:0": {
+          "chained_components": [],
+          "direct_cross_split_edges": [
+            [
+              11,
+              14
+            ]
+          ],
+          "groups": 15,
+          "mixed_split_groups": [
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                11,
+                14
+              ]
+            }
+          ],
+          "repeated_groups": 1
+        },
+        "source_q8:256": {
+          "chained_components": [],
+          "direct_cross_split_edges": [
+            [
+              11,
+              14
+            ]
+          ],
+          "groups": 15,
+          "mixed_split_groups": [
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                11,
+                14
+              ]
+            }
+          ],
+          "repeated_groups": 1
+        }
+      },
+      "identity_within_two_native_px": {
+        "count": 0,
+        "reference_exact_sites": 0,
+        "reference_radius_one_sites": 0,
+        "rows": []
+      },
+      "pair": {
+        "id": "pair-2-5",
+        "local_span": 3,
+        "reference": 5,
+        "reference_original": 65,
+        "source": 2,
+        "source_original": 26,
+        "star": true
+      },
+      "rows": 16
+    },
+    {
+      "exact_source_conflicts": [
+        {
+          "reference_q8": [
+            [
+              989436,
+              837550
+            ],
+            [
+              813002,
+              733841
+            ]
+          ],
+          "reference_separation_native_px": 799.4416485379744,
+          "rows": [
+            3,
+            15
+          ],
+          "source_q8": [
+            1144327,
+            1094254
+          ],
+          "splits": [
+            "holdout",
+            "holdout"
+          ]
+        },
+        {
+          "reference_q8": [
+            [
+              848758,
+              218895
+            ],
+            [
+              639562,
+              767943
+            ]
+          ],
+          "reference_separation_native_px": 2295.122739613849,
+          "rows": [
+            7,
+            13
+          ],
+          "source_q8": [
+            1178943,
+            1101146
+          ],
+          "splits": [
+            "holdout",
+            "holdout"
+          ]
+        },
+        {
+          "reference_q8": [
+            [
+              848758,
+              218895
+            ],
+            [
+              893346,
+              896737
+            ]
+          ],
+          "reference_separation_native_px": 2653.542584796523,
+          "rows": [
+            7,
+            14
+          ],
+          "source_q8": [
+            1178943,
+            1101146
+          ],
+          "splits": [
+            "holdout",
+            "calibration"
+          ]
+        },
+        {
+          "reference_q8": [
+            [
+              848758,
+              218895
+            ],
+            [
+              893346,
+              896737
+            ]
+          ],
+          "reference_separation_native_px": 2653.542584796523,
+          "rows": [
+            7,
+            17
+          ],
+          "source_q8": [
+            1178943,
+            1101146
+          ],
+          "splits": [
+            "holdout",
+            "holdout"
+          ]
+        },
+        {
+          "reference_q8": [
+            [
+              639562,
+              767943
+            ],
+            [
+              893346,
+              896737
+            ]
+          ],
+          "reference_separation_native_px": 1111.69852606451,
+          "rows": [
+            13,
+            14
+          ],
+          "source_q8": [
+            1178943,
+            1101146
+          ],
+          "splits": [
+            "holdout",
+            "calibration"
+          ]
+        },
+        {
+          "reference_q8": [
+            [
+              639562,
+              767943
+            ],
+            [
+              893346,
+              896737
+            ]
+          ],
+          "reference_separation_native_px": 1111.69852606451,
+          "rows": [
+            13,
+            17
+          ],
+          "source_q8": [
+            1178943,
+            1101146
+          ],
+          "splits": [
+            "holdout",
+            "holdout"
+          ]
+        }
+      ],
+      "groups": {
+        "joint:0": {
+          "chained_components": [],
+          "direct_cross_split_edges": [
+            [
+              14,
+              17
+            ]
+          ],
+          "groups": 20,
+          "mixed_split_groups": [
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                14,
+                17
+              ]
+            }
+          ],
+          "repeated_groups": 1
+        },
+        "joint:256": {
+          "chained_components": [],
+          "direct_cross_split_edges": [
+            [
+              14,
+              17
+            ]
+          ],
+          "groups": 20,
+          "mixed_split_groups": [
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                14,
+                17
+              ]
+            }
+          ],
+          "repeated_groups": 1
+        },
+        "reference_q8:0": {
+          "chained_components": [],
+          "direct_cross_split_edges": [
+            [
+              14,
+              17
+            ]
+          ],
+          "groups": 20,
+          "mixed_split_groups": [
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                14,
+                17
+              ]
+            }
+          ],
+          "repeated_groups": 1
+        },
+        "reference_q8:256": {
+          "chained_components": [],
+          "direct_cross_split_edges": [
+            [
+              14,
+              17
+            ]
+          ],
+          "groups": 20,
+          "mixed_split_groups": [
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                14,
+                17
+              ]
+            }
+          ],
+          "repeated_groups": 1
+        },
+        "source_q8:0": {
+          "chained_components": [],
+          "direct_cross_split_edges": [
+            [
+              7,
+              14
+            ],
+            [
+              13,
+              14
+            ],
+            [
+              14,
+              17
+            ]
+          ],
+          "groups": 17,
+          "mixed_split_groups": [
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                7,
+                13,
+                14,
+                17
+              ]
+            }
+          ],
+          "repeated_groups": 2
+        },
+        "source_q8:256": {
+          "chained_components": [],
+          "direct_cross_split_edges": [
+            [
+              7,
+              14
+            ],
+            [
+              13,
+              14
+            ],
+            [
+              14,
+              17
+            ]
+          ],
+          "groups": 17,
+          "mixed_split_groups": [
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                7,
+                13,
+                14,
+                17
+              ]
+            }
+          ],
+          "repeated_groups": 2
+        }
+      },
+      "identity_within_two_native_px": {
+        "count": 0,
+        "reference_exact_sites": 0,
+        "reference_radius_one_sites": 0,
+        "rows": []
+      },
+      "pair": {
+        "id": "pair-2-6",
+        "local_span": 4,
+        "reference": 2,
+        "reference_original": 26,
+        "source": 6,
+        "source_original": 78,
+        "star": false
+      },
+      "rows": 21
+    },
+    {
+      "exact_source_conflicts": [
+        {
+          "reference_q8": [
+            [
+              1276733,
+              838783
+            ],
+            [
+              1135469,
+              484765
+            ]
+          ],
+          "reference_separation_native_px": 1488.912995532029,
+          "rows": [
+            0,
+            1
+          ],
+          "source_q8": [
+            1075660,
+            712680
+          ],
+          "splits": [
+            "calibration",
+            "holdout"
+          ]
+        },
+        {
+          "reference_q8": [
+            [
+              1212501,
+              433029
+            ],
+            [
+              1175789,
+              667869
+            ]
+          ],
+          "reference_separation_native_px": 928.4852762446613,
+          "rows": [
+            8,
+            16
+          ],
+          "source_q8": [
+            1274280,
+            1016733
+          ],
+          "splits": [
+            "calibration",
+            "calibration"
+          ]
+        },
+        {
+          "reference_q8": [
+            [
+              1261284,
+              930101
+            ],
+            [
+              678576,
+              595580
+            ]
+          ],
+          "reference_separation_native_px": 2624.6189755118403,
+          "rows": [
+            18,
+            24
+          ],
+          "source_q8": [
+            1375344,
+            856443
+          ],
+          "splits": [
+            "calibration",
+            "calibration"
+          ]
+        }
+      ],
+      "groups": {
+        "joint:0": {
+          "chained_components": [],
+          "direct_cross_split_edges": [],
+          "groups": 24,
+          "mixed_split_groups": [],
+          "repeated_groups": 1
+        },
+        "joint:256": {
+          "chained_components": [],
+          "direct_cross_split_edges": [],
+          "groups": 24,
+          "mixed_split_groups": [],
+          "repeated_groups": 1
+        },
+        "reference_q8:0": {
+          "chained_components": [],
+          "direct_cross_split_edges": [],
+          "groups": 24,
+          "mixed_split_groups": [],
+          "repeated_groups": 1
+        },
+        "reference_q8:256": {
+          "chained_components": [],
+          "direct_cross_split_edges": [],
+          "groups": 24,
+          "mixed_split_groups": [],
+          "repeated_groups": 1
+        },
+        "source_q8:0": {
+          "chained_components": [],
+          "direct_cross_split_edges": [
+            [
+              0,
+              1
+            ]
+          ],
+          "groups": 21,
+          "mixed_split_groups": [
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                0,
+                1
+              ]
+            }
+          ],
+          "repeated_groups": 4
+        },
+        "source_q8:256": {
+          "chained_components": [],
+          "direct_cross_split_edges": [
+            [
+              0,
+              1
+            ]
+          ],
+          "groups": 21,
+          "mixed_split_groups": [
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                0,
+                1
+              ]
+            }
+          ],
+          "repeated_groups": 4
+        }
+      },
+      "identity_within_two_native_px": {
+        "count": 0,
+        "reference_exact_sites": 0,
+        "reference_radius_one_sites": 0,
+        "rows": []
+      },
+      "pair": {
+        "id": "pair-3-4",
+        "local_span": 1,
+        "reference": 3,
+        "reference_original": 39,
+        "source": 4,
+        "source_original": 52,
+        "star": false
+      },
+      "rows": 25
+    },
+    {
+      "exact_source_conflicts": [],
+      "groups": {
+        "joint:0": {
+          "chained_components": [],
+          "direct_cross_split_edges": [],
+          "groups": 15,
+          "mixed_split_groups": [],
+          "repeated_groups": 0
+        },
+        "joint:256": {
+          "chained_components": [],
+          "direct_cross_split_edges": [],
+          "groups": 15,
+          "mixed_split_groups": [],
+          "repeated_groups": 0
+        },
+        "reference_q8:0": {
+          "chained_components": [],
+          "direct_cross_split_edges": [],
+          "groups": 15,
+          "mixed_split_groups": [],
+          "repeated_groups": 0
+        },
+        "reference_q8:256": {
+          "chained_components": [],
+          "direct_cross_split_edges": [],
+          "groups": 15,
+          "mixed_split_groups": [],
+          "repeated_groups": 0
+        },
+        "source_q8:0": {
+          "chained_components": [],
+          "direct_cross_split_edges": [],
+          "groups": 15,
+          "mixed_split_groups": [],
+          "repeated_groups": 0
+        },
+        "source_q8:256": {
+          "chained_components": [],
+          "direct_cross_split_edges": [],
+          "groups": 15,
+          "mixed_split_groups": [],
+          "repeated_groups": 0
+        }
+      },
+      "identity_within_two_native_px": {
+        "count": 0,
+        "reference_exact_sites": 0,
+        "reference_radius_one_sites": 0,
+        "rows": []
+      },
+      "pair": {
+        "id": "pair-3-5",
+        "local_span": 2,
+        "reference": 5,
+        "reference_original": 65,
+        "source": 3,
+        "source_original": 39,
+        "star": true
+      },
+      "rows": 15
+    },
+    {
+      "exact_source_conflicts": [
+        {
+          "reference_q8": [
+            [
+              1191271,
+              620887
+            ],
+            [
+              1198990,
+              434021
+            ]
+          ],
+          "reference_separation_native_px": 730.567808676471,
+          "rows": [
+            1,
+            2
+          ],
+          "source_q8": [
+            1523435,
+            1075884
+          ],
+          "splits": [
+            "holdout",
+            "calibration"
+          ]
+        }
+      ],
+      "groups": {
+        "joint:0": {
+          "chained_components": [],
+          "direct_cross_split_edges": [],
+          "groups": 17,
+          "mixed_split_groups": [],
+          "repeated_groups": 1
+        },
+        "joint:256": {
+          "chained_components": [],
+          "direct_cross_split_edges": [],
+          "groups": 17,
+          "mixed_split_groups": [],
+          "repeated_groups": 1
+        },
+        "reference_q8:0": {
+          "chained_components": [],
+          "direct_cross_split_edges": [],
+          "groups": 17,
+          "mixed_split_groups": [],
+          "repeated_groups": 1
+        },
+        "reference_q8:256": {
+          "chained_components": [],
+          "direct_cross_split_edges": [],
+          "groups": 17,
+          "mixed_split_groups": [],
+          "repeated_groups": 1
+        },
+        "source_q8:0": {
+          "chained_components": [],
+          "direct_cross_split_edges": [
+            [
+              1,
+              2
+            ]
+          ],
+          "groups": 16,
+          "mixed_split_groups": [
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                1,
+                2
+              ]
+            }
+          ],
+          "repeated_groups": 2
+        },
+        "source_q8:256": {
+          "chained_components": [],
+          "direct_cross_split_edges": [
+            [
+              1,
+              2
+            ]
+          ],
+          "groups": 16,
+          "mixed_split_groups": [
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                1,
+                2
+              ]
+            }
+          ],
+          "repeated_groups": 2
+        }
+      },
+      "identity_within_two_native_px": {
+        "count": 0,
+        "reference_exact_sites": 0,
+        "reference_radius_one_sites": 0,
+        "rows": []
+      },
+      "pair": {
+        "id": "pair-3-7",
+        "local_span": 4,
+        "reference": 3,
+        "reference_original": 39,
+        "source": 7,
+        "source_original": 91,
+        "star": false
+      },
+      "rows": 18
+    },
+    {
+      "exact_source_conflicts": [],
+      "groups": {
+        "joint:0": {
+          "chained_components": [],
+          "direct_cross_split_edges": [
+            [
+              5,
+              8
+            ],
+            [
+              20,
+              45
+            ],
+            [
+              26,
+              45
+            ],
+            [
+              30,
+              41
+            ]
+          ],
+          "groups": 41,
+          "mixed_split_groups": [
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                5,
+                8
+              ]
+            },
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                20,
+                26,
+                45
+              ]
+            },
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                30,
+                41
+              ]
+            }
+          ],
+          "repeated_groups": 4
+        },
+        "joint:256": {
+          "chained_components": [],
+          "direct_cross_split_edges": [
+            [
+              5,
+              8
+            ],
+            [
+              20,
+              45
+            ],
+            [
+              26,
+              45
+            ],
+            [
+              30,
+              41
+            ]
+          ],
+          "groups": 41,
+          "mixed_split_groups": [
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                5,
+                8
+              ]
+            },
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                20,
+                26,
+                45
+              ]
+            },
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                30,
+                41
+              ]
+            }
+          ],
+          "repeated_groups": 4
+        },
+        "reference_q8:0": {
+          "chained_components": [],
+          "direct_cross_split_edges": [
+            [
+              5,
+              8
+            ],
+            [
+              20,
+              45
+            ],
+            [
+              26,
+              45
+            ],
+            [
+              30,
+              41
+            ]
+          ],
+          "groups": 41,
+          "mixed_split_groups": [
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                5,
+                8
+              ]
+            },
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                20,
+                26,
+                45
+              ]
+            },
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                30,
+                41
+              ]
+            }
+          ],
+          "repeated_groups": 4
+        },
+        "reference_q8:256": {
+          "chained_components": [],
+          "direct_cross_split_edges": [
+            [
+              5,
+              8
+            ],
+            [
+              20,
+              45
+            ],
+            [
+              26,
+              45
+            ],
+            [
+              30,
+              41
+            ]
+          ],
+          "groups": 41,
+          "mixed_split_groups": [
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                5,
+                8
+              ]
+            },
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                20,
+                26,
+                45
+              ]
+            },
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                30,
+                41
+              ]
+            }
+          ],
+          "repeated_groups": 4
+        },
+        "source_q8:0": {
+          "chained_components": [],
+          "direct_cross_split_edges": [
+            [
+              5,
+              8
+            ],
+            [
+              20,
+              45
+            ],
+            [
+              26,
+              45
+            ],
+            [
+              30,
+              41
+            ]
+          ],
+          "groups": 41,
+          "mixed_split_groups": [
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                5,
+                8
+              ]
+            },
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                20,
+                26,
+                45
+              ]
+            },
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                30,
+                41
+              ]
+            }
+          ],
+          "repeated_groups": 4
+        },
+        "source_q8:256": {
+          "chained_components": [],
+          "direct_cross_split_edges": [
+            [
+              5,
+              8
+            ],
+            [
+              20,
+              45
+            ],
+            [
+              26,
+              45
+            ],
+            [
+              30,
+              41
+            ]
+          ],
+          "groups": 41,
+          "mixed_split_groups": [
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                5,
+                8
+              ]
+            },
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                20,
+                26,
+                45
+              ]
+            },
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                30,
+                41
+              ]
+            }
+          ],
+          "repeated_groups": 4
+        }
+      },
+      "identity_within_two_native_px": {
+        "count": 3,
+        "reference_exact_sites": 1,
+        "reference_radius_one_sites": 1,
+        "rows": [
+          20,
+          26,
+          45
+        ]
+      },
+      "pair": {
+        "id": "pair-4-5",
+        "local_span": 1,
+        "reference": 5,
+        "reference_original": 65,
+        "source": 4,
+        "source_original": 52,
+        "star": true
+      },
+      "rows": 46
+    },
+    {
+      "exact_source_conflicts": [],
+      "groups": {
+        "joint:0": {
+          "chained_components": [],
+          "direct_cross_split_edges": [
+            [
+              0,
+              17
+            ],
+            [
+              4,
+              17
+            ]
+          ],
+          "groups": 22,
+          "mixed_split_groups": [
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                0,
+                4,
+                17
+              ]
+            }
+          ],
+          "repeated_groups": 1
+        },
+        "joint:256": {
+          "chained_components": [],
+          "direct_cross_split_edges": [
+            [
+              0,
+              17
+            ],
+            [
+              4,
+              17
+            ]
+          ],
+          "groups": 22,
+          "mixed_split_groups": [
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                0,
+                4,
+                17
+              ]
+            }
+          ],
+          "repeated_groups": 1
+        },
+        "reference_q8:0": {
+          "chained_components": [],
+          "direct_cross_split_edges": [
+            [
+              0,
+              17
+            ],
+            [
+              4,
+              17
+            ]
+          ],
+          "groups": 22,
+          "mixed_split_groups": [
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                0,
+                4,
+                17
+              ]
+            }
+          ],
+          "repeated_groups": 1
+        },
+        "reference_q8:256": {
+          "chained_components": [],
+          "direct_cross_split_edges": [
+            [
+              0,
+              17
+            ],
+            [
+              4,
+              17
+            ]
+          ],
+          "groups": 22,
+          "mixed_split_groups": [
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                0,
+                4,
+                17
+              ]
+            }
+          ],
+          "repeated_groups": 1
+        },
+        "source_q8:0": {
+          "chained_components": [],
+          "direct_cross_split_edges": [
+            [
+              0,
+              17
+            ],
+            [
+              4,
+              17
+            ]
+          ],
+          "groups": 22,
+          "mixed_split_groups": [
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                0,
+                4,
+                17
+              ]
+            }
+          ],
+          "repeated_groups": 1
+        },
+        "source_q8:256": {
+          "chained_components": [],
+          "direct_cross_split_edges": [
+            [
+              0,
+              17
+            ],
+            [
+              4,
+              17
+            ]
+          ],
+          "groups": 22,
+          "mixed_split_groups": [
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                0,
+                4,
+                17
+              ]
+            }
+          ],
+          "repeated_groups": 1
+        }
+      },
+      "identity_within_two_native_px": {
+        "count": 3,
+        "reference_exact_sites": 1,
+        "reference_radius_one_sites": 1,
+        "rows": [
+          0,
+          4,
+          17
+        ]
+      },
+      "pair": {
+        "id": "pair-4-6",
+        "local_span": 2,
+        "reference": 4,
+        "reference_original": 52,
+        "source": 6,
+        "source_original": 78,
+        "star": false
+      },
+      "rows": 24
+    },
+    {
+      "exact_source_conflicts": [],
+      "groups": {
+        "joint:0": {
+          "chained_components": [],
+          "direct_cross_split_edges": [
+            [
+              2,
+              7
+            ],
+            [
+              2,
+              13
+            ]
+          ],
+          "groups": 15,
+          "mixed_split_groups": [
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                2,
+                7,
+                13
+              ]
+            }
+          ],
+          "repeated_groups": 1
+        },
+        "joint:256": {
+          "chained_components": [],
+          "direct_cross_split_edges": [
+            [
+              2,
+              7
+            ],
+            [
+              2,
+              13
+            ]
+          ],
+          "groups": 15,
+          "mixed_split_groups": [
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                2,
+                7,
+                13
+              ]
+            }
+          ],
+          "repeated_groups": 1
+        },
+        "reference_q8:0": {
+          "chained_components": [],
+          "direct_cross_split_edges": [
+            [
+              2,
+              7
+            ],
+            [
+              2,
+              13
+            ]
+          ],
+          "groups": 15,
+          "mixed_split_groups": [
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                2,
+                7,
+                13
+              ]
+            }
+          ],
+          "repeated_groups": 1
+        },
+        "reference_q8:256": {
+          "chained_components": [],
+          "direct_cross_split_edges": [
+            [
+              2,
+              7
+            ],
+            [
+              2,
+              13
+            ]
+          ],
+          "groups": 15,
+          "mixed_split_groups": [
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                2,
+                7,
+                13
+              ]
+            }
+          ],
+          "repeated_groups": 1
+        },
+        "source_q8:0": {
+          "chained_components": [],
+          "direct_cross_split_edges": [
+            [
+              2,
+              7
+            ],
+            [
+              2,
+              13
+            ]
+          ],
+          "groups": 15,
+          "mixed_split_groups": [
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                2,
+                7,
+                13
+              ]
+            }
+          ],
+          "repeated_groups": 1
+        },
+        "source_q8:256": {
+          "chained_components": [],
+          "direct_cross_split_edges": [
+            [
+              2,
+              7
+            ],
+            [
+              2,
+              13
+            ]
+          ],
+          "groups": 15,
+          "mixed_split_groups": [
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                2,
+                7,
+                13
+              ]
+            }
+          ],
+          "repeated_groups": 1
+        }
+      },
+      "identity_within_two_native_px": {
+        "count": 3,
+        "reference_exact_sites": 1,
+        "reference_radius_one_sites": 1,
+        "rows": [
+          2,
+          7,
+          13
+        ]
+      },
+      "pair": {
+        "id": "pair-4-8",
+        "local_span": 4,
+        "reference": 4,
+        "reference_original": 52,
+        "source": 8,
+        "source_original": 104,
+        "star": false
+      },
+      "rows": 17
+    },
+    {
+      "exact_source_conflicts": [],
+      "groups": {
+        "joint:0": {
+          "chained_components": [],
+          "direct_cross_split_edges": [
+            [
+              1,
+              10
+            ],
+            [
+              1,
+              50
+            ],
+            [
+              30,
+              49
+            ],
+            [
+              38,
+              49
+            ],
+            [
+              44,
+              49
+            ]
+          ],
+          "groups": 47,
+          "mixed_split_groups": [
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                1,
+                10,
+                50
+              ]
+            },
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                30,
+                38,
+                44,
+                49
+              ]
+            }
+          ],
+          "repeated_groups": 3
+        },
+        "joint:256": {
+          "chained_components": [],
+          "direct_cross_split_edges": [
+            [
+              1,
+              10
+            ],
+            [
+              1,
+              50
+            ],
+            [
+              30,
+              49
+            ],
+            [
+              38,
+              49
+            ],
+            [
+              44,
+              49
+            ]
+          ],
+          "groups": 47,
+          "mixed_split_groups": [
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                1,
+                10,
+                50
+              ]
+            },
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                30,
+                38,
+                44,
+                49
+              ]
+            }
+          ],
+          "repeated_groups": 3
+        },
+        "reference_q8:0": {
+          "chained_components": [],
+          "direct_cross_split_edges": [
+            [
+              1,
+              10
+            ],
+            [
+              1,
+              50
+            ],
+            [
+              30,
+              49
+            ],
+            [
+              38,
+              49
+            ],
+            [
+              44,
+              49
+            ]
+          ],
+          "groups": 47,
+          "mixed_split_groups": [
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                1,
+                10,
+                50
+              ]
+            },
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                30,
+                38,
+                44,
+                49
+              ]
+            }
+          ],
+          "repeated_groups": 3
+        },
+        "reference_q8:256": {
+          "chained_components": [],
+          "direct_cross_split_edges": [
+            [
+              1,
+              10
+            ],
+            [
+              1,
+              50
+            ],
+            [
+              30,
+              49
+            ],
+            [
+              38,
+              49
+            ],
+            [
+              44,
+              49
+            ]
+          ],
+          "groups": 47,
+          "mixed_split_groups": [
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                1,
+                10,
+                50
+              ]
+            },
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                30,
+                38,
+                44,
+                49
+              ]
+            }
+          ],
+          "repeated_groups": 3
+        },
+        "source_q8:0": {
+          "chained_components": [],
+          "direct_cross_split_edges": [
+            [
+              1,
+              10
+            ],
+            [
+              1,
+              50
+            ],
+            [
+              30,
+              49
+            ],
+            [
+              38,
+              49
+            ],
+            [
+              44,
+              49
+            ]
+          ],
+          "groups": 47,
+          "mixed_split_groups": [
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                1,
+                10,
+                50
+              ]
+            },
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                30,
+                38,
+                44,
+                49
+              ]
+            }
+          ],
+          "repeated_groups": 3
+        },
+        "source_q8:256": {
+          "chained_components": [],
+          "direct_cross_split_edges": [
+            [
+              1,
+              10
+            ],
+            [
+              1,
+              50
+            ],
+            [
+              30,
+              49
+            ],
+            [
+              38,
+              49
+            ],
+            [
+              44,
+              49
+            ]
+          ],
+          "groups": 47,
+          "mixed_split_groups": [
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                1,
+                10,
+                50
+              ]
+            },
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                30,
+                38,
+                44,
+                49
+              ]
+            }
+          ],
+          "repeated_groups": 3
+        }
+      },
+      "identity_within_two_native_px": {
+        "count": 3,
+        "reference_exact_sites": 1,
+        "reference_radius_one_sites": 1,
+        "rows": [
+          1,
+          10,
+          50
+        ]
+      },
+      "pair": {
+        "id": "pair-5-6",
+        "local_span": 1,
+        "reference": 5,
+        "reference_original": 65,
+        "source": 6,
+        "source_original": 78,
+        "star": true
+      },
+      "rows": 53
+    },
+    {
+      "exact_source_conflicts": [],
+      "groups": {
+        "joint:0": {
+          "chained_components": [],
+          "direct_cross_split_edges": [
+            [
+              12,
+              23
+            ]
+          ],
+          "groups": 26,
+          "mixed_split_groups": [
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                12,
+                23
+              ]
+            }
+          ],
+          "repeated_groups": 2
+        },
+        "joint:256": {
+          "chained_components": [],
+          "direct_cross_split_edges": [
+            [
+              12,
+              23
+            ]
+          ],
+          "groups": 26,
+          "mixed_split_groups": [
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                12,
+                23
+              ]
+            }
+          ],
+          "repeated_groups": 2
+        },
+        "reference_q8:0": {
+          "chained_components": [],
+          "direct_cross_split_edges": [
+            [
+              12,
+              23
+            ]
+          ],
+          "groups": 26,
+          "mixed_split_groups": [
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                12,
+                23
+              ]
+            }
+          ],
+          "repeated_groups": 2
+        },
+        "reference_q8:256": {
+          "chained_components": [],
+          "direct_cross_split_edges": [
+            [
+              12,
+              23
+            ]
+          ],
+          "groups": 26,
+          "mixed_split_groups": [
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                12,
+                23
+              ]
+            }
+          ],
+          "repeated_groups": 2
+        },
+        "source_q8:0": {
+          "chained_components": [],
+          "direct_cross_split_edges": [
+            [
+              12,
+              23
+            ]
+          ],
+          "groups": 26,
+          "mixed_split_groups": [
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                12,
+                23
+              ]
+            }
+          ],
+          "repeated_groups": 2
+        },
+        "source_q8:256": {
+          "chained_components": [],
+          "direct_cross_split_edges": [
+            [
+              12,
+              23
+            ]
+          ],
+          "groups": 26,
+          "mixed_split_groups": [
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                12,
+                23
+              ]
+            }
+          ],
+          "repeated_groups": 2
+        }
+      },
+      "identity_within_two_native_px": {
+        "count": 3,
+        "reference_exact_sites": 1,
+        "reference_radius_one_sites": 1,
+        "rows": [
+          6,
+          14,
+          24
+        ]
+      },
+      "pair": {
+        "id": "pair-5-7",
+        "local_span": 2,
+        "reference": 5,
+        "reference_original": 65,
+        "source": 7,
+        "source_original": 91,
+        "star": true
+      },
+      "rows": 29
+    },
+    {
+      "exact_source_conflicts": [],
+      "groups": {
+        "joint:0": {
+          "chained_components": [],
+          "direct_cross_split_edges": [
+            [
+              1,
+              6
+            ],
+            [
+              6,
+              11
+            ],
+            [
+              6,
+              15
+            ]
+          ],
+          "groups": 19,
+          "mixed_split_groups": [
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                1,
+                6,
+                11,
+                15
+              ]
+            }
+          ],
+          "repeated_groups": 1
+        },
+        "joint:256": {
+          "chained_components": [],
+          "direct_cross_split_edges": [
+            [
+              1,
+              6
+            ],
+            [
+              6,
+              11
+            ],
+            [
+              6,
+              15
+            ]
+          ],
+          "groups": 19,
+          "mixed_split_groups": [
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                1,
+                6,
+                11,
+                15
+              ]
+            }
+          ],
+          "repeated_groups": 1
+        },
+        "reference_q8:0": {
+          "chained_components": [],
+          "direct_cross_split_edges": [
+            [
+              1,
+              6
+            ],
+            [
+              6,
+              11
+            ],
+            [
+              6,
+              15
+            ]
+          ],
+          "groups": 19,
+          "mixed_split_groups": [
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                1,
+                6,
+                11,
+                15
+              ]
+            }
+          ],
+          "repeated_groups": 1
+        },
+        "reference_q8:256": {
+          "chained_components": [],
+          "direct_cross_split_edges": [
+            [
+              1,
+              6
+            ],
+            [
+              6,
+              11
+            ],
+            [
+              6,
+              15
+            ]
+          ],
+          "groups": 19,
+          "mixed_split_groups": [
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                1,
+                6,
+                11,
+                15
+              ]
+            }
+          ],
+          "repeated_groups": 1
+        },
+        "source_q8:0": {
+          "chained_components": [],
+          "direct_cross_split_edges": [
+            [
+              1,
+              6
+            ],
+            [
+              6,
+              11
+            ],
+            [
+              6,
+              15
+            ]
+          ],
+          "groups": 19,
+          "mixed_split_groups": [
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                1,
+                6,
+                11,
+                15
+              ]
+            }
+          ],
+          "repeated_groups": 1
+        },
+        "source_q8:256": {
+          "chained_components": [],
+          "direct_cross_split_edges": [
+            [
+              1,
+              6
+            ],
+            [
+              6,
+              11
+            ],
+            [
+              6,
+              15
+            ]
+          ],
+          "groups": 19,
+          "mixed_split_groups": [
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                1,
+                6,
+                11,
+                15
+              ]
+            }
+          ],
+          "repeated_groups": 1
+        }
+      },
+      "identity_within_two_native_px": {
+        "count": 4,
+        "reference_exact_sites": 1,
+        "reference_radius_one_sites": 1,
+        "rows": [
+          1,
+          6,
+          11,
+          15
+        ]
+      },
+      "pair": {
+        "id": "pair-5-8",
+        "local_span": 3,
+        "reference": 5,
+        "reference_original": 65,
+        "source": 8,
+        "source_original": 104,
+        "star": true
+      },
+      "rows": 22
+    },
+    {
+      "exact_source_conflicts": [],
+      "groups": {
+        "joint:0": {
+          "chained_components": [],
+          "direct_cross_split_edges": [
+            [
+              8,
+              15
+            ],
+            [
+              8,
+              23
+            ],
+            [
+              12,
+              15
+            ],
+            [
+              12,
+              23
+            ],
+            [
+              15,
+              16
+            ],
+            [
+              15,
+              22
+            ],
+            [
+              15,
+              40
+            ],
+            [
+              16,
+              23
+            ],
+            [
+              19,
+              36
+            ],
+            [
+              22,
+              23
+            ],
+            [
+              23,
+              40
+            ]
+          ],
+          "groups": 41,
+          "mixed_split_groups": [
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                8,
+                12,
+                15,
+                16,
+                22,
+                23,
+                40
+              ]
+            },
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                19,
+                36
+              ]
+            }
+          ],
+          "repeated_groups": 4
+        },
+        "joint:256": {
+          "chained_components": [],
+          "direct_cross_split_edges": [
+            [
+              8,
+              15
+            ],
+            [
+              8,
+              23
+            ],
+            [
+              12,
+              15
+            ],
+            [
+              12,
+              23
+            ],
+            [
+              15,
+              16
+            ],
+            [
+              15,
+              22
+            ],
+            [
+              15,
+              40
+            ],
+            [
+              16,
+              23
+            ],
+            [
+              19,
+              36
+            ],
+            [
+              22,
+              23
+            ],
+            [
+              23,
+              40
+            ]
+          ],
+          "groups": 41,
+          "mixed_split_groups": [
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                8,
+                12,
+                15,
+                16,
+                22,
+                23,
+                40
+              ]
+            },
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                19,
+                36
+              ]
+            }
+          ],
+          "repeated_groups": 4
+        },
+        "reference_q8:0": {
+          "chained_components": [],
+          "direct_cross_split_edges": [
+            [
+              8,
+              15
+            ],
+            [
+              8,
+              23
+            ],
+            [
+              12,
+              15
+            ],
+            [
+              12,
+              23
+            ],
+            [
+              15,
+              16
+            ],
+            [
+              15,
+              22
+            ],
+            [
+              15,
+              40
+            ],
+            [
+              16,
+              23
+            ],
+            [
+              19,
+              36
+            ],
+            [
+              22,
+              23
+            ],
+            [
+              23,
+              40
+            ]
+          ],
+          "groups": 41,
+          "mixed_split_groups": [
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                8,
+                12,
+                15,
+                16,
+                22,
+                23,
+                40
+              ]
+            },
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                19,
+                36
+              ]
+            }
+          ],
+          "repeated_groups": 4
+        },
+        "reference_q8:256": {
+          "chained_components": [],
+          "direct_cross_split_edges": [
+            [
+              8,
+              15
+            ],
+            [
+              8,
+              23
+            ],
+            [
+              12,
+              15
+            ],
+            [
+              12,
+              23
+            ],
+            [
+              15,
+              16
+            ],
+            [
+              15,
+              22
+            ],
+            [
+              15,
+              40
+            ],
+            [
+              16,
+              23
+            ],
+            [
+              19,
+              36
+            ],
+            [
+              22,
+              23
+            ],
+            [
+              23,
+              40
+            ]
+          ],
+          "groups": 41,
+          "mixed_split_groups": [
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                8,
+                12,
+                15,
+                16,
+                22,
+                23,
+                40
+              ]
+            },
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                19,
+                36
+              ]
+            }
+          ],
+          "repeated_groups": 4
+        },
+        "source_q8:0": {
+          "chained_components": [],
+          "direct_cross_split_edges": [
+            [
+              8,
+              15
+            ],
+            [
+              8,
+              23
+            ],
+            [
+              12,
+              15
+            ],
+            [
+              12,
+              23
+            ],
+            [
+              15,
+              16
+            ],
+            [
+              15,
+              22
+            ],
+            [
+              15,
+              40
+            ],
+            [
+              16,
+              23
+            ],
+            [
+              19,
+              36
+            ],
+            [
+              22,
+              23
+            ],
+            [
+              23,
+              40
+            ]
+          ],
+          "groups": 41,
+          "mixed_split_groups": [
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                8,
+                12,
+                15,
+                16,
+                22,
+                23,
+                40
+              ]
+            },
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                19,
+                36
+              ]
+            }
+          ],
+          "repeated_groups": 4
+        },
+        "source_q8:256": {
+          "chained_components": [],
+          "direct_cross_split_edges": [
+            [
+              8,
+              15
+            ],
+            [
+              8,
+              23
+            ],
+            [
+              12,
+              15
+            ],
+            [
+              12,
+              23
+            ],
+            [
+              15,
+              16
+            ],
+            [
+              15,
+              22
+            ],
+            [
+              15,
+              40
+            ],
+            [
+              16,
+              23
+            ],
+            [
+              19,
+              36
+            ],
+            [
+              22,
+              23
+            ],
+            [
+              23,
+              40
+            ]
+          ],
+          "groups": 41,
+          "mixed_split_groups": [
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                8,
+                12,
+                15,
+                16,
+                22,
+                23,
+                40
+              ]
+            },
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                19,
+                36
+              ]
+            }
+          ],
+          "repeated_groups": 4
+        }
+      },
+      "identity_within_two_native_px": {
+        "count": 9,
+        "reference_exact_sites": 2,
+        "reference_radius_one_sites": 2,
+        "rows": [
+          8,
+          12,
+          15,
+          16,
+          22,
+          23,
+          31,
+          33,
+          40
+        ]
+      },
+      "pair": {
+        "id": "pair-6-7",
+        "local_span": 1,
+        "reference": 6,
+        "reference_original": 78,
+        "source": 7,
+        "source_original": 91,
+        "star": false
+      },
+      "rows": 50
+    },
+    {
+      "exact_source_conflicts": [],
+      "groups": {
+        "joint:0": {
+          "chained_components": [],
+          "direct_cross_split_edges": [
+            [
+              7,
+              18
+            ],
+            [
+              9,
+              18
+            ],
+            [
+              10,
+              13
+            ],
+            [
+              10,
+              19
+            ],
+            [
+              12,
+              13
+            ],
+            [
+              12,
+              19
+            ],
+            [
+              13,
+              16
+            ],
+            [
+              13,
+              20
+            ],
+            [
+              16,
+              19
+            ],
+            [
+              19,
+              20
+            ]
+          ],
+          "groups": 15,
+          "mixed_split_groups": [
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                7,
+                9,
+                18
+              ]
+            },
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                10,
+                12,
+                13,
+                16,
+                19,
+                20
+              ]
+            }
+          ],
+          "repeated_groups": 2
+        },
+        "joint:256": {
+          "chained_components": [],
+          "direct_cross_split_edges": [
+            [
+              7,
+              18
+            ],
+            [
+              9,
+              18
+            ],
+            [
+              10,
+              13
+            ],
+            [
+              10,
+              19
+            ],
+            [
+              12,
+              13
+            ],
+            [
+              12,
+              19
+            ],
+            [
+              13,
+              16
+            ],
+            [
+              13,
+              20
+            ],
+            [
+              16,
+              19
+            ],
+            [
+              19,
+              20
+            ]
+          ],
+          "groups": 15,
+          "mixed_split_groups": [
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                7,
+                9,
+                18
+              ]
+            },
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                10,
+                12,
+                13,
+                16,
+                19,
+                20
+              ]
+            }
+          ],
+          "repeated_groups": 2
+        },
+        "reference_q8:0": {
+          "chained_components": [],
+          "direct_cross_split_edges": [
+            [
+              7,
+              18
+            ],
+            [
+              9,
+              18
+            ],
+            [
+              10,
+              13
+            ],
+            [
+              10,
+              19
+            ],
+            [
+              12,
+              13
+            ],
+            [
+              12,
+              19
+            ],
+            [
+              13,
+              16
+            ],
+            [
+              13,
+              20
+            ],
+            [
+              16,
+              19
+            ],
+            [
+              19,
+              20
+            ]
+          ],
+          "groups": 15,
+          "mixed_split_groups": [
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                7,
+                9,
+                18
+              ]
+            },
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                10,
+                12,
+                13,
+                16,
+                19,
+                20
+              ]
+            }
+          ],
+          "repeated_groups": 2
+        },
+        "reference_q8:256": {
+          "chained_components": [],
+          "direct_cross_split_edges": [
+            [
+              7,
+              18
+            ],
+            [
+              9,
+              18
+            ],
+            [
+              10,
+              13
+            ],
+            [
+              10,
+              19
+            ],
+            [
+              12,
+              13
+            ],
+            [
+              12,
+              19
+            ],
+            [
+              13,
+              16
+            ],
+            [
+              13,
+              20
+            ],
+            [
+              16,
+              19
+            ],
+            [
+              19,
+              20
+            ]
+          ],
+          "groups": 15,
+          "mixed_split_groups": [
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                7,
+                9,
+                18
+              ]
+            },
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                10,
+                12,
+                13,
+                16,
+                19,
+                20
+              ]
+            }
+          ],
+          "repeated_groups": 2
+        },
+        "source_q8:0": {
+          "chained_components": [],
+          "direct_cross_split_edges": [
+            [
+              7,
+              18
+            ],
+            [
+              9,
+              18
+            ],
+            [
+              10,
+              13
+            ],
+            [
+              10,
+              19
+            ],
+            [
+              12,
+              13
+            ],
+            [
+              12,
+              19
+            ],
+            [
+              13,
+              16
+            ],
+            [
+              13,
+              20
+            ],
+            [
+              16,
+              19
+            ],
+            [
+              19,
+              20
+            ]
+          ],
+          "groups": 15,
+          "mixed_split_groups": [
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                7,
+                9,
+                18
+              ]
+            },
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                10,
+                12,
+                13,
+                16,
+                19,
+                20
+              ]
+            }
+          ],
+          "repeated_groups": 2
+        },
+        "source_q8:256": {
+          "chained_components": [],
+          "direct_cross_split_edges": [
+            [
+              7,
+              18
+            ],
+            [
+              9,
+              18
+            ],
+            [
+              10,
+              13
+            ],
+            [
+              10,
+              19
+            ],
+            [
+              12,
+              13
+            ],
+            [
+              12,
+              19
+            ],
+            [
+              13,
+              16
+            ],
+            [
+              13,
+              20
+            ],
+            [
+              16,
+              19
+            ],
+            [
+              19,
+              20
+            ]
+          ],
+          "groups": 15,
+          "mixed_split_groups": [
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                7,
+                9,
+                18
+              ]
+            },
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                10,
+                12,
+                13,
+                16,
+                19,
+                20
+              ]
+            }
+          ],
+          "repeated_groups": 2
+        }
+      },
+      "identity_within_two_native_px": {
+        "count": 9,
+        "reference_exact_sites": 2,
+        "reference_radius_one_sites": 2,
+        "rows": [
+          7,
+          9,
+          10,
+          12,
+          13,
+          16,
+          18,
+          19,
+          20
+        ]
+      },
+      "pair": {
+        "id": "pair-6-8",
+        "local_span": 2,
+        "reference": 6,
+        "reference_original": 78,
+        "source": 8,
+        "source_original": 104,
+        "star": false
+      },
+      "rows": 22
+    },
+    {
+      "exact_source_conflicts": [
+        {
+          "reference_q8": [
+            [
+              1325022,
+              1056474
+            ],
+            [
+              1523435,
+              1075884
+            ]
+          ],
+          "reference_separation_native_px": 778.7505591033839,
+          "rows": [
+            0,
+            12
+          ],
+          "source_q8": [
+            1777677,
+            1048864
+          ],
+          "splits": [
+            "calibration",
+            "calibration"
+          ]
+        }
+      ],
+      "groups": {
+        "joint:0": {
+          "chained_components": [],
+          "direct_cross_split_edges": [
+            [
+              3,
+              40
+            ],
+            [
+              5,
+              40
+            ],
+            [
+              9,
+              22
+            ],
+            [
+              19,
+              40
+            ],
+            [
+              21,
+              40
+            ],
+            [
+              39,
+              40
+            ]
+          ],
+          "groups": 37,
+          "mixed_split_groups": [
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                3,
+                5,
+                19,
+                21,
+                39,
+                40
+              ]
+            },
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                9,
+                22
+              ]
+            }
+          ],
+          "repeated_groups": 3
+        },
+        "joint:256": {
+          "chained_components": [],
+          "direct_cross_split_edges": [
+            [
+              3,
+              40
+            ],
+            [
+              5,
+              40
+            ],
+            [
+              9,
+              22
+            ],
+            [
+              19,
+              40
+            ],
+            [
+              21,
+              40
+            ],
+            [
+              39,
+              40
+            ]
+          ],
+          "groups": 37,
+          "mixed_split_groups": [
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                3,
+                5,
+                19,
+                21,
+                39,
+                40
+              ]
+            },
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                9,
+                22
+              ]
+            }
+          ],
+          "repeated_groups": 3
+        },
+        "reference_q8:0": {
+          "chained_components": [],
+          "direct_cross_split_edges": [
+            [
+              3,
+              40
+            ],
+            [
+              5,
+              40
+            ],
+            [
+              9,
+              22
+            ],
+            [
+              19,
+              40
+            ],
+            [
+              21,
+              40
+            ],
+            [
+              39,
+              40
+            ]
+          ],
+          "groups": 37,
+          "mixed_split_groups": [
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                3,
+                5,
+                19,
+                21,
+                39,
+                40
+              ]
+            },
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                9,
+                22
+              ]
+            }
+          ],
+          "repeated_groups": 3
+        },
+        "reference_q8:256": {
+          "chained_components": [],
+          "direct_cross_split_edges": [
+            [
+              3,
+              40
+            ],
+            [
+              5,
+              40
+            ],
+            [
+              9,
+              22
+            ],
+            [
+              19,
+              40
+            ],
+            [
+              21,
+              40
+            ],
+            [
+              39,
+              40
+            ]
+          ],
+          "groups": 37,
+          "mixed_split_groups": [
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                3,
+                5,
+                19,
+                21,
+                39,
+                40
+              ]
+            },
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                9,
+                22
+              ]
+            }
+          ],
+          "repeated_groups": 3
+        },
+        "source_q8:0": {
+          "chained_components": [],
+          "direct_cross_split_edges": [
+            [
+              3,
+              40
+            ],
+            [
+              5,
+              40
+            ],
+            [
+              9,
+              22
+            ],
+            [
+              19,
+              40
+            ],
+            [
+              21,
+              40
+            ],
+            [
+              39,
+              40
+            ]
+          ],
+          "groups": 36,
+          "mixed_split_groups": [
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                3,
+                5,
+                19,
+                21,
+                39,
+                40
+              ]
+            },
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                9,
+                22
+              ]
+            }
+          ],
+          "repeated_groups": 4
+        },
+        "source_q8:256": {
+          "chained_components": [],
+          "direct_cross_split_edges": [
+            [
+              3,
+              40
+            ],
+            [
+              5,
+              40
+            ],
+            [
+              9,
+              22
+            ],
+            [
+              19,
+              40
+            ],
+            [
+              21,
+              40
+            ],
+            [
+              39,
+              40
+            ]
+          ],
+          "groups": 36,
+          "mixed_split_groups": [
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                3,
+                5,
+                19,
+                21,
+                39,
+                40
+              ]
+            },
+            {
+              "diameter_native_px": 0.0,
+              "rows": [
+                9,
+                22
+              ]
+            }
+          ],
+          "repeated_groups": 4
+        }
+      },
+      "identity_within_two_native_px": {
+        "count": 9,
+        "reference_exact_sites": 3,
+        "reference_radius_one_sites": 3,
+        "rows": [
+          3,
+          5,
+          10,
+          16,
+          19,
+          21,
+          36,
+          39,
+          40
+        ]
+      },
+      "pair": {
+        "id": "pair-7-8",
+        "local_span": 1,
+        "reference": 7,
+        "reference_original": 91,
+        "source": 8,
+        "source_original": 104,
+        "star": false
+      },
+      "rows": 44
+    }
+  ],
+  "schema": "m193c-independent-coordinate-sites-v1",
+  "source": {
+    "bytes": 9064,
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\work\\independent-coordinate-sites-1.py",
+    "sha256": "2f65e2cc3dfebaa74cb96b907a5963da47c43e19ca9edc7821991a885462cf9b"
+  },
+  "status": "PASS_SAVED_COORDINATE_REVIEW_ONLY",
+  "summary": {
+    "chained_components_all_sides_radius_one": 0,
+    "contradictory_exact_source_groups": 9,
+    "mixed_exact_joint_pairs_all_23": 14,
+    "mixed_exact_joint_pairs_at_least_24_rows": 7,
+    "mixed_radius_one_joint_pairs_all_23": 14,
+    "pair_count": 23,
+    "pairs_with_exact_source_contradiction": [
+      "pair-2-4",
+      "pair-2-6",
+      "pair-3-4",
+      "pair-3-7",
+      "pair-7-8"
+    ]
+  },
+  "timing": {
+    "cpu_seconds": 0.0625,
+    "wall_seconds": 0.10947829999986425
+  }
+}
