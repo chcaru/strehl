@@ -951,6 +951,48 @@ state an explicit finite extension and commission live combined accounting plus
 durable final Job evidence before another fixed23-pair attempt. Real geometry
 and consumer admission remain unmeasured.
 
+## Operational replacement: prelaunch source-contract refusal
+
+**VERIFIED operational outcome:** the replacement controller from
+`c315c12761ed5ed3fa1925da901c577056738baa` and checker from
+`98456b7b886e29a2bad088c9251cbecedcdf0d6e` were released at
+`e35a957ec65eeb1fc32dbc6c66cd1d82d5bb815e`. The actual preparation completed:
+296 bound sources, 305 metadata files checked, and 960,068 bytes of reserved
+preparation capacity within 1 MiB. All 296 source digests matched before launch.
+
+The [single actual invocation](../../experiments/m193c-output-grid/work/real-accounting-repair-1-outer.json)
+exited 1 after **0.479311 seconds**, at source validation and before controls or
+worker launch. Its [retained result](../../experiments/m193c-output-grid/real-accounting-repair-1/result.json)
+records zero images, extractions, normalizations, model forwards and registrar
+calls. All 23 pairs remain unvisited. This is not a learned-matcher rejection.
+
+The failure is a concrete schema mismatch. The preparer admitted one empty
+diagnostic stderr file into `source_bindings`; the unchanged source reader
+requires positive byte counts. The file's empty digest is correct. Correct
+bytes did not establish that this evidence belonged in the source schema.
+Independent review checked the actual unique zero-byte entry and the failing
+reader predicate. A fresh release will preserve every positive source binding,
+bind explicitly named empty diagnostics separately, and reject unexpected empty
+source entries before writing any plan. Scientific and geometry gates stay fixed.
+
+The [frozen independent checker](../../experiments/m193c-output-grid/work/independent-real-accounting-repair-audit.json)
+ran once and verified this saved refusal. Its 0.345241-second whole invocation
+fits the sampled wall time plus the reserved publication allowance.
+The outcome and [independent interpretation](../../experiments/m193c-output-grid/work/independent-real-accounting-repair-outcome-read.md)
+are preserved at `b23c1e1d21b229637ef152fd3144ad93a309f883`.
+Five output files occupy 221,184 bytes; reserved capacity is 286,720 bytes.
+The refusal report, accounting sample and unobserved-child record survived.
+
+The audit's generic `OBSERVED_RESOURCE_ENVELOPE_EXCEEDED` label must not be
+quoted as an actual overrun: its transport-admission predicate is false for
+every incomplete attempt. The other resource checks pass; the retained parent
+CPU increment is 0.453125 seconds. The conservative carry nevertheless retains
+the registered 102-second incomplete-attempt CPU charge. After the audit it is
+1,292.771803 CPU seconds, 1,193.6198098999992 wall seconds, 4,059,662,381 file
+bytes and 68,401,447 metadata bytes. A subsequent attempt needs a fresh,
+explicit finite allowance and preserves these charges. No real geometry,
+support, placement or SOTA claim follows from this operational result.
+
 ## Reproduction and preserved attempts
 
 Each release contains the complete actual argument array, input references and
