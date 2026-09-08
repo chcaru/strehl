@@ -1,0 +1,108 @@
+{
+  "scope": "Conservative canonical preparation metadata; all1MiB charged",
+  "files": [
+    {
+      "path": "experiments/m193c-output-grid/independent-precise-upscale-1-read.md",
+      "bytes": 7617,
+      "sha256": "4cea18398a92a59cff235895af6ba7137a27a78ec2359b0d801213c750f2ec3d"
+    },
+    {
+      "path": "experiments/m193c-output-grid/independent-precise-upscale-canonical-source-review.md",
+      "bytes": 7238,
+      "sha256": "c4ac36416793fc9a9901f0670ab772c6c87897ec8bbdc75759a7eff5669a9e1e"
+    },
+    {
+      "path": "experiments/m193c-output-grid/precise-upscale-1/result.json",
+      "bytes": 38925,
+      "sha256": "04ebdbedaa86035a06283b8659f9bcd1b43413fe049b7d79d51c658f64445d00"
+    },
+    {
+      "path": "experiments/m193c-output-grid/precise-upscale-canonical-plan-1.json",
+      "bytes": 36490,
+      "sha256": "a9f194a8cfd43c94a54ca7351aebf6a8c01658f1b96d9a987728adf1a44b0a90"
+    },
+    {
+      "path": "experiments/m193c-output-grid/precise-upscale-canonical-preregister.md",
+      "bytes": 10037,
+      "sha256": "0362046130173d506630eea40e79d699b3a77dbbe3117c5445df026625acd8e9"
+    },
+    {
+      "path": "experiments/m193c-output-grid/precise-upscale-canonical-run.py",
+      "bytes": 20094,
+      "sha256": "ae38588792af5128c7f7ad51707eeb8ba72b94b95b73a88e827fee545e087919"
+    },
+    {
+      "path": "experiments/m193c-output-grid/precise-upscale-plan-1.json",
+      "bytes": 35176,
+      "sha256": "128919ba8369df7c0756e7ee6a4fbfb5ff0282850858088ef3eafd5f7ea79ec9"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/archive-precise-upscale-canonical-plan-1.py",
+      "bytes": 1169,
+      "sha256": "220dce451807c2a869772d07cf2b9cf5d3fda5dea8e773f98297be51efc3d490"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/independent-precise-upscale-1-audit.json",
+      "bytes": 13156,
+      "sha256": "99bffd1e2474d7d40d2366de4eac6fac0f55d401f80137cb58e5e1c502b06347"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/independent-precise-upscale-1-audit.py",
+      "bytes": 24861,
+      "sha256": "223625fcc936620aeda0f4dc01f9d0c2f883eaeff694b9e973c991eb4b491181"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/independent-precise-upscale-canonical-plan-preparation-read.md",
+      "bytes": 4239,
+      "sha256": "56daeeda4433e00d3f45a3d9e783c42eaa46d971fcb180a16c58c4989451688e"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/precise-upscale-1-console.txt",
+      "bytes": 1163,
+      "sha256": "0d461e61444b3128b9da12f1653411324e6c06d0d16ced1383203207d8f032cd"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/precise-upscale-1-exit.txt",
+      "bytes": 3,
+      "sha256": "f1b2f662800122bed0ff255693df89c4487fbdcf453d3524a42d4ec20c3d9c04"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/precise-upscale-1-outer.json",
+      "bytes": 1055,
+      "sha256": "6b4ac98bc88e68fbb7c083fe5a6bc630df71d0e4b71d1fc995f7b0152a671bd3"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/precise-upscale-canonical-plan-1-review.md",
+      "bytes": 2038,
+      "sha256": "7085a04f4417e82b3331a13e83cf55a743300733aa4af62aebcbd652c213d961"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/precise-upscale-canonical-preparation-1-console.txt",
+      "bytes": 499,
+      "sha256": "0f58e25e4656922159cde28e69f615b8e9188c67d2ff37cb2dd2714592be10b9"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/precise-upscale-canonical-preparation-1-exit.txt",
+      "bytes": 3,
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/precise-upscale-canonical-preparation-1-outer.json",
+      "bytes": 1404,
+      "sha256": "03afc763c32374c9eecabb0ea154b7c74b641ad214ab218cb8ad3a2a0b107515"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/precise-upscale-canonical-prior-work-1.json",
+      "bytes": 103,
+      "sha256": "16ea25dc9289f9cace437a4e800c0e6a9adaea883984d70c015efef59b05a29e"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/prepare-precise-upscale-canonical-plan-1.py",
+      "bytes": 4794,
+      "sha256": "e3b1ea51f6a6995a163f09eedd2ec8cd15a305e2728bac9530d9ce8e15ff96fb"
+    }
+  ],
+  "total_bytes": 210064,
+  "future_audit_reserve_bytes": 200704,
+  "allowance_bytes": 1048576
+}

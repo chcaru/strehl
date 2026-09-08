@@ -1,0 +1,28 @@
+{
+  "scope": "Actual metadata-only canonical private comparison repair preparation",
+  "command": [
+    "C:/Users/chris/AppData/Local/Programs/Python/Python312/python.exe",
+    "-B",
+    "experiments/m193c-output-grid/work/prepare-precise-upscale-canonical-plan-1.py",
+    "--audit-sha256",
+    "99bffd1e2474d7d40d2366de4eac6fac0f55d401f80137cb58e5e1c502b06347",
+    "--source",
+    "experiments/m193c-output-grid/precise-upscale-canonical-run.py",
+    "ae38588792af5128c7f7ad51707eeb8ba72b94b95b73a88e827fee545e087919",
+    "--source",
+    "experiments/m193c-output-grid/precise-upscale-canonical-preregister.md",
+    "0362046130173d506630eea40e79d699b3a77dbbe3117c5445df026625acd8e9",
+    "--source",
+    "experiments/m193c-output-grid/independent-precise-upscale-canonical-source-review.md",
+    "c4ac36416793fc9a9901f0670ab772c6c87897ec8bbdc75759a7eff5669a9e1e",
+    "--source",
+    "experiments/m193c-output-grid/work/independent-precise-upscale-canonical-plan-preparation-read.md",
+    "56daeeda4433e00d3f45a3d9e783c42eaa46d971fcb180a16c58c4989451688e",
+    "--source",
+    "experiments/m193c-output-grid/work/independent-precise-upscale-1-audit.py",
+    "223625fcc936620aeda0f4dc01f9d0c2f883eaeff694b9e973c991eb4b491181"
+  ],
+  "exit_code": 0,
+  "elapsed_wall_seconds": 0.1212862,
+  "source_sha256": "e3b1ea51f6a6995a163f09eedd2ec8cd15a305e2728bac9530d9ce8e15ff96fb"
+}
