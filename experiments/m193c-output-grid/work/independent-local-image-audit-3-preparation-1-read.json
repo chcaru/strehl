@@ -1,0 +1,44 @@
+{
+  "schema": "m193c-audit3-preparation-root-actual-read-v1",
+  "status": "VERIFIED_METADATA_PREPARATION_ONLY",
+  "source_freeze_commit": "5e20932db02371b35af692dca63bf1a4976ce988",
+  "grant": {
+    "bytes": 8750,
+    "path": "experiments/m193c-output-grid/work/local-image-audit-recovery-3.json",
+    "sha256": "b35e818e16b845fa6633d1df28dc894c4fb7154f31a65e3d08f1797875f6dd55"
+  },
+  "receipt": {
+    "bytes": 5759,
+    "path": "experiments/m193c-output-grid/work/local-image-audit-3-preparation-1.json",
+    "sha256": "add2d2a16fd56a789ecd871a8e27f9844eeeaa9df3647877c70258a15d350e9e"
+  },
+  "controls": {
+    "bytes": 968,
+    "path": "experiments/m193c-output-grid/work/local-image-audit-3-preparation-controls-1.json",
+    "sha256": "a9587452312fcba330ba8e1ed1ee590847c6c0bdfa903c0407fd508787cf5002"
+  },
+  "external": {
+    "path": "experiments/m193c-output-grid/work/local-image-audit-3-preparation-1-outer.json",
+    "bytes": 3827,
+    "sha256": "d6dd6b3acbb1799e18b8d2e0198d32cf7f6ee853c80df34483599ff23e4f79e8"
+  },
+  "actual_exit": 0,
+  "whole_external_wall_seconds": 0.125,
+  "post_publication_sample": {
+    "cpu_seconds": 0.109375,
+    "wall_seconds": 0.11000000000058208
+  },
+  "tail_allowance": {
+    "cpu_seconds": 0.25,
+    "wall_seconds": 0.5
+  },
+  "exact_control_rows": 9,
+  "exact_metadata_files_rehashed": 50,
+  "metadata_file_bytes_rehashed": 1709802,
+  "source_count": 10,
+  "source_bytes": 173885,
+  "full_process_cpu_verified": false,
+  "command_reconstructed_from_original_actual_authority": true,
+  "audit_artifacts_absent": true,
+  "scope": "Root independent of preparer author; read full actual controls/receipt and rehashed exact source/history/authority bytes without candidate import or data access. Initial failure file is not an admitted success result."
+}

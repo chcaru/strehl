@@ -1,0 +1,59 @@
+{
+  "schema": "m193c-local-image-audit3-once-release-v1",
+  "decision": "RELEASE_EXACTLY_ONE_SAVED_DATA_AUDIT3",
+  "source_freeze_commit": "5e20932db02371b35af692dca63bf1a4976ce988",
+  "preparation_actual_read": {
+    "path": "experiments/m193c-output-grid/work/independent-local-image-audit-3-preparation-1-read.json",
+    "bytes": 1794,
+    "sha256": "e96929cf1c0fdd832ce3e22579ecb90a6a39b012a1413de1865594e6ce924599"
+  },
+  "grant": {
+    "bytes": 8750,
+    "path": "experiments/m193c-output-grid/work/local-image-audit-recovery-3.json",
+    "sha256": "b35e818e16b845fa6633d1df28dc894c4fb7154f31a65e3d08f1797875f6dd55"
+  },
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-I",
+    "-S",
+    "-B",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\work\\independent-local-image-probe-audit-3.py",
+    "--plan",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\local-image-probe-plan-1.json",
+    "--plan-sha256",
+    "337ee76493feb15f14982d14fdb6b6148bc76ba108a9c0d77ba51ca25a6e66c1",
+    "--result",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\local-image-probe-1\\result.json",
+    "--result-sha256",
+    "8f5307a9ebfd5fb3e51be9ebb9bb6b9e92f1f0f4d0bb1a84ed792276a6eb1d64",
+    "--outer",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\work\\local-image-probe-1-launch-outer.json",
+    "--outer-sha256",
+    "d2d41c654e38468fb5af2ff1dff4cf533c778007452baee33ba3b883f8b01db6",
+    "--console",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\work\\local-image-probe-1-launch-stdout.bin",
+    "--console-sha256",
+    "dc947f106763901b640d2e0c9b7b6127ff2b1a6e9743971d9ebecc3ff549aa3f",
+    "--exit",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\work\\local-image-probe-1-launch-exit.txt",
+    "--exit-sha256",
+    "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "--self-sha256",
+    "bf095b28e679e057427e4a2db1be4ba798bef8492af47553681b313246f5f33c",
+    "--worker-sha256",
+    "5ad5e115ed0db16a2d2049ade8d1727d4f407463a3718de7bc407d8c4659896d",
+    "--recovery-grant",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\work\\local-image-audit-recovery-3.json",
+    "--recovery-grant-sha256",
+    "b35e818e16b845fa6633d1df28dc894c4fb7154f31a65e3d08f1797875f6dd55"
+  ],
+  "allowance": {
+    "cpu_seconds": 25,
+    "file_bytes": 3145728,
+    "metadata_bytes": 3145728,
+    "wall_seconds": 30
+  },
+  "whole_external_wall_required": true,
+  "complete_raw_streams_required": true,
+  "scope": "One isolated saved-data checker. Runtime preflight must pass before saved numerical payloads; no new native image extraction, estimator/model/graph run, capture2 or retry. All original refusal and historical costs remain. A successful saved check does not establish physical geometry or original producer completion."
+}
