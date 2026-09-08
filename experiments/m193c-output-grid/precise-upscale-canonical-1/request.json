@@ -1,0 +1,69 @@
+{
+  "inputs": {
+    "cached_control": {
+      "bytes": 171509,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\factor-eight-1\\worker\\control-native-rotation-positive.json",
+      "sha256": "087e9ae3d844ed7e397417b6101b642b84610fd6005d689d7ca063ac6981fe00"
+    },
+    "cached_features": {
+      "bytes": 193074,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\factor-eight-1\\worker\\rotation-feature-record.json",
+      "sha256": "93803e508f1be6116b9647a98451c798ada20a5d75f56b8e3110812843deea56"
+    },
+    "failed_arm": {
+      "bytes": 154411,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\precise-upscale-1\\worker\\explicit-false-arm.json",
+      "sha256": "c58531196a76d3bc2a12d783c9745c29d15781758019e2bfe4e0e62473c14147"
+    },
+    "failed_features": {
+      "bytes": 193074,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\precise-upscale-1\\worker\\explicit-false-features.json",
+      "sha256": "93803e508f1be6116b9647a98451c798ada20a5d75f56b8e3110812843deea56"
+    },
+    "fixture": {
+      "bytes": 663776,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sensor-white-coverage-1\\worker\\fixture-1.tiff",
+      "sha256": "325704a7ecd23d4428b3d0417f9a76142b67ba6651caf4c5ef98a1fcc1b6c94e"
+    },
+    "saved_authority_comparisons": [
+      {
+        "equal": true,
+        "label": "saved-failed-features-vs-original",
+        "left": {
+          "bytes": 193074,
+          "sha256": "93803e508f1be6116b9647a98451c798ada20a5d75f56b8e3110812843deea56"
+        },
+        "method": "ENTIRE records: immutable n.json_bytes; exact serialized byte equality; no omitted fields or tolerance",
+        "right": {
+          "bytes": 193074,
+          "sha256": "93803e508f1be6116b9647a98451c798ada20a5d75f56b8e3110812843deea56"
+        }
+      },
+      {
+        "equal": true,
+        "label": "saved-failed-outcome-vs-original",
+        "left": {
+          "bytes": 137335,
+          "sha256": "90533188e61165d52bc6b4d999b4295d5f506cc6508fb5146b4d0104b838ebf3"
+        },
+        "method": "ENTIRE records: immutable n.json_bytes; exact serialized byte equality; no omitted fields or tolerance",
+        "right": {
+          "bytes": 137335,
+          "sha256": "90533188e61165d52bc6b4d999b4295d5f506cc6508fb5146b4d0104b838ebf3"
+        }
+      }
+    ]
+  },
+  "plan": {
+    "bytes": 36490,
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\precise-upscale-canonical-plan-1.json",
+    "sha256": "a9f194a8cfd43c94a54ca7351aebf6a8c01658f1b96d9a987728adf1a44b0a90"
+  },
+  "prior_work": {
+    "cpu_seconds": 504.3125,
+    "file_bytes": 3954331630,
+    "metadata_bytes": 29130984,
+    "wall_seconds": 590.2021814999998
+  },
+  "schema": "m193c-precise-upscale-request-v1"
+}

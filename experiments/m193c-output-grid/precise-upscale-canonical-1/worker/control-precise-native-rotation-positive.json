@@ -1,0 +1,78 @@
+{
+  "evidence": {
+    "arm": {
+      "bytes": 154549,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\precise-upscale-canonical-1\\worker\\precise-true-arm.json",
+      "sha256": "c8c173c47f68725968e3ff0bf5b50c68a5f75c7864fdb8fbf7766f5e72dabeae"
+    },
+    "corner_errors": [
+      {
+        "error_native_px": 0.0014653635951645152,
+        "expected": [
+          3071,
+          0
+        ],
+        "source": [
+          0,
+          0
+        ],
+        "squared_error_denominator": 4611686018427387904,
+        "squared_error_numerator": 9902629419709
+      },
+      {
+        "error_native_px": 0.0015512533203470358,
+        "expected": [
+          3071,
+          2303
+        ],
+        "source": [
+          2303,
+          0
+        ],
+        "squared_error_denominator": 18446744073709551616,
+        "squared_error_numerator": 44390002620473
+      },
+      {
+        "error_native_px": 0.0007681312112573364,
+        "expected": [
+          0,
+          0
+        ],
+        "source": [
+          0,
+          3071
+        ],
+        "squared_error_denominator": 18446744073709551616,
+        "squared_error_numerator": 10884050459981
+      },
+      {
+        "error_native_px": 0.0009214781362364992,
+        "expected": [
+          0,
+          2303
+        ],
+        "source": [
+          2303,
+          3071
+        ],
+        "squared_error_denominator": 9223372036854775808,
+        "squared_error_numerator": 7831767700809
+      }
+    ],
+    "literal_truth_q32": {
+      "a": 0,
+      "b": 4294967296,
+      "tx": 13189844566016,
+      "ty": 0
+    },
+    "qualification": {
+      "coordinate_gauge": "native pixel centres; q_native=8*q_coarse+896",
+      "coordinate_lattice_step_q8": 8,
+      "guard_status": "UNQUALIFIED_FOR_COARSE_LATTICE",
+      "inherited_quantization_guard_q8": 1,
+      "scope": "Diagnostic direct fit only; no support, overlap, placement or quality admission"
+    }
+  },
+  "id": "precise-native-rotation-positive",
+  "passed": true
+}

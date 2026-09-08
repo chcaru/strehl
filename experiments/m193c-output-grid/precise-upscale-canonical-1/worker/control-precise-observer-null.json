@@ -1,0 +1,132 @@
+{
+  "evidence": {
+    "canonical_signature_sha256": {
+      "count": "8f664489734e91ea230f0692f060625c31d48bf503231a04eecf30c58feab028",
+      "off": "8f664489734e91ea230f0692f060625c31d48bf503231a04eecf30c58feab028",
+      "placebo": "8f664489734e91ea230f0692f060625c31d48bf503231a04eecf30c58feab028"
+    },
+    "count_arm": {
+      "bytes": 154549,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\precise-upscale-canonical-1\\worker\\precise-true-arm.json",
+      "sha256": "c8c173c47f68725968e3ff0bf5b50c68a5f75c7864fdb8fbf7766f5e72dabeae"
+    },
+    "off": {
+      "error": null,
+      "guard": 166,
+      "heldout_bbox_q8": null,
+      "landmarks": [],
+      "metrics": {
+        "calibration_count": 128,
+        "calibration_inlier_count": 127,
+        "coordinate_quantization_guard_q8": 1,
+        "heldout_max_source_px_ceil_q8": 165,
+        "heldout_rms_reference_px": "0.059345100",
+        "holdout_count": 128,
+        "holdout_inlier_count": 128,
+        "mutual_match_count": 256,
+        "valid_support_continuous_margin_q8": 294
+      },
+      "qualification": {
+        "coordinate_gauge": "native pixel centres; q_native=8*q_coarse+896",
+        "coordinate_lattice_step_q8": 8,
+        "guard_status": "UNQUALIFIED_FOR_COARSE_LATTICE",
+        "inherited_quantization_guard_q8": 1,
+        "scope": "Diagnostic direct fit only; no support, overlap, placement or quality admission"
+      },
+      "site_evidence": {
+        "descriptor_match_count": 0,
+        "exact_endpoint_group_layout": "[coordinate_q8, landmark_ordinals]; split comes from saved landmark row",
+        "exact_endpoint_groups": {
+          "reference_q8": [],
+          "source_q8": []
+        },
+        "exact_joint_groups": 0,
+        "repeated_joint_groups": [],
+        "scope": "descriptive exact coordinate groups; no independence or coverage acceptance claim",
+        "sides": {
+          "reference_q8": {
+            "bbox_q8": null,
+            "calibration_unique": 0,
+            "exact_locations_shared_between_splits": [],
+            "holdout_unique": 0,
+            "unique_total": 0
+          },
+          "source_q8": {
+            "bbox_q8": null,
+            "calibration_unique": 0,
+            "exact_locations_shared_between_splits": [],
+            "holdout_unique": 0,
+            "unique_total": 0
+          }
+        }
+      },
+      "status": "RETURNED",
+      "transform": {
+        "a": -1639,
+        "b": 4294969262,
+        "tx": 13189850616036,
+        "ty": 1734294
+      }
+    },
+    "placebo": {
+      "error": null,
+      "guard": 166,
+      "heldout_bbox_q8": null,
+      "landmarks": [],
+      "metrics": {
+        "calibration_count": 128,
+        "calibration_inlier_count": 127,
+        "coordinate_quantization_guard_q8": 1,
+        "heldout_max_source_px_ceil_q8": 165,
+        "heldout_rms_reference_px": "0.059345100",
+        "holdout_count": 128,
+        "holdout_inlier_count": 128,
+        "mutual_match_count": 256,
+        "valid_support_continuous_margin_q8": 294
+      },
+      "qualification": {
+        "coordinate_gauge": "native pixel centres; q_native=8*q_coarse+896",
+        "coordinate_lattice_step_q8": 8,
+        "guard_status": "UNQUALIFIED_FOR_COARSE_LATTICE",
+        "inherited_quantization_guard_q8": 1,
+        "scope": "Diagnostic direct fit only; no support, overlap, placement or quality admission"
+      },
+      "site_evidence": {
+        "descriptor_match_count": 0,
+        "exact_endpoint_group_layout": "[coordinate_q8, landmark_ordinals]; split comes from saved landmark row",
+        "exact_endpoint_groups": {
+          "reference_q8": [],
+          "source_q8": []
+        },
+        "exact_joint_groups": 0,
+        "repeated_joint_groups": [],
+        "scope": "descriptive exact coordinate groups; no independence or coverage acceptance claim",
+        "sides": {
+          "reference_q8": {
+            "bbox_q8": null,
+            "calibration_unique": 0,
+            "exact_locations_shared_between_splits": [],
+            "holdout_unique": 0,
+            "unique_total": 0
+          },
+          "source_q8": {
+            "bbox_q8": null,
+            "calibration_unique": 0,
+            "exact_locations_shared_between_splits": [],
+            "holdout_unique": 0,
+            "unique_total": 0
+          }
+        }
+      },
+      "status": "RETURNED",
+      "transform": {
+        "a": -1639,
+        "b": 4294969262,
+        "tx": 13189850616036,
+        "ty": 1734294
+      }
+    }
+  },
+  "id": "precise-observer-null",
+  "passed": true
+}

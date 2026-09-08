@@ -1,0 +1,79 @@
+{
+  "evidence": {
+    "baseline": {
+      "a": -1639,
+      "b": 4294969262,
+      "tx": 13189850616036,
+      "ty": 1734294
+    },
+    "corner_errors": [
+      {
+        "error_native_px": 2.0014086707849903,
+        "expected": [
+          3071,
+          0
+        ],
+        "source": [
+          0,
+          0
+        ],
+        "squared_error_denominator": 4611686018427387904,
+        "squared_error_numerator": 18472738614379117245
+      },
+      {
+        "error_native_px": 2.0005303148333224,
+        "expected": [
+          3071,
+          2303
+        ],
+        "source": [
+          2303,
+          0
+        ],
+        "squared_error_denominator": 18446744073709551616,
+        "squared_error_numerator": 73826111810721708089
+      },
+      {
+        "error_native_px": 2.0000030425202984,
+        "expected": [
+          0,
+          0
+        ],
+        "source": [
+          0,
+          3071
+        ],
+        "squared_error_denominator": 18446744073709551616,
+        "squared_error_numerator": 73787200793382100301
+      },
+      {
+        "error_native_px": 1.999124068977266,
+        "expected": [
+          0,
+          2303
+        ],
+        "source": [
+          2303,
+          3071
+        ],
+        "squared_error_denominator": 9223372036854775808,
+        "squared_error_numerator": 36861179073293669705
+      }
+    ],
+    "mutated": {
+      "a": -1639,
+      "b": 4294969262,
+      "tx": 13198440550628,
+      "ty": 1734294
+    },
+    "qualification": {
+      "coordinate_gauge": "native pixel centres; q_native=8*q_coarse+896",
+      "coordinate_lattice_step_q8": 8,
+      "guard_status": "UNQUALIFIED_FOR_COARSE_LATTICE",
+      "inherited_quantization_guard_q8": 1,
+      "scope": "Diagnostic direct fit only; no support, overlap, placement or quality admission"
+    }
+  },
+  "id": "precise-two-pixel-map-destroyer",
+  "passed": true
+}

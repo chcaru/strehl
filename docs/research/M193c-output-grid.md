@@ -13,8 +13,10 @@ source-artifact refusals remain preserved. The factor-eight experiment then
 failed its known-rotation positive before any real input: low fitted residuals
 coexisted with a four-native-pixel truth error. Independent inspection confirms
 that failure. The private follow-up then stopped on an in-memory record
-comparison despite identical saved baseline records. A canonical whole-record
-comparison repair is next; the detector-option effect remains untested.
+comparison despite identical saved baseline records. The canonical repair now
+passes its powered controls, and the private detector-option experiment completes:
+precise upscale removes the measured four-pixel mapping error on that fixture.
+Its independent audit confirms the finite result; real cross-focus transfer is next.
 HardFloor remains the default; no quality promotion follows
 from this work. The [charter](../../experiments/m193c-output-grid/charter.md)
 names the actual sampling-coordinate consumer and the fixed historical inputs.
@@ -460,6 +462,54 @@ seconds,3953283054 file bytes and28082408 metadata bytes. Actual outer3.5949191
 seconds gives conservative next wall559.8271815 seconds. All prior charges
 remain; no speed or detector-quality conclusion follows.
 
+## Canonical repair and private detector-option result
+
+**MEASURED, independently inspected:** the canonical repair frozen at `77082d3a`
+completed once with parent and worker exit0. Five metadata comparator cases passed
+before decoding: the actual tuple/list placebo, one-Q8 landmark fault and restore,
+and one-Q32 map fault and restore. The same full-record serializer then passed
+all three fresh-false and five restored-false reproduction predicates. No field
+was omitted and no numerical tolerance changed. All seven scientific groups pass.
+
+The [independent actual audit](../../experiments/m193c-output-grid/independent-precise-upscale-canonical-1-read.md)
+reconstructed every comparison and scored all captured matches against the
+literal native rotation, independently of the fitted map and inlier selection:
+
+| Private setting | Fitted held-out RMS, native reference pixels | Worst native corner error against literal rotation | Captured matches within2 native pixels of truth | All-captured truth RMS, native reference pixels |
+| --- | --- | --- | --- | --- |
+| Explicit false | 0.187776034 | 4.0492691357 | 0/256 | 4.003144935 |
+| Precise true | 0.059345100 | 0.0015512533 | 255/256 | 0.201947836 |
+| Restored false | 0.187776034 | 4.0492691357 | 0/256 | 4.003144935 |
+
+The coordinate gauge is native pixel centres, `q_native=8*q_coarse+896`, with
+source-to-reference truth `(3071-y,x)`. Fitted RMS can reward coherent wrong
+correspondences, as the false arm demonstrates; it is not accuracy evidence by
+itself. Literal truth supplies that independent check on this fixture. One true
+correspondence remains outside2 pixels, so neither the tiny corner error nor the
+held-out inlier score means every match is correct. Exact site groups also remain
+shared across the fit/holdout split; ten in each arm. No independence claim follows.
+
+The +2-native-pixel tx destroyer fails the unchanged one-native-pixel corner bar.
+True observer off/count/placebo signatures are byte-identical. Exactly one private
+decode, six feature extractions, six factories and five matcher calls completed;
+all factories were restored. False and restored-false full features/outcomes agree
+with the original cache. This identifies a finite detector-option effect in the
+fixed pipeline; changes to candidates and descriptors prevent isolating a universal
+quarter-pixel mechanism. It says nothing yet about real complementary-focus accuracy.
+
+All18 output files total1164283 bytes; no new TIFF/RAW or real-image work. Parent
+result39687B SHA256
+`37d820048e59c04026d00f02a10282672585284aed8891592e45ddf3214ece03`.
+Cumulative accounting is510.46875 CPU seconds,3955495913 file bytes and30295267
+metadata bytes. Actual outer6.6928943 seconds gives conservative next wall
+596.5200758 seconds. Both finalization lists are empty and terminal Job activity
+is zero. All failed work and reservations remain charged. The eight-Q8 lattice's
+inherited one-Q8 support guard remains explicitly unqualified.
+
+The result permits a separately frozen diagnostic on the original nine derivatives
+and23 direct pairs, retaining the native thresholds, direct pair fits and explicit
+support exclusion. It does not yet permit a graph solve, overlap manifest or render.
+
 ## Reproduction and preserved attempts
 
 Each release contains the complete actual argument array, input references and
@@ -488,6 +538,7 @@ these attempts when reproducing them.
 | Fixed direct-pair support 1 | `e4d4b894` | [direct-pair plan 1](../../experiments/m193c-output-grid/direct-pair-plan-1.json) | [all23 observed; all23 refused](../../experiments/m193c-output-grid/direct-pair-1/result.json) |
 | Factor-eight representation 1 | `781cd9fc` | [factor-eight plan 1](../../experiments/m193c-output-grid/factor-eight-plan-1.json) | [known-rotation positive refused; zero real inputs](../../experiments/m193c-output-grid/factor-eight-1/result.json) |
 | Private precise-upscale 1 | `b6957375` | [precise-upscale plan 1](../../experiments/m193c-output-grid/precise-upscale-plan-1.json) | [baseline record comparison refused; true unvisited](../../experiments/m193c-output-grid/precise-upscale-1/result.json) |
+| Canonical private precise-upscale 1 | `77082d3a` | [canonical plan1](../../experiments/m193c-output-grid/precise-upscale-canonical-plan-1.json) | [private controls and option comparison completed](../../experiments/m193c-output-grid/precise-upscale-canonical-1/result.json) |
 
 Final control result SHA256:
 `39a6f6e93e3b8df83834ab4046c7f30d6f42612df0cb0ec57ea158815baa7cfd`.
@@ -496,11 +547,10 @@ Build 2 result SHA256:
 
 ## Next decisions
 
-Commission the canonical whole-record comparison repair, then run the bounded
-private precise-upscale false/true/restored-false comparison. Preserve both
-failed private attempts and all unvisited real inputs. Keep
-the known native-coordinate oracle and require actual default reproduction,
-restoration and a powered map destroyer. A real coarse comparison remains
-conditional; no graph solve or cover-mode render is yet admitted.
+Freeze the diagnostic AREA8/precise-upscale comparison on the same nine real
+derivatives and23 direct pairs. The private known-truth, full-record reproduction,
+restoration and map-destroyer prerequisites now pass independently. Preserve both
+failed attempts. Keep every real refusal, native threshold and explicit unqualified
+support guard; no graph solve or cover-mode render is yet admitted.
 The [next-decision memo](../../experiments/m193c-output-grid/next-program-decision.md)
 keeps real cover-mode renders conditional on usable input geometry.

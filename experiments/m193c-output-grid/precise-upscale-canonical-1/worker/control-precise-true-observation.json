@@ -1,0 +1,12 @@
+{
+  "evidence": {
+    "arm": {
+      "bytes": 154549,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\precise-upscale-canonical-1\\worker\\precise-true-arm.json",
+      "sha256": "c8c173c47f68725968e3ff0bf5b50c68a5f75c7864fdb8fbf7766f5e72dabeae"
+    },
+    "scope": "Completed fixed observation; this does not admit its map"
+  },
+  "id": "precise-true-observation",
+  "passed": true
+}

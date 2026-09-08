@@ -1,0 +1,95 @@
+{
+  "evidence": {
+    "cached_control": {
+      "bytes": 171509,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\factor-eight-1\\worker\\control-native-rotation-positive.json",
+      "sha256": "087e9ae3d844ed7e397417b6101b642b84610fd6005d689d7ca063ac6981fe00"
+    },
+    "cases": [
+      {
+        "comparison": {
+          "equal": true,
+          "label": "actual-tuple-list-null",
+          "left": {
+            "bytes": 137335,
+            "sha256": "90533188e61165d52bc6b4d999b4295d5f506cc6508fb5146b4d0104b838ebf3"
+          },
+          "method": "ENTIRE records: immutable n.json_bytes; exact serialized byte equality; no omitted fields or tolerance",
+          "right": {
+            "bytes": 137335,
+            "sha256": "90533188e61165d52bc6b4d999b4295d5f506cc6508fb5146b4d0104b838ebf3"
+          }
+        },
+        "expected_equal": true
+      },
+      {
+        "comparison": {
+          "equal": false,
+          "label": "actual-landmark-plus-one-q8",
+          "left": {
+            "bytes": 137335,
+            "sha256": "289d5282c63eb3a3fed2558681b260a76f7e34bdfbc3808427f93ee664a6de9b"
+          },
+          "method": "ENTIRE records: immutable n.json_bytes; exact serialized byte equality; no omitted fields or tolerance",
+          "right": {
+            "bytes": 137335,
+            "sha256": "90533188e61165d52bc6b4d999b4295d5f506cc6508fb5146b4d0104b838ebf3"
+          }
+        },
+        "expected_equal": false
+      },
+      {
+        "comparison": {
+          "equal": true,
+          "label": "landmark-restored",
+          "left": {
+            "bytes": 137335,
+            "sha256": "90533188e61165d52bc6b4d999b4295d5f506cc6508fb5146b4d0104b838ebf3"
+          },
+          "method": "ENTIRE records: immutable n.json_bytes; exact serialized byte equality; no omitted fields or tolerance",
+          "right": {
+            "bytes": 137335,
+            "sha256": "90533188e61165d52bc6b4d999b4295d5f506cc6508fb5146b4d0104b838ebf3"
+          }
+        },
+        "expected_equal": true
+      },
+      {
+        "comparison": {
+          "equal": false,
+          "label": "actual-map-tx-plus-one-q32",
+          "left": {
+            "bytes": 137335,
+            "sha256": "285db3cd4b2f37b315f3d3f2b0415d7d814b79f6b44a1e2fbddab4b504747147"
+          },
+          "method": "ENTIRE records: immutable n.json_bytes; exact serialized byte equality; no omitted fields or tolerance",
+          "right": {
+            "bytes": 137335,
+            "sha256": "90533188e61165d52bc6b4d999b4295d5f506cc6508fb5146b4d0104b838ebf3"
+          }
+        },
+        "expected_equal": false
+      },
+      {
+        "comparison": {
+          "equal": true,
+          "label": "map-restored",
+          "left": {
+            "bytes": 137335,
+            "sha256": "90533188e61165d52bc6b4d999b4295d5f506cc6508fb5146b4d0104b838ebf3"
+          },
+          "method": "ENTIRE records: immutable n.json_bytes; exact serialized byte equality; no omitted fields or tolerance",
+          "right": {
+            "bytes": 137335,
+            "sha256": "90533188e61165d52bc6b4d999b4295d5f506cc6508fb5146b4d0104b838ebf3"
+          }
+        },
+        "expected_equal": true
+      }
+    ],
+    "python_equality": false,
+    "tuple_converted_shared_coordinates": 20
+  },
+  "id": "whole-record-comparator",
+  "passed": true
+}

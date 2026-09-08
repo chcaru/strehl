@@ -1,0 +1,50 @@
+{
+  "evidence": {
+    "cached_features": {
+      "bytes": 193074,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\factor-eight-1\\worker\\rotation-feature-record.json",
+      "sha256": "93803e508f1be6116b9647a98451c798ada20a5d75f56b8e3110812843deea56"
+    },
+    "fixture": {
+      "bytes": 663776,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sensor-white-coverage-1\\worker\\fixture-1.tiff",
+      "sha256": "325704a7ecd23d4428b3d0417f9a76142b67ba6651caf4c5ef98a1fcc1b6c94e"
+    },
+    "reference": {
+      "centre_q8": 896,
+      "coarse_rgb_sha256_u16_le": "a41b88f9d3966f3d25373d150100213f743fec95773368ed85df41db2b1f7ddf",
+      "coarse_shape": [
+        288,
+        384,
+        3
+      ],
+      "factor": 8,
+      "key_coordinate_gauge": "coarse Q8; unchanged detector keys",
+      "method": "m193c-area8-native-centres-v1",
+      "native_shape": [
+        2304,
+        3072,
+        3
+      ]
+    },
+    "source": {
+      "centre_q8": 896,
+      "coarse_rgb_sha256_u16_le": "aa3f853880f15dffb3a7450b0ada304ebd34c390331a1aaaff08862d5c42855c",
+      "coarse_shape": [
+        384,
+        288,
+        3
+      ],
+      "factor": 8,
+      "key_coordinate_gauge": "coarse Q8; unchanged detector keys",
+      "method": "m193c-area8-native-centres-v1",
+      "native_shape": [
+        3072,
+        2304,
+        3
+      ]
+    }
+  },
+  "id": "cached-repeated-block-null",
+  "passed": true
+}

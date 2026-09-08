@@ -1,0 +1,62 @@
+{
+  "evidence": {
+    "arm": {
+      "bytes": 154421,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\precise-upscale-canonical-1\\worker\\explicit-false-arm.json",
+      "sha256": "32a63adacfd4cf53cc14e2b1277c89cbd6202d0eea3e5e35a52bce2e077e56d1"
+    },
+    "cached_control": {
+      "bytes": 171509,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\factor-eight-1\\worker\\control-native-rotation-positive.json",
+      "sha256": "087e9ae3d844ed7e397417b6101b642b84610fd6005d689d7ca063ac6981fe00"
+    },
+    "cached_features": {
+      "bytes": 193074,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\factor-eight-1\\worker\\rotation-feature-record.json",
+      "sha256": "93803e508f1be6116b9647a98451c798ada20a5d75f56b8e3110812843deea56"
+    },
+    "canonical_comparisons": [
+      {
+        "equal": true,
+        "label": "entire-feature-record",
+        "left": {
+          "bytes": 193074,
+          "sha256": "93803e508f1be6116b9647a98451c798ada20a5d75f56b8e3110812843deea56"
+        },
+        "method": "ENTIRE records: immutable n.json_bytes; exact serialized byte equality; no omitted fields or tolerance",
+        "right": {
+          "bytes": 193074,
+          "sha256": "93803e508f1be6116b9647a98451c798ada20a5d75f56b8e3110812843deea56"
+        }
+      },
+      {
+        "equal": true,
+        "label": "entire-frozen-signature",
+        "left": {
+          "bytes": 521,
+          "sha256": "92896fc60a38ce7a3c44ce12ee324bb7e8adc9afcc6106b17e74f5228f7a0c73"
+        },
+        "method": "ENTIRE records: immutable n.json_bytes; exact serialized byte equality; no omitted fields or tolerance",
+        "right": {
+          "bytes": 521,
+          "sha256": "92896fc60a38ce7a3c44ce12ee324bb7e8adc9afcc6106b17e74f5228f7a0c73"
+        }
+      },
+      {
+        "equal": true,
+        "label": "entire-outcome-record",
+        "left": {
+          "bytes": 137335,
+          "sha256": "90533188e61165d52bc6b4d999b4295d5f506cc6508fb5146b4d0104b838ebf3"
+        },
+        "method": "ENTIRE records: immutable n.json_bytes; exact serialized byte equality; no omitted fields or tolerance",
+        "right": {
+          "bytes": 137335,
+          "sha256": "90533188e61165d52bc6b4d999b4295d5f506cc6508fb5146b4d0104b838ebf3"
+        }
+      }
+    ]
+  },
+  "id": "explicit-false-reproduction",
+  "passed": true
+}
