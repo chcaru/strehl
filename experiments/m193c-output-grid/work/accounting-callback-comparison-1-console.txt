@@ -1,0 +1,1 @@
+{"status": "PASS_CALLBACK_EQUIVALENCE_AND_POWER_ONLY", "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\work\\accounting-callback-comparison-1\\result.json", "sha256": "b42293535eed7fcd9545a451804da23fcfa6d7735d0639f10b92e7a06c899bb0"}

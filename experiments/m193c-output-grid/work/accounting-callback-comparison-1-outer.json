@@ -1,0 +1,12 @@
+{
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-B",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\work\\accounting-callback-comparison.py",
+    "--output",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\work\\accounting-callback-comparison-1"
+  ],
+  "exit_code": 0,
+  "elapsed_wall_seconds": 0.5373565000008966,
+  "source_freeze": "a56273c9e8c6e16bf9d909263901e6b2860e98a6"
+}
