@@ -1,0 +1,312 @@
+{
+  "outcome": {
+    "error": {
+      "code": "UNMEASURED_INPUT_REGISTRATION_INADEQUATE",
+      "message": "UNMEASURED_INPUT_REGISTRATION_INADEQUATE: too few total mutual landmarks",
+      "traceback": "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-run.py\", line 161, in observe_pair\n    transform,metrics,guard=v1.register_to_reference(ref,src)\n                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M193-cover-overlap\\reference.py\", line 542, in register_to_reference\n    require(\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M193-cover-overlap\\reference.py\", line 46, in require\n    raise ContractError(code, message)\nm193b_frozen_reference.ContractError: UNMEASURED_INPUT_REGISTRATION_INADEQUATE: too few total mutual landmarks\n",
+      "type": "ContractError"
+    },
+    "guard": null,
+    "heldout_bbox_q8": null,
+    "landmarks": [
+      {
+        "digest": "01891a76540ba64ec6d46aa42eab5b14c2f0209be498b262e96d273fe274950e",
+        "inlier": null,
+        "reference_q8": [
+          1397541,
+          627595
+        ],
+        "source_q8": [
+          1374806,
+          718004
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "05d73f6f8073632dc13e4753b0c8d435eff38efa86291d053f6e027bd4303c2e",
+        "inlier": null,
+        "reference_q8": [
+          1029968,
+          1080914
+        ],
+        "source_q8": [
+          1026554,
+          1068525
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "0df41f18fb04770ce11fc0624e05977c54caa062027d0d70eca073607a4616c4",
+        "inlier": null,
+        "reference_q8": [
+          37649,
+          880849
+        ],
+        "source_q8": [
+          327145,
+          795780
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "131cc92fcfe12918a21e2c8c21ca814dea05f24362d3e35e323b6b4b116e9743",
+        "inlier": null,
+        "reference_q8": [
+          1345902,
+          923638
+        ],
+        "source_q8": [
+          1346267,
+          917853
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "1b146f6d7b6fc3644b737213a49cf3a86074d5b1ac7fdbcc0fd4993a05776f85",
+        "inlier": null,
+        "reference_q8": [
+          259020,
+          965232
+        ],
+        "source_q8": [
+          1715035,
+          1027295
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "43a913c88c32c06c85e5fa49eae585192965be05bb2382f08c1f47dddcc41e07",
+        "inlier": null,
+        "reference_q8": [
+          989606,
+          600768
+        ],
+        "source_q8": [
+          989110,
+          598759
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "49c34507e729973759596f0f561bdc789bb46ccd507140b06abf4d7a395382e8",
+        "inlier": null,
+        "reference_q8": [
+          233069,
+          933929
+        ],
+        "source_q8": [
+          1400769,
+          999718
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "51bdde711bc4f1f1d7cc1b1d14d8c154b642ac1e534543a74771dffbbd33133e",
+        "inlier": null,
+        "reference_q8": [
+          1639701,
+          60755
+        ],
+        "source_q8": [
+          1639701,
+          60746
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "72daf283e3dc1f452647e34771f72774124e1798156fd61a34430a9b81ca2209",
+        "inlier": null,
+        "reference_q8": [
+          360067,
+          938333
+        ],
+        "source_q8": [
+          1673225,
+          1044973
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "885b5a0df662509fb329eb49d4441a7b499258a0c39998f8c9ea692f10ca6952",
+        "inlier": null,
+        "reference_q8": [
+          1639701,
+          60755
+        ],
+        "source_q8": [
+          1639701,
+          60746
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "98fb404365709e70bc1819728ccb1a93a2ce6df2f3d794e5dbf846a63865f87e",
+        "inlier": null,
+        "reference_q8": [
+          1257788,
+          139776
+        ],
+        "source_q8": [
+          1257836,
+          139786
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "acbde1e6e16884d12f01ef43eef0d55ba19a14e7cf669360f63b0093be27f899",
+        "inlier": null,
+        "reference_q8": [
+          1163889,
+          1108974
+        ],
+        "source_q8": [
+          1360688,
+          1013288
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "b75b4ca7f13b2c9d8091d65e27dc2253ad6ac646f33d8742732b40445087e8c6",
+        "inlier": null,
+        "reference_q8": [
+          1257788,
+          139776
+        ],
+        "source_q8": [
+          1257836,
+          139786
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "c187db1d0c560518ac9f4b231c123ecfd5296564cff60e4db924f60416c32dde",
+        "inlier": null,
+        "reference_q8": [
+          1257788,
+          139776
+        ],
+        "source_q8": [
+          1257836,
+          139786
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "ccab18ee049474702dd8c74404f2d3f96657d3833d5656b15f9cc2ff4cbd9515",
+        "inlier": null,
+        "reference_q8": [
+          1183502,
+          985196
+        ],
+        "source_q8": [
+          1174144,
+          977343
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "ce60c26d26959041b30af0dc4b53c76572de59a7324875f88ed82463391809f3",
+        "inlier": null,
+        "reference_q8": [
+          329964,
+          931197
+        ],
+        "source_q8": [
+          1394049,
+          995578
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "ce7230880728989353a36db210f112cf3b6bbb243c980e27ef7dc7d7a9c27fb9",
+        "inlier": null,
+        "reference_q8": [
+          1257788,
+          139776
+        ],
+        "source_q8": [
+          1257836,
+          139786
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "d7f6e2022ca1541a5622ebc59c951e20f58690219218501289a167537de1b145",
+        "inlier": null,
+        "reference_q8": [
+          735804,
+          1105955
+        ],
+        "source_q8": [
+          1306293,
+          980664
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "ddbe443e8ea04142bf816b9282db39598c14b1e4c097f38c7768e2e9f691c10e",
+        "inlier": null,
+        "reference_q8": [
+          1639701,
+          60755
+        ],
+        "source_q8": [
+          1639701,
+          60746
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "df77a76a4de8ce7064790034852d44c71e29b9112a15d25f1baf0b928d6d9040",
+        "inlier": null,
+        "reference_q8": [
+          1257788,
+          139776
+        ],
+        "source_q8": [
+          1257836,
+          139786
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "e917ab8c0c9f8b6d2375748c2fb789ea56c5f2ce1da89b885cd802c1bbaa3bac",
+        "inlier": null,
+        "reference_q8": [
+          1257788,
+          139776
+        ],
+        "source_q8": [
+          1257836,
+          139786
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "f709f3a1fb1c495ec81d790f2158efcfe7b8ce4a85061aae71b95b402d748c68",
+        "inlier": null,
+        "reference_q8": [
+          1470273,
+          1073855
+        ],
+        "source_q8": [
+          1460052,
+          1064784
+        ],
+        "split": "holdout"
+      }
+    ],
+    "metrics": null,
+    "status": "REGISTRATION_REFUSED",
+    "transform": null
+  },
+  "pair": {
+    "id": "pair-6-8",
+    "local_span": 2,
+    "reference": 6,
+    "reference_original": 78,
+    "source": 8,
+    "source_original": 104,
+    "star": false
+  }
+}

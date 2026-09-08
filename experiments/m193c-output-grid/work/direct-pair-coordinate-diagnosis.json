@@ -1,0 +1,2615 @@
+{
+  "elapsed_seconds": 0.03107810008805245,
+  "features": [
+    {
+      "count": 503,
+      "local": 0,
+      "spatial": {
+        "bbox": [
+          134.53125,
+          157.421875,
+          6868.71484375,
+          4610.92578125
+        ],
+        "edge_counts": {
+          "128": 5,
+          "256": 15,
+          "64": 0
+        },
+        "grid_4x4": [
+          [
+            0,
+            63,
+            14,
+            11
+          ],
+          [
+            7,
+            168,
+            24,
+            9
+          ],
+          [
+            19,
+            97,
+            44,
+            6
+          ],
+          [
+            5,
+            13,
+            17,
+            6
+          ]
+        ],
+        "unique_exact": 403
+      }
+    },
+    {
+      "count": 1024,
+      "local": 1,
+      "spatial": {
+        "bbox": [
+          1539.34765625,
+          358.45703125,
+          5637.9609375,
+          3724.609375
+        ],
+        "edge_counts": {
+          "128": 0,
+          "256": 0,
+          "64": 0
+        },
+        "grid_4x4": [
+          [
+            0,
+            211,
+            2,
+            0
+          ],
+          [
+            0,
+            658,
+            2,
+            0
+          ],
+          [
+            32,
+            116,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            0,
+            2
+          ]
+        ],
+        "unique_exact": 699
+      }
+    },
+    {
+      "count": 1024,
+      "local": 2,
+      "spatial": {
+        "bbox": [
+          1615.35546875,
+          373.12890625,
+          5529.2265625,
+          3855.66015625
+        ],
+        "edge_counts": {
+          "128": 0,
+          "256": 0,
+          "64": 0
+        },
+        "grid_4x4": [
+          [
+            1,
+            72,
+            3,
+            0
+          ],
+          [
+            7,
+            420,
+            12,
+            0
+          ],
+          [
+            0,
+            345,
+            138,
+            2
+          ],
+          [
+            0,
+            1,
+            21,
+            2
+          ]
+        ],
+        "unique_exact": 673
+      }
+    },
+    {
+      "count": 1024,
+      "local": 3,
+      "spatial": {
+        "bbox": [
+          1513.46484375,
+          384.1875,
+          5514.34375,
+          4645.5859375
+        ],
+        "edge_counts": {
+          "128": 5,
+          "256": 5,
+          "64": 5
+        },
+        "grid_4x4": [
+          [
+            0,
+            5,
+            25,
+            0
+          ],
+          [
+            0,
+            104,
+            420,
+            0
+          ],
+          [
+            0,
+            1,
+            314,
+            4
+          ],
+          [
+            2,
+            5,
+            143,
+            1
+          ]
+        ],
+        "unique_exact": 651
+      }
+    },
+    {
+      "count": 1024,
+      "local": 4,
+      "spatial": {
+        "bbox": [
+          7.3515625,
+          237.21875,
+          6869.0703125,
+          4681.78515625
+        ],
+        "edge_counts": {
+          "128": 183,
+          "256": 417,
+          "64": 88
+        },
+        "grid_4x4": [
+          [
+            0,
+            0,
+            27,
+            4
+          ],
+          [
+            10,
+            27,
+            24,
+            16
+          ],
+          [
+            0,
+            9,
+            46,
+            45
+          ],
+          [
+            315,
+            400,
+            94,
+            7
+          ]
+        ],
+        "unique_exact": 805
+      }
+    },
+    {
+      "count": 1024,
+      "local": 5,
+      "spatial": {
+        "bbox": [
+          22.0703125,
+          237.30859375,
+          6868.859375,
+          4677.58203125
+        ],
+        "edge_counts": {
+          "128": 168,
+          "256": 336,
+          "64": 57
+        },
+        "grid_4x4": [
+          [
+            0,
+            0,
+            1,
+            4
+          ],
+          [
+            2,
+            4,
+            4,
+            3
+          ],
+          [
+            2,
+            2,
+            2,
+            6
+          ],
+          [
+            383,
+            288,
+            226,
+            97
+          ]
+        ],
+        "unique_exact": 812
+      }
+    },
+    {
+      "count": 1024,
+      "local": 6,
+      "spatial": {
+        "bbox": [
+          11.98046875,
+          237.32421875,
+          7020.0625,
+          4611.3203125
+        ],
+        "edge_counts": {
+          "128": 61,
+          "256": 193,
+          "64": 23
+        },
+        "grid_4x4": [
+          [
+            0,
+            0,
+            8,
+            3
+          ],
+          [
+            2,
+            3,
+            2,
+            0
+          ],
+          [
+            210,
+            2,
+            3,
+            1
+          ],
+          [
+            313,
+            22,
+            221,
+            234
+          ]
+        ],
+        "unique_exact": 823
+      }
+    },
+    {
+      "count": 1024,
+      "local": 7,
+      "spatial": {
+        "bbox": [
+          13.7890625,
+          156.75,
+          7024.4765625,
+          4493.74609375
+        ],
+        "edge_counts": {
+          "128": 70,
+          "256": 150,
+          "64": 31
+        },
+        "grid_4x4": [
+          [
+            0,
+            1,
+            7,
+            3
+          ],
+          [
+            1,
+            2,
+            2,
+            0
+          ],
+          [
+            323,
+            1,
+            2,
+            1
+          ],
+          [
+            5,
+            0,
+            162,
+            514
+          ]
+        ],
+        "unique_exact": 816
+      }
+    },
+    {
+      "count": 1024,
+      "local": 8,
+      "spatial": {
+        "bbox": [
+          4.77734375,
+          156.56640625,
+          7021.87890625,
+          4610.9375
+        ],
+        "edge_counts": {
+          "128": 63,
+          "256": 144,
+          "64": 21
+        },
+        "grid_4x4": [
+          [
+            0,
+            1,
+            7,
+            4
+          ],
+          [
+            1,
+            0,
+            1,
+            0
+          ],
+          [
+            221,
+            0,
+            1,
+            1
+          ],
+          [
+            0,
+            0,
+            112,
+            675
+          ]
+        ],
+        "unique_exact": 815
+      }
+    }
+  ],
+  "gauge": "source native centres to reference native centres; Q8 divided by 256; no placements admitted",
+  "image_or_subject_calls": 0,
+  "inputs": [
+    {
+      "bytes": 9329,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\pair-1-2.json",
+      "sha256": "6c28c3d9c72b4ad28b34c11b3afba101453ae9cf09c0ea44f986b1d4af4885ae"
+    },
+    {
+      "bytes": 9073,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\pair-3-4.json",
+      "sha256": "eb5de610a0ef94841494b9a342d34e7a707f5ada83d175d05eebd2ea0a1d68da"
+    },
+    {
+      "bytes": 15349,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\pair-4-5.json",
+      "sha256": "c3c1c24e3e9c0d93e0e9dbb84d500740057250ec5f6410c3dfd7d69c531f8b2a"
+    },
+    {
+      "bytes": 8769,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\pair-4-6.json",
+      "sha256": "3780f838f7968e1544eebd62f3296c72da973b9a90bee16e566212f56f031964"
+    },
+    {
+      "bytes": 17443,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\pair-5-6.json",
+      "sha256": "29fb94ef48c5b234163b2e5ca9de53046041c6ab96475510efecb17321af74a9"
+    },
+    {
+      "bytes": 10266,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\pair-5-7.json",
+      "sha256": "1f37d218ab1d2a42b0ac1e30775b24073e4b23e3e58579613145cf2b3d07632f"
+    },
+    {
+      "bytes": 16553,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\pair-6-7.json",
+      "sha256": "d3dff7f520c0b220a578e47a70c4d0d65e64f1fca721d0ad0b76d82550821373"
+    },
+    {
+      "bytes": 14785,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\pair-7-8.json",
+      "sha256": "9dc51c37e30e088ca291fa874348efb20cec776e0a6b1b5e00ef4d67dc60037b"
+    },
+    {
+      "bytes": 20807,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\feature-0.json",
+      "sha256": "b06cb634feaaea77925261165fc3b76c5fa28a44733e84dbedf0744854a786f7"
+    },
+    {
+      "bytes": 41560,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\feature-1.json",
+      "sha256": "b002e5db9b69aed50774c69359f905cfaad001ee4f0afa2d18fbecd4eb0923bd"
+    },
+    {
+      "bytes": 41594,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\feature-2.json",
+      "sha256": "c9058d55473fbf94915698f292a1d8243afc9d5df1379a8a7815ba35a8f96c68"
+    },
+    {
+      "bytes": 42508,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\feature-3.json",
+      "sha256": "25771602fa860c1884a83feb69882002ea90fa9ec8a2d615913ef6b10531af69"
+    },
+    {
+      "bytes": 42524,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\feature-4.json",
+      "sha256": "8f71e57a532f99f0ede0088309b8a30fd1781f74912059eb9f38dd7e18270446"
+    },
+    {
+      "bytes": 42652,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\feature-5.json",
+      "sha256": "9044a6b46e9d399c23a6eb9caf56386e51e16724d7209d6096e063953d9a33e4"
+    },
+    {
+      "bytes": 42361,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\feature-6.json",
+      "sha256": "da56fba948359288c7e5b2a1b784b1c7783afe43f0ec79af46f395c0999bbc7f"
+    },
+    {
+      "bytes": 42770,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\feature-7.json",
+      "sha256": "105bd30a81c039ac5f18222a6f3df217c0753f0b83cfc763e2dbc7c75814509c"
+    },
+    {
+      "bytes": 42973,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\feature-8.json",
+      "sha256": "5f14204fa989d74b9a8c43490fc244148675369b8a2f2bc2875277313b16fdb7"
+    }
+  ],
+  "pairs": [
+    {
+      "calibration": 13,
+      "calibration_cluster_sizes": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "correspondence_cluster_sizes": [
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "displacement_x": {
+        "max": 382.5390625,
+        "median": -864.4296875,
+        "min": -1721.69140625,
+        "q25": -1015.81640625,
+        "q75": 9.59375
+      },
+      "displacement_y": {
+        "max": 334.08984375,
+        "median": -425.21484375,
+        "min": -2274.98046875,
+        "q25": -1834.7734375,
+        "q75": 6.08984375
+      },
+      "frozen_required_calibration": 12,
+      "gross_unfit_median_errors": {
+        "double_about_origin": 4783.870250728063,
+        "halve_about_origin": 1034.6485579397518,
+        "identity": 1120.872993674312,
+        "x_reflect": 2134.0886113760907,
+        "xy_swap": 2095.2908649551646,
+        "y_reflect": 1793.9089355790443
+      },
+      "holdout": 13,
+      "identity": {
+        "calibration_count": 0,
+        "counts": {
+          "128": 5,
+          "2": 0,
+          "32": 4,
+          "8": 0
+        },
+        "displacement": {
+          "max": 2651.370952909389,
+          "median": 1063.2428967713774,
+          "min": 14.89523247349477,
+          "q25": 887.150391706436,
+          "q75": 2069.047921866121
+        },
+        "holdout_count": 0,
+        "indices": [],
+        "reference_spatial": null
+      },
+      "independent_model": {
+        "a": 0.21508467124113045,
+        "angle_degrees": 10.268018262513666,
+        "b": 0.038963499542322706,
+        "calibration": {
+          "counts": {
+            "128": 3,
+            "2": 0,
+            "32": 0,
+            "8": 0
+          },
+          "residual": {
+            "max": 3338.942670986628,
+            "median": 480.8989168208806,
+            "min": 38.54094527597272,
+            "q25": 312.14911492505644,
+            "q75": 889.4121491397086
+          }
+        },
+        "holdout": {
+          "counts": {
+            "128": 2,
+            "2": 0,
+            "32": 0,
+            "8": 0
+          },
+          "residual": {
+            "max": 2936.1215921441712,
+            "median": 527.3289595188977,
+            "min": 38.54094527597272,
+            "q25": 312.14911492505644,
+            "q75": 776.3381843158003
+          }
+        },
+        "method": "calibration-long-baseline-complex-slope-median",
+        "scale": 0.21858538400242994,
+        "slope_count": 70,
+        "source_min_baseline": 512,
+        "tx": 1715.125352039453,
+        "ty": 902.9248965639999
+      },
+      "pair": {
+        "id": "pair-1-2",
+        "local_span": 1,
+        "reference": 1,
+        "reference_original": 13,
+        "source": 2,
+        "source_original": 26,
+        "star": false
+      },
+      "reference_spatial": {
+        "bbox": [
+          1778.4453125,
+          358.45703125,
+          5565.9140625,
+          3724.609375
+        ],
+        "edge_counts": {
+          "128": 0,
+          "256": 0,
+          "64": 0
+        },
+        "grid_4x4": [
+          [
+            0,
+            6,
+            2,
+            0
+          ],
+          [
+            0,
+            14,
+            1,
+            0
+          ],
+          [
+            0,
+            1,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            0,
+            1
+          ]
+        ],
+        "unique_exact": 24
+      },
+      "source_spatial": {
+        "bbox": [
+          1615.35546875,
+          373.12890625,
+          5525.453125,
+          3711.04296875
+        ],
+        "edge_counts": {
+          "128": 0,
+          "256": 0,
+          "64": 0
+        },
+        "grid_4x4": [
+          [
+            0,
+            3,
+            2,
+            0
+          ],
+          [
+            1,
+            7,
+            0,
+            0
+          ],
+          [
+            0,
+            8,
+            3,
+            1
+          ],
+          [
+            0,
+            0,
+            0,
+            1
+          ]
+        ],
+        "unique_exact": 24
+      },
+      "total": 26
+    },
+    {
+      "calibration": 13,
+      "calibration_cluster_sizes": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "correspondence_cluster_sizes": [
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "displacement_x": {
+        "max": 4130.1875,
+        "median": 26.296875,
+        "min": -2721.75,
+        "q25": -445.546875,
+        "q75": 1156.98828125
+      },
+      "displacement_y": {
+        "max": 492.58984375,
+        "median": -414.54296875,
+        "min": -2789.8515625,
+        "q25": -1018.99609375,
+        "q75": 6.92578125
+      },
+      "frozen_required_calibration": 12,
+      "gross_unfit_median_errors": {
+        "double_about_origin": 6293.499718795556,
+        "halve_about_origin": 2977.253854320343,
+        "identity": 1352.720637890923,
+        "x_reflect": 2327.9869013807806,
+        "xy_swap": 2389.739227554779,
+        "y_reflect": 1957.021599979327
+      },
+      "holdout": 12,
+      "identity": {
+        "calibration_count": 0,
+        "counts": {
+          "128": 5,
+          "2": 0,
+          "32": 3,
+          "8": 0
+        },
+        "displacement": {
+          "max": 4902.245337358816,
+          "median": 1352.720637890923,
+          "min": 11.895865329536838,
+          "q25": 530.3758974447576,
+          "q75": 1858.4325135308607
+        },
+        "holdout_count": 0,
+        "indices": [],
+        "reference_spatial": null
+      },
+      "independent_model": {
+        "a": 0.07786148475363683,
+        "angle_degrees": 11.605460385850987,
+        "b": 0.015990400632836573,
+        "calibration": {
+          "counts": {
+            "128": 1,
+            "2": 0,
+            "32": 0,
+            "8": 0
+          },
+          "residual": {
+            "max": 2734.515168554506,
+            "median": 1111.3272476378686,
+            "min": 95.12956851864874,
+            "q25": 915.5264505781566,
+            "q75": 1270.1106932367893
+          }
+        },
+        "holdout": {
+          "counts": {
+            "128": 0,
+            "2": 0,
+            "32": 0,
+            "8": 0
+          },
+          "residual": {
+            "max": 2139.8459076406266,
+            "median": 1061.3111610593273,
+            "min": 433.48975214378174,
+            "q25": 645.878028494758,
+            "q75": 1225.7418672001936
+          }
+        },
+        "method": "calibration-long-baseline-complex-slope-median",
+        "scale": 0.07948650024022595,
+        "slope_count": 74,
+        "source_min_baseline": 512,
+        "tx": 4363.995331076311,
+        "ty": 2220.0328566545686
+      },
+      "pair": {
+        "id": "pair-3-4",
+        "local_span": 1,
+        "reference": 3,
+        "reference_original": 39,
+        "source": 4,
+        "source_original": 52,
+        "star": false
+      },
+      "reference_spatial": {
+        "bbox": [
+          1875.734375,
+          396.18359375,
+          5406.703125,
+          3886.21484375
+        ],
+        "edge_counts": {
+          "128": 0,
+          "256": 0,
+          "64": 0
+        },
+        "grid_4x4": [
+          [
+            0,
+            1,
+            0,
+            0
+          ],
+          [
+            0,
+            3,
+            9,
+            0
+          ],
+          [
+            0,
+            1,
+            6,
+            1
+          ],
+          [
+            0,
+            0,
+            3,
+            1
+          ]
+        ],
+        "unique_exact": 24
+      },
+      "source_spatial": {
+        "bbox": [
+          587.890625,
+          825.2421875,
+          5514.12890625,
+          4587.09375
+        ],
+        "edge_counts": {
+          "128": 1,
+          "256": 2,
+          "64": 0
+        },
+        "grid_4x4": [
+          [
+            0,
+            0,
+            1,
+            0
+          ],
+          [
+            0,
+            1,
+            1,
+            0
+          ],
+          [
+            0,
+            1,
+            7,
+            5
+          ],
+          [
+            2,
+            3,
+            3,
+            1
+          ]
+        ],
+        "unique_exact": 21
+      },
+      "total": 25
+    },
+    {
+      "calibration": 23,
+      "calibration_cluster_sizes": [
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "correspondence_cluster_sizes": [
+        3,
+        2,
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "displacement_x": {
+        "max": 2279.31640625,
+        "median": -1.1171875,
+        "min": -3372.046875,
+        "q25": -16.41796875,
+        "q75": 7.56640625
+      },
+      "displacement_y": {
+        "max": 2700.28515625,
+        "median": -19.23046875,
+        "min": -927.328125,
+        "q25": -24.54296875,
+        "q75": -2.5078125
+      },
+      "frozen_required_calibration": 12,
+      "gross_unfit_median_errors": {
+        "double_about_origin": 5711.87031111503,
+        "halve_about_origin": 2831.0359438041705,
+        "identity": 24.697336050678928,
+        "x_reflect": 2626.4418514392146,
+        "xy_swap": 2070.3786896134143,
+        "y_reflect": 3883.3264832995555
+      },
+      "holdout": 23,
+      "identity": {
+        "calibration_count": 2,
+        "counts": {
+          "128": 35,
+          "2": 3,
+          "32": 31,
+          "8": 6
+        },
+        "displacement": {
+          "max": 3499.486710899379,
+          "median": 24.590553628553973,
+          "min": 0.10726195482614048,
+          "q25": 19.271051563023917,
+          "q75": 45.552293343288525
+        },
+        "holdout_count": 1,
+        "indices": [
+          20,
+          26,
+          45
+        ],
+        "reference_spatial": {
+          "bbox": [
+            6405.1015625,
+            237.30859375,
+            6405.1015625,
+            237.30859375
+          ],
+          "edge_counts": {
+            "128": 0,
+            "256": 3,
+            "64": 0
+          },
+          "grid_4x4": [
+            [
+              0,
+              0,
+              0,
+              3
+            ],
+            [
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          "unique_exact": 1
+        }
+      },
+      "independent_model": {
+        "a": 0.9877923380258353,
+        "angle_degrees": 0.04633165694517582,
+        "b": 0.0007987685323923743,
+        "calibration": {
+          "counts": {
+            "128": 16,
+            "2": 1,
+            "32": 14,
+            "8": 8
+          },
+          "residual": {
+            "max": 3481.046255316723,
+            "median": 15.898559228260861,
+            "min": 1.6680537199108585,
+            "q25": 7.322455308470338,
+            "q75": 322.14244150763096
+          }
+        },
+        "holdout": {
+          "counts": {
+            "128": 19,
+            "2": 1,
+            "32": 18,
+            "8": 15
+          },
+          "residual": {
+            "max": 3488.9377995511036,
+            "median": 6.295998631496935,
+            "min": 1.9038169138685206,
+            "q25": 4.702838762337585,
+            "q75": 13.513020189731659
+          }
+        },
+        "method": "calibration-long-baseline-complex-slope-median",
+        "scale": 0.9877926609839306,
+        "slope_count": 238,
+        "source_min_baseline": 512,
+        "tx": 47.41023336356875,
+        "ty": 25.075058030604396
+      },
+      "pair": {
+        "id": "pair-4-5",
+        "local_span": 1,
+        "reference": 5,
+        "reference_original": 65,
+        "source": 4,
+        "source_original": 52,
+        "star": true
+      },
+      "reference_spatial": {
+        "bbox": [
+          266.51171875,
+          237.30859375,
+          6405.1015625,
+          4603.73046875
+        ],
+        "edge_counts": {
+          "128": 2,
+          "256": 10,
+          "64": 0
+        },
+        "grid_4x4": [
+          [
+            0,
+            0,
+            0,
+            3
+          ],
+          [
+            2,
+            3,
+            1,
+            0
+          ],
+          [
+            0,
+            1,
+            1,
+            1
+          ],
+          [
+            6,
+            13,
+            15,
+            0
+          ]
+        ],
+        "unique_exact": 41
+      },
+      "source_spatial": {
+        "bbox": [
+          580.4453125,
+          237.21875,
+          6405.16015625,
+          4669.15625
+        ],
+        "edge_counts": {
+          "128": 3,
+          "256": 16,
+          "64": 3
+        },
+        "grid_4x4": [
+          [
+            0,
+            0,
+            0,
+            3
+          ],
+          [
+            2,
+            3,
+            2,
+            0
+          ],
+          [
+            0,
+            1,
+            2,
+            1
+          ],
+          [
+            5,
+            11,
+            16,
+            0
+          ]
+        ],
+        "unique_exact": 41
+      },
+      "total": 46
+    },
+    {
+      "calibration": 12,
+      "calibration_cluster_sizes": [
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "correspondence_cluster_sizes": [
+        3,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "displacement_x": {
+        "max": 1213.2265625,
+        "median": 0.078125,
+        "min": -4930.64453125,
+        "q25": -110.8671875,
+        "q75": 17.75
+      },
+      "displacement_y": {
+        "max": 4057.42578125,
+        "median": 28.75390625,
+        "min": -2217.9296875,
+        "q25": -0.10546875,
+        "q75": 47.9765625
+      },
+      "frozen_required_calibration": 12,
+      "gross_unfit_median_errors": {
+        "double_about_origin": 5924.249987042247,
+        "halve_about_origin": 2975.7454845526136,
+        "identity": 49.31773270207347,
+        "x_reflect": 2693.108919873465,
+        "xy_swap": 2743.2303742160466,
+        "y_reflect": 3353.6529619308435
+      },
+      "holdout": 12,
+      "identity": {
+        "calibration_count": 2,
+        "counts": {
+          "128": 14,
+          "2": 3,
+          "32": 6,
+          "8": 3
+        },
+        "displacement": {
+          "max": 4932.242048694219,
+          "median": 50.65867327495377,
+          "min": 0.1312523251282144,
+          "q25": 33.791265508024246,
+          "q75": 1461.9147353090052
+        },
+        "holdout_count": 1,
+        "indices": [
+          0,
+          4,
+          17
+        ],
+        "reference_spatial": {
+          "bbox": [
+            6405.16015625,
+            237.21875,
+            6405.16015625,
+            237.21875
+          ],
+          "edge_counts": {
+            "128": 0,
+            "256": 3,
+            "64": 0
+          },
+          "grid_4x4": [
+            [
+              0,
+              0,
+              0,
+              3
+            ],
+            [
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          "unique_exact": 1
+        }
+      },
+      "independent_model": {
+        "a": 0.856824816498424,
+        "angle_degrees": -0.36265694564644474,
+        "b": -0.005423394590006589,
+        "calibration": {
+          "counts": {
+            "128": 3,
+            "2": 0,
+            "32": 2,
+            "8": 0
+          },
+          "residual": {
+            "max": 4603.3752146499655,
+            "median": 653.3882657637599,
+            "min": 20.731485366036853,
+            "q25": 185.0186979580665,
+            "q75": 728.0695103877091
+          }
+        },
+        "holdout": {
+          "counts": {
+            "128": 1,
+            "2": 0,
+            "32": 0,
+            "8": 0
+          },
+          "residual": {
+            "max": 3824.4803858764303,
+            "median": 728.0695103877091,
+            "min": 100.44438087974554,
+            "q25": 345.39511741869995,
+            "q75": 2312.215648589285
+          }
+        },
+        "method": "calibration-long-baseline-complex-slope-median",
+        "scale": 0.8568419804003752,
+        "slope_count": 60,
+        "source_min_baseline": 512,
+        "tx": 514.5609593919493,
+        "ty": 676.1142468942628
+      },
+      "pair": {
+        "id": "pair-4-6",
+        "local_span": 2,
+        "reference": 4,
+        "reference_original": 52,
+        "source": 6,
+        "source_original": 78,
+        "star": false
+      },
+      "reference_spatial": {
+        "bbox": [
+          1036.3125,
+          237.21875,
+          6405.16015625,
+          4551.15625
+        ],
+        "edge_counts": {
+          "128": 0,
+          "256": 8,
+          "64": 0
+        },
+        "grid_4x4": [
+          [
+            0,
+            0,
+            0,
+            3
+          ],
+          [
+            2,
+            2,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            2,
+            0
+          ],
+          [
+            4,
+            3,
+            7,
+            1
+          ]
+        ],
+        "unique_exact": 22
+      },
+      "source_spatial": {
+        "bbox": [
+          569.46875,
+          237.32421875,
+          7000.34765625,
+          4547.78515625
+        ],
+        "edge_counts": {
+          "128": 1,
+          "256": 8,
+          "64": 1
+        },
+        "grid_4x4": [
+          [
+            0,
+            0,
+            1,
+            3
+          ],
+          [
+            1,
+            2,
+            0,
+            0
+          ],
+          [
+            2,
+            0,
+            2,
+            1
+          ],
+          [
+            1,
+            1,
+            7,
+            3
+          ]
+        ],
+        "unique_exact": 22
+      },
+      "total": 24
+    },
+    {
+      "calibration": 27,
+      "calibration_cluster_sizes": [
+        3,
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "correspondence_cluster_sizes": [
+        4,
+        3,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "displacement_x": {
+        "max": 5411.078125,
+        "median": 0.01953125,
+        "min": -4194.59375,
+        "q25": -20.31640625,
+        "q75": 11.34375
+      },
+      "displacement_y": {
+        "max": 4040.12109375,
+        "median": 16.16015625,
+        "min": -3530.6328125,
+        "q25": 6.1171875,
+        "q75": 22.37890625
+      },
+      "frozen_required_calibration": 14,
+      "gross_unfit_median_errors": {
+        "double_about_origin": 5443.814250645891,
+        "halve_about_origin": 2785.2859642665917,
+        "identity": 25.33061719019748,
+        "x_reflect": 3688.794141893486,
+        "xy_swap": 2571.4311846671376,
+        "y_reflect": 3198.99810778081
+      },
+      "holdout": 26,
+      "identity": {
+        "calibration_count": 2,
+        "counts": {
+          "128": 40,
+          "2": 3,
+          "32": 37,
+          "8": 6
+        },
+        "displacement": {
+          "max": 5543.858951447752,
+          "median": 25.33061719019748,
+          "min": 0.025012204052472065,
+          "q25": 18.272769884795665,
+          "q75": 34.81835559518196
+        },
+        "holdout_count": 1,
+        "indices": [
+          1,
+          10,
+          50
+        ],
+        "reference_spatial": {
+          "bbox": [
+            6405.1015625,
+            237.30859375,
+            6405.1015625,
+            237.30859375
+          ],
+          "edge_counts": {
+            "128": 0,
+            "256": 3,
+            "64": 0
+          },
+          "grid_4x4": [
+            [
+              0,
+              0,
+              0,
+              3
+            ],
+            [
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          "unique_exact": 1
+        }
+      },
+      "independent_model": {
+        "a": 1.0076569320469362,
+        "angle_degrees": 0.024542751050657778,
+        "b": 0.00043163170045748957,
+        "calibration": {
+          "counts": {
+            "128": 24,
+            "2": 3,
+            "32": 24,
+            "8": 18
+          },
+          "residual": {
+            "max": 3714.819711275179,
+            "median": 4.566898390283785,
+            "min": 0.02506371980507538,
+            "q25": 3.767168356383742,
+            "q75": 15.758664764048175
+          }
+        },
+        "holdout": {
+          "counts": {
+            "128": 16,
+            "2": 0,
+            "32": 16,
+            "8": 9
+          },
+          "residual": {
+            "max": 5564.371787148827,
+            "median": 13.786733017071336,
+            "min": 2.0938435968604705,
+            "q25": 5.622415393878759,
+            "q75": 1391.0334494899064
+          }
+        },
+        "method": "calibration-long-baseline-complex-slope-median",
+        "scale": 1.0076570244920484,
+        "slope_count": 318,
+        "source_min_baseline": 512,
+        "tx": -25.367076553867264,
+        "ty": -15.081997556772876
+      },
+      "pair": {
+        "id": "pair-5-6",
+        "local_span": 1,
+        "reference": 5,
+        "reference_original": 65,
+        "source": 6,
+        "source_original": 78,
+        "star": true
+      },
+      "reference_spatial": {
+        "bbox": [
+          380.0703125,
+          237.30859375,
+          6405.1015625,
+          4622.17578125
+        ],
+        "edge_counts": {
+          "128": 3,
+          "256": 15,
+          "64": 0
+        },
+        "grid_4x4": [
+          [
+            0,
+            0,
+            1,
+            3
+          ],
+          [
+            1,
+            3,
+            1,
+            0
+          ],
+          [
+            2,
+            1,
+            1,
+            1
+          ],
+          [
+            13,
+            4,
+            16,
+            6
+          ]
+        ],
+        "unique_exact": 47
+      },
+      "source_spatial": {
+        "bbox": [
+          131.43359375,
+          237.32421875,
+          6948.03125,
+          4565.140625
+        ],
+        "edge_counts": {
+          "128": 2,
+          "256": 11,
+          "64": 0
+        },
+        "grid_4x4": [
+          [
+            0,
+            0,
+            1,
+            3
+          ],
+          [
+            1,
+            3,
+            1,
+            0
+          ],
+          [
+            4,
+            0,
+            1,
+            1
+          ],
+          [
+            13,
+            5,
+            14,
+            6
+          ]
+        ],
+        "unique_exact": 47
+      },
+      "total": 53
+    },
+    {
+      "calibration": 15,
+      "calibration_cluster_sizes": [
+        3,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "correspondence_cluster_sizes": [
+        3,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "displacement_x": {
+        "max": 5062.61328125,
+        "median": -14.5078125,
+        "min": -4995.3046875,
+        "q25": -811.92578125,
+        "q75": 3.25
+      },
+      "displacement_y": {
+        "max": 1542.890625,
+        "median": 25.09765625,
+        "min": -406.078125,
+        "q25": -7.4609375,
+        "q75": 321.421875
+      },
+      "frozen_required_calibration": 12,
+      "gross_unfit_median_errors": {
+        "double_about_origin": 6089.197499698801,
+        "halve_about_origin": 2714.827660196391,
+        "identity": 60.64512504741499,
+        "x_reflect": 2311.6700026312283,
+        "xy_swap": 2422.921544453595,
+        "y_reflect": 3946.6774396957676
+      },
+      "holdout": 14,
+      "identity": {
+        "calibration_count": 3,
+        "counts": {
+          "128": 15,
+          "2": 3,
+          "32": 8,
+          "8": 3
+        },
+        "displacement": {
+          "max": 5292.500799830056,
+          "median": 60.64512504741499,
+          "min": 0.15194258077169315,
+          "q25": 31.619258072875486,
+          "q75": 931.4444472517081
+        },
+        "holdout_count": 0,
+        "indices": [
+          6,
+          14,
+          24
+        ],
+        "reference_spatial": {
+          "bbox": [
+            6405.1015625,
+            237.30859375,
+            6405.1015625,
+            237.30859375
+          ],
+          "edge_counts": {
+            "128": 0,
+            "256": 3,
+            "64": 0
+          },
+          "grid_4x4": [
+            [
+              0,
+              0,
+              0,
+              3
+            ],
+            [
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          "unique_exact": 1
+        }
+      },
+      "independent_model": {
+        "a": 1.0044738368215673,
+        "angle_degrees": 0.20694095767785153,
+        "b": 0.003627975453111778,
+        "calibration": {
+          "counts": {
+            "128": 8,
+            "2": 0,
+            "32": 6,
+            "8": 3
+          },
+          "residual": {
+            "max": 4993.386703936631,
+            "median": 55.11518819642515,
+            "min": 4.66779935242721,
+            "q25": 15.466945162032205,
+            "q75": 905.8593599688287
+          }
+        },
+        "holdout": {
+          "counts": {
+            "128": 7,
+            "2": 0,
+            "32": 2,
+            "8": 0
+          },
+          "residual": {
+            "max": 5330.867041854544,
+            "median": 72.46570160409279,
+            "min": 27.040117643518624,
+            "q25": 53.8636943789865,
+            "q75": 880.4658124663199
+          }
+        },
+        "method": "calibration-long-baseline-complex-slope-median",
+        "scale": 1.004480388591499,
+        "slope_count": 98,
+        "source_min_baseline": 512,
+        "tx": -27.840989818527305,
+        "ty": -19.776779736381286
+      },
+      "pair": {
+        "id": "pair-5-7",
+        "local_span": 2,
+        "reference": 5,
+        "reference_original": 65,
+        "source": 7,
+        "source_original": 91,
+        "star": true
+      },
+      "reference_spatial": {
+        "bbox": [
+          349.546875,
+          237.30859375,
+          6405.1015625,
+          4618.0703125
+        ],
+        "edge_counts": {
+          "128": 4,
+          "256": 10,
+          "64": 0
+        },
+        "grid_4x4": [
+          [
+            0,
+            0,
+            0,
+            3
+          ],
+          [
+            1,
+            2,
+            1,
+            0
+          ],
+          [
+            1,
+            0,
+            1,
+            1
+          ],
+          [
+            6,
+            4,
+            8,
+            1
+          ]
+        ],
+        "unique_exact": 26
+      },
+      "source_spatial": {
+        "bbox": [
+          123.48046875,
+          237.453125,
+          6405.1484375,
+          4493.74609375
+        ],
+        "edge_counts": {
+          "128": 1,
+          "256": 6,
+          "64": 0
+        },
+        "grid_4x4": [
+          [
+            0,
+            0,
+            0,
+            3
+          ],
+          [
+            1,
+            2,
+            1,
+            0
+          ],
+          [
+            4,
+            0,
+            1,
+            1
+          ],
+          [
+            1,
+            0,
+            9,
+            6
+          ]
+        ],
+        "unique_exact": 26
+      },
+      "total": 29
+    },
+    {
+      "calibration": 25,
+      "calibration_cluster_sizes": [
+        5,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "correspondence_cluster_sizes": [
+        7,
+        2,
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "displacement_x": {
+        "max": 4731.15625,
+        "median": 1.0078125,
+        "min": -4990.34375,
+        "q25": -8.35546875,
+        "q75": 16.1171875
+      },
+      "displacement_y": {
+        "max": 1295.96484375,
+        "median": 11.05078125,
+        "min": -777.37109375,
+        "q25": -0.00390625,
+        "q75": 19.43359375
+      },
+      "frozen_required_calibration": 13,
+      "gross_unfit_median_errors": {
+        "double_about_origin": 5930.500016395946,
+        "halve_about_origin": 2758.041015924291,
+        "identity": 24.50867213694803,
+        "x_reflect": 2832.7723755575707,
+        "xy_swap": 3047.8895256449705,
+        "y_reflect": 3749.7448193619575
+      },
+      "holdout": 25,
+      "identity": {
+        "calibration_count": 5,
+        "counts": {
+          "128": 36,
+          "2": 9,
+          "32": 33,
+          "8": 12
+        },
+        "displacement": {
+          "max": 5050.528344694457,
+          "median": 24.22413057670524,
+          "min": 0.016105881350068987,
+          "q25": 9.58680021077158,
+          "q75": 283.4159291530825
+        },
+        "holdout_count": 4,
+        "indices": [
+          8,
+          12,
+          15,
+          16,
+          22,
+          23,
+          31,
+          33,
+          40
+        ],
+        "reference_spatial": {
+          "bbox": [
+            4913.234375,
+            237.32421875,
+            6405.08203125,
+            546.0
+          ],
+          "edge_counts": {
+            "128": 0,
+            "256": 2,
+            "64": 0
+          },
+          "grid_4x4": [
+            [
+              0,
+              0,
+              7,
+              2
+            ],
+            [
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          "unique_exact": 2
+        }
+      },
+      "independent_model": {
+        "a": 1.004193852686021,
+        "angle_degrees": -0.021946441675045676,
+        "b": -0.00038464408868360214,
+        "calibration": {
+          "counts": {
+            "128": 19,
+            "2": 0,
+            "32": 18,
+            "8": 6
+          },
+          "residual": {
+            "max": 4629.465890883655,
+            "median": 9.001050836092992,
+            "min": 3.0864988363244126,
+            "q25": 8.355140068132123,
+            "q75": 47.66943082860606
+          }
+        },
+        "holdout": {
+          "counts": {
+            "128": 17,
+            "2": 0,
+            "32": 17,
+            "8": 6
+          },
+          "residual": {
+            "max": 5065.353189995991,
+            "median": 15.278386927286594,
+            "min": 2.4841529660030774,
+            "q25": 9.001050836092992,
+            "q75": 366.206889610424
+          }
+        },
+        "method": "calibration-long-baseline-complex-slope-median",
+        "scale": 1.004193926352609,
+        "slope_count": 273,
+        "source_min_baseline": 512,
+        "tx": -11.830556374312664,
+        "ty": -0.3073181516497243
+      },
+      "pair": {
+        "id": "pair-6-7",
+        "local_span": 1,
+        "reference": 6,
+        "reference_original": 78,
+        "source": 7,
+        "source_original": 91,
+        "star": false
+      },
+      "reference_spatial": {
+        "bbox": [
+          65.40234375,
+          237.32421875,
+          6906.62109375,
+          4497.875
+        ],
+        "edge_counts": {
+          "128": 3,
+          "256": 7,
+          "64": 0
+        },
+        "grid_4x4": [
+          [
+            0,
+            0,
+            7,
+            2
+          ],
+          [
+            1,
+            2,
+            1,
+            0
+          ],
+          [
+            7,
+            1,
+            2,
+            1
+          ],
+          [
+            2,
+            2,
+            17,
+            5
+          ]
+        ],
+        "unique_exact": 41
+      },
+      "source_spatial": {
+        "bbox": [
+          81.7890625,
+          237.453125,
+          6878.546875,
+          4444.26953125
+        ],
+        "edge_counts": {
+          "128": 3,
+          "256": 7,
+          "64": 0
+        },
+        "grid_4x4": [
+          [
+            0,
+            0,
+            7,
+            2
+          ],
+          [
+            1,
+            2,
+            2,
+            0
+          ],
+          [
+            9,
+            1,
+            1,
+            1
+          ],
+          [
+            0,
+            0,
+            15,
+            9
+          ]
+        ],
+        "unique_exact": 41
+      },
+      "total": 50
+    },
+    {
+      "calibration": 22,
+      "calibration_cluster_sizes": [
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "correspondence_cluster_sizes": [
+        6,
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "displacement_x": {
+        "max": 1716.98046875,
+        "median": 0.9296875,
+        "min": -5072.12890625,
+        "q25": -4.2578125,
+        "q75": 27.00390625
+      },
+      "displacement_y": {
+        "max": 415.41015625,
+        "median": 16.6328125,
+        "min": -1724.73828125,
+        "q25": 0.18359375,
+        "q75": 26.27734375
+      },
+      "frozen_required_calibration": 12,
+      "gross_unfit_median_errors": {
+        "double_about_origin": 6409.403515313975,
+        "halve_about_origin": 3193.564546487207,
+        "identity": 31.169756757163942,
+        "x_reflect": 4467.024290343525,
+        "xy_swap": 3263.3458402618626,
+        "y_reflect": 3594.957035358674
+      },
+      "holdout": 22,
+      "identity": {
+        "calibration_count": 4,
+        "counts": {
+          "128": 32,
+          "2": 9,
+          "32": 23,
+          "8": 13
+        },
+        "displacement": {
+          "max": 5124.987803269179,
+          "median": 31.472266446791714,
+          "min": 0.1754336841631689,
+          "q25": 7.443501591481176,
+          "q75": 382.3330550343821
+        },
+        "holdout_count": 5,
+        "indices": [
+          3,
+          5,
+          10,
+          16,
+          19,
+          21,
+          36,
+          39,
+          40
+        ],
+        "reference_spatial": {
+          "bbox": [
+            1983.578125,
+            156.75,
+            6405.1484375,
+            546.00390625
+          ],
+          "edge_counts": {
+            "128": 0,
+            "256": 3,
+            "64": 0
+          },
+          "grid_4x4": [
+            [
+              0,
+              1,
+              6,
+              2
+            ],
+            [
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          "unique_exact": 3
+        }
+      },
+      "independent_model": {
+        "a": 1.0048941715588484,
+        "angle_degrees": -0.00030787137144774624,
+        "b": -5.39966729469152e-06,
+        "calibration": {
+          "counts": {
+            "128": 16,
+            "2": 1,
+            "32": 16,
+            "8": 10
+          },
+          "residual": {
+            "max": 2791.524631593024,
+            "median": 15.306349922644744,
+            "min": 0.9661741987775775,
+            "q25": 3.582597513190234,
+            "q75": 399.5326239356798
+          }
+        },
+        "holdout": {
+          "counts": {
+            "128": 16,
+            "2": 1,
+            "32": 15,
+            "8": 5
+          },
+          "residual": {
+            "max": 5146.638816974349,
+            "median": 15.306349922644744,
+            "min": 0.9661741987775775,
+            "q25": 10.270673340223281,
+            "q75": 386.1412637825832
+          }
+        },
+        "method": "calibration-long-baseline-complex-slope-median",
+        "scale": 1.0048941715733557,
+        "slope_count": 183,
+        "source_min_baseline": 512,
+        "tx": -8.915956449510077,
+        "ty": -2.5770307028010393
+      },
+      "pair": {
+        "id": "pair-7-8",
+        "local_span": 1,
+        "reference": 7,
+        "reference_original": 91,
+        "source": 8,
+        "source_original": 104,
+        "star": false
+      },
+      "reference_spatial": {
+        "bbox": [
+          416.3125,
+          156.75,
+          6929.2890625,
+          4366.93359375
+        ],
+        "edge_counts": {
+          "128": 1,
+          "256": 6,
+          "64": 0
+        },
+        "grid_4x4": [
+          [
+            0,
+            1,
+            6,
+            2
+          ],
+          [
+            1,
+            1,
+            1,
+            0
+          ],
+          [
+            3,
+            0,
+            1,
+            1
+          ],
+          [
+            0,
+            0,
+            7,
+            20
+          ]
+        ],
+        "unique_exact": 37
+      },
+      "source_spatial": {
+        "bbox": [
+          441.7421875,
+          156.56640625,
+          7008.7734375,
+          4215.07421875
+        ],
+        "edge_counts": {
+          "128": 3,
+          "256": 7,
+          "64": 1
+        },
+        "grid_4x4": [
+          [
+            0,
+            1,
+            6,
+            2
+          ],
+          [
+            1,
+            0,
+            1,
+            0
+          ],
+          [
+            2,
+            0,
+            1,
+            1
+          ],
+          [
+            0,
+            0,
+            7,
+            22
+          ]
+        ],
+        "unique_exact": 36
+      },
+      "total": 44
+    }
+  ],
+  "schema": "m193c-saved-coordinate-diagnosis-v1",
+  "source": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\work\\direct-pair-coordinate-diagnosis.py",
+    "sha256": "72771196d42908d27513a2ffb93279be85cc4014d735a8f7ab388bf94e40f8bd"
+  },
+  "status": "EXPLORATORY_SAVED_COORDINATES_ONLY"
+}

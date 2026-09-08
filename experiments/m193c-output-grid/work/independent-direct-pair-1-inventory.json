@@ -1,0 +1,241 @@
+{
+  "schema": "m193c-direct-pair-saved-output-inventory-v1",
+  "status": "PASS_SAVED_OUTPUT_EXTENTS",
+  "audit_sha256": "2b8b4a6ce4e2f245c95249555bdc3911f0802385fcc781b1427f2dc83bb9bef1",
+  "output_count": 46,
+  "output_bytes": 1417587,
+  "file_delta": 1417587,
+  "metadata_delta": 1417587,
+  "files": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\pair-plan.json",
+      "bytes": 26609,
+      "sha256": "6d802ac13a94a00ab3d1f7c5b167e72e4bd6d1a4da99595558a951d349c38db3"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\request.json",
+      "bytes": 18126,
+      "sha256": "7a06c79773eb105b3532b1368a1aad97a1b3da28669759ab4b61ff49f2d5fa53"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\result.json",
+      "bytes": 36932,
+      "sha256": "af1e60284bcb2888441113faf9835be3e7ab1091f08eeb38f2123f590c09a919"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker.log",
+      "bytes": 402,
+      "sha256": "d551114dbf28ea646e136bdb0ae80f134b36b174a99dac8613904fbbdf2fdce4"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\control-association-destroyer-restored.json",
+      "bytes": 431,
+      "sha256": "b6ed2105b12d8d0acd6008fcbcffb1703d1a94a4e3d697ac931ec7b5f33eeee5"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\control-blob-sha-refusal-restored.json",
+      "bytes": 192,
+      "sha256": "823a92aecaa2e98a6b2ce19161acf845c80505395cd088be7fabe29af288f6df"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\control-complementary-refusal.json",
+      "bytes": 378,
+      "sha256": "66afd6cf5f9b3315fa2442495427fe071f6a4a671d27ee2ecf983ce9c47f991d"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\control-geometry-0.json",
+      "bytes": 622,
+      "sha256": "33a15e7bc8c133572350052ba1031619470ec9d304ab53fce6cf82a8fd066b3a"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\control-geometry-2.json",
+      "bytes": 622,
+      "sha256": "86f6d1cac4c3b0d1d00c54c226cd1e88962d35f132336ed6c4ee08cf37ebe92c"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\control-identity.json",
+      "bytes": 589,
+      "sha256": "75e7687727b1df0ccb93fa96f14d3d96699240e69ef6030be381647de323c075"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\control-observer-null.json",
+      "bytes": 2217,
+      "sha256": "86a0d11418a197bb644bfb1773c7492e35ce26d99dc40282d6adae9c8d465767"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\controls.json",
+      "bytes": 5467,
+      "sha256": "99c6a1424f8454739ad12f20e4110778d1819a5fced3c4af1fd38d14911cba64"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\feature-0.json",
+      "bytes": 20807,
+      "sha256": "b06cb634feaaea77925261165fc3b76c5fa28a44733e84dbedf0744854a786f7"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\feature-1.json",
+      "bytes": 41560,
+      "sha256": "b002e5db9b69aed50774c69359f905cfaad001ee4f0afa2d18fbecd4eb0923bd"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\feature-2.json",
+      "bytes": 41594,
+      "sha256": "c9058d55473fbf94915698f292a1d8243afc9d5df1379a8a7815ba35a8f96c68"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\feature-3.json",
+      "bytes": 42508,
+      "sha256": "25771602fa860c1884a83feb69882002ea90fa9ec8a2d615913ef6b10531af69"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\feature-4.json",
+      "bytes": 42524,
+      "sha256": "8f71e57a532f99f0ede0088309b8a30fd1781f74912059eb9f38dd7e18270446"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\feature-5.json",
+      "bytes": 42652,
+      "sha256": "9044a6b46e9d399c23a6eb9caf56386e51e16724d7209d6096e063953d9a33e4"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\feature-6.json",
+      "bytes": 42361,
+      "sha256": "da56fba948359288c7e5b2a1b784b1c7783afe43f0ec79af46f395c0999bbc7f"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\feature-7.json",
+      "bytes": 42770,
+      "sha256": "105bd30a81c039ac5f18222a6f3df217c0753f0b83cfc763e2dbc7c75814509c"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\feature-8.json",
+      "bytes": 42973,
+      "sha256": "5f14204fa989d74b9a8c43490fc244148675369b8a2f2bc2875277313b16fdb7"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\pair-0-1.json",
+      "bytes": 3410,
+      "sha256": "fd108eda9ca959a5f66ee43f820daaf12462b6fa419895ec21511ed6738001ca"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\pair-0-2.json",
+      "bytes": 3409,
+      "sha256": "830b8e806ab45ddf33abf898924cae7bc7be6f9ac975a95f12ca6d3e6ff3b7ed"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\pair-0-4.json",
+      "bytes": 5789,
+      "sha256": "becef70db38e5bb1719fbd1e6c5274090137193c90d476ebb71e2c85a94cb34d"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\pair-0-5.json",
+      "bytes": 6380,
+      "sha256": "52d57c0cd1579711e532caff730e653bf17333cbd9a9e9de0a4fc1600cb3f11f"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\pair-1-2.json",
+      "bytes": 9329,
+      "sha256": "6c28c3d9c72b4ad28b34c11b3afba101453ae9cf09c0ea44f986b1d4af4885ae"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\pair-1-3.json",
+      "bytes": 5494,
+      "sha256": "a371fd1ed43a76cd698cfc53ad402cfbc3334c5ddb44a55f91b554a9e0902d87"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\pair-1-5.json",
+      "bytes": 3411,
+      "sha256": "85b0909fdc00a85c691cfecb9321739dcee0dc2b1a61ee3af08ec95948e2e6aa"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\pair-2-3.json",
+      "bytes": 5496,
+      "sha256": "08d06affc47ead99958c2c4de2f4316045f4331c7a6878ea1dc63ad91ad5f9fd"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\pair-2-4.json",
+      "bytes": 6685,
+      "sha256": "7732bff77f2f21934c3b10bfb3883864ebe8383074a873f27110e29a86c8f692"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\pair-2-5.json",
+      "bytes": 6093,
+      "sha256": "ad12dc6d0b62340a1ea74ffaa3ae33ff62b097dc1ec5a0c05a624d4d77d6416b"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\pair-2-6.json",
+      "bytes": 7594,
+      "sha256": "c2082b53b56a9b7c8c9a9745ffe8a79f324a42ade1fed7cc8297ec114e486e5b"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\pair-3-4.json",
+      "bytes": 9073,
+      "sha256": "eb5de610a0ef94841494b9a342d34e7a707f5ada83d175d05eebd2ea0a1d68da"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\pair-3-5.json",
+      "bytes": 5804,
+      "sha256": "71029cd5527465a431b03aa5feb08a2c68df827dcaffa6e99b78daef0441b3b5"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\pair-3-7.json",
+      "bytes": 6719,
+      "sha256": "44df526b96fb9e3764d52c5a856a526472211ab5722682e506175e3fbb4bcd85"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\pair-4-5.json",
+      "bytes": 15349,
+      "sha256": "c3c1c24e3e9c0d93e0e9dbb84d500740057250ec5f6410c3dfd7d69c531f8b2a"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\pair-4-6.json",
+      "bytes": 8769,
+      "sha256": "3780f838f7968e1544eebd62f3296c72da973b9a90bee16e566212f56f031964"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\pair-4-8.json",
+      "bytes": 6403,
+      "sha256": "e009edf54cebf831f1885232a39f7fdffd8f2911d962faa629d9f09af3ebe792"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\pair-5-6.json",
+      "bytes": 17443,
+      "sha256": "29fb94ef48c5b234163b2e5ca9de53046041c6ab96475510efecb17321af74a9"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\pair-5-7.json",
+      "bytes": 10266,
+      "sha256": "1f37d218ab1d2a42b0ac1e30775b24073e4b23e3e58579613145cf2b3d07632f"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\pair-5-8.json",
+      "bytes": 7902,
+      "sha256": "42770e13277edef275e4cec0de58321ef685e4055427cbfd4ffb3b1268378fa1"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\pair-6-7.json",
+      "bytes": 16553,
+      "sha256": "d3dff7f520c0b220a578e47a70c4d0d65e64f1fca721d0ad0b76d82550821373"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\pair-6-8.json",
+      "bytes": 7894,
+      "sha256": "10562d91ecb9e3c9252ee8e81dd0c0a8abfe8e69e2a0b98dcc11652078a9e554"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\pair-7-8.json",
+      "bytes": 14785,
+      "sha256": "9dc51c37e30e088ca291fa874348efb20cec776e0a6b1b5e00ef4d67dc60037b"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\pair-plan.json",
+      "bytes": 16327,
+      "sha256": "c5d1b0b7cf184e27095371576920c406f37d383180f8867d131caee185640ba2"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\result.json",
+      "bytes": 758874,
+      "sha256": "ac1ec543728274c130aabecc10e59d0949516aff4228735c71ceebd63abbe255"
+    }
+  ]
+}

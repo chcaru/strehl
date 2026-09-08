@@ -1,0 +1,26 @@
+{
+  "evidence": {
+    "error": null,
+    "guard": 1,
+    "metrics": {
+      "calibration_count": 128,
+      "calibration_inlier_count": 128,
+      "coordinate_quantization_guard_q8": 1,
+      "heldout_max_source_px_ceil_q8": 0,
+      "heldout_rms_reference_px": "0.000000000",
+      "holdout_count": 128,
+      "holdout_inlier_count": 128,
+      "mutual_match_count": 256,
+      "valid_support_continuous_margin_q8": 129
+    },
+    "status": "RETURNED",
+    "transform": {
+      "a": 4294967296,
+      "b": 0,
+      "tx": 0,
+      "ty": 0
+    }
+  },
+  "id": "identity",
+  "passed": true
+}

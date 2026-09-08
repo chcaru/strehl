@@ -1,0 +1,205 @@
+[
+  {
+    "evidence": {
+      "error": null,
+      "guard": 108,
+      "metrics": {
+        "calibration_count": 128,
+        "calibration_inlier_count": 125,
+        "coordinate_quantization_guard_q8": 1,
+        "heldout_max_source_px_ceil_q8": 107,
+        "heldout_rms_reference_px": "0.112928456",
+        "holdout_count": 128,
+        "holdout_inlier_count": 127,
+        "mutual_match_count": 256,
+        "valid_support_continuous_margin_q8": 236
+      },
+      "status": "RETURNED",
+      "transform": {
+        "a": 4230087616,
+        "b": -25971173,
+        "tx": 22701987882,
+        "ty": 3615191313
+      }
+    },
+    "id": "geometry-0",
+    "passed": true
+  },
+  {
+    "evidence": {
+      "error": null,
+      "guard": 157,
+      "metrics": {
+        "calibration_count": 128,
+        "calibration_inlier_count": 128,
+        "coordinate_quantization_guard_q8": 1,
+        "heldout_max_source_px_ceil_q8": 156,
+        "heldout_rms_reference_px": "0.122228082",
+        "holdout_count": 128,
+        "holdout_inlier_count": 128,
+        "mutual_match_count": 256,
+        "valid_support_continuous_margin_q8": 285
+      },
+      "status": "RETURNED",
+      "transform": {
+        "a": 4155353360,
+        "b": -43431024,
+        "tx": 50916918627,
+        "ty": 5043472855
+      }
+    },
+    "id": "geometry-2",
+    "passed": true
+  },
+  {
+    "evidence": {
+      "canonical_signature_sha256": {
+        "count": "984e9b6827390ebab6c6270dab110a2bd4cc3c8e38b5548d960e1cd2ab8bb7ed",
+        "off": "984e9b6827390ebab6c6270dab110a2bd4cc3c8e38b5548d960e1cd2ab8bb7ed",
+        "placebo": "984e9b6827390ebab6c6270dab110a2bd4cc3c8e38b5548d960e1cd2ab8bb7ed"
+      },
+      "count": {
+        "error": null,
+        "guard": 108,
+        "metrics": {
+          "calibration_count": 128,
+          "calibration_inlier_count": 125,
+          "coordinate_quantization_guard_q8": 1,
+          "heldout_max_source_px_ceil_q8": 107,
+          "heldout_rms_reference_px": "0.112928456",
+          "holdout_count": 128,
+          "holdout_inlier_count": 127,
+          "mutual_match_count": 256,
+          "valid_support_continuous_margin_q8": 236
+        },
+        "status": "RETURNED",
+        "transform": {
+          "a": 4230087616,
+          "b": -25971173,
+          "tx": 22701987882,
+          "ty": 3615191313
+        }
+      },
+      "off": {
+        "error": null,
+        "guard": 108,
+        "metrics": {
+          "calibration_count": 128,
+          "calibration_inlier_count": 125,
+          "coordinate_quantization_guard_q8": 1,
+          "heldout_max_source_px_ceil_q8": 107,
+          "heldout_rms_reference_px": "0.112928456",
+          "holdout_count": 128,
+          "holdout_inlier_count": 127,
+          "mutual_match_count": 256,
+          "valid_support_continuous_margin_q8": 236
+        },
+        "status": "RETURNED",
+        "transform": {
+          "a": 4230087616,
+          "b": -25971173,
+          "tx": 22701987882,
+          "ty": 3615191313
+        }
+      },
+      "placebo": {
+        "error": null,
+        "guard": 108,
+        "metrics": {
+          "calibration_count": 128,
+          "calibration_inlier_count": 125,
+          "coordinate_quantization_guard_q8": 1,
+          "heldout_max_source_px_ceil_q8": 107,
+          "heldout_rms_reference_px": "0.112928456",
+          "holdout_count": 128,
+          "holdout_inlier_count": 127,
+          "mutual_match_count": 256,
+          "valid_support_continuous_margin_q8": 236
+        },
+        "status": "RETURNED",
+        "transform": {
+          "a": 4230087616,
+          "b": -25971173,
+          "tx": 22701987882,
+          "ty": 3615191313
+        }
+      }
+    },
+    "id": "observer-null",
+    "passed": true
+  },
+  {
+    "evidence": {
+      "error": null,
+      "guard": 1,
+      "metrics": {
+        "calibration_count": 128,
+        "calibration_inlier_count": 128,
+        "coordinate_quantization_guard_q8": 1,
+        "heldout_max_source_px_ceil_q8": 0,
+        "heldout_rms_reference_px": "0.000000000",
+        "holdout_count": 128,
+        "holdout_inlier_count": 128,
+        "mutual_match_count": 256,
+        "valid_support_continuous_margin_q8": 129
+      },
+      "status": "RETURNED",
+      "transform": {
+        "a": 4294967296,
+        "b": 0,
+        "tx": 0,
+        "ty": 0
+      }
+    },
+    "id": "identity",
+    "passed": true
+  },
+  {
+    "evidence": {
+      "error": {
+        "code": "UNMEASURED_INPUT_REGISTRATION_INADEQUATE",
+        "message": "UNMEASURED_INPUT_REGISTRATION_INADEQUATE: too few total mutual landmarks",
+        "type": "ContractError"
+      },
+      "guard": null,
+      "metrics": null,
+      "status": "REGISTRATION_REFUSED",
+      "transform": null
+    },
+    "id": "complementary-refusal",
+    "passed": true
+  },
+  {
+    "evidence": {
+      "first": {
+        "a": 4230087616,
+        "b": -25971173,
+        "tx": 22701987882,
+        "ty": 3615191313
+      },
+      "restored": {
+        "a": 4230087616,
+        "b": -25971173,
+        "tx": 22701987882,
+        "ty": 3615191313
+      },
+      "wrong": {
+        "a": 4155353360,
+        "b": -43431024,
+        "tx": 50916918627,
+        "ty": 5043472855
+      }
+    },
+    "id": "association-destroyer-restored",
+    "passed": true
+  },
+  {
+    "evidence": {
+      "exception": "authenticated same TIFF blob",
+      "refused_decoder_calls": 0,
+      "restored_decoder_calls": 1
+    },
+    "id": "blob-sha-refusal-restored",
+    "passed": true
+  }
+]

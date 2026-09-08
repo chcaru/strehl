@@ -1,0 +1,15 @@
+{
+  "evidence": {
+    "error": {
+      "code": "UNMEASURED_INPUT_REGISTRATION_INADEQUATE",
+      "message": "UNMEASURED_INPUT_REGISTRATION_INADEQUATE: too few total mutual landmarks",
+      "type": "ContractError"
+    },
+    "guard": null,
+    "metrics": null,
+    "status": "REGISTRATION_REFUSED",
+    "transform": null
+  },
+  "id": "complementary-refusal",
+  "passed": true
+}

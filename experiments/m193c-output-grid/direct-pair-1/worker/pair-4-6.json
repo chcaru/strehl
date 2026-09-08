@@ -1,0 +1,338 @@
+{
+  "outcome": {
+    "error": {
+      "code": "UNMEASURED_INPUT_REGISTRATION_INADEQUATE",
+      "message": "UNMEASURED_INPUT_REGISTRATION_INADEQUATE: no majority landmark consensus",
+      "traceback": "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-run.py\", line 161, in observe_pair\n    transform,metrics,guard=v1.register_to_reference(ref,src)\n                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M193-cover-overlap\\reference.py\", line 549, in register_to_reference\n    transform, calibration_inliers = choose_similarity(calibration)\n                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M193-cover-overlap\\reference.py\", line 503, in choose_similarity\n    require(\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M193-cover-overlap\\reference.py\", line 46, in require\n    raise ContractError(code, message)\nm193b_frozen_reference.ContractError: UNMEASURED_INPUT_REGISTRATION_INADEQUATE: no majority landmark consensus\n",
+      "type": "ContractError"
+    },
+    "guard": null,
+    "heldout_bbox_q8": null,
+    "landmarks": [
+      {
+        "digest": "08b02b22be66add09a71e214c7713d832cd53faa531dbd6146d8c30ab8139b8d",
+        "inlier": null,
+        "reference_q8": [
+          1639721,
+          60728
+        ],
+        "source_q8": [
+          1639701,
+          60755
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "0e944b4def6a5d04458e6b15acf490e1ea610381d8f47030baf97dad1e297a5a",
+        "inlier": null,
+        "reference_q8": [
+          313331,
+          482981
+        ],
+        "source_q8": [
+          326236,
+          484264
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "0f4580f0e29cd227ca133fa0a120662030dcdf045bbce6989b3321116b6420ea",
+        "inlier": null,
+        "reference_q8": [
+          1196557,
+          997416
+        ],
+        "source_q8": [
+          1183502,
+          985196
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "27e5fb2674c38c3f59408b57ed3ebbae1d7767ec3eb3713e19e735d0f66eac77",
+        "inlier": null,
+        "reference_q8": [
+          1352479,
+          931998
+        ],
+        "source_q8": [
+          1345902,
+          923638
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "2eb66981d92cd5e8add701aa80eafed2c0ee0460afc9b55aa203b93314e5f211",
+        "inlier": null,
+        "reference_q8": [
+          1639721,
+          60728
+        ],
+        "source_q8": [
+          1639701,
+          60755
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "2f0dfac80e79390c9e02e9643729783f09cf63d84ee0524ca180d800be2b27f6",
+        "inlier": null,
+        "reference_q8": [
+          1116357,
+          1117047
+        ],
+        "source_q8": [
+          1112132,
+          1109071
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "44d9747abd088ea41fb139a593342ca07145f48aaaa7929f1b826a25752bb83a",
+        "inlier": null,
+        "reference_q8": [
+          265296,
+          1108857
+        ],
+        "source_q8": [
+          149579,
+          897869
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "463e8c6383c5919f8002d06dc5306ea36f505937f1cdffaf3b01236cb7d72173",
+        "inlier": null,
+        "reference_q8": [
+          1186174,
+          1105246
+        ],
+        "source_q8": [
+          1181630,
+          1097885
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "48c7858e1e0bd8ee40a152ff3463eb690913e5e5ab9d1a2e415beb899f77f8b9",
+        "inlier": null,
+        "reference_q8": [
+          920665,
+          1148561
+        ],
+        "source_q8": [
+          949047,
+          109860
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "4b9ef27b676d4c657f6707866c5ab6d9fe606dcb7ba2328c01d877bec792e67d",
+        "inlier": null,
+        "reference_q8": [
+          1032388,
+          689837
+        ],
+        "source_q8": [
+          1493279,
+          1137311
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "4f910b8b05e905489266f42292fa28915cd57e67b67205aea0e286269a133934",
+        "inlier": null,
+        "reference_q8": [
+          896461,
+          1145076
+        ],
+        "source_q8": [
+          892278,
+          1139177
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "5c88c109a68928ee312324e161ee369ffd01489d4fb3ef4bb4e128cccec211b2",
+        "inlier": null,
+        "reference_q8": [
+          797753,
+          577540
+        ],
+        "source_q8": [
+          801547,
+          576472
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "5d001a063427436c94333f662a597c9738700e9faec2b6e707c86579491a9db8",
+        "inlier": null,
+        "reference_q8": [
+          959526,
+          1150473
+        ],
+        "source_q8": [
+          959529,
+          1140620
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "5fde1bd2aa1e4826061d7deae109675056aefa2e79e3cae9c994500c1527987f",
+        "inlier": null,
+        "reference_q8": [
+          763383,
+          323594
+        ],
+        "source_q8": [
+          766948,
+          328418
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "7a0e7684ddcf82fc13896aaac4afabbd4720cbd5414b188c79a5a7f9680d6399",
+        "inlier": null,
+        "reference_q8": [
+          904264,
+          1095878
+        ],
+        "source_q8": [
+          904302,
+          1083596
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "9d539dcaa485a3d53ff6542f663c0eb00b1e22660d666d93b41c332273993898",
+        "inlier": null,
+        "reference_q8": [
+          362302,
+          512378
+        ],
+        "source_q8": [
+          1118052,
+          1080168
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "affd55ad61394d7202b60787f6f3e3cb64fc4656c69ffd1a4463bda10c00b716",
+        "inlier": null,
+        "reference_q8": [
+          289477,
+          1106532
+        ],
+        "source_q8": [
+          1551722,
+          1138666
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "b37c2f0bb9c836ca402d92272b4f502403ef5628992a0b1e5cbd2ffe205f910a",
+        "inlier": null,
+        "reference_q8": [
+          1639721,
+          60728
+        ],
+        "source_q8": [
+          1639701,
+          60755
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "ccb0fd549c26527fd36fde20cf6a9129bfe32f243d18909303caceda21119710",
+        "inlier": null,
+        "reference_q8": [
+          1250048,
+          884602
+        ],
+        "source_q8": [
+          1242088,
+          878351
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "dc29b9c6335c2dfc3e707e2e68881a88802b866c1f3cd1c0cf2de85d10e97672",
+        "inlier": null,
+        "reference_q8": [
+          694490,
+          1165096
+        ],
+        "source_q8": [
+          1792089,
+          1164233
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "e578b57a47a9e91bf03ff0abe07bdfc2288ff60ca4209e0f5531798c7553a60a",
+        "inlier": null,
+        "reference_q8": [
+          1325904,
+          945188
+        ],
+        "source_q8": [
+          1397541,
+          627595
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "e6591889c862d46d34b25852d42cec06a47c6e6e36c392f39807c31392ad8bfd",
+        "inlier": null,
+        "reference_q8": [
+          447023,
+          1141726
+        ],
+        "source_q8": [
+          1042089,
+          686481
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "f84643a659124410531669151d082c1f9a73e210d6dc107ffa851298f5bb9387",
+        "inlier": null,
+        "reference_q8": [
+          272912,
+          1090123
+        ],
+        "source_q8": [
+          145784,
+          890860
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "f8fbcd541626732ce112305a267de0291134a60c0b68d8501e04ea83b1725f89",
+        "inlier": null,
+        "reference_q8": [
+          580860,
+          1133275
+        ],
+        "source_q8": [
+          270274,
+          924470
+        ],
+        "split": "holdout"
+      }
+    ],
+    "metrics": null,
+    "status": "REGISTRATION_REFUSED",
+    "transform": null
+  },
+  "pair": {
+    "id": "pair-4-6",
+    "local_span": 2,
+    "reference": 4,
+    "reference_original": 52,
+    "source": 6,
+    "source_original": 78,
+    "star": false
+  }
+}

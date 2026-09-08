@@ -1,0 +1,27 @@
+{
+  "scope": "Local diagnostic display only; stride16 and fixed power1/2.2; no quality metric, image synthesis, RAW decode or alignment",
+  "inputs": [
+    {
+      "bytes": 197798267,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-derivative-1\\frame-00\\native\\DSC00016-registration.tiff",
+      "sha256": "97af13814d35ca2bf5320587268c722903ef5204ae3d9b379eef2bb384753d5f"
+    },
+    {
+      "bytes": 197798267,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-artifact-derivative-1\\frame-04\\native\\DSC00068-registration.tiff",
+      "sha256": "88ddd13d5e216345b75fea78163ee017396113a82c6a65dfc3532d0928a75d88"
+    },
+    {
+      "bytes": 197798267,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-artifact-derivative-1\\frame-08\\native\\DSC00120-registration.tiff",
+      "sha256": "669de9f7ac88f6a373e32b36044474fc6d80a84b4ea4ca19b0870f37e161fe33"
+    }
+  ],
+  "output": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\work\\direct-pair-input-previews.png",
+    "bytes": 491896,
+    "sha256": "2afd388bf7cdbaa20971c96b5dd2286bd559862e64116fdc67b888cdfa7df369"
+  },
+  "cpu_seconds": 0.640625,
+  "wall_seconds": 0.640999999945052
+}

@@ -3,12 +3,14 @@
 **IN PROGRESS.** All nine native registration derivatives have completed
 the camera-metadata reader and corrected controller. The unchanged registrar
 then refused its first nonreference input: original104 has too few mutual
-landmarks with its byte-selected reference, original65. Seven inputs remain
-registration-unvisited. Independent actual audits verify both outcomes.
+landmarks with its byte-selected reference, original65. Its seven unvisited
+inputs were subsequently included in a fixed direct-pair diagnostic: all nine
+feature extractions returned, but all23 pairs refused. Independent actual audits
+verify both outcomes; there are zero accepted direct edges.
 Private attempt2 and the preceding domain/white investigations are independently
 verified within their reported scopes. Earlier decoder-domain, white-level and
-source-artifact refusals remain preserved. The next experiment measures
-direct-pair support on these same nine derivatives with the unchanged matcher.
+source-artifact refusals remain preserved. The next experiment tests one fixed
+factor-eight representation with the original native-pixel fitting limits.
 HardFloor remains the default; no quality promotion follows
 from this work. The [charter](../../experiments/m193c-output-grid/charter.md)
 names the actual sampling-coordinate consumer and the fixed historical inputs.
@@ -319,6 +321,49 @@ This follows the existing conditional next-decision memo. Reusing the frozen
 in-memory TIFF byte decoder avoids another nine-file temporary-copy charge;
 the original experiment limits remain fixed.
 
+## Complete direct-pair support diagnostic
+
+**MEASURED, independently inspected:** the experiment frozen at `e4d4b894`
+completed all23 scheduled calls after seven private control groups passed.
+Parent and worker both exited0 with `COMPLETE_DIRECT_PAIR_SUPPORT_ONLY`:
+this status means the observations completed, not that registration succeeded.
+All nine feature extractions returned. Fifteen pairs refused for too few total
+mutual landmarks; eight refused for no majority landmark consensus. No unrelated
+exception, unvisited pair or returned real transform occurred.
+
+The local-rung spans1,2,4 plus actual local5-reference star have the fixed
+original-index mapping0,13,26,39,52,65,78,91,104. The historical reference65 /
+source104 call reproduced its exact refusal and retained22 mutual landmarks;
+the earlier coverage attempt did not record that count. The reporting anchor
+is original52. Independent graph reconstruction finds zero edges and nine
+singleton components, with no bridges or cycles. No graph solve is justified.
+This does not establish that the scene lacks shared geometry under other methods.
+
+The actual parent result is36932 bytes, SHA256
+`af1e60284bcb2888441113faf9835be3e7ab1091f08eeb38f2123f590c09a919`;
+worker result758874 bytes,
+`ac1ec543728274c130aabecc10e59d0949516aff4228735c71ceebd63abbe255`.
+The [independent audit](../../experiments/m193c-output-grid/independent-direct-pair-1-read.md)
+checks the exact population, saved coordinate membership and splits, controls,
+source/runtime bindings and terminal process accounting. Its accepted-transform
+branches remain unexercised because every real call refused.
+
+Final cumulative accounting is422.453125 CPU seconds,3948978385 charged file
+bytes and23777739 metadata bytes. Actual outer54.3849439 seconds gives
+conservative next wall457.0575196 seconds. The46 new files total1417587 bytes;
+no TIFF or RAW was written. All old reservations and failed-work charges remain.
+These are operational observations, not a performance comparison.
+
+**ARGUED next decision:** test exact8-by-8 RGB block averaging before the same
+feature extractor, retaining the existing23 native outcomes as the baseline.
+A nonidentity private rotation must pass a known native-coordinate oracle before
+any real input is decoded. Keep the2-native-pixel inlier and1-native-pixel
+held-out limits. Record distinct feature sites and cross-split reuse descriptively;
+descriptor multiplicity is not independent spatial support. Inherited coarse
+support margins are unqualified. The [decision memo](../../experiments/m193c-output-grid/next-registration-diagnostic-decision.md)
+keeps spatially balanced selection and local translation probes conditional.
+This changes no product default or quality acceptance bar.
+
 ## Reproduction and preserved attempts
 
 Each release contains the complete actual argument array, input references and
@@ -344,6 +389,7 @@ these attempts when reproducing them.
 | Camera-white native derivatives 1 | `8b0db533` | [camera-white release](../../experiments/m193c-output-grid/native-sensor-white-derivative-release-1.json) | [source-snapshot contract refusal](../../experiments/m193c-output-grid/native-sensor-white-derivative-1/result.json) |
 | Artifact-contract native derivatives 1 | `79d75c40` | [artifact-parent release](../../experiments/m193c-output-grid/native-sensor-white-artifact-derivative-release-1.json) | [nine native readers completed](../../experiments/m193c-output-grid/native-sensor-white-artifact-derivative-1/result.json) |
 | Nine-input registration coverage 1 | `1f3c6bd7` | [coverage release 2](../../experiments/m193c-output-grid/sensor-white-coverage-release-2.json) | [first nonreference registration refused](../../experiments/m193c-output-grid/sensor-white-coverage-1/result.json) |
+| Fixed direct-pair support 1 | `e4d4b894` | [direct-pair plan 1](../../experiments/m193c-output-grid/direct-pair-plan-1.json) | [all23 observed; all23 refused](../../experiments/m193c-output-grid/direct-pair-1/result.json) |
 
 Final control result SHA256:
 `39a6f6e93e3b8df83834ab4046c7f30d6f42612df0cb0ec57ea158815baa7cfd`.
@@ -352,10 +398,10 @@ Build 2 result SHA256:
 
 ## Next decisions
 
-Run the bounded23-pair support experiment selected by the actual registration
-refusal. Keep the frozen matcher, thresholds and nine inputs. Preserve the
-failed65-reference/104-source direction and distinguish unvisited, refused,
-and supported pairs. A connected tree does not justify a graph solve, and
-accepted landmark residuals do not establish whole-frame placement accuracy.
+Commission the fixed factor-eight representation with powered coordinate
+controls, then observe the same23 pairs only if the positive passes. Keep native
+accuracy limits and preserve the all-refused native baseline. Distinct-site
+counts are descriptive; accepted residuals do not establish whole-frame
+placement accuracy. No graph solve or real cover-mode render is yet admitted.
 The [next-decision memo](../../experiments/m193c-output-grid/next-program-decision.md)
 keeps real cover-mode renders conditional on usable input geometry.

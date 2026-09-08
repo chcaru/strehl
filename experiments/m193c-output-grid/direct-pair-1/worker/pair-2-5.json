@@ -1,0 +1,234 @@
+{
+  "outcome": {
+    "error": {
+      "code": "UNMEASURED_INPUT_REGISTRATION_INADEQUATE",
+      "message": "UNMEASURED_INPUT_REGISTRATION_INADEQUATE: too few total mutual landmarks",
+      "traceback": "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-run.py\", line 161, in observe_pair\n    transform,metrics,guard=v1.register_to_reference(ref,src)\n                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M193-cover-overlap\\reference.py\", line 542, in register_to_reference\n    require(\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M193-cover-overlap\\reference.py\", line 46, in require\n    raise ContractError(code, message)\nm193b_frozen_reference.ContractError: UNMEASURED_INPUT_REGISTRATION_INADEQUATE: too few total mutual landmarks\n",
+      "type": "ContractError"
+    },
+    "guard": null,
+    "heldout_bbox_q8": null,
+    "landmarks": [
+      {
+        "digest": "012832f2adb9478bba24c795a4bb21bdc33a3fe6679867324324d70959e9ba1a",
+        "inlier": null,
+        "reference_q8": [
+          976984,
+          1128152
+        ],
+        "source_q8": [
+          837664,
+          370709
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "0c4a8ee547d372ffd4fec090e03897b3182d7c798a0cd933e729343bccbdbac0",
+        "inlier": null,
+        "reference_q8": [
+          489468,
+          870745
+        ],
+        "source_q8": [
+          470778,
+          877509
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "0f97d10b24f061bf0bf2244939d8dd5348d24525f4bdc77e3fe019c6d6c4149a",
+        "inlier": null,
+        "reference_q8": [
+          623067,
+          1077965
+        ],
+        "source_q8": [
+          813002,
+          733841
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "3054e2f5e4e8d0330d596b402b2b7c8a27627f8a4c372af2c41cfd6e6afca9a0",
+        "inlier": null,
+        "reference_q8": [
+          440551,
+          1050105
+        ],
+        "source_q8": [
+          505650,
+          550275
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "31347768de6eb4d94a84af740e32f766433cee9b7f3221eae1d15bfe3578c7a5",
+        "inlier": null,
+        "reference_q8": [
+          920513,
+          1144131
+        ],
+        "source_q8": [
+          949383,
+          95521
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "3e1a271363d631b15ba71f150bca08f5083afcb2ff631565faa8ac54121aff6f",
+        "inlier": null,
+        "reference_q8": [
+          779962,
+          1112415
+        ],
+        "source_q8": [
+          820303,
+          423414
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "48b1e76c557afa5975f1ce1cbf729ebe3e246d1456fd7c11d5d7be7d7b9b02f7",
+        "inlier": null,
+        "reference_q8": [
+          480665,
+          1043360
+        ],
+        "source_q8": [
+          927058,
+          930602
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "565907d81034a0a849127ef302785fd97bad38e30cf40ab42dee6c98c160fc3e",
+        "inlier": null,
+        "reference_q8": [
+          697506,
+          1091212
+        ],
+        "source_q8": [
+          820484,
+          425369
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "5ac1a14cef0548308a526dd3cadcf4ff071854baf18c9def201f188241b07053",
+        "inlier": null,
+        "reference_q8": [
+          479015,
+          1040078
+        ],
+        "source_q8": [
+          843346,
+          379338
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "7dba7a0d986e8c97c8ef3e02df18c3f690a23396813bb1cf2c77167e3c4f0f49",
+        "inlier": null,
+        "reference_q8": [
+          1402118,
+          628561
+        ],
+        "source_q8": [
+          1415482,
+          629996
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "86cfb4071c1899f4c1480c5b7f26e9d9ca0f97e2d3dec4f236a6d05a63cac8b6",
+        "inlier": null,
+        "reference_q8": [
+          1029787,
+          301006
+        ],
+        "source_q8": [
+          1040664,
+          291658
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "93f2932256fa1349bfb5faba275612d3d0d9dbdc62dafdb0dc7a6cee7d04246e",
+        "inlier": null,
+        "reference_q8": [
+          1084450,
+          1152680
+        ],
+        "source_q8": [
+          854613,
+          324561
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "a6c7131203bd67f7fbbf462fa6a361b855f51b6f97ff52bb8e8e5ef3357af276",
+        "inlier": null,
+        "reference_q8": [
+          1375392,
+          1188497
+        ],
+        "source_q8": [
+          789226,
+          446287
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "b68a5b15705bc6df7bee47c60123e3b16932df62ab4c528297897521f332ec12",
+        "inlier": null,
+        "reference_q8": [
+          1392870,
+          721312
+        ],
+        "source_q8": [
+          1405778,
+          726345
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "efd27460680589396960bd438ab22392cc2fd1351f20cbca42c424a3649bac0f",
+        "inlier": null,
+        "reference_q8": [
+          1084450,
+          1152680
+        ],
+        "source_q8": [
+          854613,
+          324561
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "f346da327f9604e195ddc3ef159e4a3e872adec4ff0257287b15c63d6223b2e2",
+        "inlier": null,
+        "reference_q8": [
+          620565,
+          1088319
+        ],
+        "source_q8": [
+          876701,
+          688846
+        ],
+        "split": "holdout"
+      }
+    ],
+    "metrics": null,
+    "status": "REGISTRATION_REFUSED",
+    "transform": null
+  },
+  "pair": {
+    "id": "pair-2-5",
+    "local_span": 3,
+    "reference": 5,
+    "reference_original": 65,
+    "source": 2,
+    "source_original": 26,
+    "star": true
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "scope": "Actual fixed23 direct-pair support; no placement or quality conclusion",
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-B",
+    "-X",
+    "faulthandler",
+    "-X",
+    "pycache_prefix=C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\parent-cache",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-run.py",
+    "--plan",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-plan-1.json",
+    "--sha256",
+    "fb7a6b8e00503f07b4c6403b25403357f53fb967ba9466e6829e3fc1fe187179",
+    "--output",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1"
+  ],
+  "plan_sha256": "fb7a6b8e00503f07b4c6403b25403357f53fb967ba9466e6829e3fc1fe187179",
+  "exit_code": 0,
+  "elapsed_wall_seconds": 54.3849439,
+  "admissible_parent_exit": true
+}

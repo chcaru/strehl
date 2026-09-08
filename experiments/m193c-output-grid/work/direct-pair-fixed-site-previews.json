@@ -1,0 +1,37 @@
+{
+  "scope": "Qualitative native128x128 crops around two repeated feature sites, displayed2x nearest-neighbor/fixedpower1/2.2; physical cause unknown; no quality metric",
+  "inputs": [
+    {
+      "bytes": 197798267,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-derivative-1\\frame-00\\native\\DSC00016-registration.tiff",
+      "sha256": "97af13814d35ca2bf5320587268c722903ef5204ae3d9b379eef2bb384753d5f"
+    },
+    {
+      "bytes": 197798267,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-artifact-derivative-1\\frame-04\\native\\DSC00068-registration.tiff",
+      "sha256": "88ddd13d5e216345b75fea78163ee017396113a82c6a65dfc3532d0928a75d88"
+    },
+    {
+      "bytes": 197798267,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-artifact-derivative-1\\frame-08\\native\\DSC00120-registration.tiff",
+      "sha256": "669de9f7ac88f6a373e32b36044474fc6d80a84b4ea4ca19b0870f37e161fe33"
+    }
+  ],
+  "sites_native_xy": [
+    [
+      6405,
+      237
+    ],
+    [
+      4913,
+      546
+    ]
+  ],
+  "output": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\work\\direct-pair-fixed-site-previews.png",
+    "bytes": 248390,
+    "sha256": "1c9d1b72f4b57827b9fff69f4cf009e48a7b51e3b7f71f2870e065eff51646db"
+  },
+  "cpu_seconds": 0.609375,
+  "wall_seconds": 0.6099999999860302
+}

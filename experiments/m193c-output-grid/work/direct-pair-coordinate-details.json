@@ -1,0 +1,807 @@
+{
+  "features": [
+    {
+      "local": 0,
+      "lower_quarter": 41,
+      "total": 503,
+      "unique_locations": 403,
+      "upper_half": 296
+    },
+    {
+      "local": 1,
+      "lower_quarter": 2,
+      "total": 1024,
+      "unique_locations": 699,
+      "upper_half": 873
+    },
+    {
+      "local": 2,
+      "lower_quarter": 24,
+      "total": 1024,
+      "unique_locations": 673,
+      "upper_half": 515
+    },
+    {
+      "local": 3,
+      "lower_quarter": 151,
+      "total": 1024,
+      "unique_locations": 651,
+      "upper_half": 554
+    },
+    {
+      "local": 4,
+      "lower_quarter": 816,
+      "total": 1024,
+      "unique_locations": 805,
+      "upper_half": 108
+    },
+    {
+      "local": 5,
+      "lower_quarter": 994,
+      "total": 1024,
+      "unique_locations": 812,
+      "upper_half": 18
+    },
+    {
+      "local": 6,
+      "lower_quarter": 790,
+      "total": 1024,
+      "unique_locations": 823,
+      "upper_half": 18
+    },
+    {
+      "local": 7,
+      "lower_quarter": 681,
+      "total": 1024,
+      "unique_locations": 816,
+      "upper_half": 16
+    },
+    {
+      "local": 8,
+      "lower_quarter": 787,
+      "total": 1024,
+      "unique_locations": 815,
+      "upper_half": 14
+    }
+  ],
+  "image_or_subject_calls": 0,
+  "inputs": [
+    {
+      "bytes": 9329,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\pair-1-2.json",
+      "sha256": "6c28c3d9c72b4ad28b34c11b3afba101453ae9cf09c0ea44f986b1d4af4885ae"
+    },
+    {
+      "bytes": 9073,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\pair-3-4.json",
+      "sha256": "eb5de610a0ef94841494b9a342d34e7a707f5ada83d175d05eebd2ea0a1d68da"
+    },
+    {
+      "bytes": 15349,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\pair-4-5.json",
+      "sha256": "c3c1c24e3e9c0d93e0e9dbb84d500740057250ec5f6410c3dfd7d69c531f8b2a"
+    },
+    {
+      "bytes": 8769,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\pair-4-6.json",
+      "sha256": "3780f838f7968e1544eebd62f3296c72da973b9a90bee16e566212f56f031964"
+    },
+    {
+      "bytes": 17443,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\pair-5-6.json",
+      "sha256": "29fb94ef48c5b234163b2e5ca9de53046041c6ab96475510efecb17321af74a9"
+    },
+    {
+      "bytes": 10266,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\pair-5-7.json",
+      "sha256": "1f37d218ab1d2a42b0ac1e30775b24073e4b23e3e58579613145cf2b3d07632f"
+    },
+    {
+      "bytes": 16553,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\pair-6-7.json",
+      "sha256": "d3dff7f520c0b220a578e47a70c4d0d65e64f1fca721d0ad0b76d82550821373"
+    },
+    {
+      "bytes": 14785,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\pair-7-8.json",
+      "sha256": "9dc51c37e30e088ca291fa874348efb20cec776e0a6b1b5e00ef4d67dc60037b"
+    },
+    {
+      "bytes": 20807,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\feature-0.json",
+      "sha256": "b06cb634feaaea77925261165fc3b76c5fa28a44733e84dbedf0744854a786f7"
+    },
+    {
+      "bytes": 41560,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\feature-1.json",
+      "sha256": "b002e5db9b69aed50774c69359f905cfaad001ee4f0afa2d18fbecd4eb0923bd"
+    },
+    {
+      "bytes": 41594,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\feature-2.json",
+      "sha256": "c9058d55473fbf94915698f292a1d8243afc9d5df1379a8a7815ba35a8f96c68"
+    },
+    {
+      "bytes": 42508,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\feature-3.json",
+      "sha256": "25771602fa860c1884a83feb69882002ea90fa9ec8a2d615913ef6b10531af69"
+    },
+    {
+      "bytes": 42524,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\feature-4.json",
+      "sha256": "8f71e57a532f99f0ede0088309b8a30fd1781f74912059eb9f38dd7e18270446"
+    },
+    {
+      "bytes": 42652,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\feature-5.json",
+      "sha256": "9044a6b46e9d399c23a6eb9caf56386e51e16724d7209d6096e063953d9a33e4"
+    },
+    {
+      "bytes": 42361,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\feature-6.json",
+      "sha256": "da56fba948359288c7e5b2a1b784b1c7783afe43f0ec79af46f395c0999bbc7f"
+    },
+    {
+      "bytes": 42770,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\feature-7.json",
+      "sha256": "105bd30a81c039ac5f18222a6f3df217c0753f0b83cfc763e2dbc7c75814509c"
+    },
+    {
+      "bytes": 42973,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\feature-8.json",
+      "sha256": "5f14204fa989d74b9a8c43490fc244148675369b8a2f2bc2875277313b16fdb7"
+    }
+  ],
+  "pairs": [
+    {
+      "exact_groups_crossing_split": 2,
+      "incompatible_same_point_groups": [],
+      "lower_quarter_reference": 1,
+      "pair": {
+        "id": "pair-1-2",
+        "local_span": 1,
+        "reference": 1,
+        "reference_original": 13,
+        "source": 2,
+        "source_original": 26,
+        "star": false
+      },
+      "repeated_exact_correspondences": [
+        {
+          "displacement_px": 1063.2428967713774,
+          "ids": [
+            0,
+            19
+          ],
+          "reference_q8": [
+            606286,
+            313976
+          ],
+          "source_q8": [
+            864690,
+            228449
+          ],
+          "splits": [
+            "calibration",
+            "holdout"
+          ]
+        },
+        {
+          "displacement_px": 1178.5030905772467,
+          "ids": [
+            6,
+            17
+          ],
+          "reference_q8": [
+            526009,
+            317815
+          ],
+          "source_q8": [
+            827427,
+            330782
+          ],
+          "splits": [
+            "calibration",
+            "holdout"
+          ]
+        }
+      ],
+      "total": 26,
+      "upper_half_reference": 23
+    },
+    {
+      "exact_groups_crossing_split": 0,
+      "incompatible_same_point_groups": [
+        {
+          "fixed_q8": [
+            1075660,
+            712680
+          ],
+          "fixed_side": "source_q8",
+          "ids": [
+            0,
+            1
+          ],
+          "other_diameter_px": 1488.912995532029,
+          "other_q8": [
+            [
+              1276733,
+              838783
+            ],
+            [
+              1135469,
+              484765
+            ]
+          ]
+        },
+        {
+          "fixed_q8": [
+            1274280,
+            1016733
+          ],
+          "fixed_side": "source_q8",
+          "ids": [
+            8,
+            16
+          ],
+          "other_diameter_px": 928.4852762446613,
+          "other_q8": [
+            [
+              1212501,
+              433029
+            ],
+            [
+              1175789,
+              667869
+            ]
+          ]
+        },
+        {
+          "fixed_q8": [
+            1375344,
+            856443
+          ],
+          "fixed_side": "source_q8",
+          "ids": [
+            18,
+            24
+          ],
+          "other_diameter_px": 2624.6189755118403,
+          "other_q8": [
+            [
+              1261284,
+              930101
+            ],
+            [
+              678576,
+              595580
+            ]
+          ]
+        }
+      ],
+      "lower_quarter_reference": 4,
+      "pair": {
+        "id": "pair-3-4",
+        "local_span": 1,
+        "reference": 3,
+        "reference_original": 39,
+        "source": 4,
+        "source_original": 52,
+        "star": false
+      },
+      "repeated_exact_correspondences": [
+        {
+          "displacement_px": 1664.7250594954587,
+          "ids": [
+            7,
+            9
+          ],
+          "reference_q8": [
+            643228,
+            586447
+          ],
+          "source_q8": [
+            1057389,
+            686902
+          ],
+          "splits": [
+            "holdout",
+            "holdout"
+          ]
+        }
+      ],
+      "total": 25,
+      "upper_half_reference": 13
+    },
+    {
+      "exact_groups_crossing_split": 3,
+      "incompatible_same_point_groups": [],
+      "lower_quarter_reference": 34,
+      "pair": {
+        "id": "pair-4-5",
+        "local_span": 1,
+        "reference": 5,
+        "reference_original": 65,
+        "source": 4,
+        "source_original": 52,
+        "star": true
+      },
+      "repeated_exact_correspondences": [
+        {
+          "displacement_px": 978.8845388965558,
+          "ids": [
+            5,
+            8
+          ],
+          "reference_q8": [
+            396586,
+            1031797
+          ],
+          "source_q8": [
+            619144,
+            1146973
+          ],
+          "splits": [
+            "holdout",
+            "calibration"
+          ]
+        },
+        {
+          "displacement_px": 28.023245018244033,
+          "ids": [
+            11,
+            31
+          ],
+          "reference_q8": [
+            500480,
+            1088518
+          ],
+          "source_q8": [
+            495868,
+            1094013
+          ],
+          "splits": [
+            "holdout",
+            "holdout"
+          ]
+        },
+        {
+          "displacement_px": 0.10726195482614048,
+          "ids": [
+            20,
+            26,
+            45
+          ],
+          "reference_q8": [
+            1639706,
+            60751
+          ],
+          "source_q8": [
+            1639721,
+            60728
+          ],
+          "splits": [
+            "calibration",
+            "calibration",
+            "holdout"
+          ]
+        },
+        {
+          "displacement_px": 24.80411847280388,
+          "ids": [
+            30,
+            41
+          ],
+          "reference_q8": [
+            1047765,
+            1178555
+          ],
+          "source_q8": [
+            1048684,
+            1184838
+          ],
+          "splits": [
+            "calibration",
+            "holdout"
+          ]
+        }
+      ],
+      "total": 46,
+      "upper_half_reference": 9
+    },
+    {
+      "exact_groups_crossing_split": 1,
+      "incompatible_same_point_groups": [],
+      "lower_quarter_reference": 15,
+      "pair": {
+        "id": "pair-4-6",
+        "local_span": 2,
+        "reference": 4,
+        "reference_original": 52,
+        "source": 6,
+        "source_original": 78,
+        "star": false
+      },
+      "repeated_exact_correspondences": [
+        {
+          "displacement_px": 0.1312523251282144,
+          "ids": [
+            0,
+            4,
+            17
+          ],
+          "reference_q8": [
+            1639721,
+            60728
+          ],
+          "source_q8": [
+            1639701,
+            60755
+          ],
+          "splits": [
+            "calibration",
+            "calibration",
+            "holdout"
+          ]
+        }
+      ],
+      "total": 24,
+      "upper_half_reference": 7
+    },
+    {
+      "exact_groups_crossing_split": 2,
+      "incompatible_same_point_groups": [],
+      "lower_quarter_reference": 39,
+      "pair": {
+        "id": "pair-5-6",
+        "local_span": 1,
+        "reference": 5,
+        "reference_original": 65,
+        "source": 6,
+        "source_original": 78,
+        "star": true
+      },
+      "repeated_exact_correspondences": [
+        {
+          "displacement_px": 0.025012204052472065,
+          "ids": [
+            1,
+            10,
+            50
+          ],
+          "reference_q8": [
+            1639706,
+            60751
+          ],
+          "source_q8": [
+            1639701,
+            60755
+          ],
+          "splits": [
+            "holdout",
+            "calibration",
+            "calibration"
+          ]
+        },
+        {
+          "displacement_px": 24.62054929837891,
+          "ids": [
+            8,
+            24
+          ],
+          "reference_q8": [
+            1244426,
+            1135030
+          ],
+          "source_q8": [
+            1241522,
+            1129436
+          ],
+          "splits": [
+            "calibration",
+            "calibration"
+          ]
+        },
+        {
+          "displacement_px": 25.33061719019748,
+          "ids": [
+            30,
+            38,
+            44,
+            49
+          ],
+          "reference_q8": [
+            345231,
+            1011336
+          ],
+          "source_q8": [
+            350432,
+            1007463
+          ],
+          "splits": [
+            "calibration",
+            "calibration",
+            "calibration",
+            "holdout"
+          ]
+        }
+      ],
+      "total": 53,
+      "upper_half_reference": 9
+    },
+    {
+      "exact_groups_crossing_split": 1,
+      "incompatible_same_point_groups": [],
+      "lower_quarter_reference": 19,
+      "pair": {
+        "id": "pair-5-7",
+        "local_span": 2,
+        "reference": 5,
+        "reference_original": 65,
+        "source": 7,
+        "source_original": 91,
+        "star": true
+      },
+      "repeated_exact_correspondences": [
+        {
+          "displacement_px": 0.15194258077169315,
+          "ids": [
+            6,
+            14,
+            24
+          ],
+          "reference_q8": [
+            1639706,
+            60751
+          ],
+          "source_q8": [
+            1639718,
+            60788
+          ],
+          "splits": [
+            "calibration",
+            "calibration",
+            "calibration"
+          ]
+        },
+        {
+          "displacement_px": 5008.89088245846,
+          "ids": [
+            12,
+            23
+          ],
+          "reference_q8": [
+            213909,
+            987738
+          ],
+          "source_q8": [
+            1492707,
+            1082118
+          ],
+          "splits": [
+            "calibration",
+            "holdout"
+          ]
+        }
+      ],
+      "total": 29,
+      "upper_half_reference": 7
+    },
+    {
+      "exact_groups_crossing_split": 2,
+      "incompatible_same_point_groups": [],
+      "lower_quarter_reference": 26,
+      "pair": {
+        "id": "pair-6-7",
+        "local_span": 1,
+        "reference": 6,
+        "reference_original": 78,
+        "source": 7,
+        "source_original": 91,
+        "star": false
+      },
+      "repeated_exact_correspondences": [
+        {
+          "displacement_px": 0.016105881350068987,
+          "ids": [
+            8,
+            12,
+            15,
+            16,
+            22,
+            23,
+            40
+          ],
+          "reference_q8": [
+            1257788,
+            139776
+          ],
+          "source_q8": [
+            1257792,
+            139777
+          ],
+          "splits": [
+            "calibration",
+            "calibration",
+            "holdout",
+            "calibration",
+            "calibration",
+            "holdout",
+            "calibration"
+          ]
+        },
+        {
+          "displacement_px": 31.493088948041567,
+          "ids": [
+            19,
+            36
+          ],
+          "reference_q8": [
+            16743,
+            829351
+          ],
+          "source_q8": [
+            24389,
+            826794
+          ],
+          "splits": [
+            "holdout",
+            "calibration"
+          ]
+        },
+        {
+          "displacement_px": 0.14500555619742644,
+          "ids": [
+            31,
+            33
+          ],
+          "reference_q8": [
+            1639701,
+            60755
+          ],
+          "source_q8": [
+            1639718,
+            60788
+          ],
+          "splits": [
+            "holdout",
+            "holdout"
+          ]
+        },
+        {
+          "displacement_px": 24.014850472424154,
+          "ids": [
+            37,
+            49
+          ],
+          "reference_q8": [
+            1345922,
+            1094285
+          ],
+          "source_q8": [
+            1342237,
+            1089364
+          ],
+          "splits": [
+            "holdout",
+            "holdout"
+          ]
+        }
+      ],
+      "total": 50,
+      "upper_half_reference": 13
+    },
+    {
+      "exact_groups_crossing_split": 2,
+      "incompatible_same_point_groups": [
+        {
+          "fixed_q8": [
+            1777677,
+            1048864
+          ],
+          "fixed_side": "source_q8",
+          "ids": [
+            0,
+            12
+          ],
+          "other_diameter_px": 778.7505591033839,
+          "other_q8": [
+            [
+              1325022,
+              1056474
+            ],
+            [
+              1523435,
+              1075884
+            ]
+          ]
+        }
+      ],
+      "lower_quarter_reference": 27,
+      "pair": {
+        "id": "pair-7-8",
+        "local_span": 1,
+        "reference": 7,
+        "reference_original": 91,
+        "source": 8,
+        "source_original": 104,
+        "star": false
+      },
+      "repeated_exact_correspondences": [
+        {
+          "displacement_px": 0.1754336841631689,
+          "ids": [
+            3,
+            5,
+            19,
+            21,
+            39,
+            40
+          ],
+          "reference_q8": [
+            1257792,
+            139777
+          ],
+          "source_q8": [
+            1257836,
+            139786
+          ],
+          "splits": [
+            "holdout",
+            "holdout",
+            "holdout",
+            "holdout",
+            "holdout",
+            "calibration"
+          ]
+        },
+        {
+          "displacement_px": 27.096801445181132,
+          "ids": [
+            9,
+            22
+          ],
+          "reference_q8": [
+            1503332,
+            1056644
+          ],
+          "source_q8": [
+            1498030,
+            1052171
+          ],
+          "splits": [
+            "holdout",
+            "calibration"
+          ]
+        },
+        {
+          "displacement_px": 0.17699235561264362,
+          "ids": [
+            16,
+            36
+          ],
+          "reference_q8": [
+            1639718,
+            60788
+          ],
+          "source_q8": [
+            1639701,
+            60746
+          ],
+          "splits": [
+            "calibration",
+            "calibration"
+          ]
+        }
+      ],
+      "total": 44,
+      "upper_half_reference": 12
+    }
+  ],
+  "schema": "m193c-saved-coordinate-details-v1",
+  "source": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\work\\direct-pair-coordinate-details.py",
+    "sha256": "031a8ee29f1cc5b840f181d740c54c2ac7480a083cb7745396b8238470213c4c"
+  },
+  "status": "POST_SUMMARY_DESCRIPTIVE_ONLY"
+}
