@@ -1,0 +1,109 @@
+{
+  "command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\bridge-build-3\\output-grid-tests.exe",
+    "--exact",
+    "merge_cmd::production_truth::m193c_registration_derivative::m193c_derivative_native",
+    "--ignored",
+    "--test-threads=1",
+    "--nocapture"
+  ],
+  "environment": {
+    "RAYON_NUM_THREADS": "2",
+    "STREHL_M193C_DERIVATIVE_INPUT_PLAN": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-artifact-derivative-1\\input-plan.json",
+    "STREHL_M193C_DERIVATIVE_INPUT_PLAN_SHA256": "ed77972c956e9267dfb88907778ac8ff2f83887085457b83d7dccdc299db546f",
+    "STREHL_M193C_DERIVATIVE_ORIGINAL_INDEX": "104",
+    "STREHL_M193C_DERIVATIVE_OUTPUT_DIR": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-artifact-derivative-1\\frame-08\\native",
+    "STREHL_M193C_DERIVATIVE_SNAPSHOT": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-artifact-derivative-1\\frame-08\\DSC00120.ARW"
+  },
+  "observation": {
+    "cleanup_errors": [],
+    "command": [
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\bridge-build-3\\output-grid-tests.exe",
+      "--exact",
+      "merge_cmd::production_truth::m193c_registration_derivative::m193c_derivative_native",
+      "--ignored",
+      "--test-threads=1",
+      "--nocapture"
+    ],
+    "configured_job_limits": {
+      "committed_bytes": 8589934592,
+      "flags": 8704
+    },
+    "direct_exit_observed": true,
+    "error": null,
+    "exit_code": 0,
+    "job_accounting": {
+      "active_processes": 0,
+      "total_cpu_100ns": 186406250,
+      "total_kernel_100ns": 3281250,
+      "total_page_fault_count": 175339,
+      "total_processes": 2,
+      "total_terminated_processes": 0,
+      "total_user_100ns": 183125000
+    },
+    "job_memory": {
+      "peak_job_memory_used_bytes": 344363008,
+      "peak_process_memory_used_bytes": 343080960
+    },
+    "limits": {
+      "committed_bytes": 8589934592,
+      "cpu_seconds": 964.390625,
+      "log_bytes": 16777216,
+      "wall_seconds": 240
+    },
+    "log": {
+      "bytes": 211,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-artifact-derivative-1\\frame-08\\native.log",
+      "sha256": "2121131851a847a3f1a98f6a6dcdb356c8339cdb930bbb70c879aa73a046888d"
+    },
+    "log_bytes": 211,
+    "pipe_eof_observed": true,
+    "post_exit_drain": {
+      "completed": true,
+      "ended_wall_seconds": 14.797000000020489,
+      "initial_accounting": {
+        "active_processes": 0,
+        "total_cpu_100ns": 186406250,
+        "total_kernel_100ns": 3281250,
+        "total_page_fault_count": 175339,
+        "total_processes": 2,
+        "total_terminated_processes": 0,
+        "total_user_100ns": 183125000
+      },
+      "last_accounting": {
+        "active_processes": 0,
+        "total_cpu_100ns": 186406250,
+        "total_kernel_100ns": 3281250,
+        "total_page_fault_count": 175339,
+        "total_processes": 2,
+        "total_terminated_processes": 0,
+        "total_user_100ns": 183125000
+      },
+      "observation_count": 1,
+      "observations": [
+        {
+          "accounting": {
+            "active_processes": 0,
+            "total_cpu_100ns": 186406250,
+            "total_kernel_100ns": 3281250,
+            "total_page_fault_count": 175339,
+            "total_processes": 2,
+            "total_terminated_processes": 0,
+            "total_user_100ns": 183125000
+          },
+          "wall_seconds": 14.797000000020489
+        }
+      ],
+      "started_wall_seconds": 14.797000000020489
+    },
+    "scope": "owned job tree; committed memory, observed user+kernel CPU; not RSS or a timing benchmark",
+    "terminal_job_accounting": true,
+    "termination": {
+      "attempted": false,
+      "before_accounting": null,
+      "succeeded": false
+    },
+    "wall_seconds": 14.797000000020489
+  },
+  "removed_environment": []
+}

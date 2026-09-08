@@ -1,0 +1,114 @@
+{
+  "schema": "m193c-root-metadata-reservation-read-v1",
+  "reserved_bytes": 196608,
+  "actual_named_and_growth_bytes": 115606,
+  "record_archive_checkpoint_growth_upper_bytes": 32768,
+  "metadata_files": [
+    {
+      "path": "experiments/m193c-output-grid/independent-native-sensor-white-artifact-release-1-review.md",
+      "bytes": 2688,
+      "sha256": "4833da146d2e860b19a3ffdafbed2b24f3454a49c0485ba9956111f2c514c02b"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/read-native-sensor-white-artifact-release-1.py",
+      "bytes": 5156,
+      "sha256": "f10d89caba1f0f9ad37c5d1f807edf6f03d657b4d9d000326fa10723c7f399e4"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/prepare-native-sensor-white-artifact-archive-1.py",
+      "bytes": 1172,
+      "sha256": "c261f3d1c2bb519724e3a41a71fecee0f515cfd58eecc782a2bea079d8fc1a0a"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/archive-native-sensor-white-artifact-1.nul",
+      "bytes": 828,
+      "sha256": "81526417249039d088af7126badcea38637f64fe5b5aa9d85dcf88fa47535a52"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/native-sensor-white-artifact-1-console.txt",
+      "bytes": 414,
+      "sha256": "ee3416319438f0fbb90510798defeee89ff82c071e081db8c7230cc20b327602"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/native-sensor-white-artifact-1-exit.txt",
+      "bytes": 3,
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/native-sensor-white-artifact-1-outer.json",
+      "bytes": 2393,
+      "sha256": "078747cc22ec8e74101ea173075182ad09151723d7ca0854328ef08d13cd0fc1"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/native-sensor-white-artifact-1-checkpoint.json",
+      "bytes": 4468,
+      "sha256": "a10ff9bdcf66d68ee121e15be0556b769b5300043979422580454a80bd403a97"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/independent-native-sensor-white-artifact-1-audit.py",
+      "bytes": 43768,
+      "sha256": "64c7c94d17173e32509a458fd9561fcae971ea4767377ebf9e18185d980d7c5f"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/independent-native-sensor-white-artifact-1-audit.json",
+      "bytes": 27399,
+      "sha256": "bb53b2437a0c6f0cbe45c9f4ee2a40e9fee540df9a4cc708d6acf60326094c28"
+    },
+    {
+      "path": "experiments/m193c-output-grid/independent-native-sensor-white-artifact-1-read.md",
+      "bytes": 14500,
+      "sha256": "9918bb55a20a3df60b60f98615e82bbf552069377bb3fe7b380b68ae40b00334"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/continuation-2026-09-07-native-nine.md",
+      "bytes": 7093,
+      "sha256": "241f759b6f52973650569893c0940c7c42b92bb0e445ab087b2962c6a426f26b"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/archive-native-artifact-outcome-1.py",
+      "bytes": 1487,
+      "sha256": "c200ae6eb41b368b4b0d7c3ccc5a00db467f38181fe7430314c762878610b70f"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/account-native-artifact-root-metadata.py",
+      "bytes": 2511,
+      "sha256": "d56ab9b2233488c25bf147845cdc201e28a8d22f2c838e5e113cde3a8b6be67c"
+    }
+  ],
+  "administrative_files": [
+    {
+      "path": "AGENTS.md",
+      "baseline": {
+        "path": "AGENTS.md",
+        "sha256": "13432fdac5ca8b588b4fe45dc3520be141f97c5ecdb75b2451beb53baaffcf90",
+        "bytes": 304955
+      },
+      "bytes": 305102,
+      "sha256": "0008a4d4f7841d705a6b7fcd8c21621d76e32563edc0787fd1dd3eef7c2dc7df",
+      "charged_growth_bytes": 147
+    },
+    {
+      "path": "docs/proposals/2026-09-sota-program.md",
+      "baseline": {
+        "path": "docs/proposals/2026-09-sota-program.md",
+        "sha256": "4b97a6be6c622ac804f9b1a8ff7bc942a4ddd466a07a3426b927f656695cfb39",
+        "bytes": 28918
+      },
+      "bytes": 29037,
+      "sha256": "8348536b4c770c002a096e1101cdfaaf9a9dacc0f4764f9069ae06e58e9bf285",
+      "charged_growth_bytes": 119
+    },
+    {
+      "path": "docs/research/M193c-output-grid.md",
+      "baseline": {
+        "path": "docs/research/M193c-output-grid.md",
+        "sha256": "42742765f839fbdff3cbd17fd5a2fcacb91e416329d6ebdf31ee13edb1c7ea0a",
+        "bytes": 20621
+      },
+      "bytes": 22081,
+      "sha256": "1dc7c7f097de463983ea56da4a525c0d0f79ebdc80cf7ff787ffe7f455ed2e09",
+      "charged_growth_bytes": 1460
+    }
+  ],
+  "scope": "Actual independent audit source/Markdown/structured JSON and root metadata, with positive live-document growth. Remaining reservation covers this record, exact archive NUL and later checkpoint updates. New coverage preparation/source/carry is separately covered by its two-MiB allowance. No refund or exact write-I/O claim."
+}

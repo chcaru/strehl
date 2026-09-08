@@ -419,11 +419,13 @@ metadata and should have been caught in source review. The camera-white run
 from `8b0db533` passed its first independent reader: eleven native checks,
 eight sensor-domain controls and ten white-control groups. Its parent then
 refused the reader's six intentional source/spec snapshots under an incompatible
-metadata-suffix rule. Next is an exact source-bound artifact contract with
-powered missing/changed/extra-file controls; the reader and all old failures
-remain unchanged. No physical-crop, calibration or quality conclusion follows
-from these agreements. The coverage runner is prepared
-but lacks all-nine native admission; real coverage remains unmeasured. See the
+metadata-suffix rule. The exact source-bound artifact parent from `79d75c40`
+has now passed its four control groups and completed all nine native readers,
+with17 fresh child invocations and no finalization error. Independent actual
+audit has verified the complete set. Next is the unchanged registrar's support
+and overlap test on the nine derivatives. No physical-crop, calibration or
+quality conclusion follows from the native agreements. Real coverage remains
+unmeasured. See the
 [M193c progress record](../research/M193c-output-grid.md).
 Existing owned RAW decode may
 allocate before exposing shape: enforce a process committed-memory limit and

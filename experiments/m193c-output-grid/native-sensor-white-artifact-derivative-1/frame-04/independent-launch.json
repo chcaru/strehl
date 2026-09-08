@@ -1,0 +1,115 @@
+{
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-B",
+    "-X",
+    "faulthandler",
+    "-X",
+    "pycache_prefix=C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-artifact-derivative-1\\frame-04\\reader-cache",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\independent-sensor-white-derivative-read.py",
+    "--request",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-artifact-derivative-1\\frame-04\\read-request.json",
+    "--request-sha256",
+    "2ff3e86d6ebf3b1ccd745e819d96b819f2216a1652f8efc00ebf5c8f79125b57",
+    "--output",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-artifact-derivative-1\\frame-04\\independent"
+  ],
+  "observation": {
+    "cleanup_errors": [],
+    "command": [
+      "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+      "-B",
+      "-X",
+      "faulthandler",
+      "-X",
+      "pycache_prefix=C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-artifact-derivative-1\\frame-04\\reader-cache",
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\independent-sensor-white-derivative-read.py",
+      "--request",
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-artifact-derivative-1\\frame-04\\read-request.json",
+      "--request-sha256",
+      "2ff3e86d6ebf3b1ccd745e819d96b819f2216a1652f8efc00ebf5c8f79125b57",
+      "--output",
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-artifact-derivative-1\\frame-04\\independent"
+    ],
+    "configured_job_limits": {
+      "committed_bytes": 8589934592,
+      "flags": 8704
+    },
+    "direct_exit_observed": true,
+    "error": null,
+    "exit_code": 0,
+    "job_accounting": {
+      "active_processes": 0,
+      "total_cpu_100ns": 39687500,
+      "total_kernel_100ns": 23906250,
+      "total_page_fault_count": 4643677,
+      "total_processes": 2,
+      "total_terminated_processes": 0,
+      "total_user_100ns": 15781250
+    },
+    "job_memory": {
+      "peak_job_memory_used_bytes": 333414400,
+      "peak_process_memory_used_bytes": 332111872
+    },
+    "limits": {
+      "committed_bytes": 8589934592,
+      "cpu_seconds": 1048.875,
+      "log_bytes": 16777216,
+      "wall_seconds": 240
+    },
+    "log": {
+      "bytes": 523,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-artifact-derivative-1\\frame-04\\independent.log",
+      "sha256": "273369479792261bc53eead7a735d898954c3ccc9ee65dab6f811cf5a2331ddb"
+    },
+    "log_bytes": 523,
+    "pipe_eof_observed": true,
+    "post_exit_drain": {
+      "completed": true,
+      "ended_wall_seconds": 4.031000000075437,
+      "initial_accounting": {
+        "active_processes": 0,
+        "total_cpu_100ns": 39687500,
+        "total_kernel_100ns": 23906250,
+        "total_page_fault_count": 4643677,
+        "total_processes": 2,
+        "total_terminated_processes": 0,
+        "total_user_100ns": 15781250
+      },
+      "last_accounting": {
+        "active_processes": 0,
+        "total_cpu_100ns": 39687500,
+        "total_kernel_100ns": 23906250,
+        "total_page_fault_count": 4643677,
+        "total_processes": 2,
+        "total_terminated_processes": 0,
+        "total_user_100ns": 15781250
+      },
+      "observation_count": 1,
+      "observations": [
+        {
+          "accounting": {
+            "active_processes": 0,
+            "total_cpu_100ns": 39687500,
+            "total_kernel_100ns": 23906250,
+            "total_page_fault_count": 4643677,
+            "total_processes": 2,
+            "total_terminated_processes": 0,
+            "total_user_100ns": 15781250
+          },
+          "wall_seconds": 4.031000000075437
+        }
+      ],
+      "started_wall_seconds": 4.031000000075437
+    },
+    "scope": "owned job tree; committed memory, observed user+kernel CPU; not RSS or a timing benchmark",
+    "terminal_job_accounting": true,
+    "termination": {
+      "attempted": false,
+      "before_accounting": null,
+      "succeeded": false
+    },
+    "wall_seconds": 4.031000000075437
+  },
+  "removed_environment": []
+}

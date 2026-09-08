@@ -1,18 +1,12 @@
 # M193c: native output coordinates and complementary-focus coverage
 
-**IN PROGRESS.** Private attempt2 passed all ten coordinate cases and both
-conversion fixtures, and its complete execution evidence has passed independent
-inspection. The first native frame produced an unverified derivative, then
-stopped on a four-column disagreement between declared decoder domains. The
-eight later originals remain unvisited. Native agreement and real registration
-coverage are not admitted in this milestone. A subsequent independently audited
-diagnostic found complete decoded-byte agreement over strehl's declared region;
-the visible-region descriptions remain different. The explicit sensor-region
-reader passed its domain controls and first five real checks, then refused an
-inherited white-level comparison. The camera-metadata successor has now passed
-all eleven first-frame checks; its parent refused the reader's archived source
-files at an incompatible metadata-output check. The next correction is the
-controller's exact artifact contract. Nine-frame admission remains incomplete.
+**IN PROGRESS.** All nine native registration derivatives have now completed
+the camera-metadata reader and corrected controller. Independent actual audit
+has verified this complete set; real registration coverage remains unmeasured.
+Private attempt2 and the preceding domain/white investigations are independently
+verified within their reported scopes. Earlier decoder-domain, white-level and
+source-artifact refusals remain preserved. The next experiment is the unchanged
+registrar's support and overlap on these nine independently read derivatives.
 HardFloor remains the default; no quality promotion follows
 from this work. The [charter](../../experiments/m193c-output-grid/charter.md)
 names the actual sampling-coordinate consumer and the fixed historical inputs.
@@ -240,6 +234,34 @@ that the seven reader files total570784 bytes, below the four-MiB cap; the
 failure is the suffix contract. The completed reader may be cited within its
 first-frame scope; the parent remains refused and coverage remains unmeasured.
 
+**MEASURED, independently inspected:** the artifact-contract parent, frozen at `79d75c40`, completed
+all nine frames with actual outer exit0 and
+`COMPLETE_NINE_SENSOR_WHITE_DERIVATIVES_AWAITING_COVERAGE`. All four artifact
+control groups completed first:36 retained fixture files,653165 bytes, including
+the extra/nested, changed, missing and restored cases. The actual control result
+is18852 bytes, SHA256
+`8a1257f60c1cc2684e36f89d4bea0c3f43e608802e6a42fcbf26632afd82ed64`.
+
+Original0 reuses only its old primary TIFF/launch and receives another fresh
+reader. The other eight primaries and all nine readers complete:17 new child
+invocations. The eight new owned RAW snapshots are deleted only after their
+respective independent reads pass; the first historical snapshot is retained.
+No reader, white rule, pixel method or Rust binary changes in this correction.
+
+The actual parent result is229980 bytes, SHA256
+`2cdf0f949100a8a0400579dcf5689dbc671d15362f51b3e8ebf363a972b079c4`.
+Final stdout carries264.453125 CPU seconds,2153227412 file bytes and16772929
+metadata bytes. Actual outer182.354042 seconds gives conservative next wall
+227.4812478 seconds. All nine TIFF extents sum to1780184403 bytes. These are
+operational accounting observations, not a performance comparison. The parent
+has no unvisited frames, error or finalization error; dependency endpoints match.
+The [independent complete-set audit](../../experiments/m193c-output-grid/independent-native-sensor-white-artifact-1-read.md)
+checked464 distinct files, all153 sources/145 inputs,42,192 ordered row-hash
+pairs, all nine actual TIFF file hashes and17 fresh process records. Retained
+output1591481801 plus deleted snapshots317239296 plus prior244506315 equals
+the final file charge. The new parent completes the native-stage prerequisite;
+it supplies no registration, physical calibration or photographic-quality claim.
+
 ## Reproduction and preserved attempts
 
 Each release contains the complete actual argument array, input references and
@@ -263,6 +285,7 @@ these attempts when reproducing them.
 | Saved-frame domain probe 1 | `3b10e8ff` | [probe release](../../experiments/m193c-output-grid/active-domain-probe-release-1.json) | [complete diagnostic](../../experiments/m193c-output-grid/active-domain-probe-1/result.json) |
 | Sensor-native derivatives 1 | `b7e0be39` | [sensor release](../../experiments/m193c-output-grid/native-sensor-derivative-release-1.json) | [first-frame white-level refusal](../../experiments/m193c-output-grid/native-sensor-derivative-1/result.json) |
 | Camera-white native derivatives 1 | `8b0db533` | [camera-white release](../../experiments/m193c-output-grid/native-sensor-white-derivative-release-1.json) | [source-snapshot contract refusal](../../experiments/m193c-output-grid/native-sensor-white-derivative-1/result.json) |
+| Artifact-contract native derivatives 1 | `79d75c40` | [artifact-parent release](../../experiments/m193c-output-grid/native-sensor-white-artifact-derivative-release-1.json) | [nine native readers completed](../../experiments/m193c-output-grid/native-sensor-white-artifact-derivative-1/result.json) |
 
 Final control result SHA256:
 `39a6f6e93e3b8df83834ab4046c7f30d6f42612df0cb0ec57ea158815baa7cfd`.
@@ -271,18 +294,14 @@ Build 2 result SHA256:
 
 ## Next decisions
 
-Correct the controller's artifact contract in a separate versioned parent. Admit
-only the result and six exact source-bound snapshots, with powered added,
-missing, changed and restored artifact controls on the actual validation path.
-Keep the successful camera-white reader and its pixel/level/WB checks unchanged.
-Preserve all refused attempts, held private/runtime/Rust sources and the saved
-first primary. Reuse still requires complete fresh nine-input plan identity
-and another fresh independent read; all old costs and failed artifacts stay
-in the cumulative budget.
+Freeze and run the prepared input registrar on the independently audited
+nine-frame package. Its metadata preparation has an explicit
+nonrefundable30 CPU/60 wall-second/two-MiB allowance within the existing global
+caps. The constructor snapshot reservation remains the sum of all nine TIFFs
+plus five MiB, independently of any eventual refusal. Preserve all previous
+attempts and costs. No new quality or alignment threshold is introduced.
 
-The frozen input registrar's coverage runner is prepared and source-reviewed,
-but requires all nine native independent admissions. It cannot run on this
-refused prefix. After that prerequisite is met, the existing
+Once the complete native prerequisite is independently verified, the existing
 [next-decision memo](../../experiments/m193c-output-grid/next-program-decision.md)
 selects the two real cover-mode outputs on successful coverage, or a bounded
 direct-pair support experiment on a complementary-focus refusal.

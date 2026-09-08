@@ -1,0 +1,53 @@
+{
+  "build": {
+    "bytes": 51621,
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\bridge-build-3\\result.json",
+    "sha256": "bfb951c8ccc0b2278802e69c3ca27fd9138bb817457b365caaea31d5b82a2977"
+  },
+  "execution_release": {
+    "bytes": 67113,
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-artifact-derivative-release-1.json",
+    "sha256": "ad8b391f54d3fd10843a75e4515a8344b5e2b903145d5f256c0248f7758e95ec"
+  },
+  "input_plan": {
+    "bytes": 17484,
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-artifact-derivative-1\\input-plan.json",
+    "sha256": "ed77972c956e9267dfb88907778ac8ff2f83887085457b83d7dccdc299db546f"
+  },
+  "limits": {
+    "committed_bytes": 8589934592,
+    "cpu_seconds": 997.34375,
+    "metadata_bytes": 4194304,
+    "wall_seconds": 240
+  },
+  "original": {
+    "attributes": 32,
+    "bytes": 39096320,
+    "mtime_utc": "2026-05-10T23:32:44.700000000Z",
+    "name": "DSC00094.ARW",
+    "original_index": 78,
+    "path": "D:\\personal\\macro\\coffee-bean\\DSC00094.ARW",
+    "sha256": "56afdcd42f70e1d41393c6413e1816e0849f477a6c8ecc7bacc099504ff011a1"
+  },
+  "primary_receipt": {
+    "bytes": 351008,
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-artifact-derivative-1\\frame-06\\native\\result.json",
+    "sha256": "5cb908187690ffb9fb3c319c4e098249aec71aac310097c795d0a46cefd4e6b5"
+  },
+  "reader_runtime": {
+    "bytes": 2226,
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\derivative-runtime-1.json",
+    "sha256": "413975cbbbf5b1dc33407e6be1aa23e9195dc4471f1ee7e9de99f903dccd9442"
+  },
+  "schema": "m193c-sensor-white-native-derivative-read-request-v1",
+  "snapshot": {
+    "bytes": 39096320,
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-artifact-derivative-1\\frame-06\\DSC00094.ARW",
+    "sha256": "56afdcd42f70e1d41393c6413e1816e0849f477a6c8ecc7bacc099504ff011a1"
+  },
+  "tiff": {
+    "bytes": 197798267,
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-artifact-derivative-1\\frame-06\\native\\DSC00094-registration.tiff",
+    "sha256": "6ef640cb6551f96ba6fefaa5520ddfcec463cc698f2d4c8c204633a7ee4530c3"
+  }
+}

@@ -1,0 +1,93 @@
+{
+  "schema": "m193c-root-native-artifact-1-checkpoint-v1",
+  "source_commit": "79d75c40",
+  "actual_refs": [
+    {
+      "path": "experiments/m193c-output-grid/native-sensor-white-artifact-derivative-1/result.json",
+      "bytes": 229980,
+      "sha256": "2cdf0f949100a8a0400579dcf5689dbc671d15362f51b3e8ebf363a972b079c4"
+    },
+    {
+      "path": "experiments/m193c-output-grid/native-sensor-white-artifact-derivative-1/artifact-contract-controls.json",
+      "bytes": 18852,
+      "sha256": "8a1257f60c1cc2684e36f89d4bea0c3f43e608802e6a42fcbf26632afd82ed64"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/native-sensor-white-artifact-1-console.txt",
+      "bytes": 414,
+      "sha256": "ee3416319438f0fbb90510798defeee89ff82c071e081db8c7230cc20b327602"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/native-sensor-white-artifact-1-exit.txt",
+      "bytes": 3,
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/native-sensor-white-artifact-1-outer.json",
+      "bytes": 2393,
+      "sha256": "078747cc22ec8e74101ea173075182ad09151723d7ca0854328ef08d13cd0fc1"
+    }
+  ],
+  "status": "COMPLETE_NINE_SENSOR_WHITE_DERIVATIVES_AWAITING_COVERAGE",
+  "reader_count": 9,
+  "primary_reused_count": 1,
+  "snapshot_deleted_count": 8,
+  "fresh_children": 17,
+  "final_work": {
+    "cpu_seconds": 264.453125,
+    "wall_seconds": 227.42420580005273,
+    "file_bytes": 2153227412,
+    "metadata_bytes": 16772929
+  },
+  "root_outer_wall": 182.354042,
+  "next_conservative_wall": 227.4812478,
+  "tiff_bytes_sum": 1780184403,
+  "independent_reads": [
+    {
+      "bytes": 439403,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-artifact-derivative-1\\frame-00\\independent\\result.json",
+      "sha256": "c95e57b8acd7eaedc4ef881819b3d76044a86a9900ddebe5bea786f603e0ae07"
+    },
+    {
+      "bytes": 439467,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-artifact-derivative-1\\frame-01\\independent\\result.json",
+      "sha256": "24211f8aa98dfab61d58ae4a8b2308fc33bdccb768320b57f0015a7bbd8e39df"
+    },
+    {
+      "bytes": 439473,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-artifact-derivative-1\\frame-02\\independent\\result.json",
+      "sha256": "3e0f05796cf56a5b72ea87448f7d2cb8929ea893609b83510e60a7769541412b"
+    },
+    {
+      "bytes": 439474,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-artifact-derivative-1\\frame-03\\independent\\result.json",
+      "sha256": "f877c99df9a5cb56244df1c0deac6562f94b164f94e6f1822861e1ce0040e759"
+    },
+    {
+      "bytes": 439472,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-artifact-derivative-1\\frame-04\\independent\\result.json",
+      "sha256": "6956fee90aafab901eea0cd31212a1419a4b80e32e8224651f4cdf729ac7460f"
+    },
+    {
+      "bytes": 439473,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-artifact-derivative-1\\frame-05\\independent\\result.json",
+      "sha256": "4728894c0d37af57801b538c8af3496bca34fe468c5885c577f1515b5fb3a9e3"
+    },
+    {
+      "bytes": 439473,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-artifact-derivative-1\\frame-06\\independent\\result.json",
+      "sha256": "27af0408f5ac843900b5f38710991f9023b33bc07e4d44f960492d9a425a1aa5"
+    },
+    {
+      "bytes": 439471,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-artifact-derivative-1\\frame-07\\independent\\result.json",
+      "sha256": "680d231e85fde01b3f5673ecca2302f855c6b83e0bffa81f81f6e35cf5768782"
+    },
+    {
+      "bytes": 439461,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-artifact-derivative-1\\frame-08\\independent\\result.json",
+      "sha256": "fa5f656ae6d72b20b5be34e329fd13b4b5872b8471c13e229d6b9cc5524c39a3"
+    }
+  ],
+  "scope": "Actual parent completion; independent actual audit pending. No registration/coverage or quality claim."
+}

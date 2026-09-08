@@ -1,0 +1,260 @@
+{
+  "error": null,
+  "independent_launch": {
+    "command": [
+      "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+      "-B",
+      "-X",
+      "faulthandler",
+      "-X",
+      "pycache_prefix=C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-artifact-derivative-1\\frame-02\\reader-cache",
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\independent-sensor-white-derivative-read.py",
+      "--request",
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-artifact-derivative-1\\frame-02\\read-request.json",
+      "--request-sha256",
+      "19b14a162568997a5b029db0c70b1b613a71908905666bd10f9dd239c07e5e56",
+      "--output",
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-artifact-derivative-1\\frame-02\\independent"
+    ],
+    "observation": {
+      "cleanup_errors": [],
+      "command": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-B",
+        "-X",
+        "faulthandler",
+        "-X",
+        "pycache_prefix=C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-artifact-derivative-1\\frame-02\\reader-cache",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\independent-sensor-white-derivative-read.py",
+        "--request",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-artifact-derivative-1\\frame-02\\read-request.json",
+        "--request-sha256",
+        "19b14a162568997a5b029db0c70b1b613a71908905666bd10f9dd239c07e5e56",
+        "--output",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-artifact-derivative-1\\frame-02\\independent"
+      ],
+      "configured_job_limits": {
+        "committed_bytes": 8589934592,
+        "flags": 8704
+      },
+      "direct_exit_observed": true,
+      "error": null,
+      "exit_code": 0,
+      "job_accounting": {
+        "active_processes": 0,
+        "total_cpu_100ns": 39218750,
+        "total_kernel_100ns": 24218750,
+        "total_page_fault_count": 4644844,
+        "total_processes": 2,
+        "total_terminated_processes": 0,
+        "total_user_100ns": 15000000
+      },
+      "job_memory": {
+        "peak_job_memory_used_bytes": 332894208,
+        "peak_process_memory_used_bytes": 331603968
+      },
+      "limits": {
+        "committed_bytes": 8589934592,
+        "cpu_seconds": 1098.78125,
+        "log_bytes": 16777216,
+        "wall_seconds": 240
+      },
+      "log": {
+        "bytes": 525,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-artifact-derivative-1\\frame-02\\independent.log",
+        "sha256": "21e2f24705e717f697782460330e6e63d8410bd7eb27160760b6468f4f018e5b"
+      },
+      "log_bytes": 525,
+      "pipe_eof_observed": true,
+      "post_exit_drain": {
+        "completed": true,
+        "ended_wall_seconds": 4.0,
+        "initial_accounting": {
+          "active_processes": 0,
+          "total_cpu_100ns": 39218750,
+          "total_kernel_100ns": 24218750,
+          "total_page_fault_count": 4644844,
+          "total_processes": 2,
+          "total_terminated_processes": 0,
+          "total_user_100ns": 15000000
+        },
+        "last_accounting": {
+          "active_processes": 0,
+          "total_cpu_100ns": 39218750,
+          "total_kernel_100ns": 24218750,
+          "total_page_fault_count": 4644844,
+          "total_processes": 2,
+          "total_terminated_processes": 0,
+          "total_user_100ns": 15000000
+        },
+        "observation_count": 1,
+        "observations": [
+          {
+            "accounting": {
+              "active_processes": 0,
+              "total_cpu_100ns": 39218750,
+              "total_kernel_100ns": 24218750,
+              "total_page_fault_count": 4644844,
+              "total_processes": 2,
+              "total_terminated_processes": 0,
+              "total_user_100ns": 15000000
+            },
+            "wall_seconds": 4.0
+          }
+        ],
+        "started_wall_seconds": 4.0
+      },
+      "scope": "owned job tree; committed memory, observed user+kernel CPU; not RSS or a timing benchmark",
+      "terminal_job_accounting": true,
+      "termination": {
+        "attempted": false,
+        "before_accounting": null,
+        "succeeded": false
+      },
+      "wall_seconds": 4.0
+    },
+    "removed_environment": []
+  },
+  "independent_read": {
+    "bytes": 439473,
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-artifact-derivative-1\\frame-02\\independent\\result.json",
+    "sha256": "3e0f05796cf56a5b72ea87448f7d2cb8929ea893609b83510e60a7769541412b"
+  },
+  "name": "DSC00042.ARW",
+  "ordinal": 2,
+  "original_index": 26,
+  "primary_launch": {
+    "command": [
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\bridge-build-3\\output-grid-tests.exe",
+      "--exact",
+      "merge_cmd::production_truth::m193c_registration_derivative::m193c_derivative_native",
+      "--ignored",
+      "--test-threads=1",
+      "--nocapture"
+    ],
+    "environment": {
+      "RAYON_NUM_THREADS": "2",
+      "STREHL_M193C_DERIVATIVE_INPUT_PLAN": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-artifact-derivative-1\\input-plan.json",
+      "STREHL_M193C_DERIVATIVE_INPUT_PLAN_SHA256": "ed77972c956e9267dfb88907778ac8ff2f83887085457b83d7dccdc299db546f",
+      "STREHL_M193C_DERIVATIVE_ORIGINAL_INDEX": "26",
+      "STREHL_M193C_DERIVATIVE_OUTPUT_DIR": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-artifact-derivative-1\\frame-02\\native",
+      "STREHL_M193C_DERIVATIVE_SNAPSHOT": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-artifact-derivative-1\\frame-02\\DSC00042.ARW"
+    },
+    "observation": {
+      "cleanup_errors": [],
+      "command": [
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\bridge-build-3\\output-grid-tests.exe",
+        "--exact",
+        "merge_cmd::production_truth::m193c_registration_derivative::m193c_derivative_native",
+        "--ignored",
+        "--test-threads=1",
+        "--nocapture"
+      ],
+      "configured_job_limits": {
+        "committed_bytes": 8589934592,
+        "flags": 8704
+      },
+      "direct_exit_observed": true,
+      "error": null,
+      "exit_code": 0,
+      "job_accounting": {
+        "active_processes": 0,
+        "total_cpu_100ns": 186875000,
+        "total_kernel_100ns": 2500000,
+        "total_page_fault_count": 177311,
+        "total_processes": 2,
+        "total_terminated_processes": 0,
+        "total_user_100ns": 184375000
+      },
+      "job_memory": {
+        "peak_job_memory_used_bytes": 345391104,
+        "peak_process_memory_used_bytes": 344125440
+      },
+      "limits": {
+        "committed_bytes": 8589934592,
+        "cpu_seconds": 1118.234375,
+        "log_bytes": 16777216,
+        "wall_seconds": 240
+      },
+      "log": {
+        "bytes": 211,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-artifact-derivative-1\\frame-02\\native.log",
+        "sha256": "1f8f4d4e6eee8132e61c80aef37b67c66900497b93244341eb8f2dfbef768af3"
+      },
+      "log_bytes": 211,
+      "pipe_eof_observed": true,
+      "post_exit_drain": {
+        "completed": true,
+        "ended_wall_seconds": 14.890999999945052,
+        "initial_accounting": {
+          "active_processes": 0,
+          "total_cpu_100ns": 186875000,
+          "total_kernel_100ns": 2500000,
+          "total_page_fault_count": 177311,
+          "total_processes": 2,
+          "total_terminated_processes": 0,
+          "total_user_100ns": 184375000
+        },
+        "last_accounting": {
+          "active_processes": 0,
+          "total_cpu_100ns": 186875000,
+          "total_kernel_100ns": 2500000,
+          "total_page_fault_count": 177311,
+          "total_processes": 2,
+          "total_terminated_processes": 0,
+          "total_user_100ns": 184375000
+        },
+        "observation_count": 1,
+        "observations": [
+          {
+            "accounting": {
+              "active_processes": 0,
+              "total_cpu_100ns": 186875000,
+              "total_kernel_100ns": 2500000,
+              "total_page_fault_count": 177311,
+              "total_processes": 2,
+              "total_terminated_processes": 0,
+              "total_user_100ns": 184375000
+            },
+            "wall_seconds": 14.890999999945052
+          }
+        ],
+        "started_wall_seconds": 14.890999999945052
+      },
+      "scope": "owned job tree; committed memory, observed user+kernel CPU; not RSS or a timing benchmark",
+      "terminal_job_accounting": true,
+      "termination": {
+        "attempted": false,
+        "before_accounting": null,
+        "succeeded": false
+      },
+      "wall_seconds": 14.905999999959022
+    },
+    "removed_environment": []
+  },
+  "primary_receipt": {
+    "bytes": 351008,
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-artifact-derivative-1\\frame-02\\native\\result.json",
+    "sha256": "16714d43204af0a20eb265d7cdeada1333729f9b3d136fe1712f58dad147841a"
+  },
+  "primary_reused": false,
+  "read_request": {
+    "bytes": 2491,
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-artifact-derivative-1\\frame-02\\read-request.json",
+    "sha256": "19b14a162568997a5b029db0c70b1b613a71908905666bd10f9dd239c07e5e56"
+  },
+  "reuse_provenance": null,
+  "snapshot": {
+    "bytes": 40873984,
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-artifact-derivative-1\\frame-02\\DSC00042.ARW",
+    "sha256": "5aaf520bb11a3bdc3ad2e4352b49a40221bcccbff9cf6c8548c2bdd7c631dc70"
+  },
+  "snapshot_deleted": true,
+  "snapshot_retained_from_refused_run": false,
+  "stage": "COMPLETE_FRAME_INDEPENDENTLY_READ",
+  "tiff": {
+    "bytes": 197798267,
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-artifact-derivative-1\\frame-02\\native\\DSC00042-registration.tiff",
+    "sha256": "f58c3b75bae43325d039bf952c8a7495d5344a000f20d950bd171d49e016ccdd"
+  }
+}
