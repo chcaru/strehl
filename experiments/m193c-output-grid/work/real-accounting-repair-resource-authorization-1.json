@@ -1,0 +1,69 @@
+{
+  "additional_authorized_work": {
+    "cpu_seconds": 120,
+    "file_bytes": 0,
+    "metadata_bytes": 0,
+    "wall_seconds": 0
+  },
+  "attempt_caps": {
+    "cpu_seconds": 100,
+    "file_bytes": 8388608,
+    "metadata_bytes": 8388608,
+    "wall_seconds": 180
+  },
+  "callback_result": {
+    "bytes": 10240,
+    "path": "experiments/m193c-output-grid/work/accounting-callback-comparison-1/result.json",
+    "sha256": "b42293535eed7fcd9545a451804da23fcfa6d7735d0639f10b92e7a06c899bb0"
+  },
+  "failed_prefix_audit": {
+    "bytes": 11333,
+    "path": "experiments/m193c-output-grid/work/independent-sift-lightglue-real-prefix-audit.json",
+    "sha256": "4f8b48d9edf19fdac45c38aaf3bab85364e853a721827d4415d4d7dcb91cc66f"
+  },
+  "new_cumulative_limits": {
+    "cpu_seconds": 1320,
+    "file_bytes": 4294967296,
+    "metadata_bytes": 134217728,
+    "wall_seconds": 1800
+  },
+  "new_output": "experiments/m193c-output-grid/real-accounting-repair-1",
+  "preparation_allowance": {
+    "cpu_seconds": 20,
+    "file_bytes": 1048576,
+    "metadata_bytes": 1048576,
+    "wall_seconds": 30
+  },
+  "previous_ceiling_disposition": "RETIRED_NOT_RESET",
+  "previous_charged_work": {
+    "cpu_seconds": 1170.209303,
+    "file_bytes": 4058327085,
+    "metadata_bytes": 67066151,
+    "wall_seconds": 1162.3484670000043
+  },
+  "previous_cumulative_limits": {
+    "cpu_seconds": 1200,
+    "file_bytes": 4294967296,
+    "metadata_bytes": 134217728,
+    "wall_seconds": 1800
+  },
+  "replacement_sources": {
+    "runner": {
+      "bytes": 29315,
+      "path": "experiments/m193c-output-grid/real-accounting-repair-run.py",
+      "sha256": "7ca656b0a689116f892e66108cbb8b843c8ab0efcf0bccb89bec8155c5ab724c"
+    },
+    "spec": {
+      "bytes": 23106,
+      "path": "experiments/m193c-output-grid/real-accounting-repair-preregister.md",
+      "sha256": "de109a124bb3e1aa3bc10a9e1545c9cae2e654f2c7ee9203f57abd408f2d81ff"
+    },
+    "support": {
+      "bytes": 22268,
+      "path": "experiments/m193c-output-grid/real-accounting-repair-support.py",
+      "sha256": "295e5d5e5289cff1f0657e697016c6c98f657fa14178b20567090ce64d4aaba0"
+    }
+  },
+  "schema": "m193c-real-accounting-repair-resource-authorization-v1",
+  "status": "AUTHORIZED_SINGLE_FRESH_OPERATIONAL_REPLACEMENT"
+}
