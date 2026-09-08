@@ -1,0 +1,73 @@
+{
+  "audit": {
+    "cpu_seconds": 25,
+    "file_bytes": 3145728,
+    "metadata_bytes": 3145728,
+    "wall_seconds": 30
+  },
+  "audit_family_scope": "Entire prospective checker/source review, result/progress/stage/outer/stderr, independent/root report and outcome-checkpoint family within3MiB; no additional reserve or native image reads.",
+  "failure_policy": "Ordinary per-file CPU refusal may leave prefix data and last durable terminal. Never rerun automatically; preserve exact outer, unlinked files and final stage if present. Actual overshoot is retained beyond fixed reservation and prevents continuation without capacity.",
+  "parent_component_caps": {
+    "actual_root_outer_console_exit": 65536,
+    "child_log": 262144,
+    "child_terminal": 65536,
+    "publication_and_metadata_reserve": 524288,
+    "terminal_and_stage": 131072
+  },
+  "parent_store_cap": 1048576,
+  "phase": {
+    "cpu_seconds": 120,
+    "file_bytes": 67108864,
+    "metadata_bytes": 67108864,
+    "wall_seconds": 180
+  },
+  "preparation": {
+    "cpu_seconds": 5,
+    "file_bytes": 1048576,
+    "metadata_bytes": 1048576,
+    "wall_seconds": 10
+  },
+  "preparation_component_caps": {
+    "checkpoint_and_source_manifests": 32768,
+    "new_source_preregister_ledger_preparer_and_reviews": 262144,
+    "plan": 655360,
+    "preparation_outer_console_exit": 16384,
+    "resource_grant": 8192,
+    "runtime_inventory_metadata": 65536
+  },
+  "schema": "m193c-local-image-probe-ledger-v1",
+  "source_accounting_scope": "Prior artifacts remain charged and referenced without copying. All newly written source/review/plan/grant/preparation receipts are within1MiB; all new audit-family artifacts within3MiB. Full120CPU/180wall/64MiB phase is nonrefundable, both file and metadata byte namespaces charged.",
+  "subject": {
+    "cpu_seconds": 90,
+    "file_bytes": 62914560,
+    "metadata_bytes": 62914560,
+    "wall_seconds": 140
+  },
+  "terminal_capacity": {
+    "actual_estimator_executions_for_sizing": 0,
+    "derived_metadata_proxy_maximum_bytes": 52272,
+    "encoded_error_maximum_bytes": 4096,
+    "metadata_only_prefixes_checked": 129,
+    "parent_reserved_file_count": 4,
+    "proxy_maximum_prefix": 128,
+    "slot_bytes": 65536,
+    "worker_reserved_file_count": 865
+  },
+  "worker_literal_maxima": {
+    "disjoint_records": 2097152,
+    "literal_reader_tiffs": 524288,
+    "native_final_receipts": 131072,
+    "private_central_surfaces": 219700,
+    "private_control_records": 720896,
+    "private_rgb_and_f32_inputs": 2662560,
+    "real_central_surfaces": 2163200,
+    "real_complete_records": 8388608,
+    "real_rgb_and_f32_inputs": 42600960,
+    "runtime_intake_receipt": 4096,
+    "runtime_module_manifest": 2097152,
+    "runtime_namespace_controls": 8192,
+    "worker_terminal_and_stage": 131072
+  },
+  "worker_literal_maximum_bytes": 61748948,
+  "worker_store_cap": 61865984
+}
