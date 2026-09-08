@@ -157,3 +157,63 @@ child output across every arm. Review exact sources and the finite release
 before running. This adds attribution and does not repair or reinterpret the
 completed failed rehearsal. The unresolved full-campaign timing transition
 remains a separate question.
+## Executed AGENTS rule checklist
+
+This is the checklist for the completed three-run rehearsal and its report,
+not a claim that the prospective startup probe has run. Paths below are under
+experiments/m192e-campaign-runner unless named otherwise. Function names and
+actual artifact contents identify the checked code paths; source/release/archive
+SHAs and commands are recorded above. No SYNTHESIS facts were folded.
+
+| Rule | Discharge or inapplicability for this result |
+|---|---|
+|1|No product arithmetic/storage change; pinned pre-existing native binary and complete TIFF identities are bound by preparation-1/plan.json. |
+|2|No new aligned-frame materialization; actual argv uses the unchanged native pipeline. |
+|3|No noise-model implementation or estimate is added. |
+|4|No merge-reference election or best-frame statistic is introduced. |
+|5|No profile, geometry fit or camera constant is changed. |
+|6|No alignment chain/solve is run; bound prerecorded sidecar and identical fixed configuration. No placement number is claimed. |
+|7|No decoded-buffer statistic is reported; independent outcome read streams whole-file bytes only. |
+|8|The exact actual launch and verification arrays, exits and walls are in the two linked outer receipts; measured and derived claims are distinguished. |
+|9|No sharpness/detail/quality metric is used; byte identity is scoped to nonperturbation. |
+|10|No spatial/temporal noise comparison is made. |
+|11|Actual off/on/placebo outputs agree; storage controls and Job-counter corruptions reject/restore. The headline gap is independently reconstructed on the actual retained timestamp path. No individual startup cause is claimed. |
+|12|factor_eight_implementation authored the runner; factor_eight_review independently read actual files/timestamps/Jobs and whole TIFF hashes. |
+|13|No parameter sweep or optimum is reported. |
+|14|Independent output inventory used Get-ChildItem -Recurse -Force -File. Input manifests preserve the named33-file population; no whole-corpus total or mirrored-stack replication claim. |
+|15|No unqualified artifact/filter expansion terminology is used. |
+|16|The once-only fixed-order rehearsal is explicitly not a timing benchmark or mode-cost ranking. |
+|17|Independent review groups by timestamp/poll identity across final/checkpoint/incident evidence; no response-derived bins or scene-quality correlation is used. |
+|18|The report states that high scheduled coverage can hide a failed maximum gap, byte identity cannot score quality, and snapshots cannot recover evicted history. |
+|19|New experiment directory and helper files use kebab-case; retained historical milestone/report naming is preserved. |
+|20|Wrong-total/negative/bool counters and storage faults provide rejecting inputs. Untreated actual off fails100ms despite high coverage; no gate is redefined to make it pass. |
+|21|No fitted constant gates its generating model. |
+|22|This explicit per-rule checklist names the actual evidence; prospective startup controls remain unexecuted. |
+|23|No multidimensional image filter or non-spatial-axis operation is added. |
+|24|The independent reviewer re-chose the observation union, whole-file hashing and terminal CPU summation instead of rerunning the author's verifier. |
+|25|No facts/disciplines/questions number block or SYNTHESIS edit. |
+|26|All three actual complete TIFF files are independently hash-identical, including the persistence placebo. |
+|27|All subject runs ended naturally; there was no inference of a dead process from silence or deletion of an active process. |
+|28|No report fold or duplicate numerical fact insertion. |
+|29|Research report is a fresh file; program update preserved every heading and the user-owned H1, and the entire program file was excluded from commits. |
+|30|The known117.8844ms disagreement remains an asserted failed integration, not an excluded interval. |
+|31|No fold. Sources were committed before release and outcomes cite exact revisions. |
+|31b|No fold script or SYNTHESIS publication; fold_check is inapplicable. |
+|32|No new rawpy loader or borrowed decode buffer. Independent read did not decode RAWs or TIFF pixels. |
+|33|No Rust compilation/test result claimed; existing executable identity was authenticated and executed. |
+|34|No synthetic calibration claim or supplied noise constant. |
+|35|Nonempty whole TIFFs, actual timestamps and raw terminal Job counters are independent operands; wrong counter variants reject. |
+|36|On/placebo actually wrote31 checkpoints each; storage faults/recovery and the off rejecting interval occurred in retained records. |
+|37|No SYNTHESIS insertion, numbered namespace or structural table fold. |
+|38|The terminal JSON flags and full independent read were read in context; PASS_BOUND_TERMINAL_REHEARSAL_ONLY is not paraphrased as integration PASS. |
+|39|No statistical separation, mode-cost ratio or precision confirmation is claimed. Exact byte identity and deterministic counter arithmetic are identified as such. |
+|40|The M192e preregistration/dispatch retained the mechanical prior-art search and M192/M192b/c/d lineage; completed questions were not recommissioned. |
+|41|The M192e allocation is in AGENTS.md before this continuation; the startup work is a genuine continuation, not a reused milestone identity. |
+|42|Exact NUL path manifests and git commit --only --pathspec-from-file restricted each source/release/evidence/report commit; committed paths were checked with diff-tree. |
+|43|The report bounds its absence claims to actual saved traces and source call sites; it does not assert that no prior calibration or method exists. |
+|44|No corpus fold, duplicate corroboration or exclusion from a duplicate checker. |
+|45|The actual plan/invocation binds the isolated saved sidecar; gathering kernel is fixed, not a swept independent variable. |
+|46|Actual execution outputs and exit codes were captured without truncating process pipelines. Display-only reads do not determine a gate exit. |
+|47|Plan and invocation receipts bind absolute input/frame range, executable/sidecar/source, environment and actual CLI; independent read checked these associations. |
+|48|No visual defect verdict or resized-viewer quality judgment is used. |
+|49|Root coordinated execution; only owned Job trees were available to cleanup, none required termination, and no peer hold or process kill was used. |
