@@ -1,0 +1,13 @@
+{
+  "evidence": {
+    "arm_id": "cropped-grid",
+    "denominator_pixels": 99918,
+    "field_of_view_verdict": "FAIL_GEOMETRY_FIELD_OF_VIEW",
+    "retained_fraction_denominator": 183,
+    "retained_fraction_numerator": 178,
+    "retained_percent": "97.267759563",
+    "retained_pixels": 97188
+  },
+  "id": "crop-retention-destroyer",
+  "passed": true
+}

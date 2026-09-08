@@ -1,0 +1,13 @@
+{
+  "evidence": {
+    "arm_id": "identity-grid",
+    "denominator_pixels": 99918,
+    "field_of_view_verdict": "PASS",
+    "retained_fraction_denominator": 1,
+    "retained_fraction_numerator": 1,
+    "retained_percent": "100.000000000",
+    "retained_pixels": 99918
+  },
+  "id": "restored-identity-retention",
+  "passed": true
+}

@@ -1,12 +1,14 @@
 # M193c: native output coordinates and complementary-focus coverage
 
-**IN PROGRESS.** All nine native registration derivatives have now completed
-the camera-metadata reader and corrected controller. Independent actual audit
-has verified this complete set; real registration coverage remains unmeasured.
+**IN PROGRESS.** All nine native registration derivatives have completed
+the camera-metadata reader and corrected controller. The unchanged registrar
+then refused its first nonreference input: original104 has too few mutual
+landmarks with its byte-selected reference, original65. Seven inputs remain
+registration-unvisited. Independent actual audits verify both outcomes.
 Private attempt2 and the preceding domain/white investigations are independently
 verified within their reported scopes. Earlier decoder-domain, white-level and
-source-artifact refusals remain preserved. The next experiment is the unchanged
-registrar's support and overlap on these nine independently read derivatives.
+source-artifact refusals remain preserved. The next experiment measures
+direct-pair support on these same nine derivatives with the unchanged matcher.
 HardFloor remains the default; no quality promotion follows
 from this work. The [charter](../../experiments/m193c-output-grid/charter.md)
 names the actual sampling-coordinate consumer and the fixed historical inputs.
@@ -262,6 +264,61 @@ output1591481801 plus deleted snapshots317239296 plus prior244506315 equals
 the final file charge. The new parent completes the native-stage prerequisite;
 it supplies no registration, physical calibration or photographic-quality claim.
 
+## First real registration outcome
+
+**MEASURED, independently inspected:** coverage from `1f3c6bd7` ran the
+unchanged registrar after all eight fixed controls passed. The worker returned
+`REGISTRAR_REFUSED`, and the parent correctly retained `REFUSED`, both with
+actual exit1 and no finalization errors. The first nonreference call failed
+`UNMEASURED_INPUT_REGISTRATION_INADEQUATE: too few total mutual landmarks`.
+The method requires at least24 mutual landmarks before its fit/holdout split;
+this attempt did not retain the exact lower count.
+
+The reference is local5/original65, selected by the minimum TIFF-byte identity;
+the failing source is local8/original104. The complete byte order is
+65,104,13,78,52,91,0,39,26. Only the identity reference is in the admitted
+prefix. The seven remaining inputs are unvisited, not failed alignments.
+No complete overlap manifest or original52 placement gauge was produced.
+This is evidence about this fixed single-reference attempt, not an assertion
+that all other frame pairs lack support or that the transforms are inaccurate.
+
+The actual parent result is227292 bytes, SHA256
+`3068d412483c69e71a0a682410de1c506788faab74889c65d6f20c7607a06418`;
+worker result28116 bytes,
+`6ff1f2d2a08e9287daae6a9a1d58f332db0d294a4052c4d1ea86da9a561203a9`.
+The [independent saved-outcome audit](../../experiments/m193c-output-grid/work/independent-sensor-white-coverage-1-audit.json)
+distinguishes audit success from the refused subject and verifies the eight
+controls, ordered refusal, terminal process accounting and retained costs.
+
+The first metadata preparer had refused a combined buffer/stat predicate;
+its record cannot identify which operand failed. A separately reviewed
+successor passed six powered metadata controls and completed preparation.
+Both attempts keep their whole30 CPU/60 wall/two-MiB allowances. The
+[preparation review](../../experiments/m193c-output-grid/independent-sensor-white-coverage-preparation-2-read.md)
+does not retroactively diagnose the first failure as access time.
+
+Final coverage accounting carries348.203125 CPU seconds,3946512222 file bytes
+and21311576 metadata bytes. Actual outer25.1913279 seconds yields conservative
+next wall372.6725757 seconds. Its entire1785427283-byte temporary-copy
+reservation stays charged despite the early scientific refusal. This is
+operational accounting, not a speed comparison.
+
+The independent audit initially rejected a source-commit assertion. Root had
+already disclosed before execution that the bound M193 contract differed
+from its Git blob in exactly two status/provenance fields. The corrected audit
+asserts that precise expected difference, the unchanged remaining content,
+and the committed preexecution disclosure:164 source files correspond after
+newline normalization, plus one explicitly bound metadata exception. The
+first audit failure is retained; no registrar, contract or threshold changed.
+
+The next experiment fixes the actual reference at local5 for star calls and
+adds direct local-rung spans1,2,4:23 unique pairs. These are original-index
+gaps13,26,52, not adjacent RAW frames. It will retain every outcome and report
+connectivity/cycles relative to local4/original52 without composing transforms.
+This follows the existing conditional next-decision memo. Reusing the frozen
+in-memory TIFF byte decoder avoids another nine-file temporary-copy charge;
+the original experiment limits remain fixed.
+
 ## Reproduction and preserved attempts
 
 Each release contains the complete actual argument array, input references and
@@ -286,6 +343,7 @@ these attempts when reproducing them.
 | Sensor-native derivatives 1 | `b7e0be39` | [sensor release](../../experiments/m193c-output-grid/native-sensor-derivative-release-1.json) | [first-frame white-level refusal](../../experiments/m193c-output-grid/native-sensor-derivative-1/result.json) |
 | Camera-white native derivatives 1 | `8b0db533` | [camera-white release](../../experiments/m193c-output-grid/native-sensor-white-derivative-release-1.json) | [source-snapshot contract refusal](../../experiments/m193c-output-grid/native-sensor-white-derivative-1/result.json) |
 | Artifact-contract native derivatives 1 | `79d75c40` | [artifact-parent release](../../experiments/m193c-output-grid/native-sensor-white-artifact-derivative-release-1.json) | [nine native readers completed](../../experiments/m193c-output-grid/native-sensor-white-artifact-derivative-1/result.json) |
+| Nine-input registration coverage 1 | `1f3c6bd7` | [coverage release 2](../../experiments/m193c-output-grid/sensor-white-coverage-release-2.json) | [first nonreference registration refused](../../experiments/m193c-output-grid/sensor-white-coverage-1/result.json) |
 
 Final control result SHA256:
 `39a6f6e93e3b8df83834ab4046c7f30d6f42612df0cb0ec57ea158815baa7cfd`.
@@ -294,14 +352,10 @@ Build 2 result SHA256:
 
 ## Next decisions
 
-Freeze and run the prepared input registrar on the independently audited
-nine-frame package. Its metadata preparation has an explicit
-nonrefundable30 CPU/60 wall-second/two-MiB allowance within the existing global
-caps. The constructor snapshot reservation remains the sum of all nine TIFFs
-plus five MiB, independently of any eventual refusal. Preserve all previous
-attempts and costs. No new quality or alignment threshold is introduced.
-
-Once the complete native prerequisite is independently verified, the existing
-[next-decision memo](../../experiments/m193c-output-grid/next-program-decision.md)
-selects the two real cover-mode outputs on successful coverage, or a bounded
-direct-pair support experiment on a complementary-focus refusal.
+Run the bounded23-pair support experiment selected by the actual registration
+refusal. Keep the frozen matcher, thresholds and nine inputs. Preserve the
+failed65-reference/104-source direction and distinguish unvisited, refused,
+and supported pairs. A connected tree does not justify a graph solve, and
+accepted landmark residuals do not establish whole-frame placement accuracy.
+The [next-decision memo](../../experiments/m193c-output-grid/next-program-decision.md)
+keeps real cover-mode renders conditional on usable input geometry.

@@ -613,8 +613,53 @@ def main():
     source_names = list(release["source_bindings"])
     tree = subprocess.run(["git","ls-tree","-r","--name-only",args.commit,"--",*source_names],cwd=ROOT,capture_output=True,check=True).stdout.decode().splitlines()
     need(set(tree) == set(source_names),"all subject sources committed before actual invocation")
-    need(not subprocess.run(["git","diff","--name-only",args.commit,"--",*source_names],cwd=ROOT,capture_output=True,check=True).stdout,
-         "actual held source bytes stable from release commit")
+    # The committed pre-execution review explicitly recorded this one metadata difference.
+    contract_name = CONTRACT.relative_to(ROOT).as_posix()
+    changed = subprocess.run(["git","diff","--name-only",args.commit,"--",*source_names],cwd=ROOT,capture_output=True,check=True).stdout.decode().splitlines()
+    need(changed == [contract_name],"exact expected contract metadata difference; no other checkout changes")
+    query = "".join(args.commit+":"+name+"\n" for name in source_names).encode()
+    blobs = subprocess.run(["git","cat-file","--batch"],input=query,cwd=ROOT,capture_output=True,check=True).stdout
+    cursor,corresponding,old_contract = 0,0,None
+    for name in source_names:
+        end = blobs.index(b"\n",cursor)
+        header = blobs[cursor:end].split()
+        need(len(header) == 3 and header[1] == b"blob","actual committed source blob")
+        size = int(header[2]); start = end+1
+        raw = blobs[start:start+size]
+        need(len(raw) == size and blobs[start+size:start+size+1] == b"\n","complete Git blob framing")
+        cursor = start+size+1
+        current = path(name).read_bytes()
+        if name == contract_name:
+            old_contract = raw
+            need(hashlib.sha256(raw).hexdigest() == "012a1ff307f78c79789d37a7cad0ab036f05a2331669f45c48543c492e8ccbd9" and
+                 hashlib.sha256(current).hexdigest() == "19421729ac39273a5f61cda5068026f3458ba08c98f0aa954de7c219cbfabf47",
+                 "exact recorded committed/released contract versions")
+            old_fields,new_fields = strict(raw),strict(current)
+            need(old_fields["status"] == "ALGORITHM_PRECOMMIT_NO_SCORING_OUTPUT_EXISTS" and
+                 old_fields["algorithm_precommit_commit"] is None and
+                 new_fields["status"] == "FROZEN_PRE_COMPARATOR_OUTPUT" and
+                 new_fields["algorithm_precommit_commit"] == "dfaa2f639b85af0b568e7f8af1e8722548831c91",
+                 "exact expected status/provenance values")
+            new_fields.update(status=old_fields["status"],algorithm_precommit_commit=old_fields["algorithm_precommit_commit"])
+            exact(new_fields,old_fields)
+            restored = current.replace(b'"status": "FROZEN_PRE_COMPARATOR_OUTPUT"',b'"status": "ALGORITHM_PRECOMMIT_NO_SCORING_OUTPUT_EXISTS"').replace(
+                b'"algorithm_precommit_commit": "dfaa2f639b85af0b568e7f8af1e8722548831c91"',b'"algorithm_precommit_commit": null')
+            need(restored.replace(b"\r\n",b"\n") == raw.replace(b"\r\n",b"\n"),"only those two contract fields differ after newline normalization")
+        else:
+            need(current.replace(b"\r\n",b"\n") == raw.replace(b"\r\n",b"\n"),"committed source content correspondence: "+name)
+            corresponding += 1
+    need(cursor == len(blobs) and old_contract is not None and corresponding == 164 and len(source_names) == 165,
+         "164 commit-corresponding sources plus one asserted expected metadata difference")
+    review = HERE/"independent-sensor-white-coverage-release-2-review.md"
+    review_ref = pinned(review,"e63563ec14b6da062a1f5cb53f94777c798f537785acf5f6de4aad28d49d1f8d",MIB)
+    review_blob = subprocess.run(["git","show",args.commit+":"+review.relative_to(ROOT).as_posix()],cwd=ROOT,capture_output=True,check=True).stdout
+    need(hashlib.sha256(review_blob).hexdigest() == review_ref["sha256"] and
+         b"two pre-existing status/provenance field changes" in review_blob and
+         b"claim every local byte is identical to a Git blob" in review_blob,"actual committed pre-execution scope disclosure")
+    commit_scope = dict(corresponding_after_newline_normalization=corresponding,
+                        expected_metadata_difference=dict(path=contract_name,committed_bytes=len(old_contract),
+                            committed_sha256=hashlib.sha256(old_contract).hexdigest(),released=bind(CONTRACT),
+                            fields=["status","algorithm_precommit_commit"]),preexecution_review=review_ref)
     raw_release = subprocess.run(["git","show",args.commit+":"+RELEASE.relative_to(ROOT).as_posix()],cwd=ROOT,capture_output=True,check=True).stdout
     need(hashlib.sha256(raw_release).hexdigest() == args.release_sha256,"actual committed release bytes")
     # Keep complete evidence in the actual controlled files instead of duplicating it in the audit stdout.
@@ -626,7 +671,7 @@ def main():
     receipt = dict(schema="m193c-saved-sensor-white-coverage-audit-v1",status="PASS_SAVED_COVERAGE_OUTCOME_AUDIT",
                    subject_status=parent["status"],subject_complete=complete,worker_status=worker["status"] if worker else None,
                    external=refs,audit_source=bind(__file__,MIB),invocation=sys.orig_argv,commit=args.commit,
-                   source_count=len(source_names),input_count=len(release["inputs"]),native_audit=old_audit_ref,
+                   source_count=len(source_names),source_commit_scope=commit_scope,input_count=len(release["inputs"]),native_audit=old_audit_ref,
                    worker_result=parent["worker_result"],worker_job=job,controls=check_receipt,registration=detail,
                    runtime=worker["runtime_before"] if worker else None,actual_final_accounting=accounting,
                    prior_work=prior,preparation_carry=preparation_carry,next_wall_seconds=str(next_wall),output_count=len(output_refs),

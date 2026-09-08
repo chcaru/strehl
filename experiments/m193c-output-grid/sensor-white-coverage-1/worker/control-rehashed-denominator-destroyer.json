@@ -1,0 +1,19 @@
+{
+  "evidence": {
+    "actual_refusal": {
+      "code": "UNMEASURED_DENOMINATOR_UNDEFINED",
+      "message": "UNMEASURED_DENOMINATOR_UNDEFINED: manifest differs from trusted input registration"
+    },
+    "old": {
+      "arm_id": "cropped-grid",
+      "denominator_pixels": 400,
+      "field_of_view_verdict": "PASS",
+      "retained_fraction_denominator": 1,
+      "retained_fraction_numerator": 1,
+      "retained_percent": "100.000000000",
+      "retained_pixels": 400
+    }
+  },
+  "id": "rehashed-denominator-destroyer",
+  "passed": true
+}

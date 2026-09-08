@@ -1,0 +1,91 @@
+{
+  "evidence": {
+    "anchor_q32": {
+      "a": 6442450944,
+      "b": 2147483648,
+      "tx": 30064771072,
+      "ty": -12884901888
+    },
+    "forward": {
+      "a": {
+        "denominator": 2,
+        "numerator": 1
+      },
+      "b": {
+        "denominator": 2,
+        "numerator": -1
+      },
+      "tx": {
+        "denominator": 5,
+        "numerator": -19
+      },
+      "ty": {
+        "denominator": 5,
+        "numerator": 33
+      }
+    },
+    "pull": {
+      "a": {
+        "denominator": 1,
+        "numerator": 1
+      },
+      "b": {
+        "denominator": 1,
+        "numerator": 1
+      },
+      "tx": {
+        "denominator": 5,
+        "numerator": 52
+      },
+      "ty": {
+        "denominator": 5,
+        "numerator": -14
+      }
+    },
+    "reversed_order": {
+      "a": {
+        "denominator": 2,
+        "numerator": 1
+      },
+      "b": {
+        "denominator": 2,
+        "numerator": -1
+      },
+      "tx": {
+        "denominator": 1,
+        "numerator": -4
+      },
+      "ty": {
+        "denominator": 1,
+        "numerator": 10
+      }
+    },
+    "reversed_rotation_sign": {
+      "a": {
+        "denominator": 10,
+        "numerator": 7
+      },
+      "b": {
+        "denominator": 10,
+        "numerator": 1
+      },
+      "tx": {
+        "denominator": 5,
+        "numerator": -19
+      },
+      "ty": {
+        "denominator": 5,
+        "numerator": 33
+      }
+    },
+    "scope": "exact arithmetic reporting control; not observed native placement truth",
+    "source_q32": {
+      "a": 4294967296,
+      "b": -2147483648,
+      "tx": -8589934592,
+      "ty": 21474836480
+    }
+  },
+  "id": "exact-gauge-direction-and-order",
+  "passed": true
+}

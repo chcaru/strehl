@@ -1,0 +1,641 @@
+{
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-B",
+    "-X",
+    "faulthandler",
+    "-X",
+    "pycache_prefix=C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sensor-white-coverage-1\\worker-cache",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\coverage-sensor-white-run.py",
+    "--release",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sensor-white-coverage-release-2.json",
+    "--sha256",
+    "a6ab7a11ab053c61c12e3496414fca22b15afd31f43c642b9e6dc1d01b8b9801",
+    "--output",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sensor-white-coverage-1\\worker",
+    "--worker",
+    "--request",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sensor-white-coverage-1\\request.json",
+    "--request-sha256",
+    "91c9cb57326a0a001b2c374b0a004c2cfc6333c1a3bbfc5fe9d6da58e22fa521"
+  ],
+  "controls": [
+    {
+      "evidence": {
+        "common_overlap": {
+          "area_pixels": 99918,
+          "height": 273,
+          "width": 366,
+          "x": 16,
+          "y": 2
+        },
+        "input_bundle_sha256": "ea4784bb77048f3e3a44c37e151a24743167e1f9f61c4b720de95f5af9d27ce7",
+        "input_count": 3,
+        "intersection_rule": "exact Q32 inverse-support inequalities at integer reference centres",
+        "manifest_sha256": "a1cdb836fb8806398a0c5031bdff5844b63888376542d5cc78b37d0149c77265",
+        "maximal_rectangle_tie_break": [
+          "maximum area",
+          "minimum y",
+          "minimum x",
+          "maximum height",
+          "maximum width"
+        ],
+        "native_height": 288,
+        "native_width": 384,
+        "reference_rule": "minimum (sha256_digest_bytes, byte_length, exact_bytes)",
+        "reference_source_sha256": "325704a7ecd23d4428b3d0417f9a76142b67ba6651caf4c5ef98a1fcc1b6c94e",
+        "schema": "strehl.m193-cover-overlap.v1",
+        "sources": [
+          {
+            "byte_length": 663776,
+            "multiplicity": 1,
+            "reference": true,
+            "registration": {
+              "coordinate_quantization_guard_q8": 0,
+              "heldout_max_source_px_ceil_q8": 0,
+              "heldout_rms_reference_px": "0.000000000",
+              "reference": true,
+              "valid_support_continuous_margin_q8": 128
+            },
+            "source_sha256": "325704a7ecd23d4428b3d0417f9a76142b67ba6651caf4c5ef98a1fcc1b6c94e",
+            "source_to_reference_q32": {
+              "a": 4294967296,
+              "b": 0,
+              "tx": 0,
+              "ty": 0
+            },
+            "valid_center_guard_q8": 0
+          },
+          {
+            "byte_length": 663776,
+            "multiplicity": 1,
+            "reference": false,
+            "registration": {
+              "calibration_count": 128,
+              "calibration_inlier_count": 125,
+              "coordinate_quantization_guard_q8": 1,
+              "heldout_max_source_px_ceil_q8": 107,
+              "heldout_rms_reference_px": "0.112928456",
+              "holdout_count": 128,
+              "holdout_inlier_count": 127,
+              "mutual_match_count": 256,
+              "reference": false,
+              "valid_support_continuous_margin_q8": 236
+            },
+            "source_sha256": "913b0f3ca53a8e5461621fcd70e989ef6fe78c8e9a26e7025501c49160c905ee",
+            "source_to_reference_q32": {
+              "a": 4230087616,
+              "b": -25971173,
+              "tx": 22701987882,
+              "ty": 3615191313
+            },
+            "valid_center_guard_q8": 108
+          },
+          {
+            "byte_length": 663776,
+            "multiplicity": 1,
+            "reference": false,
+            "registration": {
+              "calibration_count": 128,
+              "calibration_inlier_count": 128,
+              "coordinate_quantization_guard_q8": 1,
+              "heldout_max_source_px_ceil_q8": 156,
+              "heldout_rms_reference_px": "0.122228082",
+              "holdout_count": 128,
+              "holdout_inlier_count": 128,
+              "mutual_match_count": 256,
+              "reference": false,
+              "valid_support_continuous_margin_q8": 285
+            },
+            "source_sha256": "925b533a463489acc038fd61525b839a0d3ef236dd8fdefef2acf6df8ab6ff43",
+            "source_to_reference_q32": {
+              "a": 4155353360,
+              "b": -43431024,
+              "tx": 50916918627,
+              "ty": 5043472855
+            },
+            "valid_center_guard_q8": 157
+          }
+        ],
+        "status": "DEFINED_INPUT_ONLY",
+        "unique_input_count": 3,
+        "valid_support_rule": "active pixel-cell footprint eroded by 0.5 px to the valid-centre domain, plus held-out max residual rounded up to 1/256 source px and one 1/256-px coordinate quantum"
+      },
+      "id": "frozen-three-input-manifest",
+      "passed": true
+    },
+    {
+      "evidence": {
+        "arm_id": "identity-grid",
+        "denominator_pixels": 99918,
+        "field_of_view_verdict": "PASS",
+        "retained_fraction_denominator": 1,
+        "retained_fraction_numerator": 1,
+        "retained_percent": "100.000000000",
+        "retained_pixels": 99918
+      },
+      "id": "identity-retention",
+      "passed": true
+    },
+    {
+      "evidence": {
+        "arm_id": "cropped-grid",
+        "denominator_pixels": 99918,
+        "field_of_view_verdict": "FAIL_GEOMETRY_FIELD_OF_VIEW",
+        "retained_fraction_denominator": 183,
+        "retained_fraction_numerator": 178,
+        "retained_percent": "97.267759563",
+        "retained_pixels": 97188
+      },
+      "id": "crop-retention-destroyer",
+      "passed": true
+    },
+    {
+      "evidence": {
+        "actual_refusal": {
+          "code": "UNMEASURED_DENOMINATOR_UNDEFINED",
+          "message": "UNMEASURED_DENOMINATOR_UNDEFINED: manifest differs from trusted input registration"
+        },
+        "old": {
+          "arm_id": "cropped-grid",
+          "denominator_pixels": 400,
+          "field_of_view_verdict": "PASS",
+          "retained_fraction_denominator": 1,
+          "retained_fraction_numerator": 1,
+          "retained_percent": "100.000000000",
+          "retained_pixels": 400
+        }
+      },
+      "id": "rehashed-denominator-destroyer",
+      "passed": true
+    },
+    {
+      "evidence": {
+        "arm_id": "identity-grid",
+        "denominator_pixels": 99918,
+        "field_of_view_verdict": "PASS",
+        "retained_fraction_denominator": 1,
+        "retained_fraction_numerator": 1,
+        "retained_percent": "100.000000000",
+        "retained_pixels": 99918
+      },
+      "id": "restored-identity-retention",
+      "passed": true
+    },
+    {
+      "evidence": {
+        "calibration_count": 128,
+        "calibration_inlier_count": 128,
+        "coordinate_quantization_guard_q8": 1,
+        "heldout_max_source_px_ceil_q8": 0,
+        "heldout_rms_reference_px": "0.000000000",
+        "holdout_count": 128,
+        "holdout_inlier_count": 128,
+        "mutual_match_count": 256,
+        "valid_support_continuous_margin_q8": 129
+      },
+      "id": "complementary-self-registration",
+      "passed": true
+    },
+    {
+      "evidence": {
+        "code": "UNMEASURED_INPUT_REGISTRATION_INADEQUATE",
+        "committed_sources": [
+          {
+            "byte_length": 663776,
+            "multiplicity": 1,
+            "reference": true,
+            "registration": {
+              "coordinate_quantization_guard_q8": 0,
+              "heldout_max_source_px_ceil_q8": 0,
+              "heldout_rms_reference_px": "0.000000000",
+              "reference": true,
+              "valid_support_continuous_margin_q8": 128
+            },
+            "source_sha256": "bc96b1c011aa3800609f88f8158aa32039768bb725347e71e5240634caa95886",
+            "source_to_reference_q32": {
+              "a": 4294967296,
+              "b": 0,
+              "tx": 0,
+              "ty": 0
+            },
+            "valid_center_guard_q8": 0
+          }
+        ],
+        "constructor_index": 1,
+        "failing_input": {
+          "bytes": 663776,
+          "multiplicity": 1,
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sensor-white-coverage-1\\worker\\fixture-3.tiff",
+          "sha256": "c00a8bbcfb36cbbc8cc13ae760cdd565a55bd11916fd7fc1c92d77452f61ce0b"
+        },
+        "failure_phase": "register_to_reference",
+        "frames": [
+          {
+            "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\coverage-sensor-white-run.py",
+            "function": "private_controls",
+            "line": 562
+          },
+          {
+            "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sensor-white-coverage-1\\worker\\registrar\\m193b-geometry-consumer\\consumer.py",
+            "function": "construct_overlap_paths",
+            "line": 231
+          },
+          {
+            "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sensor-white-coverage-1\\worker\\registrar\\M193-cover-overlap\\reference.py",
+            "function": "register_to_reference",
+            "line": 542
+          },
+          {
+            "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sensor-white-coverage-1\\worker\\registrar\\M193-cover-overlap\\reference.py",
+            "function": "require",
+            "line": 46
+          }
+        ],
+        "message": "UNMEASURED_INPUT_REGISTRATION_INADEQUATE: too few total mutual landmarks",
+        "ordered_groups": [
+          {
+            "bytes": 663776,
+            "multiplicity": 1,
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sensor-white-coverage-1\\worker\\fixture-4.tiff",
+            "sha256": "bc96b1c011aa3800609f88f8158aa32039768bb725347e71e5240634caa95886"
+          },
+          {
+            "bytes": 663776,
+            "multiplicity": 1,
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sensor-white-coverage-1\\worker\\fixture-3.tiff",
+            "sha256": "c00a8bbcfb36cbbc8cc13ae760cdd565a55bd11916fd7fc1c92d77452f61ce0b"
+          }
+        ],
+        "ordered_groups_complete": true,
+        "traceback": "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\coverage-sensor-white-run.py\", line 562, in private_controls\n    c.construct_overlap_paths(focus_paths)\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sensor-white-coverage-1\\worker\\registrar\\m193b-geometry-consumer\\consumer.py\", line 231, in construct_overlap_paths\n    transform, registration, guard = register_to_reference(reference_features, features)\n                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sensor-white-coverage-1\\worker\\registrar\\M193-cover-overlap\\reference.py\", line 542, in register_to_reference\n    require(\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sensor-white-coverage-1\\worker\\registrar\\M193-cover-overlap\\reference.py\", line 46, in require\n    raise ContractError(code, message)\nm193b_frozen_reference.ContractError: UNMEASURED_INPUT_REGISTRATION_INADEQUATE: too few total mutual landmarks\n",
+        "type": "ContractError",
+        "unvisited_inputs": []
+      },
+      "id": "complementary-first-refusal",
+      "passed": true
+    },
+    {
+      "evidence": {
+        "anchor_q32": {
+          "a": 6442450944,
+          "b": 2147483648,
+          "tx": 30064771072,
+          "ty": -12884901888
+        },
+        "forward": {
+          "a": {
+            "denominator": 2,
+            "numerator": 1
+          },
+          "b": {
+            "denominator": 2,
+            "numerator": -1
+          },
+          "tx": {
+            "denominator": 5,
+            "numerator": -19
+          },
+          "ty": {
+            "denominator": 5,
+            "numerator": 33
+          }
+        },
+        "pull": {
+          "a": {
+            "denominator": 1,
+            "numerator": 1
+          },
+          "b": {
+            "denominator": 1,
+            "numerator": 1
+          },
+          "tx": {
+            "denominator": 5,
+            "numerator": 52
+          },
+          "ty": {
+            "denominator": 5,
+            "numerator": -14
+          }
+        },
+        "reversed_order": {
+          "a": {
+            "denominator": 2,
+            "numerator": 1
+          },
+          "b": {
+            "denominator": 2,
+            "numerator": -1
+          },
+          "tx": {
+            "denominator": 1,
+            "numerator": -4
+          },
+          "ty": {
+            "denominator": 1,
+            "numerator": 10
+          }
+        },
+        "reversed_rotation_sign": {
+          "a": {
+            "denominator": 10,
+            "numerator": 7
+          },
+          "b": {
+            "denominator": 10,
+            "numerator": 1
+          },
+          "tx": {
+            "denominator": 5,
+            "numerator": -19
+          },
+          "ty": {
+            "denominator": 5,
+            "numerator": 33
+          }
+        },
+        "scope": "exact arithmetic reporting control; not observed native placement truth",
+        "source_q32": {
+          "a": 4294967296,
+          "b": -2147483648,
+          "tx": -8589934592,
+          "ty": 21474836480
+        }
+      },
+      "id": "exact-gauge-direction-and-order",
+      "passed": true
+    }
+  ],
+  "error": "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\coverage-sensor-white-run.py\", line 684, in worker\n    manifest, binding = consumer.construct_overlap_paths([Path(r[\"tiff\"][\"path\"]) for r in request[\"native_rows\"]])\n                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sensor-white-coverage-1\\worker\\registrar\\m193b-geometry-consumer\\consumer.py\", line 231, in construct_overlap_paths\n    transform, registration, guard = register_to_reference(reference_features, features)\n                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sensor-white-coverage-1\\worker\\registrar\\M193-cover-overlap\\reference.py\", line 542, in register_to_reference\n    require(\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sensor-white-coverage-1\\worker\\registrar\\M193-cover-overlap\\reference.py\", line 46, in require\n    raise ContractError(code, message)\nm193b_frozen_reference.ContractError: UNMEASURED_INPUT_REGISTRATION_INADEQUATE: too few total mutual landmarks\n",
+  "execution_release": {
+    "bytes": 98423,
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sensor-white-coverage-release-2.json",
+    "sha256": "a6ab7a11ab053c61c12e3496414fca22b15afd31f43c642b9e6dc1d01b8b9801"
+  },
+  "finalization_errors": [],
+  "first_refusal": {
+    "code": "UNMEASURED_INPUT_REGISTRATION_INADEQUATE",
+    "committed_sources": [
+      {
+        "byte_length": 197798267,
+        "multiplicity": 1,
+        "original_indices": [
+          65
+        ],
+        "reference": true,
+        "registration": {
+          "coordinate_quantization_guard_q8": 0,
+          "heldout_max_source_px_ceil_q8": 0,
+          "heldout_rms_reference_px": "0.000000000",
+          "reference": true,
+          "valid_support_continuous_margin_q8": 128
+        },
+        "source_sha256": "458b8a2180ea4ee135364db2b79f850a01d3cf7dca2df9f3e6f6baa8a86159da",
+        "source_to_reference_q32": {
+          "a": 4294967296,
+          "b": 0,
+          "tx": 0,
+          "ty": 0
+        },
+        "valid_center_guard_q8": 0
+      }
+    ],
+    "constructor_index": 1,
+    "failing_input": {
+      "bytes": 197798267,
+      "multiplicity": 1,
+      "original_indices": [
+        104
+      ],
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-artifact-derivative-1\\frame-08\\native\\DSC00120-registration.tiff",
+      "sha256": "669de9f7ac88f6a373e32b36044474fc6d80a84b4ea4ca19b0870f37e161fe33"
+    },
+    "failure_phase": "register_to_reference",
+    "frames": [
+      {
+        "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\coverage-sensor-white-run.py",
+        "function": "worker",
+        "line": 684
+      },
+      {
+        "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sensor-white-coverage-1\\worker\\registrar\\m193b-geometry-consumer\\consumer.py",
+        "function": "construct_overlap_paths",
+        "line": 231
+      },
+      {
+        "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sensor-white-coverage-1\\worker\\registrar\\M193-cover-overlap\\reference.py",
+        "function": "register_to_reference",
+        "line": 542
+      },
+      {
+        "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sensor-white-coverage-1\\worker\\registrar\\M193-cover-overlap\\reference.py",
+        "function": "require",
+        "line": 46
+      }
+    ],
+    "message": "UNMEASURED_INPUT_REGISTRATION_INADEQUATE: too few total mutual landmarks",
+    "ordered_groups": [
+      {
+        "bytes": 197798267,
+        "multiplicity": 1,
+        "original_indices": [
+          65
+        ],
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-artifact-derivative-1\\frame-05\\native\\DSC00081-registration.tiff",
+        "sha256": "458b8a2180ea4ee135364db2b79f850a01d3cf7dca2df9f3e6f6baa8a86159da"
+      },
+      {
+        "bytes": 197798267,
+        "multiplicity": 1,
+        "original_indices": [
+          104
+        ],
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-artifact-derivative-1\\frame-08\\native\\DSC00120-registration.tiff",
+        "sha256": "669de9f7ac88f6a373e32b36044474fc6d80a84b4ea4ca19b0870f37e161fe33"
+      },
+      {
+        "bytes": 197798267,
+        "multiplicity": 1,
+        "original_indices": [
+          13
+        ],
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-artifact-derivative-1\\frame-01\\native\\DSC00029-registration.tiff",
+        "sha256": "68082002b84288bf4db8e0f925a4b82ccdbd61c3f8388b5edcb0d2828bbf0e04"
+      },
+      {
+        "bytes": 197798267,
+        "multiplicity": 1,
+        "original_indices": [
+          78
+        ],
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-artifact-derivative-1\\frame-06\\native\\DSC00094-registration.tiff",
+        "sha256": "6ef640cb6551f96ba6fefaa5520ddfcec463cc698f2d4c8c204633a7ee4530c3"
+      },
+      {
+        "bytes": 197798267,
+        "multiplicity": 1,
+        "original_indices": [
+          52
+        ],
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-artifact-derivative-1\\frame-04\\native\\DSC00068-registration.tiff",
+        "sha256": "88ddd13d5e216345b75fea78163ee017396113a82c6a65dfc3532d0928a75d88"
+      },
+      {
+        "bytes": 197798267,
+        "multiplicity": 1,
+        "original_indices": [
+          91
+        ],
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-artifact-derivative-1\\frame-07\\native\\DSC00107-registration.tiff",
+        "sha256": "9726b4287c20506f7082c35877cf317dfbef37644e136d9ee9ab4f9a1b29a347"
+      },
+      {
+        "bytes": 197798267,
+        "multiplicity": 1,
+        "original_indices": [
+          0
+        ],
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-derivative-1\\frame-00\\native\\DSC00016-registration.tiff",
+        "sha256": "97af13814d35ca2bf5320587268c722903ef5204ae3d9b379eef2bb384753d5f"
+      },
+      {
+        "bytes": 197798267,
+        "multiplicity": 1,
+        "original_indices": [
+          39
+        ],
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-artifact-derivative-1\\frame-03\\native\\DSC00055-registration.tiff",
+        "sha256": "cd390f1866aaa74b1589426b74761626ca1ca2b845e4c9bfd9b078f5e673f2d3"
+      },
+      {
+        "bytes": 197798267,
+        "multiplicity": 1,
+        "original_indices": [
+          26
+        ],
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-artifact-derivative-1\\frame-02\\native\\DSC00042-registration.tiff",
+        "sha256": "f58c3b75bae43325d039bf952c8a7495d5344a000f20d950bd171d49e016ccdd"
+      }
+    ],
+    "ordered_groups_complete": true,
+    "traceback": "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\coverage-sensor-white-run.py\", line 684, in worker\n    manifest, binding = consumer.construct_overlap_paths([Path(r[\"tiff\"][\"path\"]) for r in request[\"native_rows\"]])\n                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sensor-white-coverage-1\\worker\\registrar\\m193b-geometry-consumer\\consumer.py\", line 231, in construct_overlap_paths\n    transform, registration, guard = register_to_reference(reference_features, features)\n                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sensor-white-coverage-1\\worker\\registrar\\M193-cover-overlap\\reference.py\", line 542, in register_to_reference\n    require(\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sensor-white-coverage-1\\worker\\registrar\\M193-cover-overlap\\reference.py\", line 46, in require\n    raise ContractError(code, message)\nm193b_frozen_reference.ContractError: UNMEASURED_INPUT_REGISTRATION_INADEQUATE: too few total mutual landmarks\n",
+    "type": "ContractError",
+    "unvisited_inputs": [
+      {
+        "bytes": 197798267,
+        "multiplicity": 1,
+        "original_indices": [
+          13
+        ],
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-artifact-derivative-1\\frame-01\\native\\DSC00029-registration.tiff",
+        "sha256": "68082002b84288bf4db8e0f925a4b82ccdbd61c3f8388b5edcb0d2828bbf0e04"
+      },
+      {
+        "bytes": 197798267,
+        "multiplicity": 1,
+        "original_indices": [
+          78
+        ],
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-artifact-derivative-1\\frame-06\\native\\DSC00094-registration.tiff",
+        "sha256": "6ef640cb6551f96ba6fefaa5520ddfcec463cc698f2d4c8c204633a7ee4530c3"
+      },
+      {
+        "bytes": 197798267,
+        "multiplicity": 1,
+        "original_indices": [
+          52
+        ],
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-artifact-derivative-1\\frame-04\\native\\DSC00068-registration.tiff",
+        "sha256": "88ddd13d5e216345b75fea78163ee017396113a82c6a65dfc3532d0928a75d88"
+      },
+      {
+        "bytes": 197798267,
+        "multiplicity": 1,
+        "original_indices": [
+          91
+        ],
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-artifact-derivative-1\\frame-07\\native\\DSC00107-registration.tiff",
+        "sha256": "9726b4287c20506f7082c35877cf317dfbef37644e136d9ee9ab4f9a1b29a347"
+      },
+      {
+        "bytes": 197798267,
+        "multiplicity": 1,
+        "original_indices": [
+          0
+        ],
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-derivative-1\\frame-00\\native\\DSC00016-registration.tiff",
+        "sha256": "97af13814d35ca2bf5320587268c722903ef5204ae3d9b379eef2bb384753d5f"
+      },
+      {
+        "bytes": 197798267,
+        "multiplicity": 1,
+        "original_indices": [
+          39
+        ],
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-artifact-derivative-1\\frame-03\\native\\DSC00055-registration.tiff",
+        "sha256": "cd390f1866aaa74b1589426b74761626ca1ca2b845e4c9bfd9b078f5e673f2d3"
+      },
+      {
+        "bytes": 197798267,
+        "multiplicity": 1,
+        "original_indices": [
+          26
+        ],
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-artifact-derivative-1\\frame-02\\native\\DSC00042-registration.tiff",
+        "sha256": "f58c3b75bae43325d039bf952c8a7495d5344a000f20d950bd171d49e016ccdd"
+      }
+    ]
+  },
+  "fixtures": [
+    {
+      "bytes": 663776,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sensor-white-coverage-1\\worker\\fixture-0.tiff",
+      "sha256": "913b0f3ca53a8e5461621fcd70e989ef6fe78c8e9a26e7025501c49160c905ee"
+    },
+    {
+      "bytes": 663776,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sensor-white-coverage-1\\worker\\fixture-1.tiff",
+      "sha256": "325704a7ecd23d4428b3d0417f9a76142b67ba6651caf4c5ef98a1fcc1b6c94e"
+    },
+    {
+      "bytes": 663776,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sensor-white-coverage-1\\worker\\fixture-2.tiff",
+      "sha256": "925b533a463489acc038fd61525b839a0d3ef236dd8fdefef2acf6df8ab6ff43"
+    },
+    {
+      "bytes": 663776,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sensor-white-coverage-1\\worker\\fixture-3.tiff",
+      "sha256": "c00a8bbcfb36cbbc8cc13ae760cdd565a55bd11916fd7fc1c92d77452f61ce0b"
+    },
+    {
+      "bytes": 663776,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sensor-white-coverage-1\\worker\\fixture-4.tiff",
+      "sha256": "bc96b1c011aa3800609f88f8158aa32039768bb725347e71e5240634caa95886"
+    }
+  ],
+  "native_manifest": null,
+  "native_stage": "refused",
+  "original_gauges": null,
+  "request": {
+    "bytes": 12650,
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sensor-white-coverage-1\\request.json",
+    "sha256": "91c9cb57326a0a001b2c374b0a004c2cfc6333c1a3bbfc5fe9d6da58e22fa521"
+  },
+  "runtime_after": {
+    "numpy": "2.4.4",
+    "opencv": "4.13.0",
+    "opencv_build_information_sha256": "8a55f551e40cf84d0fa7e2509bb9544da66782a8cbc017d7ce27a9de0ef9c1ac",
+    "python": "3.12.10",
+    "tifffile": "2026.5.2"
+  },
+  "runtime_before": {
+    "numpy": "2.4.4",
+    "opencv": "4.13.0",
+    "opencv_build_information_sha256": "8a55f551e40cf84d0fa7e2509bb9544da66782a8cbc017d7ce27a9de0ef9c1ac",
+    "python": "3.12.10",
+    "tifffile": "2026.5.2"
+  },
+  "schema": "m193c-sensor-white-coverage-worker-v1",
+  "status": "REGISTRAR_REFUSED"
+}

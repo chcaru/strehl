@@ -422,10 +422,16 @@ refused the reader's six intentional source/spec snapshots under an incompatible
 metadata-suffix rule. The exact source-bound artifact parent from `79d75c40`
 has now passed its four control groups and completed all nine native readers,
 with17 fresh child invocations and no finalization error. Independent actual
-audit has verified the complete set. Next is the unchanged registrar's support
-and overlap test on the nine derivatives. No physical-crop, calibration or
-quality conclusion follows from the native agreements. Real coverage remains
-unmeasured. See the
+audit has verified the complete set. The unchanged registrar from `1f3c6bd7`
+then passed its eight controls and refused its first nonreference input:
+original104 has too few mutual landmarks with reference65. Seven originals
+remain registration-unvisited; no complete overlap or per-frame placement
+result exists. The independently checked refusal selects one bounded23-pair
+support experiment: local-rung spans1,2,4 plus the actual reference star,
+unchanged matcher/thresholds, every outcome retained. Report graph support
+relative to original52 without composing transforms or treating accepted
+residuals as placement truth. No physical-crop, calibration or quality
+conclusion follows from the native agreements. See the
 [M193c progress record](../research/M193c-output-grid.md).
 Existing owned RAW decode may
 allocate before exposing shape: enforce a process committed-memory limit and

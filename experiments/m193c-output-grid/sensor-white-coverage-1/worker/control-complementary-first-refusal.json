@@ -1,0 +1,78 @@
+{
+  "evidence": {
+    "code": "UNMEASURED_INPUT_REGISTRATION_INADEQUATE",
+    "committed_sources": [
+      {
+        "byte_length": 663776,
+        "multiplicity": 1,
+        "reference": true,
+        "registration": {
+          "coordinate_quantization_guard_q8": 0,
+          "heldout_max_source_px_ceil_q8": 0,
+          "heldout_rms_reference_px": "0.000000000",
+          "reference": true,
+          "valid_support_continuous_margin_q8": 128
+        },
+        "source_sha256": "bc96b1c011aa3800609f88f8158aa32039768bb725347e71e5240634caa95886",
+        "source_to_reference_q32": {
+          "a": 4294967296,
+          "b": 0,
+          "tx": 0,
+          "ty": 0
+        },
+        "valid_center_guard_q8": 0
+      }
+    ],
+    "constructor_index": 1,
+    "failing_input": {
+      "bytes": 663776,
+      "multiplicity": 1,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sensor-white-coverage-1\\worker\\fixture-3.tiff",
+      "sha256": "c00a8bbcfb36cbbc8cc13ae760cdd565a55bd11916fd7fc1c92d77452f61ce0b"
+    },
+    "failure_phase": "register_to_reference",
+    "frames": [
+      {
+        "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\coverage-sensor-white-run.py",
+        "function": "private_controls",
+        "line": 562
+      },
+      {
+        "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sensor-white-coverage-1\\worker\\registrar\\m193b-geometry-consumer\\consumer.py",
+        "function": "construct_overlap_paths",
+        "line": 231
+      },
+      {
+        "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sensor-white-coverage-1\\worker\\registrar\\M193-cover-overlap\\reference.py",
+        "function": "register_to_reference",
+        "line": 542
+      },
+      {
+        "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sensor-white-coverage-1\\worker\\registrar\\M193-cover-overlap\\reference.py",
+        "function": "require",
+        "line": 46
+      }
+    ],
+    "message": "UNMEASURED_INPUT_REGISTRATION_INADEQUATE: too few total mutual landmarks",
+    "ordered_groups": [
+      {
+        "bytes": 663776,
+        "multiplicity": 1,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sensor-white-coverage-1\\worker\\fixture-4.tiff",
+        "sha256": "bc96b1c011aa3800609f88f8158aa32039768bb725347e71e5240634caa95886"
+      },
+      {
+        "bytes": 663776,
+        "multiplicity": 1,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sensor-white-coverage-1\\worker\\fixture-3.tiff",
+        "sha256": "c00a8bbcfb36cbbc8cc13ae760cdd565a55bd11916fd7fc1c92d77452f61ce0b"
+      }
+    ],
+    "ordered_groups_complete": true,
+    "traceback": "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\coverage-sensor-white-run.py\", line 562, in private_controls\n    c.construct_overlap_paths(focus_paths)\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sensor-white-coverage-1\\worker\\registrar\\m193b-geometry-consumer\\consumer.py\", line 231, in construct_overlap_paths\n    transform, registration, guard = register_to_reference(reference_features, features)\n                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sensor-white-coverage-1\\worker\\registrar\\M193-cover-overlap\\reference.py\", line 542, in register_to_reference\n    require(\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sensor-white-coverage-1\\worker\\registrar\\M193-cover-overlap\\reference.py\", line 46, in require\n    raise ContractError(code, message)\nm193b_frozen_reference.ContractError: UNMEASURED_INPUT_REGISTRATION_INADEQUATE: too few total mutual landmarks\n",
+    "type": "ContractError",
+    "unvisited_inputs": []
+  },
+  "id": "complementary-first-refusal",
+  "passed": true
+}

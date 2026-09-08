@@ -1,0 +1,22 @@
+{
+  "scope": "Actual released nine-input registration coverage; no quality conclusion",
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-B",
+    "-X",
+    "faulthandler",
+    "-X",
+    "pycache_prefix=C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sensor-white-coverage-1\\parent-cache",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\coverage-sensor-white-run.py",
+    "--release",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sensor-white-coverage-release-2.json",
+    "--sha256",
+    "a6ab7a11ab053c61c12e3496414fca22b15afd31f43c642b9e6dc1d01b8b9801",
+    "--output",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sensor-white-coverage-1"
+  ],
+  "release_sha256": "a6ab7a11ab053c61c12e3496414fca22b15afd31f43c642b9e6dc1d01b8b9801",
+  "exit_code": 1,
+  "elapsed_wall_seconds": 25.1913279,
+  "admissible_parent_exit": false
+}
