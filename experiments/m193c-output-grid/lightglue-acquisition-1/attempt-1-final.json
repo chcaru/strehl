@@ -1,0 +1,15 @@
+{
+  "bytes": 8194,
+  "content_length": "8194",
+  "content_type": "text/plain; charset=utf-8",
+  "elapsed_wall_seconds": 0.7970000000004802,
+  "error": null,
+  "final_url": "https://raw.githubusercontent.com/cvg/LightGlue/eb42fee2d71449efb0aa5c10549752b5d75384d8/lightglue/sift.py",
+  "http_status": 200,
+  "id": "rootsift_reference",
+  "path": "experiments/m193c-output-grid/lightglue-acquisition-1/sift.py",
+  "redirects": [],
+  "sha256": "9fa24851ff25b6f09cb06fa62aed1d07fa9cb6aa340c79d6467b3bdfdd4508cd",
+  "status": "COMPLETE_OPAQUE_ASSET",
+  "url": "https://raw.githubusercontent.com/cvg/LightGlue/eb42fee2d71449efb0aa5c10549752b5d75384d8/lightglue/sift.py"
+}

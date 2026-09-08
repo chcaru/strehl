@@ -1,0 +1,15 @@
+{
+  "bytes": 26417,
+  "content_length": "26417",
+  "content_type": "text/plain; charset=utf-8",
+  "elapsed_wall_seconds": 0.5940000000009604,
+  "error": null,
+  "final_url": "https://raw.githubusercontent.com/cvg/LightGlue/eb42fee2d71449efb0aa5c10549752b5d75384d8/lightglue/lightglue.py",
+  "http_status": 200,
+  "id": "matcher",
+  "path": "experiments/m193c-output-grid/lightglue-acquisition-1/lightglue.py",
+  "redirects": [],
+  "sha256": "dcb75b9cad1985c5e7a537c512d4318d47fbcc99df75b39a513de60e027c039f",
+  "status": "COMPLETE_OPAQUE_ASSET",
+  "url": "https://raw.githubusercontent.com/cvg/LightGlue/eb42fee2d71449efb0aa5c10549752b5d75384d8/lightglue/lightglue.py"
+}

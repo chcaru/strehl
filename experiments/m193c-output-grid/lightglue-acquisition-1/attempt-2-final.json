@@ -1,0 +1,15 @@
+{
+  "bytes": 11340,
+  "content_length": "11340",
+  "content_type": "text/plain; charset=utf-8",
+  "elapsed_wall_seconds": 0.9850000000005821,
+  "error": null,
+  "final_url": "https://raw.githubusercontent.com/cvg/LightGlue/eb42fee2d71449efb0aa5c10549752b5d75384d8/LICENSE",
+  "http_status": 200,
+  "id": "license",
+  "path": "experiments/m193c-output-grid/lightglue-acquisition-1/license.txt",
+  "redirects": [],
+  "sha256": "0e6031ed3e62dc91dc8b1c8f240abd200b1083f60773362e64e339fe01d1bf18",
+  "status": "COMPLETE_OPAQUE_ASSET",
+  "url": "https://raw.githubusercontent.com/cvg/LightGlue/eb42fee2d71449efb0aa5c10549752b5d75384d8/LICENSE"
+}

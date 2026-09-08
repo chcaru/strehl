@@ -22,7 +22,8 @@ correspondences do not yet supply accepted geometry. Its complete audit passes.
 The saved-coordinate trace now also completes and passes its independent audit:
 21 pairs stop before refinement; two reach the later held-out gates. The fixed
 AREA4/precise follow-up now also completes with independent verification and
-still returns zero real fits. A bounded learned-matching branch is next.
+still returns zero real fits. The bounded LightGlue asset intake now passes
+its independent audit; feature export and one private model test are next.
 HardFloor remains the default; no quality promotion follows
 from this work. The [charter](../../experiments/m193c-output-grid/charter.md)
 names the actual sampling-coordinate consumer and the fixed historical inputs.
@@ -704,6 +705,45 @@ not attention alone. Learned confidence is not the old ratio test or physical
 truth; the registrar split cannot be called independent of a model that conditions
 on all features. Keep all23 pairs, native fit limits, literal geometry/destructive
 controls and the zero-return falsifier. No model has yet been downloaded or run.
+
+## LightGlue source and checkpoint intake
+
+**VERIFIED acquisition only:** the one opaque intake from source release
+`87798049a05582158220c2b3e27dc5818e44d005` completed all five fixed assets.
+The [plan](../../experiments/m193c-output-grid/lightglue-acquisition-plan-1.json)
+binds214 sources, retaining all210 AREA4 bindings. Eleven rejecting URL/body/
+byte/JSON controls passed. The
+[result](../../experiments/m193c-output-grid/lightglue-acquisition-1/result.json)
+and [independent audit](../../experiments/m193c-output-grid/work/independent-lightglue-acquisition-audit.json)
+report complete acquisition and allowed admission to the next bounded stage.
+The audit ran once, exited0 and retained empty stderr.
+
+The source subset is official cvg/LightGlue commit
+`eb42fee2d71449efb0aa5c10549752b5d75384d8`: matcher, SIFT reference, README
+and Apache-2.0 licence. The official SIFT checkpoint is47,632,573 bytes with
+actual local SHA256
+`5b52b8d9982d43532dc042606b346bb9594c9f5a4bd6f64362c63866287b4ac0`.
+The local hash binds the HTTPS bytes received; the prior official API observation
+provided no publisher digest. Keep the checkpoint local and opaque until the
+separately reviewed offline load. No package initializer, model, image decoder
+or checkpoint parser ran in the acquisition worker.
+
+**MEASURED resource observations:**19 files total47,710,999 bytes, independently
+rehashed and confirmed by a hidden-inclusive inventory. The parent outer interval
+was3.2644254 seconds; this is one acquisition observation, not a speed benchmark.
+The audited full nonrefundable carry is659.9375 CPU seconds,877.919086 wall
+seconds,4,036,556,476 file bytes and45,295,542 metadata bytes. The64MiB intake
+reservation explicitly covers the weights. Finalization, preparation and the
+audit fit the retained limits; no budget is refunded.
+
+The actual command is retained in the
+[outer receipt](../../experiments/m193c-output-grid/work/lightglue-acquisition-1-outer.json):
+`python -B -X faulthandler lightglue-acquisition-run.py --plan <actual plan> --sha256 0302f5d4f963e734ee2f2d7d13841e06640e86e736ab47ed2fa1d469817af52d --output <fresh intake directory>`.
+This completes dependency acquisition only. The next source-reviewed stage
+reproduces eleven cached AREA8/precise feature sets, exports their retained
+descriptors and key-derived attributes, then runs one private CPU float32
+LightGlue forward. No learned real-pair result, alignment or quality claim follows
+from acquiring assets.
 
 ## Reproduction and preserved attempts
 

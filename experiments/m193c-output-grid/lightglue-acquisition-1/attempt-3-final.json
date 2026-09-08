@@ -1,0 +1,15 @@
+{
+  "bytes": 10217,
+  "content_length": "10217",
+  "content_type": "text/plain; charset=utf-8",
+  "elapsed_wall_seconds": 1.2030000000013388,
+  "error": null,
+  "final_url": "https://raw.githubusercontent.com/cvg/LightGlue/eb42fee2d71449efb0aa5c10549752b5d75384d8/README.md",
+  "http_status": 200,
+  "id": "readme",
+  "path": "experiments/m193c-output-grid/lightglue-acquisition-1/readme.md",
+  "redirects": [],
+  "sha256": "19dbb3380634bde27d76d6dc0dc6167432a3d2d43082a8653311cbfeee972d43",
+  "status": "COMPLETE_OPAQUE_ASSET",
+  "url": "https://raw.githubusercontent.com/cvg/LightGlue/eb42fee2d71449efb0aa5c10549752b5d75384d8/README.md"
+}

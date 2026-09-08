@@ -1,0 +1,22 @@
+{
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-B",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\work\\independent-lightglue-acquisition-audit.py",
+    "--plan-sha256",
+    "0302f5d4f963e734ee2f2d7d13841e06640e86e736ab47ed2fa1d469817af52d",
+    "--result-sha256",
+    "977527f7b88b6700840fe81b0bfd04f9ec9af568a8ef2fd924577112611c9a8c",
+    "--outer-sha256",
+    "3e52f7b41d966dfdc2583b5aa47738f3047565868703187e07b923463bc7e1f3",
+    "--console-sha256",
+    "847502a7d7447efedc5bf9b9d61f0d9c07d2c40cc41a8cd26db01ecddc5ebd9d",
+    "--exit-sha256",
+    "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+  ],
+  "exit_code": 0,
+  "elapsed_wall_seconds": 0.4599785999998858,
+  "stdout_bytes": 21345,
+  "stderr_bytes": 0,
+  "scope": "one frozen saved-intake audit; no network or checkpoint parsing"
+}

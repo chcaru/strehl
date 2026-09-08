@@ -1,0 +1,72 @@
+{
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-B",
+    "-X",
+    "faulthandler",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\lightglue-acquisition-run.py",
+    "--plan",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\lightglue-acquisition-plan-1.json",
+    "--sha256",
+    "0302f5d4f963e734ee2f2d7d13841e06640e86e736ab47ed2fa1d469817af52d",
+    "--output",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\lightglue-acquisition-1",
+    "--worker"
+  ],
+  "controls": [
+    {
+      "id": "forbidden-url-0",
+      "passed": true
+    },
+    {
+      "id": "forbidden-url-1",
+      "passed": true
+    },
+    {
+      "id": "forbidden-url-2",
+      "passed": true
+    },
+    {
+      "id": "forbidden-url-3",
+      "passed": true
+    },
+    {
+      "id": "forbidden-url-4",
+      "passed": true
+    },
+    {
+      "id": "forbidden-url-5",
+      "passed": true
+    },
+    {
+      "id": "prewrite-overrun",
+      "passed": true
+    },
+    {
+      "id": "checkpoint-json",
+      "passed": true
+    },
+    {
+      "id": "checkpoint-html",
+      "passed": true
+    },
+    {
+      "id": "checkpoint-random",
+      "passed": true
+    },
+    {
+      "id": "duplicate-plan-key",
+      "passed": true
+    }
+  ],
+  "plan": {
+    "bytes": 42745,
+    "path": "experiments/m193c-output-grid/lightglue-acquisition-plan-1.json",
+    "sha256": "0302f5d4f963e734ee2f2d7d13841e06640e86e736ab47ed2fa1d469817af52d"
+  },
+  "status": "COMPLETE_SOURCE_AND_CHECKPOINT_ACQUISITION_ONLY",
+  "timing": {
+    "cpu_seconds": 1.203125,
+    "wall_seconds": 2.7030000000013388
+  }
+}

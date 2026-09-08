@@ -1,0 +1,9 @@
+{
+  "bytes": 0,
+  "error": null,
+  "id": "checkpoint",
+  "redirects": [],
+  "sha256": null,
+  "status": "STARTED",
+  "url": "https://github.com/cvg/LightGlue/releases/download/v0.1_arxiv/sift_lightglue.pth"
+}

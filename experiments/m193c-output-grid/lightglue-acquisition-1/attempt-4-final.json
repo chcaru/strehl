@@ -1,0 +1,21 @@
+{
+  "bytes": 47632573,
+  "content_length": "47632573",
+  "content_type": "application/octet-stream",
+  "elapsed_wall_seconds": 2.67200000000048,
+  "error": null,
+  "final_url": "https://release-assets.githubusercontent.com/github-production-release-asset/658277588/63d7d633-969c-48cf-9d1a-7f4e8901b267?sp=r&sv=2018-11-09&sr=b&spr=https&se=2026-09-08T09%3A04%3A17Z&rscd=attachment%3B+filename%3Dsift_lightglue.pth&rsct=application%2Foctet-stream&skoid=96c2d410-5711-43a1-aedd-ab1947aa7ab0&sktid=398a6654-997b-47e9-b12b-9515b896b4de&skt=2026-09-08T08%3A03%3A27Z&ske=2026-09-08T09%3A04%3A17Z&sks=b&skv=2018-11-09&sig=ETJxapQJq4Edw4biAbMidxQw8etbY81qVEtqdCSM0PM%3D&jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmVsZWFzZS1hc3NldHMuZ2l0aHVidXNlcmNvbnRlbnQuY29tIiwia2V5Ijoia2V5MSIsImV4cCI6MTc4ODg1NjkyOSwibmJmIjoxNzg4ODU1MTI5LCJwYXRoIjoicmVsZWFzZWFzc2V0cHJvZHVjdGlvbi5ibG9iLmNvcmUud2luZG93cy5uZXQifQ.eXm0XcYg5AP1SRSZVPTVgHS-ckEstVS7t_T9UB0alAQ&response-content-disposition=attachment%3B%20filename%3Dsift_lightglue.pth&response-content-type=application%2Foctet-stream",
+  "http_status": 200,
+  "id": "checkpoint",
+  "path": "experiments/m193c-output-grid/lightglue-acquisition-1/sift-lightglue.pth",
+  "redirects": [
+    {
+      "from_url": "https://github.com/cvg/LightGlue/releases/download/v0.1_arxiv/sift_lightglue.pth",
+      "status": 302,
+      "to_url": "https://release-assets.githubusercontent.com/github-production-release-asset/658277588/63d7d633-969c-48cf-9d1a-7f4e8901b267?sp=r&sv=2018-11-09&sr=b&spr=https&se=2026-09-08T09%3A04%3A17Z&rscd=attachment%3B+filename%3Dsift_lightglue.pth&rsct=application%2Foctet-stream&skoid=96c2d410-5711-43a1-aedd-ab1947aa7ab0&sktid=398a6654-997b-47e9-b12b-9515b896b4de&skt=2026-09-08T08%3A03%3A27Z&ske=2026-09-08T09%3A04%3A17Z&sks=b&skv=2018-11-09&sig=ETJxapQJq4Edw4biAbMidxQw8etbY81qVEtqdCSM0PM%3D&jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmVsZWFzZS1hc3NldHMuZ2l0aHVidXNlcmNvbnRlbnQuY29tIiwia2V5Ijoia2V5MSIsImV4cCI6MTc4ODg1NjkyOSwibmJmIjoxNzg4ODU1MTI5LCJwYXRoIjoicmVsZWFzZWFzc2V0cHJvZHVjdGlvbi5ibG9iLmNvcmUud2luZG93cy5uZXQifQ.eXm0XcYg5AP1SRSZVPTVgHS-ckEstVS7t_T9UB0alAQ&response-content-disposition=attachment%3B%20filename%3Dsift_lightglue.pth&response-content-type=application%2Foctet-stream"
+    }
+  ],
+  "sha256": "5b52b8d9982d43532dc042606b346bb9594c9f5a4bd6f64362c63866287b4ac0",
+  "status": "COMPLETE_OPAQUE_ASSET",
+  "url": "https://github.com/cvg/LightGlue/releases/download/v0.1_arxiv/sift_lightglue.pth"
+}

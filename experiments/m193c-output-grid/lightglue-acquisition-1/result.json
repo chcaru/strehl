@@ -1,0 +1,331 @@
+{
+  "asset_release_id": 131252238,
+  "assets": [
+    {
+      "bytes": 26417,
+      "expected_bytes": null,
+      "final_url": "https://raw.githubusercontent.com/cvg/LightGlue/eb42fee2d71449efb0aa5c10549752b5d75384d8/lightglue/lightglue.py",
+      "id": "matcher",
+      "path": "experiments/m193c-output-grid/lightglue-acquisition-1/lightglue.py",
+      "sha256": "dcb75b9cad1985c5e7a537c512d4318d47fbcc99df75b39a513de60e027c039f",
+      "url": "https://raw.githubusercontent.com/cvg/LightGlue/eb42fee2d71449efb0aa5c10549752b5d75384d8/lightglue/lightglue.py"
+    },
+    {
+      "bytes": 8194,
+      "expected_bytes": null,
+      "final_url": "https://raw.githubusercontent.com/cvg/LightGlue/eb42fee2d71449efb0aa5c10549752b5d75384d8/lightglue/sift.py",
+      "id": "rootsift_reference",
+      "path": "experiments/m193c-output-grid/lightglue-acquisition-1/sift.py",
+      "sha256": "9fa24851ff25b6f09cb06fa62aed1d07fa9cb6aa340c79d6467b3bdfdd4508cd",
+      "url": "https://raw.githubusercontent.com/cvg/LightGlue/eb42fee2d71449efb0aa5c10549752b5d75384d8/lightglue/sift.py"
+    },
+    {
+      "bytes": 11340,
+      "expected_bytes": null,
+      "final_url": "https://raw.githubusercontent.com/cvg/LightGlue/eb42fee2d71449efb0aa5c10549752b5d75384d8/LICENSE",
+      "id": "license",
+      "path": "experiments/m193c-output-grid/lightglue-acquisition-1/license.txt",
+      "sha256": "0e6031ed3e62dc91dc8b1c8f240abd200b1083f60773362e64e339fe01d1bf18",
+      "url": "https://raw.githubusercontent.com/cvg/LightGlue/eb42fee2d71449efb0aa5c10549752b5d75384d8/LICENSE"
+    },
+    {
+      "bytes": 10217,
+      "expected_bytes": null,
+      "final_url": "https://raw.githubusercontent.com/cvg/LightGlue/eb42fee2d71449efb0aa5c10549752b5d75384d8/README.md",
+      "id": "readme",
+      "path": "experiments/m193c-output-grid/lightglue-acquisition-1/readme.md",
+      "sha256": "19dbb3380634bde27d76d6dc0dc6167432a3d2d43082a8653311cbfeee972d43",
+      "url": "https://raw.githubusercontent.com/cvg/LightGlue/eb42fee2d71449efb0aa5c10549752b5d75384d8/README.md"
+    },
+    {
+      "bytes": 47632573,
+      "expected_bytes": 47632573,
+      "final_url": "https://release-assets.githubusercontent.com/github-production-release-asset/658277588/63d7d633-969c-48cf-9d1a-7f4e8901b267?sp=r&sv=2018-11-09&sr=b&spr=https&se=2026-09-08T09%3A04%3A17Z&rscd=attachment%3B+filename%3Dsift_lightglue.pth&rsct=application%2Foctet-stream&skoid=96c2d410-5711-43a1-aedd-ab1947aa7ab0&sktid=398a6654-997b-47e9-b12b-9515b896b4de&skt=2026-09-08T08%3A03%3A27Z&ske=2026-09-08T09%3A04%3A17Z&sks=b&skv=2018-11-09&sig=ETJxapQJq4Edw4biAbMidxQw8etbY81qVEtqdCSM0PM%3D&jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmVsZWFzZS1hc3NldHMuZ2l0aHVidXNlcmNvbnRlbnQuY29tIiwia2V5Ijoia2V5MSIsImV4cCI6MTc4ODg1NjkyOSwibmJmIjoxNzg4ODU1MTI5LCJwYXRoIjoicmVsZWFzZWFzc2V0cHJvZHVjdGlvbi5ibG9iLmNvcmUud2luZG93cy5uZXQifQ.eXm0XcYg5AP1SRSZVPTVgHS-ckEstVS7t_T9UB0alAQ&response-content-disposition=attachment%3B%20filename%3Dsift_lightglue.pth&response-content-type=application%2Foctet-stream",
+      "id": "checkpoint",
+      "path": "experiments/m193c-output-grid/lightglue-acquisition-1/sift-lightglue.pth",
+      "sha256": "5b52b8d9982d43532dc042606b346bb9594c9f5a4bd6f64362c63866287b4ac0",
+      "url": "https://github.com/cvg/LightGlue/releases/download/v0.1_arxiv/sift_lightglue.pth"
+    }
+  ],
+  "charged_work": {
+    "cpu_seconds": 659.9375,
+    "file_bytes": 4036556476,
+    "metadata_bytes": 45295542,
+    "wall_seconds": 877.919086
+  },
+  "checkpoint_parses": 0,
+  "child": {
+    "cleanup_errors": [],
+    "command": [
+      "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+      "-B",
+      "-X",
+      "faulthandler",
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\lightglue-acquisition-run.py",
+      "--plan",
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\lightglue-acquisition-plan-1.json",
+      "--sha256",
+      "0302f5d4f963e734ee2f2d7d13841e06640e86e736ab47ed2fa1d469817af52d",
+      "--output",
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\lightglue-acquisition-1",
+      "--worker"
+    ],
+    "configured_job_limits": {
+      "committed_bytes": 536870912,
+      "flags": 8704
+    },
+    "direct_exit_observed": true,
+    "error": null,
+    "exit_code": 0,
+    "job_accounting": {
+      "active_processes": 0,
+      "total_cpu_100ns": 12343750,
+      "total_kernel_100ns": 7812500,
+      "total_page_fault_count": 147568,
+      "total_processes": 2,
+      "total_terminated_processes": 0,
+      "total_user_100ns": 4531250
+    },
+    "job_memory": {
+      "peak_job_memory_used_bytes": 21897216,
+      "peak_process_memory_used_bytes": 20656128
+    },
+    "limits": {
+      "committed_bytes": 536870912,
+      "cpu_seconds": 15,
+      "log_bytes": 65536,
+      "wall_seconds": 110
+    },
+    "log": {
+      "bytes": 49,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\lightglue-acquisition-1\\worker.log",
+      "sha256": "c021e737fbefe5cc45a8924c0ebdf608ed180cb148ae2a9594151f4b9c2ae7a2"
+    },
+    "log_bytes": 49,
+    "pipe_eof_observed": true,
+    "post_exit_drain": {
+      "completed": true,
+      "ended_wall_seconds": 2.7809999999990396,
+      "initial_accounting": {
+        "active_processes": 0,
+        "total_cpu_100ns": 12343750,
+        "total_kernel_100ns": 7812500,
+        "total_page_fault_count": 147568,
+        "total_processes": 2,
+        "total_terminated_processes": 0,
+        "total_user_100ns": 4531250
+      },
+      "last_accounting": {
+        "active_processes": 0,
+        "total_cpu_100ns": 12343750,
+        "total_kernel_100ns": 7812500,
+        "total_page_fault_count": 147568,
+        "total_processes": 2,
+        "total_terminated_processes": 0,
+        "total_user_100ns": 4531250
+      },
+      "observation_count": 1,
+      "observations": [
+        {
+          "accounting": {
+            "active_processes": 0,
+            "total_cpu_100ns": 12343750,
+            "total_kernel_100ns": 7812500,
+            "total_page_fault_count": 147568,
+            "total_processes": 2,
+            "total_terminated_processes": 0,
+            "total_user_100ns": 4531250
+          },
+          "wall_seconds": 2.7809999999990396
+        }
+      ],
+      "started_wall_seconds": 2.7809999999990396
+    },
+    "scope": "owned job tree; committed memory, observed user+kernel CPU; not RSS or a timing benchmark",
+    "terminal_job_accounting": true,
+    "termination": {
+      "attempted": false,
+      "before_accounting": null,
+      "succeeded": false
+    },
+    "wall_seconds": 2.7809999999990396
+  },
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-B",
+    "-X",
+    "faulthandler",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\lightglue-acquisition-run.py",
+    "--plan",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\lightglue-acquisition-plan-1.json",
+    "--sha256",
+    "0302f5d4f963e734ee2f2d7d13841e06640e86e736ab47ed2fa1d469817af52d",
+    "--output",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\lightglue-acquisition-1"
+  ],
+  "errors": [],
+  "final_tail_allowance": {
+    "cpu_seconds": 2,
+    "wall_seconds": 5
+  },
+  "image_payloads_opened": 0,
+  "inventory": [
+    {
+      "bytes": 671,
+      "path": "experiments/m193c-output-grid/lightglue-acquisition-1/attempt-0-final.json",
+      "sha256": "39e376bb159176ed457374f0347b7cf64986fc70e148422d6cc63624073db14a"
+    },
+    {
+      "bytes": 237,
+      "path": "experiments/m193c-output-grid/lightglue-acquisition-1/attempt-0-start.json",
+      "sha256": "0cfc7db25a7f50b61eb51bc249d08072fcf97c41a480d10d6294862b9277942a"
+    },
+    {
+      "bytes": 665,
+      "path": "experiments/m193c-output-grid/lightglue-acquisition-1/attempt-1-final.json",
+      "sha256": "5e3428db4ab88d4ee81bb00d523331e6bac1f63236f46d12812de9416c042c9a"
+    },
+    {
+      "bytes": 243,
+      "path": "experiments/m193c-output-grid/lightglue-acquisition-1/attempt-1-start.json",
+      "sha256": "042627d8c86469e78d7d53728c363bfab1485ba945588c3a8688f6a382648c00"
+    },
+    {
+      "bytes": 640,
+      "path": "experiments/m193c-output-grid/lightglue-acquisition-1/attempt-2-final.json",
+      "sha256": "77a606b54acbe3ee778bb476456f8b5d2c35da21171e180ee15a1cad57f68f15"
+    },
+    {
+      "bytes": 222,
+      "path": "experiments/m193c-output-grid/lightglue-acquisition-1/attempt-2-start.json",
+      "sha256": "bf2b58a6adbd025dc500a038cf151577ac4a5f13894398b1ee22a33db31fc391"
+    },
+    {
+      "bytes": 641,
+      "path": "experiments/m193c-output-grid/lightglue-acquisition-1/attempt-3-final.json",
+      "sha256": "a566562e1b68597fe1a0d7730b63b26598e4e36c2e316a6a6326f1f8b09d9d88"
+    },
+    {
+      "bytes": 223,
+      "path": "experiments/m193c-output-grid/lightglue-acquisition-1/attempt-3-start.json",
+      "sha256": "9c4a177339cf5fe5588350dc74bec9b51e5a1d04eb4eed8c4aa46cb7219deb05"
+    },
+    {
+      "bytes": 2526,
+      "path": "experiments/m193c-output-grid/lightglue-acquisition-1/attempt-4-final.json",
+      "sha256": "556155b5fd355e6e5d53828815001c6e4ddafc6c5b152d28753e27a5e5984041"
+    },
+    {
+      "bytes": 209,
+      "path": "experiments/m193c-output-grid/lightglue-acquisition-1/attempt-4-start.json",
+      "sha256": "e50ae38ed5370483359deb9478bb43e740ae74df72e5010bed5942f91a2222ce"
+    },
+    {
+      "bytes": 636,
+      "path": "experiments/m193c-output-grid/lightglue-acquisition-1/controls.json",
+      "sha256": "4ba6cdda64cb0cc7754b112440fdad8b44908e1ff20d4ae77d3ba8684bfa5229"
+    },
+    {
+      "bytes": 11340,
+      "path": "experiments/m193c-output-grid/lightglue-acquisition-1/license.txt",
+      "sha256": "0e6031ed3e62dc91dc8b1c8f240abd200b1083f60773362e64e339fe01d1bf18"
+    },
+    {
+      "bytes": 26417,
+      "path": "experiments/m193c-output-grid/lightglue-acquisition-1/lightglue.py",
+      "sha256": "dcb75b9cad1985c5e7a537c512d4318d47fbcc99df75b39a513de60e027c039f"
+    },
+    {
+      "bytes": 10217,
+      "path": "experiments/m193c-output-grid/lightglue-acquisition-1/readme.md",
+      "sha256": "19dbb3380634bde27d76d6dc0dc6167432a3d2d43082a8653311cbfeee972d43"
+    },
+    {
+      "bytes": 47632573,
+      "path": "experiments/m193c-output-grid/lightglue-acquisition-1/sift-lightglue.pth",
+      "sha256": "5b52b8d9982d43532dc042606b346bb9594c9f5a4bd6f64362c63866287b4ac0"
+    },
+    {
+      "bytes": 8194,
+      "path": "experiments/m193c-output-grid/lightglue-acquisition-1/sift.py",
+      "sha256": "9fa24851ff25b6f09cb06fa62aed1d07fa9cb6aa340c79d6467b3bdfdd4508cd"
+    },
+    {
+      "bytes": 1725,
+      "path": "experiments/m193c-output-grid/lightglue-acquisition-1/worker-result.json",
+      "sha256": "c4dec40f8db546f18c549a70a84779cc90bc8eaa85d852c8f44248f63ff56e45"
+    },
+    {
+      "bytes": 49,
+      "path": "experiments/m193c-output-grid/lightglue-acquisition-1/worker.log",
+      "sha256": "c021e737fbefe5cc45a8924c0ebdf608ed180cb148ae2a9594151f4b9c2ae7a2"
+    }
+  ],
+  "metadata_accounting": {
+    "final_receipt_reserve": 262144,
+    "future_audit_reserve": 200704,
+    "held": [
+      {
+        "bytes": 6893,
+        "path": "experiments/m193c-output-grid/lightglue-acquisition-preregister.md",
+        "sha256": "9cc108d4714f0d6f2e8addbbaf7c417535ccfaed9a3525d007b01c486467c8b8"
+      },
+      {
+        "bytes": 22326,
+        "path": "experiments/m193c-output-grid/lightglue-acquisition-run.py",
+        "sha256": "dab882788ebfae4759981c0784251dfac49d8721db024808e19b0f65ea4a6215"
+      },
+      {
+        "bytes": 29544,
+        "path": "experiments/m193c-output-grid/work/independent-lightglue-acquisition-audit.py",
+        "sha256": "e2c00f07481aa56437bc34c10f8adeb41f039989e8bb66b9371cf51d95651d2d"
+      },
+      {
+        "bytes": 6741,
+        "path": "experiments/m193c-output-grid/work/independent-lightglue-acquisition-source-review.md",
+        "sha256": "6a7814bab168cb25c875e8207df6b61bc1e555b00a94d59a7f8605866a69eee2"
+      }
+    ],
+    "held_bytes": 108249,
+    "outer_receipt_reserve": 8192,
+    "plan_bytes": 42745
+  },
+  "model_imports": 0,
+  "observed_work_plus_final_receipt_reserve": {
+    "cpu_seconds": 3.828125,
+    "file_bytes": 48276717,
+    "metadata_bytes": 644144,
+    "wall_seconds": 8.39100000000144
+  },
+  "plan": {
+    "bytes": 42745,
+    "path": "experiments/m193c-output-grid/lightglue-acquisition-plan-1.json",
+    "sha256": "0302f5d4f963e734ee2f2d7d13841e06640e86e736ab47ed2fa1d469817af52d"
+  },
+  "prior_work": {
+    "cpu_seconds": 639.9375,
+    "file_bytes": 3969447612,
+    "metadata_bytes": 44246966,
+    "wall_seconds": 757.919086
+  },
+  "reservation": {
+    "cpu_seconds": 20,
+    "file_bytes": 67108864,
+    "metadata_bytes": 1048576,
+    "wall_seconds": 120
+  },
+  "schema": "m193c-lightglue-acquisition-v1",
+  "source": {
+    "bytes": 22326,
+    "path": "experiments/m193c-output-grid/lightglue-acquisition-run.py",
+    "sha256": "dab882788ebfae4759981c0784251dfac49d8721db024808e19b0f65ea4a6215"
+  },
+  "source_commit": "eb42fee2d71449efb0aa5c10549752b5d75384d8",
+  "status": "COMPLETE_SOURCE_AND_CHECKPOINT_ACQUISITION_ONLY",
+  "timing": {
+    "cpu_seconds": 1.828125,
+    "wall_seconds": 3.3910000000014406
+  },
+  "timing_scope": "Through pre-result sample, plus separately reserved final tail; outer receipt and independent audit must verify tail.",
+  "upstream_checkpoint_digest": null
+}
