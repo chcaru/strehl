@@ -1,0 +1,1 @@
+{"evidence":{"artifact":{"bytes":2637,"path":"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\real-accounting-repair-2\\worker\\metadata\\codec\\declared-offset.json","sha256":"96dc7c3ea8c4c807c6f68a66fa163c59e2fcbb17bdbfd7cdd3168489f8e75f87"},"error":"SEGMENT_OFFSET","expected_error":"SEGMENT_OFFSET"},"id":"declared-offset","passed":true}

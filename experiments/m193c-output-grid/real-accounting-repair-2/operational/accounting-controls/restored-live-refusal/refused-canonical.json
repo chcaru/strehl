@@ -1,0 +1,13 @@
+{
+  "child_terminal": {
+    "bytes": 16384,
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\real-accounting-repair-2\\operational\\accounting-controls\\restored-live-refusal\\child-terminal.json",
+    "sha256": "b14c49e2009bdf36fc9970bf114bcd2e14a95bec50cecda1b42359fa64aa1912"
+  },
+  "error": "local cap",
+  "id": "restored-live-refusal",
+  "measurement_scope": "INJECTED_ACCOUNTING_SEAM",
+  "schema": "m193c-accounting-control-v1",
+  "status": "REFUSED"
+}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     

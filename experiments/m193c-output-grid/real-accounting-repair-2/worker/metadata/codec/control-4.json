@@ -1,0 +1,1 @@
+{"evidence":{"artifact":{"bytes":2637,"path":"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\real-accounting-repair-2\\worker\\metadata\\codec\\index-range.json","sha256":"77ba8593311630d1d191f10ca21ec4164ebce9717e8e25f97d8a629d2b8abc2e"},"error":"INDEX_RANGE","expected_error":"INDEX_RANGE"},"id":"index-range","passed":true}

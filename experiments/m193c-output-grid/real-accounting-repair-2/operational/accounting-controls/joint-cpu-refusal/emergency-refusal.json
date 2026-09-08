@@ -1,0 +1,14 @@
+{
+  "child_terminal": {
+    "bytes": 16384,
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\real-accounting-repair-2\\operational\\accounting-controls\\joint-cpu-refusal\\child-terminal.json",
+    "sha256": "f45af32f325f651fc34b7c03e72c9780f0481d947275235dad99c6dea6e41c6b"
+  },
+  "error": "local cap",
+  "id": "joint-cpu-refusal",
+  "measurement_scope": "INJECTED_ACCOUNTING_SEAM",
+  "publication_phase": "BOUND_RECOVERY_REFUSAL",
+  "schema": "m193c-accounting-control-v1",
+  "status": "REFUSED"
+}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            

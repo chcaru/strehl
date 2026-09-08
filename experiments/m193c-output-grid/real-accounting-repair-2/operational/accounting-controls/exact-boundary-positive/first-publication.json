@@ -1,0 +1,13 @@
+{
+  "child_terminal": {
+    "bytes": 16384,
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\real-accounting-repair-2\\operational\\accounting-controls\\exact-boundary-positive\\child-terminal.json",
+    "sha256": "1fc1f09504b7966b172e06f43d0bebe99081d045fdd47b238f6a0ea31eeeb160"
+  },
+  "error": null,
+  "id": "exact-boundary-positive",
+  "measurement_scope": "INJECTED_ACCOUNTING_SEAM",
+  "schema": "m193c-accounting-control-v1",
+  "status": "COMPLETE_CONTROL_ONLY"
+}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
