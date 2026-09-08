@@ -1,0 +1,26 @@
+{
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-B",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\work\\independent-sift-lightglue-real-prefix-audit.py",
+    "--source-sha256",
+    "57b079abeb92b95b4880c002a15e67fc316c3b0b4fc692832b659ef1e2f9a855",
+    "--ledger-sha256",
+    "1bde5b13dd84e8415978233acf40fdc6076287887ae204578185346d2515c191",
+    "--plan-sha256",
+    "63de01efe856d3760ea3b0b5d15ac056a3ec2e868fdd74eb908e3df616174184",
+    "--result-sha256",
+    "bd9b645c7501660a573770c3d0a6571fefa0085b65325b29cf316270c1254aa5",
+    "--outer-sha256",
+    "2390ebad5ede3cd650dfe1d6a33d4ba41dbf6fcffcb854a60074f83f2cd91908",
+    "--console-sha256",
+    "e374764c8e3cbff6efb3581308de4e3c3dd72029a322ece59d3fb11cc9443db0",
+    "--exit-sha256",
+    "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+  ],
+  "exit_code": 0,
+  "elapsed_wall_seconds": 0.4128223000006983,
+  "stdout_bytes": 11333,
+  "stderr_bytes": 0,
+  "source_freeze": "0c168ec060ad2ff622b25804a7ecf47ca98ddca4"
+}
