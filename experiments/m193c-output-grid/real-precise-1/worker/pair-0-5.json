@@ -1,0 +1,2050 @@
+{
+  "native_baseline": {
+    "bytes": 6380,
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-1\\worker\\pair-0-5.json",
+    "sha256": "52d57c0cd1579711e532caff730e653bf17333cbd9a9e9de0a4fc1600cb3f11f"
+  },
+  "outcome": {
+    "error": {
+      "code": "UNMEASURED_INPUT_REGISTRATION_INADEQUATE",
+      "message": "UNMEASURED_INPUT_REGISTRATION_INADEQUATE: no majority landmark consensus",
+      "traceback": "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\direct-pair-run.py\", line 161, in observe_pair\n    transform,metrics,guard=v1.register_to_reference(ref,src)\n                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M193-cover-overlap\\reference.py\", line 549, in register_to_reference\n    transform, calibration_inliers = choose_similarity(calibration)\n                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M193-cover-overlap\\reference.py\", line 503, in choose_similarity\n    require(\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M193-cover-overlap\\reference.py\", line 46, in require\n    raise ContractError(code, message)\nm193b_frozen_reference.ContractError: UNMEASURED_INPUT_REGISTRATION_INADEQUATE: no majority landmark consensus\n",
+      "type": "ContractError"
+    },
+    "guard": null,
+    "heldout_bbox_q8": null,
+    "landmarks": [
+      {
+        "digest": "0844392f05e3ce35f3cdc8de74ceea613797f516a5d972bda73f5b277702e58d",
+        "inlier": null,
+        "reference_q8": [
+          942904,
+          955800
+        ],
+        "source_q8": [
+          943520,
+          975432
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "0ea525d91b7b88237799e5a784ce5c7b7bd8f8e988de787d11033fddcbe56c8c",
+        "inlier": null,
+        "reference_q8": [
+          839144,
+          932864
+        ],
+        "source_q8": [
+          836544,
+          951848
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "0edd9099f3ae7ae5c66062b0e8d19f10505fa287aacc2f3aeb7c7bffdcc12e00",
+        "inlier": null,
+        "reference_q8": [
+          143952,
+          721136
+        ],
+        "source_q8": [
+          133784,
+          758944
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "0fbbbc11e5e6673c0d28adc0067a42c02f69a2eb0c8c7b07f3dff4ab4332524a",
+        "inlier": null,
+        "reference_q8": [
+          660040,
+          309928
+        ],
+        "source_q8": [
+          647680,
+          293360
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "15b01a773ca1acd78d79df2b04a3b6286dcc55eb09896174eb46e841eddbe1fd",
+        "inlier": null,
+        "reference_q8": [
+          1029968,
+          300904
+        ],
+        "source_q8": [
+          1047384,
+          286512
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "17b886584cfe368fe37e6867bcb42a7a5f3e1bf44b6edb45bd772f6f318251ca",
+        "inlier": null,
+        "reference_q8": [
+          1002024,
+          874592
+        ],
+        "source_q8": [
+          1007000,
+          889728
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "1e517c3edf45665c61407abe5d784b0da8429a362efe2037945f40449dd9b24a",
+        "inlier": null,
+        "reference_q8": [
+          1003104,
+          950616
+        ],
+        "source_q8": [
+          1006952,
+          971136
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "235d396a82657c216ca5771cee75e85293df8863e0be639d9975a9b0433aae26",
+        "inlier": null,
+        "reference_q8": [
+          489704,
+          870944
+        ],
+        "source_q8": [
+          462520,
+          880984
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "263ab20f3ae9698147c5d9e55caba074ea13273e401f9fd916d12dc2b3c68787",
+        "inlier": null,
+        "reference_q8": [
+          804256,
+          460128
+        ],
+        "source_q8": [
+          797928,
+          455888
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "283e094173b7f708df1fa98522f11b3c599a3454e0b15a2a80b5320ccb1bb53e",
+        "inlier": null,
+        "reference_q8": [
+          325528,
+          481816
+        ],
+        "source_q8": [
+          288944,
+          476216
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "29b63db3a4f3e646f421669c892919e07c70de2cedb4de04b9da0ed7893a1bdc",
+        "inlier": null,
+        "reference_q8": [
+          935080,
+          1115952
+        ],
+        "source_q8": [
+          936568,
+          1139696
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "2db8fcff1be2517db3d04090eebf1be05384ab64b31f55169936eab74b65cf63",
+        "inlier": null,
+        "reference_q8": [
+          153360,
+          1027176
+        ],
+        "source_q8": [
+          612816,
+          199640
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "365db91f8d3d17d66f2a49999d2308cbc7247b945efdabea94d04906684d8a84",
+        "inlier": null,
+        "reference_q8": [
+          1094240,
+          588888
+        ],
+        "source_q8": [
+          1105848,
+          589184
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "378d5428132743caa8e5c556cf331400812a3adf96a1749067173f100f96ff69",
+        "inlier": null,
+        "reference_q8": [
+          549824,
+          1039136
+        ],
+        "source_q8": [
+          439088,
+          677904
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "379a0a44c89bf5ced32471463edab92ef4c18de49b7d9517198dd640ef9f380c",
+        "inlier": null,
+        "reference_q8": [
+          714720,
+          1141464
+        ],
+        "source_q8": [
+          501224,
+          338872
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "4032936c063855ce9baedc0e7d863fe0d31c82f95bb619a5efa71b3e09204157",
+        "inlier": null,
+        "reference_q8": [
+          1000216,
+          715336
+        ],
+        "source_q8": [
+          1002008,
+          723872
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "4615f73d04c90bcba2ece90e5b9e80dabfcbd57dc777385327c2cc2bbd203170",
+        "inlier": null,
+        "reference_q8": [
+          1639672,
+          60648
+        ],
+        "source_q8": [
+          1639672,
+          60632
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "466a72d20bf5d58f36952ad07c4f3a7e06997ead01b9ebb40fe36fda2bfd0cd3",
+        "inlier": null,
+        "reference_q8": [
+          714720,
+          1141464
+        ],
+        "source_q8": [
+          501224,
+          338872
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "474823fdb81d3dff2b5456a91a0f6cec77f8c2237003316b3a605a35daa3318e",
+        "inlier": null,
+        "reference_q8": [
+          1302880,
+          681464
+        ],
+        "source_q8": [
+          1320264,
+          686080
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "4851fb9bade651e994fc755beccb6c98660cdf47a376f76ae773e62a2a65160c",
+        "inlier": null,
+        "reference_q8": [
+          118400,
+          910408
+        ],
+        "source_q8": [
+          479264,
+          660088
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "4bf40b415fc82c2fa4db781af34ac0d2c388c32e2f7b159251c0641d1c9ecfa5",
+        "inlier": null,
+        "reference_q8": [
+          1135000,
+          458720
+        ],
+        "source_q8": [
+          1147048,
+          451104
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "4c0f3b0ff4386a4056b9becda28a7721d4d8677a30ad279f9db6fd9e42d6f5ca",
+        "inlier": null,
+        "reference_q8": [
+          493160,
+          456256
+        ],
+        "source_q8": [
+          469440,
+          451456
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "5df758dd6ea2d3b73eccc0064c131f563af76661d4e053867cae32e4e0d276be",
+        "inlier": null,
+        "reference_q8": [
+          975744,
+          417648
+        ],
+        "source_q8": [
+          978800,
+          410632
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "61d3ead627a1bee4486802e42864776a3993f92c3e0de39a3c77fb08b3db2e2f",
+        "inlier": null,
+        "reference_q8": [
+          1307488,
+          607040
+        ],
+        "source_q8": [
+          1327208,
+          611120
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "62cb8f503463689974a99df5bcdbf2dac2034dfa137f4f5617a30806970d6ac1",
+        "inlier": null,
+        "reference_q8": [
+          600008,
+          1032960
+        ],
+        "source_q8": [
+          714008,
+          444704
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "652ee83f23086fcba0d1b8d44746ec27b9105d4c7b7a0e11ac5e5c5dc788cff1",
+        "inlier": null,
+        "reference_q8": [
+          724096,
+          325920
+        ],
+        "source_q8": [
+          576392,
+          659264
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "680174817759da469632a470f334626626f2afc8da3ea09134c2213a33932487",
+        "inlier": null,
+        "reference_q8": [
+          1116520,
+          392656
+        ],
+        "source_q8": [
+          1127400,
+          381984
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "6ad69ec45b840edfda88bbb8c2d9817d54cf1496564c004bd8bfd7eb1da0c59a",
+        "inlier": null,
+        "reference_q8": [
+          820512,
+          680280
+        ],
+        "source_q8": [
+          815456,
+          685848
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "779384f4f5d402fc599b239ee060d4feb8fd6b8176ed4853e9c8d2ce4a50da16",
+        "inlier": null,
+        "reference_q8": [
+          666888,
+          580456
+        ],
+        "source_q8": [
+          654320,
+          574288
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "7c1881ced0b1f2d31dafe0ca8ecd52ebdb332458d67016d9d2b0a14404780c35",
+        "inlier": null,
+        "reference_q8": [
+          888296,
+          308136
+        ],
+        "source_q8": [
+          888520,
+          293184
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "808c1ed9e8a07bf98ccd5f14e7dcacaf3de4f256537910362cc48b7b82da763c",
+        "inlier": null,
+        "reference_q8": [
+          568016,
+          606144
+        ],
+        "source_q8": [
+          545208,
+          604624
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "8768615b5d46c43e2f387ba93eeb3f9e5297684622d1ed126885106a6e1ceba3",
+        "inlier": null,
+        "reference_q8": [
+          976880,
+          684200
+        ],
+        "source_q8": [
+          980816,
+          690288
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "8cdf406e90a822cdf11cddb48ed71a19d6196a515ebac8202f590c1409f9abf2",
+        "inlier": null,
+        "reference_q8": [
+          1193808,
+          707016
+        ],
+        "source_q8": [
+          1208168,
+          714488
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "8d9d1c2df82d08560e0d9ae9494120f4a4433112fe41cc17b39e7169bb7610c3",
+        "inlier": null,
+        "reference_q8": [
+          1205848,
+          422856
+        ],
+        "source_q8": [
+          1222512,
+          413928
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "8fafa1597efb5de0fd3aaabd9c61b3ebfda8ad56c10460a388ff954d6d00b204",
+        "inlier": null,
+        "reference_q8": [
+          497584,
+          672152
+        ],
+        "source_q8": [
+          475688,
+          673392
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "8ff436b4f8490a6687a3d55dda7a015aadb4b56e40792af93110af15302d8bed",
+        "inlier": null,
+        "reference_q8": [
+          1330536,
+          757304
+        ],
+        "source_q8": [
+          1351048,
+          766984
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "92780c7eef8aef52dc8d02663526bcd1f0f1ea0a763ea7bfd2ce70456d429168",
+        "inlier": null,
+        "reference_q8": [
+          1639672,
+          60648
+        ],
+        "source_q8": [
+          1639672,
+          60632
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "aad7d0a0e670cc9b12d7352db225f8d76cdf0a71878336aeceacf712186ad17e",
+        "inlier": null,
+        "reference_q8": [
+          1388640,
+          578800
+        ],
+        "source_q8": [
+          1387848,
+          669088
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "aca8b8e81e02caf5fba19786a13adc75f5db3153a62a1070304d5d1cfe49fa75",
+        "inlier": null,
+        "reference_q8": [
+          971056,
+          998352
+        ],
+        "source_q8": [
+          972312,
+          1020000
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "b0a02d8070d38ffee8358a1f027fab482ccb9a359c67bb8b9addeb457a450ebc",
+        "inlier": null,
+        "reference_q8": [
+          919184,
+          918800
+        ],
+        "source_q8": [
+          920144,
+          937168
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "b3cce3364136a9ffe39c58961fb8276419f21f0e87d6acf64a7d28044b636a16",
+        "inlier": null,
+        "reference_q8": [
+          929592,
+          437912
+        ],
+        "source_q8": [
+          930984,
+          430496
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "b4672a56d241d835793a32fc8951c0ff39c4cb5cca04e290d7908e1e1e9f68fa",
+        "inlier": null,
+        "reference_q8": [
+          855984,
+          526352
+        ],
+        "source_q8": [
+          854024,
+          523904
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "b6937bb69555c1d4a510a6f5b1bf5dc19c8769504eddc9f8d2ba9f67c4c36274",
+        "inlier": null,
+        "reference_q8": [
+          1092392,
+          1075656
+        ],
+        "source_q8": [
+          353496,
+          621304
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "b7b938dda43095ab131919399666f0cd42ccfb49c407e322096c87a8839ed729",
+        "inlier": null,
+        "reference_q8": [
+          1067536,
+          804512
+        ],
+        "source_q8": [
+          1075960,
+          817168
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "bf5a4a221837e6038005f250dd568c5cd12c61bef74c76992dfb0f24aa963f9d",
+        "inlier": null,
+        "reference_q8": [
+          820512,
+          680280
+        ],
+        "source_q8": [
+          815456,
+          685848
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "bfba63c00bcb75b995682886490343ec5f0a3cf4e73fa60c23f89e90f618947a",
+        "inlier": null,
+        "reference_q8": [
+          1120480,
+          525440
+        ],
+        "source_q8": [
+          1130664,
+          524288
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "d6002c6c38822f4318e5cf1355e7f8620dd9eea0bf27ff1819eaf71ad60a1065",
+        "inlier": null,
+        "reference_q8": [
+          1014960,
+          473936
+        ],
+        "source_q8": [
+          1019328,
+          471944
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "dc0e9e32c082d667eebd3290724f9e8651d4eabe7f0d214a822d6676cf9e0424",
+        "inlier": null,
+        "reference_q8": [
+          1639672,
+          60648
+        ],
+        "source_q8": [
+          1639672,
+          60632
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "de5d8f225dfa66c6cbec3641e35915a1e477de023670bed862f32d2778ff10c4",
+        "inlier": null,
+        "reference_q8": [
+          749456,
+          493728
+        ],
+        "source_q8": [
+          741888,
+          489320
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "e5753f9676aa7ea1b4b653f9550fb9e7e59ccdd3064315acfec065254d8910cd",
+        "inlier": null,
+        "reference_q8": [
+          1240472,
+          516320
+        ],
+        "source_q8": [
+          1258224,
+          513608
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "e7ddf3a60d94383fb67a1c1bbf261d483b3f34a85c37d1ea4401583d8e92faeb",
+        "inlier": null,
+        "reference_q8": [
+          1229968,
+          589608
+        ],
+        "source_q8": [
+          1248472,
+          592056
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "ebf7c9c9b19f7c5c2a0f2c667d3cd3ba9f7feef59637e61b180cdce606eecc2f",
+        "inlier": null,
+        "reference_q8": [
+          1178984,
+          742912
+        ],
+        "source_q8": [
+          1192112,
+          750968
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "edb3f5ec2b7a797f1d7ad3f0e394440752b4d47fbfeea7e85b652df6a6797cbb",
+        "inlier": null,
+        "reference_q8": [
+          1235768,
+          443192
+        ],
+        "source_q8": [
+          1255192,
+          437336
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "ee0d3aafa19c5fe7cdd8db72e0b6194b62df18af94ea6c7accac39a97609766f",
+        "inlier": null,
+        "reference_q8": [
+          1170056,
+          771688
+        ],
+        "source_q8": [
+          1185040,
+          782688
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "f1d8c7b28174dad6a5649a909da721fac026b4240dddb61006d8413e5aa73f52",
+        "inlier": null,
+        "reference_q8": [
+          937584,
+          851648
+        ],
+        "source_q8": [
+          939552,
+          866872
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "f2b06abfad9d88f8e0f441b29851c89d0994fbb75a66230f3730ed5a3adcba7b",
+        "inlier": null,
+        "reference_q8": [
+          895560,
+          616944
+        ],
+        "source_q8": [
+          526952,
+          363728
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "f8444660ab65af32a77f36295ee602171cfdc7c17049b5ce14c6a2c4572ce26b",
+        "inlier": null,
+        "reference_q8": [
+          337288,
+          611872
+        ],
+        "source_q8": [
+          311672,
+          619376
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "f92a0747e6750180ee6d53bc122405668d78b9666fcdd08ba7f837a30590a59e",
+        "inlier": null,
+        "reference_q8": [
+          736296,
+          648792
+        ],
+        "source_q8": [
+          726520,
+          650880
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "fa3bd8d3cd3d51b91ff6987a24a3ac93c0be8388b57a7845c8c6ca9df0052867",
+        "inlier": null,
+        "reference_q8": [
+          1246096,
+          881608
+        ],
+        "source_q8": [
+          1259744,
+          896216
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "fa5e66cb01a0ed451cb5d0e2f8ad9ccc5fae76868cf5268295bbce8896de30c3",
+        "inlier": null,
+        "reference_q8": [
+          1002024,
+          874592
+        ],
+        "source_q8": [
+          1007000,
+          889728
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "fb1640026ec861c28a2ba68655d046a8d53727c324e03e5adc41080191f08781",
+        "inlier": null,
+        "reference_q8": [
+          1135000,
+          458720
+        ],
+        "source_q8": [
+          1147048,
+          451104
+        ],
+        "split": "calibration"
+      },
+      {
+        "digest": "fb4c6c244b07ac6f28bb74b4452f494dd56ed5d0f0f6c7bdccf04079ce1fd3fb",
+        "inlier": null,
+        "reference_q8": [
+          641976,
+          651392
+        ],
+        "source_q8": [
+          633144,
+          654944
+        ],
+        "split": "holdout"
+      },
+      {
+        "digest": "fdbe30520ad1737fbf5d4ea6ec54d4d3d987e043ec465ac014001f4fa12a2edf",
+        "inlier": null,
+        "reference_q8": [
+          765112,
+          326072
+        ],
+        "source_q8": [
+          757952,
+          313264
+        ],
+        "split": "calibration"
+      }
+    ],
+    "metrics": null,
+    "qualification": {
+      "coordinate_gauge": "native pixel centres; q_native=8*q_coarse+896",
+      "coordinate_lattice_step_q8": 8,
+      "guard_status": "UNQUALIFIED_FOR_COARSE_LATTICE",
+      "inherited_quantization_guard_q8": 1,
+      "scope": "Diagnostic direct fit only; no support, overlap, placement or quality admission"
+    },
+    "site_evidence": {
+      "descriptor_match_count": 63,
+      "exact_endpoint_group_layout": "[coordinate_q8, landmark_ordinals]; split comes from saved landmark row",
+      "exact_endpoint_groups": {
+        "reference_q8": [
+          [
+            [
+              118400,
+              910408
+            ],
+            [
+              19
+            ]
+          ],
+          [
+            [
+              143952,
+              721136
+            ],
+            [
+              2
+            ]
+          ],
+          [
+            [
+              153360,
+              1027176
+            ],
+            [
+              11
+            ]
+          ],
+          [
+            [
+              325528,
+              481816
+            ],
+            [
+              9
+            ]
+          ],
+          [
+            [
+              337288,
+              611872
+            ],
+            [
+              56
+            ]
+          ],
+          [
+            [
+              489704,
+              870944
+            ],
+            [
+              7
+            ]
+          ],
+          [
+            [
+              493160,
+              456256
+            ],
+            [
+              21
+            ]
+          ],
+          [
+            [
+              497584,
+              672152
+            ],
+            [
+              34
+            ]
+          ],
+          [
+            [
+              549824,
+              1039136
+            ],
+            [
+              13
+            ]
+          ],
+          [
+            [
+              568016,
+              606144
+            ],
+            [
+              30
+            ]
+          ],
+          [
+            [
+              600008,
+              1032960
+            ],
+            [
+              24
+            ]
+          ],
+          [
+            [
+              641976,
+              651392
+            ],
+            [
+              61
+            ]
+          ],
+          [
+            [
+              660040,
+              309928
+            ],
+            [
+              3
+            ]
+          ],
+          [
+            [
+              666888,
+              580456
+            ],
+            [
+              28
+            ]
+          ],
+          [
+            [
+              714720,
+              1141464
+            ],
+            [
+              14,
+              17
+            ]
+          ],
+          [
+            [
+              724096,
+              325920
+            ],
+            [
+              25
+            ]
+          ],
+          [
+            [
+              736296,
+              648792
+            ],
+            [
+              57
+            ]
+          ],
+          [
+            [
+              749456,
+              493728
+            ],
+            [
+              48
+            ]
+          ],
+          [
+            [
+              765112,
+              326072
+            ],
+            [
+              62
+            ]
+          ],
+          [
+            [
+              804256,
+              460128
+            ],
+            [
+              8
+            ]
+          ],
+          [
+            [
+              820512,
+              680280
+            ],
+            [
+              27,
+              44
+            ]
+          ],
+          [
+            [
+              839144,
+              932864
+            ],
+            [
+              1
+            ]
+          ],
+          [
+            [
+              855984,
+              526352
+            ],
+            [
+              41
+            ]
+          ],
+          [
+            [
+              888296,
+              308136
+            ],
+            [
+              29
+            ]
+          ],
+          [
+            [
+              895560,
+              616944
+            ],
+            [
+              55
+            ]
+          ],
+          [
+            [
+              919184,
+              918800
+            ],
+            [
+              39
+            ]
+          ],
+          [
+            [
+              929592,
+              437912
+            ],
+            [
+              40
+            ]
+          ],
+          [
+            [
+              935080,
+              1115952
+            ],
+            [
+              10
+            ]
+          ],
+          [
+            [
+              937584,
+              851648
+            ],
+            [
+              54
+            ]
+          ],
+          [
+            [
+              942904,
+              955800
+            ],
+            [
+              0
+            ]
+          ],
+          [
+            [
+              971056,
+              998352
+            ],
+            [
+              38
+            ]
+          ],
+          [
+            [
+              975744,
+              417648
+            ],
+            [
+              22
+            ]
+          ],
+          [
+            [
+              976880,
+              684200
+            ],
+            [
+              31
+            ]
+          ],
+          [
+            [
+              1000216,
+              715336
+            ],
+            [
+              15
+            ]
+          ],
+          [
+            [
+              1002024,
+              874592
+            ],
+            [
+              5,
+              59
+            ]
+          ],
+          [
+            [
+              1003104,
+              950616
+            ],
+            [
+              6
+            ]
+          ],
+          [
+            [
+              1014960,
+              473936
+            ],
+            [
+              46
+            ]
+          ],
+          [
+            [
+              1029968,
+              300904
+            ],
+            [
+              4
+            ]
+          ],
+          [
+            [
+              1067536,
+              804512
+            ],
+            [
+              43
+            ]
+          ],
+          [
+            [
+              1092392,
+              1075656
+            ],
+            [
+              42
+            ]
+          ],
+          [
+            [
+              1094240,
+              588888
+            ],
+            [
+              12
+            ]
+          ],
+          [
+            [
+              1116520,
+              392656
+            ],
+            [
+              26
+            ]
+          ],
+          [
+            [
+              1120480,
+              525440
+            ],
+            [
+              45
+            ]
+          ],
+          [
+            [
+              1135000,
+              458720
+            ],
+            [
+              20,
+              60
+            ]
+          ],
+          [
+            [
+              1170056,
+              771688
+            ],
+            [
+              53
+            ]
+          ],
+          [
+            [
+              1178984,
+              742912
+            ],
+            [
+              51
+            ]
+          ],
+          [
+            [
+              1193808,
+              707016
+            ],
+            [
+              32
+            ]
+          ],
+          [
+            [
+              1205848,
+              422856
+            ],
+            [
+              33
+            ]
+          ],
+          [
+            [
+              1229968,
+              589608
+            ],
+            [
+              50
+            ]
+          ],
+          [
+            [
+              1235768,
+              443192
+            ],
+            [
+              52
+            ]
+          ],
+          [
+            [
+              1240472,
+              516320
+            ],
+            [
+              49
+            ]
+          ],
+          [
+            [
+              1246096,
+              881608
+            ],
+            [
+              58
+            ]
+          ],
+          [
+            [
+              1302880,
+              681464
+            ],
+            [
+              18
+            ]
+          ],
+          [
+            [
+              1307488,
+              607040
+            ],
+            [
+              23
+            ]
+          ],
+          [
+            [
+              1330536,
+              757304
+            ],
+            [
+              35
+            ]
+          ],
+          [
+            [
+              1388640,
+              578800
+            ],
+            [
+              37
+            ]
+          ],
+          [
+            [
+              1639672,
+              60648
+            ],
+            [
+              16,
+              36,
+              47
+            ]
+          ]
+        ],
+        "source_q8": [
+          [
+            [
+              133784,
+              758944
+            ],
+            [
+              2
+            ]
+          ],
+          [
+            [
+              288944,
+              476216
+            ],
+            [
+              9
+            ]
+          ],
+          [
+            [
+              311672,
+              619376
+            ],
+            [
+              56
+            ]
+          ],
+          [
+            [
+              353496,
+              621304
+            ],
+            [
+              42
+            ]
+          ],
+          [
+            [
+              439088,
+              677904
+            ],
+            [
+              13
+            ]
+          ],
+          [
+            [
+              462520,
+              880984
+            ],
+            [
+              7
+            ]
+          ],
+          [
+            [
+              469440,
+              451456
+            ],
+            [
+              21
+            ]
+          ],
+          [
+            [
+              475688,
+              673392
+            ],
+            [
+              34
+            ]
+          ],
+          [
+            [
+              479264,
+              660088
+            ],
+            [
+              19
+            ]
+          ],
+          [
+            [
+              501224,
+              338872
+            ],
+            [
+              14,
+              17
+            ]
+          ],
+          [
+            [
+              526952,
+              363728
+            ],
+            [
+              55
+            ]
+          ],
+          [
+            [
+              545208,
+              604624
+            ],
+            [
+              30
+            ]
+          ],
+          [
+            [
+              576392,
+              659264
+            ],
+            [
+              25
+            ]
+          ],
+          [
+            [
+              612816,
+              199640
+            ],
+            [
+              11
+            ]
+          ],
+          [
+            [
+              633144,
+              654944
+            ],
+            [
+              61
+            ]
+          ],
+          [
+            [
+              647680,
+              293360
+            ],
+            [
+              3
+            ]
+          ],
+          [
+            [
+              654320,
+              574288
+            ],
+            [
+              28
+            ]
+          ],
+          [
+            [
+              714008,
+              444704
+            ],
+            [
+              24
+            ]
+          ],
+          [
+            [
+              726520,
+              650880
+            ],
+            [
+              57
+            ]
+          ],
+          [
+            [
+              741888,
+              489320
+            ],
+            [
+              48
+            ]
+          ],
+          [
+            [
+              757952,
+              313264
+            ],
+            [
+              62
+            ]
+          ],
+          [
+            [
+              797928,
+              455888
+            ],
+            [
+              8
+            ]
+          ],
+          [
+            [
+              815456,
+              685848
+            ],
+            [
+              27,
+              44
+            ]
+          ],
+          [
+            [
+              836544,
+              951848
+            ],
+            [
+              1
+            ]
+          ],
+          [
+            [
+              854024,
+              523904
+            ],
+            [
+              41
+            ]
+          ],
+          [
+            [
+              888520,
+              293184
+            ],
+            [
+              29
+            ]
+          ],
+          [
+            [
+              920144,
+              937168
+            ],
+            [
+              39
+            ]
+          ],
+          [
+            [
+              930984,
+              430496
+            ],
+            [
+              40
+            ]
+          ],
+          [
+            [
+              936568,
+              1139696
+            ],
+            [
+              10
+            ]
+          ],
+          [
+            [
+              939552,
+              866872
+            ],
+            [
+              54
+            ]
+          ],
+          [
+            [
+              943520,
+              975432
+            ],
+            [
+              0
+            ]
+          ],
+          [
+            [
+              972312,
+              1020000
+            ],
+            [
+              38
+            ]
+          ],
+          [
+            [
+              978800,
+              410632
+            ],
+            [
+              22
+            ]
+          ],
+          [
+            [
+              980816,
+              690288
+            ],
+            [
+              31
+            ]
+          ],
+          [
+            [
+              1002008,
+              723872
+            ],
+            [
+              15
+            ]
+          ],
+          [
+            [
+              1006952,
+              971136
+            ],
+            [
+              6
+            ]
+          ],
+          [
+            [
+              1007000,
+              889728
+            ],
+            [
+              5,
+              59
+            ]
+          ],
+          [
+            [
+              1019328,
+              471944
+            ],
+            [
+              46
+            ]
+          ],
+          [
+            [
+              1047384,
+              286512
+            ],
+            [
+              4
+            ]
+          ],
+          [
+            [
+              1075960,
+              817168
+            ],
+            [
+              43
+            ]
+          ],
+          [
+            [
+              1105848,
+              589184
+            ],
+            [
+              12
+            ]
+          ],
+          [
+            [
+              1127400,
+              381984
+            ],
+            [
+              26
+            ]
+          ],
+          [
+            [
+              1130664,
+              524288
+            ],
+            [
+              45
+            ]
+          ],
+          [
+            [
+              1147048,
+              451104
+            ],
+            [
+              20,
+              60
+            ]
+          ],
+          [
+            [
+              1185040,
+              782688
+            ],
+            [
+              53
+            ]
+          ],
+          [
+            [
+              1192112,
+              750968
+            ],
+            [
+              51
+            ]
+          ],
+          [
+            [
+              1208168,
+              714488
+            ],
+            [
+              32
+            ]
+          ],
+          [
+            [
+              1222512,
+              413928
+            ],
+            [
+              33
+            ]
+          ],
+          [
+            [
+              1248472,
+              592056
+            ],
+            [
+              50
+            ]
+          ],
+          [
+            [
+              1255192,
+              437336
+            ],
+            [
+              52
+            ]
+          ],
+          [
+            [
+              1258224,
+              513608
+            ],
+            [
+              49
+            ]
+          ],
+          [
+            [
+              1259744,
+              896216
+            ],
+            [
+              58
+            ]
+          ],
+          [
+            [
+              1320264,
+              686080
+            ],
+            [
+              18
+            ]
+          ],
+          [
+            [
+              1327208,
+              611120
+            ],
+            [
+              23
+            ]
+          ],
+          [
+            [
+              1351048,
+              766984
+            ],
+            [
+              35
+            ]
+          ],
+          [
+            [
+              1387848,
+              669088
+            ],
+            [
+              37
+            ]
+          ],
+          [
+            [
+              1639672,
+              60632
+            ],
+            [
+              16,
+              36,
+              47
+            ]
+          ]
+        ]
+      },
+      "exact_joint_groups": 57,
+      "repeated_joint_groups": [
+        {
+          "ordinals": [
+            14,
+            17
+          ],
+          "reference_q8": [
+            714720,
+            1141464
+          ],
+          "source_q8": [
+            501224,
+            338872
+          ],
+          "split_membership": [
+            "calibration",
+            "holdout"
+          ]
+        },
+        {
+          "ordinals": [
+            27,
+            44
+          ],
+          "reference_q8": [
+            820512,
+            680280
+          ],
+          "source_q8": [
+            815456,
+            685848
+          ],
+          "split_membership": [
+            "calibration",
+            "holdout"
+          ]
+        },
+        {
+          "ordinals": [
+            5,
+            59
+          ],
+          "reference_q8": [
+            1002024,
+            874592
+          ],
+          "source_q8": [
+            1007000,
+            889728
+          ],
+          "split_membership": [
+            "holdout"
+          ]
+        },
+        {
+          "ordinals": [
+            20,
+            60
+          ],
+          "reference_q8": [
+            1135000,
+            458720
+          ],
+          "source_q8": [
+            1147048,
+            451104
+          ],
+          "split_membership": [
+            "calibration"
+          ]
+        },
+        {
+          "ordinals": [
+            16,
+            36,
+            47
+          ],
+          "reference_q8": [
+            1639672,
+            60648
+          ],
+          "source_q8": [
+            1639672,
+            60632
+          ],
+          "split_membership": [
+            "calibration",
+            "holdout"
+          ]
+        }
+      ],
+      "scope": "descriptive exact coordinate groups; no independence or coverage acceptance claim",
+      "sides": {
+        "reference_q8": {
+          "bbox_q8": [
+            118400,
+            60648,
+            1639672,
+            1141464
+          ],
+          "calibration_unique": 30,
+          "exact_locations_shared_between_splits": [
+            [
+              714720,
+              1141464
+            ],
+            [
+              820512,
+              680280
+            ],
+            [
+              1639672,
+              60648
+            ]
+          ],
+          "holdout_unique": 30,
+          "unique_total": 57
+        },
+        "source_q8": {
+          "bbox_q8": [
+            133784,
+            60632,
+            1639672,
+            1139696
+          ],
+          "calibration_unique": 30,
+          "exact_locations_shared_between_splits": [
+            [
+              501224,
+              338872
+            ],
+            [
+              815456,
+              685848
+            ],
+            [
+              1639672,
+              60632
+            ]
+          ],
+          "holdout_unique": 30,
+          "unique_total": 57
+        }
+      }
+    },
+    "status": "REGISTRATION_REFUSED",
+    "transform": null
+  },
+  "pair": {
+    "id": "pair-0-5",
+    "local_span": 5,
+    "reference": 5,
+    "reference_original": 65,
+    "source": 0,
+    "source_original": 0,
+    "star": true
+  }
+}

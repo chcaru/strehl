@@ -1,0 +1,22 @@
+{
+  "scope": "Actual fixed9 derivatives23 direct-pair AREA8 precise diagnostic; no support or product admission",
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-B",
+    "-X",
+    "faulthandler",
+    "-X",
+    "pycache_prefix=C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\real-precise-1\\parent-cache",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\real-precise-run.py",
+    "--plan",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\real-precise-plan-1.json",
+    "--sha256",
+    "4364546cdade4133946b81f3a241839f280306bf7ac1a056174a46788da5f1d4",
+    "--output",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\real-precise-1"
+  ],
+  "plan_sha256": "4364546cdade4133946b81f3a241839f280306bf7ac1a056174a46788da5f1d4",
+  "exit_code": 0,
+  "elapsed_wall_seconds": 27.5080092,
+  "admissible_parent_exit": true
+}

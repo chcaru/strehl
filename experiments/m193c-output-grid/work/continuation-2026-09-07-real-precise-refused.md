@@ -1,0 +1,88 @@
+# Continuation: real AREA8/precise complete, all23 refused; saved-fit trace next
+
+2026-09-07. Chris authorized autonomous program continuation through next tasks.
+Quiet hourly strehl-sota-program heartbeat remains active; no duplicate or formal
+goal. No root process running. Scoped writes/commits auto-approved; no rejection.
+Read-only sandbox requires exact require_escalated mutations. Python3.12.10 at
+C:/Users/chris/AppData/Local/Programs/Python/Python312/python.exe. UTF-8 explicitly.
+User-owned unrelated program H1 '# SOTA   n plan' preserved; whole program file
+excluded from commits despite owned status-body updates. No SYNTHESIS fold.
+
+Sourcefreeze5a3739f7 exactly15paths includes held prospectiveactualauditorsource;
+rootverified15paths/all197sources before one actual run. Prior d02f5df1 archived
+canonicalprivate28paths, verified;77082d3a froze13canonicalrelease. All historical
+sources/results/failures remain unchanged. RAW/TIFF remainlocal, notGit.
+
+Realplan37546B4364546cdade4133946b81f3a241839f280306bf7ac1a056174a46788da5f1d4.
+Runner20506B7f71fa2414f72bd994ff1701d7ae8c39d49005a11f0fb60027622e780c43efa6;
+spec12083Bd8e9b7385f229ed8635ee86d50082f96ca837037fb3bb1a223074dd01f9a1a31.
+Metadata preparationonce0:206metadata/0images,197sourcesall191preserved. Prior
+530.46875CPU626.5200758wall3956544489file31343843meta. Inventory22files275890B+
+4690Binventory+196KiBauditreserve leaves567292B withinfullnonrefund1MiB.
+
+Actualreal1 parentworker0 COMPLETE_FACTOR_EIGHT_SUPPORT_ONLY,implementation
+m193c-real-precise-v1; inherited SUPPORT label doesNOTadmit support. All14controls
+PASS,privatefulltruecachematches,wrongmap/wronglift/restoration/observer hashes.
+Nine realdecodes/ninefeatures/all23pairsvisited, all23REGISTRATION_REFUSED.
+21calibration'no majority landmark consensus'; pair2-3(reference26/source39)
+reportsheldoutRMS1.035343942native>1; pair3-4(reference39/source52)heldoutmajority.
+Savederrorsarenotrecomputedfits: refusedmaps/metricsnull. Native2/1barsunchanged.
+Allpairscarry29-252tentative vsnative7-53, eachpairhigher. This iscombinedAREA8+
+preciseeffect; no realAREA8defaultfalsearm exists. No physicalqualityclaim.
+Exactjointsites28-221;21/23crosscal/hold (exceptions1-5,2-5). Radius1addsnomerges,
+allcomponentdiameters0. Morematchesarenotphysicaltruthorindependentsupport.
+Graph0edges9singletons/cyclerank0/bridgesnone. Anchorlocal4/original52 distinct
+fromreferencelocal5/original65, eachsingleton. No graphsolve/overlap/render.
+Featurecountorig0,13,26,39,52,65,78,91,104 =487,1024,1024,1024,1024,1024,1024,910,734.
+11applicablefactorywitnesses true/restored; legacy7controlsunmodifieddefaultSIFT.
+Nativeq=8coarseq+896;8Q8latticeinherited1Q8guardUNQUALIFIED remains.
+
+Parent43505B82cc275d4fc78b43a1b63752e763e085a1d211a8a2b2e6686291315d806b013b;
+worker894809Bf040d2a2826b1e3df46da0c8b10bdd1d10b50a545acb03605be0a57784ffae11.
+work/real-precise-1-outer.json1048B
+c2fd17007ed7e18e6ba0d9199f1e9df0399f38b40237bf4117d9d43245f26280;
+console393Bb65bc49f17044d719060737bf7d78aeba1d48b9b9cf005163f3ec04bc3000658;
+exit0 3B13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354.
+Actualouter27.5080092; final557.75CPU653.9890757999983internalwall3962122692file/
+36922046meta. Conservative nextwall654.0280850. JobCPU25.875,wall26.171,
+peakcommit509616128B,2process/0active,noattemptedkill/noerrors. All54outputfiles
+5578203B confirmed-Force;noTIFF/RAW/snapshotwrites. Parentandworkerfinalizationempty.
+
+Independentactualauditorsource HELD BEFOREsubject/frozen5a3739f7:33051B
+10c0b84b51b5ae45f116fc1265b9a32b182ac30e44e62b0512e04d38964eabe5.
+Audit ranonce0,no stderr. FirsttransientlaunchwrapperSyntaxErrorbeforeexecution
+(noauditlaunchorfilewrite),correctedwrapperonly. JSON78821B
+7920f885e0cea2bcfbe2ac4f9af9ffc519212495274798cee23b79aa2e179ccc;
+report11557Ba7ad4fa84520bc88fcf767070e3d0c033891bf1caa32d0cb1543b24186b46508.
+Total123429B<196KiB. Schema m193c-saved-real-precise-audit-v1,
+statusPASS_SAVED_REAL_PRECISE_OUTCOME_AUDIT,subject_completetrue/refused_controlnull,
+external5/worker_result,actual_final_work/next_wall_seconds/cpucompletekeys.
+300metadatahashes/noimagepayload;TIFFextentonly. Source/helper/oldauditsunchanged.
+
+NEXT: factor_eight_implementation drafts refusal-trace-run.py and
+work/real-precise-refusal-diagnostic-preregister.md, SOURCE/DESIGN ONLY. Traceexact
+frozenexhaustivecalibration seedkey onall23savedcoordinates; separate minimum12
+fromhalfcount and valid/separation/scale exclusions. Retainfullsignedresiduals
+forBESTseedandactuallyvisitedrefinement/finalcandidates only,notallseeds(output
+explodes). No refinement afteroriginal gatefailure. Allmatchedrowsbothsplits,
+fixedCDF/extents/sitecountsdiagnosticonly. Compareactualoldreturn/refusalcode/
+message, including1.035343942, by off/on/placebo hashes. Privateknownfalse andtrue
+literalrotation +fixedwithinsplitendpointpermutationandrestorationprovidepower;
+falsecoherentwrongmapkeepslimitationvisible. Noimages/SIFT/newmatching/threshold
+orgraphguardwork. Thislocatespath/severity; realbadmatches,localizationandmodel
+mismatchremainunidentifiedwithoutindependenttruth. Do not jump to 'refine' simply
+because1.035isclose. Prototypecontrolsnotyetexecuted.
+
+Reviewerfactor_eight_reviewcompletedinitialchoicepointmemo, needsfollowupwhen
+sourceheld; coordinate_verificationassignednexttraceindepaudit/designreview.
+Rootnextpriorif20CPU30wall1MiBprep =577.75CPU684.0280850wall3963171268file/
+37970622meta; no new traceplan/preparation yet. Preservecaps global1200CPU1800wall
+4GiBfile128MiBmeta; previouslocal300CPU480wall8MiB/job240wall8GiB/1MiBlog.
+Acompactstandalonemetadata-onlycontrollercanavoidanotherdeepauthoritywrapper,
+with exactactuallyexecutedsource/runtime/inputbindings andactualcostcarry.
+
+Immediate: archiveactualreal23/audit/checkpoint/ownedAGENTS+M193creport (auditor
+sourcealreadyinrelease,omitunchangedsourcefromnewcommitmanifest). Verifyexact
+committedpaths andaccount7deletedstatuslines/retainallreportheadings and5pipe
+AGENTSrow. Thenreview/freeze/runboundedtraceonce/audititandchooseconcretenextwork.
+ContinuewithoutaskingChris; donotclaimSOTA/defaultpromotion.

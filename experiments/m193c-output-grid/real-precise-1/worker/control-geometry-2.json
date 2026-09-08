@@ -1,0 +1,26 @@
+{
+  "evidence": {
+    "error": null,
+    "guard": 157,
+    "metrics": {
+      "calibration_count": 128,
+      "calibration_inlier_count": 128,
+      "coordinate_quantization_guard_q8": 1,
+      "heldout_max_source_px_ceil_q8": 156,
+      "heldout_rms_reference_px": "0.122228082",
+      "holdout_count": 128,
+      "holdout_inlier_count": 128,
+      "mutual_match_count": 256,
+      "valid_support_continuous_margin_q8": 285
+    },
+    "status": "RETURNED",
+    "transform": {
+      "a": 4155353360,
+      "b": -43431024,
+      "tx": 50916918627,
+      "ty": 5043472855
+    }
+  },
+  "id": "geometry-2",
+  "passed": true
+}

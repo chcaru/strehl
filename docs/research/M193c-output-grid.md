@@ -16,7 +16,9 @@ that failure. The private follow-up then stopped on an in-memory record
 comparison despite identical saved baseline records. The canonical repair now
 passes its powered controls, and the private detector-option experiment completes:
 precise upscale removes the measured four-pixel mapping error on that fixture.
-Its independent audit confirms the finite result; real cross-focus transfer is next.
+Its independent audit confirms the finite result. The fixed real AREA8/precise
+follow-up now completes all23 pairs, but all23 still refuse: more tentative
+correspondences do not yet supply accepted geometry. Its complete audit passes.
 HardFloor remains the default; no quality promotion follows
 from this work. The [charter](../../experiments/m193c-output-grid/charter.md)
 names the actual sampling-coordinate consumer and the fixed historical inputs.
@@ -510,6 +512,68 @@ The result permits a separately frozen diagnostic on the original nine derivativ
 and23 direct pairs, retaining the native thresholds, direct pair fits and explicit
 support exclusion. It does not yet permit a graph solve, overlap manifest or render.
 
+## Real AREA8/precise comparison: more matches, no accepted edges
+
+**MEASURED, independently inspected:** the fixed real run frozen at `5a3739f7`
+completed once, parent and worker exit0. All14 control groups pass, including
+complete cached-true private feature/outcome comparisons, literal native rotation,
+wrong-map and wrong-centre controls, restoration and observer byte identity.
+All nine actual TIFFs decoded and supplied feature records; all23 pairs were
+visited. All11 applicable private/real factories explicitly enabled precise
+upscale and restored their original factory. The seven legacy groups kept their
+original detector path.
+
+The [independent actual audit](../../experiments/m193c-output-grid/independent-real-precise-1-read.md)
+was frozen before this run. Every real pair has more tentative matches than its
+cached native counterpart: new counts29–252 versus7–53. **All23 nevertheless
+remain REGISTRATION_REFUSED**, with no accepted direct edge:
+
+| Saved refusal boundary | Pairs | Qualification |
+| --- | --- | --- |
+| No calibration landmark consensus | 21 | The error combines the minimum12 and half-population requirements; it does not retain which failed or the best rejected seed |
+| Held-out RMS exceeds1 native pixel | 1: reference original26, source39 | The saved error reports1.035343942; the refused outcome does not retain its fitted map/metrics |
+| Held-out landmarks lack majority consensus | 1: reference original39, source52 | Reached the held-out stage, then refused |
+
+These are verified saved failure reasons. The audit does not independently refit
+the failed hypotheses or reconstruct the error's RMS. All maps/metrics remain
+null in the refused outcomes. The complete matched coordinates are retained and
+can support a separately released trace of the deciding code path. Do not turn
+a near-threshold error into a pass, or report an unavailable transform as identity.
+The graph has zero edges, nine singleton components, cycle rank0 and no bridges;
+reporting anchor local4/original52 and reference local5/original65 remain singletons.
+
+Rechosen exact joint-site counts are28–221;21 of23 pairs have exact joint sites
+crossing calibration and holdout. The exceptions are local1–5 and2–5. Independent
+one-native-pixel grouping adds no merges and every component has diameter0.
+These descriptor/site summaries cannot establish physical correspondence or
+image-wide coverage. More candidate matches can increase the supply of wrong
+matches as well as useful matches. Low fitted residuals can conceal a coherent
+wrong map, as the private false arm already demonstrated.
+
+This real comparison changes AREA8 representation and the detector option
+together. The earlier AREA8/default-false run never reached real inputs; there
+is no real control that isolates either change. The private option effect stays
+valid within its own scope. Neither result qualifies the eight-Q8 support guard,
+a global placement solve, an overlap manifest, a render or a SOTA claim.
+
+All54 output files total5578203 bytes; no RAW, new TIFF, snapshot or product image.
+Parent43505B SHA256
+`82cc275d4fc78b43a1b63752e763e085a1d211a8a2b2e6686291315d806b013b`;
+worker894809B SHA256
+`f040d2a2826b1e3df46da0c8b10bdd1d10b50a545acb03605be0a57784ffae11`.
+Final cumulative accounting is557.75 CPU seconds,3962122692 file bytes and36922046
+metadata bytes. Actual outer27.5080092 gives next wall654.0280850 seconds.
+Terminal Job has zero active processes, no termination attempt and no errors;
+all finalization checks pass. The audit rechecks300 metadata hashes and checks
+TIFF extents only; current pixel payloads remain producer hash witnesses.
+
+**Next:** trace the exact rejected-fit path from all23 saved coordinate records,
+separating too few seed inliers, insufficient calibration fraction and held-out
+failure. Retain all-match signed residuals and the private wrong-map counterexample.
+This can locate rejection severity; real bad matches, localization error and model
+mismatch remain competing causes until independent evidence separates them.
+No new image arm, parameter relaxation or graph work is justified by counts alone.
+
 ## Reproduction and preserved attempts
 
 Each release contains the complete actual argument array, input references and
@@ -539,6 +603,7 @@ these attempts when reproducing them.
 | Factor-eight representation 1 | `781cd9fc` | [factor-eight plan 1](../../experiments/m193c-output-grid/factor-eight-plan-1.json) | [known-rotation positive refused; zero real inputs](../../experiments/m193c-output-grid/factor-eight-1/result.json) |
 | Private precise-upscale 1 | `b6957375` | [precise-upscale plan 1](../../experiments/m193c-output-grid/precise-upscale-plan-1.json) | [baseline record comparison refused; true unvisited](../../experiments/m193c-output-grid/precise-upscale-1/result.json) |
 | Canonical private precise-upscale 1 | `77082d3a` | [canonical plan1](../../experiments/m193c-output-grid/precise-upscale-canonical-plan-1.json) | [private controls and option comparison completed](../../experiments/m193c-output-grid/precise-upscale-canonical-1/result.json) |
+| Real AREA8/precise 1 | `5a3739f7` | [real precise plan1](../../experiments/m193c-output-grid/real-precise-plan-1.json) | [all23 observed; all23 refused](../../experiments/m193c-output-grid/real-precise-1/result.json) |
 
 Final control result SHA256:
 `39a6f6e93e3b8df83834ab4046c7f30d6f42612df0cb0ec57ea158815baa7cfd`.
@@ -547,10 +612,10 @@ Build 2 result SHA256:
 
 ## Next decisions
 
-Freeze the diagnostic AREA8/precise-upscale comparison on the same nine real
-derivatives and23 direct pairs. The private known-truth, full-record reproduction,
-restoration and map-destroyer prerequisites now pass independently. Preserve both
-failed attempts. Keep every real refusal, native threshold and explicit unqualified
-support guard; no graph solve or cover-mode render is yet admitted.
+Trace the rejected-fit boundary from the23 saved AREA8/precise coordinate records.
+More matches did not produce an accepted edge. Separate minimum support,
+calibration fraction and held-out residual failures before choosing another
+representation or refinement. Keep all refusals, native thresholds and the
+unqualified support guard; no graph solve or cover-mode render is yet admitted.
 The [next-decision memo](../../experiments/m193c-output-grid/next-program-decision.md)
 keeps real cover-mode renders conditional on usable input geometry.
