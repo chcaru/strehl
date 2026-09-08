@@ -22,8 +22,14 @@ correspondences do not yet supply accepted geometry. Its complete audit passes.
 The saved-coordinate trace now also completes and passes its independent audit:
 21 pairs stop before refinement; two reach the later held-out gates. The fixed
 AREA4/precise follow-up now also completes with independent verification and
-still returns zero real fits. The bounded LightGlue asset intake now passes
-its independent audit; feature export and one private model test are next.
+still returns zero real fits. The bounded LightGlue asset intake passes its
+independent audit. The first feature-export/private-model attempt then retained
+all eleven exports and one model output, but refused an evidence write before
+any registrar call. Its parent terminal record is missing after the same storage
+limit blocked publication. Independent saved-prefix review now verifies all914
+private matches against the known rotation, with0.050891 native-pixel all-row RMS.
+A separate saved-data completion is in progress; no learned-match registrar gate
+has yet been executed.
 HardFloor remains the default; no quality promotion follows
 from this work. The [charter](../../experiments/m193c-output-grid/charter.md)
 names the actual sampling-coordinate consumer and the fixed historical inputs.
@@ -745,6 +751,78 @@ descriptors and key-derived attributes, then runs one private CPU float32
 LightGlue forward. No learned real-pair result, alignment or quality claim follows
 from acquiring assets.
 
+## First private LightGlue attempt: evidence-cap refusal
+
+**VERIFIED from retained outputs by the separate prefix-v3 audit:** the
+one run from frozen source `ef2f8e2b62ad41f90fc36cfd4edb798e5eaf5c14`
+retained all eleven exported AREA8/precise feature sets and one private model
+output. The worker reports twelve completed prerequisite control groups,
+eleven feature extractions, one private model forward, zero real model forwards
+and zero registrar calls. Its status is `REFUSED`, phase `private-known-geometry`,
+and its assembly reference is null. These are recorded observations, not an
+assertion that the unvisited private geometry checks passed.
+
+The worker refused the next assembled-correspondence/truth evidence write at
+the 8 MiB preallocation limit. The parent then failed both attempts to publish
+its own full terminal record under that same limit. The actual parent exit was
+1. The [worker record](../../experiments/m193c-output-grid/sift-lightglue-commission-1/worker/result.json),
+[console](../../experiments/m193c-output-grid/work/sift-lightglue-commission-1-console.txt)
+and [outer receipt](../../experiments/m193c-output-grid/work/sift-lightglue-commission-1-outer.json)
+remain intact; there is no parent `result.json`. A hidden-inclusive inventory
+observed 79 retained output files totalling 8,350,611 bytes. The actual outer
+interval was 44.5846779 seconds, an operational observation without a throughput
+claim.
+
+The missing parent record also loses the complete owned-process CPU and final
+Job receipt. The worker's retained CPU is only a sub-observation. Continued
+bookkeeping charges the entire original300 CPU-second reservation plus2 CPU
+seconds for publication, actual original outer wall and all retained bytes.
+It also charges both failed audit outer intervals and publication tails, an
+explicit5 CPU/3 wall-second census policy, and the successful audit's own work
+and publication allowance. This conservative reservation policy does not recover
+complete measured CPU accounting. Ordinary completion admission remains denied.
+
+**VERIFIED saved prefix, not original completion:** the independent v3 audit ran
+once from source `9a0c755554699562896c2881a821aa50f75fe32b` and exited0. Its
+[actual result](../../experiments/m193c-output-grid/work/independent-sift-lightglue-commission-prefix-v3-audit.json)
+and [independent read](../../experiments/m193c-output-grid/work/independent-sift-lightglue-commission-prefix-v3-read.md)
+verify all eleven cached feature exports, all262,144 private normalized descriptor
+components, the complete learned tensor associations and the captured runtime.
+The first two audit adapters remain failed: one compared equivalent relative and
+absolute asset paths literally; the second rejected55 ordinary external runtime
+files because they had stable hard links. V3 repairs only those audit policies,
+retaining exact path, extent, content and opened-file identity checks. The
+original frozen full-outcome auditor remains unchanged and its main unexecuted.
+
+**DERIVED in native pixel centres:** literal known rotation
+`x_reference=3071-y_source, y_reference=x_source` places all914 matches within
+two native pixels, all-row RMS0.050891263281009055. The prescribed hash-capped
+256 are all within two pixels, RMS0.035372598195849286. The capped set is nested,
+not a second replication. These errors use the independently stated rotation,
+not a fitted transform or an inlier subset. A coherent four-pixel wrong map
+fails the literal-truth control; a two-pixel translation fails the corner check.
+A good private rotation cannot establish correspondence through real defocus.
+The240 exact coordinate sites include six groups crossing the registrar split;
+distinct feature keys do not establish independent physical support. The
+inherited one-Q8 guard on an eight-Q8 coordinate lattice remains UNQUALIFIED.
+
+Maximum scalar-float64 RootSIFT component disagreement is5.228009831e-8 on
+each side, below the fixed2^-15 bound; a fixed L2-only normalization destroyer
+fails that same bound. The retained model invocation remains one forward:
+inference-observer non-perturbation is still untested. Neither this audit nor its
+predecessors decoded images, invoked the model or performed a registrar fit.
+The actual audit command and9.356066400-second outer observation are retained in
+[its outer receipt](../../experiments/m193c-output-grid/work/independent-sift-lightglue-commission-prefix-v3-audit-outer.json).
+These are operational observations, not performance claims.
+
+**ARGUED next:** reuse these authenticated saved values in a separately frozen
+controller for the five originally unvisited registrar calls and controls.
+Reserve durable compact terminal records before ordinary evidence and exercise
+actual capacity, oversized-record and late-publication failures before science.
+Preserve the original refused directory and incomplete historical CPU status.
+The conditional fixed23 real-pair model arm remains unreleased until this
+separate private completion also passes independent actual-outcome review.
+
 ## Reproduction and preserved attempts
 
 Each release contains the complete actual argument array, input references and
@@ -785,8 +863,8 @@ Build 2 result SHA256:
 
 ## Next decisions
 
-Prepare the bounded SIFT-input LightGlue branch on AREA8/precise, starting with
-feature-export and actual dependency/runtime authority. Both completed fixed
+Complete the bounded saved-value SIFT-input LightGlue private checks, then
+conditionally test the fixed23 real pairs. Both completed fixed
 representations retain zero real fits. Preserve all23 pairs, native limits and
 physical-truth controls; no learned confidence or registrar split can substitute
 for independent placement and consumer qualification.
