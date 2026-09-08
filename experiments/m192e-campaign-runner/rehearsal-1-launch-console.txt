@@ -1,0 +1,1 @@
+{"status": "COMPLETE_OUTER_CAPTURE_ONLY", "result": {"path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m192e-campaign-runner\\rehearsal-1-outer\\outer.json", "bytes": 8192, "sha256": "58F2505E97F5F2FFB2A2203BD5194F06E993955E25B560E012176B3AFE34D3F5"}}

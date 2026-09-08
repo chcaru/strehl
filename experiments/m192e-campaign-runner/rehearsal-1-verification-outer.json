@@ -1,0 +1,20 @@
+{
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-B",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m192e-campaign-runner\\verify.py",
+    "--plan",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m192e-campaign-runner\\preparation-1\\plan.json",
+    "--plan-sha256",
+    "9A8BFCEF7DA8F6BBF1927ADCB99039CD1D679DA851DEB99367C9A1D836A40D73",
+    "--outer",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m192e-campaign-runner\\rehearsal-1-outer\\outer.json",
+    "--outer-sha256",
+    "58F2505E97F5F2FFB2A2203BD5194F06E993955E25B560E012176B3AFE34D3F5"
+  ],
+  "exit_code": 0,
+  "elapsed_wall_seconds": 1.639999999999418,
+  "stdout_bytes": 3086,
+  "stderr_bytes": 0,
+  "scope": "saved-output checker; no product replay; sixty-second external wall limit"
+}

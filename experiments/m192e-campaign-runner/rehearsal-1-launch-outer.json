@@ -1,0 +1,14 @@
+{
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-B",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m192e-campaign-runner\\launch.py",
+    "--plan",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m192e-campaign-runner\\preparation-1\\plan.json",
+    "--plan-sha256",
+    "9A8BFCEF7DA8F6BBF1927ADCB99039CD1D679DA851DEB99367C9A1D836A40D73"
+  ],
+  "exit_code": 0,
+  "elapsed_wall_seconds": 103.88999999999942,
+  "scope": "whole separate launch helper through final publication and exit"
+}
