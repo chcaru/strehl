@@ -1,0 +1,56 @@
+{
+  "held_files": [
+    {
+      "bytes": 62292,
+      "path": "experiments/m193c-output-grid/work/independent-sift-lightglue-commission-audit.py",
+      "sha256": "ccb78254596b6402139bb4ff4541a5bb6f0597175268a426bef66ba5e4f7c03c"
+    },
+    {
+      "bytes": 16742,
+      "path": "experiments/m193c-output-grid/work/independent-sift-lightglue-commission-prefix-audit.py",
+      "sha256": "f2665e50742c6aa689dbdc20b0917ed4093368cff130417af6cdf565b0a11845"
+    },
+    {
+      "bytes": 0,
+      "path": "experiments/m193c-output-grid/work/independent-sift-lightglue-commission-prefix-audit.json",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 1215,
+      "path": "experiments/m193c-output-grid/work/independent-sift-lightglue-commission-prefix-audit-stderr.txt",
+      "sha256": "126e47d6299a4bcfc732a0323271bacc3d9cddc45d050dbb7e25cf357b6a0f55"
+    },
+    {
+      "bytes": 987,
+      "path": "experiments/m193c-output-grid/work/independent-sift-lightglue-commission-prefix-audit-outer.json",
+      "sha256": "5e7d5ed4990353a4edc90f2c611c23e63294890136635bc7993781fb30e8c16d"
+    },
+    {
+      "bytes": 3844,
+      "path": "experiments/m193c-output-grid/work/independent-sift-lightglue-request-diagnosis.py",
+      "sha256": "4f0ad636e550b216e9d65caea8f74609e0349f3ab8920740ad2e699988385eb1"
+    },
+    {
+      "bytes": 9137,
+      "path": "experiments/m193c-output-grid/work/independent-sift-lightglue-request-diagnosis.json",
+      "sha256": "e44fd6061c0d800e8d74278b6f3012565ce3d90e8dfc1096521237eeba1e8b6f"
+    },
+    {
+      "bytes": 23690,
+      "path": "experiments/m193c-output-grid/work/independent-sift-lightglue-commission-prefix-v2-audit.py",
+      "sha256": "d9a8d411c1eae75bff5d1b6b1037325a6e81a3e304e0fe2d01429a548b034579"
+    }
+  ],
+  "limit_bytes": 262144,
+  "maximum_total_bytes": 251027,
+  "previous_limit_bytes": 200704,
+  "reserved_outputs": {
+    "family_ledger": 4096,
+    "independent_read_report": 8192,
+    "v2_json": 114688,
+    "v2_outer": 2048,
+    "v2_stderr": 4096
+  },
+  "schema": "m193c-sift-lightglue-audit-family-reservation-v2",
+  "scope": "Includes original unexecuted full-outcome auditor, immutable failed prefix adapter and actual failed stdout/stderr/outer, metadata-only conjunct diagnosis source/result, new v2 source and bounded future v2 result/stderr/outer/read report. Comparator control witnesses are embedded in the v2 JSON. Increased family cap stays within the existing nonrefundable1 MiB preparation reservation; no global or scientific threshold change."
+}
