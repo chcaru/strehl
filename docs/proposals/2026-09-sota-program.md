@@ -415,9 +415,13 @@ The explicit sensor-region run from `b7e0be39` passed its eight domain controls,
 full-plan reuse controls and first five real checks, including all4688-row
 agreement. It then refused the inherited generic-white comparison16383 versus
 primary/camera-channel15360. That difference was visible in the earlier saved
-metadata and should have been caught in source review. Next is an explicit
-camera-metadata authority with wrong-channel controls, preserving the old
-refusals and full pixel checks. No physical-crop or quality conclusion follows
+metadata and should have been caught in source review. The camera-white run
+from `8b0db533` passed its first independent reader: eleven native checks,
+eight sensor-domain controls and ten white-control groups. Its parent then
+refused the reader's six intentional source/spec snapshots under an incompatible
+metadata-suffix rule. Next is an exact source-bound artifact contract with
+powered missing/changed/extra-file controls; the reader and all old failures
+remain unchanged. No physical-crop, calibration or quality conclusion follows
 from these agreements. The coverage runner is prepared
 but lacks all-nine native admission; real coverage remains unmeasured. See the
 [M193c progress record](../research/M193c-output-grid.md).

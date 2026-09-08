@@ -1,0 +1,112 @@
+{
+  "schema": "m193c-root-sensor-white-native-1-checkpoint-v1",
+  "source_commit": "8b0db533",
+  "result": "REFUSED",
+  "actual_refs": [
+    {
+      "path": "experiments/m193c-output-grid/native-sensor-white-derivative-1/result.json",
+      "sha256": "af72a5964fe1434db61a1c40638cf0ab4ac1d14ba2133440c067e00cba7fa76f",
+      "bytes": 125088
+    },
+    {
+      "path": "experiments/m193c-output-grid/native-sensor-white-derivative-1/frame-00/independent/result.json",
+      "sha256": "6ec2727b5d8e2b6f3c12c50434d7591735bb57af92339a751fb76d4aae11f3aa",
+      "bytes": 438743
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/native-sensor-white-1-console.txt",
+      "sha256": "b2e5d1d489dd882cbbcc46a3f93d1c2dbba162bb2d6e431592601569a05aa62e",
+      "bytes": 1383
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/native-sensor-white-1-exit.txt",
+      "sha256": "f1b2f662800122bed0ff255693df89c4487fbdcf453d3524a42d4ec20c3d9c04",
+      "bytes": 3
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/native-sensor-white-1-outer.json",
+      "sha256": "c25135fca535b84dd7ebb517a09f79a0a51dc680a091fda793afd39b0dfdd3d7",
+      "bytes": 2368
+    }
+  ],
+  "reuse_controls": [
+    {
+      "id": "reuse-full-plan-valid",
+      "passed": true
+    },
+    {
+      "exception": "full nine-plan byte/content equality",
+      "id": "reuse-later-entry-refused",
+      "passed": true
+    },
+    {
+      "id": "reuse-full-plan-restored",
+      "passed": true
+    }
+  ],
+  "primary_reused": true,
+  "snapshot_deleted": false,
+  "domain_control_ids": [
+    "sensor-nonzero-origin",
+    "visible-crop-null",
+    "wrong-offset-hash-refusal",
+    "truncated-buffer-refusal",
+    "borrowed-sensor-refusal",
+    "late-copy-lifetime-destroyer",
+    "restored-sensor-copy",
+    "source-origin-cfa"
+  ],
+  "white_control_ids": [
+    "camera-white-authority",
+    "global-match-wrong-camera-refused",
+    "mixed-used-camera-white-refused",
+    "absent-camera-white-refused",
+    "malformed-camera-white-refused",
+    "malformed-global-white-refused",
+    "malformed-cfa-index-refused",
+    "native-black-regression-refused",
+    "native-wb-regression-refused",
+    "camera-white-restored"
+  ],
+  "completed_check_ids": [
+    "owned-sensor-copy",
+    "active-shape",
+    "local-rggb",
+    "active-u16-bytes",
+    "active-row-u16-bytes",
+    "scalar-black-camera-white",
+    "green-normalized-wb",
+    "tiff-native-rgb16",
+    "tiff-linear-camera-description",
+    "tiff-full-pixel-read",
+    "input-source-stability"
+  ],
+  "reader_status": "PASS_SENSOR_WHITE_NATIVE_DERIVATIVE_FRAME_ONLY",
+  "reader_error": null,
+  "tiff_pixel_hash": "3caece4a2dc67b37f2bc84c307fe735a7dcfadc3fc18681b1c8f29ee1c3db545",
+  "unvisited": [
+    13,
+    26,
+    39,
+    52,
+    65,
+    78,
+    91,
+    104
+  ],
+  "final_work": {
+    "cpu_seconds": 50.46875,
+    "wall_seconds": 45.06568420003168,
+    "file_bytes": 243457739,
+    "metadata_bytes": 6628688
+  },
+  "root_outer_wall": 7.1395216,
+  "next_conservative_wall": 45.1272058,
+  "dependency_error": null,
+  "first_refusal": {
+    "error": "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-derivative-run.py\", line 847, in main\n    need(row[\"error\"] is None and row[\"stage\"] == \"COMPLETE_FRAME_INDEPENDENTLY_READ\",\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-derivative-run.py\", line 69, in need\n    raise ValueError(message)\nValueError: first native frame refusal:\nTraceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-derivative-run.py\", line 726, in run_one\n    need(all(not p.is_file() or p.suffix in (\".json\", \".log\", \".txt\") for p in products),\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-derivative-run.py\", line 69, in need\n    raise ValueError(message)\nValueError: independent reader metadata-only output\n\n",
+    "original_index": 0,
+    "stage": "independent-result"
+  },
+  "scope": "Successful first reader; parent refused metadata suffix contract before binding independent_read. No nine-frame admission or coverage. The null-valued Select-Object display is a PowerShell hashtable projection error; the actual serialized outer record retains valid fields."
+}

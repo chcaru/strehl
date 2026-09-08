@@ -8,9 +8,11 @@ eight later originals remain unvisited. Native agreement and real registration
 coverage are not admitted in this milestone. A subsequent independently audited
 diagnostic found complete decoded-byte agreement over strehl's declared region;
 the visible-region descriptions remain different. The explicit sensor-region
-reader has now passed its domain controls and first five real checks, then
-refused an inherited white-level comparison. A camera-metadata comparison is
-the next correction; no native derivative is admitted yet.
+reader passed its domain controls and first five real checks, then refused an
+inherited white-level comparison. The camera-metadata successor has now passed
+all eleven first-frame checks; its parent refused the reader's archived source
+files at an incompatible metadata-output check. The next correction is the
+controller's exact artifact contract. Nine-frame admission remains incomplete.
 HardFloor remains the default; no quality promotion follows
 from this work. The [charter](../../experiments/m193c-output-grid/charter.md)
 names the actual sampling-coordinate consumer and the fixed historical inputs.
@@ -208,6 +210,36 @@ checked253 distinct files, all146 source bindings/93 inputs, actual process
 accounting, original-file associations, all4688 rows and the completed controls.
 Its source-review omission is documented alongside the refusal.
 
+**MEASURED, independently inspected:** camera-white native attempt1, frozen at `8b0db533`, returned
+actual parent exit1 after its sole fresh reader returned0 and
+`PASS_SENSOR_WHITE_NATIVE_DERIVATIVE_FRAME_ONLY`. The reader completed all
+eleven native checks, eight sensor-domain controls and ten camera-white control
+groups. The camera-channel authority selects15360; generic white16383 remains
+recorded, and the wrong-camera/global-match control must refuse. This is an
+explicit metadata authority, not physical sensor calibration.
+
+The controller then refused `independent reader metadata-only output`: its
+recursive suffix check permitted only JSON, logs and text, while the reader
+intentionally archived three Python sources and three Markdown specifications.
+The successful reader receipt does not retroactively complete the refused
+parent. All eight later originals remain decode-unvisited. This is a controller
+artifact-contract defect, with no new primary TIFF, RAW snapshot or registration.
+
+Actual parent result:125088 bytes, SHA256
+`af72a5964fe1434db61a1c40638cf0ab4ac1d14ba2133440c067e00cba7fa76f`.
+Actual reader result:438743 bytes, SHA256
+`6ec2727b5d8e2b6f3c12c50434d7591735bb57af92339a751fb76d4aae11f3aa`.
+Final carried work is50.46875 CPU seconds,243457739 file bytes and6628688
+metadata bytes. Actual root outer7.1395216 seconds gives conservative next wall
+45.1272058 seconds. The parent retains no finalization error; its source/input
+and adjacent dependency endpoint checks completed. The
+[independent actual audit](../../experiments/m193c-output-grid/independent-native-sensor-white-1-read.md)
+checked279 distinct files, all150 source bindings/118 inputs, all4688 saved row
+hashes, the actual eleven native checks and23 white-metadata calls. It confirms
+that the seven reader files total570784 bytes, below the four-MiB cap; the
+failure is the suffix contract. The completed reader may be cited within its
+first-frame scope; the parent remains refused and coverage remains unmeasured.
+
 ## Reproduction and preserved attempts
 
 Each release contains the complete actual argument array, input references and
@@ -230,6 +262,7 @@ these attempts when reproducing them.
 | Native derivatives 1 | `5c64d6f1` | [native release](../../experiments/m193c-output-grid/native-derivative-release-1.json) | [first-frame domain refusal](../../experiments/m193c-output-grid/native-derivative-1/result.json) |
 | Saved-frame domain probe 1 | `3b10e8ff` | [probe release](../../experiments/m193c-output-grid/active-domain-probe-release-1.json) | [complete diagnostic](../../experiments/m193c-output-grid/active-domain-probe-1/result.json) |
 | Sensor-native derivatives 1 | `b7e0be39` | [sensor release](../../experiments/m193c-output-grid/native-sensor-derivative-release-1.json) | [first-frame white-level refusal](../../experiments/m193c-output-grid/native-sensor-derivative-1/result.json) |
+| Camera-white native derivatives 1 | `8b0db533` | [camera-white release](../../experiments/m193c-output-grid/native-sensor-white-derivative-release-1.json) | [source-snapshot contract refusal](../../experiments/m193c-output-grid/native-sensor-white-derivative-1/result.json) |
 
 Final control result SHA256:
 `39a6f6e93e3b8df83834ab4046c7f30d6f42612df0cb0ec57ea158815baa7cfd`.
@@ -238,12 +271,14 @@ Build 2 result SHA256:
 
 ## Next decisions
 
-Correct the native white-level authority in a separate versioned reader with finite
-wrong-channel, missing/malformed-metadata and restored controls. Keep exact black,
-WB, whole/row sensor and TIFF checks. Preserve both old native attempts, held
-private/runtime/Rust sources and the saved first primary. Reuse still requires
-complete fresh nine-input plan identity and another fresh independent read;
-all old costs and failed artifacts stay in the cumulative budget.
+Correct the controller's artifact contract in a separate versioned parent. Admit
+only the result and six exact source-bound snapshots, with powered added,
+missing, changed and restored artifact controls on the actual validation path.
+Keep the successful camera-white reader and its pixel/level/WB checks unchanged.
+Preserve all refused attempts, held private/runtime/Rust sources and the saved
+first primary. Reuse still requires complete fresh nine-input plan identity
+and another fresh independent read; all old costs and failed artifacts stay
+in the cumulative budget.
 
 The frozen input registrar's coverage runner is prepared and source-reviewed,
 but requires all nine native independent admissions. It cannot run on this

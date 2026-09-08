@@ -1,0 +1,59 @@
+{
+  "schema": "m193c-root-metadata-reservation-read-v1",
+  "scope": "Actual named root artifacts after camera-white native1. The separate next preparation charges independent audit, new method/review and positive administrative growth. No subject CPU or artifact refund.",
+  "reserved_bytes": 196608,
+  "actual_named_bytes": 21124,
+  "record_archive_and_checkpoint_growth_upper_bytes": 16384,
+  "metadata_files": [
+    {
+      "path": "independent-native-sensor-white-release-1-review.md",
+      "bytes": 2540,
+      "sha256": "a56f7df20a42d0d4609ae7839eda190df8b4a0879ceaf658d21d50151d7e1864"
+    },
+    {
+      "path": "work/read-native-sensor-white-release-1.py",
+      "bytes": 4851,
+      "sha256": "45f7ad7c42edf3ef42acbbd79a8733454044602243a72555c3c28004a6a9e0e7"
+    },
+    {
+      "path": "work/prepare-native-sensor-white-archive-1.py",
+      "bytes": 1415,
+      "sha256": "17283f17c846bf62fa67b1781c777e98d28395da0c4c6df7c972d72ad432d8fe"
+    },
+    {
+      "path": "work/archive-native-sensor-white-1.nul",
+      "bytes": 1128,
+      "sha256": "2e3fe7499c36907467e1948c98f2996b354eeff93bfd3ae814a27fe9e82e01ba"
+    },
+    {
+      "path": "work/native-sensor-white-1-console.txt",
+      "bytes": 1383,
+      "sha256": "b2e5d1d489dd882cbbcc46a3f93d1c2dbba162bb2d6e431592601569a05aa62e"
+    },
+    {
+      "path": "work/native-sensor-white-1-exit.txt",
+      "bytes": 3,
+      "sha256": "f1b2f662800122bed0ff255693df89c4487fbdcf453d3524a42d4ec20c3d9c04"
+    },
+    {
+      "path": "work/native-sensor-white-1-outer.json",
+      "bytes": 2368,
+      "sha256": "c25135fca535b84dd7ebb517a09f79a0a51dc680a091fda793afd39b0dfdd3d7"
+    },
+    {
+      "path": "work/native-sensor-white-1-checkpoint.json",
+      "bytes": 4474,
+      "sha256": "8187b1273c1f50cdc2c3db5bd2ecc870102f29a2a721d484a8c3f56b584ecc30"
+    },
+    {
+      "path": "work/archive-native-sensor-white-outcome-1.py",
+      "bytes": 1289,
+      "sha256": "6ce797d444affd4316edef9487920ce5e1d625810aa3d1093e7457c5a5ea13bf"
+    },
+    {
+      "path": "work/account-native-sensor-white-root-metadata.py",
+      "bytes": 1673,
+      "sha256": "b60d796d5f68ec07286a7690826427e3ec3cfad351d9aa1fea7b397fc86af005"
+    }
+  ]
+}

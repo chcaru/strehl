@@ -1,0 +1,310 @@
+{
+  "error": "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-derivative-run.py\", line 726, in run_one\n    need(all(not p.is_file() or p.suffix in (\".json\", \".log\", \".txt\") for p in products),\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-derivative-run.py\", line 69, in need\n    raise ValueError(message)\nValueError: independent reader metadata-only output\n",
+  "independent_launch": {
+    "command": [
+      "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+      "-B",
+      "-X",
+      "faulthandler",
+      "-X",
+      "pycache_prefix=C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-derivative-1\\frame-00\\reader-cache",
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\independent-sensor-white-derivative-read.py",
+      "--request",
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-derivative-1\\frame-00\\read-request.json",
+      "--request-sha256",
+      "56b08b23d9e9908845bbc6879b02e92bf240251cadcfe0dc8347fdd1dda27a4a",
+      "--output",
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-derivative-1\\frame-00\\independent"
+    ],
+    "observation": {
+      "cleanup_errors": [],
+      "command": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-B",
+        "-X",
+        "faulthandler",
+        "-X",
+        "pycache_prefix=C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-derivative-1\\frame-00\\reader-cache",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\independent-sensor-white-derivative-read.py",
+        "--request",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-derivative-1\\frame-00\\read-request.json",
+        "--request-sha256",
+        "56b08b23d9e9908845bbc6879b02e92bf240251cadcfe0dc8347fdd1dda27a4a",
+        "--output",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-derivative-1\\frame-00\\independent"
+      ],
+      "configured_job_limits": {
+        "committed_bytes": 8589934592,
+        "flags": 8704
+      },
+      "direct_exit_observed": true,
+      "error": null,
+      "exit_code": 0,
+      "job_accounting": {
+        "active_processes": 0,
+        "total_cpu_100ns": 37187500,
+        "total_kernel_100ns": 21718750,
+        "total_page_fault_count": 4277257,
+        "total_processes": 2,
+        "total_terminated_processes": 0,
+        "total_user_100ns": 15468750
+      },
+      "job_memory": {
+        "peak_job_memory_used_bytes": 332464128,
+        "peak_process_memory_used_bytes": 331169792
+      },
+      "limits": {
+        "committed_bytes": 8589934592,
+        "cpu_seconds": 1154.375,
+        "log_bytes": 16777216,
+        "wall_seconds": 240
+      },
+      "log": {
+        "bytes": 514,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-derivative-1\\frame-00\\independent.log",
+        "sha256": "c64ac10b98551eb8a8cbc416008f3455c6cd9d0ae1e30fbce4fbdb9fa70ff642"
+      },
+      "log_bytes": 514,
+      "pipe_eof_observed": true,
+      "post_exit_drain": {
+        "completed": true,
+        "ended_wall_seconds": 3.812000000034459,
+        "initial_accounting": {
+          "active_processes": 0,
+          "total_cpu_100ns": 37187500,
+          "total_kernel_100ns": 21718750,
+          "total_page_fault_count": 4277257,
+          "total_processes": 2,
+          "total_terminated_processes": 0,
+          "total_user_100ns": 15468750
+        },
+        "last_accounting": {
+          "active_processes": 0,
+          "total_cpu_100ns": 37187500,
+          "total_kernel_100ns": 21718750,
+          "total_page_fault_count": 4277257,
+          "total_processes": 2,
+          "total_terminated_processes": 0,
+          "total_user_100ns": 15468750
+        },
+        "observation_count": 1,
+        "observations": [
+          {
+            "accounting": {
+              "active_processes": 0,
+              "total_cpu_100ns": 37187500,
+              "total_kernel_100ns": 21718750,
+              "total_page_fault_count": 4277257,
+              "total_processes": 2,
+              "total_terminated_processes": 0,
+              "total_user_100ns": 15468750
+            },
+            "wall_seconds": 3.812000000034459
+          }
+        ],
+        "started_wall_seconds": 3.812000000034459
+      },
+      "scope": "owned job tree; committed memory, observed user+kernel CPU; not RSS or a timing benchmark",
+      "terminal_job_accounting": true,
+      "termination": {
+        "attempted": false,
+        "before_accounting": null,
+        "succeeded": false
+      },
+      "wall_seconds": 3.812000000034459
+    },
+    "removed_environment": []
+  },
+  "independent_read": null,
+  "name": "DSC00016.ARW",
+  "ordinal": 0,
+  "original_index": 0,
+  "primary_launch": {
+    "command": [
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\bridge-build-3\\output-grid-tests.exe",
+      "--exact",
+      "merge_cmd::production_truth::m193c_registration_derivative::m193c_derivative_native",
+      "--ignored",
+      "--test-threads=1",
+      "--nocapture"
+    ],
+    "environment": {
+      "RAYON_NUM_THREADS": "2",
+      "STREHL_M193C_DERIVATIVE_INPUT_PLAN": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-derivative-1\\input-plan.json",
+      "STREHL_M193C_DERIVATIVE_INPUT_PLAN_SHA256": "ed77972c956e9267dfb88907778ac8ff2f83887085457b83d7dccdc299db546f",
+      "STREHL_M193C_DERIVATIVE_ORIGINAL_INDEX": "0",
+      "STREHL_M193C_DERIVATIVE_OUTPUT_DIR": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-derivative-1\\frame-00\\native",
+      "STREHL_M193C_DERIVATIVE_SNAPSHOT": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-derivative-1\\frame-00\\DSC00016.ARW"
+    },
+    "observation": {
+      "cleanup_errors": [],
+      "command": [
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\bridge-build-3\\output-grid-tests.exe",
+        "--exact",
+        "merge_cmd::production_truth::m193c_registration_derivative::m193c_derivative_native",
+        "--ignored",
+        "--test-threads=1",
+        "--nocapture"
+      ],
+      "configured_job_limits": {
+        "committed_bytes": 8589934592,
+        "flags": 8704
+      },
+      "direct_exit_observed": true,
+      "error": null,
+      "exit_code": 0,
+      "job_accounting": {
+        "active_processes": 0,
+        "total_cpu_100ns": 276562500,
+        "total_kernel_100ns": 2031250,
+        "total_page_fault_count": 176009,
+        "total_processes": 2,
+        "total_terminated_processes": 0,
+        "total_user_100ns": 274531250
+      },
+      "job_memory": {
+        "peak_job_memory_used_bytes": 344461312,
+        "peak_process_memory_used_bytes": 343171072
+      },
+      "limits": {
+        "committed_bytes": 8589934592,
+        "cpu_seconds": 1196.640625,
+        "log_bytes": 16777216,
+        "wall_seconds": 240
+      },
+      "log": {
+        "bytes": 211,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-derivative-1\\frame-00\\native.log",
+        "sha256": "2182f7a9b92ae0314245454467882b65dd46380f4140118504cd01d8be13e8db"
+      },
+      "log_bytes": 211,
+      "pipe_eof_observed": true,
+      "post_exit_drain": {
+        "completed": true,
+        "ended_wall_seconds": 21.82900000002701,
+        "initial_accounting": {
+          "active_processes": 0,
+          "total_cpu_100ns": 276562500,
+          "total_kernel_100ns": 2031250,
+          "total_page_fault_count": 176009,
+          "total_processes": 2,
+          "total_terminated_processes": 0,
+          "total_user_100ns": 274531250
+        },
+        "last_accounting": {
+          "active_processes": 0,
+          "total_cpu_100ns": 276562500,
+          "total_kernel_100ns": 2031250,
+          "total_page_fault_count": 176009,
+          "total_processes": 2,
+          "total_terminated_processes": 0,
+          "total_user_100ns": 274531250
+        },
+        "observation_count": 1,
+        "observations": [
+          {
+            "accounting": {
+              "active_processes": 0,
+              "total_cpu_100ns": 276562500,
+              "total_kernel_100ns": 2031250,
+              "total_page_fault_count": 176009,
+              "total_processes": 2,
+              "total_terminated_processes": 0,
+              "total_user_100ns": 274531250
+            },
+            "wall_seconds": 21.82900000002701
+          }
+        ],
+        "started_wall_seconds": 21.82900000002701
+      },
+      "scope": "owned job tree; committed memory, observed user+kernel CPU; not RSS or a timing benchmark",
+      "terminal_job_accounting": true,
+      "termination": {
+        "attempted": false,
+        "before_accounting": null,
+        "succeeded": false
+      },
+      "wall_seconds": 21.82900000002701
+    },
+    "removed_environment": []
+  },
+  "primary_receipt": {
+    "bytes": 350873,
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-derivative-1\\frame-00\\native\\result.json",
+    "sha256": "e02482a38f3f15a2cc89ee83a809fdbdc590568db8a439754e956f20f8251427"
+  },
+  "primary_reused": true,
+  "read_request": {
+    "bytes": 2391,
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-derivative-1\\frame-00\\read-request.json",
+    "sha256": "56b08b23d9e9908845bbc6879b02e92bf240251cadcfe0dc8347fdd1dda27a4a"
+  },
+  "reuse_provenance": {
+    "authority": {
+      "console": {
+        "bytes": 1537,
+        "path": "experiments/m193c-output-grid/work/native-derivative-1-console.txt",
+        "sha256": "ca5f9f117157410846d788d424aa878524296851a5f2100b0b097d89c645c990"
+      },
+      "exit": {
+        "bytes": 3,
+        "path": "experiments/m193c-output-grid/work/native-derivative-1-exit.txt",
+        "sha256": "f1b2f662800122bed0ff255693df89c4487fbdcf453d3524a42d4ec20c3d9c04"
+      },
+      "frame_result": {
+        "bytes": 10752,
+        "path": "experiments/m193c-output-grid/native-derivative-1/frame-00/frame-result.json",
+        "sha256": "5274f9d1e6963762e8d93c23a1ea7f8c2e5a2c7c29e8601e37702eb8bc60b5a6"
+      },
+      "independent_refusal": {
+        "bytes": 32013,
+        "path": "experiments/m193c-output-grid/native-derivative-1/frame-00/independent/result.json",
+        "sha256": "754485f20e99c0511465da98c228554229c0ff8a6c6a187e8ae9f38443a2a2f4"
+      },
+      "outer": {
+        "bytes": 2314,
+        "path": "experiments/m193c-output-grid/work/native-derivative-1-outer.json",
+        "sha256": "45e398ad4bf9fe51d0095e6b7be8f4132e53828866a51193cabcf644f5e8ec13"
+      },
+      "primary_launch": {
+        "bytes": 3978,
+        "path": "experiments/m193c-output-grid/native-derivative-1/frame-00/native-launch.json",
+        "sha256": "209ec462625b544d450dc591be1c6d9671758ee10db94925d128bca729b3f0fb"
+      },
+      "result": {
+        "bytes": 93975,
+        "path": "experiments/m193c-output-grid/native-derivative-1/result.json",
+        "sha256": "4299877897694e655ef04f88001e6406058c1b2d0efddded6d525510fbc9dfe0"
+      }
+    },
+    "controls": [
+      {
+        "id": "reuse-full-plan-valid",
+        "passed": true
+      },
+      {
+        "exception": "full nine-plan byte/content equality",
+        "id": "reuse-later-entry-refused",
+        "passed": true
+      },
+      {
+        "id": "reuse-full-plan-restored",
+        "passed": true
+      }
+    ],
+    "primary_cpu_scope": "historical; already charged in prior_work"
+  },
+  "snapshot": {
+    "bytes": 39030784,
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-derivative-1\\frame-00\\DSC00016.ARW",
+    "sha256": "35ccc60a2cadbcdc999fb6765a326f5baaa298776fb951d12287e05c5892ed36"
+  },
+  "snapshot_deleted": false,
+  "snapshot_retained_from_refused_run": true,
+  "stage": "independent-result",
+  "tiff": {
+    "bytes": 197798267,
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-derivative-1\\frame-00\\native\\DSC00016-registration.tiff",
+    "sha256": "97af13814d35ca2bf5320587268c722903ef5204ae3d9b379eef2bb384753d5f"
+  }
+}

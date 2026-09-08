@@ -1,0 +1,48 @@
+{
+  "scope": "Actual PowerShell direct invocation and terminal wall observation with supplemental adjacent-DLL endpoint byte checks; parent plus new child Job CPU in final receipt",
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-B",
+    "-X",
+    "faulthandler",
+    "-X",
+    "pycache_prefix=C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-derivative-1\\parent-cache",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-derivative-run.py",
+    "--release",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-derivative-release-1.json",
+    "--release-sha256",
+    "70d44a9c43d9d8c194824b214b1287358a4f254e01ce6e1efc955d1f85af6611",
+    "--output",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-derivative-1"
+  ],
+  "release_sha256": "70d44a9c43d9d8c194824b214b1287358a4f254e01ce6e1efc955d1f85af6611",
+  "exit_code": 1,
+  "elapsed_wall_seconds": 7.1395216,
+  "dependency_before": [
+    {
+      "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\rawpy\\raw_r.dll",
+      "sha256": "da20108e301a929170fe1af2acb2ef7e5de62347057f860139fda111d504fa39",
+      "bytes": 1926656
+    },
+    {
+      "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\rawpy\\vcomp140.dll",
+      "sha256": "55aba23cdcd6484fbb06f4155b8ca75adfce7a881f10afd0c49457165e677164",
+      "bytes": 193152
+    }
+  ],
+  "dependency_after": [
+    {
+      "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\rawpy\\raw_r.dll",
+      "sha256": "da20108e301a929170fe1af2acb2ef7e5de62347057f860139fda111d504fa39",
+      "bytes": 1926656
+    },
+    {
+      "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\rawpy\\vcomp140.dll",
+      "sha256": "55aba23cdcd6484fbb06f4155b8ca75adfce7a881f10afd0c49457165e677164",
+      "bytes": 193152
+    }
+  ],
+  "dependency_error": null,
+  "dependency_supplement_sha256": "c93af42e6fd2a26d2de7cdc6e7decf7156f9181a124fe4a9d2ab99e03a82a6aa",
+  "admissible_parent_exit": false
+}
