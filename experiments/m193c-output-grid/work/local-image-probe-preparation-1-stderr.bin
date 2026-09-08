@@ -1,0 +1,16 @@
+Traceback (most recent call last):
+  File "C:\dev\blog\death-of-software\projects\strehl\experiments\m193c-output-grid\local-image-probe-prepare.py", line 199, in <module>
+    if __name__=='__main__':raise SystemExit(main())
+                                             ^^^^^^
+  File "C:\dev\blog\death-of-software\projects\strehl\experiments\m193c-output-grid\local-image-probe-prepare.py", line 147, in main
+    raw,ref=read(Path(current)/name,128*MIB,empty=True);pin={k:ref[k] for k in ('bytes','sha256')}
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\dev\blog\death-of-software\projects\strehl\experiments\m193c-output-grid\local-image-probe-prepare.py", line 63, in read
+    SEEN[str(path)]=(identity(named),owned);check();return raw,ref
+                                            ^^^^^^^
+  File "C:\dev\blog\death-of-software\projects\strehl\experiments\m193c-output-grid\local-image-probe-prepare.py", line 35, in check
+    need(time.process_time()+.25<=5 and time.monotonic()-START+.5<=10,'preparation including reserved final CPU/wall tail')
+  File "C:\dev\blog\death-of-software\projects\strehl\experiments\m193c-output-grid\local-image-probe-prepare.py", line 33, in need
+    if not ok:raise ValueError(message)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: preparation including reserved final CPU/wall tail

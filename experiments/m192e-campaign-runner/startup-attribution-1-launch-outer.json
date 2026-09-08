@@ -1,0 +1,16 @@
+{
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-B",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m192e-campaign-runner\\startup-attribution-run.py",
+    "--plan",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m192e-campaign-runner\\startup-attribution-plan-1.json",
+    "--plan-sha256",
+    "fbf293dffc9c6da8e73852fc4d2e0563e0d0965a9f3be25ea3e76287fb92a5f4"
+  ],
+  "exit_code": 1,
+  "elapsed_wall_seconds": 0.4690000000045984,
+  "stdout_bytes": 505,
+  "stderr_bytes": 0,
+  "scope": "Actual process launch through final exit; raw redirected streams retained. CPU belongs to subject accounting, not inferred from wall."
+}
