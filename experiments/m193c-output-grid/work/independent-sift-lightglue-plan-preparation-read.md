@@ -1,0 +1,26 @@
+# Independent SIFT-LightGlue metadata preparation review
+
+2026-09-08. SOURCE-READ VERDICT: eligible to prepare the exact first private-commission plan after every required new source, prospective audit and review is held. This review does not execute preparation or authorize model work by itself.
+
+Reviewed preparer: work/prepare-sift-lightglue-commission-plan-1.py, 6728 bytes, SHA256 4a6d3d660620e601cfb25c3384e84140fc7cefdea910e9aaa27f01e3104303ec. Paths are relative to experiments/m193c-output-grid unless stated otherwise. No historical file was changed.
+
+## Actual ancestry and schema checks
+
+The preparer pins lightglue-acquisition-plan-1.json to 0302f5d4f963e734ee2f2d7d13841e06640e86e736ab47ed2fa1d469817af52d. Its actual source_bindings contains 214 entries. The prospective plan retains that mapping and rechecks every original path, declared extent and SHA256; duplicate keys cannot silently replace old bindings.
+
+The admitted actual acquisition audit read for this review is work/independent-lightglue-acquisition-audit.json: 21345 bytes, SHA256 a539ba714a870eea0be485388b322c50bdff1fb48e31a53df72acc4d2f6b1b65. Its schema/status match the preparer's exact checks; subject_complete, admission_allowed and cpu_accounting_complete are required true and all caps must pass. Its five external references are rehashed with declared extents and paired with the audit reference. The actual result must be complete, error-free and carry exactly that audit's actual_final_work. Existing AREA4 six-reference ancestry is reconstructed from the original acquisition plan and extents/hashes checked.
+
+The separately saved audit outer receipt is 912 bytes, SHA256 2037216c6d6aa807f27f2ffb81e139b7e80d24920ac3b29f74c4e2b4319b3b69. Source checks require exit0, exact Python/audit/ordered five-pin argv and actual stdout length equal to the audit length. The observed launcher wall 0.4599785999998858 fits the recorded audit wall 0.4004475999990973 plus its 0.5-second publication allowance. The actual zero-byte stderr is hashed and checked explicitly, then kept OUT of historical positive-extent FileRef source bindings. The nonempty outer receipt is added to the source closure.
+
+The observed audit carry is CPU659.9375, wall877.919086, file4036556476 and metadata45295542. Upward microsecond rounding precedes the full nonrefundable ordinary preparation allowance of CPU20, wall30, file1048576 and metadata1048576. The exact asserted new prior is CPU679.9375, wall907.919086, file4037605052 and metadata46344118. This is an exact first-run preparer, not a generic tool that refunds or silently adapts changed ancestry.
+
+## Choice points and write boundary
+
+- The resulting plan has exactly the eight runner-required keys: schema, source_bindings, area4_baseline, acquisition_receipt, prior_work, preparation_allowance, python_executable and commands. Both baseline bundles have the six required references. The schema is m193c-sift-lightglue-commission-plan-v1.
+- Every acquired asset is hashed opaquely against the successful receipt. The four text assets enter source_bindings; the checkpoint remains separately bound through acquisition_receipt. A checkpoint read here computes only its byte extent/hash, never parses or loads it. Paths are confined to the repository or the exact pinned Python executable; the sole allowed .pth path is the acquired SIFT checkpoint.
+- Read helpers validate size, hash and stable path metadata across reads; JSON is bounded to 8 MiB and individual opaque reads to 64 MiB. There are no subject imports, image formats, network requests or model APIs in this program. Hash identity is checked again on the JSON bytes actually parsed.
+- Required sources include the runner, adapter, preregistration, independent commission source review, prospective commission audit and this preparation review. The preparer binds itself. A missing required file refuses before either planned output is written. The prospective audit had not yet been published at this review; this is an expected release dependency, not a reason to run preparation early.
+- Parent and worker argv reproduce the runner's exact -B, faulthandler, fresh owned cache locations, plan/output/request paths and actual-hash placeholders. The Python executable is rehashed. The fresh output tree, new plan and new prior must all be absent before reads; plan and prior use exclusive creation.
+- All authority/source validation, exact prior assertion, required-source closure, argv construction and the <=256 KiB plan/time/CPU preflight occur before the first write. The prior is written and rehashed before the plan. A late failure may leave a partial prepared prefix; it must remain charged and cannot be overwritten as a retry. Final stdout identifies the actual saved plan/prior hashes and distinguishes metadata/opaque-hash work from image/checkpoint execution.
+
+No new blocker found. Root still needs the complete held source arguments, the actual once-only preparation receipt, matching final plan hash/argv, existing bounded launcher and independently reviewed prospective audit before commissioning. The separate commission source review retains the one-private-forward/zero-real-forward boundary and the unqualified coarse guard. This metadata review does not independently repeat the actual intake audit or predict the model outcome.

@@ -1,0 +1,37 @@
+{
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-B",
+    "-X",
+    "faulthandler",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\work\\prepare-sift-lightglue-commission-plan-1.py",
+    "--audit-sha256",
+    "a539ba714a870eea0be485388b322c50bdff1fb48e31a53df72acc4d2f6b1b65",
+    "--source",
+    "experiments/m193c-output-grid/sift-lightglue-commission-run.py",
+    "00ea4a61e59ebc1e36c74cf77ea63bc3167d28e94c5fa84d4ed76eb2a6fd73b1",
+    "--source",
+    "experiments/m193c-output-grid/sift-lightglue-adapter.py",
+    "febb91b856ac17c9d453d16e81aa412e9ea46465ca1bc03c9ce3b189e604495c",
+    "--source",
+    "experiments/m193c-output-grid/sift-lightglue-commission-preregister.md",
+    "c4889bb8773ad6950282ad9fc9692af578529a5f5f18597c7a00b87a7ad62269",
+    "--source",
+    "experiments/m193c-output-grid/work/independent-sift-lightglue-commission-source-review.md",
+    "2885ad07dc7e60de9e7a9790dd1e872655ba6783d3291c94236fb02ef9d43000",
+    "--source",
+    "experiments/m193c-output-grid/work/independent-sift-lightglue-plan-preparation-read.md",
+    "470aa56609c58b2be39052906ad641670f740ab5f89f60a6dda9c573bda6c3cf",
+    "--source",
+    "experiments/m193c-output-grid/work/independent-sift-lightglue-commission-audit.py",
+    "ccb78254596b6402139bb4ff4541a5bb6f0597175268a426bef66ba5e4f7c03c"
+  ],
+  "exit_code": 0,
+  "elapsed_wall_seconds": 0.2139126000001852,
+  "admissible_parent_exit": true,
+  "plan": {
+    "path": "experiments/m193c-output-grid/sift-lightglue-commission-plan-1.json",
+    "bytes": 44426,
+    "sha256": "897a2d435a4f77cc6044e912c40ce97c086e70b1c3e08c17550445b4410ab437"
+  }
+}
