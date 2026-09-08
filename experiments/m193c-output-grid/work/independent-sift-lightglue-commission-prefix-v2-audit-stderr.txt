@@ -1,0 +1,20 @@
+Traceback (most recent call last):
+  File "C:\dev\blog\death-of-software\projects\strehl\experiments\m193c-output-grid\work\independent-sift-lightglue-commission-prefix-v2-audit.py", line 180, in <module>
+    if __name__=='__main__':main()
+                            ^^^^^^
+  File "C:\dev\blog\death-of-software\projects\strehl\experiments\m193c-output-grid\work\independent-sift-lightglue-commission-prefix-v2-audit.py", line 139, in main
+    commissioned=h.commission();science=h.scientific(worker,base)
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\dev\blog\death-of-software\projects\strehl\experiments\m193c-output-grid\work\independent-sift-lightglue-commission-audit.py", line 442, in scientific
+    return dict(exports=[dict(record=x['record'],name=x['manifest']['name'],count=len(x['keys']),descriptor_file=x['manifest']['descriptors']['file'],key_file=x['manifest']['key_fields']['file'],original_descriptors_sha256=x['manifest']['core']['descriptors_sha256'],original_keys_sha256=x['manifest']['core']['keys_sha256'],exact_duplicate_full_keys=len(x['keys'])-len(set(k+(d,) for k,d in zip(x['keys'],x['descriptors'],strict=True))),coarse_size=x['manifest']['explicit_coarse_image_size'],attributes=x['attributes']) for x in exports],controls=notes,normalized_private_descriptors=norm,learned=learned_summary,model_loading=model_load(worker['model_loading']),runtime_before=runtime(worker['runtime_before']),runtime_after=runtime(worker['runtime_after']),factory_observations=obs,counters=counters,export_admission=worker['export_admission'],unvisited_real_exports=worker['unvisited_real_exports'],unvisited_controls=CONTROLS[len(ctrl):],active_phase=worker['active_phase'],refused_control=next((r['id'] for r in ctrl if not r['passed']),None))
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\dev\blog\death-of-software\projects\strehl\experiments\m193c-output-grid\work\independent-sift-lightglue-commission-audit.py", line 360, in runtime
+    need(r['bytes']>0,'nonempty runtime FileRef');file(path(r),r,'runtime');total+=r['bytes'];need(total<=16<<30,'16 GiB total runtime rehash boundary')
+                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\dev\blog\death-of-software\projects\strehl\experiments\m193c-output-grid\work\independent-sift-lightglue-commission-audit.py", line 86, in file
+    s=p.stat(follow_symlinks=False);need(not (getattr(s,'st_file_attributes',0)&0x400) and s.st_nlink==1 and 0<=s.st_size<=cap,'ordinary bounded single-link file')
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\dev\blog\death-of-software\projects\strehl\experiments\m193c-output-grid\work\independent-sift-lightglue-commission-audit.py", line 51, in need
+    if not ok:raise ValueError(message)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: ordinary bounded single-link file

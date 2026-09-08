@@ -73,3 +73,46 @@ original source/prep211944B + original inventory2822B +256KiB <1MiB.
 Count oldhelper/bothadapters/failedoutput/diagnosis/newoutput/outer/report together.
 No scientific threshold or total cap changed. Freeze/review v2 then run ONCE.
 Saved-completion standalone source implementation continues independently; no execution.
+
+## Update: prefix-v2 reached runtime and refused an unjustified link-count rule
+
+Source freeze4186894174c442d0bc0bf2a0f6c3871874bced9f, exact4paths:
+v2auditor23690B d9a8d411c1eae75bff5d1b6b1037325a6e81a3e304e0fe2d01429a548b034579;
+ledger2572B fd32e12cfecde6f6d65e5ce6ca7fbb7726848fc9924ebad4ef8803702e881b26;
+diagnosissource3844B4f0ad636e550b216e9d65caea8f74609e0349f3ab8920740ad2e699988385eb1;
+source-review3973B584c01ea57bf425c6186c28bf6711d548231e2490d91024c5fa05e86e4ddaa16.
+Root maximum ledger251027+review3973=255000<=262144.
+
+V2 ran ONCE, exit1, outer5.803396700001031s. It passed request association and
+reached runtime_before after export/normalization/learned checks, but NO final
+JSON exists and those intermediate numeric results were not published. Do not
+invent a PASS or quote unpublished truth. Empty stdout; stderr3672B
+SHA7a941c81190ffbeee757bdfdaf1accffad8649c6003a4686a4b669a10728c318;
+outer979B SHA30e8e092bc2f2c571c9b89f7df25b544abcd04962b63c7576b1fec60a5d9b03e.
+All are work/independent-sift-lightglue-commission-prefix-v2-audit{.json,-stderr.txt,-outer.json}.
+
+Metadata-only census identified55 external runtime files with nlink>1, none
+reparse, first C:/Windows/System32/DXCore.dll nlink2 and matching282520B extent.
+Independent reviewer found native producer plain_file requires regular/nonreparse
+but NOT single-link. The independent audit helper introduced single-link without
+a runtime-specific justification. This is an auditor policy mismatch, not an
+observed payload mismatch. No rejected file was content-rehashed in diagnosis.
+
+Root now authorizes SOURCE ONLY prefix-v3, not rerunning or changing either old
+source. Runtime-only external manifest paths may have stable positive link count
+while preserving regular/nonreparse, exact frozen path/extent/SHA and opened-file
+identity. Keep strict owned source/export policy. Power changed identity/hash/
+extent/reparse/link-zero rejects. Save bounded partial audit-phase receipts from
+unchanged-return wrappers around normalized/learned/runtime helpers; incomplete
+partial evidence never grants ordinary completion admission.
+
+Full auditfamily512KiB is now allocated INSIDE already charged1MiB prep:
+211944+2822+524288<1048576. Preserve and chargev2 actualouter5.8033967 as conservative
+single-threadCPU/wall plus .25/.5, as with first audit. No scientific/globalcapchange.
+Coor prepares v3/ledger; reviewer checks. Root must freeze then release ONCE.
+
+Saved-completion source progresses independently. Root tightened NEW local limits
+to60CPU120wall,worker<=90wall, with12wall launcher cleanup separate from publication
+inside limits. Five original fits only, no images/model/normalization. Full original
+REFUSED attempt still charged300CPU+2publication because its parentCPU is missing.
+No completion execution has occurred. New publisher12015B current draft is NOT held.

@@ -1,0 +1,22 @@
+{
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-B",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\work\\independent-sift-lightglue-commission-prefix-v2-audit.py",
+    "--plan-sha256",
+    "897a2d435a4f77cc6044e912c40ce97c086e70b1c3e08c17550445b4410ab437",
+    "--worker-result-sha256",
+    "82eb7235d6e132dacf2eb4979e87d6dca1314864410c6d688521aef66b56843d",
+    "--outer-sha256",
+    "0f52b378fc25abc15cb718bbd94963f06bf89822d49ecaf44dac4826a3a316ac",
+    "--console-sha256",
+    "58d56735a6f8f1a4c9ab6a05e1121df4e619c3ea564aae03fd1fc65ae9d4f0b1",
+    "--exit-sha256",
+    "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+  ],
+  "elapsed_wall_seconds": 5.803396700001031,
+  "exit_code": 1,
+  "scope": "one frozen version2 saved-prefix audit; no images, model or registrar execution; prior audit attempts preserved",
+  "stderr_bytes": 3672,
+  "stdout_bytes": 0
+}
