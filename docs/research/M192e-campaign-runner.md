@@ -217,3 +217,60 @@ SHAs and commands are recorded above. No SYNTHESIS facts were folded.
 |47|Plan and invocation receipts bind absolute input/frame range, executable/sidecar/source, environment and actual CLI; independent read checked these associations. |
 |48|No visual defect verdict or resized-viewer quality judgment is used. |
 |49|Root coordinated execution; only owned Job trees were available to cleanup, none required termination, and no peer hold or process kill was used. |
+
+
+## Private startup attribution: completed follow-through
+
+**VERIFIED, private diagnostic scope only (2026-09-08).** The second fixed
+five-null-child probe and its frozen independent saved checker completed once.
+The independent raw-record re-choice is
+[the startup2 actual read](../../experiments/m192e-campaign-runner/independent-startup-attribution-2-read.md),
+11728 bytes, SHA25643f05f12bffb454ab202285defae154620446c0699397a2d93ccacbaa1f16cdf.
+Exact actual argv, exit, whole wall and source/result pins are retained in
+startup-attribution-2-launch-outer.json and startup-attribution-2-audit-outer.json.
+
+| Arm | Complete maximum gap, ms | Coverage | Original gate | Control disposition |
+|---|---:|---:|---|---|
+| off |10.4956|1.0|PASS|PASS|
+| on |10.4914|1.0|PASS|PASS|
+| placebo |10.6485|1.0|PASS|PASS|
+| before-Popen delay |161.3971|0.8125|FAIL|Expected rejection|
+| after-resume delay |160.1858|0.7692307692|FAIL|Expected rejection|
+
+The injected phases measure150.1857/150.3644ms. Independent child timestamps
+place the first entirely before child entry and the second across actual child
+execution. The latter first interval partitions into63.8704ms before child-code
+entry and96.3154ms during it. These are actual null-process events, not invented
+production timestamps. Final-closure uncertainty stays below the observed
+maxima, so the original100ms/90% gate is independently determined.
+
+All five4138-byte nonempty outputs match the literal oracle and each other.
+The independent reader checked all49 files/873687 bytes and actual native
+return/PID associations. Whole subject wall4.422s; complete owned Job CPU1.1875s
+plus sampled parent0.578125s plus0.25s publication reserve is2.015625s. The
+reserve is bookkeeping, not measured terminal parent CPU. Peak committed Job
+memory821858304 bytes fits1GiB. Saved audit exit0/whole0.203s fits its0.156s
+sample plus0.5s tail. These are bounded-run observations, not comparative timings.
+
+Attempt1 remains failed: containing Job peak561917952 bytes exceeded512MiB committed
+memory, cleanup completed and all arms remained unvisited. Its one-byte log
+does not identify a library cause. Full20CPU/30wall/4MiB subject and10CPU/20wall/
+1MiB audit reservations remain charged separately. The source-reviewed second
+attempt changed only the worker memory ceiling and bindings. Source/failure
+freeze7dce975c and release d4a6ef57 preserve that sequence.
+
+This commissions private startup attribution, not production memory/sampling,
+the historical111.9996ms cause, or the133-case scorecard. The next prospective
+integration holds persistence ON across one fixed N33/W8 startup-observer
+off/on/placebo triplet. Root chooses this over the independent reader's proposed
+persistence-OFF branch to exercise durable-trace composition while varying one
+instrumentation factor. No new product call is released by this report.
+
+The preceding per-rule checklist remains the inherited rehearsal checklist.
+Here, rules8/11/20/24 are discharged by actual outer commands, independently
+positioned rejecting delays and literal-output/byte-fault checks;26 by five
+unchanged intrinsic hashes;27/49 by retained owned cleanup on attempt1 and
+natural completion on attempt2;29 by append-only editing and preserved existing
+headings;31/31b/37 by no SYNTHESIS fold;42 by exact source/release/evidence path
+manifests. Other architecture/RAW/noise/geometry/quality rules are unchanged or
+outside this null-only scope.
