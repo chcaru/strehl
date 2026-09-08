@@ -1,0 +1,49 @@
+{
+  "schema": "m193c-local-image-audit3-source-freeze-v1",
+  "base_commit": "f5bdabc0b4723e1370925a982514782e81840ff4",
+  "sources": {
+    "experiments/m193c-output-grid/work/independent-local-image-probe-audit-3.py": {
+      "bytes": 87106,
+      "sha256": "bf095b28e679e057427e4a2db1be4ba798bef8492af47553681b313246f5f33c"
+    },
+    "experiments/m193c-output-grid/work/local-image-audit-3-runtime.py": {
+      "bytes": 15030,
+      "sha256": "f5eab6edb0fdebc918ee3bb131a1712b800a332464c4654fd3f080b842d750c5"
+    },
+    "experiments/m193c-output-grid/work/independent-local-image-probe-audit-3-ledger.json": {
+      "bytes": 3062,
+      "sha256": "3b9f52fd6355324d456e33f858545ad9fef1fe1831d60cef122926da9e285d8e"
+    },
+    "experiments/m193c-output-grid/work/independent-local-image-probe-audit-3-preregister.md": {
+      "bytes": 13726,
+      "sha256": "3aead8168bcbfaacfbc04112436e2aee32b6385aa9c8dcaae31c153209f251ec"
+    },
+    "experiments/m193c-output-grid/work/independent-local-image-probe-audit-3-source-review.md": {
+      "bytes": 8105,
+      "sha256": "3bad3a7b436c6aec12cfbd194a424a753261f9eaf552bc7e62b63d5defc77c40"
+    },
+    "experiments/m193c-output-grid/work/prepare-local-image-audit-3.py": {
+      "bytes": 23832,
+      "sha256": "46074cf9a59455513a25659952f7ac65ea94cee4a575fba9608f74b037573a0f"
+    },
+    "experiments/m193c-output-grid/work/local-image-audit-3-preparation.md": {
+      "bytes": 9960,
+      "sha256": "6f7594f54d24954dc68a2fb4902b76e4a854fbeb9be565a4466c0d3b65dc2f5d"
+    },
+    "experiments/m193c-output-grid/work/independent-local-image-audit-3-preparation-review.md": {
+      "bytes": 6027,
+      "sha256": "158004af98180bd0399ca45cfa96bebf9008420672aa693392ea61fe40e691e2"
+    },
+    "experiments/m193c-output-grid/work/local-image-audit-3-runtime-decision.md": {
+      "bytes": 5538,
+      "sha256": "09b140d3d2c2b27cd4464fd990e4128c4163864020a4c84c946db54cbf883c49"
+    },
+    "experiments/m193c-output-grid/work/root-isolated-import-capture-1-terminal-read.json": {
+      "bytes": 1499,
+      "sha256": "77d4fe803ce219e6b78312751e02f02bfad0a6d667447d0f02b04450875bbff6"
+    }
+  },
+  "source_count": 10,
+  "source_bytes": 173885,
+  "scope": "Source-only review freeze. One metadata preparation may run from these literal reviewed triples; no checker or numerical run released by this record."
+}
