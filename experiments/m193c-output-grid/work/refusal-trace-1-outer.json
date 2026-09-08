@@ -1,0 +1,22 @@
+{
+  "scope": "Actual fixed saved-correspondence refusal trace; no image processing or support admission",
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-B",
+    "-X",
+    "faulthandler",
+    "-X",
+    "pycache_prefix=C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\refusal-trace-1\\parent-cache",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\refusal-trace-run.py",
+    "--plan",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\refusal-trace-plan-1.json",
+    "--sha256",
+    "327ffd9e27270542e8f7c93ee37827a4beb5eb9291394924f66590dcf3baaeef",
+    "--output",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\refusal-trace-1"
+  ],
+  "plan_sha256": "327ffd9e27270542e8f7c93ee37827a4beb5eb9291394924f66590dcf3baaeef",
+  "exit_code": 0,
+  "elapsed_wall_seconds": 13.54700000000048,
+  "admissible_parent_exit": true
+}

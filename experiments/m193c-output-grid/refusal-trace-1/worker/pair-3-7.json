@@ -1,0 +1,746 @@
+{
+  "comparisons": [
+    {
+      "equal": true,
+      "label": "on-vs-off",
+      "left": {
+        "bytes": 260,
+        "sha256": "7471e0db02a89961d209f59812eaf18f646541e7ee4fed0a92740bc359170869"
+      },
+      "method": "entire registrar return/refusal or trace; exact canonical bytes",
+      "right": {
+        "bytes": 260,
+        "sha256": "7471e0db02a89961d209f59812eaf18f646541e7ee4fed0a92740bc359170869"
+      }
+    },
+    {
+      "equal": true,
+      "label": "on-vs-placebo",
+      "left": {
+        "bytes": 260,
+        "sha256": "7471e0db02a89961d209f59812eaf18f646541e7ee4fed0a92740bc359170869"
+      },
+      "method": "entire registrar return/refusal or trace; exact canonical bytes",
+      "right": {
+        "bytes": 260,
+        "sha256": "7471e0db02a89961d209f59812eaf18f646541e7ee4fed0a92740bc359170869"
+      }
+    },
+    {
+      "equal": true,
+      "label": "on-vs-actual-cache",
+      "left": {
+        "bytes": 260,
+        "sha256": "7471e0db02a89961d209f59812eaf18f646541e7ee4fed0a92740bc359170869"
+      },
+      "method": "entire registrar return/refusal or trace; exact canonical bytes",
+      "right": {
+        "bytes": 260,
+        "sha256": "7471e0db02a89961d209f59812eaf18f646541e7ee4fed0a92740bc359170869"
+      }
+    }
+  ],
+  "input": {
+    "bytes": 20446,
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\real-precise-1\\worker\\pair-3-7.json",
+    "sha256": "0bff7bf6983602752cf0a2c975653d588b4bf600e07adfcb0f4a3d39f17d5d1a"
+  },
+  "pair": {
+    "id": "pair-3-7",
+    "local_span": 4,
+    "reference": 3,
+    "reference_original": 39,
+    "source": 7,
+    "source_original": 91,
+    "star": false
+  },
+  "passed": true,
+  "qualification": {
+    "consumer": "saved registrar rejection path; no support, overlap, graph solve, placement, merge or quality admission",
+    "coordinate_gauge": "native pixel centres; source to reference",
+    "coordinate_lattice_step_q8": 8,
+    "guard_status": "UNQUALIFIED_FOR_COARSE_LATTICE",
+    "inherited_quantization_guard_q8": 1,
+    "limitation": "Residual severity does not identify bad correspondence versus localization or model error without real truth; lattice quantum does not bound detector localization.",
+    "status": "NONADMISSIBLE_DIAGNOSTIC_CANDIDATES"
+  },
+  "saved_landmark_digest_semantics": "Producer witness; descriptors absent, no digest recomputation, rematching or split change",
+  "schema": "m193c-saved-refusal-trace-record-v1",
+  "trace": {
+    "calibration_gate": {
+      "at_least_half": false,
+      "calibration_count": 15,
+      "candidate_exists": true,
+      "minimum_12": false,
+      "selected_count": 3
+    },
+    "callback_calls": 1,
+    "final": null,
+    "gates": [
+      {
+        "code": "UNMEASURED_INPUT_REGISTRATION_INADEQUATE",
+        "message": "too few total mutual landmarks",
+        "passed": true
+      },
+      {
+        "code": "UNMEASURED_INPUT_REGISTRATION_INADEQUATE",
+        "message": "too few calibration landmarks",
+        "passed": true
+      },
+      {
+        "code": "UNMEASURED_INPUT_REGISTRATION_INADEQUATE",
+        "message": "no majority landmark consensus",
+        "passed": false
+      }
+    ],
+    "helpers_restored": true,
+    "qualification": {
+      "consumer": "saved registrar rejection path; no support, overlap, graph solve, placement, merge or quality admission",
+      "coordinate_gauge": "native pixel centres; source to reference",
+      "coordinate_lattice_step_q8": 8,
+      "guard_status": "UNQUALIFIED_FOR_COARSE_LATTICE",
+      "inherited_quantization_guard_q8": 1,
+      "limitation": "Residual severity does not identify bad correspondence versus localization or model error without real truth; lattice quantum does not bound detector localization.",
+      "status": "NONADMISSIBLE_DIAGNOSTIC_CANDIDATES"
+    },
+    "refinement": [],
+    "seed": {
+      "calibration_input_ordinals": null,
+      "calibration_update_ordinals": [
+        14,
+        22,
+        24
+      ],
+      "label": "selected-calibration-seed",
+      "qualification": {
+        "consumer": "saved registrar rejection path; no support, overlap, graph solve, placement, merge or quality admission",
+        "coordinate_gauge": "native pixel centres; source to reference",
+        "coordinate_lattice_step_q8": 8,
+        "guard_status": "UNQUALIFIED_FOR_COARSE_LATTICE",
+        "inherited_quantization_guard_q8": 1,
+        "limitation": "Residual severity does not identify bad correspondence versus localization or model error without real truth; lattice quantum does not bound detector localization.",
+        "status": "NONADMISSIBLE_DIAGNOSTIC_CANDIDATES"
+      },
+      "residual_columns": [
+        "ordinal",
+        "predicted_minus_reference_x_numerator",
+        "predicted_minus_reference_y_numerator",
+        "squared_numerator",
+        "within_two_native"
+      ],
+      "residual_coordinate_denominator": 1099511627776,
+      "residual_squared_denominator": 1208925819614629174706176,
+      "residuals": [
+        [
+          0,
+          41425029114328,
+          -8528125379432,
+          1788761959610234638063534208,
+          false
+        ],
+        [
+          1,
+          -8666226842176,
+          -5548952537920,
+          105894361948140613850341376,
+          false
+        ],
+        [
+          2,
+          4898348786832,
+          -8389266153456,
+          94373607430980956317340160,
+          false
+        ],
+        [
+          3,
+          -173903428913520,
+          2074100347940144,
+          4332134655913306107071445531136,
+          false
+        ],
+        [
+          4,
+          22642656449664,
+          -19926637208432,
+          909760761533977387177611520,
+          false
+        ],
+        [
+          5,
+          113467988387000,
+          -114748452942696,
+          26042191841334485163628748416,
+          false
+        ],
+        [
+          6,
+          -3876769546859808,
+          1814277587536912,
+          18320945284098358441224568292608,
+          false
+        ],
+        [
+          7,
+          -354681693917704,
+          50887508156840,
+          128388642486744324161963417216,
+          false
+        ],
+        [
+          8,
+          -4599178430003328,
+          -216159766530768,
+          21199167275674513161272381745408,
+          false
+        ],
+        [
+          9,
+          2778311237768,
+          -6520572827432,
+          50236883331752503081336448,
+          false
+        ],
+        [
+          10,
+          3986011680752,
+          7531863173008,
+          72617251976005521707053568,
+          false
+        ],
+        [
+          11,
+          -3878918857053648,
+          -372714729426720,
+          15184927769138012026183400066304,
+          false
+        ],
+        [
+          12,
+          -22008196067976,
+          -3087287673640,
+          493892039346283750363586176,
+          false
+        ],
+        [
+          13,
+          -17459644280024,
+          7721485784008,
+          364460521097612419753984640,
+          false
+        ],
+        [
+          14,
+          -99640,
+          -591032,
+          359246954624,
+          true
+        ],
+        [
+          15,
+          -3876769546859808,
+          1814277587536912,
+          18320945284098358441224568292608,
+          false
+        ],
+        [
+          16,
+          5122758383440,
+          -9800107762896,
+          122284765619479243820540416,
+          false
+        ],
+        [
+          17,
+          15860511156536,
+          -7225473886088,
+          303763287025142548695463040,
+          false
+        ],
+        [
+          18,
+          -1294108412720,
+          8747783160784,
+          78198426811968787453293056,
+          false
+        ],
+        [
+          19,
+          2025173153770136,
+          1579635094747960,
+          6596573335310675478686649620096,
+          false
+        ],
+        [
+          20,
+          -100032243052320,
+          -80440069539760,
+          16477054437639847488478240000,
+          false
+        ],
+        [
+          21,
+          506831939176,
+          -19225987067688,
+          369895457341475125257224320,
+          false
+        ],
+        [
+          22,
+          -1224567461208,
+          633035613480,
+          1900299554983406542529664,
+          true
+        ],
+        [
+          23,
+          -12332354892032,
+          26641165682608,
+          861838686111195784970770688,
+          false
+        ],
+        [
+          24,
+          -158328,
+          -906040,
+          845976237184,
+          true
+        ],
+        [
+          25,
+          4960783642088,
+          8835595901240,
+          102677129273616969918537344,
+          false
+        ],
+        [
+          26,
+          -113704199610440,
+          -65931601071960,
+          17275621028962860868855235200,
+          false
+        ],
+        [
+          27,
+          4030292531785792,
+          512622427517024,
+          16506039644961775743318382883840,
+          false
+        ],
+        [
+          28,
+          -694474062904,
+          30931673767288,
+          957250736269979003327788160,
+          false
+        ]
+      ],
+      "seed_baseline_squared_q8": {
+        "reference": 303877345536,
+        "source": 278852986880
+      },
+      "seed_calibration_ordinals": [
+        7,
+        12
+      ],
+      "seed_full_ordinals": [
+        14,
+        24
+      ],
+      "selection_key": [
+        -3,
+        1900299554984611765721472,
+        7,
+        12
+      ],
+      "summaries": {
+        "all": {
+          "all_rows": {
+            "endpoints": {
+              "reference": {
+                "bbox_q8": [
+                  140248,
+                  40144,
+                  1639704,
+                  1097592
+                ],
+                "unique_sites": 28
+              },
+              "source": {
+                "bbox_q8": [
+                  24328,
+                  40040,
+                  1705712,
+                  1109168
+                ],
+                "unique_sites": 28
+              }
+            },
+            "joint_multiplicity_histogram": [
+              [
+                1,
+                27
+              ],
+              [
+                2,
+                1
+              ]
+            ],
+            "rows": 29,
+            "unique_joint_groups": 28
+          },
+          "cdf": [
+            {
+              "count": 2,
+              "radius_native": "1/4"
+            },
+            {
+              "count": 2,
+              "radius_native": "1/2"
+            },
+            {
+              "count": 2,
+              "radius_native": "1"
+            },
+            {
+              "count": 3,
+              "radius_native": "2"
+            },
+            {
+              "count": 3,
+              "radius_native": "4"
+            },
+            {
+              "count": 5,
+              "radius_native": "8"
+            },
+            {
+              "count": 11,
+              "radius_native": "16"
+            },
+            {
+              "count": 17,
+              "radius_native": "32"
+            }
+          ],
+          "count": 29,
+          "quantiles_nearest_rank": [
+            {
+              "fraction": "0",
+              "native_px": 5.451257799661377e-07,
+              "squared_residual_numerator": 359246954624
+            },
+            {
+              "fraction": "1/2",
+              "native_px": 26.700117084000876,
+              "squared_residual_numerator": 861838686111195784970770688
+            },
+            {
+              "fraction": "9/10",
+              "native_px": 3892.9077490548093,
+              "squared_residual_numerator": 18320945284098358441224568292608
+            },
+            {
+              "fraction": "19/20",
+              "native_px": 3892.9077490548093,
+              "squared_residual_numerator": 18320945284098358441224568292608
+            },
+            {
+              "fraction": "1",
+              "native_px": 4187.545841266283,
+              "squared_residual_numerator": 21199167275674513161272381745408
+            }
+          ],
+          "within_two_native": 3,
+          "within_two_rows": {
+            "endpoints": {
+              "reference": {
+                "bbox_q8": [
+                  796768,
+                  577688,
+                  1252768,
+                  926824
+                ],
+                "unique_sites": 3
+              },
+              "source": {
+                "bbox_q8": [
+                  802872,
+                  575200,
+                  1237400,
+                  910688
+                ],
+                "unique_sites": 3
+              }
+            },
+            "joint_multiplicity_histogram": [
+              [
+                1,
+                3
+              ]
+            ],
+            "rows": 3,
+            "unique_joint_groups": 3
+          }
+        },
+        "calibration": {
+          "all_rows": {
+            "endpoints": {
+              "reference": {
+                "bbox_q8": [
+                  140248,
+                  40144,
+                  1360624,
+                  1097592
+                ],
+                "unique_sites": 15
+              },
+              "source": {
+                "bbox_q8": [
+                  24328,
+                  40040,
+                  1345432,
+                  1076928
+                ],
+                "unique_sites": 15
+              }
+            },
+            "joint_multiplicity_histogram": [
+              [
+                1,
+                15
+              ]
+            ],
+            "rows": 15,
+            "unique_joint_groups": 15
+          },
+          "cdf": [
+            {
+              "count": 2,
+              "radius_native": "1/4"
+            },
+            {
+              "count": 2,
+              "radius_native": "1/2"
+            },
+            {
+              "count": 2,
+              "radius_native": "1"
+            },
+            {
+              "count": 3,
+              "radius_native": "2"
+            },
+            {
+              "count": 3,
+              "radius_native": "4"
+            },
+            {
+              "count": 4,
+              "radius_native": "8"
+            },
+            {
+              "count": 7,
+              "radius_native": "16"
+            },
+            {
+              "count": 10,
+              "radius_native": "32"
+            }
+          ],
+          "count": 15,
+          "quantiles_nearest_rank": [
+            {
+              "fraction": "0",
+              "native_px": 5.451257799661377e-07,
+              "squared_residual_numerator": 359246954624
+            },
+            {
+              "fraction": "1/2",
+              "native_px": 20.212320986010564,
+              "squared_residual_numerator": 493892039346283750363586176
+            },
+            {
+              "fraction": "9/10",
+              "native_px": 3892.9077490548093,
+              "squared_residual_numerator": 18320945284098358441224568292608
+            },
+            {
+              "fraction": "19/20",
+              "native_px": 4187.545841266283,
+              "squared_residual_numerator": 21199167275674513161272381745408
+            },
+            {
+              "fraction": "1",
+              "native_px": 4187.545841266283,
+              "squared_residual_numerator": 21199167275674513161272381745408
+            }
+          ],
+          "within_two_native": 3,
+          "within_two_rows": {
+            "endpoints": {
+              "reference": {
+                "bbox_q8": [
+                  796768,
+                  577688,
+                  1252768,
+                  926824
+                ],
+                "unique_sites": 3
+              },
+              "source": {
+                "bbox_q8": [
+                  802872,
+                  575200,
+                  1237400,
+                  910688
+                ],
+                "unique_sites": 3
+              }
+            },
+            "joint_multiplicity_histogram": [
+              [
+                1,
+                3
+              ]
+            ],
+            "rows": 3,
+            "unique_joint_groups": 3
+          }
+        },
+        "holdout": {
+          "all_rows": {
+            "endpoints": {
+              "reference": {
+                "bbox_q8": [
+                  712136,
+                  60640,
+                  1639704,
+                  1008488
+                ],
+                "unique_sites": 14
+              },
+              "source": {
+                "bbox_q8": [
+                  251880,
+                  60720,
+                  1705712,
+                  1109168
+                ],
+                "unique_sites": 14
+              }
+            },
+            "joint_multiplicity_histogram": [
+              [
+                1,
+                14
+              ]
+            ],
+            "rows": 14,
+            "unique_joint_groups": 14
+          },
+          "cdf": [
+            {
+              "count": 0,
+              "radius_native": "1/4"
+            },
+            {
+              "count": 0,
+              "radius_native": "1/2"
+            },
+            {
+              "count": 0,
+              "radius_native": "1"
+            },
+            {
+              "count": 0,
+              "radius_native": "2"
+            },
+            {
+              "count": 0,
+              "radius_native": "4"
+            },
+            {
+              "count": 1,
+              "radius_native": "8"
+            },
+            {
+              "count": 4,
+              "radius_native": "16"
+            },
+            {
+              "count": 7,
+              "radius_native": "32"
+            }
+          ],
+          "count": 14,
+          "quantiles_nearest_rank": [
+            {
+              "fraction": "0",
+              "native_px": 6.446314910638017,
+              "squared_residual_numerator": 50236883331752503081336448
+            },
+            {
+              "fraction": "1/2",
+              "native_px": 26.700117084000876,
+              "squared_residual_numerator": 861838686111195784970770688
+            },
+            {
+              "fraction": "9/10",
+              "native_px": 3695.061025794302,
+              "squared_residual_numerator": 16506039644961775743318382883840
+            },
+            {
+              "fraction": "19/20",
+              "native_px": 3892.9077490548093,
+              "squared_residual_numerator": 18320945284098358441224568292608
+            },
+            {
+              "fraction": "1",
+              "native_px": 3892.9077490548093,
+              "squared_residual_numerator": 18320945284098358441224568292608
+            }
+          ],
+          "within_two_native": 0,
+          "within_two_rows": {
+            "endpoints": {
+              "reference": {
+                "bbox_q8": null,
+                "unique_sites": 0
+              },
+              "source": {
+                "bbox_q8": null,
+                "unique_sites": 0
+              }
+            },
+            "joint_multiplicity_histogram": [],
+            "rows": 0,
+            "unique_joint_groups": 0
+          }
+        }
+      },
+      "transform_q32": {
+        "a": 4483410987,
+        "b": -34450909,
+        "tx": -770815650046,
+        "ty": -273622120356
+      }
+    },
+    "seed_counts": {
+      "eligible": 89,
+      "scale_rejected": 16,
+      "separation_rejected": 0,
+      "total": 105
+    },
+    "signature": {
+      "error": {
+        "code": "UNMEASURED_INPUT_REGISTRATION_INADEQUATE",
+        "message": "UNMEASURED_INPUT_REGISTRATION_INADEQUATE: no majority landmark consensus"
+      },
+      "guard": null,
+      "metrics": null,
+      "status": "REGISTRATION_REFUSED",
+      "transform": null
+    }
+  }
+}

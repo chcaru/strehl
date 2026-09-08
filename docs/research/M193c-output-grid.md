@@ -19,6 +19,9 @@ precise upscale removes the measured four-pixel mapping error on that fixture.
 Its independent audit confirms the finite result. The fixed real AREA8/precise
 follow-up now completes all23 pairs, but all23 still refuse: more tentative
 correspondences do not yet supply accepted geometry. Its complete audit passes.
+The saved-coordinate trace now also completes and passes its independent audit:
+21 pairs stop before refinement; two reach the later held-out gates. The next
+fixed experiment tests AREA4 with precise upscale at unchanged native limits.
 HardFloor remains the default; no quality promotion follows
 from this work. The [charter](../../experiments/m193c-output-grid/charter.md)
 names the actual sampling-coordinate consumer and the fixed historical inputs.
@@ -574,6 +577,76 @@ This can locate rejection severity; real bad matches, localization error and mod
 mismatch remain competing causes until independent evidence separates them.
 No new image arm, parameter relaxation or graph work is justified by counts alone.
 
+## Saved refusal trace and next representation decision
+
+**MEASURED, independently verified:** the source release `f43b966e` completes
+all four controls, all23 real records and77 saved-match registrar replays. It reads
+no image payload, extracts no features and performs no descriptor matching.
+All23 real refusals and both cached private returns have identical recorded
+canonical hashes with the observer off, on and in placebo mode, agreeing with
+the original cache (75 calls). The fixed within-split source permutation actually
+refuses; restoration reproduces the entire true trace (one call each). The audit
+checks retained hash witnesses; separate off/placebo values were not saved.
+The private false map still returns despite failing literal physical truth.
+
+The [prospective independent audit](../../experiments/m193c-output-grid/work/independent-refusal-trace-1-audit.py)
+was committed before the run. Its [actual result](../../experiments/m193c-output-grid/work/independent-refusal-trace-1-audit.json)
+independently checks selected seed coefficients, each actually visited refinement,
+every retained signed residual, original gates and complete accounting. It does
+not re-enumerate every hypothesis, so global seed optimality remains supported
+by the pinned original loop and nonperturbation evidence, not a second search.
+
+| Actual path | Pairs | Verified implication |
+|---|---:|---|
+| Seed fails minimum12 and half-population | 13 | Both support predicates fail |
+| Seed meets minimum12 but fails half-population | 8 | More than12 matches does not establish majority |
+| Seed passes, held-out RMS refuses | 1: local2-3 / original26-39 | Three actual refinements;67/126 held-out inliers; RMS1.035343941561 rounds to the original1.035343942 message |
+| Seed passes, held-out consensus refuses | 1: local3-4 / original39-52 | One actual refinement;54/115 held-out inliers, needing58 |
+
+All23 pairs have an eligible selected seed; all21 seed-gate failures perform
+zero refinements. Local1-2 is59/119 calibration inliers, one row below its
+required60. Its seed has60/118 held-out inliers, but no refinement or held-out gate
+was actually visited for that pair. These descriptive observations do not license
+running a skipped stage retroactively or treating a rejected candidate as geometry.
+
+Near misses coexist with broad disagreement. For the21 seed-refused pairs,
+independent conventional all-held-out medians span1.919144 to99.79745 native
+pixels. Conventional median averages the two central residual magnitudes at even
+N; the producer's predeclared nearest-rank median selects the lower one. For
+local2-3's final candidate these are1.711824 and1.677667 respectively. Its all-row
+held-out RMS is225.10219 native pixels, although selected-inlier RMS is1.035344.
+The former includes gross outliers; the latter is selected optimistically. Neither
+is physical placement truth or distinguishes correspondence, localization and
+model error. Repeated coordinate rows also remain in the original gate population.
+
+The run writes31 metadata files totaling1,922,639 bytes, independently inventoried
+including hidden files. Parent/worker exit0, finalization is clean and terminal
+Job accounting is complete. Final carry is591.234375CPU seconds,
+697.57508500000048 conservative outer-wall seconds,3,965,093,907 file bytes and
+39,893,261 metadata bytes. These are budget receipts, not timing benchmarks.
+No image volume, accepted support edge, overlap or real placement is produced.
+
+**ARGUED next implementation:** run one fixed AREA4 + precise=true representation
+against the completed AREA8 + precise=true comparator. Both independent design
+reads support this narrower step before a learned matcher or local patch refiner.
+It tests finer image sampling against cross-defocus robustness; it does not claim
+that the8-Q8 coordinate quantum caused the multi-pixel residuals. AREA4 changes
+sampled content and thus detector candidates/descriptors and resulting match
+splits. Any difference belongs to that representation pipeline. The historical
+native arm omitted precise upscale, so it is not a clean resolution endpoint.
+
+Keep the same nine authenticated inputs and23 pair directions, original native
+2-pixel inlier/1-pixel held-out RMS limits, literal private rotation and powered
+map/centre/observer controls. Lift coarse centres by4q+384 Q8; the resulting4-Q8
+lattice still does not qualify the inherited1-Q8 support guard. If valid controls
+are followed by0/23 returned fits, reject this fixed arm as a route to obtaining
+diagnostic fits. More tentative matches or lower selected residuals alone do not
+count. Returned fits would justify further development, not physical accuracy,
+per-frame placement, support, merge quality or SOTA admission. Broad baseline
+failures remain part of the fixed population. See the
+[primary alternatives memo](../../experiments/m193c-output-grid/work/registration-primary-alternatives.md)
+for conditional learned-matcher alternatives and their actual input/licence limits.
+
 ## Reproduction and preserved attempts
 
 Each release contains the complete actual argument array, input references and
@@ -604,6 +677,7 @@ these attempts when reproducing them.
 | Private precise-upscale 1 | `b6957375` | [precise-upscale plan 1](../../experiments/m193c-output-grid/precise-upscale-plan-1.json) | [baseline record comparison refused; true unvisited](../../experiments/m193c-output-grid/precise-upscale-1/result.json) |
 | Canonical private precise-upscale 1 | `77082d3a` | [canonical plan1](../../experiments/m193c-output-grid/precise-upscale-canonical-plan-1.json) | [private controls and option comparison completed](../../experiments/m193c-output-grid/precise-upscale-canonical-1/result.json) |
 | Real AREA8/precise 1 | `5a3739f7` | [real precise plan1](../../experiments/m193c-output-grid/real-precise-plan-1.json) | [all23 observed; all23 refused](../../experiments/m193c-output-grid/real-precise-1/result.json) |
+| Saved refusal trace1 | `f43b966e` | [trace plan1](../../experiments/m193c-output-grid/refusal-trace-plan-1.json) | [77 replays complete; exact refusals preserved](../../experiments/m193c-output-grid/refusal-trace-1/result.json) |
 
 Final control result SHA256:
 `39a6f6e93e3b8df83834ab4046c7f30d6f42612df0cb0ec57ea158815baa7cfd`.
@@ -612,10 +686,10 @@ Build 2 result SHA256:
 
 ## Next decisions
 
-Trace the rejected-fit boundary from the23 saved AREA8/precise coordinate records.
-More matches did not produce an accepted edge. Separate minimum support,
-calibration fraction and held-out residual failures before choosing another
-representation or refinement. Keep all refusals, native thresholds and the
-unqualified support guard; no graph solve or cover-mode render is yet admitted.
+Implement and independently review the single fixed AREA4/precise experiment
+selected from the completed saved-coordinate trace. Preserve all23 pairs, the
+original native limits and all earlier refusals. A returned diagnostic fit is
+not physical truth; the support guard and real placement still require their own
+qualification before any graph solve or cover-mode render.
 The [next-decision memo](../../experiments/m193c-output-grid/next-program-decision.md)
 keeps real cover-mode renders conditional on usable input geometry.
