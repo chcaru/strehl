@@ -399,8 +399,10 @@ process-drain repair has now passed all fourteen controls and independent
 readback. Build3 from `43a72446` is independently verified. Private2 from
 `3090dc0c` passed ten coordinate cases, two conversion fixtures and their
 independent controls; its complete twelve-TIFF chain has passed independent
-inspection. Next is dependency runtime capture, then the nine native derivatives
-and frozen input registrar. Real coverage remains unmeasured. See the
+inspection. Dependency capture from `3bc87c03` is independently verified;
+two adjacent decoder DLLs receive separate before/after byte checks. Next is
+the nine native derivatives and frozen input registrar. Real coverage remains
+unmeasured. See the
 [M193c progress record](../research/M193c-output-grid.md).
 Existing owned RAW decode may
 allocate before exposing shape: enforce a process committed-memory limit and

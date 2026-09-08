@@ -42,3 +42,20 @@ after those prerequisites exist. The actual resulting manifest still needs its
 own comparison with the observed prerequisites before execution. The review
 does not run the preparer, reset the real-stage budget, or authorize a claimed
 alignment result.
+
+## Root's later prerequisite addition
+
+After successful dependency capture, root added five required input filenames
+to the preparer's existing `add(ref(...))` list: the actual independent capture
+read, capture console/exit/outer observations, and the explanatory prior-work
+record. The resulting source is 19,881 bytes, SHA256
+`967e5d42ddd061538a3dd0895fad2eb705fe3654dd65f2e06624d92ca40b7af7`.
+All previously reviewed logic is unchanged. This addition is root-authored;
+its independent review is delegated to implementation_audit with the actual
+capture read. It must not be described as independently verified by this note.
+
+The final metadata list adds a sixth file, the adjacent decoder-DLL supplement.
+The final preparer is 19,925 bytes, SHA256
+`80427c42c6ee97cfc84c6308a2810c73b74e166f9b81ef4a28f07789aef4f9f1`.
+The independent actual-capture read now verifies both additions and the limited
+supplemental endpoint-observation method. Numerical sources remain unchanged.

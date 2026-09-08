@@ -1,0 +1,97 @@
+{
+  "scope": "actual enumerated capture metadata extents, not write I/O",
+  "reserved_bytes": 1048576,
+  "observed_bytes": 150449,
+  "files": [
+    {
+      "path": "experiments/m193c-output-grid/derivative-runtime-1.json",
+      "bytes": 2226,
+      "sha256": "413975cbbbf5b1dc33407e6be1aa23e9195dc4471f1ee7e9de99f903dccd9442"
+    },
+    {
+      "path": "experiments/m193c-output-grid/independent-runtime-capture-1-read.md",
+      "bytes": 11330,
+      "sha256": "fe366c0db5941e46022f4b373995772648897e4292b6b49fbea3ca8cec6a5159"
+    },
+    {
+      "path": "experiments/m193c-output-grid/independent-runtime-capture-release-review.md",
+      "bytes": 7187,
+      "sha256": "cd016f17670c49671adc4c9a3c6431cd01644ea3d62ce1c87a84bea9a0202e45"
+    },
+    {
+      "path": "experiments/m193c-output-grid/independent-runtime-capture-review.md",
+      "bytes": 3652,
+      "sha256": "b7a5f4316ee8c276bb374625654a0f0683809a9adf78666a42770d84f852716f"
+    },
+    {
+      "path": "experiments/m193c-output-grid/runtime-capture-1/capture.log",
+      "bytes": 275,
+      "sha256": "b2a8f2167d78d8d4f5549999a519ffe23448247151d04962e8a584ef1b3e5d22"
+    },
+    {
+      "path": "experiments/m193c-output-grid/runtime-capture-1/result.json",
+      "bytes": 58261,
+      "sha256": "0cb18db67c7a87674999f0714e964ff19883b43fbd88f7a2436b44d5c41e43fa"
+    },
+    {
+      "path": "experiments/m193c-output-grid/runtime-capture-preregister.md",
+      "bytes": 7640,
+      "sha256": "20d397feec6c515f732de2918524d75fd51fb62ebe141ebfaff71dcc9d70120f"
+    },
+    {
+      "path": "experiments/m193c-output-grid/runtime-capture-release-1.json",
+      "bytes": 27467,
+      "sha256": "7a2436afe602b2d53fdf95600e6285c26ca390a429cb5c6255b1be8206502a30"
+    },
+    {
+      "path": "experiments/m193c-output-grid/runtime-capture.py",
+      "bytes": 20047,
+      "sha256": "20708c62badf50172d59994fb35e43e27714772c91d1842367d7bae37526ed18"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/check-native-prior-reservation-1.py",
+      "bytes": 1783,
+      "sha256": "7f04c082bf880df8f8a7a9740c3ec8bf4625f5a18cffcbfee696dfc79dce8e7c"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/native-adjacent-dependencies-1.json",
+      "bytes": 1028,
+      "sha256": "c93af42e6fd2a26d2de7cdc6e7decf7156f9181a124fe4a9d2ab99e03a82a6aa"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/native-prior-work-1.json",
+      "bytes": 112,
+      "sha256": "4ec3dbd3f843979ff9c94efbbc6f663e2d1ff7b2701e666580850ce55e2e76a9"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/native-prior-work-1.md",
+      "bytes": 2007,
+      "sha256": "d3df97aaea3d860339d90b0d9b4316d833ab0ba720d961baf048987bb3c3ad98"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/prepare-runtime-archive-1.py",
+      "bytes": 1608,
+      "sha256": "6eb67c60c6edd749a967ccb6303f951093d5ee47ff1c72c1084410168db47bd0"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/prepare-runtime-capture-1.py",
+      "bytes": 4155,
+      "sha256": "c1e98710ce61c24e8d5f80ab90bee889c7500ae6b84dccd77f026d11e7ad218f"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/runtime-capture-1-console.txt",
+      "bytes": 620,
+      "sha256": "eddfb927b3c436aa3e530f9ef04440eb4b06660f9ecbaebfa762b95e7da13c7a"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/runtime-capture-1-exit.txt",
+      "bytes": 3,
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/runtime-capture-1-outer.json",
+      "bytes": 1048,
+      "sha256": "cc5495d5b575cf55fff2cc42c395452475e2a7a642e91112932f73b52fd383a8"
+    }
+  ]
+}

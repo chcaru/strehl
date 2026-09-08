@@ -1,0 +1,18 @@
+{
+  "scope": "Supplementary actual byte pins for DLLs adjacent to rawpy; no full interpreter or loaded-module closure claim",
+  "required_observation": "Root verifies these two exact FileRefs before and after the released native parent, retaining both observations in its outer record. A mismatch or missing observation prevents admission regardless of the child status.",
+  "files": [
+    {
+      "bytes": 1926656,
+      "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\rawpy\\raw_r.dll",
+      "sha256": "da20108e301a929170fe1af2acb2ef7e5de62347057f860139fda111d504fa39"
+    },
+    {
+      "bytes": 193152,
+      "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\rawpy\\vcomp140.dll",
+      "sha256": "55aba23cdcd6484fbb06f4155b8ca75adfce7a881f10afd0c49457165e677164"
+    }
+  ],
+  "runtime_sha256": "413975cbbbf5b1dc33407e6be1aa23e9195dc4471f1ee7e9de99f903dccd9442",
+  "schema": "m193c-adjacent-dependency-observation-v1"
+}

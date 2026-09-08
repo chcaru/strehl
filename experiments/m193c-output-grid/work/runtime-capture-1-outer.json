@@ -1,0 +1,21 @@
+{
+  "release_sha256": "7a2436afe602b2d53fdf95600e6285c26ca390a429cb5c6255b1be8206502a30",
+  "scope": "Actual PowerShell direct invocation and terminal wall observation; parent plus child Job CPU in final receipt",
+  "exit_code": 0,
+  "elapsed_wall_seconds": 1.7583753,
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-B",
+    "-X",
+    "faulthandler",
+    "-X",
+    "pycache_prefix=C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\runtime-capture-1\\cache-parent",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\runtime-capture.py",
+    "--release",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\runtime-capture-release-1.json",
+    "--release-sha256",
+    "7a2436afe602b2d53fdf95600e6285c26ca390a429cb5c6255b1be8206502a30",
+    "--output",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\runtime-capture-1"
+  ]
+}

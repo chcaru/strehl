@@ -1,0 +1,54 @@
+{
+  "libraw_version": [
+    0,
+    22,
+    1
+  ],
+  "module_files": [
+    {
+      "bytes": 27212,
+      "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\numpy\\__init__.py",
+      "sha256": "b16a4f347c6583c878e1973a208564e01686b79cc70911ad0157e05d8eecda37"
+    },
+    {
+      "bytes": 3714560,
+      "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\numpy\\_core\\_multiarray_umath.cp312-win_amd64.pyd",
+      "sha256": "f4523c2dfe641a904605029ce4a5046388bd61b18afc0594d34018b5e6d848f8"
+    },
+    {
+      "bytes": 20415488,
+      "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\numpy.libs\\libscipy_openblas64_-63c857e738469261263c764a36be9436.dll",
+      "sha256": "63c857e738469261263c764a36be9436ebdeaa272e340a828f42047a97131080"
+    },
+    {
+      "bytes": 575056,
+      "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\numpy.libs\\msvcp140-a4c2229bdc2a2a630acdc095b4d86008.dll",
+      "sha256": "a4c2229bdc2a2a630acdc095b4d86008e5c3e3bc7773174354f3da4f5beb9cde"
+    },
+    {
+      "bytes": 4700,
+      "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\rawpy\\__init__.py",
+      "sha256": "24a06e984ef21c4c01569105f862c347f8a92446ec361c40835aa15dfa921eff"
+    },
+    {
+      "bytes": 205824,
+      "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\rawpy\\_rawpy.cp312-win_amd64.pyd",
+      "sha256": "51fecc08ba36294590a9a4b35f0ce246f0349a9b9ee509a13d6589ba7150b897"
+    }
+  ],
+  "numpy_version": "2.4.4",
+  "python_executable": {
+    "bytes": 104952,
+    "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "sha256": "4d6f5f81a4bca11191c4c7c6b43632694d0a4ce74e068619d8fdc161d469859a"
+  },
+  "python_version": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+  "rawpy_version": "0.27.0",
+  "schema": "m193c-derivative-reader-runtime-v1",
+  "thread_environment": {
+    "MKL_NUM_THREADS": "2",
+    "NUMEXPR_NUM_THREADS": "2",
+    "OMP_NUM_THREADS": "2",
+    "OPENBLAS_NUM_THREADS": "2"
+  }
+}

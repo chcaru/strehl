@@ -282,7 +282,10 @@ def main():
          "d01a74aefcfa15b2146256b54ea51876715ab203b7de123b3cff2b0af4a1b19c", "held original TIFF dependency")
     for name in ("native-derivative-run-preregister.md", "independent-native-parent-source-review.md",
                  "independent-derivative-reader-preregister.md", "independent-derivative-reader-source-review.md",
-                 "independent-derivative-source-repair-review.md", "independent-private-campaign-review.md"):
+                 "independent-derivative-source-repair-review.md", "independent-private-campaign-review.md",
+                 "independent-runtime-capture-1-read.md", "work/runtime-capture-1-console.txt",
+                 "work/runtime-capture-1-exit.txt", "work/runtime-capture-1-outer.json",
+                 "work/native-prior-work-1.md", "work/native-adjacent-dependencies-1.json"):
         add(ref(HERE / name))
     need(literal(HERE / "native-derivative-run.py", "POPULATION") == POPULATION and
          literal(HERE / "independent-derivative-read.py", "ORIGINALS") == POPULATION,

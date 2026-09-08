@@ -107,6 +107,20 @@ this is not exact write-I/O accounting. The original 600 CPU / 1200 wall /
 The actual result SHA256 is
 `5c962797001d5e0fbc9ffd09605f6ad5d46c3e5a786d8a5e07e5f3ed5aa2de7e`.
 
+**MEASURED, independently inspected:** dependency capture from `3bc87c03`
+completed with actual parent and child exit 0. The actual runtime records
+Python 3.12.10, NumPy 2.4.4, rawpy 0.27.0 and LibRaw 0.22.1, with six selected
+module/DLL byte pins. The
+[independent read](../../experiments/m193c-output-grid/independent-runtime-capture-1-read.md)
+verified these files and the source, command and terminal associations. Root
+identified two adjacent rawpy DLLs outside that capture's directory selection;
+a separately bound supplement requires actual before/after byte checks around
+the native run. This is not a full loaded-module or hermetic-interpreter claim.
+The 1.65625 CPU / 1.7583753 outer wall seconds are carried into the real stage,
+alongside a conservative one-MiB metadata/file charge. Its 150,449-byte
+enumerated metadata plus 3,697-byte check record fits that charge. No RAW was
+read by the capture or this preparation.
+
 ## Reproduction and preserved attempts
 
 Each release contains the complete actual argument array, input references and
@@ -125,6 +139,7 @@ these attempts when reproducing them.
 | Process controls 4 | `4339bdaa` | [control release 4](../../experiments/m193c-output-grid/controller-controls-release-4.json) | [fourteen controls passed](../../experiments/m193c-output-grid/controller-controls-4/result.json) |
 | Test build 3 | `43a72446` | [build release 3](../../experiments/m193c-output-grid/bridge-build-release-3.json) | [compiled tests only](../../experiments/m193c-output-grid/bridge-build-3/result.json) |
 | Private attempt 2 | `3090dc0c` | [private release 2](../../experiments/m193c-output-grid/private-campaign-release-2.json) | [private checks passed](../../experiments/m193c-output-grid/private-campaign-2/result.json) |
+| Dependency capture 1 | `3bc87c03` | [capture release](../../experiments/m193c-output-grid/runtime-capture-release-1.json) | [dependency metadata completed](../../experiments/m193c-output-grid/runtime-capture-1/result.json) |
 
 Final control result SHA256:
 `39a6f6e93e3b8df83834ab4046c7f30d6f42612df0cb0ec57ea158815baa7cfd`.
@@ -133,8 +148,7 @@ Build 2 result SHA256:
 
 ## Next decisions
 
-Capture and bind the actual independent reader's dependency runtime using the
-separately reviewed, bounded metadata-only command. Then decode the nine fixed
+Execute the separately reviewed native release to decode the nine fixed
 non-holdout coffee-bean inputs with one live workspace snapshot at a time and
 an independent active-RAW reader before admitting each derivative. Then apply
 the frozen input registrar. A first registration failure leaves later frames
