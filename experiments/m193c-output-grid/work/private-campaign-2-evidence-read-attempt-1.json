@@ -1,0 +1,59 @@
+{
+  "errors": [
+    "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\work\\private-campaign-2-evidence-read.py\", line 393, in <module>\n    run()\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\work\\private-campaign-2-evidence-read.py\", line 222, in run\n    ref(dict(path=name, **value))\n        ^^^^^^^^^^^^^^^^^^^^^^^^\nTypeError: dict() got multiple values for keyword argument 'path'\n"
+  ],
+  "observations": [
+    {
+      "cpu_seconds": 141.0,
+      "first_active": 0,
+      "label": "enclosing-worker",
+      "log_bytes": 99,
+      "peak_committed_bytes": 1634713600,
+      "polls": 1,
+      "total_processes": 54,
+      "wall_seconds": 133.45300000009593
+    },
+    {
+      "cpu_seconds": 130.375,
+      "first_active": 0,
+      "label": "grid_producer",
+      "log_bytes": 504,
+      "peak_committed_bytes": 820625408,
+      "polls": 1,
+      "total_processes": 46,
+      "wall_seconds": 123.03099999995902
+    },
+    {
+      "cpu_seconds": 5.65625,
+      "first_active": 0,
+      "label": "grid_reader",
+      "log_bytes": 88,
+      "peak_committed_bytes": 90865664,
+      "polls": 1,
+      "total_processes": 2,
+      "wall_seconds": 5.952999999979511
+    },
+    {
+      "cpu_seconds": 0.0625,
+      "first_active": 0,
+      "label": "derivative_producer",
+      "log_bytes": 211,
+      "peak_committed_bytes": 2654208,
+      "polls": 1,
+      "total_processes": 2,
+      "wall_seconds": 0.10900000005494803
+    },
+    {
+      "cpu_seconds": 1.75,
+      "first_active": 0,
+      "label": "derivative_reader",
+      "log_bytes": 484,
+      "peak_committed_bytes": 331816960,
+      "polls": 1,
+      "total_processes": 2,
+      "wall_seconds": 1.8440000000409782
+    }
+  ],
+  "scope": "retained evidence and independent classic-TIFF strip read only",
+  "status": "READ_ONLY_AUDIT_EXCEPTION"
+}

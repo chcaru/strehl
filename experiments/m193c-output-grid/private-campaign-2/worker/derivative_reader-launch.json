@@ -1,0 +1,129 @@
+{
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-B",
+    "-X",
+    "faulthandler",
+    "-X",
+    "pycache_prefix=C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\private-campaign-2\\cache-derivative-reader",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\independent-derivative-read.py",
+    "--private",
+    "--request",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\private-campaign-2\\worker\\derivative-reader-request.json",
+    "--request-sha256",
+    "9556065265c6937b9bfe9040600579213b234f91eee062efc64f91d8d8329671",
+    "--output",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\private-campaign-2\\worker\\derivative-reader"
+  ],
+  "ended_monotonic_ns": 797098921000000,
+  "environment": {},
+  "error": null,
+  "log": {
+    "bytes": 484,
+    "path": "experiments/m193c-output-grid/private-campaign-2/worker/derivative_reader.log",
+    "sha256": "b5be685a86292fc33bacd24f4f25d9402769797f454f6f764e7d15bd7865b3ed"
+  },
+  "observation": {
+    "cleanup_errors": [],
+    "command": [
+      "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+      "-B",
+      "-X",
+      "faulthandler",
+      "-X",
+      "pycache_prefix=C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\private-campaign-2\\cache-derivative-reader",
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\independent-derivative-read.py",
+      "--private",
+      "--request",
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\private-campaign-2\\worker\\derivative-reader-request.json",
+      "--request-sha256",
+      "9556065265c6937b9bfe9040600579213b234f91eee062efc64f91d8d8329671",
+      "--output",
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\private-campaign-2\\worker\\derivative-reader"
+    ],
+    "configured_job_limits": {
+      "committed_bytes": 8589934592,
+      "flags": 8704
+    },
+    "direct_exit_observed": true,
+    "error": null,
+    "exit_code": 0,
+    "job_accounting": {
+      "active_processes": 0,
+      "total_cpu_100ns": 17500000,
+      "total_kernel_100ns": 12031250,
+      "total_page_fault_count": 2333015,
+      "total_processes": 2,
+      "total_terminated_processes": 0,
+      "total_user_100ns": 5468750
+    },
+    "job_memory": {
+      "peak_job_memory_used_bytes": 331816960,
+      "peak_process_memory_used_bytes": 330530816
+    },
+    "limits": {
+      "committed_bytes": 8589934592,
+      "cpu_seconds": 120,
+      "log_bytes": 16777216,
+      "wall_seconds": 240
+    },
+    "log": {
+      "bytes": 484,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\private-campaign-2\\worker\\derivative_reader.log",
+      "sha256": "b5be685a86292fc33bacd24f4f25d9402769797f454f6f764e7d15bd7865b3ed"
+    },
+    "log_bytes": 484,
+    "pipe_eof_observed": true,
+    "post_exit_drain": {
+      "completed": true,
+      "ended_wall_seconds": 1.8440000000409782,
+      "initial_accounting": {
+        "active_processes": 0,
+        "total_cpu_100ns": 17500000,
+        "total_kernel_100ns": 12031250,
+        "total_page_fault_count": 2333015,
+        "total_processes": 2,
+        "total_terminated_processes": 0,
+        "total_user_100ns": 5468750
+      },
+      "last_accounting": {
+        "active_processes": 0,
+        "total_cpu_100ns": 17500000,
+        "total_kernel_100ns": 12031250,
+        "total_page_fault_count": 2333015,
+        "total_processes": 2,
+        "total_terminated_processes": 0,
+        "total_user_100ns": 5468750
+      },
+      "observation_count": 1,
+      "observations": [
+        {
+          "accounting": {
+            "active_processes": 0,
+            "total_cpu_100ns": 17500000,
+            "total_kernel_100ns": 12031250,
+            "total_page_fault_count": 2333015,
+            "total_processes": 2,
+            "total_terminated_processes": 0,
+            "total_user_100ns": 5468750
+          },
+          "wall_seconds": 1.8440000000409782
+        }
+      ],
+      "started_wall_seconds": 1.8440000000409782
+    },
+    "scope": "owned job tree; committed memory, observed user+kernel CPU; not RSS or a timing benchmark",
+    "terminal_job_accounting": true,
+    "termination": {
+      "attempted": false,
+      "before_accounting": null,
+      "succeeded": false
+    },
+    "wall_seconds": 1.8440000000409782
+  },
+  "removed_environment_names": [],
+  "schema": "m193c-campaign-child-launch-v1",
+  "stage": "derivative_reader",
+  "started_monotonic_ns": 797096875000000,
+  "status": "COMPLETE_CHILD_EXIT_ZERO"
+}

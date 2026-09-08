@@ -1,0 +1,404 @@
+{
+  "checks": [
+    {
+      "evidence": {
+        "active": {
+          "height": 22,
+          "width": 30,
+          "x": 2,
+          "y": 4
+        },
+        "active_row_sha256_u16_le": [
+          "ea1e5c5b53b572923d10e36a5c136eb540011d652777c979bf134926adddf800",
+          "d0db0d54419befa930b4a3b91660364e313c0c9d2fa6ebb1e66e739a85e5daa0",
+          "4e158fdb7dbfdca61b981f2f67e2902a945079bec1454b5156d1d0efcaa61075",
+          "5bdc903c3652f86fb66c035bc62476f9769d91c1b52ce696a6a70c1eed9ef326",
+          "c8ea866b4203b3da3bebda1c43e0aca98e5761ef4be9c47324ebfd7c8c9b73be",
+          "9962d2be2485ed583ee317bf3e076ae8132cee92844ac15b979dba53326cf36f",
+          "6198c979516375ee43c3aa167cbc50a576de79590fca538da8068b27316eefa1",
+          "e3e058ef520d4445f75b3eb161327a8852c5a48fb97f67ac3763b00836cbf686",
+          "97631ad6d55a9fc6b74e3cc8ce04b7878818e0a92157be825f49d56aa318751f",
+          "e946498a5341cc5fbf0c6a4f4e28bd368bcfe1c592c3e6ad219db82c5b110247",
+          "903333ab71fb2416df6cc8cfa74d0c43206325fbbe92bd0f677ea5db74eb9c82",
+          "f78e4a3a43775169312b807655d09ce11546ab279a497add1d9ac52a7623aa21",
+          "1c3a82ab2f7425f7d6c57784385118373a4feafd45f1c45151bef6636a0a452e",
+          "81bf838f4686f029253f60446ebf24ecc4179583677f00ef4b7776f3df6fbfc4",
+          "6398673e49c335987ae4694b15f16bb3d4dc29cfcba89c26aa840acbf3184651",
+          "438a271fdcf6ca901e7518b2ff60fe28bbeb966cada4c2589e474c87b2869708",
+          "22e6777120dbfff4ff4d1c08fb07f36b7d286815fefa2147902696beda46141d",
+          "4cc0d35b158ae6230005a24e748d753a29a56271f2f865e2c3e6d283433779b4",
+          "df41989b239188f19cc716d1c53cf249231fcb9b1dbda78f728d07572a108277",
+          "ddba59625ac00cbebe46c67fdc4a1f3b044e43e6d617f4cf983b9679d888e1da",
+          "b11fa65c550f02681bc7ff149ba6df5396af34d8efdd3b99e4a55e00e1b5b00b",
+          "54b29e86b4ca4c224da50a4b8e9bf4851378f1fc254db5aba6abcfead1cb1071"
+        ],
+        "active_samples": 660,
+        "active_sha256_u16_le": "6962762666172b8dd01e1ffdbd51c403c6ad91fd91c5d6786b66613f958d586f",
+        "allocated_bytes": 2560,
+        "allocated_samples": 1280,
+        "black": 64.0,
+        "black_f32_bits": 1115684864,
+        "buffer_height": 32,
+        "cfa_validation": "owned decoder requires camera RGGB; even active origin preserves local RGGB",
+        "compiled_sources": {
+          "experiments/m193c-output-grid/derivative-controls-preregister.md": "7c9f359a100d3b1f7c0522e8635f9178e0147756e61bcbc1373fd37324fbe5dc",
+          "experiments/m193c-output-grid/independent-derivative-design-review.md": "3c63fe97679509b77523788e14209d0e0238133d1a1ac478ae197e796f0fc54a",
+          "experiments/m193c-output-grid/registration-derivative-design.md": "f503af4c7805f8e4b2f4771b2baaf31599ed9f0ca583d2958a1a6da11a408d68",
+          "experiments/m193c-output-grid/registration-derivative.rs": "db2a4d0c36d3f0778481e8a9837feef1c2651258865799bbd143b6bb0840eecd"
+        },
+        "inverse_range_f32_bits": 964689920,
+        "level_selection": "existing wrapper resolved scalar; absent black/white can become0/65535; metadata presence unproved",
+        "mosaic_bytes": 2640,
+        "normalized_max": 0.4140625,
+        "normalized_min": 0.125,
+        "operation": "((sample-black)*(1.0f32/(white-black)))*green-normalized-as-shot-gain",
+        "raw_wb_f32_bits": [
+          1073741824,
+          1065353216,
+          1082130432,
+          2143289345
+        ],
+        "stride": 40,
+        "wb_rgb": [
+          2.0,
+          1.0,
+          4.0
+        ],
+        "wb_rgb_f32_bits": [
+          1073741824,
+          1065353216,
+          1082130432
+        ],
+        "white": 4160.0,
+        "white_f32_bits": 1166147584
+      },
+      "id": "valid-affine",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "actual": "active extent",
+        "expected": "active extent",
+        "restored": true
+      },
+      "id": "empty-active",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "actual": "active parity",
+        "expected": "active parity",
+        "restored": true
+      },
+      "id": "odd-origin-x",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "actual": "active parity",
+        "expected": "active parity",
+        "restored": true
+      },
+      "id": "odd-origin-y",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "actual": "active parity",
+        "expected": "active parity",
+        "restored": true
+      },
+      "id": "odd-width",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "actual": "active parity",
+        "expected": "active parity",
+        "restored": true
+      },
+      "id": "odd-height",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "actual": "storage length",
+        "expected": "storage length",
+        "restored": true
+      },
+      "id": "stride-storage",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "actual": "active containment",
+        "expected": "active containment",
+        "restored": true
+      },
+      "id": "active-outside",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "actual": "storage overflow",
+        "expected": "storage overflow",
+        "restored": true
+      },
+      "id": "stride-overflow",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "actual": "axis bound",
+        "expected": "axis bound",
+        "restored": true
+      },
+      "id": "axis-bound",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "actual": "pixel bound",
+        "expected": "pixel bound",
+        "restored": true
+      },
+      "id": "pixel-bound",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "actual": "buffer bound",
+        "expected": "buffer bound",
+        "restored": true
+      },
+      "id": "buffer-bound",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "actual": "levels",
+        "expected": "levels",
+        "restored": true
+      },
+      "id": "black-nan",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "actual": "levels",
+        "expected": "levels",
+        "restored": true
+      },
+      "id": "black-negative",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "actual": "levels",
+        "expected": "levels",
+        "restored": true
+      },
+      "id": "white-infinity",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "actual": "levels",
+        "expected": "levels",
+        "restored": true
+      },
+      "id": "white-container",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "actual": "levels",
+        "expected": "levels",
+        "restored": true
+      },
+      "id": "zero-range",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "actual": "levels",
+        "expected": "levels",
+        "restored": true
+      },
+      "id": "negative-range",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "actual": "WB coefficients",
+        "expected": "WB coefficients",
+        "restored": true
+      },
+      "id": "red-gain-zero",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "actual": "WB coefficients",
+        "expected": "WB coefficients",
+        "restored": true
+      },
+      "id": "green-gain-zero",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "actual": "WB coefficients",
+        "expected": "WB coefficients",
+        "restored": true
+      },
+      "id": "blue-gain-nan",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "actual": "WB gains",
+        "expected": "WB gains",
+        "restored": true
+      },
+      "id": "gain-ratio-overflow",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "raw_wb_f32_bits": [
+          1073741824,
+          1065353216,
+          1082130432,
+          4290772994
+        ]
+      },
+      "id": "fourth-wb-null",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "active_sha256_u16_le": "6962762666172b8dd01e1ffdbd51c403c6ad91fd91c5d6786b66613f958d586f"
+      },
+      "id": "padding-null",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "green_after": 0.27734375,
+        "green_before": 0.27734375,
+        "red_after": 0.263671875,
+        "red_before": 0.17578125
+      },
+      "id": "red-gain-live",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "before": 0.02734375,
+        "delta": 0.00390625,
+        "early_clamp": 0.03125,
+        "restored_exact": true
+      },
+      "id": "black-clamp-live",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "post_wb_green": 0.013671875,
+        "pre_wb_green": 0.0,
+        "restored_exact": true
+      },
+      "id": "wb-order-live",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "actual": "nine input plan",
+        "decode_calls": 0
+      },
+      "id": "nine-plan-before-decode",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "decode_calls": 1,
+        "injected_live_lease_refusal": "derivative writer reached with a live frame lease",
+        "restored_writer": true,
+        "writer_observed_live_leases": 0
+      },
+      "id": "decode-once-drop-before-write",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "actual": "derivative bound file changed",
+        "restored": {
+          "bytes": 13,
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\private-campaign-2\\worker\\derivative\\guard.bin",
+          "sha256": "7ac7743bd30144fc24dfcdcd98b0c6cf86bf52fc8d0406814751b9732c33ac3e"
+        }
+      },
+      "id": "snapshot-changed",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "expected_provisional_sha256": "c794b68ea6ace27f955dba7ab621cbc5a19893df4cde729bcb55e0a561479423",
+        "observed_provisional_sha256": "c794b68ea6ace27f955dba7ab621cbc5a19893df4cde729bcb55e0a561479423",
+        "persisted": {
+          "error": "private late-finalization source fault",
+          "finalization_errors": [
+            "private late-finalization source fault"
+          ],
+          "status": "REFUSED"
+        },
+        "retained_first": {
+          "bytes": 84,
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\private-campaign-2\\worker\\derivative\\publication.first.json",
+          "sha256": "c794b68ea6ace27f955dba7ab621cbc5a19893df4cde729bcb55e0a561479423"
+        },
+        "retained_first_matches_initial_bytes": true,
+        "returned_error": "private late-finalization source fault"
+      },
+      "id": "late-publication-revokes",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "active_sha256_u16_le": "6962762666172b8dd01e1ffdbd51c403c6ad91fd91c5d6786b66613f958d586f"
+      },
+      "id": "restored-affine",
+      "pass": true
+    }
+  ],
+  "command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\bridge-build-3\\output-grid-tests.exe",
+    "--exact",
+    "merge_cmd::production_truth::m193c_registration_derivative::m193c_derivative_private",
+    "--ignored",
+    "--test-threads=1",
+    "--nocapture"
+  ],
+  "elapsed_seconds": 0.0388142,
+  "environment": {
+    "RAYON_NUM_THREADS": "2",
+    "STREHL_M193C_DERIVATIVE_OUTPUT_DIR": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\private-campaign-2\\worker\\derivative"
+  },
+  "error": null,
+  "finalization_errors": [],
+  "outputs": {
+    "affine": {
+      "bytes": 4563,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\private-campaign-2\\worker\\derivative\\affine.tiff",
+      "sha256": "b158f1a39cc3cdb4c442282140d3a8c2f36394921f0b823745a26903f0859e2c"
+    },
+    "signed_border": {
+      "bytes": 4563,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\private-campaign-2\\worker\\derivative\\signed-border.tiff",
+      "sha256": "c363de6bb7cc00c24009626d545ca2284db127c74da314c75c58284bf95df6f5"
+    }
+  },
+  "schema": "m193c-derivative-private-v1",
+  "status": "COMPLETE_PRIVATE_DERIVATIVE_PRODUCTS_UNVERIFIED"
+}

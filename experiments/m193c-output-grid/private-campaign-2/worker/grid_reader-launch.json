@@ -1,0 +1,127 @@
+{
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-B",
+    "-X",
+    "faulthandler",
+    "-X",
+    "pycache_prefix=C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\private-campaign-2\\cache-grid-reader",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\independent-private-read.py",
+    "--request",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\private-campaign-2\\worker\\grid-reader-request.json",
+    "--request-sha256",
+    "6076161f6d437d5499451d7ad67354d9ec86f9d0ccc030e839ca4ebfb6f1714b",
+    "--output",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\private-campaign-2\\worker\\grid-reader"
+  ],
+  "ended_monotonic_ns": 797096234000000,
+  "environment": {},
+  "error": null,
+  "log": {
+    "bytes": 88,
+    "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid_reader.log",
+    "sha256": "b6c1ca101b969378d6d6ea6c788423d6df19bb1f9bf71bd4939b0d8a593f6525"
+  },
+  "observation": {
+    "cleanup_errors": [],
+    "command": [
+      "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+      "-B",
+      "-X",
+      "faulthandler",
+      "-X",
+      "pycache_prefix=C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\private-campaign-2\\cache-grid-reader",
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\independent-private-read.py",
+      "--request",
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\private-campaign-2\\worker\\grid-reader-request.json",
+      "--request-sha256",
+      "6076161f6d437d5499451d7ad67354d9ec86f9d0ccc030e839ca4ebfb6f1714b",
+      "--output",
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\private-campaign-2\\worker\\grid-reader"
+    ],
+    "configured_job_limits": {
+      "committed_bytes": 8589934592,
+      "flags": 8704
+    },
+    "direct_exit_observed": true,
+    "error": null,
+    "exit_code": 0,
+    "job_accounting": {
+      "active_processes": 0,
+      "total_cpu_100ns": 56562500,
+      "total_kernel_100ns": 8593750,
+      "total_page_fault_count": 1480818,
+      "total_processes": 2,
+      "total_terminated_processes": 0,
+      "total_user_100ns": 47968750
+    },
+    "job_memory": {
+      "peak_job_memory_used_bytes": 90865664,
+      "peak_process_memory_used_bytes": 89587712
+    },
+    "limits": {
+      "committed_bytes": 8589934592,
+      "cpu_seconds": 120,
+      "log_bytes": 16777216,
+      "wall_seconds": 240
+    },
+    "log": {
+      "bytes": 88,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\private-campaign-2\\worker\\grid_reader.log",
+      "sha256": "b6c1ca101b969378d6d6ea6c788423d6df19bb1f9bf71bd4939b0d8a593f6525"
+    },
+    "log_bytes": 88,
+    "pipe_eof_observed": true,
+    "post_exit_drain": {
+      "completed": true,
+      "ended_wall_seconds": 5.937999999965541,
+      "initial_accounting": {
+        "active_processes": 0,
+        "total_cpu_100ns": 56562500,
+        "total_kernel_100ns": 8593750,
+        "total_page_fault_count": 1480818,
+        "total_processes": 2,
+        "total_terminated_processes": 0,
+        "total_user_100ns": 47968750
+      },
+      "last_accounting": {
+        "active_processes": 0,
+        "total_cpu_100ns": 56562500,
+        "total_kernel_100ns": 8593750,
+        "total_page_fault_count": 1480818,
+        "total_processes": 2,
+        "total_terminated_processes": 0,
+        "total_user_100ns": 47968750
+      },
+      "observation_count": 1,
+      "observations": [
+        {
+          "accounting": {
+            "active_processes": 0,
+            "total_cpu_100ns": 56562500,
+            "total_kernel_100ns": 8593750,
+            "total_page_fault_count": 1480818,
+            "total_processes": 2,
+            "total_terminated_processes": 0,
+            "total_user_100ns": 47968750
+          },
+          "wall_seconds": 5.937999999965541
+        }
+      ],
+      "started_wall_seconds": 5.937999999965541
+    },
+    "scope": "owned job tree; committed memory, observed user+kernel CPU; not RSS or a timing benchmark",
+    "terminal_job_accounting": true,
+    "termination": {
+      "attempted": false,
+      "before_accounting": null,
+      "succeeded": false
+    },
+    "wall_seconds": 5.952999999979511
+  },
+  "removed_environment_names": [],
+  "schema": "m193c-campaign-child-launch-v1",
+  "stage": "grid_reader",
+  "started_monotonic_ns": 797090109000000,
+  "status": "COMPLETE_CHILD_EXIT_ZERO"
+}

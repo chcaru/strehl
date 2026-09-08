@@ -1,0 +1,1950 @@
+{
+  "cases": [
+    {
+      "bytes": 407403,
+      "file_sha256": "bbe18c82ffeab42af9b870122442ebca8e804221de10ad29eeb8d3cbde2dc838",
+      "id": "identity-nine",
+      "identity": [
+        645901345302496490,
+        1407374886507221
+      ],
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/00.tif",
+      "pixel_sha256": "cce164f66b7cdab0d8694fb01ae3195dc42edf6795c3e1dd6727e4e136f09849",
+      "score": {
+        "expectation": "correct-U",
+        "kind": "paired_two_site_coordinate",
+        "maximum_axis_dn": 0.11126878767072412,
+        "maximum_correct_u_native": 0.003773507061266644,
+        "maximum_native": 0.0037735070612656837,
+        "rms_native": 0.0024471180335418393
+      },
+      "shape": [
+        226,
+        300,
+        3
+      ],
+      "strips": 1
+    },
+    {
+      "bytes": 353403,
+      "file_sha256": "85a158056963f099864fa6c15f359c25c28dc816dbf3f9ee9f44c6d9dab5cee5",
+      "id": "curved-nine-off",
+      "identity": [
+        645901345302496490,
+        844424933088880
+      ],
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/01.tif",
+      "pixel_sha256": "5ec30e15cc16353d5d133f059ca24d8cf1c32643bbe6e8b24d4d261915884bdf",
+      "score": {
+        "expectation": "correct-U",
+        "kind": "paired_two_site_coordinate",
+        "maximum_axis_dn": 0.23566033417273502,
+        "maximum_correct_u_native": 0.006464916422807138,
+        "maximum_native": 0.006464916422801338,
+        "rms_native": 0.003201222785070188
+      },
+      "shape": [
+        210,
+        280,
+        3
+      ],
+      "strips": 1
+    },
+    {
+      "bytes": 353403,
+      "file_sha256": "85a158056963f099864fa6c15f359c25c28dc816dbf3f9ee9f44c6d9dab5cee5",
+      "id": "curved-nine-count",
+      "identity": [
+        645901345302496490,
+        844424933088884
+      ],
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/02.tif",
+      "pixel_sha256": "5ec30e15cc16353d5d133f059ca24d8cf1c32643bbe6e8b24d4d261915884bdf",
+      "score": {
+        "expectation": "correct-U",
+        "kind": "paired_two_site_coordinate",
+        "maximum_axis_dn": 0.23566033417273502,
+        "maximum_correct_u_native": 0.006464916422807138,
+        "maximum_native": 0.006464916422801338,
+        "rms_native": 0.003201222785070188
+      },
+      "shape": [
+        210,
+        280,
+        3
+      ],
+      "strips": 1
+    },
+    {
+      "bytes": 353403,
+      "file_sha256": "85a158056963f099864fa6c15f359c25c28dc816dbf3f9ee9f44c6d9dab5cee5",
+      "id": "curved-nine-placebo",
+      "identity": [
+        645901345302496490,
+        8162774324700586
+      ],
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/03.tif",
+      "pixel_sha256": "5ec30e15cc16353d5d133f059ca24d8cf1c32643bbe6e8b24d4d261915884bdf",
+      "score": {
+        "expectation": "correct-U",
+        "kind": "paired_two_site_coordinate",
+        "maximum_axis_dn": 0.23566033417273502,
+        "maximum_correct_u_native": 0.006464916422807138,
+        "maximum_native": 0.006464916422801338,
+        "rms_native": 0.003201222785070188
+      },
+      "shape": [
+        210,
+        280,
+        3
+      ],
+      "strips": 1
+    },
+    {
+      "bytes": 461403,
+      "file_sha256": "91b9991c9511da2643993ec12fdd0af71bfe6eb8e8dc0462336515abded2206d",
+      "id": "curved-nine-scale",
+      "identity": [
+        645901345302496490,
+        844424933088883
+      ],
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/04.tif",
+      "pixel_sha256": "d5fda2ad23adc33740ddcbba7ba35b1e293611c5684028123fb705bb917de134",
+      "score": {
+        "expectation": "correct-U",
+        "kind": "paired_two_site_coordinate",
+        "maximum_axis_dn": 0.3914145397793618,
+        "maximum_correct_u_native": 0.011832531436728454,
+        "maximum_native": 0.01183253143673546,
+        "rms_native": 0.005179022702799717
+      },
+      "shape": [
+        240,
+        320,
+        3
+      ],
+      "strips": 1
+    },
+    {
+      "bytes": 353403,
+      "file_sha256": "59973a0f2ed8fa0e3b02c5718f91fda4f535701a0367a54888f73931ae9b39d9",
+      "id": "original-one-correct",
+      "identity": [
+        645901345302496490,
+        562949956378242
+      ],
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/05.tif",
+      "pixel_sha256": "35915e832d7a1b234c57b76a02ae2990575873a943714dcba88bd86ef27bffe6",
+      "score": {
+        "expectation": "correct-U",
+        "kind": "paired_two_site_coordinate",
+        "maximum_axis_dn": 0.9998321507591754,
+        "maximum_correct_u_native": 0.02500453461324015,
+        "maximum_native": 0.025004534613245873,
+        "rms_native": 0.0050145338989869
+      },
+      "shape": [
+        210,
+        280,
+        3
+      ],
+      "strips": 1
+    },
+    {
+      "bytes": 353403,
+      "file_sha256": "86028defae5a00f428f62b7579b0b19c6e6629f57120cdef4616b2fa31116c8c",
+      "id": "original-one-swapped",
+      "identity": [
+        645901345302496490,
+        1125899909799558
+      ],
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/06.tif",
+      "pixel_sha256": "03a715c2fd1602447a158d1ea813d448228a60dfdc3472843f9744d3f62e1bb5",
+      "score": {
+        "expectation": "fault-consistent",
+        "kind": "paired_two_site_coordinate",
+        "maximum_axis_dn": 0.9160580356465289,
+        "maximum_correct_u_native": 17.77321293690482,
+        "maximum_native": 0.025615811288322073,
+        "rms_native": 0.014164870031379966
+      },
+      "shape": [
+        210,
+        280,
+        3
+      ],
+      "strips": 1
+    },
+    {
+      "bytes": 353403,
+      "file_sha256": "59973a0f2ed8fa0e3b02c5718f91fda4f535701a0367a54888f73931ae9b39d9",
+      "id": "original-one-restored",
+      "identity": [
+        645901345302496490,
+        562949956378250
+      ],
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/07.tif",
+      "pixel_sha256": "35915e832d7a1b234c57b76a02ae2990575873a943714dcba88bd86ef27bffe6",
+      "score": {
+        "expectation": "correct-U",
+        "kind": "paired_two_site_coordinate",
+        "maximum_axis_dn": 0.9998321507591754,
+        "maximum_correct_u_native": 0.02500453461324015,
+        "maximum_native": 0.025004534613245873,
+        "rms_native": 0.0050145338989869
+      },
+      "shape": [
+        210,
+        280,
+        3
+      ],
+      "strips": 1
+    },
+    {
+      "bytes": 353403,
+      "file_sha256": "c3915eb177df590efe961237cbe39fe369c1a789c7808c6e73b1175bd37cf8c8",
+      "id": "original-one-inverse",
+      "identity": [
+        645901345302496490,
+        2251799816600355
+      ],
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/08.tif",
+      "pixel_sha256": "5dea8105987222234aa54e6372c08034d938b69030e5b543739bc1faafb17c92",
+      "score": {
+        "expectation": "fault-consistent",
+        "kind": "paired_two_site_coordinate",
+        "maximum_axis_dn": 0.8562349193325645,
+        "maximum_correct_u_native": 14.482459150615352,
+        "maximum_native": 0.02445944786720934,
+        "rms_native": 0.012775266296327576
+      },
+      "shape": [
+        210,
+        280,
+        3
+      ],
+      "strips": 1
+    },
+    {
+      "bytes": 353403,
+      "file_sha256": "3d9423cb542ffaeb2c8c69327950a4518e03af1987f3f7dffcb4c9866ca30143",
+      "id": "constant-nine-null",
+      "identity": [
+        645901345302496490,
+        3659174699981178
+      ],
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/09.tif",
+      "pixel_sha256": "096522b472450ad7ecb5726918c31b96417d6e13407368873b4c4f5604a411d2",
+      "score": {
+        "coordinate_inversion": "REFUSED_RANK_ZERO",
+        "kind": "constant_rank_zero"
+      },
+      "shape": [
+        210,
+        280,
+        3
+      ],
+      "strips": 1
+    }
+  ],
+  "derivative_checks": {
+    "reader": [
+      {
+        "evidence": {
+          "accepted_subject_rejected": true,
+          "attempted": [
+            {
+              "evidence": {},
+              "id": "tiff-compression",
+              "pass": false
+            }
+          ],
+          "exception": "expected refusal did not occur: tiff-compression"
+        },
+        "id": "refusal-helper-false-acceptance",
+        "pass": true
+      },
+      {
+        "evidence": {
+          "output_count": 2,
+          "status": "PRIVATE_FIXTURE_ENTRY_ONLY"
+        },
+        "id": "producer-valid",
+        "pass": true
+      },
+      {
+        "evidence": {
+          "exception": "actual source32 check",
+          "exception_type": "ValueError",
+          "expected": "actual source32"
+        },
+        "id": "producer-false-check",
+        "pass": true
+      },
+      {
+        "evidence": {
+          "exception": "source32 population",
+          "exception_type": "ValueError",
+          "expected": "source32 population"
+        },
+        "id": "producer-omitted-check",
+        "pass": true
+      },
+      {
+        "evidence": {
+          "exception": "private producer closed fields",
+          "exception_type": "ValueError",
+          "expected": "closed fields"
+        },
+        "id": "producer-unknown-key",
+        "pass": true
+      },
+      {
+        "evidence": {
+          "exception": "private output association",
+          "exception_type": "ValueError",
+          "expected": "output association"
+        },
+        "id": "producer-output-association",
+        "pass": true
+      },
+      {
+        "evidence": {
+          "exception": "conflicting consumed reference",
+          "exception_type": "ValueError",
+          "expected": "conflicting consumed reference"
+        },
+        "id": "producer-changed-reference",
+        "pass": true
+      },
+      {
+        "evidence": {
+          "output_count": 2,
+          "status": "PRIVATE_FIXTURE_ENTRY_ONLY"
+        },
+        "id": "producer-restored",
+        "pass": true
+      },
+      {
+        "evidence": {
+          "pixel_sha256": "8f2e8bfe2e90e40117059a5b69f60d22f63aa8e8fc1ea967836360e66fb281dd",
+          "tiff": {
+            "bytes": 4493,
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\private-campaign-2\\worker\\derivative-reader\\fixtures\\tiff-little-endian.tiff",
+            "sha256": "0b51a50354b92e41947b0140135e509d7df75382fba6bbaa85e78d9956b40d6f"
+          }
+        },
+        "id": "tiff-little-endian",
+        "pass": true
+      },
+      {
+        "evidence": {
+          "pixel_sha256": "8f2e8bfe2e90e40117059a5b69f60d22f63aa8e8fc1ea967836360e66fb281dd",
+          "tiff": {
+            "bytes": 4493,
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\private-campaign-2\\worker\\derivative-reader\\fixtures\\tiff-big-endian.tiff",
+            "sha256": "a0902ff4a175068205cc9f4c0b60bca80149ae205ddb8611897354bf6cf8ff75"
+          }
+        },
+        "id": "tiff-big-endian",
+        "pass": true
+      },
+      {
+        "evidence": {
+          "bytes": 4397,
+          "consumed_pixel_bytes": 3864,
+          "endian": "<",
+          "kind": "rgb",
+          "pixel_sha256": "25b3bf6ca141697a92e39d02f61a7959ed16a8208b969fb9d8370662a6c452eb",
+          "sha256": "5689057ccbc38726476189992946c51529a9a03c5ec7880facbe1bb37d10ba29",
+          "shape": [
+            2,
+            322,
+            3
+          ],
+          "strip_count": 1,
+          "tags": {
+            "256": {
+              "count": 1,
+              "type": 4,
+              "value": [
+                322
+              ]
+            },
+            "257": {
+              "count": 1,
+              "type": 4,
+              "value": [
+                2
+              ]
+            },
+            "258": {
+              "count": 3,
+              "type": 3,
+              "value": [
+                16,
+                16,
+                16
+              ]
+            },
+            "259": {
+              "count": 1,
+              "type": 3,
+              "value": [
+                1
+              ]
+            },
+            "262": {
+              "count": 1,
+              "type": 3,
+              "value": [
+                2
+              ]
+            },
+            "270": {
+              "count": 356,
+              "type": 2,
+              "value": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain."
+            },
+            "273": {
+              "count": 1,
+              "type": 4,
+              "value": [
+                533
+              ]
+            },
+            "274": {
+              "count": 1,
+              "type": 3,
+              "value": [
+                1
+              ]
+            },
+            "277": {
+              "count": 1,
+              "type": 3,
+              "value": [
+                3
+              ]
+            },
+            "278": {
+              "count": 1,
+              "type": 4,
+              "value": [
+                2
+              ]
+            },
+            "279": {
+              "count": 1,
+              "type": 4,
+              "value": [
+                3864
+              ]
+            },
+            "305": {
+              "count": 13,
+              "type": 2,
+              "value": "strehl 0.0.0"
+            }
+          }
+        },
+        "id": "tiff-wide322",
+        "pass": true
+      },
+      {
+        "evidence": {
+          "exception": "typed native-bounded expected RGB shape",
+          "exception_type": "Refusal",
+          "expected": "typed native-bounded"
+        },
+        "id": "old-parser-width-refusal",
+        "pass": true
+      },
+      {
+        "evidence": {
+          "exception": "unreferenced trailing bytes",
+          "exception_type": "Refusal",
+          "expected": "trailing bytes"
+        },
+        "id": "tiff-appended",
+        "pass": true
+      },
+      {
+        "evidence": {
+          "exception": "strip outside file",
+          "exception_type": "Refusal",
+          "expected": "strip outside"
+        },
+        "id": "tiff-truncated",
+        "pass": true
+      },
+      {
+        "evidence": {
+          "exception": "duplicate tag 256",
+          "exception_type": "Refusal",
+          "expected": "duplicate tag"
+        },
+        "id": "tiff-duplicate-tag",
+        "pass": true
+      },
+      {
+        "evidence": {
+          "exception": "compression",
+          "exception_type": "Refusal",
+          "expected": "compression"
+        },
+        "id": "tiff-compression",
+        "pass": true
+      },
+      {
+        "evidence": {
+          "exception": "orientation",
+          "exception_type": "Refusal",
+          "expected": "orientation"
+        },
+        "id": "tiff-orientation",
+        "pass": true
+      },
+      {
+        "evidence": {
+          "exception": "CameraLinear description",
+          "exception_type": "Refusal",
+          "expected": "CameraLinear description"
+        },
+        "id": "tiff-description",
+        "pass": true
+      },
+      {
+        "evidence": {
+          "exception": "measurement software",
+          "exception_type": "Refusal",
+          "expected": "measurement software"
+        },
+        "id": "tiff-software",
+        "pass": true
+      },
+      {
+        "evidence": {
+          "exception": "expected TIFF dimensions/channels",
+          "exception_type": "Refusal",
+          "expected": "dimensions/channels"
+        },
+        "id": "tiff-wrong-shape",
+        "pass": true
+      },
+      {
+        "evidence": {
+          "exception": "typed native-bounded expected RGB shape",
+          "exception_type": "Refusal",
+          "expected": "typed native-bounded"
+        },
+        "id": "tiff-bool-shape",
+        "pass": true
+      },
+      {
+        "evidence": {
+          "exception": "independent private pixel discrepancy",
+          "exception_type": "ValueError",
+          "expected": "pixel discrepancy"
+        },
+        "id": "tiff-changed-code",
+        "pass": true
+      },
+      {
+        "evidence": {
+          "pixel_sha256": "8f2e8bfe2e90e40117059a5b69f60d22f63aa8e8fc1ea967836360e66fb281dd",
+          "tiff": {
+            "bytes": 4493,
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\private-campaign-2\\worker\\derivative-reader\\fixtures\\tiff-restored.tiff",
+            "sha256": "0b51a50354b92e41947b0140135e509d7df75382fba6bbaa85e78d9956b40d6f"
+          }
+        },
+        "id": "tiff-restored",
+        "pass": true
+      },
+      {
+        "evidence": {
+          "arithmetic": "Fraction affine versus Fraction MHC",
+          "channels": 3,
+          "sites": 54
+        },
+        "id": "affine-rational",
+        "pass": true
+      },
+      {
+        "evidence": {
+          "corner_r": "9/8",
+          "full_sites": 660,
+          "signed_r": "-1/128"
+        },
+        "id": "signed-rational",
+        "pass": true
+      },
+      {
+        "evidence": {
+          "exception": "independent private pixel discrepancy",
+          "exception_type": "ValueError",
+          "expected": "pixel discrepancy"
+        },
+        "id": "premature-black-clamp",
+        "pass": true
+      },
+      {
+        "evidence": {
+          "exception": "independent private pixel discrepancy",
+          "exception_type": "ValueError",
+          "expected": "pixel discrepancy"
+        },
+        "id": "white-balance-after-mhc",
+        "pass": true
+      },
+      {
+        "evidence": {
+          "pipeline_control": "separate actual producer source32 padding-null",
+          "pixel_sha256": "163f99c0e765dd35597417ed359baae573d87b1899ec6d3cfde973b0959f9c56",
+          "scope": "array-layout identity after extracting the same active rectangle; arithmetic null",
+          "unchanged": true
+        },
+        "id": "padding-null",
+        "pass": true
+      },
+      {
+        "evidence": {
+          "pixel_sha256": "163f99c0e765dd35597417ed359baae573d87b1899ec6d3cfde973b0959f9c56",
+          "tiff": {
+            "bytes": 4493,
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\private-campaign-2\\worker\\derivative-reader\\fixtures\\oracle-restored.tiff",
+            "sha256": "ce88472cc6180b76e8c78cb1a053849adba36e1b8d2309e456fe01d6739986a6"
+          }
+        },
+        "id": "oracle-restored",
+        "pass": true
+      },
+      {
+        "evidence": {
+          "compared_after_context": true,
+          "owned": true,
+          "postprocess_calls": 0
+        },
+        "id": "owned-lifetime",
+        "pass": true
+      },
+      {
+        "evidence": {
+          "exception": "owned visible copy inside lifetime",
+          "exception_type": "ValueError",
+          "expected": "owned visible copy"
+        },
+        "id": "borrowed-lifetime-refusal",
+        "pass": true
+      },
+      {
+        "evidence": {
+          "compared_after_context": true,
+          "owned": true,
+          "postprocess_calls": 0
+        },
+        "id": "lifetime-restored",
+        "pass": true
+      },
+      {
+        "evidence": {
+          "exception": "independent local RGGB",
+          "exception_type": "ValueError",
+          "expected": "local RGGB"
+        },
+        "id": "wrong-cfa",
+        "pass": true
+      },
+      {
+        "evidence": {
+          "exception": "used-channel black disagrees",
+          "exception_type": "ValueError",
+          "expected": "black disagrees"
+        },
+        "id": "wrong-black",
+        "pass": true
+      },
+      {
+        "evidence": {
+          "exception": "used-channel white disagrees",
+          "exception_type": "ValueError",
+          "expected": "white disagrees"
+        },
+        "id": "wrong-white",
+        "pass": true
+      },
+      {
+        "evidence": {
+          "exception": "green-normalized WB disagrees",
+          "exception_type": "ValueError",
+          "expected": "WB disagrees"
+        },
+        "id": "wrong-wb",
+        "pass": true
+      },
+      {
+        "evidence": {
+          "camera_white_availability": [
+            4160,
+            4160,
+            4160,
+            4160
+          ],
+          "metadata_presence_claim": false,
+          "normalized_wb": [
+            2.0,
+            1.0,
+            4.0
+          ],
+          "used_cfa_indices": [
+            0,
+            1,
+            2,
+            3
+          ]
+        },
+        "id": "metadata-restored",
+        "pass": true
+      },
+      {
+        "evidence": {
+          "exception": "whole active u16 disagreement",
+          "exception_type": "ValueError",
+          "expected": "whole active"
+        },
+        "id": "wrong-active-hash",
+        "pass": true
+      },
+      {
+        "evidence": {
+          "exception": "active row u16 disagreement",
+          "exception_type": "ValueError",
+          "expected": "active row"
+        },
+        "id": "wrong-row-hash",
+        "pass": true
+      },
+      {
+        "evidence": {
+          "exception": "conflicting consumed reference",
+          "exception_type": "ValueError",
+          "expected": "conflicting consumed"
+        },
+        "id": "conflicting-reference",
+        "pass": true
+      },
+      {
+        "evidence": {
+          "exception": "nonfinite JSON overflow",
+          "exception_type": "ValueError",
+          "expected": "nonfinite JSON overflow"
+        },
+        "id": "json-overflow",
+        "pass": true
+      }
+    ],
+    "source": [
+      {
+        "evidence": {
+          "active": {
+            "height": 22,
+            "width": 30,
+            "x": 2,
+            "y": 4
+          },
+          "active_row_sha256_u16_le": [
+            "ea1e5c5b53b572923d10e36a5c136eb540011d652777c979bf134926adddf800",
+            "d0db0d54419befa930b4a3b91660364e313c0c9d2fa6ebb1e66e739a85e5daa0",
+            "4e158fdb7dbfdca61b981f2f67e2902a945079bec1454b5156d1d0efcaa61075",
+            "5bdc903c3652f86fb66c035bc62476f9769d91c1b52ce696a6a70c1eed9ef326",
+            "c8ea866b4203b3da3bebda1c43e0aca98e5761ef4be9c47324ebfd7c8c9b73be",
+            "9962d2be2485ed583ee317bf3e076ae8132cee92844ac15b979dba53326cf36f",
+            "6198c979516375ee43c3aa167cbc50a576de79590fca538da8068b27316eefa1",
+            "e3e058ef520d4445f75b3eb161327a8852c5a48fb97f67ac3763b00836cbf686",
+            "97631ad6d55a9fc6b74e3cc8ce04b7878818e0a92157be825f49d56aa318751f",
+            "e946498a5341cc5fbf0c6a4f4e28bd368bcfe1c592c3e6ad219db82c5b110247",
+            "903333ab71fb2416df6cc8cfa74d0c43206325fbbe92bd0f677ea5db74eb9c82",
+            "f78e4a3a43775169312b807655d09ce11546ab279a497add1d9ac52a7623aa21",
+            "1c3a82ab2f7425f7d6c57784385118373a4feafd45f1c45151bef6636a0a452e",
+            "81bf838f4686f029253f60446ebf24ecc4179583677f00ef4b7776f3df6fbfc4",
+            "6398673e49c335987ae4694b15f16bb3d4dc29cfcba89c26aa840acbf3184651",
+            "438a271fdcf6ca901e7518b2ff60fe28bbeb966cada4c2589e474c87b2869708",
+            "22e6777120dbfff4ff4d1c08fb07f36b7d286815fefa2147902696beda46141d",
+            "4cc0d35b158ae6230005a24e748d753a29a56271f2f865e2c3e6d283433779b4",
+            "df41989b239188f19cc716d1c53cf249231fcb9b1dbda78f728d07572a108277",
+            "ddba59625ac00cbebe46c67fdc4a1f3b044e43e6d617f4cf983b9679d888e1da",
+            "b11fa65c550f02681bc7ff149ba6df5396af34d8efdd3b99e4a55e00e1b5b00b",
+            "54b29e86b4ca4c224da50a4b8e9bf4851378f1fc254db5aba6abcfead1cb1071"
+          ],
+          "active_samples": 660,
+          "active_sha256_u16_le": "6962762666172b8dd01e1ffdbd51c403c6ad91fd91c5d6786b66613f958d586f",
+          "allocated_bytes": 2560,
+          "allocated_samples": 1280,
+          "black": 64.0,
+          "black_f32_bits": 1115684864,
+          "buffer_height": 32,
+          "cfa_validation": "owned decoder requires camera RGGB; even active origin preserves local RGGB",
+          "compiled_sources": {
+            "experiments/m193c-output-grid/derivative-controls-preregister.md": "7c9f359a100d3b1f7c0522e8635f9178e0147756e61bcbc1373fd37324fbe5dc",
+            "experiments/m193c-output-grid/independent-derivative-design-review.md": "3c63fe97679509b77523788e14209d0e0238133d1a1ac478ae197e796f0fc54a",
+            "experiments/m193c-output-grid/registration-derivative-design.md": "f503af4c7805f8e4b2f4771b2baaf31599ed9f0ca583d2958a1a6da11a408d68",
+            "experiments/m193c-output-grid/registration-derivative.rs": "db2a4d0c36d3f0778481e8a9837feef1c2651258865799bbd143b6bb0840eecd"
+          },
+          "inverse_range_f32_bits": 964689920,
+          "level_selection": "existing wrapper resolved scalar; absent black/white can become0/65535; metadata presence unproved",
+          "mosaic_bytes": 2640,
+          "normalized_max": 0.4140625,
+          "normalized_min": 0.125,
+          "operation": "((sample-black)*(1.0f32/(white-black)))*green-normalized-as-shot-gain",
+          "raw_wb_f32_bits": [
+            1073741824,
+            1065353216,
+            1082130432,
+            2143289345
+          ],
+          "stride": 40,
+          "wb_rgb": [
+            2.0,
+            1.0,
+            4.0
+          ],
+          "wb_rgb_f32_bits": [
+            1073741824,
+            1065353216,
+            1082130432
+          ],
+          "white": 4160.0,
+          "white_f32_bits": 1166147584
+        },
+        "id": "valid-affine",
+        "pass": true
+      },
+      {
+        "evidence": {
+          "actual": "active extent",
+          "expected": "active extent",
+          "restored": true
+        },
+        "id": "empty-active",
+        "pass": true
+      },
+      {
+        "evidence": {
+          "actual": "active parity",
+          "expected": "active parity",
+          "restored": true
+        },
+        "id": "odd-origin-x",
+        "pass": true
+      },
+      {
+        "evidence": {
+          "actual": "active parity",
+          "expected": "active parity",
+          "restored": true
+        },
+        "id": "odd-origin-y",
+        "pass": true
+      },
+      {
+        "evidence": {
+          "actual": "active parity",
+          "expected": "active parity",
+          "restored": true
+        },
+        "id": "odd-width",
+        "pass": true
+      },
+      {
+        "evidence": {
+          "actual": "active parity",
+          "expected": "active parity",
+          "restored": true
+        },
+        "id": "odd-height",
+        "pass": true
+      },
+      {
+        "evidence": {
+          "actual": "storage length",
+          "expected": "storage length",
+          "restored": true
+        },
+        "id": "stride-storage",
+        "pass": true
+      },
+      {
+        "evidence": {
+          "actual": "active containment",
+          "expected": "active containment",
+          "restored": true
+        },
+        "id": "active-outside",
+        "pass": true
+      },
+      {
+        "evidence": {
+          "actual": "storage overflow",
+          "expected": "storage overflow",
+          "restored": true
+        },
+        "id": "stride-overflow",
+        "pass": true
+      },
+      {
+        "evidence": {
+          "actual": "axis bound",
+          "expected": "axis bound",
+          "restored": true
+        },
+        "id": "axis-bound",
+        "pass": true
+      },
+      {
+        "evidence": {
+          "actual": "pixel bound",
+          "expected": "pixel bound",
+          "restored": true
+        },
+        "id": "pixel-bound",
+        "pass": true
+      },
+      {
+        "evidence": {
+          "actual": "buffer bound",
+          "expected": "buffer bound",
+          "restored": true
+        },
+        "id": "buffer-bound",
+        "pass": true
+      },
+      {
+        "evidence": {
+          "actual": "levels",
+          "expected": "levels",
+          "restored": true
+        },
+        "id": "black-nan",
+        "pass": true
+      },
+      {
+        "evidence": {
+          "actual": "levels",
+          "expected": "levels",
+          "restored": true
+        },
+        "id": "black-negative",
+        "pass": true
+      },
+      {
+        "evidence": {
+          "actual": "levels",
+          "expected": "levels",
+          "restored": true
+        },
+        "id": "white-infinity",
+        "pass": true
+      },
+      {
+        "evidence": {
+          "actual": "levels",
+          "expected": "levels",
+          "restored": true
+        },
+        "id": "white-container",
+        "pass": true
+      },
+      {
+        "evidence": {
+          "actual": "levels",
+          "expected": "levels",
+          "restored": true
+        },
+        "id": "zero-range",
+        "pass": true
+      },
+      {
+        "evidence": {
+          "actual": "levels",
+          "expected": "levels",
+          "restored": true
+        },
+        "id": "negative-range",
+        "pass": true
+      },
+      {
+        "evidence": {
+          "actual": "WB coefficients",
+          "expected": "WB coefficients",
+          "restored": true
+        },
+        "id": "red-gain-zero",
+        "pass": true
+      },
+      {
+        "evidence": {
+          "actual": "WB coefficients",
+          "expected": "WB coefficients",
+          "restored": true
+        },
+        "id": "green-gain-zero",
+        "pass": true
+      },
+      {
+        "evidence": {
+          "actual": "WB coefficients",
+          "expected": "WB coefficients",
+          "restored": true
+        },
+        "id": "blue-gain-nan",
+        "pass": true
+      },
+      {
+        "evidence": {
+          "actual": "WB gains",
+          "expected": "WB gains",
+          "restored": true
+        },
+        "id": "gain-ratio-overflow",
+        "pass": true
+      },
+      {
+        "evidence": {
+          "raw_wb_f32_bits": [
+            1073741824,
+            1065353216,
+            1082130432,
+            4290772994
+          ]
+        },
+        "id": "fourth-wb-null",
+        "pass": true
+      },
+      {
+        "evidence": {
+          "active_sha256_u16_le": "6962762666172b8dd01e1ffdbd51c403c6ad91fd91c5d6786b66613f958d586f"
+        },
+        "id": "padding-null",
+        "pass": true
+      },
+      {
+        "evidence": {
+          "green_after": 0.27734375,
+          "green_before": 0.27734375,
+          "red_after": 0.263671875,
+          "red_before": 0.17578125
+        },
+        "id": "red-gain-live",
+        "pass": true
+      },
+      {
+        "evidence": {
+          "before": 0.02734375,
+          "delta": 0.00390625,
+          "early_clamp": 0.03125,
+          "restored_exact": true
+        },
+        "id": "black-clamp-live",
+        "pass": true
+      },
+      {
+        "evidence": {
+          "post_wb_green": 0.013671875,
+          "pre_wb_green": 0.0,
+          "restored_exact": true
+        },
+        "id": "wb-order-live",
+        "pass": true
+      },
+      {
+        "evidence": {
+          "actual": "nine input plan",
+          "decode_calls": 0
+        },
+        "id": "nine-plan-before-decode",
+        "pass": true
+      },
+      {
+        "evidence": {
+          "decode_calls": 1,
+          "injected_live_lease_refusal": "derivative writer reached with a live frame lease",
+          "restored_writer": true,
+          "writer_observed_live_leases": 0
+        },
+        "id": "decode-once-drop-before-write",
+        "pass": true
+      },
+      {
+        "evidence": {
+          "actual": "derivative bound file changed",
+          "restored": {
+            "bytes": 13,
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\private-campaign-2\\worker\\derivative\\guard.bin",
+            "sha256": "7ac7743bd30144fc24dfcdcd98b0c6cf86bf52fc8d0406814751b9732c33ac3e"
+          }
+        },
+        "id": "snapshot-changed",
+        "pass": true
+      },
+      {
+        "evidence": {
+          "expected_provisional_sha256": "c794b68ea6ace27f955dba7ab621cbc5a19893df4cde729bcb55e0a561479423",
+          "observed_provisional_sha256": "c794b68ea6ace27f955dba7ab621cbc5a19893df4cde729bcb55e0a561479423",
+          "persisted": {
+            "error": "private late-finalization source fault",
+            "finalization_errors": [
+              "private late-finalization source fault"
+            ],
+            "status": "REFUSED"
+          },
+          "retained_first": {
+            "bytes": 84,
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\private-campaign-2\\worker\\derivative\\publication.first.json",
+            "sha256": "c794b68ea6ace27f955dba7ab621cbc5a19893df4cde729bcb55e0a561479423"
+          },
+          "retained_first_matches_initial_bytes": true,
+          "returned_error": "private late-finalization source fault"
+        },
+        "id": "late-publication-revokes",
+        "pass": true
+      },
+      {
+        "evidence": {
+          "active_sha256_u16_le": "6962762666172b8dd01e1ffdbd51c403c6ad91fd91c5d6786b66613f958d586f"
+        },
+        "id": "restored-affine",
+        "pass": true
+      }
+    ]
+  },
+  "derivative_outputs": [
+    {
+      "bytes": 4563,
+      "compared_sites": 54,
+      "file_sha256": "b158f1a39cc3cdb4c442282140d3a8c2f36394921f0b823745a26903f0859e2c",
+      "id": "affine",
+      "identity": [
+        645901345302496490,
+        10133099161925437
+      ],
+      "max_code_error": 0,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/derivative/affine.tiff",
+      "pixel_sha256": "8f2e8bfe2e90e40117059a5b69f60d22f63aa8e8fc1ea967836360e66fb281dd",
+      "shape": [
+        22,
+        30,
+        3
+      ],
+      "strips": 1
+    },
+    {
+      "bytes": 4563,
+      "compared_sites": 660,
+      "file_sha256": "c363de6bb7cc00c24009626d545ca2284db127c74da314c75c58284bf95df6f5",
+      "id": "signed_border",
+      "identity": [
+        645901345302496490,
+        13792273859163976
+      ],
+      "max_code_error": 0,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/derivative/signed-border.tiff",
+      "pixel_sha256": "163f99c0e765dd35597417ed359baae573d87b1899ec6d3cfde973b0959f9c56",
+      "shape": [
+        22,
+        30,
+        3
+      ],
+      "strips": 1
+    }
+  ],
+  "derivative_work": {
+    "artifact_bytes": 172433,
+    "artifact_limit": 33554432,
+    "bounded_bytes_read": 179817818,
+    "cpu_seconds": 1.5625,
+    "owned_array_limit": 134217728,
+    "owned_array_peak_bytes": 27624,
+    "wall_seconds": 1.6099999999860302
+  },
+  "distinct_bound_files_rehashed": 378,
+  "errors": [],
+  "final_work": {
+    "artifact_bytes": 14761297,
+    "byte_scope": "cumulative observed per-path high-water extents; deleted paths remain charged",
+    "cpu_seconds": 143.4375,
+    "observed_child_cpu_seconds": 141.0,
+    "owner_or_worker_cpu_seconds": 2.4375,
+    "wall_seconds": 135.26500000001397
+  },
+  "grid_controls": [
+    {
+      "expected_boundary": null,
+      "id": "genuine-case-1",
+      "observed": null,
+      "status": "PASS_VALID_COMPANION"
+    },
+    {
+      "expected_boundary": null,
+      "id": "genuine-case-4",
+      "observed": null,
+      "status": "PASS_VALID_COMPANION"
+    },
+    {
+      "expected_boundary": null,
+      "id": "genuine-case-6",
+      "observed": null,
+      "status": "PASS_VALID_COMPANION"
+    },
+    {
+      "expected_boundary": null,
+      "id": "genuine-case-8",
+      "observed": null,
+      "status": "PASS_VALID_COMPANION"
+    },
+    {
+      "expected_boundary": null,
+      "id": "genuine-case-9",
+      "observed": null,
+      "status": "PASS_VALID_COMPANION"
+    },
+    {
+      "expected_boundary": "population",
+      "id": "missing-case",
+      "observed": {
+        "boundary": "population",
+        "message": "population: all ten rows",
+        "type": "Refusal"
+      },
+      "status": "PASS_EXPECTED_REFUSAL"
+    },
+    {
+      "expected_boundary": "population",
+      "id": "duplicate-case",
+      "observed": {
+        "boundary": "population",
+        "message": "population: typed literal",
+        "type": "Refusal"
+      },
+      "status": "PASS_EXPECTED_REFUSAL"
+    },
+    {
+      "expected_boundary": "population",
+      "id": "reordered-case",
+      "observed": {
+        "boundary": "population",
+        "message": "population: typed literal",
+        "type": "Refusal"
+      },
+      "status": "PASS_EXPECTED_REFUSAL"
+    },
+    {
+      "expected_boundary": "population",
+      "id": "bool-case-ordinal",
+      "observed": {
+        "boundary": "population",
+        "message": "population: typed literal",
+        "type": "Refusal"
+      },
+      "status": "PASS_EXPECTED_REFUSAL"
+    },
+    {
+      "expected_boundary": "geometry",
+      "id": "float-width",
+      "observed": {
+        "boundary": "geometry",
+        "message": "geometry: typed literal",
+        "type": "Refusal"
+      },
+      "status": "PASS_EXPECTED_REFUSAL"
+    },
+    {
+      "expected_boundary": "source",
+      "id": "float-decode-count",
+      "observed": {
+        "boundary": "source",
+        "message": "source: typed literal",
+        "type": "Refusal"
+      },
+      "status": "PASS_EXPECTED_REFUSAL"
+    },
+    {
+      "expected_boundary": "association",
+      "id": "wrong-local",
+      "observed": {
+        "boundary": "association",
+        "message": "association: typed literal",
+        "type": "Refusal"
+      },
+      "status": "PASS_EXPECTED_REFUSAL"
+    },
+    {
+      "expected_boundary": "association",
+      "id": "wrong-original",
+      "observed": {
+        "boundary": "association",
+        "message": "association: typed literal",
+        "type": "Refusal"
+      },
+      "status": "PASS_EXPECTED_REFUSAL"
+    },
+    {
+      "expected_boundary": "association",
+      "id": "wrong-probe",
+      "observed": {
+        "boundary": "association",
+        "message": "association: typed literal",
+        "type": "Refusal"
+      },
+      "status": "PASS_EXPECTED_REFUSAL"
+    },
+    {
+      "expected_boundary": "source",
+      "id": "stale-source",
+      "observed": {
+        "boundary": "source",
+        "message": "source: typed literal",
+        "type": "Refusal"
+      },
+      "status": "PASS_EXPECTED_REFUSAL"
+    },
+    {
+      "expected_boundary": "sensor",
+      "id": "changed-range",
+      "observed": {
+        "boundary": "sensor",
+        "message": "sensor: typed literal",
+        "type": "Refusal"
+      },
+      "status": "PASS_EXPECTED_REFUSAL"
+    },
+    {
+      "expected_boundary": "sensor",
+      "id": "nonunity-wb",
+      "observed": {
+        "boundary": "sensor",
+        "message": "sensor: real value",
+        "type": "Refusal"
+      },
+      "status": "PASS_EXPECTED_REFUSAL"
+    },
+    {
+      "expected_boundary": "config",
+      "id": "missing-final-hull",
+      "observed": {
+        "boundary": "config",
+        "message": "config: typed literal",
+        "type": "Refusal"
+      },
+      "status": "PASS_EXPECTED_REFUSAL"
+    },
+    {
+      "expected_boundary": "environment",
+      "id": "unexpected-environment",
+      "observed": {
+        "boundary": "environment",
+        "message": "environment: closed keys",
+        "type": "Refusal"
+      },
+      "status": "PASS_EXPECTED_REFUSAL"
+    },
+    {
+      "expected_boundary": "source",
+      "id": "wrong-compiled-source",
+      "observed": {
+        "boundary": "source",
+        "message": "source: typed literal",
+        "type": "Refusal"
+      },
+      "status": "PASS_EXPECTED_REFUSAL"
+    },
+    {
+      "expected_boundary": "receipt",
+      "id": "failed-receipt",
+      "observed": {
+        "boundary": "receipt",
+        "message": "receipt: typed literal",
+        "type": "Refusal"
+      },
+      "status": "PASS_EXPECTED_REFUSAL"
+    },
+    {
+      "expected_boundary": "receipt",
+      "id": "concealed-terminal-error",
+      "observed": {
+        "boundary": "receipt",
+        "message": "receipt: typed literal",
+        "type": "Refusal"
+      },
+      "status": "PASS_EXPECTED_REFUSAL"
+    },
+    {
+      "expected_boundary": "geometry",
+      "id": "wrong-half-pixel-centre",
+      "observed": {
+        "boundary": "geometry",
+        "message": "geometry: real value",
+        "type": "Refusal"
+      },
+      "status": "PASS_EXPECTED_REFUSAL"
+    },
+    {
+      "expected_boundary": "json",
+      "id": "duplicate-json-key",
+      "observed": {
+        "boundary": "json",
+        "message": "json: duplicate key",
+        "type": "Refusal"
+      },
+      "status": "PASS_EXPECTED_REFUSAL"
+    },
+    {
+      "expected_boundary": "json",
+      "id": "overflow-json-real",
+      "observed": {
+        "boundary": "json",
+        "message": "json: overflow literal",
+        "type": "Refusal"
+      },
+      "status": "PASS_EXPECTED_REFUSAL"
+    },
+    {
+      "expected_boundary": "coordinate",
+      "id": "changed-r-code",
+      "observed": {
+        "boundary": "coordinate",
+        "message": "coordinate: fixed paired-site bar",
+        "type": "Refusal"
+      },
+      "status": "PASS_EXPECTED_REFUSAL"
+    },
+    {
+      "expected_boundary": "coordinate",
+      "id": "swapped-r-b",
+      "observed": {
+        "boundary": "coordinate",
+        "message": "coordinate: fixed paired-site bar",
+        "type": "Refusal"
+      },
+      "status": "PASS_EXPECTED_REFUSAL"
+    },
+    {
+      "expected_boundary": "coordinate",
+      "id": "spatial-green-swap",
+      "observed": {
+        "boundary": "coordinate",
+        "message": "coordinate: fixed paired-site bar",
+        "type": "Refusal"
+      },
+      "status": "PASS_EXPECTED_REFUSAL"
+    },
+    {
+      "expected_boundary": "tiff-format",
+      "id": "appended-tiff",
+      "observed": {
+        "boundary": "tiff-format",
+        "message": "tiff-format: unreferenced trailing bytes",
+        "type": "Refusal"
+      },
+      "status": "PASS_EXPECTED_REFUSAL"
+    },
+    {
+      "expected_boundary": "coordinate",
+      "id": "transpose-output",
+      "observed": {
+        "boundary": "coordinate",
+        "message": "coordinate: fixed paired-site bar",
+        "type": "Refusal"
+      },
+      "status": "PASS_EXPECTED_REFUSAL"
+    },
+    {
+      "expected_boundary": "coordinate",
+      "id": "zero-crop",
+      "observed": {
+        "boundary": "coordinate",
+        "message": "coordinate: fixed paired-site bar",
+        "type": "Refusal"
+      },
+      "status": "PASS_EXPECTED_REFUSAL"
+    },
+    {
+      "expected_boundary": "coordinate",
+      "id": "exchange-crop",
+      "observed": {
+        "boundary": "coordinate",
+        "message": "coordinate: fixed paired-site bar",
+        "type": "Refusal"
+      },
+      "status": "PASS_EXPECTED_REFUSAL"
+    },
+    {
+      "expected_boundary": "coordinate",
+      "id": "quad-as-native",
+      "observed": {
+        "boundary": "coordinate",
+        "message": "coordinate: fixed paired-site bar",
+        "type": "Refusal"
+      },
+      "status": "PASS_EXPECTED_REFUSAL"
+    },
+    {
+      "expected_boundary": "coordinate",
+      "id": "unit-scale",
+      "observed": {
+        "boundary": "coordinate",
+        "message": "coordinate: fixed paired-site bar",
+        "type": "Refusal"
+      },
+      "status": "PASS_EXPECTED_REFUSAL"
+    },
+    {
+      "expected_boundary": "coordinate",
+      "id": "stale-association",
+      "observed": {
+        "boundary": "coordinate",
+        "message": "coordinate: fixed paired-site bar",
+        "type": "Refusal"
+      },
+      "status": "PASS_EXPECTED_REFUSAL"
+    },
+    {
+      "expected_boundary": "coordinate",
+      "id": "wrong-inverse",
+      "observed": {
+        "boundary": "coordinate",
+        "message": "coordinate: fixed paired-site bar",
+        "type": "Refusal"
+      },
+      "status": "PASS_EXPECTED_REFUSAL"
+    },
+    {
+      "expected_boundary": "rank",
+      "id": "rank-one-field",
+      "observed": {
+        "boundary": "rank",
+        "message": "rank: rank-two coordinates required",
+        "type": "Refusal"
+      },
+      "status": "PASS_EXPECTED_REFUSAL"
+    },
+    {
+      "expected_boundary": null,
+      "id": "restored-crop-pixels",
+      "observed": null,
+      "status": "PASS_VALID_COMPANION"
+    },
+    {
+      "expected_boundary": null,
+      "id": "restored-scale-pixels",
+      "observed": null,
+      "status": "PASS_VALID_COMPANION"
+    },
+    {
+      "expected_boundary": null,
+      "id": "restored-association-pixels",
+      "observed": null,
+      "status": "PASS_VALID_COMPANION"
+    },
+    {
+      "expected_boundary": null,
+      "id": "genuine-complete-precision",
+      "observed": null,
+      "status": "PASS_VALID_COMPANION"
+    },
+    {
+      "expected_boundary": "precision-kernel",
+      "id": "coherent-kernel-value-fault",
+      "observed": {
+        "boundary": "precision-kernel",
+        "message": "precision-kernel: typed literal",
+        "type": "Refusal"
+      },
+      "status": "PASS_EXPECTED_REFUSAL"
+    },
+    {
+      "expected_boundary": "precision-kernel",
+      "id": "omit-outer-kernel",
+      "observed": {
+        "boundary": "precision-kernel",
+        "message": "precision-kernel: typed literal",
+        "type": "Refusal"
+      },
+      "status": "PASS_EXPECTED_REFUSAL"
+    },
+    {
+      "expected_boundary": "precision-kernel",
+      "id": "opposite-channel-kernel",
+      "observed": {
+        "boundary": "precision-kernel",
+        "message": "precision-kernel: typed literal",
+        "type": "Refusal"
+      },
+      "status": "PASS_EXPECTED_REFUSAL"
+    },
+    {
+      "expected_boundary": null,
+      "id": "restored-complete-precision",
+      "observed": null,
+      "status": "PASS_VALID_COMPANION"
+    }
+  ],
+  "grid_launches": [
+    {
+      "cpu_seconds": 0.359375,
+      "first_active": 0,
+      "label": "00-plan",
+      "log_bytes": 200,
+      "peak_committed_bytes": 2453504,
+      "polls": 1,
+      "total_processes": 2,
+      "wall_seconds": 0.40600000007543713
+    },
+    {
+      "cpu_seconds": 1.25,
+      "first_active": 0,
+      "label": "00-render",
+      "log_bytes": 4013,
+      "peak_committed_bytes": 9347072,
+      "polls": 1,
+      "total_processes": 2,
+      "wall_seconds": 1.0
+    },
+    {
+      "cpu_seconds": 0.359375,
+      "first_active": 0,
+      "label": "01-plan",
+      "log_bytes": 200,
+      "peak_committed_bytes": 2461696,
+      "polls": 1,
+      "total_processes": 2,
+      "wall_seconds": 0.35900000005494803
+    },
+    {
+      "cpu_seconds": 1.296875,
+      "first_active": 0,
+      "label": "01-render",
+      "log_bytes": 4017,
+      "peak_committed_bytes": 8986624,
+      "polls": 1,
+      "total_processes": 2,
+      "wall_seconds": 1.0
+    },
+    {
+      "cpu_seconds": 0.359375,
+      "first_active": 0,
+      "label": "02-plan",
+      "log_bytes": 200,
+      "peak_committed_bytes": 2445312,
+      "polls": 1,
+      "total_processes": 2,
+      "wall_seconds": 0.375
+    },
+    {
+      "cpu_seconds": 1.234375,
+      "first_active": 0,
+      "label": "02-render",
+      "log_bytes": 4017,
+      "peak_committed_bytes": 8900608,
+      "polls": 1,
+      "total_processes": 2,
+      "wall_seconds": 1.0
+    },
+    {
+      "cpu_seconds": 0.34375,
+      "first_active": 0,
+      "label": "03-plan",
+      "log_bytes": 200,
+      "peak_committed_bytes": 2461696,
+      "polls": 1,
+      "total_processes": 2,
+      "wall_seconds": 0.35999999998603016
+    },
+    {
+      "cpu_seconds": 1.25,
+      "first_active": 0,
+      "label": "03-render",
+      "log_bytes": 4017,
+      "peak_committed_bytes": 8781824,
+      "polls": 1,
+      "total_processes": 2,
+      "wall_seconds": 1.0
+    },
+    {
+      "cpu_seconds": 0.34375,
+      "first_active": 0,
+      "label": "04-plan",
+      "log_bytes": 200,
+      "peak_committed_bytes": 2453504,
+      "polls": 1,
+      "total_processes": 2,
+      "wall_seconds": 0.375
+    },
+    {
+      "cpu_seconds": 1.21875,
+      "first_active": 0,
+      "label": "04-render",
+      "log_bytes": 3586,
+      "peak_committed_bytes": 9904128,
+      "polls": 1,
+      "total_processes": 2,
+      "wall_seconds": 1.015999999945052
+    },
+    {
+      "cpu_seconds": 0.34375,
+      "first_active": 0,
+      "label": "05-plan",
+      "log_bytes": 200,
+      "peak_committed_bytes": 2416640,
+      "polls": 1,
+      "total_processes": 2,
+      "wall_seconds": 0.35999999998603016
+    },
+    {
+      "cpu_seconds": 0.65625,
+      "first_active": 0,
+      "label": "05-render",
+      "log_bytes": 4017,
+      "peak_committed_bytes": 7467008,
+      "polls": 1,
+      "total_processes": 2,
+      "wall_seconds": 0.6720000000204891
+    },
+    {
+      "cpu_seconds": 0.34375,
+      "first_active": 0,
+      "label": "06-plan",
+      "log_bytes": 200,
+      "peak_committed_bytes": 2400256,
+      "polls": 1,
+      "total_processes": 2,
+      "wall_seconds": 0.3589999999385327
+    },
+    {
+      "cpu_seconds": 0.65625,
+      "first_active": 0,
+      "label": "06-render",
+      "log_bytes": 4017,
+      "peak_committed_bytes": 7696384,
+      "polls": 1,
+      "total_processes": 2,
+      "wall_seconds": 0.7029999999795109
+    },
+    {
+      "cpu_seconds": 0.34375,
+      "first_active": 0,
+      "label": "07-plan",
+      "log_bytes": 200,
+      "peak_committed_bytes": 2428928,
+      "polls": 1,
+      "total_processes": 2,
+      "wall_seconds": 0.35900000005494803
+    },
+    {
+      "cpu_seconds": 0.640625,
+      "first_active": 0,
+      "label": "07-render",
+      "log_bytes": 4017,
+      "peak_committed_bytes": 7524352,
+      "polls": 1,
+      "total_processes": 2,
+      "wall_seconds": 0.6870000000344589
+    },
+    {
+      "cpu_seconds": 0.34375,
+      "first_active": 0,
+      "label": "08-plan",
+      "log_bytes": 200,
+      "peak_committed_bytes": 2424832,
+      "polls": 1,
+      "total_processes": 2,
+      "wall_seconds": 0.35900000005494803
+    },
+    {
+      "cpu_seconds": 0.640625,
+      "first_active": 0,
+      "label": "08-render",
+      "log_bytes": 4017,
+      "peak_committed_bytes": 7499776,
+      "polls": 1,
+      "total_processes": 2,
+      "wall_seconds": 0.6879999999655411
+    },
+    {
+      "cpu_seconds": 0.34375,
+      "first_active": 0,
+      "label": "09-plan",
+      "log_bytes": 200,
+      "peak_committed_bytes": 2453504,
+      "polls": 1,
+      "total_processes": 2,
+      "wall_seconds": 0.35900000005494803
+    },
+    {
+      "cpu_seconds": 1.28125,
+      "first_active": 0,
+      "label": "09-render",
+      "log_bytes": 4020,
+      "peak_committed_bytes": 9048064,
+      "polls": 1,
+      "total_processes": 2,
+      "wall_seconds": 1.047000000020489
+    },
+    {
+      "cpu_seconds": 6.734375,
+      "first_active": 0,
+      "label": "precision-component",
+      "log_bytes": 225,
+      "peak_committed_bytes": 8474624,
+      "polls": 1,
+      "total_processes": 2,
+      "wall_seconds": 5.938000000081956
+    }
+  ],
+  "grid_work": {
+    "authority_read_bytes": 234123021,
+    "cpu_seconds": 5.375,
+    "limits": {
+      "artifact_bytes": 33554432,
+      "cpu_seconds": 120,
+      "wall_seconds": 240
+    },
+    "numeric_reader": {
+      "cpu_seconds": 5.375,
+      "limits": {
+        "arrays": 33554432,
+        "cpu": 120,
+        "read_bytes": 302747891,
+        "wall": 240
+      },
+      "peak_array_bytes": 3686400,
+      "read_bytes": 57713070,
+      "wall_seconds": 5.593999999924563
+    },
+    "reserved_artifact_bytes": 7774929,
+    "scope": "pre-publication local sample; enclosing campaign owns terminal whole-process accounting",
+    "wall_seconds": 5.593999999924563
+  },
+  "index_count": 192,
+  "input_count": 25,
+  "observations": [
+    {
+      "cpu_seconds": 141.0,
+      "first_active": 0,
+      "label": "enclosing-worker",
+      "log_bytes": 99,
+      "peak_committed_bytes": 1634713600,
+      "polls": 1,
+      "total_processes": 54,
+      "wall_seconds": 133.45300000009593
+    },
+    {
+      "cpu_seconds": 130.375,
+      "first_active": 0,
+      "label": "grid_producer",
+      "log_bytes": 504,
+      "peak_committed_bytes": 820625408,
+      "polls": 1,
+      "total_processes": 46,
+      "wall_seconds": 123.03099999995902
+    },
+    {
+      "cpu_seconds": 5.65625,
+      "first_active": 0,
+      "label": "grid_reader",
+      "log_bytes": 88,
+      "peak_committed_bytes": 90865664,
+      "polls": 1,
+      "total_processes": 2,
+      "wall_seconds": 5.952999999979511
+    },
+    {
+      "cpu_seconds": 0.0625,
+      "first_active": 0,
+      "label": "derivative_producer",
+      "log_bytes": 211,
+      "peak_committed_bytes": 2654208,
+      "polls": 1,
+      "total_processes": 2,
+      "wall_seconds": 0.10900000005494803
+    },
+    {
+      "cpu_seconds": 1.75,
+      "first_active": 0,
+      "label": "derivative_reader",
+      "log_bytes": 484,
+      "peak_committed_bytes": 331816960,
+      "polls": 1,
+      "total_processes": 2,
+      "wall_seconds": 1.8440000000409782
+    }
+  ],
+  "outer_wall_seconds": 135.3224576,
+  "precision": {
+    "case_counts": {
+      "0": 576,
+      "1": 576,
+      "2": 576,
+      "3": 576,
+      "4": 576,
+      "5": 64,
+      "6": 64,
+      "7": 64,
+      "8": 64,
+      "9": 576
+    },
+    "liveness": {
+      "fractional": 2880,
+      "integer": 832,
+      "negative_imaginary": 640,
+      "negative_translation": 1536,
+      "positive_imaginary": 896,
+      "positive_translation": 1280
+    },
+    "maximum_gather_error_dn": 0.002851082492270507,
+    "maximum_source_evaluation_error_dn": 2.741785000303329e-12,
+    "schema": "m193c-independent-grid-precision-v1",
+    "scope": "actual fixed-site f32/kernel+warp samples, not a universal floating-point bound",
+    "source_stencil_sites": 66123,
+    "status": "PASS_LITERAL_KERNEL_PRECISION",
+    "witness": {
+      "bytes": 3854,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/precision/result.json",
+      "sha256": "efc3b1dd7e818393af40b5b6b2b32da94f8054cd76c7b2da4c9b9a8d00c5c46a"
+    }
+  },
+  "prepublication_work": {
+    "artifact_bytes": 14698419,
+    "byte_scope": "cumulative observed per-path high-water extents; deleted paths remain charged",
+    "cpu_seconds": 143.0625,
+    "observed_child_cpu_seconds": 141.0,
+    "owner_or_worker_cpu_seconds": 2.0625,
+    "scope": "outer actual encompassing terminal Job CPU plus owner CPU; before final publication",
+    "wall_seconds": 134.89000000001397
+  },
+  "producer_input_count": 208,
+  "producer_source_count": 123,
+  "retained_bytes": 14761297,
+  "retained_file_count": 194,
+  "scope": "retained evidence and independent classic-TIFF strip read only",
+  "snapshots": [
+    {
+      "snapshot": "experiments/m193c-output-grid/private-campaign-2/worker/derivative-reader/sources/8c571654667f8ef6-independent-derivative-read.py",
+      "source": "experiments/m193c-output-grid/independent-derivative-read.py"
+    },
+    {
+      "snapshot": "experiments/m193c-output-grid/private-campaign-2/worker/derivative-reader/sources/9acceb498568967b-independent-derivative-tiff.py",
+      "source": "experiments/m193c-output-grid/independent-derivative-tiff.py"
+    },
+    {
+      "snapshot": "experiments/m193c-output-grid/private-campaign-2/worker/derivative-reader/sources/bf8a6c2a13b109fb-independent-derivative-reader-preregister.md",
+      "source": "experiments/m193c-output-grid/independent-derivative-reader-preregister.md"
+    },
+    {
+      "snapshot": "experiments/m193c-output-grid/private-campaign-2/worker/derivative-reader/sources/d01a74aefcfa15b2-independent-rgb-tiff.py",
+      "source": "experiments/m194g-larger-pupil/independent-rgb-tiff.py"
+    }
+  ],
+  "source_count": 133,
+  "status": "COMPLETE_READ_ONLY_EVIDENCE_AUDIT"
+}

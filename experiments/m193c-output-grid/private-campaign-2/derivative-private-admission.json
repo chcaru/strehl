@@ -1,0 +1,21 @@
+{
+  "build": {
+    "bytes": 51621,
+    "path": "experiments/m193c-output-grid/bridge-build-3/result.json",
+    "sha256": "bfb951c8ccc0b2278802e69c3ca27fd9138bb817457b365caaea31d5b82a2977"
+  },
+  "error": null,
+  "finalization_errors": [],
+  "independent_read": {
+    "bytes": 54768,
+    "path": "experiments/m193c-output-grid/private-campaign-2/worker/derivative-reader/result.json",
+    "sha256": "23866d3ad45dcffa8f60729e3e540426495520bc5c2db8fd2ea354cc084da36e"
+  },
+  "private_result": {
+    "bytes": 12027,
+    "path": "experiments/m193c-output-grid/private-campaign-2/worker/derivative/result.json",
+    "sha256": "b57a017cd0d0525187230e20f6cfab81f7993568c5da7b927c5e1154e0f8979e"
+  },
+  "schema": "m193c-derivative-private-admission-v1",
+  "status": "PASS_REGISTRATION_DERIVATIVE_PRIVATE_ONLY"
+}

@@ -1,0 +1,1955 @@
+{
+  "plan": {
+    "build": {
+      "bytes": 29488640,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\bridge-build-3\\output-grid-tests.exe",
+      "sha256": "fa03b12fe177608851d6758517c9bda050998cdc4d777195fab8e3dc1e0813a3",
+      "software": "strehl 0.0.0 (43a72446c2c7)"
+    },
+    "case": {
+      "fault": "swap-original-1-7",
+      "id": "original-one-swapped",
+      "observer": "off",
+      "ordinal": 6,
+      "restored_from": null
+    },
+    "compiled_inputs": {
+      "private_adapter_sha256": "e9fe4be0fe6354e00294900c8f5bad1aade76fbbfb2be1367bb7cafa13ed85a8",
+      "private_protocol_sha256": "990ccd293c9e4f1f9179d33334e0ff5e85d077862dc6456e938d4e3643ff092e"
+    },
+    "config": {
+      "admission": "HardFloor",
+      "backend": "Pyramid",
+      "bands": 3,
+      "base": "Mean",
+      "ca": false,
+      "confidence": false,
+      "defect": false,
+      "demosaic": "MHC",
+      "exponent": 2.0,
+      "exposure": 0,
+      "fallback": "Mean",
+      "fullres_gather": true,
+      "gate": 2.0,
+      "gate_floor": true,
+      "hull": "InputRange",
+      "mean_coarse": 0,
+      "photometric": "Off",
+      "resampler": "CatmullRom",
+      "restoration": false,
+      "select": "SoftPower",
+      "sharpen_per_octave": 1.399999976158142,
+      "significance_scale": 0.0,
+      "space": "CameraLinear"
+    },
+    "environment": {
+      "RAYON_NUM_THREADS": "2",
+      "STREHL_DEFECT": "off",
+      "STREHL_FIX_CA": "off",
+      "STREHL_FULLRES_GATHER": "1",
+      "STREHL_PYRAMID_WORKERS": "2"
+    },
+    "fields": {
+      "kind": "affine",
+      "rgb_affine": [
+        [
+          1100,
+          40,
+          0
+        ],
+        [
+          1700,
+          0,
+          40
+        ],
+        [
+          2100,
+          12,
+          8
+        ]
+      ]
+    },
+    "geometry": {
+      "canonical_private_index": 4,
+      "cover_k": 0.8826661016949156,
+      "cover_mode": "Crop",
+      "crop_quad": {
+        "height": 105,
+        "width": 140,
+        "x": 10,
+        "y": 8
+      },
+      "full_native": [
+        320,
+        240
+      ],
+      "full_quad": [
+        160,
+        120
+      ],
+      "level_sizes": [
+        [
+          140,
+          105
+        ],
+        [
+          70,
+          53
+        ],
+        [
+          35,
+          27
+        ],
+        [
+          18,
+          14
+        ]
+      ],
+      "local_reference": 0,
+      "native_centre": [
+        160.0,
+        120.0
+      ],
+      "output_native": [
+        280,
+        210
+      ],
+      "output_to_canonical": "z+2*crop_origin"
+    },
+    "schema": "m193c-private-grid-plan-v1",
+    "selected": [
+      {
+        "actual_quad_pull": {
+          "a_im": -0.0078125,
+          "a_re": 0.9289546501066683,
+          "b_im": -1.0,
+          "b_re": 1.5
+        },
+        "local_index": 0,
+        "original_index": 1,
+        "path": "M193C-NO-SUCH-RAW-1.ARW",
+        "probe_seed_index": 0
+      }
+    ],
+    "sensor": {
+      "active": {
+        "height": 240,
+        "width": 320,
+        "x": 0,
+        "y": 0
+      },
+      "black": 512,
+      "buffer_height": 240,
+      "cfa": "RGGB",
+      "frame_wb_f32": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "gain_dn_per_e": [
+        0.25,
+        0.25,
+        0.25,
+        0.25
+      ],
+      "iso": 160,
+      "provenance": "Fallback: injected synthetic coefficients; no calibration claim",
+      "range_dn": 14848,
+      "read_noise_e": [
+        4.0,
+        4.0,
+        4.0,
+        4.0
+      ],
+      "source_rounding": "positive half-up, no clipping permitted",
+      "stride": 320,
+      "tiff_u16_to_dn": 0.22656595712214847,
+      "white": 15360,
+      "writer_wb_f32": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    "status": "PLAN_ONLY",
+    "track": [
+      {
+        "actual_post_fault_pull": {
+          "a_im": 0.0,
+          "a_re": 1.0561223412120058,
+          "b_im": 1.0,
+          "b_re": -2.0
+        },
+        "correct_post_cover_pull": {
+          "a_im": 0.0,
+          "a_re": 1.0561223412120058,
+          "b_im": 1.0,
+          "b_re": -2.0
+        },
+        "original_index": 0,
+        "retained_rung": 0,
+        "retained_scale": 0.9999999999999998,
+        "source_generation_pull": {
+          "a_im": 0.0,
+          "a_re": 1.0561223412120058,
+          "b_im": 1.0,
+          "b_re": -2.0
+        }
+      },
+      {
+        "actual_post_fault_pull": {
+          "a_im": -0.0078125,
+          "a_re": 0.9289546501066683,
+          "b_im": -1.0,
+          "b_re": 1.5
+        },
+        "correct_post_cover_pull": {
+          "a_im": 0.0078125,
+          "a_re": 1.0409458631687893,
+          "b_im": 1.0,
+          "b_re": -1.5
+        },
+        "original_index": 1,
+        "retained_rung": 40,
+        "retained_scale": 0.9856299999999998,
+        "source_generation_pull": {
+          "a_im": 0.0078125,
+          "a_re": 1.0409458631687893,
+          "b_im": 1.0,
+          "b_re": -1.5
+        }
+      },
+      {
+        "actual_post_fault_pull": {
+          "a_im": 0.0,
+          "a_re": 1.0272532370149758,
+          "b_im": 0.5,
+          "b_re": -1.0
+        },
+        "correct_post_cover_pull": {
+          "a_im": 0.0,
+          "a_re": 1.0272532370149758,
+          "b_im": 0.5,
+          "b_re": -1.0
+        },
+        "original_index": 2,
+        "retained_rung": 80,
+        "retained_scale": 0.9726649999999999,
+        "source_generation_pull": {
+          "a_im": 0.0,
+          "a_re": 1.0272532370149758,
+          "b_im": 0.5,
+          "b_re": -1.0
+        }
+      },
+      {
+        "actual_post_fault_pull": {
+          "a_im": -0.00390625,
+          "a_re": 1.0183659675136767,
+          "b_im": 0.25,
+          "b_re": -0.5
+        },
+        "correct_post_cover_pull": {
+          "a_im": -0.00390625,
+          "a_re": 1.0183659675136767,
+          "b_im": 0.25,
+          "b_re": -0.5
+        },
+        "original_index": 3,
+        "retained_rung": 112,
+        "retained_scale": 0.9642499999999998,
+        "source_generation_pull": {
+          "a_im": -0.00390625,
+          "a_re": 1.0183659675136767,
+          "b_im": 0.25,
+          "b_re": -0.5
+        }
+      },
+      {
+        "actual_post_fault_pull": {
+          "a_im": 0.0,
+          "a_re": 1.0,
+          "b_im": 0.0,
+          "b_re": 0.0
+        },
+        "correct_post_cover_pull": {
+          "a_im": 0.0,
+          "a_re": 1.0,
+          "b_im": 0.0,
+          "b_re": 0.0
+        },
+        "original_index": 4,
+        "retained_rung": 144,
+        "retained_scale": 0.9468599999999999,
+        "source_generation_pull": {
+          "a_im": 0.0,
+          "a_re": 1.0,
+          "b_im": 0.0,
+          "b_re": 0.0
+        }
+      },
+      {
+        "actual_post_fault_pull": {
+          "a_im": 0.00390625,
+          "a_re": 0.9806993642143506,
+          "b_im": -0.25,
+          "b_re": 0.5
+        },
+        "correct_post_cover_pull": {
+          "a_im": 0.00390625,
+          "a_re": 0.9806993642143506,
+          "b_im": -0.25,
+          "b_re": 0.5
+        },
+        "original_index": 5,
+        "retained_rung": 184,
+        "retained_scale": 0.9285849999999999,
+        "source_generation_pull": {
+          "a_im": 0.00390625,
+          "a_re": 0.9806993642143506,
+          "b_im": -0.25,
+          "b_re": 0.5
+        }
+      },
+      {
+        "actual_post_fault_pull": {
+          "a_im": 0.0,
+          "a_re": 0.9600891367255983,
+          "b_im": -0.5,
+          "b_re": 1.0
+        },
+        "correct_post_cover_pull": {
+          "a_im": 0.0,
+          "a_re": 0.9600891367255983,
+          "b_im": -0.5,
+          "b_re": 1.0
+        },
+        "original_index": 6,
+        "retained_rung": 224,
+        "retained_scale": 0.9090699999999999,
+        "source_generation_pull": {
+          "a_im": 0.0,
+          "a_re": 0.9600891367255983,
+          "b_im": -0.5,
+          "b_re": 1.0
+        }
+      },
+      {
+        "actual_post_fault_pull": {
+          "a_im": 0.0078125,
+          "a_re": 1.0409458631687893,
+          "b_im": 1.0,
+          "b_re": -1.5
+        },
+        "correct_post_cover_pull": {
+          "a_im": -0.0078125,
+          "a_re": 0.9289546501066683,
+          "b_im": -1.0,
+          "b_re": 1.5
+        },
+        "original_index": 7,
+        "retained_rung": 264,
+        "retained_scale": 0.8795899999999999,
+        "source_generation_pull": {
+          "a_im": -0.0078125,
+          "a_re": 0.9289546501066683,
+          "b_im": -1.0,
+          "b_re": 1.5
+        }
+      },
+      {
+        "actual_post_fault_pull": {
+          "a_im": 0.0,
+          "a_re": 0.9052447035464589,
+          "b_im": -1.5,
+          "b_re": 2.0
+        },
+        "correct_post_cover_pull": {
+          "a_im": 0.0,
+          "a_re": 0.9052447035464589,
+          "b_im": -1.5,
+          "b_re": 2.0
+        },
+        "original_index": 8,
+        "retained_rung": 298,
+        "retained_scale": 0.85714,
+        "source_generation_pull": {
+          "a_im": 0.0,
+          "a_re": 0.9052447035464589,
+          "b_im": -1.5,
+          "b_re": 2.0
+        }
+      }
+    ]
+  },
+  "plan_bytes": 8318,
+  "plan_sha256": "70b16f940a612a0e78952dacb7bb682c3bd6c02848d414b48e73805286c36229",
+  "rows": [
+    {
+      "actual_warp_u16": 4633,
+      "black_restored_f32_bits": 1167116846,
+      "black_restored_f32_dn": 4633.2724609375,
+      "channel": "R",
+      "full_native_xy": [
+        60,
+        52
+      ],
+      "local_index": 0,
+      "original_index": 1,
+      "output_native_xy": [
+        40,
+        36
+      ],
+      "pair_index": 0,
+      "rounded_u16": 4633,
+      "sample_f32_bits": 1166068270,
+      "sample_f32_dn": 4121.2724609375,
+      "sample_native_xy": [
+        69.57328498933316,
+        55.612333792746554
+      ]
+    },
+    {
+      "actual_warp_u16": 4486,
+      "black_restored_f32_bits": 1166815272,
+      "black_restored_f32_dn": 4486.01953125,
+      "channel": "G1",
+      "full_native_xy": [
+        61,
+        52
+      ],
+      "local_index": 0,
+      "original_index": 1,
+      "output_native_xy": [
+        41,
+        36
+      ],
+      "pair_index": 0,
+      "rounded_u16": 4486,
+      "sample_f32_bits": 1165516881,
+      "sample_f32_dn": 3974.019775390625,
+      "sample_native_xy": [
+        70.50223963943984,
+        55.604521292746554
+      ]
+    },
+    {
+      "actual_warp_u16": 5633,
+      "black_restored_f32_bits": 1169164238,
+      "black_restored_f32_dn": 5632.9755859375,
+      "channel": "R",
+      "full_native_xy": [
+        88,
+        52
+      ],
+      "local_index": 0,
+      "original_index": 1,
+      "output_native_xy": [
+        68,
+        36
+      ],
+      "pair_index": 1,
+      "rounded_u16": 5633,
+      "sample_f32_bits": 1168115662,
+      "sample_f32_dn": 5120.9755859375,
+      "sample_native_xy": [
+        95.58401519231988,
+        55.393583792746554
+      ]
+    },
+    {
+      "actual_warp_u16": 4470,
+      "black_restored_f32_bits": 1166781554,
+      "black_restored_f32_dn": 4469.5556640625,
+      "channel": "G1",
+      "full_native_xy": [
+        89,
+        52
+      ],
+      "local_index": 0,
+      "original_index": 1,
+      "output_native_xy": [
+        69,
+        36
+      ],
+      "pair_index": 1,
+      "rounded_u16": 4470,
+      "sample_f32_bits": 1165449444,
+      "sample_f32_dn": 3957.5556640625,
+      "sample_native_xy": [
+        96.51296984242654,
+        55.385771292746554
+      ]
+    },
+    {
+      "actual_warp_u16": 6632,
+      "black_restored_f32_bits": 1171210965,
+      "black_restored_f32_dn": 6632.35400390625,
+      "channel": "R",
+      "full_native_xy": [
+        116,
+        52
+      ],
+      "local_index": 0,
+      "original_index": 1,
+      "output_native_xy": [
+        96,
+        36
+      ],
+      "pair_index": 2,
+      "rounded_u16": 6632,
+      "sample_f32_bits": 1170162389,
+      "sample_f32_dn": 6120.35400390625,
+      "sample_native_xy": [
+        121.5947453953066,
+        55.174833792746554
+      ]
+    },
+    {
+      "actual_warp_u16": 4454,
+      "black_restored_f32_bits": 1166749912,
+      "black_restored_f32_dn": 4454.10546875,
+      "channel": "G1",
+      "full_native_xy": [
+        117,
+        52
+      ],
+      "local_index": 0,
+      "original_index": 1,
+      "output_native_xy": [
+        97,
+        36
+      ],
+      "pair_index": 2,
+      "rounded_u16": 4454,
+      "sample_f32_bits": 1165386161,
+      "sample_f32_dn": 3942.105712890625,
+      "sample_native_xy": [
+        122.52370004541326,
+        55.167021292746554
+      ]
+    },
+    {
+      "actual_warp_u16": 7632,
+      "black_restored_f32_bits": 1173258079,
+      "black_restored_f32_dn": 7631.92138671875,
+      "channel": "R",
+      "full_native_xy": [
+        144,
+        52
+      ],
+      "local_index": 0,
+      "original_index": 1,
+      "output_native_xy": [
+        124,
+        36
+      ],
+      "pair_index": 3,
+      "rounded_u16": 7632,
+      "sample_f32_bits": 1172209503,
+      "sample_f32_dn": 7119.92138671875,
+      "sample_native_xy": [
+        147.6054755982933,
+        54.956083792746554
+      ]
+    },
+    {
+      "actual_warp_u16": 4438,
+      "black_restored_f32_bits": 1166716879,
+      "black_restored_f32_dn": 4437.97607421875,
+      "channel": "G1",
+      "full_native_xy": [
+        145,
+        52
+      ],
+      "local_index": 0,
+      "original_index": 1,
+      "output_native_xy": [
+        125,
+        36
+      ],
+      "pair_index": 3,
+      "rounded_u16": 4438,
+      "sample_f32_bits": 1165320094,
+      "sample_f32_dn": 3925.97607421875,
+      "sample_native_xy": [
+        148.53443024839999,
+        54.948271292746554
+      ]
+    },
+    {
+      "actual_warp_u16": 8631,
+      "black_restored_f32_bits": 1174855062,
+      "black_restored_f32_dn": 8631.396484375,
+      "channel": "R",
+      "full_native_xy": [
+        172,
+        52
+      ],
+      "local_index": 0,
+      "original_index": 1,
+      "output_native_xy": [
+        152,
+        36
+      ],
+      "pair_index": 4,
+      "rounded_u16": 8631,
+      "sample_f32_bits": 1174256429,
+      "sample_f32_dn": 8119.39697265625,
+      "sample_native_xy": [
+        173.61620580128002,
+        54.737333792746554
+      ]
+    },
+    {
+      "actual_warp_u16": 4422,
+      "black_restored_f32_bits": 1166685072,
+      "black_restored_f32_dn": 4422.4453125,
+      "channel": "G1",
+      "full_native_xy": [
+        173,
+        52
+      ],
+      "local_index": 0,
+      "original_index": 1,
+      "output_native_xy": [
+        153,
+        36
+      ],
+      "pair_index": 4,
+      "rounded_u16": 4422,
+      "sample_f32_bits": 1165256480,
+      "sample_f32_dn": 3910.4453125,
+      "sample_native_xy": [
+        174.5451604513867,
+        54.729521292746554
+      ]
+    },
+    {
+      "actual_warp_u16": 9631,
+      "black_restored_f32_bits": 1175878390,
+      "black_restored_f32_dn": 9630.740234375,
+      "channel": "R",
+      "full_native_xy": [
+        200,
+        52
+      ],
+      "local_index": 0,
+      "original_index": 1,
+      "output_native_xy": [
+        180,
+        36
+      ],
+      "pair_index": 5,
+      "rounded_u16": 9631,
+      "sample_f32_bits": 1175354102,
+      "sample_f32_dn": 9118.740234375,
+      "sample_native_xy": [
+        199.62693600426672,
+        54.518583792746554
+      ]
+    },
+    {
+      "actual_warp_u16": 4406,
+      "black_restored_f32_bits": 1166651354,
+      "black_restored_f32_dn": 4405.9814453125,
+      "channel": "G1",
+      "full_native_xy": [
+        201,
+        52
+      ],
+      "local_index": 0,
+      "original_index": 1,
+      "output_native_xy": [
+        181,
+        36
+      ],
+      "pair_index": 5,
+      "rounded_u16": 4406,
+      "sample_f32_bits": 1165189045,
+      "sample_f32_dn": 3893.981689453125,
+      "sample_native_xy": [
+        200.5558906543734,
+        54.510771292746554
+      ]
+    },
+    {
+      "actual_warp_u16": 10630,
+      "black_restored_f32_bits": 1176901818,
+      "black_restored_f32_dn": 10630.181640625,
+      "channel": "R",
+      "full_native_xy": [
+        228,
+        52
+      ],
+      "local_index": 0,
+      "original_index": 1,
+      "output_native_xy": [
+        208,
+        36
+      ],
+      "pair_index": 6,
+      "rounded_u16": 10630,
+      "sample_f32_bits": 1176377530,
+      "sample_f32_dn": 10118.181640625,
+      "sample_native_xy": [
+        225.63766620725346,
+        54.299833792746554
+      ]
+    },
+    {
+      "actual_warp_u16": 4390,
+      "black_restored_f32_bits": 1166619602,
+      "black_restored_f32_dn": 4390.4775390625,
+      "channel": "G1",
+      "full_native_xy": [
+        229,
+        52
+      ],
+      "local_index": 0,
+      "original_index": 1,
+      "output_native_xy": [
+        209,
+        36
+      ],
+      "pair_index": 6,
+      "rounded_u16": 4390,
+      "sample_f32_bits": 1165125539,
+      "sample_f32_dn": 3878.477294921875,
+      "sample_native_xy": [
+        226.56662085736014,
+        54.292021292746554
+      ]
+    },
+    {
+      "actual_warp_u16": 11629,
+      "black_restored_f32_bits": 1177925119,
+      "black_restored_f32_dn": 11629.4990234375,
+      "channel": "R",
+      "full_native_xy": [
+        256,
+        52
+      ],
+      "local_index": 0,
+      "original_index": 1,
+      "output_native_xy": [
+        236,
+        36
+      ],
+      "pair_index": 7,
+      "rounded_u16": 11629,
+      "sample_f32_bits": 1177400831,
+      "sample_f32_dn": 11117.4990234375,
+      "sample_native_xy": [
+        251.64839641024017,
+        54.081083792746554
+      ]
+    },
+    {
+      "actual_warp_u16": 4374,
+      "black_restored_f32_bits": 1166585876,
+      "black_restored_f32_dn": 4374.009765625,
+      "channel": "G1",
+      "full_native_xy": [
+        257,
+        52
+      ],
+      "local_index": 0,
+      "original_index": 1,
+      "output_native_xy": [
+        237,
+        36
+      ],
+      "pair_index": 7,
+      "rounded_u16": 4374,
+      "sample_f32_bits": 1165058088,
+      "sample_f32_dn": 3862.009765625,
+      "sample_native_xy": [
+        252.5773510603468,
+        54.073271292746554
+      ]
+    },
+    {
+      "actual_warp_u16": 4652,
+      "black_restored_f32_bits": 1167154465,
+      "black_restored_f32_dn": 4651.64111328125,
+      "channel": "R",
+      "full_native_xy": [
+        60,
+        84
+      ],
+      "local_index": 0,
+      "original_index": 1,
+      "output_native_xy": [
+        40,
+        68
+      ],
+      "pair_index": 8,
+      "rounded_u16": 4652,
+      "sample_f32_bits": 1166105889,
+      "sample_f32_dn": 4139.64111328125,
+      "sample_native_xy": [
+        69.82328498933316,
+        85.33888259615995
+      ]
+    },
+    {
+      "actual_warp_u16": 5628,
+      "black_restored_f32_bits": 1169153936,
+      "black_restored_f32_dn": 5627.9453125,
+      "channel": "G1",
+      "full_native_xy": [
+        61,
+        84
+      ],
+      "local_index": 0,
+      "original_index": 1,
+      "output_native_xy": [
+        41,
+        68
+      ],
+      "pair_index": 8,
+      "rounded_u16": 5628,
+      "sample_f32_bits": 1168105360,
+      "sample_f32_dn": 5115.9453125,
+      "sample_native_xy": [
+        70.75223963943984,
+        85.33107009615995
+      ]
+    },
+    {
+      "actual_warp_u16": 5651,
+      "black_restored_f32_bits": 1169201370,
+      "black_restored_f32_dn": 5651.1064453125,
+      "channel": "R",
+      "full_native_xy": [
+        88,
+        84
+      ],
+      "local_index": 0,
+      "original_index": 1,
+      "output_native_xy": [
+        68,
+        68
+      ],
+      "pair_index": 9,
+      "rounded_u16": 5651,
+      "sample_f32_bits": 1168152794,
+      "sample_f32_dn": 5139.1064453125,
+      "sample_native_xy": [
+        95.83401519231988,
+        85.12013259615995
+      ]
+    },
+    {
+      "actual_warp_u16": 5612,
+      "black_restored_f32_bits": 1169120964,
+      "black_restored_f32_dn": 5611.845703125,
+      "channel": "G1",
+      "full_native_xy": [
+        89,
+        84
+      ],
+      "local_index": 0,
+      "original_index": 1,
+      "output_native_xy": [
+        69,
+        68
+      ],
+      "pair_index": 9,
+      "rounded_u16": 5612,
+      "sample_f32_bits": 1168072388,
+      "sample_f32_dn": 5099.845703125,
+      "sample_native_xy": [
+        96.76296984242654,
+        85.11232009615995
+      ]
+    },
+    {
+      "actual_warp_u16": 6650,
+      "black_restored_f32_bits": 1171247603,
+      "black_restored_f32_dn": 6650.24365234375,
+      "channel": "R",
+      "full_native_xy": [
+        116,
+        84
+      ],
+      "local_index": 0,
+      "original_index": 1,
+      "output_native_xy": [
+        96,
+        68
+      ],
+      "pair_index": 10,
+      "rounded_u16": 6650,
+      "sample_f32_bits": 1170199027,
+      "sample_f32_dn": 6138.24365234375,
+      "sample_native_xy": [
+        121.8447453953066,
+        84.90138259615995
+      ]
+    },
+    {
+      "actual_warp_u16": 5596,
+      "black_restored_f32_bits": 1169088309,
+      "black_restored_f32_dn": 5595.90087890625,
+      "channel": "G1",
+      "full_native_xy": [
+        117,
+        84
+      ],
+      "local_index": 0,
+      "original_index": 1,
+      "output_native_xy": [
+        97,
+        68
+      ],
+      "pair_index": 10,
+      "rounded_u16": 5596,
+      "sample_f32_bits": 1168039733,
+      "sample_f32_dn": 5083.90087890625,
+      "sample_native_xy": [
+        122.77370004541326,
+        84.89357009615995
+      ]
+    },
+    {
+      "actual_warp_u16": 7650,
+      "black_restored_f32_bits": 1173294555,
+      "black_restored_f32_dn": 7649.73193359375,
+      "channel": "R",
+      "full_native_xy": [
+        144,
+        84
+      ],
+      "local_index": 0,
+      "original_index": 1,
+      "output_native_xy": [
+        124,
+        68
+      ],
+      "pair_index": 11,
+      "rounded_u16": 7650,
+      "sample_f32_bits": 1172245979,
+      "sample_f32_dn": 7137.73193359375,
+      "sample_native_xy": [
+        147.8554755982933,
+        84.68263259615995
+      ]
+    },
+    {
+      "actual_warp_u16": 5580,
+      "black_restored_f32_bits": 1169056092,
+      "black_restored_f32_dn": 5580.169921875,
+      "channel": "G1",
+      "full_native_xy": [
+        145,
+        84
+      ],
+      "local_index": 0,
+      "original_index": 1,
+      "output_native_xy": [
+        125,
+        68
+      ],
+      "pair_index": 11,
+      "rounded_u16": 5580,
+      "sample_f32_bits": 1168007516,
+      "sample_f32_dn": 5068.169921875,
+      "sample_native_xy": [
+        148.78443024839999,
+        84.67482009615995
+      ]
+    },
+    {
+      "actual_warp_u16": 8649,
+      "black_restored_f32_bits": 1174872932,
+      "black_restored_f32_dn": 8648.84765625,
+      "channel": "R",
+      "full_native_xy": [
+        172,
+        84
+      ],
+      "local_index": 0,
+      "original_index": 1,
+      "output_native_xy": [
+        152,
+        68
+      ],
+      "pair_index": 12,
+      "rounded_u16": 8649,
+      "sample_f32_bits": 1174292168,
+      "sample_f32_dn": 8136.84765625,
+      "sample_native_xy": [
+        173.86620580128002,
+        84.46388259615995
+      ]
+    },
+    {
+      "actual_warp_u16": 5564,
+      "black_restored_f32_bits": 1169023971,
+      "black_restored_f32_dn": 5564.48583984375,
+      "channel": "G1",
+      "full_native_xy": [
+        173,
+        84
+      ],
+      "local_index": 0,
+      "original_index": 1,
+      "output_native_xy": [
+        153,
+        68
+      ],
+      "pair_index": 12,
+      "rounded_u16": 5564,
+      "sample_f32_bits": 1167975395,
+      "sample_f32_dn": 5052.48583984375,
+      "sample_native_xy": [
+        174.7951604513867,
+        84.45607009615995
+      ]
+    },
+    {
+      "actual_warp_u16": 9648,
+      "black_restored_f32_bits": 1175896431,
+      "black_restored_f32_dn": 9648.3583984375,
+      "channel": "R",
+      "full_native_xy": [
+        200,
+        84
+      ],
+      "local_index": 0,
+      "original_index": 1,
+      "output_native_xy": [
+        180,
+        68
+      ],
+      "pair_index": 13,
+      "rounded_u16": 9648,
+      "sample_f32_bits": 1175372143,
+      "sample_f32_dn": 9136.3583984375,
+      "sample_native_xy": [
+        199.87693600426672,
+        84.24513259615995
+      ]
+    },
+    {
+      "actual_warp_u16": 5548,
+      "black_restored_f32_bits": 1168990573,
+      "black_restored_f32_dn": 5548.17822265625,
+      "channel": "G1",
+      "full_native_xy": [
+        201,
+        84
+      ],
+      "local_index": 0,
+      "original_index": 1,
+      "output_native_xy": [
+        181,
+        68
+      ],
+      "pair_index": 13,
+      "rounded_u16": 5548,
+      "sample_f32_bits": 1167941997,
+      "sample_f32_dn": 5036.17822265625,
+      "sample_native_xy": [
+        200.8058906543734,
+        84.23732009615995
+      ]
+    },
+    {
+      "actual_warp_u16": 10648,
+      "black_restored_f32_bits": 1176919699,
+      "black_restored_f32_dn": 10647.6435546875,
+      "channel": "R",
+      "full_native_xy": [
+        228,
+        84
+      ],
+      "local_index": 0,
+      "original_index": 1,
+      "output_native_xy": [
+        208,
+        68
+      ],
+      "pair_index": 14,
+      "rounded_u16": 10648,
+      "sample_f32_bits": 1176395411,
+      "sample_f32_dn": 10135.6435546875,
+      "sample_native_xy": [
+        225.88766620725346,
+        84.02638259615995
+      ]
+    },
+    {
+      "actual_warp_u16": 5533,
+      "black_restored_f32_bits": 1168958932,
+      "black_restored_f32_dn": 5532.728515625,
+      "channel": "G1",
+      "full_native_xy": [
+        229,
+        84
+      ],
+      "local_index": 0,
+      "original_index": 1,
+      "output_native_xy": [
+        209,
+        68
+      ],
+      "pair_index": 14,
+      "rounded_u16": 5533,
+      "sample_f32_bits": 1167910356,
+      "sample_f32_dn": 5020.728515625,
+      "sample_native_xy": [
+        226.81662085736014,
+        84.01857009615995
+      ]
+    },
+    {
+      "actual_warp_u16": 11647,
+      "black_restored_f32_bits": 1177943153,
+      "black_restored_f32_dn": 11647.1103515625,
+      "channel": "R",
+      "full_native_xy": [
+        256,
+        84
+      ],
+      "local_index": 0,
+      "original_index": 1,
+      "output_native_xy": [
+        236,
+        68
+      ],
+      "pair_index": 15,
+      "rounded_u16": 11647,
+      "sample_f32_bits": 1177418865,
+      "sample_f32_dn": 11135.1103515625,
+      "sample_native_xy": [
+        251.89839641024017,
+        83.80763259615995
+      ]
+    },
+    {
+      "actual_warp_u16": 5516,
+      "black_restored_f32_bits": 1168925341,
+      "black_restored_f32_dn": 5516.32666015625,
+      "channel": "G1",
+      "full_native_xy": [
+        257,
+        84
+      ],
+      "local_index": 0,
+      "original_index": 1,
+      "output_native_xy": [
+        237,
+        68
+      ],
+      "pair_index": 15,
+      "rounded_u16": 5516,
+      "sample_f32_bits": 1167876765,
+      "sample_f32_dn": 5004.32666015625,
+      "sample_native_xy": [
+        252.8273510603468,
+        83.79982009615995
+      ]
+    },
+    {
+      "actual_warp_u16": 4670,
+      "black_restored_f32_bits": 1167191814,
+      "black_restored_f32_dn": 4669.8779296875,
+      "channel": "R",
+      "full_native_xy": [
+        60,
+        116
+      ],
+      "local_index": 0,
+      "original_index": 1,
+      "output_native_xy": [
+        40,
+        100
+      ],
+      "pair_index": 16,
+      "rounded_u16": 4670,
+      "sample_f32_bits": 1166143238,
+      "sample_f32_dn": 4157.8779296875,
+      "sample_native_xy": [
+        70.07328498933316,
+        115.06543139957333
+      ]
+    },
+    {
+      "actual_warp_u16": 6770,
+      "black_restored_f32_bits": 1171492542,
+      "black_restored_f32_dn": 6769.8427734375,
+      "channel": "G1",
+      "full_native_xy": [
+        61,
+        116
+      ],
+      "local_index": 0,
+      "original_index": 1,
+      "output_native_xy": [
+        41,
+        100
+      ],
+      "pair_index": 16,
+      "rounded_u16": 6770,
+      "sample_f32_bits": 1170443966,
+      "sample_f32_dn": 6257.8427734375,
+      "sample_native_xy": [
+        71.00223963943984,
+        115.05761889957333
+      ]
+    },
+    {
+      "actual_warp_u16": 5670,
+      "black_restored_f32_bits": 1169239093,
+      "black_restored_f32_dn": 5669.52587890625,
+      "channel": "R",
+      "full_native_xy": [
+        88,
+        116
+      ],
+      "local_index": 0,
+      "original_index": 1,
+      "output_native_xy": [
+        68,
+        100
+      ],
+      "pair_index": 17,
+      "rounded_u16": 5670,
+      "sample_f32_bits": 1168190517,
+      "sample_f32_dn": 5157.52587890625,
+      "sample_native_xy": [
+        96.08401519231988,
+        114.84668139957333
+      ]
+    },
+    {
+      "actual_warp_u16": 6754,
+      "black_restored_f32_bits": 1171460446,
+      "black_restored_f32_dn": 6754.1708984375,
+      "channel": "G1",
+      "full_native_xy": [
+        89,
+        116
+      ],
+      "local_index": 0,
+      "original_index": 1,
+      "output_native_xy": [
+        69,
+        100
+      ],
+      "pair_index": 17,
+      "rounded_u16": 6754,
+      "sample_f32_bits": 1170411870,
+      "sample_f32_dn": 6242.1708984375,
+      "sample_native_xy": [
+        97.01296984242654,
+        114.83886889957333
+      ]
+    },
+    {
+      "actual_warp_u16": 6669,
+      "black_restored_f32_bits": 1171285417,
+      "black_restored_f32_dn": 6668.70751953125,
+      "channel": "R",
+      "full_native_xy": [
+        116,
+        116
+      ],
+      "local_index": 0,
+      "original_index": 1,
+      "output_native_xy": [
+        96,
+        100
+      ],
+      "pair_index": 18,
+      "rounded_u16": 6669,
+      "sample_f32_bits": 1170236841,
+      "sample_f32_dn": 6156.70751953125,
+      "sample_native_xy": [
+        122.0947453953066,
+        114.62793139957333
+      ]
+    },
+    {
+      "actual_warp_u16": 6738,
+      "black_restored_f32_bits": 1171427589,
+      "black_restored_f32_dn": 6738.12744140625,
+      "channel": "G1",
+      "full_native_xy": [
+        117,
+        116
+      ],
+      "local_index": 0,
+      "original_index": 1,
+      "output_native_xy": [
+        97,
+        100
+      ],
+      "pair_index": 18,
+      "rounded_u16": 6738,
+      "sample_f32_bits": 1170379013,
+      "sample_f32_dn": 6226.12744140625,
+      "sample_native_xy": [
+        123.02370004541326,
+        114.62011889957333
+      ]
+    },
+    {
+      "actual_warp_u16": 7668,
+      "black_restored_f32_bits": 1173332458,
+      "black_restored_f32_dn": 7668.2392578125,
+      "channel": "R",
+      "full_native_xy": [
+        144,
+        116
+      ],
+      "local_index": 0,
+      "original_index": 1,
+      "output_native_xy": [
+        124,
+        100
+      ],
+      "pair_index": 19,
+      "rounded_u16": 7668,
+      "sample_f32_bits": 1172283882,
+      "sample_f32_dn": 7156.2392578125,
+      "sample_native_xy": [
+        148.1054755982933,
+        114.40918139957333
+      ]
+    },
+    {
+      "actual_warp_u16": 6723,
+      "black_restored_f32_bits": 1171395584,
+      "black_restored_f32_dn": 6722.5,
+      "channel": "G1",
+      "full_native_xy": [
+        145,
+        116
+      ],
+      "local_index": 0,
+      "original_index": 1,
+      "output_native_xy": [
+        125,
+        100
+      ],
+      "pair_index": 19,
+      "rounded_u16": 6723,
+      "sample_f32_bits": 1170347008,
+      "sample_f32_dn": 6210.5,
+      "sample_native_xy": [
+        149.03443024839999,
+        114.40136889957333
+      ]
+    },
+    {
+      "actual_warp_u16": 8667,
+      "black_restored_f32_bits": 1174892023,
+      "black_restored_f32_dn": 8667.4912109375,
+      "channel": "R",
+      "full_native_xy": [
+        172,
+        116
+      ],
+      "local_index": 0,
+      "original_index": 1,
+      "output_native_xy": [
+        152,
+        100
+      ],
+      "pair_index": 20,
+      "rounded_u16": 8667,
+      "sample_f32_bits": 1174330350,
+      "sample_f32_dn": 8155.4912109375,
+      "sample_native_xy": [
+        174.11620580128002,
+        114.19043139957333
+      ]
+    },
+    {
+      "actual_warp_u16": 6706,
+      "black_restored_f32_bits": 1171361795,
+      "black_restored_f32_dn": 6706.00146484375,
+      "channel": "G1",
+      "full_native_xy": [
+        173,
+        116
+      ],
+      "local_index": 0,
+      "original_index": 1,
+      "output_native_xy": [
+        153,
+        100
+      ],
+      "pair_index": 20,
+      "rounded_u16": 6706,
+      "sample_f32_bits": 1170313219,
+      "sample_f32_dn": 6194.00146484375,
+      "sample_native_xy": [
+        175.0451604513867,
+        114.18261889957333
+      ]
+    },
+    {
+      "actual_warp_u16": 9667,
+      "black_restored_f32_bits": 1175915414,
+      "black_restored_f32_dn": 9666.896484375,
+      "channel": "R",
+      "full_native_xy": [
+        200,
+        116
+      ],
+      "local_index": 0,
+      "original_index": 1,
+      "output_native_xy": [
+        180,
+        100
+      ],
+      "pair_index": 21,
+      "rounded_u16": 9667,
+      "sample_f32_bits": 1175391126,
+      "sample_f32_dn": 9154.896484375,
+      "sample_native_xy": [
+        200.12693600426672,
+        113.97168139957333
+      ]
+    },
+    {
+      "actual_warp_u16": 6691,
+      "black_restored_f32_bits": 1171330245,
+      "black_restored_f32_dn": 6690.59619140625,
+      "channel": "G1",
+      "full_native_xy": [
+        201,
+        116
+      ],
+      "local_index": 0,
+      "original_index": 1,
+      "output_native_xy": [
+        181,
+        100
+      ],
+      "pair_index": 21,
+      "rounded_u16": 6691,
+      "sample_f32_bits": 1170281669,
+      "sample_f32_dn": 6178.59619140625,
+      "sample_native_xy": [
+        201.0558906543734,
+        113.96386889957333
+      ]
+    },
+    {
+      "actual_warp_u16": 10666,
+      "black_restored_f32_bits": 1176938637,
+      "black_restored_f32_dn": 10666.1376953125,
+      "channel": "R",
+      "full_native_xy": [
+        228,
+        116
+      ],
+      "local_index": 0,
+      "original_index": 1,
+      "output_native_xy": [
+        208,
+        100
+      ],
+      "pair_index": 22,
+      "rounded_u16": 10666,
+      "sample_f32_bits": 1176414349,
+      "sample_f32_dn": 10154.1376953125,
+      "sample_native_xy": [
+        226.13766620725346,
+        113.75293139957333
+      ]
+    },
+    {
+      "actual_warp_u16": 6674,
+      "black_restored_f32_bits": 1171296889,
+      "black_restored_f32_dn": 6674.30908203125,
+      "channel": "G1",
+      "full_native_xy": [
+        229,
+        116
+      ],
+      "local_index": 0,
+      "original_index": 1,
+      "output_native_xy": [
+        209,
+        100
+      ],
+      "pair_index": 22,
+      "rounded_u16": 6674,
+      "sample_f32_bits": 1170248313,
+      "sample_f32_dn": 6162.30908203125,
+      "sample_native_xy": [
+        227.06662085736014,
+        113.74511889957333
+      ]
+    },
+    {
+      "actual_warp_u16": 11665,
+      "black_restored_f32_bits": 1177961983,
+      "black_restored_f32_dn": 11665.4990234375,
+      "channel": "R",
+      "full_native_xy": [
+        256,
+        116
+      ],
+      "local_index": 0,
+      "original_index": 1,
+      "output_native_xy": [
+        236,
+        100
+      ],
+      "pair_index": 23,
+      "rounded_u16": 11665,
+      "sample_f32_bits": 1177437695,
+      "sample_f32_dn": 11153.4990234375,
+      "sample_native_xy": [
+        252.14839641024017,
+        113.53418139957333
+      ]
+    },
+    {
+      "actual_warp_u16": 6659,
+      "black_restored_f32_bits": 1171264845,
+      "black_restored_f32_dn": 6658.66259765625,
+      "channel": "G1",
+      "full_native_xy": [
+        257,
+        116
+      ],
+      "local_index": 0,
+      "original_index": 1,
+      "output_native_xy": [
+        237,
+        100
+      ],
+      "pair_index": 23,
+      "rounded_u16": 6659,
+      "sample_f32_bits": 1170216269,
+      "sample_f32_dn": 6146.66259765625,
+      "sample_native_xy": [
+        253.0773510603468,
+        113.52636889957333
+      ]
+    },
+    {
+      "actual_warp_u16": 4688,
+      "black_restored_f32_bits": 1167228348,
+      "black_restored_f32_dn": 4687.716796875,
+      "channel": "R",
+      "full_native_xy": [
+        60,
+        148
+      ],
+      "local_index": 0,
+      "original_index": 1,
+      "output_native_xy": [
+        40,
+        132
+      ],
+      "pair_index": 24,
+      "rounded_u16": 4688,
+      "sample_f32_bits": 1166179772,
+      "sample_f32_dn": 4175.716796875,
+      "sample_native_xy": [
+        70.32328498933316,
+        144.7919802029867
+      ]
+    },
+    {
+      "actual_warp_u16": 7912,
+      "black_restored_f32_bits": 1173831598,
+      "black_restored_f32_dn": 7911.9599609375,
+      "channel": "G1",
+      "full_native_xy": [
+        61,
+        148
+      ],
+      "local_index": 0,
+      "original_index": 1,
+      "output_native_xy": [
+        41,
+        132
+      ],
+      "pair_index": 24,
+      "rounded_u16": 7912,
+      "sample_f32_bits": 1172783022,
+      "sample_f32_dn": 7399.9599609375,
+      "sample_native_xy": [
+        71.25223963943984,
+        144.7841677029867
+      ]
+    },
+    {
+      "actual_warp_u16": 5687,
+      "black_restored_f32_bits": 1169274998,
+      "black_restored_f32_dn": 5687.0576171875,
+      "channel": "R",
+      "full_native_xy": [
+        88,
+        148
+      ],
+      "local_index": 0,
+      "original_index": 1,
+      "output_native_xy": [
+        68,
+        132
+      ],
+      "pair_index": 25,
+      "rounded_u16": 5687,
+      "sample_f32_bits": 1168226422,
+      "sample_f32_dn": 5175.0576171875,
+      "sample_native_xy": [
+        96.33401519231988,
+        144.5732302029867
+      ]
+    },
+    {
+      "actual_warp_u16": 7897,
+      "black_restored_f32_bits": 1173800014,
+      "black_restored_f32_dn": 7896.5380859375,
+      "channel": "G1",
+      "full_native_xy": [
+        89,
+        148
+      ],
+      "local_index": 0,
+      "original_index": 1,
+      "output_native_xy": [
+        69,
+        132
+      ],
+      "pair_index": 25,
+      "rounded_u16": 7897,
+      "sample_f32_bits": 1172751438,
+      "sample_f32_dn": 7384.5380859375,
+      "sample_native_xy": [
+        97.26296984242654,
+        144.5654177029867
+      ]
+    },
+    {
+      "actual_warp_u16": 6686,
+      "black_restored_f32_bits": 1171321528,
+      "black_restored_f32_dn": 6686.33984375,
+      "channel": "R",
+      "full_native_xy": [
+        116,
+        148
+      ],
+      "local_index": 0,
+      "original_index": 1,
+      "output_native_xy": [
+        96,
+        132
+      ],
+      "pair_index": 26,
+      "rounded_u16": 6686,
+      "sample_f32_bits": 1170272952,
+      "sample_f32_dn": 6174.33984375,
+      "sample_native_xy": [
+        122.3447453953066,
+        144.3544802029867
+      ]
+    },
+    {
+      "actual_warp_u16": 7880,
+      "black_restored_f32_bits": 1173766688,
+      "black_restored_f32_dn": 7880.265625,
+      "channel": "G1",
+      "full_native_xy": [
+        117,
+        148
+      ],
+      "local_index": 0,
+      "original_index": 1,
+      "output_native_xy": [
+        97,
+        132
+      ],
+      "pair_index": 26,
+      "rounded_u16": 7880,
+      "sample_f32_bits": 1172718112,
+      "sample_f32_dn": 7368.265625,
+      "sample_native_xy": [
+        123.27370004541326,
+        144.3466677029867
+      ]
+    },
+    {
+      "actual_warp_u16": 7687,
+      "black_restored_f32_bits": 1173370143,
+      "black_restored_f32_dn": 7686.64013671875,
+      "channel": "R",
+      "full_native_xy": [
+        144,
+        148
+      ],
+      "local_index": 0,
+      "original_index": 1,
+      "output_native_xy": [
+        124,
+        132
+      ],
+      "pair_index": 27,
+      "rounded_u16": 7687,
+      "sample_f32_bits": 1172321567,
+      "sample_f32_dn": 7174.64013671875,
+      "sample_native_xy": [
+        148.3554755982933,
+        144.1357302029867
+      ]
+    },
+    {
+      "actual_warp_u16": 7865,
+      "black_restored_f32_bits": 1173734849,
+      "black_restored_f32_dn": 7864.71923828125,
+      "channel": "G1",
+      "full_native_xy": [
+        145,
+        148
+      ],
+      "local_index": 0,
+      "original_index": 1,
+      "output_native_xy": [
+        125,
+        132
+      ],
+      "pair_index": 27,
+      "rounded_u16": 7865,
+      "sample_f32_bits": 1172686273,
+      "sample_f32_dn": 7352.71923828125,
+      "sample_native_xy": [
+        149.28443024839999,
+        144.1279177029867
+      ]
+    },
+    {
+      "actual_warp_u16": 8686,
+      "black_restored_f32_bits": 1174910846,
+      "black_restored_f32_dn": 8685.873046875,
+      "channel": "R",
+      "full_native_xy": [
+        172,
+        148
+      ],
+      "local_index": 0,
+      "original_index": 1,
+      "output_native_xy": [
+        152,
+        132
+      ],
+      "pair_index": 28,
+      "rounded_u16": 8686,
+      "sample_f32_bits": 1174367997,
+      "sample_f32_dn": 8173.87353515625,
+      "sample_native_xy": [
+        174.36620580128002,
+        143.9169802029867
+      ]
+    },
+    {
+      "actual_warp_u16": 7848,
+      "black_restored_f32_bits": 1173701255,
+      "black_restored_f32_dn": 7848.31591796875,
+      "channel": "G1",
+      "full_native_xy": [
+        173,
+        148
+      ],
+      "local_index": 0,
+      "original_index": 1,
+      "output_native_xy": [
+        153,
+        132
+      ],
+      "pair_index": 28,
+      "rounded_u16": 7848,
+      "sample_f32_bits": 1172652679,
+      "sample_f32_dn": 7336.31591796875,
+      "sample_native_xy": [
+        175.2951604513867,
+        143.9091677029867
+      ]
+    },
+    {
+      "actual_warp_u16": 9685,
+      "black_restored_f32_bits": 1175934389,
+      "black_restored_f32_dn": 9685.4267578125,
+      "channel": "R",
+      "full_native_xy": [
+        200,
+        148
+      ],
+      "local_index": 0,
+      "original_index": 1,
+      "output_native_xy": [
+        180,
+        132
+      ],
+      "pair_index": 29,
+      "rounded_u16": 9685,
+      "sample_f32_bits": 1175410101,
+      "sample_f32_dn": 9173.4267578125,
+      "sample_native_xy": [
+        200.37693600426672,
+        143.6982302029867
+      ]
+    },
+    {
+      "actual_warp_u16": 7833,
+      "black_restored_f32_bits": 1173669770,
+      "black_restored_f32_dn": 7832.9423828125,
+      "channel": "G1",
+      "full_native_xy": [
+        201,
+        148
+      ],
+      "local_index": 0,
+      "original_index": 1,
+      "output_native_xy": [
+        181,
+        132
+      ],
+      "pair_index": 29,
+      "rounded_u16": 7833,
+      "sample_f32_bits": 1172621194,
+      "sample_f32_dn": 7320.9423828125,
+      "sample_native_xy": [
+        201.3058906543734,
+        143.6904177029867
+      ]
+    },
+    {
+      "actual_warp_u16": 10685,
+      "black_restored_f32_bits": 1176957449,
+      "black_restored_f32_dn": 10684.5087890625,
+      "channel": "R",
+      "full_native_xy": [
+        228,
+        148
+      ],
+      "local_index": 0,
+      "original_index": 1,
+      "output_native_xy": [
+        208,
+        132
+      ],
+      "pair_index": 30,
+      "rounded_u16": 10685,
+      "sample_f32_bits": 1176433161,
+      "sample_f32_dn": 10172.5087890625,
+      "sample_native_xy": [
+        226.38766620725346,
+        143.4794802029867
+      ]
+    },
+    {
+      "actual_warp_u16": 7816,
+      "black_restored_f32_bits": 1173635858,
+      "black_restored_f32_dn": 7816.3837890625,
+      "channel": "G1",
+      "full_native_xy": [
+        229,
+        148
+      ],
+      "local_index": 0,
+      "original_index": 1,
+      "output_native_xy": [
+        209,
+        132
+      ],
+      "pair_index": 30,
+      "rounded_u16": 7816,
+      "sample_f32_bits": 1172587282,
+      "sample_f32_dn": 7304.3837890625,
+      "sample_native_xy": [
+        227.31662085736014,
+        143.4716677029867
+      ]
+    },
+    {
+      "actual_warp_u16": 11684,
+      "black_restored_f32_bits": 1177981072,
+      "black_restored_f32_dn": 11684.140625,
+      "channel": "R",
+      "full_native_xy": [
+        256,
+        148
+      ],
+      "local_index": 0,
+      "original_index": 1,
+      "output_native_xy": [
+        236,
+        132
+      ],
+      "pair_index": 31,
+      "rounded_u16": 11684,
+      "sample_f32_bits": 1177456784,
+      "sample_f32_dn": 11172.140625,
+      "sample_native_xy": [
+        252.39839641024017,
+        143.2607302029867
+      ]
+    },
+    {
+      "actual_warp_u16": 7801,
+      "black_restored_f32_bits": 1173604386,
+      "black_restored_f32_dn": 7801.0166015625,
+      "channel": "G1",
+      "full_native_xy": [
+        257,
+        148
+      ],
+      "local_index": 0,
+      "original_index": 1,
+      "output_native_xy": [
+        237,
+        132
+      ],
+      "pair_index": 31,
+      "rounded_u16": 7801,
+      "sample_f32_bits": 1172555810,
+      "sample_f32_dn": 7289.0166015625,
+      "sample_native_xy": [
+        253.3273510603468,
+        143.2529177029867
+      ]
+    }
+  ],
+  "schema": "m193c-precision-case-v1",
+  "scope": "existing MHC/Catmull f32 values and actual warp u16; independent numeric oracle pending",
+  "source": {
+    "attempts": [
+      1
+    ],
+    "optional_counts": [
+      0
+    ],
+    "optional_hooks": 0,
+    "records": [
+      {
+        "bytes": 153600,
+        "local_index": 0,
+        "maximum_unrounded_dn": 13719.784941253107,
+        "minimum_unrounded_dn": 1432.1824651992188,
+        "original_index": 1,
+        "probe_seed_index": 0,
+        "samples": 76800,
+        "sha256_u16_le": "17b2df7dafd02fbff829e72245a49e37325a1beda649d726314b314ee863568f",
+        "source_generation_pull": {
+          "a_im": 0.0078125,
+          "a_re": 1.0409458631687893,
+          "b_im": 1.0,
+          "b_re": -1.5
+        }
+      }
+    ]
+  },
+  "status": "COMPONENT_OBSERVED_UNVERIFIED"
+}

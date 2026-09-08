@@ -1,0 +1,11 @@
+M193c rendered 1/10: identity-nine
+M193c rendered 2/10: curved-nine-off
+M193c rendered 3/10: curved-nine-count
+M193c rendered 4/10: curved-nine-placebo
+M193c rendered 5/10: curved-nine-scale
+M193c rendered 6/10: original-one-correct
+M193c rendered 7/10: original-one-swapped
+M193c rendered 8/10: original-one-restored
+M193c rendered 9/10: original-one-inverse
+M193c rendered 10/10: constant-nine-null
+{"status": "COMPLETE_PRIVATE_OUTPUTS_UNVERIFIED", "error": null, "finalization_errors": []}

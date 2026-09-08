@@ -1,0 +1,133 @@
+{
+  "command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\bridge-build-3\\output-grid-tests.exe",
+    "--exact",
+    "merge_cmd::production_truth::m193c_output_grid::m193c_private_output_case",
+    "--ignored",
+    "--test-threads=1",
+    "--nocapture"
+  ],
+  "ended_monotonic_ns": 797024406000000,
+  "ended_utc": "2026-09-08T00:12:56.500911+00:00",
+  "environment": {
+    "RAYON_NUM_THREADS": "2",
+    "STREHL_DEFECT": "off",
+    "STREHL_FIX_CA": "off",
+    "STREHL_FULLRES_GATHER": "1",
+    "STREHL_M193C_GRID_CASE": "curved-nine-placebo",
+    "STREHL_M193C_GRID_MODE": "render",
+    "STREHL_M193C_GRID_OUTPUT": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\private-campaign-2\\worker\\grid\\03.tif",
+    "STREHL_M193C_GRID_PLAN": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\private-campaign-2\\worker\\grid\\03-plan.json",
+    "STREHL_M193C_GRID_PLAN_SHA256": "20c21feb421ec2051a27d4684442dbe33f3b1190433d92d05b44b169dae7a2b7",
+    "STREHL_M193C_GRID_RECEIPT": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\private-campaign-2\\worker\\grid\\03-receipt.json",
+    "STREHL_PYRAMID_WORKERS": "2"
+  },
+  "error": null,
+  "executable": {
+    "bytes": 29488640,
+    "path": "experiments/m193c-output-grid/bridge-build-3/output-grid-tests.exe",
+    "sha256": "fa03b12fe177608851d6758517c9bda050998cdc4d777195fab8e3dc1e0813a3"
+  },
+  "log": {
+    "bytes": 4017,
+    "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/03-render.log",
+    "sha256": "9d20c4d022bc082d65dc07ab0101ba9b4c95aca10a4ede2456c7431ca5dc6076"
+  },
+  "observation": {
+    "cleanup_errors": [],
+    "command": [
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\bridge-build-3\\output-grid-tests.exe",
+      "--exact",
+      "merge_cmd::production_truth::m193c_output_grid::m193c_private_output_case",
+      "--ignored",
+      "--test-threads=1",
+      "--nocapture"
+    ],
+    "configured_job_limits": {
+      "committed_bytes": 8589934592,
+      "flags": 8704
+    },
+    "direct_exit_observed": true,
+    "error": null,
+    "exit_code": 0,
+    "job_accounting": {
+      "active_processes": 0,
+      "total_cpu_100ns": 12500000,
+      "total_kernel_100ns": 1562500,
+      "total_page_fault_count": 14697,
+      "total_processes": 2,
+      "total_terminated_processes": 0,
+      "total_user_100ns": 10937500
+    },
+    "job_memory": {
+      "peak_job_memory_used_bytes": 8781824,
+      "peak_process_memory_used_bytes": 7499776
+    },
+    "limits": {
+      "committed_bytes": 8589934592,
+      "cpu_seconds": 542.765625,
+      "log_bytes": 16777216,
+      "wall_seconds": 240
+    },
+    "log": {
+      "bytes": 4017,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\private-campaign-2\\worker\\grid\\03-render.log",
+      "sha256": "9d20c4d022bc082d65dc07ab0101ba9b4c95aca10a4ede2456c7431ca5dc6076"
+    },
+    "log_bytes": 4017,
+    "pipe_eof_observed": true,
+    "post_exit_drain": {
+      "completed": true,
+      "ended_wall_seconds": 1.0,
+      "initial_accounting": {
+        "active_processes": 0,
+        "total_cpu_100ns": 12500000,
+        "total_kernel_100ns": 1562500,
+        "total_page_fault_count": 14697,
+        "total_processes": 2,
+        "total_terminated_processes": 0,
+        "total_user_100ns": 10937500
+      },
+      "last_accounting": {
+        "active_processes": 0,
+        "total_cpu_100ns": 12500000,
+        "total_kernel_100ns": 1562500,
+        "total_page_fault_count": 14697,
+        "total_processes": 2,
+        "total_terminated_processes": 0,
+        "total_user_100ns": 10937500
+      },
+      "observation_count": 1,
+      "observations": [
+        {
+          "accounting": {
+            "active_processes": 0,
+            "total_cpu_100ns": 12500000,
+            "total_kernel_100ns": 1562500,
+            "total_page_fault_count": 14697,
+            "total_processes": 2,
+            "total_terminated_processes": 0,
+            "total_user_100ns": 10937500
+          },
+          "wall_seconds": 1.0
+        }
+      ],
+      "started_wall_seconds": 1.0
+    },
+    "scope": "owned job tree; committed memory, observed user+kernel CPU; not RSS or a timing benchmark",
+    "terminal_job_accounting": true,
+    "termination": {
+      "attempted": false,
+      "before_accounting": null,
+      "succeeded": false
+    },
+    "wall_seconds": 1.0
+  },
+  "ordinal": 3,
+  "phase": "render",
+  "removed_environment_names": [],
+  "schema": "m193c-child-launch-v1",
+  "started_monotonic_ns": 797020218000000,
+  "started_utc": "2026-09-08T00:12:52.306100+00:00",
+  "status": "COMPLETE_CHILD_EXIT_ZERO"
+}

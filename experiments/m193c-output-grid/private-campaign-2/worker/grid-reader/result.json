@@ -1,0 +1,3933 @@
+{
+  "active_child": null,
+  "build": {
+    "bytes": 51621,
+    "path": "experiments/m193c-output-grid/bridge-build-3/result.json",
+    "sha256": "bfb951c8ccc0b2278802e69c3ca27fd9138bb817457b365caaea31d5b82a2977"
+  },
+  "cases": [
+    {
+      "bytes": 38067,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid-reader/case-00.json",
+      "sha256": "175105779715a5400b1fc9a24e51c5cce500cd40cf5feb0ed88769feadd62b82"
+    },
+    {
+      "bytes": 38341,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid-reader/case-01.json",
+      "sha256": "75e731e5c834c25c78839b45d7647d00ff5f90fd33a3ee91d2b340aace01bc2a"
+    },
+    {
+      "bytes": 38343,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid-reader/case-02.json",
+      "sha256": "7b69abc5756e78dea24bd9ab9737ce666f9902f6d2e08f9dd6aaede2de4b8b8e"
+    },
+    {
+      "bytes": 38345,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid-reader/case-03.json",
+      "sha256": "5120c39e5bc291ead26c74c29b502c2a9e0b47d1ded836fac5d942567e6573b3"
+    },
+    {
+      "bytes": 39887,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid-reader/case-04.json",
+      "sha256": "1daae780379db18f4547f0c43625ce4143edbf6654b0cfdbf40ee0e460d21e2e"
+    },
+    {
+      "bytes": 34107,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid-reader/case-05.json",
+      "sha256": "e5cb1696dc285d1dd30902ede3dd9eecb7832b8ff59cad343640e5e4ef2280a7"
+    },
+    {
+      "bytes": 35574,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid-reader/case-06.json",
+      "sha256": "22fd3723738b86283c7b5c00064c2e58af104ab83fb28b936c6f809814d8d403"
+    },
+    {
+      "bytes": 34108,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid-reader/case-07.json",
+      "sha256": "4fdb954096bf5bb9fbf1e96c4cb26fb9f1ec28763b363a6823d3c4ae438b4afc"
+    },
+    {
+      "bytes": 35583,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid-reader/case-08.json",
+      "sha256": "f193a642e83fc42f00ba36c1b6d29fde3be5011d6b04a250fcb7e85ff7fd9de3"
+    },
+    {
+      "bytes": 18095,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid-reader/case-09.json",
+      "sha256": "68a756ae726fd5467858b95cb7a89039b7fd91f538f3a221844b329f1e132c76"
+    }
+  ],
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-B",
+    "-X",
+    "faulthandler",
+    "-X",
+    "pycache_prefix=C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\private-campaign-2\\cache-grid-reader",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\independent-private-read.py",
+    "--request",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\private-campaign-2\\worker\\grid-reader-request.json",
+    "--request-sha256",
+    "6076161f6d437d5499451d7ad67354d9ec86f9d0ccc030e839ca4ebfb6f1714b",
+    "--output",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\private-campaign-2\\worker\\grid-reader"
+  ],
+  "context": {
+    "build": {
+      "bytes": 29488640,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\bridge-build-3\\output-grid-tests.exe",
+      "sha256": "fa03b12fe177608851d6758517c9bda050998cdc4d777195fab8e3dc1e0813a3",
+      "software": "strehl 0.0.0 (43a72446c2c7)"
+    },
+    "compiled_inputs": {
+      "private_adapter_sha256": "e9fe4be0fe6354e00294900c8f5bad1aade76fbbfb2be1367bb7cafa13ed85a8",
+      "private_protocol_sha256": "990ccd293c9e4f1f9179d33334e0ff5e85d077862dc6456e938d4e3643ff092e"
+    },
+    "precision_witness_sha256": "6979f6e51b9bf9028002c9cdfff81f4925f293ce79386eb49fa4a84bec643cc9"
+  },
+  "controls": {
+    "bytes": 11343,
+    "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid-reader/controls.json",
+    "sha256": "9e52e027a0804aeb3b9e41a13c7ea1e0273f4884f447e7981a208c538a74f2ac"
+  },
+  "error": null,
+  "finalization_errors": [],
+  "inputs_after": {
+    "Cargo.lock": {
+      "bytes": 43571,
+      "path": "Cargo.lock",
+      "sha256": "82a228ddda138d1b6269e1a32a6e55377369bb94923e92da362cf11cc9569a4b"
+    },
+    "Cargo.toml": {
+      "bytes": 1009,
+      "path": "Cargo.toml",
+      "sha256": "732c5d4d874594cccbfd896ae688afa01e91290f0b1c8fd0331fa8b06f914984"
+    },
+    "crates/strehl-cli/Cargo.toml": {
+      "bytes": 782,
+      "path": "crates/strehl-cli/Cargo.toml",
+      "sha256": "d0e6b05aa93df026270e513fd3e5ab9cd50726596ef1475b8a3680faa84b2650"
+    },
+    "crates/strehl-cli/build.rs": {
+      "bytes": 5591,
+      "path": "crates/strehl-cli/build.rs",
+      "sha256": "5b864155733a90c2a4f7152e21d3dbcc5d5e0f469b4aa772c328fe86e4aa2091"
+    },
+    "crates/strehl-cli/examples/blend-render.rs": {
+      "bytes": 29695,
+      "path": "crates/strehl-cli/examples/blend-render.rs",
+      "sha256": "86c403dc074519bdf54dd66226a82ac935d8a91a26d44799596989fbcacd25b9"
+    },
+    "crates/strehl-cli/examples/blend-truth.rs": {
+      "bytes": 29918,
+      "path": "crates/strehl-cli/examples/blend-truth.rs",
+      "sha256": "38a5a9464a7c09521dad8320a90faea4f25a09aead175af3f37f25dc7e034ca2"
+    },
+    "crates/strehl-cli/examples/build-demosaic-truth.rs": {
+      "bytes": 59669,
+      "path": "crates/strehl-cli/examples/build-demosaic-truth.rs",
+      "sha256": "fb33639b174986c9159b8a544b46b5cb4aa3a514a4315a80738c55b4305f27fd"
+    },
+    "crates/strehl-cli/examples/build-gatefloor.rs": {
+      "bytes": 22941,
+      "path": "crates/strehl-cli/examples/build-gatefloor.rs",
+      "sha256": "c377d932c168c8ac5d74ae3c96e9a1d714726ccb91fca01697b5e1596e8de0cd"
+    },
+    "crates/strehl-cli/examples/build-plugin-field.rs": {
+      "bytes": 8051,
+      "path": "crates/strehl-cli/examples/build-plugin-field.rs",
+      "sha256": "a733f23be4a3d385a4011f249b8fd3769a3fd018dade66aa43c9d19935ec6f71"
+    },
+    "crates/strehl-cli/examples/build-resamp-mtf.rs": {
+      "bytes": 11067,
+      "path": "crates/strehl-cli/examples/build-resamp-mtf.rs",
+      "sha256": "69dd26cb260d9d0435ec1689dbcfd27b0cab16f9feffe82d3b944701e80bcb27"
+    },
+    "crates/strehl-cli/examples/cover-reference.rs": {
+      "bytes": 28329,
+      "path": "crates/strehl-cli/examples/cover-reference.rs",
+      "sha256": "f1762977aa8ae7c1d95366f5c65a6857dc6ab012e9e7323a4054ff6cd2bf5c7e"
+    },
+    "crates/strehl-cli/examples/defect-cpl-split.rs": {
+      "bytes": 38484,
+      "path": "crates/strehl-cli/examples/defect-cpl-split.rs",
+      "sha256": "0131f7bbdbfb6f840472e318a290205134f739f4f4b93c441a2d8d4f42873bb4"
+    },
+    "crates/strehl-cli/examples/defect-flat-census.rs": {
+      "bytes": 20797,
+      "path": "crates/strehl-cli/examples/defect-flat-census.rs",
+      "sha256": "070f2e343597916269cc4699d34a7bd485dccac9d17b185303af152a745c8273"
+    },
+    "crates/strehl-cli/examples/defect-geometry-census.rs": {
+      "bytes": 4797,
+      "path": "crates/strehl-cli/examples/defect-geometry-census.rs",
+      "sha256": "23e3d8ff39020a9ef09701bd17886ea09249f503495f5e527c53d84a014126e4"
+    },
+    "crates/strehl-cli/examples/defect-geometry-verdict.rs": {
+      "bytes": 8268,
+      "path": "crates/strehl-cli/examples/defect-geometry-verdict.rs",
+      "sha256": "38e4e8ea3afb115a018413985813e730bd109351489f761c771f2cf144a62749"
+    },
+    "crates/strehl-cli/examples/defect-plant-fidelity.rs": {
+      "bytes": 65194,
+      "path": "crates/strehl-cli/examples/defect-plant-fidelity.rs",
+      "sha256": "bff657c34c0ac00bba47b75dd17f7698e47328631600718e0c2adfe99adcb7f5"
+    },
+    "crates/strehl-cli/examples/m123-null-radius.rs": {
+      "bytes": 20318,
+      "path": "crates/strehl-cli/examples/m123-null-radius.rs",
+      "sha256": "29780cdb8f20768705949bf5622783faff6ba2cb9d46326779eb064ac0a941cd"
+    },
+    "crates/strehl-cli/examples/m123-outlier-real.rs": {
+      "bytes": 15716,
+      "path": "crates/strehl-cli/examples/m123-outlier-real.rs",
+      "sha256": "3cb776b76023f5ebe7ac5ffa588e31b4b0a8c34d98794d2cd174ef071d638275"
+    },
+    "crates/strehl-cli/examples/m123-trap-decompose.rs": {
+      "bytes": 9579,
+      "path": "crates/strehl-cli/examples/m123-trap-decompose.rs",
+      "sha256": "be1462beb949bf32eb1e54b3a598ad488ee616aca79704a2940f9049f5aecf9f"
+    },
+    "crates/strehl-cli/examples/m60-disagreement.rs": {
+      "bytes": 27439,
+      "path": "crates/strehl-cli/examples/m60-disagreement.rs",
+      "sha256": "e6800fabce502189bba14148b42f96ceabd893e77e8732af27394592a219a93b"
+    },
+    "crates/strehl-cli/examples/m65-election.rs": {
+      "bytes": 23194,
+      "path": "crates/strehl-cli/examples/m65-election.rs",
+      "sha256": "8bb8b1f268107d171ca8d3454687c02ca0bec24dea629ede433f9547c993ae8f"
+    },
+    "crates/strehl-cli/examples/m67-focus-correctness.rs": {
+      "bytes": 27183,
+      "path": "crates/strehl-cli/examples/m67-focus-correctness.rs",
+      "sha256": "9b2fa813ced90939f7cb065fbb12662fd8129b4e06269183764e6e52e048881c"
+    },
+    "crates/strehl-cli/examples/m73-cylinder.rs": {
+      "bytes": 22475,
+      "path": "crates/strehl-cli/examples/m73-cylinder.rs",
+      "sha256": "b42700a1384eb2d6f12d4072b4040fbe3f4da82cf27de1d71eb47fd181e7cd55"
+    },
+    "crates/strehl-cli/examples/m86-align.rs": {
+      "bytes": 72686,
+      "path": "crates/strehl-cli/examples/m86-align.rs",
+      "sha256": "63dad30331cf9ecb293374d35133f1f9062592e016f3cafd767b962b76080a2e"
+    },
+    "crates/strehl-cli/examples/m89-robust.rs": {
+      "bytes": 61874,
+      "path": "crates/strehl-cli/examples/m89-robust.rs",
+      "sha256": "acb6f32abf2d40dd9b1d00085710ee4b5ae77c34481a3730ba6bb76bdebbaa2f"
+    },
+    "crates/strehl-cli/examples/m90-prnu.rs": {
+      "bytes": 56536,
+      "path": "crates/strehl-cli/examples/m90-prnu.rs",
+      "sha256": "7e5a232e10d70ea7809780ea32f578a7aadf6cff46a3d2df45ffc5e79031f5c8"
+    },
+    "crates/strehl-cli/examples/m90-rho.rs": {
+      "bytes": 52401,
+      "path": "crates/strehl-cli/examples/m90-rho.rs",
+      "sha256": "fbe0faadaa636616cec0755e872509e33a65a108b636d50f5a359e6f3a582d7f"
+    },
+    "crates/strehl-cli/examples/m91-photometry.rs": {
+      "bytes": 50889,
+      "path": "crates/strehl-cli/examples/m91-photometry.rs",
+      "sha256": "e39f2f6d95e0606ec7f9525991b17c4519d4c3deac709188f8b5e3eaa1625f61"
+    },
+    "crates/strehl-cli/examples/m93-election.rs": {
+      "bytes": 42218,
+      "path": "crates/strehl-cli/examples/m93-election.rs",
+      "sha256": "d63a840f830be4489fc32c05c8f11e3c26e10e163df40d6eb15f1ad9c39ea677"
+    },
+    "crates/strehl-cli/examples/m95-demosaic.rs": {
+      "bytes": 2769,
+      "path": "crates/strehl-cli/examples/m95-demosaic.rs",
+      "sha256": "8210edf48821204928af800b307617389f4a1b7a0e24003f1c6d9375436fde81"
+    },
+    "crates/strehl-cli/examples/m95-kernel.rs": {
+      "bytes": 45407,
+      "path": "crates/strehl-cli/examples/m95-kernel.rs",
+      "sha256": "bd2391e8b83da68b742cf0bf98834315c013e07afa1fd6afbc79f06ca3c1d614"
+    },
+    "crates/strehl-cli/examples/m95-lanczos.rs": {
+      "bytes": 4867,
+      "path": "crates/strehl-cli/examples/m95-lanczos.rs",
+      "sha256": "61d6f4d5ba260cd3c601f1a9f525b2cac922ef42270ebec3c58f0e5dc04fa298"
+    },
+    "crates/strehl-cli/examples/m96-election-margin.rs": {
+      "bytes": 52503,
+      "path": "crates/strehl-cli/examples/m96-election-margin.rs",
+      "sha256": "06d62fd30245590a74d6c948d3d7ef0421e65b836c32abbc39d71ed364470eac"
+    },
+    "crates/strehl-cli/examples/m97-outlier.rs": {
+      "bytes": 7713,
+      "path": "crates/strehl-cli/examples/m97-outlier.rs",
+      "sha256": "cb6562b5d0a3352ef7005fdc82a65f8ba80821739ca851402cd42f556248652c"
+    },
+    "crates/strehl-cli/examples/m97-tornmap.rs": {
+      "bytes": 5909,
+      "path": "crates/strehl-cli/examples/m97-tornmap.rs",
+      "sha256": "55b21b7803d7a1afe7305c80a799f0e1de89b76098878c1deef8e9c6a7a1ff4e"
+    },
+    "crates/strehl-cli/examples/m99-photometric.rs": {
+      "bytes": 40516,
+      "path": "crates/strehl-cli/examples/m99-photometric.rs",
+      "sha256": "a253c53102f873961dbd13c3190e178374c58e3c7967e2fef407b5865e59b512"
+    },
+    "crates/strehl-cli/src/align_cmd.rs": {
+      "bytes": 122446,
+      "path": "crates/strehl-cli/src/align_cmd.rs",
+      "sha256": "b3de7738151a6bc0500c66dd916f9fcb20cdb9be0bf698ad00425d3ebb397c69"
+    },
+    "crates/strehl-cli/src/bin/strehl-common-input.rs": {
+      "bytes": 7369,
+      "path": "crates/strehl-cli/src/bin/strehl-common-input.rs",
+      "sha256": "0abf5917357365ba83028f82c0a2855917ad45071d95d3ec2d404702de1ef31f"
+    },
+    "crates/strehl-cli/src/focus_plugin.rs": {
+      "bytes": 7354,
+      "path": "crates/strehl-cli/src/focus_plugin.rs",
+      "sha256": "d917dba8f3bfc57a709b7af6650dc43a34724383270ac5faec986ed3a963d337"
+    },
+    "crates/strehl-cli/src/image_out.rs": {
+      "bytes": 134835,
+      "path": "crates/strehl-cli/src/image_out.rs",
+      "sha256": "c1362363740cb0176985283455cd6ddef80479854b1bbc9f0396851c490f82b6"
+    },
+    "crates/strehl-cli/src/main.rs": {
+      "bytes": 89041,
+      "path": "crates/strehl-cli/src/main.rs",
+      "sha256": "a29e0f975764b75491eb3147e94f15b05944120cdc3cdd55a24830a89a2e5340"
+    },
+    "crates/strehl-cli/src/merge_cmd.rs": {
+      "bytes": 425678,
+      "path": "crates/strehl-cli/src/merge_cmd.rs",
+      "sha256": "ca829e45c7021c5c5df7b51da85859e3763a9a95d01d302a91ab7cd0687b2dcf"
+    },
+    "crates/strehl-cli/src/merge_cmd/band-admission-benchmark.rs": {
+      "bytes": 1870,
+      "path": "crates/strehl-cli/src/merge_cmd/band-admission-benchmark.rs",
+      "sha256": "d275b189d374117de2f6d5d9aa163417d675adba1820d96f42e9dfe0d322c2c3"
+    },
+    "crates/strehl-cli/src/merge_cmd/dump.rs": {
+      "bytes": 7245,
+      "path": "crates/strehl-cli/src/merge_cmd/dump.rs",
+      "sha256": "2827483acbbce3dc528f3d27642cb54e8c8f99abb85b0b23f89f59c53c93bfe3"
+    },
+    "crates/strehl-cli/src/merge_cmd/gatefloor.rs": {
+      "bytes": 22127,
+      "path": "crates/strehl-cli/src/merge_cmd/gatefloor.rs",
+      "sha256": "bcea35986c73011c20d872bddc9c0ef3ea9354101259bd3952c16976bb1c9496"
+    },
+    "crates/strehl-cli/src/merge_cmd/halo.rs": {
+      "bytes": 24425,
+      "path": "crates/strehl-cli/src/merge_cmd/halo.rs",
+      "sha256": "fc234df8b515f982bbc527448ea0a0764c30b088385405d85f253800aaf7dd55"
+    },
+    "crates/strehl-cli/src/merge_cmd/joint-pupil-bridge.rs": {
+      "bytes": 45153,
+      "path": "crates/strehl-cli/src/merge_cmd/joint-pupil-bridge.rs",
+      "sha256": "8295981a03e54f05009f3510dc39addf150ddd72303913530f2603d3c744ab33"
+    },
+    "crates/strehl-cli/src/merge_cmd/known-scene-benchmark.rs": {
+      "bytes": 29747,
+      "path": "crates/strehl-cli/src/merge_cmd/known-scene-benchmark.rs",
+      "sha256": "38e1ed45531f0ba02b0cdd1b8aecf0d99f5f123826c086158aedbeb8d994a573"
+    },
+    "crates/strehl-cli/src/merge_cmd/noise-pupil-bridge.rs": {
+      "bytes": 67493,
+      "path": "crates/strehl-cli/src/merge_cmd/noise-pupil-bridge.rs",
+      "sha256": "2a59b81e4044673d14049c36fbffd3d80af6445d6f734b9273ef65b0425df028"
+    },
+    "crates/strehl-cli/src/merge_cmd/production-truth.rs": {
+      "bytes": 12917,
+      "path": "crates/strehl-cli/src/merge_cmd/production-truth.rs",
+      "sha256": "11aab6eb649ee6dacd67abe7083b1e4ea7dfda40f6191ae476170e2448094c44"
+    },
+    "crates/strehl-cli/src/stack.rs": {
+      "bytes": 107231,
+      "path": "crates/strehl-cli/src/stack.rs",
+      "sha256": "108bb38a964946c7e7b7c25c640ce08297835faee253ad4e059e6074f5655572"
+    },
+    "crates/strehl-cli/tests/byte-freeze.rs": {
+      "bytes": 103042,
+      "path": "crates/strehl-cli/tests/byte-freeze.rs",
+      "sha256": "750efd0d5605d76bc1e5000e9945a58d57ef4418ec25299cd27920408f53976c"
+    },
+    "crates/strehl-cli/tests/byte-freezes.tsv": {
+      "bytes": 20801,
+      "path": "crates/strehl-cli/tests/byte-freezes.tsv",
+      "sha256": "d74c3f1da19c0edf6625bc6a26ccad3de6a6ab6c201f009d009b9999c5f4d001"
+    },
+    "crates/strehl-cli/tests/data/coffee-bean-20.clamped-catmull.warpmap.txt": {
+      "bytes": 3211,
+      "path": "crates/strehl-cli/tests/data/coffee-bean-20.clamped-catmull.warpmap.txt",
+      "sha256": "d35352b083530cf52d7649d384e046e3eb410de41b4f5444c4b7992338900fe8"
+    },
+    "crates/strehl-cli/tests/data/coffee-bean-20.warpmap.txt": {
+      "bytes": 3171,
+      "path": "crates/strehl-cli/tests/data/coffee-bean-20.warpmap.txt",
+      "sha256": "ef74541395db1ba606067bcf04947909bd6a9c5be530fe8aad21578b5c1e93b3"
+    },
+    "crates/strehl-core/Cargo.toml": {
+      "bytes": 367,
+      "path": "crates/strehl-core/Cargo.toml",
+      "sha256": "25bdef9c60ef30849ba184116f2b5aa202b07baf55da22ca311f725ab56bde16"
+    },
+    "crates/strehl-core/examples/demosaic-plane.rs": {
+      "bytes": 3109,
+      "path": "crates/strehl-core/examples/demosaic-plane.rs",
+      "sha256": "d40278227e647f195be75e1c199eab04132cdc21c7ae07648cf29bbb410d2f8c"
+    },
+    "crates/strehl-core/examples/focus-window-cost.rs": {
+      "bytes": 6180,
+      "path": "crates/strehl-core/examples/focus-window-cost.rs",
+      "sha256": "ddb8aa01857c03860f62fbbf82793e8e1b5d2df32adde877269af2be39c9b997"
+    },
+    "crates/strehl-core/examples/restore-plane.rs": {
+      "bytes": 3047,
+      "path": "crates/strehl-core/examples/restore-plane.rs",
+      "sha256": "5707ab9a2a66333968936d704ea8888fa7535dc6e0b7c73c1a3f815fd2c1a0d1"
+    },
+    "crates/strehl-core/src/align.rs": {
+      "bytes": 147932,
+      "path": "crates/strehl-core/src/align.rs",
+      "sha256": "6d33f0e24f21d4370ccd8df0bf618e54a5ad615b838bc265469b4f85051c2786"
+    },
+    "crates/strehl-core/src/boxfilter.rs": {
+      "bytes": 7986,
+      "path": "crates/strehl-core/src/boxfilter.rs",
+      "sha256": "5cf6dab36c8ddb7499acbec140df509b4e1e5fe0b0ace3a13f8d7cf68f979b8e"
+    },
+    "crates/strehl-core/src/clip.rs": {
+      "bytes": 10231,
+      "path": "crates/strehl-core/src/clip.rs",
+      "sha256": "aa1ccdac944d928879f94770b2161152a271f9fa208c57c66d8921e5a643533d"
+    },
+    "crates/strehl-core/src/color.rs": {
+      "bytes": 83992,
+      "path": "crates/strehl-core/src/color.rs",
+      "sha256": "83c1aa371dc751862bfef5724a6eceab8182c5d68b6f31ac299b3443c14c8f1e"
+    },
+    "crates/strehl-core/src/defect-map-ILCE-7CM2-dust.txt": {
+      "bytes": 23797,
+      "path": "crates/strehl-core/src/defect-map-ILCE-7CM2-dust.txt",
+      "sha256": "a406efd51f806e360e1e51fc1421eca5e3cc912f356ced0693c8477a398853ee"
+    },
+    "crates/strehl-core/src/defect_map.rs": {
+      "bytes": 176181,
+      "path": "crates/strehl-core/src/defect_map.rs",
+      "sha256": "1738c770c9f316a6aeac3f742bf7abc9581ea386b4e07ec128e50df35c2ffb14"
+    },
+    "crates/strehl-core/src/demosaic.rs": {
+      "bytes": 51381,
+      "path": "crates/strehl-core/src/demosaic.rs",
+      "sha256": "425d6889485011cf6f2aaf57b0b873f15fd6ee3250853f3ba5f6540b496b3810"
+    },
+    "crates/strehl-core/src/edgeaware.rs": {
+      "bytes": 105131,
+      "path": "crates/strehl-core/src/edgeaware.rs",
+      "sha256": "a32580ac72dd273e62cab40afa9b36e2462ef57335c8d7cd8ab0725184c7f77b"
+    },
+    "crates/strehl-core/src/election_coherence.rs": {
+      "bytes": 13331,
+      "path": "crates/strehl-core/src/election_coherence.rs",
+      "sha256": "47640a176cb445dd2f01b309d907da066ae7f5a6d28b354d2de60362538f948e"
+    },
+    "crates/strehl-core/src/flat_ratio.rs": {
+      "bytes": 32764,
+      "path": "crates/strehl-core/src/flat_ratio.rs",
+      "sha256": "da1df7167b6f18ac248c1ee347671388391a968aa45a762299c4418a2287fef0"
+    },
+    "crates/strehl-core/src/focus.rs": {
+      "bytes": 78172,
+      "path": "crates/strehl-core/src/focus.rs",
+      "sha256": "71e63def76e40f18df440617a9dba7013d799ceabd30bf805149223433384e3e"
+    },
+    "crates/strehl-core/src/highlight.rs": {
+      "bytes": 29639,
+      "path": "crates/strehl-core/src/highlight.rs",
+      "sha256": "97d4aacec3d7e6c3dd2df1f792ffb7ee136a8f6064ffb0dc1656476730f7641e"
+    },
+    "crates/strehl-core/src/lib.rs": {
+      "bytes": 4356,
+      "path": "crates/strehl-core/src/lib.rs",
+      "sha256": "91419ceb273be1dc9ab15dbdc6347bd2b398d29cf36c0da9184ee533372f8022"
+    },
+    "crates/strehl-core/src/merge.rs": {
+      "bytes": 253103,
+      "path": "crates/strehl-core/src/merge.rs",
+      "sha256": "7362cf6fab70db56443693e5483f052ba48b32cc7ef264d64ec4a7bd1b50e4ef"
+    },
+    "crates/strehl-core/src/noise.rs": {
+      "bytes": 29746,
+      "path": "crates/strehl-core/src/noise.rs",
+      "sha256": "d88dc9cf419a8fdb1e3ff2c51f0b0ac80d785c17de7f9e71e905fc977fce0ecc"
+    },
+    "crates/strehl-core/src/optics.rs": {
+      "bytes": 93722,
+      "path": "crates/strehl-core/src/optics.rs",
+      "sha256": "1884fd98c7a2adf903c152b3d877051cfeba71316bdbb797fd2f1ba1433a5524"
+    },
+    "crates/strehl-core/src/outlier.rs": {
+      "bytes": 51153,
+      "path": "crates/strehl-core/src/outlier.rs",
+      "sha256": "8d3fb7a225b5811c2d831db4339953b15a5181bfcda7591ac05f23f6adf5e67d"
+    },
+    "crates/strehl-core/src/photometric.rs": {
+      "bytes": 83028,
+      "path": "crates/strehl-core/src/photometric.rs",
+      "sha256": "b6102288c7fc2312f16d108dc3d943d290a5b8fd5d5a5c39306d97489191399b"
+    },
+    "crates/strehl-core/src/plane.rs": {
+      "bytes": 11536,
+      "path": "crates/strehl-core/src/plane.rs",
+      "sha256": "8c219f9c4d2c8c0da19416998b0f369a9f9d44e305740664f29caaba69203dc4"
+    },
+    "crates/strehl-core/src/profile.rs": {
+      "bytes": 44194,
+      "path": "crates/strehl-core/src/profile.rs",
+      "sha256": "07e7cf7b3040239a5a32464ae998a434696031010ce8d87dac7f2dd2a95ac1f1"
+    },
+    "crates/strehl-core/src/pyramid.rs": {
+      "bytes": 207878,
+      "path": "crates/strehl-core/src/pyramid.rs",
+      "sha256": "848b485271abc48ee496ee69d70a1e01f45074bfbccde7a7ca076ded90f77d9e"
+    },
+    "crates/strehl-core/src/restore.rs": {
+      "bytes": 60029,
+      "path": "crates/strehl-core/src/restore.rs",
+      "sha256": "3ab5c6660b7a45837ac4b5560078092e6aafa9c85a041a935e95b0cd77533afd"
+    },
+    "crates/strehl-core/src/robust.rs": {
+      "bytes": 31317,
+      "path": "crates/strehl-core/src/robust.rs",
+      "sha256": "2cf6013b948f5c9d4f11783633f04e6d76ac9830383197c05506b0d68fe24004"
+    },
+    "crates/strehl-core/src/softgate.rs": {
+      "bytes": 25418,
+      "path": "crates/strehl-core/src/softgate.rs",
+      "sha256": "0cb0f916dade24e6e3a31529378390a083c6c56cb3e8b479eb7eb65ac04f688d"
+    },
+    "crates/strehl-core/src/stack.rs": {
+      "bytes": 20542,
+      "path": "crates/strehl-core/src/stack.rs",
+      "sha256": "c951cdbb304e4894676f1ff6a77316e7e2ab68d7756f22bf623562380d5f6337"
+    },
+    "crates/strehl-core/src/through_focus.rs": {
+      "bytes": 90250,
+      "path": "crates/strehl-core/src/through_focus.rs",
+      "sha256": "475a6c4eece089638ab916e3d7f4cf480197e2d838b5244347c16762f5122a3d"
+    },
+    "crates/strehl-core/src/warpmap.rs": {
+      "bytes": 54829,
+      "path": "crates/strehl-core/src/warpmap.rs",
+      "sha256": "9d2198eeab5e8a941e297cf8fcd8a217d2454390220433ae19cc6b07e6fd721b"
+    },
+    "crates/strehl-plugin/Cargo.toml": {
+      "bytes": 417,
+      "path": "crates/strehl-plugin/Cargo.toml",
+      "sha256": "b3fd67fd414ac138119f4ab8dedaee280cea23b1bcc20f21f066f09d3575c88c"
+    },
+    "crates/strehl-plugin/examples/calibration-survey.rs": {
+      "bytes": 2842,
+      "path": "crates/strehl-plugin/examples/calibration-survey.rs",
+      "sha256": "b453361321e0e777148121ba5a4b8edff557a5d59aa1d9615b91386208c4aafe"
+    },
+    "crates/strehl-plugin/examples/f5-design-probes.rs": {
+      "bytes": 6954,
+      "path": "crates/strehl-plugin/examples/f5-design-probes.rs",
+      "sha256": "4f368b7e3ec8ab522183ee3b86fa36adbee76a2b5d772c8f0bafcc9706536676"
+    },
+    "crates/strehl-plugin/src/calibrate.rs": {
+      "bytes": 36532,
+      "path": "crates/strehl-plugin/src/calibrate.rs",
+      "sha256": "7e10fbd56d8257f409a083461854bf999f8c97ce1a65aad5f90da3b76c8d2a10"
+    },
+    "crates/strehl-plugin/src/field.rs": {
+      "bytes": 7730,
+      "path": "crates/strehl-plugin/src/field.rs",
+      "sha256": "6a1da0df1fc4d6ba5e7cbfc0bc3d79295e89bca7b21647f237154bd97018ced5"
+    },
+    "crates/strehl-plugin/src/lib.rs": {
+      "bytes": 8756,
+      "path": "crates/strehl-plugin/src/lib.rs",
+      "sha256": "9dbb902a31cb21ba5e07fe1576f96b0cffad2dd8fed70a777c2bfaaab41f97e7"
+    },
+    "crates/strehl-plugin/src/measure.rs": {
+      "bytes": 8713,
+      "path": "crates/strehl-plugin/src/measure.rs",
+      "sha256": "a3941112f7e5a19b2929d83e95afa97d7be1f2ed3465d6160715386705a23c20"
+    },
+    "crates/strehl-plugin/src/reference.rs": {
+      "bytes": 28757,
+      "path": "crates/strehl-plugin/src/reference.rs",
+      "sha256": "eca4ecf81d1e783c48d680323907fd34336d1f3d5accdedfbdf726e14e847cfb"
+    },
+    "crates/strehl-plugin/src/registry.rs": {
+      "bytes": 25801,
+      "path": "crates/strehl-plugin/src/registry.rs",
+      "sha256": "1543ba679a56bdcd9ff625e54c9efd97d74c316cbf0726866e125cc1eb806a35"
+    },
+    "crates/strehl-plugin/src/rng.rs": {
+      "bytes": 9324,
+      "path": "crates/strehl-plugin/src/rng.rs",
+      "sha256": "402c5fa0acb97df6de6df14a51935de05ad9a71d20f4a909a9f7154f52442225"
+    },
+    "crates/strehl-raw/Cargo.toml": {
+      "bytes": 424,
+      "path": "crates/strehl-raw/Cargo.toml",
+      "sha256": "6e1e7cfdadb24371423143fb10945b0e61b3f45696365aa87a721661edde31c9"
+    },
+    "crates/strehl-raw/examples/identity.rs": {
+      "bytes": 1657,
+      "path": "crates/strehl-raw/examples/identity.rs",
+      "sha256": "78cdc478590b5bfd46bf3bcbed46cb0d74f5d788b08d38a5fd98636d46443668"
+    },
+    "crates/strehl-raw/src/common_tiff.rs": {
+      "bytes": 33071,
+      "path": "crates/strehl-raw/src/common_tiff.rs",
+      "sha256": "bac1d18f036b8960a8e82d01b610ae945d00d259d4cc3fe7eb9106e8a8077f42"
+    },
+    "crates/strehl-raw/src/identity.rs": {
+      "bytes": 36796,
+      "path": "crates/strehl-raw/src/identity.rs",
+      "sha256": "676d18872656a72a93e3257b1677c38ea2ee39084574e1153bdbbfbc6e8ad1fe"
+    },
+    "crates/strehl-raw/src/lib.rs": {
+      "bytes": 24809,
+      "path": "crates/strehl-raw/src/lib.rs",
+      "sha256": "1513fd3e682f2edb8c54c7d47083f20f66525ad72a5687fb2e530bb5697fef2a"
+    },
+    "experiments/m12-scorecard/m12-harness.py": {
+      "bytes": 117908,
+      "path": "experiments/m12-scorecard/m12-harness.py",
+      "sha256": "6cfb408992f37b225f102da4d62ba836f9c5b67c92bdd418ff460987866a1bb9"
+    },
+    "experiments/m193c-output-grid/bounded-process.py": {
+      "bytes": 12664,
+      "path": "experiments/m193c-output-grid/bounded-process.py",
+      "sha256": "47b9f8d848759eba61f055b9fdca1f8ac400f134dcd7636f0e0eaaa955704e0b"
+    },
+    "experiments/m193c-output-grid/bridge-build-3-independent-read.md": {
+      "bytes": 6981,
+      "path": "experiments/m193c-output-grid/bridge-build-3-independent-read.md",
+      "sha256": "35e7c78b5d21df15d0a61ecad97b1473abdcd7e4ff46ef88a6e2f7bc56a3307a"
+    },
+    "experiments/m193c-output-grid/bridge-build-3/compiler.log": {
+      "bytes": 184893,
+      "path": "experiments/m193c-output-grid/bridge-build-3/compiler.log",
+      "sha256": "cc88f9ee15209c37f8d89215c340536fcdc0104fc4291a639bccfbe5cb4ad981"
+    },
+    "experiments/m193c-output-grid/bridge-build-3/output-grid-tests.exe": {
+      "bytes": 29488640,
+      "path": "experiments/m193c-output-grid/bridge-build-3/output-grid-tests.exe",
+      "sha256": "fa03b12fe177608851d6758517c9bda050998cdc4d777195fab8e3dc1e0813a3"
+    },
+    "experiments/m193c-output-grid/bridge-build-3/result.json": {
+      "bytes": 51621,
+      "path": "experiments/m193c-output-grid/bridge-build-3/result.json",
+      "sha256": "bfb951c8ccc0b2278802e69c3ca27fd9138bb817457b365caaea31d5b82a2977"
+    },
+    "experiments/m193c-output-grid/bridge-build-3/test-list.log": {
+      "bytes": 13769,
+      "path": "experiments/m193c-output-grid/bridge-build-3/test-list.log",
+      "sha256": "f8ae71f235181746a868f092f5490ade629a3ceb4d03ac50ebb239b7c922f3b0"
+    },
+    "experiments/m193c-output-grid/bridge-build-release-3.json": {
+      "bytes": 25342,
+      "path": "experiments/m193c-output-grid/bridge-build-release-3.json",
+      "sha256": "459c65edb12d6ebd4ac5d74f7d4ca9b664592425dbf7428c92927bf4316ade52"
+    },
+    "experiments/m193c-output-grid/bridge-build.py": {
+      "bytes": 14682,
+      "path": "experiments/m193c-output-grid/bridge-build.py",
+      "sha256": "e0ab57c437af32b61f8f8ed6d7cfb0407789974f6db40151c2f49f302edfa255"
+    },
+    "experiments/m193c-output-grid/build-drain-repair-review.md": {
+      "bytes": 7631,
+      "path": "experiments/m193c-output-grid/build-drain-repair-review.md",
+      "sha256": "4e5c89f2c81b2f3ab32e37ec149a39d1a1c5b738aa00f4cf059f4ac955e14c99"
+    },
+    "experiments/m193c-output-grid/controller-amendment-3.md": {
+      "bytes": 10792,
+      "path": "experiments/m193c-output-grid/controller-amendment-3.md",
+      "sha256": "0c4d13c6520512785918661b61daa2a4ada5ab7fcf3fe8cb89f02e8b51e00e7e"
+    },
+    "experiments/m193c-output-grid/controller-child.py": {
+      "bytes": 4416,
+      "path": "experiments/m193c-output-grid/controller-child.py",
+      "sha256": "8944b1387990a262d1ad47c44ee2bbd7de281323185a0758802f1637289d2788"
+    },
+    "experiments/m193c-output-grid/controller-controls-4-independent-read.md": {
+      "bytes": 11260,
+      "path": "experiments/m193c-output-grid/controller-controls-4-independent-read.md",
+      "sha256": "f5a3d477b51f5b7d1679fedb7ec22e7a6a777d336290635f964ab356eb7444af"
+    },
+    "experiments/m193c-output-grid/controller-controls-4/00-valid.log": {
+      "bytes": 19,
+      "path": "experiments/m193c-output-grid/controller-controls-4/00-valid.log",
+      "sha256": "07f1280c0bd3664c53d669c5d1d3ef35341dbbfea45b59f1d91ee5dea4083c65"
+    },
+    "experiments/m193c-output-grid/controller-controls-4/01-nonzero.log": {
+      "bytes": 18,
+      "path": "experiments/m193c-output-grid/controller-controls-4/01-nonzero.log",
+      "sha256": "a06b7d243518affb9e73a1b3fe0744b2bb6be6b6a0160d537e4a33ae47dd7152"
+    },
+    "experiments/m193c-output-grid/controller-controls-4/02-exact-log.log": {
+      "bytes": 65536,
+      "path": "experiments/m193c-output-grid/controller-controls-4/02-exact-log.log",
+      "sha256": "1f8745f0d2d1387ec1af2211a3cf417b2e9e885e853472649c1d979d0e9370e3"
+    },
+    "experiments/m193c-output-grid/controller-controls-4/03-overflow-log.log": {
+      "bytes": 65536,
+      "path": "experiments/m193c-output-grid/controller-controls-4/03-overflow-log.log",
+      "sha256": "1f8745f0d2d1387ec1af2211a3cf417b2e9e885e853472649c1d979d0e9370e3"
+    },
+    "experiments/m193c-output-grid/controller-controls-4/04-timeout.log": {
+      "bytes": 44,
+      "path": "experiments/m193c-output-grid/controller-controls-4/04-timeout.log",
+      "sha256": "d8cbe19c0b7ccda6a98f82d813a0439281dd44dab465769846132120051fe1b2"
+    },
+    "experiments/m193c-output-grid/controller-controls-4/05-nested-timeout.log": {
+      "bytes": 91,
+      "path": "experiments/m193c-output-grid/controller-controls-4/05-nested-timeout.log",
+      "sha256": "9b296931ca5a6d5e35f47bfd220d1dff105db4e5e40326eacfec8316bcecc785"
+    },
+    "experiments/m193c-output-grid/controller-controls-4/06-memory-allowed.log": {
+      "bytes": 32,
+      "path": "experiments/m193c-output-grid/controller-controls-4/06-memory-allowed.log",
+      "sha256": "069b403264accdc8e29af4e6542150a9538723d8a1fa9201f04f4997327c2106"
+    },
+    "experiments/m193c-output-grid/controller-controls-4/07-memory.log": {
+      "bytes": 22,
+      "path": "experiments/m193c-output-grid/controller-controls-4/07-memory.log",
+      "sha256": "1128b5db9d7ca34bd50a8740f673da48cbb4f4ed3b94034db230cc2a9fc2cd18"
+    },
+    "experiments/m193c-output-grid/controller-controls-4/08-late-log-binding.log": {
+      "bytes": 65536,
+      "path": "experiments/m193c-output-grid/controller-controls-4/08-late-log-binding.log",
+      "sha256": "1f8745f0d2d1387ec1af2211a3cf417b2e9e885e853472649c1d979d0e9370e3"
+    },
+    "experiments/m193c-output-grid/controller-controls-4/09-changed-input.log": {
+      "bytes": 29,
+      "path": "experiments/m193c-output-grid/controller-controls-4/09-changed-input.log",
+      "sha256": "2e75a0c920b25162b66f377ffd56008cfe4e23f77a03e7eea1f39910e2ecfdf1"
+    },
+    "experiments/m193c-output-grid/controller-controls-4/10-restored.log": {
+      "bytes": 19,
+      "path": "experiments/m193c-output-grid/controller-controls-4/10-restored.log",
+      "sha256": "07f1280c0bd3664c53d669c5d1d3ef35341dbbfea45b59f1d91ee5dea4083c65"
+    },
+    "experiments/m193c-output-grid/controller-controls-4/11-drain-finish.log": {
+      "bytes": 204,
+      "path": "experiments/m193c-output-grid/controller-controls-4/11-drain-finish.log",
+      "sha256": "a084a0600252b33803044d0a75d781f3dfbadca0bb4f9b591a74b4955fe8a357"
+    },
+    "experiments/m193c-output-grid/controller-controls-4/11-drain-finish/completion.json": {
+      "bytes": 217,
+      "path": "experiments/m193c-output-grid/controller-controls-4/11-drain-finish/completion.json",
+      "sha256": "d2eb598e1598ec5623531ca52a3944b8a981ccb518c3c7d1ed0b7ce64adc3504"
+    },
+    "experiments/m193c-output-grid/controller-controls-4/11-drain-finish/startup.json": {
+      "bytes": 151,
+      "path": "experiments/m193c-output-grid/controller-controls-4/11-drain-finish/startup.json",
+      "sha256": "fc6eb65d200d7d6d421243b99dbe4fc998e645fd30a5ea80959d830e820a7d3b"
+    },
+    "experiments/m193c-output-grid/controller-controls-4/12-drain-persist.log": {
+      "bytes": 206,
+      "path": "experiments/m193c-output-grid/controller-controls-4/12-drain-persist.log",
+      "sha256": "2a42f5885a1912c8ca0bfa735c16f3b80e9581ac0c20015e32c5119444d6c72d"
+    },
+    "experiments/m193c-output-grid/controller-controls-4/12-drain-persist/startup.json": {
+      "bytes": 153,
+      "path": "experiments/m193c-output-grid/controller-controls-4/12-drain-persist/startup.json",
+      "sha256": "4ec4b7b91c40ceb04b233b14c623c251eaf99e10de376353fd9df013dc54dc9e"
+    },
+    "experiments/m193c-output-grid/controller-controls-4/13-drain-restored.log": {
+      "bytes": 206,
+      "path": "experiments/m193c-output-grid/controller-controls-4/13-drain-restored.log",
+      "sha256": "0564f56a9c1696f600b1680025e730bed89d79ab560b6b735989b0c4132a7798"
+    },
+    "experiments/m193c-output-grid/controller-controls-4/13-drain-restored/completion.json": {
+      "bytes": 220,
+      "path": "experiments/m193c-output-grid/controller-controls-4/13-drain-restored/completion.json",
+      "sha256": "9ec6dc7e4286ab68904b1bf8cdc4ba1c7cfd8c99ae02047b46b75a8395dcc91a"
+    },
+    "experiments/m193c-output-grid/controller-controls-4/13-drain-restored/startup.json": {
+      "bytes": 154,
+      "path": "experiments/m193c-output-grid/controller-controls-4/13-drain-restored/startup.json",
+      "sha256": "c8abe5b0eba6e04c7ae622a552dae20135ab7440032e7b374853402bad184d95"
+    },
+    "experiments/m193c-output-grid/controller-controls-4/result.json": {
+      "bytes": 71176,
+      "path": "experiments/m193c-output-grid/controller-controls-4/result.json",
+      "sha256": "6598085965a18d0165073a0ebcfcbdc44ed543008af64f569182965eddea8b80"
+    },
+    "experiments/m193c-output-grid/controller-controls-4/sources/experiments/m12-scorecard/m12-harness.py": {
+      "bytes": 117908,
+      "path": "experiments/m193c-output-grid/controller-controls-4/sources/experiments/m12-scorecard/m12-harness.py",
+      "sha256": "6cfb408992f37b225f102da4d62ba836f9c5b67c92bdd418ff460987866a1bb9"
+    },
+    "experiments/m193c-output-grid/controller-controls-4/sources/experiments/m193c-output-grid/bounded-process.py": {
+      "bytes": 12664,
+      "path": "experiments/m193c-output-grid/controller-controls-4/sources/experiments/m193c-output-grid/bounded-process.py",
+      "sha256": "47b9f8d848759eba61f055b9fdca1f8ac400f134dcd7636f0e0eaaa955704e0b"
+    },
+    "experiments/m193c-output-grid/controller-controls-4/sources/experiments/m193c-output-grid/controller-child.py": {
+      "bytes": 4416,
+      "path": "experiments/m193c-output-grid/controller-controls-4/sources/experiments/m193c-output-grid/controller-child.py",
+      "sha256": "8944b1387990a262d1ad47c44ee2bbd7de281323185a0758802f1637289d2788"
+    },
+    "experiments/m193c-output-grid/controller-controls-4/sources/experiments/m193c-output-grid/controller-controls.py": {
+      "bytes": 18455,
+      "path": "experiments/m193c-output-grid/controller-controls-4/sources/experiments/m193c-output-grid/controller-controls.py",
+      "sha256": "217999b5969a29224868fe731284493e04ce0ef33bd225fc4c9f3bc3f8b5b84c"
+    },
+    "experiments/m193c-output-grid/controller-controls-4/watched-input.txt": {
+      "bytes": 22,
+      "path": "experiments/m193c-output-grid/controller-controls-4/watched-input.txt",
+      "sha256": "d7a6fb6663933dea81270712039f4a3a56bb368d9e54f1d3f9f447b4d213ddee"
+    },
+    "experiments/m193c-output-grid/controller-controls-release-4.json": {
+      "bytes": 4369,
+      "path": "experiments/m193c-output-grid/controller-controls-release-4.json",
+      "sha256": "63e229c90510650678b52f384572498125543ebb662ff63ace1c635c1d48dd16"
+    },
+    "experiments/m193c-output-grid/controller-controls.py": {
+      "bytes": 18455,
+      "path": "experiments/m193c-output-grid/controller-controls.py",
+      "sha256": "217999b5969a29224868fe731284493e04ce0ef33bd225fc4c9f3bc3f8b5b84c"
+    },
+    "experiments/m193c-output-grid/derivative-controls-preregister.md": {
+      "bytes": 14799,
+      "path": "experiments/m193c-output-grid/derivative-controls-preregister.md",
+      "sha256": "7c9f359a100d3b1f7c0522e8635f9178e0147756e61bcbc1373fd37324fbe5dc"
+    },
+    "experiments/m193c-output-grid/execution-preregister.md": {
+      "bytes": 8721,
+      "path": "experiments/m193c-output-grid/execution-preregister.md",
+      "sha256": "10511b44708fd3067698846006e71828c37f6d9c83a7d052556af8fdfb3fdbf1"
+    },
+    "experiments/m193c-output-grid/independent-controller-amendment-3-review.md": {
+      "bytes": 7426,
+      "path": "experiments/m193c-output-grid/independent-controller-amendment-3-review.md",
+      "sha256": "d81af100167d0f15777fd785ee16a5f41bcd3185f9b13c28a0c209b8e77177a8"
+    },
+    "experiments/m193c-output-grid/independent-derivative-design-review.md": {
+      "bytes": 11291,
+      "path": "experiments/m193c-output-grid/independent-derivative-design-review.md",
+      "sha256": "3c63fe97679509b77523788e14209d0e0238133d1a1ac478ae197e796f0fc54a"
+    },
+    "experiments/m193c-output-grid/independent-derivative-read.py": {
+      "bytes": 61341,
+      "path": "experiments/m193c-output-grid/independent-derivative-read.py",
+      "sha256": "8c571654667f8ef66520aedfd1bddceb991c8a86d1a7355a4ed21cf2ba85eced"
+    },
+    "experiments/m193c-output-grid/independent-derivative-reader-preregister.md": {
+      "bytes": 10711,
+      "path": "experiments/m193c-output-grid/independent-derivative-reader-preregister.md",
+      "sha256": "bf8a6c2a13b109fb8e5cb8e3c1a9f1ce47931ded220de909118636645bd8a990"
+    },
+    "experiments/m193c-output-grid/independent-derivative-reader-source-review.md": {
+      "bytes": 6102,
+      "path": "experiments/m193c-output-grid/independent-derivative-reader-source-review.md",
+      "sha256": "ddf3932d536bc1cf0374ab0766c9b6bf7a2ade816c8ad34aecb33dc9d19f561f"
+    },
+    "experiments/m193c-output-grid/independent-derivative-source-repair-review.md": {
+      "bytes": 2626,
+      "path": "experiments/m193c-output-grid/independent-derivative-source-repair-review.md",
+      "sha256": "141c187e08e5a171ef90e164769cc13d37a85e94e03836c2765d0da09ce6c9ee"
+    },
+    "experiments/m193c-output-grid/independent-derivative-tiff.py": {
+      "bytes": 8144,
+      "path": "experiments/m193c-output-grid/independent-derivative-tiff.py",
+      "sha256": "9acceb498568967bb02ce01389441da09de7502f3a51faebbed8fed61943a5ae"
+    },
+    "experiments/m193c-output-grid/independent-grid-read.py": {
+      "bytes": 50979,
+      "path": "experiments/m193c-output-grid/independent-grid-read.py",
+      "sha256": "435b147a390a2917c8d032d3a254b0fd3fb689d51f72ad101b432652ce21d0d7"
+    },
+    "experiments/m193c-output-grid/independent-grid-source-review.md": {
+      "bytes": 4079,
+      "path": "experiments/m193c-output-grid/independent-grid-source-review.md",
+      "sha256": "da4182820cada45cbb794517814fd795685646a90a1f1b7b7bf8ba9fcdf4f19b"
+    },
+    "experiments/m193c-output-grid/independent-parent-component-review.md": {
+      "bytes": 18345,
+      "path": "experiments/m193c-output-grid/independent-parent-component-review.md",
+      "sha256": "5d508de58566ffec0bc3602d534290c4be966ac985b3056f41bf12b9a3932893"
+    },
+    "experiments/m193c-output-grid/independent-private-campaign-1-read.md": {
+      "bytes": 11952,
+      "path": "experiments/m193c-output-grid/independent-private-campaign-1-read.md",
+      "sha256": "2d5d431ffe6c9f168b9afdea1415bf6be4811b5b662cca0c8973dfa5b2f4bc18"
+    },
+    "experiments/m193c-output-grid/independent-private-campaign-review.md": {
+      "bytes": 16234,
+      "path": "experiments/m193c-output-grid/independent-private-campaign-review.md",
+      "sha256": "d21675982153d72896e0077939a4285c14322f4aa859457a3c9b9db54b44681e"
+    },
+    "experiments/m193c-output-grid/independent-private-read.py": {
+      "bytes": 20408,
+      "path": "experiments/m193c-output-grid/independent-private-read.py",
+      "sha256": "e943584dbd993639e804132451b11574a5d98f8c8a867ac274b5cef17938cdbc"
+    },
+    "experiments/m193c-output-grid/independent-private-reader-wrapper-review.md": {
+      "bytes": 9892,
+      "path": "experiments/m193c-output-grid/independent-private-reader-wrapper-review.md",
+      "sha256": "ba6740dbf00dc50b1cdf60d7be21bdbd00ce44deef50d8bba8d42cb7aef39ed7"
+    },
+    "experiments/m193c-output-grid/independent-private-run-repair-review.md": {
+      "bytes": 9418,
+      "path": "experiments/m193c-output-grid/independent-private-run-repair-review.md",
+      "sha256": "ca0cbd32cbcb691d365bb2c51a8cb1347133ce3e8f1a6c7e88f66bbefbd35c03"
+    },
+    "experiments/m193c-output-grid/independent-private-run-review.md": {
+      "bytes": 11188,
+      "path": "experiments/m193c-output-grid/independent-private-run-review.md",
+      "sha256": "a34a0ca39812b58597021f10c1e49529d6d41979a13c07ef1a33c48e6079c679"
+    },
+    "experiments/m193c-output-grid/precision-witness.rs": {
+      "bytes": 7697,
+      "path": "experiments/m193c-output-grid/precision-witness.rs",
+      "sha256": "6979f6e51b9bf9028002c9cdfff81f4925f293ce79386eb49fa4a84bec643cc9"
+    },
+    "experiments/m193c-output-grid/private-adapter.rs": {
+      "bytes": 23746,
+      "path": "experiments/m193c-output-grid/private-adapter.rs",
+      "sha256": "e9fe4be0fe6354e00294900c8f5bad1aade76fbbfb2be1367bb7cafa13ed85a8"
+    },
+    "experiments/m193c-output-grid/private-campaign-1/result.json": {
+      "bytes": 30532,
+      "path": "experiments/m193c-output-grid/private-campaign-1/result.json",
+      "sha256": "415b2b6032bd59bf81b7e2e499e430ddbabc7d8395f1aaa1858af05b9eee15d4"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid-reader-request.json": {
+      "bytes": 1386,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid-reader-request.json",
+      "sha256": "6076161f6d437d5499451d7ad67354d9ec86f9d0ccc030e839ca4ebfb6f1714b"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/00-plan-launch.json": {
+      "bytes": 4373,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/00-plan-launch.json",
+      "sha256": "e990b0a171b2f5ba1ba7540cc348f384f30811d7adcd64693d746e3a18ee7982"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/00-plan.json": {
+      "bytes": 9824,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/00-plan.json",
+      "sha256": "313b2640f4f33991d53e87f19a81e49020f5ba54dca7c70faa5e9d2623899a85"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/00-plan.log": {
+      "bytes": 200,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/00-plan.log",
+      "sha256": "f9fe8648b414f63050f7613c9b36af551efeb6fc7a3be5733914a0ad95f9ad0d"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/00-receipt.json": {
+      "bytes": 16204,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/00-receipt.json",
+      "sha256": "e9e203ec118b9644dcf8364e21a6d5524ccb5f496953f5f38528f51a062cf513"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/00-render-launch.json": {
+      "bytes": 4812,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/00-render-launch.json",
+      "sha256": "8b39e4ab34484c05f49b3e0ccd129bcf58b7a493d44cfa61eed9a31a4c2328f9"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/00-render.log": {
+      "bytes": 4013,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/00-render.log",
+      "sha256": "6b999348316992834e06a34f7963fea0efd74c64272f4d6807281bcea5f23e83"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/00.tif": {
+      "bytes": 407403,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/00.tif",
+      "sha256": "bbe18c82ffeab42af9b870122442ebca8e804221de10ad29eeb8d3cbde2dc838"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/01-plan-launch.json": {
+      "bytes": 4376,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/01-plan-launch.json",
+      "sha256": "a774afd94462196ddabf500db7589370347abca3678a64587434d7d3412acf5f"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/01-plan.json": {
+      "bytes": 10459,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/01-plan.json",
+      "sha256": "6c5acf1d1bf6705399334d686624f30146a65fe4ecba8a7a2b379144adc5a7ec"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/01-plan.log": {
+      "bytes": 200,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/01-plan.log",
+      "sha256": "f9fe8648b414f63050f7613c9b36af551efeb6fc7a3be5733914a0ad95f9ad0d"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/01-receipt.json": {
+      "bytes": 17174,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/01-receipt.json",
+      "sha256": "9dbc9298c52d75ae09535565507384d8c243f826bc739a4f1d788624e323f80c"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/01-render-launch.json": {
+      "bytes": 4804,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/01-render-launch.json",
+      "sha256": "121ce88f860724f2ffd08301aa8acf488f5efad39328bb77c7f6bc13ca137a6a"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/01-render.log": {
+      "bytes": 4017,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/01-render.log",
+      "sha256": "15c756f9241c4f8efb8bc97ae05f37a2556cd92a108dfb4715d8e1ea8a608083"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/01.tif": {
+      "bytes": 353403,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/01.tif",
+      "sha256": "85a158056963f099864fa6c15f359c25c28dc816dbf3f9ee9f44c6d9dab5cee5"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/02-plan-launch.json": {
+      "bytes": 4364,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/02-plan-launch.json",
+      "sha256": "18205f09d0a07cd874ba72207061188ef6df87a5915258c2d5ddb7dcb5942c0e"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/02-plan.json": {
+      "bytes": 10463,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/02-plan.json",
+      "sha256": "e887c1cfdca7c0f2ff213262263f59c6d27d63c0b5db1955b9b47073548c19a7"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/02-plan.log": {
+      "bytes": 200,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/02-plan.log",
+      "sha256": "f9fe8648b414f63050f7613c9b36af551efeb6fc7a3be5733914a0ad95f9ad0d"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/02-receipt.json": {
+      "bytes": 17178,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/02-receipt.json",
+      "sha256": "58c6ce1decc4b40d20b995177aced4c2edc5a401b673c8d1b7ebbea2ded23b83"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/02-render-launch.json": {
+      "bytes": 4800,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/02-render-launch.json",
+      "sha256": "825d8382e737661db30fdf672091711c16a5feeb59b85028db846715c794f8d3"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/02-render.log": {
+      "bytes": 4017,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/02-render.log",
+      "sha256": "89ea6fdb295e6f788f3896c3ea0473981f3cda44b81480cfb0d99edccc4edeec"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/02.tif": {
+      "bytes": 353403,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/02.tif",
+      "sha256": "85a158056963f099864fa6c15f359c25c28dc816dbf3f9ee9f44c6d9dab5cee5"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/03-plan-launch.json": {
+      "bytes": 4379,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/03-plan-launch.json",
+      "sha256": "dec1cdc52f34b908ed944c88aa1135c5eec3a394648f7c6f0e467a24fd996773"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/03-plan.json": {
+      "bytes": 10467,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/03-plan.json",
+      "sha256": "20c21feb421ec2051a27d4684442dbe33f3b1190433d92d05b44b169dae7a2b7"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/03-plan.log": {
+      "bytes": 200,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/03-plan.log",
+      "sha256": "f0496a30f19c097dd8ebc318ed99abfc9b334d5546ae749d7f98090a767858b2"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/03-receipt.json": {
+      "bytes": 17182,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/03-receipt.json",
+      "sha256": "f248dd779d37433bb461477126b28d0d2cc616364158f937ac4dde86b6ad8cc9"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/03-render-launch.json": {
+      "bytes": 4778,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/03-render-launch.json",
+      "sha256": "1dd9b05b7d59895838c664d9d168e79107e4e04697d0187476806f9f2e1193c3"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/03-render.log": {
+      "bytes": 4017,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/03-render.log",
+      "sha256": "9d20c4d022bc082d65dc07ab0101ba9b4c95aca10a4ede2456c7431ca5dc6076"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/03.tif": {
+      "bytes": 353403,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/03.tif",
+      "sha256": "85a158056963f099864fa6c15f359c25c28dc816dbf3f9ee9f44c6d9dab5cee5"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/04-plan-launch.json": {
+      "bytes": 4321,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/04-plan-launch.json",
+      "sha256": "6571ad0c6c1838d6adb9c8d664371081b00183f0ff1294342b9b36f982ee9688"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/04-plan.json": {
+      "bytes": 10620,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/04-plan.json",
+      "sha256": "348d9be9aecf6b8b95b1b802202726306cb1489c3c538ca072f112e957c50398"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/04-plan.log": {
+      "bytes": 200,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/04-plan.log",
+      "sha256": "f0496a30f19c097dd8ebc318ed99abfc9b334d5546ae749d7f98090a767858b2"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/04-receipt.json": {
+      "bytes": 17335,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/04-receipt.json",
+      "sha256": "9a292f03d2c75d38568adc3782a94ca43bd3708e661a441d1b5866d6a575a017"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/04-render-launch.json": {
+      "bytes": 4803,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/04-render-launch.json",
+      "sha256": "d986a761193799fa79625da52d25767b897390565cbaa2c0646ac0894977d79c"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/04-render.log": {
+      "bytes": 3586,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/04-render.log",
+      "sha256": "1e7682f6f2d4ef79ac3b3129c2e1b8729b746bce1b196a0dc5ceb948c36eb38c"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/04.tif": {
+      "bytes": 461403,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/04.tif",
+      "sha256": "91b9991c9511da2643993ec12fdd0af71bfe6eb8e8dc0462336515abded2206d"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/05-plan-launch.json": {
+      "bytes": 4378,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/05-plan-launch.json",
+      "sha256": "8a5605dfee43aebdfe51a47c4ce7e128e171a52d4ba6a862be1c39e172a27028"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/05-plan.json": {
+      "bytes": 8304,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/05-plan.json",
+      "sha256": "5e90216bc90844f1926e9cbec3275655ee5254597d810ef8a951cd6cbe64af91"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/05-plan.log": {
+      "bytes": 200,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/05-plan.log",
+      "sha256": "f0496a30f19c097dd8ebc318ed99abfc9b334d5546ae749d7f98090a767858b2"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/05-receipt.json": {
+      "bytes": 10673,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/05-receipt.json",
+      "sha256": "8704baf19c76290273f346f2385dc3f02ece9417495e786ed870ce9f1f382068"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/05-render-launch.json": {
+      "bytes": 4823,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/05-render-launch.json",
+      "sha256": "a31b9da4c32c0b9d21715e15ad700d1b20592d13564f16700a093eb1344cadd0"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/05-render.log": {
+      "bytes": 4017,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/05-render.log",
+      "sha256": "b61d813625ff16f710488447a5fd9e858cf459bf1bc39efece8f120b5b3cea3c"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/05.tif": {
+      "bytes": 353403,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/05.tif",
+      "sha256": "59973a0f2ed8fa0e3b02c5718f91fda4f535701a0367a54888f73931ae9b39d9"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/06-plan-launch.json": {
+      "bytes": 4377,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/06-plan-launch.json",
+      "sha256": "551e50ffd91c7c9bc8b97521b23fd0695e79960cc1407097d9078f51ef13b32a"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/06-plan.json": {
+      "bytes": 8318,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/06-plan.json",
+      "sha256": "70b16f940a612a0e78952dacb7bb682c3bd6c02848d414b48e73805286c36229"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/06-plan.log": {
+      "bytes": 200,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/06-plan.log",
+      "sha256": "f0496a30f19c097dd8ebc318ed99abfc9b334d5546ae749d7f98090a767858b2"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/06-receipt.json": {
+      "bytes": 10687,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/06-receipt.json",
+      "sha256": "99118d3e0d59a6b98b96550b5c80bc7b32e53771b5ae177606f555faad34479d"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/06-render-launch.json": {
+      "bytes": 4825,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/06-render-launch.json",
+      "sha256": "cbabd06b8401d041b06f816508e5f8fe9adbf31a998b55767b400cae4ca2d348"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/06-render.log": {
+      "bytes": 4017,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/06-render.log",
+      "sha256": "2260de859adb702847e0b70c22782e3d5db6ece808a01b1de743302797f5222e"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/06.tif": {
+      "bytes": 353403,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/06.tif",
+      "sha256": "86028defae5a00f428f62b7579b0b19c6e6629f57120cdef4616b2fa31116c8c"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/07-plan-launch.json": {
+      "bytes": 4381,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/07-plan-launch.json",
+      "sha256": "d2bdf29dad3842ae40d390ff85d0ab21d657fd68dec66954a1b8f77c849c12e6"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/07-plan.json": {
+      "bytes": 8302,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/07-plan.json",
+      "sha256": "4b60329603475eb6f16e9f0aa0b850207565346a602be074badb11021800d8c5"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/07-plan.log": {
+      "bytes": 200,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/07-plan.log",
+      "sha256": "f9fe8648b414f63050f7613c9b36af551efeb6fc7a3be5733914a0ad95f9ad0d"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/07-receipt.json": {
+      "bytes": 10671,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/07-receipt.json",
+      "sha256": "71042d9f9d25f9cf8875569eb8f3440ec4c20709e6eed249699ab3440183209e"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/07-render-launch.json": {
+      "bytes": 4824,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/07-render-launch.json",
+      "sha256": "85ef6391c92dbc9c5d47fabbe188f3d673558af82d4f3ca86dd4c8a1245e045b"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/07-render.log": {
+      "bytes": 4017,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/07-render.log",
+      "sha256": "d98ae0db776053d02fb29c7bdcf8ff1a93a979a8c199b6d1a74cc48ebb701e03"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/07.tif": {
+      "bytes": 353403,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/07.tif",
+      "sha256": "59973a0f2ed8fa0e3b02c5718f91fda4f535701a0367a54888f73931ae9b39d9"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/08-plan-launch.json": {
+      "bytes": 4377,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/08-plan-launch.json",
+      "sha256": "a2e919015ceed081100de7aa2ac595755796d2e358b02c19d63d6db15c49a2a6"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/08-plan.json": {
+      "bytes": 8404,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/08-plan.json",
+      "sha256": "80f4740bb1289cf3d325eafd95887f6dac7686bd5f34676dc0f7a8b351e09caf"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/08-plan.log": {
+      "bytes": 200,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/08-plan.log",
+      "sha256": "f0496a30f19c097dd8ebc318ed99abfc9b334d5546ae749d7f98090a767858b2"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/08-receipt.json": {
+      "bytes": 10773,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/08-receipt.json",
+      "sha256": "1a7d1cf1a11dd5865b0ac8ae9ea095c9793822eee3138679def1f479a2843068"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/08-render-launch.json": {
+      "bytes": 4823,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/08-render-launch.json",
+      "sha256": "707e62354fb1eed8e78fbf6a99b162ab60e909f5e43d009086115a77b4c27a00"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/08-render.log": {
+      "bytes": 4017,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/08-render.log",
+      "sha256": "5c29708ad19bd4d2b8e936eee5bd5aeff9a6abe42c0350841bf7ffd827740fad"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/08.tif": {
+      "bytes": 353403,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/08.tif",
+      "sha256": "c3915eb177df590efe961237cbe39fe369c1a789c7808c6e73b1175bd37cf8c8"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/09-plan-launch.json": {
+      "bytes": 4378,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/09-plan-launch.json",
+      "sha256": "9a209cd09cff666a7cf33cbb453eaea1aebc3414583ecbed4f3690f88a8ec167"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/09-plan.json": {
+      "bytes": 10461,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/09-plan.json",
+      "sha256": "a81195885a07f22cbec67e14b886cc2967230f85997f2c24e3fdd83a2f315e66"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/09-plan.log": {
+      "bytes": 200,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/09-plan.log",
+      "sha256": "f0496a30f19c097dd8ebc318ed99abfc9b334d5546ae749d7f98090a767858b2"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/09-receipt.json": {
+      "bytes": 16991,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/09-receipt.json",
+      "sha256": "54aaa48a529ee25f12d585ff2d5dbee314a23b35cf016d69ce6485088c1a7ce2"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/09-render-launch.json": {
+      "bytes": 4830,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/09-render-launch.json",
+      "sha256": "b3d8c07c6efca99d8bd91dd333de87012a15fa12ca7b9bb7b818d70cf35a8240"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/09-render.log": {
+      "bytes": 4020,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/09-render.log",
+      "sha256": "34a7b2745c2217b87247a91fed1d51e7ef10ae0a01ae803d4ab198fc48cbb055"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/09.tif": {
+      "bytes": 353403,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/09.tif",
+      "sha256": "3d9423cb542ffaeb2c8c69327950a4518e03af1987f3f7dffcb4c9866ca30143"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/10-component-launch.json": {
+      "bytes": 4363,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/10-component-launch.json",
+      "sha256": "6a3fd1d7131405928a0ae4b24936cd26dc8922a51e87af66ef8c05fc26a3d01b"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/10-component.log": {
+      "bytes": 225,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/10-component.log",
+      "sha256": "bf1cee80c478bbd79747ae0e4e4cde54aa7ad30b1bec93cdedef62b030df0b60"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/all-ten-plans.json": {
+      "bytes": 6101,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/all-ten-plans.json",
+      "sha256": "e36556d10262c430f6ade87859fae3c0e22701bf37b6d6fe997bfdfdd4055552"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/precision/00-identity-nine.json": {
+      "bytes": 306595,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/precision/00-identity-nine.json",
+      "sha256": "3c6b28cb778ea4c0aa8e2e7819787ce4817a42ab1590cfd5faf275019741af8c"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/precision/01-curved-nine-off.json": {
+      "bytes": 329844,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/precision/01-curved-nine-off.json",
+      "sha256": "e1df18c1c47a9fc29501c4bf99bf8779f912bbb3fe602c35e479406d55f9864d"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/precision/02-curved-nine-count.json": {
+      "bytes": 329848,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/precision/02-curved-nine-count.json",
+      "sha256": "b4f6e824d5e1956939bd0510c6a2e815612b5dc428f6183f49768ab478803695"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/precision/03-curved-nine-placebo.json": {
+      "bytes": 329852,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/precision/03-curved-nine-placebo.json",
+      "sha256": "31967d1bfa15b6b76ad43010bd594f534001d958fd882fccb0f1199d2d114743"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/precision/04-curved-nine-scale.json": {
+      "bytes": 332596,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/precision/04-curved-nine-scale.json",
+      "sha256": "8a072b7bbe44bff214cbcc959d0b06f31efde68114cfcc2d7f093e66d54df174"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/precision/05-original-one-correct.json": {
+      "bytes": 45196,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/precision/05-original-one-correct.json",
+      "sha256": "167a7e5dbad0b308b51fe25638c9b6094773449f51ddbf5b7f3b55e1b646c34a"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/precision/06-original-one-swapped.json": {
+      "bytes": 45164,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/precision/06-original-one-swapped.json",
+      "sha256": "d8f005f303af2a7116cbed9f70c6fd777d2bd583dd46538a607030b0ab96c0e0"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/precision/07-original-one-restored.json": {
+      "bytes": 45194,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/precision/07-original-one-restored.json",
+      "sha256": "54463b9d14a0e6b062590e44dc58af5a529b8a6011c1600f56be006fab7afa47"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/precision/08-original-one-inverse.json": {
+      "bytes": 45248,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/precision/08-original-one-inverse.json",
+      "sha256": "15b5298dcb067ad6e47fb80f33473a0441e08313c08c8e7bb1b047dc3e179874"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/precision/09-constant-nine-null.json": {
+      "bytes": 325588,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/precision/09-constant-nine-null.json",
+      "sha256": "bcc67d67b2dd6599bcde3953496b5180cb21a6fb15fc57a3ffbd14a672210843"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/precision/result.json": {
+      "bytes": 3854,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/precision/result.json",
+      "sha256": "efc3b1dd7e818393af40b5b6b2b32da94f8054cd76c7b2da4c9b9a8d00c5c46a"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/progress.json": {
+      "bytes": 12364,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/progress.json",
+      "sha256": "31b971ad7e4cefc34d4d82d24cbd8b046620236712d0664775463163cf44dc2d"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/run-index.json": {
+      "bytes": 178224,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/run-index.json",
+      "sha256": "9b98828f99933059becf969ce7332b1845dbf19ace421db5a441d58ae2a51642"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid_producer-launch.json": {
+      "bytes": 5686,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid_producer-launch.json",
+      "sha256": "b3547b4c07de5654025bac88aab39f103890721604a239384f68533e8374a3de"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid_producer.log": {
+      "bytes": 504,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid_producer.log",
+      "sha256": "c54b5eaef4b042e93e3cf27fd71d36b07ba6a486a30b35edf2758e1e61c9b214"
+    },
+    "experiments/m193c-output-grid/private-campaign-preregister.md": {
+      "bytes": 11764,
+      "path": "experiments/m193c-output-grid/private-campaign-preregister.md",
+      "sha256": "21dc02994b6ca2e27fcc26010209c95beca6f6d050c96548b0d1ff717980aa00"
+    },
+    "experiments/m193c-output-grid/private-campaign-release-2.json": {
+      "bytes": 32380,
+      "path": "experiments/m193c-output-grid/private-campaign-release-2.json",
+      "sha256": "fb0505d6a738cead4863b87ce882d655b2962c6e79c189bbd5d3ce6783a457f0"
+    },
+    "experiments/m193c-output-grid/private-campaign.py": {
+      "bytes": 48401,
+      "path": "experiments/m193c-output-grid/private-campaign.py",
+      "sha256": "25d666a54973883ac91f8095add61349a6bbda96a9977ddb9e6f29c12c8fa420"
+    },
+    "experiments/m193c-output-grid/private-grid-release-2.json": {
+      "bytes": 24313,
+      "path": "experiments/m193c-output-grid/private-grid-release-2.json",
+      "sha256": "2a483fac1da2c8f82fa1e50fef5c351aafc95d38982545ef3d8c035513d7225d"
+    },
+    "experiments/m193c-output-grid/private-grid-run.py": {
+      "bytes": 22426,
+      "path": "experiments/m193c-output-grid/private-grid-run.py",
+      "sha256": "9d0c9dcc60e41ca8520152033fd931e50ccc850263f539698a296509cf83f0b4"
+    },
+    "experiments/m193c-output-grid/private-protocol.md": {
+      "bytes": 20999,
+      "path": "experiments/m193c-output-grid/private-protocol.md",
+      "sha256": "990ccd293c9e4f1f9179d33334e0ff5e85d077862dc6456e938d4e3643ff092e"
+    },
+    "experiments/m193c-output-grid/private-reader-preregister.md": {
+      "bytes": 14763,
+      "path": "experiments/m193c-output-grid/private-reader-preregister.md",
+      "sha256": "b2f976b7aa72b27fa232261095a93a5a20e9b62b6901164e7bdbabd785dd72f2"
+    },
+    "experiments/m193c-output-grid/private-reader-wrapper-preregister.md": {
+      "bytes": 2773,
+      "path": "experiments/m193c-output-grid/private-reader-wrapper-preregister.md",
+      "sha256": "0f20e75f6d45c562cf8a2e632e4fe0e491465da031bb5165862a82f7ed9c17f6"
+    },
+    "experiments/m193c-output-grid/registration-derivative-design.md": {
+      "bytes": 20652,
+      "path": "experiments/m193c-output-grid/registration-derivative-design.md",
+      "sha256": "f503af4c7805f8e4b2f4771b2baaf31599ed9f0ca583d2958a1a6da11a408d68"
+    },
+    "experiments/m193c-output-grid/registration-derivative.rs": {
+      "bytes": 39489,
+      "path": "experiments/m193c-output-grid/registration-derivative.rs",
+      "sha256": "db2a4d0c36d3f0778481e8a9837feef1c2651258865799bbd143b6bb0840eecd"
+    },
+    "experiments/m194-production-truth/independent-controls.rs": {
+      "bytes": 19528,
+      "path": "experiments/m194-production-truth/independent-controls.rs",
+      "sha256": "bd5777f1f960e7db217fda4b4ce9f24a963cea9351d244acf8aac84ee68f718f"
+    },
+    "experiments/m194c-probe-layout/author-tests.rs": {
+      "bytes": 9396,
+      "path": "experiments/m194c-probe-layout/author-tests.rs",
+      "sha256": "6eb9940f98e7e21012ae83011fdc30d290654cdd55dafd320ad3f9918e6ad3bc"
+    },
+    "experiments/m194c-probe-layout/independent-tests.rs": {
+      "bytes": 21156,
+      "path": "experiments/m194c-probe-layout/independent-tests.rs",
+      "sha256": "72accd1598756d13e340947ded9c27f40c65420bd137c593b962131ddf8dc58d"
+    },
+    "experiments/m194c-probe-layout/legacy-fill-noise.rs": {
+      "bytes": 1191,
+      "path": "experiments/m194c-probe-layout/legacy-fill-noise.rs",
+      "sha256": "ffdc647077cb18f9161b8cc6e04f53d155220bc817adbf2a4da1b3d9b4c47388"
+    },
+    "experiments/m194d-band-admission/author-core-tests.rs": {
+      "bytes": 8252,
+      "path": "experiments/m194d-band-admission/author-core-tests.rs",
+      "sha256": "c9059e3d59c56bc0a716bd788a995bcfffb517e8db5c405798ad8e3c88b20099"
+    },
+    "experiments/m194d-band-admission/independent-consumer-tests.rs": {
+      "bytes": 13170,
+      "path": "experiments/m194d-band-admission/independent-consumer-tests.rs",
+      "sha256": "1942370ba982c6a5bf07e99fd6eda3af28830b63a06dbafa75b24d20fb4248f1"
+    },
+    "experiments/m194d-band-admission/independent-core-tests.rs": {
+      "bytes": 13115,
+      "path": "experiments/m194d-band-admission/independent-core-tests.rs",
+      "sha256": "89718084f205e087819fb7aa7d8073ca9977d2182fe246e9833e720133d060ae"
+    },
+    "experiments/m194f-production-bridge/author-controls.rs": {
+      "bytes": 9362,
+      "path": "experiments/m194f-production-bridge/author-controls.rs",
+      "sha256": "b7e611c0c2c42a108391fdc517dbb6b8d841026a0d2e32c7bf3330c595ffccf0"
+    },
+    "experiments/m194f-production-bridge/independent-reader-controls.rs": {
+      "bytes": 37174,
+      "path": "experiments/m194f-production-bridge/independent-reader-controls.rs",
+      "sha256": "1428f4e870da36c39e50f2d58e96f87e26454d00221a9ecd8e19a0491d8573a7"
+    },
+    "experiments/m194g-larger-pupil/independent-rgb-tiff.py": {
+      "bytes": 7305,
+      "path": "experiments/m194g-larger-pupil/independent-rgb-tiff.py",
+      "sha256": "d01a74aefcfa15b2146256b54ea51876715ab203b7de123b3cff2b0af4a1b19c"
+    },
+    "target/m193c-output-grid-build-3/debug/deps/strehl-2cd1c0b56ad4ab1f.exe": {
+      "bytes": 29488640,
+      "path": "target/m193c-output-grid-build-3/debug/deps/strehl-2cd1c0b56ad4ab1f.exe",
+      "sha256": "fa03b12fe177608851d6758517c9bda050998cdc4d777195fab8e3dc1e0813a3"
+    }
+  },
+  "inputs_before": {
+    "Cargo.lock": {
+      "bytes": 43571,
+      "path": "Cargo.lock",
+      "sha256": "82a228ddda138d1b6269e1a32a6e55377369bb94923e92da362cf11cc9569a4b"
+    },
+    "Cargo.toml": {
+      "bytes": 1009,
+      "path": "Cargo.toml",
+      "sha256": "732c5d4d874594cccbfd896ae688afa01e91290f0b1c8fd0331fa8b06f914984"
+    },
+    "crates/strehl-cli/Cargo.toml": {
+      "bytes": 782,
+      "path": "crates/strehl-cli/Cargo.toml",
+      "sha256": "d0e6b05aa93df026270e513fd3e5ab9cd50726596ef1475b8a3680faa84b2650"
+    },
+    "crates/strehl-cli/build.rs": {
+      "bytes": 5591,
+      "path": "crates/strehl-cli/build.rs",
+      "sha256": "5b864155733a90c2a4f7152e21d3dbcc5d5e0f469b4aa772c328fe86e4aa2091"
+    },
+    "crates/strehl-cli/examples/blend-render.rs": {
+      "bytes": 29695,
+      "path": "crates/strehl-cli/examples/blend-render.rs",
+      "sha256": "86c403dc074519bdf54dd66226a82ac935d8a91a26d44799596989fbcacd25b9"
+    },
+    "crates/strehl-cli/examples/blend-truth.rs": {
+      "bytes": 29918,
+      "path": "crates/strehl-cli/examples/blend-truth.rs",
+      "sha256": "38a5a9464a7c09521dad8320a90faea4f25a09aead175af3f37f25dc7e034ca2"
+    },
+    "crates/strehl-cli/examples/build-demosaic-truth.rs": {
+      "bytes": 59669,
+      "path": "crates/strehl-cli/examples/build-demosaic-truth.rs",
+      "sha256": "fb33639b174986c9159b8a544b46b5cb4aa3a514a4315a80738c55b4305f27fd"
+    },
+    "crates/strehl-cli/examples/build-gatefloor.rs": {
+      "bytes": 22941,
+      "path": "crates/strehl-cli/examples/build-gatefloor.rs",
+      "sha256": "c377d932c168c8ac5d74ae3c96e9a1d714726ccb91fca01697b5e1596e8de0cd"
+    },
+    "crates/strehl-cli/examples/build-plugin-field.rs": {
+      "bytes": 8051,
+      "path": "crates/strehl-cli/examples/build-plugin-field.rs",
+      "sha256": "a733f23be4a3d385a4011f249b8fd3769a3fd018dade66aa43c9d19935ec6f71"
+    },
+    "crates/strehl-cli/examples/build-resamp-mtf.rs": {
+      "bytes": 11067,
+      "path": "crates/strehl-cli/examples/build-resamp-mtf.rs",
+      "sha256": "69dd26cb260d9d0435ec1689dbcfd27b0cab16f9feffe82d3b944701e80bcb27"
+    },
+    "crates/strehl-cli/examples/cover-reference.rs": {
+      "bytes": 28329,
+      "path": "crates/strehl-cli/examples/cover-reference.rs",
+      "sha256": "f1762977aa8ae7c1d95366f5c65a6857dc6ab012e9e7323a4054ff6cd2bf5c7e"
+    },
+    "crates/strehl-cli/examples/defect-cpl-split.rs": {
+      "bytes": 38484,
+      "path": "crates/strehl-cli/examples/defect-cpl-split.rs",
+      "sha256": "0131f7bbdbfb6f840472e318a290205134f739f4f4b93c441a2d8d4f42873bb4"
+    },
+    "crates/strehl-cli/examples/defect-flat-census.rs": {
+      "bytes": 20797,
+      "path": "crates/strehl-cli/examples/defect-flat-census.rs",
+      "sha256": "070f2e343597916269cc4699d34a7bd485dccac9d17b185303af152a745c8273"
+    },
+    "crates/strehl-cli/examples/defect-geometry-census.rs": {
+      "bytes": 4797,
+      "path": "crates/strehl-cli/examples/defect-geometry-census.rs",
+      "sha256": "23e3d8ff39020a9ef09701bd17886ea09249f503495f5e527c53d84a014126e4"
+    },
+    "crates/strehl-cli/examples/defect-geometry-verdict.rs": {
+      "bytes": 8268,
+      "path": "crates/strehl-cli/examples/defect-geometry-verdict.rs",
+      "sha256": "38e4e8ea3afb115a018413985813e730bd109351489f761c771f2cf144a62749"
+    },
+    "crates/strehl-cli/examples/defect-plant-fidelity.rs": {
+      "bytes": 65194,
+      "path": "crates/strehl-cli/examples/defect-plant-fidelity.rs",
+      "sha256": "bff657c34c0ac00bba47b75dd17f7698e47328631600718e0c2adfe99adcb7f5"
+    },
+    "crates/strehl-cli/examples/m123-null-radius.rs": {
+      "bytes": 20318,
+      "path": "crates/strehl-cli/examples/m123-null-radius.rs",
+      "sha256": "29780cdb8f20768705949bf5622783faff6ba2cb9d46326779eb064ac0a941cd"
+    },
+    "crates/strehl-cli/examples/m123-outlier-real.rs": {
+      "bytes": 15716,
+      "path": "crates/strehl-cli/examples/m123-outlier-real.rs",
+      "sha256": "3cb776b76023f5ebe7ac5ffa588e31b4b0a8c34d98794d2cd174ef071d638275"
+    },
+    "crates/strehl-cli/examples/m123-trap-decompose.rs": {
+      "bytes": 9579,
+      "path": "crates/strehl-cli/examples/m123-trap-decompose.rs",
+      "sha256": "be1462beb949bf32eb1e54b3a598ad488ee616aca79704a2940f9049f5aecf9f"
+    },
+    "crates/strehl-cli/examples/m60-disagreement.rs": {
+      "bytes": 27439,
+      "path": "crates/strehl-cli/examples/m60-disagreement.rs",
+      "sha256": "e6800fabce502189bba14148b42f96ceabd893e77e8732af27394592a219a93b"
+    },
+    "crates/strehl-cli/examples/m65-election.rs": {
+      "bytes": 23194,
+      "path": "crates/strehl-cli/examples/m65-election.rs",
+      "sha256": "8bb8b1f268107d171ca8d3454687c02ca0bec24dea629ede433f9547c993ae8f"
+    },
+    "crates/strehl-cli/examples/m67-focus-correctness.rs": {
+      "bytes": 27183,
+      "path": "crates/strehl-cli/examples/m67-focus-correctness.rs",
+      "sha256": "9b2fa813ced90939f7cb065fbb12662fd8129b4e06269183764e6e52e048881c"
+    },
+    "crates/strehl-cli/examples/m73-cylinder.rs": {
+      "bytes": 22475,
+      "path": "crates/strehl-cli/examples/m73-cylinder.rs",
+      "sha256": "b42700a1384eb2d6f12d4072b4040fbe3f4da82cf27de1d71eb47fd181e7cd55"
+    },
+    "crates/strehl-cli/examples/m86-align.rs": {
+      "bytes": 72686,
+      "path": "crates/strehl-cli/examples/m86-align.rs",
+      "sha256": "63dad30331cf9ecb293374d35133f1f9062592e016f3cafd767b962b76080a2e"
+    },
+    "crates/strehl-cli/examples/m89-robust.rs": {
+      "bytes": 61874,
+      "path": "crates/strehl-cli/examples/m89-robust.rs",
+      "sha256": "acb6f32abf2d40dd9b1d00085710ee4b5ae77c34481a3730ba6bb76bdebbaa2f"
+    },
+    "crates/strehl-cli/examples/m90-prnu.rs": {
+      "bytes": 56536,
+      "path": "crates/strehl-cli/examples/m90-prnu.rs",
+      "sha256": "7e5a232e10d70ea7809780ea32f578a7aadf6cff46a3d2df45ffc5e79031f5c8"
+    },
+    "crates/strehl-cli/examples/m90-rho.rs": {
+      "bytes": 52401,
+      "path": "crates/strehl-cli/examples/m90-rho.rs",
+      "sha256": "fbe0faadaa636616cec0755e872509e33a65a108b636d50f5a359e6f3a582d7f"
+    },
+    "crates/strehl-cli/examples/m91-photometry.rs": {
+      "bytes": 50889,
+      "path": "crates/strehl-cli/examples/m91-photometry.rs",
+      "sha256": "e39f2f6d95e0606ec7f9525991b17c4519d4c3deac709188f8b5e3eaa1625f61"
+    },
+    "crates/strehl-cli/examples/m93-election.rs": {
+      "bytes": 42218,
+      "path": "crates/strehl-cli/examples/m93-election.rs",
+      "sha256": "d63a840f830be4489fc32c05c8f11e3c26e10e163df40d6eb15f1ad9c39ea677"
+    },
+    "crates/strehl-cli/examples/m95-demosaic.rs": {
+      "bytes": 2769,
+      "path": "crates/strehl-cli/examples/m95-demosaic.rs",
+      "sha256": "8210edf48821204928af800b307617389f4a1b7a0e24003f1c6d9375436fde81"
+    },
+    "crates/strehl-cli/examples/m95-kernel.rs": {
+      "bytes": 45407,
+      "path": "crates/strehl-cli/examples/m95-kernel.rs",
+      "sha256": "bd2391e8b83da68b742cf0bf98834315c013e07afa1fd6afbc79f06ca3c1d614"
+    },
+    "crates/strehl-cli/examples/m95-lanczos.rs": {
+      "bytes": 4867,
+      "path": "crates/strehl-cli/examples/m95-lanczos.rs",
+      "sha256": "61d6f4d5ba260cd3c601f1a9f525b2cac922ef42270ebec3c58f0e5dc04fa298"
+    },
+    "crates/strehl-cli/examples/m96-election-margin.rs": {
+      "bytes": 52503,
+      "path": "crates/strehl-cli/examples/m96-election-margin.rs",
+      "sha256": "06d62fd30245590a74d6c948d3d7ef0421e65b836c32abbc39d71ed364470eac"
+    },
+    "crates/strehl-cli/examples/m97-outlier.rs": {
+      "bytes": 7713,
+      "path": "crates/strehl-cli/examples/m97-outlier.rs",
+      "sha256": "cb6562b5d0a3352ef7005fdc82a65f8ba80821739ca851402cd42f556248652c"
+    },
+    "crates/strehl-cli/examples/m97-tornmap.rs": {
+      "bytes": 5909,
+      "path": "crates/strehl-cli/examples/m97-tornmap.rs",
+      "sha256": "55b21b7803d7a1afe7305c80a799f0e1de89b76098878c1deef8e9c6a7a1ff4e"
+    },
+    "crates/strehl-cli/examples/m99-photometric.rs": {
+      "bytes": 40516,
+      "path": "crates/strehl-cli/examples/m99-photometric.rs",
+      "sha256": "a253c53102f873961dbd13c3190e178374c58e3c7967e2fef407b5865e59b512"
+    },
+    "crates/strehl-cli/src/align_cmd.rs": {
+      "bytes": 122446,
+      "path": "crates/strehl-cli/src/align_cmd.rs",
+      "sha256": "b3de7738151a6bc0500c66dd916f9fcb20cdb9be0bf698ad00425d3ebb397c69"
+    },
+    "crates/strehl-cli/src/bin/strehl-common-input.rs": {
+      "bytes": 7369,
+      "path": "crates/strehl-cli/src/bin/strehl-common-input.rs",
+      "sha256": "0abf5917357365ba83028f82c0a2855917ad45071d95d3ec2d404702de1ef31f"
+    },
+    "crates/strehl-cli/src/focus_plugin.rs": {
+      "bytes": 7354,
+      "path": "crates/strehl-cli/src/focus_plugin.rs",
+      "sha256": "d917dba8f3bfc57a709b7af6650dc43a34724383270ac5faec986ed3a963d337"
+    },
+    "crates/strehl-cli/src/image_out.rs": {
+      "bytes": 134835,
+      "path": "crates/strehl-cli/src/image_out.rs",
+      "sha256": "c1362363740cb0176985283455cd6ddef80479854b1bbc9f0396851c490f82b6"
+    },
+    "crates/strehl-cli/src/main.rs": {
+      "bytes": 89041,
+      "path": "crates/strehl-cli/src/main.rs",
+      "sha256": "a29e0f975764b75491eb3147e94f15b05944120cdc3cdd55a24830a89a2e5340"
+    },
+    "crates/strehl-cli/src/merge_cmd.rs": {
+      "bytes": 425678,
+      "path": "crates/strehl-cli/src/merge_cmd.rs",
+      "sha256": "ca829e45c7021c5c5df7b51da85859e3763a9a95d01d302a91ab7cd0687b2dcf"
+    },
+    "crates/strehl-cli/src/merge_cmd/band-admission-benchmark.rs": {
+      "bytes": 1870,
+      "path": "crates/strehl-cli/src/merge_cmd/band-admission-benchmark.rs",
+      "sha256": "d275b189d374117de2f6d5d9aa163417d675adba1820d96f42e9dfe0d322c2c3"
+    },
+    "crates/strehl-cli/src/merge_cmd/dump.rs": {
+      "bytes": 7245,
+      "path": "crates/strehl-cli/src/merge_cmd/dump.rs",
+      "sha256": "2827483acbbce3dc528f3d27642cb54e8c8f99abb85b0b23f89f59c53c93bfe3"
+    },
+    "crates/strehl-cli/src/merge_cmd/gatefloor.rs": {
+      "bytes": 22127,
+      "path": "crates/strehl-cli/src/merge_cmd/gatefloor.rs",
+      "sha256": "bcea35986c73011c20d872bddc9c0ef3ea9354101259bd3952c16976bb1c9496"
+    },
+    "crates/strehl-cli/src/merge_cmd/halo.rs": {
+      "bytes": 24425,
+      "path": "crates/strehl-cli/src/merge_cmd/halo.rs",
+      "sha256": "fc234df8b515f982bbc527448ea0a0764c30b088385405d85f253800aaf7dd55"
+    },
+    "crates/strehl-cli/src/merge_cmd/joint-pupil-bridge.rs": {
+      "bytes": 45153,
+      "path": "crates/strehl-cli/src/merge_cmd/joint-pupil-bridge.rs",
+      "sha256": "8295981a03e54f05009f3510dc39addf150ddd72303913530f2603d3c744ab33"
+    },
+    "crates/strehl-cli/src/merge_cmd/known-scene-benchmark.rs": {
+      "bytes": 29747,
+      "path": "crates/strehl-cli/src/merge_cmd/known-scene-benchmark.rs",
+      "sha256": "38e1ed45531f0ba02b0cdd1b8aecf0d99f5f123826c086158aedbeb8d994a573"
+    },
+    "crates/strehl-cli/src/merge_cmd/noise-pupil-bridge.rs": {
+      "bytes": 67493,
+      "path": "crates/strehl-cli/src/merge_cmd/noise-pupil-bridge.rs",
+      "sha256": "2a59b81e4044673d14049c36fbffd3d80af6445d6f734b9273ef65b0425df028"
+    },
+    "crates/strehl-cli/src/merge_cmd/production-truth.rs": {
+      "bytes": 12917,
+      "path": "crates/strehl-cli/src/merge_cmd/production-truth.rs",
+      "sha256": "11aab6eb649ee6dacd67abe7083b1e4ea7dfda40f6191ae476170e2448094c44"
+    },
+    "crates/strehl-cli/src/stack.rs": {
+      "bytes": 107231,
+      "path": "crates/strehl-cli/src/stack.rs",
+      "sha256": "108bb38a964946c7e7b7c25c640ce08297835faee253ad4e059e6074f5655572"
+    },
+    "crates/strehl-cli/tests/byte-freeze.rs": {
+      "bytes": 103042,
+      "path": "crates/strehl-cli/tests/byte-freeze.rs",
+      "sha256": "750efd0d5605d76bc1e5000e9945a58d57ef4418ec25299cd27920408f53976c"
+    },
+    "crates/strehl-cli/tests/byte-freezes.tsv": {
+      "bytes": 20801,
+      "path": "crates/strehl-cli/tests/byte-freezes.tsv",
+      "sha256": "d74c3f1da19c0edf6625bc6a26ccad3de6a6ab6c201f009d009b9999c5f4d001"
+    },
+    "crates/strehl-cli/tests/data/coffee-bean-20.clamped-catmull.warpmap.txt": {
+      "bytes": 3211,
+      "path": "crates/strehl-cli/tests/data/coffee-bean-20.clamped-catmull.warpmap.txt",
+      "sha256": "d35352b083530cf52d7649d384e046e3eb410de41b4f5444c4b7992338900fe8"
+    },
+    "crates/strehl-cli/tests/data/coffee-bean-20.warpmap.txt": {
+      "bytes": 3171,
+      "path": "crates/strehl-cli/tests/data/coffee-bean-20.warpmap.txt",
+      "sha256": "ef74541395db1ba606067bcf04947909bd6a9c5be530fe8aad21578b5c1e93b3"
+    },
+    "crates/strehl-core/Cargo.toml": {
+      "bytes": 367,
+      "path": "crates/strehl-core/Cargo.toml",
+      "sha256": "25bdef9c60ef30849ba184116f2b5aa202b07baf55da22ca311f725ab56bde16"
+    },
+    "crates/strehl-core/examples/demosaic-plane.rs": {
+      "bytes": 3109,
+      "path": "crates/strehl-core/examples/demosaic-plane.rs",
+      "sha256": "d40278227e647f195be75e1c199eab04132cdc21c7ae07648cf29bbb410d2f8c"
+    },
+    "crates/strehl-core/examples/focus-window-cost.rs": {
+      "bytes": 6180,
+      "path": "crates/strehl-core/examples/focus-window-cost.rs",
+      "sha256": "ddb8aa01857c03860f62fbbf82793e8e1b5d2df32adde877269af2be39c9b997"
+    },
+    "crates/strehl-core/examples/restore-plane.rs": {
+      "bytes": 3047,
+      "path": "crates/strehl-core/examples/restore-plane.rs",
+      "sha256": "5707ab9a2a66333968936d704ea8888fa7535dc6e0b7c73c1a3f815fd2c1a0d1"
+    },
+    "crates/strehl-core/src/align.rs": {
+      "bytes": 147932,
+      "path": "crates/strehl-core/src/align.rs",
+      "sha256": "6d33f0e24f21d4370ccd8df0bf618e54a5ad615b838bc265469b4f85051c2786"
+    },
+    "crates/strehl-core/src/boxfilter.rs": {
+      "bytes": 7986,
+      "path": "crates/strehl-core/src/boxfilter.rs",
+      "sha256": "5cf6dab36c8ddb7499acbec140df509b4e1e5fe0b0ace3a13f8d7cf68f979b8e"
+    },
+    "crates/strehl-core/src/clip.rs": {
+      "bytes": 10231,
+      "path": "crates/strehl-core/src/clip.rs",
+      "sha256": "aa1ccdac944d928879f94770b2161152a271f9fa208c57c66d8921e5a643533d"
+    },
+    "crates/strehl-core/src/color.rs": {
+      "bytes": 83992,
+      "path": "crates/strehl-core/src/color.rs",
+      "sha256": "83c1aa371dc751862bfef5724a6eceab8182c5d68b6f31ac299b3443c14c8f1e"
+    },
+    "crates/strehl-core/src/defect-map-ILCE-7CM2-dust.txt": {
+      "bytes": 23797,
+      "path": "crates/strehl-core/src/defect-map-ILCE-7CM2-dust.txt",
+      "sha256": "a406efd51f806e360e1e51fc1421eca5e3cc912f356ced0693c8477a398853ee"
+    },
+    "crates/strehl-core/src/defect_map.rs": {
+      "bytes": 176181,
+      "path": "crates/strehl-core/src/defect_map.rs",
+      "sha256": "1738c770c9f316a6aeac3f742bf7abc9581ea386b4e07ec128e50df35c2ffb14"
+    },
+    "crates/strehl-core/src/demosaic.rs": {
+      "bytes": 51381,
+      "path": "crates/strehl-core/src/demosaic.rs",
+      "sha256": "425d6889485011cf6f2aaf57b0b873f15fd6ee3250853f3ba5f6540b496b3810"
+    },
+    "crates/strehl-core/src/edgeaware.rs": {
+      "bytes": 105131,
+      "path": "crates/strehl-core/src/edgeaware.rs",
+      "sha256": "a32580ac72dd273e62cab40afa9b36e2462ef57335c8d7cd8ab0725184c7f77b"
+    },
+    "crates/strehl-core/src/election_coherence.rs": {
+      "bytes": 13331,
+      "path": "crates/strehl-core/src/election_coherence.rs",
+      "sha256": "47640a176cb445dd2f01b309d907da066ae7f5a6d28b354d2de60362538f948e"
+    },
+    "crates/strehl-core/src/flat_ratio.rs": {
+      "bytes": 32764,
+      "path": "crates/strehl-core/src/flat_ratio.rs",
+      "sha256": "da1df7167b6f18ac248c1ee347671388391a968aa45a762299c4418a2287fef0"
+    },
+    "crates/strehl-core/src/focus.rs": {
+      "bytes": 78172,
+      "path": "crates/strehl-core/src/focus.rs",
+      "sha256": "71e63def76e40f18df440617a9dba7013d799ceabd30bf805149223433384e3e"
+    },
+    "crates/strehl-core/src/highlight.rs": {
+      "bytes": 29639,
+      "path": "crates/strehl-core/src/highlight.rs",
+      "sha256": "97d4aacec3d7e6c3dd2df1f792ffb7ee136a8f6064ffb0dc1656476730f7641e"
+    },
+    "crates/strehl-core/src/lib.rs": {
+      "bytes": 4356,
+      "path": "crates/strehl-core/src/lib.rs",
+      "sha256": "91419ceb273be1dc9ab15dbdc6347bd2b398d29cf36c0da9184ee533372f8022"
+    },
+    "crates/strehl-core/src/merge.rs": {
+      "bytes": 253103,
+      "path": "crates/strehl-core/src/merge.rs",
+      "sha256": "7362cf6fab70db56443693e5483f052ba48b32cc7ef264d64ec4a7bd1b50e4ef"
+    },
+    "crates/strehl-core/src/noise.rs": {
+      "bytes": 29746,
+      "path": "crates/strehl-core/src/noise.rs",
+      "sha256": "d88dc9cf419a8fdb1e3ff2c51f0b0ac80d785c17de7f9e71e905fc977fce0ecc"
+    },
+    "crates/strehl-core/src/optics.rs": {
+      "bytes": 93722,
+      "path": "crates/strehl-core/src/optics.rs",
+      "sha256": "1884fd98c7a2adf903c152b3d877051cfeba71316bdbb797fd2f1ba1433a5524"
+    },
+    "crates/strehl-core/src/outlier.rs": {
+      "bytes": 51153,
+      "path": "crates/strehl-core/src/outlier.rs",
+      "sha256": "8d3fb7a225b5811c2d831db4339953b15a5181bfcda7591ac05f23f6adf5e67d"
+    },
+    "crates/strehl-core/src/photometric.rs": {
+      "bytes": 83028,
+      "path": "crates/strehl-core/src/photometric.rs",
+      "sha256": "b6102288c7fc2312f16d108dc3d943d290a5b8fd5d5a5c39306d97489191399b"
+    },
+    "crates/strehl-core/src/plane.rs": {
+      "bytes": 11536,
+      "path": "crates/strehl-core/src/plane.rs",
+      "sha256": "8c219f9c4d2c8c0da19416998b0f369a9f9d44e305740664f29caaba69203dc4"
+    },
+    "crates/strehl-core/src/profile.rs": {
+      "bytes": 44194,
+      "path": "crates/strehl-core/src/profile.rs",
+      "sha256": "07e7cf7b3040239a5a32464ae998a434696031010ce8d87dac7f2dd2a95ac1f1"
+    },
+    "crates/strehl-core/src/pyramid.rs": {
+      "bytes": 207878,
+      "path": "crates/strehl-core/src/pyramid.rs",
+      "sha256": "848b485271abc48ee496ee69d70a1e01f45074bfbccde7a7ca076ded90f77d9e"
+    },
+    "crates/strehl-core/src/restore.rs": {
+      "bytes": 60029,
+      "path": "crates/strehl-core/src/restore.rs",
+      "sha256": "3ab5c6660b7a45837ac4b5560078092e6aafa9c85a041a935e95b0cd77533afd"
+    },
+    "crates/strehl-core/src/robust.rs": {
+      "bytes": 31317,
+      "path": "crates/strehl-core/src/robust.rs",
+      "sha256": "2cf6013b948f5c9d4f11783633f04e6d76ac9830383197c05506b0d68fe24004"
+    },
+    "crates/strehl-core/src/softgate.rs": {
+      "bytes": 25418,
+      "path": "crates/strehl-core/src/softgate.rs",
+      "sha256": "0cb0f916dade24e6e3a31529378390a083c6c56cb3e8b479eb7eb65ac04f688d"
+    },
+    "crates/strehl-core/src/stack.rs": {
+      "bytes": 20542,
+      "path": "crates/strehl-core/src/stack.rs",
+      "sha256": "c951cdbb304e4894676f1ff6a77316e7e2ab68d7756f22bf623562380d5f6337"
+    },
+    "crates/strehl-core/src/through_focus.rs": {
+      "bytes": 90250,
+      "path": "crates/strehl-core/src/through_focus.rs",
+      "sha256": "475a6c4eece089638ab916e3d7f4cf480197e2d838b5244347c16762f5122a3d"
+    },
+    "crates/strehl-core/src/warpmap.rs": {
+      "bytes": 54829,
+      "path": "crates/strehl-core/src/warpmap.rs",
+      "sha256": "9d2198eeab5e8a941e297cf8fcd8a217d2454390220433ae19cc6b07e6fd721b"
+    },
+    "crates/strehl-plugin/Cargo.toml": {
+      "bytes": 417,
+      "path": "crates/strehl-plugin/Cargo.toml",
+      "sha256": "b3fd67fd414ac138119f4ab8dedaee280cea23b1bcc20f21f066f09d3575c88c"
+    },
+    "crates/strehl-plugin/examples/calibration-survey.rs": {
+      "bytes": 2842,
+      "path": "crates/strehl-plugin/examples/calibration-survey.rs",
+      "sha256": "b453361321e0e777148121ba5a4b8edff557a5d59aa1d9615b91386208c4aafe"
+    },
+    "crates/strehl-plugin/examples/f5-design-probes.rs": {
+      "bytes": 6954,
+      "path": "crates/strehl-plugin/examples/f5-design-probes.rs",
+      "sha256": "4f368b7e3ec8ab522183ee3b86fa36adbee76a2b5d772c8f0bafcc9706536676"
+    },
+    "crates/strehl-plugin/src/calibrate.rs": {
+      "bytes": 36532,
+      "path": "crates/strehl-plugin/src/calibrate.rs",
+      "sha256": "7e10fbd56d8257f409a083461854bf999f8c97ce1a65aad5f90da3b76c8d2a10"
+    },
+    "crates/strehl-plugin/src/field.rs": {
+      "bytes": 7730,
+      "path": "crates/strehl-plugin/src/field.rs",
+      "sha256": "6a1da0df1fc4d6ba5e7cbfc0bc3d79295e89bca7b21647f237154bd97018ced5"
+    },
+    "crates/strehl-plugin/src/lib.rs": {
+      "bytes": 8756,
+      "path": "crates/strehl-plugin/src/lib.rs",
+      "sha256": "9dbb902a31cb21ba5e07fe1576f96b0cffad2dd8fed70a777c2bfaaab41f97e7"
+    },
+    "crates/strehl-plugin/src/measure.rs": {
+      "bytes": 8713,
+      "path": "crates/strehl-plugin/src/measure.rs",
+      "sha256": "a3941112f7e5a19b2929d83e95afa97d7be1f2ed3465d6160715386705a23c20"
+    },
+    "crates/strehl-plugin/src/reference.rs": {
+      "bytes": 28757,
+      "path": "crates/strehl-plugin/src/reference.rs",
+      "sha256": "eca4ecf81d1e783c48d680323907fd34336d1f3d5accdedfbdf726e14e847cfb"
+    },
+    "crates/strehl-plugin/src/registry.rs": {
+      "bytes": 25801,
+      "path": "crates/strehl-plugin/src/registry.rs",
+      "sha256": "1543ba679a56bdcd9ff625e54c9efd97d74c316cbf0726866e125cc1eb806a35"
+    },
+    "crates/strehl-plugin/src/rng.rs": {
+      "bytes": 9324,
+      "path": "crates/strehl-plugin/src/rng.rs",
+      "sha256": "402c5fa0acb97df6de6df14a51935de05ad9a71d20f4a909a9f7154f52442225"
+    },
+    "crates/strehl-raw/Cargo.toml": {
+      "bytes": 424,
+      "path": "crates/strehl-raw/Cargo.toml",
+      "sha256": "6e1e7cfdadb24371423143fb10945b0e61b3f45696365aa87a721661edde31c9"
+    },
+    "crates/strehl-raw/examples/identity.rs": {
+      "bytes": 1657,
+      "path": "crates/strehl-raw/examples/identity.rs",
+      "sha256": "78cdc478590b5bfd46bf3bcbed46cb0d74f5d788b08d38a5fd98636d46443668"
+    },
+    "crates/strehl-raw/src/common_tiff.rs": {
+      "bytes": 33071,
+      "path": "crates/strehl-raw/src/common_tiff.rs",
+      "sha256": "bac1d18f036b8960a8e82d01b610ae945d00d259d4cc3fe7eb9106e8a8077f42"
+    },
+    "crates/strehl-raw/src/identity.rs": {
+      "bytes": 36796,
+      "path": "crates/strehl-raw/src/identity.rs",
+      "sha256": "676d18872656a72a93e3257b1677c38ea2ee39084574e1153bdbbfbc6e8ad1fe"
+    },
+    "crates/strehl-raw/src/lib.rs": {
+      "bytes": 24809,
+      "path": "crates/strehl-raw/src/lib.rs",
+      "sha256": "1513fd3e682f2edb8c54c7d47083f20f66525ad72a5687fb2e530bb5697fef2a"
+    },
+    "experiments/m12-scorecard/m12-harness.py": {
+      "bytes": 117908,
+      "path": "experiments/m12-scorecard/m12-harness.py",
+      "sha256": "6cfb408992f37b225f102da4d62ba836f9c5b67c92bdd418ff460987866a1bb9"
+    },
+    "experiments/m193c-output-grid/bounded-process.py": {
+      "bytes": 12664,
+      "path": "experiments/m193c-output-grid/bounded-process.py",
+      "sha256": "47b9f8d848759eba61f055b9fdca1f8ac400f134dcd7636f0e0eaaa955704e0b"
+    },
+    "experiments/m193c-output-grid/bridge-build-3-independent-read.md": {
+      "bytes": 6981,
+      "path": "experiments/m193c-output-grid/bridge-build-3-independent-read.md",
+      "sha256": "35e7c78b5d21df15d0a61ecad97b1473abdcd7e4ff46ef88a6e2f7bc56a3307a"
+    },
+    "experiments/m193c-output-grid/bridge-build-3/compiler.log": {
+      "bytes": 184893,
+      "path": "experiments/m193c-output-grid/bridge-build-3/compiler.log",
+      "sha256": "cc88f9ee15209c37f8d89215c340536fcdc0104fc4291a639bccfbe5cb4ad981"
+    },
+    "experiments/m193c-output-grid/bridge-build-3/output-grid-tests.exe": {
+      "bytes": 29488640,
+      "path": "experiments/m193c-output-grid/bridge-build-3/output-grid-tests.exe",
+      "sha256": "fa03b12fe177608851d6758517c9bda050998cdc4d777195fab8e3dc1e0813a3"
+    },
+    "experiments/m193c-output-grid/bridge-build-3/result.json": {
+      "bytes": 51621,
+      "path": "experiments/m193c-output-grid/bridge-build-3/result.json",
+      "sha256": "bfb951c8ccc0b2278802e69c3ca27fd9138bb817457b365caaea31d5b82a2977"
+    },
+    "experiments/m193c-output-grid/bridge-build-3/test-list.log": {
+      "bytes": 13769,
+      "path": "experiments/m193c-output-grid/bridge-build-3/test-list.log",
+      "sha256": "f8ae71f235181746a868f092f5490ade629a3ceb4d03ac50ebb239b7c922f3b0"
+    },
+    "experiments/m193c-output-grid/bridge-build-release-3.json": {
+      "bytes": 25342,
+      "path": "experiments/m193c-output-grid/bridge-build-release-3.json",
+      "sha256": "459c65edb12d6ebd4ac5d74f7d4ca9b664592425dbf7428c92927bf4316ade52"
+    },
+    "experiments/m193c-output-grid/bridge-build.py": {
+      "bytes": 14682,
+      "path": "experiments/m193c-output-grid/bridge-build.py",
+      "sha256": "e0ab57c437af32b61f8f8ed6d7cfb0407789974f6db40151c2f49f302edfa255"
+    },
+    "experiments/m193c-output-grid/build-drain-repair-review.md": {
+      "bytes": 7631,
+      "path": "experiments/m193c-output-grid/build-drain-repair-review.md",
+      "sha256": "4e5c89f2c81b2f3ab32e37ec149a39d1a1c5b738aa00f4cf059f4ac955e14c99"
+    },
+    "experiments/m193c-output-grid/controller-amendment-3.md": {
+      "bytes": 10792,
+      "path": "experiments/m193c-output-grid/controller-amendment-3.md",
+      "sha256": "0c4d13c6520512785918661b61daa2a4ada5ab7fcf3fe8cb89f02e8b51e00e7e"
+    },
+    "experiments/m193c-output-grid/controller-child.py": {
+      "bytes": 4416,
+      "path": "experiments/m193c-output-grid/controller-child.py",
+      "sha256": "8944b1387990a262d1ad47c44ee2bbd7de281323185a0758802f1637289d2788"
+    },
+    "experiments/m193c-output-grid/controller-controls-4-independent-read.md": {
+      "bytes": 11260,
+      "path": "experiments/m193c-output-grid/controller-controls-4-independent-read.md",
+      "sha256": "f5a3d477b51f5b7d1679fedb7ec22e7a6a777d336290635f964ab356eb7444af"
+    },
+    "experiments/m193c-output-grid/controller-controls-4/00-valid.log": {
+      "bytes": 19,
+      "path": "experiments/m193c-output-grid/controller-controls-4/00-valid.log",
+      "sha256": "07f1280c0bd3664c53d669c5d1d3ef35341dbbfea45b59f1d91ee5dea4083c65"
+    },
+    "experiments/m193c-output-grid/controller-controls-4/01-nonzero.log": {
+      "bytes": 18,
+      "path": "experiments/m193c-output-grid/controller-controls-4/01-nonzero.log",
+      "sha256": "a06b7d243518affb9e73a1b3fe0744b2bb6be6b6a0160d537e4a33ae47dd7152"
+    },
+    "experiments/m193c-output-grid/controller-controls-4/02-exact-log.log": {
+      "bytes": 65536,
+      "path": "experiments/m193c-output-grid/controller-controls-4/02-exact-log.log",
+      "sha256": "1f8745f0d2d1387ec1af2211a3cf417b2e9e885e853472649c1d979d0e9370e3"
+    },
+    "experiments/m193c-output-grid/controller-controls-4/03-overflow-log.log": {
+      "bytes": 65536,
+      "path": "experiments/m193c-output-grid/controller-controls-4/03-overflow-log.log",
+      "sha256": "1f8745f0d2d1387ec1af2211a3cf417b2e9e885e853472649c1d979d0e9370e3"
+    },
+    "experiments/m193c-output-grid/controller-controls-4/04-timeout.log": {
+      "bytes": 44,
+      "path": "experiments/m193c-output-grid/controller-controls-4/04-timeout.log",
+      "sha256": "d8cbe19c0b7ccda6a98f82d813a0439281dd44dab465769846132120051fe1b2"
+    },
+    "experiments/m193c-output-grid/controller-controls-4/05-nested-timeout.log": {
+      "bytes": 91,
+      "path": "experiments/m193c-output-grid/controller-controls-4/05-nested-timeout.log",
+      "sha256": "9b296931ca5a6d5e35f47bfd220d1dff105db4e5e40326eacfec8316bcecc785"
+    },
+    "experiments/m193c-output-grid/controller-controls-4/06-memory-allowed.log": {
+      "bytes": 32,
+      "path": "experiments/m193c-output-grid/controller-controls-4/06-memory-allowed.log",
+      "sha256": "069b403264accdc8e29af4e6542150a9538723d8a1fa9201f04f4997327c2106"
+    },
+    "experiments/m193c-output-grid/controller-controls-4/07-memory.log": {
+      "bytes": 22,
+      "path": "experiments/m193c-output-grid/controller-controls-4/07-memory.log",
+      "sha256": "1128b5db9d7ca34bd50a8740f673da48cbb4f4ed3b94034db230cc2a9fc2cd18"
+    },
+    "experiments/m193c-output-grid/controller-controls-4/08-late-log-binding.log": {
+      "bytes": 65536,
+      "path": "experiments/m193c-output-grid/controller-controls-4/08-late-log-binding.log",
+      "sha256": "1f8745f0d2d1387ec1af2211a3cf417b2e9e885e853472649c1d979d0e9370e3"
+    },
+    "experiments/m193c-output-grid/controller-controls-4/09-changed-input.log": {
+      "bytes": 29,
+      "path": "experiments/m193c-output-grid/controller-controls-4/09-changed-input.log",
+      "sha256": "2e75a0c920b25162b66f377ffd56008cfe4e23f77a03e7eea1f39910e2ecfdf1"
+    },
+    "experiments/m193c-output-grid/controller-controls-4/10-restored.log": {
+      "bytes": 19,
+      "path": "experiments/m193c-output-grid/controller-controls-4/10-restored.log",
+      "sha256": "07f1280c0bd3664c53d669c5d1d3ef35341dbbfea45b59f1d91ee5dea4083c65"
+    },
+    "experiments/m193c-output-grid/controller-controls-4/11-drain-finish.log": {
+      "bytes": 204,
+      "path": "experiments/m193c-output-grid/controller-controls-4/11-drain-finish.log",
+      "sha256": "a084a0600252b33803044d0a75d781f3dfbadca0bb4f9b591a74b4955fe8a357"
+    },
+    "experiments/m193c-output-grid/controller-controls-4/11-drain-finish/completion.json": {
+      "bytes": 217,
+      "path": "experiments/m193c-output-grid/controller-controls-4/11-drain-finish/completion.json",
+      "sha256": "d2eb598e1598ec5623531ca52a3944b8a981ccb518c3c7d1ed0b7ce64adc3504"
+    },
+    "experiments/m193c-output-grid/controller-controls-4/11-drain-finish/startup.json": {
+      "bytes": 151,
+      "path": "experiments/m193c-output-grid/controller-controls-4/11-drain-finish/startup.json",
+      "sha256": "fc6eb65d200d7d6d421243b99dbe4fc998e645fd30a5ea80959d830e820a7d3b"
+    },
+    "experiments/m193c-output-grid/controller-controls-4/12-drain-persist.log": {
+      "bytes": 206,
+      "path": "experiments/m193c-output-grid/controller-controls-4/12-drain-persist.log",
+      "sha256": "2a42f5885a1912c8ca0bfa735c16f3b80e9581ac0c20015e32c5119444d6c72d"
+    },
+    "experiments/m193c-output-grid/controller-controls-4/12-drain-persist/startup.json": {
+      "bytes": 153,
+      "path": "experiments/m193c-output-grid/controller-controls-4/12-drain-persist/startup.json",
+      "sha256": "4ec4b7b91c40ceb04b233b14c623c251eaf99e10de376353fd9df013dc54dc9e"
+    },
+    "experiments/m193c-output-grid/controller-controls-4/13-drain-restored.log": {
+      "bytes": 206,
+      "path": "experiments/m193c-output-grid/controller-controls-4/13-drain-restored.log",
+      "sha256": "0564f56a9c1696f600b1680025e730bed89d79ab560b6b735989b0c4132a7798"
+    },
+    "experiments/m193c-output-grid/controller-controls-4/13-drain-restored/completion.json": {
+      "bytes": 220,
+      "path": "experiments/m193c-output-grid/controller-controls-4/13-drain-restored/completion.json",
+      "sha256": "9ec6dc7e4286ab68904b1bf8cdc4ba1c7cfd8c99ae02047b46b75a8395dcc91a"
+    },
+    "experiments/m193c-output-grid/controller-controls-4/13-drain-restored/startup.json": {
+      "bytes": 154,
+      "path": "experiments/m193c-output-grid/controller-controls-4/13-drain-restored/startup.json",
+      "sha256": "c8abe5b0eba6e04c7ae622a552dae20135ab7440032e7b374853402bad184d95"
+    },
+    "experiments/m193c-output-grid/controller-controls-4/result.json": {
+      "bytes": 71176,
+      "path": "experiments/m193c-output-grid/controller-controls-4/result.json",
+      "sha256": "6598085965a18d0165073a0ebcfcbdc44ed543008af64f569182965eddea8b80"
+    },
+    "experiments/m193c-output-grid/controller-controls-4/sources/experiments/m12-scorecard/m12-harness.py": {
+      "bytes": 117908,
+      "path": "experiments/m193c-output-grid/controller-controls-4/sources/experiments/m12-scorecard/m12-harness.py",
+      "sha256": "6cfb408992f37b225f102da4d62ba836f9c5b67c92bdd418ff460987866a1bb9"
+    },
+    "experiments/m193c-output-grid/controller-controls-4/sources/experiments/m193c-output-grid/bounded-process.py": {
+      "bytes": 12664,
+      "path": "experiments/m193c-output-grid/controller-controls-4/sources/experiments/m193c-output-grid/bounded-process.py",
+      "sha256": "47b9f8d848759eba61f055b9fdca1f8ac400f134dcd7636f0e0eaaa955704e0b"
+    },
+    "experiments/m193c-output-grid/controller-controls-4/sources/experiments/m193c-output-grid/controller-child.py": {
+      "bytes": 4416,
+      "path": "experiments/m193c-output-grid/controller-controls-4/sources/experiments/m193c-output-grid/controller-child.py",
+      "sha256": "8944b1387990a262d1ad47c44ee2bbd7de281323185a0758802f1637289d2788"
+    },
+    "experiments/m193c-output-grid/controller-controls-4/sources/experiments/m193c-output-grid/controller-controls.py": {
+      "bytes": 18455,
+      "path": "experiments/m193c-output-grid/controller-controls-4/sources/experiments/m193c-output-grid/controller-controls.py",
+      "sha256": "217999b5969a29224868fe731284493e04ce0ef33bd225fc4c9f3bc3f8b5b84c"
+    },
+    "experiments/m193c-output-grid/controller-controls-4/watched-input.txt": {
+      "bytes": 22,
+      "path": "experiments/m193c-output-grid/controller-controls-4/watched-input.txt",
+      "sha256": "d7a6fb6663933dea81270712039f4a3a56bb368d9e54f1d3f9f447b4d213ddee"
+    },
+    "experiments/m193c-output-grid/controller-controls-release-4.json": {
+      "bytes": 4369,
+      "path": "experiments/m193c-output-grid/controller-controls-release-4.json",
+      "sha256": "63e229c90510650678b52f384572498125543ebb662ff63ace1c635c1d48dd16"
+    },
+    "experiments/m193c-output-grid/controller-controls.py": {
+      "bytes": 18455,
+      "path": "experiments/m193c-output-grid/controller-controls.py",
+      "sha256": "217999b5969a29224868fe731284493e04ce0ef33bd225fc4c9f3bc3f8b5b84c"
+    },
+    "experiments/m193c-output-grid/derivative-controls-preregister.md": {
+      "bytes": 14799,
+      "path": "experiments/m193c-output-grid/derivative-controls-preregister.md",
+      "sha256": "7c9f359a100d3b1f7c0522e8635f9178e0147756e61bcbc1373fd37324fbe5dc"
+    },
+    "experiments/m193c-output-grid/execution-preregister.md": {
+      "bytes": 8721,
+      "path": "experiments/m193c-output-grid/execution-preregister.md",
+      "sha256": "10511b44708fd3067698846006e71828c37f6d9c83a7d052556af8fdfb3fdbf1"
+    },
+    "experiments/m193c-output-grid/independent-controller-amendment-3-review.md": {
+      "bytes": 7426,
+      "path": "experiments/m193c-output-grid/independent-controller-amendment-3-review.md",
+      "sha256": "d81af100167d0f15777fd785ee16a5f41bcd3185f9b13c28a0c209b8e77177a8"
+    },
+    "experiments/m193c-output-grid/independent-derivative-design-review.md": {
+      "bytes": 11291,
+      "path": "experiments/m193c-output-grid/independent-derivative-design-review.md",
+      "sha256": "3c63fe97679509b77523788e14209d0e0238133d1a1ac478ae197e796f0fc54a"
+    },
+    "experiments/m193c-output-grid/independent-derivative-read.py": {
+      "bytes": 61341,
+      "path": "experiments/m193c-output-grid/independent-derivative-read.py",
+      "sha256": "8c571654667f8ef66520aedfd1bddceb991c8a86d1a7355a4ed21cf2ba85eced"
+    },
+    "experiments/m193c-output-grid/independent-derivative-reader-preregister.md": {
+      "bytes": 10711,
+      "path": "experiments/m193c-output-grid/independent-derivative-reader-preregister.md",
+      "sha256": "bf8a6c2a13b109fb8e5cb8e3c1a9f1ce47931ded220de909118636645bd8a990"
+    },
+    "experiments/m193c-output-grid/independent-derivative-reader-source-review.md": {
+      "bytes": 6102,
+      "path": "experiments/m193c-output-grid/independent-derivative-reader-source-review.md",
+      "sha256": "ddf3932d536bc1cf0374ab0766c9b6bf7a2ade816c8ad34aecb33dc9d19f561f"
+    },
+    "experiments/m193c-output-grid/independent-derivative-source-repair-review.md": {
+      "bytes": 2626,
+      "path": "experiments/m193c-output-grid/independent-derivative-source-repair-review.md",
+      "sha256": "141c187e08e5a171ef90e164769cc13d37a85e94e03836c2765d0da09ce6c9ee"
+    },
+    "experiments/m193c-output-grid/independent-derivative-tiff.py": {
+      "bytes": 8144,
+      "path": "experiments/m193c-output-grid/independent-derivative-tiff.py",
+      "sha256": "9acceb498568967bb02ce01389441da09de7502f3a51faebbed8fed61943a5ae"
+    },
+    "experiments/m193c-output-grid/independent-grid-read.py": {
+      "bytes": 50979,
+      "path": "experiments/m193c-output-grid/independent-grid-read.py",
+      "sha256": "435b147a390a2917c8d032d3a254b0fd3fb689d51f72ad101b432652ce21d0d7"
+    },
+    "experiments/m193c-output-grid/independent-grid-source-review.md": {
+      "bytes": 4079,
+      "path": "experiments/m193c-output-grid/independent-grid-source-review.md",
+      "sha256": "da4182820cada45cbb794517814fd795685646a90a1f1b7b7bf8ba9fcdf4f19b"
+    },
+    "experiments/m193c-output-grid/independent-parent-component-review.md": {
+      "bytes": 18345,
+      "path": "experiments/m193c-output-grid/independent-parent-component-review.md",
+      "sha256": "5d508de58566ffec0bc3602d534290c4be966ac985b3056f41bf12b9a3932893"
+    },
+    "experiments/m193c-output-grid/independent-private-campaign-1-read.md": {
+      "bytes": 11952,
+      "path": "experiments/m193c-output-grid/independent-private-campaign-1-read.md",
+      "sha256": "2d5d431ffe6c9f168b9afdea1415bf6be4811b5b662cca0c8973dfa5b2f4bc18"
+    },
+    "experiments/m193c-output-grid/independent-private-campaign-review.md": {
+      "bytes": 16234,
+      "path": "experiments/m193c-output-grid/independent-private-campaign-review.md",
+      "sha256": "d21675982153d72896e0077939a4285c14322f4aa859457a3c9b9db54b44681e"
+    },
+    "experiments/m193c-output-grid/independent-private-read.py": {
+      "bytes": 20408,
+      "path": "experiments/m193c-output-grid/independent-private-read.py",
+      "sha256": "e943584dbd993639e804132451b11574a5d98f8c8a867ac274b5cef17938cdbc"
+    },
+    "experiments/m193c-output-grid/independent-private-reader-wrapper-review.md": {
+      "bytes": 9892,
+      "path": "experiments/m193c-output-grid/independent-private-reader-wrapper-review.md",
+      "sha256": "ba6740dbf00dc50b1cdf60d7be21bdbd00ce44deef50d8bba8d42cb7aef39ed7"
+    },
+    "experiments/m193c-output-grid/independent-private-run-repair-review.md": {
+      "bytes": 9418,
+      "path": "experiments/m193c-output-grid/independent-private-run-repair-review.md",
+      "sha256": "ca0cbd32cbcb691d365bb2c51a8cb1347133ce3e8f1a6c7e88f66bbefbd35c03"
+    },
+    "experiments/m193c-output-grid/independent-private-run-review.md": {
+      "bytes": 11188,
+      "path": "experiments/m193c-output-grid/independent-private-run-review.md",
+      "sha256": "a34a0ca39812b58597021f10c1e49529d6d41979a13c07ef1a33c48e6079c679"
+    },
+    "experiments/m193c-output-grid/precision-witness.rs": {
+      "bytes": 7697,
+      "path": "experiments/m193c-output-grid/precision-witness.rs",
+      "sha256": "6979f6e51b9bf9028002c9cdfff81f4925f293ce79386eb49fa4a84bec643cc9"
+    },
+    "experiments/m193c-output-grid/private-adapter.rs": {
+      "bytes": 23746,
+      "path": "experiments/m193c-output-grid/private-adapter.rs",
+      "sha256": "e9fe4be0fe6354e00294900c8f5bad1aade76fbbfb2be1367bb7cafa13ed85a8"
+    },
+    "experiments/m193c-output-grid/private-campaign-1/result.json": {
+      "bytes": 30532,
+      "path": "experiments/m193c-output-grid/private-campaign-1/result.json",
+      "sha256": "415b2b6032bd59bf81b7e2e499e430ddbabc7d8395f1aaa1858af05b9eee15d4"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid-reader-request.json": {
+      "bytes": 1386,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid-reader-request.json",
+      "sha256": "6076161f6d437d5499451d7ad67354d9ec86f9d0ccc030e839ca4ebfb6f1714b"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/00-plan-launch.json": {
+      "bytes": 4373,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/00-plan-launch.json",
+      "sha256": "e990b0a171b2f5ba1ba7540cc348f384f30811d7adcd64693d746e3a18ee7982"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/00-plan.json": {
+      "bytes": 9824,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/00-plan.json",
+      "sha256": "313b2640f4f33991d53e87f19a81e49020f5ba54dca7c70faa5e9d2623899a85"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/00-plan.log": {
+      "bytes": 200,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/00-plan.log",
+      "sha256": "f9fe8648b414f63050f7613c9b36af551efeb6fc7a3be5733914a0ad95f9ad0d"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/00-receipt.json": {
+      "bytes": 16204,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/00-receipt.json",
+      "sha256": "e9e203ec118b9644dcf8364e21a6d5524ccb5f496953f5f38528f51a062cf513"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/00-render-launch.json": {
+      "bytes": 4812,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/00-render-launch.json",
+      "sha256": "8b39e4ab34484c05f49b3e0ccd129bcf58b7a493d44cfa61eed9a31a4c2328f9"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/00-render.log": {
+      "bytes": 4013,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/00-render.log",
+      "sha256": "6b999348316992834e06a34f7963fea0efd74c64272f4d6807281bcea5f23e83"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/00.tif": {
+      "bytes": 407403,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/00.tif",
+      "sha256": "bbe18c82ffeab42af9b870122442ebca8e804221de10ad29eeb8d3cbde2dc838"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/01-plan-launch.json": {
+      "bytes": 4376,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/01-plan-launch.json",
+      "sha256": "a774afd94462196ddabf500db7589370347abca3678a64587434d7d3412acf5f"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/01-plan.json": {
+      "bytes": 10459,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/01-plan.json",
+      "sha256": "6c5acf1d1bf6705399334d686624f30146a65fe4ecba8a7a2b379144adc5a7ec"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/01-plan.log": {
+      "bytes": 200,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/01-plan.log",
+      "sha256": "f9fe8648b414f63050f7613c9b36af551efeb6fc7a3be5733914a0ad95f9ad0d"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/01-receipt.json": {
+      "bytes": 17174,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/01-receipt.json",
+      "sha256": "9dbc9298c52d75ae09535565507384d8c243f826bc739a4f1d788624e323f80c"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/01-render-launch.json": {
+      "bytes": 4804,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/01-render-launch.json",
+      "sha256": "121ce88f860724f2ffd08301aa8acf488f5efad39328bb77c7f6bc13ca137a6a"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/01-render.log": {
+      "bytes": 4017,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/01-render.log",
+      "sha256": "15c756f9241c4f8efb8bc97ae05f37a2556cd92a108dfb4715d8e1ea8a608083"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/01.tif": {
+      "bytes": 353403,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/01.tif",
+      "sha256": "85a158056963f099864fa6c15f359c25c28dc816dbf3f9ee9f44c6d9dab5cee5"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/02-plan-launch.json": {
+      "bytes": 4364,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/02-plan-launch.json",
+      "sha256": "18205f09d0a07cd874ba72207061188ef6df87a5915258c2d5ddb7dcb5942c0e"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/02-plan.json": {
+      "bytes": 10463,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/02-plan.json",
+      "sha256": "e887c1cfdca7c0f2ff213262263f59c6d27d63c0b5db1955b9b47073548c19a7"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/02-plan.log": {
+      "bytes": 200,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/02-plan.log",
+      "sha256": "f9fe8648b414f63050f7613c9b36af551efeb6fc7a3be5733914a0ad95f9ad0d"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/02-receipt.json": {
+      "bytes": 17178,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/02-receipt.json",
+      "sha256": "58c6ce1decc4b40d20b995177aced4c2edc5a401b673c8d1b7ebbea2ded23b83"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/02-render-launch.json": {
+      "bytes": 4800,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/02-render-launch.json",
+      "sha256": "825d8382e737661db30fdf672091711c16a5feeb59b85028db846715c794f8d3"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/02-render.log": {
+      "bytes": 4017,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/02-render.log",
+      "sha256": "89ea6fdb295e6f788f3896c3ea0473981f3cda44b81480cfb0d99edccc4edeec"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/02.tif": {
+      "bytes": 353403,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/02.tif",
+      "sha256": "85a158056963f099864fa6c15f359c25c28dc816dbf3f9ee9f44c6d9dab5cee5"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/03-plan-launch.json": {
+      "bytes": 4379,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/03-plan-launch.json",
+      "sha256": "dec1cdc52f34b908ed944c88aa1135c5eec3a394648f7c6f0e467a24fd996773"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/03-plan.json": {
+      "bytes": 10467,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/03-plan.json",
+      "sha256": "20c21feb421ec2051a27d4684442dbe33f3b1190433d92d05b44b169dae7a2b7"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/03-plan.log": {
+      "bytes": 200,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/03-plan.log",
+      "sha256": "f0496a30f19c097dd8ebc318ed99abfc9b334d5546ae749d7f98090a767858b2"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/03-receipt.json": {
+      "bytes": 17182,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/03-receipt.json",
+      "sha256": "f248dd779d37433bb461477126b28d0d2cc616364158f937ac4dde86b6ad8cc9"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/03-render-launch.json": {
+      "bytes": 4778,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/03-render-launch.json",
+      "sha256": "1dd9b05b7d59895838c664d9d168e79107e4e04697d0187476806f9f2e1193c3"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/03-render.log": {
+      "bytes": 4017,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/03-render.log",
+      "sha256": "9d20c4d022bc082d65dc07ab0101ba9b4c95aca10a4ede2456c7431ca5dc6076"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/03.tif": {
+      "bytes": 353403,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/03.tif",
+      "sha256": "85a158056963f099864fa6c15f359c25c28dc816dbf3f9ee9f44c6d9dab5cee5"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/04-plan-launch.json": {
+      "bytes": 4321,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/04-plan-launch.json",
+      "sha256": "6571ad0c6c1838d6adb9c8d664371081b00183f0ff1294342b9b36f982ee9688"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/04-plan.json": {
+      "bytes": 10620,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/04-plan.json",
+      "sha256": "348d9be9aecf6b8b95b1b802202726306cb1489c3c538ca072f112e957c50398"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/04-plan.log": {
+      "bytes": 200,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/04-plan.log",
+      "sha256": "f0496a30f19c097dd8ebc318ed99abfc9b334d5546ae749d7f98090a767858b2"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/04-receipt.json": {
+      "bytes": 17335,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/04-receipt.json",
+      "sha256": "9a292f03d2c75d38568adc3782a94ca43bd3708e661a441d1b5866d6a575a017"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/04-render-launch.json": {
+      "bytes": 4803,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/04-render-launch.json",
+      "sha256": "d986a761193799fa79625da52d25767b897390565cbaa2c0646ac0894977d79c"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/04-render.log": {
+      "bytes": 3586,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/04-render.log",
+      "sha256": "1e7682f6f2d4ef79ac3b3129c2e1b8729b746bce1b196a0dc5ceb948c36eb38c"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/04.tif": {
+      "bytes": 461403,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/04.tif",
+      "sha256": "91b9991c9511da2643993ec12fdd0af71bfe6eb8e8dc0462336515abded2206d"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/05-plan-launch.json": {
+      "bytes": 4378,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/05-plan-launch.json",
+      "sha256": "8a5605dfee43aebdfe51a47c4ce7e128e171a52d4ba6a862be1c39e172a27028"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/05-plan.json": {
+      "bytes": 8304,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/05-plan.json",
+      "sha256": "5e90216bc90844f1926e9cbec3275655ee5254597d810ef8a951cd6cbe64af91"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/05-plan.log": {
+      "bytes": 200,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/05-plan.log",
+      "sha256": "f0496a30f19c097dd8ebc318ed99abfc9b334d5546ae749d7f98090a767858b2"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/05-receipt.json": {
+      "bytes": 10673,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/05-receipt.json",
+      "sha256": "8704baf19c76290273f346f2385dc3f02ece9417495e786ed870ce9f1f382068"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/05-render-launch.json": {
+      "bytes": 4823,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/05-render-launch.json",
+      "sha256": "a31b9da4c32c0b9d21715e15ad700d1b20592d13564f16700a093eb1344cadd0"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/05-render.log": {
+      "bytes": 4017,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/05-render.log",
+      "sha256": "b61d813625ff16f710488447a5fd9e858cf459bf1bc39efece8f120b5b3cea3c"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/05.tif": {
+      "bytes": 353403,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/05.tif",
+      "sha256": "59973a0f2ed8fa0e3b02c5718f91fda4f535701a0367a54888f73931ae9b39d9"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/06-plan-launch.json": {
+      "bytes": 4377,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/06-plan-launch.json",
+      "sha256": "551e50ffd91c7c9bc8b97521b23fd0695e79960cc1407097d9078f51ef13b32a"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/06-plan.json": {
+      "bytes": 8318,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/06-plan.json",
+      "sha256": "70b16f940a612a0e78952dacb7bb682c3bd6c02848d414b48e73805286c36229"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/06-plan.log": {
+      "bytes": 200,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/06-plan.log",
+      "sha256": "f0496a30f19c097dd8ebc318ed99abfc9b334d5546ae749d7f98090a767858b2"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/06-receipt.json": {
+      "bytes": 10687,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/06-receipt.json",
+      "sha256": "99118d3e0d59a6b98b96550b5c80bc7b32e53771b5ae177606f555faad34479d"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/06-render-launch.json": {
+      "bytes": 4825,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/06-render-launch.json",
+      "sha256": "cbabd06b8401d041b06f816508e5f8fe9adbf31a998b55767b400cae4ca2d348"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/06-render.log": {
+      "bytes": 4017,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/06-render.log",
+      "sha256": "2260de859adb702847e0b70c22782e3d5db6ece808a01b1de743302797f5222e"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/06.tif": {
+      "bytes": 353403,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/06.tif",
+      "sha256": "86028defae5a00f428f62b7579b0b19c6e6629f57120cdef4616b2fa31116c8c"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/07-plan-launch.json": {
+      "bytes": 4381,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/07-plan-launch.json",
+      "sha256": "d2bdf29dad3842ae40d390ff85d0ab21d657fd68dec66954a1b8f77c849c12e6"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/07-plan.json": {
+      "bytes": 8302,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/07-plan.json",
+      "sha256": "4b60329603475eb6f16e9f0aa0b850207565346a602be074badb11021800d8c5"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/07-plan.log": {
+      "bytes": 200,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/07-plan.log",
+      "sha256": "f9fe8648b414f63050f7613c9b36af551efeb6fc7a3be5733914a0ad95f9ad0d"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/07-receipt.json": {
+      "bytes": 10671,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/07-receipt.json",
+      "sha256": "71042d9f9d25f9cf8875569eb8f3440ec4c20709e6eed249699ab3440183209e"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/07-render-launch.json": {
+      "bytes": 4824,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/07-render-launch.json",
+      "sha256": "85ef6391c92dbc9c5d47fabbe188f3d673558af82d4f3ca86dd4c8a1245e045b"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/07-render.log": {
+      "bytes": 4017,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/07-render.log",
+      "sha256": "d98ae0db776053d02fb29c7bdcf8ff1a93a979a8c199b6d1a74cc48ebb701e03"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/07.tif": {
+      "bytes": 353403,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/07.tif",
+      "sha256": "59973a0f2ed8fa0e3b02c5718f91fda4f535701a0367a54888f73931ae9b39d9"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/08-plan-launch.json": {
+      "bytes": 4377,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/08-plan-launch.json",
+      "sha256": "a2e919015ceed081100de7aa2ac595755796d2e358b02c19d63d6db15c49a2a6"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/08-plan.json": {
+      "bytes": 8404,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/08-plan.json",
+      "sha256": "80f4740bb1289cf3d325eafd95887f6dac7686bd5f34676dc0f7a8b351e09caf"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/08-plan.log": {
+      "bytes": 200,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/08-plan.log",
+      "sha256": "f0496a30f19c097dd8ebc318ed99abfc9b334d5546ae749d7f98090a767858b2"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/08-receipt.json": {
+      "bytes": 10773,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/08-receipt.json",
+      "sha256": "1a7d1cf1a11dd5865b0ac8ae9ea095c9793822eee3138679def1f479a2843068"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/08-render-launch.json": {
+      "bytes": 4823,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/08-render-launch.json",
+      "sha256": "707e62354fb1eed8e78fbf6a99b162ab60e909f5e43d009086115a77b4c27a00"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/08-render.log": {
+      "bytes": 4017,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/08-render.log",
+      "sha256": "5c29708ad19bd4d2b8e936eee5bd5aeff9a6abe42c0350841bf7ffd827740fad"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/08.tif": {
+      "bytes": 353403,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/08.tif",
+      "sha256": "c3915eb177df590efe961237cbe39fe369c1a789c7808c6e73b1175bd37cf8c8"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/09-plan-launch.json": {
+      "bytes": 4378,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/09-plan-launch.json",
+      "sha256": "9a209cd09cff666a7cf33cbb453eaea1aebc3414583ecbed4f3690f88a8ec167"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/09-plan.json": {
+      "bytes": 10461,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/09-plan.json",
+      "sha256": "a81195885a07f22cbec67e14b886cc2967230f85997f2c24e3fdd83a2f315e66"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/09-plan.log": {
+      "bytes": 200,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/09-plan.log",
+      "sha256": "f0496a30f19c097dd8ebc318ed99abfc9b334d5546ae749d7f98090a767858b2"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/09-receipt.json": {
+      "bytes": 16991,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/09-receipt.json",
+      "sha256": "54aaa48a529ee25f12d585ff2d5dbee314a23b35cf016d69ce6485088c1a7ce2"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/09-render-launch.json": {
+      "bytes": 4830,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/09-render-launch.json",
+      "sha256": "b3d8c07c6efca99d8bd91dd333de87012a15fa12ca7b9bb7b818d70cf35a8240"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/09-render.log": {
+      "bytes": 4020,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/09-render.log",
+      "sha256": "34a7b2745c2217b87247a91fed1d51e7ef10ae0a01ae803d4ab198fc48cbb055"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/09.tif": {
+      "bytes": 353403,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/09.tif",
+      "sha256": "3d9423cb542ffaeb2c8c69327950a4518e03af1987f3f7dffcb4c9866ca30143"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/10-component-launch.json": {
+      "bytes": 4363,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/10-component-launch.json",
+      "sha256": "6a3fd1d7131405928a0ae4b24936cd26dc8922a51e87af66ef8c05fc26a3d01b"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/10-component.log": {
+      "bytes": 225,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/10-component.log",
+      "sha256": "bf1cee80c478bbd79747ae0e4e4cde54aa7ad30b1bec93cdedef62b030df0b60"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/all-ten-plans.json": {
+      "bytes": 6101,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/all-ten-plans.json",
+      "sha256": "e36556d10262c430f6ade87859fae3c0e22701bf37b6d6fe997bfdfdd4055552"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/precision/00-identity-nine.json": {
+      "bytes": 306595,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/precision/00-identity-nine.json",
+      "sha256": "3c6b28cb778ea4c0aa8e2e7819787ce4817a42ab1590cfd5faf275019741af8c"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/precision/01-curved-nine-off.json": {
+      "bytes": 329844,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/precision/01-curved-nine-off.json",
+      "sha256": "e1df18c1c47a9fc29501c4bf99bf8779f912bbb3fe602c35e479406d55f9864d"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/precision/02-curved-nine-count.json": {
+      "bytes": 329848,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/precision/02-curved-nine-count.json",
+      "sha256": "b4f6e824d5e1956939bd0510c6a2e815612b5dc428f6183f49768ab478803695"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/precision/03-curved-nine-placebo.json": {
+      "bytes": 329852,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/precision/03-curved-nine-placebo.json",
+      "sha256": "31967d1bfa15b6b76ad43010bd594f534001d958fd882fccb0f1199d2d114743"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/precision/04-curved-nine-scale.json": {
+      "bytes": 332596,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/precision/04-curved-nine-scale.json",
+      "sha256": "8a072b7bbe44bff214cbcc959d0b06f31efde68114cfcc2d7f093e66d54df174"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/precision/05-original-one-correct.json": {
+      "bytes": 45196,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/precision/05-original-one-correct.json",
+      "sha256": "167a7e5dbad0b308b51fe25638c9b6094773449f51ddbf5b7f3b55e1b646c34a"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/precision/06-original-one-swapped.json": {
+      "bytes": 45164,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/precision/06-original-one-swapped.json",
+      "sha256": "d8f005f303af2a7116cbed9f70c6fd777d2bd583dd46538a607030b0ab96c0e0"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/precision/07-original-one-restored.json": {
+      "bytes": 45194,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/precision/07-original-one-restored.json",
+      "sha256": "54463b9d14a0e6b062590e44dc58af5a529b8a6011c1600f56be006fab7afa47"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/precision/08-original-one-inverse.json": {
+      "bytes": 45248,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/precision/08-original-one-inverse.json",
+      "sha256": "15b5298dcb067ad6e47fb80f33473a0441e08313c08c8e7bb1b047dc3e179874"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/precision/09-constant-nine-null.json": {
+      "bytes": 325588,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/precision/09-constant-nine-null.json",
+      "sha256": "bcc67d67b2dd6599bcde3953496b5180cb21a6fb15fc57a3ffbd14a672210843"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/precision/result.json": {
+      "bytes": 3854,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/precision/result.json",
+      "sha256": "efc3b1dd7e818393af40b5b6b2b32da94f8054cd76c7b2da4c9b9a8d00c5c46a"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/progress.json": {
+      "bytes": 12364,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/progress.json",
+      "sha256": "31b971ad7e4cefc34d4d82d24cbd8b046620236712d0664775463163cf44dc2d"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid/run-index.json": {
+      "bytes": 178224,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/run-index.json",
+      "sha256": "9b98828f99933059becf969ce7332b1845dbf19ace421db5a441d58ae2a51642"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid_producer-launch.json": {
+      "bytes": 5686,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid_producer-launch.json",
+      "sha256": "b3547b4c07de5654025bac88aab39f103890721604a239384f68533e8374a3de"
+    },
+    "experiments/m193c-output-grid/private-campaign-2/worker/grid_producer.log": {
+      "bytes": 504,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid_producer.log",
+      "sha256": "c54b5eaef4b042e93e3cf27fd71d36b07ba6a486a30b35edf2758e1e61c9b214"
+    },
+    "experiments/m193c-output-grid/private-campaign-preregister.md": {
+      "bytes": 11764,
+      "path": "experiments/m193c-output-grid/private-campaign-preregister.md",
+      "sha256": "21dc02994b6ca2e27fcc26010209c95beca6f6d050c96548b0d1ff717980aa00"
+    },
+    "experiments/m193c-output-grid/private-campaign-release-2.json": {
+      "bytes": 32380,
+      "path": "experiments/m193c-output-grid/private-campaign-release-2.json",
+      "sha256": "fb0505d6a738cead4863b87ce882d655b2962c6e79c189bbd5d3ce6783a457f0"
+    },
+    "experiments/m193c-output-grid/private-campaign.py": {
+      "bytes": 48401,
+      "path": "experiments/m193c-output-grid/private-campaign.py",
+      "sha256": "25d666a54973883ac91f8095add61349a6bbda96a9977ddb9e6f29c12c8fa420"
+    },
+    "experiments/m193c-output-grid/private-grid-release-2.json": {
+      "bytes": 24313,
+      "path": "experiments/m193c-output-grid/private-grid-release-2.json",
+      "sha256": "2a483fac1da2c8f82fa1e50fef5c351aafc95d38982545ef3d8c035513d7225d"
+    },
+    "experiments/m193c-output-grid/private-grid-run.py": {
+      "bytes": 22426,
+      "path": "experiments/m193c-output-grid/private-grid-run.py",
+      "sha256": "9d0c9dcc60e41ca8520152033fd931e50ccc850263f539698a296509cf83f0b4"
+    },
+    "experiments/m193c-output-grid/private-protocol.md": {
+      "bytes": 20999,
+      "path": "experiments/m193c-output-grid/private-protocol.md",
+      "sha256": "990ccd293c9e4f1f9179d33334e0ff5e85d077862dc6456e938d4e3643ff092e"
+    },
+    "experiments/m193c-output-grid/private-reader-preregister.md": {
+      "bytes": 14763,
+      "path": "experiments/m193c-output-grid/private-reader-preregister.md",
+      "sha256": "b2f976b7aa72b27fa232261095a93a5a20e9b62b6901164e7bdbabd785dd72f2"
+    },
+    "experiments/m193c-output-grid/private-reader-wrapper-preregister.md": {
+      "bytes": 2773,
+      "path": "experiments/m193c-output-grid/private-reader-wrapper-preregister.md",
+      "sha256": "0f20e75f6d45c562cf8a2e632e4fe0e491465da031bb5165862a82f7ed9c17f6"
+    },
+    "experiments/m193c-output-grid/registration-derivative-design.md": {
+      "bytes": 20652,
+      "path": "experiments/m193c-output-grid/registration-derivative-design.md",
+      "sha256": "f503af4c7805f8e4b2f4771b2baaf31599ed9f0ca583d2958a1a6da11a408d68"
+    },
+    "experiments/m193c-output-grid/registration-derivative.rs": {
+      "bytes": 39489,
+      "path": "experiments/m193c-output-grid/registration-derivative.rs",
+      "sha256": "db2a4d0c36d3f0778481e8a9837feef1c2651258865799bbd143b6bb0840eecd"
+    },
+    "experiments/m194-production-truth/independent-controls.rs": {
+      "bytes": 19528,
+      "path": "experiments/m194-production-truth/independent-controls.rs",
+      "sha256": "bd5777f1f960e7db217fda4b4ce9f24a963cea9351d244acf8aac84ee68f718f"
+    },
+    "experiments/m194c-probe-layout/author-tests.rs": {
+      "bytes": 9396,
+      "path": "experiments/m194c-probe-layout/author-tests.rs",
+      "sha256": "6eb9940f98e7e21012ae83011fdc30d290654cdd55dafd320ad3f9918e6ad3bc"
+    },
+    "experiments/m194c-probe-layout/independent-tests.rs": {
+      "bytes": 21156,
+      "path": "experiments/m194c-probe-layout/independent-tests.rs",
+      "sha256": "72accd1598756d13e340947ded9c27f40c65420bd137c593b962131ddf8dc58d"
+    },
+    "experiments/m194c-probe-layout/legacy-fill-noise.rs": {
+      "bytes": 1191,
+      "path": "experiments/m194c-probe-layout/legacy-fill-noise.rs",
+      "sha256": "ffdc647077cb18f9161b8cc6e04f53d155220bc817adbf2a4da1b3d9b4c47388"
+    },
+    "experiments/m194d-band-admission/author-core-tests.rs": {
+      "bytes": 8252,
+      "path": "experiments/m194d-band-admission/author-core-tests.rs",
+      "sha256": "c9059e3d59c56bc0a716bd788a995bcfffb517e8db5c405798ad8e3c88b20099"
+    },
+    "experiments/m194d-band-admission/independent-consumer-tests.rs": {
+      "bytes": 13170,
+      "path": "experiments/m194d-band-admission/independent-consumer-tests.rs",
+      "sha256": "1942370ba982c6a5bf07e99fd6eda3af28830b63a06dbafa75b24d20fb4248f1"
+    },
+    "experiments/m194d-band-admission/independent-core-tests.rs": {
+      "bytes": 13115,
+      "path": "experiments/m194d-band-admission/independent-core-tests.rs",
+      "sha256": "89718084f205e087819fb7aa7d8073ca9977d2182fe246e9833e720133d060ae"
+    },
+    "experiments/m194f-production-bridge/author-controls.rs": {
+      "bytes": 9362,
+      "path": "experiments/m194f-production-bridge/author-controls.rs",
+      "sha256": "b7e611c0c2c42a108391fdc517dbb6b8d841026a0d2e32c7bf3330c595ffccf0"
+    },
+    "experiments/m194f-production-bridge/independent-reader-controls.rs": {
+      "bytes": 37174,
+      "path": "experiments/m194f-production-bridge/independent-reader-controls.rs",
+      "sha256": "1428f4e870da36c39e50f2d58e96f87e26454d00221a9ecd8e19a0491d8573a7"
+    },
+    "experiments/m194g-larger-pupil/independent-rgb-tiff.py": {
+      "bytes": 7305,
+      "path": "experiments/m194g-larger-pupil/independent-rgb-tiff.py",
+      "sha256": "d01a74aefcfa15b2146256b54ea51876715ab203b7de123b3cff2b0af4a1b19c"
+    },
+    "target/m193c-output-grid-build-3/debug/deps/strehl-2cd1c0b56ad4ab1f.exe": {
+      "bytes": 29488640,
+      "path": "target/m193c-output-grid-build-3/debug/deps/strehl-2cd1c0b56ad4ab1f.exe",
+      "sha256": "fa03b12fe177608851d6758517c9bda050998cdc4d777195fab8e3dc1e0813a3"
+    }
+  },
+  "precision": {
+    "bytes": 2503794,
+    "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid-reader/precision.json",
+    "sha256": "3fb1d1e2cd7357a378aeff56c0041b143edb3525e3c017aae907cc6d69262601"
+  },
+  "producer_launch": {
+    "bytes": 5686,
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\private-campaign-2\\worker\\grid_producer-launch.json",
+    "sha256": "b3547b4c07de5654025bac88aab39f103890721604a239384f68533e8374a3de"
+  },
+  "producer_result": {
+    "bytes": 178224,
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\private-campaign-2\\worker\\grid\\run-index.json",
+    "sha256": "9b98828f99933059becf969ce7332b1845dbf19ace421db5a441d58ae2a51642"
+  },
+  "request": {
+    "bytes": 1386,
+    "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid-reader-request.json",
+    "sha256": "6076161f6d437d5499451d7ad67354d9ec86f9d0ccc030e839ca4ebfb6f1714b"
+  },
+  "schema": "m193c-private-grid-admission-v1",
+  "sources_after": {
+    "Cargo.lock": {
+      "bytes": 43571,
+      "sha256": "82a228ddda138d1b6269e1a32a6e55377369bb94923e92da362cf11cc9569a4b"
+    },
+    "Cargo.toml": {
+      "bytes": 1009,
+      "sha256": "732c5d4d874594cccbfd896ae688afa01e91290f0b1c8fd0331fa8b06f914984"
+    },
+    "crates/strehl-cli/Cargo.toml": {
+      "bytes": 782,
+      "sha256": "d0e6b05aa93df026270e513fd3e5ab9cd50726596ef1475b8a3680faa84b2650"
+    },
+    "crates/strehl-cli/build.rs": {
+      "bytes": 5591,
+      "sha256": "5b864155733a90c2a4f7152e21d3dbcc5d5e0f469b4aa772c328fe86e4aa2091"
+    },
+    "crates/strehl-cli/examples/blend-render.rs": {
+      "bytes": 29695,
+      "sha256": "86c403dc074519bdf54dd66226a82ac935d8a91a26d44799596989fbcacd25b9"
+    },
+    "crates/strehl-cli/examples/blend-truth.rs": {
+      "bytes": 29918,
+      "sha256": "38a5a9464a7c09521dad8320a90faea4f25a09aead175af3f37f25dc7e034ca2"
+    },
+    "crates/strehl-cli/examples/build-demosaic-truth.rs": {
+      "bytes": 59669,
+      "sha256": "fb33639b174986c9159b8a544b46b5cb4aa3a514a4315a80738c55b4305f27fd"
+    },
+    "crates/strehl-cli/examples/build-gatefloor.rs": {
+      "bytes": 22941,
+      "sha256": "c377d932c168c8ac5d74ae3c96e9a1d714726ccb91fca01697b5e1596e8de0cd"
+    },
+    "crates/strehl-cli/examples/build-plugin-field.rs": {
+      "bytes": 8051,
+      "sha256": "a733f23be4a3d385a4011f249b8fd3769a3fd018dade66aa43c9d19935ec6f71"
+    },
+    "crates/strehl-cli/examples/build-resamp-mtf.rs": {
+      "bytes": 11067,
+      "sha256": "69dd26cb260d9d0435ec1689dbcfd27b0cab16f9feffe82d3b944701e80bcb27"
+    },
+    "crates/strehl-cli/examples/cover-reference.rs": {
+      "bytes": 28329,
+      "sha256": "f1762977aa8ae7c1d95366f5c65a6857dc6ab012e9e7323a4054ff6cd2bf5c7e"
+    },
+    "crates/strehl-cli/examples/defect-cpl-split.rs": {
+      "bytes": 38484,
+      "sha256": "0131f7bbdbfb6f840472e318a290205134f739f4f4b93c441a2d8d4f42873bb4"
+    },
+    "crates/strehl-cli/examples/defect-flat-census.rs": {
+      "bytes": 20797,
+      "sha256": "070f2e343597916269cc4699d34a7bd485dccac9d17b185303af152a745c8273"
+    },
+    "crates/strehl-cli/examples/defect-geometry-census.rs": {
+      "bytes": 4797,
+      "sha256": "23e3d8ff39020a9ef09701bd17886ea09249f503495f5e527c53d84a014126e4"
+    },
+    "crates/strehl-cli/examples/defect-geometry-verdict.rs": {
+      "bytes": 8268,
+      "sha256": "38e4e8ea3afb115a018413985813e730bd109351489f761c771f2cf144a62749"
+    },
+    "crates/strehl-cli/examples/defect-plant-fidelity.rs": {
+      "bytes": 65194,
+      "sha256": "bff657c34c0ac00bba47b75dd17f7698e47328631600718e0c2adfe99adcb7f5"
+    },
+    "crates/strehl-cli/examples/m123-null-radius.rs": {
+      "bytes": 20318,
+      "sha256": "29780cdb8f20768705949bf5622783faff6ba2cb9d46326779eb064ac0a941cd"
+    },
+    "crates/strehl-cli/examples/m123-outlier-real.rs": {
+      "bytes": 15716,
+      "sha256": "3cb776b76023f5ebe7ac5ffa588e31b4b0a8c34d98794d2cd174ef071d638275"
+    },
+    "crates/strehl-cli/examples/m123-trap-decompose.rs": {
+      "bytes": 9579,
+      "sha256": "be1462beb949bf32eb1e54b3a598ad488ee616aca79704a2940f9049f5aecf9f"
+    },
+    "crates/strehl-cli/examples/m60-disagreement.rs": {
+      "bytes": 27439,
+      "sha256": "e6800fabce502189bba14148b42f96ceabd893e77e8732af27394592a219a93b"
+    },
+    "crates/strehl-cli/examples/m65-election.rs": {
+      "bytes": 23194,
+      "sha256": "8bb8b1f268107d171ca8d3454687c02ca0bec24dea629ede433f9547c993ae8f"
+    },
+    "crates/strehl-cli/examples/m67-focus-correctness.rs": {
+      "bytes": 27183,
+      "sha256": "9b2fa813ced90939f7cb065fbb12662fd8129b4e06269183764e6e52e048881c"
+    },
+    "crates/strehl-cli/examples/m73-cylinder.rs": {
+      "bytes": 22475,
+      "sha256": "b42700a1384eb2d6f12d4072b4040fbe3f4da82cf27de1d71eb47fd181e7cd55"
+    },
+    "crates/strehl-cli/examples/m86-align.rs": {
+      "bytes": 72686,
+      "sha256": "63dad30331cf9ecb293374d35133f1f9062592e016f3cafd767b962b76080a2e"
+    },
+    "crates/strehl-cli/examples/m89-robust.rs": {
+      "bytes": 61874,
+      "sha256": "acb6f32abf2d40dd9b1d00085710ee4b5ae77c34481a3730ba6bb76bdebbaa2f"
+    },
+    "crates/strehl-cli/examples/m90-prnu.rs": {
+      "bytes": 56536,
+      "sha256": "7e5a232e10d70ea7809780ea32f578a7aadf6cff46a3d2df45ffc5e79031f5c8"
+    },
+    "crates/strehl-cli/examples/m90-rho.rs": {
+      "bytes": 52401,
+      "sha256": "fbe0faadaa636616cec0755e872509e33a65a108b636d50f5a359e6f3a582d7f"
+    },
+    "crates/strehl-cli/examples/m91-photometry.rs": {
+      "bytes": 50889,
+      "sha256": "e39f2f6d95e0606ec7f9525991b17c4519d4c3deac709188f8b5e3eaa1625f61"
+    },
+    "crates/strehl-cli/examples/m93-election.rs": {
+      "bytes": 42218,
+      "sha256": "d63a840f830be4489fc32c05c8f11e3c26e10e163df40d6eb15f1ad9c39ea677"
+    },
+    "crates/strehl-cli/examples/m95-demosaic.rs": {
+      "bytes": 2769,
+      "sha256": "8210edf48821204928af800b307617389f4a1b7a0e24003f1c6d9375436fde81"
+    },
+    "crates/strehl-cli/examples/m95-kernel.rs": {
+      "bytes": 45407,
+      "sha256": "bd2391e8b83da68b742cf0bf98834315c013e07afa1fd6afbc79f06ca3c1d614"
+    },
+    "crates/strehl-cli/examples/m95-lanczos.rs": {
+      "bytes": 4867,
+      "sha256": "61d6f4d5ba260cd3c601f1a9f525b2cac922ef42270ebec3c58f0e5dc04fa298"
+    },
+    "crates/strehl-cli/examples/m96-election-margin.rs": {
+      "bytes": 52503,
+      "sha256": "06d62fd30245590a74d6c948d3d7ef0421e65b836c32abbc39d71ed364470eac"
+    },
+    "crates/strehl-cli/examples/m97-outlier.rs": {
+      "bytes": 7713,
+      "sha256": "cb6562b5d0a3352ef7005fdc82a65f8ba80821739ca851402cd42f556248652c"
+    },
+    "crates/strehl-cli/examples/m97-tornmap.rs": {
+      "bytes": 5909,
+      "sha256": "55b21b7803d7a1afe7305c80a799f0e1de89b76098878c1deef8e9c6a7a1ff4e"
+    },
+    "crates/strehl-cli/examples/m99-photometric.rs": {
+      "bytes": 40516,
+      "sha256": "a253c53102f873961dbd13c3190e178374c58e3c7967e2fef407b5865e59b512"
+    },
+    "crates/strehl-cli/src/align_cmd.rs": {
+      "bytes": 122446,
+      "sha256": "b3de7738151a6bc0500c66dd916f9fcb20cdb9be0bf698ad00425d3ebb397c69"
+    },
+    "crates/strehl-cli/src/bin/strehl-common-input.rs": {
+      "bytes": 7369,
+      "sha256": "0abf5917357365ba83028f82c0a2855917ad45071d95d3ec2d404702de1ef31f"
+    },
+    "crates/strehl-cli/src/focus_plugin.rs": {
+      "bytes": 7354,
+      "sha256": "d917dba8f3bfc57a709b7af6650dc43a34724383270ac5faec986ed3a963d337"
+    },
+    "crates/strehl-cli/src/image_out.rs": {
+      "bytes": 134835,
+      "sha256": "c1362363740cb0176985283455cd6ddef80479854b1bbc9f0396851c490f82b6"
+    },
+    "crates/strehl-cli/src/main.rs": {
+      "bytes": 89041,
+      "sha256": "a29e0f975764b75491eb3147e94f15b05944120cdc3cdd55a24830a89a2e5340"
+    },
+    "crates/strehl-cli/src/merge_cmd.rs": {
+      "bytes": 425678,
+      "sha256": "ca829e45c7021c5c5df7b51da85859e3763a9a95d01d302a91ab7cd0687b2dcf"
+    },
+    "crates/strehl-cli/src/merge_cmd/band-admission-benchmark.rs": {
+      "bytes": 1870,
+      "sha256": "d275b189d374117de2f6d5d9aa163417d675adba1820d96f42e9dfe0d322c2c3"
+    },
+    "crates/strehl-cli/src/merge_cmd/dump.rs": {
+      "bytes": 7245,
+      "sha256": "2827483acbbce3dc528f3d27642cb54e8c8f99abb85b0b23f89f59c53c93bfe3"
+    },
+    "crates/strehl-cli/src/merge_cmd/gatefloor.rs": {
+      "bytes": 22127,
+      "sha256": "bcea35986c73011c20d872bddc9c0ef3ea9354101259bd3952c16976bb1c9496"
+    },
+    "crates/strehl-cli/src/merge_cmd/halo.rs": {
+      "bytes": 24425,
+      "sha256": "fc234df8b515f982bbc527448ea0a0764c30b088385405d85f253800aaf7dd55"
+    },
+    "crates/strehl-cli/src/merge_cmd/joint-pupil-bridge.rs": {
+      "bytes": 45153,
+      "sha256": "8295981a03e54f05009f3510dc39addf150ddd72303913530f2603d3c744ab33"
+    },
+    "crates/strehl-cli/src/merge_cmd/known-scene-benchmark.rs": {
+      "bytes": 29747,
+      "sha256": "38e1ed45531f0ba02b0cdd1b8aecf0d99f5f123826c086158aedbeb8d994a573"
+    },
+    "crates/strehl-cli/src/merge_cmd/noise-pupil-bridge.rs": {
+      "bytes": 67493,
+      "sha256": "2a59b81e4044673d14049c36fbffd3d80af6445d6f734b9273ef65b0425df028"
+    },
+    "crates/strehl-cli/src/merge_cmd/production-truth.rs": {
+      "bytes": 12917,
+      "sha256": "11aab6eb649ee6dacd67abe7083b1e4ea7dfda40f6191ae476170e2448094c44"
+    },
+    "crates/strehl-cli/src/stack.rs": {
+      "bytes": 107231,
+      "sha256": "108bb38a964946c7e7b7c25c640ce08297835faee253ad4e059e6074f5655572"
+    },
+    "crates/strehl-cli/tests/byte-freeze.rs": {
+      "bytes": 103042,
+      "sha256": "750efd0d5605d76bc1e5000e9945a58d57ef4418ec25299cd27920408f53976c"
+    },
+    "crates/strehl-cli/tests/byte-freezes.tsv": {
+      "bytes": 20801,
+      "sha256": "d74c3f1da19c0edf6625bc6a26ccad3de6a6ab6c201f009d009b9999c5f4d001"
+    },
+    "crates/strehl-cli/tests/data/coffee-bean-20.clamped-catmull.warpmap.txt": {
+      "bytes": 3211,
+      "sha256": "d35352b083530cf52d7649d384e046e3eb410de41b4f5444c4b7992338900fe8"
+    },
+    "crates/strehl-cli/tests/data/coffee-bean-20.warpmap.txt": {
+      "bytes": 3171,
+      "sha256": "ef74541395db1ba606067bcf04947909bd6a9c5be530fe8aad21578b5c1e93b3"
+    },
+    "crates/strehl-core/Cargo.toml": {
+      "bytes": 367,
+      "sha256": "25bdef9c60ef30849ba184116f2b5aa202b07baf55da22ca311f725ab56bde16"
+    },
+    "crates/strehl-core/examples/demosaic-plane.rs": {
+      "bytes": 3109,
+      "sha256": "d40278227e647f195be75e1c199eab04132cdc21c7ae07648cf29bbb410d2f8c"
+    },
+    "crates/strehl-core/examples/focus-window-cost.rs": {
+      "bytes": 6180,
+      "sha256": "ddb8aa01857c03860f62fbbf82793e8e1b5d2df32adde877269af2be39c9b997"
+    },
+    "crates/strehl-core/examples/restore-plane.rs": {
+      "bytes": 3047,
+      "sha256": "5707ab9a2a66333968936d704ea8888fa7535dc6e0b7c73c1a3f815fd2c1a0d1"
+    },
+    "crates/strehl-core/src/align.rs": {
+      "bytes": 147932,
+      "sha256": "6d33f0e24f21d4370ccd8df0bf618e54a5ad615b838bc265469b4f85051c2786"
+    },
+    "crates/strehl-core/src/boxfilter.rs": {
+      "bytes": 7986,
+      "sha256": "5cf6dab36c8ddb7499acbec140df509b4e1e5fe0b0ace3a13f8d7cf68f979b8e"
+    },
+    "crates/strehl-core/src/clip.rs": {
+      "bytes": 10231,
+      "sha256": "aa1ccdac944d928879f94770b2161152a271f9fa208c57c66d8921e5a643533d"
+    },
+    "crates/strehl-core/src/color.rs": {
+      "bytes": 83992,
+      "sha256": "83c1aa371dc751862bfef5724a6eceab8182c5d68b6f31ac299b3443c14c8f1e"
+    },
+    "crates/strehl-core/src/defect-map-ILCE-7CM2-dust.txt": {
+      "bytes": 23797,
+      "sha256": "a406efd51f806e360e1e51fc1421eca5e3cc912f356ced0693c8477a398853ee"
+    },
+    "crates/strehl-core/src/defect_map.rs": {
+      "bytes": 176181,
+      "sha256": "1738c770c9f316a6aeac3f742bf7abc9581ea386b4e07ec128e50df35c2ffb14"
+    },
+    "crates/strehl-core/src/demosaic.rs": {
+      "bytes": 51381,
+      "sha256": "425d6889485011cf6f2aaf57b0b873f15fd6ee3250853f3ba5f6540b496b3810"
+    },
+    "crates/strehl-core/src/edgeaware.rs": {
+      "bytes": 105131,
+      "sha256": "a32580ac72dd273e62cab40afa9b36e2462ef57335c8d7cd8ab0725184c7f77b"
+    },
+    "crates/strehl-core/src/election_coherence.rs": {
+      "bytes": 13331,
+      "sha256": "47640a176cb445dd2f01b309d907da066ae7f5a6d28b354d2de60362538f948e"
+    },
+    "crates/strehl-core/src/flat_ratio.rs": {
+      "bytes": 32764,
+      "sha256": "da1df7167b6f18ac248c1ee347671388391a968aa45a762299c4418a2287fef0"
+    },
+    "crates/strehl-core/src/focus.rs": {
+      "bytes": 78172,
+      "sha256": "71e63def76e40f18df440617a9dba7013d799ceabd30bf805149223433384e3e"
+    },
+    "crates/strehl-core/src/highlight.rs": {
+      "bytes": 29639,
+      "sha256": "97d4aacec3d7e6c3dd2df1f792ffb7ee136a8f6064ffb0dc1656476730f7641e"
+    },
+    "crates/strehl-core/src/lib.rs": {
+      "bytes": 4356,
+      "sha256": "91419ceb273be1dc9ab15dbdc6347bd2b398d29cf36c0da9184ee533372f8022"
+    },
+    "crates/strehl-core/src/merge.rs": {
+      "bytes": 253103,
+      "sha256": "7362cf6fab70db56443693e5483f052ba48b32cc7ef264d64ec4a7bd1b50e4ef"
+    },
+    "crates/strehl-core/src/noise.rs": {
+      "bytes": 29746,
+      "sha256": "d88dc9cf419a8fdb1e3ff2c51f0b0ac80d785c17de7f9e71e905fc977fce0ecc"
+    },
+    "crates/strehl-core/src/optics.rs": {
+      "bytes": 93722,
+      "sha256": "1884fd98c7a2adf903c152b3d877051cfeba71316bdbb797fd2f1ba1433a5524"
+    },
+    "crates/strehl-core/src/outlier.rs": {
+      "bytes": 51153,
+      "sha256": "8d3fb7a225b5811c2d831db4339953b15a5181bfcda7591ac05f23f6adf5e67d"
+    },
+    "crates/strehl-core/src/photometric.rs": {
+      "bytes": 83028,
+      "sha256": "b6102288c7fc2312f16d108dc3d943d290a5b8fd5d5a5c39306d97489191399b"
+    },
+    "crates/strehl-core/src/plane.rs": {
+      "bytes": 11536,
+      "sha256": "8c219f9c4d2c8c0da19416998b0f369a9f9d44e305740664f29caaba69203dc4"
+    },
+    "crates/strehl-core/src/profile.rs": {
+      "bytes": 44194,
+      "sha256": "07e7cf7b3040239a5a32464ae998a434696031010ce8d87dac7f2dd2a95ac1f1"
+    },
+    "crates/strehl-core/src/pyramid.rs": {
+      "bytes": 207878,
+      "sha256": "848b485271abc48ee496ee69d70a1e01f45074bfbccde7a7ca076ded90f77d9e"
+    },
+    "crates/strehl-core/src/restore.rs": {
+      "bytes": 60029,
+      "sha256": "3ab5c6660b7a45837ac4b5560078092e6aafa9c85a041a935e95b0cd77533afd"
+    },
+    "crates/strehl-core/src/robust.rs": {
+      "bytes": 31317,
+      "sha256": "2cf6013b948f5c9d4f11783633f04e6d76ac9830383197c05506b0d68fe24004"
+    },
+    "crates/strehl-core/src/softgate.rs": {
+      "bytes": 25418,
+      "sha256": "0cb0f916dade24e6e3a31529378390a083c6c56cb3e8b479eb7eb65ac04f688d"
+    },
+    "crates/strehl-core/src/stack.rs": {
+      "bytes": 20542,
+      "sha256": "c951cdbb304e4894676f1ff6a77316e7e2ab68d7756f22bf623562380d5f6337"
+    },
+    "crates/strehl-core/src/through_focus.rs": {
+      "bytes": 90250,
+      "sha256": "475a6c4eece089638ab916e3d7f4cf480197e2d838b5244347c16762f5122a3d"
+    },
+    "crates/strehl-core/src/warpmap.rs": {
+      "bytes": 54829,
+      "sha256": "9d2198eeab5e8a941e297cf8fcd8a217d2454390220433ae19cc6b07e6fd721b"
+    },
+    "crates/strehl-plugin/Cargo.toml": {
+      "bytes": 417,
+      "sha256": "b3fd67fd414ac138119f4ab8dedaee280cea23b1bcc20f21f066f09d3575c88c"
+    },
+    "crates/strehl-plugin/examples/calibration-survey.rs": {
+      "bytes": 2842,
+      "sha256": "b453361321e0e777148121ba5a4b8edff557a5d59aa1d9615b91386208c4aafe"
+    },
+    "crates/strehl-plugin/examples/f5-design-probes.rs": {
+      "bytes": 6954,
+      "sha256": "4f368b7e3ec8ab522183ee3b86fa36adbee76a2b5d772c8f0bafcc9706536676"
+    },
+    "crates/strehl-plugin/src/calibrate.rs": {
+      "bytes": 36532,
+      "sha256": "7e10fbd56d8257f409a083461854bf999f8c97ce1a65aad5f90da3b76c8d2a10"
+    },
+    "crates/strehl-plugin/src/field.rs": {
+      "bytes": 7730,
+      "sha256": "6a1da0df1fc4d6ba5e7cbfc0bc3d79295e89bca7b21647f237154bd97018ced5"
+    },
+    "crates/strehl-plugin/src/lib.rs": {
+      "bytes": 8756,
+      "sha256": "9dbb902a31cb21ba5e07fe1576f96b0cffad2dd8fed70a777c2bfaaab41f97e7"
+    },
+    "crates/strehl-plugin/src/measure.rs": {
+      "bytes": 8713,
+      "sha256": "a3941112f7e5a19b2929d83e95afa97d7be1f2ed3465d6160715386705a23c20"
+    },
+    "crates/strehl-plugin/src/reference.rs": {
+      "bytes": 28757,
+      "sha256": "eca4ecf81d1e783c48d680323907fd34336d1f3d5accdedfbdf726e14e847cfb"
+    },
+    "crates/strehl-plugin/src/registry.rs": {
+      "bytes": 25801,
+      "sha256": "1543ba679a56bdcd9ff625e54c9efd97d74c316cbf0726866e125cc1eb806a35"
+    },
+    "crates/strehl-plugin/src/rng.rs": {
+      "bytes": 9324,
+      "sha256": "402c5fa0acb97df6de6df14a51935de05ad9a71d20f4a909a9f7154f52442225"
+    },
+    "crates/strehl-raw/Cargo.toml": {
+      "bytes": 424,
+      "sha256": "6e1e7cfdadb24371423143fb10945b0e61b3f45696365aa87a721661edde31c9"
+    },
+    "crates/strehl-raw/examples/identity.rs": {
+      "bytes": 1657,
+      "sha256": "78cdc478590b5bfd46bf3bcbed46cb0d74f5d788b08d38a5fd98636d46443668"
+    },
+    "crates/strehl-raw/src/common_tiff.rs": {
+      "bytes": 33071,
+      "sha256": "bac1d18f036b8960a8e82d01b610ae945d00d259d4cc3fe7eb9106e8a8077f42"
+    },
+    "crates/strehl-raw/src/identity.rs": {
+      "bytes": 36796,
+      "sha256": "676d18872656a72a93e3257b1677c38ea2ee39084574e1153bdbbfbc6e8ad1fe"
+    },
+    "crates/strehl-raw/src/lib.rs": {
+      "bytes": 24809,
+      "sha256": "1513fd3e682f2edb8c54c7d47083f20f66525ad72a5687fb2e530bb5697fef2a"
+    },
+    "experiments/m12-scorecard/m12-harness.py": {
+      "bytes": 117908,
+      "sha256": "6cfb408992f37b225f102da4d62ba836f9c5b67c92bdd418ff460987866a1bb9"
+    },
+    "experiments/m193c-output-grid/bounded-process.py": {
+      "bytes": 12664,
+      "sha256": "47b9f8d848759eba61f055b9fdca1f8ac400f134dcd7636f0e0eaaa955704e0b"
+    },
+    "experiments/m193c-output-grid/bridge-build.py": {
+      "bytes": 14682,
+      "sha256": "e0ab57c437af32b61f8f8ed6d7cfb0407789974f6db40151c2f49f302edfa255"
+    },
+    "experiments/m193c-output-grid/controller-child.py": {
+      "bytes": 4416,
+      "sha256": "8944b1387990a262d1ad47c44ee2bbd7de281323185a0758802f1637289d2788"
+    },
+    "experiments/m193c-output-grid/controller-controls.py": {
+      "bytes": 18455,
+      "sha256": "217999b5969a29224868fe731284493e04ce0ef33bd225fc4c9f3bc3f8b5b84c"
+    },
+    "experiments/m193c-output-grid/derivative-controls-preregister.md": {
+      "bytes": 14799,
+      "sha256": "7c9f359a100d3b1f7c0522e8635f9178e0147756e61bcbc1373fd37324fbe5dc"
+    },
+    "experiments/m193c-output-grid/independent-derivative-design-review.md": {
+      "bytes": 11291,
+      "sha256": "3c63fe97679509b77523788e14209d0e0238133d1a1ac478ae197e796f0fc54a"
+    },
+    "experiments/m193c-output-grid/independent-derivative-read.py": {
+      "bytes": 61341,
+      "sha256": "8c571654667f8ef66520aedfd1bddceb991c8a86d1a7355a4ed21cf2ba85eced"
+    },
+    "experiments/m193c-output-grid/independent-derivative-reader-preregister.md": {
+      "bytes": 10711,
+      "sha256": "bf8a6c2a13b109fb8e5cb8e3c1a9f1ce47931ded220de909118636645bd8a990"
+    },
+    "experiments/m193c-output-grid/independent-derivative-tiff.py": {
+      "bytes": 8144,
+      "sha256": "9acceb498568967bb02ce01389441da09de7502f3a51faebbed8fed61943a5ae"
+    },
+    "experiments/m193c-output-grid/independent-grid-read.py": {
+      "bytes": 50979,
+      "sha256": "435b147a390a2917c8d032d3a254b0fd3fb689d51f72ad101b432652ce21d0d7"
+    },
+    "experiments/m193c-output-grid/independent-private-read.py": {
+      "bytes": 20408,
+      "sha256": "e943584dbd993639e804132451b11574a5d98f8c8a867ac274b5cef17938cdbc"
+    },
+    "experiments/m193c-output-grid/precision-witness.rs": {
+      "bytes": 7697,
+      "sha256": "6979f6e51b9bf9028002c9cdfff81f4925f293ce79386eb49fa4a84bec643cc9"
+    },
+    "experiments/m193c-output-grid/private-adapter.rs": {
+      "bytes": 23746,
+      "sha256": "e9fe4be0fe6354e00294900c8f5bad1aade76fbbfb2be1367bb7cafa13ed85a8"
+    },
+    "experiments/m193c-output-grid/private-campaign-preregister.md": {
+      "bytes": 11764,
+      "sha256": "21dc02994b6ca2e27fcc26010209c95beca6f6d050c96548b0d1ff717980aa00"
+    },
+    "experiments/m193c-output-grid/private-campaign.py": {
+      "bytes": 48401,
+      "sha256": "25d666a54973883ac91f8095add61349a6bbda96a9977ddb9e6f29c12c8fa420"
+    },
+    "experiments/m193c-output-grid/private-grid-run.py": {
+      "bytes": 22426,
+      "sha256": "9d0c9dcc60e41ca8520152033fd931e50ccc850263f539698a296509cf83f0b4"
+    },
+    "experiments/m193c-output-grid/private-protocol.md": {
+      "bytes": 20999,
+      "sha256": "990ccd293c9e4f1f9179d33334e0ff5e85d077862dc6456e938d4e3643ff092e"
+    },
+    "experiments/m193c-output-grid/private-reader-preregister.md": {
+      "bytes": 14763,
+      "sha256": "b2f976b7aa72b27fa232261095a93a5a20e9b62b6901164e7bdbabd785dd72f2"
+    },
+    "experiments/m193c-output-grid/private-reader-wrapper-preregister.md": {
+      "bytes": 2773,
+      "sha256": "0f20e75f6d45c562cf8a2e632e4fe0e491465da031bb5165862a82f7ed9c17f6"
+    },
+    "experiments/m193c-output-grid/registration-derivative-design.md": {
+      "bytes": 20652,
+      "sha256": "f503af4c7805f8e4b2f4771b2baaf31599ed9f0ca583d2958a1a6da11a408d68"
+    },
+    "experiments/m193c-output-grid/registration-derivative.rs": {
+      "bytes": 39489,
+      "sha256": "db2a4d0c36d3f0778481e8a9837feef1c2651258865799bbd143b6bb0840eecd"
+    },
+    "experiments/m194-production-truth/independent-controls.rs": {
+      "bytes": 19528,
+      "sha256": "bd5777f1f960e7db217fda4b4ce9f24a963cea9351d244acf8aac84ee68f718f"
+    },
+    "experiments/m194c-probe-layout/author-tests.rs": {
+      "bytes": 9396,
+      "sha256": "6eb9940f98e7e21012ae83011fdc30d290654cdd55dafd320ad3f9918e6ad3bc"
+    },
+    "experiments/m194c-probe-layout/independent-tests.rs": {
+      "bytes": 21156,
+      "sha256": "72accd1598756d13e340947ded9c27f40c65420bd137c593b962131ddf8dc58d"
+    },
+    "experiments/m194c-probe-layout/legacy-fill-noise.rs": {
+      "bytes": 1191,
+      "sha256": "ffdc647077cb18f9161b8cc6e04f53d155220bc817adbf2a4da1b3d9b4c47388"
+    },
+    "experiments/m194d-band-admission/author-core-tests.rs": {
+      "bytes": 8252,
+      "sha256": "c9059e3d59c56bc0a716bd788a995bcfffb517e8db5c405798ad8e3c88b20099"
+    },
+    "experiments/m194d-band-admission/independent-consumer-tests.rs": {
+      "bytes": 13170,
+      "sha256": "1942370ba982c6a5bf07e99fd6eda3af28830b63a06dbafa75b24d20fb4248f1"
+    },
+    "experiments/m194d-band-admission/independent-core-tests.rs": {
+      "bytes": 13115,
+      "sha256": "89718084f205e087819fb7aa7d8073ca9977d2182fe246e9833e720133d060ae"
+    },
+    "experiments/m194f-production-bridge/author-controls.rs": {
+      "bytes": 9362,
+      "sha256": "b7e611c0c2c42a108391fdc517dbb6b8d841026a0d2e32c7bf3330c595ffccf0"
+    },
+    "experiments/m194f-production-bridge/independent-reader-controls.rs": {
+      "bytes": 37174,
+      "sha256": "1428f4e870da36c39e50f2d58e96f87e26454d00221a9ecd8e19a0491d8573a7"
+    },
+    "experiments/m194g-larger-pupil/independent-rgb-tiff.py": {
+      "bytes": 7305,
+      "sha256": "d01a74aefcfa15b2146256b54ea51876715ab203b7de123b3cff2b0af4a1b19c"
+    }
+  },
+  "sources_before": {
+    "Cargo.lock": {
+      "bytes": 43571,
+      "sha256": "82a228ddda138d1b6269e1a32a6e55377369bb94923e92da362cf11cc9569a4b"
+    },
+    "Cargo.toml": {
+      "bytes": 1009,
+      "sha256": "732c5d4d874594cccbfd896ae688afa01e91290f0b1c8fd0331fa8b06f914984"
+    },
+    "crates/strehl-cli/Cargo.toml": {
+      "bytes": 782,
+      "sha256": "d0e6b05aa93df026270e513fd3e5ab9cd50726596ef1475b8a3680faa84b2650"
+    },
+    "crates/strehl-cli/build.rs": {
+      "bytes": 5591,
+      "sha256": "5b864155733a90c2a4f7152e21d3dbcc5d5e0f469b4aa772c328fe86e4aa2091"
+    },
+    "crates/strehl-cli/examples/blend-render.rs": {
+      "bytes": 29695,
+      "sha256": "86c403dc074519bdf54dd66226a82ac935d8a91a26d44799596989fbcacd25b9"
+    },
+    "crates/strehl-cli/examples/blend-truth.rs": {
+      "bytes": 29918,
+      "sha256": "38a5a9464a7c09521dad8320a90faea4f25a09aead175af3f37f25dc7e034ca2"
+    },
+    "crates/strehl-cli/examples/build-demosaic-truth.rs": {
+      "bytes": 59669,
+      "sha256": "fb33639b174986c9159b8a544b46b5cb4aa3a514a4315a80738c55b4305f27fd"
+    },
+    "crates/strehl-cli/examples/build-gatefloor.rs": {
+      "bytes": 22941,
+      "sha256": "c377d932c168c8ac5d74ae3c96e9a1d714726ccb91fca01697b5e1596e8de0cd"
+    },
+    "crates/strehl-cli/examples/build-plugin-field.rs": {
+      "bytes": 8051,
+      "sha256": "a733f23be4a3d385a4011f249b8fd3769a3fd018dade66aa43c9d19935ec6f71"
+    },
+    "crates/strehl-cli/examples/build-resamp-mtf.rs": {
+      "bytes": 11067,
+      "sha256": "69dd26cb260d9d0435ec1689dbcfd27b0cab16f9feffe82d3b944701e80bcb27"
+    },
+    "crates/strehl-cli/examples/cover-reference.rs": {
+      "bytes": 28329,
+      "sha256": "f1762977aa8ae7c1d95366f5c65a6857dc6ab012e9e7323a4054ff6cd2bf5c7e"
+    },
+    "crates/strehl-cli/examples/defect-cpl-split.rs": {
+      "bytes": 38484,
+      "sha256": "0131f7bbdbfb6f840472e318a290205134f739f4f4b93c441a2d8d4f42873bb4"
+    },
+    "crates/strehl-cli/examples/defect-flat-census.rs": {
+      "bytes": 20797,
+      "sha256": "070f2e343597916269cc4699d34a7bd485dccac9d17b185303af152a745c8273"
+    },
+    "crates/strehl-cli/examples/defect-geometry-census.rs": {
+      "bytes": 4797,
+      "sha256": "23e3d8ff39020a9ef09701bd17886ea09249f503495f5e527c53d84a014126e4"
+    },
+    "crates/strehl-cli/examples/defect-geometry-verdict.rs": {
+      "bytes": 8268,
+      "sha256": "38e4e8ea3afb115a018413985813e730bd109351489f761c771f2cf144a62749"
+    },
+    "crates/strehl-cli/examples/defect-plant-fidelity.rs": {
+      "bytes": 65194,
+      "sha256": "bff657c34c0ac00bba47b75dd17f7698e47328631600718e0c2adfe99adcb7f5"
+    },
+    "crates/strehl-cli/examples/m123-null-radius.rs": {
+      "bytes": 20318,
+      "sha256": "29780cdb8f20768705949bf5622783faff6ba2cb9d46326779eb064ac0a941cd"
+    },
+    "crates/strehl-cli/examples/m123-outlier-real.rs": {
+      "bytes": 15716,
+      "sha256": "3cb776b76023f5ebe7ac5ffa588e31b4b0a8c34d98794d2cd174ef071d638275"
+    },
+    "crates/strehl-cli/examples/m123-trap-decompose.rs": {
+      "bytes": 9579,
+      "sha256": "be1462beb949bf32eb1e54b3a598ad488ee616aca79704a2940f9049f5aecf9f"
+    },
+    "crates/strehl-cli/examples/m60-disagreement.rs": {
+      "bytes": 27439,
+      "sha256": "e6800fabce502189bba14148b42f96ceabd893e77e8732af27394592a219a93b"
+    },
+    "crates/strehl-cli/examples/m65-election.rs": {
+      "bytes": 23194,
+      "sha256": "8bb8b1f268107d171ca8d3454687c02ca0bec24dea629ede433f9547c993ae8f"
+    },
+    "crates/strehl-cli/examples/m67-focus-correctness.rs": {
+      "bytes": 27183,
+      "sha256": "9b2fa813ced90939f7cb065fbb12662fd8129b4e06269183764e6e52e048881c"
+    },
+    "crates/strehl-cli/examples/m73-cylinder.rs": {
+      "bytes": 22475,
+      "sha256": "b42700a1384eb2d6f12d4072b4040fbe3f4da82cf27de1d71eb47fd181e7cd55"
+    },
+    "crates/strehl-cli/examples/m86-align.rs": {
+      "bytes": 72686,
+      "sha256": "63dad30331cf9ecb293374d35133f1f9062592e016f3cafd767b962b76080a2e"
+    },
+    "crates/strehl-cli/examples/m89-robust.rs": {
+      "bytes": 61874,
+      "sha256": "acb6f32abf2d40dd9b1d00085710ee4b5ae77c34481a3730ba6bb76bdebbaa2f"
+    },
+    "crates/strehl-cli/examples/m90-prnu.rs": {
+      "bytes": 56536,
+      "sha256": "7e5a232e10d70ea7809780ea32f578a7aadf6cff46a3d2df45ffc5e79031f5c8"
+    },
+    "crates/strehl-cli/examples/m90-rho.rs": {
+      "bytes": 52401,
+      "sha256": "fbe0faadaa636616cec0755e872509e33a65a108b636d50f5a359e6f3a582d7f"
+    },
+    "crates/strehl-cli/examples/m91-photometry.rs": {
+      "bytes": 50889,
+      "sha256": "e39f2f6d95e0606ec7f9525991b17c4519d4c3deac709188f8b5e3eaa1625f61"
+    },
+    "crates/strehl-cli/examples/m93-election.rs": {
+      "bytes": 42218,
+      "sha256": "d63a840f830be4489fc32c05c8f11e3c26e10e163df40d6eb15f1ad9c39ea677"
+    },
+    "crates/strehl-cli/examples/m95-demosaic.rs": {
+      "bytes": 2769,
+      "sha256": "8210edf48821204928af800b307617389f4a1b7a0e24003f1c6d9375436fde81"
+    },
+    "crates/strehl-cli/examples/m95-kernel.rs": {
+      "bytes": 45407,
+      "sha256": "bd2391e8b83da68b742cf0bf98834315c013e07afa1fd6afbc79f06ca3c1d614"
+    },
+    "crates/strehl-cli/examples/m95-lanczos.rs": {
+      "bytes": 4867,
+      "sha256": "61d6f4d5ba260cd3c601f1a9f525b2cac922ef42270ebec3c58f0e5dc04fa298"
+    },
+    "crates/strehl-cli/examples/m96-election-margin.rs": {
+      "bytes": 52503,
+      "sha256": "06d62fd30245590a74d6c948d3d7ef0421e65b836c32abbc39d71ed364470eac"
+    },
+    "crates/strehl-cli/examples/m97-outlier.rs": {
+      "bytes": 7713,
+      "sha256": "cb6562b5d0a3352ef7005fdc82a65f8ba80821739ca851402cd42f556248652c"
+    },
+    "crates/strehl-cli/examples/m97-tornmap.rs": {
+      "bytes": 5909,
+      "sha256": "55b21b7803d7a1afe7305c80a799f0e1de89b76098878c1deef8e9c6a7a1ff4e"
+    },
+    "crates/strehl-cli/examples/m99-photometric.rs": {
+      "bytes": 40516,
+      "sha256": "a253c53102f873961dbd13c3190e178374c58e3c7967e2fef407b5865e59b512"
+    },
+    "crates/strehl-cli/src/align_cmd.rs": {
+      "bytes": 122446,
+      "sha256": "b3de7738151a6bc0500c66dd916f9fcb20cdb9be0bf698ad00425d3ebb397c69"
+    },
+    "crates/strehl-cli/src/bin/strehl-common-input.rs": {
+      "bytes": 7369,
+      "sha256": "0abf5917357365ba83028f82c0a2855917ad45071d95d3ec2d404702de1ef31f"
+    },
+    "crates/strehl-cli/src/focus_plugin.rs": {
+      "bytes": 7354,
+      "sha256": "d917dba8f3bfc57a709b7af6650dc43a34724383270ac5faec986ed3a963d337"
+    },
+    "crates/strehl-cli/src/image_out.rs": {
+      "bytes": 134835,
+      "sha256": "c1362363740cb0176985283455cd6ddef80479854b1bbc9f0396851c490f82b6"
+    },
+    "crates/strehl-cli/src/main.rs": {
+      "bytes": 89041,
+      "sha256": "a29e0f975764b75491eb3147e94f15b05944120cdc3cdd55a24830a89a2e5340"
+    },
+    "crates/strehl-cli/src/merge_cmd.rs": {
+      "bytes": 425678,
+      "sha256": "ca829e45c7021c5c5df7b51da85859e3763a9a95d01d302a91ab7cd0687b2dcf"
+    },
+    "crates/strehl-cli/src/merge_cmd/band-admission-benchmark.rs": {
+      "bytes": 1870,
+      "sha256": "d275b189d374117de2f6d5d9aa163417d675adba1820d96f42e9dfe0d322c2c3"
+    },
+    "crates/strehl-cli/src/merge_cmd/dump.rs": {
+      "bytes": 7245,
+      "sha256": "2827483acbbce3dc528f3d27642cb54e8c8f99abb85b0b23f89f59c53c93bfe3"
+    },
+    "crates/strehl-cli/src/merge_cmd/gatefloor.rs": {
+      "bytes": 22127,
+      "sha256": "bcea35986c73011c20d872bddc9c0ef3ea9354101259bd3952c16976bb1c9496"
+    },
+    "crates/strehl-cli/src/merge_cmd/halo.rs": {
+      "bytes": 24425,
+      "sha256": "fc234df8b515f982bbc527448ea0a0764c30b088385405d85f253800aaf7dd55"
+    },
+    "crates/strehl-cli/src/merge_cmd/joint-pupil-bridge.rs": {
+      "bytes": 45153,
+      "sha256": "8295981a03e54f05009f3510dc39addf150ddd72303913530f2603d3c744ab33"
+    },
+    "crates/strehl-cli/src/merge_cmd/known-scene-benchmark.rs": {
+      "bytes": 29747,
+      "sha256": "38e1ed45531f0ba02b0cdd1b8aecf0d99f5f123826c086158aedbeb8d994a573"
+    },
+    "crates/strehl-cli/src/merge_cmd/noise-pupil-bridge.rs": {
+      "bytes": 67493,
+      "sha256": "2a59b81e4044673d14049c36fbffd3d80af6445d6f734b9273ef65b0425df028"
+    },
+    "crates/strehl-cli/src/merge_cmd/production-truth.rs": {
+      "bytes": 12917,
+      "sha256": "11aab6eb649ee6dacd67abe7083b1e4ea7dfda40f6191ae476170e2448094c44"
+    },
+    "crates/strehl-cli/src/stack.rs": {
+      "bytes": 107231,
+      "sha256": "108bb38a964946c7e7b7c25c640ce08297835faee253ad4e059e6074f5655572"
+    },
+    "crates/strehl-cli/tests/byte-freeze.rs": {
+      "bytes": 103042,
+      "sha256": "750efd0d5605d76bc1e5000e9945a58d57ef4418ec25299cd27920408f53976c"
+    },
+    "crates/strehl-cli/tests/byte-freezes.tsv": {
+      "bytes": 20801,
+      "sha256": "d74c3f1da19c0edf6625bc6a26ccad3de6a6ab6c201f009d009b9999c5f4d001"
+    },
+    "crates/strehl-cli/tests/data/coffee-bean-20.clamped-catmull.warpmap.txt": {
+      "bytes": 3211,
+      "sha256": "d35352b083530cf52d7649d384e046e3eb410de41b4f5444c4b7992338900fe8"
+    },
+    "crates/strehl-cli/tests/data/coffee-bean-20.warpmap.txt": {
+      "bytes": 3171,
+      "sha256": "ef74541395db1ba606067bcf04947909bd6a9c5be530fe8aad21578b5c1e93b3"
+    },
+    "crates/strehl-core/Cargo.toml": {
+      "bytes": 367,
+      "sha256": "25bdef9c60ef30849ba184116f2b5aa202b07baf55da22ca311f725ab56bde16"
+    },
+    "crates/strehl-core/examples/demosaic-plane.rs": {
+      "bytes": 3109,
+      "sha256": "d40278227e647f195be75e1c199eab04132cdc21c7ae07648cf29bbb410d2f8c"
+    },
+    "crates/strehl-core/examples/focus-window-cost.rs": {
+      "bytes": 6180,
+      "sha256": "ddb8aa01857c03860f62fbbf82793e8e1b5d2df32adde877269af2be39c9b997"
+    },
+    "crates/strehl-core/examples/restore-plane.rs": {
+      "bytes": 3047,
+      "sha256": "5707ab9a2a66333968936d704ea8888fa7535dc6e0b7c73c1a3f815fd2c1a0d1"
+    },
+    "crates/strehl-core/src/align.rs": {
+      "bytes": 147932,
+      "sha256": "6d33f0e24f21d4370ccd8df0bf618e54a5ad615b838bc265469b4f85051c2786"
+    },
+    "crates/strehl-core/src/boxfilter.rs": {
+      "bytes": 7986,
+      "sha256": "5cf6dab36c8ddb7499acbec140df509b4e1e5fe0b0ace3a13f8d7cf68f979b8e"
+    },
+    "crates/strehl-core/src/clip.rs": {
+      "bytes": 10231,
+      "sha256": "aa1ccdac944d928879f94770b2161152a271f9fa208c57c66d8921e5a643533d"
+    },
+    "crates/strehl-core/src/color.rs": {
+      "bytes": 83992,
+      "sha256": "83c1aa371dc751862bfef5724a6eceab8182c5d68b6f31ac299b3443c14c8f1e"
+    },
+    "crates/strehl-core/src/defect-map-ILCE-7CM2-dust.txt": {
+      "bytes": 23797,
+      "sha256": "a406efd51f806e360e1e51fc1421eca5e3cc912f356ced0693c8477a398853ee"
+    },
+    "crates/strehl-core/src/defect_map.rs": {
+      "bytes": 176181,
+      "sha256": "1738c770c9f316a6aeac3f742bf7abc9581ea386b4e07ec128e50df35c2ffb14"
+    },
+    "crates/strehl-core/src/demosaic.rs": {
+      "bytes": 51381,
+      "sha256": "425d6889485011cf6f2aaf57b0b873f15fd6ee3250853f3ba5f6540b496b3810"
+    },
+    "crates/strehl-core/src/edgeaware.rs": {
+      "bytes": 105131,
+      "sha256": "a32580ac72dd273e62cab40afa9b36e2462ef57335c8d7cd8ab0725184c7f77b"
+    },
+    "crates/strehl-core/src/election_coherence.rs": {
+      "bytes": 13331,
+      "sha256": "47640a176cb445dd2f01b309d907da066ae7f5a6d28b354d2de60362538f948e"
+    },
+    "crates/strehl-core/src/flat_ratio.rs": {
+      "bytes": 32764,
+      "sha256": "da1df7167b6f18ac248c1ee347671388391a968aa45a762299c4418a2287fef0"
+    },
+    "crates/strehl-core/src/focus.rs": {
+      "bytes": 78172,
+      "sha256": "71e63def76e40f18df440617a9dba7013d799ceabd30bf805149223433384e3e"
+    },
+    "crates/strehl-core/src/highlight.rs": {
+      "bytes": 29639,
+      "sha256": "97d4aacec3d7e6c3dd2df1f792ffb7ee136a8f6064ffb0dc1656476730f7641e"
+    },
+    "crates/strehl-core/src/lib.rs": {
+      "bytes": 4356,
+      "sha256": "91419ceb273be1dc9ab15dbdc6347bd2b398d29cf36c0da9184ee533372f8022"
+    },
+    "crates/strehl-core/src/merge.rs": {
+      "bytes": 253103,
+      "sha256": "7362cf6fab70db56443693e5483f052ba48b32cc7ef264d64ec4a7bd1b50e4ef"
+    },
+    "crates/strehl-core/src/noise.rs": {
+      "bytes": 29746,
+      "sha256": "d88dc9cf419a8fdb1e3ff2c51f0b0ac80d785c17de7f9e71e905fc977fce0ecc"
+    },
+    "crates/strehl-core/src/optics.rs": {
+      "bytes": 93722,
+      "sha256": "1884fd98c7a2adf903c152b3d877051cfeba71316bdbb797fd2f1ba1433a5524"
+    },
+    "crates/strehl-core/src/outlier.rs": {
+      "bytes": 51153,
+      "sha256": "8d3fb7a225b5811c2d831db4339953b15a5181bfcda7591ac05f23f6adf5e67d"
+    },
+    "crates/strehl-core/src/photometric.rs": {
+      "bytes": 83028,
+      "sha256": "b6102288c7fc2312f16d108dc3d943d290a5b8fd5d5a5c39306d97489191399b"
+    },
+    "crates/strehl-core/src/plane.rs": {
+      "bytes": 11536,
+      "sha256": "8c219f9c4d2c8c0da19416998b0f369a9f9d44e305740664f29caaba69203dc4"
+    },
+    "crates/strehl-core/src/profile.rs": {
+      "bytes": 44194,
+      "sha256": "07e7cf7b3040239a5a32464ae998a434696031010ce8d87dac7f2dd2a95ac1f1"
+    },
+    "crates/strehl-core/src/pyramid.rs": {
+      "bytes": 207878,
+      "sha256": "848b485271abc48ee496ee69d70a1e01f45074bfbccde7a7ca076ded90f77d9e"
+    },
+    "crates/strehl-core/src/restore.rs": {
+      "bytes": 60029,
+      "sha256": "3ab5c6660b7a45837ac4b5560078092e6aafa9c85a041a935e95b0cd77533afd"
+    },
+    "crates/strehl-core/src/robust.rs": {
+      "bytes": 31317,
+      "sha256": "2cf6013b948f5c9d4f11783633f04e6d76ac9830383197c05506b0d68fe24004"
+    },
+    "crates/strehl-core/src/softgate.rs": {
+      "bytes": 25418,
+      "sha256": "0cb0f916dade24e6e3a31529378390a083c6c56cb3e8b479eb7eb65ac04f688d"
+    },
+    "crates/strehl-core/src/stack.rs": {
+      "bytes": 20542,
+      "sha256": "c951cdbb304e4894676f1ff6a77316e7e2ab68d7756f22bf623562380d5f6337"
+    },
+    "crates/strehl-core/src/through_focus.rs": {
+      "bytes": 90250,
+      "sha256": "475a6c4eece089638ab916e3d7f4cf480197e2d838b5244347c16762f5122a3d"
+    },
+    "crates/strehl-core/src/warpmap.rs": {
+      "bytes": 54829,
+      "sha256": "9d2198eeab5e8a941e297cf8fcd8a217d2454390220433ae19cc6b07e6fd721b"
+    },
+    "crates/strehl-plugin/Cargo.toml": {
+      "bytes": 417,
+      "sha256": "b3fd67fd414ac138119f4ab8dedaee280cea23b1bcc20f21f066f09d3575c88c"
+    },
+    "crates/strehl-plugin/examples/calibration-survey.rs": {
+      "bytes": 2842,
+      "sha256": "b453361321e0e777148121ba5a4b8edff557a5d59aa1d9615b91386208c4aafe"
+    },
+    "crates/strehl-plugin/examples/f5-design-probes.rs": {
+      "bytes": 6954,
+      "sha256": "4f368b7e3ec8ab522183ee3b86fa36adbee76a2b5d772c8f0bafcc9706536676"
+    },
+    "crates/strehl-plugin/src/calibrate.rs": {
+      "bytes": 36532,
+      "sha256": "7e10fbd56d8257f409a083461854bf999f8c97ce1a65aad5f90da3b76c8d2a10"
+    },
+    "crates/strehl-plugin/src/field.rs": {
+      "bytes": 7730,
+      "sha256": "6a1da0df1fc4d6ba5e7cbfc0bc3d79295e89bca7b21647f237154bd97018ced5"
+    },
+    "crates/strehl-plugin/src/lib.rs": {
+      "bytes": 8756,
+      "sha256": "9dbb902a31cb21ba5e07fe1576f96b0cffad2dd8fed70a777c2bfaaab41f97e7"
+    },
+    "crates/strehl-plugin/src/measure.rs": {
+      "bytes": 8713,
+      "sha256": "a3941112f7e5a19b2929d83e95afa97d7be1f2ed3465d6160715386705a23c20"
+    },
+    "crates/strehl-plugin/src/reference.rs": {
+      "bytes": 28757,
+      "sha256": "eca4ecf81d1e783c48d680323907fd34336d1f3d5accdedfbdf726e14e847cfb"
+    },
+    "crates/strehl-plugin/src/registry.rs": {
+      "bytes": 25801,
+      "sha256": "1543ba679a56bdcd9ff625e54c9efd97d74c316cbf0726866e125cc1eb806a35"
+    },
+    "crates/strehl-plugin/src/rng.rs": {
+      "bytes": 9324,
+      "sha256": "402c5fa0acb97df6de6df14a51935de05ad9a71d20f4a909a9f7154f52442225"
+    },
+    "crates/strehl-raw/Cargo.toml": {
+      "bytes": 424,
+      "sha256": "6e1e7cfdadb24371423143fb10945b0e61b3f45696365aa87a721661edde31c9"
+    },
+    "crates/strehl-raw/examples/identity.rs": {
+      "bytes": 1657,
+      "sha256": "78cdc478590b5bfd46bf3bcbed46cb0d74f5d788b08d38a5fd98636d46443668"
+    },
+    "crates/strehl-raw/src/common_tiff.rs": {
+      "bytes": 33071,
+      "sha256": "bac1d18f036b8960a8e82d01b610ae945d00d259d4cc3fe7eb9106e8a8077f42"
+    },
+    "crates/strehl-raw/src/identity.rs": {
+      "bytes": 36796,
+      "sha256": "676d18872656a72a93e3257b1677c38ea2ee39084574e1153bdbbfbc6e8ad1fe"
+    },
+    "crates/strehl-raw/src/lib.rs": {
+      "bytes": 24809,
+      "sha256": "1513fd3e682f2edb8c54c7d47083f20f66525ad72a5687fb2e530bb5697fef2a"
+    },
+    "experiments/m12-scorecard/m12-harness.py": {
+      "bytes": 117908,
+      "sha256": "6cfb408992f37b225f102da4d62ba836f9c5b67c92bdd418ff460987866a1bb9"
+    },
+    "experiments/m193c-output-grid/bounded-process.py": {
+      "bytes": 12664,
+      "sha256": "47b9f8d848759eba61f055b9fdca1f8ac400f134dcd7636f0e0eaaa955704e0b"
+    },
+    "experiments/m193c-output-grid/bridge-build.py": {
+      "bytes": 14682,
+      "sha256": "e0ab57c437af32b61f8f8ed6d7cfb0407789974f6db40151c2f49f302edfa255"
+    },
+    "experiments/m193c-output-grid/controller-child.py": {
+      "bytes": 4416,
+      "sha256": "8944b1387990a262d1ad47c44ee2bbd7de281323185a0758802f1637289d2788"
+    },
+    "experiments/m193c-output-grid/controller-controls.py": {
+      "bytes": 18455,
+      "sha256": "217999b5969a29224868fe731284493e04ce0ef33bd225fc4c9f3bc3f8b5b84c"
+    },
+    "experiments/m193c-output-grid/derivative-controls-preregister.md": {
+      "bytes": 14799,
+      "sha256": "7c9f359a100d3b1f7c0522e8635f9178e0147756e61bcbc1373fd37324fbe5dc"
+    },
+    "experiments/m193c-output-grid/independent-derivative-design-review.md": {
+      "bytes": 11291,
+      "sha256": "3c63fe97679509b77523788e14209d0e0238133d1a1ac478ae197e796f0fc54a"
+    },
+    "experiments/m193c-output-grid/independent-derivative-read.py": {
+      "bytes": 61341,
+      "sha256": "8c571654667f8ef66520aedfd1bddceb991c8a86d1a7355a4ed21cf2ba85eced"
+    },
+    "experiments/m193c-output-grid/independent-derivative-reader-preregister.md": {
+      "bytes": 10711,
+      "sha256": "bf8a6c2a13b109fb8e5cb8e3c1a9f1ce47931ded220de909118636645bd8a990"
+    },
+    "experiments/m193c-output-grid/independent-derivative-tiff.py": {
+      "bytes": 8144,
+      "sha256": "9acceb498568967bb02ce01389441da09de7502f3a51faebbed8fed61943a5ae"
+    },
+    "experiments/m193c-output-grid/independent-grid-read.py": {
+      "bytes": 50979,
+      "sha256": "435b147a390a2917c8d032d3a254b0fd3fb689d51f72ad101b432652ce21d0d7"
+    },
+    "experiments/m193c-output-grid/independent-private-read.py": {
+      "bytes": 20408,
+      "sha256": "e943584dbd993639e804132451b11574a5d98f8c8a867ac274b5cef17938cdbc"
+    },
+    "experiments/m193c-output-grid/precision-witness.rs": {
+      "bytes": 7697,
+      "sha256": "6979f6e51b9bf9028002c9cdfff81f4925f293ce79386eb49fa4a84bec643cc9"
+    },
+    "experiments/m193c-output-grid/private-adapter.rs": {
+      "bytes": 23746,
+      "sha256": "e9fe4be0fe6354e00294900c8f5bad1aade76fbbfb2be1367bb7cafa13ed85a8"
+    },
+    "experiments/m193c-output-grid/private-campaign-preregister.md": {
+      "bytes": 11764,
+      "sha256": "21dc02994b6ca2e27fcc26010209c95beca6f6d050c96548b0d1ff717980aa00"
+    },
+    "experiments/m193c-output-grid/private-campaign.py": {
+      "bytes": 48401,
+      "sha256": "25d666a54973883ac91f8095add61349a6bbda96a9977ddb9e6f29c12c8fa420"
+    },
+    "experiments/m193c-output-grid/private-grid-run.py": {
+      "bytes": 22426,
+      "sha256": "9d0c9dcc60e41ca8520152033fd931e50ccc850263f539698a296509cf83f0b4"
+    },
+    "experiments/m193c-output-grid/private-protocol.md": {
+      "bytes": 20999,
+      "sha256": "990ccd293c9e4f1f9179d33334e0ff5e85d077862dc6456e938d4e3643ff092e"
+    },
+    "experiments/m193c-output-grid/private-reader-preregister.md": {
+      "bytes": 14763,
+      "sha256": "b2f976b7aa72b27fa232261095a93a5a20e9b62b6901164e7bdbabd785dd72f2"
+    },
+    "experiments/m193c-output-grid/private-reader-wrapper-preregister.md": {
+      "bytes": 2773,
+      "sha256": "0f20e75f6d45c562cf8a2e632e4fe0e491465da031bb5165862a82f7ed9c17f6"
+    },
+    "experiments/m193c-output-grid/registration-derivative-design.md": {
+      "bytes": 20652,
+      "sha256": "f503af4c7805f8e4b2f4771b2baaf31599ed9f0ca583d2958a1a6da11a408d68"
+    },
+    "experiments/m193c-output-grid/registration-derivative.rs": {
+      "bytes": 39489,
+      "sha256": "db2a4d0c36d3f0778481e8a9837feef1c2651258865799bbd143b6bb0840eecd"
+    },
+    "experiments/m194-production-truth/independent-controls.rs": {
+      "bytes": 19528,
+      "sha256": "bd5777f1f960e7db217fda4b4ce9f24a963cea9351d244acf8aac84ee68f718f"
+    },
+    "experiments/m194c-probe-layout/author-tests.rs": {
+      "bytes": 9396,
+      "sha256": "6eb9940f98e7e21012ae83011fdc30d290654cdd55dafd320ad3f9918e6ad3bc"
+    },
+    "experiments/m194c-probe-layout/independent-tests.rs": {
+      "bytes": 21156,
+      "sha256": "72accd1598756d13e340947ded9c27f40c65420bd137c593b962131ddf8dc58d"
+    },
+    "experiments/m194c-probe-layout/legacy-fill-noise.rs": {
+      "bytes": 1191,
+      "sha256": "ffdc647077cb18f9161b8cc6e04f53d155220bc817adbf2a4da1b3d9b4c47388"
+    },
+    "experiments/m194d-band-admission/author-core-tests.rs": {
+      "bytes": 8252,
+      "sha256": "c9059e3d59c56bc0a716bd788a995bcfffb517e8db5c405798ad8e3c88b20099"
+    },
+    "experiments/m194d-band-admission/independent-consumer-tests.rs": {
+      "bytes": 13170,
+      "sha256": "1942370ba982c6a5bf07e99fd6eda3af28830b63a06dbafa75b24d20fb4248f1"
+    },
+    "experiments/m194d-band-admission/independent-core-tests.rs": {
+      "bytes": 13115,
+      "sha256": "89718084f205e087819fb7aa7d8073ca9977d2182fe246e9833e720133d060ae"
+    },
+    "experiments/m194f-production-bridge/author-controls.rs": {
+      "bytes": 9362,
+      "sha256": "b7e611c0c2c42a108391fdc517dbb6b8d841026a0d2e32c7bf3330c595ffccf0"
+    },
+    "experiments/m194f-production-bridge/independent-reader-controls.rs": {
+      "bytes": 37174,
+      "sha256": "1428f4e870da36c39e50f2d58e96f87e26454d00221a9ecd8e19a0491d8573a7"
+    },
+    "experiments/m194g-larger-pupil/independent-rgb-tiff.py": {
+      "bytes": 7305,
+      "sha256": "d01a74aefcfa15b2146256b54ea51876715ab203b7de123b3cff2b0af4a1b19c"
+    }
+  },
+  "status": "PASS_GRID_ADAPTER_PRIVATE_ONLY",
+  "work": {
+    "authority_read_bytes": 234123021,
+    "cpu_seconds": 5.375,
+    "limits": {
+      "artifact_bytes": 33554432,
+      "cpu_seconds": 120,
+      "wall_seconds": 240
+    },
+    "numeric_reader": {
+      "cpu_seconds": 5.375,
+      "limits": {
+        "arrays": 33554432,
+        "cpu": 120,
+        "read_bytes": 302747891,
+        "wall": 240
+      },
+      "peak_array_bytes": 3686400,
+      "read_bytes": 57713070,
+      "wall_seconds": 5.593999999924563
+    },
+    "reserved_artifact_bytes": 7774929,
+    "scope": "pre-publication local sample; enclosing campaign owns terminal whole-process accounting",
+    "wall_seconds": 5.593999999924563
+  }
+}

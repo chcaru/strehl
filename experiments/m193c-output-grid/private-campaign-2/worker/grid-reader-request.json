@@ -1,0 +1,33 @@
+{
+  "build": {
+    "bytes": 51621,
+    "path": "experiments/m193c-output-grid/bridge-build-3/result.json",
+    "sha256": "bfb951c8ccc0b2278802e69c3ca27fd9138bb817457b365caaea31d5b82a2977"
+  },
+  "execution_release": {
+    "bytes": 32380,
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\private-campaign-release-2.json",
+    "sha256": "fb0505d6a738cead4863b87ce882d655b2962c6e79c189bbd5d3ce6783a457f0"
+  },
+  "producer_launch": {
+    "bytes": 5686,
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\private-campaign-2\\worker\\grid_producer-launch.json",
+    "sha256": "b3547b4c07de5654025bac88aab39f103890721604a239384f68533e8374a3de"
+  },
+  "producer_result": {
+    "bytes": 178224,
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\private-campaign-2\\worker\\grid\\run-index.json",
+    "sha256": "9b98828f99933059becf969ce7332b1845dbf19ace421db5a441d58ae2a51642"
+  },
+  "reader_runtime": {
+    "bytes": 104952,
+    "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "sha256": "4d6f5f81a4bca11191c4c7c6b43632694d0a4ce74e068619d8fdc161d469859a"
+  },
+  "remaining_limits": {
+    "artifact_bytes": 33554432,
+    "cpu_seconds": 120,
+    "wall_seconds": 240
+  },
+  "schema": "m193c-grid-reader-request-v1"
+}

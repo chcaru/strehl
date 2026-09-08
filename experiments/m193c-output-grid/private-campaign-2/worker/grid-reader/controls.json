@@ -1,0 +1,439 @@
+{
+  "checks": [
+    {
+      "expected_boundary": null,
+      "id": "genuine-case-1",
+      "observed": null,
+      "status": "PASS_VALID_COMPANION"
+    },
+    {
+      "expected_boundary": null,
+      "id": "genuine-case-4",
+      "observed": null,
+      "status": "PASS_VALID_COMPANION"
+    },
+    {
+      "expected_boundary": null,
+      "id": "genuine-case-6",
+      "observed": null,
+      "status": "PASS_VALID_COMPANION"
+    },
+    {
+      "expected_boundary": null,
+      "id": "genuine-case-8",
+      "observed": null,
+      "status": "PASS_VALID_COMPANION"
+    },
+    {
+      "expected_boundary": null,
+      "id": "genuine-case-9",
+      "observed": null,
+      "status": "PASS_VALID_COMPANION"
+    },
+    {
+      "expected_boundary": "population",
+      "id": "missing-case",
+      "observed": {
+        "boundary": "population",
+        "message": "population: all ten rows",
+        "type": "Refusal"
+      },
+      "status": "PASS_EXPECTED_REFUSAL"
+    },
+    {
+      "expected_boundary": "population",
+      "id": "duplicate-case",
+      "observed": {
+        "boundary": "population",
+        "message": "population: typed literal",
+        "type": "Refusal"
+      },
+      "status": "PASS_EXPECTED_REFUSAL"
+    },
+    {
+      "expected_boundary": "population",
+      "id": "reordered-case",
+      "observed": {
+        "boundary": "population",
+        "message": "population: typed literal",
+        "type": "Refusal"
+      },
+      "status": "PASS_EXPECTED_REFUSAL"
+    },
+    {
+      "expected_boundary": "population",
+      "id": "bool-case-ordinal",
+      "observed": {
+        "boundary": "population",
+        "message": "population: typed literal",
+        "type": "Refusal"
+      },
+      "status": "PASS_EXPECTED_REFUSAL"
+    },
+    {
+      "expected_boundary": "geometry",
+      "id": "float-width",
+      "observed": {
+        "boundary": "geometry",
+        "message": "geometry: typed literal",
+        "type": "Refusal"
+      },
+      "status": "PASS_EXPECTED_REFUSAL"
+    },
+    {
+      "expected_boundary": "source",
+      "id": "float-decode-count",
+      "observed": {
+        "boundary": "source",
+        "message": "source: typed literal",
+        "type": "Refusal"
+      },
+      "status": "PASS_EXPECTED_REFUSAL"
+    },
+    {
+      "expected_boundary": "association",
+      "id": "wrong-local",
+      "observed": {
+        "boundary": "association",
+        "message": "association: typed literal",
+        "type": "Refusal"
+      },
+      "status": "PASS_EXPECTED_REFUSAL"
+    },
+    {
+      "expected_boundary": "association",
+      "id": "wrong-original",
+      "observed": {
+        "boundary": "association",
+        "message": "association: typed literal",
+        "type": "Refusal"
+      },
+      "status": "PASS_EXPECTED_REFUSAL"
+    },
+    {
+      "expected_boundary": "association",
+      "id": "wrong-probe",
+      "observed": {
+        "boundary": "association",
+        "message": "association: typed literal",
+        "type": "Refusal"
+      },
+      "status": "PASS_EXPECTED_REFUSAL"
+    },
+    {
+      "expected_boundary": "source",
+      "id": "stale-source",
+      "observed": {
+        "boundary": "source",
+        "message": "source: typed literal",
+        "type": "Refusal"
+      },
+      "status": "PASS_EXPECTED_REFUSAL"
+    },
+    {
+      "expected_boundary": "sensor",
+      "id": "changed-range",
+      "observed": {
+        "boundary": "sensor",
+        "message": "sensor: typed literal",
+        "type": "Refusal"
+      },
+      "status": "PASS_EXPECTED_REFUSAL"
+    },
+    {
+      "expected_boundary": "sensor",
+      "id": "nonunity-wb",
+      "observed": {
+        "boundary": "sensor",
+        "message": "sensor: real value",
+        "type": "Refusal"
+      },
+      "status": "PASS_EXPECTED_REFUSAL"
+    },
+    {
+      "expected_boundary": "config",
+      "id": "missing-final-hull",
+      "observed": {
+        "boundary": "config",
+        "message": "config: typed literal",
+        "type": "Refusal"
+      },
+      "status": "PASS_EXPECTED_REFUSAL"
+    },
+    {
+      "expected_boundary": "environment",
+      "id": "unexpected-environment",
+      "observed": {
+        "boundary": "environment",
+        "message": "environment: closed keys",
+        "type": "Refusal"
+      },
+      "status": "PASS_EXPECTED_REFUSAL"
+    },
+    {
+      "expected_boundary": "source",
+      "id": "wrong-compiled-source",
+      "observed": {
+        "boundary": "source",
+        "message": "source: typed literal",
+        "type": "Refusal"
+      },
+      "status": "PASS_EXPECTED_REFUSAL"
+    },
+    {
+      "expected_boundary": "receipt",
+      "id": "failed-receipt",
+      "observed": {
+        "boundary": "receipt",
+        "message": "receipt: typed literal",
+        "type": "Refusal"
+      },
+      "status": "PASS_EXPECTED_REFUSAL"
+    },
+    {
+      "expected_boundary": "receipt",
+      "id": "concealed-terminal-error",
+      "observed": {
+        "boundary": "receipt",
+        "message": "receipt: typed literal",
+        "type": "Refusal"
+      },
+      "status": "PASS_EXPECTED_REFUSAL"
+    },
+    {
+      "expected_boundary": "geometry",
+      "id": "wrong-half-pixel-centre",
+      "observed": {
+        "boundary": "geometry",
+        "message": "geometry: real value",
+        "type": "Refusal"
+      },
+      "status": "PASS_EXPECTED_REFUSAL"
+    },
+    {
+      "expected_boundary": "json",
+      "id": "duplicate-json-key",
+      "observed": {
+        "boundary": "json",
+        "message": "json: duplicate key",
+        "type": "Refusal"
+      },
+      "status": "PASS_EXPECTED_REFUSAL"
+    },
+    {
+      "expected_boundary": "json",
+      "id": "overflow-json-real",
+      "observed": {
+        "boundary": "json",
+        "message": "json: overflow literal",
+        "type": "Refusal"
+      },
+      "status": "PASS_EXPECTED_REFUSAL"
+    },
+    {
+      "expected_boundary": "coordinate",
+      "id": "changed-r-code",
+      "observed": {
+        "boundary": "coordinate",
+        "message": "coordinate: fixed paired-site bar",
+        "type": "Refusal"
+      },
+      "status": "PASS_EXPECTED_REFUSAL"
+    },
+    {
+      "expected_boundary": "coordinate",
+      "id": "swapped-r-b",
+      "observed": {
+        "boundary": "coordinate",
+        "message": "coordinate: fixed paired-site bar",
+        "type": "Refusal"
+      },
+      "status": "PASS_EXPECTED_REFUSAL"
+    },
+    {
+      "expected_boundary": "coordinate",
+      "id": "spatial-green-swap",
+      "observed": {
+        "boundary": "coordinate",
+        "message": "coordinate: fixed paired-site bar",
+        "type": "Refusal"
+      },
+      "status": "PASS_EXPECTED_REFUSAL"
+    },
+    {
+      "expected_boundary": "tiff-format",
+      "id": "appended-tiff",
+      "observed": {
+        "boundary": "tiff-format",
+        "message": "tiff-format: unreferenced trailing bytes",
+        "type": "Refusal"
+      },
+      "status": "PASS_EXPECTED_REFUSAL"
+    },
+    {
+      "expected_boundary": "coordinate",
+      "id": "transpose-output",
+      "observed": {
+        "boundary": "coordinate",
+        "message": "coordinate: fixed paired-site bar",
+        "type": "Refusal"
+      },
+      "status": "PASS_EXPECTED_REFUSAL"
+    },
+    {
+      "expected_boundary": "coordinate",
+      "id": "zero-crop",
+      "observed": {
+        "boundary": "coordinate",
+        "message": "coordinate: fixed paired-site bar",
+        "type": "Refusal"
+      },
+      "status": "PASS_EXPECTED_REFUSAL"
+    },
+    {
+      "expected_boundary": "coordinate",
+      "id": "exchange-crop",
+      "observed": {
+        "boundary": "coordinate",
+        "message": "coordinate: fixed paired-site bar",
+        "type": "Refusal"
+      },
+      "status": "PASS_EXPECTED_REFUSAL"
+    },
+    {
+      "expected_boundary": "coordinate",
+      "id": "quad-as-native",
+      "observed": {
+        "boundary": "coordinate",
+        "message": "coordinate: fixed paired-site bar",
+        "type": "Refusal"
+      },
+      "status": "PASS_EXPECTED_REFUSAL"
+    },
+    {
+      "expected_boundary": "coordinate",
+      "id": "unit-scale",
+      "observed": {
+        "boundary": "coordinate",
+        "message": "coordinate: fixed paired-site bar",
+        "type": "Refusal"
+      },
+      "status": "PASS_EXPECTED_REFUSAL"
+    },
+    {
+      "expected_boundary": "coordinate",
+      "id": "stale-association",
+      "observed": {
+        "boundary": "coordinate",
+        "message": "coordinate: fixed paired-site bar",
+        "type": "Refusal"
+      },
+      "status": "PASS_EXPECTED_REFUSAL"
+    },
+    {
+      "expected_boundary": "coordinate",
+      "id": "wrong-inverse",
+      "observed": {
+        "boundary": "coordinate",
+        "message": "coordinate: fixed paired-site bar",
+        "type": "Refusal"
+      },
+      "status": "PASS_EXPECTED_REFUSAL"
+    },
+    {
+      "expected_boundary": "rank",
+      "id": "rank-one-field",
+      "observed": {
+        "boundary": "rank",
+        "message": "rank: rank-two coordinates required",
+        "type": "Refusal"
+      },
+      "status": "PASS_EXPECTED_REFUSAL"
+    },
+    {
+      "expected_boundary": null,
+      "id": "restored-crop-pixels",
+      "observed": null,
+      "status": "PASS_VALID_COMPANION"
+    },
+    {
+      "expected_boundary": null,
+      "id": "restored-scale-pixels",
+      "observed": null,
+      "status": "PASS_VALID_COMPANION"
+    },
+    {
+      "expected_boundary": null,
+      "id": "restored-association-pixels",
+      "observed": null,
+      "status": "PASS_VALID_COMPANION"
+    },
+    {
+      "expected_boundary": null,
+      "id": "genuine-complete-precision",
+      "observed": null,
+      "status": "PASS_VALID_COMPANION"
+    },
+    {
+      "expected_boundary": "precision-kernel",
+      "id": "coherent-kernel-value-fault",
+      "observed": {
+        "boundary": "precision-kernel",
+        "message": "precision-kernel: typed literal",
+        "type": "Refusal"
+      },
+      "status": "PASS_EXPECTED_REFUSAL"
+    },
+    {
+      "expected_boundary": "precision-kernel",
+      "id": "omit-outer-kernel",
+      "observed": {
+        "boundary": "precision-kernel",
+        "message": "precision-kernel: typed literal",
+        "type": "Refusal"
+      },
+      "status": "PASS_EXPECTED_REFUSAL"
+    },
+    {
+      "expected_boundary": "precision-kernel",
+      "id": "opposite-channel-kernel",
+      "observed": {
+        "boundary": "precision-kernel",
+        "message": "precision-kernel: typed literal",
+        "type": "Refusal"
+      },
+      "status": "PASS_EXPECTED_REFUSAL"
+    },
+    {
+      "expected_boundary": null,
+      "id": "restored-complete-precision",
+      "observed": null,
+      "status": "PASS_VALID_COMPANION"
+    }
+  ],
+  "counts": {
+    "rejected": 35,
+    "total": 45,
+    "valid": 10
+  },
+  "error": null,
+  "precision": {
+    "bytes": 2503794,
+    "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid-reader/controls-precision.json",
+    "sha256": "3fb1d1e2cd7357a378aeff56c0041b143edb3525e3c017aae907cc6d69262601"
+  },
+  "schema": "m193c-independent-grid-controls-v1",
+  "status": "PASS_GRID_READER_CONTROLS",
+  "work": {
+    "cpu_seconds": 3.078125,
+    "limits": {
+      "arrays": 33554432,
+      "cpu": 120,
+      "read_bytes": 392366433,
+      "wall": 240
+    },
+    "peak_array_bytes": 3686400,
+    "read_bytes": 22727549,
+    "wall_seconds": 3.2339999999385327
+  }
+}

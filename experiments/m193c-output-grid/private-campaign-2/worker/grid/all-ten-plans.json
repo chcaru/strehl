@@ -1,0 +1,175 @@
+{
+  "entries": [
+    {
+      "id": "identity-nine",
+      "ordinal": 0,
+      "plan": {
+        "bytes": 9824,
+        "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/00-plan.json",
+        "sha256": "313b2640f4f33991d53e87f19a81e49020f5ba54dca7c70faa5e9d2623899a85"
+      },
+      "plan_launch": {
+        "bytes": 4373,
+        "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/00-plan-launch.json",
+        "sha256": "e990b0a171b2f5ba1ba7540cc348f384f30811d7adcd64693d746e3a18ee7982"
+      },
+      "receipt": null,
+      "render_launch": null,
+      "tiff": null
+    },
+    {
+      "id": "curved-nine-off",
+      "ordinal": 1,
+      "plan": {
+        "bytes": 10459,
+        "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/01-plan.json",
+        "sha256": "6c5acf1d1bf6705399334d686624f30146a65fe4ecba8a7a2b379144adc5a7ec"
+      },
+      "plan_launch": {
+        "bytes": 4376,
+        "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/01-plan-launch.json",
+        "sha256": "a774afd94462196ddabf500db7589370347abca3678a64587434d7d3412acf5f"
+      },
+      "receipt": null,
+      "render_launch": null,
+      "tiff": null
+    },
+    {
+      "id": "curved-nine-count",
+      "ordinal": 2,
+      "plan": {
+        "bytes": 10463,
+        "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/02-plan.json",
+        "sha256": "e887c1cfdca7c0f2ff213262263f59c6d27d63c0b5db1955b9b47073548c19a7"
+      },
+      "plan_launch": {
+        "bytes": 4364,
+        "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/02-plan-launch.json",
+        "sha256": "18205f09d0a07cd874ba72207061188ef6df87a5915258c2d5ddb7dcb5942c0e"
+      },
+      "receipt": null,
+      "render_launch": null,
+      "tiff": null
+    },
+    {
+      "id": "curved-nine-placebo",
+      "ordinal": 3,
+      "plan": {
+        "bytes": 10467,
+        "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/03-plan.json",
+        "sha256": "20c21feb421ec2051a27d4684442dbe33f3b1190433d92d05b44b169dae7a2b7"
+      },
+      "plan_launch": {
+        "bytes": 4379,
+        "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/03-plan-launch.json",
+        "sha256": "dec1cdc52f34b908ed944c88aa1135c5eec3a394648f7c6f0e467a24fd996773"
+      },
+      "receipt": null,
+      "render_launch": null,
+      "tiff": null
+    },
+    {
+      "id": "curved-nine-scale",
+      "ordinal": 4,
+      "plan": {
+        "bytes": 10620,
+        "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/04-plan.json",
+        "sha256": "348d9be9aecf6b8b95b1b802202726306cb1489c3c538ca072f112e957c50398"
+      },
+      "plan_launch": {
+        "bytes": 4321,
+        "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/04-plan-launch.json",
+        "sha256": "6571ad0c6c1838d6adb9c8d664371081b00183f0ff1294342b9b36f982ee9688"
+      },
+      "receipt": null,
+      "render_launch": null,
+      "tiff": null
+    },
+    {
+      "id": "original-one-correct",
+      "ordinal": 5,
+      "plan": {
+        "bytes": 8304,
+        "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/05-plan.json",
+        "sha256": "5e90216bc90844f1926e9cbec3275655ee5254597d810ef8a951cd6cbe64af91"
+      },
+      "plan_launch": {
+        "bytes": 4378,
+        "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/05-plan-launch.json",
+        "sha256": "8a5605dfee43aebdfe51a47c4ce7e128e171a52d4ba6a862be1c39e172a27028"
+      },
+      "receipt": null,
+      "render_launch": null,
+      "tiff": null
+    },
+    {
+      "id": "original-one-swapped",
+      "ordinal": 6,
+      "plan": {
+        "bytes": 8318,
+        "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/06-plan.json",
+        "sha256": "70b16f940a612a0e78952dacb7bb682c3bd6c02848d414b48e73805286c36229"
+      },
+      "plan_launch": {
+        "bytes": 4377,
+        "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/06-plan-launch.json",
+        "sha256": "551e50ffd91c7c9bc8b97521b23fd0695e79960cc1407097d9078f51ef13b32a"
+      },
+      "receipt": null,
+      "render_launch": null,
+      "tiff": null
+    },
+    {
+      "id": "original-one-restored",
+      "ordinal": 7,
+      "plan": {
+        "bytes": 8302,
+        "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/07-plan.json",
+        "sha256": "4b60329603475eb6f16e9f0aa0b850207565346a602be074badb11021800d8c5"
+      },
+      "plan_launch": {
+        "bytes": 4381,
+        "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/07-plan-launch.json",
+        "sha256": "d2bdf29dad3842ae40d390ff85d0ab21d657fd68dec66954a1b8f77c849c12e6"
+      },
+      "receipt": null,
+      "render_launch": null,
+      "tiff": null
+    },
+    {
+      "id": "original-one-inverse",
+      "ordinal": 8,
+      "plan": {
+        "bytes": 8404,
+        "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/08-plan.json",
+        "sha256": "80f4740bb1289cf3d325eafd95887f6dac7686bd5f34676dc0f7a8b351e09caf"
+      },
+      "plan_launch": {
+        "bytes": 4377,
+        "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/08-plan-launch.json",
+        "sha256": "a2e919015ceed081100de7aa2ac595755796d2e358b02c19d63d6db15c49a2a6"
+      },
+      "receipt": null,
+      "render_launch": null,
+      "tiff": null
+    },
+    {
+      "id": "constant-nine-null",
+      "ordinal": 9,
+      "plan": {
+        "bytes": 10461,
+        "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/09-plan.json",
+        "sha256": "a81195885a07f22cbec67e14b886cc2967230f85997f2c24e3fdd83a2f315e66"
+      },
+      "plan_launch": {
+        "bytes": 4378,
+        "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/09-plan-launch.json",
+        "sha256": "9a209cd09cff666a7cf33cbb453eaea1aebc3414583ecbed4f3690f88a8ec167"
+      },
+      "receipt": null,
+      "render_launch": null,
+      "tiff": null
+    }
+  ],
+  "schema": "m193c-all-plans-v1"
+}

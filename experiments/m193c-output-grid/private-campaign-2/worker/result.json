@@ -1,0 +1,165 @@
+{
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-B",
+    "-X",
+    "faulthandler",
+    "-X",
+    "pycache_prefix=C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\private-campaign-2\\cache-worker",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\private-campaign.py",
+    "--worker",
+    "--release",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\private-campaign-release-2.json",
+    "--release-sha256",
+    "fb0505d6a738cead4863b87ce882d655b2962c6e79c189bbd5d3ce6783a457f0",
+    "--output",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\private-campaign-2\\worker"
+  ],
+  "error": null,
+  "execution_release": {
+    "bytes": 32380,
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\private-campaign-release-2.json",
+    "sha256": "fb0505d6a738cead4863b87ce882d655b2962c6e79c189bbd5d3ce6783a457f0"
+  },
+  "finalization_errors": [],
+  "products": [
+    {
+      "bytes": 407403,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/00.tif",
+      "sha256": "bbe18c82ffeab42af9b870122442ebca8e804221de10ad29eeb8d3cbde2dc838"
+    },
+    {
+      "bytes": 353403,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/01.tif",
+      "sha256": "85a158056963f099864fa6c15f359c25c28dc816dbf3f9ee9f44c6d9dab5cee5"
+    },
+    {
+      "bytes": 353403,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/02.tif",
+      "sha256": "85a158056963f099864fa6c15f359c25c28dc816dbf3f9ee9f44c6d9dab5cee5"
+    },
+    {
+      "bytes": 353403,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/03.tif",
+      "sha256": "85a158056963f099864fa6c15f359c25c28dc816dbf3f9ee9f44c6d9dab5cee5"
+    },
+    {
+      "bytes": 461403,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/04.tif",
+      "sha256": "91b9991c9511da2643993ec12fdd0af71bfe6eb8e8dc0462336515abded2206d"
+    },
+    {
+      "bytes": 353403,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/05.tif",
+      "sha256": "59973a0f2ed8fa0e3b02c5718f91fda4f535701a0367a54888f73931ae9b39d9"
+    },
+    {
+      "bytes": 353403,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/06.tif",
+      "sha256": "86028defae5a00f428f62b7579b0b19c6e6629f57120cdef4616b2fa31116c8c"
+    },
+    {
+      "bytes": 353403,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/07.tif",
+      "sha256": "59973a0f2ed8fa0e3b02c5718f91fda4f535701a0367a54888f73931ae9b39d9"
+    },
+    {
+      "bytes": 353403,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/08.tif",
+      "sha256": "c3915eb177df590efe961237cbe39fe369c1a789c7808c6e73b1175bd37cf8c8"
+    },
+    {
+      "bytes": 353403,
+      "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/09.tif",
+      "sha256": "3d9423cb542ffaeb2c8c69327950a4518e03af1987f3f7dffcb4c9866ca30143"
+    },
+    {
+      "bytes": 4563,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\private-campaign-2\\worker\\derivative\\affine.tiff",
+      "sha256": "b158f1a39cc3cdb4c442282140d3a8c2f36394921f0b823745a26903f0859e2c"
+    },
+    {
+      "bytes": 4563,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\private-campaign-2\\worker\\derivative\\signed-border.tiff",
+      "sha256": "c363de6bb7cc00c24009626d545ca2284db127c74da314c75c58284bf95df6f5"
+    }
+  ],
+  "schema": "m193c-private-worker-v1",
+  "stages": [
+    {
+      "launch": {
+        "bytes": 5686,
+        "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid_producer-launch.json",
+        "sha256": "b3547b4c07de5654025bac88aab39f103890721604a239384f68533e8374a3de"
+      },
+      "request": null,
+      "result": {
+        "bytes": 178224,
+        "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid/run-index.json",
+        "sha256": "9b98828f99933059becf969ce7332b1845dbf19ace421db5a441d58ae2a51642"
+      },
+      "stage": "grid_producer"
+    },
+    {
+      "launch": {
+        "bytes": 4700,
+        "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid_reader-launch.json",
+        "sha256": "a1b8ddda6374ebde2503594a044238dcea83fa705e2c215f4ed8a373c2fefc80"
+      },
+      "request": {
+        "bytes": 1386,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\private-campaign-2\\worker\\grid-reader-request.json",
+        "sha256": "6076161f6d437d5499451d7ad67354d9ec86f9d0ccc030e839ca4ebfb6f1714b"
+      },
+      "result": {
+        "bytes": 190648,
+        "path": "experiments/m193c-output-grid/private-campaign-2/worker/grid-reader/result.json",
+        "sha256": "67561ad9eca8c7134c48de4dddcdec3f0a22ed8164d22d2889973577db3b0af4"
+      },
+      "stage": "grid_reader"
+    },
+    {
+      "launch": {
+        "bytes": 3870,
+        "path": "experiments/m193c-output-grid/private-campaign-2/worker/derivative_producer-launch.json",
+        "sha256": "edf574ba4941ea51a10e2644cd895b6f5ced551623cb43273feb04ab6a82e7c5"
+      },
+      "request": null,
+      "result": {
+        "bytes": 12027,
+        "path": "experiments/m193c-output-grid/private-campaign-2/worker/derivative/result.json",
+        "sha256": "b57a017cd0d0525187230e20f6cfab81f7993568c5da7b927c5e1154e0f8979e"
+      },
+      "stage": "derivative_producer"
+    },
+    {
+      "launch": {
+        "bytes": 4805,
+        "path": "experiments/m193c-output-grid/private-campaign-2/worker/derivative_reader-launch.json",
+        "sha256": "718aaed88b7cffbfe605a6e533306b8c58760e6d536b92f85469a42b9c902e66"
+      },
+      "request": {
+        "bytes": 1396,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\private-campaign-2\\worker\\derivative-reader-request.json",
+        "sha256": "9556065265c6937b9bfe9040600579213b234f91eee062efc64f91d8d8329671"
+      },
+      "result": {
+        "bytes": 54768,
+        "path": "experiments/m193c-output-grid/private-campaign-2/worker/derivative-reader/result.json",
+        "sha256": "23866d3ad45dcffa8f60729e3e540426495520bc5c2db8fd2ea354cc084da36e"
+      },
+      "stage": "derivative_reader"
+    }
+  ],
+  "status": "COMPLETE_PRIVATE_CHILD_OUTPUTS_UNVERIFIED",
+  "unvisited": [],
+  "work": {
+    "artifact_bytes": 14647667,
+    "byte_scope": "cumulative observed per-path high-water extents; deleted paths remain charged",
+    "cpu_seconds": 140.859375,
+    "observed_child_cpu_seconds": 137.84375,
+    "owner_or_worker_cpu_seconds": 3.015625,
+    "scope": "worker-local only; encompassing parent Job is admission authority",
+    "wall_seconds": 133.25
+  }
+}

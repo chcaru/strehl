@@ -396,8 +396,12 @@ attempt stopped after one successful plan test on an immediate active-process
 refusal, before any TIFF, precision component or RAW operation. The original
 shutdown observation was not retained, so its cause is unknown. A bounded
 process-drain repair has now passed all fourteen controls and independent
-readback. Build3 from `43a72446` is independently verified; the private2 release
-is in final review. See the [M193c progress record](../research/M193c-output-grid.md).
+readback. Build3 from `43a72446` is independently verified. Private2 from
+`3090dc0c` passed ten coordinate cases, two conversion fixtures and their
+independent controls; its complete twelve-TIFF chain has passed independent
+inspection. Next is dependency runtime capture, then the nine native derivatives
+and frozen input registrar. Real coverage remains unmeasured. See the
+[M193c progress record](../research/M193c-output-grid.md).
 Existing owned RAW decode may
 allocate before exposing shape: enforce a process committed-memory limit and
 check the returned geometry before further owned image allocations, without
