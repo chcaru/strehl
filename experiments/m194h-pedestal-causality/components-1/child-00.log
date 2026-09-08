@@ -1,0 +1,21 @@
+
+running 1 test
+test pyramid::m194h::controls::fixed_threshold_null_and_observer_controls ... M194H_COMPONENT_PASS all-above-floor-weight-identity-exact-floor-destroyer-restoration
+M194H_COMPONENT_PASS threshold-three-floors-and-actual-partition-fault
+M194H_COMPONENT_PASS noise-free-four-plane-flat-null
+M194H_COMPONENT_PASS all-arms-off-on-placebo-and-unarmed-H-P-bit-identity
+M194H_COMPONENT_PASS strong-stripe-rejects-plain-mean
+
+thread 'pyramid::m194h::controls::fixed_threshold_null_and_observer_controls' (16556) panicked at C:\dev\blog\death-of-software\projects\strehl\crates\strehl-core/../../experiments/m194h-pedestal-causality/core-hook.rs:106:34:
+M194h concurrent session
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+M194H_COMPONENT_PASS session-rejects-nesting-and-restores-after-panic
+
+thread 'pyramid::m194h::controls::fixed_threshold_null_and_observer_controls' (16556) panicked at C:\dev\blog\death-of-software\projects\strehl\crates\strehl-core/../../experiments/m194h-pedestal-causality/core-hook.rs:156:5:
+M194h unsupported consumer configuration
+M194H_COMPONENT_PASS unsupported-consumer-refused-before-frame-and-restored
+M194H_COMPONENT_COMPLETE 26-merges 130-frame-folds plus-one-rejected-entry
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 559 filtered out; finished in 0.67s
+
