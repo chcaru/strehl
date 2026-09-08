@@ -1,0 +1,68 @@
+{
+  "held_files": [
+    {
+      "bytes": 59052,
+      "path": "experiments/m193c-output-grid/work/independent-sift-lightglue-saved-completion-audit.py",
+      "sha256": "7c93287992515235438912569520513eb7d2573742304a253d00104d96e044fa"
+    },
+    {
+      "bytes": 5231,
+      "path": "experiments/m193c-output-grid/work/independent-sift-lightglue-saved-completion-auditor-source-read.md",
+      "sha256": "0bc51ea15a1dec70777ba214732baf446c2f53a1447cdde84cbf1ba6d9669444"
+    },
+    {
+      "bytes": 0,
+      "path": "experiments/m193c-output-grid/work/independent-sift-lightglue-saved-completion-audit.json",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 928,
+      "path": "experiments/m193c-output-grid/work/independent-sift-lightglue-saved-completion-audit-stderr.txt",
+      "sha256": "a093a9917408f5f7df125cb310f81941dd1f2ca293cd0c3d15cab2b401d1ce01"
+    },
+    {
+      "bytes": 975,
+      "path": "experiments/m193c-output-grid/work/independent-sift-lightglue-saved-completion-audit-outer.json",
+      "sha256": "5b53307aad22a3251ea4051d3718d12a5e4e5ab89568000838aad968bdc0095f"
+    },
+    {
+      "bytes": 15806,
+      "path": "experiments/m193c-output-grid/work/independent-sift-lightglue-saved-completion-audit-progress.json",
+      "sha256": "99e45a3892926d803e8301105e5040d4994abba8e1541f9192f787b9c821ae34"
+    },
+    {
+      "bytes": 5668,
+      "path": "experiments/m193c-output-grid/work/independent-sift-lightglue-saved-completion-audit-v1-refusal.md",
+      "sha256": "d1b8bd677b39bf5e01aa43b7ba68d3919a312dd3a82462c7f97bddb6c686e6be"
+    },
+    {
+      "bytes": 19136,
+      "path": "experiments/m193c-output-grid/work/independent-sift-lightglue-saved-completion-audit-v2.py",
+      "sha256": "aac15b99a6c729e2ee055d36f6c96d097e986d4812017a3a1dcaec3dff27536c"
+    }
+  ],
+  "limit_bytes": 393216,
+  "maximum_total_bytes": 336172,
+  "plan_bytes": 48518,
+  "preparation_other_bound_bytes": 32768,
+  "reserved_outputs": {
+    "actual_report": 8192,
+    "final_json": 114688,
+    "ledger": 8192,
+    "outer": 8192,
+    "progress": 32768,
+    "source_review": 8192,
+    "staging": 32768,
+    "stderr": 16384
+  },
+  "reused_previously_charged_sources": [
+    {
+      "bytes": 62292,
+      "path": "experiments/m193c-output-grid/work/independent-sift-lightglue-commission-audit.py",
+      "sha256": "ccb78254596b6402139bb4ff4541a5bb6f0597175268a426bef66ba5e4f7c03c"
+    }
+  ],
+  "schema": "m193c-saved-completion-audit-family-v2",
+  "scope": "Entire saved-completion v1/v2 audit family: immutable v1 source and independent review, empty failedstdout, failedstderr/outer/durablepartial/report, new v2 source and separately reserved final/stdout/stderr/outer32KiB partial+32KiB staging/new reviews/this ledger. The original62292-byte helper was charged in the earlier prefix-audit family and remains separately pinned. Existing1MiB new preparation reservation funds384KiB here; no subject/global cap increase and no refund of missing/staged files.",
+  "source_preparation_reservation_bytes": 185051
+}
