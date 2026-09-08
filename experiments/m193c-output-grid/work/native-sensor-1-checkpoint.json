@@ -1,0 +1,96 @@
+{
+  "schema": "m193c-root-sensor-native-1-checkpoint-v1",
+  "source_commit": "b7e0be39",
+  "result": "REFUSED",
+  "actual_refs": [
+    {
+      "path": "experiments\\m193c-output-grid\\native-sensor-derivative-1\\result.json",
+      "sha256": "00ae754f28277c69196a55da5fff88c8c807de17f6c48123d73c8b3ee1a6eadb",
+      "bytes": 113744
+    },
+    {
+      "path": "experiments\\m193c-output-grid\\native-sensor-derivative-1\\frame-00\\independent\\result.json",
+      "sha256": "58f4a7208a12a5a17913f1c048a54d106faa9a40e0ee3c849c83cbc71c962db7",
+      "bytes": 408686
+    },
+    {
+      "path": "experiments\\m193c-output-grid\\work\\native-sensor-1-console.txt",
+      "sha256": "d256eb2a353639ca02e62bde2959d994764c8710c1c316469dea06b5f8c5f007",
+      "bytes": 1578
+    },
+    {
+      "path": "experiments\\m193c-output-grid\\work\\native-sensor-1-exit.txt",
+      "sha256": "f1b2f662800122bed0ff255693df89c4487fbdcf453d3524a42d4ec20c3d9c04",
+      "bytes": 3
+    },
+    {
+      "path": "experiments\\m193c-output-grid\\work\\native-sensor-1-outer.json",
+      "sha256": "d5b1950c49691cdfcea2e2fd5fbc70440c81a8474db06ebc0463ab6470d83c2e",
+      "bytes": 2344
+    }
+  ],
+  "reuse_controls": [
+    {
+      "id": "reuse-full-plan-valid",
+      "passed": true
+    },
+    {
+      "exception": "full nine-plan byte/content equality",
+      "id": "reuse-later-entry-refused",
+      "passed": true
+    },
+    {
+      "id": "reuse-full-plan-restored",
+      "passed": true
+    }
+  ],
+  "primary_reused": true,
+  "snapshot_deleted": false,
+  "domain_control_ids": [
+    "sensor-nonzero-origin",
+    "visible-crop-null",
+    "wrong-offset-hash-refusal",
+    "truncated-buffer-refusal",
+    "borrowed-sensor-refusal",
+    "late-copy-lifetime-destroyer",
+    "restored-sensor-copy",
+    "source-origin-cfa"
+  ],
+  "completed_check_ids": [
+    "owned-sensor-copy",
+    "active-shape",
+    "local-rggb",
+    "active-u16-bytes",
+    "active-row-u16-bytes"
+  ],
+  "reader_error": "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\independent-sensor-derivative-read.py\", line 1170, in main\n    native_run(request, result, reads, budget, np, rawpy, parser)\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\independent-sensor-derivative-read.py\", line 1025, in native_run\n    agreement = validate_independent_metadata(metadata, source)\n                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\independent-sensor-derivative-read.py\", line 636, in validate_independent_metadata\n    need(finite(metadata[\"white\"], \"independent white\", 0, 65535) == white,\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\independent-sensor-derivative-read.py\", line 74, in need\n    raise ValueError(message)\nValueError: scalar white disagrees\n",
+  "tiff_pixel_hash": null,
+  "reader_job": {
+    "active_processes": 0,
+    "total_cpu_100ns": 24843750,
+    "total_kernel_100ns": 15312500,
+    "total_page_fault_count": 3152617,
+    "total_processes": 2,
+    "total_terminated_processes": 0,
+    "total_user_100ns": 9531250
+  },
+  "unvisited": [
+    13,
+    26,
+    39,
+    52,
+    65,
+    78,
+    91,
+    104
+  ],
+  "final_work": {
+    "cpu_seconds": 43.46875,
+    "wall_seconds": 37.92508029995952,
+    "file_bytes": 241651810,
+    "metadata_bytes": 4822759
+  },
+  "root_outer_wall": 5.8436039,
+  "next_conservative_wall": 37.9876842,
+  "dependency_error": null
+}

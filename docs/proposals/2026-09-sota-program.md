@@ -411,9 +411,14 @@ versus independent visible width7028, both height4688 and origin(0,0). Its
 primary TIFF remains unverified and eight later originals remain unvisited.
 The bounded retained-snapshot sensor-domain comparison from `3b10e8ff` found
 whole-region and all4,688-row byte agreement; its actual audit is complete.
-Next is an explicit sensor-region reader with mandatory per-frame full/row
-agreement, retaining both declared domains and the old refusal. No physical-crop
-or quality conclusion follows from that diagnostic. The coverage runner is prepared
+The explicit sensor-region run from `b7e0be39` passed its eight domain controls,
+full-plan reuse controls and first five real checks, including all4688-row
+agreement. It then refused the inherited generic-white comparison16383 versus
+primary/camera-channel15360. That difference was visible in the earlier saved
+metadata and should have been caught in source review. Next is an explicit
+camera-metadata authority with wrong-channel controls, preserving the old
+refusals and full pixel checks. No physical-crop or quality conclusion follows
+from these agreements. The coverage runner is prepared
 but lacks all-nine native admission; real coverage remains unmeasured. See the
 [M193c progress record](../research/M193c-output-grid.md).
 Existing owned RAW decode may

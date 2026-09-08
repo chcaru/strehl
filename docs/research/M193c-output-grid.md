@@ -7,8 +7,10 @@ stopped on a four-column disagreement between declared decoder domains. The
 eight later originals remain unvisited. Native agreement and real registration
 coverage are not admitted in this milestone. A subsequent independently audited
 diagnostic found complete decoded-byte agreement over strehl's declared region;
-the visible-region descriptions remain different. An explicit sensor-region
-reader is the next implementation.
+the visible-region descriptions remain different. The explicit sensor-region
+reader has now passed its domain controls and first five real checks, then
+refused an inherited white-level comparison. A camera-metadata comparison is
+the next correction; no native derivative is admitted yet.
 HardFloor remains the default; no quality promotion follows
 from this work. The [charter](../../experiments/m193c-output-grid/charter.md)
 names the actual sampling-coordinate consumer and the fixed historical inputs.
@@ -176,6 +178,36 @@ Cumulative final work is 37.71875 CPU seconds, 239,908,463 file bytes and
 from the actual outer interval plus prior work. The diagnostic reused the
 retained snapshot; it read no other original and produced no image.
 
+**MEASURED, independently inspected:** sensor-native attempt1, frozen
+at `b7e0be39`, returned actual parent and fresh reader exit1. It reused the old
+primary without rerendering, passed all three full-plan controls and all eight
+sensor-region controls, then passed the first five native checks including
+exact whole-region and all4688-row agreement. It stopped at
+`validate_independent_metadata`: generic white16383 was required to equal
+primary white15360 before examining the four camera-channel whites, all15360.
+The TIFF pixel hash remains null and the other eight originals remain unvisited.
+
+This distinction was already present in native1's retained metadata. The
+inherited validator and the sensor-only source review missed it; neither an
+agreement on sensor samples nor a source review admitted the level comparison.
+The new reader must use an explicit independently documented metadata authority,
+with powered wrong-channel controls, rather than accepting whichever field
+happens to match. The old refusal and its costs remain preserved.
+
+Actual parent result:113744 bytes, SHA256
+`00ae754f28277c69196a55da5fff88c8c807de17f6c48123d73c8b3ee1a6eadb`.
+Actual reader result:408686 bytes, SHA256
+`58f4a7208a12a5a17913f1c048a54d106faa9a40e0ee3c849c83cbc71c962db7`.
+Final carried work is43.46875 CPU seconds,241651810 file bytes and4822759
+metadata bytes. Actual root outer5.8436039 seconds gives conservative next wall
+37.9876842 seconds. This attempt produced no new TIFF or RAW snapshot; original0's
+historical files remain intact. Source/input and adjacent dependency endpoint
+checks completed without a finalization error. The
+[independent actual audit](../../experiments/m193c-output-grid/independent-native-sensor-1-read.md)
+checked253 distinct files, all146 source bindings/93 inputs, actual process
+accounting, original-file associations, all4688 rows and the completed controls.
+Its source-review omission is documented alongside the refusal.
+
 ## Reproduction and preserved attempts
 
 Each release contains the complete actual argument array, input references and
@@ -197,6 +229,7 @@ these attempts when reproducing them.
 | Dependency capture 1 | `3bc87c03` | [capture release](../../experiments/m193c-output-grid/runtime-capture-release-1.json) | [dependency metadata completed](../../experiments/m193c-output-grid/runtime-capture-1/result.json) |
 | Native derivatives 1 | `5c64d6f1` | [native release](../../experiments/m193c-output-grid/native-derivative-release-1.json) | [first-frame domain refusal](../../experiments/m193c-output-grid/native-derivative-1/result.json) |
 | Saved-frame domain probe 1 | `3b10e8ff` | [probe release](../../experiments/m193c-output-grid/active-domain-probe-release-1.json) | [complete diagnostic](../../experiments/m193c-output-grid/active-domain-probe-1/result.json) |
+| Sensor-native derivatives 1 | `b7e0be39` | [sensor release](../../experiments/m193c-output-grid/native-sensor-derivative-release-1.json) | [first-frame white-level refusal](../../experiments/m193c-output-grid/native-sensor-derivative-1/result.json) |
 
 Final control result SHA256:
 `39a6f6e93e3b8df83834ab4046c7f30d6f42612df0cb0ec57ea158815baa7cfd`.
@@ -205,15 +238,12 @@ Build 2 result SHA256:
 
 ## Next decisions
 
-Implement a separately versioned independent reader that copies the explicit
-primary sensor rectangle from the independent uncropped array, records both
-domain descriptions and still requires full/row byte equality for every frame.
-Commission nonzero origins, differing visible regions and wrong-domain/copy
-controls before a new RAW read. Keep the held reader, private commissioning,
-Rust production code and native1 result unchanged. A new parent may reuse the
-first primary output only with explicit old-plan/launch provenance and identical
-current plan content, followed by a fresh independent read. Its original cost
-and failed artifacts stay in the cumulative budget.
+Correct the native white-level authority in a separate versioned reader with finite
+wrong-channel, missing/malformed-metadata and restored controls. Keep exact black,
+WB, whole/row sensor and TIFF checks. Preserve both old native attempts, held
+private/runtime/Rust sources and the saved first primary. Reuse still requires
+complete fresh nine-input plan identity and another fresh independent read;
+all old costs and failed artifacts stay in the cumulative budget.
 
 The frozen input registrar's coverage runner is prepared and source-reviewed,
 but requires all nine native independent admissions. It cannot run on this

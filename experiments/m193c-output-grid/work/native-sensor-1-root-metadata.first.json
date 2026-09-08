@@ -1,0 +1,64 @@
+{
+  "schema": "m193c-root-metadata-reservation-read-v1",
+  "scope": "Observed root manifest review, launch, archive and checkpoint files charged inside the existing future-root reservation; later independent audit and program/docs/coverage sources will be explicitly carried in the successor preparation",
+  "reserved_bytes": 262144,
+  "actual_named_bytes": null,
+  "record_upper_bytes": 8192,
+  "metadata_files": [
+    {
+      "path": "independent-native-sensor-release-1-review.md",
+      "bytes": 2757,
+      "sha256": "46a693d18d2515e7f14836796a39c306a5e8ed13d25dd00041ad8f6483d42081"
+    },
+    {
+      "path": "work/read-native-sensor-release-1.py",
+      "bytes": 4410,
+      "sha256": "038b3bff70758d096ba9b7bcd783e450abfa168857e1683adf069359a2a02601"
+    },
+    {
+      "path": "work/prepare-native-sensor-archive-1.py",
+      "bytes": 1246,
+      "sha256": "8012cb5859dff8a66e796cd5be6c1bb631a215024633bab507ea6eee1c4727ad"
+    },
+    {
+      "path": "work/archive-native-sensor-1.nul",
+      "bytes": 902,
+      "sha256": "69722e844693bd41ba7e8ea3971ee3784a76231d1ecdd3b93bf49b9ea728ad69"
+    },
+    {
+      "path": "work/native-sensor-1-console.txt",
+      "bytes": 1578,
+      "sha256": "d256eb2a353639ca02e62bde2959d994764c8710c1c316469dea06b5f8c5f007"
+    },
+    {
+      "path": "work/native-sensor-1-exit.txt",
+      "bytes": 3,
+      "sha256": "f1b2f662800122bed0ff255693df89c4487fbdcf453d3524a42d4ec20c3d9c04"
+    },
+    {
+      "path": "work/native-sensor-1-outer.json",
+      "bytes": 2344,
+      "sha256": "d5b1950c49691cdfcea2e2fd5fbc70440c81a8474db06ebc0463ab6470d83c2e"
+    },
+    {
+      "path": "work/native-sensor-1-checkpoint.json",
+      "bytes": 3700,
+      "sha256": "c46a60c7c592f1057308ab50aef7c6dd7abdce0ad031264aa06f3b8eb8cf683d"
+    },
+    {
+      "path": "work/archive-native-sensor-outcome-1.py",
+      "bytes": 1219,
+      "sha256": "0d31938f7aa127ac3a8b47f303cd0cc2404effdab654677b09e1d11c30f4535c"
+    },
+    {
+      "path": "work/archive-native-sensor-outcome-1.nul",
+      "bytes": 2071,
+      "sha256": "d704adf7f22eb4995340265a9e047801f77d2c2215775b39c83f7adf62991453"
+    },
+    {
+      "path": "work/continuation-2026-09-07-domain.md",
+      "bytes": 12333,
+      "sha256": "68c250b7b22ef3c1325ff9341db9bdbade466684873a7946c1fb28836330257f"
+    }
+  ]
+}
