@@ -1,0 +1,34 @@
+{
+  "schema": "m193c-coverage-carry-basis-v1",
+  "scope": "Root reservation for future metadata-only coverage preparation; does not admit native evidence before independent actual audit. No budget reset or refund.",
+  "native_console": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\work\\native-sensor-white-artifact-1-console.txt",
+    "bytes": 414,
+    "sha256": "ee3416319438f0fbb90510798defeee89ff82c071e081db8c7230cc20b327602"
+  },
+  "native_outer": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\work\\native-sensor-white-artifact-1-outer.json",
+    "bytes": 2393,
+    "sha256": "078747cc22ec8e74101ea173075182ad09151723d7ca0854328ef08d13cd0fc1"
+  },
+  "native_actual_and_conservative_outer": {
+    "cpu_seconds": 264.453125,
+    "wall_seconds": 227.4812478,
+    "file_bytes": 2153227412,
+    "metadata_bytes": 16772929
+  },
+  "nonrefundable_preparation_allowance": {
+    "cpu_seconds": 30,
+    "wall_seconds": 60,
+    "file_bytes": 2097152,
+    "metadata_bytes": 2097152
+  },
+  "prior_work": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\work\\sensor-white-coverage-prior-work-1.json",
+    "bytes": 121,
+    "sha256": "caed0c531189417de52253ba927338c264105d29589c26335494b9dd54a01146"
+  },
+  "snapshot_reservation_separate_bytes": 1785427283,
+  "combined_file_charge_before_worker": 3940751847,
+  "file_cap": 4294967296
+}
