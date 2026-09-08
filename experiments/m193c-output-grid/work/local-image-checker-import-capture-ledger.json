@@ -1,0 +1,77 @@
+{
+  "schema": "m193c-isolated-numpy-import-capture-ledger-v1",
+  "source_execution": "NOT_RUN_SOURCE_ONLY",
+  "capture_allowance": {
+    "cpu_seconds": 15,
+    "wall_seconds": 25,
+    "file_bytes": 2097152,
+    "metadata_bytes": 2097152
+  },
+  "operation_stop": {
+    "cpu_seconds": 14,
+    "wall_seconds": 23.5
+  },
+  "publication_reserve": {
+    "cpu_seconds": 1,
+    "wall_seconds": 1.5
+  },
+  "retained_family_bytes": {
+    "final": 1179648,
+    "progress": 65536,
+    "stage": 65536,
+    "console": 8192,
+    "outer": 65536,
+    "exit_error_transport": 32768,
+    "independent_capture_receipt_and_declared_metadata": 65536,
+    "simultaneous_outer_stage": 65536
+  },
+  "reserved_bytes": 1548288,
+  "unallocated_bytes": 548864,
+  "maximum_publication_writes": 12,
+  "maximum_phases": 8,
+  "registry_limits": {
+    "aliases": 4096,
+    "files": 2048,
+    "combined_serialization_bytes": 1048576,
+    "hashed_bytes": 134217728
+  },
+  "scope": "Metadata source capture only. No saved data; no dependent native DLL or executed-cache closure. Complete requires independent actual terminal/outer association.",
+  "prior_work": {
+    "cpu_seconds": 1588.443678,
+    "wall_seconds": 1601.9278447999966,
+    "file_bytes": 4140565273,
+    "metadata_bytes": 149304339
+  },
+  "phase_allocations": {
+    "preparation_before_capture": {
+      "cpu": 5,
+      "wall": 10,
+      "mib": 1
+    },
+    "capture": {
+      "cpu": 15,
+      "wall": 25,
+      "mib": 2
+    },
+    "preparation_before_audit": {
+      "cpu": 5,
+      "wall": 10,
+      "mib": 1
+    },
+    "audit": {
+      "cpu": 25,
+      "wall": 30,
+      "mib": 3
+    },
+    "independent_and_external": {
+      "cpu": 10,
+      "wall": 15,
+      "mib": 1
+    }
+  },
+  "full_phase": {
+    "cpu": 60,
+    "wall": 90,
+    "mib": 8
+  }
+}
