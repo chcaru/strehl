@@ -1,0 +1,23 @@
+{
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-B",
+    "-X",
+    "faulthandler",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\lightglue-acquisition-run.py",
+    "--prepare",
+    "--source",
+    "experiments/m193c-output-grid/work/independent-lightglue-acquisition-source-review.md",
+    "--source",
+    "experiments/m193c-output-grid/work/independent-lightglue-acquisition-audit.py"
+  ],
+  "exit_code": 0,
+  "elapsed_wall_seconds": 0.228034599998864,
+  "admissible_parent_exit": true,
+  "plan": {
+    "path": "experiments/m193c-output-grid/lightglue-acquisition-plan-1.json",
+    "bytes": 42745,
+    "sha256": "0302f5d4f963e734ee2f2d7d13841e06640e86e736ab47ed2fa1d469817af52d"
+  },
+  "plan_sha256": "0302f5d4f963e734ee2f2d7d13841e06640e86e736ab47ed2fa1d469817af52d"
+}
