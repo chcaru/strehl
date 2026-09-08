@@ -1,0 +1,89 @@
+{
+  "schema": "m193c-audit3-root-actual-transport-read-v1",
+  "status": "VERIFIED_ACTUAL_SAVED_AUDIT_TRANSPORT_AND_METADATA",
+  "release_commit": "e396929aeea3855a4938238892f909d773e7af8a",
+  "artifacts": [
+    {
+      "path": "experiments/m193c-output-grid/work/independent-local-image-probe-audit-3.json",
+      "bytes": 609195,
+      "sha256": "24ff96f402cdb6ab625653810fc626bd716f5308dd0f97e09e9e49d8eda62e7c"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/independent-local-image-probe-audit-3-progress.json",
+      "bytes": 65536,
+      "sha256": "1db87671d8baa65a5818f60681609be2b169d8ca3c0976bb5b0901b18d18d76f"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/independent-local-image-probe-audit-3-runtime-before-data.json",
+      "bytes": 72979,
+      "sha256": "e8e1ae3c713ef2f8aefb7c642bb9250ae89b618f3d195b8999b89ef3306b4021"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/independent-local-image-probe-audit-3-runtime-after-data.json",
+      "bytes": 74411,
+      "sha256": "9d3ff05fe1397b3df5ddd0dfc8d28016d52b4af23b7e18686f7781acf3351ab0"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/independent-local-image-probe-audit-3-stdout.bin",
+      "bytes": 609195,
+      "sha256": "24ff96f402cdb6ab625653810fc626bd716f5308dd0f97e09e9e49d8eda62e7c"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/independent-local-image-probe-audit-3-stderr.bin",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/independent-local-image-probe-audit-3-exit.txt",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/independent-local-image-probe-audit-3-outer.json",
+      "bytes": 3105,
+      "sha256": "f9009efa9a54b22a9837d28173e7dbbe5ad33f80798861a9b79d2a526b1937ed"
+    }
+  ],
+  "actual_artifact_bytes": 1434423,
+  "actual_exit": 0,
+  "whole_external_wall_seconds": 22.264999999999418,
+  "audit_sample": {
+    "cpu_seconds": 22.0625,
+    "wall_seconds": 22.218999999997322
+  },
+  "tail": {
+    "cpu_seconds": 0.25,
+    "wall_seconds": 0.5
+  },
+  "same_complete_final_stdout": true,
+  "runtime_aliases_each": 204,
+  "runtime_files_each": 164,
+  "runtime_rows_and_file_witnesses_equal": true,
+  "runtime_controls_passed": 16,
+  "private_groups_passed": 11,
+  "all_real_rows": 128,
+  "all_disjoint_groups": 32,
+  "real_outcomes": {
+    "RETURNED_LOCAL_TRANSLATION": 106,
+    "LOW_CORRELATION": 17,
+    "AMBIGUOUS_MULTIPLE_PEAKS": 2,
+    "FLAT_OR_LOW_CONTRAST": 2,
+    "REFINEMENT_INCONSISTENT": 1
+  },
+  "disjoint_outcomes": {
+    "DISAGREEMENT": 17,
+    "UNAVAILABLE_DISJOINT_EVIDENCE": 11,
+    "DISJOINT_DIAGONAL_AGREEMENT": 4
+  },
+  "saved_data_checks_complete": true,
+  "original_subject_complete": false,
+  "physical_geometry_admitted": false,
+  "full_current_process_cpu_verified": false,
+  "actual_final_work": {
+    "cpu_seconds": 1648.443678,
+    "file_bytes": 4148953881,
+    "metadata_bytes": 157692947,
+    "wall_seconds": 1691.9278447999966
+  },
+  "scope": "Root independently read actual transport and decoded complete metadata rows; source hashes checked. Numerical/private predicates are the separately authored audit, not a third recomputation. Runtime dependent DLL/cache/in-memory and physical correspondence truth remain unverified."
+}

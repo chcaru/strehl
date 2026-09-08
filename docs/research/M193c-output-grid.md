@@ -1192,3 +1192,93 @@ capture15/25/2MiB and independent/external10/15/1MiB charges. Remaining preparat
 within1660CPU/1800wall/4GiB/168MiB. This is DERIVED reservation arithmetic,
 not a refund from the quick failure. Source implementation is next; no audit3
 execution is released here, and no geometry/quality/SOTA result follows.
+
+
+## Saved audit3 complete: fixed local diagnostic closed
+
+**MEASURED and independently VERIFIED within saved-data scope, 2026-09-08.**
+The isolated checker completed once from release commit
+`e396929aeea3855a4938238892f909d773e7af8a`.
+Its exact executed argument vector is retained in
+[release1](../../experiments/m193c-output-grid/work/local-image-audit-3-release-1.json)
+and equals the actual
+[outer command](../../experiments/m193c-output-grid/work/independent-local-image-probe-audit-3-outer.json).
+No image extraction, estimator/model call or original subject was rerun.
+
+The new source package was independently reviewed and committed at
+`5e20932db02371b35af692dca63bf1a4976ce988`.
+One metadata preparation then passed all nine controls; root independently
+rehashed its50 bound metadata files and reconstructed the prospective command
+from original actual authority. The10 positive source bindings total173885 bytes.
+Preparation exited0 in0.125s whole external wall; its complete5CPU/10wall/1MiB
+reservation remains charged. The grant is8750 bytes, SHA256
+b35e818e16b845fa6633d1df28dc894c4fb7154f31a65e3d08f1797875f6dd55.
+
+Audit3 exited0 in22.264999999999418s whole external wall, without timeout.
+The complete final and raw stdout are byte-identical:609195 bytes, SHA256
+24ff96f402cdb6ab625653810fc626bd716f5308dd0f97e09e9e49d8eda62e7c.
+The eight actual final/progress/runtime/transport artifacts total1434423 bytes.
+The [independent actual read](../../experiments/m193c-output-grid/work/independent-local-image-probe-audit-3-read.md)
+is8165 bytes/SHA256
+c2cd8d65159bb329bd98e430fee942119eb5bcdd0070f958177f7b58beeb88d1.
+Root separately checked the complete raw transport, current source pins and
+decoded census equality in
+[the actual receipt](../../experiments/m193c-output-grid/work/root-local-image-audit-3-actual-read.json).
+
+The executed checker's before-data and after-data snapshots each contain204
+aliases and164 authenticated source files. The separate actual reader decoded
+every row and file witness: they agree exactly, with zero unsupported entries
+or added/missing/rebound/changed aliases. Both actual typing class proxies are
+handled through the narrow owner/type/source contract. This does not identify
+the unsaved failing alias from capture1. All16 runtime metadata controls passed,
+including the powered lookup trap, wrong owner/metaclass, missing/rebound/change,
+wrong source hash and restoration. Runtime preflight preceded every saved-array
+or private-TIFF payload read. Executed cache bytes, dependent native DLLs,
+transient aliases and in-memory callable provenance remain unverified.
+
+All11 private groups are linked and pass the unchanged saved checks. The fixed
+128 real rows and32 disjoint groups are complete, including every refusal.
+The independent review authenticated all171 private/real/group JSON records
+and re-chose the full-population interpretation; it did not rerun numerical
+arrays or turn the selected-lag audit into a new global-peak/subpixel estimator.
+
+| Directed local pair (original indices) | Returned /64 | Low correlation | Ambiguous | Low contrast | Refinement refusal | Agree /16 | Disagree | Unavailable |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| 0-1 (0-13) | 55 | 7 | 2 | 0 | 0 | 1 | 10 | 5 |
+| 3-4 (39-52) | 51 | 10 | 0 | 2 | 1 | 3 | 7 | 6 |
+| Total | 106 | 17 | 2 | 2 | 1 | 4 | 17 | 11 |
+
+The fixed opposite-diagonal0.5-native-pixel comparison measures patch
+reproducibility. Shared texture/defocus bias can create agreement, and spatial
+variation or model mismatch can create disagreement without identifying its
+cause. These native patch displacements are not per-frame placements or global
+maps.106 returns therefore coexist with limited disjoint reproducibility:
+4 agreements,17 disagreements and11 unavailable groups. Do not remove the
+unavailable groups from the population or fit maps to selected agreements.
+No physical truth, whole-frame support or merge-input accuracy follows.
+
+The final status is PASS_SAVED_LOCAL_IMAGE_PROBE_ISOLATED_AUTHORITY_AUDIT and
+saved_data_checks_complete=true. Original subject/worker completion,
+scientific_contract_verified, producer_runtime_verified and
+real_geometry_admission remain false. The original866-file inventory is
+unchanged, and its missing producer runtime manifest remains missing. The
+successful checker does not retroactively admit the original subject, either
+earlier audit or the isolated capture.
+
+Audit CPU22.0625 and wall22.218999999997322 are samples; with the reserved
+0.25CPU/0.5wall publication tail they fit25/30, and actual whole wall also fits.
+They are not complete process CPU. Full audit25CPU/30wall/3MiB and all entered
+phase costs remain charged. Final conservative carry is1648.443678CPU,
+1691.9278447999966wall,4148953881file bytes and157692947metadata bytes, within
+the unchanged1660CPU/1800wall/4GiB/168MiB limits. No retry, refund or new capture
+is scheduled.
+
+**Decision:** close this fixed real correlation arm after the scoped report.
+The result neither licenses a direct-map fit nor refutes every correlation
+method. The separately reviewed
+[next-step recommendation](../../experiments/m193c-output-grid/work/next-science-after-local-audit3.md)
+keeps acquisition-time physical geometry as a future route and moves development
+to one explanatory experiment on already admitted M194g data. That experiment
+separates newly admitted sub-floor band weights from changed above-floor weights
+at an observed sparse error. It preserves HardFloor defaults and the completed
+38-output result; it is not another geometry campaign or a quality/SOTA claim.

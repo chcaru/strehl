@@ -1,0 +1,63 @@
+{
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-I",
+    "-S",
+    "-B",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\work\\independent-local-image-probe-audit-3.py",
+    "--plan",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\local-image-probe-plan-1.json",
+    "--plan-sha256",
+    "337ee76493feb15f14982d14fdb6b6148bc76ba108a9c0d77ba51ca25a6e66c1",
+    "--result",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\local-image-probe-1\\result.json",
+    "--result-sha256",
+    "8f5307a9ebfd5fb3e51be9ebb9bb6b9e92f1f0f4d0bb1a84ed792276a6eb1d64",
+    "--outer",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\work\\local-image-probe-1-launch-outer.json",
+    "--outer-sha256",
+    "d2d41c654e38468fb5af2ff1dff4cf533c778007452baee33ba3b883f8b01db6",
+    "--console",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\work\\local-image-probe-1-launch-stdout.bin",
+    "--console-sha256",
+    "dc947f106763901b640d2e0c9b7b6127ff2b1a6e9743971d9ebecc3ff549aa3f",
+    "--exit",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\work\\local-image-probe-1-launch-exit.txt",
+    "--exit-sha256",
+    "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "--self-sha256",
+    "bf095b28e679e057427e4a2db1be4ba798bef8492af47553681b313246f5f33c",
+    "--worker-sha256",
+    "5ad5e115ed0db16a2d2049ade8d1727d4f407463a3718de7bc407d8c4659896d",
+    "--recovery-grant",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\work\\local-image-audit-recovery-3.json",
+    "--recovery-grant-sha256",
+    "b35e818e16b845fa6633d1df28dc894c4fb7154f31a65e3d08f1797875f6dd55"
+  ],
+  "source": {
+    "path": "experiments/m193c-output-grid/work/independent-local-image-probe-audit-3.py",
+    "bytes": 87106,
+    "sha256": "bf095b28e679e057427e4a2db1be4ba798bef8492af47553681b313246f5f33c"
+  },
+  "exit_code": 0,
+  "elapsed_wall_seconds": 22.264999999999418,
+  "timeout_terminated": false,
+  "stdout": {
+    "path": "experiments/m193c-output-grid/work/independent-local-image-probe-audit-3-stdout.bin",
+    "bytes": 609195,
+    "sha256": "24ff96f402cdb6ab625653810fc626bd716f5308dd0f97e09e9e49d8eda62e7c"
+  },
+  "stderr": {
+    "path": "experiments/m193c-output-grid/work/independent-local-image-probe-audit-3-stderr.bin",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "exit": {
+    "path": "experiments/m193c-output-grid/work/independent-local-image-probe-audit-3-exit.txt",
+    "bytes": 2,
+    "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+  },
+  "stdout_bytes": 609195,
+  "stderr_bytes": 0,
+  "scope": "Complete directly launched process interval and actual exit; raw byte streams. No complete CPU inference from elapsed wall. Source is fixed; this process does not launch children."
+}

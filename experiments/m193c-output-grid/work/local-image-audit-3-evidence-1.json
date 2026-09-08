@@ -1,0 +1,80 @@
+{
+  "schema": "m193c-local-image-audit3-evidence-v1",
+  "source_freeze_commit": "5e20932db02371b35af692dca63bf1a4976ce988",
+  "release_commit": "e396929aeea3855a4938238892f909d773e7af8a",
+  "artifacts": [
+    {
+      "path": "experiments/m193c-output-grid/work/independent-local-image-probe-audit-3.json",
+      "bytes": 609195,
+      "sha256": "24ff96f402cdb6ab625653810fc626bd716f5308dd0f97e09e9e49d8eda62e7c"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/independent-local-image-probe-audit-3-progress.json",
+      "bytes": 65536,
+      "sha256": "1db87671d8baa65a5818f60681609be2b169d8ca3c0976bb5b0901b18d18d76f"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/independent-local-image-probe-audit-3-runtime-before-data.json",
+      "bytes": 72979,
+      "sha256": "e8e1ae3c713ef2f8aefb7c642bb9250ae89b618f3d195b8999b89ef3306b4021"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/independent-local-image-probe-audit-3-runtime-after-data.json",
+      "bytes": 74411,
+      "sha256": "9d3ff05fe1397b3df5ddd0dfc8d28016d52b4af23b7e18686f7781acf3351ab0"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/independent-local-image-probe-audit-3-stdout.bin",
+      "bytes": 609195,
+      "sha256": "24ff96f402cdb6ab625653810fc626bd716f5308dd0f97e09e9e49d8eda62e7c"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/independent-local-image-probe-audit-3-stderr.bin",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/independent-local-image-probe-audit-3-exit.txt",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/independent-local-image-probe-audit-3-outer.json",
+      "bytes": 3105,
+      "sha256": "f9009efa9a54b22a9837d28173e7dbbe5ad33f80798861a9b79d2a526b1937ed"
+    }
+  ],
+  "artifact_bytes": 1434423,
+  "reviews_and_continuation": [
+    {
+      "path": "experiments/m193c-output-grid/work/independent-local-image-probe-audit-3-read.md",
+      "bytes": 8165,
+      "sha256": "c2cd8d65159bb329bd98e430fee942119eb5bcdd0070f958177f7b58beeb88d1"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/root-local-image-audit-3-actual-read.json",
+      "bytes": 3454,
+      "sha256": "ef888248eb85603662bdde454e50b721ca67bde7f33f558fad7b66d94a115dd6"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/next-science-after-local-audit3.md",
+      "bytes": 7592,
+      "sha256": "ab097d11eba427c9b4860ac33271f7e9e8a608adacd05a4e042a7349887fcfaf"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/continuation-audit3-and-pedestal.md",
+      "bytes": 9924,
+      "sha256": "cf8bcce0af18e762e22ceb1f54cfb45fa2bf6740f3a8ad97ef68e0a43070d944"
+    }
+  ],
+  "report": {
+    "path": "docs/research/M193c-output-grid.md",
+    "bytes": 89715,
+    "sha256": "dd2a0c91533b878bf404f70bfda88f35e425998983d84eead73c69425350a772"
+  },
+  "status": "VERIFIED_SAVED_DIAGNOSTIC_ONLY",
+  "saved_data_checks_complete": true,
+  "original_subject_complete": false,
+  "physical_geometry_admitted": false,
+  "scope": "Complete one-shot audit3 evidence. No original capture, producer or prior-audit promotion. Fixed real-correlation arm closed; next source-only work isolates a merge-weight mechanism on existing M194g fixtures."
+}
