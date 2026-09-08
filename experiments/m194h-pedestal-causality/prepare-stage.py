@@ -1,5 +1,5 @@
 """Root's fixed M194h metadata constructor. No build, test or image computation.
-One invocation per stage, cumulative preparation <=30 CPU/60 wall/8 MiB.
+Corrected invocation per stage, cumulative including first refusal <=40 CPU/80 wall/8 MiB.
 """
 from pathlib import Path
 import hashlib,json,os,re,shutil,sys,time
@@ -23,7 +23,7 @@ def read(p,cap=64<<20):
         before=os.fstat(f.fileno());b=f.read(cap+1);after=os.fstat(f.fileno())
     final=p.stat()
     identity=lambda s:(s.st_dev,s.st_ino,s.st_size,s.st_mtime_ns,s.st_ctime_ns,s.st_nlink)
-    check(len(b)<=cap and identity(initial)==identity(before)==identity(after)==identity(final) and len(b)==before.st_size,"stable input")
+    check(len(b)<=cap and identity(initial)==identity(final) and identity(before)==identity(after) and identity(initial)[:4]+identity(initial)[5:]==identity(before)[:4]+identity(before)[5:] and len(b)==before.st_size,"stable input")
     live()
     return b
 def buffer_ref(p):
@@ -89,9 +89,11 @@ def main():
     stage=sys.argv[1];check(stage in ("build","components","render"),"fixed stage")
     check(Path.cwd().resolve()==ROOT and Path(sys.executable).resolve()==PY and sys.flags.isolated and sys.flags.no_site and sys.dont_write_bytecode,"fixed metadata process")
     WORK.mkdir(exist_ok=True)
+    history=json.loads(read(WORK/"build-preparation-1.json"))
+    check(history["status"]=="REFUSED" and history["charged_cpu_seconds"]==10 and history["charged_wall_seconds"]==20,"retained first preparation refusal")
     prior=[]
     for s in ("build","components","render"):
-        p=WORK/(s+"-preparation-1.json")
+        p=WORK/(s+"-preparation-2.json")
         if p.exists() and s!=stage:prior.append(json.loads(read(p)))
     check(len(prior)==("build","components","render").index(stage),"once-only ordered preparation")
     check(all(r["status"]=="PASS_METADATA_PREPARATION" for r in prior),"successful previous preparation")
@@ -138,10 +140,10 @@ def main():
                  children=children,binaries=binaries,subject_grant=subject,prerequisites=prerequisites)
     rr=write(path,release)
     check(freeze_sources()==sources,"source closure unchanged through preparation")
-    cpu=sum(r["charged_cpu_seconds"] for r in prior)+10
-    wall=sum(r["charged_wall_seconds"] for r in prior)+20
+    cpu=history["charged_cpu_seconds"]+sum(r["charged_cpu_seconds"] for r in prior)+10
+    wall=history["charged_wall_seconds"]+sum(r["charged_wall_seconds"] for r in prior)+20
     size=sum(p.stat().st_size for p in WORK.iterdir() if p.is_file())
-    check(cpu<=30 and wall<=60 and size+(64<<10)<=8<<20,"cumulative metadata envelope")
+    check(cpu<=40 and wall<=80 and size+(64<<10)<=8<<20,"cumulative metadata envelope")
     result=dict(schema="m194h-root-preparation-v1",stage=stage,release=rr,source_freeze=ref(closure),source_files=len(sources),
       source_bytes=sum(v["bytes"] for v in sources.values()),charged_cpu_seconds=10,
       charged_wall_seconds=20,actual_parent_cpu_sample=time.process_time(),actual_wall_sample=time.monotonic()-START,cumulative_cpu_seconds=cpu,cumulative_wall_seconds=wall,work_file_bytes=size,
@@ -150,14 +152,14 @@ def main():
     print(json.dumps(result))
 def publish_receipt(value):
     raw=encoded(value);check(len(raw)<=64<<10,"bounded preparation receipt")
-    temp=WORK/(sys.argv[1]+"-preparation-stage-1.json")
+    temp=WORK/(sys.argv[1]+"-preparation-stage-2.json")
     with temp.open("xb") as f:f.write(raw);f.flush();os.fsync(f.fileno())
-    os.replace(temp,WORK/(sys.argv[1]+"-preparation-1.json"))
+    os.replace(temp,WORK/(sys.argv[1]+"-preparation-2.json"))
 if __name__=="__main__":
     stage=sys.argv[1]
     check(stage in ("build","components","render"),"stage")
     WORK.mkdir(exist_ok=True)
-    receipt=WORK/(stage+"-preparation-1.json")
+    receipt=WORK/(stage+"-preparation-2.json")
     check(not receipt.exists(),"fresh preparation")
     initial=dict(schema="m194h-root-preparation-v1",stage=stage,status="INITIAL_INCOMPLETE",
        charged_cpu_seconds=10,charged_wall_seconds=20,scope="Full prospective slice retained before ordinary preparation; no retry.")

@@ -330,6 +330,12 @@ def object_identity(s):
             getattr(s, "st_file_attributes", 0), s.st_nlink)
 
 
+def shared_identity(s):
+    # Windows stat/fstat ctime conventions differ; retain ctime within each API.
+    return (s.st_dev, s.st_ino, s.st_size, s.st_mtime_ns,
+            getattr(s, "st_file_attributes", 0), s.st_nlink)
+
+
 class Budget:
     def __init__(self):
         self.owners = {}; self.peak = 0; self.decodes = 0; self.read_bytes = 0
@@ -361,19 +367,25 @@ class Files:
         if role_path is not None: need(p==path_identity(str(role_path)), "exact evidence role path")
         before=p.stat();need(stat.S_ISREG(before.st_mode) and before.st_nlink==1 and before.st_size==ref["bytes"], "plain owned evidence identity")
         identity=object_identity(before);key=p.relative_to(ROOT).as_posix()
-        if key in self.seen: exact(self.seen[key],dict(ref=dict(path=key,bytes=ref["bytes"],sha256=ref["sha256"]),identity=list(identity)),"stable repeated FileRef and identity")
+        prior=self.seen.get(key)
+        record=dict(ref=dict(path=key,bytes=ref["bytes"],sha256=ref["sha256"]),identity=list(identity))
+        if prior is not None:
+            exact({k:prior[k] for k in ("ref","identity")},record,"stable repeated FileRef and path identity")
         h=hashlib.sha256();parts=[];count=0
         with p.open("rb") as stream:
-            need(object_identity(os.fstat(stream.fileno()))==identity,"same opened file")
+            opened=os.fstat(stream.fileno());handle_identity=object_identity(opened)
+            need(shared_identity(opened)==shared_identity(before),"same opened file shared identity")
+            if prior is not None:
+                exact(prior["handle_identity"],list(handle_identity),"stable repeated handle identity")
             while True:
                 self.budget.check();block=stream.read(min(MIB,ref["bytes"]-count+1))
                 if not block: break
                 count+=len(block);need(count<=ref["bytes"],"file grew beyond exact extent")
                 self.budget.read_bytes+=len(block);h.update(block)
                 if retain: parts.append(block)
-            need(object_identity(os.fstat(stream.fileno()))==identity,"same final handle")
+            need(object_identity(os.fstat(stream.fileno()))==handle_identity,"same final handle")
         need(object_identity(p.stat())==identity and count==ref["bytes"] and h.hexdigest()==ref["sha256"],"actual same-buffer extent/hash")
-        self.seen[key]=dict(ref=dict(path=key,bytes=count,sha256=h.hexdigest()),identity=list(identity))
+        record["handle_identity"]=list(handle_identity);self.seen[key]=record
         self.budget.check();return b"".join(parts) if retain else None
     def json(self, ref, cap=4*MIB, role_path=None): return strict(self.read(ref,cap,role_path=role_path))
     def actual(self,p,cap,empty=False):
@@ -381,10 +393,11 @@ class Files:
         # Initial discovery is confined to a released fixed artifact role.
         before=object_identity(s);h=hashlib.sha256();n=0
         with p.open("rb") as f:
-            need(object_identity(os.fstat(f.fileno()))==before,"actual ref open identity")
+            opened=os.fstat(f.fileno());handle_identity=object_identity(opened)
+            need(shared_identity(opened)==shared_identity(s),"actual ref open shared identity")
             while block:=f.read(min(MIB,cap-n+1)):
                 n+=len(block);need(n<=cap,"actual ref cap");h.update(block);self.budget.read_bytes+=len(block);self.budget.check()
-            need(object_identity(os.fstat(f.fileno()))==before,"actual ref close identity")
+            need(object_identity(os.fstat(f.fileno()))==handle_identity,"actual ref close identity")
         need(object_identity(p.stat())==before,"actual ref final identity")
         return dict(path=p.relative_to(ROOT).as_posix(),bytes=n,sha256=h.hexdigest())
     def finish(self):
@@ -1027,9 +1040,10 @@ def numpy_source_observation(budget):
     need(path.is_absolute() and stat.S_ISREG(before.st_mode) and not getattr(before,"st_file_attributes",0)&0x400
          and 0<before.st_size<=256*KIB,"bounded ordinary NumPy source observation")
     with path.open("rb") as stream:
-        need(object_identity(os.fstat(stream.fileno()))==identity,"NumPy source same handle")
+        opened=os.fstat(stream.fileno());handle_identity=object_identity(opened)
+        need(shared_identity(opened)==shared_identity(before),"NumPy source shared open identity")
         raw=stream.read(256*KIB+1)
-        need(object_identity(os.fstat(stream.fileno()))==identity,"NumPy source final handle")
+        need(object_identity(os.fstat(stream.fileno()))==handle_identity,"NumPy source final handle")
     need(object_identity(path.stat())==identity and len(raw)==before.st_size,"stable NumPy source observation")
     budget.read_bytes+=len(raw);budget.check()
     return dict(numpy=NP.__version__,python=sys.version,isolated=bool(sys.flags.isolated),

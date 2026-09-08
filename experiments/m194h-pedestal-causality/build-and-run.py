@@ -87,19 +87,24 @@ def owned(path):
     need(path.resolve()==path,"canonical path")
     return path
 def identity(s):return (s.st_dev,s.st_ino,s.st_size,s.st_mtime_ns,s.st_ctime_ns,s.st_nlink)
+def shared_identity(s):return (s.st_dev,s.st_ino,s.st_size,s.st_mtime_ns,s.st_nlink)
 def read(path,cap,expected=None,keep=True,check=lambda:None):
     path=lexical(path);before=path.stat()
     need(stat.S_ISREG(before.st_mode) and 0<=before.st_size<=cap,"plain bounded file")
     h=hashlib.sha256();parts=[];size=0
     with path.open("rb") as stream:
-        need(identity(before)==identity(os.fstat(stream.fileno())),"open file identity")
+        opened=os.fstat(stream.fileno())
+        need(shared_identity(before)==shared_identity(opened),"open file identity")
         while True:
             check();raw=stream.read(min(MIB,cap-size+1))
             if not raw:break
             size+=len(raw);need(size<=cap,"bounded file changed extent");h.update(raw)
             if keep:parts.append(raw)
         after=os.fstat(stream.fileno())
-    need(identity(before)==identity(after)==identity(path.stat()) and size==before.st_size,"stable file identity")
+    named_after=path.stat()
+    # Windows stat/fstat ctime domains can differ; each domain must stay stable.
+    need(identity(before)==identity(named_after) and identity(opened)==identity(after)
+         and shared_identity(before)==shared_identity(after) and size==before.st_size,"stable file identity")
     ref=dict(path=str(path),bytes=size,sha256=h.hexdigest())
     if expected is not None:
         need(type(expected) is dict and set(expected)=={"path","bytes","sha256"},"typed FileRef")

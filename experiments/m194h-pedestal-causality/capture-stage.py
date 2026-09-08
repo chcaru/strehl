@@ -12,7 +12,7 @@ def buffer_ref(p):
  initial=p.stat()
  with p.open("rb") as f:
   before=os.fstat(f.fileno());b=f.read((1<<20)+1);after=os.fstat(f.fileno())
- assert len(b)<=1<<20 and identity(initial)==identity(before)==identity(after)==identity(p.stat()) and len(b)==before.st_size,"stable external input"
+ assert len(b)<=1<<20 and identity(initial)==identity(p.stat()) and identity(before)==identity(after) and identity(initial)[:4]+identity(initial)[5:]==identity(before)[:4]+identity(before)[5:] and len(b)==before.st_size,"stable external input"
  return b,dict(path=p.relative_to(ROOT).as_posix(),bytes=len(b),sha256=hashlib.sha256(b).hexdigest())
 def ref(p):return buffer_ref(p)[1]
 def main():
@@ -22,7 +22,7 @@ def main():
  release=HERE/"work"/(stage+"-release-1.json")
  raw,r=buffer_ref(release);grant=json.loads(raw)
  assert grant["schema"]=="m194h-owned-stage-release-v1" and grant["stage"]==stage,"fixed stage schema"
- prepraw,_=buffer_ref(HERE/"work"/(stage+"-preparation-1.json"))
+ prepraw,_=buffer_ref(HERE/"work"/(stage+"-preparation-2.json"))
  prep=json.loads(prepraw)
  assert prep["status"]=="PASS_METADATA_PREPARATION" and prep["release"]==r,"prepared actual release"
  own=ref(Path(__file__).resolve())

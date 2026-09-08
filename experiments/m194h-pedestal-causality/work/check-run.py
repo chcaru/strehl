@@ -11,11 +11,12 @@ LIMITS=dict(cpu_seconds=60,wall_seconds=120,committed_bytes=1<<30,file_bytes=16<
 def need(v,s):
  if not v:raise ValueError(s)
 def read(p,cap):
- need(p.stat().st_size<=cap,"bounded input")
+ path_before=p.stat()
+ need(path_before.st_size<=cap,"bounded input")
  with p.open("rb") as f:
   s=os.fstat(f.fileno());b=f.read(cap+1);e=os.fstat(f.fileno())
  ident=lambda x:(x.st_dev,x.st_ino,x.st_size,x.st_mtime_ns,x.st_ctime_ns)
- need(len(b)<=cap and ident(s)==ident(e)==ident(p.stat()) and len(b)==s.st_size,"same input bytes")
+ need(len(b)<=cap and ident(s)==ident(e) and ident(path_before)==ident(p.stat()) and ident(path_before)[:4]==ident(s)[:4] and len(b)==s.st_size,"same input bytes")
  return b
 def main():
  need(sys.argv[1::2][0:2]==["--release","--release-sha256"] and len(sys.argv)==5,"exact wrapper arguments")
