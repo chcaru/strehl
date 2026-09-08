@@ -1,0 +1,27 @@
+# Prospective saved audit3: inspect runtime authority before data
+
+ROOT PROGRAM DECISION, 2026-09-08. Source implementation only is authorized here. No checker, numerical import or saved-data execution is released by this document. A complete separately reviewed source/grant must precede one audit3 invocation.
+
+Capture1 remains INCOMPLETE_NO_DATA_IMPORT_CAPTURE. It imported NumPy2.4.4 and retained94 pre-import aliases/62 module files, then its exact ModuleType assertion failed before recording the post-import population. Its58677-byte final is SHA2562bfaa94532ea2e90ad3744475c7e9ce0883121e5ac7a83c31f54c453a6081950. The failing alias was not recorded. Do not identify typing.io/re as the measured operand. The [independent source diagnosis](independent-isolated-import-registry-diagnosis.md) establishes a supported compatibility case, not that historical attribution.
+
+## Revised contract
+
+The prior prospective workflow required a successful separate no-data capture before audit3. That capture failed at an inspector assumption after import returned. Root replaces the still-unexecuted next workflow with one separately granted isolated audit whose complete runtime-source preflight must finish BEFORE any saved numerical payload is opened. There is no second no-data capture. This revision does not turn capture1 into a success, refund it, grant an unknown file or change the scientific method.
+
+Use the same pinned Python/NumPy installation under -I -S -B, fixed cwd and one direct site-packages append; no site processing, package installation or added numerical dependency. Each preflight loaded module source must match the original immutable positive/empty runtime namespace or explicit new checker/helper source authority. After saved-data checks, retain and validate the complete registry again, classifying added/missing/rebound rows. Unknown preflight entries stop data access; unsupported late entries stop completion. Full post-import baseline population equality is NOT a claim, since no such baseline exists. Old94-row metadata may support a disclosed common-field comparison only; new raw inspection must not pretend to reproduce an old accessor-dependent signature.
+
+Retain every bounded alias before its classification can fail. Genuine modules and subclasses must be inspected through raw built-in dictionary descriptors without triggering custom attribute hooks. Raw class, loader and spec metadata need the same care; do not invoke generic repr/getattr/vars or spec.cached accessors to force lazy work. Module subclass type provenance must be explicit.
+
+Admit the two source-established typing class proxies only under their exact aliases, class/metaclass identities, identity with the corresponding entries in the raw dictionary of the authenticated typing module, and its original122330-byte typing.py hash26506916777c5fb375f98d13824895adb110565a12a9674c03cb596332e13c43. Arbitrary non-module objects or objects merely claiming __module__='typing' remain unsupported. Preserve their bounded metadata and refuse after completing the census, rather than stopping at the first anonymous assertion.
+
+Commission the revised authority with finite metadata-only controls on the actual predicates: ordinary module, genuine subclass, a lookup trap proving raw inspection does not trigger loading, exact supported typing proxy, wrong proxy/owner/type, unsupported object retained, missing/rebound row, wrong declared file hash, and whole restoration. Prove the interesting cases occurred. These do not validate physical startup causality or scientific calibration.
+
+Preserve all38 original scientific/reader/producer-runtime function bodies by AST comparison. The fixed private/real/disjoint saved populations, image method, thresholds and direction/sign checks remain unchanged. The original producer and both prior audits remain refused/incomplete; saved-data verification cannot supply missing producer runtime_records or promote subject_complete/scientific_contract_verified. Executed cached bytecode, dependent native DLL closure and in-memory callable provenance beyond declared source witnesses remain unverified.
+
+## Existing finite reservation
+
+No increase is needed. Preserve original prior1588.443678CPU/1601.9278447999966wall/4140565273file bytes/149304339metadata bytes. In the current60CPU/90wall/8MiB phase, charge the entered preparation5/10/1MiB, capture15/25/2MiB and independent/external10/15/1MiB in full. This is30CPU/50wall/4MiB; it includes the launcher and source diagnosis, not a refund based on the quick failure.
+
+Remaining actions are the already reserved audit preparation5CPU/10wall/1MiB and one saved audit25CPU/30wall/3MiB. Whole prospective finish remains1648.443678CPU/1691.9278447999966wall/4148953881file bytes/157692947metadata bytes, within1660CPU/1800wall/4GiB/168MiB. Preflight failure consumes that audit attempt; no internal restart, added module grant or repeated import is allowed.
+
+Implementation must retain raw final/console/actual exit and externally bounded whole wall. Missing or incomplete registry records cannot silently grant saved-data access. Before execution root independently reviews the complete revised source and metadata preparation, commits/fixes their identities, reviews actual prepared authority and releases one invocation. The independent reviewer then re-chooses runtime classification and scientific evidence from its actual retained output. This decision changes checker workflow only; it is not a geometry, quality, performance or SOTA result.

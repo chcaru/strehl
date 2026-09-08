@@ -1154,3 +1154,41 @@ Retain every refusal and all costs; do not replay completed subject controls or
 image extraction. Native limits and physical-truth qualifications remain. The
 [next-decision memo](../../experiments/m193c-output-grid/next-program-decision.md)
 keeps real cover-mode renders conditional on usable input geometry.
+
+## Isolated checker import: retained refusal and revised next contract
+
+**VERIFIED metadata outcome, 2026-09-08.** The separately frozen no-data capture
+ran once under isolated Python startup. NumPy2.4.4 imported successfully; the
+registry inspector then rejected an entry that was not an ordinary ModuleType.
+It retained no offending alias or post-import registry. The complete pre-import
+population is94 aliases/62 authenticated files, with all10 metadata controls
+passing. No saved-image calculation ran. Capture1 remains incomplete, and the
+original subject/audit1/audit2 refusals remain unchanged.
+
+The [independent capture read](../../experiments/m193c-output-grid/work/independent-local-image-checker-import-capture-1-read.md)
+and [root terminal supplement](../../experiments/m193c-output-grid/work/root-isolated-import-capture-1-terminal-read.json)
+bind the actual commands, exits, raw console/final and source identities.
+Final58677 bytes has SHA256
+2bfaa94532ea2e90ad3744475c7e9ce0883121e5ac7a83c31f54c453a6081950.
+Actual external exit1/0.437wholewall and terminal Job0.265625CPU/zero active
+processes show a completed refusal, not a stalled process. The Job recorded
+two cumulative processes; the aggregate does not identify the second.
+
+[Independent source diagnosis](../../experiments/m193c-output-grid/work/independent-isolated-import-registry-diagnosis.md)
+found Python's typing.io/re class proxies and a lazy-module accessor hazard.
+These are source-supported compatibility cases, not identification of the
+unsaved failed alias. Root's [prospective audit3 decision](../../experiments/m193c-output-grid/work/local-image-audit-3-runtime-decision.md)
+replaces a second no-data capture with complete runtime-source preflight before
+any saved numerical payload, followed by an explicit post-data census. Exact
+source-proven proxies get narrow owner/type/file checks; unknown entries are
+retained and refuse data admission. Scientific methods and38 existing functions
+remain fixed. No completed post-import baseline or retroactive capture pass
+is claimed.
+
+The existing60CPU/90wall/8MiB phase retains full entered preparation5/10/1MiB,
+capture15/25/2MiB and independent/external10/15/1MiB charges. Remaining preparation
+5/10/1MiB and one audit25/30/3MiB keep prospective total
+1648.443678CPU/1691.9278447999966wall/4148953881file bytes/157692947metadata bytes
+within1660CPU/1800wall/4GiB/168MiB. This is DERIVED reservation arithmetic,
+not a refund from the quick failure. Source implementation is next; no audit3
+execution is released here, and no geometry/quality/SOTA result follows.
