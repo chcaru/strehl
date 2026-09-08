@@ -1,0 +1,97 @@
+{
+  "actual_plan": {
+    "bytes": 35176,
+    "path": "experiments/m193c-output-grid/precise-upscale-plan-1.json",
+    "sha256": "128919ba8369df7c0756e7ee6a4fbfb5ff0282850858088ef3eafd5f7ea79ec9"
+  },
+  "charged_allowance": 1048576,
+  "files": [
+    {
+      "bytes": 21313,
+      "path": "experiments/m193c-output-grid/precise-upscale-run.py",
+      "sha256": "bdb52e2a87992709d2479237ed2f275ce6a0e223667b55c3fc6a2c316d0f0547"
+    },
+    {
+      "bytes": 10070,
+      "path": "experiments/m193c-output-grid/precise-upscale-preregister.md",
+      "sha256": "a7af9ccdf9d30d08b8a7aecb2341275123134282695ec4806380b047922f82af"
+    },
+    {
+      "bytes": 6570,
+      "path": "experiments/m193c-output-grid/independent-precise-upscale-source-review.md",
+      "sha256": "edae26b7e1c9ddf6feda8fc968b5623817a246df0466c844cacd3448a9493e92"
+    },
+    {
+      "bytes": 4693,
+      "path": "experiments/m193c-output-grid/work/prepare-precise-upscale-plan-1.py",
+      "sha256": "6e1b3b3efbcad09e0737af15160e6dee4f717247b807367bb320119e7b3ef2d9"
+    },
+    {
+      "bytes": 5193,
+      "path": "experiments/m193c-output-grid/work/independent-precise-upscale-plan-preparation-read.md",
+      "sha256": "1e4bfbde21732e888bc635ce1d78f4d83a616b4b1f0ddc5bd098df021c43ec40"
+    },
+    {
+      "bytes": 35176,
+      "path": "experiments/m193c-output-grid/precise-upscale-plan-1.json",
+      "sha256": "128919ba8369df7c0756e7ee6a4fbfb5ff0282850858088ef3eafd5f7ea79ec9"
+    },
+    {
+      "bytes": 104,
+      "path": "experiments/m193c-output-grid/work/precise-upscale-prior-work-1.json",
+      "sha256": "b3899c3a133026cb573a802a88c32907ddfcf79f112bdd7777d98cf0643a5540"
+    },
+    {
+      "bytes": 478,
+      "path": "experiments/m193c-output-grid/work/precise-upscale-preparation-1-console.txt",
+      "sha256": "f1d6ab8e3fcc231c451950ad85d696a94277fc2bea021cfeeba5129a20499b03"
+    },
+    {
+      "bytes": 3,
+      "path": "experiments/m193c-output-grid/work/precise-upscale-preparation-1-exit.txt",
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354"
+    },
+    {
+      "bytes": 1338,
+      "path": "experiments/m193c-output-grid/work/precise-upscale-preparation-1-outer.json",
+      "sha256": "cab8df2e3f0dc95918478a7f64e11de14167e0fc3aba5308582051cc8ebd9ab2"
+    },
+    {
+      "bytes": 4842,
+      "path": "experiments/m193c-output-grid/work/continuation-2026-09-07-factor-eight.md",
+      "sha256": "8c85ae1dd535dcdd4f389e4fedf3dc0794599603109166e95289cd5fc677e953"
+    },
+    {
+      "bytes": 1351,
+      "path": "experiments/m193c-output-grid/work/archive-factor-eight-outcome-1.py",
+      "sha256": "69b086be12e5f429d0604d73cbf90c370e0e6bf9e9eba3589ccb70c87add7744"
+    },
+    {
+      "bytes": 305741,
+      "path": "AGENTS.md",
+      "sha256": "c9ddcdcc7d62bac05e7530188e30980100543ce9d85e76aaa092fc735b05a296"
+    },
+    {
+      "bytes": 32863,
+      "path": "docs/research/M193c-output-grid.md",
+      "sha256": "00e6743133bc77d6992004499fc457c71f2fe4378efb07918f9495f38bc294c5"
+    },
+    {
+      "bytes": 29539,
+      "path": "docs/proposals/2026-09-sota-program.md",
+      "sha256": "61730c14160fde330f89a667f1d75a87fef1b49c07c2eb773e416c8b832d1b05"
+    }
+  ],
+  "future_independent_audit_allowance": 200704,
+  "images_decoded": 0,
+  "metadata_files_checked": 201,
+  "observed_file_bytes": 459274,
+  "prior_work": {
+    "bytes": 104,
+    "path": "experiments/m193c-output-grid/work/precise-upscale-prior-work-1.json",
+    "sha256": "b3899c3a133026cb573a802a88c32907ddfcf79f112bdd7777d98cf0643a5540"
+  },
+  "remaining_for_root_archive_and_metadata": 388598,
+  "scope": "Conservative explicit private-test preparation inventory; all1MiB charged, no historical refund",
+  "source_count": 185
+}

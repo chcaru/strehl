@@ -1,0 +1,28 @@
+{
+  "scope": "Actual metadata-only private precise-upscale preparation",
+  "command": [
+    "C:/Users/chris/AppData/Local/Programs/Python/Python312/python.exe",
+    "-B",
+    "experiments/m193c-output-grid/work/prepare-precise-upscale-plan-1.py",
+    "--audit-sha256",
+    "386a2c56515041d4c71a63b77876d3f987be1d2993182b9317b68db4ccea7440",
+    "--source",
+    "experiments/m193c-output-grid/precise-upscale-run.py",
+    "bdb52e2a87992709d2479237ed2f275ce6a0e223667b55c3fc6a2c316d0f0547",
+    "--source",
+    "experiments/m193c-output-grid/precise-upscale-preregister.md",
+    "a7af9ccdf9d30d08b8a7aecb2341275123134282695ec4806380b047922f82af",
+    "--source",
+    "experiments/m193c-output-grid/independent-precise-upscale-source-review.md",
+    "edae26b7e1c9ddf6feda8fc968b5623817a246df0466c844cacd3448a9493e92",
+    "--source",
+    "experiments/m193c-output-grid/work/independent-precise-upscale-plan-preparation-read.md",
+    "1e4bfbde21732e888bc635ce1d78f4d83a616b4b1f0ddc5bd098df021c43ec40",
+    "--source",
+    "experiments/m193c-output-grid/work/independent-factor-eight-1-audit.py",
+    "4b4736b8a95ef7d347dd2ad98cc66ac4460e1d77d7f735e68f016e8e26912e30"
+  ],
+  "exit_code": 0,
+  "elapsed_wall_seconds": 0.1165967,
+  "source_sha256": "6e1b3b3efbcad09e0737af15160e6dee4f717247b807367bb320119e7b3ef2d9"
+}
