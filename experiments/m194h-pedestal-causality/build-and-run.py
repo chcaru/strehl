@@ -26,8 +26,10 @@ SELF=Path(__file__).resolve()
 KIB=1024;MIB=1<<20;GIB=1<<30
 SCHEMA="m194h-owned-stage-release-v1"
 FEATURE="m194h-pedestal-causality"
-TARGET=ROOT/"target/m194h-pedestal-causality-1"
+TARGET=ROOT/"target/m194h-pedestal-causality-2"
 PROCESS=ROOT/"experiments/m193c-output-grid/bounded-process.py"
+BUILD_PROCESS=HERE/"bounded-build-process.py"
+BUILD_PROCESS_SHA="6c4b6e6222e1b58ec408fbd949d7a90bbb0c12778c292517c6eb6539eb4b036b"
 HARNESS=ROOT/"experiments/m12-scorecard/m12-harness.py"
 PROCESS_SHA="47b9f8d848759eba61f055b9fdca1f8ac400f134dcd7636f0e0eaaa955704e0b"
 CORE_TEST="pyramid::m194h::controls::fixed_threshold_null_and_observer_controls"
@@ -36,7 +38,7 @@ STAGES={
  "build":dict(cpu_seconds=300,wall_seconds=240,committed_bytes=8*GIB,file_bytes=128*MIB,scratch_bytes=4*GIB),
  "components":dict(cpu_seconds=60,wall_seconds=60,committed_bytes=GIB,file_bytes=2*MIB,scratch_bytes=0),
  "render":dict(cpu_seconds=120,wall_seconds=180,committed_bytes=GIB,file_bytes=16*MIB,scratch_bytes=0)}
-OUTPUTS={k:HERE/(k+"-1" if k!="render" else "subject-1") for k in STAGES}
+OUTPUTS={"build":HERE/"build-2","components":HERE/"components-1","render":HERE/"subject-1"}
 FIXED_ENV={"RAYON_NUM_THREADS":"2","STREHL_PYRAMID_WORKERS":"2","STREHL_DEFECT":"off","STREHL_FIX_CA":"off","STREHL_FULLRES_GATHER":"1"}
 JOB_NAMES=("kernel32","ntdll","CREATE_SUSPENDED","JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE",
  "JOB_OBJECT_BASIC_ACCOUNTING_INFORMATION_CLASS","JOB_OBJECT_EXTENDED_LIMIT_INFORMATION_CLASS",
@@ -50,7 +52,7 @@ TERMINAL_CAP=64*KIB
 TAIL_CPU=2;TAIL_WALL=3;CLEANUP_WALL=12
 CASE_CAPS={"plan.json":128*KIB,"trace.bin":128*KIB,"trace.json":16*KIB,"output.tif":512*KIB,
  "result.json":32*KIB,"result-stage.json":32*KIB,"failure.json":8*KIB}
-REQUIRED=(".gitattributes","build-and-run.py","build-and-execution-contract.md","resource-ledger.json",
+REQUIRED=(".gitattributes","build-and-run.py","bounded-build-process.py","build-and-execution-contract.md","resource-ledger.json",
  "experiment-decision.md","core-hook.rs","component-controls.rs","production-bridge.rs","preregister.md",
  "independent-verification-design.md","independent-verify.py")
 
@@ -237,11 +239,15 @@ class Budget:
         return dict(wall_seconds=wall,cpu_seconds=cpu,log_bytes=16*MIB if self.stage=="build" and index<2 else 64*KIB,
                     committed_bytes=self.caps["committed_bytes"])
 
-def load_process(bindings):
-    data=source_bytes(PROCESS,bindings);need(sha(data)==PROCESS_SHA,"immutable owned process source")
-    module=types.ModuleType("m194h_owned_process");module.__file__=str(PROCESS)
-    exec(compile(data,str(PROCESS),"exec"),module.__dict__)
+def load_process(bindings,compile_only=False):
+    need(type(compile_only) is bool,"typed process policy")
+    path=BUILD_PROCESS if compile_only else PROCESS
+    expected=BUILD_PROCESS_SHA if compile_only else PROCESS_SHA
+    data=source_bytes(path,bindings);need(sha(data)==expected,"immutable owned process source")
+    module=types.ModuleType("m194h_owned_build_process" if compile_only else "m194h_owned_process");module.__file__=str(path)
+    exec(compile(data,str(path),"exec"),module.__dict__)
     tree=ast.parse(source_bytes(HARNESS,bindings),str(HARNESS));nodes=[];seen=set();names=set(JOB_NAMES+JOB_SIGNATURES)
+    if compile_only:names.update(("JOB_OBJECT_BASIC_PROCESS_ID_LIST_CLASS","job_process_ids"))
     for node in tree.body:
         if isinstance(node,ast.ImportFrom) and node.module=="__future__":nodes.append(node);continue
         name=node.name if isinstance(node,(ast.FunctionDef,ast.ClassDef)) else None
@@ -418,7 +424,38 @@ def case_result(output,index,budget):
     need(ref_binding(observed["output.tif"])=={k:value["output"][k] for k in ("bytes","sha256")},"actual output association")
     return dict(case=index,result=observed["result.json"],output=observed["output.tif"],trace=observed["trace.json"])
 
+def admit_compile_cleanup(record):
+    value=record.get("compile_cleanup")
+    keys=("schema","policy","disposition","attempted","succeeded","completed","before_accounting",
+          "after_accounting","remaining_process_ids","pid_query_performed","pid_query_error",
+          "started_wall_seconds","ended_wall_seconds","wait_seconds","max_wait_seconds","error","scope")
+    need(type(value) is dict and set(value)==set(keys),"closed compile cleanup record")
+    need(value["schema"]=="m194h-compile-owned-descendant-cleanup-v1"
+         and value["policy"]=="AFTER_DIRECT_ZERO_AND_PIPE_EOF" and value["completed"] is True
+         and value["error"] is None and value["pid_query_error"] is None,"successful compile cleanup")
+    need(value["max_wait_seconds"]==5 and all(finite(value[k]) for k in
+         ("started_wall_seconds","ended_wall_seconds","wait_seconds")),"compile cleanup timing")
+    need(value["wait_seconds"]==value["ended_wall_seconds"]-value["started_wall_seconds"]
+         and value["wait_seconds"]<=5 and value["ended_wall_seconds"]<=record["limits"]["wall_seconds"],"bounded compile cleanup")
+    before=job_cpu(value["before_accounting"]);after=job_cpu(value["after_accounting"])
+    need(after>=before and value["after_accounting"]["active_processes"]==0,"compile cleanup final accounting")
+    pids=value["remaining_process_ids"]
+    need(type(value["pid_query_performed"]) is bool,"typed compile PID observation")
+    if value["pid_query_performed"]:
+        need(type(pids) is list and len(pids)<=1024 and all(type(p) is int and 0<p<1<<32 for p in pids)
+             and len(set(pids))==len(pids),"bounded actual Job PIDs")
+    else:need(pids is None,"no invented PID observation")
+    if value["disposition"]=="NATURAL_JOB_EXIT":
+        need(value["attempted"] is False and value["succeeded"] is False
+             and value["before_accounting"]["active_processes"]==0,"natural compile Job exit")
+    else:
+        need(value["disposition"]=="INTENTIONAL_OWNED_JOB_CLEANUP" and value["attempted"] is True
+             and value["succeeded"] is True and value["pid_query_performed"] is True
+             and value["before_accounting"]["active_processes"]>0,"intentional owned compile cleanup")
+
 def child_call(process,api,command,env,index,output,budget,result):
+    compile_case=budget.stage=="build" and index in (0,1)
+    need((getattr(process,"BUILD_ONLY",False) is True)==compile_case,"exact compile-only process dispatch")
     limits=budget.limits(index);old=api.job_accounting
     budget.live_cpu=0.;budget.complete=False
     def observed(job):return budget.observe(old(job))
@@ -440,6 +477,9 @@ def child_call(process,api,command,env,index,output,budget,result):
     need(record["error"] is None and not record["cleanup_errors"] and record["exit_code"]==0
          and record["direct_exit_observed"] and record["pipe_eof_observed"]
          and record["post_exit_drain"]["completed"],"owned child successful terminal")
+    need(record["termination"]["attempted"] is False,"no successful failure-cleanup admission")
+    if compile_case:admit_compile_cleanup(record)
+    else:need("compile_cleanup" not in record,"strict helper outside compile cases")
     return record
 
 def main():
@@ -461,13 +501,15 @@ def main():
         result["metadata_controls"]=metadata_controls(output)
         budget.check(True)
         process,api=load_process(sources)
+        build_process,build_api=load_process(sources,True) if release["stage"]=="build" else (None,None)
         outputs=[]
         for index,command in enumerate(release["children"]):
             actual_env=dict(env)
             if release["stage"]=="render":
                 grant=release["subject_grant"]
                 actual_env.update(M194H_GRANT=str(owned(ROOT/grant["path"])),M194H_GRANT_SHA256=grant["sha256"],M194H_CASE=str(index))
-            child_call(process,api,command,actual_env,index,output,budget,result)
+            chosen_process,chosen_api=(build_process,build_api) if release["stage"]=="build" and index in (0,1) else (process,api)
+            child_call(chosen_process,chosen_api,command,actual_env,index,output,budget,result)
             if release["stage"]=="build":
                 if index<2:result["artifacts"][("core","cli")[index]]=compile_artifact(output/f"child-{index:02}.log",index,output,budget)
                 else:

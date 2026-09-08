@@ -19,10 +19,10 @@ def main():
  stage=sys.argv[1]
  assert stage in ("build","components","render")
  assert Path.cwd().resolve()==ROOT
- release=HERE/"work"/(stage+"-release-1.json")
+ release=HERE/"work"/(stage+"-release-"+("2" if stage=="build" else "1")+".json")
  raw,r=buffer_ref(release);grant=json.loads(raw)
  assert grant["schema"]=="m194h-owned-stage-release-v1" and grant["stage"]==stage,"fixed stage schema"
- prepraw,_=buffer_ref(HERE/"work"/(stage+"-preparation-2.json"))
+ prepraw,_=buffer_ref(HERE/"work"/(stage+"-preparation-3.json"))
  prep=json.loads(prepraw)
  assert prep["status"]=="PASS_METADATA_PREPARATION" and prep["release"]==r,"prepared actual release"
  own=ref(Path(__file__).resolve())
@@ -30,7 +30,7 @@ def main():
  command=[r["sha256"] if x=="ACTUAL_RELEASE_SHA256" else x for x in grant["command"]]
  source=ref(HERE/"build-and-run.py")
  assert {k:source[k] for k in ("bytes","sha256")}==grant["source_bindings"][source["path"]]
- stem=HERE/"work"/(stage+"-external-1")
+ stem=HERE/"work"/(stage+"-external-"+("2" if stage=="build" else "1"))
  paths={k:Path(str(stem)+suffix) for k,suffix in (("stdout","-stdout.bin"),("stderr","-stderr.bin"),("exit","-exit.txt"),("outer","-outer.json"))}
  assert all(not p.exists() for p in paths.values())
  timeout={"build":240,"components":60,"render":180}[stage]

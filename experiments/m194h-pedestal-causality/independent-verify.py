@@ -442,8 +442,72 @@ def job_cpu(record):
     return record["total_cpu_100ns"]/1e7
 
 
+
+def compile_completion(value,stage,index,command):
+    compile_case=stage=="build" and index in (0,1)
+    if not compile_case:
+        need("compile_cleanup" not in value,"strict process helper outside compile indices0/1")
+        return dict(policy="ORIGINAL_STRICT_PROCESS_COMPLETION",complete=True,
+                    natural_job_exit=None,intentional_owned_cleanup=False)
+    target=str(ROOT/"target/m194h-pedestal-causality-2")
+    prefix=["cargo","test","-p","strehl-core" if index==0 else "strehl-cli"]
+    kind=["--lib"] if index==0 else ["--bin","strehl"]
+    expected=prefix+kind+["--features","m194h-pedestal-causality","--target-dir",target,
+        "--no-run","--message-format=json-render-diagnostics","--locked","--offline"]
+    need(command==expected,"intentional cleanup restricted to exact compile argv/index")
+    cleanup=value.get("compile_cleanup")
+    if cleanup is None:
+        return dict(policy="COMPILE_POLICY_UNOBSERVED",complete=False,natural_job_exit=None,intentional_owned_cleanup=False)
+    keys={"schema","policy","disposition","attempted","succeeded","completed","before_accounting","after_accounting",
+          "remaining_process_ids","pid_query_performed","pid_query_error","started_wall_seconds","ended_wall_seconds",
+          "wait_seconds","max_wait_seconds","error","scope"}
+    need(type(cleanup) is dict and set(cleanup)==keys and cleanup["schema"]=="m194h-compile-owned-descendant-cleanup-v1"
+         and cleanup["policy"]=="AFTER_DIRECT_ZERO_AND_PIPE_EOF","closed compile-only completion record")
+    need(cleanup["disposition"] in ("UNVISITED","NATURAL_JOB_EXIT","INTENTIONAL_OWNED_JOB_CLEANUP","REFUSED"),"known compile completion disposition")
+    for key in ("attempted","succeeded","completed","pid_query_performed"):
+        need(type(cleanup[key]) is bool,"typed compile cleanup flags")
+    need(type(cleanup["max_wait_seconds"]) in (int,float) and not isinstance(cleanup["max_wait_seconds"],bool)
+         and cleanup["max_wait_seconds"]==5,"fixed cleanup wait cap")
+    before=cleanup["before_accounting"];after=cleanup["after_accounting"]
+    before_cpu=job_cpu(before) if before is not None else None
+    after_cpu=job_cpu(after) if after is not None else None
+    ids=cleanup["remaining_process_ids"]
+    if cleanup["pid_query_performed"]:
+        if ids is not None:
+            need(type(ids) is list and len(ids)<=1024,"bounded actual Job PID snapshot")
+            for pid in ids:integer(pid,1,0xffffffff,"typed observed Job PID")
+            need(len(ids)==len(set(ids)),"unique observed Job PIDs")
+    else:need(ids is None,"no invented unqueried PID census")
+    start,end,wait=(cleanup[k] for k in ("started_wall_seconds","ended_wall_seconds","wait_seconds"))
+    for value0 in (start,end,wait):
+        if value0 is not None:scalar(value0,"finite actual compile cleanup timing",True)
+    natural=cleanup["disposition"]=="NATURAL_JOB_EXIT"
+    intentional=cleanup["disposition"]=="INTENTIONAL_OWNED_JOB_CLEANUP"
+    timing=(start is not None and end is not None and wait is not None and end>=start
+            and abs((end-start)-wait)<=1e-8 and wait<=5 and value["wall_seconds"] is not None
+            and end<=value["wall_seconds"] and end<=240)
+    accounting=(before_cpu is not None and after_cpu is not None and after_cpu>=before_cpu
+                and after["active_processes"]==0 and value["job_accounting"] is not None
+                and value["job_accounting"]["active_processes"]==0 and job_cpu(value["job_accounting"])>=after_cpu)
+    flags=((natural and cleanup["attempted"] is False and cleanup["succeeded"] is False
+            and before is not None and before["active_processes"]==0) or
+           (intentional and cleanup["attempted"] is True and cleanup["succeeded"] is True
+            and cleanup["pid_query_performed"] is True and ids is not None
+            and before is not None and before["active_processes"]>0))
+    completed=(cleanup["completed"] is True and flags and timing and accounting
+               and (not cleanup["pid_query_performed"] or ids is not None)
+               and cleanup["error"] is None and cleanup["pid_query_error"] is None
+               and value["exit_code"]==0 and value["direct_exit_observed"] is True and value["pipe_eof_observed"] is True
+               and value["termination"]["attempted"] is False)
+    return dict(policy=cleanup["policy"],disposition=cleanup["disposition"],complete=bool(completed),
+        natural_job_exit=natural,intentional_owned_cleanup=intentional,attempted=cleanup["attempted"],succeeded=cleanup["succeeded"],
+        before_active=before["active_processes"] if before else None,after_active=after["active_processes"] if after else None,
+        before_cpu_seconds=before_cpu,after_cpu_seconds=after_cpu,pid_query_performed=cleanup["pid_query_performed"],
+        observed_pid_count=len(ids) if ids is not None else None,pid_snapshot_sha256=digest(encoded(ids)) if ids is not None else None,
+        wait_seconds=wait,scope="PIDs are retained Job observations, never independent kill targets or evidence of process purpose")
+
 def child_record(files,ref,stage,index,expected_command):
-    d=HERE/(stage+"-1" if stage!="render" else "subject-1")
+    d=HERE/("build-2" if stage=="build" else "components-1" if stage=="components" else "subject-1")
     v=files.json(ref,32*KIB,d/f"child-{index:02}.json")
     need(v["command"]==expected_command,"detached actual child command")
     cap=16*MIB if stage=="build" and index<2 else 64*KIB
@@ -468,11 +532,12 @@ def child_record(files,ref,stage,index,expected_command):
         cpu<=(20 if stage=="render" else STAGE_CAPS[stage][0]) and
         wall<=(20 if stage=="render" else STAGE_CAPS[stage][1]) and peak<=STAGE_CAPS[stage][2])
     terminal=bool(v["terminal_job_accounting"] is True and cpu is not None and v["job_accounting"]["active_processes"]==0)
-    okay=(linked and terminal and installed and resources is True and v["error"] is None and not v["cleanup_errors"]
+    completion=compile_completion(v,stage,index,expected_command)
+    okay=(completion["complete"] and linked and terminal and installed and resources is True and v["error"] is None and not v["cleanup_errors"]
           and v["exit_code"]==0 and v["direct_exit_observed"] is True and v["pipe_eof_observed"] is True
           and type(v["post_exit_drain"]) is dict and v["post_exit_drain"]["completed"] is True)
     return dict(ref=ref,cpu_seconds=cpu,wall_seconds=wall,complete=bool(okay),terminal=terminal,
-                resource_admissible=resources,committed_limit_installed=installed,log_association_verified=linked,log=log,log_ref=lr)
+                resource_admissible=resources,committed_limit_installed=installed,log_association_verified=linked,completion_policy=completion,log=log,log_ref=lr)
 
 
 def stage_bundle(files,bundle,stage):
@@ -480,7 +545,7 @@ def stage_bundle(files,bundle,stage):
     need(type(bundle) is dict and set(bundle)==set(caps),"closed six-ref stage bundle")
     raw={k:files.read(bundle[k],cap,empty=k=="stderr") for k,cap in caps.items()}
     v,t,o,a=(strict(raw[k]) for k in ("result","tail","outer","stdout"))
-    d=HERE/(stage+"-1" if stage!="render" else "subject-1")
+    d=HERE/("build-2" if stage=="build" else "components-1" if stage=="components" else "subject-1")
     need(path_identity(bundle["result"]["path"])==d/"result.json" and path_identity(bundle["tail"]["path"])==d/"parent-tail.json","fixed stage terminal roles")
     need(set(o)=={"schema","command","source","exit_code","timeout_terminated","elapsed_wall_seconds","stdout","stderr","exit","stdout_bytes","stderr_bytes","scope"} and o["schema"]=="m194h-stage-external-v1","closed external stage receipt")
     need(v["schema"]=="m194h-owned-stage-v1" and v["stage"]==stage and o["command"]==v["invocation"],"actual stage identity")
@@ -511,6 +576,7 @@ def stage_bundle(files,bundle,stage):
     complete=bool(complete and resources and job_association and len(observed)==len(release["children"]) and all(c["complete"] for c in observed))
     return dict(result=v,release=release,children=observed,complete=complete,
                 summary=dict(stage=stage,bundle=bundle,complete=complete,resources=resources,job_cpu_seconds=total,
+                child_completion=[dict(index=i,record=c["ref"],policy=c["completion_policy"],complete=c["complete"]) for i,c in enumerate(observed)],
                 parent_cpu_sample=t["actual_parent_cpu_sample"],charged_parent_tail_cpu=2,whole_wall_seconds=o["elapsed_wall_seconds"],
                 scope="exact retained child Job CPU; parent sample plus reserved tail, not measured parent exit CPU"))
 
@@ -1135,7 +1201,7 @@ def main():
             science["original_metric_anchors"]=old_metric_anchors(files,science["diagnostics"])
             out.phase("independent-consumer-science",science)
         files.finish()
-        inv=inventory(files,[(HERE/"build-1",128*MIB),(HERE/"components-1",2*MIB),(SUBJECT,16*MIB)])
+        inv=inventory(files,[(HERE/"build-2",128*MIB),(HERE/"components-1",2*MIB),(SUBJECT,16*MIB)])
         complete=bool(full_science and all(s["complete"] for s in stages) and all(c["complete"] for c in control) and component_complete)
         budget.check()
         final=dict(schema=SCHEMA,status="PASS_INDEPENDENT_SAVED_CONSUMER_CHECK_ONLY" if complete else "VERIFIED_INCOMPLETE_SAVED_PREFIX",
