@@ -1,0 +1,113 @@
+{
+  "scope": "Conservative saved-trace preparation metadata; all1MiB charged",
+  "files": [
+    {
+      "path": "experiments/m193c-output-grid/independent-real-precise-1-read.md",
+      "bytes": 11557,
+      "sha256": "a7ad4fa84520bc88fcf767070e3d0c033891bf1caa32d0cb1543b24186b46508"
+    },
+    {
+      "path": "experiments/m193c-output-grid/independent-refusal-trace-source-review.md",
+      "bytes": 8053,
+      "sha256": "7f44441a5341a4ce431af9109593cddda259784b573312038d31f2dcee8297b0"
+    },
+    {
+      "path": "experiments/m193c-output-grid/real-precise-1/result.json",
+      "bytes": 43505,
+      "sha256": "82cc275d4fc78b43a1b63752e763e085a1d211a8a2b2e6686291315d806b013b"
+    },
+    {
+      "path": "experiments/m193c-output-grid/real-precise-plan-1.json",
+      "bytes": 37546,
+      "sha256": "4364546cdade4133946b81f3a241839f280306bf7ac1a056174a46788da5f1d4"
+    },
+    {
+      "path": "experiments/m193c-output-grid/refusal-trace-plan-1.json",
+      "bytes": 38628,
+      "sha256": "327ffd9e27270542e8f7c93ee37827a4beb5eb9291394924f66590dcf3baaeef"
+    },
+    {
+      "path": "experiments/m193c-output-grid/refusal-trace-run.py",
+      "bytes": 34853,
+      "sha256": "05162ef398426ea7ec9ac434ec3ab637bc2cd7e02331ef93f9534357ffd50268"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/archive-refusal-trace-plan-1.py",
+      "bytes": 1081,
+      "sha256": "ac4f8f6b974713b7b668ba7624fb21ae6bff8ae903acf07d9f2f766dd53e530a"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/independent-real-precise-1-audit.json",
+      "bytes": 78821,
+      "sha256": "7920f885e0cea2bcfbe2ac4f9af9ffc519212495274798cee23b79aa2e179ccc"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/independent-real-precise-1-audit.py",
+      "bytes": 33051,
+      "sha256": "10c0b84b51b5ae45f116fc1265b9a32b182ac30e44e62b0512e04d38964eabe5"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/independent-refusal-trace-1-audit.py",
+      "bytes": 43271,
+      "sha256": "18093725797dea574ada23053fb3cebaff22734811d48ff41276a1908f6389ac"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/independent-refusal-trace-plan-preparation-read.md",
+      "bytes": 4160,
+      "sha256": "24defa702fec57e4eb8c882827f3199bdbc7bc33ec062b3e26de2c664d672b3b"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/prepare-refusal-trace-plan-1.py",
+      "bytes": 4661,
+      "sha256": "3f68b539e4071b4a1d01cb26f5d777011cbbe5ea1f071b7f9433c1da5cadc5ed"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/real-precise-1-console.txt",
+      "bytes": 393,
+      "sha256": "b65bc49f17044d719060737bf7d78aeba1d48b9b9cf005163f3ec04bc3000658"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/real-precise-1-exit.txt",
+      "bytes": 3,
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/real-precise-1-outer.json",
+      "bytes": 1048,
+      "sha256": "c2fd17007ed7e18e6ba0d9199f1e9df0399f38b40237bf4117d9d43245f26280"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/real-precise-refusal-diagnostic-preregister.md",
+      "bytes": 16062,
+      "sha256": "756d46b8e2bbe2ab6513b56335c142a3fa22b2569b67ac010d6caaf1d3c7191d"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/refusal-trace-plan-1-review.md",
+      "bytes": 2509,
+      "sha256": "5d0925c9f577705b5ce76c4ea495a61beeac48b2b69a9ed64b7a8168de982f69"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/refusal-trace-preparation-1-console.txt",
+      "bytes": 474,
+      "sha256": "4ab2aa8ed69a717c4211351e49201726a786508858215fd34d1f2d83ad35ac31"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/refusal-trace-preparation-1-exit.txt",
+      "bytes": 3,
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/refusal-trace-preparation-1-outer.json",
+      "bytes": 1361,
+      "sha256": "e7f0e1a950d69f4019b40232f1d65eb8ef3398803d4ef8d511733196fd478e7a"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/refusal-trace-prior-work-1.json",
+      "bytes": 99,
+      "sha256": "5c0a2503d1c7a78d49f0f849382b941b9d24c140f68e1e4014e938f015f26de9"
+    }
+  ],
+  "total_bytes": 361139,
+  "future_audit_reserve_bytes": 200704,
+  "allowance_bytes": 1048576
+}

@@ -1,0 +1,28 @@
+{
+  "scope": "Actual metadata-only saved refusal-trace preparation",
+  "command": [
+    "C:/Users/chris/AppData/Local/Programs/Python/Python312/python.exe",
+    "-B",
+    "experiments\\m193c-output-grid\\work\\prepare-refusal-trace-plan-1.py",
+    "--audit-sha256",
+    "7920f885e0cea2bcfbe2ac4f9af9ffc519212495274798cee23b79aa2e179ccc",
+    "--source",
+    "experiments/m193c-output-grid/refusal-trace-run.py",
+    "05162ef398426ea7ec9ac434ec3ab637bc2cd7e02331ef93f9534357ffd50268",
+    "--source",
+    "experiments/m193c-output-grid/work/real-precise-refusal-diagnostic-preregister.md",
+    "756d46b8e2bbe2ab6513b56335c142a3fa22b2569b67ac010d6caaf1d3c7191d",
+    "--source",
+    "experiments/m193c-output-grid/independent-refusal-trace-source-review.md",
+    "7f44441a5341a4ce431af9109593cddda259784b573312038d31f2dcee8297b0",
+    "--source",
+    "experiments/m193c-output-grid/work/independent-refusal-trace-plan-preparation-read.md",
+    "24defa702fec57e4eb8c882827f3199bdbc7bc33ec062b3e26de2c664d672b3b",
+    "--source",
+    "experiments/m193c-output-grid/work/independent-real-precise-1-audit.py",
+    "10c0b84b51b5ae45f116fc1265b9a32b182ac30e44e62b0512e04d38964eabe5"
+  ],
+  "exit_code": 0,
+  "elapsed_wall_seconds": 0.10900000000037835,
+  "source_sha256": "3f68b539e4071b4a1d01cb26f5d777011cbbe5ea1f071b7f9433c1da5cadc5ed"
+}
