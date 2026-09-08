@@ -1,0 +1,133 @@
+{
+  "schema": "m192e-startup-attribution-plan-v1",
+  "source_bindings": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m192e-campaign-runner\\durable.py",
+      "bytes": 15166,
+      "sha256": "41b97a63056332c316daff88c9e172b3c3cdd6de2f36a939ac7eb1bee14fe532"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m192c-sampler\\sampler.py",
+      "bytes": 13556,
+      "sha256": "3e5f8d45201176f904ac9c14177108d409d3c6e24a7ab6ead60c1655fc662aa6"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\m12-harness.py",
+      "bytes": 117908,
+      "sha256": "6cfb408992f37b225f102da4d62ba836f9c5b67c92bdd418ff460987866a1bb9"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sift-lightglue-saved-completion-run.py",
+      "bytes": 44413,
+      "sha256": "12e3a81fb7dea313375f8227483b2303269c85357246d041a27ccd7d1033df27"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\bounded-process.py",
+      "bytes": 12664,
+      "sha256": "47b9f8d848759eba61f055b9fdca1f8ac400f134dcd7636f0e0eaaa955704e0b"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\saved-completion-publication.py",
+      "bytes": 12343,
+      "sha256": "875dfb30db4555c1906adec9e446ea7f91763493f0d23f66430d0143b8953f30"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m192e-campaign-runner\\startup-attribution-run.py",
+      "bytes": 24534,
+      "sha256": "48698b704042766c24aaeb5fe674d493e628cc58397ec0823e4c10a4a30afe44"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m192e-campaign-runner\\startup-attribution-preregister.md",
+      "bytes": 12750,
+      "sha256": "fbd2d8425ccace3229a65d4159f203ecaa3d1ecd9d94c630ce3bd25db14fa492"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m192e-campaign-runner\\independent-startup-attribution-source-review.md",
+      "bytes": 5973,
+      "sha256": "59eea51828d31bcf494f25f365c74af0031525a21dc6fc74e41a35e4d014fb87"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m192e-campaign-runner\\startup-attribution-audit.py",
+      "bytes": 37387,
+      "sha256": "ff31a1edf0a632d487329f06923cde85be2dc1f8d1dfa36903216be2f140674e"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m192e-campaign-runner\\root-startup-attribution-auditor-source-review.md",
+      "bytes": 6173,
+      "sha256": "a396ea9b249f6616906f91463129cd1aa101daeec03d0f322a02e862d7c57ecb"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m192c-sampler\\child.py",
+      "bytes": 3295,
+      "sha256": "f8fb5c4ad8406ef56ef372299fbb97fb38cdc52f6b5dc5c9739414b33d696fe8"
+    }
+  ],
+  "rehearsal_baseline": {
+    "plan": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m192e-campaign-runner\\preparation-1\\plan.json",
+      "bytes": 6921,
+      "sha256": "9a8bfcef7da8f6bbf1927adcb99039cd1d679da851deb99367c9a1d836a40d73"
+    },
+    "result": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m192e-campaign-runner\\rehearsal-1\\parent\\result.json",
+      "bytes": 65536,
+      "sha256": "760b11c100e977e3f1de0368bf49bc9de1d146243dd458ebae5b4af70e86b15e"
+    },
+    "outer": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m192e-campaign-runner\\rehearsal-1-outer\\outer.json",
+      "bytes": 8192,
+      "sha256": "58f2505e97f5f2ffb2a2203bd5194f06e993955e25b560e012176b3afe34d3f5"
+    },
+    "verification": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m192e-campaign-runner\\rehearsal-1-verification.json",
+      "bytes": 3086,
+      "sha256": "a0f4f50e8f2b2c96778966b0714fbe3b6b84b94ace30c11084ba4ea7a784ee10"
+    },
+    "diagnosis": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m192e-campaign-runner\\sampling-diagnosis-1.md",
+      "bytes": 9795,
+      "sha256": "b92f0ebdec00768d99aaadbdb41c85441623a4b052d81787b1dd6ac5d7ab2ef1"
+    },
+    "independent_review": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m192e-campaign-runner\\independent-rehearsal-1-read.md",
+      "bytes": 9509,
+      "sha256": "4d19117d757fd6e814aeba1cbb747f3e53f9b376c2b4d540d6662809b4387ff8"
+    }
+  },
+  "python": {
+    "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "bytes": 104952,
+    "sha256": "4d6f5f81a4bca11191c4c7c6b43632694d0a4ce74e068619d8fdc161d469859a"
+  },
+  "output_directory": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m192e-campaign-runner\\startup-attribution-1",
+  "commands": {
+    "parent": [
+      "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+      "-B",
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m192e-campaign-runner\\startup-attribution-run.py",
+      "--plan",
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m192e-campaign-runner\\startup-attribution-plan-1.json",
+      "--plan-sha256",
+      "ACTUAL_PLAN_SHA256"
+    ],
+    "worker": [
+      "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+      "-B",
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m192e-campaign-runner\\startup-attribution-run.py",
+      "--plan",
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m192e-campaign-runner\\startup-attribution-plan-1.json",
+      "--plan-sha256",
+      "ACTUAL_PLAN_SHA256",
+      "--worker"
+    ]
+  },
+  "resource_limits": {
+    "phase_cpu_seconds": 20,
+    "phase_wall_seconds": 30,
+    "source_bytes": 1048576,
+    "output_bytes": 3145728,
+    "audit_cpu_seconds": 10,
+    "audit_wall_seconds": 20,
+    "audit_file_bytes": 1048576
+  }
+}
