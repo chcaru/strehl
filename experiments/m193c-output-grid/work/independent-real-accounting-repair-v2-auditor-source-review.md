@@ -1,0 +1,30 @@
+# Independent source review: v2 saved-outcome auditor
+
+PASS_SOURCE_REVIEW_ONLY, 2026-09-08. Reviewer factor_eight_review; author coordinate_verification. Exact candidate:
+
+| File | Bytes | SHA256 |
+|---|---:|---|
+| independent-real-accounting-repair-v2-audit.py |81800|a97d00094ec0c1442354e0401f7894e9d6ca52bca7c21324642568a696e52dc0|
+| independent-real-accounting-repair-v2-audit-ledger.json |3797|e7b3447cb4ad70f1ef42d393b738e26f7a2cdc2fbfa66cb567cf95fbcadba555|
+
+This is a delta review against the held v1 auditor 73261/71f7b6f83354f1e8195f3bc5c7898a799f0fdfe1f6197a82a0f1d94cedf12dd3 and its independent source review,8854/001a6314baf1a3d7ed08b98000b8e8a7ee30e12df26c0c55d4916387b49449d4. Those sources/reviews and the actual failed-attempt audit remain unchanged. I read the changed functions and complete entry/output flow, parsed syntax and independently compared AST definitions. No audit, helper control, subject, model, image, normalization, codec or registrar execution occurred.
+
+The candidate pins the exact reviewed v2 subject trio: runner17916/6422d6ce08b51d179d29f95eb0a3cf69c37657554c1ed511c0bf28c6a7b6ea39; support2243/2b2ece0185c7a55eace5bba46632ea0afd8a1632fe65f9188dcc7b4cd813b248; spec15215/383a423f460bddf9d881b5947b4daec18b1586edb4604f9dc1f789d2c704c2f4. It targets only the fresh output2 authority and distinct v2 output/progress paths. The general auditor main remains frozen and unexecuted.
+
+## Changed choices
+
+The independent authority validates the twelve-key plan, exact two typed-zero evidence paths, disjoint positive namespace, all295 retained positive predecessor entries, failed output1 and its actual audit/outer/exit/tail, and the fifteen-key1320-to1440 grant. Its separate metadata negatives cover zero and bool sources, unknown/nonzero/bool/wrong-hash evidence and overlap. They operate on copies. Historical reuse loads the pinned prior auditor in a named module and calls only its authority on the unchanged old plan. It never invokes the old main or silently patches the old296-entry map.
+
+The saved per-process source/evidence receipt is rederived in full: eight ordered rows, six exact refusal strings, initial/restored namespace hashes, both current empty file identities and the compact serialized bytes. Six-field identity agrees with the producer and requires owned single-link, exact-zero content. The unchanged same-handle reader authenticates the file itself. A saved-but-unlinked receipt can be retained as a refused prefix; a completed process must retain its link. A worker launch requires the verified parent receipt; any saved scientific population requires the worker receipt. No absent control becomes a pass.
+
+The loader's thirteen-field return witness, checkpoint/state scope, codec, normalization, private literal truth, returned-map/heldout residuals, descriptive final calibration membership, site grouping and runtime alias expansion are unchanged AST functions or unchanged pinned general definitions. No scientific arithmetic or acceptance choice is modified. The new live-control interpretation uses1439/1441 and retired1320/new1440; it remains distinct from actual Windows Job observations. Terminal/request/accounting schemas and exact command templates consistently use v2.
+
+The previous generic resource exception is preserved with its precise completeness-conditioned meaning. New measured checks keep unavailable final-tail evidence as null and flag an observed overrun only from an available false predicate. Conservative charge bounds and their exceptions are separate. An incomplete run retains the full102-CPU policy charge and conservative reservation/physical union; a complete run uses terminal Job plus latest parent sample and explicit2-CPU final-write allowance. The full outer wall is not charged twice. Missing/partial ledgers and earlier samples cannot establish complete accounting. The reader preserves available complete worker science separately if parent publication, exit, resources or tail make the overall subject incomplete. Historical CPU completeness remains false.
+
+## Capacity and residual scope
+
+The new source fits its96KiB slot. Final authority18KiB and total128KiB replace10/120; all other scientific/normalization/runtime slots remain. Explicit source/final/progress/stage/stderr/outer/review/report/ledger reservations total335872 bytes (328KiB), within the fixed393216-byte family already inside the1MiB preparation. The simultaneous32KiB progress staging lane is separately charged. The3797-byte ledger fits4KiB; stderr8KiB, outer4KiB and report8KiB remain bounded. Previously charged four helper sources are enumerated without copying or a new allowance.
+
+The author retained DERIVED metadata proxies: authority16605 below18432 and the earlier complete-science65009 below69632; normalization and independent earlier phase constructors remain inside their named slots. These are source-shaped construction evidence, not measured future output. The entry point checks disjoint section caps, final aggregate bytes and audit25-CPU/40-wall budget including its0.25/0.5 publication allowance before final emission. Atomic bounded progress preserves visited phases if a later unrelated check fails. Output compaction starts from fresh copies; full original records are verified before reporting hashes/references or removing duplicate summaries.
+
+No remaining source blocker for these exact bytes. A PASS audit status alone does not mean subject completion: subject_complete, verified_worker_scientific_population, diagnostic_observations_verified, operational exceptions and actual outer/tail remain separate. Even complete23 matching/fit evidence would be a fixed diagnostic population, not real physical per-frame placement truth, qualified support margin, merge readiness or SOTA. The8-Q8 lattice/1-Q8 guard remains explicitly unqualified. Root must release the actual five input hashes (plus explicit worker hash if needed), run this auditor once, and independently check its retained outer against the sampled wall plus allowance. This source review does not authorize an unbounded retry.

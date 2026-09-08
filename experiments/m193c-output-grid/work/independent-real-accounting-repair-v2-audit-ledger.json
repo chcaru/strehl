@@ -1,0 +1,79 @@
+{
+  "audit_caps_including_publication": {
+    "cpu_seconds": 25,
+    "wall_seconds": 40
+  },
+  "audit_publication_allowance": {
+    "cpu_seconds": 0.25,
+    "wall_seconds": 0.5
+  },
+  "final_section_caps_bytes": {
+    "accounting": 6144,
+    "authority": 18432,
+    "normalization": 8192,
+    "operational": 5120,
+    "other": 4096,
+    "publication": 5120,
+    "runtime": 4096,
+    "science": 69632,
+    "terminal": 10240
+  },
+  "limit_bytes": 393216,
+  "metadata_only_output_shape_checks": {
+    "authority_full_proxy_bytes": 16605,
+    "authority_proxy_ref_extent_digits": 10,
+    "authority_proxy_relative_ref_characters": 167,
+    "complete_23_returned_compact_scientific_proxy_bytes": 65009,
+    "independent_reviewer_codec_phase_bytes": 2530,
+    "independent_reviewer_publication_phase_bytes": 1752,
+    "normalization_final_proxy_bytes": 7133,
+    "normalization_phase_proxy_bytes": 6431,
+    "scientific_proxy_corner_numerator_digits": 75,
+    "scientific_proxy_relative_ref_characters": 167,
+    "scientific_proxy_transform_digits": 19,
+    "scope": "Plain metadata constructors only; source-derived bounds, no helper/audit/subject/scientific execution."
+  },
+  "progress_extent_ledger_bytes": {
+    "error_json_maximum": 4096,
+    "outer_structure_reserve": 1024,
+    "total": 32768,
+    "verified_phase_rows": 27648
+  },
+  "reservations": {
+    "final": 131072,
+    "ledger": 4096,
+    "outer": 4096,
+    "progress": 32768,
+    "report": 8192,
+    "source": 98304,
+    "source_review": 16384,
+    "staging": 32768,
+    "stderr": 8192
+  },
+  "reserved_total_bytes": 335872,
+  "reused_previously_charged_helpers": [
+    {
+      "bytes": 84962,
+      "path": "experiments/m193c-output-grid/work/independent-sift-lightglue-real-audit.py",
+      "sha256": "df220b094f28dfca82b173ac529d7edad807817ce2e2aee06be36812b8d9b323"
+    },
+    {
+      "bytes": 59052,
+      "path": "experiments/m193c-output-grid/work/independent-sift-lightglue-saved-completion-audit.py",
+      "sha256": "7c93287992515235438912569520513eb7d2573742304a253d00104d96e044fa"
+    },
+    {
+      "bytes": 62292,
+      "path": "experiments/m193c-output-grid/work/independent-sift-lightglue-commission-audit.py",
+      "sha256": "ccb78254596b6402139bb4ff4541a5bb6f0597175268a426bef66ba5e4f7c03c"
+    },
+    {
+      "bytes": 73261,
+      "path": "experiments/m193c-output-grid/work/independent-real-accounting-repair-audit.py",
+      "sha256": "71f7b6f83354f1e8195f3bc5c7898a799f0fdfe1f6197a82a0f1d94cedf12dd3"
+    }
+  ],
+  "schema": "m193c-real-accounting-repair-v2-audit-family-v1",
+  "scope": "One prospective v2 adapter source96KiB plus final128/progress32/stage32/stderr8/outer4/review16/report8/ledger4KiB equals328KiB within384KiB. Entire384KiB remains nonrefundable inside the existing1MiB preparation; preparer bounds all new metadata before writes. Old audit mains and subject/model/image/fit code are never invoked. Four immutable helpers were previously charged. V2 authority18KiB explicitly covers failed-repair bundle, two empty diagnostics, old sentinel interpretation and both source/evidence receipts; these are excluded from the4KiB other allowance. All old scalar normalization, scientific and other section capacities remain. Final output cap failure preserves prior32KiB progress and no admission. Final disjoint sections sum128KiB. Progress27KiB phase slots plus4KiB error plus1KiB framing covers32KiB; stage remains separately reserved. Full values are checked before fresh compact reporting; runtime names retain count/hash/record references and site columns are lossless. Original records/objects remain unchanged. Old completeness-conditioned resource flag is preserved without claiming observed overrun; new measured checks retain availability.",
+  "within_existing_preparation_bytes": 1048576
+}
