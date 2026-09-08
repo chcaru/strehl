@@ -395,8 +395,9 @@ independent image readers were frozen for the first private attempt. That
 attempt stopped after one successful plan test on an immediate active-process
 refusal, before any TIFF, precision component or RAW operation. The original
 shutdown observation was not retained, so its cause is unknown. A bounded
-process-drain repair and three added process controls precede a new build and
-private release. See the [M193c progress record](../research/M193c-output-grid.md).
+process-drain repair has now passed all fourteen controls and independent
+readback. Build3 from `43a72446` is independently verified; the private2 release
+is in final review. See the [M193c progress record](../research/M193c-output-grid.md).
 Existing owned RAW decode may
 allocate before exposing shape: enforce a process committed-memory limit and
 check the returned geometry before further owned image allocations, without

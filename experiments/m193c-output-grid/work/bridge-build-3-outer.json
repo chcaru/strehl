@@ -1,0 +1,21 @@
+{
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-B",
+    "-X",
+    "utf8",
+    "-X",
+    "faulthandler",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\bridge-build.py",
+    "--release",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\bridge-build-release-3.json",
+    "--release-sha256",
+    "459c65edb12d6ebd4ac5d74f7d4ca9b664592425dbf7428c92927bf4316ade52",
+    "--output",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\bridge-build-3"
+  ],
+  "elapsed_wall_seconds": 26.6325101,
+  "scope": "Actual PowerShell direct invocation and terminal wall observation",
+  "release_sha256": "459c65edb12d6ebd4ac5d74f7d4ca9b664592425dbf7428c92927bf4316ade52",
+  "exit_code": 0
+}

@@ -1,7 +1,8 @@
 # M193c: native output coordinates and complementary-focus coverage
 
 **IN PROGRESS.** The first private execution stopped on a process-control
-refusal after its first plan test. Private image coordinates, RAW derivatives
+refusal after its first plan test. The repaired controller has passed fourteen
+controls and build3 has completed; private attempt2 is pending. Private image coordinates, RAW derivatives
 and real registration coverage remain unmeasured
 in this milestone. HardFloor remains the default; no quality promotion follows
 from this work. The [charter](../../experiments/m193c-output-grid/charter.md)
@@ -60,6 +61,27 @@ the unchanged eleven process controls. It needs its own execution and a new
 build before another private attempt, since the build source closure includes
 the process helper. No image bar or image population changes.
 
+**MEASURED, independently inspected:** controls4, frozen at `4339bdaa`, passed
+all fourteen cases with actual outer exit 0. Both delayed-descendant companions
+observed positive Job activity after direct exit and EOF, reached their saved
+completion markers, and completed without a termination attempt. The persistent
+descendant retained positive activity until the original five-second wall
+refusal, then explicit owned termination reached zero active processes. The
+original eleven controls also passed. The
+[independent read](../../experiments/m193c-output-grid/controller-controls-4-independent-read.md)
+binds the actual identities, complete artifacts and limits; it does not identify
+the shutdown mechanism in the earlier failed private attempt.
+
+**MEASURED, independently inspected:** build3, frozen at `43a72446`,
+returned actual outer and compiler exit 0 with a fresh `Compiling strehl-cli`
+line and all four ignored entry points listed. The copied executable is
+29,488,640 bytes, SHA256
+`fa03b12fe177608851d6758517c9bda050998cdc4d777195fab8e3dc1e0813a3`,
+software stamp `strehl 0.0.0 (43a72446c2c7)`. The
+[independent build read](../../experiments/m193c-output-grid/bridge-build-3-independent-read.md)
+confirmed its source, artifact, listing and process associations. No test was
+executed by the build.
+
 ## Reproduction and preserved attempts
 
 Each release contains the complete actual argument array, input references and
@@ -75,6 +97,8 @@ these attempts when reproducing them.
 | Test build 1 | `1e5e100a` | [build release 1](../../experiments/m193c-output-grid/bridge-build-release-1.json) | [retained compiler refusal](../../experiments/m193c-output-grid/bridge-build-1/result.json) |
 | Test build 2 | `7b861935` | [build release 2](../../experiments/m193c-output-grid/bridge-build-release-2.json) | [compiled tests only](../../experiments/m193c-output-grid/bridge-build-2/result.json) |
 | Private attempt 1 | `f9ee06a4` | [private release 1](../../experiments/m193c-output-grid/private-campaign-release-1.json) | [first-plan process refusal](../../experiments/m193c-output-grid/private-campaign-1/result.json) |
+| Process controls 4 | `4339bdaa` | [control release 4](../../experiments/m193c-output-grid/controller-controls-release-4.json) | [fourteen controls passed](../../experiments/m193c-output-grid/controller-controls-4/result.json) |
+| Test build 3 | `43a72446` | [build release 3](../../experiments/m193c-output-grid/bridge-build-release-3.json) | [compiled tests only](../../experiments/m193c-output-grid/bridge-build-3/result.json) |
 
 Final control result SHA256:
 `39a6f6e93e3b8df83834ab4046c7f30d6f42612df0cb0ec57ea158815baa7cfd`.
@@ -83,8 +107,8 @@ Build 2 result SHA256:
 
 ## Next decisions
 
-Commission the process shutdown repair, rebuild, then execute a new frozen
-encompassing private attempt. It owns one
+Freeze and execute the independently reviewed private attempt2 release.
+The encompassing private attempt owns one
 600 CPU second / 1200 wall second / 128 MiB artifact allowance across the grid
 producer, independent reader and two derivative fixtures. Local child samples
 cannot reset that allowance. Failed children retain their partial artifacts

@@ -1,0 +1,1 @@
+{"status": "COMPLETE_COMPILED_TESTS_ONLY", "result": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\bridge-build-3\\result.json", "error": null, "finalization_errors": []}
