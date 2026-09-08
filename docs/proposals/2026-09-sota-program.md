@@ -405,8 +405,11 @@ two adjacent decoder DLLs receive separate before/after byte checks. Native1
 from `5c64d6f1` stopped at its first independent read: primary active width7032
 versus independent visible width7028, both height4688 and origin(0,0). Its
 primary TIFF remains unverified and eight later originals remain unvisited.
-Next is the bounded retained-snapshot sensor-domain comparison, without
-cropping the disagreement out of an assertion. The coverage runner is prepared
+The bounded retained-snapshot sensor-domain comparison from `3b10e8ff` found
+whole-region and all4,688-row byte agreement; its actual audit is complete.
+Next is an explicit sensor-region reader with mandatory per-frame full/row
+agreement, retaining both declared domains and the old refusal. No physical-crop
+or quality conclusion follows from that diagnostic. The coverage runner is prepared
 but lacks all-nine native admission; real coverage remains unmeasured. See the
 [M193c progress record](../research/M193c-output-grid.md).
 Existing owned RAW decode may

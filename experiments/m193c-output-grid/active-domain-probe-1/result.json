@@ -1,0 +1,132 @@
+{
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-B",
+    "-X",
+    "faulthandler",
+    "-X",
+    "pycache_prefix=C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\active-domain-probe-1\\cache-parent",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\active-domain-probe.py",
+    "--release",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\active-domain-probe-release-1.json",
+    "--release-sha256",
+    "b540b3dd8d88587a87a98e5347c579221bc46dd40f014ddd7e0e70de17452538"
+  ],
+  "cpu_accounting_complete": true,
+  "error": null,
+  "evidence": {
+    "bytes": 350731,
+    "path": "experiments/m193c-output-grid/active-domain-probe-1/worker.json",
+    "sha256": "1031e0bee6bec02473981911634857a700cc59f414d575cd18c7ff9a9b9cb03c"
+  },
+  "execution_release": {
+    "bytes": 40553,
+    "path": "experiments/m193c-output-grid/active-domain-probe-release-1.json",
+    "sha256": "b540b3dd8d88587a87a98e5347c579221bc46dd40f014ddd7e0e70de17452538"
+  },
+  "finalization_errors": [],
+  "observation": {
+    "cleanup_errors": [],
+    "command": [
+      "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+      "-B",
+      "-X",
+      "faulthandler",
+      "-X",
+      "pycache_prefix=C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\active-domain-probe-1\\cache-worker",
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\active-domain-probe.py",
+      "--release",
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\active-domain-probe-release-1.json",
+      "--release-sha256",
+      "b540b3dd8d88587a87a98e5347c579221bc46dd40f014ddd7e0e70de17452538",
+      "--worker"
+    ],
+    "configured_job_limits": {
+      "committed_bytes": 2147483648,
+      "flags": 8704
+    },
+    "direct_exit_observed": true,
+    "error": null,
+    "exit_code": 0,
+    "job_accounting": {
+      "active_processes": 0,
+      "total_cpu_100ns": 15625000,
+      "total_kernel_100ns": 5312500,
+      "total_page_fault_count": 655058,
+      "total_processes": 2,
+      "total_terminated_processes": 0,
+      "total_user_100ns": 10312500
+    },
+    "job_memory": {
+      "peak_job_memory_used_bytes": 238780416,
+      "peak_process_memory_used_bytes": 237498368
+    },
+    "limits": {
+      "committed_bytes": 2147483648,
+      "cpu_seconds": 30,
+      "log_bytes": 1048576,
+      "wall_seconds": 60
+    },
+    "log": {
+      "bytes": 387,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\active-domain-probe-1\\worker.log",
+      "sha256": "8482226fc988beb3d9c4fe951d5eb1b05e002b228ecf8372691643a7a84403c3"
+    },
+    "log_bytes": 387,
+    "pipe_eof_observed": true,
+    "post_exit_drain": {
+      "completed": true,
+      "ended_wall_seconds": 1.5939999999245629,
+      "initial_accounting": {
+        "active_processes": 0,
+        "total_cpu_100ns": 15625000,
+        "total_kernel_100ns": 5312500,
+        "total_page_fault_count": 655058,
+        "total_processes": 2,
+        "total_terminated_processes": 0,
+        "total_user_100ns": 10312500
+      },
+      "last_accounting": {
+        "active_processes": 0,
+        "total_cpu_100ns": 15625000,
+        "total_kernel_100ns": 5312500,
+        "total_page_fault_count": 655058,
+        "total_processes": 2,
+        "total_terminated_processes": 0,
+        "total_user_100ns": 10312500
+      },
+      "observation_count": 1,
+      "observations": [
+        {
+          "accounting": {
+            "active_processes": 0,
+            "total_cpu_100ns": 15625000,
+            "total_kernel_100ns": 5312500,
+            "total_page_fault_count": 655058,
+            "total_processes": 2,
+            "total_terminated_processes": 0,
+            "total_user_100ns": 10312500
+          },
+          "wall_seconds": 1.5939999999245629
+        }
+      ],
+      "started_wall_seconds": 1.5939999999245629
+    },
+    "scope": "owned job tree; committed memory, observed user+kernel CPU; not RSS or a timing benchmark",
+    "terminal_job_accounting": true,
+    "termination": {
+      "attempted": false,
+      "before_accounting": null,
+      "succeeded": false
+    },
+    "wall_seconds": 1.5939999999245629
+  },
+  "schema": "m193c-active-domain-probe-run-v1",
+  "status": "COMPLETE_DIAGNOSTIC_ONLY",
+  "work": {
+    "cpu_seconds": 37.609375,
+    "file_bytes": 239903845,
+    "metadata_bytes": 3074794,
+    "wall_seconds": 31.99093049997464
+  }
+}

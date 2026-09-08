@@ -1,0 +1,19 @@
+{
+  "release_sha256": "b540b3dd8d88587a87a98e5347c579221bc46dd40f014ddd7e0e70de17452538",
+  "elapsed_wall_seconds": 2.8091498,
+  "scope": "Actual PowerShell direct invocation and terminal wall observation; diagnostic parent plus child Job CPU in final receipt",
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-B",
+    "-X",
+    "faulthandler",
+    "-X",
+    "pycache_prefix=C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\active-domain-probe-1\\cache-parent",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\active-domain-probe.py",
+    "--release",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\active-domain-probe-release-1.json",
+    "--release-sha256",
+    "b540b3dd8d88587a87a98e5347c579221bc46dd40f014ddd7e0e70de17452538"
+  ],
+  "exit_code": 0
+}

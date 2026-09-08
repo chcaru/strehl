@@ -5,7 +5,10 @@ conversion fixtures, and its complete execution evidence has passed independent
 inspection. The first native frame produced an unverified derivative, then
 stopped on a four-column disagreement between declared decoder domains. The
 eight later originals remain unvisited. Native agreement and real registration
-coverage are not admitted in this milestone.
+coverage are not admitted in this milestone. A subsequent independently audited
+diagnostic found complete decoded-byte agreement over strehl's declared region;
+the visible-region descriptions remain different. An explicit sensor-region
+reader is the next implementation.
 HardFloor remains the default; no quality promotion follows
 from this work. The [charter](../../experiments/m193c-output-grid/charter.md)
 names the actual sampling-coordinate consumer and the fixed historical inputs.
@@ -150,6 +153,29 @@ This is a decoder-domain refusal, not an alignment failure or an image-quality
 result. Investigate the saved snapshot's exact candidate sensor rectangle
 before changing either domain; do not shrink an assertion simply to pass it.
 
+**MEASURED, independently inspected:** the saved-frame active-domain probe,
+frozen at `3b10e8ff`, completed with actual parent and worker exit 0. The
+independent decoder's uncropped array agrees with the primary over the entire
+7032 by 4688 rectangle and all 4,688 rows, SHA256
+`e5b8c066623e6f64d4f945ae22dafb4ccb5238fd76fff36f39de8a16cd4739e1`.
+The 7028-wide visible view matches the same subset of that rectangle. Each
+of the four extra columns contains 4,688 nonzero decoded samples. The fixed
+one-code mutation changes its row hash and restoration recovers it.
+
+The [independent actual probe read](../../experiments/m193c-output-grid/independent-active-domain-probe-1-read.md)
+checked all row associations, actual snapshot bytes, source/runtime bindings,
+process completion and totals. This distinguishes a declared viewport difference
+from a decoded-payload disagreement on this one rectangle. It does not establish
+physical photosite validity, the correct photographic crop or another frame's
+agreement. Native1 remains refused, and its primary TIFF remains unadmitted.
+
+The actual probe result is 4,618 bytes, SHA256
+`78330bd2c6f83ff9791fdd3406679ea1e7cd766d1968375e0a418f2185ef688e`.
+Cumulative final work is 37.71875 CPU seconds, 239,908,463 file bytes and
+3,079,412 metadata bytes. Conservative next wall carry is 32.1440803 seconds
+from the actual outer interval plus prior work. The diagnostic reused the
+retained snapshot; it read no other original and produced no image.
+
 ## Reproduction and preserved attempts
 
 Each release contains the complete actual argument array, input references and
@@ -170,6 +196,7 @@ these attempts when reproducing them.
 | Private attempt 2 | `3090dc0c` | [private release 2](../../experiments/m193c-output-grid/private-campaign-release-2.json) | [private checks passed](../../experiments/m193c-output-grid/private-campaign-2/result.json) |
 | Dependency capture 1 | `3bc87c03` | [capture release](../../experiments/m193c-output-grid/runtime-capture-release-1.json) | [dependency metadata completed](../../experiments/m193c-output-grid/runtime-capture-1/result.json) |
 | Native derivatives 1 | `5c64d6f1` | [native release](../../experiments/m193c-output-grid/native-derivative-release-1.json) | [first-frame domain refusal](../../experiments/m193c-output-grid/native-derivative-1/result.json) |
+| Saved-frame domain probe 1 | `3b10e8ff` | [probe release](../../experiments/m193c-output-grid/active-domain-probe-release-1.json) | [complete diagnostic](../../experiments/m193c-output-grid/active-domain-probe-1/result.json) |
 
 Final control result SHA256:
 `39a6f6e93e3b8df83834ab4046c7f30d6f42612df0cb0ec57ea158815baa7cfd`.
@@ -178,13 +205,15 @@ Build 2 result SHA256:
 
 ## Next decisions
 
-Run the independently reviewed, separately frozen single-snapshot
-[active-domain diagnostic](../../experiments/m193c-output-grid/active-domain-probe-preregister.md)
-on retained original0. Compare the explicit primary sensor region through
-rawpy's uncropped public array with the actual primary whole/row hashes, while
-retaining the visible-domain disagreement and four-column evidence. Agreement
-would justify a new explicit sensor-domain reader contract; disagreement must
-remain visible. Neither outcome rewrites native1 or by itself admits its TIFF.
+Implement a separately versioned independent reader that copies the explicit
+primary sensor rectangle from the independent uncropped array, records both
+domain descriptions and still requires full/row byte equality for every frame.
+Commission nonzero origins, differing visible regions and wrong-domain/copy
+controls before a new RAW read. Keep the held reader, private commissioning,
+Rust production code and native1 result unchanged. A new parent may reuse the
+first primary output only with explicit old-plan/launch provenance and identical
+current plan content, followed by a fresh independent read. Its original cost
+and failed artifacts stay in the cumulative budget.
 
 The frozen input registrar's coverage runner is prepared and source-reviewed,
 but requires all nine native independent admissions. It cannot run on this
