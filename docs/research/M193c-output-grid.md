@@ -2,8 +2,10 @@
 
 **IN PROGRESS.** Private attempt2 passed all ten coordinate cases and both
 conversion fixtures, and its complete execution evidence has passed independent
-inspection. The earlier failed attempt is preserved. Native RAW derivatives
-and real registration coverage remain unmeasured in this milestone.
+inspection. The first native frame produced an unverified derivative, then
+stopped on a four-column disagreement between declared decoder domains. The
+eight later originals remain unvisited. Native agreement and real registration
+coverage are not admitted in this milestone.
 HardFloor remains the default; no quality promotion follows
 from this work. The [charter](../../experiments/m193c-output-grid/charter.md)
 names the actual sampling-coordinate consumer and the fixed historical inputs.
@@ -121,6 +123,33 @@ alongside a conservative one-MiB metadata/file charge. Its 150,449-byte
 enumerated metadata plus 3,697-byte check record fits that charge. No RAW was
 read by the capture or this preparation.
 
+**MEASURED, independently inspected:** native attempt1, frozen at `5c64d6f1`,
+returned actual outer exit 1. The first primary test completed and wrote a
+197,798,267-byte registration TIFF, but the independent reader refused
+`independent active dimensions`: strehl's declared active region is
+7032 by 4688 at (0,0), while rawpy's visible region is 7028 by 4688 at (0,0).
+Both report an allocated buffer of 7168 by 5120. Only the independent owned-copy
+check completed; no pixel, level, white-balance or TIFF agreement is claimed.
+
+The [independent actual read](../../experiments/m193c-output-grid/independent-native-derivative-1-read.md)
+confirms the original reader failure, successful primary exit, clean process
+completion, unchanged source/input associations and both supplemental DLL
+endpoint checks. All nine original files were hashed before the attempt; only
+original0 was decoded, its workspace snapshot remains, and originals
+13/26/39/52/65/78/91/104 were not visited for decoding. There was no registration.
+The actual result SHA256 is
+`4299877897694e655ef04f88001e6406058c1b2d0efddded6d525510fbc9dfe0`.
+
+Final parent CPU is 34.984375 seconds including capture carry. The conservative
+next wall carry is 29.3349305 seconds: prior capture 1.7583753 plus actual native
+outer 27.5765552, without double counting the parent's already carried sample.
+Files and metadata are 238,504,151 and 1,675,100 bytes including prior reserves.
+The unverified TIFF and RAW snapshot remain local retained artifacts, referenced
+by exact bytes/hashes; source, metadata and reports are archived in Git.
+This is a decoder-domain refusal, not an alignment failure or an image-quality
+result. Investigate the saved snapshot's exact candidate sensor rectangle
+before changing either domain; do not shrink an assertion simply to pass it.
+
 ## Reproduction and preserved attempts
 
 Each release contains the complete actual argument array, input references and
@@ -140,6 +169,7 @@ these attempts when reproducing them.
 | Test build 3 | `43a72446` | [build release 3](../../experiments/m193c-output-grid/bridge-build-release-3.json) | [compiled tests only](../../experiments/m193c-output-grid/bridge-build-3/result.json) |
 | Private attempt 2 | `3090dc0c` | [private release 2](../../experiments/m193c-output-grid/private-campaign-release-2.json) | [private checks passed](../../experiments/m193c-output-grid/private-campaign-2/result.json) |
 | Dependency capture 1 | `3bc87c03` | [capture release](../../experiments/m193c-output-grid/runtime-capture-release-1.json) | [dependency metadata completed](../../experiments/m193c-output-grid/runtime-capture-1/result.json) |
+| Native derivatives 1 | `5c64d6f1` | [native release](../../experiments/m193c-output-grid/native-derivative-release-1.json) | [first-frame domain refusal](../../experiments/m193c-output-grid/native-derivative-1/result.json) |
 
 Final control result SHA256:
 `39a6f6e93e3b8df83834ab4046c7f30d6f42612df0cb0ec57ea158815baa7cfd`.
@@ -148,9 +178,17 @@ Build 2 result SHA256:
 
 ## Next decisions
 
-Execute the separately reviewed native release to decode the nine fixed
-non-holdout coffee-bean inputs with one live workspace snapshot at a time and
-an independent active-RAW reader before admitting each derivative. Then apply
-the frozen input registrar. A first registration failure leaves later frames
-unvisited and informs the next direct-pair alignment experiment. It is not
-permission to fabricate a complete placement track or tune a quality score.
+Run the independently reviewed, separately frozen single-snapshot
+[active-domain diagnostic](../../experiments/m193c-output-grid/active-domain-probe-preregister.md)
+on retained original0. Compare the explicit primary sensor region through
+rawpy's uncropped public array with the actual primary whole/row hashes, while
+retaining the visible-domain disagreement and four-column evidence. Agreement
+would justify a new explicit sensor-domain reader contract; disagreement must
+remain visible. Neither outcome rewrites native1 or by itself admits its TIFF.
+
+The frozen input registrar's coverage runner is prepared and source-reviewed,
+but requires all nine native independent admissions. It cannot run on this
+refused prefix. After that prerequisite is met, the existing
+[next-decision memo](../../experiments/m193c-output-grid/next-program-decision.md)
+selects the two real cover-mode outputs on successful coverage, or a bounded
+direct-pair support experiment on a complementary-focus refusal.

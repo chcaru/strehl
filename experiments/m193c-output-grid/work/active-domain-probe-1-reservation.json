@@ -1,0 +1,59 @@
+{
+  "schema": "m193c-probe-preparation-reservation-v1",
+  "files": [
+    {
+      "path": "experiments/m193c-output-grid/native-derivative-release-1.json",
+      "sha256": "37f4f8ceb590dbff386f9a7a773d2f99381e8be481145f2dc9e0ec6896928dc2",
+      "bytes": 44038
+    },
+    {
+      "path": "experiments/m193c-output-grid/independent-native-release-1-review.md",
+      "sha256": "ec835ed311fc6b2e7b13dcbb09dd4ef26890153f69689bb00d6fee7cfc7ab7ce",
+      "bytes": 8068
+    },
+    {
+      "path": "experiments/m193c-output-grid/independent-native-derivative-1-read.md",
+      "sha256": "82f9eea0f293b29454b6555dad01e49654b58ee42daa1e6d9ef73f0bb4f4d91f",
+      "bytes": 11184
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/native-derivative-1-console.txt",
+      "sha256": "ca5f9f117157410846d788d424aa878524296851a5f2100b0b097d89c645c990",
+      "bytes": 1537
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/native-derivative-1-exit.txt",
+      "sha256": "f1b2f662800122bed0ff255693df89c4487fbdcf453d3524a42d4ec20c3d9c04",
+      "bytes": 3
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/native-derivative-1-outer.json",
+      "sha256": "45e398ad4bf9fe51d0095e6b7be8f4132e53828866a51193cabcf644f5e8ec13",
+      "bytes": 2314
+    },
+    {
+      "path": "experiments/m193c-output-grid/active-domain-probe.py",
+      "sha256": "db541d3f826da7d32617002a90ed48d8c3cf2bb401f09b18331be67b6807086b",
+      "bytes": 13219
+    },
+    {
+      "path": "experiments/m193c-output-grid/active-domain-probe-preregister.md",
+      "sha256": "783df10b5e2108f9466ca5a81924c02e50298bd5dff8c6d9738a2229bae69563",
+      "bytes": 5627
+    },
+    {
+      "path": "experiments/m193c-output-grid/independent-active-domain-probe-source-review.md",
+      "sha256": "57da40720c6f73f8f61f1ed6431dc6b23869744b29da551f9d7223d8255766f0",
+      "bytes": 7363
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/prepare-active-domain-probe-1.py",
+      "sha256": "3ec571cf56a279114cff6fd9f3411963c6efea406b3a4d5823d93515aac14124",
+      "bytes": 10174
+    }
+  ],
+  "observed_bytes": 103527,
+  "release_upper_bytes": 65536,
+  "reserved_bytes": 1048576,
+  "scope": "extra native/probe metadata reservation; no refund or write-I/O claim"
+}

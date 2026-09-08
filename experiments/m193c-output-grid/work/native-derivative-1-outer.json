@@ -1,0 +1,48 @@
+{
+  "exit_code": 1,
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-B",
+    "-X",
+    "faulthandler",
+    "-X",
+    "pycache_prefix=C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-derivative-1\\parent-cache",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-derivative-run.py",
+    "--release",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-derivative-release-1.json",
+    "--release-sha256",
+    "37f4f8ceb590dbff386f9a7a773d2f99381e8be481145f2dc9e0ec6896928dc2",
+    "--output",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-derivative-1"
+  ],
+  "dependency_after": [
+    {
+      "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\rawpy\\raw_r.dll",
+      "sha256": "da20108e301a929170fe1af2acb2ef7e5de62347057f860139fda111d504fa39",
+      "bytes": 1926656
+    },
+    {
+      "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\rawpy\\vcomp140.dll",
+      "sha256": "55aba23cdcd6484fbb06f4155b8ca75adfce7a881f10afd0c49457165e677164",
+      "bytes": 193152
+    }
+  ],
+  "dependency_before": [
+    {
+      "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\rawpy\\raw_r.dll",
+      "sha256": "da20108e301a929170fe1af2acb2ef7e5de62347057f860139fda111d504fa39",
+      "bytes": 1926656
+    },
+    {
+      "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\rawpy\\vcomp140.dll",
+      "sha256": "55aba23cdcd6484fbb06f4155b8ca75adfce7a881f10afd0c49457165e677164",
+      "bytes": 193152
+    }
+  ],
+  "dependency_error": null,
+  "scope": "Actual PowerShell direct invocation and terminal wall observation with supplemental adjacent-DLL endpoint byte checks; parent plus child Job CPU in final receipt",
+  "dependency_supplement_sha256": "c93af42e6fd2a26d2de7cdc6e7decf7156f9181a124fe4a9d2ab99e03a82a6aa",
+  "elapsed_wall_seconds": 27.5765552,
+  "admissible_parent_exit": false,
+  "release_sha256": "37f4f8ceb590dbff386f9a7a773d2f99381e8be481145f2dc9e0ec6896928dc2"
+}

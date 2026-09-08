@@ -377,8 +377,9 @@ crop origins, before claiming adapter coverage.
 **Next concrete geometry development: M193c.** The
 [output-grid charter](../../experiments/m193c-output-grid/charter.md) starts
 native output-coordinate authentication and complementary-focus coverage on
-nine fixed historical coffee-bean rungs. Metadata accessibility is observed;
-no image has been decoded under this new charter. Root reviewed the design and
+nine fixed historical coffee-bean rungs. Metadata accessibility was established
+first; the first native decode and its domain refusal are now recorded below.
+Root reviewed the design and
 keeps native geometry separate from the missing full common-TIFF stack route.
 M165's one-file identity test cannot supply that route or its colour/noise
 contract. Exact private coordinate plants, production seam and execution limits
@@ -400,9 +401,13 @@ readback. Build3 from `43a72446` is independently verified. Private2 from
 `3090dc0c` passed ten coordinate cases, two conversion fixtures and their
 independent controls; its complete twelve-TIFF chain has passed independent
 inspection. Dependency capture from `3bc87c03` is independently verified;
-two adjacent decoder DLLs receive separate before/after byte checks. Next is
-the nine native derivatives and frozen input registrar. Real coverage remains
-unmeasured. See the
+two adjacent decoder DLLs receive separate before/after byte checks. Native1
+from `5c64d6f1` stopped at its first independent read: primary active width7032
+versus independent visible width7028, both height4688 and origin(0,0). Its
+primary TIFF remains unverified and eight later originals remain unvisited.
+Next is the bounded retained-snapshot sensor-domain comparison, without
+cropping the disagreement out of an assertion. The coverage runner is prepared
+but lacks all-nine native admission; real coverage remains unmeasured. See the
 [M193c progress record](../research/M193c-output-grid.md).
 Existing owned RAW decode may
 allocate before exposing shape: enforce a process committed-memory limit and
