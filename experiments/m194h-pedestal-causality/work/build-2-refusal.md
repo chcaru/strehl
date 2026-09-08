@@ -1,0 +1,7 @@
+# Build2: live compile refusal before completion policy
+
+MEASURED: one capture-stage.py build invocation under release a1d89da852874df1be383dbf139b8f9ed5259011. Actual outer exit1, whole12.046000000002095 seconds, no outer timeout. Only child00 ran. Its log contains Compiling strehl-core but no completed fresh artifact/build-finished record. The child retained FileNotFoundError(2) without a filename or traceback. Direct exit and pipe EOF were not observed, compile_cleanup remained UNVISITED, and emergency owned-Job cleanup terminated five active processes to zero with no cleanup errors. This does not test the new compile-completion policy.
+
+Parent CPU sample4.515625 plus terminal child Job21.109375=25.625 seconds before the charged2-second tail. Retain the entire second build300CPU/240wall allocation, separately from build1. No binary was copied; components, renders and checker remain unvisited.
+
+ARGUED source-level candidate: live scratch census enumerates files while Cargo creates/renames/removes them; owned-path validation/stat then has no disappearance handling. This can produce the recorded exception, but the saved record cannot identify its exact path, so attribution is UNVERIFIED. A fixed actual scanner disappearance fixture will test the proposed correction's behavior; it cannot retroactively establish the cause of this failure. Future scanner errors need operation/path context. Build2 remains REFUSED and unchanged.
