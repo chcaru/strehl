@@ -1,0 +1,1 @@
+{"evidence":{"artifact":{"bytes":2634,"path":"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sift-lightglue-real-1\\worker\\metadata\\codec\\declared-dimension.json","sha256":"ccc9005d6565bf91a696fda4aac41494fe7bd789ca57f9b9495e74f75d00f05e"},"error":"SEGMENT_SCHEMA","expected_error":"SEGMENT_SCHEMA"},"id":"declared-dimension","passed":true}

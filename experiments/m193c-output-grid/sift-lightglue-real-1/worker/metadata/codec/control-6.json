@@ -1,0 +1,1 @@
+{"evidence":{"artifact":{"bytes":2634,"path":"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sift-lightglue-real-1\\worker\\metadata\\codec\\declared-offset.json","sha256":"99e6d0da89ecfed1536475653a143919778811eb5ab37969856421817c1e505b"},"error":"SEGMENT_OFFSET","expected_error":"SEGMENT_OFFSET"},"id":"declared-offset","passed":true}

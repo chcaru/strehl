@@ -1,0 +1,1 @@
+{"evidence":{"artifact":{"bytes":2634,"path":"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sift-lightglue-real-1\\worker\\metadata\\codec\\index-range.json","sha256":"4bd9986c741df380323b4b417d7225a0d1d8fd4d3fc701535582f1785ce7fa6b"},"error":"INDEX_RANGE","expected_error":"INDEX_RANGE"},"id":"index-range","passed":true}

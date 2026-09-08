@@ -1,0 +1,1 @@
+{"evidence":{"artifact":{"bytes":2634,"path":"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sift-lightglue-real-1\\worker\\metadata\\codec\\one-payload-byte.json","sha256":"84b037038dc7efcd709c05c3c22acce253ddb16a22dee34c2bf69a55fe8b9bb6"},"error":"ORIGINAL_TENSOR_HASH","expected_error":null},"id":"one-payload-byte","passed":true}

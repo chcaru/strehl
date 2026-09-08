@@ -1,0 +1,22 @@
+{
+  "scope": "Fixed23 real LightGlue diagnostic with three private forwards and five private fits; no images or extraction",
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-B",
+    "-X",
+    "faulthandler",
+    "-X",
+    "pycache_prefix=C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sift-lightglue-real-1\\parent-cache",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sift-lightglue-real-run.py",
+    "--plan",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sift-lightglue-real-plan-1.json",
+    "--sha256",
+    "63de01efe856d3760ea3b0b5d15ac056a3ec2e868fdd74eb908e3df616174184",
+    "--output",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sift-lightglue-real-1"
+  ],
+  "plan_sha256": "63de01efe856d3760ea3b0b5d15ac056a3ec2e868fdd74eb908e3df616174184",
+  "exit_code": 1,
+  "elapsed_wall_seconds": 96.12708470000143,
+  "admissible_parent_exit": true
+}
