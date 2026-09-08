@@ -28,9 +28,9 @@ all eleven exports and one model output, but refused an evidence write before
 any registrar call. Its parent terminal record is missing after the same storage
 limit blocked publication. Independent saved-prefix review now verifies all914
 private matches against the known rotation, with0.050891 native-pixel all-row RMS.
-A separate saved-data completion now reports all five fitting/control groups
-passed. Its independent audit stopped on a runtime-stage comparison; a narrow
-audit correction is in progress, with no repeated subject work.
+The separate saved-data completion now passes its independent actual-outcome
+audit: all five fitting/control groups and all seven publication controls pass.
+The real-pair controller is under review; no real model pair has run.
 HardFloor remains the default; no quality promotion follows
 from this work. The [charter](../../experiments/m193c-output-grid/charter.md)
 names the actual sampling-coordinate consumer and the fixed historical inputs.
@@ -826,7 +826,7 @@ separate private completion also passes independent actual-outcome review.
 
 ## Saved-value private completion
 
-**OBSERVED in the retained complete run; independent final audit pending:** the
+**VERIFIED by the independent saved-completion v2 audit:** the
 separately frozen controller from `56fc0fe3e91ae4b2bc4b2a4451eda0569057a943`
 ran once under release `26fa4faca1a7270d4abc556fc2bf02381996a9ff`, exited0 and
 retained both parent and worker terminal records. The [parent](../../experiments/m193c-output-grid/sift-lightglue-saved-completion-1/result.json)
@@ -835,8 +835,9 @@ records report five registrar calls, zero images/extractions/normalizations/mode
 calls, all seven actual publication controls and all five private scientific/control
 groups completed. The known-rotation fit returns; the within-split association
 fault refuses; observer off/on/placebo intrinsic outcomes and the complete
-restored outcome agree. These are subject-record observations pending the final
-independent disposition, not new real-stack evidence.
+restored outcome agree. The independent [actual audit](../../experiments/m193c-output-grid/work/independent-sift-lightglue-saved-completion-audit-v2.json)
+and [read](../../experiments/m193c-output-grid/work/independent-sift-lightglue-saved-completion-audit-v2-report.md)
+verify this finite private result; real-stack matching remains unvisited.
 
 The actual [outer receipt](../../experiments/m193c-output-grid/work/sift-lightglue-saved-completion-1-outer.json)
 records8.309214800 seconds. Hidden-inclusive enumeration finds60 retained files
@@ -851,10 +852,31 @@ raw before/after runtime equality rejected the five intended staged additions:
 four source-bound pure helper modules and Python's `__future__`. Separate source
 and saved-metadata readers confirm no removed or rebound existing module, and
 all33 resolved native files are unchanged; only their sorted-table indices shift.
-The complete subject and failed audit artifacts remain unchanged. A separately
-reviewed adapter must authenticate both snapshots and this exact declared delta,
-then finish the unvisited accounting/inventory checks. No subject rerun follows
-from an auditor's extra invariant, and the real-pair branch remains conditional.
+The complete subject and failed audit artifacts remain unchanged. The separately
+reviewed v2 adapter from `66cb2d589968df827c66db6d120373102f0f009e` then ran once,
+verified both snapshots and the exact source-predicted delta, and completed the
+accounting/inventory checks. Its shuffled-index positive and four changed-binding/
+module/native-set controls pass. No subject work was repeated.
+
+**VERIFIED in native pixel centres:** the returned private map's maximum literal
+corner error is0.0034801642863 pixels. All128 held-out rows are within two native
+reference pixels, all-row RMS0.0473673347; here the selected and full held-out
+sets coincide. Tight fitted residuals can also describe a coherent wrong map,
+so the independent known-rotation corner check supplies the private truth test.
+The within-split association fault has only4/256 matches within two native pixels
+and the registrar refuses it. Returned outcome hashes and observer/restoration
+comparisons reconstruct from actual rows; the refused outcome's full hash includes
+an unretained traceback and remains a producer witness. Final calibration-radius
+membership is descriptive, not a reconstruction of the refinement input subset.
+
+The audit's actual2.9916485-second outer fits its sampled wall plus the declared
+publication tail. The accepted conservative carry is1037.5843028000008 CPU seconds,
+1015.3528168000003 wall seconds,4,048,889,901 file bytes and57,628,967 metadata
+bytes, including the failed v1 audit and explicit publication allowances. Current
+run Job accounting is complete; historical CPU accounting remains incomplete.
+The combined private prerequisite is eligible. The real model arm still needs
+its own reviewed controller, observer checks and complete23-pair outcome.
+
 
 ## Reproduction and preserved attempts
 

@@ -1,0 +1,23 @@
+{
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-B",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\work\\independent-sift-lightglue-saved-completion-audit-v2.py",
+    "--plan-sha256",
+    "e32172b9d4371f4e88e69e399eaaa34be63ab7c8c2251a9ccfaab12af982a59f",
+    "--result-sha256",
+    "1f6a6b81965c8c5bda6862bac94dcb07cdf393cce27b525736d9f9b8e72c2b4d",
+    "--outer-sha256",
+    "7c4f40b804a9e5731062956530f09474eeb66096761f4b99defaa49a39868048",
+    "--console-sha256",
+    "42c70039fab7e7bf9c7a79b13d3134fc79b83698e87bace2975dd613b8d8f19f",
+    "--exit-sha256",
+    "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+  ],
+  "elapsed_wall_seconds": 2.991648499999428,
+  "exit_code": 0,
+  "launcher_error": null,
+  "scope": "Exactly one released v2 independent saved-evidence audit; no subject fit, image or model rerun.",
+  "stderr_bytes": 0,
+  "stdout_bytes": 45088
+}
