@@ -274,3 +274,166 @@ natural completion on attempt2;29 by append-only editing and preserved existing
 headings;31/31b/37 by no SYNTHESIS fold;42 by exact source/release/evidence path
 manifests. Other architecture/RAW/noise/geometry/quality rules are unchanged or
 outside this null-only scope.
+
+
+## Production startup with persistence on: completed integration
+
+**MEASURED and independently VERIFIED, 2026-09-08, within the bounded
+rehearsal contract.** One fixed N33/W8 triplet completed with startup observation
+off/on/placebo and persistence ON in all three arms. Its output identity,
+terminal accounting and original source sampling gates pass. This is the
+completed integration proposed above. It preserves the earlier failed
+rehearsal and does not certify a complete retained sampling history.
+
+The held source revision is
+2c314d38f20b90d323034253989ec1b3e35946af; the actual triplet plan/release revision is
+dc4c5bcaf5b0bb8a9ee2bcf23f2d88e786d237bf. The saved-audit release revision is
+c4f40cf6444e31a3739a95a7e1db19592ce7e98f. The plan is 12,473 bytes,
+SHA256 23c46b2f76a079352d685c21e90c251b19b50d2c09e9915748cc5eff5ff68811.
+Exact absolute invocation arrays, release identities and observed exits are
+retained in the [subject release](../../experiments/m192e-campaign-runner/startup-production-release-1.json)
+and [actual subject outer receipt](../../experiments/m192e-campaign-runner/rehearsal-startup-production-1-outer.json),
+and in the [audit release](../../experiments/m192e-campaign-runner/startup-production-audit-release-1.json)
+and [actual audit outer receipt](../../experiments/m192e-campaign-runner/rehearsal-startup-production-1-audit-outer.json).
+These are commands that ran once, not authorization to repeat them.
+
+The [saved independent audit](../../experiments/m192e-campaign-runner/rehearsal-startup-production-1-independent-audit/result.json)
+is 28,672 bytes, SHA256
+45907aa5bdb1269cc4d7061484cbd8d28cfc2fbda0e9a4c8f6592b64b3af972f.
+Its raw audit stdout is byte-identical, including the terminal newline.
+The actual audit outer is 1,995 bytes, SHA256
+46f4668ef2dfaba5d39b92ad523b96b3cc98e79f38dfbdd668175c0d4b33e416.
+Its status is PASS_SAVED_STARTUP_PRODUCTION_OUTCOME_AUDIT:
+subject_complete, worker_complete_verified, output_nonperturbation,
+sampling_all_pass and integration_pass are true; exceptions and unvisited
+populations are empty. independent_full_interval_histories and
+full_campaign_certificate remain false. Parent and worker retain
+COMPLETE_REHEARSAL_EVIDENCE_ONLY, natural exit zero, terminal tails and the
+associated first-positive publication evidence. A canonical positive alone
+was not the admission test.
+
+The [independent actual outcome read](../../experiments/m192e-campaign-runner/independent-startup-production-1-read.md)
+is 11,465 bytes, SHA256
+8a08ac66f77d797dfc18de95b38e30252a66e58722f5cb27d2c75fc81d79a08b.
+It checked the 39 held source bindings, six relevant committed source blobs,
+actual commands and saved identity, checkpoint, timing and accounting choices.
+It did not rerun the subject/checker or read TIFF/RAW payloads.
+
+### Sampling passes with an explicitly incomplete retained history
+
+The unchanged gate includes initial, inter-poll and final intervals, with a
+100 ms maximum and at least 90% cadence coverage. The source reports:
+
+| Startup observer | Samples | Missed cadence slots | Source cadence coverage | Source maximum gap, ms | Initial interval, ms |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| off | 3,938 | 85 | 0.978871488938603 | 59.4427 | 9.3711 |
+| on | 3,935 | 95 | 0.9764267990074442 | 54.3478 | 22.2327 |
+| placebo | 3,961 | 104 | 0.9744157441574416 | 58.9619 | 9.9492 |
+
+These are qualified source-aggregate results. Each reported maximum has a
+matching retained interval, but the reader cannot independently exclude a
+larger interval from the evicted population. Cadence coverage is the source
+sampling ratio; it is not the fraction of full observation payloads retained.
+The reader therefore reports passing bound source aggregates while explicitly
+refusing a full independent interval-history claim.
+
+Each arm made 39 checkpoint publications; the retained adjacent generations
+are 37 and 38. Their sealed overlap and payload identities check. The union of
+retained full observations covers poll 2800 through the final poll: 1,138,
+1,135 and 1,161 observations respectively. Poll zero has a separate first-poll
+scalar witness, not a retained full observation. Intervals for polls 1 through
+2799 are missing, and full payloads for polls 0 through 2799 are missing.
+The final tails each contain 1,000 observations. Source observation drop counts
+are 2,938/2,935/2,961; event drop counts are 16,384/16,369/16,505. Incident and
+telemetry drop counts are zero.
+
+Checkpoint recovery remains RECOVERABLE_INCOMPLETE, with resume and
+certification false. It preserves recoverable evidence rather than rebuilding
+discarded history. The independent final-closure bounds contain the reported
+final intervals; they do not fabricate exact missing timestamps or make the
+retained histories complete.
+
+### Startup attribution and unchanged outputs
+
+The on/placebo arms retain all eight prescribed native startup brackets,
+including suspended creation, assignment and successful resume, associated
+with the actual child identity and invocation. Their summed bracket wall
+intervals are 5.7118/3.954 ms. Remaining uncovered pre-query time is
+0.1076/0.0534 ms; first memory-query time is 16.4133/5.9418 ms.
+Together these partition the original 22.2327/9.9492 ms initial intervals
+without shifting the sampler origin. The off arm has no added brackets:
+its 9.3711 ms initial interval contains 3.6946 ms unpartitioned before the
+first query and 5.6765 ms in that query.
+
+The historical 111.9996 ms startup interval did not recur in this triplet.
+That observation does not identify its cause. These fixed-order arms do not
+measure observer overhead, and their timing differences are not a performance
+ranking. Zero bracket CPU at the retained clock resolution does not establish
+zero work. No actual production child-code entry timestamp was added; the
+suspended process can already consume memory before resume. Startup attribution
+and the original sampling exposure remain distinct.
+
+All three TIFFs are byte-identical: 197,798,956 bytes each, shape
+4688 x 7032 x 3. Whole-file SHA256 is
+3309e33318c701fb75c55507bfb49ad279d8950492b592ec247dbe2d1193ac9e;
+pixel-data SHA256 is
+6efc261e892dcdb5d492ad3fd79bdc7e5a208d93d0227a41b258fb3b900f9b89.
+Their held local extent is 593,396,868 bytes. The independent checker streamed
+the TIFF and pixel identities; the later human-facing read checked those
+bindings and extents without another TIFF payload pass. The seven historical
+output identities were also independently checked. The 33 RAW inputs retain
+producer before/after hash witnesses and independent metadata checks, not an
+independent full-corpus RAW rehash. Identical outputs establish nonperturbation
+in this triplet, not image quality.
+
+### Complete subject accounting and the next consumer
+
+Actual terminal parent CPU is 6.40625 s; terminal worker Job CPU is
+569.40625 s. Their sum is 575.8125 s, counted once, leaving 24.1875 s below
+the fixed 600 s subject ceiling. The outer containing Job agrees with this
+sum and is a cross-check, not another quantity to add. Product CPU is already
+inside the worker Job. Typed nonnegative user/kernel/total counters agree,
+and terminal active-process counts are zero. Peak committed Job memory stays
+within the 8 GiB ceiling; it is not an RSS measurement.
+
+The owned parent's wall interval is 129.56199999999808 s; the actual external
+wrapper receipt records 129.7190000000046 s whole wall and exit zero. Across
+the paired subject roots, the actual physical census is 60 files /
+630,602,104 bytes, below 1 GiB. This is retained extent, not cumulative I/O.
+The wrapper's own CPU sample is 0.734375 s plus its separately charged 0.25 s
+publication allowance; its 129.67199999999866 s wall sample plus 0.5 s covers
+the actual outer interval. Those wrapper samples do not replace measured
+terminal subject CPU.
+
+The saved audit ran once with exit zero and 2.25 s whole outer wall. Its own
+sample is 2.21875 s CPU / 2.2030000000013388 s wall, plus the declared
+0.25 s CPU / 0.5 s publication allowance, within its 30 CPU / 60 wall
+reservation. The audit's own final CPU remains sampled plus allowance.
+These systems reservations are separate from the geometry campaign; unused
+work does not refund or authorize another geometry attempt.
+
+The current composition checks reject trace/telemetry construction before
+durable installation and persistence OFF. Current startup metadata faults
+alter invocation, child identity, required phase, clock origin and first-poll
+identity; their restored originals agree. Independent Job faults reject
+wrong component sums, negative values and booleans. These powered metadata
+checks accompany the actual off/on/placebo output hashes. The eight earlier
+storage controls and six invocation controls are inherited evidence, not
+newly commissioned production runs.
+
+Startup instrumentation with durable persistence is now commissioned for
+future bounded runs under this qualified sampling contract. The immediate
+priority returns to independently checking the already saved geometry data.
+This result authorizes neither the full 133-case campaign nor an invented
+performance experiment, a changed timing-state policy, or relaxation of the
+100 ms/90% sampling and existing 2% timing bars.
+
+For this append, rules 8/12/24 are discharged by actual command receipts and
+the independent choices documented above; 11/20/26 by rejecting metadata
+faults, restoration and actual output identity; 18/30 by the explicit eviction
+limit and preserved historical negative. Rule 29 is discharged by exact
+append-only prefix preservation and structural counts. Rules 31/31b/37 need
+no fold because SYNTHESIS is unchanged; the exact source/release/evidence
+bindings provide the scoped rule 42 record. This append changes no
+architecture, RAW implementation, estimator, image-quality/noise claim or
+scientific acceptance threshold.
