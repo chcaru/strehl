@@ -12,3 +12,7 @@ description = "Core types for strehl: noise model, CFA planes, geometry."
 thiserror.workspace = true
 anyhow.workspace = true
 rayon.workspace = true
+
+[features]
+# Explicit experiment-only consumer hook; disabled in normal builds.
+m194h-pedestal-causality = []

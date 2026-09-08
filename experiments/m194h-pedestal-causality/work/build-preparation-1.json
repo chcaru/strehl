@@ -1,0 +1,1 @@
+{"actual_parent_cpu_sample":0.046875,"actual_wall_sample":0.01600000000325963,"charged_cpu_seconds":10,"charged_wall_seconds":20,"error":"stable input","schema":"m194h-root-preparation-v1","scope":"Full prospective slice retained before ordinary preparation; no retry.","stage":"build","status":"REFUSED"}

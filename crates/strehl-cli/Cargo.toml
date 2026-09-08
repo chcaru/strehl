@@ -31,3 +31,7 @@ tiff.workspace = true
 serde = { version = "=1.0.229", features = ["derive"] }
 serde_json = { version = "=1.0.151", features = ["float_roundtrip"] }
 sha2 = "=0.11.0"
+
+[features]
+# Explicit experiment-only consumer hook; disabled in normal builds.
+m194h-pedestal-causality = ["strehl-core/m194h-pedestal-causality"]

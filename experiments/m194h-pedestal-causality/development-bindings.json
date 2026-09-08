@@ -1,0 +1,417 @@
+{
+  "schema": "m194h-existing-development-bindings-v1",
+  "status": "SOURCE_METADATA_ONLY_NO_NEW_PAYLOAD_READ",
+  "matrix": {
+    "path": "experiments/m194g-larger-pupil/production-matrix-1/run-index.json",
+    "bytes": 66801,
+    "sha256": "03e7ffe9028cca5d56266603db09fbadd3f7f3cc19e95db609007a96914d55ca"
+  },
+  "noise_admission": {
+    "path": "experiments/m194g-larger-pupil/independent-noise-files-1/noise-admission.json",
+    "bytes": 1082,
+    "sha256": "088272bfbeca6d00a816a5de72eeaf7aac8f8ca6e0ef68941ab236655fa298e7"
+  },
+  "quality_verification": {
+    "path": "experiments/m194g-larger-pupil/independent-quality-result-check-1/result.json",
+    "bytes": 317942,
+    "sha256": "5a0c6dcc84608a64e7545ee9ac751441c468194347eb0cf7534793b0c971a4c5"
+  },
+  "selected": [
+    {
+      "scene": "flat",
+      "seed": null,
+      "original_plan": {
+        "path": "experiments/m194g-larger-pupil/production-matrix-1/case-00-plan.json",
+        "bytes": 75476,
+        "sha256": "67bf4d3a57b22d5815a16aac1274c3a34df7294185e3ed3e382812b9329ace31"
+      },
+      "frames": [
+        {
+          "audit": {
+            "bytes": 915,
+            "path": "flat/noise-off/frame-0-audit.json",
+            "sha256": "a4bc0bf0ba764415fd05d677c9057bec652d909c867b2fb3b609e0362d2359d2"
+          },
+          "cfa": {
+            "bytes": 153600,
+            "dtype": "<u2",
+            "path": "flat/noise-off/frame-0.cfa",
+            "sha256": "94339363f2ed812b22b0ea313d6beb7e598b9813bb02210fcce14e6073d2580b",
+            "shape": [
+              240,
+              320
+            ]
+          },
+          "index": 0,
+          "inverse_focus": 0.5
+        },
+        {
+          "audit": {
+            "bytes": 915,
+            "path": "flat/noise-off/frame-1-audit.json",
+            "sha256": "ff189039774e3f8517f6f993ab13390bd0460321b6977b9305bb3f5fd76cc806"
+          },
+          "cfa": {
+            "bytes": 153600,
+            "dtype": "<u2",
+            "path": "flat/noise-off/frame-1.cfa",
+            "sha256": "94339363f2ed812b22b0ea313d6beb7e598b9813bb02210fcce14e6073d2580b",
+            "shape": [
+              240,
+              320
+            ]
+          },
+          "index": 1,
+          "inverse_focus": 0.625
+        },
+        {
+          "audit": {
+            "bytes": 915,
+            "path": "flat/noise-off/frame-2-audit.json",
+            "sha256": "cc01b1c5bdf5aa94f97f38c7f33f40c235a0618d62192555a83e037debe43ce4"
+          },
+          "cfa": {
+            "bytes": 153600,
+            "dtype": "<u2",
+            "path": "flat/noise-off/frame-2.cfa",
+            "sha256": "94339363f2ed812b22b0ea313d6beb7e598b9813bb02210fcce14e6073d2580b",
+            "shape": [
+              240,
+              320
+            ]
+          },
+          "index": 2,
+          "inverse_focus": 0.75
+        },
+        {
+          "audit": {
+            "bytes": 915,
+            "path": "flat/noise-off/frame-3-audit.json",
+            "sha256": "c361242ac7d5a77c4061a2407b9f8a89745f889dc7f9318ae25fe1d808875b8c"
+          },
+          "cfa": {
+            "bytes": 153600,
+            "dtype": "<u2",
+            "path": "flat/noise-off/frame-3.cfa",
+            "sha256": "94339363f2ed812b22b0ea313d6beb7e598b9813bb02210fcce14e6073d2580b",
+            "shape": [
+              240,
+              320
+            ]
+          },
+          "index": 3,
+          "inverse_focus": 0.875
+        },
+        {
+          "audit": {
+            "bytes": 915,
+            "path": "flat/noise-off/frame-4-audit.json",
+            "sha256": "1501d5eb99d71f782828015e82a313a32778ff22eab89d81cd2103d70dd501eb"
+          },
+          "cfa": {
+            "bytes": 153600,
+            "dtype": "<u2",
+            "path": "flat/noise-off/frame-4.cfa",
+            "sha256": "94339363f2ed812b22b0ea313d6beb7e598b9813bb02210fcce14e6073d2580b",
+            "shape": [
+              240,
+              320
+            ]
+          },
+          "index": 4,
+          "inverse_focus": 1.0
+        }
+      ],
+      "bundle_root": "experiments/m194g-larger-pupil/software-noise-intended-1"
+    },
+    {
+      "scene": "flat",
+      "seed": 743,
+      "original_plan": {
+        "path": "experiments/m194g-larger-pupil/production-matrix-1/case-15-plan.json",
+        "bytes": 75469,
+        "sha256": "0a6d2e0369c0d5314c6e44e9b0b7e425773b7330341ec50c47554c05bc4d30ec"
+      },
+      "frames": [
+        {
+          "audit": {
+            "bytes": 2660,
+            "path": "flat/seed-743/frame-0-audit.json",
+            "sha256": "d2f8477932558dde658142757e8e89b289c86c0c8663c231d70f4b711f70ee7b"
+          },
+          "cfa": {
+            "bytes": 153600,
+            "dtype": "<u2",
+            "path": "flat/seed-743/frame-0.cfa",
+            "sha256": "ba5c5460f8ea65c2daf0c12f0f606eeea06a1e4ae73e4fc5bca6c01efe443ad9",
+            "shape": [
+              240,
+              320
+            ]
+          },
+          "index": 0,
+          "inverse_focus": 0.5
+        },
+        {
+          "audit": {
+            "bytes": 2660,
+            "path": "flat/seed-743/frame-1-audit.json",
+            "sha256": "9400a3b1ea7c5beb7caed414d5fc4e16728bda5d764749d54a703f951ae9698d"
+          },
+          "cfa": {
+            "bytes": 153600,
+            "dtype": "<u2",
+            "path": "flat/seed-743/frame-1.cfa",
+            "sha256": "2522173565cb2ff26ce85e55cce347f31a1a511b4dd8e23da2f31cf3f4c1f331",
+            "shape": [
+              240,
+              320
+            ]
+          },
+          "index": 1,
+          "inverse_focus": 0.625
+        },
+        {
+          "audit": {
+            "bytes": 2662,
+            "path": "flat/seed-743/frame-2-audit.json",
+            "sha256": "88fa5cd456ff5caa2e18ca6f5bb9c276c665d1260c2f526019ae701ba89732da"
+          },
+          "cfa": {
+            "bytes": 153600,
+            "dtype": "<u2",
+            "path": "flat/seed-743/frame-2.cfa",
+            "sha256": "0e40791ebb695b7428a72d4f06c98582a1a82d1ae4ae32650281e5115605fa56",
+            "shape": [
+              240,
+              320
+            ]
+          },
+          "index": 2,
+          "inverse_focus": 0.75
+        },
+        {
+          "audit": {
+            "bytes": 2657,
+            "path": "flat/seed-743/frame-3-audit.json",
+            "sha256": "b607db80a8d148f9df2c023750e816b18c1ac09ad7cf62d42e2a2cc3330c527c"
+          },
+          "cfa": {
+            "bytes": 153600,
+            "dtype": "<u2",
+            "path": "flat/seed-743/frame-3.cfa",
+            "sha256": "ae3a369d7ebee92036f8c4e410ddcc72d1781974ccc9adb6f114d8e519e1d68e",
+            "shape": [
+              240,
+              320
+            ]
+          },
+          "index": 3,
+          "inverse_focus": 0.875
+        },
+        {
+          "audit": {
+            "bytes": 2663,
+            "path": "flat/seed-743/frame-4-audit.json",
+            "sha256": "aab5f068db7cb864736e1fa1ba40fa00764eb9716a6d818e752873c5ab176176"
+          },
+          "cfa": {
+            "bytes": 153600,
+            "dtype": "<u2",
+            "path": "flat/seed-743/frame-4.cfa",
+            "sha256": "d836ff7259413d5e4a4cbdcbe12e2fe9c4866214c7cf4d25849c9f5487bf6804",
+            "shape": [
+              240,
+              320
+            ]
+          },
+          "index": 4,
+          "inverse_focus": 1.0
+        }
+      ],
+      "bundle_root": "experiments/m194g-larger-pupil/software-noise-intended-1"
+    }
+  ],
+  "archived_endpoints": [
+    {
+      "admission": "hard-floor",
+      "launch": {
+        "bytes": 2284,
+        "path": "experiments/m194g-larger-pupil/production-matrix-1/case-00-render-launch.json",
+        "sha256": "916fadabd89f6ad4ef4ebe147a324e49dd5620bfd10a0398f9b436f22731db97"
+      },
+      "log": {
+        "bytes": 4056,
+        "path": "experiments/m194g-larger-pupil/production-matrix-1/case-00-render.log",
+        "sha256": "45fb6d1227bb88ec6408278b54f1a0c3be9c20e29beec1012ccb63bd047d7659"
+      },
+      "noise_enabled": false,
+      "ordinal": 0,
+      "original_indices": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "plan": {
+        "bytes": 75476,
+        "path": "experiments/m194g-larger-pupil/production-matrix-1/case-00-plan.json",
+        "sha256": "67bf4d3a57b22d5815a16aac1274c3a34df7294185e3ed3e382812b9329ace31"
+      },
+      "plan_launch": {
+        "bytes": 1868,
+        "path": "experiments/m194g-larger-pupil/production-matrix-1/case-00-plan-launch.json",
+        "sha256": "a86791213fe4436b0b6ba89b695f7ba063eedcbdbf8fef3e3fda4577e96bfcd5"
+      },
+      "receipt": {
+        "bytes": 79048,
+        "path": "experiments/m194g-larger-pupil/production-matrix-1/case-00-receipt.json",
+        "sha256": "000b449ff49bc26accdcc61f8a866b4f62401ef6ab1d5970cd207fbd73e1cfe1"
+      },
+      "scene": "flat",
+      "seed": null,
+      "subset": "all-five",
+      "tiff": {
+        "bytes": 407403,
+        "path": "experiments/m194g-larger-pupil/production-matrix-1/case-00.tif",
+        "sha256": "34e13e84725cc792607a0e05834bf69607cc45f3f92910503259133d6f62c771"
+      }
+    },
+    {
+      "admission": "floor-pedestal-v1",
+      "launch": {
+        "bytes": 2290,
+        "path": "experiments/m194g-larger-pupil/production-matrix-1/case-01-render-launch.json",
+        "sha256": "3d740622b1ba60fb1504651e3ccce162e91ee2d0e63a1b582760eb3b183c56ba"
+      },
+      "log": {
+        "bytes": 3911,
+        "path": "experiments/m194g-larger-pupil/production-matrix-1/case-01-render.log",
+        "sha256": "6b1c725a438c6b8f6529cfaf094007a1fa8ccb8983118447cf6df27349624c80"
+      },
+      "noise_enabled": false,
+      "ordinal": 1,
+      "original_indices": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "plan": {
+        "bytes": 75482,
+        "path": "experiments/m194g-larger-pupil/production-matrix-1/case-01-plan.json",
+        "sha256": "49f445472b5ed3acc6d4204d06a18f26f2362a0e66ddaad8240fd10aa7900475"
+      },
+      "plan_launch": {
+        "bytes": 1875,
+        "path": "experiments/m194g-larger-pupil/production-matrix-1/case-01-plan-launch.json",
+        "sha256": "cfe97df6d1c9c28ab6425968ce3ae3c532726de362462231855f5fa1acaaa24c"
+      },
+      "receipt": {
+        "bytes": 79054,
+        "path": "experiments/m194g-larger-pupil/production-matrix-1/case-01-receipt.json",
+        "sha256": "82cd4ceae063d16c64365fc379bf7db40a79eac3671303e9c657bfa53f308e76"
+      },
+      "scene": "flat",
+      "seed": null,
+      "subset": "all-five",
+      "tiff": {
+        "bytes": 407403,
+        "path": "experiments/m194g-larger-pupil/production-matrix-1/case-01.tif",
+        "sha256": "34e13e84725cc792607a0e05834bf69607cc45f3f92910503259133d6f62c771"
+      }
+    },
+    {
+      "admission": "floor-pedestal-v1",
+      "launch": {
+        "bytes": 2286,
+        "path": "experiments/m194g-larger-pupil/production-matrix-1/case-14-render-launch.json",
+        "sha256": "9ac1c971330ee40ba33d703556f77192c640bf28547f054fc1afc2f892e99893"
+      },
+      "log": {
+        "bytes": 3911,
+        "path": "experiments/m194g-larger-pupil/production-matrix-1/case-14-render.log",
+        "sha256": "9d46d6a22bc32d92f60f1ec7bf6231606a65079e99790686bf008516b7058ba8"
+      },
+      "noise_enabled": true,
+      "ordinal": 14,
+      "original_indices": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "plan": {
+        "bytes": 75475,
+        "path": "experiments/m194g-larger-pupil/production-matrix-1/case-14-plan.json",
+        "sha256": "a63ad116c0a567f16724683dd3e0bb84fb50bdefdb6b2602bd957613ab6a01a7"
+      },
+      "plan_launch": {
+        "bytes": 1869,
+        "path": "experiments/m194g-larger-pupil/production-matrix-1/case-14-plan-launch.json",
+        "sha256": "0cc287d83f9508b531ee7c51d71b5aabf52f2d4ff71b7d8ff677ee793e060ec2"
+      },
+      "receipt": {
+        "bytes": 79047,
+        "path": "experiments/m194g-larger-pupil/production-matrix-1/case-14-receipt.json",
+        "sha256": "151f06e8bb3e30c71931a7962b18e3a3e7369d6d93c7b6786f5c8aef9b987879"
+      },
+      "scene": "flat",
+      "seed": 743,
+      "subset": "all-five",
+      "tiff": {
+        "bytes": 407403,
+        "path": "experiments/m194g-larger-pupil/production-matrix-1/case-14.tif",
+        "sha256": "36a995a53f842077bd9ffa0ad705a8da3af432c28c42a8da3793bce4513a8372"
+      }
+    },
+    {
+      "admission": "hard-floor",
+      "launch": {
+        "bytes": 2266,
+        "path": "experiments/m194g-larger-pupil/production-matrix-1/case-15-render-launch.json",
+        "sha256": "02e8450486024afd93c0c98f92e235c9ddccfe08c8aad8df017f1803293f4a42"
+      },
+      "log": {
+        "bytes": 4053,
+        "path": "experiments/m194g-larger-pupil/production-matrix-1/case-15-render.log",
+        "sha256": "53b1babc9d851e824173cc9503ee9ddbb148d2a9855791ee666a14413df14cb5"
+      },
+      "noise_enabled": true,
+      "ordinal": 15,
+      "original_indices": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "plan": {
+        "bytes": 75469,
+        "path": "experiments/m194g-larger-pupil/production-matrix-1/case-15-plan.json",
+        "sha256": "0a6d2e0369c0d5314c6e44e9b0b7e425773b7330341ec50c47554c05bc4d30ec"
+      },
+      "plan_launch": {
+        "bytes": 1849,
+        "path": "experiments/m194g-larger-pupil/production-matrix-1/case-15-plan-launch.json",
+        "sha256": "ee992848a92dcb103bd6233dba9423a75da02730570b0cb148e0f35f8c9a1bf2"
+      },
+      "receipt": {
+        "bytes": 79041,
+        "path": "experiments/m194g-larger-pupil/production-matrix-1/case-15-receipt.json",
+        "sha256": "37e74f32d963147b291a2a23488dd0466ceb602e0732feced92a0c2f178f2516"
+      },
+      "scene": "flat",
+      "seed": 743,
+      "subset": "all-five",
+      "tiff": {
+        "bytes": 407403,
+        "path": "experiments/m194g-larger-pupil/production-matrix-1/case-15.tif",
+        "sha256": "a1b6be484b9f13914c95a03d60fb80ef02761b935f478ffb3eed8b9e18704874"
+      }
+    }
+  ]
+}

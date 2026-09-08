@@ -1,0 +1,36 @@
+{
+  "final_shape_bound_bytes": 491520,
+  "final_shape_subcaps_kib": {
+    "cases": 96,
+    "framing": 48,
+    "inventory": 160,
+    "science": 128,
+    "stages": 48
+  },
+  "internal_limits": {
+    "input_hash_bytes": 536870912,
+    "named_ndarray_bytes": 67108864,
+    "output_directory_bytes": 8388608,
+    "owned_inventory_files": 256,
+    "tiff_decodes": 15
+  },
+  "limits": {
+    "committed_bytes": 1073741824,
+    "cpu_seconds": 60,
+    "retained_bytes": 16777216,
+    "wall_seconds": 120
+  },
+  "remaining_bytes": 7069696,
+  "reserved_bytes": 9707520,
+  "schema": "m194h-independent-verification-ledger-v1",
+  "scope": "Prospective exact maximum slots including duplicated stdout; parent wrapper actual whole CPU/wall and committed memory still required. No allowance is a measured outcome.",
+  "slots": {
+    "external_wrapper_and_logs": 1048576,
+    "final_json": 1048576,
+    "phases_20_by_256KiB": 5242880,
+    "raw_stderr": 8192,
+    "raw_stdout": 1048576,
+    "release": 1048576,
+    "sources_reviews_report": 262144
+  }
+}

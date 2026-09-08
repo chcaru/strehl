@@ -1,0 +1,114 @@
+{
+  "schema": "m194h-prospective-resource-ledger-v1",
+  "status": "SOURCE_ONLY_NOT_EXECUTION_AUTHORITY",
+  "stage_limits": {
+    "build": {
+      "cpu_seconds": 300,
+      "wall_seconds": 240,
+      "committed_bytes": 8589934592,
+      "file_bytes": 134217728,
+      "scratch_bytes": 4294967296
+    },
+    "components": {
+      "cpu_seconds": 60,
+      "wall_seconds": 60,
+      "committed_bytes": 1073741824,
+      "file_bytes": 2097152,
+      "scratch_bytes": 0
+    },
+    "render": {
+      "cpu_seconds": 120,
+      "wall_seconds": 180,
+      "committed_bytes": 1073741824,
+      "file_bytes": 16777216,
+      "scratch_bytes": 0
+    }
+  },
+  "preparation": {
+    "cpu_seconds": 30,
+    "wall_seconds": 60,
+    "file_bytes": 8388608
+  },
+  "independent_checker_proposal": {
+    "cpu_seconds": 60,
+    "wall_seconds": 120,
+    "committed_bytes": 1073741824,
+    "file_bytes": 16777216,
+    "status": "ACCEPTED_ENVELOPE_PENDING_FINAL_CHECKER_SOURCE"
+  },
+  "build_families": {
+    "compiler_logs": 33554432,
+    "test_list_logs": 131072,
+    "copied_test_binaries": 67108864,
+    "child_terminal_receipts": 131072,
+    "parent_publication_slots": 196608,
+    "metadata_and_controls": 2097152,
+    "external_receipts": 262144,
+    "total_reserved": 103481344,
+    "remaining": 30736384
+  },
+  "component_families": {
+    "log": 65536,
+    "child_terminal": 32768,
+    "parent_publication_slots": 196608,
+    "metadata_controls": 262144,
+    "external_receipts": 131072,
+    "total_reserved": 688128,
+    "remaining": 1409024
+  },
+  "render_families": {
+    "twelve_case_slots": 10518528,
+    "logs": 786432,
+    "child_terminal_receipts": 393216,
+    "parent_publication_slots": 196608,
+    "metadata_controls_and_tail": 524288,
+    "external_receipts": 262144,
+    "total_reserved": 12681216,
+    "remaining": 4096000
+  },
+  "per_case": {
+    "plan": 131072,
+    "trace_binary": 131072,
+    "trace_header": 16384,
+    "tiff": 524288,
+    "canonical_result": 32768,
+    "result_stage": 32768,
+    "failure": 8192,
+    "total": 876544
+  },
+  "render_per_child": {
+    "cpu_seconds": 20,
+    "wall_seconds": 20,
+    "committed_bytes": 1073741824
+  },
+  "within_each_stage": {
+    "final_parent_tail_cpu_seconds": 2,
+    "final_parent_tail_wall_seconds": 3,
+    "separate_cleanup_wall_seconds": 12,
+    "scope": "No cap extension. Child wall is reduced by cleanup plus publication reserves from aggregate remaining wall. OS or filesystem stalls may still exceed envelopes and are retained as refusal."
+  },
+  "evidence_basis": {
+    "old_build_wall_seconds": 25.063000000081956,
+    "old_cli_binary_bytes": 12767744,
+    "old_build_log_bytes": 182883,
+    "old_target_census_files": 2217,
+    "old_target_census_bytes": 1674906257,
+    "scope": "Read-only prior metadata; no CPU/peak-memory measurement. New limits are prospective finite envelopes, not measured requirements."
+  },
+  "historical_geometry_grant": "M193c closed; no ceiling or unused balance is reused.",
+  "retry_policy": "No automatic retries or population extension. Every launched or refused stage remains retained and charged.",
+  "trace_source_bound": {
+    "support_counts": [
+      18,
+      18,
+      15,
+      16
+    ],
+    "non_lifecycle_words": 8064,
+    "max_absorb_calls": 5,
+    "max_reset_calls": 5,
+    "total_words": 8099,
+    "total_bytes": 32396,
+    "scope": "DERIVED from fixed source; independent source/count check required, no trace execution"
+  }
+}

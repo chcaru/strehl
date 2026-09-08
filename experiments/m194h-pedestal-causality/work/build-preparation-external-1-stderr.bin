@@ -1,0 +1,16 @@
+Traceback (most recent call last):
+  File "C:\dev\blog\death-of-software\projects\strehl\experiments\m194h-pedestal-causality\prepare-stage.py", line 165, in <module>
+    try:main()
+        ^^^^^^
+  File "C:\dev\blog\death-of-software\projects\strehl\experiments\m194h-pedestal-causality\prepare-stage.py", line 98, in main
+    sources=freeze_sources()
+            ^^^^^^^^^^^^^^^^
+  File "C:\dev\blog\death-of-software\projects\strehl\experiments\m194h-pedestal-causality\prepare-stage.py", line 55, in freeze_sources
+    seen.add((p,crate));s=read(p,4<<20).decode("utf8")
+                          ^^^^^^^^^^^^^
+  File "C:\dev\blog\death-of-software\projects\strehl\experiments\m194h-pedestal-causality\prepare-stage.py", line 26, in read
+    check(len(b)<=cap and identity(initial)==identity(before)==identity(after)==identity(final) and len(b)==before.st_size,"stable input")
+  File "C:\dev\blog\death-of-software\projects\strehl\experiments\m194h-pedestal-causality\prepare-stage.py", line 17, in check
+    if not ok:raise ValueError(message)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: stable input

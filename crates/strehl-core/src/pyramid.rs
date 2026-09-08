@@ -70,6 +70,11 @@ use std::sync::{Mutex, OnceLock};
 use crate::noise::NoiseModel;
 use rayon::prelude::*;
 
+#[cfg(feature = "m194h-pedestal-causality")]
+pub mod m194h {
+    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/m194h-pedestal-causality/core-hook.rs"));
+}
+
 /// The 5-tap binomial generating kernel, `[1, 4, 6, 4, 1] / 16`.
 ///
 /// Burt & Adelson's `a = 0.4` member of the generating-kernel family, which is
@@ -1608,6 +1613,8 @@ impl BandMerge {
     /// scratch accumulator and fold the next chunk without retaining one
     /// full-frame accumulator per chunk.
     pub fn reset_for_reuse(&mut self) {
+        #[cfg(feature = "m194h-pedestal-causality")]
+        m194h::reset(self);
         for values in self
             .num
             .iter_mut()
@@ -1740,6 +1747,9 @@ impl BandMerge {
         assert_eq!(luma.len(), n0);
         assert_eq!(variance.len(), n0);
 
+        #[cfg(feature = "m194h-pedestal-causality")]
+        m194h::begin_frame(self, frame_beta);
+
         // 1. The selection pyramid, and the noise pyramid beside it.
         ws.luma.build(luma, &mut ws.ws);
         ws.var.build_gaussian(variance, &mut ws.ws);
@@ -1801,8 +1811,14 @@ impl BandMerge {
                         }
                     });
             }
+            #[cfg(feature = "m194h-pedestal-causality")]
+            m194h::band(self, k, planes, &mut ws.plane, sq, ws.var.level(k),
+                Self::beta_for(&self.gain, frame_beta, k), w);
             self.accumulate_level(k, planes, &mut ws.plane, w);
         }
+
+        #[cfg(feature = "m194h-pedestal-causality")]
+        m194h::base(self, planes, &mut ws.plane);
 
         // 3. The base band.
         //
@@ -2064,6 +2080,8 @@ impl BandMerge {
     /// zero, in which case the fallback mean is used and the tie does not reach
     /// the output.
     pub fn absorb(&mut self, other: &BandMerge) {
+        #[cfg(feature = "m194h-pedestal-causality")]
+        m194h::absorb(self, other);
         assert_eq!(
             self.sizes, other.sizes,
             "cannot absorb a differently shaped merge"
@@ -2409,6 +2427,8 @@ impl BandMerge {
                             "FloorPedestalV1: nonfinite resolved coefficient"
                         );
                     }
+                    #[cfg(feature = "m194h-pedestal-causality")]
+                    m194h::resolved(self, c, k, out);
                 }
                 let mut img = if self.cfg.hull.bounds_each_level() {
                     // Bound the partial reconstruction at every level on the way
@@ -2436,11 +2456,15 @@ impl BandMerge {
                 // level, and running this unconditionally means `PerLevel` is a
                 // strict tightening of `InputRange` rather than a replacement
                 // whose weaker cases would have to be argued separately.
+                #[cfg(feature = "m194h-pedestal-causality")]
+                m194h::pre_hull(self, c, &img);
                 if self.cfg.hull.bounds() {
                     for ((p, l), h) in img.iter_mut().zip(&self.lo[c]).zip(&self.hi[c]) {
                         *p = p.clamp(*l, *h);
                     }
                 }
+                #[cfg(feature = "m194h-pedestal-causality")]
+                m194h::post_hull(c, &img);
                 img
             })
             .collect()

@@ -1,0 +1,122 @@
+{
+  "schema": "m194h-source-derived-capacity-v1",
+  "status": "DERIVED_FROM_LITERAL_SHAPES_NOT_MEASURED_RUNTIME",
+  "quad_sizes": [
+    [
+      150,
+      113
+    ],
+    [
+      75,
+      57
+    ],
+    [
+      38,
+      29
+    ],
+    [
+      19,
+      15
+    ]
+  ],
+  "support_indices": [
+    [
+      7145,
+      7146,
+      7147,
+      7295,
+      7296,
+      7297,
+      7445,
+      7446,
+      7447,
+      7746,
+      7747,
+      7748,
+      7896,
+      7897,
+      7898,
+      8046,
+      8047,
+      8048
+    ],
+    [
+      1772,
+      1773,
+      1774,
+      1847,
+      1848,
+      1849,
+      1922,
+      1923,
+      1924,
+      1925,
+      1997,
+      1998,
+      1999,
+      2000,
+      2072,
+      2073,
+      2074,
+      2075
+    ],
+    [
+      441,
+      442,
+      443,
+      479,
+      480,
+      481,
+      482,
+      517,
+      518,
+      519,
+      520,
+      555,
+      556,
+      557,
+      558
+    ],
+    [
+      106,
+      107,
+      108,
+      109,
+      125,
+      126,
+      127,
+      128,
+      144,
+      145,
+      146,
+      147,
+      163,
+      164,
+      165,
+      166
+    ]
+  ],
+  "support_counts": [
+    18,
+    18,
+    15,
+    16
+  ],
+  "core_trace_max_words_including_four_absorbs_four_resets": 8092,
+  "core_trace_max_bytes": 32368,
+  "core_trace_cap_bytes": 131072,
+  "per_case_slots": {
+    "plan": 131072,
+    "trace_binary": 131072,
+    "trace_header": 16384,
+    "output_tiff": 524288,
+    "canonical_result": 32768,
+    "simultaneous_result_stage": 32768,
+    "failure": 8192
+  },
+  "case_slots_total": 876544,
+  "twelve_case_slots_total": 10518528,
+  "subject_artifact_allowance_proposed": 16777216,
+  "scope": "Source-only dependency/encoding arithmetic. No Rust/helper/fixture execution, float-valued output assumption or measured peak claim.",
+  "construction_history": "First metadata constructor rejected an incorrect handwritten per-case sum before writing this file; development-bindings.json had already been written. Corrected by summing the literal named slots. No experiment ran."
+}

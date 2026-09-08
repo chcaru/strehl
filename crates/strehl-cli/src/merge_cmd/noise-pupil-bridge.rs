@@ -1782,3 +1782,11 @@ mod private_controls {
         Ok(())
     }
 }
+
+#[cfg(feature = "m194h-pedestal-causality")]
+mod pedestal_causality {
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/m194h-pedestal-causality/production-bridge.rs"
+    ));
+}
