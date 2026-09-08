@@ -449,7 +449,7 @@ def compile_completion(value,stage,index,command):
         need("compile_cleanup" not in value,"strict process helper outside compile indices0/1")
         return dict(policy="ORIGINAL_STRICT_PROCESS_COMPLETION",complete=True,
                     natural_job_exit=None,intentional_owned_cleanup=False)
-    target=str(ROOT/"target/m194h-pedestal-causality-2")
+    target=str(ROOT/"target/m194h-pedestal-causality-3")
     prefix=["cargo","test","-p","strehl-core" if index==0 else "strehl-cli"]
     kind=["--lib"] if index==0 else ["--bin","strehl"]
     expected=prefix+kind+["--features","m194h-pedestal-causality","--target-dir",target,
@@ -507,7 +507,7 @@ def compile_completion(value,stage,index,command):
         wait_seconds=wait,scope="PIDs are retained Job observations, never independent kill targets or evidence of process purpose")
 
 def child_record(files,ref,stage,index,expected_command):
-    d=HERE/("build-2" if stage=="build" else "components-1" if stage=="components" else "subject-1")
+    d=HERE/("build-3" if stage=="build" else "components-1" if stage=="components" else "subject-1")
     v=files.json(ref,32*KIB,d/f"child-{index:02}.json")
     need(v["command"]==expected_command,"detached actual child command")
     cap=16*MIB if stage=="build" and index<2 else 64*KIB
@@ -545,7 +545,7 @@ def stage_bundle(files,bundle,stage):
     need(type(bundle) is dict and set(bundle)==set(caps),"closed six-ref stage bundle")
     raw={k:files.read(bundle[k],cap,empty=k=="stderr") for k,cap in caps.items()}
     v,t,o,a=(strict(raw[k]) for k in ("result","tail","outer","stdout"))
-    d=HERE/("build-2" if stage=="build" else "components-1" if stage=="components" else "subject-1")
+    d=HERE/("build-3" if stage=="build" else "components-1" if stage=="components" else "subject-1")
     need(path_identity(bundle["result"]["path"])==d/"result.json" and path_identity(bundle["tail"]["path"])==d/"parent-tail.json","fixed stage terminal roles")
     need(set(o)=={"schema","command","source","exit_code","timeout_terminated","elapsed_wall_seconds","stdout","stderr","exit","stdout_bytes","stderr_bytes","scope"} and o["schema"]=="m194h-stage-external-v1","closed external stage receipt")
     need(v["schema"]=="m194h-owned-stage-v1" and v["stage"]==stage and o["command"]==v["invocation"],"actual stage identity")
@@ -1201,7 +1201,7 @@ def main():
             science["original_metric_anchors"]=old_metric_anchors(files,science["diagnostics"])
             out.phase("independent-consumer-science",science)
         files.finish()
-        inv=inventory(files,[(HERE/"build-2",128*MIB),(HERE/"components-1",2*MIB),(SUBJECT,16*MIB)])
+        inv=inventory(files,[(HERE/"build-3",128*MIB),(HERE/"components-1",2*MIB),(SUBJECT,16*MIB)])
         complete=bool(full_science and all(s["complete"] for s in stages) and all(c["complete"] for c in control) and component_complete)
         budget.check()
         final=dict(schema=SCHEMA,status="PASS_INDEPENDENT_SAVED_CONSUMER_CHECK_ONLY" if complete else "VERIFIED_INCOMPLETE_SAVED_PREFIX",

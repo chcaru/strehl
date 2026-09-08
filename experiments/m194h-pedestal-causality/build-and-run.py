@@ -26,7 +26,7 @@ SELF=Path(__file__).resolve()
 KIB=1024;MIB=1<<20;GIB=1<<30
 SCHEMA="m194h-owned-stage-release-v1"
 FEATURE="m194h-pedestal-causality"
-TARGET=ROOT/"target/m194h-pedestal-causality-2"
+TARGET=ROOT/"target/m194h-pedestal-causality-3"
 PROCESS=ROOT/"experiments/m193c-output-grid/bounded-process.py"
 BUILD_PROCESS=HERE/"bounded-build-process.py"
 BUILD_PROCESS_SHA="6c4b6e6222e1b58ec408fbd949d7a90bbb0c12778c292517c6eb6539eb4b036b"
@@ -38,7 +38,7 @@ STAGES={
  "build":dict(cpu_seconds=300,wall_seconds=240,committed_bytes=8*GIB,file_bytes=128*MIB,scratch_bytes=4*GIB),
  "components":dict(cpu_seconds=60,wall_seconds=60,committed_bytes=GIB,file_bytes=2*MIB,scratch_bytes=0),
  "render":dict(cpu_seconds=120,wall_seconds=180,committed_bytes=GIB,file_bytes=16*MIB,scratch_bytes=0)}
-OUTPUTS={"build":HERE/"build-2","components":HERE/"components-1","render":HERE/"subject-1"}
+OUTPUTS={"build":HERE/"build-3","components":HERE/"components-1","render":HERE/"subject-1"}
 FIXED_ENV={"RAYON_NUM_THREADS":"2","STREHL_PYRAMID_WORKERS":"2","STREHL_DEFECT":"off","STREHL_FIX_CA":"off","STREHL_FULLRES_GATHER":"1"}
 JOB_NAMES=("kernel32","ntdll","CREATE_SUSPENDED","JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE",
  "JOB_OBJECT_BASIC_ACCOUNTING_INFORMATION_CLASS","JOB_OBJECT_EXTENDED_LIMIT_INFORMATION_CLASS",
@@ -148,16 +148,59 @@ def clean_env():
     blocked={"RUSTFLAGS","CARGO_ENCODED_RUSTFLAGS","CARGO_TARGET_DIR","RUSTC_WRAPPER","RUSTC_WORKSPACE_WRAPPER","RUSTC"}
     env={k:v for k,v in os.environ.items() if not k.upper().startswith(("STREHL_","M194H_","RAYON_","OMP_","OPENBLAS_","MKL_","NUMEXPR_")) and k.upper() not in blocked}
     env.update(FIXED_ENV);env["CARGO_NET_OFFLINE"]="true";return env
-def scan(root,limit):
-    if not root.exists():return dict(files=0,bytes=0)
-    total=count=0
-    for directory,dirs,files in os.walk(root,followlinks=False):
-        for name in dirs:owned(Path(directory)/name)
-        for name in files:
-            p=owned(Path(directory)/name);s=p.stat()
-            need(stat.S_ISREG(s.st_mode),"plain output file");count+=1;total+=s.st_size
-            need(total<=limit,"file family capacity")
-    return dict(files=count,bytes=total)
+def scan(root,limit,*,tolerate_disappearance=False):
+    need(type(tolerate_disappearance) is bool,"typed scratch scan policy")
+    root=Path(root);total=count=raced=0;samples=[]
+    def result(initial_absent=False):
+        return dict(files=count,bytes=total,initial_absent=initial_absent,
+                    observed_disappearances=raced,disappearance_samples=samples,
+                    tolerate_disappearance=tolerate_disappearance,
+                    scope="Non-atomic sum of observed file extents; already counted bytes remain counted. "
+                          "Disappearance counts are observations, not unique files or a peak-size certificate.")
+    def failure(exc,path,operation):
+        nonlocal raced
+        if isinstance(exc,FileNotFoundError) and tolerate_disappearance:
+            raced+=1
+            if len(samples)<8:
+                label=str(path)
+                samples.append(dict(operation=operation,path=label[:384],path_truncated=len(label)>384))
+            return
+        message=f"scan {operation} path={path}: {exc}"
+        if isinstance(exc,OSError):raise type(exc)(exc.errno,message,str(path)) from exc
+        raise ValueError(message) from exc
+    try:initial=root.lstat()
+    except FileNotFoundError:return result(initial_absent=True)
+    except Exception as exc:
+        failure(exc,root,"initial-lstat");raise
+    try:
+        need(not initial.st_file_attributes&0x400 and not stat.S_ISLNK(initial.st_mode),"reparse/symlink path")
+        root=owned(root);need(stat.S_ISDIR(initial.st_mode),"scan directory root")
+    except Exception as exc:
+        failure(exc,root,"root-inspection")
+        return result()
+    def walk_error(exc):failure(exc,getattr(exc,"filename",None) or root,"walk")
+    try:
+        for directory,dirs,files in os.walk(root,followlinks=False,onerror=walk_error):
+            for name in tuple(dirs):
+                path=Path(directory)/name
+                try:
+                    p=owned(path);need(stat.S_ISDIR(p.stat().st_mode),"plain output directory")
+                except Exception as exc:
+                    failure(exc,path,"directory-inspection")
+                    dirs.remove(name)
+            for name in files:
+                path=Path(directory)/name
+                try:
+                    p=owned(path);s=p.stat()
+                    need(stat.S_ISREG(s.st_mode),"plain output file")
+                    count+=1;total+=s.st_size
+                    need(total<=limit,"file family capacity")
+                except Exception as exc:failure(exc,path,"file-inspection")
+    except Exception as exc:
+        # Native walk errors normally use onerror; retain context for iterator errors too.
+        if isinstance(exc,FileNotFoundError) and tolerate_disappearance:failure(exc,root,"walk-iteration")
+        else:raise
+    return result()
 
 def admit_work(work,caps,cpu_reserve=TAIL_CPU,wall_reserve=TAIL_WALL):
     need(all(finite(work[k]) for k in ("cpu_seconds","wall_seconds")),"typed work")
@@ -227,7 +270,7 @@ class Budget:
         admit_work(w,self.caps)
         if force or time.monotonic()-self.last_scan>=.25:
             self.inventory=scan(self.output,self.caps["file_bytes"]-3*TERMINAL_CAP)
-            if self.stage=="build":self.scratch=scan(TARGET,self.caps["scratch_bytes"])
+            if self.stage=="build":self.scratch=scan(TARGET,self.caps["scratch_bytes"],tolerate_disappearance=True)
             self.last_scan=time.monotonic()
     def limits(self,index):
         self.check(True);w=self.work()

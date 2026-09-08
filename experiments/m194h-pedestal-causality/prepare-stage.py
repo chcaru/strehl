@@ -1,5 +1,5 @@
 """Root's fixed M194h metadata constructor. No build, test or image computation.
-Corrected invocation per stage, cumulative including first refusal and completed preparation <=50 CPU/100 wall/8 MiB.
+Corrected invocation per stage, cumulative including first refusal and completed preparation <=60 CPU/120 wall/8 MiB.
 """
 from pathlib import Path
 import hashlib,json,os,re,shutil,sys,time
@@ -76,8 +76,8 @@ def freeze_sources():
     check(sum(v["bytes"] for v in out.values())<=16<<20,"source aggregate")
     return out
 def bundle(stage):
-    base=HERE/("subject-1" if stage=="render" else "build-2" if stage=="build" else stage+"-1")
-    stem=WORK/(stage+"-external-"+("2" if stage=="build" else "1"))
+    base=HERE/("subject-1" if stage=="render" else "build-3" if stage=="build" else stage+"-1")
+    stem=WORK/(stage+"-external-"+("3" if stage=="build" else "1"))
     out={k:ref(p) for k,p in (
         ("result",base/"result.json"),("tail",base/"parent-tail.json"),
         ("outer",Path(str(stem)+"-outer.json")),("stdout",Path(str(stem)+"-stdout.bin")),
@@ -93,26 +93,28 @@ def main():
     check(history["status"]=="REFUSED" and history["charged_cpu_seconds"]==10 and history["charged_wall_seconds"]==20,"retained first preparation refusal")
     prepared=json.loads(read(WORK/"build-preparation-2.json"))
     check(prepared["status"]=="PASS_METADATA_PREPARATION" and prepared["charged_cpu_seconds"]==10 and prepared["charged_wall_seconds"]==20,"retained completed preparation2")
+    prepared3=json.loads(read(WORK/"build-preparation-3.json"))
+    check(prepared3["status"]=="PASS_METADATA_PREPARATION" and prepared3["charged_cpu_seconds"]==10 and prepared3["charged_wall_seconds"]==20,"retained completed preparation3")
     prior=[]
     for s in ("build","components","render"):
-        p=WORK/(s+"-preparation-3.json")
+        p=WORK/(s+"-preparation-4.json")
         if p.exists() and s!=stage:prior.append(json.loads(read(p)))
     check(len(prior)==("build","components","render").index(stage),"once-only ordered preparation")
     check(all(r["status"]=="PASS_METADATA_PREPARATION" for r in prior),"successful previous preparation")
     sources=freeze_sources()
-    closure=WORK/"source-freeze-2.json"
+    closure=WORK/"source-freeze-3.json"
     if stage=="build":write(closure,dict(schema="m194h-root-source-freeze-v1",source_bindings=sources,scope="Exact working bytes used by the owned build; immutable through these three stages."))
     else:check(json.loads(read(closure))["source_bindings"]==sources,"held source unchanged")
-    target=ROOT/"target/m194h-pedestal-causality-2"
+    target=ROOT/"target/m194h-pedestal-causality-3"
     inputs=[ref(PY)]
     binaries={};prerequisites={}
     if stage=="build":
-        check(not target.exists() and not (HERE/"build-2").exists(),"fresh build")
+        check(not target.exists() and not (HERE/"build-3").exists(),"fresh build")
         inputs += [ref(Path(shutil.which(n))) for n in ("cargo","rustc")]
         base=["cargo","test"]
         children=[base+["-p","strehl-core","--lib","--features",FEATURE,"--target-dir",str(target),"--no-run","--message-format=json-render-diagnostics","--locked","--offline"],
           base+["-p","strehl-cli","--bin","strehl","--features",FEATURE,"--target-dir",str(target),"--no-run","--message-format=json-render-diagnostics","--locked","--offline"],
-          [str(HERE/"build-2/core-tests.exe"),"--list"],[str(HERE/"build-2/cli-tests.exe"),"--list"]]
+          [str(HERE/"build-3/core-tests.exe"),"--list"],[str(HERE/"build-3/cli-tests.exe"),"--list"]]
     else:
         prerequisites["build"]=bundle("build")
         built=verify(prerequisites["build"]["result"])
@@ -136,16 +138,16 @@ def main():
             binary=binaries["cli"],commands=[children[0]],cases=cases)
         for k in ("noise_admission","matrix_index","quality_verification"):verify(grant[k]);inputs.append(grant[k])
         subject=write(WORK/"subject-release-1.json",grant)
-    path=WORK/(stage+"-release-"+("2" if stage=="build" else "1")+".json")
+    path=WORK/(stage+"-release-"+("3" if stage=="build" else "1")+".json")
     command=[str(PY),"-I","-S","-B",str(HERE/"build-and-run.py"),"--release",str(path),"--release-sha256","ACTUAL_RELEASE_SHA256"]
     release=dict(schema="m194h-owned-stage-release-v1",stage=stage,source_bindings=sources,inputs=inputs,command=command,
                  children=children,binaries=binaries,subject_grant=subject,prerequisites=prerequisites)
     rr=write(path,release)
     check(freeze_sources()==sources,"source closure unchanged through preparation")
-    cpu=history["charged_cpu_seconds"]+prepared["charged_cpu_seconds"]+sum(r["charged_cpu_seconds"] for r in prior)+10
-    wall=history["charged_wall_seconds"]+prepared["charged_wall_seconds"]+sum(r["charged_wall_seconds"] for r in prior)+20
+    cpu=history["charged_cpu_seconds"]+prepared["charged_cpu_seconds"]+prepared3["charged_cpu_seconds"]+sum(r["charged_cpu_seconds"] for r in prior)+10
+    wall=history["charged_wall_seconds"]+prepared["charged_wall_seconds"]+prepared3["charged_wall_seconds"]+sum(r["charged_wall_seconds"] for r in prior)+20
     size=sum(p.stat().st_size for p in WORK.iterdir() if p.is_file())
-    check(cpu<=50 and wall<=100 and size+(64<<10)<=8<<20,"cumulative metadata envelope")
+    check(cpu<=60 and wall<=120 and size+(64<<10)<=8<<20,"cumulative metadata envelope")
     result=dict(schema="m194h-root-preparation-v1",stage=stage,release=rr,source_freeze=ref(closure),source_files=len(sources),
       source_bytes=sum(v["bytes"] for v in sources.values()),charged_cpu_seconds=10,
       charged_wall_seconds=20,actual_parent_cpu_sample=time.process_time(),actual_wall_sample=time.monotonic()-START,cumulative_cpu_seconds=cpu,cumulative_wall_seconds=wall,work_file_bytes=size,
@@ -154,14 +156,14 @@ def main():
     print(json.dumps(result))
 def publish_receipt(value):
     raw=encoded(value);check(len(raw)<=64<<10,"bounded preparation receipt")
-    temp=WORK/(sys.argv[1]+"-preparation-stage-3.json")
+    temp=WORK/(sys.argv[1]+"-preparation-stage-4.json")
     with temp.open("xb") as f:f.write(raw);f.flush();os.fsync(f.fileno())
-    os.replace(temp,WORK/(sys.argv[1]+"-preparation-3.json"))
+    os.replace(temp,WORK/(sys.argv[1]+"-preparation-4.json"))
 if __name__=="__main__":
     stage=sys.argv[1]
     check(stage in ("build","components","render"),"stage")
     WORK.mkdir(exist_ok=True)
-    receipt=WORK/(stage+"-preparation-3.json")
+    receipt=WORK/(stage+"-preparation-4.json")
     check(not receipt.exists(),"fresh preparation")
     initial=dict(schema="m194h-root-preparation-v1",stage=stage,status="INITIAL_INCOMPLETE",
        charged_cpu_seconds=10,charged_wall_seconds=20,scope="Full prospective slice retained before ordinary preparation; no retry.")
