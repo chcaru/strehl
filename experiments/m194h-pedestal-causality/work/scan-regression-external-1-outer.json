@@ -1,0 +1,39 @@
+{
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-I",
+    "-S",
+    "-B",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194h-pedestal-causality\\work\\scan-regression-control.py",
+    "--driver-sha256",
+    "b505a2fff0024691d98088c599f7f554c1543268de09c836a6bc1fe6c17b7410",
+    "--self-sha256",
+    "c2e1a39bedd16fbe9b2dec9affed42c773ce5497b89bd254f6135779266dec11"
+  ],
+  "source": {
+    "path": "experiments/m194h-pedestal-causality/work/scan-regression-control.py",
+    "bytes": 11473,
+    "sha256": "c2e1a39bedd16fbe9b2dec9affed42c773ce5497b89bd254f6135779266dec11"
+  },
+  "exit_code": 0,
+  "elapsed_wall_seconds": 0.17200000000593718,
+  "timeout_terminated": false,
+  "stdout": {
+    "path": "experiments/m194h-pedestal-causality/work/scan-regression-external-1-stdout.bin",
+    "bytes": 243,
+    "sha256": "8a98726912be70b3dfc41e38d472fa90df639a1c42c5a9a763e0f702c14de321"
+  },
+  "stderr": {
+    "path": "experiments/m194h-pedestal-causality/work/scan-regression-external-1-stderr.bin",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "exit": {
+    "path": "experiments/m194h-pedestal-causality/work/scan-regression-external-1-exit.txt",
+    "bytes": 2,
+    "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+  },
+  "stdout_bytes": 243,
+  "stderr_bytes": 0,
+  "scope": "Complete directly launched process interval and actual exit; raw byte streams. No complete CPU inference from elapsed wall. Source is fixed; this process does not launch children."
+}
