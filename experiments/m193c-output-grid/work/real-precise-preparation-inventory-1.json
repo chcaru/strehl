@@ -1,0 +1,118 @@
+{
+  "scope": "Conservative real-precise preparation metadata; all1MiB charged",
+  "files": [
+    {
+      "path": "experiments/m193c-output-grid/independent-precise-upscale-canonical-1-read.md",
+      "bytes": 8545,
+      "sha256": "a2c4a9fbe3bddaa30e36299c999d31850dc693fb83455bee2905382897d8cb63"
+    },
+    {
+      "path": "experiments/m193c-output-grid/independent-real-precise-source-review.md",
+      "bytes": 7728,
+      "sha256": "282a55f65a90bbb705505603e9e13975451adc545d4416ae0b5c8d36a97739ee"
+    },
+    {
+      "path": "experiments/m193c-output-grid/precise-upscale-canonical-1/result.json",
+      "bytes": 39687,
+      "sha256": "37d820048e59c04026d00f02a10282672585284aed8891592e45ddf3214ece03"
+    },
+    {
+      "path": "experiments/m193c-output-grid/precise-upscale-canonical-plan-1.json",
+      "bytes": 36490,
+      "sha256": "a9f194a8cfd43c94a54ca7351aebf6a8c01658f1b96d9a987728adf1a44b0a90"
+    },
+    {
+      "path": "experiments/m193c-output-grid/real-precise-plan-1.json",
+      "bytes": 37546,
+      "sha256": "4364546cdade4133946b81f3a241839f280306bf7ac1a056174a46788da5f1d4"
+    },
+    {
+      "path": "experiments/m193c-output-grid/real-precise-preregister.md",
+      "bytes": 12083,
+      "sha256": "d8e9b7385f229ed8635ee86d50082f96ca837037fb3bb1a223074dd01f9a1a31"
+    },
+    {
+      "path": "experiments/m193c-output-grid/real-precise-run.py",
+      "bytes": 20506,
+      "sha256": "7f71fa2414f72bd994ff1701d7ae8c39d49005a11f0fb60027622e780c43efa6"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/archive-real-precise-plan-1.py",
+      "bytes": 1062,
+      "sha256": "90720a6149367278fecd7f0548c21afc97af632f95106624721e117fd05a673c"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/independent-precise-upscale-canonical-1-audit.json",
+      "bytes": 25983,
+      "sha256": "471c68d50e1cca2804eec32e38756d06b3e0d8db79716de1450fb038ff197b5e"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/independent-precise-upscale-canonical-1-audit.py",
+      "bytes": 28881,
+      "sha256": "52e52c011ff83c1c2f590cbd4da46b03b63619e22ac1d335a71a6b20c66fb09d"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/independent-real-precise-1-audit.py",
+      "bytes": 33051,
+      "sha256": "10c0b84b51b5ae45f116fc1265b9a32b182ac30e44e62b0512e04d38964eabe5"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/independent-real-precise-plan-preparation-read.md",
+      "bytes": 4644,
+      "sha256": "c687cb04d60bc7065f1cecbaacd90fc1adacc44b60daa2091aa422c6367bc4bc"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/precise-upscale-canonical-1-console.txt",
+      "bytes": 420,
+      "sha256": "6fd7b0d814bb32d037da09cec859999f35b341fc8eabe46adfb0eddcd5fbe37d"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/precise-upscale-canonical-1-exit.txt",
+      "bytes": 3,
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/precise-upscale-canonical-1-outer.json",
+      "bytes": 1105,
+      "sha256": "c6f6f0c6731ad9e2e09e4302d72a1ac21420d62b23e36285cfd536c02973ace4"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/precise-upscale-conditional-next.md",
+      "bytes": 8923,
+      "sha256": "663c0f8d61563a3c4ab32ea9a96d23692ea35fcaffaf3e09e25a74b53296f41e"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/prepare-real-precise-plan-1.py",
+      "bytes": 4697,
+      "sha256": "68d62b53f623456f8abedae828c7b287aa53b302dc648da1687d700b71a2bcd6"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/real-precise-plan-1-review.md",
+      "bytes": 2614,
+      "sha256": "7692c0c69f4abfb3267d5d837ad3f05112ecc8e39a95fcb8a1ba38a801f8f8a0"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/real-precise-preparation-1-console.txt",
+      "bytes": 473,
+      "sha256": "5146c00cccbd0313f7b7666e901e407bd08584f7db6710d629a11c1a376c059e"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/real-precise-preparation-1-exit.txt",
+      "bytes": 3,
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/real-precise-preparation-1-outer.json",
+      "bytes": 1343,
+      "sha256": "5f88ccf41d63e88e549cf75183946ba520775519498592edee8b5c7b35e2870d"
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/real-precise-prior-work-1.json",
+      "bytes": 103,
+      "sha256": "3c9f2c0b0be6c18c7ffd01280a404bc854555259b49f8ff7db385af27d8c075a"
+    }
+  ],
+  "total_bytes": 275890,
+  "future_audit_reserve_bytes": 200704,
+  "allowance_bytes": 1048576
+}

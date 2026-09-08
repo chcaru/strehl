@@ -1,0 +1,28 @@
+{
+  "scope": "Actual metadata-only fixed real-pair AREA8 precise preparation",
+  "command": [
+    "C:/Users/chris/AppData/Local/Programs/Python/Python312/python.exe",
+    "-B",
+    "experiments/m193c-output-grid/work/prepare-real-precise-plan-1.py",
+    "--audit-sha256",
+    "471c68d50e1cca2804eec32e38756d06b3e0d8db79716de1450fb038ff197b5e",
+    "--source",
+    "experiments/m193c-output-grid/real-precise-run.py",
+    "7f71fa2414f72bd994ff1701d7ae8c39d49005a11f0fb60027622e780c43efa6",
+    "--source",
+    "experiments/m193c-output-grid/real-precise-preregister.md",
+    "d8e9b7385f229ed8635ee86d50082f96ca837037fb3bb1a223074dd01f9a1a31",
+    "--source",
+    "experiments/m193c-output-grid/independent-real-precise-source-review.md",
+    "282a55f65a90bbb705505603e9e13975451adc545d4416ae0b5c8d36a97739ee",
+    "--source",
+    "experiments/m193c-output-grid/work/independent-real-precise-plan-preparation-read.md",
+    "c687cb04d60bc7065f1cecbaacd90fc1adacc44b60daa2091aa422c6367bc4bc",
+    "--source",
+    "experiments/m193c-output-grid/work/independent-precise-upscale-canonical-1-audit.py",
+    "52e52c011ff83c1c2f590cbd4da46b03b63619e22ac1d335a71a6b20c66fb09d"
+  ],
+  "exit_code": 0,
+  "elapsed_wall_seconds": 0.1141556,
+  "source_sha256": "68d62b53f623456f8abedae828c7b287aa53b302dc648da1687d700b71a2bcd6"
+}
