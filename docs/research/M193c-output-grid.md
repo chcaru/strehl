@@ -1056,6 +1056,53 @@ running the proposed4-by4 feature-selection arm; another seed trace could repeat
 the ambiguity already exposed by77 saved AREA8 replays. This is a bounded new
 hypothesis, not a claimed correction or a request to rerun the23-pair arm.
 
+## Saved local-image measurements: verification remains incomplete
+
+**VERIFIED operational record, 2026-09-08:** the fixed local-image subject
+retained its planned private and real records, then refused final runtime
+declaration. The original plan and refused parent/worker remain immutable.
+All866 subject artifacts are preserved at e2abc618, including the saved patches;
+no image extraction or subject run was repeated for the audit recovery.
+The11 private groups,128 real comparisons and32 disjoint-window groups remain
+producer-reported evidence until numerical verification completes. They are
+not yet accepted physical displacements or an independently verified result.
+
+The first saved-data audit refused before numerical checks on an undeclared
+_distutils_hack startup file. It also published stdout with a one-byte Windows
+newline difference. A separately reviewed checker-only supplement and raw-byte
+writer were frozen at79ba200dd08a5297abd138f4dbe5ad0f37e1b3fa.
+The metadata preparation passed all six controls and its actual publication
+bounds; release e2cbf1a9b7536a014247e042457debaf22e55cc3 authorized one
+saved-data audit. No original producer runtime binding was added.
+
+**MEASURED actual audit2:** the [exact command and outer result](../../experiments/m193c-output-grid/work/independent-local-image-probe-audit-2-outer.json)
+record exit1 after9.875 seconds. The [independent outcome read](../../experiments/m193c-output-grid/work/independent-local-image-probe-audit-2-outcome-read.md)
+verifies final/stdout byte identity at168790 bytes, SHA256
+9440c3cd8b25b0d7cba5c938c923e2daf6597eafeeaf4dd785ffb7da3723592f.
+The checker again stopped before private/real numerical checks, this time at
+undeclared win32/lib/pywin32_bootstrap.py. Its complete prior physical-inventory
+record agrees with audit1. Exact output equality fixes transport, not science.
+
+Actual audit2 evidence is committed at e849aa4d2c27978cc1a0c469068eb4134b5397cd.
+The9.78125CPU/9.828000000001339wall sample and declared publication tails fit
+the actual outer result. Both failed audits retain their full reservations.
+Final conservative carry is1588.443678CPU/1601.9278447999966wall seconds,
+4140565273 file bytes and149304339 metadata bytes. This is charged spending;
+historical complete-process CPU remains unavailable. Only11.556322CPU remains
+under the1600CPU ceiling, so another complete audit does not fit that grant.
+
+**ARGUED decision:** end one-file-per-failure supplementation. Prepare a
+separately reviewed isolated checker startup and one bounded, no-data numerical
+import census; freeze its actual complete module-file authority before another
+saved-array check. The original subject stays REFUSED, and all prior failures
+and costs carry forward. Source work alone does not release that new execution.
+No geometry, graph, crop, image-quality or SOTA admission follows.
+
+The [external-method consumer review](../../experiments/review-current-comparators/geometry-consumer-refresh.md)
+also preserves the same geometry prerequisite: current depth models can assume
+alignment and appearance-preserving warps can accept wrong physical sites.
+Neither supplies a shortcut around the existing missing placement evidence.
+
 ## Reproduction and preserved attempts
 
 Each release contains the complete actual argument array, input references and
@@ -1100,9 +1147,10 @@ Build 2 result SHA256:
 ## Next decisions
 
 The fixed23-pair LightGlue diagnostic and its independent saved-output audit
-are complete. Move to the bounded local-image displacement branch described
-above; retain every previous refusal and all costs. Further execution needs a
-fresh finite plan and independent review, not a rerun of completed controls.
-Native limits and physical-truth qualifications remain. The
+are complete. The local-image subject and two incomplete saved-data audits are
+now preserved. Next, commission the isolated checker environment and freeze its
+actual module-file authority before numerical verification of existing patches.
+Retain every refusal and all costs; do not replay completed subject controls or
+image extraction. Native limits and physical-truth qualifications remain. The
 [next-decision memo](../../experiments/m193c-output-grid/next-program-decision.md)
 keeps real cover-mode renders conditional on usable input geometry.
