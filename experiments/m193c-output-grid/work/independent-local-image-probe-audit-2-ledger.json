@@ -1,0 +1,61 @@
+{
+  "allowance": {
+    "cpu_seconds": 25,
+    "file_bytes": 3145728,
+    "metadata_bytes": 3145728,
+    "wall_seconds": 30
+  },
+  "audit_timing_tail": {
+    "cpu_seconds": 0.25,
+    "wall_seconds": 0.5
+  },
+  "component_caps": {
+    "final_json": 1048576,
+    "ledger": 4096,
+    "optional_final_note": 8192,
+    "outer": 16384,
+    "progress": 65536,
+    "protocol": 16384,
+    "resource_amendment_review": 8192,
+    "retained_stdout": 1048576,
+    "root_continuation_checkpoint": 16384,
+    "root_source_read": 8192,
+    "simultaneous_progress_stage": 65536,
+    "source": 131072,
+    "source_review": 8192,
+    "stderr": 16384
+  },
+  "first_failed_audit_retained": {
+    "cpu_seconds": 25,
+    "file_bytes": 3145728,
+    "measured_complete_process_cpu": false,
+    "metadata_bytes": 3145728,
+    "wall_seconds": 30
+  },
+  "metadata_preparation_family": {
+    "cpu_seconds": 5,
+    "file_bytes": 1048576,
+    "metadata_bytes": 1048576,
+    "scope": "Separate full nonrefundable preparation reserve; includes helper, recipe, review, grant, receipt, failure and external records.",
+    "wall_seconds": 10
+  },
+  "metadata_proxy": {
+    "final_cap_bytes": 1048576,
+    "progress_phase_cap": 8192,
+    "progress_total_cap": 65536,
+    "recovery_extension_allowance_bytes": 8192,
+    "scope": "Original972838-byte whole-shape metadata proxy plus8192-byte allowance for fixed recovery references/accounting; no numerical execution.",
+    "whole_final_bytes": 981030
+  },
+  "nonrefundable": true,
+  "recovery_scope": "Original subject/plan/source/runtime authority and first failed audit unchanged. Checker-only fixed supplementary runtime plus new source grant; no subject rerun or completion promotion.",
+  "required_metadata_sources": [
+    "prepare-local-image-audit-2.py",
+    "local-image-audit-2-preparation.md",
+    "independent-local-image-audit-2-preparation-review.md"
+  ],
+  "reused_already_charged": "All original plan source/runtime/evidence bindings; no copied native images, models or payloads.",
+  "schema": "m193c-local-image-independent-audit-ledger-v2",
+  "total_reserved_bytes": 2461696,
+  "unused_family_margin_bytes": 684032
+}
