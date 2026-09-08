@@ -1,0 +1,311 @@
+{
+  "assets": {
+    "checkpoint": {
+      "bytes": 47632573,
+      "path": "experiments/m193c-output-grid/lightglue-acquisition-1/sift-lightglue.pth",
+      "sha256": "5b52b8d9982d43532dc042606b346bb9594c9f5a4bd6f64362c63866287b4ac0"
+    },
+    "license": {
+      "bytes": 11340,
+      "path": "experiments/m193c-output-grid/lightglue-acquisition-1/license.txt",
+      "sha256": "0e6031ed3e62dc91dc8b1c8f240abd200b1083f60773362e64e339fe01d1bf18"
+    },
+    "matcher": {
+      "bytes": 26417,
+      "path": "experiments/m193c-output-grid/lightglue-acquisition-1/lightglue.py",
+      "sha256": "dcb75b9cad1985c5e7a537c512d4318d47fbcc99df75b39a513de60e027c039f"
+    },
+    "readme": {
+      "bytes": 10217,
+      "path": "experiments/m193c-output-grid/lightglue-acquisition-1/readme.md",
+      "sha256": "19dbb3380634bde27d76d6dc0dc6167432a3d2d43082a8653311cbfeee972d43"
+    },
+    "rootsift_reference": {
+      "bytes": 8194,
+      "path": "experiments/m193c-output-grid/lightglue-acquisition-1/sift.py",
+      "sha256": "9fa24851ff25b6f09cb06fa62aed1d07fa9cb6aa340c79d6467b3bdfdd4508cd"
+    }
+  },
+  "plan": {
+    "bytes": 44426,
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sift-lightglue-commission-plan-1.json",
+    "sha256": "897a2d435a4f77cc6044e912c40ce97c086e70b1c3e08c17550445b4410ab437"
+  },
+  "prior_work": {
+    "cpu_seconds": 680.734375,
+    "file_bytes": 4037605052,
+    "metadata_bytes": 46344118,
+    "wall_seconds": 908.857086
+  },
+  "private_ref": {
+    "bytes": 193077,
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\precise-upscale-canonical-1\\worker\\precise-true-features.json",
+    "sha256": "3ef07d3363cfa51341945de3eeedcec6938150387b545e98c40778aad1a75026"
+  },
+  "real_refs": [
+    {
+      "bytes": 67202,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\real-precise-1\\worker\\feature-0.json",
+      "sha256": "fc85c6704a21e6b4eda93570abce4c0983fe89b9a78bca95b030347a953c5912"
+    },
+    {
+      "bytes": 139432,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\real-precise-1\\worker\\feature-1.json",
+      "sha256": "b768d78feac1d56aac0b1f6fef3dbdb9d912e014a6c0abf0975a9c6a631b3d4d"
+    },
+    {
+      "bytes": 140345,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\real-precise-1\\worker\\feature-2.json",
+      "sha256": "41f3d9bedf7a2ba9d352788a3155e6cfe998fbe25cb5422a314328fb41bca13b"
+    },
+    {
+      "bytes": 141376,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\real-precise-1\\worker\\feature-3.json",
+      "sha256": "fa774b5152364b9f4674397bd05da986c3577eb8dd617c685048b3495853b720"
+    },
+    {
+      "bytes": 141660,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\real-precise-1\\worker\\feature-4.json",
+      "sha256": "37b0970d6f3155b3a495ab80c8f63c7864bdad1d0f688f0d88df2351bd79cbc8"
+    },
+    {
+      "bytes": 141824,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\real-precise-1\\worker\\feature-5.json",
+      "sha256": "c15d0554236eaac540f8cf43a1a32807af5897050d77c8dd0191f74689666910"
+    },
+    {
+      "bytes": 142187,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\real-precise-1\\worker\\feature-6.json",
+      "sha256": "52cc943eb6429b03b506a1e7293677b6185f6276f70f58b43db2e8ff12d6433e"
+    },
+    {
+      "bytes": 126254,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\real-precise-1\\worker\\feature-7.json",
+      "sha256": "7c06d4349b91fa1de8e6ed40bb51a0fb5a5352166c8a66cb38e45e21f203abe5"
+    },
+    {
+      "bytes": 102036,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\real-precise-1\\worker\\feature-8.json",
+      "sha256": "36f85aa89a1256468234b35b3f8c122c88bd48da53657c4cd0c77524909f6361"
+    }
+  ],
+  "rows": [
+    {
+      "active_sha256_u16_le": "e5b8c066623e6f64d4f945ae22dafb4ccb5238fd76fff36f39de8a16cd4739e1",
+      "independent_read": {
+        "bytes": 439403,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-artifact-derivative-1\\frame-00\\independent\\result.json",
+        "sha256": "c95e57b8acd7eaedc4ef881819b3d76044a86a9900ddebe5bea786f603e0ae07"
+      },
+      "name": "DSC00016.ARW",
+      "ordinal": 0,
+      "original_index": 0,
+      "primary_receipt": {
+        "bytes": 350873,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-derivative-1\\frame-00\\native\\result.json",
+        "sha256": "e02482a38f3f15a2cc89ee83a809fdbdc590568db8a439754e956f20f8251427"
+      },
+      "primary_reused": true,
+      "snapshot_retained_from_refused_run": true,
+      "tiff": {
+        "bytes": 197798267,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-derivative-1\\frame-00\\native\\DSC00016-registration.tiff",
+        "sha256": "97af13814d35ca2bf5320587268c722903ef5204ae3d9b379eef2bb384753d5f"
+      },
+      "tiff_pixel_sha256_u16_le": "3caece4a2dc67b37f2bc84c307fe735a7dcfadc3fc18681b1c8f29ee1c3db545"
+    },
+    {
+      "active_sha256_u16_le": "c0d67f4657c214f18d11d7e735b12366458ad94f6bdd84ae4871d297e373da93",
+      "independent_read": {
+        "bytes": 439467,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-artifact-derivative-1\\frame-01\\independent\\result.json",
+        "sha256": "24211f8aa98dfab61d58ae4a8b2308fc33bdccb768320b57f0015a7bbd8e39df"
+      },
+      "name": "DSC00029.ARW",
+      "ordinal": 1,
+      "original_index": 13,
+      "primary_receipt": {
+        "bytes": 351008,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-artifact-derivative-1\\frame-01\\native\\result.json",
+        "sha256": "34203668550e8b6622785517e3b31e6cd344aa84884e3403325ab134c3da0df5"
+      },
+      "primary_reused": false,
+      "snapshot_retained_from_refused_run": false,
+      "tiff": {
+        "bytes": 197798267,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-artifact-derivative-1\\frame-01\\native\\DSC00029-registration.tiff",
+        "sha256": "68082002b84288bf4db8e0f925a4b82ccdbd61c3f8388b5edcb0d2828bbf0e04"
+      },
+      "tiff_pixel_sha256_u16_le": "95b4b4c6bcfdba3eaa5d3ecbaa6a5c91a359dcafe56a15aa0b4e40e41c94d313"
+    },
+    {
+      "active_sha256_u16_le": "271926c7b4a4dc7af7e38c9650806b7650439eb76a8cb4521a21aa42dc87604e",
+      "independent_read": {
+        "bytes": 439473,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-artifact-derivative-1\\frame-02\\independent\\result.json",
+        "sha256": "3e0f05796cf56a5b72ea87448f7d2cb8929ea893609b83510e60a7769541412b"
+      },
+      "name": "DSC00042.ARW",
+      "ordinal": 2,
+      "original_index": 26,
+      "primary_receipt": {
+        "bytes": 351008,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-artifact-derivative-1\\frame-02\\native\\result.json",
+        "sha256": "16714d43204af0a20eb265d7cdeada1333729f9b3d136fe1712f58dad147841a"
+      },
+      "primary_reused": false,
+      "snapshot_retained_from_refused_run": false,
+      "tiff": {
+        "bytes": 197798267,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-artifact-derivative-1\\frame-02\\native\\DSC00042-registration.tiff",
+        "sha256": "f58c3b75bae43325d039bf952c8a7495d5344a000f20d950bd171d49e016ccdd"
+      },
+      "tiff_pixel_sha256_u16_le": "9ac0eb14dd2ffcad482b6aebec9d75e9bb0c43306012c74aa675431984ee8969"
+    },
+    {
+      "active_sha256_u16_le": "df66a44ba142914959baaa8e86553590b3a74ece5e7546c58f97ee33cdc13c89",
+      "independent_read": {
+        "bytes": 439474,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-artifact-derivative-1\\frame-03\\independent\\result.json",
+        "sha256": "f877c99df9a5cb56244df1c0deac6562f94b164f94e6f1822861e1ce0040e759"
+      },
+      "name": "DSC00055.ARW",
+      "ordinal": 3,
+      "original_index": 39,
+      "primary_receipt": {
+        "bytes": 351008,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-artifact-derivative-1\\frame-03\\native\\result.json",
+        "sha256": "07cd2270feee49b486f26eba57d3b4078c3bf9316292e5ed2711a04d34271f92"
+      },
+      "primary_reused": false,
+      "snapshot_retained_from_refused_run": false,
+      "tiff": {
+        "bytes": 197798267,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-artifact-derivative-1\\frame-03\\native\\DSC00055-registration.tiff",
+        "sha256": "cd390f1866aaa74b1589426b74761626ca1ca2b845e4c9bfd9b078f5e673f2d3"
+      },
+      "tiff_pixel_sha256_u16_le": "ff79345a364a242c133b7df63c4ec09220fb30e7a4dadfdd33ce62e33803b844"
+    },
+    {
+      "active_sha256_u16_le": "ec9a539a9002a0ed82f23a0e8f34013df956e8e9e87c7fdc045d7ba1b4fc306f",
+      "independent_read": {
+        "bytes": 439472,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-artifact-derivative-1\\frame-04\\independent\\result.json",
+        "sha256": "6956fee90aafab901eea0cd31212a1419a4b80e32e8224651f4cdf729ac7460f"
+      },
+      "name": "DSC00068.ARW",
+      "ordinal": 4,
+      "original_index": 52,
+      "primary_receipt": {
+        "bytes": 351008,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-artifact-derivative-1\\frame-04\\native\\result.json",
+        "sha256": "06713431dc4eb743d739a904cd8ccc40b32292329ac3d44bab58aeea8934615c"
+      },
+      "primary_reused": false,
+      "snapshot_retained_from_refused_run": false,
+      "tiff": {
+        "bytes": 197798267,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-artifact-derivative-1\\frame-04\\native\\DSC00068-registration.tiff",
+        "sha256": "88ddd13d5e216345b75fea78163ee017396113a82c6a65dfc3532d0928a75d88"
+      },
+      "tiff_pixel_sha256_u16_le": "b550719a28306561b034dee9f112366e10146d8d2fb75024f98d7362a2c1bdc5"
+    },
+    {
+      "active_sha256_u16_le": "dd76eb91e5e111680fbda14bd415c02e8fa7872491603f697ff54a02c63dac00",
+      "independent_read": {
+        "bytes": 439473,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-artifact-derivative-1\\frame-05\\independent\\result.json",
+        "sha256": "4728894c0d37af57801b538c8af3496bca34fe468c5885c577f1515b5fb3a9e3"
+      },
+      "name": "DSC00081.ARW",
+      "ordinal": 5,
+      "original_index": 65,
+      "primary_receipt": {
+        "bytes": 351008,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-artifact-derivative-1\\frame-05\\native\\result.json",
+        "sha256": "ec26fccf26c9155a9e9015d9fcae5fe80ead1ff94c1e590676add66880aae314"
+      },
+      "primary_reused": false,
+      "snapshot_retained_from_refused_run": false,
+      "tiff": {
+        "bytes": 197798267,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-artifact-derivative-1\\frame-05\\native\\DSC00081-registration.tiff",
+        "sha256": "458b8a2180ea4ee135364db2b79f850a01d3cf7dca2df9f3e6f6baa8a86159da"
+      },
+      "tiff_pixel_sha256_u16_le": "5b6f472d4026823d6f4d88c96d21cdbcfb2326f951aa502426123f94daa3f70e"
+    },
+    {
+      "active_sha256_u16_le": "4f9eb206a37d81234165a91e70f13dd10c32ea376edaa7c3aea0de03503fd065",
+      "independent_read": {
+        "bytes": 439473,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-artifact-derivative-1\\frame-06\\independent\\result.json",
+        "sha256": "27af0408f5ac843900b5f38710991f9023b33bc07e4d44f960492d9a425a1aa5"
+      },
+      "name": "DSC00094.ARW",
+      "ordinal": 6,
+      "original_index": 78,
+      "primary_receipt": {
+        "bytes": 351008,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-artifact-derivative-1\\frame-06\\native\\result.json",
+        "sha256": "5cb908187690ffb9fb3c319c4e098249aec71aac310097c795d0a46cefd4e6b5"
+      },
+      "primary_reused": false,
+      "snapshot_retained_from_refused_run": false,
+      "tiff": {
+        "bytes": 197798267,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-artifact-derivative-1\\frame-06\\native\\DSC00094-registration.tiff",
+        "sha256": "6ef640cb6551f96ba6fefaa5520ddfcec463cc698f2d4c8c204633a7ee4530c3"
+      },
+      "tiff_pixel_sha256_u16_le": "24c9581dfe5fdb87899c7b4058cf960edfe786d5f2715d191f94f871165ff74e"
+    },
+    {
+      "active_sha256_u16_le": "e05f3bf89aa841c0948e4b5ef74ae7c47573cc5f17593a6531e542e64c5c7621",
+      "independent_read": {
+        "bytes": 439471,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-artifact-derivative-1\\frame-07\\independent\\result.json",
+        "sha256": "680d231e85fde01b3f5673ecca2302f855c6b83e0bffa81f81f6e35cf5768782"
+      },
+      "name": "DSC00107.ARW",
+      "ordinal": 7,
+      "original_index": 91,
+      "primary_receipt": {
+        "bytes": 351008,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-artifact-derivative-1\\frame-07\\native\\result.json",
+        "sha256": "b26d3fcd0e4439be1333301d990b15e36247af1bdfb0ae6dcdd4f61d4245a7f0"
+      },
+      "primary_reused": false,
+      "snapshot_retained_from_refused_run": false,
+      "tiff": {
+        "bytes": 197798267,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-artifact-derivative-1\\frame-07\\native\\DSC00107-registration.tiff",
+        "sha256": "9726b4287c20506f7082c35877cf317dfbef37644e136d9ee9ab4f9a1b29a347"
+      },
+      "tiff_pixel_sha256_u16_le": "73d8108d18a420cd90440438e36e280305a3571bdcd513296a0f9156d8d5c341"
+    },
+    {
+      "active_sha256_u16_le": "b69f728d28a0e957ff56c304d0ed0fffb7b7aaa2cb31934b2839d3840b1e91f3",
+      "independent_read": {
+        "bytes": 439461,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-artifact-derivative-1\\frame-08\\independent\\result.json",
+        "sha256": "fa5f656ae6d72b20b5be34e329fd13b4b5872b8471c13e229d6b9cc5524c39a3"
+      },
+      "name": "DSC00120.ARW",
+      "ordinal": 8,
+      "original_index": 104,
+      "primary_receipt": {
+        "bytes": 351009,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-artifact-derivative-1\\frame-08\\native\\result.json",
+        "sha256": "9ff2f748015b7dd8fa78cad468974e167913dd3b028f4e267fa4e93e6454be11"
+      },
+      "primary_reused": false,
+      "snapshot_retained_from_refused_run": false,
+      "tiff": {
+        "bytes": 197798267,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-artifact-derivative-1\\frame-08\\native\\DSC00120-registration.tiff",
+        "sha256": "669de9f7ac88f6a373e32b36044474fc6d80a84b4ea4ca19b0870f37e161fe33"
+      },
+      "tiff_pixel_sha256_u16_le": "6a7c1e710754a2de836fb6eac144c6590cdba710a125d0f69198fc4ea4dbbf95"
+    }
+  ],
+  "schema": "m193c-sift-lightglue-commission-request-v1"
+}

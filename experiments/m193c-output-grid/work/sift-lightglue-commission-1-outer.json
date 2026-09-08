@@ -1,0 +1,22 @@
+{
+  "scope": "Actual eleven cached feature exports and one private CPU LightGlue forward; zero real model pairs",
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-B",
+    "-X",
+    "faulthandler",
+    "-X",
+    "pycache_prefix=C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sift-lightglue-commission-1\\parent-cache",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sift-lightglue-commission-run.py",
+    "--plan",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sift-lightglue-commission-plan-1.json",
+    "--sha256",
+    "897a2d435a4f77cc6044e912c40ce97c086e70b1c3e08c17550445b4410ab437",
+    "--output",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sift-lightglue-commission-1"
+  ],
+  "plan_sha256": "897a2d435a4f77cc6044e912c40ce97c086e70b1c3e08c17550445b4410ab437",
+  "exit_code": 1,
+  "elapsed_wall_seconds": 44.584677899998496,
+  "admissible_parent_exit": true
+}

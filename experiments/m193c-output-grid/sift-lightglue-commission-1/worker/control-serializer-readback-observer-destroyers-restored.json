@@ -1,0 +1,177 @@
+{
+  "evidence": {
+    "actual_fault_prefixes": [
+      {
+        "bytes": 1061,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sift-lightglue-commission-1\\worker\\export-fault-prefix-1.json",
+        "sha256": "9a37b03352aabf7ce2afdcadd74d882a274a70f1c60b7d84e6919ae599b0d9ba"
+      },
+      {
+        "bytes": 2133,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sift-lightglue-commission-1\\worker\\export-fault-prefix-2.json",
+        "sha256": "9d704265d3deaba64ff785a56187909365daea5df94fe55c2216ca6e10f07a12"
+      },
+      {
+        "bytes": 3206,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sift-lightglue-commission-1\\worker\\export-fault-prefix-3.json",
+        "sha256": "da8b0f3e3a385cd0f6073ac2acf34f748d7a9f43676a09e2b5309cce34bf3298"
+      }
+    ],
+    "mutants": [
+      {
+        "attributes": {
+          "image_size": {
+            "dtype": "<f4",
+            "sha256": "38c6500496e77dd4ccf7ffbf904a6869502551c8ab278f5651e6512ee82a1b8a",
+            "shape": [
+              2
+            ]
+          },
+          "keypoints": {
+            "dtype": "<f4",
+            "sha256": "4cfd7e6a2355ec613361430137b5640a71b961f268056545fe054c7cb99570c0",
+            "shape": [
+              1024,
+              2
+            ]
+          },
+          "oris": {
+            "dtype": "<f4",
+            "sha256": "d423536437a40b7e463fae96c3847c9359dcfab2320ea8890398aed69938e213",
+            "shape": [
+              1024
+            ]
+          },
+          "scales": {
+            "dtype": "<f4",
+            "sha256": "36f0061af47d1897871425842dc133c7f1d66cbc6f582ed9c6f44ab7ab6299d3",
+            "shape": [
+              1024
+            ]
+          }
+        },
+        "descriptor_sha256": "fea93aa796305fafc61895099174bb003a9c9cd90ebe49d9c35350790d92080d",
+        "error": "entire reconstructed feature core",
+        "id": "one-descriptor-byte",
+        "keys_sha256": "3626627d808f87b2a965a2af6975572ef96b9b3f730e767a900b1f7f375ae1bd",
+        "rejected": true
+      },
+      {
+        "attributes": {
+          "image_size": {
+            "dtype": "<f4",
+            "sha256": "38c6500496e77dd4ccf7ffbf904a6869502551c8ab278f5651e6512ee82a1b8a",
+            "shape": [
+              2
+            ]
+          },
+          "keypoints": {
+            "dtype": "<f4",
+            "sha256": "4cfd7e6a2355ec613361430137b5640a71b961f268056545fe054c7cb99570c0",
+            "shape": [
+              1024,
+              2
+            ]
+          },
+          "oris": {
+            "dtype": "<f4",
+            "sha256": "d423536437a40b7e463fae96c3847c9359dcfab2320ea8890398aed69938e213",
+            "shape": [
+              1024
+            ]
+          },
+          "scales": {
+            "dtype": "<f4",
+            "sha256": "36f0061af47d1897871425842dc133c7f1d66cbc6f582ed9c6f44ab7ab6299d3",
+            "shape": [
+              1024
+            ]
+          }
+        },
+        "descriptor_sha256": "718ab015742ef6b13a4d9268d9ca807628da6fce23ccff3b41c6c5805f11fa7c",
+        "error": "original lexicographic order; no repair/re-sort",
+        "id": "key-row-association",
+        "keys_sha256": "7f0cca0763b40cd96b81d959b47c8f15b50302f5484f7595b18ff0c973e25d61",
+        "rejected": true
+      },
+      {
+        "attributes": {
+          "image_size": {
+            "dtype": "<f4",
+            "sha256": "38c6500496e77dd4ccf7ffbf904a6869502551c8ab278f5651e6512ee82a1b8a",
+            "shape": [
+              2
+            ]
+          },
+          "keypoints": {
+            "dtype": "<f4",
+            "sha256": "4cfd7e6a2355ec613361430137b5640a71b961f268056545fe054c7cb99570c0",
+            "shape": [
+              1024,
+              2
+            ]
+          },
+          "oris": {
+            "dtype": "<f4",
+            "sha256": "d423536437a40b7e463fae96c3847c9359dcfab2320ea8890398aed69938e213",
+            "shape": [
+              1024
+            ]
+          },
+          "scales": {
+            "dtype": "<f4",
+            "sha256": "ff18bb689fc15454492bb59705504484e70401ce422dc3808573d7318cda5da6",
+            "shape": [
+              1024
+            ]
+          }
+        },
+        "descriptor_sha256": "718ab015742ef6b13a4d9268d9ca807628da6fce23ccff3b41c6c5805f11fa7c",
+        "error": "exact declared attribute units/recipe",
+        "id": "native-instead-of-coarse-scale",
+        "keys_sha256": "3626627d808f87b2a965a2af6975572ef96b9b3f730e767a900b1f7f375ae1bd",
+        "rejected": true
+      }
+    ],
+    "observer_feature_sha256": {
+      "off": "9a0c0e1948900e1b4205c43d3fd09be28368fdc5cc699713e9fe4694fa922091",
+      "on": "9a0c0e1948900e1b4205c43d3fd09be28368fdc5cc699713e9fe4694fa922091",
+      "placebo": "9a0c0e1948900e1b4205c43d3fd09be28368fdc5cc699713e9fe4694fa922091"
+    },
+    "restored_attributes": {
+      "image_size": {
+        "dtype": "<f4",
+        "sha256": "38c6500496e77dd4ccf7ffbf904a6869502551c8ab278f5651e6512ee82a1b8a",
+        "shape": [
+          2
+        ]
+      },
+      "keypoints": {
+        "dtype": "<f4",
+        "sha256": "4cfd7e6a2355ec613361430137b5640a71b961f268056545fe054c7cb99570c0",
+        "shape": [
+          1024,
+          2
+        ]
+      },
+      "oris": {
+        "dtype": "<f4",
+        "sha256": "d423536437a40b7e463fae96c3847c9359dcfab2320ea8890398aed69938e213",
+        "shape": [
+          1024
+        ]
+      },
+      "scales": {
+        "dtype": "<f4",
+        "sha256": "36f0061af47d1897871425842dc133c7f1d66cbc6f582ed9c6f44ab7ab6299d3",
+        "shape": [
+          1024
+        ]
+      }
+    },
+    "restored_core_sha256": "9a0c0e1948900e1b4205c43d3fd09be28368fdc5cc699713e9fe4694fa922091",
+    "scope": "post-extraction serialization/readback only; no detector or inference observer"
+  },
+  "id": "serializer-readback-observer-destroyers-restored",
+  "passed": true
+}

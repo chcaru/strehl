@@ -1,0 +1,40 @@
+[
+  {
+    "attributes": {
+      "image_size": {
+        "dtype": "<f4",
+        "sha256": "38c6500496e77dd4ccf7ffbf904a6869502551c8ab278f5651e6512ee82a1b8a",
+        "shape": [
+          2
+        ]
+      },
+      "keypoints": {
+        "dtype": "<f4",
+        "sha256": "4cfd7e6a2355ec613361430137b5640a71b961f268056545fe054c7cb99570c0",
+        "shape": [
+          1024,
+          2
+        ]
+      },
+      "oris": {
+        "dtype": "<f4",
+        "sha256": "d423536437a40b7e463fae96c3847c9359dcfab2320ea8890398aed69938e213",
+        "shape": [
+          1024
+        ]
+      },
+      "scales": {
+        "dtype": "<f4",
+        "sha256": "36f0061af47d1897871425842dc133c7f1d66cbc6f582ed9c6f44ab7ab6299d3",
+        "shape": [
+          1024
+        ]
+      }
+    },
+    "descriptor_sha256": "fea93aa796305fafc61895099174bb003a9c9cd90ebe49d9c35350790d92080d",
+    "error": "entire reconstructed feature core",
+    "id": "one-descriptor-byte",
+    "keys_sha256": "3626627d808f87b2a965a2af6975572ef96b9b3f730e767a900b1f7f375ae1bd",
+    "rejected": true
+  }
+]

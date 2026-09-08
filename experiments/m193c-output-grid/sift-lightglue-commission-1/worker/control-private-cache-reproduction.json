@@ -1,0 +1,26 @@
+{
+  "evidence": {
+    "actual": {
+      "bytes": 193077,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sift-lightglue-commission-1\\worker\\private-reproduced-features.json",
+      "sha256": "3ef07d3363cfa51341945de3eeedcec6938150387b545e98c40778aad1a75026"
+    },
+    "canonical_comparisons": [
+      {
+        "equal": true,
+        "label": "entire-private-AREA8-precise-features",
+        "left": {
+          "bytes": 193077,
+          "sha256": "3ef07d3363cfa51341945de3eeedcec6938150387b545e98c40778aad1a75026"
+        },
+        "method": "entire registrar return/refusal or trace; exact canonical bytes",
+        "right": {
+          "bytes": 193077,
+          "sha256": "3ef07d3363cfa51341945de3eeedcec6938150387b545e98c40778aad1a75026"
+        }
+      }
+    ]
+  },
+  "id": "private-cache-reproduction",
+  "passed": true
+}

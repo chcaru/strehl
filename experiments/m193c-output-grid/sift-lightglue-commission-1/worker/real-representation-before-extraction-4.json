@@ -1,0 +1,33 @@
+{
+  "representation": {
+    "centre_q8": 896,
+    "coarse_rgb_sha256_u16_le": "f61687bd11639cf6e9df20fb1e4706cafa00da6f1d4c42ed87b2773f6d7f8207",
+    "coarse_shape": [
+      586,
+      879,
+      3
+    ],
+    "factor": 8,
+    "key_coordinate_gauge": "coarse Q8; unchanged detector keys",
+    "method": "m193c-area8-native-centres-v1",
+    "native_shape": [
+      4688,
+      7032,
+      3
+    ],
+    "precise_factory": {
+      "calls": [],
+      "error": null,
+      "ordinal": 4,
+      "original_index": 52,
+      "requested_true": true,
+      "restored": false,
+      "scope": "real"
+    }
+  },
+  "tiff": {
+    "bytes": 197798267,
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-white-artifact-derivative-1\\frame-04\\native\\DSC00068-registration.tiff",
+    "sha256": "88ddd13d5e216345b75fea78163ee017396113a82c6a65dfc3532d0928a75d88"
+  }
+}

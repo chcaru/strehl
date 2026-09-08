@@ -1,0 +1,31 @@
+{
+  "evidence": {
+    "actual": {
+      "bytes": 140345,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sift-lightglue-commission-1\\worker\\real-reproduced-2.json",
+      "sha256": "41f3d9bedf7a2ba9d352788a3155e6cfe998fbe25cb5422a314328fb41bca13b"
+    },
+    "cache": {
+      "bytes": 140345,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\real-precise-1\\worker\\feature-2.json",
+      "sha256": "41f3d9bedf7a2ba9d352788a3155e6cfe998fbe25cb5422a314328fb41bca13b"
+    },
+    "canonical_comparisons": [
+      {
+        "equal": true,
+        "label": "entire-real-AREA8-precise-feature-2",
+        "left": {
+          "bytes": 140345,
+          "sha256": "41f3d9bedf7a2ba9d352788a3155e6cfe998fbe25cb5422a314328fb41bca13b"
+        },
+        "method": "entire registrar return/refusal or trace; exact canonical bytes",
+        "right": {
+          "bytes": 140345,
+          "sha256": "41f3d9bedf7a2ba9d352788a3155e6cfe998fbe25cb5422a314328fb41bca13b"
+        }
+      }
+    ]
+  },
+  "id": "real-cache-reproduction-2",
+  "passed": true
+}

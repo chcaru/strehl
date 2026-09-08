@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "C:\dev\blog\death-of-software\projects\strehl\experiments\m193c-output-grid\work\independent-sift-lightglue-commission-prefix-audit.py", line 119, in <module>
+    if __name__=='__main__':main()
+                            ^^^^^^
+  File "C:\dev\blog\death-of-software\projects\strehl\experiments\m193c-output-grid\work\independent-sift-lightglue-commission-prefix-audit.py", line 68, in main
+    need(h.path(worker['request'])==OUT/'request.json' and set(request)==set('schema plan rows private_ref real_refs assets prior_work'.split()) and request['schema']=='m193c-sift-lightglue-commission-request-v1' and h.same(request['plan'],external['plan']) and request['rows']==base['rows'] and request['real_refs']==base['real_refs'] and h.same(request['private_ref'],base['private_ref']) and request['assets']==base['assets'],'same actual request and private2/real9/assets')
+  File "C:\dev\blog\death-of-software\projects\strehl\experiments\m193c-output-grid\work\independent-sift-lightglue-commission-audit.py", line 51, in need
+    if not ok:raise ValueError(message)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: same actual request and private2/real9/assets

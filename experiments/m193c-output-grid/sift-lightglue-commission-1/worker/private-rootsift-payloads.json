@@ -1,0 +1,47 @@
+{
+  "schema": "m193c-private-rootsift-payloads-v1",
+  "sides": [
+    {
+      "dtype": "<f4",
+      "file": {
+        "bytes": 524288,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sift-lightglue-commission-1\\worker\\image0-rootsift.f32",
+        "sha256": "80825121b714a4450184052a49eb0e3a971ca917d0cfafff4ea1440f2b98d6f8"
+      },
+      "scope": "actual copied RootSIFT input values before single forward",
+      "shape": [
+        1,
+        1024,
+        128
+      ],
+      "side": "image0",
+      "source_export": {
+        "bytes": 98861,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sift-lightglue-commission-1\\worker\\private-reference.json",
+        "sha256": "7071a0bfce174dee96d05d52429f5338201846da0369eb0e5e93d2c688cef48a"
+      },
+      "tensor_sha256": "80825121b714a4450184052a49eb0e3a971ca917d0cfafff4ea1440f2b98d6f8"
+    },
+    {
+      "dtype": "<f4",
+      "file": {
+        "bytes": 524288,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sift-lightglue-commission-1\\worker\\image1-rootsift.f32",
+        "sha256": "abab55185498dc5b892b50a0c5887d03809c4f29043707611a91e7c4b65f1367"
+      },
+      "scope": "actual copied RootSIFT input values before single forward",
+      "shape": [
+        1,
+        1024,
+        128
+      ],
+      "side": "image1",
+      "source_export": {
+        "bytes": 98822,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\sift-lightglue-commission-1\\worker\\private-source.json",
+        "sha256": "f5c0b288c49ae8d1755231a80da9e4ee9cf95ecb14b0d1a37ea6e4b824adceee"
+      },
+      "tensor_sha256": "abab55185498dc5b892b50a0c5887d03809c4f29043707611a91e7c4b65f1367"
+    }
+  ]
+}
