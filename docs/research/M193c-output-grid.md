@@ -878,6 +878,48 @@ The combined private prerequisite is eligible. The real model arm still needs
 its own reviewed controller, observer checks and complete23-pair outcome.
 
 
+## First real LightGlue attempt: resource refusal
+
+**MEASURED operational outcome; saved-prefix audit pending:** the reviewed
+controller from `f01eb85c5a28af047904c1341c3032dc4d8c3d3d` ran once under
+release `6e0c0b0d79b4365e2c457f34696ca9b20d71caa1`. Its
+[actual outer receipt](../../experiments/m193c-output-grid/work/sift-lightglue-real-1-outer.json)
+records parent exit1 after96.127084700 seconds. The
+[console](../../experiments/m193c-output-grid/work/sift-lightglue-real-1-console.txt)
+records a local-cap failure during terminal replacement. The canonical parent
+and worker slots both retain INITIAL_INCOMPLETE refusals. No terminal Job
+observation, scientific counters, runtime snapshot or real-pair observation
+survived. This is not23 scientific registration refusals and cannot reject the
+learned matching arm.
+
+Hidden-inclusive enumeration finds63 files and750,878 physical bytes. Retained
+records include the seven linked publisher groups, ten codec groups and the
+model-loading witness; independent validation of this prefix remains pending.
+The source places model-loading immediately before runtime acquisition, which
+precedes input normalization and inference. The saved artifacts do not identify
+the exact first exception or provide a measured phase profile. Both CPU
+completeness flags remain false. The entire attempt is archived at
+`2aee31d2ca991d3783bcceaf506abc991581e450`.
+
+**SOURCE-READ independently:** each runtime-hash callback repeats the family
+totals calculation for all nine families, and eagerly computes a fallback path
+classification even when an override exists. This is redundant work, but its
+contribution to the observed refusal is unmeasured. A separate terminal defect
+can hide the cause: the parent adds terminal child CPU before saving the Job
+receipt, so an aggregate limit failure can block that save and later detailed
+refusal publication. A bounded callback comparison and an explicit combined
+parent/child overrun control are the next operational checks.
+
+The prospective general auditor from `62dc2a1cef725776e96dd0cf1fe104dc04626e74`
+remains unchanged and **unexecuted**. Source applicability review found that it
+requires a parent request reference absent from the emergency default, although
+the worker and actual request file retain their association. It also incorrectly
+expects an old runner-added loader field in the new loader-return witness.
+A separate narrow prefix audit must preserve those differences, not rewrite
+the failed subject into a completed one. The previously admitted private
+geometry result remains valid; all real geometry and consumer admission remain
+unmeasured.
+
 ## Reproduction and preserved attempts
 
 Each release contains the complete actual argument array, input references and
@@ -918,9 +960,11 @@ Build 2 result SHA256:
 
 ## Next decisions
 
-Complete the bounded saved-value SIFT-input LightGlue private checks, then
-conditionally test the fixed23 real pairs. Both completed fixed
-representations retain zero real fits. Preserve all23 pairs, native limits and
+The saved-value private prerequisite is independently admitted. Audit the
+retained first real-attempt prefix, then commission the narrow operational
+repair before releasing another fixed23-pair experiment. Preserve the consumed
+budget and give any further experiment an explicit reviewed resource envelope.
+Both completed fixed representations retain zero real fits. Preserve all23 pairs, native limits and
 physical-truth controls; no learned confidence or registrar split can substitute
 for independent placement and consumer qualification.
 The [next-decision memo](../../experiments/m193c-output-grid/next-program-decision.md)
