@@ -1,0 +1,438 @@
+{
+  "schema": "m193c-sensor-release-preparation-v1",
+  "metadata_files": [
+    {
+      "path": "experiments/m193c-output-grid/native-sensor-derivative-run.py",
+      "sha256": "10ec80290bc7bb5c2e7fc140cb831d539e517844281b40b372055b409113a1ed",
+      "bytes": 53533
+    },
+    {
+      "path": "experiments/m193c-output-grid/independent-sensor-derivative-read.py",
+      "sha256": "eeed1ea3c45927f81e34d99ca31dc57715f898b718dfef26dcf0ea2cddf3fbe7",
+      "bytes": 68424
+    },
+    {
+      "path": "experiments/m193c-output-grid/sensor-domain-reader-preregister.md",
+      "sha256": "7450a8e2ecef2b5c3c883e63fd2f636dc84c5bc6ac07df80fc1277bf5bdf7125",
+      "bytes": 15934
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/prepare-native-sensor-release-1.py",
+      "sha256": "cc97dd882823c998479d78a8aab09089c05829b97450d96f1ed685044587f8c4",
+      "bytes": 18692
+    },
+    {
+      "path": "experiments/m193c-output-grid/independent-sensor-domain-source-review.md",
+      "sha256": "78cfa72f8f2a1c92ca669c8749d65f8efcc6134d6112160ddaca72a16b158cde",
+      "bytes": 10530
+    },
+    {
+      "path": "experiments/m193c-output-grid/independent-sensor-native-parent-source-review.md",
+      "sha256": "a96ce096b025440cea440946881bf6566cc6e18a82062a4ab1865c49d9259b1b",
+      "bytes": 5300
+    },
+    {
+      "path": "experiments/m193c-output-grid/independent-native-sensor-preparation-source-review.md",
+      "sha256": "948d15b81600dce06e482572b4eb77ef2e4723b863afcf28ccdd1cebaf98d04c",
+      "bytes": 3437
+    },
+    {
+      "path": "experiments/m193c-output-grid/independent-active-domain-probe-1-read.md",
+      "sha256": "16d3b83d8ec718c42f5a3594cf6e260f4d94f3bd71d18033aeb9506d76536e90",
+      "bytes": 10015
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/independent-active-domain-probe-1-audit.py",
+      "sha256": "880f9cb397d7bebda70663276bb09b4b7fb79e522b6fdbcfbe358dbe137b22d9",
+      "bytes": 9572
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/active-domain-probe-1-console.txt",
+      "sha256": "e529731c77e828af28b004b365c0e147fbc0f665e2f981b8da8c10526a79d6a2",
+      "bytes": 390
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/active-domain-probe-1-outer.json",
+      "sha256": "97358d1936cf9229990c8ae4788f7b24a9ab6e398afd4150d8c01288cfc503bd",
+      "bytes": 944
+    },
+    {
+      "path": "experiments/m193c-output-grid/work/active-domain-probe-1-exit.txt",
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+      "bytes": 3
+    }
+  ],
+  "observed_metadata_bytes": 196774,
+  "reserved_bytes": 1048576,
+  "release_upper_bytes": 131072,
+  "carry_before_reserve": {
+    "cpu_seconds": 37.71875,
+    "wall_seconds": 32.1440803,
+    "file_bytes": 239908463,
+    "metadata_bytes": 3079412
+  },
+  "new_children": [
+    {
+      "ordinal": 0,
+      "original_index": 0,
+      "role": "new-independent-reader",
+      "command": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-B",
+        "-X",
+        "faulthandler",
+        "-X",
+        "pycache_prefix=C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-derivative-1\\frame-00\\reader-cache",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\independent-sensor-derivative-read.py",
+        "--request",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-derivative-1\\frame-00\\read-request.json",
+        "--request-sha256",
+        "ACTUAL_FRAME_REQUEST_SHA256",
+        "--output",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-derivative-1\\frame-00\\independent"
+      ]
+    },
+    {
+      "ordinal": 1,
+      "original_index": 13,
+      "role": "new-primary",
+      "command": [
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\bridge-build-3\\output-grid-tests.exe",
+        "--exact",
+        "merge_cmd::production_truth::m193c_registration_derivative::m193c_derivative_native",
+        "--ignored",
+        "--test-threads=1",
+        "--nocapture"
+      ]
+    },
+    {
+      "ordinal": 1,
+      "original_index": 13,
+      "role": "new-independent-reader",
+      "command": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-B",
+        "-X",
+        "faulthandler",
+        "-X",
+        "pycache_prefix=C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-derivative-1\\frame-01\\reader-cache",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\independent-sensor-derivative-read.py",
+        "--request",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-derivative-1\\frame-01\\read-request.json",
+        "--request-sha256",
+        "ACTUAL_FRAME_REQUEST_SHA256",
+        "--output",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-derivative-1\\frame-01\\independent"
+      ]
+    },
+    {
+      "ordinal": 2,
+      "original_index": 26,
+      "role": "new-primary",
+      "command": [
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\bridge-build-3\\output-grid-tests.exe",
+        "--exact",
+        "merge_cmd::production_truth::m193c_registration_derivative::m193c_derivative_native",
+        "--ignored",
+        "--test-threads=1",
+        "--nocapture"
+      ]
+    },
+    {
+      "ordinal": 2,
+      "original_index": 26,
+      "role": "new-independent-reader",
+      "command": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-B",
+        "-X",
+        "faulthandler",
+        "-X",
+        "pycache_prefix=C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-derivative-1\\frame-02\\reader-cache",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\independent-sensor-derivative-read.py",
+        "--request",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-derivative-1\\frame-02\\read-request.json",
+        "--request-sha256",
+        "ACTUAL_FRAME_REQUEST_SHA256",
+        "--output",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-derivative-1\\frame-02\\independent"
+      ]
+    },
+    {
+      "ordinal": 3,
+      "original_index": 39,
+      "role": "new-primary",
+      "command": [
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\bridge-build-3\\output-grid-tests.exe",
+        "--exact",
+        "merge_cmd::production_truth::m193c_registration_derivative::m193c_derivative_native",
+        "--ignored",
+        "--test-threads=1",
+        "--nocapture"
+      ]
+    },
+    {
+      "ordinal": 3,
+      "original_index": 39,
+      "role": "new-independent-reader",
+      "command": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-B",
+        "-X",
+        "faulthandler",
+        "-X",
+        "pycache_prefix=C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-derivative-1\\frame-03\\reader-cache",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\independent-sensor-derivative-read.py",
+        "--request",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-derivative-1\\frame-03\\read-request.json",
+        "--request-sha256",
+        "ACTUAL_FRAME_REQUEST_SHA256",
+        "--output",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-derivative-1\\frame-03\\independent"
+      ]
+    },
+    {
+      "ordinal": 4,
+      "original_index": 52,
+      "role": "new-primary",
+      "command": [
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\bridge-build-3\\output-grid-tests.exe",
+        "--exact",
+        "merge_cmd::production_truth::m193c_registration_derivative::m193c_derivative_native",
+        "--ignored",
+        "--test-threads=1",
+        "--nocapture"
+      ]
+    },
+    {
+      "ordinal": 4,
+      "original_index": 52,
+      "role": "new-independent-reader",
+      "command": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-B",
+        "-X",
+        "faulthandler",
+        "-X",
+        "pycache_prefix=C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-derivative-1\\frame-04\\reader-cache",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\independent-sensor-derivative-read.py",
+        "--request",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-derivative-1\\frame-04\\read-request.json",
+        "--request-sha256",
+        "ACTUAL_FRAME_REQUEST_SHA256",
+        "--output",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-derivative-1\\frame-04\\independent"
+      ]
+    },
+    {
+      "ordinal": 5,
+      "original_index": 65,
+      "role": "new-primary",
+      "command": [
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\bridge-build-3\\output-grid-tests.exe",
+        "--exact",
+        "merge_cmd::production_truth::m193c_registration_derivative::m193c_derivative_native",
+        "--ignored",
+        "--test-threads=1",
+        "--nocapture"
+      ]
+    },
+    {
+      "ordinal": 5,
+      "original_index": 65,
+      "role": "new-independent-reader",
+      "command": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-B",
+        "-X",
+        "faulthandler",
+        "-X",
+        "pycache_prefix=C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-derivative-1\\frame-05\\reader-cache",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\independent-sensor-derivative-read.py",
+        "--request",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-derivative-1\\frame-05\\read-request.json",
+        "--request-sha256",
+        "ACTUAL_FRAME_REQUEST_SHA256",
+        "--output",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-derivative-1\\frame-05\\independent"
+      ]
+    },
+    {
+      "ordinal": 6,
+      "original_index": 78,
+      "role": "new-primary",
+      "command": [
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\bridge-build-3\\output-grid-tests.exe",
+        "--exact",
+        "merge_cmd::production_truth::m193c_registration_derivative::m193c_derivative_native",
+        "--ignored",
+        "--test-threads=1",
+        "--nocapture"
+      ]
+    },
+    {
+      "ordinal": 6,
+      "original_index": 78,
+      "role": "new-independent-reader",
+      "command": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-B",
+        "-X",
+        "faulthandler",
+        "-X",
+        "pycache_prefix=C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-derivative-1\\frame-06\\reader-cache",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\independent-sensor-derivative-read.py",
+        "--request",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-derivative-1\\frame-06\\read-request.json",
+        "--request-sha256",
+        "ACTUAL_FRAME_REQUEST_SHA256",
+        "--output",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-derivative-1\\frame-06\\independent"
+      ]
+    },
+    {
+      "ordinal": 7,
+      "original_index": 91,
+      "role": "new-primary",
+      "command": [
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\bridge-build-3\\output-grid-tests.exe",
+        "--exact",
+        "merge_cmd::production_truth::m193c_registration_derivative::m193c_derivative_native",
+        "--ignored",
+        "--test-threads=1",
+        "--nocapture"
+      ]
+    },
+    {
+      "ordinal": 7,
+      "original_index": 91,
+      "role": "new-independent-reader",
+      "command": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-B",
+        "-X",
+        "faulthandler",
+        "-X",
+        "pycache_prefix=C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-derivative-1\\frame-07\\reader-cache",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\independent-sensor-derivative-read.py",
+        "--request",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-derivative-1\\frame-07\\read-request.json",
+        "--request-sha256",
+        "ACTUAL_FRAME_REQUEST_SHA256",
+        "--output",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-derivative-1\\frame-07\\independent"
+      ]
+    },
+    {
+      "ordinal": 8,
+      "original_index": 104,
+      "role": "new-primary",
+      "command": [
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\bridge-build-3\\output-grid-tests.exe",
+        "--exact",
+        "merge_cmd::production_truth::m193c_registration_derivative::m193c_derivative_native",
+        "--ignored",
+        "--test-threads=1",
+        "--nocapture"
+      ]
+    },
+    {
+      "ordinal": 8,
+      "original_index": 104,
+      "role": "new-independent-reader",
+      "command": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-B",
+        "-X",
+        "faulthandler",
+        "-X",
+        "pycache_prefix=C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-derivative-1\\frame-08\\reader-cache",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\independent-sensor-derivative-read.py",
+        "--request",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-derivative-1\\frame-08\\read-request.json",
+        "--request-sha256",
+        "ACTUAL_FRAME_REQUEST_SHA256",
+        "--output",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-sensor-derivative-1\\frame-08\\independent"
+      ]
+    }
+  ],
+  "primary_reuse": {
+    "ordinal": 0,
+    "authority": {
+      "result": {
+        "path": "experiments/m193c-output-grid/native-derivative-1/result.json",
+        "sha256": "4299877897694e655ef04f88001e6406058c1b2d0efddded6d525510fbc9dfe0",
+        "bytes": 93975
+      },
+      "frame_result": {
+        "path": "experiments/m193c-output-grid/native-derivative-1/frame-00/frame-result.json",
+        "sha256": "5274f9d1e6963762e8d93c23a1ea7f8c2e5a2c7c29e8601e37702eb8bc60b5a6",
+        "bytes": 10752
+      },
+      "primary_launch": {
+        "path": "experiments/m193c-output-grid/native-derivative-1/frame-00/native-launch.json",
+        "sha256": "209ec462625b544d450dc591be1c6d9671758ee10db94925d128bca729b3f0fb",
+        "bytes": 3978
+      },
+      "independent_refusal": {
+        "path": "experiments/m193c-output-grid/native-derivative-1/frame-00/independent/result.json",
+        "sha256": "754485f20e99c0511465da98c228554229c0ff8a6c6a187e8ae9f38443a2a2f4",
+        "bytes": 32013
+      },
+      "outer": {
+        "path": "experiments/m193c-output-grid/work/native-derivative-1-outer.json",
+        "sha256": "45e398ad4bf9fe51d0095e6b7be8f4132e53828866a51193cabcf644f5e8ec13",
+        "bytes": 2314
+      },
+      "console": {
+        "path": "experiments/m193c-output-grid/work/native-derivative-1-console.txt",
+        "sha256": "ca5f9f117157410846d788d424aa878524296851a5f2100b0b097d89c645c990",
+        "bytes": 1537
+      },
+      "exit": {
+        "path": "experiments/m193c-output-grid/work/native-derivative-1-exit.txt",
+        "sha256": "f1b2f662800122bed0ff255693df89c4487fbdcf453d3524a42d4ec20c3d9c04",
+        "bytes": 3
+      }
+    },
+    "snapshot": {
+      "bytes": 39030784,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-derivative-1\\frame-00\\DSC00016.ARW",
+      "sha256": "35ccc60a2cadbcdc999fb6765a326f5baaa298776fb951d12287e05c5892ed36"
+    },
+    "tiff": {
+      "bytes": 197798267,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-derivative-1\\frame-00\\native\\DSC00016-registration.tiff",
+      "sha256": "97af13814d35ca2bf5320587268c722903ef5204ae3d9b379eef2bb384753d5f"
+    },
+    "primary": {
+      "bytes": 350873,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-derivative-1\\frame-00\\native\\result.json",
+      "sha256": "e02482a38f3f15a2cc89ee83a809fdbdc590568db8a439754e956f20f8251427"
+    },
+    "original_plan": {
+      "bytes": 17484,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\native-derivative-1\\input-plan.json",
+      "sha256": "ed77972c956e9267dfb88907778ac8ff2f83887085457b83d7dccdc299db546f"
+    },
+    "new_primary_invocation": false,
+    "snapshot_delete": false,
+    "cpu_already_carried": true,
+    "runtime_requirement": "fresh full-nine observations and plan bytes/content must equal old plan before reuse"
+  },
+  "scope": "nonrefundable metadata reservation; no image reads, new launch, or runtime equality claim",
+  "future_root_metadata": {
+    "reserved_bytes": 262144,
+    "intended_basenames": [
+      "independent-native-sensor-release-1-review.md",
+      "native-sensor-1-console.txt",
+      "native-sensor-1-exit.txt",
+      "native-sensor-1-outer.json",
+      "prepare-native-sensor-archive-1.py",
+      "archive-native-sensor-1.nul",
+      "native-sensor-1-checkpoint.json"
+    ],
+    "scope": "Aggregate allowance for later exact manifest review and external root launch/archive/checkpoint metadata; no nonexistent FileRefs. Root must inventory actual follow-on extents against this allowance before admission. No refund or extra allowance outside the existing one MiB."
+  }
+}

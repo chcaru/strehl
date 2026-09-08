@@ -231,9 +231,13 @@ formal comparator substitution.
 **First scoped comparison complete:** M194d measures reconstructed production
 pixels against known scene truth and repeated flat-noise controls. Its candidate
 remains experimental, with small detail costs and sparse adverse errors retained.
-The next depth-boundary comparison depends on M194e and a separately commissioned
-production bridge and noise population. Compare one candidate with one pinned
-production baseline. Pair detail fidelity with flat-region noise, known
+**The scoped depth-boundary comparison is also complete:** M194g commissioned
+the production bridge and noise population and completed its fixed 38-output
+comparison. It retains the experimental weighting and the observed sparse
+adverse errors; it does not promote a default or establish real-capture SOTA.
+Do not rerun that completed matrix. A subsequent candidate needs its own
+versioned comparison with one pinned production baseline. Pair detail fidelity
+with flat-region noise, known
 blur/sharpening controls, occlusion-boundary error and clipping. Keep an untreated
 control and an independent verifier. Avoid bundling admission, base-band,
 photometric, depth and output changes into one result.
