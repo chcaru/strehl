@@ -1,0 +1,18 @@
+{
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-B",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\local-image-probe-run.py",
+    "--plan",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\local-image-probe-plan-1.json",
+    "--sha256",
+    "337ee76493feb15f14982d14fdb6b6148bc76ba108a9c0d77ba51ca25a6e66c1",
+    "--output",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\local-image-probe-1"
+  ],
+  "exit_code": 1,
+  "elapsed_wall_seconds": 49.42199999999866,
+  "stdout_bytes": 656,
+  "stderr_bytes": 0,
+  "scope": "Actual process launch through final exit; raw redirected streams retained. CPU belongs to subject accounting, not inferred from wall."
+}
