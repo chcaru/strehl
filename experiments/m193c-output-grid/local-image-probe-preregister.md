@@ -1,3 +1,40 @@
+# Resource amendment after metadata preparation 1
+
+PROSPECTIVE, 2026-09-08. This paragraph supersedes only preparation/resource
+figures in the inherited full preregistration below. All estimator, reader,
+native pair, private stimulus, call population and scientific thresholds remain
+unchanged. No local-image subject or numerical control has executed.
+
+Actual preparation1 exited1 after9.546999999998661 seconds during a runtime
+file read, before any plan/grant/inventory/receipt publication. Its combined
+CPU/wall guard retained no separate sample; do not infer a unique triggering
+term. The actual four external records and root failure note are bound in the
+new grant. The original source freeze and failed files remain preserved.
+
+Retain FAILED_PREP5CPU/10wall/1MiB, add CURRENT_PREP20CPU/60wall/1MiB.
+Aggregate PREP25CPU/70wall/2MiB; keep subject90CPU/140wall/60MiB and saved
+audit25CPU/30wall/3MiB. PHASE140CPU/240wall/65MiB; cumulative limits1600CPU,
+1800wall,4GiBfiles,160MiBmetadata. BASE remains the exact completed v3 audit.
+Full reserved carry is1558.443678CPU/1561.9278447999966wall/4136370969file
+bytes/145110035metadata bytes. Earlier costs are not refunded. Actual overshoots
+raise the carry; a future subject or audit remains separately released once.
+
+The plan stays eleven keys. Its closed resource grant adds preparation_attempts
+with failed/current allocations and failed_preparation with exact outer/stderr/
+stdout/exit/note FileRefs. Positive failed evidence must be source-bound; the
+literal empty stdout is checked independently outside positive source/runtime
+namespaces. Source authority alone cannot fabricate a completed preparation:
+root retains actual second-preparation stdout/stderr/exit and whole wall and
+checks the new paired accounting samples and final-publication allowance.
+
+Preparation component ceilings describe the current1MiB attempt; a new8KiB
+failure-receipt lane is included, with no source or plan cap growth. The source
+reviewer must recheck the exact sum and required fresh closure. Subject result,
+worker memory, runtime scope, scientific controls and all actual-output/audit
+allowances are unchanged. No retry or parameter search occurs in the subject.
+
+---
+
 # Fixed local native-image displacement probe
 
 2026-09-08. SOURCE-ONLY prospective protocol. No private correlation, runtime import, image-payload read, plan preparation or subject execution has occurred for this arm. An independent source review, frozen source/plan and a separate root release are required before one run. All preceding subject and failed-audit evidence remains immutable.

@@ -16,6 +16,7 @@
     "outer": 16384,
     "progress": 65536,
     "protocol": 16384,
+    "resource_amendment_review": 8192,
     "retained_stdout": 1048576,
     "root_continuation_checkpoint": 16384,
     "root_source_read": 8192,
@@ -32,12 +33,39 @@
     "whole_final_bytes": 972838
   },
   "nonrefundable": true,
+  "resource_only_preparation_amendment": {
+    "aggregate_preparation": {
+      "cpu_seconds": 25,
+      "file_bytes": 2097152,
+      "metadata_bytes": 2097152,
+      "wall_seconds": 70
+    },
+    "complete_phase": {
+      "cpu_seconds": 140,
+      "file_bytes": 68157440,
+      "metadata_bytes": 68157440,
+      "wall_seconds": 240
+    },
+    "current_preparation": {
+      "cpu_seconds": 20,
+      "file_bytes": 1048576,
+      "metadata_bytes": 1048576,
+      "wall_seconds": 60
+    },
+    "failed_preparation": {
+      "cpu_seconds": 5,
+      "file_bytes": 1048576,
+      "metadata_bytes": 1048576,
+      "wall_seconds": 10
+    },
+    "scope": "Audit3MiB/25CPU/30wall unchanged; no failed-cost refund or scientific change."
+  },
   "reused_already_charged": "All original plan source/runtime/evidence bindings; no copied native images, models or payloads.",
   "root_additional_files": {
     "continuation-local-image-startup-1.md": 8943,
     "root-local-image-probe-source-read.md": 6744
   },
   "schema": "m193c-local-image-independent-audit-ledger-v1",
-  "total_reserved_bytes": 2453504,
-  "unused_family_margin_bytes": 692224
+  "total_reserved_bytes": 2461696,
+  "unused_family_margin_bytes": 684032
 }

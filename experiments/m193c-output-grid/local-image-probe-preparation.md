@@ -1,6 +1,8 @@
 # Local-image probe — exact metadata preparation
 
-SOURCE ONLY, 2026-09-08. This helper prepares one fixed release; it never imports
+SOURCE ONLY amendment after preparation attempt1, 2026-09-08. The original
+committed preparer and failed external receipts remain preserved. This helper
+prepares the still-uncreated fixed release; it never imports
 or executes the subject/estimator, reads a native TIFF or RAW, or calls a model.
 Independent source review and a committed source freeze must precede execution.
 A successful preparation is not itself a subject or audit execution release.
@@ -20,6 +22,16 @@ metadata. Only the fixed pair identities local0/1 and3/4 (original0/13 and39/52)
 are selected. Baseline admission and historical complete CPU accounting remain
 false. Existing source/evidence files are read and bound, not copied or refunded.
 Every fresh --source addition is counted in the new source allocation.
+
+The exact failed attempt1 outer, stderr, stdout, exit and root failure note are
+authenticated by literal FileRefs before current preparation. The four positive
+files also join source_bindings as fixed historical evidence. The zero-byte
+stdout is accepted only at its literal named path with integer0, empty SHA256,
+one-byte-bounded same-object read and final identity recheck; it never enters
+the source or runtime namespaces. The old outer's exact command binds the
+committed16396-byte original preparer. It does not claim those old source bytes
+are still at the amended working-tree path. The independent actual-failure read
+is a required fresh source binding.
 
 ## Runtime file scope
 
@@ -50,12 +62,37 @@ imported by that preliminary path/stat enumeration.
 
 ## Finite work and publication
 
-The whole preparation allowance is5 CPU seconds,10 wall seconds and1MiB of
-new file/metadata capacity. Each read checks process CPU and elapsed wall with
-0.25CPU/0.5wall reserved for final serialization, writes, readback and exit.
-The complete phase remains conservatively charged even on refusal; a final
-sample is not complete process CPU. Root must retain exact argv, stdout,
-stderr/exit and whole external wall, and check the sample plus declared tail.
+The current second preparation allowance is20 CPU seconds,60 wall seconds
+and1MiB of new file/metadata capacity. The failed first attempt's full5CPU,
+10wall and1MiB remain charged separately: aggregate preparation is25CPU,
+70wall and2MiB. Current run checks use CURRENT_PREP20/60, never the aggregate
+25/70 as a fresh runtime allowance. Each read checks whole process CPU and
+elapsed wall with0.25CPU/0.5wall reserved for final serialization, writes,
+readback and exit. The sampled CPU and wall are obtained once per check, with
+their separate pass flags, active phase and current path retained in LAST_CHECK.
+
+Attempt1 failed in that combined predicate during runtime inventory, after
+one file read/hash; its individual check samples and current filename were
+not retained. The9.546999999998661-second external wall is consistent with the
+old ordinary9.5-second wall boundary but cannot identify a unique CPU or wall
+cause. This prospective capacity extension makes no estimator or performance
+claim.
+
+A successful second preparation retains its before-publication sample in the
+normal receipt and its actual after-publication CPU/wall sample in stdout.
+A caught exception makes one bounded exclusive8KiB write to
+work/local-image-probe-preparation-2-failure.json, retaining the last paired
+guard, current paired sample, active phase/path, exception and allowances.
+If that write fails, bounded failure details are attempted once on stderr;
+there is no retry or resumed work. The failure path does not run the resource
+admission check again before retaining refusal evidence. It does not claim
+that a consumed hard deadline or failed filesystem can always be recovered.
+
+These samples are not complete process CPU. Root must retain exact argv,
+stdout, stderr/exit and whole external wall for attempt2, require actual zero
+exit for success, and check the sample plus declared tail. The full reserved
+stage remains charged on refusal; any separately observed overshoot is added,
+never refunded. Historical complete CPU accounting remains false.
 
 | Family | Reserved KiB |
 |---|---:|
@@ -65,20 +102,27 @@ stderr/exit and whole external wall, and check the sample plus declared tail.
 | External stdout/stderr/exit/whole-wall receipt |16 |
 | Preparation receipt |32 |
 | Runtime inventory summary |64 |
+| Current failure receipt |8 |
 
-The sum is1,016KiB, below1MiB. The source allowance is not merely a list of new
+The current sum is1,024KiB, exactly1MiB; the failed attempt's separate1MiB
+reservation is retained in aggregate preparation. The source allowance is not merely a list of new
 bindings: previously accounted fixed evidence is separately identified, while
 all fresh caller-supplied sources count. Actual runtime file payloads are read
 in place, not copied into the experiment. They are not new output storage.
 
 The new finite phase explicitly retains baseline1418.443678CPU,
 1321.9278447999966wall,4,068,213,529file bytes and76,952,595metadata bytes. It
-adds preparation5CPU/10wall/1MiB, subject90CPU/140wall/60MiB and independent
-audit25CPU/30wall/3MiB; the prospective whole phase reserves120CPU/180wall/64MiB.
+adds aggregate preparation25CPU/70wall/2MiB, subject90CPU/140wall/60MiB and
+independent audit25CPU/30wall/3MiB. The prospective whole phase therefore
+reserves140CPU/240wall/65MiB, including both preparation attempts.
 The complete phase is charged to both file and metadata namespaces, preserving
-all earlier costs. The new cumulative limits are1540CPU,1800wall,4GiB files,
+all earlier costs. The new cumulative limits are1600CPU,1800wall,4GiB files,
 160MiB metadata. This explicit local-probe authorization supersedes the old
 1440CPU/128MiB capacity prospectively; it does not change the historical record.
+The abandoned unissued1540CPU phase did not produce a grant or plan.
+BASE+PHASE is1558.443678CPU,1561.9278447999966wall,
+4,136,370,969file bytes and145,110,035metadata bytes. These are derived
+reserved totals, not measured current process work.
 Unused reserved work within any stage does not authorize another run.
 
 The helper checks same-handle identity, exact extents and hashes, then rechecks
@@ -90,14 +134,19 @@ are exclusive fresh paths:
 - work/local-image-probe-runtime-inventory-1.json;
 - work/local-image-probe-preparation-1.json.
 
-The subject's fixed local-image-probe-1 directory must also be absent. A partial
+The subject's fixed local-image-probe-1 directory and the new attempt2 failure
+receipt must also be absent. A partial
 write or post-publication cap failure is a failed preparation even when some
 files exist; preserve it, do not reuse or overwrite. Root's external receipt
 and actual zero exit are required before considering the plan releasable.
 
 The receipt binds its own source, exact actual argv, full family reservations,
-sampled work, fixed tail, release refs and the future absolute launch command
+sampled work, last paired guard, current and aggregate allowances, failed
+attempt evidence, fixed tail, release refs and the future absolute launch command
 with the real plan hash substituted. The plan retains placeholders only where
 the subject compares that actual hash against its own argv. The grant matches
-the runner's exact closed allowance contract. Re-reading a prepared JSON file
+the runner's exact closed allowance contract, including preparation_attempts
+{failed,current} and failed_preparation {outer,stderr,stdout,exit,note}.
+The plan retains its eleven keys; estimator, reader, populations, controls,
+image pairs, numerical gates and runtime inventory traversal are unchanged. Re-reading a prepared JSON file
 alone is not proof that its external invocation completed.

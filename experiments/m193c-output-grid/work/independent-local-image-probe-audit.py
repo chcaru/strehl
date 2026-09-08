@@ -12,20 +12,22 @@ FINAL=WORK/'independent-local-image-probe-audit.json';PROGRESS=WORK/'independent
 LIMITS=dict(cpu_seconds=25,wall_seconds=30,file_bytes=3*MIB,metadata_bytes=3*MIB)
 BASE=dict(cpu_seconds=1418.443678,wall_seconds=1321.9278447999966,file_bytes=4068213529,metadata_bytes=76952595)
 SUBJECT=dict(cpu_seconds=90,wall_seconds=140,file_bytes=60*MIB,metadata_bytes=60*MIB)
-PREP=dict(cpu_seconds=5,wall_seconds=10,file_bytes=MIB,metadata_bytes=MIB)
+FAILED_PREP=dict(cpu_seconds=5,wall_seconds=10,file_bytes=MIB,metadata_bytes=MIB)
+CURRENT_PREP=dict(cpu_seconds=20,wall_seconds=60,file_bytes=MIB,metadata_bytes=MIB)
+PREP=dict(cpu_seconds=25,wall_seconds=70,file_bytes=2*MIB,metadata_bytes=2*MIB)
 PINS={'local-image-probe.py':(7859,'a76393fc3027340174a3b761b692ae2575056c50ed2dbbf574f05993c1a9c577'),
  'local-image-patches.py':(8014,'d407d592e326da587a8057fdb2d4169e81d042a384ee1a2a86c8741a86138f84'),
- 'local-image-probe-run.py':(35956,'c38ae6c19c1e41732a2fa676ea334c9b161c37d5451ffd38323d1b4e4070bb99'),
- 'local-image-probe-preregister.md':(22161,'f07765ecee2b029e883d0deb9f6b900a8d0237dc9e3006b5d900817b4d8a4ba9'),
- 'local-image-probe-ledger.json':(2864,'3db18629ad82f621a1310f89ab35be431f4f03850e1666c9957e0a96142572df')}
+ 'local-image-probe-run.py':(38744,'c9724fae5c8431c58a1c2a8445a633abb70bbf0ecadeb8334b075e489975316a'),
+ 'local-image-probe-preregister.md':(24374,'4fc987d3a1f759fb105afa271aa224da9642e027861b30c05b200028f279171e'),
+ 'local-image-probe-ledger.json':(3267,'9ce386f75fe8dec68e5b98bfbf45b18560811c71277950d9fb0aa59fa8e8191b')}
 PRIVATE=('zero','integer','fractional','differential-blur','flat','unrelated','periodic','outside-search')
 CONTROL=('rgb16-strip-reader',*PRIVATE,'observer-output','literal-displacement-oracle')
 TRUTH={'zero':(0.,0.),'integer':(5.,-7.),'fractional':(1.25,-.4),'differential-blur':(1.25,-.4),'outside-search':(40.,0.)}
 PAIRS=((0,1),(3,4));ORIGINAL={0:0,1:13,3:39,4:52};LUMA=(.2880402,.7118741,.0000857)
 REAL_IDS=[f'{a}-{b}/g{g:02d}/q{q}' for a,b in PAIRS for g in range(16) for q in range(4)]
-CAPS=dict(cpu_seconds=1540,wall_seconds=1800,file_bytes=4*(1<<30),metadata_bytes=160*MIB)
+CAPS=dict(cpu_seconds=1600,wall_seconds=1800,file_bytes=4*(1<<30),metadata_bytes=160*MIB)
 OLD_CAPS=dict(cpu_seconds=1440,wall_seconds=1800,file_bytes=4*(1<<30),metadata_bytes=128*MIB)
-PHASE=dict(cpu_seconds=120,wall_seconds=180,file_bytes=64*MIB,metadata_bytes=64*MIB)
+PHASE=dict(cpu_seconds=140,wall_seconds=240,file_bytes=65*MIB,metadata_bytes=65*MIB)
 EMPTY=hashlib.sha256(b'').hexdigest();VERIFIED={};READ_IDENTITIES={};PHASES=[];NP=None
 
 def need(value,message):
@@ -89,6 +91,20 @@ def remember(phase,summary):
 def released(p,digest,cap):
  raw,r=read(p,cap);need(type(digest) is str and len(digest)==64 and r['sha256']==digest.lower(),'external released SHA256');return parse(raw),r
 
+
+def failed_preparation(plan):
+ # Exact prior failed attempt; zero stdout has an evidence role, never a positive source role.
+ pins={'outer':('outer.json',3150,'23ff1213d9705eaf2785465a1044e7212b945a50341acc3ccb1ce81fa1c78ae6'),'stderr':('stderr.bin',1364,'bda56ca8025fa39f77e305f7f6ed000b9eae335ad76da5a1c64456f68adcfe95'),'stdout':('stdout.bin',0,EMPTY),'exit':('exit.txt',2,'4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865'),'note':('failure.md',3108,'d8b7cdcade03930c299631f7ed1c5f86ec0e2db819dd3714aa91832cc4f90c79')}
+ refs={};data={}
+ for role,(suffix,n,h) in pins.items():
+  p=WORK/('local-image-probe-preparation-1-'+suffix);r=dict(path=p.relative_to(ROOT).as_posix(),bytes=n,sha256=h)
+  if n:need(plan['source_bindings'].get(r['path'])==dict(bytes=n,sha256=h),'exact positive failed preparation evidence in source closure')
+  else:
+   need(role=='stdout' and n==0 and h==EMPTY,'sole exact empty prior stdout role')
+   need(all(path(k)!=p for space in ('source_bindings','runtime_bindings','runtime_empty_bindings') for k in plan[space]),'historical empty stdout excluded by resolved identity from all executable namespaces')
+  data[role],refs[role]=read(p,n,r)
+ outer=parse(data['outer']);need(outer['exit_code']==1 and outer['stdout_bytes']==0 and outer['stderr_bytes']==1364 and data['exit']==b'1\n' and b'preparation including reserved final CPU/wall tail' in data['stderr'],'actual earlier preparation refusal without assigning a unique CPU or wall cause')
+ return refs
 def authority(args):
  raw,sr=read(SELF,128*KIB);need(sr['sha256']==args.self_sha256.lower(),'executed audit source authority')
  plan,pr=released(args.plan,args.plan_sha256,640*KIB)
@@ -110,7 +126,11 @@ def authority(args):
  baseline=saved(plan['baseline_audit']);bo=saved(plan['baseline_outer']);native=saved(plan['native_audit']);grant=saved(plan['resource_authorization'])
  need(baseline['status']=='PASS_SAVED_REAL_ACCOUNTING_REPAIR_V3_OUTCOME_AUDIT' and baseline['subject_complete'] is True and baseline['actual_final_work']==BASE and baseline['cpu_accounting_complete'] is False,'exact prior outcome/cost history')
  need(bo['exit_code']==0 and bo['stderr_bytes']==0 and bo['stdout_bytes']==plan['baseline_audit']['bytes'] and bo['elapsed_wall_seconds']<=baseline['audit_timing']['wall_seconds']+baseline['audit_publication_allowance']['wall_seconds'],'prior actual audit tail')
- need(grant==dict(schema='m193c-local-image-resource-authorization-v1',baseline_audit=plan['baseline_audit'],baseline_outer=plan['baseline_outer'],retained_work=BASE,previous_limits=OLD_CAPS,new_limits=CAPS,phase_allowance=PHASE,preparation_allowance=PREP,subject_allowance=SUBJECT,audit_allowance=LIMITS,scope='ONE_FIXED_LOCAL_IMAGE_PROBE; NO_RETIRED_COST_REFUND; NO_GEOMETRY_ADMISSION'),'complete closed scoped phase resource grant')
+ closed(grant['failed_preparation'],('outer','stderr','stdout','exit','note'))
+ for r in grant['failed_preparation'].values():
+  closed(r,('path','bytes','sha256'));need(type(r['path']) is str and type(r['bytes']) is int and r['bytes']>=0 and type(r['sha256']) is str and len(r['sha256'])==64,'typed actual failed-evidence FileRef; false is not zero')
+ subject_ledger=saved(dict(path=(HERE/'local-image-probe-ledger.json').relative_to(ROOT).as_posix(),bytes=PINS['local-image-probe-ledger.json'][0],sha256=PINS['local-image-probe-ledger.json'][1]));need(subject_ledger['preparation_attempts']==dict(failed=FAILED_PREP,current=CURRENT_PREP),'exact subject ledger failed/current preparation allocations')
+ need(grant==dict(schema='m193c-local-image-resource-authorization-v1',baseline_audit=plan['baseline_audit'],baseline_outer=plan['baseline_outer'],retained_work=BASE,previous_limits=OLD_CAPS,new_limits=CAPS,phase_allowance=PHASE,preparation_allowance=PREP,subject_allowance=SUBJECT,audit_allowance=LIMITS,preparation_attempts=dict(failed=FAILED_PREP,current=CURRENT_PREP),failed_preparation=failed_preparation(plan),scope='ONE_FIXED_LOCAL_IMAGE_PROBE; NO_RETIRED_COST_REFUND; NO_GEOMETRY_ADMISSION'),'complete closed scoped phase resource grant')
  oldplan=saved(baseline['external']['plan']);need(all(plan['source_bindings'].get(k)==v for k,v in oldplan['source_bindings'].items()),'preserved old positive source closure')
  need(native['status']=='PASS_SAVED_SENSOR_WHITE_ARTIFACT_OUTCOME_AUDIT','native metadata authority only')
  frames={i:native['frames'][i] for i in ORIGINAL}

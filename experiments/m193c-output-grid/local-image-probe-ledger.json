@@ -16,19 +16,34 @@
   },
   "parent_store_cap": 1048576,
   "phase": {
-    "cpu_seconds": 120,
-    "file_bytes": 67108864,
-    "metadata_bytes": 67108864,
-    "wall_seconds": 180
+    "cpu_seconds": 140,
+    "file_bytes": 68157440,
+    "metadata_bytes": 68157440,
+    "wall_seconds": 240
   },
   "preparation": {
-    "cpu_seconds": 5,
-    "file_bytes": 1048576,
-    "metadata_bytes": 1048576,
-    "wall_seconds": 10
+    "cpu_seconds": 25,
+    "file_bytes": 2097152,
+    "metadata_bytes": 2097152,
+    "wall_seconds": 70
+  },
+  "preparation_attempts": {
+    "current": {
+      "cpu_seconds": 20,
+      "file_bytes": 1048576,
+      "metadata_bytes": 1048576,
+      "wall_seconds": 60
+    },
+    "failed": {
+      "cpu_seconds": 5,
+      "file_bytes": 1048576,
+      "metadata_bytes": 1048576,
+      "wall_seconds": 10
+    }
   },
   "preparation_component_caps": {
     "checkpoint_and_source_manifests": 32768,
+    "current_failure_receipt": 8192,
     "new_source_preregister_ledger_preparer_and_reviews": 262144,
     "plan": 655360,
     "preparation_outer_console_exit": 16384,
@@ -36,7 +51,7 @@
     "runtime_inventory_metadata": 65536
   },
   "schema": "m193c-local-image-probe-ledger-v1",
-  "source_accounting_scope": "Prior artifacts remain charged and referenced without copying. All newly written source/review/plan/grant/preparation receipts are within1MiB; all new audit-family artifacts within3MiB. Full120CPU/180wall/64MiB phase is nonrefundable, both file and metadata byte namespaces charged.",
+  "source_accounting_scope": "Original failed preparation5CPU/10wall/1MiB remains charged. Current preparation20CPU/60wall/1MiB; aggregate25CPU/70wall/2MiB. Fixed subject90CPU/140wall/60MiB and saved audit25CPU/30wall/3MiB unchanged. Whole140CPU/240wall/65MiB phase nonrefundable in both byte namespaces. The component table bounds the current preparation, not both attempts.",
   "subject": {
     "cpu_seconds": 90,
     "file_bytes": 62914560,

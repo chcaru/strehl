@@ -10,11 +10,13 @@ from pathlib import Path
 ROOT=Path(__file__).resolve().parents[2];HERE=Path(__file__).resolve().parent;SELF=Path(__file__).resolve()
 KIB=1024;MIB=1<<20;COMPLETE='COMPLETE_FIXED_LOCAL_IMAGE_PROBE_ONLY'
 BASE=dict(cpu_seconds=1418.443678,wall_seconds=1321.9278447999966,file_bytes=4068213529,metadata_bytes=76952595)
-PREP=dict(cpu_seconds=5,wall_seconds=10,file_bytes=MIB,metadata_bytes=MIB)
+FAILED_PREP=dict(cpu_seconds=5,wall_seconds=10,file_bytes=MIB,metadata_bytes=MIB)
+CURRENT_PREP=dict(cpu_seconds=20,wall_seconds=60,file_bytes=MIB,metadata_bytes=MIB)
+PREP={k:FAILED_PREP[k]+CURRENT_PREP[k] for k in FAILED_PREP}
 SUBJECT=dict(cpu_seconds=90,wall_seconds=140,file_bytes=60*MIB,metadata_bytes=60*MIB)
 AUDIT=dict(cpu_seconds=25,wall_seconds=30,file_bytes=3*MIB,metadata_bytes=3*MIB)
-PHASE=dict(cpu_seconds=120,wall_seconds=180,file_bytes=64*MIB,metadata_bytes=64*MIB)
-CAPS=dict(cpu_seconds=1540,wall_seconds=1800,file_bytes=4*(1<<30),metadata_bytes=160*MIB)
+PHASE=dict(cpu_seconds=140,wall_seconds=240,file_bytes=65*MIB,metadata_bytes=65*MIB)
+CAPS=dict(cpu_seconds=1600,wall_seconds=1800,file_bytes=4*(1<<30),metadata_bytes=160*MIB)
 EMPTY_SHA=hashlib.sha256(b'').hexdigest();RUNTIME_EMPTY={}
 OLD_CAPS=dict(cpu_seconds=1440,wall_seconds=1800,file_bytes=4*(1<<30),metadata_bytes=128*MIB)
 SLOT=64*KIB;PRIVATE_IDS=('zero','integer','fractional','differential-blur','flat','unrelated','periodic','outside-search')
@@ -84,6 +86,33 @@ def runtime_namespace(positive,empty):
     names=[(ROOT/k).resolve() for k in [*positive,*empty]];need(len(names)==len(set(names)),'runtime resolved identities unique')
 def runtime_bound(name,pin):return bound(dict(path=name,**pin),128*MIB,allow_empty=pin['bytes']==0)
 
+def failed_preparation_evidence(plan):
+    pins={
+        'outer':('outer.json',3150,'23ff1213d9705eaf2785465a1044e7212b945a50341acc3ccb1ce81fa1c78ae6'),
+        'stderr':('stderr.bin',1364,'bda56ca8025fa39f77e305f7f6ed000b9eae335ad76da5a1c64456f68adcfe95'),
+        'stdout':('stdout.bin',0,EMPTY_SHA),
+        'exit':('exit.txt',2,'4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865'),
+        'note':('failure.md',3108,'d8b7cdcade03930c299631f7ed1c5f86ec0e2db819dd3714aa91832cc4f90c79')}
+    refs={};values={}
+    for role,(suffix,size,digest) in pins.items():
+        path=HERE/'work'/('local-image-probe-preparation-1-'+suffix)
+        ref=dict(path=relative(path),bytes=size,sha256=digest);refs[role]=ref
+        if size:
+            need(plan['source_bindings'].get(ref['path'])=={k:ref[k] for k in ('bytes','sha256')},'positive failed preparation evidence bound')
+            values[role]=bound(ref,size)
+        else:
+            need(role=='stdout' and size==0 and digest==EMPTY_SHA and ref['path'] not in plan['source_bindings'] and all((ROOT/k).resolve()!=path for space in ('runtime_bindings','runtime_empty_bindings') for k in plan[space]),'sole literal empty historical stdout outside source and runtime namespaces')
+            before=path.lstat();ordinary(before,True)
+            with path.open('rb') as stream:
+                opened=os.fstat(stream.fileno());ordinary(opened,True);need(identity(before)==identity(opened),'same opened empty historical stdout')
+                data=stream.read(1);after=os.fstat(stream.fileno())
+            named=path.lstat();ordinary(named,True)
+            need(identity(opened)==identity(after)==identity(named) and binding(data)==dict(bytes=0,sha256=EMPTY_SHA),'exact stable empty historical stdout')
+            values[role]=data
+    failed=strict(values['outer'])
+    need(failed['exit_code']==1 and failed['stdout_bytes']==0 and failed['stderr_bytes']==1364 and values['exit']==b'1\n' and b'preparation including reserved final CPU/wall tail' in values['stderr'],'actual failed preparation retained without unique CPU/wall cause')
+    return refs
+
 def authority(args):
     global RUNTIME_EMPTY
     path=Path(args.plan).resolve();need(path==HERE/'local-image-probe-plan-1.json','fixed new plan path');extent=path.lstat().st_size;raw=bound(dict(path=str(path),bytes=extent,sha256=args.sha256),640*KIB);plan=strict(raw)
@@ -106,15 +135,18 @@ def authority(args):
     need(native['status']=='PASS_SAVED_SENSOR_WHITE_ARTIFACT_OUTCOME_AUDIT','actual native image authority')
     frames=[native['frames'][i] for i in ORDINALS]
     need([r['ordinal'] for r in frames]==list(ORDINALS) and [r['original_index'] for r in frames]==list(ORIGINALS) and all(r['tiff']['bytes']==197798267 for r in frames),'fixed native image population')
-    grant=strict(bound(plan['resource_authorization']));closed(grant,('schema','baseline_audit','baseline_outer','retained_work','previous_limits','new_limits','phase_allowance','preparation_allowance','subject_allowance','audit_allowance','scope'))
-    need(grant==dict(schema='m193c-local-image-resource-authorization-v1',baseline_audit=plan['baseline_audit'],baseline_outer=plan['baseline_outer'],retained_work=BASE,previous_limits=OLD_CAPS,new_limits=CAPS,phase_allowance=PHASE,preparation_allowance=PREP,subject_allowance=SUBJECT,audit_allowance=AUDIT,scope='ONE_FIXED_LOCAL_IMAGE_PROBE; NO_RETIRED_COST_REFUND; NO_GEOMETRY_ADMISSION'),'explicit scoped CPU/metadata amendment')
+    grant=strict(bound(plan['resource_authorization']));closed(grant,('schema','baseline_audit','baseline_outer','retained_work','previous_limits','new_limits','phase_allowance','preparation_allowance','subject_allowance','audit_allowance','preparation_attempts','failed_preparation','scope'))
+    closed(grant['failed_preparation'],('outer','stderr','stdout','exit','note'))
+    for item in grant['failed_preparation'].values():
+        closed(item,('path','bytes','sha256'));need(type(item['bytes']) is int,'typed failed preparation extent, not boolean zero')
+    need(grant==dict(schema='m193c-local-image-resource-authorization-v1',baseline_audit=plan['baseline_audit'],baseline_outer=plan['baseline_outer'],retained_work=BASE,previous_limits=OLD_CAPS,new_limits=CAPS,phase_allowance=PHASE,preparation_allowance=PREP,subject_allowance=SUBJECT,audit_allowance=AUDIT,preparation_attempts=dict(failed=FAILED_PREP,current=CURRENT_PREP),failed_preparation=failed_preparation_evidence(plan),scope='ONE_FIXED_LOCAL_IMAGE_PROBE; NO_RETIRED_COST_REFUND; NO_GEOMETRY_ADMISSION'),'explicit scoped CPU/metadata amendment')
     need(plan['prior_work']=={k:BASE[k]+PREP[k] for k in BASE} and all(BASE[k]+PHASE[k]<=CAPS[k] for k in BASE),'full prior/preparation charge and complete phase capacity')
     bound(plan['python_executable'],128*MIB);need(Path(plan['python_executable']['path']).resolve()==Path(sys.executable).resolve(),'exact pinned interpreter')
     closed(plan['commands'],('parent','worker'));actual=sys.orig_argv;expected=[args.sha256 if v=='ACTUAL_PLAN_SHA256' else v for v in plan['commands']['worker' if args.worker else 'parent']]
     need(actual==expected and sys.dont_write_bytecode and not sys._xoptions and Path.cwd().resolve()==ROOT,'exact current argv/cwd/no bytecode')
     output=Path(args.output).resolve();need(output==HERE/'local-image-probe-1'/('worker' if args.worker else '') and not output.exists(),'fresh fixed owned output')
     ledger=strict(bound(dict(path=relative(HERE/'local-image-probe-ledger.json'),**plan['source_bindings'][relative(HERE/'local-image-probe-ledger.json')])))
-    need(ledger['schema']=='m193c-local-image-probe-ledger-v1' and ledger['phase']==PHASE and ledger['preparation']==PREP and ledger['subject']==SUBJECT and ledger['audit']==AUDIT,'exact finite phase ledger')
+    need(ledger['schema']=='m193c-local-image-probe-ledger-v1' and ledger['phase']==PHASE and ledger['preparation']==PREP and ledger['subject']==SUBJECT and ledger['audit']==AUDIT and ledger['preparation_attempts']==dict(failed=FAILED_PREP,current=CURRENT_PREP),'exact finite phase ledger')
     need(sum(ledger['preparation_component_caps'].values())<=MIB and sum(ledger['worker_literal_maxima'].values())==ledger['worker_literal_maximum_bytes']<=59*MIB and sum(ledger['parent_component_caps'].values())<=MIB,'full source/plan/wrapper/data/output capacity')
     return plan,frames,output,reference(path,raw)
 
