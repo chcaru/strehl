@@ -1,0 +1,37 @@
+{
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-I",
+    "-S",
+    "-B",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194h-pedestal-causality\\work\\windows-file-identity-control.py",
+    "--source-sha256",
+    "c8306f36b5b4c6a6f349cfeaa16c7ee96422377a54a7777a5f9c5771f79bc138"
+  ],
+  "source": {
+    "path": "experiments/m194h-pedestal-causality/work/windows-file-identity-control.py",
+    "bytes": 11678,
+    "sha256": "c8306f36b5b4c6a6f349cfeaa16c7ee96422377a54a7777a5f9c5771f79bc138"
+  },
+  "exit_code": 0,
+  "elapsed_wall_seconds": 0.10900000000401633,
+  "timeout_terminated": false,
+  "stdout": {
+    "path": "experiments/m194h-pedestal-causality/work/windows-file-identity-control-external-1-stdout.bin",
+    "bytes": 28344,
+    "sha256": "e5bbf58bf174d5c62cd283e5df0e90421e01a4a48eb69fda9666a4db8af6c505"
+  },
+  "stderr": {
+    "path": "experiments/m194h-pedestal-causality/work/windows-file-identity-control-external-1-stderr.bin",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "exit": {
+    "path": "experiments/m194h-pedestal-causality/work/windows-file-identity-control-external-1-exit.txt",
+    "bytes": 2,
+    "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+  },
+  "stdout_bytes": 28344,
+  "stderr_bytes": 0,
+  "scope": "Complete directly launched process interval and actual exit; raw byte streams. No complete CPU inference from elapsed wall. Source is fixed; this process does not launch children."
+}
