@@ -1,0 +1,58 @@
+
+running 1 test
+test merge_cmd::known_scene_benchmark::noise_pupil_bridge::pedestal_causality::m194h_fixed_pedestal_case ... frames          : 5 from M194G-NO-RAW-DIRECTORY  (first decode 0.00 s)
+planes          : 160 x 120 per CFA plane
+analysis domain : 150 x 113 at full-plane origin (5, 4) -- Crop is applied BEFORE luma, variance, weighting and accumulation
+--- the merge ---
+bands           : 3 Laplacian levels + 1 base, coarsest 19 x 15
+selection       : SOFT -- weight = (band power above the noise floor)^exponent, a convex combination.
+                  Sign coherence is free: a convex combination cannot take adjacent
+                  coefficients from opposite-signed frames, which is the ringing a
+                  coefficient-wise argmax produces.
+noise gate      : 2.00 x the modelled band-noise power. Below it, NO frame may win and the
+                  merge averages -- which is the correct estimator when there is no
+                  information, and the only operation that gets below single-frame noise.
+exponent        : 2.00
+per-band exp    : 2 3 4   (coarsest -> finest)
+                  sharpness ramps 1.4x per octave toward the fine bands. A wrong pick in a
+                  fine band is one high-frequency coefficient nobody can see; a wrong pick
+                  in a coarse band IS the rim.
+base band       : plain mean across frames
+not applied     : photometric gain, clip census, outlier rejection, halo correction, through-focus
+                  statistics. Those are the --merge estimator path's stages; this arm is the merge only.
+coverage mode   : crop -- as asked, --cover
+alignment       : ON (M194g supplied identity), reference frame 2, 5 placed / 0 refused, 0.0 s
+  held-out err  : NOT MEASURED   resampler: CatmullRom
+  coverage      : CROPPED to the region EVERY frame covers -- 150 x 113 plane px at (5, 4) of 160 x 120, emitted at UNITY SCALE. 5.1% of width dropped and NOT upsampled (k=0.9492), so the output is SMALLER than the plane by design and no placement carries a coverage scale. The reference frame's own placement reaches the gather unmodified.
+memory plan     : 5 canonical chunks, 1 reusable frame worker, 1 retained + 1 scratch accumulator, 2 execution threads
+                  CONSTANT in the frame count and reduction order. Chunks run serially; spatial work uses
+                  the execution pool. STREHL_PYRAMID_WORKERS=N changes threads, never arithmetic.
+
+folded          : 5 / 5 frames in 0.4 s (0.07 s per frame, 2 execution threads)
+band noise gain : 0.8894 0.0529 0.0101 0.0037
+                  (E[L_k^2] / sigma_0^2, MEASURED on these operators, not derived.)
+measured floor  : 0.8849 0.0528
+                  x white       : 0.9948 0.9989
+                  THE FLOOR THE GATE ACTUALLY USED, averaged over 5 warped
+  frames. The line above it is the white-noise constant, which is
+  exact only for an UNWARPED frame; resampling correlates neighbours
+                  and moves the per-band split. Bands past this list kept the constant.
+                  STREHL_GATE_FLOOR=white restores it everywhere.
+averaged        : 88.3% 81.5% 72.9% 100.0%
+                  per level, the fraction of coefficients where NO frame cleared the noise
+                  floor and the merge therefore averaged instead of selecting. Near 0%
+                  everywhere would mean the gate is not gating and this is a naive
+                  pyramid stacker.
+
+output domain    : compact Crop 150x113 from full-plane origin (5, 4); collapsed plane written directly (no second crop)
+
+wrote           : \\?\C:\dev\blog\death-of-software\projects\strehl\experiments\m194h-pedestal-causality\subject-1\case-01\output.tif (300 x 226, 16-bit RGB, linear camera-native RGB, Malvar-He-Cutler demosaic)
+                  Full sensor resolution: every CFA site estimated, one focus
+                  decision per quad. Interpolated -- do not measure resolution on it.
+collapse+write  : 0.0 s
+total           : 0.4 s
+M194H_CASE_COMPLETE 1
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 162 filtered out; finished in 2.82s
+

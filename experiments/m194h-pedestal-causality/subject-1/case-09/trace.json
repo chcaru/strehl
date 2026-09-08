@@ -1,0 +1,145 @@
+{
+  "arm": "H",
+  "binary": {
+    "bytes": 0,
+    "path": "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194h-pedestal-causality\\subject-1\\case-09\\trace.bin",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "calls": {
+    "absorb": 4,
+    "bands": 15,
+    "bases": 5,
+    "frames": 5,
+    "post_hull": 4,
+    "pre_hull": 4,
+    "reset": 4,
+    "resolved": 16
+  },
+  "cfa_plane_order": [
+    "R",
+    "G1",
+    "G2",
+    "B"
+  ],
+  "format": "little-endian-u32-TLV-original-f32-bits",
+  "format_version": 1,
+  "native_crop_offset": [
+    10,
+    8
+  ],
+  "native_sites": [
+    [
+      202,
+      104
+    ],
+    [
+      205,
+      113
+    ]
+  ],
+  "observation": "off",
+  "observer_records": 0,
+  "placebo_records": 0,
+  "production": true,
+  "quad_sizes": [
+    [
+      150,
+      113
+    ],
+    [
+      75,
+      57
+    ],
+    [
+      38,
+      29
+    ],
+    [
+      19,
+      15
+    ]
+  ],
+  "schema": "m194h-core-trace-v1",
+  "scope": "actual four CFA-plane operands; RGB comes later through unchanged MHC and writer; partial data never implies a completed case",
+  "status": "COMPLETE_CORE_CALLS_UNVERIFIED",
+  "support_indices": [
+    [
+      7145,
+      7146,
+      7147,
+      7295,
+      7296,
+      7297,
+      7445,
+      7446,
+      7447,
+      7746,
+      7747,
+      7748,
+      7896,
+      7897,
+      7898,
+      8046,
+      8047,
+      8048
+    ],
+    [
+      1772,
+      1773,
+      1774,
+      1847,
+      1848,
+      1849,
+      1922,
+      1923,
+      1924,
+      1925,
+      1997,
+      1998,
+      1999,
+      2000,
+      2072,
+      2073,
+      2074,
+      2075
+    ],
+    [
+      441,
+      442,
+      443,
+      479,
+      480,
+      481,
+      482,
+      517,
+      518,
+      519,
+      520,
+      555,
+      556,
+      557,
+      558
+    ],
+    [
+      106,
+      107,
+      108,
+      109,
+      125,
+      126,
+      127,
+      128,
+      144,
+      145,
+      146,
+      147,
+      163,
+      164,
+      165,
+      166
+    ]
+  ],
+  "support_rule": "all-four-plane union of full native5x5 MHC envelopes followed by exact nonzero inverse-expand closure",
+  "word_cap": 32768,
+  "word_count": 0
+}
