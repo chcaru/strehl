@@ -1,0 +1,84 @@
+{
+  "additional_authorized_work": {
+    "cpu_seconds": 120,
+    "file_bytes": 0,
+    "metadata_bytes": 0,
+    "wall_seconds": 0
+  },
+  "attempt_caps": {
+    "cpu_seconds": 100,
+    "file_bytes": 8388608,
+    "metadata_bytes": 8388608,
+    "wall_seconds": 180
+  },
+  "callback_result": {
+    "bytes": 10240,
+    "path": "experiments/m193c-output-grid/work/accounting-callback-comparison-1/result.json",
+    "sha256": "b42293535eed7fcd9545a451804da23fcfa6d7735d0639f10b92e7a06c899bb0"
+  },
+  "evidence_bindings": {
+    "experiments/m193c-output-grid/work/independent-real-accounting-repair-audit-stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "experiments/m193c-output-grid/work/independent-sift-lightglue-real-prefix-audit-stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "failed_prefix_audit": {
+    "bytes": 11333,
+    "path": "experiments/m193c-output-grid/work/independent-sift-lightglue-real-prefix-audit.json",
+    "sha256": "4f8b48d9edf19fdac45c38aaf3bab85364e853a721827d4415d4d7dcb91cc66f"
+  },
+  "failed_repair_audit": {
+    "bytes": 16641,
+    "path": "experiments/m193c-output-grid/work/independent-real-accounting-repair-audit.json",
+    "sha256": "7a86134c6e2e570194caac609824e8e54f1a86c5c7bff0ad02e1af470aa16447"
+  },
+  "new_cumulative_limits": {
+    "cpu_seconds": 1440,
+    "file_bytes": 4294967296,
+    "metadata_bytes": 134217728,
+    "wall_seconds": 1800
+  },
+  "new_output": "experiments/m193c-output-grid/real-accounting-repair-2",
+  "preparation_allowance": {
+    "cpu_seconds": 20,
+    "file_bytes": 1048576,
+    "metadata_bytes": 1048576,
+    "wall_seconds": 30
+  },
+  "previous_ceiling_disposition": "RETIRED_NOT_RESET",
+  "previous_charged_work": {
+    "cpu_seconds": 1292.771803,
+    "file_bytes": 4059662381,
+    "metadata_bytes": 68401447,
+    "wall_seconds": 1193.6198098999992
+  },
+  "previous_cumulative_limits": {
+    "cpu_seconds": 1320,
+    "file_bytes": 4294967296,
+    "metadata_bytes": 134217728,
+    "wall_seconds": 1800
+  },
+  "replacement_sources": {
+    "runner": {
+      "bytes": 17916,
+      "path": "experiments/m193c-output-grid/real-accounting-repair-v2-run.py",
+      "sha256": "6422d6ce08b51d179d29f95eb0a3cf69c37657554c1ed511c0bf28c6a7b6ea39"
+    },
+    "spec": {
+      "bytes": 15215,
+      "path": "experiments/m193c-output-grid/real-accounting-repair-v2-preregister.md",
+      "sha256": "383a423f460bddf9d881b5947b4daec18b1586edb4604f9dc1f789d2c704c2f4"
+    },
+    "support": {
+      "bytes": 2243,
+      "path": "experiments/m193c-output-grid/real-accounting-repair-v2-support.py",
+      "sha256": "2b2ece0185c7a55eace5bba46632ea0afd8a1632fe65f9188dcc7b4cd813b248"
+    }
+  },
+  "schema": "m193c-real-accounting-repair-resource-authorization-v2",
+  "status": "AUTHORIZED_SINGLE_FRESH_OPERATIONAL_REPLACEMENT"
+}
