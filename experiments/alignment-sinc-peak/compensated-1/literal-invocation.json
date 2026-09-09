@@ -1,0 +1,15 @@
+{
+  "command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\alignment-sinc-peak\\build-3\\core-tests.exe",
+    "--exact",
+    "align::sinc_peak_diagnostic::tests::sinc_peak_literal_controls",
+    "--ignored",
+    "--nocapture",
+    "--test-threads=1"
+  ],
+  "environment_overrides": {
+    "RAYON_NUM_THREADS": "2",
+    "STREHL_SINC_PEAK_OUT": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\alignment-sinc-peak\\compensated-1\\literal.json"
+  },
+  "removed_environment": []
+}

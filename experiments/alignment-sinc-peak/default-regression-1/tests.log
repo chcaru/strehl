@@ -1,0 +1,37 @@
+
+running 32 tests
+test align::tests::a_disconnected_frame_is_reported_unplaced_not_guessed ... ok
+test align::tests::a_featureless_tile_is_refused_rather_than_matched ... ok
+test align::tests::a_gather_under_the_identity_is_the_identity ... ok
+test align::tests::a_plane_view_refuses_a_mismatched_buffer ... ok
+test align::tests::a_tree_training_graph_is_detected_as_a_tree ... ok
+test align::tests::a_widened_clamp_makes_the_hull_guard_fail ... ok
+test align::tests::an_uncorrelatable_pair_refuses_instead_of_inventing_a_transform ... ok
+test align::tests::bilinear_costs_more_high_frequency_than_catmull_rom ... ok
+test align::tests::catmull_rom_reproduces_the_samples_at_integer_positions ... ok
+test align::tests::chaining_compounds_a_bias_that_the_global_solve_absorbs ... ok
+test align::tests::clamped_catmull_rom_has_catmull_support_and_checked_domain ... ok
+test align::tests::clamped_catmull_rom_is_bit_identical_until_catmull_leaves_the_hull ... ok
+test align::tests::clamped_catmull_rom_preserves_integer_samples_and_constant_planes_exactly ... ok
+test align::tests::clamped_catmull_rom_stays_inside_the_exact_support16_hull ... ok
+test align::tests::complex_log_and_exp_invert_each_other_near_unity ... ok
+test align::tests::cycle_consistency_is_zero_on_a_self_consistent_edge_set ... ok
+test align::tests::downsample_averages_rather_than_subsamples ... ok
+test align::tests::every_resampler_survives_a_name_round_trip ... ok
+test align::tests::inverse_variance_falls_back_rather_than_dividing_by_zero ... ok
+test align::tests::lanczos2_is_interpolating_and_costs_no_extra_border ... ok
+test align::tests::lanczos3_is_interpolating_and_preserves_dc ... ok
+test align::tests::lanczos3_support_matches_its_reach ... ok
+test align::tests::similarity_compose_and_invert_round_trip ... ok
+test align::tests::similarity_rms_identity_holds ... ok
+test align::tests::the_estimator_recovers_a_planted_similarity ... ok
+test align::tests::the_global_solve_recovers_a_planted_track_from_noisy_edges ... ok
+test align::tests::the_least_squares_core_matches_a_known_solution ... ok
+test align::tests::the_least_squares_core_refuses_an_underdetermined_system ... ok
+test align::tests::the_linearised_inverse_is_wrong_by_g_squared_rho ... ok
+test align::tests::the_parametric_solve_recovers_a_smooth_track_and_its_centre ... ok
+test align::tests::tile_grid_insets_by_the_margin_and_spans_the_rest ... ok
+test align::tests::total_drift_measures_the_whole_bracket_not_one_pair ... ok
+
+test result: ok. 32 passed; 0 failed; 0 ignored; 0 measured; 529 filtered out; finished in 0.03s
+

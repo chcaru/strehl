@@ -1,0 +1,19 @@
+{
+  "command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\alignment-sinc-peak\\build-3\\core-tests.exe",
+    "align::tests::",
+    "--nocapture",
+    "--test-threads=1"
+  ],
+  "fields": {
+    "RAYON_NUM_THREADS": "2"
+  },
+  "removed": [],
+  "exe": {
+    "path": "experiments\\alignment-sinc-peak\\build-3\\core-tests.exe",
+    "sha256": "edcaa1c7c574c396b4fcd5004a72378b4929432743e958945f90b2bd887cfe27",
+    "bytes": 3596800
+  },
+  "prior_child_cpu_seconds": 0.046875,
+  "scope": "existing default-alignment regression tests only"
+}
