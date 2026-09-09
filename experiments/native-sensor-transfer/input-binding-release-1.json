@@ -1,0 +1,55 @@
+{
+  "schema": "native-sensor-transfer-input-binding-release-v1",
+  "source": {
+    "path": "experiments/native-sensor-transfer/bind-inputs.py",
+    "bytes": 4283,
+    "sha256": "040a7346a1e22ea9803f769005a20e31d461fa2f4a5d2fff0102b09d00fd9d14"
+  },
+  "originals": [
+    "D:/personal/macro/requests/10-paper-iso-var/DSC00235.ARW",
+    "D:/personal/macro/requests/10-paper-iso-var/DSC00236.ARW",
+    "D:/personal/macro/requests/10-paper-iso-var/DSC00237.ARW",
+    "D:/personal/macro/requests/10-paper-iso-var/DSC00238.ARW",
+    "D:/personal/macro/requests/10-paper-iso-var/DSC00239.ARW",
+    "D:/personal/macro/requests/6-11-extended-dark-frames/DSC00872.ARW",
+    "D:/personal/macro/requests/6-11-extended-dark-frames/DSC00873.ARW",
+    "D:/personal/macro/requests/6-11-extended-dark-frames/DSC00874.ARW",
+    "D:/personal/macro/requests/6-11-extended-dark-frames/DSC00875.ARW",
+    "D:/personal/macro/requests/6-11-extended-dark-frames/DSC00876.ARW",
+    "D:/personal/macro/requests/6-11-extended-dark-frames/DSC00877.ARW",
+    "D:/personal/macro/requests/6-11-extended-dark-frames/DSC00878.ARW",
+    "D:/personal/macro/requests/6-11-extended-dark-frames/DSC00879.ARW",
+    "D:/personal/macro/requests/6-11-extended-dark-frames/DSC00880.ARW",
+    "D:/personal/macro/requests/6-11-extended-dark-frames/DSC00881.ARW",
+    "D:/personal/macro/requests/6-11-extended-dark-frames/DSC00882.ARW",
+    "D:/personal/macro/requests/6-11-extended-dark-frames/DSC00883.ARW",
+    "D:/personal/macro/requests/6-11-extended-dark-frames/DSC00884.ARW",
+    "D:/personal/macro/requests/6-11-extended-dark-frames/DSC00885.ARW",
+    "D:/personal/macro/requests/6-11-extended-dark-frames/DSC00886.ARW",
+    "D:/personal/macro/requests/6-11-extended-dark-frames/DSC00887.ARW",
+    "D:/personal/macro/requests/6-11-extended-dark-frames/DSC00888.ARW",
+    "D:/personal/macro/requests/6-11-extended-dark-frames/DSC00889.ARW",
+    "D:/personal/macro/requests/6-11-extended-dark-frames/DSC00890.ARW",
+    "D:/personal/macro/requests/6-11-extended-dark-frames/DSC00891.ARW",
+    "D:/personal/macro/requests/6-11-extended-dark-frames/DSC00892.ARW",
+    "D:/personal/macro/requests/6-11-extended-dark-frames/DSC00893.ARW"
+  ],
+  "limits": {
+    "cpu_seconds": 20,
+    "wall_seconds": 60,
+    "read_bytes": 1073741824,
+    "write_bytes": 65536
+  },
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-I",
+    "-S",
+    "-B",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-sensor-transfer\\bind-inputs.py",
+    "--release",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-sensor-transfer\\input-binding-release-1.json",
+    "--release-sha256",
+    "ACTUAL_RELEASE_SHA256"
+  ],
+  "authority": "Root fixed read-only content binding. Previously allocated27 controls; no decode, image array, metric or candidate. Separate read cost retained."
+}
