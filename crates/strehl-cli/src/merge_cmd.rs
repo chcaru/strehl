@@ -75,6 +75,11 @@ pub(crate) mod halo;
 #[cfg(test)]
 #[path = "merge_cmd/production-truth.rs"]
 mod production_truth;
+
+#[cfg(test)]
+pub(crate) mod native_sensor_transfer {
+    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/native-sensor-transfer/source/native-adapter.rs"));
+}
 #[cfg(test)]
 #[path = "merge_cmd/known-scene-benchmark.rs"]
 mod known_scene_benchmark;
@@ -4904,9 +4909,13 @@ impl BandWorker {
         }
 
         let refs: Vec<&[f32]> = self.planes.iter().map(|v| v.as_slice()).collect();
+        #[cfg(all(test, feature = "native-sensor-transfer"))]
+        native_sensor_transfer::inputs(&self.planes, &self.luma, &self.var, frame_beta);
         self.fws.next_frame();
         self.merge
             .add_frame_with_gain(&refs, &self.luma, &self.var, frame_beta, &mut self.fws);
+        #[cfg(all(test, feature = "native-sensor-transfer"))]
+        native_sensor_transfer::after(&self.var);
         Ok(true)
     }
 }
@@ -5007,6 +5016,8 @@ fn load_frame(
             }
         }
 
+        #[cfg(all(test, feature = "native-sensor-transfer"))]
+        native_sensor_transfer::prepared(&frame, domain);
         let black = levels.black;
         extract_planes(
             &frame.data,

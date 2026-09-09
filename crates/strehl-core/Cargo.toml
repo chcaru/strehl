@@ -16,3 +16,4 @@ rayon.workspace = true
 [features]
 # Explicit experiment-only consumer hook; disabled in normal builds.
 m194h-pedestal-causality = []
+native-sensor-transfer = []

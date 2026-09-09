@@ -75,6 +75,11 @@ pub mod m194h {
     include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/m194h-pedestal-causality/core-hook.rs"));
 }
 
+#[cfg(feature = "native-sensor-transfer")]
+pub mod native_sensor_transfer {
+    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/native-sensor-transfer/source/core-hook.rs"));
+}
+
 /// The 5-tap binomial generating kernel, `[1, 4, 6, 4, 1] / 16`.
 ///
 /// Burt & Adelson's `a = 0.4` member of the generating-kernel family, which is
@@ -1750,6 +1755,9 @@ impl BandMerge {
         #[cfg(feature = "m194h-pedestal-causality")]
         m194h::begin_frame(self, frame_beta);
 
+        #[cfg(feature = "native-sensor-transfer")]
+        native_sensor_transfer::begin_frame(self, frame_beta);
+
         // 1. The selection pyramid, and the noise pyramid beside it.
         ws.luma.build(luma, &mut ws.ws);
         ws.var.build_gaussian(variance, &mut ws.ws);
@@ -1814,6 +1822,9 @@ impl BandMerge {
             #[cfg(feature = "m194h-pedestal-causality")]
             m194h::band(self, k, planes, &mut ws.plane, sq, ws.var.level(k),
                 Self::beta_for(&self.gain, frame_beta, k), w);
+            #[cfg(feature = "native-sensor-transfer")]
+            native_sensor_transfer::band(self, k, averaged, frame_beta,
+                lv, ws.var.level(k), sq, w);
             self.accumulate_level(k, planes, &mut ws.plane, w);
         }
 
@@ -1842,6 +1853,9 @@ impl BandMerge {
                 );
             }
         }
+        #[cfg(feature = "native-sensor-transfer")]
+        native_sensor_transfer::base(self, kb, ws.luma.level(kb), ws.var.level(kb),
+            &ws.coarse[..szb.pixels()]);
         Self::accumulate_level(self, kb, planes, &mut ws.plane, &ws.coarse[..szb.pixels()]);
 
         // 4. The hull of the aligned inputs, which the reconstruction will be
@@ -1924,6 +1938,8 @@ impl BandMerge {
     /// first level touched.
     fn accumulate_level(&mut self, k: usize, planes: &[&[f32]], cache: &mut PlaneCache, w: &[f32]) {
         cache.ensure(planes, &self.sizes);
+        #[cfg(feature = "native-sensor-transfer")]
+        native_sensor_transfer::coefficients(k, &cache.pyramids);
         let px = self.sizes[k].pixels();
         // Diagnostic, and deliberately before the accumulators are borrowed:
         // `self.frames` is still this frame's 0-based index here, because it is

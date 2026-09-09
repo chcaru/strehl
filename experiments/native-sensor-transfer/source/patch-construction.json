@@ -33,8 +33,8 @@
       "original_sha256": "ea0a490d299b156c449b3de8c5633fcaeda2190d1c92d1d9c5356e6a9a92c02e",
       "replacements": 5,
       "reverse_exact_bytes": true,
-      "patch_applied_lf_bytes": 210044,
-      "patch_applied_lf_sha256": "c5d7b0663ee083f9a70abe360b44057e4f8c062c39b4b85f807989ee5eba5686",
+      "patch_applied_lf_bytes": 209731,
+      "patch_applied_lf_sha256": "a504c2b8b5f693f0d83a186b20fa209082930d6b0167536b2177608adca41a65",
       "candidate_bytes": 209731,
       "candidate_sha256": "a504c2b8b5f693f0d83a186b20fa209082930d6b0167536b2177608adca41a65"
     },
@@ -46,8 +46,8 @@
       "candidate_sha256": "6b7f018f5598f68cd4a5217ff522355498ecb9281200a97570256f9aabb4965c",
       "replacements": 4,
       "reverse_exact_bytes": true,
-      "patch_applied_lf_bytes": 426598,
-      "patch_applied_lf_sha256": "b0ffb690cddc2a915669edc565c2296b8a32abb0a18cd28f8ecd93a7a7ec4c33"
+      "patch_applied_lf_bytes": 426238,
+      "patch_applied_lf_sha256": "6b7f018f5598f68cd4a5217ff522355498ecb9281200a97570256f9aabb4965c"
     },
     {
       "path": "crates/strehl-cli/src/align_cmd.rs",
@@ -57,8 +57,9 @@
       "candidate_sha256": "8cd858dd6bfe93999a621e94ff968a051c3d5c7fcd257ccf09f1402cea737c6d",
       "replacements": 1,
       "reverse_exact_bytes": true,
-      "patch_applied_lf_bytes": 119881,
-      "patch_applied_lf_sha256": "74e71af92b9f7b16e39f3f243cc7da3b69d8f73cfcccec372dfe4e3d60279519"
+      "patch_applied_lf_bytes": 119825,
+      "patch_applied_lf_sha256": "6e36f14d5c2eb6b2b2273dbb45031c81851330c1d65fce8dcf231b1c27fd16cd"
     }
-  ]
+  ],
+  "correction_lineage": "Original metadata preserved at51281d20. Root independent dry application corrected three stale LF pins; semantic patch and preserved-newline candidate pins unchanged. replacements counts constructor replacement operations, not unified hunks (merge_cmd:4 operations/3 hunks)."
 }

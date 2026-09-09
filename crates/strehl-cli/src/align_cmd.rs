@@ -2098,6 +2098,9 @@ pub fn warp_frame_in_place_fullres(
             let src = PlaneRef::from_geometry(plane, fgeom)
                 .context("full-resolution warp source does not match the frame geometry")?;
             let t_site = strehl_core::optics::OpticalProfile::compose(ca, ch, t);
+            #[cfg(all(test, feature = "native-sensor-transfer"))]
+            crate::merge_cmd::native_sensor_transfer::gather_site(
+                &frame.path, &gain, ident.model.as_deref(), ident.lens_type3, ca, dx, dy, t_site);
             // The site's own offset inside the quad, in plane units.
             let (ox, oy) = (dx as f64 * 0.5, dy as f64 * 0.5);
             {

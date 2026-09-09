@@ -1,0 +1,97 @@
+{
+  "schema": "native-sensor-transfer-source-application-v1",
+  "status": "APPLIED_REVIEWED_SOURCE_ONLY",
+  "source_review": {
+    "path": "experiments/native-sensor-transfer/producer-source-review.md",
+    "bytes": 14105,
+    "sha256": "31dee2b8a5465c9815d1c73d5f5ccd02a5e305fd02ded337361806d10cd9729d"
+  },
+  "patch_sha256": "2fda52067848153017fcb59e6b1bbb630b343ab5f1b76d96a90d7c727a77c553",
+  "paths": [
+    {
+      "path": "crates/strehl-core/Cargo.toml",
+      "before_bytes": 478,
+      "before_sha256": "6ef45d6cecf366bc4a882850f14b2f2ce518dc9ff73f3a3169ee6df0bb04d331",
+      "after_bytes": 506,
+      "after_sha256": "338bcf049529364bf07bde8005f72b1f072e31574dd80e7867e886bb2ac3228a",
+      "hunks": 1,
+      "inserted_lines": 1,
+      "deleted_lines": 0,
+      "reverse_exact_bytes": true,
+      "reviewed_lf_patch_equal": true,
+      "actual_lf_bytes": 492,
+      "actual_lf_sha256": "5879b09a44963738b238ed42571800fe5135f263d62a9febea78218cc23361b6",
+      "legacy_candidate_pin_equal": true
+    },
+    {
+      "path": "crates/strehl-cli/Cargo.toml",
+      "before_bytes": 912,
+      "before_sha256": "812de43881c1b29afd84eb9435e7764027bae5da0f6efaabd5b8ea41ce6a3bf5",
+      "after_bytes": 976,
+      "after_sha256": "b89f7964189adf7375614ef31cb45eb888315a4fbf3f51407f33982cf94d53d5",
+      "hunks": 1,
+      "inserted_lines": 1,
+      "deleted_lines": 0,
+      "reverse_exact_bytes": true,
+      "reviewed_lf_patch_equal": true,
+      "actual_lf_bytes": 976,
+      "actual_lf_sha256": "b89f7964189adf7375614ef31cb45eb888315a4fbf3f51407f33982cf94d53d5",
+      "legacy_candidate_pin_equal": true
+    },
+    {
+      "path": "crates/strehl-core/src/pyramid.rs",
+      "before_bytes": 208956,
+      "before_sha256": "ea0a490d299b156c449b3de8c5633fcaeda2190d1c92d1d9c5356e6a9a92c02e",
+      "after_bytes": 209731,
+      "after_sha256": "a504c2b8b5f693f0d83a186b20fa209082930d6b0167536b2177608adca41a65",
+      "hunks": 5,
+      "inserted_lines": 16,
+      "deleted_lines": 0,
+      "reverse_exact_bytes": true,
+      "reviewed_lf_patch_equal": true,
+      "actual_lf_bytes": 209731,
+      "actual_lf_sha256": "a504c2b8b5f693f0d83a186b20fa209082930d6b0167536b2177608adca41a65",
+      "legacy_candidate_pin_equal": true
+    },
+    {
+      "path": "crates/strehl-cli/src/merge_cmd.rs",
+      "before_bytes": 425678,
+      "before_sha256": "ca829e45c7021c5c5df7b51da85859e3763a9a95d01d302a91ab7cd0687b2dcf",
+      "after_bytes": 426238,
+      "after_sha256": "6b7f018f5598f68cd4a5217ff522355498ecb9281200a97570256f9aabb4965c",
+      "hunks": 3,
+      "inserted_lines": 11,
+      "deleted_lines": 0,
+      "reverse_exact_bytes": true,
+      "reviewed_lf_patch_equal": true,
+      "actual_lf_bytes": 426238,
+      "actual_lf_sha256": "6b7f018f5598f68cd4a5217ff522355498ecb9281200a97570256f9aabb4965c",
+      "legacy_candidate_pin_equal": true
+    },
+    {
+      "path": "crates/strehl-cli/src/align_cmd.rs",
+      "before_bytes": 122446,
+      "before_sha256": "b3de7738151a6bc0500c66dd916f9fcb20cdb9be0bf698ad00425d3ebb397c69",
+      "after_bytes": 122681,
+      "after_sha256": "8cd858dd6bfe93999a621e94ff968a051c3d5c7fcd257ccf09f1402cea737c6d",
+      "hunks": 1,
+      "inserted_lines": 3,
+      "deleted_lines": 0,
+      "reverse_exact_bytes": true,
+      "reviewed_lf_patch_equal": true,
+      "actual_lf_bytes": 119825,
+      "actual_lf_sha256": "6e36f14d5c2eb6b2b2273dbb45031c81851330c1d65fce8dcf231b1c27fd16cd",
+      "legacy_candidate_pin_equal": true
+    }
+  ],
+  "earlier_dry_read": {
+    "exit_code": 1,
+    "assertion": "crates/strehl-core/src/pyramid.rs",
+    "reason": "stale alternate normalized-LF construction pins",
+    "live_writes": 0
+  },
+  "decision": "All five actual candidate byte pins and independent reversal agree; alternate normalized metadata is not used as application authority. Original construction retained at51281d20.",
+  "numerical_execution": false,
+  "raw_payload_reads": 0,
+  "builds": 0
+}

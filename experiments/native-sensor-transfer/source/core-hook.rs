@@ -127,6 +127,9 @@ pub(super) fn band(
     let Some(a) = slot.as_mut() else { return; };
     if a.snapshot.mode == Mode::Off { return; }
     assert!(a.begun && k < 4 && a.snapshot.band_visits == k, "observer band order");
+    // DERIVED scalar context: these re-evaluate selection/exponent/significance
+    // from actual config/prefix. They are not retained weight-closure locals.
+    // L/V/E/weight and the separately copied config/prefix remain actual observations.
     let context = if a.snapshot.mode == Mode::Placebo { vec![0; 9] } else {
         let selected = BandMerge::beta_for(&merge.gain, beta, k);
         vec![0, averaged as u32, beta.is_some_and(|b| k < b.len()) as u32,

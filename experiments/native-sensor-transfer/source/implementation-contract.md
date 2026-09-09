@@ -3,7 +3,9 @@
 SOURCE-ONLY, 2026-09-09. This is the producer author's implementation contract,
 not independent verification or numerical authority. The charter and amendments
 1/2/3 govern. No RAW payload, candidate, probe, control, build or test has run in
-this source lane. The patch remains outside crates and unapplied.
+this source lane. The patch remains outside crates and unapplied. The original candidate is
+preserved at51281d201be2c2a6a46e45d3c5b4afcad49dd678; this correction addresses
+the three findings in producer-source-review.md without changing its population.
 
 ## Consumer and unchanged policy
 
@@ -96,7 +98,10 @@ off/on/placebo and against their feature-off counterparts. Each f32 payload is
 262144 bytes; all18 total4718592. Call existing write_merged on the same
 finished Merged::Bands, actual first-frame levels/WB/matrix provenance,
 OutputSpace::CameraLinear, demosaic=true, Exposure::None, restore=None.
-The native TIFF dimensions are256x256, each capped512KiB;18 reserve9437184 bytes.
+The native TIFF dimensions are256x256;18 reserve9437184 bytes at512KiB each.
+The unchanged writer runs before that extent is checked. This is a postwriter
+bound, not online enforcement; the released owned parent must cover actual
+writer/stage bytes and preserve an oversize or failed publication.
 These18 writer calls are additional work, but add no fold/decode/probe.
 The original measurement writer is reused unchanged, with no external RGB path. The
 primary paper/on output is reused as that actual witness, not called another run.
@@ -104,6 +109,9 @@ There is no whole22-dark byte-neutrality claim and no no-map/placed equality bar
 A feature-off binary is independently built from the same source set with only
 the feature selection differing. Observer failures, partial fold counts and
 output failures cannot be promoted to successful scientific traversals.
+Assertions and publication panics can leave only incomplete.json, earlier rows,
+stages and raw terminal evidence. failure.json is attempted for returned errors
+but is not guaranteed. Attempted-but-unpublished decode/fold counts are unknown.
 
 ## Passive observation interface
 
@@ -124,11 +132,16 @@ four Laplacians; actual base weight; and all four plane coefficient pyramids fro
 the already prepared production cache. The black scalar plus original/prepared
 codes permits independently reconstructed signed values; label those DERIVED.
 
-Per-band context records requested/actual depth, level shape, selected white or
-per-frame beta, actual beta bits, gate, exponent, significance and bypass/base
-labels. Production's threshold is a scalar local inside the parallel weight
-closure. A saved floor array is explicitly DERIVED from the recorded exact
-operands gate*beta*max(V,0); it is never labelled the original scalar array.
+Per-band context records requested/actual depth, level shape, copied config,
+supplied prefix, white gain and bypass/base labels. Its selected beta,
+effective exponent and effective significance value are DERIVED re-evaluations
+of beta_for/exponent_at/significance_floor from actual config/prefix, not
+directly retained weight-closure locals. Frame JSON labels this provenance
+DERIVED_FROM_ACTUAL_CONFIG_AND_PREFIX; numeric trace layout stays unchanged.
+L/V/E/weights and copied config/prefix remain actual observations. Production's
+threshold is a scalar local inside the parallel weight closure. A saved floor
+array is explicitly DERIVED from recorded operands gate*beta*max(V,0); it is
+never labelled the original scalar array.
 Actual weight bits are the consuming observation. Independent comparison, with
 its declared finite arithmetic tolerance, checks their relationship. BaseMean
 is not a fifth gated band; no permanently green base/mean-coarse census.
@@ -137,8 +150,12 @@ Off retains common source/config/output identities but does not inspect arrays
 through optional hooks. Placebo allocates/touches the identical optional shapes
 with constants and never reads optional merge state; its zero arrays are labelled
 placebo, not observations. Shared mandatory input/output hashes remain common.
-All hooks are inert without an active session. A feature-off build contains no
-core hook calls. RAII cleanup refuses nesting and prevents stale frame association.
+The final retained_map_record_count counts retained actual On records or
+constant Placebo records, with zero for Off/feature-off. The separate
+expected_map_callback_visits states8*decoded for feature-on complete traversals
+(including Off callbacks that return early), zero for feature-off; it is not an
+individually measured callback counter. All hooks are inert without an active
+session. A feature-off build contains no core hook calls. RAII cleanup refuses nesting and prevents stale frame association.
 
 On this crop gatefloor measures min(4,sizes.len()-2)=3 bands. k3 is NOT attempted;
 the hypothetical12x12 trimmed population would also be below256, but that is not
@@ -187,6 +204,12 @@ owned-process/resource ledger. Root releases those separately. Independent opera
 same-file decoder agreement establishes physical sensor calibration. No claim here of
 complete native DLL closure, sensor calibration, physical stationarity, quality,
 real alignment, restored M1/M2 evidence, or SOTA.
+
+Hash/decode association retains source_ref's exact checked hash-time length/mtime
+baseline. The same baseline is checked immediately before decoding, after decode,
+and after both route folds; no fresh predecode baseline can bridge an unnoticed
+hash-to-decode change. This remains metadata continuity, not an atomic snapshot
+or complete native-library/filesystem identity guarantee.
 
 Preparation scope64MiB source/report reads,4MiB new retention,60CPU/120 active
 process wall. The explicit12-file pin pass read883974 bytes; earlier source reads

@@ -1,7 +1,9 @@
 # Native sensor transfer continuation
 
-2026-09-09. SOURCE PREPARATION. No RAW payload, simulation, numerical control,
-test, build or product execution has been released for this task.
+2026-09-09. REVIEWED OBSERVER SOURCE INTEGRATED; builds and execution pending.
+No RAW payload, simulation, numerical control, test, build or product execution
+has been released. Earlier source-preparation sections are retained as history;
+the integration section below supersedes their unapplied-source status.
 
 Root adopted raw-program-priority-review.md at59202e51df6c09485099618a393ebad0b5468777.
 The integer common-TIFF design is retained but deferred; native RAW sensor
@@ -165,3 +167,28 @@ under the held methodology, still SOURCE ONLY (64MiB reads/4MiB retained/60CPU/
 120active-process-wall). No control or candidate import is granted. Sampler
 will review that source independently. Producer proposes a208MiB artifact
 envelope including independent failure slots; this is not an execution release.
+
+## Reviewed observer source integrated
+
+Root applied the independently reviewed observer on2026-09-09. The five live
+crate files now contain32 added lines and zero deleted lines. A separate parser
+reconstructed the exact reviewed candidate bytes, and removing its additions
+restored each original byte buffer. root-application.py is the exact executed
+source procedure; source-application-1.json3933B/028a53f5859c3795f5777d4e3fe425d423172f73deea0c6dd5d6413c0f0b9fea
+records the application and the preceding dry-read refusal. Three alternate
+normalized-LF construction pins were stale; all five actual candidate pins
+were correct. Factor corrected that metadata without changing patch semantics.
+No build or scientific execution followed this source application.
+
+The producer review cleared hash-to-decode metadata continuity, truthful map
+record/expected-visit labels and DERIVED scalar-context provenance. Actual
+array observations and the unchanged native writer remain distinct. The
+postwriter size check and possibly missing failure.json remain explicit.
+
+Factor is adapting the existing owned stage/Job/capture helpers for two fresh
+feature-on/off builds, controls, nine native invocations and independent read.
+Coordinate is implementing the held ten-key reader release and20 control groups;
+Sampler is reviewing its concrete source after the producer delta. Root alone
+will release exact build/control/RAW commands after source review and finite
+resource/source/input bindings. The source-only tasks do not authorize those
+executions. Existing source archives51281d20 and methodologya257cba9 stay held.

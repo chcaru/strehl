@@ -139,7 +139,7 @@ fn json_new(path: &Path, value: &Value) -> Result<Value> {
     let mut raw = serde_json::to_vec(value)?; raw.push(b'\n');
     write_new(path, &raw, MAX_JSON)
 }
-fn source_ref(path: &Path) -> Result<Value> {
+fn source_ref(path: &Path) -> Result<(Value, fs::Metadata)> {
     let before = fs::metadata(path)?;
     ensure!(before.is_file() && before.len()>0 && before.len() <= 38825984, "native original extent");
     let mut f = File::open(path)?;
@@ -155,7 +155,8 @@ fn source_ref(path: &Path) -> Result<Value> {
     ensure!(total==before.len() && closed.len()==opened.len() &&
         closed.modified()?==opened.modified()? && named.len()==before.len() &&
         named.modified()?==before.modified()?, "native source changed during hash");
-    Ok(json!({"path":path,"bytes":total,"sha256":hex(h.finalize().as_ref())}))
+    // Keep this exact hash-time baseline through decode and both route folds.
+    Ok((json!({"path":path,"bytes":total,"sha256":hex(h.finalize().as_ref())}), before))
 }
 fn same_metadata(path: &Path, before: &fs::Metadata) -> Result<()> {
     let after=fs::metadata(path)?;
@@ -245,8 +246,8 @@ fn run_pair(invocation: usize, out: &Path) -> Result<Value> {
     let mut output_wb=None; let mut output_matrix=None;
     let mut pool=None; let mut decoded=0usize;
     for (index,path) in paths.iter().enumerate() {
-        let source=source_ref(path)?;
-        let before=fs::metadata(path)?;
+        let (source,before)=source_ref(path)?;
+        same_metadata(path,&before)?;
         let original=strehl_raw::decode(path).with_context(||format!("native decode {}",path.display()))?;
         decoded+=1; same_metadata(path,&before)?; check_frame(&original)?;
         ensure!(original.path==*path,"decoder source path identity");
@@ -313,6 +314,7 @@ fn run_pair(invocation: usize, out: &Path) -> Result<Value> {
                 "prepared_roi":prepared_ref,"trace":trace_ref,"inputs":capture.inputs,
                 "variance_after_sha256":capture.after,"gather_site_records":capture.maps,
                 "folded":true,"floor_array":"not-stored; threshold derived from exact operands",
+                "scalar_context_provenance":"DERIVED_FROM_ACTUAL_CONFIG_AND_PREFIX",
                 "feature":cfg!(feature="native-sensor-transfer")});
             rows.push(json_new(&out.join(format!("frame-{index:02}-route-{route}.json")),&row)?);
         }
@@ -360,7 +362,9 @@ fn run_pair(invocation: usize, out: &Path) -> Result<Value> {
         "invocation":invocation,"observer":mode.name(),"feature":cfg!(feature="native-sensor-transfer"),
         "native_decodes":decoded,"source_handoffs":2*decoded,"folds":2*decoded,
         "expected_real_fullres_warps":decoded,"expected_synthetic_probe_warps":decoded,
-        "map_callback_visits":if mode==Observe::On||mode==Observe::Placebo{8*decoded}else{0},
+        "retained_map_record_count":if mode==Observe::On||mode==Observe::Placebo{8*decoded}else{0},
+        "expected_map_callback_visits":if cfg!(feature="native-sensor-transfer"){8*decoded}else{0},
+        "map_callback_count_scope":"expected for complete traversal; calls not individually counted",
         "shape":[128,128],"crop":[1694,1108,128,128],"configured_bands":7,"actual_sides":SIDES,
         "config":format!("{cfg:?}"),"partition":partition,"environment":env,"frames":rows,"outputs":outputs,
         "scope":"conditional native Crop; no physical calibration or photographic quality admission"}))
