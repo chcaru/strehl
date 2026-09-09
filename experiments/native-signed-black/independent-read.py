@@ -114,7 +114,7 @@ def decoded(raw):
     return rgb, known
 
 
-def arm(directory, signed):
+def arm(directory, signed, mode=None):
     raw, result_ref = read(directory / 'result.json', 128 * 1024)
     result = json.loads(raw)
     need(result['schema'] == 'native-signed-black-comparison-v1'
@@ -124,6 +124,13 @@ def arm(directory, signed):
     need(result['level_sizes'] == [[64, 48], [32, 24], [16, 12]], 'actual pyramid geometry')
     need(result['noise']['gain_dn_per_e'] == 1.0 and result['noise']['read_noise_e'] == 4.0
          and result['noise']['iso'] == 160.0, 'fixed injected model')
+    if mode is not None:
+        need(type(result.get('mode')) is int and result['mode'] == mode, 'explicit stage2 mode')
+        need(result.get('stage') == 2 and result.get('decision_proxy') == 'baseline-clamped-green',
+             'stage2 baseline decision proxy')
+    elif 'mode' in result:
+        need(type(result['mode']) is int and result['mode'] == (1 if signed else 0),
+             'mode1 comparison identity')
     need(result['configured_bands'] == 7 and result['cfa_order'] == ['R', 'G1', 'G2', 'B'],
          'fixed production configuration')
     need([r['id'] for r in result['cases']] == list(IDS), 'fixed four cases')
@@ -141,6 +148,16 @@ def arm(directory, signed):
         need(all(math.isfinite(r['variance']['min']) and math.isfinite(r['variance']['max'])
                  and 0 <= r['variance']['min'] <= r['variance']['max'] for r in observed),
              'finite actual variance')
+        decision_operands = []
+        if mode is not None:
+            for r in observed:
+                hashes = [r['luma_f32_sha256'], r['variance_f32_sha256']]
+                need(all(isinstance(h, str) and len(h) == 64
+                         and all(c in '0123456789abcdef' for c in h) for h in hashes),
+                     'actual decision hash shape')
+                decision_operands.append({'index': r['index'],
+                    'luma_f32_sha256': hashes[0], 'variance_f32_sha256': hashes[1],
+                    'beta_prefix': r['beta_prefix'], 'averaged_fraction': r['averaged_fraction']})
         floats, float_ref = artifact(row['collapsed'], directory, case + '.f32', 49152)
         need(len(floats) == 49152, 'four complete CFA planes')
         cfa = np.frombuffer(floats, dtype='<f4').reshape(4, H, W)
@@ -167,7 +184,8 @@ def arm(directory, signed):
                      'tiff_pixels_sha256': hashlib.sha256(rgb.astype('<u2').tobytes()).hexdigest(),
                      'writer_max_code_error': int(delta.max()),
                      'writer_unequal_known_samples': int((delta != 0).sum()),
-                     'scores': scores, 'fixture_source_claims': row['fixture']})
+                     'scores': scores, 'fixture_source_claims': row['fixture'],
+                     'decision_operands': decision_operands})
         buffers[case] = (floats, tiff, rgb)
     return {'result': result_ref, 'recipe': result['recipe'], 'cases': rows}, buffers
 
@@ -176,11 +194,17 @@ def main():
     start, cpu = time.perf_counter(), time.process_time()
     parser = argparse.ArgumentParser()
     parser.add_argument('--output', type=Path, required=True)
+    parser.add_argument('--clamped-dir', type=Path, default=HERE / 'comparison-clamped')
+    parser.add_argument('--signed-dir', type=Path, default=HERE / 'comparison-signed')
+    parser.add_argument('--signed-mode', type=int, choices=(1, 2), default=1)
     args = parser.parse_args()
     need(args.output.resolve().parent == HERE and not args.output.exists(), 'fresh local result')
     _, own_source = read(Path(__file__), 64 * 1024)
-    clamped, a = arm(HERE / 'comparison-clamped', False)
-    signed, b = arm(HERE / 'comparison-signed', True)
+    need(args.clamped_dir.resolve().parent == HERE and args.signed_dir.resolve().parent == HERE,
+         'local comparison directories')
+    stage2 = args.signed_mode == 2
+    clamped, a = arm(args.clamped_dir, False, 0 if stage2 else None)
+    signed, b = arm(args.signed_dir, True, 2 if stage2 else None)
     need(clamped['recipe'] == signed['recipe'], 'same fixed recipe across arms')
     same = {case: {'f32_bytes': a[case][0] == b[case][0],
                    'tiff_bytes': a[case][1] == b[case][1],
@@ -190,6 +214,9 @@ def main():
     changes = []
     for ca, cb in zip(clamped['cases'], signed['cases']):
         need(ca['fixture_source_claims'] == cb['fixture_source_claims'], 'same actual source hashes across arms')
+        if stage2:
+            need(ca['decision_operands'] == cb['decision_operands']
+                 and len(ca['decision_operands']) == 5, 'same actual focus decision operands')
         differences = {}
         for view in ca['scores']:
             differences[view] = {}
@@ -199,7 +226,8 @@ def main():
                                           'signed_minus_clamped_abs_bias_dn': abs(y['bias_dn']) - abs(x['bias_dn'])}
         changes.append({'case': ca['case'], 'changes': differences})
     result = {'schema': 'native-signed-black-independent-read-v1', 'status': 'SAVED_RESULTS_READ',
-              'source_sha256': own_source['sha256'],
+              'source_sha256': own_source['sha256'], 'signed_mode': args.signed_mode,
+              'same_actual_decision_operands_required': stage2,
               'masks_half_open': {k: rects for k, (_, rects) in MASKS.items()},
               'clamped': clamped, 'signed': signed, 'equality': same, 'paired_changes': changes,
               'reads': read_refs, 'read_bytes': read_bytes,
@@ -209,7 +237,8 @@ def main():
                        'Known-channel TIFF fidelity only; interpolated-channel quality is not independently scored. '
                        'One-code writer tolerance is a rounding bound, not a fidelity threshold. '
                        'Neutral CFA truth does not independently establish color/permutation accuracy. '
-                       'Negative changes favor signed on that metric; no automatic quality or calibration PASS.'}
+                       'Negative changes favor signed on that metric; no automatic quality or calibration PASS. '
+                       'Mode2 is a separate reconstruction-only candidate; it does not supersede the rejected mode1 fidelity result.'}
     raw = json.dumps(result, allow_nan=False, sort_keys=True, separators=(',', ':')).encode() + b'\n'
     need(len(raw) <= WRITE_LIMIT, 'result write bound')
     with args.output.open('xb') as f:
