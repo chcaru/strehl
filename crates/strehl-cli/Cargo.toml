@@ -49,3 +49,6 @@ native-direct-planes = []
 
 # Test-only correction-noise transfer diagnostic.
 native-correction-variance = ["strehl-core/native-correction-variance"]
+
+# Original-CFA finest-band cue; explicit source opt-in only.
+native-green-cue = ["strehl-core/native-green-cue"]

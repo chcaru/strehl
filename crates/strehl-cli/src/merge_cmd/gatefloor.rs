@@ -675,3 +675,8 @@ mod native_direct_planes_independent_tests {
 mod native_correction_variance {
     include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/native-correction-variance/implementation.rs"));
 }
+
+#[cfg(all(test, feature = "native-green-cue"))]
+mod native_green_cue_controls {
+    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/native-green-cue/independent-controls.rs"));
+}

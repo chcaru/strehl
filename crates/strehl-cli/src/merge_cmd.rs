@@ -4822,6 +4822,8 @@ struct BandWorker {
     /// the failure mode this project exists to catch.
     beta_sum: Vec<f64>,
     beta_n: usize,
+    #[cfg(feature = "native-green-cue")]
+    green_cue: Option<strehl_core::pyramid::native_green_cue::Cue>,
 }
 
 /// One decoded-CFA source shared by the fold and every confidence reread.
@@ -4830,6 +4832,8 @@ struct BandWorker {
 trait PyramidFrameSource: Sync {
     fn len(&self) -> usize;
     fn decode(&self, index: usize) -> Result<Frame>;
+    #[cfg(feature = "native-green-cue")]
+    fn green_cue_enabled(&self) -> bool { false }
     #[cfg(all(test, feature = "native-direct-planes"))]
     fn observe_direct_inputs(&self, _index: usize, _planes: &[Vec<f32>], _luma: &[f32], _beta: Option<&[f32]>) -> Result<()> { Ok(()) }
     #[cfg(all(test, feature = "native-direct-planes"))]
@@ -4877,6 +4881,8 @@ impl BandWorker {
             beta: Vec::new(),
             beta_sum: Vec::new(),
             beta_n: 0,
+            #[cfg(feature = "native-green-cue")]
+            green_cue: None,
         }
     }
 
@@ -4902,7 +4908,7 @@ impl BandWorker {
         if let Some(p) = self.floor.as_mut() {
             p.invalidate();
         }
-        if !load_frame(
+        if !load_frame_impl(
             source,
             index,
             self.domain,
@@ -4913,6 +4919,7 @@ impl BandWorker {
             self.floor.as_mut(),
             &mut self.planes,
             &mut self.luma,
+            #[cfg(feature = "native-green-cue")] Some((noise,&mut self.green_cue)),
         )? {
             return Ok(false);
         }
@@ -4951,6 +4958,13 @@ impl BandWorker {
         #[cfg(feature = "native-pyramid-profile")]
         let add_phase = native_pyramid_profile::start(native_pyramid_profile::ADD);
         self.fws.next_frame();
+        #[cfg(feature = "native-green-cue")]
+        if let Some(cue) = self.green_cue.as_ref() {
+            self.merge.add_frame_with_green_cue(&refs,&self.luma,&self.var,frame_beta,&mut self.fws,cue);
+        } else {
+            self.merge.add_frame_with_gain(&refs,&self.luma,&self.var,frame_beta,&mut self.fws);
+        }
+        #[cfg(not(feature = "native-green-cue"))]
         self.merge
             .add_frame_with_gain(&refs, &self.luma, &self.var, frame_beta, &mut self.fws);
         #[cfg(feature = "native-pyramid-profile")]
@@ -4959,6 +4973,47 @@ impl BandWorker {
         native_sensor_transfer::after(&self.var);
         Ok(true)
     }
+}
+
+// Fixed experiment adapter: actual load_frame/BandWorker/BandMerge::finish.
+// The returned count names supplied valid cue sites, not independent evidence
+// of improved detail; the independent output comparison must establish that.
+#[cfg(all(test, feature = "native-green-cue"))]
+pub(crate) fn green_cue_consume(
+    frames: Vec<Frame>, noise: &NoiseModel, on: bool,
+) -> (Vec<Vec<f32>>, usize) {
+    struct Source { frames: Vec<Frame>, on: bool }
+    impl PyramidFrameSource for Source {
+        fn len(&self) -> usize { self.frames.len() }
+        fn decode(&self,index:usize) -> Result<Frame> { Ok(self.frames[index].clone()) }
+        fn green_cue_enabled(&self) -> bool { self.on }
+    }
+    assert!(!frames.is_empty());
+    assert!(frames.iter().all(|f| !f.path.exists()),"generated fixture only");
+    let full = frames[0].geometry();
+    assert_eq!(full,PlaneGeometry {width:137,height:95});
+    let levels = frames[0].levels;
+    let domain = PyramidDomain::cropped(full,align_cmd::CropRect {x:9,y:6,width:112,height:78}).unwrap();
+    let paths: Vec<_> = frames.iter().map(|f|f.path.clone()).collect();
+    let entries: Vec<_> = paths.iter().map(|p|(p.to_string_lossy(),frames[0].allocated_bytes() as u64)).collect();
+    let map = WarpMap::new(strehl_core::warpmap::Provenance {
+        stack: StackIdentity::from_entries("native-green-cue generated",&entries),
+        strategy:"fixed identity consumer".into(),heldout_px:None,cycle_floor_px:None,
+        reference:4,note:"no optical alignment claim".into(),
+    },full,Resampler::CatmullRom,vec![FrameWarp::Placed(strehl_core::align::Similarity::IDENTITY);frames.len()]);
+    let source = Source {frames,on};
+    let cfg = MergeConfig {bands:3,..MergeConfig::default()};
+    assert_eq!(cfg.mean_coarse,0);
+    let mut worker = BandWorker::new(domain,cfg);
+    let mut valid_supplied = 0;
+    for index in 0..source.len() {
+        assert!(worker.fold(&source,index,levels,noise,Some(&map),None).unwrap());
+        if let Some(cue) = worker.green_cue.as_ref() {
+            valid_supplied += cue.valid.iter().filter(|&&v|v).count();
+        }
+    }
+    let sizes = level_sizes(112,78,cfg.bands);
+    (worker.merge.finish(&mut Workspace::new(&sizes)),valid_supplied)
 }
 
 /// Decode, register and deinterleave one frame into its four CFA planes and
@@ -4984,6 +5039,23 @@ fn load_frame(
     planes: &mut [Vec<f32>],
     luma: &mut [f32],
 ) -> Result<bool> {
+    load_frame_impl(source,index,domain,levels,warps,defect,scratch,floor,planes,luma,
+        #[cfg(feature = "native-green-cue")] None)
+}
+
+#[allow(clippy::too_many_arguments)]
+fn load_frame_impl(
+    source: &impl PyramidFrameSource, index: usize, domain: PyramidDomain, levels: Levels,
+    warps: Option<&WarpMap>, defect: Option<(&crate::stack::DefectPlan, &crate::stack::DefectTally)>,
+    scratch: &mut WarpScratch, floor: Option<&mut gatefloor::Probe>,
+    planes: &mut [Vec<f32>], luma: &mut [f32],
+    #[cfg(feature = "native-green-cue")]
+    cue: Option<(&NoiseModel,&mut Option<strehl_core::pyramid::native_green_cue::Cue>)>,
+) -> Result<bool> {
+    #[cfg(feature = "native-green-cue")]
+    if source.green_cue_enabled() {
+        ensure!(defect.is_none(),"native green cue does not support corrected-source variance");
+    }
     #[cfg(feature = "native-pyramid-profile")]
     let extract_phase;
     #[cfg(feature = "native-direct-planes")]
@@ -5008,6 +5080,27 @@ fn load_frame(
             levels.black,
             levels.white
         );
+        #[cfg(feature = "native-green-cue")]
+        if let Some((noise,cue)) = cue {
+            *cue = None;
+            if source.green_cue_enabled() {
+                ensure!(noise.plane(CfaPlane::G1).levels == levels && noise.plane(CfaPlane::G2).levels == levels,
+                    "native green cue requires the injected source levels");
+                let ident = strehl_raw::identity(&frame.path);
+                ensure!(strehl_core::optics::profile_for_capture_env(ident.model.as_deref(),ident.lens_type3)?.is_none(),
+                    "native green cue does not support CA transport");
+                let pull = match warps {
+                    Some(map) => match map.warp(index)? {
+                        FrameWarp::Placed(t) => *t,
+                        FrameWarp::Refused(_) => return Ok(false),
+                    },
+                    None => strehl_core::align::Similarity::IDENTITY,
+                };
+                let r = domain.rect;
+                *cue = Some(strehl_core::pyramid::native_green_cue::prepare(
+                    &frame,levels,noise,pull,[r.x,r.y,r.width,r.height]));
+            }
+        }
         #[cfg(feature = "native-pyramid-profile")]
         drop(decode_phase);
         // ---- sensor defect correction, BEFORE THE WARP -------------------

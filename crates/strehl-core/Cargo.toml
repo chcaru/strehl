@@ -24,6 +24,9 @@ native-correction-variance = []
 # Explicit NCC score interpolation experiment; default consumers stay parabolic.
 alignment-sinc-peak = []
 
+# Original-CFA finest-band cue; explicit source opt-in only.
+native-green-cue = []
+
 # Existing locked package, used only for experiment/test receipts.
 [dev-dependencies]
 serde_json = { version = "=1.0.151", features = ["float_roundtrip"] }

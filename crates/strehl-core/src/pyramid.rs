@@ -80,6 +80,11 @@ pub mod native_sensor_transfer {
     include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/native-sensor-transfer/source/core-hook.rs"));
 }
 
+#[cfg(feature = "native-green-cue")]
+pub mod native_green_cue {
+    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/native-green-cue/implementation.rs"));
+}
+
 #[cfg(feature = "native-correction-variance")]
 pub mod correction_variance_diagnostic {
     include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/native-correction-variance/core-bridge.rs"));
@@ -1752,6 +1757,25 @@ impl BandMerge {
         frame_beta: Option<&[f32]>,
         ws: &mut FrameWorkspace,
     ) {
+        self.add_frame_with_gain_impl(planes,luma,variance,frame_beta,ws,
+            #[cfg(feature = "native-green-cue")] None);
+    }
+
+    #[cfg(feature = "native-green-cue")]
+    pub fn add_frame_with_green_cue(
+        &mut self, planes: &[&[f32]], luma: &[f32], variance: &[f32],
+        frame_beta: Option<&[f32]>, ws: &mut FrameWorkspace, cue: &native_green_cue::Cue,
+    ) {
+        let n = self.sizes[0].pixels();
+        assert_eq!(cue.energy.len(),n); assert_eq!(cue.variance.len(),n); assert_eq!(cue.valid.len(),n);
+        self.add_frame_with_gain_impl(planes,luma,variance,frame_beta,ws,Some(cue));
+    }
+
+    fn add_frame_with_gain_impl(
+        &mut self, planes: &[&[f32]], luma: &[f32], variance: &[f32],
+        frame_beta: Option<&[f32]>, ws: &mut FrameWorkspace,
+        #[cfg(feature = "native-green-cue")] cue: Option<&native_green_cue::Cue>,
+    ) {
         assert_eq!(planes.len(), self.planes, "wrong number of planes");
         let n0 = self.sizes[0].pixels();
         assert_eq!(luma.len(), n0);
@@ -1823,6 +1847,24 @@ impl BandMerge {
                             }
                         }
                     });
+            }
+            #[cfg(feature = "native-green-cue")]
+            if k == 0 && !averaged {
+                if let Some(cue) = cue {
+                    let gate = self.cfg.gate;
+                    let p = self.cfg.exponent_at(k,nb);
+                    let r_floor = significance_floor(gate)*self.cfg.significance_scale;
+                    w.par_iter_mut().enumerate().for_each(|(i,w)| {
+                        if cue.valid[i] {
+                            let e = cue.energy[i];
+                            let floor = gate*cue.variance[i];
+                            *w = match self.cfg.admission {
+                                AdmissionMode::HardFloor => select_weight((e-floor).max(0.0),floor,p,r_floor),
+                                AdmissionMode::FloorPedestalV1 => pedestal_weight(e,floor,p),
+                            };
+                        }
+                    });
+                }
             }
             #[cfg(feature = "m194h-pedestal-causality")]
             m194h::band(self, k, planes, &mut ws.plane, sq, ws.var.level(k),
