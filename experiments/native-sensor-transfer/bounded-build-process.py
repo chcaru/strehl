@@ -135,7 +135,7 @@ def run(command, env, cwd, log, *, api, wall_seconds, cpu_seconds,
         need(value > 0, "positive child bound")
     allowed = []
     for feature in (True, False):
-        target = ROOT / ("target/native-sensor-transfer-" + ("on-3" if feature else "off-1"))
+        target = ROOT / ("target/native-sensor-transfer-" + ("on-4" if feature else "off-1"))
         argv = ["cargo", "test", "-p", "strehl-cli", "--bin", "strehl", "--no-run"]
         if feature: argv += ["--features", "native-sensor-transfer"]
         allowed.append(argv + ["--jobs", "2", "--target-dir", str(target),

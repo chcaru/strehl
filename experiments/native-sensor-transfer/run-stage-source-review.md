@@ -134,3 +134,35 @@ preparer9560B/2c8139a7ae340dddec2c7205a7d5bdf36c28ac7bda042beed29f80ead86c61d6;
 contract24323B/647708878c8b34594478da4647353b59b53a7977c971bd324c5f1137cc894569.
 Fresh build3 is accepted for release with the same finite allocation, additional
 to the two preserved failures. No physics or numerical test has run yet.
+
+
+## Accepted drive-prefix correction and build-on4
+
+The third build's exact Windows drive/verbatim spelling refusal is preserved
+0badb3f4. The native-local scratch-scan.py3576B/
+b53c57e56855578c803c29594da34e0a69423c9113608932d823184c4b79c2a4
+changes only comparison normalization. Sampler independently reversed that
+delta to the exact shared original. All containment/reparse/strict-resolve and
+retained-artifact logic remain byte-identical. Shared scanner stays untouched.
+
+Twelve independently chosen pure-path controls ran ONCE, actual tool exit0 and
+tool-observed interval0.0582023s. All twelve saved rows passed. Sampler read and
+accepted the saved result2762B/
+28a213ccc85605501d9f47783d896c8f2586c884fe4c047d1b69f42f5c96b3b7.
+The command is in work/scratch-path-controls-1.json. CPU0.03125/wall0.015 are
+prepublication samples, not complete CPU or whole-host measurements. This is
+a path-comparison control only, not a filesystem-race/scanner/RAW test.
+The allocation was10CPU/20wall/4MiB reads/1MiB writes; full allocation retained.
+
+Root read the complete small shim/control and runner/preparer deltas.
+Build-on paths/freeze advance to4, off1 unchanged. New shim and controls are
+included in the build map. Runner33938B/
+6b3fc325a1d10a25885a2f2c8d42114732733a9282d02ad7edb7bb9f26e02d62;
+helper16805B/0a17f2779b6b76d9f495bc88743fc0d13b291f16e49e59535442b01b0018027a;
+capture4016B/9bfd70e83dc53465124bf6d69f7556b90ffc79baf0e6101f821bbca4f4d3d7d1;
+preparer9605B/43de8242c759cb568ee1ac52f769a702e24c0bb5ee9a136e58a29911afba4a15.
+Independent reader/constructor have only their already-reviewed attempt numerals
+advanced to4. No physics, population, numerical tolerance or merge change.
+
+Build4 is accepted for execution at the same finite per-build allocation,
+additional to all three failures. No scientific measurement has run yet.

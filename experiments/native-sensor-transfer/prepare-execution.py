@@ -1,5 +1,5 @@
 """Root metadata-only release constructor: controls, native, verify, once each.
-Uses held build-source-freeze-3 and fixed six-role stage receipts; imports no
+Uses held build-source-freeze-4 and fixed six-role stage receipts; imports no
 candidate/producer/decoder. No original, ROI, trace, TIFF or executable payload
 is read except this metadata process's Python executable. Build executable refs
 come from authenticated completed build records and are rehashed by the runner
@@ -137,7 +137,7 @@ def archive_check(value,mapping):
             need(pin(z.read(k))==v,'archived source bytes');check()
 
 def sources(stage):
-    base_raw=read(WORK/'build-source-freeze-3.json',MIB);base= strict(base_raw)
+    base_raw=read(WORK/'build-source-freeze-4.json',MIB);base= strict(base_raw)
     need(set(base)=={'schema','source_bindings','archive'} and base['schema']=='native-sensor-transfer-build-source-freeze-v1','held build freeze schema')
     original=base['source_bindings'];map_shape(original);archive_check(base['archive'],original)
     current=dict(original);buffers={}
@@ -157,18 +157,18 @@ def sources(stage):
             for k in current:z.writestr(k,buffers[k])
         ar=publish_raw(archive,stream.getvalue(),17*MIB);archive_check(ar,current)
         frozen=publish(freeze,{'schema':'native-sensor-transfer-execution-source-freeze-v1',
-            'build_source_freeze':ref(WORK/'build-source-freeze-3.json',base_raw),'source_bindings':current,'archive':ar})
+            'build_source_freeze':ref(WORK/'build-source-freeze-4.json',base_raw),'source_bindings':current,'archive':ar})
     else:
         raw=read(freeze,MIB);held=strict(raw)
         need(set(held)=={'schema','build_source_freeze','source_bindings','archive'} and
              held['schema']=='native-sensor-transfer-execution-source-freeze-v1' and held['source_bindings']==current,
              'unchanged controls/native/verify source map')
-        same(held['build_source_freeze'],ref(WORK/'build-source-freeze-3.json',base_raw));archive_check(held['archive'],current)
+        same(held['build_source_freeze'],ref(WORK/'build-source-freeze-4.json',base_raw));archive_check(held['archive'],current)
         frozen=ref(freeze,raw)
     return original,current,buffers,frozen
 
 def bundle(stage,current,original):
-    attempt=3 if stage=='build-on' else 1
+    attempt=4 if stage=='build-on' else 1
     output=HERE/f'{stage}-{attempt}';stem=WORK/f'{stage}-external-{attempt}-'
     paths={'result':output/'result.json','tail':output/'parent-tail.json',
            'outer':Path(str(stem)+'outer.json'),'stdout':Path(str(stem)+'stdout.bin'),
@@ -242,7 +242,7 @@ def main():
     closure=results['build-on']['compiled_source_closure']
     need(all(v['compiled_source_closure']==closure for v in results.values()),'same actual compiled closure in all prerequisites')
     binaries={}
-    for role,name,attempt in (('feature_on','build-on',3),('feature_off','build-off',1)):
+    for role,name,attempt in (('feature_on','build-on',4),('feature_off','build-off',1)):
         value=results[name]['artifacts']['executable']
         need(type(value) is dict and set(value)=={'path','bytes','sha256'} and path(value['path'])==HERE/f'{name}-{attempt}'/'cli-tests.exe','fixed copied binary role')
         pin_shape({k:value[k] for k in ('bytes','sha256')},cap=64*MIB);binaries[role]=value
@@ -260,7 +260,7 @@ def main():
             'output':str(HERE/f'{stage}-1'/'check'),'limits':limits,'command':command})
         commands=[[reader['sha256'] if v=='ACTUAL_RELEASE_SHA256' else v for v in command]]
     else:
-        commands=[[str(HERE/('build-on-3' if i<7 else 'build-off-1')/'cli-tests.exe'),'--ignored','--exact',TEST,
+        commands=[[str(HERE/('build-on-4' if i<7 else 'build-off-1')/'cli-tests.exe'),'--ignored','--exact',TEST,
                    '--nocapture','--test-threads=1'] for i in range(9)]
     command=[str(PY),'-I','-S','-B',str(HERE/'run-stage.py'),'--release',str(release_path),'--release-sha256','ACTUAL_RELEASE_SHA256']
     value={'schema':'native-sensor-transfer-stage-release-v1','stage':stage,'source_bindings':current,'inputs':inputs,

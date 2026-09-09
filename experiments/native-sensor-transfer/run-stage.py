@@ -13,17 +13,17 @@ MIB=1<<20;KIB=1024;GIB=1<<30
 BASE=ROOT/"experiments/m194h-pedestal-causality/build-and-run.py"
 BASE_SHA="b505a2fff0024691d98088c599f7f554c1543268de09c836a6bc1fe6c17b7410"
 BUILD_PROCESS=HERE/"bounded-build-process.py"
-BUILD_SHA="e565c355796081da186a56d58a0a902e8edd8105c7bdfbea63def28ad198a6fb"
-SCRATCH=ROOT/"experiments/common-tiff-dimensions/scratch-scan.py"
-SCRATCH_SHA="3a1aa413fd4c9d37bccb973a419e3f4c03291903d44b7198c53992e7b00d3e46"
+BUILD_SHA="0a17f2779b6b76d9f495bc88743fc0d13b291f16e49e59535442b01b0018027a"
+SCRATCH=HERE/"scratch-scan.py"
+SCRATCH_SHA="b53c57e56855578c803c29594da34e0a69423c9113608932d823184c4b79c2a4"
 STAGES={
     "build-on":dict(cpu_seconds=600,wall_seconds=300,committed_bytes=3*GIB,file_bytes=128*MIB,scratch_bytes=4*GIB),
     "build-off":dict(cpu_seconds=600,wall_seconds=300,committed_bytes=3*GIB,file_bytes=128*MIB,scratch_bytes=4*GIB),
     "controls":dict(cpu_seconds=120,wall_seconds=180,committed_bytes=GIB,file_bytes=64*MIB,scratch_bytes=0),
     "native":dict(cpu_seconds=1800,wall_seconds=1200,committed_bytes=2*GIB,file_bytes=256*MIB,scratch_bytes=0),
     "verify":dict(cpu_seconds=1200,wall_seconds=900,committed_bytes=GIB,file_bytes=96*MIB,scratch_bytes=0)}
-OUTPUTS={s:HERE/(s+("-3" if s=="build-on" else "-1")) for s in STAGES}
-TARGETS={s:ROOT/("target/native-sensor-transfer-"+s.removeprefix("build-")+("-3" if s=="build-on" else "-1")) for s in ("build-on","build-off")}
+OUTPUTS={s:HERE/(s+("-4" if s=="build-on" else "-1")) for s in STAGES}
+TARGETS={s:ROOT/("target/native-sensor-transfer-"+s.removeprefix("build-")+("-4" if s=="build-on" else "-1")) for s in ("build-on","build-off")}
 EXES={s:OUTPUTS["build-"+s.removeprefix("feature_")]/"cli-tests.exe" for s in ("feature_on","feature_off")}
 READER=HERE/"independent-read.py"
 INPUT_BINDINGS={"path":"experiments/native-sensor-transfer/input-bindings-1.json","bytes":7119,

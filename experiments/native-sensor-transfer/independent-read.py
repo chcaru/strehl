@@ -818,7 +818,7 @@ def bundle_read(io,bundle,stage,sources):
     stage_completion(result)
     need(result['schema']=='native-sensor-transfer-owned-stage-v1' and result['stage']==stage,'saved native stage schema')
     output=Path(canonical_path(bundle['result']['path'])).parent
-    need(output==HERE/(stage+('-3' if stage=='build-on' else '-1')) and Path(canonical_path(bundle['result']['path'])).name=='result.json','fixed stage result path')
+    need(output==HERE/(stage+('-4' if stage=='build-on' else '-1')) and Path(canonical_path(bundle['result']['path'])).name=='result.json','fixed stage result path')
     need(canonical_path(bundle['tail']['path'])==canonical_path(str(output/'parent-tail.json')),'saved tail fixed path')
     closed(outer,('schema','command','source','exit_code','timeout_terminated','elapsed_wall_seconds',
                  'stdout','stderr','exit','stdout_bytes','stderr_bytes','scope'),'stage outer keys')
@@ -855,7 +855,7 @@ def bundle_read(io,bundle,stage,sources):
     if stage.startswith('build-'):
         command=['cargo','test','-p','strehl-cli','--bin','strehl','--no-run']
         if stage=='build-on':command += ['--features','native-sensor-transfer']
-        command += ['--jobs','2','--target-dir',str(REPO/'target'/('native-sensor-transfer-'+stage.removeprefix('build-')+('-3' if stage=='build-on' else '-1'))),
+        command += ['--jobs','2','--target-dir',str(REPO/'target'/('native-sensor-transfer-'+stage.removeprefix('build-')+('-4' if stage=='build-on' else '-1'))),
                     '--message-format=json-render-diagnostics','--locked','--offline']
         need(expected==[{'command':command,'expected_exit_code':0}],'fixed actual build argv')
     for child in expected:
@@ -944,7 +944,7 @@ def array_runtime(mode,n):
 
 
 def compiled_executable(io,stage,feature):
-    result=stage['result'];art=result['artifacts'];expected=HERE/('build-on-3' if feature else 'build-off-1')/'cli-tests.exe'
+    result=stage['result'];art=result['artifacts'];expected=HERE/('build-on-4' if feature else 'build-off-1')/'cli-tests.exe'
     ref=art['executable'];need(canonical_path(ref['path'])==canonical_path(str(expected)),'fixed compiled native test binary')
     executable=io.read(ref,64*MIB)
     original=art['compiled_original'];ref_shape(original)
@@ -966,7 +966,7 @@ def compiled_executable(io,stage,feature):
          canonical_path(message['target']['src_path'])==canonical_path(str(REPO/'crates/strehl-cli/src/main.rs')) and
          canonical_path(message['manifest_path'])==canonical_path(str(REPO/'crates/strehl-cli/Cargo.toml')),
          'fresh exact compiled target/source/features')
-    need(Path(canonical_path(original['path'])).is_relative_to(REPO/'target'/('native-sensor-transfer-'+('on' if feature else 'off')+('-3' if feature else '-1'))),
+    need(Path(canonical_path(original['path'])).is_relative_to(REPO/'target'/('native-sensor-transfer-'+('on' if feature else 'off')+('-4' if feature else '-1'))),
          'fresh compiled target directory')
     need(all(marker in stage['children'][0]['raw_log'] for marker in (b'Compiling strehl-core',b'Compiling strehl-cli')),'actual native compile markers')
     del executable

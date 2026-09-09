@@ -64,7 +64,7 @@ def sources():
             paths.add(target);pending.append((target,crate))
     local=("run-stage.py","bounded-build-process.py","capture-stage.py","run-stage-contract.md","run-stage-source-review.md",
            "charter.md","scope-amendment-2.md","scope-amendment-3.md","source/implementation-contract.md",
-           "source/native-adapter.rs","source/core-hook.rs","producer-source-review.md","prepare-build.py","input-bindings-1.json")
+           "source/native-adapter.rs","source/core-hook.rs","producer-source-review.md","prepare-build.py","input-bindings-1.json","scratch-scan.py","scratch-path-controls.py")
     paths.update(HERE/n for n in local)
     paths.update(ROOT/n for n in ("experiments/m194h-pedestal-causality/build-and-run.py",
         "experiments/m193c-output-grid/bounded-process.py","experiments/m12-scorecard/m12-harness.py",
@@ -76,7 +76,7 @@ def sources():
     need(sum(v["bytes"] for v in out.values())<=16*MIB,"source aggregate")
     return out,buffers
 def bundle(stage):
-    attempt=3 if stage=="build-on" else 1
+    attempt=4 if stage=="build-on" else 1
     output=HERE/(stage+"-"+str(attempt));stem=WORK/(stage+"-external-"+str(attempt)+"-")
     paths={"result":output/"result.json","tail":output/"parent-tail.json",
            "outer":Path(str(stem)+"outer.json"),"stdout":Path(str(stem)+"stdout.bin"),
@@ -94,11 +94,11 @@ def main():
     need(os.name=="nt" and Path.cwd().resolve()==ROOT,"fixed Windows repository")
     need(sys.flags.isolated and sys.flags.no_site and sys.dont_write_bytecode,"isolated metadata-only constructor")
     WORK.mkdir(exist_ok=True)
-    attempt=3 if stage=="build-on" else 1
+    attempt=4 if stage=="build-on" else 1
     release=WORK/(stage+"-release-"+str(attempt)+".json")
     target=ROOT/("target/native-sensor-transfer-"+stage.removeprefix("build-")+"-"+str(attempt))
     need(not release.exists() and not target.exists() and not (HERE/(stage+"-"+str(attempt))).exists(),"fresh fixed stage")
-    current,buffers=sources();freeze=WORK/"build-source-freeze-3.json";archive=WORK/"build-source-3.zip"
+    current,buffers=sources();freeze=WORK/"build-source-freeze-4.json";archive=WORK/"build-source-4.zip"
     if stage=="build-on":
         need(not freeze.exists() and not archive.exists(),"fresh source preservation")
         need(WRITE+17*MIB<=24*MIB,"reserve full bounded stored archive before creation")
