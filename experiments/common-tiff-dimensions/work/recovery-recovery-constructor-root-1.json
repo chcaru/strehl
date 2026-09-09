@@ -1,0 +1,16 @@
+{
+  "schema": "dimensions-recovery-constructor-root-v1",
+  "stage": "recovery",
+  "source_commit": "ece53b2ee70d8b6828a7db215f2fe0be143b9a2f",
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-I",
+    "-S",
+    "-B",
+    "experiments/common-tiff-dimensions/prepare-recovery-release.py",
+    "recovery"
+  ],
+  "exit_code": 0,
+  "whole_wrapper_wall_seconds": 0.2878282,
+  "scope": "Complete directly invoked constructor interval and immediately captured exit; stdout also emitted to tool, canonical final receipt retained by constructor. No CPU inferred from wall."
+}
