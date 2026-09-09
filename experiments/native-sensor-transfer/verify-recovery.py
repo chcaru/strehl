@@ -32,9 +32,28 @@ def original_module():
     need(full(before)==full(after) and full(opened)==full(closed) and shared(before)==shared(opened) and
          len(raw)==OLD_READER['bytes'] and hashlib.sha256(raw).hexdigest()==OLD_READER['sha256'],'held reader bootstrap bytes')
     module=types.ModuleType('native_frozen_reader');module.__file__=str(p)
-    exec(compile(raw,str(p),'exec'),module.__dict__)
+    # One source-proven output-role literal changes for fresh verify2 only.
+    old_role=b"HERE/'verify-1'/'check'";new_role=b"HERE/'verify-2'/'check'"
+    need(raw.count(old_role)==1,'sole original verification output role')
+    adapted=raw.replace(old_role,new_role)
+    need(adapted.replace(new_role,old_role)==raw,'output-role-only reverse identity')
+    exec(compile(adapted,str(p),'exec'),module.__dict__)
     module.START=START
     return module,len(raw)+1
+
+def publication_io(o,limits,output):
+    class PublicationIO(o.IO):
+        def array(self,name,a):
+            # Filename metadata only: the inherited serializer receives a unchanged.
+            need(type(name) is str and name.isascii(),'ASCII statistical array name')
+            normalized=name.lower().replace('_','-')
+            need(len(normalized)==len(name),'same-length array filename normalization')
+            if not hasattr(self,'array_names'):self.array_names={}
+            need(normalized not in self.array_names,'normalized array publication collision')
+            self.array_names[normalized]=name
+            return super().array(normalized,a)
+    return PublicationIO(limits,output)
+
 
 def same_bundle(o,left,right):
     o.closed(left,CAPS,'native six roles');o.closed(right,CAPS,'native six roles')
@@ -195,7 +214,7 @@ def main():
                   '--release-sha256',args.release_sha256]
         need(sys.orig_argv==expected==[args.release_sha256 if v=='ACTUAL_RELEASE_SHA256' else v for v in release['command']],'actual recovery reader command')
         need(release['limits']['cpu_seconds']<=1000 and release['limits']['wall_seconds']<=850 and release['limits']['write_bytes']<=64*MIB,'unchanged verify reader ceilings')
-        io=o.IO(release['limits'],release['output']);io.read_bytes+=boot+len(raw)+1;io.tick()
+        io=publication_io(o,release['limits'],release['output']);io.read_bytes+=boot+len(raw)+1;io.tick()
         result.update(release=release_ref,command=sys.orig_argv,source_bindings_sha256=o.sha(o.encoded(release['source_bindings'])))
         o.original_population(release['originals']);o.closed(release['native'],('failed','resumed'),'two real native bundles')
         old=stage_header(o,io,release['native']['failed'],1,success=False)
@@ -248,6 +267,7 @@ def main():
                 result['frame_checks']=io.publish('actual-frame-checks.json',consumer.frame_observations,2*MIB)
     if suite is not None:result['groups']=suite.output()
     if io is not None:
+        result['array_filename_normalization']={'rule':'ASCII lowercase and underscore-to-hyphen','published_names':len(getattr(io,'array_names',{})),'unique':True,'numerical_values_changed':False}
         result['accounting']=io.account();raw=o.encoded(result);need(len(raw)<=128<<10,'recovery final/raw log cap')
         io.publish_raw('result.json',raw,128<<10);need(io.write_bytes+len(raw)<=io.limits['write_bytes'],'recovery stdout charged')
         io.write_bytes+=len(raw);need(sys.stdout.buffer.write(raw)==len(raw),'full recovery stdout');sys.stdout.buffer.flush();io.tick()

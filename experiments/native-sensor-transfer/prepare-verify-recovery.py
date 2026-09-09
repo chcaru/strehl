@@ -15,7 +15,7 @@ OLD_FREEZE={'path':'experiments/native-sensor-transfer/work/execution-source-fre
 OLD_MAP_SHA='7c3867e4957ddb77a3b0c143266fec844afa679e7ce612cc5fed927378bdfb77'
 NATIVE_EXTRAS=('run-native-continuation.py','native-publication-scan.py','publication-race-controls.py',
                'capture-native-continuation.py','prepare-native-continuation.py')
-VERIFY_EXTRAS=('verify-recovery.py','prepare-verify-recovery.py')
+VERIFY_EXTRAS=('verify-recovery.py','prepare-verify-recovery.py','run-verify-continuation.py','capture-verify-continuation.py')
 
 def need(v,s):
     if not v:raise ValueError(s)
@@ -64,9 +64,9 @@ def main():
          'fixed metadata-only recovery preparation')
     need(len(sys.orig_argv)==5 and sys.orig_argv[:4]==[py,'-I','-S','-B'] and
          p.path(sys.orig_argv[4])==HERE/'prepare-verify-recovery.py','exact preparation command')
-    released=work/'verify-continuation-release-1.json';reader_path=work/'verify-recovery-reader-release-1.json'
-    freeze_path=work/'verify-recovery-source-freeze-1.json';receipt_path=work/'verify-recovery-preparation-1.json'
-    need(all(not q.exists() for q in (released,reader_path,freeze_path,receipt_path,HERE/'verify-1')),'fresh single verification preparation')
+    released=work/'verify-continuation-release-2.json';reader_path=work/'verify-recovery-reader-release-2.json'
+    freeze_path=work/'verify-recovery-source-freeze-2.json';receipt_path=work/'verify-recovery-preparation-2.json'
+    need(all(not q.exists() for q in (released,reader_path,freeze_path,receipt_path,HERE/'verify-2')),'fresh single verification preparation')
     original=p.strict(p.bound_read(OLD_FREEZE,MIB))['source_bindings'];p.map_shape(original)
     need(len(original)==150 and p.pin(p.encoded(original))['sha256']==OLD_MAP_SHA,'held original150 source map')
     native_ref,native,prior=native_bundle(p)
@@ -81,7 +81,7 @@ def main():
     for name in VERIFY_EXTRAS:
         key=(HERE/name).relative_to(ROOT).as_posix();need(key not in current,'additive verification source')
         current[key]=p.pin(p.read(HERE/name))
-    current=dict(sorted(current.items()));p.map_shape(current);need(len(current)==157,'fixed current157 source map')
+    current=dict(sorted(current.items()));p.map_shape(current);need(len(current)==159,'fixed current159 source map')
     for k,v in current.items():need(p.pin(p.read(p.source_path(k)))==v,'all actual unchanged source bytes')
     build_freeze=p.strict(p.read(work/'build-source-freeze-4.json',MIB))['source_bindings']
     bundles={};results={}
@@ -107,20 +107,20 @@ def main():
     reader=p.publish(reader_path,{'schema':'native-sensor-transfer-reader-recovery-release-v1','mode':'verify',
         'source_bindings':current,'originals':original_refs,'builds':{'feature_on':bundles['build-on'],'feature_off':bundles['build-off']},
         'native':{'failed':recovery['failed_native'],'resumed':native_ref},'controls':bundles['controls'],
-        'output':str(HERE/'verify-1/check'),'limits':limits,'command':command})
+        'output':str(HERE/'verify-2/check'),'limits':limits,'command':command})
     freeze=p.publish(freeze_path,{'schema':'native-sensor-transfer-verify-recovery-source-freeze-v1',
         'original_source_freeze':OLD_FREEZE,'native_source_freeze':p.ref(work/'native-continuation-source-freeze-3.json',held_freeze_raw),
         'source_bindings':current})
     inputs=[p.ref(Path(py),p.read(Path(py),MIB))]
     value={'schema':'native-sensor-transfer-continuation-release-v1','stage':'verify','source_bindings':current,'inputs':inputs,
-        'originals':original_refs,'command':[py,'-I','-S','-B',str(HERE/'run-native-continuation.py'),'--release',str(released),
+        'originals':original_refs,'command':[py,'-I','-S','-B',str(HERE/'run-verify-continuation.py'),'--release',str(released),
                                            '--release-sha256','ACTUAL_RELEASE_SHA256'],
         'children':[{'command':[reader['sha256'] if x=='ACTUAL_RELEASE_SHA256' else x for x in command],'expected_exit_code':0}],
         'binaries':binaries,'reader_release':reader,'prerequisites':bundles,'recovery':recovery}
     for k,v in current.items():need(p.pin(p.read(p.source_path(k)))==v,'source stability through release')
     released_ref=p.publish(released,value);p.check();p.PUBLISHING=True
     record={'schema':'native-sensor-transfer-verify-recovery-preparation-v1','release':released_ref,'reader_release':reader,
-        'source_freeze':freeze,'read_pricing':prices,'source_files':157,'invocation':sys.orig_argv,
+        'source_freeze':freeze,'read_pricing':prices,'source_files':159,'invocation':sys.orig_argv,
         'cpu_sample_seconds':time.process_time(),'wall_sample_seconds':time.monotonic()-START,
         'read_bytes_sample':p.READ,'write_bytes_sample':p.WRITE,
         'allocation':{'cpu_seconds':30,'wall_seconds':60,'read_bytes':128*MIB,'write_bytes':24*MIB,'publication_cpu_seconds':1,'publication_wall_seconds':2},
