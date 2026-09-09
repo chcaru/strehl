@@ -20,3 +20,10 @@ native-sensor-transfer = []
 
 # Source-transfer kernel access; no default-path call.
 native-correction-variance = []
+
+# Explicit NCC score interpolation experiment; default consumers stay parabolic.
+alignment-sinc-peak = []
+
+# Existing locked package, used only for experiment/test receipts.
+[dev-dependencies]
+serde_json = { version = "=1.0.151", features = ["float_roundtrip"] }

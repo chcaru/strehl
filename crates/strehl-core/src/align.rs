@@ -796,6 +796,11 @@ fn parabola(l: f32, c: f32, r: f32) -> f32 {
     if o.abs() > 1.0 { 0.0 } else { o }
 }
 
+#[cfg(feature = "alignment-sinc-peak")]
+pub mod sinc_peak_diagnostic {
+    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/alignment-sinc-peak/implementation.rs"));
+}
+
 /// Where and how one tile is correlated.
 #[derive(Clone, Copy, Debug)]
 pub struct TileProbe {
@@ -823,6 +828,18 @@ pub fn ncc_tile(
     moving: PlaneRef<'_>,
     probe: TileProbe,
     cfg: &AlignConfig,
+) -> TileMeasurement {
+    ncc_tile_impl::<false>(reference, moving, probe, cfg,
+        #[cfg(feature = "alignment-sinc-peak")] None)
+}
+
+fn ncc_tile_impl<const SINC: bool>(
+    reference: PlaneRef<'_>,
+    moving: PlaneRef<'_>,
+    probe: TileProbe,
+    cfg: &AlignConfig,
+    #[cfg(feature = "alignment-sinc-peak")]
+    diagnostic: Option<&mut Option<sinc_peak_diagnostic::Outcome>>,
 ) -> TileMeasurement {
     let TileProbe {
         tx,
@@ -920,6 +937,19 @@ pub fn ncc_tile(
     let sc = |i: usize, j: usize| scores[j * n + i];
     let ox = parabola(sc(bi - 1, bj), sc(bi, bj), sc(bi + 1, bj));
     let oy = parabola(sc(bi, bj - 1), sc(bi, bj), sc(bi, bj + 1));
+    #[cfg(feature = "alignment-sinc-peak")]
+    let (ox, oy) = if SINC {
+        let result = sinc_peak_diagnostic::refine(&scores, n, bi, bj);
+        if let Some(diagnostic) = diagnostic { *diagnostic = Some(result); }
+        result.offset.unwrap_or((ox, oy))
+    } else {
+        if let Some(diagnostic) = diagnostic {
+            *diagnostic = Some(sinc_peak_diagnostic::Outcome {
+                offset: None, evaluations: 0, reason: "parabolic", integer_peak: (bi,bj),
+            });
+        }
+        (ox, oy)
+    };
     TileMeasurement {
         status: TileStatus::Ok,
         contrast,
@@ -991,6 +1021,19 @@ pub fn ncc_tile_warped(
     probe: TileProbe,
     warp: SimilarityParams,
     cfg: &AlignConfig,
+) -> TileMeasurement {
+    ncc_tile_warped_impl::<false>(reference, moving, probe, warp, cfg,
+        #[cfg(feature = "alignment-sinc-peak")] None)
+}
+
+fn ncc_tile_warped_impl<const SINC: bool>(
+    reference: PlaneRef<'_>,
+    moving: PlaneRef<'_>,
+    probe: TileProbe,
+    warp: SimilarityParams,
+    cfg: &AlignConfig,
+    #[cfg(feature = "alignment-sinc-peak")]
+    diagnostic: Option<&mut Option<sinc_peak_diagnostic::Outcome>>,
 ) -> TileMeasurement {
     let TileProbe {
         tx,
@@ -1100,6 +1143,19 @@ pub fn ncc_tile_warped(
     let sc = |i: usize, j: usize| scores[j * n + i];
     let ox = parabola(sc(bi - 1, bj), sc(bi, bj), sc(bi + 1, bj));
     let oy = parabola(sc(bi, bj - 1), sc(bi, bj), sc(bi, bj + 1));
+    #[cfg(feature = "alignment-sinc-peak")]
+    let (ox, oy) = if SINC {
+        let result = sinc_peak_diagnostic::refine(&scores, n, bi, bj);
+        if let Some(diagnostic) = diagnostic { *diagnostic = Some(result); }
+        result.offset.unwrap_or((ox, oy))
+    } else {
+        if let Some(diagnostic) = diagnostic {
+            *diagnostic = Some(sinc_peak_diagnostic::Outcome {
+                offset: None, evaluations: 0, reason: "parabolic", integer_peak: (bi,bj),
+            });
+        }
+        (ox, oy)
+    };
     // Residual in reference px, then carried into moving px through `a`.
     let rx = (bi as i32 - radius) as f64 + ox as f64;
     let ry = (bj as i32 - radius) as f64 + oy as f64;
