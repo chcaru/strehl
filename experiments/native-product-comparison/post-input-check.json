@@ -1,0 +1,5 @@
+{
+  "listed_inputs": 210,
+  "filename_size_mtime_match_before": true,
+  "scope": "Only210explicitly listed RAW/TIFF inputs. Metadata identity, not a whole-corpus content-hash guarantee."
+}

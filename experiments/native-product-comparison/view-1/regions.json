@@ -1,0 +1,80 @@
+{
+  "choice": "Exploratory rectangles chosen after full overviews, before viewing these crops; integer output coordinates x,y,width,height; no output registration, histogram/color correction or resampling.",
+  "sources": {
+    "native": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-product-comparison\\run-1\\native-coffee-bean.tiff",
+      "sha256": "411f3bb79fcee3aecbf27899d036e785b92469e53b21b0b339e82d65cd5c6e87"
+    },
+    "fork": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-product-comparison\\fork-2\\fork-coffee-bean.tiff",
+      "sha256": "137ab09a78af02594afe360b77a52fa2f1c3096bc5fb0a6ac16b50a667b019d4"
+    }
+  },
+  "regions": [
+    {
+      "id": "background",
+      "purpose": "low-detail left background and directional marks; exploratory, not a registered per-pixel match",
+      "native": [
+        80,
+        1280,
+        512,
+        512
+      ],
+      "fork": [
+        400,
+        1370,
+        512,
+        512
+      ]
+    },
+    {
+      "id": "front-texture",
+      "purpose": "front bean surface texture continuity at similar physical area",
+      "native": [
+        3400,
+        3000,
+        512,
+        512
+      ],
+      "fork": [
+        3510,
+        3030,
+        512,
+        512
+      ]
+    },
+    {
+      "id": "central-crack",
+      "purpose": "central occluding crack with light fragments; common visible landmarks",
+      "native": [
+        2380,
+        1850,
+        512,
+        512
+      ],
+      "fork": [
+        2480,
+        2020,
+        512,
+        512
+      ]
+    },
+    {
+      "id": "outer-edge",
+      "purpose": "upper-left outer bean boundary, edge width and chromatic rims",
+      "native": [
+        1390,
+        660,
+        512,
+        512
+      ],
+      "fork": [
+        1490,
+        720,
+        512,
+        512
+      ]
+    }
+  ],
+  "view": "Rounded16-bit/257 to8-bit intended sRGB at1:1 pixel sampling, independent512x512 crops with labels. Different development/tone/geometry means no ground truth or objective quality comparison."
+}

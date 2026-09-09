@@ -1,0 +1,12 @@
+{
+  "source_sha256": "137ab09a78af02594afe360b77a52fa2f1c3096bc5fb0a6ac16b50a667b019d4",
+  "tags": {
+    "Orientation": null,
+    "ImageDescription": null,
+    "Software": null,
+    "PhotometricInterpretation": "2",
+    "ICC": null
+  },
+  "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-product-comparison\\fork-2\\fork-overview.png",
+  "method": "declared sRGB16 output to8 by rounded /257 then Lanczos thumbnail; no color/tonal adjustment; labelled overview"
+}

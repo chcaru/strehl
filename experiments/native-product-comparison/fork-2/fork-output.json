@@ -1,0 +1,25 @@
+{
+  "label": "fork",
+  "output": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-product-comparison\\fork-2\\fork-coffee-bean.tiff",
+    "sha256": "137ab09a78af02594afe360b77a52fa2f1c3096bc5fb0a6ac16b50a667b019d4",
+    "bytes": 147139828
+  },
+  "decoded": {
+    "shape": [
+      4672,
+      7008,
+      3
+    ],
+    "dtype": "uint16",
+    "bytes": 196448256,
+    "sha256": "edc93c718a9f323aa31e3f328f07e34edfba535d6bd5e34b6c6fb78b95cb31ca"
+  },
+  "tags": {
+    "PhotometricInterpretation": "2",
+    "icc_profile": null
+  },
+  "process_wall_seconds": 99.76599999999962,
+  "job_cpu_seconds": 802.3125,
+  "peak_job_commit_bytes": 25536389120
+}

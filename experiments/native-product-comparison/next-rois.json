@@ -1,0 +1,34 @@
+{
+  "status": "FROZEN_BEFORE_ORIGINAL_RAW_CROP_READ",
+  "source_output": "run-1/native-coffee-bean.tiff",
+  "source_sha256": "411f3bb79fcee3aecbf27899d036e785b92469e53b21b0b339e82d65cd5c6e87",
+  "coordinates": "native delivered sRGB output pixels; diagnostic will recover original full-grid sampling via recorded compact Crop origin",
+  "crop_origin_quad": [
+    62,
+    41
+  ],
+  "crop_origin_native": [
+    124,
+    82
+  ],
+  "stroke": [
+    150,
+    1490,
+    320,
+    120
+  ],
+  "nearby_clean": [
+    150,
+    1300,
+    320,
+    120
+  ],
+  "choice": "Within the recorded exploratory gray-background pair. Root visually chose one obvious dark horizontal stroke and nearby gray control before inspecting original-frame pixels. This is a diagnostic target, not representative-scene or competitive-quality sampling.",
+  "hypotheses": [
+    "captured scene feature",
+    "sensor-coordinate persistent attenuation or defect spread along placement path",
+    "warp/fusion artifact"
+  ],
+  "no_cause_yet": true,
+  "maximum_initial_original_raw_files": 5
+}

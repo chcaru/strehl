@@ -1,0 +1,12 @@
+{
+  "status": "TWO_CURRENT_PHOTOGRAPHS_REVIEWED",
+  "native_wall_seconds": 50.063,
+  "native_alignment_scope": "Existing complete ref52 map reused; historical solve excluded.",
+  "fork_completed_wall_seconds": 99.766,
+  "fork_alignment_scope": "Neighbour alignment included; prior Lightroom development excluded.",
+  "first_fork_attempt": "Our16GiBcap terminated a still-progressing job at16.203s; preserved; one explicit40GiBsamepresetamendment completed.",
+  "quality": "No clear structural-quality winner in four exploratory crop pairs. Colour/tone/upstream processing differ; no common-linear or SOTA claim.",
+  "next_visible_target": "Distinct native gray-background dark stroke; cause and competitive loss unproven. Prior-art review precedes source-coordinate diagnosis.",
+  "roi_freeze": "next-rois.json",
+  "new_primary_renders_remaining": 0
+}

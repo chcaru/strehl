@@ -1,0 +1,31 @@
+{
+  "memory_before": {
+    "total_bytes": 66094223360,
+    "available_bytes": 55838638080
+  },
+  "charter": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-product-comparison\\resource-amendment.md",
+    "sha256": "46c1c481fe7d2b2efb68ca854d9139012ca786d6b0ffe9688c5e9ba2d742c193",
+    "bytes": 2433
+  },
+  "original_plan": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-product-comparison\\run-1\\plan.json",
+    "sha256": "e5acdda4c6aa75e52225d843efd0008f91795444f43e846cb635645da1ac8643",
+    "bytes": 41616
+  },
+  "failed_process": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-product-comparison\\run-1\\fork-process.json",
+    "sha256": "e7820819faaf46357734bfbd449de2f2019477cd7b7670d34ae02d7923bd276e",
+    "bytes": 7712
+  },
+  "retained_native": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-product-comparison\\run-1\\native-output.json",
+    "sha256": "391ce9963416303ef139bdef9a9ab7648e714ae3c1c97d827b860427888683b3",
+    "bytes": 867
+  },
+  "changes": [
+    "output path",
+    "committed memory cap16GiBto40GiB"
+  ],
+  "same_remaining_argv": true
+}
