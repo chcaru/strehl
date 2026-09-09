@@ -6,11 +6,12 @@ use tiff::encoder::{TiffEncoder, TiffValue, colortype};
 use tiff::tags::{Tag, Type};
 
 use super::files::{self, Result, require};
-use super::manifest::{HEIGHT, WIDTH};
+use super::manifest::Layout;
 
-pub const CAP: usize = 128 << 10;
 const DESCRIPTION: &str = "common-tiff-stack-v1; identity common-RGB pixels; linear ProPhoto RGB D50; RGB16 code units; no WB, camera matrix, demosaic, exposure, tone or transfer; finite clamp then round half away from zero; simulation-only noise declaration";
 const SOFTWARE: &str = "strehl-common-input common-tiff-stack-v1";
+const DESCRIPTION_V2: &str = "common-tiff-stack-v2; identity common-RGB pixels; linear ProPhoto RGB D50; RGB16 code units; no WB, camera matrix, demosaic, exposure, tone or transfer; finite clamp then round half away from zero; simulation-only noise declaration";
+const SOFTWARE_V2: &str = "strehl-common-input common-tiff-stack-v2";
 
 struct IccBytes<'a>(&'a [u8]);
 impl TiffValue for IccBytes<'_> {
@@ -24,11 +25,11 @@ impl TiffValue for IccBytes<'_> {
     }
 }
 
-struct BoundedCursor(Cursor<Vec<u8>>);
+struct BoundedCursor(Cursor<Vec<u8>>, usize);
 impl Write for BoundedCursor {
     fn write(&mut self, bytes: &[u8]) -> std::io::Result<usize> {
         let end = self.0.position().checked_add(bytes.len() as u64);
-        if !end.is_some_and(|n| n <= CAP as u64) {
+        if !end.is_some_and(|n| n <= self.1 as u64) {
             return Err(std::io::Error::other("TIFF encoding capacity"));
         }
         self.0.write(bytes)
@@ -40,7 +41,7 @@ impl Write for BoundedCursor {
 impl Seek for BoundedCursor {
     fn seek(&mut self, position: SeekFrom) -> std::io::Result<u64> {
         let next = self.0.seek(position)?;
-        if next > CAP as u64 {
+        if next > self.1 as u64 {
             return Err(std::io::Error::other("TIFF seek capacity"));
         }
         Ok(next)
@@ -68,8 +69,8 @@ pub struct Encoded {
     pub quantization: &'static str,
 }
 
-pub fn encode(planes: &[Vec<f32>], icc: &[u8]) -> Result<Encoded> {
-    let count = (WIDTH * HEIGHT) as usize;
+pub fn encode(planes: &[Vec<f32>], icc: &[u8], layout: &Layout) -> Result<Encoded> {
+    let count = layout.pixels;
     require(
         planes.len() == 3 && planes.iter().all(|p| p.len() == count),
         "output plane geometry",
@@ -87,12 +88,15 @@ pub fn encode(planes: &[Vec<f32>], icc: &[u8]) -> Result<Encoded> {
         }
     }
     let payload: Vec<u8> = samples.iter().flat_map(|v| v.to_le_bytes()).collect();
-    let mut buffer = BoundedCursor(Cursor::new(Vec::with_capacity(CAP)));
+    let mut buffer = BoundedCursor(
+        Cursor::new(Vec::with_capacity(layout.output_cap)),
+        layout.output_cap,
+    );
     {
         let mut encoder =
             TiffEncoder::new(&mut buffer).map_err(|e| format!("TIFF encoder: {e}"))?;
         let mut image = encoder
-            .new_image::<colortype::RGB16>(WIDTH, HEIGHT)
+            .new_image::<colortype::RGB16>(layout.width, layout.height)
             .map_err(|e| format!("TIFF RGB16: {e}"))?;
         image
             .encoder()
@@ -100,11 +104,21 @@ pub fn encode(planes: &[Vec<f32>], icc: &[u8]) -> Result<Encoded> {
             .map_err(|e| format!("TIFF chunky RGB: {e}"))?;
         image
             .encoder()
-            .write_tag(Tag::ImageDescription, DESCRIPTION)
+            .write_tag(
+                Tag::ImageDescription,
+                if layout.v2 {
+                    DESCRIPTION_V2
+                } else {
+                    DESCRIPTION
+                },
+            )
             .map_err(|e| format!("TIFF description: {e}"))?;
         image
             .encoder()
-            .write_tag(Tag::Software, SOFTWARE)
+            .write_tag(
+                Tag::Software,
+                if layout.v2 { SOFTWARE_V2 } else { SOFTWARE },
+            )
             .map_err(|e| format!("TIFF software: {e}"))?;
         image
             .encoder()
@@ -115,11 +129,11 @@ pub fn encode(planes: &[Vec<f32>], icc: &[u8]) -> Result<Encoded> {
             .map_err(|e| format!("TIFF data: {e}"))?;
     }
     let bytes = buffer.0.into_inner();
-    require(bytes.len() <= CAP, "TIFF final capacity")?;
+    require(bytes.len() <= layout.output_cap, "TIFF final capacity")?;
     Ok(Encoded {
         bytes,
-        width: WIDTH,
-        height: HEIGHT,
+        width: layout.width,
+        height: layout.height,
         sample_format: "RGB16",
         color_space: "linear-prophoto-d50",
         icc_sha256: files::hash(icc),

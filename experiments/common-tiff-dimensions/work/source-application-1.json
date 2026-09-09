@@ -1,0 +1,42 @@
+{
+  "schema": "common-tiff-dimensions-source-application-v1",
+  "patch_sha256": "fee644d8854b3298d3083025dc8f2ae83c6ba7a189ceddbf98416f397b3de005",
+  "original_revision": "b6f4088bdceb4a4ccc5c12f87fdae54a7e143e8e",
+  "formatted_files": [
+    {
+      "path": "crates/strehl-cli/src/bin/common-stack/manifest.rs",
+      "bytes": 12421,
+      "sha256": "52e8c0e5ad556b71aaee385fd8caa15b9e57806db08af4cb4222c2859801a628"
+    },
+    {
+      "path": "crates/strehl-cli/src/bin/common-stack/mod.rs",
+      "bytes": 18095,
+      "sha256": "fc55cdaca929b5540901dc246c4294df6fa6c9f3a4407b16799c0de2ecd91452"
+    },
+    {
+      "path": "crates/strehl-cli/src/bin/common-stack/writer.rs",
+      "bytes": 5138,
+      "sha256": "92c47325646d8206a7cf5a840d4bb77ed134caafefbabb81c5bc4410284687a5"
+    }
+  ],
+  "format_command": [
+    "rustfmt",
+    "--edition",
+    "2024",
+    "--config",
+    "skip_children=true",
+    "--emit",
+    "stdout"
+  ],
+  "three_formatter_exits": [
+    0,
+    0,
+    0
+  ],
+  "exact_formatted_output_equal": true,
+  "scope": "Source formatting/construction only; no compiler/test/fixture/image. Exact reconstruction of held patch against Git original, original pins matched, each formatted stdout byte-equal to current source and stderr empty. These three commands were already run once and are not rerun for publication.",
+  "preserved_preparation_failures": [
+    "Initial git apply completed, then post-apply hash assertion failed before metadata publication. Exact intermediate bytes were not retained; cause unknown. A separately issued formatting command still ran, a sequencing mistake.",
+    "Later reconstruction/three-format comparisons passed, then receipt text-open rejected a literal backslash-n newline argument before writing content. This metadata publication corrects that constructor only."
+  ]
+}

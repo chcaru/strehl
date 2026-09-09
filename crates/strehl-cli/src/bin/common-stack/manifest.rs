@@ -21,7 +21,7 @@ pub struct Manifest {
     pub color: Color,
     pub noise: Noise,
     pub merge: Merge,
-    pub inputs: [Input; 3],
+    pub inputs: Vec<Input>,
     pub output: Output,
 }
 #[derive(Debug, Clone, Deserialize, Serialize)]
@@ -138,26 +138,80 @@ impl Merge {
     }
 }
 
+#[derive(Clone, Copy)]
+pub struct Layout {
+    pub width: u32,
+    pub height: u32,
+    pub pixels: usize,
+    pub frames: usize,
+    pub tiff_cap: u64,
+    pub output_cap: usize,
+    pub report_cap: usize,
+    pub v2: bool,
+}
+impl Manifest {
+    pub fn layout(&self) -> Result<Layout> {
+        let v2 = match self.schema.as_str() {
+            "common-tiff-stack-v1" => false,
+            "common-tiff-stack-v2" => true,
+            _ => return Err("unsupported manifest schema".into()),
+        };
+        let frames = self.inputs.len();
+        if v2 {
+            require((2..=8).contains(&frames), "v2 requires two to eight inputs")?;
+        } else {
+            require(frames == 3, "v1 requires exactly three inputs")?;
+        }
+        let (width, height) = (self.grid.width, self.grid.height);
+        require(
+            self.grid.channels == "RGB"
+                && self.grid.coordinates == GEOMETRY
+                && if v2 {
+                    (64..=512).contains(&width) && (64..=512).contains(&height)
+                } else {
+                    width == WIDTH && height == HEIGHT
+                },
+            "unsupported common grid",
+        )?;
+        // Bounds reject huge axes first. This checked product is defensive, not
+        // an independently exercised overflow branch under the admitted domain.
+        let pixels = width
+            .checked_mul(height)
+            .ok_or("common grid extent overflow")?;
+        require(pixels <= 262144, "common grid pixel capacity")?;
+        let payload = u64::from(pixels)
+            .checked_mul(6)
+            .ok_or("RGB16 payload overflow")?;
+        let tiff_cap = if v2 {
+            payload.checked_add(65536).ok_or("TIFF capacity overflow")?
+        } else {
+            TIFF_CAP
+        };
+        let output_cap = if v2 { tiff_cap as usize } else { 128 << 10 };
+        Ok(Layout {
+            width,
+            height,
+            pixels: pixels as usize,
+            frames,
+            tiff_cap,
+            output_cap,
+            report_cap: if v2 { 192 << 10 } else { 64 << 10 },
+            v2,
+        })
+    }
+}
+
 pub struct Resolved {
     pub manifest: Manifest,
-    pub inputs: [PathBuf; 3],
+    pub inputs: Vec<PathBuf>,
+    pub layout: Layout,
     pub profile: PathBuf,
     pub output: PathBuf,
 }
 
 pub fn parse(raw: &[u8], base: &Path, report: &Path, incomplete: &FileRef) -> Result<Resolved> {
     let m: Manifest = serde_json::from_slice(raw).map_err(|e| format!("manifest JSON: {e}"))?;
-    require(
-        m.schema == "common-tiff-stack-v1",
-        "unsupported manifest schema",
-    )?;
-    require(
-        m.grid.width == WIDTH
-            && m.grid.height == HEIGHT
-            && m.grid.channels == "RGB"
-            && m.grid.coordinates == GEOMETRY,
-        "unsupported common grid",
-    )?;
+    let layout = m.layout()?;
     require(
         m.color.space == SPACE && m.color.icc.bytes == 548 && m.color.icc.sha256 == ICC_SHA,
         "unadmitted input profile",
@@ -195,7 +249,12 @@ pub fn parse(raw: &[u8], base: &Path, report: &Path, incomplete: &FileRef) -> Re
     let mut names = BTreeSet::new();
     let mut paths = BTreeSet::new();
     let mut hashes = BTreeSet::new();
-    let mut inputs = Vec::new();
+    let mut inputs = Vec::with_capacity(layout.frames);
+    let mut input_bytes = 0u64;
+    let input_capacity = layout
+        .tiff_cap
+        .checked_mul(layout.frames as u64)
+        .ok_or("aggregate input capacity overflow")?;
     for input in &m.inputs {
         require(
             !input.id.is_empty()
@@ -209,11 +268,15 @@ pub fn parse(raw: &[u8], base: &Path, report: &Path, incomplete: &FileRef) -> Re
         require(names.insert(input.id.clone()), "duplicate input id")?;
         require(
             input.tiff.bytes > 0
-                && input.tiff.bytes <= TIFF_CAP
+                && input.tiff.bytes <= layout.tiff_cap
                 && files::valid_hash(&input.tiff.sha256)
                 && files::valid_hash(&input.pixel_sha256),
             "typed bounded input identity",
         )?;
+        input_bytes = input_bytes
+            .checked_add(input.tiff.bytes)
+            .ok_or("aggregate input extent overflow")?;
+        require(input_bytes <= input_capacity, "aggregate input capacity")?;
         require(
             hashes.insert(input.tiff.sha256.clone()),
             "duplicate whole-input identity",
@@ -235,16 +298,17 @@ pub fn parse(raw: &[u8], base: &Path, report: &Path, incomplete: &FileRef) -> Re
     }
     let mut all = paths;
     require(all.insert(files::key(&profile)), "profile/input alias")?;
-    for p in [
+    let mut outputs = vec![
         report.to_path_buf(),
         report.with_extension("incomplete.json"),
-        report.with_extension("frame-0.json"),
-        report.with_extension("frame-1.json"),
-        report.with_extension("frame-2.json"),
+    ];
+    outputs.extend((0..layout.frames).map(|i| report.with_extension(format!("frame-{i}.json"))));
+    outputs.extend([
         report.with_extension("stage.json"),
         output.clone(),
         output.with_extension("tiff-stage"),
-    ] {
+    ]);
+    for p in outputs {
         require(
             all.insert(files::key(&p)),
             "input/output/receipt path collision",
@@ -261,13 +325,14 @@ pub fn parse(raw: &[u8], base: &Path, report: &Path, incomplete: &FileRef) -> Re
     }
     Ok(Resolved {
         manifest: m,
-        inputs: inputs.try_into().map_err(|_| "three inputs")?,
+        inputs,
+        layout,
         profile,
         output,
     })
 }
 
-pub fn preflight(raw: &[u8]) -> Result<()> {
+pub fn preflight(raw: &[u8], layout: &Layout) -> Result<()> {
     require(
         raw.len() >= 8 && &raw[..4] == b"II*\0",
         "classic little-endian TIFF header",
@@ -308,7 +373,7 @@ pub fn preflight(raw: &[u8]) -> Result<()> {
                 "unique LONG/count1 TIFF dimensions",
             )?;
             require(
-                u32_at(entry + 8)? == [WIDTH, HEIGHT][slot],
+                u32_at(entry + 8)? == [layout.width, layout.height][slot],
                 "TIFF dimensions do not match common grid",
             )?;
             seen[slot] = true;

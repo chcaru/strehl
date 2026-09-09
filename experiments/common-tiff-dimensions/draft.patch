@@ -1,0 +1,442 @@
+--- a/crates/strehl-cli/src/bin/common-stack/manifest.rs
++++ b/crates/strehl-cli/src/bin/common-stack/manifest.rs
+@@ -21,7 +21,7 @@
+     pub color: Color,
+     pub noise: Noise,
+     pub merge: Merge,
+-    pub inputs: [Input; 3],
++    pub inputs: Vec<Input>,
+     pub output: Output,
+ }
+ #[derive(Debug, Clone, Deserialize, Serialize)]
+@@ -138,26 +138,70 @@
+     }
+ }
+ 
++#[derive(Clone, Copy)]
++pub struct Layout {
++    pub width: u32,
++    pub height: u32,
++    pub pixels: usize,
++    pub frames: usize,
++    pub tiff_cap: u64,
++    pub output_cap: usize,
++    pub report_cap: usize,
++    pub v2: bool,
++}
++impl Manifest {
++    pub fn layout(&self) -> Result<Layout> {
++        let v2 = match self.schema.as_str() {
++            "common-tiff-stack-v1" => false,
++            "common-tiff-stack-v2" => true,
++            _ => return Err("unsupported manifest schema".into()),
++        };
++        let frames = self.inputs.len();
++        if v2 {
++            require((2..=8).contains(&frames), "v2 requires two to eight inputs")?;
++        } else {
++            require(frames == 3, "v1 requires exactly three inputs")?;
++        }
++        let (width, height) = (self.grid.width, self.grid.height);
++        require(
++            self.grid.channels == "RGB"
++                && self.grid.coordinates == GEOMETRY
++                && if v2 {
++                    (64..=512).contains(&width) && (64..=512).contains(&height)
++                } else {
++                    width == WIDTH && height == HEIGHT
++                },
++            "unsupported common grid",
++        )?;
++        // Bounds reject huge axes first. This checked product is defensive, not
++        // an independently exercised overflow branch under the admitted domain.
++        let pixels = width.checked_mul(height).ok_or("common grid extent overflow")?;
++        require(pixels <= 262144, "common grid pixel capacity")?;
++        let payload = u64::from(pixels).checked_mul(6).ok_or("RGB16 payload overflow")?;
++        let tiff_cap = if v2 {
++            payload.checked_add(65536).ok_or("TIFF capacity overflow")?
++        } else {
++            TIFF_CAP
++        };
++        let output_cap = if v2 { tiff_cap as usize } else { 128 << 10 };
++        Ok(Layout {
++            width, height, pixels: pixels as usize, frames, tiff_cap, output_cap,
++            report_cap: if v2 { 192 << 10 } else { 64 << 10 }, v2,
++        })
++    }
++}
++
+ pub struct Resolved {
+     pub manifest: Manifest,
+-    pub inputs: [PathBuf; 3],
++    pub inputs: Vec<PathBuf>,
++    pub layout: Layout,
+     pub profile: PathBuf,
+     pub output: PathBuf,
+ }
+ 
+ pub fn parse(raw: &[u8], base: &Path, report: &Path, incomplete: &FileRef) -> Result<Resolved> {
+     let m: Manifest = serde_json::from_slice(raw).map_err(|e| format!("manifest JSON: {e}"))?;
+-    require(
+-        m.schema == "common-tiff-stack-v1",
+-        "unsupported manifest schema",
+-    )?;
+-    require(
+-        m.grid.width == WIDTH
+-            && m.grid.height == HEIGHT
+-            && m.grid.channels == "RGB"
+-            && m.grid.coordinates == GEOMETRY,
+-        "unsupported common grid",
+-    )?;
++    let layout = m.layout()?;
+     require(
+         m.color.space == SPACE && m.color.icc.bytes == 548 && m.color.icc.sha256 == ICC_SHA,
+         "unadmitted input profile",
+@@ -195,7 +239,10 @@
+     let mut names = BTreeSet::new();
+     let mut paths = BTreeSet::new();
+     let mut hashes = BTreeSet::new();
+-    let mut inputs = Vec::new();
++    let mut inputs = Vec::with_capacity(layout.frames);
++    let mut input_bytes = 0u64;
++    let input_capacity = layout.tiff_cap.checked_mul(layout.frames as u64)
++        .ok_or("aggregate input capacity overflow")?;
+     for input in &m.inputs {
+         require(
+             !input.id.is_empty()
+@@ -209,11 +256,14 @@
+         require(names.insert(input.id.clone()), "duplicate input id")?;
+         require(
+             input.tiff.bytes > 0
+-                && input.tiff.bytes <= TIFF_CAP
++                && input.tiff.bytes <= layout.tiff_cap
+                 && files::valid_hash(&input.tiff.sha256)
+                 && files::valid_hash(&input.pixel_sha256),
+             "typed bounded input identity",
+         )?;
++        input_bytes = input_bytes.checked_add(input.tiff.bytes)
++            .ok_or("aggregate input extent overflow")?;
++        require(input_bytes <= input_capacity, "aggregate input capacity")?;
+         require(
+             hashes.insert(input.tiff.sha256.clone()),
+             "duplicate whole-input identity",
+@@ -235,16 +285,11 @@
+     }
+     let mut all = paths;
+     require(all.insert(files::key(&profile)), "profile/input alias")?;
+-    for p in [
+-        report.to_path_buf(),
+-        report.with_extension("incomplete.json"),
+-        report.with_extension("frame-0.json"),
+-        report.with_extension("frame-1.json"),
+-        report.with_extension("frame-2.json"),
+-        report.with_extension("stage.json"),
+-        output.clone(),
+-        output.with_extension("tiff-stage"),
+-    ] {
++    let mut outputs = vec![report.to_path_buf(), report.with_extension("incomplete.json")];
++    outputs.extend((0..layout.frames).map(|i| report.with_extension(format!("frame-{i}.json"))));
++    outputs.extend([report.with_extension("stage.json"), output.clone(),
++        output.with_extension("tiff-stage")]);
++    for p in outputs {
+         require(
+             all.insert(files::key(&p)),
+             "input/output/receipt path collision",
+@@ -261,13 +306,14 @@
+     }
+     Ok(Resolved {
+         manifest: m,
+-        inputs: inputs.try_into().map_err(|_| "three inputs")?,
++        inputs,
++        layout,
+         profile,
+         output,
+     })
+ }
+ 
+-pub fn preflight(raw: &[u8]) -> Result<()> {
++pub fn preflight(raw: &[u8], layout: &Layout) -> Result<()> {
+     require(
+         raw.len() >= 8 && &raw[..4] == b"II*\0",
+         "classic little-endian TIFF header",
+@@ -308,7 +354,7 @@
+                 "unique LONG/count1 TIFF dimensions",
+             )?;
+             require(
+-                u32_at(entry + 8)? == [WIDTH, HEIGHT][slot],
++                u32_at(entry + 8)? == [layout.width, layout.height][slot],
+                 "TIFF dimensions do not match common grid",
+             )?;
+             seen[slot] = true;
+--- a/crates/strehl-cli/src/bin/common-stack/mod.rs
++++ b/crates/strehl-cli/src/bin/common-stack/mod.rs
+@@ -11,7 +11,6 @@
+ use strehl_raw::common_tiff::{CommonTiffFrame, ExpectedIdentity};
+ 
+ use files::{FileRef, Result, require};
+-use manifest::{HEIGHT, WIDTH};
+ 
+ const REPORT_CAP: usize = 64 << 10;
+ 
+@@ -25,6 +24,7 @@
+     receipt: Value,
+     report: PathBuf,
+     incomplete: FileRef,
++    report_cap: usize,
+ }
+ 
+ fn args(argv: &[String]) -> Result<Args> {
+@@ -83,9 +83,6 @@
+     for p in [
+         args.report.with_extension("incomplete.json"),
+         args.report.with_extension("stage.json"),
+-        args.report.with_extension("frame-0.json"),
+-        args.report.with_extension("frame-1.json"),
+-        args.report.with_extension("frame-2.json"),
+     ] {
+         require(!p.exists(), "receipt companion already exists")?;
+     }
+@@ -104,6 +101,7 @@
+         "output":null,"scope":"Software integration only. Simulation noise declaration; identity common-RGB grid. No physical calibration, placement, comparator or quality admission."}),
+         report: args.report.clone(),
+         incomplete,
++        report_cap: REPORT_CAP,
+     })
+ }
+ 
+@@ -196,10 +194,10 @@
+     )
+ }
+ 
+-fn observe(mode: &str, planes: &[Vec<f32>]) -> Result<Value> {
+-    let count = (WIDTH * HEIGHT * 3) as usize;
+-    require(
+-        planes.len() == 3 && planes.iter().all(|p| p.len() * 3 == count),
++fn observe(mode: &str, planes: &[Vec<f32>], pixels: usize) -> Result<Value> {
++    let count = pixels.checked_mul(3).ok_or("observer extent overflow")?;
++    require(
++        planes.len() == 3 && planes.iter().all(|p| p.len() == pixels),
+         "observer geometry",
+     )?;
+     match mode {
+@@ -234,6 +232,11 @@
+     let resolved = manifest::parse(&raw, base, &args.report, &state.incomplete)?;
+     // Manifest is authenticated before any TIFF or profile read.
+     let m = &resolved.manifest;
++    let layout = resolved.layout;
++    state.report_cap = layout.report_cap;
++    if layout.v2 {
++        state.receipt["schema"] = json!("common-tiff-stack-result-v2");
++    }
+     state.receipt["plan"] = json!(m);
+     let executable = std::env::current_exe().map_err(|e| format!("current executable: {e}"))?;
+     let binary = files::hash_file(&executable, 128 << 20)?;
+@@ -244,9 +247,9 @@
+         "actual admitted ICC bytes",
+     )?;
+     state.receipt["profile"] = json!(profile);
+-    let sizes = level_sizes(WIDTH as usize, HEIGHT as usize, 3);
++    let sizes = level_sizes(layout.width as usize, layout.height as usize, 3);
+     require(sizes.len() == 4, "exact three-band geometry")?;
+-    let mut merge = BandMerge::new(WIDTH as usize, HEIGHT as usize, 3, m.merge.core()?);
++    let mut merge = BandMerge::new(layout.width as usize, layout.height as usize, 3, m.merge.core()?);
+     let mut workspace = FrameWorkspace::new(&sizes, 3);
+     let all_beta = merge.band_gain().all().to_vec();
+     require(
+@@ -263,8 +266,8 @@
+     let mut frame_receipts = Vec::new();
+     for (ordinal, (input, path)) in m.inputs.iter().zip(&resolved.inputs).enumerate() {
+         state.receipt["stage"] = json!(format!("input-{ordinal}"));
+-        let (bytes, actual) = files::read(path, manifest::TIFF_CAP, Some(&input.tiff))?;
+-        manifest::preflight(&bytes)?;
++        let (bytes, actual) = files::read(path, layout.tiff_cap, Some(&input.tiff))?;
++        manifest::preflight(&bytes, &layout)?;
+         let frame = CommonTiffFrame::parse(&bytes).map_err(|e| format!("TIFF parser: {e}"))?;
+         frame
+             .verify(&ExpectedIdentity {
+@@ -275,7 +278,7 @@
+             })
+             .map_err(|e| format!("TIFF identity: {e}"))?;
+         require(
+-            frame.width == WIDTH && frame.height == HEIGHT,
++            frame.width == layout.width && frame.height == layout.height,
+             "actual parsed grid",
+         )?;
+         let provenance: manifest::Provenance = serde_json::from_str(&frame.provenance)
+@@ -287,7 +290,7 @@
+         let planes = frame.merge_planes();
+         let before = CommonTiffFrame::hash_merge_planes(&planes).map_err(|e| e.to_string())?;
+         require(before == input.pixel_sha256, "actual merge-facing payload")?;
+-        let n = (WIDTH * HEIGHT) as usize;
++        let n = layout.pixels;
+         let proxy: Vec<f32> = (0..n)
+             .map(|i| (planes[0][i] + 2.0 * planes[1][i] + planes[2][i]) * 0.25)
+             .collect();
+@@ -323,7 +326,8 @@
+             &path,
+             &files::encoded(
+                 &json!({
+-            "schema":"common-tiff-stack-frame-v1","manifest":pin,"fold":row}),
++            "schema":if layout.v2 {"common-tiff-stack-frame-v2"} else {"common-tiff-stack-frame-v1"},
++            "manifest":pin,"fold":row}),
+                 16 << 10,
+             )?,
+             16 << 10,
+@@ -334,12 +338,12 @@
+     }
+     state.receipt["stage"] = json!("finish");
+     require(
+-        consumed.len() == 3 && merge.frames() == 3,
+-        "complete three-input population",
++        consumed.len() == layout.frames && merge.frames() as usize == layout.frames,
++        "complete declared input population",
+     )?;
+     let output = merge.finish(&mut Workspace::new(&sizes));
+     let before_observer = files::f32_hash(output.iter().flatten().copied());
+-    let observer = observe(&args.observer, &output)?;
++    let observer = observe(&args.observer, &output, layout.pixels)?;
+     let after_observer = files::f32_hash(output.iter().flatten().copied());
+     require(
+         before_observer == after_observer,
+@@ -349,11 +353,11 @@
+         "output_f32_sha256_after":after_observer,"scope":"One actual after-finish observer call only."});
+     state.receipt["final_gate"] = consumed.last().ok_or("missing final fold")?["gate"].clone();
+     state.receipt["stage"] = json!("encode");
+-    let encoded = writer::encode(&output, &icc)?;
++    let encoded = writer::encode(&output, &icc, &layout)?;
+     state.receipt["encoding"] = json!(encoded);
+     // Recheck all input/profile/manifest bytes and the actual executable before publication.
+     for (input, path) in m.inputs.iter().zip(&resolved.inputs) {
+-        files::read(path, manifest::TIFF_CAP, Some(&input.tiff))?;
++        files::read(path, layout.tiff_cap, Some(&input.tiff))?;
+     }
+     files::read(&resolved.profile, 548, Some(&profile))?;
+     files::read(&args.manifest, 64 << 10, Some(&pin))?;
+@@ -368,11 +372,16 @@
+     )?;
+     state.receipt["inputs_rechecked"] = json!(true);
+     state.receipt["stage"] = json!("publish-output");
++    if layout.v2 {
++        // Keep room for the bounded output reference/status and error suffix.
++        // An image is never admission without the final receipt and actual exit.
++        files::encoded(&state.receipt, state.report_cap - (16 << 10))?;
++    }
+     let output_pin = files::staged(
+         &resolved.output,
+         &resolved.output.with_extension("tiff-stage"),
+         &encoded.bytes,
+-        writer::CAP,
++        layout.output_cap,
+     )?;
+     state.receipt["output"] = json!(output_pin);
+     state.receipt["stage"] = json!("complete");
+@@ -402,12 +411,12 @@
+             state.receipt["subject_complete"] = json!(false);
+             state.receipt["error"] = json!(error.chars().take(2048).collect::<String>());
+         }
+-        let raw = files::encoded(&state.receipt, REPORT_CAP)?;
++        let raw = files::encoded(&state.receipt, state.report_cap)?;
+         files::staged(
+             &state.report,
+             &state.report.with_extension("stage.json"),
+             &raw,
+-            REPORT_CAP,
++            state.report_cap,
+         )?;
+         // Final stdout is exactly the raw report bytes; outer exit still controls admission.
+         let mut stdout = std::io::stdout().lock();
+--- a/crates/strehl-cli/src/bin/common-stack/writer.rs
++++ b/crates/strehl-cli/src/bin/common-stack/writer.rs
+@@ -6,11 +6,12 @@
+ use tiff::tags::{Tag, Type};
+ 
+ use super::files::{self, Result, require};
+-use super::manifest::{HEIGHT, WIDTH};
++use super::manifest::Layout;
+ 
+-pub const CAP: usize = 128 << 10;
+ const DESCRIPTION: &str = "common-tiff-stack-v1; identity common-RGB pixels; linear ProPhoto RGB D50; RGB16 code units; no WB, camera matrix, demosaic, exposure, tone or transfer; finite clamp then round half away from zero; simulation-only noise declaration";
+ const SOFTWARE: &str = "strehl-common-input common-tiff-stack-v1";
++const DESCRIPTION_V2: &str = "common-tiff-stack-v2; identity common-RGB pixels; linear ProPhoto RGB D50; RGB16 code units; no WB, camera matrix, demosaic, exposure, tone or transfer; finite clamp then round half away from zero; simulation-only noise declaration";
++const SOFTWARE_V2: &str = "strehl-common-input common-tiff-stack-v2";
+ 
+ struct IccBytes<'a>(&'a [u8]);
+ impl TiffValue for IccBytes<'_> {
+@@ -24,11 +25,11 @@
+     }
+ }
+ 
+-struct BoundedCursor(Cursor<Vec<u8>>);
++struct BoundedCursor(Cursor<Vec<u8>>, usize);
+ impl Write for BoundedCursor {
+     fn write(&mut self, bytes: &[u8]) -> std::io::Result<usize> {
+         let end = self.0.position().checked_add(bytes.len() as u64);
+-        if !end.is_some_and(|n| n <= CAP as u64) {
++        if !end.is_some_and(|n| n <= self.1 as u64) {
+             return Err(std::io::Error::other("TIFF encoding capacity"));
+         }
+         self.0.write(bytes)
+@@ -40,7 +41,7 @@
+ impl Seek for BoundedCursor {
+     fn seek(&mut self, position: SeekFrom) -> std::io::Result<u64> {
+         let next = self.0.seek(position)?;
+-        if next > CAP as u64 {
++        if next > self.1 as u64 {
+             return Err(std::io::Error::other("TIFF seek capacity"));
+         }
+         Ok(next)
+@@ -68,8 +69,8 @@
+     pub quantization: &'static str,
+ }
+ 
+-pub fn encode(planes: &[Vec<f32>], icc: &[u8]) -> Result<Encoded> {
+-    let count = (WIDTH * HEIGHT) as usize;
++pub fn encode(planes: &[Vec<f32>], icc: &[u8], layout: &Layout) -> Result<Encoded> {
++    let count = layout.pixels;
+     require(
+         planes.len() == 3 && planes.iter().all(|p| p.len() == count),
+         "output plane geometry",
+@@ -87,12 +88,12 @@
+         }
+     }
+     let payload: Vec<u8> = samples.iter().flat_map(|v| v.to_le_bytes()).collect();
+-    let mut buffer = BoundedCursor(Cursor::new(Vec::with_capacity(CAP)));
++    let mut buffer = BoundedCursor(Cursor::new(Vec::with_capacity(layout.output_cap)), layout.output_cap);
+     {
+         let mut encoder =
+             TiffEncoder::new(&mut buffer).map_err(|e| format!("TIFF encoder: {e}"))?;
+         let mut image = encoder
+-            .new_image::<colortype::RGB16>(WIDTH, HEIGHT)
++            .new_image::<colortype::RGB16>(layout.width, layout.height)
+             .map_err(|e| format!("TIFF RGB16: {e}"))?;
+         image
+             .encoder()
+@@ -100,11 +101,11 @@
+             .map_err(|e| format!("TIFF chunky RGB: {e}"))?;
+         image
+             .encoder()
+-            .write_tag(Tag::ImageDescription, DESCRIPTION)
++            .write_tag(Tag::ImageDescription, if layout.v2 { DESCRIPTION_V2 } else { DESCRIPTION })
+             .map_err(|e| format!("TIFF description: {e}"))?;
+         image
+             .encoder()
+-            .write_tag(Tag::Software, SOFTWARE)
++            .write_tag(Tag::Software, if layout.v2 { SOFTWARE_V2 } else { SOFTWARE })
+             .map_err(|e| format!("TIFF software: {e}"))?;
+         image
+             .encoder()
+@@ -115,11 +116,11 @@
+             .map_err(|e| format!("TIFF data: {e}"))?;
+     }
+     let bytes = buffer.0.into_inner();
+-    require(bytes.len() <= CAP, "TIFF final capacity")?;
++    require(bytes.len() <= layout.output_cap, "TIFF final capacity")?;
+     Ok(Encoded {
+         bytes,
+-        width: WIDTH,
+-        height: HEIGHT,
++        width: layout.width,
++        height: layout.height,
+         sample_format: "RGB16",
+         color_space: "linear-prophoto-d50",
+         icc_sha256: files::hash(icc),

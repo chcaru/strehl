@@ -11,7 +11,6 @@ use strehl_core::pyramid::{BandMerge, FrameWorkspace, Workspace, level_sizes};
 use strehl_raw::common_tiff::{CommonTiffFrame, ExpectedIdentity};
 
 use files::{FileRef, Result, require};
-use manifest::{HEIGHT, WIDTH};
 
 const REPORT_CAP: usize = 64 << 10;
 
@@ -25,6 +24,7 @@ struct State {
     receipt: Value,
     report: PathBuf,
     incomplete: FileRef,
+    report_cap: usize,
 }
 
 fn args(argv: &[String]) -> Result<Args> {
@@ -83,9 +83,6 @@ fn initialize(args: &Args, argv: &[String]) -> Result<State> {
     for p in [
         args.report.with_extension("incomplete.json"),
         args.report.with_extension("stage.json"),
-        args.report.with_extension("frame-0.json"),
-        args.report.with_extension("frame-1.json"),
-        args.report.with_extension("frame-2.json"),
     ] {
         require(!p.exists(), "receipt companion already exists")?;
     }
@@ -104,6 +101,7 @@ fn initialize(args: &Args, argv: &[String]) -> Result<State> {
         "output":null,"scope":"Software integration only. Simulation noise declaration; identity common-RGB grid. No physical calibration, placement, comparator or quality admission."}),
         report: args.report.clone(),
         incomplete,
+        report_cap: REPORT_CAP,
     })
 }
 
@@ -196,10 +194,10 @@ fn gate(mode: &str, merge: &BandMerge) -> Result<Value> {
     )
 }
 
-fn observe(mode: &str, planes: &[Vec<f32>]) -> Result<Value> {
-    let count = (WIDTH * HEIGHT * 3) as usize;
+fn observe(mode: &str, planes: &[Vec<f32>], pixels: usize) -> Result<Value> {
+    let count = pixels.checked_mul(3).ok_or("observer extent overflow")?;
     require(
-        planes.len() == 3 && planes.iter().all(|p| p.len() * 3 == count),
+        planes.len() == 3 && planes.iter().all(|p| p.len() == pixels),
         "observer geometry",
     )?;
     match mode {
@@ -234,6 +232,11 @@ fn process(args: &Args, state: &mut State) -> Result<()> {
     let resolved = manifest::parse(&raw, base, &args.report, &state.incomplete)?;
     // Manifest is authenticated before any TIFF or profile read.
     let m = &resolved.manifest;
+    let layout = resolved.layout;
+    state.report_cap = layout.report_cap;
+    if layout.v2 {
+        state.receipt["schema"] = json!("common-tiff-stack-result-v2");
+    }
     state.receipt["plan"] = json!(m);
     let executable = std::env::current_exe().map_err(|e| format!("current executable: {e}"))?;
     let binary = files::hash_file(&executable, 128 << 20)?;
@@ -244,9 +247,14 @@ fn process(args: &Args, state: &mut State) -> Result<()> {
         "actual admitted ICC bytes",
     )?;
     state.receipt["profile"] = json!(profile);
-    let sizes = level_sizes(WIDTH as usize, HEIGHT as usize, 3);
+    let sizes = level_sizes(layout.width as usize, layout.height as usize, 3);
     require(sizes.len() == 4, "exact three-band geometry")?;
-    let mut merge = BandMerge::new(WIDTH as usize, HEIGHT as usize, 3, m.merge.core()?);
+    let mut merge = BandMerge::new(
+        layout.width as usize,
+        layout.height as usize,
+        3,
+        m.merge.core()?,
+    );
     let mut workspace = FrameWorkspace::new(&sizes, 3);
     let all_beta = merge.band_gain().all().to_vec();
     require(
@@ -263,8 +271,8 @@ fn process(args: &Args, state: &mut State) -> Result<()> {
     let mut frame_receipts = Vec::new();
     for (ordinal, (input, path)) in m.inputs.iter().zip(&resolved.inputs).enumerate() {
         state.receipt["stage"] = json!(format!("input-{ordinal}"));
-        let (bytes, actual) = files::read(path, manifest::TIFF_CAP, Some(&input.tiff))?;
-        manifest::preflight(&bytes)?;
+        let (bytes, actual) = files::read(path, layout.tiff_cap, Some(&input.tiff))?;
+        manifest::preflight(&bytes, &layout)?;
         let frame = CommonTiffFrame::parse(&bytes).map_err(|e| format!("TIFF parser: {e}"))?;
         frame
             .verify(&ExpectedIdentity {
@@ -275,7 +283,7 @@ fn process(args: &Args, state: &mut State) -> Result<()> {
             })
             .map_err(|e| format!("TIFF identity: {e}"))?;
         require(
-            frame.width == WIDTH && frame.height == HEIGHT,
+            frame.width == layout.width && frame.height == layout.height,
             "actual parsed grid",
         )?;
         let provenance: manifest::Provenance = serde_json::from_str(&frame.provenance)
@@ -287,7 +295,7 @@ fn process(args: &Args, state: &mut State) -> Result<()> {
         let planes = frame.merge_planes();
         let before = CommonTiffFrame::hash_merge_planes(&planes).map_err(|e| e.to_string())?;
         require(before == input.pixel_sha256, "actual merge-facing payload")?;
-        let n = (WIDTH * HEIGHT) as usize;
+        let n = layout.pixels;
         let proxy: Vec<f32> = (0..n)
             .map(|i| (planes[0][i] + 2.0 * planes[1][i] + planes[2][i]) * 0.25)
             .collect();
@@ -323,7 +331,8 @@ fn process(args: &Args, state: &mut State) -> Result<()> {
             &path,
             &files::encoded(
                 &json!({
-            "schema":"common-tiff-stack-frame-v1","manifest":pin,"fold":row}),
+            "schema":if layout.v2 {"common-tiff-stack-frame-v2"} else {"common-tiff-stack-frame-v1"},
+            "manifest":pin,"fold":row}),
                 16 << 10,
             )?,
             16 << 10,
@@ -334,12 +343,12 @@ fn process(args: &Args, state: &mut State) -> Result<()> {
     }
     state.receipt["stage"] = json!("finish");
     require(
-        consumed.len() == 3 && merge.frames() == 3,
-        "complete three-input population",
+        consumed.len() == layout.frames && merge.frames() as usize == layout.frames,
+        "complete declared input population",
     )?;
     let output = merge.finish(&mut Workspace::new(&sizes));
     let before_observer = files::f32_hash(output.iter().flatten().copied());
-    let observer = observe(&args.observer, &output)?;
+    let observer = observe(&args.observer, &output, layout.pixels)?;
     let after_observer = files::f32_hash(output.iter().flatten().copied());
     require(
         before_observer == after_observer,
@@ -349,11 +358,11 @@ fn process(args: &Args, state: &mut State) -> Result<()> {
         "output_f32_sha256_after":after_observer,"scope":"One actual after-finish observer call only."});
     state.receipt["final_gate"] = consumed.last().ok_or("missing final fold")?["gate"].clone();
     state.receipt["stage"] = json!("encode");
-    let encoded = writer::encode(&output, &icc)?;
+    let encoded = writer::encode(&output, &icc, &layout)?;
     state.receipt["encoding"] = json!(encoded);
     // Recheck all input/profile/manifest bytes and the actual executable before publication.
     for (input, path) in m.inputs.iter().zip(&resolved.inputs) {
-        files::read(path, manifest::TIFF_CAP, Some(&input.tiff))?;
+        files::read(path, layout.tiff_cap, Some(&input.tiff))?;
     }
     files::read(&resolved.profile, 548, Some(&profile))?;
     files::read(&args.manifest, 64 << 10, Some(&pin))?;
@@ -368,11 +377,16 @@ fn process(args: &Args, state: &mut State) -> Result<()> {
     )?;
     state.receipt["inputs_rechecked"] = json!(true);
     state.receipt["stage"] = json!("publish-output");
+    if layout.v2 {
+        // Keep room for the bounded output reference/status and error suffix.
+        // An image is never admission without the final receipt and actual exit.
+        files::encoded(&state.receipt, state.report_cap - (16 << 10))?;
+    }
     let output_pin = files::staged(
         &resolved.output,
         &resolved.output.with_extension("tiff-stage"),
         &encoded.bytes,
-        writer::CAP,
+        layout.output_cap,
     )?;
     state.receipt["output"] = json!(output_pin);
     state.receipt["stage"] = json!("complete");
@@ -402,12 +416,12 @@ pub fn entry(argv: &[String]) -> i32 {
             state.receipt["subject_complete"] = json!(false);
             state.receipt["error"] = json!(error.chars().take(2048).collect::<String>());
         }
-        let raw = files::encoded(&state.receipt, REPORT_CAP)?;
+        let raw = files::encoded(&state.receipt, state.report_cap)?;
         files::staged(
             &state.report,
             &state.report.with_extension("stage.json"),
             &raw,
-            REPORT_CAP,
+            state.report_cap,
         )?;
         // Final stdout is exactly the raw report bytes; outer exit still controls admission.
         let mut stdout = std::io::stdout().lock();
