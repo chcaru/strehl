@@ -1,0 +1,25 @@
+{
+  "command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\alignment-sinc-peak\\build-2\\core-tests.exe",
+    "--exact",
+    "align::sinc_peak_diagnostic::tests::sinc_peak_literal_controls",
+    "--ignored",
+    "--nocapture",
+    "--test-threads=1"
+  ],
+  "fields": {
+    "RAYON_NUM_THREADS": "2",
+    "STREHL_SINC_PEAK_OUT": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\alignment-sinc-peak\\diagnostic-1\\literal.json"
+  },
+  "removed": [],
+  "exe": {
+    "path": "experiments\\alignment-sinc-peak\\build-2\\core-tests.exe",
+    "sha256": "f4838fd2b0e9d9fbc6897a450c5054aab8a38e3046676bd374d33e15e70b37d2",
+    "bytes": 3597312
+  },
+  "build": {
+    "sha256": "1bc22f303f794ea35a53b288fed6e901ff252e5db2a637ccc2462f208afb42d2",
+    "bytes": 2481
+  },
+  "scope": "one context-only repeat; no consumer"
+}

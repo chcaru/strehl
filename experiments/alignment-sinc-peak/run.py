@@ -12,19 +12,26 @@ def read(p): return json.loads(p.read_text(encoding="utf-8"))
 def save(p,value):
     with p.open("x",encoding="utf-8") as stream:
         json.dump(value,stream,indent=2,allow_nan=False);stream.write("\n")
-assert not sys.argv[1:]
-build=HERE/"build-1";held=read(build/"executable.json");exe=ROOT/held["path"]
+assert sys.argv[1:] in ([], ["--compensated"])
+repair = bool(sys.argv[1:])
+build=HERE/("build-3" if repair else "build-1");held=read(build/"executable.json");exe=ROOT/held["path"]
 receipt=read(build/"invocation.json")
 def check():
     assert m.binding(exe)=={k:held[k] for k in ("bytes","sha256")}
     for item in receipt["source_files"]:
         assert m.binding(ROOT/item["path"])=={k:item[k] for k in ("bytes","sha256")},"compiled source changed"
 check()
-out=HERE/"run-1";out.mkdir()
+out=HERE/("compensated-1" if repair else "run-1");out.mkdir()
 api=m.load_job_api(m.binding(ROOT/"experiments/m12-scorecard/m12-harness.py"))
 save(out/"execution.json",dict(build=m.binding(build/"invocation.json"),executable=held,
     runner=m.binding(HERE/"run.py"),revision=receipt["revision"],scope="no original captures; fixed generated source"))
 cpu=0.0;steps=[]
+if repair:
+    for prior in (HERE/"run-1/literal-process.json", HERE/"diagnostic-1/process.json"):
+        previous=read(prior)
+        assert previous["exit_code"]==101 and previous["error"] is None and previous["terminal_job_accounting"]
+        cpu+=previous["job_accounting"]["total_cpu_100ns"]/1e7
+    save(out/"prior-cost.json",dict(aggregate_child_cpu_seconds=cpu, scope="same original120CPU allocation"))
 for name,test,output_env in [
     ("literal","align::sinc_peak_diagnostic::tests::sinc_peak_literal_controls","STREHL_SINC_PEAK_OUT"),
     ("consumer","align::sinc_peak_diagnostic::consumer_tests::alignment_sinc_peak_fixed_consumer","STREHL_SINC_PEAK_CONSUMER_OUT")]:

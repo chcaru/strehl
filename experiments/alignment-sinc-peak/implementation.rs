@@ -38,9 +38,25 @@ fn sinc(x: f32) -> [f32; 3] {
     let d = (c-v)/x;
     [v, d, -p2*v-2.0*d/x]
 }
+// Fixed prospective arithmetic repair: preserve signed low-order terms in
+// the existing reductions. This does not change the interpolant or optimizer.
+#[derive(Clone, Copy, Default)]
+struct Sum { value: f32, correction: f32 }
+impl Sum {
+    fn add(&mut self, value: f32) {
+        let next = self.value+value;
+        self.correction += if self.value.abs() >= value.abs() {
+            (self.value-next)+value
+        } else {
+            (value-next)+self.value
+        };
+        self.value = next;
+    }
+    fn total(self) -> f32 { self.value+self.correction }
+}
 fn weights(offset: f32) -> [[f32; 3]; 9] {
     let mut w = [[0.0; 3]; 9];
-    let mut sum = [0.0; 3];
+    let mut sums = [Sum::default(); 3];
     for (i, wi) in w.iter_mut().enumerate() {
         let x = offset-(i as f32-4.0);
         if x.abs() >= 4.0 { continue; }
@@ -48,8 +64,9 @@ fn weights(offset: f32) -> [[f32; 3]; 9] {
         let b = sinc(x/4.0);
         *wi = [a[0]*b[0], a[1]*b[0]+a[0]*b[1]/4.0,
             a[2]*b[0]+a[1]*b[1]/2.0+a[0]*b[2]/16.0];
-        for k in 0..3 { sum[k] += wi[k]; }
+        for k in 0..3 { sums[k].add(wi[k]); }
     }
+    let sum = sums.map(Sum::total);
     for wi in &mut w {
         let [v, d, dd] = *wi;
         *wi = [v/sum[0], (d-v*sum[1]/sum[0])/sum[0],
@@ -64,18 +81,19 @@ fn weights(offset: f32) -> [[f32; 3]; 9] {
 fn evaluate(local: &[f32; 81], x: f32, y: f32) -> Option<[f32; 6]> {
     let wx = weights(x);
     let wy = weights(y);
-    let mut out = [0.0; 6];
+    let mut sums = [Sum::default(); 6];
     for j in 0..9 {
         for i in 0..9 {
             let v = local[j*9+i];
-            out[0] += v*wx[i][0]*wy[j][0];
-            out[1] += v*wx[i][1]*wy[j][0];
-            out[2] += v*wx[i][0]*wy[j][1];
-            out[3] += v*wx[i][2]*wy[j][0];
-            out[4] += v*wx[i][1]*wy[j][1];
-            out[5] += v*wx[i][0]*wy[j][2];
+            sums[0].add(v*wx[i][0]*wy[j][0]);
+            sums[1].add(v*wx[i][1]*wy[j][0]);
+            sums[2].add(v*wx[i][0]*wy[j][1]);
+            sums[3].add(v*wx[i][2]*wy[j][0]);
+            sums[4].add(v*wx[i][1]*wy[j][1]);
+            sums[5].add(v*wx[i][0]*wy[j][2]);
         }
     }
+    let out = sums.map(Sum::total);
     out.iter().all(|v| v.is_finite()).then_some(out)
 }
 

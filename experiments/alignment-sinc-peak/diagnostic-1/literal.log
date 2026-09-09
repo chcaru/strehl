@@ -1,0 +1,15 @@
+
+running 1 test
+test align::sinc_peak_diagnostic::tests::sinc_peak_literal_controls ... 
+thread 'align::sinc_peak_diagnostic::tests::sinc_peak_literal_controls' (23660) panicked at C:\dev\blog\death-of-software\projects\strehl\crates\strehl-core/../../experiments/alignment-sinc-peak/independent-controls.rs:51:51:
+analytic positive peak must exercise candidate: kind=2, shift=(0.1875, -0.3125), outcome=(None, 10, "line-search")
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+FAILED
+
+failures:
+
+failures:
+    align::sinc_peak_diagnostic::tests::sinc_peak_literal_controls
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 560 filtered out; finished in 0.00s
+

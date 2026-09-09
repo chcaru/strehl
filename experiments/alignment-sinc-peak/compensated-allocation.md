@@ -1,0 +1,7 @@
+# One arithmetic repair, same controls
+
+2026-09-09. The context-only repeat at a957c89b confirmed refusal of the positive kind2 crossed-Gaussian peak at(0.1875,-0.3125), reason line-search,10 interpolant evaluations. Both literal failures are preserved. Neither the48-row actual-NCC comparison nor RAW data has run. Ten evaluations does not uniquely reconstruct the rejected backtracking trace.
+
+Independent source review found no derivative-algebra defect. A concrete numerical weakness remains: independent sequential f32 sums of signed terms can obscure the tiny difference of objective values near Newton convergence. This is plausible, not an established cause. Root authorizes one prospective compensated-f32 accumulation change in the three kernel-normalization sums and six value/gradient/Hessian sums. No kernel, radius, optimizer, Armijo rule, tolerance, backtrack count,80-evaluation bound, input, scoring formula or acceptance bar changes. Independent controls remain byte-identical to a48e64ad….
+
+Fresh build3 and compensated-1 retain the result. Root runs the same literal controls once; only a pass releases the unchanged48-row generated comparison. No original RAW or full solve follows automatically. The first run and diagnostic together used0.03125childCPU seconds; this repair shares the original120-second numerical budget. If this one repair fails, close this implementation without a further precision/parameter/optimizer campaign. This is an implementation repair, not evidence of SOTA or proof of the original failure's cause.
