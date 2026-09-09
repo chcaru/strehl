@@ -32,3 +32,19 @@ equal bytes at different locations must remain different. No frozen producer,
 test, reader, stage controller or stage result is modified. Preserve full actual
 outer exit, raw streams, complete ledgers where available, and failure costs.
 The result report must name this actual audit failure even if correction passes.
+
+## Bound correction from the actual failed adapter source
+
+Root subsequently read independent-transport-failed-1.py. Its shared read()
+checks128MiB per file; the four executable get() calls do not additionally
+enforce32MiB before reading. The prior129MiB charge used the producer's32MiB
+artifact bound as if it were this adapter's own read cap. That attribution was
+wrong. Replace the failed-attempt read reservation with513MiB (four128MiB
+reads plus1MiB for the released metadata) before any corrected audit runs.
+The actual read ledger remains unpublished and is not reconstructed as a
+measurement. This correction changes no numerical population or past result.
+
+The aggregate768MiB still applies, now leaving255MiB for the four saved
+interpretations and their metadata. The corrected adapter must count all
+actual bytes and enforce any narrower per-role cap before reading. No new
+reader source, producer run or increased aggregate byte allowance follows.

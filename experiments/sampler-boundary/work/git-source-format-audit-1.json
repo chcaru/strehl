@@ -1,0 +1,23 @@
+{
+  "candidate": {
+    "bytes": 148796,
+    "crlf": 4071,
+    "sha256": "e5003cf05a2805a0a6a72b6f59f2724bcc8873ebbcc8bbb95a69120bda7a24a1"
+  },
+  "normalized_added_lines": 39,
+  "normalized_deleted_lines": 15,
+  "normalized_prior_git_equals_original": true,
+  "original_working_source": {
+    "bytes": 147932,
+    "crlf": 4047,
+    "sha256": "6d33f0e24f21d4370ccd8df0bf618e54a5ad615b838bc265469b4f85051c2786"
+  },
+  "path": "crates/strehl-core/src/align.rs",
+  "prior_git": {
+    "bytes": 143885,
+    "crlf": 0,
+    "sha256": "24b6fd9303560e36205488885cbae6dcc43f9a152b7a431c864bdd91aed57449"
+  },
+  "schema": "sampler-git-source-format-audit-v1",
+  "scope": "Prior Git blob used LF; certified original working bytes use CRLF. Exact-byte commit intentionally retains certified CRLF; all apparent whole-file Git deletions beyond the15 reviewed lines are line-ending representation, not removed code."
+}
