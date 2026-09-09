@@ -1173,3 +1173,7 @@ untested geometry model would violate rule 8. The `CaptureMode` enum and mode
 detection stay in place because that is the one seam the rail case genuinely
 needs. Never silently apply the breathing model to rail data — detect from EXIF
 plus fitted residual signature, and warn. Never trust a user flag alone.
+
+## Signed RAW black-subtraction prototype allocation
+
+2026-09-09. Root dispatches `native-signed-black` after the completed native sensor-transfer diagnostic. Owned directory: `experiments/native-signed-black/`; factor_eight_implementation owns an opt-in CLI extraction prototype and its small actual production-path fixture. coordinate_verification independently checks numerical/consumer choices; sampler_result_review reviews resulting measurements. Keep current default, sensor gains, beta, admission, gather and writer unchanged. Test preserving signed black-subtracted f32 CFA values until the existing final output boundary. No global gain fit is licensed: paper is motion-confounded; dark signed-green variance agrees with the model while clamping changes its distribution. Root owns execution and exact-path commits. Compile and run a tiny whole-path smoke test before expanding the comparison. Reuse existing process/fixture tools; no new provenance, package-inventory or general control framework. This is a development candidate, not a SOTA claim. Do not reopen completed native, M194h, geometry or systems campaigns.

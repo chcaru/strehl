@@ -1,0 +1,33 @@
+# Native RAW transfer: measured result and implementation decision
+
+2026-09-09. **MEASURED; independently reviewed.** The fixed native diagnostic and independent reader completed. **No global sensor-gain or band-gain correction is identified by this experiment.** The next development candidate preserves signed black-subtracted RAW values through the merge instead of clipping each input at black.
+
+## Completed evidence
+
+The successful measurement population uses exactly27 original CONTROL ARWs: paper DSC00235–00239 under D:/personal/macro/requests/10-paper-iso-var, and dark DSC00872–00893 under D:/personal/macro/requests/6-11-extended-dark-frames. It observes one128×128 CFA-plane Crop at quad origin(1694,1108), with the actual current sensor/WB/MHC/CA processing. Configured7 bands yields128/64/32/16/8 levels here. This is neither a full-frame quality benchmark nor a sensor-wide calibration.
+
+All nine planned native traversals completed:50 successful-population native decodes and100 route/frame folds, including repeated originals for output controls. Native0 was preserved from the first attempt; native3 executed only1–8. The complete native output evidence is committed at79e7118a5fb2d1ef5aa434e6e97002c4ec9c21ad, with unchanged reused0 at4639949f0974d462a913824a628400256103cbd7. The final independent analysis and220 retained arrays are committed at6680a298d508d134c97b445ce9f84084f3dda78b.
+
+The independent reader completed27 decodes with owned array copies and matching Crop/row hashes,100 saved frame checks, and all197 variants across20 control groups. For each of the no-map and geometrically identity routes, paper-five and dark-first-two collapsed f32 outputs and whole TIFFs are identical across observer on/off/placebo and feature-absent arms. That statement does not extend to full22-dark neutrality. The separate reviewer regrouped the saved output identities, checked complete populations, and re-chose pair/all-frame and phase/support interpretations; it did not perform another pixel decode. The reader's actual software status is PASS_CONDITIONAL_NATIVE_DIAGNOSTIC. physical_model_pass remains null.
+
+## What the physical observations permit
+
+**Paper: NOT_IDENTIFIED.** The predeclared motion screen fails: for frame0, a(0,+1) shift improves its fixed score by about70.3%. Illumination and headroom screens do not trigger. Full-support temporal variance/prediction ratios at bands0–2 are about1.01,2.03,5.39, but the disjoint pair means differ by1.13×,2.99×,6.45×. All-frame sensitivity changes those estimates further. These observations cannot separate sensor transfer from scene movement. No alignment rescue, nuisance subtraction or gain tuning is performed.
+
+**Dark: the signed green signal agrees closely with the sensor model.** Paired temporal variance/model is0.9914; all-frame sensitivity is0.9962. Clipping black-subtracted inputs below zero reduces green temporal variance to about0.4337 of the signed value. This is a different random variable, so its lower variance is not evidence of better image quality or a lower sensor gain.
+
+Signed dark band variance/prediction ratios are about0.9476,1.3443,1.3733 at full-support bands0–2. Bands1/2 remain above1.32 in every interior phase. A finite diagonal operator alone does not explain that interior discrepancy: its full-support correction versus the white scalar is near1. The actual consumed beta-times-variance term exceeds saved smoothed temporal variance by roughly1.5–2.9× at bands0–2 across the retained routes/strata. This supports a conditional clamp/covariance-transport hypothesis, not a production correction or established output-quality benefit. Signed and clipped domains must stay separate.
+
+Both green routes consume identical samples and therefore are not independent physical corroborations or a fractional-warp test. Band3 has only nine full-support sites and is outside the inference claim. Paper's mean-scene energy is not temporal noise; it is retained without subtraction. Profile uncertainty remains unquantified. The dark and paper captures are not a matched calibration pair.
+
+## Decision
+
+**ARGUED next implementation:** test retaining signed f32 values after RAW black subtraction until the existing final output boundary. Keep u16 source storage and the current injected sensor model. This can test rectification bias without fitting a new gain. It does not automatically resolve the remaining signed-band covariance discrepancy. The current default, HardFloor, beta, alignment, WB and writer stay fixed while the candidate is evaluated. The allocated implementation and powered controls are in ../native-signed-black/charter.md. No SOTA or photographic improvement is claimed here.
+
+## Execution and retained failures
+
+Selected executable: C:/Users/chris/AppData/Local/Programs/Python/Python312/python.exe. Working directory: C:/dev/blog/death-of-software/projects/strehl. Successful stage invocations were that Python with -I -S -B followed by the absolute path to experiments/native-sensor-transfer/capture-native-continuation.py and argument native, then capture-verify-continuation.py and argument verify. Their committed releases contain every exact child command, environment, input identity, setting and resource limit: work/native-continuation-release-3.json and work/verify-continuation-release-2.json. Feature-on build4 and feature-off build1 were reused without a rebuild. These are debug diagnostic executions, not product speed measurements.
+
+Native attempt1 completed paper0 and was then interrupted after its live output scan raised FileNotFoundError on a .stage path. This is consistent with the writer’s publication transition; the exact transition was not independently observed. Its partial dark output is archived byte-identically at921bfe02. Native2 refused before any child because equivalent absolute/relative FileRefs were compared literally; evidence is at02e9da49. Verify1 completed27 decodes and100 frame checks, then refused a statistical filename containing characters its own publication policy forbade; evidence is at0f2ce2fc. Verify2 changes only artifact-name metadata and its fresh output paths, preserving the scientific calculations. All failures remain failures. The final native continuation took435.140s wall; the successful independent analysis took15.469s. These omit prior attempts and preparation and are not total project cost or end-to-end product performance.
+
+The operational work consumed too much iteration for this question. Future candidates start with a tiny compiled whole-path smoke run before a larger comparison. Existing process tools are sufficient; this result does not authorize another generic runner, provenance or package-inspection campaign.

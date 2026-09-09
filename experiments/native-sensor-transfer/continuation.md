@@ -1,5 +1,20 @@
 # Native sensor transfer continuation
 
+CLOSED2026-09-09: native3 completed all9 selected traversals; verify2 completed
+27 independent decodes,100 framechecks and197 control variants. Actual outputs
+are committed79e7118a/native and6680a298/independent. Read results.md.
+Physical decision: no global gain/beta correction identified. Paper motion fails;
+dark signedgreen variance agrees with sensor model, but clipping changes the
+consumed distribution. No SOTA/default promotion. Do not rerun this campaign.
+
+NEXT IMPLEMENTATION is allocated in experiments/native-signed-black/charter.md
+and rootAGENTS. Factor owns a minimal opt-in signed-black CFA prototype;
+coordinate independently reviews its actual consumer and powered small controls.
+Root owns early compile/whole-path smoke and fixed small comparison; no new
+framework. Sampler independently reviewed the completed native scientific result.
+Current processes have all exited cleanly for the successful native3/verify2.
+Older live checkpoints below are historical only.
+
 Current live checkpoint: native attempt3 is running, PTY session14394.
 Command: selected Python -I -S -B capture-native-continuation.py native.
 Release c524bb3127a39dfa65dd9cf9606d905b5d8739dd; work/native-continuation-release-3.json,

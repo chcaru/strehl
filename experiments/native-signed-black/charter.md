@@ -1,0 +1,15 @@
+# Preserve signed RAW values through the merge
+
+2026-09-09. Development prototype; no default promotion.
+
+The completed native sensor-transfer diagnostic provides the premise: dark signed-green temporal variance/model is 0.9914 (all-frame sensitivity 0.9962), while clipping below black retains about0.4337 of signed variance. Paper motion fails the held screen, so its ratios cannot calibrate a change. The separate reviewer concludes that a global gain/beta correction is not identified.
+
+Test one implementation change: keep `raw - black` signed in f32 CFA planes through the pyramid, preserving the existing final writer boundary. Raw storage remains u16. Keep gain/noise parameters, admission/weights, beta, geometry, CFA offsets, exposure, demosaic and output settings fixed. Check every earlier and later clamp actually traversed; retaining signs at an unused seam proves nothing. Baseline remains byte-frozen and default unchanged.
+
+Start with a tiny compiled whole-path fixture. The candidate must actually encounter negative samples, and an all-nonnegative companion must retain the baseline result. A known zero/dim-signal flat fixture can reject persistent rectification bias; a noise-free companion prevents mistaking a general offset or scaling error for improvement. Pair any lower noise/bias claim with known-scene texture and depth-boundary error. Do not use gradient magnitude as a quality score. Synthetic noise tests the operator, not sensor calibration. Use the existing M194 production-truth consumer where applicable; do not replay its completed matrices.
+
+Reuse independently checked saved CFA crops from the current27-original diagnostic for a small development check if useful; no need to decode the entire original library again. These are sensor crops, not a new capture, native full-frame performance benchmark or independent replicate. No paper-derived gain tuning, holdout access or new capture request. A clamp change alone cannot remove the remaining signed-band covariance discrepancy.
+
+Execution order: implement the smallest opt-in path and compile early; independently review the consumer and controls; execute a fixed small comparison; report actual bias/fidelity/cost and decide keep or reject. Root owns bounded execution. Reuse existing process tools. No new generic runner, importer, registry inspector, source archive or control framework.
+
+Prior-art search ran with selected Python -I -S -B experiments/ORCH-drift-check/prior_art.py "black clamp" "signed" "censored", exit0. It returned ORCH-veiling, M41-r3-kill, M46-detail-metric, M87-occlusion, M54-clip-mask, M111-waxy-blobs, BUILD-HALO and BUILD-HIGHLIGHT. Root searched the directly relevant black-clamp passages; highlight censoring and Wiener inversion are different mechanisms and are not revived. Read these prior decisions as needed and SYNTHESIS before architecture changes. Current concrete extraction seam is extract_planes in crates/strehl-cli/src/merge_cmd.rs; Merged accessors preserve the existing final nonnegative writer contract.
