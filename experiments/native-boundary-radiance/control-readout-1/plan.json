@@ -1,0 +1,13 @@
+{
+  "schema": "native-boundary-radiance-control-readout-v1",
+  "source": {
+    "path": "experiments/native-boundary-radiance/read-controls.py",
+    "bytes": 4310,
+    "sha256": "84a28d40ace1e6b2d81598820a88613dc6abc8272b9fefe8f580e72ef05b790e"
+  },
+  "expected_failure_inputs": [
+    "identical grayscale channels cannot witness genuine-colour identity",
+    "displaced boundary that changes no pixel is an inactive model destroyer"
+  ],
+  "metric_scope": "wrong-model error ordering is reported, not used to rescue the rejected candidate"
+}

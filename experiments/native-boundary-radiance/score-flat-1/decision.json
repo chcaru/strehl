@@ -1,0 +1,191 @@
+{
+  "status": "FLAT_CONTROLS_PASS",
+  "checks": [
+    {
+      "metric": "temporal_variance_dn2",
+      "channel": "R",
+      "region": "window",
+      "baseline": 297.2417385439432,
+      "candidate": 266.31944648137016,
+      "comparison": "<=",
+      "passed": true
+    },
+    {
+      "metric": "noise-off_ideal_mse_dn2",
+      "channel": "R",
+      "region": "window",
+      "baseline": 0.0016201552855855696,
+      "candidate": 0.0016201552855855696,
+      "comparison": "<=",
+      "passed": true
+    },
+    {
+      "metric": "eight-repeat-mean_ideal_mse_dn2",
+      "channel": "R",
+      "region": "window",
+      "baseline": 36.48697408039431,
+      "candidate": 32.79547804998465,
+      "comparison": "<=",
+      "passed": true
+    },
+    {
+      "metric": "temporal_variance_dn2",
+      "channel": "R",
+      "region": "boundary",
+      "baseline": 279.3916741647432,
+      "candidate": 66.48209329582919,
+      "comparison": "<=",
+      "passed": true
+    },
+    {
+      "metric": "noise-off_ideal_mse_dn2",
+      "channel": "R",
+      "region": "boundary",
+      "baseline": 0.0016201552855855696,
+      "candidate": 0.0016201552855855696,
+      "comparison": "<=",
+      "passed": true
+    },
+    {
+      "metric": "eight-repeat-mean_ideal_mse_dn2",
+      "channel": "R",
+      "region": "boundary",
+      "baseline": 31.177854440861207,
+      "candidate": 6.121675119134254,
+      "comparison": "<=",
+      "passed": true
+    },
+    {
+      "metric": "temporal_variance_dn2",
+      "channel": "G",
+      "region": "window",
+      "baseline": 268.7922138740406,
+      "candidate": 240.29203279015678,
+      "comparison": "<=",
+      "passed": true
+    },
+    {
+      "metric": "noise-off_ideal_mse_dn2",
+      "channel": "G",
+      "region": "window",
+      "baseline": 0.0016129658122338724,
+      "candidate": 0.0016129658122338724,
+      "comparison": "<=",
+      "passed": true
+    },
+    {
+      "metric": "eight-repeat-mean_ideal_mse_dn2",
+      "channel": "G",
+      "region": "window",
+      "baseline": 32.4473002946368,
+      "candidate": 29.2387867808465,
+      "comparison": "<=",
+      "passed": true
+    },
+    {
+      "metric": "temporal_variance_dn2",
+      "channel": "G",
+      "region": "boundary",
+      "baseline": 240.39106767900017,
+      "candidate": 42.38962794791384,
+      "comparison": "<=",
+      "passed": true
+    },
+    {
+      "metric": "noise-off_ideal_mse_dn2",
+      "channel": "G",
+      "region": "boundary",
+      "baseline": 0.0016129658122338722,
+      "candidate": 0.0016129658122338722,
+      "comparison": "<=",
+      "passed": true
+    },
+    {
+      "metric": "eight-repeat-mean_ideal_mse_dn2",
+      "channel": "G",
+      "region": "boundary",
+      "baseline": 28.060276380986007,
+      "candidate": 5.869578413619141,
+      "comparison": "<=",
+      "passed": true
+    },
+    {
+      "metric": "temporal_variance_dn2",
+      "channel": "B",
+      "region": "window",
+      "baseline": 326.4576054816631,
+      "candidate": 294.9271433499084,
+      "comparison": "<=",
+      "passed": true
+    },
+    {
+      "metric": "noise-off_ideal_mse_dn2",
+      "channel": "B",
+      "region": "window",
+      "baseline": 0.001607225744344835,
+      "candidate": 0.001607225744344835,
+      "comparison": "<=",
+      "passed": true
+    },
+    {
+      "metric": "eight-repeat-mean_ideal_mse_dn2",
+      "channel": "B",
+      "region": "window",
+      "baseline": 41.39751218666788,
+      "candidate": 37.14852485270909,
+      "comparison": "<=",
+      "passed": true
+    },
+    {
+      "metric": "temporal_variance_dn2",
+      "channel": "B",
+      "region": "boundary",
+      "baseline": 315.4958943541564,
+      "candidate": 98.83511352058927,
+      "comparison": "<=",
+      "passed": true
+    },
+    {
+      "metric": "noise-off_ideal_mse_dn2",
+      "channel": "B",
+      "region": "boundary",
+      "baseline": 0.001607225744344835,
+      "candidate": 0.001607225744344835,
+      "comparison": "<=",
+      "passed": true
+    },
+    {
+      "metric": "eight-repeat-mean_ideal_mse_dn2",
+      "channel": "B",
+      "region": "boundary",
+      "baseline": 44.25485352576447,
+      "candidate": 14.408260083031266,
+      "comparison": "<=",
+      "passed": true
+    },
+    {
+      "metric": "accepted_site_events",
+      "baseline": 0,
+      "candidate": 30997,
+      "comparison": ">",
+      "passed": true
+    },
+    {
+      "metric": "changed_decoded_pixel_pairs",
+      "baseline": 0,
+      "candidate": 8,
+      "comparison": ">",
+      "passed": true
+    }
+  ],
+  "failed_checks": [],
+  "scope": "fixed finite-population decision; no physical calibration, default promotion or SOTA claim",
+  "next": "Only a flat pass permits the fixed textured comparison; shifted geometry and colour identity remain separate required controls.",
+  "proceed_to_textured": true,
+  "flat_run_index": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-boundary-radiance\\run-flat-1\\run-index.json",
+    "bytes": 27106,
+    "sha256": "290ffdc0efa4b1e453fa7bd162d8abfd095d592119a89c5a2aae373c3a27ccfa"
+  },
+  "schema": "native-boundary-radiance-decision-v1"
+}

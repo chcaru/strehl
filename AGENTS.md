@@ -1200,3 +1200,7 @@ Stage2 follow-up,2026-09-09: the full-signed small comparison reduced shadow bia
 ## Native boundary radiance allocation
 
 2026-09-09. Root allocates native-boundary-radiance and experiments/native-boundary-radiance/ as the next quality intervention, under charter.md and the prior-art-complete native-green-probe/new-quality-directions.md. Implement a small default-off original-CFA two-layer affine-radiance operator using shared-pupil visibility moments, injected noise and the current output consumer. Existing M194g geometry is explicitly an oracle input; hidden radiance is forbidden. Compile early, use existing saved truth/readers, and separate author, controls and actual-result review. No new renderer, corpus, generic framework or default promotion. Prior M87 native hair destruction and all closed physical/signed-black experiments remain binding.
+
+## Angular-centred spectrum alignment allocation
+
+2026-09-09. Root allocates experiments/alignment-angular-spectrum/ under charter.md after the fixed39-image boundary-radiance rejection. One small direct scale/refusal prototype uses existing curved seven-rung M103 truth and analytic images, compares ordinary and angular-centred Fourier magnitude, and exercises scale-information loss and multiple-depth/window failure. Independent choices and controls precede root execution. No native decode, new framework, parameter sweep or production change; do not let the current final NCC refinement overwrite the quantity being tested. Existing prior-art memos are the starting point.

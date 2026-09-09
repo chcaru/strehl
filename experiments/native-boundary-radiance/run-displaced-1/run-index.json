@@ -1,0 +1,235 @@
+{
+  "schema": "native-boundary-radiance-placebos-v1",
+  "case": "displaced",
+  "status": "COMPLETE_UNSCORED",
+  "rows": [
+    {
+      "ordinal": 0,
+      "scene": "textured",
+      "seed": null,
+      "mode": "displaced",
+      "output": {
+        "path": "experiments/native-boundary-radiance/run-displaced-1/case-00.tif",
+        "sha256": "b6e605c2457cb2c0d0fcce20f35a20f915dfdc5085e73fadf65d40d7dae857cb",
+        "bytes": 407403
+      },
+      "receipt": {
+        "path": "experiments/native-boundary-radiance/run-displaced-1/case-00-receipt.json",
+        "sha256": "39b5f8c623690643b5b9b40256d2f346c2b1bd8c5e8ce5fce551329b41b01760",
+        "bytes": 4621
+      },
+      "process": {
+        "path": "experiments/native-boundary-radiance/run-displaced-1/case-00-process.json",
+        "sha256": "28e900f4ced57db69a8316ecfc2c9a6c8d24498155a4726e6266962670af3101",
+        "bytes": 2790
+      },
+      "log": {
+        "path": "experiments/native-boundary-radiance/run-displaced-1/case-00.log",
+        "sha256": "4bd47854c85cd9eaf90b7dfbd52780dd7058fd1be27f143e26bf3fac147057bc",
+        "bytes": 4527
+      },
+      "diagnostics": [
+        {
+          "accepted": 2605,
+          "boundary_offset": 146.0,
+          "configuration": "M194g-oracle-local-affine-v1",
+          "maximum_normalized_residual": 131.73471069335938,
+          "maximum_variance_dn2": 193.3041229248047,
+          "minimum_normalized_schur_pivot": 0.00010442733764648438,
+          "radius_native": 2,
+          "refusal_order": [
+            "insufficient-observations",
+            "rank",
+            "nonfinite",
+            "negative",
+            "variance"
+          ],
+          "refusals": [
+            0,
+            1022,
+            0,
+            0,
+            0
+          ],
+          "residual_rejection": false,
+          "source_frames": 5,
+          "targets": 3627
+        }
+      ],
+      "source_bindings": [
+        {
+          "path": "crates\\strehl-cli\\Cargo.toml",
+          "bytes": 1286,
+          "sha256": "563575399c24d0a27720ed33bacc13d7cd36520ce14407a862e77881bfaf77a3"
+        },
+        {
+          "path": "crates\\strehl-cli\\src\\merge_cmd.rs",
+          "bytes": 431324,
+          "sha256": "07e8998e28bba0508ba95904fbee7d34993f2c1b9bd023c348efd6c7da8f53c6"
+        },
+        {
+          "path": "experiments\\native-pyramid-profile\\implementation.rs",
+          "bytes": 12621,
+          "sha256": "85362dd472a95d64704c80235159abb188573914ac3cf9e7ac3b0fa16c029c69"
+        },
+        {
+          "path": "experiments\\native-pyramid-profile\\build.py",
+          "bytes": 3604,
+          "sha256": "8485ced455dd17d700a452b9f7a732759ff375fcca2d942cb9411a7d715dbc02"
+        },
+        {
+          "path": "crates\\strehl-cli\\src\\merge_cmd\\gatefloor.rs",
+          "bytes": 26053,
+          "sha256": "8505c84f39f945621ced6c384e84fb4452028c3fa8aa8920338e40e9cbeaf62d"
+        },
+        {
+          "path": "crates\\strehl-cli\\src\\align_cmd.rs",
+          "bytes": 127575,
+          "sha256": "c5cdbbe9a0666da37530523d1524b33a75a048d53e4443cc33278bbe6c746479"
+        },
+        {
+          "path": "crates\\strehl-core\\src\\demosaic.rs",
+          "bytes": 52206,
+          "sha256": "17cca911c2e756f3224deb1520379a1994c58375d3bcb5f4c91fcf9dc6fbe514"
+        },
+        {
+          "path": "experiments\\native-boundary-radiance\\implementation.rs",
+          "bytes": 10751,
+          "sha256": "2af22aacc45941dd24dcfab6584f85b23e76eb922d1242034bad82be425d4c9f"
+        },
+        {
+          "path": "experiments\\native-boundary-radiance\\independent-tests.rs",
+          "bytes": 10662,
+          "sha256": "e1434db795e1fbe846809707fbbdf0edcd587155946c3b6f2587840a958886a0"
+        },
+        {
+          "path": "experiments\\native-boundary-radiance\\source-hook.rs",
+          "bytes": 9528,
+          "sha256": "5f5e694e7ff198c974374d7279c19834f2e61968a5e1a7ee93ee314888d74a68"
+        },
+        {
+          "path": "experiments\\native-boundary-radiance\\bridge.rs",
+          "bytes": 5002,
+          "sha256": "3d0fd586b008e66620668abb9cbf2d002e375101883321a3ba129214cb500718"
+        },
+        {
+          "path": "crates\\strehl-cli\\src\\merge_cmd\\noise-pupil-bridge.rs",
+          "bytes": 67894,
+          "sha256": "85c42dbe62689eb6dd8d0ac5b7ed4d213537cf80ac0098d8c4d16a71b39cb854"
+        },
+        {
+          "path": "crates\\strehl-cli\\src\\merge_cmd\\known-scene-benchmark.rs",
+          "bytes": 31256,
+          "sha256": "f3c309e827cb4f3427a816606b347fc879845dfb6a357f25b9295186a78cad26"
+        },
+        {
+          "path": "experiments/native-boundary-radiance/run-placebos.py",
+          "sha256": "c7bb7a5c46064d000f2fce4a4c281b74ed0a852437d5ba0b90b403595901cf9e",
+          "bytes": 8550
+        },
+        {
+          "path": "experiments/m193c-output-grid/bounded-process.py",
+          "sha256": "47b9f8d848759eba61f055b9fdca1f8ac400f134dcd7636f0e0eaaa955704e0b",
+          "bytes": 12664
+        },
+        {
+          "path": "experiments/m12-scorecard/m12-harness.py",
+          "sha256": "6cfb408992f37b225f102da4d62ba836f9c5b67c92bdd418ff460987866a1bb9",
+          "bytes": 117908
+        }
+      ],
+      "consumer_wall_seconds": 0.050885
+    }
+  ],
+  "plan": {
+    "path": "experiments/native-boundary-radiance/run-displaced-1/plan.json",
+    "sha256": "8c84570b008199aa24af17f018e289a2dfa39297ce0006603deaf65e080e26ea",
+    "bytes": 4568
+  },
+  "source_bindings": [
+    {
+      "path": "crates\\strehl-cli\\Cargo.toml",
+      "bytes": 1286,
+      "sha256": "563575399c24d0a27720ed33bacc13d7cd36520ce14407a862e77881bfaf77a3"
+    },
+    {
+      "path": "crates\\strehl-cli\\src\\merge_cmd.rs",
+      "bytes": 431324,
+      "sha256": "07e8998e28bba0508ba95904fbee7d34993f2c1b9bd023c348efd6c7da8f53c6"
+    },
+    {
+      "path": "experiments\\native-pyramid-profile\\implementation.rs",
+      "bytes": 12621,
+      "sha256": "85362dd472a95d64704c80235159abb188573914ac3cf9e7ac3b0fa16c029c69"
+    },
+    {
+      "path": "experiments\\native-pyramid-profile\\build.py",
+      "bytes": 3604,
+      "sha256": "8485ced455dd17d700a452b9f7a732759ff375fcca2d942cb9411a7d715dbc02"
+    },
+    {
+      "path": "crates\\strehl-cli\\src\\merge_cmd\\gatefloor.rs",
+      "bytes": 26053,
+      "sha256": "8505c84f39f945621ced6c384e84fb4452028c3fa8aa8920338e40e9cbeaf62d"
+    },
+    {
+      "path": "crates\\strehl-cli\\src\\align_cmd.rs",
+      "bytes": 127575,
+      "sha256": "c5cdbbe9a0666da37530523d1524b33a75a048d53e4443cc33278bbe6c746479"
+    },
+    {
+      "path": "crates\\strehl-core\\src\\demosaic.rs",
+      "bytes": 52206,
+      "sha256": "17cca911c2e756f3224deb1520379a1994c58375d3bcb5f4c91fcf9dc6fbe514"
+    },
+    {
+      "path": "experiments\\native-boundary-radiance\\implementation.rs",
+      "bytes": 10751,
+      "sha256": "2af22aacc45941dd24dcfab6584f85b23e76eb922d1242034bad82be425d4c9f"
+    },
+    {
+      "path": "experiments\\native-boundary-radiance\\independent-tests.rs",
+      "bytes": 10662,
+      "sha256": "e1434db795e1fbe846809707fbbdf0edcd587155946c3b6f2587840a958886a0"
+    },
+    {
+      "path": "experiments\\native-boundary-radiance\\source-hook.rs",
+      "bytes": 9528,
+      "sha256": "5f5e694e7ff198c974374d7279c19834f2e61968a5e1a7ee93ee314888d74a68"
+    },
+    {
+      "path": "experiments\\native-boundary-radiance\\bridge.rs",
+      "bytes": 5002,
+      "sha256": "3d0fd586b008e66620668abb9cbf2d002e375101883321a3ba129214cb500718"
+    },
+    {
+      "path": "crates\\strehl-cli\\src\\merge_cmd\\noise-pupil-bridge.rs",
+      "bytes": 67894,
+      "sha256": "85c42dbe62689eb6dd8d0ac5b7ed4d213537cf80ac0098d8c4d16a71b39cb854"
+    },
+    {
+      "path": "crates\\strehl-cli\\src\\merge_cmd\\known-scene-benchmark.rs",
+      "bytes": 31256,
+      "sha256": "f3c309e827cb4f3427a816606b347fc879845dfb6a357f25b9295186a78cad26"
+    },
+    {
+      "path": "experiments/native-boundary-radiance/run-placebos.py",
+      "sha256": "c7bb7a5c46064d000f2fce4a4c281b74ed0a852437d5ba0b90b403595901cf9e",
+      "bytes": 8550
+    },
+    {
+      "path": "experiments/m193c-output-grid/bounded-process.py",
+      "sha256": "47b9f8d848759eba61f055b9fdca1f8ac400f134dcd7636f0e0eaaa955704e0b",
+      "bytes": 12664
+    },
+    {
+      "path": "experiments/m12-scorecard/m12-harness.py",
+      "sha256": "6cfb408992f37b225f102da4d62ba836f9c5b67c92bdd418ff460987866a1bb9",
+      "bytes": 117908
+    }
+  ],
+  "outcome": {
+    "fixed_displaced_model_exercised": true,
+    "quality": "UNSCORED"
+  }
+}

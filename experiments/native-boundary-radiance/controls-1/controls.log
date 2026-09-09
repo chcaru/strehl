@@ -1,0 +1,7 @@
+
+running 1 test
+test merge_cmd::native_boundary_radiance::independent_tests::independent_boundary_radiance_controls ... BOUNDARY_RADIANCE_INDEPENDENT: affine/constant recovery, Schur threshold sides, variance/rank refusals, no-treatment bits, analytic shared-pupil/cell moments, displaced boundary and 15 independent ray-integrated rows passed
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 168 filtered out; finished in 0.04s
+

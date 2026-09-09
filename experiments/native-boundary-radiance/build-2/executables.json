@@ -1,0 +1,12 @@
+{
+  "strehl": {
+    "path": "experiments\\native-boundary-radiance\\build-2\\strehl.exe",
+    "bytes": 10242048,
+    "sha256": "4301aaf79367a14d945bf68cd6ae29cce766dec774a12eaebe456000684b3e12"
+  },
+  "cli-tests": {
+    "path": "experiments\\native-boundary-radiance\\build-2\\cli-tests.exe",
+    "bytes": 13413888,
+    "sha256": "facb0a0c4237c398cd1e0ee59e2c3476d99bd8e159eb995f0ecfb542a0b1e9ab"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-boundary-radiance\\build-1\\cli-tests.exe",
+    "merge_cmd::native_boundary_radiance::independent_tests::independent_boundary_radiance_controls",
+    "--exact",
+    "--nocapture",
+    "--test-threads=1"
+  ],
+  "executable": {
+    "sha256": "2c80c0b9f76ef1a9d40424ada109e786d9a19261609941b2fdb98574dd39170a",
+    "bytes": 13238272
+  },
+  "environment_overrides": {
+    "RAYON_NUM_THREADS": "2",
+    "STREHL_PYRAMID_PROFILE": "off"
+  },
+  "removed_environment": [],
+  "revision": "5532940af14b20e96f1c882e483c34176e6367be",
+  "scope": "independent affine/moment operator controls, no scored image or native RAW"
+}

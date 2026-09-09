@@ -1,0 +1,56 @@
+{
+  "ordinal": 15,
+  "scene": "flat",
+  "seed": 743,
+  "mode": "apply",
+  "output": {
+    "path": "experiments/native-boundary-radiance/run-flat-1/case-15.tif",
+    "sha256": "63860298354a10c8e4e3463a89e681dfce77257acc90e153c65aba1eaa6d7ac9",
+    "bytes": 407403
+  },
+  "receipt": {
+    "path": "experiments/native-boundary-radiance/run-flat-1/case-15-receipt.json",
+    "sha256": "795fe3a590b9c86b8706852534a814af6c57f5b0c5764c45763618cae972351b",
+    "bytes": 4563
+  },
+  "process": {
+    "path": "experiments/native-boundary-radiance/run-flat-1/case-15-process.json",
+    "sha256": "c35f9cb1c1e9f3f6510d8f6423cd6e4f0be11c514542dd0b8e664bf61adb75fc",
+    "bytes": 2786
+  },
+  "log": {
+    "path": "experiments/native-boundary-radiance/run-flat-1/case-15.log",
+    "sha256": "535d055b70f74b2b40737f5d0afc3b8e73a080934434c697ed12e9a330e48990",
+    "bytes": 4524
+  },
+  "diagnostics": [
+    {
+      "accepted": 3448,
+      "boundary_offset": 142.0,
+      "configuration": "M194g-oracle-local-affine-v1",
+      "maximum_normalized_residual": 2.5741496086120605,
+      "maximum_variance_dn2": 145.88792419433594,
+      "minimum_normalized_schur_pivot": 0.00010292232036590576,
+      "radius_native": 2,
+      "refusal_order": [
+        "insufficient-observations",
+        "rank",
+        "nonfinite",
+        "negative",
+        "variance"
+      ],
+      "refusals": [
+        0,
+        179,
+        0,
+        0,
+        0
+      ],
+      "residual_rejection": false,
+      "source_frames": 5,
+      "targets": 3627
+    }
+  ],
+  "baseline_identity": false,
+  "consumer_wall_seconds": 0.0486937
+}

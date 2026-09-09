@@ -1,0 +1,29 @@
+{
+  "ordinal": 16,
+  "scene": "flat",
+  "seed": 751,
+  "mode": "off",
+  "output": {
+    "path": "experiments/native-boundary-radiance/run-flat-1/case-16.tif",
+    "sha256": "26350ad3b3816931f9fb913b976f00606a6a98dfcc0d8698897d11820be147df",
+    "bytes": 407403
+  },
+  "receipt": {
+    "path": "experiments/native-boundary-radiance/run-flat-1/case-16-receipt.json",
+    "sha256": "7eba0459fad622bd8a255abf8d072e107446ce886931120f4266eca62ecbcece",
+    "bytes": 4561
+  },
+  "process": {
+    "path": "experiments/native-boundary-radiance/run-flat-1/case-16-process.json",
+    "sha256": "cdcefcba825300cc64cdb8e3721892662d708b3d9bfc30ae31bbd8e667e493a2",
+    "bytes": 2789
+  },
+  "log": {
+    "path": "experiments/native-boundary-radiance/run-flat-1/case-16.log",
+    "sha256": "c66ed5853b46aae7081bf3dabde73cbd426a0f5cd9aee5c01c394ba1285ecd8d",
+    "bytes": 4079
+  },
+  "diagnostics": [],
+  "baseline_identity": true,
+  "consumer_wall_seconds": 0.0354039
+}

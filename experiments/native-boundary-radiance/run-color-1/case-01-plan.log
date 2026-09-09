@@ -1,0 +1,6 @@
+
+running 1 test
+test merge_cmd::known_scene_benchmark::m194b_boundary_radiance_no_treatment_consumer ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 170 filtered out; finished in 0.00s
+

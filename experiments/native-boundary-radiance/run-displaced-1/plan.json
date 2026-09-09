@@ -1,0 +1,121 @@
+{
+  "schema": "native-boundary-radiance-placebos-v1",
+  "case": "displaced",
+  "primary_tiffs": 1,
+  "maximum_program_primary_tiffs": 39,
+  "executable": {
+    "path": "experiments/native-boundary-radiance/build-2/cli-tests.exe",
+    "sha256": "facb0a0c4237c398cd1e0ee59e2c3476d99bd8e159eb995f0ecfb542a0b1e9ab",
+    "bytes": 13413888
+  },
+  "build_invocation": {
+    "path": "experiments/native-boundary-radiance/build-2/invocation.json",
+    "sha256": "c49ad96ca68c31d0f02bffdb5be93d94126bef72a7d26a28df7a20d13b5f907f",
+    "bytes": 3260
+  },
+  "source_bindings": [
+    {
+      "path": "crates\\strehl-cli\\Cargo.toml",
+      "bytes": 1286,
+      "sha256": "563575399c24d0a27720ed33bacc13d7cd36520ce14407a862e77881bfaf77a3"
+    },
+    {
+      "path": "crates\\strehl-cli\\src\\merge_cmd.rs",
+      "bytes": 431324,
+      "sha256": "07e8998e28bba0508ba95904fbee7d34993f2c1b9bd023c348efd6c7da8f53c6"
+    },
+    {
+      "path": "experiments\\native-pyramid-profile\\implementation.rs",
+      "bytes": 12621,
+      "sha256": "85362dd472a95d64704c80235159abb188573914ac3cf9e7ac3b0fa16c029c69"
+    },
+    {
+      "path": "experiments\\native-pyramid-profile\\build.py",
+      "bytes": 3604,
+      "sha256": "8485ced455dd17d700a452b9f7a732759ff375fcca2d942cb9411a7d715dbc02"
+    },
+    {
+      "path": "crates\\strehl-cli\\src\\merge_cmd\\gatefloor.rs",
+      "bytes": 26053,
+      "sha256": "8505c84f39f945621ced6c384e84fb4452028c3fa8aa8920338e40e9cbeaf62d"
+    },
+    {
+      "path": "crates\\strehl-cli\\src\\align_cmd.rs",
+      "bytes": 127575,
+      "sha256": "c5cdbbe9a0666da37530523d1524b33a75a048d53e4443cc33278bbe6c746479"
+    },
+    {
+      "path": "crates\\strehl-core\\src\\demosaic.rs",
+      "bytes": 52206,
+      "sha256": "17cca911c2e756f3224deb1520379a1994c58375d3bcb5f4c91fcf9dc6fbe514"
+    },
+    {
+      "path": "experiments\\native-boundary-radiance\\implementation.rs",
+      "bytes": 10751,
+      "sha256": "2af22aacc45941dd24dcfab6584f85b23e76eb922d1242034bad82be425d4c9f"
+    },
+    {
+      "path": "experiments\\native-boundary-radiance\\independent-tests.rs",
+      "bytes": 10662,
+      "sha256": "e1434db795e1fbe846809707fbbdf0edcd587155946c3b6f2587840a958886a0"
+    },
+    {
+      "path": "experiments\\native-boundary-radiance\\source-hook.rs",
+      "bytes": 9528,
+      "sha256": "5f5e694e7ff198c974374d7279c19834f2e61968a5e1a7ee93ee314888d74a68"
+    },
+    {
+      "path": "experiments\\native-boundary-radiance\\bridge.rs",
+      "bytes": 5002,
+      "sha256": "3d0fd586b008e66620668abb9cbf2d002e375101883321a3ba129214cb500718"
+    },
+    {
+      "path": "crates\\strehl-cli\\src\\merge_cmd\\noise-pupil-bridge.rs",
+      "bytes": 67894,
+      "sha256": "85c42dbe62689eb6dd8d0ac5b7ed4d213537cf80ac0098d8c4d16a71b39cb854"
+    },
+    {
+      "path": "crates\\strehl-cli\\src\\merge_cmd\\known-scene-benchmark.rs",
+      "bytes": 31256,
+      "sha256": "f3c309e827cb4f3427a816606b347fc879845dfb6a357f25b9295186a78cad26"
+    },
+    {
+      "path": "experiments/native-boundary-radiance/run-placebos.py",
+      "sha256": "c7bb7a5c46064d000f2fce4a4c281b74ed0a852437d5ba0b90b403595901cf9e",
+      "bytes": 8550
+    },
+    {
+      "path": "experiments/m193c-output-grid/bounded-process.py",
+      "sha256": "47b9f8d848759eba61f055b9fdca1f8ac400f134dcd7636f0e0eaaa955704e0b",
+      "bytes": 12664
+    },
+    {
+      "path": "experiments/m12-scorecard/m12-harness.py",
+      "sha256": "6cfb408992f37b225f102da4d62ba836f9c5b67c92bdd418ff460987866a1bb9",
+      "bytes": 117908
+    }
+  ],
+  "prerequisites": {
+    "controls": {
+      "path": "experiments/native-boundary-radiance/controls-1/results.json",
+      "sha256": "7b3bf572bbc568e4bcce5801c294e186b783b0545fe72112ab2263988c10ed82",
+      "bytes": 274
+    },
+    "flat_decision": {
+      "path": "experiments/native-boundary-radiance/score-flat-1/decision.json",
+      "sha256": "37b3f0d057d10c5c9e3f3562b6e4dd23ace9c1bdee0693087ca70bae81556790",
+      "bytes": 5133
+    },
+    "completed_textured": {
+      "path": "experiments/native-boundary-radiance/run-textured-1/run-index.json",
+      "sha256": "e11c27dec84574761ad3ef015b76a6082561d7558c89371483e5e9a287c80105",
+      "bytes": 27460
+    }
+  },
+  "failing_inputs": [
+    "colour off/no-treatment whole TIFF differs",
+    "no-treatment marker absent",
+    "displaced model is unchanged or all fits abstain"
+  ],
+  "quality_authority": "independent fixed scorer; this runner does not inspect truth or score quality"
+}

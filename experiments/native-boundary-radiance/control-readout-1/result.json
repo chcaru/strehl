@@ -1,0 +1,237 @@
+{
+  "schema": "native-boundary-radiance-control-readout-v1",
+  "colour": {
+    "decoded_pixel_identity": true,
+    "red_green_nonzero": 60173,
+    "blue_green_nonzero": 60171,
+    "red_green_range": 2916.0,
+    "blue_green_range": 3020.0,
+    "pixels": 60208
+  },
+  "noise_off_errors": [
+    {
+      "mode": "off",
+      "channel": "R",
+      "region": "window",
+      "sites": 3584,
+      "bias_dn": 1.67582948178459,
+      "mse_dn2": 3873.7338919969325,
+      "rmse_dn": 62.23932753490298
+    },
+    {
+      "mode": "off",
+      "channel": "R",
+      "region": "boundary",
+      "sites": 513,
+      "bias_dn": 26.390089320324186,
+      "mse_dn2": 25480.527419724425,
+      "rmse_dn": 159.6262115685404
+    },
+    {
+      "mode": "off",
+      "channel": "G",
+      "region": "window",
+      "sites": 3584,
+      "bias_dn": 1.7844082787082998,
+      "mse_dn2": 4003.584126635976,
+      "rmse_dn": 63.2738818679238
+    },
+    {
+      "mode": "off",
+      "channel": "G",
+      "region": "boundary",
+      "sites": 513,
+      "bias_dn": 26.272710510377948,
+      "mse_dn2": 25767.814965090092,
+      "rmse_dn": 160.5235651394838
+    },
+    {
+      "mode": "off",
+      "channel": "B",
+      "region": "window",
+      "sites": 3584,
+      "bias_dn": 1.917241953529491,
+      "mse_dn2": 3924.877089446752,
+      "rmse_dn": 62.64883949002369
+    },
+    {
+      "mode": "off",
+      "channel": "B",
+      "region": "boundary",
+      "sites": 513,
+      "bias_dn": 26.722389099898486,
+      "mse_dn2": 25874.23498263142,
+      "rmse_dn": 160.85470146262875
+    },
+    {
+      "mode": "apply",
+      "channel": "R",
+      "region": "window",
+      "sites": 3584,
+      "bias_dn": -0.5228211847076868,
+      "mse_dn2": 12617.753940042878,
+      "rmse_dn": 112.32877609963921
+    },
+    {
+      "mode": "apply",
+      "channel": "R",
+      "region": "boundary",
+      "sites": 513,
+      "bias_dn": 10.740255615405415,
+      "mse_dn2": 86244.52289268763,
+      "rmse_dn": 293.6741781169867
+    },
+    {
+      "mode": "apply",
+      "channel": "G",
+      "region": "window",
+      "sites": 3584,
+      "bias_dn": -0.1026509807931656,
+      "mse_dn2": 12543.657189554593,
+      "rmse_dn": 111.99846958576975
+    },
+    {
+      "mode": "apply",
+      "channel": "G",
+      "region": "boundary",
+      "sites": 513,
+      "bias_dn": 13.084186901057082,
+      "mse_dn2": 85354.86506475043,
+      "rmse_dn": 292.1555494334318
+    },
+    {
+      "mode": "apply",
+      "channel": "B",
+      "region": "window",
+      "sites": 3584,
+      "bias_dn": 0.3303952304044436,
+      "mse_dn2": 13504.083737187391,
+      "rmse_dn": 116.20707266422036
+    },
+    {
+      "mode": "apply",
+      "channel": "B",
+      "region": "boundary",
+      "sites": 513,
+      "bias_dn": 15.435606253478158,
+      "mse_dn2": 92607.09463384433,
+      "rmse_dn": 304.3141380774878
+    },
+    {
+      "mode": "displaced",
+      "channel": "R",
+      "region": "window",
+      "sites": 3584,
+      "bias_dn": 1.5270823564753238,
+      "mse_dn2": 9729.347592070479,
+      "rmse_dn": 98.63745532033194
+    },
+    {
+      "mode": "displaced",
+      "channel": "R",
+      "region": "boundary",
+      "sites": 513,
+      "bias_dn": 25.099149178671084,
+      "mse_dn2": 66236.22672650698,
+      "rmse_dn": 257.36399656227553
+    },
+    {
+      "mode": "displaced",
+      "channel": "G",
+      "region": "window",
+      "sites": 3584,
+      "bias_dn": 1.2556068748782854,
+      "mse_dn2": 9015.774092841331,
+      "rmse_dn": 94.95143017796694
+    },
+    {
+      "mode": "displaced",
+      "channel": "G",
+      "region": "boundary",
+      "sites": 513,
+      "bias_dn": 22.22367211876809,
+      "mse_dn2": 60753.29980745997,
+      "rmse_dn": 246.48184478265324
+    },
+    {
+      "mode": "displaced",
+      "channel": "B",
+      "region": "window",
+      "sites": 3584,
+      "bias_dn": 3.0182741173677887,
+      "mse_dn2": 10179.294680095121,
+      "rmse_dn": 100.89249070220797
+    },
+    {
+      "mode": "displaced",
+      "channel": "B",
+      "region": "boundary",
+      "sites": 513,
+      "bias_dn": 35.1455195759874,
+      "mse_dn2": 69444.04643844298,
+      "rmse_dn": 263.5223831829907
+    }
+  ],
+  "displaced_ordering": [
+    {
+      "channel": "R",
+      "correct_model_mse_dn2": 86244.52289268763,
+      "displaced_mse_dn2": 66236.22672650698,
+      "displaced_is_worse": false
+    },
+    {
+      "channel": "G",
+      "correct_model_mse_dn2": 85354.86506475043,
+      "displaced_mse_dn2": 60753.29980745997,
+      "displaced_is_worse": false
+    },
+    {
+      "channel": "B",
+      "correct_model_mse_dn2": 92607.09463384433,
+      "displaced_mse_dn2": 69444.04643844298,
+      "displaced_is_worse": false
+    }
+  ],
+  "pixel_hashes": {
+    "off": "b8ccc197af72fe7c87aec7a6890e4e1b835d1fa685bc7fd2a62753c42e5c6dee",
+    "apply": "b2faf2a3c1b17a8adcc9cd3c43ba09b20afdbef3c25b04270e0bd844922a6ffb",
+    "displaced": "06131047d2cf5a8e228e8da938f2403543b8e9c0fe749bbf99b6b9cd3f68aeff"
+  },
+  "inputs": [
+    {
+      "path": "experiments/native-boundary-radiance/run-color-1/run-index.json",
+      "bytes": 13822,
+      "sha256": "71f26fb7753bb25e0280992bf975496c5c2aa32f19035636443b54a2b3ed2828"
+    },
+    {
+      "path": "experiments/native-boundary-radiance/run-textured-1/run-index.json",
+      "bytes": 27460,
+      "sha256": "e11c27dec84574761ad3ef015b76a6082561d7558c89371483e5e9a287c80105"
+    },
+    {
+      "path": "experiments/native-boundary-radiance/run-displaced-1/run-index.json",
+      "bytes": 8713,
+      "sha256": "f5b5abecfe446579a09b04eb61c131886151731a14eea98e9c6483bf0983a5e4"
+    }
+  ],
+  "work": {
+    "stage": "score",
+    "limits": {
+      "cpu_seconds": 120.0,
+      "wall_seconds": 240.0,
+      "live_array_bytes": 33554432,
+      "output_bytes": 33554432,
+      "tiff_decodes": 256,
+      "target_cells": 76928
+    },
+    "cpu_seconds": 0.03125,
+    "wall_seconds": 0.038618300000962336,
+    "live_array_bytes": 474600,
+    "output_bytes": 0,
+    "tiff_decodes": 0,
+    "target_cells": 0,
+    "peak_live_array_bytes": 1565416,
+    "tracked_scope": "unique live backing ndarrays; not process RSS"
+  },
+  "scope": "independent decoder colour witness and fixed wrong-model diagnostic; no quality acceptance"
+}

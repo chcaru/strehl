@@ -1,0 +1,25 @@
+{
+  "command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-boundary-radiance\\build-2\\cli-tests.exe",
+    "merge_cmd::known_scene_benchmark::noise_pupil_bridge::boundary_radiance_bridge::m194g_boundary_radiance_consumer",
+    "--exact",
+    "--ignored",
+    "--nocapture",
+    "--test-threads=1"
+  ],
+  "environment_overrides": {
+    "RAYON_NUM_THREADS": "2",
+    "STREHL_DEFECT": "off",
+    "STREHL_FIX_CA": "off",
+    "STREHL_FULLRES_GATHER": "1",
+    "STREHL_PYRAMID_WORKERS": "2",
+    "STREHL_BOUNDARY_BRIDGE_MODE": "apply",
+    "STREHL_BOUNDARY_BRIDGE_SCENE": "flat",
+    "STREHL_BOUNDARY_BRIDGE_SEED": "751",
+    "STREHL_BOUNDARY_BRIDGE_NOISE_ADMISSION": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194g-larger-pupil\\independent-noise-files-1\\noise-admission.json",
+    "STREHL_BOUNDARY_BRIDGE_NOISE_ADMISSION_SHA256": "088272bfbeca6d00a816a5de72eeaf7aac8f8ca6e0ef68941ab236655fa298e7",
+    "STREHL_BOUNDARY_BRIDGE_OUTPUT": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-boundary-radiance\\run-flat-1\\case-17.tif",
+    "STREHL_BOUNDARY_BRIDGE_RECEIPT": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-boundary-radiance\\run-flat-1\\case-17-receipt.json"
+  },
+  "removed_environment": []
+}

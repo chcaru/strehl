@@ -1,0 +1,176 @@
+{
+  "candidate": "M194g-oracle-local-affine-v1",
+  "consumer_wall_seconds": 0.0343511,
+  "decode_counts": [
+    1,
+    1,
+    1,
+    1,
+    1
+  ],
+  "diagnostics": "actual boundary radiance and floor lines in bound stderr",
+  "environment": {
+    "RAYON_NUM_THREADS": "2",
+    "STREHL_DEFECT": "off",
+    "STREHL_FIX_CA": "off",
+    "STREHL_FULLRES_GATHER": "1",
+    "STREHL_PYRAMID_WORKERS": "2"
+  },
+  "executable_sha256": "facb0a0c4237c398cd1e0ee59e2c3476d99bd8e159eb995f0ecfb542a0b1e9ab",
+  "geometry": {
+    "crop_offset_native": [
+      10,
+      8
+    ],
+    "depths": [
+      1,
+      2
+    ],
+    "inverse_foci": [
+      0.5,
+      0.625,
+      0.75,
+      0.875,
+      1.0
+    ],
+    "model_offset": 142,
+    "native": [
+      320,
+      240
+    ],
+    "normal": [
+      1.0,
+      -0.15
+    ],
+    "oracle": true,
+    "pupil_k": 12,
+    "reference_original": 2,
+    "true_offset": 142
+  },
+  "inputs_unchanged": true,
+  "mode": "off",
+  "noise_admission_sha256": "088272bfbeca6d00a816a5de72eeaf7aac8f8ca6e0ef68941ab236655fa298e7",
+  "old_m194g_plan_authority": false,
+  "output": {
+    "bytes": 407403,
+    "channels": 3,
+    "height": 226,
+    "path": "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-boundary-radiance\\run-flat-1\\case-08.tif",
+    "pixel_sha256_le": "2b05ed00b72535e92e3b4fe508ab5add89a8be209fc2c044932ce835757230e8",
+    "sample_type": "u16",
+    "sha256": "7c8667e221262a77c65c7513a6e00d539f1b9176162767d516411edd6787ee9b",
+    "software": "strehl 0.0.0",
+    "width": 300
+  },
+  "scene": "flat",
+  "schema": "native-boundary-radiance-consumer-v1",
+  "seed": 727,
+  "selected": [
+    {
+      "audit": {
+        "bytes": 2661,
+        "path": "flat/seed-727/frame-0-audit.json",
+        "sha256": "efc6ad22b4c863e950d6fbe167c78f9d531c1d92683eb9b713d8c0b658d3d61f"
+      },
+      "cfa": {
+        "bytes": 153600,
+        "dtype": "<u2",
+        "path": "flat/seed-727/frame-0.cfa",
+        "sha256": "3e287637d6e73d660d96ee90bb06274b5ee4fff064e698bb8a95badc65d26fe1",
+        "shape": [
+          240,
+          320
+        ]
+      },
+      "index": 0,
+      "inverse_focus": 0.5
+    },
+    {
+      "audit": {
+        "bytes": 2656,
+        "path": "flat/seed-727/frame-1-audit.json",
+        "sha256": "1f4f49823c8a317546242d1b819e0727385d948170b8c8f3a51c9eb5cd959bd4"
+      },
+      "cfa": {
+        "bytes": 153600,
+        "dtype": "<u2",
+        "path": "flat/seed-727/frame-1.cfa",
+        "sha256": "742a8f2728a3b7430d1ce3a17ddab7d3d8e48bd80428b721a829b409f2ba1c19",
+        "shape": [
+          240,
+          320
+        ]
+      },
+      "index": 1,
+      "inverse_focus": 0.625
+    },
+    {
+      "audit": {
+        "bytes": 2659,
+        "path": "flat/seed-727/frame-2-audit.json",
+        "sha256": "de234ae75755c47aaf30cfe6161c75a775154bcc2ea8c80a508e60af1454009a"
+      },
+      "cfa": {
+        "bytes": 153600,
+        "dtype": "<u2",
+        "path": "flat/seed-727/frame-2.cfa",
+        "sha256": "782dde0e6ace1bf3f61017c366791ccd3c5e864b54cc0df5acb57a4273927050",
+        "shape": [
+          240,
+          320
+        ]
+      },
+      "index": 2,
+      "inverse_focus": 0.75
+    },
+    {
+      "audit": {
+        "bytes": 2663,
+        "path": "flat/seed-727/frame-3-audit.json",
+        "sha256": "b3708842bd6ff1e1f8b0a7f45f63ce818346a334835fe4c3a26e69d5812b4aac"
+      },
+      "cfa": {
+        "bytes": 153600,
+        "dtype": "<u2",
+        "path": "flat/seed-727/frame-3.cfa",
+        "sha256": "6144349594a4725209ebb8045f955f42e759d5d3eee0186b8605caf6fb8f0b45",
+        "shape": [
+          240,
+          320
+        ]
+      },
+      "index": 3,
+      "inverse_focus": 0.875
+    },
+    {
+      "audit": {
+        "bytes": 2662,
+        "path": "flat/seed-727/frame-4-audit.json",
+        "sha256": "71c62d929a4befdf4aa5df045af0c537f2938c8e409a1bcdd868968b07460685"
+      },
+      "cfa": {
+        "bytes": 153600,
+        "dtype": "<u2",
+        "path": "flat/seed-727/frame-4.cfa",
+        "sha256": "d47c89dd0183aac86ae45db05af08209adf52ff332d6fd24c00c6040a211eb44",
+        "shape": [
+          240,
+          320
+        ]
+      },
+      "index": 4,
+      "inverse_focus": 1.0
+    }
+  ],
+  "status": "COMPLETE_UNVERIFIED",
+  "treatment": {
+    "fixed_band_half_width": 8,
+    "fixed_band_offset": 142,
+    "minimum_normalized_schur_pivot": 0.0001,
+    "minimum_observations": 12,
+    "native_radius": 2,
+    "residual_rejection": false,
+    "variance_ceiling": "minimum injected individual observation variance",
+    "wb_applied_by_existing_writer_once": true
+  }
+}

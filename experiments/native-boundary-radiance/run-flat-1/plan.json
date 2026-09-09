@@ -1,0 +1,54 @@
+{
+  "schema": "native-boundary-radiance-fixed-pairs-v1",
+  "scene": "flat",
+  "runner": {
+    "path": "experiments/native-boundary-radiance/run-matrix.py",
+    "sha256": "20017cc8368d364ecac47124afe89b230b43664516a0a013edcc287e9fc10082",
+    "bytes": 5995
+  },
+  "saved_baseline_index": {
+    "path": "experiments/m194g-larger-pupil/production-matrix-1/run-index.json",
+    "sha256": "03e7ffe9028cca5d56266603db09fbadd3f7f3cc19e95db609007a96914d55ca",
+    "bytes": 66801
+  },
+  "seeds": [
+    null,
+    701,
+    709,
+    719,
+    727,
+    733,
+    739,
+    743,
+    751
+  ],
+  "modes": [
+    "off",
+    "apply"
+  ],
+  "cases": 18,
+  "maximum_program_primary_tiffs": 39,
+  "executable": {
+    "path": "experiments/native-boundary-radiance/build-2/cli-tests.exe",
+    "sha256": "facb0a0c4237c398cd1e0ee59e2c3476d99bd8e159eb995f0ecfb542a0b1e9ab",
+    "bytes": 13413888
+  },
+  "source_revision": "3511763b95b8f1ed6ab4fea9112225f5fe989a6f",
+  "noise_admission": {
+    "path": "experiments/m194g-larger-pupil/independent-noise-files-1/noise-admission.json",
+    "sha256": "088272bfbeca6d00a816a5de72eeaf7aac8f8ca6e0ef68941ab236655fa298e7",
+    "bytes": 1082
+  },
+  "controls": {
+    "path": "experiments/native-boundary-radiance/controls-1/results.json",
+    "sha256": "7b3bf572bbc568e4bcce5801c294e186b783b0545fe72112ab2263988c10ed82",
+    "bytes": 274
+  },
+  "timing_scope": "one observation per output; not a performance benchmark",
+  "failing_inputs": [
+    "off bytes differ from saved current HardFloor output",
+    "consumer skips,duplicates or reorders original CFA observations",
+    "all candidate fits abstain; no evidence of treatment"
+  ],
+  "quality_authority": "independent scorer, fixed flat-first policy"
+}

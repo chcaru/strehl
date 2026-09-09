@@ -1,0 +1,8 @@
+{
+  "status": "INDEPENDENT_OPERATOR_CONTROLS_PASS",
+  "scope": "operator only; no production-hook, image-quality or physical calibration acceptance",
+  "log": {
+    "sha256": "41b56d9b75365558d509c19b91ea59618bf47abd38ed91f478398804a230bf13",
+    "bytes": 445
+  }
+}

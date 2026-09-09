@@ -1,0 +1,97 @@
+{
+  "command": [
+    "cargo",
+    "test",
+    "-p",
+    "strehl-cli",
+    "--bin",
+    "strehl",
+    "--test",
+    "byte-freeze",
+    "--no-run",
+    "--release",
+    "--features",
+    "native-pyramid-profile,native-boundary-radiance",
+    "--jobs",
+    "2",
+    "--target-dir",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\target\\native-pyramid-profile",
+    "--message-format=json-render-diagnostics",
+    "--locked",
+    "--offline"
+  ],
+  "revision": "7ef4e4a6f6c265f45128cee08d71cec20ae2f695",
+  "environment_overrides": {
+    "RAYON_NUM_THREADS": "8",
+    "CARGO_INCREMENTAL": "0"
+  },
+  "removed_environment": [],
+  "source_files": [
+    {
+      "path": "crates\\strehl-cli\\Cargo.toml",
+      "bytes": 1286,
+      "sha256": "563575399c24d0a27720ed33bacc13d7cd36520ce14407a862e77881bfaf77a3"
+    },
+    {
+      "path": "crates\\strehl-cli\\src\\merge_cmd.rs",
+      "bytes": 431324,
+      "sha256": "07e8998e28bba0508ba95904fbee7d34993f2c1b9bd023c348efd6c7da8f53c6"
+    },
+    {
+      "path": "experiments\\native-pyramid-profile\\implementation.rs",
+      "bytes": 12621,
+      "sha256": "85362dd472a95d64704c80235159abb188573914ac3cf9e7ac3b0fa16c029c69"
+    },
+    {
+      "path": "experiments\\native-pyramid-profile\\build.py",
+      "bytes": 3604,
+      "sha256": "8485ced455dd17d700a452b9f7a732759ff375fcca2d942cb9411a7d715dbc02"
+    },
+    {
+      "path": "crates\\strehl-cli\\src\\merge_cmd\\gatefloor.rs",
+      "bytes": 26053,
+      "sha256": "8505c84f39f945621ced6c384e84fb4452028c3fa8aa8920338e40e9cbeaf62d"
+    },
+    {
+      "path": "crates\\strehl-cli\\src\\align_cmd.rs",
+      "bytes": 127575,
+      "sha256": "c5cdbbe9a0666da37530523d1524b33a75a048d53e4443cc33278bbe6c746479"
+    },
+    {
+      "path": "crates\\strehl-core\\src\\demosaic.rs",
+      "bytes": 52206,
+      "sha256": "17cca911c2e756f3224deb1520379a1994c58375d3bcb5f4c91fcf9dc6fbe514"
+    },
+    {
+      "path": "experiments\\native-boundary-radiance\\implementation.rs",
+      "bytes": 10751,
+      "sha256": "2af22aacc45941dd24dcfab6584f85b23e76eb922d1242034bad82be425d4c9f"
+    },
+    {
+      "path": "experiments\\native-boundary-radiance\\independent-tests.rs",
+      "bytes": 10662,
+      "sha256": "e1434db795e1fbe846809707fbbdf0edcd587155946c3b6f2587840a958886a0"
+    },
+    {
+      "path": "experiments\\native-boundary-radiance\\source-hook.rs",
+      "bytes": 9528,
+      "sha256": "5f5e694e7ff198c974374d7279c19834f2e61968a5e1a7ee93ee314888d74a68"
+    },
+    {
+      "path": "experiments\\native-boundary-radiance\\bridge.rs",
+      "bytes": 5002,
+      "sha256": "3d0fd586b008e66620668abb9cbf2d002e375101883321a3ba129214cb500718"
+    },
+    {
+      "path": "crates\\strehl-cli\\src\\merge_cmd\\noise-pupil-bridge.rs",
+      "bytes": 67894,
+      "sha256": "85c42dbe62689eb6dd8d0ac5b7ed4d213537cf80ac0098d8c4d16a71b39cb854"
+    },
+    {
+      "path": "crates\\strehl-cli\\src\\merge_cmd\\known-scene-benchmark.rs",
+      "bytes": 31256,
+      "sha256": "f3c309e827cb4f3427a816606b347fc879845dfb6a357f25b9295186a78cad26"
+    }
+  ],
+  "scope": "release compile only; existing integration test is compiled to obtain CLI artifact and is not executed"
+}
