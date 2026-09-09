@@ -1,0 +1,13 @@
+# Current native pyramid phase costs
+
+2026-09-09. Measure the actual default RAW pipeline before choosing a speed optimization. Native sensor-transfer and signed-black populations are closed; do not replay or tune them. No image-quality or SOTA win is presumed.
+
+Add a small opt-in phase timer at the existing production consumer: decode/validate, defect correction, gather, measured gate-floor probe, extraction/luma, variance, pyramid add, plus existing outer preparation/alignment/collapse/write times. Keep pixels, noise coefficients, geometry, canonical frame order, arithmetic and writer identical. Instrument wall time at actual consumption; disjoint intervals must not be presented as summed CPU time. Use existing process/timing facilities; no new runner, package/source inventory or provenance framework.
+
+First compile the minimal observer and run a tiny generated-frame null/off/on/placebo using an existing production seam. Prove identical output hashes and show a separately requested known delay lands in the correct phase. Then use a small fixed native development prefix with isolated lane-owned warp/output files and release optimization. Freeze exact input names, flags/environment and bounds before native execution. Include process startup, decode, transfers if any, and completed final file; compare alternating order with actual host load. Do not infer cold-cache throughput or a speedup from one direction or old resident GPU timings.
+
+The result chooses one dominant stage and the smallest defensible optimization; source-level guesses are not a measured bottleneck. CPU SIMD or a connected GPU backend remain hypotheses. No decode queue revival: M-PHASE0-PIPE measured it slower and removed it. Its worker curve predates current serial canonical chunks with spatial parallelism. M-PHASE0-DECODE2 and M8-scratch-measured are prior calibration/black-box evidence, not a new decoder rewrite license. Never read rawler or forbidden GPL source.
+
+Prior-art command already run at preceding checkpoint, exit0: Python312 -I -S -B experiments/ORCH-drift-check/prior_art.py "phase profiling" "pyramid" "decode". Root read M-PHASE0-PIPE, M-PHASE0-DECODE2, M8-scratch-measured and current BandWorker/load_frame. See native-sensor-transfer/next-quality-speed-decisions.md for current consumers and conditional GPU direction.
+
+Factor owns minimal CLI observer/module and early small fixture. Coordinate independently checks timing boundaries and byte-preservation controls; sampler independently reviews observed cost attribution. Root owns all execution, exact-path commits and native input selection. Compile early; do not grow the design before executable evidence.

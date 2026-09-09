@@ -72,6 +72,10 @@ use crate::image_out;
 pub(crate) mod dump;
 pub(crate) mod gatefloor;
 pub(crate) mod halo;
+#[cfg(feature = "native-pyramid-profile")]
+mod native_pyramid_profile {
+    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/native-pyramid-profile/implementation.rs"));
+}
 #[cfg(feature = "native-signed-black")]
 mod native_signed_black {
     include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/native-signed-black/implementation.rs"));
@@ -4900,7 +4904,11 @@ impl BandWorker {
         )? {
             return Ok(false);
         }
+        #[cfg(feature = "native-pyramid-profile")]
+        let variance_phase = native_pyramid_profile::start(native_pyramid_profile::VARIANCE);
         luma_variance(&self.luma, noise, &mut self.var);
+        #[cfg(feature = "native-pyramid-profile")]
+        drop(variance_phase);
 
         // The measured floor, truncated at the first band the probe could not
         // speak for rather than skipping past it. `add_frame_with_gain` falls
@@ -4926,9 +4934,13 @@ impl BandWorker {
         let refs: Vec<&[f32]> = self.planes.iter().map(|v| v.as_slice()).collect();
         #[cfg(all(test, feature = "native-sensor-transfer"))]
         native_sensor_transfer::inputs(&self.planes, &self.luma, &self.var, frame_beta);
+        #[cfg(feature = "native-pyramid-profile")]
+        let add_phase = native_pyramid_profile::start(native_pyramid_profile::ADD);
         self.fws.next_frame();
         self.merge
             .add_frame_with_gain(&refs, &self.luma, &self.var, frame_beta, &mut self.fws);
+        #[cfg(feature = "native-pyramid-profile")]
+        drop(add_phase);
         #[cfg(all(test, feature = "native-sensor-transfer"))]
         native_sensor_transfer::after(&self.var);
         Ok(true)
@@ -4958,7 +4970,11 @@ fn load_frame(
     planes: &mut [Vec<f32>],
     luma: &mut [f32],
 ) -> Result<bool> {
+    #[cfg(feature = "native-pyramid-profile")]
+    let extract_phase;
     {
+        #[cfg(feature = "native-pyramid-profile")]
+        let decode_phase = native_pyramid_profile::start(native_pyramid_profile::DECODE);
         let mut frame = source
             .decode(index)
             .with_context(|| format!("frame {index}"))?;
@@ -4972,6 +4988,8 @@ fn load_frame(
             levels.black,
             levels.white
         );
+        #[cfg(feature = "native-pyramid-profile")]
+        drop(decode_phase);
         // ---- sensor defect correction, BEFORE THE WARP -------------------
         //
         // This ordering is the whole point of the feature and it is why these
@@ -4996,11 +5014,17 @@ fn load_frame(
         // `with_an_identity_warp_the_two_orderings_are_bit_identical` proves
         // that test is measuring the ordering and not the resampler.
         if let Some((plan, tally)) = defect {
+            #[cfg(feature = "native-pyramid-profile")]
+            let defect_phase = native_pyramid_profile::start(native_pyramid_profile::DEFECT);
             crate::stack::apply_defects(plan, &mut frame, tally, index)?;
+            #[cfg(feature = "native-pyramid-profile")]
+            drop(defect_phase);
         }
         if let Some(map) = warps {
             match map.warp(index)? {
                 FrameWarp::Placed(t) => {
+                    #[cfg(feature = "native-pyramid-profile")]
+                    let gather_phase = native_pyramid_profile::start(native_pyramid_profile::GATHER);
                     align_cmd::warp_frame_in_place(
                         &mut frame,
                         *t,
@@ -5008,6 +5032,8 @@ fn load_frame(
                         map.resampler(),
                         scratch,
                     )?;
+                    #[cfg(feature = "native-pyramid-profile")]
+                    drop(gather_phase);
                     // This frame's own band-noise floor, at this frame's own
                     // sub-pixel phase, measured here because this is the only
                     // place the decoded frame and the transform that was
@@ -5021,7 +5047,11 @@ fn load_frame(
                     // bit-identical. That is a property of the control flow,
                     // not of a tolerance.
                     if let Some(p) = floor {
+                        #[cfg(feature = "native-pyramid-profile")]
+                        let probe_phase = native_pyramid_profile::start(native_pyramid_profile::PROBE);
                         p.measure(&frame, index, *t, map.resampler(), scratch)?;
+                        #[cfg(feature = "native-pyramid-profile")]
+                        drop(probe_phase);
                     }
                 }
                 // The solve could not connect this frame to the bracket, so its
@@ -5033,6 +5063,8 @@ fn load_frame(
 
         #[cfg(all(test, feature = "native-sensor-transfer"))]
         native_sensor_transfer::prepared(&frame, domain);
+        #[cfg(feature = "native-pyramid-profile")]
+        { extract_phase = native_pyramid_profile::start(native_pyramid_profile::EXTRACT); }
         let black = levels.black;
         extract_planes(
             &frame.data,
@@ -5070,6 +5102,8 @@ fn load_frame(
                 };
             }
         });
+    #[cfg(feature = "native-pyramid-profile")]
+    drop(extract_phase);
     Ok(true)
 }
 
@@ -5817,6 +5851,8 @@ fn run_pyramid_prepared(
     prepared: PreparedPyramid<'_>,
     source: &impl PyramidFrameSource,
 ) -> Result<()> {
+    #[cfg(feature = "native-pyramid-profile")]
+    native_pyramid_profile::begin(true)?;
     let PreparedPyramid {
         paths,
         geom,
@@ -6141,6 +6177,12 @@ fn run_pyramid_prepared(
              yet, so a\n                  run without --out only proves the fold completes."
         );
         eprintln!("total           : {:.1} s", t_start.elapsed().as_secs_f64());
+        #[cfg(feature = "native-pyramid-profile")]
+        native_pyramid_profile::publish(serde_json::json!({
+            "prologue_wall_seconds":prologue_secs,"alignment_wall_seconds":align_secs,
+            "fold_wall_seconds":fold_secs,"collapse_write_wall_seconds":null,
+            "total_before_profile_publication":t_start.elapsed().as_secs_f64()
+        }))?;
         return Ok(());
     };
     let t_out = Instant::now();
@@ -6248,6 +6290,12 @@ fn run_pyramid_prepared(
     )?;
     eprintln!("collapse+write  : {:.1} s", t_out.elapsed().as_secs_f64());
     eprintln!("total           : {:.1} s", t_start.elapsed().as_secs_f64());
+    #[cfg(feature = "native-pyramid-profile")]
+    native_pyramid_profile::publish(serde_json::json!({
+        "prologue_wall_seconds":prologue_secs,"alignment_wall_seconds":align_secs,
+        "fold_wall_seconds":fold_secs,"collapse_write_wall_seconds":t_out.elapsed().as_secs_f64(),
+        "total_before_profile_publication":t_start.elapsed().as_secs_f64()
+    }))?;
     Ok(())
 }
 

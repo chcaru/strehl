@@ -37,3 +37,6 @@ m194h-pedestal-causality = ["strehl-core/m194h-pedestal-causality"]
 native-sensor-transfer = ["strehl-core/native-sensor-transfer"]
 # Development opt-in; extraction remains clamped unless explicitly enabled.
 native-signed-black = []
+
+# Opt-in wall-time observation of the current native pyramid consumer.
+native-pyramid-profile = []

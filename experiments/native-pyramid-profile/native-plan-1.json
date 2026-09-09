@@ -1,0 +1,131 @@
+{
+  "scope": "Eight-frame development prefix, current algorithm at native resolution; no quality, deep-stack, cold-cache or comparator claim.",
+  "inputs": [
+    {
+      "path": "D:\\personal\\macro\\112MSDCF\\DSC00001.ARW",
+      "bytes": 37068800,
+      "mtime_ns": 1778213264940000000,
+      "sha256": "01aaa1c6f082216db3ee71130a0cce4d5e2d4e92668798d208df34347ece1543"
+    },
+    {
+      "path": "D:\\personal\\macro\\112MSDCF\\DSC00002.ARW",
+      "bytes": 37072896,
+      "mtime_ns": 1778213265420000000,
+      "sha256": "eda15bcf9b64e8e26fd8b7c14985bf9764100a9f0a32cc6fdcaa85eb501ec1a1"
+    },
+    {
+      "path": "D:\\personal\\macro\\112MSDCF\\DSC00003.ARW",
+      "bytes": 37076992,
+      "mtime_ns": 1778213265960000000,
+      "sha256": "bdd935141d0fe32f8f1d62218abe5a97d47d03bc6f9dd9ede70cc28cf32bd93d"
+    },
+    {
+      "path": "D:\\personal\\macro\\112MSDCF\\DSC00004.ARW",
+      "bytes": 37085184,
+      "mtime_ns": 1778213266460000000,
+      "sha256": "464508bb65d215f104af24cc06120cf25cc0a64896f31cf4f65109a77c1253dc"
+    },
+    {
+      "path": "D:\\personal\\macro\\112MSDCF\\DSC00005.ARW",
+      "bytes": 37085184,
+      "mtime_ns": 1778213266960000000,
+      "sha256": "17807015e7842be23dd3909d174b14deca9b0ce8d402abe95e21b562ea729754"
+    },
+    {
+      "path": "D:\\personal\\macro\\112MSDCF\\DSC00006.ARW",
+      "bytes": 37093376,
+      "mtime_ns": 1778213267430000000,
+      "sha256": "e48bebe412a668bae8e6a26d9729846e2e82269346d814d2e0d8beb2f03eba1f"
+    },
+    {
+      "path": "D:\\personal\\macro\\112MSDCF\\DSC00007.ARW",
+      "bytes": 37113856,
+      "mtime_ns": 1778213267960000000,
+      "sha256": "c2e7dcd0690e83ce0d4d534cd90aef7d64d06d15ac0f75bc6a319fe982104945"
+    },
+    {
+      "path": "D:\\personal\\macro\\112MSDCF\\DSC00008.ARW",
+      "bytes": 37105664,
+      "mtime_ns": 1778213268450000000,
+      "sha256": "1b8c09f34cead4a3d6d691475fbd82bb17368e4a056fa88ace384694ff90bcaf"
+    }
+  ],
+  "input_bytes": 296701952,
+  "hash_wall_seconds": 0.19633849999809172,
+  "original_directory_read_only": true,
+  "workspace_free_bytes": 473340182528,
+  "planned_alignment": {
+    "command": [
+      "align",
+      "D:\\personal\\macro\\112MSDCF",
+      "--limit",
+      "8",
+      "--threads",
+      "8",
+      "--resampler",
+      "catmull-rom",
+      "--out",
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-pyramid-profile\\native\\112-eight.warpmap.json"
+    ],
+    "purpose": "one lane-owned default direct solve reused by all renders; never modify corpus/shared map cache"
+  },
+  "planned_render": {
+    "command": [
+      "stack",
+      "D:\\personal\\macro\\112MSDCF",
+      "--limit",
+      "8",
+      "--merge",
+      "pyramid",
+      "--pyramid-bands",
+      "7",
+      "--pyramid-gate",
+      "2",
+      "--pyramid-exponent",
+      "2",
+      "--pyramid-sharpen",
+      "1.4",
+      "--pyramid-select",
+      "soft",
+      "--pyramid-base",
+      "mean",
+      "--demosaic",
+      "--resampler",
+      "catmull-rom",
+      "--cover",
+      "scale",
+      "--out",
+      "PER_RUN_NATIVE_TIFF"
+    ],
+    "environment_overrides": {
+      "RAYON_NUM_THREADS": "8",
+      "STREHL_ALIGN": "1",
+      "STREHL_PYRAMID_WORKERS": "8",
+      "STREHL_WARPMAP": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-pyramid-profile\\native\\112-eight.warpmap.json"
+    },
+    "cleared_environment_prefixes": [
+      "STREHL_",
+      "RAYON_",
+      "OMP_",
+      "OPENBLAS_",
+      "MKL_",
+      "NUMEXPR_"
+    ],
+    "fixed_remaining_choices": "camera-linear RGB16 native demosaic, camera WB and guarded CA defaults, no exposure/statistics/confidence/defect/restoration options; current profile/gate floor and canonical arithmetic retained",
+    "modes": [
+      "off",
+      "on",
+      "placebo",
+      "on",
+      "off"
+    ]
+  },
+  "limits": {
+    "native_child_wall_seconds": 180,
+    "native_child_cpu_seconds": 900,
+    "native_child_committed_bytes": 8589934592,
+    "native_log_bytes": 2097152,
+    "retained_native_output_bytes": 2147483648
+  },
+  "analysis": "Report exact full output hashes, phase intervals and outer completion. All five outputs must match. Alternate off/on order, include placebo, contemporaneous host busy and owned job CPU. Timings include warmup/cache effects; no native speedup or dominant-stage conclusion before actual profiles."
+}
