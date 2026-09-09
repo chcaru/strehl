@@ -1,0 +1,311 @@
+{
+  "allocation": {
+    "active_wall_seconds": 20,
+    "cpu_seconds": 10,
+    "read_bytes": 2097152,
+    "write_bytes": 1048576
+  },
+  "allocation_charge": "Full allocation retained, no refunds. CPU and wall observations are samples; unsampled analysis/publication cost is not inferred as zero.",
+  "checks": {
+    "17dispatches": true,
+    "absentRootReturn": true,
+    "actualDeleteOppositePolicy": true,
+    "actualRestoredBytes": true,
+    "actualRowsFit2048": true,
+    "allowedDeleteReturn": true,
+    "canonicalRefusal": true,
+    "childSource_held": true,
+    "childSource_shim": true,
+    "childSource_source": true,
+    "childSource_spec": true,
+    "exact16IDs": true,
+    "exactChildCommand": true,
+    "exactWrapperCommand": true,
+    "fullScan_restored-after-delete": true,
+    "fullScan_restored-final": true,
+    "fullScan_stable-retained": true,
+    "fullScan_stable-scratch": true,
+    "historicalCauseUnknown": true,
+    "independentOutcomePartition": true,
+    "noIntervention": true,
+    "orderedWallObservations": true,
+    "outerRef_exit": true,
+    "outerRef_result": true,
+    "outerRef_stderr": true,
+    "outerRef_stdout": true,
+    "outerSource_controls": true,
+    "outerSource_shim": true,
+    "outerSource_spec": true,
+    "outerSource_wrapper": true,
+    "permission_permission-refuses": true,
+    "permission_walk-permission-refuses": true,
+    "policyPopulation": true,
+    "progressIsPrefinal": true,
+    "progressRowsAreTerminalRows": true,
+    "progressSourcesMatch": true,
+    "refusal_false-policy-keeps-original": true,
+    "refusal_nonregular-refuses": true,
+    "refusal_overcapacity-refuses": true,
+    "reparseBeforeVictim_reparse": true,
+    "reparseBeforeVictim_symlink": true,
+    "reparseTwoModes": true,
+    "resolvePolicy_absent-scratch-root_none": true,
+    "resolvePolicy_delete-before-resolve_delete": true,
+    "resolvePolicy_extant-canonical-mismatch_canonical": true,
+    "resolvePolicy_false-policy-keeps-original_canonical": true,
+    "resolvePolicy_nonbool-policy-refuses_none": true,
+    "resolvePolicy_nonregular-refuses_nonregular": true,
+    "resolvePolicy_overcapacity-refuses_none": true,
+    "resolvePolicy_permission-refuses_permission": true,
+    "resolvePolicy_reparse-refuses_reparse": true,
+    "resolvePolicy_reparse-refuses_symlink": true,
+    "resolvePolicy_restored-after-delete_none": true,
+    "resolvePolicy_restored-final_none": true,
+    "resolvePolicy_retained-deletion-refuses_delete": true,
+    "resolvePolicy_stable-retained_none": true,
+    "resolvePolicy_stable-scratch_none": true,
+    "resolvePolicy_walk-permission-refuses_walk-permission": true,
+    "resolvePolicy_wrong-scratch-root-refuses_none": true,
+    "restoredAncestryAndDeleteOrder": true,
+    "rootEarlyOuts": true,
+    "rootRefusal": true,
+    "rootReleaseContext": true,
+    "strictDeleteRefusal": true,
+    "terminalAndRawBytes": true,
+    "typeRefusal": true,
+    "walkPermissionBeforeFiles": true
+  },
+  "complete_error_hash_checks": [
+    {
+      "id": "reparse-refuses",
+      "mode": "reparse",
+      "verified": true
+    },
+    {
+      "id": "reparse-refuses",
+      "mode": "symlink",
+      "verified": true
+    },
+    {
+      "id": "nonregular-refuses",
+      "mode": "nonregular",
+      "verified": true
+    },
+    {
+      "id": "overcapacity-refuses",
+      "mode": "none",
+      "verified": true
+    },
+    {
+      "id": "wrong-scratch-root-refuses",
+      "mode": "none",
+      "verified": true
+    },
+    {
+      "id": "nonbool-policy-refuses",
+      "mode": "none",
+      "verified": true
+    },
+    {
+      "id": "false-policy-keeps-original",
+      "mode": "canonical",
+      "verified": true
+    }
+  ],
+  "disposition": "VERIFIED_FIXED_SCRATCH_CONTROL_SAVED_RECORDS",
+  "full_message_scope": "Four prefixes are truncated; full reported SHA is not an independently observed full string.",
+  "original_cause": "unknown",
+  "partition": {
+    "dispatches": 17,
+    "fixture": 8,
+    "groups": 16,
+    "injected": 7,
+    "realDelete": 2,
+    "refusals": 11,
+    "scanReturns": 6
+  },
+  "publication_pre_sample": {
+    "cpu_seconds": 0.0,
+    "wall_seconds": 0.0
+  },
+  "read_refs": {
+    "controls": {
+      "bytes": 19863,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\common-tiff-dimensions\\scratch-scan-controls.py",
+      "sha256": "37c90e6fc52a0f27f7fe5b8c08092bbc1fcb3acc6181fee96911493bcf552f36"
+    },
+    "exit": {
+      "bytes": 2,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\common-tiff-dimensions\\work\\scratch-control-external-1\\exit.txt",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "held": {
+      "bytes": 40626,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\common-tiff-dimensions\\..\\m194h-pedestal-causality\\build-and-run.py",
+      "sha256": "b505a2fff0024691d98088c599f7f554c1543268de09c836a6bc1fe6c17b7410"
+    },
+    "outer": {
+      "bytes": 4046,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\common-tiff-dimensions\\work\\scratch-control-external-1\\outer.json",
+      "sha256": "723c62a9cd2125dc307c2da68c3a148b1599ffb6f96cc5c14cca2165b947d844"
+    },
+    "progress": {
+      "bytes": 15287,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\common-tiff-dimensions\\work\\scratch-scan-controls-1\\progress.json",
+      "sha256": "e797c79feafdb4e823417db81108291aa670196c1c3c25ba475565318394e165"
+    },
+    "result": {
+      "bytes": 15524,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\common-tiff-dimensions\\work\\scratch-scan-controls-1\\result.json",
+      "sha256": "caef9b91fb7dc3f061982b530173afa7cffd1c5728d529255277a3f49bb6cb3d"
+    },
+    "retained_keep": {
+      "bytes": 7,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\common-tiff-dimensions\\work\\scratch-scan-controls-1\\retained\\keep.bin",
+      "sha256": "0f0cf9286f065a2f38e3c4e4886578e35af4050c108e507998a05888c98667ea"
+    },
+    "retained_victim": {
+      "bytes": 11,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\common-tiff-dimensions\\work\\scratch-scan-controls-1\\retained\\victim.bin",
+      "sha256": "d0ef9abb7cf34f1b9951f4ea7379b76461fa31d6bcc25633d8c90e9968f453cb"
+    },
+    "root": {
+      "bytes": 424,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\common-tiff-dimensions\\work\\scratch-control-root-1.json",
+      "sha256": "988477ca6e4d16dfa68c64cc31456ecd3a9558ca142881426497fc424fba0b70"
+    },
+    "scratch_keep": {
+      "bytes": 7,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\common-tiff-dimensions\\work\\scratch-scan-controls-1\\scratch\\keep.bin",
+      "sha256": "0f0cf9286f065a2f38e3c4e4886578e35af4050c108e507998a05888c98667ea"
+    },
+    "scratch_victim": {
+      "bytes": 11,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\common-tiff-dimensions\\work\\scratch-scan-controls-1\\scratch\\victim.bin",
+      "sha256": "d0ef9abb7cf34f1b9951f4ea7379b76461fa31d6bcc25633d8c90e9968f453cb"
+    },
+    "shim": {
+      "bytes": 2991,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\common-tiff-dimensions\\scratch-scan.py",
+      "sha256": "3a1aa413fd4c9d37bccb973a419e3f4c03291903d44b7198c53992e7b00d3e46"
+    },
+    "spec": {
+      "bytes": 8590,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\common-tiff-dimensions\\scratch-scan-spec.md",
+      "sha256": "c65ef3fbe791c473eb3bdfeca0cd72a40b49f71a6efc3639d442d75566f19ab8"
+    },
+    "stderr": {
+      "bytes": 0,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\common-tiff-dimensions\\work\\scratch-control-external-1\\stderr.bin",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "stdout": {
+      "bytes": 15524,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\common-tiff-dimensions\\work\\scratch-control-external-1\\stdout.bin",
+      "sha256": "caef9b91fb7dc3f061982b530173afa7cffd1c5728d529255277a3f49bb6cb3d"
+    },
+    "wrapper": {
+      "bytes": 11112,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\common-tiff-dimensions\\scratch-control-capture.py",
+      "sha256": "9a4dc0b4749a1b723603ba3a2b64607488f492ae2dae15a4656599262d2f1f51"
+    }
+  },
+  "read_tool": {
+    "outer_exit": 0,
+    "outer_wall": 0.0788373,
+    "read_bytes": 134025,
+    "read_cpu": 0.015625,
+    "read_wall": 0
+  },
+  "report": {
+    "bytes": 9363,
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\common-tiff-dimensions\\scratch-scan-result-review.md",
+    "sha256": "739068ac0984856256ba8ad185eff859905ba3a7e0695aa1634d93d46a7af902"
+  },
+  "root_terminal": {
+    "exit_code": 0,
+    "release_sha256": "65eda120d1dfe8010154e705d6fe46e8a61705d37ba3b1b6fe116c8c6b4a0236",
+    "schema": "dimensions-scratch-root-terminal-v1",
+    "scope": "Stopwatch brackets the complete directly invoked wrapper process; exit captured immediately before filtering; no CPU inferred from wall.",
+    "source_commit": "b2d26480717dfd34950cb0a02c434ebaca28a119",
+    "whole_wrapper_wall_seconds": 0.3277722
+  },
+  "row_bytes_without_newline": [
+    {
+      "bytes": 774,
+      "id": "stable-scratch"
+    },
+    {
+      "bytes": 980,
+      "id": "delete-before-resolve"
+    },
+    {
+      "bytes": 781,
+      "id": "restored-after-delete"
+    },
+    {
+      "bytes": 674,
+      "id": "absent-scratch-root"
+    },
+    {
+      "bytes": 1068,
+      "id": "retained-deletion-refuses"
+    },
+    {
+      "bytes": 1076,
+      "id": "extant-canonical-mismatch"
+    },
+    {
+      "bytes": 1591,
+      "id": "reparse-refuses"
+    },
+    {
+      "bytes": 809,
+      "id": "nonregular-refuses"
+    },
+    {
+      "bytes": 1073,
+      "id": "permission-refuses"
+    },
+    {
+      "bytes": 801,
+      "id": "overcapacity-refuses"
+    },
+    {
+      "bytes": 548,
+      "id": "wrong-scratch-root-refuses"
+    },
+    {
+      "bytes": 534,
+      "id": "nonbool-policy-refuses"
+    },
+    {
+      "bytes": 818,
+      "id": "false-policy-keeps-original"
+    },
+    {
+      "bytes": 1013,
+      "id": "walk-permission-refuses"
+    },
+    {
+      "bytes": 781,
+      "id": "stable-retained"
+    },
+    {
+      "bytes": 774,
+      "id": "restored-final"
+    }
+  ],
+  "saved_read_source": "from pathlib import Path\nimport json,hashlib,time,os,stat\nCPU=time.process_time();START=time.monotonic();READ=0\nROOT=Path.cwd();BASE=ROOT/'experiments/common-tiff-dimensions'\ndef read(rel,cap):\n global READ\n p=BASE/rel\n for q in (p,*p.parents):\n  s=q.lstat()\n  assert not stat.S_ISLNK(s.st_mode) and not getattr(s,'st_file_attributes',0)&0x400\n a=p.stat();assert stat.S_ISREG(a.st_mode) and 0<=a.st_size<=cap\n assert READ+a.st_size+1<=2*1024*1024\n with p.open('rb') as f:\n  b=os.fstat(f.fileno());raw=f.read(a.st_size+1);c=os.fstat(f.fileno())\n d=p.stat()\n ident=lambda x:(x.st_dev,x.st_ino,x.st_size,x.st_mtime_ns,x.st_nlink,getattr(x,'st_file_attributes',0))\n assert ident(a)==ident(b)==ident(c)==ident(d) and len(raw)==a.st_size\n READ+=len(raw);assert time.process_time()-CPU<9 and time.monotonic()-START<18\n return raw,{'path':str(p),'bytes':len(raw),'sha256':hashlib.sha256(raw).hexdigest()}\nnames={\n 'root':('work/scratch-control-root-1.json',65536),\n 'outer':('work/scratch-control-external-1/outer.json',65536),\n 'stdout':('work/scratch-control-external-1/stdout.bin',65536),\n 'stderr':('work/scratch-control-external-1/stderr.bin',16384),\n 'exit':('work/scratch-control-external-1/exit.txt',1024),\n 'result':('work/scratch-scan-controls-1/result.json',65536),\n 'progress':('work/scratch-scan-controls-1/progress.json',40960),\n 'scratch_keep':('work/scratch-scan-controls-1/scratch/keep.bin',11),\n 'scratch_victim':('work/scratch-scan-controls-1/scratch/victim.bin',11),\n 'retained_keep':('work/scratch-scan-controls-1/retained/keep.bin',11),\n 'retained_victim':('work/scratch-scan-controls-1/retained/victim.bin',11),\n 'controls':('scratch-scan-controls.py',32768),\n 'shim':('scratch-scan.py',16384),\n 'spec':('scratch-scan-spec.md',16384),\n 'wrapper':('scratch-control-capture.py',32768),\n 'held':('../m194h-pedestal-causality/build-and-run.py',65536)}\nbuffers={};refs={};values={}\nfor role,(name,cap) in names.items():\n raw,ref=read(name,cap);buffers[role]=raw;refs[role]=ref\n if role in ('root','outer','result','progress'):values[role]=json.loads(raw)\n elif role in ('stderr','exit'):values[role]=raw.decode('utf-8',errors='replace')\n elif role.startswith(('scratch_','retained_')):values[role]=raw.hex()\nassert buffers['stdout']==buffers['result']\nvalues['raw_stdout_equals_result']=True\nanswer={'refs':refs,'values':values,'read_bytes':READ,'cpu_sample':time.process_time()-CPU,\n 'wall_sample':time.monotonic()-START,'allocation':{'cpu_seconds':10,'active_wall_seconds':20,'read_bytes':2*1024*1024,'write_bytes':1024*1024}}\nprint(json.dumps(answer,sort_keys=True))\n",
+  "schema": "common-tiff-dimensions-independent-scratch-read-v1",
+  "wrapper_observed": {
+    "exit": 0,
+    "termination": {
+      "attempted": false,
+      "error": null,
+      "kill_succeeded": false,
+      "wait_completed": true
+    },
+    "wall": 0.25
+  }
+}

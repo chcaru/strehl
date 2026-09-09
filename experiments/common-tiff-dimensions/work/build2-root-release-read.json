@@ -1,0 +1,27 @@
+{
+  "schema": "dimensions-build2-root-release-read-v1",
+  "source_count": 190,
+  "delta_archive": {
+    "bytes": 249521,
+    "path": "experiments/common-tiff-dimensions/work/source-2-delta.zip",
+    "sha256": "bcb7d3198a62ec1ca600d2a248a0ca715c892cb4c1133ab270d47a046a552d0b"
+  },
+  "changed_or_new_count": 16,
+  "command": [
+    "cargo",
+    "build",
+    "-p",
+    "strehl-cli",
+    "--bin",
+    "strehl-common-input",
+    "--jobs",
+    "2",
+    "--target-dir",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\target\\common-tiff-dimensions-2",
+    "--message-format=json-render-diagnostics",
+    "--locked",
+    "--offline"
+  ],
+  "complete": true,
+  "prior_read_failure": "Root read-only preflight asserted target at argv index10, which actually contains --message-format=json-render-diagnostics; target is index9. No producer, source archive, release or process changed. Corrected check compares the entire independently written argument vector. Prior tool exit1 is retained in conversation; no constructor rerun."
+}

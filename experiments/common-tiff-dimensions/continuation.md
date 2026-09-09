@@ -84,3 +84,46 @@ Fresh build2 reservation600CPU300wall, added to original stages870CPU720wall
 plus four fresh constructor slots40CPU80wall=>50CPU100wall; independent
 failed-build review10CPU20wall and scratch slices remain separate. These are
 reservations, not observed usage; do not invent a whole-program numerical sum.
+
+Heartbeat continuation checkpoint,2026-09-08:
+Scratch source/release committedb2d26480. Actual one-shot16groups/17dispatches
+completedexit0: evidence29f5def9. Root fullwrapper interval0.3277722s, child
+interval0.25s; child/result15524B caef9b91fb7dc3f061982b530173afa7cffd1c5728d529255277a3f49bb6cb3d;
+outer4046B723c62a9cd2125dc307c2da68c3a148b1599ffb6f96cc5c14cca2165b947d844.
+AllgroupsadvertisePASS and root inspected actualrows. Independent
+sampler_result_review is now reading savedresults under10CPU20wall2MiBread
+1MiBwrite; wait for actualreview before build2. No controlrerun. Canonicalerror
+full478B has a saved400-character prefix: fullbothstrings were source-checked,
+not fullyvisible in savedcontroltext; preserve that qualification.
+
+Build2source package committedfb0c69df, rootreview/audit included. Rootaudit
+sourceonly5CPU10wall16MiBread1MiBwrite,6074752actualreadB; its report is
+build2-source-review.md5560B a2cbb53cec308648018a6464a54d878b3886f31565a5cd7cba975581cce85e0a.
+Independent source review scratch-scan-source-review.md11754B
+319cc7c7522486bc22a579dcee373affb58fb771c0e33a8b0b617f2e18669e4b is final.
+Preparerfinal11863B08140b301a73e2e5a8e401d1fa38ecef952a29229006d3ed649abbeee638f231
+allows sevenchangedoldfiles including independent-spec and nine newfiles
+including scratch-control-capture. No source2freeze/release/build yet.
+
+Coordinate has independent source-only next-integer-consumer-audit: priorart
+query+atmost12detailedreports/sourcefiles,16MiBread1MiBnotes20CPU40activewall.
+No newbuild/image/control/geometryexperiment is authorized by that audit.
+
+Build2 release checkpoint:
+Independent saved scanner review PASSES: scratch-scan-result-review.md9363B
+739068ac0984856256ba8ad185eff859905ba3a7e0695aa1634d93d46a7af902;
+work/scratch-scan-independent-read-1.json13430B
+545267421478a1d839df01febbb8d918c136e0da3e8d42acdf46821d7da9dcfd.
+Actual17dispatches:6returns/11refusals; all67independentrecordpredicates pass,
+seven complete savederrorhashes match; four truncatedmessages stayqualified.
+156818reviewreadB/22793retainedB; full10CPU20wallreviewcharged.
+
+The build2 metadata constructor ranonceexit0,CPU0.234375/wall0.234sample.
+work/source-freeze-2.json28634B f3778c80df31b6cde6e253797cf497ca2cdfced85f8507ae126ba03ce8563708;
+work/source-2-delta.zip249521B bcb7d3198a62ec1ca600d2a248a0ca715c892cb4c1133ab270d47a046a552d0b;
+work/build-release-2.json28414B e6a6610d81854b14689cea52fd7faeff9467639cd1b98ad06ccc2b69671efdb5.
+190sources5716711B;16changed/newarchiveentries. Firstrootreadonlypreflight
+misindexed targetatargv10 and failed; corrected full-vector comparison passed
+without changing/repeatingconstructor. Recordwork/build2-root-release-read.json.
+No build2 compiler dispatched yet at this checkpoint. Next commitrelease then
+run exact capture-stage.py build once, preserve actualoutcome.
