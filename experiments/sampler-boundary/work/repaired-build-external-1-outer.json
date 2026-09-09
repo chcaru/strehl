@@ -1,0 +1,40 @@
+{
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-I",
+    "-S",
+    "-B",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\run-stage.py",
+    "--release",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\work\\repaired-build-release-1.json",
+    "--release-sha256",
+    "c0a36062a870e2193b69cc6d49dd729b7a332096c648c83d82cd3e8a98dadc05"
+  ],
+  "elapsed_wall_seconds": 18.139999999999418,
+  "exit": {
+    "bytes": 2,
+    "path": "experiments/sampler-boundary/work/repaired-build-external-1-exit.txt",
+    "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+  },
+  "exit_code": 0,
+  "schema": "sampler-boundary-stage-external-v1",
+  "scope": "Complete directly launched controller interval and actual exit; controller owns descendant Jobs. Raw controller stdout/stderr. No whole CPU inference from wall.",
+  "source": {
+    "bytes": 39050,
+    "path": "experiments/sampler-boundary/run-stage.py",
+    "sha256": "44bc15edbd008da4a39e615bed312949c72abf4d5be9b0bca6908d1439d8071c"
+  },
+  "stderr": {
+    "bytes": 0,
+    "path": "experiments/sampler-boundary/work/repaired-build-external-1-stderr.bin",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "stderr_bytes": 0,
+  "stdout": {
+    "bytes": 486,
+    "path": "experiments/sampler-boundary/work/repaired-build-external-1-stdout.bin",
+    "sha256": "537ba3b3d47015031375a3a6747f78e0e790404204979448f4f30a81389876b6"
+  },
+  "stdout_bytes": 486,
+  "timeout_terminated": false
+}
