@@ -1,0 +1,33 @@
+{
+  "schema": "sampler-independent-transport-failure-v1",
+  "status": "REFUSED_BEFORE_HELD_READER",
+  "slice": 1,
+  "actual_outer_python_exit_code": 1,
+  "execution_wall_seconds_reported_by_exec_tool": 0.0908582,
+  "exact_parent_cpu_seconds": "unrecorded because inline wrapper raised before publication",
+  "actual_bytes_read": "unrecorded ledger; all reads were bounded released inputs; conservative charge to be assigned by root",
+  "stage_test_rerun": false,
+  "held_independent_reader_invoked": false,
+  "cause": "Transport adapter compared FileRef dictionaries directly, so absolute stage paths disagreed with ROOT-relative release references. Extent/hash reads succeeded; these were association-checker failures, not sampler failures.",
+  "errors": [
+    "baseline-build exact release",
+    "baseline-build result/tail advertisement",
+    "baseline-build child receipt association",
+    "absolute versus relative paths for both retained and original integration/unit executable references",
+    "baseline-test exact release",
+    "baseline-test result/tail advertisement",
+    "baseline-test child receipt association",
+    "baseline-test detached observation association"
+  ],
+  "source": "experiments/sampler-boundary/work/independent-transport-failed-1.py",
+  "invocation": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-I",
+    "-S",
+    "-B",
+    "-"
+  ],
+  "source_transport": "Exact source was provided to the invocation on standard input by PowerShell here-string; saved source is the same string.",
+  "source_sha256": "81bea2d5ecb373243ca4fb1feffce1deb563a66f4f033212b5d55afb952fd4d3",
+  "source_bytes": 9943
+}
