@@ -1,0 +1,560 @@
+{
+  "schema": "native-background-stroke-inspection-v1",
+  "sources": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-stroke\\inspect.py",
+      "bytes": 13091,
+      "sha256": "dc98cdb7fda9a6fb7c668e45827042726011373e2105a44776c5ac972ae0c47e"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-stroke\\sampler.py",
+      "bytes": 2746,
+      "sha256": "091f69688d3f590d6429d62d127747b373078a8ef0ec20a90690bbe2781b0f3d"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-stroke\\independent-controls.py",
+      "bytes": 8314,
+      "sha256": "ac971b14e3a30e085330b0b93bdbffc11be4ea994fbef7e4785648e9d975b7d8"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-PHASE0-PHASE\\src\\clib.py",
+      "bytes": 9274,
+      "sha256": "95d557d38855d720322d96edd57c2b654f6b8ea1af49fabb66df08ad5d93e0d2"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-stroke\\charter.md",
+      "bytes": 3542,
+      "sha256": "b2c502f44114e0b089e75ae7ba91b6510ca1aa4550a17d45e7c8b1adfbc18dfc"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-stroke\\design.md",
+      "bytes": 5437,
+      "sha256": "3d0766758e4ede7970eebfdaa0bfeb61ebfce0abd75588cc331ad25ad7e3e5e3"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-product-comparison\\next-rois.json",
+      "bytes": 1086,
+      "sha256": "866ee6ecfd166dcf6d3cd34caf96e8e5eca20c3d104f494da08b2e82a6c52b19"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-PHASE0-PHASE\\out\\canon\\coffee-bean.warpmap.txt",
+      "bytes": 14591,
+      "sha256": "b21b247944c257ab0fd3c767c879b9abf4a5fb1112dded97c87990a7d537274c"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-product-comparison\\run-1\\plan.json",
+      "bytes": 41616,
+      "sha256": "e5acdda4c6aa75e52225d843efd0008f91795444f43e846cb635645da1ac8643"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m61-ptc-high-iso\\decode-check\\target\\release\\m61-decode-check.exe",
+      "bytes": 6846976,
+      "sha256": "ecf20e1b1e639fc3b86fe82d26a3e3ca02fd326549aa6353e80ad4480682d89d"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m61-ptc-high-iso\\decode-check\\src\\main.rs",
+      "bytes": 2815,
+      "sha256": "62343abc6f479353a198d73762991ea4f0b5de71274fa546e875a3aa27805fcb"
+    }
+  ],
+  "indices": [
+    0,
+    26,
+    52,
+    78,
+    104
+  ],
+  "raw_roi_xywh": [
+    112,
+    1304,
+    640,
+    456
+  ],
+  "context_reference_native_xywh": [
+    274,
+    1382,
+    320,
+    310
+  ],
+  "rectangles_reference_native": {
+    "stroke": [
+      274,
+      1572,
+      320,
+      120
+    ],
+    "clean": [
+      274,
+      1382,
+      320,
+      120
+    ]
+  },
+  "contrasts": [
+    {
+      "index": 0,
+      "gauge": "sensor",
+      "phase": "G1",
+      "stroke_mean_dn": 4888.8940625,
+      "clean_mean_dn": 4833.7446875,
+      "stroke_minus_clean_dn": 55.149374999999964,
+      "fraction_of_clean": 0.01140924450201425
+    },
+    {
+      "index": 0,
+      "gauge": "sensor",
+      "phase": "G2",
+      "stroke_mean_dn": 4879.632604166667,
+      "clean_mean_dn": 4825.6753125,
+      "stroke_minus_clean_dn": 53.957291666667516,
+      "fraction_of_clean": 0.011181293429937433
+    },
+    {
+      "index": 0,
+      "gauge": "scene",
+      "phase": "G1",
+      "stroke_mean_dn": 4867.832484079997,
+      "clean_mean_dn": 4814.039582010905,
+      "stroke_minus_clean_dn": 53.792902069091724,
+      "fraction_of_clean": 0.011174171120259365
+    },
+    {
+      "index": 0,
+      "gauge": "scene",
+      "phase": "G2",
+      "stroke_mean_dn": 4858.853588155111,
+      "clean_mean_dn": 4805.882184549968,
+      "stroke_minus_clean_dn": 52.97140360514277,
+      "fraction_of_clean": 0.011022201870748339
+    },
+    {
+      "index": 26,
+      "gauge": "sensor",
+      "phase": "G1",
+      "stroke_mean_dn": 5045.193020833333,
+      "clean_mean_dn": 4995.8446875,
+      "stroke_minus_clean_dn": 49.34833333333336,
+      "fraction_of_clean": 0.009877875798822731
+    },
+    {
+      "index": 26,
+      "gauge": "sensor",
+      "phase": "G2",
+      "stroke_mean_dn": 5036.629375,
+      "clean_mean_dn": 4987.020729166667,
+      "stroke_minus_clean_dn": 49.60864583333387,
+      "fraction_of_clean": 0.009947551559831494
+    },
+    {
+      "index": 26,
+      "gauge": "scene",
+      "phase": "G1",
+      "stroke_mean_dn": 5043.560648295084,
+      "clean_mean_dn": 4989.758411458333,
+      "stroke_minus_clean_dn": 53.802236836751035,
+      "fraction_of_clean": 0.010782533421498158
+    },
+    {
+      "index": 26,
+      "gauge": "scene",
+      "phase": "G2",
+      "stroke_mean_dn": 5035.198939107259,
+      "clean_mean_dn": 4981.318612976074,
+      "stroke_minus_clean_dn": 53.88032613118503,
+      "fraction_of_clean": 0.010816478590795136
+    },
+    {
+      "index": 52,
+      "gauge": "sensor",
+      "phase": "G1",
+      "stroke_mean_dn": 4654.6090625,
+      "clean_mean_dn": 4581.710416666667,
+      "stroke_minus_clean_dn": 72.89864583333292,
+      "fraction_of_clean": 0.015910792958051874
+    },
+    {
+      "index": 52,
+      "gauge": "sensor",
+      "phase": "G2",
+      "stroke_mean_dn": 4646.275520833334,
+      "clean_mean_dn": 4573.190104166667,
+      "stroke_minus_clean_dn": 73.08541666666679,
+      "fraction_of_clean": 0.015981276745980478
+    },
+    {
+      "index": 52,
+      "gauge": "scene",
+      "phase": "G1",
+      "stroke_mean_dn": 4654.6090625,
+      "clean_mean_dn": 4581.710416666667,
+      "stroke_minus_clean_dn": 72.89864583333292,
+      "fraction_of_clean": 0.015910792958051874
+    },
+    {
+      "index": 52,
+      "gauge": "scene",
+      "phase": "G2",
+      "stroke_mean_dn": 4646.275520833334,
+      "clean_mean_dn": 4573.190104166667,
+      "stroke_minus_clean_dn": 73.08541666666679,
+      "fraction_of_clean": 0.015981276745980478
+    },
+    {
+      "index": 78,
+      "gauge": "sensor",
+      "phase": "G1",
+      "stroke_mean_dn": 4566.8075,
+      "clean_mean_dn": 4449.405625,
+      "stroke_minus_clean_dn": 117.40187499999956,
+      "fraction_of_clean": 0.026385968125798725
+    },
+    {
+      "index": 78,
+      "gauge": "sensor",
+      "phase": "G2",
+      "stroke_mean_dn": 4558.495,
+      "clean_mean_dn": 4441.3759375,
+      "stroke_minus_clean_dn": 117.11906249999993,
+      "fraction_of_clean": 0.02636999527806802
+    },
+    {
+      "index": 78,
+      "gauge": "scene",
+      "phase": "G1",
+      "stroke_mean_dn": 4558.632779591878,
+      "clean_mean_dn": 4444.7793084716795,
+      "stroke_minus_clean_dn": 113.85347112019826,
+      "fraction_of_clean": 0.02561510104746828
+    },
+    {
+      "index": 78,
+      "gauge": "scene",
+      "phase": "G2",
+      "stroke_mean_dn": 4550.822756907145,
+      "clean_mean_dn": 4436.666269175212,
+      "stroke_minus_clean_dn": 114.15648773193334,
+      "fraction_of_clean": 0.025730239960815294
+    },
+    {
+      "index": 104,
+      "gauge": "sensor",
+      "phase": "G1",
+      "stroke_mean_dn": 4480.758125,
+      "clean_mean_dn": 4334.966770833334,
+      "stroke_minus_clean_dn": 145.79135416666668,
+      "fraction_of_clean": 0.0336314813639599
+    },
+    {
+      "index": 104,
+      "gauge": "sensor",
+      "phase": "G2",
+      "stroke_mean_dn": 4472.220729166666,
+      "clean_mean_dn": 4326.264583333334,
+      "stroke_minus_clean_dn": 145.9561458333328,
+      "fraction_of_clean": 0.03373722134231453
+    },
+    {
+      "index": 104,
+      "gauge": "scene",
+      "phase": "G1",
+      "stroke_mean_dn": 4468.885838724772,
+      "clean_mean_dn": 4321.990963185628,
+      "stroke_minus_clean_dn": 146.89487553914387,
+      "fraction_of_clean": 0.03398777942628354
+    },
+    {
+      "index": 104,
+      "gauge": "scene",
+      "phase": "G2",
+      "stroke_mean_dn": 4460.343179626465,
+      "clean_mean_dn": 4313.8232464599605,
+      "stroke_minus_clean_dn": 146.51993316650442,
+      "fraction_of_clean": 0.03396521479797361
+    }
+  ],
+  "views": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-stroke\\run-1\\view-0-sensor-G1.npy",
+      "bytes": 99328,
+      "sha256": "0d44db178a97f367c6720cfbf21694900663617853e14761ef8a55a3b9538af0"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-stroke\\run-1\\view-0-sensor-G2.npy",
+      "bytes": 99328,
+      "sha256": "030c3f1b6ba831fd283a1dda3a0992a3f4f9e5c4bb5e376ab12fa7c70bd2ed1b"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-stroke\\run-1\\view-0-scene-G1.npy",
+      "bytes": 99328,
+      "sha256": "59a4431ff5f695fec7cb1520368c727f6dd8042bea9730c590a7fac99f69b7a5"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-stroke\\run-1\\view-0-scene-G2.npy",
+      "bytes": 99328,
+      "sha256": "9e02ce33a9f86b508949fe4b739ca7f4a0c5d6688f4f42d4e72870230fa47012"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-stroke\\run-1\\view-26-sensor-G1.npy",
+      "bytes": 99328,
+      "sha256": "06bf97864124fadcf6c66349fc9870d8d7120ec9a0b53f5171f3b3eac0bb6c65"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-stroke\\run-1\\view-26-sensor-G2.npy",
+      "bytes": 99328,
+      "sha256": "72f6da0d534333d8f5ba60d56e8b951b278df29a1315d16d0ac2f5eb4a8a7074"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-stroke\\run-1\\view-26-scene-G1.npy",
+      "bytes": 99328,
+      "sha256": "967957576851da1f3e3750274516b5c6f67ee96aebef47daa53c49fec919d668"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-stroke\\run-1\\view-26-scene-G2.npy",
+      "bytes": 99328,
+      "sha256": "4dac489284fa4a7b53fa8853e89335999698ea5c8ec56ee67ab424c749aa5edf"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-stroke\\run-1\\view-52-sensor-G1.npy",
+      "bytes": 99328,
+      "sha256": "4d2eab2b38222c36e123cc1f75c268ad0b0eb709287591234d79d218d1f36738"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-stroke\\run-1\\view-52-sensor-G2.npy",
+      "bytes": 99328,
+      "sha256": "76c064276dbab01a2af668991c42937959e92d559b3667870b6244609b3113a4"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-stroke\\run-1\\view-52-scene-G1.npy",
+      "bytes": 99328,
+      "sha256": "4d2eab2b38222c36e123cc1f75c268ad0b0eb709287591234d79d218d1f36738"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-stroke\\run-1\\view-52-scene-G2.npy",
+      "bytes": 99328,
+      "sha256": "76c064276dbab01a2af668991c42937959e92d559b3667870b6244609b3113a4"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-stroke\\run-1\\view-78-sensor-G1.npy",
+      "bytes": 99328,
+      "sha256": "07ac3250712f6e18bc0be4fe8faf813a6d3ddf2d5d8f8bf37bb3723d299d4df3"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-stroke\\run-1\\view-78-sensor-G2.npy",
+      "bytes": 99328,
+      "sha256": "35ac29d66691da974d4a94139fd80f6f6c490a030a416c3ddb9b1a4b3f4c4313"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-stroke\\run-1\\view-78-scene-G1.npy",
+      "bytes": 99328,
+      "sha256": "ba3264a99e227097d30cfaa397078ebff687ba3c94d57fe21e49921f694976bd"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-stroke\\run-1\\view-78-scene-G2.npy",
+      "bytes": 99328,
+      "sha256": "6cf87df45726709471a14ab3c75779787e7a48fe00cad0c79fcaa267a0187e71"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-stroke\\run-1\\view-104-sensor-G1.npy",
+      "bytes": 99328,
+      "sha256": "223a8115a2bc4f808176c236049370e61293ef6ece46c0bc0fbfc52e146a4b0b"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-stroke\\run-1\\view-104-sensor-G2.npy",
+      "bytes": 99328,
+      "sha256": "77d968501335beba78260ad15e46791237526216317012bf942e4f6df14b3ce8"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-stroke\\run-1\\view-104-scene-G1.npy",
+      "bytes": 99328,
+      "sha256": "e56a191b7133f7cffb79e8a89818b8b521874b2a59bd2eb09d658a822e62c720"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-stroke\\run-1\\view-104-scene-G2.npy",
+      "bytes": 99328,
+      "sha256": "d84747ab638a308510d41ccc9b157aebe78fd6f690128d5b9dbc498997c22a1d"
+    }
+  ],
+  "charts": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-stroke\\run-1\\contact-G1.png",
+      "bytes": 416108,
+      "sha256": "5cf398a4561168bd49f0c3bdc7420654e8ca0f296223e2085ae2acacfdd7dce8"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-stroke\\run-1\\contact-G2.png",
+      "bytes": 416562,
+      "sha256": "d700406be6c700f5e7d57e98cf3e58b01387305ffb1fd6dbe99caa1ac92a155d"
+    }
+  ],
+  "display": {
+    "kind": "shared linear black-subtracted DN",
+    "vmin": 3890.8327213541666,
+    "vmax": 5264.067799479167,
+    "choice": "reference52 sensor clean two-green mean +/-15%; no per-panel fit",
+    "clipping_counts": [
+      {
+        "index": 0,
+        "gauge": "sensor",
+        "phase": "G1",
+        "below": 0,
+        "above": 0,
+        "values": 24800
+      },
+      {
+        "index": 0,
+        "gauge": "sensor",
+        "phase": "G2",
+        "below": 0,
+        "above": 0,
+        "values": 24800
+      },
+      {
+        "index": 0,
+        "gauge": "scene",
+        "phase": "G1",
+        "below": 0,
+        "above": 0,
+        "values": 24800
+      },
+      {
+        "index": 0,
+        "gauge": "scene",
+        "phase": "G2",
+        "below": 0,
+        "above": 0,
+        "values": 24800
+      },
+      {
+        "index": 26,
+        "gauge": "sensor",
+        "phase": "G1",
+        "below": 0,
+        "above": 0,
+        "values": 24800
+      },
+      {
+        "index": 26,
+        "gauge": "sensor",
+        "phase": "G2",
+        "below": 0,
+        "above": 0,
+        "values": 24800
+      },
+      {
+        "index": 26,
+        "gauge": "scene",
+        "phase": "G1",
+        "below": 0,
+        "above": 0,
+        "values": 24800
+      },
+      {
+        "index": 26,
+        "gauge": "scene",
+        "phase": "G2",
+        "below": 0,
+        "above": 0,
+        "values": 24800
+      },
+      {
+        "index": 52,
+        "gauge": "sensor",
+        "phase": "G1",
+        "below": 0,
+        "above": 0,
+        "values": 24800
+      },
+      {
+        "index": 52,
+        "gauge": "sensor",
+        "phase": "G2",
+        "below": 0,
+        "above": 0,
+        "values": 24800
+      },
+      {
+        "index": 52,
+        "gauge": "scene",
+        "phase": "G1",
+        "below": 0,
+        "above": 0,
+        "values": 24800
+      },
+      {
+        "index": 52,
+        "gauge": "scene",
+        "phase": "G2",
+        "below": 0,
+        "above": 0,
+        "values": 24800
+      },
+      {
+        "index": 78,
+        "gauge": "sensor",
+        "phase": "G1",
+        "below": 0,
+        "above": 0,
+        "values": 24800
+      },
+      {
+        "index": 78,
+        "gauge": "sensor",
+        "phase": "G2",
+        "below": 0,
+        "above": 0,
+        "values": 24800
+      },
+      {
+        "index": 78,
+        "gauge": "scene",
+        "phase": "G1",
+        "below": 0,
+        "above": 0,
+        "values": 24800
+      },
+      {
+        "index": 78,
+        "gauge": "scene",
+        "phase": "G2",
+        "below": 0,
+        "above": 0,
+        "values": 24800
+      },
+      {
+        "index": 104,
+        "gauge": "sensor",
+        "phase": "G1",
+        "below": 0,
+        "above": 0,
+        "values": 24800
+      },
+      {
+        "index": 104,
+        "gauge": "sensor",
+        "phase": "G2",
+        "below": 0,
+        "above": 0,
+        "values": 24800
+      },
+      {
+        "index": 104,
+        "gauge": "scene",
+        "phase": "G1",
+        "below": 0,
+        "above": 0,
+        "values": 24800
+      },
+      {
+        "index": 104,
+        "gauge": "scene",
+        "phase": "G2",
+        "below": 0,
+        "above": 0,
+        "values": 24800
+      }
+    ]
+  },
+  "interpretation": "DESCRIPTIVE_ONLY: independent decode identical; five observations cannot establish dust or manufactured fusion damage. Inspect 2D endpoints; horizontal stationarity can be ambiguous.",
+  "spatial_sd_is_not_temporal_noise": true,
+  "new_alignment": false
+}

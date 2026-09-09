@@ -1,0 +1,84 @@
+{
+  "status": "COMPLETE_PENDING_INDEPENDENT_INTERPRETATION",
+  "steps": [
+    {
+      "label": "controls",
+      "wall_seconds": 1.1409999999996217,
+      "cpu_seconds": 1.09375,
+      "peak_job_commit_bytes": 51572736
+    },
+    {
+      "label": "secondary-0",
+      "wall_seconds": 0.3120000000017171,
+      "cpu_seconds": 0.296875,
+      "peak_job_commit_bytes": 127418368
+    },
+    {
+      "label": "primary-0",
+      "wall_seconds": 0.7189999999973224,
+      "cpu_seconds": 0.625,
+      "peak_job_commit_bytes": 102256640
+    },
+    {
+      "label": "secondary-26",
+      "wall_seconds": 0.25,
+      "cpu_seconds": 0.359375,
+      "peak_job_commit_bytes": 129470464
+    },
+    {
+      "label": "primary-26",
+      "wall_seconds": 0.6870000000017171,
+      "cpu_seconds": 0.625,
+      "peak_job_commit_bytes": 102322176
+    },
+    {
+      "label": "secondary-52",
+      "wall_seconds": 0.25,
+      "cpu_seconds": 0.3125,
+      "peak_job_commit_bytes": 128647168
+    },
+    {
+      "label": "primary-52",
+      "wall_seconds": 0.7809999999990396,
+      "cpu_seconds": 0.65625,
+      "peak_job_commit_bytes": 102125568
+    },
+    {
+      "label": "secondary-78",
+      "wall_seconds": 0.23500000000058208,
+      "cpu_seconds": 0.28125,
+      "peak_job_commit_bytes": 127660032
+    },
+    {
+      "label": "primary-78",
+      "wall_seconds": 0.7030000000013388,
+      "cpu_seconds": 0.625,
+      "peak_job_commit_bytes": 102322176
+    },
+    {
+      "label": "secondary-104",
+      "wall_seconds": 0.25,
+      "cpu_seconds": 0.3125,
+      "peak_job_commit_bytes": 128126976
+    },
+    {
+      "label": "primary-104",
+      "wall_seconds": 0.7029999999977008,
+      "cpu_seconds": 0.625,
+      "peak_job_commit_bytes": 102055936
+    },
+    {
+      "label": "analysis",
+      "wall_seconds": 1.5780000000013388,
+      "cpu_seconds": 1.25,
+      "peak_job_commit_bytes": 120492032
+    }
+  ],
+  "aggregate_cpu_seconds": 7.0625,
+  "original_metadata_unchanged": true,
+  "diagnostic": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-stroke\\run-1\\result.json",
+    "sha256": "956c9a40b01111f7e65fb6a84219b23f992183058d723bcb5b6fb2d75773d11a",
+    "bytes": 18019
+  }
+}

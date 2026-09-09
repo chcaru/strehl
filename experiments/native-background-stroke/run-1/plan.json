@@ -1,0 +1,148 @@
+{
+  "revision": "7d886d2611740b33a3d2632fc95f5dca6c58472a",
+  "runner": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-stroke\\run.py",
+    "sha256": "94362567ca9c8c96906f753229f1fb518e35917bedbc11a75a4e90587ec82d8d",
+    "bytes": 4514
+  },
+  "python": {
+    "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "sha256": "4d6f5f81a4bca11191c4c7c6b43632694d0a4ce74e068619d8fdc161d469859a",
+    "bytes": 104952
+  },
+  "helpers": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\m12-harness.py",
+      "sha256": "6cfb408992f37b225f102da4d62ba836f9c5b67c92bdd418ff460987866a1bb9",
+      "bytes": 117908
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\bounded-process.py",
+      "sha256": "47b9f8d848759eba61f055b9fdca1f8ac400f134dcd7636f0e0eaaa955704e0b",
+      "bytes": 12664
+    }
+  ],
+  "sources": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-stroke\\inspect.py",
+      "bytes": 13091,
+      "sha256": "dc98cdb7fda9a6fb7c668e45827042726011373e2105a44776c5ac972ae0c47e"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-stroke\\sampler.py",
+      "bytes": 2746,
+      "sha256": "091f69688d3f590d6429d62d127747b373078a8ef0ec20a90690bbe2781b0f3d"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-stroke\\independent-controls.py",
+      "bytes": 8314,
+      "sha256": "ac971b14e3a30e085330b0b93bdbffc11be4ea994fbef7e4785648e9d975b7d8"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-PHASE0-PHASE\\src\\clib.py",
+      "bytes": 9274,
+      "sha256": "95d557d38855d720322d96edd57c2b654f6b8ea1af49fabb66df08ad5d93e0d2"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-stroke\\charter.md",
+      "bytes": 3542,
+      "sha256": "b2c502f44114e0b089e75ae7ba91b6510ca1aa4550a17d45e7c8b1adfbc18dfc"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-stroke\\design.md",
+      "bytes": 5437,
+      "sha256": "3d0766758e4ede7970eebfdaa0bfeb61ebfce0abd75588cc331ad25ad7e3e5e3"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-product-comparison\\next-rois.json",
+      "bytes": 1086,
+      "sha256": "866ee6ecfd166dcf6d3cd34caf96e8e5eca20c3d104f494da08b2e82a6c52b19"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-PHASE0-PHASE\\out\\canon\\coffee-bean.warpmap.txt",
+      "bytes": 14591,
+      "sha256": "b21b247944c257ab0fd3c767c879b9abf4a5fb1112dded97c87990a7d537274c"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-product-comparison\\run-1\\plan.json",
+      "bytes": 41616,
+      "sha256": "e5acdda4c6aa75e52225d843efd0008f91795444f43e846cb635645da1ac8643"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m61-ptc-high-iso\\decode-check\\target\\release\\m61-decode-check.exe",
+      "bytes": 6846976,
+      "sha256": "ecf20e1b1e639fc3b86fe82d26a3e3ca02fd326549aa6353e80ad4480682d89d"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m61-ptc-high-iso\\decode-check\\src\\main.rs",
+      "bytes": 2815,
+      "sha256": "62343abc6f479353a198d73762991ea4f0b5de71274fa546e875a3aa27805fcb"
+    }
+  ],
+  "inputs": [
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00016.ARW",
+      "bytes": 39030784,
+      "mtime_ns": 1778455869760000000
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00016.tif",
+      "bytes": 392918428,
+      "mtime_ns": 1778456286733383100
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00042.ARW",
+      "bytes": 40873984,
+      "mtime_ns": 1778455902060000000
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00042.tif",
+      "bytes": 392920572,
+      "mtime_ns": 1778456281245288600
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00068.ARW",
+      "bytes": 39497728,
+      "mtime_ns": 1778455934500000000
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00068.tif",
+      "bytes": 392919540,
+      "mtime_ns": 1778456275118288500
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00094.ARW",
+      "bytes": 39096320,
+      "mtime_ns": 1778455964700000000
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00094.tif",
+      "bytes": 392917640,
+      "mtime_ns": 1778456269022109700
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00120.ARW",
+      "bytes": 38969344,
+      "mtime_ns": 1778455994150000000
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00120.tif",
+      "bytes": 392916884,
+      "mtime_ns": 1778456263776051100
+    }
+  ],
+  "secondary_caller_commit": "052697263a1eb35a05426b3ab2b454c62da25d06",
+  "secondary_manifest": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m61-ptc-high-iso\\decode-check\\Cargo.toml",
+    "sha256": "e38021d08d108706c7e5ec094fa0f61003ce25a19608ac0923c246d12ab91a57",
+    "bytes": 215
+  },
+  "secondary_scope": "Existing held executable, not rebuilt. Current caller binding is descriptive; exact independent ROI equality admits decoded samples.",
+  "limits": {
+    "per_child_wall_seconds": 60,
+    "per_child_cpu_seconds": 60,
+    "per_child_commit_bytes": 1073741824,
+    "aggregate_cpu_seconds": 120,
+    "retained_output_bytes": 67108864
+  }
+}

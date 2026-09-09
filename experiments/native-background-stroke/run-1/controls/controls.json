@@ -1,0 +1,215 @@
+{
+  "sources": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-stroke\\inspect.py",
+      "bytes": 13091,
+      "sha256": "dc98cdb7fda9a6fb7c668e45827042726011373e2105a44776c5ac972ae0c47e"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-stroke\\sampler.py",
+      "bytes": 2746,
+      "sha256": "091f69688d3f590d6429d62d127747b373078a8ef0ec20a90690bbe2781b0f3d"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-stroke\\independent-controls.py",
+      "bytes": 8314,
+      "sha256": "ac971b14e3a30e085330b0b93bdbffc11be4ea994fbef7e4785648e9d975b7d8"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-PHASE0-PHASE\\src\\clib.py",
+      "bytes": 9274,
+      "sha256": "95d557d38855d720322d96edd57c2b654f6b8ea1af49fabb66df08ad5d93e0d2"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-stroke\\charter.md",
+      "bytes": 3542,
+      "sha256": "b2c502f44114e0b089e75ae7ba91b6510ca1aa4550a17d45e7c8b1adfbc18dfc"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-stroke\\design.md",
+      "bytes": 5437,
+      "sha256": "3d0766758e4ede7970eebfdaa0bfeb61ebfce0abd75588cc331ad25ad7e3e5e3"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-product-comparison\\next-rois.json",
+      "bytes": 1086,
+      "sha256": "866ee6ecfd166dcf6d3cd34caf96e8e5eca20c3d104f494da08b2e82a6c52b19"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-PHASE0-PHASE\\out\\canon\\coffee-bean.warpmap.txt",
+      "bytes": 14591,
+      "sha256": "b21b247944c257ab0fd3c767c879b9abf4a5fb1112dded97c87990a7d537274c"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-product-comparison\\run-1\\plan.json",
+      "bytes": 41616,
+      "sha256": "e5acdda4c6aa75e52225d843efd0008f91795444f43e846cb635645da1ac8643"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m61-ptc-high-iso\\decode-check\\target\\release\\m61-decode-check.exe",
+      "bytes": 6846976,
+      "sha256": "ecf20e1b1e639fc3b86fe82d26a3e3ca02fd326549aa6353e80ad4480682d89d"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m61-ptc-high-iso\\decode-check\\src\\main.rs",
+      "bytes": 2815,
+      "sha256": "62343abc6f479353a198d73762991ea4f0b5de71274fa546e875a3aa27805fcb"
+    }
+  ],
+  "result": {
+    "status": "PASS",
+    "scope": "arithmetic controls only; no real alignment truth or calibration",
+    "indices": [
+      0,
+      26,
+      52,
+      78,
+      104
+    ],
+    "literal_comparisons": 80,
+    "maximum_affine_error_dn": 0.000244140625,
+    "maximum_storage_origin_error_dn": 0.0,
+    "omitted_output_origin_destroyer_dn": 56.5,
+    "plants": [
+      {
+        "plant": "scene",
+        "phase": [
+          1,
+          0
+        ],
+        "preferred": "scene",
+        "sensor_residual": [
+          1.8698197923008213,
+          1.5374368241990166,
+          1.410607563189,
+          1.905502398713064
+        ],
+        "scene_residual": [
+          2.943769383850344e-05,
+          3.483932760428876e-05,
+          4.901583921840522e-05,
+          1.3154707832579797e-05
+        ],
+        "inverse_residual": [
+          1.2494813594591516,
+          1.8327085203891778,
+          1.9110496501738,
+          1.8576261490508368
+        ]
+      },
+      {
+        "plant": "scene",
+        "phase": [
+          0,
+          1
+        ],
+        "preferred": "scene",
+        "sensor_residual": [
+          1.8743375448034463,
+          1.5374448779033445,
+          1.4106091752104037,
+          1.9055015516497906
+        ],
+        "scene_residual": [
+          2.943776593971696e-05,
+          3.4839559530295946e-05,
+          4.9015391181704803e-05,
+          1.3155788262943654e-05
+        ],
+        "inverse_residual": [
+          1.249762842036057,
+          1.849551643765032,
+          1.9108908928391248,
+          1.8454507856357023
+        ]
+      },
+      {
+        "plant": "sensor",
+        "phase": [
+          1,
+          0
+        ],
+        "preferred": "sensor",
+        "sensor_residual": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "scene_residual": [
+          1.803314668074049,
+          1.4844098443651805,
+          1.4421614768767168,
+          1.9619262709849337
+        ],
+        "inverse_residual": [
+          1.8620711015582014,
+          1.5307933327003664,
+          1.4039684379914155,
+          1.9021373104261547
+        ]
+      },
+      {
+        "plant": "sensor",
+        "phase": [
+          0,
+          1
+        ],
+        "preferred": "sensor",
+        "sensor_residual": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "scene_residual": [
+          1.8033134795366625,
+          1.4844111743427544,
+          1.4421650574715985,
+          1.9661985699729885
+        ],
+        "inverse_residual": [
+          1.8665642783400591,
+          1.5308012280211731,
+          1.4039699252661537,
+          1.9021362194829448
+        ]
+      }
+    ],
+    "nulls": [
+      {
+        "field": "uniform",
+        "phase": [
+          1,
+          0
+        ],
+        "decision": "ambiguous"
+      },
+      {
+        "field": "uniform",
+        "phase": [
+          0,
+          1
+        ],
+        "decision": "ambiguous"
+      },
+      {
+        "field": "infinite-horizontal",
+        "phase": [
+          1,
+          0
+        ],
+        "decision": "ambiguous"
+      },
+      {
+        "field": "infinite-horizontal",
+        "phase": [
+          0,
+          1
+        ],
+        "decision": "ambiguous"
+      }
+    ],
+    "rule": "both-axis finite structure; every nonreference rung correct residual <=0.0025 and <=one tenth competing residual; nulls refuse"
+  }
+}

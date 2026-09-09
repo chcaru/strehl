@@ -1,0 +1,147 @@
+{
+  "index": 0,
+  "sources": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-stroke\\inspect.py",
+      "bytes": 13091,
+      "sha256": "dc98cdb7fda9a6fb7c668e45827042726011373e2105a44776c5ac972ae0c47e"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-stroke\\sampler.py",
+      "bytes": 2746,
+      "sha256": "091f69688d3f590d6429d62d127747b373078a8ef0ec20a90690bbe2781b0f3d"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-stroke\\independent-controls.py",
+      "bytes": 8314,
+      "sha256": "ac971b14e3a30e085330b0b93bdbffc11be4ea994fbef7e4785648e9d975b7d8"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-PHASE0-PHASE\\src\\clib.py",
+      "bytes": 9274,
+      "sha256": "95d557d38855d720322d96edd57c2b654f6b8ea1af49fabb66df08ad5d93e0d2"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-stroke\\charter.md",
+      "bytes": 3542,
+      "sha256": "b2c502f44114e0b089e75ae7ba91b6510ca1aa4550a17d45e7c8b1adfbc18dfc"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-stroke\\design.md",
+      "bytes": 5437,
+      "sha256": "3d0766758e4ede7970eebfdaa0bfeb61ebfce0abd75588cc331ad25ad7e3e5e3"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-product-comparison\\next-rois.json",
+      "bytes": 1086,
+      "sha256": "866ee6ecfd166dcf6d3cd34caf96e8e5eca20c3d104f494da08b2e82a6c52b19"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-PHASE0-PHASE\\out\\canon\\coffee-bean.warpmap.txt",
+      "bytes": 14591,
+      "sha256": "b21b247944c257ab0fd3c767c879b9abf4a5fb1112dded97c87990a7d537274c"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-product-comparison\\run-1\\plan.json",
+      "bytes": 41616,
+      "sha256": "e5acdda4c6aa75e52225d843efd0008f91795444f43e846cb635645da1ac8643"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m61-ptc-high-iso\\decode-check\\target\\release\\m61-decode-check.exe",
+      "bytes": 6846976,
+      "sha256": "ecf20e1b1e639fc3b86fe82d26a3e3ca02fd326549aa6353e80ad4480682d89d"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m61-ptc-high-iso\\decode-check\\src\\main.rs",
+      "bytes": 2815,
+      "sha256": "62343abc6f479353a198d73762991ea4f0b5de71274fa546e875a3aa27805fcb"
+    }
+  ],
+  "raw_input": {
+    "path": "D:\\personal\\macro\\coffee-bean\\DSC00016.ARW",
+    "bytes": 39030784,
+    "sha256": "35ccc60a2cadbcdc999fb6765a326f5baaa298776fb951d12287e05c5892ed36"
+  },
+  "original_metadata": {
+    "path": "D:\\personal\\macro\\coffee-bean\\DSC00016.ARW",
+    "bytes": 39030784,
+    "mtime_ns": 1778455869760000000
+  },
+  "raw_roi_xywh": [
+    112,
+    1304,
+    640,
+    456
+  ],
+  "raw": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-stroke\\run-1\\raw-0.npy",
+    "bytes": 583808,
+    "sha256": "6fa25f4742d7e827028a87487c4c106058c30afb19915efe469247e9d7212d7f"
+  },
+  "decoder": {
+    "name": "rawpy/LibRaw",
+    "rawpy": "0.27.0",
+    "libraw": [
+      0,
+      22,
+      1
+    ],
+    "visible_shape": [
+      4688,
+      7028
+    ],
+    "raw_pattern": [
+      [
+        0,
+        1
+      ],
+      [
+        3,
+        2
+      ]
+    ],
+    "color_desc": "RGBG",
+    "black_level_per_channel": [
+      512,
+      512,
+      512,
+      512
+    ],
+    "white_level": 16383,
+    "camera_whitebalance": [
+      2697.0,
+      1024.0,
+      1509.0,
+      1024.0
+    ],
+    "exposure_time_seconds": null,
+    "iso": null,
+    "aperture": null,
+    "exposure_metadata": "unavailable in allocated rawpy interface; no new EXIF read",
+    "sizes": {
+      "raw_height": 5120,
+      "raw_width": 7168,
+      "height": 4688,
+      "width": 7028,
+      "top_margin": 0,
+      "left_margin": 0
+    }
+  },
+  "tiff_original_metadata": {
+    "path": "D:\\edited\\macro\\coffee-bean\\DSC00016.tif",
+    "bytes": 392918428,
+    "mtime_ns": 1778456286733383100
+  },
+  "tiff_roi_xywh": [
+    64,
+    1240,
+    768,
+    576
+  ],
+  "tiff": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-stroke\\run-1\\tiff-0.npy",
+    "bytes": 5308544,
+    "sha256": "9f7efcc0880b656a85f5b5332f287ad26d2e7a8208b258e926dac7ebb9503915"
+  },
+  "tiff_interpretation": "unregistered supplementary Linear Rec.2020 Lightroom ROI; no RAW pixel equivalence"
+}

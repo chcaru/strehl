@@ -1,0 +1,327 @@
+{
+  "sources": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-stroke\\inspect.py",
+      "bytes": 13091,
+      "sha256": "dc98cdb7fda9a6fb7c668e45827042726011373e2105a44776c5ac972ae0c47e"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-stroke\\sampler.py",
+      "bytes": 2746,
+      "sha256": "091f69688d3f590d6429d62d127747b373078a8ef0ec20a90690bbe2781b0f3d"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-stroke\\independent-controls.py",
+      "bytes": 8314,
+      "sha256": "ac971b14e3a30e085330b0b93bdbffc11be4ea994fbef7e4785648e9d975b7d8"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-PHASE0-PHASE\\src\\clib.py",
+      "bytes": 9274,
+      "sha256": "95d557d38855d720322d96edd57c2b654f6b8ea1af49fabb66df08ad5d93e0d2"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-stroke\\charter.md",
+      "bytes": 3542,
+      "sha256": "b2c502f44114e0b089e75ae7ba91b6510ca1aa4550a17d45e7c8b1adfbc18dfc"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-stroke\\design.md",
+      "bytes": 5437,
+      "sha256": "3d0766758e4ede7970eebfdaa0bfeb61ebfce0abd75588cc331ad25ad7e3e5e3"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-product-comparison\\next-rois.json",
+      "bytes": 1086,
+      "sha256": "866ee6ecfd166dcf6d3cd34caf96e8e5eca20c3d104f494da08b2e82a6c52b19"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-PHASE0-PHASE\\out\\canon\\coffee-bean.warpmap.txt",
+      "bytes": 14591,
+      "sha256": "b21b247944c257ab0fd3c767c879b9abf4a5fb1112dded97c87990a7d537274c"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-product-comparison\\run-1\\plan.json",
+      "bytes": 41616,
+      "sha256": "e5acdda4c6aa75e52225d843efd0008f91795444f43e846cb635645da1ac8643"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m61-ptc-high-iso\\decode-check\\target\\release\\m61-decode-check.exe",
+      "bytes": 6846976,
+      "sha256": "ecf20e1b1e639fc3b86fe82d26a3e3ca02fd326549aa6353e80ad4480682d89d"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m61-ptc-high-iso\\decode-check\\src\\main.rs",
+      "bytes": 2815,
+      "sha256": "62343abc6f479353a198d73762991ea4f0b5de71274fa546e875a3aa27805fcb"
+    }
+  ],
+  "rows": [
+    {
+      "index": 0,
+      "primary": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-stroke\\run-1\\raw-0.npy",
+        "bytes": 583808,
+        "sha256": "6fa25f4742d7e827028a87487c4c106058c30afb19915efe469247e9d7212d7f"
+      },
+      "secondary": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-stroke\\run-1\\secondary\\rawler-frame-0.bin",
+        "bytes": 583696,
+        "sha256": "db823cc6a973323855d329a1e474a7d159c14caa6dcc11a8cac33391e7d7c690"
+      },
+      "different_sensels": 0,
+      "max_abs_dn": 0,
+      "phases": [
+        {
+          "phase": [
+            0,
+            0
+          ],
+          "values": 72960,
+          "primary_u16_sha256": "cadce9c9379e7248cc2b765af3347aa2586efc8f7eccba019d34afb396c60948",
+          "secondary_u16_sha256": "cadce9c9379e7248cc2b765af3347aa2586efc8f7eccba019d34afb396c60948"
+        },
+        {
+          "phase": [
+            1,
+            0
+          ],
+          "values": 72960,
+          "primary_u16_sha256": "ba61baf2ee24081aba80758c47ea9a9f5405d6b3e673adfd6e977e15b96299fe",
+          "secondary_u16_sha256": "ba61baf2ee24081aba80758c47ea9a9f5405d6b3e673adfd6e977e15b96299fe"
+        },
+        {
+          "phase": [
+            0,
+            1
+          ],
+          "values": 72960,
+          "primary_u16_sha256": "8596036f7fc6ed19b8024572d93c1a966987dce666492b4a61dc80dc62ac1f5e",
+          "secondary_u16_sha256": "8596036f7fc6ed19b8024572d93c1a966987dce666492b4a61dc80dc62ac1f5e"
+        },
+        {
+          "phase": [
+            1,
+            1
+          ],
+          "values": 72960,
+          "primary_u16_sha256": "0570895b09833be0867d51ba0bba0e480c645039923492d99db9b432a3797288",
+          "secondary_u16_sha256": "0570895b09833be0867d51ba0bba0e480c645039923492d99db9b432a3797288"
+        }
+      ]
+    },
+    {
+      "index": 26,
+      "primary": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-stroke\\run-1\\raw-26.npy",
+        "bytes": 583808,
+        "sha256": "682351c3ba08b107d7a18c8c024e4f70174fdc5067c89403a7d709ce0925672e"
+      },
+      "secondary": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-stroke\\run-1\\secondary\\rawler-frame-26.bin",
+        "bytes": 583696,
+        "sha256": "ada6484c58a7e4c7f761dd13a0ae4ea904639db1e94d161ca7a423d463289a90"
+      },
+      "different_sensels": 0,
+      "max_abs_dn": 0,
+      "phases": [
+        {
+          "phase": [
+            0,
+            0
+          ],
+          "values": 72960,
+          "primary_u16_sha256": "9962375d3341e6b921716a7a0b06ca8355176ea555ee5b3d7c1d7678d95e3699",
+          "secondary_u16_sha256": "9962375d3341e6b921716a7a0b06ca8355176ea555ee5b3d7c1d7678d95e3699"
+        },
+        {
+          "phase": [
+            1,
+            0
+          ],
+          "values": 72960,
+          "primary_u16_sha256": "8b9e357f35358e0c69bedce57d694b66e43877b8d2b3dfa0b13c59086dead187",
+          "secondary_u16_sha256": "8b9e357f35358e0c69bedce57d694b66e43877b8d2b3dfa0b13c59086dead187"
+        },
+        {
+          "phase": [
+            0,
+            1
+          ],
+          "values": 72960,
+          "primary_u16_sha256": "39ba5d427059fca30a4556d53145f3b5fc63df213dfa87ca9911d333a598e8e3",
+          "secondary_u16_sha256": "39ba5d427059fca30a4556d53145f3b5fc63df213dfa87ca9911d333a598e8e3"
+        },
+        {
+          "phase": [
+            1,
+            1
+          ],
+          "values": 72960,
+          "primary_u16_sha256": "c58817df3f8a50df33cd5256386886363e31685cabc71dfd76e76d430a854039",
+          "secondary_u16_sha256": "c58817df3f8a50df33cd5256386886363e31685cabc71dfd76e76d430a854039"
+        }
+      ]
+    },
+    {
+      "index": 52,
+      "primary": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-stroke\\run-1\\raw-52.npy",
+        "bytes": 583808,
+        "sha256": "506e754734bcf94a73907e982f0590e88323b4e085a9e85b1beeffbf3250cc5f"
+      },
+      "secondary": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-stroke\\run-1\\secondary\\rawler-frame-52.bin",
+        "bytes": 583696,
+        "sha256": "a3889bdf16144ef123445243d005d2c33ea85a972e155d432ad47787e4c0f6cb"
+      },
+      "different_sensels": 0,
+      "max_abs_dn": 0,
+      "phases": [
+        {
+          "phase": [
+            0,
+            0
+          ],
+          "values": 72960,
+          "primary_u16_sha256": "4018254e637b2eafa7936f2e81b92d0ad72b3be484cf76709b7333b3ea88b035",
+          "secondary_u16_sha256": "4018254e637b2eafa7936f2e81b92d0ad72b3be484cf76709b7333b3ea88b035"
+        },
+        {
+          "phase": [
+            1,
+            0
+          ],
+          "values": 72960,
+          "primary_u16_sha256": "294b3ebb83ccd410ccb32047c4624a1910783a4ecdc90c84ca67cf1e5b34e46d",
+          "secondary_u16_sha256": "294b3ebb83ccd410ccb32047c4624a1910783a4ecdc90c84ca67cf1e5b34e46d"
+        },
+        {
+          "phase": [
+            0,
+            1
+          ],
+          "values": 72960,
+          "primary_u16_sha256": "8aa6920f3cce2718ad3706da8856b96819129d37d9bfe390ec0bd5ffd853c7c1",
+          "secondary_u16_sha256": "8aa6920f3cce2718ad3706da8856b96819129d37d9bfe390ec0bd5ffd853c7c1"
+        },
+        {
+          "phase": [
+            1,
+            1
+          ],
+          "values": 72960,
+          "primary_u16_sha256": "bf2b2839026dfc770f8a7adada26ad50e3f7576fc309dd0460d80e4a3c456e32",
+          "secondary_u16_sha256": "bf2b2839026dfc770f8a7adada26ad50e3f7576fc309dd0460d80e4a3c456e32"
+        }
+      ]
+    },
+    {
+      "index": 78,
+      "primary": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-stroke\\run-1\\raw-78.npy",
+        "bytes": 583808,
+        "sha256": "c242264a289a1ed2e7d107d38ce5b6a90cc6010d22e77b9df49e30f56385b755"
+      },
+      "secondary": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-stroke\\run-1\\secondary\\rawler-frame-78.bin",
+        "bytes": 583696,
+        "sha256": "fef3e92fcdc6a1d91f0828cf0db55c11a5acc919df74bffde492eb06dcc5219f"
+      },
+      "different_sensels": 0,
+      "max_abs_dn": 0,
+      "phases": [
+        {
+          "phase": [
+            0,
+            0
+          ],
+          "values": 72960,
+          "primary_u16_sha256": "4ca470a25deaeab8f6173277e0d905d4e7603d77848d7d34b9edc688f3bc6e74",
+          "secondary_u16_sha256": "4ca470a25deaeab8f6173277e0d905d4e7603d77848d7d34b9edc688f3bc6e74"
+        },
+        {
+          "phase": [
+            1,
+            0
+          ],
+          "values": 72960,
+          "primary_u16_sha256": "ab23a59af6f51d09bf60e009958ce023f8ee8f7f7e04a5df1bc4767b854aba3c",
+          "secondary_u16_sha256": "ab23a59af6f51d09bf60e009958ce023f8ee8f7f7e04a5df1bc4767b854aba3c"
+        },
+        {
+          "phase": [
+            0,
+            1
+          ],
+          "values": 72960,
+          "primary_u16_sha256": "132ab5e4ef7ef42393831269ab1826bb9fa4ae079092055f12a3be798edd2935",
+          "secondary_u16_sha256": "132ab5e4ef7ef42393831269ab1826bb9fa4ae079092055f12a3be798edd2935"
+        },
+        {
+          "phase": [
+            1,
+            1
+          ],
+          "values": 72960,
+          "primary_u16_sha256": "974e243acd8ab54da2a5a3c251ed5dd89409ac0a476a9ad278825a5c28eef7a0",
+          "secondary_u16_sha256": "974e243acd8ab54da2a5a3c251ed5dd89409ac0a476a9ad278825a5c28eef7a0"
+        }
+      ]
+    },
+    {
+      "index": 104,
+      "primary": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-stroke\\run-1\\raw-104.npy",
+        "bytes": 583808,
+        "sha256": "167a1ab729c6408fc64fd291bd3c6c36352e87af76c75e315a01d6d359956535"
+      },
+      "secondary": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-stroke\\run-1\\secondary\\rawler-frame-104.bin",
+        "bytes": 583696,
+        "sha256": "f747ce523b01a0a1220d1cb75b88cc06f3b0a0bd4622720f3b810f6772cf4422"
+      },
+      "different_sensels": 0,
+      "max_abs_dn": 0,
+      "phases": [
+        {
+          "phase": [
+            0,
+            0
+          ],
+          "values": 72960,
+          "primary_u16_sha256": "756b46102947f9392464b8c582067596ffcf38cb139490e4ac682bfd2d306fdd",
+          "secondary_u16_sha256": "756b46102947f9392464b8c582067596ffcf38cb139490e4ac682bfd2d306fdd"
+        },
+        {
+          "phase": [
+            1,
+            0
+          ],
+          "values": 72960,
+          "primary_u16_sha256": "4f28c27d0a2fb357ab1ea7b0101db3331f87951313954c00afbe242c45e1c927",
+          "secondary_u16_sha256": "4f28c27d0a2fb357ab1ea7b0101db3331f87951313954c00afbe242c45e1c927"
+        },
+        {
+          "phase": [
+            0,
+            1
+          ],
+          "values": 72960,
+          "primary_u16_sha256": "bf73be3111ee55bc7cf1ddb4689bc3e53b7f8474e11427152079761c3085b194",
+          "secondary_u16_sha256": "bf73be3111ee55bc7cf1ddb4689bc3e53b7f8474e11427152079761c3085b194"
+        },
+        {
+          "phase": [
+            1,
+            1
+          ],
+          "values": 72960,
+          "primary_u16_sha256": "4a3c9176fb270cd4913f115ee90bab940a171392d22c9cb148598efa0be8c3b4",
+          "secondary_u16_sha256": "4a3c9176fb270cd4913f115ee90bab940a171392d22c9cb148598efa0be8c3b4"
+        }
+      ]
+    }
+  ],
+  "all_identical": true
+}
