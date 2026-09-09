@@ -1,0 +1,22 @@
+
+running 1 test
+test merge_cmd::native_signed_black::tests::signed_cfa_comparison ... 
+wrote           : \\?\C:\dev\blog\death-of-software\projects\strehl\experiments\native-signed-black\comparison-clamped\split-offset.tiff (128 x 96, 16-bit RGB, linear camera-native RGB, Malvar-He-Cutler demosaic)
+                  Full sensor resolution: every CFA site estimated, one focus
+                  decision per quad. Interpolated -- do not measure resolution on it.
+
+wrote           : \\?\C:\dev\blog\death-of-software\projects\strehl\experiments\native-signed-black\comparison-clamped\nonnegative-depth.tiff (128 x 96, 16-bit RGB, linear camera-native RGB, Malvar-He-Cutler demosaic)
+                  Full sensor resolution: every CFA site estimated, one focus
+                  decision per quad. Interpolated -- do not measure resolution on it.
+
+wrote           : \\?\C:\dev\blog\death-of-software\projects\strehl\experiments\native-signed-black\comparison-clamped\noisy-flat.tiff (128 x 96, 16-bit RGB, linear camera-native RGB, Malvar-He-Cutler demosaic)
+                  Full sensor resolution: every CFA site estimated, one focus
+                  decision per quad. Interpolated -- do not measure resolution on it.
+
+wrote           : \\?\C:\dev\blog\death-of-software\projects\strehl\experiments\native-signed-black\comparison-clamped\noisy-depth.tiff (128 x 96, 16-bit RGB, linear camera-native RGB, Malvar-He-Cutler demosaic)
+                  Full sensor resolution: every CFA site estimated, one focus
+                  decision per quad. Interpolated -- do not measure resolution on it.
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 164 filtered out; finished in 0.35s
+

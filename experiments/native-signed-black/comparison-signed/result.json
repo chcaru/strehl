@@ -1,0 +1,952 @@
+{
+  "cases": [
+    {
+      "collapsed": {
+        "bytes": 49152,
+        "count": 12288,
+        "max": 1.0,
+        "mean": 0.5,
+        "min": 0.0,
+        "negative_values": 0,
+        "path": "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-signed-black\\comparison-signed\\split-offset.f32",
+        "sha256": "7d66ab0286661d194e1efbe2054f1b18d2cb865452786f5d19a7dcf2c3943947"
+      },
+      "fixture": {
+        "best_frames": [
+          1,
+          3
+        ],
+        "frames": [
+          {
+            "active_u16_sha256": "e0292b7bfe09f23e78a568916a36311cdadd590e132a85f0ae5b32d364e96267",
+            "blur_squared_error_by_surface": [
+              0,
+              0
+            ],
+            "frame": 0,
+            "hash_layout": "plane-major R G1 G2 B, row-major u16LE, active sites only",
+            "raw_max": 509,
+            "raw_min": 508
+          },
+          {
+            "active_u16_sha256": "5a1f38af716876c8186f41453aab28570db8612d3903d35c1d73ba710dc7656f",
+            "blur_squared_error_by_surface": [
+              0,
+              0
+            ],
+            "frame": 1,
+            "hash_layout": "plane-major R G1 G2 B, row-major u16LE, active sites only",
+            "raw_max": 511,
+            "raw_min": 510
+          },
+          {
+            "active_u16_sha256": "1b9a56ac371f464023e78cbef09d8edec2d0cda2c74af84d6d4bcd4ffeca9958",
+            "blur_squared_error_by_surface": [
+              0,
+              0
+            ],
+            "frame": 2,
+            "hash_layout": "plane-major R G1 G2 B, row-major u16LE, active sites only",
+            "raw_max": 513,
+            "raw_min": 512
+          },
+          {
+            "active_u16_sha256": "dedcc5a326353d53c57400d9856131ea363f3187be516d6f00ec74a8538610a3",
+            "blur_squared_error_by_surface": [
+              0,
+              0
+            ],
+            "frame": 3,
+            "hash_layout": "plane-major R G1 G2 B, row-major u16LE, active sites only",
+            "raw_max": 515,
+            "raw_min": 514
+          },
+          {
+            "active_u16_sha256": "d6521a5c4a2a15ebc40444b8e5a0c71e268c32544962bfc2a1c43d95b60bd228",
+            "blur_squared_error_by_surface": [
+              0,
+              0
+            ],
+            "frame": 4,
+            "hash_layout": "plane-major R G1 G2 B, row-major u16LE, active sites only",
+            "raw_max": 517,
+            "raw_min": 516
+          }
+        ]
+      },
+      "folds": 5,
+      "folds_observed": [
+        {
+          "averaged_fraction": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "beta_prefix": [],
+          "consumed": {
+            "count": 12288,
+            "max": -3.0,
+            "mean": -3.5,
+            "min": -4.0,
+            "negative_values": 12288
+          },
+          "index": 0,
+          "negative_values": 12288,
+          "variance": {
+            "count": 3072,
+            "max": 7.999999523162842,
+            "mean": 7.999999523162842,
+            "min": 7.999999523162842,
+            "negative_values": 0
+          }
+        },
+        {
+          "averaged_fraction": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "beta_prefix": [],
+          "consumed": {
+            "count": 12288,
+            "max": -1.0,
+            "mean": -1.5,
+            "min": -2.0,
+            "negative_values": 12288
+          },
+          "index": 1,
+          "negative_values": 12288,
+          "variance": {
+            "count": 3072,
+            "max": 7.999999523162842,
+            "mean": 7.999999523162842,
+            "min": 7.999999523162842,
+            "negative_values": 0
+          }
+        },
+        {
+          "averaged_fraction": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "beta_prefix": [],
+          "consumed": {
+            "count": 12288,
+            "max": 1.0,
+            "mean": 0.5,
+            "min": 0.0,
+            "negative_values": 0
+          },
+          "index": 2,
+          "negative_values": 0,
+          "variance": {
+            "count": 3072,
+            "max": 8.499999046325684,
+            "mean": 8.249999284744263,
+            "min": 7.999999523162842,
+            "negative_values": 0
+          }
+        },
+        {
+          "averaged_fraction": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "beta_prefix": [],
+          "consumed": {
+            "count": 12288,
+            "max": 3.0,
+            "mean": 2.5,
+            "min": 2.0,
+            "negative_values": 0
+          },
+          "index": 3,
+          "negative_values": 0,
+          "variance": {
+            "count": 3072,
+            "max": 9.5,
+            "mean": 9.25,
+            "min": 9.0,
+            "negative_values": 0
+          }
+        },
+        {
+          "averaged_fraction": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "beta_prefix": [],
+          "consumed": {
+            "count": 12288,
+            "max": 5.0,
+            "mean": 4.5,
+            "min": 4.0,
+            "negative_values": 0
+          },
+          "index": 4,
+          "negative_values": 0,
+          "variance": {
+            "count": 3072,
+            "max": 10.499999046325684,
+            "mean": 10.249999523162842,
+            "min": 10.0,
+            "negative_values": 0
+          }
+        }
+      ],
+      "id": "split-offset",
+      "negative_consumed_values": 24576,
+      "scope": "actual operator/output evidence; independent fidelity scoring required",
+      "source_calls": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "tiff": {
+        "bytes": 74331,
+        "path": "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-signed-black\\comparison-signed\\split-offset.tiff",
+        "sha256": "20d9f880998e603ae743278857e408d546218f852d5458e0eac815f34a075530"
+      }
+    },
+    {
+      "collapsed": {
+        "bytes": 49152,
+        "count": 12288,
+        "max": 87.0,
+        "mean": 70.36597561836243,
+        "min": 65.0,
+        "negative_values": 0,
+        "path": "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-signed-black\\comparison-signed\\nonnegative-depth.f32",
+        "sha256": "842897abd1d7be55f2e2b226337f07770b4044143350d095bb05f0fc6202238d"
+      },
+      "fixture": {
+        "best_frames": [
+          1,
+          3
+        ],
+        "frames": [
+          {
+            "active_u16_sha256": "faf6da91118514cd0a59a56357de549f1d64b185cde6c5c884c23aa71aeeea16",
+            "blur_squared_error_by_surface": [
+              48552,
+              394320
+            ],
+            "frame": 0,
+            "hash_layout": "plane-major R G1 G2 B, row-major u16LE, active sites only",
+            "raw_max": 596,
+            "raw_min": 577
+          },
+          {
+            "active_u16_sha256": "8f7e26a58bb172175da3a11b69e3dbc0b20168c2f0760eb6b05d48ebf51667ac",
+            "blur_squared_error_by_surface": [
+              0,
+              295616
+            ],
+            "frame": 1,
+            "hash_layout": "plane-major R G1 G2 B, row-major u16LE, active sites only",
+            "raw_max": 599,
+            "raw_min": 577
+          },
+          {
+            "active_u16_sha256": "9c4c92f4aa8d902b952920a0d22e73fdf5178639658ce607adb9a9c586c99693",
+            "blur_squared_error_by_surface": [
+              48552,
+              171972
+            ],
+            "frame": 2,
+            "hash_layout": "plane-major R G1 G2 B, row-major u16LE, active sites only",
+            "raw_max": 599,
+            "raw_min": 577
+          },
+          {
+            "active_u16_sha256": "1b70e1fa597759e4f0d134b14efb75e4d022644321272c4d083c4a7eefe3668a",
+            "blur_squared_error_by_surface": [
+              86416,
+              0
+            ],
+            "frame": 3,
+            "hash_layout": "plane-major R G1 G2 B, row-major u16LE, active sites only",
+            "raw_max": 599,
+            "raw_min": 577
+          },
+          {
+            "active_u16_sha256": "fd842e8e05eb2121f170148bf66527ef3c0623cb88ec9c0aed86a13c7d582815",
+            "blur_squared_error_by_surface": [
+              124128,
+              171972
+            ],
+            "frame": 4,
+            "hash_layout": "plane-major R G1 G2 B, row-major u16LE, active sites only",
+            "raw_max": 599,
+            "raw_min": 577
+          }
+        ]
+      },
+      "folds": 5,
+      "folds_observed": [
+        {
+          "averaged_fraction": [
+            1.0,
+            0.90625,
+            1.0
+          ],
+          "beta_prefix": [],
+          "consumed": {
+            "count": 12288,
+            "max": 84.0,
+            "mean": 70.68880208333333,
+            "min": 65.0,
+            "negative_values": 0
+          },
+          "index": 0,
+          "negative_values": 0,
+          "variance": {
+            "count": 3072,
+            "max": 50.0,
+            "mean": 43.344401609152555,
+            "min": 40.500003814697266,
+            "negative_values": 0
+          }
+        },
+        {
+          "averaged_fraction": [
+            1.0,
+            0.66796875,
+            1.0
+          ],
+          "beta_prefix": [],
+          "consumed": {
+            "count": 12288,
+            "max": 87.0,
+            "mean": 70.6796875,
+            "min": 65.0,
+            "negative_values": 0
+          },
+          "index": 1,
+          "negative_values": 0,
+          "variance": {
+            "count": 3072,
+            "max": 51.5,
+            "mean": 43.33984528978666,
+            "min": 40.500003814697266,
+            "negative_values": 0
+          }
+        },
+        {
+          "averaged_fraction": [
+            1.0,
+            0.4661458333333333,
+            1.0
+          ],
+          "beta_prefix": [],
+          "consumed": {
+            "count": 12288,
+            "max": 87.0,
+            "mean": 70.68782552083333,
+            "min": 65.0,
+            "negative_values": 0
+          },
+          "index": 2,
+          "negative_values": 0,
+          "variance": {
+            "count": 3072,
+            "max": 51.5,
+            "mean": 43.343913370122515,
+            "min": 40.500003814697266,
+            "negative_values": 0
+          }
+        },
+        {
+          "averaged_fraction": [
+            0.9518229166666666,
+            0.3893229166666667,
+            1.0
+          ],
+          "beta_prefix": [],
+          "consumed": {
+            "count": 12288,
+            "max": 87.0,
+            "mean": 70.68880208333333,
+            "min": 65.0,
+            "negative_values": 0
+          },
+          "index": 3,
+          "negative_values": 0,
+          "variance": {
+            "count": 3072,
+            "max": 51.5,
+            "mean": 43.3444014005363,
+            "min": 40.500003814697266,
+            "negative_values": 0
+          }
+        },
+        {
+          "averaged_fraction": [
+            0.9518229166666666,
+            0.3893229166666667,
+            1.0
+          ],
+          "beta_prefix": [],
+          "consumed": {
+            "count": 12288,
+            "max": 87.0,
+            "mean": 70.69498697916667,
+            "min": 65.0,
+            "negative_values": 0
+          },
+          "index": 4,
+          "negative_values": 0,
+          "variance": {
+            "count": 3072,
+            "max": 51.5,
+            "mean": 43.34749315182368,
+            "min": 40.500003814697266,
+            "negative_values": 0
+          }
+        }
+      ],
+      "id": "nonnegative-depth",
+      "negative_consumed_values": 0,
+      "scope": "actual operator/output evidence; independent fidelity scoring required",
+      "source_calls": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "tiff": {
+        "bytes": 74331,
+        "path": "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-signed-black\\comparison-signed\\nonnegative-depth.tiff",
+        "sha256": "add04789cb2477540ea516b21af57fab70912642b8fdc452bcc011bcc0e16b4c"
+      }
+    },
+    {
+      "collapsed": {
+        "bytes": 49152,
+        "count": 12288,
+        "max": 4.0,
+        "mean": -0.03036691309368204,
+        "min": -4.0,
+        "negative_values": 1616,
+        "path": "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-signed-black\\comparison-signed\\noisy-flat.f32",
+        "sha256": "5d532229942b0ff06ce51a3362a6667d1d2ce2489960332c86f264bb4b6ee297"
+      },
+      "fixture": {
+        "best_frames": [
+          1,
+          3
+        ],
+        "frames": [
+          {
+            "active_u16_sha256": "94992f31779d215966ac76d19576d0ecd526efa591fabde97d853f0fbe805ed2",
+            "blur_squared_error_by_surface": [
+              0,
+              0
+            ],
+            "frame": 0,
+            "hash_layout": "plane-major R G1 G2 B, row-major u16LE, active sites only",
+            "raw_max": 516,
+            "raw_min": 508
+          },
+          {
+            "active_u16_sha256": "1e4a375e14f2e8799ef8771531272851a7459ee39b728786b8dafd5ab0f65fd8",
+            "blur_squared_error_by_surface": [
+              0,
+              0
+            ],
+            "frame": 1,
+            "hash_layout": "plane-major R G1 G2 B, row-major u16LE, active sites only",
+            "raw_max": 516,
+            "raw_min": 508
+          },
+          {
+            "active_u16_sha256": "9b6b72aeb663b738a44374f2d65d4b316938ddc3531da3d5d6a4dbead49f6731",
+            "blur_squared_error_by_surface": [
+              0,
+              0
+            ],
+            "frame": 2,
+            "hash_layout": "plane-major R G1 G2 B, row-major u16LE, active sites only",
+            "raw_max": 516,
+            "raw_min": 508
+          },
+          {
+            "active_u16_sha256": "ddf28f98b53e28fcc237330cca7258a8c1324eed2d5f28fc65750fbbf04c0a2a",
+            "blur_squared_error_by_surface": [
+              0,
+              0
+            ],
+            "frame": 3,
+            "hash_layout": "plane-major R G1 G2 B, row-major u16LE, active sites only",
+            "raw_max": 516,
+            "raw_min": 508
+          },
+          {
+            "active_u16_sha256": "7c51de247f0943bcdb61765f04119ce5c176435256d2a7dda30ea505815c383e",
+            "blur_squared_error_by_surface": [
+              0,
+              0
+            ],
+            "frame": 4,
+            "hash_layout": "plane-major R G1 G2 B, row-major u16LE, active sites only",
+            "raw_max": 512,
+            "raw_min": 512
+          }
+        ]
+      },
+      "folds": 5,
+      "folds_observed": [
+        {
+          "averaged_fraction": [
+            1.0,
+            0.9661458333333334,
+            1.0
+          ],
+          "beta_prefix": [],
+          "consumed": {
+            "count": 12288,
+            "max": 4.0,
+            "mean": 0.057291666666666664,
+            "min": -4.0,
+            "negative_values": 6056
+          },
+          "index": 0,
+          "negative_values": 6056,
+          "variance": {
+            "count": 3072,
+            "max": 10.0,
+            "mean": 8.49348922415326,
+            "min": 7.999999523162842,
+            "negative_values": 0
+          }
+        },
+        {
+          "averaged_fraction": [
+            1.0,
+            0.9583333333333334,
+            1.0
+          ],
+          "beta_prefix": [],
+          "consumed": {
+            "count": 12288,
+            "max": 4.0,
+            "mean": -0.057291666666666664,
+            "min": -4.0,
+            "negative_values": 6232
+          },
+          "index": 1,
+          "negative_values": 6232,
+          "variance": {
+            "count": 3072,
+            "max": 10.0,
+            "mean": 8.49804651690647,
+            "min": 7.999999523162842,
+            "negative_values": 0
+          }
+        },
+        {
+          "averaged_fraction": [
+            0.9993489583333334,
+            0.9388020833333334,
+            1.0
+          ],
+          "beta_prefix": [],
+          "consumed": {
+            "count": 12288,
+            "max": 4.0,
+            "mean": 0.009765625,
+            "min": -4.0,
+            "negative_values": 6129
+          },
+          "index": 2,
+          "negative_values": 6129,
+          "variance": {
+            "count": 3072,
+            "max": 10.0,
+            "mean": 8.505207976947228,
+            "min": 7.999999523162842,
+            "negative_values": 0
+          }
+        },
+        {
+          "averaged_fraction": [
+            0.998046875,
+            0.93359375,
+            1.0
+          ],
+          "beta_prefix": [],
+          "consumed": {
+            "count": 12288,
+            "max": 4.0,
+            "mean": -0.009765625,
+            "min": -4.0,
+            "negative_values": 6159
+          },
+          "index": 3,
+          "negative_values": 6159,
+          "variance": {
+            "count": 3072,
+            "max": 10.0,
+            "mean": 8.500650684194019,
+            "min": 7.999999523162842,
+            "negative_values": 0
+          }
+        },
+        {
+          "averaged_fraction": [
+            0.998046875,
+            0.93359375,
+            1.0
+          ],
+          "beta_prefix": [],
+          "consumed": {
+            "count": 12288,
+            "max": 0.0,
+            "mean": 0.0,
+            "min": 0.0,
+            "negative_values": 0
+          },
+          "index": 4,
+          "negative_values": 0,
+          "variance": {
+            "count": 3072,
+            "max": 7.999999523162842,
+            "mean": 7.999999523162842,
+            "min": 7.999999523162842,
+            "negative_values": 0
+          }
+        }
+      ],
+      "id": "noisy-flat",
+      "negative_consumed_values": 24576,
+      "scope": "actual operator/output evidence; independent fidelity scoring required",
+      "source_calls": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "tiff": {
+        "bytes": 74331,
+        "path": "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-signed-black\\comparison-signed\\noisy-flat.tiff",
+        "sha256": "fff85a793690eb9f31d260fc4c75548df7ec9dcd497bc36776959a1b21ae3a76"
+      }
+    },
+    {
+      "collapsed": {
+        "bytes": 49152,
+        "count": 12288,
+        "max": 27.0,
+        "mean": 6.472051383342811,
+        "min": -3.0,
+        "negative_values": 1900,
+        "path": "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-signed-black\\comparison-signed\\noisy-depth.f32",
+        "sha256": "9f8198b6fd4c87d2742cf9d8a28a3d09988c897392e229c3b29eb6b7efe23d8e"
+      },
+      "fixture": {
+        "best_frames": [
+          1,
+          3
+        ],
+        "frames": [
+          {
+            "active_u16_sha256": "ef7908142ba111eab72f650229a864ced8cc37e7e318500d1408de12f5aca569",
+            "blur_squared_error_by_surface": [
+              48552,
+              394320
+            ],
+            "frame": 0,
+            "hash_layout": "plane-major R G1 G2 B, row-major u16LE, active sites only",
+            "raw_max": 536,
+            "raw_min": 509
+          },
+          {
+            "active_u16_sha256": "764cc25b7becee04750b0f58182ab615b9a4c8dee71001e888a5e4f9c392dc6a",
+            "blur_squared_error_by_surface": [
+              0,
+              295616
+            ],
+            "frame": 1,
+            "hash_layout": "plane-major R G1 G2 B, row-major u16LE, active sites only",
+            "raw_max": 539,
+            "raw_min": 509
+          },
+          {
+            "active_u16_sha256": "30ebfe03b5322f32fb68bcf0bbbb97791a2abfa99508edb3df50e331ee7e277f",
+            "blur_squared_error_by_surface": [
+              48552,
+              171972
+            ],
+            "frame": 2,
+            "hash_layout": "plane-major R G1 G2 B, row-major u16LE, active sites only",
+            "raw_max": 539,
+            "raw_min": 509
+          },
+          {
+            "active_u16_sha256": "a8b0c9f8b55b010b32dde54b4e0cf312a5dabb15cbdad53c87cd1eb78b9ba2bc",
+            "blur_squared_error_by_surface": [
+              86416,
+              0
+            ],
+            "frame": 3,
+            "hash_layout": "plane-major R G1 G2 B, row-major u16LE, active sites only",
+            "raw_max": 539,
+            "raw_min": 509
+          },
+          {
+            "active_u16_sha256": "0244a8db7ed50bbdf1d9a7b5726914857f9fcc601549027ae207ab39240b7dcf",
+            "blur_squared_error_by_surface": [
+              124128,
+              171972
+            ],
+            "frame": 4,
+            "hash_layout": "plane-major R G1 G2 B, row-major u16LE, active sites only",
+            "raw_max": 535,
+            "raw_min": 513
+          }
+        ]
+      },
+      "folds": 5,
+      "folds_observed": [
+        {
+          "averaged_fraction": [
+            0.9781901041666666,
+            0.53125,
+            1.0
+          ],
+          "beta_prefix": [],
+          "consumed": {
+            "count": 12288,
+            "max": 24.0,
+            "mean": 6.74609375,
+            "min": -3.0,
+            "negative_values": 2601
+          },
+          "index": 0,
+          "negative_values": 2601,
+          "variance": {
+            "count": 3072,
+            "max": 18.5,
+            "mean": 11.45882148683692,
+            "min": 7.999999523162842,
+            "negative_values": 0
+          }
+        },
+        {
+          "averaged_fraction": [
+            0.76171875,
+            0.4401041666666667,
+            1.0
+          ],
+          "beta_prefix": [],
+          "consumed": {
+            "count": 12288,
+            "max": 27.0,
+            "mean": 6.622395833333333,
+            "min": -3.0,
+            "negative_values": 3382
+          },
+          "index": 1,
+          "negative_values": 3382,
+          "variance": {
+            "count": 3072,
+            "max": 21.5,
+            "mean": 11.500325313614061,
+            "min": 7.999999523162842,
+            "negative_values": 0
+          }
+        },
+        {
+          "averaged_fraction": [
+            0.6715494791666666,
+            0.2747395833333333,
+            1.0
+          ],
+          "beta_prefix": [],
+          "consumed": {
+            "count": 12288,
+            "max": 27.0,
+            "mean": 6.697591145833333,
+            "min": -3.0,
+            "negative_values": 2963
+          },
+          "index": 2,
+          "negative_values": 2963,
+          "variance": {
+            "count": 3072,
+            "max": 21.5,
+            "mean": 11.474771892651916,
+            "min": 7.999999523162842,
+            "negative_values": 0
+          }
+        },
+        {
+          "averaged_fraction": [
+            0.4527994791666667,
+            0.2630208333333333,
+            1.0
+          ],
+          "beta_prefix": [],
+          "consumed": {
+            "count": 12288,
+            "max": 27.0,
+            "mean": 6.679036458333333,
+            "min": -3.0,
+            "negative_values": 3528
+          },
+          "index": 3,
+          "negative_values": 3528,
+          "variance": {
+            "count": 3072,
+            "max": 21.5,
+            "mean": 11.45686809408168,
+            "min": 7.999999523162842,
+            "negative_values": 0
+          }
+        },
+        {
+          "averaged_fraction": [
+            0.4527994791666667,
+            0.2630208333333333,
+            1.0
+          ],
+          "beta_prefix": [],
+          "consumed": {
+            "count": 12288,
+            "max": 23.0,
+            "mean": 6.694986979166667,
+            "min": 1.0,
+            "negative_values": 0
+          },
+          "index": 4,
+          "negative_values": 0,
+          "variance": {
+            "count": 3072,
+            "max": 19.499998092651367,
+            "mean": 11.347493340571722,
+            "min": 8.499999046325684,
+            "negative_values": 0
+          }
+        }
+      ],
+      "id": "noisy-depth",
+      "negative_consumed_values": 12474,
+      "scope": "actual operator/output evidence; independent fidelity scoring required",
+      "source_calls": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "tiff": {
+        "bytes": 74331,
+        "path": "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-signed-black\\comparison-signed\\noisy-depth.tiff",
+        "sha256": "24a302ce048e38c10bd2d4600add29123cb423aa34200a29c3d964f6c99eee58"
+      }
+    }
+  ],
+  "cfa_order": [
+    "R",
+    "G1",
+    "G2",
+    "B"
+  ],
+  "configured_bands": 7,
+  "geometry": {
+    "height": 48,
+    "width": 64
+  },
+  "level_sizes": [
+    [
+      64,
+      48
+    ],
+    [
+      32,
+      24
+    ],
+    [
+      16,
+      12
+    ]
+  ],
+  "levels": {
+    "black": 512.0,
+    "white": 15360.0
+  },
+  "noise": {
+    "gain_dn_per_e": 1.0,
+    "iso": 160.0,
+    "read_noise_e": 4.0,
+    "scope": "fixed injected smoke model; deterministic anticorrelated perturbations are not sensor calibration"
+  },
+  "recipe": {
+    "best_frames": [
+      1,
+      3
+    ],
+    "blur": "each full surface first; radius=abs(frame-best); clamp-edge square box; (sum+count/2)/count integer rounding; then compose atx32",
+    "flat_y": [
+      0,
+      20
+    ],
+    "left": "1+12*((x/4+y/4)%2); y<20 overrides to1",
+    "mask_coordinates": "half-open [x0,x1,y0,y1] on CFA plane grid",
+    "noisy_depth": "blurred composite plus perturbation",
+    "noisy_flat": "zero plus perturbation",
+    "nonnegative_depth": "blurred composite plus64; no perturbation",
+    "perturbation": "[s,-s,t,-t,0], each sign +/-4; exact wrapping-u32 sign() in source, x/y/CFA/phase domains",
+    "producer_masks": {
+      "boundary": [
+        [
+          28,
+          36,
+          8,
+          40
+        ]
+      ],
+      "flat": [
+        [
+          8,
+          24,
+          8,
+          16
+        ],
+        [
+          40,
+          56,
+          8,
+          16
+        ]
+      ],
+      "texture": [
+        [
+          8,
+          24,
+          24,
+          40
+        ],
+        [
+          40,
+          56,
+          24,
+          40
+        ]
+      ]
+    },
+    "right": "3+20*((x/5+y/3)%2); y<20 overrides to3",
+    "scope": "two-surface software plant; no physical occlusion, noise calibration or SOTA claim",
+    "split_offset": "left0/right1 plus frame offsets[-4,-2,0,2,4]",
+    "split_x": 32
+  },
+  "schema": "native-signed-black-comparison-v1",
+  "signed": true
+}

@@ -1,0 +1,21 @@
+{
+  "command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-signed-black\\build-2\\cli-tests.exe",
+    "merge_cmd::native_signed_black::tests::signed_cfa_comparison",
+    "--exact",
+    "--ignored",
+    "--nocapture",
+    "--test-threads=1"
+  ],
+  "environment_overrides": {
+    "RAYON_NUM_THREADS": "4",
+    "STREHL_SIGNED_BLACK": "1"
+  },
+  "removed_environment": [],
+  "executable": {
+    "path": "experiments\\native-signed-black\\build-2\\cli-tests.exe",
+    "bytes": 29857792,
+    "sha256": "7cff94ea62eeb0436c5846eb8df683c1933db0aa75d4cd7358539cbc9af80dd9"
+  },
+  "revision": "5694161b84579f94526d1dd9615dd966bb011bf1"
+}
