@@ -72,6 +72,10 @@ use crate::image_out;
 pub(crate) mod dump;
 pub(crate) mod gatefloor;
 pub(crate) mod halo;
+#[cfg(feature = "native-boundary-radiance")]
+pub(crate) mod native_boundary_radiance {
+    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/native-boundary-radiance/implementation.rs"));
+}
 #[cfg(feature = "native-pyramid-profile")]
 mod native_pyramid_profile {
     include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/native-pyramid-profile/implementation.rs"));

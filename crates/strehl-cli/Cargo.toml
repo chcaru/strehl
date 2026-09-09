@@ -40,3 +40,6 @@ native-signed-black = []
 
 # Opt-in wall-time observation of the current native pyramid consumer.
 native-pyramid-profile = []
+
+# Oracle-geometry local affine boundary prototype; disabled in normal builds.
+native-boundary-radiance = []
