@@ -72,6 +72,10 @@ use crate::image_out;
 pub(crate) mod dump;
 pub(crate) mod gatefloor;
 pub(crate) mod halo;
+#[cfg(feature = "native-signed-black")]
+mod native_signed_black {
+    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/native-signed-black/implementation.rs"));
+}
 #[cfg(test)]
 #[path = "merge_cmd/production-truth.rs"]
 mod production_truth;
@@ -4684,6 +4688,9 @@ fn extract_planes(
         "Crop rectangle exceeds the decoded active area"
     );
 
+    #[cfg(feature = "native-signed-black")]
+    let signed_black = native_signed_black::enabled()?;
+
     planes
         .par_iter_mut()
         .zip(offsets.par_iter().copied())
@@ -4697,7 +4704,15 @@ fn extract_planes(
                         + 2 * domain.rect.x
                         + dx;
                     for (local_x, value) in dst.iter_mut().enumerate() {
-                        *value = (f32::from(data[row + 2 * local_x]) - black).max(0.0);
+                        #[cfg(not(feature = "native-signed-black"))]
+                        {
+                            *value = (f32::from(data[row + 2 * local_x]) - black).max(0.0);
+                        }
+                        #[cfg(feature = "native-signed-black")]
+                        {
+                            let sample = f32::from(data[row + 2 * local_x]) - black;
+                            *value = if signed_black { sample } else { sample.max(0.0) };
+                        }
                     }
                 });
         });

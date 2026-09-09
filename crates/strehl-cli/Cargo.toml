@@ -35,3 +35,5 @@ sha2 = "=0.11.0"
 # Explicit experiment-only consumer hook; disabled in normal builds.
 m194h-pedestal-causality = ["strehl-core/m194h-pedestal-causality"]
 native-sensor-transfer = ["strehl-core/native-sensor-transfer"]
+# Development opt-in; extraction remains clamped unless explicitly enabled.
+native-signed-black = []
