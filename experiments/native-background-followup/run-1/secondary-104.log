@@ -1,0 +1,11 @@
+file      : D:\personal\macro\coffee-bean\DSC00120.ARW
+camera    : ILCE-7CM2
+stride    : 7168
+buffer h  : 5120
+active    : 7032x4688 at (0,0)
+levels    : black 512 white 15360
+plane R(even,even)  : n 8241504 mean 3039.2585
+plane G1(even,odd)  : n 8241504 mean 7182.7676
+plane G2(odd,even)  : n 8241504 mean 7176.8847
+plane B(odd,odd)    : n 8241504 mean 4959.6392
+wrote     : C:\dev\blog\death-of-software\projects\strehl\experiments\native-background-followup\run-1\secondary\rawler-frame-104.bin

@@ -817,45 +817,29 @@ impl DefectRequest {
 
 /// Read the defect-map configuration from the environment.
 ///
-/// # Why this is OFF by default, and what would move it
+/// # Default and measured limits
 ///
-/// **It is off because two lanes hunting the same mote disagree by 17x and the
-/// contradiction is unadjudicated.** BUILD-DEFECT reads mote 2 at
-/// `(3434, 2305)` at **-13.28%**; a second lane hunting independently reads
-/// **-0.78%** at 1:1 on 14 of 26 flat-and-bright masters and shipped its
-/// artifact labelled `NOT-REPRODUCED`. At least one of those numbers is wrong,
-/// and a default-on corrector is the wrong place to find out which.
+/// The corrector is experimental and remains off by default. The former reason
+/// given here -- an unresolved 17x disagreement about mote 2 -- was adjudicated
+/// by `docs/research/V-MOTE.md`. The reports had compared different subjects
+/// and statistics. That disagreement is not a remaining blocker.
 ///
-/// The most likely explanation is arithmetic rather than physical: **three
-/// coordinate pairs are in circulation for one mote** -- `(3434, 2305)`,
-/// `(7008, 4450)` and `6776_4322` -- and they do not reconcile by any single
-/// factor of two. See `docs/research/BUILD-DEFECT.md` for what each one is.
-/// Until they do, the honest position is that the *location* is disputed even
-/// though the *design* is not.
+/// Current noise propagation is a separate limitation: correction multiplies
+/// original sensels by a spatial gain, but the merge's injected variance and
+/// transfer probe do not carry that gain through reconstruction and gathering.
+/// `experiments/native-stroke-correction/variance-followup.md` traces this path;
+/// `experiments/native-correction-variance/independent-results.md` records the
+/// failed local variance approximation. A visible improvement alone does not
+/// establish the corrector's noise fidelity. V-MOTE also left its render-cache
+/// toggle check open; its historical recommendation is not a current certificate.
 ///
-/// # The design argument for on-by-default, which still stands
+/// [`SiteValidator`] still validates nominated sensor sites on frames from the
+/// current stack before correction. The embedded calibration is specific to a
+/// body model and a measurement date, not a sensor serial number; matching the
+/// model alone cannot establish that its marks remain. Validation has no bypass.
 ///
-/// It was briefly on. An adversarial audit of all 26 delivered masters had
-/// measured what shipping it off cost -- mote 2 in **18 of 26** images, worst
-/// reading **-13.28%**, *visible unstretched* as a soft grey disc about 45 px
-/// across on near-white -- and the objection it had to clear was staleness: a
-/// dust map is a statement about the sensor **on a particular date**, so if the
-/// owner cleans the sensor a default-on map brightens a spot where nothing is
-/// wrong and **manufactures the exact defect it was built to remove**.
-///
-/// [`SiteValidator`] answers that structurally rather than by caution: the map
-/// nominates a location and the correction must **observe the darkening in the
-/// frames in front of it** before touching them. A stale map cannot manufacture
-/// a defect it is required to measure first. MEASURED, on five simulated
-/// cleaned-sensor cases, the check skipped **5 of 5**, declining a correction
-/// that would have planted a **+8.64% to +16.44%** bright spot; and MEASURED on
-/// the real corpus it skips **9 of 26** stacks outright (§12.9).
-///
-/// **That guard is exactly what makes a wrong coordinate survivable rather than
-/// catastrophic** -- a corrector that reads its amplitude from the frames has a
-/// natural zero when the frames show nothing. It is not, however, a reason to
-/// default on while the coordinate is in dispute: the guard bounds the damage,
-/// it does not adjudicate the disagreement.
+/// A supplied sidecar replaces the embedded map; it does not add to it. In
+/// particular, a custom map for one mark leaves other embedded nominations out.
 ///
 /// - `STREHL_DEFECT=on` — apply the correction. **Off is the default**; a typo
 ///   is an error, not a silent fallback, because `STREHL_DEFECT=1` quietly

@@ -1,0 +1,82 @@
+{
+  "revision": "7f5b746c99da9b49e954965cdfb899b964155045",
+  "sources": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-followup\\inspect.py",
+      "sha256": "23c07b674e9f89ec548b5c961a07de98211bb7475ac85b602b1e7131afaf0fb7",
+      "bytes": 8278
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-followup\\run.py",
+      "sha256": "d61c6c5b3e5bdea54ee074f828a9b9163751fde43ab58f12cb0d1bf473282510",
+      "bytes": 3933
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-followup\\charter.md",
+      "sha256": "7dfcfdfa216ba7c55b2a9ba403583a73033f66a0eadba1022472bd8e2ac0a844",
+      "bytes": 2429
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-followup\\independent-review.md",
+      "sha256": "7c4a3a5ae258687a9d6212bbf1aa04308948a15637773c645fe43f7908f83790",
+      "bytes": 3038
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-stroke\\inspect.py",
+      "sha256": "dc98cdb7fda9a6fb7c668e45827042726011373e2105a44776c5ac972ae0c47e",
+      "bytes": 13091
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-stroke\\sampler.py",
+      "sha256": "091f69688d3f590d6429d62d127747b373078a8ef0ec20a90690bbe2781b0f3d",
+      "bytes": 2746
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-PHASE0-PHASE\\src\\clib.py",
+      "sha256": "95d557d38855d720322d96edd57c2b654f6b8ea1af49fabb66df08ad5d93e0d2",
+      "bytes": 9274
+    }
+  ],
+  "inputs": [
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00016.ARW",
+      "bytes": 39030784,
+      "mtime_ns": 1778455869760000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00120.ARW",
+      "bytes": 38969344,
+      "mtime_ns": 1778455994150000000
+    }
+  ],
+  "python": {
+    "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "sha256": "4d6f5f81a4bca11191c4c7c6b43632694d0a4ce74e068619d8fdc161d469859a",
+    "bytes": 104952
+  },
+  "secondary_executable": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m61-ptc-high-iso\\decode-check\\target\\release\\m61-decode-check.exe",
+    "sha256": "ecf20e1b1e639fc3b86fe82d26a3e3ca02fd326549aa6353e80ad4480682d89d",
+    "bytes": 6846976
+  },
+  "helpers": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\m12-harness.py",
+      "sha256": "6cfb408992f37b225f102da4d62ba836f9c5b67c92bdd418ff460987866a1bb9",
+      "bytes": 117908
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\bounded-process.py",
+      "sha256": "47b9f8d848759eba61f055b9fdca1f8ac400f134dcd7636f0e0eaaa955704e0b",
+      "bytes": 12664
+    }
+  ],
+  "limits": {
+    "per_child_wall_seconds": 30,
+    "per_child_cpu_seconds": 30,
+    "per_child_commit_bytes": 1073741824,
+    "aggregate_cpu_seconds": 60,
+    "retained_bytes": 33554432
+  },
+  "scope": "two existing originals only; no new build or render"
+}

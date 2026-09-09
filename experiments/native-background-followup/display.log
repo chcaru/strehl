@@ -1,0 +1,82 @@
+{
+  "target_threshold_counts": [
+    {
+      "index": 0,
+      "gauge": "sensor",
+      "native_bounds": [
+        6310.0,
+        164.0,
+        6506.0,
+        324.0
+      ],
+      "samples": 31360,
+      "at_or_above_product_white15360": 4,
+      "at_or_above_libraw_white16383": 0
+    },
+    {
+      "index": 0,
+      "gauge": "scene_bounding_box",
+      "native_bounds": [
+        6371.918532459487,
+        108.96931633861277,
+        6573.444831431724,
+        273.60370451738345
+      ],
+      "samples": 33330,
+      "at_or_above_product_white15360": 2,
+      "at_or_above_libraw_white16383": 0
+    },
+    {
+      "index": 104,
+      "gauge": "sensor",
+      "native_bounds": [
+        6310.0,
+        164.0,
+        6506.0,
+        324.0
+      ],
+      "samples": 31360,
+      "at_or_above_product_white15360": 0,
+      "at_or_above_libraw_white16383": 0
+    },
+    {
+      "index": 104,
+      "gauge": "scene_bounding_box",
+      "native_bounds": [
+        6256.033698214062,
+        205.54841998409347,
+        6447.367804422525,
+        361.80337590516956
+      ],
+      "samples": 29796,
+      "at_or_above_product_white15360": 0,
+      "at_or_above_libraw_white16383": 0
+    }
+  ],
+  "files": [
+    {
+      "name": "fixed-dn.png",
+      "bytes": 201765,
+      "sha256": "1f228a5facee125633173e561ce68056e199a17e9251bfb15728ad6c0497c1a8",
+      "range_dn": [
+        0.0,
+        14848.0
+      ]
+    },
+    {
+      "name": "pooled-inspection-only.png",
+      "bytes": 399916,
+      "sha256": "f6ddf2d315aed78276dcc73ff8f371505172ae5ca61c6c7c1873f9a5fd3d20ec",
+      "range_dn": [
+        13005.0,
+        14934.0
+      ]
+    },
+    {
+      "name": "white-threshold-masks.png",
+      "bytes": 31269,
+      "sha256": "865a7b5f205db5ed02ce0ff4fcca49408a68ac9d24fa61354783be327b345bbf",
+      "range_dn": null
+    }
+  ]
+}

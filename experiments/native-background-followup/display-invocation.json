@@ -1,0 +1,16 @@
+{
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-I",
+    "-B",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-followup\\display.py"
+  ],
+  "source": {
+    "sha256": "8fdbeb70a0775d78a864e132adc16f67451e60ce9351a38c785c98c0032343d0",
+    "bytes": 4497
+  },
+  "environment_removed": [],
+  "wall_limit": 30,
+  "cpu_limit": 30,
+  "commit_limit": 1073741824
+}

@@ -1,0 +1,18 @@
+{
+  "command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m61-ptc-high-iso\\decode-check\\target\\release\\m61-decode-check.exe",
+    "D:\\personal\\macro\\coffee-bean\\DSC00016.ARW",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-followup\\run-1\\secondary",
+    "frame-0",
+    "0",
+    "6000",
+    "512",
+    "704"
+  ],
+  "overrides": {
+    "OPENBLAS_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "RAYON_NUM_THREADS": "2"
+  },
+  "removed_environment": []
+}

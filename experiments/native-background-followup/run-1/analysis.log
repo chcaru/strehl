@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "C:\dev\blog\death-of-software\projects\strehl\experiments\native-background-followup\inspect.py", line 146, in <module>
+    analyze(args.out)
+  File "C:\dev\blog\death-of-software\projects\strehl\experiments\native-background-followup\inspect.py", line 95, in analyze
+    assert all(r["different_sensels"]==0 and r["clipped_native_white"]==0 for r in comparisons), "decode mismatch or clipped support; no interpretation"
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: decode mismatch or clipped support; no interpretation

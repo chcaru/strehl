@@ -1,0 +1,49 @@
+{
+  "status": "CLOSED_ORIGINAL_GATE_FAILED_SEPARATE_DISPLAY_REVIEWED",
+  "original_metadata_unchanged": true,
+  "original_source_bindings_unchanged": true,
+  "sources": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-followup\\results.md",
+      "bytes": 4295,
+      "sha256": "04f83bca6ccd68ce185e74e2bf11fea5d87ebd8fd269e55f7f547ea148e68add"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-followup\\independent-results.md",
+      "bytes": 2361,
+      "sha256": "c9d4cd458569320db9a70bea77ab704b8542648297d1821528345a08e9c1f8b9"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-followup\\independent-display.md",
+      "bytes": 1714,
+      "sha256": "76a8d8debf6e33f0d5548dfddfb65b658a02f762c378a59e6eac906d2870c66b"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-followup\\display.py",
+      "bytes": 4497,
+      "sha256": "8fdbeb70a0775d78a864e132adc16f67451e60ce9351a38c785c98c0032343d0"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-followup\\display-amendment.md",
+      "bytes": 1251,
+      "sha256": "6e542e8bb5537e956ee636b9260104ce01a4a816da55258e0923f6d2d83e778c"
+    }
+  ],
+  "decode_comparison": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-followup\\run-1\\decode-comparison.json",
+    "bytes": 4091,
+    "sha256": "44d187f25f0bc84c272b776981e1a662720bbf6f82ce17ce1feca39122a1a602"
+  },
+  "display_receipt": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-followup\\view-2\\receipt.json",
+    "bytes": 3597,
+    "sha256": "6b08976fc2cd9265a4b0d5e89cfd5bc46b4649446b38a60d3dca23090c238e16"
+  },
+  "embedded_map": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-core\\src\\defect-map-ILCE-7CM2-dust.txt",
+    "bytes": 23797,
+    "sha256": "a406efd51f806e360e1e51fc1421eca5e3cc912f356ced0693c8477a398853ee"
+  },
+  "no_new_production_render": true,
+  "owned_cpu_seconds": 2.25
+}

@@ -1,0 +1,111 @@
+{
+  "rows": [
+    {
+      "index": 0,
+      "primary": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-followup\\run-1\\raw-0.npy",
+        "bytes": 721024,
+        "sha256": "1e9b6366fd82dc664d1f3429faf4bb593492ca6778996472f4aa47686413b90d"
+      },
+      "secondary": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-followup\\run-1\\secondary\\rawler-frame-0.bin",
+        "bytes": 720912,
+        "sha256": "e6eb57ddcc5d284dc1196cfbec232748d7311fe2a0cdd24abc6081f11b2e564b"
+      },
+      "phases": [
+        {
+          "phase_xy": [
+            0,
+            0
+          ],
+          "different_sensels": 0,
+          "primary_u16_sha256": "4909ea77e5d97ab9a80faab43e97e1adb662ef275cd6f9d1eccedd627425b230",
+          "secondary_u16_sha256": "4909ea77e5d97ab9a80faab43e97e1adb662ef275cd6f9d1eccedd627425b230"
+        },
+        {
+          "phase_xy": [
+            1,
+            0
+          ],
+          "different_sensels": 0,
+          "primary_u16_sha256": "ad724db253b44475bfabdfa2fecca4c9f25097eeb2f5f3609737e214bd7a7264",
+          "secondary_u16_sha256": "ad724db253b44475bfabdfa2fecca4c9f25097eeb2f5f3609737e214bd7a7264"
+        },
+        {
+          "phase_xy": [
+            0,
+            1
+          ],
+          "different_sensels": 0,
+          "primary_u16_sha256": "9993e6c2f1662f77a3d92a535e64f38bf98ccd094e95c91fae3089c00d50573c",
+          "secondary_u16_sha256": "9993e6c2f1662f77a3d92a535e64f38bf98ccd094e95c91fae3089c00d50573c"
+        },
+        {
+          "phase_xy": [
+            1,
+            1
+          ],
+          "different_sensels": 0,
+          "primary_u16_sha256": "0691f16ae955d6e4a1679682235e32a5780430b968ade6a4ae6ccb2a61d6ea1a",
+          "secondary_u16_sha256": "0691f16ae955d6e4a1679682235e32a5780430b968ade6a4ae6ccb2a61d6ea1a"
+        }
+      ],
+      "different_sensels": 0,
+      "clipped_native_white": 22437
+    },
+    {
+      "index": 104,
+      "primary": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-followup\\run-1\\raw-104.npy",
+        "bytes": 721024,
+        "sha256": "0a4585ebd530421077ff7b0a6ff1679afafbcead07108d086baf8cfc13fabfac"
+      },
+      "secondary": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-followup\\run-1\\secondary\\rawler-frame-104.bin",
+        "bytes": 720912,
+        "sha256": "6953a66e6c2c0690115a0cf0ef8fe865d5059d102714fbf2b2db1b3d24ed118d"
+      },
+      "phases": [
+        {
+          "phase_xy": [
+            0,
+            0
+          ],
+          "different_sensels": 0,
+          "primary_u16_sha256": "1bbf946301350e51c3409d3ce46f653b3d79a23bf1256d205f32bab9cbbaf08c",
+          "secondary_u16_sha256": "1bbf946301350e51c3409d3ce46f653b3d79a23bf1256d205f32bab9cbbaf08c"
+        },
+        {
+          "phase_xy": [
+            1,
+            0
+          ],
+          "different_sensels": 0,
+          "primary_u16_sha256": "0164d20a0c59bad667c66c366661161b79a5ea31f0b62a66ee9b76eedae312ad",
+          "secondary_u16_sha256": "0164d20a0c59bad667c66c366661161b79a5ea31f0b62a66ee9b76eedae312ad"
+        },
+        {
+          "phase_xy": [
+            0,
+            1
+          ],
+          "different_sensels": 0,
+          "primary_u16_sha256": "fbf140950400bd56a107d7844b98ff33a7c828a4495cfe19575d736c0bcf64eb",
+          "secondary_u16_sha256": "fbf140950400bd56a107d7844b98ff33a7c828a4495cfe19575d736c0bcf64eb"
+        },
+        {
+          "phase_xy": [
+            1,
+            1
+          ],
+          "different_sensels": 0,
+          "primary_u16_sha256": "00da233f77886299e2dec5598ea92663908853d3a50ef4bd7b4cf52e0f346411",
+          "secondary_u16_sha256": "00da233f77886299e2dec5598ea92663908853d3a50ef4bd7b4cf52e0f346411"
+        }
+      ],
+      "different_sensels": 0,
+      "clipped_native_white": 0
+    }
+  ],
+  "all_identical": true
+}
