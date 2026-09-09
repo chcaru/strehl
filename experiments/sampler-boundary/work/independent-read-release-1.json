@@ -1,0 +1,364 @@
+{
+  "archives": {
+    "baseline-source-1.zip": {
+      "bytes": 5554495,
+      "path": "experiments/sampler-boundary/work/baseline-source-1.zip",
+      "sha256": "7bc4ad1597b14df0ac842c06b891530c192ac193e0412585f26005405a973c78"
+    },
+    "baseline-source-freeze-1.json": {
+      "bytes": 25156,
+      "path": "experiments/sampler-boundary/work/baseline-source-freeze-1.json",
+      "sha256": "8b7d19ebadc41590667b85c02a8d806fb7faf285c87917ab4e1e2dc4d3bed3b2"
+    },
+    "repaired-source-1.zip": {
+      "bytes": 148956,
+      "path": "experiments/sampler-boundary/work/repaired-source-1.zip",
+      "sha256": "8233d63ac83883f40762bd7a52faef0c3bc10db583f67c7f776935a9790e290a"
+    },
+    "repaired-source-freeze-1.json": {
+      "bytes": 25155,
+      "path": "experiments/sampler-boundary/work/repaired-source-freeze-1.json",
+      "sha256": "da93c4bf1625179ad8605976dc40be6c9b029c354cf3f3b7eec26fac78078185"
+    }
+  },
+  "commands": [
+    {
+      "command": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-I",
+        "-S",
+        "-B",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\independent-saved-read.py",
+        "scalar",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\baseline-test-1\\child-00.log",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\independent-baseline-scalar-1.json"
+      ],
+      "expected_exit_code": 0,
+      "mode": "scalar",
+      "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\independent-baseline-scalar-1.json",
+      "variant": "baseline"
+    },
+    {
+      "command": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-I",
+        "-S",
+        "-B",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\independent-saved-read.py",
+        "gather",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\baseline-test-1\\child-00.log",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\independent-baseline-gather-1.json"
+      ],
+      "expected_exit_code": 0,
+      "mode": "gather",
+      "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\independent-baseline-gather-1.json",
+      "variant": "baseline"
+    },
+    {
+      "command": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-I",
+        "-S",
+        "-B",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\independent-saved-read.py",
+        "scalar",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\repaired-test-1\\child-00.log",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\independent-repaired-scalar-1.json"
+      ],
+      "expected_exit_code": 0,
+      "mode": "scalar",
+      "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\independent-repaired-scalar-1.json",
+      "variant": "repaired"
+    },
+    {
+      "command": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-I",
+        "-S",
+        "-B",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\independent-saved-read.py",
+        "gather",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\repaired-test-1\\child-00.log",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\independent-repaired-gather-1.json"
+      ],
+      "expected_exit_code": 0,
+      "mode": "gather",
+      "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\independent-repaired-gather-1.json",
+      "variant": "repaired"
+    }
+  ],
+  "limits": {
+    "active_wall_per_slice": 15,
+    "aggregate_read_bytes": 805306368,
+    "cpu_per_slice": 10,
+    "per_file_bytes": 134217728,
+    "retained_bytes": 8388608,
+    "slices": 4
+  },
+  "plan": {
+    "bytes": 7293,
+    "path": "experiments/sampler-boundary/independent-result-review.md",
+    "sha256": "e20dd8886b2fa39179d03653d536611bab8eeeae19e54957d09846013ccdad42"
+  },
+  "plan_commit": "ee6098d8b518bbce8d5378e7653a5402d9276b0e",
+  "reader": {
+    "bytes": 21204,
+    "path": "experiments/sampler-boundary/independent-saved-read.py",
+    "sha256": "9af714765a05bfe4ca33052704a1e6612f69aa93e525c0731aa083fe9354701b"
+  },
+  "schema": "sampler-independent-read-release-v1",
+  "scope": "Saved evidence only. Metadata transport and the corresponding scalar/gather helper share each slice; retain complete external interval/exit, actual source/log/output hashes and cumulative byte charges. No sampler/build/test/controller/model/image process.",
+  "source_commit": "3ceebceb2532ae017a17392592794f3b9893c52b",
+  "stages": {
+    "baseline-build": {
+      "child": {
+        "bytes": 3702,
+        "path": "experiments/sampler-boundary/baseline-build-1/child-00.json",
+        "sha256": "12f37c87a010003637c22ce646d3f4b75964bd040804332d3590daa09e9ec274"
+      },
+      "exit": {
+        "bytes": 2,
+        "path": "experiments/sampler-boundary/work/baseline-build-external-1-exit.txt",
+        "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+      },
+      "log": {
+        "bytes": 26734,
+        "path": "experiments/sampler-boundary/baseline-build-1/child-00.log",
+        "sha256": "c297be6702da53a0bb5479afda75663219a81009a1b27808053f03551b569a4b"
+      },
+      "outer": {
+        "bytes": 1620,
+        "path": "experiments/sampler-boundary/work/baseline-build-external-1-outer.json",
+        "sha256": "254d2b149b2c35cc0b7ba2416a68e932a79f8d722a402f668dd99910747b0adc"
+      },
+      "release": {
+        "bytes": 26566,
+        "path": "experiments/sampler-boundary/work/baseline-build-release-1.json",
+        "sha256": "e25b2e4b17254a67bbb689e118f3be8168549c2df4b8bdeecd96ef6d7aca218f"
+      },
+      "result": {
+        "bytes": 65536,
+        "path": "experiments/sampler-boundary/baseline-build-1/result.json",
+        "sha256": "e96739b7e1a8c1452370e3c93010af00995bcfd447b0d98d61a769816b93d225"
+      },
+      "stderr": {
+        "bytes": 0,
+        "path": "experiments/sampler-boundary/work/baseline-build-external-1-stderr.bin",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stdout": {
+        "bytes": 486,
+        "path": "experiments/sampler-boundary/work/baseline-build-external-1-stdout.bin",
+        "sha256": "d00eeaca0ee641052f3bdfaeaf923e83ee1c2345d00973747bacf75769f444ac"
+      },
+      "tail": {
+        "bytes": 616,
+        "path": "experiments/sampler-boundary/baseline-build-1/parent-tail.json",
+        "sha256": "53f9d92bdc8b242fff202b01c5b2df28eee39aac284ef96f214d2709569ed1b0"
+      }
+    },
+    "baseline-test": {
+      "child": {
+        "bytes": 2006,
+        "path": "experiments/sampler-boundary/baseline-test-1/child-00.json",
+        "sha256": "439dc11e8a18f8ef43722d547cc980d55e621352a8a5a2a1aaf066cae95ce481"
+      },
+      "exit": {
+        "bytes": 2,
+        "path": "experiments/sampler-boundary/work/baseline-test-external-1-exit.txt",
+        "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+      },
+      "log": {
+        "bytes": 242248,
+        "path": "experiments/sampler-boundary/baseline-test-1/child-00.log",
+        "sha256": "482df6d5967c7d4cba812f4cf9098384b2f0f45eba4b7ca43ac624b1a54492c3"
+      },
+      "observation": {
+        "bytes": 17867,
+        "path": "experiments/sampler-boundary/baseline-test-1/test-observation.json",
+        "sha256": "b6e713e7bcec450ae03e3536ddd9f46f0f09f674a9683c0a5420721521af3f05"
+      },
+      "outer": {
+        "bytes": 1616,
+        "path": "experiments/sampler-boundary/work/baseline-test-external-1-outer.json",
+        "sha256": "9f5d3aefb8566e4201f4f9a4d35c41da3e3dc3f142ce7eb6bd9e955840e0caae"
+      },
+      "release": {
+        "bytes": 27498,
+        "path": "experiments/sampler-boundary/work/baseline-test-release-1.json",
+        "sha256": "16424d475e0d3da5cbe5400cecade5a6c28a696cfa65a2522610b5fbbcf3dfc2"
+      },
+      "result": {
+        "bytes": 65536,
+        "path": "experiments/sampler-boundary/baseline-test-1/result.json",
+        "sha256": "bfec5d1c987ab28b4e2c14b780859a0268ffc4a183721236abd42a8f35c8ae22"
+      },
+      "stderr": {
+        "bytes": 0,
+        "path": "experiments/sampler-boundary/work/baseline-test-external-1-stderr.bin",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stdout": {
+        "bytes": 484,
+        "path": "experiments/sampler-boundary/work/baseline-test-external-1-stdout.bin",
+        "sha256": "569665c71263b634aac79b03bafd74f2d737211002bed07ab12c5de568f2822b"
+      },
+      "tail": {
+        "bytes": 599,
+        "path": "experiments/sampler-boundary/baseline-test-1/parent-tail.json",
+        "sha256": "9298fff8ad70c23c60bedaefd2d63cdb4f6c088a8b727cff3d95c3d63e196bd7"
+      }
+    },
+    "repaired-build": {
+      "child": {
+        "bytes": 3750,
+        "path": "experiments/sampler-boundary/repaired-build-1/child-00.json",
+        "sha256": "52379b9e89860e7afc0519941010b9abed4b79979534498760378c6abac84f6d"
+      },
+      "exit": {
+        "bytes": 2,
+        "path": "experiments/sampler-boundary/work/repaired-build-external-1-exit.txt",
+        "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+      },
+      "log": {
+        "bytes": 26734,
+        "path": "experiments/sampler-boundary/repaired-build-1/child-00.log",
+        "sha256": "f63f40b6c0b65336d24b19769de18954510f968aad3dec15ce03d8b4a9077af9"
+      },
+      "outer": {
+        "bytes": 1620,
+        "path": "experiments/sampler-boundary/work/repaired-build-external-1-outer.json",
+        "sha256": "c5fc90808dc600ca5ef8a0e143d8d5a7a4fea2e3716d9b665611385a5c3e48a5"
+      },
+      "release": {
+        "bytes": 27615,
+        "path": "experiments/sampler-boundary/work/repaired-build-release-1.json",
+        "sha256": "c0a36062a870e2193b69cc6d49dd729b7a332096c648c83d82cd3e8a98dadc05"
+      },
+      "result": {
+        "bytes": 65536,
+        "path": "experiments/sampler-boundary/repaired-build-1/result.json",
+        "sha256": "c8a3b4264b0a5428c8427bb80017d3db6bfe94c4dda88fc98784f9530cc2df75"
+      },
+      "stderr": {
+        "bytes": 0,
+        "path": "experiments/sampler-boundary/work/repaired-build-external-1-stderr.bin",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stdout": {
+        "bytes": 486,
+        "path": "experiments/sampler-boundary/work/repaired-build-external-1-stdout.bin",
+        "sha256": "537ba3b3d47015031375a3a6747f78e0e790404204979448f4f30a81389876b6"
+      },
+      "tail": {
+        "bytes": 611,
+        "path": "experiments/sampler-boundary/repaired-build-1/parent-tail.json",
+        "sha256": "d8daada4b8e4fd3478cf0ab1b5c3e69da9fd5394beda99dbf1a9b68723bbcaf0"
+      }
+    },
+    "repaired-regression": {
+      "child": {
+        "bytes": 2899,
+        "path": "experiments/sampler-boundary/repaired-regression-1/child-00.json",
+        "sha256": "af716e112f5657af61f9efd810aed44ba31ecb65bdea00fbdc45fc6e32248d06"
+      },
+      "exit": {
+        "bytes": 2,
+        "path": "experiments/sampler-boundary/work/repaired-regression-external-1-exit.txt",
+        "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+      },
+      "log": {
+        "bytes": 1128,
+        "path": "experiments/sampler-boundary/repaired-regression-1/child-00.log",
+        "sha256": "a48444229e0f1ee56954936f62c6a81a1ca460bcf08b050ad8312b3f34e0baf6"
+      },
+      "observation": {
+        "bytes": 2389,
+        "path": "experiments/sampler-boundary/repaired-regression-1/regression-observation.json",
+        "sha256": "0385e4e6e81683140d8c5d9d8c0a4d57109075c7024c7411d8a0b9f15ef0a575"
+      },
+      "outer": {
+        "bytes": 1640,
+        "path": "experiments/sampler-boundary/work/repaired-regression-external-1-outer.json",
+        "sha256": "24c3fd02ba9694da157afb912f93204eb3dc3ed29caa6b3a302631d4bc352d7d"
+      },
+      "release": {
+        "bytes": 29387,
+        "path": "experiments/sampler-boundary/work/repaired-regression-release-1.json",
+        "sha256": "f1ca3b251b68a7682aaa5f1cd735f15428923519a4278f0f6b7d363bee127c2e"
+      },
+      "result": {
+        "bytes": 65536,
+        "path": "experiments/sampler-boundary/repaired-regression-1/result.json",
+        "sha256": "160a7b287cadadb1890b0834f598a262ecd16dc3264ef9c3f706e74632b3a4cf"
+      },
+      "stderr": {
+        "bytes": 0,
+        "path": "experiments/sampler-boundary/work/repaired-regression-external-1-stderr.bin",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stdout": {
+        "bytes": 496,
+        "path": "experiments/sampler-boundary/work/repaired-regression-external-1-stdout.bin",
+        "sha256": "6728563ae6269240b81446255028431ee43567db268b217ae66cf5f590b28abb"
+      },
+      "tail": {
+        "bytes": 614,
+        "path": "experiments/sampler-boundary/repaired-regression-1/parent-tail.json",
+        "sha256": "31ca4af6c1ce434a59c316062a213649e40829b3115e7fc4dbda57e774c45ac0"
+      }
+    },
+    "repaired-test": {
+      "child": {
+        "bytes": 2059,
+        "path": "experiments/sampler-boundary/repaired-test-1/child-00.json",
+        "sha256": "229f8c910846f0292e3ed3b488db8c07e60f97174dbeae58535258e89896e26c"
+      },
+      "exit": {
+        "bytes": 2,
+        "path": "experiments/sampler-boundary/work/repaired-test-external-1-exit.txt",
+        "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+      },
+      "log": {
+        "bytes": 241198,
+        "path": "experiments/sampler-boundary/repaired-test-1/child-00.log",
+        "sha256": "83bc772383fc7a2afeff71c026972707e59623c0c52341b8e1efccb6108e9b35"
+      },
+      "observation": {
+        "bytes": 1355,
+        "path": "experiments/sampler-boundary/repaired-test-1/test-observation.json",
+        "sha256": "5e3e86d90bbcd1d936e47c69921806b6f8d1b81e075529dc7df9af24bb08ee38"
+      },
+      "outer": {
+        "bytes": 1616,
+        "path": "experiments/sampler-boundary/work/repaired-test-external-1-outer.json",
+        "sha256": "f14e9ff26c1e72a24852814f2f400d3082839d2bae9a6fc14e4d289c6858ca7d"
+      },
+      "release": {
+        "bytes": 27494,
+        "path": "experiments/sampler-boundary/work/repaired-test-release-1.json",
+        "sha256": "c51b6673886545d3f2622889ee24a1625d868659b44231c75449f398eaef533e"
+      },
+      "result": {
+        "bytes": 65536,
+        "path": "experiments/sampler-boundary/repaired-test-1/result.json",
+        "sha256": "401620d37b21dff31d8969dd1d3173ba1fed9f71fb7efd224f00f078137268a7"
+      },
+      "stderr": {
+        "bytes": 0,
+        "path": "experiments/sampler-boundary/work/repaired-test-external-1-stderr.bin",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stdout": {
+        "bytes": 484,
+        "path": "experiments/sampler-boundary/work/repaired-test-external-1-stdout.bin",
+        "sha256": "acc03253c448b9929cb0a875992ff044ecaf3aeefdacad110cc1c49a789a2787"
+      },
+      "tail": {
+        "bytes": 611,
+        "path": "experiments/sampler-boundary/repaired-test-1/parent-tail.json",
+        "sha256": "17060619f62894f726bf6529c6251411a3f86ad55fd57e94546d83e6efc85ec1"
+      }
+    }
+  }
+}
