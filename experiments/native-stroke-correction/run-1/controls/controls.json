@@ -1,0 +1,234 @@
+{
+  "sources": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-stroke-correction\\propose.py",
+      "bytes": 17004,
+      "sha256": "7f796d7e5a1cc4108a34dbf3275c9a639c467823e46bfe6db155896b9ee6da63"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-stroke-correction\\charter.md",
+      "bytes": 4733,
+      "sha256": "ef082bb48d3e7091679a20c2711a42a94cf1091467123e0d2c179b4c9c70f806"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-stroke-correction\\design.md",
+      "bytes": 5872,
+      "sha256": "bde678ba01a5abf4580ec2895bd227ce2352e659c3a1a2d23a503cc8199e41ec"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-stroke-correction\\independent-controls.py",
+      "bytes": 9628,
+      "sha256": "025d06e8270e6a54247f691c692f91aeb6c56eb9ef71d71c74d75b479f93a051"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-core\\src\\defect_map.rs",
+      "bytes": 176181,
+      "sha256": "1738c770c9f316a6aeac3f742bf7abc9581ea386b4e07ec128e50df35c2ffb14"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-cli\\src\\stack.rs",
+      "bytes": 107231,
+      "sha256": "108bb38a964946c7e7b7c25c640ce08297835faee253ad4e059e6074f5655572"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-stroke\\sampler.py",
+      "bytes": 2746,
+      "sha256": "091f69688d3f590d6429d62d127747b373078a8ef0ec20a90690bbe2781b0f3d"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-PHASE0-PHASE\\src\\clib.py",
+      "bytes": 9274,
+      "sha256": "95d557d38855d720322d96edd57c2b654f6b8ea1af49fabb66df08ad5d93e0d2"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-PHASE0-PHASE\\out\\canon\\coffee-bean.warpmap.txt",
+      "bytes": 14591,
+      "sha256": "b21b247944c257ab0fd3c767c879b9abf4a5fb1112dded97c87990a7d537274c"
+    }
+  ],
+  "result": {
+    "status": "PASS",
+    "scalar_cases": 288,
+    "positive_amplitude": 0.08000000265109837,
+    "positive_rows": 40,
+    "forced_overcorrection_reasons": [
+      "affine/26/R:support-rmse-worse",
+      "affine/26/R:support-absolute-mean-worse",
+      "affine/26/R:core-overbright",
+      "affine/26/G1:support-rmse-worse",
+      "affine/26/G1:support-absolute-mean-worse",
+      "affine/26/G1:core-overbright",
+      "affine/26/G2:support-rmse-worse",
+      "affine/26/G2:support-absolute-mean-worse",
+      "affine/26/G2:core-overbright",
+      "affine/26/B:support-rmse-worse",
+      "affine/26/B:support-absolute-mean-worse",
+      "affine/26/B:core-overbright",
+      "affine/52/R:support-rmse-worse",
+      "affine/52/R:support-absolute-mean-worse",
+      "affine/52/R:core-overbright",
+      "affine/52/G1:support-rmse-worse",
+      "affine/52/G1:support-absolute-mean-worse",
+      "affine/52/G1:core-overbright",
+      "affine/52/G2:support-rmse-worse",
+      "affine/52/G2:support-absolute-mean-worse",
+      "affine/52/G2:core-overbright",
+      "affine/52/B:support-rmse-worse",
+      "affine/52/B:support-absolute-mean-worse",
+      "affine/52/B:core-overbright",
+      "affine/78/R:support-rmse-worse",
+      "affine/78/R:support-absolute-mean-worse",
+      "affine/78/R:core-overbright",
+      "affine/78/G1:support-rmse-worse",
+      "affine/78/G1:support-absolute-mean-worse",
+      "affine/78/G1:core-overbright",
+      "affine/78/G2:support-rmse-worse",
+      "affine/78/G2:support-absolute-mean-worse",
+      "affine/78/G2:core-overbright",
+      "affine/78/B:support-rmse-worse",
+      "affine/78/B:support-absolute-mean-worse",
+      "affine/78/B:core-overbright",
+      "quadratic/26/R:support-rmse-worse",
+      "quadratic/26/R:support-absolute-mean-worse",
+      "quadratic/26/R:core-overbright",
+      "quadratic/26/G1:support-rmse-worse",
+      "quadratic/26/G1:support-absolute-mean-worse",
+      "quadratic/26/G1:core-overbright",
+      "quadratic/26/G2:support-rmse-worse",
+      "quadratic/26/G2:support-absolute-mean-worse",
+      "quadratic/26/G2:core-overbright",
+      "quadratic/26/B:support-rmse-worse",
+      "quadratic/26/B:support-absolute-mean-worse",
+      "quadratic/26/B:core-overbright",
+      "quadratic/52/R:support-rmse-worse",
+      "quadratic/52/R:support-absolute-mean-worse",
+      "quadratic/52/R:core-overbright",
+      "quadratic/52/G1:support-rmse-worse",
+      "quadratic/52/G1:support-absolute-mean-worse",
+      "quadratic/52/G1:core-overbright",
+      "quadratic/52/G2:support-rmse-worse",
+      "quadratic/52/G2:support-absolute-mean-worse",
+      "quadratic/52/G2:core-overbright",
+      "quadratic/52/B:support-rmse-worse",
+      "quadratic/52/B:support-absolute-mean-worse",
+      "quadratic/52/B:core-overbright",
+      "quadratic/78/R:support-rmse-worse",
+      "quadratic/78/R:support-absolute-mean-worse",
+      "quadratic/78/R:core-overbright",
+      "quadratic/78/G1:support-rmse-worse",
+      "quadratic/78/G1:support-absolute-mean-worse",
+      "quadratic/78/G1:core-overbright",
+      "quadratic/78/G2:support-rmse-worse",
+      "quadratic/78/G2:support-absolute-mean-worse",
+      "quadratic/78/G2:core-overbright",
+      "quadratic/78/B:support-rmse-worse",
+      "quadratic/78/B:support-absolute-mean-worse",
+      "quadratic/78/B:core-overbright"
+    ],
+    "shallow_phase_reasons": [
+      "affine/R:median-core-too-shallow",
+      "quadratic/R:median-core-too-shallow"
+    ],
+    "refusals": [
+      {
+        "input": "constant-clean",
+        "amplitude": 0.0,
+        "reasons": [
+          "amplitude-outside-positive-format-bound"
+        ]
+      },
+      {
+        "input": "affine-clean",
+        "amplitude": -1.2024445924461764e-08,
+        "reasons": [
+          "amplitude-outside-positive-format-bound"
+        ]
+      },
+      {
+        "input": "quadratic-clean",
+        "amplitude": 0.05992221523896707,
+        "reasons": [
+          "quadratic/26/R:support-rmse-worse",
+          "quadratic/26/R:support-absolute-mean-worse",
+          "quadratic/26/R:core-overbright",
+          "quadratic/26/G1:support-rmse-worse",
+          "quadratic/26/G1:support-absolute-mean-worse",
+          "quadratic/26/G1:core-overbright",
+          "quadratic/26/G2:support-rmse-worse",
+          "quadratic/26/G2:support-absolute-mean-worse",
+          "quadratic/26/G2:core-overbright",
+          "quadratic/26/B:support-rmse-worse",
+          "quadratic/26/B:support-absolute-mean-worse",
+          "quadratic/26/B:core-overbright",
+          "quadratic/52/R:support-rmse-worse",
+          "quadratic/52/R:support-absolute-mean-worse",
+          "quadratic/52/R:core-overbright",
+          "quadratic/52/G1:support-rmse-worse",
+          "quadratic/52/G1:support-absolute-mean-worse",
+          "quadratic/52/G1:core-overbright",
+          "quadratic/52/G2:support-rmse-worse",
+          "quadratic/52/G2:support-absolute-mean-worse",
+          "quadratic/52/G2:core-overbright",
+          "quadratic/52/B:support-rmse-worse",
+          "quadratic/52/B:support-absolute-mean-worse",
+          "quadratic/52/B:core-overbright",
+          "quadratic/78/R:support-rmse-worse",
+          "quadratic/78/R:support-absolute-mean-worse",
+          "quadratic/78/R:core-overbright",
+          "quadratic/78/G1:support-rmse-worse",
+          "quadratic/78/G1:support-absolute-mean-worse",
+          "quadratic/78/G1:core-overbright",
+          "quadratic/78/G2:support-rmse-worse",
+          "quadratic/78/G2:support-absolute-mean-worse",
+          "quadratic/78/G2:core-overbright",
+          "quadratic/78/B:support-rmse-worse",
+          "quadratic/78/B:support-absolute-mean-worse",
+          "quadratic/78/B:core-overbright",
+          "quadratic/R:not-present-four-of-five",
+          "quadratic/R:median-core-too-shallow",
+          "quadratic/G1:not-present-four-of-five",
+          "quadratic/G1:median-core-too-shallow",
+          "quadratic/G2:not-present-four-of-five",
+          "quadratic/G2:median-core-too-shallow",
+          "quadratic/B:not-present-four-of-five",
+          "quadratic/B:median-core-too-shallow"
+        ]
+      },
+      {
+        "input": "scene-following",
+        "amplitude": -0.0015320497054655295,
+        "reasons": [
+          "amplitude-outside-positive-format-bound"
+        ]
+      }
+    ],
+    "altered_heldout_reasons": [
+      "affine/52/R:support-rmse-worse",
+      "affine/52/R:support-absolute-mean-worse",
+      "affine/52/R:core-overbright",
+      "affine/52/G1:support-rmse-worse",
+      "affine/52/G1:support-absolute-mean-worse",
+      "affine/52/G1:core-overbright",
+      "affine/52/G2:support-rmse-worse",
+      "affine/52/G2:support-absolute-mean-worse",
+      "affine/52/G2:core-overbright",
+      "affine/52/B:support-rmse-worse",
+      "affine/52/B:support-absolute-mean-worse",
+      "affine/52/B:core-overbright",
+      "quadratic/52/R:support-rmse-worse",
+      "quadratic/52/R:support-absolute-mean-worse",
+      "quadratic/52/R:core-overbright",
+      "quadratic/52/G1:support-rmse-worse",
+      "quadratic/52/G1:support-absolute-mean-worse",
+      "quadratic/52/G1:core-overbright",
+      "quadratic/52/G2:support-rmse-worse",
+      "quadratic/52/G2:support-absolute-mean-worse",
+      "quadratic/52/G2:core-overbright",
+      "quadratic/52/B:support-rmse-worse",
+      "quadratic/52/B:support-absolute-mean-worse",
+      "quadratic/52/B:core-overbright"
+    ],
+    "outside_unchanged_values": 288612,
+    "scope": "arithmetic/source-proposal controls; no physical dust identification or noise calibration"
+  }
+}

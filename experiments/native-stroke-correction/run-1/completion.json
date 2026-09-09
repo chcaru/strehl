@@ -1,0 +1,18 @@
+{
+  "status": "PROPOSAL_COMPLETE",
+  "proceed_to_render": true,
+  "steps": [
+    {
+      "label": "controls",
+      "wall_seconds": 1.0940000000009604,
+      "cpu_seconds": 1.046875,
+      "peak_job_commit_bytes": 116396032
+    },
+    {
+      "label": "proposal",
+      "wall_seconds": 0.6559999999990396,
+      "cpu_seconds": 0.625,
+      "peak_job_commit_bytes": 98107392
+    }
+  ]
+}
