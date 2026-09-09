@@ -1,0 +1,24 @@
+{
+  "command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-green-probe\\build-1\\cli-tests.exe",
+    "merge_cmd::gatefloor::native_green_probe_independent_tests::independent_green_probe_controls",
+    "--exact",
+    "--nocapture",
+    "--test-threads=1"
+  ],
+  "executable": {
+    "sha256": "2fed8797c6a1ab7256742e923dbdb9ecb29d39b4adb02bdab0ead6367cfb576b",
+    "bytes": 13133824
+  },
+  "environment_overrides": {
+    "STREHL_GREEN_PROBE_OUTPUT": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-green-probe\\controls-1\\malvar-fullres0-green",
+    "STREHL_PYRAMID_PROFILE": "off",
+    "RAYON_NUM_THREADS": "4",
+    "STREHL_PYRAMID_WORKERS": "4",
+    "STREHL_DEMOSAIC": "malvar",
+    "STREHL_FULLRES_GATHER": "0",
+    "STREHL_PROBE_GATHER": "green"
+  },
+  "removed_environment": [],
+  "revision": "8e1732112394c4fcb19b2e956b0f6cc051b30011"
+}

@@ -1,0 +1,58 @@
+{
+  "status": "EIGHT_GREEN_PROBE_CONTROLS_PASS",
+  "pairs": [
+    {
+      "demosaic": "malvar",
+      "fullres": "1",
+      "measurements_equal": true,
+      "whole_tiff": {
+        "sha256": "daa103579b42e18048bb455fc04fb5fec61e5b193b37edd3b38767f203cd37cd",
+        "bytes": 312963
+      },
+      "crop_tiff": {
+        "sha256": "1eb75211f1f9ee5870c94b55e31e0631949e86dff5e77581e5a8b9d34ee55151",
+        "bytes": 210267
+      }
+    },
+    {
+      "demosaic": "malvar",
+      "fullres": "0",
+      "measurements_equal": true,
+      "whole_tiff": {
+        "sha256": "0ea259c90e9d9337357afcd4bf955468164a46c36251e1356e6908155bb53690",
+        "bytes": 312963
+      },
+      "crop_tiff": {
+        "sha256": "f62a0a0c46333f2b5f81b6b244937cba153fba20b41fad47aff50b94ed7cbbef",
+        "bytes": 210267
+      }
+    },
+    {
+      "demosaic": "directional",
+      "fullres": "1",
+      "measurements_equal": true,
+      "whole_tiff": {
+        "sha256": "07c2824868c1503359d5a6833c476c5d222698686583d0302babf41727bb4d6c",
+        "bytes": 312963
+      },
+      "crop_tiff": {
+        "sha256": "780562a9ae43b0ebd346f94bf6ef40c62a1c6311022c984559bed52dfbdf5fd1",
+        "bytes": 210267
+      }
+    },
+    {
+      "demosaic": "directional",
+      "fullres": "0",
+      "measurements_equal": true,
+      "whole_tiff": {
+        "sha256": "02f26e5b512ad620d1d61c08c5cd96738835faba111494b2c085cba75c647120",
+        "bytes": 312963
+      },
+      "crop_tiff": {
+        "sha256": "87dfcde31aae03515189153b7ce063eb71a4e21d7985b3310dd8368f4dc1eb3f",
+        "bytes": 210267
+      }
+    }
+  ],
+  "scope": "exact generated green/beta and whole/crop output controls; no photographic-quality or speed claim"
+}

@@ -1,0 +1,15 @@
+
+running 1 test
+test merge_cmd::gatefloor::native_green_probe_independent_tests::independent_green_probe_controls ... 
+thread 'merge_cmd::gatefloor::native_green_probe_independent_tests::independent_green_probe_controls' (17680) panicked at C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli/../../experiments/native-green-probe/independent-tests.rs:73:9:
+source R/B destroyer did not reach reconstructed green, phase=3
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+FAILED
+
+failures:
+
+failures:
+    merge_cmd::gatefloor::native_green_probe_independent_tests::independent_green_probe_controls
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 166 filtered out; finished in 0.00s
+
