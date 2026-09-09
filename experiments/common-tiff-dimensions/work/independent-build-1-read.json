@@ -1,0 +1,99 @@
+{
+  "allocation": {
+    "active_wall_seconds": 20,
+    "cpu_seconds": 10,
+    "read_bytes": 67108864,
+    "retained_bytes": 2097152
+  },
+  "charged_active_wall_seconds": 20,
+  "charged_cpu_seconds": 10,
+  "checks": {
+    "actual_outer_streams": true,
+    "child_code": true,
+    "child_log": true,
+    "cpu_association": true,
+    "cpu_components": true,
+    "cpu_total": true,
+    "exit": true,
+    "invocation": true,
+    "no_cleanup_errors": true,
+    "no_recorded_executable": true,
+    "no_subject_compile": true,
+    "no_successful_build_record": true,
+    "result_child": true,
+    "stdout_result": true,
+    "stdout_tail": true,
+    "terminal_zero": true
+  },
+  "input_refs": {
+    "child": {
+      "bytes": 2422,
+      "path": "experiments/common-tiff-dimensions/build-1/child-00.json",
+      "sha256": "f242e8d3a46703f1e48dd89a27e81023a746c4c72855c78bd7b9bb2720bce8ea"
+    },
+    "exit": {
+      "bytes": 2,
+      "path": "experiments/common-tiff-dimensions/work/build-external-1-exit.txt",
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+    },
+    "log": {
+      "bytes": 3312,
+      "path": "experiments/common-tiff-dimensions/build-1/child-00.log",
+      "sha256": "5163311a9878697553baf6be9262c8594770edda771222476b70c02d701fd5b9"
+    },
+    "outer": {
+      "bytes": 1625,
+      "path": "experiments/common-tiff-dimensions/work/build-external-1-outer.json",
+      "sha256": "43bdc3f65a594e37f4124e14b7d3e124fbaa38c5c9555739f7ebd9dbcfa2f947"
+    },
+    "result": {
+      "bytes": 262144,
+      "path": "experiments/common-tiff-dimensions/build-1/result.json",
+      "sha256": "ae5a36bc43999eb255aa9352f8d1a61ad4cfd793b44dd613c4224efe8d34b3fd"
+    },
+    "stderr": {
+      "bytes": 0,
+      "path": "experiments/common-tiff-dimensions/work/build-external-1-stderr.bin",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "stdout": {
+      "bytes": 463,
+      "path": "experiments/common-tiff-dimensions/work/build-external-1-stdout.bin",
+      "sha256": "daea0d210280073d8d6ffc530ac3a2bb706391875668dd31aa7c5c0611cf6049"
+    },
+    "tail": {
+      "bytes": 614,
+      "path": "experiments/common-tiff-dimensions/build-1/parent-tail.json",
+      "sha256": "c650f644fa6e06467b3a663c2f0977058ba826646f06675aba8b9ab27937f374"
+    }
+  },
+  "observed": {
+    "active_after": 0,
+    "active_before": 6,
+    "child_cpu": 1.3125,
+    "child_exit": 3784556766,
+    "combined_cpu_sample": 2.40625,
+    "compile_cleanup": "UNVISITED",
+    "error": "ValueError('scan file-inspection path=C:\\\\dev\\\\blog\\\\death-of-software\\\\projects\\\\strehl\\\\target\\\\common-tiff-dimensions-1\\\\debug\\\\build\\\\proc-macro2-0ff67e0f32290390\\\\out\\\\probe\\\\libproc_macro2.rmeta: canonical path')",
+    "outer_exit": 1,
+    "outer_wall": 3.688000000009197,
+    "parent_cpu_sample": 1.09375,
+    "status": "REFUSED",
+    "timeout": false
+  },
+  "read_execution": {
+    "cpu_scope": "quantized sample; zero is not zero actual cost",
+    "exit": 0,
+    "inner_cpu_sample": 0,
+    "inner_wall_sample": 0.015999999988707714,
+    "input_bytes": 270582,
+    "tool_wall_seconds": 0.0878073
+  },
+  "review_report": {
+    "bytes": 6160,
+    "path": "experiments/common-tiff-dimensions/independent-build-1-review.md",
+    "sha256": "c04a2c7c5accdb6440f35bf6b53019b1d6c03b7a0b9c921db2e8c31ae74a6791"
+  },
+  "schema": "common-tiff-dimensions-independent-build-refusal-review-v1",
+  "scope": "Saved artifact associations only. Underlying canonical-path rejection cause unknown. No source or process execution."
+}
