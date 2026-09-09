@@ -1,0 +1,11 @@
+{
+  "schema": "native-build-abandoned-index-lock-v1",
+  "path": "C:\\dev\\blog\\death-of-software\\.git\\modules\\projects\\strehl\\index.lock",
+  "bytes": 0,
+  "last_write_utc": "2026-09-09T09:06:43.4391676Z",
+  "observed_utc": "2026-09-09T09:12:34.5292504Z",
+  "no_git_process_at_two_prior_reads": true,
+  "exclusive_open_succeeded": true,
+  "cause": "Unknown; observed after interrupted owned compiler tree",
+  "action": "Remove only observed empty unlocked index.lock"
+}
