@@ -1,9 +1,10 @@
 # Native sensor transfer continuation
 
-2026-09-09. REVIEWED OBSERVER SOURCE INTEGRATED; builds and execution pending.
-No RAW payload, simulation, numerical control, test, build or product execution
-has been released. Earlier source-preparation sections are retained as history;
-the integration section below supersedes their unapplied-source status.
+2026-09-09. REVIEWED OBSERVER/RUNNER SOURCE READY; fresh builds are next.
+Exactly27 CONTROL originals completed one hash-only identity pass; no RAW decode,
+pixel metric, simulation, numerical control or product run has occurred.
+Earlier sections remain history; this preface supersedes their earlier
+no-payload/unapplied-source status.
 
 Root adopted raw-program-priority-review.md at59202e51df6c09485099618a393ebad0b5468777.
 The integer common-TIFF design is retained but deferred; native RAW sensor
@@ -192,3 +193,24 @@ Sampler is reviewing its concrete source after the producer delta. Root alone
 will release exact build/control/RAW commands after source review and finite
 resource/source/input bindings. The source-only tasks do not authorize those
 executions. Existing source archives51281d20 and methodologya257cba9 stay held.
+
+## Fixed build and owner priority checkpoint
+
+Input binding ran once, exit0: input-bindings-1.json7119B/
+ab4017907d5ff243ca36883a9e5ff7335717c4f7da4678b01eacab98b3d98b4a.
+It binds27originals/926855168B without decoding. Its source/release are70d44f13.
+Reviewed runner/producer sources are now committed ate8b42669695b5cf2b7c03d8995969d7ab69cbf7b.
+The exact source archive/releases will be preserved before each fresh build.
+Independent Python reader work continues separately.
+
+The owner reiterated cost, urgency, SOTA image quality AND competitive speed.
+Root closes completed infrastructure investigations. Next: finish this bounded
+native noise-transfer measurement, choose an intervention against the result
+and existing bottleneck evidence, then compare actual quality plus runtime and
+memory. A concise independent memo selects at most two physics/algorithm/
+hardware interventions; no general survey or new process framework is needed.
+
+The source commit audit initially expected twelve changed paths, but the
+continuation edit had refused before writing; actual commit contained the
+intended eleven changed sources, all independently byte-matched afterward.
+No unrelated path was included. The failed documentary edit is repaired here.
