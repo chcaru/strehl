@@ -1,0 +1,12 @@
+{
+  "strehl": {
+    "path": "experiments\\native-correction-variance\\build-2\\strehl.exe",
+    "bytes": 10225664,
+    "sha256": "04b7950b6a6dc9cf4b8ecb7f4ea405fb417ade9146c7b19903d21be22073ed14"
+  },
+  "cli-tests": {
+    "path": "experiments\\native-correction-variance\\build-2\\cli-tests.exe",
+    "bytes": 13549568,
+    "sha256": "883eb304c8247a68025c800d0f99b3ea74a5d73a65f53faeed4a9c04db6708bc"
+  }
+}

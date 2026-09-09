@@ -1,0 +1,49 @@
+{
+  "command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-correction-variance\\build-2\\cli-tests.exe",
+    "--exact",
+    "merge_cmd::gatefloor::native_correction_variance::correction_variance_transfer",
+    "--ignored",
+    "--nocapture",
+    "--test-threads=1"
+  ],
+  "overrides": {
+    "RAYON_NUM_THREADS": "2",
+    "STREHL_FULLRES_GATHER": "1",
+    "STREHL_DIRECT_PLANES": "rounded",
+    "STREHL_PROBE_GATHER": "green",
+    "STREHL_WARP_WRITEBACK": "parallel",
+    "STREHL_DEFECT": "off",
+    "STREHL_CORRECTION_VARIANCE_OUT": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-correction-variance\\run-1\\measurement.json"
+  },
+  "removed_environment": [],
+  "executable": {
+    "path": "experiments\\native-correction-variance\\build-2\\cli-tests.exe",
+    "bytes": 13549568,
+    "sha256": "883eb304c8247a68025c800d0f99b3ea74a5d73a65f53faeed4a9c04db6708bc"
+  },
+  "build": {
+    "sha256": "6cc6fae8344b58c9b18f9a1eab6057b47657a3e03c756d050d034c36f5f162bf",
+    "bytes": 4411
+  },
+  "source_revision": "e2b15119a0378941d4cfb98d23bf2ec59813b9f2",
+  "protocol": {
+    "run.py": {
+      "sha256": "5ee873033821482d23341d60ddc30c8d604b8940a85d34aba42a9319dc2e97f6",
+      "bytes": 3721
+    },
+    "design.md": {
+      "sha256": "741883aa5b9a93680e93567129c82bfa0a0f855d87a06b3230d9f330524dd987",
+      "bytes": 8493
+    },
+    "independent-review.md": {
+      "sha256": "9ad16e7ba310e3222a0f22b6bd15c12a7a017fa3b827fa69b1e4151696a5cde4",
+      "bytes": 8937
+    },
+    "charter.md": {
+      "sha256": "97c25b7a6176fc6cd25b3c4a62c4a993a4757dceda55c569b252e8f010214654",
+      "bytes": 4401
+    }
+  },
+  "prior_child_cpu_seconds": 0.03125
+}

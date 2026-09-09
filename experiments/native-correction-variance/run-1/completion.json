@@ -1,0 +1,12 @@
+{
+  "status": "REJECT",
+  "measurement": {
+    "sha256": "b466ff301a9305c1b746494449d582e7f9f5a2d97ba06ea8d789334758b65575",
+    "bytes": 134414
+  },
+  "aggregate_child_cpu_seconds": 3.21875,
+  "wall_seconds": 2.1089999999967404,
+  "peak_job_commit_bytes": 8454144,
+  "retained_bytes_before_completion": 139270,
+  "scope": "fixed software transfer only; no native photograph or SOTA claim"
+}

@@ -1,0 +1,24 @@
+{
+  "command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-correction-variance\\build-1\\cli-tests.exe",
+    "--exact",
+    "merge_cmd::gatefloor::native_correction_variance::correction_variance_smoke",
+    "--ignored",
+    "--nocapture",
+    "--test-threads=1"
+  ],
+  "overrides": {
+    "RAYON_NUM_THREADS": "2",
+    "STREHL_FULLRES_GATHER": "1",
+    "STREHL_DIRECT_PLANES": "rounded",
+    "STREHL_PROBE_GATHER": "green",
+    "STREHL_WARP_WRITEBACK": "parallel",
+    "STREHL_DEFECT": "off"
+  },
+  "removed_environment": [],
+  "exe": {
+    "sha256": "4f16d1a224b2399c3ca7301fa64296df5ddd4ebfcbc6f64fc56f7bc8d186a88a",
+    "bytes": 13328384
+  },
+  "source_revision": "17117f31492c8714978f5f439efb94197e012f2c"
+}

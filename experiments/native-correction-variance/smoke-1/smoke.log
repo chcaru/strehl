@@ -1,0 +1,8 @@
+
+running 1 test
+test merge_cmd::gatefloor::native_correction_variance::correction_variance_smoke ... CORRECTION_VARIANCE_SMOKE luma=1ae98723bfb9f0ee8aaef47ba8eb9dbf16ca9d3a4b13641860e358810b713ed4 energy=b263d99f43d7da872b2e83042e3819264aee19ed35a3bd3f97a84f5138dd38e9 beta=[0.8947155, 0.05567467]
+CORRECTION_VARIANCE_SMOKE luma=1f61da1da913f8c17ea1d964fa111ca2a50cd504f5cf132c75400e5059dbb6fb energy=6a9749ec0ad918d63c16c5c4e642ff01065f102af17418908bdb700ac3b26fbe beta=[0.73713714, 0.04758486]
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 170 filtered out; finished in 0.01s
+
