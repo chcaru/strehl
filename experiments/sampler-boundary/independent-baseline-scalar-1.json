@@ -1,0 +1,1215 @@
+{
+  "schema": "sampler-independent-saved-read-v1",
+  "mode": "scalar",
+  "invocation": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-I",
+    "-S",
+    "-B",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\independent-saved-read.py",
+    "scalar",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\baseline-test-1\\child-00.log",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\independent-baseline-scalar-1.json"
+  ],
+  "source": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\independent-saved-read.py",
+    "sha256": "9af714765a05bfe4ca33052704a1e6612f69aa93e525c0731aa083fe9354701b"
+  },
+  "reads": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\independent-saved-read.py",
+      "bytes": 21204,
+      "sha256": "9af714765a05bfe4ca33052704a1e6612f69aa93e525c0731aa083fe9354701b"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\baseline-test-1\\child-00.log",
+      "bytes": 242248,
+      "sha256": "482df6d5967c7d4cba812f4cf9098384b2f0f45eba4b7ca43ac624b1a54492c3"
+    }
+  ],
+  "actual_read_bytes": 263452,
+  "review": {
+    "rows": 344,
+    "failed": 103,
+    "passed": 241,
+    "saved_operand_predicates": 344,
+    "source_bound_reported_boolean_rows": [
+      "nearest-support-literal",
+      "bilinear-support-literal",
+      "catmull-rom-support-literal",
+      "clamped-catmull-rom-support-literal",
+      "lanczos2-support-literal",
+      "lanczos3-support-literal",
+      "plane-constructor-empty-both",
+      "plane-constructor-empty-width",
+      "plane-constructor-empty-height",
+      "plane-constructor-short-data",
+      "bilinear-gather-requested-map",
+      "bilinear-gather-opposite-direction-rejected"
+    ],
+    "dispositions": [
+      {
+        "group": "boundary",
+        "actual_kind": "finite",
+        "passed": false,
+        "count": 35
+      },
+      {
+        "group": "boundary",
+        "actual_kind": "finite",
+        "passed": true,
+        "count": 43
+      },
+      {
+        "group": "boundary",
+        "actual_kind": "refused",
+        "passed": true,
+        "count": 48
+      },
+      {
+        "group": "constructor",
+        "actual_kind": "true",
+        "passed": true,
+        "count": 4
+      },
+      {
+        "group": "cubic-limiter",
+        "actual_kind": "finite",
+        "passed": true,
+        "count": 6
+      },
+      {
+        "group": "gather",
+        "actual_kind": "false",
+        "passed": false,
+        "count": 1
+      },
+      {
+        "group": "gather",
+        "actual_kind": "true",
+        "passed": true,
+        "count": 1
+      },
+      {
+        "group": "lanczos-commission",
+        "actual_kind": "finite",
+        "passed": true,
+        "count": 18
+      },
+      {
+        "group": "nonfinite",
+        "actual_kind": "finite",
+        "passed": false,
+        "count": 3
+      },
+      {
+        "group": "nonfinite",
+        "actual_kind": "nonfinite",
+        "passed": false,
+        "count": 5
+      },
+      {
+        "group": "nonfinite",
+        "actual_kind": "panic",
+        "passed": false,
+        "count": 4
+      },
+      {
+        "group": "nonfinite",
+        "actual_kind": "refused",
+        "passed": true,
+        "count": 24
+      },
+      {
+        "group": "null",
+        "actual_kind": "finite",
+        "passed": true,
+        "count": 18
+      },
+      {
+        "group": "support",
+        "actual_kind": "true",
+        "passed": true,
+        "count": 6
+      },
+      {
+        "group": "tiny",
+        "actual_kind": "finite",
+        "passed": false,
+        "count": 5
+      },
+      {
+        "group": "tiny",
+        "actual_kind": "finite",
+        "passed": true,
+        "count": 18
+      },
+      {
+        "group": "tiny",
+        "actual_kind": "refused",
+        "passed": true,
+        "count": 25
+      },
+      {
+        "group": "unchecked",
+        "actual_kind": "finite",
+        "passed": false,
+        "count": 40
+      },
+      {
+        "group": "unchecked",
+        "actual_kind": "finite",
+        "passed": true,
+        "count": 20
+      },
+      {
+        "group": "unchecked-tiny",
+        "actual_kind": "finite",
+        "passed": false,
+        "count": 10
+      },
+      {
+        "group": "unchecked-tiny",
+        "actual_kind": "finite",
+        "passed": true,
+        "count": 10
+      }
+    ],
+    "failed_rows": [
+      {
+        "id": "nearest-nonfinite-nan-x",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 1320.0,
+        "oracle": null,
+        "paired": null,
+        "x": "nonfinite",
+        "y": 20.25
+      },
+      {
+        "id": "nearest-nonfinite-nan-y",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 1160.0,
+        "oracle": null,
+        "paired": null,
+        "x": 20.25,
+        "y": "nonfinite"
+      },
+      {
+        "id": "bilinear-boundary-high-x-quarter",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2332.0,
+        "oracle": 2334.0,
+        "paired": null,
+        "x": 126.25,
+        "y": 20.25
+      },
+      {
+        "id": "bilinear-boundary-high-x-half",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2332.0,
+        "oracle": 2336.0,
+        "paired": null,
+        "x": 126.5,
+        "y": 20.25
+      },
+      {
+        "id": "bilinear-boundary-high-y-quarter",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2666.0,
+        "oracle": 2670.0,
+        "paired": null,
+        "x": 20.25,
+        "y": 94.25
+      },
+      {
+        "id": "bilinear-boundary-high-y-half",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2666.0,
+        "oracle": 2674.0,
+        "paired": null,
+        "x": 20.25,
+        "y": 94.5
+      },
+      {
+        "id": "bilinear-boundary-high-corner-quarter",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 3512.0,
+        "oracle": 3518.0,
+        "paired": null,
+        "x": 126.25,
+        "y": 94.25
+      },
+      {
+        "id": "bilinear-boundary-high-corner-half",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 3512.0,
+        "oracle": 3524.0,
+        "paired": null,
+        "x": 126.5,
+        "y": 94.5
+      },
+      {
+        "id": "bilinear-boundary-exact-upper-corner",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 3512.0,
+        "oracle": 3524.0,
+        "paired": null,
+        "x": 126.5,
+        "y": 94.5
+      },
+      {
+        "id": "bilinear-nonfinite-nan-x",
+        "kind": "nonfinite",
+        "exercised": true,
+        "actual": null,
+        "oracle": null,
+        "paired": null,
+        "x": "nonfinite",
+        "y": 20.25
+      },
+      {
+        "id": "bilinear-nonfinite-nan-y",
+        "kind": "nonfinite",
+        "exercised": true,
+        "actual": null,
+        "oracle": null,
+        "paired": null,
+        "x": 20.25,
+        "y": "nonfinite"
+      },
+      {
+        "id": "bilinear-tiny-2x2",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 1000.0,
+        "oracle": 1012.0,
+        "paired": null,
+        "x": 0.5,
+        "y": 0.5
+      },
+      {
+        "id": "bilinear-unchecked-high-x-quarter",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2332.0,
+        "oracle": 2334.0,
+        "paired": null,
+        "x": 126.25,
+        "y": 20.25
+      },
+      {
+        "id": "bilinear-unchecked-high-y-quarter",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2666.0,
+        "oracle": 2670.0,
+        "paired": null,
+        "x": 20.25,
+        "y": 94.25
+      },
+      {
+        "id": "bilinear-unchecked-endpoint-x",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2328.0,
+        "oracle": 2336.0,
+        "paired": null,
+        "x": 127.0,
+        "y": 20.0
+      },
+      {
+        "id": "bilinear-unchecked-endpoint-y",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2664.0,
+        "oracle": 2680.0,
+        "paired": null,
+        "x": 20.0,
+        "y": 95.0
+      },
+      {
+        "id": "bilinear-unchecked-endpoint-corner",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 3512.0,
+        "oracle": 3536.0,
+        "paired": null,
+        "x": 127.0,
+        "y": 95.0
+      },
+      {
+        "id": "bilinear-unchecked-far-high-x",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2328.0,
+        "oracle": 2336.0,
+        "paired": null,
+        "x": 178.0,
+        "y": 20.0
+      },
+      {
+        "id": "bilinear-unchecked-far-high-y",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2664.0,
+        "oracle": 2680.0,
+        "paired": null,
+        "x": 20.0,
+        "y": 146.0
+      },
+      {
+        "id": "bilinear-unchecked-far-high-corner",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 3512.0,
+        "oracle": 3536.0,
+        "paired": null,
+        "x": 178.0,
+        "y": 146.0
+      },
+      {
+        "id": "catmull-rom-boundary-high-x-quarter",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2324.0,
+        "oracle": 2326.0,
+        "paired": null,
+        "x": 125.25,
+        "y": 20.25
+      },
+      {
+        "id": "catmull-rom-boundary-high-x-half",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2324.0,
+        "oracle": 2328.0,
+        "paired": null,
+        "x": 125.5,
+        "y": 20.25
+      },
+      {
+        "id": "catmull-rom-boundary-high-y-quarter",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2650.0,
+        "oracle": 2654.0,
+        "paired": null,
+        "x": 20.25,
+        "y": 93.25
+      },
+      {
+        "id": "catmull-rom-boundary-high-y-half",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2650.0,
+        "oracle": 2658.0,
+        "paired": null,
+        "x": 20.25,
+        "y": 93.5
+      },
+      {
+        "id": "catmull-rom-boundary-high-corner-quarter",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 3488.0,
+        "oracle": 3494.0,
+        "paired": null,
+        "x": 125.25,
+        "y": 93.25
+      },
+      {
+        "id": "catmull-rom-boundary-high-corner-half",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 3488.0,
+        "oracle": 3500.0,
+        "paired": null,
+        "x": 125.5,
+        "y": 93.5
+      },
+      {
+        "id": "catmull-rom-boundary-exact-upper-corner",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 3488.0,
+        "oracle": 3500.0,
+        "paired": null,
+        "x": 125.5,
+        "y": 93.5
+      },
+      {
+        "id": "catmull-rom-nonfinite-nan-x",
+        "kind": "nonfinite",
+        "exercised": true,
+        "actual": null,
+        "oracle": null,
+        "paired": null,
+        "x": "nonfinite",
+        "y": 20.25
+      },
+      {
+        "id": "catmull-rom-nonfinite-nan-y",
+        "kind": "panic",
+        "exercised": true,
+        "actual": null,
+        "oracle": null,
+        "paired": null,
+        "x": 20.25,
+        "y": "nonfinite"
+      },
+      {
+        "id": "catmull-rom-tiny-4x4",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 1024.0,
+        "oracle": 1036.0,
+        "paired": null,
+        "x": 1.5,
+        "y": 1.5
+      },
+      {
+        "id": "catmull-rom-unchecked-high-x-quarter",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2324.0,
+        "oracle": 2326.0,
+        "paired": null,
+        "x": 125.25,
+        "y": 20.25
+      },
+      {
+        "id": "catmull-rom-unchecked-high-y-quarter",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2650.0,
+        "oracle": 2654.0,
+        "paired": null,
+        "x": 20.25,
+        "y": 93.25
+      },
+      {
+        "id": "catmull-rom-unchecked-endpoint-x",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2320.0,
+        "oracle": 2328.0,
+        "paired": null,
+        "x": 126.0,
+        "y": 20.0
+      },
+      {
+        "id": "catmull-rom-unchecked-endpoint-y",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2648.0,
+        "oracle": 2664.0,
+        "paired": null,
+        "x": 20.0,
+        "y": 94.0
+      },
+      {
+        "id": "catmull-rom-unchecked-endpoint-corner",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 3488.0,
+        "oracle": 3512.0,
+        "paired": null,
+        "x": 126.0,
+        "y": 94.0
+      },
+      {
+        "id": "catmull-rom-unchecked-far-high-x",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2320.0,
+        "oracle": 2328.0,
+        "paired": null,
+        "x": 178.0,
+        "y": 20.0
+      },
+      {
+        "id": "catmull-rom-unchecked-far-high-y",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2648.0,
+        "oracle": 2664.0,
+        "paired": null,
+        "x": 20.0,
+        "y": 146.0
+      },
+      {
+        "id": "catmull-rom-unchecked-far-high-corner",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 3488.0,
+        "oracle": 3512.0,
+        "paired": null,
+        "x": 178.0,
+        "y": 146.0
+      },
+      {
+        "id": "clamped-catmull-rom-boundary-high-x-quarter",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2324.0,
+        "oracle": 2326.0,
+        "paired": null,
+        "x": 125.25,
+        "y": 20.25
+      },
+      {
+        "id": "clamped-catmull-rom-boundary-high-x-half",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2324.0,
+        "oracle": 2328.0,
+        "paired": null,
+        "x": 125.5,
+        "y": 20.25
+      },
+      {
+        "id": "clamped-catmull-rom-boundary-high-y-quarter",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2650.0,
+        "oracle": 2654.0,
+        "paired": null,
+        "x": 20.25,
+        "y": 93.25
+      },
+      {
+        "id": "clamped-catmull-rom-boundary-high-y-half",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2650.0,
+        "oracle": 2658.0,
+        "paired": null,
+        "x": 20.25,
+        "y": 93.5
+      },
+      {
+        "id": "clamped-catmull-rom-boundary-high-corner-quarter",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 3488.0,
+        "oracle": 3494.0,
+        "paired": null,
+        "x": 125.25,
+        "y": 93.25
+      },
+      {
+        "id": "clamped-catmull-rom-boundary-high-corner-half",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 3488.0,
+        "oracle": 3500.0,
+        "paired": null,
+        "x": 125.5,
+        "y": 93.5
+      },
+      {
+        "id": "clamped-catmull-rom-boundary-exact-upper-corner",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 3488.0,
+        "oracle": 3500.0,
+        "paired": null,
+        "x": 125.5,
+        "y": 93.5
+      },
+      {
+        "id": "clamped-catmull-rom-nonfinite-nan-x",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 1304.0,
+        "oracle": null,
+        "paired": null,
+        "x": "nonfinite",
+        "y": 20.25
+      },
+      {
+        "id": "clamped-catmull-rom-nonfinite-nan-y",
+        "kind": "panic",
+        "exercised": true,
+        "actual": null,
+        "oracle": null,
+        "paired": null,
+        "x": 20.25,
+        "y": "nonfinite"
+      },
+      {
+        "id": "clamped-catmull-rom-tiny-4x4",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 1024.0,
+        "oracle": 1036.0,
+        "paired": null,
+        "x": 1.5,
+        "y": 1.5
+      },
+      {
+        "id": "clamped-catmull-rom-unchecked-high-x-quarter",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2324.0,
+        "oracle": 2326.0,
+        "paired": null,
+        "x": 125.25,
+        "y": 20.25
+      },
+      {
+        "id": "clamped-catmull-rom-unchecked-high-y-quarter",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2650.0,
+        "oracle": 2654.0,
+        "paired": null,
+        "x": 20.25,
+        "y": 93.25
+      },
+      {
+        "id": "clamped-catmull-rom-unchecked-endpoint-x",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2320.0,
+        "oracle": 2328.0,
+        "paired": null,
+        "x": 126.0,
+        "y": 20.0
+      },
+      {
+        "id": "clamped-catmull-rom-unchecked-endpoint-y",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2648.0,
+        "oracle": 2664.0,
+        "paired": null,
+        "x": 20.0,
+        "y": 94.0
+      },
+      {
+        "id": "clamped-catmull-rom-unchecked-endpoint-corner",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 3488.0,
+        "oracle": 3512.0,
+        "paired": null,
+        "x": 126.0,
+        "y": 94.0
+      },
+      {
+        "id": "clamped-catmull-rom-unchecked-far-high-x",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2320.0,
+        "oracle": 2328.0,
+        "paired": null,
+        "x": 178.0,
+        "y": 20.0
+      },
+      {
+        "id": "clamped-catmull-rom-unchecked-far-high-y",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2648.0,
+        "oracle": 2664.0,
+        "paired": null,
+        "x": 20.0,
+        "y": 146.0
+      },
+      {
+        "id": "clamped-catmull-rom-unchecked-far-high-corner",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 3488.0,
+        "oracle": 3512.0,
+        "paired": null,
+        "x": 178.0,
+        "y": 146.0
+      },
+      {
+        "id": "lanczos2-boundary-high-x-quarter",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2324.5029296875,
+        "oracle": null,
+        "paired": 2326.754638671875,
+        "x": 125.25,
+        "y": 20.25
+      },
+      {
+        "id": "lanczos2-boundary-high-x-half",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2324.5029296875,
+        "oracle": null,
+        "paired": 2328.5029296875,
+        "x": 125.5,
+        "y": 20.25
+      },
+      {
+        "id": "lanczos2-boundary-high-y-quarter",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2650.251708984375,
+        "oracle": null,
+        "paired": 2654.754638671875,
+        "x": 20.25,
+        "y": 93.25
+      },
+      {
+        "id": "lanczos2-boundary-high-y-half",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2650.251708984375,
+        "oracle": null,
+        "paired": 2658.25146484375,
+        "x": 20.25,
+        "y": 93.5
+      },
+      {
+        "id": "lanczos2-boundary-high-corner-quarter",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 3488.0,
+        "oracle": null,
+        "paired": 3494.75439453125,
+        "x": 125.25,
+        "y": 93.25
+      },
+      {
+        "id": "lanczos2-boundary-high-corner-half",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 3488.0,
+        "oracle": null,
+        "paired": 3500.0,
+        "x": 125.5,
+        "y": 93.5
+      },
+      {
+        "id": "lanczos2-boundary-exact-upper-corner",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 3488.0,
+        "oracle": null,
+        "paired": 3500.0,
+        "x": 125.5,
+        "y": 93.5
+      },
+      {
+        "id": "lanczos2-nonfinite-nan-x",
+        "kind": "nonfinite",
+        "exercised": true,
+        "actual": null,
+        "oracle": null,
+        "paired": null,
+        "x": "nonfinite",
+        "y": 20.25
+      },
+      {
+        "id": "lanczos2-nonfinite-nan-y",
+        "kind": "panic",
+        "exercised": true,
+        "actual": null,
+        "oracle": null,
+        "paired": null,
+        "x": 20.25,
+        "y": "nonfinite"
+      },
+      {
+        "id": "lanczos2-tiny-4x4",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 1024.0,
+        "oracle": null,
+        "paired": 1036.0,
+        "x": 1.5,
+        "y": 1.5
+      },
+      {
+        "id": "lanczos2-unchecked-high-x-quarter",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2324.5029296875,
+        "oracle": null,
+        "paired": 2326.754638671875,
+        "x": 125.25,
+        "y": 20.25
+      },
+      {
+        "id": "lanczos2-unchecked-high-y-quarter",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2650.251708984375,
+        "oracle": null,
+        "paired": 2654.754638671875,
+        "x": 20.25,
+        "y": 93.25
+      },
+      {
+        "id": "lanczos2-unchecked-endpoint-x",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2320.0,
+        "oracle": 2328.0,
+        "paired": null,
+        "x": 126.0,
+        "y": 20.0
+      },
+      {
+        "id": "lanczos2-unchecked-endpoint-y",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2648.0,
+        "oracle": 2664.0,
+        "paired": null,
+        "x": 20.0,
+        "y": 94.0
+      },
+      {
+        "id": "lanczos2-unchecked-endpoint-corner",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 3488.0,
+        "oracle": 3512.0,
+        "paired": null,
+        "x": 126.0,
+        "y": 94.0
+      },
+      {
+        "id": "lanczos2-unchecked-far-high-x",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2320.0,
+        "oracle": 2328.0,
+        "paired": null,
+        "x": 178.0,
+        "y": 20.0
+      },
+      {
+        "id": "lanczos2-unchecked-far-high-y",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2648.0,
+        "oracle": 2664.0,
+        "paired": null,
+        "x": 20.0,
+        "y": 146.0
+      },
+      {
+        "id": "lanczos2-unchecked-far-high-corner",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 3488.0,
+        "oracle": 3512.0,
+        "paired": null,
+        "x": 178.0,
+        "y": 146.0
+      },
+      {
+        "id": "lanczos3-boundary-high-x-quarter",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2315.68310546875,
+        "oracle": null,
+        "paired": 2317.524658203125,
+        "x": 124.25,
+        "y": 20.25
+      },
+      {
+        "id": "lanczos3-boundary-high-x-half",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2315.68310546875,
+        "oracle": null,
+        "paired": 2319.682861328125,
+        "x": 124.5,
+        "y": 20.25
+      },
+      {
+        "id": "lanczos3-boundary-high-y-quarter",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2633.841796875,
+        "oracle": null,
+        "paired": 2637.52490234375,
+        "x": 20.25,
+        "y": 92.25
+      },
+      {
+        "id": "lanczos3-boundary-high-y-half",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2633.841796875,
+        "oracle": null,
+        "paired": 2641.841796875,
+        "x": 20.25,
+        "y": 92.5
+      },
+      {
+        "id": "lanczos3-boundary-high-corner-quarter",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 3464.0,
+        "oracle": null,
+        "paired": 3469.524658203125,
+        "x": 124.25,
+        "y": 92.25
+      },
+      {
+        "id": "lanczos3-boundary-high-corner-half",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 3464.0,
+        "oracle": null,
+        "paired": 3476.00048828125,
+        "x": 124.5,
+        "y": 92.5
+      },
+      {
+        "id": "lanczos3-boundary-exact-upper-corner",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 3464.0,
+        "oracle": null,
+        "paired": 3476.00048828125,
+        "x": 124.5,
+        "y": 92.5
+      },
+      {
+        "id": "lanczos3-nonfinite-nan-x",
+        "kind": "nonfinite",
+        "exercised": true,
+        "actual": null,
+        "oracle": null,
+        "paired": null,
+        "x": "nonfinite",
+        "y": 20.25
+      },
+      {
+        "id": "lanczos3-nonfinite-nan-y",
+        "kind": "panic",
+        "exercised": true,
+        "actual": null,
+        "oracle": null,
+        "paired": null,
+        "x": 20.25,
+        "y": "nonfinite"
+      },
+      {
+        "id": "lanczos3-tiny-6x6",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 1048.0,
+        "oracle": null,
+        "paired": 1060.000244140625,
+        "x": 2.5,
+        "y": 2.5
+      },
+      {
+        "id": "lanczos3-unchecked-high-x-quarter",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2315.68310546875,
+        "oracle": null,
+        "paired": 2317.524658203125,
+        "x": 124.25,
+        "y": 20.25
+      },
+      {
+        "id": "lanczos3-unchecked-high-y-quarter",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2633.841796875,
+        "oracle": null,
+        "paired": 2637.52490234375,
+        "x": 20.25,
+        "y": 92.25
+      },
+      {
+        "id": "lanczos3-unchecked-endpoint-x",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2312.0,
+        "oracle": 2320.0,
+        "paired": null,
+        "x": 125.0,
+        "y": 20.0
+      },
+      {
+        "id": "lanczos3-unchecked-endpoint-y",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2632.0,
+        "oracle": 2648.0,
+        "paired": null,
+        "x": 20.0,
+        "y": 93.0
+      },
+      {
+        "id": "lanczos3-unchecked-endpoint-corner",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 3464.0,
+        "oracle": 3488.0,
+        "paired": null,
+        "x": 125.0,
+        "y": 93.0
+      },
+      {
+        "id": "lanczos3-unchecked-far-high-x",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2312.0,
+        "oracle": 2320.0,
+        "paired": null,
+        "x": 178.0,
+        "y": 20.0
+      },
+      {
+        "id": "lanczos3-unchecked-far-high-y",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2632.0,
+        "oracle": 2648.0,
+        "paired": null,
+        "x": 20.0,
+        "y": 146.0
+      },
+      {
+        "id": "lanczos3-unchecked-far-high-corner",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 3464.0,
+        "oracle": 3488.0,
+        "paired": null,
+        "x": 178.0,
+        "y": 146.0
+      },
+      {
+        "id": "catmull-rom-unchecked-tiny-2x7",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 1080.0,
+        "oracle": 1104.0,
+        "paired": 1080.0,
+        "x": 52.0,
+        "y": 57.0
+      },
+      {
+        "id": "catmull-rom-unchecked-tiny-7x2",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 1040.0,
+        "oracle": 1064.0,
+        "paired": 1040.0,
+        "x": 57.0,
+        "y": 52.0
+      },
+      {
+        "id": "clamped-catmull-rom-unchecked-tiny-2x7",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 1080.0,
+        "oracle": 1104.0,
+        "paired": 1080.0,
+        "x": 52.0,
+        "y": 57.0
+      },
+      {
+        "id": "clamped-catmull-rom-unchecked-tiny-7x2",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 1040.0,
+        "oracle": 1064.0,
+        "paired": 1040.0,
+        "x": 57.0,
+        "y": 52.0
+      },
+      {
+        "id": "lanczos2-unchecked-tiny-2x7",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 1080.0,
+        "oracle": 1104.0,
+        "paired": 1080.0,
+        "x": 52.0,
+        "y": 57.0
+      },
+      {
+        "id": "lanczos2-unchecked-tiny-7x2",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 1040.0,
+        "oracle": 1064.0,
+        "paired": 1040.0,
+        "x": 57.0,
+        "y": 52.0
+      },
+      {
+        "id": "lanczos3-unchecked-tiny-2x7",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 1080.0,
+        "oracle": 1104.0,
+        "paired": 1080.0,
+        "x": 52.0,
+        "y": 57.0
+      },
+      {
+        "id": "lanczos3-unchecked-tiny-7x2",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 1040.0,
+        "oracle": 1064.0,
+        "paired": 1040.0,
+        "x": 57.0,
+        "y": 52.0
+      },
+      {
+        "id": "lanczos3-unchecked-tiny-4x7",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 1072.0,
+        "oracle": 1096.0,
+        "paired": 1072.0,
+        "x": 54.0,
+        "y": 57.0
+      },
+      {
+        "id": "lanczos3-unchecked-tiny-7x4",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 1048.0,
+        "oracle": 1072.0,
+        "paired": 1048.0,
+        "x": 57.0,
+        "y": 54.0
+      },
+      {
+        "id": "bilinear-gather-requested-map",
+        "kind": "false",
+        "exercised": true,
+        "actual": null,
+        "oracle": null,
+        "paired": null,
+        "x": 0.0,
+        "y": 0.0
+      }
+    ]
+  },
+  "failures": [],
+  "process_cpu_seconds": 0.015625,
+  "active_wall_seconds": 0.0,
+  "interpretation_complete": true
+}

@@ -1,0 +1,2983 @@
+{
+  "schema": "sampler-independent-audit-slice-v1",
+  "slice": 1,
+  "release_sha256": "fc92179b15531145ecd840373258524fc6bed0235e4b18c7c50690f049d2c60c",
+  "charged_allocation": 2,
+  "actual_command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-I",
+    "-S",
+    "-B",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\independent-saved-read.py",
+    "scalar",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\baseline-test-1\\child-00.log",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\independent-baseline-scalar-1.json"
+  ],
+  "actual_exit_code": 0,
+  "helper_timeout": false,
+  "owned_reader_termination": false,
+  "streams": {
+    "stdout": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\work\\independent-read-slice-1-stdout.bin",
+      "bytes": 304,
+      "sha256": "61ef70b5d1f70acdcd56c889806a8e50e6932a4bf39a7a9f33a5234122b2742b"
+    },
+    "stderr": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\work\\independent-read-slice-1-stderr.bin",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "exit": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\work\\independent-read-slice-1-exit.txt",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    }
+  },
+  "helper_whole_wall_seconds": 0.06199999999080319,
+  "helper_complete_process_cpu_seconds": 0.046875,
+  "metadata_parent_cpu_sample": 0.03125,
+  "combined_cpu_sample": 0.078125,
+  "whole_slice_wall_sample": 0.07799999999406282,
+  "final_allowance": {
+    "cpu_seconds": 1,
+    "wall_seconds": 2
+  },
+  "reads": [
+    {
+      "path": "experiments/sampler-boundary/independent-transport-read.py",
+      "bytes": 18513,
+      "sha256": "56954443669bfb4b8c4c754cb582c3205775e926eac18b802117a009760ebef5"
+    },
+    {
+      "path": "experiments/sampler-boundary/work/independent-read-release-1.json",
+      "bytes": 16124,
+      "sha256": "fc92179b15531145ecd840373258524fc6bed0235e4b18c7c50690f049d2c60c"
+    },
+    {
+      "path": "experiments/sampler-boundary/independent-saved-read.py",
+      "bytes": 21204,
+      "sha256": "9af714765a05bfe4ca33052704a1e6612f69aa93e525c0731aa083fe9354701b"
+    },
+    {
+      "path": "experiments/sampler-boundary/baseline-build-1/child-00.json",
+      "bytes": 3702,
+      "sha256": "12f37c87a010003637c22ce646d3f4b75964bd040804332d3590daa09e9ec274"
+    },
+    {
+      "path": "experiments/sampler-boundary/work/baseline-build-external-1-exit.txt",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "experiments/sampler-boundary/baseline-build-1/child-00.log",
+      "bytes": 26734,
+      "sha256": "c297be6702da53a0bb5479afda75663219a81009a1b27808053f03551b569a4b"
+    },
+    {
+      "path": "experiments/sampler-boundary/work/baseline-build-external-1-outer.json",
+      "bytes": 1620,
+      "sha256": "254d2b149b2c35cc0b7ba2416a68e932a79f8d722a402f668dd99910747b0adc"
+    },
+    {
+      "path": "experiments/sampler-boundary/work/baseline-build-release-1.json",
+      "bytes": 26566,
+      "sha256": "e25b2e4b17254a67bbb689e118f3be8168549c2df4b8bdeecd96ef6d7aca218f"
+    },
+    {
+      "path": "experiments/sampler-boundary/baseline-build-1/result.json",
+      "bytes": 65536,
+      "sha256": "e96739b7e1a8c1452370e3c93010af00995bcfd447b0d98d61a769816b93d225"
+    },
+    {
+      "path": "experiments/sampler-boundary/work/baseline-build-external-1-stderr.bin",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "experiments/sampler-boundary/work/baseline-build-external-1-stdout.bin",
+      "bytes": 486,
+      "sha256": "d00eeaca0ee641052f3bdfaeaf923e83ee1c2345d00973747bacf75769f444ac"
+    },
+    {
+      "path": "experiments/sampler-boundary/baseline-build-1/parent-tail.json",
+      "bytes": 616,
+      "sha256": "53f9d92bdc8b242fff202b01c5b2df28eee39aac284ef96f214d2709569ed1b0"
+    },
+    {
+      "path": "experiments/sampler-boundary/baseline-build-1/sampler-boundary-tests.exe",
+      "bytes": 998400,
+      "sha256": "e6c4ffc7eb37a805fb063e62d180e0ecfca1f36a2d605fb13d3e8882f6c9ea0a"
+    },
+    {
+      "path": "target/sampler-boundary-baseline-1/debug/deps/sampler_boundary-7d2e664a829f6387.exe",
+      "bytes": 998400,
+      "sha256": "e6c4ffc7eb37a805fb063e62d180e0ecfca1f36a2d605fb13d3e8882f6c9ea0a"
+    },
+    {
+      "path": "experiments/sampler-boundary/baseline-build-1/core-unit-tests.exe",
+      "bytes": 6799872,
+      "sha256": "b32660118bdf8e300259839ac8635e7d25dbc669a88ad24a6aa9c9ec8cc840b6"
+    },
+    {
+      "path": "target/sampler-boundary-baseline-1/debug/deps/strehl_core-d38618da76a23b5a.exe",
+      "bytes": 6799872,
+      "sha256": "b32660118bdf8e300259839ac8635e7d25dbc669a88ad24a6aa9c9ec8cc840b6"
+    },
+    {
+      "path": "experiments/sampler-boundary/baseline-test-1/child-00.json",
+      "bytes": 2006,
+      "sha256": "439dc11e8a18f8ef43722d547cc980d55e621352a8a5a2a1aaf066cae95ce481"
+    },
+    {
+      "path": "experiments/sampler-boundary/work/baseline-test-external-1-exit.txt",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "experiments/sampler-boundary/baseline-test-1/child-00.log",
+      "bytes": 242248,
+      "sha256": "482df6d5967c7d4cba812f4cf9098384b2f0f45eba4b7ca43ac624b1a54492c3"
+    },
+    {
+      "path": "experiments/sampler-boundary/baseline-test-1/test-observation.json",
+      "bytes": 17867,
+      "sha256": "b6e713e7bcec450ae03e3536ddd9f46f0f09f674a9683c0a5420721521af3f05"
+    },
+    {
+      "path": "experiments/sampler-boundary/work/baseline-test-external-1-outer.json",
+      "bytes": 1616,
+      "sha256": "9f5d3aefb8566e4201f4f9a4d35c41da3e3dc3f142ce7eb6bd9e955840e0caae"
+    },
+    {
+      "path": "experiments/sampler-boundary/work/baseline-test-release-1.json",
+      "bytes": 27498,
+      "sha256": "16424d475e0d3da5cbe5400cecade5a6c28a696cfa65a2522610b5fbbcf3dfc2"
+    },
+    {
+      "path": "experiments/sampler-boundary/baseline-test-1/result.json",
+      "bytes": 65536,
+      "sha256": "bfec5d1c987ab28b4e2c14b780859a0268ffc4a183721236abd42a8f35c8ae22"
+    },
+    {
+      "path": "experiments/sampler-boundary/work/baseline-test-external-1-stderr.bin",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "experiments/sampler-boundary/work/baseline-test-external-1-stdout.bin",
+      "bytes": 484,
+      "sha256": "569665c71263b634aac79b03bafd74f2d737211002bed07ab12c5de568f2822b"
+    },
+    {
+      "path": "experiments/sampler-boundary/baseline-test-1/parent-tail.json",
+      "bytes": 599,
+      "sha256": "9298fff8ad70c23c60bedaefd2d63cdb4f6c088a8b727cff3d95c3d63e196bd7"
+    },
+    {
+      "path": "experiments/sampler-boundary/baseline-test-1/child-00.log",
+      "bytes": 242248,
+      "sha256": "482df6d5967c7d4cba812f4cf9098384b2f0f45eba4b7ca43ac624b1a54492c3"
+    },
+    {
+      "path": "experiments/sampler-boundary/independent-baseline-scalar-1.json",
+      "bytes": 29263,
+      "sha256": "64b575116f4897ca6906a299ec0e08cf3ed0eb78cd300f9f73377be76cf1572a"
+    }
+  ],
+  "helper_reads": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\independent-saved-read.py",
+      "bytes": 21204,
+      "sha256": "9af714765a05bfe4ca33052704a1e6612f69aa93e525c0731aa083fe9354701b"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\baseline-test-1\\child-00.log",
+      "bytes": 242248,
+      "sha256": "482df6d5967c7d4cba812f4cf9098384b2f0f45eba4b7ca43ac624b1a54492c3"
+    }
+  ],
+  "charged_read_bytes": 16670466,
+  "prior_charged_bytes": 537919488,
+  "cumulative_charged_bytes": 554589954,
+  "findings": {
+    "baseline-build_compiler_artifacts": [
+      {
+        "reason": "compiler-artifact",
+        "package_id": "path+file:///C:/dev/blog/death-of-software/projects/strehl/crates/strehl-core#0.0.0",
+        "manifest_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-core\\Cargo.toml",
+        "target": {
+          "kind": [
+            "test"
+          ],
+          "crate_types": [
+            "bin"
+          ],
+          "name": "sampler-boundary",
+          "src_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-core\\tests\\sampler-boundary.rs",
+          "edition": "2024",
+          "doc": false,
+          "doctest": false,
+          "test": true
+        },
+        "profile": {
+          "opt_level": "0",
+          "debuginfo": 2,
+          "debug_assertions": true,
+          "overflow_checks": true,
+          "test": true
+        },
+        "features": [],
+        "filenames": [
+          "C:\\dev\\blog\\death-of-software\\projects\\strehl\\target\\sampler-boundary-baseline-1\\debug\\deps\\sampler_boundary-7d2e664a829f6387.exe",
+          "C:\\dev\\blog\\death-of-software\\projects\\strehl\\target\\sampler-boundary-baseline-1\\debug\\deps\\sampler_boundary-7d2e664a829f6387.pdb"
+        ],
+        "executable": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\target\\sampler-boundary-baseline-1\\debug\\deps\\sampler_boundary-7d2e664a829f6387.exe",
+        "fresh": false
+      },
+      {
+        "reason": "compiler-artifact",
+        "package_id": "path+file:///C:/dev/blog/death-of-software/projects/strehl/crates/strehl-core#0.0.0",
+        "manifest_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-core\\Cargo.toml",
+        "target": {
+          "kind": [
+            "lib"
+          ],
+          "crate_types": [
+            "lib"
+          ],
+          "name": "strehl_core",
+          "src_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-core\\src\\lib.rs",
+          "edition": "2024",
+          "doc": true,
+          "doctest": true,
+          "test": true
+        },
+        "profile": {
+          "opt_level": "0",
+          "debuginfo": 2,
+          "debug_assertions": true,
+          "overflow_checks": true,
+          "test": true
+        },
+        "features": [],
+        "filenames": [
+          "C:\\dev\\blog\\death-of-software\\projects\\strehl\\target\\sampler-boundary-baseline-1\\debug\\deps\\strehl_core-d38618da76a23b5a.exe",
+          "C:\\dev\\blog\\death-of-software\\projects\\strehl\\target\\sampler-boundary-baseline-1\\debug\\deps\\strehl_core-d38618da76a23b5a.pdb"
+        ],
+        "executable": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\target\\sampler-boundary-baseline-1\\debug\\deps\\strehl_core-d38618da76a23b5a.exe",
+        "fresh": false
+      }
+    ],
+    "baseline-build": {
+      "child": {
+        "cleanup_errors": [],
+        "command": [
+          "cargo",
+          "test",
+          "-p",
+          "strehl-core",
+          "--lib",
+          "--test",
+          "sampler-boundary",
+          "--no-run",
+          "--jobs",
+          "2",
+          "--target-dir",
+          "C:\\dev\\blog\\death-of-software\\projects\\strehl\\target\\sampler-boundary-baseline-1",
+          "--message-format=json-render-diagnostics",
+          "--locked",
+          "--offline"
+        ],
+        "compile_cleanup": {
+          "after_accounting": {
+            "active_processes": 0,
+            "total_cpu_100ns": 256093750,
+            "total_kernel_100ns": 60781250,
+            "total_page_fault_count": 1559276,
+            "total_processes": 59,
+            "total_terminated_processes": 0,
+            "total_user_100ns": 195312500
+          },
+          "attempted": true,
+          "before_accounting": {
+            "active_processes": 1,
+            "total_cpu_100ns": 256093750,
+            "total_kernel_100ns": 60781250,
+            "total_page_fault_count": 1559276,
+            "total_processes": 59,
+            "total_terminated_processes": 0,
+            "total_user_100ns": 195312500
+          },
+          "completed": true,
+          "disposition": "INTENTIONAL_OWNED_JOB_CLEANUP",
+          "ended_wall_seconds": 14.264999999999418,
+          "error": null,
+          "max_wait_seconds": 5,
+          "pid_query_error": null,
+          "pid_query_performed": true,
+          "policy": "AFTER_DIRECT_ZERO_AND_PIPE_EOF",
+          "remaining_process_ids": [
+            31964
+          ],
+          "schema": "m194h-compile-owned-descendant-cleanup-v1",
+          "scope": "Only this owned Job is terminated; PIDs are observations, never kill targets. No executable or creation-identity proof. Generic termination records failure cleanup only.",
+          "started_wall_seconds": 14.25,
+          "succeeded": true,
+          "wait_seconds": 0.014999999999417923
+        },
+        "configured_job_limits": {
+          "committed_bytes": 3221225472,
+          "flags": 8704
+        },
+        "direct_exit_observed": true,
+        "error": null,
+        "exit_code": 0,
+        "job_accounting": {
+          "active_processes": 0,
+          "total_cpu_100ns": 256093750,
+          "total_kernel_100ns": 60781250,
+          "total_page_fault_count": 1559276,
+          "total_processes": 59,
+          "total_terminated_processes": 0,
+          "total_user_100ns": 195312500
+        },
+        "job_memory": {
+          "peak_job_memory_used_bytes": 993394688,
+          "peak_process_memory_used_bytes": 625422336
+        },
+        "limits": {
+          "committed_bytes": 3221225472,
+          "cpu_seconds": 597.21875,
+          "log_bytes": 16777216,
+          "wall_seconds": 284.20299999999406
+        },
+        "log": {
+          "bytes": 26734,
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\baseline-build-1\\child-00.log",
+          "sha256": "c297be6702da53a0bb5479afda75663219a81009a1b27808053f03551b569a4b"
+        },
+        "log_bytes": 26734,
+        "pipe_eof_observed": true,
+        "post_exit_drain": {
+          "completed": true,
+          "ended_wall_seconds": 14.264999999999418,
+          "initial_accounting": {
+            "active_processes": 1,
+            "total_cpu_100ns": 256093750,
+            "total_kernel_100ns": 60781250,
+            "total_page_fault_count": 1559276,
+            "total_processes": 59,
+            "total_terminated_processes": 0,
+            "total_user_100ns": 195312500
+          },
+          "last_accounting": {
+            "active_processes": 0,
+            "total_cpu_100ns": 256093750,
+            "total_kernel_100ns": 60781250,
+            "total_page_fault_count": 1559276,
+            "total_processes": 59,
+            "total_terminated_processes": 0,
+            "total_user_100ns": 195312500
+          },
+          "observation_count": 3,
+          "observations": [
+            {
+              "accounting": {
+                "active_processes": 1,
+                "total_cpu_100ns": 256093750,
+                "total_kernel_100ns": 60781250,
+                "total_page_fault_count": 1559276,
+                "total_processes": 59,
+                "total_terminated_processes": 0,
+                "total_user_100ns": 195312500
+              },
+              "wall_seconds": 14.25
+            },
+            {
+              "accounting": {
+                "active_processes": 1,
+                "total_cpu_100ns": 256093750,
+                "total_kernel_100ns": 60781250,
+                "total_page_fault_count": 1559276,
+                "total_processes": 59,
+                "total_terminated_processes": 0,
+                "total_user_100ns": 195312500
+              },
+              "wall_seconds": 14.25
+            },
+            {
+              "accounting": {
+                "active_processes": 0,
+                "total_cpu_100ns": 256093750,
+                "total_kernel_100ns": 60781250,
+                "total_page_fault_count": 1559276,
+                "total_processes": 59,
+                "total_terminated_processes": 0,
+                "total_user_100ns": 195312500
+              },
+              "wall_seconds": 14.264999999999418
+            }
+          ],
+          "started_wall_seconds": 14.25
+        },
+        "scope": "compile-only owned job tree; intentional descendant cleanup is separate from natural exit; not a timing benchmark",
+        "terminal_job_accounting": true,
+        "termination": {
+          "attempted": false,
+          "before_accounting": null,
+          "succeeded": false
+        },
+        "wall_seconds": 14.264999999999418
+      },
+      "tail": {
+        "actual_parent_cpu_sample": 11.015625,
+        "completed_child_cpu_seconds": 25.609375,
+        "cpu_accounting_complete": true,
+        "final_external_allowance": {
+          "cpu_seconds": 2,
+          "wall_seconds": 3
+        },
+        "live_child_cpu_seconds": 0.0,
+        "result": {
+          "bytes": 65536,
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\baseline-build-1\\result.json",
+          "sha256": "e96739b7e1a8c1452370e3c93010af00995bcfd447b0d98d61a769816b93d225"
+        },
+        "schema": "sampler-boundary-parent-tail-v1",
+        "scope": "Sample after canonical publication; actual external exit/whole wall and reserved tail are required.",
+        "whole_wall_sample": 19.047000000005937
+      },
+      "outer": {
+        "command": [
+          "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+          "-I",
+          "-S",
+          "-B",
+          "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\run-stage.py",
+          "--release",
+          "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\work\\baseline-build-release-1.json",
+          "--release-sha256",
+          "e25b2e4b17254a67bbb689e118f3be8168549c2df4b8bdeecd96ef6d7aca218f"
+        ],
+        "elapsed_wall_seconds": 19.093000000008033,
+        "exit": {
+          "bytes": 2,
+          "path": "experiments/sampler-boundary/work/baseline-build-external-1-exit.txt",
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+        },
+        "exit_code": 0,
+        "schema": "sampler-boundary-stage-external-v1",
+        "scope": "Complete directly launched controller interval and actual exit; controller owns descendant Jobs. Raw controller stdout/stderr. No whole CPU inference from wall.",
+        "source": {
+          "bytes": 39050,
+          "path": "experiments/sampler-boundary/run-stage.py",
+          "sha256": "44bc15edbd008da4a39e615bed312949c72abf4d5be9b0bca6908d1439d8071c"
+        },
+        "stderr": {
+          "bytes": 0,
+          "path": "experiments/sampler-boundary/work/baseline-build-external-1-stderr.bin",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stderr_bytes": 0,
+        "stdout": {
+          "bytes": 486,
+          "path": "experiments/sampler-boundary/work/baseline-build-external-1-stdout.bin",
+          "sha256": "d00eeaca0ee641052f3bdfaeaf923e83ee1c2345d00973747bacf75769f444ac"
+        },
+        "stdout_bytes": 486,
+        "timeout_terminated": false
+      },
+      "work": {
+        "completed_child_cpu_seconds": 25.609375,
+        "cpu_accounting_complete": true,
+        "cpu_seconds": 36.609375,
+        "live_child_cpu_seconds": 0.0,
+        "parent_cpu_seconds": 11.0,
+        "wall_seconds": 19.047000000005937
+      },
+      "disposition": null,
+      "observation": null,
+      "environment": {
+        "CARGO_HOME": null,
+        "CARGO_NET_OFFLINE": "true",
+        "RAYON_NUM_THREADS": "2",
+        "RUSTUP_HOME": null,
+        "RUSTUP_TOOLCHAIN": null,
+        "RUST_BACKTRACE": "0",
+        "RUST_LIB_BACKTRACE": "0"
+      },
+      "artifacts": {
+        "build_finished": {
+          "reason": "build-finished",
+          "success": true
+        },
+        "compiler_messages": {
+          "sampler-boundary": {
+            "executable": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\target\\sampler-boundary-baseline-1\\debug\\deps\\sampler_boundary-7d2e664a829f6387.exe",
+            "features": [],
+            "filenames": [
+              "C:\\dev\\blog\\death-of-software\\projects\\strehl\\target\\sampler-boundary-baseline-1\\debug\\deps\\sampler_boundary-7d2e664a829f6387.exe",
+              "C:\\dev\\blog\\death-of-software\\projects\\strehl\\target\\sampler-boundary-baseline-1\\debug\\deps\\sampler_boundary-7d2e664a829f6387.pdb"
+            ],
+            "fresh": false,
+            "manifest_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-core\\Cargo.toml",
+            "package_id": "path+file:///C:/dev/blog/death-of-software/projects/strehl/crates/strehl-core#0.0.0",
+            "profile": {
+              "debug_assertions": true,
+              "debuginfo": 2,
+              "opt_level": "0",
+              "overflow_checks": true,
+              "test": true
+            },
+            "reason": "compiler-artifact",
+            "target": {
+              "crate_types": [
+                "bin"
+              ],
+              "doc": false,
+              "doctest": false,
+              "edition": "2024",
+              "kind": [
+                "test"
+              ],
+              "name": "sampler-boundary",
+              "src_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-core\\tests\\sampler-boundary.rs",
+              "test": true
+            }
+          },
+          "strehl_core": {
+            "executable": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\target\\sampler-boundary-baseline-1\\debug\\deps\\strehl_core-d38618da76a23b5a.exe",
+            "features": [],
+            "filenames": [
+              "C:\\dev\\blog\\death-of-software\\projects\\strehl\\target\\sampler-boundary-baseline-1\\debug\\deps\\strehl_core-d38618da76a23b5a.exe",
+              "C:\\dev\\blog\\death-of-software\\projects\\strehl\\target\\sampler-boundary-baseline-1\\debug\\deps\\strehl_core-d38618da76a23b5a.pdb"
+            ],
+            "fresh": false,
+            "manifest_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-core\\Cargo.toml",
+            "package_id": "path+file:///C:/dev/blog/death-of-software/projects/strehl/crates/strehl-core#0.0.0",
+            "profile": {
+              "debug_assertions": true,
+              "debuginfo": 2,
+              "opt_level": "0",
+              "overflow_checks": true,
+              "test": true
+            },
+            "reason": "compiler-artifact",
+            "target": {
+              "crate_types": [
+                "lib"
+              ],
+              "doc": true,
+              "doctest": true,
+              "edition": "2024",
+              "kind": [
+                "lib"
+              ],
+              "name": "strehl_core",
+              "src_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-core\\src\\lib.rs",
+              "test": true
+            }
+          }
+        },
+        "executable": {
+          "bytes": 998400,
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\baseline-build-1\\sampler-boundary-tests.exe",
+          "sha256": "e6c4ffc7eb37a805fb063e62d180e0ecfca1f36a2d605fb13d3e8882f6c9ea0a"
+        },
+        "executable_compiled_original": {
+          "bytes": 998400,
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\target\\sampler-boundary-baseline-1\\debug\\deps\\sampler_boundary-7d2e664a829f6387.exe",
+          "sha256": "e6c4ffc7eb37a805fb063e62d180e0ecfca1f36a2d605fb13d3e8882f6c9ea0a"
+        },
+        "unit_executable": {
+          "bytes": 6799872,
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\baseline-build-1\\core-unit-tests.exe",
+          "sha256": "b32660118bdf8e300259839ac8635e7d25dbc669a88ad24a6aa9c9ec8cc840b6"
+        },
+        "unit_executable_compiled_original": {
+          "bytes": 6799872,
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\target\\sampler-boundary-baseline-1\\debug\\deps\\strehl_core-d38618da76a23b5a.exe",
+          "sha256": "b32660118bdf8e300259839ac8635e7d25dbc669a88ad24a6aa9c9ec8cc840b6"
+        }
+      },
+      "operations": [
+        {
+          "expected_exit_code": 0,
+          "ordinal": 0,
+          "status": "EXPECTED_PROCESS_DISPOSITION"
+        }
+      ],
+      "source_count": 177,
+      "source_align": {
+        "bytes": 147932,
+        "sha256": "6d33f0e24f21d4370ccd8df0bf618e54a5ad615b838bc265469b4f85051c2786"
+      }
+    },
+    "baseline-test": {
+      "child": {
+        "cleanup_errors": [],
+        "command": [
+          "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\baseline-build-1\\sampler-boundary-tests.exe",
+          "--exact",
+          "sampler_boundary_public_contract",
+          "--nocapture",
+          "--test-threads=1"
+        ],
+        "configured_job_limits": {
+          "committed_bytes": 536870912,
+          "flags": 8704
+        },
+        "direct_exit_observed": true,
+        "error": null,
+        "exit_code": 101,
+        "job_accounting": {
+          "active_processes": 0,
+          "total_cpu_100ns": 156250,
+          "total_kernel_100ns": 156250,
+          "total_page_fault_count": 3990,
+          "total_processes": 2,
+          "total_terminated_processes": 0,
+          "total_user_100ns": 0
+        },
+        "job_memory": {
+          "peak_job_memory_used_bytes": 2711552,
+          "peak_process_memory_used_bytes": 1470464
+        },
+        "limits": {
+          "committed_bytes": 536870912,
+          "cpu_seconds": 27.296875,
+          "log_bytes": 1048576,
+          "wall_seconds": 44.312000000005355
+        },
+        "log": {
+          "bytes": 242248,
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\baseline-test-1\\child-00.log",
+          "sha256": "482df6d5967c7d4cba812f4cf9098384b2f0f45eba4b7ca43ac624b1a54492c3"
+        },
+        "log_bytes": 242248,
+        "pipe_eof_observed": true,
+        "post_exit_drain": {
+          "completed": true,
+          "ended_wall_seconds": 0.125,
+          "initial_accounting": {
+            "active_processes": 0,
+            "total_cpu_100ns": 156250,
+            "total_kernel_100ns": 156250,
+            "total_page_fault_count": 3990,
+            "total_processes": 2,
+            "total_terminated_processes": 0,
+            "total_user_100ns": 0
+          },
+          "last_accounting": {
+            "active_processes": 0,
+            "total_cpu_100ns": 156250,
+            "total_kernel_100ns": 156250,
+            "total_page_fault_count": 3990,
+            "total_processes": 2,
+            "total_terminated_processes": 0,
+            "total_user_100ns": 0
+          },
+          "observation_count": 1,
+          "observations": [
+            {
+              "accounting": {
+                "active_processes": 0,
+                "total_cpu_100ns": 156250,
+                "total_kernel_100ns": 156250,
+                "total_page_fault_count": 3990,
+                "total_processes": 2,
+                "total_terminated_processes": 0,
+                "total_user_100ns": 0
+              },
+              "wall_seconds": 0.125
+            }
+          ],
+          "started_wall_seconds": 0.125
+        },
+        "scope": "owned job tree; committed memory, observed user+kernel CPU; not RSS or a timing benchmark",
+        "terminal_job_accounting": true,
+        "termination": {
+          "attempted": false,
+          "before_accounting": null,
+          "succeeded": false
+        },
+        "wall_seconds": 0.125
+      },
+      "tail": {
+        "actual_parent_cpu_sample": 1.28125,
+        "completed_child_cpu_seconds": 0.015625,
+        "cpu_accounting_complete": true,
+        "final_external_allowance": {
+          "cpu_seconds": 2,
+          "wall_seconds": 3
+        },
+        "live_child_cpu_seconds": 0.0,
+        "result": {
+          "bytes": 65536,
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\baseline-test-1\\result.json",
+          "sha256": "bfec5d1c987ab28b4e2c14b780859a0268ffc4a183721236abd42a8f35c8ae22"
+        },
+        "schema": "sampler-boundary-parent-tail-v1",
+        "scope": "Sample after canonical publication; actual external exit/whole wall and reserved tail are required.",
+        "whole_wall_sample": 1.375
+      },
+      "outer": {
+        "command": [
+          "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+          "-I",
+          "-S",
+          "-B",
+          "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\run-stage.py",
+          "--release",
+          "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\work\\baseline-test-release-1.json",
+          "--release-sha256",
+          "16424d475e0d3da5cbe5400cecade5a6c28a696cfa65a2522610b5fbbcf3dfc2"
+        ],
+        "elapsed_wall_seconds": 1.4060000000026776,
+        "exit": {
+          "bytes": 2,
+          "path": "experiments/sampler-boundary/work/baseline-test-external-1-exit.txt",
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+        },
+        "exit_code": 0,
+        "schema": "sampler-boundary-stage-external-v1",
+        "scope": "Complete directly launched controller interval and actual exit; controller owns descendant Jobs. Raw controller stdout/stderr. No whole CPU inference from wall.",
+        "source": {
+          "bytes": 39050,
+          "path": "experiments/sampler-boundary/run-stage.py",
+          "sha256": "44bc15edbd008da4a39e615bed312949c72abf4d5be9b0bca6908d1439d8071c"
+        },
+        "stderr": {
+          "bytes": 0,
+          "path": "experiments/sampler-boundary/work/baseline-test-external-1-stderr.bin",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stderr_bytes": 0,
+        "stdout": {
+          "bytes": 484,
+          "path": "experiments/sampler-boundary/work/baseline-test-external-1-stdout.bin",
+          "sha256": "569665c71263b634aac79b03bafd74f2d737211002bed07ab12c5de568f2822b"
+        },
+        "stdout_bytes": 484,
+        "timeout_terminated": false
+      },
+      "work": {
+        "completed_child_cpu_seconds": 0.015625,
+        "cpu_accounting_complete": true,
+        "cpu_seconds": 1.296875,
+        "live_child_cpu_seconds": 0.0,
+        "parent_cpu_seconds": 1.28125,
+        "wall_seconds": 1.375
+      },
+      "disposition": {
+        "actual_exit_code": 101,
+        "exercised_public_boundary_failure": true,
+        "failed": 103,
+        "passed": 241,
+        "population_complete": true,
+        "rows": 344,
+        "test_passed": false
+      },
+      "observation": {
+        "actual_exit_code": 101,
+        "begin": {
+          "expected_rows": 344,
+          "gauge": "integer sample centres; scalar plane sample pitch",
+          "height": 96,
+          "schema": "sampler-boundary-begin-v1",
+          "width": 128
+        },
+        "exercised_public_boundary_failure": true,
+        "failed": 103,
+        "failed_rows": [
+          {
+            "actual_kind": "finite",
+            "api": "sample_checked",
+            "exercised": true,
+            "group": "nonfinite",
+            "id": "nearest-nonfinite-nan-x",
+            "kernel": "nearest",
+            "ordinal": 25
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample_checked",
+            "exercised": true,
+            "group": "nonfinite",
+            "id": "nearest-nonfinite-nan-y",
+            "kernel": "nearest",
+            "ordinal": 26
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample_checked",
+            "exercised": true,
+            "group": "boundary",
+            "id": "bilinear-boundary-high-x-quarter",
+            "kernel": "bilinear",
+            "ordinal": 56
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample_checked",
+            "exercised": true,
+            "group": "boundary",
+            "id": "bilinear-boundary-high-x-half",
+            "kernel": "bilinear",
+            "ordinal": 57
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample_checked",
+            "exercised": true,
+            "group": "boundary",
+            "id": "bilinear-boundary-high-y-quarter",
+            "kernel": "bilinear",
+            "ordinal": 58
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample_checked",
+            "exercised": true,
+            "group": "boundary",
+            "id": "bilinear-boundary-high-y-half",
+            "kernel": "bilinear",
+            "ordinal": 59
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample_checked",
+            "exercised": true,
+            "group": "boundary",
+            "id": "bilinear-boundary-high-corner-quarter",
+            "kernel": "bilinear",
+            "ordinal": 60
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample_checked",
+            "exercised": true,
+            "group": "boundary",
+            "id": "bilinear-boundary-high-corner-half",
+            "kernel": "bilinear",
+            "ordinal": 61
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample_checked",
+            "exercised": true,
+            "group": "boundary",
+            "id": "bilinear-boundary-exact-upper-corner",
+            "kernel": "bilinear",
+            "ordinal": 62
+          },
+          {
+            "actual_kind": "nonfinite",
+            "api": "sample_checked",
+            "exercised": true,
+            "group": "nonfinite",
+            "id": "bilinear-nonfinite-nan-x",
+            "kernel": "bilinear",
+            "ordinal": 74
+          },
+          {
+            "actual_kind": "nonfinite",
+            "api": "sample_checked",
+            "exercised": true,
+            "group": "nonfinite",
+            "id": "bilinear-nonfinite-nan-y",
+            "kernel": "bilinear",
+            "ordinal": 75
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample_checked",
+            "exercised": true,
+            "group": "tiny",
+            "id": "bilinear-tiny-2x2",
+            "kernel": "bilinear",
+            "ordinal": 83
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample",
+            "exercised": true,
+            "group": "unchecked",
+            "id": "bilinear-unchecked-high-x-quarter",
+            "kernel": "bilinear",
+            "ordinal": 88
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample",
+            "exercised": true,
+            "group": "unchecked",
+            "id": "bilinear-unchecked-high-y-quarter",
+            "kernel": "bilinear",
+            "ordinal": 89
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample",
+            "exercised": true,
+            "group": "unchecked",
+            "id": "bilinear-unchecked-endpoint-x",
+            "kernel": "bilinear",
+            "ordinal": 90
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample",
+            "exercised": true,
+            "group": "unchecked",
+            "id": "bilinear-unchecked-endpoint-y",
+            "kernel": "bilinear",
+            "ordinal": 91
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample",
+            "exercised": true,
+            "group": "unchecked",
+            "id": "bilinear-unchecked-endpoint-corner",
+            "kernel": "bilinear",
+            "ordinal": 92
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample",
+            "exercised": true,
+            "group": "unchecked",
+            "id": "bilinear-unchecked-far-high-x",
+            "kernel": "bilinear",
+            "ordinal": 93
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample",
+            "exercised": true,
+            "group": "unchecked",
+            "id": "bilinear-unchecked-far-high-y",
+            "kernel": "bilinear",
+            "ordinal": 94
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample",
+            "exercised": true,
+            "group": "unchecked",
+            "id": "bilinear-unchecked-far-high-corner",
+            "kernel": "bilinear",
+            "ordinal": 95
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample_checked",
+            "exercised": true,
+            "group": "boundary",
+            "id": "catmull-rom-boundary-high-x-quarter",
+            "kernel": "catmull-rom",
+            "ordinal": 105
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample_checked",
+            "exercised": true,
+            "group": "boundary",
+            "id": "catmull-rom-boundary-high-x-half",
+            "kernel": "catmull-rom",
+            "ordinal": 106
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample_checked",
+            "exercised": true,
+            "group": "boundary",
+            "id": "catmull-rom-boundary-high-y-quarter",
+            "kernel": "catmull-rom",
+            "ordinal": 107
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample_checked",
+            "exercised": true,
+            "group": "boundary",
+            "id": "catmull-rom-boundary-high-y-half",
+            "kernel": "catmull-rom",
+            "ordinal": 108
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample_checked",
+            "exercised": true,
+            "group": "boundary",
+            "id": "catmull-rom-boundary-high-corner-quarter",
+            "kernel": "catmull-rom",
+            "ordinal": 109
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample_checked",
+            "exercised": true,
+            "group": "boundary",
+            "id": "catmull-rom-boundary-high-corner-half",
+            "kernel": "catmull-rom",
+            "ordinal": 110
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample_checked",
+            "exercised": true,
+            "group": "boundary",
+            "id": "catmull-rom-boundary-exact-upper-corner",
+            "kernel": "catmull-rom",
+            "ordinal": 111
+          },
+          {
+            "actual_kind": "nonfinite",
+            "api": "sample_checked",
+            "exercised": true,
+            "group": "nonfinite",
+            "id": "catmull-rom-nonfinite-nan-x",
+            "kernel": "catmull-rom",
+            "ordinal": 123
+          },
+          {
+            "actual_kind": "panic",
+            "api": "sample_checked",
+            "exercised": true,
+            "group": "nonfinite",
+            "id": "catmull-rom-nonfinite-nan-y",
+            "kernel": "catmull-rom",
+            "ordinal": 124
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample_checked",
+            "exercised": true,
+            "group": "tiny",
+            "id": "catmull-rom-tiny-4x4",
+            "kernel": "catmull-rom",
+            "ordinal": 134
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample",
+            "exercised": true,
+            "group": "unchecked",
+            "id": "catmull-rom-unchecked-high-x-quarter",
+            "kernel": "catmull-rom",
+            "ordinal": 137
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample",
+            "exercised": true,
+            "group": "unchecked",
+            "id": "catmull-rom-unchecked-high-y-quarter",
+            "kernel": "catmull-rom",
+            "ordinal": 138
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample",
+            "exercised": true,
+            "group": "unchecked",
+            "id": "catmull-rom-unchecked-endpoint-x",
+            "kernel": "catmull-rom",
+            "ordinal": 139
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample",
+            "exercised": true,
+            "group": "unchecked",
+            "id": "catmull-rom-unchecked-endpoint-y",
+            "kernel": "catmull-rom",
+            "ordinal": 140
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample",
+            "exercised": true,
+            "group": "unchecked",
+            "id": "catmull-rom-unchecked-endpoint-corner",
+            "kernel": "catmull-rom",
+            "ordinal": 141
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample",
+            "exercised": true,
+            "group": "unchecked",
+            "id": "catmull-rom-unchecked-far-high-x",
+            "kernel": "catmull-rom",
+            "ordinal": 142
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample",
+            "exercised": true,
+            "group": "unchecked",
+            "id": "catmull-rom-unchecked-far-high-y",
+            "kernel": "catmull-rom",
+            "ordinal": 143
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample",
+            "exercised": true,
+            "group": "unchecked",
+            "id": "catmull-rom-unchecked-far-high-corner",
+            "kernel": "catmull-rom",
+            "ordinal": 144
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample_checked",
+            "exercised": true,
+            "group": "boundary",
+            "id": "clamped-catmull-rom-boundary-high-x-quarter",
+            "kernel": "clamped-catmull-rom",
+            "ordinal": 154
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample_checked",
+            "exercised": true,
+            "group": "boundary",
+            "id": "clamped-catmull-rom-boundary-high-x-half",
+            "kernel": "clamped-catmull-rom",
+            "ordinal": 155
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample_checked",
+            "exercised": true,
+            "group": "boundary",
+            "id": "clamped-catmull-rom-boundary-high-y-quarter",
+            "kernel": "clamped-catmull-rom",
+            "ordinal": 156
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample_checked",
+            "exercised": true,
+            "group": "boundary",
+            "id": "clamped-catmull-rom-boundary-high-y-half",
+            "kernel": "clamped-catmull-rom",
+            "ordinal": 157
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample_checked",
+            "exercised": true,
+            "group": "boundary",
+            "id": "clamped-catmull-rom-boundary-high-corner-quarter",
+            "kernel": "clamped-catmull-rom",
+            "ordinal": 158
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample_checked",
+            "exercised": true,
+            "group": "boundary",
+            "id": "clamped-catmull-rom-boundary-high-corner-half",
+            "kernel": "clamped-catmull-rom",
+            "ordinal": 159
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample_checked",
+            "exercised": true,
+            "group": "boundary",
+            "id": "clamped-catmull-rom-boundary-exact-upper-corner",
+            "kernel": "clamped-catmull-rom",
+            "ordinal": 160
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample_checked",
+            "exercised": true,
+            "group": "nonfinite",
+            "id": "clamped-catmull-rom-nonfinite-nan-x",
+            "kernel": "clamped-catmull-rom",
+            "ordinal": 172
+          },
+          {
+            "actual_kind": "panic",
+            "api": "sample_checked",
+            "exercised": true,
+            "group": "nonfinite",
+            "id": "clamped-catmull-rom-nonfinite-nan-y",
+            "kernel": "clamped-catmull-rom",
+            "ordinal": 173
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample_checked",
+            "exercised": true,
+            "group": "tiny",
+            "id": "clamped-catmull-rom-tiny-4x4",
+            "kernel": "clamped-catmull-rom",
+            "ordinal": 183
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample",
+            "exercised": true,
+            "group": "unchecked",
+            "id": "clamped-catmull-rom-unchecked-high-x-quarter",
+            "kernel": "clamped-catmull-rom",
+            "ordinal": 186
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample",
+            "exercised": true,
+            "group": "unchecked",
+            "id": "clamped-catmull-rom-unchecked-high-y-quarter",
+            "kernel": "clamped-catmull-rom",
+            "ordinal": 187
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample",
+            "exercised": true,
+            "group": "unchecked",
+            "id": "clamped-catmull-rom-unchecked-endpoint-x",
+            "kernel": "clamped-catmull-rom",
+            "ordinal": 188
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample",
+            "exercised": true,
+            "group": "unchecked",
+            "id": "clamped-catmull-rom-unchecked-endpoint-y",
+            "kernel": "clamped-catmull-rom",
+            "ordinal": 189
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample",
+            "exercised": true,
+            "group": "unchecked",
+            "id": "clamped-catmull-rom-unchecked-endpoint-corner",
+            "kernel": "clamped-catmull-rom",
+            "ordinal": 190
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample",
+            "exercised": true,
+            "group": "unchecked",
+            "id": "clamped-catmull-rom-unchecked-far-high-x",
+            "kernel": "clamped-catmull-rom",
+            "ordinal": 191
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample",
+            "exercised": true,
+            "group": "unchecked",
+            "id": "clamped-catmull-rom-unchecked-far-high-y",
+            "kernel": "clamped-catmull-rom",
+            "ordinal": 192
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample",
+            "exercised": true,
+            "group": "unchecked",
+            "id": "clamped-catmull-rom-unchecked-far-high-corner",
+            "kernel": "clamped-catmull-rom",
+            "ordinal": 193
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample_checked",
+            "exercised": true,
+            "group": "boundary",
+            "id": "lanczos2-boundary-high-x-quarter",
+            "kernel": "lanczos2",
+            "ordinal": 203
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample_checked",
+            "exercised": true,
+            "group": "boundary",
+            "id": "lanczos2-boundary-high-x-half",
+            "kernel": "lanczos2",
+            "ordinal": 204
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample_checked",
+            "exercised": true,
+            "group": "boundary",
+            "id": "lanczos2-boundary-high-y-quarter",
+            "kernel": "lanczos2",
+            "ordinal": 205
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample_checked",
+            "exercised": true,
+            "group": "boundary",
+            "id": "lanczos2-boundary-high-y-half",
+            "kernel": "lanczos2",
+            "ordinal": 206
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample_checked",
+            "exercised": true,
+            "group": "boundary",
+            "id": "lanczos2-boundary-high-corner-quarter",
+            "kernel": "lanczos2",
+            "ordinal": 207
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample_checked",
+            "exercised": true,
+            "group": "boundary",
+            "id": "lanczos2-boundary-high-corner-half",
+            "kernel": "lanczos2",
+            "ordinal": 208
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample_checked",
+            "exercised": true,
+            "group": "boundary",
+            "id": "lanczos2-boundary-exact-upper-corner",
+            "kernel": "lanczos2",
+            "ordinal": 209
+          },
+          {
+            "actual_kind": "nonfinite",
+            "api": "sample_checked",
+            "exercised": true,
+            "group": "nonfinite",
+            "id": "lanczos2-nonfinite-nan-x",
+            "kernel": "lanczos2",
+            "ordinal": 221
+          },
+          {
+            "actual_kind": "panic",
+            "api": "sample_checked",
+            "exercised": true,
+            "group": "nonfinite",
+            "id": "lanczos2-nonfinite-nan-y",
+            "kernel": "lanczos2",
+            "ordinal": 222
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample_checked",
+            "exercised": true,
+            "group": "tiny",
+            "id": "lanczos2-tiny-4x4",
+            "kernel": "lanczos2",
+            "ordinal": 232
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample",
+            "exercised": true,
+            "group": "unchecked",
+            "id": "lanczos2-unchecked-high-x-quarter",
+            "kernel": "lanczos2",
+            "ordinal": 235
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample",
+            "exercised": true,
+            "group": "unchecked",
+            "id": "lanczos2-unchecked-high-y-quarter",
+            "kernel": "lanczos2",
+            "ordinal": 236
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample",
+            "exercised": true,
+            "group": "unchecked",
+            "id": "lanczos2-unchecked-endpoint-x",
+            "kernel": "lanczos2",
+            "ordinal": 237
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample",
+            "exercised": true,
+            "group": "unchecked",
+            "id": "lanczos2-unchecked-endpoint-y",
+            "kernel": "lanczos2",
+            "ordinal": 238
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample",
+            "exercised": true,
+            "group": "unchecked",
+            "id": "lanczos2-unchecked-endpoint-corner",
+            "kernel": "lanczos2",
+            "ordinal": 239
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample",
+            "exercised": true,
+            "group": "unchecked",
+            "id": "lanczos2-unchecked-far-high-x",
+            "kernel": "lanczos2",
+            "ordinal": 240
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample",
+            "exercised": true,
+            "group": "unchecked",
+            "id": "lanczos2-unchecked-far-high-y",
+            "kernel": "lanczos2",
+            "ordinal": 241
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample",
+            "exercised": true,
+            "group": "unchecked",
+            "id": "lanczos2-unchecked-far-high-corner",
+            "kernel": "lanczos2",
+            "ordinal": 242
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample_checked",
+            "exercised": true,
+            "group": "boundary",
+            "id": "lanczos3-boundary-high-x-quarter",
+            "kernel": "lanczos3",
+            "ordinal": 252
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample_checked",
+            "exercised": true,
+            "group": "boundary",
+            "id": "lanczos3-boundary-high-x-half",
+            "kernel": "lanczos3",
+            "ordinal": 253
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample_checked",
+            "exercised": true,
+            "group": "boundary",
+            "id": "lanczos3-boundary-high-y-quarter",
+            "kernel": "lanczos3",
+            "ordinal": 254
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample_checked",
+            "exercised": true,
+            "group": "boundary",
+            "id": "lanczos3-boundary-high-y-half",
+            "kernel": "lanczos3",
+            "ordinal": 255
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample_checked",
+            "exercised": true,
+            "group": "boundary",
+            "id": "lanczos3-boundary-high-corner-quarter",
+            "kernel": "lanczos3",
+            "ordinal": 256
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample_checked",
+            "exercised": true,
+            "group": "boundary",
+            "id": "lanczos3-boundary-high-corner-half",
+            "kernel": "lanczos3",
+            "ordinal": 257
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample_checked",
+            "exercised": true,
+            "group": "boundary",
+            "id": "lanczos3-boundary-exact-upper-corner",
+            "kernel": "lanczos3",
+            "ordinal": 258
+          },
+          {
+            "actual_kind": "nonfinite",
+            "api": "sample_checked",
+            "exercised": true,
+            "group": "nonfinite",
+            "id": "lanczos3-nonfinite-nan-x",
+            "kernel": "lanczos3",
+            "ordinal": 270
+          },
+          {
+            "actual_kind": "panic",
+            "api": "sample_checked",
+            "exercised": true,
+            "group": "nonfinite",
+            "id": "lanczos3-nonfinite-nan-y",
+            "kernel": "lanczos3",
+            "ordinal": 271
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample_checked",
+            "exercised": true,
+            "group": "tiny",
+            "id": "lanczos3-tiny-6x6",
+            "kernel": "lanczos3",
+            "ordinal": 283
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample",
+            "exercised": true,
+            "group": "unchecked",
+            "id": "lanczos3-unchecked-high-x-quarter",
+            "kernel": "lanczos3",
+            "ordinal": 284
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample",
+            "exercised": true,
+            "group": "unchecked",
+            "id": "lanczos3-unchecked-high-y-quarter",
+            "kernel": "lanczos3",
+            "ordinal": 285
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample",
+            "exercised": true,
+            "group": "unchecked",
+            "id": "lanczos3-unchecked-endpoint-x",
+            "kernel": "lanczos3",
+            "ordinal": 286
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample",
+            "exercised": true,
+            "group": "unchecked",
+            "id": "lanczos3-unchecked-endpoint-y",
+            "kernel": "lanczos3",
+            "ordinal": 287
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample",
+            "exercised": true,
+            "group": "unchecked",
+            "id": "lanczos3-unchecked-endpoint-corner",
+            "kernel": "lanczos3",
+            "ordinal": 288
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample",
+            "exercised": true,
+            "group": "unchecked",
+            "id": "lanczos3-unchecked-far-high-x",
+            "kernel": "lanczos3",
+            "ordinal": 289
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample",
+            "exercised": true,
+            "group": "unchecked",
+            "id": "lanczos3-unchecked-far-high-y",
+            "kernel": "lanczos3",
+            "ordinal": 290
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample",
+            "exercised": true,
+            "group": "unchecked",
+            "id": "lanczos3-unchecked-far-high-corner",
+            "kernel": "lanczos3",
+            "ordinal": 291
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample-endpoint-and-far-high",
+            "exercised": true,
+            "group": "unchecked-tiny",
+            "id": "catmull-rom-unchecked-tiny-2x7",
+            "kernel": "catmull-rom",
+            "ordinal": 298
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample-endpoint-and-far-high",
+            "exercised": true,
+            "group": "unchecked-tiny",
+            "id": "catmull-rom-unchecked-tiny-7x2",
+            "kernel": "catmull-rom",
+            "ordinal": 299
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample-endpoint-and-far-high",
+            "exercised": true,
+            "group": "unchecked-tiny",
+            "id": "clamped-catmull-rom-unchecked-tiny-2x7",
+            "kernel": "clamped-catmull-rom",
+            "ordinal": 302
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample-endpoint-and-far-high",
+            "exercised": true,
+            "group": "unchecked-tiny",
+            "id": "clamped-catmull-rom-unchecked-tiny-7x2",
+            "kernel": "clamped-catmull-rom",
+            "ordinal": 303
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample-endpoint-and-far-high",
+            "exercised": true,
+            "group": "unchecked-tiny",
+            "id": "lanczos2-unchecked-tiny-2x7",
+            "kernel": "lanczos2",
+            "ordinal": 306
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample-endpoint-and-far-high",
+            "exercised": true,
+            "group": "unchecked-tiny",
+            "id": "lanczos2-unchecked-tiny-7x2",
+            "kernel": "lanczos2",
+            "ordinal": 307
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample-endpoint-and-far-high",
+            "exercised": true,
+            "group": "unchecked-tiny",
+            "id": "lanczos3-unchecked-tiny-2x7",
+            "kernel": "lanczos3",
+            "ordinal": 310
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample-endpoint-and-far-high",
+            "exercised": true,
+            "group": "unchecked-tiny",
+            "id": "lanczos3-unchecked-tiny-7x2",
+            "kernel": "lanczos3",
+            "ordinal": 311
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample-endpoint-and-far-high",
+            "exercised": true,
+            "group": "unchecked-tiny",
+            "id": "lanczos3-unchecked-tiny-4x7",
+            "kernel": "lanczos3",
+            "ordinal": 312
+          },
+          {
+            "actual_kind": "finite",
+            "api": "sample-endpoint-and-far-high",
+            "exercised": true,
+            "group": "unchecked-tiny",
+            "id": "lanczos3-unchecked-tiny-7x4",
+            "kernel": "lanczos3",
+            "ordinal": 313
+          },
+          {
+            "actual_kind": "false",
+            "api": "metadata-or-consumer",
+            "exercised": true,
+            "group": "gather",
+            "id": "bilinear-gather-requested-map",
+            "kernel": "bilinear",
+            "ordinal": 342
+          }
+        ],
+        "gather_record": {
+          "byte_offset": 136622,
+          "bytes": 104955,
+          "sha256": "470c6a1f045013cf25c794e429fca114d8f028db82328c681ceedba0e309975d"
+        },
+        "groups": {
+          "boundary": 126,
+          "constructor": 4,
+          "cubic-limiter": 6,
+          "gather": 2,
+          "lanczos-commission": 18,
+          "nonfinite": 36,
+          "null": 18,
+          "support": 6,
+          "tiny": 48,
+          "unchecked": 60,
+          "unchecked-tiny": 20
+        },
+        "passed": 241,
+        "population_complete": true,
+        "raw_log": {
+          "bytes": 242248,
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\baseline-test-1\\child-00.log",
+          "sha256": "482df6d5967c7d4cba812f4cf9098384b2f0f45eba4b7ca43ac624b1a54492c3"
+        },
+        "rows": 344,
+        "schema": "sampler-boundary-test-observation-v1",
+        "scope": "Transport/population and authored assertion disposition only. Full bit arrays/rows remain in raw log; no sampler oracle is recomputed here.",
+        "summary": {
+          "failed": 103,
+          "groups": {
+            "boundary": 126,
+            "constructor": 4,
+            "cubic-limiter": 6,
+            "gather": 2,
+            "lanczos-commission": 18,
+            "nonfinite": 36,
+            "null": 18,
+            "support": 6,
+            "tiny": 48,
+            "unchecked": 60,
+            "unchecked-tiny": 20
+          },
+          "passed": 241,
+          "population_complete": true,
+          "rows": 344,
+          "schema": "sampler-boundary-summary-v1"
+        },
+        "test_passed": false,
+        "variant": "baseline"
+      },
+      "environment": {
+        "CARGO_HOME": null,
+        "CARGO_NET_OFFLINE": "true",
+        "RAYON_NUM_THREADS": "2",
+        "RUSTUP_HOME": null,
+        "RUSTUP_TOOLCHAIN": null,
+        "RUST_BACKTRACE": "0",
+        "RUST_LIB_BACKTRACE": "0"
+      },
+      "artifacts": {
+        "test_observation": {
+          "bytes": 17867,
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\baseline-test-1\\test-observation.json",
+          "sha256": "b6e713e7bcec450ae03e3536ddd9f46f0f09f674a9683c0a5420721521af3f05"
+        }
+      },
+      "operations": [
+        {
+          "expected_exit_code": 101,
+          "ordinal": 0,
+          "status": "EXPECTED_PROCESS_DISPOSITION"
+        }
+      ],
+      "source_count": 177,
+      "source_align": {
+        "bytes": 147932,
+        "sha256": "6d33f0e24f21d4370ccd8df0bf618e54a5ad615b838bc265469b4f85051c2786"
+      }
+    }
+  },
+  "helper_review": {
+    "rows": 344,
+    "failed": 103,
+    "passed": 241,
+    "saved_operand_predicates": 344,
+    "source_bound_reported_boolean_rows": [
+      "nearest-support-literal",
+      "bilinear-support-literal",
+      "catmull-rom-support-literal",
+      "clamped-catmull-rom-support-literal",
+      "lanczos2-support-literal",
+      "lanczos3-support-literal",
+      "plane-constructor-empty-both",
+      "plane-constructor-empty-width",
+      "plane-constructor-empty-height",
+      "plane-constructor-short-data",
+      "bilinear-gather-requested-map",
+      "bilinear-gather-opposite-direction-rejected"
+    ],
+    "dispositions": [
+      {
+        "group": "boundary",
+        "actual_kind": "finite",
+        "passed": false,
+        "count": 35
+      },
+      {
+        "group": "boundary",
+        "actual_kind": "finite",
+        "passed": true,
+        "count": 43
+      },
+      {
+        "group": "boundary",
+        "actual_kind": "refused",
+        "passed": true,
+        "count": 48
+      },
+      {
+        "group": "constructor",
+        "actual_kind": "true",
+        "passed": true,
+        "count": 4
+      },
+      {
+        "group": "cubic-limiter",
+        "actual_kind": "finite",
+        "passed": true,
+        "count": 6
+      },
+      {
+        "group": "gather",
+        "actual_kind": "false",
+        "passed": false,
+        "count": 1
+      },
+      {
+        "group": "gather",
+        "actual_kind": "true",
+        "passed": true,
+        "count": 1
+      },
+      {
+        "group": "lanczos-commission",
+        "actual_kind": "finite",
+        "passed": true,
+        "count": 18
+      },
+      {
+        "group": "nonfinite",
+        "actual_kind": "finite",
+        "passed": false,
+        "count": 3
+      },
+      {
+        "group": "nonfinite",
+        "actual_kind": "nonfinite",
+        "passed": false,
+        "count": 5
+      },
+      {
+        "group": "nonfinite",
+        "actual_kind": "panic",
+        "passed": false,
+        "count": 4
+      },
+      {
+        "group": "nonfinite",
+        "actual_kind": "refused",
+        "passed": true,
+        "count": 24
+      },
+      {
+        "group": "null",
+        "actual_kind": "finite",
+        "passed": true,
+        "count": 18
+      },
+      {
+        "group": "support",
+        "actual_kind": "true",
+        "passed": true,
+        "count": 6
+      },
+      {
+        "group": "tiny",
+        "actual_kind": "finite",
+        "passed": false,
+        "count": 5
+      },
+      {
+        "group": "tiny",
+        "actual_kind": "finite",
+        "passed": true,
+        "count": 18
+      },
+      {
+        "group": "tiny",
+        "actual_kind": "refused",
+        "passed": true,
+        "count": 25
+      },
+      {
+        "group": "unchecked",
+        "actual_kind": "finite",
+        "passed": false,
+        "count": 40
+      },
+      {
+        "group": "unchecked",
+        "actual_kind": "finite",
+        "passed": true,
+        "count": 20
+      },
+      {
+        "group": "unchecked-tiny",
+        "actual_kind": "finite",
+        "passed": false,
+        "count": 10
+      },
+      {
+        "group": "unchecked-tiny",
+        "actual_kind": "finite",
+        "passed": true,
+        "count": 10
+      }
+    ],
+    "failed_rows": [
+      {
+        "id": "nearest-nonfinite-nan-x",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 1320.0,
+        "oracle": null,
+        "paired": null,
+        "x": "nonfinite",
+        "y": 20.25
+      },
+      {
+        "id": "nearest-nonfinite-nan-y",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 1160.0,
+        "oracle": null,
+        "paired": null,
+        "x": 20.25,
+        "y": "nonfinite"
+      },
+      {
+        "id": "bilinear-boundary-high-x-quarter",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2332.0,
+        "oracle": 2334.0,
+        "paired": null,
+        "x": 126.25,
+        "y": 20.25
+      },
+      {
+        "id": "bilinear-boundary-high-x-half",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2332.0,
+        "oracle": 2336.0,
+        "paired": null,
+        "x": 126.5,
+        "y": 20.25
+      },
+      {
+        "id": "bilinear-boundary-high-y-quarter",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2666.0,
+        "oracle": 2670.0,
+        "paired": null,
+        "x": 20.25,
+        "y": 94.25
+      },
+      {
+        "id": "bilinear-boundary-high-y-half",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2666.0,
+        "oracle": 2674.0,
+        "paired": null,
+        "x": 20.25,
+        "y": 94.5
+      },
+      {
+        "id": "bilinear-boundary-high-corner-quarter",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 3512.0,
+        "oracle": 3518.0,
+        "paired": null,
+        "x": 126.25,
+        "y": 94.25
+      },
+      {
+        "id": "bilinear-boundary-high-corner-half",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 3512.0,
+        "oracle": 3524.0,
+        "paired": null,
+        "x": 126.5,
+        "y": 94.5
+      },
+      {
+        "id": "bilinear-boundary-exact-upper-corner",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 3512.0,
+        "oracle": 3524.0,
+        "paired": null,
+        "x": 126.5,
+        "y": 94.5
+      },
+      {
+        "id": "bilinear-nonfinite-nan-x",
+        "kind": "nonfinite",
+        "exercised": true,
+        "actual": null,
+        "oracle": null,
+        "paired": null,
+        "x": "nonfinite",
+        "y": 20.25
+      },
+      {
+        "id": "bilinear-nonfinite-nan-y",
+        "kind": "nonfinite",
+        "exercised": true,
+        "actual": null,
+        "oracle": null,
+        "paired": null,
+        "x": 20.25,
+        "y": "nonfinite"
+      },
+      {
+        "id": "bilinear-tiny-2x2",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 1000.0,
+        "oracle": 1012.0,
+        "paired": null,
+        "x": 0.5,
+        "y": 0.5
+      },
+      {
+        "id": "bilinear-unchecked-high-x-quarter",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2332.0,
+        "oracle": 2334.0,
+        "paired": null,
+        "x": 126.25,
+        "y": 20.25
+      },
+      {
+        "id": "bilinear-unchecked-high-y-quarter",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2666.0,
+        "oracle": 2670.0,
+        "paired": null,
+        "x": 20.25,
+        "y": 94.25
+      },
+      {
+        "id": "bilinear-unchecked-endpoint-x",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2328.0,
+        "oracle": 2336.0,
+        "paired": null,
+        "x": 127.0,
+        "y": 20.0
+      },
+      {
+        "id": "bilinear-unchecked-endpoint-y",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2664.0,
+        "oracle": 2680.0,
+        "paired": null,
+        "x": 20.0,
+        "y": 95.0
+      },
+      {
+        "id": "bilinear-unchecked-endpoint-corner",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 3512.0,
+        "oracle": 3536.0,
+        "paired": null,
+        "x": 127.0,
+        "y": 95.0
+      },
+      {
+        "id": "bilinear-unchecked-far-high-x",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2328.0,
+        "oracle": 2336.0,
+        "paired": null,
+        "x": 178.0,
+        "y": 20.0
+      },
+      {
+        "id": "bilinear-unchecked-far-high-y",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2664.0,
+        "oracle": 2680.0,
+        "paired": null,
+        "x": 20.0,
+        "y": 146.0
+      },
+      {
+        "id": "bilinear-unchecked-far-high-corner",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 3512.0,
+        "oracle": 3536.0,
+        "paired": null,
+        "x": 178.0,
+        "y": 146.0
+      },
+      {
+        "id": "catmull-rom-boundary-high-x-quarter",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2324.0,
+        "oracle": 2326.0,
+        "paired": null,
+        "x": 125.25,
+        "y": 20.25
+      },
+      {
+        "id": "catmull-rom-boundary-high-x-half",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2324.0,
+        "oracle": 2328.0,
+        "paired": null,
+        "x": 125.5,
+        "y": 20.25
+      },
+      {
+        "id": "catmull-rom-boundary-high-y-quarter",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2650.0,
+        "oracle": 2654.0,
+        "paired": null,
+        "x": 20.25,
+        "y": 93.25
+      },
+      {
+        "id": "catmull-rom-boundary-high-y-half",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2650.0,
+        "oracle": 2658.0,
+        "paired": null,
+        "x": 20.25,
+        "y": 93.5
+      },
+      {
+        "id": "catmull-rom-boundary-high-corner-quarter",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 3488.0,
+        "oracle": 3494.0,
+        "paired": null,
+        "x": 125.25,
+        "y": 93.25
+      },
+      {
+        "id": "catmull-rom-boundary-high-corner-half",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 3488.0,
+        "oracle": 3500.0,
+        "paired": null,
+        "x": 125.5,
+        "y": 93.5
+      },
+      {
+        "id": "catmull-rom-boundary-exact-upper-corner",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 3488.0,
+        "oracle": 3500.0,
+        "paired": null,
+        "x": 125.5,
+        "y": 93.5
+      },
+      {
+        "id": "catmull-rom-nonfinite-nan-x",
+        "kind": "nonfinite",
+        "exercised": true,
+        "actual": null,
+        "oracle": null,
+        "paired": null,
+        "x": "nonfinite",
+        "y": 20.25
+      },
+      {
+        "id": "catmull-rom-nonfinite-nan-y",
+        "kind": "panic",
+        "exercised": true,
+        "actual": null,
+        "oracle": null,
+        "paired": null,
+        "x": 20.25,
+        "y": "nonfinite"
+      },
+      {
+        "id": "catmull-rom-tiny-4x4",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 1024.0,
+        "oracle": 1036.0,
+        "paired": null,
+        "x": 1.5,
+        "y": 1.5
+      },
+      {
+        "id": "catmull-rom-unchecked-high-x-quarter",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2324.0,
+        "oracle": 2326.0,
+        "paired": null,
+        "x": 125.25,
+        "y": 20.25
+      },
+      {
+        "id": "catmull-rom-unchecked-high-y-quarter",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2650.0,
+        "oracle": 2654.0,
+        "paired": null,
+        "x": 20.25,
+        "y": 93.25
+      },
+      {
+        "id": "catmull-rom-unchecked-endpoint-x",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2320.0,
+        "oracle": 2328.0,
+        "paired": null,
+        "x": 126.0,
+        "y": 20.0
+      },
+      {
+        "id": "catmull-rom-unchecked-endpoint-y",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2648.0,
+        "oracle": 2664.0,
+        "paired": null,
+        "x": 20.0,
+        "y": 94.0
+      },
+      {
+        "id": "catmull-rom-unchecked-endpoint-corner",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 3488.0,
+        "oracle": 3512.0,
+        "paired": null,
+        "x": 126.0,
+        "y": 94.0
+      },
+      {
+        "id": "catmull-rom-unchecked-far-high-x",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2320.0,
+        "oracle": 2328.0,
+        "paired": null,
+        "x": 178.0,
+        "y": 20.0
+      },
+      {
+        "id": "catmull-rom-unchecked-far-high-y",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2648.0,
+        "oracle": 2664.0,
+        "paired": null,
+        "x": 20.0,
+        "y": 146.0
+      },
+      {
+        "id": "catmull-rom-unchecked-far-high-corner",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 3488.0,
+        "oracle": 3512.0,
+        "paired": null,
+        "x": 178.0,
+        "y": 146.0
+      },
+      {
+        "id": "clamped-catmull-rom-boundary-high-x-quarter",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2324.0,
+        "oracle": 2326.0,
+        "paired": null,
+        "x": 125.25,
+        "y": 20.25
+      },
+      {
+        "id": "clamped-catmull-rom-boundary-high-x-half",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2324.0,
+        "oracle": 2328.0,
+        "paired": null,
+        "x": 125.5,
+        "y": 20.25
+      },
+      {
+        "id": "clamped-catmull-rom-boundary-high-y-quarter",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2650.0,
+        "oracle": 2654.0,
+        "paired": null,
+        "x": 20.25,
+        "y": 93.25
+      },
+      {
+        "id": "clamped-catmull-rom-boundary-high-y-half",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2650.0,
+        "oracle": 2658.0,
+        "paired": null,
+        "x": 20.25,
+        "y": 93.5
+      },
+      {
+        "id": "clamped-catmull-rom-boundary-high-corner-quarter",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 3488.0,
+        "oracle": 3494.0,
+        "paired": null,
+        "x": 125.25,
+        "y": 93.25
+      },
+      {
+        "id": "clamped-catmull-rom-boundary-high-corner-half",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 3488.0,
+        "oracle": 3500.0,
+        "paired": null,
+        "x": 125.5,
+        "y": 93.5
+      },
+      {
+        "id": "clamped-catmull-rom-boundary-exact-upper-corner",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 3488.0,
+        "oracle": 3500.0,
+        "paired": null,
+        "x": 125.5,
+        "y": 93.5
+      },
+      {
+        "id": "clamped-catmull-rom-nonfinite-nan-x",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 1304.0,
+        "oracle": null,
+        "paired": null,
+        "x": "nonfinite",
+        "y": 20.25
+      },
+      {
+        "id": "clamped-catmull-rom-nonfinite-nan-y",
+        "kind": "panic",
+        "exercised": true,
+        "actual": null,
+        "oracle": null,
+        "paired": null,
+        "x": 20.25,
+        "y": "nonfinite"
+      },
+      {
+        "id": "clamped-catmull-rom-tiny-4x4",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 1024.0,
+        "oracle": 1036.0,
+        "paired": null,
+        "x": 1.5,
+        "y": 1.5
+      },
+      {
+        "id": "clamped-catmull-rom-unchecked-high-x-quarter",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2324.0,
+        "oracle": 2326.0,
+        "paired": null,
+        "x": 125.25,
+        "y": 20.25
+      },
+      {
+        "id": "clamped-catmull-rom-unchecked-high-y-quarter",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2650.0,
+        "oracle": 2654.0,
+        "paired": null,
+        "x": 20.25,
+        "y": 93.25
+      },
+      {
+        "id": "clamped-catmull-rom-unchecked-endpoint-x",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2320.0,
+        "oracle": 2328.0,
+        "paired": null,
+        "x": 126.0,
+        "y": 20.0
+      },
+      {
+        "id": "clamped-catmull-rom-unchecked-endpoint-y",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2648.0,
+        "oracle": 2664.0,
+        "paired": null,
+        "x": 20.0,
+        "y": 94.0
+      },
+      {
+        "id": "clamped-catmull-rom-unchecked-endpoint-corner",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 3488.0,
+        "oracle": 3512.0,
+        "paired": null,
+        "x": 126.0,
+        "y": 94.0
+      },
+      {
+        "id": "clamped-catmull-rom-unchecked-far-high-x",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2320.0,
+        "oracle": 2328.0,
+        "paired": null,
+        "x": 178.0,
+        "y": 20.0
+      },
+      {
+        "id": "clamped-catmull-rom-unchecked-far-high-y",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2648.0,
+        "oracle": 2664.0,
+        "paired": null,
+        "x": 20.0,
+        "y": 146.0
+      },
+      {
+        "id": "clamped-catmull-rom-unchecked-far-high-corner",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 3488.0,
+        "oracle": 3512.0,
+        "paired": null,
+        "x": 178.0,
+        "y": 146.0
+      },
+      {
+        "id": "lanczos2-boundary-high-x-quarter",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2324.5029296875,
+        "oracle": null,
+        "paired": 2326.754638671875,
+        "x": 125.25,
+        "y": 20.25
+      },
+      {
+        "id": "lanczos2-boundary-high-x-half",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2324.5029296875,
+        "oracle": null,
+        "paired": 2328.5029296875,
+        "x": 125.5,
+        "y": 20.25
+      },
+      {
+        "id": "lanczos2-boundary-high-y-quarter",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2650.251708984375,
+        "oracle": null,
+        "paired": 2654.754638671875,
+        "x": 20.25,
+        "y": 93.25
+      },
+      {
+        "id": "lanczos2-boundary-high-y-half",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2650.251708984375,
+        "oracle": null,
+        "paired": 2658.25146484375,
+        "x": 20.25,
+        "y": 93.5
+      },
+      {
+        "id": "lanczos2-boundary-high-corner-quarter",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 3488.0,
+        "oracle": null,
+        "paired": 3494.75439453125,
+        "x": 125.25,
+        "y": 93.25
+      },
+      {
+        "id": "lanczos2-boundary-high-corner-half",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 3488.0,
+        "oracle": null,
+        "paired": 3500.0,
+        "x": 125.5,
+        "y": 93.5
+      },
+      {
+        "id": "lanczos2-boundary-exact-upper-corner",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 3488.0,
+        "oracle": null,
+        "paired": 3500.0,
+        "x": 125.5,
+        "y": 93.5
+      },
+      {
+        "id": "lanczos2-nonfinite-nan-x",
+        "kind": "nonfinite",
+        "exercised": true,
+        "actual": null,
+        "oracle": null,
+        "paired": null,
+        "x": "nonfinite",
+        "y": 20.25
+      },
+      {
+        "id": "lanczos2-nonfinite-nan-y",
+        "kind": "panic",
+        "exercised": true,
+        "actual": null,
+        "oracle": null,
+        "paired": null,
+        "x": 20.25,
+        "y": "nonfinite"
+      },
+      {
+        "id": "lanczos2-tiny-4x4",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 1024.0,
+        "oracle": null,
+        "paired": 1036.0,
+        "x": 1.5,
+        "y": 1.5
+      },
+      {
+        "id": "lanczos2-unchecked-high-x-quarter",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2324.5029296875,
+        "oracle": null,
+        "paired": 2326.754638671875,
+        "x": 125.25,
+        "y": 20.25
+      },
+      {
+        "id": "lanczos2-unchecked-high-y-quarter",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2650.251708984375,
+        "oracle": null,
+        "paired": 2654.754638671875,
+        "x": 20.25,
+        "y": 93.25
+      },
+      {
+        "id": "lanczos2-unchecked-endpoint-x",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2320.0,
+        "oracle": 2328.0,
+        "paired": null,
+        "x": 126.0,
+        "y": 20.0
+      },
+      {
+        "id": "lanczos2-unchecked-endpoint-y",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2648.0,
+        "oracle": 2664.0,
+        "paired": null,
+        "x": 20.0,
+        "y": 94.0
+      },
+      {
+        "id": "lanczos2-unchecked-endpoint-corner",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 3488.0,
+        "oracle": 3512.0,
+        "paired": null,
+        "x": 126.0,
+        "y": 94.0
+      },
+      {
+        "id": "lanczos2-unchecked-far-high-x",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2320.0,
+        "oracle": 2328.0,
+        "paired": null,
+        "x": 178.0,
+        "y": 20.0
+      },
+      {
+        "id": "lanczos2-unchecked-far-high-y",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2648.0,
+        "oracle": 2664.0,
+        "paired": null,
+        "x": 20.0,
+        "y": 146.0
+      },
+      {
+        "id": "lanczos2-unchecked-far-high-corner",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 3488.0,
+        "oracle": 3512.0,
+        "paired": null,
+        "x": 178.0,
+        "y": 146.0
+      },
+      {
+        "id": "lanczos3-boundary-high-x-quarter",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2315.68310546875,
+        "oracle": null,
+        "paired": 2317.524658203125,
+        "x": 124.25,
+        "y": 20.25
+      },
+      {
+        "id": "lanczos3-boundary-high-x-half",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2315.68310546875,
+        "oracle": null,
+        "paired": 2319.682861328125,
+        "x": 124.5,
+        "y": 20.25
+      },
+      {
+        "id": "lanczos3-boundary-high-y-quarter",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2633.841796875,
+        "oracle": null,
+        "paired": 2637.52490234375,
+        "x": 20.25,
+        "y": 92.25
+      },
+      {
+        "id": "lanczos3-boundary-high-y-half",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2633.841796875,
+        "oracle": null,
+        "paired": 2641.841796875,
+        "x": 20.25,
+        "y": 92.5
+      },
+      {
+        "id": "lanczos3-boundary-high-corner-quarter",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 3464.0,
+        "oracle": null,
+        "paired": 3469.524658203125,
+        "x": 124.25,
+        "y": 92.25
+      },
+      {
+        "id": "lanczos3-boundary-high-corner-half",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 3464.0,
+        "oracle": null,
+        "paired": 3476.00048828125,
+        "x": 124.5,
+        "y": 92.5
+      },
+      {
+        "id": "lanczos3-boundary-exact-upper-corner",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 3464.0,
+        "oracle": null,
+        "paired": 3476.00048828125,
+        "x": 124.5,
+        "y": 92.5
+      },
+      {
+        "id": "lanczos3-nonfinite-nan-x",
+        "kind": "nonfinite",
+        "exercised": true,
+        "actual": null,
+        "oracle": null,
+        "paired": null,
+        "x": "nonfinite",
+        "y": 20.25
+      },
+      {
+        "id": "lanczos3-nonfinite-nan-y",
+        "kind": "panic",
+        "exercised": true,
+        "actual": null,
+        "oracle": null,
+        "paired": null,
+        "x": 20.25,
+        "y": "nonfinite"
+      },
+      {
+        "id": "lanczos3-tiny-6x6",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 1048.0,
+        "oracle": null,
+        "paired": 1060.000244140625,
+        "x": 2.5,
+        "y": 2.5
+      },
+      {
+        "id": "lanczos3-unchecked-high-x-quarter",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2315.68310546875,
+        "oracle": null,
+        "paired": 2317.524658203125,
+        "x": 124.25,
+        "y": 20.25
+      },
+      {
+        "id": "lanczos3-unchecked-high-y-quarter",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2633.841796875,
+        "oracle": null,
+        "paired": 2637.52490234375,
+        "x": 20.25,
+        "y": 92.25
+      },
+      {
+        "id": "lanczos3-unchecked-endpoint-x",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2312.0,
+        "oracle": 2320.0,
+        "paired": null,
+        "x": 125.0,
+        "y": 20.0
+      },
+      {
+        "id": "lanczos3-unchecked-endpoint-y",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2632.0,
+        "oracle": 2648.0,
+        "paired": null,
+        "x": 20.0,
+        "y": 93.0
+      },
+      {
+        "id": "lanczos3-unchecked-endpoint-corner",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 3464.0,
+        "oracle": 3488.0,
+        "paired": null,
+        "x": 125.0,
+        "y": 93.0
+      },
+      {
+        "id": "lanczos3-unchecked-far-high-x",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2312.0,
+        "oracle": 2320.0,
+        "paired": null,
+        "x": 178.0,
+        "y": 20.0
+      },
+      {
+        "id": "lanczos3-unchecked-far-high-y",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 2632.0,
+        "oracle": 2648.0,
+        "paired": null,
+        "x": 20.0,
+        "y": 146.0
+      },
+      {
+        "id": "lanczos3-unchecked-far-high-corner",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 3464.0,
+        "oracle": 3488.0,
+        "paired": null,
+        "x": 178.0,
+        "y": 146.0
+      },
+      {
+        "id": "catmull-rom-unchecked-tiny-2x7",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 1080.0,
+        "oracle": 1104.0,
+        "paired": 1080.0,
+        "x": 52.0,
+        "y": 57.0
+      },
+      {
+        "id": "catmull-rom-unchecked-tiny-7x2",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 1040.0,
+        "oracle": 1064.0,
+        "paired": 1040.0,
+        "x": 57.0,
+        "y": 52.0
+      },
+      {
+        "id": "clamped-catmull-rom-unchecked-tiny-2x7",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 1080.0,
+        "oracle": 1104.0,
+        "paired": 1080.0,
+        "x": 52.0,
+        "y": 57.0
+      },
+      {
+        "id": "clamped-catmull-rom-unchecked-tiny-7x2",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 1040.0,
+        "oracle": 1064.0,
+        "paired": 1040.0,
+        "x": 57.0,
+        "y": 52.0
+      },
+      {
+        "id": "lanczos2-unchecked-tiny-2x7",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 1080.0,
+        "oracle": 1104.0,
+        "paired": 1080.0,
+        "x": 52.0,
+        "y": 57.0
+      },
+      {
+        "id": "lanczos2-unchecked-tiny-7x2",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 1040.0,
+        "oracle": 1064.0,
+        "paired": 1040.0,
+        "x": 57.0,
+        "y": 52.0
+      },
+      {
+        "id": "lanczos3-unchecked-tiny-2x7",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 1080.0,
+        "oracle": 1104.0,
+        "paired": 1080.0,
+        "x": 52.0,
+        "y": 57.0
+      },
+      {
+        "id": "lanczos3-unchecked-tiny-7x2",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 1040.0,
+        "oracle": 1064.0,
+        "paired": 1040.0,
+        "x": 57.0,
+        "y": 52.0
+      },
+      {
+        "id": "lanczos3-unchecked-tiny-4x7",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 1072.0,
+        "oracle": 1096.0,
+        "paired": 1072.0,
+        "x": 54.0,
+        "y": 57.0
+      },
+      {
+        "id": "lanczos3-unchecked-tiny-7x4",
+        "kind": "finite",
+        "exercised": true,
+        "actual": 1048.0,
+        "oracle": 1072.0,
+        "paired": 1048.0,
+        "x": 57.0,
+        "y": 54.0
+      },
+      {
+        "id": "bilinear-gather-requested-map",
+        "kind": "false",
+        "exercised": true,
+        "actual": null,
+        "oracle": null,
+        "paired": null,
+        "x": 0.0,
+        "y": 0.0
+      }
+    ]
+  },
+  "failures": []
+}

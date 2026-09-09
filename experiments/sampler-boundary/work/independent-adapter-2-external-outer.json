@@ -1,0 +1,39 @@
+{
+  "schema": "sampler-independent-adapter-external-v1",
+  "slice": 2,
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-I",
+    "-S",
+    "-B",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\independent-transport-read.py",
+    "2"
+  ],
+  "source": {
+    "bytes": 18513,
+    "path": "experiments/sampler-boundary/independent-transport-read.py",
+    "sha256": "56954443669bfb4b8c4c754cb582c3205775e926eac18b802117a009760ebef5"
+  },
+  "release_sha256": "298acd5eb0740d00a8259070e0c05eb25a65fa200f3ba99fcbc03e9a708883c8",
+  "actual_exit_code": 0,
+  "elapsed_wall_seconds": 0.14100000000325963,
+  "timeout_terminated": false,
+  "authority_source_read_bytes": 20979,
+  "streams": {
+    "stdout": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\work\\independent-adapter-2-external-stdout.bin",
+      "bytes": 2334,
+      "sha256": "3f8eacb767a91ff8fab994394689b0ebfa3fbb520bd4f92aaf769bbb5b9044a7"
+    },
+    "stderr": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\work\\independent-adapter-2-external-stderr.bin",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "exit": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\work\\independent-adapter-2-external-exit.txt",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    }
+  }
+}

@@ -1,0 +1,1292 @@
+{
+  "schema": "sampler-independent-audit-slice-v1",
+  "slice": 3,
+  "release_sha256": "fc92179b15531145ecd840373258524fc6bed0235e4b18c7c50690f049d2c60c",
+  "charged_allocation": 4,
+  "actual_command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-I",
+    "-S",
+    "-B",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\independent-saved-read.py",
+    "scalar",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\repaired-test-1\\child-00.log",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\independent-repaired-scalar-1.json"
+  ],
+  "actual_exit_code": 0,
+  "helper_timeout": false,
+  "owned_reader_termination": false,
+  "streams": {
+    "stdout": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\work\\independent-read-slice-3-stdout.bin",
+      "bytes": 315,
+      "sha256": "58a8496a6f38dbdfd73cfb5367c702f48a643882a48f2e1985a274fd14beb156"
+    },
+    "stderr": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\work\\independent-read-slice-3-stderr.bin",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "exit": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\work\\independent-read-slice-3-exit.txt",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    }
+  },
+  "helper_whole_wall_seconds": 0.046000000002095476,
+  "helper_complete_process_cpu_seconds": 0.046875,
+  "metadata_parent_cpu_sample": 0.015625,
+  "combined_cpu_sample": 0.0625,
+  "whole_slice_wall_sample": 0.09400000001187436,
+  "final_allowance": {
+    "cpu_seconds": 1,
+    "wall_seconds": 2
+  },
+  "reads": [
+    {
+      "path": "experiments/sampler-boundary/independent-transport-read.py",
+      "bytes": 18513,
+      "sha256": "56954443669bfb4b8c4c754cb582c3205775e926eac18b802117a009760ebef5"
+    },
+    {
+      "path": "experiments/sampler-boundary/work/independent-read-slice-1-ledger.json",
+      "bytes": 90889,
+      "sha256": "d31f0bda9b18760ea33fbc4b934e91b6377aefda1ffd28df5561f7bc95e83958"
+    },
+    {
+      "path": "experiments/sampler-boundary/work/independent-read-slice-2-ledger.json",
+      "bytes": 6552,
+      "sha256": "20e6ff498fdce2a0decb4d5503651b248790b708833b43568a7a897e9f06458b"
+    },
+    {
+      "path": "experiments/sampler-boundary/work/independent-read-release-1.json",
+      "bytes": 16124,
+      "sha256": "fc92179b15531145ecd840373258524fc6bed0235e4b18c7c50690f049d2c60c"
+    },
+    {
+      "path": "experiments/sampler-boundary/independent-saved-read.py",
+      "bytes": 21204,
+      "sha256": "9af714765a05bfe4ca33052704a1e6612f69aa93e525c0731aa083fe9354701b"
+    },
+    {
+      "path": "experiments/sampler-boundary/repaired-build-1/child-00.json",
+      "bytes": 3750,
+      "sha256": "52379b9e89860e7afc0519941010b9abed4b79979534498760378c6abac84f6d"
+    },
+    {
+      "path": "experiments/sampler-boundary/work/repaired-build-external-1-exit.txt",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "experiments/sampler-boundary/repaired-build-1/child-00.log",
+      "bytes": 26734,
+      "sha256": "f63f40b6c0b65336d24b19769de18954510f968aad3dec15ce03d8b4a9077af9"
+    },
+    {
+      "path": "experiments/sampler-boundary/work/repaired-build-external-1-outer.json",
+      "bytes": 1620,
+      "sha256": "c5fc90808dc600ca5ef8a0e143d8d5a7a4fea2e3716d9b665611385a5c3e48a5"
+    },
+    {
+      "path": "experiments/sampler-boundary/work/repaired-build-release-1.json",
+      "bytes": 27615,
+      "sha256": "c0a36062a870e2193b69cc6d49dd729b7a332096c648c83d82cd3e8a98dadc05"
+    },
+    {
+      "path": "experiments/sampler-boundary/repaired-build-1/result.json",
+      "bytes": 65536,
+      "sha256": "c8a3b4264b0a5428c8427bb80017d3db6bfe94c4dda88fc98784f9530cc2df75"
+    },
+    {
+      "path": "experiments/sampler-boundary/work/repaired-build-external-1-stderr.bin",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "experiments/sampler-boundary/work/repaired-build-external-1-stdout.bin",
+      "bytes": 486,
+      "sha256": "537ba3b3d47015031375a3a6747f78e0e790404204979448f4f30a81389876b6"
+    },
+    {
+      "path": "experiments/sampler-boundary/repaired-build-1/parent-tail.json",
+      "bytes": 611,
+      "sha256": "d8daada4b8e4fd3478cf0ab1b5c3e69da9fd5394beda99dbf1a9b68723bbcaf0"
+    },
+    {
+      "path": "experiments/sampler-boundary/repaired-build-1/sampler-boundary-tests.exe",
+      "bytes": 999424,
+      "sha256": "470b39c801531a7ea80c03dcd50e31e3e2bd2db969b23bf00eee675e680dfea7"
+    },
+    {
+      "path": "target/sampler-boundary-repaired-1/debug/deps/sampler_boundary-7d2e664a829f6387.exe",
+      "bytes": 999424,
+      "sha256": "470b39c801531a7ea80c03dcd50e31e3e2bd2db969b23bf00eee675e680dfea7"
+    },
+    {
+      "path": "experiments/sampler-boundary/repaired-build-1/core-unit-tests.exe",
+      "bytes": 6800384,
+      "sha256": "92f0b1a18dfca5a1cba3db85069f54259fd5eb51c37da3f5c828ac1568ca9682"
+    },
+    {
+      "path": "target/sampler-boundary-repaired-1/debug/deps/strehl_core-d38618da76a23b5a.exe",
+      "bytes": 6800384,
+      "sha256": "92f0b1a18dfca5a1cba3db85069f54259fd5eb51c37da3f5c828ac1568ca9682"
+    },
+    {
+      "path": "experiments/sampler-boundary/repaired-test-1/child-00.json",
+      "bytes": 2059,
+      "sha256": "229f8c910846f0292e3ed3b488db8c07e60f97174dbeae58535258e89896e26c"
+    },
+    {
+      "path": "experiments/sampler-boundary/work/repaired-test-external-1-exit.txt",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "experiments/sampler-boundary/repaired-test-1/child-00.log",
+      "bytes": 241198,
+      "sha256": "83bc772383fc7a2afeff71c026972707e59623c0c52341b8e1efccb6108e9b35"
+    },
+    {
+      "path": "experiments/sampler-boundary/repaired-test-1/test-observation.json",
+      "bytes": 1355,
+      "sha256": "5e3e86d90bbcd1d936e47c69921806b6f8d1b81e075529dc7df9af24bb08ee38"
+    },
+    {
+      "path": "experiments/sampler-boundary/work/repaired-test-external-1-outer.json",
+      "bytes": 1616,
+      "sha256": "f14e9ff26c1e72a24852814f2f400d3082839d2bae9a6fc14e4d289c6858ca7d"
+    },
+    {
+      "path": "experiments/sampler-boundary/work/repaired-test-release-1.json",
+      "bytes": 27494,
+      "sha256": "c51b6673886545d3f2622889ee24a1625d868659b44231c75449f398eaef533e"
+    },
+    {
+      "path": "experiments/sampler-boundary/repaired-test-1/result.json",
+      "bytes": 65536,
+      "sha256": "401620d37b21dff31d8969dd1d3173ba1fed9f71fb7efd224f00f078137268a7"
+    },
+    {
+      "path": "experiments/sampler-boundary/work/repaired-test-external-1-stderr.bin",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "experiments/sampler-boundary/work/repaired-test-external-1-stdout.bin",
+      "bytes": 484,
+      "sha256": "acc03253c448b9929cb0a875992ff044ecaf3aeefdacad110cc1c49a789a2787"
+    },
+    {
+      "path": "experiments/sampler-boundary/repaired-test-1/parent-tail.json",
+      "bytes": 611,
+      "sha256": "17060619f62894f726bf6529c6251411a3f86ad55fd57e94546d83e6efc85ec1"
+    },
+    {
+      "path": "experiments/sampler-boundary/repaired-regression-1/child-00.json",
+      "bytes": 2899,
+      "sha256": "af716e112f5657af61f9efd810aed44ba31ecb65bdea00fbdc45fc6e32248d06"
+    },
+    {
+      "path": "experiments/sampler-boundary/work/repaired-regression-external-1-exit.txt",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "experiments/sampler-boundary/repaired-regression-1/child-00.log",
+      "bytes": 1128,
+      "sha256": "a48444229e0f1ee56954936f62c6a81a1ca460bcf08b050ad8312b3f34e0baf6"
+    },
+    {
+      "path": "experiments/sampler-boundary/repaired-regression-1/regression-observation.json",
+      "bytes": 2389,
+      "sha256": "0385e4e6e81683140d8c5d9d8c0a4d57109075c7024c7411d8a0b9f15ef0a575"
+    },
+    {
+      "path": "experiments/sampler-boundary/work/repaired-regression-external-1-outer.json",
+      "bytes": 1640,
+      "sha256": "24c3fd02ba9694da157afb912f93204eb3dc3ed29caa6b3a302631d4bc352d7d"
+    },
+    {
+      "path": "experiments/sampler-boundary/work/repaired-regression-release-1.json",
+      "bytes": 29387,
+      "sha256": "f1ca3b251b68a7682aaa5f1cd735f15428923519a4278f0f6b7d363bee127c2e"
+    },
+    {
+      "path": "experiments/sampler-boundary/repaired-regression-1/result.json",
+      "bytes": 65536,
+      "sha256": "160a7b287cadadb1890b0834f598a262ecd16dc3264ef9c3f706e74632b3a4cf"
+    },
+    {
+      "path": "experiments/sampler-boundary/work/repaired-regression-external-1-stderr.bin",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "experiments/sampler-boundary/work/repaired-regression-external-1-stdout.bin",
+      "bytes": 496,
+      "sha256": "6728563ae6269240b81446255028431ee43567db268b217ae66cf5f590b28abb"
+    },
+    {
+      "path": "experiments/sampler-boundary/repaired-regression-1/parent-tail.json",
+      "bytes": 614,
+      "sha256": "31ca4af6c1ce434a59c316062a213649e40829b3115e7fc4dbda57e774c45ac0"
+    },
+    {
+      "path": "experiments/sampler-boundary/repaired-test-1/child-00.log",
+      "bytes": 241198,
+      "sha256": "83bc772383fc7a2afeff71c026972707e59623c0c52341b8e1efccb6108e9b35"
+    },
+    {
+      "path": "experiments/sampler-boundary/independent-repaired-scalar-1.json",
+      "bytes": 3751,
+      "sha256": "64a023408364326db15f0da25e42155c29a24c5542079a37a87168c3bd8f44b6"
+    }
+  ],
+  "helper_reads": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\independent-saved-read.py",
+      "bytes": 21204,
+      "sha256": "9af714765a05bfe4ca33052704a1e6612f69aa93e525c0731aa083fe9354701b"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\repaired-test-1\\child-00.log",
+      "bytes": 241198,
+      "sha256": "83bc772383fc7a2afeff71c026972707e59623c0c52341b8e1efccb6108e9b35"
+    }
+  ],
+  "charged_read_bytes": 16831049,
+  "prior_charged_bytes": 555246647,
+  "cumulative_charged_bytes": 572077696,
+  "findings": {
+    "repaired-build_compiler_artifacts": [
+      {
+        "reason": "compiler-artifact",
+        "package_id": "path+file:///C:/dev/blog/death-of-software/projects/strehl/crates/strehl-core#0.0.0",
+        "manifest_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-core\\Cargo.toml",
+        "target": {
+          "kind": [
+            "test"
+          ],
+          "crate_types": [
+            "bin"
+          ],
+          "name": "sampler-boundary",
+          "src_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-core\\tests\\sampler-boundary.rs",
+          "edition": "2024",
+          "doc": false,
+          "doctest": false,
+          "test": true
+        },
+        "profile": {
+          "opt_level": "0",
+          "debuginfo": 2,
+          "debug_assertions": true,
+          "overflow_checks": true,
+          "test": true
+        },
+        "features": [],
+        "filenames": [
+          "C:\\dev\\blog\\death-of-software\\projects\\strehl\\target\\sampler-boundary-repaired-1\\debug\\deps\\sampler_boundary-7d2e664a829f6387.exe",
+          "C:\\dev\\blog\\death-of-software\\projects\\strehl\\target\\sampler-boundary-repaired-1\\debug\\deps\\sampler_boundary-7d2e664a829f6387.pdb"
+        ],
+        "executable": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\target\\sampler-boundary-repaired-1\\debug\\deps\\sampler_boundary-7d2e664a829f6387.exe",
+        "fresh": false
+      },
+      {
+        "reason": "compiler-artifact",
+        "package_id": "path+file:///C:/dev/blog/death-of-software/projects/strehl/crates/strehl-core#0.0.0",
+        "manifest_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-core\\Cargo.toml",
+        "target": {
+          "kind": [
+            "lib"
+          ],
+          "crate_types": [
+            "lib"
+          ],
+          "name": "strehl_core",
+          "src_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-core\\src\\lib.rs",
+          "edition": "2024",
+          "doc": true,
+          "doctest": true,
+          "test": true
+        },
+        "profile": {
+          "opt_level": "0",
+          "debuginfo": 2,
+          "debug_assertions": true,
+          "overflow_checks": true,
+          "test": true
+        },
+        "features": [],
+        "filenames": [
+          "C:\\dev\\blog\\death-of-software\\projects\\strehl\\target\\sampler-boundary-repaired-1\\debug\\deps\\strehl_core-d38618da76a23b5a.exe",
+          "C:\\dev\\blog\\death-of-software\\projects\\strehl\\target\\sampler-boundary-repaired-1\\debug\\deps\\strehl_core-d38618da76a23b5a.pdb"
+        ],
+        "executable": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\target\\sampler-boundary-repaired-1\\debug\\deps\\strehl_core-d38618da76a23b5a.exe",
+        "fresh": false
+      }
+    ],
+    "repaired-build": {
+      "child": {
+        "cleanup_errors": [],
+        "command": [
+          "cargo",
+          "test",
+          "-p",
+          "strehl-core",
+          "--lib",
+          "--test",
+          "sampler-boundary",
+          "--no-run",
+          "--jobs",
+          "2",
+          "--target-dir",
+          "C:\\dev\\blog\\death-of-software\\projects\\strehl\\target\\sampler-boundary-repaired-1",
+          "--message-format=json-render-diagnostics",
+          "--locked",
+          "--offline"
+        ],
+        "compile_cleanup": {
+          "after_accounting": {
+            "active_processes": 0,
+            "total_cpu_100ns": 255000000,
+            "total_kernel_100ns": 61718750,
+            "total_page_fault_count": 1551085,
+            "total_processes": 59,
+            "total_terminated_processes": 0,
+            "total_user_100ns": 193281250
+          },
+          "attempted": true,
+          "before_accounting": {
+            "active_processes": 1,
+            "total_cpu_100ns": 255000000,
+            "total_kernel_100ns": 61718750,
+            "total_page_fault_count": 1551085,
+            "total_processes": 59,
+            "total_terminated_processes": 0,
+            "total_user_100ns": 193281250
+          },
+          "completed": true,
+          "disposition": "INTENTIONAL_OWNED_JOB_CLEANUP",
+          "ended_wall_seconds": 14.281000000002678,
+          "error": null,
+          "max_wait_seconds": 5,
+          "pid_query_error": null,
+          "pid_query_performed": true,
+          "policy": "AFTER_DIRECT_ZERO_AND_PIPE_EOF",
+          "remaining_process_ids": [
+            12880
+          ],
+          "schema": "m194h-compile-owned-descendant-cleanup-v1",
+          "scope": "Only this owned Job is terminated; PIDs are observations, never kill targets. No executable or creation-identity proof. Generic termination records failure cleanup only.",
+          "started_wall_seconds": 13.718999999997322,
+          "succeeded": true,
+          "wait_seconds": 0.5620000000053551
+        },
+        "configured_job_limits": {
+          "committed_bytes": 3221225472,
+          "flags": 8704
+        },
+        "direct_exit_observed": true,
+        "error": null,
+        "exit_code": 0,
+        "job_accounting": {
+          "active_processes": 0,
+          "total_cpu_100ns": 255000000,
+          "total_kernel_100ns": 61718750,
+          "total_page_fault_count": 1551085,
+          "total_processes": 59,
+          "total_terminated_processes": 0,
+          "total_user_100ns": 193281250
+        },
+        "job_memory": {
+          "peak_job_memory_used_bytes": 992907264,
+          "peak_process_memory_used_bytes": 624132096
+        },
+        "limits": {
+          "committed_bytes": 3221225472,
+          "cpu_seconds": 597.28125,
+          "log_bytes": 16777216,
+          "wall_seconds": 284.2810000000027
+        },
+        "log": {
+          "bytes": 26734,
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\repaired-build-1\\child-00.log",
+          "sha256": "f63f40b6c0b65336d24b19769de18954510f968aad3dec15ce03d8b4a9077af9"
+        },
+        "log_bytes": 26734,
+        "pipe_eof_observed": true,
+        "post_exit_drain": {
+          "completed": true,
+          "ended_wall_seconds": 14.281000000002678,
+          "initial_accounting": {
+            "active_processes": 1,
+            "total_cpu_100ns": 255000000,
+            "total_kernel_100ns": 61718750,
+            "total_page_fault_count": 1551085,
+            "total_processes": 59,
+            "total_terminated_processes": 0,
+            "total_user_100ns": 193281250
+          },
+          "last_accounting": {
+            "active_processes": 0,
+            "total_cpu_100ns": 255000000,
+            "total_kernel_100ns": 61718750,
+            "total_page_fault_count": 1551085,
+            "total_processes": 59,
+            "total_terminated_processes": 0,
+            "total_user_100ns": 193281250
+          },
+          "observation_count": 3,
+          "observations": [
+            {
+              "accounting": {
+                "active_processes": 1,
+                "total_cpu_100ns": 255000000,
+                "total_kernel_100ns": 61718750,
+                "total_page_fault_count": 1551085,
+                "total_processes": 59,
+                "total_terminated_processes": 0,
+                "total_user_100ns": 193281250
+              },
+              "wall_seconds": 13.718999999997322
+            },
+            {
+              "accounting": {
+                "active_processes": 1,
+                "total_cpu_100ns": 255000000,
+                "total_kernel_100ns": 61718750,
+                "total_page_fault_count": 1551085,
+                "total_processes": 59,
+                "total_terminated_processes": 0,
+                "total_user_100ns": 193281250
+              },
+              "wall_seconds": 14.26600000000326
+            },
+            {
+              "accounting": {
+                "active_processes": 0,
+                "total_cpu_100ns": 255000000,
+                "total_kernel_100ns": 61718750,
+                "total_page_fault_count": 1551085,
+                "total_processes": 59,
+                "total_terminated_processes": 0,
+                "total_user_100ns": 193281250
+              },
+              "wall_seconds": 14.281000000002678
+            }
+          ],
+          "started_wall_seconds": 13.718999999997322
+        },
+        "scope": "compile-only owned job tree; intentional descendant cleanup is separate from natural exit; not a timing benchmark",
+        "terminal_job_accounting": true,
+        "termination": {
+          "attempted": false,
+          "before_accounting": null,
+          "succeeded": false
+        },
+        "wall_seconds": 14.281000000002678
+      },
+      "tail": {
+        "actual_parent_cpu_sample": 10.234375,
+        "completed_child_cpu_seconds": 25.5,
+        "cpu_accounting_complete": true,
+        "final_external_allowance": {
+          "cpu_seconds": 2,
+          "wall_seconds": 3
+        },
+        "live_child_cpu_seconds": 0.0,
+        "result": {
+          "bytes": 65536,
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\repaired-build-1\\result.json",
+          "sha256": "c8a3b4264b0a5428c8427bb80017d3db6bfe94c4dda88fc98784f9530cc2df75"
+        },
+        "schema": "sampler-boundary-parent-tail-v1",
+        "scope": "Sample after canonical publication; actual external exit/whole wall and reserved tail are required.",
+        "whole_wall_sample": 18.110000000000582
+      },
+      "outer": {
+        "command": [
+          "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+          "-I",
+          "-S",
+          "-B",
+          "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\run-stage.py",
+          "--release",
+          "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\work\\repaired-build-release-1.json",
+          "--release-sha256",
+          "c0a36062a870e2193b69cc6d49dd729b7a332096c648c83d82cd3e8a98dadc05"
+        ],
+        "elapsed_wall_seconds": 18.139999999999418,
+        "exit": {
+          "bytes": 2,
+          "path": "experiments/sampler-boundary/work/repaired-build-external-1-exit.txt",
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+        },
+        "exit_code": 0,
+        "schema": "sampler-boundary-stage-external-v1",
+        "scope": "Complete directly launched controller interval and actual exit; controller owns descendant Jobs. Raw controller stdout/stderr. No whole CPU inference from wall.",
+        "source": {
+          "bytes": 39050,
+          "path": "experiments/sampler-boundary/run-stage.py",
+          "sha256": "44bc15edbd008da4a39e615bed312949c72abf4d5be9b0bca6908d1439d8071c"
+        },
+        "stderr": {
+          "bytes": 0,
+          "path": "experiments/sampler-boundary/work/repaired-build-external-1-stderr.bin",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stderr_bytes": 0,
+        "stdout": {
+          "bytes": 486,
+          "path": "experiments/sampler-boundary/work/repaired-build-external-1-stdout.bin",
+          "sha256": "537ba3b3d47015031375a3a6747f78e0e790404204979448f4f30a81389876b6"
+        },
+        "stdout_bytes": 486,
+        "timeout_terminated": false
+      },
+      "work": {
+        "completed_child_cpu_seconds": 25.5,
+        "cpu_accounting_complete": true,
+        "cpu_seconds": 35.71875,
+        "live_child_cpu_seconds": 0.0,
+        "parent_cpu_seconds": 10.21875,
+        "wall_seconds": 18.110000000000582
+      },
+      "disposition": null,
+      "observation": null,
+      "environment": {
+        "CARGO_HOME": null,
+        "CARGO_NET_OFFLINE": "true",
+        "RAYON_NUM_THREADS": "2",
+        "RUSTUP_HOME": null,
+        "RUSTUP_TOOLCHAIN": null,
+        "RUST_BACKTRACE": "0",
+        "RUST_LIB_BACKTRACE": "0"
+      },
+      "artifacts": {
+        "build_finished": {
+          "reason": "build-finished",
+          "success": true
+        },
+        "compiler_messages": {
+          "sampler-boundary": {
+            "executable": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\target\\sampler-boundary-repaired-1\\debug\\deps\\sampler_boundary-7d2e664a829f6387.exe",
+            "features": [],
+            "filenames": [
+              "C:\\dev\\blog\\death-of-software\\projects\\strehl\\target\\sampler-boundary-repaired-1\\debug\\deps\\sampler_boundary-7d2e664a829f6387.exe",
+              "C:\\dev\\blog\\death-of-software\\projects\\strehl\\target\\sampler-boundary-repaired-1\\debug\\deps\\sampler_boundary-7d2e664a829f6387.pdb"
+            ],
+            "fresh": false,
+            "manifest_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-core\\Cargo.toml",
+            "package_id": "path+file:///C:/dev/blog/death-of-software/projects/strehl/crates/strehl-core#0.0.0",
+            "profile": {
+              "debug_assertions": true,
+              "debuginfo": 2,
+              "opt_level": "0",
+              "overflow_checks": true,
+              "test": true
+            },
+            "reason": "compiler-artifact",
+            "target": {
+              "crate_types": [
+                "bin"
+              ],
+              "doc": false,
+              "doctest": false,
+              "edition": "2024",
+              "kind": [
+                "test"
+              ],
+              "name": "sampler-boundary",
+              "src_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-core\\tests\\sampler-boundary.rs",
+              "test": true
+            }
+          },
+          "strehl_core": {
+            "executable": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\target\\sampler-boundary-repaired-1\\debug\\deps\\strehl_core-d38618da76a23b5a.exe",
+            "features": [],
+            "filenames": [
+              "C:\\dev\\blog\\death-of-software\\projects\\strehl\\target\\sampler-boundary-repaired-1\\debug\\deps\\strehl_core-d38618da76a23b5a.exe",
+              "C:\\dev\\blog\\death-of-software\\projects\\strehl\\target\\sampler-boundary-repaired-1\\debug\\deps\\strehl_core-d38618da76a23b5a.pdb"
+            ],
+            "fresh": false,
+            "manifest_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-core\\Cargo.toml",
+            "package_id": "path+file:///C:/dev/blog/death-of-software/projects/strehl/crates/strehl-core#0.0.0",
+            "profile": {
+              "debug_assertions": true,
+              "debuginfo": 2,
+              "opt_level": "0",
+              "overflow_checks": true,
+              "test": true
+            },
+            "reason": "compiler-artifact",
+            "target": {
+              "crate_types": [
+                "lib"
+              ],
+              "doc": true,
+              "doctest": true,
+              "edition": "2024",
+              "kind": [
+                "lib"
+              ],
+              "name": "strehl_core",
+              "src_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-core\\src\\lib.rs",
+              "test": true
+            }
+          }
+        },
+        "executable": {
+          "bytes": 999424,
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\repaired-build-1\\sampler-boundary-tests.exe",
+          "sha256": "470b39c801531a7ea80c03dcd50e31e3e2bd2db969b23bf00eee675e680dfea7"
+        },
+        "executable_compiled_original": {
+          "bytes": 999424,
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\target\\sampler-boundary-repaired-1\\debug\\deps\\sampler_boundary-7d2e664a829f6387.exe",
+          "sha256": "470b39c801531a7ea80c03dcd50e31e3e2bd2db969b23bf00eee675e680dfea7"
+        },
+        "unit_executable": {
+          "bytes": 6800384,
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\repaired-build-1\\core-unit-tests.exe",
+          "sha256": "92f0b1a18dfca5a1cba3db85069f54259fd5eb51c37da3f5c828ac1568ca9682"
+        },
+        "unit_executable_compiled_original": {
+          "bytes": 6800384,
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\target\\sampler-boundary-repaired-1\\debug\\deps\\strehl_core-d38618da76a23b5a.exe",
+          "sha256": "92f0b1a18dfca5a1cba3db85069f54259fd5eb51c37da3f5c828ac1568ca9682"
+        }
+      },
+      "operations": [
+        {
+          "expected_exit_code": 0,
+          "ordinal": 0,
+          "status": "EXPECTED_PROCESS_DISPOSITION"
+        }
+      ],
+      "source_count": 177,
+      "source_align": {
+        "bytes": 148796,
+        "sha256": "e5003cf05a2805a0a6a72b6f59f2724bcc8873ebbcc8bbb95a69120bda7a24a1"
+      }
+    },
+    "repaired-test": {
+      "child": {
+        "cleanup_errors": [],
+        "command": [
+          "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\repaired-build-1\\sampler-boundary-tests.exe",
+          "--exact",
+          "sampler_boundary_public_contract",
+          "--nocapture",
+          "--test-threads=1"
+        ],
+        "configured_job_limits": {
+          "committed_bytes": 536870912,
+          "flags": 8704
+        },
+        "direct_exit_observed": true,
+        "error": null,
+        "exit_code": 0,
+        "job_accounting": {
+          "active_processes": 0,
+          "total_cpu_100ns": 156250,
+          "total_kernel_100ns": 156250,
+          "total_page_fault_count": 4035,
+          "total_processes": 2,
+          "total_terminated_processes": 0,
+          "total_user_100ns": 0
+        },
+        "job_memory": {
+          "peak_job_memory_used_bytes": 2691072,
+          "peak_process_memory_used_bytes": 1454080
+        },
+        "limits": {
+          "committed_bytes": 536870912,
+          "cpu_seconds": 27.296875,
+          "log_bytes": 1048576,
+          "wall_seconds": 44.29700000000594
+        },
+        "log": {
+          "bytes": 241198,
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\repaired-test-1\\child-00.log",
+          "sha256": "83bc772383fc7a2afeff71c026972707e59623c0c52341b8e1efccb6108e9b35"
+        },
+        "log_bytes": 241198,
+        "pipe_eof_observed": true,
+        "post_exit_drain": {
+          "completed": true,
+          "ended_wall_seconds": 0.11000000000058208,
+          "initial_accounting": {
+            "active_processes": 0,
+            "total_cpu_100ns": 156250,
+            "total_kernel_100ns": 156250,
+            "total_page_fault_count": 4035,
+            "total_processes": 2,
+            "total_terminated_processes": 0,
+            "total_user_100ns": 0
+          },
+          "last_accounting": {
+            "active_processes": 0,
+            "total_cpu_100ns": 156250,
+            "total_kernel_100ns": 156250,
+            "total_page_fault_count": 4035,
+            "total_processes": 2,
+            "total_terminated_processes": 0,
+            "total_user_100ns": 0
+          },
+          "observation_count": 1,
+          "observations": [
+            {
+              "accounting": {
+                "active_processes": 0,
+                "total_cpu_100ns": 156250,
+                "total_kernel_100ns": 156250,
+                "total_page_fault_count": 4035,
+                "total_processes": 2,
+                "total_terminated_processes": 0,
+                "total_user_100ns": 0
+              },
+              "wall_seconds": 0.11000000000058208
+            }
+          ],
+          "started_wall_seconds": 0.11000000000058208
+        },
+        "scope": "owned job tree; committed memory, observed user+kernel CPU; not RSS or a timing benchmark",
+        "terminal_job_accounting": true,
+        "termination": {
+          "attempted": false,
+          "before_accounting": null,
+          "succeeded": false
+        },
+        "wall_seconds": 0.11000000000058208
+      },
+      "tail": {
+        "actual_parent_cpu_sample": 1.28125,
+        "completed_child_cpu_seconds": 0.015625,
+        "cpu_accounting_complete": true,
+        "final_external_allowance": {
+          "cpu_seconds": 2,
+          "wall_seconds": 3
+        },
+        "live_child_cpu_seconds": 0.0,
+        "result": {
+          "bytes": 65536,
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\repaired-test-1\\result.json",
+          "sha256": "401620d37b21dff31d8969dd1d3173ba1fed9f71fb7efd224f00f078137268a7"
+        },
+        "schema": "sampler-boundary-parent-tail-v1",
+        "scope": "Sample after canonical publication; actual external exit/whole wall and reserved tail are required.",
+        "whole_wall_sample": 1.360000000000582
+      },
+      "outer": {
+        "command": [
+          "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+          "-I",
+          "-S",
+          "-B",
+          "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\run-stage.py",
+          "--release",
+          "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\work\\repaired-test-release-1.json",
+          "--release-sha256",
+          "c51b6673886545d3f2622889ee24a1625d868659b44231c75449f398eaef533e"
+        ],
+        "elapsed_wall_seconds": 1.4220000000059372,
+        "exit": {
+          "bytes": 2,
+          "path": "experiments/sampler-boundary/work/repaired-test-external-1-exit.txt",
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+        },
+        "exit_code": 0,
+        "schema": "sampler-boundary-stage-external-v1",
+        "scope": "Complete directly launched controller interval and actual exit; controller owns descendant Jobs. Raw controller stdout/stderr. No whole CPU inference from wall.",
+        "source": {
+          "bytes": 39050,
+          "path": "experiments/sampler-boundary/run-stage.py",
+          "sha256": "44bc15edbd008da4a39e615bed312949c72abf4d5be9b0bca6908d1439d8071c"
+        },
+        "stderr": {
+          "bytes": 0,
+          "path": "experiments/sampler-boundary/work/repaired-test-external-1-stderr.bin",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stderr_bytes": 0,
+        "stdout": {
+          "bytes": 484,
+          "path": "experiments/sampler-boundary/work/repaired-test-external-1-stdout.bin",
+          "sha256": "acc03253c448b9929cb0a875992ff044ecaf3aeefdacad110cc1c49a789a2787"
+        },
+        "stdout_bytes": 484,
+        "timeout_terminated": false
+      },
+      "work": {
+        "completed_child_cpu_seconds": 0.015625,
+        "cpu_accounting_complete": true,
+        "cpu_seconds": 1.296875,
+        "live_child_cpu_seconds": 0.0,
+        "parent_cpu_seconds": 1.28125,
+        "wall_seconds": 1.360000000000582
+      },
+      "disposition": {
+        "actual_exit_code": 0,
+        "exercised_public_boundary_failure": false,
+        "failed": 0,
+        "passed": 344,
+        "population_complete": true,
+        "rows": 344,
+        "test_passed": true
+      },
+      "observation": {
+        "actual_exit_code": 0,
+        "begin": {
+          "expected_rows": 344,
+          "gauge": "integer sample centres; scalar plane sample pitch",
+          "height": 96,
+          "schema": "sampler-boundary-begin-v1",
+          "width": 128
+        },
+        "exercised_public_boundary_failure": false,
+        "failed": 0,
+        "failed_rows": [],
+        "gather_record": {
+          "byte_offset": 135841,
+          "bytes": 104953,
+          "sha256": "0ce2f2f48562dbdb1af730035d249ee93f637a7ff41639e38269f3cd58d46d60"
+        },
+        "groups": {
+          "boundary": 126,
+          "constructor": 4,
+          "cubic-limiter": 6,
+          "gather": 2,
+          "lanczos-commission": 18,
+          "nonfinite": 36,
+          "null": 18,
+          "support": 6,
+          "tiny": 48,
+          "unchecked": 60,
+          "unchecked-tiny": 20
+        },
+        "passed": 344,
+        "population_complete": true,
+        "raw_log": {
+          "bytes": 241198,
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\repaired-test-1\\child-00.log",
+          "sha256": "83bc772383fc7a2afeff71c026972707e59623c0c52341b8e1efccb6108e9b35"
+        },
+        "rows": 344,
+        "schema": "sampler-boundary-test-observation-v1",
+        "scope": "Transport/population and authored assertion disposition only. Full bit arrays/rows remain in raw log; no sampler oracle is recomputed here.",
+        "summary": {
+          "failed": 0,
+          "groups": {
+            "boundary": 126,
+            "constructor": 4,
+            "cubic-limiter": 6,
+            "gather": 2,
+            "lanczos-commission": 18,
+            "nonfinite": 36,
+            "null": 18,
+            "support": 6,
+            "tiny": 48,
+            "unchecked": 60,
+            "unchecked-tiny": 20
+          },
+          "passed": 344,
+          "population_complete": true,
+          "rows": 344,
+          "schema": "sampler-boundary-summary-v1"
+        },
+        "test_passed": true,
+        "variant": "repaired"
+      },
+      "environment": {
+        "CARGO_HOME": null,
+        "CARGO_NET_OFFLINE": "true",
+        "RAYON_NUM_THREADS": "2",
+        "RUSTUP_HOME": null,
+        "RUSTUP_TOOLCHAIN": null,
+        "RUST_BACKTRACE": "0",
+        "RUST_LIB_BACKTRACE": "0"
+      },
+      "artifacts": {
+        "test_observation": {
+          "bytes": 1355,
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\repaired-test-1\\test-observation.json",
+          "sha256": "5e3e86d90bbcd1d936e47c69921806b6f8d1b81e075529dc7df9af24bb08ee38"
+        }
+      },
+      "operations": [
+        {
+          "expected_exit_code": 0,
+          "ordinal": 0,
+          "status": "EXPECTED_PROCESS_DISPOSITION"
+        }
+      ],
+      "source_count": 177,
+      "source_align": {
+        "bytes": 148796,
+        "sha256": "e5003cf05a2805a0a6a72b6f59f2724bcc8873ebbcc8bbb95a69120bda7a24a1"
+      }
+    },
+    "regression_raw_log": "\nrunning 13 tests\ntest align::tests::a_gather_under_the_identity_is_the_identity ... ok\ntest align::tests::a_widened_clamp_makes_the_hull_guard_fail ... ok\ntest align::tests::catmull_rom_reproduces_the_samples_at_integer_positions ... ok\ntest align::tests::clamped_catmull_rom_has_catmull_support_and_checked_domain ... ok\ntest align::tests::clamped_catmull_rom_is_bit_identical_until_catmull_leaves_the_hull ... ok\ntest align::tests::clamped_catmull_rom_preserves_integer_samples_and_constant_planes_exactly ... ok\ntest align::tests::clamped_catmull_rom_stays_inside_the_exact_support16_hull ... ok\ntest align::tests::lanczos2_is_interpolating_and_costs_no_extra_border ... ok\ntest align::tests::lanczos3_is_interpolating_and_preserves_dc ... ok\ntest align::tests::lanczos3_support_matches_its_reach ... ok\ntest warpmap::gather_tests::gather_marks_uncovered_pixels_instead_of_clamping ... ok\ntest warpmap::gather_tests::gather_refuses_a_geometry_mismatch ... ok\ntest warpmap::gather_tests::gather_refuses_a_refused_frame ... ok\n\ntest result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 546 filtered out; finished in 0.02s\n\n",
+    "repaired-regression": {
+      "child": {
+        "cleanup_errors": [],
+        "command": [
+          "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\repaired-build-1\\core-unit-tests.exe",
+          "--exact",
+          "--nocapture",
+          "--test-threads=1",
+          "align::tests::catmull_rom_reproduces_the_samples_at_integer_positions",
+          "align::tests::clamped_catmull_rom_stays_inside_the_exact_support16_hull",
+          "align::tests::clamped_catmull_rom_is_bit_identical_until_catmull_leaves_the_hull",
+          "align::tests::clamped_catmull_rom_preserves_integer_samples_and_constant_planes_exactly",
+          "align::tests::clamped_catmull_rom_has_catmull_support_and_checked_domain",
+          "align::tests::a_widened_clamp_makes_the_hull_guard_fail",
+          "align::tests::a_gather_under_the_identity_is_the_identity",
+          "align::tests::lanczos3_is_interpolating_and_preserves_dc",
+          "align::tests::lanczos3_support_matches_its_reach",
+          "align::tests::lanczos2_is_interpolating_and_costs_no_extra_border",
+          "warpmap::gather_tests::gather_marks_uncovered_pixels_instead_of_clamping",
+          "warpmap::gather_tests::gather_refuses_a_geometry_mismatch",
+          "warpmap::gather_tests::gather_refuses_a_refused_frame"
+        ],
+        "configured_job_limits": {
+          "committed_bytes": 536870912,
+          "flags": 8704
+        },
+        "direct_exit_observed": true,
+        "error": null,
+        "exit_code": 0,
+        "job_accounting": {
+          "active_processes": 0,
+          "total_cpu_100ns": 312500,
+          "total_kernel_100ns": 0,
+          "total_page_fault_count": 4003,
+          "total_processes": 2,
+          "total_terminated_processes": 0,
+          "total_user_100ns": 312500
+        },
+        "job_memory": {
+          "peak_job_memory_used_bytes": 2191360,
+          "peak_process_memory_used_bytes": 1253376
+        },
+        "limits": {
+          "committed_bytes": 536870912,
+          "cpu_seconds": 27.28125,
+          "log_bytes": 1048576,
+          "wall_seconds": 44.296000000002095
+        },
+        "log": {
+          "bytes": 1128,
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\repaired-regression-1\\child-00.log",
+          "sha256": "a48444229e0f1ee56954936f62c6a81a1ca460bcf08b050ad8312b3f34e0baf6"
+        },
+        "log_bytes": 1128,
+        "pipe_eof_observed": true,
+        "post_exit_drain": {
+          "completed": true,
+          "ended_wall_seconds": 0.17100000000209548,
+          "initial_accounting": {
+            "active_processes": 0,
+            "total_cpu_100ns": 312500,
+            "total_kernel_100ns": 0,
+            "total_page_fault_count": 4003,
+            "total_processes": 2,
+            "total_terminated_processes": 0,
+            "total_user_100ns": 312500
+          },
+          "last_accounting": {
+            "active_processes": 0,
+            "total_cpu_100ns": 312500,
+            "total_kernel_100ns": 0,
+            "total_page_fault_count": 4003,
+            "total_processes": 2,
+            "total_terminated_processes": 0,
+            "total_user_100ns": 312500
+          },
+          "observation_count": 1,
+          "observations": [
+            {
+              "accounting": {
+                "active_processes": 0,
+                "total_cpu_100ns": 312500,
+                "total_kernel_100ns": 0,
+                "total_page_fault_count": 4003,
+                "total_processes": 2,
+                "total_terminated_processes": 0,
+                "total_user_100ns": 312500
+              },
+              "wall_seconds": 0.17100000000209548
+            }
+          ],
+          "started_wall_seconds": 0.17100000000209548
+        },
+        "scope": "owned job tree; committed memory, observed user+kernel CPU; not RSS or a timing benchmark",
+        "terminal_job_accounting": true,
+        "termination": {
+          "attempted": false,
+          "before_accounting": null,
+          "succeeded": false
+        },
+        "wall_seconds": 0.1870000000053551
+      },
+      "tail": {
+        "actual_parent_cpu_sample": 1.25,
+        "completed_child_cpu_seconds": 0.03125,
+        "cpu_accounting_complete": true,
+        "final_external_allowance": {
+          "cpu_seconds": 2,
+          "wall_seconds": 3
+        },
+        "live_child_cpu_seconds": 0.0,
+        "result": {
+          "bytes": 65536,
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\repaired-regression-1\\result.json",
+          "sha256": "160a7b287cadadb1890b0834f598a262ecd16dc3264ef9c3f706e74632b3a4cf"
+        },
+        "schema": "sampler-boundary-parent-tail-v1",
+        "scope": "Sample after canonical publication; actual external exit/whole wall and reserved tail are required.",
+        "whole_wall_sample": 1.4539999999979045
+      },
+      "outer": {
+        "command": [
+          "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+          "-I",
+          "-S",
+          "-B",
+          "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\run-stage.py",
+          "--release",
+          "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\work\\repaired-regression-release-1.json",
+          "--release-sha256",
+          "f1ca3b251b68a7682aaa5f1cd735f15428923519a4278f0f6b7d363bee127c2e"
+        ],
+        "elapsed_wall_seconds": 1.4689999999973224,
+        "exit": {
+          "bytes": 2,
+          "path": "experiments/sampler-boundary/work/repaired-regression-external-1-exit.txt",
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+        },
+        "exit_code": 0,
+        "schema": "sampler-boundary-stage-external-v1",
+        "scope": "Complete directly launched controller interval and actual exit; controller owns descendant Jobs. Raw controller stdout/stderr. No whole CPU inference from wall.",
+        "source": {
+          "bytes": 39050,
+          "path": "experiments/sampler-boundary/run-stage.py",
+          "sha256": "44bc15edbd008da4a39e615bed312949c72abf4d5be9b0bca6908d1439d8071c"
+        },
+        "stderr": {
+          "bytes": 0,
+          "path": "experiments/sampler-boundary/work/repaired-regression-external-1-stderr.bin",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stderr_bytes": 0,
+        "stdout": {
+          "bytes": 496,
+          "path": "experiments/sampler-boundary/work/repaired-regression-external-1-stdout.bin",
+          "sha256": "6728563ae6269240b81446255028431ee43567db268b217ae66cf5f590b28abb"
+        },
+        "stdout_bytes": 496,
+        "timeout_terminated": false
+      },
+      "work": {
+        "completed_child_cpu_seconds": 0.03125,
+        "cpu_accounting_complete": true,
+        "cpu_seconds": 1.265625,
+        "live_child_cpu_seconds": 0.0,
+        "parent_cpu_seconds": 1.234375,
+        "wall_seconds": 1.437999999994645
+      },
+      "disposition": {
+        "actual_exit_code": 0,
+        "failed": 0,
+        "filtered_unvisited": 546,
+        "ignored": 0,
+        "passed": 13,
+        "population_complete": true,
+        "test_passed": true,
+        "tests": 13
+      },
+      "observation": {
+        "actual_exit_code": 0,
+        "failed": 0,
+        "filtered_unvisited": 546,
+        "ignored": 0,
+        "observed_order": [
+          "align::tests::a_gather_under_the_identity_is_the_identity",
+          "align::tests::a_widened_clamp_makes_the_hull_guard_fail",
+          "align::tests::catmull_rom_reproduces_the_samples_at_integer_positions",
+          "align::tests::clamped_catmull_rom_has_catmull_support_and_checked_domain",
+          "align::tests::clamped_catmull_rom_is_bit_identical_until_catmull_leaves_the_hull",
+          "align::tests::clamped_catmull_rom_preserves_integer_samples_and_constant_planes_exactly",
+          "align::tests::clamped_catmull_rom_stays_inside_the_exact_support16_hull",
+          "align::tests::lanczos2_is_interpolating_and_costs_no_extra_border",
+          "align::tests::lanczos3_is_interpolating_and_preserves_dc",
+          "align::tests::lanczos3_support_matches_its_reach",
+          "warpmap::gather_tests::gather_marks_uncovered_pixels_instead_of_clamping",
+          "warpmap::gather_tests::gather_refuses_a_geometry_mismatch",
+          "warpmap::gather_tests::gather_refuses_a_refused_frame"
+        ],
+        "passed": 13,
+        "population_complete": true,
+        "raw_log": {
+          "bytes": 1128,
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\repaired-regression-1\\child-00.log",
+          "sha256": "a48444229e0f1ee56954936f62c6a81a1ca460bcf08b050ad8312b3f34e0baf6"
+        },
+        "requested_order": [
+          "align::tests::catmull_rom_reproduces_the_samples_at_integer_positions",
+          "align::tests::clamped_catmull_rom_stays_inside_the_exact_support16_hull",
+          "align::tests::clamped_catmull_rom_is_bit_identical_until_catmull_leaves_the_hull",
+          "align::tests::clamped_catmull_rom_preserves_integer_samples_and_constant_planes_exactly",
+          "align::tests::clamped_catmull_rom_has_catmull_support_and_checked_domain",
+          "align::tests::a_widened_clamp_makes_the_hull_guard_fail",
+          "align::tests::a_gather_under_the_identity_is_the_identity",
+          "align::tests::lanczos3_is_interpolating_and_preserves_dc",
+          "align::tests::lanczos3_support_matches_its_reach",
+          "align::tests::lanczos2_is_interpolating_and_costs_no_extra_border",
+          "warpmap::gather_tests::gather_marks_uncovered_pixels_instead_of_clamping",
+          "warpmap::gather_tests::gather_refuses_a_geometry_mismatch",
+          "warpmap::gather_tests::gather_refuses_a_refused_frame"
+        ],
+        "schema": "sampler-boundary-regression-observation-v1",
+        "scope": "One exact-name OR-filter libtest invocation; other core tests are filtered/unvisited. This is regression evidence, not image quality.",
+        "test_passed": true,
+        "tests": 13,
+        "variant": "repaired"
+      },
+      "environment": {
+        "CARGO_HOME": null,
+        "CARGO_NET_OFFLINE": "true",
+        "RAYON_NUM_THREADS": "2",
+        "RUSTUP_HOME": null,
+        "RUSTUP_TOOLCHAIN": null,
+        "RUST_BACKTRACE": "0",
+        "RUST_LIB_BACKTRACE": "0"
+      },
+      "artifacts": {
+        "regression_observation": {
+          "bytes": 2389,
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\repaired-regression-1\\regression-observation.json",
+          "sha256": "0385e4e6e81683140d8c5d9d8c0a4d57109075c7024c7411d8a0b9f15ef0a575"
+        }
+      },
+      "operations": [
+        {
+          "expected_exit_code": 0,
+          "ordinal": 0,
+          "status": "EXPECTED_PROCESS_DISPOSITION"
+        }
+      ],
+      "source_count": 177,
+      "source_align": {
+        "bytes": 148796,
+        "sha256": "e5003cf05a2805a0a6a72b6f59f2724bcc8873ebbcc8bbb95a69120bda7a24a1"
+      }
+    }
+  },
+  "helper_review": {
+    "rows": 344,
+    "failed": 0,
+    "passed": 344,
+    "saved_operand_predicates": 344,
+    "source_bound_reported_boolean_rows": [
+      "nearest-support-literal",
+      "bilinear-support-literal",
+      "catmull-rom-support-literal",
+      "clamped-catmull-rom-support-literal",
+      "lanczos2-support-literal",
+      "lanczos3-support-literal",
+      "plane-constructor-empty-both",
+      "plane-constructor-empty-width",
+      "plane-constructor-empty-height",
+      "plane-constructor-short-data",
+      "bilinear-gather-requested-map",
+      "bilinear-gather-opposite-direction-rejected"
+    ],
+    "dispositions": [
+      {
+        "group": "boundary",
+        "actual_kind": "finite",
+        "passed": true,
+        "count": 78
+      },
+      {
+        "group": "boundary",
+        "actual_kind": "refused",
+        "passed": true,
+        "count": 48
+      },
+      {
+        "group": "constructor",
+        "actual_kind": "true",
+        "passed": true,
+        "count": 4
+      },
+      {
+        "group": "cubic-limiter",
+        "actual_kind": "finite",
+        "passed": true,
+        "count": 6
+      },
+      {
+        "group": "gather",
+        "actual_kind": "true",
+        "passed": true,
+        "count": 2
+      },
+      {
+        "group": "lanczos-commission",
+        "actual_kind": "finite",
+        "passed": true,
+        "count": 18
+      },
+      {
+        "group": "nonfinite",
+        "actual_kind": "refused",
+        "passed": true,
+        "count": 36
+      },
+      {
+        "group": "null",
+        "actual_kind": "finite",
+        "passed": true,
+        "count": 18
+      },
+      {
+        "group": "support",
+        "actual_kind": "true",
+        "passed": true,
+        "count": 6
+      },
+      {
+        "group": "tiny",
+        "actual_kind": "finite",
+        "passed": true,
+        "count": 23
+      },
+      {
+        "group": "tiny",
+        "actual_kind": "refused",
+        "passed": true,
+        "count": 25
+      },
+      {
+        "group": "unchecked",
+        "actual_kind": "finite",
+        "passed": true,
+        "count": 60
+      },
+      {
+        "group": "unchecked-tiny",
+        "actual_kind": "finite",
+        "passed": true,
+        "count": 20
+      }
+    ],
+    "failed_rows": []
+  },
+  "failures": []
+}

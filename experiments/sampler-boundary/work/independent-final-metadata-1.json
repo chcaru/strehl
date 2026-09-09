@@ -1,0 +1,381 @@
+{
+  "schema": "sampler-independent-final-metadata-v1",
+  "reads": [
+    {
+      "path": "experiments\\sampler-boundary\\work\\independent-read-slice-1-ledger.json",
+      "bytes": 90889,
+      "sha256": "d31f0bda9b18760ea33fbc4b934e91b6377aefda1ffd28df5561f7bc95e83958"
+    },
+    {
+      "path": "experiments\\sampler-boundary\\work\\independent-read-slice-2-ledger.json",
+      "bytes": 6552,
+      "sha256": "20e6ff498fdce2a0decb4d5503651b248790b708833b43568a7a897e9f06458b"
+    },
+    {
+      "path": "experiments\\sampler-boundary\\work\\independent-read-slice-3-ledger.json",
+      "bytes": 51425,
+      "sha256": "c618a0873ddaab96636b7a34f2e8d75f2c582108e9e5dd1ce56a7f67fe31b70a"
+    },
+    {
+      "path": "experiments\\sampler-boundary\\work\\independent-read-slice-4-ledger.json",
+      "bytes": 43968,
+      "sha256": "a2d38c6906cf77839d7fb53918ead1afe08c9f51e368579f47542f3cf5df944d"
+    },
+    {
+      "path": "experiments\\sampler-boundary\\work\\independent-adapter-1-external-outer.json",
+      "bytes": 1577,
+      "sha256": "82fa77cdbf7d864440704060367e5e03296487170bbb3339e7a2253ae9dbc5f9"
+    },
+    {
+      "path": "experiments\\sampler-boundary\\work\\independent-adapter-2-external-outer.json",
+      "bytes": 1590,
+      "sha256": "f4f829350a5349b07a7305c6064b1337c234374c072037614b38f0d179760e3d"
+    },
+    {
+      "path": "experiments\\sampler-boundary\\work\\independent-adapter-3-external-outer.json",
+      "bytes": 1590,
+      "sha256": "b8df30178a09161af8d09f7cc457c75b0da0a3a8f144e51532c045c3d1c76e3e"
+    },
+    {
+      "path": "experiments\\sampler-boundary\\work\\independent-adapter-4-external-outer.json",
+      "bytes": 1590,
+      "sha256": "8e02bf025eec2272b66127534d840d365334a89da021eeaffecf059d420e1f27"
+    },
+    {
+      "path": "docs\\research\\sampler-boundary-correction.md",
+      "bytes": 12983,
+      "sha256": "6db010e580a76e0337a0d9e225c981f167d4a2b2bebad7ad4de335d01f4951bf"
+    }
+  ],
+  "successful_adapter_intervals": [
+    0.125,
+    0.14100000000325963,
+    0.14100000000325963,
+    0.20299999999406282
+  ],
+  "successful_adapter_exits": [
+    0,
+    0,
+    0,
+    0
+  ],
+  "successful_combined_cpu_samples": [
+    0.078125,
+    0.078125,
+    0.0625,
+    0.125
+  ],
+  "successful_read_bytes": [
+    16670466,
+    656693,
+    16831049,
+    18203073
+  ],
+  "whole_charged_read_bytes_before_report_composition": 590579315,
+  "retained_family_files_before_report_composition": 47,
+  "retained_family_bytes_before_report_composition": 378484,
+  "actual13_names": [
+    "align::tests::a_gather_under_the_identity_is_the_identity",
+    "align::tests::a_widened_clamp_makes_the_hull_guard_fail",
+    "align::tests::catmull_rom_reproduces_the_samples_at_integer_positions",
+    "align::tests::clamped_catmull_rom_has_catmull_support_and_checked_domain",
+    "align::tests::clamped_catmull_rom_is_bit_identical_until_catmull_leaves_the_hull",
+    "align::tests::clamped_catmull_rom_preserves_integer_samples_and_constant_planes_exactly",
+    "align::tests::clamped_catmull_rom_stays_inside_the_exact_support16_hull",
+    "align::tests::lanczos2_is_interpolating_and_costs_no_extra_border",
+    "align::tests::lanczos3_is_interpolating_and_preserves_dc",
+    "align::tests::lanczos3_support_matches_its_reach",
+    "warpmap::gather_tests::gather_marks_uncovered_pixels_instead_of_clamping",
+    "warpmap::gather_tests::gather_refuses_a_geometry_mismatch",
+    "warpmap::gather_tests::gather_refuses_a_refused_frame"
+  ],
+  "source_audit": {
+    "source_count": 177,
+    "changed": [
+      "crates/strehl-core/src/align.rs"
+    ],
+    "archive_reconstruction": true,
+    "all_current_sources_equal_repaired_archive": true,
+    "actual_scalar_changes": [
+      {
+        "group": "boundary",
+        "kernel": "bilinear",
+        "count": 7
+      },
+      {
+        "group": "boundary",
+        "kernel": "catmull-rom",
+        "count": 7
+      },
+      {
+        "group": "boundary",
+        "kernel": "clamped-catmull-rom",
+        "count": 7
+      },
+      {
+        "group": "boundary",
+        "kernel": "lanczos2",
+        "count": 7
+      },
+      {
+        "group": "boundary",
+        "kernel": "lanczos3",
+        "count": 7
+      },
+      {
+        "group": "cubic-limiter",
+        "kernel": "clamped-catmull-rom",
+        "count": 1
+      },
+      {
+        "group": "gather",
+        "kernel": "bilinear",
+        "count": 1
+      },
+      {
+        "group": "nonfinite",
+        "kernel": "bilinear",
+        "count": 2
+      },
+      {
+        "group": "nonfinite",
+        "kernel": "catmull-rom",
+        "count": 2
+      },
+      {
+        "group": "nonfinite",
+        "kernel": "clamped-catmull-rom",
+        "count": 2
+      },
+      {
+        "group": "nonfinite",
+        "kernel": "lanczos2",
+        "count": 2
+      },
+      {
+        "group": "nonfinite",
+        "kernel": "lanczos3",
+        "count": 2
+      },
+      {
+        "group": "nonfinite",
+        "kernel": "nearest",
+        "count": 2
+      },
+      {
+        "group": "null",
+        "kernel": "lanczos3",
+        "count": 1
+      },
+      {
+        "group": "tiny",
+        "kernel": "bilinear",
+        "count": 1
+      },
+      {
+        "group": "tiny",
+        "kernel": "catmull-rom",
+        "count": 1
+      },
+      {
+        "group": "tiny",
+        "kernel": "clamped-catmull-rom",
+        "count": 1
+      },
+      {
+        "group": "tiny",
+        "kernel": "lanczos2",
+        "count": 1
+      },
+      {
+        "group": "tiny",
+        "kernel": "lanczos3",
+        "count": 1
+      },
+      {
+        "group": "unchecked",
+        "kernel": "bilinear",
+        "count": 8
+      },
+      {
+        "group": "unchecked",
+        "kernel": "catmull-rom",
+        "count": 8
+      },
+      {
+        "group": "unchecked",
+        "kernel": "clamped-catmull-rom",
+        "count": 8
+      },
+      {
+        "group": "unchecked",
+        "kernel": "lanczos2",
+        "count": 8
+      },
+      {
+        "group": "unchecked",
+        "kernel": "lanczos3",
+        "count": 8
+      },
+      {
+        "group": "unchecked-tiny",
+        "kernel": "catmull-rom",
+        "count": 2
+      },
+      {
+        "group": "unchecked-tiny",
+        "kernel": "clamped-catmull-rom",
+        "count": 2
+      },
+      {
+        "group": "unchecked-tiny",
+        "kernel": "lanczos2",
+        "count": 2
+      },
+      {
+        "group": "unchecked-tiny",
+        "kernel": "lanczos3",
+        "count": 4
+      }
+    ]
+  },
+  "stages": [
+    {
+      "stage": "baseline-build",
+      "child_exit": 0,
+      "parent_cpu_sample": 11.015625,
+      "whole_job_cpu": 25.609375,
+      "whole_external_wall": 19.093000000008033,
+      "job_peak_bytes": 993394688,
+      "job_active": 0,
+      "cleanup": {
+        "disposition": "INTENTIONAL_OWNED_JOB_CLEANUP",
+        "attempted": true,
+        "succeeded": true,
+        "completed": true,
+        "wait_seconds": 0.014999999999417923
+      },
+      "environment": {
+        "CARGO_HOME": null,
+        "CARGO_NET_OFFLINE": "true",
+        "RAYON_NUM_THREADS": "2",
+        "RUSTUP_HOME": null,
+        "RUSTUP_TOOLCHAIN": null,
+        "RUST_BACKTRACE": "0",
+        "RUST_LIB_BACKTRACE": "0"
+      },
+      "executable": {
+        "bytes": 998400,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\baseline-build-1\\sampler-boundary-tests.exe",
+        "sha256": "e6c4ffc7eb37a805fb063e62d180e0ecfca1f36a2d605fb13d3e8882f6c9ea0a"
+      },
+      "unit_executable": {
+        "bytes": 6799872,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\baseline-build-1\\core-unit-tests.exe",
+        "sha256": "b32660118bdf8e300259839ac8635e7d25dbc669a88ad24a6aa9c9ec8cc840b6"
+      }
+    },
+    {
+      "stage": "baseline-test",
+      "child_exit": 101,
+      "parent_cpu_sample": 1.28125,
+      "whole_job_cpu": 0.015625,
+      "whole_external_wall": 1.4060000000026776,
+      "job_peak_bytes": 2711552,
+      "job_active": 0,
+      "cleanup": null,
+      "environment": {
+        "CARGO_HOME": null,
+        "CARGO_NET_OFFLINE": "true",
+        "RAYON_NUM_THREADS": "2",
+        "RUSTUP_HOME": null,
+        "RUSTUP_TOOLCHAIN": null,
+        "RUST_BACKTRACE": "0",
+        "RUST_LIB_BACKTRACE": "0"
+      },
+      "executable": null,
+      "unit_executable": null
+    },
+    {
+      "stage": "repaired-build",
+      "child_exit": 0,
+      "parent_cpu_sample": 10.234375,
+      "whole_job_cpu": 25.5,
+      "whole_external_wall": 18.139999999999418,
+      "job_peak_bytes": 992907264,
+      "job_active": 0,
+      "cleanup": {
+        "disposition": "INTENTIONAL_OWNED_JOB_CLEANUP",
+        "attempted": true,
+        "succeeded": true,
+        "completed": true,
+        "wait_seconds": 0.5620000000053551
+      },
+      "environment": {
+        "CARGO_HOME": null,
+        "CARGO_NET_OFFLINE": "true",
+        "RAYON_NUM_THREADS": "2",
+        "RUSTUP_HOME": null,
+        "RUSTUP_TOOLCHAIN": null,
+        "RUST_BACKTRACE": "0",
+        "RUST_LIB_BACKTRACE": "0"
+      },
+      "executable": {
+        "bytes": 999424,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\repaired-build-1\\sampler-boundary-tests.exe",
+        "sha256": "470b39c801531a7ea80c03dcd50e31e3e2bd2db969b23bf00eee675e680dfea7"
+      },
+      "unit_executable": {
+        "bytes": 6800384,
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\repaired-build-1\\core-unit-tests.exe",
+        "sha256": "92f0b1a18dfca5a1cba3db85069f54259fd5eb51c37da3f5c828ac1568ca9682"
+      }
+    },
+    {
+      "stage": "repaired-test",
+      "child_exit": 0,
+      "parent_cpu_sample": 1.28125,
+      "whole_job_cpu": 0.015625,
+      "whole_external_wall": 1.4220000000059372,
+      "job_peak_bytes": 2691072,
+      "job_active": 0,
+      "cleanup": null,
+      "environment": {
+        "CARGO_HOME": null,
+        "CARGO_NET_OFFLINE": "true",
+        "RAYON_NUM_THREADS": "2",
+        "RUSTUP_HOME": null,
+        "RUSTUP_TOOLCHAIN": null,
+        "RUST_BACKTRACE": "0",
+        "RUST_LIB_BACKTRACE": "0"
+      },
+      "executable": null,
+      "unit_executable": null
+    },
+    {
+      "stage": "repaired-regression",
+      "child_exit": 0,
+      "parent_cpu_sample": 1.25,
+      "whole_job_cpu": 0.03125,
+      "whole_external_wall": 1.4689999999973224,
+      "job_peak_bytes": 2191360,
+      "job_active": 0,
+      "cleanup": null,
+      "environment": {
+        "CARGO_HOME": null,
+        "CARGO_NET_OFFLINE": "true",
+        "RAYON_NUM_THREADS": "2",
+        "RUSTUP_HOME": null,
+        "RUSTUP_TOOLCHAIN": null,
+        "RUST_BACKTRACE": "0",
+        "RUST_LIB_BACKTRACE": "0"
+      },
+      "executable": null,
+      "unit_executable": null
+    }
+  ],
+  "metadata_process_cpu_sample": 0.0,
+  "metadata_active_wall_sample": 0.014999999999417923,
+  "charged_slice": 4,
+  "scope": "Supplemental saved-ledger/report reading and output-family census, within final corrected slice; no scientific process or test rerun."
+}

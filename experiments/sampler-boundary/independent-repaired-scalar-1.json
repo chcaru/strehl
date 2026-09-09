@@ -1,0 +1,136 @@
+{
+  "schema": "sampler-independent-saved-read-v1",
+  "mode": "scalar",
+  "invocation": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-I",
+    "-S",
+    "-B",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\independent-saved-read.py",
+    "scalar",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\repaired-test-1\\child-00.log",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\independent-repaired-scalar-1.json"
+  ],
+  "source": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\independent-saved-read.py",
+    "sha256": "9af714765a05bfe4ca33052704a1e6612f69aa93e525c0731aa083fe9354701b"
+  },
+  "reads": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\independent-saved-read.py",
+      "bytes": 21204,
+      "sha256": "9af714765a05bfe4ca33052704a1e6612f69aa93e525c0731aa083fe9354701b"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\repaired-test-1\\child-00.log",
+      "bytes": 241198,
+      "sha256": "83bc772383fc7a2afeff71c026972707e59623c0c52341b8e1efccb6108e9b35"
+    }
+  ],
+  "actual_read_bytes": 262402,
+  "review": {
+    "rows": 344,
+    "failed": 0,
+    "passed": 344,
+    "saved_operand_predicates": 344,
+    "source_bound_reported_boolean_rows": [
+      "nearest-support-literal",
+      "bilinear-support-literal",
+      "catmull-rom-support-literal",
+      "clamped-catmull-rom-support-literal",
+      "lanczos2-support-literal",
+      "lanczos3-support-literal",
+      "plane-constructor-empty-both",
+      "plane-constructor-empty-width",
+      "plane-constructor-empty-height",
+      "plane-constructor-short-data",
+      "bilinear-gather-requested-map",
+      "bilinear-gather-opposite-direction-rejected"
+    ],
+    "dispositions": [
+      {
+        "group": "boundary",
+        "actual_kind": "finite",
+        "passed": true,
+        "count": 78
+      },
+      {
+        "group": "boundary",
+        "actual_kind": "refused",
+        "passed": true,
+        "count": 48
+      },
+      {
+        "group": "constructor",
+        "actual_kind": "true",
+        "passed": true,
+        "count": 4
+      },
+      {
+        "group": "cubic-limiter",
+        "actual_kind": "finite",
+        "passed": true,
+        "count": 6
+      },
+      {
+        "group": "gather",
+        "actual_kind": "true",
+        "passed": true,
+        "count": 2
+      },
+      {
+        "group": "lanczos-commission",
+        "actual_kind": "finite",
+        "passed": true,
+        "count": 18
+      },
+      {
+        "group": "nonfinite",
+        "actual_kind": "refused",
+        "passed": true,
+        "count": 36
+      },
+      {
+        "group": "null",
+        "actual_kind": "finite",
+        "passed": true,
+        "count": 18
+      },
+      {
+        "group": "support",
+        "actual_kind": "true",
+        "passed": true,
+        "count": 6
+      },
+      {
+        "group": "tiny",
+        "actual_kind": "finite",
+        "passed": true,
+        "count": 23
+      },
+      {
+        "group": "tiny",
+        "actual_kind": "refused",
+        "passed": true,
+        "count": 25
+      },
+      {
+        "group": "unchecked",
+        "actual_kind": "finite",
+        "passed": true,
+        "count": 60
+      },
+      {
+        "group": "unchecked-tiny",
+        "actual_kind": "finite",
+        "passed": true,
+        "count": 20
+      }
+    ],
+    "failed_rows": []
+  },
+  "failures": [],
+  "process_cpu_seconds": 0.0,
+  "active_wall_seconds": 0.014999999999417923,
+  "interpretation_complete": true
+}

@@ -1,0 +1,20 @@
+{
+  "schema": "sampler-independent-review-publication-v1",
+  "report": {
+    "path": "experiments\\sampler-boundary\\independent-result-review.md",
+    "bytes": 21654,
+    "sha256": "b814851d352ab6a01c5589e6075282fe525bf15dfd30a3dae7a7bc83e9877f95"
+  },
+  "preserved_original_plan_bytes": 7293,
+  "read_bytes": 18359,
+  "cumulative_read_bytes": 590597674,
+  "family_files_before_this_receipt": 48,
+  "family_bytes_before_this_receipt": 403911,
+  "parent_cpu_sample": 0.0,
+  "active_wall_sample": 0.0,
+  "charged_slice": 4,
+  "final_allowance": {
+    "cpu_seconds": 1,
+    "wall_seconds": 2
+  }
+}

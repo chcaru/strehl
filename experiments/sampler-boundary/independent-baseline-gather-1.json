@@ -1,0 +1,151 @@
+{
+  "schema": "sampler-independent-saved-read-v1",
+  "mode": "gather",
+  "invocation": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-I",
+    "-S",
+    "-B",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\independent-saved-read.py",
+    "gather",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\baseline-test-1\\child-00.log",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\independent-baseline-gather-1.json"
+  ],
+  "source": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\independent-saved-read.py",
+    "sha256": "9af714765a05bfe4ca33052704a1e6612f69aa93e525c0731aa083fe9354701b"
+  },
+  "reads": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\independent-saved-read.py",
+      "bytes": 21204,
+      "sha256": "9af714765a05bfe4ca33052704a1e6612f69aa93e525c0731aa083fe9354701b"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\baseline-test-1\\child-00.log",
+      "bytes": 242248,
+      "sha256": "482df6d5967c7d4cba812f4cf9098384b2f0f45eba4b7ca43ac624b1a54492c3"
+    }
+  ],
+  "actual_read_bytes": 263452,
+  "review": {
+    "reconstructed": {
+      "expected_count": 11844,
+      "observed_count": 11844,
+      "mask_mismatches": 0,
+      "value_mismatches": 219,
+      "refusal_nan_mismatches": 0,
+      "wrong_direction_mask_mismatches": 0,
+      "wrong_direction_value_mismatches": 11844,
+      "max_abs_error": 6.0
+    },
+    "complete_consumer_population": true,
+    "positive_coordinate_predicate": false,
+    "direction_destroyer": true,
+    "partitions": {
+      "refused-border": {
+        "count": 444,
+        "mask_mismatches": 0,
+        "value_mismatches": 0,
+        "refusal_nan_mismatches": 0,
+        "wrong_direction_value_mismatches": 0,
+        "finite_residuals": {}
+      },
+      "accepted-interior": {
+        "count": 11625,
+        "mask_mismatches": 0,
+        "value_mismatches": 0,
+        "refusal_nan_mismatches": 0,
+        "wrong_direction_value_mismatches": 11625,
+        "finite_residuals": {
+          "0": 11625
+        }
+      },
+      "accepted-final-column-without-corner": {
+        "count": 93,
+        "mask_mismatches": 0,
+        "value_mismatches": 93,
+        "refusal_nan_mismatches": 0,
+        "wrong_direction_value_mismatches": 93,
+        "finite_residuals": {
+          "-2": 93
+        }
+      },
+      "accepted-final-row-without-corner": {
+        "count": 125,
+        "mask_mismatches": 0,
+        "value_mismatches": 125,
+        "refusal_nan_mismatches": 0,
+        "wrong_direction_value_mismatches": 125,
+        "finite_residuals": {
+          "-4": 125
+        }
+      },
+      "accepted-final-corner": {
+        "count": 1,
+        "mask_mismatches": 0,
+        "value_mismatches": 1,
+        "refusal_nan_mismatches": 0,
+        "wrong_direction_value_mismatches": 1,
+        "finite_residuals": {
+          "-6": 1
+        }
+      }
+    },
+    "selected_exact_words": [
+      {
+        "x": 0,
+        "y": 0,
+        "bits": 2143289344,
+        "finite_value": null,
+        "covered": false
+      },
+      {
+        "x": 1,
+        "y": 1,
+        "bits": 1149288448,
+        "finite_value": 1030.0,
+        "covered": true
+      },
+      {
+        "x": 126,
+        "y": 1,
+        "bits": 1157464064,
+        "finite_value": 2028.0,
+        "covered": true
+      },
+      {
+        "x": 125,
+        "y": 93,
+        "bits": 1163550720,
+        "finite_value": 3494.0,
+        "covered": true
+      },
+      {
+        "x": 1,
+        "y": 94,
+        "bits": 1159536640,
+        "finite_value": 2514.0,
+        "covered": true
+      },
+      {
+        "x": 126,
+        "y": 94,
+        "bits": 1163624448,
+        "finite_value": 3512.0,
+        "covered": true
+      },
+      {
+        "x": 127,
+        "y": 95,
+        "bits": 2143289344,
+        "finite_value": null,
+        "covered": false
+      }
+    ]
+  },
+  "failures": [],
+  "process_cpu_seconds": 0.03125,
+  "active_wall_seconds": 0.03200000000651926,
+  "interpretation_complete": true
+}
