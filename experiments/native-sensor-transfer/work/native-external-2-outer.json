@@ -1,0 +1,40 @@
+{
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-I",
+    "-S",
+    "-B",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-sensor-transfer\\run-native-continuation.py",
+    "--release",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-sensor-transfer\\work\\native-continuation-release-2.json",
+    "--release-sha256",
+    "2839400e5f70abd33d2d73f5696cf982659d063018f846119e848b47a9744d6b"
+  ],
+  "elapsed_wall_seconds": 1.2819999999919673,
+  "exit": {
+    "bytes": 2,
+    "path": "experiments/native-sensor-transfer/work/native-external-2-exit.txt",
+    "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+  },
+  "exit_code": 1,
+  "schema": "native-sensor-transfer-stage-external-v1",
+  "scope": "Complete directly launched controller interval and actual exit; controller owns descendant Jobs. Raw controller stdout/stderr. No whole CPU inference from wall.",
+  "source": {
+    "bytes": 42474,
+    "path": "experiments/native-sensor-transfer/run-native-continuation.py",
+    "sha256": "817cbe5e27c791d7995613113c78e6fe95d5f19c7482786d9bb12c8644d57920"
+  },
+  "stderr": {
+    "bytes": 0,
+    "path": "experiments/native-sensor-transfer/work/native-external-2-stderr.bin",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "stderr_bytes": 0,
+  "stdout": {
+    "bytes": 465,
+    "path": "experiments/native-sensor-transfer/work/native-external-2-stdout.bin",
+    "sha256": "7b246edec3bd35c8f9993e8f9ce35b169e72c9be81d32f5221b8310995e6b378"
+  },
+  "stdout_bytes": 465,
+  "timeout_terminated": false
+}
