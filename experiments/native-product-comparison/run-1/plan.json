@@ -1,0 +1,1305 @@
+{
+  "schema": "native-product-comparison-v1",
+  "revision": "b46eafb453632a5fa919d7d72ef1f88c8e7f3612",
+  "runner": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-product-comparison\\run.py",
+    "sha256": "1830862e2c0283af0fab263344ffe6a33fc7069fa4f94176c931628f21697e3e",
+    "bytes": 6183
+  },
+  "native": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-direct-planes\\build-1\\strehl.exe",
+    "sha256": "95e5c82d8940e87dc2e5e790a71aea4f5def69b03abbf1478a93b80087ca0236",
+    "bytes": 10225664
+  },
+  "fork": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M175-fork-arm\\bin\\focus-stack.exe",
+    "sha256": "691eada94d451fdc06baaddb7edee86ee85472d8aff4fa915dab468ef8f609ac",
+    "bytes": 271360
+  },
+  "dlls": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M175-fork-arm\\bin\\concrt140.dll",
+      "sha256": "54716f0738af891f283d213b5c8d11b25896bb8ee3097d301eae718560cf974e",
+      "bytes": 374200
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M175-fork-arm\\bin\\msvcp140.dll",
+      "sha256": "7c26614e1d733892c2deac7e245ce115504b1d80592dd0a01b08e3e5a55f89ca",
+      "bytes": 643512
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M175-fork-arm\\bin\\opencv_world4130.dll",
+      "sha256": "d6ad6fcc7908e8e90625fa8614d0480b111d7cc887054ed01a3ed2ad5f872d79",
+      "bytes": 67995648
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M175-fork-arm\\bin\\vcruntime140.dll",
+      "sha256": "d1f4225df2cd877dbf130d5668a021dce3f94118455ff5ec952061c30afc9ce7",
+      "bytes": 178616
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M175-fork-arm\\bin\\vcruntime140_1.dll",
+      "sha256": "a7146c08f89fe5b04541ab507cdb59ff7b44534d4ba3c668a426c6450a03434e",
+      "bytes": 50112
+    }
+  ],
+  "map": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-PHASE0-PHASE\\out\\canon\\coffee-bean.warpmap.txt",
+    "sha256": "b21b247944c257ab0fd3c767c879b9abf4a5fb1112dded97c87990a7d537274c",
+    "bytes": 14591
+  },
+  "inputs": [
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00016.ARW",
+      "bytes": 39030784,
+      "mtime_ns": 1778455869760000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00017.ARW",
+      "bytes": 39055360,
+      "mtime_ns": 1778455870990000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00018.ARW",
+      "bytes": 39071744,
+      "mtime_ns": 1778455872270000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00019.ARW",
+      "bytes": 39092224,
+      "mtime_ns": 1778455873520000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00020.ARW",
+      "bytes": 39124992,
+      "mtime_ns": 1778455874810000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00021.ARW",
+      "bytes": 39157760,
+      "mtime_ns": 1778455876040000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00022.ARW",
+      "bytes": 39190528,
+      "mtime_ns": 1778455877250000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00023.ARW",
+      "bytes": 39235584,
+      "mtime_ns": 1778455878490000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00024.ARW",
+      "bytes": 39297024,
+      "mtime_ns": 1778455879720000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00025.ARW",
+      "bytes": 39374848,
+      "mtime_ns": 1778455880970000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00026.ARW",
+      "bytes": 39485440,
+      "mtime_ns": 1778455882190000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00027.ARW",
+      "bytes": 39616512,
+      "mtime_ns": 1778455883420000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00028.ARW",
+      "bytes": 39743488,
+      "mtime_ns": 1778455884700000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00029.ARW",
+      "bytes": 39878656,
+      "mtime_ns": 1778455885960000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00030.ARW",
+      "bytes": 39985152,
+      "mtime_ns": 1778455887190000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00031.ARW",
+      "bytes": 40099840,
+      "mtime_ns": 1778455888420000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00032.ARW",
+      "bytes": 40185856,
+      "mtime_ns": 1778455889630000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00033.ARW",
+      "bytes": 40251392,
+      "mtime_ns": 1778455890910000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00034.ARW",
+      "bytes": 40325120,
+      "mtime_ns": 1778455892140000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00035.ARW",
+      "bytes": 40325120,
+      "mtime_ns": 1778455893360000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00036.ARW",
+      "bytes": 40390656,
+      "mtime_ns": 1778455894570000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00037.ARW",
+      "bytes": 40415232,
+      "mtime_ns": 1778455895790000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00038.ARW",
+      "bytes": 40509440,
+      "mtime_ns": 1778455897030000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00039.ARW",
+      "bytes": 40583168,
+      "mtime_ns": 1778455898260000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00040.ARW",
+      "bytes": 40574976,
+      "mtime_ns": 1778455899540000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00041.ARW",
+      "bytes": 40611840,
+      "mtime_ns": 1778455900810000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00042.ARW",
+      "bytes": 40873984,
+      "mtime_ns": 1778455902060000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00043.ARW",
+      "bytes": 40804352,
+      "mtime_ns": 1778455903360000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00044.ARW",
+      "bytes": 40857600,
+      "mtime_ns": 1778455904660000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00045.ARW",
+      "bytes": 40906752,
+      "mtime_ns": 1778455905980000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00046.ARW",
+      "bytes": 40878080,
+      "mtime_ns": 1778455907320000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00047.ARW",
+      "bytes": 40833024,
+      "mtime_ns": 1778455908600000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00048.ARW",
+      "bytes": 40878080,
+      "mtime_ns": 1778455909890000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00049.ARW",
+      "bytes": 40927232,
+      "mtime_ns": 1778455911210000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00050.ARW",
+      "bytes": 40931328,
+      "mtime_ns": 1778455912500000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00051.ARW",
+      "bytes": 40869888,
+      "mtime_ns": 1778455913830000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00052.ARW",
+      "bytes": 40841216,
+      "mtime_ns": 1778455915160000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00053.ARW",
+      "bytes": 40828928,
+      "mtime_ns": 1778455916420000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00054.ARW",
+      "bytes": 40677376,
+      "mtime_ns": 1778455917690000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00055.ARW",
+      "bytes": 40669184,
+      "mtime_ns": 1778455918950000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00056.ARW",
+      "bytes": 40726528,
+      "mtime_ns": 1778455920220000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00057.ARW",
+      "bytes": 40550400,
+      "mtime_ns": 1778455921440000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00058.ARW",
+      "bytes": 40407040,
+      "mtime_ns": 1778455922620000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00059.ARW",
+      "bytes": 40263680,
+      "mtime_ns": 1778455923780000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00060.ARW",
+      "bytes": 40153088,
+      "mtime_ns": 1778455924960000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00061.ARW",
+      "bytes": 40046592,
+      "mtime_ns": 1778455926160000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00062.ARW",
+      "bytes": 39923712,
+      "mtime_ns": 1778455927360000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00063.ARW",
+      "bytes": 39837696,
+      "mtime_ns": 1778455928560000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00064.ARW",
+      "bytes": 39747584,
+      "mtime_ns": 1778455929760000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00065.ARW",
+      "bytes": 39665664,
+      "mtime_ns": 1778455930920000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00066.ARW",
+      "bytes": 39604224,
+      "mtime_ns": 1778455932110000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00067.ARW",
+      "bytes": 39538688,
+      "mtime_ns": 1778455933300000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00068.ARW",
+      "bytes": 39497728,
+      "mtime_ns": 1778455934500000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00069.ARW",
+      "bytes": 39456768,
+      "mtime_ns": 1778455935690000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00070.ARW",
+      "bytes": 39424000,
+      "mtime_ns": 1778455936850000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00071.ARW",
+      "bytes": 39395328,
+      "mtime_ns": 1778455938040000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00072.ARW",
+      "bytes": 39366656,
+      "mtime_ns": 1778455939180000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00073.ARW",
+      "bytes": 39337984,
+      "mtime_ns": 1778455940350000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00074.ARW",
+      "bytes": 39325696,
+      "mtime_ns": 1778455941520000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00075.ARW",
+      "bytes": 39305216,
+      "mtime_ns": 1778455942690000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00076.ARW",
+      "bytes": 39288832,
+      "mtime_ns": 1778455943850000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00077.ARW",
+      "bytes": 39288832,
+      "mtime_ns": 1778455945040000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00078.ARW",
+      "bytes": 39268352,
+      "mtime_ns": 1778455946190000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00079.ARW",
+      "bytes": 39251968,
+      "mtime_ns": 1778455947350000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00080.ARW",
+      "bytes": 39243776,
+      "mtime_ns": 1778455948540000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00081.ARW",
+      "bytes": 39235584,
+      "mtime_ns": 1778455949690000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00082.ARW",
+      "bytes": 39231488,
+      "mtime_ns": 1778455950870000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00083.ARW",
+      "bytes": 39223296,
+      "mtime_ns": 1778455952020000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00084.ARW",
+      "bytes": 39215104,
+      "mtime_ns": 1778455953220000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00085.ARW",
+      "bytes": 39190528,
+      "mtime_ns": 1778455954350000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00086.ARW",
+      "bytes": 39182336,
+      "mtime_ns": 1778455955520000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00087.ARW",
+      "bytes": 39161856,
+      "mtime_ns": 1778455956650000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00088.ARW",
+      "bytes": 39161856,
+      "mtime_ns": 1778455957820000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00089.ARW",
+      "bytes": 39149568,
+      "mtime_ns": 1778455958950000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00090.ARW",
+      "bytes": 39137280,
+      "mtime_ns": 1778455960080000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00091.ARW",
+      "bytes": 39124992,
+      "mtime_ns": 1778455961250000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00092.ARW",
+      "bytes": 39112704,
+      "mtime_ns": 1778455962380000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00093.ARW",
+      "bytes": 39100416,
+      "mtime_ns": 1778455963550000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00094.ARW",
+      "bytes": 39096320,
+      "mtime_ns": 1778455964700000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00095.ARW",
+      "bytes": 39079936,
+      "mtime_ns": 1778455965850000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00096.ARW",
+      "bytes": 39075840,
+      "mtime_ns": 1778455966990000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00097.ARW",
+      "bytes": 39071744,
+      "mtime_ns": 1778455968120000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00098.ARW",
+      "bytes": 39059456,
+      "mtime_ns": 1778455969250000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00099.ARW",
+      "bytes": 39043072,
+      "mtime_ns": 1778455970400000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00100.ARW",
+      "bytes": 39051264,
+      "mtime_ns": 1778455971550000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00101.ARW",
+      "bytes": 39043072,
+      "mtime_ns": 1778455972690000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00102.ARW",
+      "bytes": 39038976,
+      "mtime_ns": 1778455973820000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00103.ARW",
+      "bytes": 39026688,
+      "mtime_ns": 1778455974950000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00104.ARW",
+      "bytes": 39022592,
+      "mtime_ns": 1778455976120000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00105.ARW",
+      "bytes": 39014400,
+      "mtime_ns": 1778455977250000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00106.ARW",
+      "bytes": 39018496,
+      "mtime_ns": 1778455978380000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00107.ARW",
+      "bytes": 39018496,
+      "mtime_ns": 1778455979520000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00108.ARW",
+      "bytes": 39010304,
+      "mtime_ns": 1778455980650000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00109.ARW",
+      "bytes": 39010304,
+      "mtime_ns": 1778455981780000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00110.ARW",
+      "bytes": 39002112,
+      "mtime_ns": 1778455982920000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00111.ARW",
+      "bytes": 38998016,
+      "mtime_ns": 1778455984080000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00112.ARW",
+      "bytes": 38998016,
+      "mtime_ns": 1778455985190000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00113.ARW",
+      "bytes": 38993920,
+      "mtime_ns": 1778455986310000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00114.ARW",
+      "bytes": 38989824,
+      "mtime_ns": 1778455987420000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00115.ARW",
+      "bytes": 38989824,
+      "mtime_ns": 1778455988560000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00116.ARW",
+      "bytes": 38985728,
+      "mtime_ns": 1778455989690000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00117.ARW",
+      "bytes": 38985728,
+      "mtime_ns": 1778455990820000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00118.ARW",
+      "bytes": 38977536,
+      "mtime_ns": 1778455991930000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00119.ARW",
+      "bytes": 38973440,
+      "mtime_ns": 1778455993050000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00120.ARW",
+      "bytes": 38969344,
+      "mtime_ns": 1778455994150000000
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00016.tif",
+      "bytes": 392918428,
+      "mtime_ns": 1778456286733383100
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00017.tif",
+      "bytes": 392918508,
+      "mtime_ns": 1778456286694390500
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00018.tif",
+      "bytes": 392918576,
+      "mtime_ns": 1778456286621390000
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00019.tif",
+      "bytes": 392918654,
+      "mtime_ns": 1778456286440402900
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00020.tif",
+      "bytes": 392918742,
+      "mtime_ns": 1778456286351409200
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00021.tif",
+      "bytes": 392918824,
+      "mtime_ns": 1778456286160424200
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00022.tif",
+      "bytes": 392918916,
+      "mtime_ns": 1778456285940910100
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00023.tif",
+      "bytes": 392919002,
+      "mtime_ns": 1778456285732933800
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00024.tif",
+      "bytes": 392919078,
+      "mtime_ns": 1778456285597935000
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00025.tif",
+      "bytes": 392919162,
+      "mtime_ns": 1778456285366955300
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00026.tif",
+      "bytes": 392919278,
+      "mtime_ns": 1778456285080973800
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00027.tif",
+      "bytes": 392919354,
+      "mtime_ns": 1778456284864985900
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00028.tif",
+      "bytes": 392919462,
+      "mtime_ns": 1778456284572006800
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00029.tif",
+      "bytes": 392919534,
+      "mtime_ns": 1778456284332422600
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00030.tif",
+      "bytes": 392919626,
+      "mtime_ns": 1778456284166433800
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00031.tif",
+      "bytes": 392919732,
+      "mtime_ns": 1778456283976447100
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00032.tif",
+      "bytes": 392919824,
+      "mtime_ns": 1778456283697466700
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00033.tif",
+      "bytes": 392919940,
+      "mtime_ns": 1778456283454484400
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00034.tif",
+      "bytes": 392920028,
+      "mtime_ns": 1778456283165505300
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00035.tif",
+      "bytes": 392920108,
+      "mtime_ns": 1778456282896522900
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00036.tif",
+      "bytes": 392920210,
+      "mtime_ns": 1778456282724535300
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00037.tif",
+      "bytes": 392920274,
+      "mtime_ns": 1778456282507551200
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00038.tif",
+      "bytes": 392920356,
+      "mtime_ns": 1778456282312565800
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00039.tif",
+      "bytes": 392920414,
+      "mtime_ns": 1778456282098579100
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00040.tif",
+      "bytes": 392920476,
+      "mtime_ns": 1778456281787601700
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00041.tif",
+      "bytes": 392920538,
+      "mtime_ns": 1778456281471246700
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00042.tif",
+      "bytes": 392920572,
+      "mtime_ns": 1778456281245288600
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00043.tif",
+      "bytes": 392920638,
+      "mtime_ns": 1778456281146269100
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00044.tif",
+      "bytes": 392920658,
+      "mtime_ns": 1778456280880290100
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00045.tif",
+      "bytes": 392920690,
+      "mtime_ns": 1778456280707928100
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00046.tif",
+      "bytes": 392920696,
+      "mtime_ns": 1778456280500942100
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00047.tif",
+      "bytes": 392920706,
+      "mtime_ns": 1778456279817503500
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00048.tif",
+      "bytes": 392920748,
+      "mtime_ns": 1778456279762538200
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00049.tif",
+      "bytes": 392920726,
+      "mtime_ns": 1778456279737509500
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00050.tif",
+      "bytes": 392920720,
+      "mtime_ns": 1778456279420534300
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00051.tif",
+      "bytes": 392920716,
+      "mtime_ns": 1778456279335537000
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00052.tif",
+      "bytes": 392920684,
+      "mtime_ns": 1778456279110553400
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00053.tif",
+      "bytes": 392920630,
+      "mtime_ns": 1778456278538543700
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00054.tif",
+      "bytes": 392920598,
+      "mtime_ns": 1778456278293561900
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00055.tif",
+      "bytes": 392920544,
+      "mtime_ns": 1778456278079840500
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00056.tif",
+      "bytes": 392920466,
+      "mtime_ns": 1778456277771860600
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00057.tif",
+      "bytes": 392920414,
+      "mtime_ns": 1778456277600871500
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00058.tif",
+      "bytes": 392920338,
+      "mtime_ns": 1778456277354554300
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00059.tif",
+      "bytes": 392920280,
+      "mtime_ns": 1778456277177567100
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00060.tif",
+      "bytes": 392920214,
+      "mtime_ns": 1778456276906586400
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00061.tif",
+      "bytes": 392920146,
+      "mtime_ns": 1778456276708599800
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00062.tif",
+      "bytes": 392920054,
+      "mtime_ns": 1778456276456617900
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00063.tif",
+      "bytes": 392919986,
+      "mtime_ns": 1778456276215634900
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00064.tif",
+      "bytes": 392919900,
+      "mtime_ns": 1778456275992223800
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00065.tif",
+      "bytes": 392919818,
+      "mtime_ns": 1778456275810237000
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00066.tif",
+      "bytes": 392919722,
+      "mtime_ns": 1778456275541257800
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00067.tif",
+      "bytes": 392919630,
+      "mtime_ns": 1778456275344269700
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00068.tif",
+      "bytes": 392919540,
+      "mtime_ns": 1778456275118288500
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00069.tif",
+      "bytes": 392919458,
+      "mtime_ns": 1778456274660825500
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00070.tif",
+      "bytes": 392919374,
+      "mtime_ns": 1778456274613827900
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00071.tif",
+      "bytes": 392919258,
+      "mtime_ns": 1778456274414212000
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00072.tif",
+      "bytes": 392919174,
+      "mtime_ns": 1778456274152230700
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00073.tif",
+      "bytes": 392919090,
+      "mtime_ns": 1778456273946734200
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00074.tif",
+      "bytes": 392918994,
+      "mtime_ns": 1778456273846740500
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00075.tif",
+      "bytes": 392918916,
+      "mtime_ns": 1778456273305355900
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00076.tif",
+      "bytes": 392918834,
+      "mtime_ns": 1778456273195359500
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00077.tif",
+      "bytes": 392918746,
+      "mtime_ns": 1778456273034370200
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00078.tif",
+      "bytes": 392918652,
+      "mtime_ns": 1778456272776388100
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00079.tif",
+      "bytes": 392918574,
+      "mtime_ns": 1778456272605401100
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00080.tif",
+      "bytes": 392918514,
+      "mtime_ns": 1778456272462409800
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00081.tif",
+      "bytes": 392918436,
+      "mtime_ns": 1778456272043328400
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00082.tif",
+      "bytes": 392918372,
+      "mtime_ns": 1778456271766348300
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00083.tif",
+      "bytes": 392918318,
+      "mtime_ns": 1778456271569001900
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00084.tif",
+      "bytes": 392918226,
+      "mtime_ns": 1778456271286021400
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00085.tif",
+      "bytes": 392918148,
+      "mtime_ns": 1778456271181028300
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00086.tif",
+      "bytes": 392918072,
+      "mtime_ns": 1778456271025039300
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00087.tif",
+      "bytes": 392918012,
+      "mtime_ns": 1778456270702552700
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00088.tif",
+      "bytes": 392917930,
+      "mtime_ns": 1778456270437570700
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00089.tif",
+      "bytes": 392917882,
+      "mtime_ns": 1778456270222071600
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00090.tif",
+      "bytes": 392917816,
+      "mtime_ns": 1778456269895095100
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00091.tif",
+      "bytes": 392917770,
+      "mtime_ns": 1778456269766100700
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00092.tif",
+      "bytes": 392917728,
+      "mtime_ns": 1778456269670108300
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00093.tif",
+      "bytes": 392917700,
+      "mtime_ns": 1778456269375081600
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00094.tif",
+      "bytes": 392917640,
+      "mtime_ns": 1778456269022109700
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00095.tif",
+      "bytes": 392917608,
+      "mtime_ns": 1778456268938781900
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00096.tif",
+      "bytes": 392917578,
+      "mtime_ns": 1778456268445817600
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00097.tif",
+      "bytes": 392917534,
+      "mtime_ns": 1778456268297841200
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00098.tif",
+      "bytes": 392917494,
+      "mtime_ns": 1778456268281830000
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00099.tif",
+      "bytes": 392917432,
+      "mtime_ns": 1778456268044847900
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00100.tif",
+      "bytes": 392917402,
+      "mtime_ns": 1778456267756866200
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00101.tif",
+      "bytes": 392917366,
+      "mtime_ns": 1778456267608875900
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00102.tif",
+      "bytes": 392917336,
+      "mtime_ns": 1778456267003202400
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00103.tif",
+      "bytes": 392917292,
+      "mtime_ns": 1778456266735758100
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00104.tif",
+      "bytes": 392917262,
+      "mtime_ns": 1778456266661760000
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00105.tif",
+      "bytes": 392917226,
+      "mtime_ns": 1778456266618762700
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00106.tif",
+      "bytes": 392917208,
+      "mtime_ns": 1778456266380778200
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00107.tif",
+      "bytes": 392917186,
+      "mtime_ns": 1778456266196792300
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00108.tif",
+      "bytes": 392917168,
+      "mtime_ns": 1778456265391147600
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00109.tif",
+      "bytes": 392917154,
+      "mtime_ns": 1778456265334151600
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00110.tif",
+      "bytes": 392917136,
+      "mtime_ns": 1778456265203159100
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00111.tif",
+      "bytes": 392917098,
+      "mtime_ns": 1778456265043170800
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00112.tif",
+      "bytes": 392917072,
+      "mtime_ns": 1778456264877971700
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00113.tif",
+      "bytes": 392917042,
+      "mtime_ns": 1778456264676986000
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00114.tif",
+      "bytes": 392917020,
+      "mtime_ns": 1778456264033032600
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00115.tif",
+      "bytes": 392916994,
+      "mtime_ns": 1778456263365902400
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00116.tif",
+      "bytes": 392916964,
+      "mtime_ns": 1778456263628060300
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00117.tif",
+      "bytes": 392916944,
+      "mtime_ns": 1778456263793051200
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00118.tif",
+      "bytes": 392916924,
+      "mtime_ns": 1778456262418116100
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00119.tif",
+      "bytes": 392916902,
+      "mtime_ns": 1778456263521890700
+    },
+    {
+      "path": "D:\\edited\\macro\\coffee-bean\\DSC00120.tif",
+      "bytes": 392916884,
+      "mtime_ns": 1778456263776051100
+    }
+  ],
+  "plans": [
+    {
+      "label": "native",
+      "command": [
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-direct-planes\\build-1\\strehl.exe",
+        "stack",
+        "D:\\personal\\macro\\coffee-bean",
+        "--merge",
+        "pyramid",
+        "--pyramid-bands",
+        "7",
+        "--pyramid-gate",
+        "2",
+        "--pyramid-exponent",
+        "2",
+        "--pyramid-sharpen",
+        "1.4",
+        "--pyramid-select",
+        "soft",
+        "--pyramid-base",
+        "mean",
+        "--srgb",
+        "--demosaic",
+        "--resampler",
+        "catmull-rom",
+        "--cover",
+        "crop",
+        "--out",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-product-comparison\\run-1\\native-coffee-bean.tiff"
+      ],
+      "fields": [
+        [
+          "RAYON_NUM_THREADS",
+          "8"
+        ],
+        [
+          "STREHL_PYRAMID_WORKERS",
+          "8"
+        ],
+        [
+          "STREHL_ALIGN",
+          "1"
+        ],
+        [
+          "STREHL_WARPMAP",
+          "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-PHASE0-PHASE\\out\\canon\\coffee-bean.warpmap.txt"
+        ],
+        [
+          "STREHL_DIRECT_PLANES",
+          "rounded"
+        ],
+        [
+          "STREHL_PROBE_GATHER",
+          "green"
+        ],
+        [
+          "STREHL_WARP_WRITEBACK",
+          "parallel"
+        ],
+        [
+          "STREHL_FULLRES_GATHER",
+          "1"
+        ],
+        [
+          "STREHL_DEFECT",
+          "off"
+        ]
+      ],
+      "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-product-comparison\\run-1\\native-coffee-bean.tiff"
+    },
+    {
+      "label": "fork",
+      "command": [
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M175-fork-arm\\bin\\focus-stack.exe",
+        "--output=C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-product-comparison\\run-1\\fork-coffee-bean.tiff",
+        "--reference=52",
+        "--threads=8",
+        "--batchsize=8",
+        "--consistency=2",
+        "--denoise=1",
+        "--input-colorspace=linear-rec2020",
+        "--output-colorspace=srgb",
+        "--output-bitdepth=16",
+        "--verbose",
+        "D:\\edited\\macro\\coffee-bean\\DSC00016.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00017.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00018.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00019.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00020.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00021.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00022.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00023.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00024.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00025.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00026.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00027.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00028.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00029.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00030.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00031.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00032.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00033.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00034.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00035.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00036.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00037.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00038.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00039.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00040.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00041.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00042.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00043.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00044.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00045.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00046.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00047.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00048.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00049.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00050.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00051.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00052.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00053.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00054.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00055.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00056.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00057.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00058.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00059.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00060.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00061.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00062.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00063.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00064.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00065.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00066.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00067.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00068.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00069.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00070.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00071.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00072.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00073.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00074.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00075.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00076.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00077.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00078.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00079.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00080.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00081.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00082.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00083.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00084.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00085.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00086.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00087.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00088.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00089.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00090.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00091.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00092.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00093.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00094.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00095.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00096.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00097.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00098.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00099.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00100.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00101.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00102.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00103.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00104.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00105.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00106.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00107.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00108.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00109.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00110.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00111.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00112.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00113.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00114.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00115.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00116.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00117.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00118.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00119.tif",
+        "D:\\edited\\macro\\coffee-bean\\DSC00120.tif"
+      ],
+      "fields": [],
+      "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-product-comparison\\run-1\\fork-coffee-bean.tiff"
+    }
+  ],
+  "limits": {
+    "wall_seconds": 600,
+    "cpu_seconds": 3600,
+    "peak_job_commit_bytes": 17179869184,
+    "log_bytes": 4194304,
+    "retained_primary_output_bytes": 536870912
+  },
+  "scope": "RAW direct versus existing developed LinearRec2020 TIFF workflow; native reuses map while fork aligns; upstream development time unavailable; no speed ranking or common-linear quality claim"
+}

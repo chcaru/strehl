@@ -1,0 +1,11 @@
+{
+  "command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-direct-planes\\build-1\\strehl.exe",
+    "align",
+    "D:\\personal\\macro\\coffee-bean",
+    "--check",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-PHASE0-PHASE\\out\\canon\\coffee-bean.warpmap.txt"
+  ],
+  "environment_overrides": {},
+  "removed_environment": []
+}

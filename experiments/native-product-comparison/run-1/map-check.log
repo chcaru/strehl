@@ -1,0 +1,11 @@
+sidecar C:\dev\blog\death-of-software\projects\strehl\experiments\M-PHASE0-PHASE\out\canon\coffee-bean.warpmap.txt
+  fitted on   coffee-bean (digest bb9a2b40eefb65a9, 105 frames)
+  strategy    S3-ba-unit
+  reference   frame 52
+  resampler   CatmullRom
+  held-out    6.671 plane px  (above M86 T_usable = 4.0 px)
+  edge floor  2.208 plane px
+  placed      105/105, refused 0
+
+  applied to  coffee-bean (digest bb9a2b40eefb65a9, 105 frames)
+  MATCH: this sidecar belongs to this bracket

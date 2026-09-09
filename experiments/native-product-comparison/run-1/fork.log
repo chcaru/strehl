@@ -1,0 +1,289 @@
+OpenCL device: NVIDIA Corporation NVIDIA GeForce RTX 5090 OpenCL 3.0 CUDA
+ 0.231 [  1/  2] T4 Starting task: Load D:\edited\macro\coffee-bean\DSC00068.tif
+ 0.231 [  2/  7] T0 Starting task: Load D:\edited\macro\coffee-bean\DSC00067.tif
+ 0.231 [  3/ 12] T7 Starting task: Load D:\edited\macro\coffee-bean\DSC00069.tif
+ 0.231 [  4/ 21] T6 Starting task: Load D:\edited\macro\coffee-bean\DSC00070.tif
+ 0.231 [  5/ 26] T1 Starting task: Load D:\edited\macro\coffee-bean\DSC00065.tif
+ 0.231 [  6/ 26] T2 Starting task: Load D:\edited\macro\coffee-bean\DSC00066.tif
+ 0.231 [  7/ 31] T3 Starting task: Load D:\edited\macro\coffee-bean\DSC00071.tif
+ 0.231 [  8/ 40] T5 Starting task: Load D:\edited\macro\coffee-bean\DSC00064.tif
+[ WARN:0@2.015] global matrix_expressions.cpp:1334 cv::MatOp_AddEx::assign OpenCV/MatExpr: processing of multi-channel arrays might be changed in the future: https://github.com/opencv/opencv/issues/16739
+DSC00068.tif has resolution 7008x4672, using 10 wavelet levels and expanding to 7168x5120
+ 2.347           T4 Finished task 1 in 2.116 s.
+ 2.347 [  9/557] T4 Starting task: Grayscale D:\edited\macro\coffee-bean\DSC00068.tif
+Using grayscale weights R:0.0011, G:0.0013, B:0.0014 (input depth 16-bit)
+ 2.642           T4 Finished task 9 in 0.295 s.
+ 2.642 [ 10/557] T4 Starting task: Align DSC00068.tif to DSC00068.tif
+aligned_DSC00068.tif transformed corners TL (80.0,224.0), TR (7088.0,224.0), BL (80.0,4896.0), BR (7088.0,4896.0)
+aligned_DSC00068.tif valid area X 80, Y 224, W 7008, H 4672
+ 2.642           T4 Finished task 10 in 0.000 s.
+ 2.642 [ 11/557] T4 Starting task: Grayscale aligned_DSC00068.tif
+DSC00067.tif has resolution 7008x4672, using 10 wavelet levels and expanding to 7168x5120
+ 2.836           T0 Finished task 2 in 2.605 s.
+ 2.836 [ 12/557] T0 Starting task: Grayscale D:\edited\macro\coffee-bean\DSC00067.tif
+ 2.971           T4 Finished task 11 in 0.329 s.
+ 2.971 [ 13/557] T4 Starting task: Forward-wavelet aligned_DSC00068.tif
+ 3.226           T4 Finished task 13 in 0.255 s.
+ 3.226 [ 14/557] T4 Starting task: Load D:\edited\macro\coffee-bean\DSC00072.tif
+ 3.228           T0 Finished task 12 in 0.392 s.
+ 3.228 [ 15/557] T0 Starting task: Align DSC00067.tif to DSC00068.tif
+DSC00069.tif has resolution 7008x4672, using 10 wavelet levels and expanding to 7168x5120
+ 3.327           T7 Finished task 3 in 3.096 s.
+ 3.327 [ 16/557] T7 Starting task: Grayscale D:\edited\macro\coffee-bean\DSC00069.tif
+ 3.598           T7 Finished task 16 in 0.271 s.
+ 3.598 [ 17/557] T7 Starting task: Align DSC00069.tif to DSC00068.tif
+DSC00070.tif has resolution 7008x4672, using 10 wavelet levels and expanding to 7168x5120
+ 3.738           T6 Finished task 4 in 3.507 s.
+ 3.738 [ 18/557] T6 Starting task: Grayscale D:\edited\macro\coffee-bean\DSC00070.tif
+ 4.051           T6 Finished task 18 in 0.313 s.
+ 4.051 [ 19/557] T6 Starting task: Align DSC00070.tif to DSC00069.tif
+DSC00065.tif has resolution 7008x4672, using 10 wavelet levels and expanding to 7168x5120
+ 4.145           T1 Finished task 5 in 3.914 s.
+ 4.145 [ 20/557] T1 Starting task: Grayscale D:\edited\macro\coffee-bean\DSC00065.tif
+aligned_DSC00067.tif transform: [0.999 0.000 2.598; -0.000 0.999 1.905]
+ 4.343           T1 Finished task 20 in 0.198 s.
+ 4.343 [ 21/557] T1 Starting task: Load D:\edited\macro\coffee-bean\DSC00063.tif
+DSC00066.tif has resolution 7008x4672, using 10 wavelet levels and expanding to 7168x5120
+aligned_DSC00069.tif transform: [1.001 0.000 -3.165; 0.000 1.001 -1.751]
+ 4.596           T2 Finished task 6 in 4.365 s.
+ 4.596 [ 22/557] T2 Starting task: Grayscale D:\edited\macro\coffee-bean\DSC00066.tif
+aligned_DSC00067.tif contrast map: C:1.002, X:-0.000, X2:-0.007, Y:0.000, Y2:-0.006
+aligned_DSC00067.tif whitebalance: R:x1.000-8.9, G:x1.000-8.0, B:x1.000-2.1
+ 4.860           T2 Finished task 22 in 0.264 s.
+ 4.860 [ 23/557] T2 Starting task: Align DSC00066.tif to DSC00067.tif
+DSC00071.tif has resolution 7008x4672, using 10 wavelet levels and expanding to 7168x5120
+ 4.977           T3 Finished task 7 in 4.746 s.
+ 4.977 [ 24/557] T3 Starting task: Align DSC00065.tif to DSC00066.tif
+aligned_DSC00067.tif transformed corners TL (82.5,225.7), TR (7085.6,225.2), BL (82.6,4893.9), BR (7085.6,4893.4)
+aligned_DSC00067.tif valid area X 83, Y 226, W 7002, H 4667
+ 5.024           T0 Finished task 15 in 1.796 s.
+ 5.024 [ 25/557] T0 Starting task: Grayscale aligned_DSC00067.tif
+aligned_DSC00069.tif contrast map: C:0.999, X:0.000, X2:0.004, Y:-0.000, Y2:0.005
+aligned_DSC00069.tif whitebalance: R:x1.000+4.1, G:x1.000-9.0, B:x1.000-1.4
+ 5.211           T0 Finished task 25 in 0.187 s.
+ 5.211 [ 26/557] T0 Starting task: Forward-wavelet aligned_DSC00067.tif
+DSC00064.tif has resolution 7008x4672, using 10 wavelet levels and expanding to 7168x5120
+ 5.294           T5 Finished task 8 in 5.063 s.
+ 5.294 [ 27/557] T5 Starting task: Grayscale D:\edited\macro\coffee-bean\DSC00071.tif
+aligned_DSC00069.tif transformed corners TL (76.9,222.4), TR (7089.8,222.8), BL (77.0,4898.1), BR (7089.9,4898.4)
+aligned_DSC00069.tif valid area X 80, Y 224, W 7008, H 4672
+ 5.351           T7 Finished task 17 in 1.753 s.
+ 5.351 [ 28/557] T7 Starting task: Grayscale aligned_DSC00069.tif
+ 5.435           T0 Finished task 26 in 0.224 s.
+ 5.435 [ 29/557] T0 Starting task: Grayscale D:\edited\macro\coffee-bean\DSC00064.tif
+ 5.604           T5 Finished task 27 in 0.310 s.
+ 5.604 [ 30/557] T5 Starting task: Align DSC00071.tif to DSC00070.tif
+ 5.693           T7 Finished task 28 in 0.342 s.
+ 5.693 [ 31/557] T7 Starting task: Forward-wavelet aligned_DSC00069.tif
+ 5.752           T0 Finished task 29 in 0.317 s.
+ 5.752 [ 32/557] T0 Starting task: Align DSC00064.tif to DSC00065.tif
+aligned_DSC00070.tif transform: [1.001 0.000 -6.196; 0.000 1.002 -4.528]
+ 5.902           T7 Finished task 31 in 0.209 s.
+ 5.902 [ 33/557] T7 Starting task: Load D:\edited\macro\coffee-bean\DSC00073.tif
+DSC00072.tif has resolution 7008x4672, using 10 wavelet levels and expanding to 7168x5120
+ 6.052           T4 Finished task 14 in 2.826 s.
+ 6.052 [ 34/557] T4 Starting task: Grayscale D:\edited\macro\coffee-bean\DSC00072.tif
+ 6.233           T4 Finished task 34 in 0.181 s.
+ 6.233 [ 35/557] T4 Starting task: Align DSC00072.tif to DSC00071.tif
+aligned_DSC00070.tif contrast map: C:0.999, X:-0.001, X2:0.003, Y:0.000, Y2:0.006
+aligned_DSC00070.tif whitebalance: R:x1.000+9.7, G:x1.000+7.0, B:x1.000+12.9
+aligned_DSC00066.tif transform: [0.999 -0.000 5.478; -0.000 0.998 4.778]
+aligned_DSC00070.tif transformed corners TL (73.9,219.8), TR (7091.8,220.4), BL (74.1,4899.3), BR (7092.0,4899.9)
+aligned_DSC00070.tif valid area X 80, Y 224, W 7008, H 4672
+ 6.551           T6 Finished task 19 in 2.500 s.
+ 6.551 [ 36/557] T6 Starting task: Grayscale aligned_DSC00070.tif
+ 6.741           T6 Finished task 36 in 0.190 s.
+ 6.741 [ 37/557] T6 Starting task: Forward-wavelet aligned_DSC00070.tif
+DSC00063.tif has resolution 7008x4672, using 10 wavelet levels and expanding to 7168x5120
+ 6.933           T6 Finished task 37 in 0.192 s.
+ 6.933 [ 38/557] T6 Starting task: Load D:\edited\macro\coffee-bean\DSC00062.tif
+ 6.952           T1 Finished task 21 in 2.609 s.
+ 6.952 [ 39/557] T1 Starting task: Grayscale D:\edited\macro\coffee-bean\DSC00063.tif
+aligned_DSC00066.tif contrast map: C:1.003, X:-0.000, X2:-0.013, Y:0.001, Y2:-0.012
+aligned_DSC00066.tif whitebalance: R:x1.000-16.1, G:x1.000-13.9, B:x1.000-1.2
+ 7.165           T1 Finished task 39 in 0.213 s.
+ 7.165 [ 40/557] T1 Starting task: Align DSC00063.tif to DSC00064.tif
+aligned_DSC00071.tif transform: [1.002 0.000 -7.884; 0.000 1.002 -6.551]
+aligned_DSC00066.tif transformed corners TL (85.4,228.4), TR (7083.5,227.7), BL (85.3,4892.8), BR (7083.4,4892.1)
+aligned_DSC00066.tif valid area X 86, Y 229, W 6997, H 4663
+ 7.200           T2 Finished task 23 in 2.340 s.
+ 7.200 [ 41/557] T2 Starting task: Grayscale aligned_DSC00066.tif
+aligned_DSC00065.tif transform: [0.998 -0.000 7.131; -0.000 0.998 6.447]
+ 7.393           T2 Finished task 41 in 0.193 s.
+ 7.393 [ 42/557] T2 Starting task: Forward-wavelet aligned_DSC00066.tif
+ 7.609           T2 Finished task 42 in 0.216 s.
+ 7.610 [ 43/557] T2 Starting task: Load D:\edited\macro\coffee-bean\DSC00074.tif
+aligned_DSC00071.tif contrast map: C:0.998, X:-0.000, X2:0.006, Y:0.000, Y2:0.010
+aligned_DSC00071.tif whitebalance: R:x1.001+4.0, G:x1.001+0.0, B:x1.001+8.2
+aligned_DSC00065.tif contrast map: C:1.002, X:0.001, X2:-0.009, Y:0.001, Y2:-0.011
+aligned_DSC00065.tif whitebalance: R:x1.001-52.2, G:x1.000-27.5, B:x1.000-25.4
+aligned_DSC00071.tif transformed corners TL (72.3,218.0), TR (7095.0,218.8), BL (72.6,4901.3), BR (7095.3,4902.1)
+aligned_DSC00071.tif valid area X 80, Y 224, W 7008, H 4672
+ 7.935           T5 Finished task 30 in 2.331 s.
+ 7.935 [ 44/557] T5 Starting task: Grayscale aligned_DSC00071.tif
+aligned_DSC00072.tif transform: [1.003 0.000 -11.637; 0.000 1.003 -8.668]
+aligned_DSC00072.tif contrast map: C:0.998, X:-0.001, X2:0.007, Y:0.000, Y2:0.013
+aligned_DSC00072.tif whitebalance: R:x1.001-2.9, G:x1.001+18.6, B:x1.001+12.7
+aligned_DSC00065.tif transformed corners TL (87.0,229.9), TR (7080.3,228.9), BL (86.8,4890.8), BR (7080.2,4889.8)
+aligned_DSC00065.tif valid area X 87, Y 230, W 6993, H 4659
+ 7.986           T3 Finished task 24 in 3.009 s.
+aligned_DSC00064.tif transform: [0.997 -0.000 9.799; -0.000 0.997 8.259]
+ 7.986 [ 45/557] T3 Starting task: Grayscale aligned_DSC00065.tif
+aligned_DSC00064.tif contrast map: C:1.002, X:0.001, X2:-0.010, Y:0.000, Y2:-0.014
+aligned_DSC00064.tif whitebalance: R:x1.001-54.2, G:x1.001-56.1, B:x1.000-29.1
+aligned_DSC00072.tif transformed corners TL (68.6,216.1), TR (7096.6,217.0), BL (69.0,4903.3), BR (7097.0,4904.3)
+aligned_DSC00072.tif valid area X 80, Y 224, W 7008, H 4672
+ 8.231           T4 Finished task 35 in 1.998 s.
+ 8.231 [ 46/557] T4 Starting task: Grayscale aligned_DSC00072.tif
+aligned_DSC00064.tif transformed corners TL (89.6,231.5), TR (7078.0,230.2), BL (89.5,4889.0), BR (7077.9,4887.6)
+aligned_DSC00064.tif valid area X 90, Y 232, W 6987, H 4655
+ 8.253           T0 Finished task 32 in 2.501 s.
+ 8.253 [ 47/557] T0 Starting task: Grayscale aligned_DSC00064.tif
+ 8.285           T5 Finished task 44 in 0.350 s.
+ 8.285 [ 48/557] T5 Starting task: Forward-wavelet aligned_DSC00071.tif
+ 8.337           T3 Finished task 45 in 0.351 s.
+ 8.337 [ 49/557] T3 Starting task: Load D:\edited\macro\coffee-bean\DSC00061.tif
+aligned_DSC00063.tif transform: [0.997 -0.000 12.674; -0.000 0.996 9.952]
+aligned_DSC00063.tif contrast map: C:1.002, X:0.002, X2:-0.008, Y:0.000, Y2:-0.015
+aligned_DSC00063.tif whitebalance: R:x1.001-85.4, G:x1.001-60.3, B:x1.001-49.2
+DSC00073.tif has resolution 7008x4672, using 10 wavelet levels and expanding to 7168x5120
+ 8.552           T7 Finished task 33 in 2.650 s.
+ 8.552 [ 50/557] T7 Starting task: Grayscale D:\edited\macro\coffee-bean\DSC00073.tif
+ 8.588           T4 Finished task 46 in 0.357 s.
+ 8.588 [ 51/557] T4 Starting task: Load D:\edited\macro\coffee-bean\DSC00075.tif
+ 8.597           T0 Finished task 47 in 0.344 s.
+ 8.597 [ 52/557] T0 Starting task: Build color reassignment map from 8 images
+aligned_DSC00063.tif transformed corners TL (92.4,233.1), TR (7076.0,231.4), BL (92.2,4887.1), BR (7075.8,4885.4)
+aligned_DSC00063.tif valid area X 93, Y 234, W 6982, H 4651
+ 8.609           T1 Finished task 40 in 1.444 s.
+ 8.609 [ 53/557] T1 Starting task: Grayscale aligned_DSC00063.tif
+ 8.648           T5 Finished task 48 in 0.363 s.
+ 8.648 [ 54/557] T5 Starting task: Forward-wavelet aligned_DSC00065.tif
+ 8.966           T7 Finished task 50 in 0.414 s.
+ 8.966 [ 55/557] T7 Starting task: Align DSC00073.tif to DSC00072.tif
+ 8.976           T5 Finished task 54 in 0.328 s.
+ 8.976 [ 56/557] T5 Starting task: Forward-wavelet aligned_DSC00064.tif
+ 9.050           T1 Finished task 53 in 0.441 s.
+ 9.050 [ 57/557] T1 Starting task: Load D:\edited\macro\coffee-bean\DSC00060.tif
+ 9.211           T5 Finished task 56 in 0.235 s.
+ 9.211 [ 58/557] T5 Starting task: Merge 8 images
+DSC00062.tif has resolution 7008x4672, using 10 wavelet levels and expanding to 7168x5120
+ 9.850           T6 Finished task 38 in 2.917 s.
+ 9.851 [ 59/557] T6 Starting task: Forward-wavelet aligned_DSC00072.tif
+aligned_DSC00073.tif transform: [1.004 0.000 -14.307; 0.000 1.004 -11.116]
+aligned_DSC00073.tif contrast map: C:1.001, X:-0.003, X2:-0.003, Y:0.001, Y2:0.008
+aligned_DSC00073.tif whitebalance: R:x1.001-2.5, G:x1.001+22.7, B:x1.001+26.9
+10.078           T6 Finished task 59 in 0.227 s.
+10.078 [ 60/557] T6 Starting task: Forward-wavelet aligned_DSC00063.tif
+aligned_DSC00073.tif transformed corners TL (66.0,213.8), TR (7099.1,214.8), BL (66.5,4905.1), BR (7099.6,4906.1)
+aligned_DSC00073.tif valid area X 80, Y 224, W 7008, H 4672
+10.225           T7 Finished task 55 in 1.259 s.
+10.225 [ 61/557] T7 Starting task: Grayscale aligned_DSC00073.tif
+10.267           T0 Finished task 52 in 1.670 s.
+10.268 [ 62/557] T0 Starting task: Grayscale D:\edited\macro\coffee-bean\DSC00062.tif
+10.333           T6 Finished task 60 in 0.255 s.
+10.333 [ 63/557] T6 Starting task: Load D:\edited\macro\coffee-bean\DSC00076.tif
+DSC00074.tif has resolution 7008x4672, using 10 wavelet levels and expanding to 7168x5120
+10.650           T7 Finished task 61 in 0.425 s.
+10.650 [ 64/557] T7 Starting task: Forward-wavelet aligned_DSC00073.tif
+10.690           T2 Finished task 43 in 3.080 s.
+10.690 [ 65/557] T2 Starting task: Grayscale D:\edited\macro\coffee-bean\DSC00074.tif
+10.737           T0 Finished task 62 in 0.469 s.
+10.737 [ 66/557] T0 Starting task: Align DSC00062.tif to DSC00063.tif
+10.992           T7 Finished task 64 in 0.342 s.
+10.992 [ 67/557] T7 Starting task: Load D:\edited\macro\coffee-bean\DSC00059.tif
+11.037           T2 Finished task 65 in 0.347 s.
+11.037 [ 68/557] T2 Starting task: Align DSC00074.tif to DSC00073.tif
+DSC00061.tif has resolution 7008x4672, using 10 wavelet levels and expanding to 7168x5120
+11.453           T3 Finished task 49 in 3.116 s.
+11.453 [ 69/557] T3 Starting task: Grayscale D:\edited\macro\coffee-bean\DSC00061.tif
+11.734           T3 Finished task 69 in 0.281 s.
+11.734 [ 70/557] T3 Starting task: Align DSC00061.tif to DSC00062.tif
+DSC00075.tif has resolution 7008x4672, using 10 wavelet levels and expanding to 7168x5120
+aligned_DSC00062.tif transform: [0.996 -0.000 15.455; -0.000 0.995 12.106]
+11.781           T4 Finished task 51 in 3.193 s.
+11.781 [ 71/557] T4 Starting task: Grayscale D:\edited\macro\coffee-bean\DSC00075.tif
+11.877           T5 Finished task 58 in 2.666 s.
+11.877 [ 72/557] T5 Starting task: Load D:\edited\macro\coffee-bean\DSC00077.tif
+aligned_DSC00074.tif transform: [1.004 0.000 -17.147; 0.000 1.005 -13.685]
+12.058           T4 Finished task 71 in 0.277 s.
+12.058 [ 73/557] T4 Starting task: Align DSC00075.tif to DSC00074.tif
+DSC00060.tif has resolution 7008x4672, using 10 wavelet levels and expanding to 7168x5120
+12.221           T1 Finished task 57 in 3.171 s.
+12.222 [ 74/557] T1 Starting task: Grayscale D:\edited\macro\coffee-bean\DSC00060.tif
+aligned_DSC00062.tif contrast map: C:1.004, X:0.002, X2:-0.015, Y:0.000, Y2:-0.022
+aligned_DSC00062.tif whitebalance: R:x1.001-85.5, G:x1.001-62.5, B:x1.001-42.5
+12.415           T1 Finished task 74 in 0.193 s.
+12.415 [ 75/557] T1 Starting task: Align DSC00060.tif to DSC00061.tif
+aligned_DSC00062.tif transformed corners TL (95.1,235.1), TR (7073.5,233.1), BL (94.8,4885.6), BR (7073.2,4883.6)
+aligned_DSC00062.tif valid area X 96, Y 236, W 6977, H 4647
+aligned_DSC00074.tif contrast map: C:1.000, X:-0.003, X2:0.001, Y:0.001, Y2:0.012
+aligned_DSC00074.tif whitebalance: R:x1.002-8.4, G:x1.001+13.6, B:x1.001+24.0
+12.532           T0 Finished task 66 in 1.795 s.
+12.532 [ 76/557] T0 Starting task: Grayscale aligned_DSC00062.tif
+12.713           T0 Finished task 76 in 0.181 s.
+12.713 [ 77/557] T0 Starting task: Forward-wavelet aligned_DSC00062.tif
+aligned_DSC00074.tif transformed corners TL (63.2,211.4), TR (7101.4,212.6), BL (63.8,4906.8), BR (7101.9,4907.9)
+aligned_DSC00074.tif valid area X 80, Y 224, W 7008, H 4672
+12.751           T2 Finished task 68 in 1.714 s.
+12.751 [ 78/557] T2 Starting task: Grayscale aligned_DSC00074.tif
+12.973           T0 Finished task 77 in 0.260 s.
+12.973 [ 79/557] T0 Starting task: Load D:\edited\macro\coffee-bean\DSC00058.tif
+13.015           T2 Finished task 78 in 0.264 s.
+13.015 [ 80/557] T2 Starting task: Forward-wavelet aligned_DSC00074.tif
+DSC00076.tif has resolution 7008x4672, using 10 wavelet levels and expanding to 7168x5120
+13.105           T6 Finished task 63 in 2.772 s.
+13.105 [ 81/557] T6 Starting task: Grayscale D:\edited\macro\coffee-bean\DSC00076.tif
+13.290           T2 Finished task 80 in 0.275 s.
+13.290 [ 82/557] T2 Starting task: Load D:\edited\macro\coffee-bean\DSC00078.tif
+13.341           T6 Finished task 81 in 0.236 s.
+13.341 [ 83/557] T6 Starting task: Align DSC00076.tif to DSC00075.tif
+aligned_DSC00061.tif transform: [0.995 -0.000 17.417; -0.000 0.995 13.453]
+DSC00059.tif has resolution 7008x4672, using 10 wavelet levels and expanding to 7168x5120
+13.584           T7 Finished task 67 in 2.592 s.
+13.584 [ 84/557] T7 Starting task: Grayscale D:\edited\macro\coffee-bean\DSC00059.tif
+aligned_DSC00075.tif transform: [1.005 0.000 -19.938; 0.000 1.006 -15.747]
+13.771           T7 Finished task 84 in 0.187 s.
+13.771 [ 85/557] T7 Starting task: Align DSC00059.tif to DSC00060.tif
+aligned_DSC00061.tif contrast map: C:1.003, X:0.003, X2:-0.013, Y:0.000, Y2:-0.022
+aligned_DSC00061.tif whitebalance: R:x1.002-113.8, G:x1.001-70.1, B:x1.001-51.1
+aligned_DSC00075.tif contrast map: C:1.001, X:-0.004, X2:-0.001, Y:0.001, Y2:0.013
+aligned_DSC00075.tif whitebalance: R:x1.002-1.1, G:x1.001+18.0, B:x1.001+32.5
+aligned_DSC00061.tif transformed corners TL (97.0,236.2), TR (7070.6,234.1), BL (96.6,4883.5), BR (7070.2,4881.4)
+aligned_DSC00061.tif valid area X 98, Y 237, W 6972, H 4644
+14.207           T3 Finished task 70 in 2.473 s.
+14.207 [ 86/557] T3 Starting task: Grayscale aligned_DSC00061.tif
+aligned_DSC00060.tif transform: [0.994 -0.000 20.552; -0.000 0.994 15.785]
+aligned_DSC00075.tif transformed corners TL (60.5,209.6), TR (7104.0,210.6), BL (61.1,4909.0), BR (7104.6,4910.1)
+aligned_DSC00075.tif valid area X 80, Y 224, W 7008, H 4672
+14.392           T4 Finished task 73 in 2.334 s.
+14.392 [ 87/557] T4 Starting task: Grayscale aligned_DSC00075.tif
+14.431           T3 Finished task 86 in 0.224 s.
+14.431 [ 88/557] T3 Starting task: Forward-wavelet aligned_DSC00061.tif
+DSC00077.tif has resolution 7008x4672, using 10 wavelet levels and expanding to 7168x5120
+14.547           T5 Finished task 72 in 2.670 s.
+14.547 [ 89/557] T5 Starting task: Grayscale D:\edited\macro\coffee-bean\DSC00077.tif
+14.665           T3 Finished task 88 in 0.234 s.
+14.665 [ 90/557] T3 Starting task: Load D:\edited\macro\coffee-bean\DSC00057.tif
+14.687           T4 Finished task 87 in 0.295 s.
+14.687 [ 91/557] T4 Starting task: Forward-wavelet aligned_DSC00075.tif
+aligned_DSC00060.tif contrast map: C:1.003, X:0.004, X2:-0.014, Y:0.000, Y2:-0.025
+aligned_DSC00060.tif whitebalance: R:x1.002-128.8, G:x1.002-89.2, B:x1.001-56.5
+14.829           T5 Finished task 89 in 0.282 s.
+14.829 [ 92/557] T5 Starting task: Align DSC00077.tif to DSC00076.tif
+14.904           T4 Finished task 91 in 0.217 s.
+14.904 [ 93/557] T4 Starting task: Load D:\edited\macro\coffee-bean\DSC00079.tif
+aligned_DSC00060.tif transformed corners TL (100.1,238.4), TR (7068.7,236.2), BL (99.6,4882.5), BR (7068.2,4880.2)
+aligned_DSC00060.tif valid area X 101, Y 239, W 6967, H 4641
+14.970           T1 Finished task 75 in 2.555 s.
+14.970 [ 94/557] T1 Starting task: Grayscale aligned_DSC00060.tif
+aligned_DSC00076.tif transform: [1.006 0.000 -22.781; 0.000 1.007 -18.328]
+15.159           T1 Finished task 94 in 0.189 s.
+15.159 [ 95/557] T1 Starting task: Forward-wavelet aligned_DSC00060.tif
+15.384           T1 Finished task 95 in 0.225 s.
+15.384 [ 96/557] T1 Starting task: Merge 8 images
+aligned_DSC00059.tif transform: [0.994 -0.000 23.561; -0.000 0.993 17.572]
+DSC00058.tif has resolution 7008x4672, using 10 wavelet levels and expanding to 7168x5120
+aligned_DSC00076.tif contrast map: C:1.002, X:-0.005, X2:-0.005, Y:0.001, Y2:0.012
+aligned_DSC00076.tif whitebalance: R:x1.002+2.0, G:x1.001+16.3, B:x1.001+44.3
+15.538           T0 Finished task 79 in 2.565 s.

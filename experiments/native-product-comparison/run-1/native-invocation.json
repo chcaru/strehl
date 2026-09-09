@@ -1,0 +1,41 @@
+{
+  "command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-direct-planes\\build-1\\strehl.exe",
+    "stack",
+    "D:\\personal\\macro\\coffee-bean",
+    "--merge",
+    "pyramid",
+    "--pyramid-bands",
+    "7",
+    "--pyramid-gate",
+    "2",
+    "--pyramid-exponent",
+    "2",
+    "--pyramid-sharpen",
+    "1.4",
+    "--pyramid-select",
+    "soft",
+    "--pyramid-base",
+    "mean",
+    "--srgb",
+    "--demosaic",
+    "--resampler",
+    "catmull-rom",
+    "--cover",
+    "crop",
+    "--out",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-product-comparison\\run-1\\native-coffee-bean.tiff"
+  ],
+  "environment_overrides": {
+    "RAYON_NUM_THREADS": "8",
+    "STREHL_PYRAMID_WORKERS": "8",
+    "STREHL_ALIGN": "1",
+    "STREHL_WARPMAP": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-PHASE0-PHASE\\out\\canon\\coffee-bean.warpmap.txt",
+    "STREHL_DIRECT_PLANES": "rounded",
+    "STREHL_PROBE_GATHER": "green",
+    "STREHL_WARP_WRITEBACK": "parallel",
+    "STREHL_FULLRES_GATHER": "1",
+    "STREHL_DEFECT": "off"
+  },
+  "removed_environment": []
+}

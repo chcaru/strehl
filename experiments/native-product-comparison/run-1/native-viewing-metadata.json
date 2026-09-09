@@ -1,0 +1,16 @@
+{
+  "source_sha256": "411f3bb79fcee3aecbf27899d036e785b92469e53b21b0b339e82d65cd5c6e87",
+  "tags": {
+    "Orientation": null,
+    "ImageDescription": "sRGB (IEC 61966-2-1): BT.709-6 primaries, D65 white point, sRGB transfer curve. For viewing. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain. Tone rendering: black 0.020049, white 1.165917 (linear, luminance percentiles 0.1/99.9 with white mapped to 0.9), black fraction removed 0.85, display-space contrast 0.550. Placement is a single luminance-derived gain applied to all three channels, so chromaticity is preserved; the toe is soft, so no channel is clamped to zero.",
+    "Software": "strehl 0.0.0 (f290b6145c09)",
+    "PhotometricInterpretation": "2",
+    "ICC": {
+      "bytes": 2716,
+      "sha256": "238ad2596316306a72025bb245cf3c8cd72f1090c8d95af2f38dc090e84ece5b",
+      "description": "strehl sRGB (IEC 61966-2-1)"
+    }
+  },
+  "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-product-comparison\\run-1\\native-overview.png",
+  "method": "sRGB16 to8 by rounded /257 then Lanczos thumbnail; no color/tonal adjustment; labelled overview"
+}

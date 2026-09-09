@@ -1,0 +1,89 @@
+{
+  "command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-direct-planes\\build-1\\strehl.exe",
+    "align",
+    "D:\\personal\\macro\\coffee-bean",
+    "--check",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-PHASE0-PHASE\\out\\canon\\coffee-bean.warpmap.txt"
+  ],
+  "exit_code": 0,
+  "error": null,
+  "cleanup_errors": [],
+  "wall_seconds": 0.046999999998661224,
+  "log_bytes": 485,
+  "job_accounting": {
+    "total_user_100ns": 0,
+    "total_kernel_100ns": 156250,
+    "total_cpu_100ns": 156250,
+    "total_page_fault_count": 3613,
+    "total_processes": 2,
+    "active_processes": 0,
+    "total_terminated_processes": 0
+  },
+  "job_memory": {
+    "peak_process_memory_used_bytes": 1241088,
+    "peak_job_memory_used_bytes": 2187264
+  },
+  "terminal_job_accounting": true,
+  "configured_job_limits": {
+    "flags": 8704,
+    "committed_bytes": 1073741824
+  },
+  "direct_exit_observed": true,
+  "pipe_eof_observed": true,
+  "post_exit_drain": {
+    "initial_accounting": {
+      "total_user_100ns": 0,
+      "total_kernel_100ns": 156250,
+      "total_cpu_100ns": 156250,
+      "total_page_fault_count": 3613,
+      "total_processes": 2,
+      "active_processes": 0,
+      "total_terminated_processes": 0
+    },
+    "last_accounting": {
+      "total_user_100ns": 0,
+      "total_kernel_100ns": 156250,
+      "total_cpu_100ns": 156250,
+      "total_page_fault_count": 3613,
+      "total_processes": 2,
+      "active_processes": 0,
+      "total_terminated_processes": 0
+    },
+    "observations": [
+      {
+        "wall_seconds": 0.046999999998661224,
+        "accounting": {
+          "total_user_100ns": 0,
+          "total_kernel_100ns": 156250,
+          "total_cpu_100ns": 156250,
+          "total_page_fault_count": 3613,
+          "total_processes": 2,
+          "active_processes": 0,
+          "total_terminated_processes": 0
+        }
+      }
+    ],
+    "observation_count": 1,
+    "completed": true,
+    "started_wall_seconds": 0.046999999998661224,
+    "ended_wall_seconds": 0.046999999998661224
+  },
+  "termination": {
+    "attempted": false,
+    "before_accounting": null,
+    "succeeded": false
+  },
+  "limits": {
+    "wall_seconds": 15,
+    "cpu_seconds": 15,
+    "log_bytes": 4194304,
+    "committed_bytes": 1073741824
+  },
+  "scope": "owned job tree; committed memory, observed user+kernel CPU; not RSS or a timing benchmark",
+  "log": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-product-comparison\\run-1\\map-check.log",
+    "sha256": "40d6af54da11230e1c43a6b4573ebb7a88bf12778c51b687e4f80fe1da76166f",
+    "bytes": 485
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "label": "native",
+  "output": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-product-comparison\\run-1\\native-coffee-bean.tiff",
+    "sha256": "411f3bb79fcee3aecbf27899d036e785b92469e53b21b0b339e82d65cd5c6e87",
+    "bytes": 184149970
+  },
+  "decoded": {
+    "shape": [
+      4524,
+      6784,
+      3
+    ],
+    "dtype": "uint16",
+    "bytes": 184144896,
+    "sha256": "e6c8d7ada22b7bd0f944bf8e554600d6c209f37e80dad1e35aa0968c5c8664cb"
+  },
+  "tags": {
+    "Software": "strehl 0.0.0 (f290b6145c09)",
+    "PhotometricInterpretation": "2",
+    "icc_profile": {
+      "bytes": 2716,
+      "sha256": "238ad2596316306a72025bb245cf3c8cd72f1090c8d95af2f38dc090e84ece5b"
+    }
+  },
+  "process_wall_seconds": 50.06300000000192,
+  "job_cpu_seconds": 305.078125,
+  "peak_job_commit_bytes": 2838089728
+}
