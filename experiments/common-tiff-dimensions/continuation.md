@@ -339,3 +339,46 @@ limited to8MiB metadata reads/1MiB retained/10CPU30active process wall, and
 must await the independent interpretation before declaring closure. The
 original200 source bindings remain frozen until that review is complete.
 Integer translation/crop remains the next separate commission, not yet released.
+
+### Dimensions closed; RAW-native mission reaffirmed
+
+The separate independent interpretation is complete:
+dimensions-independent-result-review.md15952B,
+207a6b27306faafa38711b7153ee46491f0ae49632f80c9fd6369f2706577386,
+ACCEPTED FOR THE FIXED IDENTITY-COMMON-RGB SOFTWARE INTERFACE.
+The final product report is docs/research/common-tiff-dimensions.md19893B,
+0086f3b82a570db6dc538e2baf65748e04cf52baa175a1393ee0a70682e2f014.
+Root read the interpretation and report diff. Historical failed publications,
+authorship limits and sample-accounting limits remain explicit. No numerical
+rerun or original200-source edit occurred. This closes the current audit;
+retain its archives and all earlier failures permanently.
+
+User explicitly reaffirmed the program's objective: native RAW stacking that
+uses sensor information, and the diagnostic captures under
+D:/personal/macro/requests. Root confirmed the actual RawPyramidSource calls
+strehl_raw::decode, run_pyramid obtains active geometry/levels/camera/ISO and
+injects the noise model, and the full-resolution writer demosaics the merged
+CFA estimates. This is source inspection, not a new numerical performance claim.
+M194-production-truth.md records the existing shared native consumer and its
+independent preservation checks.
+
+Root confirmed by read-only directory metadata that all eight requests groups
+are present:10-paper-iso-var,12-bee-iso-var-no-bracket-32-repeat-diff-light,
+19-razor-edge,30-calibration-grid,6-11-extended-dark-frames,7-aperture-pairs,
+8-tilted-planar,misc-diagnostic. M141-capture-inventory.md contains the prior
+detailed inventory and scientific-use restrictions. Current directory listing
+does not reverify its historical ARW counts or EXIF. No RAW pixel was read and
+no capture was modified.
+
+NEXT DECISION: pause automatic promotion of the integer TIFF proposal to
+implementation. The proposal's source-only review may finish; no crate edit
+or new experiment has been released. sampler_result_review now owns a bounded
+mission-alignment review at raw-program-priority-review.md, challenging whether
+that extension is necessary before the next native-CFA/real-diagnostic question.
+Its grant is24MiB source/report reads,1MiB retained,20CPU60active process wall,
+metadata/source only; no image, RAW, model, test, product or broad scan. It must
+name available diagnostic roles and prior answers, avoid new unsupported
+missing-data assertions, and preserve calibration/holdout/refuted-metric rules.
+Factor's dimensions report is complete. Coordinate finishes only the integer
+proposal review, including coordinate gauge and source/output-shape separation.
+Root will choose and commission the next bounded task after the priority review.

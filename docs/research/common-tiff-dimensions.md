@@ -1,16 +1,17 @@
 # Common-TIFF variable count and dimensions
 
-2026-09-08. **MEASURED / INDEPENDENT-CHECKER-PASS; final independent
-saved-result review pending.** This report is written by the product author
-from committed metadata and receipts. It is not the author's verification of
-the product, a completed final audit, or a SYNTHESIS fold.
+2026-09-08. **MEASURED / INDEPENDENT-CHECKER-PASS / INDEPENDENTLY
+INTERPRETED SAVED EVIDENCE.** This report is written by the product author
+from committed metadata and receipts. The separate published source and
+saved-result review supplies the independent interpretation described below;
+this report is not the author's verification or a SYNTHESIS fold.
 
 The once-run fixed24-case population and135-control saved checker completed.
 The saved checker reports PASS_COMMON_RGB_DIMENSIONS_SOFTWARE_INTEGRATION,
 software_integration_complete=true, and no failures. Its explicit physical
 noise calibration, real geometry admission and quality admission flags remain
-false. Final interpretation and complete saved-evidence/source review remain
-a separate independent task.
+false. The reviewed final saved reader subsequently passed, and its separate
+independent interpretation closes this fixed software integration scope.
 
 ## Change and measured scope
 
@@ -78,8 +79,8 @@ Constant/address payload and identity comparisons use exact code values or
 hashes. Case04 retains the original<=1 RGB16-code predicate; its +8, column and
 corner destroyers fail that same predicate. Its finite-fixture rounding
 argument was specified before execution, not fitted to the observed zero
-error. This does not prove arbitrary odd-pyramid arithmetic. Final review must
-also preserve the disclosed case04 oracle authorship and interpretation.
+error. This does not prove arbitrary odd-pyramid arithmetic. The final review
+preserves the disclosed case04 oracle authorship and interpretation.
 
 For the noisy-on case, the final shared selection denominators contain7,128
 zero and9,395 positive sites across the three Laplacian levels. The mean base
@@ -191,14 +192,89 @@ later events do not repair the review's overrun. Root subsequently granted a
 prospective5 CPU/30 active-wall/1 MiB read finalization slice within the same
 1 MiB retained review family; it reran no control or253-predicate evaluation.
 See [recovery-controls-result-review.md](../../experiments/common-tiff-dimensions/recovery-controls-result-review.md)
-for the preserved chronology, qualifications and exact records. Final independent
-saved-result review must authenticate the later outcomes separately.
+for the preserved chronology, qualifications and exact records. The final
+saved-result review below authenticates the later outcomes separately; it does
+not make the earlier review allocation compliant.
 
 All previous preparation, scanner, review, archive and metadata reservations
 remain retained. No global sum is fabricated from samples with different scopes,
 and no later grant retroactively makes an earlier overrun compliant.
 
-## Evidence anchors and remaining disposition
+## Final saved-evidence closure
+
+The once-run reviewed reader records
+PASS_SAVED_DIMENSIONS_EVIDENCE_READER and saved_evidence_complete=true, with
+no errors. Its full population is24/24 passed cases,135/135 passed control
+rows,51 completed folds, nine positive outputs,36 distinct input TIFFs and108
+case publications. All original checker rows remain attached. The ledger
+retains build1 and prepare1 as REFUSED and the separate saved-fixture admission;
+a later pass does not change those historical dispositions.
+
+Using P and D defined above, the actual reader command was:
+
+    P -I -S -B D\dimensions-independent-saved-read.py --release D\work\dimensions-final-read-release-1.json --release-sha256 b9e66eaf28f8626ed3c2b9fc06e58b48d6e619cf87e961902813a6981780c72b --source-sha256 1cae9b83d1fc503c305d98308df9678a3960627b2134ceba91bc21a6a2774b68
+
+The reader source/review/capture release is
+d7ff969d79a9e9b7869c797dc3b12ec96fdd4e30, its immutable input release is
+2159a631c6f14ed7da623650e9fe6f7e5743584f, and actual saved evidence is
+351241e0596259513fa68317844821cebfbf9793. The result is
+[work/dimensions-independent-read-1.json](../../experiments/common-tiff-dimensions/work/dimensions-independent-read-1.json),
+315,943 bytes, SHA256
+df3f7bff04ea289e23ec32038ef1135281c41102af8a13d9bc7f76c711ca3d89.
+The425-byte raw stdout is its advertisement, not a copy of this full ledger.
+Its FileRef names that exact result. Actual exit is0, stderr is empty and
+timeout_terminated=false. The2,178-byte progress snapshot remains INCOMPLETE,
+with controls_observed=0; it predates the final control pass and is not the
+terminal outcome.
+
+The [outer record](../../experiments/common-tiff-dimensions/work/dimensions-final-read-external-1-outer.json)
+is2,009 bytes, SHA256
+2c1bc73060a91cb7168fedbc1e573704dba0b3be762ae4c195e5e08c6c3f45c6,
+and records0.9060000000026776 seconds for the reader child. The separate
+[root capture](../../experiments/common-tiff-dimensions/work/dimensions-final-read-capture-root-1.json)
+records0.9645889 seconds through capture-wrapper exit. Neither is a
+terminated-process CPU measurement or a measurement of later root-record
+publication. The ledger's0.8125 CPU/0.8479614999960177 wall seconds are samples
+before final publication, with2 CPU/3 wall reserved. Its37,012,391
+physical-plus-inflated read bytes exclude the final ledger readback;
+54,657 written bytes precede the final ledger and advertisement. The full
+30 CPU/60 wall reader allocation remains charged; no all-history CPU or
+resource-compliance total follows from these samples.
+
+The saved decoder and review cover every fixed output and refusal, not a
+selected agreement subset. Address and offset each retain all eight disjoint
+spatial partitions; every channel's maximum absolute error is0 in both
+saved outputs. The original exact address and<=1-code offset thresholds
+remain unchanged. Noisy off/on/placebo match in whole TIFF and pixel payload,
+including both exhaustive x partitions. The full contributor identity,
+immutable frame receipts and actual injected proxy/variance hashes remain
+associated with the same compiled executable and composed181/190/200
+archived source histories.
+
+The draft reader and original checker share coordinate_verification as author;
+this is disclosed in the ledger. sampler_result_review independently reviewed
+the source/choices and interpreted the actual saved ledger and raw transport.
+Its [published interpretation](../../experiments/common-tiff-dimensions/dimensions-independent-result-review.md)
+is15,952 bytes, SHA256
+207a6b27306faafa38711b7153ee46491f0ae49632f80c9fd6369f2706577386,
+with disposition ACCEPTED FOR THE FIXED IDENTITY-COMMON-RGB SOFTWARE INTERFACE.
+That reviewer also proposed case04 and participated in its finite<=1-code
+allowance: agreement is not a new independent proof of that allowance.
+The product author attributes this closure to that separate review.
+
+The final interpretation preserves its own report-only failed structural check:
+it expected seven section headings where there were six. Corrected metadata
+readback passed; both costs remain retained, with no reader/numerical rerun or
+reported wall overrun. Its conservative explicit read/probe accounting is
+38,060,319 bytes within256 MiB; exact terminated CPU remains unknown.
+The108 non-restoration competing means are compared to saved image bytes by
+independent integer arithmetic. Other unsaved mutated operands remain
+source-bound reported controls, not independently observed mutant buffers.
+Retained prequantization f32 hashes are not reconstructed f32 arrays.
+Case04_independent_float_proof, per_repeat_variance, physical noise calibration,
+real geometry accuracy and quality/default admission remain false.
+
+## Evidence anchors and disposition
 
 | Evidence | Commit |
 |---|---|
@@ -229,5 +305,13 @@ candidate, simulation, compiler or product and changed no held source.
 The next integer-translation/crop charter remains a draft for a separate
 commission after final validation. This report makes no fractional covariance,
 real alignment, arbitrary developed-RGB calibration, quality or SOTA claim.
-Final saved-result review is pending and must be recorded before this report
-is promoted to a fully independently reviewed outcome.
+Final saved-result interpretation is closed for this fixed identity-grid
+software population, with the explicit authorship and measurement limits above.
+
+For this closure update, the product author read 415,193 bytes of
+metadata/report contents, including repeated reads and the new report readback,
+under the separate8 MiB read/1 MiB retention/10 CPU/30 active-process-wall
+report allocation. This content counter excludes interpreter/OS loading and
+is not a complete process-I/O or all-work CPU total. Exact aggregate authoring
+CPU is unavailable. No TIFF decode, product, reader, checker, build or control
+was rerun, and none of the frozen200 sources was edited.
