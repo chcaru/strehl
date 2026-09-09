@@ -20,3 +20,7 @@ proof of the original failure. Preserve original receipts and all new hashes.
 
 Source review and committed source precede execution. No native RAW decode,
 timing campaign, arithmetic tolerance relaxation or production default change.
+
+Build5 found the new adapter-report field used u32 while wgpu30 reports its
+storage-binding limit as u64. Preserve that exact u64 type, rebuild as build6,
+and use it for the unchanged run3. No shader arithmetic or input changes.

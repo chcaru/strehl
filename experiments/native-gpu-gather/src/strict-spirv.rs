@@ -10,7 +10,7 @@ pub const ENTRY_POINTS: [&str; 3] = ["mhc", "gather", "quantize_vector"];
 #[derive(Debug, serde::Serialize)]
 pub struct CompilationReport {
     pub no_contraction: bool,
-    pub max_storage_buffer_binding_size: u32,
+    pub max_storage_buffer_binding_size: u64,
     pub max_buffer_size: u64,
     pub original_sha256: String,
     pub decorated_sha256: String,
