@@ -1,5 +1,29 @@
 # Native sensor transfer continuation
 
+2026-09-09 current checkpoint: both native builds succeeded (on4/off1).
+All175 preliminary independent controls passed;17/18 retain actual-output checks.
+The native attempt1 actually decoded originals: paper invocation0 completed,
+dark invocation1 was killed by the runner after its retained-file scan observed
+a missing temporary .stage file during inspection. The writer publishes via
+hard-link creation followed by stage removal; this transition is consistent with
+the observed scan error. This is a runner failure, not evidence
+against the sensor model. The partial dark traversal is excluded and must restart.
+The successful paper traversal has a clean terminal record and remains reusable.
+Full failed attempt artifacts and accounting are preserved in
+work/native-failure-1-inventory.json; outer wall196.953s, sampled totalCPU643.296875s.
+No physical sensor-model finding, observer-neutrality finding, or SOTA claim yet.
+
+Next: runtime-only recovery of the publication-transition scan, retaining the same compiled
+on4/off1 binaries and scientific sources; restart incomplete1, then fixed2..8.
+Do not rerun175 private controls or rebuild unchanged producer code. Root owns
+recovery release; factor implements; coordinate adapts saved-bundle associations;
+sampler independently reviews the narrow recovery and later scientific result.
+User explicitly prioritizes actual RAW quality and end-to-end speed over further
+infrastructure campaigns. Once this diagnostic is interpreted, implement the
+smallest supported product change described in next-quality-speed-decisions.md.
+
+The dated paragraphs below are historical and are superseded by this checkpoint.
+
 2026-09-09. REVIEWED OBSERVER/RUNNER SOURCE READY; fresh builds are next.
 Exactly27 CONTROL originals completed one hash-only identity pass; no RAW decode,
 pixel metric, simulation, numerical control or product run has occurred.

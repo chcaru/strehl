@@ -1,0 +1,943 @@
+{
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-I",
+    "-S",
+    "-B",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-sensor-transfer\\capture-stage.py",
+    "native"
+  ],
+  "dark_1_interrupted": {
+    "attempted": true,
+    "before_accounting": {
+      "active_processes": 2,
+      "total_cpu_100ns": 4835312500,
+      "total_kernel_100ns": 22343750,
+      "total_page_fault_count": 6283034,
+      "total_processes": 2,
+      "total_terminated_processes": 0,
+      "total_user_100ns": 4812968750
+    },
+    "succeeded": true
+  },
+  "failure": "FileNotFoundError(2, \"scan file-inspection path=C:\\\\dev\\\\blog\\\\death-of-software\\\\projects\\\\strehl\\\\experiments\\\\native-sensor-transfer\\\\native-run-1\\\\frame-18-original.u16.stage: [WinError 2] The system cannot find the file specified: 'C:\\\\\\\\dev\\\\\\\\blog\\\\\\\\death-of-software\\\\\\\\projects\\\\\\\\strehl\\\\\\\\experiments\\\\\\\\native-sensor-transfer\\\\\\\\native-run-1\\\\\\\\frame-18-original.u16.stage'\")",
+  "files": [
+    {
+      "bytes": 2161,
+      "path": "experiments/native-sensor-transfer/native-1/child-00.json",
+      "sha256": "c2036081780d6d775ce02cd724b0c4e44b2ef7705845b17cb1226a9ee71f3b2e"
+    },
+    {
+      "bytes": 1218,
+      "path": "experiments/native-sensor-transfer/native-1/child-00.log",
+      "sha256": "b07c268c300ec3cc8d6a87722a58e9cbad584eb91002165212fbd8c76bc19222"
+    },
+    {
+      "bytes": 1992,
+      "path": "experiments/native-sensor-transfer/native-1/child-01.json",
+      "sha256": "2f88424ae436f51c15c44175e654a51042c81efb56f48858f2f425d598f92a98"
+    },
+    {
+      "bytes": 94,
+      "path": "experiments/native-sensor-transfer/native-1/child-01.log",
+      "sha256": "1369ba7d2eba0c3f4f2433d94c575fa652b55d51af03fbf298f8553695389a7f"
+    },
+    {
+      "bytes": 620,
+      "path": "experiments/native-sensor-transfer/native-1/parent-tail.json",
+      "sha256": "569cefc2e6fdfd72a77905c469da876ed501e085ed01472a49d8f886521f02aa"
+    },
+    {
+      "bytes": 262144,
+      "path": "experiments/native-sensor-transfer/native-1/result.json",
+      "sha256": "5f53ec740b061226f55c2f328e3b8a727a489b7db5e6ad1cbfc0cea232dfb3da"
+    },
+    {
+      "bytes": 131072,
+      "path": "experiments/native-sensor-transfer/native-run-0/frame-00-original.u16",
+      "sha256": "94e6ce21177ed9f24a05f61ac474416f6a433049c37d2ebee17d6c59627c7e28"
+    },
+    {
+      "bytes": 131072,
+      "path": "experiments/native-sensor-transfer/native-run-0/frame-00-route-0-prepared.u16",
+      "sha256": "94e6ce21177ed9f24a05f61ac474416f6a433049c37d2ebee17d6c59627c7e28"
+    },
+    {
+      "bytes": 19492,
+      "path": "experiments/native-sensor-transfer/native-run-0/frame-00-route-0.json",
+      "sha256": "192774036ad6cca162b1512c6db5d0f36d6bd9db78999a1f40c2f5ee90b3b593"
+    },
+    {
+      "bytes": 1092424,
+      "path": "experiments/native-sensor-transfer/native-run-0/frame-00-route-0.trace",
+      "sha256": "f774cb93f3daecf94a29698034cfcc19874d24fa912d3160d5df2142ae3b1ac0"
+    },
+    {
+      "bytes": 131072,
+      "path": "experiments/native-sensor-transfer/native-run-0/frame-00-route-1-prepared.u16",
+      "sha256": "7ec79785f4048adb2be4e2a54d775233ba10630e01fded0dc9333a680c3e1f6a"
+    },
+    {
+      "bytes": 28191,
+      "path": "experiments/native-sensor-transfer/native-run-0/frame-00-route-1.json",
+      "sha256": "47e1cc35104cfbb0a6108bbf53c2f6bf7edba9dc3d6613e39e7eee8b5ec28fbc"
+    },
+    {
+      "bytes": 1092436,
+      "path": "experiments/native-sensor-transfer/native-run-0/frame-00-route-1.trace",
+      "sha256": "9d99fea60cb581f8119759bb9a20169fbadbc73d3e6da2f733ab7bc869d02ad2"
+    },
+    {
+      "bytes": 131072,
+      "path": "experiments/native-sensor-transfer/native-run-0/frame-01-original.u16",
+      "sha256": "31b772df9318dff06fa8ff631b50870b3c4cc3d40beb805983733917df6af8db"
+    },
+    {
+      "bytes": 131072,
+      "path": "experiments/native-sensor-transfer/native-run-0/frame-01-route-0-prepared.u16",
+      "sha256": "31b772df9318dff06fa8ff631b50870b3c4cc3d40beb805983733917df6af8db"
+    },
+    {
+      "bytes": 19492,
+      "path": "experiments/native-sensor-transfer/native-run-0/frame-01-route-0.json",
+      "sha256": "8802b942643b9242f4bad8124ad1b1ebdc62bc430369cdceb6b274b5991fb998"
+    },
+    {
+      "bytes": 1092424,
+      "path": "experiments/native-sensor-transfer/native-run-0/frame-01-route-0.trace",
+      "sha256": "a81ec79c0a73bafbdc8bb4e72b313d64546bb7a883561b74de8105ba364153c9"
+    },
+    {
+      "bytes": 131072,
+      "path": "experiments/native-sensor-transfer/native-run-0/frame-01-route-1-prepared.u16",
+      "sha256": "ce264a541fbf95196db07ebbe1a5036b1af06c5dff93d1738e26c511b79e6c18"
+    },
+    {
+      "bytes": 28191,
+      "path": "experiments/native-sensor-transfer/native-run-0/frame-01-route-1.json",
+      "sha256": "0ffc6b16c369bf73437a5424f3ca48585cad9577c01801200b97dca89ff7eb84"
+    },
+    {
+      "bytes": 1092436,
+      "path": "experiments/native-sensor-transfer/native-run-0/frame-01-route-1.trace",
+      "sha256": "a7dca104ad29405aaed979df6595bb9312278944af3e04de381a91b43b550b0d"
+    },
+    {
+      "bytes": 131072,
+      "path": "experiments/native-sensor-transfer/native-run-0/frame-02-original.u16",
+      "sha256": "5cb73a9f4f40ed0616f01e2412341927be5b7edd3ef583d7e554e9a093963965"
+    },
+    {
+      "bytes": 131072,
+      "path": "experiments/native-sensor-transfer/native-run-0/frame-02-route-0-prepared.u16",
+      "sha256": "5cb73a9f4f40ed0616f01e2412341927be5b7edd3ef583d7e554e9a093963965"
+    },
+    {
+      "bytes": 19492,
+      "path": "experiments/native-sensor-transfer/native-run-0/frame-02-route-0.json",
+      "sha256": "eeb2d741c06f9c355bbc68d1b34cc36c1b2c7652aec9c51d301b532db53c53d2"
+    },
+    {
+      "bytes": 1092424,
+      "path": "experiments/native-sensor-transfer/native-run-0/frame-02-route-0.trace",
+      "sha256": "bae923203e63017ba3d646220d2d3cd5fe56e1c888b93fcbc157916777fd190a"
+    },
+    {
+      "bytes": 131072,
+      "path": "experiments/native-sensor-transfer/native-run-0/frame-02-route-1-prepared.u16",
+      "sha256": "f8284edc5ada4e27717c610de9d52ed83894125bdd1ae9cba8f865a6be385d38"
+    },
+    {
+      "bytes": 28191,
+      "path": "experiments/native-sensor-transfer/native-run-0/frame-02-route-1.json",
+      "sha256": "1cef26ccc7db50c0c38962472cb7913709e92be38ff1356c2b03da3e1277ee94"
+    },
+    {
+      "bytes": 1092436,
+      "path": "experiments/native-sensor-transfer/native-run-0/frame-02-route-1.trace",
+      "sha256": "aa470bb0946dbbb0350d07e73bc986c00730d6a1a7ed361b7e45f66f3545ad93"
+    },
+    {
+      "bytes": 131072,
+      "path": "experiments/native-sensor-transfer/native-run-0/frame-03-original.u16",
+      "sha256": "d1838e5e0e32b998c3a49bf0e347248e1a1ca5134150ca546a9677f3e9218994"
+    },
+    {
+      "bytes": 131072,
+      "path": "experiments/native-sensor-transfer/native-run-0/frame-03-route-0-prepared.u16",
+      "sha256": "d1838e5e0e32b998c3a49bf0e347248e1a1ca5134150ca546a9677f3e9218994"
+    },
+    {
+      "bytes": 19492,
+      "path": "experiments/native-sensor-transfer/native-run-0/frame-03-route-0.json",
+      "sha256": "b4c4c22a0a19925c10eb7a0667c7a8cb1363e540912f757b906c00dad00e5af8"
+    },
+    {
+      "bytes": 1092424,
+      "path": "experiments/native-sensor-transfer/native-run-0/frame-03-route-0.trace",
+      "sha256": "590a2850f62d37b8cae9c1376773a9dbd4e4e9669fd4401bf3e32ec330e7b595"
+    },
+    {
+      "bytes": 131072,
+      "path": "experiments/native-sensor-transfer/native-run-0/frame-03-route-1-prepared.u16",
+      "sha256": "1f4938fc2a9df1664826d9fa7152745d79ec07f97da15dea7099add6de216a77"
+    },
+    {
+      "bytes": 28191,
+      "path": "experiments/native-sensor-transfer/native-run-0/frame-03-route-1.json",
+      "sha256": "6d74160f1540a56f784343271fa3c39d6a685c9e2b41f9f04618ef0ced3ff629"
+    },
+    {
+      "bytes": 1092436,
+      "path": "experiments/native-sensor-transfer/native-run-0/frame-03-route-1.trace",
+      "sha256": "197ddbee6ccc012272e3f5b8952eb378bf618947d409d17a365621354a6127b9"
+    },
+    {
+      "bytes": 131072,
+      "path": "experiments/native-sensor-transfer/native-run-0/frame-04-original.u16",
+      "sha256": "fc6aa5bf081a688a93882ac91fc1d8309d8aa35ede1c46f2995343db4d7bc54b"
+    },
+    {
+      "bytes": 131072,
+      "path": "experiments/native-sensor-transfer/native-run-0/frame-04-route-0-prepared.u16",
+      "sha256": "fc6aa5bf081a688a93882ac91fc1d8309d8aa35ede1c46f2995343db4d7bc54b"
+    },
+    {
+      "bytes": 19492,
+      "path": "experiments/native-sensor-transfer/native-run-0/frame-04-route-0.json",
+      "sha256": "58553ac87f9dc00c418cebf5a44ce7b715cd1994693b1ed1c5bcf38308b55b14"
+    },
+    {
+      "bytes": 1092424,
+      "path": "experiments/native-sensor-transfer/native-run-0/frame-04-route-0.trace",
+      "sha256": "337941fd7aa203cf14c575c314dc5503bdf06582c8a1c9392559b0ca42ad6b2d"
+    },
+    {
+      "bytes": 131072,
+      "path": "experiments/native-sensor-transfer/native-run-0/frame-04-route-1-prepared.u16",
+      "sha256": "dce382cb003bb963c42b7d2ab8d976dcc1e220e4bfd026248f66384622f9344d"
+    },
+    {
+      "bytes": 28191,
+      "path": "experiments/native-sensor-transfer/native-run-0/frame-04-route-1.json",
+      "sha256": "4a293f2c1bc4e591bca0b94604d0028e3e6c85614e2fca5440a549dc9566194a"
+    },
+    {
+      "bytes": 1092436,
+      "path": "experiments/native-sensor-transfer/native-run-0/frame-04-route-1.trace",
+      "sha256": "1d5984e79efad4170ab50a7f3be069a690fa8476056b159ce57c12a575de92d7"
+    },
+    {
+      "bytes": 94,
+      "path": "experiments/native-sensor-transfer/native-run-0/incomplete.json",
+      "sha256": "24e582a5b92ed31137c9b8221fd4048b73aaab80199f59a6fb25592b1285bf56"
+    },
+    {
+      "bytes": 5215,
+      "path": "experiments/native-sensor-transfer/native-run-0/result.json",
+      "sha256": "60290553394183040dfc03c03cc59feb9a53b17850899499650eaa7adfef8d8f"
+    },
+    {
+      "bytes": 262144,
+      "path": "experiments/native-sensor-transfer/native-run-0/route-0-collapsed.f32",
+      "sha256": "35a301bf21591f470aa85f3c97140f7181f07ba73bafcb9fb56f7bc33f64b665"
+    },
+    {
+      "bytes": 393819,
+      "path": "experiments/native-sensor-transfer/native-run-0/route-0-native.tiff",
+      "sha256": "8e8ad413c86a7ccba46839d740ea69109cd311008a123b0c081d116dc4bb5403"
+    },
+    {
+      "bytes": 262144,
+      "path": "experiments/native-sensor-transfer/native-run-0/route-1-collapsed.f32",
+      "sha256": "8a250c12bea2772e700715b65ede80ab36dec50603646d3a3a62bdb66ae2ce26"
+    },
+    {
+      "bytes": 393819,
+      "path": "experiments/native-sensor-transfer/native-run-0/route-1-native.tiff",
+      "sha256": "90a0f0a27ebc6489f22107aedde714ae6290569e17571ead74131a17c6cfaa5b"
+    },
+    {
+      "bytes": 131072,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-00-original.u16",
+      "sha256": "c96883032a3c2c00fc4bc94e03818d9869b1e17f92df2c3ed0627c454e31619d"
+    },
+    {
+      "bytes": 131072,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-00-route-0-prepared.u16",
+      "sha256": "c96883032a3c2c00fc4bc94e03818d9869b1e17f92df2c3ed0627c454e31619d"
+    },
+    {
+      "bytes": 19510,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-00-route-0.json",
+      "sha256": "2fb565edda179239a6f0a19f8816c88d9307c1a1cb7292f9f0af683b883598b2"
+    },
+    {
+      "bytes": 1092424,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-00-route-0.trace",
+      "sha256": "7826d772b1801969593d172f5a850db7147d8c263df2909ede1bdc92c10d3c39"
+    },
+    {
+      "bytes": 131072,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-00-route-1-prepared.u16",
+      "sha256": "c96883032a3c2c00fc4bc94e03818d9869b1e17f92df2c3ed0627c454e31619d"
+    },
+    {
+      "bytes": 28281,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-00-route-1.json",
+      "sha256": "86f567e22fa666eed08c3423ac40d9d342c4bf2c2bf50f04f88c2dfdec774f6a"
+    },
+    {
+      "bytes": 1092436,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-00-route-1.trace",
+      "sha256": "8a8c981a0035314b78ff723807cb95c30f662ef2100169183240dd7ef7a05d34"
+    },
+    {
+      "bytes": 131072,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-01-original.u16",
+      "sha256": "f8a32f2cbe0a50c275f393487df199ed3009bd69195a3cdc7ea55e825cc0e282"
+    },
+    {
+      "bytes": 131072,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-01-route-0-prepared.u16",
+      "sha256": "f8a32f2cbe0a50c275f393487df199ed3009bd69195a3cdc7ea55e825cc0e282"
+    },
+    {
+      "bytes": 19510,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-01-route-0.json",
+      "sha256": "dc8bb58330f8dad412f0e8822d489d32616b3892054bd51b0aafe7f51009df12"
+    },
+    {
+      "bytes": 1092424,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-01-route-0.trace",
+      "sha256": "0c5ee3d0697b1462912c228ed3bfe92099614ee55418d70739f7de185b3408b9"
+    },
+    {
+      "bytes": 131072,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-01-route-1-prepared.u16",
+      "sha256": "f8a32f2cbe0a50c275f393487df199ed3009bd69195a3cdc7ea55e825cc0e282"
+    },
+    {
+      "bytes": 28281,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-01-route-1.json",
+      "sha256": "20564291a74a3da75c3d82c1503745e4c31fb965b0070ff1e5c4a2af7ae576fa"
+    },
+    {
+      "bytes": 1092436,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-01-route-1.trace",
+      "sha256": "ddda7f443bee3510feb32e2b6dc1707446dfadf030eaeae2f831add1f6db04d7"
+    },
+    {
+      "bytes": 131072,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-02-original.u16",
+      "sha256": "8deade35fff3d11e32a7b492a23056160dda4807f2960e27eceb4c8983956cc2"
+    },
+    {
+      "bytes": 131072,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-02-route-0-prepared.u16",
+      "sha256": "8deade35fff3d11e32a7b492a23056160dda4807f2960e27eceb4c8983956cc2"
+    },
+    {
+      "bytes": 19510,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-02-route-0.json",
+      "sha256": "6547011ec77f1ca52646e04a1a42d373d1153484ff75b5a01c3805fc21d7dd82"
+    },
+    {
+      "bytes": 1092424,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-02-route-0.trace",
+      "sha256": "b677be90d193ecc39b2f8475bc765a120ea90d5423273590b1a88e6fc4170972"
+    },
+    {
+      "bytes": 131072,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-02-route-1-prepared.u16",
+      "sha256": "8deade35fff3d11e32a7b492a23056160dda4807f2960e27eceb4c8983956cc2"
+    },
+    {
+      "bytes": 28281,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-02-route-1.json",
+      "sha256": "508b083ca2843f51d2355f9187b87c1868796aa1668b4d86aa45e42dd598e076"
+    },
+    {
+      "bytes": 1092436,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-02-route-1.trace",
+      "sha256": "0080af6554651b01dfcaa414ee6ee5d97c5ffbf3fde53e242a3c2a7fdf1113a6"
+    },
+    {
+      "bytes": 131072,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-03-original.u16",
+      "sha256": "2e7c05e98114da2fa3e64223055d176e1a22712bbd73c82885c3ef1bbcd456f3"
+    },
+    {
+      "bytes": 131072,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-03-route-0-prepared.u16",
+      "sha256": "2e7c05e98114da2fa3e64223055d176e1a22712bbd73c82885c3ef1bbcd456f3"
+    },
+    {
+      "bytes": 19510,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-03-route-0.json",
+      "sha256": "1759dab1ee9de364c5f4eecb08afc97cc3e4d240eb0061ab8ca318427dcc08fe"
+    },
+    {
+      "bytes": 1092424,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-03-route-0.trace",
+      "sha256": "bd317e815246236121580c32b6971acfb91b132bebb38be1969919abdae5ce1e"
+    },
+    {
+      "bytes": 131072,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-03-route-1-prepared.u16",
+      "sha256": "2e7c05e98114da2fa3e64223055d176e1a22712bbd73c82885c3ef1bbcd456f3"
+    },
+    {
+      "bytes": 28281,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-03-route-1.json",
+      "sha256": "d1d74d8852d71cbabb5d59e5b10515cba87c7c6439f678a2dfadb132963561a3"
+    },
+    {
+      "bytes": 1092436,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-03-route-1.trace",
+      "sha256": "41197f78be8014aab0865bb294c22f3694f4916b3e1b551eb328e10b421323be"
+    },
+    {
+      "bytes": 131072,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-04-original.u16",
+      "sha256": "fb7cda901eed4a0d34f79019d7a14c517f512be8ba6d1c1b7cc28b98880df1d1"
+    },
+    {
+      "bytes": 131072,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-04-route-0-prepared.u16",
+      "sha256": "fb7cda901eed4a0d34f79019d7a14c517f512be8ba6d1c1b7cc28b98880df1d1"
+    },
+    {
+      "bytes": 19510,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-04-route-0.json",
+      "sha256": "9eb9d7cb083d3f7e423992172b9cb88a6c510102738278d097e99af18d256f79"
+    },
+    {
+      "bytes": 1092424,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-04-route-0.trace",
+      "sha256": "886b50afe7adfc293ea7b681438a1b353bb1ed72a776d055a40e55b8f17c4045"
+    },
+    {
+      "bytes": 131072,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-04-route-1-prepared.u16",
+      "sha256": "c556938a5728e742fc6794f7545b10a6b1ed1a801b9b12ec1a7abadaf9c31026"
+    },
+    {
+      "bytes": 28281,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-04-route-1.json",
+      "sha256": "8e6691a7164ab75d970cb0ca7fd69ec38e09a345e127ef7fc6c54a00a187c0a4"
+    },
+    {
+      "bytes": 1092436,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-04-route-1.trace",
+      "sha256": "24bbd4cce5c0a1207a909fc28e0429550882643b704ac1f42cdebfdfb2242f86"
+    },
+    {
+      "bytes": 131072,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-05-original.u16",
+      "sha256": "0350d77350c9b2b4b2e688b6b57b0b611421cc5cdc65e5c74524c213deefaac0"
+    },
+    {
+      "bytes": 131072,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-05-route-0-prepared.u16",
+      "sha256": "0350d77350c9b2b4b2e688b6b57b0b611421cc5cdc65e5c74524c213deefaac0"
+    },
+    {
+      "bytes": 19511,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-05-route-0.json",
+      "sha256": "1bb676eb00a0c24d24a2385a379386092fed4b992f1cf9dfbbbc05cba6e47ba2"
+    },
+    {
+      "bytes": 1092424,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-05-route-0.trace",
+      "sha256": "df30a46b706ccbcbc09c3680f5087cb1f1e44edf7f547df98f22f35bb59bcb3f"
+    },
+    {
+      "bytes": 131072,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-05-route-1-prepared.u16",
+      "sha256": "0350d77350c9b2b4b2e688b6b57b0b611421cc5cdc65e5c74524c213deefaac0"
+    },
+    {
+      "bytes": 28282,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-05-route-1.json",
+      "sha256": "6f9e7ec8c69176a0153554ada49e985d66e54d64cd2e75ff3087d9d76675cb3d"
+    },
+    {
+      "bytes": 1092436,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-05-route-1.trace",
+      "sha256": "8e106f582cfcd4a5b316a7ecc4bcd7b8c269f00647627ec0671679f2036c93ee"
+    },
+    {
+      "bytes": 131072,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-06-original.u16",
+      "sha256": "33300428cc45f912c581930bc679abbb2b3d5e05801b183fd1d46135a98181d7"
+    },
+    {
+      "bytes": 131072,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-06-route-0-prepared.u16",
+      "sha256": "33300428cc45f912c581930bc679abbb2b3d5e05801b183fd1d46135a98181d7"
+    },
+    {
+      "bytes": 19511,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-06-route-0.json",
+      "sha256": "3d4b1436f121c2a877dac7d04c16d373e78aa8448ce138ca2c194d8769652ba3"
+    },
+    {
+      "bytes": 1092424,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-06-route-0.trace",
+      "sha256": "a8b94151f56ea21dc20361ca0421ff84a923b233f7d868bf527020b1b1f73d16"
+    },
+    {
+      "bytes": 131072,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-06-route-1-prepared.u16",
+      "sha256": "33300428cc45f912c581930bc679abbb2b3d5e05801b183fd1d46135a98181d7"
+    },
+    {
+      "bytes": 28282,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-06-route-1.json",
+      "sha256": "0c3af6a19e0376636ae1b3174bcfe98f6af1dc36f5764f1051b26364b10416d5"
+    },
+    {
+      "bytes": 1092436,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-06-route-1.trace",
+      "sha256": "2d088d527d0de0ad86394d40c794fa0d1f3e07cf7e86cf2f9264e61cb5a197c7"
+    },
+    {
+      "bytes": 131072,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-07-original.u16",
+      "sha256": "a8c6062817d37d9640e72f765013f550c479732fa89d32c40db479227a9f27b3"
+    },
+    {
+      "bytes": 131072,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-07-route-0-prepared.u16",
+      "sha256": "a8c6062817d37d9640e72f765013f550c479732fa89d32c40db479227a9f27b3"
+    },
+    {
+      "bytes": 19511,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-07-route-0.json",
+      "sha256": "a2dd21fbe22b4c9861e1192775c3c0c1ea86c6078f5452ac892b9b9bcf9ec360"
+    },
+    {
+      "bytes": 1092424,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-07-route-0.trace",
+      "sha256": "b0660dcd164f6d2862ad299d8d7cdfe5b741b3a2046c325bab7b55989c597fe2"
+    },
+    {
+      "bytes": 131072,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-07-route-1-prepared.u16",
+      "sha256": "9efa70d56ca8e8d979c8a3b6571f6b05836d54285cb49b8422d02bb6c3e81552"
+    },
+    {
+      "bytes": 28282,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-07-route-1.json",
+      "sha256": "ff879073a41a9a49ebb51a7e13b3c4e2086e02cba3550f6adbbf5c44820090bd"
+    },
+    {
+      "bytes": 1092436,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-07-route-1.trace",
+      "sha256": "2b3af182fbb2f53672014bdce925ff8edd14420efdb41efbc515a14355166bd3"
+    },
+    {
+      "bytes": 131072,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-08-original.u16",
+      "sha256": "93d9ad85aaf8a7ad3f519f0095d70cb5ba95e322bdf94c5c58dead0767551ff9"
+    },
+    {
+      "bytes": 131072,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-08-route-0-prepared.u16",
+      "sha256": "93d9ad85aaf8a7ad3f519f0095d70cb5ba95e322bdf94c5c58dead0767551ff9"
+    },
+    {
+      "bytes": 19511,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-08-route-0.json",
+      "sha256": "f839a5b84797714992f8f95a7a7fe40aa249d08fb8e617f4ffab2c47308bf3bc"
+    },
+    {
+      "bytes": 1092424,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-08-route-0.trace",
+      "sha256": "7e313c5da9ae3213e396585edde916ac858a6ab0b608626e9b3f9defef773346"
+    },
+    {
+      "bytes": 131072,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-08-route-1-prepared.u16",
+      "sha256": "93d9ad85aaf8a7ad3f519f0095d70cb5ba95e322bdf94c5c58dead0767551ff9"
+    },
+    {
+      "bytes": 28282,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-08-route-1.json",
+      "sha256": "4bb393130504012e2cf301e5560a1bbf8539411a0ecb0a6dbc1d90b654950380"
+    },
+    {
+      "bytes": 1092436,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-08-route-1.trace",
+      "sha256": "35f657aa4e67b4d5d0199f0e7f0c14e05cf94bebdf4268fd0606f290a2b31e9d"
+    },
+    {
+      "bytes": 131072,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-09-original.u16",
+      "sha256": "66f346bfddccd3bc584f9b730dc1fc08d659b4bc5e4487f4452acc6d34adbb23"
+    },
+    {
+      "bytes": 131072,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-09-route-0-prepared.u16",
+      "sha256": "66f346bfddccd3bc584f9b730dc1fc08d659b4bc5e4487f4452acc6d34adbb23"
+    },
+    {
+      "bytes": 19511,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-09-route-0.json",
+      "sha256": "5a0f21f7e83bd607b9b0ecdda974eed788f1cead3ac8c81820cc39010f246fbb"
+    },
+    {
+      "bytes": 1092424,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-09-route-0.trace",
+      "sha256": "f356b11c5eaf3be6c590b900634ccd6f48671899d5f7b22caf02a81c7b005b4e"
+    },
+    {
+      "bytes": 131072,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-09-route-1-prepared.u16",
+      "sha256": "66f346bfddccd3bc584f9b730dc1fc08d659b4bc5e4487f4452acc6d34adbb23"
+    },
+    {
+      "bytes": 28282,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-09-route-1.json",
+      "sha256": "926c62ba54c38809f4acefc502a78722564548973e92cc0e99bfb583c9bd3fca"
+    },
+    {
+      "bytes": 1092436,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-09-route-1.trace",
+      "sha256": "1d1a3e83ca3f125bff59cf0bffa39b519262cf35a5f58f338f4b07d231b91e51"
+    },
+    {
+      "bytes": 131072,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-10-original.u16",
+      "sha256": "8e46f4c06cc6badb405686b538bd758252358ca78d5136b1716232e13d8d639e"
+    },
+    {
+      "bytes": 131072,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-10-route-0-prepared.u16",
+      "sha256": "8e46f4c06cc6badb405686b538bd758252358ca78d5136b1716232e13d8d639e"
+    },
+    {
+      "bytes": 19512,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-10-route-0.json",
+      "sha256": "f72bcf908049581e3bbcd067771a1f5b3462627a2bbc46a67cc88ce00819145a"
+    },
+    {
+      "bytes": 1092424,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-10-route-0.trace",
+      "sha256": "345ec1ef2013c804b588553409f7deb2f33559c166b290be875a10a567b66ad5"
+    },
+    {
+      "bytes": 131072,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-10-route-1-prepared.u16",
+      "sha256": "8e46f4c06cc6badb405686b538bd758252358ca78d5136b1716232e13d8d639e"
+    },
+    {
+      "bytes": 28283,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-10-route-1.json",
+      "sha256": "185264cbe17f765d0d77e6333921d96bf043d2030ade040e4afc1664fc2389de"
+    },
+    {
+      "bytes": 1092436,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-10-route-1.trace",
+      "sha256": "56301ebc62880d628754c6df3ff33f24df1f401fc1c36db3496385801ac3a70f"
+    },
+    {
+      "bytes": 131072,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-11-original.u16",
+      "sha256": "0c2607792ae2935ef85135eac4ffc7c07dcebf75a69325d9a47cd9ba7eefe49a"
+    },
+    {
+      "bytes": 131072,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-11-route-0-prepared.u16",
+      "sha256": "0c2607792ae2935ef85135eac4ffc7c07dcebf75a69325d9a47cd9ba7eefe49a"
+    },
+    {
+      "bytes": 19512,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-11-route-0.json",
+      "sha256": "d7ad2319d6b0c72f0e8df04752bb77e86a4e2fb1e8d6d47b78c2551cb1769b0a"
+    },
+    {
+      "bytes": 1092424,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-11-route-0.trace",
+      "sha256": "262908fe710c48e9fb1367ad2cf708ac2ac1ed11cd23508f22ed351be8f34a84"
+    },
+    {
+      "bytes": 131072,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-11-route-1-prepared.u16",
+      "sha256": "0c2607792ae2935ef85135eac4ffc7c07dcebf75a69325d9a47cd9ba7eefe49a"
+    },
+    {
+      "bytes": 28283,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-11-route-1.json",
+      "sha256": "11503a07ca7a307a48512e1e3f7b50f08b753a31bf066a1f92d9bf171e8bbed7"
+    },
+    {
+      "bytes": 1092436,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-11-route-1.trace",
+      "sha256": "d4756e88ae02af2271a0eb1adfb7296f73b025820e16bc1e17166d0883a42e72"
+    },
+    {
+      "bytes": 131072,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-12-original.u16",
+      "sha256": "05423aef92bb8a02c3e59b1ef09bf7a0fbcf622922ba6d443e6233abbcde661f"
+    },
+    {
+      "bytes": 131072,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-12-route-0-prepared.u16",
+      "sha256": "05423aef92bb8a02c3e59b1ef09bf7a0fbcf622922ba6d443e6233abbcde661f"
+    },
+    {
+      "bytes": 19512,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-12-route-0.json",
+      "sha256": "fa87db88e9891b171f790a4b3af956682d751ba00986142bc095baa3162ef413"
+    },
+    {
+      "bytes": 1092424,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-12-route-0.trace",
+      "sha256": "19a8e4874b5a4a4f5f96cd67dab94ac47b165b532975d85d15bc0c7ffcd409fe"
+    },
+    {
+      "bytes": 131072,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-12-route-1-prepared.u16",
+      "sha256": "05423aef92bb8a02c3e59b1ef09bf7a0fbcf622922ba6d443e6233abbcde661f"
+    },
+    {
+      "bytes": 28283,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-12-route-1.json",
+      "sha256": "7e9a36e9a8214db49b0288980e306038f8f131ebd93233b16d7caf850142e6f9"
+    },
+    {
+      "bytes": 1092436,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-12-route-1.trace",
+      "sha256": "3439c9fffa0dbc8fac6977ad8d765e9d579bc71df20187cda2465d3ba148fbf8"
+    },
+    {
+      "bytes": 131072,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-13-original.u16",
+      "sha256": "ea29579546b9f2c594a3a61088871f635864a16bb6c1c492d1c28a663911955b"
+    },
+    {
+      "bytes": 131072,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-13-route-0-prepared.u16",
+      "sha256": "ea29579546b9f2c594a3a61088871f635864a16bb6c1c492d1c28a663911955b"
+    },
+    {
+      "bytes": 19512,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-13-route-0.json",
+      "sha256": "0e7325606ecec32f981175b14a2113f93143e22756b84777427c8e96e6ada372"
+    },
+    {
+      "bytes": 1092424,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-13-route-0.trace",
+      "sha256": "592e614747f56d3987859b1f368bf13f2f5cfa4ac39a1aac27da5a91ac836768"
+    },
+    {
+      "bytes": 131072,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-13-route-1-prepared.u16",
+      "sha256": "ea29579546b9f2c594a3a61088871f635864a16bb6c1c492d1c28a663911955b"
+    },
+    {
+      "bytes": 28283,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-13-route-1.json",
+      "sha256": "04cc10ade88ceb2811fef872d960d955fc7241500352e05b1e68508a0916bef5"
+    },
+    {
+      "bytes": 1092436,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-13-route-1.trace",
+      "sha256": "fcc93a43dad47208f3adf0ab7fe15c397916608e1bb999fa6451ffbb9efbaff4"
+    },
+    {
+      "bytes": 131072,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-14-original.u16",
+      "sha256": "6ad3a32526e14e27cad5b77be44969ee06607218a68652f643213097fca6de41"
+    },
+    {
+      "bytes": 131072,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-14-route-0-prepared.u16",
+      "sha256": "6ad3a32526e14e27cad5b77be44969ee06607218a68652f643213097fca6de41"
+    },
+    {
+      "bytes": 19512,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-14-route-0.json",
+      "sha256": "9837e5215e4263dd6e0aea26b0ffec04bf60b8d8a7233fa0f104a00ebec4ab85"
+    },
+    {
+      "bytes": 1092424,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-14-route-0.trace",
+      "sha256": "0fad7902befb0ad953dcd6b154a1ff7ec82a3e1a7fba901ac8a2db034ba3bcc4"
+    },
+    {
+      "bytes": 131072,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-14-route-1-prepared.u16",
+      "sha256": "b5bd450621579ca2114220dff63f420c2b20dcb3fe8161e09502bb0f02aaf4a7"
+    },
+    {
+      "bytes": 28283,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-14-route-1.json",
+      "sha256": "d496856f91145c8fda77f1ed95d382e6f5ed30d100aaa6f47bfa61710ae8da9a"
+    },
+    {
+      "bytes": 1092436,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-14-route-1.trace",
+      "sha256": "5418123f885b4174beca25267bfaef3d096531461a48dd781a2d4060acdf6c5b"
+    },
+    {
+      "bytes": 131072,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-15-original.u16",
+      "sha256": "a5b1696de89a8a1948a0791b985256a3a3116185262cb36defa4f947ebe31999"
+    },
+    {
+      "bytes": 131072,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-15-route-0-prepared.u16",
+      "sha256": "a5b1696de89a8a1948a0791b985256a3a3116185262cb36defa4f947ebe31999"
+    },
+    {
+      "bytes": 19512,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-15-route-0.json",
+      "sha256": "f64a53f3eb056162d7956f09a11287904b0a284ceeee490f1040db3051786112"
+    },
+    {
+      "bytes": 1092424,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-15-route-0.trace",
+      "sha256": "7a18b0934fdd11a7cea8b83eca09b4541c735e67b72967d88916379e785f4791"
+    },
+    {
+      "bytes": 131072,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-15-route-1-prepared.u16",
+      "sha256": "a5b1696de89a8a1948a0791b985256a3a3116185262cb36defa4f947ebe31999"
+    },
+    {
+      "bytes": 28283,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-15-route-1.json",
+      "sha256": "fd335478d112f889618f8a2bf16d96d182a17943cce9021cf7e6064abad1f900"
+    },
+    {
+      "bytes": 1092436,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-15-route-1.trace",
+      "sha256": "64f89f8a38df2d0668baa3b54bfe9a51a36a2af70d01a4a70d474ab8c03baaf9"
+    },
+    {
+      "bytes": 131072,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-16-original.u16",
+      "sha256": "002bf5b58b00fd41c6e8f8aff6c36f73e8aaebf147b152ec0e48c42f151ce889"
+    },
+    {
+      "bytes": 131072,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-16-route-0-prepared.u16",
+      "sha256": "002bf5b58b00fd41c6e8f8aff6c36f73e8aaebf147b152ec0e48c42f151ce889"
+    },
+    {
+      "bytes": 19512,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-16-route-0.json",
+      "sha256": "5aa1ef1dfc59a97dcbb828fa2605053cefc3976b636e1a89779d4f579795521e"
+    },
+    {
+      "bytes": 1092424,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-16-route-0.trace",
+      "sha256": "6a63cc22bbaf7757088b9b7e0bbfb1a44383ba6e2fd38365e14192a5ffae9581"
+    },
+    {
+      "bytes": 131072,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-16-route-1-prepared.u16",
+      "sha256": "002bf5b58b00fd41c6e8f8aff6c36f73e8aaebf147b152ec0e48c42f151ce889"
+    },
+    {
+      "bytes": 28283,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-16-route-1.json",
+      "sha256": "8460cba875bb094294077c234b6b9af68c07a376cadbf54c82799b80c2999d0a"
+    },
+    {
+      "bytes": 1092436,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-16-route-1.trace",
+      "sha256": "cd226ccb2738113bb80b3eab2aa9100f3f4732a5495d0db8e77ece140c5ccddb"
+    },
+    {
+      "bytes": 131072,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-17-original.u16",
+      "sha256": "6e419ec8acb4ecbcf5d447433c821dfc4f013ecda107014dcdb97533f913bf36"
+    },
+    {
+      "bytes": 131072,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-17-route-0-prepared.u16",
+      "sha256": "6e419ec8acb4ecbcf5d447433c821dfc4f013ecda107014dcdb97533f913bf36"
+    },
+    {
+      "bytes": 19512,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-17-route-0.json",
+      "sha256": "a21f4e237e4be3aaffa504c680595b7f9da86e1dd3a31560670f56ddb4a1f2c1"
+    },
+    {
+      "bytes": 1092424,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-17-route-0.trace",
+      "sha256": "e78dfd038770bbd1c031906804046c011882106186bdf5b21df60948d6486229"
+    },
+    {
+      "bytes": 131072,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-17-route-1-prepared.u16",
+      "sha256": "6e419ec8acb4ecbcf5d447433c821dfc4f013ecda107014dcdb97533f913bf36"
+    },
+    {
+      "bytes": 28283,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-17-route-1.json",
+      "sha256": "6a87056c5fd471055f67573f483853a17470c8482d5a8fd0e371841d9921d146"
+    },
+    {
+      "bytes": 1092436,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-17-route-1.trace",
+      "sha256": "51f32241dd6b83bb1c156bd9cf6916f697bd1feec9737779258bf418998c7bf8"
+    },
+    {
+      "bytes": 131072,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-18-original.u16",
+      "sha256": "5818db87b01093d2c6d77399884b490c3ac60508a6f1fe54624008a2b25cb303"
+    },
+    {
+      "bytes": 131072,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-18-route-0-prepared.u16",
+      "sha256": "5818db87b01093d2c6d77399884b490c3ac60508a6f1fe54624008a2b25cb303"
+    },
+    {
+      "bytes": 1092424,
+      "path": "experiments/native-sensor-transfer/native-run-1/frame-18-route-0.trace",
+      "sha256": "fbdb3a902b2ab6f9dedbd03292aceac5c3ecdfcccce9fcfed9b0ed684128301b"
+    },
+    {
+      "bytes": 94,
+      "path": "experiments/native-sensor-transfer/native-run-1/incomplete.json",
+      "sha256": "a8d61eb7ff45c58f6682e5a0751f78fb46866693662723b71c1781ad35cfdedb"
+    },
+    {
+      "bytes": 2,
+      "path": "experiments/native-sensor-transfer/work/native-external-1-exit.txt",
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+    },
+    {
+      "bytes": 1630,
+      "path": "experiments/native-sensor-transfer/work/native-external-1-outer.json",
+      "sha256": "b98959b4ba0b22f16851f3e6616a067a954f7b80bc34d5eeede4d79fa11f18a3"
+    },
+    {
+      "bytes": 0,
+      "path": "experiments/native-sensor-transfer/work/native-external-1-stderr.bin",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 465,
+      "path": "experiments/native-sensor-transfer/work/native-external-1-stdout.bin",
+      "sha256": "cdeb7e9c3d4f71f56a3017db1f8a89aa3ffe34e92f808baa63c3715b67d4451f"
+    }
+  ],
+  "mechanism_scope": "Missing enumerated stage path is observed. Writer hard-links the final name then removes the stage; this transition is consistent with the failure, not independently recorded as a rename.",
+  "paper_0_complete": true,
+  "scientific_conclusion": null,
+  "status": "FAILED_RUNNER_LIVE_PUBLICATION_SCAN",
+  "work": {
+    "completed_child_cpu_seconds": 618.390625,
+    "cpu_accounting_complete": true,
+    "cpu_seconds": 643.296875,
+    "live_child_cpu_seconds": 0.0,
+    "parent_cpu_seconds": 24.90625,
+    "wall_seconds": 196.92200000000594
+  }
+}
