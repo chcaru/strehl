@@ -2047,6 +2047,94 @@ pub fn warp_frame_in_place_fullres(
     warp_frame_in_place_fullres_outputs::<false>(frame, t, geom, resampler, scratch)
 }
 
+/// Execution choice for independent destination rows; arithmetic is identical.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub(crate) enum WarpWriteback {
+    Serial,
+    Parallel,
+}
+
+fn warp_writeback_mode() -> Result<WarpWriteback> {
+    const ENV: &str = "STREHL_WARP_WRITEBACK";
+    static CHOICE: std::sync::OnceLock<std::result::Result<WarpWriteback, String>> =
+        std::sync::OnceLock::new();
+    match CHOICE.get_or_init(|| match std::env::var(ENV) {
+        Err(std::env::VarError::NotPresent) => Ok(WarpWriteback::Parallel),
+        Ok(v) if v.eq_ignore_ascii_case("parallel") => Ok(WarpWriteback::Parallel),
+        Ok(v) if v.eq_ignore_ascii_case("serial") => Ok(WarpWriteback::Serial),
+        other => Err(format!("{ENV}: expected serial or parallel, got {other:?}")),
+    }) {
+        Ok(mode) => Ok(*mode),
+        Err(message) => bail!("{message}"),
+    }
+}
+
+/// Quantize one gathered CFA site into disjoint decoded rows.
+///
+/// The source channels have already been reconstructed, so no destination
+/// write can change another row's input. Only integer coverage is reduced;
+/// no image-sized buffer or floating-point reduction is introduced.
+#[allow(clippy::too_many_arguments)]
+pub(crate) fn writeback_fullres_site(
+    data: &mut [u16],
+    stride: usize,
+    active: (usize, usize),
+    geom: PlaneGeometry,
+    site: (usize, usize),
+    dst: &[f32],
+    cover: &[bool],
+    inv: f32,
+    black: f32,
+    mode: WarpWriteback,
+) -> usize {
+    let (gw, gh) = (geom.width, geom.height);
+    let (ax, ay) = active;
+    let (dx, dy) = site;
+    let black_dn = black.round().clamp(0.0, u16::MAX as f32) as u16;
+    match mode {
+        WarpWriteback::Serial => {
+            let mut covered = 0usize;
+            for py in 0..gh {
+                let row = (ay + 2 * py + dy) * stride + ax + dx;
+                let lo = py * gw;
+                for px in 0..gw {
+                    data[row + 2 * px] = if cover[lo + px] {
+                        covered += 1;
+                        (dst[lo + px] * inv + black)
+                            .round()
+                            .clamp(0.0, u16::MAX as f32) as u16
+                    } else {
+                        black_dn
+                    };
+                }
+            }
+            covered
+        }
+        WarpWriteback::Parallel => data
+            .par_chunks_mut(stride)
+            .skip(ay + dy)
+            .step_by(2)
+            .take(gh)
+            .zip(dst[..geom.pixels()].par_chunks_exact(gw))
+            .zip(cover[..geom.pixels()].par_chunks_exact(gw))
+            .map(|((row, values), covered)| {
+                let mut count = 0usize;
+                for px in 0..gw {
+                    row[ax + dx + 2 * px] = if covered[px] {
+                        count += 1;
+                        (values[px] * inv + black)
+                            .round()
+                            .clamp(0.0, u16::MAX as f32) as u16
+                    } else {
+                        black_dn
+                    };
+                }
+                count
+            })
+            .sum(),
+    }
+}
+
 // Share every source/geometry/gather operation between actual RGB frames and
 // green-only synthetic probes. The latter never reads or writes R/B outputs.
 fn warp_frame_in_place_fullres_outputs<const GREEN_ONLY: bool>(
@@ -2065,9 +2153,9 @@ fn warp_frame_in_place_fullres_outputs<const GREEN_ONLY: bool>(
             frame.active.height / 2
         );
     }
+    let writeback = warp_writeback_mode()?;
     let (fw, fh) = (2 * gw, 2 * gh);
     let black = frame.levels.black;
-    let black_dn = black.round().clamp(0.0, u16::MAX as f32) as u16;
     let (stride, ax, ay) = (frame.stride, frame.active.x, frame.active.y);
     let gain = wb_gains(&frame.wb_coeffs);
 
@@ -2186,22 +2274,18 @@ fn warp_frame_in_place_fullres_outputs<const GREEN_ONLY: bool>(
             }
 
             let inv = 1.0 / gain[ci];
-            for py in 0..gh {
-                let row = (ay + 2 * py + dy) * stride + ax + dx;
-                let lo = py * gw;
-                for px in 0..gw {
-                    frame.data[row + 2 * px] = if scratch.cover[lo + px] {
-                        covered_total += 1;
-                        // Undo the balance, restore the pedestal, then round and
-                        // clamp exactly as the shipped path does.
-                        (scratch.dst[lo + px] * inv + black)
-                            .round()
-                            .clamp(0.0, u16::MAX as f32) as u16
-                    } else {
-                        black_dn
-                    };
-                }
-            }
+            covered_total += writeback_fullres_site(
+                &mut frame.data,
+                stride,
+                (ax, ay),
+                geom,
+                (dx, dy),
+                &scratch.dst,
+                &scratch.cover,
+                inv,
+                black,
+                writeback,
+            );
         }
     }
     let sites = if GREEN_ONLY { 2 } else { 4 };

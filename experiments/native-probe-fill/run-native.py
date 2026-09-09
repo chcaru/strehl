@@ -12,20 +12,21 @@ host=module("probe_fill_host",ROOT/"experiments/M-PHASE0-PIPE/measure.py")
 def ref(p):return dict(path=str(p),**m.binding(p))
 def save(p,x):
     with p.open("x",encoding="utf-8") as f:json.dump(x,f,indent=2,allow_nan=False);f.write("\n")
-assert sys.argv[1:] in ([], ["--transfer-109"], ["--green-probe-109"]), "only fixed109 follow-ups are supported"
+assert sys.argv[1:] in ([], ["--transfer-109"], ["--green-probe-109"], ["--parallel-writeback-109"]), "only fixed109 follow-ups are supported"
+writeback=sys.argv[1:]==["--parallel-writeback-109"]
 green=sys.argv[1:]==["--green-probe-109"]
 transfer=bool(sys.argv[1:])
 plan_path=HERE/"transfer-plan-109.json" if transfer else PROFILE/"native-plan-1.json"
 plan=json.loads(plan_path.read_text(encoding="utf-8"))
-baseline=(json.loads((HERE/"transfer-109/results.json").read_text(encoding="utf-8"))["renders"][0] if green else None) if transfer else json.loads((PROFILE/"native/results.json").read_text(encoding="utf-8"))["renders"][0]
-arms=("old","candidate","candidate","old","rgb-control") if green else (("old","candidate","candidate","old") if transfer else ("old","candidate","candidate","old","scalar-control"))
-old=HERE/"build-1/strehl.exe" if green else PROFILE/"build-1/strehl.exe"
-new=ROOT/"experiments/native-green-probe/build-2/strehl.exe" if green else HERE/"build-1/strehl.exe"
+baseline=(json.loads((HERE/"transfer-109/results.json").read_text(encoding="utf-8"))["renders"][0] if green or writeback else None) if transfer else json.loads((PROFILE/"native/results.json").read_text(encoding="utf-8"))["renders"][0]
+arms=("old","candidate","candidate","old","serial-control") if writeback else (("old","candidate","candidate","old","rgb-control") if green else (("old","candidate","candidate","old") if transfer else ("old","candidate","candidate","old","scalar-control")))
+old=ROOT/"experiments/native-green-probe/build-2/strehl.exe" if writeback else (HERE/"build-1/strehl.exe" if green else PROFILE/"build-1/strehl.exe")
+new=ROOT/"experiments/native-parallel-writeback/build-1/strehl.exe" if writeback else (ROOT/"experiments/native-green-probe/build-2/strehl.exe" if green else HERE/"build-1/strehl.exe")
 for exe in (old,new):
     built=json.loads((exe.parent/"executables.json").read_text(encoding="utf-8"))
     assert ref(exe)["sha256"]==built["strehl"]["sha256"]
 api=m.load_job_api(m.binding(ROOT/"experiments/m12-scorecard/m12-harness.py"))
-out=ROOT/"experiments/native-green-probe/native" if green else HERE/("transfer-109" if transfer else "native");out.mkdir()
+out=ROOT/"experiments/native-parallel-writeback/native" if writeback else (ROOT/"experiments/native-green-probe/native" if green else HERE/("transfer-109" if transfer else "native"));out.mkdir()
 limits=plan["limits"]
 revision=subprocess.check_output(["git","rev-parse","HEAD"],cwd=ROOT,text=True).strip()
 save(out/"execution.json",dict(revision=revision,source=ref(Path(__file__)),plan=ref(plan_path),old=ref(old),candidate=ref(new),baseline_file=None if baseline is None else baseline["file"],baseline_decoded=None if baseline is None else baseline["decoded"],mode_order=list(arms)))
@@ -43,6 +44,7 @@ for i,arm in enumerate(arms):
     fields=list(plan["planned_render"]["environment_overrides"].items())+[("STREHL_PYRAMID_PROFILE","on"),("STREHL_PYRAMID_PROFILE_OUTPUT",str(profile))]
     if arm=="scalar-control":fields.append(("STREHL_PROBE_FILL","serial"))
     if arm=="rgb-control":fields.append(("STREHL_PROBE_GATHER","rgb"))
+    if arm=="serial-control":fields.append(("STREHL_WARP_WRITEBACK","serial"))
     env,removed=m.clean_environment(fields);argv=[str(exe),*args]
     save(out/(label+"-invocation.json"),dict(command=argv,environment_overrides=dict(fields),removed_environment=removed))
     before=host.system_times();start=time.perf_counter()

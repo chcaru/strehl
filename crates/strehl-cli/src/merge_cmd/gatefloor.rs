@@ -625,4 +625,16 @@ mod native_green_probe_independent_tests {
         env!("CARGO_MANIFEST_DIR"),
         "/../../experiments/native-green-probe/independent-tests.rs"
     ));
+
+    pub(super) fn run_for_writeback_controls() {
+        independent_green_probe_controls();
+    }
+}
+
+#[cfg(test)]
+mod native_parallel_writeback_independent_tests {
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/native-parallel-writeback/independent-tests.rs"
+    ));
 }
