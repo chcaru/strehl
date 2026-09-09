@@ -1,0 +1,9 @@
+{
+  "schema": "dimensions-final-read-capture-root-v1",
+  "source_commit": "d7ff969d79a9e9b7869c797dc3b12ec96fdd4e30",
+  "release_commit": "2159a631c6f14ed7da623650e9fe6f7e5743584f",
+  "release_sha256": "b9e66eaf28f8626ed3c2b9fc06e58b48d6e619cf87e961902813a6981780c72b",
+  "exit_code": 0,
+  "whole_capture_wrapper_wall_seconds": 0.9645889,
+  "scope": "Complete direct capture-wrapper interval through immediately captured terminal exit; actual reader interval, argv, raw stdout/stderr/exit and source identities retained by its outer record. Wrapper publication time and exact terminated CPU are not inferred."
+}
