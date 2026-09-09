@@ -654,6 +654,19 @@ fn m194b_known_scene_consumer() -> Result<()> {
 }
 
 fn run_known_scene_consumer(admission: Option<AdmissionMode>) -> Result<()> {
+    run_known_scene_consumer_configured(admission, false)
+}
+
+#[cfg(feature = "native-boundary-radiance")]
+#[test]
+#[ignore = "Requires existing colour manifest and boundary no-treatment plan/output paths"]
+fn m194b_boundary_radiance_no_treatment_consumer() -> Result<()> {
+    run_known_scene_consumer_configured(None, true)
+}
+
+fn run_known_scene_consumer_configured(admission: Option<AdmissionMode>, boundary_no_treatment: bool) -> Result<()> {
+    #[cfg(not(feature = "native-boundary-radiance"))]
+    ensure!(!boundary_no_treatment, "boundary radiance feature is disabled");
     if let Some(mode) = admission {
         let expected = match mode {
             AdmissionMode::HardFloor => "hard-floor",
@@ -671,11 +684,17 @@ fn run_known_scene_consumer(admission: Option<AdmissionMode>) -> Result<()> {
     };
     let manifest_path = PathBuf::from(env("MANIFEST")?);
     let inputs = Inputs::load(&manifest_path, &env("MANIFEST_SHA256")?)?;
-    let (domain, fit, plan) = if admission.is_some() {
+    let (domain, fit, mut plan) = if admission.is_some() {
         prepare_with_admission(&inputs, &environment, admission)?
     } else {
         prepare(&inputs, &environment)?
     };
+    if boundary_no_treatment {
+        ensure!(inputs.manifest.scene == "color" && !inputs.manifest.noise_enabled,
+            "boundary no-treatment control requires the existing genuine colour fixture");
+        plan["schema"] = json!("native-boundary-radiance-colour-no-treatment-plan-v1");
+        plan["boundary_radiance"] = json!("explicit no-treatment; M194g geometry unsupported");
+    }
     let plan_path = PathBuf::from(env("PLAN")?);
     let mode = env("MODE")?;
     if mode == "plan" {
@@ -722,6 +741,13 @@ fn run_known_scene_consumer(admission: Option<AdmissionMode>) -> Result<()> {
         calls: indices.iter().map(|_| AtomicUsize::new(0)).collect(),
         indices: indices.clone(),
     };
+    #[cfg(feature = "native-boundary-radiance")]
+    let configured_source = native_boundary_radiance::ConfiguredSource::optional(&source,
+        boundary_no_treatment.then_some(native_boundary_radiance::Configuration::NoTreatment));
+    #[cfg(feature = "native-boundary-radiance")]
+    let consumer_source = &configured_source;
+    #[cfg(not(feature = "native-boundary-radiance"))]
+    let consumer_source = &source;
     let local = domain.analysis();
     run_pyramid_prepared(
         &opts,
@@ -746,7 +772,7 @@ fn run_known_scene_consumer(admission: Option<AdmissionMode>) -> Result<()> {
             t_start: Instant::now(),
             exposure: Exposure::resolve(false, 0.0, false)?,
         },
-        &source,
+        consumer_source,
     )?;
     let calls: Vec<_> = source
         .calls
@@ -778,7 +804,9 @@ fn run_known_scene_consumer(admission: Option<AdmissionMode>) -> Result<()> {
         Some(p) => Some(json!({"path":p.to_string_lossy(),"sha256":hash_file(&p)?})),
         None => None,
     };
-    let receipt_schema = if admission.is_some() {
+    let receipt_schema = if boundary_no_treatment {
+        "native-boundary-radiance-colour-no-treatment-receipt-v1"
+    } else if admission.is_some() {
         "m194d-consumer-receipt-v1"
     } else {
         "m194b-consumer-receipt-v1"

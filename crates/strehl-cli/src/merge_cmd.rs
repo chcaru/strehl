@@ -4830,6 +4830,10 @@ struct BandWorker {
 trait PyramidFrameSource: Sync {
     fn len(&self) -> usize;
     fn decode(&self, index: usize) -> Result<Frame>;
+    #[cfg(feature = "native-boundary-radiance")]
+    fn boundary_config(&self) -> Option<native_boundary_radiance::Configuration> { None }
+    #[cfg(feature = "native-boundary-radiance")]
+    fn observe_boundary(&self, _index: usize, _frame: &Frame) -> Result<()> { Ok(()) }
 }
 
 struct RawPyramidSource<'a> {
@@ -5024,6 +5028,8 @@ fn load_frame(
             #[cfg(feature = "native-pyramid-profile")]
             drop(defect_phase);
         }
+        #[cfg(feature = "native-boundary-radiance")]
+        source.observe_boundary(index, &frame)?;
         if let Some(map) = warps {
             match map.warp(index)? {
                 FrameWarp::Placed(t) => {
@@ -6040,6 +6046,10 @@ fn run_pyramid_prepared(
     );
 
     let warps = alignment.as_ref().map(|(m, _, _)| m);
+    #[cfg(feature = "native-boundary-radiance")]
+    let observed_source = native_boundary_radiance::ObservedSource::new(source, levels, &noise, domain, warps)?;
+    #[cfg(feature = "native-boundary-radiance")]
+    let source = &observed_source;
     let t_fold = Instant::now();
     let pool = ThreadPoolBuilder::new()
         .num_threads(workers)
@@ -6192,6 +6202,8 @@ fn run_pyramid_prepared(
     let t_out = Instant::now();
     let mut ws = Workspace::new(&sizes);
     let planes = merge.finish(&mut ws);
+    #[cfg(feature = "native-boundary-radiance")]
+    let mut planes = planes;
     drop(ws);
     drop(merge);
     ensure!(
@@ -6199,6 +6211,9 @@ fn run_pyramid_prepared(
         "the band merge returned {} planes, not {BAND_PLANES}",
         planes.len()
     );
+
+    #[cfg(feature = "native-boundary-radiance")]
+    observed_source.finish(&mut planes)?;
 
     // The confidence map, if asked for. Deliberately AFTER `finish` and before
     // the write: the question it answers is about the merged output, so the

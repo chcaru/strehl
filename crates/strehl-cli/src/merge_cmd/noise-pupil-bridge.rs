@@ -1790,3 +1790,8 @@ mod pedestal_causality {
         "/../../experiments/m194h-pedestal-causality/production-bridge.rs"
     ));
 }
+
+#[cfg(feature = "native-boundary-radiance")]
+mod boundary_radiance_bridge {
+    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/native-boundary-radiance/bridge.rs"));
+}

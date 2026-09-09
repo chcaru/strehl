@@ -1,5 +1,6 @@
 // Experimental local two-layer affine radiance reconstruction. No truth radiance enters.
 use anyhow::{Result, ensure};
+include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/native-boundary-radiance/source-hook.rs"));
 
 pub(crate) const NEIGHBOUR_RADIUS: usize = 2;
 pub(crate) const MIN_OBSERVATIONS: usize = 12;
