@@ -224,3 +224,14 @@ core Cargo478B/6ef45d6cecf366bc4a882850f14b2f2ce518dc9ff73f3a3169ee6df0bb04d331;
 CLI Cargo912B/812de43881c1b29afd84eb9435e7764027bae5da0f6efaabd5b8ea41ce6a3bf5;
 pyramid208956B/ea0a490d299b156c449b3de8c5633fcaeda2190d1c92d1d9c5356e6a9a92c02e;
 merge_cmd425678B/ca829e45c7021c5c5df7b51da85859e3763a9a95d01d302a91ab7cd0687b2dcf.
+
+Source-only path correction after the reviewed producer candidate: the ignored
+test canonicalizes the existing experiment root before creating native-run-I.
+This removes literal parent components from emitted artifact paths; ordinary
+and Windows verbatim absolute drive spellings remain supported by the reader.
+Only that root expression changes. No array/operator/writer ordering, input,
+population or numerical configuration changes. The prior adapter was24251 B/
+fa96ad627f5d20321467a9a3b5343a495a23f8a965e165555f5285a1734aa884;
+current adapter is24327 B/7e471b2512930dba0e2264de69d2f94a32bdf86d3d85a58f7a875f77054a0fc2.
+An in-memory one-expression reverse recovered the prior exact bytes. No
+crate patch changed or candidate ran; root separately owns live integration.

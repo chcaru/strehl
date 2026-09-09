@@ -1,0 +1,89 @@
+# Native sensor transfer runner source review
+
+2026-09-09. Reviewer: root; runner author: factor_eight_implementation.
+Disposition: VERIFIED SOURCE REVIEW ACCEPTED FOR THE TWO FIXED BUILDS.
+This is not a build, numerical-control, RAW-decode, physical-model or SOTA result.
+
+Root read the entire runner and capture wrapper, the contract, and the exact
+helper diff. Final reviewed pins:
+- run-stage.py:33684 bytes/e000e5dfa15b54b7f88040c9f5d7dea3eaa92b62e120be5dd8b73d4d2cdfacd4.
+- bounded-build-process.py:16724/45ad9348a441fc7a45d8649a150a3cd077a3b195260f488fe9fad38a100e4fa3.
+- capture-stage.py:3988/045bb436f58fccbb3a70cc7e2260627b9207146bf515a9af84cc2cad4292d177.
+- run-stage-contract.md:18785/eedd7af1b9d4f443b9fb93c99395efb0837c78bdeee84325a471ccbd189a1eec.
+
+The actual source command git diff --no-index -- experiments/common-tiff-dimensions/bounded-build-process.py experiments/native-sensor-transfer/bounded-build-process.py
+returned1 because it contains the intended diff. Its sole semantic change is
+the literal Cargo argv/target allowlist. Existing suspended owned Job creation,
+terminal accounting, drain and compile-only descendant cleanup are reused.
+No old campaign or process-control test is commissioned again.
+
+## Independent choices and disposition
+
+The parent visits only the fixed27 original metadata identities already held
+in input-bindings-1.json. It does not repeat the927MB source hash pass.
+Controls/verify require their own current reader authority; those releases
+remain pending independent reader review. Source closure includes the actual
+crate tree and literal experiment Rust includes. Compile-on/off require
+fresh separate target directories, actual Compiling core/CLI lines, exact
+Cargo feature/test artifact metadata and a byte-matched copied executable.
+
+Root re-chose source association by compiled input, rather than requiring all
+later Python files to equal a historical build map. Each historical release
+retains its own runner binding; the current runner must remain identical.
+Changing the runner after build would require a documented recovery, whereas
+finishing unrelated independent Python source does not imply recompilation.
+
+The reviewer identified a real inherited numeric-thread mismatch. Reader
+children now set OMP/OPENBLAS/MKL/NUMEXPR threads to1 and record those actual
+values. Native children remain Rayon4/pyramid4 with invocation0..8. There is
+no extra STREHL override or registration solve. Source-derived collection
+counts are expectations until actual traversal receipts and saved checking.
+
+The sampler reviewer identified a real Cargo flag source not covered by
+removing RUSTFLAGS alone. The final runner removes Cargo build/target/profile/
+unstable and Rust compiler/bootstrap overrides. Literal argv admits no
+--config. build_configuration requires all14 actual applicable config and
+config.toml paths absent, records selected CARGO_HOME, and checks again after
+the child. This rules out those inherited flags for this fixed build. It is
+not a hermetic compiler, registry-dependency or runtime-DLL assertion.
+
+The adapter path correction canonicalizes the existing experiment root
+before creating any output directory. Root read the exact one-expression
+diff. It changes emitted path spelling, not pixels, arithmetic or writer order.
+Its new24327-byte source is7e471b2512930dba0e2264de69d2f94a32bdf86d3d85a58f7a875f77054a0fc2.
+
+## Finite release and limitations
+
+Each compile stage is one no-run Cargo invocation:600CPU seconds,300wall,
+3GiB child Job committed memory,128MiB retained output,4GiB fresh scratch.
+The default-off observation feature is compiled once on and once off.
+prepare-build.py gets one metadata-only30CPU/60active-wall/128MiB-read/
+24MiB-write slice per stage, including1CPU/2wall publication allowance.
+Each external capture gets5CPU/20active-wall setup/publication allowance in
+addition to the directly observed stage interval. These are allocations,
+not measured consumption or peak memory. No whole-session aggregate is
+fabricated from source-tool timings.
+
+The wrapper records its actual direct controller exit/interval and raw
+streams. It is not an online arbitrary-output limiter; post-exit stream
+extent failure can leave raw streams/exit without outer JSON. Native writer
+size checking likewise follows the unchanged write, and panic need not
+publish failure.json. Retained incomplete evidence remains a failure.
+
+The parent separately scans all nine native directories. It cannot infer
+whole-TIFF non-perturbation from passive source intent; the independent reader
+must compare actual off/on/placebo/feature-off outputs. Eighteen writers and
+100folds stay fixed. The physical-model result remains null even after the
+software association stage passes.
+
+Read-only source review and source parsing are not numerical validation.
+Builds are now permitted after exact source/release preservation. Controls,
+native data execution and saved verification remain separate dependent
+stages. Do not expand this diagnostic into another general infrastructure
+campaign or rerun successful previous campaigns.
+
+Factor independently reviewed root's metadata-only prepare-build.py. The exact
+release/command/prerequisite construction aligned with the runner. It caught
+an omitted archive-member read charge; root added reservation/counting before
+each member read and reserved the bounded stored archive before creation.
+No constructor, compiler or RAW consumer had executed when corrected.

@@ -127,3 +127,14 @@ are additional. No complete process CPU/read total was instrumented. This lane
 remains inside its declared64MiB read/4MiB retained source scope; current authored
 source set before this handoff was53565 bytes. Numerical permissions remain
 unissued, and all previous RAW/profile/calibration caveats remain in force.
+
+Source-only path correction after the reviewed producer candidate: the ignored
+test canonicalizes the existing experiment root before creating native-run-I.
+This removes literal parent components from emitted artifact paths; ordinary
+and Windows verbatim absolute drive spellings remain supported by the reader.
+Only that root expression changes. No array/operator/writer ordering, input,
+population or numerical configuration changes. The prior adapter was24251 B/
+fa96ad627f5d20321467a9a3b5343a495a23f8a965e165555f5285a1734aa884;
+current adapter is24327 B/7e471b2512930dba0e2264de69d2f94a32bdf86d3d85a58f7a875f77054a0fc2.
+An in-memory one-expression reverse recovered the prior exact bytes. No
+crate patch changed or candidate ran; root separately owns live integration.

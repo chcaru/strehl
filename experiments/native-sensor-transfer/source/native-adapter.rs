@@ -375,7 +375,8 @@ fn fixed_native_sensor_transfer_pair() {
     let invocation=std::env::var("NATIVE_SENSOR_TRANSFER_INVOCATION").expect("released invocation required")
         .parse::<usize>().expect("integer invocation required");
     assert!(invocation<9);
-    let root=Path::new(env!("CARGO_MANIFEST_DIR")).join("../../experiments/native-sensor-transfer");
+    let root=Path::new(env!("CARGO_MANIFEST_DIR")).join("../../experiments/native-sensor-transfer")
+        .canonicalize().expect("existing canonical native experiment root");
     let out=root.join(format!("native-run-{invocation}"));
     fs::create_dir(&out).expect("fresh native output directory required");
     json_new(&out.join("incomplete.json"),&json!({"schema":"native-sensor-transfer-traversal-v1",

@@ -1,0 +1,181 @@
+{
+  "schema": "native-sensor-transfer-input-bindings-v1",
+  "status": "INPUT_IDENTITIES_HELD_UNDECODED",
+  "release": {
+    "path": "experiments/native-sensor-transfer/input-binding-release-1.json",
+    "bytes": 2917,
+    "sha256": "32fec84448950f63a79f93e91ca666da95b20e2d86368517cd62a15dc9c22640"
+  },
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-I",
+    "-S",
+    "-B",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-sensor-transfer\\bind-inputs.py",
+    "--release",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-sensor-transfer\\input-binding-release-1.json",
+    "--release-sha256",
+    "32fec84448950f63a79f93e91ca666da95b20e2d86368517cd62a15dc9c22640"
+  ],
+  "source": {
+    "path": "experiments/native-sensor-transfer/bind-inputs.py",
+    "bytes": 4283,
+    "sha256": "040a7346a1e22ea9803f769005a20e31d461fa2f4a5d2fff0102b09d00fd9d14"
+  },
+  "originals": [
+    {
+      "path": "D:/personal/macro/requests/10-paper-iso-var/DSC00235.ARW",
+      "bytes": 38825984,
+      "sha256": "58d3e2eea6b7946f552bf0ad7fffe5185421fd916f230cfec62c6bd1042a15e6"
+    },
+    {
+      "path": "D:/personal/macro/requests/10-paper-iso-var/DSC00236.ARW",
+      "bytes": 38514688,
+      "sha256": "ca8d80c41fed8f660aaaf64df518179b9ef802e688185253d7acfc8881ab0716"
+    },
+    {
+      "path": "D:/personal/macro/requests/10-paper-iso-var/DSC00237.ARW",
+      "bytes": 38477824,
+      "sha256": "6d93b0b95e0440df15e144a3908084ccd306401af5fb125d265d63ae3093036b"
+    },
+    {
+      "path": "D:/personal/macro/requests/10-paper-iso-var/DSC00238.ARW",
+      "bytes": 38510592,
+      "sha256": "02de09e9d9cac07dac81e4a184c0cd683f98117cb5a01b789d6c96493faf46b3"
+    },
+    {
+      "path": "D:/personal/macro/requests/10-paper-iso-var/DSC00239.ARW",
+      "bytes": 38539264,
+      "sha256": "e6d0604d138a2f697cbbd0942ea002aa43a2e8b61f86d070056bcf4d1eeb89b6"
+    },
+    {
+      "path": "D:/personal/macro/requests/6-11-extended-dark-frames/DSC00872.ARW",
+      "bytes": 33353728,
+      "sha256": "42445e73d595b1be7b3c7567e6131769eda58a5c86d916c7e112573d1fa22be7"
+    },
+    {
+      "path": "D:/personal/macro/requests/6-11-extended-dark-frames/DSC00873.ARW",
+      "bytes": 33370112,
+      "sha256": "9a027f3e9bb177a91b2c2dd1663f0dc6e9e7e8eb7f15a1e09a118381a1607673"
+    },
+    {
+      "path": "D:/personal/macro/requests/6-11-extended-dark-frames/DSC00874.ARW",
+      "bytes": 33361920,
+      "sha256": "afe7cfbdfaf7b32c3e91374beea436e2eea175f2aa06d537bf5b07adb28512cb"
+    },
+    {
+      "path": "D:/personal/macro/requests/6-11-extended-dark-frames/DSC00875.ARW",
+      "bytes": 33361920,
+      "sha256": "198ea702fee1f6821853dbffca9ed7b721abd258bd0163aedf12cb10c9fc3727"
+    },
+    {
+      "path": "D:/personal/macro/requests/6-11-extended-dark-frames/DSC00876.ARW",
+      "bytes": 33366016,
+      "sha256": "d20c4b7a7d58418df3146bf3f8c376b54f56770a405d72d25a29135e222364eb"
+    },
+    {
+      "path": "D:/personal/macro/requests/6-11-extended-dark-frames/DSC00877.ARW",
+      "bytes": 33374208,
+      "sha256": "93cc0f3753aa1087778860c1096e84facb0622bf5968b3f1d6c7d805e0b4532c"
+    },
+    {
+      "path": "D:/personal/macro/requests/6-11-extended-dark-frames/DSC00878.ARW",
+      "bytes": 33361920,
+      "sha256": "00961d03c0241c5080dd83d2cc064efc74db846d0dfd84d9a7f4561978254393"
+    },
+    {
+      "path": "D:/personal/macro/requests/6-11-extended-dark-frames/DSC00879.ARW",
+      "bytes": 33361920,
+      "sha256": "dc3bb40283be635bd0a1183624eb785fbae8feea4c9b42e979000745f8daa6fb"
+    },
+    {
+      "path": "D:/personal/macro/requests/6-11-extended-dark-frames/DSC00880.ARW",
+      "bytes": 33361920,
+      "sha256": "9eb32b631fb17b2559fccaf9d18680c0fc9819b9edf1fa21454c51320e331321"
+    },
+    {
+      "path": "D:/personal/macro/requests/6-11-extended-dark-frames/DSC00881.ARW",
+      "bytes": 33361920,
+      "sha256": "e59bd0e72475b70b25d846d011d64ebe52d2388f8cc1d8ac3757a1f293e29be9"
+    },
+    {
+      "path": "D:/personal/macro/requests/6-11-extended-dark-frames/DSC00882.ARW",
+      "bytes": 33370112,
+      "sha256": "7711d3dcb7b8003f5e91463377fd2543659194a3d0c40942623f9ed1aed75d50"
+    },
+    {
+      "path": "D:/personal/macro/requests/6-11-extended-dark-frames/DSC00883.ARW",
+      "bytes": 33361920,
+      "sha256": "9def865077bf4e305e6925d9d7a81edd25a0b78052c2d9a6b9873327460be4fc"
+    },
+    {
+      "path": "D:/personal/macro/requests/6-11-extended-dark-frames/DSC00884.ARW",
+      "bytes": 33370112,
+      "sha256": "5a5845fdbf69b80a60fb06595b23a5b10338e61bf24898e782109dda6db3e8d2"
+    },
+    {
+      "path": "D:/personal/macro/requests/6-11-extended-dark-frames/DSC00885.ARW",
+      "bytes": 33361920,
+      "sha256": "783965aa2d3afbda8db1e755ad6478a782ff5a5a43d2ee10a4cdd1b5892501c2"
+    },
+    {
+      "path": "D:/personal/macro/requests/6-11-extended-dark-frames/DSC00886.ARW",
+      "bytes": 33370112,
+      "sha256": "ff4ded3478849cbfef853a4fc1b584a0af18a27d22c57438c6ebf3a5fc2faf9e"
+    },
+    {
+      "path": "D:/personal/macro/requests/6-11-extended-dark-frames/DSC00887.ARW",
+      "bytes": 33361920,
+      "sha256": "e9b0fb74c105e41a8e86621e4ebbc6d8d9f99646da02c112648d347405c9d8ea"
+    },
+    {
+      "path": "D:/personal/macro/requests/6-11-extended-dark-frames/DSC00888.ARW",
+      "bytes": 33361920,
+      "sha256": "38a93e3b88f45a2378c76e2c7028c86017017ede229f1238ef8098e3c2897594"
+    },
+    {
+      "path": "D:/personal/macro/requests/6-11-extended-dark-frames/DSC00889.ARW",
+      "bytes": 33361920,
+      "sha256": "742495e7fe250df475c705643674cfc9a99e10c382de0c55c4a8f9d0a289e88f"
+    },
+    {
+      "path": "D:/personal/macro/requests/6-11-extended-dark-frames/DSC00890.ARW",
+      "bytes": 33361920,
+      "sha256": "fb52e7cada3288b4c09a26a3e71e1a12c354f21b8377e85081086d7fa4ea8dbc"
+    },
+    {
+      "path": "D:/personal/macro/requests/6-11-extended-dark-frames/DSC00891.ARW",
+      "bytes": 33361920,
+      "sha256": "af428e5a33d5a346c780191cbf71969c03994254df1e15b84198a0492c0ad6ac"
+    },
+    {
+      "path": "D:/personal/macro/requests/6-11-extended-dark-frames/DSC00892.ARW",
+      "bytes": 33353728,
+      "sha256": "cb08f642fde12efdec4f2b3aed8182e9dbc82ca624dbf34d6a5d1fccfe512d54"
+    },
+    {
+      "path": "D:/personal/macro/requests/6-11-extended-dark-frames/DSC00893.ARW",
+      "bytes": 33353728,
+      "sha256": "5e9e14b8dec178a0c0c50267b6eb90ea8030f8a5a0efbf8e637ca14d967980ec"
+    }
+  ],
+  "error": null,
+  "limits": {
+    "cpu_seconds": 20,
+    "wall_seconds": 60,
+    "read_bytes": 1073741824,
+    "write_bytes": 65536
+  },
+  "scope": "One stable streaming hash per fixed original; no atomic snapshot, RAW decode, pixel statistic, or physical calibration claim. Process-local CPU/wall samples, with reserved final publication; no Job memory or whole-host timing claim.",
+  "work": {
+    "read_bytes_charged": 926902994,
+    "retained_original_refs": 27,
+    "process_cpu_sample": 0.546875,
+    "elapsed_wall_sample": 0.6879999999946449,
+    "final_publication_reserve": {
+      "cpu_seconds": 1,
+      "wall_seconds": 2
+    },
+    "raw_decodes": 0
+  }
+}

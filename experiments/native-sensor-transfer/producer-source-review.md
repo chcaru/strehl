@@ -223,3 +223,44 @@ does not reset or refund the earlier review lane. Complete cumulative CPU was
 not measured and is not manufactured from individual tool response times.
 The numerical release, source application/reversal proof, actual build and
 independent execution/control results remain root-owned future requirements.
+
+## Construction-metadata qualification after root application
+
+Root subsequently performed the independent application/reversal check left
+explicitly unverified above. I read its retained `source-application-1.json`
+(3933 bytes, SHA256
+`028a53f5859c3795f5777d4e3fe425d423172f73deea0c6dd5d6413c0f0b9fea`)
+and the corrected `source/patch-construction.json` (3475 bytes, SHA256
+`c840750a0520928663b313e5e67a8ed706f94ece905044f89127a6c31f6098eb`).
+The earlier dry read failed on three stale alternate normalized-LF pins and
+made no live writes. Root's actual five-file application matched the original
+preserved-newline candidate hashes, and its reversal restored all original
+bytes: 32 semantic added lines and zero semantic removals. The three alternate
+LF metadata pins were corrected; the reviewed semantic patch stayed unchanged.
+
+This is my read of root's retained independent application evidence, not a
+second application or reversal by this reviewer. It closes that source
+association prerequisite at root's recorded scope and preserves the original
+failed dry read. The source-semantics clearance above stands. The applied
+package is committed at `c9f6bb1e`; root separately accounted for align_cmd's
+working-copy CRLF versus earlier Git LF as cosmetic diff lines. No build,
+control or RAW execution is implied by source application.
+
+## Reader-interface path correction
+
+The later concrete reader review exposed a path-spelling mismatch which could
+not be accepted as a normal artifact role: PathBuf::join retained the adapter's
+literal `../..`, while the reader rejects parent components. Root authorized
+canonicalizing the existing experiment root before creating fresh native output
+directories. I read the exact one-expression diff and corrected contract:
+`source/native-adapter.rs` is now 24327 bytes, SHA256
+`7e471b2512930dba0e2264de69d2f94a32bdf86d3d85a58f7a875f77054a0fc2`;
+`source/implementation-contract.md` is 15969 bytes, SHA256
+`21a1b9ea37296d0f2cfd0f84e97d2f327736eedd4b1ddfe7c98a59fe72ed1dae`.
+
+This resolves the mismatch using the reader's existing ordinary/verbatim
+absolute-drive policy. Fresh output creation still follows canonicalization.
+The patch, numerical kernels, writer ordering, original input population and
+observer schedule are unchanged. This is a source-derived interface correction,
+not an observed run failure. Producer source clearance includes this exact
+delta; root retains integration/source association and execution authority.
