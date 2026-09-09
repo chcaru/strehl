@@ -1,0 +1,229 @@
+{
+  "base_archive": {
+    "bytes": 5661467,
+    "sha256": "0dbe11b91a4351e041bff97201506600fee03ab3b37bf1b32e5b34cd63016770"
+  },
+  "base_freeze": {
+    "bytes": 25815,
+    "sha256": "7b37fe67c8cee38e655d461ee9c5b498b60808b834d2b97d61ee3be9a76b6de4"
+  },
+  "changes": {
+    "bounded-build-process.py": {
+      "added": [],
+      "changed": [
+        "run"
+      ],
+      "removed": [],
+      "unchanged": [
+        "need",
+        "binding",
+        "load_job_api",
+        "clean_environment",
+        "compile_cleanup_record",
+        "finish_compile_cleanup"
+      ]
+    },
+    "capture-stage.py": {
+      "added": [],
+      "changed": [
+        "main"
+      ],
+      "removed": [],
+      "unchanged": [
+        "need",
+        "read_bound",
+        "ref"
+      ]
+    },
+    "independent-controls.py": {
+      "added": [],
+      "changed": [
+        "saved_render_bundle"
+      ],
+      "removed": [],
+      "unchanged": [
+        "need",
+        "canonical",
+        "digest",
+        "typed_int",
+        "sha",
+        "shared",
+        "full",
+        "read_bytes",
+        "file_ref",
+        "read_ref",
+        "strict_json",
+        "check_time",
+        "write_fresh",
+        "payload",
+        "make_tiff",
+        "inspect_tiff",
+        "compare_pixels",
+        "compare_observer",
+        "expected_noise",
+        "number_equal",
+        "noise_contract",
+        "association_path",
+        "same_ref",
+        "finite_nonnegative",
+        "job_cpu",
+        "hash_large_ref",
+        "f32_bytes",
+        "f32_equal",
+        "merge_contract",
+        "contributor_ids",
+        "admitted_profile",
+        "negative",
+        "bounded_error",
+        "source_authority",
+        "palette",
+        "rounded_mean",
+        "mean_competitors",
+        "literal_pixels",
+        "levels",
+        "expected_provenance",
+        "legacy_authority",
+        "input_catalog",
+        "case_manifest",
+        "case_row",
+        "prepare",
+        "fixture_authority",
+        "gate_record",
+        "constant_contract",
+        "grid_contract",
+        "levels_contract",
+        "product_case",
+        "offset_contract",
+        "compact",
+        "progress",
+        "independent_power",
+        "verify",
+        "main"
+      ]
+    },
+    "independent-spec.md": {
+      "append_only": true,
+      "new_bytes": 19270,
+      "old_bytes": 18544
+    },
+    "prepare-release.py": {
+      "added": [
+        "base_sources"
+      ],
+      "changed": [
+        "source_map",
+        "archive_sources",
+        "main"
+      ],
+      "removed": [],
+      "unchanged": [
+        "attempt",
+        "need",
+        "read_bound",
+        "raw",
+        "binding",
+        "ref",
+        "write",
+        "bundle"
+      ]
+    },
+    "run-stage-contract.md": {
+      "append_only": false,
+      "new_bytes": 18905,
+      "old_bytes": 14705
+    },
+    "run-stage.py": {
+      "added": [],
+      "changed": [
+        "authority"
+      ],
+      "removed": [],
+      "unchanged": [
+        "need",
+        "bootstrap",
+        "load_base",
+        "file_ref",
+        "source_check",
+        "build_command",
+        "python_command",
+        "bundle_read",
+        "input_check",
+        "fixture_read",
+        "prerequisites",
+        "exact_children",
+        "child_call",
+        "compiled_binary",
+        "capture_case",
+        "main"
+      ]
+    }
+  },
+  "current": {
+    "bounded-build-process.py": {
+      "bytes": 16517,
+      "sha256": "1d52b3cd9a4f218b886049f9fcc29b95164e64eb7afb2717a1f3f9646987f31d"
+    },
+    "build2-source-addendum.md": {
+      "bytes": 6876,
+      "sha256": "bcf55bf5aba0c090f63c9176369eea7fba6f7ba0ec6f2c6445f61b9b05555aff"
+    },
+    "capture-stage.py": {
+      "bytes": 3870,
+      "sha256": "e5ba4fb688687711a11cf05d4e83ae8211af1805e6fe60d6d79fe17229545422"
+    },
+    "independent-controls.py": {
+      "bytes": 65751,
+      "sha256": "8fefa5e31c614595367f644b314ece77da6bf5d4ec54c4edde80816a0e8cee47"
+    },
+    "independent-spec.md": {
+      "bytes": 19270,
+      "sha256": "055b66302e3f73d3d62226c25cef939f74dd664149e1a7d005991ce09286489b"
+    },
+    "prepare-release.py": {
+      "bytes": 11863,
+      "sha256": "08140b301a73e2e5a8e401d1fa38ecef952a29229006d3ed649abbeee638f231"
+    },
+    "run-stage-contract.md": {
+      "bytes": 18905,
+      "sha256": "d24c6c1085dbc55c9c81daea56b4452e0f9f7eca25b75b3d3655e32668b4ddc5"
+    },
+    "run-stage.py": {
+      "bytes": 33546,
+      "sha256": "442226bd08b128f8bb97460fab6f8ab6280fd0950d1912313b87d583b7a33940"
+    },
+    "scratch-control-capture.py": {
+      "bytes": 11112,
+      "sha256": "9a4dc0b4749a1b723603ba3a2b64607488f492ae2dae15a4656599262d2f1f51"
+    },
+    "scratch-scan-controls.py": {
+      "bytes": 19863,
+      "sha256": "37c90e6fc52a0f27f7fe5b8c08092bbc1fcb3acc6181fee96911493bcf552f36"
+    },
+    "scratch-scan-rationale.md": {
+      "bytes": 7745,
+      "sha256": "a89a2e7f57decf85fe0d9211e85e566af70ebd874556653b31d72cf8c4e7d817"
+    },
+    "scratch-scan-spec.md": {
+      "bytes": 8590,
+      "sha256": "c65ef3fbe791c473eb3bdfeca0cd72a40b49f71a6efc3639d442d75566f19ab8"
+    },
+    "scratch-scan.py": {
+      "bytes": 2991,
+      "sha256": "3a1aa413fd4c9d37bccb973a419e3f4c03291903d44b7198c53992e7b00d3e46"
+    }
+  },
+  "reservation": {
+    "cpu_seconds": 5,
+    "read_bytes": 16777216,
+    "wall_seconds": 10,
+    "written_bytes": 1048576
+  },
+  "sample": {
+    "cpu_seconds": 0.078125,
+    "read_bytes": 6074752,
+    "wall_seconds": 0.09399999999732245
+  },
+  "schema": "dimensions-build2-root-source-audit-v1",
+  "scope": "Root independently compares producer code choices against preserved source1; no candidate import, control, compiler, fixture or product.",
+  "source_only": true
+}

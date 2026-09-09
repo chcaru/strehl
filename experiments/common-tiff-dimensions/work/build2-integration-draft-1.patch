@@ -1,0 +1,410 @@
+diff --git a/experiments/common-tiff-dimensions/bounded-build-process.py b/experiments/common-tiff-dimensions/bounded-build-process.py
+index f5522ec4..13860e72 100644
+--- a/experiments/common-tiff-dimensions/bounded-build-process.py
++++ b/experiments/common-tiff-dimensions/bounded-build-process.py
+@@ -133,7 +133,7 @@ def run(command, env, cwd, log, *, api, wall_seconds, cpu_seconds,
+     need(type(command) is list and command and all(type(v) is str for v in command), "child argv")
+     for value in (wall_seconds, cpu_seconds, log_bytes, committed_bytes):
+         need(value > 0, "positive child bound")
+-    target = ROOT / "target/common-tiff-dimensions-1"
++    target = ROOT / "target/common-tiff-dimensions-2"
+     need(command == ["cargo", "build", "-p", "strehl-cli", "--bin", "strehl-common-input", "--jobs", "2",
+                      "--target-dir", str(target), "--message-format=json-render-diagnostics",
+                      "--locked", "--offline"], "exact common-TIFF compile-only owned helper")
+diff --git a/experiments/common-tiff-dimensions/capture-stage.py b/experiments/common-tiff-dimensions/capture-stage.py
+index 5c480192..fc1beb4f 100644
+--- a/experiments/common-tiff-dimensions/capture-stage.py
++++ b/experiments/common-tiff-dimensions/capture-stage.py
+@@ -23,7 +23,7 @@ def read_bound(p,cap=64<<20,empty=False):
+ def ref(p,empty=False,cap=64<<20):
+  b=read_bound(p,cap,empty);return dict(path=p.relative_to(ROOT).as_posix(),bytes=len(b),sha256=hashlib.sha256(b).hexdigest())
+ def main():
+- a=argparse.ArgumentParser();a.add_argument("stage",choices=("build","prepare","render","verify"));args=a.parse_args();stage=args.stage;attempt=1
++ a=argparse.ArgumentParser();a.add_argument("stage",choices=("build","prepare","render","verify"));args=a.parse_args();stage=args.stage;attempt=2 if stage=="build" else 1
+  work=HERE/"work";release=work/(stage+"-release-"+str(attempt)+".json");b=read_bound(release,1<<20)
+  r=json.loads(b);assert r["schema"]=="common-tiff-dimensions-stage-release-v1" and r["stage"]==stage
+  sha=hashlib.sha256(b).hexdigest()
+diff --git a/experiments/common-tiff-dimensions/prepare-release.py b/experiments/common-tiff-dimensions/prepare-release.py
+index 65abea7c..10b42d38 100644
+--- a/experiments/common-tiff-dimensions/prepare-release.py
++++ b/experiments/common-tiff-dimensions/prepare-release.py
+@@ -1,10 +1,25 @@
+ """Root metadata-only release constructor; never launches a product or checker."""
+ from pathlib import Path
+-import argparse,hashlib,json,shutil,sys,time,os,stat,zipfile
++import argparse,hashlib,json,shutil,sys,time,os,stat,zipfile,io
+ ROOT=Path(__file__).resolve().parents[2]
+ HERE=Path(__file__).resolve().parent
+ WORK=HERE/"work"
+-BUILD_ATTEMPT=1
++BUILD_ATTEMPT=2
++BASE_FREEZE_SHA="7b37fe67c8cee38e655d461ee9c5b498b60808b834d2b97d61ee3be9a76b6de4"
++NEW_SOURCES=("scratch-scan.py","scratch-scan-draft-1.py","scratch-scan-rationale.md",
++             "scratch-scan-controls.py","scratch-scan-spec.md","scratch-scan-source-review.md",
++             "build2-source-addendum.md","build2-source-review.md")
++CHANGED_SOURCES=("run-stage.py","bounded-build-process.py","prepare-release.py",
++                 "capture-stage.py","run-stage-contract.md","independent-controls.py")
++RESERVATIONS={
++ "failed_build_1":{"cpu_seconds":600,"wall_seconds":300,"retained":True},
++ "fresh_build_2":{"cpu_seconds":600,"wall_seconds":300,"invocations":1},
++ "unchanged_prepare_render_verify":{"cpu_seconds":270,"wall_seconds":420},
++ "stage_total":{"cpu_seconds":1470,"wall_seconds":1020},
++ "metadata_constructors":{"prior_invocations":1,"fresh_invocations":4,"cpu_seconds":50,"wall_seconds":100,"family_bytes":32<<20},
++ "failed_build_review":{"cpu_seconds":10,"wall_seconds":20,"read_bytes":64<<20,"write_bytes":2<<20},
++ "scratch_controls":{"cpu_seconds":5,"wall_seconds":10,"read_bytes":1<<20,"write_bytes":1<<20},
++ "scope":"Nonrefundable explicit reservations only. Earlier source-preparation/formatter records remain; no whole-session numeric aggregate is inferred."}
+ def attempt(stage):return BUILD_ATTEMPT if stage=="build" else 1
+ STAGES=("build","prepare","render","verify")
+ def need(v,s):
+@@ -37,17 +52,33 @@ def write(p,value):
+  need(len(b)<=1<<20,"metadata output cap")
+  with p.open("xb") as f:f.write(b)
+  return ref(p)
+-def source_map():
+- old=json.loads(raw(ROOT/"experiments/common-tiff-stack/work/verification-source-freeze-2.json"))["source_bindings"]
++def source_map(old):
+  paths={ROOT/k for k in old}
+  paths.update(p for p in (ROOT/"crates").rglob("*") if p.is_file() and (p.suffix==".rs" or p.name=="Cargo.toml") and "target" not in p.relative_to(ROOT/"crates").parts)
+- paths.update(HERE/n for n in ("charter.md","implementation-contract.md","independent-spec.md","independent-controls.py","bounded-build-process.py","run-stage.py","run-stage-contract.md","prepare-release.py","capture-stage.py","source-review.md","root-source-review.md","draft.patch","patch-source-handoff.md","stage-layout-construction.md","independent-spec-draft-1.md","product-layout-construction.md"))
++ paths.update(HERE/n for n in NEW_SOURCES)
+  need(len(paths)<=512,"source path population before content reads")
+  extents=[p.stat().st_size for p in paths]
+  need(all(0<n<=4<<20 for n in extents) and sum(extents)<=16<<20,"declared source extents before content reads")
+  out={p.relative_to(ROOT).as_posix():binding(p) for p in sorted(paths)}
+  need(len(out)<=512 and sum(v["bytes"] for v in out.values())<=16<<20,"source family cap")
++ allowed_new={(HERE/n).relative_to(ROOT).as_posix() for n in NEW_SOURCES}
++ allowed_changed={(HERE/n).relative_to(ROOT).as_posix() for n in CHANGED_SOURCES}
++ need(set(old)<=set(out) and set(out)-set(old)<=allowed_new,"no removed or undeclared new source")
++ need({k for k in old if out[k]!=old[k]}<=allowed_changed,"only declared operational/path source changes")
+  return out
++
++def base_sources():
++ path=WORK/"source-freeze-1.json";b=raw(path,64<<10)
++ need(hashlib.sha256(b).hexdigest()==BASE_FREEZE_SHA,"exact preserved source1 freeze")
++ value=json.loads(b)
++ need(set(value)=={"schema","source_bindings","archive"} and value["schema"]=="common-tiff-dimensions-root-source-freeze-v1"
++      and len(value["source_bindings"])==181,"original181 source authority")
++ archive=value["archive"]
++ need(archive["path"]=="experiments/common-tiff-dimensions/work/source-1.zip","exact preserved archive path")
++ archive_raw=raw(ROOT/archive["path"],16<<20)
++ need(ref(ROOT/archive["path"],b=archive_raw)==archive,"same-buffer preserved source1 archive")
++ return value,ref(path,b=b),archive_raw
++
+ def bundle(stage):
+  stem=WORK/(stage+"-external-"+str(attempt(stage)))
+  paths={"result":HERE/(stage+"-"+str(attempt(stage))+"/result.json"),"tail":HERE/(stage+"-"+str(attempt(stage))+"/parent-tail.json"),
+@@ -59,32 +90,44 @@ def bundle(stage):
+  need(r["status"]=="COMPLETE_STAGE_UNVERIFIED" and r["error"] is None and not r["finalization_errors"],"completed prerequisite")
+  need(o["exit_code"]==0 and o["timeout_terminated"] is False and buffers["exit"]==b"0\n","actual prior exit")
+  return b,r
+-def archive_sources(sources):
+- # Immutable exact as-run source buffers, not a replacement live source tree.
+- selected=sources
+- path=WORK/"source-1.zip"
++def archive_sources(sources,base,base_ref,base_raw):
++ # Retain source1; archive only changed/new bytes, then reconstruct every current buffer.
++ prior=base["source_bindings"]
++ selected={k:v for k,v in sources.items() if k not in prior or prior[k]!=v}
++ need(selected and set(prior)<=set(sources),"nonempty extension without source removal")
++ path=WORK/"source-2-delta.zip"
+  with zipfile.ZipFile(path,"x",compression=zipfile.ZIP_STORED) as z:
+   for k,pin in selected.items():
+    b=raw(ROOT/k,4<<20)
+-   need(dict(bytes=len(b),sha256=hashlib.sha256(b).hexdigest())==pin,"archived source equals held buffer")
++   need(dict(bytes=len(b),sha256=hashlib.sha256(b).hexdigest())==pin,"archived delta equals held buffer")
+    z.writestr(k,b)
+- with zipfile.ZipFile(path,"r") as z:
+-  need(z.namelist()==list(selected),"exact archive inventory")
+-  for k,pin in selected.items():
+-   b=z.read(k)
+-   need(dict(bytes=len(b),sha256=hashlib.sha256(b).hexdigest())==pin,"every archive buffer read back")
+- return ref(path)
++ delta_raw=raw(path,16<<20)
++ with zipfile.ZipFile(io.BytesIO(base_raw),"r") as old,zipfile.ZipFile(io.BytesIO(delta_raw),"r") as delta:
++  need(len(old.namelist())==len(prior) and set(old.namelist())==set(prior)
++       and delta.namelist()==list(selected),"exact unique base/delta archive inventories")
++  for k,pin in prior.items():
++   b=old.read(k)
++   need(dict(bytes=len(b),sha256=hashlib.sha256(b).hexdigest())==pin,"every preserved archive buffer")
++  for k,pin in sources.items():
++   b=(delta if k in selected else old).read(k)
++   need(dict(bytes=len(b),sha256=hashlib.sha256(b).hexdigest())==pin,"every composed current source buffer")
++ return {"schema":"common-tiff-dimensions-root-source-freeze-v2","source_bindings":sources,
++         "base_freeze":base_ref,"base_archive":base["archive"],"delta_archive":ref(path,b=delta_raw),
++         "changed_or_new":list(selected),"scope":"Exact current source is delta when named, otherwise preserved source1. No old byte buffer is overwritten."}
+ 
+ def main():
+  started=time.monotonic();cpu_started=time.process_time();a=argparse.ArgumentParser();a.add_argument("stage",choices=STAGES);args=a.parse_args();stage=args.stage
+  WORK.mkdir(exist_ok=True)
+- freeze=WORK/"source-freeze-1.json";current=source_map()
++ freeze=WORK/"source-freeze-2.json";base,base_ref,base_raw=base_sources();current=source_map(base["source_bindings"])
+  if stage=="build":
+-  need(not freeze.exists() and not (HERE/"build-1").exists(),"new initial freeze/build")
+-  archive=archive_sources(current)
+-  write(freeze,{"schema":"common-tiff-dimensions-root-source-freeze-v1","source_bindings":current,"archive":archive})
++  need(not freeze.exists() and not (HERE/"build-2").exists() and not (ROOT/"target/common-tiff-dimensions-2").exists(),"fresh source2/build2/target2")
++  composed=archive_sources(current,base,base_ref,base_raw)
++  write(freeze,composed)
+  else:
+-  need(json.loads(raw(freeze))["source_bindings"]==current,"unchanged frozen source bytes")
++  frozen=json.loads(raw(freeze))
++  need(frozen["schema"]=="common-tiff-dimensions-root-source-freeze-v2" and frozen["source_bindings"]==current
++       and frozen["base_freeze"]==base_ref and frozen["base_archive"]==base["archive"],"unchanged compositional source2 authority")
++  need(ref(ROOT/frozen["delta_archive"]["path"])==frozen["delta_archive"],"unchanged source2 delta archive")
+  sources=current
+  prereq={};results={}
+  for previous in STAGES[:STAGES.index(stage)]:
+@@ -98,7 +141,7 @@ def main():
+  py=str(Path(sys.executable));controller=str(HERE/"run-stage.py");release=WORK/(stage+"-release-"+str(attempt(stage))+".json")
+  controls=str(HERE/"independent-controls.py");controlsha=sources["experiments/common-tiff-dimensions/independent-controls.py"]["sha256"]
+  if stage=="build":
+-  commands=[["cargo","build","-p","strehl-cli","--bin","strehl-common-input","--jobs","2","--target-dir",str(ROOT/"target/common-tiff-dimensions-1"),"--message-format=json-render-diagnostics","--locked","--offline"]]
++  commands=[["cargo","build","-p","strehl-cli","--bin","strehl-common-input","--jobs","2","--target-dir",str(ROOT/"target/common-tiff-dimensions-2"),"--message-format=json-render-diagnostics","--locked","--offline"]]
+  elif stage=="prepare":
+   commands=[[py,"-I","-S","-B",controls,"prepare","--output",str(HERE/"prepare-1/fixtures"),"--source-sha256",controlsha]]
+  elif stage=="render":
+@@ -118,7 +161,7 @@ def main():
+  cpu=time.process_time()-cpu_started;wall=time.monotonic()-started
+  need(cpu+1<=10 and wall+2<=20,"fixed10CPU/20activewall metadata slice including final allowance")
+  need(sum(p.stat().st_size for p in WORK.iterdir() if p.is_file())<=32<<20,"32MiB metadata/archive family")
+- record={"stage":stage,"release":result,"sources":len(sources),"source_bytes":sum(v["bytes"] for v in sources.values()),"metadata_only":True,"parent_cpu_sample":cpu,"active_wall_sample":wall,"charged_cpu_seconds":10,"charged_active_wall_seconds":20,"scope":"Four fixed metadata construction slices total40CPU/80activewall/32MiB; no product/checker. Samples plus1CPU/2wall final allowance must fit each slice."}
++ record={"stage":stage,"build_attempt":BUILD_ATTEMPT,"source_freeze":ref(freeze),"reservations":RESERVATIONS,"release":result,"sources":len(sources),"source_bytes":sum(v["bytes"] for v in sources.values()),"metadata_only":True,"parent_cpu_sample":cpu,"active_wall_sample":wall,"charged_cpu_seconds":10,"charged_active_wall_seconds":20,"scope":"Four fresh metadata slices plus the retained build1 slice total50CPU/100wall/32MiB; no product/checker. Samples plus1CPU/2wall final allowance fit each fresh10CPU/20wall slice; prior work is not reset."}
+  write(WORK/(stage+"-preparation-"+str(attempt(stage))+".json"),record)
+  print(json.dumps(record),flush=True)
+ if __name__=="__main__":main()
+diff --git a/experiments/common-tiff-dimensions/run-stage-contract.md b/experiments/common-tiff-dimensions/run-stage-contract.md
+index 66828415..318a996d 100644
+--- a/experiments/common-tiff-dimensions/run-stage-contract.md
++++ b/experiments/common-tiff-dimensions/run-stage-contract.md
+@@ -26,9 +26,9 @@ pass that cap explicitly because the inherited Python default was bound64KiB
+ at definition time. The atomic publication algorithm is unchanged.
+ 
+ bounded-build-process.py16517B,
+-SHA25697cf2d4a587c95a111a738330a66a24d9b003debb69ee0346cecd3c9955151d9,
++SHA2561d52b3cd9a4f218b886049f9fcc29b95164e64eb7afb2717a1f3f9646987f31d,
+ differs from the old common-TIFF helper16512B/d27374f6b0fe00c53d2f7110f2ebd553067cb3e2c772d3076547b5f2db9e3d94
+-only by target/common-tiff-stack-3 -> target/common-tiff-dimensions-1.
++only by target/common-tiff-stack-3 -> target/common-tiff-dimensions-2.
+ Reversing that one string restores the entire original buffer. The full helper
+ is held; no process/pipe/Job/cleanup body is rewritten.
+ 
+@@ -45,9 +45,9 @@ launcher, arbitrary process census or new control framework is introduced.
+ ## Exact fresh stages, commands and authority
+ 
+ ROOT is this repository; HERE=ROOT/experiments/common-tiff-dimensions.
+-TARGET=ROOT/target/common-tiff-dimensions-1 must initially be absent.
+-Directories are build-1,prepare-1,render-1,verify-1 under HERE, all fresh.
+-Actual executable is HERE/build-1/strehl-common-input.exe. Existing CLI defaults
++TARGET=ROOT/target/common-tiff-dimensions-2 must initially be absent.
++Directories are build-2,prepare-1,render-1,verify-1 under HERE, all fresh.
++Actual executable is HERE/build-2/strehl-common-input.exe. Existing CLI defaults
+ and fixed two-thread environment are retained.
+ 
+ Controller invocation from ROOT:
+@@ -89,7 +89,7 @@ Build command, exactly:
+ Require a Compiling strehl-cli line, exactly one fresh:false non-test bin
+ compiler-artifact with actual source/manifest paths, successful build-finished
+ record and no M194h feature. Copy only that actual target executable,<=64MiB,
+-to the fresh build-1 path and verify its hash. No stale-cache or old-binary
++to the fresh build-2 path and verify its hash. No stale-cache or old-binary
+ substitution is admitted.
+ 
+ Prepare child:
+@@ -196,10 +196,15 @@ terminal files. Margins after this extra reserve are respectively48979968,
+ before execution;16MiB checker+1MiB log+transport+extra reserve does not fit18MiB.
+ No observed overrun or scientific threshold change motivated this arithmetic.
+ 
+-Root independently owns four metadata construction slots10CPU/20wall each,
+-40CPU/80wall total and32MiB metadata/archive family. This controller neither
+-spends nor resets another study's completed grant. Fixed stage grants total
+-870CPU/720wall; metadata adds40/80. Wall is an upper reservation, not a forecast.
++Root owns four fresh metadata construction slots10CPU/20wall each plus the
++already spent build1 constructor10/20:50CPU/100wall cumulative, with the same
++32MiB metadata/archive family. The full failed build1 reservation600CPU/300wall
++remains charged; the fresh build2 receives600/300 once. The unchanged later
++stages270/420 make cumulative stage reservations1470CPU/1020wall. Independent
++failed-build review retains10CPU/20wall/64MiB read/2MiB write; the separately
++reviewed scratch control phase reserves5CPU/10wall/1MiB read/1MiB write. Earlier
++source-preparation/formatter records remain; no aggregate CPU for them is
++invented. Wall reservations are ceilings, not forecasts, and no old grant resets.
+ 
+ ## Terminal capacity, timing and failure qualifications
+ 
+@@ -247,3 +252,58 @@ controller; no new publisher/process-control commission is claimed.
+ 
+ The exact metadata constructor and observed output are retained in
+ stage-layout-construction.md and must be included in the source release.
++
++## Build2 operational correction and compositional source closure
++
++Build1's eight negative evidence files remain committed at834a3c61; the exact
++original181-source archive remains committed at8017d2f3. No product executable,
++fixture preparation or render resulted from that attempt. Its observed scanner
++canonical mismatch has an unknown historical cause; source-derived race
++possibility and the later missing-path observation do not reproduce it.
++
++Only build2 installs the separately pinned scratch-scan.py dispatcher into the
++private imported primitive module. The source is authenticated from the positive
++map and checked against its literal SHA before execution, before Budget creation.
++The shim clones the original scan code with a private owned binding using
++no-follow ancestry and strict resolution. Missing scratch entries can use the
++original FileNotFoundError recovery; extant canonical mismatches, reparse,
++permission, nonregular, containment and capacity errors still refuse. Only the
++exact TARGET may select tolerance. Retained scans delegate to the exact captured
++original function; nonbuild stages do not install the shim at all.
++
++The helper's sole change from build1 is its literal Cargo target1-to-target2
++guard. Process accounting, five-second cleanup, direct-zero/EOF admission and
++all scientific/product/checker choices remain unchanged. Capture uses build
++release/external suffix2; later stage suffixes stay1 and their prerequisite
++bundle selects the actual build2 result, tail and streams.
++
++Metadata preparation writes fresh work/source-freeze-2.json and
++work/source-2-delta.zip exclusively. It authenticates source-freeze-1.json
++(25815B, SHA2567b37fe67c8cee38e655d461ee9c5b498b60808b834d2b97d61ee3be9a76b6de4)
++and its exact source-1.zip(5661467B,
++SHA2560dbe11b91a4351e041bff97201506600fee03ab3b37bf1b32e5b34cd63016770).
++The new freeze schema common-tiff-dimensions-root-source-freeze-v2 has exactly
++schema,source_bindings,base_freeze,base_archive,delta_archive,changed_or_new,scope.
++
++The full current map keeps every original key. Changed original entries are
++restricted to this controller, compile helper, prepare/capture wrappers, this
++contract and the independent checker's build-path adaptation. New entries are
++the exact named shim/control/spec/rationale/review/addendum files. Delta ZIP
++contains only changed/new entries. Constructor verifies the base's unique
++complete inventory, all181 original member hashes, the delta inventory and
++every current source reconstructed as delta when named, otherwise base. Base
++archive ordering may differ from sorted JSON-map ordering; its complete original
++bytes/hash still bind its order. No original source buffer is overwritten in
++either archive.
++
++Later constructors require the same frozen2 map and unchanged base/delta
++identities. All stages bind the complete revised map; no additions after freeze.
++The new archive/records remain inside the existing32MiB metadata family.
++No result-size increase is required: the parent already records references to
++source-bearing release/metadata, not duplicate source archives or full maps.
++
++Root must first accept the actual fixed16 scanner controls and independent
++scratch-scan-source-review.md. Root also owns build2-source-review.md for the
++complete controller/constructor/capture/contract delta. These notes and the
++independent control source/spec enter the full map only when final. Source-only
++syntax and archive design checks are not those controls and authorize no build.
+diff --git a/experiments/common-tiff-dimensions/run-stage.py b/experiments/common-tiff-dimensions/run-stage.py
+index 619a043e..8b7782cb 100644
+--- a/experiments/common-tiff-dimensions/run-stage.py
++++ b/experiments/common-tiff-dimensions/run-stage.py
+@@ -13,14 +13,16 @@ MIB=1<<20;KIB=1024;GIB=1<<30
+ BASE=ROOT/"experiments/m194h-pedestal-causality/build-and-run.py"
+ BASE_SHA="b505a2fff0024691d98088c599f7f554c1543268de09c836a6bc1fe6c17b7410"
+ BUILD_PROCESS=HERE/"bounded-build-process.py"
+-BUILD_SHA="97cf2d4a587c95a111a738330a66a24d9b003debb69ee0346cecd3c9955151d9"
+-TARGET=ROOT/"target/common-tiff-dimensions-1"
+-EXE=HERE/"build-1/strehl-common-input.exe"
++BUILD_SHA="1d52b3cd9a4f218b886049f9fcc29b95164e64eb7afb2717a1f3f9646987f31d"
++SCRATCH=HERE/"scratch-scan.py"
++SCRATCH_SHA="3a1aa413fd4c9d37bccb973a419e3f4c03291903d44b7198c53992e7b00d3e46"
++TARGET=ROOT/"target/common-tiff-dimensions-2"
++EXE=HERE/"build-2/strehl-common-input.exe"
+ CONTROLS=HERE/"independent-controls.py"
+ FIXTURES=HERE/"prepare-1/fixtures"
+ INDEX=FIXTURES/"index.json"
+ RUN_BUNDLE=HERE/"render-bundle-1.json"
+-OUTPUTS={s:HERE/(s+"-1") for s in ("build","prepare","render","verify")}
++OUTPUTS={s:HERE/(s+("-2" if s=="build" else "-1")) for s in ("build","prepare","render","verify")}
+ STAGES={
+     "build":dict(cpu_seconds=600,wall_seconds=300,committed_bytes=3*GIB,file_bytes=128*MIB,scratch_bytes=4*GIB),
+     "prepare":dict(cpu_seconds=30,wall_seconds=60,committed_bytes=GIB,file_bytes=34*MIB,scratch_bytes=0),
+@@ -31,7 +33,9 @@ RESULT="common-tiff-dimensions-owned-stage-v1"
+ EXTERNAL="common-tiff-dimensions-stage-external-v1"
+ TAIL="common-tiff-dimensions-parent-tail-v1"
+ REQUIRED=("run-stage.py","bounded-build-process.py","run-stage-contract.md",
+-          "charter.md","implementation-contract.md","independent-controls.py","independent-spec.md")
++          "charter.md","implementation-contract.md","independent-controls.py","independent-spec.md",
++          "scratch-scan.py","scratch-scan-controls.py","scratch-scan-spec.md",
++          "scratch-scan-rationale.md","scratch-scan-source-review.md","build2-source-review.md")
+ CASE_IDS=("mean-two-min","mean-five-odd","mean-eight-max","odd-address","odd-offset",
+           "odd-noisy-off","odd-noisy-on","odd-noisy-placebo","legacy-constant",
+           "count-zero","count-one","count-nine","width-low","width-high","height-low",
+@@ -131,6 +135,12 @@ def authority(args):
+          and all(d.source_ref(p) in sources for p in (BASE,d.PROCESS,d.HARNESS)),"mandatory primitive/control source closure")
+     need(sources[d.source_ref(BASE)]["sha256"]==BASE_SHA and sources[d.source_ref(BUILD_PROCESS)]["sha256"]==BUILD_SHA,"fixed reused source pins")
+     d.source_bytes(SELF,sources)
++    if stage=="build":
++        shim_raw=d.source_bytes(SCRATCH,sources)
++        need(hashlib.sha256(shim_raw).hexdigest()==SCRATCH_SHA,"held scratch-only shim source")
++        shim=types.ModuleType("common_tiff_dimensions_scratch_scan");shim.__file__=str(SCRATCH)
++        exec(compile(shim_raw,str(SCRATCH),"exec"),shim.__dict__)
++        d.scan=shim.make_scanner(d,TARGET)
+     output=OUTPUTS[stage];need(not output.exists(),"fresh once-only stage output")
+     output.mkdir()
+     budget=d.Budget(stage,output);budget.source_bindings=sources
+diff --git a/experiments/common-tiff-dimensions/scratch-scan.py b/experiments/common-tiff-dimensions/scratch-scan.py
+new file mode 100644
+index 00000000..e74b3399
+--- /dev/null
++++ b/experiments/common-tiff-dimensions/scratch-scan.py
+@@ -0,0 +1,64 @@
++"""Scratch-only strict resolution for the held, non-atomic M194h scanner.
++
++Caller authenticates both source files before use.  This factory does not mutate
++the held module.  Only the controller's exact declared build target may select
++the cloned scanner; retained evidence keeps the original scanner.
++"""
++from types import FunctionType
++
++
++def make_scanner(held, target):
++    """Return the strict-retained / strict-resolving-scratch dispatcher."""
++    original = held.scan
++    need = held.need
++    lexical = held.lexical
++    Path = original.__globals__["Path"]
++    os = original.__globals__["os"]
++    stat = original.__globals__["stat"]
++    repository = held.ROOT
++    target = Path(target)
++    need(target.is_absolute() and target == lexical(target),
++         "absolute lexical scratch root")
++    need(target != repository and target.is_relative_to(repository),
++         "repository-owned scratch root")
++    need(type(original) is FunctionType and original.__closure__ is None,
++         "held scanner has no free variables")
++
++    def scratch_owned(path):
++        path = Path(os.path.abspath(path))
++        need(len(str(path)) <= 384 and str(path).isascii(),
++             "declared ASCII path width")
++        # Unlike exists(), lstat sees a present dangling reparse/symlink.
++        # Continue past an absent component to inspect every other ancestor;
++        # strict resolve below remains the source of the final missing-path error.
++        for part in (path, *path.parents):
++            try:
++                observed = part.lstat()
++            except FileNotFoundError:
++                continue
++            need(not observed.st_file_attributes & 0x400
++                 and not stat.S_ISLNK(observed.st_mode), "reparse/symlink path")
++        need(path.is_relative_to(repository), "repository-owned path")
++        need(path.is_relative_to(target), "declared scratch containment")
++        # Missing entries remain FileNotFoundError.  The held scanner alone
++        # decides whether that exact exception is eligible for scratch recovery.
++        resolved = path.resolve(strict=True)
++        need(resolved == path,
++             f"canonical scratch path declared={str(path)!r} resolved={str(resolved)!r}")
++        return path
++
++    namespace = dict(original.__globals__)
++    namespace["owned"] = scratch_owned
++    scratch = FunctionType(original.__code__, namespace, original.__name__,
++                           original.__defaults__, original.__closure__)
++    scratch.__kwdefaults__ = (None if original.__kwdefaults__ is None
++                             else dict(original.__kwdefaults__))
++
++    def scan(root, limit, *, tolerate_disappearance=False):
++        need(type(tolerate_disappearance) is bool, "typed scratch scan policy")
++        if not tolerate_disappearance:
++            return original(root, limit, tolerate_disappearance=False)
++        need(Path(root) == target, "exact declared scratch scan root")
++        return scratch(root, limit, tolerate_disappearance=True)
++
++    return scan

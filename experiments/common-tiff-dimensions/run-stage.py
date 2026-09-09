@@ -13,14 +13,16 @@ MIB=1<<20;KIB=1024;GIB=1<<30
 BASE=ROOT/"experiments/m194h-pedestal-causality/build-and-run.py"
 BASE_SHA="b505a2fff0024691d98088c599f7f554c1543268de09c836a6bc1fe6c17b7410"
 BUILD_PROCESS=HERE/"bounded-build-process.py"
-BUILD_SHA="97cf2d4a587c95a111a738330a66a24d9b003debb69ee0346cecd3c9955151d9"
-TARGET=ROOT/"target/common-tiff-dimensions-1"
-EXE=HERE/"build-1/strehl-common-input.exe"
+BUILD_SHA="1d52b3cd9a4f218b886049f9fcc29b95164e64eb7afb2717a1f3f9646987f31d"
+SCRATCH=HERE/"scratch-scan.py"
+SCRATCH_SHA="3a1aa413fd4c9d37bccb973a419e3f4c03291903d44b7198c53992e7b00d3e46"
+TARGET=ROOT/"target/common-tiff-dimensions-2"
+EXE=HERE/"build-2/strehl-common-input.exe"
 CONTROLS=HERE/"independent-controls.py"
 FIXTURES=HERE/"prepare-1/fixtures"
 INDEX=FIXTURES/"index.json"
 RUN_BUNDLE=HERE/"render-bundle-1.json"
-OUTPUTS={s:HERE/(s+"-1") for s in ("build","prepare","render","verify")}
+OUTPUTS={s:HERE/(s+("-2" if s=="build" else "-1")) for s in ("build","prepare","render","verify")}
 STAGES={
     "build":dict(cpu_seconds=600,wall_seconds=300,committed_bytes=3*GIB,file_bytes=128*MIB,scratch_bytes=4*GIB),
     "prepare":dict(cpu_seconds=30,wall_seconds=60,committed_bytes=GIB,file_bytes=34*MIB,scratch_bytes=0),
@@ -31,7 +33,9 @@ RESULT="common-tiff-dimensions-owned-stage-v1"
 EXTERNAL="common-tiff-dimensions-stage-external-v1"
 TAIL="common-tiff-dimensions-parent-tail-v1"
 REQUIRED=("run-stage.py","bounded-build-process.py","run-stage-contract.md",
-          "charter.md","implementation-contract.md","independent-controls.py","independent-spec.md")
+          "charter.md","implementation-contract.md","independent-controls.py","independent-spec.md",
+          "scratch-scan.py","scratch-scan-controls.py","scratch-scan-spec.md",
+          "scratch-scan-rationale.md","scratch-scan-source-review.md","build2-source-review.md")
 CASE_IDS=("mean-two-min","mean-five-odd","mean-eight-max","odd-address","odd-offset",
           "odd-noisy-off","odd-noisy-on","odd-noisy-placebo","legacy-constant",
           "count-zero","count-one","count-nine","width-low","width-high","height-low",
@@ -131,6 +135,12 @@ def authority(args):
          and all(d.source_ref(p) in sources for p in (BASE,d.PROCESS,d.HARNESS)),"mandatory primitive/control source closure")
     need(sources[d.source_ref(BASE)]["sha256"]==BASE_SHA and sources[d.source_ref(BUILD_PROCESS)]["sha256"]==BUILD_SHA,"fixed reused source pins")
     d.source_bytes(SELF,sources)
+    if stage=="build":
+        shim_raw=d.source_bytes(SCRATCH,sources)
+        need(hashlib.sha256(shim_raw).hexdigest()==SCRATCH_SHA,"held scratch-only shim source")
+        shim=types.ModuleType("common_tiff_dimensions_scratch_scan");shim.__file__=str(SCRATCH)
+        exec(compile(shim_raw,str(SCRATCH),"exec"),shim.__dict__)
+        d.scan=shim.make_scanner(d,TARGET)
     output=OUTPUTS[stage];need(not output.exists(),"fresh once-only stage output")
     output.mkdir()
     budget=d.Budget(stage,output);budget.source_bindings=sources

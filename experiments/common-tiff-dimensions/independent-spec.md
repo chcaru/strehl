@@ -290,3 +290,15 @@ complete final102,906B<196,608. Adding2048 ASCII control characters to error
 (full six-byte JSON escaping each) yields115,205B<196,608. No encoded pixels
 occur in these records: writer bytes has serde(skip). Operational refusals
 remain governed by actual capacity guards and retained external exit.
+
+## Build2 path-only correction
+
+After the preserved build1 scanner refusal, root authorized exactly one
+independent checker source spelling change: build-1/strehl-common-input.exe
+to build-2/strehl-common-input.exe. The source before this edit was65,751B,
+SHA256 be722b454916fe949202cb72b91a25f1a93c32179ced70dd9247cacc01d02d75,
+byte-identical to git6e98e4fd:experiments/common-tiff-dimensions/independent-controls.py.
+The changed literal occurs once; reversing only it reproduces that committed
+blob exactly. Every other source byte,24 cases,135 controls, fixture recipe,
+numerical predicate and observed-data association remains unchanged. No
+checker, fixture, product or private control ran during this source correction.

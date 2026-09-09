@@ -810,7 +810,7 @@ def saved_render_bundle(args,index):
     cp=(BASE/"run-stage.py").relative_to(ROOT).as_posix()
     need(same_ref(outer["source"],{"path":cp,**sources[cp]}),"actual controller source")
     exe=hash_large_ref(release["executable"],128*1024*1024)
-    need(exe==BASE/"build-1/strehl-common-input.exe","actual compiled product path")
+    need(exe==BASE/"build-2/strehl-common-input.exe","actual compiled product path")
     commands=[[str(exe) if x=="ACTUAL_BINARY_PATH" else x for x in row["command"]] for row in index["cases"]]
     need(release["children"]==[{"command":c,"expected_exit_code":index["cases"][i]["expected_exit_code"]} for i,c in enumerate(commands)],"released fixed schedule")
     observed=result["children"];need(type(observed) is list and len(observed)<=24,"actual bounded child prefix")

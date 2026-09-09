@@ -26,9 +26,9 @@ pass that cap explicitly because the inherited Python default was bound64KiB
 at definition time. The atomic publication algorithm is unchanged.
 
 bounded-build-process.py16517B,
-SHA25697cf2d4a587c95a111a738330a66a24d9b003debb69ee0346cecd3c9955151d9,
+SHA2561d52b3cd9a4f218b886049f9fcc29b95164e64eb7afb2717a1f3f9646987f31d,
 differs from the old common-TIFF helper16512B/d27374f6b0fe00c53d2f7110f2ebd553067cb3e2c772d3076547b5f2db9e3d94
-only by target/common-tiff-stack-3 -> target/common-tiff-dimensions-1.
+only by target/common-tiff-stack-3 -> target/common-tiff-dimensions-2.
 Reversing that one string restores the entire original buffer. The full helper
 is held; no process/pipe/Job/cleanup body is rewritten.
 
@@ -45,9 +45,9 @@ launcher, arbitrary process census or new control framework is introduced.
 ## Exact fresh stages, commands and authority
 
 ROOT is this repository; HERE=ROOT/experiments/common-tiff-dimensions.
-TARGET=ROOT/target/common-tiff-dimensions-1 must initially be absent.
-Directories are build-1,prepare-1,render-1,verify-1 under HERE, all fresh.
-Actual executable is HERE/build-1/strehl-common-input.exe. Existing CLI defaults
+TARGET=ROOT/target/common-tiff-dimensions-2 must initially be absent.
+Directories are build-2,prepare-1,render-1,verify-1 under HERE, all fresh.
+Actual executable is HERE/build-2/strehl-common-input.exe. Existing CLI defaults
 and fixed two-thread environment are retained.
 
 Controller invocation from ROOT:
@@ -89,7 +89,7 @@ Build command, exactly:
 Require a Compiling strehl-cli line, exactly one fresh:false non-test bin
 compiler-artifact with actual source/manifest paths, successful build-finished
 record and no M194h feature. Copy only that actual target executable,<=64MiB,
-to the fresh build-1 path and verify its hash. No stale-cache or old-binary
+to the fresh build-2 path and verify its hash. No stale-cache or old-binary
 substitution is admitted.
 
 Prepare child:
@@ -196,10 +196,17 @@ terminal files. Margins after this extra reserve are respectively48979968,
 before execution;16MiB checker+1MiB log+transport+extra reserve does not fit18MiB.
 No observed overrun or scientific threshold change motivated this arithmetic.
 
-Root independently owns four metadata construction slots10CPU/20wall each,
-40CPU/80wall total and32MiB metadata/archive family. This controller neither
-spends nor resets another study's completed grant. Fixed stage grants total
-870CPU/720wall; metadata adds40/80. Wall is an upper reservation, not a forecast.
+Root owns four fresh metadata construction slots10CPU/20wall each plus the
+already spent build1 constructor10/20:50CPU/100wall cumulative, with the same
+32MiB metadata/archive family. The full failed build1 reservation600CPU/300wall
+remains charged; the fresh build2 receives600/300 once. The unchanged later
+stages270/420 make cumulative stage reservations1470CPU/1020wall. Independent
+failed-build review retains10CPU/20wall/64MiB read/2MiB write; the separately
+reviewed scratch control phase reserves5CPU/10wall/1MiB read/1MiB write; its
+separate capture wrapper reserves another5CPU/10wall/1MiB read/1MiB write.
+Their combined outer interval is bounded by20wall. Earlier
+source-preparation/formatter records remain; no aggregate CPU for them is
+invented. Wall reservations are ceilings, not forecasts, and no old grant resets.
 
 ## Terminal capacity, timing and failure qualifications
 
@@ -247,3 +254,61 @@ controller; no new publisher/process-control commission is claimed.
 
 The exact metadata constructor and observed output are retained in
 stage-layout-construction.md and must be included in the source release.
+
+## Build2 operational correction and compositional source closure
+
+Build1's eight negative evidence files remain committed at834a3c61; the exact
+original181-source archive remains committed at8017d2f3. No product executable,
+fixture preparation or render resulted from that attempt. Its observed scanner
+canonical mismatch has an unknown historical cause; source-derived race
+possibility and the later missing-path observation do not reproduce it.
+
+Only build2 installs the separately pinned scratch-scan.py dispatcher into the
+private imported primitive module. The source is authenticated from the positive
+map and checked against its literal SHA before execution, before Budget creation.
+The shim clones the original scan code with a private owned binding using
+no-follow ancestry and strict resolution. Missing scratch entries can use the
+original FileNotFoundError recovery; extant canonical mismatches, reparse,
+permission, nonregular, containment and capacity errors still refuse. Only the
+exact TARGET may select tolerance. Retained scans delegate to the exact captured
+original function; nonbuild stages do not install the shim at all.
+
+The helper's sole change from build1 is its literal Cargo target1-to-target2
+guard. Process accounting, five-second cleanup, direct-zero/EOF admission and
+all scientific/product/checker choices remain unchanged. Capture uses build
+release/external suffix2; later stage suffixes stay1 and their prerequisite
+bundle selects the actual build2 result, tail and streams.
+
+Metadata preparation writes fresh work/source-freeze-2.json and
+work/source-2-delta.zip exclusively. It authenticates source-freeze-1.json
+(25815B, SHA2567b37fe67c8cee38e655d461ee9c5b498b60808b834d2b97d61ee3be9a76b6de4)
+and its exact source-1.zip(5661467B,
+SHA2560dbe11b91a4351e041bff97201506600fee03ab3b37bf1b32e5b34cd63016770).
+The new freeze schema common-tiff-dimensions-root-source-freeze-v2 has exactly
+schema,source_bindings,base_freeze,base_archive,delta_archive,changed_or_new,scope.
+
+The full current map keeps every original key. Changed original entries are
+restricted to this controller, compile helper, prepare/capture wrappers, this
+contract, the independent checker's build-path adaptation and its matching
+independent-spec.md explanatory append(seven original entries). New entries are
+the exact named shim/control/spec/rationale/review/addendum files, including
+scratch-control-capture.py. Delta ZIP
+contains only changed/new entries. Constructor verifies the base's unique
+complete inventory, all181 original member hashes, the delta inventory and
+every current source reconstructed as delta when named, otherwise base. Base
+archive ordering may differ from sorted JSON-map ordering; its complete original
+bytes/hash still bind its order. No original source buffer is overwritten in
+either archive.
+
+Later constructors require the same frozen2 map and unchanged base/delta
+identities. All stages bind the complete revised map; no additions after freeze.
+The new archive/records remain inside the existing32MiB metadata family.
+No result-size increase is required: the parent already records references to
+source-bearing release/metadata, not duplicate source archives or full maps.
+
+Root must first accept the actual fixed16 scanner groups(17 dispatcher calls,
+including two metadata variants in the reparse group) and independent
+scratch-scan-source-review.md. Root also owns build2-source-review.md for the
+complete controller/constructor/capture/contract delta. These notes and the
+independent control source/spec enter the full map only when final. Source-only
+syntax and archive design checks are not those controls and authorize no build.
