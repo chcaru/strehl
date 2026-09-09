@@ -1,13 +1,24 @@
 // Opt-in extraction policy. This module does not change storage or merge arithmetic.
 pub(super) const ENV: &str = "STREHL_SIGNED_BLACK";
 
-pub(super) fn enabled() -> anyhow::Result<bool> {
+// 0: historical clamp; 1: signed values and decisions;
+// 2: signed reconstruction values, baseline clamped-green decision proxy.
+pub(super) fn mode() -> anyhow::Result<u8> {
     match std::env::var(ENV) {
-        Err(std::env::VarError::NotPresent) => Ok(false),
-        Ok(value) if value == "0" => Ok(false),
-        Ok(value) if value == "1" => Ok(true),
-        _ => anyhow::bail!("{ENV} must be unset, 0, or 1"),
+        Err(std::env::VarError::NotPresent) => Ok(0),
+        Ok(value) if value == "0" => Ok(0),
+        Ok(value) if value == "1" => Ok(1),
+        Ok(value) if value == "2" => Ok(2),
+        _ => anyhow::bail!("{ENV} must be unset, 0, 1, or 2"),
     }
+}
+
+pub(super) fn enabled() -> anyhow::Result<bool> {
+    Ok(mode()? != 0)
+}
+
+pub(super) fn clamped_decisions() -> anyhow::Result<bool> {
+    Ok(mode()? == 2)
 }
 
 #[cfg(test)]
@@ -245,6 +256,15 @@ mod tests {
         out
     }
 
+    fn f32_hash(values: &[f32]) -> String {
+        use sha2::{Digest, Sha256};
+        let mut digest = Sha256::new();
+        for value in values {
+            digest.update(value.to_le_bytes());
+        }
+        hex(digest.finalize().as_ref())
+    }
+
     fn file_ref(path: &Path) -> Result<serde_json::Value> {
         use sha2::{Digest, Sha256};
         let bytes = fs::read(path)?;
@@ -359,12 +379,34 @@ mod tests {
     #[test]
     #[ignore = "root releases clamped/signed once each; four additional consumer cases per invocation"]
     fn signed_cfa_comparison() -> Result<()> {
-        let signed = enabled()?;
-        let arm = if signed { "signed" } else { "clamped" };
+        run_comparison(false)
+    }
+
+    #[test]
+    #[ignore = "root releases clamped/value-only once each; same four cases"]
+    fn signed_cfa_values_comparison() -> Result<()> {
+        run_comparison(true)
+    }
+
+    fn run_comparison(stage2: bool) -> Result<()> {
+        let mode = super::mode()?;
+        ensure!(
+            mode == 0 || mode == if stage2 { 2 } else { 1 },
+            "fixed comparison mode"
+        );
+        let signed = mode != 0;
+        let arm = if !signed {
+            "clamped"
+        } else if stage2 {
+            "values"
+        } else {
+            "signed"
+        };
+        let prefix = if stage2 { "comparison2" } else { "comparison" };
         let out = Path::new(env!("CARGO_MANIFEST_DIR"))
             .join("../../experiments/native-signed-black")
             .canonicalize()?
-            .join(format!("comparison-{arm}"));
+            .join(format!("{prefix}-{arm}"));
         fs::create_dir(&out)?;
         let levels = Levels {
             black: 512.0,
@@ -404,6 +446,9 @@ mod tests {
                     "index": index, "negative_values": negative,
                     "consumed": values_summary(worker.planes.iter().flatten()),
                     "variance": values_summary(worker.var.iter()),
+                    "luma_f32_sha256": f32_hash(&worker.luma),
+                    "variance_f32_sha256": f32_hash(&worker.var),
+                    "decision_hash_layout": "actual consumed row-major f32LE, immutable borrows through add_frame_with_gain",
                     "beta_prefix": worker.beta,
                     "averaged_fraction": worker.merge.averaged_fraction()
                 }));
@@ -477,6 +522,9 @@ mod tests {
         }
         let raw = serde_json::to_vec_pretty(&serde_json::json!({
             "schema": "native-signed-black-comparison-v1", "signed": signed,
+            "mode": mode, "stage": if stage2 { 2 } else { 1 },
+            "decision_proxy": if mode == 1 { "signed-green" } else { "baseline-clamped-green" },
+            "decision_scope": "no-map; empty measured-beta prefix; placed gate-floor probe not commissioned",
             "geometry": { "width": CW, "height": CH }, "cfa_order": ["R","G1","G2","B"],
             "levels": { "black": levels.black, "white": levels.white },
             "configured_bands": cfg.bands,

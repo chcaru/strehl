@@ -5050,9 +5050,26 @@ fn load_frame(
     // computes it -- the same plane the estimator's election runs on.
     // Selecting on green only is what keeps chroma noise out of the
     // decision.
+    #[cfg(feature = "native-signed-black")]
+    let clamped_decisions = native_signed_black::clamped_decisions()?;
     luma.par_iter_mut()
         .zip(planes[1].par_iter().zip(planes[2].par_iter()))
-        .for_each(|(luma, (g1, g2))| *luma = 0.5 * (*g1 + *g2));
+        .for_each(|(luma, (g1, g2))| {
+            #[cfg(not(feature = "native-signed-black"))]
+            {
+                *luma = 0.5 * (*g1 + *g2);
+            }
+            #[cfg(feature = "native-signed-black")]
+            {
+                // Value-only candidate retains the historical per-site clamp
+                // for decisions. Reconstruction still consumes signed planes.
+                *luma = if clamped_decisions {
+                    0.5 * (g1.max(0.0) + g2.max(0.0))
+                } else {
+                    0.5 * (*g1 + *g2)
+                };
+            }
+        });
     Ok(true)
 }
 
