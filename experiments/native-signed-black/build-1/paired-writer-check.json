@@ -1,0 +1,33 @@
+{
+  "pairs": [
+    {
+      "case": "negative",
+      "whole_tiff_equal": true,
+      "clamped": {
+        "path": "experiments\\native-signed-black\\smoke-clamped\\negative.tiff",
+        "bytes": 74331,
+        "sha256": "bd664aab163c900ed780a1214022a9f499d5710a01dc989242d5c9d62757cc3e"
+      },
+      "signed": {
+        "path": "experiments\\native-signed-black\\smoke-signed\\negative.tiff",
+        "bytes": 74331,
+        "sha256": "bd664aab163c900ed780a1214022a9f499d5710a01dc989242d5c9d62757cc3e"
+      }
+    },
+    {
+      "case": "nonnegative",
+      "whole_tiff_equal": true,
+      "clamped": {
+        "path": "experiments\\native-signed-black\\smoke-clamped\\nonnegative.tiff",
+        "bytes": 74331,
+        "sha256": "1e13c8c206459b32028a3a3071689bab8c13e018c1d27103d2ae5d11f58745ae"
+      },
+      "signed": {
+        "path": "experiments\\native-signed-black\\smoke-signed\\nonnegative.tiff",
+        "bytes": 74331,
+        "sha256": "1e13c8c206459b32028a3a3071689bab8c13e018c1d27103d2ae5d11f58745ae"
+      }
+    }
+  ],
+  "scope": "constant zero and positive companion; no image quality claim"
+}

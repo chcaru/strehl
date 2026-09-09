@@ -1,0 +1,49 @@
+{
+  "revision": "d88bba62f8f89db4e37b0050e6654c19acc4311c",
+  "command": [
+    "cargo",
+    "test",
+    "-p",
+    "strehl-cli",
+    "--bin",
+    "strehl",
+    "--no-run",
+    "--features",
+    "native-signed-black",
+    "--jobs",
+    "2",
+    "--target-dir",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\target\\native-signed-black",
+    "--message-format=json-render-diagnostics",
+    "--locked",
+    "--offline"
+  ],
+  "environment_overrides": {
+    "RAYON_NUM_THREADS": "4",
+    "CARGO_INCREMENTAL": "0"
+  },
+  "removed_environment": [],
+  "sources": [
+    {
+      "path": "crates\\strehl-cli\\Cargo.toml",
+      "bytes": 1077,
+      "sha256": "e0bbdb6bd81f7ee9aa5ea669d05728433819784e318e9f2df2a12d71825db8ad"
+    },
+    {
+      "path": "crates\\strehl-cli\\src\\merge_cmd.rs",
+      "bytes": 426934,
+      "sha256": "8c25bd4268b0d796b0f357b61447cf68d61f4218e5b4a877048b336286935e48"
+    },
+    {
+      "path": "experiments\\native-signed-black\\implementation.rs",
+      "bytes": 5700,
+      "sha256": "f82369ba0114fa362bd52e42888d64ac1d880bdb765205b146c04b8e322f185a"
+    },
+    {
+      "path": "experiments\\native-signed-black\\run-smoke.py",
+      "bytes": 4057,
+      "sha256": "9c5a4c7c330aa85ba595e8436f0a42a55d1fb1232786f1b86f95af3e0e501b36"
+    }
+  ],
+  "scope": "debug smoke, no native performance claim"
+}
