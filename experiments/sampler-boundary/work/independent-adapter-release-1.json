@@ -1,0 +1,68 @@
+{
+  "adapter": {
+    "bytes": 18513,
+    "path": "experiments/sampler-boundary/independent-transport-read.py",
+    "sha256": "56954443669bfb4b8c4c754cb582c3205775e926eac18b802117a009760ebef5"
+  },
+  "aggregate_read_cap_bytes": 805306368,
+  "aggregate_review_output_cap_bytes": 8388608,
+  "amendment": {
+    "bytes": 3107,
+    "path": "experiments/sampler-boundary/work/independent-read-amendment-1.md",
+    "sha256": "f98facda80820092352e827dacc20af345cc1fa295d1d0c3f0e4268ddd26f44f"
+  },
+  "commands": [
+    [
+      "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+      "-I",
+      "-S",
+      "-B",
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\independent-transport-read.py",
+      "1"
+    ],
+    [
+      "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+      "-I",
+      "-S",
+      "-B",
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\independent-transport-read.py",
+      "2"
+    ],
+    [
+      "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+      "-I",
+      "-S",
+      "-B",
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\independent-transport-read.py",
+      "3"
+    ],
+    [
+      "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+      "-I",
+      "-S",
+      "-B",
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\sampler-boundary\\independent-transport-read.py",
+      "4"
+    ]
+  ],
+  "expected_exits": [
+    0,
+    0,
+    0,
+    0
+  ],
+  "external_wall_cap_each": 15,
+  "failed_attempt": {
+    "bytes": 1669,
+    "path": "experiments/sampler-boundary/work/independent-transport-failure-1.json",
+    "sha256": "ec0d787b0120eef70746b2cffe739f83eed2ca681b65391c36b839f9cfb40d3f"
+  },
+  "failed_read_charge_bytes": 537919488,
+  "saved_read_release": {
+    "bytes": 16124,
+    "path": "experiments/sampler-boundary/work/independent-read-release-1.json",
+    "sha256": "fc92179b15531145ecd840373258524fc6bed0235e4b18c7c50690f049d2c60c"
+  },
+  "schema": "sampler-independent-adapter-release-v1",
+  "scope": "Only four fixed saved-bit interpretations, once each, with source-reviewed metadata transport. Exact external wrapper exits/whole intervals and aggregate output extent are required. No sampler/build/test rerun."
+}
