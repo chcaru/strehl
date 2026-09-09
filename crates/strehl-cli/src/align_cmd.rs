@@ -2138,10 +2138,19 @@ pub(crate) fn writeback_fullres_site(
 #[cfg(feature = "native-direct-planes")]
 include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/native-direct-planes/implementation.rs"));
 
+#[cfg(feature = "native-gpu-gather")]
+pub(crate) mod native_gpu_integration {
+    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/native-gpu-gather/integration.rs"));
+}
+
 fn warp_frame_in_place_fullres_outputs<const GREEN_ONLY: bool>(
     frame: &mut strehl_raw::Frame, t: Similarity, geom: PlaneGeometry,
     resampler: Resampler, scratch: &mut WarpScratch,
 ) -> Result<f64> {
+    #[cfg(feature = "native-gpu-gather")]
+    if let Some(covered) = native_gpu_integration::gpu_remosaic::<GREEN_ONLY>(frame,t,geom,resampler)? {
+        return Ok(covered);
+    }
     warp_frame_fullres_with_sink::<GREEN_ONLY,_>(frame,t,geom,resampler,scratch,
         |frame,site,dst,cover,inv,black,execution| Ok(writeback_fullres_site(
             &mut frame.data,frame.stride,(frame.active.x,frame.active.y),geom,site,

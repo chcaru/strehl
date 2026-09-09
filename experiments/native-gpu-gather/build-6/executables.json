@@ -1,0 +1,12 @@
+{
+  "strehl": {
+    "path": "experiments\\native-gpu-gather\\build-6\\strehl.exe",
+    "bytes": 10196480,
+    "sha256": "084e4ba4264151a9c21686198763566e7caaad21997c77603faf744a6df30531"
+  },
+  "cli-tests": {
+    "path": "experiments\\native-gpu-gather\\build-6\\cli-tests.exe",
+    "bytes": 20195328,
+    "sha256": "1c85c95cd83201307030817c570c04b56a825d63c31d97d8311db842114de7e8"
+  }
+}

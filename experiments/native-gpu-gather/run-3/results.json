@@ -1,0 +1,601 @@
+{
+  "active_primary_case": null,
+  "adapter": "NVIDIA GeForce RTX 5090",
+  "backend": "Vulkan",
+  "compilation": {
+    "added_decorations": 30,
+    "arithmetic_results": 30,
+    "bounds_policy": "Restrict indices/buffers/images/binding-arrays; integer division checks and loop bounds enabled",
+    "decorated_sha256": "a7dce2107ce7713ac4d9cd961dd44e303bd69b37c2d2ca7029f20aa1f131de9d",
+    "entry_points": [
+      "mhc",
+      "gather",
+      "quantize_vector"
+    ],
+    "float_operations": {
+      "FAdd": 8,
+      "FMul": 17,
+      "FSub": 5
+    },
+    "group_zero_bindings": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "max_buffer_size": 4294967295,
+    "max_storage_buffer_binding_size": 2147483644,
+    "no_contraction": true,
+    "original_sha256": "41658a89bd9b17c73b0f452b48bde689679e4ecc50774872ebfff0171cdb6560",
+    "submitted_sha256": "a7dce2107ce7713ac4d9cd961dd44e303bd69b37c2d2ca7029f20aa1f131de9d",
+    "validation": "embedded WGSL+IR; Naga SPIR-V parse+IR; structural decoration/removal identity; NOT spirv-val"
+  },
+  "descriptor_destroyers": {
+    "pass": true,
+    "rows": [
+      {
+        "changed_codes": 1490,
+        "changed_coverage": 0,
+        "first_changed_native": [
+          10,
+          10
+        ],
+        "kind": "source-base-plus-one",
+        "mutations": 1500,
+        "pass": true
+      },
+      {
+        "changed_codes": 1360,
+        "changed_coverage": 0,
+        "first_changed_native": [
+          5,
+          2
+        ],
+        "kind": "swap-green-phase",
+        "mutations": 1364,
+        "pass": true
+      },
+      {
+        "changed_codes": 1500,
+        "changed_coverage": 1500,
+        "first_changed_native": [
+          10,
+          10
+        ],
+        "kind": "flip-coverage",
+        "mutations": 1500,
+        "pass": true
+      }
+    ]
+  },
+  "device_type": "DiscreteGpu",
+  "expected_primary_cases": 18,
+  "literal_quantization": {
+    "count": 25,
+    "first_difference": null,
+    "gpu_length": 25,
+    "pass": true,
+    "premature_add_destroyer_live": true
+  },
+  "rows": [
+    {
+      "code_mismatches": 0,
+      "coverage_mismatches": 0,
+      "cpu_observer_controls": null,
+      "errors": [],
+      "first_difference": null,
+      "half_ties": 0,
+      "height": 50,
+      "high_clamped": 0,
+      "id": 0,
+      "label": "identity-colour",
+      "negative_clamped": 0,
+      "outside_changed": 0,
+      "pass": true,
+      "phase_covered": [
+        759,
+        759,
+        759,
+        759
+      ],
+      "width": 70
+    },
+    {
+      "code_mismatches": 0,
+      "coverage_mismatches": 0,
+      "cpu_observer_controls": {
+        "arms": [
+          {
+            "arm": "ordinary-no-observer",
+            "sha256_u16_le": "b90b508b783ae3fb4ea4c82386ae5ddce88d5290eed1aeab40f0a84f9826c6c8"
+          },
+          {
+            "arm": "actual-operand-observer",
+            "sha256_u16_le": "b90b508b783ae3fb4ea4c82386ae5ddce88d5290eed1aeab40f0a84f9826c6c8"
+          },
+          {
+            "arm": "fixed-sentinel-observer-placebo",
+            "sha256_u16_le": "b90b508b783ae3fb4ea4c82386ae5ddce88d5290eed1aeab40f0a84f9826c6c8"
+          }
+        ],
+        "fixed_sentinel_trace": true,
+        "same_complete_storage": true
+      },
+      "errors": [],
+      "first_difference": null,
+      "half_ties": 1,
+      "height": 50,
+      "high_clamped": 0,
+      "id": 1,
+      "label": "padded-transform-colour",
+      "negative_clamped": 0,
+      "outside_changed": 0,
+      "pass": true,
+      "phase_covered": [
+        716,
+        715,
+        722,
+        722
+      ],
+      "width": 70
+    },
+    {
+      "code_mismatches": 0,
+      "coverage_mismatches": 0,
+      "cpu_observer_controls": null,
+      "errors": [],
+      "first_difference": null,
+      "half_ties": 1,
+      "height": 50,
+      "high_clamped": 0,
+      "id": 2,
+      "label": "odd-active-odd-stride",
+      "negative_clamped": 0,
+      "outside_changed": 0,
+      "pass": true,
+      "phase_covered": [
+        716,
+        715,
+        722,
+        722
+      ],
+      "width": 70
+    },
+    {
+      "code_mismatches": 0,
+      "coverage_mismatches": 0,
+      "cpu_observer_controls": null,
+      "errors": [],
+      "first_difference": null,
+      "half_ties": 2,
+      "height": 50,
+      "high_clamped": 0,
+      "id": 3,
+      "label": "synthetic-ca",
+      "negative_clamped": 0,
+      "outside_changed": 0,
+      "pass": true,
+      "phase_covered": [
+        707,
+        715,
+        722,
+        725
+      ],
+      "width": 70
+    },
+    {
+      "code_mismatches": 0,
+      "coverage_mismatches": 0,
+      "cpu_observer_controls": null,
+      "errors": [],
+      "first_difference": null,
+      "half_ties": 2990,
+      "height": 50,
+      "high_clamped": 0,
+      "id": 4,
+      "label": "ramp-half-ties",
+      "negative_clamped": 0,
+      "outside_changed": 0,
+      "pass": true,
+      "phase_covered": [
+        759,
+        782,
+        759,
+        782
+      ],
+      "width": 70
+    },
+    {
+      "code_mismatches": 0,
+      "coverage_mismatches": 0,
+      "cpu_observer_controls": null,
+      "errors": [],
+      "first_difference": null,
+      "half_ties": 0,
+      "height": 50,
+      "high_clamped": 1449,
+      "id": 5,
+      "label": "signed-overshoot-clamp",
+      "negative_clamped": 114,
+      "outside_changed": 0,
+      "pass": true,
+      "phase_covered": [
+        759,
+        759,
+        759,
+        759
+      ],
+      "width": 70
+    },
+    {
+      "code_mismatches": 0,
+      "coverage_mismatches": 0,
+      "cpu_observer_controls": null,
+      "errors": [],
+      "first_difference": null,
+      "half_ties": 15,
+      "height": 50,
+      "high_clamped": 0,
+      "id": 6,
+      "label": "native-boundary-1.5--1",
+      "negative_clamped": 0,
+      "outside_changed": 0,
+      "pass": true,
+      "phase_covered": [
+        759,
+        759,
+        759,
+        759
+      ],
+      "width": 70
+    },
+    {
+      "code_mismatches": 0,
+      "coverage_mismatches": 0,
+      "cpu_observer_controls": null,
+      "errors": [],
+      "first_difference": null,
+      "half_ties": 15,
+      "height": 50,
+      "high_clamped": 0,
+      "id": 7,
+      "label": "native-boundary-1.5-0",
+      "negative_clamped": 0,
+      "outside_changed": 0,
+      "pass": true,
+      "phase_covered": [
+        782,
+        759,
+        782,
+        759
+      ],
+      "width": 70
+    },
+    {
+      "code_mismatches": 0,
+      "coverage_mismatches": 0,
+      "cpu_observer_controls": null,
+      "errors": [],
+      "first_difference": null,
+      "half_ties": 15,
+      "height": 50,
+      "high_clamped": 0,
+      "id": 8,
+      "label": "native-boundary-1.5-1",
+      "negative_clamped": 0,
+      "outside_changed": 0,
+      "pass": true,
+      "phase_covered": [
+        759,
+        759,
+        759,
+        759
+      ],
+      "width": 70
+    },
+    {
+      "code_mismatches": 0,
+      "coverage_mismatches": 0,
+      "cpu_observer_controls": null,
+      "errors": [],
+      "first_difference": null,
+      "half_ties": 0,
+      "height": 50,
+      "high_clamped": 0,
+      "id": 9,
+      "label": "native-boundary-4--1",
+      "negative_clamped": 0,
+      "outside_changed": 0,
+      "pass": true,
+      "phase_covered": [
+        736,
+        736,
+        736,
+        736
+      ],
+      "width": 70
+    },
+    {
+      "code_mismatches": 0,
+      "coverage_mismatches": 0,
+      "cpu_observer_controls": null,
+      "errors": [],
+      "first_difference": null,
+      "half_ties": 0,
+      "height": 50,
+      "high_clamped": 0,
+      "id": 10,
+      "label": "native-boundary-4-0",
+      "negative_clamped": 0,
+      "outside_changed": 0,
+      "pass": true,
+      "phase_covered": [
+        736,
+        736,
+        736,
+        736
+      ],
+      "width": 70
+    },
+    {
+      "code_mismatches": 0,
+      "coverage_mismatches": 0,
+      "cpu_observer_controls": null,
+      "errors": [],
+      "first_difference": null,
+      "half_ties": 0,
+      "height": 50,
+      "high_clamped": 0,
+      "id": 11,
+      "label": "native-boundary-4-1",
+      "negative_clamped": 0,
+      "outside_changed": 0,
+      "pass": true,
+      "phase_covered": [
+        736,
+        736,
+        736,
+        736
+      ],
+      "width": 70
+    },
+    {
+      "code_mismatches": 0,
+      "coverage_mismatches": 0,
+      "cpu_observer_controls": null,
+      "errors": [],
+      "first_difference": null,
+      "half_ties": 0,
+      "height": 50,
+      "high_clamped": 0,
+      "id": 12,
+      "label": "native-boundary-67.5--1",
+      "negative_clamped": 0,
+      "outside_changed": 0,
+      "pass": true,
+      "phase_covered": [
+        23,
+        0,
+        23,
+        0
+      ],
+      "width": 70
+    },
+    {
+      "code_mismatches": 0,
+      "coverage_mismatches": 0,
+      "cpu_observer_controls": null,
+      "errors": [],
+      "first_difference": null,
+      "half_ties": 0,
+      "height": 50,
+      "high_clamped": 0,
+      "id": 13,
+      "label": "native-boundary-67.5-0",
+      "negative_clamped": 0,
+      "outside_changed": 0,
+      "pass": true,
+      "phase_covered": [
+        23,
+        0,
+        23,
+        0
+      ],
+      "width": 70
+    },
+    {
+      "code_mismatches": 0,
+      "coverage_mismatches": 0,
+      "cpu_observer_controls": null,
+      "errors": [],
+      "first_difference": null,
+      "half_ties": 0,
+      "height": 50,
+      "high_clamped": 0,
+      "id": 14,
+      "label": "native-boundary-67.5-1",
+      "negative_clamped": 0,
+      "outside_changed": 0,
+      "pass": true,
+      "phase_covered": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "width": 70
+    },
+    {
+      "code_mismatches": 0,
+      "coverage_mismatches": 0,
+      "cpu_observer_controls": null,
+      "errors": [],
+      "first_difference": null,
+      "half_ties": 0,
+      "height": 2,
+      "high_clamped": 0,
+      "id": 15,
+      "label": "all-uncovered-two-by-two",
+      "negative_clamped": 0,
+      "outside_changed": 0,
+      "pass": true,
+      "phase_covered": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "width": 2
+    },
+    {
+      "code_mismatches": 0,
+      "coverage_mismatches": 0,
+      "cpu_observer_controls": {
+        "arms": [
+          {
+            "arm": "ordinary-no-observer",
+            "sha256_u16_le": "7e35c41dd1e66b434a3462cd2b99b6167da36b596f2339754ea384a20127cb8f"
+          },
+          {
+            "arm": "actual-operand-observer",
+            "sha256_u16_le": "7e35c41dd1e66b434a3462cd2b99b6167da36b596f2339754ea384a20127cb8f"
+          },
+          {
+            "arm": "fixed-sentinel-observer-placebo",
+            "sha256_u16_le": "7e35c41dd1e66b434a3462cd2b99b6167da36b596f2339754ea384a20127cb8f"
+          }
+        ],
+        "fixed_sentinel_trace": true,
+        "same_complete_storage": true
+      },
+      "errors": [],
+      "first_difference": null,
+      "half_ties": 0,
+      "height": 50,
+      "high_clamped": 0,
+      "id": 16,
+      "label": "green-only-padded-transform-colour",
+      "negative_clamped": 0,
+      "outside_changed": 0,
+      "pass": true,
+      "phase_covered": [
+        0,
+        715,
+        722,
+        0
+      ],
+      "width": 70
+    },
+    {
+      "code_mismatches": 0,
+      "coverage_mismatches": 0,
+      "cpu_observer_controls": null,
+      "errors": [],
+      "first_difference": null,
+      "half_ties": 0,
+      "height": 50,
+      "high_clamped": 724,
+      "id": 17,
+      "label": "green-only-signed-overshoot-clamp",
+      "negative_clamped": 58,
+      "outside_changed": 0,
+      "pass": true,
+      "phase_covered": [
+        0,
+        759,
+        759,
+        0
+      ],
+      "width": 70
+    }
+  ],
+  "schema": "native-gpu-gather-fixed-eighteen-v1",
+  "scope": "generated codes; exact operator equivalence, no calibration/quality/timing claim",
+  "status": "EIGHTEEN_GPU_GATHER_CONTROLS_PASS",
+  "undecorated_case3": {
+    "adapter": "NVIDIA GeForce RTX 5090",
+    "affects_primary_pass": false,
+    "backend": "Vulkan",
+    "code_mismatches": 1,
+    "compilation": {
+      "added_decorations": 0,
+      "arithmetic_results": 30,
+      "bounds_policy": "Restrict indices/buffers/images/binding-arrays; integer division checks and loop bounds enabled",
+      "decorated_sha256": "a7dce2107ce7713ac4d9cd961dd44e303bd69b37c2d2ca7029f20aa1f131de9d",
+      "entry_points": [
+        "mhc",
+        "gather",
+        "quantize_vector"
+      ],
+      "float_operations": {
+        "FAdd": 8,
+        "FMul": 17,
+        "FSub": 5
+      },
+      "group_zero_bindings": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "max_buffer_size": 4294967295,
+      "max_storage_buffer_binding_size": 2147483644,
+      "no_contraction": false,
+      "original_sha256": "41658a89bd9b17c73b0f452b48bde689679e4ecc50774872ebfff0171cdb6560",
+      "submitted_sha256": "41658a89bd9b17c73b0f452b48bde689679e4ecc50774872ebfff0171cdb6560",
+      "validation": "embedded WGSL+IR; Naga SPIR-V parse+IR; structural decoration/removal identity; NOT spirv-val"
+    },
+    "constructor": "new_undecorated_for_test",
+    "coverage_mismatches": 0,
+    "cpu_observer_controls": null,
+    "device_type": "DiscreteGpu",
+    "errors": [
+      "consumed u16 differs"
+    ],
+    "first_difference": {
+      "black_bits": 1140850688,
+      "cpu_code": 3478,
+      "cpu_covered": true,
+      "cpu_sensor_before_round": 3477.5,
+      "cpu_sensor_bits": 1163483136,
+      "descriptor": {
+        "fx_bits": 1062182232,
+        "fy_bits": 1042869813,
+        "source_native": [
+          25.8109946183619,
+          2.1649711844319164
+        ],
+        "x0": 25,
+        "y0": 2
+      },
+      "gpu_code": 3477,
+      "gpu_covered": true,
+      "inverse_wb_bits": 1063164884,
+      "native": [
+        26,
+        2
+      ],
+      "phase": "R",
+      "source_code": 3479
+    },
+    "half_ties": 2,
+    "height": 50,
+    "high_clamped": 0,
+    "id": 3,
+    "negative_clamped": 0,
+    "outside_changed": 0,
+    "pass": false,
+    "phase_covered": [
+      707,
+      715,
+      722,
+      725
+    ],
+    "status": "RETURNED_OR_CAUGHT_ERROR",
+    "width": 70
+  }
+}

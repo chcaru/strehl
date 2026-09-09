@@ -2955,6 +2955,8 @@ pub fn preflight_soft_kernel() -> Result<()> {
 /// lines of compiled, tested, unreachable code and `blend-render` -- an example
 /// binary that ships nothing -- was the only way to run it.
 pub fn run(opts: &MergeOptions) -> Result<()> {
+    #[cfg(feature = "native-gpu-gather")]
+    align_cmd::native_gpu_integration::gpu_gather_enabled()?;
     preflight_soft_kernel()?;
     preflight_cover_backend_support(opts.backend, opts.cover)?;
     match opts.backend {
