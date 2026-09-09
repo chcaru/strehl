@@ -117,3 +117,51 @@ a refitted law or a discarded result. No source mutation or RAW read has
 occurred. Factor and coordinate are continuing source/protocol preparation;
 sampler is available for the cohesive final source review. Root has not
 granted build, application, decode, control or image execution.
+
+## Methodology checkpoint and source amendment 3
+
+The prospective methodology is now independently reviewed and ready for source
+freeze. independent-protocol.md is 38811 bytes, SHA256
+e3c527d2d012e56877dd1b5992237191fb988eed957234664a37fab781585ec4.
+independent-checker-design.md is 12541 bytes, SHA256
+a68987a11679835034699454e8c5bf669b8c4da336b9e1685feb057aa810e6f0.
+Preserve independent-protocol-draft-1.md32176B/33896928666bb0ec8cbd42d7f40e730afc71b0cb684219c250cab2472daa2082
+as superseded, never executed. sampler_result_review's exact reread clears the
+methodological choices, not the unfinished concrete implementation.
+
+The frozen invocation population is nine paired native processes,50 original
+decodes/100 actual folds/50 real full-frame warps/50 full-frame probe warps,
+plus27 independent original decodes. Each fresh process also initializes the
+existing memoized BandGain::measure once:9 initializations/288 compact256x256
+synthetic pyramids. These are source-derived work counts, not measured usage.
+
+scope-amendment-3.md2363B/fdffcff04d52fd9bb8514080f0a8bf8bdb9cbb1452002002f63755900192edcb
+allows a narrow test-and-feature-gated callback at the existing resolved
+per-site map in align_cmd::warp_frame_in_place_fullres. No extra lookup,
+per-pixel logger or arithmetic change. The native writer witness remains:
+18 collapsed f32 payloads AND18 actual existing write_merged TIFFs, using the
+same finished planes with CameraLinear, demosaic true, Exposure::None,
+restore None and actual levels/WB. Hash both representations across the
+same-route paper-five and dark-prefix-two observer/feature witnesses; output
+quantization cannot stand in for unchanged merge values.
+
+Pre-data independent review corrected the green prediction increment to8*g
+for a16DN shift on both green sites, separated a literal q-times-four control
+from changing the gain, and distinguished correct p2 weight underflow from
+threshold rejection. Finite half-integer uncertainty calculations now have
+an external NIST table reference rather than only an inverse-of-own-CDF check.
+None of these source corrections is a measured sensor defect.
+
+Remaining: producer's cohesive unapplied adapter/hook patch and updated contract,
+concrete independent reader implementation (including literal fixed baselines
+for groups12/14 from the already-fixed group15 field), full independent source
+review, exact source freeze and finite build/control/RAW stage releases.
+The implementation contract and core-hook draft may still change and are NOT
+certified by this methodology checkpoint. No live crate mutation, build, control,
+RAW decode or candidate execution has occurred for this task.
+
+Root has commissioned coordinate_verification to implement the concrete reader
+under the held methodology, still SOURCE ONLY (64MiB reads/4MiB retained/60CPU/
+120active-process-wall). No control or candidate import is granted. Sampler
+will review that source independently. Producer proposes a208MiB artifact
+envelope including independent failure slots; this is not an execution release.
