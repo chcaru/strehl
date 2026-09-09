@@ -1216,3 +1216,7 @@ Stage2 follow-up,2026-09-09: the full-signed small comparison reduced shadow bia
 ## Background-stroke diagnostic allocation
 
 2026-09-09. Root allocates experiments/native-background-stroke/ under charter.md after the completed actual105frame coffee-bean product comparison. One frozen left-background stroke/cleanpair, exactlyfive named originalRAWs, existingmap and existingindependentROIdecoder. The generic hotpixel/dust-trail premise and old right-border mote campaign remain closed; currentROIhasno directoverlap. Author implements only small copiedCFA patches and2Dcoordinate views; separateverifier commissions known-transform/refusal controls; rootexecutes. No whole-stackrender, newalignment, private noiseestimate or genericframework. The endpointis an evidence-bounded cause hypothesis or ambiguity, not an automaticdustfix or SOTAclaim.
+
+## Targeted stroke correction allocation
+
+2026-09-09. Root allocates experiments/native-stroke-correction under charter.md, after the five-frame sensor-coordinate-persistence finding. One held existing v2 sidecar, saved-patch fit and numerical holdouts, then at most one current full RAW intervention with unchanged eight-frame validation. No production source edit, default promotion or noise-fidelity claim; current dust gain variance propagation is incomplete. Independent controls and outcome review; root execution and exact-path commits.
