@@ -55,3 +55,32 @@ task; it was updated after common completion. Preserve user's exact program
 H1 '# SOTA   n plan' and all unrelated dirt; that whole program file is not
 included in root commits because it carries user changes. User authorized
 autonomous work and moving to next tasks without waking them.
+
+## Completion and current next task, 2026-09-08
+
+COMPLETE within the fixed software contract. Source repair48285a9a; original
+negative evidence9bbc0181; repaired344-pass result16449d26; all13 selected
+regressions3ceebceb; independent final saved-evidence review2c76b8c6.
+All219 originally wrong accepted gather edge values are corrected; coverage
+remains11844/444. See docs/research/sampler-boundary-correction.md.
+Unchecked upper plateau/fallback semantics intentionally change. Unsaved
+exercise flags remain source-bound; no SOTA, physical placement or noise claim.
+The independent audit's first metadata adapter failed path spelling, not
+sampler numerics. Failure/cost513MiB+full10CPU15wall preserved; all four original
+numeric readers then completed once after separately reviewed adapter repair.
+Do not rerun any sampler stage or saved checker. Both177-source maps survive
+in committed original+delta archives. Live source may now advance independently.
+
+Current task: experiments/common-tiff-dimensions/charter.md at87d3136b.
+Source-only24-case intake generalization to2..8 frames,64..512 axes, preserving
+v1 admission/output. Implementation owns external patch/contract; coordinate
+verification owns independent spec/fixture/checker sources; sampler result
+reviewer cross-reviews choices. Root owns integration/runner/release and commits.
+No dimensions build, fixture, product image or checker is released yet.
+Close independent source concerns and fix finite resource/source/command/input
+bindings before executing a stage once. Use exact actual outcomes; preserve
+failed attempts. The old common-TIFF/M194h/M194g/M193c completed work stays closed.
+
+Earlier paragraphs above are preserved historical dispatch, superseded by this
+completion. Preserve user program header and unrelated shared-tree dirt.
+
