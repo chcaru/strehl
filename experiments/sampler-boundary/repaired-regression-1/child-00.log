@@ -1,0 +1,18 @@
+
+running 13 tests
+test align::tests::a_gather_under_the_identity_is_the_identity ... ok
+test align::tests::a_widened_clamp_makes_the_hull_guard_fail ... ok
+test align::tests::catmull_rom_reproduces_the_samples_at_integer_positions ... ok
+test align::tests::clamped_catmull_rom_has_catmull_support_and_checked_domain ... ok
+test align::tests::clamped_catmull_rom_is_bit_identical_until_catmull_leaves_the_hull ... ok
+test align::tests::clamped_catmull_rom_preserves_integer_samples_and_constant_planes_exactly ... ok
+test align::tests::clamped_catmull_rom_stays_inside_the_exact_support16_hull ... ok
+test align::tests::lanczos2_is_interpolating_and_costs_no_extra_border ... ok
+test align::tests::lanczos3_is_interpolating_and_preserves_dc ... ok
+test align::tests::lanczos3_support_matches_its_reach ... ok
+test warpmap::gather_tests::gather_marks_uncovered_pixels_instead_of_clamping ... ok
+test warpmap::gather_tests::gather_refuses_a_geometry_mismatch ... ok
+test warpmap::gather_tests::gather_refuses_a_refused_frame ... ok
+
+test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 546 filtered out; finished in 0.02s
+
