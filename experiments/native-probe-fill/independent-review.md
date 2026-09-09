@@ -1,0 +1,13 @@
+# Independent review: exact parallel probe fill
+
+Status: source reviewed and held for root execution, 2026-09-09. No build, test, RAW decode or timing run by this reviewer. No measured identity or speed claim yet.
+
+The candidate uses the existing Rayon pool to assign complete active rows. Independent reading confirms that enumerate occurs after skipping the active origin; the stream jump uses the consumed even width, not storage stride or the odd trailing active sensel. Each old Box-Muller pair consumes two draws and emits two values, so the start of every consumed row has no spare. Wrapping multiplication and addition reconstruct the state before the next increment. The f64 log, square root, sine/cosine, multiplication, addition, rounding and clamping retain the old grouping. There is no parallel reduction or changed noise law.
+
+The independent oracle is a scalar state machine with direct active-relative indexing, separate from the candidate row-start formula, iterator traversal and production helpers. Its 720 whole-buffer comparisons cover both schedules, 1/2/8 threads, five independently selected layouts, four seeds including usize::MAX-1, and six level/sigma choices. Comparisons include sentinel storage outside complete quads. Assertions require actual multirow, padded-origin, odd-tail, wrapping-jump and both saturation cases. Known zero-sigma half-integer outputs have literal expectations. The wrong-row-start control consumes one extra normal per later row: row zero must remain equal and row one must differ, proving that whole-buffer identity can reject a displaced stream. This is a destroyer of the equality criterion, not an executed mutation of production code.
+
+Two source corrections were necessary: import QuadSource for the trait method geometry, and make the parser expectation agree with the proposed unset=parallel default. The parser also checks the explicit serial/parallel values and rejects empty, case-changed and whitespace-padded values. Process-global environment mutation is intentionally absent; non-Unicode environment refusal is only source-reviewed.
+
+The seed-domain test preserves the old index+1 requirement; it does not establish new behavior for usize::MAX. These software controls establish scheduling identity only if root executes them successfully. They cannot calibrate the sensor model, validate a physical noise law, or establish speed. Final acceptance still requires full native TIFF/pixel and actual probe-result identity against the held original binary, with alternating complete-process timings. Probe wall time includes more than filling and must not be presented as fill time.
+
+Held independent-tests.rs SHA-256: `1b6e551e18610b6dda9bf167d59086180181a5ff8511364a716c7e49e24a43e5`.

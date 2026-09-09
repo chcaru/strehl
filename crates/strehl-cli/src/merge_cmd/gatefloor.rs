@@ -45,9 +45,10 @@
 //! fields to keep in step, which is the failure mode a hand-built probe has.
 
 use anyhow::{Context, Result};
+use rayon::prelude::*;
 use strehl_core::align::{Resampler, Similarity};
 use strehl_core::plane::PlaneGeometry;
-use strehl_core::pyramid::{level_sizes, LevelSize, Pyramid, Workspace};
+use strehl_core::pyramid::{LevelSize, Pyramid, Workspace, level_sizes};
 use strehl_raw::Frame;
 
 use super::{BAND_PLANE_OFFSETS, PyramidDomain, extract_planes};
@@ -301,8 +302,8 @@ impl Probe {
         // 0.9998x white at band 0 and **12.6x** at band 6, on a warp that is an
         // exact no-op. The floor is a statement about fluctuations; the
         // pedestal is not one of them.
-        let mean = (self.luma.iter().map(|v| f64::from(*v)).sum::<f64>()
-            / self.luma.len() as f64) as f32;
+        let mean =
+            (self.luma.iter().map(|v| f64::from(*v)).sum::<f64>() / self.luma.len() as f64) as f32;
         for v in self.luma.iter_mut() {
             *v -= mean;
         }
@@ -429,6 +430,23 @@ fn pooled_mean_square(level: &[f32], sz: LevelSize) -> Option<f64> {
     Some(acc / (iw * ih) as f64)
 }
 
+/// Select the deterministic execution schedule, never a different noise law.
+pub const PROBE_FILL_ENV: &str = "STREHL_PROBE_FILL";
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+enum FillMode {
+    Serial,
+    Parallel,
+}
+
+fn parse_fill_mode(raw: Option<&str>) -> Result<FillMode> {
+    match raw {
+        None | Some("parallel") => Ok(FillMode::Parallel),
+        Some("serial") => Ok(FillMode::Serial),
+        _ => anyhow::bail!("{PROBE_FILL_ENV} must be unset, serial, or parallel"),
+    }
+}
+
 /// Fill only the complete quads that both gather implementations consume.
 /// The RNG advances in active-relative row order, never through unused storage.
 /// Using the full geometry (not the analysis Crop) also keeps the probe at a
@@ -441,16 +459,53 @@ fn fill_probe_noise(
     sigma: f64,
     index: usize,
 ) -> Result<()> {
+    // Resolve once per full fill, before writing; no environment access per row.
+    let mode = match std::env::var(PROBE_FILL_ENV) {
+        Ok(raw) => parse_fill_mode(Some(&raw))?,
+        Err(std::env::VarError::NotPresent) => parse_fill_mode(None)?,
+        Err(error) => return Err(error).context(PROBE_FILL_ENV),
+    };
+    fill_probe_noise_mode(frame, full, level, sigma, index, mode)
+}
+
+fn fill_probe_noise_mode(
+    frame: &mut Frame,
+    full: PlaneGeometry,
+    level: f64,
+    sigma: f64,
+    index: usize,
+    mode: FillMode,
+) -> Result<()> {
     super::validate_pyramid_frame(frame, full, index)?;
     let (ax, ay) = (frame.active.x, frame.active.y);
     let width = 2 * full.width;
-    let sites = frame
-        .data
-        .chunks_exact_mut(frame.stride)
-        .skip(ay)
-        .take(2 * full.height)
-        .flat_map(|row| row[ax..ax + width].iter_mut());
-    fill_noise(sites, level, sigma, index);
+    match mode {
+        FillMode::Serial => {
+            let sites = frame
+                .data
+                .chunks_exact_mut(frame.stride)
+                .skip(ay)
+                .take(2 * full.height)
+                .flat_map(|row| row[ax..ax + width].iter_mut());
+            fill_noise(sites, level, sigma, index);
+        }
+        FillMode::Parallel => {
+            let seed = noise_seed(index);
+            frame
+                .data
+                .par_chunks_exact_mut(frame.stride)
+                .skip(ay)
+                .take(2 * full.height)
+                .enumerate()
+                .for_each(|(row_index, row)| {
+                    // A complete-quad row is even: each Box-Muller pair uses
+                    // two RNG draws for two sites, with no spare across rows.
+                    let draws = (row_index as u64).wrapping_mul(width as u64);
+                    let state = seed.wrapping_add(0x9E37_79B9_7F4A_7C15u64.wrapping_mul(draws));
+                    fill_noise_from_state(row[ax..ax + width].iter_mut(), level, sigma, state);
+                });
+        }
+    }
     Ok(())
 }
 
@@ -461,11 +516,21 @@ fn fill_probe_noise(
 /// scheduling would make the gate -- and therefore the merge -- irreproducible,
 /// and the byte-freezes would fail for a reason that is not a bug in the merge.
 fn fill_noise<'a>(data: impl Iterator<Item = &'a mut u16>, level: f64, sigma: f64, index: usize) {
+    fill_noise_from_state(data, level, sigma, noise_seed(index));
+}
+
+fn noise_seed(index: usize) -> u64 {
+    0x9E37_79B9_7F4A_7C15u64.wrapping_mul(index as u64 + 1) ^ 0x2545_F491_4F6C_DD1D
+}
+
+fn fill_noise_from_state<'a>(
+    data: impl Iterator<Item = &'a mut u16>,
+    level: f64,
+    sigma: f64,
+    mut s: u64,
+) {
     // SplitMix64. Self-contained on purpose: the probe's determinism is a
     // property of this file and should not move if a shared RNG is retuned.
-    let mut s = 0x9E37_79B9_7F4A_7C15u64
-        .wrapping_mul(index as u64 + 1)
-        ^ 0x2545_F491_4F6C_DD1D;
     let mut next = || {
         s = s.wrapping_add(0x9E37_79B9_7F4A_7C15);
         let mut z = s;
@@ -503,5 +568,13 @@ mod m194c_independent_tests {
     include!(concat!(
         env!("CARGO_MANIFEST_DIR"),
         "/../../experiments/m194c-probe-layout/independent-tests.rs"
+    ));
+}
+
+#[cfg(test)]
+mod native_probe_fill_independent_tests {
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/native-probe-fill/independent-tests.rs"
     ));
 }
