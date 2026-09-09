@@ -1,0 +1,9 @@
+# Fixed rounded handoff timing
+
+Root allocation2026-09-09 after twelve build1 process controls pass. This is a new-candidate population, not a replay of a closed optimization. Run the existing native-probe-fill/run-native.py --direct-planes-109 extension exactly once: held writeback executable / build1 rounded / build1 rounded / held writeback / build1 off. No float native arm. Use existing transfer-plan-109.json with all22 original109MSDCF frames and the unchanged canonical map. The earlier alignment solve is not part of render timing and no112 solve cost is assigned here.
+
+Require normal completed writer/process accounting, complete7032x4688 RGB16 TIFF identity and decoded identity to the retained original. The ordinary old minimum and candidate minimum compare completed render wall; report CPU and memory and both order comparisons. Same-binary off tests attribution to the direct route, since a new binary can differ for unrelated compiler/layout reasons. A warm-cache or clock shift can improve wall without improving the implementation; alternating directions, held map, whole-output equality and off control make that visible. No claim from tiny fixture times. No aggregate percentage multiplication across prior timing windows.
+
+Build1 CLI95e5c82d8940e87dc2e5e790a71aea4f5def69b03abbf1478a93b80087ca0236, held writeback4fe5443366c628029f9ea64faf6c239bb1769953f5ee505a7d629f5e22f4e2b8. The output TIFF hash remains84f24ff6cdeae80f612ec6a2048dc888715eb8a2e632be29efcb9eefcdc61851; decoded1bd230a17e40030159540be6f75a958a839cd422b29d78afcd524f3cfe4c53e1.
+
+Use the held existing plan's process and storage bounds; no concurrent numerical execution or build is commissioned during this comparison. Source-only bridge/scorer work may continue. Five renders only; preserve any failure and stop rather than retry for a better number. A rounded speed win cannot establish improved image fidelity or precision-mode acceptance.
