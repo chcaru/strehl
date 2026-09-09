@@ -1,0 +1,197 @@
+--- a/experiments/native-sensor-transfer/run-stage.py
++++ b/experiments/native-sensor-transfer/run-stage.py
+@@ -13,7 +13,7 @@
+ BASE=ROOT/"experiments/m194h-pedestal-causality/build-and-run.py"
+ BASE_SHA="b505a2fff0024691d98088c599f7f554c1543268de09c836a6bc1fe6c17b7410"
+ BUILD_PROCESS=HERE/"bounded-build-process.py"
+-BUILD_SHA="45ad9348a441fc7a45d8649a150a3cd077a3b195260f488fe9fad38a100e4fa3"
++BUILD_SHA="7bd2918966fb206b404f0f18018a971cf4d9c8017d66cf0c36b3796f5a007d6c"
+ SCRATCH=ROOT/"experiments/common-tiff-dimensions/scratch-scan.py"
+ SCRATCH_SHA="3a1aa413fd4c9d37bccb973a419e3f4c03291903d44b7198c53992e7b00d3e46"
+ STAGES={
+@@ -22,8 +22,8 @@
+     "controls":dict(cpu_seconds=120,wall_seconds=180,committed_bytes=GIB,file_bytes=64*MIB,scratch_bytes=0),
+     "native":dict(cpu_seconds=1800,wall_seconds=1200,committed_bytes=2*GIB,file_bytes=256*MIB,scratch_bytes=0),
+     "verify":dict(cpu_seconds=1200,wall_seconds=900,committed_bytes=GIB,file_bytes=96*MIB,scratch_bytes=0)}
+-OUTPUTS={s:HERE/(s+"-1") for s in STAGES}
+-TARGETS={s:ROOT/("target/native-sensor-transfer-"+s.removeprefix("build-")+"-1") for s in ("build-on","build-off")}
++OUTPUTS={s:HERE/(s+("-2" if s=="build-on" else "-1")) for s in STAGES}
++TARGETS={s:ROOT/("target/native-sensor-transfer-"+s.removeprefix("build-")+("-2" if s=="build-on" else "-1")) for s in ("build-on","build-off")}
+ EXES={s:OUTPUTS["build-"+s.removeprefix("feature_")]/"cli-tests.exe" for s in ("feature_on","feature_off")}
+ READER=HERE/"independent-read.py"
+ INPUT_BINDINGS={"path":"experiments/native-sensor-transfer/input-bindings-1.json","bytes":7119,
+@@ -105,6 +105,7 @@
+     need(total<=16*MIB,"source aggregate")
+ 
+ def build_configuration(env):
++    need(env.get("CARGO_INCREMENTAL")=="0","fixed nonincremental native builds")
+     need(not any(k.upper().startswith(BUILD_ENV_PREFIXES) or k.upper() in BUILD_ENV_KEYS for k in env),
+          "no inherited build/target/profile/unstable compiler flag overrides")
+     supplied=env.get("CARGO_HOME")
+@@ -122,7 +123,7 @@
+         try:candidate.lstat()
+         except FileNotFoundError:records.append(dict(path=str(candidate),absent=True))
+         else:raise ValueError(f"unexpected Cargo configuration source: {candidate}")
+-    return dict(cargo_home_environment=supplied,cargo_home_selected=str(home),
++    return dict(cargo_home_environment=supplied,cargo_home_selected=str(home),cargo_incremental=env["CARGO_INCREMENTAL"],
+                 selection="explicit CARGO_HOME" if supplied is not None else "default user home/.cargo",
+                 candidates=records,environment_overrides="removed; no extra rustflags/profile/target/unstable keys",
+                 scope="Fixed absent configuration ruling and exact argv; no hermetic compiler/dependency claim")
+@@ -401,7 +402,8 @@
+              if not k.upper().startswith(("NATIVE_SENSOR_TRANSFER_",*BUILD_ENV_PREFIXES))
+              and k.upper() not in BUILD_ENV_KEYS}
+         need(not any(k.upper().startswith(("STREHL_","M194H_","NATIVE_SENSOR_TRANSFER_")) for k in env),"no native/experiment overrides")
+-        result["environment"]={k:env.get(k) for k in ("RAYON_NUM_THREADS","CARGO_NET_OFFLINE","RUSTUP_TOOLCHAIN","RUSTUP_HOME","CARGO_HOME")}
++        if stage.startswith("build-"):env["CARGO_INCREMENTAL"]="0"
++        result["environment"]={k:env.get(k) for k in ("RAYON_NUM_THREADS","CARGO_NET_OFFLINE","RUSTUP_TOOLCHAIN","RUSTUP_HOME","CARGO_HOME","CARGO_INCREMENTAL")}
+         need(len(d.encoded(result["environment"]))<=8*KIB,"bounded observed environment")
+         result["environment_scope"]="Four Rayon threads; per-traversal pyramid/selector fields below. Offline compiler; observed inherited toolchain search is not hermetic."
+         compile_stage=stage.startswith("build-")
+@@ -418,7 +420,7 @@
+                 name="feature_on" if i<7 else "feature_off"
+                 file_ref(EXES[name],64*MIB,release["binaries"][name],budget.check)
+                 child_env.update(STREHL_PYRAMID_WORKERS="4",NATIVE_SENSOR_TRANSFER_INVOCATION=str(i))
+-            invocation_env={k:child_env[k] for k in ("RAYON_NUM_THREADS","STREHL_PYRAMID_WORKERS","NATIVE_SENSOR_TRANSFER_INVOCATION",*READER_ENV) if k in child_env}
++            invocation_env={k:child_env[k] for k in ("RAYON_NUM_THREADS","STREHL_PYRAMID_WORKERS","NATIVE_SENSOR_TRANSFER_INVOCATION","CARGO_INCREMENTAL",*READER_ENV) if k in child_env}
+             result["operations"].append(dict(ordinal=i,expected_exit_code=0,status="ATTEMPTED",environment=invocation_env))
+             d.atomic(output/"result.json",result,STAGE_RESULT_CAP)
+             record=child_call(process,api,child["command"],child_env,0,i,output,budget,result)
+--- a/experiments/native-sensor-transfer/bounded-build-process.py
++++ b/experiments/native-sensor-transfer/bounded-build-process.py
+@@ -135,12 +135,13 @@
+         need(value > 0, "positive child bound")
+     allowed = []
+     for feature in (True, False):
+-        target = ROOT / ("target/native-sensor-transfer-" + ("on" if feature else "off") + "-1")
++        target = ROOT / ("target/native-sensor-transfer-" + ("on-2" if feature else "off-1"))
+         argv = ["cargo", "test", "-p", "strehl-cli", "--bin", "strehl", "--no-run"]
+         if feature: argv += ["--features", "native-sensor-transfer"]
+         allowed.append(argv + ["--jobs", "2", "--target-dir", str(target),
+                                "--message-format=json-render-diagnostics", "--locked", "--offline"])
+     need(command in allowed, "exact native sensor compile-only owned helper")
++    need(env.get("CARGO_INCREMENTAL") == "0", "fixed nonincremental native builds")
+     log = Path(log)
+     need(not log.exists() and log.parent.is_dir(), "fresh child log")
+     started = time.monotonic()
+--- a/experiments/native-sensor-transfer/capture-stage.py
++++ b/experiments/native-sensor-transfer/capture-stage.py
+@@ -23,7 +23,7 @@
+ def ref(p,empty=False,cap=64<<20):
+  b=read_bound(p,cap,empty);return dict(path=p.relative_to(ROOT).as_posix(),bytes=len(b),sha256=hashlib.sha256(b).hexdigest())
+ def main():
+- a=argparse.ArgumentParser();a.add_argument("stage",choices=("build-on","build-off","controls","native","verify"));args=a.parse_args();stage=args.stage;attempt=1
++ a=argparse.ArgumentParser();a.add_argument("stage",choices=("build-on","build-off","controls","native","verify"));args=a.parse_args();stage=args.stage;attempt=2 if stage=="build-on" else 1
+  work=HERE/"work";release=work/(stage+"-release-"+str(attempt)+".json");b=read_bound(release,1<<20)
+  r=json.loads(b);assert r["schema"]=="native-sensor-transfer-stage-release-v1" and r["stage"]==stage
+  sha=hashlib.sha256(b).hexdigest()
+--- a/experiments/native-sensor-transfer/prepare-build.py
++++ b/experiments/native-sensor-transfer/prepare-build.py
+@@ -76,7 +76,8 @@
+     need(sum(v["bytes"] for v in out.values())<=16*MIB,"source aggregate")
+     return out,buffers
+ def bundle(stage):
+-    output=HERE/(stage+"-1");stem=WORK/(stage+"-external-1-")
++    attempt=2 if stage=="build-on" else 1
++    output=HERE/(stage+"-"+str(attempt));stem=WORK/(stage+"-external-"+str(attempt)+"-")
+     paths={"result":output/"result.json","tail":output/"parent-tail.json",
+            "outer":Path(str(stem)+"outer.json"),"stdout":Path(str(stem)+"stdout.bin"),
+            "stderr":Path(str(stem)+"stderr.bin"),"exit":Path(str(stem)+"exit.txt")}
+@@ -93,10 +94,11 @@
+     need(os.name=="nt" and Path.cwd().resolve()==ROOT,"fixed Windows repository")
+     need(sys.flags.isolated and sys.flags.no_site and sys.dont_write_bytecode,"isolated metadata-only constructor")
+     WORK.mkdir(exist_ok=True)
+-    release=WORK/(stage+"-release-1.json")
+-    target=ROOT/("target/native-sensor-transfer-"+stage.removeprefix("build-")+"-1")
+-    need(not release.exists() and not target.exists() and not (HERE/(stage+"-1")).exists(),"fresh fixed stage")
+-    current,buffers=sources();freeze=WORK/"build-source-freeze-1.json";archive=WORK/"build-source-1.zip"
++    attempt=2 if stage=="build-on" else 1
++    release=WORK/(stage+"-release-"+str(attempt)+".json")
++    target=ROOT/("target/native-sensor-transfer-"+stage.removeprefix("build-")+"-"+str(attempt))
++    need(not release.exists() and not target.exists() and not (HERE/(stage+"-"+str(attempt))).exists(),"fresh fixed stage")
++    current,buffers=sources();freeze=WORK/"build-source-freeze-2.json";archive=WORK/"build-source-2.zip"
+     if stage=="build-on":
+         need(not freeze.exists() and not archive.exists(),"fresh source preservation")
+         need(WRITE+17*MIB<=24*MIB,"reserve full bounded stored archive before creation")
+@@ -140,6 +142,6 @@
+         read_bytes_sample=READ,write_bytes_sample=WRITE,
+         allocation=dict(cpu_seconds=30,wall_seconds=60,read_bytes=128*MIB,write_bytes=24*MIB,publication_reserve_cpu_seconds=1,publication_reserve_wall_seconds=2),
+         scope="Metadata and source/tool identity only. No RAW payload read/decode, product, compiler, control or checker invocation.")
+-    receipt=publish(WORK/(stage+"-preparation-1.json"),record)
++    receipt=publish(WORK/(stage+"-preparation-"+str(attempt)+".json"),record)
+     print(json.dumps(dict(release=released,preparation=receipt,source_files=len(current))),flush=True)
+ if __name__=="__main__":main()
+--- a/experiments/native-sensor-transfer/run-stage-contract.md
++++ b/experiments/native-sensor-transfer/run-stage-contract.md
+@@ -1,16 +1,16 @@
+ # Native sensor transfer stage runner contract
+ 
+-Status: SOURCE REVIEW CANDIDATE. This document defines a future finite execution; it records no build, control, RAW decode, numerical result or performance measurement. Root owns the release and actual execution. The native producer remains the independently reviewed Crop consumer in source/implementation-contract.md; this runner adds no operator, image reader, estimator or quality gate.
++Status: SOURCE REVIEW CANDIDATE FOR BUILD-ON ATTEMPT 2. Section 7 preserves the actual refused first build; the active recovery is prospective and records no successful build, control, RAW decode, numerical result or performance measurement. Root owns the release and actual execution. The native producer remains the independently reviewed Crop consumer in source/implementation-contract.md; this runner adds no operator, image reader, estimator or quality gate.
+ 
+ ## 1. Reuse and scope
+ 
+ run-stage.py adapts the held common-TIFF dimensions runner (33,546 bytes, SHA256 442226bd08b128f8bb97460fab6f8ab6280fd0950d1912313b87d583b7a33940). It loads only the already commissioned M194h module at experiments/m194h-pedestal-causality/build-and-run.py (40,626 bytes, b505a2fff0024691d98088c599f7f554c1543268de09c836a6bc1fe6c17b7410). Its main is never invoked. Source-only AST comparison found need, bootstrap, file_ref, source_check and child_call identical to the predecessor; a one-guard reverse recovered the helper's complete predecessor source text exactly. The reused pieces are authenticated readers/writers, source closure, Budget, environment filtering and closed Job API selection. The copied child_call body retains durable child publication before admission, sampled parent CPU, terminal Job CPU counted once, strict cleanup checks and the compile-only exception.
+ 
+-The new bounded-build-process.py derives from the dimensions helper (16,517 bytes, 1d52b3cd9a4f218b886049f9fcc29b95164e64eb7afb2717a1f3f9646987f31d). Only its exact Cargo command guard changes. Owned suspension/Job assignment, pipe drain, error handling, remaining-PID observations and intentional owned descendant cleanup are unchanged. That policy is selected only for child zero of build-on/build-off. Every native and reader child uses the unchanged strict experiments/m193c-output-grid/bounded-process.py through the held loader. PID observations are never independent kill targets.
++The new bounded-build-process.py derives from the dimensions helper (16,517 bytes, 1d52b3cd9a4f218b886049f9fcc29b95164e64eb7afb2717a1f3f9646987f31d). Only its exact Cargo command/environment guard changes. Owned suspension/Job assignment, pipe drain, error handling, remaining-PID observations and intentional owned descendant cleanup are unchanged. That policy is selected only for child zero of build-on/build-off. Every native and reader child uses the unchanged strict experiments/m193c-output-grid/bounded-process.py through the held loader. PID observations are never independent kill targets.
+ 
+ The existing dimensions scratch-scan.py (2,991 bytes, 3a1aa413fd4c9d37bccb973a419e3f4c03291903d44b7198c53992e7b00d3e46) is reused without edits. It delegates retained scans strictly and substitutes its no-follow/strict-resolve private path only for the selected fresh build scratch root. Nothing skips arbitrary ValueError, permissions, reparse paths or size failures. Its disappearance census is not an atomic snapshot or peak measurement.
+ 
+-capture-stage.py adapts the existing 3,870-byte dimensions external wrapper. Changes are the five fixed stage names, schemas, timeouts, attempt one, a preextent+1 bounded read, and checking the outer JSON extent/full write before publication. It starts only the controller. The controller owns all subsequent child Jobs. No former source or evidence is edited.
++capture-stage.py adapts the existing 3,870-byte dimensions external wrapper. Changes are the five fixed stage names, schemas, timeouts, the fixed attempt selection, a preextent+1 bounded read, and checking the outer JSON extent/full write before publication. It starts only the controller. The controller owns all subsequent child Jobs. No former source or evidence is edited.
+ 
+ ## 2. Exact release and provenance
+ 
+@@ -18,7 +18,7 @@
+ 
+ schema, stage, source_bindings, inputs, originals, command, children, binaries, reader_release, prerequisites.
+ 
+-Schema is native-sensor-transfer-stage-release-v1. All five stages run once under work/STAGE-release-1.json. command is the exact Python executable followed by -I -S -B, the absolute run-stage.py path, --release, the absolute release path, --release-sha256 and ACTUAL_RELEASE_SHA256, which is replaced with the actual held release SHA. sys.orig_argv must equal it.
++Schema is native-sensor-transfer-stage-release-v1. The active build-on release is work/build-on-release-2.json; the other four stage releases remain work/STAGE-release-1.json. Each active stage is released once; the refused build-on attempt 1 remains separately retained. command is the exact Python executable followed by -I -S -B, the absolute run-stage.py path, --release, the absolute release path, --release-sha256 and ACTUAL_RELEASE_SHA256, which is replaced with the actual held release SHA. sys.orig_argv must equal it.
+ 
+ source_bindings maps canonical repository-relative paths to positive {bytes,sha256}. Each entry is at most 4 MiB, at most 512 entries and 16 MiB total. The mandatory list is literal in REQUIRED: runner/helper/capture/contract/review; charter and scope amendments 2/3; producer implementation contract, adapter, core hook and source review. Held M194h/process/Job/scratch sources and input-bindings-1.json are also mandatory. Controls and verify additionally require independent-read.py; its own reader release must carry the current full source map, including its independent modules, protocol, design and reviews. Root must finish those review files before the associated release. Build releases can precede unrelated checker completion.
+ 
+@@ -41,15 +41,15 @@
+ 
+ | Stage | Required prior six-ref bundles | Output |
+ | --- | --- | --- |
+-| build-on | none | build-on-1 |
++| build-on | none | build-on-2 |
+ | build-off | build-on | build-off-1 |
+ | controls | build-on, build-off | controls-1 |
+ | native | build-on, build-off, controls | native-1 plus native-run-0 through native-run-8 |
+ | verify | build-on, build-off, controls, native | verify-1 |
+ 
+-Build-on command: cargo test -p strehl-cli --bin strehl --no-run --features native-sensor-transfer --jobs 2 --target-dir ABS/target/native-sensor-transfer-on-1 --message-format=json-render-diagnostics --locked --offline.
++Build-on command: cargo test -p strehl-cli --bin strehl --no-run --features native-sensor-transfer --jobs 2 --target-dir ABS/target/native-sensor-transfer-on-2 --message-format=json-render-diagnostics --locked --offline.
+ 
+-Build-off command is identical except it omits --features native-sensor-transfer and uses ABS/target/native-sensor-transfer-off-1. Both target roots and stage outputs must be absent. Each build executes exactly one Cargo child. Admission requires actual Compiling strehl-core and Compiling strehl-cli lines, one successful build-finished record and a unique fresh compiler-artifact for the strehl bin test executable. The exact target/src_path/manifest_path/profile.test and feature vector are checked. The executable is copied, hashed and read back as build-on-1/cli-tests.exe or build-off-1/cli-tests.exe. artifacts has executable, compiled_original, compiler_message and build_finished. No list or trial invocation is added.
++Build-off command is identical except it omits --features native-sensor-transfer and uses ABS/target/native-sensor-transfer-off-1. Both target roots and stage outputs must be absent. Each build executes exactly one Cargo child. Admission requires actual Compiling strehl-core and Compiling strehl-cli lines, one successful build-finished record and a unique fresh compiler-artifact for the strehl bin test executable. The exact target/src_path/manifest_path/profile.test and feature vector are checked. The executable is copied, hashed and read back as build-on-2/cli-tests.exe or build-off-1/cli-tests.exe. artifacts has executable, compiled_original, compiler_message and build_finished. No list or trial invocation is added.
+ 
+ Native executes exactly nine commands:
+ EXE --ignored --exact merge_cmd::native_sensor_transfer::fixed_native_sensor_transfer_pair --nocapture --test-threads=1.
+@@ -81,7 +81,7 @@
+ 
+ Every stage retains fixed result.json, parent-tail.json, child-NN.json and child-NN.log. Native artifacts.traversals is exactly nine ordered {invocation,result} entries pointing to actual native-run-I/result.json. These are metadata associations; this parent does not decode/rehash all arrays or TIFFs. Independent saved checking remains necessary. Controls/verify publish artifacts.independent_result.
+ 
+-A prerequisite is exactly {result,tail,outer,stdout,stderr,exit}. Result schema is native-sensor-transfer-owned-stage-v1; success status COMPLETE_STAGE_UNVERIFIED. Tail schema is native-sensor-transfer-parent-tail-v1. Actual external schema is native-sensor-transfer-stage-external-v1 with exactly schema, command, source, exit_code, timeout_terminated, elapsed_wall_seconds, stdout, stderr, exit, stdout_bytes, stderr_bytes, scope. Raw files are work/STAGE-external-1-{stdout.bin,stderr.bin,exit.txt,outer.json}.
++A prerequisite is exactly {result,tail,outer,stdout,stderr,exit}. Result schema is native-sensor-transfer-owned-stage-v1; success status COMPLETE_STAGE_UNVERIFIED. Tail schema is native-sensor-transfer-parent-tail-v1. Actual external schema is native-sensor-transfer-stage-external-v1 with exactly schema, command, source, exit_code, timeout_terminated, elapsed_wall_seconds, stdout, stderr, exit, stdout_bytes, stderr_bytes, scope. Raw files are work/build-on-external-2-{stdout.bin,stderr.bin,exit.txt,outer.json} for build-on and work/STAGE-external-1-{stdout.bin,stderr.bin,exit.txt,outer.json} for the other stages.
+ 
+ The parent advertisement is exact canonical raw JSON {status,result,tail}, at most 8 KiB. The external outer must bind that exact stdout, the separate stderr (including empty) and actual exit file. Success needs actual exit zero, no timeout, complete zero-active Job terminal accounting, clean direct exit plus EOF/drain and actual whole controller wall within both stage cap and sampled tail wall+3. Intentional owned compile descendant cleanup is admitted only by the two compile children; failure cleanup never promotes a child to success.
+ 
+@@ -116,3 +116,15 @@
+ ## 6. Source preparation and review boundary
+ 
+ Only source text construction, exact helper-delta comparison and AST parsing are authorized here. They do not import the new or old candidate modules and do not commission process helpers again. Root integrates the reviewed producer patch, freezes actual source/tool/input maps and reviews this runner before any build. Independent checker review and its own current source freeze precede controls. The nine native calls await completed controls, and saved verify awaits all native calls. Completing these operational stages cannot by itself establish physical sensor calibration, real alignment accuracy, full-frame seven-band behavior or SOTA quality.
++
++## 7. Preserved first build and minimal prospective recovery
++
++The first feature-on build is REFUSED. Its retained child-00.json is 3,077 bytes, SHA256 42a1f30b7809325b7c97a6fd1a4844609e9120061a076d30f8b1ebfee5f0b599; result.json is 262,144 bytes, SHA256 e5da6d4facce3ea72fb1c932e4cf86f83d05c6c878df02a20c612b6e8ecfa83b. The scratch canonical-path exception records an incremental strehl_raw object under an s-hm4lx8410g-0q0xbd1-working directory resolving to the corresponding finalized s-hm4lx8410g-0q0xbd1-c4yczt66x72x6odkw94ohvzky directory. This is evidence of the actual differing spellings during the scan, consistent with Rust's incremental-directory rename; it is not a compiler error, a numerical finding or a new scanner commissioning result.
++
++Actual child wall was 59.75 seconds and terminal Job user+kernel CPU was 98.625 seconds. Failure cleanup recorded six active owned processes becoming zero with no cleanup error. Parent sampled CPU plus completed Job CPU was 131.265625 seconds, with sampled wall 60.969 seconds; root retained an external direct-controller interval of 61.016 seconds. The parent sample is not exact terminated parent CPU. All first-build artifacts and its full 600 CPU/300 wall, 3 GiB Job, 4 GiB scratch and 128 MiB retained reservation stay charged. No useful-prefix refund is claimed.
++
++The sole operational workaround is fixed CARGO_INCREMENTAL=0 for both subsequent compile children. The runner sets it explicitly, includes it in stage/operation environment evidence and both pre/post build-configuration observations, and the compile-only helper requires it. Configuration absence, all other compiler flag restrictions, feature selection and literal Cargo arguments remain intact. Incremental caching is disabled; arithmetic, optimization profiles, noise policy, kernels, population and source consumer are unchanged. The reused scratch scanner and all retained-artifact checks are untouched; unrelated future filesystem failures can still refuse.
++
++The one fresh feature-on build uses target/native-sensor-transfer-on-2, build-on-2 and work/build-on-release-2.json, with work/build-on-preparation-2.json and external attempt-2 raw files. Feature-off remains its previously unvisited target/native-sensor-transfer-off-1, build-off-1 and release/preparation/external attempt 1. Source preservation is fresh work/build-source-freeze-2.json plus work/build-source-2.zip. The first source freeze/archive, release, scratch and negative evidence remain unchanged. Both active builds bind the same source-freeze-2 map; historical successful build provenance and compiled-closure checks for later stages remain as specified above.
++
++A fresh full 600 CPU/300 wall build-on allocation is prospective and separate from the failed one. The unchanged build-off and later unvisited allowances remain available only through root's explicit releases. Each metadata constructor retains its existing separate 30 CPU/60 wall, 128 MiB read/24 MiB write allocation with 1 CPU/2 wall publication reserve; the new build-on constructor is an additional invocation, not a rewrite of the old receipt. Source preparation/review costs remain separate; no whole-program aggregate is inferred. This amendment authorizes source review only, with no build, scanner control, RAW or numerical invocation by its author.

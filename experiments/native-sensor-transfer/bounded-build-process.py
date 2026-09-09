@@ -135,12 +135,13 @@ def run(command, env, cwd, log, *, api, wall_seconds, cpu_seconds,
         need(value > 0, "positive child bound")
     allowed = []
     for feature in (True, False):
-        target = ROOT / ("target/native-sensor-transfer-" + ("on" if feature else "off") + "-1")
+        target = ROOT / ("target/native-sensor-transfer-" + ("on-2" if feature else "off-1"))
         argv = ["cargo", "test", "-p", "strehl-cli", "--bin", "strehl", "--no-run"]
         if feature: argv += ["--features", "native-sensor-transfer"]
         allowed.append(argv + ["--jobs", "2", "--target-dir", str(target),
                                "--message-format=json-render-diagnostics", "--locked", "--offline"])
     need(command in allowed, "exact native sensor compile-only owned helper")
+    need(env.get("CARGO_INCREMENTAL") == "0", "fixed nonincremental native builds")
     log = Path(log)
     need(not log.exists() and log.parent.is_dir(), "fresh child log")
     started = time.monotonic()

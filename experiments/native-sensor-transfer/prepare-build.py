@@ -76,7 +76,8 @@ def sources():
     need(sum(v["bytes"] for v in out.values())<=16*MIB,"source aggregate")
     return out,buffers
 def bundle(stage):
-    output=HERE/(stage+"-1");stem=WORK/(stage+"-external-1-")
+    attempt=2 if stage=="build-on" else 1
+    output=HERE/(stage+"-"+str(attempt));stem=WORK/(stage+"-external-"+str(attempt)+"-")
     paths={"result":output/"result.json","tail":output/"parent-tail.json",
            "outer":Path(str(stem)+"outer.json"),"stdout":Path(str(stem)+"stdout.bin"),
            "stderr":Path(str(stem)+"stderr.bin"),"exit":Path(str(stem)+"exit.txt")}
@@ -93,10 +94,11 @@ def main():
     need(os.name=="nt" and Path.cwd().resolve()==ROOT,"fixed Windows repository")
     need(sys.flags.isolated and sys.flags.no_site and sys.dont_write_bytecode,"isolated metadata-only constructor")
     WORK.mkdir(exist_ok=True)
-    release=WORK/(stage+"-release-1.json")
-    target=ROOT/("target/native-sensor-transfer-"+stage.removeprefix("build-")+"-1")
-    need(not release.exists() and not target.exists() and not (HERE/(stage+"-1")).exists(),"fresh fixed stage")
-    current,buffers=sources();freeze=WORK/"build-source-freeze-1.json";archive=WORK/"build-source-1.zip"
+    attempt=2 if stage=="build-on" else 1
+    release=WORK/(stage+"-release-"+str(attempt)+".json")
+    target=ROOT/("target/native-sensor-transfer-"+stage.removeprefix("build-")+"-"+str(attempt))
+    need(not release.exists() and not target.exists() and not (HERE/(stage+"-"+str(attempt))).exists(),"fresh fixed stage")
+    current,buffers=sources();freeze=WORK/"build-source-freeze-2.json";archive=WORK/"build-source-2.zip"
     if stage=="build-on":
         need(not freeze.exists() and not archive.exists(),"fresh source preservation")
         need(WRITE+17*MIB<=24*MIB,"reserve full bounded stored archive before creation")
@@ -140,6 +142,6 @@ def main():
         read_bytes_sample=READ,write_bytes_sample=WRITE,
         allocation=dict(cpu_seconds=30,wall_seconds=60,read_bytes=128*MIB,write_bytes=24*MIB,publication_reserve_cpu_seconds=1,publication_reserve_wall_seconds=2),
         scope="Metadata and source/tool identity only. No RAW payload read/decode, product, compiler, control or checker invocation.")
-    receipt=publish(WORK/(stage+"-preparation-1.json"),record)
+    receipt=publish(WORK/(stage+"-preparation-"+str(attempt)+".json"),record)
     print(json.dumps(dict(release=released,preparation=receipt,source_files=len(current))),flush=True)
 if __name__=="__main__":main()

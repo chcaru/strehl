@@ -13,7 +13,7 @@ MIB=1<<20;KIB=1024;GIB=1<<30
 BASE=ROOT/"experiments/m194h-pedestal-causality/build-and-run.py"
 BASE_SHA="b505a2fff0024691d98088c599f7f554c1543268de09c836a6bc1fe6c17b7410"
 BUILD_PROCESS=HERE/"bounded-build-process.py"
-BUILD_SHA="45ad9348a441fc7a45d8649a150a3cd077a3b195260f488fe9fad38a100e4fa3"
+BUILD_SHA="7bd2918966fb206b404f0f18018a971cf4d9c8017d66cf0c36b3796f5a007d6c"
 SCRATCH=ROOT/"experiments/common-tiff-dimensions/scratch-scan.py"
 SCRATCH_SHA="3a1aa413fd4c9d37bccb973a419e3f4c03291903d44b7198c53992e7b00d3e46"
 STAGES={
@@ -22,8 +22,8 @@ STAGES={
     "controls":dict(cpu_seconds=120,wall_seconds=180,committed_bytes=GIB,file_bytes=64*MIB,scratch_bytes=0),
     "native":dict(cpu_seconds=1800,wall_seconds=1200,committed_bytes=2*GIB,file_bytes=256*MIB,scratch_bytes=0),
     "verify":dict(cpu_seconds=1200,wall_seconds=900,committed_bytes=GIB,file_bytes=96*MIB,scratch_bytes=0)}
-OUTPUTS={s:HERE/(s+"-1") for s in STAGES}
-TARGETS={s:ROOT/("target/native-sensor-transfer-"+s.removeprefix("build-")+"-1") for s in ("build-on","build-off")}
+OUTPUTS={s:HERE/(s+("-2" if s=="build-on" else "-1")) for s in STAGES}
+TARGETS={s:ROOT/("target/native-sensor-transfer-"+s.removeprefix("build-")+("-2" if s=="build-on" else "-1")) for s in ("build-on","build-off")}
 EXES={s:OUTPUTS["build-"+s.removeprefix("feature_")]/"cli-tests.exe" for s in ("feature_on","feature_off")}
 READER=HERE/"independent-read.py"
 INPUT_BINDINGS={"path":"experiments/native-sensor-transfer/input-bindings-1.json","bytes":7119,
@@ -105,6 +105,7 @@ def source_map(sources):
     need(total<=16*MIB,"source aggregate")
 
 def build_configuration(env):
+    need(env.get("CARGO_INCREMENTAL")=="0","fixed nonincremental native builds")
     need(not any(k.upper().startswith(BUILD_ENV_PREFIXES) or k.upper() in BUILD_ENV_KEYS for k in env),
          "no inherited build/target/profile/unstable compiler flag overrides")
     supplied=env.get("CARGO_HOME")
@@ -122,7 +123,7 @@ def build_configuration(env):
         try:candidate.lstat()
         except FileNotFoundError:records.append(dict(path=str(candidate),absent=True))
         else:raise ValueError(f"unexpected Cargo configuration source: {candidate}")
-    return dict(cargo_home_environment=supplied,cargo_home_selected=str(home),
+    return dict(cargo_home_environment=supplied,cargo_home_selected=str(home),cargo_incremental=env["CARGO_INCREMENTAL"],
                 selection="explicit CARGO_HOME" if supplied is not None else "default user home/.cargo",
                 candidates=records,environment_overrides="removed; no extra rustflags/profile/target/unstable keys",
                 scope="Fixed absent configuration ruling and exact argv; no hermetic compiler/dependency claim")
@@ -401,7 +402,8 @@ def main():
              if not k.upper().startswith(("NATIVE_SENSOR_TRANSFER_",*BUILD_ENV_PREFIXES))
              and k.upper() not in BUILD_ENV_KEYS}
         need(not any(k.upper().startswith(("STREHL_","M194H_","NATIVE_SENSOR_TRANSFER_")) for k in env),"no native/experiment overrides")
-        result["environment"]={k:env.get(k) for k in ("RAYON_NUM_THREADS","CARGO_NET_OFFLINE","RUSTUP_TOOLCHAIN","RUSTUP_HOME","CARGO_HOME")}
+        if stage.startswith("build-"):env["CARGO_INCREMENTAL"]="0"
+        result["environment"]={k:env.get(k) for k in ("RAYON_NUM_THREADS","CARGO_NET_OFFLINE","RUSTUP_TOOLCHAIN","RUSTUP_HOME","CARGO_HOME","CARGO_INCREMENTAL")}
         need(len(d.encoded(result["environment"]))<=8*KIB,"bounded observed environment")
         result["environment_scope"]="Four Rayon threads; per-traversal pyramid/selector fields below. Offline compiler; observed inherited toolchain search is not hermetic."
         compile_stage=stage.startswith("build-")
@@ -418,7 +420,7 @@ def main():
                 name="feature_on" if i<7 else "feature_off"
                 file_ref(EXES[name],64*MIB,release["binaries"][name],budget.check)
                 child_env.update(STREHL_PYRAMID_WORKERS="4",NATIVE_SENSOR_TRANSFER_INVOCATION=str(i))
-            invocation_env={k:child_env[k] for k in ("RAYON_NUM_THREADS","STREHL_PYRAMID_WORKERS","NATIVE_SENSOR_TRANSFER_INVOCATION",*READER_ENV) if k in child_env}
+            invocation_env={k:child_env[k] for k in ("RAYON_NUM_THREADS","STREHL_PYRAMID_WORKERS","NATIVE_SENSOR_TRANSFER_INVOCATION","CARGO_INCREMENTAL",*READER_ENV) if k in child_env}
             result["operations"].append(dict(ordinal=i,expected_exit_code=0,status="ATTEMPTED",environment=invocation_env))
             d.atomic(output/"result.json",result,STAGE_RESULT_CAP)
             record=child_call(process,api,child["command"],child_env,0,i,output,budget,result)

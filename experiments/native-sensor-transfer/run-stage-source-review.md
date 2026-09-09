@@ -87,3 +87,32 @@ release/command/prerequisite construction aligned with the runner. It caught
 an omitted archive-member read charge; root added reservation/counting before
 each member read and reserved the bounded stored archive before creation.
 No constructor, compiler or RAW consumer had executed when corrected.
+
+
+## Accepted build-on2 recovery delta
+
+After the preserved build-on1 refusal (evidence7da40b87), root read the complete
+four-code-file diff. The same independent reviewer accepted its exact changed
+paths, argv, configuration and helper guard. Current accepted pins:
+run-stage33973B/9f760ec0e2f875c412a3d39694af1fa178acb4fd517a34e917971b6d8dee0399;
+helper16805B/7bd2918966fb206b404f0f18018a971cf4d9c8017d66cf0c36b3796f5a007d6c;
+capture4016B/165467ef02b127797af92783fd2c6a25ae6db72fd60da86df42ecd2185e1c7a5;
+preparer9560B/12e23849eef8b2fdc7f009a4d0a8849245d85980d8b17078e8ae2b30db28afb0;
+contract22480B/dab2d6018c040b7e1e9d0feb7b6a6974c433efacf39975b3b5126235bcb6ddfc.
+
+The change forces CARGO_INCREMENTAL=0 and records it before/after both builds,
+with a matching helper assertion. Build-on uses fresh attempt2 output/target/
+release/archive; build-off remains its unvisited attempt1. No scanner, compiler
+profile, physics, tolerance, pipeline or numerical control changes. Existing
+failed evidence/source archive is preserved. The same fixed per-build bounds
+are newly allocated for build-on2; attempt1's full allocation is additional.
+
+CARGO_INCREMENTAL is absent in the current inherited host environment (separate
+read by sampler); nonbuild operations must retain that absence because their
+reader admits an exact environment key set. A changed future host environment
+must be cleared for those launches, not silently added to the native protocol.
+This is a fixed current-run source acceptance, not arbitrary-environment proof.
+
+The complete independent reader is accepted and committed0e024582, including
+the separately reversed four-expression build-on2 path amendment. Build
+completion and actual numerical/RAW execution remain pending.
