@@ -301,3 +301,41 @@ For outside-crop mutation, final registration must distinguish pixel invariance
 from whole-TIFF metadata invariance. All200 current source bindings stay frozen.
 No owned process is running; no session remains. Hourly automation was updated
 to this actual checkpoint and stays quiet unless a meaningful result arrives.
+
+### Final saved-output audit passes; interpretation closure active
+
+The once-only final saved reader executed successfully. Its five source/review
+files are committed at d7ff969d79a9e9b7869c797dc3b12ec96fdd4e30, its three
+release/preparation records at 2159a631c6f14ed7da623650e9fe6f7e5743584f,
+and its seven actual output/capture records at
+351241e0596259513fa68317844821cebfbf9793.
+
+MEASURED: work/dimensions-independent-read-1.json is315943 bytes, SHA256
+df3f7bff04ea289e23ec32038ef1135281c41102af8a13d9bc7f76c711ca3d89.
+Status PASS_SAVED_DIMENSIONS_EVIDENCE_READER, saved_evidence_complete=true,
+errors=[]; coverage24/24 case rows,135/135 controls,51 folds,9 positive
+outputs,36 inputs and108 required case artifacts. Observer whole-TIFF and
+pixel equality pass in independently selected left/right partitions.
+
+The reader source is93802 bytes,
+1cae9b83d1fc503c305d98308df9678a3960627b2134ceba91bc21a6a2774b68.
+Release work/dimensions-final-read-release-1.json is12037 bytes,
+b9e66eaf28f8626ed3c2b9fc06e58b48d6e619cf87e961902813a6981780c72b.
+The actual command is retained verbatim in
+work/dimensions-final-read-external-1-outer.json and the complete wrapper
+record in work/dimensions-final-read-capture-root-1.json. Reader exit0,
+no timeout, external reader interval0.9060000000026776 seconds. Ledger
+accounting is explicitly sampled BEFORE publication/readback:0.8125 CPU,
+0.8479614999960177 wall,37012391 read bytes. These are not complete totals;
+the original30CPU60activewall256MiBread16MiB retained grant is not refunded.
+Prior review-publication overrun remains a failure of historical resource
+compliance; this passing saved-output audit does not erase it.
+
+CURRENT: sampler_result_review is independently interpreting the saved ledger,
+raw transport, partitions and root records and will publish
+dimensions-independent-result-review.md. No reader, image, checker, candidate
+or control rerun is authorized or needed. Factor is preparing report closure,
+limited to8MiB metadata reads/1MiB retained/10CPU30active process wall, and
+must await the independent interpretation before declaring closure. The
+original200 source bindings remain frozen until that review is complete.
+Integer translation/crop remains the next separate commission, not yet released.
