@@ -1,0 +1,11 @@
+# Skip only unconsumed synthetic probe outputs
+
+The retained row-parallel generator is fixed. Test one source-led optimization inside the still dominant per-frame synthetic probe: compute and gather only its consumed green outputs. Keep ALL source CFA mosaic noise, WB balancing, the original green demosaic math (including the directional opt-in), reflect support, transforms/CA guard, phase, quantization, full-grid domain and green destination values identical. The actual image warp remains full RGB. The existing plane-gather override must retain its behavior.
+
+Use shared existing operations rather than a forked physical model. Add an explicit STREHL_PROBE_GATHER=rgb reference; keep the green candidate unpromoted until exact controls and native performance evidence. Default may be green in the held candidate binary for testing; this is not acceptance.
+
+Independent controls must compare exact reconstructed green rows, consumed G1/G2 after warp, finite/NaN beta entries by bits and actual whole outputs. Include odd/tiny/padded origins/tails, fractional shifts/scale/rotation/partial coverage, WB changes, Malvar/directional in separate processes, and plane-route fallback. Red/blue SOURCE perturbations must change reconstructed green at red/blue source sites; zeroing them is a real destroyer, whereas green CA composition being identity is not a live quality control. Output R/B storage may remain unchanged by the synthetic-only path and must not be read by its consumer.
+
+Compile the smallest implementation early and run bounded generated controls before any native comparison. Reuse the existing held22-frame109 map, inputs and process facilities for original/green/green/original plus explicit RGB control after exact controls pass. Retain current phase observer; whole-process timing and complete TIFF/pixel identity decide promotion, not an isolated kernel number. It is new output-work omission under exact equivalence, not a photographic-quality or competitiveSOTA claim. Original RAWs and protected holdouts remain untouched.
+
+Root executes, coordinates and commits. Implementation author never verifies their own results; independent verifier re-chooses the failure inputs. Prior-art and exact source memo: experiments/native-probe-fill/next-green-probe.md.

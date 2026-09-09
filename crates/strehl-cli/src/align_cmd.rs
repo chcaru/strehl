@@ -1848,10 +1848,9 @@ impl WarpScratch {
 /// silently move *both* arms of an A/B onto the same path and the comparison
 /// would report a null it could never have failed.
 ///
-/// This is the **only** site that reads [`fullres_gather_enabled`]. That is what
-/// makes `STREHL_ALIGN=0` renders a specificity control for the flip: with no
-/// warp applied, this function never runs and the switch cannot reach the
-/// output.
+/// The synthetic probe dispatch also reads [`fullres_gather_enabled`] so its
+/// plane fallback follows this choice. With `STREHL_ALIGN=0` neither dispatch
+/// runs and the switch cannot reach the output.
 pub fn warp_frame_in_place(
     frame: &mut strehl_raw::Frame,
     t: Similarity,
@@ -1864,6 +1863,36 @@ pub fn warp_frame_in_place(
     } else {
         warp_frame_in_place_plane(frame, t, geom, resampler, scratch)
     }
+}
+
+/// Warp only the synthetic probe's consumed green destinations.
+///
+/// The complete source CFA mosaic is retained. The plane-gather override uses
+/// the original four-site routine; only full-resolution probe output work is
+/// omitted. No coverage fraction is exposed for a partial destination warp.
+pub(crate) fn warp_probe_greens_in_place(
+    frame: &mut strehl_raw::Frame,
+    t: Similarity,
+    geom: PlaneGeometry,
+    resampler: Resampler,
+    scratch: &mut WarpScratch,
+) -> Result<()> {
+    if fullres_gather_enabled() {
+        warp_probe_greens_in_place_fullres(frame, t, geom, resampler, scratch)
+    } else {
+        warp_frame_in_place_plane(frame, t, geom, resampler, scratch).map(|_| ())
+    }
+}
+
+/// Explicit full-resolution green probe arm for comparison with the RGB warp.
+pub(crate) fn warp_probe_greens_in_place_fullres(
+    frame: &mut strehl_raw::Frame,
+    t: Similarity,
+    geom: PlaneGeometry,
+    resampler: Resampler,
+    scratch: &mut WarpScratch,
+) -> Result<()> {
+    warp_frame_in_place_fullres_outputs::<true>(frame, t, geom, resampler, scratch).map(|_| ())
 }
 
 /// The shipped gather: four CFA phases, each on its own `gw x gh` plane.
@@ -2015,6 +2044,18 @@ pub fn warp_frame_in_place_fullres(
     resampler: Resampler,
     scratch: &mut WarpScratch,
 ) -> Result<f64> {
+    warp_frame_in_place_fullres_outputs::<false>(frame, t, geom, resampler, scratch)
+}
+
+// Share every source/geometry/gather operation between actual RGB frames and
+// green-only synthetic probes. The latter never reads or writes R/B outputs.
+fn warp_frame_in_place_fullres_outputs<const GREEN_ONLY: bool>(
+    frame: &mut strehl_raw::Frame,
+    t: Similarity,
+    geom: PlaneGeometry,
+    resampler: Resampler,
+    scratch: &mut WarpScratch,
+) -> Result<f64> {
     let (gw, gh) = (geom.width, geom.height);
     if frame.active.width / 2 != gw || frame.active.height / 2 != gh {
         bail!(
@@ -2043,31 +2084,45 @@ pub fn warp_frame_in_place_fullres(
         });
     }
 
-    // 2. Demosaic to three full-resolution channel planes.
-    let mut rp = vec![0f32; fw * fh];
+    // 2. Only the synthetic probe may omit its unconsumed R/B output planes.
+    let mut rp = if GREEN_ONLY {
+        Vec::new()
+    } else {
+        vec![0f32; fw * fh]
+    };
     let mut gp = vec![0f32; fw * fh];
-    let mut bp = vec![0f32; fw * fh];
+    let mut bp = if GREEN_ONLY {
+        Vec::new()
+    } else {
+        vec![0f32; fw * fh]
+    };
     {
         let m = strehl_core::demosaic::Mosaic {
             data: &mos,
             width: fw,
             height: fh,
         };
-        rp.par_chunks_mut(fw)
-            .zip(gp.par_chunks_mut(fw))
-            .zip(bp.par_chunks_mut(fw))
-            .enumerate()
-            .for_each_init(
-                || vec![0f32; fw * 3],
-                |buf, (y, ((rr, gg), bb))| {
-                    strehl_core::demosaic::demosaic_row(&m, y, buf);
-                    for x in 0..fw {
-                        rr[x] = buf[3 * x];
-                        gg[x] = buf[3 * x + 1];
-                        bb[x] = buf[3 * x + 2];
-                    }
-                },
-            );
+        if GREEN_ONLY {
+            gp.par_chunks_mut(fw).enumerate().for_each(|(y, gg)| {
+                strehl_core::demosaic::demosaic_green_row(&m, y, gg);
+            });
+        } else {
+            rp.par_chunks_mut(fw)
+                .zip(gp.par_chunks_mut(fw))
+                .zip(bp.par_chunks_mut(fw))
+                .enumerate()
+                .for_each_init(
+                    || vec![0f32; fw * 3],
+                    |buf, (y, ((rr, gg), bb))| {
+                        strehl_core::demosaic::demosaic_row(&m, y, buf);
+                        for x in 0..fw {
+                            rr[x] = buf[3 * x];
+                            gg[x] = buf[3 * x + 1];
+                            bb[x] = buf[3 * x + 2];
+                        }
+                    },
+                );
+        }
     }
     drop(mos);
 
@@ -2090,6 +2145,9 @@ pub fn warp_frame_in_place_fullres(
         for dx in 0..2usize {
             let ch = strehl_core::optics::cfa_site_channel(dx, dy);
             let ci = rggb_channel_index(dx, dy);
+            if GREEN_ONLY && ci != 1 {
+                continue;
+            }
             let plane: &[f32] = match ci {
                 0 => &rp,
                 2 => &bp,
@@ -2146,7 +2204,8 @@ pub fn warp_frame_in_place_fullres(
             }
         }
     }
-    Ok(covered_total as f64 / (4 * geom.pixels()) as f64)
+    let sites = if GREEN_ONLY { 2 } else { 4 };
+    Ok(covered_total as f64 / (sites * geom.pixels()) as f64)
 }
 
 /// Gate W8 -- `warp_frame_in_place` on a real decoded frame.

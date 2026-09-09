@@ -100,6 +100,26 @@ pub fn enabled() -> bool {
     })
 }
 
+/// Synthetic-probe output work: `rgb` retains the original four-site warp;
+/// `green` (default) omits only unused full-resolution R/B outputs.
+pub const PROBE_GATHER_ENV: &str = "STREHL_PROBE_GATHER";
+
+pub(super) fn probe_gather_uses_green() -> Result<bool> {
+    static CHOICE: std::sync::OnceLock<std::result::Result<bool, String>> =
+        std::sync::OnceLock::new();
+    match CHOICE.get_or_init(|| match std::env::var(PROBE_GATHER_ENV) {
+        Err(std::env::VarError::NotPresent) => Ok(true),
+        Ok(v) if v.eq_ignore_ascii_case("green") => Ok(true),
+        Ok(v) if v.eq_ignore_ascii_case("rgb") => Ok(false),
+        other => Err(format!(
+            "{PROBE_GATHER_ENV}: expected green or rgb, got {other:?}"
+        )),
+    }) {
+        Ok(value) => Ok(*value),
+        Err(message) => anyhow::bail!("{message}"),
+    }
+}
+
 /// Per-band multiplier on the floor, comma separated, e.g.
 /// `STREHL_GATE_FLOOR_SCALE=1,4,4,4,4,4,4`. Unset means no scaling and is a
 /// byte-exact no-op.
@@ -259,6 +279,8 @@ impl Probe {
         resampler: Resampler,
         scratch: &mut WarpScratch,
     ) -> Result<()> {
+        // Refuse an unknown arm before cloning or generating a synthetic frame.
+        let greens_only = probe_gather_uses_green()?;
         let mut probe = template.clone();
         let black = f64::from(template.levels.black);
         fill_probe_noise(
@@ -269,8 +291,13 @@ impl Probe {
             index,
         )?;
 
-        align_cmd::warp_frame_in_place(&mut probe, t, self.domain.full, resampler, scratch)
-            .context("warping the noise probe for the band-noise floor")?;
+        if greens_only {
+            align_cmd::warp_probe_greens_in_place(&mut probe, t, self.domain.full, resampler, scratch)
+        } else {
+            align_cmd::warp_frame_in_place(&mut probe, t, self.domain.full, resampler, scratch)
+                .map(|_| ())
+        }
+        .context("warping the noise probe for the band-noise floor")?;
 
         // Deinterleave the two green phases exactly as `load_frame` does, and
         // form the same `L = (G1 + G2) / 2`. Only the greens: the selection
@@ -569,6 +596,19 @@ mod m194c_independent_tests {
         env!("CARGO_MANIFEST_DIR"),
         "/../../experiments/m194c-probe-layout/independent-tests.rs"
     ));
+
+    pub(super) fn green_fixture(w: usize, h: usize, layout: usize, k: usize) -> Frame {
+        make_frame(w, h, layout, k)
+    }
+
+    pub(super) fn green_render(
+        frames: Vec<Frame>,
+        dir: &std::path::Path,
+        label: &str,
+        cropped: bool,
+    ) -> Vec<u8> {
+        render(frames, dir, label, cropped, false, false, 0)
+    }
 }
 
 #[cfg(test)]
@@ -576,5 +616,13 @@ mod native_probe_fill_independent_tests {
     include!(concat!(
         env!("CARGO_MANIFEST_DIR"),
         "/../../experiments/native-probe-fill/independent-tests.rs"
+    ));
+}
+
+#[cfg(test)]
+mod native_green_probe_independent_tests {
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../experiments/native-green-probe/independent-tests.rs"
     ));
 }

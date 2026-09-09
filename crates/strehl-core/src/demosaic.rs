@@ -341,6 +341,24 @@ pub fn demosaic_row(m: &Mosaic, y: usize, out: &mut [f32]) {
     demosaic_malvar_row(m, y, out)
 }
 
+/// Reconstruct only the green output row, retaining the complete source mosaic.
+///
+/// The synthetic noise-floor probe consumes this channel alone. Use the same
+/// selection and exact green operations as [`demosaic_row`]; red/blue source
+/// samples still participate in green at red/blue sites.
+pub fn demosaic_green_row(m: &Mosaic, y: usize, out: &mut [f32]) {
+    assert_eq!(out.len(), m.width, "output row is the wrong width");
+    assert!(y < m.height, "row {y} is outside the mosaic");
+    let directional = use_directional();
+    for (x, o) in out.iter_mut().enumerate() {
+        *o = match m.plane_at(x, y) {
+            CfaPlane::G1 | CfaPlane::G2 => m.data[y * m.width + x],
+            _ if directional => green_directional(m, x as isize, y as isize),
+            _ => conv(m, x, y, &F_G),
+        };
+    }
+}
+
 /// Directional green, chroma as colour differences. **Measured and rejected as
 /// a default** — see [`DEMOSAIC_ENV`].
 pub fn demosaic_directional_row(m: &Mosaic, y: usize, out: &mut [f32]) {
