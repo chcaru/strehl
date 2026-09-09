@@ -1,0 +1,40 @@
+{
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-I",
+    "-S",
+    "-B",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\common-tiff-stack\\run-stage.py",
+    "--release",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\common-tiff-stack\\work\\build-release-2.json",
+    "--release-sha256",
+    "011337e097f488e112d720c6a2d742a44e358f60e9046a511410bb7241393b33"
+  ],
+  "elapsed_wall_seconds": 59.937999999994645,
+  "exit": {
+    "bytes": 2,
+    "path": "experiments/common-tiff-stack/work/build-external-2-exit.txt",
+    "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+  },
+  "exit_code": 1,
+  "schema": "common-tiff-stack-stage-external-v1",
+  "scope": "Complete directly launched controller interval and actual exit; controller owns descendant Jobs. Raw controller stdout/stderr. No whole CPU inference from wall.",
+  "source": {
+    "bytes": 29852,
+    "path": "experiments/common-tiff-stack/run-stage.py",
+    "sha256": "8f2bc5d8e9e1a5d3323643b5ba7b5d9ab1066093a6b90e5d6c86fb65320d1e3a"
+  },
+  "stderr": {
+    "bytes": 0,
+    "path": "experiments/common-tiff-stack/work/build-external-2-stderr.bin",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "stderr_bytes": 0,
+  "stdout": {
+    "bytes": 452,
+    "path": "experiments/common-tiff-stack/work/build-external-2-stdout.bin",
+    "sha256": "eccd43b123290241c5d5cc2cf801ff5568fd278bfe020651cb4621156865fa5f"
+  },
+  "stdout_bytes": 452,
+  "timeout_terminated": false
+}

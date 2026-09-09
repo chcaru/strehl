@@ -1,0 +1,22 @@
+{
+  "status": "VERIFIED_COMPLETE_SOURCE_FROM_BASE_AND_DELTA",
+  "source_count": 156,
+  "source_bytes": 5225420,
+  "delta_files": 9,
+  "base": {
+    "path": "experiments/common-tiff-stack/work/frozen-source-1.zip",
+    "bytes": 5265631,
+    "sha256": "e63e9a7e5dd227b8de097588194e07224b0bcbf224559c08e4fff01da7c81db3"
+  },
+  "delta": {
+    "path": "experiments/common-tiff-stack/work/frozen-source-2-delta.zip",
+    "bytes": 182485,
+    "sha256": "6acf8b148922310e66346901ba8e097feb977e597cdd9910f43df53bad2897e5"
+  },
+  "source_freeze": {
+    "path": "experiments/common-tiff-stack/work/source-freeze-2.json",
+    "bytes": 21902,
+    "sha256": "0db7b1c02b0270c353b49016a1687ecc40fc4d8bd0acd3f8de234ece3d1ef9fc"
+  },
+  "note": "All156 actual build2 source buffers equal base+delta readback before any compile-error correction. No science execution."
+}
