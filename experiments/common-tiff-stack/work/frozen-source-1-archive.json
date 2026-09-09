@@ -1,0 +1,15 @@
+{
+  "status": "VERIFIED_SOURCE_ARCHIVE_ONLY",
+  "source_count": 156,
+  "source_bytes": 5217607,
+  "archive": {
+    "path": "experiments/common-tiff-stack/work/frozen-source-1.zip",
+    "bytes": 5265631,
+    "sha256": "e63e9a7e5dd227b8de097588194e07224b0bcbf224559c08e4fff01da7c81db3"
+  },
+  "source_freeze": {
+    "bytes": 21902,
+    "sha256": "5a72fa2ce057c99462c500ffcc648f05545335b2428ef6686d5ebdd44aedd3a3"
+  },
+  "note": "Exact refused build1 sources retained before --jobs 2 correction; before-write and archive-readback equality. No executable/fixture/render/checker."
+}
