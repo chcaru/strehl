@@ -8,7 +8,7 @@ def save(path,value):
     with path.open("x",encoding="utf-8") as f:
         json.dump(value,f,indent=2,allow_nan=False);f.write("\n")
 assert sys.argv[1:]==[],"one fixed allocation, no sweep"
-build=HERE/"build-3"
+build=HERE/"build-4"
 receipt=json.loads((build/"invocation.json").read_text(encoding="utf-8"))
 def check_sources():
     for e in receipt["source_files"]:
@@ -16,7 +16,7 @@ def check_sources():
 check_sources()
 held=json.loads((build/"executables.json").read_text(encoding="utf-8"))["cli-tests"]
 exe=ROOT/held["path"];assert m.binding(exe)=={k:held[k] for k in ("bytes","sha256")}
-out=HERE/"run-1";out.mkdir()
+out=HERE/"run-2";out.mkdir()
 fields={"RAYON_NUM_THREADS":"2","STREHL_FULLRES_GATHER":"1",
         "STREHL_PROBE_GATHER":"green","STREHL_WARP_WRITEBACK":"parallel",
         "STREHL_DEFECT":"off","STREHL_GPU_GATHER_OUTPUT":str(out)}

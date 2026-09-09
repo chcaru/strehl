@@ -1,0 +1,8 @@
+{
+  "expected_primary_cases": 18,
+  "initialization_error": "GPU gather error: Validation Error\n\nCaused by:\n  In Device::create_shader_module, label = 'current-mhc-catmull'\n    \nShader validation error: Function [2] 'reflect' is invalid\n   ┌─ current-mhc-catmull:33:1\n   │  \n33 │ ╭ fn reflect(index:i32,n:i32)->u32 {\n34 │ │  if (n<=1) { return 0u; }\n35 │ │  var i=index;\n36 │ │  loop {\n37 │ │   if (i<0) { i=-i; } else if (i>=n) { i=2*(n-1)-i; } else { return u32(i); }\n38 │ │  }\n39 │ │ }\n   │ ╰─^ naga::ir::Function [2]\n   │  \n   = The `return` expression None does not match the declared return type Some([0])\n\n\n      The `return` expression None does not match the declared return type Some([0])\n",
+  "rows": [],
+  "schema": "native-gpu-gather-fixed-eighteen-v1",
+  "scope": "generated codes; exact operator equivalence, no calibration/quality/timing claim",
+  "status": "CONTROL_FAILED"
+}

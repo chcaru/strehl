@@ -1,0 +1,39 @@
+
+running 1 test
+test merge_cmd::tests::native_gpu_gather_controls::independent_gpu_gather_controls ... 
+thread 'merge_cmd::tests::native_gpu_gather_controls::independent_gpu_gather_controls' (24036) panicked at experiments\native-gpu-gather\src\lib.rs:116:60:
+GPU gather error: Validation Error
+
+Caused by:
+  In Device::create_shader_module, label = 'current-mhc-catmull'
+    
+Shader validation error: Function [2] 'reflect' is invalid
+   ┌─ current-mhc-catmull:33:1
+   │  
+33 │ ╭ fn reflect(index:i32,n:i32)->u32 {
+34 │ │  if (n<=1) { return 0u; }
+35 │ │  var i=index;
+36 │ │  loop {
+37 │ │   if (i<0) { i=-i; } else if (i>=n) { i=2*(n-1)-i; } else { return u32(i); }
+38 │ │  }
+39 │ │ }
+   │ ╰─^ naga::ir::Function [2]
+   │  
+   = The `return` expression None does not match the declared return type Some([0])
+
+
+      The `return` expression None does not match the declared return type Some([0])
+
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread 'merge_cmd::tests::native_gpu_gather_controls::independent_gpu_gather_controls' (24036) panicked at C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli/../../experiments/native-gpu-gather/independent-tests.rs:351:33:
+GPU initialization failed; report retained at C:\dev\blog\death-of-software\projects\strehl\experiments\native-gpu-gather\run-1\results.json
+FAILED
+
+failures:
+
+failures:
+    merge_cmd::tests::native_gpu_gather_controls::independent_gpu_gather_controls
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 168 filtered out; finished in 0.90s
+

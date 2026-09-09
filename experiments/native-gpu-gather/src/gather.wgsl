@@ -33,9 +33,10 @@ fn sensel(i:u32)->u32 { return (raw[i/2u] >> (16u*(i&1u))) & 65535u; }
 fn reflect(index:i32,n:i32)->u32 {
  if (n<=1) { return 0u; }
  var i=index;
- loop {
-  if (i<0) { i=-i; } else if (i>=n) { i=2*(n-1)-i; } else { return u32(i); }
+ while (i<0 || i>=n) {
+  if (i<0) { i=-i; } else { i=2*(n-1)-i; }
  }
+ return u32(i);
 }
 fn mosaic(x:i32,y:i32)->f32 {
  let sx=reflect(x,i32(p.dims.x)); let sy=reflect(y,i32(p.dims.y));

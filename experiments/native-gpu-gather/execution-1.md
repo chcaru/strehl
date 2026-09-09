@@ -30,3 +30,9 @@ Build2 exposed two further compile-only test issues: missing Similarity import
 and LowerHex unavailable on the current digest return type. Import the existing
 type and hex-format individual digest bytes. Build3 and run1 keep every fixed
 input/operator/criterion and all bounds; no GPU execution has yet occurred.
+
+Run1 built successfully, then shader validation refused reflect's implicit
+function-end return after its unconditional loop. No primary case executed.
+Rewrite the same reflection recurrence as a while-outside loop with an explicit
+return afterward. Build4/run2 repeat the unchanged fixed controls under the
+same bounds; this is an implementation repair, not a tolerance adjustment.
