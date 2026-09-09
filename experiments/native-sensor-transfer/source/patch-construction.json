@@ -1,0 +1,64 @@
+{
+  "schema": "native-sensor-transfer-source-patch-v1",
+  "status": "UNAPPLIED_SOURCE_ONLY",
+  "patch_bytes": 4907,
+  "patch_sha256": "2fda52067848153017fcb59e6b1bbb630b343ab5f1b76d96a90d7c727a77c553",
+  "normalization": "Hunks use LF. Source-only application preserves each unchanged original line byte-for-byte and chooses the neighbouring original newline for added lines. Candidate byte hashes and separate all-LF hashes are both explicit. Reversing all hunk edits reconstructed every original exact byte buffer. Live sources remain unchanged; root separately verifies actual apply/formatting.",
+  "paths": [
+    {
+      "path": "crates/strehl-core/Cargo.toml",
+      "original_bytes": 478,
+      "original_sha256": "6ef45d6cecf366bc4a882850f14b2f2ce518dc9ff73f3a3169ee6df0bb04d331",
+      "candidate_bytes": 506,
+      "candidate_sha256": "338bcf049529364bf07bde8005f72b1f072e31574dd80e7867e886bb2ac3228a",
+      "replacements": 1,
+      "reverse_exact_bytes": true,
+      "patch_applied_lf_bytes": 492,
+      "patch_applied_lf_sha256": "5879b09a44963738b238ed42571800fe5135f263d62a9febea78218cc23361b6"
+    },
+    {
+      "path": "crates/strehl-cli/Cargo.toml",
+      "original_bytes": 912,
+      "original_sha256": "812de43881c1b29afd84eb9435e7764027bae5da0f6efaabd5b8ea41ce6a3bf5",
+      "candidate_bytes": 976,
+      "candidate_sha256": "b89f7964189adf7375614ef31cb45eb888315a4fbf3f51407f33982cf94d53d5",
+      "replacements": 1,
+      "reverse_exact_bytes": true,
+      "patch_applied_lf_bytes": 976,
+      "patch_applied_lf_sha256": "b89f7964189adf7375614ef31cb45eb888315a4fbf3f51407f33982cf94d53d5"
+    },
+    {
+      "path": "crates/strehl-core/src/pyramid.rs",
+      "original_bytes": 208956,
+      "original_sha256": "ea0a490d299b156c449b3de8c5633fcaeda2190d1c92d1d9c5356e6a9a92c02e",
+      "replacements": 5,
+      "reverse_exact_bytes": true,
+      "patch_applied_lf_bytes": 210044,
+      "patch_applied_lf_sha256": "c5d7b0663ee083f9a70abe360b44057e4f8c062c39b4b85f807989ee5eba5686",
+      "candidate_bytes": 209731,
+      "candidate_sha256": "a504c2b8b5f693f0d83a186b20fa209082930d6b0167536b2177608adca41a65"
+    },
+    {
+      "path": "crates/strehl-cli/src/merge_cmd.rs",
+      "original_bytes": 425678,
+      "original_sha256": "ca829e45c7021c5c5df7b51da85859e3763a9a95d01d302a91ab7cd0687b2dcf",
+      "candidate_bytes": 426238,
+      "candidate_sha256": "6b7f018f5598f68cd4a5217ff522355498ecb9281200a97570256f9aabb4965c",
+      "replacements": 4,
+      "reverse_exact_bytes": true,
+      "patch_applied_lf_bytes": 426598,
+      "patch_applied_lf_sha256": "b0ffb690cddc2a915669edc565c2296b8a32abb0a18cd28f8ecd93a7a7ec4c33"
+    },
+    {
+      "path": "crates/strehl-cli/src/align_cmd.rs",
+      "original_bytes": 122446,
+      "original_sha256": "b3de7738151a6bc0500c66dd916f9fcb20cdb9be0bf698ad00425d3ebb397c69",
+      "candidate_bytes": 122681,
+      "candidate_sha256": "8cd858dd6bfe93999a621e94ff968a051c3d5c7fcd257ccf09f1402cea737c6d",
+      "replacements": 1,
+      "reverse_exact_bytes": true,
+      "patch_applied_lf_bytes": 119881,
+      "patch_applied_lf_sha256": "74e71af92b9f7b16e39f3f243cc7da3b69d8f73cfcccec372dfe4e3d60279519"
+    }
+  ]
+}
