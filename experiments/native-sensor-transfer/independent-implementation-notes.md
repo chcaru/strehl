@@ -192,3 +192,15 @@ required byte equality with the original; AST syntax parsing also passed.
 The numerical, decode and twenty-control source files did not change. No
 candidate import, control, array, decoder or native test was executed by this
 lane. The draft is historical source lineage, never a second reader invocation.
+
+## Source-only build-on attempt3 amendment
+
+The incremental-off second build reached CLI compilation and refused on a
+diagnostic json! expression syntax error. Root preserves that actual failed
+record and separately reviews the parentheses-only correction. The reader now
+binds build-on-3 and target/native-sensor-transfer-on-3 through exactly the same
+four path expressions; build-off-1 is unchanged. Reversing only their attempt
+numerals reproduces the prior committed reader bytes exactly (commit0e024582).
+The metadata constructor likewise changes only its build-source-freeze3/on3
+associations. No independent numerical/decode/control body or tolerance changes,
+no new reader attempt, and no candidate execution accompany this source change.
