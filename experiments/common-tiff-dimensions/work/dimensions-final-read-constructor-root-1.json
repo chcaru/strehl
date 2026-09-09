@@ -1,0 +1,7 @@
+{
+  "schema": "dimensions-final-read-constructor-root-v1",
+  "source_commit": "d7ff969d79a9e9b7869c797dc3b12ec96fdd4e30",
+  "exit_code": 0,
+  "whole_constructor_wall_seconds": 0.0843797,
+  "scope": "Complete direct metadata constructor interval and immediately captured terminal exit; exact invocation and source in prepared receipt. No image or executable payload read by constructor."
+}
