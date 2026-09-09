@@ -6,8 +6,10 @@ p=ROOT/"experiments/m193c-output-grid/bounded-process.py";s=importlib.util.spec_
 def save(p,v):
     with p.open("x",encoding="utf-8") as f:json.dump(v,f,indent=2);f.write("\n")
 api=m.load_job_api(m.binding(ROOT/"experiments/m12-scorecard/m12-harness.py"))
-exe=HERE/"build-1/cli-tests.exe";assert m.binding(exe)["sha256"]==json.loads((exe.parent/"executables.json").read_text(encoding="utf-8"))["cli-tests"]["sha256"]
-out=HERE/"controls-1";out.mkdir()
+assert sys.argv[1:] in ([], ["--revised-power"]), "only fixed power-control revision is supported"
+revised=bool(sys.argv[1:])
+exe=HERE/("build-2/cli-tests.exe" if revised else "build-1/cli-tests.exe");assert m.binding(exe)["sha256"]==json.loads((exe.parent/"executables.json").read_text(encoding="utf-8"))["cli-tests"]["sha256"]
+out=HERE/("controls-2" if revised else "controls-1");out.mkdir()
 pairs=[]
 for demosaic in ("malvar","directional"):
  for fullres in ("1","0"):

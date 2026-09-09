@@ -20,7 +20,7 @@ plan=json.loads(plan_path.read_text(encoding="utf-8"))
 baseline=(json.loads((HERE/"transfer-109/results.json").read_text(encoding="utf-8"))["renders"][0] if green else None) if transfer else json.loads((PROFILE/"native/results.json").read_text(encoding="utf-8"))["renders"][0]
 arms=("old","candidate","candidate","old","rgb-control") if green else (("old","candidate","candidate","old") if transfer else ("old","candidate","candidate","old","scalar-control"))
 old=HERE/"build-1/strehl.exe" if green else PROFILE/"build-1/strehl.exe"
-new=ROOT/"experiments/native-green-probe/build-1/strehl.exe" if green else HERE/"build-1/strehl.exe"
+new=ROOT/"experiments/native-green-probe/build-2/strehl.exe" if green else HERE/"build-1/strehl.exe"
 for exe in (old,new):
     built=json.loads((exe.parent/"executables.json").read_text(encoding="utf-8"))
     assert ref(exe)["sha256"]==built["strehl"]["sha256"]

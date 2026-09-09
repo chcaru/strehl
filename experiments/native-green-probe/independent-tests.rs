@@ -55,22 +55,48 @@ fn core_controls() -> (usize, String) {
         all_bits.extend(core_rows(&data, w, h));
         sites += w * h;
     }
+    // Retain the failed first-run power input as an asserted known inert case.
+    // 27*37+11 = 10*101: this stimulus is constant down every column.
     let (w, h) = (27, 19);
     let data: Vec<f32> = (0..w * h).map(|i| ((i * 37 + (i / w) * 11) % 101) as f32 + 3.25).collect();
+    assert!(data.chunks_exact(w).all(|row| row == &data[..w]));
+    let mut blue_zeroed = data.clone();
+    for y in (1..h).step_by(2) {
+        for x in (1..w).step_by(2) { blue_zeroed[y * w + x] = 0.0; }
+    }
+    let original = Mosaic { data: &data, width: w, height: h };
+    let changed = Mosaic { data: &blue_zeroed, width: w, height: h };
+    let mut a = vec![0.0; 3 * w];
+    let mut b = vec![0.0; 3 * w];
+    let mut malvar_was_live = false;
+    for y in 0..h {
+        demosaic::demosaic_directional_row(&original, y, &mut a);
+        demosaic::demosaic_directional_row(&changed, y, &mut b);
+        for x in 0..w { assert_eq!(a[3 * x + 1].to_bits(), b[3 * x + 1].to_bits(), "known column-constant directional B control changed"); }
+        demosaic::demosaic_malvar_row(&original, y, &mut a);
+        demosaic::demosaic_malvar_row(&changed, y, &mut b);
+        malvar_was_live |= (0..w).any(|x| a[3 * x + 1].to_bits() != b[3 * x + 1].to_bits());
+    }
+    assert!(malvar_was_live, "retained old stimulus no longer distinguishes directional invariance from Malvar response");
+
+    // A two-dimensional isolated known-color impulse forces both directional
+    // curvatures to respond. The center green is 64 + 32/2 = 80 in BOTH arms.
+    // An implementation discarding R/B source samples would incorrectly stay 64.
+    let (w, h) = (24, 20);
+    let data = vec![64.0f32; w * h];
     let baseline = core_rows(&data, w, h);
-    for phase in [0, 3] {
+    for (x, y) in [(10, 8), (11, 9)] {
         let mut changed = data.clone();
-        for (i, v) in changed.iter_mut().enumerate() {
-            if 2 * ((i / w) % 2) + (i % w) % 2 == phase { *v = 0.0; }
-        }
-        let poisoned = core_rows(&changed, w, h);
-        let mut reconstructed_changes = 0;
+        changed[y * w + x] += 32.0;
+        let impulsed = core_rows(&changed, w, h);
+        assert_eq!(baseline[y * w + x], 64.0f32.to_bits());
+        assert_eq!(impulsed[y * w + x], 80.0f32.to_bits(), "known-color impulse did not reach green at {x},{y}");
         for i in 0..w * h {
             if ((i % w) + (i / w)) % 2 == 1 {
-                assert_eq!(baseline[i], poisoned[i], "source G must remain unchanged");
-            } else { reconstructed_changes += usize::from(baseline[i] != poisoned[i]); }
+                assert_eq!(baseline[i], impulsed[i], "source G must remain unchanged");
+            }
         }
-        assert!(reconstructed_changes > 0, "source R/B destroyer did not reach reconstructed green, phase={phase}");
+        assert_ne!(baseline, impulsed, "two-dimensional source impulse lost power");
     }
     (sites, bits_hash(&all_bits))
 }
@@ -131,22 +157,32 @@ fn warp_controls() -> (usize, usize) {
     assert_eq!(pairs, 144);
     assert_eq!(dispatches, 4);
     assert!(partial && absent && omitted_rb_live && odd_tail, "required geometry/output omission case was not live");
-    let before = frame(66, 46, 2, 0);
+    // Use the same analytic impulse after actual gathering. At a quarter-plane
+    // horizontal shift, a destination green samples halfway between a known G
+    // and the impulse's reconstructed green. 320 DN at R/B yields +80 DN here.
+    let mut before = frame(66, 46, 2, 0);
+    before.wb_coeffs = [1.0, 1.0, 1.0, f32::NAN];
     let g = before.geometry();
-    let mut baseline = before.clone();
-    align_cmd::warp_probe_greens_in_place_fullres(&mut baseline, transform(1), g, Resampler::CatmullRom, &mut WarpScratch::new(g)).unwrap();
-    for phase in [0, 3] {
-        let mut changed = before.clone();
-        for y in 0..2 * g.height {
-            for x in 0..2 * g.width {
-                if 2 * (y % 2) + x % 2 == phase {
-                    changed.data[(changed.active.y + y) * changed.stride + changed.active.x + x] = 512;
-                }
-            }
+    for y in 0..2 * g.height {
+        for x in 0..2 * g.width {
+            before.data[(before.active.y + y) * before.stride + before.active.x + x] = 2512;
         }
-        assert_eq!(green_codes(&changed), green_codes(&before), "destroyer touched source greens");
-        align_cmd::warp_probe_greens_in_place_fullres(&mut changed, transform(1), g, Resampler::CatmullRom, &mut WarpScratch::new(g)).unwrap();
-        assert_ne!(green_codes(&changed), green_codes(&baseline), "source R/B did not affect consumed destination greens, phase={phase}");
+    }
+    let shift = Similarity::from_params(SimilarityParams { g: 0.0, rot: 0.0, ax: 0.25, ay: 0.0 });
+    let mut baseline = before.clone();
+    align_cmd::warp_probe_greens_in_place_fullres(&mut baseline, shift, g, Resampler::Bilinear, &mut WarpScratch::new(g)).unwrap();
+    for (x, y) in [(20, 20), (21, 21)] {
+        let mut changed = before.clone();
+        changed.data[(changed.active.y + y) * changed.stride + changed.active.x + x] += 320;
+        assert_eq!(green_codes(&changed), green_codes(&before), "impulse touched source greens");
+        let mut rgb = changed.clone();
+        align_cmd::warp_frame_in_place_fullres(&mut rgb, shift, g, Resampler::Bilinear, &mut WarpScratch::new(g)).unwrap();
+        align_cmd::warp_probe_greens_in_place_fullres(&mut changed, shift, g, Resampler::Bilinear, &mut WarpScratch::new(g)).unwrap();
+        assert_eq!(green_codes(&changed), green_codes(&rgb), "impulse RGB/green gather mismatch");
+        let dest = (before.active.y + y) * before.stride + before.active.x + x - 1;
+        assert_eq!(baseline.data[dest], 2512, "impulse's baseline destination");
+        assert_eq!(changed.data[dest], 2592, "known-color impulse did not reach consumed destination green at {},{y}",x - 1);
+        assert_ne!(green_codes(&changed), green_codes(&baseline), "source impulse did not affect consumed destination greens");
     }
     (pairs, sites)
 }
