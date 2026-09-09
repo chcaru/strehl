@@ -89,3 +89,32 @@ pub(crate) fn warp_frame_fullres_into_planes<const GREEN_ONLY: bool>(
         })?;
     Ok(())
 }
+
+// Test-only liveness markers: explicit arithmetic helpers do not touch these.
+#[cfg(test)]
+static DIRECT_OBSERVER: std::sync::atomic::AtomicBool = std::sync::atomic::AtomicBool::new(false);
+#[cfg(test)]
+static DIRECT_ACTUAL_HITS: std::sync::atomic::AtomicUsize = std::sync::atomic::AtomicUsize::new(0);
+#[cfg(test)]
+static DIRECT_PROBE_HITS: std::sync::atomic::AtomicUsize = std::sync::atomic::AtomicUsize::new(0);
+#[cfg(test)]
+pub(crate) fn direct_plane_observer(enabled: bool) {
+    DIRECT_OBSERVER.store(enabled, std::sync::atomic::Ordering::SeqCst);
+}
+#[cfg(test)]
+pub(crate) fn direct_plane_hits() -> (usize, usize) {
+    (DIRECT_ACTUAL_HITS.load(std::sync::atomic::Ordering::SeqCst),
+     DIRECT_PROBE_HITS.load(std::sync::atomic::Ordering::SeqCst))
+}
+#[cfg(test)]
+pub(crate) fn direct_plane_actual_hit() {
+    if DIRECT_OBSERVER.load(std::sync::atomic::Ordering::SeqCst) {
+        DIRECT_ACTUAL_HITS.fetch_add(1, std::sync::atomic::Ordering::SeqCst);
+    }
+}
+#[cfg(test)]
+pub(crate) fn direct_plane_probe_hit() {
+    if DIRECT_OBSERVER.load(std::sync::atomic::Ordering::SeqCst) {
+        DIRECT_PROBE_HITS.fetch_add(1, std::sync::atomic::Ordering::SeqCst);
+    }
+}

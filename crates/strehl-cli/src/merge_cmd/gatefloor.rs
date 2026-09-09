@@ -308,6 +308,8 @@ impl Probe {
                     &mut probe,t,self.domain.full,resampler,scratch,self.domain.rect,
                     &BAND_PLANE_OFFSETS[1..3],&mut self.planes,direct_mode)
             }.context("gathering the direct noise-probe planes")?;
+            #[cfg(test)]
+            align_cmd::direct_plane_probe_hit();
         }
         if !direct_consumed {
             if greens_only {

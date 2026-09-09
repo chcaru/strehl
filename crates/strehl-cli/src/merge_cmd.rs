@@ -4830,6 +4830,10 @@ struct BandWorker {
 trait PyramidFrameSource: Sync {
     fn len(&self) -> usize;
     fn decode(&self, index: usize) -> Result<Frame>;
+    #[cfg(all(test, feature = "native-direct-planes"))]
+    fn observe_direct_inputs(&self, _index: usize, _planes: &[Vec<f32>], _luma: &[f32], _beta: Option<&[f32]>) -> Result<()> { Ok(()) }
+    #[cfg(all(test, feature = "native-direct-planes"))]
+    fn observe_direct_collapsed(&self, _planes: &[Vec<f32>]) -> Result<()> { Ok(()) }
     #[cfg(feature = "native-boundary-radiance")]
     fn boundary_config(&self) -> Option<native_boundary_radiance::Configuration> { None }
     #[cfg(feature = "native-boundary-radiance")]
@@ -4939,6 +4943,8 @@ impl BandWorker {
             self.beta_n += 1;
         }
 
+        #[cfg(all(test, feature = "native-direct-planes"))]
+        source.observe_direct_inputs(index, &self.planes, &self.luma, frame_beta)?;
         let refs: Vec<&[f32]> = self.planes.iter().map(|v| v.as_slice()).collect();
         #[cfg(all(test, feature = "native-sensor-transfer"))]
         native_sensor_transfer::inputs(&self.planes, &self.luma, &self.var, frame_beta);
@@ -5047,6 +5053,8 @@ fn load_frame(
                             &mut frame,*t,domain.full,map.resampler(),scratch,domain.rect,
                             &BAND_PLANE_OFFSETS,planes,direct_mode)?;
                         direct_consumed = true;
+                        #[cfg(test)]
+                        align_cmd::direct_plane_actual_hit();
                     }
                     if !direct_consumed {
                         align_cmd::warp_frame_in_place(
@@ -6231,6 +6239,8 @@ fn run_pyramid_prepared(
 
     #[cfg(feature = "native-boundary-radiance")]
     observed_source.finish(&mut planes)?;
+    #[cfg(all(test, feature = "native-direct-planes"))]
+    source.observe_direct_collapsed(&planes)?;
 
     // The confidence map, if asked for. Deliberately AFTER `finish` and before
     // the write: the question it answers is about the merged output, so the
