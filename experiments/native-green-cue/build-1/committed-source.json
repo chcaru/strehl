@@ -1,0 +1,21 @@
+{
+  "build_recorded_head": "33d87c0382e32ab4711f13bd9482287dffaaf0fe",
+  "committed_source_revision": "bd7d444e53a8ec399ffc8299e0431c98b20bb2bf",
+  "matched_source_paths": [
+    "crates/strehl-cli/Cargo.toml",
+    "crates/strehl-cli/src/merge_cmd.rs",
+    "experiments/native-pyramid-profile/implementation.rs",
+    "experiments/native-pyramid-profile/build.py",
+    "crates/strehl-cli/src/merge_cmd/gatefloor.rs",
+    "crates/strehl-cli/src/align_cmd.rs",
+    "crates/strehl-core/src/demosaic.rs",
+    "crates/strehl-core/Cargo.toml",
+    "crates/strehl-core/src/pyramid.rs",
+    "Cargo.lock",
+    "experiments/native-green-cue/implementation.rs",
+    "experiments/native-green-cue/independent-controls.rs",
+    "experiments/native-green-cue/design.md",
+    "experiments/native-green-cue/charter.md"
+  ],
+  "explanation": "Build began while source commit was blocked by an empty abandoned Git index lock. No source changed between build and commit; every declared compiled source matches this committed revision byte for byte. Original invocation retained."
+}

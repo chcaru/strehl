@@ -1,0 +1,15 @@
+
+running 1 test
+test merge_cmd::gatefloor::native_green_cue_controls::native_green_cue_consumer ... 
+thread 'merge_cmd::gatefloor::native_green_cue_controls::native_green_cue_consumer' (24460) panicked at C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli/../../experiments/native-green-cue/independent-controls.rs:399:5:
+fixed candidate rejected; see complete measurements
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+FAILED
+
+failures:
+
+failures:
+    merge_cmd::gatefloor::native_green_cue_controls::native_green_cue_consumer
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 168 filtered out; finished in 2.70s
+

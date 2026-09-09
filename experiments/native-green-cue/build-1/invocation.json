@@ -1,0 +1,102 @@
+{
+  "command": [
+    "cargo",
+    "test",
+    "-p",
+    "strehl-cli",
+    "--bin",
+    "strehl",
+    "--test",
+    "byte-freeze",
+    "--no-run",
+    "--release",
+    "--features",
+    "native-pyramid-profile,native-green-cue",
+    "--jobs",
+    "2",
+    "--target-dir",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\target\\native-pyramid-profile",
+    "--message-format=json-render-diagnostics",
+    "--locked",
+    "--offline"
+  ],
+  "revision": "33d87c0382e32ab4711f13bd9482287dffaaf0fe",
+  "environment_overrides": {
+    "RAYON_NUM_THREADS": "8",
+    "CARGO_INCREMENTAL": "0"
+  },
+  "removed_environment": [],
+  "source_files": [
+    {
+      "path": "crates\\strehl-cli\\Cargo.toml",
+      "bytes": 1619,
+      "sha256": "320896151425f30d9af6fc6a595c0debaf9529f00106d6e70c735032ec45cd46"
+    },
+    {
+      "path": "crates\\strehl-cli\\src\\merge_cmd.rs",
+      "bytes": 437881,
+      "sha256": "dcaa52f878e11e9038927989959037da4f1352bbc7e8fb612d699c9ff92e07ba"
+    },
+    {
+      "path": "experiments\\native-pyramid-profile\\implementation.rs",
+      "bytes": 12621,
+      "sha256": "85362dd472a95d64704c80235159abb188573914ac3cf9e7ac3b0fa16c029c69"
+    },
+    {
+      "path": "experiments\\native-pyramid-profile\\build.py",
+      "bytes": 5341,
+      "sha256": "a45b6971fa1ce40dd174de66fec7da2d8984ca944c0e7f7910ccd0e95e494ef8"
+    },
+    {
+      "path": "crates\\strehl-cli\\src\\merge_cmd\\gatefloor.rs",
+      "bytes": 28061,
+      "sha256": "7d1fa8c3f6f79c279e8dfead0cbea2fbea2967e5d2da81db60c8d5c70edb4b25"
+    },
+    {
+      "path": "crates\\strehl-cli\\src\\align_cmd.rs",
+      "bytes": 128050,
+      "sha256": "ba4ec58b969d13f9fe611558423cac71ce223b04ed5111edfbae303e0435c2de"
+    },
+    {
+      "path": "crates\\strehl-core\\src\\demosaic.rs",
+      "bytes": 52206,
+      "sha256": "17cca911c2e756f3224deb1520379a1994c58375d3bcb5f4c91fcf9dc6fbe514"
+    },
+    {
+      "path": "crates\\strehl-core\\Cargo.toml",
+      "bytes": 955,
+      "sha256": "722149ae720fc5e376d3b7b1cfead95ee61c6ba3e1628ddb5c05d0f0621fa4c8"
+    },
+    {
+      "path": "crates\\strehl-core\\src\\pyramid.rs",
+      "bytes": 211904,
+      "sha256": "29210ab4ed704fbde09191b83b92d9824232f2ef4af6ce3d2a2841560efad011"
+    },
+    {
+      "path": "Cargo.lock",
+      "bytes": 43586,
+      "sha256": "8b6d95c415f988a4a182e3d94230ea57b0d69d2bcedd4b2410cb44d8ca434b90"
+    },
+    {
+      "path": "experiments\\native-green-cue\\implementation.rs",
+      "bytes": 4754,
+      "sha256": "74f0031636532f883c9688a0a0b037ead657939547c5f03800f4c0e21af75f54"
+    },
+    {
+      "path": "experiments\\native-green-cue\\independent-controls.rs",
+      "bytes": 23955,
+      "sha256": "ecf95bf9173241fdd7035f27c8b4b5fc421cdfa31bdcea94333fc523425e5b14"
+    },
+    {
+      "path": "experiments\\native-green-cue\\design.md",
+      "bytes": 8296,
+      "sha256": "80f2d83998a5f1eaf7d4d5d4b656abfd4c6a3c44ce6cce73fe5b70a5a3990117"
+    },
+    {
+      "path": "experiments\\native-green-cue\\charter.md",
+      "bytes": 2923,
+      "sha256": "49e6c565c7b12035165803a00d1f7d354e88822093d52d582930e963e5a7ec7b"
+    }
+  ],
+  "scope": "release compile only; existing integration test is compiled to obtain CLI artifact and is not executed"
+}

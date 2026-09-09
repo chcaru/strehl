@@ -1,0 +1,47 @@
+{
+  "command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-green-cue\\build-1\\cli-tests.exe",
+    "--exact",
+    "merge_cmd::gatefloor::native_green_cue_controls::native_green_cue_consumer",
+    "--ignored",
+    "--nocapture",
+    "--test-threads=1"
+  ],
+  "overrides": {
+    "RAYON_NUM_THREADS": "2",
+    "STREHL_FULLRES_GATHER": "1",
+    "STREHL_PROBE_GATHER": "green",
+    "STREHL_WARP_WRITEBACK": "parallel",
+    "STREHL_DEFECT": "off",
+    "STREHL_GREEN_CUE_OUT": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-green-cue\\run-1\\measurement.json"
+  },
+  "removed_environment": [],
+  "executable": {
+    "path": "experiments\\native-green-cue\\build-1\\cli-tests.exe",
+    "bytes": 13449728,
+    "sha256": "b64a90f9e3dc0554c289404077574eeb5c0641fae8c487af0ff86e639f89882f"
+  },
+  "build": {
+    "sha256": "9135cf7eb06232b3d6c9f8f51baa08ddbf113c914a895dc2c7dda25b87c417c9",
+    "bytes": 3318
+  },
+  "source_revision": "33d87c0382e32ab4711f13bd9482287dffaaf0fe",
+  "protocol": {
+    "run.py": {
+      "sha256": "5073b83ae616b9dc117663483f993580b571af77cf5d7a8ed6a470107aed3703",
+      "bytes": 3118
+    },
+    "design.md": {
+      "sha256": "80f2d83998a5f1eaf7d4d5d4b656abfd4c6a3c44ce6cce73fe5b70a5a3990117",
+      "bytes": 8296
+    },
+    "independent-review.md": {
+      "sha256": "1cd95836cedf0874a241bdfd02a97a1be21b8a847bdce2d1796c9392a16d7dea",
+      "bytes": 7405
+    },
+    "charter.md": {
+      "sha256": "49e6c565c7b12035165803a00d1f7d354e88822093d52d582930e963e5a7ec7b",
+      "bytes": 2923
+    }
+  }
+}
