@@ -48,3 +48,39 @@ independently verified. Then issue a separately committed build2 with a fresh
 target, own source delta archive and unchanged product/checker population.
 The newly added source/control files and all changed bindings must be reviewed
 and frozen before execution; no old image or checker rerun is justified.
+
+Root status checkpoint,2026-09-08:
+The user asked for program status; this is steering, not cancellation. Program
+notes were appended preserving all prior bytes and exact user heading; that
+file remains deliberately unstaged. Hourly strehl-sota-program heartbeat is
+ACTIVE and updated to this build1 failure and current source-only correction.
+
+Independent source review found the initial shim could tolerate a present
+dangling reparse path because held lexical uses exists before lstat. Initial
+shim/control/spec drafts are preserved. Current2991-byte shim SHA
+3a1aa413fd4c9d37bccb973a419e3f4c03291903d44b7198c53992e7b00d3e46
+uses no-follow lstat on all ancestors before strict resolve. The reparse row
+now has attribute and symlink-mode variants:16 groups,17 dispatcher calls.
+These are injected metadata witnesses; deletion rows actually delete their
+own11-byte fixture at the resolve seam. No controls have executed.
+
+Coordinate owns pending scratch-control-capture.py (one direct owned Python,
+child5CPU10wall1MiBread1MiBwrite plus separate wrapper5CPU10wall1MiBread1MiBwrite,
+outer combined20wall including cleanup/publication). Reviewer independently
+checks shim, fixed controls and capture; root reviews and commits exact sources
+before one execution, then separately verifies saved actual outputs.
+
+Factor agent is preparing source-only build2 integration in the new dimensions
+runner/helper/prepare/capture, with fresh target/build2, dependent stages still1
+and base archive1 plus changed/new source archive2. Root owns prospective
+build2-source-review.md; peer owns scratch-scan-source-review.md. Current edits
+are pending, not frozen. Product checker only changes the exact executable
+path literal build1->build2; its reversal reproduces6e98e4fd byte-for-byte,
+new65751B/8fefa5e31c614595367f644b314ece77da6bf5d4ec54c4edde80816a0e8cee47.
+No24-case/135-control population or numerical tolerance changes are authorized.
+
+Fresh build2 reservation600CPU300wall, added to original stages870CPU720wall
+=>1470CPU1020wall planned stage allocations. Metadata firstbuild10CPU20wall
+plus four fresh constructor slots40CPU80wall=>50CPU100wall; independent
+failed-build review10CPU20wall and scratch slices remain separate. These are
+reservations, not observed usage; do not invent a whole-program numerical sum.
