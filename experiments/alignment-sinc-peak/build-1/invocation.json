@@ -1,0 +1,79 @@
+{
+  "command": [
+    "cargo",
+    "test",
+    "-p",
+    "strehl-core",
+    "--lib",
+    "--no-run",
+    "--release",
+    "--features",
+    "alignment-sinc-peak",
+    "--jobs",
+    "2",
+    "--target-dir",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\target\\native-pyramid-profile",
+    "--message-format=json-render-diagnostics",
+    "--locked",
+    "--offline"
+  ],
+  "source_files": [
+    {
+      "path": "crates\\strehl-core\\Cargo.toml",
+      "sha256": "b3a1014b257fd6e2193d6a33916725eab44ac509df7c75a864463ffaae71fa78",
+      "bytes": 868
+    },
+    {
+      "path": "crates\\strehl-core\\src\\align.rs",
+      "sha256": "98fa69c3f8d730246bbcb02af07e112cfa643ee7fbb36f82b93031a893293de8",
+      "bytes": 150909
+    },
+    {
+      "path": "crates\\strehl-core\\src\\lib.rs",
+      "sha256": "91419ceb273be1dc9ab15dbdc6347bd2b398d29cf36c0da9184ee533372f8022",
+      "bytes": 4356
+    },
+    {
+      "path": "Cargo.lock",
+      "sha256": "8b6d95c415f988a4a182e3d94230ea57b0d69d2bcedd4b2410cb44d8ca434b90",
+      "bytes": 43586
+    },
+    {
+      "path": "experiments\\alignment-sinc-peak\\implementation.rs",
+      "sha256": "88a0ca6da8d605aa241a6602d014c6c958281485f6e0326b910f97c3c8c5d255",
+      "bytes": 8511
+    },
+    {
+      "path": "experiments\\alignment-sinc-peak\\consumer-tests.rs",
+      "sha256": "fcfde31b8c899844b9765c12b3ab26fd1941c9c4b8da800004945f46a0384a08",
+      "bytes": 16134
+    },
+    {
+      "path": "experiments\\alignment-sinc-peak\\independent-controls.rs",
+      "sha256": "61ee3924f09f84e47c0719338cf94f854dd0096835c0e34d0ea6026076600d35",
+      "bytes": 6838
+    },
+    {
+      "path": "experiments\\alignment-sinc-peak\\design.md",
+      "sha256": "529a343328cf0d31021d55897752a60b9cc49fe82ef08993fdffe9fe55aee23d",
+      "bytes": 8814
+    },
+    {
+      "path": "experiments\\alignment-sinc-peak\\charter.md",
+      "sha256": "c817c85889cde3e7ef0f2479aa29954d38ac4b31e9111a78d20dc8e193b8c828",
+      "bytes": 3866
+    },
+    {
+      "path": "experiments\\alignment-sinc-peak\\build.py",
+      "sha256": "07b7d39531446ee2f53d83f071f132b2e7e0f3ada780655d388f308f4940028e",
+      "bytes": 2831
+    }
+  ],
+  "revision": "e22ba5c15ac6c063fdb57ac401458a255a52c2f9",
+  "environment_overrides": {
+    "RAYON_NUM_THREADS": "2",
+    "CARGO_INCREMENTAL": "0"
+  },
+  "removed_environment": [],
+  "scope": "core-only compile; no test or original image execution"
+}

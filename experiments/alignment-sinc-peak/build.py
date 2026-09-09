@@ -17,8 +17,8 @@ def save(path,value):
     with path.open("x",encoding="utf-8") as stream:
         json.dump(value,stream,indent=2,allow_nan=False);stream.write("\n")
 
-assert not sys.argv[1:]
-out=HERE/"build-1";out.mkdir()
+assert sys.argv[1:] in ([], ["--diagnostic"])
+out=HERE/("build-2" if sys.argv[1:] else "build-1");out.mkdir()
 files=["crates/strehl-core/Cargo.toml","crates/strehl-core/src/align.rs","crates/strehl-core/src/lib.rs","Cargo.lock"]
 files += ["experiments/alignment-sinc-peak/"+name for name in
           ("implementation.rs","consumer-tests.rs","independent-controls.rs","design.md","charter.md","build.py")]

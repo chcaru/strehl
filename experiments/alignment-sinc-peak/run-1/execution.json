@@ -1,0 +1,17 @@
+{
+  "build": {
+    "sha256": "5c554cd85feac5c99fa4a726c3fa8732a57ea84d0b2b81f838cf4ba62c26dc81",
+    "bytes": 2481
+  },
+  "executable": {
+    "path": "experiments\\alignment-sinc-peak\\build-1\\core-tests.exe",
+    "sha256": "3a3e76c11e7cdf4d4a1f7ce873ab83923ae37d0fff898dc75ed16ee12fcbfd07",
+    "bytes": 3594752
+  },
+  "runner": {
+    "sha256": "381d5fc4779c37d3864d31ccf602287a069ec20823bf77aab8fb282de50b5176",
+    "bytes": 3633
+  },
+  "revision": "e22ba5c15ac6c063fdb57ac401458a255a52c2f9",
+  "scope": "no original captures; fixed generated source"
+}

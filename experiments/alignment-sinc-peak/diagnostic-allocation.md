@@ -1,0 +1,5 @@
+# One failed-control diagnostic
+
+2026-09-09. The first independent literal test at source e22ba5c15ac6c063fdb57ac401458a255a52c2f9 failed before any consumer/timing/RAW work. A known analytic positive was refused; the assertion omitted its case and Outcome, so the cause is not established. Preserve build1 and run1 completely. Testexit101, no Job error or intervention,0.14wall/0.015625childCPU seconds. This is an implementation-control failure, not a measured native placement result.
+
+Root authorizes exactly one context-only source edit to the failing assertion and one repeat of that same literal test. Print kind, shift and the existing result tuple when it fails; do not change the candidate, input, assertions, thresholds or optimizer. The existing builder gains only --diagnostic to select fresh build2. No consumer run follows automatically. The shared remaining numerical allowance is119.984375CPU seconds, not a new120-second population. No new renderer, frame, probe or parameter sweep. This narrow debugging step makes the already-observed failure actionable; it does not erase it or accept the candidate.

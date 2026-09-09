@@ -48,7 +48,7 @@ where F: Fn(&[f32],usize,usize,usize)->Answer {
             let values=grid(side,at,|x,y| analytic(kind,x,y,shift));
             assert_eq!(peak(&values,side),at,"positive plant must nominate supplied integer peak");
             let result=evaluate(&refine,&values,side,at);
-            let offset=result.0.expect("analytic positive peak must exercise candidate");
+            let offset=result.0.unwrap_or_else(|| panic!("analytic positive peak must exercise candidate: kind={kind}, shift={shift:?}, outcome={result:?}"));
             let error=(offset.0 as f64-shift.0).hypot(offset.1 as f64-shift.1);
             assert!(error<=if shift==(0.0,0.0) {0.001} else {0.15},
                 "signed analytic maximum error={error}, kind={kind}, shift={shift:?}");
