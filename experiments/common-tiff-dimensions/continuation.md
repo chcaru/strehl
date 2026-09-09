@@ -203,3 +203,59 @@ retaining the old parentREFUSED; no invented oldCOMPLETE or generic failure
 bypass. Original controller/source identities remain historical; new execution
 authority is an explicit additive map. Reuse exact two legacy callsite changes
 and unchanged numerical/checker bodies. Render1/verify1 remain unvisited.
+
+Recovery source and actual controls checkpoint, 2026-09-08:
+The reviewed eight new sources are committed at ece53b2e; the existing pinned
+contract/design stay unchanged. Source review7559d9a5 independently clears the
+closed ten-source extension and retains all source-derived capacity tables.
+Its operative capture sublimit is1MiB read/write inside the authorized4/2MiB
+envelope. Admission normal-read bound65,344,404B leaves1,764,460B under64MiB;
+these are SOURCE-DERIVED limits, not actual performance observations.
+
+Controls constructor ran once, exit0. Current200-source freeze28903B
+e6418a9a721ce6b322e58d235a211f60050e07488f325016eabdc25cf378f5d1
+and additive archive/release committed c8697aef. Original190 and compiled118
+remain unchanged. Actual controls ran once from the held release; all40groups
+report pass, no error, direct child0 and root wrapper0. Evidence ecea6f3d
+preserves all9files, including two distinct same-content26B path stimuli.
+Result/stdout8030B641b722d77521b4ce5b6168b0287122e86fa0f2528aa6abff4be902e3762abf5;
+outer1875Bb2faa5c0ac55ebcff183333f66bb8d8ee0a30efe8933199ef0358099f17e81b1.
+Independent saved-control review is commissioned10CPU20activewall4MiBread1MiB
+retained; no admission until its actual-result interpretation is accepted.
+No recovery/admission/render/verify run has occurred at this checkpoint.
+
+Coordinate is drafting the separate independent final saved reader plus explicit
+recovery-authority amendment to the original final plan. Factor is drafting the
+next integer-translation/crop charter from the completed source audit. Both are
+source-only, outside the held200-file map; neither releases new numerical work.
+
+Saved admission and application execution checkpoint, 2026-09-08:
+Independent reviewer reported all253 saved-control predicates accepted before
+publishing its final files. Root accepted that message and executed the held
+childless recovery once (release59315128, evidence436cc70f): exit0,
+SAVED_FIXTURES_ADMITTED,59files/16025258B, oldprepareREFUSED,
+subject_complete=false, zero children. Actual read sample62400176B plus1MiB
+final reserve under64MiB; parent-tail CPU1.359375s, no child CPU, outer1.656s.
+
+All24 application invocations then completed once from releasebabd0da8.
+Evidencee5f3e8c0 preserves163files/2981662B, all108case artifacts, nineexit0
+positives and fifteenexit1 semantic refusals; no stage/finalization error.
+Actual outer19.312s, parent-tail8.984375CPU and childJob total10.5CPU.
+Root's first metadata summary was truncated because it printed163names;
+a compact saved-record reread completed without rerunning any application.
+No pixel-quality acceptance follows from the process disposition alone.
+
+Verification metadata constructor succeeded once; release56f6cf2a binds the
+original135 numerical controls and exact completed render bundle. Its actual
+verifier has NOT yet executed at this checkpoint.
+
+After these runs the control reviewer reported a publication-resource failure:
+the owned-file patch tool took22.6s, exceeding its20active-wall allocation,
+plus an earlier command-length failure that launched no process. The253saved
+predicates had passed; the full review's resource compliance was not complete
+when root acted on the acceptance message. Preserve this chronology; do not
+describe the original review as fully admitted or the overhead as zero.
+Root prospectively adds one5CPU30active-wall1MiBread final readback/publication
+slice within the same1MiB retained family, preserving the earlier overrun
+without refund or re-executing the controls/predicates. Separate final saved
+audit remains required for the actual software results.
