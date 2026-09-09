@@ -1,0 +1,20 @@
+{
+  "schema": "dimensions-recovery-capture-root-v1",
+  "stage": "verify",
+  "source_commit": "ece53b2ee70d8b6828a7db215f2fe0be143b9a2f",
+  "release_commit": "56f6cf2a924d950ac0a6f3f3612e9a0d8fb212c2",
+  "release_sha256": "8058a0f8c48945d1e80e39fde629133f7aae618dcff8bea911b0eedc00b45686",
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-I",
+    "-S",
+    "-B",
+    "experiments/common-tiff-dimensions/capture-recovery-stage.py",
+    "verify",
+    "--release-sha256",
+    "8058a0f8c48945d1e80e39fde629133f7aae618dcff8bea911b0eedc00b45686"
+  ],
+  "exit_code": 0,
+  "whole_wrapper_wall_seconds": 4.5803633,
+  "scope": "Complete directly invoked capture wrapper interval and immediately captured terminal exit; actual stage interval, descendant Job and raw streams retained separately. No CPU inferred from wall."
+}
