@@ -1,0 +1,10 @@
+
+running 5 tests
+test merge_cmd::tests::crop_domain_extracts_at_full_origin_and_excludes_every_outside_sample ... ok
+test merge_cmd::tests::crop_domain_rejects_empty_overflow_and_out_of_bounds_rectangles ... ok
+test merge_cmd::tests::crop_domain_requires_an_actual_covered_fit ... ok
+test merge_cmd::tests::crop_domain_whole_plane_keeps_the_historical_addressing ... ok
+test merge_cmd::tests::crop_domain_writer_reads_compact_indices_without_a_second_crop ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 161 filtered out; finished in 0.00s
+

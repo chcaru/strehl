@@ -1,0 +1,23 @@
+{
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-I",
+    "-B",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-signed-black\\independent-read.py",
+    "--output",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-signed-black\\independent-result-2.json",
+    "--clamped-dir",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-signed-black\\comparison2-clamped",
+    "--signed-dir",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-signed-black\\comparison2-values",
+    "--signed-mode",
+    "2"
+  ],
+  "environment_overrides": {
+    "OPENBLAS_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1"
+  },
+  "removed_environment": [],
+  "revision": "b25a47980d76180c2102b3d73dbd9335c565b09d"
+}
