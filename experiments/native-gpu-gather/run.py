@@ -8,7 +8,7 @@ def save(path,value):
     with path.open("x",encoding="utf-8") as f:
         json.dump(value,f,indent=2,allow_nan=False);f.write("\n")
 assert sys.argv[1:]==[],"one fixed allocation, no sweep"
-build=HERE/"build-2"
+build=HERE/"build-3"
 receipt=json.loads((build/"invocation.json").read_text(encoding="utf-8"))
 def check_sources():
     for e in receipt["source_files"]:

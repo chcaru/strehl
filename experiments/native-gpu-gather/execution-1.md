@@ -25,3 +25,8 @@ Build1 stopped before any GPU execution on a Rust json! syntax error in the
 failure-report phase expression. Parenthesizing that existing expression is
 a syntax-only repair. Build2 uses the same bounds, inputs and criteria; run1
 will use its held executable. Original build1 receipts and log are retained.
+
+Build2 exposed two further compile-only test issues: missing Similarity import
+and LowerHex unavailable on the current digest return type. Import the existing
+type and hex-format individual digest bytes. Build3 and run1 keep every fixed
+input/operator/criterion and all bounds; no GPU execution has yet occurred.

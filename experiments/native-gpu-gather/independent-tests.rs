@@ -2,7 +2,7 @@
 use super::*;
 use serde_json::{json, Value};
 use sha2::{Digest, Sha256};
-use strehl_core::align::SimilarityParams;
+use strehl_core::align::{Similarity, SimilarityParams};
 use strehl_core::optics::{OpticalProfile, A7C2_FE100GM_2XTC_X4CPL};
 use strehl_core::plane::QuadSource;
 use strehl_native_gpu_gather::{GpuGather, Input, Output, SamplePlan, INVALID};
@@ -117,7 +117,7 @@ fn require(ok: bool, message: &str, errors: &mut Vec<String>) {
 fn storage_hash(data:&[u16]) -> String {
     let mut hash=Sha256::new();
     for code in data {hash.update(code.to_le_bytes());}
-    format!("{:x}",hash.finalize())
+    hash.finalize().iter().map(|b|format!("{b:02x}")).collect()
 }
 
 fn check_case(gpu: &mut GpuGather, c: &Case) -> Result<Value,String> {
