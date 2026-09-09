@@ -1,0 +1,71 @@
+{
+  "rows": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-stroke\\run-1\\unscaled-views\\frame-0-G1.png",
+      "sha256": "16a720db0c041186bdc47d662dc40dac00dda0d57d10758e0bec429071e99232",
+      "index": 0,
+      "phase": "G1"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-stroke\\run-1\\unscaled-views\\frame-0-G2.png",
+      "sha256": "83028f70e98ddaa678d84d3b5fb0552653956471902facf239bccab579a8c41b",
+      "index": 0,
+      "phase": "G2"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-stroke\\run-1\\unscaled-views\\frame-26-G1.png",
+      "sha256": "ed0732477dc555a44264e80a10209072d749a93fb74f0b101f9e114e74eb7129",
+      "index": 26,
+      "phase": "G1"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-stroke\\run-1\\unscaled-views\\frame-26-G2.png",
+      "sha256": "58e452670091548be84dd8b2483a00fefac6a7b0d827cbc7c76a6b4a257bfd4d",
+      "index": 26,
+      "phase": "G2"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-stroke\\run-1\\unscaled-views\\frame-52-G1.png",
+      "sha256": "00c05dbd62e38772bba2b6dc11f8a7f9ab428f7de3fb52ee8d37b7b52317fe76",
+      "index": 52,
+      "phase": "G1"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-stroke\\run-1\\unscaled-views\\frame-52-G2.png",
+      "sha256": "363b17801537dbf4315219ec8673f32fceca191a1291896dd133640531b8b71b",
+      "index": 52,
+      "phase": "G2"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-stroke\\run-1\\unscaled-views\\frame-78-G1.png",
+      "sha256": "0fd1586183143e7cb471cd71bbbab3a5c478363a08bf84cbdbcbf2f9c544d148",
+      "index": 78,
+      "phase": "G1"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-stroke\\run-1\\unscaled-views\\frame-78-G2.png",
+      "sha256": "546a328ec1977b45f9e51c9d405b2fd7deb613da2bc07697f996044143f1ba6c",
+      "index": 78,
+      "phase": "G2"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-stroke\\run-1\\unscaled-views\\frame-104-G1.png",
+      "sha256": "bcbbb19bc0306ac6e03c96a9ed2b6398170e362c530afedf297586a3ae0479e2",
+      "index": 104,
+      "phase": "G1"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-background-stroke\\run-1\\unscaled-views\\frame-104-G2.png",
+      "sha256": "5fd09cd0784b76d57cd6e171e01f5e522769ded0746e2f6429ae5c3f78e71e90",
+      "index": 104,
+      "phase": "G2"
+    }
+  ],
+  "left": "sensor",
+  "right": "scene",
+  "display": [
+    3890.8327213541666,
+    5264.067799479167
+  ],
+  "samples": "onePNGpixel per originalphase-grid view value, no resizing"
+}

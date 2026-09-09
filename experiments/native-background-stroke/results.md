@@ -56,3 +56,5 @@ The fixed broad rectangles fail as local attenuation measures: every stroke-minu
 ## Decision
 
 Close this five-file diagnosis with the sensor-coordinate-persistence finding. No default changes and no enlarged source inspection follow automatically. The next decision is one targeted causal intervention or pipeline observation at this nominated feature; it must preserve a clean/real-detail control and must distinguish a local improvement from global SOTA quality. Existing source correction hooks are being assessed before adding any new mechanism. SOTA photographic quality and a fair competitive timing result remain unproven.
+
+Rule48 follow-through: root also viewed all ten direct320x155 gray strips in run-1/unscaled-views, each with sensorleft andsceneright, onePNGpixelper phase-grid value, noresizing andthesame documentedDNtransform. This confirms the finite-feature persistence at native phase sampling; thelarge labelledcontacts are presentation/context. display-views.py holds the exact scriptcontents run through Python -I -B stdin; views.json binds everystrip. No newsourcepixels, fit or metric was computed.
