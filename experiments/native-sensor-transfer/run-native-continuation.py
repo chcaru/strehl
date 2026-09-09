@@ -29,7 +29,7 @@ STAGES={
     "controls":dict(cpu_seconds=120,wall_seconds=180,committed_bytes=GIB,file_bytes=64*MIB,scratch_bytes=0),
     "native":dict(cpu_seconds=1800,wall_seconds=1200,committed_bytes=2*GIB,file_bytes=256*MIB,scratch_bytes=0),
     "verify":dict(cpu_seconds=1200,wall_seconds=900,committed_bytes=GIB,file_bytes=96*MIB,scratch_bytes=0)}
-OUTPUTS={s:HERE/(s+("-4" if s=="build-on" else "-2" if s=="native" else "-1")) for s in STAGES}
+OUTPUTS={s:HERE/(s+("-4" if s=="build-on" else "-3" if s=="native" else "-1")) for s in STAGES}
 TARGETS={s:ROOT/("target/native-sensor-transfer-"+s.removeprefix("build-")+("-4" if s=="build-on" else "-1")) for s in ("build-on","build-off")}
 EXES={s:OUTPUTS["build-"+s.removeprefix("feature_")]/"cli-tests.exe" for s in ("feature_on","feature_off")}
 READER=HERE/"verify-recovery.py"
@@ -150,7 +150,7 @@ def native_inventory(scanner,output):
         if d.lexical(path)!=output or tolerate_disappearance:
             return scanner(path,limit,tolerate_disappearance=tolerate_disappearance)
         records=[];total=files=0
-        for directory in (output,HERE/"native-1",HERE/"native-attempt-1-partial",*(HERE/f"native-run-{i}" for i in range(9))):
+        for directory in (output,HERE/"native-1",HERE/"native-2",HERE/"native-attempt-1-partial",*(HERE/f"native-run-{i}" for i in range(9))):
             entry=scanner(directory,limit-total)
             total+=entry["bytes"];files+=entry["files"]
             records.append(dict(path=d.source_ref(directory),sample=entry))
@@ -436,8 +436,10 @@ def admit_recovery(release,budget,closure):
     d.job_cpu(child["job_accounting"])
     file_ref(HERE/"native-1/child-00.log",MIB,child["log"],budget.check)
     d.read(ROOT/HISTORY["child1"]["path"],32*KIB,HISTORY["child1"],check=budget.check)
-    need(old["artifacts"]["traversals"]==[dict(invocation=0,result=HISTORY["traversal0"])]
-         and capture_traversal(0,budget)==dict(invocation=0,result=HISTORY["traversal0"]),"saved complete zero traversal")
+    saved=old["artifacts"]["traversals"];captured=capture_traversal(0,budget)
+    need(type(saved) is list and len(saved)==1 and all(type(row) is dict and set(row)=={"invocation","result"}
+         and type(row["invocation"]) is int and row["invocation"]==0
+         and d.same_ref(row["result"],HISTORY["traversal0"]) for row in (saved[0],captured)),"saved complete zero traversal")
     moved_raw,_=d.read(ROOT/HISTORY["archive"]["path"],64*KIB,HISTORY["archive"],check=budget.check);moved=d.strict(moved_raw)
     need(moved["content_hashes_preserved"] is True and moved["partial_population_excluded"] is True
          and moved["files"]==130 and moved["bytes"]==48620310

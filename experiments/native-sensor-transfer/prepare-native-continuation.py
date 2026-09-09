@@ -129,10 +129,10 @@ def main():
         need(key not in current,"additive source only");current[key]=pin(raw)
     map_shape(current)
     for key,value in current.items():need(pin(read(source_path(key)))==value,"unchanged exact source")
-    release_path=WORK/"native-continuation-release-2.json"
-    freeze_path=WORK/"native-continuation-source-freeze-1.json"
-    receipt_path=WORK/"native-continuation-preparation-1.json"
-    need(all(not q.exists() for q in (release_path,freeze_path,receipt_path,HERE/"native-2")),"fresh continuation metadata/output")
+    release_path=WORK/"native-continuation-release-3.json"
+    freeze_path=WORK/"native-continuation-source-freeze-3.json"
+    receipt_path=WORK/"native-continuation-preparation-3.json"
+    need(all(not q.exists() for q in (release_path,freeze_path,receipt_path,HERE/"native-3")),"fresh continuation metadata/output")
     need((HERE/"native-run-0").is_dir() and all(not (HERE/f"native-run-{i}").exists() for i in range(1,9)),"saved zero and fresh remainder")
     moved_raw=bound_read(history["archive"],64<<10);moved=strict(moved_raw)
     need(moved["content_hashes_preserved"] is True and moved["partial_population_excluded"] is True
