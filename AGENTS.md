@@ -1014,6 +1014,12 @@ from 3 pre-existing warnings to 4 (orchestrator-verified). It is a one-line fix 
 **not being made while M62 is certifying that exact file** -- editing an artefact under
 certification is the shared-tree hazard rule 42 exists for.
 
+### Native RAW continuation allocation
+
+| Identifier | Question and scope | Owned paths | State |
+|---|---|---|---|
+| native-sensor-transfer | Frozen native sensor-to-band noise prediction on27 existing ISO160 paper/dark control RAWs; source preparation only, no profile/default/quality claim. | experiments/native-sensor-transfer/; prospective test-only native adapter, unapplied first | dispatched2026-09-09: root owns release; factor_eight_implementation producer; coordinate_verification independent protocol/decoder; sampler_result_review choice and result review. Prior decision59202e51; integer common-TIFF expansion deferred. |
+
 ## Layout
 
 | Path | What |
