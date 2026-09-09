@@ -625,6 +625,9 @@ mod m194c_independent_tests {
         make_frame(w, h, layout, k)
     }
 
+    pub(super) fn variance_warp() -> Similarity { warp(1) }
+    pub(super) fn variance_crop() -> align_cmd::CropRect { crop() }
+
     pub(super) fn green_render(
         frames: Vec<Frame>,
         dir: &std::path::Path,
@@ -666,4 +669,9 @@ mod native_parallel_writeback_independent_tests {
 #[cfg(all(test, feature = "native-direct-planes"))]
 mod native_direct_planes_independent_tests {
     include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/native-direct-planes/independent-tests.rs"));
+}
+
+#[cfg(all(test, feature = "native-correction-variance"))]
+mod native_correction_variance {
+    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/native-correction-variance/implementation.rs"));
 }

@@ -80,6 +80,11 @@ pub mod native_sensor_transfer {
     include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/native-sensor-transfer/source/core-hook.rs"));
 }
 
+#[cfg(feature = "native-correction-variance")]
+pub mod correction_variance_diagnostic {
+    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/native-correction-variance/core-bridge.rs"));
+}
+
 /// The 5-tap binomial generating kernel, `[1, 4, 6, 4, 1] / 16`.
 ///
 /// Burt & Adelson's `a = 0.4` member of the generating-kernel family, which is

@@ -1220,3 +1220,7 @@ Stage2 follow-up,2026-09-09: the full-signed small comparison reduced shadow bia
 ## Targeted stroke correction allocation
 
 2026-09-09. Root allocates experiments/native-stroke-correction under charter.md, after the five-frame sensor-coordinate-persistence finding. One held existing v2 sidecar, saved-patch fit and numerical holdouts, then at most one current full RAW intervention with unchanged eight-frame validation. No production source edit, default promotion or noise-fidelity claim; current dust gain variance propagation is incomplete. Independent controls and outcome review; root execution and exact-path commits.
+
+## Known correction-gain variance allocation
+
+2026-09-09. Root allocates experiments/native-correction-variance under charter.md after the completed local RAW stroke improvement. One test-only existing-CFA-consumer falsifier of sparse known-gain variance propagation; no production default, original RAW reads, native renders, private calibration or covariance framework. Author owns the minimal test module/inclusion, independent agents fix stimulus and audit consumer normalization, root builds and executes finite controls.

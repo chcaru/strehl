@@ -46,3 +46,6 @@ native-boundary-radiance = []
 
 # Default-off rounded or floating direct gather-to-plane experiment.
 native-direct-planes = []
+
+# Test-only correction-noise transfer diagnostic.
+native-correction-variance = ["strehl-core/native-correction-variance"]

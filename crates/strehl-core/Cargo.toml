@@ -17,3 +17,6 @@ rayon.workspace = true
 # Explicit experiment-only consumer hook; disabled in normal builds.
 m194h-pedestal-causality = []
 native-sensor-transfer = []
+
+# Source-transfer kernel access; no default-path call.
+native-correction-variance = []
