@@ -1,0 +1,8 @@
+{
+  "schema": "dimensions-scratch-root-terminal-v1",
+  "source_commit": "b2d26480717dfd34950cb0a02c434ebaca28a119",
+  "release_sha256": "65eda120d1dfe8010154e705d6fe46e8a61705d37ba3b1b6fe116c8c6b4a0236",
+  "exit_code": 0,
+  "whole_wrapper_wall_seconds": 0.3277722,
+  "scope": "Stopwatch brackets the complete directly invoked wrapper process; exit captured immediately before filtering; no CPU inferred from wall."
+}
