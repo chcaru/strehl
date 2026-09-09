@@ -23,7 +23,7 @@ def read_bound(p,cap=64<<20,empty=False):
 def ref(p,empty=False,cap=64<<20):
  b=read_bound(p,cap,empty);return dict(path=p.relative_to(ROOT).as_posix(),bytes=len(b),sha256=hashlib.sha256(b).hexdigest())
 def main():
- a=argparse.ArgumentParser();a.add_argument("stage",choices=("build-on","build-off","controls","native","verify"));args=a.parse_args();stage=args.stage;attempt=2 if stage=="build-on" else 1
+ a=argparse.ArgumentParser();a.add_argument("stage",choices=("build-on","build-off","controls","native","verify"));args=a.parse_args();stage=args.stage;attempt=3 if stage=="build-on" else 1
  work=HERE/"work";release=work/(stage+"-release-"+str(attempt)+".json");b=read_bound(release,1<<20)
  r=json.loads(b);assert r["schema"]=="native-sensor-transfer-stage-release-v1" and r["stage"]==stage
  sha=hashlib.sha256(b).hexdigest()

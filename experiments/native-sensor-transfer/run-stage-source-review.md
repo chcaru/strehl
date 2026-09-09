@@ -116,3 +116,21 @@ This is a fixed current-run source acceptance, not arbitrary-environment proof.
 The complete independent reader is accepted and committed0e024582, including
 the separately reversed four-expression build-on2 path amendment. Build
 completion and actual numerical/RAW execution remain pending.
+
+
+## Accepted ordinary compile correction and build-on3
+
+Root and sampler independently read the exact adapter diff: only two grouping
+parentheses surround the existing model_planes array.map JSON expression.
+Current adapter24329B/6a4e8987792a7516bff934755504fa16c79e0e2b7c0373ceea790d52c59ed4a5.
+The actual build2 syntax error and failed process are preserved544498e2.
+
+Only feature-on paths advance to3 (output, target, release, source archive).
+Build-off1, incremental0, scanner and all numerical/resource criteria stay.
+Current runner33973B/38909dbcf17a75f72eb62231a61e806435c8448a6d340a7a7cc7fd123862427e;
+helper16805B/e565c355796081da186a56d58a0a902e8edd8105c7bdfbea63def28ad198a6fb;
+capture4016B/beff54236696c3b75a3cd22d07e98311651c6a0467d128e2f32358ef2f640cc7;
+preparer9560B/2c8139a7ae340dddec2c7205a7d5bdf36c28ac7bda042beed29f80ead86c61d6;
+contract24323B/647708878c8b34594478da4647353b59b53a7977c971bd324c5f1137cc894569.
+Fresh build3 is accepted for release with the same finite allocation, additional
+to the two preserved failures. No physics or numerical test has run yet.

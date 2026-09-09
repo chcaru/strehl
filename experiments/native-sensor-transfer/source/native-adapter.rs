@@ -275,10 +275,10 @@ fn run_pair(invocation: usize, out: &Path) -> Result<Value> {
             "buffer":[original.stride,original.buffer_height],"active":[original.active.x,original.active.y,original.active.width,original.active.height],
             "levels_bits":[original.levels.black.to_bits(),original.levels.white.to_bits()],
             "wb_coeff_bits":original.wb_coeffs.map(f32::to_bits),"model":"profile::noise_model_for",
-            "model_planes": [CfaPlane::R,CfaPlane::G1,CfaPlane::G2,CfaPlane::B].map(|p|{
+            "model_planes": ([CfaPlane::R,CfaPlane::G1,CfaPlane::G2,CfaPlane::B].map(|p|{
                 let n=noise.as_ref().unwrap().plane(p);
                 [n.gain_dn_per_e.to_bits(),n.read_noise_e.to_bits(),n.levels.black.to_bits(),n.levels.white.to_bits()]
-            })});
+            }))});
         let mut frames=[Some(original.clone()),Some(original)];
         for route in 0..2 {
             let handoff=OneFrameSource{frame:Mutex::new(frames[route].take()),index,len:paths.len()};

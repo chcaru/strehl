@@ -1,6 +1,6 @@
 # Native sensor transfer stage runner contract
 
-Status: SOURCE REVIEW CANDIDATE FOR BUILD-ON ATTEMPT 2. Section 7 preserves the actual refused first build; the active recovery is prospective and records no successful build, control, RAW decode, numerical result or performance measurement. Root owns the release and actual execution. The native producer remains the independently reviewed Crop consumer in source/implementation-contract.md; this runner adds no operator, image reader, estimator or quality gate.
+Status: SOURCE REVIEW CANDIDATE FOR BUILD-ON ATTEMPT 3. Sections 7 and 8 preserve the refused earlier builds; the active recovery is prospective and records no successful build, control, RAW decode, numerical result or performance measurement. Root owns the release and actual execution. The native producer remains the independently reviewed Crop consumer in source/implementation-contract.md; this runner adds no operator, image reader, estimator or quality gate.
 
 ## 1. Reuse and scope
 
@@ -18,7 +18,7 @@ The root-authored runner release has exactly ten keys:
 
 schema, stage, source_bindings, inputs, originals, command, children, binaries, reader_release, prerequisites.
 
-Schema is native-sensor-transfer-stage-release-v1. The active build-on release is work/build-on-release-2.json; the other four stage releases remain work/STAGE-release-1.json. Each active stage is released once; the refused build-on attempt 1 remains separately retained. command is the exact Python executable followed by -I -S -B, the absolute run-stage.py path, --release, the absolute release path, --release-sha256 and ACTUAL_RELEASE_SHA256, which is replaced with the actual held release SHA. sys.orig_argv must equal it.
+Schema is native-sensor-transfer-stage-release-v1. The active build-on release is work/build-on-release-3.json; the other four stage releases remain work/STAGE-release-1.json. Each active stage is released once; the refused build-on attempts 1 and 2 remain separately retained. command is the exact Python executable followed by -I -S -B, the absolute run-stage.py path, --release, the absolute release path, --release-sha256 and ACTUAL_RELEASE_SHA256, which is replaced with the actual held release SHA. sys.orig_argv must equal it.
 
 source_bindings maps canonical repository-relative paths to positive {bytes,sha256}. Each entry is at most 4 MiB, at most 512 entries and 16 MiB total. The mandatory list is literal in REQUIRED: runner/helper/capture/contract/review; charter and scope amendments 2/3; producer implementation contract, adapter, core hook and source review. Held M194h/process/Job/scratch sources and input-bindings-1.json are also mandatory. Controls and verify additionally require independent-read.py; its own reader release must carry the current full source map, including its independent modules, protocol, design and reviews. Root must finish those review files before the associated release. Build releases can precede unrelated checker completion.
 
@@ -41,15 +41,15 @@ The child environment additionally removes CARGO_BUILD_*, CARGO_TARGET_*, CARGO_
 
 | Stage | Required prior six-ref bundles | Output |
 | --- | --- | --- |
-| build-on | none | build-on-2 |
+| build-on | none | build-on-3 |
 | build-off | build-on | build-off-1 |
 | controls | build-on, build-off | controls-1 |
 | native | build-on, build-off, controls | native-1 plus native-run-0 through native-run-8 |
 | verify | build-on, build-off, controls, native | verify-1 |
 
-Build-on command: cargo test -p strehl-cli --bin strehl --no-run --features native-sensor-transfer --jobs 2 --target-dir ABS/target/native-sensor-transfer-on-2 --message-format=json-render-diagnostics --locked --offline.
+Build-on command: cargo test -p strehl-cli --bin strehl --no-run --features native-sensor-transfer --jobs 2 --target-dir ABS/target/native-sensor-transfer-on-3 --message-format=json-render-diagnostics --locked --offline.
 
-Build-off command is identical except it omits --features native-sensor-transfer and uses ABS/target/native-sensor-transfer-off-1. Both target roots and stage outputs must be absent. Each build executes exactly one Cargo child. Admission requires actual Compiling strehl-core and Compiling strehl-cli lines, one successful build-finished record and a unique fresh compiler-artifact for the strehl bin test executable. The exact target/src_path/manifest_path/profile.test and feature vector are checked. The executable is copied, hashed and read back as build-on-2/cli-tests.exe or build-off-1/cli-tests.exe. artifacts has executable, compiled_original, compiler_message and build_finished. No list or trial invocation is added.
+Build-off command is identical except it omits --features native-sensor-transfer and uses ABS/target/native-sensor-transfer-off-1. Both target roots and stage outputs must be absent. Each build executes exactly one Cargo child. Admission requires actual Compiling strehl-core and Compiling strehl-cli lines, one successful build-finished record and a unique fresh compiler-artifact for the strehl bin test executable. The exact target/src_path/manifest_path/profile.test and feature vector are checked. The executable is copied, hashed and read back as build-on-3/cli-tests.exe or build-off-1/cli-tests.exe. artifacts has executable, compiled_original, compiler_message and build_finished. No list or trial invocation is added.
 
 Native executes exactly nine commands:
 EXE --ignored --exact merge_cmd::native_sensor_transfer::fixed_native_sensor_transfer_pair --nocapture --test-threads=1.
@@ -81,7 +81,7 @@ Reader final result.json and actual combined raw child log must be byte-identica
 
 Every stage retains fixed result.json, parent-tail.json, child-NN.json and child-NN.log. Native artifacts.traversals is exactly nine ordered {invocation,result} entries pointing to actual native-run-I/result.json. These are metadata associations; this parent does not decode/rehash all arrays or TIFFs. Independent saved checking remains necessary. Controls/verify publish artifacts.independent_result.
 
-A prerequisite is exactly {result,tail,outer,stdout,stderr,exit}. Result schema is native-sensor-transfer-owned-stage-v1; success status COMPLETE_STAGE_UNVERIFIED. Tail schema is native-sensor-transfer-parent-tail-v1. Actual external schema is native-sensor-transfer-stage-external-v1 with exactly schema, command, source, exit_code, timeout_terminated, elapsed_wall_seconds, stdout, stderr, exit, stdout_bytes, stderr_bytes, scope. Raw files are work/build-on-external-2-{stdout.bin,stderr.bin,exit.txt,outer.json} for build-on and work/STAGE-external-1-{stdout.bin,stderr.bin,exit.txt,outer.json} for the other stages.
+A prerequisite is exactly {result,tail,outer,stdout,stderr,exit}. Result schema is native-sensor-transfer-owned-stage-v1; success status COMPLETE_STAGE_UNVERIFIED. Tail schema is native-sensor-transfer-parent-tail-v1. Actual external schema is native-sensor-transfer-stage-external-v1 with exactly schema, command, source, exit_code, timeout_terminated, elapsed_wall_seconds, stdout, stderr, exit, stdout_bytes, stderr_bytes, scope. Raw files are work/build-on-external-3-{stdout.bin,stderr.bin,exit.txt,outer.json} for build-on and work/STAGE-external-1-{stdout.bin,stderr.bin,exit.txt,outer.json} for the other stages.
 
 The parent advertisement is exact canonical raw JSON {status,result,tail}, at most 8 KiB. The external outer must bind that exact stdout, the separate stderr (including empty) and actual exit file. Success needs actual exit zero, no timeout, complete zero-active Job terminal accounting, clean direct exit plus EOF/drain and actual whole controller wall within both stage cap and sampled tail wall+3. Intentional owned compile descendant cleanup is admitted only by the two compile children; failure cleanup never promotes a child to success.
 
@@ -128,3 +128,11 @@ The sole operational workaround is fixed CARGO_INCREMENTAL=0 for both subsequent
 The one fresh feature-on build uses target/native-sensor-transfer-on-2, build-on-2 and work/build-on-release-2.json, with work/build-on-preparation-2.json and external attempt-2 raw files. Feature-off remains its previously unvisited target/native-sensor-transfer-off-1, build-off-1 and release/preparation/external attempt 1. Source preservation is fresh work/build-source-freeze-2.json plus work/build-source-2.zip. The first source freeze/archive, release, scratch and negative evidence remain unchanged. Both active builds bind the same source-freeze-2 map; historical successful build provenance and compiled-closure checks for later stages remain as specified above.
 
 A fresh full 600 CPU/300 wall build-on allocation is prospective and separate from the failed one. The unchanged build-off and later unvisited allowances remain available only through root's explicit releases. Each metadata constructor retains its existing separate 30 CPU/60 wall, 128 MiB read/24 MiB write allocation with 1 CPU/2 wall publication reserve; the new build-on constructor is an additional invocation, not a rewrite of the old receipt. Source preparation/review costs remain separate; no whole-program aggregate is inferred. This amendment authorizes source review only, with no build, scanner control, RAW or numerical invocation by its author.
+
+## 8. Ordinary compile correction and active attempt 3
+
+Attempt 2 reached strehl-cli and refused on the native-adapter.rs json! metadata field model_planes: the array method-call expression needed surrounding parentheses for that macro's expression parser. The source repair adds exactly one pair of parentheses around the existing array.map expression. Its four CFA entries, closure, noise-model operands, returned bits and evaluation order are unchanged. The same macro was source-inspected: its other method calls start with normal expressions rather than an unparenthesized array literal; no analogous change was needed. This is a syntax correction, not a measured numerical result.
+
+The active feature-on paths advance to target/native-sensor-transfer-on-3, build-on-3/cli-tests.exe, work/build-on-release-3.json, work/build-on-preparation-3.json and work/build-on-external-3-{stdout.bin,stderr.bin,exit.txt,outer.json}. Fresh source preservation is work/build-source-freeze-3.json and work/build-source-3.zip. Feature-off remains attempt 1 and consumes the successful attempt-3 build-on bundle. CARGO_INCREMENTAL=0 and all other compiler, process, source and numerical policies remain unchanged.
+
+Sections 7's attempt-2 names describe that preserved historical attempt. Neither earlier source archive, target, release nor failure evidence is overwritten. Both failed build-on attempts retain their separate full 600 CPU/300 wall reservations; one further full 600 CPU/300 wall build-on reservation is prospective. The next metadata preparation also keeps the existing separate 30 CPU/60 wall, 128 MiB read/24 MiB write allowance and publication reserve. No aggregate measured CPU total or refund is inferred. The author performed source edits and Python AST parsing only; root owns the next fresh build and its actual evidence.
