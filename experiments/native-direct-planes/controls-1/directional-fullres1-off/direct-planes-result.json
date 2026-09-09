@@ -1,0 +1,14 @@
+{
+  "actual_fractional_changed_sites": 2857,
+  "literal_checks": 1308,
+  "old_scalar_comparisons": 2304,
+  "requested_mode": "off",
+  "rounded_crop_green_allcolour_source_storage_controls": true,
+  "schema": "native-direct-planes-independent-v1",
+  "scope": "exact consumed-plane/IEEE controls plus existing actual Probe beta and whole/crop TIFFs; root compares process arms; no precision quality or native speed claim",
+  "threads": [
+    1,
+    2,
+    8
+  ]
+}

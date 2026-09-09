@@ -1,0 +1,106 @@
+{
+  "limits": "generated consumer equivalence; NaN arm uses invalid black metadata; no calibration or speed claim",
+  "measurements": {
+    "beta_cases": [
+      {
+        "bits": [
+          1061173133,
+          1029457208
+        ],
+        "crop": false,
+        "seed": 0,
+        "wb": 0
+      },
+      {
+        "bits": [
+          1060805996,
+          1028286515
+        ],
+        "crop": false,
+        "seed": 17,
+        "wb": 0
+      },
+      {
+        "bits": [
+          1061059272,
+          1029602466
+        ],
+        "crop": false,
+        "seed": 0,
+        "wb": 1
+      },
+      {
+        "bits": [
+          1060674880,
+          1028542725
+        ],
+        "crop": false,
+        "seed": 17,
+        "wb": 1
+      },
+      {
+        "bits": [
+          1061246307,
+          1029270933
+        ],
+        "crop": true,
+        "seed": 0,
+        "wb": 0
+      },
+      {
+        "bits": [
+          1060645093,
+          1028825889
+        ],
+        "crop": true,
+        "seed": 17,
+        "wb": 0
+      },
+      {
+        "bits": [
+          1061137152,
+          1029571358
+        ],
+        "crop": true,
+        "seed": 0,
+        "wb": 1
+      },
+      {
+        "bits": [
+          1060512000,
+          1028850099
+        ],
+        "crop": true,
+        "seed": 17,
+        "wb": 1
+      }
+    ],
+    "core_green_sha256": "7faf668545e83b7317cf0ab3d7fd471e89d267a975c770d0dc39850df61aaf6c",
+    "core_sites": 3403,
+    "empty_beta_bits": [],
+    "green_sites": 290736,
+    "nan_fault_beta_bits": [
+      4290772992,
+      4290772992
+    ],
+    "outputs": [
+      {
+        "bytes": 312963,
+        "name": "whole.tif",
+        "sha256": "5110e0463eaacd7c6b8fe8923fcc5d6b243c3f6c858f1925760a23cfbf12c650"
+      },
+      {
+        "bytes": 210267,
+        "name": "crop.tif",
+        "sha256": "9d83b2342cc0909d57b083a58856b8964b3d0c603f1cb616a02279901737f959"
+      }
+    ],
+    "warp_pairs": 144
+  },
+  "mode": {
+    "demosaic": "directional",
+    "fullres": true,
+    "green": true
+  },
+  "schema": "native-green-probe-independent-v1"
+}

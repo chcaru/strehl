@@ -1,0 +1,25 @@
+{
+  "command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-direct-planes\\build-1\\cli-tests.exe",
+    "merge_cmd::gatefloor::native_direct_planes_independent_tests::independent_direct_planes_controls",
+    "--exact",
+    "--nocapture",
+    "--test-threads=1"
+  ],
+  "executable": {
+    "sha256": "a9dfbaa53f13bb777ad8c63d910883ce68b9e13e99cb22f08028f6b1b69bcd40",
+    "bytes": 13274624
+  },
+  "environment_overrides": {
+    "STREHL_GREEN_PROBE_OUTPUT": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-direct-planes\\controls-1\\malvar-fullres1-off",
+    "STREHL_PYRAMID_PROFILE": "off",
+    "RAYON_NUM_THREADS": "4",
+    "STREHL_PYRAMID_WORKERS": "4",
+    "STREHL_DEMOSAIC": "malvar",
+    "STREHL_FULLRES_GATHER": "1",
+    "STREHL_PROBE_GATHER": "green",
+    "STREHL_DIRECT_PLANES": "off"
+  },
+  "removed_environment": [],
+  "revision": "53f22d4fe43f136d51ef49f1e4def581ac77b719"
+}

@@ -1,0 +1,882 @@
+{
+  "confidence": null,
+  "decode_counts": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+  ],
+  "direct_planes_evidence": {
+    "actual_direct_calls": 9,
+    "collapsed": [
+      [
+        {
+          "finite_values": 15052,
+          "fractional_values": 14821,
+          "label": "R",
+          "sha256_f32_le": "07cd2dcaa9f934a727e6bc1b00fde98f236c20c4917c08834507463ef204bbc0",
+          "values": 15052
+        },
+        {
+          "finite_values": 15052,
+          "fractional_values": 14666,
+          "label": "G1",
+          "sha256_f32_le": "9c99720e55f2d95f408d97aa2d9279ce38dd27aa3eaa6179ce66950a0f2204f1",
+          "values": 15052
+        },
+        {
+          "finite_values": 15052,
+          "fractional_values": 14677,
+          "label": "G2",
+          "sha256_f32_le": "59eb42f257e642176bafd1788101205656100ef7da03ee6e666bde8a511ce951",
+          "values": 15052
+        },
+        {
+          "finite_values": 15052,
+          "fractional_values": 14839,
+          "label": "B",
+          "sha256_f32_le": "87a00c2a28cf490890fa27e9a1bd7ce87896247ad7e3758d60c96dd72e8723dd",
+          "values": 15052
+        }
+      ]
+    ],
+    "collapsed_captures": 1,
+    "dimensions_quad": [
+      142,
+      106
+    ],
+    "hash_encoding": "ordered IEEE754 f32 bits, little endian; labels/dimensions in receipt",
+    "input_captures": 9,
+    "inputs": [
+      {
+        "beta": {
+          "finite_values": 2,
+          "fractional_values": 2,
+          "label": "beta",
+          "sha256_f32_le": "f7b6ae7a0f2b2f2b9fdcff9f00edef83d3ccf2faf83fdd68fb1e0d8ac4e627e7",
+          "values": 2
+        },
+        "luma": {
+          "finite_values": 15052,
+          "fractional_values": 7503,
+          "label": "luma",
+          "sha256_f32_le": "9f5b0d567cba17d3186384a6e1e0f5628b14f5b700afef71f5814fad097a96ab",
+          "values": 15052
+        },
+        "original_index": 0,
+        "planes": [
+          {
+            "finite_values": 15052,
+            "fractional_values": 0,
+            "label": "R",
+            "sha256_f32_le": "19cf22358e2af6e8cc3225f494ad9eb31745c4020ae5f81f1f41db3789f8bde5",
+            "values": 15052
+          },
+          {
+            "finite_values": 15052,
+            "fractional_values": 0,
+            "label": "G1",
+            "sha256_f32_le": "68a131521f4c252573a8affb33d701f26a39cb5ed817eb6f880f7692240a0b6d",
+            "values": 15052
+          },
+          {
+            "finite_values": 15052,
+            "fractional_values": 0,
+            "label": "G2",
+            "sha256_f32_le": "6c312564164061bf170aaa66770c2c234d15f11bdf3d1ed66a29a288093b7b65",
+            "values": 15052
+          },
+          {
+            "finite_values": 15052,
+            "fractional_values": 0,
+            "label": "B",
+            "sha256_f32_le": "d3b064ab10e6244c15267f2e2ed51bccd753dbd6c3e0859b3b01a665f27c786e",
+            "values": 15052
+          }
+        ]
+      },
+      {
+        "beta": {
+          "finite_values": 2,
+          "fractional_values": 2,
+          "label": "beta",
+          "sha256_f32_le": "27ea6b639339c266ac59fe34b9a2f18e4eebf99fb8cf31e24d172eef4d07cbc6",
+          "values": 2
+        },
+        "luma": {
+          "finite_values": 15052,
+          "fractional_values": 7636,
+          "label": "luma",
+          "sha256_f32_le": "bc0991c972962f78b4adf9f8c54d9264f0537f84c7b848a42c0b5983fb11c7dd",
+          "values": 15052
+        },
+        "original_index": 1,
+        "planes": [
+          {
+            "finite_values": 15052,
+            "fractional_values": 0,
+            "label": "R",
+            "sha256_f32_le": "fd2524587aa7ff5e69c4316cd68668b50ffabff155a0b128b7e61d3c3849ac2b",
+            "values": 15052
+          },
+          {
+            "finite_values": 15052,
+            "fractional_values": 0,
+            "label": "G1",
+            "sha256_f32_le": "188aaf4af20a9a8568a6d211a9d4136ddf2bac796b05f76aae34259dceea95a3",
+            "values": 15052
+          },
+          {
+            "finite_values": 15052,
+            "fractional_values": 0,
+            "label": "G2",
+            "sha256_f32_le": "6279ef8eeed8e5c97ade4468b40cc246b5e1e581a6f50ce87d27109020cb3e5e",
+            "values": 15052
+          },
+          {
+            "finite_values": 15052,
+            "fractional_values": 0,
+            "label": "B",
+            "sha256_f32_le": "3e35a16951cf6cc652b6946974afb4485a4153073a1d1a2f2e975ff7cae09c13",
+            "values": 15052
+          }
+        ]
+      },
+      {
+        "beta": {
+          "finite_values": 2,
+          "fractional_values": 2,
+          "label": "beta",
+          "sha256_f32_le": "a775bf8bbfda7f144577564a4d2d8aa73a8e11e3ab370efa18e253f28e4e2f62",
+          "values": 2
+        },
+        "luma": {
+          "finite_values": 15052,
+          "fractional_values": 7581,
+          "label": "luma",
+          "sha256_f32_le": "be695c9173f17e9993d010fae0963779715c93bf8e3d689b4a11c63ec85136a1",
+          "values": 15052
+        },
+        "original_index": 2,
+        "planes": [
+          {
+            "finite_values": 15052,
+            "fractional_values": 0,
+            "label": "R",
+            "sha256_f32_le": "5216beddb1eb553ea7706f07f45e932aba020fa42125bcbbd05a1562e08cb062",
+            "values": 15052
+          },
+          {
+            "finite_values": 15052,
+            "fractional_values": 0,
+            "label": "G1",
+            "sha256_f32_le": "2533d1311b018a08d1bd134fec6fc95a931a3ed8b5bdc9dfb81ca26b761dce32",
+            "values": 15052
+          },
+          {
+            "finite_values": 15052,
+            "fractional_values": 0,
+            "label": "G2",
+            "sha256_f32_le": "550007f2165cdb5fd44120dbb1c763e0179e44657547c411617d5c3b5972e418",
+            "values": 15052
+          },
+          {
+            "finite_values": 15052,
+            "fractional_values": 0,
+            "label": "B",
+            "sha256_f32_le": "2526de0661d553ac275c53b4431f2567e471afca92758777e17a3ccf5173b3e8",
+            "values": 15052
+          }
+        ]
+      },
+      {
+        "beta": {
+          "finite_values": 2,
+          "fractional_values": 2,
+          "label": "beta",
+          "sha256_f32_le": "488c7446ff0add0f8305d4dd0f5af6ead0735e68acb7bc68c74bf3353b8b1254",
+          "values": 2
+        },
+        "luma": {
+          "finite_values": 15052,
+          "fractional_values": 7521,
+          "label": "luma",
+          "sha256_f32_le": "7afeb57348b00cdb94af7c1d671ea343a9835007407664552e196952e8c1e6f0",
+          "values": 15052
+        },
+        "original_index": 3,
+        "planes": [
+          {
+            "finite_values": 15052,
+            "fractional_values": 0,
+            "label": "R",
+            "sha256_f32_le": "3729d5d01732a1f2826836af5980f263cbc552b0a65410f33a9f7b690420d710",
+            "values": 15052
+          },
+          {
+            "finite_values": 15052,
+            "fractional_values": 0,
+            "label": "G1",
+            "sha256_f32_le": "7e8c068ed9c3acdcda4137c88ae30a56f8e0a72fa24d8d9cea9e6fadbc999223",
+            "values": 15052
+          },
+          {
+            "finite_values": 15052,
+            "fractional_values": 0,
+            "label": "G2",
+            "sha256_f32_le": "fe2e995b893dab850acbc28eacac2edb5e54388a133933adc54e5944c3817f75",
+            "values": 15052
+          },
+          {
+            "finite_values": 15052,
+            "fractional_values": 0,
+            "label": "B",
+            "sha256_f32_le": "ea8a1c16648eb63ace3e12c76f092b6d4e038a624ab3c98eb4477949dbe6c1b2",
+            "values": 15052
+          }
+        ]
+      },
+      {
+        "beta": {
+          "finite_values": 2,
+          "fractional_values": 2,
+          "label": "beta",
+          "sha256_f32_le": "7c75bff97ff1133cb4107d9a05da100c15c9fc162f8ccd81e917d48d6f6856e5",
+          "values": 2
+        },
+        "luma": {
+          "finite_values": 15052,
+          "fractional_values": 7407,
+          "label": "luma",
+          "sha256_f32_le": "bf1344590828f09c26900a2d2f4977e00bcc15c06ff320f3a07b8731269b6119",
+          "values": 15052
+        },
+        "original_index": 4,
+        "planes": [
+          {
+            "finite_values": 15052,
+            "fractional_values": 0,
+            "label": "R",
+            "sha256_f32_le": "d6ad2cab012fe046a254ee212127b768f02b28520e3033858aa5561e90a404e0",
+            "values": 15052
+          },
+          {
+            "finite_values": 15052,
+            "fractional_values": 0,
+            "label": "G1",
+            "sha256_f32_le": "5b8f976449cb82ac9893d1f0817ec71c0f73337474e39fae59370ece08d447c1",
+            "values": 15052
+          },
+          {
+            "finite_values": 15052,
+            "fractional_values": 0,
+            "label": "G2",
+            "sha256_f32_le": "e7fd67e64aa659f1f1017809fb1717a0634581d1161684cb32b3043b086f68e5",
+            "values": 15052
+          },
+          {
+            "finite_values": 15052,
+            "fractional_values": 0,
+            "label": "B",
+            "sha256_f32_le": "07e57cc26efb75b436d96d5b224a40ae63b379c5975c3a712087bd07f4e9a2db",
+            "values": 15052
+          }
+        ]
+      },
+      {
+        "beta": {
+          "finite_values": 2,
+          "fractional_values": 2,
+          "label": "beta",
+          "sha256_f32_le": "de9e3d5c21551fe795ee411a64c4f3ca68325ffd0172b348225f4e8fbbe8a78f",
+          "values": 2
+        },
+        "luma": {
+          "finite_values": 15052,
+          "fractional_values": 7528,
+          "label": "luma",
+          "sha256_f32_le": "d82bc8db2d7777c13bc7f6e23962547c6e89f5d183fee6e1deb240c950c3e986",
+          "values": 15052
+        },
+        "original_index": 5,
+        "planes": [
+          {
+            "finite_values": 15052,
+            "fractional_values": 0,
+            "label": "R",
+            "sha256_f32_le": "d8e19dc4f64bdd1f50c44d390ac34f4d28d0e4e4b78e1a4b46c9be52fd899eb4",
+            "values": 15052
+          },
+          {
+            "finite_values": 15052,
+            "fractional_values": 0,
+            "label": "G1",
+            "sha256_f32_le": "6e2879bc61f731f04a577ceb671e1dd42f9a28870803981c3a0813bf95feb685",
+            "values": 15052
+          },
+          {
+            "finite_values": 15052,
+            "fractional_values": 0,
+            "label": "G2",
+            "sha256_f32_le": "f2312aae1b02c2344a9adc1305677359493f3638e4c82f31321d54176c1b68bb",
+            "values": 15052
+          },
+          {
+            "finite_values": 15052,
+            "fractional_values": 0,
+            "label": "B",
+            "sha256_f32_le": "42328d4c7dae8a5b097d597f3625fb1c7031b509336a73b2a0fe6baeb8e36293",
+            "values": 15052
+          }
+        ]
+      },
+      {
+        "beta": {
+          "finite_values": 2,
+          "fractional_values": 2,
+          "label": "beta",
+          "sha256_f32_le": "c3a4a0003ee0e5368d1ff4cb6db2109717643455a784130953d1bdfad36dcf76",
+          "values": 2
+        },
+        "luma": {
+          "finite_values": 15052,
+          "fractional_values": 7532,
+          "label": "luma",
+          "sha256_f32_le": "4e7cf4ec68c4e13c8f29c86469db856a976a8932c6c367dbfab0af1d69feaad7",
+          "values": 15052
+        },
+        "original_index": 6,
+        "planes": [
+          {
+            "finite_values": 15052,
+            "fractional_values": 0,
+            "label": "R",
+            "sha256_f32_le": "1a031eae95ac1755db56b3e51bb705a2e1c28b8c97a730d65ed840bcbeae0198",
+            "values": 15052
+          },
+          {
+            "finite_values": 15052,
+            "fractional_values": 0,
+            "label": "G1",
+            "sha256_f32_le": "304adea59b4742d9454ff20d0f46557077081e42c77200bcb81ae912cbc4562b",
+            "values": 15052
+          },
+          {
+            "finite_values": 15052,
+            "fractional_values": 0,
+            "label": "G2",
+            "sha256_f32_le": "b874befd3c1efd64fa9e07835b87a2957a3407a24c5ba302091020352396eb84",
+            "values": 15052
+          },
+          {
+            "finite_values": 15052,
+            "fractional_values": 0,
+            "label": "B",
+            "sha256_f32_le": "6ac4433e8af2dd2224fbdc8e5b82093e0ab9562003000778c3361a53b0636ef0",
+            "values": 15052
+          }
+        ]
+      },
+      {
+        "beta": {
+          "finite_values": 2,
+          "fractional_values": 2,
+          "label": "beta",
+          "sha256_f32_le": "e0d702bee3f96975040651923e30be5c5d70124c98c8667219d27aa96d58a6f6",
+          "values": 2
+        },
+        "luma": {
+          "finite_values": 15052,
+          "fractional_values": 7501,
+          "label": "luma",
+          "sha256_f32_le": "39d1963bd0567b1e1cf5918d6cab30af9456167abb8eed7207e1f0f2381eda3c",
+          "values": 15052
+        },
+        "original_index": 7,
+        "planes": [
+          {
+            "finite_values": 15052,
+            "fractional_values": 0,
+            "label": "R",
+            "sha256_f32_le": "041716a0730c265cbee42ce60ab8800d1b3b544fdb33e762d40e6be690695345",
+            "values": 15052
+          },
+          {
+            "finite_values": 15052,
+            "fractional_values": 0,
+            "label": "G1",
+            "sha256_f32_le": "8902d63e8e90201ee98c9ee7fd3acc9ee62054a0545ce4fb82b56187811a243c",
+            "values": 15052
+          },
+          {
+            "finite_values": 15052,
+            "fractional_values": 0,
+            "label": "G2",
+            "sha256_f32_le": "83fb61cdd97d50ec75898c07d9044beef386d70db3305d8c50cb1623d57701c7",
+            "values": 15052
+          },
+          {
+            "finite_values": 15052,
+            "fractional_values": 0,
+            "label": "B",
+            "sha256_f32_le": "b78d09e52474926feaba694439d8a075a7bba1d9178793f984b9be3e6b6e430d",
+            "values": 15052
+          }
+        ]
+      },
+      {
+        "beta": {
+          "finite_values": 2,
+          "fractional_values": 2,
+          "label": "beta",
+          "sha256_f32_le": "943cba02c05db9c68441a93dd994fe8a1056462511eb820bafea14b9d33d9683",
+          "values": 2
+        },
+        "luma": {
+          "finite_values": 15052,
+          "fractional_values": 7533,
+          "label": "luma",
+          "sha256_f32_le": "5e4d1653624f10bf2043c070ccc70b0116d0a8b0f60d5181c6aa8f0e1ace0e0c",
+          "values": 15052
+        },
+        "original_index": 8,
+        "planes": [
+          {
+            "finite_values": 15052,
+            "fractional_values": 0,
+            "label": "R",
+            "sha256_f32_le": "0f202c6ab9091b8e502de46573271a2e1a1bf30438b8bc4e20d3ddf6d266cf7f",
+            "values": 15052
+          },
+          {
+            "finite_values": 15052,
+            "fractional_values": 0,
+            "label": "G1",
+            "sha256_f32_le": "58791a982e660a7a394d44614fabab93c741d3fb5fa56265b0077f17eac2dd9c",
+            "values": 15052
+          },
+          {
+            "finite_values": 15052,
+            "fractional_values": 0,
+            "label": "G2",
+            "sha256_f32_le": "6ea9dd3060fcaa52e521012c89ac7631046653db81c6b3ff33d7ab54380aa751",
+            "values": 15052
+          },
+          {
+            "finite_values": 15052,
+            "fractional_values": 0,
+            "label": "B",
+            "sha256_f32_le": "2950a9ba9a2e5acb882abf8208d6bc07d28d544ae6c43a0875b60b241e448ce2",
+            "values": 15052
+          }
+        ]
+      }
+    ],
+    "observer_enabled": true,
+    "probe_direct_calls": 9,
+    "site_order": [
+      "R",
+      "G1",
+      "G2",
+      "B"
+    ]
+  },
+  "direct_planes_mode": "rounded",
+  "frame_subset_original": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "manifest_sha256": "4bb5464883fc7a9230fb38fee010e3df93a80967f024c7c4eff380f88c356027",
+  "output": {
+    "bytes": 361851,
+    "channels": 3,
+    "height": 212,
+    "path": "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-direct-planes\\run-flat-1\\case-13.tif",
+    "pixel_sha256_le": "2a563f03969a050deb5383435b7f8162be88fc9ae2b5b12cc7738db0cac39dd8",
+    "sample_type": "u16",
+    "sha256": "2b50a5875859cac03e7bf3c86479fb7599e8bc4711c9a0d01f8ef07218c35b31",
+    "software": "strehl 0.0.0",
+    "width": 284
+  },
+  "plan": {
+    "canonical_native_offset": [
+      18,
+      14
+    ],
+    "config": {
+      "auto_exposure": false,
+      "bands": 3,
+      "base": "Mean",
+      "ca": "off",
+      "defect": "off",
+      "demosaic": true,
+      "exponent": 2.0,
+      "exposure_stops": 0,
+      "fallback": "Mean",
+      "fallback_k": 3,
+      "fallback_power": 4.0,
+      "gate": 2.0,
+      "gate_floor_enabled": true,
+      "hull": "InputRange",
+      "hull_from_level": 1,
+      "hull_lambda": 2.0,
+      "hull_low_only": false,
+      "mean_coarse": 0,
+      "merge": "Pyramid",
+      "photometric": "Off",
+      "resampler": "CatmullRom",
+      "restoration": "unset",
+      "select": "SoftPower",
+      "sharpen_per_octave": 1.399999976158142,
+      "significance_scale": 0.0,
+      "space": "CameraLinear"
+    },
+    "cover_fit": {
+      "k": 0.8901581355932207,
+      "kind": "Crop"
+    },
+    "crop_quad": {
+      "height": 106,
+      "width": 142,
+      "x": 9,
+      "y": 7
+    },
+    "diagnostic": null,
+    "direct_planes_mode": "rounded",
+    "direct_planes_observer": true,
+    "environment": {
+      "RAYON_NUM_THREADS": "2",
+      "STREHL_DEFECT": "off",
+      "STREHL_DIRECT_PLANES": "rounded",
+      "STREHL_FIX_CA": "off",
+      "STREHL_FULLRES_GATHER": "1",
+      "STREHL_PYRAMID_WORKERS": "2"
+    },
+    "full_native": [
+      320,
+      240
+    ],
+    "full_quad": [
+      160,
+      120
+    ],
+    "inputs": [
+      {
+        "bytes": 153600,
+        "index": 0,
+        "path": "frames/frame-00.cfa",
+        "sha256": "2bbf884d19c1a103089b3f2dffbff85e6654c04ca147cfc7dc9d3a42047b70a7"
+      },
+      {
+        "bytes": 153600,
+        "index": 1,
+        "path": "frames/frame-01.cfa",
+        "sha256": "c44262928eb28bf1c2048004dcedfc511d03cdf28c5881ae3c3bf02be62d303d"
+      },
+      {
+        "bytes": 153600,
+        "index": 2,
+        "path": "frames/frame-02.cfa",
+        "sha256": "d1510cd04407d898b44798ebd5a7fc25fe2e2985d9ce868f480946d2b9c2db23"
+      },
+      {
+        "bytes": 153600,
+        "index": 3,
+        "path": "frames/frame-03.cfa",
+        "sha256": "bb876cae6f114701b9769abf10c75b41a506afec7c851980e65d3e96db713dd6"
+      },
+      {
+        "bytes": 153600,
+        "index": 4,
+        "path": "frames/frame-04.cfa",
+        "sha256": "3aaaa0e6a9411f1c666422c113d71c64200580493af136bda2049798b9a5fde0"
+      },
+      {
+        "bytes": 153600,
+        "index": 5,
+        "path": "frames/frame-05.cfa",
+        "sha256": "c369f1124b91998daa95b3752fe0e2a8a3e14c35f645710552cd6fbfc899cd83"
+      },
+      {
+        "bytes": 153600,
+        "index": 6,
+        "path": "frames/frame-06.cfa",
+        "sha256": "faa30cc63d24f6a7dcaeef0724bcafe2de2d578d909de12068072b5d0af1b0e5"
+      },
+      {
+        "bytes": 153600,
+        "index": 7,
+        "path": "frames/frame-07.cfa",
+        "sha256": "b766f7488e4a899fc89b550766557e79286386a9004c8f6c00e6a355ef4f02b0"
+      },
+      {
+        "bytes": 153600,
+        "index": 8,
+        "path": "frames/frame-08.cfa",
+        "sha256": "4e9a28f39fc515d58e03cd23070920b0d9017cb9362d2d6be1dd3c6c05cc4567"
+      }
+    ],
+    "level_sizes": [
+      [
+        142,
+        106
+      ],
+      [
+        71,
+        53
+      ],
+      [
+        36,
+        27
+      ],
+      [
+        18,
+        14
+      ]
+    ],
+    "manifest_sha256": "4bb5464883fc7a9230fb38fee010e3df93a80967f024c7c4eff380f88c356027",
+    "noise": {
+      "black": 512.0,
+      "gain_dn_per_e": 0.25,
+      "iso": 160.0,
+      "prnu": false,
+      "provenance": "Fallback: explicitly synthetic-known coefficients; no calibration claim",
+      "read_noise_e": 4.0,
+      "variance_at_3000_dn": 751.0,
+      "white": 15360.0
+    },
+    "noise_enabled": true,
+    "normalization": {
+      "second_black_subtraction": false,
+      "tiff_u16_to_dn": 0.22656595712214847
+    },
+    "output_channels": 3,
+    "output_native": [
+      284,
+      212
+    ],
+    "placements": [
+      {
+        "original_index": 0,
+        "params": {
+          "ax": -0.6454069239380663,
+          "ay": 0.5331622415140548,
+          "g": 0.056122341212005766,
+          "rot": 0.0
+        },
+        "quad_similarity": {
+          "a_im": 0.0,
+          "a_re": 1.0561223412120058,
+          "b_im": 0.5331622415140548,
+          "b_re": -0.6454069239380663
+        },
+        "scale": 1.0561223412120058
+      },
+      {
+        "original_index": 1,
+        "params": {
+          "ax": -0.48411591998817083,
+          "ay": 0.3999218469467498,
+          "g": 0.04209703652071051,
+          "rot": 0.0
+        },
+        "quad_similarity": {
+          "a_im": 0.0,
+          "a_re": 1.0420970365207105,
+          "b_im": 0.3999218469467498,
+          "b_re": -0.48411591998817083
+        },
+        "scale": 1.0420970365207105
+      },
+      {
+        "original_index": 2,
+        "params": {
+          "ax": -0.3603542234332421,
+          "ay": 0.2976839237057217,
+          "g": 0.03133514986376018,
+          "rot": 0.0
+        },
+        "quad_similarity": {
+          "a_im": 0.0,
+          "a_re": 1.0313351498637602,
+          "b_im": 0.2976839237057217,
+          "b_re": -0.3603542234332421
+        },
+        "scale": 1.0313351498637602
+      },
+      {
+        "original_index": 3,
+        "params": {
+          "ax": -0.29835192108654063,
+          "ay": 0.24646463046279443,
+          "g": 0.025943645311873098,
+          "rot": 0.0
+        },
+        "quad_similarity": {
+          "a_im": 0.0,
+          "a_re": 1.025943645311873,
+          "b_im": 0.24646463046279443,
+          "b_re": -0.29835192108654063
+        },
+        "scale": 1.025943645311873
+      },
+      {
+        "original_index": 4,
+        "params": {
+          "ax": 0.0,
+          "ay": -0.0,
+          "g": 0.0,
+          "rot": 0.0
+        },
+        "quad_similarity": {
+          "a_im": 0.0,
+          "a_re": 1.0,
+          "b_im": -0.0,
+          "b_re": 0.0
+        },
+        "scale": 1.0
+      },
+      {
+        "original_index": 5,
+        "params": {
+          "ax": 0.22195731153496862,
+          "ay": -0.18335603996366973,
+          "g": -0.019300635785649445,
+          "rot": 0.0
+        },
+        "quad_similarity": {
+          "a_im": 0.0,
+          "a_re": 0.9806993642143506,
+          "b_im": -0.18335603996366973,
+          "b_re": 0.22195731153496862
+        },
+        "scale": 0.9806993642143506
+      },
+      {
+        "original_index": 6,
+        "params": {
+          "ax": 0.45897492765562004,
+          "ay": -0.37915320110681655,
+          "g": -0.03991086327440174,
+          "rot": 0.0
+        },
+        "quad_similarity": {
+          "a_im": 0.0,
+          "a_re": 0.9600891367255983,
+          "b_im": -0.37915320110681655,
+          "b_re": 0.45897492765562004
+        },
+        "scale": 0.9600891367255983
+      },
+      {
+        "original_index": 7,
+        "params": {
+          "ax": 0.8170215237733142,
+          "ay": -0.6749308239866508,
+          "g": -0.07104534989333167,
+          "rot": 0.0
+        },
+        "quad_similarity": {
+          "a_im": 0.0,
+          "a_re": 0.9289546501066683,
+          "b_im": -0.6749308239866508,
+          "b_re": 0.8170215237733142
+        },
+        "scale": 0.9289546501066683
+      },
+      {
+        "original_index": 8,
+        "params": {
+          "ax": 1.0896859092157225,
+          "ay": -0.9001753163086403,
+          "g": -0.09475529645354108,
+          "rot": 0.0
+        },
+        "quad_similarity": {
+          "a_im": 0.0,
+          "a_re": 0.9052447035464589,
+          "b_im": -0.9001753163086403,
+          "b_re": 1.0896859092157225
+        },
+        "scale": 0.9052447035464589
+      }
+    ],
+    "producer": {
+      "command": [
+        "experiments/m194b-known-scene/produce.py",
+        "--commission",
+        "experiments/m194b-known-scene/producer-commission-1/commission.json",
+        "--out",
+        "experiments/m194b-known-scene/producer-output-1"
+      ],
+      "expected_electrons_sha256": "b167ab9ccb763fc0ccfc66c940db08dd125939ef9d90a0c6d5b5fe8c1370455f",
+      "preregistration_sha256": "b8295044614f55db45e715d7c5ffc985e676f3104443e6fe5dcf20193e9c0129",
+      "source_sha256": {
+        "experiments/M103-halfdrift/data/truth-dense.json": "45b12d8c7106fa1c9c1ce3d5f663896a43992ff35f867fd3c6374131cb67be01",
+        "experiments/m194b-known-scene/produce.py": "c17391b26199ea70b29e4f0da12667fe1b8ca9dc355053ea49b3e8a87cc6c4a0",
+        "experiments/m25-simulator/src/strehl_sim/config.py": "507d165e405812a9fdcffbf83a026e699f844dfd88bb2af9faec6e4c12c0ba59",
+        "experiments/m25-simulator/src/strehl_sim/optics.py": "ac5a2342d5ad3e6551ca3ddade5dba8feb9ea8f555f3aa36b71c774c6868fb93",
+        "experiments/m25-simulator/src/strehl_sim/render.py": "8b842d06ab1a550d1c66263dde2969e0e390a439938e57cb54c4095a6a36118c",
+        "experiments/m25-simulator/src/strehl_sim/scene.py": "9bea8539999ca64f893505337dbbe4c32c5765bc2368508275be43eed008351f",
+        "experiments/m25-simulator/src/strehl_sim/sensor.py": "d3057d2bfe3be5c832314e3a442941ef8269dd9a9c3b35e7e100a520e975957f"
+      }
+    },
+    "reference_original_index": 4,
+    "repeat": 727,
+    "roi_native": [
+      64,
+      64,
+      256,
+      176
+    ],
+    "scale_centre_native": [
+      183.0,
+      101.0
+    ],
+    "scene": "flat",
+    "schema": "native-direct-planes-consumer-plan-v1",
+    "sensor": {
+      "active_origin": [
+        2,
+        4
+      ],
+      "black": 512.0,
+      "buffer_height": 247,
+      "cfa": "RGGB",
+      "height": 240,
+      "iso": 160.0,
+      "noise_gain_dn_per_e": 0.25,
+      "read_noise_e": 4.0,
+      "stride": 327,
+      "wb": [
+        1.3333333333333333,
+        1.0,
+        1.6666666666666667
+      ],
+      "white": 15360.0,
+      "width": 320
+    },
+    "software": "strehl 0.0.0 (730542ab83c7)",
+    "wb_f32": [
+      1.3333333730697632,
+      1.0,
+      1.6666666269302368
+    ]
+  },
+  "plan_sha256": "02bd5fca1fa8e4c8f32cf85e1092f447efe9fbec266201dcf59f8d0be8c259bb",
+  "reference_local_index": 4,
+  "reference_original_index": 4,
+  "schema": "native-direct-planes-consumer-receipt-v1"
+}

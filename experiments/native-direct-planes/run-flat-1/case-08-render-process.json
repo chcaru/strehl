@@ -1,0 +1,90 @@
+{
+  "command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-direct-planes\\build-2\\cli-tests.exe",
+    "merge_cmd::known_scene_benchmark::m194b_direct_planes_consumer",
+    "--exact",
+    "--ignored",
+    "--nocapture",
+    "--test-threads=1"
+  ],
+  "exit_code": 0,
+  "error": null,
+  "cleanup_errors": [],
+  "wall_seconds": 0.11000000000058208,
+  "log_bytes": 4031,
+  "job_accounting": {
+    "total_user_100ns": 468750,
+    "total_kernel_100ns": 312500,
+    "total_cpu_100ns": 781250,
+    "total_page_fault_count": 12900,
+    "total_processes": 2,
+    "active_processes": 0,
+    "total_terminated_processes": 0
+  },
+  "job_memory": {
+    "peak_process_memory_used_bytes": 7688192,
+    "peak_job_memory_used_bytes": 8916992
+  },
+  "terminal_job_accounting": true,
+  "configured_job_limits": {
+    "flags": 8704,
+    "committed_bytes": 1073741824
+  },
+  "direct_exit_observed": true,
+  "pipe_eof_observed": true,
+  "post_exit_drain": {
+    "initial_accounting": {
+      "total_user_100ns": 468750,
+      "total_kernel_100ns": 312500,
+      "total_cpu_100ns": 781250,
+      "total_page_fault_count": 12900,
+      "total_processes": 2,
+      "active_processes": 0,
+      "total_terminated_processes": 0
+    },
+    "last_accounting": {
+      "total_user_100ns": 468750,
+      "total_kernel_100ns": 312500,
+      "total_cpu_100ns": 781250,
+      "total_page_fault_count": 12900,
+      "total_processes": 2,
+      "active_processes": 0,
+      "total_terminated_processes": 0
+    },
+    "observations": [
+      {
+        "wall_seconds": 0.11000000000058208,
+        "accounting": {
+          "total_user_100ns": 468750,
+          "total_kernel_100ns": 312500,
+          "total_cpu_100ns": 781250,
+          "total_page_fault_count": 12900,
+          "total_processes": 2,
+          "active_processes": 0,
+          "total_terminated_processes": 0
+        }
+      }
+    ],
+    "observation_count": 1,
+    "completed": true,
+    "started_wall_seconds": 0.11000000000058208,
+    "ended_wall_seconds": 0.11000000000058208
+  },
+  "termination": {
+    "attempted": false,
+    "before_accounting": null,
+    "succeeded": false
+  },
+  "limits": {
+    "wall_seconds": 60,
+    "cpu_seconds": 58.953125,
+    "log_bytes": 2097152,
+    "committed_bytes": 1073741824
+  },
+  "scope": "owned job tree; committed memory, observed user+kernel CPU; not RSS or a timing benchmark",
+  "log": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-direct-planes\\run-flat-1\\case-08-render.log",
+    "sha256": "5026faab08f6ae5f1b62a30158bad797a9f96e2ff75efe363b8d2e083ec6a2b8",
+    "bytes": 4031
+  }
+}

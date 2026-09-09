@@ -1,0 +1,37 @@
+{
+  "scene": "flat",
+  "seed": null,
+  "mode": "off",
+  "manifest": {
+    "path": "experiments/m194b-known-scene/producer-output-1/flat/noise-off/manifest.json",
+    "sha256": "60ae007752236191358ee45f015e04a5b5243fb7c0704d065af88fb3f74ddb44",
+    "bytes": 4551
+  },
+  "plan": {
+    "path": "experiments/native-direct-planes/run-flat-1/observer-placebo-plan.json",
+    "sha256": "eb4fb49123cbf59c9092b1cd8170b9b53252bba5c4ace551db41c5b021c41b2a",
+    "bytes": 9083
+  },
+  "receipt": {
+    "path": "experiments/native-direct-planes/run-flat-1/observer-placebo-receipt.json",
+    "sha256": "69e60248cd9947d4878c9601a0b169048c2115d6100ccabf4f35b6bd5eec4d04",
+    "bytes": 11259
+  },
+  "output": {
+    "path": "experiments/native-direct-planes/run-flat-1/observer-placebo.tif",
+    "sha256": "4cf945da51c2fc41715c07c20188b0329c6de60d17f5a8aa3c2928b5ae86bfcd",
+    "bytes": 361851
+  },
+  "processes": [
+    {
+      "path": "experiments/native-direct-planes/run-flat-1/observer-placebo-plan-process.json",
+      "sha256": "602ed3f852656df710d4cb7018ead8c87b077601fd45bc102265c9add43e0d2b",
+      "bytes": 2713
+    },
+    {
+      "path": "experiments/native-direct-planes/run-flat-1/observer-placebo-render-process.json",
+      "sha256": "da2012beebb64b15f3bd0dd9f916d79278cb3e5946d4c610a523b4c0b64ec743",
+      "bytes": 2739
+    }
+  ]
+}

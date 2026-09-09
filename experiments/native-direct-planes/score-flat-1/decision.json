@@ -1,0 +1,2182 @@
+{
+  "schema": "native-direct-planes-decision-v1",
+  "phase": "flat",
+  "status": "FLAT_REJECT",
+  "run_index": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-direct-planes\\run-flat-1\\run-index.json",
+    "bytes": 41997,
+    "sha256": "5fca02c070ef75de3a138c097bb4e05357892b5e627793be335e01186669f629"
+  },
+  "controls": {
+    "path": "experiments/native-direct-planes/controls-1/results.json",
+    "sha256": "3aea26e0faf519a48ad2f6638b6bfb3531d345c60452ec0d3272fe622b47d1b3",
+    "bytes": 4480
+  },
+  "design_sha256": "9783e7c269c7902c75323d04b7f0e965317ad576fd6236e6a8951d95e6f5c47c",
+  "scorer_sha256": "faa3de1227a4b80da4364847b2bc060d37d50a7fc1c9a6bed5fb447d7571e46c",
+  "rounded_exact_pass": true,
+  "precision_nonregression_pass": false,
+  "proceed_to_precision_detail": false,
+  "material_flat_variance_by_channel": [
+    false,
+    false,
+    false
+  ],
+  "material_detail": [],
+  "changed_float_pixel_pairs": [
+    {
+      "scene": "flat",
+      "seed": 701
+    },
+    {
+      "scene": "flat",
+      "seed": 709
+    },
+    {
+      "scene": "flat",
+      "seed": 719
+    },
+    {
+      "scene": "flat",
+      "seed": 727
+    },
+    {
+      "scene": "flat",
+      "seed": 733
+    },
+    {
+      "scene": "flat",
+      "seed": 739
+    },
+    {
+      "scene": "flat",
+      "seed": 743
+    },
+    {
+      "scene": "flat",
+      "seed": 751
+    }
+  ],
+  "fractional_consumed_witnesses": [
+    {
+      "scene": "flat",
+      "seed": null,
+      "original_index": 0,
+      "plane": "R",
+      "fractional_values": 8145
+    },
+    {
+      "scene": "flat",
+      "seed": null,
+      "original_index": 0,
+      "plane": "G1",
+      "fractional_values": 8203
+    },
+    {
+      "scene": "flat",
+      "seed": null,
+      "original_index": 0,
+      "plane": "G2",
+      "fractional_values": 8307
+    },
+    {
+      "scene": "flat",
+      "seed": null,
+      "original_index": 0,
+      "plane": "B",
+      "fractional_values": 5047
+    },
+    {
+      "scene": "flat",
+      "seed": null,
+      "original_index": 1,
+      "plane": "R",
+      "fractional_values": 9594
+    },
+    {
+      "scene": "flat",
+      "seed": null,
+      "original_index": 1,
+      "plane": "G1",
+      "fractional_values": 9050
+    },
+    {
+      "scene": "flat",
+      "seed": null,
+      "original_index": 1,
+      "plane": "G2",
+      "fractional_values": 9405
+    },
+    {
+      "scene": "flat",
+      "seed": null,
+      "original_index": 1,
+      "plane": "B",
+      "fractional_values": 4554
+    },
+    {
+      "scene": "flat",
+      "seed": null,
+      "original_index": 2,
+      "plane": "R",
+      "fractional_values": 8255
+    },
+    {
+      "scene": "flat",
+      "seed": null,
+      "original_index": 2,
+      "plane": "G1",
+      "fractional_values": 8552
+    },
+    {
+      "scene": "flat",
+      "seed": null,
+      "original_index": 2,
+      "plane": "G2",
+      "fractional_values": 8863
+    },
+    {
+      "scene": "flat",
+      "seed": null,
+      "original_index": 2,
+      "plane": "B",
+      "fractional_values": 6102
+    },
+    {
+      "scene": "flat",
+      "seed": null,
+      "original_index": 3,
+      "plane": "R",
+      "fractional_values": 7946
+    },
+    {
+      "scene": "flat",
+      "seed": null,
+      "original_index": 3,
+      "plane": "G1",
+      "fractional_values": 8274
+    },
+    {
+      "scene": "flat",
+      "seed": null,
+      "original_index": 3,
+      "plane": "G2",
+      "fractional_values": 8199
+    },
+    {
+      "scene": "flat",
+      "seed": null,
+      "original_index": 3,
+      "plane": "B",
+      "fractional_values": 5355
+    },
+    {
+      "scene": "flat",
+      "seed": null,
+      "original_index": 5,
+      "plane": "R",
+      "fractional_values": 7710
+    },
+    {
+      "scene": "flat",
+      "seed": null,
+      "original_index": 5,
+      "plane": "G1",
+      "fractional_values": 8696
+    },
+    {
+      "scene": "flat",
+      "seed": null,
+      "original_index": 5,
+      "plane": "G2",
+      "fractional_values": 8544
+    },
+    {
+      "scene": "flat",
+      "seed": null,
+      "original_index": 5,
+      "plane": "B",
+      "fractional_values": 5709
+    },
+    {
+      "scene": "flat",
+      "seed": null,
+      "original_index": 6,
+      "plane": "R",
+      "fractional_values": 7846
+    },
+    {
+      "scene": "flat",
+      "seed": null,
+      "original_index": 6,
+      "plane": "G1",
+      "fractional_values": 8060
+    },
+    {
+      "scene": "flat",
+      "seed": null,
+      "original_index": 6,
+      "plane": "G2",
+      "fractional_values": 8669
+    },
+    {
+      "scene": "flat",
+      "seed": null,
+      "original_index": 6,
+      "plane": "B",
+      "fractional_values": 6194
+    },
+    {
+      "scene": "flat",
+      "seed": null,
+      "original_index": 7,
+      "plane": "R",
+      "fractional_values": 8729
+    },
+    {
+      "scene": "flat",
+      "seed": null,
+      "original_index": 7,
+      "plane": "G1",
+      "fractional_values": 8841
+    },
+    {
+      "scene": "flat",
+      "seed": null,
+      "original_index": 7,
+      "plane": "G2",
+      "fractional_values": 8399
+    },
+    {
+      "scene": "flat",
+      "seed": null,
+      "original_index": 7,
+      "plane": "B",
+      "fractional_values": 5462
+    },
+    {
+      "scene": "flat",
+      "seed": null,
+      "original_index": 8,
+      "plane": "R",
+      "fractional_values": 8826
+    },
+    {
+      "scene": "flat",
+      "seed": null,
+      "original_index": 8,
+      "plane": "G1",
+      "fractional_values": 8682
+    },
+    {
+      "scene": "flat",
+      "seed": null,
+      "original_index": 8,
+      "plane": "G2",
+      "fractional_values": 8622
+    },
+    {
+      "scene": "flat",
+      "seed": null,
+      "original_index": 8,
+      "plane": "B",
+      "fractional_values": 5608
+    },
+    {
+      "scene": "flat",
+      "seed": 701,
+      "original_index": 0,
+      "plane": "R",
+      "fractional_values": 15049
+    },
+    {
+      "scene": "flat",
+      "seed": 701,
+      "original_index": 0,
+      "plane": "G1",
+      "fractional_values": 15050
+    },
+    {
+      "scene": "flat",
+      "seed": 701,
+      "original_index": 0,
+      "plane": "G2",
+      "fractional_values": 15047
+    },
+    {
+      "scene": "flat",
+      "seed": 701,
+      "original_index": 0,
+      "plane": "B",
+      "fractional_values": 15041
+    },
+    {
+      "scene": "flat",
+      "seed": 701,
+      "original_index": 1,
+      "plane": "R",
+      "fractional_values": 15050
+    },
+    {
+      "scene": "flat",
+      "seed": 701,
+      "original_index": 1,
+      "plane": "G1",
+      "fractional_values": 15049
+    },
+    {
+      "scene": "flat",
+      "seed": 701,
+      "original_index": 1,
+      "plane": "G2",
+      "fractional_values": 15044
+    },
+    {
+      "scene": "flat",
+      "seed": 701,
+      "original_index": 1,
+      "plane": "B",
+      "fractional_values": 15043
+    },
+    {
+      "scene": "flat",
+      "seed": 701,
+      "original_index": 2,
+      "plane": "R",
+      "fractional_values": 15048
+    },
+    {
+      "scene": "flat",
+      "seed": 701,
+      "original_index": 2,
+      "plane": "G1",
+      "fractional_values": 15048
+    },
+    {
+      "scene": "flat",
+      "seed": 701,
+      "original_index": 2,
+      "plane": "G2",
+      "fractional_values": 15046
+    },
+    {
+      "scene": "flat",
+      "seed": 701,
+      "original_index": 2,
+      "plane": "B",
+      "fractional_values": 15039
+    },
+    {
+      "scene": "flat",
+      "seed": 701,
+      "original_index": 3,
+      "plane": "R",
+      "fractional_values": 15044
+    },
+    {
+      "scene": "flat",
+      "seed": 701,
+      "original_index": 3,
+      "plane": "G1",
+      "fractional_values": 15049
+    },
+    {
+      "scene": "flat",
+      "seed": 701,
+      "original_index": 3,
+      "plane": "G2",
+      "fractional_values": 15047
+    },
+    {
+      "scene": "flat",
+      "seed": 701,
+      "original_index": 3,
+      "plane": "B",
+      "fractional_values": 15046
+    },
+    {
+      "scene": "flat",
+      "seed": 701,
+      "original_index": 5,
+      "plane": "R",
+      "fractional_values": 15046
+    },
+    {
+      "scene": "flat",
+      "seed": 701,
+      "original_index": 5,
+      "plane": "G1",
+      "fractional_values": 15047
+    },
+    {
+      "scene": "flat",
+      "seed": 701,
+      "original_index": 5,
+      "plane": "G2",
+      "fractional_values": 15047
+    },
+    {
+      "scene": "flat",
+      "seed": 701,
+      "original_index": 5,
+      "plane": "B",
+      "fractional_values": 15047
+    },
+    {
+      "scene": "flat",
+      "seed": 701,
+      "original_index": 6,
+      "plane": "R",
+      "fractional_values": 15049
+    },
+    {
+      "scene": "flat",
+      "seed": 701,
+      "original_index": 6,
+      "plane": "G1",
+      "fractional_values": 15051
+    },
+    {
+      "scene": "flat",
+      "seed": 701,
+      "original_index": 6,
+      "plane": "G2",
+      "fractional_values": 15049
+    },
+    {
+      "scene": "flat",
+      "seed": 701,
+      "original_index": 6,
+      "plane": "B",
+      "fractional_values": 15044
+    },
+    {
+      "scene": "flat",
+      "seed": 701,
+      "original_index": 7,
+      "plane": "R",
+      "fractional_values": 15048
+    },
+    {
+      "scene": "flat",
+      "seed": 701,
+      "original_index": 7,
+      "plane": "G1",
+      "fractional_values": 15049
+    },
+    {
+      "scene": "flat",
+      "seed": 701,
+      "original_index": 7,
+      "plane": "G2",
+      "fractional_values": 15051
+    },
+    {
+      "scene": "flat",
+      "seed": 701,
+      "original_index": 7,
+      "plane": "B",
+      "fractional_values": 15047
+    },
+    {
+      "scene": "flat",
+      "seed": 701,
+      "original_index": 8,
+      "plane": "R",
+      "fractional_values": 15049
+    },
+    {
+      "scene": "flat",
+      "seed": 701,
+      "original_index": 8,
+      "plane": "G1",
+      "fractional_values": 15044
+    },
+    {
+      "scene": "flat",
+      "seed": 701,
+      "original_index": 8,
+      "plane": "G2",
+      "fractional_values": 15052
+    },
+    {
+      "scene": "flat",
+      "seed": 701,
+      "original_index": 8,
+      "plane": "B",
+      "fractional_values": 15048
+    },
+    {
+      "scene": "flat",
+      "seed": 709,
+      "original_index": 0,
+      "plane": "R",
+      "fractional_values": 15047
+    },
+    {
+      "scene": "flat",
+      "seed": 709,
+      "original_index": 0,
+      "plane": "G1",
+      "fractional_values": 15042
+    },
+    {
+      "scene": "flat",
+      "seed": 709,
+      "original_index": 0,
+      "plane": "G2",
+      "fractional_values": 15050
+    },
+    {
+      "scene": "flat",
+      "seed": 709,
+      "original_index": 0,
+      "plane": "B",
+      "fractional_values": 15046
+    },
+    {
+      "scene": "flat",
+      "seed": 709,
+      "original_index": 1,
+      "plane": "R",
+      "fractional_values": 15048
+    },
+    {
+      "scene": "flat",
+      "seed": 709,
+      "original_index": 1,
+      "plane": "G1",
+      "fractional_values": 15049
+    },
+    {
+      "scene": "flat",
+      "seed": 709,
+      "original_index": 1,
+      "plane": "G2",
+      "fractional_values": 15045
+    },
+    {
+      "scene": "flat",
+      "seed": 709,
+      "original_index": 1,
+      "plane": "B",
+      "fractional_values": 15043
+    },
+    {
+      "scene": "flat",
+      "seed": 709,
+      "original_index": 2,
+      "plane": "R",
+      "fractional_values": 15048
+    },
+    {
+      "scene": "flat",
+      "seed": 709,
+      "original_index": 2,
+      "plane": "G1",
+      "fractional_values": 15051
+    },
+    {
+      "scene": "flat",
+      "seed": 709,
+      "original_index": 2,
+      "plane": "G2",
+      "fractional_values": 15049
+    },
+    {
+      "scene": "flat",
+      "seed": 709,
+      "original_index": 2,
+      "plane": "B",
+      "fractional_values": 15046
+    },
+    {
+      "scene": "flat",
+      "seed": 709,
+      "original_index": 3,
+      "plane": "R",
+      "fractional_values": 15048
+    },
+    {
+      "scene": "flat",
+      "seed": 709,
+      "original_index": 3,
+      "plane": "G1",
+      "fractional_values": 15050
+    },
+    {
+      "scene": "flat",
+      "seed": 709,
+      "original_index": 3,
+      "plane": "G2",
+      "fractional_values": 15047
+    },
+    {
+      "scene": "flat",
+      "seed": 709,
+      "original_index": 3,
+      "plane": "B",
+      "fractional_values": 15048
+    },
+    {
+      "scene": "flat",
+      "seed": 709,
+      "original_index": 5,
+      "plane": "R",
+      "fractional_values": 15047
+    },
+    {
+      "scene": "flat",
+      "seed": 709,
+      "original_index": 5,
+      "plane": "G1",
+      "fractional_values": 15041
+    },
+    {
+      "scene": "flat",
+      "seed": 709,
+      "original_index": 5,
+      "plane": "G2",
+      "fractional_values": 15047
+    },
+    {
+      "scene": "flat",
+      "seed": 709,
+      "original_index": 5,
+      "plane": "B",
+      "fractional_values": 15044
+    },
+    {
+      "scene": "flat",
+      "seed": 709,
+      "original_index": 6,
+      "plane": "R",
+      "fractional_values": 15044
+    },
+    {
+      "scene": "flat",
+      "seed": 709,
+      "original_index": 6,
+      "plane": "G1",
+      "fractional_values": 15048
+    },
+    {
+      "scene": "flat",
+      "seed": 709,
+      "original_index": 6,
+      "plane": "G2",
+      "fractional_values": 15050
+    },
+    {
+      "scene": "flat",
+      "seed": 709,
+      "original_index": 6,
+      "plane": "B",
+      "fractional_values": 15044
+    },
+    {
+      "scene": "flat",
+      "seed": 709,
+      "original_index": 7,
+      "plane": "R",
+      "fractional_values": 15049
+    },
+    {
+      "scene": "flat",
+      "seed": 709,
+      "original_index": 7,
+      "plane": "G1",
+      "fractional_values": 15045
+    },
+    {
+      "scene": "flat",
+      "seed": 709,
+      "original_index": 7,
+      "plane": "G2",
+      "fractional_values": 15051
+    },
+    {
+      "scene": "flat",
+      "seed": 709,
+      "original_index": 7,
+      "plane": "B",
+      "fractional_values": 15048
+    },
+    {
+      "scene": "flat",
+      "seed": 709,
+      "original_index": 8,
+      "plane": "R",
+      "fractional_values": 15050
+    },
+    {
+      "scene": "flat",
+      "seed": 709,
+      "original_index": 8,
+      "plane": "G1",
+      "fractional_values": 15047
+    },
+    {
+      "scene": "flat",
+      "seed": 709,
+      "original_index": 8,
+      "plane": "G2",
+      "fractional_values": 15049
+    },
+    {
+      "scene": "flat",
+      "seed": 709,
+      "original_index": 8,
+      "plane": "B",
+      "fractional_values": 15042
+    },
+    {
+      "scene": "flat",
+      "seed": 719,
+      "original_index": 0,
+      "plane": "R",
+      "fractional_values": 15048
+    },
+    {
+      "scene": "flat",
+      "seed": 719,
+      "original_index": 0,
+      "plane": "G1",
+      "fractional_values": 15049
+    },
+    {
+      "scene": "flat",
+      "seed": 719,
+      "original_index": 0,
+      "plane": "G2",
+      "fractional_values": 15049
+    },
+    {
+      "scene": "flat",
+      "seed": 719,
+      "original_index": 0,
+      "plane": "B",
+      "fractional_values": 15046
+    },
+    {
+      "scene": "flat",
+      "seed": 719,
+      "original_index": 1,
+      "plane": "R",
+      "fractional_values": 15048
+    },
+    {
+      "scene": "flat",
+      "seed": 719,
+      "original_index": 1,
+      "plane": "G1",
+      "fractional_values": 15046
+    },
+    {
+      "scene": "flat",
+      "seed": 719,
+      "original_index": 1,
+      "plane": "G2",
+      "fractional_values": 15047
+    },
+    {
+      "scene": "flat",
+      "seed": 719,
+      "original_index": 1,
+      "plane": "B",
+      "fractional_values": 15046
+    },
+    {
+      "scene": "flat",
+      "seed": 719,
+      "original_index": 2,
+      "plane": "R",
+      "fractional_values": 15047
+    },
+    {
+      "scene": "flat",
+      "seed": 719,
+      "original_index": 2,
+      "plane": "G1",
+      "fractional_values": 15048
+    },
+    {
+      "scene": "flat",
+      "seed": 719,
+      "original_index": 2,
+      "plane": "G2",
+      "fractional_values": 15049
+    },
+    {
+      "scene": "flat",
+      "seed": 719,
+      "original_index": 2,
+      "plane": "B",
+      "fractional_values": 15045
+    },
+    {
+      "scene": "flat",
+      "seed": 719,
+      "original_index": 3,
+      "plane": "R",
+      "fractional_values": 15047
+    },
+    {
+      "scene": "flat",
+      "seed": 719,
+      "original_index": 3,
+      "plane": "G1",
+      "fractional_values": 15051
+    },
+    {
+      "scene": "flat",
+      "seed": 719,
+      "original_index": 3,
+      "plane": "G2",
+      "fractional_values": 15051
+    },
+    {
+      "scene": "flat",
+      "seed": 719,
+      "original_index": 3,
+      "plane": "B",
+      "fractional_values": 15048
+    },
+    {
+      "scene": "flat",
+      "seed": 719,
+      "original_index": 5,
+      "plane": "R",
+      "fractional_values": 15049
+    },
+    {
+      "scene": "flat",
+      "seed": 719,
+      "original_index": 5,
+      "plane": "G1",
+      "fractional_values": 15050
+    },
+    {
+      "scene": "flat",
+      "seed": 719,
+      "original_index": 5,
+      "plane": "G2",
+      "fractional_values": 15042
+    },
+    {
+      "scene": "flat",
+      "seed": 719,
+      "original_index": 5,
+      "plane": "B",
+      "fractional_values": 15048
+    },
+    {
+      "scene": "flat",
+      "seed": 719,
+      "original_index": 6,
+      "plane": "R",
+      "fractional_values": 15049
+    },
+    {
+      "scene": "flat",
+      "seed": 719,
+      "original_index": 6,
+      "plane": "G1",
+      "fractional_values": 15047
+    },
+    {
+      "scene": "flat",
+      "seed": 719,
+      "original_index": 6,
+      "plane": "G2",
+      "fractional_values": 15048
+    },
+    {
+      "scene": "flat",
+      "seed": 719,
+      "original_index": 6,
+      "plane": "B",
+      "fractional_values": 15047
+    },
+    {
+      "scene": "flat",
+      "seed": 719,
+      "original_index": 7,
+      "plane": "R",
+      "fractional_values": 15047
+    },
+    {
+      "scene": "flat",
+      "seed": 719,
+      "original_index": 7,
+      "plane": "G1",
+      "fractional_values": 15047
+    },
+    {
+      "scene": "flat",
+      "seed": 719,
+      "original_index": 7,
+      "plane": "G2",
+      "fractional_values": 15050
+    },
+    {
+      "scene": "flat",
+      "seed": 719,
+      "original_index": 7,
+      "plane": "B",
+      "fractional_values": 15047
+    },
+    {
+      "scene": "flat",
+      "seed": 719,
+      "original_index": 8,
+      "plane": "R",
+      "fractional_values": 15050
+    },
+    {
+      "scene": "flat",
+      "seed": 719,
+      "original_index": 8,
+      "plane": "G1",
+      "fractional_values": 15049
+    },
+    {
+      "scene": "flat",
+      "seed": 719,
+      "original_index": 8,
+      "plane": "G2",
+      "fractional_values": 15051
+    },
+    {
+      "scene": "flat",
+      "seed": 719,
+      "original_index": 8,
+      "plane": "B",
+      "fractional_values": 15049
+    },
+    {
+      "scene": "flat",
+      "seed": 727,
+      "original_index": 0,
+      "plane": "R",
+      "fractional_values": 15048
+    },
+    {
+      "scene": "flat",
+      "seed": 727,
+      "original_index": 0,
+      "plane": "G1",
+      "fractional_values": 15047
+    },
+    {
+      "scene": "flat",
+      "seed": 727,
+      "original_index": 0,
+      "plane": "G2",
+      "fractional_values": 15045
+    },
+    {
+      "scene": "flat",
+      "seed": 727,
+      "original_index": 0,
+      "plane": "B",
+      "fractional_values": 15045
+    },
+    {
+      "scene": "flat",
+      "seed": 727,
+      "original_index": 1,
+      "plane": "R",
+      "fractional_values": 15049
+    },
+    {
+      "scene": "flat",
+      "seed": 727,
+      "original_index": 1,
+      "plane": "G1",
+      "fractional_values": 15046
+    },
+    {
+      "scene": "flat",
+      "seed": 727,
+      "original_index": 1,
+      "plane": "G2",
+      "fractional_values": 15046
+    },
+    {
+      "scene": "flat",
+      "seed": 727,
+      "original_index": 1,
+      "plane": "B",
+      "fractional_values": 15047
+    },
+    {
+      "scene": "flat",
+      "seed": 727,
+      "original_index": 2,
+      "plane": "R",
+      "fractional_values": 15048
+    },
+    {
+      "scene": "flat",
+      "seed": 727,
+      "original_index": 2,
+      "plane": "G1",
+      "fractional_values": 15046
+    },
+    {
+      "scene": "flat",
+      "seed": 727,
+      "original_index": 2,
+      "plane": "G2",
+      "fractional_values": 15049
+    },
+    {
+      "scene": "flat",
+      "seed": 727,
+      "original_index": 2,
+      "plane": "B",
+      "fractional_values": 15045
+    },
+    {
+      "scene": "flat",
+      "seed": 727,
+      "original_index": 3,
+      "plane": "R",
+      "fractional_values": 15044
+    },
+    {
+      "scene": "flat",
+      "seed": 727,
+      "original_index": 3,
+      "plane": "G1",
+      "fractional_values": 15048
+    },
+    {
+      "scene": "flat",
+      "seed": 727,
+      "original_index": 3,
+      "plane": "G2",
+      "fractional_values": 15048
+    },
+    {
+      "scene": "flat",
+      "seed": 727,
+      "original_index": 3,
+      "plane": "B",
+      "fractional_values": 15049
+    },
+    {
+      "scene": "flat",
+      "seed": 727,
+      "original_index": 5,
+      "plane": "R",
+      "fractional_values": 15050
+    },
+    {
+      "scene": "flat",
+      "seed": 727,
+      "original_index": 5,
+      "plane": "G1",
+      "fractional_values": 15047
+    },
+    {
+      "scene": "flat",
+      "seed": 727,
+      "original_index": 5,
+      "plane": "G2",
+      "fractional_values": 15050
+    },
+    {
+      "scene": "flat",
+      "seed": 727,
+      "original_index": 5,
+      "plane": "B",
+      "fractional_values": 15043
+    },
+    {
+      "scene": "flat",
+      "seed": 727,
+      "original_index": 6,
+      "plane": "R",
+      "fractional_values": 15049
+    },
+    {
+      "scene": "flat",
+      "seed": 727,
+      "original_index": 6,
+      "plane": "G1",
+      "fractional_values": 15048
+    },
+    {
+      "scene": "flat",
+      "seed": 727,
+      "original_index": 6,
+      "plane": "G2",
+      "fractional_values": 15050
+    },
+    {
+      "scene": "flat",
+      "seed": 727,
+      "original_index": 6,
+      "plane": "B",
+      "fractional_values": 15047
+    },
+    {
+      "scene": "flat",
+      "seed": 727,
+      "original_index": 7,
+      "plane": "R",
+      "fractional_values": 15046
+    },
+    {
+      "scene": "flat",
+      "seed": 727,
+      "original_index": 7,
+      "plane": "G1",
+      "fractional_values": 15049
+    },
+    {
+      "scene": "flat",
+      "seed": 727,
+      "original_index": 7,
+      "plane": "G2",
+      "fractional_values": 15049
+    },
+    {
+      "scene": "flat",
+      "seed": 727,
+      "original_index": 7,
+      "plane": "B",
+      "fractional_values": 15042
+    },
+    {
+      "scene": "flat",
+      "seed": 727,
+      "original_index": 8,
+      "plane": "R",
+      "fractional_values": 15049
+    },
+    {
+      "scene": "flat",
+      "seed": 727,
+      "original_index": 8,
+      "plane": "G1",
+      "fractional_values": 15049
+    },
+    {
+      "scene": "flat",
+      "seed": 727,
+      "original_index": 8,
+      "plane": "G2",
+      "fractional_values": 15048
+    },
+    {
+      "scene": "flat",
+      "seed": 727,
+      "original_index": 8,
+      "plane": "B",
+      "fractional_values": 15042
+    },
+    {
+      "scene": "flat",
+      "seed": 733,
+      "original_index": 0,
+      "plane": "R",
+      "fractional_values": 15049
+    },
+    {
+      "scene": "flat",
+      "seed": 733,
+      "original_index": 0,
+      "plane": "G1",
+      "fractional_values": 15046
+    },
+    {
+      "scene": "flat",
+      "seed": 733,
+      "original_index": 0,
+      "plane": "G2",
+      "fractional_values": 15050
+    },
+    {
+      "scene": "flat",
+      "seed": 733,
+      "original_index": 0,
+      "plane": "B",
+      "fractional_values": 15046
+    },
+    {
+      "scene": "flat",
+      "seed": 733,
+      "original_index": 1,
+      "plane": "R",
+      "fractional_values": 15045
+    },
+    {
+      "scene": "flat",
+      "seed": 733,
+      "original_index": 1,
+      "plane": "G1",
+      "fractional_values": 15044
+    },
+    {
+      "scene": "flat",
+      "seed": 733,
+      "original_index": 1,
+      "plane": "G2",
+      "fractional_values": 15046
+    },
+    {
+      "scene": "flat",
+      "seed": 733,
+      "original_index": 1,
+      "plane": "B",
+      "fractional_values": 15047
+    },
+    {
+      "scene": "flat",
+      "seed": 733,
+      "original_index": 2,
+      "plane": "R",
+      "fractional_values": 15047
+    },
+    {
+      "scene": "flat",
+      "seed": 733,
+      "original_index": 2,
+      "plane": "G1",
+      "fractional_values": 15049
+    },
+    {
+      "scene": "flat",
+      "seed": 733,
+      "original_index": 2,
+      "plane": "G2",
+      "fractional_values": 15051
+    },
+    {
+      "scene": "flat",
+      "seed": 733,
+      "original_index": 2,
+      "plane": "B",
+      "fractional_values": 15047
+    },
+    {
+      "scene": "flat",
+      "seed": 733,
+      "original_index": 3,
+      "plane": "R",
+      "fractional_values": 15047
+    },
+    {
+      "scene": "flat",
+      "seed": 733,
+      "original_index": 3,
+      "plane": "G1",
+      "fractional_values": 15048
+    },
+    {
+      "scene": "flat",
+      "seed": 733,
+      "original_index": 3,
+      "plane": "G2",
+      "fractional_values": 15045
+    },
+    {
+      "scene": "flat",
+      "seed": 733,
+      "original_index": 3,
+      "plane": "B",
+      "fractional_values": 15044
+    },
+    {
+      "scene": "flat",
+      "seed": 733,
+      "original_index": 5,
+      "plane": "R",
+      "fractional_values": 15049
+    },
+    {
+      "scene": "flat",
+      "seed": 733,
+      "original_index": 5,
+      "plane": "G1",
+      "fractional_values": 15048
+    },
+    {
+      "scene": "flat",
+      "seed": 733,
+      "original_index": 5,
+      "plane": "G2",
+      "fractional_values": 15050
+    },
+    {
+      "scene": "flat",
+      "seed": 733,
+      "original_index": 5,
+      "plane": "B",
+      "fractional_values": 15050
+    },
+    {
+      "scene": "flat",
+      "seed": 733,
+      "original_index": 6,
+      "plane": "R",
+      "fractional_values": 15048
+    },
+    {
+      "scene": "flat",
+      "seed": 733,
+      "original_index": 6,
+      "plane": "G1",
+      "fractional_values": 15042
+    },
+    {
+      "scene": "flat",
+      "seed": 733,
+      "original_index": 6,
+      "plane": "G2",
+      "fractional_values": 15050
+    },
+    {
+      "scene": "flat",
+      "seed": 733,
+      "original_index": 6,
+      "plane": "B",
+      "fractional_values": 15044
+    },
+    {
+      "scene": "flat",
+      "seed": 733,
+      "original_index": 7,
+      "plane": "R",
+      "fractional_values": 15049
+    },
+    {
+      "scene": "flat",
+      "seed": 733,
+      "original_index": 7,
+      "plane": "G1",
+      "fractional_values": 15049
+    },
+    {
+      "scene": "flat",
+      "seed": 733,
+      "original_index": 7,
+      "plane": "G2",
+      "fractional_values": 15048
+    },
+    {
+      "scene": "flat",
+      "seed": 733,
+      "original_index": 7,
+      "plane": "B",
+      "fractional_values": 15048
+    },
+    {
+      "scene": "flat",
+      "seed": 733,
+      "original_index": 8,
+      "plane": "R",
+      "fractional_values": 15048
+    },
+    {
+      "scene": "flat",
+      "seed": 733,
+      "original_index": 8,
+      "plane": "G1",
+      "fractional_values": 15048
+    },
+    {
+      "scene": "flat",
+      "seed": 733,
+      "original_index": 8,
+      "plane": "G2",
+      "fractional_values": 15050
+    },
+    {
+      "scene": "flat",
+      "seed": 733,
+      "original_index": 8,
+      "plane": "B",
+      "fractional_values": 15043
+    },
+    {
+      "scene": "flat",
+      "seed": 739,
+      "original_index": 0,
+      "plane": "R",
+      "fractional_values": 15046
+    },
+    {
+      "scene": "flat",
+      "seed": 739,
+      "original_index": 0,
+      "plane": "G1",
+      "fractional_values": 15049
+    },
+    {
+      "scene": "flat",
+      "seed": 739,
+      "original_index": 0,
+      "plane": "G2",
+      "fractional_values": 15049
+    },
+    {
+      "scene": "flat",
+      "seed": 739,
+      "original_index": 0,
+      "plane": "B",
+      "fractional_values": 15045
+    },
+    {
+      "scene": "flat",
+      "seed": 739,
+      "original_index": 1,
+      "plane": "R",
+      "fractional_values": 15047
+    },
+    {
+      "scene": "flat",
+      "seed": 739,
+      "original_index": 1,
+      "plane": "G1",
+      "fractional_values": 15049
+    },
+    {
+      "scene": "flat",
+      "seed": 739,
+      "original_index": 1,
+      "plane": "G2",
+      "fractional_values": 15049
+    },
+    {
+      "scene": "flat",
+      "seed": 739,
+      "original_index": 1,
+      "plane": "B",
+      "fractional_values": 15045
+    },
+    {
+      "scene": "flat",
+      "seed": 739,
+      "original_index": 2,
+      "plane": "R",
+      "fractional_values": 15045
+    },
+    {
+      "scene": "flat",
+      "seed": 739,
+      "original_index": 2,
+      "plane": "G1",
+      "fractional_values": 15047
+    },
+    {
+      "scene": "flat",
+      "seed": 739,
+      "original_index": 2,
+      "plane": "G2",
+      "fractional_values": 15047
+    },
+    {
+      "scene": "flat",
+      "seed": 739,
+      "original_index": 2,
+      "plane": "B",
+      "fractional_values": 15045
+    },
+    {
+      "scene": "flat",
+      "seed": 739,
+      "original_index": 3,
+      "plane": "R",
+      "fractional_values": 15049
+    },
+    {
+      "scene": "flat",
+      "seed": 739,
+      "original_index": 3,
+      "plane": "G1",
+      "fractional_values": 15047
+    },
+    {
+      "scene": "flat",
+      "seed": 739,
+      "original_index": 3,
+      "plane": "G2",
+      "fractional_values": 15049
+    },
+    {
+      "scene": "flat",
+      "seed": 739,
+      "original_index": 3,
+      "plane": "B",
+      "fractional_values": 15049
+    },
+    {
+      "scene": "flat",
+      "seed": 739,
+      "original_index": 5,
+      "plane": "R",
+      "fractional_values": 15046
+    },
+    {
+      "scene": "flat",
+      "seed": 739,
+      "original_index": 5,
+      "plane": "G1",
+      "fractional_values": 15048
+    },
+    {
+      "scene": "flat",
+      "seed": 739,
+      "original_index": 5,
+      "plane": "G2",
+      "fractional_values": 15047
+    },
+    {
+      "scene": "flat",
+      "seed": 739,
+      "original_index": 5,
+      "plane": "B",
+      "fractional_values": 15045
+    },
+    {
+      "scene": "flat",
+      "seed": 739,
+      "original_index": 6,
+      "plane": "R",
+      "fractional_values": 15046
+    },
+    {
+      "scene": "flat",
+      "seed": 739,
+      "original_index": 6,
+      "plane": "G1",
+      "fractional_values": 15049
+    },
+    {
+      "scene": "flat",
+      "seed": 739,
+      "original_index": 6,
+      "plane": "G2",
+      "fractional_values": 15050
+    },
+    {
+      "scene": "flat",
+      "seed": 739,
+      "original_index": 6,
+      "plane": "B",
+      "fractional_values": 15045
+    },
+    {
+      "scene": "flat",
+      "seed": 739,
+      "original_index": 7,
+      "plane": "R",
+      "fractional_values": 15050
+    },
+    {
+      "scene": "flat",
+      "seed": 739,
+      "original_index": 7,
+      "plane": "G1",
+      "fractional_values": 15047
+    },
+    {
+      "scene": "flat",
+      "seed": 739,
+      "original_index": 7,
+      "plane": "G2",
+      "fractional_values": 15047
+    },
+    {
+      "scene": "flat",
+      "seed": 739,
+      "original_index": 7,
+      "plane": "B",
+      "fractional_values": 15050
+    },
+    {
+      "scene": "flat",
+      "seed": 739,
+      "original_index": 8,
+      "plane": "R",
+      "fractional_values": 15048
+    },
+    {
+      "scene": "flat",
+      "seed": 739,
+      "original_index": 8,
+      "plane": "G1",
+      "fractional_values": 15047
+    },
+    {
+      "scene": "flat",
+      "seed": 739,
+      "original_index": 8,
+      "plane": "G2",
+      "fractional_values": 15048
+    },
+    {
+      "scene": "flat",
+      "seed": 739,
+      "original_index": 8,
+      "plane": "B",
+      "fractional_values": 15046
+    },
+    {
+      "scene": "flat",
+      "seed": 743,
+      "original_index": 0,
+      "plane": "R",
+      "fractional_values": 15050
+    },
+    {
+      "scene": "flat",
+      "seed": 743,
+      "original_index": 0,
+      "plane": "G1",
+      "fractional_values": 15050
+    },
+    {
+      "scene": "flat",
+      "seed": 743,
+      "original_index": 0,
+      "plane": "G2",
+      "fractional_values": 15049
+    },
+    {
+      "scene": "flat",
+      "seed": 743,
+      "original_index": 0,
+      "plane": "B",
+      "fractional_values": 15041
+    },
+    {
+      "scene": "flat",
+      "seed": 743,
+      "original_index": 1,
+      "plane": "R",
+      "fractional_values": 15050
+    },
+    {
+      "scene": "flat",
+      "seed": 743,
+      "original_index": 1,
+      "plane": "G1",
+      "fractional_values": 15050
+    },
+    {
+      "scene": "flat",
+      "seed": 743,
+      "original_index": 1,
+      "plane": "G2",
+      "fractional_values": 15045
+    },
+    {
+      "scene": "flat",
+      "seed": 743,
+      "original_index": 1,
+      "plane": "B",
+      "fractional_values": 15044
+    },
+    {
+      "scene": "flat",
+      "seed": 743,
+      "original_index": 2,
+      "plane": "R",
+      "fractional_values": 15048
+    },
+    {
+      "scene": "flat",
+      "seed": 743,
+      "original_index": 2,
+      "plane": "G1",
+      "fractional_values": 15047
+    },
+    {
+      "scene": "flat",
+      "seed": 743,
+      "original_index": 2,
+      "plane": "G2",
+      "fractional_values": 15043
+    },
+    {
+      "scene": "flat",
+      "seed": 743,
+      "original_index": 2,
+      "plane": "B",
+      "fractional_values": 15045
+    },
+    {
+      "scene": "flat",
+      "seed": 743,
+      "original_index": 3,
+      "plane": "R",
+      "fractional_values": 15044
+    },
+    {
+      "scene": "flat",
+      "seed": 743,
+      "original_index": 3,
+      "plane": "G1",
+      "fractional_values": 15048
+    },
+    {
+      "scene": "flat",
+      "seed": 743,
+      "original_index": 3,
+      "plane": "G2",
+      "fractional_values": 15048
+    },
+    {
+      "scene": "flat",
+      "seed": 743,
+      "original_index": 3,
+      "plane": "B",
+      "fractional_values": 15047
+    },
+    {
+      "scene": "flat",
+      "seed": 743,
+      "original_index": 5,
+      "plane": "R",
+      "fractional_values": 15047
+    },
+    {
+      "scene": "flat",
+      "seed": 743,
+      "original_index": 5,
+      "plane": "G1",
+      "fractional_values": 15050
+    },
+    {
+      "scene": "flat",
+      "seed": 743,
+      "original_index": 5,
+      "plane": "G2",
+      "fractional_values": 15050
+    },
+    {
+      "scene": "flat",
+      "seed": 743,
+      "original_index": 5,
+      "plane": "B",
+      "fractional_values": 15043
+    },
+    {
+      "scene": "flat",
+      "seed": 743,
+      "original_index": 6,
+      "plane": "R",
+      "fractional_values": 15047
+    },
+    {
+      "scene": "flat",
+      "seed": 743,
+      "original_index": 6,
+      "plane": "G1",
+      "fractional_values": 15045
+    },
+    {
+      "scene": "flat",
+      "seed": 743,
+      "original_index": 6,
+      "plane": "G2",
+      "fractional_values": 15048
+    },
+    {
+      "scene": "flat",
+      "seed": 743,
+      "original_index": 6,
+      "plane": "B",
+      "fractional_values": 15043
+    },
+    {
+      "scene": "flat",
+      "seed": 743,
+      "original_index": 7,
+      "plane": "R",
+      "fractional_values": 15047
+    },
+    {
+      "scene": "flat",
+      "seed": 743,
+      "original_index": 7,
+      "plane": "G1",
+      "fractional_values": 15049
+    },
+    {
+      "scene": "flat",
+      "seed": 743,
+      "original_index": 7,
+      "plane": "G2",
+      "fractional_values": 15050
+    },
+    {
+      "scene": "flat",
+      "seed": 743,
+      "original_index": 7,
+      "plane": "B",
+      "fractional_values": 15045
+    },
+    {
+      "scene": "flat",
+      "seed": 743,
+      "original_index": 8,
+      "plane": "R",
+      "fractional_values": 15050
+    },
+    {
+      "scene": "flat",
+      "seed": 743,
+      "original_index": 8,
+      "plane": "G1",
+      "fractional_values": 15047
+    },
+    {
+      "scene": "flat",
+      "seed": 743,
+      "original_index": 8,
+      "plane": "G2",
+      "fractional_values": 15048
+    },
+    {
+      "scene": "flat",
+      "seed": 743,
+      "original_index": 8,
+      "plane": "B",
+      "fractional_values": 15043
+    },
+    {
+      "scene": "flat",
+      "seed": 751,
+      "original_index": 0,
+      "plane": "R",
+      "fractional_values": 15047
+    },
+    {
+      "scene": "flat",
+      "seed": 751,
+      "original_index": 0,
+      "plane": "G1",
+      "fractional_values": 15047
+    },
+    {
+      "scene": "flat",
+      "seed": 751,
+      "original_index": 0,
+      "plane": "G2",
+      "fractional_values": 15050
+    },
+    {
+      "scene": "flat",
+      "seed": 751,
+      "original_index": 0,
+      "plane": "B",
+      "fractional_values": 15044
+    },
+    {
+      "scene": "flat",
+      "seed": 751,
+      "original_index": 1,
+      "plane": "R",
+      "fractional_values": 15045
+    },
+    {
+      "scene": "flat",
+      "seed": 751,
+      "original_index": 1,
+      "plane": "G1",
+      "fractional_values": 15048
+    },
+    {
+      "scene": "flat",
+      "seed": 751,
+      "original_index": 1,
+      "plane": "G2",
+      "fractional_values": 15047
+    },
+    {
+      "scene": "flat",
+      "seed": 751,
+      "original_index": 1,
+      "plane": "B",
+      "fractional_values": 15043
+    },
+    {
+      "scene": "flat",
+      "seed": 751,
+      "original_index": 2,
+      "plane": "R",
+      "fractional_values": 15046
+    },
+    {
+      "scene": "flat",
+      "seed": 751,
+      "original_index": 2,
+      "plane": "G1",
+      "fractional_values": 15048
+    },
+    {
+      "scene": "flat",
+      "seed": 751,
+      "original_index": 2,
+      "plane": "G2",
+      "fractional_values": 15048
+    },
+    {
+      "scene": "flat",
+      "seed": 751,
+      "original_index": 2,
+      "plane": "B",
+      "fractional_values": 15044
+    },
+    {
+      "scene": "flat",
+      "seed": 751,
+      "original_index": 3,
+      "plane": "R",
+      "fractional_values": 15045
+    },
+    {
+      "scene": "flat",
+      "seed": 751,
+      "original_index": 3,
+      "plane": "G1",
+      "fractional_values": 15047
+    },
+    {
+      "scene": "flat",
+      "seed": 751,
+      "original_index": 3,
+      "plane": "G2",
+      "fractional_values": 15051
+    },
+    {
+      "scene": "flat",
+      "seed": 751,
+      "original_index": 3,
+      "plane": "B",
+      "fractional_values": 15045
+    },
+    {
+      "scene": "flat",
+      "seed": 751,
+      "original_index": 5,
+      "plane": "R",
+      "fractional_values": 15048
+    },
+    {
+      "scene": "flat",
+      "seed": 751,
+      "original_index": 5,
+      "plane": "G1",
+      "fractional_values": 15048
+    },
+    {
+      "scene": "flat",
+      "seed": 751,
+      "original_index": 5,
+      "plane": "G2",
+      "fractional_values": 15049
+    },
+    {
+      "scene": "flat",
+      "seed": 751,
+      "original_index": 5,
+      "plane": "B",
+      "fractional_values": 15047
+    },
+    {
+      "scene": "flat",
+      "seed": 751,
+      "original_index": 6,
+      "plane": "R",
+      "fractional_values": 15049
+    },
+    {
+      "scene": "flat",
+      "seed": 751,
+      "original_index": 6,
+      "plane": "G1",
+      "fractional_values": 15048
+    },
+    {
+      "scene": "flat",
+      "seed": 751,
+      "original_index": 6,
+      "plane": "G2",
+      "fractional_values": 15048
+    },
+    {
+      "scene": "flat",
+      "seed": 751,
+      "original_index": 6,
+      "plane": "B",
+      "fractional_values": 15041
+    },
+    {
+      "scene": "flat",
+      "seed": 751,
+      "original_index": 7,
+      "plane": "R",
+      "fractional_values": 15042
+    },
+    {
+      "scene": "flat",
+      "seed": 751,
+      "original_index": 7,
+      "plane": "G1",
+      "fractional_values": 15051
+    },
+    {
+      "scene": "flat",
+      "seed": 751,
+      "original_index": 7,
+      "plane": "G2",
+      "fractional_values": 15049
+    },
+    {
+      "scene": "flat",
+      "seed": 751,
+      "original_index": 7,
+      "plane": "B",
+      "fractional_values": 15045
+    },
+    {
+      "scene": "flat",
+      "seed": 751,
+      "original_index": 8,
+      "plane": "R",
+      "fractional_values": 15045
+    },
+    {
+      "scene": "flat",
+      "seed": 751,
+      "original_index": 8,
+      "plane": "G1",
+      "fractional_values": 15048
+    },
+    {
+      "scene": "flat",
+      "seed": 751,
+      "original_index": 8,
+      "plane": "G2",
+      "fractional_values": 15047
+    },
+    {
+      "scene": "flat",
+      "seed": 751,
+      "original_index": 8,
+      "plane": "B",
+      "fractional_values": 15045
+    }
+  ],
+  "observer_placebo": {
+    "bindings": {
+      "scene": "flat",
+      "seed": null,
+      "mode": "off",
+      "manifest": {
+        "path": "experiments/m194b-known-scene/producer-output-1/flat/noise-off/manifest.json",
+        "sha256": "60ae007752236191358ee45f015e04a5b5243fb7c0704d065af88fb3f74ddb44",
+        "bytes": 4551
+      },
+      "plan": {
+        "path": "experiments/native-direct-planes/run-flat-1/observer-placebo-plan.json",
+        "sha256": "eb4fb49123cbf59c9092b1cd8170b9b53252bba5c4ace551db41c5b021c41b2a",
+        "bytes": 9083
+      },
+      "receipt": {
+        "path": "experiments/native-direct-planes/run-flat-1/observer-placebo-receipt.json",
+        "sha256": "69e60248cd9947d4878c9601a0b169048c2115d6100ccabf4f35b6bd5eec4d04",
+        "bytes": 11259
+      },
+      "output": {
+        "path": "experiments/native-direct-planes/run-flat-1/observer-placebo.tif",
+        "sha256": "4cf945da51c2fc41715c07c20188b0329c6de60d17f5a8aa3c2928b5ae86bfcd",
+        "bytes": 361851
+      },
+      "processes": [
+        {
+          "path": "experiments/native-direct-planes/run-flat-1/observer-placebo-plan-process.json",
+          "sha256": "602ed3f852656df710d4cb7018ead8c87b077601fd45bc102265c9add43e0d2b",
+          "bytes": 2713
+        },
+        {
+          "path": "experiments/native-direct-planes/run-flat-1/observer-placebo-render-process.json",
+          "sha256": "da2012beebb64b15f3bd0dd9f916d79278cb3e5946d4c610a523b4c0b64ec743",
+          "bytes": 2739
+        }
+      ]
+    },
+    "whole_tiff_equal": true,
+    "decoded_pixels_equal": true
+  },
+  "prior_flat_decision": null,
+  "failed_checks": [
+    {
+      "metric": "flat.repeat.temporal_variance_dn2",
+      "component": [
+        0
+      ],
+      "off": 189.38403051201772,
+      "float": 189.73138466279534,
+      "difference": 0.347354150777619,
+      "pass": false
+    },
+    {
+      "metric": "flat.repeat.temporal_variance_dn2",
+      "component": [
+        1
+      ],
+      "off": 187.94089195091797,
+      "float": 187.9730283715588,
+      "difference": 0.03213642064082478,
+      "pass": false
+    },
+    {
+      "metric": "flat.repeat.repeat_mean_mse_dn2",
+      "component": [
+        0
+      ],
+      "off": 23.838076835799452,
+      "float": 23.887002166380075,
+      "difference": 0.04892533058062298,
+      "pass": false
+    },
+    {
+      "metric": "flat.repeat.repeat_mean_mse_dn2",
+      "component": [
+        1
+      ],
+      "off": 23.377804232281584,
+      "float": 23.430320839566424,
+      "difference": 0.05251660728483998,
+      "pass": false
+    },
+    {
+      "metric": "flat.repeat.repeat_mean_mse_dn2",
+      "component": [
+        2
+      ],
+      "off": 25.187580707241484,
+      "float": 25.307882893022484,
+      "difference": 0.12030218578100005,
+      "pass": false
+    },
+    {
+      "metric": "flat.repeat.bias_of_repeat_mean_dn",
+      "component": [
+        1
+      ],
+      "off": 0.3029939018410427,
+      "float": 0.304162079877496,
+      "difference": 0.0011681780364533045,
+      "pass": false
+    }
+  ]
+}

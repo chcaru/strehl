@@ -1,0 +1,1086 @@
+{
+  "schema": "native-direct-planes-score-v1",
+  "decision": {
+    "schema": "native-direct-planes-decision-v1",
+    "phase": "detail",
+    "status": "PRECISION_REJECT",
+    "run_index": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-direct-planes\\run-detail-1\\run-index.json",
+      "bytes": 6939,
+      "sha256": "0afb4cda88b3a18c701d60e7c29cd1117cb9d1cf9aec24e527c728d56cfa0879"
+    },
+    "controls": {
+      "path": "experiments/native-direct-planes/controls-1/results.json",
+      "sha256": "3aea26e0faf519a48ad2f6638b6bfb3531d345c60452ec0d3272fe622b47d1b3",
+      "bytes": 4480
+    },
+    "design_sha256": "9783e7c269c7902c75323d04b7f0e965317ad576fd6236e6a8951d95e6f5c47c",
+    "scorer_sha256": "faa3de1227a4b80da4364847b2bc060d37d50a7fc1c9a6bed5fb447d7571e46c",
+    "rounded_exact_pass": true,
+    "precision_nonregression_pass": false,
+    "proceed_to_precision_detail": false,
+    "material_flat_variance_by_channel": [
+      false,
+      false,
+      false
+    ],
+    "material_detail": [],
+    "changed_float_pixel_pairs": [],
+    "fractional_consumed_witnesses": [],
+    "observer_placebo": {
+      "bindings": {
+        "scene": "flat",
+        "seed": null,
+        "mode": "off",
+        "manifest": {
+          "path": "experiments/m194b-known-scene/producer-output-1/flat/noise-off/manifest.json",
+          "sha256": "60ae007752236191358ee45f015e04a5b5243fb7c0704d065af88fb3f74ddb44",
+          "bytes": 4551
+        },
+        "plan": {
+          "path": "experiments/native-direct-planes/run-flat-1/observer-placebo-plan.json",
+          "sha256": "eb4fb49123cbf59c9092b1cd8170b9b53252bba5c4ace551db41c5b021c41b2a",
+          "bytes": 9083
+        },
+        "receipt": {
+          "path": "experiments/native-direct-planes/run-flat-1/observer-placebo-receipt.json",
+          "sha256": "69e60248cd9947d4878c9601a0b169048c2115d6100ccabf4f35b6bd5eec4d04",
+          "bytes": 11259
+        },
+        "output": {
+          "path": "experiments/native-direct-planes/run-flat-1/observer-placebo.tif",
+          "sha256": "4cf945da51c2fc41715c07c20188b0329c6de60d17f5a8aa3c2928b5ae86bfcd",
+          "bytes": 361851
+        },
+        "processes": [
+          {
+            "path": "experiments/native-direct-planes/run-flat-1/observer-placebo-plan-process.json",
+            "sha256": "602ed3f852656df710d4cb7018ead8c87b077601fd45bc102265c9add43e0d2b",
+            "bytes": 2713
+          },
+          {
+            "path": "experiments/native-direct-planes/run-flat-1/observer-placebo-render-process.json",
+            "sha256": "da2012beebb64b15f3bd0dd9f916d79278cb3e5946d4c610a523b4c0b64ec743",
+            "bytes": 2739
+          }
+        ]
+      },
+      "whole_tiff_equal": true,
+      "decoded_pixels_equal": true
+    },
+    "prior_flat_decision": {
+      "path": "experiments/native-direct-planes/score-flat-1/decision.json",
+      "sha256": "00e5ddd8753052524136bf3139e0c4013078b36d9ffbeaeee683027ba6e44d41",
+      "bytes": 45689
+    },
+    "failed_checks": []
+  },
+  "output_count": 4,
+  "mask_pixels": 21504,
+  "mask_sha256": "ab32f901c99f1a29e7668d09b5780deb937e125d2693a36c9bd9b574ba4cae8b",
+  "units": "post-WB DN from actual RGB16 * 14848/65535; no second black subtraction",
+  "measurements": {
+    "rows": [
+      {
+        "scene": "plane",
+        "target": "ideal",
+        "reference_sha256": "3eebdc42934ae14a8dbd0b726616797f4ce17c7ae240ab830a7e6c84d1e20783",
+        "reference_wave_response": {
+          "constant_dn": [
+            3000.000089406967,
+            3000.000000000003,
+            2999.9999284744263
+          ],
+          "waves": [
+            {
+              "frequency_native": [
+                0.0625,
+                0.041666666666666664
+              ],
+              "amplitude_dn": [
+                445.83832661926607,
+                445.83831333224947,
+                445.8383027026355
+              ],
+              "phase_rad": [
+                0.20000000000000326,
+                0.2000000000000032,
+                0.2000000000000031
+              ]
+            },
+            {
+              "frequency_native": [
+                0.125,
+                -0.0625
+              ],
+              "amplitude_dn": [
+                217.8553057802267,
+                217.85529928763287,
+                217.85529409355777
+              ],
+              "phase_rad": [
+                1.099999999999998,
+                1.099999999999998,
+                1.099999999999998
+              ]
+            }
+          ],
+          "design_condition": 1.414213562373097,
+          "scope": "joint readout of registered waves, not output normalization"
+        },
+        "arms": {
+          "off": {
+            "pixels": 21504,
+            "bias_dn": [
+              -0.5030972508310386,
+              -0.49760288032203726,
+              -0.5113967193117036
+            ],
+            "mse_dn2": [
+              4904.540674843147,
+              4933.217579316177,
+              4902.798063286303
+            ],
+            "rmse_dn": [
+              70.03242588146685,
+              70.23686766446933,
+              70.01998331395333
+            ],
+            "p99_9_abs_error_dn": [
+              159.07667354061414,
+              162.59491248220456,
+              161.29490753171922
+            ],
+            "max_abs_error_dn": [
+              170.5111524830454,
+              169.57856743287266,
+              172.62320538782615
+            ],
+            "quantile": "nearest rank on fixed native mask",
+            "complex_wave_error_dn": [
+              [
+                71.60496083335832,
+                71.56065923598861,
+                71.58069760041832
+              ],
+              [
+                67.54571602531715,
+                67.41337636936119,
+                67.5435031823073
+              ]
+            ],
+            "wave_response": {
+              "constant_dn": [
+                2999.4969921561365,
+                2999.502397119677,
+                2999.4885317551148
+              ],
+              "waves": [
+                {
+                  "frequency_native": [
+                    0.0625,
+                    0.041666666666666664
+                  ],
+                  "amplitude_dn": [
+                    374.2333667050303,
+                    374.27765534463106,
+                    374.2580106079328
+                  ],
+                  "phase_rad": [
+                    0.20002808751395315,
+                    0.20003272187719612,
+                    0.1994101567665674
+                  ]
+                },
+                {
+                  "frequency_native": [
+                    0.125,
+                    -0.0625
+                  ],
+                  "amplitude_dn": [
+                    150.3099333402477,
+                    150.44193436783095,
+                    150.31186910049732
+                  ],
+                  "phase_rad": [
+                    1.0988094359193774,
+                    1.0997829729405082,
+                    1.0994320638839086
+                  ]
+                }
+              ],
+              "design_condition": 1.414213562373097,
+              "scope": "joint readout of registered waves, not output normalization"
+            }
+          },
+          "rounded": {
+            "pixels": 21504,
+            "bias_dn": [
+              -0.5030972508310386,
+              -0.49760288032203726,
+              -0.5113967193117036
+            ],
+            "mse_dn2": [
+              4904.540674843147,
+              4933.217579316177,
+              4902.798063286303
+            ],
+            "rmse_dn": [
+              70.03242588146685,
+              70.23686766446933,
+              70.01998331395333
+            ],
+            "p99_9_abs_error_dn": [
+              159.07667354061414,
+              162.59491248220456,
+              161.29490753171922
+            ],
+            "max_abs_error_dn": [
+              170.5111524830454,
+              169.57856743287266,
+              172.62320538782615
+            ],
+            "quantile": "nearest rank on fixed native mask",
+            "complex_wave_error_dn": [
+              [
+                71.60496083335832,
+                71.56065923598861,
+                71.58069760041832
+              ],
+              [
+                67.54571602531715,
+                67.41337636936119,
+                67.5435031823073
+              ]
+            ],
+            "wave_response": {
+              "constant_dn": [
+                2999.4969921561365,
+                2999.502397119677,
+                2999.4885317551148
+              ],
+              "waves": [
+                {
+                  "frequency_native": [
+                    0.0625,
+                    0.041666666666666664
+                  ],
+                  "amplitude_dn": [
+                    374.2333667050303,
+                    374.27765534463106,
+                    374.2580106079328
+                  ],
+                  "phase_rad": [
+                    0.20002808751395315,
+                    0.20003272187719612,
+                    0.1994101567665674
+                  ]
+                },
+                {
+                  "frequency_native": [
+                    0.125,
+                    -0.0625
+                  ],
+                  "amplitude_dn": [
+                    150.3099333402477,
+                    150.44193436783095,
+                    150.31186910049732
+                  ],
+                  "phase_rad": [
+                    1.0988094359193774,
+                    1.0997829729405082,
+                    1.0994320638839086
+                  ]
+                }
+              ],
+              "design_condition": 1.414213562373097,
+              "scope": "joint readout of registered waves, not output normalization"
+            }
+          }
+        }
+      },
+      {
+        "scene": "plane",
+        "target": "observation",
+        "reference_sha256": "28657ee5fc919cfbe63a6cdcde2de437b072f07ee025bdd432976ee13eedd603",
+        "reference_wave_response": {
+          "constant_dn": [
+            3000.000089406973,
+            2999.9999999999995,
+            2999.9999284744267
+          ],
+          "waves": [
+            {
+              "frequency_native": [
+                0.0625,
+                0.041666666666666664
+              ],
+              "amplitude_dn": [
+                374.9547401554602,
+                374.9547289809379,
+                374.95472004132097
+              ],
+              "phase_rad": [
+                0.2000000000000031,
+                0.2000000000000031,
+                0.20000000000000306
+              ]
+            },
+            {
+              "frequency_native": [
+                0.125,
+                -0.0625
+              ],
+              "amplitude_dn": [
+                153.94807759267323,
+                153.94807300466292,
+                153.94806933425494
+              ],
+              "phase_rad": [
+                1.0999999999999983,
+                1.0999999999999985,
+                1.0999999999999988
+              ]
+            }
+          ],
+          "design_condition": 1.414213562373097,
+          "scope": "joint readout of registered waves, not output normalization"
+        },
+        "arms": {
+          "off": {
+            "pixels": 21504,
+            "bias_dn": [
+              -0.503097250831023,
+              -0.4976028803220237,
+              -0.5113967193117
+            ],
+            "mse_dn2": [
+              66.58828192030043,
+              106.84828640126327,
+              66.71933920350084
+            ],
+            "rmse_dn": [
+              8.160164331697029,
+              10.336744477893573,
+              8.16819069338497
+            ],
+            "p99_9_abs_error_dn": [
+              31.671734697220018,
+              31.827906801915105,
+              31.569374825658997
+            ],
+            "max_abs_error_dn": [
+              38.99224120635836,
+              38.66160373122102,
+              38.19635174746145
+            ],
+            "quantile": "nearest rank on fixed native mask",
+            "complex_wave_error_dn": [
+              [
+                0.7214501750439305,
+                0.6771845915101542,
+                0.7309082594839176
+              ],
+              [
+                3.6426491896365767,
+                3.5062941983677236,
+                3.637226422912798
+              ]
+            ],
+            "wave_response": {
+              "constant_dn": [
+                2999.4969921561365,
+                2999.502397119677,
+                2999.4885317551148
+              ],
+              "waves": [
+                {
+                  "frequency_native": [
+                    0.0625,
+                    0.041666666666666664
+                  ],
+                  "amplitude_dn": [
+                    374.2333667050303,
+                    374.27765534463106,
+                    374.2580106079328
+                  ],
+                  "phase_rad": [
+                    0.20002808751395315,
+                    0.20003272187719612,
+                    0.1994101567665674
+                  ]
+                },
+                {
+                  "frequency_native": [
+                    0.125,
+                    -0.0625
+                  ],
+                  "amplitude_dn": [
+                    150.3099333402477,
+                    150.44193436783095,
+                    150.31186910049732
+                  ],
+                  "phase_rad": [
+                    1.0988094359193774,
+                    1.0997829729405082,
+                    1.0994320638839086
+                  ]
+                }
+              ],
+              "design_condition": 1.414213562373097,
+              "scope": "joint readout of registered waves, not output normalization"
+            }
+          },
+          "rounded": {
+            "pixels": 21504,
+            "bias_dn": [
+              -0.503097250831023,
+              -0.4976028803220237,
+              -0.5113967193117
+            ],
+            "mse_dn2": [
+              66.58828192030043,
+              106.84828640126327,
+              66.71933920350084
+            ],
+            "rmse_dn": [
+              8.160164331697029,
+              10.336744477893573,
+              8.16819069338497
+            ],
+            "p99_9_abs_error_dn": [
+              31.671734697220018,
+              31.827906801915105,
+              31.569374825658997
+            ],
+            "max_abs_error_dn": [
+              38.99224120635836,
+              38.66160373122102,
+              38.19635174746145
+            ],
+            "quantile": "nearest rank on fixed native mask",
+            "complex_wave_error_dn": [
+              [
+                0.7214501750439305,
+                0.6771845915101542,
+                0.7309082594839176
+              ],
+              [
+                3.6426491896365767,
+                3.5062941983677236,
+                3.637226422912798
+              ]
+            ],
+            "wave_response": {
+              "constant_dn": [
+                2999.4969921561365,
+                2999.502397119677,
+                2999.4885317551148
+              ],
+              "waves": [
+                {
+                  "frequency_native": [
+                    0.0625,
+                    0.041666666666666664
+                  ],
+                  "amplitude_dn": [
+                    374.2333667050303,
+                    374.27765534463106,
+                    374.2580106079328
+                  ],
+                  "phase_rad": [
+                    0.20002808751395315,
+                    0.20003272187719612,
+                    0.1994101567665674
+                  ]
+                },
+                {
+                  "frequency_native": [
+                    0.125,
+                    -0.0625
+                  ],
+                  "amplitude_dn": [
+                    150.3099333402477,
+                    150.44193436783095,
+                    150.31186910049732
+                  ],
+                  "phase_rad": [
+                    1.0988094359193774,
+                    1.0997829729405082,
+                    1.0994320638839086
+                  ]
+                }
+              ],
+              "design_condition": 1.414213562373097,
+              "scope": "joint readout of registered waves, not output normalization"
+            }
+          }
+        }
+      },
+      {
+        "scene": "color",
+        "target": "ideal",
+        "reference_sha256": "3547f3c94ba8e198efbda4d84507eab56b1b4968331edef14139e0fdb1d681b5",
+        "reference_wave_response": {
+          "constant_dn": [
+            2999.9999999999995,
+            2999.999999999999,
+            3000.0
+          ],
+          "waves": [
+            {
+              "frequency_native": [
+                0.08,
+                0.03
+              ],
+              "amplitude_dn": [
+                444.6186151950742,
+                444.61861519507465,
+                444.61861519507465
+              ],
+              "phase_rad": [
+                0.19999999999999596,
+                0.19999999999999643,
+                0.19999999999999676
+              ]
+            },
+            {
+              "frequency_native": [
+                0.19,
+                -0.07
+              ],
+              "amplitude_dn": [
+                168.13712734768092,
+                168.13712734768092,
+                168.13712734768092
+              ],
+              "phase_rad": [
+                1.0999999999999956,
+                1.0999999999999954,
+                1.0999999999999959
+              ]
+            },
+            {
+              "frequency_native": [
+                0.11,
+                0.04
+              ],
+              "amplitude_dn": [
+                234.63288524238527,
+                9.982031321010016e-13,
+                234.6328852423833
+              ],
+              "phase_rad": [
+                0.8000000000000048,
+                0.5567193087558717,
+                -2.341592653589785
+              ]
+            },
+            {
+              "frequency_native": [
+                0.05,
+                -0.09
+              ],
+              "amplitude_dn": [
+                6.573237283267176e-13,
+                117.92117198243419,
+                4.10124422700844e-13
+              ],
+              "phase_rad": [
+                1.7386155855477192,
+                1.9999999999999996,
+                1.718927540454481
+              ]
+            }
+          ],
+          "design_condition": 1.4174648846536488,
+          "scope": "joint readout of registered waves, not output normalization"
+        },
+        "arms": {
+          "off": {
+            "pixels": 21504,
+            "bias_dn": [
+              -0.12042510500098129,
+              -0.14094333344647023,
+              -0.055379653335154586
+            ],
+            "mse_dn2": [
+              6003.333745407612,
+              1466.347852874773,
+              6027.078783661076
+            ],
+            "rmse_dn": [
+              77.4811831699001,
+              38.292921707213374,
+              77.63426294917133
+            ],
+            "p99_9_abs_error_dn": [
+              230.1031256694946,
+              134.6049016766783,
+              232.34872670316918
+            ],
+            "max_abs_error_dn": [
+              248.92936018428782,
+              152.8935105068863,
+              253.3647483560826
+            ],
+            "quantile": "nearest rank on fixed native mask",
+            "complex_wave_error_dn": [
+              [
+                27.36989687863172,
+                27.95434173633305,
+                27.490748391336687
+              ],
+              [
+                22.707608447374334,
+                22.874668074188016,
+                22.724672848734006
+              ],
+              [
+                88.83626285384746,
+                0.029458648378330368,
+                88.86924691389412
+              ],
+              [
+                16.52954350460444,
+                11.124910056179813,
+                16.483482864113142
+              ]
+            ],
+            "wave_response": {
+              "constant_dn": [
+                2999.9453489517173,
+                2999.897391198329,
+                2999.9403638411377
+              ],
+              "waves": [
+                {
+                  "frequency_native": [
+                    0.08,
+                    0.03
+                  ],
+                  "amplitude_dn": [
+                    471.9798302361242,
+                    472.572942682759,
+                    472.08997955860923
+                  ],
+                  "phase_rad": [
+                    0.20150476078391158,
+                    0.1999384258861953,
+                    0.19774707050264495
+                  ]
+                },
+                {
+                  "frequency_native": [
+                    0.19,
+                    -0.07
+                  ],
+                  "amplitude_dn": [
+                    190.84466879578227,
+                    191.01177767714827,
+                    190.86167825343475
+                  ],
+                  "phase_rad": [
+                    1.0996920617801345,
+                    1.0998410117557404,
+                    1.099584423998843
+                  ]
+                },
+                {
+                  "frequency_native": [
+                    0.11,
+                    0.04
+                  ],
+                  "amplitude_dn": [
+                    145.80249336876398,
+                    0.02945864837904123,
+                    145.76721458426584
+                  ],
+                  "phase_rad": [
+                    0.8055218156987232,
+                    1.3349696280444099,
+                    -2.3372816673866907
+                  ]
+                },
+                {
+                  "frequency_native": [
+                    0.05,
+                    -0.09
+                  ],
+                  "amplitude_dn": [
+                    16.529543504605076,
+                    106.79628995502664,
+                    16.483482864113533
+                  ],
+                  "phase_rad": [
+                    2.006152372351348,
+                    2.0002225312669473,
+                    2.005343296671458
+                  ]
+                }
+              ],
+              "design_condition": 1.4174648846536488,
+              "scope": "joint readout of registered waves, not output normalization"
+            }
+          },
+          "rounded": {
+            "pixels": 21504,
+            "bias_dn": [
+              -0.12042510500098129,
+              -0.14094333344647023,
+              -0.055379653335154586
+            ],
+            "mse_dn2": [
+              6003.333745407612,
+              1466.347852874773,
+              6027.078783661076
+            ],
+            "rmse_dn": [
+              77.4811831699001,
+              38.292921707213374,
+              77.63426294917133
+            ],
+            "p99_9_abs_error_dn": [
+              230.1031256694946,
+              134.6049016766783,
+              232.34872670316918
+            ],
+            "max_abs_error_dn": [
+              248.92936018428782,
+              152.8935105068863,
+              253.3647483560826
+            ],
+            "quantile": "nearest rank on fixed native mask",
+            "complex_wave_error_dn": [
+              [
+                27.36989687863172,
+                27.95434173633305,
+                27.490748391336687
+              ],
+              [
+                22.707608447374334,
+                22.874668074188016,
+                22.724672848734006
+              ],
+              [
+                88.83626285384746,
+                0.029458648378330368,
+                88.86924691389412
+              ],
+              [
+                16.52954350460444,
+                11.124910056179813,
+                16.483482864113142
+              ]
+            ],
+            "wave_response": {
+              "constant_dn": [
+                2999.9453489517173,
+                2999.897391198329,
+                2999.9403638411377
+              ],
+              "waves": [
+                {
+                  "frequency_native": [
+                    0.08,
+                    0.03
+                  ],
+                  "amplitude_dn": [
+                    471.9798302361242,
+                    472.572942682759,
+                    472.08997955860923
+                  ],
+                  "phase_rad": [
+                    0.20150476078391158,
+                    0.1999384258861953,
+                    0.19774707050264495
+                  ]
+                },
+                {
+                  "frequency_native": [
+                    0.19,
+                    -0.07
+                  ],
+                  "amplitude_dn": [
+                    190.84466879578227,
+                    191.01177767714827,
+                    190.86167825343475
+                  ],
+                  "phase_rad": [
+                    1.0996920617801345,
+                    1.0998410117557404,
+                    1.099584423998843
+                  ]
+                },
+                {
+                  "frequency_native": [
+                    0.11,
+                    0.04
+                  ],
+                  "amplitude_dn": [
+                    145.80249336876398,
+                    0.02945864837904123,
+                    145.76721458426584
+                  ],
+                  "phase_rad": [
+                    0.8055218156987232,
+                    1.3349696280444099,
+                    -2.3372816673866907
+                  ]
+                },
+                {
+                  "frequency_native": [
+                    0.05,
+                    -0.09
+                  ],
+                  "amplitude_dn": [
+                    16.529543504605076,
+                    106.79628995502664,
+                    16.483482864113533
+                  ],
+                  "phase_rad": [
+                    2.006152372351348,
+                    2.0002225312669473,
+                    2.005343296671458
+                  ]
+                }
+              ],
+              "design_condition": 1.4174648846536488,
+              "scope": "joint readout of registered waves, not output normalization"
+            }
+          }
+        }
+      }
+    ]
+  },
+  "checks": [],
+  "rounded_pairs": [
+    {
+      "scene": "plane",
+      "seed": null,
+      "equal": {
+        "whole_tiff": true,
+        "decoded_pixels": true,
+        "consumed_planes_luma_beta_f32": true,
+        "collapsed_f32": true
+      },
+      "pass": true
+    },
+    {
+      "scene": "color",
+      "seed": null,
+      "equal": {
+        "whole_tiff": true,
+        "decoded_pixels": true,
+        "consumed_planes_luma_beta_f32": true,
+        "collapsed_f32": true
+      },
+      "pass": true
+    }
+  ],
+  "tiffs": [
+    {
+      "scene": "plane",
+      "seed": null,
+      "mode": "off",
+      "info": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-direct-planes\\run-detail-1\\case-00.tif",
+        "bytes": 361851,
+        "file_sha256": "c260d5943de5b7d2127e763541a428c8bdfea7f01cc9284ae308e3520c0eb65f",
+        "pixel_sha256": "329755283fe504888822daa94e3d0bebc80909ccc8a76ad319b687222f355a00",
+        "width": 284,
+        "height": 212,
+        "channels": 3,
+        "dtype": "uint16",
+        "orientation": 1,
+        "icc": "absent",
+        "transfer_tags": "absent",
+        "image_description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+        "tag_codes": [
+          256,
+          257,
+          258,
+          259,
+          262,
+          270,
+          273,
+          277,
+          278,
+          279,
+          282,
+          283,
+          296,
+          305,
+          317,
+          339
+        ],
+        "rail_zero_by_channel": [
+          0,
+          0,
+          0
+        ],
+        "rail_max_by_channel": [
+          0,
+          0,
+          0
+        ],
+        "software": "strehl 0.0.0"
+      }
+    },
+    {
+      "scene": "plane",
+      "seed": null,
+      "mode": "rounded",
+      "info": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-direct-planes\\run-detail-1\\case-01.tif",
+        "bytes": 361851,
+        "file_sha256": "c260d5943de5b7d2127e763541a428c8bdfea7f01cc9284ae308e3520c0eb65f",
+        "pixel_sha256": "329755283fe504888822daa94e3d0bebc80909ccc8a76ad319b687222f355a00",
+        "width": 284,
+        "height": 212,
+        "channels": 3,
+        "dtype": "uint16",
+        "orientation": 1,
+        "icc": "absent",
+        "transfer_tags": "absent",
+        "image_description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+        "tag_codes": [
+          256,
+          257,
+          258,
+          259,
+          262,
+          270,
+          273,
+          277,
+          278,
+          279,
+          282,
+          283,
+          296,
+          305,
+          317,
+          339
+        ],
+        "rail_zero_by_channel": [
+          0,
+          0,
+          0
+        ],
+        "rail_max_by_channel": [
+          0,
+          0,
+          0
+        ],
+        "software": "strehl 0.0.0"
+      }
+    },
+    {
+      "scene": "color",
+      "seed": null,
+      "mode": "off",
+      "info": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-direct-planes\\run-detail-1\\case-02.tif",
+        "bytes": 361851,
+        "file_sha256": "9e81c00dccd17710423127d3d67f5691c01be228229176fe311fd7ee98a7ef59",
+        "pixel_sha256": "9b8f12ab01384b43b0a71ab12fb55198f09b742e3ab0cb57af4a330587c952fd",
+        "width": 284,
+        "height": 212,
+        "channels": 3,
+        "dtype": "uint16",
+        "orientation": 1,
+        "icc": "absent",
+        "transfer_tags": "absent",
+        "image_description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+        "tag_codes": [
+          256,
+          257,
+          258,
+          259,
+          262,
+          270,
+          273,
+          277,
+          278,
+          279,
+          282,
+          283,
+          296,
+          305,
+          317,
+          339
+        ],
+        "rail_zero_by_channel": [
+          0,
+          0,
+          0
+        ],
+        "rail_max_by_channel": [
+          0,
+          0,
+          0
+        ],
+        "software": "strehl 0.0.0"
+      }
+    },
+    {
+      "scene": "color",
+      "seed": null,
+      "mode": "rounded",
+      "info": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-direct-planes\\run-detail-1\\case-03.tif",
+        "bytes": 361851,
+        "file_sha256": "9e81c00dccd17710423127d3d67f5691c01be228229176fe311fd7ee98a7ef59",
+        "pixel_sha256": "9b8f12ab01384b43b0a71ab12fb55198f09b742e3ab0cb57af4a330587c952fd",
+        "width": 284,
+        "height": 212,
+        "channels": 3,
+        "dtype": "uint16",
+        "orientation": 1,
+        "icc": "absent",
+        "transfer_tags": "absent",
+        "image_description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+        "tag_codes": [
+          256,
+          257,
+          258,
+          259,
+          262,
+          270,
+          273,
+          277,
+          278,
+          279,
+          282,
+          283,
+          296,
+          305,
+          317,
+          339
+        ],
+        "rail_zero_by_channel": [
+          0,
+          0,
+          0
+        ],
+        "rail_max_by_channel": [
+          0,
+          0,
+          0
+        ],
+        "software": "strehl 0.0.0"
+      }
+    }
+  ],
+  "reader_sha256": "d292c8623827eb960bc28dc341398c7e164f5c14cd31af74663ee24c1ff5b5dd",
+  "plan_checker_sha256": "eccbd41383ebcb46d865aef6745b39cafe91dab9294ea109b3a83981388fa80b",
+  "failure_directions": [
+    "Variance and noisy MSE can reward blur or biased flattening; fixed noise-off and repeat-mean fidelity must also pass.",
+    "RMSE averages can hide local outliers; nearest-rank p99.9 and literal max are separate nonregression bars.",
+    "Amplitude alone can reward sharpening and miss phase shifts; fixed complex-wave error compares both amplitude and phase.",
+    "A TIFF identity cannot establish collapsed f32 identity; the latter is compared from direct pre-writer evidence."
+  ],
+  "scope": "MEASURED under saved synthetic photon model; no physical calibration, native speed or SOTA claim",
+  "color_wb_convention": "producer exact-rational inverse WB versus consumed f32 gains retains a small finite-arithmetic discrepancy",
+  "plane_materiality_floor": "0.400776 DN is inherited engineering ranking floor, not rigorous target-error propagation"
+}

@@ -1,0 +1,37 @@
+{
+  "scene": "flat",
+  "seed": 701,
+  "mode": "rounded",
+  "manifest": {
+    "path": "experiments/m194b-known-scene/producer-output-1/flat/seed-701/manifest.json",
+    "sha256": "6b505c8b3459c36f1d8c423500a8fb05d9fd0989e8ad8e7ad8d7481e8dfc79bf",
+    "bytes": 4549
+  },
+  "plan": {
+    "path": "experiments/native-direct-planes/run-flat-1/case-04-plan.json",
+    "sha256": "c931acbb011c4e651c85ce645f68bcba892d327d5a95dacfef520efd3591cf4e",
+    "bytes": 9088
+  },
+  "receipt": {
+    "path": "experiments/native-direct-planes/run-flat-1/case-04-receipt.json",
+    "sha256": "4a075acf5a20e8aab71c391e15a1488941d6efab8f21e7c87b383bafa30f8e34",
+    "bytes": 26222
+  },
+  "output": {
+    "path": "experiments/native-direct-planes/run-flat-1/case-04.tif",
+    "sha256": "33594569e451e669564c3ac19b3d6d0ce7ca6d84d0b2fe04c630f8dffb70eeb1",
+    "bytes": 361851
+  },
+  "processes": [
+    {
+      "path": "experiments/native-direct-planes/run-flat-1/case-04-plan-process.json",
+      "sha256": "703d9bc0226683e6bfb3ab7fcf40d6fb8f39ec01e650034fef7a84d841becbd9",
+      "bytes": 2705
+    },
+    {
+      "path": "experiments/native-direct-planes/run-flat-1/case-04-render-process.json",
+      "sha256": "05d845441fa7de1087802fcf79638b7854bacef768970066be94dd913c5bf2be",
+      "bytes": 2734
+    }
+  ]
+}

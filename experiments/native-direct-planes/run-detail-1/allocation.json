@@ -1,0 +1,33 @@
+{
+  "scene": "detail",
+  "modes": [
+    "off",
+    "rounded"
+  ],
+  "runner": {
+    "path": "experiments/native-direct-planes/run-matrix.py",
+    "sha256": "72e158daaca164dedb2dce1e64658d480bd989a37b74fc0d6d5ceb9e82fe6c6a",
+    "bytes": 6660
+  },
+  "producer": {
+    "path": "experiments/m194b-known-scene/producer-output-1/producer-result.json",
+    "sha256": "544d47dbc0fdebcf220094ca53434ca49abfee62f55febec27b36f58c24087cc",
+    "bytes": 5655
+  },
+  "executable": {
+    "path": "experiments/native-direct-planes/build-2/cli-tests.exe",
+    "sha256": "58873b3ce09843c013b05195020f1b1b0696930c5f6e370f86db8f48485dc544",
+    "bytes": 13311488
+  },
+  "controls": {
+    "path": "experiments/native-direct-planes/controls-1/results.json",
+    "sha256": "3aea26e0faf519a48ad2f6638b6bfb3531d345c60452ec0d3272fe622b47d1b3",
+    "bytes": 4480
+  },
+  "source_revision": "65ee8120d14fad3c203b2c955b1b0b56ec9176f6",
+  "primary_ceiling": 33,
+  "observer_placebos": 1,
+  "aggregate_cpu_seconds_limit": 60,
+  "peak_job_commit_limit": 1073741824,
+  "timing_scope": "tiny saved inputs only; no native throughput claim"
+}

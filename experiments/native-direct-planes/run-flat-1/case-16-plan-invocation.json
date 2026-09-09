@@ -1,0 +1,25 @@
+{
+  "command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-direct-planes\\build-2\\cli-tests.exe",
+    "merge_cmd::known_scene_benchmark::m194b_direct_planes_consumer",
+    "--exact",
+    "--ignored",
+    "--nocapture",
+    "--test-threads=1"
+  ],
+  "environment_overrides": {
+    "RAYON_NUM_THREADS": "2",
+    "STREHL_DEFECT": "off",
+    "STREHL_FIX_CA": "off",
+    "STREHL_FULLRES_GATHER": "1",
+    "STREHL_PYRAMID_WORKERS": "2",
+    "STREHL_DIRECT_PLANES": "rounded",
+    "STREHL_M194B_MANIFEST": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194b-known-scene\\producer-output-1\\flat\\seed-733\\manifest.json",
+    "STREHL_M194B_MANIFEST_SHA256": "05f9fbb85b1e60a13181e55e55faa733c9cb1d88bdd915ed453f7f4bdef05681",
+    "STREHL_M194B_PLAN": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-direct-planes\\run-flat-1\\case-16-plan.json",
+    "STREHL_M194B_SUBSET": "all",
+    "STREHL_M194B_DIRECT_OBSERVER": "on",
+    "STREHL_M194B_MODE": "plan"
+  },
+  "removed_environment": []
+}

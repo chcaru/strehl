@@ -1,0 +1,4255 @@
+{
+  "schema": "native-direct-planes-score-v1",
+  "decision": {
+    "schema": "native-direct-planes-decision-v1",
+    "phase": "flat",
+    "status": "FLAT_REJECT",
+    "run_index": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-direct-planes\\run-flat-1\\run-index.json",
+      "bytes": 41997,
+      "sha256": "5fca02c070ef75de3a138c097bb4e05357892b5e627793be335e01186669f629"
+    },
+    "controls": {
+      "path": "experiments/native-direct-planes/controls-1/results.json",
+      "sha256": "3aea26e0faf519a48ad2f6638b6bfb3531d345c60452ec0d3272fe622b47d1b3",
+      "bytes": 4480
+    },
+    "design_sha256": "9783e7c269c7902c75323d04b7f0e965317ad576fd6236e6a8951d95e6f5c47c",
+    "scorer_sha256": "faa3de1227a4b80da4364847b2bc060d37d50a7fc1c9a6bed5fb447d7571e46c",
+    "rounded_exact_pass": true,
+    "precision_nonregression_pass": false,
+    "proceed_to_precision_detail": false,
+    "material_flat_variance_by_channel": [
+      false,
+      false,
+      false
+    ],
+    "material_detail": [],
+    "changed_float_pixel_pairs": [
+      {
+        "scene": "flat",
+        "seed": 701
+      },
+      {
+        "scene": "flat",
+        "seed": 709
+      },
+      {
+        "scene": "flat",
+        "seed": 719
+      },
+      {
+        "scene": "flat",
+        "seed": 727
+      },
+      {
+        "scene": "flat",
+        "seed": 733
+      },
+      {
+        "scene": "flat",
+        "seed": 739
+      },
+      {
+        "scene": "flat",
+        "seed": 743
+      },
+      {
+        "scene": "flat",
+        "seed": 751
+      }
+    ],
+    "fractional_consumed_witnesses": [
+      {
+        "scene": "flat",
+        "seed": null,
+        "original_index": 0,
+        "plane": "R",
+        "fractional_values": 8145
+      },
+      {
+        "scene": "flat",
+        "seed": null,
+        "original_index": 0,
+        "plane": "G1",
+        "fractional_values": 8203
+      },
+      {
+        "scene": "flat",
+        "seed": null,
+        "original_index": 0,
+        "plane": "G2",
+        "fractional_values": 8307
+      },
+      {
+        "scene": "flat",
+        "seed": null,
+        "original_index": 0,
+        "plane": "B",
+        "fractional_values": 5047
+      },
+      {
+        "scene": "flat",
+        "seed": null,
+        "original_index": 1,
+        "plane": "R",
+        "fractional_values": 9594
+      },
+      {
+        "scene": "flat",
+        "seed": null,
+        "original_index": 1,
+        "plane": "G1",
+        "fractional_values": 9050
+      },
+      {
+        "scene": "flat",
+        "seed": null,
+        "original_index": 1,
+        "plane": "G2",
+        "fractional_values": 9405
+      },
+      {
+        "scene": "flat",
+        "seed": null,
+        "original_index": 1,
+        "plane": "B",
+        "fractional_values": 4554
+      },
+      {
+        "scene": "flat",
+        "seed": null,
+        "original_index": 2,
+        "plane": "R",
+        "fractional_values": 8255
+      },
+      {
+        "scene": "flat",
+        "seed": null,
+        "original_index": 2,
+        "plane": "G1",
+        "fractional_values": 8552
+      },
+      {
+        "scene": "flat",
+        "seed": null,
+        "original_index": 2,
+        "plane": "G2",
+        "fractional_values": 8863
+      },
+      {
+        "scene": "flat",
+        "seed": null,
+        "original_index": 2,
+        "plane": "B",
+        "fractional_values": 6102
+      },
+      {
+        "scene": "flat",
+        "seed": null,
+        "original_index": 3,
+        "plane": "R",
+        "fractional_values": 7946
+      },
+      {
+        "scene": "flat",
+        "seed": null,
+        "original_index": 3,
+        "plane": "G1",
+        "fractional_values": 8274
+      },
+      {
+        "scene": "flat",
+        "seed": null,
+        "original_index": 3,
+        "plane": "G2",
+        "fractional_values": 8199
+      },
+      {
+        "scene": "flat",
+        "seed": null,
+        "original_index": 3,
+        "plane": "B",
+        "fractional_values": 5355
+      },
+      {
+        "scene": "flat",
+        "seed": null,
+        "original_index": 5,
+        "plane": "R",
+        "fractional_values": 7710
+      },
+      {
+        "scene": "flat",
+        "seed": null,
+        "original_index": 5,
+        "plane": "G1",
+        "fractional_values": 8696
+      },
+      {
+        "scene": "flat",
+        "seed": null,
+        "original_index": 5,
+        "plane": "G2",
+        "fractional_values": 8544
+      },
+      {
+        "scene": "flat",
+        "seed": null,
+        "original_index": 5,
+        "plane": "B",
+        "fractional_values": 5709
+      },
+      {
+        "scene": "flat",
+        "seed": null,
+        "original_index": 6,
+        "plane": "R",
+        "fractional_values": 7846
+      },
+      {
+        "scene": "flat",
+        "seed": null,
+        "original_index": 6,
+        "plane": "G1",
+        "fractional_values": 8060
+      },
+      {
+        "scene": "flat",
+        "seed": null,
+        "original_index": 6,
+        "plane": "G2",
+        "fractional_values": 8669
+      },
+      {
+        "scene": "flat",
+        "seed": null,
+        "original_index": 6,
+        "plane": "B",
+        "fractional_values": 6194
+      },
+      {
+        "scene": "flat",
+        "seed": null,
+        "original_index": 7,
+        "plane": "R",
+        "fractional_values": 8729
+      },
+      {
+        "scene": "flat",
+        "seed": null,
+        "original_index": 7,
+        "plane": "G1",
+        "fractional_values": 8841
+      },
+      {
+        "scene": "flat",
+        "seed": null,
+        "original_index": 7,
+        "plane": "G2",
+        "fractional_values": 8399
+      },
+      {
+        "scene": "flat",
+        "seed": null,
+        "original_index": 7,
+        "plane": "B",
+        "fractional_values": 5462
+      },
+      {
+        "scene": "flat",
+        "seed": null,
+        "original_index": 8,
+        "plane": "R",
+        "fractional_values": 8826
+      },
+      {
+        "scene": "flat",
+        "seed": null,
+        "original_index": 8,
+        "plane": "G1",
+        "fractional_values": 8682
+      },
+      {
+        "scene": "flat",
+        "seed": null,
+        "original_index": 8,
+        "plane": "G2",
+        "fractional_values": 8622
+      },
+      {
+        "scene": "flat",
+        "seed": null,
+        "original_index": 8,
+        "plane": "B",
+        "fractional_values": 5608
+      },
+      {
+        "scene": "flat",
+        "seed": 701,
+        "original_index": 0,
+        "plane": "R",
+        "fractional_values": 15049
+      },
+      {
+        "scene": "flat",
+        "seed": 701,
+        "original_index": 0,
+        "plane": "G1",
+        "fractional_values": 15050
+      },
+      {
+        "scene": "flat",
+        "seed": 701,
+        "original_index": 0,
+        "plane": "G2",
+        "fractional_values": 15047
+      },
+      {
+        "scene": "flat",
+        "seed": 701,
+        "original_index": 0,
+        "plane": "B",
+        "fractional_values": 15041
+      },
+      {
+        "scene": "flat",
+        "seed": 701,
+        "original_index": 1,
+        "plane": "R",
+        "fractional_values": 15050
+      },
+      {
+        "scene": "flat",
+        "seed": 701,
+        "original_index": 1,
+        "plane": "G1",
+        "fractional_values": 15049
+      },
+      {
+        "scene": "flat",
+        "seed": 701,
+        "original_index": 1,
+        "plane": "G2",
+        "fractional_values": 15044
+      },
+      {
+        "scene": "flat",
+        "seed": 701,
+        "original_index": 1,
+        "plane": "B",
+        "fractional_values": 15043
+      },
+      {
+        "scene": "flat",
+        "seed": 701,
+        "original_index": 2,
+        "plane": "R",
+        "fractional_values": 15048
+      },
+      {
+        "scene": "flat",
+        "seed": 701,
+        "original_index": 2,
+        "plane": "G1",
+        "fractional_values": 15048
+      },
+      {
+        "scene": "flat",
+        "seed": 701,
+        "original_index": 2,
+        "plane": "G2",
+        "fractional_values": 15046
+      },
+      {
+        "scene": "flat",
+        "seed": 701,
+        "original_index": 2,
+        "plane": "B",
+        "fractional_values": 15039
+      },
+      {
+        "scene": "flat",
+        "seed": 701,
+        "original_index": 3,
+        "plane": "R",
+        "fractional_values": 15044
+      },
+      {
+        "scene": "flat",
+        "seed": 701,
+        "original_index": 3,
+        "plane": "G1",
+        "fractional_values": 15049
+      },
+      {
+        "scene": "flat",
+        "seed": 701,
+        "original_index": 3,
+        "plane": "G2",
+        "fractional_values": 15047
+      },
+      {
+        "scene": "flat",
+        "seed": 701,
+        "original_index": 3,
+        "plane": "B",
+        "fractional_values": 15046
+      },
+      {
+        "scene": "flat",
+        "seed": 701,
+        "original_index": 5,
+        "plane": "R",
+        "fractional_values": 15046
+      },
+      {
+        "scene": "flat",
+        "seed": 701,
+        "original_index": 5,
+        "plane": "G1",
+        "fractional_values": 15047
+      },
+      {
+        "scene": "flat",
+        "seed": 701,
+        "original_index": 5,
+        "plane": "G2",
+        "fractional_values": 15047
+      },
+      {
+        "scene": "flat",
+        "seed": 701,
+        "original_index": 5,
+        "plane": "B",
+        "fractional_values": 15047
+      },
+      {
+        "scene": "flat",
+        "seed": 701,
+        "original_index": 6,
+        "plane": "R",
+        "fractional_values": 15049
+      },
+      {
+        "scene": "flat",
+        "seed": 701,
+        "original_index": 6,
+        "plane": "G1",
+        "fractional_values": 15051
+      },
+      {
+        "scene": "flat",
+        "seed": 701,
+        "original_index": 6,
+        "plane": "G2",
+        "fractional_values": 15049
+      },
+      {
+        "scene": "flat",
+        "seed": 701,
+        "original_index": 6,
+        "plane": "B",
+        "fractional_values": 15044
+      },
+      {
+        "scene": "flat",
+        "seed": 701,
+        "original_index": 7,
+        "plane": "R",
+        "fractional_values": 15048
+      },
+      {
+        "scene": "flat",
+        "seed": 701,
+        "original_index": 7,
+        "plane": "G1",
+        "fractional_values": 15049
+      },
+      {
+        "scene": "flat",
+        "seed": 701,
+        "original_index": 7,
+        "plane": "G2",
+        "fractional_values": 15051
+      },
+      {
+        "scene": "flat",
+        "seed": 701,
+        "original_index": 7,
+        "plane": "B",
+        "fractional_values": 15047
+      },
+      {
+        "scene": "flat",
+        "seed": 701,
+        "original_index": 8,
+        "plane": "R",
+        "fractional_values": 15049
+      },
+      {
+        "scene": "flat",
+        "seed": 701,
+        "original_index": 8,
+        "plane": "G1",
+        "fractional_values": 15044
+      },
+      {
+        "scene": "flat",
+        "seed": 701,
+        "original_index": 8,
+        "plane": "G2",
+        "fractional_values": 15052
+      },
+      {
+        "scene": "flat",
+        "seed": 701,
+        "original_index": 8,
+        "plane": "B",
+        "fractional_values": 15048
+      },
+      {
+        "scene": "flat",
+        "seed": 709,
+        "original_index": 0,
+        "plane": "R",
+        "fractional_values": 15047
+      },
+      {
+        "scene": "flat",
+        "seed": 709,
+        "original_index": 0,
+        "plane": "G1",
+        "fractional_values": 15042
+      },
+      {
+        "scene": "flat",
+        "seed": 709,
+        "original_index": 0,
+        "plane": "G2",
+        "fractional_values": 15050
+      },
+      {
+        "scene": "flat",
+        "seed": 709,
+        "original_index": 0,
+        "plane": "B",
+        "fractional_values": 15046
+      },
+      {
+        "scene": "flat",
+        "seed": 709,
+        "original_index": 1,
+        "plane": "R",
+        "fractional_values": 15048
+      },
+      {
+        "scene": "flat",
+        "seed": 709,
+        "original_index": 1,
+        "plane": "G1",
+        "fractional_values": 15049
+      },
+      {
+        "scene": "flat",
+        "seed": 709,
+        "original_index": 1,
+        "plane": "G2",
+        "fractional_values": 15045
+      },
+      {
+        "scene": "flat",
+        "seed": 709,
+        "original_index": 1,
+        "plane": "B",
+        "fractional_values": 15043
+      },
+      {
+        "scene": "flat",
+        "seed": 709,
+        "original_index": 2,
+        "plane": "R",
+        "fractional_values": 15048
+      },
+      {
+        "scene": "flat",
+        "seed": 709,
+        "original_index": 2,
+        "plane": "G1",
+        "fractional_values": 15051
+      },
+      {
+        "scene": "flat",
+        "seed": 709,
+        "original_index": 2,
+        "plane": "G2",
+        "fractional_values": 15049
+      },
+      {
+        "scene": "flat",
+        "seed": 709,
+        "original_index": 2,
+        "plane": "B",
+        "fractional_values": 15046
+      },
+      {
+        "scene": "flat",
+        "seed": 709,
+        "original_index": 3,
+        "plane": "R",
+        "fractional_values": 15048
+      },
+      {
+        "scene": "flat",
+        "seed": 709,
+        "original_index": 3,
+        "plane": "G1",
+        "fractional_values": 15050
+      },
+      {
+        "scene": "flat",
+        "seed": 709,
+        "original_index": 3,
+        "plane": "G2",
+        "fractional_values": 15047
+      },
+      {
+        "scene": "flat",
+        "seed": 709,
+        "original_index": 3,
+        "plane": "B",
+        "fractional_values": 15048
+      },
+      {
+        "scene": "flat",
+        "seed": 709,
+        "original_index": 5,
+        "plane": "R",
+        "fractional_values": 15047
+      },
+      {
+        "scene": "flat",
+        "seed": 709,
+        "original_index": 5,
+        "plane": "G1",
+        "fractional_values": 15041
+      },
+      {
+        "scene": "flat",
+        "seed": 709,
+        "original_index": 5,
+        "plane": "G2",
+        "fractional_values": 15047
+      },
+      {
+        "scene": "flat",
+        "seed": 709,
+        "original_index": 5,
+        "plane": "B",
+        "fractional_values": 15044
+      },
+      {
+        "scene": "flat",
+        "seed": 709,
+        "original_index": 6,
+        "plane": "R",
+        "fractional_values": 15044
+      },
+      {
+        "scene": "flat",
+        "seed": 709,
+        "original_index": 6,
+        "plane": "G1",
+        "fractional_values": 15048
+      },
+      {
+        "scene": "flat",
+        "seed": 709,
+        "original_index": 6,
+        "plane": "G2",
+        "fractional_values": 15050
+      },
+      {
+        "scene": "flat",
+        "seed": 709,
+        "original_index": 6,
+        "plane": "B",
+        "fractional_values": 15044
+      },
+      {
+        "scene": "flat",
+        "seed": 709,
+        "original_index": 7,
+        "plane": "R",
+        "fractional_values": 15049
+      },
+      {
+        "scene": "flat",
+        "seed": 709,
+        "original_index": 7,
+        "plane": "G1",
+        "fractional_values": 15045
+      },
+      {
+        "scene": "flat",
+        "seed": 709,
+        "original_index": 7,
+        "plane": "G2",
+        "fractional_values": 15051
+      },
+      {
+        "scene": "flat",
+        "seed": 709,
+        "original_index": 7,
+        "plane": "B",
+        "fractional_values": 15048
+      },
+      {
+        "scene": "flat",
+        "seed": 709,
+        "original_index": 8,
+        "plane": "R",
+        "fractional_values": 15050
+      },
+      {
+        "scene": "flat",
+        "seed": 709,
+        "original_index": 8,
+        "plane": "G1",
+        "fractional_values": 15047
+      },
+      {
+        "scene": "flat",
+        "seed": 709,
+        "original_index": 8,
+        "plane": "G2",
+        "fractional_values": 15049
+      },
+      {
+        "scene": "flat",
+        "seed": 709,
+        "original_index": 8,
+        "plane": "B",
+        "fractional_values": 15042
+      },
+      {
+        "scene": "flat",
+        "seed": 719,
+        "original_index": 0,
+        "plane": "R",
+        "fractional_values": 15048
+      },
+      {
+        "scene": "flat",
+        "seed": 719,
+        "original_index": 0,
+        "plane": "G1",
+        "fractional_values": 15049
+      },
+      {
+        "scene": "flat",
+        "seed": 719,
+        "original_index": 0,
+        "plane": "G2",
+        "fractional_values": 15049
+      },
+      {
+        "scene": "flat",
+        "seed": 719,
+        "original_index": 0,
+        "plane": "B",
+        "fractional_values": 15046
+      },
+      {
+        "scene": "flat",
+        "seed": 719,
+        "original_index": 1,
+        "plane": "R",
+        "fractional_values": 15048
+      },
+      {
+        "scene": "flat",
+        "seed": 719,
+        "original_index": 1,
+        "plane": "G1",
+        "fractional_values": 15046
+      },
+      {
+        "scene": "flat",
+        "seed": 719,
+        "original_index": 1,
+        "plane": "G2",
+        "fractional_values": 15047
+      },
+      {
+        "scene": "flat",
+        "seed": 719,
+        "original_index": 1,
+        "plane": "B",
+        "fractional_values": 15046
+      },
+      {
+        "scene": "flat",
+        "seed": 719,
+        "original_index": 2,
+        "plane": "R",
+        "fractional_values": 15047
+      },
+      {
+        "scene": "flat",
+        "seed": 719,
+        "original_index": 2,
+        "plane": "G1",
+        "fractional_values": 15048
+      },
+      {
+        "scene": "flat",
+        "seed": 719,
+        "original_index": 2,
+        "plane": "G2",
+        "fractional_values": 15049
+      },
+      {
+        "scene": "flat",
+        "seed": 719,
+        "original_index": 2,
+        "plane": "B",
+        "fractional_values": 15045
+      },
+      {
+        "scene": "flat",
+        "seed": 719,
+        "original_index": 3,
+        "plane": "R",
+        "fractional_values": 15047
+      },
+      {
+        "scene": "flat",
+        "seed": 719,
+        "original_index": 3,
+        "plane": "G1",
+        "fractional_values": 15051
+      },
+      {
+        "scene": "flat",
+        "seed": 719,
+        "original_index": 3,
+        "plane": "G2",
+        "fractional_values": 15051
+      },
+      {
+        "scene": "flat",
+        "seed": 719,
+        "original_index": 3,
+        "plane": "B",
+        "fractional_values": 15048
+      },
+      {
+        "scene": "flat",
+        "seed": 719,
+        "original_index": 5,
+        "plane": "R",
+        "fractional_values": 15049
+      },
+      {
+        "scene": "flat",
+        "seed": 719,
+        "original_index": 5,
+        "plane": "G1",
+        "fractional_values": 15050
+      },
+      {
+        "scene": "flat",
+        "seed": 719,
+        "original_index": 5,
+        "plane": "G2",
+        "fractional_values": 15042
+      },
+      {
+        "scene": "flat",
+        "seed": 719,
+        "original_index": 5,
+        "plane": "B",
+        "fractional_values": 15048
+      },
+      {
+        "scene": "flat",
+        "seed": 719,
+        "original_index": 6,
+        "plane": "R",
+        "fractional_values": 15049
+      },
+      {
+        "scene": "flat",
+        "seed": 719,
+        "original_index": 6,
+        "plane": "G1",
+        "fractional_values": 15047
+      },
+      {
+        "scene": "flat",
+        "seed": 719,
+        "original_index": 6,
+        "plane": "G2",
+        "fractional_values": 15048
+      },
+      {
+        "scene": "flat",
+        "seed": 719,
+        "original_index": 6,
+        "plane": "B",
+        "fractional_values": 15047
+      },
+      {
+        "scene": "flat",
+        "seed": 719,
+        "original_index": 7,
+        "plane": "R",
+        "fractional_values": 15047
+      },
+      {
+        "scene": "flat",
+        "seed": 719,
+        "original_index": 7,
+        "plane": "G1",
+        "fractional_values": 15047
+      },
+      {
+        "scene": "flat",
+        "seed": 719,
+        "original_index": 7,
+        "plane": "G2",
+        "fractional_values": 15050
+      },
+      {
+        "scene": "flat",
+        "seed": 719,
+        "original_index": 7,
+        "plane": "B",
+        "fractional_values": 15047
+      },
+      {
+        "scene": "flat",
+        "seed": 719,
+        "original_index": 8,
+        "plane": "R",
+        "fractional_values": 15050
+      },
+      {
+        "scene": "flat",
+        "seed": 719,
+        "original_index": 8,
+        "plane": "G1",
+        "fractional_values": 15049
+      },
+      {
+        "scene": "flat",
+        "seed": 719,
+        "original_index": 8,
+        "plane": "G2",
+        "fractional_values": 15051
+      },
+      {
+        "scene": "flat",
+        "seed": 719,
+        "original_index": 8,
+        "plane": "B",
+        "fractional_values": 15049
+      },
+      {
+        "scene": "flat",
+        "seed": 727,
+        "original_index": 0,
+        "plane": "R",
+        "fractional_values": 15048
+      },
+      {
+        "scene": "flat",
+        "seed": 727,
+        "original_index": 0,
+        "plane": "G1",
+        "fractional_values": 15047
+      },
+      {
+        "scene": "flat",
+        "seed": 727,
+        "original_index": 0,
+        "plane": "G2",
+        "fractional_values": 15045
+      },
+      {
+        "scene": "flat",
+        "seed": 727,
+        "original_index": 0,
+        "plane": "B",
+        "fractional_values": 15045
+      },
+      {
+        "scene": "flat",
+        "seed": 727,
+        "original_index": 1,
+        "plane": "R",
+        "fractional_values": 15049
+      },
+      {
+        "scene": "flat",
+        "seed": 727,
+        "original_index": 1,
+        "plane": "G1",
+        "fractional_values": 15046
+      },
+      {
+        "scene": "flat",
+        "seed": 727,
+        "original_index": 1,
+        "plane": "G2",
+        "fractional_values": 15046
+      },
+      {
+        "scene": "flat",
+        "seed": 727,
+        "original_index": 1,
+        "plane": "B",
+        "fractional_values": 15047
+      },
+      {
+        "scene": "flat",
+        "seed": 727,
+        "original_index": 2,
+        "plane": "R",
+        "fractional_values": 15048
+      },
+      {
+        "scene": "flat",
+        "seed": 727,
+        "original_index": 2,
+        "plane": "G1",
+        "fractional_values": 15046
+      },
+      {
+        "scene": "flat",
+        "seed": 727,
+        "original_index": 2,
+        "plane": "G2",
+        "fractional_values": 15049
+      },
+      {
+        "scene": "flat",
+        "seed": 727,
+        "original_index": 2,
+        "plane": "B",
+        "fractional_values": 15045
+      },
+      {
+        "scene": "flat",
+        "seed": 727,
+        "original_index": 3,
+        "plane": "R",
+        "fractional_values": 15044
+      },
+      {
+        "scene": "flat",
+        "seed": 727,
+        "original_index": 3,
+        "plane": "G1",
+        "fractional_values": 15048
+      },
+      {
+        "scene": "flat",
+        "seed": 727,
+        "original_index": 3,
+        "plane": "G2",
+        "fractional_values": 15048
+      },
+      {
+        "scene": "flat",
+        "seed": 727,
+        "original_index": 3,
+        "plane": "B",
+        "fractional_values": 15049
+      },
+      {
+        "scene": "flat",
+        "seed": 727,
+        "original_index": 5,
+        "plane": "R",
+        "fractional_values": 15050
+      },
+      {
+        "scene": "flat",
+        "seed": 727,
+        "original_index": 5,
+        "plane": "G1",
+        "fractional_values": 15047
+      },
+      {
+        "scene": "flat",
+        "seed": 727,
+        "original_index": 5,
+        "plane": "G2",
+        "fractional_values": 15050
+      },
+      {
+        "scene": "flat",
+        "seed": 727,
+        "original_index": 5,
+        "plane": "B",
+        "fractional_values": 15043
+      },
+      {
+        "scene": "flat",
+        "seed": 727,
+        "original_index": 6,
+        "plane": "R",
+        "fractional_values": 15049
+      },
+      {
+        "scene": "flat",
+        "seed": 727,
+        "original_index": 6,
+        "plane": "G1",
+        "fractional_values": 15048
+      },
+      {
+        "scene": "flat",
+        "seed": 727,
+        "original_index": 6,
+        "plane": "G2",
+        "fractional_values": 15050
+      },
+      {
+        "scene": "flat",
+        "seed": 727,
+        "original_index": 6,
+        "plane": "B",
+        "fractional_values": 15047
+      },
+      {
+        "scene": "flat",
+        "seed": 727,
+        "original_index": 7,
+        "plane": "R",
+        "fractional_values": 15046
+      },
+      {
+        "scene": "flat",
+        "seed": 727,
+        "original_index": 7,
+        "plane": "G1",
+        "fractional_values": 15049
+      },
+      {
+        "scene": "flat",
+        "seed": 727,
+        "original_index": 7,
+        "plane": "G2",
+        "fractional_values": 15049
+      },
+      {
+        "scene": "flat",
+        "seed": 727,
+        "original_index": 7,
+        "plane": "B",
+        "fractional_values": 15042
+      },
+      {
+        "scene": "flat",
+        "seed": 727,
+        "original_index": 8,
+        "plane": "R",
+        "fractional_values": 15049
+      },
+      {
+        "scene": "flat",
+        "seed": 727,
+        "original_index": 8,
+        "plane": "G1",
+        "fractional_values": 15049
+      },
+      {
+        "scene": "flat",
+        "seed": 727,
+        "original_index": 8,
+        "plane": "G2",
+        "fractional_values": 15048
+      },
+      {
+        "scene": "flat",
+        "seed": 727,
+        "original_index": 8,
+        "plane": "B",
+        "fractional_values": 15042
+      },
+      {
+        "scene": "flat",
+        "seed": 733,
+        "original_index": 0,
+        "plane": "R",
+        "fractional_values": 15049
+      },
+      {
+        "scene": "flat",
+        "seed": 733,
+        "original_index": 0,
+        "plane": "G1",
+        "fractional_values": 15046
+      },
+      {
+        "scene": "flat",
+        "seed": 733,
+        "original_index": 0,
+        "plane": "G2",
+        "fractional_values": 15050
+      },
+      {
+        "scene": "flat",
+        "seed": 733,
+        "original_index": 0,
+        "plane": "B",
+        "fractional_values": 15046
+      },
+      {
+        "scene": "flat",
+        "seed": 733,
+        "original_index": 1,
+        "plane": "R",
+        "fractional_values": 15045
+      },
+      {
+        "scene": "flat",
+        "seed": 733,
+        "original_index": 1,
+        "plane": "G1",
+        "fractional_values": 15044
+      },
+      {
+        "scene": "flat",
+        "seed": 733,
+        "original_index": 1,
+        "plane": "G2",
+        "fractional_values": 15046
+      },
+      {
+        "scene": "flat",
+        "seed": 733,
+        "original_index": 1,
+        "plane": "B",
+        "fractional_values": 15047
+      },
+      {
+        "scene": "flat",
+        "seed": 733,
+        "original_index": 2,
+        "plane": "R",
+        "fractional_values": 15047
+      },
+      {
+        "scene": "flat",
+        "seed": 733,
+        "original_index": 2,
+        "plane": "G1",
+        "fractional_values": 15049
+      },
+      {
+        "scene": "flat",
+        "seed": 733,
+        "original_index": 2,
+        "plane": "G2",
+        "fractional_values": 15051
+      },
+      {
+        "scene": "flat",
+        "seed": 733,
+        "original_index": 2,
+        "plane": "B",
+        "fractional_values": 15047
+      },
+      {
+        "scene": "flat",
+        "seed": 733,
+        "original_index": 3,
+        "plane": "R",
+        "fractional_values": 15047
+      },
+      {
+        "scene": "flat",
+        "seed": 733,
+        "original_index": 3,
+        "plane": "G1",
+        "fractional_values": 15048
+      },
+      {
+        "scene": "flat",
+        "seed": 733,
+        "original_index": 3,
+        "plane": "G2",
+        "fractional_values": 15045
+      },
+      {
+        "scene": "flat",
+        "seed": 733,
+        "original_index": 3,
+        "plane": "B",
+        "fractional_values": 15044
+      },
+      {
+        "scene": "flat",
+        "seed": 733,
+        "original_index": 5,
+        "plane": "R",
+        "fractional_values": 15049
+      },
+      {
+        "scene": "flat",
+        "seed": 733,
+        "original_index": 5,
+        "plane": "G1",
+        "fractional_values": 15048
+      },
+      {
+        "scene": "flat",
+        "seed": 733,
+        "original_index": 5,
+        "plane": "G2",
+        "fractional_values": 15050
+      },
+      {
+        "scene": "flat",
+        "seed": 733,
+        "original_index": 5,
+        "plane": "B",
+        "fractional_values": 15050
+      },
+      {
+        "scene": "flat",
+        "seed": 733,
+        "original_index": 6,
+        "plane": "R",
+        "fractional_values": 15048
+      },
+      {
+        "scene": "flat",
+        "seed": 733,
+        "original_index": 6,
+        "plane": "G1",
+        "fractional_values": 15042
+      },
+      {
+        "scene": "flat",
+        "seed": 733,
+        "original_index": 6,
+        "plane": "G2",
+        "fractional_values": 15050
+      },
+      {
+        "scene": "flat",
+        "seed": 733,
+        "original_index": 6,
+        "plane": "B",
+        "fractional_values": 15044
+      },
+      {
+        "scene": "flat",
+        "seed": 733,
+        "original_index": 7,
+        "plane": "R",
+        "fractional_values": 15049
+      },
+      {
+        "scene": "flat",
+        "seed": 733,
+        "original_index": 7,
+        "plane": "G1",
+        "fractional_values": 15049
+      },
+      {
+        "scene": "flat",
+        "seed": 733,
+        "original_index": 7,
+        "plane": "G2",
+        "fractional_values": 15048
+      },
+      {
+        "scene": "flat",
+        "seed": 733,
+        "original_index": 7,
+        "plane": "B",
+        "fractional_values": 15048
+      },
+      {
+        "scene": "flat",
+        "seed": 733,
+        "original_index": 8,
+        "plane": "R",
+        "fractional_values": 15048
+      },
+      {
+        "scene": "flat",
+        "seed": 733,
+        "original_index": 8,
+        "plane": "G1",
+        "fractional_values": 15048
+      },
+      {
+        "scene": "flat",
+        "seed": 733,
+        "original_index": 8,
+        "plane": "G2",
+        "fractional_values": 15050
+      },
+      {
+        "scene": "flat",
+        "seed": 733,
+        "original_index": 8,
+        "plane": "B",
+        "fractional_values": 15043
+      },
+      {
+        "scene": "flat",
+        "seed": 739,
+        "original_index": 0,
+        "plane": "R",
+        "fractional_values": 15046
+      },
+      {
+        "scene": "flat",
+        "seed": 739,
+        "original_index": 0,
+        "plane": "G1",
+        "fractional_values": 15049
+      },
+      {
+        "scene": "flat",
+        "seed": 739,
+        "original_index": 0,
+        "plane": "G2",
+        "fractional_values": 15049
+      },
+      {
+        "scene": "flat",
+        "seed": 739,
+        "original_index": 0,
+        "plane": "B",
+        "fractional_values": 15045
+      },
+      {
+        "scene": "flat",
+        "seed": 739,
+        "original_index": 1,
+        "plane": "R",
+        "fractional_values": 15047
+      },
+      {
+        "scene": "flat",
+        "seed": 739,
+        "original_index": 1,
+        "plane": "G1",
+        "fractional_values": 15049
+      },
+      {
+        "scene": "flat",
+        "seed": 739,
+        "original_index": 1,
+        "plane": "G2",
+        "fractional_values": 15049
+      },
+      {
+        "scene": "flat",
+        "seed": 739,
+        "original_index": 1,
+        "plane": "B",
+        "fractional_values": 15045
+      },
+      {
+        "scene": "flat",
+        "seed": 739,
+        "original_index": 2,
+        "plane": "R",
+        "fractional_values": 15045
+      },
+      {
+        "scene": "flat",
+        "seed": 739,
+        "original_index": 2,
+        "plane": "G1",
+        "fractional_values": 15047
+      },
+      {
+        "scene": "flat",
+        "seed": 739,
+        "original_index": 2,
+        "plane": "G2",
+        "fractional_values": 15047
+      },
+      {
+        "scene": "flat",
+        "seed": 739,
+        "original_index": 2,
+        "plane": "B",
+        "fractional_values": 15045
+      },
+      {
+        "scene": "flat",
+        "seed": 739,
+        "original_index": 3,
+        "plane": "R",
+        "fractional_values": 15049
+      },
+      {
+        "scene": "flat",
+        "seed": 739,
+        "original_index": 3,
+        "plane": "G1",
+        "fractional_values": 15047
+      },
+      {
+        "scene": "flat",
+        "seed": 739,
+        "original_index": 3,
+        "plane": "G2",
+        "fractional_values": 15049
+      },
+      {
+        "scene": "flat",
+        "seed": 739,
+        "original_index": 3,
+        "plane": "B",
+        "fractional_values": 15049
+      },
+      {
+        "scene": "flat",
+        "seed": 739,
+        "original_index": 5,
+        "plane": "R",
+        "fractional_values": 15046
+      },
+      {
+        "scene": "flat",
+        "seed": 739,
+        "original_index": 5,
+        "plane": "G1",
+        "fractional_values": 15048
+      },
+      {
+        "scene": "flat",
+        "seed": 739,
+        "original_index": 5,
+        "plane": "G2",
+        "fractional_values": 15047
+      },
+      {
+        "scene": "flat",
+        "seed": 739,
+        "original_index": 5,
+        "plane": "B",
+        "fractional_values": 15045
+      },
+      {
+        "scene": "flat",
+        "seed": 739,
+        "original_index": 6,
+        "plane": "R",
+        "fractional_values": 15046
+      },
+      {
+        "scene": "flat",
+        "seed": 739,
+        "original_index": 6,
+        "plane": "G1",
+        "fractional_values": 15049
+      },
+      {
+        "scene": "flat",
+        "seed": 739,
+        "original_index": 6,
+        "plane": "G2",
+        "fractional_values": 15050
+      },
+      {
+        "scene": "flat",
+        "seed": 739,
+        "original_index": 6,
+        "plane": "B",
+        "fractional_values": 15045
+      },
+      {
+        "scene": "flat",
+        "seed": 739,
+        "original_index": 7,
+        "plane": "R",
+        "fractional_values": 15050
+      },
+      {
+        "scene": "flat",
+        "seed": 739,
+        "original_index": 7,
+        "plane": "G1",
+        "fractional_values": 15047
+      },
+      {
+        "scene": "flat",
+        "seed": 739,
+        "original_index": 7,
+        "plane": "G2",
+        "fractional_values": 15047
+      },
+      {
+        "scene": "flat",
+        "seed": 739,
+        "original_index": 7,
+        "plane": "B",
+        "fractional_values": 15050
+      },
+      {
+        "scene": "flat",
+        "seed": 739,
+        "original_index": 8,
+        "plane": "R",
+        "fractional_values": 15048
+      },
+      {
+        "scene": "flat",
+        "seed": 739,
+        "original_index": 8,
+        "plane": "G1",
+        "fractional_values": 15047
+      },
+      {
+        "scene": "flat",
+        "seed": 739,
+        "original_index": 8,
+        "plane": "G2",
+        "fractional_values": 15048
+      },
+      {
+        "scene": "flat",
+        "seed": 739,
+        "original_index": 8,
+        "plane": "B",
+        "fractional_values": 15046
+      },
+      {
+        "scene": "flat",
+        "seed": 743,
+        "original_index": 0,
+        "plane": "R",
+        "fractional_values": 15050
+      },
+      {
+        "scene": "flat",
+        "seed": 743,
+        "original_index": 0,
+        "plane": "G1",
+        "fractional_values": 15050
+      },
+      {
+        "scene": "flat",
+        "seed": 743,
+        "original_index": 0,
+        "plane": "G2",
+        "fractional_values": 15049
+      },
+      {
+        "scene": "flat",
+        "seed": 743,
+        "original_index": 0,
+        "plane": "B",
+        "fractional_values": 15041
+      },
+      {
+        "scene": "flat",
+        "seed": 743,
+        "original_index": 1,
+        "plane": "R",
+        "fractional_values": 15050
+      },
+      {
+        "scene": "flat",
+        "seed": 743,
+        "original_index": 1,
+        "plane": "G1",
+        "fractional_values": 15050
+      },
+      {
+        "scene": "flat",
+        "seed": 743,
+        "original_index": 1,
+        "plane": "G2",
+        "fractional_values": 15045
+      },
+      {
+        "scene": "flat",
+        "seed": 743,
+        "original_index": 1,
+        "plane": "B",
+        "fractional_values": 15044
+      },
+      {
+        "scene": "flat",
+        "seed": 743,
+        "original_index": 2,
+        "plane": "R",
+        "fractional_values": 15048
+      },
+      {
+        "scene": "flat",
+        "seed": 743,
+        "original_index": 2,
+        "plane": "G1",
+        "fractional_values": 15047
+      },
+      {
+        "scene": "flat",
+        "seed": 743,
+        "original_index": 2,
+        "plane": "G2",
+        "fractional_values": 15043
+      },
+      {
+        "scene": "flat",
+        "seed": 743,
+        "original_index": 2,
+        "plane": "B",
+        "fractional_values": 15045
+      },
+      {
+        "scene": "flat",
+        "seed": 743,
+        "original_index": 3,
+        "plane": "R",
+        "fractional_values": 15044
+      },
+      {
+        "scene": "flat",
+        "seed": 743,
+        "original_index": 3,
+        "plane": "G1",
+        "fractional_values": 15048
+      },
+      {
+        "scene": "flat",
+        "seed": 743,
+        "original_index": 3,
+        "plane": "G2",
+        "fractional_values": 15048
+      },
+      {
+        "scene": "flat",
+        "seed": 743,
+        "original_index": 3,
+        "plane": "B",
+        "fractional_values": 15047
+      },
+      {
+        "scene": "flat",
+        "seed": 743,
+        "original_index": 5,
+        "plane": "R",
+        "fractional_values": 15047
+      },
+      {
+        "scene": "flat",
+        "seed": 743,
+        "original_index": 5,
+        "plane": "G1",
+        "fractional_values": 15050
+      },
+      {
+        "scene": "flat",
+        "seed": 743,
+        "original_index": 5,
+        "plane": "G2",
+        "fractional_values": 15050
+      },
+      {
+        "scene": "flat",
+        "seed": 743,
+        "original_index": 5,
+        "plane": "B",
+        "fractional_values": 15043
+      },
+      {
+        "scene": "flat",
+        "seed": 743,
+        "original_index": 6,
+        "plane": "R",
+        "fractional_values": 15047
+      },
+      {
+        "scene": "flat",
+        "seed": 743,
+        "original_index": 6,
+        "plane": "G1",
+        "fractional_values": 15045
+      },
+      {
+        "scene": "flat",
+        "seed": 743,
+        "original_index": 6,
+        "plane": "G2",
+        "fractional_values": 15048
+      },
+      {
+        "scene": "flat",
+        "seed": 743,
+        "original_index": 6,
+        "plane": "B",
+        "fractional_values": 15043
+      },
+      {
+        "scene": "flat",
+        "seed": 743,
+        "original_index": 7,
+        "plane": "R",
+        "fractional_values": 15047
+      },
+      {
+        "scene": "flat",
+        "seed": 743,
+        "original_index": 7,
+        "plane": "G1",
+        "fractional_values": 15049
+      },
+      {
+        "scene": "flat",
+        "seed": 743,
+        "original_index": 7,
+        "plane": "G2",
+        "fractional_values": 15050
+      },
+      {
+        "scene": "flat",
+        "seed": 743,
+        "original_index": 7,
+        "plane": "B",
+        "fractional_values": 15045
+      },
+      {
+        "scene": "flat",
+        "seed": 743,
+        "original_index": 8,
+        "plane": "R",
+        "fractional_values": 15050
+      },
+      {
+        "scene": "flat",
+        "seed": 743,
+        "original_index": 8,
+        "plane": "G1",
+        "fractional_values": 15047
+      },
+      {
+        "scene": "flat",
+        "seed": 743,
+        "original_index": 8,
+        "plane": "G2",
+        "fractional_values": 15048
+      },
+      {
+        "scene": "flat",
+        "seed": 743,
+        "original_index": 8,
+        "plane": "B",
+        "fractional_values": 15043
+      },
+      {
+        "scene": "flat",
+        "seed": 751,
+        "original_index": 0,
+        "plane": "R",
+        "fractional_values": 15047
+      },
+      {
+        "scene": "flat",
+        "seed": 751,
+        "original_index": 0,
+        "plane": "G1",
+        "fractional_values": 15047
+      },
+      {
+        "scene": "flat",
+        "seed": 751,
+        "original_index": 0,
+        "plane": "G2",
+        "fractional_values": 15050
+      },
+      {
+        "scene": "flat",
+        "seed": 751,
+        "original_index": 0,
+        "plane": "B",
+        "fractional_values": 15044
+      },
+      {
+        "scene": "flat",
+        "seed": 751,
+        "original_index": 1,
+        "plane": "R",
+        "fractional_values": 15045
+      },
+      {
+        "scene": "flat",
+        "seed": 751,
+        "original_index": 1,
+        "plane": "G1",
+        "fractional_values": 15048
+      },
+      {
+        "scene": "flat",
+        "seed": 751,
+        "original_index": 1,
+        "plane": "G2",
+        "fractional_values": 15047
+      },
+      {
+        "scene": "flat",
+        "seed": 751,
+        "original_index": 1,
+        "plane": "B",
+        "fractional_values": 15043
+      },
+      {
+        "scene": "flat",
+        "seed": 751,
+        "original_index": 2,
+        "plane": "R",
+        "fractional_values": 15046
+      },
+      {
+        "scene": "flat",
+        "seed": 751,
+        "original_index": 2,
+        "plane": "G1",
+        "fractional_values": 15048
+      },
+      {
+        "scene": "flat",
+        "seed": 751,
+        "original_index": 2,
+        "plane": "G2",
+        "fractional_values": 15048
+      },
+      {
+        "scene": "flat",
+        "seed": 751,
+        "original_index": 2,
+        "plane": "B",
+        "fractional_values": 15044
+      },
+      {
+        "scene": "flat",
+        "seed": 751,
+        "original_index": 3,
+        "plane": "R",
+        "fractional_values": 15045
+      },
+      {
+        "scene": "flat",
+        "seed": 751,
+        "original_index": 3,
+        "plane": "G1",
+        "fractional_values": 15047
+      },
+      {
+        "scene": "flat",
+        "seed": 751,
+        "original_index": 3,
+        "plane": "G2",
+        "fractional_values": 15051
+      },
+      {
+        "scene": "flat",
+        "seed": 751,
+        "original_index": 3,
+        "plane": "B",
+        "fractional_values": 15045
+      },
+      {
+        "scene": "flat",
+        "seed": 751,
+        "original_index": 5,
+        "plane": "R",
+        "fractional_values": 15048
+      },
+      {
+        "scene": "flat",
+        "seed": 751,
+        "original_index": 5,
+        "plane": "G1",
+        "fractional_values": 15048
+      },
+      {
+        "scene": "flat",
+        "seed": 751,
+        "original_index": 5,
+        "plane": "G2",
+        "fractional_values": 15049
+      },
+      {
+        "scene": "flat",
+        "seed": 751,
+        "original_index": 5,
+        "plane": "B",
+        "fractional_values": 15047
+      },
+      {
+        "scene": "flat",
+        "seed": 751,
+        "original_index": 6,
+        "plane": "R",
+        "fractional_values": 15049
+      },
+      {
+        "scene": "flat",
+        "seed": 751,
+        "original_index": 6,
+        "plane": "G1",
+        "fractional_values": 15048
+      },
+      {
+        "scene": "flat",
+        "seed": 751,
+        "original_index": 6,
+        "plane": "G2",
+        "fractional_values": 15048
+      },
+      {
+        "scene": "flat",
+        "seed": 751,
+        "original_index": 6,
+        "plane": "B",
+        "fractional_values": 15041
+      },
+      {
+        "scene": "flat",
+        "seed": 751,
+        "original_index": 7,
+        "plane": "R",
+        "fractional_values": 15042
+      },
+      {
+        "scene": "flat",
+        "seed": 751,
+        "original_index": 7,
+        "plane": "G1",
+        "fractional_values": 15051
+      },
+      {
+        "scene": "flat",
+        "seed": 751,
+        "original_index": 7,
+        "plane": "G2",
+        "fractional_values": 15049
+      },
+      {
+        "scene": "flat",
+        "seed": 751,
+        "original_index": 7,
+        "plane": "B",
+        "fractional_values": 15045
+      },
+      {
+        "scene": "flat",
+        "seed": 751,
+        "original_index": 8,
+        "plane": "R",
+        "fractional_values": 15045
+      },
+      {
+        "scene": "flat",
+        "seed": 751,
+        "original_index": 8,
+        "plane": "G1",
+        "fractional_values": 15048
+      },
+      {
+        "scene": "flat",
+        "seed": 751,
+        "original_index": 8,
+        "plane": "G2",
+        "fractional_values": 15047
+      },
+      {
+        "scene": "flat",
+        "seed": 751,
+        "original_index": 8,
+        "plane": "B",
+        "fractional_values": 15045
+      }
+    ],
+    "observer_placebo": {
+      "bindings": {
+        "scene": "flat",
+        "seed": null,
+        "mode": "off",
+        "manifest": {
+          "path": "experiments/m194b-known-scene/producer-output-1/flat/noise-off/manifest.json",
+          "sha256": "60ae007752236191358ee45f015e04a5b5243fb7c0704d065af88fb3f74ddb44",
+          "bytes": 4551
+        },
+        "plan": {
+          "path": "experiments/native-direct-planes/run-flat-1/observer-placebo-plan.json",
+          "sha256": "eb4fb49123cbf59c9092b1cd8170b9b53252bba5c4ace551db41c5b021c41b2a",
+          "bytes": 9083
+        },
+        "receipt": {
+          "path": "experiments/native-direct-planes/run-flat-1/observer-placebo-receipt.json",
+          "sha256": "69e60248cd9947d4878c9601a0b169048c2115d6100ccabf4f35b6bd5eec4d04",
+          "bytes": 11259
+        },
+        "output": {
+          "path": "experiments/native-direct-planes/run-flat-1/observer-placebo.tif",
+          "sha256": "4cf945da51c2fc41715c07c20188b0329c6de60d17f5a8aa3c2928b5ae86bfcd",
+          "bytes": 361851
+        },
+        "processes": [
+          {
+            "path": "experiments/native-direct-planes/run-flat-1/observer-placebo-plan-process.json",
+            "sha256": "602ed3f852656df710d4cb7018ead8c87b077601fd45bc102265c9add43e0d2b",
+            "bytes": 2713
+          },
+          {
+            "path": "experiments/native-direct-planes/run-flat-1/observer-placebo-render-process.json",
+            "sha256": "da2012beebb64b15f3bd0dd9f916d79278cb3e5946d4c610a523b4c0b64ec743",
+            "bytes": 2739
+          }
+        ]
+      },
+      "whole_tiff_equal": true,
+      "decoded_pixels_equal": true
+    },
+    "prior_flat_decision": null,
+    "failed_checks": [
+      {
+        "metric": "flat.repeat.temporal_variance_dn2",
+        "component": [
+          0
+        ],
+        "off": 189.38403051201772,
+        "float": 189.73138466279534,
+        "difference": 0.347354150777619,
+        "pass": false
+      },
+      {
+        "metric": "flat.repeat.temporal_variance_dn2",
+        "component": [
+          1
+        ],
+        "off": 187.94089195091797,
+        "float": 187.9730283715588,
+        "difference": 0.03213642064082478,
+        "pass": false
+      },
+      {
+        "metric": "flat.repeat.repeat_mean_mse_dn2",
+        "component": [
+          0
+        ],
+        "off": 23.838076835799452,
+        "float": 23.887002166380075,
+        "difference": 0.04892533058062298,
+        "pass": false
+      },
+      {
+        "metric": "flat.repeat.repeat_mean_mse_dn2",
+        "component": [
+          1
+        ],
+        "off": 23.377804232281584,
+        "float": 23.430320839566424,
+        "difference": 0.05251660728483998,
+        "pass": false
+      },
+      {
+        "metric": "flat.repeat.repeat_mean_mse_dn2",
+        "component": [
+          2
+        ],
+        "off": 25.187580707241484,
+        "float": 25.307882893022484,
+        "difference": 0.12030218578100005,
+        "pass": false
+      },
+      {
+        "metric": "flat.repeat.bias_of_repeat_mean_dn",
+        "component": [
+          1
+        ],
+        "off": 0.3029939018410427,
+        "float": 0.304162079877496,
+        "difference": 0.0011681780364533045,
+        "pass": false
+      }
+    ]
+  },
+  "output_count": 27,
+  "mask_pixels": 21504,
+  "mask_sha256": "ab32f901c99f1a29e7668d09b5780deb937e125d2693a36c9bd9b574ba4cae8b",
+  "units": "post-WB DN from actual RGB16 * 14848/65535; no second black subtraction",
+  "measurements": {
+    "repeat": {
+      "off": {
+        "repeats": 8,
+        "pixels": 21504,
+        "mse_each_dn2": [
+          [
+            194.1352749351418,
+            200.37566309849257,
+            212.601266531586
+          ],
+          [
+            191.71798589707294,
+            181.06766700322845,
+            205.07582873275962
+          ],
+          [
+            187.21161137677805,
+            188.25488489312005,
+            197.65594830994308
+          ],
+          [
+            186.81305811680093,
+            185.56001799171398,
+            195.39430589588278
+          ],
+          [
+            195.87098789654624,
+            191.33994633358458,
+            205.7183239799819
+          ],
+          [
+            182.63081500795448,
+            175.73656653175584,
+            190.41902922604046
+          ],
+          [
+            182.22278896504594,
+            183.41121923295972,
+            200.4913647089676
+          ],
+          [
+            195.79030607520122,
+            196.8627124297919,
+            208.0776926243577
+          ]
+        ],
+        "mse_mean_dn2": [
+          189.5491035338177,
+          187.82608468933086,
+          201.92922000118992
+        ],
+        "mse_sem_dn2": [
+          1.978199331291929,
+          2.8913121298838655,
+          2.575546478243332
+        ],
+        "rmse_from_mean_mse_dn": [
+          13.767683303076728,
+          13.704965694569646,
+          14.210180153720428
+        ],
+        "bias_of_repeat_mean_dn": [
+          -0.10673720875985795,
+          -0.3029939018410427,
+          -0.10448093094726119
+        ],
+        "temporal_variance_dn2": [
+          189.38403051201772,
+          187.94089195091797,
+          201.9904449073709
+        ],
+        "temporal_sigma_dn": [
+          13.76168705181228,
+          13.709153582585541,
+          14.212334252590983
+        ],
+        "repeat_mean_mse_dn2": [
+          23.838076835799452,
+          23.377804232281584,
+          25.187580707241484
+        ],
+        "finite_repeat_subtraction_dn2": [
+          23.673003814002215,
+          23.492611493864747,
+          25.24880561342136
+        ],
+        "unclipped_squared_bias_estimate_dn2": [
+          0.16507302179723737,
+          -0.11480726158316301,
+          -0.06122490617987708
+        ],
+        "arithmetic_decomposition_residual_dn2": [
+          2.7569058147491887e-12,
+          -3.950617610826157e-12,
+          -1.1084466677857563e-12
+        ],
+        "decomposition_status": "DERIVED arithmetic identity, not independent evidence",
+        "uncertainty_scope": "SEM across independent whole-image repeat MSEs; no pixel independence assumption"
+      },
+      "rounded": {
+        "repeats": 8,
+        "pixels": 21504,
+        "mse_each_dn2": [
+          [
+            194.1352749351418,
+            200.37566309849257,
+            212.601266531586
+          ],
+          [
+            191.71798589707294,
+            181.06766700322845,
+            205.07582873275962
+          ],
+          [
+            187.21161137677805,
+            188.25488489312005,
+            197.65594830994308
+          ],
+          [
+            186.81305811680093,
+            185.56001799171398,
+            195.39430589588278
+          ],
+          [
+            195.87098789654624,
+            191.33994633358458,
+            205.7183239799819
+          ],
+          [
+            182.63081500795448,
+            175.73656653175584,
+            190.41902922604046
+          ],
+          [
+            182.22278896504594,
+            183.41121923295972,
+            200.4913647089676
+          ],
+          [
+            195.79030607520122,
+            196.8627124297919,
+            208.0776926243577
+          ]
+        ],
+        "mse_mean_dn2": [
+          189.5491035338177,
+          187.82608468933086,
+          201.92922000118992
+        ],
+        "mse_sem_dn2": [
+          1.978199331291929,
+          2.8913121298838655,
+          2.575546478243332
+        ],
+        "rmse_from_mean_mse_dn": [
+          13.767683303076728,
+          13.704965694569646,
+          14.210180153720428
+        ],
+        "bias_of_repeat_mean_dn": [
+          -0.10673720875985795,
+          -0.3029939018410427,
+          -0.10448093094726119
+        ],
+        "temporal_variance_dn2": [
+          189.38403051201772,
+          187.94089195091797,
+          201.9904449073709
+        ],
+        "temporal_sigma_dn": [
+          13.76168705181228,
+          13.709153582585541,
+          14.212334252590983
+        ],
+        "repeat_mean_mse_dn2": [
+          23.838076835799452,
+          23.377804232281584,
+          25.187580707241484
+        ],
+        "finite_repeat_subtraction_dn2": [
+          23.673003814002215,
+          23.492611493864747,
+          25.24880561342136
+        ],
+        "unclipped_squared_bias_estimate_dn2": [
+          0.16507302179723737,
+          -0.11480726158316301,
+          -0.06122490617987708
+        ],
+        "arithmetic_decomposition_residual_dn2": [
+          2.7569058147491887e-12,
+          -3.950617610826157e-12,
+          -1.1084466677857563e-12
+        ],
+        "decomposition_status": "DERIVED arithmetic identity, not independent evidence",
+        "uncertainty_scope": "SEM across independent whole-image repeat MSEs; no pixel independence assumption"
+      },
+      "float": {
+        "repeats": 8,
+        "pixels": 21504,
+        "mse_each_dn2": [
+          [
+            194.46522941069654,
+            200.92323172707464,
+            213.39882072065672
+          ],
+          [
+            191.3132201519186,
+            180.67844406150522,
+            204.8097069277863
+          ],
+          [
+            187.1071457780519,
+            188.6795961081836,
+            198.0407698494035
+          ],
+          [
+            187.08854079559856,
+            184.8763817833555,
+            194.75514178395167
+          ],
+          [
+            196.05948126761862,
+            191.67295140056208,
+            205.95214693477456
+          ],
+          [
+            183.8530499319973,
+            175.87415365050865,
+            191.1964271945477
+          ],
+          [
+            182.9443931658538,
+            183.43346435026154,
+            200.21271041077375
+          ],
+          [
+            196.38464946888746,
+            197.11554223595851,
+            207.96752054812904
+          ]
+        ],
+        "mse_mean_dn2": [
+          189.90196374632785,
+          187.90672066467624,
+          202.04165554625288
+        ],
+        "mse_sem_dn2": [
+          1.9061871875336343,
+          2.9738065216175387,
+          2.595048567004729
+        ],
+        "rmse_from_mean_mse_dn": [
+          13.780492144561741,
+          13.707907231400286,
+          14.214135765014097
+        ],
+        "bias_of_repeat_mean_dn": [
+          -0.10372918324096059,
+          -0.304162079877496,
+          -0.09113578095470729
+        ],
+        "temporal_variance_dn2": [
+          189.73138466279534,
+          187.9730283715588,
+          201.98145446083535
+        ],
+        "temporal_sigma_dn": [
+          13.77430160344964,
+          13.710325611434573,
+          14.212017958785282
+        ],
+        "repeat_mean_mse_dn2": [
+          23.887002166380075,
+          23.430320839566424,
+          25.307882893022484
+        ],
+        "finite_repeat_subtraction_dn2": [
+          23.716423082849417,
+          23.49662854644485,
+          25.24768180760442
+        ],
+        "unclipped_squared_bias_estimate_dn2": [
+          0.17057908353065798,
+          -0.06630770687842613,
+          0.06020108541806479
+        ],
+        "arithmetic_decomposition_residual_dn2": [
+          1.8474111129762605e-12,
+          -4.149569576838985e-12,
+          -5.400124791776761e-13
+        ],
+        "decomposition_status": "DERIVED arithmetic identity, not independent evidence",
+        "uncertainty_scope": "SEM across independent whole-image repeat MSEs; no pixel independence assumption"
+      }
+    },
+    "noiseoff": {
+      "off": {
+        "pixels": 21504,
+        "bias_dn": [
+          -0.04025115259946688,
+          -0.04016174563230379,
+          -0.04009022005857332
+        ],
+        "mse_dn2": [
+          0.001620155285585966,
+          0.0016129658122344764,
+          0.001607225744344224
+        ],
+        "rmse_dn": [
+          0.040251152599471804,
+          0.040161745632311306,
+          0.040090220058565704
+        ]
+      },
+      "rounded": {
+        "pixels": 21504,
+        "bias_dn": [
+          -0.04025115259946688,
+          -0.04016174563230379,
+          -0.04009022005857332
+        ],
+        "mse_dn2": [
+          0.001620155285585966,
+          0.0016129658122344764,
+          0.001607225744344224
+        ],
+        "rmse_dn": [
+          0.040251152599471804,
+          0.040161745632311306,
+          0.040090220058565704
+        ]
+      },
+      "float": {
+        "pixels": 21504,
+        "bias_dn": [
+          -0.04025115259946688,
+          -0.04016174563230379,
+          -0.04009022005857332
+        ],
+        "mse_dn2": [
+          0.001620155285585966,
+          0.0016129658122344764,
+          0.001607225744344224
+        ],
+        "rmse_dn": [
+          0.040251152599471804,
+          0.040161745632311306,
+          0.040090220058565704
+        ]
+      }
+    },
+    "paired": {
+      "direction": "direct precision (float) minus current off; negative error/variance differences favor float",
+      "repeat_mse_difference_dn2": [
+        [
+          0.3299544755547288,
+          0.54756862858207,
+          0.7975541890707234
+        ],
+        [
+          -0.4047657451543216,
+          -0.3892229417232329,
+          -0.2661218049733236
+        ],
+        [
+          -0.1044655987261649,
+          0.424711215063553,
+          0.384821539460404
+        ],
+        [
+          0.2754826787976299,
+          -0.6836362083584788,
+          -0.6391641119311089
+        ],
+        [
+          0.18849337107238284,
+          0.3330050669775062,
+          0.23382295479265736
+        ],
+        [
+          1.222234924042823,
+          0.13758711875280483,
+          0.7773979685072447
+        ],
+        [
+          0.7216042008078603,
+          0.022245117301821438,
+          -0.2786542981938567
+        ],
+        [
+          0.5943433936862448,
+          0.2528298061666021,
+          -0.11017207622865044
+        ]
+      ],
+      "mean_mse_difference_dn2": [
+        0.3528602125101479,
+        0.08063597534533073,
+        0.11243554506301123
+      ],
+      "mse_difference_sem_dn2": [
+        0.17762174135807726,
+        0.14888196695949135,
+        0.18473942770641977
+      ],
+      "temporal_variance_difference_dn2": [
+        0.347354150777619,
+        0.03213642064082478,
+        -0.008990446535534602
+      ],
+      "variance_difference_jackknife_se_dn2": [
+        0.194542333221559,
+        0.19294381483627943,
+        0.25614831816065664
+      ],
+      "leave_one_out_variance_difference_dn2": [
+        [
+          0.33889899652413646,
+          -0.05918647760739759,
+          -0.19274182414778807
+        ],
+        [
+          0.481845637171034,
+          0.1507773416996656,
+          0.07581624538096321
+        ],
+        [
+          0.42254958044549085,
+          -0.022365166057824126,
+          -0.0018743257941196134
+        ],
+        [
+          0.3385206984944773,
+          0.13646987824895973,
+          0.13934269259780763
+        ],
+        [
+          0.36247794454973814,
+          0.0033483013295096953,
+          -0.025798152496435023
+        ],
+        [
+          0.2278748897917353,
+          0.03531812249488553,
+          -0.1010156912279001
+        ],
+        [
+          0.32548862684478763,
+          0.05167928502791597,
+          0.04762633540974548
+        ],
+        [
+          0.2811768323906847,
+          -0.0389499200053649,
+          -0.01327885200731771
+        ]
+      ],
+      "uncertainty_scope": "paired whole-image repeats; delete-one-repeat variance uncertainty is a small-sample diagnostic"
+    },
+    "noiseoff_tails": {
+      "off": {
+        "p99_9_abs_error_dn": [
+          0.04025115259946688,
+          0.04016174563230379,
+          0.04009022005857332
+        ],
+        "max_abs_error_dn": [
+          0.04025115259946688,
+          0.04016174563230379,
+          0.04009022005857332
+        ],
+        "quantile": "nearest rank on fixed native mask"
+      },
+      "rounded": {
+        "p99_9_abs_error_dn": [
+          0.04025115259946688,
+          0.04016174563230379,
+          0.04009022005857332
+        ],
+        "max_abs_error_dn": [
+          0.04025115259946688,
+          0.04016174563230379,
+          0.04009022005857332
+        ],
+        "quantile": "nearest rank on fixed native mask"
+      },
+      "float": {
+        "p99_9_abs_error_dn": [
+          0.04025115259946688,
+          0.04016174563230379,
+          0.04009022005857332
+        ],
+        "max_abs_error_dn": [
+          0.04025115259946688,
+          0.04016174563230379,
+          0.04009022005857332
+        ],
+        "quantile": "nearest rank on fixed native mask"
+      }
+    },
+    "reference_sha256": "4635ec37875b863a378fdece43d7f8920b561caaff679686ae66ad0e02b4e78a"
+  },
+  "checks": [
+    {
+      "metric": "flat.repeat.temporal_variance_dn2",
+      "component": [
+        0
+      ],
+      "off": 189.38403051201772,
+      "float": 189.73138466279534,
+      "difference": 0.347354150777619,
+      "pass": false
+    },
+    {
+      "metric": "flat.repeat.temporal_variance_dn2",
+      "component": [
+        1
+      ],
+      "off": 187.94089195091797,
+      "float": 187.9730283715588,
+      "difference": 0.03213642064082478,
+      "pass": false
+    },
+    {
+      "metric": "flat.repeat.temporal_variance_dn2",
+      "component": [
+        2
+      ],
+      "off": 201.9904449073709,
+      "float": 201.98145446083535,
+      "difference": -0.008990446535534602,
+      "pass": true
+    },
+    {
+      "metric": "flat.repeat.repeat_mean_mse_dn2",
+      "component": [
+        0
+      ],
+      "off": 23.838076835799452,
+      "float": 23.887002166380075,
+      "difference": 0.04892533058062298,
+      "pass": false
+    },
+    {
+      "metric": "flat.repeat.repeat_mean_mse_dn2",
+      "component": [
+        1
+      ],
+      "off": 23.377804232281584,
+      "float": 23.430320839566424,
+      "difference": 0.05251660728483998,
+      "pass": false
+    },
+    {
+      "metric": "flat.repeat.repeat_mean_mse_dn2",
+      "component": [
+        2
+      ],
+      "off": 25.187580707241484,
+      "float": 25.307882893022484,
+      "difference": 0.12030218578100005,
+      "pass": false
+    },
+    {
+      "metric": "flat.repeat.bias_of_repeat_mean_dn",
+      "component": [
+        0
+      ],
+      "off": 0.10673720875985795,
+      "float": 0.10372918324096059,
+      "difference": -0.003008025518897367,
+      "pass": true
+    },
+    {
+      "metric": "flat.repeat.bias_of_repeat_mean_dn",
+      "component": [
+        1
+      ],
+      "off": 0.3029939018410427,
+      "float": 0.304162079877496,
+      "difference": 0.0011681780364533045,
+      "pass": false
+    },
+    {
+      "metric": "flat.repeat.bias_of_repeat_mean_dn",
+      "component": [
+        2
+      ],
+      "off": 0.10448093094726119,
+      "float": 0.09113578095470729,
+      "difference": -0.0133451499925539,
+      "pass": true
+    },
+    {
+      "metric": "flat.noiseoff.mse_dn2",
+      "component": [
+        0
+      ],
+      "off": 0.001620155285585966,
+      "float": 0.001620155285585966,
+      "difference": 0.0,
+      "pass": true
+    },
+    {
+      "metric": "flat.noiseoff.mse_dn2",
+      "component": [
+        1
+      ],
+      "off": 0.0016129658122344764,
+      "float": 0.0016129658122344764,
+      "difference": 0.0,
+      "pass": true
+    },
+    {
+      "metric": "flat.noiseoff.mse_dn2",
+      "component": [
+        2
+      ],
+      "off": 0.001607225744344224,
+      "float": 0.001607225744344224,
+      "difference": 0.0,
+      "pass": true
+    },
+    {
+      "metric": "flat.noiseoff.bias_dn",
+      "component": [
+        0
+      ],
+      "off": 0.04025115259946688,
+      "float": 0.04025115259946688,
+      "difference": 0.0,
+      "pass": true
+    },
+    {
+      "metric": "flat.noiseoff.bias_dn",
+      "component": [
+        1
+      ],
+      "off": 0.04016174563230379,
+      "float": 0.04016174563230379,
+      "difference": 0.0,
+      "pass": true
+    },
+    {
+      "metric": "flat.noiseoff.bias_dn",
+      "component": [
+        2
+      ],
+      "off": 0.04009022005857332,
+      "float": 0.04009022005857332,
+      "difference": 0.0,
+      "pass": true
+    }
+  ],
+  "rounded_pairs": [
+    {
+      "scene": "flat",
+      "seed": null,
+      "equal": {
+        "whole_tiff": true,
+        "decoded_pixels": true,
+        "consumed_planes_luma_beta_f32": true,
+        "collapsed_f32": true
+      },
+      "pass": true
+    },
+    {
+      "scene": "flat",
+      "seed": 701,
+      "equal": {
+        "whole_tiff": true,
+        "decoded_pixels": true,
+        "consumed_planes_luma_beta_f32": true,
+        "collapsed_f32": true
+      },
+      "pass": true
+    },
+    {
+      "scene": "flat",
+      "seed": 709,
+      "equal": {
+        "whole_tiff": true,
+        "decoded_pixels": true,
+        "consumed_planes_luma_beta_f32": true,
+        "collapsed_f32": true
+      },
+      "pass": true
+    },
+    {
+      "scene": "flat",
+      "seed": 719,
+      "equal": {
+        "whole_tiff": true,
+        "decoded_pixels": true,
+        "consumed_planes_luma_beta_f32": true,
+        "collapsed_f32": true
+      },
+      "pass": true
+    },
+    {
+      "scene": "flat",
+      "seed": 727,
+      "equal": {
+        "whole_tiff": true,
+        "decoded_pixels": true,
+        "consumed_planes_luma_beta_f32": true,
+        "collapsed_f32": true
+      },
+      "pass": true
+    },
+    {
+      "scene": "flat",
+      "seed": 733,
+      "equal": {
+        "whole_tiff": true,
+        "decoded_pixels": true,
+        "consumed_planes_luma_beta_f32": true,
+        "collapsed_f32": true
+      },
+      "pass": true
+    },
+    {
+      "scene": "flat",
+      "seed": 739,
+      "equal": {
+        "whole_tiff": true,
+        "decoded_pixels": true,
+        "consumed_planes_luma_beta_f32": true,
+        "collapsed_f32": true
+      },
+      "pass": true
+    },
+    {
+      "scene": "flat",
+      "seed": 743,
+      "equal": {
+        "whole_tiff": true,
+        "decoded_pixels": true,
+        "consumed_planes_luma_beta_f32": true,
+        "collapsed_f32": true
+      },
+      "pass": true
+    },
+    {
+      "scene": "flat",
+      "seed": 751,
+      "equal": {
+        "whole_tiff": true,
+        "decoded_pixels": true,
+        "consumed_planes_luma_beta_f32": true,
+        "collapsed_f32": true
+      },
+      "pass": true
+    }
+  ],
+  "tiffs": [
+    {
+      "scene": "flat",
+      "seed": null,
+      "mode": "off",
+      "info": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-direct-planes\\run-flat-1\\case-00.tif",
+        "bytes": 361851,
+        "file_sha256": "4cf945da51c2fc41715c07c20188b0329c6de60d17f5a8aa3c2928b5ae86bfcd",
+        "pixel_sha256": "2fc3eeb603ae1f0a8d0a9bdfb4da0e1262e260d5ce18f1e105acf564b9b485db",
+        "width": 284,
+        "height": 212,
+        "channels": 3,
+        "dtype": "uint16",
+        "orientation": 1,
+        "icc": "absent",
+        "transfer_tags": "absent",
+        "image_description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+        "tag_codes": [
+          256,
+          257,
+          258,
+          259,
+          262,
+          270,
+          273,
+          277,
+          278,
+          279,
+          282,
+          283,
+          296,
+          305,
+          317,
+          339
+        ],
+        "rail_zero_by_channel": [
+          0,
+          0,
+          0
+        ],
+        "rail_max_by_channel": [
+          0,
+          0,
+          0
+        ],
+        "software": "strehl 0.0.0"
+      }
+    },
+    {
+      "scene": "flat",
+      "seed": null,
+      "mode": "rounded",
+      "info": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-direct-planes\\run-flat-1\\case-01.tif",
+        "bytes": 361851,
+        "file_sha256": "4cf945da51c2fc41715c07c20188b0329c6de60d17f5a8aa3c2928b5ae86bfcd",
+        "pixel_sha256": "2fc3eeb603ae1f0a8d0a9bdfb4da0e1262e260d5ce18f1e105acf564b9b485db",
+        "width": 284,
+        "height": 212,
+        "channels": 3,
+        "dtype": "uint16",
+        "orientation": 1,
+        "icc": "absent",
+        "transfer_tags": "absent",
+        "image_description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+        "tag_codes": [
+          256,
+          257,
+          258,
+          259,
+          262,
+          270,
+          273,
+          277,
+          278,
+          279,
+          282,
+          283,
+          296,
+          305,
+          317,
+          339
+        ],
+        "rail_zero_by_channel": [
+          0,
+          0,
+          0
+        ],
+        "rail_max_by_channel": [
+          0,
+          0,
+          0
+        ],
+        "software": "strehl 0.0.0"
+      }
+    },
+    {
+      "scene": "flat",
+      "seed": null,
+      "mode": "float",
+      "info": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-direct-planes\\run-flat-1\\case-02.tif",
+        "bytes": 361851,
+        "file_sha256": "4cf945da51c2fc41715c07c20188b0329c6de60d17f5a8aa3c2928b5ae86bfcd",
+        "pixel_sha256": "2fc3eeb603ae1f0a8d0a9bdfb4da0e1262e260d5ce18f1e105acf564b9b485db",
+        "width": 284,
+        "height": 212,
+        "channels": 3,
+        "dtype": "uint16",
+        "orientation": 1,
+        "icc": "absent",
+        "transfer_tags": "absent",
+        "image_description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+        "tag_codes": [
+          256,
+          257,
+          258,
+          259,
+          262,
+          270,
+          273,
+          277,
+          278,
+          279,
+          282,
+          283,
+          296,
+          305,
+          317,
+          339
+        ],
+        "rail_zero_by_channel": [
+          0,
+          0,
+          0
+        ],
+        "rail_max_by_channel": [
+          0,
+          0,
+          0
+        ],
+        "software": "strehl 0.0.0"
+      }
+    },
+    {
+      "scene": "flat",
+      "seed": 701,
+      "mode": "off",
+      "info": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-direct-planes\\run-flat-1\\case-03.tif",
+        "bytes": 361851,
+        "file_sha256": "33594569e451e669564c3ac19b3d6d0ce7ca6d84d0b2fe04c630f8dffb70eeb1",
+        "pixel_sha256": "8a6fded049c4ffa7bab28d11eed140196bb056b6b3b2c75ecc092897f3a52ef5",
+        "width": 284,
+        "height": 212,
+        "channels": 3,
+        "dtype": "uint16",
+        "orientation": 1,
+        "icc": "absent",
+        "transfer_tags": "absent",
+        "image_description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+        "tag_codes": [
+          256,
+          257,
+          258,
+          259,
+          262,
+          270,
+          273,
+          277,
+          278,
+          279,
+          282,
+          283,
+          296,
+          305,
+          317,
+          339
+        ],
+        "rail_zero_by_channel": [
+          0,
+          0,
+          0
+        ],
+        "rail_max_by_channel": [
+          0,
+          0,
+          0
+        ],
+        "software": "strehl 0.0.0"
+      }
+    },
+    {
+      "scene": "flat",
+      "seed": 701,
+      "mode": "rounded",
+      "info": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-direct-planes\\run-flat-1\\case-04.tif",
+        "bytes": 361851,
+        "file_sha256": "33594569e451e669564c3ac19b3d6d0ce7ca6d84d0b2fe04c630f8dffb70eeb1",
+        "pixel_sha256": "8a6fded049c4ffa7bab28d11eed140196bb056b6b3b2c75ecc092897f3a52ef5",
+        "width": 284,
+        "height": 212,
+        "channels": 3,
+        "dtype": "uint16",
+        "orientation": 1,
+        "icc": "absent",
+        "transfer_tags": "absent",
+        "image_description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+        "tag_codes": [
+          256,
+          257,
+          258,
+          259,
+          262,
+          270,
+          273,
+          277,
+          278,
+          279,
+          282,
+          283,
+          296,
+          305,
+          317,
+          339
+        ],
+        "rail_zero_by_channel": [
+          0,
+          0,
+          0
+        ],
+        "rail_max_by_channel": [
+          0,
+          0,
+          0
+        ],
+        "software": "strehl 0.0.0"
+      }
+    },
+    {
+      "scene": "flat",
+      "seed": 701,
+      "mode": "float",
+      "info": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-direct-planes\\run-flat-1\\case-05.tif",
+        "bytes": 361851,
+        "file_sha256": "c6089f9998b2005304fd2ab5cdf55dff3ea25cc0da9108693754bfe317653e98",
+        "pixel_sha256": "cbfd94a4f48051adf2b49645349fbfd927d16cbea5638a30751559b86a5d71a1",
+        "width": 284,
+        "height": 212,
+        "channels": 3,
+        "dtype": "uint16",
+        "orientation": 1,
+        "icc": "absent",
+        "transfer_tags": "absent",
+        "image_description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+        "tag_codes": [
+          256,
+          257,
+          258,
+          259,
+          262,
+          270,
+          273,
+          277,
+          278,
+          279,
+          282,
+          283,
+          296,
+          305,
+          317,
+          339
+        ],
+        "rail_zero_by_channel": [
+          0,
+          0,
+          0
+        ],
+        "rail_max_by_channel": [
+          0,
+          0,
+          0
+        ],
+        "software": "strehl 0.0.0"
+      }
+    },
+    {
+      "scene": "flat",
+      "seed": 709,
+      "mode": "off",
+      "info": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-direct-planes\\run-flat-1\\case-06.tif",
+        "bytes": 361851,
+        "file_sha256": "c1a9c1e0e9666e0e1309f4ee2a82f3405dda9a498dd9ce72e854e1aa343da17f",
+        "pixel_sha256": "d48133068b8cc03bf33494cf957d5a9d111f2ebc8fbdb294b8298fc562927384",
+        "width": 284,
+        "height": 212,
+        "channels": 3,
+        "dtype": "uint16",
+        "orientation": 1,
+        "icc": "absent",
+        "transfer_tags": "absent",
+        "image_description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+        "tag_codes": [
+          256,
+          257,
+          258,
+          259,
+          262,
+          270,
+          273,
+          277,
+          278,
+          279,
+          282,
+          283,
+          296,
+          305,
+          317,
+          339
+        ],
+        "rail_zero_by_channel": [
+          0,
+          0,
+          0
+        ],
+        "rail_max_by_channel": [
+          0,
+          0,
+          0
+        ],
+        "software": "strehl 0.0.0"
+      }
+    },
+    {
+      "scene": "flat",
+      "seed": 709,
+      "mode": "rounded",
+      "info": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-direct-planes\\run-flat-1\\case-07.tif",
+        "bytes": 361851,
+        "file_sha256": "c1a9c1e0e9666e0e1309f4ee2a82f3405dda9a498dd9ce72e854e1aa343da17f",
+        "pixel_sha256": "d48133068b8cc03bf33494cf957d5a9d111f2ebc8fbdb294b8298fc562927384",
+        "width": 284,
+        "height": 212,
+        "channels": 3,
+        "dtype": "uint16",
+        "orientation": 1,
+        "icc": "absent",
+        "transfer_tags": "absent",
+        "image_description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+        "tag_codes": [
+          256,
+          257,
+          258,
+          259,
+          262,
+          270,
+          273,
+          277,
+          278,
+          279,
+          282,
+          283,
+          296,
+          305,
+          317,
+          339
+        ],
+        "rail_zero_by_channel": [
+          0,
+          0,
+          0
+        ],
+        "rail_max_by_channel": [
+          0,
+          0,
+          0
+        ],
+        "software": "strehl 0.0.0"
+      }
+    },
+    {
+      "scene": "flat",
+      "seed": 709,
+      "mode": "float",
+      "info": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-direct-planes\\run-flat-1\\case-08.tif",
+        "bytes": 361851,
+        "file_sha256": "52e244d2d848f514ed12a458a09bdfd6dfce629961cd81127a30dc99f8629b6c",
+        "pixel_sha256": "8f0c4c53ec4f852bbe5769b8ac263ef7a24cbd3839a222785d99730f9b4d99d1",
+        "width": 284,
+        "height": 212,
+        "channels": 3,
+        "dtype": "uint16",
+        "orientation": 1,
+        "icc": "absent",
+        "transfer_tags": "absent",
+        "image_description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+        "tag_codes": [
+          256,
+          257,
+          258,
+          259,
+          262,
+          270,
+          273,
+          277,
+          278,
+          279,
+          282,
+          283,
+          296,
+          305,
+          317,
+          339
+        ],
+        "rail_zero_by_channel": [
+          0,
+          0,
+          0
+        ],
+        "rail_max_by_channel": [
+          0,
+          0,
+          0
+        ],
+        "software": "strehl 0.0.0"
+      }
+    },
+    {
+      "scene": "flat",
+      "seed": 719,
+      "mode": "off",
+      "info": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-direct-planes\\run-flat-1\\case-09.tif",
+        "bytes": 361851,
+        "file_sha256": "63c3b18710598a227d4c498244df81dd79743112d65c978e568e2072d5efed86",
+        "pixel_sha256": "ad0b04e6651ee2cf0d61d776740480f39977163568a4e2daa7143e0010ddcfeb",
+        "width": 284,
+        "height": 212,
+        "channels": 3,
+        "dtype": "uint16",
+        "orientation": 1,
+        "icc": "absent",
+        "transfer_tags": "absent",
+        "image_description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+        "tag_codes": [
+          256,
+          257,
+          258,
+          259,
+          262,
+          270,
+          273,
+          277,
+          278,
+          279,
+          282,
+          283,
+          296,
+          305,
+          317,
+          339
+        ],
+        "rail_zero_by_channel": [
+          0,
+          0,
+          0
+        ],
+        "rail_max_by_channel": [
+          0,
+          0,
+          0
+        ],
+        "software": "strehl 0.0.0"
+      }
+    },
+    {
+      "scene": "flat",
+      "seed": 719,
+      "mode": "rounded",
+      "info": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-direct-planes\\run-flat-1\\case-10.tif",
+        "bytes": 361851,
+        "file_sha256": "63c3b18710598a227d4c498244df81dd79743112d65c978e568e2072d5efed86",
+        "pixel_sha256": "ad0b04e6651ee2cf0d61d776740480f39977163568a4e2daa7143e0010ddcfeb",
+        "width": 284,
+        "height": 212,
+        "channels": 3,
+        "dtype": "uint16",
+        "orientation": 1,
+        "icc": "absent",
+        "transfer_tags": "absent",
+        "image_description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+        "tag_codes": [
+          256,
+          257,
+          258,
+          259,
+          262,
+          270,
+          273,
+          277,
+          278,
+          279,
+          282,
+          283,
+          296,
+          305,
+          317,
+          339
+        ],
+        "rail_zero_by_channel": [
+          0,
+          0,
+          0
+        ],
+        "rail_max_by_channel": [
+          0,
+          0,
+          0
+        ],
+        "software": "strehl 0.0.0"
+      }
+    },
+    {
+      "scene": "flat",
+      "seed": 719,
+      "mode": "float",
+      "info": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-direct-planes\\run-flat-1\\case-11.tif",
+        "bytes": 361851,
+        "file_sha256": "d9c18578ae35132ba0e0f84cffa3901f7c73654d77abe5f4a9023025c531976d",
+        "pixel_sha256": "bdcfce1239707c65a5f49bd8a59d11fdb6862cc085403cb0aef3a6df4679accc",
+        "width": 284,
+        "height": 212,
+        "channels": 3,
+        "dtype": "uint16",
+        "orientation": 1,
+        "icc": "absent",
+        "transfer_tags": "absent",
+        "image_description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+        "tag_codes": [
+          256,
+          257,
+          258,
+          259,
+          262,
+          270,
+          273,
+          277,
+          278,
+          279,
+          282,
+          283,
+          296,
+          305,
+          317,
+          339
+        ],
+        "rail_zero_by_channel": [
+          0,
+          0,
+          0
+        ],
+        "rail_max_by_channel": [
+          0,
+          0,
+          0
+        ],
+        "software": "strehl 0.0.0"
+      }
+    },
+    {
+      "scene": "flat",
+      "seed": 727,
+      "mode": "off",
+      "info": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-direct-planes\\run-flat-1\\case-12.tif",
+        "bytes": 361851,
+        "file_sha256": "2b50a5875859cac03e7bf3c86479fb7599e8bc4711c9a0d01f8ef07218c35b31",
+        "pixel_sha256": "2a563f03969a050deb5383435b7f8162be88fc9ae2b5b12cc7738db0cac39dd8",
+        "width": 284,
+        "height": 212,
+        "channels": 3,
+        "dtype": "uint16",
+        "orientation": 1,
+        "icc": "absent",
+        "transfer_tags": "absent",
+        "image_description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+        "tag_codes": [
+          256,
+          257,
+          258,
+          259,
+          262,
+          270,
+          273,
+          277,
+          278,
+          279,
+          282,
+          283,
+          296,
+          305,
+          317,
+          339
+        ],
+        "rail_zero_by_channel": [
+          0,
+          0,
+          0
+        ],
+        "rail_max_by_channel": [
+          0,
+          0,
+          0
+        ],
+        "software": "strehl 0.0.0"
+      }
+    },
+    {
+      "scene": "flat",
+      "seed": 727,
+      "mode": "rounded",
+      "info": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-direct-planes\\run-flat-1\\case-13.tif",
+        "bytes": 361851,
+        "file_sha256": "2b50a5875859cac03e7bf3c86479fb7599e8bc4711c9a0d01f8ef07218c35b31",
+        "pixel_sha256": "2a563f03969a050deb5383435b7f8162be88fc9ae2b5b12cc7738db0cac39dd8",
+        "width": 284,
+        "height": 212,
+        "channels": 3,
+        "dtype": "uint16",
+        "orientation": 1,
+        "icc": "absent",
+        "transfer_tags": "absent",
+        "image_description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+        "tag_codes": [
+          256,
+          257,
+          258,
+          259,
+          262,
+          270,
+          273,
+          277,
+          278,
+          279,
+          282,
+          283,
+          296,
+          305,
+          317,
+          339
+        ],
+        "rail_zero_by_channel": [
+          0,
+          0,
+          0
+        ],
+        "rail_max_by_channel": [
+          0,
+          0,
+          0
+        ],
+        "software": "strehl 0.0.0"
+      }
+    },
+    {
+      "scene": "flat",
+      "seed": 727,
+      "mode": "float",
+      "info": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-direct-planes\\run-flat-1\\case-14.tif",
+        "bytes": 361851,
+        "file_sha256": "3a60595973b5c98014b8c5659acb4f4152f343658e833f97e6944a3ef00ba8b0",
+        "pixel_sha256": "aaaab6f87b41e746756c255c490065c871abad9c40e2afb6d25d088a7306d2dc",
+        "width": 284,
+        "height": 212,
+        "channels": 3,
+        "dtype": "uint16",
+        "orientation": 1,
+        "icc": "absent",
+        "transfer_tags": "absent",
+        "image_description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+        "tag_codes": [
+          256,
+          257,
+          258,
+          259,
+          262,
+          270,
+          273,
+          277,
+          278,
+          279,
+          282,
+          283,
+          296,
+          305,
+          317,
+          339
+        ],
+        "rail_zero_by_channel": [
+          0,
+          0,
+          0
+        ],
+        "rail_max_by_channel": [
+          0,
+          0,
+          0
+        ],
+        "software": "strehl 0.0.0"
+      }
+    },
+    {
+      "scene": "flat",
+      "seed": 733,
+      "mode": "off",
+      "info": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-direct-planes\\run-flat-1\\case-15.tif",
+        "bytes": 361851,
+        "file_sha256": "8ba43da97041580edfa903e438583542298fa90906b53212aa9394f12eee76df",
+        "pixel_sha256": "ff49b512dad1e2ae21865355dea89893b6cea63673149ad04dddb1b7867c41ab",
+        "width": 284,
+        "height": 212,
+        "channels": 3,
+        "dtype": "uint16",
+        "orientation": 1,
+        "icc": "absent",
+        "transfer_tags": "absent",
+        "image_description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+        "tag_codes": [
+          256,
+          257,
+          258,
+          259,
+          262,
+          270,
+          273,
+          277,
+          278,
+          279,
+          282,
+          283,
+          296,
+          305,
+          317,
+          339
+        ],
+        "rail_zero_by_channel": [
+          0,
+          0,
+          0
+        ],
+        "rail_max_by_channel": [
+          0,
+          0,
+          0
+        ],
+        "software": "strehl 0.0.0"
+      }
+    },
+    {
+      "scene": "flat",
+      "seed": 733,
+      "mode": "rounded",
+      "info": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-direct-planes\\run-flat-1\\case-16.tif",
+        "bytes": 361851,
+        "file_sha256": "8ba43da97041580edfa903e438583542298fa90906b53212aa9394f12eee76df",
+        "pixel_sha256": "ff49b512dad1e2ae21865355dea89893b6cea63673149ad04dddb1b7867c41ab",
+        "width": 284,
+        "height": 212,
+        "channels": 3,
+        "dtype": "uint16",
+        "orientation": 1,
+        "icc": "absent",
+        "transfer_tags": "absent",
+        "image_description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+        "tag_codes": [
+          256,
+          257,
+          258,
+          259,
+          262,
+          270,
+          273,
+          277,
+          278,
+          279,
+          282,
+          283,
+          296,
+          305,
+          317,
+          339
+        ],
+        "rail_zero_by_channel": [
+          0,
+          0,
+          0
+        ],
+        "rail_max_by_channel": [
+          0,
+          0,
+          0
+        ],
+        "software": "strehl 0.0.0"
+      }
+    },
+    {
+      "scene": "flat",
+      "seed": 733,
+      "mode": "float",
+      "info": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-direct-planes\\run-flat-1\\case-17.tif",
+        "bytes": 361851,
+        "file_sha256": "bf708c566b8aa391619baca0fb72c156c9c4930a9fef7e5b0d0d9d0bde05cf97",
+        "pixel_sha256": "d5bbdba5a1c5009cc6304582850e6398e1eb6fb6be0a8a9daf8d24c84505b62e",
+        "width": 284,
+        "height": 212,
+        "channels": 3,
+        "dtype": "uint16",
+        "orientation": 1,
+        "icc": "absent",
+        "transfer_tags": "absent",
+        "image_description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+        "tag_codes": [
+          256,
+          257,
+          258,
+          259,
+          262,
+          270,
+          273,
+          277,
+          278,
+          279,
+          282,
+          283,
+          296,
+          305,
+          317,
+          339
+        ],
+        "rail_zero_by_channel": [
+          0,
+          0,
+          0
+        ],
+        "rail_max_by_channel": [
+          0,
+          0,
+          0
+        ],
+        "software": "strehl 0.0.0"
+      }
+    },
+    {
+      "scene": "flat",
+      "seed": 739,
+      "mode": "off",
+      "info": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-direct-planes\\run-flat-1\\case-18.tif",
+        "bytes": 361851,
+        "file_sha256": "7347d58dc2c7a8a34f00715d291e7eae441b8574c4d8e78dec570b0f563cfd3e",
+        "pixel_sha256": "3c86828e21272520376b53d9fd745cec799410ed9c1af8414069e912dc62fa21",
+        "width": 284,
+        "height": 212,
+        "channels": 3,
+        "dtype": "uint16",
+        "orientation": 1,
+        "icc": "absent",
+        "transfer_tags": "absent",
+        "image_description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+        "tag_codes": [
+          256,
+          257,
+          258,
+          259,
+          262,
+          270,
+          273,
+          277,
+          278,
+          279,
+          282,
+          283,
+          296,
+          305,
+          317,
+          339
+        ],
+        "rail_zero_by_channel": [
+          0,
+          0,
+          0
+        ],
+        "rail_max_by_channel": [
+          0,
+          0,
+          0
+        ],
+        "software": "strehl 0.0.0"
+      }
+    },
+    {
+      "scene": "flat",
+      "seed": 739,
+      "mode": "rounded",
+      "info": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-direct-planes\\run-flat-1\\case-19.tif",
+        "bytes": 361851,
+        "file_sha256": "7347d58dc2c7a8a34f00715d291e7eae441b8574c4d8e78dec570b0f563cfd3e",
+        "pixel_sha256": "3c86828e21272520376b53d9fd745cec799410ed9c1af8414069e912dc62fa21",
+        "width": 284,
+        "height": 212,
+        "channels": 3,
+        "dtype": "uint16",
+        "orientation": 1,
+        "icc": "absent",
+        "transfer_tags": "absent",
+        "image_description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+        "tag_codes": [
+          256,
+          257,
+          258,
+          259,
+          262,
+          270,
+          273,
+          277,
+          278,
+          279,
+          282,
+          283,
+          296,
+          305,
+          317,
+          339
+        ],
+        "rail_zero_by_channel": [
+          0,
+          0,
+          0
+        ],
+        "rail_max_by_channel": [
+          0,
+          0,
+          0
+        ],
+        "software": "strehl 0.0.0"
+      }
+    },
+    {
+      "scene": "flat",
+      "seed": 739,
+      "mode": "float",
+      "info": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-direct-planes\\run-flat-1\\case-20.tif",
+        "bytes": 361851,
+        "file_sha256": "4d98237860e658762c90cdad4aa1e2a9a9397cc05153d227355bb2b8c6103981",
+        "pixel_sha256": "0e399327bce6be8857290941c0206b34e152fced49f4f95d64e48c8a621bf7e0",
+        "width": 284,
+        "height": 212,
+        "channels": 3,
+        "dtype": "uint16",
+        "orientation": 1,
+        "icc": "absent",
+        "transfer_tags": "absent",
+        "image_description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+        "tag_codes": [
+          256,
+          257,
+          258,
+          259,
+          262,
+          270,
+          273,
+          277,
+          278,
+          279,
+          282,
+          283,
+          296,
+          305,
+          317,
+          339
+        ],
+        "rail_zero_by_channel": [
+          0,
+          0,
+          0
+        ],
+        "rail_max_by_channel": [
+          0,
+          0,
+          0
+        ],
+        "software": "strehl 0.0.0"
+      }
+    },
+    {
+      "scene": "flat",
+      "seed": 743,
+      "mode": "off",
+      "info": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-direct-planes\\run-flat-1\\case-21.tif",
+        "bytes": 361851,
+        "file_sha256": "439895ed0256c5a4091eb8a6eab7bd889b5ba4ad15fb918c3fb2af95690c2981",
+        "pixel_sha256": "0d45e88159d90791a8d17da0ac66473d51a005c8f020318186e2b9e7eec01434",
+        "width": 284,
+        "height": 212,
+        "channels": 3,
+        "dtype": "uint16",
+        "orientation": 1,
+        "icc": "absent",
+        "transfer_tags": "absent",
+        "image_description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+        "tag_codes": [
+          256,
+          257,
+          258,
+          259,
+          262,
+          270,
+          273,
+          277,
+          278,
+          279,
+          282,
+          283,
+          296,
+          305,
+          317,
+          339
+        ],
+        "rail_zero_by_channel": [
+          0,
+          0,
+          0
+        ],
+        "rail_max_by_channel": [
+          0,
+          0,
+          0
+        ],
+        "software": "strehl 0.0.0"
+      }
+    },
+    {
+      "scene": "flat",
+      "seed": 743,
+      "mode": "rounded",
+      "info": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-direct-planes\\run-flat-1\\case-22.tif",
+        "bytes": 361851,
+        "file_sha256": "439895ed0256c5a4091eb8a6eab7bd889b5ba4ad15fb918c3fb2af95690c2981",
+        "pixel_sha256": "0d45e88159d90791a8d17da0ac66473d51a005c8f020318186e2b9e7eec01434",
+        "width": 284,
+        "height": 212,
+        "channels": 3,
+        "dtype": "uint16",
+        "orientation": 1,
+        "icc": "absent",
+        "transfer_tags": "absent",
+        "image_description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+        "tag_codes": [
+          256,
+          257,
+          258,
+          259,
+          262,
+          270,
+          273,
+          277,
+          278,
+          279,
+          282,
+          283,
+          296,
+          305,
+          317,
+          339
+        ],
+        "rail_zero_by_channel": [
+          0,
+          0,
+          0
+        ],
+        "rail_max_by_channel": [
+          0,
+          0,
+          0
+        ],
+        "software": "strehl 0.0.0"
+      }
+    },
+    {
+      "scene": "flat",
+      "seed": 743,
+      "mode": "float",
+      "info": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-direct-planes\\run-flat-1\\case-23.tif",
+        "bytes": 361851,
+        "file_sha256": "bb43a47c8ba4783274febff1cfc80198ab6c20d549c0d2bbda4fb07c8b42cb50",
+        "pixel_sha256": "95dd6d8319490c24a4531cd7e93bfc3acb7537c1615d181ab145db6dd8c81171",
+        "width": 284,
+        "height": 212,
+        "channels": 3,
+        "dtype": "uint16",
+        "orientation": 1,
+        "icc": "absent",
+        "transfer_tags": "absent",
+        "image_description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+        "tag_codes": [
+          256,
+          257,
+          258,
+          259,
+          262,
+          270,
+          273,
+          277,
+          278,
+          279,
+          282,
+          283,
+          296,
+          305,
+          317,
+          339
+        ],
+        "rail_zero_by_channel": [
+          0,
+          0,
+          0
+        ],
+        "rail_max_by_channel": [
+          0,
+          0,
+          0
+        ],
+        "software": "strehl 0.0.0"
+      }
+    },
+    {
+      "scene": "flat",
+      "seed": 751,
+      "mode": "off",
+      "info": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-direct-planes\\run-flat-1\\case-24.tif",
+        "bytes": 361851,
+        "file_sha256": "baf9d99beb7917db4ce5bbedb7222008aafeb408892a66a747b8703523f6ad53",
+        "pixel_sha256": "1d869e29d3af99dcb9cadce426ea63e45118ad06cce9fed7d32d095bdf159a7b",
+        "width": 284,
+        "height": 212,
+        "channels": 3,
+        "dtype": "uint16",
+        "orientation": 1,
+        "icc": "absent",
+        "transfer_tags": "absent",
+        "image_description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+        "tag_codes": [
+          256,
+          257,
+          258,
+          259,
+          262,
+          270,
+          273,
+          277,
+          278,
+          279,
+          282,
+          283,
+          296,
+          305,
+          317,
+          339
+        ],
+        "rail_zero_by_channel": [
+          0,
+          0,
+          0
+        ],
+        "rail_max_by_channel": [
+          0,
+          0,
+          0
+        ],
+        "software": "strehl 0.0.0"
+      }
+    },
+    {
+      "scene": "flat",
+      "seed": 751,
+      "mode": "rounded",
+      "info": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-direct-planes\\run-flat-1\\case-25.tif",
+        "bytes": 361851,
+        "file_sha256": "baf9d99beb7917db4ce5bbedb7222008aafeb408892a66a747b8703523f6ad53",
+        "pixel_sha256": "1d869e29d3af99dcb9cadce426ea63e45118ad06cce9fed7d32d095bdf159a7b",
+        "width": 284,
+        "height": 212,
+        "channels": 3,
+        "dtype": "uint16",
+        "orientation": 1,
+        "icc": "absent",
+        "transfer_tags": "absent",
+        "image_description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+        "tag_codes": [
+          256,
+          257,
+          258,
+          259,
+          262,
+          270,
+          273,
+          277,
+          278,
+          279,
+          282,
+          283,
+          296,
+          305,
+          317,
+          339
+        ],
+        "rail_zero_by_channel": [
+          0,
+          0,
+          0
+        ],
+        "rail_max_by_channel": [
+          0,
+          0,
+          0
+        ],
+        "software": "strehl 0.0.0"
+      }
+    },
+    {
+      "scene": "flat",
+      "seed": 751,
+      "mode": "float",
+      "info": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-direct-planes\\run-flat-1\\case-26.tif",
+        "bytes": 361851,
+        "file_sha256": "fa2881edeb24758689588d0717ef3afaf5402142004c033e4218a6243b8123f1",
+        "pixel_sha256": "e4e35602c20b19e428fd17a77b36338f1bb19298121c0a9d98338bdb5c22f7c8",
+        "width": 284,
+        "height": 212,
+        "channels": 3,
+        "dtype": "uint16",
+        "orientation": 1,
+        "icc": "absent",
+        "transfer_tags": "absent",
+        "image_description": "Linear camera-native RGB (sensor primaries), NO colour matrix, no transfer curve. THIS IS NOT sRGB -- do not treat it as such. This is the measurement output. White balance: as-shot per-channel gains, green = 1, applied AFTER black subtraction and normalisation by (white - black), and AFTER the noise model, which is calibrated in raw DN before any gain.",
+        "tag_codes": [
+          256,
+          257,
+          258,
+          259,
+          262,
+          270,
+          273,
+          277,
+          278,
+          279,
+          282,
+          283,
+          296,
+          305,
+          317,
+          339
+        ],
+        "rail_zero_by_channel": [
+          0,
+          0,
+          0
+        ],
+        "rail_max_by_channel": [
+          0,
+          0,
+          0
+        ],
+        "software": "strehl 0.0.0"
+      }
+    }
+  ],
+  "reader_sha256": "d292c8623827eb960bc28dc341398c7e164f5c14cd31af74663ee24c1ff5b5dd",
+  "plan_checker_sha256": "eccbd41383ebcb46d865aef6745b39cafe91dab9294ea109b3a83981388fa80b",
+  "failure_directions": [
+    "Variance and noisy MSE can reward blur or biased flattening; fixed noise-off and repeat-mean fidelity must also pass.",
+    "RMSE averages can hide local outliers; nearest-rank p99.9 and literal max are separate nonregression bars.",
+    "Amplitude alone can reward sharpening and miss phase shifts; fixed complex-wave error compares both amplitude and phase.",
+    "A TIFF identity cannot establish collapsed f32 identity; the latter is compared from direct pre-writer evidence."
+  ],
+  "scope": "MEASURED under saved synthetic photon model; no physical calibration, native speed or SOTA claim",
+  "color_wb_convention": "producer exact-rational inverse WB versus consumed f32 gains retains a small finite-arithmetic discrepancy",
+  "plane_materiality_floor": "0.400776 DN is inherited engineering ranking floor, not rigorous target-error propagation"
+}

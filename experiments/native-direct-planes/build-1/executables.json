@@ -1,0 +1,12 @@
+{
+  "strehl": {
+    "path": "experiments\\native-direct-planes\\build-1\\strehl.exe",
+    "bytes": 10225664,
+    "sha256": "95e5c82d8940e87dc2e5e790a71aea4f5def69b03abbf1478a93b80087ca0236"
+  },
+  "cli-tests": {
+    "path": "experiments\\native-direct-planes\\build-1\\cli-tests.exe",
+    "bytes": 13274624,
+    "sha256": "a9dfbaa53f13bb777ad8c63d910883ce68b9e13e99cb22f08028f6b1b69bcd40"
+  }
+}

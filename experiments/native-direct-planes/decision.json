@@ -1,0 +1,11 @@
+{
+  "status": "CLOSED_PRECISION_NOT_DEMONSTRATED",
+  "rounded": "Verified exact on11 tiny whole-consumer pairs and5 native rendered outputs; modest1.000\u20131.273%same-binary wall improvement. Retain experimental opt-in; default unchanged.",
+  "precision": "Fails6of15 fixed flat components with small changes; no material1% benefit and all variance changes within2jackknifeSE. Do not claim visible/significant degradation. Float detail not rendered.",
+  "primary_tiffs": 31,
+  "observer_placebos": 1,
+  "plan_render_processes": 64,
+  "aggregate_child_cpu_seconds": 3.671875,
+  "next": "native-product-comparison",
+  "rerun": false
+}

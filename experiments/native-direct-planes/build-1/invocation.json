@@ -1,0 +1,87 @@
+{
+  "command": [
+    "cargo",
+    "test",
+    "-p",
+    "strehl-cli",
+    "--bin",
+    "strehl",
+    "--test",
+    "byte-freeze",
+    "--no-run",
+    "--release",
+    "--features",
+    "native-pyramid-profile,native-direct-planes",
+    "--jobs",
+    "2",
+    "--target-dir",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\target\\native-pyramid-profile",
+    "--message-format=json-render-diagnostics",
+    "--locked",
+    "--offline"
+  ],
+  "revision": "f290b6145c091b68482b6cbb76fcc1533331c7bf",
+  "environment_overrides": {
+    "RAYON_NUM_THREADS": "8",
+    "CARGO_INCREMENTAL": "0"
+  },
+  "removed_environment": [],
+  "source_files": [
+    {
+      "path": "crates\\strehl-cli\\Cargo.toml",
+      "bytes": 1382,
+      "sha256": "f871371829b9fd8aec2e7bd9bddda490d126d581ce0df7cd27be5c016886e696"
+    },
+    {
+      "path": "crates\\strehl-cli\\src\\merge_cmd.rs",
+      "bytes": 432240,
+      "sha256": "1bcc38bca2de1cc8cc754d4da81ba40b44c5979c4a55b1ef452adf588571d4cb"
+    },
+    {
+      "path": "experiments\\native-pyramid-profile\\implementation.rs",
+      "bytes": 12621,
+      "sha256": "85362dd472a95d64704c80235159abb188573914ac3cf9e7ac3b0fa16c029c69"
+    },
+    {
+      "path": "experiments\\native-pyramid-profile\\build.py",
+      "bytes": 4099,
+      "sha256": "622c0fb3d4a54f2ea32da455d44c73c06cb18008a9fe709208f1308a6101d5b3"
+    },
+    {
+      "path": "crates\\strehl-cli\\src\\merge_cmd\\gatefloor.rs",
+      "bytes": 27449,
+      "sha256": "93c473e3fa9ce33fa7528343ee24119544afde720e2d34b0daa9a42e251e30c2"
+    },
+    {
+      "path": "crates\\strehl-cli\\src\\align_cmd.rs",
+      "bytes": 128050,
+      "sha256": "ba4ec58b969d13f9fe611558423cac71ce223b04ed5111edfbae303e0435c2de"
+    },
+    {
+      "path": "crates\\strehl-core\\src\\demosaic.rs",
+      "bytes": 52206,
+      "sha256": "17cca911c2e756f3224deb1520379a1994c58375d3bcb5f4c91fcf9dc6fbe514"
+    },
+    {
+      "path": "experiments\\native-direct-planes\\implementation.rs",
+      "bytes": 4659,
+      "sha256": "377c3578dd39a547e60df67a2854ec8d52bf762666a9528d0f80d827f450084c"
+    },
+    {
+      "path": "experiments\\native-direct-planes\\independent-tests.rs",
+      "bytes": 11957,
+      "sha256": "efc70237e6818411bee8cae8f04b3abc833568643694504891df0f73447207ad"
+    },
+    {
+      "path": "experiments\\native-parallel-writeback\\independent-tests.rs",
+      "bytes": 9426,
+      "sha256": "b4cd15fd4940f19003f752956dbf03b68ccc6c73495de901ff46947056a53cd0"
+    },
+    {
+      "path": "experiments\\native-green-probe\\independent-tests.rs",
+      "bytes": 14153,
+      "sha256": "05a3d6472f19b1e2c50768e63e602d4cb2de659a52050971bef61f0efafcf0a6"
+    }
+  ],
+  "scope": "release compile only; existing integration test is compiled to obtain CLI artifact and is not executed"
+}
