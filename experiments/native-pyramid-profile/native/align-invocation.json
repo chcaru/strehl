@@ -1,0 +1,19 @@
+{
+  "command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-pyramid-profile\\build-1\\strehl.exe",
+    "align",
+    "D:\\personal\\macro\\112MSDCF",
+    "--limit",
+    "8",
+    "--threads",
+    "8",
+    "--resampler",
+    "catmull-rom",
+    "--out",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-pyramid-profile\\native\\112-eight.warpmap.json"
+  ],
+  "environment_overrides": {
+    "RAYON_NUM_THREADS": "8"
+  },
+  "removed_environment": []
+}

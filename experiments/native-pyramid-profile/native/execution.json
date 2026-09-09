@@ -1,0 +1,20 @@
+{
+  "revision": "90fbbb3b5ae9858e06ad5213b9d0e58cf7fd4a4f",
+  "source": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-pyramid-profile\\run-native.py",
+    "sha256": "755838e8493989b6710c4cc9dc6299c3c5c4195060c2f774c4ce71fb1ff27bb9",
+    "bytes": 5165
+  },
+  "plan": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-pyramid-profile\\native-plan-1.json",
+    "sha256": "947b7fba499cf493d19c1c73f1374693256517983909b84e262d4312958ccf29",
+    "bytes": 4482
+  },
+  "executable": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-pyramid-profile\\build-1\\strehl.exe",
+    "sha256": "f8b63d8715c0287c672f0804e8a2f618a6f7c48b10ba9501cf30303fb2c8f84e",
+    "bytes": 10135040
+  },
+  "physical_memory_bytes": 66094223360,
+  "logical_cpu_count": 32
+}

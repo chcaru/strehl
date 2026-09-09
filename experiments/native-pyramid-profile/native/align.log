@@ -1,0 +1,19 @@
+stack 112MSDCF: 8 frames, digest 5a10ff5ae055e578
+  reference frame 4 (middle, default)
+2026-09-09T11:23:01.026331Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+2026-09-09T11:23:01.026331Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+2026-09-09T11:23:01.026337Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+2026-09-09T11:23:01.026332Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+2026-09-09T11:23:01.026331Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+2026-09-09T11:23:01.026335Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+2026-09-09T11:23:01.026331Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+2026-09-09T11:23:01.026336Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  decoded 8 frames in 0.3 s, plane 3516x2344
+  measured 17/17 edges in 0.8 s (0.0% refused)
+align: track prior on, lambda=1 huber=Some(1.0) px
+
+  placed 8/8 frames, refused 0
+  total corner drift frame 0 -> 7: 9.684 plane px
+  held-out corner error: NOT MEASURED (too few edges)
+  cycle-consistency floor: 0.186 plane px
+  wrote C:\dev\blog\death-of-software\projects\strehl\experiments\native-pyramid-profile\native\112-eight.warpmap.json

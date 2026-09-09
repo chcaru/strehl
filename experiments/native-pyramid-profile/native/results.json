@@ -1,0 +1,331 @@
+{
+  "scope": "Eight-frame development prefix, current algorithm at native resolution; no quality, deep-stack, cold-cache or comparator claim.",
+  "alignment_process_wall_seconds": 1.2970000000059372,
+  "renders": [
+    {
+      "label": "1-off",
+      "mode": "off",
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-pyramid-profile\\native\\1-off.tiff",
+        "sha256": "ba96c63dd56f2729ba2ed25fedc19b291a4a78f9992f6823ce501a1df2a8bdc6",
+        "bytes": 197798267
+      },
+      "decoded": {
+        "shape": [
+          4688,
+          7032,
+          3
+        ],
+        "dtype": "uint16",
+        "bytes": 197796096,
+        "minimum": 0,
+        "maximum": 7920,
+        "sha256": "d5fd6969b77fc94334995dea771e434f65f2b3cf782e1d683ca2872639595a1a"
+      },
+      "process_wall_seconds": 9.85899999999674,
+      "job_cpu_seconds": 42.0625,
+      "peak_job_commit_bytes": 3070574592,
+      "host": {
+        "interval_wall_seconds": 9.855714399993303,
+        "busy_fraction": 0.22423038728897715,
+        "all_core_busy_seconds": 70.5625,
+        "scope": "Whole-machine sampling enclosing child helper, not exclusive competing-process accounting."
+      },
+      "profile": null
+    },
+    {
+      "label": "2-on",
+      "mode": "on",
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-pyramid-profile\\native\\2-on.tiff",
+        "sha256": "ba96c63dd56f2729ba2ed25fedc19b291a4a78f9992f6823ce501a1df2a8bdc6",
+        "bytes": 197798267
+      },
+      "decoded": {
+        "shape": [
+          4688,
+          7032,
+          3
+        ],
+        "dtype": "uint16",
+        "bytes": 197796096,
+        "minimum": 0,
+        "maximum": 7920,
+        "sha256": "d5fd6969b77fc94334995dea771e434f65f2b3cf782e1d683ca2872639595a1a"
+      },
+      "process_wall_seconds": 9.452999999994063,
+      "job_cpu_seconds": 40.203125,
+      "peak_job_commit_bytes": 3068960768,
+      "host": {
+        "interval_wall_seconds": 9.449477200003457,
+        "busy_fraction": 0.22383435741209273,
+        "all_core_busy_seconds": 67.734375,
+        "scope": "Whole-machine sampling enclosing child helper, not exclusive competing-process accounting."
+      },
+      "profile": {
+        "mode": "on",
+        "outer": {
+          "alignment_wall_seconds": 0.0002832,
+          "collapse_write_wall_seconds": 0.4018163,
+          "fold_wall_seconds": 8.8671422,
+          "prologue_wall_seconds": 0.1054105,
+          "total_before_profile_publication": 9.3808224
+        },
+        "phases": [
+          {
+            "calls": 8,
+            "phase": "decode-validate",
+            "wall_nanoseconds": 508639800,
+            "wall_seconds": 0.5086398000000001
+          },
+          {
+            "calls": 0,
+            "phase": "defect",
+            "wall_nanoseconds": 0,
+            "wall_seconds": 0.0
+          },
+          {
+            "calls": 8,
+            "phase": "gather",
+            "wall_nanoseconds": 2201804600,
+            "wall_seconds": 2.2018046
+          },
+          {
+            "calls": 8,
+            "phase": "probe",
+            "wall_nanoseconds": 4889226600,
+            "wall_seconds": 4.889226600000001
+          },
+          {
+            "calls": 8,
+            "phase": "extract-luma",
+            "wall_nanoseconds": 104442300,
+            "wall_seconds": 0.1044423
+          },
+          {
+            "calls": 8,
+            "phase": "variance",
+            "wall_nanoseconds": 11378400,
+            "wall_seconds": 0.0113784
+          },
+          {
+            "calls": 8,
+            "phase": "pyramid-add",
+            "wall_nanoseconds": 666173100,
+            "wall_seconds": 0.6661731000000001
+          }
+        ],
+        "schema": "native-pyramid-phase-profile-v1",
+        "scope": "Wall intervals only, not CPU. Decode/extract phases cover load_frame consumers including optional confidence passes. Variance/add cover BandWorker folds. No startup, plan/worker allocation, reduction/absorb, beta bookkeeping or final publication in leaf sum. Current canonical fold is serial; concurrency would make a leaf sum worker-time rather than elapsed pipeline time.",
+        "summed_phase_wall_seconds": 8.381664800000001
+      }
+    },
+    {
+      "label": "3-placebo",
+      "mode": "placebo",
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-pyramid-profile\\native\\3-placebo.tiff",
+        "sha256": "ba96c63dd56f2729ba2ed25fedc19b291a4a78f9992f6823ce501a1df2a8bdc6",
+        "bytes": 197798267
+      },
+      "decoded": {
+        "shape": [
+          4688,
+          7032,
+          3
+        ],
+        "dtype": "uint16",
+        "bytes": 197796096,
+        "minimum": 0,
+        "maximum": 7920,
+        "sha256": "d5fd6969b77fc94334995dea771e434f65f2b3cf782e1d683ca2872639595a1a"
+      },
+      "process_wall_seconds": 9.281000000002678,
+      "job_cpu_seconds": 39.5625,
+      "peak_job_commit_bytes": 3068661760,
+      "host": {
+        "interval_wall_seconds": 9.282346199994208,
+        "busy_fraction": 0.21989060692121595,
+        "all_core_busy_seconds": 65.328125,
+        "scope": "Whole-machine sampling enclosing child helper, not exclusive competing-process accounting."
+      },
+      "profile": {
+        "mode": "placebo",
+        "outer": {
+          "alignment_wall_seconds": 0.0002664,
+          "collapse_write_wall_seconds": 0.3984779,
+          "fold_wall_seconds": 8.7169282,
+          "prologue_wall_seconds": 0.1047255,
+          "total_before_profile_publication": 9.2259531
+        },
+        "phases": [
+          {
+            "calls": 8,
+            "phase": "decode-validate",
+            "wall_nanoseconds": null,
+            "wall_seconds": null
+          },
+          {
+            "calls": 0,
+            "phase": "defect",
+            "wall_nanoseconds": null,
+            "wall_seconds": null
+          },
+          {
+            "calls": 8,
+            "phase": "gather",
+            "wall_nanoseconds": null,
+            "wall_seconds": null
+          },
+          {
+            "calls": 8,
+            "phase": "probe",
+            "wall_nanoseconds": null,
+            "wall_seconds": null
+          },
+          {
+            "calls": 8,
+            "phase": "extract-luma",
+            "wall_nanoseconds": null,
+            "wall_seconds": null
+          },
+          {
+            "calls": 8,
+            "phase": "variance",
+            "wall_nanoseconds": null,
+            "wall_seconds": null
+          },
+          {
+            "calls": 8,
+            "phase": "pyramid-add",
+            "wall_nanoseconds": null,
+            "wall_seconds": null
+          }
+        ],
+        "schema": "native-pyramid-phase-profile-v1",
+        "scope": "Wall intervals only, not CPU. Decode/extract phases cover load_frame consumers including optional confidence passes. Variance/add cover BandWorker folds. No startup, plan/worker allocation, reduction/absorb, beta bookkeeping or final publication in leaf sum. Current canonical fold is serial; concurrency would make a leaf sum worker-time rather than elapsed pipeline time.",
+        "summed_phase_wall_seconds": null
+      }
+    },
+    {
+      "label": "4-on",
+      "mode": "on",
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-pyramid-profile\\native\\4-on.tiff",
+        "sha256": "ba96c63dd56f2729ba2ed25fedc19b291a4a78f9992f6823ce501a1df2a8bdc6",
+        "bytes": 197798267
+      },
+      "decoded": {
+        "shape": [
+          4688,
+          7032,
+          3
+        ],
+        "dtype": "uint16",
+        "bytes": 197796096,
+        "minimum": 0,
+        "maximum": 7920,
+        "sha256": "d5fd6969b77fc94334995dea771e434f65f2b3cf782e1d683ca2872639595a1a"
+      },
+      "process_wall_seconds": 9.35899999999674,
+      "job_cpu_seconds": 40.375,
+      "peak_job_commit_bytes": 3070365696,
+      "host": {
+        "interval_wall_seconds": 9.353326500000549,
+        "busy_fraction": 0.21795339623625085,
+        "all_core_busy_seconds": 65.328125,
+        "scope": "Whole-machine sampling enclosing child helper, not exclusive competing-process accounting."
+      },
+      "profile": {
+        "mode": "on",
+        "outer": {
+          "alignment_wall_seconds": 0.0002721,
+          "collapse_write_wall_seconds": 0.4192341,
+          "fold_wall_seconds": 8.7690654,
+          "prologue_wall_seconds": 0.1002182,
+          "total_before_profile_publication": 9.2940493
+        },
+        "phases": [
+          {
+            "calls": 8,
+            "phase": "decode-validate",
+            "wall_nanoseconds": 508225700,
+            "wall_seconds": 0.5082257
+          },
+          {
+            "calls": 0,
+            "phase": "defect",
+            "wall_nanoseconds": 0,
+            "wall_seconds": 0.0
+          },
+          {
+            "calls": 8,
+            "phase": "gather",
+            "wall_nanoseconds": 2097693500,
+            "wall_seconds": 2.0976935
+          },
+          {
+            "calls": 8,
+            "phase": "probe",
+            "wall_nanoseconds": 4865533600,
+            "wall_seconds": 4.8655336
+          },
+          {
+            "calls": 8,
+            "phase": "extract-luma",
+            "wall_nanoseconds": 117828000,
+            "wall_seconds": 0.117828
+          },
+          {
+            "calls": 8,
+            "phase": "variance",
+            "wall_nanoseconds": 11568100,
+            "wall_seconds": 0.011568100000000001
+          },
+          {
+            "calls": 8,
+            "phase": "pyramid-add",
+            "wall_nanoseconds": 669526100,
+            "wall_seconds": 0.6695261
+          }
+        ],
+        "schema": "native-pyramid-phase-profile-v1",
+        "scope": "Wall intervals only, not CPU. Decode/extract phases cover load_frame consumers including optional confidence passes. Variance/add cover BandWorker folds. No startup, plan/worker allocation, reduction/absorb, beta bookkeeping or final publication in leaf sum. Current canonical fold is serial; concurrency would make a leaf sum worker-time rather than elapsed pipeline time.",
+        "summed_phase_wall_seconds": 8.270375
+      }
+    },
+    {
+      "label": "5-off",
+      "mode": "off",
+      "file": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-pyramid-profile\\native\\5-off.tiff",
+        "sha256": "ba96c63dd56f2729ba2ed25fedc19b291a4a78f9992f6823ce501a1df2a8bdc6",
+        "bytes": 197798267
+      },
+      "decoded": {
+        "shape": [
+          4688,
+          7032,
+          3
+        ],
+        "dtype": "uint16",
+        "bytes": 197796096,
+        "minimum": 0,
+        "maximum": 7920,
+        "sha256": "d5fd6969b77fc94334995dea771e434f65f2b3cf782e1d683ca2872639595a1a"
+      },
+      "process_wall_seconds": 9.312000000005355,
+      "job_cpu_seconds": 39.71875,
+      "peak_job_commit_bytes": 3069362176,
+      "host": {
+        "interval_wall_seconds": 9.30540359999577,
+        "busy_fraction": 0.21720622240908136,
+        "all_core_busy_seconds": 64.578125,
+        "scope": "Whole-machine sampling enclosing child helper, not exclusive competing-process accounting."
+      },
+      "profile": null
+    }
+  ],
+  "all_whole_tiff_bytes_equal": true,
+  "all_decoded_pixels_equal": true
+}

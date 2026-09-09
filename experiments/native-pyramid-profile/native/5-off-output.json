@@ -1,0 +1,31 @@
+{
+  "label": "5-off",
+  "mode": "off",
+  "file": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-pyramid-profile\\native\\5-off.tiff",
+    "sha256": "ba96c63dd56f2729ba2ed25fedc19b291a4a78f9992f6823ce501a1df2a8bdc6",
+    "bytes": 197798267
+  },
+  "decoded": {
+    "shape": [
+      4688,
+      7032,
+      3
+    ],
+    "dtype": "uint16",
+    "bytes": 197796096,
+    "minimum": 0,
+    "maximum": 7920,
+    "sha256": "d5fd6969b77fc94334995dea771e434f65f2b3cf782e1d683ca2872639595a1a"
+  },
+  "process_wall_seconds": 9.312000000005355,
+  "job_cpu_seconds": 39.71875,
+  "peak_job_commit_bytes": 3069362176,
+  "host": {
+    "interval_wall_seconds": 9.30540359999577,
+    "busy_fraction": 0.21720622240908136,
+    "all_core_busy_seconds": 64.578125,
+    "scope": "Whole-machine sampling enclosing child helper, not exclusive competing-process accounting."
+  },
+  "profile": null
+}

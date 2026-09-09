@@ -1,0 +1,12 @@
+{
+  "strehl": {
+    "path": "experiments\\native-pyramid-profile\\build-1\\strehl.exe",
+    "bytes": 10135040,
+    "sha256": "f8b63d8715c0287c672f0804e8a2f618a6f7c48b10ba9501cf30303fb2c8f84e"
+  },
+  "cli-tests": {
+    "path": "experiments\\native-pyramid-profile\\build-1\\cli-tests.exe",
+    "bytes": 13025792,
+    "sha256": "796596e97f0ae65001dce88cf06188058d7ef78e1e6712fe7fc9b6c621088f1e"
+  }
+}

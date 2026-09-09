@@ -1,0 +1,24 @@
+strehl-warpmap 1
+# a warp sidecar: per-frame placements, reference -> frame.
+# `a_re a_im b_re b_im` are f64 bit patterns; the trailing
+# decimals are a human aid and are NOT parsed.
+stack-name 112MSDCF
+stack-digest 5a10ff5ae055e578
+frames 8
+plane 3516x2344
+reference 4
+strategy S3-ba-unit
+resampler catmull-rom
+heldout-px none
+cycle-floor-px 3fc7d9f23f08e701 # 0.1863
+note strehl align, M86b, spans [1, 2, 4, 8, 16, 32, 64, 96, 128]
+# idx state a_re a_im b_re b_im | scale-1, rot, dx, dy
+0 placed 3ff008e017b26b59 bf2aa7f98c4f33ed bfff4540ed66d395 bfd6dfb030449792 # g=+2.166836e-3 rot=-2.033703e-4 dx=-1.9544 dy=-0.3574
+1 placed 3ff0067adcd86a95 bf136e44dcf02db2 bff119fe3d06232e bfd355bb5719caad # g=+1.582015e-3 rot=-7.412238e-5 dx=-1.0688 dy=-0.3021
+2 placed 3ff0044882eddd30 beff0e6f5c38d758 bfe55c579a61fbe0 bfc6a0d61fa9df01 # g=+1.045715e-3 rot=-2.961768e-5 dx=-0.6675 dy=-0.1768
+3 placed 3ff00236dbcf839c bee6363c4fb295e0 bfd7d925509b0000 bfa106db9bd15bc8 # g=+5.405985e-4 rot=-1.059144e-5 dx=-0.3726 dy=-0.0333
+4 placed 3ff0000000000000 0000000000000000 bcb0000000000000 0000000000000000 # g=+0.000000e0 rot=+0.000000e0 dx=-0.0000 dy=+0.0000
+5 placed 3feffbbc8cb00bb3 bef0a98777cd1370 bfd4fbbaeaebc3dc 3fc1da402bee9d96 # g=-5.204441e-4 rot=-1.589033e-5 dx=-0.3279 dy=+0.1395
+6 placed 3feff79257013fab 3eebc6d9ae543c30 bfdfed38f76434e4 3fdc51130ad29f56 # g=-1.028853e-3 rot=+1.324499e-5 dx=-0.4989 dy=+0.4424
+7 placed 3feff3547d600135 3eef671e76178570 bfddfb0b299dd234 3fe83b7ff2ee74ba # g=-1.546626e-3 rot=+1.497403e-5 dx=-0.4684 dy=+0.7573
+end 8

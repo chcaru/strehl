@@ -1,0 +1,140 @@
+{
+  "actual_delay_calls": 3,
+  "configured_bands": 7,
+  "consumer_end_ns": 93044200,
+  "consumer_start_ns": 225100,
+  "f32": {
+    "bytes": 49152,
+    "path": "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-pyramid-profile\\smoke-delay\\output.f32",
+    "sha256": "0f5b4f6cf951dcd85e7a297755efc6e09ba21669388b0ffdb7c832a10fb58aca"
+  },
+  "folds": 3,
+  "label": "delay",
+  "level_count": 3,
+  "profile": {
+    "mode": "on",
+    "phases": [
+      {
+        "calls": 3,
+        "phase": "decode-validate",
+        "wall_nanoseconds": 75915600,
+        "wall_seconds": 0.0759156
+      },
+      {
+        "calls": 0,
+        "phase": "defect",
+        "wall_nanoseconds": 0,
+        "wall_seconds": 0.0
+      },
+      {
+        "calls": 0,
+        "phase": "gather",
+        "wall_nanoseconds": 0,
+        "wall_seconds": 0.0
+      },
+      {
+        "calls": 0,
+        "phase": "probe",
+        "wall_nanoseconds": 0,
+        "wall_seconds": 0.0
+      },
+      {
+        "calls": 3,
+        "phase": "extract-luma",
+        "wall_nanoseconds": 231600,
+        "wall_seconds": 0.00023160000000000002
+      },
+      {
+        "calls": 3,
+        "phase": "variance",
+        "wall_nanoseconds": 95400,
+        "wall_seconds": 0.0000954
+      },
+      {
+        "calls": 3,
+        "phase": "pyramid-add",
+        "wall_nanoseconds": 2287400,
+        "wall_seconds": 0.0022874
+      }
+    ],
+    "schema": "native-pyramid-phase-profile-v1",
+    "scope": "Wall intervals only, not CPU. Decode/extract phases cover load_frame consumers including optional confidence passes. Variance/add cover BandWorker folds. No startup, plan/worker allocation, reduction/absorb, beta bookkeeping or final publication in leaf sum. Current canonical fold is serial; concurrency would make a leaf sum worker-time rather than elapsed pipeline time.",
+    "summed_phase_wall_seconds": 0.07852999999999999,
+    "trace": [
+      {
+        "end_ns": 38479700,
+        "phase": "decode-validate",
+        "start_ns": 13044700
+      },
+      {
+        "end_ns": 38570000,
+        "phase": "extract-luma",
+        "start_ns": 38485200
+      },
+      {
+        "end_ns": 38620200,
+        "phase": "variance",
+        "start_ns": 38578300
+      },
+      {
+        "end_ns": 39722100,
+        "phase": "pyramid-add",
+        "start_ns": 38623400
+      },
+      {
+        "end_ns": 64994200,
+        "phase": "decode-validate",
+        "start_ns": 39724100
+      },
+      {
+        "end_ns": 65072300,
+        "phase": "extract-luma",
+        "start_ns": 64996600
+      },
+      {
+        "end_ns": 65095100,
+        "phase": "variance",
+        "start_ns": 65075300
+      },
+      {
+        "end_ns": 65713700,
+        "phase": "pyramid-add",
+        "start_ns": 65096300
+      },
+      {
+        "end_ns": 90925700,
+        "phase": "decode-validate",
+        "start_ns": 65715200
+      },
+      {
+        "end_ns": 91001500,
+        "phase": "extract-luma",
+        "start_ns": 90930400
+      },
+      {
+        "end_ns": 91039300,
+        "phase": "variance",
+        "start_ns": 91005600
+      },
+      {
+        "end_ns": 91614400,
+        "phase": "pyramid-add",
+        "start_ns": 91043100
+      }
+    ]
+  },
+  "requested_delay_ms_per_decode": 25,
+  "schema": "native-pyramid-profile-smoke-v1",
+  "scope": "No-map generated-frame timing/byte-identity control; no RAW decode or native throughput claim. Unused defect/gather/probe are not powered by this fixture.",
+  "source_calls": [
+    1,
+    1,
+    1
+  ],
+  "tiff": {
+    "bytes": 74331,
+    "path": "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-pyramid-profile\\smoke-delay\\output.tiff",
+    "sha256": "1f993975da17149e3b153650d69765ef04c56a3e9a4751801660906fa7b5404a"
+  },
+  "whole_consumer_wall_seconds": 0.0928189
+}

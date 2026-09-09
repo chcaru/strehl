@@ -1,0 +1,21 @@
+{
+  "command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-pyramid-profile\\build-1\\cli-tests.exe",
+    "merge_cmd::native_pyramid_profile::tests::phase_timer_smoke",
+    "--exact",
+    "--ignored",
+    "--nocapture",
+    "--test-threads=1"
+  ],
+  "environment_overrides": {
+    "RAYON_NUM_THREADS": "4",
+    "STREHL_PYRAMID_PROFILE": "on"
+  },
+  "removed_environment": [],
+  "executable": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-pyramid-profile\\build-1\\cli-tests.exe",
+    "bytes": 13025792,
+    "sha256": "796596e97f0ae65001dce88cf06188058d7ef78e1e6712fe7fc9b6c621088f1e"
+  },
+  "revision": "33c1a03f237b65bbed27b8d5f7346b4b3d9cd857"
+}

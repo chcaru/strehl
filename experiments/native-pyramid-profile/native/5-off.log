@@ -1,0 +1,79 @@
+build           : strehl 0.0.0 (6f425cc3f63c)
+merge backend   : pyramid (--merge)
+2026-09-09T11:23:41.008262Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+strehl stack -- LAPLACIAN MULTI-BAND MERGE (--merge pyramid; THE DEFAULT PATH)
+camera          : ILCE-7CM2
+lateral CA      : CORRECTING, profile "a7c2-fe100gm-2xtc-x4cpl" (gear matched; default on)
+iso             : 500
+levels          : black 512, white 15360
+noise model     : PROVENANCE=Profile -- camera profile at ISO 500. Trustworthy for ranking.
+                  GAIN: anchored by a PHOTON-TRANSFER MEASUREMENT on signal (M25 fact 200,
+                  SYNTHESIS fact 550). The divisor was originally DERIVED by reproducing the
+                  camera's own white level, which checks one relation and is not a PTC; the
+                  PTC now exists and the relation survives it at true gain steps -- the ISO 160
+                  control measures 0.3273 DN/e- against the relation's 0.3663, 10.7% low.
+                  READ NOISE: not photon-transfer measured. DERIVED from dark frames, and below
+                  ISO 400 it carries a shape error `profile.rs` asserts rather than hides.
+                  This is a PROFILE, NOT A PER-BODY CALIBRATION: the constants describe the
+                  camera MODEL and nothing here was fitted from this stack. Below the profile's
+                  base ISO the sensor reads out at base-ISO gain (extended/pull ISO); that floor
+                  is measured, but the ISO at which it starts is not (SYNTHESIS question 126
+                  -- the corpus holds no ISO 64 or 80 capture).
+defect map      : off (STREHL_DEFECT=off)
+frames          : 8 from D:\personal\macro\112MSDCF  (first decode 0.10 s)
+planes          : 3516 x 2344 per CFA plane
+--- the merge ---
+bands           : 7 Laplacian levels + 1 base, coarsest 28 x 19
+selection       : SOFT -- weight = (band power above the noise floor)^exponent, a convex combination.
+                  Sign coherence is free: a convex combination cannot take adjacent
+                  coefficients from opposite-signed frames, which is the ringing a
+                  coefficient-wise argmax produces.
+noise gate      : 2.00 x the modelled band-noise power. Below it, NO frame may win and the
+                  merge averages -- which is the correct estimator when there is no
+                  information, and the only operation that gets below single-frame noise.
+exponent        : 2.00
+per-band exp    : 2 3 4 5 8 8 8   (coarsest -> finest)
+                  sharpness ramps 1.4x per octave toward the fine bands. A wrong pick in a
+                  fine band is one high-frequency coefficient nobody can see; a wrong pick
+                  in a coarse band IS the rim.
+base band       : plain mean across frames
+not applied     : photometric gain, clip census, outlier rejection, halo correction, through-focus
+                  statistics. Those are the --merge estimator path's stages; this arm is the merge only.
+coverage mode   : scale -- as asked, --cover
+alignment       : ON (sidecar-override), reference frame 4, 8 placed / 0 refused, 0.0 s
+  held-out err  : NOT MEASURED   resampler: CatmullRom
+  coverage      : field of view scaled to 0.9947 so that EVERY frame covers every pixel (0.5% of width dropped, then upsampled to keep the output dimensions).
+memory plan     : 4 canonical chunks, 1 reusable frame worker, 1 retained + 1 scratch accumulator, 8 execution threads
+                  CONSTANT in the frame count and reduction order. Chunks run serially; spatial work uses
+                  the execution pool. STREHL_PYRAMID_WORKERS=N changes threads, never arithmetic.
+2026-09-09T11:23:41.297316Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+2026-09-09T11:23:42.221939Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+2026-09-09T11:23:43.181767Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+2026-09-09T11:23:44.176370Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+2026-09-09T11:23:45.360016Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+2026-09-09T11:23:46.435660Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+2026-09-09T11:23:47.578495Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+2026-09-09T11:23:48.668531Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+
+folded          : 8 / 8 frames in 8.7 s (1.09 s per frame, 8 execution threads)
+band noise gain : 0.8898 0.0529 0.0101 0.0024 0.0006 0.0001 0.0000 0.0000
+                  (E[L_k^2] / sigma_0^2, MEASURED on these operators, not derived.)
+measured floor  : 1.0753 0.0495 0.0099 0.0024
+                  x white       : 1.2084 0.9342 0.9815 1.0062
+                  THE FLOOR THE GATE ACTUALLY USED, averaged over 8 warped
+  frames. The line above it is the white-noise constant, which is
+  exact only for an UNWARPED frame; resampling correlates neighbours
+                  and moves the per-band split. Bands past this list kept the constant.
+                  STREHL_GATE_FLOOR=white restores it everywhere.
+averaged        : 97.7% 39.4% 5.8% 0.2% 0.0% 0.0% 0.0% 100.0%
+                  per level, the fraction of coefficients where NO frame cleared the noise
+                  floor and the merge therefore averaged instead of selecting. Near 0%
+                  everywhere would mean the gate is not gating and this is a naive
+                  pyramid stacker.
+
+
+wrote           : C:\dev\blog\death-of-software\projects\strehl\experiments\native-pyramid-profile\native\5-off.tiff (7032 x 4688, 16-bit RGB, linear camera-native RGB, Malvar-He-Cutler demosaic)
+                  Full sensor resolution: every CFA site estimated, one focus
+                  decision per quad. Interpolated -- do not measure resolution on it.
+collapse+write  : 0.4 s
+total           : 9.2 s

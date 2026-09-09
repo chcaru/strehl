@@ -1,0 +1,52 @@
+{
+  "command": [
+    "cargo",
+    "test",
+    "-p",
+    "strehl-cli",
+    "--bin",
+    "strehl",
+    "--test",
+    "byte-freeze",
+    "--no-run",
+    "--release",
+    "--features",
+    "native-pyramid-profile",
+    "--jobs",
+    "2",
+    "--target-dir",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\target\\native-pyramid-profile",
+    "--message-format=json-render-diagnostics",
+    "--locked",
+    "--offline"
+  ],
+  "revision": "6f425cc3f63c84dc83bcbb619e52816cffbb98ee",
+  "environment_overrides": {
+    "RAYON_NUM_THREADS": "8",
+    "CARGO_INCREMENTAL": "0"
+  },
+  "removed_environment": [],
+  "source_files": [
+    {
+      "path": "crates\\strehl-cli\\Cargo.toml",
+      "bytes": 1177,
+      "sha256": "fb925e321c7a9aa74472b6413c1703fb560b11124ba568e1291a3fa19ed5e0d6"
+    },
+    {
+      "path": "crates\\strehl-cli\\src\\merge_cmd.rs",
+      "bytes": 430326,
+      "sha256": "32743997f9191c5da29ea2853453e64f1db2333cc0ee2f022e2021c2f7759baa"
+    },
+    {
+      "path": "experiments\\native-pyramid-profile\\implementation.rs",
+      "bytes": 12621,
+      "sha256": "85362dd472a95d64704c80235159abb188573914ac3cf9e7ac3b0fa16c029c69"
+    },
+    {
+      "path": "experiments\\native-pyramid-profile\\build.py",
+      "bytes": 2769,
+      "sha256": "493c13648eb54e2d3477bcf8bf4d9e8f9d793ba822f140a5a4ce410675eb7d21"
+    }
+  ],
+  "scope": "release compile only; existing integration test is compiled to obtain CLI artifact and is not executed"
+}

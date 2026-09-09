@@ -1,0 +1,104 @@
+{
+  "pairs": [
+    {
+      "label": "on",
+      "files": [
+        {
+          "name": "output.f32",
+          "baseline": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-pyramid-profile\\smoke-off\\output.f32",
+            "bytes": 49152,
+            "sha256": "0f5b4f6cf951dcd85e7a297755efc6e09ba21669388b0ffdb7c832a10fb58aca"
+          },
+          "observed": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-pyramid-profile\\smoke-on\\output.f32",
+            "bytes": 49152,
+            "sha256": "0f5b4f6cf951dcd85e7a297755efc6e09ba21669388b0ffdb7c832a10fb58aca"
+          },
+          "byte_equal": true
+        },
+        {
+          "name": "output.tiff",
+          "baseline": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-pyramid-profile\\smoke-off\\output.tiff",
+            "bytes": 74331,
+            "sha256": "1f993975da17149e3b153650d69765ef04c56a3e9a4751801660906fa7b5404a"
+          },
+          "observed": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-pyramid-profile\\smoke-on\\output.tiff",
+            "bytes": 74331,
+            "sha256": "1f993975da17149e3b153650d69765ef04c56a3e9a4751801660906fa7b5404a"
+          },
+          "byte_equal": true
+        }
+      ]
+    },
+    {
+      "label": "placebo",
+      "files": [
+        {
+          "name": "output.f32",
+          "baseline": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-pyramid-profile\\smoke-off\\output.f32",
+            "bytes": 49152,
+            "sha256": "0f5b4f6cf951dcd85e7a297755efc6e09ba21669388b0ffdb7c832a10fb58aca"
+          },
+          "observed": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-pyramid-profile\\smoke-placebo\\output.f32",
+            "bytes": 49152,
+            "sha256": "0f5b4f6cf951dcd85e7a297755efc6e09ba21669388b0ffdb7c832a10fb58aca"
+          },
+          "byte_equal": true
+        },
+        {
+          "name": "output.tiff",
+          "baseline": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-pyramid-profile\\smoke-off\\output.tiff",
+            "bytes": 74331,
+            "sha256": "1f993975da17149e3b153650d69765ef04c56a3e9a4751801660906fa7b5404a"
+          },
+          "observed": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-pyramid-profile\\smoke-placebo\\output.tiff",
+            "bytes": 74331,
+            "sha256": "1f993975da17149e3b153650d69765ef04c56a3e9a4751801660906fa7b5404a"
+          },
+          "byte_equal": true
+        }
+      ]
+    },
+    {
+      "label": "delay",
+      "files": [
+        {
+          "name": "output.f32",
+          "baseline": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-pyramid-profile\\smoke-off\\output.f32",
+            "bytes": 49152,
+            "sha256": "0f5b4f6cf951dcd85e7a297755efc6e09ba21669388b0ffdb7c832a10fb58aca"
+          },
+          "observed": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-pyramid-profile\\smoke-delay\\output.f32",
+            "bytes": 49152,
+            "sha256": "0f5b4f6cf951dcd85e7a297755efc6e09ba21669388b0ffdb7c832a10fb58aca"
+          },
+          "byte_equal": true
+        },
+        {
+          "name": "output.tiff",
+          "baseline": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-pyramid-profile\\smoke-off\\output.tiff",
+            "bytes": 74331,
+            "sha256": "1f993975da17149e3b153650d69765ef04c56a3e9a4751801660906fa7b5404a"
+          },
+          "observed": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-pyramid-profile\\smoke-delay\\output.tiff",
+            "bytes": 74331,
+            "sha256": "1f993975da17149e3b153650d69765ef04c56a3e9a4751801660906fa7b5404a"
+          },
+          "byte_equal": true
+        }
+      ]
+    }
+  ],
+  "scope": "tiny actual output identity; independent phase checker still required"
+}

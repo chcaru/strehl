@@ -1,0 +1,38 @@
+{
+  "command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-pyramid-profile\\build-1\\strehl.exe",
+    "stack",
+    "D:\\personal\\macro\\112MSDCF",
+    "--limit",
+    "8",
+    "--merge",
+    "pyramid",
+    "--pyramid-bands",
+    "7",
+    "--pyramid-gate",
+    "2",
+    "--pyramid-exponent",
+    "2",
+    "--pyramid-sharpen",
+    "1.4",
+    "--pyramid-select",
+    "soft",
+    "--pyramid-base",
+    "mean",
+    "--demosaic",
+    "--resampler",
+    "catmull-rom",
+    "--cover",
+    "scale",
+    "--out",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-pyramid-profile\\native\\5-off.tiff"
+  ],
+  "environment_overrides": {
+    "RAYON_NUM_THREADS": "8",
+    "STREHL_ALIGN": "1",
+    "STREHL_PYRAMID_WORKERS": "8",
+    "STREHL_WARPMAP": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-pyramid-profile\\native\\112-eight.warpmap.json",
+    "STREHL_PYRAMID_PROFILE": "off"
+  },
+  "removed_environment": []
+}
