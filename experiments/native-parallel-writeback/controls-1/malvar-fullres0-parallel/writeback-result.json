@@ -1,0 +1,13 @@
+{
+  "direct_comparisons": 2304,
+  "literal_round_clamp_cast": true,
+  "requested_writeback": "parallel",
+  "schema": "native-parallel-writeback-independent-v1",
+  "scope": "exact generated destination scheduling controls plus retained actual green/beta/whole/crop controls; no speed or calibration claim",
+  "threads": [
+    1,
+    2,
+    8
+  ],
+  "wrong_stride_phase_and_coverage_controls_live": true
+}

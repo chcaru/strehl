@@ -1,0 +1,67 @@
+{
+  "command": [
+    "cargo",
+    "test",
+    "-p",
+    "strehl-cli",
+    "--bin",
+    "strehl",
+    "--test",
+    "byte-freeze",
+    "--no-run",
+    "--release",
+    "--features",
+    "native-pyramid-profile",
+    "--jobs",
+    "2",
+    "--target-dir",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\target\\native-pyramid-profile",
+    "--message-format=json-render-diagnostics",
+    "--locked",
+    "--offline"
+  ],
+  "revision": "2c452ce0352ff2d2dc85831d01f06831b045d62a",
+  "environment_overrides": {
+    "RAYON_NUM_THREADS": "8",
+    "CARGO_INCREMENTAL": "0"
+  },
+  "removed_environment": [],
+  "source_files": [
+    {
+      "path": "crates\\strehl-cli\\Cargo.toml",
+      "bytes": 1177,
+      "sha256": "fb925e321c7a9aa74472b6413c1703fb560b11124ba568e1291a3fa19ed5e0d6"
+    },
+    {
+      "path": "crates\\strehl-cli\\src\\merge_cmd.rs",
+      "bytes": 430326,
+      "sha256": "32743997f9191c5da29ea2853453e64f1db2333cc0ee2f022e2021c2f7759baa"
+    },
+    {
+      "path": "experiments\\native-pyramid-profile\\implementation.rs",
+      "bytes": 12621,
+      "sha256": "85362dd472a95d64704c80235159abb188573914ac3cf9e7ac3b0fa16c029c69"
+    },
+    {
+      "path": "experiments\\native-pyramid-profile\\build.py",
+      "bytes": 3069,
+      "sha256": "daf1b21afd75deed9708b60b37aa964c22cfa4d7d95c02a2d943a31d2d17ea6e"
+    },
+    {
+      "path": "crates\\strehl-cli\\src\\merge_cmd\\gatefloor.rs",
+      "bytes": 26053,
+      "sha256": "8505c84f39f945621ced6c384e84fb4452028c3fa8aa8920338e40e9cbeaf62d"
+    },
+    {
+      "path": "crates\\strehl-cli\\src\\align_cmd.rs",
+      "bytes": 127575,
+      "sha256": "c5cdbbe9a0666da37530523d1524b33a75a048d53e4443cc33278bbe6c746479"
+    },
+    {
+      "path": "crates\\strehl-core\\src\\demosaic.rs",
+      "bytes": 52206,
+      "sha256": "17cca911c2e756f3224deb1520379a1994c58375d3bcb5f4c91fcf9dc6fbe514"
+    }
+  ],
+  "scope": "release compile only; existing integration test is compiled to obtain CLI artifact and is not executed"
+}

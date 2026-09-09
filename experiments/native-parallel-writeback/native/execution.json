@@ -1,0 +1,45 @@
+{
+  "revision": "2c452ce0352ff2d2dc85831d01f06831b045d62a",
+  "source": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-probe-fill\\run-native.py",
+    "sha256": "95d49057c80a444f5a303327b846a052130e02c461b43b45fb39450ae1b511e5",
+    "bytes": 6388
+  },
+  "plan": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-probe-fill\\transfer-plan-109.json",
+    "sha256": "3eb75cb702755104623047a38a1a2c13c270681aec7fd1d8a810e0b824f3be59",
+    "bytes": 7778
+  },
+  "old": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-green-probe\\build-2\\strehl.exe",
+    "sha256": "2581e0373118bd03577eaaf486bb30898fd8b0e385215ae1c8a1a574d18d2e88",
+    "bytes": 10174464
+  },
+  "candidate": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-parallel-writeback\\build-1\\strehl.exe",
+    "sha256": "4fe5443366c628029f9ea64faf6c239bb1769953f5ee505a7d629f5e22f4e2b8",
+    "bytes": 10195968
+  },
+  "baseline_file": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-probe-fill\\transfer-109\\1-old.tiff",
+    "sha256": "84f24ff6cdeae80f612ec6a2048dc888715eb8a2e632be29efcb9eefcdc61851",
+    "bytes": 197798267
+  },
+  "baseline_decoded": {
+    "shape": [
+      4688,
+      7032,
+      3
+    ],
+    "dtype": "uint16",
+    "bytes": 197796096,
+    "sha256": "1bd230a17e40030159540be6f75a958a839cd422b29d78afcd524f3cfe4c53e1"
+  },
+  "mode_order": [
+    "old",
+    "candidate",
+    "candidate",
+    "old",
+    "serial-control"
+  ]
+}

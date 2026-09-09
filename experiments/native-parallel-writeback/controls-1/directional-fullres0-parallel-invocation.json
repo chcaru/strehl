@@ -1,0 +1,25 @@
+{
+  "command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-parallel-writeback\\build-1\\cli-tests.exe",
+    "merge_cmd::gatefloor::native_parallel_writeback_independent_tests::independent_parallel_writeback_controls",
+    "--exact",
+    "--nocapture",
+    "--test-threads=1"
+  ],
+  "executable": {
+    "sha256": "b6d98624057b7b2f05f49b64859e3ffce2264188de89647bdc78d0f3280570b7",
+    "bytes": 13203968
+  },
+  "environment_overrides": {
+    "STREHL_GREEN_PROBE_OUTPUT": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-parallel-writeback\\controls-1\\directional-fullres0-parallel",
+    "STREHL_PYRAMID_PROFILE": "off",
+    "RAYON_NUM_THREADS": "4",
+    "STREHL_PYRAMID_WORKERS": "4",
+    "STREHL_DEMOSAIC": "directional",
+    "STREHL_FULLRES_GATHER": "0",
+    "STREHL_PROBE_GATHER": "green",
+    "STREHL_WARP_WRITEBACK": "parallel"
+  },
+  "removed_environment": [],
+  "revision": "2c452ce0352ff2d2dc85831d01f06831b045d62a"
+}

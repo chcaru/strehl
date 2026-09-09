@@ -1,0 +1,12 @@
+{
+  "strehl": {
+    "path": "experiments\\native-parallel-writeback\\build-1\\strehl.exe",
+    "bytes": 10195968,
+    "sha256": "4fe5443366c628029f9ea64faf6c239bb1769953f5ee505a7d629f5e22f4e2b8"
+  },
+  "cli-tests": {
+    "path": "experiments\\native-parallel-writeback\\build-1\\cli-tests.exe",
+    "bytes": 13203968,
+    "sha256": "b6d98624057b7b2f05f49b64859e3ffce2264188de89647bdc78d0f3280570b7"
+  }
+}
