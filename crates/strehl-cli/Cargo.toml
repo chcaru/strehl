@@ -43,3 +43,6 @@ native-pyramid-profile = []
 
 # Oracle-geometry local affine boundary prototype; disabled in normal builds.
 native-boundary-radiance = []
+
+# Default-off rounded or floating direct gather-to-plane experiment.
+native-direct-planes = []

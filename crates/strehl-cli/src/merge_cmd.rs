@@ -4980,6 +4980,12 @@ fn load_frame(
 ) -> Result<bool> {
     #[cfg(feature = "native-pyramid-profile")]
     let extract_phase;
+    #[cfg(feature = "native-direct-planes")]
+    let direct_mode = align_cmd::direct_plane_mode()?;
+    #[cfg(feature = "native-direct-planes")]
+    let mut direct_consumed = false;
+    #[cfg(not(feature = "native-direct-planes"))]
+    let direct_consumed = false;
     {
         #[cfg(feature = "native-pyramid-profile")]
         let decode_phase = native_pyramid_profile::start(native_pyramid_profile::DECODE);
@@ -5035,13 +5041,22 @@ fn load_frame(
                 FrameWarp::Placed(t) => {
                     #[cfg(feature = "native-pyramid-profile")]
                     let gather_phase = native_pyramid_profile::start(native_pyramid_profile::GATHER);
-                    align_cmd::warp_frame_in_place(
-                        &mut frame,
-                        *t,
-                        domain.full,
-                        map.resampler(),
-                        scratch,
-                    )?;
+                    #[cfg(feature = "native-direct-planes")]
+                    if direct_mode != align_cmd::DirectPlaneMode::Off && align_cmd::fullres_gather_enabled() {
+                        align_cmd::warp_frame_fullres_into_planes::<false>(
+                            &mut frame,*t,domain.full,map.resampler(),scratch,domain.rect,
+                            &BAND_PLANE_OFFSETS,planes,direct_mode)?;
+                        direct_consumed = true;
+                    }
+                    if !direct_consumed {
+                        align_cmd::warp_frame_in_place(
+                            &mut frame,
+                            *t,
+                            domain.full,
+                            map.resampler(),
+                            scratch,
+                        )?;
+                    }
                     #[cfg(feature = "native-pyramid-profile")]
                     drop(gather_phase);
                     // This frame's own band-noise floor, at this frame's own
@@ -5076,16 +5091,18 @@ fn load_frame(
         #[cfg(feature = "native-pyramid-profile")]
         { extract_phase = native_pyramid_profile::start(native_pyramid_profile::EXTRACT); }
         let black = levels.black;
-        extract_planes(
-            &frame.data,
-            frame.stride,
-            frame.active.x,
-            frame.active.y,
-            black,
-            domain,
-            &BAND_PLANE_OFFSETS,
-            planes,
-        )?;
+        if !direct_consumed {
+            extract_planes(
+                &frame.data,
+                frame.stride,
+                frame.active.x,
+                frame.active.y,
+                black,
+                domain,
+                &BAND_PLANE_OFFSETS,
+                planes,
+            )?;
+        }
     }
 
     // Green luma, `L = (G1 + G2) / 2`, exactly as `plane::green_luma`

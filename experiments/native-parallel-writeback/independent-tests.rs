@@ -20,7 +20,7 @@ fn old_scalar(data: &mut [u16], stride: usize, active: (usize, usize), g: PlaneG
     count
 }
 
-fn direct_controls() -> usize {
+pub(super) fn direct_controls() -> usize {
     // Quad width/height, active x/y, right/bottom padding, odd active tail.
     let layouts = [(1, 1, 0, 0, 0, 0, 0), (2, 3, 1, 2, 4, 3, 1),
                    (17, 9, 3, 1, 5, 4, 1), (64, 47, 2, 5, 11, 3, 0)];
@@ -76,6 +76,9 @@ fn direct_controls() -> usize {
                                         if !touched { assert_eq!(actual[y * stride + x], before[y * stride + x], "untouched storage {x},{y}"); }
                                     }
                                 }
+                                #[cfg(feature = "native-direct-planes")]
+                                pool.install(|| super::native_direct_planes_independent_tests::check_writeback_case(
+                                    &expected, stride, (ax, ay), g, site, &dst, &cover, inv, black, mode));
                                 comparisons += 1;
                             }
                         }

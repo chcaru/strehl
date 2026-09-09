@@ -2135,15 +2135,30 @@ pub(crate) fn writeback_fullres_site(
     }
 }
 
-// Share every source/geometry/gather operation between actual RGB frames and
-// green-only synthetic probes. The latter never reads or writes R/B outputs.
+#[cfg(feature = "native-direct-planes")]
+include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/native-direct-planes/implementation.rs"));
+
 fn warp_frame_in_place_fullres_outputs<const GREEN_ONLY: bool>(
+    frame: &mut strehl_raw::Frame, t: Similarity, geom: PlaneGeometry,
+    resampler: Resampler, scratch: &mut WarpScratch,
+) -> Result<f64> {
+    warp_frame_fullres_with_sink::<GREEN_ONLY,_>(frame,t,geom,resampler,scratch,
+        |frame,site,dst,cover,inv,black,execution| Ok(writeback_fullres_site(
+            &mut frame.data,frame.stride,(frame.active.x,frame.active.y),geom,site,
+            dst,cover,inv,black,execution)))
+}
+
+// Every source, geometry and sampling operation is shared; only destination storage differs.
+fn warp_frame_fullres_with_sink<const GREEN_ONLY: bool, F>(
     frame: &mut strehl_raw::Frame,
     t: Similarity,
     geom: PlaneGeometry,
     resampler: Resampler,
     scratch: &mut WarpScratch,
-) -> Result<f64> {
+    mut sink: F,
+) -> Result<f64>
+where F: FnMut(&mut strehl_raw::Frame,(usize,usize),&[f32],&[bool],f32,f32,WarpWriteback)->Result<usize>
+{
     let (gw, gh) = (geom.width, geom.height);
     if frame.active.width / 2 != gw || frame.active.height / 2 != gh {
         bail!(
@@ -2274,18 +2289,7 @@ fn warp_frame_in_place_fullres_outputs<const GREEN_ONLY: bool>(
             }
 
             let inv = 1.0 / gain[ci];
-            covered_total += writeback_fullres_site(
-                &mut frame.data,
-                stride,
-                (ax, ay),
-                geom,
-                (dx, dy),
-                &scratch.dst,
-                &scratch.cover,
-                inv,
-                black,
-                writeback,
-            );
+            covered_total += sink(frame,(dx,dy),&scratch.dst,&scratch.cover,inv,black,writeback)?;
         }
     }
     let sites = if GREEN_ONLY { 2 } else { 4 };

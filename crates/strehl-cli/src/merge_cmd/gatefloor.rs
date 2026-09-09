@@ -281,6 +281,12 @@ impl Probe {
     ) -> Result<()> {
         // Refuse an unknown arm before cloning or generating a synthetic frame.
         let greens_only = probe_gather_uses_green()?;
+        #[cfg(feature = "native-direct-planes")]
+        let direct_mode = align_cmd::direct_plane_mode()?;
+        #[cfg(feature = "native-direct-planes")]
+        let direct_consumed = direct_mode != align_cmd::DirectPlaneMode::Off && align_cmd::fullres_gather_enabled();
+        #[cfg(not(feature = "native-direct-planes"))]
+        let direct_consumed = false;
         let mut probe = template.clone();
         let black = f64::from(template.levels.black);
         fill_probe_noise(
@@ -291,29 +297,45 @@ impl Probe {
             index,
         )?;
 
-        if greens_only {
-            align_cmd::warp_probe_greens_in_place(&mut probe, t, self.domain.full, resampler, scratch)
-        } else {
-            align_cmd::warp_frame_in_place(&mut probe, t, self.domain.full, resampler, scratch)
-                .map(|_| ())
+        #[cfg(feature = "native-direct-planes")]
+        if direct_consumed {
+            if greens_only {
+                align_cmd::warp_frame_fullres_into_planes::<true>(
+                    &mut probe,t,self.domain.full,resampler,scratch,self.domain.rect,
+                    &BAND_PLANE_OFFSETS[1..3],&mut self.planes,direct_mode)
+            } else {
+                align_cmd::warp_frame_fullres_into_planes::<false>(
+                    &mut probe,t,self.domain.full,resampler,scratch,self.domain.rect,
+                    &BAND_PLANE_OFFSETS[1..3],&mut self.planes,direct_mode)
+            }.context("gathering the direct noise-probe planes")?;
         }
-        .context("warping the noise probe for the band-noise floor")?;
+        if !direct_consumed {
+            if greens_only {
+                align_cmd::warp_probe_greens_in_place(&mut probe, t, self.domain.full, resampler, scratch)
+            } else {
+                align_cmd::warp_frame_in_place(&mut probe, t, self.domain.full, resampler, scratch)
+                    .map(|_| ())
+            }
+            .context("warping the noise probe for the band-noise floor")?;
+        }
 
         // Deinterleave the two green phases exactly as `load_frame` does, and
         // form the same `L = (G1 + G2) / 2`. Only the greens: the selection
         // runs on green luma, so that is the plane whose noise the gate models.
         let blackf = template.levels.black;
-        extract_planes(
-            &probe.data,
-            probe.stride,
-            probe.active.x,
-            probe.active.y,
-            blackf,
-            self.domain,
-            &BAND_PLANE_OFFSETS[1..3],
-            &mut self.planes,
-        )
-        .context("extracting the compact gate-floor luma domain")?;
+        if !direct_consumed {
+            extract_planes(
+                &probe.data,
+                probe.stride,
+                probe.active.x,
+                probe.active.y,
+                blackf,
+                self.domain,
+                &BAND_PLANE_OFFSETS[1..3],
+                &mut self.planes,
+            )
+            .context("extracting the compact gate-floor luma domain")?;
+        }
         for i in 0..self.luma.len() {
             self.luma[i] = 0.5 * (self.planes[0][i] + self.planes[1][i]);
         }
@@ -637,4 +659,9 @@ mod native_parallel_writeback_independent_tests {
         env!("CARGO_MANIFEST_DIR"),
         "/../../experiments/native-parallel-writeback/independent-tests.rs"
     ));
+}
+
+#[cfg(all(test, feature = "native-direct-planes"))]
+mod native_direct_planes_independent_tests {
+    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/native-direct-planes/independent-tests.rs"));
 }

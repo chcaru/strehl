@@ -149,6 +149,8 @@ fn warp_controls() -> (usize, usize) {
                         }
                         dispatches += 1;
                     }
+                    #[cfg(feature = "native-direct-planes")]
+                    super::native_direct_planes_independent_tests::check_warp_case(&before, &rgb, t, g, kernel);
                     pairs += 1;
                 }
             }
