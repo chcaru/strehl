@@ -107,3 +107,20 @@ Root's preparer now additionally binds this independent product review and
 control ledger, with no algorithm or command change. All source reviews found
 no remaining blocker. Proceed only through the fixed build/prepare/render/verify
 releases; preserve any failure and do not silently rerun a once-only stage.
+
+## Build2 review amendment
+
+The preceding body records the source review before build1; its original bytes
+remain in frozen-source-1.zip. Build1 now has an actual resource refusal, retained
+in root-decision.md and immutable build-1 evidence. Build2 adds only two Cargo
+jobs, fresh build/target2 paths and the corresponding expected binary path.
+Product Rust and scientific recipes/gates are byte-identical. Independent review
+of the corrected wrapper/controller associations precedes release2.
+
+Build2 cross-review is complete. Coordinate independently cleared the updated
+root wrappers against the exact controller and helper paths/argv. The controller
+author proved reverse substitutions recover the held build1 controller/helper;
+only build_command changes among its existing functions, plus the named path/pin
+globals. Rust product, fixture recipe, all twelve cases and sixteen scientific
+controls remain unchanged. The checker changed only its expected binary path.
+No stage2 or downstream subject function has run at this review point.

@@ -1,4 +1,4 @@
-# Fixed common-TIFF stage controller
+# Fixed common-TIFF stage controller, build2 source revision
 
 SOURCE ONLY. This protocol authorizes no execution by itself. The root releases
 each of build, prepare, render and verify at most once, in that order, with an
@@ -20,14 +20,14 @@ limits wrapper supplies the new fixed per-child bounds.
 
 The separate bounded-build-process.py differs from the held M194h compile helper
 (16,334 bytes, 6c4b6e6222e1b58ec408fbd949d7a90bbb0c12778c292517c6eb6539eb4b036b)
-only in the exact argv gate. Reverse replacement recovers every original byte.
+only in the exact argv gate. It now names the fresh target2 and Cargo jobs2. Reverse replacement of that gate recovers every original byte.
 All its Job, process, pipe, termination and cleanup functions are unchanged.
 The gate admits only:
 
-cargo build -p strehl-cli --bin strehl-common-input --target-dir ABS_TARGET
+cargo build -p strehl-cli --bin strehl-common-input --jobs 2 --target-dir ABS_TARGET
 --message-format=json-render-diagnostics --locked --offline
 
-ABS_TARGET is exactly ROOT/target/common-tiff-stack-1, initially absent.
+ABS_TARGET is exactly ROOT/target/common-tiff-stack-2, initially absent.
 No feature flag is added. This helper is selected only for build child zero.
 Other children use the original strict M193c bounded-process.py
 47b9f8d848759eba61f055b9fdca1f8ac400f134dcd7636f0e0eaaa955704e0b.
@@ -98,7 +98,7 @@ one actual fresh:false non-test bin artifact for strehl-common-input with the
 exact src/bin/strehl-common-input.rs and CLI Cargo.toml, and the successful
 build-finished JSON record. No M194h feature may be present. The source executable
 must be under the new target; its exact bytes are copied to
-build-1/strehl-common-input.exe and hashed again. No old executable is admitted.
+build-2/strehl-common-input.exe and hashed again. No old executable is admitted.
 
 The prepare child is PINNED_PYTHON -I -S -B independent-controls.py prepare
 --output ABS/prepare-1/fixtures --source-sha256 ACTUAL_CONTROLS_SHA.
@@ -236,3 +236,46 @@ A first proxy incorrectly combined render's cases with verify's three
 prerequisites and exceeded the slot; that impossible combined-stage shape was
 corrected, not used to widen capacity. Verify has no case array. Actual encoded
 capacity guards remain authoritative and any overflow remains operational refusal.
+
+## Preserved first build and narrow second release
+
+The first build actually refused before any executable, fixture, product case
+or saved-data verification existed. Its child reported committed-memory rejection:
+peak Job committed3,287,552,000 bytes versus the unchanged3GiB cap3,221,225,472.
+The retained final Job has53 total processes and zero active; the pre-termination
+observation has32 active. Owned generic termination succeeded, with no cleanup
+errors. Direct exit and EOF were not observed before the rejection, and the
+compile-only successful-completion policy remained UNVISITED. The12-byte raw
+log contains only an incomplete Compiling prefix; it is not successful build
+or compiler diagnostic evidence. No executable identity or failing compiler
+subprocess can be inferred from that log.
+
+The saved child interval is0.6560000000026776 seconds with5.171875 whole-Job CPU;
+parent work sample is1.265625 CPU and1.6090000000112923 wall; actual external
+controller interval is1.6569999999919673 seconds, exit1. These are retained
+measurements, not a retrospective successful build or an estimate of Cargo's
+optimal parallelism. Root independently captured and reviewed the attempt.
+
+Before any second-source write, root preserved and read back all156 source
+buffers,5,217,607 bytes, in work/frozen-source-1.zip,5,265,631 bytes/SHA256
+ e63e9a7e5dd227b8de097588194e07224b0bcbf224559c08e4fff01da7c81db3.
+The original build-1, target/common-tiff-stack-1 and first release/external
+records remain intact. The old source-contract and independent product/control
+intent are preserved. This source revision changes only controller/helper
+Cargo argv to --jobs 2, target/common-tiff-stack-2, the copied build-2 executable
+and build stage directory, and the helper's new SHA binding. The parent release
+and external constructors supply their separately reviewed version2 names.
+Prepare-1, render-1, verify-1 and every fixed product/checker command and case
+remain unvisited and unchanged. No new control population is added.
+
+The separate second build keeps600CPU/300wall/3GiB committed/128MiB retained/
+4GiB observed scratch. The prior600CPU/300wall build allocation is retained,
+not refunded using its small measured prefix; two entered build allocations
+therefore sum1,200CPU/600wall. Memory remains a3GiB per-Job cap, not a6GiB cap.
+Old and new scratch/output families are separate and both remain preserved.
+This is an explicit build concurrency limit, not evidence that two jobs will
+succeed or that the first process count proves a particular compiler cause.
+Success still requires the full current zero-exit/EOF/empty-owned-Job,
+actual Compiling, fresh:false executable and build-finished success evidence.
+No build2, fixture, product, checker, native API or control has run during this
+source amendment. Root must hold new source pins and release once before it runs.

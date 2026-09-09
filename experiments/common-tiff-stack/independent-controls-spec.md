@@ -185,3 +185,20 @@ Decision: a complete pass establishes this software consumer on these three
 simulation cases. Failure stops this version without relaxed bars, a larger
 image campaign or a fallback noise model. Real conversion/noise propagation,
 nonidentity per-frame geometry and comparator colour semantics remain open.
+
+## Build 2 path correction
+
+SOURCE ONLY. Build 1 refused before producing an executable because the owned
+Job exceeded its unchanged 3 GiB committed-memory cap. The original source and
+actual refusal are preserved in work/frozen-source-1.zip (5,265,631 bytes,
+SHA256 e63e9a7e5dd227b8de097588194e07224b0bcbf224559c08e4fff01da7c81db3).
+The separately reviewed controller adds Cargo --jobs 2 and uses fresh build-2
+and target/common-tiff-stack-2 paths under the same per-attempt limits.
+
+The independent checker changes exactly one executable-path literal from
+build-1/strehl-common-input.exe to build-2/strehl-common-input.exe. Reversing
+that substitution restores the entire original source byte for byte, and
+its parsed AST is unchanged after reversal. No fixture, recipe, numerical
+code, 12-case population, 16-control population, gate, or output interpretation
+changes. prepare-1, render-1 and verify-1 remain the fixed unexecuted stages.
+No fixture, control, product or checker execution accompanies this amendment.

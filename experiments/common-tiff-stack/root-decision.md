@@ -90,3 +90,39 @@ Passing admits this bounded software consumer; failure identifies the next
 specific repair. Neither outcome changes a SOTA scorecard axis or permits a
 physical RGB noise claim. After closure, choose the next concrete program task
 from the evidence and continue without waiting for the sleeping owner.
+
+## Build1 refusal and separately scoped build2 correction
+
+The first actual build ran once after source commit5344e81c and releasea187fd93.
+It refused on the owned child's committed-memory bound: observed peak Job memory
+3,287,552,000 bytes exceeded the unchanged3GiB (3,221,225,472 bytes) limit.
+The Job recorded53 total processes and32 active before its owned termination;
+final active count0, no cleanup errors, and terminal CPU5.171875 seconds.
+Direct exit and EOF were not observed; compile-only cleanup was UNVISITED.
+Only12 raw log bytes ('   Compiling') exist, with no compiler artifact or
+product executable. Actual external wall1.657 seconds, parent CPU sample1.265625.
+This is an actual failed build, not a product/scientific result.
+
+The source-family archive was verified before editing and after ZIP readback:
+156 files/5,217,607 source bytes; work/frozen-source-1.zip5,265,631 bytes,
+SHA256e63e9a7e5dd227b8de097588194e07224b0bcbf224559c08e4fff01da7c81db3.
+All build1 records, allocation and refusal are retained; build1 is never rerun.
+
+ARGUED correction: limit Cargo to exactly two jobs, using --jobs 2 immediately
+after --bin strehl-common-input. The owned process count is observed; the number
+of compiler workers within it is not separately identified. Restricting compiler
+concurrency is a targeted resource mitigation to test on fresh build2, not a
+proven historical process-role diagnosis. Keep3GiB/600CPU/300wall/128MiB retained/
+4GiB observed scratch. Allocate this separate build2 slice without refunding
+build1. The source/metadata lane gains one5CPU/7.5active-wall preparation slot,
+so five total slots including build1 fit25CPU/37.5active-wall. Its8MiB file cap
+still holds with the source archive. Other stage caps and all scientific bars
+remain unchanged.
+
+Use target/common-tiff-stack-2 and build-2 for the fresh binary. The controller,
+compile helper, metadata wrappers and independent checker's expected binary
+path change accordingly. Freeze2 supplies the common source map to all future
+stages. Prepare-1/render-1/verify-1 remain unvisited; exactly twelve product cases
+and sixteen saved verifier controls remain fixed. No Rust product, input recipe,
+noise setting, observer, gate or writer code changes. Fresh compilation and all
+later positive/refusal controls remain necessary.

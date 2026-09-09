@@ -23,8 +23,8 @@ def read_bound(p,cap=64<<20,empty=False):
 def ref(p,empty=False,cap=64<<20):
  b=read_bound(p,cap,empty);return dict(path=p.relative_to(ROOT).as_posix(),bytes=len(b),sha256=hashlib.sha256(b).hexdigest())
 def main():
- a=argparse.ArgumentParser();a.add_argument("stage",choices=("build","prepare","render","verify"));args=a.parse_args();stage=args.stage
- work=HERE/"work";release=work/(stage+"-release-1.json");b=read_bound(release,1<<20)
+ a=argparse.ArgumentParser();a.add_argument("stage",choices=("build","prepare","render","verify"));args=a.parse_args();stage=args.stage;attempt=2 if stage=="build" else 1
+ work=HERE/"work";release=work/(stage+"-release-"+str(attempt)+".json");b=read_bound(release,1<<20)
  r=json.loads(b);assert r["schema"]=="common-tiff-stack-stage-release-v1" and r["stage"]==stage
  sha=hashlib.sha256(b).hexdigest()
  source=HERE/"run-stage.py";pin=ref(source)
@@ -32,8 +32,8 @@ def main():
  own=ref(Path(__file__).resolve());assert {k:own[k] for k in ("bytes","sha256")}==r["source_bindings"][own["path"]]
  command=[sha if x=="ACTUAL_RELEASE_SHA256" else x for x in r["command"]]
  assert command==[sys.executable,"-I","-S","-B",str(source),"--release",str(release),"--release-sha256",sha]
- paths={k:work/(stage+"-external-1-"+suffix) for k,suffix in [("stdout","stdout.bin"),("stderr","stderr.bin"),("exit","exit.txt"),("outer","outer.json")]}
- assert all(not p.exists() for p in paths.values()) and not (HERE/(stage+"-1")).exists()
+ paths={k:work/(stage+"-external-"+str(attempt)+"-"+suffix) for k,suffix in [("stdout","stdout.bin"),("stderr","stderr.bin"),("exit","exit.txt"),("outer","outer.json")]}
+ assert all(not p.exists() for p in paths.values()) and not (HERE/(stage+"-"+str(attempt))).exists()
  timedout=False
  with paths["stdout"].open("xb") as out,paths["stderr"].open("xb") as err:
   start=time.monotonic();p=subprocess.Popen(command,cwd=ROOT,stdin=subprocess.DEVNULL,stdout=out,stderr=err)

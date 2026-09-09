@@ -13,14 +13,15 @@ MIB=1<<20;KIB=1024;GIB=1<<30
 BASE=ROOT/"experiments/m194h-pedestal-causality/build-and-run.py"
 BASE_SHA="b505a2fff0024691d98088c599f7f554c1543268de09c836a6bc1fe6c17b7410"
 BUILD_PROCESS=HERE/"bounded-build-process.py"
-BUILD_SHA="66dc424b3de9ad912bc2ea1b66750cdbc7f154cce6e1b8ddbca40f163cae3d5a"
-TARGET=ROOT/"target/common-tiff-stack-1"
-EXE=HERE/"build-1/strehl-common-input.exe"
+BUILD_SHA="f70486f4c8cd1aadf108575849da2b2494b090bd088bb2a057b08dbdd49f4a8c"
+TARGET=ROOT/"target/common-tiff-stack-2"
+EXE=HERE/"build-2/strehl-common-input.exe"
 CONTROLS=HERE/"independent-controls.py"
 FIXTURES=HERE/"prepare-1/fixtures"
 INDEX=FIXTURES/"index.json"
 RUN_BUNDLE=HERE/"render-bundle-1.json"
 OUTPUTS={s:HERE/(s+"-1") for s in ("build","prepare","render","verify")}
+OUTPUTS["build"]=HERE/"build-2"
 STAGES={s:dict(cpu_seconds=60,wall_seconds=120,committed_bytes=512*MIB,file_bytes=16*MIB,scratch_bytes=0)
         for s in OUTPUTS}
 STAGES["build"]=dict(cpu_seconds=600,wall_seconds=300,committed_bytes=3*GIB,file_bytes=128*MIB,scratch_bytes=4*GIB)
@@ -76,7 +77,7 @@ def source_check(sources,budget):
     return d.source_closure(sources,budget.check)
 
 def build_command():
-    return ["cargo","build","-p","strehl-cli","--bin","strehl-common-input","--target-dir",str(TARGET),
+    return ["cargo","build","-p","strehl-cli","--bin","strehl-common-input","--jobs","2","--target-dir",str(TARGET),
             "--message-format=json-render-diagnostics","--locked","--offline"]
 
 def python_command(sources,mode,index_ref=None,bundle_ref=None):
