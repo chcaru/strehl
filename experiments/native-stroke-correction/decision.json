@@ -1,0 +1,23 @@
+{
+  "status": "CLOSED_LOCAL_VISUAL_IMPROVEMENT_EXPERIMENTAL",
+  "observed": "Nominated sensor-coordinate correction reduces the delivered dark stroke; faint residual remains.",
+  "production_default_changed": false,
+  "automatic_detection": false,
+  "physical_dust_proven": false,
+  "local_causal_contribution_supported": true,
+  "noise_fidelity_proven": false,
+  "sota_claim": false,
+  "corrected_output": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-stroke-correction\\render-1\\corrected-coffee-bean.tiff",
+    "sha256": "d568f12b84cab063df45319faa5f7d0f9993dba7fb8936ae64ccb795baea5960",
+    "bytes": 184149970
+  },
+  "source_map": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-stroke-correction\\run-1\\nominated-map.txt",
+    "bytes": 17429,
+    "sha256": "73c64de36ff15ee7b91018624d03851c1449b3081a4dd54f5a64f727242e6098"
+  },
+  "detail_controls": "three fixed512x512RGB16 regions exactly unchanged",
+  "remaining": "Propagate known correction gain through the injected variance and actual/probe consumers before promotion.",
+  "next": "A bounded source-transfer falsifier with shot/read terms and current nonidentity gather, before any new full render; no rerun of this closed single intervention."
+}

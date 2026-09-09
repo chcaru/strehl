@@ -1,0 +1,27 @@
+{
+  "status": "CORRECTED_PHOTOGRAPH_PENDING_INDEPENDENT_REVIEW",
+  "steps": [
+    {
+      "label": "native",
+      "wall_seconds": 51.78200000000288,
+      "cpu_seconds": 303.0,
+      "peak_job_commit_bytes": 2839121920
+    }
+  ],
+  "output": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-stroke-correction\\render-1\\corrected-coffee-bean.tiff",
+    "sha256": "d568f12b84cab063df45319faa5f7d0f9993dba7fb8936ae64ccb795baea5960",
+    "bytes": 184149970
+  },
+  "decoded": {
+    "shape": [
+      4524,
+      6784,
+      3
+    ],
+    "dtype": "uint16",
+    "bytes": 184144896,
+    "sha256": "d13d98ac4fcbaf6c772a32c157042480bae3e004df1b8fa973c37dc5796f8fca"
+  },
+  "original_metadata_unchanged": true
+}

@@ -1,0 +1,41 @@
+{
+  "stage": "render",
+  "sources": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-stroke-correction\\independent-controls.py",
+      "sha256": "025d06e8270e6a54247f691c692f91aeb6c56eb9ef71d71c74d75b479f93a051",
+      "bytes": 9628
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-stroke-correction\\propose.py",
+      "sha256": "7f796d7e5a1cc4108a34dbf3275c9a639c467823e46bfe6db155896b9ee6da63",
+      "bytes": 17004
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-stroke-correction\\run.py",
+      "sha256": "053bbd86cd5653d1b92fb1f9ebb10d0e8fbea9e1bfe1eb85a3c807fb86c74fcb",
+      "bytes": 5450
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-stroke-correction\\charter.md",
+      "sha256": "ef082bb48d3e7091679a20c2711a42a94cf1091467123e0d2c179b4c9c70f806",
+      "bytes": 4733
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-stroke-correction\\design.md",
+      "sha256": "bde678ba01a5abf4580ec2895bd227ce2352e659c3a1a2d23a503cc8199e41ec",
+      "bytes": 5872
+    }
+  ],
+  "revision": "9ce8d3c629c5842e2d0c56d5ca75289c21e2a390",
+  "helper": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\bounded-process.py",
+    "sha256": "47b9f8d848759eba61f055b9fdca1f8ac400f134dcd7636f0e0eaaa955704e0b",
+    "bytes": 12664
+  },
+  "python": {
+    "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "sha256": "4d6f5f81a4bca11191c4c7c6b43632694d0a4ce74e068619d8fdc161d469859a",
+    "bytes": 104952
+  }
+}

@@ -1,0 +1,94 @@
+{
+  "sources": {
+    "baseline": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-product-comparison\\run-1\\native-coffee-bean.tiff",
+    "corrected": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-stroke-correction\\render-1\\corrected-coffee-bean.tiff"
+  },
+  "regions": [
+    {
+      "id": "stroke",
+      "xywh": [
+        150,
+        1490,
+        320,
+        120
+      ],
+      "different_values": 113877,
+      "total_values": 115200,
+      "minimum_dn": -793,
+      "maximum_dn": 2559,
+      "mean_abs_dn": 288.5383159722222,
+      "preview": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-stroke-correction\\view-1\\stroke.png",
+        "sha256": "205f5af76dd17cc7f871653a80928e509e32a16632d055b64892009369acb532",
+        "top": "savedbaseline",
+        "bottom": "corrected",
+        "resized": false
+      }
+    },
+    {
+      "id": "clean",
+      "xywh": [
+        150,
+        1300,
+        320,
+        120
+      ],
+      "different_values": 76262,
+      "total_values": 115200,
+      "minimum_dn": -3,
+      "maximum_dn": 5,
+      "mean_abs_dn": 0.8355034722222222,
+      "preview": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-stroke-correction\\view-1\\clean.png",
+        "sha256": "cfa12ee35cbad3401eb16e6068d5b769e0f134c69acfa8f967aa49b9fea4869f",
+        "top": "savedbaseline",
+        "bottom": "corrected",
+        "resized": false
+      }
+    },
+    {
+      "id": "front-texture",
+      "xywh": [
+        3400,
+        3000,
+        512,
+        512
+      ],
+      "different_values": 0,
+      "total_values": 786432,
+      "minimum_dn": 0,
+      "maximum_dn": 0,
+      "mean_abs_dn": 0.0
+    },
+    {
+      "id": "central-crack",
+      "xywh": [
+        2380,
+        1850,
+        512,
+        512
+      ],
+      "different_values": 0,
+      "total_values": 786432,
+      "minimum_dn": 0,
+      "maximum_dn": 0,
+      "mean_abs_dn": 0.0
+    },
+    {
+      "id": "outer-edge",
+      "xywh": [
+        1390,
+        660,
+        512,
+        512
+      ],
+      "different_values": 0,
+      "total_values": 786432,
+      "minimum_dn": 0,
+      "maximum_dn": 0,
+      "mean_abs_dn": 0.0
+    }
+  ],
+  "display": "round(RGB16/257) identical perarm; every pixel at1:1, no registration/tone/resize repair",
+  "scope": "local target comparison and fixed actual source controls; no sharpness or noise quality metric"
+}
