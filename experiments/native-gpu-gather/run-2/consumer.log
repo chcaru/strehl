@@ -1,0 +1,15 @@
+
+running 1 test
+test merge_cmd::tests::native_gpu_gather_controls::independent_gpu_gather_controls ... 
+thread 'merge_cmd::tests::native_gpu_gather_controls::independent_gpu_gather_controls' (23224) panicked at C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli/../../experiments/native-gpu-gather/independent-tests.rs:375:5:
+GPU gather exact controls failed; report retained at C:\dev\blog\death-of-software\projects\strehl\experiments\native-gpu-gather\run-2\results.json
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+FAILED
+
+failures:
+
+failures:
+    merge_cmd::tests::native_gpu_gather_controls::independent_gpu_gather_controls
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 168 filtered out; finished in 0.61s
+

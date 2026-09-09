@@ -1,0 +1,40 @@
+{
+  "command": [
+    "cargo",
+    "metadata",
+    "--format-version=1",
+    "--filter-platform",
+    "x86_64-pc-windows-msvc",
+    "--features",
+    "native-gpu-gather"
+  ],
+  "exit_code": 0,
+  "stderr": "    Updating crates.io index\n     Locking 4 packages to latest Rust 1.98 compatible versions\n      Adding fixedbitset v0.5.7\n      Adding foldhash v0.1.5\n      Adding hashbrown v0.15.5\n      Adding petgraph v0.8.3\n Downloading crates ...\n  Downloaded fixedbitset v0.5.7\n  Downloaded foldhash v0.1.5\n  Downloaded hashbrown v0.15.5\n  Downloaded petgraph v0.8.3\n",
+  "original_lock_sha256": "59784f242807ae8bfeb34168663a5ae0ddda039228a62e1ccd786b281deed313",
+  "current_lock_sha256": "6603a0ca2a03d2bf0ed8e58cb1214b482d34b1302f45d2d125b9d4b448feb59d",
+  "added_packages": [
+    [
+      "fixedbitset",
+      "0.5.7",
+      "registry+https://github.com/rust-lang/crates.io-index"
+    ],
+    [
+      "foldhash",
+      "0.1.5",
+      "registry+https://github.com/rust-lang/crates.io-index"
+    ],
+    [
+      "hashbrown",
+      "0.15.5",
+      "registry+https://github.com/rust-lang/crates.io-index"
+    ],
+    [
+      "petgraph",
+      "0.8.3",
+      "registry+https://github.com/rust-lang/crates.io-index"
+    ]
+  ],
+  "removed_or_changed_existing": [],
+  "metadata_packages": 217,
+  "metadata_sha256": "313f29d459bbfc621ad3d7c680774ef6e5cd0e408d3ad5524ba2ce003f705cc4"
+}

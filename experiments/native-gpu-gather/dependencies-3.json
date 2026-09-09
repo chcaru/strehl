@@ -1,0 +1,15 @@
+{
+  "command": [
+    "cargo",
+    "metadata",
+    "--offline",
+    "--format-version=1",
+    "--filter-platform",
+    "x86_64-pc-windows-msvc",
+    "--features",
+    "native-gpu-gather"
+  ],
+  "exit_code": 101,
+  "stderr": "error: no matching package named `petgraph` found\nlocation searched: crates.io index\nrequired by package `naga v30.0.1`\n    ... which satisfies dependency `naga = \"=30.0.1\"` (locked to 30.0.1) of package `strehl-native-gpu-gather v0.0.0 (C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-gpu-gather)`\n    ... which satisfies path dependency `strehl-native-gpu-gather` (locked to 0.0.0) of package `strehl-cli v0.0.0 (C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-cli)`\nnote: offline mode (via `--offline`) can sometimes cause surprising resolution failures\nhelp: if this error is too confusing you may wish to retry without `--offline`\n",
+  "original_lock_sha256": "59784f242807ae8bfeb34168663a5ae0ddda039228a62e1ccd786b281deed313"
+}

@@ -354,6 +354,8 @@ fn independent_gpu_gather_controls() {
     report["adapter"]=json!(gpu.adapter);
     report["backend"]=json!(gpu.backend);
     report["device_type"]=json!(gpu.device_type);
+    report["compilation"]=json!(gpu.compilation);
+    save(&path,&report);
     report["literal_quantization"]=capture(||literal_quantization(&mut gpu));
     save(&path,&report);
     for id in 0..18 {
@@ -370,6 +372,27 @@ fn independent_gpu_gather_controls() {
     let passed=report["rows"].as_array().unwrap().len()==18
         && report["rows"].as_array().unwrap().iter().all(|r|r["pass"]==true)
         && report["literal_quantization"]["pass"]==true && report["descriptor_destroyers"]["pass"]==true;
+    // One separately reported compiler-route diagnostic, using the unchanged
+    // case3 and actual CPU comparison. It does not enter the primary predicate.
+    drop(gpu);
+    report["undecorated_case3"]=json!({"status":"STARTED","id":3,
+        "constructor":"new_undecorated_for_test","affects_primary_pass":false});
+    save(&path,&report);
+    let mut diagnostic=capture(|| {
+        let mut undecorated=GpuGather::new_undecorated_for_test()
+            .map_err(|e|format!("undecorated initialization: {e}"))?;
+        let mut row=capture(||check_case(&mut undecorated,&make_case(3)));
+        row["adapter"]=json!(undecorated.adapter);
+        row["backend"]=json!(undecorated.backend);
+        row["device_type"]=json!(undecorated.device_type);
+        row["compilation"]=json!(undecorated.compilation);
+        Ok(row)
+    });
+    diagnostic["status"]=json!("RETURNED_OR_CAUGHT_ERROR");
+    diagnostic["id"]=json!(3);
+    diagnostic["constructor"]=json!("new_undecorated_for_test");
+    diagnostic["affects_primary_pass"]=json!(false);
+    report["undecorated_case3"]=diagnostic;
     report["status"]=json!(if passed {"EIGHTEEN_GPU_GATHER_CONTROLS_PASS"} else {"CONTROL_FAILED"});
     save(&path,&report);
     assert!(passed,"GPU gather exact controls failed; report retained at {}",path.display());

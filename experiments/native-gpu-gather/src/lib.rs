@@ -6,6 +6,9 @@
 use std::time::Instant;
 use strehl_core::{align::{Resampler, Similarity}, plane::PlaneGeometry};
 use wgpu::util::DeviceExt;
+#[path = "strict-spirv.rs"]
+mod strict_spirv;
+pub use strict_spirv::CompilationReport;
 
 const STRIP_ROWS: usize = 32;
 pub const INVALID: u32 = u32::MAX;
@@ -92,14 +95,24 @@ pub struct GpuGather {
     pub device_type: String,
     pub backend: String,
     pub initialization_ms: f64,
+    pub compilation: CompilationReport,
 }
 
 impl GpuGather {
     /// M7's permissive wgpu30 device/buffer mechanism, with no timing feature,
     /// all-frame residency, ring kernel or merge reduction carried forward.
-    pub fn new() -> Result<Self, String> {
+    pub fn new() -> Result<Self, String> { Self::new_with_arithmetic(true) }
+
+    /// Single diagnostic: identical generated SPIR-V without NoContraction.
+    /// This is not an alternative production/default path.
+    pub fn new_undecorated_for_test() -> Result<Self, String> { Self::new_with_arithmetic(false) }
+
+    fn new_with_arithmetic(strict: bool) -> Result<Self, String> {
         let start = Instant::now();
-        let instance = wgpu::Instance::new(wgpu::InstanceDescriptor::new_without_display_handle());
+        let (words, mut compilation) = strict_spirv::compile(strict)?;
+        let mut descriptor = wgpu::InstanceDescriptor::new_without_display_handle();
+        descriptor.backends = wgpu::Backends::VULKAN;
+        let instance = wgpu::Instance::new(descriptor);
         let adapter = pollster::block_on(instance.request_adapter(&wgpu::RequestAdapterOptions {
             power_preference: wgpu::PowerPreference::HighPerformance,
             force_fallback_adapter: false, compatible_surface: None, apply_limit_buckets: false,
@@ -108,11 +121,16 @@ impl GpuGather {
         if info.device_type != wgpu::DeviceType::DiscreteGpu {
             return Err(format!("GPU gather requires a discrete hardware adapter, got {} ({:?})",info.name,info.device_type));
         }
+        if info.backend != wgpu::Backend::Vulkan || !adapter.features().contains(wgpu::Features::PASSTHROUGH_SHADERS) {
+            return Err("strict GPU gather requires Vulkan + PASSTHROUGH_SHADERS".into());
+        }
         let (device, queue) = pollster::block_on(adapter.request_device(&wgpu::DeviceDescriptor {
-            label: Some("native-gpu-gather"), required_features: wgpu::Features::empty(),
+            label: Some("native-gpu-gather"), required_features: wgpu::Features::PASSTHROUGH_SHADERS,
             required_limits: adapter.limits(), experimental_features: wgpu::ExperimentalFeatures::disabled(),
             memory_hints: wgpu::MemoryHints::Performance, trace: wgpu::Trace::Off,
         })).map_err(|e| e.to_string())?;
+        compilation.max_storage_buffer_binding_size = device.limits().max_storage_buffer_binding_size;
+        compilation.max_buffer_size = device.limits().max_buffer_size;
         device.on_uncaptured_error(std::sync::Arc::new(|e| panic!("GPU gather error: {e}")));
         let entries: Vec<_> = (0..6).map(|binding| wgpu::BindGroupLayoutEntry {
             binding, visibility: wgpu::ShaderStages::COMPUTE,
@@ -128,10 +146,7 @@ impl GpuGather {
         let pipeline_layout = device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
             label: None, bind_group_layouts: &[Some(&layout)], immediate_size: 0,
         });
-        let module = device.create_shader_module(wgpu::ShaderModuleDescriptor {
-            label: Some("current-mhc-catmull"),
-            source: wgpu::ShaderSource::Wgsl(include_str!("gather.wgsl").into()),
-        });
+        let module = strict_spirv::module(&device, &words);
         let pipeline = |entry| device.create_compute_pipeline(&wgpu::ComputePipelineDescriptor {
             label: Some(entry), layout: Some(&pipeline_layout), module: &module,
             entry_point: Some(entry), compilation_options: Default::default(), cache: None,
@@ -140,7 +155,7 @@ impl GpuGather {
         let quantize = pipeline("quantize_vector");
         Ok(Self { device, queue, layout, mhc, gather, quantize,
             adapter: info.name.clone(), device_type: format!("{:?}",info.device_type),
-            backend: format!("{:?}",info.backend), initialization_ms: start.elapsed().as_secs_f64()*1000.0 })
+            backend: format!("{:?}",info.backend), compilation, initialization_ms: start.elapsed().as_secs_f64()*1000.0 })
     }
 
     /// One call owns one resident source frame. No aligned stack is retained.
