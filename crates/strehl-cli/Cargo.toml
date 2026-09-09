@@ -20,6 +20,8 @@ path = "src/bin/strehl-common-input.rs"
 strehl-core.workspace = true
 strehl-plugin.workspace = true
 strehl-raw.workspace = true
+# Experimental test bridge only; no production GPU dispatch.
+strehl-native-gpu-gather = { path = "../../experiments/native-gpu-gather", optional = true }
 clap.workspace = true
 anyhow.workspace = true
 rayon.workspace = true
@@ -52,3 +54,6 @@ native-correction-variance = ["strehl-core/native-correction-variance"]
 
 # Original-CFA finest-band cue; explicit source opt-in only.
 native-green-cue = ["strehl-core/native-green-cue"]
+
+# Optional current fullres GPU gather equivalence controls.
+native-gpu-gather = ["dep:strehl-native-gpu-gather"]

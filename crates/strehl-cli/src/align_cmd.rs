@@ -2155,7 +2155,24 @@ fn warp_frame_fullres_with_sink<const GREEN_ONLY: bool, F>(
     geom: PlaneGeometry,
     resampler: Resampler,
     scratch: &mut WarpScratch,
+    sink: F,
+) -> Result<f64>
+where F: FnMut(&mut strehl_raw::Frame,(usize,usize),&[f32],&[bool],f32,f32,WarpWriteback)->Result<usize>
+{
+    warp_frame_fullres_with_sink_impl::<GREEN_ONLY,F>(frame,t,geom,resampler,scratch,sink,
+        #[cfg(all(test, feature = "native-gpu-gather"))]
+        None)
+}
+
+fn warp_frame_fullres_with_sink_impl<const GREEN_ONLY: bool, F>(
+    frame: &mut strehl_raw::Frame,
+    t: Similarity,
+    geom: PlaneGeometry,
+    resampler: Resampler,
+    scratch: &mut WarpScratch,
     mut sink: F,
+    #[cfg(all(test, feature = "native-gpu-gather"))]
+    ca_override: Option<Option<strehl_core::optics::OpticalProfile>>,
 ) -> Result<f64>
 where F: FnMut(&mut strehl_raw::Frame,(usize,usize),&[f32],&[bool],f32,f32,WarpWriteback)->Result<usize>
 {
@@ -2231,11 +2248,22 @@ where F: FnMut(&mut strehl_raw::Frame,(usize,usize),&[f32],&[bool],f32,f32,WarpW
 
     // Same gear-guarded CA resolution as the shipped path; `None` => `compose`
     // returns `t` untouched.
+    #[cfg(not(all(test, feature = "native-gpu-gather")))]
     let ident = strehl_raw::identity(&frame.path);
+    #[cfg(all(test, feature = "native-gpu-gather"))]
+    let ident = if ca_override.is_some() { strehl_raw::CaptureIdentity::default() }
+        else { strehl_raw::identity(&frame.path) };
+    #[cfg(not(all(test, feature = "native-gpu-gather")))]
     let ca = strehl_core::optics::profile_for_capture_env(
         ident.model.as_deref(),
         ident.lens_type3,
     )?;
+    #[cfg(all(test, feature = "native-gpu-gather"))]
+    let ca = match ca_override.as_ref() {
+        Some(explicit) => explicit.as_ref(),
+        None => strehl_core::optics::profile_for_capture_env(
+            ident.model.as_deref(), ident.lens_type3)?,
+    };
 
     let fgeom = PlaneGeometry {
         width: fw,
@@ -2295,6 +2323,9 @@ where F: FnMut(&mut strehl_raw::Frame,(usize,usize),&[f32],&[bool],f32,f32,WarpW
     let sites = if GREEN_ONLY { 2 } else { 4 };
     Ok(covered_total as f64 / (sites * geom.pixels()) as f64)
 }
+
+#[cfg(all(test, feature = "native-gpu-gather"))]
+include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/native-gpu-gather/cpu-bridge.rs"));
 
 /// Gate W8 -- `warp_frame_in_place` on a real decoded frame.
 ///

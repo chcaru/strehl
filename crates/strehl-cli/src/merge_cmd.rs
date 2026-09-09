@@ -8062,6 +8062,12 @@ fn write_merged(
 mod tests {
     use super::*;
 
+    #[cfg(feature = "native-gpu-gather")]
+    mod native_gpu_gather_controls {
+        include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/native-gpu-gather/independent-tests.rs"));
+    }
+
+
     #[test]
     fn restoration_accepts_linear_kernels_and_refuses_clamped_catmull() {
         ensure_restoration_supported(Resampler::CatmullRom).unwrap();

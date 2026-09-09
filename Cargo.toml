@@ -1,5 +1,7 @@
 [workspace]
 resolver = "3"
+# Optional experiment dependency keeps its own workspace; ordinary builds do not adopt it.
+exclude = ["experiments/native-gpu-gather"]
 members = [
     "crates/strehl-core",
     "crates/strehl-raw",

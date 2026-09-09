@@ -680,3 +680,13 @@ mod native_correction_variance {
 mod native_green_cue_controls {
     include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/native-green-cue/independent-controls.rs"));
 }
+
+// Reuse the independently commissioned fixture without copying its formulas.
+#[cfg(all(test, feature = "native-gpu-gather"))]
+pub(crate) fn gpu_fixture(w: usize, h: usize, layout: usize, k: usize) -> Frame {
+    m194c_independent_tests::green_fixture(w, h, layout, k)
+}
+#[cfg(all(test, feature = "native-gpu-gather"))]
+pub(crate) fn gpu_warp() -> Similarity {
+    m194c_independent_tests::variance_warp()
+}
