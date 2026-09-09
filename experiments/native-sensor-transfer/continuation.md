@@ -1,5 +1,26 @@
 # Native sensor transfer continuation
 
+Current live checkpoint: native attempt3 is running, PTY session14394.
+Command: selected Python -I -S -B capture-native-continuation.py native.
+Release c524bb3127a39dfa65dd9cf9606d905b5d8739dd; work/native-continuation-release-3.json,
+SHA256d78b0c3d72d55f22570f3d7d21f163087af68a36202709a10f4eab77c8446b00.
+It reuses clean paper0 and runs1..8 with unchanged on4/off1. Original150 sources
+remain fixed. Additive runtime source a83b024b corrects the publication scan and
+saved FileRef path equivalence. All3 publication controls passed at fb620b62.
+Native2 refused before any child/RAW in1.282s on absolute/relative-path equality;
+1.25s parent CPU sample and all evidence remain at02e9da49. Actual corrected
+metadata guard accepts zero and rejects wrong path/bool index. Partial1 is archived
+intact at921bfe02. Every failed attempt remains failed; no175-control replay.
+
+Next after native3: preserve actual outputs and outer bundle; run
+prepare-verify-recovery.py with no arguments; commit release; then
+capture-native-continuation.py verify. Independent recovery sources at a83b024b
+preserve all scientific calculations and join only native1clean0+native3new1..8.
+Sampler independently reviews actual results. No physical model/SOTA result yet.
+Do not change fixed sources during execution. Automation priorities are current.
+
+Earlier checkpoints follow for history.
+
 2026-09-09 current checkpoint: both native builds succeeded (on4/off1).
 All175 preliminary independent controls passed;17/18 retain actual-output checks.
 The native attempt1 actually decoded originals: paper invocation0 completed,
