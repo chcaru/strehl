@@ -1,0 +1,75 @@
+{
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-I",
+    "-S",
+    "-B",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\common-tiff-dimensions\\scratch-control-capture.py",
+    "--source-sha256",
+    "9a4dc0b4749a1b723603ba3a2b64607488f492ae2dae15a4656599262d2f1f51"
+  ],
+  "control_resources": {
+    "cpu_seconds": 5,
+    "read_bytes": 1048576,
+    "wall_seconds": 10,
+    "written_bytes": 1048576
+  },
+  "cwd": "C:\\dev\\blog\\death-of-software\\projects\\strehl",
+  "environment": "Absolute Python312; -I -S -B; no product environment or thread settings read; no child subprocesses inside controls; wrapper inherits environment with same isolated flags.",
+  "execution_count": 1,
+  "expected_exit_code": 0,
+  "full_wrapper_wall_seconds": 20,
+  "groups": 16,
+  "planned_dispatcher_calls": 17,
+  "preparation_sample": {
+    "cpu_seconds": 0.0,
+    "read_bytes": 159262,
+    "wall_seconds": 0.0
+  },
+  "python": {
+    "bytes": 104952,
+    "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "sha256": "4d6f5f81a4bca11191c4c7c6b43632694d0a4ce74e068619d8fdc161d469859a"
+  },
+  "root_release_and_receipt": {
+    "cpu_seconds": 5,
+    "read_bytes": 1048576,
+    "wall_seconds": 10,
+    "written_bytes": 1048576
+  },
+  "schema": "dimensions-scratch-root-release-v1",
+  "scope": "One private16-group17-dispatch fixed commission; no build or image execution; actual detailed results require independent review.",
+  "sources": {
+    "scratch-control-capture.py": {
+      "bytes": 11112,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\common-tiff-dimensions\\scratch-control-capture.py",
+      "sha256": "9a4dc0b4749a1b723603ba3a2b64607488f492ae2dae15a4656599262d2f1f51"
+    },
+    "scratch-scan-controls.py": {
+      "bytes": 19863,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\common-tiff-dimensions\\scratch-scan-controls.py",
+      "sha256": "37c90e6fc52a0f27f7fe5b8c08092bbc1fcb3acc6181fee96911493bcf552f36"
+    },
+    "scratch-scan-source-review.md": {
+      "bytes": 11754,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\common-tiff-dimensions\\scratch-scan-source-review.md",
+      "sha256": "319cc7c7522486bc22a579dcee373affb58fb771c0e33a8b0b617f2e18669e4b"
+    },
+    "scratch-scan-spec.md": {
+      "bytes": 8590,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\common-tiff-dimensions\\scratch-scan-spec.md",
+      "sha256": "c65ef3fbe791c473eb3bdfeca0cd72a40b49f71a6efc3639d442d75566f19ab8"
+    },
+    "scratch-scan.py": {
+      "bytes": 2991,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\common-tiff-dimensions\\scratch-scan.py",
+      "sha256": "3a1aa413fd4c9d37bccb973a419e3f4c03291903d44b7198c53992e7b00d3e46"
+    }
+  },
+  "wrapper_resources": {
+    "cpu_seconds": 5,
+    "read_bytes": 1048576,
+    "wall_seconds": 10,
+    "written_bytes": 1048576
+  }
+}
