@@ -13,15 +13,15 @@ MIB=1<<20;KIB=1024;GIB=1<<30
 BASE=ROOT/"experiments/m194h-pedestal-causality/build-and-run.py"
 BASE_SHA="b505a2fff0024691d98088c599f7f554c1543268de09c836a6bc1fe6c17b7410"
 BUILD_PROCESS=HERE/"bounded-build-process.py"
-BUILD_SHA="f70486f4c8cd1aadf108575849da2b2494b090bd088bb2a057b08dbdd49f4a8c"
-TARGET=ROOT/"target/common-tiff-stack-2"
-EXE=HERE/"build-2/strehl-common-input.exe"
+BUILD_SHA="d27374f6b0fe00c53d2f7110f2ebd553067cb3e2c772d3076547b5f2db9e3d94"
+TARGET=ROOT/"target/common-tiff-stack-3"
+EXE=HERE/"build-3/strehl-common-input.exe"
 CONTROLS=HERE/"independent-controls.py"
 FIXTURES=HERE/"prepare-1/fixtures"
 INDEX=FIXTURES/"index.json"
 RUN_BUNDLE=HERE/"render-bundle-1.json"
 OUTPUTS={s:HERE/(s+"-1") for s in ("build","prepare","render","verify")}
-OUTPUTS["build"]=HERE/"build-2"
+OUTPUTS["build"]=HERE/"build-3"
 STAGES={s:dict(cpu_seconds=60,wall_seconds=120,committed_bytes=512*MIB,file_bytes=16*MIB,scratch_bytes=0)
         for s in OUTPUTS}
 STAGES["build"]=dict(cpu_seconds=600,wall_seconds=300,committed_bytes=3*GIB,file_bytes=128*MIB,scratch_bytes=4*GIB)

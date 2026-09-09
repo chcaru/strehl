@@ -1,4 +1,4 @@
-# Fixed common-TIFF stage controller, build2 source revision
+# Fixed common-TIFF stage controller, build3 source revision
 
 SOURCE ONLY. This protocol authorizes no execution by itself. The root releases
 each of build, prepare, render and verify at most once, in that order, with an
@@ -20,14 +20,14 @@ limits wrapper supplies the new fixed per-child bounds.
 
 The separate bounded-build-process.py differs from the held M194h compile helper
 (16,334 bytes, 6c4b6e6222e1b58ec408fbd949d7a90bbb0c12778c292517c6eb6539eb4b036b)
-only in the exact argv gate. It now names the fresh target2 and Cargo jobs2. Reverse replacement of that gate recovers every original byte.
+only in the exact argv gate. It now names the fresh target3 and Cargo jobs2. Reverse replacement of that gate recovers every original byte.
 All its Job, process, pipe, termination and cleanup functions are unchanged.
 The gate admits only:
 
 cargo build -p strehl-cli --bin strehl-common-input --jobs 2 --target-dir ABS_TARGET
 --message-format=json-render-diagnostics --locked --offline
 
-ABS_TARGET is exactly ROOT/target/common-tiff-stack-2, initially absent.
+ABS_TARGET is exactly ROOT/target/common-tiff-stack-3, initially absent.
 No feature flag is added. This helper is selected only for build child zero.
 Other children use the original strict M193c bounded-process.py
 47b9f8d848759eba61f055b9fdca1f8ac400f134dcd7636f0e0eaaa955704e0b.
@@ -98,7 +98,7 @@ one actual fresh:false non-test bin artifact for strehl-common-input with the
 exact src/bin/strehl-common-input.rs and CLI Cargo.toml, and the successful
 build-finished JSON record. No M194h feature may be present. The source executable
 must be under the new target; its exact bytes are copied to
-build-2/strehl-common-input.exe and hashed again. No old executable is admitted.
+build-3/strehl-common-input.exe and hashed again. No old executable is admitted.
 
 The prepare child is PINNED_PYTHON -I -S -B independent-controls.py prepare
 --output ABS/prepare-1/fixtures --source-sha256 ACTUAL_CONTROLS_SHA.
@@ -279,3 +279,54 @@ Success still requires the full current zero-exit/EOF/empty-owned-Job,
 actual Compiling, fresh:false executable and build-finished success evidence.
 No build2, fixture, product, checker, native API or control has run during this
 source amendment. Root must hold new source pins and release once before it runs.
+
+## Preserved second build and third source release
+
+Build2 did not hit the committed-memory cap. Its saved compiler log contains
+three E0277 errors: LowerHex is not implemented for the sha2 0.11 digest array
+at the old files.rs lines23,194,240. Cargo retained build-finished success:false
+and actual exit101. No executable, fixture, product or checker was produced.
+Direct Cargo exit and pipe EOF were observed; compile successful-completion
+then refused its required zero-exit guard. This is distinct from a resource
+failure and is not a successful intentional descendant-cleanup admission.
+Generic failure cleanup observed one remaining owned member, terminated that
+owned Job successfully and retained final active0 with no cleanup errors.
+The earlier compile-cleanup after-accounting sample had3 active; these are
+separate times, not contradictory or an executable-identity witness.
+
+Actual retained whole-Job CPU is107.46875 seconds, parent CPU sample41.84375,
+combined149.3125. Child wall is58.21799999999348; parent wall sample
+59.905999999988126; actual outer59.937999999994645 seconds, exit1 without external
+timeout. Peak Job committed1,342,238,720 bytes is below the3GiB3,221,225,472 cap.
+Those are measured properties of this failed attempt, not a successful build,
+consumer test or proof that two Cargo jobs are an optimum.
+The child receipt is2,686 bytes/SHA256
+ dc42ef310b6ef9cc5fd120d6e8f654d512e98a1c5d7618568099fcfe9e3d2ca8;
+raw compiler log185,743 bytes/
+ b543b27359f2cb0abd1200ecf5018580206775cbb3a7876acdfa8dc1bfc417f2;
+outer1,591 bytes/
+ 9400e4b6b5e9ac0a2c9966aadd51625e9b660e8b08380bade56ef48da610e837.
+
+Root preserved all156 build2 source buffers before edits through the original
+source archive plus work/frozen-source-2-delta.zip,182,485 bytes/SHA256
+ 6acf8b148922310e66346901ba8e097feb977e597cdd9910f43df53bad2897e5.
+The implementation author's separately reviewed correction is limited to
+explicit lowercase hex encoding at the three digest serialization sites and
+an unused import. Controller build3 changes only target/common-tiff-stack-3,
+build-3 executable/output references and the matching helper source pin; the
+helper changes only its exact target path. Cargo remains --jobs 2, placed
+before --target-dir. All controller function bodies, cleanup/CPU/file readers,
+per-attempt resource caps and12 product/checker cases remain unchanged.
+Old build-1/build-2, targets and release/external files remain preserved.
+Prepare-1/render-1/verify-1 remain fresh, with their exact original population.
+
+A separately released build3 has the same600CPU/300wall/3GiB/128MiB/4GiB caps.
+The first two complete600CPU/300wall allocations remain charged, so three
+entered build allocations total1,800CPU/900wall. Per-Job memory is still3GiB,
+not a cumulative or increased memory ceiling. Root additionally authorizes
+one5CPU/7.5 active-wall metadata preparation slot: six fixed slots (two failed
+build preparations plus current build/prepare/render/verify) total30CPU/45
+active wall. The metadata schema and per-slot sampled tail allowance remain
+unchanged. No control, build3, fixture, product, checker or numerical function
+was run while authoring this source correction. Root independently reviews
+new exact source pins and the third release before any execution.

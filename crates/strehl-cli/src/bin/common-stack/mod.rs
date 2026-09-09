@@ -4,7 +4,7 @@ mod writer;
 
 use std::io::Write;
 use std::panic::{AssertUnwindSafe, catch_unwind};
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
 
 use serde_json::{Value, json};
 use strehl_core::pyramid::{BandMerge, FrameWorkspace, Workspace, level_sizes};

@@ -202,3 +202,21 @@ its parsed AST is unchanged after reversal. No fixture, recipe, numerical
 code, 12-case population, 16-control population, gate, or output interpretation
 changes. prepare-1, render-1 and verify-1 remain the fixed unexecuted stages.
 No fixture, control, product or checker execution accompanies this amendment.
+
+## Build 3 path correction
+
+SOURCE ONLY. Build 2 stopped at compilation with Cargo exit 101: sha2 0.11
+returned digest arrays that did not implement the requested LowerHex format
+at three files.rs sites. No executable, fixture, product output or independent
+checker result was produced. The original source archive and build-2 delta
+preserve the failed attempt. Its resource allocation is retained.
+
+The separately reviewed product repair changes only digest-to-hex conversion
+and its import. Build 3 keeps --jobs 2 and the existing per-attempt limits,
+using fresh build-3 and target/common-tiff-stack-3 paths. The independent
+checker changes exactly one executable-path literal from
+build-2/strehl-common-input.exe to build-3/strehl-common-input.exe. Reversing
+that substitution restores all prior checker source bytes and its AST.
+The 12 cases, 16 controls, fixtures, recipes, gates, numerical code and output
+interpretation are unchanged. prepare-1, render-1 and verify-1 remain fixed.
+No fixture, control, product or checker execution accompanies this amendment.

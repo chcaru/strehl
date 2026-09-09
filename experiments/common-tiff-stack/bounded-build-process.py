@@ -133,7 +133,7 @@ def run(command, env, cwd, log, *, api, wall_seconds, cpu_seconds,
     need(type(command) is list and command and all(type(v) is str for v in command), "child argv")
     for value in (wall_seconds, cpu_seconds, log_bytes, committed_bytes):
         need(value > 0, "positive child bound")
-    target = ROOT / "target/common-tiff-stack-2"
+    target = ROOT / "target/common-tiff-stack-3"
     need(command == ["cargo", "build", "-p", "strehl-cli", "--bin", "strehl-common-input", "--jobs", "2",
                      "--target-dir", str(target), "--message-format=json-render-diagnostics",
                      "--locked", "--offline"], "exact common-TIFF compile-only owned helper")

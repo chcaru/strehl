@@ -126,3 +126,37 @@ stages. Prepare-1/render-1/verify-1 remain unvisited; exactly twelve product cas
 and sixteen saved verifier controls remain fixed. No Rust product, input recipe,
 noise setting, observer, gate or writer code changes. Fresh compilation and all
 later positive/refusal controls remain necessary.
+
+## Build2 compiler failure and separately scoped build3 correction
+
+Build2 ran once from source590bfa3a and release215fb38a. Its actual Cargo exit
+was101 after Compiling strehl-cli and build-finished success:false. Three E0277
+errors at files.rs23/194/240 show that sha2 0.11's finalized digest Array does
+not implement LowerHex. The unused Path import was also reported. The helper's
+zero-exit/EOF requirement then refused admission; it is not the compiler cause.
+
+The two-job build remained within the unchanged3GiB bound: peak Job committed
+memory1,342,238,720 bytes,274 total processes, terminal child CPU107.46875 seconds,
+parent CPU sample41.84375 seconds, aggregate149.3125 seconds. Actual external
+wall59.938 seconds. One owned active process before generic failure cleanup
+became zero, with no cleanup errors. No executable, fixtures or product results
+exist. Failure records and compositional source archive are committedc55ed282.
+The archive1 plus frozen-source-2-delta.zip reproduces all156 build2 sources.
+The delta is182,485 bytes/SHA256
+6acf8b148922310e66346901ba8e097feb977e597cdd9910f43df53bad2897e5.
+
+Build3 corrects only the three digest encodings through a private lowercase
+nibble-table encoder, preserving digest inputs and f32 byte order, and removes
+the unused Path import. Independent source review checked leading zero bytes,
+high/low nibble order and all three call sites. This is a compile repair, not an
+algorithm change. Fresh target/common-tiff-stack-3 and build-3 paths and matching
+controller/helper/checker expectations replace the failed attempt's paths.
+
+Grant one separate build3 slice with the same600CPU/300wall/3GiB/128MiB retained/
+4GiB observed scratch caps and exactly two Cargo jobs. Retain both failed build
+allocations without refund. The metadata lane now has six5CPU/7.5active-wall
+slots including the two failed build preparations, totaling30CPU/45active-wall
+and the existing8MiB cap. Prepare-1/render-1/verify-1 remain unvisited and their
+caps unchanged. Freeze3 must bind all156 current source buffers before execution.
+The twelve product cases and sixteen saved controls remain fixed. No native
+merge, recipe, noise, observer, quality bar or default changes are admitted.

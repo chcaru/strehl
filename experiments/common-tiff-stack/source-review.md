@@ -124,3 +124,37 @@ only build_command changes among its existing functions, plus the named path/pin
 globals. Rust product, fixture recipe, all twelve cases and sixteen scientific
 controls remain unchanged. The checker changed only its expected binary path.
 No stage2 or downstream subject function has run at this review point.
+
+## Build3 review amendment
+
+Build2 now has an actual compiler failure, preserved in root-decision.md and
+commitc55ed282. This amendment is SOURCE-READ, before any build3 execution.
+The independent coordinate reviewer compared the current files against archive1
+plus delta2. Root wrappers change only build attempt/freeze/target3 and the
+six-slice30CPU/45active-wall accounting; all downstream paths and jobs2 remain.
+The Rust repair is exactly a private lowercase nibble encoder, three digest-byte
+call sites, and removal of unused Path. It preserves leading zero bytes, high
+nibble before low, digest inputs and f32 little-endian byte order.
+
+Final independently reviewed pins:
+files.rs8507/SHA256
+162d40ec1788752fb51a0032a2356bd4fffba24277a34656f11401da3c19da7f;
+mod.rs17543/SHA256
+50ba730b4b001c7c8db25416f739a7a1b5e16aa2bc3a1d60c7d17266099bf063;
+prepare-release.py7231/SHA256
+65612090211100ac3d5a3853867eb721a29241a343af64107ad3985cad0d9d2a;
+capture-stage.py3831/SHA256
+064ae7d45aa79240a3fb1d97869c3caff2bc59c5433e7fc7e8bcd15e88961b49;
+run-stage.py29852/SHA256
+25d9b11cd0b99c1720ff460a4237209eaa9c6a36a8ffa8ade50afa608f41cb05;
+bounded-build-process.py16512/SHA256
+d27374f6b0fe00c53d2f7110f2ebd553067cb3e2c772d3076547b5f2db9e3d94.
+
+The controller reviewer reversed the exact path/pin substitutions to recover
+build2 bytes, with all17 controller function bodies identical. The coordinate
+reviewer independently checked target3, build3 executable/output, helper pin and
+exact --jobs 2 compile argv against both wrappers and the checker's expected
+binary path. No remaining blocking source issue was found. Checker fixtures,
+scientific predicates and controls are unchanged; only its expected binary path
+moves. The product author's reverse substitutions recover both original Rust
+buffers; this supports scope only and is not independent runtime verification.

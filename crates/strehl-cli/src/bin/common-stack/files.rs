@@ -19,8 +19,18 @@ pub fn require(ok: bool, reason: &str) -> Result<()> {
     if ok { Ok(()) } else { Err(reason.to_string()) }
 }
 
+fn lower_hex(bytes: &[u8]) -> String {
+    const DIGITS: &[u8; 16] = b"0123456789abcdef";
+    let mut text = String::with_capacity(bytes.len() * 2);
+    for &byte in bytes {
+        text.push(char::from(DIGITS[usize::from(byte >> 4)]));
+        text.push(char::from(DIGITS[usize::from(byte & 15)]));
+    }
+    text
+}
+
 pub fn hash(raw: &[u8]) -> String {
-    format!("{:x}", Sha256::digest(raw))
+    lower_hex(Sha256::digest(raw).as_ref())
 }
 
 pub fn valid_hash(value: &str) -> bool {
@@ -191,7 +201,7 @@ pub fn hash_file(path: &Path, cap: u64) -> Result<FileRef> {
     Ok(FileRef {
         path: path.to_string_lossy().into_owned(),
         bytes: count,
-        sha256: format!("{:x}", digest.finalize()),
+        sha256: lower_hex(digest.finalize().as_ref()),
     })
 }
 
@@ -237,5 +247,5 @@ pub fn f32_hash(values: impl IntoIterator<Item = f32>) -> String {
     for value in values {
         digest.update(value.to_le_bytes());
     }
-    format!("{:x}", digest.finalize())
+    lower_hex(digest.finalize().as_ref())
 }

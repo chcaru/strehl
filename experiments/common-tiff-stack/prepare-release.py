@@ -4,7 +4,7 @@ import argparse,hashlib,json,shutil,sys,time,os,stat
 ROOT=Path(__file__).resolve().parents[2]
 HERE=Path(__file__).resolve().parent
 WORK=HERE/"work"
-BUILD_ATTEMPT=2
+BUILD_ATTEMPT=3
 def attempt(stage):return BUILD_ATTEMPT if stage=="build" else 1
 STAGES=("build","prepare","render","verify")
 def need(v,s):
@@ -59,9 +59,9 @@ def bundle(stage):
 def main():
  started=time.monotonic();cpu_started=time.process_time();a=argparse.ArgumentParser();a.add_argument("stage",choices=STAGES);args=a.parse_args();stage=args.stage
  WORK.mkdir(exist_ok=True)
- freeze=WORK/"source-freeze-2.json";current=source_map()
+ freeze=WORK/"source-freeze-3.json";current=source_map()
  if stage=="build":
-  need(not freeze.exists() and not (HERE/"build-2").exists(),"new initial freeze/build")
+  need(not freeze.exists() and not (HERE/"build-3").exists(),"new initial freeze/build")
   write(freeze,{"schema":"common-tiff-stack-root-source-freeze-v1","source_bindings":current})
  else:
   need(json.loads(raw(freeze))["source_bindings"]==current,"unchanged frozen source bytes")
@@ -78,7 +78,7 @@ def main():
  py=str(Path(sys.executable));controller=str(HERE/"run-stage.py");release=WORK/(stage+"-release-"+str(attempt(stage))+".json")
  controls=str(HERE/"independent-controls.py");controlsha=sources["experiments/common-tiff-stack/independent-controls.py"]["sha256"]
  if stage=="build":
-  commands=[["cargo","build","-p","strehl-cli","--bin","strehl-common-input","--jobs","2","--target-dir",str(ROOT/"target/common-tiff-stack-2"),"--message-format=json-render-diagnostics","--locked","--offline"]]
+  commands=[["cargo","build","-p","strehl-cli","--bin","strehl-common-input","--jobs","2","--target-dir",str(ROOT/"target/common-tiff-stack-3"),"--message-format=json-render-diagnostics","--locked","--offline"]]
  elif stage=="prepare":
   commands=[[py,"-I","-S","-B",controls,"prepare","--output",str(HERE/"prepare-1/fixtures"),"--source-sha256",controlsha]]
  elif stage=="render":
@@ -96,8 +96,8 @@ def main():
  need(not (HERE/(stage+"-"+str(attempt(stage)))).exists(),"unvisited target stage")
  result=write(release,value)
  cpu=time.process_time()-cpu_started;wall=time.monotonic()-started
- need(cpu+1<=5 and wall+2<=7.5,"fixed 5CPU/7.5activewall slice; original build1 charge retained within25CPU/37.5activewall")
- record={"stage":stage,"release":result,"sources":len(sources),"source_bytes":sum(v["bytes"] for v in sources.values()),"metadata_only":True,"parent_cpu_sample":cpu,"active_wall_sample":wall,"charged_cpu_seconds":5,"charged_active_wall_seconds":7.5,"scope":"Four v2 source/metadata construction slices plus retained build1 slice, total25CPU/37.5activewall; no science. Samples plus 1CPU/2wall final allowance must fit each slice."}
+ need(cpu+1<=5 and wall+2<=7.5,"fixed 5CPU/7.5activewall slice; original build1/build2 charges retained within30CPU/45activewall")
+ record={"stage":stage,"release":result,"sources":len(sources),"source_bytes":sum(v["bytes"] for v in sources.values()),"metadata_only":True,"parent_cpu_sample":cpu,"active_wall_sample":wall,"charged_cpu_seconds":5,"charged_active_wall_seconds":7.5,"scope":"Four v3 source/metadata construction slices plus retained build1/build2 slices, total30CPU/45activewall; no science. Samples plus 1CPU/2wall final allowance must fit each slice."}
  write(WORK/(stage+"-preparation-"+str(attempt(stage))+".json"),record)
  print(json.dumps(record),flush=True)
 if __name__=="__main__":main()
