@@ -11,3 +11,8 @@ Use the fixed eight-frame112 selection and saved direct map. Compare actual orig
 No sharpness score is needed to credit a speed change whose complete image is byte-identical. This identity predicate would reject any changed output, including an all-zero image; baseline nonconstant full-payload verification already passed. This is development-prefix speed only, without competitive, quality, deep-stack, cold-cache or alignment-quality claims. Standalone solve cost remains separate.
 
 Root owns execution. Factor owns gatefloor.rs and implementation-notes.md. Coordinate owns independent-tests.rs/independent-review.md. Sampler independently interprets measured costs. Existing process/observer tools remain unchanged except the build helper may take a fresh output directory.
+
+
+## Transfer to one different admitted stack
+
+2026-09-09. Fixed transfer-plan-109.json binds the complete22-frame109MSDCF stack and existing canonical direct map, digest b70554b8cfd9b93e. This is a different stack from112, not a directory mirror. Use the already held original/parallel binaries; no rebuild or alignment solve. The current driver accepts only the fixed --transfer-109 follow-up, runs old/candidate/candidate/old, and writes a fresh transfer-109 directory. First old output is only the byte-equality baseline. Any file/map identity mismatch, whole-TIFF mismatch, nonconstant/full-resolution output failure or owned-process failure stops comparison. No protected holdout is used, no corpus write occurs, and none of the closed112 or physical diagnostic populations is rerun. Existing strict-lint/helper failures do not license new tooling work.
