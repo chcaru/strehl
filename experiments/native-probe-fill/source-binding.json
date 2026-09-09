@@ -1,0 +1,32 @@
+{
+  "source_commit": "3c23f692f14fb1c0368be6b8343fbd0ea0dcef50",
+  "build_invocation_recorded_head": "bb1860ebd9ae9db1eff518f7dfeb1088312bc743",
+  "explanation": "Commit was delayed by a CRLF whitespace check; source bytes were held while compiling and are checked against both build bindings and the committed blobs. No source restore or change occurred during the build.",
+  "bindings": [
+    {
+      "path": "crates/strehl-cli/Cargo.toml",
+      "sha256": "fb925e321c7a9aa74472b6413c1703fb560b11124ba568e1291a3fa19ed5e0d6",
+      "current_bytes_equal_build_binding_and_commit": true
+    },
+    {
+      "path": "crates/strehl-cli/src/merge_cmd.rs",
+      "sha256": "32743997f9191c5da29ea2853453e64f1db2333cc0ee2f022e2021c2f7759baa",
+      "current_bytes_equal_build_binding_and_commit": true
+    },
+    {
+      "path": "experiments/native-pyramid-profile/implementation.rs",
+      "sha256": "85362dd472a95d64704c80235159abb188573914ac3cf9e7ac3b0fa16c029c69",
+      "current_bytes_equal_build_binding_and_commit": true
+    },
+    {
+      "path": "experiments/native-pyramid-profile/build.py",
+      "sha256": "d7f9c0716bfdf6381ff348f6e437cae6645e57d13c85b06c4e166f8fb262d839",
+      "current_bytes_equal_build_binding_and_commit": true
+    },
+    {
+      "path": "crates/strehl-cli/src/merge_cmd/gatefloor.rs",
+      "sha256": "782ea365d6d1a0074c3cf269b9d7761ce27086f3b9e9361cdf2f28931dc92282",
+      "current_bytes_equal_build_binding_and_commit": true
+    }
+  ]
+}

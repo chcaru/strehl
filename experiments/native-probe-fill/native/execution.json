@@ -1,0 +1,47 @@
+{
+  "revision": "c98e2e962524e3d0a6aa09bdfbb55232a9451da4",
+  "source": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-probe-fill\\run-native.py",
+    "sha256": "8503d4f2e23065c216ebbfeb31ae793a390a7a593fc9c51b239e10f62e91863f",
+    "bytes": 4799
+  },
+  "plan": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-pyramid-profile\\native-plan-1.json",
+    "sha256": "947b7fba499cf493d19c1c73f1374693256517983909b84e262d4312958ccf29",
+    "bytes": 4482
+  },
+  "old": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-pyramid-profile\\build-1\\strehl.exe",
+    "sha256": "f8b63d8715c0287c672f0804e8a2f618a6f7c48b10ba9501cf30303fb2c8f84e",
+    "bytes": 10135040
+  },
+  "candidate": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-probe-fill\\build-1\\strehl.exe",
+    "sha256": "1434a2cfe3cc8b673878952b9a4831bf3262731aa718b6ade58089de922498e6",
+    "bytes": 10160640
+  },
+  "baseline_file": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-pyramid-profile\\native\\1-off.tiff",
+    "sha256": "ba96c63dd56f2729ba2ed25fedc19b291a4a78f9992f6823ce501a1df2a8bdc6",
+    "bytes": 197798267
+  },
+  "baseline_decoded": {
+    "shape": [
+      4688,
+      7032,
+      3
+    ],
+    "dtype": "uint16",
+    "bytes": 197796096,
+    "minimum": 0,
+    "maximum": 7920,
+    "sha256": "d5fd6969b77fc94334995dea771e434f65f2b3cf782e1d683ca2872639595a1a"
+  },
+  "mode_order": [
+    "old",
+    "candidate",
+    "candidate",
+    "old",
+    "scalar-control"
+  ]
+}

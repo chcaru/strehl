@@ -1,0 +1,22 @@
+{
+  "command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-probe-fill\\build-1\\cli-tests.exe",
+    "merge_cmd::gatefloor::",
+    "--nocapture",
+    "--test-threads=1"
+  ],
+  "source": {
+    "sha256": "eded1ec1404ccf78d72558cf4e1b4dbfab4c8f8458bda6fcfa8ae34816203583",
+    "bytes": 1779
+  },
+  "executable": {
+    "sha256": "5e50f6a952b0dcadd7e41a22fea60ce9e96f20b55eecbe9cb3ce2b133883b4a3",
+    "bytes": 13063168
+  },
+  "environment_overrides": {
+    "RAYON_NUM_THREADS": "8",
+    "STREHL_PYRAMID_PROFILE": "off"
+  },
+  "removed_environment": [],
+  "revision": "c98e2e962524e3d0a6aa09bdfbb55232a9451da4"
+}

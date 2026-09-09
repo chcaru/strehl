@@ -1,0 +1,164 @@
+{
+  "command": [
+    "cargo",
+    "test",
+    "-p",
+    "strehl-cli",
+    "--bin",
+    "strehl",
+    "--test",
+    "byte-freeze",
+    "--no-run",
+    "--release",
+    "--features",
+    "native-pyramid-profile",
+    "--jobs",
+    "2",
+    "--target-dir",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\target\\native-pyramid-profile",
+    "--message-format=json-render-diagnostics",
+    "--locked",
+    "--offline"
+  ],
+  "exit_code": 0,
+  "error": null,
+  "cleanup_errors": [],
+  "wall_seconds": 94.09399999999914,
+  "log_bytes": 193903,
+  "job_accounting": {
+    "total_user_100ns": 1740156250,
+    "total_kernel_100ns": 54531250,
+    "total_cpu_100ns": 1794687500,
+    "total_page_fault_count": 1929827,
+    "total_processes": 23,
+    "active_processes": 0,
+    "total_terminated_processes": 0
+  },
+  "job_memory": {
+    "peak_process_memory_used_bytes": 1244864512,
+    "peak_job_memory_used_bytes": 1584300032
+  },
+  "terminal_job_accounting": true,
+  "configured_job_limits": {
+    "flags": 8704,
+    "committed_bytes": 4294967296
+  },
+  "direct_exit_observed": true,
+  "pipe_eof_observed": true,
+  "post_exit_drain": {
+    "initial_accounting": {
+      "total_user_100ns": 1740156250,
+      "total_kernel_100ns": 54531250,
+      "total_cpu_100ns": 1794687500,
+      "total_page_fault_count": 1929827,
+      "total_processes": 23,
+      "active_processes": 1,
+      "total_terminated_processes": 0
+    },
+    "last_accounting": {
+      "total_user_100ns": 1740156250,
+      "total_kernel_100ns": 54531250,
+      "total_cpu_100ns": 1794687500,
+      "total_page_fault_count": 1929827,
+      "total_processes": 23,
+      "active_processes": 0,
+      "total_terminated_processes": 0
+    },
+    "observations": [
+      {
+        "wall_seconds": 94.07799999999952,
+        "accounting": {
+          "total_user_100ns": 1740156250,
+          "total_kernel_100ns": 54531250,
+          "total_cpu_100ns": 1794687500,
+          "total_page_fault_count": 1929827,
+          "total_processes": 23,
+          "active_processes": 1,
+          "total_terminated_processes": 0
+        }
+      },
+      {
+        "wall_seconds": 94.07799999999952,
+        "accounting": {
+          "total_user_100ns": 1740156250,
+          "total_kernel_100ns": 54531250,
+          "total_cpu_100ns": 1794687500,
+          "total_page_fault_count": 1929827,
+          "total_processes": 23,
+          "active_processes": 1,
+          "total_terminated_processes": 0
+        }
+      },
+      {
+        "wall_seconds": 94.07799999999952,
+        "accounting": {
+          "total_user_100ns": 1740156250,
+          "total_kernel_100ns": 54531250,
+          "total_cpu_100ns": 1794687500,
+          "total_page_fault_count": 1929827,
+          "total_processes": 23,
+          "active_processes": 0,
+          "total_terminated_processes": 0
+        }
+      }
+    ],
+    "observation_count": 3,
+    "completed": true,
+    "started_wall_seconds": 94.07799999999952,
+    "ended_wall_seconds": 94.07799999999952
+  },
+  "termination": {
+    "attempted": false,
+    "before_accounting": null,
+    "succeeded": false
+  },
+  "limits": {
+    "wall_seconds": 600,
+    "cpu_seconds": 1800,
+    "log_bytes": 16777216,
+    "committed_bytes": 4294967296
+  },
+  "compile_cleanup": {
+    "schema": "m194h-compile-owned-descendant-cleanup-v1",
+    "policy": "AFTER_DIRECT_ZERO_AND_PIPE_EOF",
+    "disposition": "INTENTIONAL_OWNED_JOB_CLEANUP",
+    "attempted": true,
+    "succeeded": true,
+    "completed": true,
+    "before_accounting": {
+      "total_user_100ns": 1740156250,
+      "total_kernel_100ns": 54531250,
+      "total_cpu_100ns": 1794687500,
+      "total_page_fault_count": 1929827,
+      "total_processes": 23,
+      "active_processes": 1,
+      "total_terminated_processes": 0
+    },
+    "after_accounting": {
+      "total_user_100ns": 1740156250,
+      "total_kernel_100ns": 54531250,
+      "total_cpu_100ns": 1794687500,
+      "total_page_fault_count": 1929827,
+      "total_processes": 23,
+      "active_processes": 0,
+      "total_terminated_processes": 0
+    },
+    "remaining_process_ids": [
+      4752
+    ],
+    "pid_query_performed": true,
+    "pid_query_error": null,
+    "started_wall_seconds": 94.07799999999952,
+    "ended_wall_seconds": 94.07799999999952,
+    "wait_seconds": 0.0,
+    "max_wait_seconds": 5,
+    "error": null,
+    "scope": "Only this owned Job is terminated; PIDs are observations, never kill targets. No executable or creation-identity proof. Generic termination records failure cleanup only."
+  },
+  "scope": "compile-only owned job tree; intentional descendant cleanup is separate from natural exit; not a timing benchmark",
+  "log": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-probe-fill\\build-1\\compile.log",
+    "sha256": "d1bbaff72390ef1ec1bf9ba28ccce270e65c1b60b59811c905ae702002020b05",
+    "bytes": 193903
+  }
+}
