@@ -124,12 +124,12 @@ def check_placebo(index, base, primary_receipt, primary_info):
          e["inputs"] == e["collapsed"] == [], "disabled observer captured values or counters")
     op = bound(refs["output"], base, json_file=False)
     out = receipt["output"]
-    need(op.resolve() == resolve(out["path"], rp.parent).resolve() and
+    need(op.samefile(resolve(out["path"], rp.parent)) and
          out["sha256"] == refs["output"]["sha256"], "placebo output binding")
     _, info = S.read_tiff(op)
     for tk, rk in (("file_sha256", "sha256"), ("pixel_sha256", "pixel_sha256_le"), ("bytes", "bytes")):
         need(info[tk] == out[rk], "placebo actual TIFF differs from receipt")
-    need(op.resolve() != Path(primary_info["path"]).resolve(), "placebo reused primary output path")
+    need(not op.samefile(Path(primary_info["path"])), "placebo reused primary output path")
     return {"bindings": refs, "whole_tiff_equal": info["file_sha256"] == primary_info["file_sha256"],
             "decoded_pixels_equal": info["pixel_sha256"] == primary_info["pixel_sha256"]}
 
@@ -197,7 +197,7 @@ def load_population(index_path, scene):
              receipt["decode_counts"] == [1] * 9 and receipt["confidence"] is None, "wrong consumer subset/gauge/reads")
         out = receipt["output"]
         op = bound(row["output"], index_path.parent, json_file=False)
-        need(op.resolve() == resolve(out["path"], rp.parent).resolve() and
+        need(op.samefile(resolve(out["path"], rp.parent)) and
              out["sha256"] == row["output"]["sha256"], "output/receipt binding differs")
         need(str(op.resolve()) not in used, "same delivered path reused")
         used.add(str(op.resolve()))

@@ -1,0 +1,24 @@
+{
+  "command": [
+    "python",
+    "-I",
+    "-B",
+    "experiments\\native-direct-planes\\score.py",
+    "--scene",
+    "flat",
+    "--input-dir",
+    "experiments/native-direct-planes/run-flat-1",
+    "--output-dir",
+    "experiments/native-direct-planes/score-flat-1"
+  ],
+  "scorer_commit": "a868d726eae18a76c19ed91e579c8f308dd7739a",
+  "scorer_sha256": "b9c846b2add6ace15d17a65dd6e83dee28e8d391e93ee0c38737696a35a38677",
+  "exit_code": 1,
+  "wall_seconds": 0.1701982,
+  "exception": "ValueError: output/receipt binding differs",
+  "location": "score.py line200 in load_population",
+  "metrics_computed": false,
+  "output_directory_created": false,
+  "action": "Preserve original source/failed attempt; fix Windows same-file identity in adapter only, independently review; no rerenders or threshold changes.",
+  "software_literal_false_alarm": "Root initially suspected obsolete output software literal. Actual metadata and image_out.rs show CameraLinear TIFFs intentionally use package-only 'strehl 0.0.0' while the plan includes revision. The existing output literal was correct; it is retained."
+}
