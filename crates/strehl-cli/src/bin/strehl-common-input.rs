@@ -1,3 +1,6 @@
+#[path = "common-stack/mod.rs"]
+mod common_stack;
+
 use std::path::{Path, PathBuf};
 
 use strehl_core::pyramid::{BandMerge, FrameWorkspace, MergeConfig, Workspace, level_sizes};
@@ -13,6 +16,9 @@ struct Args {
 
 fn main() {
     let argv: Vec<String> = std::env::args().collect();
+    if argv.iter().any(|value| value == "--stack-manifest") {
+        std::process::exit(common_stack::entry(&argv));
+    }
     let fallback_report = option_value(&argv, "--report").map(PathBuf::from);
     let outcome = std::panic::catch_unwind(|| run(&argv));
     let (code, report_path, body) = match outcome {

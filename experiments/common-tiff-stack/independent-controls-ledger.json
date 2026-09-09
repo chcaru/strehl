@@ -1,0 +1,48 @@
+{
+  "external_parent_stage": "root60CPU/120wall/512MiB/16MiB remains separately authoritative; no inherited native certificate",
+  "final_shape_bound": {
+    "case_summaries": 12,
+    "controls": 16,
+    "each_control_cap": 512,
+    "each_summary_cap": 4096,
+    "identity_accounting_framing_cap": 16384,
+    "limit": 131072,
+    "maximum": 73728
+  },
+  "fixed_product_invocations": 12,
+  "fixed_saved_verifier_controls": 16,
+  "fixture_files": {
+    "index_cap": 262144,
+    "limit": 4194304,
+    "manifest_cap": 65536,
+    "manifests": 12,
+    "maximum": 2891776,
+    "recipe_cap": 8192,
+    "tiff_cap": 131072,
+    "tiffs": 14
+  },
+  "image_reader": "independent stdlib only",
+  "named_buffer_bound": 67108864,
+  "prepare": {
+    "cpu_seconds": 5,
+    "wall_seconds": 10
+  },
+  "publication_included": {
+    "cpu_seconds": 0.25,
+    "wall_seconds": 0.5
+  },
+  "schema": "common-tiff-stack-independent-ledger-v1",
+  "scope": "prospective fixed source limits; no execution",
+  "source_bytes_cap": 131072,
+  "spec_bytes_cap": 16384,
+  "verifier_files": {
+    "actual_stdout_cap": 131072,
+    "final_json_cap": 131072,
+    "limit": 4194304,
+    "maximum": 262144
+  },
+  "verify": {
+    "cpu_seconds": 20,
+    "wall_seconds": 30
+  }
+}
