@@ -2649,9 +2649,14 @@ pub fn sample_bilinear(p: PlaneRef<'_>, x: f64, y: f64) -> f32 {
     if p.width < 2 || p.height < 2 {
         return sample_nearest(p, x, y);
     }
-    let x = x.clamp(0.0, (p.width - 2) as f64);
-    let y = y.clamp(0.0, (p.height - 2) as f64);
-    let (x0, y0) = (x.floor() as usize, y.floor() as usize);
+    // Keep the final legal cell's phase; at its right endpoint use phase 1
+    // on the last stencil, rather than advancing the stencil out of bounds.
+    let x = x.clamp(0.0, (p.width - 1) as f64);
+    let y = y.clamp(0.0, (p.height - 1) as f64);
+    let (x0, y0) = (
+        (x.floor() as usize).min(p.width - 2),
+        (y.floor() as usize).min(p.height - 2),
+    );
     let (fx, fy) = ((x - x0 as f64) as f32, (y - y0 as f64) as f32);
     let i = y0 * p.width + x0;
     let a = p.data[i] * (1.0 - fx) + p.data[i + 1] * fx;
@@ -2689,9 +2694,13 @@ pub fn sample_catmull_rom(p: PlaneRef<'_>, x: f64, y: f64) -> f32 {
     if p.width < 4 || p.height < 4 {
         return sample_bilinear(p, x, y);
     }
-    let x = x.clamp(1.0, (p.width - 3) as f64);
-    let y = y.clamp(1.0, (p.height - 3) as f64);
-    let (x0, y0) = (x.floor() as usize, y.floor() as usize);
+    // Preserve the final legal cell through phase 1 on the last stencil.
+    let x = x.clamp(1.0, (p.width - 2) as f64);
+    let y = y.clamp(1.0, (p.height - 2) as f64);
+    let (x0, y0) = (
+        (x.floor() as usize).min(p.width - 3),
+        (y.floor() as usize).min(p.height - 3),
+    );
     let wx = catmull_rom_weights((x - x0 as f64) as f32);
     let wy = catmull_rom_weights((y - y0 as f64) as f32);
     let mut acc = 0f32;
@@ -2723,9 +2732,13 @@ pub fn sample_clamped_catmull_rom(p: PlaneRef<'_>, x: f64, y: f64) -> f32 {
     if p.width < 4 || p.height < 4 {
         return sample_bilinear(p, x, y);
     }
-    let x = x.clamp(1.0, (p.width - 3) as f64);
-    let y = y.clamp(1.0, (p.height - 3) as f64);
-    let (x0, y0) = (x.floor() as usize, y.floor() as usize);
+    // Preserve the final legal cell through phase 1 on the last stencil.
+    let x = x.clamp(1.0, (p.width - 2) as f64);
+    let y = y.clamp(1.0, (p.height - 2) as f64);
+    let (x0, y0) = (
+        (x.floor() as usize).min(p.width - 3),
+        (y.floor() as usize).min(p.height - 3),
+    );
     let wx = catmull_rom_weights((x - x0 as f64) as f32);
     let wy = catmull_rom_weights((y - y0 as f64) as f32);
     let mut acc = 0f32;
@@ -2818,9 +2831,13 @@ pub fn sample_lanczos3(p: PlaneRef<'_>, x: f64, y: f64) -> f32 {
     if p.width < 6 || p.height < 6 {
         return sample_catmull_rom(p, x, y);
     }
-    let x = x.clamp(2.0, (p.width - 4) as f64);
-    let y = y.clamp(2.0, (p.height - 4) as f64);
-    let (x0, y0) = (x.floor() as usize, y.floor() as usize);
+    // Preserve the final legal cell through phase 1 on the last stencil.
+    let x = x.clamp(2.0, (p.width - 3) as f64);
+    let y = y.clamp(2.0, (p.height - 3) as f64);
+    let (x0, y0) = (
+        (x.floor() as usize).min(p.width - 4),
+        (y.floor() as usize).min(p.height - 4),
+    );
     let wx = lanczos3_weights(x - x0 as f64);
     let wy = lanczos3_weights(y - y0 as f64);
     let mut acc = 0f32;
@@ -2874,9 +2891,13 @@ pub fn sample_lanczos2(p: PlaneRef<'_>, x: f64, y: f64) -> f32 {
     if p.width < 4 || p.height < 4 {
         return sample_bilinear(p, x, y);
     }
-    let x = x.clamp(1.0, (p.width - 3) as f64);
-    let y = y.clamp(1.0, (p.height - 3) as f64);
-    let (x0, y0) = (x.floor() as usize, y.floor() as usize);
+    // Preserve the final legal cell through phase 1 on the last stencil.
+    let x = x.clamp(1.0, (p.width - 2) as f64);
+    let y = y.clamp(1.0, (p.height - 2) as f64);
+    let (x0, y0) = (
+        (x.floor() as usize).min(p.width - 3),
+        (y.floor() as usize).min(p.height - 3),
+    );
     let wx = lanczos2_weights(x - x0 as f64);
     let wy = lanczos2_weights(y - y0 as f64);
     let mut acc = 0f32;
@@ -2939,6 +2960,9 @@ impl Resampler {
     /// slightly smaller valid rectangle, which is correct and visible.
     #[inline]
     pub fn sample_checked(self, p: PlaneRef<'_>, x: f64, y: f64) -> Option<f32> {
+        if !x.is_finite() || !y.is_finite() {
+            return None;
+        }
         let s = self.support();
         if x < s - 0.5 || y < s - 0.5 {
             return None;
