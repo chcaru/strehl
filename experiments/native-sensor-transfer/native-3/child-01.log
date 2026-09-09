@@ -1,0 +1,16 @@
+
+running 1 test
+test merge_cmd::native_sensor_transfer::fixed_native_sensor_transfer_pair ... output domain    : compact Crop 128x128 from full-plane origin (1694, 1108); collapsed plane written directly (no second crop)
+
+wrote           : \\?\C:\dev\blog\death-of-software\projects\strehl\experiments\native-sensor-transfer\native-run-2\route-0-native.tiff.stage (256 x 256, 16-bit RGB, linear camera-native RGB, Malvar-He-Cutler demosaic)
+                  Full sensor resolution: every CFA site estimated, one focus
+                  decision per quad. Interpolated -- do not measure resolution on it.
+output domain    : compact Crop 128x128 from full-plane origin (1694, 1108); collapsed plane written directly (no second crop)
+
+wrote           : \\?\C:\dev\blog\death-of-software\projects\strehl\experiments\native-sensor-transfer\native-run-2\route-1-native.tiff.stage (256 x 256, 16-bit RGB, linear camera-native RGB, Malvar-He-Cutler demosaic)
+                  Full sensor resolution: every CFA site estimated, one focus
+                  decision per quad. Interpolated -- do not measure resolution on it.
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 162 filtered out; finished in 42.60s
+
