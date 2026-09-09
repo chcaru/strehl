@@ -355,6 +355,7 @@ fn independent_gpu_gather_controls() {
     report["backend"]=json!(gpu.backend);
     report["device_type"]=json!(gpu.device_type);
     report["compilation"]=json!(gpu.compilation);
+    report["schedule"]=json!(format!("{:?}",gpu.schedule()));
     save(&path,&report);
     report["literal_quantization"]=capture(||literal_quantization(&mut gpu));
     save(&path,&report);
@@ -386,6 +387,7 @@ fn independent_gpu_gather_controls() {
         row["backend"]=json!(undecorated.backend);
         row["device_type"]=json!(undecorated.device_type);
         row["compilation"]=json!(undecorated.compilation);
+        row["schedule"]=json!(format!("{:?}",undecorated.schedule()));
         Ok(row)
     });
     diagnostic["status"]=json!("RETURNED_OR_CAUGHT_ERROR");

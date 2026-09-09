@@ -1835,6 +1835,7 @@ dependencies = [
  "bytemuck",
  "naga",
  "pollster",
+ "rayon",
  "serde",
  "sha2",
  "spirv",

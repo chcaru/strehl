@@ -8,7 +8,7 @@ def save(path,value):
     with path.open("x",encoding="utf-8") as f:
         json.dump(value,f,indent=2,allow_nan=False);f.write("\n")
 assert sys.argv[1:]==[],"one fixed allocation, no sweep"
-build=HERE/"build-6"
+build=HERE/"build-native-2"
 receipt=json.loads((build/"invocation.json").read_text(encoding="utf-8"))
 def check_sources():
     for e in receipt["source_files"]:
@@ -16,14 +16,14 @@ def check_sources():
 check_sources()
 held=json.loads((build/"executables.json").read_text(encoding="utf-8"))["cli-tests"]
 exe=ROOT/held["path"];assert m.binding(exe)=={k:held[k] for k in ("bytes","sha256")}
-out=HERE/"run-3";out.mkdir()
+out=HERE/"run-4";out.mkdir()
 fields={"RAYON_NUM_THREADS":"2","STREHL_FULLRES_GATHER":"1",
         "STREHL_PROBE_GATHER":"green","STREHL_WARP_WRITEBACK":"parallel",
         "STREHL_DEFECT":"off","STREHL_GPU_GATHER_OUTPUT":str(out)}
 env,removed=m.clean_environment(fields.items())
 argv=[str(exe),"--exact","merge_cmd::tests::native_gpu_gather_controls::independent_gpu_gather_controls",
       "--ignored","--nocapture","--test-threads=1"]
-protocol={p.name:m.binding(p) for p in (HERE/"run.py",HERE/"independent-design.md",HERE/"independent-review.md",HERE/"charter.md",HERE/"execution-1.md",HERE/"execution-2.md")}
+protocol={p.name:m.binding(p) for p in (HERE/"run.py",HERE/"independent-design.md",HERE/"independent-review.md",HERE/"charter.md",HERE/"execution-1.md",HERE/"execution-2.md",HERE/"execution-4.md")}
 save(out/"invocation.json",dict(command=argv,overrides=fields,removed_environment=removed,
     executable=held,build=m.binding(build/"invocation.json"),source_revision=receipt["revision"],protocol=protocol))
 api=m.load_job_api(m.binding(ROOT/"experiments/m12-scorecard/m12-harness.py"))

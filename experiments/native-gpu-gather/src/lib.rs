@@ -4,13 +4,19 @@
 //! Source/operation ordering is preserved, but GPU compiler contraction and
 //! final rounded equivalence require independent execution, not a source claim.
 use std::time::Instant;
+use rayon::prelude::*;
 use strehl_core::{align::{Resampler, Similarity}, plane::PlaneGeometry};
 use wgpu::util::DeviceExt;
 #[path = "strict-spirv.rs"]
 mod strict_spirv;
 pub use strict_spirv::CompilationReport;
 
-const STRIP_ROWS: usize = 32;
+/// Two fixed schedules for the same descriptor arithmetic and strict shader.
+#[derive(Clone, Copy, Debug, Eq, PartialEq, serde::Serialize)]
+pub enum Schedule { Serial32, Parallel256 }
+impl Schedule {
+    fn strip_rows(self) -> usize { match self { Self::Serial32 => 32, Self::Parallel256 => 256 } }
+}
 pub const INVALID: u32 = u32::MAX;
 pub const UNCONSUMED: u32 = u32::MAX - 1;
 
@@ -77,6 +83,7 @@ pub struct Output {
     pub height: usize,
     pub covered: usize,
     pub consumed_sites: usize,
+    pub schedule: Schedule,
     pub costs: Costs,
 }
 
@@ -91,6 +98,7 @@ pub struct GpuGather {
     mhc: wgpu::ComputePipeline,
     gather: wgpu::ComputePipeline,
     quantize: wgpu::ComputePipeline,
+    schedule: Schedule,
     pub adapter: String,
     pub device_type: String,
     pub backend: String,
@@ -153,10 +161,14 @@ impl GpuGather {
         });
         let mhc = pipeline("mhc"); let gather = pipeline("gather");
         let quantize = pipeline("quantize_vector");
-        Ok(Self { device, queue, layout, mhc, gather, quantize,
+        Ok(Self { device, queue, layout, mhc, gather, quantize, schedule: Schedule::Parallel256,
             adapter: info.name.clone(), device_type: format!("{:?}",info.device_type),
             backend: format!("{:?}",info.backend), compilation, initialization_ms: start.elapsed().as_secs_f64()*1000.0 })
     }
+
+    /// Change only descriptor scheduling and strip size; reuse this GPU context.
+    pub fn set_schedule(&mut self, schedule: Schedule) { self.schedule = schedule; }
+    pub fn schedule(&self) -> Schedule { self.schedule }
 
     /// One call owns one resident source frame. No aligned stack is retained.
     /// The caller must explicitly select this experiment; unsupported modes
@@ -210,7 +222,9 @@ impl GpuGather {
             for x in (0..w).step_by(2) { packed.push(u32::from(input.data[row+x]) | (u32::from(input.data[row+x+1])<<16)); }
         }
         costs.pack_ms = pack_start.elapsed().as_secs_f64()*1000.0;
-        let strip_n = w*STRIP_ROWS.min(h);
+        let schedule = self.schedule;
+        let strip_rows = schedule.strip_rows();
+        let strip_n = w*strip_rows.min(h);
         let source_bytes = (n*2) as u64;
         let rgb_bytes = (n*4*if input.green_only {1} else {3}) as u64;
         let plan_bytes = (strip_n*std::mem::size_of::<SamplePlan>()) as u64;
@@ -265,28 +279,47 @@ impl GpuGather {
         costs.device_buffer_bytes = source_bytes+rgb_bytes+plan_bytes+4*output_bytes+std::mem::size_of::<Params>() as u64;
         let mut all_coverage = Vec::with_capacity(n/2);
         let mut covered = 0usize;
-        let mut plan = Vec::with_capacity(strip_n);
-        for y_start in (0..h).step_by(STRIP_ROWS) {
-            let rows = STRIP_ROWS.min(h-y_start);
-            let coordinate_start = Instant::now(); plan.clear();
-            for y in y_start..y_start+rows { for x in 0..w {
-                let ci = if y%2 == 0 && x%2 == 0 {0} else if y%2 == 1 && x%2 == 1 {2} else {1};
-                if input.green_only && ci != 1 {
-                    plan.push(SamplePlan{x0:UNCONSUMED,y0:0,fx:0.0,fy:0.0});continue;
+        let mut plan = match schedule {
+            Schedule::Serial32 => Vec::with_capacity(strip_n),
+            // Initialize once, not once per strip. Only the last strip truncates.
+            Schedule::Parallel256 => vec![SamplePlan{x0:INVALID,y0:0,fx:0.0,fy:0.0}; strip_n],
+        };
+        let point = |y: usize, x: usize| {
+            let ci = if y%2 == 0 && x%2 == 0 {0} else if y%2 == 1 && x%2 == 1 {2} else {1};
+            if input.green_only && ci != 1 {
+                return SamplePlan{x0:UNCONSUMED,y0:0,fx:0.0,fy:0.0};
+            }
+            let (sx,sy) = input.pulls[ci].apply_at((x/2) as f64+(x%2) as f64*0.5,
+                (y/2) as f64+(y%2) as f64*0.5,gw as f64*0.5,gh as f64*0.5);
+            plan_at(w,h,2.0*sx,2.0*sy)
+        };
+        let invalid = |tap: &SamplePlan| tap.x0 < UNCONSUMED && (tap.x0 < 1 || tap.y0 < 1
+            || tap.x0 as usize + 2 >= w || tap.y0 as usize + 2 >= h
+            || !tap.fx.is_finite() || !tap.fy.is_finite()
+            || !(0.0..=1.0).contains(&tap.fx) || !(0.0..=1.0).contains(&tap.fy));
+        for y_start in (0..h).step_by(strip_rows) {
+            let rows = strip_rows.min(h-y_start);
+            let coordinate_start = Instant::now();
+            match schedule {
+                Schedule::Serial32 => {
+                    plan.clear();
+                    for y in y_start..y_start+rows { for x in 0..w { plan.push(point(y,x)); } }
                 }
-                let (sx,sy) = input.pulls[ci].apply_at((x/2) as f64+(x%2) as f64*0.5,
-                    (y/2) as f64+(y%2) as f64*0.5,gw as f64*0.5,gh as f64*0.5);
-                plan.push(plan_at(w,h,2.0*sx,2.0*sy));
-            }}
-            if let Some(f) = mutate.as_mut() { f(y_start, &mut plan); }
-            for tap in &plan {
-                if tap.x0 < UNCONSUMED && (tap.x0 < 1 || tap.y0 < 1
-                    || tap.x0 as usize + 2 >= w || tap.y0 as usize + 2 >= h
-                    || !tap.fx.is_finite() || !tap.fy.is_finite()
-                    || !(0.0..=1.0).contains(&tap.fx) || !(0.0..=1.0).contains(&tap.fy)) {
-                    return Err("coordinate control supplied an invalid Catmull stencil".into());
+                Schedule::Parallel256 => {
+                    plan.truncate(rows*w);
+                    plan.par_chunks_mut(w).enumerate().for_each(|(row, taps)| {
+                        let y = y_start+row;
+                        for (x,tap) in taps.iter_mut().enumerate() { *tap = point(y,x); }
+                    });
                 }
             }
+            // Parallel row completion precedes the independent mutation seam.
+            if let Some(f) = mutate.as_mut() { f(y_start, &mut plan); }
+            let invalid_plan = match schedule {
+                Schedule::Serial32 => plan.iter().any(invalid),
+                Schedule::Parallel256 => plan.par_chunks(w).any(|row|row.iter().any(invalid)),
+            };
+            if invalid_plan { return Err("coordinate control supplied an invalid Catmull stencil".into()); }
             costs.coordinate_ms += coordinate_start.elapsed().as_secs_f64()*1000.0;
             let execute_start = Instant::now();
             params.dims[2] = y_start as u32;params.dims[3] = rows as u32;
@@ -316,7 +349,7 @@ impl GpuGather {
         }
         costs.total_ms = total.elapsed().as_secs_f64()*1000.0;
         Ok(Output { packed,coverage:all_coverage,width:w,height:h,covered,
-            consumed_sites:if input.green_only {n/2} else {n},costs })
+            consumed_sites:if input.green_only {n/2} else {n},schedule,costs })
     }
 
     /// Test-only-purpose entry point, using the actual shader quantizer.

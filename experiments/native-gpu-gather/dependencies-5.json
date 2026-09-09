@@ -1,0 +1,20 @@
+{
+  "command": [
+    "cargo",
+    "metadata",
+    "--offline",
+    "--format-version=1",
+    "--filter-platform",
+    "x86_64-pc-windows-msvc",
+    "--features",
+    "native-gpu-gather"
+  ],
+  "exit_code": 0,
+  "stderr": "",
+  "original_lock_sha256": "6603a0ca2a03d2bf0ed8e58cb1214b482d34b1302f45d2d125b9d4b448feb59d",
+  "current_lock_sha256": "e83ef4556e3184ad71c3c2e36c0878fbba197bb41af3650312d9279666e78ead",
+  "added_packages": [],
+  "removed_or_changed_existing": [],
+  "metadata_packages": 217,
+  "metadata_sha256": "172c7098581846f681bbd2720c2cc94c5f9d9e5df9c28c34a5e26ce4d6a5cfa2"
+}

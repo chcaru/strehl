@@ -13,6 +13,8 @@ strehl-core = { path = "../../crates/strehl-core" }
 wgpu = "30"
 bytemuck = { version = "1", features = ["derive"] }
 pollster = "0.4"
+# Reuse the CLI's existing Rayon pool; do not create a second worker pool.
+rayon = "=1.12.0"
 # Existing package versions; spv-in additionally enables Naga's petgraph parser.
 # Only the embedded owned shader is compiled/validated.
 naga = { version = "=30.0.1", features = ["wgsl-in", "spv-out", "spv-in"] }

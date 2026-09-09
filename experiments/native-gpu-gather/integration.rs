@@ -1,11 +1,11 @@
 // Feature-gated child module of align_cmd (native-gpu-gather).
-// gpu_gather_enabled() validates both switches at merge configuration entry,
+// gpu_gather_enabled() validates switches at merge configuration entry,
 // even for a plane-route render. The fullres wrapper tries gpu_remosaic before
 // its CPU sink; the direct sink tries gpu_rounded_planes after argument checks.
 // Neither hook belongs in fullres_with_sink: the fixed CPU oracle stays CPU.
 use super::*;
 use std::sync::{Mutex, OnceLock};
-use strehl_native_gpu_gather::{GpuGather, Input, Output};
+use strehl_native_gpu_gather::{GpuGather, Input, Output, Schedule};
 
 // One context shared across actual RGB, RGB probe and green-only probe calls.
 static GPU: OnceLock<std::result::Result<Mutex<GpuGather>, String>> = OnceLock::new();
@@ -23,15 +23,27 @@ fn gpu_log_mode() -> Result<GpuLog> {
     }) { Ok(mode) => Ok(*mode), Err(message) => bail!("{message}") }
 }
 
+fn gpu_schedule() -> Result<Schedule> {
+    static SCHEDULE: OnceLock<std::result::Result<Schedule, String>> = OnceLock::new();
+    match SCHEDULE.get_or_init(|| match std::env::var("STREHL_GPU_SCHEDULE") {
+        Err(std::env::VarError::NotPresent) => Ok(Schedule::Parallel256),
+        Ok(v) if v == "parallel" => Ok(Schedule::Parallel256),
+        Ok(v) if v == "serial" => Ok(Schedule::Serial32),
+        other => Err(format!("STREHL_GPU_SCHEDULE: expected parallel or serial, got {other:?}")),
+    }) { Ok(schedule) => Ok(*schedule), Err(message) => bail!("{message}") }
+}
+
 pub(crate) fn gpu_gather_enabled() -> Result<bool> {
     gpu_log_mode()?; // Validate before data, including when GPU dispatch is off.
     static MODE: OnceLock<std::result::Result<bool, String>> = OnceLock::new();
-    match MODE.get_or_init(|| match std::env::var("STREHL_GPU_GATHER") {
+    let enabled = match MODE.get_or_init(|| match std::env::var("STREHL_GPU_GATHER") {
         Err(std::env::VarError::NotPresent) => Ok(false),
         Ok(v) if v == "off" => Ok(false),
         Ok(v) if v == "on" => Ok(true),
         other => Err(format!("STREHL_GPU_GATHER: expected off or on, got {other:?}")),
-    }) { Ok(value) => Ok(*value), Err(message) => bail!("{message}") }
+    }) { Ok(value) => *value, Err(message) => bail!("{message}") };
+    if enabled { gpu_schedule()?; } // CPU-only requests never select a GPU schedule.
+    Ok(enabled)
 }
 
 fn eligible(resampler: Resampler) -> Result<bool> {
@@ -67,11 +79,12 @@ fn run<const GREEN_ONLY: bool>(frame: &strehl_raw::Frame, t: Similarity,
         geom, black: frame.levels.black, gain, inverse_gain, pulls,
         green_only: GREEN_ONLY, malvar: true, resampler };
     let gpu = match GPU.get_or_init(|| {
-        let gpu = GpuGather::new()?;
+        let mut gpu = GpuGather::new()?;
+        gpu.set_schedule(gpu_schedule().map_err(|e|e.to_string())?);
         match gpu_log_mode().map_err(|e|e.to_string())? {
             GpuLog::Off => {}
-            GpuLog::On => eprintln!("  GPU gather: {} / {} / {}; initialization {:.3} ms; {}", gpu.adapter,
-                gpu.backend, gpu.device_type, gpu.initialization_ms,
+            GpuLog::On => eprintln!("  GPU gather: {} / {} / {}; schedule {:?}; initialization {:.3} ms; {}", gpu.adapter,
+                gpu.backend, gpu.device_type, gpu.schedule(), gpu.initialization_ms,
                 serde_json::to_string(&gpu.compilation).map_err(|e|e.to_string())?),
             GpuLog::Placebo => eprintln!("  GPU gather statistics: INITIALIZATION PLACEBO"),
         }
@@ -83,8 +96,8 @@ fn run<const GREEN_ONLY: bool>(frame: &strehl_raw::Frame, t: Similarity,
         .run(&input).map_err(anyhow::Error::msg)?;
     match gpu_log_mode()? {
         GpuLog::Off => {}
-        GpuLog::On => eprintln!("  GPU gather {}: {}x{}, covered {}/{}, library call {:.3} ms, pack {:.3}, CPU coordinates {:.3}, submit/wait/readback {:.3}; upload {} B, download {} B",
-            if GREEN_ONLY { "green-only" } else { "RGB" }, output.width, output.height,
+        GpuLog::On => eprintln!("  GPU gather {} {:?}: {}x{}, covered {}/{}, library call {:.3} ms, pack {:.3}, CPU coordinates {:.3}, submit/wait/readback {:.3}; upload {} B, download {} B",
+            if GREEN_ONLY { "green-only" } else { "RGB" }, output.schedule, output.width, output.height,
             output.covered, output.consumed_sites, output.costs.total_ms, output.costs.pack_ms,
             output.costs.coordinate_ms, output.costs.submit_wait_readback_ms,
             output.costs.source_upload_bytes + output.costs.coordinate_upload_bytes + output.costs.parameter_upload_bytes,

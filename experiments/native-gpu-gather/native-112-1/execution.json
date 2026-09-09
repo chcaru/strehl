@@ -1,0 +1,68 @@
+{
+  "source": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-gpu-gather\\run-native.py",
+    "sha256": "c16d06d15b7b7a38a47ee6111c5af8665319b07792e7425d0aa8018bf2ae15eb",
+    "bytes": 7396
+  },
+  "protocol": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-gpu-gather\\execution-3.md",
+    "sha256": "3fd9291e6d32d3e1d3143b6a47b221152505d2d582c2ef12934164243e8bc985",
+    "bytes": 2001
+  },
+  "revision": "b6f5f6be8df15dc57dc499cc2683470550c35750",
+  "build": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-gpu-gather\\build-native-1\\invocation.json",
+    "sha256": "96e4217c128f5d3d9bb71ba8a70e723bacd3e7223d8d80e39255908af484774f",
+    "bytes": 5958
+  },
+  "executable": {
+    "path": "experiments\\native-gpu-gather\\build-native-1\\strehl.exe",
+    "bytes": 17104384,
+    "sha256": "809d0c3d935fc5e01df90b9379776a4d03a48210561964dbe029338fbf208c40"
+  },
+  "plan": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-pyramid-profile\\native-plan-1.json",
+    "sha256": "947b7fba499cf493d19c1c73f1374693256517983909b84e262d4312958ccf29",
+    "bytes": 4482
+  },
+  "map": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-pyramid-profile\\native\\112-eight.warpmap.json",
+    "sha256": "1bc98923196b82699eb62b35bbed7c2b9c7e37b5f4cec9140703c6155050dddc",
+    "bytes": 1557
+  },
+  "arms": [
+    [
+      "cpu",
+      "off",
+      "off"
+    ],
+    [
+      "gpu",
+      "off",
+      "off"
+    ],
+    [
+      "cpu",
+      "rounded",
+      "off"
+    ],
+    [
+      "gpu",
+      "rounded",
+      "off"
+    ],
+    [
+      "gpu",
+      "rounded",
+      "on"
+    ],
+    [
+      "gpu",
+      "rounded",
+      "placebo"
+    ]
+  ],
+  "expected_whole": "ba96c63dd56f2729ba2ed25fedc19b291a4a78f9992f6823ce501a1df2a8bdc6",
+  "expected_decoded": "d5fd6969b77fc94334995dea771e434f65f2b3cf782e1d683ca2872639595a1a",
+  "scope": "fixed native consumer identity; timing excludes saved alignment solve"
+}

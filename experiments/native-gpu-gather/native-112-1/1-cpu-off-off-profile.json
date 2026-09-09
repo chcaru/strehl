@@ -1,0 +1,57 @@
+{
+  "mode": "on",
+  "outer": {
+    "alignment_wall_seconds": 0.0003282,
+    "collapse_write_wall_seconds": 0.3295674,
+    "fold_wall_seconds": 4.3600057,
+    "prologue_wall_seconds": 0.1237146,
+    "total_before_profile_publication": 4.8196425000000005
+  },
+  "phases": [
+    {
+      "calls": 8,
+      "phase": "decode-validate",
+      "wall_nanoseconds": 613559800,
+      "wall_seconds": 0.6135598
+    },
+    {
+      "calls": 0,
+      "phase": "defect",
+      "wall_nanoseconds": 0,
+      "wall_seconds": 0.0
+    },
+    {
+      "calls": 8,
+      "phase": "gather",
+      "wall_nanoseconds": 1355251100,
+      "wall_seconds": 1.3552511
+    },
+    {
+      "calls": 8,
+      "phase": "probe",
+      "wall_nanoseconds": 1144128200,
+      "wall_seconds": 1.1441282000000002
+    },
+    {
+      "calls": 8,
+      "phase": "extract-luma",
+      "wall_nanoseconds": 103511000,
+      "wall_seconds": 0.103511
+    },
+    {
+      "calls": 8,
+      "phase": "variance",
+      "wall_nanoseconds": 11975400,
+      "wall_seconds": 0.0119754
+    },
+    {
+      "calls": 8,
+      "phase": "pyramid-add",
+      "wall_nanoseconds": 632210300,
+      "wall_seconds": 0.6322103
+    }
+  ],
+  "schema": "native-pyramid-phase-profile-v1",
+  "scope": "Wall intervals only, not CPU. Decode/extract phases cover load_frame consumers including optional confidence passes. Variance/add cover BandWorker folds. No startup, plan/worker allocation, reduction/absorb, beta bookkeeping or final publication in leaf sum. Current canonical fold is serial; concurrency would make a leaf sum worker-time rather than elapsed pipeline time.",
+  "summed_phase_wall_seconds": 3.8606358000000003
+}
