@@ -259,3 +259,45 @@ Root prospectively adds one5CPU30active-wall1MiBread final readback/publication
 slice within the same1MiB retained family, preserving the earlier overrun
 without refund or re-executing the controls/predicates. Separate final saved
 audit remains required for the actual software results.
+
+CURRENT: original24 applications and135 numerical controls have executed once.
+Verifier671e10fa passes PASS_COMMON_RGB_DIMENSIONS_SOFTWARE_INTEGRATION,
+all24 cases/135 controls, failures[]. Actual checker31792B
+80384f8b86e8831908f03b7da33963070186fe1b0557a2b856ae751ef560241f.
+Saved checker reports exact noisy off/on/placebo whole-TIFF/pixel equality,
+and fixed odd-offset error0 within the unchanged1-code-unit allowance.
+These are actual independently authored checker results; final separate
+saved-byte/interpretation audit remains pending, not implicitly complete.
+Verify outer4.515s, parent-tail1.546875CPU plus childJob2.6875CPU; wrapper0,
+no timeout/finalization errors. All11files are committed; no retry is needed.
+
+Control review finalization is now complete at edbb88eb, preserving its earlier
+publication overrun. Review16487B a46263cc0a91469d67779f44130f9185387cf0d9ede8b21fd2ebd6e72cf5c98a;
+receipt214061B18021663a05f1217c15dd9faf24e4e9e2000f0f2447618a256bde3a6321d4c61.
+Prospective final slice5CPU30activewall1MiBread completed; readback457204B,
+retained230548B, finalizer0.0895978s/exit0. Original full20wall compliance is
+false; no control or253-predicate rerun occurred.
+
+Final saved-data audit SOURCE PREPARATION is active:
+coordinate owns dimensions-independent-saved-read.py and separate
+dimensions-independent-result-recovery-amendment.md; sampler owns independent
+source/choice review. Original plan16005B466c78d2 remains unchanged.
+Root will construct a closed16-key actual role manifest only after those pins:
+schema,reader,plan,amendment,producer_freeze,execution_freeze,stages,history,
+fixtures,checker,executable,legacy,profile,root_captures,retained_history,output.
+stages are build2/failedprepare1/recovery1/render1/verify1; history retains
+build1 separately. Five-stage sources mean old190 plus explicit current200.
+checker means actualverify1/check/result.json. Root captures are separate
+nine-key records of direct-wrapper intervals and actual exit, not stage samples.
+Read grant remains30CPU60activewall256MiBread16MiBretained, one saved pass;
+no image/checker/candidate rerun. Final reader has not executed.
+
+Factor drafts docs/research/common-tiff-dimensions.md with final audit pending.
+Its next-integer-charter-draft.md13132B82255b9a53477c8b55c10b32a74e17a0a7d6101cab2c1ed035ff96f8d10ee93d
+was read by root and accepted as a next-task proposal only:14candidatecases,
+supplied integer maps, crop before pyramids at u16 consumption. No crate edit
+or new image release until current final audit closes and root fixes next scope.
+For outside-crop mutation, final registration must distinguish pixel invariance
+from whole-TIFF metadata invariance. All200 current source bindings stay frozen.
+No owned process is running; no session remains. Hourly automation was updated
+to this actual checkpoint and stays quiet unless a meaningful result arrives.
