@@ -1,0 +1,2318 @@
+{
+  "schema": "alignment-angular-spectrum-fixed-v1",
+  "status": "COMPLETE_UNINTERPRETED",
+  "rows": [
+    {
+      "arm": "no-blur",
+      "descriptor": "ordinary",
+      "rung": 0,
+      "reference": 144,
+      "expected_scale": 1.0561223412120058,
+      "expected_log_scale": 0.05460403199404058,
+      "error_m103_plane_px": null,
+      "estimate": {
+        "accepted": false,
+        "scale": null,
+        "log_scale": null,
+        "reason": "ambiguous-peak",
+        "info_reference": {
+          "energy": 331567.00859176443,
+          "mean_energy": 2.803427764743679,
+          "information": 0.0997447129221009
+        },
+        "info_moving": {
+          "energy": 396727.6994301744,
+          "mean_energy": 3.3543670474006904,
+          "information": 0.0914273247462913
+        },
+        "peak_score": 0.9999999574641474,
+        "peak_margin": 0.0003465394264187127,
+        "integer_shift": -10,
+        "refined_shift": null
+      },
+      "input_kind": "direct analytic image"
+    },
+    {
+      "arm": "no-blur",
+      "descriptor": "centred",
+      "rung": 0,
+      "reference": 144,
+      "expected_scale": 1.0561223412120058,
+      "expected_log_scale": 0.05460403199404058,
+      "error_m103_plane_px": 0.0005030384596627842,
+      "estimate": {
+        "accepted": true,
+        "scale": 1.0561225926588445,
+        "log_scale": 0.05460427007896574,
+        "reason": null,
+        "info_reference": {
+          "energy": 88044.19290153155,
+          "mean_energy": 0.7444212738562935,
+          "information": 0.32537959609918865
+        },
+        "info_moving": {
+          "energy": 107015.27136537043,
+          "mean_energy": 0.9048233847856672,
+          "information": 0.2866835402904677
+        },
+        "peak_score": 0.9999998476556611,
+        "peak_margin": 0.0011628004444091955,
+        "integer_shift": -10,
+        "refined_shift": -10.063801308334972
+      },
+      "input_kind": "direct analytic image"
+    },
+    {
+      "arm": "no-blur",
+      "descriptor": "ordinary",
+      "rung": 8,
+      "reference": 144,
+      "expected_scale": 1.0534081067950911,
+      "expected_log_scale": 0.05203072387491431,
+      "error_m103_plane_px": null,
+      "estimate": {
+        "accepted": false,
+        "scale": null,
+        "log_scale": null,
+        "reason": "ambiguous-peak",
+        "info_reference": {
+          "energy": 331567.00859176443,
+          "mean_energy": 2.803427764743679,
+          "information": 0.0997447129221009
+        },
+        "info_moving": {
+          "energy": 393364.06564384897,
+          "mean_energy": 3.325927232513604,
+          "information": 0.09181937254028996
+        },
+        "peak_score": 0.9999997227820412,
+        "peak_margin": 0.00036932484888463346,
+        "integer_shift": -10,
+        "refined_shift": null
+      },
+      "input_kind": "direct analytic image"
+    },
+    {
+      "arm": "no-blur",
+      "descriptor": "centred",
+      "rung": 8,
+      "reference": 144,
+      "expected_scale": 1.0534081067950911,
+      "expected_log_scale": 0.05203072387491431,
+      "error_m103_plane_px": 0.014767955561899464,
+      "estimate": {
+        "accepted": true,
+        "scale": 1.053415469701137,
+        "log_scale": 0.05203771345498942,
+        "reason": null,
+        "info_reference": {
+          "energy": 88044.19290153155,
+          "mean_energy": 0.7444212738562935,
+          "information": 0.32537959609918865
+        },
+        "info_moving": {
+          "energy": 106029.64683166915,
+          "mean_energy": 0.8964898440177653,
+          "information": 0.2884563240862256
+        },
+        "peak_score": 0.9999990784289562,
+        "peak_margin": 0.001240346494351452,
+        "integer_shift": -10,
+        "refined_shift": -9.59077390822623
+      },
+      "input_kind": "direct analytic image"
+    },
+    {
+      "arm": "no-blur",
+      "descriptor": "ordinary",
+      "rung": 64,
+      "reference": 144,
+      "expected_scale": 1.0313351498637602,
+      "expected_log_scale": 0.030854224822933173,
+      "error_m103_plane_px": null,
+      "estimate": {
+        "accepted": false,
+        "scale": null,
+        "log_scale": null,
+        "reason": "ambiguous-peak",
+        "info_reference": {
+          "energy": 331567.00859176443,
+          "mean_energy": 2.803427764743679,
+          "information": 0.0997447129221009
+        },
+        "info_moving": {
+          "energy": 366827.6515427634,
+          "mean_energy": 3.101559553763895,
+          "information": 0.09505174993009974
+        },
+        "peak_score": 0.9999998364777012,
+        "peak_margin": 0.0005887133037228987,
+        "integer_shift": -6,
+        "refined_shift": null
+      },
+      "input_kind": "direct analytic image"
+    },
+    {
+      "arm": "no-blur",
+      "descriptor": "centred",
+      "rung": 64,
+      "reference": 144,
+      "expected_scale": 1.0313351498637602,
+      "expected_log_scale": 0.030854224822933173,
+      "error_m103_plane_px": -0.011620390460434508,
+      "estimate": {
+        "accepted": true,
+        "scale": 1.0313294776831061,
+        "log_scale": 0.030848724965536742,
+        "reason": null,
+        "info_reference": {
+          "energy": 88044.19290153155,
+          "mean_energy": 0.7444212738562935,
+          "information": 0.32537959609918865
+        },
+        "info_moving": {
+          "energy": 98277.30350221256,
+          "mean_energy": 0.8309431099686533,
+          "information": 0.303273576264007
+        },
+        "peak_score": 0.9999994545804171,
+        "peak_margin": 0.0019912987943679905,
+        "integer_shift": -6,
+        "refined_shift": -5.685552397636128
+      },
+      "input_kind": "direct analytic image"
+    },
+    {
+      "arm": "no-blur",
+      "descriptor": "ordinary",
+      "rung": 128,
+      "reference": 144,
+      "expected_scale": 1.0080687746868597,
+      "expected_log_scale": 0.008036396177705955,
+      "error_m103_plane_px": null,
+      "estimate": {
+        "accepted": false,
+        "scale": null,
+        "log_scale": null,
+        "reason": "ambiguous-peak",
+        "info_reference": {
+          "energy": 331567.00859176443,
+          "mean_energy": 2.803427764743679,
+          "information": 0.0997447129221009
+        },
+        "info_moving": {
+          "energy": 340382.9868602329,
+          "mean_energy": 2.877967624291742,
+          "information": 0.09852220553555441
+        },
+        "peak_score": 0.9999996579457122,
+        "peak_margin": 0.0008858987752758951,
+        "integer_shift": -1,
+        "refined_shift": null
+      },
+      "input_kind": "direct analytic image"
+    },
+    {
+      "arm": "no-blur",
+      "descriptor": "centred",
+      "rung": 128,
+      "reference": 144,
+      "expected_scale": 1.0080687746868597,
+      "expected_log_scale": 0.008036396177705955,
+      "error_m103_plane_px": -0.022799626968723997,
+      "estimate": {
+        "accepted": true,
+        "scale": 1.0080578967566396,
+        "log_scale": 0.00802560525829178,
+        "reason": null,
+        "info_reference": {
+          "energy": 88044.19290153155,
+          "mean_energy": 0.7444212738562935,
+          "information": 0.32537959609918865
+        },
+        "info_moving": {
+          "energy": 90594.80587642685,
+          "mean_energy": 0.7659869273913255,
+          "information": 0.3195649795032807
+        },
+        "peak_score": 0.9999988861333929,
+        "peak_margin": 0.0028260406395637094,
+        "integer_shift": -1,
+        "refined_shift": -1.479153490775985
+      },
+      "input_kind": "direct analytic image"
+    },
+    {
+      "arm": "no-blur",
+      "descriptor": "ordinary",
+      "rung": 144,
+      "reference": 144,
+      "expected_scale": 1.0,
+      "expected_log_scale": 0.0,
+      "error_m103_plane_px": null,
+      "estimate": {
+        "accepted": false,
+        "scale": null,
+        "log_scale": null,
+        "reason": "ambiguous-peak",
+        "info_reference": {
+          "energy": 331567.00859176443,
+          "mean_energy": 2.803427764743679,
+          "information": 0.0997447129221009
+        },
+        "info_moving": {
+          "energy": 331567.00859176443,
+          "mean_energy": 2.803427764743679,
+          "information": 0.0997447129221009
+        },
+        "peak_score": 1.0,
+        "peak_margin": 0.000819289919101851,
+        "integer_shift": 0,
+        "refined_shift": null
+      },
+      "input_kind": "direct analytic image"
+    },
+    {
+      "arm": "no-blur",
+      "descriptor": "centred",
+      "rung": 144,
+      "reference": 144,
+      "expected_scale": 1.0,
+      "expected_log_scale": 0.0,
+      "error_m103_plane_px": -0.034583634167977016,
+      "estimate": {
+        "accepted": true,
+        "scale": 0.999983631918379,
+        "log_scale": -1.636821557948668e-05,
+        "reason": null,
+        "info_reference": {
+          "energy": 88044.19290153155,
+          "mean_energy": 0.7444212738562935,
+          "information": 0.32537959609918865
+        },
+        "info_moving": {
+          "energy": 88044.19290153155,
+          "mean_energy": 0.7444212738562935,
+          "information": 0.32537959609918865
+        },
+        "peak_score": 1.0,
+        "peak_margin": 0.002545340396080231,
+        "integer_shift": 0,
+        "refined_shift": 0.0030167323750638617
+      },
+      "input_kind": "direct analytic image"
+    },
+    {
+      "arm": "no-blur",
+      "descriptor": "ordinary",
+      "rung": 200,
+      "reference": 144,
+      "expected_scale": 0.9733223496609847,
+      "expected_log_scale": -0.027039957046469484,
+      "error_m103_plane_px": null,
+      "estimate": {
+        "accepted": false,
+        "scale": null,
+        "log_scale": null,
+        "reason": "ambiguous-peak",
+        "info_reference": {
+          "energy": 331567.00859176443,
+          "mean_energy": 2.803427764743679,
+          "information": 0.0997447129221009
+        },
+        "info_moving": {
+          "energy": 303670.1131143931,
+          "mean_energy": 2.567557098166879,
+          "information": 0.10383150134547449
+        },
+        "peak_score": 0.9999999828970727,
+        "peak_margin": 0.0005377725755738583,
+        "integer_shift": 5,
+        "refined_shift": null
+      },
+      "input_kind": "direct analytic image"
+    },
+    {
+      "arm": "no-blur",
+      "descriptor": "centred",
+      "rung": 200,
+      "reference": 144,
+      "expected_scale": 0.9733223496609847,
+      "expected_log_scale": -0.027039957046469484,
+      "error_m103_plane_px": -0.041972221310801486,
+      "estimate": {
+        "accepted": true,
+        "scale": 0.9733030146223516,
+        "log_scale": -0.027059822233668384,
+        "reason": null,
+        "info_reference": {
+          "energy": 88044.19290153155,
+          "mean_energy": 0.7444212738562935,
+          "information": 0.32537959609918865
+        },
+        "info_moving": {
+          "energy": 80010.22471907598,
+          "mean_energy": 0.6764933772919709,
+          "information": 0.3451789938870836
+        },
+        "peak_score": 0.9999999357074351,
+        "peak_margin": 0.0016871752604434853,
+        "integer_shift": 5,
+        "refined_shift": 4.987241364176875
+      },
+      "input_kind": "direct analytic image"
+    },
+    {
+      "arm": "no-blur",
+      "descriptor": "ordinary",
+      "rung": 298,
+      "reference": 144,
+      "expected_scale": 0.9052447035464589,
+      "expected_log_scale": -0.09954998117210638,
+      "error_m103_plane_px": null,
+      "estimate": {
+        "accepted": false,
+        "scale": null,
+        "log_scale": null,
+        "reason": "ambiguous-peak",
+        "info_reference": {
+          "energy": 331567.00859176443,
+          "mean_energy": 2.803427764743679,
+          "information": 0.0997447129221009
+        },
+        "info_moving": {
+          "energy": 240645.08499675654,
+          "mean_energy": 2.0346750287198705,
+          "information": 0.11449707260677966
+        },
+        "peak_score": 0.9999997742015434,
+        "peak_margin": 6.278916876178986e-05,
+        "integer_shift": 18,
+        "refined_shift": null
+      },
+      "input_kind": "direct analytic image"
+    },
+    {
+      "arm": "no-blur",
+      "descriptor": "centred",
+      "rung": 298,
+      "reference": 144,
+      "expected_scale": 0.9052447035464589,
+      "expected_log_scale": -0.09954998117210638,
+      "error_m103_plane_px": null,
+      "estimate": {
+        "accepted": false,
+        "scale": null,
+        "log_scale": null,
+        "reason": "ambiguous-peak",
+        "info_reference": {
+          "energy": 88044.19290153155,
+          "mean_energy": 0.7444212738562935,
+          "information": 0.32537959609918865
+        },
+        "info_moving": {
+          "energy": 62101.89401928845,
+          "mean_energy": 0.5250768907204448,
+          "information": 0.39936346402002326
+        },
+        "peak_score": 0.9999992529706219,
+        "peak_margin": 0.00020224786991507315,
+        "integer_shift": 18,
+        "refined_shift": null
+      },
+      "input_kind": "direct analytic image"
+    },
+    {
+      "arm": "unequal-radial-blur",
+      "descriptor": "ordinary",
+      "rung": 0,
+      "reference": 144,
+      "expected_scale": 1.0561223412120058,
+      "expected_log_scale": 0.05460403199404058,
+      "error_m103_plane_px": null,
+      "estimate": {
+        "accepted": false,
+        "scale": null,
+        "log_scale": null,
+        "reason": "ambiguous-peak",
+        "info_reference": {
+          "energy": 342724.966282189,
+          "mean_energy": 2.8977692630731617,
+          "information": 0.09601262432768543
+        },
+        "info_moving": {
+          "energy": 621715.8090729692,
+          "mean_energy": 5.256660993920533,
+          "information": 0.05573721529688914
+        },
+        "peak_score": 0.99422043491465,
+        "peak_margin": 0.00046948704346017056,
+        "integer_shift": -4,
+        "refined_shift": null
+      },
+      "input_kind": "direct analytic image"
+    },
+    {
+      "arm": "unequal-radial-blur",
+      "descriptor": "centred",
+      "rung": 0,
+      "reference": 144,
+      "expected_scale": 1.0561223412120058,
+      "expected_log_scale": 0.05460403199404058,
+      "error_m103_plane_px": -0.005036091289132618,
+      "estimate": {
+        "accepted": true,
+        "scale": 1.0561198238943956,
+        "log_scale": 0.0546016484438475,
+        "reason": null,
+        "info_reference": {
+          "energy": 88044.17003341754,
+          "mean_energy": 0.7444210805044097,
+          "information": 0.3253946950829766
+        },
+        "info_moving": {
+          "energy": 107012.95055479488,
+          "mean_energy": 0.904803762131315,
+          "information": 0.28689730307312994
+        },
+        "peak_score": 0.9999998235034429,
+        "peak_margin": 0.0011628486930216342,
+        "integer_shift": -10,
+        "refined_shift": -10.063318129732002
+      },
+      "input_kind": "direct analytic image"
+    },
+    {
+      "arm": "unequal-radial-blur",
+      "descriptor": "ordinary",
+      "rung": 8,
+      "reference": 144,
+      "expected_scale": 1.0534081067950911,
+      "expected_log_scale": 0.05203072387491431,
+      "error_m103_plane_px": null,
+      "estimate": {
+        "accepted": false,
+        "scale": null,
+        "log_scale": null,
+        "reason": "ambiguous-peak",
+        "info_reference": {
+          "energy": 342724.966282189,
+          "mean_energy": 2.8977692630731617,
+          "information": 0.09601262432768543
+        },
+        "info_moving": {
+          "energy": 617549.5504658008,
+          "mean_energy": 5.2214349166818925,
+          "information": 0.05585066545049862
+        },
+        "peak_score": 0.9941674545575888,
+        "peak_margin": 0.0004904454410471493,
+        "integer_shift": -4,
+        "refined_shift": null
+      },
+      "input_kind": "direct analytic image"
+    },
+    {
+      "arm": "unequal-radial-blur",
+      "descriptor": "centred",
+      "rung": 8,
+      "reference": 144,
+      "expected_scale": 1.0534081067950911,
+      "expected_log_scale": 0.05203072387491431,
+      "error_m103_plane_px": 0.0071901819693484395,
+      "estimate": {
+        "accepted": true,
+        "scale": 1.0534116916202982,
+        "log_scale": 0.05203412694261848,
+        "reason": null,
+        "info_reference": {
+          "energy": 88044.17003341754,
+          "mean_energy": 0.7444210805044097,
+          "information": 0.3253946950829766
+        },
+        "info_moving": {
+          "energy": 106025.02005952268,
+          "mean_energy": 0.8964507242586807,
+          "information": 0.28862326262880783
+        },
+        "peak_score": 0.9999990511788427,
+        "peak_margin": 0.0012403865706508421,
+        "integer_shift": -10,
+        "refined_shift": -9.590112898604843
+      },
+      "input_kind": "direct analytic image"
+    },
+    {
+      "arm": "unequal-radial-blur",
+      "descriptor": "ordinary",
+      "rung": 64,
+      "reference": 144,
+      "expected_scale": 1.0313351498637602,
+      "expected_log_scale": 0.030854224822933173,
+      "error_m103_plane_px": null,
+      "estimate": {
+        "accepted": false,
+        "scale": null,
+        "log_scale": null,
+        "reason": "ambiguous-peak",
+        "info_reference": {
+          "energy": 342724.966282189,
+          "mean_energy": 2.8977692630731617,
+          "information": 0.09601262432768543
+        },
+        "info_moving": {
+          "energy": 584606.9151816523,
+          "mean_energy": 4.942902083178202,
+          "information": 0.05699666083986878
+        },
+        "peak_score": 0.9937187903959566,
+        "peak_margin": 0.0005160649543669571,
+        "integer_shift": 0,
+        "refined_shift": null
+      },
+      "input_kind": "direct analytic image"
+    },
+    {
+      "arm": "unequal-radial-blur",
+      "descriptor": "centred",
+      "rung": 64,
+      "reference": 144,
+      "expected_scale": 1.0313351498637602,
+      "expected_log_scale": 0.030854224822933173,
+      "error_m103_plane_px": -0.015701675061563725,
+      "estimate": {
+        "accepted": true,
+        "scale": 1.0313274855213437,
+        "log_scale": 0.030846793319317375,
+        "reason": null,
+        "info_reference": {
+          "energy": 88044.17003341754,
+          "mean_energy": 0.7444210805044097,
+          "information": 0.3253946950829766
+        },
+        "info_moving": {
+          "energy": 98275.37128425075,
+          "mean_energy": 0.8309267728984946,
+          "information": 0.3034826433225095
+        },
+        "peak_score": 0.9999994372000973,
+        "peak_margin": 0.0019913413082583986,
+        "integer_shift": -6,
+        "refined_shift": -5.68519638694829
+      },
+      "input_kind": "direct analytic image"
+    },
+    {
+      "arm": "unequal-radial-blur",
+      "descriptor": "ordinary",
+      "rung": 128,
+      "reference": 144,
+      "expected_scale": 1.0080687746868597,
+      "expected_log_scale": 0.008036396177705955,
+      "error_m103_plane_px": null,
+      "estimate": {
+        "accepted": false,
+        "scale": null,
+        "log_scale": null,
+        "reason": "ambiguous-peak",
+        "info_reference": {
+          "energy": 342724.966282189,
+          "mean_energy": 2.8977692630731617,
+          "information": 0.09601262432768543
+        },
+        "info_moving": {
+          "energy": 551537.7940612203,
+          "mean_energy": 4.663299800977579,
+          "information": 0.058153034585430835
+        },
+        "peak_score": 0.9932036362530429,
+        "peak_margin": 0.0003631046713200581,
+        "integer_shift": 4,
+        "refined_shift": null
+      },
+      "input_kind": "direct analytic image"
+    },
+    {
+      "arm": "unequal-radial-blur",
+      "descriptor": "centred",
+      "rung": 128,
+      "reference": 144,
+      "expected_scale": 1.0080687746868597,
+      "expected_log_scale": 0.008036396177705955,
+      "error_m103_plane_px": -0.025020235148837996,
+      "estimate": {
+        "accepted": true,
+        "scale": 1.0080568372885248,
+        "log_scale": 0.00802455425846819,
+        "reason": null,
+        "info_reference": {
+          "energy": 88044.17003341754,
+          "mean_energy": 0.7444210805044097,
+          "information": 0.3253946950829766
+        },
+        "info_moving": {
+          "energy": 90595.72842079296,
+          "mean_energy": 0.7659947275838149,
+          "information": 0.31981176012806656
+        },
+        "peak_score": 0.9999988797727493,
+        "peak_margin": 0.0028275236188975983,
+        "integer_shift": -1,
+        "refined_shift": -1.478959786998159
+      },
+      "input_kind": "direct analytic image"
+    },
+    {
+      "arm": "unequal-radial-blur",
+      "descriptor": "ordinary",
+      "rung": 144,
+      "reference": 144,
+      "expected_scale": 1.0,
+      "expected_log_scale": 0.0,
+      "error_m103_plane_px": null,
+      "estimate": {
+        "accepted": false,
+        "scale": null,
+        "log_scale": null,
+        "reason": "ambiguous-peak",
+        "info_reference": {
+          "energy": 342724.966282189,
+          "mean_energy": 2.8977692630731617,
+          "information": 0.09601262432768543
+        },
+        "info_moving": {
+          "energy": 342724.966282189,
+          "mean_energy": 2.8977692630731617,
+          "information": 0.09601262432768543
+        },
+        "peak_score": 1.0,
+        "peak_margin": 0.0007878089126258647,
+        "integer_shift": 0,
+        "refined_shift": null
+      },
+      "input_kind": "direct analytic image"
+    },
+    {
+      "arm": "unequal-radial-blur",
+      "descriptor": "centred",
+      "rung": 144,
+      "reference": 144,
+      "expected_scale": 1.0,
+      "expected_log_scale": 0.0,
+      "error_m103_plane_px": -0.03458929113154901,
+      "estimate": {
+        "accepted": true,
+        "scale": 0.9999836292410177,
+        "log_scale": -1.6370892984609056e-05,
+        "reason": null,
+        "info_reference": {
+          "energy": 88044.17003341754,
+          "mean_energy": 0.7444210805044097,
+          "information": 0.3253946950829766
+        },
+        "info_moving": {
+          "energy": 88044.17003341754,
+          "mean_energy": 0.7444210805044097,
+          "information": 0.3253946950829766
+        },
+        "peak_score": 1.0,
+        "peak_margin": 0.0025453821331845594,
+        "integer_shift": 0,
+        "refined_shift": 0.003017225832317929
+      },
+      "input_kind": "direct analytic image"
+    },
+    {
+      "arm": "unequal-radial-blur",
+      "descriptor": "ordinary",
+      "rung": 200,
+      "reference": 144,
+      "expected_scale": 0.9733223496609847,
+      "expected_log_scale": -0.027039957046469484,
+      "error_m103_plane_px": null,
+      "estimate": {
+        "accepted": false,
+        "scale": null,
+        "log_scale": null,
+        "reason": "ambiguous-peak",
+        "info_reference": {
+          "energy": 342724.966282189,
+          "mean_energy": 2.8977692630731617,
+          "information": 0.09601262432768543
+        },
+        "info_moving": {
+          "energy": 505161.4930495576,
+          "mean_energy": 4.271184160659815,
+          "information": 0.05975795777278026
+        },
+        "peak_score": 0.9923437492731062,
+        "peak_margin": 0.000182135695145913,
+        "integer_shift": 10,
+        "refined_shift": null
+      },
+      "input_kind": "direct analytic image"
+    },
+    {
+      "arm": "unequal-radial-blur",
+      "descriptor": "centred",
+      "rung": 200,
+      "reference": 144,
+      "expected_scale": 0.9733223496609847,
+      "expected_log_scale": -0.027039957046469484,
+      "error_m103_plane_px": -0.04092393321667626,
+      "estimate": {
+        "accepted": true,
+        "scale": 0.9733034975249446,
+        "log_scale": -0.027059326085535695,
+        "reason": null,
+        "info_reference": {
+          "energy": 88044.17003341754,
+          "mean_energy": 0.7444210805044097,
+          "information": 0.3253946950829766
+        },
+        "info_moving": {
+          "energy": 80010.58288911397,
+          "mean_energy": 0.6764964056506525,
+          "information": 0.34541614597923176
+        },
+        "peak_score": 0.9999999216332077,
+        "peak_margin": 0.001687329004166127,
+        "integer_shift": 5,
+        "refined_shift": 4.987149921946814
+      },
+      "input_kind": "direct analytic image"
+    },
+    {
+      "arm": "unequal-radial-blur",
+      "descriptor": "ordinary",
+      "rung": 298,
+      "reference": 144,
+      "expected_scale": 0.9052447035464589,
+      "expected_log_scale": -0.09954998117210638,
+      "error_m103_plane_px": null,
+      "estimate": {
+        "accepted": false,
+        "scale": null,
+        "log_scale": null,
+        "reason": "ambiguous-peak",
+        "info_reference": {
+          "energy": 342724.966282189,
+          "mean_energy": 2.8977692630731617,
+          "information": 0.09601262432768543
+        },
+        "info_moving": {
+          "energy": 424024.49828331586,
+          "mean_energy": 3.585163845063209,
+          "information": 0.06243941815677373
+        },
+        "peak_score": 0.990285451857064,
+        "peak_margin": 4.828084740338134e-06,
+        "integer_shift": 23,
+        "refined_shift": null
+      },
+      "input_kind": "direct analytic image"
+    },
+    {
+      "arm": "unequal-radial-blur",
+      "descriptor": "centred",
+      "rung": 298,
+      "reference": 144,
+      "expected_scale": 0.9052447035464589,
+      "expected_log_scale": -0.09954998117210638,
+      "error_m103_plane_px": null,
+      "estimate": {
+        "accepted": false,
+        "scale": null,
+        "log_scale": null,
+        "reason": "ambiguous-peak",
+        "info_reference": {
+          "energy": 88044.17003341754,
+          "mean_energy": 0.7444210805044097,
+          "information": 0.3253946950829766
+        },
+        "info_moving": {
+          "energy": 62101.59265472112,
+          "mean_energy": 0.5250743426569359,
+          "information": 0.39964212132230914
+        },
+        "peak_score": 0.9999992256463766,
+        "peak_margin": 0.00020219616041061705,
+        "integer_shift": 18,
+        "refined_shift": null
+      },
+      "input_kind": "direct analytic image"
+    },
+    {
+      "arm": "two-depth-window",
+      "descriptor": "ordinary",
+      "rung": 0,
+      "reference": 144,
+      "expected_scale": 1.0561223412120058,
+      "expected_log_scale": 0.05460403199404058,
+      "error_m103_plane_px": -11.40968016914635,
+      "estimate": {
+        "accepted": true,
+        "scale": 1.0504345150734005,
+        "log_scale": 0.049203902447374555,
+        "reason": null,
+        "info_reference": {
+          "energy": 409194.610533472,
+          "mean_energy": 3.4597758601653137,
+          "information": 4.327198605293133
+        },
+        "info_moving": {
+          "energy": 344596.262278084,
+          "mean_energy": 2.9135912327354236,
+          "information": 4.112261217693042
+        },
+        "peak_score": 0.9764633319668022,
+        "peak_margin": 0.005033276553174315,
+        "integer_shift": -9,
+        "refined_shift": -9.068490378297783
+      },
+      "input_kind": "direct analytic image"
+    },
+    {
+      "arm": "two-depth-window",
+      "descriptor": "centred",
+      "rung": 0,
+      "reference": 144,
+      "expected_scale": 1.0561223412120058,
+      "expected_log_scale": 0.05460403199404058,
+      "error_m103_plane_px": 2.6796339720460947,
+      "estimate": {
+        "accepted": true,
+        "scale": 1.057462622145974,
+        "log_scale": 0.05587228582518884,
+        "reason": null,
+        "info_reference": {
+          "energy": 84425.4378231332,
+          "mean_energy": 0.7138243863563074,
+          "information": 19.22736328245772
+        },
+        "info_moving": {
+          "energy": 99543.04477598722,
+          "mean_energy": 0.8416450620264071,
+          "information": 13.268837915130932
+        },
+        "peak_score": 0.9243443551691587,
+        "peak_margin": 0.012527015037330225,
+        "integer_shift": -10,
+        "refined_shift": -10.297502052019944
+      },
+      "input_kind": "direct analytic image"
+    },
+    {
+      "arm": "two-depth-window",
+      "descriptor": "ordinary",
+      "rung": 8,
+      "reference": 144,
+      "expected_scale": 1.0534081067950911,
+      "expected_log_scale": 0.05203072387491431,
+      "error_m103_plane_px": -10.481272555507667,
+      "estimate": {
+        "accepted": true,
+        "scale": 1.048195384157592,
+        "log_scale": 0.047070003786833924,
+        "reason": null,
+        "info_reference": {
+          "energy": 409194.610533472,
+          "mean_energy": 3.4597758601653137,
+          "information": 4.327198605293133
+        },
+        "info_moving": {
+          "energy": 341634.406818049,
+          "mean_energy": 2.8885484883831256,
+          "information": 3.7947086042826847
+        },
+        "peak_score": 0.9765469308156522,
+        "peak_margin": 0.005293928655866753,
+        "integer_shift": -9,
+        "refined_shift": -8.675203697590453
+      },
+      "input_kind": "direct analytic image"
+    },
+    {
+      "arm": "two-depth-window",
+      "descriptor": "centred",
+      "rung": 8,
+      "reference": 144,
+      "expected_scale": 1.0534081067950911,
+      "expected_log_scale": 0.05203072387491431,
+      "error_m103_plane_px": 3.702701133615188,
+      "estimate": {
+        "accepted": true,
+        "scale": 1.0552557862156666,
+        "log_scale": 0.053783188930699055,
+        "reason": null,
+        "info_reference": {
+          "energy": 84425.4378231332,
+          "mean_energy": 0.7138243863563074,
+          "information": 19.22736328245772
+        },
+        "info_moving": {
+          "energy": 98706.68548332318,
+          "mean_energy": 0.8345735717948727,
+          "information": 12.174550877265668
+        },
+        "peak_score": 0.924695638367981,
+        "peak_margin": 0.013285781087155724,
+        "integer_shift": -10,
+        "refined_shift": -9.912472529061379
+      },
+      "input_kind": "direct analytic image"
+    },
+    {
+      "arm": "two-depth-window",
+      "descriptor": "ordinary",
+      "rung": 64,
+      "reference": 144,
+      "expected_scale": 1.0313351498637602,
+      "expected_log_scale": 0.030854224822933173,
+      "error_m103_plane_px": -5.602396895656124,
+      "estimate": {
+        "accepted": true,
+        "scale": 1.028604105567459,
+        "log_scale": 0.028202645763759054,
+        "reason": null,
+        "info_reference": {
+          "energy": 409194.610533472,
+          "mean_energy": 3.4597758601653137,
+          "information": 4.327198605293133
+        },
+        "info_moving": {
+          "energy": 318890.32765774475,
+          "mean_energy": 2.69624532989841,
+          "information": 3.5982874184799587
+        },
+        "peak_score": 0.9765892027992373,
+        "peak_margin": 0.007362469171751096,
+        "integer_shift": -5,
+        "refined_shift": -5.197868645169555
+      },
+      "input_kind": "direct analytic image"
+    },
+    {
+      "arm": "two-depth-window",
+      "descriptor": "centred",
+      "rung": 64,
+      "reference": 144,
+      "expected_scale": 1.0313351498637602,
+      "expected_log_scale": 0.030854224822933173,
+      "error_m103_plane_px": 8.934680720757953,
+      "estimate": {
+        "accepted": true,
+        "scale": 1.035705619881994,
+        "log_scale": 0.03508295276577806,
+        "reason": null,
+        "info_reference": {
+          "energy": 84425.4378231332,
+          "mean_energy": 0.7138243863563074,
+          "information": 19.22736328245772
+        },
+        "info_moving": {
+          "energy": 92425.49315848964,
+          "mean_energy": 0.7814655468622298,
+          "information": 11.419936938172425
+        },
+        "peak_score": 0.9249793670290449,
+        "peak_margin": 0.01890148777789835,
+        "integer_shift": -6,
+        "refined_shift": -6.465938752297276
+      },
+      "input_kind": "direct analytic image"
+    },
+    {
+      "arm": "two-depth-window",
+      "descriptor": "ordinary",
+      "rung": 128,
+      "reference": 144,
+      "expected_scale": 1.0080687746868597,
+      "expected_log_scale": 0.008036396177705955,
+      "error_m103_plane_px": -0.8179281205853222,
+      "estimate": {
+        "accepted": true,
+        "scale": 1.0076786064145276,
+        "log_scale": 0.007649275965259871,
+        "reason": null,
+        "info_reference": {
+          "energy": 409194.610533472,
+          "mean_energy": 3.4597758601653137,
+          "information": 4.327198605293133
+        },
+        "info_moving": {
+          "energy": 296193.1058074031,
+          "mean_energy": 2.5043383540263386,
+          "information": 3.4577311821842196
+        },
+        "peak_score": 0.9766314645872306,
+        "peak_margin": 0.01029661478029198,
+        "integer_shift": -1,
+        "refined_shift": -1.4097943870629912
+      },
+      "input_kind": "direct analytic image"
+    },
+    {
+      "arm": "two-depth-window",
+      "descriptor": "centred",
+      "rung": 128,
+      "reference": 144,
+      "expected_scale": 1.0080687746868597,
+      "expected_log_scale": 0.008036396177705955,
+      "error_m103_plane_px": 13.929471904578369,
+      "estimate": {
+        "accepted": true,
+        "scale": 1.0147366566303906,
+        "log_scale": 0.01462912723468841,
+        "reason": null,
+        "info_reference": {
+          "energy": 84425.4378231332,
+          "mean_energy": 0.7138243863563074,
+          "information": 19.22736328245772
+        },
+        "info_moving": {
+          "energy": 86188.15160925806,
+          "mean_energy": 0.7287282840339053,
+          "information": 10.839090630530208
+        },
+        "peak_score": 0.9252931307338654,
+        "peak_margin": 0.027273394614868773,
+        "integer_shift": -3,
+        "refined_shift": -2.696210929865882
+      },
+      "input_kind": "direct analytic image"
+    },
+    {
+      "arm": "two-depth-window",
+      "descriptor": "ordinary",
+      "rung": 144,
+      "reference": 144,
+      "expected_scale": 1.0,
+      "expected_log_scale": 0.0,
+      "error_m103_plane_px": -0.05201136285412491,
+      "estimate": {
+        "accepted": true,
+        "scale": 0.9999753836535152,
+        "log_scale": -2.4616649471949385e-05,
+        "reason": null,
+        "info_reference": {
+          "energy": 409194.610533472,
+          "mean_energy": 3.4597758601653137,
+          "information": 4.327198605293133
+        },
+        "info_moving": {
+          "energy": 409194.610533472,
+          "mean_energy": 3.4597758601653137,
+          "information": 4.327198605293133
+        },
+        "peak_score": 1.0,
+        "peak_margin": 0.013065397803771583,
+        "integer_shift": 0,
+        "refined_shift": 0.0045369541393807415
+      },
+      "input_kind": "direct analytic image"
+    },
+    {
+      "arm": "two-depth-window",
+      "descriptor": "centred",
+      "rung": 144,
+      "reference": 144,
+      "expected_scale": 1.0,
+      "expected_log_scale": 0.0,
+      "error_m103_plane_px": -0.04626523725667796,
+      "estimate": {
+        "accepted": true,
+        "scale": 0.9999781031952123,
+        "log_scale": -2.189704452618263e-05,
+        "reason": null,
+        "info_reference": {
+          "energy": 84425.4378231332,
+          "mean_energy": 0.7138243863563074,
+          "information": 19.22736328245772
+        },
+        "info_moving": {
+          "energy": 84425.4378231332,
+          "mean_energy": 0.7138243863563074,
+          "information": 19.22736328245772
+        },
+        "peak_score": 1.0,
+        "peak_margin": 0.05646966003741993,
+        "integer_shift": 0,
+        "refined_shift": 0.004035719276763197
+      },
+      "input_kind": "direct analytic image"
+    },
+    {
+      "arm": "two-depth-window",
+      "descriptor": "ordinary",
+      "rung": 200,
+      "reference": 144,
+      "expected_scale": 0.9733223496609847,
+      "expected_log_scale": -0.027039957046469484,
+      "error_m103_plane_px": 7.533937512863628,
+      "estimate": {
+        "accepted": true,
+        "scale": 0.9767991835621009,
+        "log_scale": -0.023474192015126422,
+        "reason": null,
+        "info_reference": {
+          "energy": 409194.610533472,
+          "mean_energy": 3.4597758601653137,
+          "information": 4.327198605293133
+        },
+        "info_moving": {
+          "energy": 264352.7242500918,
+          "mean_energy": 2.2351251712162794,
+          "information": 3.2812024934455692
+        },
+        "peak_score": 0.9766837910922312,
+        "peak_margin": 0.009029526103779273,
+        "integer_shift": 4,
+        "refined_shift": 4.326394327262294
+      },
+      "input_kind": "direct analytic image"
+    },
+    {
+      "arm": "two-depth-window",
+      "descriptor": "centred",
+      "rung": 200,
+      "reference": 144,
+      "expected_scale": 0.9733223496609847,
+      "expected_log_scale": -0.027039957046469484,
+      "error_m103_plane_px": 23.276341152377565,
+      "estimate": {
+        "accepted": true,
+        "scale": 0.9841042801126495,
+        "log_scale": -0.016023411820676643,
+        "reason": null,
+        "info_reference": {
+          "energy": 84425.4378231332,
+          "mean_energy": 0.7138243863563074,
+          "information": 19.22736328245772
+        },
+        "info_moving": {
+          "energy": 77474.16615845097,
+          "mean_energy": 0.6550507825897167,
+          "information": 10.07407200406279
+        },
+        "peak_score": 0.9256731719915309,
+        "peak_margin": 0.03582379783746259,
+        "integer_shift": 3,
+        "refined_shift": 2.953183562598956
+      },
+      "input_kind": "direct analytic image"
+    },
+    {
+      "arm": "two-depth-window",
+      "descriptor": "ordinary",
+      "rung": 298,
+      "reference": 144,
+      "expected_scale": 0.9052447035464589,
+      "expected_log_scale": -0.09954998117210638,
+      "error_m103_plane_px": 21.924637462366082,
+      "estimate": {
+        "accepted": true,
+        "scale": 0.914687146319808,
+        "log_scale": -0.08917318876379454,
+        "reason": null,
+        "info_reference": {
+          "energy": 409194.610533472,
+          "mean_energy": 3.4597758601653137,
+          "information": 4.327198605293133
+        },
+        "info_moving": {
+          "energy": 207948.51536231049,
+          "mean_energy": 1.7582227015887995,
+          "information": 2.8835619553634393
+        },
+        "peak_score": 0.9767895701010524,
+        "peak_margin": 0.001858585704343052,
+        "integer_shift": 16,
+        "refined_shift": 16.43500137354963
+      },
+      "input_kind": "direct analytic image"
+    },
+    {
+      "arm": "two-depth-window",
+      "descriptor": "centred",
+      "rung": 298,
+      "reference": 144,
+      "expected_scale": 0.9052447035464589,
+      "expected_log_scale": -0.09954998117210638,
+      "error_m103_plane_px": 38.72769392085328,
+      "estimate": {
+        "accepted": true,
+        "scale": 0.9219904547079246,
+        "log_scale": -0.08122040829049552,
+        "reason": null,
+        "info_reference": {
+          "energy": 84425.4378231332,
+          "mean_energy": 0.7138243863563074,
+          "information": 19.22736328245772
+        },
+        "info_moving": {
+          "energy": 61923.41348234364,
+          "mean_energy": 0.5235678223277161,
+          "information": 8.382929651553921
+        },
+        "peak_score": 0.9262044768364848,
+        "peak_margin": 0.008722265896056736,
+        "integer_shift": 15,
+        "refined_shift": 14.96926980317345
+      },
+      "input_kind": "direct analytic image"
+    },
+    {
+      "arm": "radial-null",
+      "descriptor": "ordinary",
+      "rung": 0,
+      "reference": 144,
+      "expected_scale": 1.0561223412120058,
+      "expected_log_scale": 0.05460403199404058,
+      "error_m103_plane_px": null,
+      "estimate": {
+        "accepted": false,
+        "scale": null,
+        "log_scale": null,
+        "reason": "scale-information",
+        "info_reference": {
+          "energy": 534375.0070998253,
+          "mean_energy": 4.518186951263404,
+          "information": 0.0001582693735987754
+        },
+        "info_moving": {
+          "energy": 965805.3909561039,
+          "mean_energy": 8.165968200048226,
+          "information": 0.0001588397912445333
+        },
+        "peak_score": null,
+        "peak_margin": null,
+        "integer_shift": null,
+        "refined_shift": null
+      },
+      "input_kind": "direct analytic image"
+    },
+    {
+      "arm": "radial-null",
+      "descriptor": "centred",
+      "rung": 0,
+      "reference": 144,
+      "expected_scale": 1.0561223412120058,
+      "expected_log_scale": 0.05460403199404058,
+      "error_m103_plane_px": null,
+      "estimate": {
+        "accepted": false,
+        "scale": null,
+        "log_scale": null,
+        "reason": "weak-energy",
+        "info_reference": {
+          "energy": 0.010079109917602129,
+          "mean_energy": 8.521974700353532e-08,
+          "information": 8205.473306825106
+        },
+        "info_moving": {
+          "energy": 0.01843092206097043,
+          "mean_energy": 1.5583504177633276e-07,
+          "information": 8141.927301104173
+        },
+        "peak_score": null,
+        "peak_margin": null,
+        "integer_shift": null,
+        "refined_shift": null
+      },
+      "input_kind": "direct analytic image"
+    },
+    {
+      "arm": "radial-null",
+      "descriptor": "ordinary",
+      "rung": 8,
+      "reference": 144,
+      "expected_scale": 1.0534081067950911,
+      "expected_log_scale": 0.05203072387491431,
+      "error_m103_plane_px": null,
+      "estimate": {
+        "accepted": false,
+        "scale": null,
+        "log_scale": null,
+        "reason": "scale-information",
+        "info_reference": {
+          "energy": 534375.0070998253,
+          "mean_energy": 4.518186951263404,
+          "information": 0.0001582693735987754
+        },
+        "info_moving": {
+          "energy": 957741.3742877429,
+          "mean_energy": 8.097786240933972,
+          "information": 0.00015938597885659857
+        },
+        "peak_score": null,
+        "peak_margin": null,
+        "integer_shift": null,
+        "refined_shift": null
+      },
+      "input_kind": "direct analytic image"
+    },
+    {
+      "arm": "radial-null",
+      "descriptor": "centred",
+      "rung": 8,
+      "reference": 144,
+      "expected_scale": 1.0534081067950911,
+      "expected_log_scale": 0.05203072387491431,
+      "error_m103_plane_px": null,
+      "estimate": {
+        "accepted": false,
+        "scale": null,
+        "log_scale": null,
+        "reason": "weak-energy",
+        "info_reference": {
+          "energy": 0.010079109917602129,
+          "mean_energy": 8.521974700353532e-08,
+          "information": 8205.473306825106
+        },
+        "info_moving": {
+          "energy": 0.018259605450401267,
+          "mean_energy": 1.5438654500136352e-07,
+          "information": 8175.673644255443
+        },
+        "peak_score": null,
+        "peak_margin": null,
+        "integer_shift": null,
+        "refined_shift": null
+      },
+      "input_kind": "direct analytic image"
+    },
+    {
+      "arm": "radial-null",
+      "descriptor": "ordinary",
+      "rung": 64,
+      "reference": 144,
+      "expected_scale": 1.0313351498637602,
+      "expected_log_scale": 0.030854224822933173,
+      "error_m103_plane_px": null,
+      "estimate": {
+        "accepted": false,
+        "scale": null,
+        "log_scale": null,
+        "reason": "scale-information",
+        "info_reference": {
+          "energy": 534375.0070998253,
+          "mean_energy": 4.518186951263404,
+          "information": 0.0001582693735987754
+        },
+        "info_moving": {
+          "energy": 893997.0694087744,
+          "mean_energy": 7.5588226241948595,
+          "information": 0.00015881253081192727
+        },
+        "peak_score": null,
+        "peak_margin": null,
+        "integer_shift": null,
+        "refined_shift": null
+      },
+      "input_kind": "direct analytic image"
+    },
+    {
+      "arm": "radial-null",
+      "descriptor": "centred",
+      "rung": 64,
+      "reference": 144,
+      "expected_scale": 1.0313351498637602,
+      "expected_log_scale": 0.030854224822933173,
+      "error_m103_plane_px": null,
+      "estimate": {
+        "accepted": false,
+        "scale": null,
+        "log_scale": null,
+        "reason": "weak-energy",
+        "info_reference": {
+          "energy": 0.010079109917602129,
+          "mean_energy": 8.521974700353532e-08,
+          "information": 8205.473306825106
+        },
+        "info_moving": {
+          "energy": 0.016942212962970066,
+          "mean_energy": 1.432478774601771e-07,
+          "information": 8197.002349468023
+        },
+        "peak_score": null,
+        "peak_margin": null,
+        "integer_shift": null,
+        "refined_shift": null
+      },
+      "input_kind": "direct analytic image"
+    },
+    {
+      "arm": "radial-null",
+      "descriptor": "ordinary",
+      "rung": 128,
+      "reference": 144,
+      "expected_scale": 1.0080687746868597,
+      "expected_log_scale": 0.008036396177705955,
+      "error_m103_plane_px": null,
+      "estimate": {
+        "accepted": false,
+        "scale": null,
+        "log_scale": null,
+        "reason": "scale-information",
+        "info_reference": {
+          "energy": 534375.0070998253,
+          "mean_energy": 4.518186951263404,
+          "information": 0.0001582693735987754
+        },
+        "info_moving": {
+          "energy": 830589.4238365083,
+          "mean_energy": 7.022705491041906,
+          "information": 0.00015847371246555794
+        },
+        "peak_score": null,
+        "peak_margin": null,
+        "integer_shift": null,
+        "refined_shift": null
+      },
+      "input_kind": "direct analytic image"
+    },
+    {
+      "arm": "radial-null",
+      "descriptor": "centred",
+      "rung": 128,
+      "reference": 144,
+      "expected_scale": 1.0080687746868597,
+      "expected_log_scale": 0.008036396177705955,
+      "error_m103_plane_px": null,
+      "estimate": {
+        "accepted": false,
+        "scale": null,
+        "log_scale": null,
+        "reason": "weak-energy",
+        "info_reference": {
+          "energy": 0.010079109917602129,
+          "mean_energy": 8.521974700353532e-08,
+          "information": 8205.473306825106
+        },
+        "info_moving": {
+          "energy": 0.01570578288012176,
+          "mean_energy": 1.3279375405947106e-07,
+          "information": 8195.547712944417
+        },
+        "peak_score": null,
+        "peak_margin": null,
+        "integer_shift": null,
+        "refined_shift": null
+      },
+      "input_kind": "direct analytic image"
+    },
+    {
+      "arm": "radial-null",
+      "descriptor": "ordinary",
+      "rung": 144,
+      "reference": 144,
+      "expected_scale": 1.0,
+      "expected_log_scale": 0.0,
+      "error_m103_plane_px": null,
+      "estimate": {
+        "accepted": false,
+        "scale": null,
+        "log_scale": null,
+        "reason": "scale-information",
+        "info_reference": {
+          "energy": 534375.0070998253,
+          "mean_energy": 4.518186951263404,
+          "information": 0.0001582693735987754
+        },
+        "info_moving": {
+          "energy": 534375.0070998253,
+          "mean_energy": 4.518186951263404,
+          "information": 0.0001582693735987754
+        },
+        "peak_score": null,
+        "peak_margin": null,
+        "integer_shift": null,
+        "refined_shift": null
+      },
+      "input_kind": "direct analytic image"
+    },
+    {
+      "arm": "radial-null",
+      "descriptor": "centred",
+      "rung": 144,
+      "reference": 144,
+      "expected_scale": 1.0,
+      "expected_log_scale": 0.0,
+      "error_m103_plane_px": null,
+      "estimate": {
+        "accepted": false,
+        "scale": null,
+        "log_scale": null,
+        "reason": "weak-energy",
+        "info_reference": {
+          "energy": 0.010079109917602129,
+          "mean_energy": 8.521974700353532e-08,
+          "information": 8205.473306825106
+        },
+        "info_moving": {
+          "energy": 0.010079109917602129,
+          "mean_energy": 8.521974700353532e-08,
+          "information": 8205.473306825106
+        },
+        "peak_score": null,
+        "peak_margin": null,
+        "integer_shift": null,
+        "refined_shift": null
+      },
+      "input_kind": "direct analytic image"
+    },
+    {
+      "arm": "radial-null",
+      "descriptor": "ordinary",
+      "rung": 200,
+      "reference": 144,
+      "expected_scale": 0.9733223496609847,
+      "expected_log_scale": -0.027039957046469484,
+      "error_m103_plane_px": null,
+      "estimate": {
+        "accepted": false,
+        "scale": null,
+        "log_scale": null,
+        "reason": "scale-information",
+        "info_reference": {
+          "energy": 534375.0070998253,
+          "mean_energy": 4.518186951263404,
+          "information": 0.0001582693735987754
+        },
+        "info_moving": {
+          "energy": 742721.9580589068,
+          "mean_energy": 6.279778460319491,
+          "information": 0.0001583303054007641
+        },
+        "peak_score": null,
+        "peak_margin": null,
+        "integer_shift": null,
+        "refined_shift": null
+      },
+      "input_kind": "direct analytic image"
+    },
+    {
+      "arm": "radial-null",
+      "descriptor": "centred",
+      "rung": 200,
+      "reference": 144,
+      "expected_scale": 0.9733223496609847,
+      "expected_log_scale": -0.027039957046469484,
+      "error_m103_plane_px": null,
+      "estimate": {
+        "accepted": false,
+        "scale": null,
+        "log_scale": null,
+        "reason": "weak-energy",
+        "info_reference": {
+          "energy": 0.010079109917602129,
+          "mean_energy": 8.521974700353532e-08,
+          "information": 8205.473306825106
+        },
+        "info_moving": {
+          "energy": 0.01401138317102148,
+          "mean_energy": 1.1846745781775467e-07,
+          "information": 8207.400341368975
+        },
+        "peak_score": null,
+        "peak_margin": null,
+        "integer_shift": null,
+        "refined_shift": null
+      },
+      "input_kind": "direct analytic image"
+    },
+    {
+      "arm": "radial-null",
+      "descriptor": "ordinary",
+      "rung": 298,
+      "reference": 144,
+      "expected_scale": 0.9052447035464589,
+      "expected_log_scale": -0.09954998117210638,
+      "error_m103_plane_px": null,
+      "estimate": {
+        "accepted": false,
+        "scale": null,
+        "log_scale": null,
+        "reason": "scale-information",
+        "info_reference": {
+          "energy": 534375.0070998253,
+          "mean_energy": 4.518186951263404,
+          "information": 0.0001582693735987754
+        },
+        "info_moving": {
+          "energy": 592535.3853483717,
+          "mean_energy": 5.009937984885448,
+          "information": 0.00015828578230932876
+        },
+        "peak_score": null,
+        "peak_margin": null,
+        "integer_shift": null,
+        "refined_shift": null
+      },
+      "input_kind": "direct analytic image"
+    },
+    {
+      "arm": "radial-null",
+      "descriptor": "centred",
+      "rung": 298,
+      "reference": 144,
+      "expected_scale": 0.9052447035464589,
+      "expected_log_scale": -0.09954998117210638,
+      "error_m103_plane_px": null,
+      "estimate": {
+        "accepted": false,
+        "scale": null,
+        "log_scale": null,
+        "reason": "weak-energy",
+        "info_reference": {
+          "energy": 0.010079109917602129,
+          "mean_energy": 8.521974700353532e-08,
+          "information": 8205.473306825106
+        },
+        "info_moving": {
+          "energy": 0.011171994231580136,
+          "mean_energy": 9.44601785002379e-08,
+          "information": 8209.470272286888
+        },
+        "peak_score": null,
+        "peak_margin": null,
+        "integer_shift": null,
+        "refined_shift": null
+      },
+      "input_kind": "direct analytic image"
+    },
+    {
+      "arm": "separable-spectrum-null",
+      "descriptor": "ordinary",
+      "rung": 0,
+      "reference": 144,
+      "expected_scale": 1.0561223412120058,
+      "expected_log_scale": 0.05460403199404058,
+      "error_m103_plane_px": null,
+      "estimate": {
+        "accepted": false,
+        "scale": null,
+        "log_scale": null,
+        "reason": "search-boundary",
+        "info_reference": {
+          "energy": 660239.756169648,
+          "mean_energy": 5.582384302029626,
+          "information": 0.04603458097561885
+        },
+        "info_moving": {
+          "energy": 1149209.2086085568,
+          "mean_energy": 9.716663357418128,
+          "information": 0.026580213647780317
+        },
+        "peak_score": 0.999999604469129,
+        "peak_margin": null,
+        "integer_shift": -25,
+        "refined_shift": null
+      },
+      "input_kind": "analytic log spectrum (arithmetic null)"
+    },
+    {
+      "arm": "separable-spectrum-null",
+      "descriptor": "centred",
+      "rung": 0,
+      "reference": 144,
+      "expected_scale": 1.0561223412120058,
+      "expected_log_scale": 0.05460403199404058,
+      "error_m103_plane_px": null,
+      "estimate": {
+        "accepted": false,
+        "scale": null,
+        "log_scale": null,
+        "reason": "scale-information",
+        "info_reference": {
+          "energy": 7687.68036530074,
+          "mean_energy": 0.06500000308864938,
+          "information": 5.8257515089807054e-09
+        },
+        "info_moving": {
+          "energy": 7687.680252099777,
+          "mean_energy": 0.06500000213152544,
+          "information": 8.51391737940256e-09
+        },
+        "peak_score": null,
+        "peak_margin": null,
+        "integer_shift": null,
+        "refined_shift": null
+      },
+      "input_kind": "analytic log spectrum (arithmetic null)"
+    },
+    {
+      "arm": "separable-spectrum-null",
+      "descriptor": "ordinary",
+      "rung": 8,
+      "reference": 144,
+      "expected_scale": 1.0534081067950911,
+      "expected_log_scale": 0.05203072387491431,
+      "error_m103_plane_px": null,
+      "estimate": {
+        "accepted": false,
+        "scale": null,
+        "log_scale": null,
+        "reason": "search-boundary",
+        "info_reference": {
+          "energy": 660239.756169648,
+          "mean_energy": 5.582384302029626,
+          "information": 0.04603458097561885
+        },
+        "info_moving": {
+          "energy": 1139484.4671024396,
+          "mean_energy": 9.634439826014946,
+          "information": 0.02680551725298693
+        },
+        "peak_score": 0.9999999063085058,
+        "peak_margin": null,
+        "integer_shift": -25,
+        "refined_shift": null
+      },
+      "input_kind": "analytic log spectrum (arithmetic null)"
+    },
+    {
+      "arm": "separable-spectrum-null",
+      "descriptor": "centred",
+      "rung": 8,
+      "reference": 144,
+      "expected_scale": 1.0534081067950911,
+      "expected_log_scale": 0.05203072387491431,
+      "error_m103_plane_px": null,
+      "estimate": {
+        "accepted": false,
+        "scale": null,
+        "log_scale": null,
+        "reason": "scale-information",
+        "info_reference": {
+          "energy": 7687.68036530074,
+          "mean_energy": 0.06500000308864938,
+          "information": 5.8257515089807054e-09
+        },
+        "info_moving": {
+          "energy": 7687.680240501823,
+          "mean_energy": 0.06500000203346373,
+          "information": 1.016844509780848e-08
+        },
+        "peak_score": null,
+        "peak_margin": null,
+        "integer_shift": null,
+        "refined_shift": null
+      },
+      "input_kind": "analytic log spectrum (arithmetic null)"
+    },
+    {
+      "arm": "separable-spectrum-null",
+      "descriptor": "ordinary",
+      "rung": 64,
+      "reference": 144,
+      "expected_scale": 1.0313351498637602,
+      "expected_log_scale": 0.030854224822933173,
+      "error_m103_plane_px": null,
+      "estimate": {
+        "accepted": false,
+        "scale": null,
+        "log_scale": null,
+        "reason": "ambiguous-peak",
+        "info_reference": {
+          "energy": 660239.756169648,
+          "mean_energy": 5.582384302029626,
+          "information": 0.04603458097561885
+        },
+        "info_moving": {
+          "energy": 1062836.425845136,
+          "mean_energy": 8.986374000990395,
+          "information": 0.0287245651882556
+        },
+        "peak_score": 0.9999999864827364,
+        "peak_margin": 5.693198264489219e-06,
+        "integer_shift": -22,
+        "refined_shift": null
+      },
+      "input_kind": "analytic log spectrum (arithmetic null)"
+    },
+    {
+      "arm": "separable-spectrum-null",
+      "descriptor": "centred",
+      "rung": 64,
+      "reference": 144,
+      "expected_scale": 1.0313351498637602,
+      "expected_log_scale": 0.030854224822933173,
+      "error_m103_plane_px": null,
+      "estimate": {
+        "accepted": false,
+        "scale": null,
+        "log_scale": null,
+        "reason": "scale-information",
+        "info_reference": {
+          "energy": 7687.68036530074,
+          "mean_energy": 0.06500000308864938,
+          "information": 5.8257515089807054e-09
+        },
+        "info_moving": {
+          "energy": 7687.680275076904,
+          "mean_energy": 0.06500000232579904,
+          "information": 1.0796060812707247e-08
+        },
+        "peak_score": null,
+        "peak_margin": null,
+        "integer_shift": null,
+        "refined_shift": null
+      },
+      "input_kind": "analytic log spectrum (arithmetic null)"
+    },
+    {
+      "arm": "separable-spectrum-null",
+      "descriptor": "ordinary",
+      "rung": 128,
+      "reference": 144,
+      "expected_scale": 1.0080687746868597,
+      "expected_log_scale": 0.008036396177705955,
+      "error_m103_plane_px": null,
+      "estimate": {
+        "accepted": false,
+        "scale": null,
+        "log_scale": null,
+        "reason": "ambiguous-peak",
+        "info_reference": {
+          "energy": 660239.756169648,
+          "mean_energy": 5.582384302029626,
+          "information": 0.04603458097561885
+        },
+        "info_moving": {
+          "energy": 986615.8691439116,
+          "mean_energy": 8.341922594899145,
+          "information": 0.030926229588300474
+        },
+        "peak_score": 0.9999999332878322,
+        "peak_margin": 2.8815439531038045e-05,
+        "integer_shift": -19,
+        "refined_shift": null
+      },
+      "input_kind": "analytic log spectrum (arithmetic null)"
+    },
+    {
+      "arm": "separable-spectrum-null",
+      "descriptor": "centred",
+      "rung": 128,
+      "reference": 144,
+      "expected_scale": 1.0080687746868597,
+      "expected_log_scale": 0.008036396177705955,
+      "error_m103_plane_px": null,
+      "estimate": {
+        "accepted": false,
+        "scale": null,
+        "log_scale": null,
+        "reason": "scale-information",
+        "info_reference": {
+          "energy": 7687.68036530074,
+          "mean_energy": 0.06500000308864938,
+          "information": 5.8257515089807054e-09
+        },
+        "info_moving": {
+          "energy": 7687.680301657212,
+          "mean_energy": 0.06500000255053785,
+          "information": 1.1672335587345577e-08
+        },
+        "peak_score": null,
+        "peak_margin": null,
+        "integer_shift": null,
+        "refined_shift": null
+      },
+      "input_kind": "analytic log spectrum (arithmetic null)"
+    },
+    {
+      "arm": "separable-spectrum-null",
+      "descriptor": "ordinary",
+      "rung": 144,
+      "reference": 144,
+      "expected_scale": 1.0,
+      "expected_log_scale": 0.0,
+      "error_m103_plane_px": null,
+      "estimate": {
+        "accepted": false,
+        "scale": null,
+        "log_scale": null,
+        "reason": "ambiguous-peak",
+        "info_reference": {
+          "energy": 660239.756169648,
+          "mean_energy": 5.582384302029626,
+          "information": 0.04603458097561885
+        },
+        "info_moving": {
+          "energy": 660239.756169648,
+          "mean_energy": 5.582384302029626,
+          "information": 0.04603458097561885
+        },
+        "peak_score": 1.0,
+        "peak_margin": 0.00032649918926375143,
+        "integer_shift": 0,
+        "refined_shift": null
+      },
+      "input_kind": "analytic log spectrum (arithmetic null)"
+    },
+    {
+      "arm": "separable-spectrum-null",
+      "descriptor": "centred",
+      "rung": 144,
+      "reference": 144,
+      "expected_scale": 1.0,
+      "expected_log_scale": 0.0,
+      "error_m103_plane_px": null,
+      "estimate": {
+        "accepted": false,
+        "scale": null,
+        "log_scale": null,
+        "reason": "scale-information",
+        "info_reference": {
+          "energy": 7687.68036530074,
+          "mean_energy": 0.06500000308864938,
+          "information": 5.8257515089807054e-09
+        },
+        "info_moving": {
+          "energy": 7687.68036530074,
+          "mean_energy": 0.06500000308864938,
+          "information": 5.8257515089807054e-09
+        },
+        "peak_score": null,
+        "peak_margin": null,
+        "integer_shift": null,
+        "refined_shift": null
+      },
+      "input_kind": "analytic log spectrum (arithmetic null)"
+    },
+    {
+      "arm": "separable-spectrum-null",
+      "descriptor": "ordinary",
+      "rung": 200,
+      "reference": 144,
+      "expected_scale": 0.9733223496609847,
+      "expected_log_scale": -0.027039957046469484,
+      "error_m103_plane_px": null,
+      "estimate": {
+        "accepted": false,
+        "scale": null,
+        "log_scale": null,
+        "reason": "ambiguous-peak",
+        "info_reference": {
+          "energy": 660239.756169648,
+          "mean_energy": 5.582384302029626,
+          "information": 0.04603458097561885
+        },
+        "info_moving": {
+          "energy": 881104.4871797634,
+          "mean_energy": 7.449814725207686,
+          "information": 0.03459706856504749
+        },
+        "peak_score": 0.9999998736311191,
+        "peak_margin": 0.00010247145626696152,
+        "integer_shift": -13,
+        "refined_shift": null
+      },
+      "input_kind": "analytic log spectrum (arithmetic null)"
+    },
+    {
+      "arm": "separable-spectrum-null",
+      "descriptor": "centred",
+      "rung": 200,
+      "reference": 144,
+      "expected_scale": 0.9733223496609847,
+      "expected_log_scale": -0.027039957046469484,
+      "error_m103_plane_px": null,
+      "estimate": {
+        "accepted": false,
+        "scale": null,
+        "log_scale": null,
+        "reason": "scale-information",
+        "info_reference": {
+          "energy": 7687.68036530074,
+          "mean_energy": 0.06500000308864938,
+          "information": 5.8257515089807054e-09
+        },
+        "info_moving": {
+          "energy": 7687.680288642897,
+          "mean_energy": 0.06500000244050068,
+          "information": 1.0076363476102992e-08
+        },
+        "peak_score": null,
+        "peak_margin": null,
+        "integer_shift": null,
+        "refined_shift": null
+      },
+      "input_kind": "analytic log spectrum (arithmetic null)"
+    },
+    {
+      "arm": "separable-spectrum-null",
+      "descriptor": "ordinary",
+      "rung": 298,
+      "reference": 144,
+      "expected_scale": 0.9052447035464589,
+      "expected_log_scale": -0.09954998117210638,
+      "error_m103_plane_px": null,
+      "estimate": {
+        "accepted": false,
+        "scale": null,
+        "log_scale": null,
+        "reason": "ambiguous-peak",
+        "info_reference": {
+          "energy": 660239.756169648,
+          "mean_energy": 5.582384302029626,
+          "information": 0.04603458097561885
+        },
+        "info_moving": {
+          "energy": 701071.7319720042,
+          "mean_energy": 5.927622192674548,
+          "information": 0.043383197818246455
+        },
+        "peak_score": 0.9999999717327411,
+        "peak_margin": 0.0003922727623059119,
+        "integer_shift": -3,
+        "refined_shift": null
+      },
+      "input_kind": "analytic log spectrum (arithmetic null)"
+    },
+    {
+      "arm": "separable-spectrum-null",
+      "descriptor": "centred",
+      "rung": 298,
+      "reference": 144,
+      "expected_scale": 0.9052447035464589,
+      "expected_log_scale": -0.09954998117210638,
+      "error_m103_plane_px": null,
+      "estimate": {
+        "accepted": false,
+        "scale": null,
+        "log_scale": null,
+        "reason": "scale-information",
+        "info_reference": {
+          "energy": 7687.68036530074,
+          "mean_energy": 0.06500000308864938,
+          "information": 5.8257515089807054e-09
+        },
+        "info_moving": {
+          "energy": 7687.680355462975,
+          "mean_energy": 0.06500000300547024,
+          "information": 6.4294755540911305e-09
+        },
+        "peak_score": null,
+        "peak_margin": null,
+        "integer_shift": null,
+        "refined_shift": null
+      },
+      "input_kind": "analytic log spectrum (arithmetic null)"
+    }
+  ],
+  "summaries": {
+    "no-blur": {
+      "ordinary": {
+        "rungs": 7,
+        "accepted": 0,
+        "refused": 7,
+        "all_rungs_accepted": false,
+        "mean_abs_error_m103_plane_px": null,
+        "maximum_abs_error_m103_plane_px": null,
+        "interior_errors": {
+          "8": null,
+          "64": null,
+          "128": null,
+          "144": null,
+          "200": null
+        },
+        "note": "Refusals remain in every row and count; conditional errors cannot establish full-track accuracy."
+      },
+      "centred": {
+        "rungs": 7,
+        "accepted": 6,
+        "refused": 1,
+        "all_rungs_accepted": false,
+        "mean_abs_error_m103_plane_px": 0.021041144488249872,
+        "maximum_abs_error_m103_plane_px": 0.041972221310801486,
+        "interior_errors": {
+          "8": 0.014767955561899464,
+          "64": -0.011620390460434508,
+          "128": -0.022799626968723997,
+          "144": -0.034583634167977016,
+          "200": -0.041972221310801486
+        },
+        "note": "Refusals remain in every row and count; conditional errors cannot establish full-track accuracy."
+      }
+    },
+    "unequal-radial-blur": {
+      "ordinary": {
+        "rungs": 7,
+        "accepted": 0,
+        "refused": 7,
+        "all_rungs_accepted": false,
+        "mean_abs_error_m103_plane_px": null,
+        "maximum_abs_error_m103_plane_px": null,
+        "interior_errors": {
+          "8": null,
+          "64": null,
+          "128": null,
+          "144": null,
+          "200": null
+        },
+        "note": "Refusals remain in every row and count; conditional errors cannot establish full-track accuracy."
+      },
+      "centred": {
+        "rungs": 7,
+        "accepted": 6,
+        "refused": 1,
+        "all_rungs_accepted": false,
+        "mean_abs_error_m103_plane_px": 0.021410234636184675,
+        "maximum_abs_error_m103_plane_px": 0.04092393321667626,
+        "interior_errors": {
+          "8": 0.0071901819693484395,
+          "64": -0.015701675061563725,
+          "128": -0.025020235148837996,
+          "144": -0.03458929113154901,
+          "200": -0.04092393321667626
+        },
+        "note": "Refusals remain in every row and count; conditional errors cannot establish full-track accuracy."
+      }
+    },
+    "two-depth-window": {
+      "ordinary": {
+        "rungs": 7,
+        "accepted": 7,
+        "refused": 0,
+        "all_rungs_accepted": true,
+        "mean_abs_error_m103_plane_px": 8.260266296997042,
+        "maximum_abs_error_m103_plane_px": 21.924637462366082,
+        "interior_errors": {
+          "8": -10.481272555507667,
+          "64": -5.602396895656124,
+          "128": -0.8179281205853222,
+          "144": -0.05201136285412491,
+          "200": 7.533937512863628
+        },
+        "note": "Refusals remain in every row and count; conditional errors cannot establish full-track accuracy."
+      },
+      "centred": {
+        "rungs": 7,
+        "accepted": 7,
+        "refused": 0,
+        "all_rungs_accepted": true,
+        "mean_abs_error_m103_plane_px": 13.042398291640733,
+        "maximum_abs_error_m103_plane_px": 38.72769392085328,
+        "interior_errors": {
+          "8": 3.702701133615188,
+          "64": 8.934680720757953,
+          "128": 13.929471904578369,
+          "144": -0.04626523725667796,
+          "200": 23.276341152377565
+        },
+        "note": "Refusals remain in every row and count; conditional errors cannot establish full-track accuracy."
+      }
+    },
+    "radial-null": {
+      "ordinary": {
+        "rungs": 7,
+        "accepted": 0,
+        "refused": 7,
+        "all_rungs_accepted": false,
+        "mean_abs_error_m103_plane_px": null,
+        "maximum_abs_error_m103_plane_px": null,
+        "interior_errors": {
+          "8": null,
+          "64": null,
+          "128": null,
+          "144": null,
+          "200": null
+        },
+        "note": "Refusals remain in every row and count; conditional errors cannot establish full-track accuracy."
+      },
+      "centred": {
+        "rungs": 7,
+        "accepted": 0,
+        "refused": 7,
+        "all_rungs_accepted": false,
+        "mean_abs_error_m103_plane_px": null,
+        "maximum_abs_error_m103_plane_px": null,
+        "interior_errors": {
+          "8": null,
+          "64": null,
+          "128": null,
+          "144": null,
+          "200": null
+        },
+        "note": "Refusals remain in every row and count; conditional errors cannot establish full-track accuracy."
+      }
+    },
+    "separable-spectrum-null": {
+      "ordinary": {
+        "rungs": 7,
+        "accepted": 0,
+        "refused": 7,
+        "all_rungs_accepted": false,
+        "mean_abs_error_m103_plane_px": null,
+        "maximum_abs_error_m103_plane_px": null,
+        "interior_errors": {
+          "8": null,
+          "64": null,
+          "128": null,
+          "144": null,
+          "200": null
+        },
+        "note": "Refusals remain in every row and count; conditional errors cannot establish full-track accuracy."
+      },
+      "centred": {
+        "rungs": 7,
+        "accepted": 0,
+        "refused": 7,
+        "all_rungs_accepted": false,
+        "mean_abs_error_m103_plane_px": null,
+        "maximum_abs_error_m103_plane_px": null,
+        "interior_errors": {
+          "8": null,
+          "64": null,
+          "128": null,
+          "144": null,
+          "200": null
+        },
+        "note": "Refusals remain in every row and count; conditional errors cannot establish full-track accuracy."
+      }
+    }
+  },
+  "controls": {
+    "path": "experiments/alignment-angular-spectrum/run-1/controls.json",
+    "bytes": 8021,
+    "sha256": "9fa9f1c0ed8914197e6cf058db795cd7c1ec3bdb59de014472c308989062789d"
+  },
+  "plan": {
+    "path": "experiments/alignment-angular-spectrum/run-1/plan.json",
+    "bytes": 2823,
+    "sha256": "fb203841076ac21f17a38bb90255f43cacbe7f7ebddde79a4619b3e482432154"
+  },
+  "gauge": "signed log-scale error relative to rung144 times M103 CFA-plane half-diagonal",
+  "sources": [
+    {
+      "path": "experiments/alignment-angular-spectrum/experiment.py",
+      "bytes": 8195,
+      "sha256": "9b6a765cba6095f7ce89c029d71a3201d85ce7834670cec17b3c70fb815eb918"
+    },
+    {
+      "path": "experiments/alignment-angular-spectrum/operator.py",
+      "bytes": 6676,
+      "sha256": "1c5106684dbeda1997f75837a71b44a5dd671e855668f1d775e3e4ccbbd5fae4"
+    },
+    {
+      "path": "experiments/alignment-angular-spectrum/independent-controls.py",
+      "bytes": 6263,
+      "sha256": "ff39fd13a34eca16c369853fea9bea86f140ac47f39eaf84b4a4f7d79c634d70"
+    },
+    {
+      "path": "experiments/alignment-angular-spectrum/charter.md",
+      "bytes": 2868,
+      "sha256": "d6ad493c26f3ae05e27814dd26c85044a7be4f0d7c8a754f7e4a74be3938210d"
+    },
+    {
+      "path": "experiments/M103-halfdrift/data/truth-dense.json",
+      "bytes": 8491,
+      "sha256": "45b12d8c7106fa1c9c1ce3d5f663896a43992ff35f867fd3c6374131cb67be01"
+    }
+  ],
+  "scale_only": true,
+  "final_ncc_refinement": false
+}

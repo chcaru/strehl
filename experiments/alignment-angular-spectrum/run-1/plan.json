@@ -1,0 +1,115 @@
+{
+  "schema": "alignment-angular-spectrum-fixed-v1",
+  "rungs": [
+    0,
+    8,
+    64,
+    128,
+    144,
+    200,
+    298
+  ],
+  "reference": 144,
+  "gauge": "signed log-scale error relative to rung144 times M103 CFA-plane half-diagonal",
+  "m103_plane_radius": 2112.853047421898,
+  "image_size": [
+    512,
+    512
+  ],
+  "polar_shape": [
+    512,
+    256
+  ],
+  "radius_range": [
+    4,
+    64
+  ],
+  "du": 0.005425809632563172,
+  "max_shift": 25,
+  "central_support": [
+    25,
+    487
+  ],
+  "log_before_bilinear_polar": true,
+  "floor_relative": 1e-08,
+  "arms": [
+    "no-blur",
+    "unequal-radial-blur",
+    "two-depth-window",
+    "radial-null",
+    "separable-spectrum-null"
+  ],
+  "atoms": [
+    [
+      1.0,
+      4.0,
+      14.0,
+      0.0
+    ],
+    [
+      0.8,
+      8.0,
+      3.0,
+      60.0
+    ],
+    [
+      0.6,
+      2.5,
+      6.0,
+      125.0
+    ]
+  ],
+  "minimum_rms_log_energy": 0.01,
+  "minimum_scale_information": 0.001,
+  "minimum_peak_margin": 0.001,
+  "truth_ln": {
+    "0": -2.2204460492503136e-16,
+    "8": -0.0025733081191264976,
+    "64": -0.023749807171107633,
+    "128": -0.04656763581633485,
+    "144": -0.054604031994040805,
+    "200": -0.08164398904051029,
+    "298": -0.15415401316614719
+  },
+  "geometric_scale": {
+    "0": 1.0561223412120058,
+    "8": 1.0534081067950911,
+    "64": 1.0313351498637602,
+    "128": 1.0080687746868597,
+    "144": 1.0,
+    "200": 0.9733223496609847,
+    "298": 0.9052447035464589
+  },
+  "sources": [
+    {
+      "path": "experiments/alignment-angular-spectrum/experiment.py",
+      "bytes": 8195,
+      "sha256": "9b6a765cba6095f7ce89c029d71a3201d85ce7834670cec17b3c70fb815eb918"
+    },
+    {
+      "path": "experiments/alignment-angular-spectrum/operator.py",
+      "bytes": 6676,
+      "sha256": "1c5106684dbeda1997f75837a71b44a5dd671e855668f1d775e3e4ccbbd5fae4"
+    },
+    {
+      "path": "experiments/alignment-angular-spectrum/independent-controls.py",
+      "bytes": 6263,
+      "sha256": "ff39fd13a34eca16c369853fea9bea86f140ac47f39eaf84b4a4f7d79c634d70"
+    },
+    {
+      "path": "experiments/alignment-angular-spectrum/charter.md",
+      "bytes": 2868,
+      "sha256": "d6ad493c26f3ae05e27814dd26c85044a7be4f0d7c8a754f7e4a74be3938210d"
+    },
+    {
+      "path": "experiments/M103-halfdrift/data/truth-dense.json",
+      "bytes": 8491,
+      "sha256": "45b12d8c7106fa1c9c1ce3d5f663896a43992ff35f867fd3c6374131cb67be01"
+    }
+  ],
+  "numpy": "2.4.4",
+  "scipy": "1.17.1",
+  "arithmetic": "f32 image/descriptor and complex64 FFT; explicit f64 score reductions and gauge reporting",
+  "consumer": "direct descriptor scale, no image NCC refinement",
+  "scope": "analytic falsifier, no native decode or native-quality claim"
+}

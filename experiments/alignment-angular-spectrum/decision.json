@@ -1,0 +1,430 @@
+{
+  "schema": "alignment-angular-spectrum-independent-decision-v1",
+  "status": "REJECT_CANDIDATE_CLOSE_FIXED_DIRECTION",
+  "source_revision": "c2cfd3bb6325acaf1fb800a94f96d77a058b0818",
+  "results": {
+    "path": "experiments/alignment-angular-spectrum/run-1/results.json",
+    "bytes": 73792,
+    "sha256": "491d1f984625dd64641179c34eef9a0f691392e0cb819a863630136add3ff8ff"
+  },
+  "controls": {
+    "path": "experiments/alignment-angular-spectrum/run-1/controls.json",
+    "bytes": 8021,
+    "sha256": "9fa9f1c0ed8914197e6cf058db795cd7c1ec3bdb59de014472c308989062789d"
+  },
+  "preregistered_review": {
+    "path": "experiments/alignment-angular-spectrum/independent-review.md",
+    "bytes": 6997,
+    "sha256": "b556bff42db800ddcae59013ff73970df115b268e1bd3f6937d86659e753c88b"
+  },
+  "process": {
+    "path": "experiments/alignment-angular-spectrum/execution-1/process.json",
+    "bytes": 2760,
+    "sha256": "1c4ca1261c14bbfb831d2ecb25d0233192eca74797c52967c673a9e4f2271e81"
+  },
+  "checks": [
+    {
+      "name": "independent_controls",
+      "passed": true,
+      "evidence": {}
+    },
+    {
+      "name": "no-blur_centred_complete",
+      "passed": false,
+      "evidence": {
+        "accepted": 6,
+        "required_rungs": 7
+      }
+    },
+    {
+      "name": "no-blur_centred_per_rung_cap",
+      "passed": false,
+      "evidence": {
+        "cap_plane_px": 2.0,
+        "conditional_maximum": 0.041972221310801486,
+        "refused": [
+          298
+        ],
+        "failing_rungs": []
+      }
+    },
+    {
+      "name": "unequal-radial-blur_centred_complete",
+      "passed": false,
+      "evidence": {
+        "accepted": 6,
+        "required_rungs": 7
+      }
+    },
+    {
+      "name": "unequal-radial-blur_centred_per_rung_cap",
+      "passed": false,
+      "evidence": {
+        "cap_plane_px": 2.0,
+        "conditional_maximum": 0.04092393321667626,
+        "refused": [
+          298
+        ],
+        "failing_rungs": []
+      }
+    },
+    {
+      "name": "unequal-radial-blur_twenty_percent_mean_advantage",
+      "passed": false,
+      "evidence": {
+        "full_comparison_available": false,
+        "conditional_means": {
+          "ordinary": null,
+          "centred": 0.021410234636184675
+        },
+        "maximum_allowed_ratio": 0.8
+      }
+    },
+    {
+      "name": "unequal-radial-blur_maximum_not_worse",
+      "passed": false,
+      "evidence": {
+        "full_comparison_available": false,
+        "conditional_maxima": {
+          "ordinary": null,
+          "centred": 0.04092393321667626
+        }
+      }
+    },
+    {
+      "name": "two-depth-window_centred_complete",
+      "passed": true,
+      "evidence": {
+        "accepted": 7,
+        "required_rungs": 7
+      }
+    },
+    {
+      "name": "two-depth-window_centred_per_rung_cap",
+      "passed": false,
+      "evidence": {
+        "cap_plane_px": 2.0,
+        "conditional_maximum": 38.72769392085328,
+        "refused": [],
+        "failing_rungs": [
+          0,
+          8,
+          64,
+          128,
+          200,
+          298
+        ]
+      }
+    },
+    {
+      "name": "two-depth-window_twenty_percent_mean_advantage",
+      "passed": false,
+      "evidence": {
+        "full_comparison_available": true,
+        "conditional_means": {
+          "ordinary": 8.260266296997042,
+          "centred": 13.042398291640733
+        },
+        "maximum_allowed_ratio": 0.8
+      }
+    },
+    {
+      "name": "two-depth-window_maximum_not_worse",
+      "passed": false,
+      "evidence": {
+        "full_comparison_available": true,
+        "conditional_maxima": {
+          "ordinary": 21.924637462366082,
+          "centred": 38.72769392085328
+        }
+      }
+    },
+    {
+      "name": "radial-null_centred_refusal",
+      "passed": true,
+      "evidence": {
+        "accepted": 0,
+        "required_rungs": 7
+      }
+    },
+    {
+      "name": "separable-spectrum-null_centred_refusal",
+      "passed": true,
+      "evidence": {
+        "accepted": 0,
+        "required_rungs": 7
+      }
+    },
+    {
+      "name": "sign_destroyer_power",
+      "passed": true,
+      "evidence": {}
+    },
+    {
+      "name": "chord_interior_destroyer_power",
+      "passed": true,
+      "evidence": {
+        "rung200_error_plane_px": 4.074811075239613
+      }
+    }
+  ],
+  "failed_checks": [
+    {
+      "name": "no-blur_centred_complete",
+      "passed": false,
+      "evidence": {
+        "accepted": 6,
+        "required_rungs": 7
+      }
+    },
+    {
+      "name": "no-blur_centred_per_rung_cap",
+      "passed": false,
+      "evidence": {
+        "cap_plane_px": 2.0,
+        "conditional_maximum": 0.041972221310801486,
+        "refused": [
+          298
+        ],
+        "failing_rungs": []
+      }
+    },
+    {
+      "name": "unequal-radial-blur_centred_complete",
+      "passed": false,
+      "evidence": {
+        "accepted": 6,
+        "required_rungs": 7
+      }
+    },
+    {
+      "name": "unequal-radial-blur_centred_per_rung_cap",
+      "passed": false,
+      "evidence": {
+        "cap_plane_px": 2.0,
+        "conditional_maximum": 0.04092393321667626,
+        "refused": [
+          298
+        ],
+        "failing_rungs": []
+      }
+    },
+    {
+      "name": "unequal-radial-blur_twenty_percent_mean_advantage",
+      "passed": false,
+      "evidence": {
+        "full_comparison_available": false,
+        "conditional_means": {
+          "ordinary": null,
+          "centred": 0.021410234636184675
+        },
+        "maximum_allowed_ratio": 0.8
+      }
+    },
+    {
+      "name": "unequal-radial-blur_maximum_not_worse",
+      "passed": false,
+      "evidence": {
+        "full_comparison_available": false,
+        "conditional_maxima": {
+          "ordinary": null,
+          "centred": 0.04092393321667626
+        }
+      }
+    },
+    {
+      "name": "two-depth-window_centred_per_rung_cap",
+      "passed": false,
+      "evidence": {
+        "cap_plane_px": 2.0,
+        "conditional_maximum": 38.72769392085328,
+        "refused": [],
+        "failing_rungs": [
+          0,
+          8,
+          64,
+          128,
+          200,
+          298
+        ]
+      }
+    },
+    {
+      "name": "two-depth-window_twenty_percent_mean_advantage",
+      "passed": false,
+      "evidence": {
+        "full_comparison_available": true,
+        "conditional_means": {
+          "ordinary": 8.260266296997042,
+          "centred": 13.042398291640733
+        },
+        "maximum_allowed_ratio": 0.8
+      }
+    },
+    {
+      "name": "two-depth-window_maximum_not_worse",
+      "passed": false,
+      "evidence": {
+        "full_comparison_available": true,
+        "conditional_maxima": {
+          "ordinary": 21.924637462366082,
+          "centred": 38.72769392085328
+        }
+      }
+    }
+  ],
+  "comparisons": [
+    {
+      "arm": "unequal-radial-blur",
+      "full_comparison_available": false,
+      "means": {
+        "ordinary": null,
+        "centred": 0.021410234636184675
+      },
+      "maxima": {
+        "ordinary": null,
+        "centred": 0.04092393321667626
+      },
+      "mean_ratio": null,
+      "maximum_ratio": null
+    },
+    {
+      "arm": "two-depth-window",
+      "full_comparison_available": true,
+      "means": {
+        "ordinary": 8.260266296997042,
+        "centred": 13.042398291640733
+      },
+      "maxima": {
+        "ordinary": 21.924637462366082,
+        "centred": 38.72769392085328
+      },
+      "mean_ratio": 1.578931940291344,
+      "maximum_ratio": 1.7664006525685934
+    }
+  ],
+  "violation_rechoices": {
+    "all_rungs": {
+      "ordinary": {
+        "rungs": [
+          0,
+          8,
+          64,
+          128,
+          144,
+          200,
+          298
+        ],
+        "mean_abs_error_plane_px": 8.260266296997042,
+        "max_abs_error_plane_px": 21.924637462366082,
+        "per_rung_signed_errors_plane_px": {
+          "0": -11.40968016914635,
+          "8": -10.481272555507667,
+          "64": -5.602396895656124,
+          "128": -0.8179281205853222,
+          "144": -0.05201136285412491,
+          "200": 7.533937512863628,
+          "298": 21.924637462366082
+        }
+      },
+      "centred": {
+        "rungs": [
+          0,
+          8,
+          64,
+          128,
+          144,
+          200,
+          298
+        ],
+        "mean_abs_error_plane_px": 13.042398291640733,
+        "max_abs_error_plane_px": 38.72769392085328,
+        "per_rung_signed_errors_plane_px": {
+          "0": 2.6796339720460947,
+          "8": 3.702701133615188,
+          "64": 8.934680720757953,
+          "128": 13.929471904578369,
+          "144": -0.04626523725667796,
+          "200": 23.276341152377565,
+          "298": 38.72769392085328
+        }
+      }
+    },
+    "interior_including_reference": {
+      "ordinary": {
+        "rungs": [
+          8,
+          64,
+          128,
+          144,
+          200
+        ],
+        "mean_abs_error_plane_px": 4.897509289493373,
+        "max_abs_error_plane_px": 10.481272555507667,
+        "per_rung_signed_errors_plane_px": {
+          "8": -10.481272555507667,
+          "64": -5.602396895656124,
+          "128": -0.8179281205853222,
+          "144": -0.05201136285412491,
+          "200": 7.533937512863628
+        }
+      },
+      "centred": {
+        "rungs": [
+          8,
+          64,
+          128,
+          144,
+          200
+        ],
+        "mean_abs_error_plane_px": 9.97789202971715,
+        "max_abs_error_plane_px": 23.276341152377565,
+        "per_rung_signed_errors_plane_px": {
+          "8": 3.702701133615188,
+          "64": 8.934680720757953,
+          "128": 13.929471904578369,
+          "144": -0.04626523725667796,
+          "200": 23.276341152377565
+        }
+      }
+    },
+    "nonreference_interior": {
+      "ordinary": {
+        "rungs": [
+          8,
+          64,
+          128,
+          200
+        ],
+        "mean_abs_error_plane_px": 6.108883771153185,
+        "max_abs_error_plane_px": 10.481272555507667,
+        "per_rung_signed_errors_plane_px": {
+          "8": -10.481272555507667,
+          "64": -5.602396895656124,
+          "128": -0.8179281205853222,
+          "200": 7.533937512863628
+        }
+      },
+      "centred": {
+        "rungs": [
+          8,
+          64,
+          128,
+          200
+        ],
+        "mean_abs_error_plane_px": 12.46079872783227,
+        "max_abs_error_plane_px": 23.276341152377565,
+        "per_rung_signed_errors_plane_px": {
+          "8": 3.702701133615188,
+          "64": 8.934680720757953,
+          "128": 13.929471904578369,
+          "200": 23.276341152377565
+        }
+      }
+    }
+  },
+  "refusal_policy": "Missing ordinary errors are not infinity; conditional accepted-only errors cannot establish complete-track superiority.",
+  "conclusion": "Literal and information-loss controls pass. Centred estimates remain incomplete under the premise; in the fixed violation all six non-reference centred rungs exceed the frozen cap and complete-track errors exceed ordinary. Close without tuning or native deployment.",
+  "surviving_result": "Accurate accepted-only scale estimates under the single radial-blur premise and correct refusals on the fixed information-loss nulls.",
+  "scope": "One fixed Gaussian-mixture synthetic operator comparison in reference144 scale-only M103 plane-corner gauge; no native alignment or SOTA claim."
+}

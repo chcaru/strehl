@@ -1,0 +1,56 @@
+{
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-I",
+    "-B",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\alignment-angular-spectrum\\experiment.py",
+    "--output-dir",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\alignment-angular-spectrum\\run-1"
+  ],
+  "revision": "c2cfd3bb6325acaf1fb800a94f96d77a058b0818",
+  "sources": [
+    {
+      "path": "experiments/alignment-angular-spectrum/operator.py",
+      "sha256": "1c5106684dbeda1997f75837a71b44a5dd671e855668f1d775e3e4ccbbd5fae4",
+      "bytes": 6676
+    },
+    {
+      "path": "experiments/alignment-angular-spectrum/experiment.py",
+      "sha256": "9b6a765cba6095f7ce89c029d71a3201d85ce7834670cec17b3c70fb815eb918",
+      "bytes": 8195
+    },
+    {
+      "path": "experiments/alignment-angular-spectrum/independent-controls.py",
+      "sha256": "ff39fd13a34eca16c369853fea9bea86f140ac47f39eaf84b4a4f7d79c634d70",
+      "bytes": 6263
+    },
+    {
+      "path": "experiments/alignment-angular-spectrum/design.md",
+      "sha256": "891a46c09aee1602f86dd92cb1c8d3e5d75671a81bc001d27379144085b7b4b1",
+      "bytes": 5755
+    },
+    {
+      "path": "experiments/alignment-angular-spectrum/independent-review.md",
+      "sha256": "b556bff42db800ddcae59013ff73970df115b268e1bd3f6937d86659e753c88b",
+      "bytes": 6997
+    },
+    {
+      "path": "experiments/alignment-angular-spectrum/charter.md",
+      "sha256": "d6ad493c26f3ae05e27814dd26c85044a7be4f0d7c8a754f7e4a74be3938210d",
+      "bytes": 2868
+    },
+    {
+      "path": "experiments/alignment-angular-spectrum/run.py",
+      "sha256": "d7c4aadb6df11d1cd7ea9f80f75a084f7852b1c0c4c8ce0d4bba44717507af44",
+      "bytes": 2270
+    }
+  ],
+  "environment_overrides": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1"
+  },
+  "removed_environment": [],
+  "scope": "one fixed analytic-image falsifier, independent controls first, no native decode"
+}

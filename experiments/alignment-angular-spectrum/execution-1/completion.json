@@ -1,0 +1,18 @@
+{
+  "status": "COMPLETE_UNINTERPRETED",
+  "results": {
+    "path": "experiments/alignment-angular-spectrum/run-1/results.json",
+    "sha256": "491d1f984625dd64641179c34eef9a0f691392e0cb819a863630136add3ff8ff",
+    "bytes": 73792
+  },
+  "controls": {
+    "path": "experiments/alignment-angular-spectrum/run-1/controls.json",
+    "sha256": "9fa9f1c0ed8914197e6cf058db795cd7c1ec3bdb59de014472c308989062789d",
+    "bytes": 8021
+  },
+  "process": {
+    "path": "experiments/alignment-angular-spectrum/execution-1/process.json",
+    "sha256": "1c4ca1261c14bbfb831d2ecb25d0233192eca74797c52967c673a9e4f2271e81",
+    "bytes": 2760
+  }
+}

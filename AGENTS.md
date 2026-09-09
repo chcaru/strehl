@@ -1204,3 +1204,7 @@ Stage2 follow-up,2026-09-09: the full-signed small comparison reduced shadow bia
 ## Angular-centred spectrum alignment allocation
 
 2026-09-09. Root allocates experiments/alignment-angular-spectrum/ under charter.md after the fixed39-image boundary-radiance rejection. One small direct scale/refusal prototype uses existing curved seven-rung M103 truth and analytic images, compares ordinary and angular-centred Fourier magnitude, and exercises scale-information loss and multiple-depth/window failure. Independent choices and controls precede root execution. No native decode, new framework, parameter sweep or production change; do not let the current final NCC refinement overwrite the quantity being tested. Existing prior-art memos are the starting point.
+
+## Direct consumed-plane handoff allocation
+
+2026-09-09. Root allocates experiments/native-direct-planes/ under charter.md after the rejected fixed angular-spectrum experiment. Implement a default-off fullres gather sink into existing compact f32 planes, with exact rounded control before the separately tested no-intermediate-round precision arm. Preserve black/range clamps, source u16 storage, original sampling/geometry/WB/CA, no-warp/plane fallback and the identical actual/probe/confidence policy. Independently check addressing, output/beta identity and live fractional values; compile the tiny consumer early. Reuse existing M194b truth/readers/build/native tools; no new framework or native population until root fixes it. No signed-black, noise-gain or closed optical variant is reopened.
