@@ -1,0 +1,33 @@
+{
+  "source": "experiments\\native-stroke-correction\\render-1\\corrected-coffee-bean.tiff",
+  "source_sha256": "d568f12b84cab063df45319faa5f7d0f9993dba7fb8936ae64ccb795baea5960",
+  "scope": "visual nomination from existing render only; no RAW decode or new stack",
+  "views": [
+    {
+      "label": "top-right",
+      "roi_native_output": [
+        6000,
+        0,
+        784,
+        512
+      ],
+      "pixel_scale": "1:1, high byte of sRGB16, no contrast or spatial resampling",
+      "view": "experiments\\native-background-followup\\view-1\\top-right.png",
+      "view_sha256": "1e44b3db5196070b6639fa043f27580fb58e559468fe5cce0cccfc229f818afb",
+      "source_roi_u16le_sha256": "e4830c159f88da43aff08c1c4ac44530a00895747a10121840e274c427cc1736"
+    },
+    {
+      "label": "top-left",
+      "roi_native_output": [
+        1400,
+        0,
+        1100,
+        512
+      ],
+      "pixel_scale": "1:1, high byte of sRGB16, no contrast or spatial resampling",
+      "view": "experiments\\native-background-followup\\view-1\\top-left.png",
+      "view_sha256": "8da5a9d9363f6ed92dd592bf6cb0cc57e1ddb117912241518053e84369639b28",
+      "source_roi_u16le_sha256": "1eefdca80713350b7f5890cd704082a89461165589e860861f1fa3cff5f7f840"
+    }
+  ]
+}
