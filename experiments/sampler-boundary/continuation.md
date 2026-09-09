@@ -9,7 +9,7 @@ M194h remains complete6d61340d/58765d8b; M194g and M193c audit3 stay closed.
 
 Current source-only ownership:
 - coordinate_verification: crates/strehl-core/tests/sampler-boundary.rs and
-  experiments/sampler-boundary/control-spec.md, independently chosen oracles.
+  experiments/sampler-boundary/independent-test-spec.md, independently chosen oracles.
 - factor_eight_implementation: repair.patch and repair-rationale.md outside
   crates. No original align.rs edit before actual baseline failure commits.
 - factor_eight_review: new run-stage.py/controller contract and helpers. No
@@ -18,8 +18,9 @@ Current source-only ownership:
 
 The runner interface is sampler-boundary-stage-release-v1, ten keys:
 schema,stage,variant,source_bindings,inputs,command,children,executable,
-prerequisites,prediction. Stage build/test; variant baseline/repaired.
+prerequisites,prediction. Stage build/test/regression; variant baseline/repaired. Regression is repaired only.
 Fresh outputs baseline-build-1/baseline-test-1/repaired-build-1/repaired-test-1;
+plus repaired-regression-1; fixed344 public rows and13 existing unit tests;
 fresh target dirs target/sampler-boundary-baseline-1 and -repaired-1.
 Six-role external bundles remain result/tail/outer/stdout/stderr/exit.
 A clean original test exit101 may be an operationally complete negative

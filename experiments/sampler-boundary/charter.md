@@ -99,3 +99,55 @@ unrelated interpolation behavior is not admitted merely because one test passes.
 After independent final review, preserve exact owned source/results, report
 any behavior change and choose the next concrete consumer task. Continue under
 the owner's autonomous instruction.
+
+## Prospective source-review amendment, before the first execution
+
+Independent source review found that checked tiny-plane refusals cannot
+exercise inner fallback outputs. The fixed public test is therefore344 rows:
+the original324 plus20 explicit unchecked tiny-plane endpoint/extension cases.
+No original or repaired sampler has run. All earlier cases and tolerances
+remain, with the gather destroyer's exercise guard narrowed to require an
+actually completed consumer/count/mask population. This is prospective control
+coverage, not a change responding to measured results.
+
+The existing core regression requirement is made executable: both fresh
+no-run builds also request the strehl-core library test target with --lib.
+The two original build limits remain unchanged, including two Cargo jobs.
+Each build retains separately identified integration-test and library-test
+executables from actual non-fresh Cargo artifact messages.
+
+After the repaired344-row test, one additional owned repaired-regression
+stage runs exactly13 named existing unit tests, under a separate
+30CPU/60whole-wall/512MiB committed/16MiB retained allowance with the same
+reserved final tail. The exact names and command are frozen in the runner
+contract. Libtest supports multiple positional filters with OR semantics and
+--exact full-path matching, verified from the official Rustc Book's Filters
+and --exact sections and the official libtest source; this is a single direct
+binary invocation, with all13 actual named results and exit0 required.
+It covers existing cubic hull/power/bit/integer/null and gather refusal tests,
+without admitting any resampler quality ranking.
+
+This fifth release adds one metadata-only5CPU/7.5active-wall slice; total
+metadata allocation is25CPU/37.5active-wall/8MiB, replacing the earlier four
+slice20CPU/30active-wall count. Exact sources and commands still commit before
+execution. There are still only two fresh builds; the original negative
+baseline, repaired test and existing regressions retain separate outcomes.
+All files under the frozen source map stay byte-identical across the repair
+except the explicitly reviewed align.rs delta. No retry or completed older
+stage is authorized.
+
+## Independent saved-result read allocation
+
+Before any sampler execution, root accepts sampler_result_review's fixed
+saved-data-only plan: at most four separate10CPU/15active-wall read slices,
+768MiB aggregate bytes read,128MiB per file,8MiB retained review output.
+This is additional verification allocation, not a new sampler/input/control
+population. No controller import, image decode, model, build, test or capture.
+Preserve the plan before reading results, then inspect actual transport and
+source/executable associations, full344 rows and both saved12288-value gather
+planes/masks. Re-choose column/row/corner/refused-border classifications from
+index arithmetic and independently reconstruct literal and paired predicates
+where retained operands suffice; label unreconstructable exercise assertions
+as reported. Root releases the saved baseline read only after its actual
+evidence exists, and the repaired/paired read only after those stages finish.
+The four40CPU/60active-wall reservations stay charged if entered and fail.
