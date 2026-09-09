@@ -20,3 +20,8 @@ and the runner checks them before and after. All failures and partial receipts
 remain. An implementation repair requires a new source revision and fresh
 build/run directories; thresholds and the fixed stimulus stay unchanged.
 The next decision is actual-consumer integration only after these controls pass.
+
+Build1 stopped before any GPU execution on a Rust json! syntax error in the
+failure-report phase expression. Parenthesizing that existing expression is
+a syntax-only repair. Build2 uses the same bounds, inputs and criteria; run1
+will use its held executable. Original build1 receipts and log are retained.

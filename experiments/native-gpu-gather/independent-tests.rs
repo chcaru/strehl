@@ -178,7 +178,7 @@ fn check_case(gpu: &mut GpuGather, c: &Case) -> Result<Value,String> {
     let first = (0..n).find(|i| codes[*i]!=expected[*i] || cover[*i]!=oracle.coverage[*i]);
     let first_difference = first.map(|i| {
         let (x,y)=(i%w,i/w); let ci=channel(x,y); let sensor=oracle.sensor_values[i];
-        json!({"native":[x,y],"phase":["R","G1","G2","B"][2*(y%2)+x%2],
+        json!({"native":[x,y],"phase":(["R","G1","G2","B"][2*(y%2)+x%2]),
             "cpu_code":expected[i],"gpu_code":codes[i],"source_code":c.frame.sample(x,y),
             "cpu_covered":oracle.coverage[i],"gpu_covered":cover[i],
             "cpu_sensor_before_round":sensor,"cpu_sensor_bits":sensor.to_bits(),
