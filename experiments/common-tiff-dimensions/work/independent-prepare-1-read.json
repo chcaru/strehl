@@ -1,0 +1,194 @@
+{
+  "alias_read_source": "\nimport json,pathlib,os,stat,time\nroot=pathlib.Path(r\"C:\\dev\\blog\\death-of-software\\projects\\strehl\")\npairs=json.loads(\"[{\\\"role\\\":\\\"manifest\\\",\\\"a\\\":{\\\"bytes\\\":2905,\\\"path\\\":\\\"\\\\\\\\\\\\\\\\?\\\\\\\\C:\\\\\\\\dev\\\\\\\\blog\\\\\\\\death-of-software\\\\\\\\projects\\\\\\\\strehl\\\\\\\\experiments\\\\\\\\common-tiff-stack\\\\\\\\prepare-1\\\\\\\\fixtures\\\\\\\\case-00.json\\\",\\\"sha256\\\":\\\"7c764e065a46e33da556ff98daf67f2c027abdbec833da63b742d82620ffd837\\\"},\\\"b\\\":{\\\"bytes\\\":2905,\\\"path\\\":\\\"C:\\\\\\\\dev\\\\\\\\blog\\\\\\\\death-of-software\\\\\\\\projects\\\\\\\\strehl\\\\\\\\experiments\\\\\\\\common-tiff-stack\\\\\\\\prepare-1\\\\\\\\fixtures\\\\\\\\case-00.json\\\",\\\"sha256\\\":\\\"7c764e065a46e33da556ff98daf67f2c027abdbec833da63b742d82620ffd837\\\"}},{\\\"role\\\":\\\"output\\\",\\\"a\\\":{\\\"bytes\\\":74807,\\\"path\\\":\\\"\\\\\\\\\\\\\\\\?\\\\\\\\C:\\\\\\\\dev\\\\\\\\blog\\\\\\\\death-of-software\\\\\\\\projects\\\\\\\\strehl\\\\\\\\experiments\\\\\\\\common-tiff-stack\\\\\\\\render-1\\\\\\\\case-00\\\\\\\\output.tiff\\\",\\\"sha256\\\":\\\"1e6c9f9bd3146c0c8f7314c422e26c842eb45ba25d76d12adae8f8d690842f7e\\\"},\\\"b\\\":{\\\"bytes\\\":74807,\\\"path\\\":\\\"experiments/common-tiff-stack/render-1/case-00/output.tiff\\\",\\\"sha256\\\":\\\"1e6c9f9bd3146c0c8f7314c422e26c842eb45ba25d76d12adae8f8d690842f7e\\\"}}]\")\nt=time.monotonic();cpu=time.process_time()\nout=[]\nfor v in pairs:\n a=root/v[\"a\"][\"path\"];b=root/v[\"b\"][\"path\"]\n sa=a.stat();sb=b.stat()\n stripped=v[\"a\"][\"path\"][4:] if v[\"a\"][\"path\"].startswith(\"\\\\\\\\?\\\\\") else v[\"a\"][\"path\"]\n same_normal=pathlib.Path(stripped)==b\n same_metadata=(sa.st_dev,sa.st_ino,sa.st_size)==(sb.st_dev,sb.st_ino,sb.st_size)\n if not stat.S_ISREG(sa.st_mode) or not same_normal or not same_metadata:raise ValueError(\"saved path alias\")\n out.append({\"role\":v[\"role\"],\"old_path\":str(a),\"fixture_path\":str(b),\"unmodified_abspath_Path_equal\":pathlib.Path(os.path.abspath(a))==pathlib.Path(os.path.abspath(b)),\"valid_prefix_removed_Path_equal\":same_normal,\"same_saved_ref_bytes_hash\":v[\"a\"][\"bytes\"]==v[\"b\"][\"bytes\"] and v[\"a\"][\"sha256\"]==v[\"b\"][\"sha256\"],\"same_current_dev_ino_size\":same_metadata,\"observed_bytes\":sa.st_size})\nprint(json.dumps({\"pairs\":out,\"cpu_sample\":time.process_time()-cpu,\"wall_sample\":time.monotonic()-t,\"additional_file_content_reads\":0},sort_keys=True))\n",
+  "alias_tool": {
+    "exit_code": 0,
+    "whole_wall_seconds": 0.0658076
+  },
+  "aliases": {
+    "additional_file_content_reads": 0,
+    "cpu_sample": 0,
+    "pairs": [
+      {
+        "fixture_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\common-tiff-stack\\prepare-1\\fixtures\\case-00.json",
+        "observed_bytes": 2905,
+        "old_path": "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\common-tiff-stack\\prepare-1\\fixtures\\case-00.json",
+        "role": "manifest",
+        "same_current_dev_ino_size": true,
+        "same_saved_ref_bytes_hash": true,
+        "unmodified_abspath_Path_equal": false,
+        "valid_prefix_removed_Path_equal": true
+      },
+      {
+        "fixture_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\common-tiff-stack\\render-1\\case-00\\output.tiff",
+        "observed_bytes": 74807,
+        "old_path": "\\\\?\\C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\common-tiff-stack\\render-1\\case-00\\output.tiff",
+        "role": "output",
+        "same_current_dev_ino_size": true,
+        "same_saved_ref_bytes_hash": true,
+        "unmodified_abspath_Path_equal": false,
+        "valid_prefix_removed_Path_equal": true
+      }
+    ],
+    "wall_sample": 0
+  },
+  "allocation": {
+    "active_wall_seconds": 20,
+    "cpu_seconds": 10,
+    "read_bytes": 33554432,
+    "retained_bytes": 1048576
+  },
+  "charge": "Full allocation retained without refund",
+  "checks": {
+    "actual_child_clean_success": true,
+    "actual_fixture_metadata_census": true,
+    "actual_parent_refusal": true,
+    "child_record_ref": true,
+    "external_ref_exit": true,
+    "external_ref_stderr": true,
+    "external_ref_stdout": true,
+    "external_source_ref": true,
+    "fixture_source_ref": true,
+    "index_advert_ref": true,
+    "job_cpu_sum": true,
+    "legacy_actual_status": true,
+    "legacy_alias_match": true,
+    "raw_child_log_ref": true,
+    "released_argv": true,
+    "terminal_accounting": true,
+    "terminal_refs": true
+  },
+  "disposition": "VERIFIED_PARENT_PATH_ASSOCIATION_REFUSAL_AFTER_CLEAN_GENERATOR",
+  "error": {
+    "sha256": "c7ca5efa219aefb6d3517658d1d8a1539d831b22187e180ce4bc31c7ff21518b",
+    "text": "Traceback (most recent call last):\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\common-tiff-dimensions\\run-stage.py\", line 409, in main\n    index_ref=file_ref(INDEX,MIB,check=budget.check);fixture_read(index_ref,budget)\n                                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\common-tiff-dimensions\\run-stage.py\", line 231, in fixture_read\n    need(old[\"schema\"]==\"common-tiff-stack-result-v1\" and old[\"status\"]==\"COMPLETE\"\n  File \"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\common-tiff-dimensions\\run-stage.py\", line 62, in need\n    if not value:raise ValueError(message)\n                 ^^^^^^^^^^^^^^^^^^^^^^^^^\nValueError: held legacy manifest/output association\n",
+    "truncated": false,
+    "utf8_bytes": 798
+  },
+  "generator": {
+    "cases": 24,
+    "file_bytes": 16025258,
+    "generated_files": 59,
+    "own_work": {
+      "cpu_seconds": 1.90625,
+      "wall_seconds": 2.073614099994302
+    },
+    "publication_allowance": {
+      "cpu_seconds": 1,
+      "wall_seconds": 2
+    },
+    "status": "PREPARED_UNRUN_FIXTURES"
+  },
+  "read_tool": {
+    "cpu_sample": 0,
+    "exit_code": 0,
+    "wall_sample": 0.01600000000325963,
+    "whole_wall_seconds": 0.0863581
+  },
+  "reads": {
+    "actual_bounded_file_bytes": 507006,
+    "source_discovery_conservative_charge_bytes": 1048576
+  },
+  "refs": {
+    "checker": {
+      "bytes": 65751,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\common-tiff-dimensions\\independent-controls.py",
+      "sha256": "8fefa5e31c614595367f644b314ece77da6bf5d4ec54c4edde80816a0e8cee47"
+    },
+    "child": {
+      "bytes": 2293,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\common-tiff-dimensions\\prepare-1\\child-00.json",
+      "sha256": "3aee4d40f23c980989772c46cefcbb967dfae9ffe5090a508285002114870380"
+    },
+    "exit": {
+      "bytes": 2,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\common-tiff-dimensions\\work\\prepare-external-1-exit.txt",
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+    },
+    "fixtures": {
+      "bytes": 40481,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\common-tiff-dimensions\\prepare-1\\fixtures\\index.json",
+      "sha256": "d07f356bdd7b2286b88404a337afd831319130e979b9adc27222d5ad71b1bf98"
+    },
+    "held": {
+      "bytes": 40626,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m194h-pedestal-causality\\build-and-run.py",
+      "sha256": "b505a2fff0024691d98088c599f7f554c1543268de09c836a6bc1fe6c17b7410"
+    },
+    "legacy_report": {
+      "bytes": 11635,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\common-tiff-stack\\render-1\\case-00\\report.json",
+      "sha256": "abc69a25319da0ddb6ce2e9a036d8b37c0e1bcd4c67a9c186e6a647f088b5f9a"
+    },
+    "log": {
+      "bytes": 6382,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\common-tiff-dimensions\\prepare-1\\child-00.log",
+      "sha256": "b040b37644f5cc3413ac8d4c7e798194402c173d07c7c8fe692bfeb6be93f144"
+    },
+    "outer": {
+      "bytes": 1634,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\common-tiff-dimensions\\work\\prepare-external-1-outer.json",
+      "sha256": "65f109dd5e47252e503ed84cf993cbc8dadf7d59da21493ccadb087f23cfdf9b"
+    },
+    "preparer": {
+      "bytes": 11863,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\common-tiff-dimensions\\prepare-release.py",
+      "sha256": "08140b301a73e2e5a8e401d1fa38ecef952a29229006d3ed649abbeee638f231"
+    },
+    "release": {
+      "bytes": 29563,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\common-tiff-dimensions\\work\\prepare-release-1.json",
+      "sha256": "ce63754d0ec95f0c1b6636a45f3289daa8deb813bab16f16c0177eb1fcb11aa6"
+    },
+    "result": {
+      "bytes": 262144,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\common-tiff-dimensions\\prepare-1\\result.json",
+      "sha256": "8411594fbca4f81d3574e369a2089c2b3cf5d77b4580da8d827d218f5499c1f5"
+    },
+    "runner": {
+      "bytes": 33546,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\common-tiff-dimensions\\run-stage.py",
+      "sha256": "442226bd08b128f8bb97460fab6f8ab6280fd0950d1912313b87d583b7a33940"
+    },
+    "stderr": {
+      "bytes": 0,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\common-tiff-dimensions\\work\\prepare-external-1-stderr.bin",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "stdout": {
+      "bytes": 467,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\common-tiff-dimensions\\work\\prepare-external-1-stdout.bin",
+      "sha256": "696f8e97d5bb765e4c3d4592b7100ad700ba33d5c1f8bb4fbcb9aebca032b975"
+    },
+    "tail": {
+      "bytes": 619,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\common-tiff-dimensions\\prepare-1\\parent-tail.json",
+      "sha256": "67acd7438b0e46a9b19a0436187910c3c8aad14e23fde03169189879609a45bd"
+    }
+  },
+  "report": {
+    "bytes": 10675,
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\common-tiff-dimensions\\independent-prepare-1-review.md",
+    "sha256": "43b0560c06232c7a5a2c82066954314ac564200814adcda88e95deb7c61ffd7f"
+  },
+  "saved_read_source": "\nimport json,hashlib,time,os,stat,pathlib\nroot=pathlib.Path(r\"C:\\dev\\blog\\death-of-software\\projects\\strehl\")\nbase=root/\"experiments/common-tiff-dimensions\"\nstart=time.monotonic();cpu=time.process_time();read_count=0;refs={};values={};source={}\npaths={\n\"result\":base/\"prepare-1/result.json\",\"tail\":base/\"prepare-1/parent-tail.json\",\"child\":base/\"prepare-1/child-00.json\",\"log\":base/\"prepare-1/child-00.log\",\n\"outer\":base/\"work/prepare-external-1-outer.json\",\"stdout\":base/\"work/prepare-external-1-stdout.bin\",\"stderr\":base/\"work/prepare-external-1-stderr.bin\",\"exit\":base/\"work/prepare-external-1-exit.txt\",\n\"release\":base/\"work/prepare-release-1.json\",\"fixtures\":base/\"prepare-1/fixtures/index.json\",\n\"runner\":base/\"run-stage.py\",\"held\":root/\"experiments/m194h-pedestal-causality/build-and-run.py\",\"checker\":base/\"independent-controls.py\",\"preparer\":base/\"prepare-release.py\",\n\"legacy_report\":root/\"experiments/common-tiff-stack/render-1/case-00/report.json\"\n}\ndef read(k,p):\n global read_count\n s=p.stat(follow_symlinks=False)\n if not stat.S_ISREG(s.st_mode) or s.st_size>1048576:raise ValueError(\"bounded regular file \"+k)\n for parent in (p,*p.parents):\n  q=parent.stat(follow_symlinks=False)\n  if stat.S_ISLNK(q.st_mode) or getattr(q,\"st_file_attributes\",0)&0x400:raise ValueError(\"reparse \"+k)\n if read_count+s.st_size>32*1048576:raise ValueError(\"read reservation\")\n read_count+=s.st_size\n b=p.read_bytes();after=p.stat(follow_symlinks=False)\n if len(b)!=s.st_size or (s.st_size,s.st_mtime_ns,s.st_ino)!=(after.st_size,after.st_mtime_ns,after.st_ino):raise ValueError(\"unstable \"+k)\n refs[k]={\"path\":str(p),\"bytes\":len(b),\"sha256\":hashlib.sha256(b).hexdigest()}\n if time.process_time()-cpu>9 or time.monotonic()-start>18:raise ValueError(\"read time\")\n return b\nfor k,p in paths.items():\n b=read(k,p)\n if k in (\"runner\",\"held\",\"checker\",\"preparer\"):source[k]=b.decode()\n elif k in (\"log\",\"stdout\",\"stderr\",\"exit\"):values[k]=b.decode()\n else:values[k]=json.loads(b)\nfi=values[\"fixtures\"];values[\"fixture_index_summary\"]={\"schema\":fi[\"schema\"],\"source\":fi[\"source\"],\"spec\":fi[\"spec\"],\"legacy\":fi[\"legacy\"],\"generated_files_count\":len(fi[\"generated_files\"]),\"cases\":[{k:v for k,v in row.items() if k in (\"id\",\"ordinal\",\"expected_exit_code\",\"expected_folded_frames\",\"version\",\"manifest\")} for row in fi[\"cases\"]]}\ndel values[\"fixtures\"]\nrel=values[\"release\"];values[\"release_summary\"]={k:v for k,v in rel.items() if k!=\"source_bindings\"};values[\"release_summary\"][\"source_bindings_count\"]=len(rel[\"source_bindings\"]);del values[\"release\"]\nfiles=[]\nfor e in os.scandir(base/\"prepare-1/fixtures\"):\n if len(files)>=64:raise ValueError(\"fixture metadata census cap\")\n s=e.stat(follow_symlinks=False)\n if not stat.S_ISREG(s.st_mode) or getattr(s,\"st_file_attributes\",0)&0x400:raise ValueError(\"fixture ordinary file\")\n files.append({\"name\":e.name,\"bytes\":s.st_size})\nvalues[\"fixture_directory_metadata\"]=sorted(files,key=lambda x:x[\"name\"])\nout={\"refs\":refs,\"values\":values,\"source\":source,\"read_bytes\":read_count,\"cpu_sample\":time.process_time()-cpu,\"wall_sample\":time.monotonic()-start}\nprint(json.dumps(out,sort_keys=True))\n",
+  "schema": "common-tiff-dimensions-independent-prepare-failure-read-v1",
+  "scope": "No TIFF payload, candidate import or numerical rerun; fixture census is metadata, hashes not all independently reread.",
+  "tail": {
+    "actual_parent_cpu_sample": 0.828125,
+    "completed_child_cpu_seconds": 1.953125,
+    "cpu_accounting_complete": true,
+    "final_external_allowance": {
+      "cpu_seconds": 2,
+      "wall_seconds": 3
+    },
+    "live_child_cpu_seconds": 0,
+    "result": {
+      "bytes": 262144,
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\common-tiff-dimensions\\prepare-1\\result.json",
+      "sha256": "8411594fbca4f81d3574e369a2089c2b3cf5d77b4580da8d827d218f5499c1f5"
+    },
+    "schema": "common-tiff-dimensions-parent-tail-v1",
+    "scope": "Sample after canonical publication; actual external exit/whole wall and charged tail are required.",
+    "whole_wall_sample": 2.9679999999934807
+  }
+}

@@ -127,3 +127,79 @@ misindexed targetatargv10 and failed; corrected full-vector comparison passed
 without changing/repeatingconstructor. Recordwork/build2-root-release-read.json.
 No build2 compiler dispatched yet at this checkpoint. Next commitrelease then
 run exact capture-stage.py build once, preserve actualoutcome.
+
+CURRENT: build2 PASSED; prepare1 parentFAILED after successful generator.
+Build2evidenceae83e07c: freshCompilingstrehl-cli/build-finishedsuccess, actual
+Cargo0/directexit/EOF, intentionalownedcompilecleanup1->0 aftersuccess.
+Executable3201536B172a52135ebee5853169cd3cd8bd8e9c97b4dc6ad5a886c20bfd57ea0a4a0684.
+Wholeouter70.40699999999197wall, terminalJob110.453125CPU, parent45.546875CPU;
+combinedsample156.0CPU. Fullfresh600CPU300wallallocationremainscharged.
+Compiled118-fileclosureee02f4b41cfc5cc5c1d501c72d9980f2131fba9b891e6b9aca9412e119ff72a8.
+Endscratchsample1490779414B/2139files is non-atomic, notpeak orhistory.
+
+Prepare1release4dc7f282; actualfailed67-fileevidence133daa33 preservesall
+59generatedfixtures24cases plus8controller/externalfiles. Generatorchild0,
+directexit/EOF, zeroactiveJob,nointervention; child1.953125CPU. Index40481B
+d07f356bdd7b2286b88404a337afd831319130e979b9adc27222d5ad71b1bf98;
+completefixturefamily16025258B. Parentfailedonly afterward in fixture_read
+run-stage.py231-233 'held legacy manifest/output association'. Wholeouter
+2.9839999999967404wall,parent0.8125CPU,combined2.765625CPU. Full30CPU60wall
+prepareallocation remainscharged. No productrender or135checker ran.
+
+Cause is demonstratedmetadataassociation: oldlegacyreportmanifest/output
+paths use validWindowsverbatim\\?\C:\ form; newfixture refs use ordinarypaths.
+Bytes/hashes/locationsmatch, but inheritedd.same_ref does lexicalPath equality.
+Both legacycomparisonswouldrefuse. Do NOT changeoldreport,190frozen sources,
+fixtures or successfulbinary; do NOT regeneratefixtures/rebuild for this.
+
+Factor owns SOURCE-ONLY recoverydesign.md: additiveoperationalcontroller/helper
+with old190 retained, explicit successfulbuild2 plusfailedparent/cleanprepare
+child provenance, authentic currentcompiled118closure, newadmissionreceipt
+for exactexistingfixtures. Do not fabricateoldCOMPLETE; oldfailure remains.
+Reviewer owns independentfailureaudit10CPU20wall32MiBread1MiBreport; confirmed
+onlytwolegacy same_refsites. capture_casehasnoproductFileRefcomparison; current
+independentchecker alreadyhascorrectlocalverbatimassociation. No recovery
+implementation/control/admission/render is released yet.
+
+Nextconsumer sourceaudit is complete: next-integer-consumer-audit.md16907B
+578b3257c510748df5efee6f534da225bf05021820cd3cdbbfccb7b97da98815.
+Mandatorycurrentpriorartquery0/2.789s; auditreadcap prospectively48MiB and
+13detailedfiles toinclude mandatory20798042Bscan pluswarpmapconsumer. No
+newgeometryexperiment. Finaldimensionsindependentresultplan16005B
+466c78d26e8eb06eed67cd938ce2d4ee7d20ccdd0fcdc6b357ac46251c507ee5
+existsoutsidefrozenmap; readerimplementationwaits for recoverypathcontract.
+
+Recovery source commission checkpoint:
+Root read and accepted recoverydesign.md10524B
+0bc374402ca5a7f82c43a58d179db4525a77c2999ab520f10370621b289287e6
+for SOURCE IMPLEMENTATION only. Independent preparation audit is complete:
+independent-prepare-1-review.md10675B
+43b0560c06232c7a5a2c82066954314ac564200814adcda88e95deb7c61ffd7f;
+work/independent-prepare-1-read.json14724B
+6b3c76e59c69289b5a1fa8c8c2493086eefb5e393b1c5fbf21d63bc6cc68514a.
+It confirms actual failed parent, clean successful child and both Windows path
+associations; no TIFF payloads were read. Full10CPU20wall audit slice retained.
+
+Current root contract recovery-contract.md9356B
+100357f5238502b5ad213ad0752a87a6ed8064b1ec8db932193bec4b92ac8b56;
+first8185B draft preserved. All original190 sources must remain byte-identical.
+Factor owns additive run-recovery-stage.py, recovery-authority.py,
+prepare-recovery-release.py and capture-recovery-stage.py. Coordinate owns
+recovery-controls.py, recovery-spec.md and recovery-checker.py. Reviewer owns
+recovery-source-review.md. They are implementing/reviewing source only; no
+recovery control/admission/render/checker run is released. Root owns final
+contract, source review/release, actual execution, evidence commits and handoff.
+
+Controls prospectively5CPU10wall4MiBread2MiBwrite; separate controls capture
+5CPU10overhead-wall4MiBread2MiBwrite, full20wall. Five-role raw controls bundle
+result/outer/stdout/stderr/exit. Admission10CPU20wall64MiBread2MiBretained,
+childless saved bytes only. Four fresh root constructors10CPU20wall each
+inside existing32MiBarchivefamily. Existing unusedrender180CPU240wall128MiB
+andverify60CPU120wall19MiB stay unchanged. No earlier allocation resets.
+The controls table/count must be fixed independently before any execution.
+
+The recovery must produce a genuine SAVED_FIXTURES_ADMITTED receipt while
+retaining the old parentREFUSED; no invented oldCOMPLETE or generic failure
+bypass. Original controller/source identities remain historical; new execution
+authority is an explicit additive map. Reuse exact two legacy callsite changes
+and unchanged numerical/checker bodies. Render1/verify1 remain unvisited.
