@@ -1,0 +1,1951 @@
+{
+  "expected_image_pairs": 4,
+  "initialization_error": "coordinate IR: WithSpan { inner: GlobalVariable { handle: [2], name: \"plans\", source: StorageAddressSpaceWriteOnlyNotSupported }, spans: [(Span { start: 634, end: 639 }, \"naga::ir::GlobalVariable [2]\")] }",
+  "predicate_controls": {
+    "expected_checks": 192,
+    "exported_threshold_bits": 553942754166571008,
+    "literal_threshold_bits": 553942754166571008,
+    "pass": true,
+    "rows": [
+      {
+        "actual": false,
+        "bits": 553942754166571007,
+        "channel": 0,
+        "component": "a.re",
+        "expected": false,
+        "label": "positive-below",
+        "pass": true,
+        "slot": 0
+      },
+      {
+        "actual": true,
+        "bits": 553942754166571008,
+        "channel": 0,
+        "component": "a.re",
+        "expected": true,
+        "label": "positive-at",
+        "pass": true,
+        "slot": 0
+      },
+      {
+        "actual": true,
+        "bits": 553942754166571009,
+        "channel": 0,
+        "component": "a.re",
+        "expected": true,
+        "label": "positive-above",
+        "pass": true,
+        "slot": 0
+      },
+      {
+        "actual": false,
+        "bits": 9777314791021346815,
+        "channel": 0,
+        "component": "a.re",
+        "expected": false,
+        "label": "negative-below",
+        "pass": true,
+        "slot": 0
+      },
+      {
+        "actual": true,
+        "bits": 9777314791021346816,
+        "channel": 0,
+        "component": "a.re",
+        "expected": true,
+        "label": "negative-at",
+        "pass": true,
+        "slot": 0
+      },
+      {
+        "actual": true,
+        "bits": 9777314791021346817,
+        "channel": 0,
+        "component": "a.re",
+        "expected": true,
+        "label": "negative-above",
+        "pass": true,
+        "slot": 0
+      },
+      {
+        "actual": false,
+        "bits": 549439154539200512,
+        "channel": 0,
+        "component": "a.re",
+        "expected": false,
+        "label": "positive-half",
+        "pass": true,
+        "slot": 0
+      },
+      {
+        "actual": false,
+        "bits": 9772811191393976320,
+        "channel": 0,
+        "component": "a.re",
+        "expected": false,
+        "label": "negative-half",
+        "pass": true,
+        "slot": 0
+      },
+      {
+        "actual": false,
+        "bits": 4503599627370496,
+        "channel": 0,
+        "component": "a.re",
+        "expected": false,
+        "label": "minimum-normal",
+        "pass": true,
+        "slot": 0
+      },
+      {
+        "actual": false,
+        "bits": 1,
+        "channel": 0,
+        "component": "a.re",
+        "expected": false,
+        "label": "positive-subnormal",
+        "pass": true,
+        "slot": 0
+      },
+      {
+        "actual": false,
+        "bits": 9223372036854775809,
+        "channel": 0,
+        "component": "a.re",
+        "expected": false,
+        "label": "negative-subnormal",
+        "pass": true,
+        "slot": 0
+      },
+      {
+        "actual": true,
+        "bits": 0,
+        "channel": 0,
+        "component": "a.re",
+        "expected": true,
+        "label": "positive-zero",
+        "pass": true,
+        "slot": 0
+      },
+      {
+        "actual": true,
+        "bits": 9223372036854775808,
+        "channel": 0,
+        "component": "a.re",
+        "expected": true,
+        "label": "negative-zero",
+        "pass": true,
+        "slot": 0
+      },
+      {
+        "actual": true,
+        "bits": 9218868437227405312,
+        "channel": 0,
+        "component": "a.re",
+        "expected": true,
+        "label": "positive-infinity",
+        "pass": true,
+        "slot": 0
+      },
+      {
+        "actual": true,
+        "bits": 18442240474082181120,
+        "channel": 0,
+        "component": "a.re",
+        "expected": true,
+        "label": "negative-infinity",
+        "pass": true,
+        "slot": 0
+      },
+      {
+        "actual": true,
+        "bits": 9221120237041095220,
+        "channel": 0,
+        "component": "a.re",
+        "expected": true,
+        "label": "quiet-nan",
+        "pass": true,
+        "slot": 0
+      },
+      {
+        "actual": false,
+        "bits": 553942754166571007,
+        "channel": 0,
+        "component": "a.im",
+        "expected": false,
+        "label": "positive-below",
+        "pass": true,
+        "slot": 1
+      },
+      {
+        "actual": true,
+        "bits": 553942754166571008,
+        "channel": 0,
+        "component": "a.im",
+        "expected": true,
+        "label": "positive-at",
+        "pass": true,
+        "slot": 1
+      },
+      {
+        "actual": true,
+        "bits": 553942754166571009,
+        "channel": 0,
+        "component": "a.im",
+        "expected": true,
+        "label": "positive-above",
+        "pass": true,
+        "slot": 1
+      },
+      {
+        "actual": false,
+        "bits": 9777314791021346815,
+        "channel": 0,
+        "component": "a.im",
+        "expected": false,
+        "label": "negative-below",
+        "pass": true,
+        "slot": 1
+      },
+      {
+        "actual": true,
+        "bits": 9777314791021346816,
+        "channel": 0,
+        "component": "a.im",
+        "expected": true,
+        "label": "negative-at",
+        "pass": true,
+        "slot": 1
+      },
+      {
+        "actual": true,
+        "bits": 9777314791021346817,
+        "channel": 0,
+        "component": "a.im",
+        "expected": true,
+        "label": "negative-above",
+        "pass": true,
+        "slot": 1
+      },
+      {
+        "actual": false,
+        "bits": 549439154539200512,
+        "channel": 0,
+        "component": "a.im",
+        "expected": false,
+        "label": "positive-half",
+        "pass": true,
+        "slot": 1
+      },
+      {
+        "actual": false,
+        "bits": 9772811191393976320,
+        "channel": 0,
+        "component": "a.im",
+        "expected": false,
+        "label": "negative-half",
+        "pass": true,
+        "slot": 1
+      },
+      {
+        "actual": false,
+        "bits": 4503599627370496,
+        "channel": 0,
+        "component": "a.im",
+        "expected": false,
+        "label": "minimum-normal",
+        "pass": true,
+        "slot": 1
+      },
+      {
+        "actual": false,
+        "bits": 1,
+        "channel": 0,
+        "component": "a.im",
+        "expected": false,
+        "label": "positive-subnormal",
+        "pass": true,
+        "slot": 1
+      },
+      {
+        "actual": false,
+        "bits": 9223372036854775809,
+        "channel": 0,
+        "component": "a.im",
+        "expected": false,
+        "label": "negative-subnormal",
+        "pass": true,
+        "slot": 1
+      },
+      {
+        "actual": true,
+        "bits": 0,
+        "channel": 0,
+        "component": "a.im",
+        "expected": true,
+        "label": "positive-zero",
+        "pass": true,
+        "slot": 1
+      },
+      {
+        "actual": true,
+        "bits": 9223372036854775808,
+        "channel": 0,
+        "component": "a.im",
+        "expected": true,
+        "label": "negative-zero",
+        "pass": true,
+        "slot": 1
+      },
+      {
+        "actual": true,
+        "bits": 9218868437227405312,
+        "channel": 0,
+        "component": "a.im",
+        "expected": true,
+        "label": "positive-infinity",
+        "pass": true,
+        "slot": 1
+      },
+      {
+        "actual": true,
+        "bits": 18442240474082181120,
+        "channel": 0,
+        "component": "a.im",
+        "expected": true,
+        "label": "negative-infinity",
+        "pass": true,
+        "slot": 1
+      },
+      {
+        "actual": true,
+        "bits": 9221120237041095220,
+        "channel": 0,
+        "component": "a.im",
+        "expected": true,
+        "label": "quiet-nan",
+        "pass": true,
+        "slot": 1
+      },
+      {
+        "actual": false,
+        "bits": 553942754166571007,
+        "channel": 0,
+        "component": "b.re",
+        "expected": false,
+        "label": "positive-below",
+        "pass": true,
+        "slot": 2
+      },
+      {
+        "actual": true,
+        "bits": 553942754166571008,
+        "channel": 0,
+        "component": "b.re",
+        "expected": true,
+        "label": "positive-at",
+        "pass": true,
+        "slot": 2
+      },
+      {
+        "actual": true,
+        "bits": 553942754166571009,
+        "channel": 0,
+        "component": "b.re",
+        "expected": true,
+        "label": "positive-above",
+        "pass": true,
+        "slot": 2
+      },
+      {
+        "actual": false,
+        "bits": 9777314791021346815,
+        "channel": 0,
+        "component": "b.re",
+        "expected": false,
+        "label": "negative-below",
+        "pass": true,
+        "slot": 2
+      },
+      {
+        "actual": true,
+        "bits": 9777314791021346816,
+        "channel": 0,
+        "component": "b.re",
+        "expected": true,
+        "label": "negative-at",
+        "pass": true,
+        "slot": 2
+      },
+      {
+        "actual": true,
+        "bits": 9777314791021346817,
+        "channel": 0,
+        "component": "b.re",
+        "expected": true,
+        "label": "negative-above",
+        "pass": true,
+        "slot": 2
+      },
+      {
+        "actual": false,
+        "bits": 549439154539200512,
+        "channel": 0,
+        "component": "b.re",
+        "expected": false,
+        "label": "positive-half",
+        "pass": true,
+        "slot": 2
+      },
+      {
+        "actual": false,
+        "bits": 9772811191393976320,
+        "channel": 0,
+        "component": "b.re",
+        "expected": false,
+        "label": "negative-half",
+        "pass": true,
+        "slot": 2
+      },
+      {
+        "actual": false,
+        "bits": 4503599627370496,
+        "channel": 0,
+        "component": "b.re",
+        "expected": false,
+        "label": "minimum-normal",
+        "pass": true,
+        "slot": 2
+      },
+      {
+        "actual": false,
+        "bits": 1,
+        "channel": 0,
+        "component": "b.re",
+        "expected": false,
+        "label": "positive-subnormal",
+        "pass": true,
+        "slot": 2
+      },
+      {
+        "actual": false,
+        "bits": 9223372036854775809,
+        "channel": 0,
+        "component": "b.re",
+        "expected": false,
+        "label": "negative-subnormal",
+        "pass": true,
+        "slot": 2
+      },
+      {
+        "actual": true,
+        "bits": 0,
+        "channel": 0,
+        "component": "b.re",
+        "expected": true,
+        "label": "positive-zero",
+        "pass": true,
+        "slot": 2
+      },
+      {
+        "actual": true,
+        "bits": 9223372036854775808,
+        "channel": 0,
+        "component": "b.re",
+        "expected": true,
+        "label": "negative-zero",
+        "pass": true,
+        "slot": 2
+      },
+      {
+        "actual": true,
+        "bits": 9218868437227405312,
+        "channel": 0,
+        "component": "b.re",
+        "expected": true,
+        "label": "positive-infinity",
+        "pass": true,
+        "slot": 2
+      },
+      {
+        "actual": true,
+        "bits": 18442240474082181120,
+        "channel": 0,
+        "component": "b.re",
+        "expected": true,
+        "label": "negative-infinity",
+        "pass": true,
+        "slot": 2
+      },
+      {
+        "actual": true,
+        "bits": 9221120237041095220,
+        "channel": 0,
+        "component": "b.re",
+        "expected": true,
+        "label": "quiet-nan",
+        "pass": true,
+        "slot": 2
+      },
+      {
+        "actual": false,
+        "bits": 553942754166571007,
+        "channel": 0,
+        "component": "b.im",
+        "expected": false,
+        "label": "positive-below",
+        "pass": true,
+        "slot": 3
+      },
+      {
+        "actual": true,
+        "bits": 553942754166571008,
+        "channel": 0,
+        "component": "b.im",
+        "expected": true,
+        "label": "positive-at",
+        "pass": true,
+        "slot": 3
+      },
+      {
+        "actual": true,
+        "bits": 553942754166571009,
+        "channel": 0,
+        "component": "b.im",
+        "expected": true,
+        "label": "positive-above",
+        "pass": true,
+        "slot": 3
+      },
+      {
+        "actual": false,
+        "bits": 9777314791021346815,
+        "channel": 0,
+        "component": "b.im",
+        "expected": false,
+        "label": "negative-below",
+        "pass": true,
+        "slot": 3
+      },
+      {
+        "actual": true,
+        "bits": 9777314791021346816,
+        "channel": 0,
+        "component": "b.im",
+        "expected": true,
+        "label": "negative-at",
+        "pass": true,
+        "slot": 3
+      },
+      {
+        "actual": true,
+        "bits": 9777314791021346817,
+        "channel": 0,
+        "component": "b.im",
+        "expected": true,
+        "label": "negative-above",
+        "pass": true,
+        "slot": 3
+      },
+      {
+        "actual": false,
+        "bits": 549439154539200512,
+        "channel": 0,
+        "component": "b.im",
+        "expected": false,
+        "label": "positive-half",
+        "pass": true,
+        "slot": 3
+      },
+      {
+        "actual": false,
+        "bits": 9772811191393976320,
+        "channel": 0,
+        "component": "b.im",
+        "expected": false,
+        "label": "negative-half",
+        "pass": true,
+        "slot": 3
+      },
+      {
+        "actual": false,
+        "bits": 4503599627370496,
+        "channel": 0,
+        "component": "b.im",
+        "expected": false,
+        "label": "minimum-normal",
+        "pass": true,
+        "slot": 3
+      },
+      {
+        "actual": false,
+        "bits": 1,
+        "channel": 0,
+        "component": "b.im",
+        "expected": false,
+        "label": "positive-subnormal",
+        "pass": true,
+        "slot": 3
+      },
+      {
+        "actual": false,
+        "bits": 9223372036854775809,
+        "channel": 0,
+        "component": "b.im",
+        "expected": false,
+        "label": "negative-subnormal",
+        "pass": true,
+        "slot": 3
+      },
+      {
+        "actual": true,
+        "bits": 0,
+        "channel": 0,
+        "component": "b.im",
+        "expected": true,
+        "label": "positive-zero",
+        "pass": true,
+        "slot": 3
+      },
+      {
+        "actual": true,
+        "bits": 9223372036854775808,
+        "channel": 0,
+        "component": "b.im",
+        "expected": true,
+        "label": "negative-zero",
+        "pass": true,
+        "slot": 3
+      },
+      {
+        "actual": true,
+        "bits": 9218868437227405312,
+        "channel": 0,
+        "component": "b.im",
+        "expected": true,
+        "label": "positive-infinity",
+        "pass": true,
+        "slot": 3
+      },
+      {
+        "actual": true,
+        "bits": 18442240474082181120,
+        "channel": 0,
+        "component": "b.im",
+        "expected": true,
+        "label": "negative-infinity",
+        "pass": true,
+        "slot": 3
+      },
+      {
+        "actual": true,
+        "bits": 9221120237041095220,
+        "channel": 0,
+        "component": "b.im",
+        "expected": true,
+        "label": "quiet-nan",
+        "pass": true,
+        "slot": 3
+      },
+      {
+        "actual": false,
+        "bits": 553942754166571007,
+        "channel": 1,
+        "component": "a.re",
+        "expected": false,
+        "label": "positive-below",
+        "pass": true,
+        "slot": 4
+      },
+      {
+        "actual": true,
+        "bits": 553942754166571008,
+        "channel": 1,
+        "component": "a.re",
+        "expected": true,
+        "label": "positive-at",
+        "pass": true,
+        "slot": 4
+      },
+      {
+        "actual": true,
+        "bits": 553942754166571009,
+        "channel": 1,
+        "component": "a.re",
+        "expected": true,
+        "label": "positive-above",
+        "pass": true,
+        "slot": 4
+      },
+      {
+        "actual": false,
+        "bits": 9777314791021346815,
+        "channel": 1,
+        "component": "a.re",
+        "expected": false,
+        "label": "negative-below",
+        "pass": true,
+        "slot": 4
+      },
+      {
+        "actual": true,
+        "bits": 9777314791021346816,
+        "channel": 1,
+        "component": "a.re",
+        "expected": true,
+        "label": "negative-at",
+        "pass": true,
+        "slot": 4
+      },
+      {
+        "actual": true,
+        "bits": 9777314791021346817,
+        "channel": 1,
+        "component": "a.re",
+        "expected": true,
+        "label": "negative-above",
+        "pass": true,
+        "slot": 4
+      },
+      {
+        "actual": false,
+        "bits": 549439154539200512,
+        "channel": 1,
+        "component": "a.re",
+        "expected": false,
+        "label": "positive-half",
+        "pass": true,
+        "slot": 4
+      },
+      {
+        "actual": false,
+        "bits": 9772811191393976320,
+        "channel": 1,
+        "component": "a.re",
+        "expected": false,
+        "label": "negative-half",
+        "pass": true,
+        "slot": 4
+      },
+      {
+        "actual": false,
+        "bits": 4503599627370496,
+        "channel": 1,
+        "component": "a.re",
+        "expected": false,
+        "label": "minimum-normal",
+        "pass": true,
+        "slot": 4
+      },
+      {
+        "actual": false,
+        "bits": 1,
+        "channel": 1,
+        "component": "a.re",
+        "expected": false,
+        "label": "positive-subnormal",
+        "pass": true,
+        "slot": 4
+      },
+      {
+        "actual": false,
+        "bits": 9223372036854775809,
+        "channel": 1,
+        "component": "a.re",
+        "expected": false,
+        "label": "negative-subnormal",
+        "pass": true,
+        "slot": 4
+      },
+      {
+        "actual": true,
+        "bits": 0,
+        "channel": 1,
+        "component": "a.re",
+        "expected": true,
+        "label": "positive-zero",
+        "pass": true,
+        "slot": 4
+      },
+      {
+        "actual": true,
+        "bits": 9223372036854775808,
+        "channel": 1,
+        "component": "a.re",
+        "expected": true,
+        "label": "negative-zero",
+        "pass": true,
+        "slot": 4
+      },
+      {
+        "actual": true,
+        "bits": 9218868437227405312,
+        "channel": 1,
+        "component": "a.re",
+        "expected": true,
+        "label": "positive-infinity",
+        "pass": true,
+        "slot": 4
+      },
+      {
+        "actual": true,
+        "bits": 18442240474082181120,
+        "channel": 1,
+        "component": "a.re",
+        "expected": true,
+        "label": "negative-infinity",
+        "pass": true,
+        "slot": 4
+      },
+      {
+        "actual": true,
+        "bits": 9221120237041095220,
+        "channel": 1,
+        "component": "a.re",
+        "expected": true,
+        "label": "quiet-nan",
+        "pass": true,
+        "slot": 4
+      },
+      {
+        "actual": false,
+        "bits": 553942754166571007,
+        "channel": 1,
+        "component": "a.im",
+        "expected": false,
+        "label": "positive-below",
+        "pass": true,
+        "slot": 5
+      },
+      {
+        "actual": true,
+        "bits": 553942754166571008,
+        "channel": 1,
+        "component": "a.im",
+        "expected": true,
+        "label": "positive-at",
+        "pass": true,
+        "slot": 5
+      },
+      {
+        "actual": true,
+        "bits": 553942754166571009,
+        "channel": 1,
+        "component": "a.im",
+        "expected": true,
+        "label": "positive-above",
+        "pass": true,
+        "slot": 5
+      },
+      {
+        "actual": false,
+        "bits": 9777314791021346815,
+        "channel": 1,
+        "component": "a.im",
+        "expected": false,
+        "label": "negative-below",
+        "pass": true,
+        "slot": 5
+      },
+      {
+        "actual": true,
+        "bits": 9777314791021346816,
+        "channel": 1,
+        "component": "a.im",
+        "expected": true,
+        "label": "negative-at",
+        "pass": true,
+        "slot": 5
+      },
+      {
+        "actual": true,
+        "bits": 9777314791021346817,
+        "channel": 1,
+        "component": "a.im",
+        "expected": true,
+        "label": "negative-above",
+        "pass": true,
+        "slot": 5
+      },
+      {
+        "actual": false,
+        "bits": 549439154539200512,
+        "channel": 1,
+        "component": "a.im",
+        "expected": false,
+        "label": "positive-half",
+        "pass": true,
+        "slot": 5
+      },
+      {
+        "actual": false,
+        "bits": 9772811191393976320,
+        "channel": 1,
+        "component": "a.im",
+        "expected": false,
+        "label": "negative-half",
+        "pass": true,
+        "slot": 5
+      },
+      {
+        "actual": false,
+        "bits": 4503599627370496,
+        "channel": 1,
+        "component": "a.im",
+        "expected": false,
+        "label": "minimum-normal",
+        "pass": true,
+        "slot": 5
+      },
+      {
+        "actual": false,
+        "bits": 1,
+        "channel": 1,
+        "component": "a.im",
+        "expected": false,
+        "label": "positive-subnormal",
+        "pass": true,
+        "slot": 5
+      },
+      {
+        "actual": false,
+        "bits": 9223372036854775809,
+        "channel": 1,
+        "component": "a.im",
+        "expected": false,
+        "label": "negative-subnormal",
+        "pass": true,
+        "slot": 5
+      },
+      {
+        "actual": true,
+        "bits": 0,
+        "channel": 1,
+        "component": "a.im",
+        "expected": true,
+        "label": "positive-zero",
+        "pass": true,
+        "slot": 5
+      },
+      {
+        "actual": true,
+        "bits": 9223372036854775808,
+        "channel": 1,
+        "component": "a.im",
+        "expected": true,
+        "label": "negative-zero",
+        "pass": true,
+        "slot": 5
+      },
+      {
+        "actual": true,
+        "bits": 9218868437227405312,
+        "channel": 1,
+        "component": "a.im",
+        "expected": true,
+        "label": "positive-infinity",
+        "pass": true,
+        "slot": 5
+      },
+      {
+        "actual": true,
+        "bits": 18442240474082181120,
+        "channel": 1,
+        "component": "a.im",
+        "expected": true,
+        "label": "negative-infinity",
+        "pass": true,
+        "slot": 5
+      },
+      {
+        "actual": true,
+        "bits": 9221120237041095220,
+        "channel": 1,
+        "component": "a.im",
+        "expected": true,
+        "label": "quiet-nan",
+        "pass": true,
+        "slot": 5
+      },
+      {
+        "actual": false,
+        "bits": 553942754166571007,
+        "channel": 1,
+        "component": "b.re",
+        "expected": false,
+        "label": "positive-below",
+        "pass": true,
+        "slot": 6
+      },
+      {
+        "actual": true,
+        "bits": 553942754166571008,
+        "channel": 1,
+        "component": "b.re",
+        "expected": true,
+        "label": "positive-at",
+        "pass": true,
+        "slot": 6
+      },
+      {
+        "actual": true,
+        "bits": 553942754166571009,
+        "channel": 1,
+        "component": "b.re",
+        "expected": true,
+        "label": "positive-above",
+        "pass": true,
+        "slot": 6
+      },
+      {
+        "actual": false,
+        "bits": 9777314791021346815,
+        "channel": 1,
+        "component": "b.re",
+        "expected": false,
+        "label": "negative-below",
+        "pass": true,
+        "slot": 6
+      },
+      {
+        "actual": true,
+        "bits": 9777314791021346816,
+        "channel": 1,
+        "component": "b.re",
+        "expected": true,
+        "label": "negative-at",
+        "pass": true,
+        "slot": 6
+      },
+      {
+        "actual": true,
+        "bits": 9777314791021346817,
+        "channel": 1,
+        "component": "b.re",
+        "expected": true,
+        "label": "negative-above",
+        "pass": true,
+        "slot": 6
+      },
+      {
+        "actual": false,
+        "bits": 549439154539200512,
+        "channel": 1,
+        "component": "b.re",
+        "expected": false,
+        "label": "positive-half",
+        "pass": true,
+        "slot": 6
+      },
+      {
+        "actual": false,
+        "bits": 9772811191393976320,
+        "channel": 1,
+        "component": "b.re",
+        "expected": false,
+        "label": "negative-half",
+        "pass": true,
+        "slot": 6
+      },
+      {
+        "actual": false,
+        "bits": 4503599627370496,
+        "channel": 1,
+        "component": "b.re",
+        "expected": false,
+        "label": "minimum-normal",
+        "pass": true,
+        "slot": 6
+      },
+      {
+        "actual": false,
+        "bits": 1,
+        "channel": 1,
+        "component": "b.re",
+        "expected": false,
+        "label": "positive-subnormal",
+        "pass": true,
+        "slot": 6
+      },
+      {
+        "actual": false,
+        "bits": 9223372036854775809,
+        "channel": 1,
+        "component": "b.re",
+        "expected": false,
+        "label": "negative-subnormal",
+        "pass": true,
+        "slot": 6
+      },
+      {
+        "actual": true,
+        "bits": 0,
+        "channel": 1,
+        "component": "b.re",
+        "expected": true,
+        "label": "positive-zero",
+        "pass": true,
+        "slot": 6
+      },
+      {
+        "actual": true,
+        "bits": 9223372036854775808,
+        "channel": 1,
+        "component": "b.re",
+        "expected": true,
+        "label": "negative-zero",
+        "pass": true,
+        "slot": 6
+      },
+      {
+        "actual": true,
+        "bits": 9218868437227405312,
+        "channel": 1,
+        "component": "b.re",
+        "expected": true,
+        "label": "positive-infinity",
+        "pass": true,
+        "slot": 6
+      },
+      {
+        "actual": true,
+        "bits": 18442240474082181120,
+        "channel": 1,
+        "component": "b.re",
+        "expected": true,
+        "label": "negative-infinity",
+        "pass": true,
+        "slot": 6
+      },
+      {
+        "actual": true,
+        "bits": 9221120237041095220,
+        "channel": 1,
+        "component": "b.re",
+        "expected": true,
+        "label": "quiet-nan",
+        "pass": true,
+        "slot": 6
+      },
+      {
+        "actual": false,
+        "bits": 553942754166571007,
+        "channel": 1,
+        "component": "b.im",
+        "expected": false,
+        "label": "positive-below",
+        "pass": true,
+        "slot": 7
+      },
+      {
+        "actual": true,
+        "bits": 553942754166571008,
+        "channel": 1,
+        "component": "b.im",
+        "expected": true,
+        "label": "positive-at",
+        "pass": true,
+        "slot": 7
+      },
+      {
+        "actual": true,
+        "bits": 553942754166571009,
+        "channel": 1,
+        "component": "b.im",
+        "expected": true,
+        "label": "positive-above",
+        "pass": true,
+        "slot": 7
+      },
+      {
+        "actual": false,
+        "bits": 9777314791021346815,
+        "channel": 1,
+        "component": "b.im",
+        "expected": false,
+        "label": "negative-below",
+        "pass": true,
+        "slot": 7
+      },
+      {
+        "actual": true,
+        "bits": 9777314791021346816,
+        "channel": 1,
+        "component": "b.im",
+        "expected": true,
+        "label": "negative-at",
+        "pass": true,
+        "slot": 7
+      },
+      {
+        "actual": true,
+        "bits": 9777314791021346817,
+        "channel": 1,
+        "component": "b.im",
+        "expected": true,
+        "label": "negative-above",
+        "pass": true,
+        "slot": 7
+      },
+      {
+        "actual": false,
+        "bits": 549439154539200512,
+        "channel": 1,
+        "component": "b.im",
+        "expected": false,
+        "label": "positive-half",
+        "pass": true,
+        "slot": 7
+      },
+      {
+        "actual": false,
+        "bits": 9772811191393976320,
+        "channel": 1,
+        "component": "b.im",
+        "expected": false,
+        "label": "negative-half",
+        "pass": true,
+        "slot": 7
+      },
+      {
+        "actual": false,
+        "bits": 4503599627370496,
+        "channel": 1,
+        "component": "b.im",
+        "expected": false,
+        "label": "minimum-normal",
+        "pass": true,
+        "slot": 7
+      },
+      {
+        "actual": false,
+        "bits": 1,
+        "channel": 1,
+        "component": "b.im",
+        "expected": false,
+        "label": "positive-subnormal",
+        "pass": true,
+        "slot": 7
+      },
+      {
+        "actual": false,
+        "bits": 9223372036854775809,
+        "channel": 1,
+        "component": "b.im",
+        "expected": false,
+        "label": "negative-subnormal",
+        "pass": true,
+        "slot": 7
+      },
+      {
+        "actual": true,
+        "bits": 0,
+        "channel": 1,
+        "component": "b.im",
+        "expected": true,
+        "label": "positive-zero",
+        "pass": true,
+        "slot": 7
+      },
+      {
+        "actual": true,
+        "bits": 9223372036854775808,
+        "channel": 1,
+        "component": "b.im",
+        "expected": true,
+        "label": "negative-zero",
+        "pass": true,
+        "slot": 7
+      },
+      {
+        "actual": true,
+        "bits": 9218868437227405312,
+        "channel": 1,
+        "component": "b.im",
+        "expected": true,
+        "label": "positive-infinity",
+        "pass": true,
+        "slot": 7
+      },
+      {
+        "actual": true,
+        "bits": 18442240474082181120,
+        "channel": 1,
+        "component": "b.im",
+        "expected": true,
+        "label": "negative-infinity",
+        "pass": true,
+        "slot": 7
+      },
+      {
+        "actual": true,
+        "bits": 9221120237041095220,
+        "channel": 1,
+        "component": "b.im",
+        "expected": true,
+        "label": "quiet-nan",
+        "pass": true,
+        "slot": 7
+      },
+      {
+        "actual": false,
+        "bits": 553942754166571007,
+        "channel": 2,
+        "component": "a.re",
+        "expected": false,
+        "label": "positive-below",
+        "pass": true,
+        "slot": 8
+      },
+      {
+        "actual": true,
+        "bits": 553942754166571008,
+        "channel": 2,
+        "component": "a.re",
+        "expected": true,
+        "label": "positive-at",
+        "pass": true,
+        "slot": 8
+      },
+      {
+        "actual": true,
+        "bits": 553942754166571009,
+        "channel": 2,
+        "component": "a.re",
+        "expected": true,
+        "label": "positive-above",
+        "pass": true,
+        "slot": 8
+      },
+      {
+        "actual": false,
+        "bits": 9777314791021346815,
+        "channel": 2,
+        "component": "a.re",
+        "expected": false,
+        "label": "negative-below",
+        "pass": true,
+        "slot": 8
+      },
+      {
+        "actual": true,
+        "bits": 9777314791021346816,
+        "channel": 2,
+        "component": "a.re",
+        "expected": true,
+        "label": "negative-at",
+        "pass": true,
+        "slot": 8
+      },
+      {
+        "actual": true,
+        "bits": 9777314791021346817,
+        "channel": 2,
+        "component": "a.re",
+        "expected": true,
+        "label": "negative-above",
+        "pass": true,
+        "slot": 8
+      },
+      {
+        "actual": false,
+        "bits": 549439154539200512,
+        "channel": 2,
+        "component": "a.re",
+        "expected": false,
+        "label": "positive-half",
+        "pass": true,
+        "slot": 8
+      },
+      {
+        "actual": false,
+        "bits": 9772811191393976320,
+        "channel": 2,
+        "component": "a.re",
+        "expected": false,
+        "label": "negative-half",
+        "pass": true,
+        "slot": 8
+      },
+      {
+        "actual": false,
+        "bits": 4503599627370496,
+        "channel": 2,
+        "component": "a.re",
+        "expected": false,
+        "label": "minimum-normal",
+        "pass": true,
+        "slot": 8
+      },
+      {
+        "actual": false,
+        "bits": 1,
+        "channel": 2,
+        "component": "a.re",
+        "expected": false,
+        "label": "positive-subnormal",
+        "pass": true,
+        "slot": 8
+      },
+      {
+        "actual": false,
+        "bits": 9223372036854775809,
+        "channel": 2,
+        "component": "a.re",
+        "expected": false,
+        "label": "negative-subnormal",
+        "pass": true,
+        "slot": 8
+      },
+      {
+        "actual": true,
+        "bits": 0,
+        "channel": 2,
+        "component": "a.re",
+        "expected": true,
+        "label": "positive-zero",
+        "pass": true,
+        "slot": 8
+      },
+      {
+        "actual": true,
+        "bits": 9223372036854775808,
+        "channel": 2,
+        "component": "a.re",
+        "expected": true,
+        "label": "negative-zero",
+        "pass": true,
+        "slot": 8
+      },
+      {
+        "actual": true,
+        "bits": 9218868437227405312,
+        "channel": 2,
+        "component": "a.re",
+        "expected": true,
+        "label": "positive-infinity",
+        "pass": true,
+        "slot": 8
+      },
+      {
+        "actual": true,
+        "bits": 18442240474082181120,
+        "channel": 2,
+        "component": "a.re",
+        "expected": true,
+        "label": "negative-infinity",
+        "pass": true,
+        "slot": 8
+      },
+      {
+        "actual": true,
+        "bits": 9221120237041095220,
+        "channel": 2,
+        "component": "a.re",
+        "expected": true,
+        "label": "quiet-nan",
+        "pass": true,
+        "slot": 8
+      },
+      {
+        "actual": false,
+        "bits": 553942754166571007,
+        "channel": 2,
+        "component": "a.im",
+        "expected": false,
+        "label": "positive-below",
+        "pass": true,
+        "slot": 9
+      },
+      {
+        "actual": true,
+        "bits": 553942754166571008,
+        "channel": 2,
+        "component": "a.im",
+        "expected": true,
+        "label": "positive-at",
+        "pass": true,
+        "slot": 9
+      },
+      {
+        "actual": true,
+        "bits": 553942754166571009,
+        "channel": 2,
+        "component": "a.im",
+        "expected": true,
+        "label": "positive-above",
+        "pass": true,
+        "slot": 9
+      },
+      {
+        "actual": false,
+        "bits": 9777314791021346815,
+        "channel": 2,
+        "component": "a.im",
+        "expected": false,
+        "label": "negative-below",
+        "pass": true,
+        "slot": 9
+      },
+      {
+        "actual": true,
+        "bits": 9777314791021346816,
+        "channel": 2,
+        "component": "a.im",
+        "expected": true,
+        "label": "negative-at",
+        "pass": true,
+        "slot": 9
+      },
+      {
+        "actual": true,
+        "bits": 9777314791021346817,
+        "channel": 2,
+        "component": "a.im",
+        "expected": true,
+        "label": "negative-above",
+        "pass": true,
+        "slot": 9
+      },
+      {
+        "actual": false,
+        "bits": 549439154539200512,
+        "channel": 2,
+        "component": "a.im",
+        "expected": false,
+        "label": "positive-half",
+        "pass": true,
+        "slot": 9
+      },
+      {
+        "actual": false,
+        "bits": 9772811191393976320,
+        "channel": 2,
+        "component": "a.im",
+        "expected": false,
+        "label": "negative-half",
+        "pass": true,
+        "slot": 9
+      },
+      {
+        "actual": false,
+        "bits": 4503599627370496,
+        "channel": 2,
+        "component": "a.im",
+        "expected": false,
+        "label": "minimum-normal",
+        "pass": true,
+        "slot": 9
+      },
+      {
+        "actual": false,
+        "bits": 1,
+        "channel": 2,
+        "component": "a.im",
+        "expected": false,
+        "label": "positive-subnormal",
+        "pass": true,
+        "slot": 9
+      },
+      {
+        "actual": false,
+        "bits": 9223372036854775809,
+        "channel": 2,
+        "component": "a.im",
+        "expected": false,
+        "label": "negative-subnormal",
+        "pass": true,
+        "slot": 9
+      },
+      {
+        "actual": true,
+        "bits": 0,
+        "channel": 2,
+        "component": "a.im",
+        "expected": true,
+        "label": "positive-zero",
+        "pass": true,
+        "slot": 9
+      },
+      {
+        "actual": true,
+        "bits": 9223372036854775808,
+        "channel": 2,
+        "component": "a.im",
+        "expected": true,
+        "label": "negative-zero",
+        "pass": true,
+        "slot": 9
+      },
+      {
+        "actual": true,
+        "bits": 9218868437227405312,
+        "channel": 2,
+        "component": "a.im",
+        "expected": true,
+        "label": "positive-infinity",
+        "pass": true,
+        "slot": 9
+      },
+      {
+        "actual": true,
+        "bits": 18442240474082181120,
+        "channel": 2,
+        "component": "a.im",
+        "expected": true,
+        "label": "negative-infinity",
+        "pass": true,
+        "slot": 9
+      },
+      {
+        "actual": true,
+        "bits": 9221120237041095220,
+        "channel": 2,
+        "component": "a.im",
+        "expected": true,
+        "label": "quiet-nan",
+        "pass": true,
+        "slot": 9
+      },
+      {
+        "actual": false,
+        "bits": 553942754166571007,
+        "channel": 2,
+        "component": "b.re",
+        "expected": false,
+        "label": "positive-below",
+        "pass": true,
+        "slot": 10
+      },
+      {
+        "actual": true,
+        "bits": 553942754166571008,
+        "channel": 2,
+        "component": "b.re",
+        "expected": true,
+        "label": "positive-at",
+        "pass": true,
+        "slot": 10
+      },
+      {
+        "actual": true,
+        "bits": 553942754166571009,
+        "channel": 2,
+        "component": "b.re",
+        "expected": true,
+        "label": "positive-above",
+        "pass": true,
+        "slot": 10
+      },
+      {
+        "actual": false,
+        "bits": 9777314791021346815,
+        "channel": 2,
+        "component": "b.re",
+        "expected": false,
+        "label": "negative-below",
+        "pass": true,
+        "slot": 10
+      },
+      {
+        "actual": true,
+        "bits": 9777314791021346816,
+        "channel": 2,
+        "component": "b.re",
+        "expected": true,
+        "label": "negative-at",
+        "pass": true,
+        "slot": 10
+      },
+      {
+        "actual": true,
+        "bits": 9777314791021346817,
+        "channel": 2,
+        "component": "b.re",
+        "expected": true,
+        "label": "negative-above",
+        "pass": true,
+        "slot": 10
+      },
+      {
+        "actual": false,
+        "bits": 549439154539200512,
+        "channel": 2,
+        "component": "b.re",
+        "expected": false,
+        "label": "positive-half",
+        "pass": true,
+        "slot": 10
+      },
+      {
+        "actual": false,
+        "bits": 9772811191393976320,
+        "channel": 2,
+        "component": "b.re",
+        "expected": false,
+        "label": "negative-half",
+        "pass": true,
+        "slot": 10
+      },
+      {
+        "actual": false,
+        "bits": 4503599627370496,
+        "channel": 2,
+        "component": "b.re",
+        "expected": false,
+        "label": "minimum-normal",
+        "pass": true,
+        "slot": 10
+      },
+      {
+        "actual": false,
+        "bits": 1,
+        "channel": 2,
+        "component": "b.re",
+        "expected": false,
+        "label": "positive-subnormal",
+        "pass": true,
+        "slot": 10
+      },
+      {
+        "actual": false,
+        "bits": 9223372036854775809,
+        "channel": 2,
+        "component": "b.re",
+        "expected": false,
+        "label": "negative-subnormal",
+        "pass": true,
+        "slot": 10
+      },
+      {
+        "actual": true,
+        "bits": 0,
+        "channel": 2,
+        "component": "b.re",
+        "expected": true,
+        "label": "positive-zero",
+        "pass": true,
+        "slot": 10
+      },
+      {
+        "actual": true,
+        "bits": 9223372036854775808,
+        "channel": 2,
+        "component": "b.re",
+        "expected": true,
+        "label": "negative-zero",
+        "pass": true,
+        "slot": 10
+      },
+      {
+        "actual": true,
+        "bits": 9218868437227405312,
+        "channel": 2,
+        "component": "b.re",
+        "expected": true,
+        "label": "positive-infinity",
+        "pass": true,
+        "slot": 10
+      },
+      {
+        "actual": true,
+        "bits": 18442240474082181120,
+        "channel": 2,
+        "component": "b.re",
+        "expected": true,
+        "label": "negative-infinity",
+        "pass": true,
+        "slot": 10
+      },
+      {
+        "actual": true,
+        "bits": 9221120237041095220,
+        "channel": 2,
+        "component": "b.re",
+        "expected": true,
+        "label": "quiet-nan",
+        "pass": true,
+        "slot": 10
+      },
+      {
+        "actual": false,
+        "bits": 553942754166571007,
+        "channel": 2,
+        "component": "b.im",
+        "expected": false,
+        "label": "positive-below",
+        "pass": true,
+        "slot": 11
+      },
+      {
+        "actual": true,
+        "bits": 553942754166571008,
+        "channel": 2,
+        "component": "b.im",
+        "expected": true,
+        "label": "positive-at",
+        "pass": true,
+        "slot": 11
+      },
+      {
+        "actual": true,
+        "bits": 553942754166571009,
+        "channel": 2,
+        "component": "b.im",
+        "expected": true,
+        "label": "positive-above",
+        "pass": true,
+        "slot": 11
+      },
+      {
+        "actual": false,
+        "bits": 9777314791021346815,
+        "channel": 2,
+        "component": "b.im",
+        "expected": false,
+        "label": "negative-below",
+        "pass": true,
+        "slot": 11
+      },
+      {
+        "actual": true,
+        "bits": 9777314791021346816,
+        "channel": 2,
+        "component": "b.im",
+        "expected": true,
+        "label": "negative-at",
+        "pass": true,
+        "slot": 11
+      },
+      {
+        "actual": true,
+        "bits": 9777314791021346817,
+        "channel": 2,
+        "component": "b.im",
+        "expected": true,
+        "label": "negative-above",
+        "pass": true,
+        "slot": 11
+      },
+      {
+        "actual": false,
+        "bits": 549439154539200512,
+        "channel": 2,
+        "component": "b.im",
+        "expected": false,
+        "label": "positive-half",
+        "pass": true,
+        "slot": 11
+      },
+      {
+        "actual": false,
+        "bits": 9772811191393976320,
+        "channel": 2,
+        "component": "b.im",
+        "expected": false,
+        "label": "negative-half",
+        "pass": true,
+        "slot": 11
+      },
+      {
+        "actual": false,
+        "bits": 4503599627370496,
+        "channel": 2,
+        "component": "b.im",
+        "expected": false,
+        "label": "minimum-normal",
+        "pass": true,
+        "slot": 11
+      },
+      {
+        "actual": false,
+        "bits": 1,
+        "channel": 2,
+        "component": "b.im",
+        "expected": false,
+        "label": "positive-subnormal",
+        "pass": true,
+        "slot": 11
+      },
+      {
+        "actual": false,
+        "bits": 9223372036854775809,
+        "channel": 2,
+        "component": "b.im",
+        "expected": false,
+        "label": "negative-subnormal",
+        "pass": true,
+        "slot": 11
+      },
+      {
+        "actual": true,
+        "bits": 0,
+        "channel": 2,
+        "component": "b.im",
+        "expected": true,
+        "label": "positive-zero",
+        "pass": true,
+        "slot": 11
+      },
+      {
+        "actual": true,
+        "bits": 9223372036854775808,
+        "channel": 2,
+        "component": "b.im",
+        "expected": true,
+        "label": "negative-zero",
+        "pass": true,
+        "slot": 11
+      },
+      {
+        "actual": true,
+        "bits": 9218868437227405312,
+        "channel": 2,
+        "component": "b.im",
+        "expected": true,
+        "label": "positive-infinity",
+        "pass": true,
+        "slot": 11
+      },
+      {
+        "actual": true,
+        "bits": 18442240474082181120,
+        "channel": 2,
+        "component": "b.im",
+        "expected": true,
+        "label": "negative-infinity",
+        "pass": true,
+        "slot": 11
+      },
+      {
+        "actual": true,
+        "bits": 9221120237041095220,
+        "channel": 2,
+        "component": "b.im",
+        "expected": true,
+        "label": "quiet-nan",
+        "pass": true,
+        "slot": 11
+      }
+    ],
+    "underflow_witness": {
+      "centred_quad": [
+        1.0,
+        1.0
+      ],
+      "flushed_bits": 0,
+      "literal_expected_bits": 1,
+      "native": [
+        37,
+        27
+      ],
+      "pass": true,
+      "real_product_bits": 1,
+      "scope": "intermediate differs; final rounded image difference is not claimed"
+    }
+  },
+  "rows": [],
+  "schema": "native-gpu-device-guard-v1",
+  "scope": "guarded coordinate routing; same strict image shader in both arms",
+  "status": "CONTROL_FAILED"
+}

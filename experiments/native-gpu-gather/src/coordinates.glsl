@@ -8,7 +8,7 @@ layout(set=0, binding=1, std140) uniform Parameters {
     uvec4 dims; vec4 photometry; vec4 inverse; uvec4 flags;
 } p;
 struct Plan { uint x0; uint y0; float fx; float fy; };
-layout(set=0, binding=2, std430) writeonly buffer Plans { Plan values[]; } plans;
+layout(set=0, binding=2, std430) buffer Plans { Plan values[]; } plans;
 void main() {
     uint i = gl_GlobalInvocationID.x;
     if (i >= p.dims.x * p.dims.w) { return; }

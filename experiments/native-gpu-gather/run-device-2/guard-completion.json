@@ -1,0 +1,12 @@
+{
+  "test": "independent_gpu_device_guard_controls",
+  "exit_code": 101,
+  "error": null,
+  "wall_seconds": 0.5149999999994179,
+  "child_cpu_seconds": 0.265625,
+  "peak_job_commit_bytes": 278085632,
+  "measurement": {
+    "sha256": "8bdc4b12d8c8691fc457ad676351b1168fb8e7f09bed8c1c8d2981f35901866c",
+    "bytes": 44812
+  }
+}

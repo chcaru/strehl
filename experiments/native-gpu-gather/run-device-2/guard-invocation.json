@@ -1,0 +1,56 @@
+{
+  "command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-gpu-gather\\build-native-4\\cli-tests.exe",
+    "--exact",
+    "merge_cmd::tests::native_gpu_gather_controls::independent_gpu_device_guard_controls",
+    "--ignored",
+    "--nocapture",
+    "--test-threads=1"
+  ],
+  "overrides": {
+    "RAYON_NUM_THREADS": "2",
+    "STREHL_FULLRES_GATHER": "1",
+    "STREHL_PROBE_GATHER": "green",
+    "STREHL_WARP_WRITEBACK": "parallel",
+    "STREHL_DEFECT": "off",
+    "STREHL_GPU_SCHEDULE": "device",
+    "STREHL_GPU_GATHER_OUTPUT": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-gpu-gather\\run-device-2"
+  },
+  "removed_environment": [],
+  "executable": {
+    "path": "experiments\\native-gpu-gather\\build-native-4\\cli-tests.exe",
+    "bytes": 21200384,
+    "sha256": "c75285b1c5bc0ca4915c3a98442e45c4f74e854cf8ff9ed1e3dfa450cdd8588e"
+  },
+  "build": {
+    "sha256": "f13c4872c54a7ff7c010a1a4f49811f425a4384f9428b26ae1fb04c91c49f478",
+    "bytes": 6757
+  },
+  "source_revision": "555e6a50f4ab6195304bd578b6b5ffe8a8b2933d",
+  "protocol": {
+    "run-device.py": {
+      "sha256": "fc71c68c878c5f88e7981ac71764fbefe9e3d622db7debba731db923c69b2518",
+      "bytes": 4020
+    },
+    "execution-6.md": {
+      "sha256": "b3a6098e46e66d09647c7f6ba899bcf7d09a4da11a647003bbed9619c8c9a289",
+      "bytes": 2668
+    },
+    "independent-design-device.md": {
+      "sha256": "d5d45340d472eebb11d660753826cf84cbab31de9b66414848467cac8038e0b1",
+      "bytes": 4081
+    },
+    "independent-design-device-guard.md": {
+      "sha256": "d37937f9b11b2f4fc1a7e7d3d248600b7476bdfcd9cd13c3fb2c515c0430d5c4",
+      "bytes": 4275
+    },
+    "device-guard-review.md": {
+      "sha256": "ef477e0fe89b314f42b5fb9c1e0cbeaae3dbbafe2e285c7e5b4044b3d6237554",
+      "bytes": 3647
+    },
+    "independent-design.md": {
+      "sha256": "735f8be97698898e315a1c002a420dea6a6120a8e8168341f78e6dd2d39cd4c6",
+      "bytes": 4117
+    }
+  }
+}
