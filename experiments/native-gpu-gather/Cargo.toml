@@ -15,9 +15,10 @@ bytemuck = { version = "1", features = ["derive"] }
 pollster = "0.4"
 # Reuse the CLI's existing Rayon pool; do not create a second worker pool.
 rayon = "=1.12.0"
-# Existing package versions; spv-in additionally enables Naga's petgraph parser.
+# Existing versions; glsl-in enables pp-rs, spv-in enables the petgraph parser.
 # Only the embedded owned shader is compiled/validated.
-naga = { version = "=30.0.1", features = ["wgsl-in", "spv-out", "spv-in"] }
+naga = { version = "=30.0.1", features = ["wgsl-in", "glsl-in", "spv-out", "spv-in"] }
+ash = "=0.38.0"
 spirv = "=0.4.0"
 serde = { version = "=1.0.229", features = ["derive"] }
 sha2 = "=0.11.0"

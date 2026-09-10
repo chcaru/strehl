@@ -1,0 +1,30 @@
+{
+  "command": [
+    "cargo",
+    "metadata",
+    "--format-version=1",
+    "--filter-platform",
+    "x86_64-pc-windows-msvc",
+    "--features",
+    "native-gpu-gather"
+  ],
+  "exit_code": 0,
+  "stderr": "    Updating crates.io index\n     Locking 2 packages to latest Rust 1.98 compatible versions\n      Adding pp-rs v0.2.1\n      Adding unicode-xid v0.2.6\n Downloading crates ...\n  Downloaded unicode-xid v0.2.6\n  Downloaded pp-rs v0.2.1\n",
+  "original_lock_sha256": "e83ef4556e3184ad71c3c2e36c0878fbba197bb41af3650312d9279666e78ead",
+  "current_lock_sha256": "ea23b6dc6afc5fb9f1b12d08f065083ba77a75425b2a0b000d3f3a8466696efa",
+  "added_packages": [
+    [
+      "pp-rs",
+      "0.2.1",
+      "registry+https://github.com/rust-lang/crates.io-index"
+    ],
+    [
+      "unicode-xid",
+      "0.2.6",
+      "registry+https://github.com/rust-lang/crates.io-index"
+    ]
+  ],
+  "removed_or_changed_existing": [],
+  "metadata_packages": 219,
+  "metadata_sha256": "77df260bd8e16096b5e6595aec1995531f7a6455fcfea3f717736045fb5791bf"
+}

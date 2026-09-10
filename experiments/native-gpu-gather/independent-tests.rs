@@ -5,7 +5,7 @@ use sha2::{Digest, Sha256};
 use strehl_core::align::{Similarity, SimilarityParams};
 use strehl_core::optics::{OpticalProfile, A7C2_FE100GM_2XTC_X4CPL};
 use strehl_core::plane::QuadSource;
-use strehl_native_gpu_gather::{GpuGather, Input, Output, SamplePlan, INVALID};
+use strehl_native_gpu_gather::{GpuGather, Input, Output, SamplePlan, Schedule, INVALID, UNCONSUMED};
 
 struct Case {
     id: usize,
@@ -334,6 +334,16 @@ fn save(path:&std::path::Path, report:&Value) {
     std::fs::write(path,serde_json::to_vec_pretty(report).unwrap()).expect("retain independent report");
 }
 
+fn requested_gpu_schedule() -> Result<Schedule,String> {
+    match std::env::var("STREHL_GPU_SCHEDULE") {
+        Err(std::env::VarError::NotPresent) => Ok(Schedule::Parallel256),
+        Ok(v) if v=="serial" => Ok(Schedule::Serial32),
+        Ok(v) if v=="parallel" => Ok(Schedule::Parallel256),
+        Ok(v) if v=="device" => Ok(Schedule::Device256),
+        other => Err(format!("STREHL_GPU_SCHEDULE: expected serial, parallel, or device; {other:?}")),
+    }
+}
+
 #[test]
 #[ignore = "root runs the fixed 18 GPU consumer comparisons explicitly"]
 fn independent_gpu_gather_controls() {
@@ -342,7 +352,9 @@ fn independent_gpu_gather_controls() {
     let mut report=json!({"schema":"native-gpu-gather-fixed-eighteen-v1","status":"STARTED",
         "expected_primary_cases":18,"rows":[],"scope":"generated codes; exact operator equivalence, no calibration/quality/timing claim"});
     save(&path,&report);
-    let initialized=std::panic::catch_unwind(std::panic::AssertUnwindSafe(GpuGather::new));
+    let initialized=std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        GpuGather::new_with_schedule(requested_gpu_schedule()?)
+    }));
     let mut gpu=match initialized {
         Ok(Ok(g))=>g,
         failed=>{
@@ -398,4 +410,203 @@ fn independent_gpu_gather_controls() {
     report["status"]=json!(if passed {"EIGHTEEN_GPU_GATHER_CONTROLS_PASS"} else {"CONTROL_FAILED"});
     save(&path,&report);
     assert!(passed,"GPU gather exact controls failed; report retained at {}",path.display());
+}
+
+fn plan_words(p:&SamplePlan) -> [u32;4] { [p.x0,p.y0,p.fx.to_bits(),p.fy.to_bits()] }
+
+fn cpu_source(width:usize,height:usize,pulls:&[Similarity;3],x:usize,y:usize) -> (f64,f64) {
+    let (sx,sy)=pulls[channel(x,y)].apply_at(x as f64/2.0,y as f64/2.0,
+        width as f64/4.0,height as f64/4.0);
+    (2.0*sx,2.0*sy)
+}
+
+fn cpu_plans(width:usize,height:usize,pulls:&[Similarity;3],green:bool,start:usize,rows:usize) -> Vec<SamplePlan> {
+    (start..start+rows).flat_map(|y|(0..width).map(move |x| {
+        if green && channel(x,y)!=1 {SamplePlan{x0:UNCONSUMED,y0:0,fx:0.0,fy:0.0}}
+        else {let (sx,sy)=cpu_source(width,height,pulls,x,y);
+            strehl_native_gpu_gather::plan_at(width,height,sx,sy)}
+    })).collect()
+}
+
+#[allow(clippy::too_many_arguments)]
+fn compare_device_plans(gpu:&mut GpuGather,width:usize,height:usize,pulls:[Similarity;3],
+    green:bool,start:usize,rows:usize) -> Result<(Value,Vec<SamplePlan>),String> {
+    let expected=cpu_plans(width,height,&pulls,green,start,rows);
+    let actual=gpu.device_plans_for_test(width,height,pulls,green,start,rows)?;
+    let different=actual.iter().zip(&expected).filter(|(a,b)|plan_words(a)!=plan_words(b)).count();
+    let first=actual.iter().zip(&expected).position(|(a,b)|plan_words(a)!=plan_words(b)).map(|i| {
+        let (x,y)=(i%width,start+i/width);let (sx,sy)=cpu_source(width,height,&pulls,x,y);
+        json!({"native":[x,y],"channel":channel(x,y),"source_native":[sx,sy],
+            "source_f64_bits":[sx.to_bits(),sy.to_bits()],"cpu_words":plan_words(&expected[i]),
+            "device_words":plan_words(&actual[i])})
+    });
+    let valid=actual.iter().filter(|p|p.x0!=INVALID && p.x0!=UNCONSUMED).count();
+    let omitted=actual.iter().filter(|p|p.x0==UNCONSUMED).count();
+    Ok((json!({"pass":actual.len()==expected.len() && different==0 && std::mem::size_of::<SamplePlan>()==16,
+        "width":width,"height":height,"start":start,"rows":rows,"green_only":green,
+        "expected_plans":expected.len(),"actual_plans":actual.len(),"different":different,
+        "valid":valid,"unconsumed":omitted,"first_difference":first}),actual))
+}
+
+fn device_record(path:&std::path::Path,report:&mut Value,group:&str,label:&str,
+    run:impl FnOnce()->Result<Value,String>) {
+    report["active_case"]=json!(label);save(path,report);
+    let mut row=capture(run);row["group"]=json!(group);row["label"]=json!(label);
+    report["rows"].as_array_mut().unwrap().push(row);save(path,report);
+}
+
+#[allow(clippy::too_many_arguments)]
+fn literal_device_row(gpu:&mut GpuGather,axis:usize,target:f64,wanted:[u32;4],
+    live_f32:&mut usize,live_shift:&mut usize) -> Result<Value,String> {
+    let (x,y,start,pull)=if axis==0 {(0,20,20,translation(target/2.0,0.0))}
+        else {(20,0,0,translation(0.0,target/2.0))};
+    let pulls=[pull;3];let (sx,sy)=cpu_source(70,50,&pulls,x,y);
+    let actual_target=if axis==0 {sx} else {sy};
+    let current=strehl_native_gpu_gather::plan_at(70,50,sx,sy);
+    let wrong=strehl_native_gpu_gather::plan_at(70,50,(sx as f32) as f64,(sy as f32) as f64);
+    let f32_destroyer=plan_words(&wrong)!=wanted;
+    *live_f32+=usize::from(f32_destroyer);
+    let mut shifted=current;
+    let shift_live=if shifted.x0!=INVALID {shifted.x0+=1;plan_words(&shifted)!=wanted} else {false};
+    *live_shift+=usize::from(shift_live);
+    let (mut row,device)=compare_device_plans(gpu,70,50,pulls,false,start,1)?;
+    let local=x; // nominated point is on the only returned row.
+    let source_exact=actual_target.to_bits()==target.to_bits();
+    let literal_cpu=plan_words(&current)==wanted;
+    let literal_device=device.get(local).is_some_and(|p|plan_words(p)==wanted);
+    row["pass"]=json!(row["pass"]==true && source_exact && literal_cpu && literal_device);
+    row["axis"]=json!(axis);row["target"]=json!(target);row["target_f64_bits"]=json!(target.to_bits());
+    row["actual_source_f64_bits"]=json!(actual_target.to_bits());row["source_target_exact"]=json!(source_exact);
+    row["literal_expected_words"]=json!(wanted);row["cpu_target_words"]=json!(plan_words(&current));
+    row["device_target_words"]=device.get(local).map(|p|json!(plan_words(p))).unwrap_or(Value::Null);
+    row["f32_coordinate_destroyer_live"]=json!(f32_destroyer);
+    row["f32_coordinate_words"]=json!(plan_words(&wrong));row["shift_base_destroyer_live"]=json!(shift_live);
+    Ok(row)
+}
+
+fn descriptor_ca_pulls(base:Similarity) -> [Similarity;3] {
+    let ca=make_case(3).ca.unwrap();
+    [(0,0),(1,0),(1,1)].map(|(x,y)|OpticalProfile::compose(Some(&ca),
+        strehl_core::optics::cfa_site_channel(x,y),base))
+}
+
+#[test]
+#[ignore = "root runs device descriptor controls before the unchanged18 image cases"]
+fn independent_gpu_device_descriptor_controls() {
+    let path=PathBuf::from(std::env::var_os("STREHL_GPU_GATHER_OUTPUT")
+        .expect("STREHL_GPU_GATHER_OUTPUT required")).join("device-descriptor-results.json");
+    let mut report=json!({"schema":"native-gpu-device-descriptor-v1","status":"STARTED",
+        "expected_rows":41,"expected_device_requests":37,"rows":[],
+        "scope":"exact16-byte descriptors; separate from original18 image population"});
+    save(&path,&report);
+    let initialized=std::panic::catch_unwind(std::panic::AssertUnwindSafe(||
+        GpuGather::new_with_schedule(Schedule::Device256)));
+    let mut gpu=match initialized {Ok(Ok(g))=>g,other=>{
+        report["status"]=json!("CONTROL_FAILED");
+        report["initialization_error"]=json!(match other {Ok(Err(e))=>e,Err(p)=>panic_text(p),_=>unreachable!()});
+        save(&path,&report);panic!("device-coordinate initialization refused; retained {}",path.display());
+    }};
+    report["adapter"]=json!(gpu.adapter);report["backend"]=json!(gpu.backend);
+    report["device_type"]=json!(gpu.device_type);report["schedule"]=json!(format!("{:?}",gpu.schedule()));
+    report["gather_compilation"]=json!(gpu.compilation);
+    report["coordinate_compilation"]=json!(gpu.coordinate_compilation);save(&path,&report);
+    let (mut f32_live,mut shift_live)=(0,0);
+    for axis in 0..2 {
+        let upper=if axis==0 {67.5} else {47.5};
+        for centre in [1.5,4.0,upper] {for direction in [-1,0,1] {
+            let target=centre+f64::from(direction)*2.0f64.powi(-40);
+            let covered=!(centre==1.5 && direction<0 || centre==upper && direction>0);
+            let floor=if centre==1.5 {1} else if centre==upper {if axis==0 {67} else {47}}
+                else if direction<0 {3} else {4};
+            let frac=if centre!=4.0 {0x3f000000} else if direction<0 {0x3f800000}
+                else if direction==0 {0} else {0x2b800000};
+            let want=if !covered {[INVALID,0,0,0]} else if axis==0 {[floor,20,frac,0]} else {[20,floor,0,frac]};
+            device_record(&path,&mut report,"boundary",&format!("axis{axis}-at{centre}-side{direction}"),
+                ||literal_device_row(&mut gpu,axis,target,want,&mut f32_live,&mut shift_live));
+        }}
+        for parity in 0..2 {for direction in [-1,0,1] {
+            let target=4.5+(1+2*parity) as f64*2.0f64.powi(-25)+f64::from(direction)*2.0f64.powi(-40);
+            let frac=if parity==0 {if direction<=0 {0x3f000000} else {0x3f000001}}
+                else if direction<0 {0x3f000001} else {0x3f000002};
+            let want=if axis==0 {[4,20,frac,0]} else {[20,4,0,frac]};
+            device_record(&path,&mut report,"f32-half-tie",&format!("axis{axis}-parity{parity}-side{direction}"),
+                ||literal_device_row(&mut gpu,axis,target,want,&mut f32_live,&mut shift_live));
+        }}
+    }
+    let ca_base=gatefloor::gpu_warp();let ca_pulls=descriptor_ca_pulls(ca_base);
+    for green in [false,true] {
+        device_record(&path,&mut report,"ca-field",&format!("ca-green{green}"),|| {
+            let (mut row,plans)=compare_device_plans(&mut gpu,70,50,ca_pulls,green,0,50)?;
+            let mut phases=[0usize;4];
+            for (i,p) in plans.iter().enumerate() {
+                if p.x0!=INVALID && p.x0!=UNCONSUMED {phases[2*((i/70)%2)+i%2]+=1;}
+            }
+            let point=(7.0,8.0);let centre=(17.5,12.5);
+            let base=ca_base.apply_at(point.0,point.1,centre.0,centre.1);
+            let positions=ca_pulls.map(|t|t.apply_at(point.0,point.1,centre.0,centre.1));
+            let distinct=(0..3).all(|a|(a+1..3).all(|b|
+                (positions[a].0-positions[b].0).abs()+(positions[a].1-positions[b].1).abs()>0.001));
+            let literal_ca=[(0,0.012),(2,-0.009)].iter().all(|&(ci,eps)| {
+                let expected=(centre.0+(1.0+eps)*(base.0-centre.0)+0.13,
+                    centre.1+(1.0+eps)*(base.1-centre.1)-0.09);
+                (positions[ci].0-expected.0).abs()<1e-12 && (positions[ci].1-expected.1).abs()<1e-12
+            }) && positions[1].0.to_bits()==base.0.to_bits() && positions[1].1.to_bits()==base.1.to_bits();
+            let phase_live=(0..4).all(|p|if green && matches!(p,0|3) {phases[p]==0} else {phases[p]>0});
+            row["pass"]=json!(row["pass"]==true && distinct && literal_ca && phase_live);
+            row["phase_valid"]=json!(phases);row["all_three_maps_distinct"]=json!(distinct);
+            row["independent_ca_literal"]=json!(literal_ca);Ok(row)
+        });
+    }
+    let inward=Similarity::from_params(SimilarityParams{ax:0.0,ay:0.0,g:-0.02,rot:0.0});
+    let batch_pulls=descriptor_ca_pulls(inward);
+    for green in [false,true] {
+        let mut concatenated=Vec::new();
+        for (start,rows) in [(0,256),(256,2)] {
+            device_record(&path,&mut report,"batch-strip",&format!("batch-green{green}-start{start}"),|| {
+                let (mut row,plans)=compare_device_plans(&mut gpu,70,258,batch_pulls,green,start,rows)?;
+                concatenated.extend(plans);
+                if start==256 {
+                    let expected=cpu_plans(70,258,&batch_pulls,green,0,258);
+                    let exact=concatenated.len()==expected.len() && concatenated.iter().zip(&expected)
+                        .all(|(a,b)|plan_words(a)==plan_words(b));
+                    let live=row["valid"].as_u64().unwrap_or(0)>0;
+                    row["concatenation_exact"]=json!(exact);row["last_strip_valid"]=json!(live);
+                    row["pass"]=json!(row["pass"]==true && exact && live);
+                }
+                Ok(row)
+            });
+        }
+    }
+    device_record(&path,&mut report,"nonfinite","nan-infinity-overflow",|| {
+        let pulls=[translation(f64::NAN,0.0),translation(0.0,f64::INFINITY),
+            Similarity::from_params(SimilarityParams{ax:0.0,ay:0.0,g:f64::MAX,rot:0.0})];
+        let all_nonfinite=(20..22).all(|y|(0..70).all(|x| {
+            let (sx,sy)=cpu_source(70,50,&pulls,x,y);!sx.is_finite() || !sy.is_finite()
+        }));
+        let (mut row,plans)=compare_device_plans(&mut gpu,70,50,pulls,false,20,2)?;
+        let invalid=plans.iter().all(|p|plan_words(p)==[INVALID,0,0,0]);
+        row["pass"]=json!(row["pass"]==true && all_nonfinite && invalid);
+        row["all_cpu_coordinates_nonfinite"]=json!(all_nonfinite);Ok(row)
+    });
+    for (label,w,h,start,rows) in [("odd-width",71,50,0,1),("odd-height",70,51,0,1),
+        ("too-many-rows",70,258,0,257),("strip-past-end",70,50,49,2)] {
+        device_record(&path,&mut report,"api-refusal",label,|| {
+            match gpu.device_plans_for_test(w,h,[Similarity::IDENTITY;3],false,start,rows) {
+                Err(e)=>Ok(json!({"pass":true,"refusal":e})),
+                Ok(p)=>Ok(json!({"pass":false,"unexpected_plans":p.len()})),
+            }
+        });
+    }
+    report["active_case"]=Value::Null;
+    report["f32_coordinate_destroyers_live"]=json!(f32_live);
+    report["shift_base_destroyers_live"]=json!(shift_live);
+    let rows=report["rows"].as_array().unwrap();
+    let counts_match=[("boundary",18),("f32-half-tie",12),("ca-field",2),("batch-strip",4),
+        ("nonfinite",1),("api-refusal",4)].iter().all(|(name,n)|rows.iter().filter(|r|r["group"]==*name).count()==*n);
+    let pass=rows.len()==41 && counts_match && rows.iter().all(|r|r["pass"]==true)
+        && f32_live>=6 && shift_live>0 && gpu.schedule()==Schedule::Device256
+        && gpu.coordinate_compilation.is_some();
+    report["status"]=json!(if pass {"DEVICE_DESCRIPTOR_CONTROLS_PASS"} else {"CONTROL_FAILED"});
+    save(&path,&report);
+    assert!(pass,"device descriptor controls failed; retained {}",path.display());
 }

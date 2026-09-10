@@ -29,7 +29,8 @@ fn gpu_schedule() -> Result<Schedule> {
         Err(std::env::VarError::NotPresent) => Ok(Schedule::Parallel256),
         Ok(v) if v == "parallel" => Ok(Schedule::Parallel256),
         Ok(v) if v == "serial" => Ok(Schedule::Serial32),
-        other => Err(format!("STREHL_GPU_SCHEDULE: expected parallel or serial, got {other:?}")),
+        Ok(v) if v == "device" => Ok(Schedule::Device256),
+        other => Err(format!("STREHL_GPU_SCHEDULE: expected parallel, serial, or device, got {other:?}")),
     }) { Ok(schedule) => Ok(*schedule), Err(message) => bail!("{message}") }
 }
 
@@ -79,14 +80,16 @@ fn run<const GREEN_ONLY: bool>(frame: &strehl_raw::Frame, t: Similarity,
         geom, black: frame.levels.black, gain, inverse_gain, pulls,
         green_only: GREEN_ONLY, malvar: true, resampler };
     let gpu = match GPU.get_or_init(|| {
-        let mut gpu = GpuGather::new()?;
-        gpu.set_schedule(gpu_schedule().map_err(|e|e.to_string())?);
+        let gpu = GpuGather::new_with_schedule(gpu_schedule().map_err(|e|e.to_string())?)?;
         match gpu_log_mode().map_err(|e|e.to_string())? {
             GpuLog::Off => {}
             GpuLog::On => eprintln!("  GPU gather: {} / {} / {}; schedule {:?}; initialization {:.3} ms; {}", gpu.adapter,
                 gpu.backend, gpu.device_type, gpu.schedule(), gpu.initialization_ms,
                 serde_json::to_string(&gpu.compilation).map_err(|e|e.to_string())?),
             GpuLog::Placebo => eprintln!("  GPU gather statistics: INITIALIZATION PLACEBO"),
+        }
+        if matches!(gpu_log_mode().map_err(|e|e.to_string())?, GpuLog::On) {
+            if let Some(report) = &gpu.coordinate_compilation {eprintln!("  GPU device coordinates: {}",serde_json::to_string(report).map_err(|e|e.to_string())?);}
         }
         Ok(Mutex::new(gpu))
     }) { Ok(gpu) => gpu, Err(message) => bail!("GPU gather initialization failed: {message}") };
@@ -106,6 +109,9 @@ fn run<const GREEN_ONLY: bool>(frame: &strehl_raw::Frame, t: Similarity,
     }
     // Intrinsic route evidence, independent of optional numeric statistics.
     eprintln!("  GPU gather completed {}", if GREEN_ONLY { "green-only" } else { "RGB" });
+    if output.schedule == Schedule::Device256 {
+        eprintln!("  GPU device coordinates completed {}", if GREEN_ONLY {"green-only"} else {"RGB"});
+    }
     Ok(output)
 }
 

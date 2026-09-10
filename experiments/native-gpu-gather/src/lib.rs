@@ -1,6 +1,6 @@
 //! Default-off one-frame port of the current fullres MHC/Catmull gather.
 //! No RAW decoder, noise estimator, selector, merge or writer lives here.
-//! CPU geometry is intentionally retained in f64; shader arithmetic is f32.
+//! Geometry remains f64 on the host or optional device planner; image math is f32.
 //! Source/operation ordering is preserved, but GPU compiler contraction and
 //! final rounded equivalence require independent execution, not a source claim.
 use std::time::Instant;
@@ -10,12 +10,15 @@ use wgpu::util::DeviceExt;
 #[path = "strict-spirv.rs"]
 mod strict_spirv;
 pub use strict_spirv::CompilationReport;
+#[path = "device-coordinates.rs"]
+mod device_coordinates;
+pub use device_coordinates::CoordinateReport;
 
-/// Two fixed schedules for the same descriptor arithmetic and strict shader.
+/// Fixed host schedules and an explicit device-f64 coordinate experiment.
 #[derive(Clone, Copy, Debug, Eq, PartialEq, serde::Serialize)]
-pub enum Schedule { Serial32, Parallel256 }
+pub enum Schedule { Serial32, Parallel256, Device256 }
 impl Schedule {
-    fn strip_rows(self) -> usize { match self { Self::Serial32 => 32, Self::Parallel256 => 256 } }
+    fn strip_rows(self) -> usize { match self { Self::Serial32 => 32, Self::Parallel256 | Self::Device256 => 256 } }
 }
 pub const INVALID: u32 = u32::MAX;
 pub const UNCONSUMED: u32 = u32::MAX - 1;
@@ -98,6 +101,8 @@ pub struct GpuGather {
     mhc: wgpu::ComputePipeline,
     gather: wgpu::ComputePipeline,
     quantize: wgpu::ComputePipeline,
+    coordinates: Option<device_coordinates::DeviceCoordinates>,
+    pub coordinate_compilation: Option<CoordinateReport>,
     schedule: Schedule,
     pub adapter: String,
     pub device_type: String,
@@ -109,13 +114,15 @@ pub struct GpuGather {
 impl GpuGather {
     /// M7's permissive wgpu30 device/buffer mechanism, with no timing feature,
     /// all-frame residency, ring kernel or merge reduction carried forward.
-    pub fn new() -> Result<Self, String> { Self::new_with_arithmetic(true) }
+    pub fn new() -> Result<Self, String> { Self::new_with_schedule(Schedule::Parallel256) }
+
+    pub fn new_with_schedule(schedule: Schedule) -> Result<Self, String> { Self::new_with_arithmetic(true, schedule) }
 
     /// Single diagnostic: identical generated SPIR-V without NoContraction.
     /// This is not an alternative production/default path.
-    pub fn new_undecorated_for_test() -> Result<Self, String> { Self::new_with_arithmetic(false) }
+    pub fn new_undecorated_for_test() -> Result<Self, String> { Self::new_with_arithmetic(false, Schedule::Parallel256) }
 
-    fn new_with_arithmetic(strict: bool) -> Result<Self, String> {
+    fn new_with_arithmetic(strict: bool, schedule: Schedule) -> Result<Self, String> {
         let start = Instant::now();
         let (words, mut compilation) = strict_spirv::compile(strict)?;
         let mut descriptor = wgpu::InstanceDescriptor::new_without_display_handle();
@@ -132,8 +139,11 @@ impl GpuGather {
         if info.backend != wgpu::Backend::Vulkan || !adapter.features().contains(wgpu::Features::PASSTHROUGH_SHADERS) {
             return Err("strict GPU gather requires Vulkan + PASSTHROUGH_SHADERS".into());
         }
+        let coordinate_hardware = if schedule == Schedule::Device256 { Some(device_coordinates::hardware(&adapter)?) } else { None };
+        let mut features = wgpu::Features::PASSTHROUGH_SHADERS;
+        if coordinate_hardware.is_some() { features |= wgpu::Features::SHADER_F64; }
         let (device, queue) = pollster::block_on(adapter.request_device(&wgpu::DeviceDescriptor {
-            label: Some("native-gpu-gather"), required_features: wgpu::Features::PASSTHROUGH_SHADERS,
+            label: Some("native-gpu-gather"), required_features: features,
             required_limits: adapter.limits(), experimental_features: wgpu::ExperimentalFeatures::disabled(),
             memory_hints: wgpu::MemoryHints::Performance, trace: wgpu::Trace::Off,
         })).map_err(|e| e.to_string())?;
@@ -161,14 +171,26 @@ impl GpuGather {
         });
         let mhc = pipeline("mhc"); let gather = pipeline("gather");
         let quantize = pipeline("quantize_vector");
-        Ok(Self { device, queue, layout, mhc, gather, quantize, schedule: Schedule::Parallel256,
+        let (coordinates, coordinate_compilation) = if let Some(hardware) = coordinate_hardware {
+            let (kernel, report) = device_coordinates::DeviceCoordinates::new(&device, hardware)?;
+            (Some(kernel), Some(report))
+        } else { (None, None) };
+        Ok(Self { device, queue, layout, mhc, gather, quantize, schedule, coordinates, coordinate_compilation,
             adapter: info.name.clone(), device_type: format!("{:?}",info.device_type),
             backend: format!("{:?}",info.backend), compilation, initialization_ms: start.elapsed().as_secs_f64()*1000.0 })
     }
 
-    /// Change only descriptor scheduling and strip size; reuse this GPU context.
+    /// Reuse this context. Device256 requires construction with Device256;
+    /// changing a host-only context to Device256 yields an error at consumption.
     pub fn set_schedule(&mut self, schedule: Schedule) { self.schedule = schedule; }
     pub fn schedule(&self) -> Schedule { self.schedule }
+
+    /// Read only the actual device-generated strip for independent controls.
+    pub fn device_plans_for_test(&mut self, width: usize, height: usize, pulls: [Similarity;3],
+        green_only: bool, y_start: usize, rows: usize) -> Result<Vec<SamplePlan>, String> {
+        self.coordinates.as_ref().ok_or("context was not constructed for device coordinates")?
+            .readback(&self.device, &self.queue, width, height, pulls, green_only, y_start, rows)
+    }
 
     /// One call owns one resident source frame. No aligned stack is retained.
     /// The caller must explicitly select this experiment; unsupported modes
@@ -186,6 +208,9 @@ impl GpuGather {
     fn run_inner(&mut self, input: &Input<'_>,
         mut mutate: Option<&mut dyn FnMut(usize, &mut [SamplePlan])>) -> Result<Output, String> {
         let total = Instant::now();
+        let coordinates = if self.schedule == Schedule::Device256 {
+            Some(self.coordinates.as_ref().ok_or("Device256 requires a device-coordinate context")?)
+        } else { None };
         if !input.malvar || input.resampler != Resampler::CatmullRom {
             return Err("GPU prototype supports explicit Malvar + CatmullRom only".into());
         }
@@ -238,7 +263,8 @@ impl GpuGather {
         if output_bytes*2 > limits.max_buffer_size
             || w.div_ceil(64) > limits.max_compute_workgroups_per_dimension as usize
             || h > limits.max_compute_workgroups_per_dimension as usize
-            || (strip_n/2).div_ceil(64) > limits.max_compute_workgroups_per_dimension as usize {
+            || (strip_n/2).div_ceil(64) > limits.max_compute_workgroups_per_dimension as usize
+            || (coordinates.is_some() && strip_n.div_ceil(64) > limits.max_compute_workgroups_per_dimension as usize) {
             return Err("GPU dispatch/staging limit exceeded".into());
         }
         let execute_start = Instant::now();
@@ -249,7 +275,7 @@ impl GpuGather {
             label: Some(label), size, usage, mapped_at_creation: false,
         });
         let rgb = make_buffer("source-mhc",rgb_bytes,wgpu::BufferUsages::STORAGE);
-        let plans = make_buffer("exact-cpu-coordinate-strip",plan_bytes,wgpu::BufferUsages::STORAGE|wgpu::BufferUsages::COPY_DST);
+        let plans = make_buffer("exact-coordinate-strip",plan_bytes,wgpu::BufferUsages::STORAGE|wgpu::BufferUsages::COPY_DST);
         let output = make_buffer("packed-gather-strip",output_bytes,wgpu::BufferUsages::STORAGE|wgpu::BufferUsages::COPY_SRC);
         let coverage = make_buffer("coverage-strip",output_bytes,wgpu::BufferUsages::STORAGE|wgpu::BufferUsages::COPY_SRC);
         let stage = make_buffer("packed-readback-strip",output_bytes*2,wgpu::BufferUsages::COPY_DST|wgpu::BufferUsages::MAP_READ);
@@ -261,6 +287,8 @@ impl GpuGather {
             label: Some("current-gather-parameters"), contents: bytemuck::bytes_of(&params),
             usage: wgpu::BufferUsages::UNIFORM|wgpu::BufferUsages::COPY_DST,
         });
+        let transforms = coordinates.map(|_| device_coordinates::DeviceCoordinates::transforms(&self.device,input.pulls));
+        let coordinate_bind = coordinates.zip(transforms.as_ref()).map(|(kernel,transforms)|kernel.bind(&self.device,transforms,&uniform,&plans));
         let buffers = [&uniform,&source,&rgb,&plans,&output,&coverage];
         let entries: Vec<_> = buffers.iter().enumerate().map(|(i,b)| wgpu::BindGroupEntry {
             binding:i as u32,resource:b.as_entire_binding(),
@@ -275,12 +303,14 @@ impl GpuGather {
         self.device.poll(wgpu::PollType::wait_indefinitely()).map_err(|e|e.to_string())?;
         costs.submit_wait_readback_ms += execute_start.elapsed().as_secs_f64()*1000.0;
         costs.source_upload_bytes = source_bytes;
+        costs.coordinate_upload_bytes = if transforms.is_some() {96} else {0};
         costs.parameter_upload_bytes = std::mem::size_of::<Params>() as u64;
-        costs.device_buffer_bytes = source_bytes+rgb_bytes+plan_bytes+4*output_bytes+std::mem::size_of::<Params>() as u64;
+        costs.device_buffer_bytes = source_bytes+rgb_bytes+plan_bytes+4*output_bytes+std::mem::size_of::<Params>() as u64+costs.coordinate_upload_bytes;
         let mut all_coverage = Vec::with_capacity(n/2);
         let mut covered = 0usize;
         let mut plan = match schedule {
             Schedule::Serial32 => Vec::with_capacity(strip_n),
+            Schedule::Device256 => Vec::new(),
             // Initialize once, not once per strip. Only the last strip truncates.
             Schedule::Parallel256 => vec![SamplePlan{x0:INVALID,y0:0,fx:0.0,fy:0.0}; strip_n],
         };
@@ -312,21 +342,38 @@ impl GpuGather {
                         for (x,tap) in taps.iter_mut().enumerate() { *tap = point(y,x); }
                     });
                 }
+                Schedule::Device256 => {
+                    // Control-only mutation reads the actual device descriptors,
+                    // then uploads the mutated strip. Ordinary device runs keep
+                    // descriptors resident and perform neither transfer.
+                    if mutate.is_some() {
+                        plan = coordinates.unwrap().readback(&self.device,&self.queue,w,h,input.pulls,input.green_only,y_start,rows)?;
+                        costs.coordinate_upload_bytes += 96;
+                        costs.parameter_upload_bytes += std::mem::size_of::<Params>() as u64;
+                        costs.download_bytes += (plan.len()*16) as u64;
+                    }
+                }
             }
             // Parallel row completion precedes the independent mutation seam.
             if let Some(f) = mutate.as_mut() { f(y_start, &mut plan); }
             let invalid_plan = match schedule {
                 Schedule::Serial32 => plan.iter().any(invalid),
                 Schedule::Parallel256 => plan.par_chunks(w).any(|row|row.iter().any(invalid)),
+                Schedule::Device256 => plan.iter().any(invalid),
             };
             if invalid_plan { return Err("coordinate control supplied an invalid Catmull stencil".into()); }
             costs.coordinate_ms += coordinate_start.elapsed().as_secs_f64()*1000.0;
             let execute_start = Instant::now();
             params.dims[2] = y_start as u32;params.dims[3] = rows as u32;
             self.queue.write_buffer(&uniform,0,bytemuck::bytes_of(&params));
-            self.queue.write_buffer(&plans,0,bytemuck::cast_slice(&plan));
+            if coordinates.is_none() || mutate.is_some() {
+                self.queue.write_buffer(&plans,0,bytemuck::cast_slice(&plan));
+            }
             let bytes = (w*rows*2) as u64;
             let mut encoder = self.device.create_command_encoder(&Default::default());
+            if mutate.is_none() {
+                if let Some((kernel,bind)) = coordinates.zip(coordinate_bind.as_ref()) {kernel.encode(&mut encoder,bind,w*rows);}
+            }
             { let mut pass = encoder.begin_compute_pass(&wgpu::ComputePassDescriptor {label:Some("Catmull packed gather"),timestamp_writes:None});
               pass.set_pipeline(&self.gather);pass.set_bind_group(0,&bind,&[]);pass.dispatch_workgroups((w*rows/2).div_ceil(64) as u32,1,1); }
             encoder.copy_buffer_to_buffer(&output,0,&stage,0,bytes);
