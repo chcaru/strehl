@@ -1,0 +1,28 @@
+# Independent guarded Device256 source review
+
+SOURCE-REVIEWED only: no build, numerical control, GPU dispatch, RAW decode or render by this reviewer. No remaining source blocker found for execution-6. This review supplements device-source-review.md and the prospective lattice proof in device-guard-review.md; it does not reclassify the original run-device-1 hardware refusal.
+
+The held implementation checks every stored a.re/a.im/b.re/b.im component of all three precomposed pulls. The threshold is exactly binary64 bits0x07b0000000000000 (2^-900); signed zeros and nonfinite values retain the original semantics. Every unsafe finite nonzero coefficient causes actual frame consumption to select a local effective Parallel256 schedule before device-coordinate setup/upload. The requested context schedule is unchanged, so later safe inputs can still use Device256. The strict descriptor helper independently refuses unsafe coefficients before any upload. There is no unchecked normal-consumption or test-readback entry into the device planner.
+
+Output.schedule records the effective schedule, coordinate_fallback carries a nonempty reason, and integration prints that reason. A device completion marker is printed only for effective Device256. Thus the CPU planner fallback preserves the existing admitted image input domain while remaining distinguishable from device execution; it cannot silently qualify for the native timing gate.
+
+The diff removes only the DenormPreserve capability/mode/hardware requirement and its now-unneeded independence refusal. Hardware denorm support remains in the report, alongside the new guard description. SignedZeroInfNanPreserve64, RTE32/RTE64, NoContraction, the structural patch/removal checks and the explicit final-module validation limitation remain. The exact coordinate GLSL, f32 image WGSL and strict image compiler hashes are unchanged. No division, rescaled coordinate expression or alternative image arithmetic was introduced, so the previously reviewed 2^-953 intermediate-lattice proof still applies.
+
+The added controls are independent enough to reject the relevant mistakes. They check192 literal outcomes across all12 slots, including both signs immediately below/at/above the threshold, zeros, nonfinite values and unsafe tiny/subnormal values. The actual Cx multiplication of two minimum-normal neighbours at centred(1,1) must produce literal minimum-subnormal bits1; an explicit flush changes those bits, and the guard must refuse it. This witnesses dangerous intermediate arithmetic without claiming that the final pixel would visibly differ after centre addition.
+
+The four image pairs use the existing nonconstant padded case1 and compare complete packed u16 and coverage words against the retained Parallel256 planner with the same strict image shader. The first three must fall back and the final threshold-safe case must resume Device256, rejecting sticky fallback. Strict-helper refusal/equality, all-phase covered counts, complete source preservation, dimensions/denominators, effective schedules and first differences are retained. The expected56,000 host-plan versus96 device-transform upload bytes match these70x50 source paths; these are routing witnesses, not performance estimates. The reference here isolates planner routing; the original18 independently compare actual CPU image output afterward.
+
+The test diff appends188 lines and deletes none: the original37 descriptor requests plus4 API refusals and original18 image cases remain unchanged. New predicate results are saved before GPU initialization; initialization/fixture failures and each visited image pair are retained before the final assertion. Both contexts' protected original/strict image hashes must match, and the requested device report must include its coordinate compilation contract. No controls have been executed in this review.
+
+The fresh build-native-4/run-device-2 runner executes guard, descriptor, then image processes, stopping after any failure. Native admission binds all three successful completion/report hashes and the same build/test executable, requires the primary Device256 schedule and protected image module hashes, then retains the original native112 off/on/placebo and109 CPU/GPU/GPU/CPU sequence. Native GPU calls must all carry Device256 completions; the verbose arm binds both image and coordinate shader hashes. Existing exact TIFF/decoded references, selected RAW metadata/map checks, process limits and saved-alignment exclusion are retained. No speed/quality/default promotion follows from source review.
+
+Reviewed SHA256:
+
+- src/device-coordinates.rs 0bb5312db4488a17cc34c58940070bf316d866ca1f1816e0576422486d7a88ca
+- src/lib.rs daf49d8deab32658231cabaf57e98243bed6f2183e704beed671f44f63d9cdb1
+- integration.rs 42192933800a2dd2b22d085c27b472a2df5b1f190bb28fc9c758af34de9439d0
+- independent-tests.rs e965704a6fad905ea12e5a3cc23d111f97ee839b92117510ae88946b66779f7e
+- independent-design-device-guard.md d37937f9b11b2f4fc1a7e7d3d248600b7476bdfcd9cd13c3fb2c515c0430d5c4
+- Unchanged src/coordinates.glsl c7c8ed4ffcd85e8637fc25ef22f97c5f6a2e0cd9513d2f197dfa2a6d7f40b28e; src/gather.wgsl dbf900189081c839f67d103a555d27d9ec4a8165a62f0f609b63573c440cbcd0; src/strict-spirv.rs a904c1017c051e3285390a5e714e797720cab6a150a27e15c1aefc3a3145a65e
+- run-device.py fc71c68c878c5f88e7981ac71764fbefe9e3d622db7debba731db923c69b2518; run-device-native.py c311c52d07e741a5620fc1ec5d5ce4a3a0fa3a3c6ee17f412269147fd6f2c661
+- execution-6.md b3a6098e46e66d09647c7f6ba899bcf7d09a4da11a647003bbed9619c8c9a289; build.py e731b006cdaed830d6715730b2fac827c840066d61e7816b4b95f3cbc165dfbf (final reviewed change adds the guard-design source binding only)
