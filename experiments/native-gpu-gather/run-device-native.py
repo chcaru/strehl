@@ -13,11 +13,11 @@ def save(p,x):
 def ref(p):return dict(path=str(p),**m.binding(p))
 assert sys.argv[1:] in ([],["--timing-109"]),"two fixed allocations only"
 timing=bool(sys.argv[1:])
-controls=json.loads((HERE/"run-device-3/results.json").read_text(encoding="utf-8"))
+controls=json.loads((HERE/"run-device-4/results.json").read_text(encoding="utf-8"))
 assert controls["status"]=="EIGHTEEN_GPU_GATHER_CONTROLS_PASS"
 assert controls["compilation"]["original_sha256"]=="41658a89bd9b17c73b0f452b48bde689679e4ecc50774872ebfff0171cdb6560"
 assert controls["compilation"]["submitted_sha256"]=="a7dce2107ce7713ac4d9cd961dd44e303bd69b37c2d2ca7029f20aa1f131de9d"
-descriptors=json.loads((HERE/"run-device-3/device-descriptor-results.json").read_text(encoding="utf-8"))
+descriptors=json.loads((HERE/"run-device-4/device-descriptor-results.json").read_text(encoding="utf-8"))
 assert descriptors["status"]=="DEVICE_DESCRIPTOR_CONTROLS_PASS"
 assert controls["compilation"]["max_storage_buffer_binding_size"]>=395592192
 if timing:
@@ -31,19 +31,19 @@ whole="84f24ff6cdeae80f612ec6a2048dc888715eb8a2e632be29efcb9eefcdc61851" if timi
 decoded="1bd230a17e40030159540be6f75a958a839cd422b29d78afcd524f3cfe4c53e1" if timing else "d5fd6969b77fc94334995dea771e434f65f2b3cf782e1d683ca2872639595a1a"
 arms=[("cpu","rounded","off","device"),("gpu","rounded","off","device"),("gpu","rounded","off","device"),("cpu","rounded","off","device")] if timing else [
     ("gpu","rounded","off","device"),("gpu","rounded","on","device"),("gpu","rounded","placebo","device")]
-build=HERE/"build-native-5";receipt=json.loads((build/"invocation.json").read_text(encoding="utf-8"))
+build=HERE/"build-native-6";receipt=json.loads((build/"invocation.json").read_text(encoding="utf-8"))
 held=json.loads((build/"executables.json").read_text(encoding="utf-8"))["strehl"];exe=ROOT/held["path"]
 tests_held=json.loads((build/"executables.json").read_text(encoding="utf-8"))["cli-tests"]
 assert controls["schedule"]=="Device256","primary controls did not use device coordinates"
-done=json.loads((HERE/"run-device-3/completion.json").read_text(encoding="utf-8"))
+done=json.loads((HERE/"run-device-4/completion.json").read_text(encoding="utf-8"))
 assert done["status"]=="GUARD_DEVICE_AND_IMAGE_CONTROLS_PASS"
 for stem,filename in [("guard","device-guard-results.json"),("descriptors","device-descriptor-results.json"),("images","results.json")]:
-    inv=json.loads((HERE/"run-device-3"/(stem+"-invocation.json")).read_text(encoding="utf-8"))
-    completion=json.loads((HERE/"run-device-3"/(stem+"-completion.json")).read_text(encoding="utf-8"))
+    inv=json.loads((HERE/"run-device-4"/(stem+"-invocation.json")).read_text(encoding="utf-8"))
+    completion=json.loads((HERE/"run-device-4"/(stem+"-completion.json")).read_text(encoding="utf-8"))
     assert inv["build"]==m.binding(build/"invocation.json") and inv["executable"]==tests_held,"different controlled build"
     assert inv["overrides"]["STREHL_GPU_SCHEDULE"]=="device"
     assert completion["exit_code"]==0 and completion["error"] is None
-    assert completion["measurement"]==m.binding(HERE/"run-device-3"/filename),"changed control report"
+    assert completion["measurement"]==m.binding(HERE/"run-device-4"/filename),"changed control report"
 
 assert m.binding(exe)=={k:held[k] for k in ("bytes","sha256")}
 def check_sources():

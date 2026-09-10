@@ -15,6 +15,7 @@ pub struct CoordinateReport {
     pub hardware: Hardware,
     pub original_sha256: String,
     pub submitted_sha256: String,
+    pub original_extensions: Vec<String>,
     pub arithmetic_results: usize,
     pub added_capabilities: [&'static str; 2],
     pub execution_modes: [&'static str; 3],
@@ -98,17 +99,30 @@ fn instructions(words: &[u32]) -> Result<Vec<(usize,Op,&[u32])>,String> {
     }
     Ok(out)
 }
-fn patch(words: &[u32]) -> Result<(Vec<u32>,usize),String> {
+fn patch(words: &[u32]) -> Result<(Vec<u32>,usize,Vec<String>),String> {
     let insts=instructions(words)?;
     let type_at=insts.iter().find(|(_,op,_)|op.is_type()).ok_or("coordinate types absent")?.0;
     let cap_at=insts.iter().find(|(_,op,_)|*op!=Op::Capability).ok_or("coordinate capability section absent")?.0;
+    let extensions_end=insts.iter().find(|(_,op,_)|!matches!(*op,Op::Capability|Op::Extension)).ok_or("coordinate extension section absent")?.0;
     let modes_end=insts.iter().filter(|(_,op,_)|*op==Op::ExecutionMode).map(|(at,_,w)|at+w.len()).max().ok_or("coordinate execution modes absent")?;
     let mut entry=None; let mut types=BTreeSet::new(); let mut results=BTreeSet::new(); let mut imports=BTreeSet::new();
     let mut saw64=false;
+    let mut original_extensions=Vec::new();
     for &(at,op,w) in &insts {
         match op {
-            Op::Capability if w.len()!=2 || ![Capability::Shader as u32,Capability::Float64 as u32].contains(&w[1]) => return Err("unexpected coordinate capability".into()),
-            Op::Extension => return Err("unexpected existing coordinate extension".into()),
+            Op::Capability if at>=cap_at || w.len()!=2 || ![Capability::Shader as u32,Capability::Float64 as u32].contains(&w[1]) => return Err("unexpected coordinate capability".into()),
+            Op::Extension => {
+                // Naga30 writer.rs emits this for storage buffers at SPIR-V<1.3.
+                // Match the complete canonical string including NUL/padding;
+                // no other, repeated, malformed or misplaced extension is allowed.
+                let name="SPV_KHR_storage_buffer_storage_class";
+                let mut expected=name.as_bytes().to_vec();expected.push(0);
+                while expected.len()%4!=0 {expected.push(0);}
+                if at!=cap_at || !original_extensions.is_empty() || bytes(&w[1..])!=expected {
+                    return Err("unexpected existing coordinate extension".into());
+                }
+                original_extensions.push(name.to_owned());
+            }
             Op::EntryPoint => {
                 if w.len()<4 || w[1]!=spirv::ExecutionModel::GLCompute as u32 || entry.replace(w[2]).is_some() {return Err("coordinate entry changed".into());}
             }
@@ -136,6 +150,7 @@ fn patch(words: &[u32]) -> Result<(Vec<u32>,usize),String> {
         }
     }
     if !saw64 || results.is_empty() {return Err("no live f64 coordinate arithmetic".into());}
+    if original_extensions.len()!=1 {return Err("expected original storage-buffer extension absent".into());}
     let entry=entry.ok_or("no coordinate entry")?;
     let mut additions:BTreeMap<usize,Vec<u32>>=BTreeMap::new();
     let caps=additions.entry(cap_at).or_default();
@@ -143,8 +158,9 @@ fn patch(words: &[u32]) -> Result<(Vec<u32>,usize),String> {
         caps.extend_from_slice(&[(2<<16)|Op::Capability as u32,cap as u32]);
     }
     let mut name=b"SPV_KHR_float_controls\0".to_vec(); while name.len()%4!=0 {name.push(0);}
-    caps.push((((name.len()/4+1) as u32)<<16)|Op::Extension as u32);
-    caps.extend(name.chunks_exact(4).map(|w|u32::from_le_bytes(w.try_into().unwrap())));
+    let extensions=additions.entry(extensions_end).or_default();
+    extensions.push((((name.len()/4+1) as u32)<<16)|Op::Extension as u32);
+    extensions.extend(name.chunks_exact(4).map(|w|u32::from_le_bytes(w.try_into().unwrap())));
     let modes=additions.entry(modes_end).or_default();
     for (mode,width) in [(ExecutionMode::SignedZeroInfNanPreserve,64),
         (ExecutionMode::RoundingModeRTE,32),(ExecutionMode::RoundingModeRTE,64)] {
@@ -166,7 +182,7 @@ fn patch(words: &[u32]) -> Result<(Vec<u32>,usize),String> {
         restored.drain(*at..*at+extra.len());
     }
     if restored!=words || inserted.len()!=additions.len() {return Err("coordinate SPIR-V patch exceeded fixed additions".into());}
-    Ok((patched,results.len()))
+    Ok((patched,results.len(),original_extensions))
 }
 pub struct DeviceCoordinates { layout:wgpu::BindGroupLayout, pipeline:wgpu::ComputePipeline }
 impl DeviceCoordinates {
@@ -197,8 +213,8 @@ impl DeviceCoordinates {
         let parsed=naga::front::spv::parse_u8_slice(&bytes(&original),&naga::front::spv::Options {
             adjust_coordinate_space:false,strict_capabilities:true,block_ctx_dump_prefix:None}).map_err(|e|format!("original coordinate SPIR-V parse: {e:?}"))?;
         validate(&parsed)?;
-        let (words,arithmetic_results)=patch(&original)?;
-        let report=CoordinateReport{hardware,original_sha256:hash(&original),submitted_sha256:hash(&words),arithmetic_results,
+        let (words,arithmetic_results,original_extensions)=patch(&original)?;
+        let report=CoordinateReport{hardware,original_sha256:hash(&original),submitted_sha256:hash(&words),original_extensions,arithmetic_results,
             added_capabilities:["SignedZeroInfNanPreserve","RoundingModeRTE"],
             execution_modes:["SignedZeroInfNanPreserve 64","RoundingModeRTE 32","RoundingModeRTE 64"],
             coefficient_guard:COEFFICIENT_GUARD,
