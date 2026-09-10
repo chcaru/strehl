@@ -1,0 +1,115 @@
+{
+  "command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-gpu-gather\\build-native-2\\strehl.exe",
+    "stack",
+    "D:\\personal\\macro\\112MSDCF",
+    "--limit",
+    "8",
+    "--merge",
+    "pyramid",
+    "--pyramid-bands",
+    "7",
+    "--pyramid-gate",
+    "2",
+    "--pyramid-exponent",
+    "2",
+    "--pyramid-sharpen",
+    "1.4",
+    "--pyramid-select",
+    "soft",
+    "--pyramid-base",
+    "mean",
+    "--demosaic",
+    "--resampler",
+    "catmull-rom",
+    "--cover",
+    "scale",
+    "--out",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-gpu-gather\\native-112-2\\2-gpu-rounded-off-serial.tiff"
+  ],
+  "exit_code": 0,
+  "error": null,
+  "cleanup_errors": [],
+  "wall_seconds": 8.593999999997322,
+  "log_bytes": 10861,
+  "job_accounting": {
+    "total_user_100ns": 146718750,
+    "total_kernel_100ns": 15937500,
+    "total_cpu_100ns": 162656250,
+    "total_page_fault_count": 1992693,
+    "total_processes": 2,
+    "active_processes": 0,
+    "total_terminated_processes": 0
+  },
+  "job_memory": {
+    "peak_process_memory_used_bytes": 3519741952,
+    "peak_job_memory_used_bytes": 3520966656
+  },
+  "terminal_job_accounting": true,
+  "configured_job_limits": {
+    "flags": 8704,
+    "committed_bytes": 8589934592
+  },
+  "direct_exit_observed": true,
+  "pipe_eof_observed": true,
+  "post_exit_drain": {
+    "initial_accounting": {
+      "total_user_100ns": 146718750,
+      "total_kernel_100ns": 15937500,
+      "total_cpu_100ns": 162656250,
+      "total_page_fault_count": 1992693,
+      "total_processes": 2,
+      "active_processes": 0,
+      "total_terminated_processes": 0
+    },
+    "last_accounting": {
+      "total_user_100ns": 146718750,
+      "total_kernel_100ns": 15937500,
+      "total_cpu_100ns": 162656250,
+      "total_page_fault_count": 1992693,
+      "total_processes": 2,
+      "active_processes": 0,
+      "total_terminated_processes": 0
+    },
+    "observations": [
+      {
+        "wall_seconds": 8.593999999997322,
+        "accounting": {
+          "total_user_100ns": 146718750,
+          "total_kernel_100ns": 15937500,
+          "total_cpu_100ns": 162656250,
+          "total_page_fault_count": 1992693,
+          "total_processes": 2,
+          "active_processes": 0,
+          "total_terminated_processes": 0
+        }
+      }
+    ],
+    "observation_count": 1,
+    "completed": true,
+    "started_wall_seconds": 8.593999999997322,
+    "ended_wall_seconds": 8.593999999997322
+  },
+  "termination": {
+    "attempted": false,
+    "before_accounting": null,
+    "succeeded": false
+  },
+  "limits": {
+    "wall_seconds": 180,
+    "cpu_seconds": 900,
+    "log_bytes": 2097152,
+    "committed_bytes": 8589934592
+  },
+  "scope": "owned job tree; committed memory, observed user+kernel CPU; not RSS or a timing benchmark",
+  "log": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-gpu-gather\\native-112-2\\2-gpu-rounded-off-serial.log",
+    "sha256": "6d19001cbc1e2fb25fee3d096af65758230c369a8904bd04cd72a32b6ed1731f",
+    "bytes": 10861
+  },
+  "host": {
+    "busy_fraction": 0.08839936247723133,
+    "all_core_busy_seconds": 24.265625,
+    "scope": "whole machine, including this job"
+  }
+}

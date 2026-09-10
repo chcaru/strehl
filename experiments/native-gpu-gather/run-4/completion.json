@@ -1,0 +1,15 @@
+{
+  "exit_code": 0,
+  "error": null,
+  "aggregate_child_cpu_seconds": 0.3125,
+  "wall_seconds": 0.7030000000013388,
+  "peak_job_commit_bytes": 584392704,
+  "terminal_job_accounting": true,
+  "cleanup_errors": [],
+  "retained_bytes_before_completion": 19167,
+  "scope": "18 primary generated-code cases plus fixed quantizer/descriptor controls; no RAW photograph/SOTA or speed claim",
+  "measurement": {
+    "sha256": "3980091736a3131d3b5b2f4386b4f89837d9236bb91161e2cae534ece1e523f9",
+    "bytes": 14159
+  }
+}

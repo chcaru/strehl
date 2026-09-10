@@ -1,0 +1,90 @@
+{
+  "label": "2-gpu-rounded-off-parallel",
+  "arm": "gpu",
+  "direct": "rounded",
+  "log_mode": "off",
+  "schedule": "parallel",
+  "file": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-gpu-gather\\native-109-1\\2-gpu-rounded-off-parallel.tiff",
+    "sha256": "84f24ff6cdeae80f612ec6a2048dc888715eb8a2e632be29efcb9eefcdc61851",
+    "bytes": 197798267
+  },
+  "decoded": {
+    "shape": [
+      4688,
+      7032,
+      3
+    ],
+    "dtype": "uint16",
+    "bytes": 197796096,
+    "sha256": "1bd230a17e40030159540be6f75a958a839cd422b29d78afcd524f3cfe4c53e1"
+  },
+  "exact": true,
+  "gpu_rgb_calls": 22,
+  "gpu_green_calls": 22,
+  "wall_seconds": 11.218000000000757,
+  "cpu_seconds": 44.046875,
+  "peak_job_commit_bytes": 3578957824,
+  "host": {
+    "busy_fraction": 0.15827713726343268,
+    "all_core_busy_seconds": 56.84375,
+    "scope": "whole machine, including this job"
+  },
+  "profile": {
+    "mode": "on",
+    "outer": {
+      "alignment_wall_seconds": 0.0004315,
+      "collapse_write_wall_seconds": 0.3180044,
+      "fold_wall_seconds": 10.6591435,
+      "prologue_wall_seconds": 0.1020538,
+      "total_before_profile_publication": 11.0850884
+    },
+    "phases": [
+      {
+        "calls": 22,
+        "phase": "decode-validate",
+        "wall_nanoseconds": 1140035400,
+        "wall_seconds": 1.1400354000000001
+      },
+      {
+        "calls": 0,
+        "phase": "defect",
+        "wall_nanoseconds": 0,
+        "wall_seconds": 0.0
+      },
+      {
+        "calls": 22,
+        "phase": "gather",
+        "wall_nanoseconds": 3278158000,
+        "wall_seconds": 3.2781580000000003
+      },
+      {
+        "calls": 22,
+        "phase": "probe",
+        "wall_nanoseconds": 3895826500,
+        "wall_seconds": 3.8958265
+      },
+      {
+        "calls": 22,
+        "phase": "extract-luma",
+        "wall_nanoseconds": 151542400,
+        "wall_seconds": 0.15154240000000002
+      },
+      {
+        "calls": 22,
+        "phase": "variance",
+        "wall_nanoseconds": 29377600,
+        "wall_seconds": 0.0293776
+      },
+      {
+        "calls": 22,
+        "phase": "pyramid-add",
+        "wall_nanoseconds": 1685307200,
+        "wall_seconds": 1.6853072
+      }
+    ],
+    "schema": "native-pyramid-phase-profile-v1",
+    "scope": "Wall intervals only, not CPU. Decode/extract phases cover load_frame consumers including optional confidence passes. Variance/add cover BandWorker folds. No startup, plan/worker allocation, reduction/absorb, beta bookkeeping or final publication in leaf sum. Current canonical fold is serial; concurrency would make a leaf sum worker-time rather than elapsed pipeline time.",
+    "summed_phase_wall_seconds": 10.180247100000003
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-gpu-gather\\build-native-2\\cli-tests.exe",
+    "--exact",
+    "merge_cmd::tests::native_gpu_gather_controls::independent_gpu_gather_controls",
+    "--ignored",
+    "--nocapture",
+    "--test-threads=1"
+  ],
+  "overrides": {
+    "RAYON_NUM_THREADS": "2",
+    "STREHL_FULLRES_GATHER": "1",
+    "STREHL_PROBE_GATHER": "green",
+    "STREHL_WARP_WRITEBACK": "parallel",
+    "STREHL_DEFECT": "off",
+    "STREHL_GPU_GATHER_OUTPUT": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-gpu-gather\\run-4"
+  },
+  "removed_environment": [],
+  "executable": {
+    "path": "experiments\\native-gpu-gather\\build-native-2\\cli-tests.exe",
+    "bytes": 20397568,
+    "sha256": "70418700ea6eb59901a1fe137a9ff2aba547f4f76f0016e0e6a4a4fab4de3107"
+  },
+  "build": {
+    "sha256": "128ba09ab20e0e9a316b354ee470f76985c6bb35af0c83ac886bf042c9f42c36",
+    "bytes": 5958
+  },
+  "source_revision": "cbbb2bfa68dbd0444d7d74e48c685fa420560bbd",
+  "protocol": {
+    "run.py": {
+      "sha256": "e7144da533ca06c8ba6fd81f1f6aa8c2ac4a6de773ac5c7134b1a40117512b66",
+      "bytes": 3289
+    },
+    "independent-design.md": {
+      "sha256": "735f8be97698898e315a1c002a420dea6a6120a8e8168341f78e6dd2d39cd4c6",
+      "bytes": 4117
+    },
+    "independent-review.md": {
+      "sha256": "a6a404646b6663473a044caf3efff36cfa9449781f7eccc5378be991eb865129",
+      "bytes": 4232
+    },
+    "charter.md": {
+      "sha256": "f61908b063150da5946c1e4ae04098cebefc98debc69ccfe46b949ec829f4c8b",
+      "bytes": 2583
+    },
+    "execution-1.md": {
+      "sha256": "df686c3d934e90561f478ef5a6e95b9a6ffca32a3cb0536f0ea832925bc11b55",
+      "bytes": 2416
+    },
+    "execution-2.md": {
+      "sha256": "a72a322bc0540c6a8a8419fe756fd1385c44056319a1611e402077ff0dd67179",
+      "bytes": 1627
+    },
+    "execution-4.md": {
+      "sha256": "2f52e6da8eb49878766e87ea5dbe0936232cb11b3e63a862968b169b2bf7f1e4",
+      "bytes": 1937
+    }
+  }
+}
