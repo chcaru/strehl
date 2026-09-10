@@ -1,0 +1,9 @@
+{
+  "expected_device_requests": 37,
+  "expected_rows": 41,
+  "initialization_error": "required device coordinate float controls unsupported: Hardware { vulkan_api: 4211029, shader_f64: true, signed_zero_inf_nan_preserve_f64: true, denorm_preserve_f64: false, rounding_rte_f32: true, rounding_rte_f64: true, denorm_independence: 1, rounding_independence: 1 }",
+  "rows": [],
+  "schema": "native-gpu-device-descriptor-v1",
+  "scope": "exact16-byte descriptors; separate from original18 image population",
+  "status": "CONTROL_FAILED"
+}
