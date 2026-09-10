@@ -1,0 +1,11 @@
+# One saved-map coffee render
+
+After build6's guarded/device/18-image controls and exact109 ABBA have passed, execute one new105-frame coffee render using the existing native-product-comparison/run-1 invocation. Only executable, output path and explicit GPU on/device/log-on change. Preserve rounded direct planes, green Probe, seven bands, gate2, exponent2, sharpen1.4, soft selection, mean base, sRGB, Malvar/Catmull, crop, noise/profile, gear CA and defect off. No graph solve or corrected sidecar.
+
+The saved plan names exactly105 original ARWs DSC00016..DSC00120, with size/mtime metadata. Check the complete ARW set and every record before/after; do not imply content hashes of RAWs. Bind the saved warp SHA b21b247944c257ab0fd3c767c879b9abf4a5fb1112dded97c87990a7d537274c and the held baseline TIFF SHA411f3bb79fcee3aecbf27899d036e785b92469e53b21b0b339e82d65cd5c6e87 before inspecting its tags.
+
+Require105 RGB,105 green and210 actual Device256 completion markers, no fallback, matching strict gather/coordinate hashes and210 Device256 numeric upload records. The new image must be6784x4524 RGB uint16 with decoded SHA e6c8d7ada22b7bd0f944bf8e554600d6c209f37e80dad1e35aa0968c5c8664cb and184144896 decoded bytes. Compare all TIFF tag values/type/count, including the2716-byte sRGB ICC. Retain every difference; offsets/byte counts are reported separately and must also match.
+
+Only Software may differ. Existing build6's112 log says strehl0.0.0(36b91f0e5ced), the same stamp length as baseline f290b6145c09. Check the actual105 banner independently against both the bound build6 banner and the new tag. Require unchanged Software value storage length/offset, and equal whole-file SHA after zeroing only that tag's byte interval. Thus unexplained container/padding changes cannot silently pass as metadata. Preserve original/new whole hashes; do not claim whole-file byte equality.
+
+Fresh directory device-native-coffee-1; one render child,180s wall/900s CPU/8GiB commit/2MiB log. Preserve failures and output. Current20 native TIFFs total3955965340 bytes; require all native TIFFs including this one remain within4GiB. Reuse existing process/host helpers and build6 source bindings. This is deep-stack output equivalence; the older CPU binary's50s observation is not a speed comparator. No build or execution by the source author.
