@@ -610,3 +610,191 @@ fn independent_gpu_device_descriptor_controls() {
     save(&path,&report);
     assert!(pass,"device descriptor controls failed; retained {}",path.display());
 }
+
+// Additional guarded-domain controls. Original descriptor/image populations above stay fixed.
+fn set_guard_coefficient(pulls:&mut [Similarity;3],slot:usize,value:f64) {
+    let t=&mut pulls[slot/4];
+    match slot%4 {0=>t.a.re=value,1=>t.a.im=value,2=>t.b.re=value,3=>t.b.im=value,_=>unreachable!()}
+}
+
+fn guard_predicates() -> Value {
+    use strehl_native_gpu_gather::{device_coordinate_eligible,MIN_DEVICE_COEFFICIENT};
+    const T:u64=0x07b0000000000000;
+    const NEG:u64=0x8000000000000000;
+    let cases=[("positive-below",T-1,false),("positive-at",T,true),("positive-above",T+1,true),
+        ("negative-below",NEG|(T-1),false),("negative-at",NEG|T,true),("negative-above",NEG|(T+1),true),
+        ("positive-half",0x07a0000000000000,false),("negative-half",0x87a0000000000000,false),
+        ("minimum-normal",0x0010000000000000,false),("positive-subnormal",1,false),
+        ("negative-subnormal",NEG|1,false),("positive-zero",0,true),("negative-zero",NEG,true),
+        ("positive-infinity",0x7ff0000000000000,true),("negative-infinity",0xfff0000000000000,true),
+        ("quiet-nan",0x7ff8000000001234,true)];
+    let mut rows=Vec::new();
+    for slot in 0..12 {for (label,bits,expected) in cases {
+        let mut pulls=descriptor_ca_pulls(gatefloor::gpu_warp());
+        set_guard_coefficient(&mut pulls,slot,f64::from_bits(bits));
+        let actual=device_coordinate_eligible(pulls);
+        rows.push(json!({"slot":slot,"channel":slot/4,"component":(["a.re","a.im","b.re","b.im"][slot%4]),
+            "label":label,"bits":bits,"expected":expected,"actual":actual,"pass":actual==expected}));
+    }}
+    let mut dangerous=Similarity::IDENTITY;
+    dangerous.a.re=f64::from_bits(0x0010000000000001);
+    dangerous.a.im=f64::from_bits(0x0010000000000000);
+    dangerous.b.re=0.0;dangerous.b.im=0.0;
+    let centred=strehl_core::align::Cx::new(37.0/2.0-70.0/4.0,27.0/2.0-50.0/4.0);
+    let product=std::hint::black_box(dangerous.a)*std::hint::black_box(centred);
+    let flushed=if product.re.is_subnormal() {0.0} else {product.re};
+    let cancellation_pass=centred.re==1.0 && centred.im==1.0 && product.re.to_bits()==1
+        && flushed.to_bits()!=product.re.to_bits() && !device_coordinate_eligible([dangerous;3]);
+    let pass=MIN_DEVICE_COEFFICIENT.to_bits()==T && rows.len()==192
+        && rows.iter().all(|r|r["pass"]==true) && cancellation_pass;
+    json!({"pass":pass,"literal_threshold_bits":T,"exported_threshold_bits":MIN_DEVICE_COEFFICIENT.to_bits(),
+        "expected_checks":192,"rows":rows,"underflow_witness":{"pass":cancellation_pass,
+            "native":[37,27],"centred_quad":[centred.re,centred.im],"real_product_bits":product.re.to_bits(),
+            "literal_expected_bits":1,"flushed_bits":flushed.to_bits(),
+            "scope":"intermediate differs; final rounded image difference is not claimed"}})
+}
+
+fn word_hash(data:&[u32]) -> String {
+    let mut hash=Sha256::new();for word in data {hash.update(word.to_le_bytes());}
+    hash.finalize().iter().map(|b|format!("{b:02x}")).collect()
+}
+
+#[allow(clippy::too_many_arguments)]
+fn guard_image_pair(device:&mut GpuGather,parallel:&mut GpuGather,c:&Case,
+    oracle:&align_cmd::GpuCpuOracle,pulls:[Similarity;3],safe:bool) -> Result<Value,String> {
+    let original=c.frame.data.clone();let mut source=input(c,oracle);source.pulls=pulls;
+    let (w,h)=(2*source.geom.width,2*source.geom.height);let n=w*h;
+    let helper=match device.device_plans_for_test(w,h,pulls,false,0,h) {
+        Err(e)=>json!({"pass":!safe,"refused":true,"reason":e}),
+        Ok(actual)=>{
+            let expected=cpu_plans(w,h,&pulls,false,0,h);
+            let first=actual.iter().zip(&expected).position(|(a,b)|plan_words(a)!=plan_words(b));
+            json!({"pass":safe && actual.len()==expected.len() && first.is_none(),"refused":false,
+                "actual_plans":actual.len(),"expected_plans":expected.len(),
+                "first_difference":first.map(|i|json!({"native":[i%w,i/w],
+                    "cpu_words":plan_words(&expected[i]),"device_words":plan_words(&actual[i])}))})
+        }
+    };
+    let reference=parallel.run(&source)?;
+    let actual=device.run(&source)?;
+    let dimensions=actual.width==w && actual.height==h && reference.width==w && reference.height==h;
+    let lengths=actual.packed.len()==n/2 && actual.coverage.len()==n/2
+        && reference.packed.len()==n/2 && reference.coverage.len()==n/2;
+    let (codes,coverage)=unpack(&actual);
+    let mut phases=[0usize;4];
+    for (i,covered) in coverage.iter().enumerate() {
+        if *covered {phases[2*((i/w)%2)+i%2]+=1;}
+    }
+    let first=(0..actual.packed.len().min(reference.packed.len())
+        .min(actual.coverage.len()).min(reference.coverage.len())).find(|&i|
+        actual.packed[i]!=reference.packed[i] || actual.coverage[i]!=reference.coverage[i]);
+    let first_difference=first.map(|i|{
+        let (x,y)=(2*i%w,2*i/w);
+        json!({"native_pair":[x,y],"cpu_planned_word":reference.packed[i],"actual_word":actual.packed[i],
+            "cpu_planned_coverage":reference.coverage[i],"actual_coverage":actual.coverage[i],
+            "source_native_pair":[cpu_source(w,h,&pulls,x,y),cpu_source(w,h,&pulls,x+1,y)]})
+    });
+    let source_live=native_codes(&c.frame).windows(2).any(|v|v[0]!=v[1]);
+    let counts=actual.covered==reference.covered && actual.covered==coverage.iter().filter(|v|**v).count()
+        && actual.consumed_sites==n && reference.consumed_sites==n && phases.iter().all(|n|*n>0)
+        && actual.coverage.iter().all(|bits|bits&!3==0);
+    let expected_schedule=if safe {Schedule::Device256} else {Schedule::Parallel256};
+    let routing=actual.schedule==expected_schedule && reference.schedule==Schedule::Parallel256
+        && reference.coordinate_fallback.is_none()
+        && (if safe {actual.coordinate_fallback.is_none()}
+            else {actual.coordinate_fallback.is_some_and(|s|!s.is_empty())})
+        && device.schedule()==Schedule::Device256 && parallel.schedule()==Schedule::Parallel256;
+    let upload_expected=if safe {96} else {(n*16) as u64};
+    let uploads=actual.costs.coordinate_upload_bytes==upload_expected
+        && reference.costs.coordinate_upload_bytes==(n*16) as u64;
+    let exact=actual.packed==reference.packed && actual.coverage==reference.coverage;
+    let pass=dimensions && lengths && counts && routing && uploads && exact && source_live
+        && c.frame.data==original && helper["pass"]==true;
+    Ok(json!({"pass":pass,"safe":safe,"dimensions_exact":dimensions,"lengths_exact":lengths,
+        "counts_exact_and_live":counts,"covered_phase_sites":phases,"source_nonconstant":source_live,
+        "original_storage_unchanged":c.frame.data==original,"requested_schedule":format!("{:?}",device.schedule()),
+        "actual_schedule":format!("{:?}",actual.schedule),"reference_schedule":format!("{:?}",reference.schedule),
+        "coordinate_fallback":actual.coordinate_fallback,"routing_pass":routing,"upload_route_pass":uploads,
+        "actual_coordinate_upload_bytes":actual.costs.coordinate_upload_bytes,
+        "reference_coordinate_upload_bytes":reference.costs.coordinate_upload_bytes,
+        "exact_packed_and_coverage":exact,"first_difference":first_difference,"direct_helper":helper,
+        "actual_code_sha256_u16_le":storage_hash(&codes),
+        "reference_packed_sha256_u32_le":word_hash(&reference.packed),
+        "actual_packed_sha256_u32_le":word_hash(&actual.packed),
+        "reference_coverage_sha256_u32_le":word_hash(&reference.coverage),
+        "actual_coverage_sha256_u32_le":word_hash(&actual.coverage),
+        "pull_bits":pulls.map(|t|[t.a.re.to_bits(),t.a.im.to_bits(),t.b.re.to_bits(),t.b.im.to_bits()])}))
+}
+
+#[test]
+#[ignore = "root runs guard controls before the unchanged descriptor and image populations"]
+fn independent_gpu_device_guard_controls() {
+    let path=PathBuf::from(std::env::var_os("STREHL_GPU_GATHER_OUTPUT")
+        .expect("STREHL_GPU_GATHER_OUTPUT required")).join("device-guard-results.json");
+    let mut report=json!({"schema":"native-gpu-device-guard-v1","status":"STARTED","expected_image_pairs":4,
+        "rows":[],"scope":"guarded coordinate routing; same strict image shader in both arms"});
+    save(&path,&report);
+    report["predicate_controls"]=capture(||Ok(guard_predicates()));save(&path,&report);
+    if report["predicate_controls"]["pass"]!=true {
+        report["status"]=json!("CONTROL_FAILED");save(&path,&report);
+        panic!("coefficient guard predicates failed; retained {}",path.display());
+    }
+    let initialized=std::panic::catch_unwind(std::panic::AssertUnwindSafe(||
+        GpuGather::new_with_schedule(Schedule::Device256)));
+    let mut device=match initialized {Ok(Ok(g))=>g,other=>{
+        report["status"]=json!("CONTROL_FAILED");
+        report["initialization_error"]=json!(match other {Ok(Err(e))=>e,Err(p)=>panic_text(p),_=>unreachable!()});
+        save(&path,&report);panic!("guard device initialization refused; retained {}",path.display());
+    }};
+    report["adapter"]=json!(device.adapter);report["backend"]=json!(device.backend);
+    report["device_type"]=json!(device.device_type);report["schedule"]=json!(format!("{:?}",device.schedule()));
+    report["gather_compilation"]=json!(device.compilation);
+    report["coordinate_compilation"]=json!(device.coordinate_compilation);save(&path,&report);
+    let initialized=std::panic::catch_unwind(std::panic::AssertUnwindSafe(||
+        GpuGather::new_with_schedule(Schedule::Parallel256)));
+    let mut parallel=match initialized {Ok(Ok(g))=>g,other=>{
+        report["status"]=json!("CONTROL_FAILED");
+        report["reference_initialization_error"]=json!(match other {Ok(Err(e))=>e,Err(p)=>panic_text(p),_=>unreachable!()});
+        save(&path,&report);panic!("guard CPU-planner context refused; retained {}",path.display());
+    }};
+    report["reference_context"]=json!({"adapter":parallel.adapter,"backend":parallel.backend,
+        "device_type":parallel.device_type,"schedule":format!("{:?}",parallel.schedule()),
+        "gather_compilation":parallel.compilation,"coordinate_compilation":parallel.coordinate_compilation});
+    save(&path,&report);
+    let setup=std::panic::catch_unwind(std::panic::AssertUnwindSafe(||{
+        let c=make_case(1);let mut cpu=c.frame.clone();
+        let oracle=align_cmd::gpu_cpu_oracle(&mut cpu,c.transform,c.frame.geometry(),c.ca,c.green)
+            .map_err(|e|format!("unchanged case1 photometry: {e:#}"))?;
+        Ok::<_,String>((c,oracle))
+    }));
+    let (c,oracle)=match setup {Ok(Ok(v))=>v,other=>{
+        report["status"]=json!("CONTROL_FAILED");
+        report["fixture_error"]=json!(match other {Ok(Err(e))=>e,Err(p)=>panic_text(p),_=>unreachable!()});
+        save(&path,&report);panic!("guard fixture setup failed; retained {}",path.display());
+    }};
+    let base=descriptor_ca_pulls(gatefloor::gpu_warp());
+    for id in 0..4 {
+        let mut pulls=base;
+        let label=match id {
+            0=>{pulls[0].b.re=f64::from_bits(0x07afffffffffffff);"below-threshold-translation"},
+            1=>{pulls[2].b.re=f64::from_bits(1);"subnormal-translation"},
+            2=>{for t in &mut pulls {t.a.re=f64::from_bits(0x0010000000000001);
+                t.a.im=f64::from_bits(0x0010000000000000);t.b.re=0.0;t.b.im=0.0;}
+                "underflow-cancellation"},
+            3=>{pulls[2].a.im=f64::from_bits(0x07b0000000000000);"threshold-after-fallback"},
+            _=>unreachable!(),
+        };
+        device_record(&path,&mut report,"guard-image-pair",label,||
+            guard_image_pair(&mut device,&mut parallel,&c,&oracle,pulls,id==3));
+    }
+    let protected=device.compilation.original_sha256=="41658a89bd9b17c73b0f452b48bde689679e4ecc50774872ebfff0171cdb6560"
+        && device.compilation.submitted_sha256=="a7dce2107ce7713ac4d9cd961dd44e303bd69b37c2d2ca7029f20aa1f131de9d"
+        && parallel.compilation.original_sha256==device.compilation.original_sha256
+        && parallel.compilation.submitted_sha256==device.compilation.submitted_sha256;
+    let rows=report["rows"].as_array().unwrap();
+    let pass=rows.len()==4 && rows.iter().all(|r|r["pass"]==true) && protected
+        && device.coordinate_compilation.is_some() && parallel.coordinate_compilation.is_none();
+    report["active_case"]=Value::Null;report["protected_image_shader_hashes"]=json!(protected);
+    report["status"]=json!(if pass {"DEVICE_GUARD_CONTROLS_PASS"} else {"CONTROL_FAILED"});
+    save(&path,&report);assert!(pass,"device guard controls failed; retained {}",path.display());
+}

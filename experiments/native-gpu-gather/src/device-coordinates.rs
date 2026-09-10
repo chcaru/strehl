@@ -16,8 +16,9 @@ pub struct CoordinateReport {
     pub original_sha256: String,
     pub submitted_sha256: String,
     pub arithmetic_results: usize,
-    pub added_capabilities: [&'static str; 3],
-    pub execution_modes: [&'static str; 4],
+    pub added_capabilities: [&'static str; 2],
+    pub execution_modes: [&'static str; 3],
+    pub coefficient_guard: &'static str,
     pub entry_point: &'static str,
     pub bindings: [u32; 3],
     pub validation: &'static str,
@@ -33,6 +34,18 @@ pub struct Hardware {
     pub denorm_independence: i32,
     pub rounding_independence: i32,
 }
+/// Exact 2^-900 threshold; all twelve precomposed pull components are checked.
+pub const MIN_DEVICE_COEFFICIENT: f64 = f64::from_bits((1023u64 - 900) << 52);
+pub const COEFFICIENT_GUARD: &str = "every finite nonzero pull coefficient abs>=2^-900; unsafe actual frames use Parallel256; direct descriptor helper refuses";
+pub fn coefficients_safe(pulls: [Similarity;3]) -> bool {
+    pulls.iter().all(|t| [t.a.re,t.a.im,t.b.re,t.b.im].into_iter()
+        .all(|c| c == 0.0 || !c.is_finite() || c.abs() >= MIN_DEVICE_COEFFICIENT))
+}
+// The accepted finite coefficients are integer multiples of 2^-952. Centred
+// coordinates are exact half-integers, so products and every finite subsequent
+// sum/difference are multiples of 2^-953. RTE preserves this lattice; no finite
+// nonzero intermediate is subnormal. Overflow/nonfinite paths retain SINF64.
+// This guard must precede every device coordinate upload, including test paths.
 pub fn hardware(adapter: &wgpu::Adapter) -> Result<Hardware, String> {
     if adapter.get_info().backend != wgpu::Backend::Vulkan ||
         !adapter.features().contains(wgpu::Features::SHADER_F64 | wgpu::Features::PASSTHROUGH_SHADERS) {
@@ -57,15 +70,14 @@ pub fn hardware(adapter: &wgpu::Adapter) -> Result<Hardware, String> {
         rounding_rte_f64: floats.shader_rounding_mode_rte_float64 != 0,
         denorm_independence: floats.denorm_behavior_independence.as_raw(),
         rounding_independence: floats.rounding_mode_independence.as_raw() };
-    if api < vk::API_VERSION_1_2 || !result.signed_zero_inf_nan_preserve_f64 || !result.denorm_preserve_f64
-        || !result.rounding_rte_f32 || !result.rounding_rte_f64
-        || floats.denorm_behavior_independence == vk::ShaderFloatControlsIndependence::NONE {
+    if api < vk::API_VERSION_1_2 || !result.signed_zero_inf_nan_preserve_f64
+        || !result.rounding_rte_f32 || !result.rounding_rte_f64 {
         return Err(format!("required device coordinate float controls unsupported: {result:?}"));
     }
-    // Only width64 denorm/Inf/NaN modes are set. The width32 output is finite
-    // zero or >=2^-52, hence normal f32, and needs only conversion RTE. No two
-    // widths request contradictory denorm modes; independence NONE is refused
-    // because an omitted mode at width32 differs from Preserve64. RTE32/64 agree.
+    // No denorm mode is requested at either width: the per-frame coefficient
+    // guard excludes subnormal f64 inputs/intermediates. The accepted fraction
+    // cast is zero or >=2^-52, normal f32. Preserve SINF64; RTE32/64 agree.
+    // Hardware denorm support remains reported even when it is absent.
     Ok(result)
 }
 fn bytes(words: &[u32]) -> Vec<u8> { words.iter().flat_map(|w|w.to_le_bytes()).collect() }
@@ -127,14 +139,14 @@ fn patch(words: &[u32]) -> Result<(Vec<u32>,usize),String> {
     let entry=entry.ok_or("no coordinate entry")?;
     let mut additions:BTreeMap<usize,Vec<u32>>=BTreeMap::new();
     let caps=additions.entry(cap_at).or_default();
-    for cap in [Capability::DenormPreserve,Capability::SignedZeroInfNanPreserve,Capability::RoundingModeRTE] {
+    for cap in [Capability::SignedZeroInfNanPreserve,Capability::RoundingModeRTE] {
         caps.extend_from_slice(&[(2<<16)|Op::Capability as u32,cap as u32]);
     }
     let mut name=b"SPV_KHR_float_controls\0".to_vec(); while name.len()%4!=0 {name.push(0);}
     caps.push((((name.len()/4+1) as u32)<<16)|Op::Extension as u32);
     caps.extend(name.chunks_exact(4).map(|w|u32::from_le_bytes(w.try_into().unwrap())));
     let modes=additions.entry(modes_end).or_default();
-    for (mode,width) in [(ExecutionMode::DenormPreserve,64),(ExecutionMode::SignedZeroInfNanPreserve,64),
+    for (mode,width) in [(ExecutionMode::SignedZeroInfNanPreserve,64),
         (ExecutionMode::RoundingModeRTE,32),(ExecutionMode::RoundingModeRTE,64)] {
         modes.extend_from_slice(&[(4<<16)|Op::ExecutionMode as u32,entry,mode as u32,width]);
     }
@@ -187,8 +199,9 @@ impl DeviceCoordinates {
         validate(&parsed)?;
         let (words,arithmetic_results)=patch(&original)?;
         let report=CoordinateReport{hardware,original_sha256:hash(&original),submitted_sha256:hash(&words),arithmetic_results,
-            added_capabilities:["DenormPreserve","SignedZeroInfNanPreserve","RoundingModeRTE"],
-            execution_modes:["DenormPreserve 64","SignedZeroInfNanPreserve 64","RoundingModeRTE 32","RoundingModeRTE 64"],
+            added_capabilities:["SignedZeroInfNanPreserve","RoundingModeRTE"],
+            execution_modes:["SignedZeroInfNanPreserve 64","RoundingModeRTE 32","RoundingModeRTE 64"],
+            coefficient_guard:COEFFICIENT_GUARD,
             entry_point:"main",bindings:[0,1,2],validation:"owned GLSL+Naga IR and original SPIR-V parse+IR; final fixed additions structurally checked with exact removal identity; final patched SPIR-V NOT fully Naga-validated and NOT spirv-val"};
         let entries:Vec<_>=(0..3).map(|binding|wgpu::BindGroupLayoutEntry{binding,visibility:wgpu::ShaderStages::COMPUTE,
             ty:wgpu::BindingType::Buffer{ty:if binding==1 {wgpu::BufferBindingType::Uniform}else{wgpu::BufferBindingType::Storage{read_only:binding==0}},has_dynamic_offset:false,min_binding_size:None},count:None}).collect();
@@ -217,6 +230,7 @@ impl DeviceCoordinates {
         pass.set_pipeline(&self.pipeline);pass.set_bind_group(0,bind,&[]);pass.dispatch_workgroups(count.div_ceil(64) as u32,1,1);
     }
     pub fn readback(&self,device:&wgpu::Device,queue:&wgpu::Queue,w:usize,h:usize,pulls:[Similarity;3],green:bool,y:usize,rows:usize)->Result<Vec<SamplePlan>,String> {
+        if !coefficients_safe(pulls) {return Err(format!("unsafe device coordinate coefficients: {COEFFICIENT_GUARD}"));}
         let n=w.checked_mul(h).ok_or("coordinate extent overflow")?;
         if w==0 || h==0 || w%2!=0 || h%2!=0 || n>u32::MAX as usize/3 || w>i32::MAX as usize || h>i32::MAX as usize || rows==0 || rows>256 || y.checked_add(rows).is_none_or(|end|end>h) {
             return Err("invalid device coordinate dimensions/strip".into());

@@ -109,6 +109,9 @@ fn run<const GREEN_ONLY: bool>(frame: &strehl_raw::Frame, t: Similarity,
     }
     // Intrinsic route evidence, independent of optional numeric statistics.
     eprintln!("  GPU gather completed {}", if GREEN_ONLY { "green-only" } else { "RGB" });
+    if let Some(reason) = output.coordinate_fallback {
+        eprintln!("  GPU device coordinates fallback Parallel256: {reason}");
+    }
     if output.schedule == Schedule::Device256 {
         eprintln!("  GPU device coordinates completed {}", if GREEN_ONLY {"green-only"} else {"RGB"});
     }

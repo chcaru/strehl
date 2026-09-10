@@ -12,7 +12,7 @@ mod strict_spirv;
 pub use strict_spirv::CompilationReport;
 #[path = "device-coordinates.rs"]
 mod device_coordinates;
-pub use device_coordinates::CoordinateReport;
+pub use device_coordinates::{CoordinateReport, MIN_DEVICE_COEFFICIENT, coefficients_safe as device_coordinate_eligible};
 
 /// Fixed host schedules and an explicit device-f64 coordinate experiment.
 #[derive(Clone, Copy, Debug, Eq, PartialEq, serde::Serialize)]
@@ -87,6 +87,8 @@ pub struct Output {
     pub covered: usize,
     pub consumed_sites: usize,
     pub schedule: Schedule,
+    /// Per-frame input-domain fallback, never an error or timing fallback.
+    pub coordinate_fallback: Option<&'static str>,
     pub costs: Costs,
 }
 
@@ -208,7 +210,10 @@ impl GpuGather {
     fn run_inner(&mut self, input: &Input<'_>,
         mut mutate: Option<&mut dyn FnMut(usize, &mut [SamplePlan])>) -> Result<Output, String> {
         let total = Instant::now();
-        let coordinates = if self.schedule == Schedule::Device256 {
+        let coordinate_fallback = (self.schedule == Schedule::Device256 && !device_coordinate_eligible(input.pulls))
+            .then_some(device_coordinates::COEFFICIENT_GUARD);
+        let schedule = if coordinate_fallback.is_some() {Schedule::Parallel256} else {self.schedule};
+        let coordinates = if schedule == Schedule::Device256 {
             Some(self.coordinates.as_ref().ok_or("Device256 requires a device-coordinate context")?)
         } else { None };
         if !input.malvar || input.resampler != Resampler::CatmullRom {
@@ -247,7 +252,6 @@ impl GpuGather {
             for x in (0..w).step_by(2) { packed.push(u32::from(input.data[row+x]) | (u32::from(input.data[row+x+1])<<16)); }
         }
         costs.pack_ms = pack_start.elapsed().as_secs_f64()*1000.0;
-        let schedule = self.schedule;
         let strip_rows = schedule.strip_rows();
         let strip_n = w*strip_rows.min(h);
         let source_bytes = (n*2) as u64;
@@ -396,7 +400,7 @@ impl GpuGather {
         }
         costs.total_ms = total.elapsed().as_secs_f64()*1000.0;
         Ok(Output { packed,coverage:all_coverage,width:w,height:h,covered,
-            consumed_sites:if input.green_only {n/2} else {n},schedule,costs })
+            consumed_sites:if input.green_only {n/2} else {n},schedule,coordinate_fallback,costs })
     }
 
     /// Test-only-purpose entry point, using the actual shader quantizer.
