@@ -1,0 +1,27 @@
+{
+  "status": "ROOT_RECHECKED_ACTUAL_FILES",
+  "rows": [
+    {
+      "arm": "original",
+      "collapsed_sha256": "d437879d2a06a26dc00232a1556440b97a61f4247ea6a46daab2b913a5ef275c",
+      "shape": [
+        392,
+        392,
+        3
+      ],
+      "product_sha256": "f786f392915bffe9e1755bb63678a1df2269890b22618e9a3427e98c44cf00be"
+    },
+    {
+      "arm": "corrected",
+      "collapsed_sha256": "8902f66c0e1a53caab1aa9c0fddb0ba2e5dba9f49feaa219f2fa5fcbdd4487a8",
+      "shape": [
+        392,
+        392,
+        3
+      ],
+      "product_sha256": "53259fac68f9fab4ff1a3bfd1daeebfc2de4e406a1e914cf307c3ec4aca78016"
+    }
+  ],
+  "asymmetric_subregions_exact": true,
+  "frame_membership_and_ca_identity_exact": true
+}

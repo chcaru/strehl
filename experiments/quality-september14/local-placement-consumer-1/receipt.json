@@ -1,0 +1,1141 @@
+{
+  "actual_laplacian_bands": 4,
+  "changed_collapsed_f32_words": 153322,
+  "crop_quad_xywh": [
+    666,
+    552,
+    196,
+    196
+  ],
+  "filler_collapsed_and_output_exact": true,
+  "filler_values_dn": [
+    512,
+    15360
+  ],
+  "frames": [
+    146,
+    147,
+    148,
+    149,
+    150,
+    151,
+    152,
+    153
+  ],
+  "full_quad_geometry": [
+    3516,
+    2344
+  ],
+  "input_manifest_sha256": "f329c7d8f304e12b2d3b2f2548fb571793f6a651e8fbda2dbdc2009af5a81066",
+  "level_sides": [
+    196,
+    98,
+    49,
+    25,
+    13
+  ],
+  "levels": [
+    512.0,
+    15360.0
+  ],
+  "native_extent": [
+    392,
+    392
+  ],
+  "outputs": [
+    {
+      "output": {
+        "arm": "original-black",
+        "collapsed_sha256": "d437879d2a06a26dc00232a1556440b97a61f4247ea6a46daab2b913a5ef275c",
+        "interleave_actual_writer_exact": true,
+        "linear_tiff_sha256": "449309f1b4e2c38bc515152f5463b9e5bb9c974735ba8f92bf8e7c23410f7d44",
+        "product_tiff_sha256": "f786f392915bffe9e1755bb63678a1df2269890b22618e9a3427e98c44cf00be"
+      },
+      "probe": [
+        {
+          "finite_consumed_beta": [
+            1.6891772747039795,
+            0.04793567210435867,
+            0.01030884962528944
+          ],
+          "frame": 146
+        },
+        {
+          "finite_consumed_beta": [
+            0.9154627323150635,
+            0.0495225191116333,
+            0.01042479183524847
+          ],
+          "frame": 147
+        },
+        {
+          "finite_consumed_beta": [
+            0.912889838218689,
+            0.04696464166045189,
+            0.00941262487322092
+          ],
+          "frame": 148
+        },
+        {
+          "finite_consumed_beta": [
+            0.9106444716453552,
+            0.05481366813182831,
+            0.010086648166179657
+          ],
+          "frame": 149
+        },
+        {
+          "finite_consumed_beta": [
+            0.7694076299667358,
+            0.04897955060005188,
+            0.009757534600794315
+          ],
+          "frame": 150
+        },
+        {
+          "finite_consumed_beta": [
+            0.8455168604850769,
+            0.04818173125386238,
+            0.00946389976888895
+          ],
+          "frame": 151
+        },
+        {
+          "finite_consumed_beta": [
+            0.9347119331359863,
+            0.051118724048137665,
+            0.009817199781537056
+          ],
+          "frame": 152
+        },
+        {
+          "finite_consumed_beta": [
+            1.5402437448501587,
+            0.04913879185914993,
+            0.0100197559222579
+          ],
+          "frame": 153
+        }
+      ]
+    },
+    {
+      "output": {
+        "arm": "original-white",
+        "collapsed_sha256": "d437879d2a06a26dc00232a1556440b97a61f4247ea6a46daab2b913a5ef275c",
+        "interleave_actual_writer_exact": true,
+        "linear_tiff_sha256": "449309f1b4e2c38bc515152f5463b9e5bb9c974735ba8f92bf8e7c23410f7d44",
+        "product_tiff_sha256": "f786f392915bffe9e1755bb63678a1df2269890b22618e9a3427e98c44cf00be"
+      },
+      "probe": [
+        {
+          "finite_consumed_beta": [
+            1.6891772747039795,
+            0.04793567210435867,
+            0.01030884962528944
+          ],
+          "frame": 146
+        },
+        {
+          "finite_consumed_beta": [
+            0.9154627323150635,
+            0.0495225191116333,
+            0.01042479183524847
+          ],
+          "frame": 147
+        },
+        {
+          "finite_consumed_beta": [
+            0.912889838218689,
+            0.04696464166045189,
+            0.00941262487322092
+          ],
+          "frame": 148
+        },
+        {
+          "finite_consumed_beta": [
+            0.9106444716453552,
+            0.05481366813182831,
+            0.010086648166179657
+          ],
+          "frame": 149
+        },
+        {
+          "finite_consumed_beta": [
+            0.7694076299667358,
+            0.04897955060005188,
+            0.009757534600794315
+          ],
+          "frame": 150
+        },
+        {
+          "finite_consumed_beta": [
+            0.8455168604850769,
+            0.04818173125386238,
+            0.00946389976888895
+          ],
+          "frame": 151
+        },
+        {
+          "finite_consumed_beta": [
+            0.9347119331359863,
+            0.051118724048137665,
+            0.009817199781537056
+          ],
+          "frame": 152
+        },
+        {
+          "finite_consumed_beta": [
+            1.5402437448501587,
+            0.04913879185914993,
+            0.0100197559222579
+          ],
+          "frame": 153
+        }
+      ]
+    },
+    {
+      "output": {
+        "arm": "corrected-black",
+        "collapsed_sha256": "8902f66c0e1a53caab1aa9c0fddb0ba2e5dba9f49feaa219f2fa5fcbdd4487a8",
+        "interleave_actual_writer_exact": true,
+        "linear_tiff_sha256": "4a5e331ee26b7574e25169fd1f9329f892f5c52795b39f8784e584ecb18009fa",
+        "product_tiff_sha256": "53259fac68f9fab4ff1a3bfd1daeebfc2de4e406a1e914cf307c3ec4aca78016"
+      },
+      "probe": [
+        {
+          "finite_consumed_beta": [
+            0.9922675490379333,
+            0.04741869121789932,
+            0.010541439056396484
+          ],
+          "frame": 146
+        },
+        {
+          "finite_consumed_beta": [
+            1.6796287298202515,
+            0.05017511546611786,
+            0.01037366222590208
+          ],
+          "frame": 147
+        },
+        {
+          "finite_consumed_beta": [
+            1.0104073286056519,
+            0.04826948419213295,
+            0.009526415728032589
+          ],
+          "frame": 148
+        },
+        {
+          "finite_consumed_beta": [
+            0.9106444716453552,
+            0.05481366813182831,
+            0.010086648166179657
+          ],
+          "frame": 149
+        },
+        {
+          "finite_consumed_beta": [
+            0.9597916007041931,
+            0.04924945905804634,
+            0.009777924045920372
+          ],
+          "frame": 150
+        },
+        {
+          "finite_consumed_beta": [
+            1.5305367708206177,
+            0.04837789386510849,
+            0.009462117217481136
+          ],
+          "frame": 151
+        },
+        {
+          "finite_consumed_beta": [
+            0.9507394433021545,
+            0.04893011599779129,
+            0.0097038010135293
+          ],
+          "frame": 152
+        },
+        {
+          "finite_consumed_beta": [
+            0.7955929040908813,
+            0.050168126821517944,
+            0.01043636817485094
+          ],
+          "frame": 153
+        }
+      ]
+    },
+    {
+      "output": {
+        "arm": "corrected-white",
+        "collapsed_sha256": "8902f66c0e1a53caab1aa9c0fddb0ba2e5dba9f49feaa219f2fa5fcbdd4487a8",
+        "interleave_actual_writer_exact": true,
+        "linear_tiff_sha256": "4a5e331ee26b7574e25169fd1f9329f892f5c52795b39f8784e584ecb18009fa",
+        "product_tiff_sha256": "53259fac68f9fab4ff1a3bfd1daeebfc2de4e406a1e914cf307c3ec4aca78016"
+      },
+      "probe": [
+        {
+          "finite_consumed_beta": [
+            0.9922675490379333,
+            0.04741869121789932,
+            0.010541439056396484
+          ],
+          "frame": 146
+        },
+        {
+          "finite_consumed_beta": [
+            1.6796287298202515,
+            0.05017511546611786,
+            0.01037366222590208
+          ],
+          "frame": 147
+        },
+        {
+          "finite_consumed_beta": [
+            1.0104073286056519,
+            0.04826948419213295,
+            0.009526415728032589
+          ],
+          "frame": 148
+        },
+        {
+          "finite_consumed_beta": [
+            0.9106444716453552,
+            0.05481366813182831,
+            0.010086648166179657
+          ],
+          "frame": 149
+        },
+        {
+          "finite_consumed_beta": [
+            0.9597916007041931,
+            0.04924945905804634,
+            0.009777924045920372
+          ],
+          "frame": 150
+        },
+        {
+          "finite_consumed_beta": [
+            1.5305367708206177,
+            0.04837789386510849,
+            0.009462117217481136
+          ],
+          "frame": 151
+        },
+        {
+          "finite_consumed_beta": [
+            0.9507394433021545,
+            0.04893011599779129,
+            0.0097038010135293
+          ],
+          "frame": 152
+        },
+        {
+          "finite_consumed_beta": [
+            0.7955929040908813,
+            0.050168126821517944,
+            0.01043636817485094
+          ],
+          "frame": 153
+        }
+      ]
+    }
+  ],
+  "reference": 149,
+  "requested_bands": 7,
+  "scope": "Same cropped actual consumer in both arms; four bands with replicated crop boundaries. No seven-band/full-stack/within-DOF claim. No fitted photometric terms. Original global IDs retained for probe seeds.",
+  "source_decode": "saved original u16 only; RAW paths queried for existing CA gear identity, never decoded",
+  "status": "LOCAL_CROPPED_CONSUMER_COMPLETE",
+  "support": [
+    {
+      "ca": "OpticalProfile { key: \"a7c2-fe100gm-2xtc-x4cpl\", optical_path: \"Sony A7C II + FE 100mm F2.8 Macro GM + 2x Viltrox teleconverter + Breakthrough X4 circular polariser\", measured_from: \"M107 Instrument A: 20 gated ROIs over tweezers-cpl and bee-3-cpl (red); BUILD-CHROMA: 1071 gated tiles over six stacks (blue)\", measured_at: Some(\"f/5.6 (5 stacks) and f/8 (1 stack), 200 mm effective; f/11 untested\"), version: 1, support_r_max: Some(0.788), eps_r: -0.0005084, eps_b: Some(0.0001744), translation: (0.0, 0.0), fit_r: FitStats { r_squared: 0.908, permutation_p: 0.0005, residual_rms_sensel: 0.0651, n_regions: 514 }, fit_b: Some(FitStats { r_squared: 0.579, permutation_p: 0.0005, residual_rms_sensel: 0.152, n_regions: 1071 }), body_model: \"ILCE-7CM2\", lens_type3: 33094 }",
+      "delta_source_native": [
+        0.734533754227414,
+        -3.473531004194696
+      ],
+      "frame": 146,
+      "identity_lens_type3": 33094,
+      "identity_model": "ILCE-7CM2",
+      "retained": [
+        1322,
+        1096,
+        410,
+        412
+      ],
+      "source": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00147.ARW",
+      "stencils": [
+        {
+          "arm": "original",
+          "inclusive_source_bounds": [
+            1329,
+            1103,
+            1727,
+            1501
+          ],
+          "site": [
+            0,
+            0
+          ]
+        },
+        {
+          "arm": "original",
+          "inclusive_source_bounds": [
+            1327,
+            1102,
+            1726,
+            1501
+          ],
+          "site": [
+            1,
+            0
+          ]
+        },
+        {
+          "arm": "original",
+          "inclusive_source_bounds": [
+            1327,
+            1102,
+            1725,
+            1501
+          ],
+          "site": [
+            1,
+            1
+          ]
+        },
+        {
+          "arm": "corrected",
+          "inclusive_source_bounds": [
+            1329,
+            1099,
+            1727,
+            1498
+          ],
+          "site": [
+            0,
+            0
+          ]
+        },
+        {
+          "arm": "corrected",
+          "inclusive_source_bounds": [
+            1328,
+            1099,
+            1727,
+            1497
+          ],
+          "site": [
+            1,
+            0
+          ]
+        },
+        {
+          "arm": "corrected",
+          "inclusive_source_bounds": [
+            1328,
+            1099,
+            1726,
+            1497
+          ],
+          "site": [
+            1,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "ca": "OpticalProfile { key: \"a7c2-fe100gm-2xtc-x4cpl\", optical_path: \"Sony A7C II + FE 100mm F2.8 Macro GM + 2x Viltrox teleconverter + Breakthrough X4 circular polariser\", measured_from: \"M107 Instrument A: 20 gated ROIs over tweezers-cpl and bee-3-cpl (red); BUILD-CHROMA: 1071 gated tiles over six stacks (blue)\", measured_at: Some(\"f/5.6 (5 stacks) and f/8 (1 stack), 200 mm effective; f/11 untested\"), version: 1, support_r_max: Some(0.788), eps_r: -0.0005084, eps_b: Some(0.0001744), translation: (0.0, 0.0), fit_r: FitStats { r_squared: 0.908, permutation_p: 0.0005, residual_rms_sensel: 0.0651, n_regions: 514 }, fit_b: Some(FitStats { r_squared: 0.579, permutation_p: 0.0005, residual_rms_sensel: 0.152, n_regions: 1071 }), body_model: \"ILCE-7CM2\", lens_type3: 33094 }",
+      "delta_source_native": [
+        0.5212236011843451,
+        -2.225382963036051
+      ],
+      "frame": 147,
+      "identity_lens_type3": 33094,
+      "identity_model": "ILCE-7CM2",
+      "retained": [
+        1322,
+        1096,
+        410,
+        410
+      ],
+      "source": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00148.ARW",
+      "stencils": [
+        {
+          "arm": "original",
+          "inclusive_source_bounds": [
+            1329,
+            1102,
+            1727,
+            1500
+          ],
+          "site": [
+            0,
+            0
+          ]
+        },
+        {
+          "arm": "original",
+          "inclusive_source_bounds": [
+            1328,
+            1102,
+            1726,
+            1500
+          ],
+          "site": [
+            1,
+            0
+          ]
+        },
+        {
+          "arm": "original",
+          "inclusive_source_bounds": [
+            1327,
+            1102,
+            1726,
+            1500
+          ],
+          "site": [
+            1,
+            1
+          ]
+        },
+        {
+          "arm": "corrected",
+          "inclusive_source_bounds": [
+            1329,
+            1100,
+            1727,
+            1498
+          ],
+          "site": [
+            0,
+            0
+          ]
+        },
+        {
+          "arm": "corrected",
+          "inclusive_source_bounds": [
+            1328,
+            1099,
+            1727,
+            1498
+          ],
+          "site": [
+            1,
+            0
+          ]
+        },
+        {
+          "arm": "corrected",
+          "inclusive_source_bounds": [
+            1328,
+            1099,
+            1726,
+            1498
+          ],
+          "site": [
+            1,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "ca": "OpticalProfile { key: \"a7c2-fe100gm-2xtc-x4cpl\", optical_path: \"Sony A7C II + FE 100mm F2.8 Macro GM + 2x Viltrox teleconverter + Breakthrough X4 circular polariser\", measured_from: \"M107 Instrument A: 20 gated ROIs over tweezers-cpl and bee-3-cpl (red); BUILD-CHROMA: 1071 gated tiles over six stacks (blue)\", measured_at: Some(\"f/5.6 (5 stacks) and f/8 (1 stack), 200 mm effective; f/11 untested\"), version: 1, support_r_max: Some(0.788), eps_r: -0.0005084, eps_b: Some(0.0001744), translation: (0.0, 0.0), fit_r: FitStats { r_squared: 0.908, permutation_p: 0.0005, residual_rms_sensel: 0.0651, n_regions: 514 }, fit_b: Some(FitStats { r_squared: 0.579, permutation_p: 0.0005, residual_rms_sensel: 0.152, n_regions: 1071 }), body_model: \"ILCE-7CM2\", lens_type3: 33094 }",
+      "delta_source_native": [
+        0.2882349539056873,
+        -1.1110305695774787
+      ],
+      "frame": 148,
+      "identity_lens_type3": 33094,
+      "identity_model": "ILCE-7CM2",
+      "retained": [
+        1322,
+        1096,
+        410,
+        410
+      ],
+      "source": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00149.ARW",
+      "stencils": [
+        {
+          "arm": "original",
+          "inclusive_source_bounds": [
+            1329,
+            1102,
+            1727,
+            1500
+          ],
+          "site": [
+            0,
+            0
+          ]
+        },
+        {
+          "arm": "original",
+          "inclusive_source_bounds": [
+            1328,
+            1101,
+            1726,
+            1499
+          ],
+          "site": [
+            1,
+            0
+          ]
+        },
+        {
+          "arm": "original",
+          "inclusive_source_bounds": [
+            1328,
+            1101,
+            1726,
+            1499
+          ],
+          "site": [
+            1,
+            1
+          ]
+        },
+        {
+          "arm": "corrected",
+          "inclusive_source_bounds": [
+            1329,
+            1101,
+            1727,
+            1499
+          ],
+          "site": [
+            0,
+            0
+          ]
+        },
+        {
+          "arm": "corrected",
+          "inclusive_source_bounds": [
+            1328,
+            1100,
+            1726,
+            1498
+          ],
+          "site": [
+            1,
+            0
+          ]
+        },
+        {
+          "arm": "corrected",
+          "inclusive_source_bounds": [
+            1328,
+            1100,
+            1726,
+            1498
+          ],
+          "site": [
+            1,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "ca": "OpticalProfile { key: \"a7c2-fe100gm-2xtc-x4cpl\", optical_path: \"Sony A7C II + FE 100mm F2.8 Macro GM + 2x Viltrox teleconverter + Breakthrough X4 circular polariser\", measured_from: \"M107 Instrument A: 20 gated ROIs over tweezers-cpl and bee-3-cpl (red); BUILD-CHROMA: 1071 gated tiles over six stacks (blue)\", measured_at: Some(\"f/5.6 (5 stacks) and f/8 (1 stack), 200 mm effective; f/11 untested\"), version: 1, support_r_max: Some(0.788), eps_r: -0.0005084, eps_b: Some(0.0001744), translation: (0.0, 0.0), fit_r: FitStats { r_squared: 0.908, permutation_p: 0.0005, residual_rms_sensel: 0.0651, n_regions: 514 }, fit_b: Some(FitStats { r_squared: 0.579, permutation_p: 0.0005, residual_rms_sensel: 0.152, n_regions: 1071 }), body_model: \"ILCE-7CM2\", lens_type3: 33094 }",
+      "delta_source_native": [
+        0.0,
+        0.0
+      ],
+      "frame": 149,
+      "identity_lens_type3": 33094,
+      "identity_model": "ILCE-7CM2",
+      "retained": [
+        1324,
+        1096,
+        410,
+        408
+      ],
+      "source": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00150.ARW",
+      "stencils": [
+        {
+          "arm": "original",
+          "inclusive_source_bounds": [
+            1330,
+            1101,
+            1727,
+            1499
+          ],
+          "site": [
+            0,
+            0
+          ]
+        },
+        {
+          "arm": "original",
+          "inclusive_source_bounds": [
+            1328,
+            1100,
+            1727,
+            1499
+          ],
+          "site": [
+            1,
+            0
+          ]
+        },
+        {
+          "arm": "original",
+          "inclusive_source_bounds": [
+            1328,
+            1100,
+            1726,
+            1498
+          ],
+          "site": [
+            1,
+            1
+          ]
+        },
+        {
+          "arm": "corrected",
+          "inclusive_source_bounds": [
+            1330,
+            1101,
+            1727,
+            1499
+          ],
+          "site": [
+            0,
+            0
+          ]
+        },
+        {
+          "arm": "corrected",
+          "inclusive_source_bounds": [
+            1328,
+            1100,
+            1727,
+            1499
+          ],
+          "site": [
+            1,
+            0
+          ]
+        },
+        {
+          "arm": "corrected",
+          "inclusive_source_bounds": [
+            1328,
+            1100,
+            1726,
+            1498
+          ],
+          "site": [
+            1,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "ca": "OpticalProfile { key: \"a7c2-fe100gm-2xtc-x4cpl\", optical_path: \"Sony A7C II + FE 100mm F2.8 Macro GM + 2x Viltrox teleconverter + Breakthrough X4 circular polariser\", measured_from: \"M107 Instrument A: 20 gated ROIs over tweezers-cpl and bee-3-cpl (red); BUILD-CHROMA: 1071 gated tiles over six stacks (blue)\", measured_at: Some(\"f/5.6 (5 stacks) and f/8 (1 stack), 200 mm effective; f/11 untested\"), version: 1, support_r_max: Some(0.788), eps_r: -0.0005084, eps_b: Some(0.0001744), translation: (0.0, 0.0), fit_r: FitStats { r_squared: 0.908, permutation_p: 0.0005, residual_rms_sensel: 0.0651, n_regions: 514 }, fit_b: Some(FitStats { r_squared: 0.579, permutation_p: 0.0005, residual_rms_sensel: 0.152, n_regions: 1071 }), body_model: \"ILCE-7CM2\", lens_type3: 33094 }",
+      "delta_source_native": [
+        -0.13582581064956387,
+        0.7519844343992973
+      ],
+      "frame": 150,
+      "identity_lens_type3": 33094,
+      "identity_model": "ILCE-7CM2",
+      "retained": [
+        1324,
+        1094,
+        410,
+        410
+      ],
+      "source": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00151.ARW",
+      "stencils": [
+        {
+          "arm": "original",
+          "inclusive_source_bounds": [
+            1330,
+            1101,
+            1728,
+            1499
+          ],
+          "site": [
+            0,
+            0
+          ]
+        },
+        {
+          "arm": "original",
+          "inclusive_source_bounds": [
+            1329,
+            1100,
+            1727,
+            1498
+          ],
+          "site": [
+            1,
+            0
+          ]
+        },
+        {
+          "arm": "original",
+          "inclusive_source_bounds": [
+            1328,
+            1100,
+            1726,
+            1498
+          ],
+          "site": [
+            1,
+            1
+          ]
+        },
+        {
+          "arm": "corrected",
+          "inclusive_source_bounds": [
+            1330,
+            1102,
+            1727,
+            1499
+          ],
+          "site": [
+            0,
+            0
+          ]
+        },
+        {
+          "arm": "corrected",
+          "inclusive_source_bounds": [
+            1329,
+            1101,
+            1727,
+            1499
+          ],
+          "site": [
+            1,
+            0
+          ]
+        },
+        {
+          "arm": "corrected",
+          "inclusive_source_bounds": [
+            1328,
+            1101,
+            1726,
+            1499
+          ],
+          "site": [
+            1,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "ca": "OpticalProfile { key: \"a7c2-fe100gm-2xtc-x4cpl\", optical_path: \"Sony A7C II + FE 100mm F2.8 Macro GM + 2x Viltrox teleconverter + Breakthrough X4 circular polariser\", measured_from: \"M107 Instrument A: 20 gated ROIs over tweezers-cpl and bee-3-cpl (red); BUILD-CHROMA: 1071 gated tiles over six stacks (blue)\", measured_at: Some(\"f/5.6 (5 stacks) and f/8 (1 stack), 200 mm effective; f/11 untested\"), version: 1, support_r_max: Some(0.788), eps_r: -0.0005084, eps_b: Some(0.0001744), translation: (0.0, 0.0), fit_r: FitStats { r_squared: 0.908, permutation_p: 0.0005, residual_rms_sensel: 0.0651, n_regions: 514 }, fit_b: Some(FitStats { r_squared: 0.579, permutation_p: 0.0005, residual_rms_sensel: 0.152, n_regions: 1071 }), body_model: \"ILCE-7CM2\", lens_type3: 33094 }",
+      "delta_source_native": [
+        -0.32182696945364636,
+        1.609306681752569
+      ],
+      "frame": 151,
+      "identity_lens_type3": 33094,
+      "identity_model": "ILCE-7CM2",
+      "retained": [
+        1324,
+        1094,
+        410,
+        410
+      ],
+      "source": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00152.ARW",
+      "stencils": [
+        {
+          "arm": "original",
+          "inclusive_source_bounds": [
+            1330,
+            1100,
+            1728,
+            1498
+          ],
+          "site": [
+            0,
+            0
+          ]
+        },
+        {
+          "arm": "original",
+          "inclusive_source_bounds": [
+            1329,
+            1100,
+            1727,
+            1498
+          ],
+          "site": [
+            1,
+            0
+          ]
+        },
+        {
+          "arm": "original",
+          "inclusive_source_bounds": [
+            1329,
+            1100,
+            1727,
+            1498
+          ],
+          "site": [
+            1,
+            1
+          ]
+        },
+        {
+          "arm": "corrected",
+          "inclusive_source_bounds": [
+            1330,
+            1102,
+            1728,
+            1500
+          ],
+          "site": [
+            0,
+            0
+          ]
+        },
+        {
+          "arm": "corrected",
+          "inclusive_source_bounds": [
+            1329,
+            1101,
+            1727,
+            1499
+          ],
+          "site": [
+            1,
+            0
+          ]
+        },
+        {
+          "arm": "corrected",
+          "inclusive_source_bounds": [
+            1328,
+            1101,
+            1726,
+            1499
+          ],
+          "site": [
+            1,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "ca": "OpticalProfile { key: \"a7c2-fe100gm-2xtc-x4cpl\", optical_path: \"Sony A7C II + FE 100mm F2.8 Macro GM + 2x Viltrox teleconverter + Breakthrough X4 circular polariser\", measured_from: \"M107 Instrument A: 20 gated ROIs over tweezers-cpl and bee-3-cpl (red); BUILD-CHROMA: 1071 gated tiles over six stacks (blue)\", measured_at: Some(\"f/5.6 (5 stacks) and f/8 (1 stack), 200 mm effective; f/11 untested\"), version: 1, support_r_max: Some(0.788), eps_r: -0.0005084, eps_b: Some(0.0001744), translation: (0.0, 0.0), fit_r: FitStats { r_squared: 0.908, permutation_p: 0.0005, residual_rms_sensel: 0.0651, n_regions: 514 }, fit_b: Some(FitStats { r_squared: 0.579, permutation_p: 0.0005, residual_rms_sensel: 0.152, n_regions: 1071 }), body_model: \"ILCE-7CM2\", lens_type3: 33094 }",
+      "delta_source_native": [
+        -0.49768813315609584,
+        2.627875100743808
+      ],
+      "frame": 152,
+      "identity_lens_type3": 33094,
+      "identity_model": "ILCE-7CM2",
+      "retained": [
+        1324,
+        1094,
+        410,
+        410
+      ],
+      "source": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00153.ARW",
+      "stencils": [
+        {
+          "arm": "original",
+          "inclusive_source_bounds": [
+            1330,
+            1100,
+            1728,
+            1498
+          ],
+          "site": [
+            0,
+            0
+          ]
+        },
+        {
+          "arm": "original",
+          "inclusive_source_bounds": [
+            1329,
+            1099,
+            1727,
+            1497
+          ],
+          "site": [
+            1,
+            0
+          ]
+        },
+        {
+          "arm": "original",
+          "inclusive_source_bounds": [
+            1329,
+            1099,
+            1727,
+            1497
+          ],
+          "site": [
+            1,
+            1
+          ]
+        },
+        {
+          "arm": "corrected",
+          "inclusive_source_bounds": [
+            1330,
+            1103,
+            1728,
+            1500
+          ],
+          "site": [
+            0,
+            0
+          ]
+        },
+        {
+          "arm": "corrected",
+          "inclusive_source_bounds": [
+            1329,
+            1102,
+            1727,
+            1500
+          ],
+          "site": [
+            1,
+            0
+          ]
+        },
+        {
+          "arm": "corrected",
+          "inclusive_source_bounds": [
+            1328,
+            1102,
+            1726,
+            1500
+          ],
+          "site": [
+            1,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "ca": "OpticalProfile { key: \"a7c2-fe100gm-2xtc-x4cpl\", optical_path: \"Sony A7C II + FE 100mm F2.8 Macro GM + 2x Viltrox teleconverter + Breakthrough X4 circular polariser\", measured_from: \"M107 Instrument A: 20 gated ROIs over tweezers-cpl and bee-3-cpl (red); BUILD-CHROMA: 1071 gated tiles over six stacks (blue)\", measured_at: Some(\"f/5.6 (5 stacks) and f/8 (1 stack), 200 mm effective; f/11 untested\"), version: 1, support_r_max: Some(0.788), eps_r: -0.0005084, eps_b: Some(0.0001744), translation: (0.0, 0.0), fit_r: FitStats { r_squared: 0.908, permutation_p: 0.0005, residual_rms_sensel: 0.0651, n_regions: 514 }, fit_b: Some(FitStats { r_squared: 0.579, permutation_p: 0.0005, residual_rms_sensel: 0.152, n_regions: 1071 }), body_model: \"ILCE-7CM2\", lens_type3: 33094 }",
+      "delta_source_native": [
+        -0.7708538182772289,
+        3.6113268916132455
+      ],
+      "frame": 153,
+      "identity_lens_type3": 33094,
+      "identity_model": "ILCE-7CM2",
+      "retained": [
+        1324,
+        1094,
+        410,
+        410
+      ],
+      "source": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00154.ARW",
+      "stencils": [
+        {
+          "arm": "original",
+          "inclusive_source_bounds": [
+            1331,
+            1099,
+            1728,
+            1497
+          ],
+          "site": [
+            0,
+            0
+          ]
+        },
+        {
+          "arm": "original",
+          "inclusive_source_bounds": [
+            1330,
+            1099,
+            1727,
+            1497
+          ],
+          "site": [
+            1,
+            0
+          ]
+        },
+        {
+          "arm": "original",
+          "inclusive_source_bounds": [
+            1329,
+            1099,
+            1727,
+            1496
+          ],
+          "site": [
+            1,
+            1
+          ]
+        },
+        {
+          "arm": "corrected",
+          "inclusive_source_bounds": [
+            1330,
+            1103,
+            1728,
+            1501
+          ],
+          "site": [
+            0,
+            0
+          ]
+        },
+        {
+          "arm": "corrected",
+          "inclusive_source_bounds": [
+            1329,
+            1102,
+            1727,
+            1500
+          ],
+          "site": [
+            1,
+            0
+          ]
+        },
+        {
+          "arm": "corrected",
+          "inclusive_source_bounds": [
+            1329,
+            1102,
+            1726,
+            1500
+          ],
+          "site": [
+            1,
+            1
+          ]
+        }
+      ]
+    }
+  ],
+  "tone_bits": [
+    999074891,
+    1064454645,
+    1057803469
+  ],
+  "viewing_trim": 32,
+  "wb_bits": [
+    1070374912,
+    1065353216,
+    1076715520
+  ]
+}

@@ -43,14 +43,27 @@ Green remains much better conditioned. These are matrices of estimated
 positions, not independent measurements of true sampling diversity or proof
 of its contribution to the reconstruction failure.
 
-**Next decision: carry the local placement improvement into the actual merge
-consumer, with spatially restricted scope.** A crop-local fit must not become
-an unrestricted whole-image warp. Product integration and performance remain
-unproved; no new default is promoted. Preserve RAW u16 storage, injected camera
-noise, original saturation provenance and consumption-time sampling.
+**The local improvement now survives the actual merge kernels.** A fresh test
+build uses the original native gather, current gear-matched CA correction,
+injected noise, probe, band weighting, collapse and output writer. Both
+reviewers see clearer ladder separation and better-defined crossings after the
+correction, without an obvious lost structure. Colour fringes and speckle
+remain. Complete source support passes; changing unsupported buffer values
+from black to white leaves every collapsed f32 value and both output TIFFs
+exactly unchanged. Original pixel data is not decoded again; source metadata
+is read through the existing capture-identity path.
+
+The limitation is explicit: this is the same eight-frame cropped consumer in
+both arms, with four Laplacian levels supported by the saved footprint. It does
+not reproduce the seven-band, 299-frame output. Next, spatial refinement must
+be tested with full context and another scene. A crop-local fit must not become
+an unrestricted whole-image warp. No default is promoted. The revised program
+is in docs/proposals/2026-09-quality-path.md; the completed inverse work is
+committed at a0febf209ce9f38649e40fc39a6f7cf3abf4a243.
 
 Detailed evidence: results.md, final-eight-frame-photographic-verdict.md,
-local-green-translation-review.md, joint-backprojection-verdict.md,
+local-green-translation-review.md, local-placement-consumer-photographic-verdict.md,
+local-placement-consumer-review.md, joint-backprojection-verdict.md,
 mhc-catmull-sampler-controls-1.json and chip-corrected-sample-diversity-1.json.
 All recent numerical/image work reuses small saved patches. Original captures
 remain read only.

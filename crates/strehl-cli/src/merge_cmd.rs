@@ -4882,6 +4882,11 @@ pub(crate) mod matched_source_tests {
     include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/quality-september14/matched-source-tests.rs"));
 }
 
+#[cfg(all(test, feature = "native-direct-planes"))]
+mod local_placement_consumer_tests {
+    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/quality-september14/local-placement-consumer-tests.rs"));
+}
+
 impl BandWorker {
     fn new(domain: PyramidDomain, cfg: MergeConfig) -> Self {
         let geom = domain.analysis();

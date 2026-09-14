@@ -1,0 +1,65 @@
+{
+  "command": [
+    "cargo",
+    "test",
+    "-p",
+    "strehl-cli",
+    "--bin",
+    "strehl",
+    "--no-run",
+    "--release",
+    "--features",
+    "native-pyramid-profile,native-gpu-gather,native-direct-planes",
+    "--jobs",
+    "2",
+    "--target-dir",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\target\\native-pyramid-profile",
+    "--message-format=json-render-diagnostics",
+    "--locked",
+    "--offline"
+  ],
+  "source_files": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\Cargo.lock",
+      "sha256": "ea23b6dc6afc5fb9f1b12d08f065083ba77a75425b2a0b000d3f3a8466696efa",
+      "bytes": 64738
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-cli\\src\\image_out.rs",
+      "sha256": "b1bb4674337f5396e92f8fff027724e246df904faf5257b1753683a26c64c9e9",
+      "bytes": 132206
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-cli\\src\\main.rs",
+      "sha256": "176b95f4669ac9c40e70a0498db4233c4695fda80f3f6b8e1d80a9763101627d",
+      "bytes": 88555
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-cli\\src\\merge_cmd.rs",
+      "sha256": "6648b2c2efbf1ee9172c1941407e17bf6fce3883d84844fbd2781302d0bf7a8a",
+      "bytes": 449213
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-core\\src\\demosaic.rs",
+      "sha256": "91f736847c55f9f0658c92de4c3d0065f76fa03126f600e4f8468f61a3564784",
+      "bytes": 52295
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\build-local-placement.py",
+      "sha256": "6a05c83208dc08d5b39eb609d91fa6505b0cb2b4bb19f2603145a31c8d0b2241",
+      "bytes": 3415
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\local-placement-consumer-tests.rs",
+      "sha256": "45ee57e0ff1dca0f7be620fb4cd9f04aa14a399326509c65d753eb2a3bbb069a",
+      "bytes": 18220
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\matched-source-tests.rs",
+      "sha256": "093e25703bd86a303c95edbc557c253359365557d396364baa7dbdb9b6782111",
+      "bytes": 11457
+    }
+  ],
+  "removed_environment": [],
+  "scope": "Compile test binary only. No RAW decoding, image experiment or timing comparison."
+}

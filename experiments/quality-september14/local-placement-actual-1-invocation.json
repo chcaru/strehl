@@ -1,0 +1,42 @@
+{
+  "command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\local-placement-build-2\\cli-tests.exe",
+    "merge_cmd::local_placement_consumer_tests::local_placement_actual_consumer",
+    "--exact",
+    "--ignored",
+    "--nocapture",
+    "--test-threads=1"
+  ],
+  "environment": {
+    "RAYON_NUM_THREADS": "8",
+    "STREHL_PYRAMID_WORKERS": "8",
+    "STREHL_FULLRES_GATHER": "1",
+    "STREHL_DIRECT_PLANES": "rounded",
+    "STREHL_PROBE_GATHER": "green",
+    "STREHL_WARP_WRITEBACK": "parallel",
+    "STREHL_GPU_GATHER": "on",
+    "STREHL_GPU_SCHEDULE": "device",
+    "STREHL_GPU_GATHER_LOG": "off",
+    "STREHL_DEFECT": "off",
+    "STREHL_LOCAL_PLACEMENT_CONFIG": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\local-placement-consumer-inputs-1\\config.json"
+  },
+  "removed_environment": [],
+  "executable": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\local-placement-build-2\\cli-tests.exe",
+    "sha256": "d3a2e443a70c9e8434c7b52ac4ed1e27403df3899a67cd654aa6563754bdc6af",
+    "bytes": 22126592
+  },
+  "runner": {
+    "sha256": "1107eaae2f90181c32f2598f9816d6f13d1756f6c7f2681d230bb2d6bbded0dc",
+    "bytes": 4224
+  },
+  "config": {
+    "sha256": "59230b6fd4cb92ed091448c3cf8ae7f8cfb951be3ac1566f3aa33fdf1ee8d7fb",
+    "bytes": 270
+  },
+  "manifest": {
+    "sha256": "f329c7d8f304e12b2d3b2f2548fb571793f6a651e8fbda2dbdc2009af5a81066",
+    "bytes": 9985
+  },
+  "scope": "Eight saved CFA patches. Original file metadata may be queried for current CA identity; no original pixel decode."
+}

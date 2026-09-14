@@ -1,0 +1,25 @@
+# Independent review of the cropped placement consumer
+
+VERIFIED by source review and inspection of saved outputs. No original RAW was read, decoded or reprocessed for this independent review. The runtime audit command was `python -I -B experiments/quality-september14/local-placement-independent-check.py`; its result and artifact hashes are in `local-placement-consumer-independent-runtime.json`.
+
+## Source choices and powered refusals
+
+The adapter uses the existing `BandWorker::fold`, native rounded full-resolution gather, current noise probe, `BandMerge::finish` and actual output writer. It preserves original indices 146–153 and a 299-entry source/map address space, so probe seeds and reference 149 retain their original meaning. The full plane geometry is 3516x2344; plane crop (666,552,196,196) is native crop (1332,1104,392,392). Source-native corrections enter as delta/2 in plane translation before the current per-channel CA composition. They are not output-coordinate offsets or photometric corrections.
+
+The initial reference assertion was incorrect: the saved reference is near identity, not canonical identity. This review caught that choice; the completed adapter preserves all four original f64 transform bits and requires zero correction at reference 149. Final reviewed adapter SHA256 is `45ee57e0ff1dca0f7be620fb4cd9f04aa14a399326509c65d753eb2a3bbb069a`. The subsequent digest-formatting repair did not change image arithmetic.
+
+Complete support is checked in the full sensor gauge for every native output position and each R/G/B CA pull. The conservative source interval covers Catmull support -1..+2 and MHC radius two, including a 1e-7 native-coordinate guard. The preflight contains actual refusals for an identity crop lacking that stencil margin and a fixed 32-native-pixel translation outside retained support. They passed in `local-placement-preflight-1.log`; all 48 recorded real support boxes lie inside the retained patches. Testing all parities for each colour is conservative.
+
+Original paths deliberately reach `strehl_raw::identity` (`crates/strehl-raw/src/identity.rs:194`), the existing bounded TIFF metadata reader, and then `profile_for_capture_env`. These are authorized metadata reads; the adapter's pixel source only copies hashed saved u16 samples into the active sensor rectangle. Every recorded identity is ILCE-7CM2 / LensType3 33094 and resolves the existing profile with eps_r=-0.0005084 and eps_b=0.0001744. The runner clears inherited STREHL_ variables, including hull and CA overrides, before installing its explicit environment.
+
+The injected ISO100 profile is checked against the manifest for every CFA plane. WB and black/white levels retain the actual consumer's normalization, and the viewing tone is held across arms. Four Laplacian bands really execute at sizes 196,98,49,25 with a 13-pixel base, despite requesting seven. The probe records three finite band gains and uses the existing white-gain fallback for the fourth; this is not four measured probe gains. Geometry can change those measured gains legitimately while the injected source noise model remains fixed.
+
+## Completed runtime and independent saved-file audit
+
+The actual consumer exits successfully with no cleanup errors and zero remaining child processes. Its four arms take 6.203 wall seconds and 16.734375 user+kernel child CPU seconds. GPU work is outside CPU accounting. These are operational costs for one bounded run, with no arm timing comparison or full-stack speed inference.
+
+Independent byte comparisons confirm black-512 versus white-15360 filler equality within each geometry arm for all collapsed planes, normalized CFA, MHC camera RGB, camera-linear TIFF, interleave-control TIFF and developed TIFF. All 153,664 collapsed f32 words agree. Actual-file hashes match the receipt; each interleave-control TIFF also equals its actual-writer TIFF. Original versus corrected arrays change 153,322 words: treatment liveness, not a quality score.
+
+I independently chose the asymmetric odd-origin native subregion (73,91,117,83), inside the viewing trim, and addressed its CFA samples using global parity. All 9,711 samples exactly match the saved normalized CFA in each arm. Exchanging the two green planes produces 4,853 mismatches per arm, and exchanging x/y crop origins also fails, so these order/region checks have power to reject. The corresponding developed TIFF regions are exactly filler-invariant. No reconstruction or image-quality metric was rerun.
+
+No factual or qualifier drift was found in the appended results section or revised current status. Their photographic claim agrees with the separate native-view verdict: clearer local placement, with persistent colour fringes and speckle and no newly resolved-feature claim. The result applies to these same eight frames, replicated crop boundaries and four Laplacian bands. It does not reproduce the seven-band 299-frame product, establish global alignment truth, or promote a default. Filler invariance establishes independence from unsupplied buffer values; it does not establish equivalence to a full-context pyramid.

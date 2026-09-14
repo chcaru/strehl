@@ -1,0 +1,47 @@
+{
+  "status": "SAVED_OUTPUT_AUDIT_PASS",
+  "command": "python -I -B experiments/quality-september14/local-placement-independent-check.py",
+  "script_sha256": "34a9abb983af79b0070e90229ec1f7174ffacbf27df8bea491a2a0b7e9add685",
+  "receipt_sha256": "9420b8366e5e43e11bfc3680606a15a8b925566208941d5234566e85d30359ba",
+  "region_native_xywh": [
+    73,
+    91,
+    117,
+    83
+  ],
+  "all_black_white_artifacts_byte_exact": true,
+  "changed_collapsed_f32_words": 153322,
+  "rows": [
+    {
+      "arm": "original",
+      "hashes": {
+        "collapsed-planes.f32": "d437879d2a06a26dc00232a1556440b97a61f4247ea6a46daab2b913a5ef275c",
+        "cfa.f32": "8dc893a9faef294ef037a11a365f793af468365212ca337234cd252ebad27472",
+        "mhc-camera-rgb.f32": "06df7c07df13868c81da8b5c7e96c3aa4c4966259bc3eda880c1e83c083f41ca",
+        "camera-linear.tiff": "449309f1b4e2c38bc515152f5463b9e5bb9c974735ba8f92bf8e7c23410f7d44",
+        "interleave-control.tiff": "449309f1b4e2c38bc515152f5463b9e5bb9c974735ba8f92bf8e7c23410f7d44",
+        "product.tiff": "f786f392915bffe9e1755bb63678a1df2269890b22618e9a3427e98c44cf00be"
+      },
+      "cfa_region_words_exact": 9711,
+      "swapped_green_plane_mismatches": 4853,
+      "swapped_xy_region_rejected": true
+    },
+    {
+      "arm": "corrected",
+      "hashes": {
+        "collapsed-planes.f32": "8902f66c0e1a53caab1aa9c0fddb0ba2e5dba9f49feaa219f2fa5fcbdd4487a8",
+        "cfa.f32": "1f1c328a135106442336890c8482bf40743d8894968a7a297119087396fc2a05",
+        "mhc-camera-rgb.f32": "cf68a964dd437e936ca15b91794de814da984f05fe3af68659ed938278497fb9",
+        "camera-linear.tiff": "4a5e331ee26b7574e25169fd1f9329f892f5c52795b39f8784e584ecb18009fa",
+        "interleave-control.tiff": "4a5e331ee26b7574e25169fd1f9329f892f5c52795b39f8784e584ecb18009fa",
+        "product.tiff": "53259fac68f9fab4ff1a3bfd1daeebfc2de4e406a1e914cf307c3ec4aca78016"
+      },
+      "cfa_region_words_exact": 9711,
+      "swapped_green_plane_mismatches": 4853,
+      "swapped_xy_region_rejected": true
+    }
+  ],
+  "wall_seconds": 6.202999999994063,
+  "child_cpu_seconds": 16.734375,
+  "scope": "Saved artifacts only; no RAW decode, reconstruction, quality metric, or speed comparison."
+}
