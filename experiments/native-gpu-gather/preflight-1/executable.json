@@ -1,0 +1,44 @@
+{
+  "executable": {
+    "path": "experiments\\native-gpu-gather\\preflight-1\\native-gpu-preflight.exe",
+    "sha256": "ecf582748d244e781f47c7b41c7e163375db6bd316abefcecdeedbc330557a49",
+    "bytes": 7183872
+  },
+  "cargo_artifact": {
+    "reason": "compiler-artifact",
+    "package_id": "path+file:///C:/dev/blog/death-of-software/projects/strehl/crates/strehl-cli#0.0.0",
+    "manifest_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-cli\\Cargo.toml",
+    "target": {
+      "kind": [
+        "example"
+      ],
+      "crate_types": [
+        "bin"
+      ],
+      "name": "native-gpu-preflight",
+      "src_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-cli\\examples\\native-gpu-preflight.rs",
+      "edition": "2024",
+      "doc": false,
+      "doctest": false,
+      "test": false
+    },
+    "profile": {
+      "opt_level": "3",
+      "debuginfo": 0,
+      "debug_assertions": false,
+      "overflow_checks": false,
+      "test": true
+    },
+    "features": [
+      "native-direct-planes",
+      "native-gpu-gather",
+      "native-pyramid-profile"
+    ],
+    "filenames": [
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\target\\native-pyramid-profile\\release\\examples\\native_gpu_preflight-d0b2938347aaa1e9.exe",
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\target\\native-pyramid-profile\\release\\examples\\native_gpu_preflight-d0b2938347aaa1e9.pdb"
+    ],
+    "executable": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\target\\native-pyramid-profile\\release\\examples\\native_gpu_preflight-d0b2938347aaa1e9.exe",
+    "fresh": false
+  }
+}

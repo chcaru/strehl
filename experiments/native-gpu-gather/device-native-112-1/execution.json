@@ -1,0 +1,56 @@
+{
+  "source": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-gpu-gather\\run-device-native.py",
+    "sha256": "c7498c84ab838429fcc887391bb22d2476a5bc23d44dc96058d98e1a5c99eaf0",
+    "bytes": 9285
+  },
+  "protocol": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-gpu-gather\\execution-6.md",
+    "sha256": "b3a6098e46e66d09647c7f6ba899bcf7d09a4da11a647003bbed9619c8c9a289",
+    "bytes": 2668
+  },
+  "revision": "36b91f0e5ced8f09c37d0325c987fe55e4e652cb",
+  "build": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-gpu-gather\\build-native-6\\invocation.json",
+    "sha256": "a9afed55f2f1d67d140229d61de658084ab3b1769bd180b17a1d4dd960f6bedb",
+    "bytes": 6757
+  },
+  "executable": {
+    "path": "experiments\\native-gpu-gather\\build-native-6\\strehl.exe",
+    "bytes": 17714688,
+    "sha256": "2fd0a1615989e262fbba61e0a1587a9b8f20ff4913d3969510e967ce9d9219d7"
+  },
+  "plan": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-pyramid-profile\\native-plan-1.json",
+    "sha256": "947b7fba499cf493d19c1c73f1374693256517983909b84e262d4312958ccf29",
+    "bytes": 4482
+  },
+  "map": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-pyramid-profile\\native\\112-eight.warpmap.json",
+    "sha256": "1bc98923196b82699eb62b35bbed7c2b9c7e37b5f4cec9140703c6155050dddc",
+    "bytes": 1557
+  },
+  "arms": [
+    [
+      "gpu",
+      "rounded",
+      "off",
+      "device"
+    ],
+    [
+      "gpu",
+      "rounded",
+      "on",
+      "device"
+    ],
+    [
+      "gpu",
+      "rounded",
+      "placebo",
+      "device"
+    ]
+  ],
+  "expected_whole": "ba96c63dd56f2729ba2ed25fedc19b291a4a78f9992f6823ce501a1df2a8bdc6",
+  "expected_decoded": "d5fd6969b77fc94334995dea771e434f65f2b3cf782e1d683ca2872639595a1a",
+  "scope": "fixed native consumer identity; timing excludes saved alignment solve"
+}

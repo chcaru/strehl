@@ -1,0 +1,1648 @@
+{
+  "active_case": null,
+  "adapter": "NVIDIA GeForce RTX 5090",
+  "backend": "Vulkan",
+  "coordinate_compilation": {
+    "added_capabilities": [
+      "SignedZeroInfNanPreserve",
+      "RoundingModeRTE"
+    ],
+    "arithmetic_results": 24,
+    "bindings": [
+      0,
+      1,
+      2
+    ],
+    "coefficient_guard": "every finite nonzero pull coefficient abs>=2^-900; unsafe actual frames use Parallel256; direct descriptor helper refuses",
+    "entry_point": "main",
+    "execution_modes": [
+      "SignedZeroInfNanPreserve 64",
+      "RoundingModeRTE 32",
+      "RoundingModeRTE 64"
+    ],
+    "hardware": {
+      "denorm_independence": 1,
+      "denorm_preserve_f64": false,
+      "rounding_independence": 1,
+      "rounding_rte_f32": true,
+      "rounding_rte_f64": true,
+      "shader_f64": true,
+      "signed_zero_inf_nan_preserve_f64": true,
+      "vulkan_api": 4211029
+    },
+    "original_extensions": [
+      "SPV_KHR_storage_buffer_storage_class"
+    ],
+    "original_sha256": "95eb96b66b3e680303fe461954a898cc7f6db199225f67d32eb1f249cd0be3eb",
+    "submitted_sha256": "232804bc0de39feb6d50d271d0ff83d10d650a890c9e215b3f21eef6feee4947",
+    "validation": "owned GLSL+Naga IR and original SPIR-V parse+IR; final fixed additions structurally checked with exact removal identity; final patched SPIR-V NOT fully Naga-validated and NOT spirv-val"
+  },
+  "device_type": "DiscreteGpu",
+  "expected_device_requests": 37,
+  "expected_rows": 41,
+  "f32_coordinate_destroyers_live": 16,
+  "gather_compilation": {
+    "added_decorations": 30,
+    "arithmetic_results": 30,
+    "bounds_policy": "Restrict indices/buffers/images/binding-arrays; integer division checks and loop bounds enabled",
+    "decorated_sha256": "a7dce2107ce7713ac4d9cd961dd44e303bd69b37c2d2ca7029f20aa1f131de9d",
+    "entry_points": [
+      "mhc",
+      "gather",
+      "quantize_vector"
+    ],
+    "float_operations": {
+      "FAdd": 8,
+      "FMul": 17,
+      "FSub": 5
+    },
+    "group_zero_bindings": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "max_buffer_size": 4294967295,
+    "max_storage_buffer_binding_size": 2147483644,
+    "no_contraction": true,
+    "original_sha256": "41658a89bd9b17c73b0f452b48bde689679e4ecc50774872ebfff0171cdb6560",
+    "submitted_sha256": "a7dce2107ce7713ac4d9cd961dd44e303bd69b37c2d2ca7029f20aa1f131de9d",
+    "validation": "embedded WGSL+IR; Naga SPIR-V parse+IR; structural decoration/removal identity; NOT spirv-val"
+  },
+  "rows": [
+    {
+      "actual_plans": 70,
+      "actual_source_f64_bits": 4609434218613698560,
+      "axis": 0,
+      "cpu_target_words": [
+        4294967295,
+        0,
+        0,
+        0
+      ],
+      "device_target_words": [
+        4294967295,
+        0,
+        0,
+        0
+      ],
+      "different": 0,
+      "expected_plans": 70,
+      "f32_coordinate_destroyer_live": true,
+      "f32_coordinate_words": [
+        1,
+        20,
+        1056964608,
+        0
+      ],
+      "first_difference": null,
+      "green_only": false,
+      "group": "boundary",
+      "height": 50,
+      "label": "axis0-at1.5-side-1",
+      "literal_expected_words": [
+        4294967295,
+        0,
+        0,
+        0
+      ],
+      "pass": true,
+      "rows": 1,
+      "shift_base_destroyer_live": false,
+      "source_target_exact": true,
+      "start": 20,
+      "target": 1.4999999999990905,
+      "target_f64_bits": 4609434218613698560,
+      "unconsumed": 0,
+      "valid": 66,
+      "width": 70
+    },
+    {
+      "actual_plans": 70,
+      "actual_source_f64_bits": 4609434218613702656,
+      "axis": 0,
+      "cpu_target_words": [
+        1,
+        20,
+        1056964608,
+        0
+      ],
+      "device_target_words": [
+        1,
+        20,
+        1056964608,
+        0
+      ],
+      "different": 0,
+      "expected_plans": 70,
+      "f32_coordinate_destroyer_live": false,
+      "f32_coordinate_words": [
+        1,
+        20,
+        1056964608,
+        0
+      ],
+      "first_difference": null,
+      "green_only": false,
+      "group": "boundary",
+      "height": 50,
+      "label": "axis0-at1.5-side0",
+      "literal_expected_words": [
+        1,
+        20,
+        1056964608,
+        0
+      ],
+      "pass": true,
+      "rows": 1,
+      "shift_base_destroyer_live": true,
+      "source_target_exact": true,
+      "start": 20,
+      "target": 1.5,
+      "target_f64_bits": 4609434218613702656,
+      "unconsumed": 0,
+      "valid": 67,
+      "width": 70
+    },
+    {
+      "actual_plans": 70,
+      "actual_source_f64_bits": 4609434218613706752,
+      "axis": 0,
+      "cpu_target_words": [
+        1,
+        20,
+        1056964608,
+        0
+      ],
+      "device_target_words": [
+        1,
+        20,
+        1056964608,
+        0
+      ],
+      "different": 0,
+      "expected_plans": 70,
+      "f32_coordinate_destroyer_live": false,
+      "f32_coordinate_words": [
+        1,
+        20,
+        1056964608,
+        0
+      ],
+      "first_difference": null,
+      "green_only": false,
+      "group": "boundary",
+      "height": 50,
+      "label": "axis0-at1.5-side1",
+      "literal_expected_words": [
+        1,
+        20,
+        1056964608,
+        0
+      ],
+      "pass": true,
+      "rows": 1,
+      "shift_base_destroyer_live": true,
+      "source_target_exact": true,
+      "start": 20,
+      "target": 1.5000000000009095,
+      "target_f64_bits": 4609434218613706752,
+      "unconsumed": 0,
+      "valid": 66,
+      "width": 70
+    },
+    {
+      "actual_plans": 70,
+      "actual_source_f64_bits": 4616189618054756352,
+      "axis": 0,
+      "cpu_target_words": [
+        3,
+        20,
+        1065353216,
+        0
+      ],
+      "device_target_words": [
+        3,
+        20,
+        1065353216,
+        0
+      ],
+      "different": 0,
+      "expected_plans": 70,
+      "f32_coordinate_destroyer_live": true,
+      "f32_coordinate_words": [
+        4,
+        20,
+        0,
+        0
+      ],
+      "first_difference": null,
+      "green_only": false,
+      "group": "boundary",
+      "height": 50,
+      "label": "axis0-at4-side-1",
+      "literal_expected_words": [
+        3,
+        20,
+        1065353216,
+        0
+      ],
+      "pass": true,
+      "rows": 1,
+      "shift_base_destroyer_live": true,
+      "source_target_exact": true,
+      "start": 20,
+      "target": 3.9999999999990905,
+      "target_f64_bits": 4616189618054756352,
+      "unconsumed": 0,
+      "valid": 64,
+      "width": 70
+    },
+    {
+      "actual_plans": 70,
+      "actual_source_f64_bits": 4616189618054758400,
+      "axis": 0,
+      "cpu_target_words": [
+        4,
+        20,
+        0,
+        0
+      ],
+      "device_target_words": [
+        4,
+        20,
+        0,
+        0
+      ],
+      "different": 0,
+      "expected_plans": 70,
+      "f32_coordinate_destroyer_live": false,
+      "f32_coordinate_words": [
+        4,
+        20,
+        0,
+        0
+      ],
+      "first_difference": null,
+      "green_only": false,
+      "group": "boundary",
+      "height": 50,
+      "label": "axis0-at4-side0",
+      "literal_expected_words": [
+        4,
+        20,
+        0,
+        0
+      ],
+      "pass": true,
+      "rows": 1,
+      "shift_base_destroyer_live": true,
+      "source_target_exact": true,
+      "start": 20,
+      "target": 4.0,
+      "target_f64_bits": 4616189618054758400,
+      "unconsumed": 0,
+      "valid": 64,
+      "width": 70
+    },
+    {
+      "actual_plans": 70,
+      "actual_source_f64_bits": 4616189618054759424,
+      "axis": 0,
+      "cpu_target_words": [
+        4,
+        20,
+        729808896,
+        0
+      ],
+      "device_target_words": [
+        4,
+        20,
+        729808896,
+        0
+      ],
+      "different": 0,
+      "expected_plans": 70,
+      "f32_coordinate_destroyer_live": true,
+      "f32_coordinate_words": [
+        4,
+        20,
+        0,
+        0
+      ],
+      "first_difference": null,
+      "green_only": false,
+      "group": "boundary",
+      "height": 50,
+      "label": "axis0-at4-side1",
+      "literal_expected_words": [
+        4,
+        20,
+        729808896,
+        0
+      ],
+      "pass": true,
+      "rows": 1,
+      "shift_base_destroyer_live": true,
+      "source_target_exact": true,
+      "start": 20,
+      "target": 4.0000000000009095,
+      "target_f64_bits": 4616189618054759424,
+      "unconsumed": 0,
+      "valid": 64,
+      "width": 70
+    },
+    {
+      "actual_plans": 70,
+      "actual_source_f64_bits": 4634450307168862144,
+      "axis": 0,
+      "cpu_target_words": [
+        67,
+        20,
+        1056964608,
+        0
+      ],
+      "device_target_words": [
+        67,
+        20,
+        1056964608,
+        0
+      ],
+      "different": 0,
+      "expected_plans": 70,
+      "f32_coordinate_destroyer_live": false,
+      "f32_coordinate_words": [
+        67,
+        20,
+        1056964608,
+        0
+      ],
+      "first_difference": null,
+      "green_only": false,
+      "group": "boundary",
+      "height": 50,
+      "label": "axis0-at67.5-side-1",
+      "literal_expected_words": [
+        67,
+        20,
+        1056964608,
+        0
+      ],
+      "pass": true,
+      "rows": 1,
+      "shift_base_destroyer_live": true,
+      "source_target_exact": true,
+      "start": 20,
+      "target": 67.49999999999909,
+      "target_f64_bits": 4634450307168862144,
+      "unconsumed": 0,
+      "valid": 1,
+      "width": 70
+    },
+    {
+      "actual_plans": 70,
+      "actual_source_f64_bits": 4634450307168862208,
+      "axis": 0,
+      "cpu_target_words": [
+        67,
+        20,
+        1056964608,
+        0
+      ],
+      "device_target_words": [
+        67,
+        20,
+        1056964608,
+        0
+      ],
+      "different": 0,
+      "expected_plans": 70,
+      "f32_coordinate_destroyer_live": false,
+      "f32_coordinate_words": [
+        67,
+        20,
+        1056964608,
+        0
+      ],
+      "first_difference": null,
+      "green_only": false,
+      "group": "boundary",
+      "height": 50,
+      "label": "axis0-at67.5-side0",
+      "literal_expected_words": [
+        67,
+        20,
+        1056964608,
+        0
+      ],
+      "pass": true,
+      "rows": 1,
+      "shift_base_destroyer_live": true,
+      "source_target_exact": true,
+      "start": 20,
+      "target": 67.5,
+      "target_f64_bits": 4634450307168862208,
+      "unconsumed": 0,
+      "valid": 1,
+      "width": 70
+    },
+    {
+      "actual_plans": 70,
+      "actual_source_f64_bits": 4634450307168862272,
+      "axis": 0,
+      "cpu_target_words": [
+        4294967295,
+        0,
+        0,
+        0
+      ],
+      "device_target_words": [
+        4294967295,
+        0,
+        0,
+        0
+      ],
+      "different": 0,
+      "expected_plans": 70,
+      "f32_coordinate_destroyer_live": true,
+      "f32_coordinate_words": [
+        67,
+        20,
+        1056964608,
+        0
+      ],
+      "first_difference": null,
+      "green_only": false,
+      "group": "boundary",
+      "height": 50,
+      "label": "axis0-at67.5-side1",
+      "literal_expected_words": [
+        4294967295,
+        0,
+        0,
+        0
+      ],
+      "pass": true,
+      "rows": 1,
+      "shift_base_destroyer_live": false,
+      "source_target_exact": true,
+      "start": 20,
+      "target": 67.50000000000091,
+      "target_f64_bits": 4634450307168862272,
+      "unconsumed": 0,
+      "valid": 0,
+      "width": 70
+    },
+    {
+      "actual_plans": 70,
+      "actual_source_f64_bits": 4616752568041733120,
+      "axis": 0,
+      "cpu_target_words": [
+        4,
+        20,
+        1056964608,
+        0
+      ],
+      "device_target_words": [
+        4,
+        20,
+        1056964608,
+        0
+      ],
+      "different": 0,
+      "expected_plans": 70,
+      "f32_coordinate_destroyer_live": false,
+      "f32_coordinate_words": [
+        4,
+        20,
+        1056964608,
+        0
+      ],
+      "first_difference": null,
+      "green_only": false,
+      "group": "f32-half-tie",
+      "height": 50,
+      "label": "axis0-parity0-side-1",
+      "literal_expected_words": [
+        4,
+        20,
+        1056964608,
+        0
+      ],
+      "pass": true,
+      "rows": 1,
+      "shift_base_destroyer_live": true,
+      "source_target_exact": true,
+      "start": 20,
+      "target": 4.500000029801413,
+      "target_f64_bits": 4616752568041733120,
+      "unconsumed": 0,
+      "valid": 63,
+      "width": 70
+    },
+    {
+      "actual_plans": 70,
+      "actual_source_f64_bits": 4616752568041734144,
+      "axis": 0,
+      "cpu_target_words": [
+        4,
+        20,
+        1056964608,
+        0
+      ],
+      "device_target_words": [
+        4,
+        20,
+        1056964608,
+        0
+      ],
+      "different": 0,
+      "expected_plans": 70,
+      "f32_coordinate_destroyer_live": false,
+      "f32_coordinate_words": [
+        4,
+        20,
+        1056964608,
+        0
+      ],
+      "first_difference": null,
+      "green_only": false,
+      "group": "f32-half-tie",
+      "height": 50,
+      "label": "axis0-parity0-side0",
+      "literal_expected_words": [
+        4,
+        20,
+        1056964608,
+        0
+      ],
+      "pass": true,
+      "rows": 1,
+      "shift_base_destroyer_live": true,
+      "source_target_exact": true,
+      "start": 20,
+      "target": 4.500000029802322,
+      "target_f64_bits": 4616752568041734144,
+      "unconsumed": 0,
+      "valid": 63,
+      "width": 70
+    },
+    {
+      "actual_plans": 70,
+      "actual_source_f64_bits": 4616752568041735168,
+      "axis": 0,
+      "cpu_target_words": [
+        4,
+        20,
+        1056964609,
+        0
+      ],
+      "device_target_words": [
+        4,
+        20,
+        1056964609,
+        0
+      ],
+      "different": 0,
+      "expected_plans": 70,
+      "f32_coordinate_destroyer_live": true,
+      "f32_coordinate_words": [
+        4,
+        20,
+        1056964608,
+        0
+      ],
+      "first_difference": null,
+      "green_only": false,
+      "group": "f32-half-tie",
+      "height": 50,
+      "label": "axis0-parity0-side1",
+      "literal_expected_words": [
+        4,
+        20,
+        1056964609,
+        0
+      ],
+      "pass": true,
+      "rows": 1,
+      "shift_base_destroyer_live": true,
+      "source_target_exact": true,
+      "start": 20,
+      "target": 4.500000029803232,
+      "target_f64_bits": 4616752568041735168,
+      "unconsumed": 0,
+      "valid": 63,
+      "width": 70
+    },
+    {
+      "actual_plans": 70,
+      "actual_source_f64_bits": 4616752568108841984,
+      "axis": 0,
+      "cpu_target_words": [
+        4,
+        20,
+        1056964609,
+        0
+      ],
+      "device_target_words": [
+        4,
+        20,
+        1056964609,
+        0
+      ],
+      "different": 0,
+      "expected_plans": 70,
+      "f32_coordinate_destroyer_live": true,
+      "f32_coordinate_words": [
+        4,
+        20,
+        1056964608,
+        0
+      ],
+      "first_difference": null,
+      "green_only": false,
+      "group": "f32-half-tie",
+      "height": 50,
+      "label": "axis0-parity1-side-1",
+      "literal_expected_words": [
+        4,
+        20,
+        1056964609,
+        0
+      ],
+      "pass": true,
+      "rows": 1,
+      "shift_base_destroyer_live": true,
+      "source_target_exact": true,
+      "start": 20,
+      "target": 4.500000089406058,
+      "target_f64_bits": 4616752568108841984,
+      "unconsumed": 0,
+      "valid": 63,
+      "width": 70
+    },
+    {
+      "actual_plans": 70,
+      "actual_source_f64_bits": 4616752568108843008,
+      "axis": 0,
+      "cpu_target_words": [
+        4,
+        20,
+        1056964610,
+        0
+      ],
+      "device_target_words": [
+        4,
+        20,
+        1056964610,
+        0
+      ],
+      "different": 0,
+      "expected_plans": 70,
+      "f32_coordinate_destroyer_live": true,
+      "f32_coordinate_words": [
+        4,
+        20,
+        1056964608,
+        0
+      ],
+      "first_difference": null,
+      "green_only": false,
+      "group": "f32-half-tie",
+      "height": 50,
+      "label": "axis0-parity1-side0",
+      "literal_expected_words": [
+        4,
+        20,
+        1056964610,
+        0
+      ],
+      "pass": true,
+      "rows": 1,
+      "shift_base_destroyer_live": true,
+      "source_target_exact": true,
+      "start": 20,
+      "target": 4.500000089406967,
+      "target_f64_bits": 4616752568108843008,
+      "unconsumed": 0,
+      "valid": 63,
+      "width": 70
+    },
+    {
+      "actual_plans": 70,
+      "actual_source_f64_bits": 4616752568108844032,
+      "axis": 0,
+      "cpu_target_words": [
+        4,
+        20,
+        1056964610,
+        0
+      ],
+      "device_target_words": [
+        4,
+        20,
+        1056964610,
+        0
+      ],
+      "different": 0,
+      "expected_plans": 70,
+      "f32_coordinate_destroyer_live": true,
+      "f32_coordinate_words": [
+        4,
+        20,
+        1056964608,
+        0
+      ],
+      "first_difference": null,
+      "green_only": false,
+      "group": "f32-half-tie",
+      "height": 50,
+      "label": "axis0-parity1-side1",
+      "literal_expected_words": [
+        4,
+        20,
+        1056964610,
+        0
+      ],
+      "pass": true,
+      "rows": 1,
+      "shift_base_destroyer_live": true,
+      "source_target_exact": true,
+      "start": 20,
+      "target": 4.500000089407877,
+      "target_f64_bits": 4616752568108844032,
+      "unconsumed": 0,
+      "valid": 63,
+      "width": 70
+    },
+    {
+      "actual_plans": 70,
+      "actual_source_f64_bits": 4609434218613698560,
+      "axis": 1,
+      "cpu_target_words": [
+        4294967295,
+        0,
+        0,
+        0
+      ],
+      "device_target_words": [
+        4294967295,
+        0,
+        0,
+        0
+      ],
+      "different": 0,
+      "expected_plans": 70,
+      "f32_coordinate_destroyer_live": true,
+      "f32_coordinate_words": [
+        20,
+        1,
+        0,
+        1056964608
+      ],
+      "first_difference": null,
+      "green_only": false,
+      "group": "boundary",
+      "height": 50,
+      "label": "axis1-at1.5-side-1",
+      "literal_expected_words": [
+        4294967295,
+        0,
+        0,
+        0
+      ],
+      "pass": true,
+      "rows": 1,
+      "shift_base_destroyer_live": false,
+      "source_target_exact": true,
+      "start": 0,
+      "target": 1.4999999999990905,
+      "target_f64_bits": 4609434218613698560,
+      "unconsumed": 0,
+      "valid": 0,
+      "width": 70
+    },
+    {
+      "actual_plans": 70,
+      "actual_source_f64_bits": 4609434218613702656,
+      "axis": 1,
+      "cpu_target_words": [
+        20,
+        1,
+        0,
+        1056964608
+      ],
+      "device_target_words": [
+        20,
+        1,
+        0,
+        1056964608
+      ],
+      "different": 0,
+      "expected_plans": 70,
+      "f32_coordinate_destroyer_live": false,
+      "f32_coordinate_words": [
+        20,
+        1,
+        0,
+        1056964608
+      ],
+      "first_difference": null,
+      "green_only": false,
+      "group": "boundary",
+      "height": 50,
+      "label": "axis1-at1.5-side0",
+      "literal_expected_words": [
+        20,
+        1,
+        0,
+        1056964608
+      ],
+      "pass": true,
+      "rows": 1,
+      "shift_base_destroyer_live": true,
+      "source_target_exact": true,
+      "start": 0,
+      "target": 1.5,
+      "target_f64_bits": 4609434218613702656,
+      "unconsumed": 0,
+      "valid": 66,
+      "width": 70
+    },
+    {
+      "actual_plans": 70,
+      "actual_source_f64_bits": 4609434218613706752,
+      "axis": 1,
+      "cpu_target_words": [
+        20,
+        1,
+        0,
+        1056964608
+      ],
+      "device_target_words": [
+        20,
+        1,
+        0,
+        1056964608
+      ],
+      "different": 0,
+      "expected_plans": 70,
+      "f32_coordinate_destroyer_live": false,
+      "f32_coordinate_words": [
+        20,
+        1,
+        0,
+        1056964608
+      ],
+      "first_difference": null,
+      "green_only": false,
+      "group": "boundary",
+      "height": 50,
+      "label": "axis1-at1.5-side1",
+      "literal_expected_words": [
+        20,
+        1,
+        0,
+        1056964608
+      ],
+      "pass": true,
+      "rows": 1,
+      "shift_base_destroyer_live": true,
+      "source_target_exact": true,
+      "start": 0,
+      "target": 1.5000000000009095,
+      "target_f64_bits": 4609434218613706752,
+      "unconsumed": 0,
+      "valid": 66,
+      "width": 70
+    },
+    {
+      "actual_plans": 70,
+      "actual_source_f64_bits": 4616189618054756352,
+      "axis": 1,
+      "cpu_target_words": [
+        20,
+        3,
+        0,
+        1065353216
+      ],
+      "device_target_words": [
+        20,
+        3,
+        0,
+        1065353216
+      ],
+      "different": 0,
+      "expected_plans": 70,
+      "f32_coordinate_destroyer_live": true,
+      "f32_coordinate_words": [
+        20,
+        4,
+        0,
+        0
+      ],
+      "first_difference": null,
+      "green_only": false,
+      "group": "boundary",
+      "height": 50,
+      "label": "axis1-at4-side-1",
+      "literal_expected_words": [
+        20,
+        3,
+        0,
+        1065353216
+      ],
+      "pass": true,
+      "rows": 1,
+      "shift_base_destroyer_live": true,
+      "source_target_exact": true,
+      "start": 0,
+      "target": 3.9999999999990905,
+      "target_f64_bits": 4616189618054756352,
+      "unconsumed": 0,
+      "valid": 66,
+      "width": 70
+    },
+    {
+      "actual_plans": 70,
+      "actual_source_f64_bits": 4616189618054758400,
+      "axis": 1,
+      "cpu_target_words": [
+        20,
+        4,
+        0,
+        0
+      ],
+      "device_target_words": [
+        20,
+        4,
+        0,
+        0
+      ],
+      "different": 0,
+      "expected_plans": 70,
+      "f32_coordinate_destroyer_live": false,
+      "f32_coordinate_words": [
+        20,
+        4,
+        0,
+        0
+      ],
+      "first_difference": null,
+      "green_only": false,
+      "group": "boundary",
+      "height": 50,
+      "label": "axis1-at4-side0",
+      "literal_expected_words": [
+        20,
+        4,
+        0,
+        0
+      ],
+      "pass": true,
+      "rows": 1,
+      "shift_base_destroyer_live": true,
+      "source_target_exact": true,
+      "start": 0,
+      "target": 4.0,
+      "target_f64_bits": 4616189618054758400,
+      "unconsumed": 0,
+      "valid": 66,
+      "width": 70
+    },
+    {
+      "actual_plans": 70,
+      "actual_source_f64_bits": 4616189618054759424,
+      "axis": 1,
+      "cpu_target_words": [
+        20,
+        4,
+        0,
+        729808896
+      ],
+      "device_target_words": [
+        20,
+        4,
+        0,
+        729808896
+      ],
+      "different": 0,
+      "expected_plans": 70,
+      "f32_coordinate_destroyer_live": true,
+      "f32_coordinate_words": [
+        20,
+        4,
+        0,
+        0
+      ],
+      "first_difference": null,
+      "green_only": false,
+      "group": "boundary",
+      "height": 50,
+      "label": "axis1-at4-side1",
+      "literal_expected_words": [
+        20,
+        4,
+        0,
+        729808896
+      ],
+      "pass": true,
+      "rows": 1,
+      "shift_base_destroyer_live": true,
+      "source_target_exact": true,
+      "start": 0,
+      "target": 4.0000000000009095,
+      "target_f64_bits": 4616189618054759424,
+      "unconsumed": 0,
+      "valid": 66,
+      "width": 70
+    },
+    {
+      "actual_plans": 70,
+      "actual_source_f64_bits": 4631881848006377344,
+      "axis": 1,
+      "cpu_target_words": [
+        20,
+        47,
+        0,
+        1056964608
+      ],
+      "device_target_words": [
+        20,
+        47,
+        0,
+        1056964608
+      ],
+      "different": 0,
+      "expected_plans": 70,
+      "f32_coordinate_destroyer_live": false,
+      "f32_coordinate_words": [
+        20,
+        47,
+        0,
+        1056964608
+      ],
+      "first_difference": null,
+      "green_only": false,
+      "group": "boundary",
+      "height": 50,
+      "label": "axis1-at47.5-side-1",
+      "literal_expected_words": [
+        20,
+        47,
+        0,
+        1056964608
+      ],
+      "pass": true,
+      "rows": 1,
+      "shift_base_destroyer_live": true,
+      "source_target_exact": true,
+      "start": 0,
+      "target": 47.49999999999909,
+      "target_f64_bits": 4631881848006377344,
+      "unconsumed": 0,
+      "valid": 66,
+      "width": 70
+    },
+    {
+      "actual_plans": 70,
+      "actual_source_f64_bits": 4631881848006377472,
+      "axis": 1,
+      "cpu_target_words": [
+        20,
+        47,
+        0,
+        1056964608
+      ],
+      "device_target_words": [
+        20,
+        47,
+        0,
+        1056964608
+      ],
+      "different": 0,
+      "expected_plans": 70,
+      "f32_coordinate_destroyer_live": false,
+      "f32_coordinate_words": [
+        20,
+        47,
+        0,
+        1056964608
+      ],
+      "first_difference": null,
+      "green_only": false,
+      "group": "boundary",
+      "height": 50,
+      "label": "axis1-at47.5-side0",
+      "literal_expected_words": [
+        20,
+        47,
+        0,
+        1056964608
+      ],
+      "pass": true,
+      "rows": 1,
+      "shift_base_destroyer_live": true,
+      "source_target_exact": true,
+      "start": 0,
+      "target": 47.5,
+      "target_f64_bits": 4631881848006377472,
+      "unconsumed": 0,
+      "valid": 66,
+      "width": 70
+    },
+    {
+      "actual_plans": 70,
+      "actual_source_f64_bits": 4631881848006377600,
+      "axis": 1,
+      "cpu_target_words": [
+        4294967295,
+        0,
+        0,
+        0
+      ],
+      "device_target_words": [
+        4294967295,
+        0,
+        0,
+        0
+      ],
+      "different": 0,
+      "expected_plans": 70,
+      "f32_coordinate_destroyer_live": true,
+      "f32_coordinate_words": [
+        20,
+        47,
+        0,
+        1056964608
+      ],
+      "first_difference": null,
+      "green_only": false,
+      "group": "boundary",
+      "height": 50,
+      "label": "axis1-at47.5-side1",
+      "literal_expected_words": [
+        4294967295,
+        0,
+        0,
+        0
+      ],
+      "pass": true,
+      "rows": 1,
+      "shift_base_destroyer_live": false,
+      "source_target_exact": true,
+      "start": 0,
+      "target": 47.50000000000091,
+      "target_f64_bits": 4631881848006377600,
+      "unconsumed": 0,
+      "valid": 0,
+      "width": 70
+    },
+    {
+      "actual_plans": 70,
+      "actual_source_f64_bits": 4616752568041733120,
+      "axis": 1,
+      "cpu_target_words": [
+        20,
+        4,
+        0,
+        1056964608
+      ],
+      "device_target_words": [
+        20,
+        4,
+        0,
+        1056964608
+      ],
+      "different": 0,
+      "expected_plans": 70,
+      "f32_coordinate_destroyer_live": false,
+      "f32_coordinate_words": [
+        20,
+        4,
+        0,
+        1056964608
+      ],
+      "first_difference": null,
+      "green_only": false,
+      "group": "f32-half-tie",
+      "height": 50,
+      "label": "axis1-parity0-side-1",
+      "literal_expected_words": [
+        20,
+        4,
+        0,
+        1056964608
+      ],
+      "pass": true,
+      "rows": 1,
+      "shift_base_destroyer_live": true,
+      "source_target_exact": true,
+      "start": 0,
+      "target": 4.500000029801413,
+      "target_f64_bits": 4616752568041733120,
+      "unconsumed": 0,
+      "valid": 66,
+      "width": 70
+    },
+    {
+      "actual_plans": 70,
+      "actual_source_f64_bits": 4616752568041734144,
+      "axis": 1,
+      "cpu_target_words": [
+        20,
+        4,
+        0,
+        1056964608
+      ],
+      "device_target_words": [
+        20,
+        4,
+        0,
+        1056964608
+      ],
+      "different": 0,
+      "expected_plans": 70,
+      "f32_coordinate_destroyer_live": false,
+      "f32_coordinate_words": [
+        20,
+        4,
+        0,
+        1056964608
+      ],
+      "first_difference": null,
+      "green_only": false,
+      "group": "f32-half-tie",
+      "height": 50,
+      "label": "axis1-parity0-side0",
+      "literal_expected_words": [
+        20,
+        4,
+        0,
+        1056964608
+      ],
+      "pass": true,
+      "rows": 1,
+      "shift_base_destroyer_live": true,
+      "source_target_exact": true,
+      "start": 0,
+      "target": 4.500000029802322,
+      "target_f64_bits": 4616752568041734144,
+      "unconsumed": 0,
+      "valid": 66,
+      "width": 70
+    },
+    {
+      "actual_plans": 70,
+      "actual_source_f64_bits": 4616752568041735168,
+      "axis": 1,
+      "cpu_target_words": [
+        20,
+        4,
+        0,
+        1056964609
+      ],
+      "device_target_words": [
+        20,
+        4,
+        0,
+        1056964609
+      ],
+      "different": 0,
+      "expected_plans": 70,
+      "f32_coordinate_destroyer_live": true,
+      "f32_coordinate_words": [
+        20,
+        4,
+        0,
+        1056964608
+      ],
+      "first_difference": null,
+      "green_only": false,
+      "group": "f32-half-tie",
+      "height": 50,
+      "label": "axis1-parity0-side1",
+      "literal_expected_words": [
+        20,
+        4,
+        0,
+        1056964609
+      ],
+      "pass": true,
+      "rows": 1,
+      "shift_base_destroyer_live": true,
+      "source_target_exact": true,
+      "start": 0,
+      "target": 4.500000029803232,
+      "target_f64_bits": 4616752568041735168,
+      "unconsumed": 0,
+      "valid": 66,
+      "width": 70
+    },
+    {
+      "actual_plans": 70,
+      "actual_source_f64_bits": 4616752568108841984,
+      "axis": 1,
+      "cpu_target_words": [
+        20,
+        4,
+        0,
+        1056964609
+      ],
+      "device_target_words": [
+        20,
+        4,
+        0,
+        1056964609
+      ],
+      "different": 0,
+      "expected_plans": 70,
+      "f32_coordinate_destroyer_live": true,
+      "f32_coordinate_words": [
+        20,
+        4,
+        0,
+        1056964608
+      ],
+      "first_difference": null,
+      "green_only": false,
+      "group": "f32-half-tie",
+      "height": 50,
+      "label": "axis1-parity1-side-1",
+      "literal_expected_words": [
+        20,
+        4,
+        0,
+        1056964609
+      ],
+      "pass": true,
+      "rows": 1,
+      "shift_base_destroyer_live": true,
+      "source_target_exact": true,
+      "start": 0,
+      "target": 4.500000089406058,
+      "target_f64_bits": 4616752568108841984,
+      "unconsumed": 0,
+      "valid": 66,
+      "width": 70
+    },
+    {
+      "actual_plans": 70,
+      "actual_source_f64_bits": 4616752568108843008,
+      "axis": 1,
+      "cpu_target_words": [
+        20,
+        4,
+        0,
+        1056964610
+      ],
+      "device_target_words": [
+        20,
+        4,
+        0,
+        1056964610
+      ],
+      "different": 0,
+      "expected_plans": 70,
+      "f32_coordinate_destroyer_live": true,
+      "f32_coordinate_words": [
+        20,
+        4,
+        0,
+        1056964608
+      ],
+      "first_difference": null,
+      "green_only": false,
+      "group": "f32-half-tie",
+      "height": 50,
+      "label": "axis1-parity1-side0",
+      "literal_expected_words": [
+        20,
+        4,
+        0,
+        1056964610
+      ],
+      "pass": true,
+      "rows": 1,
+      "shift_base_destroyer_live": true,
+      "source_target_exact": true,
+      "start": 0,
+      "target": 4.500000089406967,
+      "target_f64_bits": 4616752568108843008,
+      "unconsumed": 0,
+      "valid": 66,
+      "width": 70
+    },
+    {
+      "actual_plans": 70,
+      "actual_source_f64_bits": 4616752568108844032,
+      "axis": 1,
+      "cpu_target_words": [
+        20,
+        4,
+        0,
+        1056964610
+      ],
+      "device_target_words": [
+        20,
+        4,
+        0,
+        1056964610
+      ],
+      "different": 0,
+      "expected_plans": 70,
+      "f32_coordinate_destroyer_live": true,
+      "f32_coordinate_words": [
+        20,
+        4,
+        0,
+        1056964608
+      ],
+      "first_difference": null,
+      "green_only": false,
+      "group": "f32-half-tie",
+      "height": 50,
+      "label": "axis1-parity1-side1",
+      "literal_expected_words": [
+        20,
+        4,
+        0,
+        1056964610
+      ],
+      "pass": true,
+      "rows": 1,
+      "shift_base_destroyer_live": true,
+      "source_target_exact": true,
+      "start": 0,
+      "target": 4.500000089407877,
+      "target_f64_bits": 4616752568108844032,
+      "unconsumed": 0,
+      "valid": 66,
+      "width": 70
+    },
+    {
+      "actual_plans": 3500,
+      "all_three_maps_distinct": true,
+      "different": 0,
+      "expected_plans": 3500,
+      "first_difference": null,
+      "green_only": false,
+      "group": "ca-field",
+      "height": 50,
+      "independent_ca_literal": true,
+      "label": "ca-greenfalse",
+      "pass": true,
+      "phase_valid": [
+        707,
+        715,
+        722,
+        725
+      ],
+      "rows": 50,
+      "start": 0,
+      "unconsumed": 0,
+      "valid": 2869,
+      "width": 70
+    },
+    {
+      "actual_plans": 3500,
+      "all_three_maps_distinct": true,
+      "different": 0,
+      "expected_plans": 3500,
+      "first_difference": null,
+      "green_only": true,
+      "group": "ca-field",
+      "height": 50,
+      "independent_ca_literal": true,
+      "label": "ca-greentrue",
+      "pass": true,
+      "phase_valid": [
+        0,
+        715,
+        722,
+        0
+      ],
+      "rows": 50,
+      "start": 0,
+      "unconsumed": 1750,
+      "valid": 1437,
+      "width": 70
+    },
+    {
+      "actual_plans": 17920,
+      "different": 0,
+      "expected_plans": 17920,
+      "first_difference": null,
+      "green_only": false,
+      "group": "batch-strip",
+      "height": 258,
+      "label": "batch-greenfalse-start0",
+      "pass": true,
+      "rows": 256,
+      "start": 0,
+      "unconsumed": 0,
+      "valid": 17247,
+      "width": 70
+    },
+    {
+      "actual_plans": 140,
+      "concatenation_exact": true,
+      "different": 0,
+      "expected_plans": 140,
+      "first_difference": null,
+      "green_only": false,
+      "group": "batch-strip",
+      "height": 258,
+      "label": "batch-greenfalse-start256",
+      "last_strip_valid": true,
+      "pass": true,
+      "rows": 2,
+      "start": 256,
+      "unconsumed": 0,
+      "valid": 135,
+      "width": 70
+    },
+    {
+      "actual_plans": 17920,
+      "different": 0,
+      "expected_plans": 17920,
+      "first_difference": null,
+      "green_only": true,
+      "group": "batch-strip",
+      "height": 258,
+      "label": "batch-greentrue-start0",
+      "pass": true,
+      "rows": 256,
+      "start": 0,
+      "unconsumed": 8960,
+      "valid": 8704,
+      "width": 70
+    },
+    {
+      "actual_plans": 140,
+      "concatenation_exact": true,
+      "different": 0,
+      "expected_plans": 140,
+      "first_difference": null,
+      "green_only": true,
+      "group": "batch-strip",
+      "height": 258,
+      "label": "batch-greentrue-start256",
+      "last_strip_valid": true,
+      "pass": true,
+      "rows": 2,
+      "start": 256,
+      "unconsumed": 70,
+      "valid": 68,
+      "width": 70
+    },
+    {
+      "actual_plans": 140,
+      "all_cpu_coordinates_nonfinite": true,
+      "different": 0,
+      "expected_plans": 140,
+      "first_difference": null,
+      "green_only": false,
+      "group": "nonfinite",
+      "height": 50,
+      "label": "nan-infinity-overflow",
+      "pass": true,
+      "rows": 2,
+      "start": 20,
+      "unconsumed": 0,
+      "valid": 0,
+      "width": 70
+    },
+    {
+      "group": "api-refusal",
+      "label": "odd-width",
+      "pass": true,
+      "refusal": "invalid device coordinate dimensions/strip"
+    },
+    {
+      "group": "api-refusal",
+      "label": "odd-height",
+      "pass": true,
+      "refusal": "invalid device coordinate dimensions/strip"
+    },
+    {
+      "group": "api-refusal",
+      "label": "too-many-rows",
+      "pass": true,
+      "refusal": "invalid device coordinate dimensions/strip"
+    },
+    {
+      "group": "api-refusal",
+      "label": "strip-past-end",
+      "pass": true,
+      "refusal": "invalid device coordinate dimensions/strip"
+    }
+  ],
+  "schedule": "Device256",
+  "schema": "native-gpu-device-descriptor-v1",
+  "scope": "exact16-byte descriptors; separate from original18 image population",
+  "shift_base_destroyers_live": 26,
+  "status": "DEVICE_DESCRIPTOR_CONTROLS_PASS"
+}

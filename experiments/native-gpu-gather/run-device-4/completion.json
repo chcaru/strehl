@@ -1,0 +1,41 @@
+{
+  "status": "GUARD_DEVICE_AND_IMAGE_CONTROLS_PASS",
+  "processes": [
+    {
+      "test": "independent_gpu_device_guard_controls",
+      "exit_code": 0,
+      "error": null,
+      "wall_seconds": 0.6719999999986612,
+      "child_cpu_seconds": 0.34375,
+      "peak_job_commit_bytes": 682053632,
+      "measurement": {
+        "sha256": "06f6eadb445a157e7e561837b4752287894c29258cf5c5c97063cf5989d85bf7",
+        "bytes": 56533
+      }
+    },
+    {
+      "test": "independent_gpu_device_descriptor_controls",
+      "exit_code": 0,
+      "error": null,
+      "wall_seconds": 0.5149999999994179,
+      "child_cpu_seconds": 0.25,
+      "peak_job_commit_bytes": 349696000,
+      "measurement": {
+        "sha256": "409eecd9d7fef262fff6608a6efe8642517edf7b45e9415d013e69c56438bebd",
+        "bytes": 35991
+      }
+    },
+    {
+      "test": "independent_gpu_gather_controls",
+      "exit_code": 0,
+      "error": null,
+      "wall_seconds": 0.5319999999992433,
+      "child_cpu_seconds": 0.328125,
+      "peak_job_commit_bytes": 552136704,
+      "measurement": {
+        "sha256": "743eab25f5e15a7be8a89090bf67b38ccb6778b556671fc05e9cbfdd14134ff7",
+        "bytes": 14157
+      }
+    }
+  ]
+}

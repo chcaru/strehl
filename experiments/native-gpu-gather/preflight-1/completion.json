@@ -1,0 +1,12 @@
+{
+  "status": "COORDINATE_PIPELINE_READY",
+  "executable": {
+    "path": "experiments\\native-gpu-gather\\preflight-1\\native-gpu-preflight.exe",
+    "sha256": "ecf582748d244e781f47c7b41c7e163375db6bd316abefcecdeedbc330557a49",
+    "bytes": 7183872
+  },
+  "pipeline": {
+    "sha256": "08c7e5722cc379ff85d293fea692c50a2406f575f4b25c1fce224b72faf9ca35",
+    "bytes": 2853
+  }
+}

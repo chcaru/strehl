@@ -1,0 +1,713 @@
+{
+  "command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-gpu-gather\\build-native-6\\strehl.exe",
+    "stack",
+    "D:\\personal\\macro\\coffee-bean",
+    "--merge",
+    "pyramid",
+    "--pyramid-bands",
+    "7",
+    "--pyramid-gate",
+    "2",
+    "--pyramid-exponent",
+    "2",
+    "--pyramid-sharpen",
+    "1.4",
+    "--pyramid-select",
+    "soft",
+    "--pyramid-base",
+    "mean",
+    "--srgb",
+    "--demosaic",
+    "--resampler",
+    "catmull-rom",
+    "--cover",
+    "crop",
+    "--out",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-gpu-gather\\device-native-coffee-1\\gpu-coffee-bean.tiff"
+  ],
+  "environment_overrides": {
+    "RAYON_NUM_THREADS": "8",
+    "STREHL_PYRAMID_WORKERS": "8",
+    "STREHL_ALIGN": "1",
+    "STREHL_WARPMAP": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-PHASE0-PHASE\\out\\canon\\coffee-bean.warpmap.txt",
+    "STREHL_DIRECT_PLANES": "rounded",
+    "STREHL_PROBE_GATHER": "green",
+    "STREHL_WARP_WRITEBACK": "parallel",
+    "STREHL_FULLRES_GATHER": "1",
+    "STREHL_DEFECT": "off",
+    "STREHL_GPU_GATHER": "on",
+    "STREHL_GPU_SCHEDULE": "device",
+    "STREHL_GPU_GATHER_LOG": "on"
+  },
+  "removed_environment": [],
+  "protocol": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-gpu-gather\\run-device-4\\completion.json",
+      "sha256": "2b63fe8222f4028b6f8147700634f5c420e7351108fd1addbdb6dffcbb545179",
+      "bytes": 1227
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-gpu-gather\\run-device-4\\guard-invocation.json",
+      "sha256": "fe7799b6dca048f4386a8dc6089d07d23830f323d51a48e8cb640fc843d85022",
+      "bytes": 2018
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-gpu-gather\\run-device-4\\guard-completion.json",
+      "sha256": "2fc078e1c8c50f56d2c1ecf81954f8c7abf46f4ecb062fccb0ebd056fdbc797b",
+      "bytes": 334
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-gpu-gather\\run-device-4\\device-guard-results.json",
+      "sha256": "06f6eadb445a157e7e561837b4752287894c29258cf5c5c97063cf5989d85bf7",
+      "bytes": 56533
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-gpu-gather\\run-device-4\\descriptors-invocation.json",
+      "sha256": "b4475f8f8d4bb3780f372a89c35506b5acf8ea23da5c7cc7916591b539af97cb",
+      "bytes": 2023
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-gpu-gather\\run-device-4\\descriptors-completion.json",
+      "sha256": "99d7f6b6bf73ec6adf241e954d1e85c51aed094962802e120e25dc0989ae0adf",
+      "bytes": 336
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-gpu-gather\\run-device-4\\device-descriptor-results.json",
+      "sha256": "409eecd9d7fef262fff6608a6efe8642517edf7b45e9415d013e69c56438bebd",
+      "bytes": 35991
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-gpu-gather\\run-device-4\\images-invocation.json",
+      "sha256": "719177a68d557094f8d650f96aa02d8f3c11e31d5e9e0db08e524c5e76c9b607",
+      "bytes": 2012
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-gpu-gather\\run-device-4\\images-completion.json",
+      "sha256": "0ec2674db9fd2f392ccbbf5fa1b47282e4b71134d078f0de7f4e91fee77ddd4c",
+      "bytes": 329
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-gpu-gather\\run-device-4\\results.json",
+      "sha256": "743eab25f5e15a7be8a89090bf67b38ccb6778b556671fc05e9cbfdd14134ff7",
+      "bytes": 14157
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-gpu-gather\\device-native-109-1\\results.json",
+      "sha256": "9419b8a1075919ccaf2e045a70e3d7361aaa22af018ed904421e16849ab571ce",
+      "bytes": 12974
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-gpu-gather\\device-native-109-1\\execution.json",
+      "sha256": "0c01056d30cf4cee231a07fe765be06ffb8a3b04f96a265672ea294d500b4ea8",
+      "bytes": 2093
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-gpu-gather\\run-device-coffee.py",
+      "sha256": "e73905eb9d94c10d116a5ce297a7a71271cbaa01f5b365e5eaa8ad15e9200b29",
+      "bytes": 9461
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-gpu-gather\\execution-coffee.md",
+      "sha256": "f6e7cde1257535200cc06dd68d6a79cda859c9bd195caa3739546434e6c908ee",
+      "bytes": 2337
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-product-comparison\\run-1\\plan.json",
+      "sha256": "e5acdda4c6aa75e52225d843efd0008f91795444f43e846cb635645da1ac8643",
+      "bytes": 41616
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-product-comparison\\run-1\\native-invocation.json",
+      "sha256": "b109cf8963ce4481749f15fec3f9312dff54d67782f5ca3a84779bb7c1916924",
+      "bytes": 1176
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-product-comparison\\run-1\\native-output.json",
+      "sha256": "391ce9963416303ef139bdef9a9ab7648e714ae3c1c97d827b860427888683b3",
+      "bytes": 867
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-product-comparison\\run-1\\native.log",
+      "sha256": "0e6d20e31c737d2ff13697970598df89b1df0ed67463007c29bf1859caebc9c2",
+      "bytes": 38789
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-gpu-gather\\device-native-112-1\\2-gpu-rounded-on-device.log",
+      "sha256": "0870a3cd62a355f4187f7aa54b4a0f2c96246340a8775f919312a4b51b285fea",
+      "bytes": 16640
+    }
+  ],
+  "build": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-gpu-gather\\build-native-6\\invocation.json",
+    "sha256": "a9afed55f2f1d67d140229d61de658084ab3b1769bd180b17a1d4dd960f6bedb",
+    "bytes": 6757
+  },
+  "executable": {
+    "path": "experiments\\native-gpu-gather\\build-native-6\\strehl.exe",
+    "bytes": 17714688,
+    "sha256": "2fd0a1615989e262fbba61e0a1587a9b8f20ff4913d3969510e967ce9d9219d7"
+  },
+  "map": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M-PHASE0-PHASE\\out\\canon\\coffee-bean.warpmap.txt",
+    "sha256": "b21b247944c257ab0fd3c767c879b9abf4a5fb1112dded97c87990a7d537274c",
+    "bytes": 14591
+  },
+  "inputs": [
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00016.ARW",
+      "bytes": 39030784,
+      "mtime_ns": 1778455869760000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00017.ARW",
+      "bytes": 39055360,
+      "mtime_ns": 1778455870990000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00018.ARW",
+      "bytes": 39071744,
+      "mtime_ns": 1778455872270000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00019.ARW",
+      "bytes": 39092224,
+      "mtime_ns": 1778455873520000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00020.ARW",
+      "bytes": 39124992,
+      "mtime_ns": 1778455874810000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00021.ARW",
+      "bytes": 39157760,
+      "mtime_ns": 1778455876040000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00022.ARW",
+      "bytes": 39190528,
+      "mtime_ns": 1778455877250000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00023.ARW",
+      "bytes": 39235584,
+      "mtime_ns": 1778455878490000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00024.ARW",
+      "bytes": 39297024,
+      "mtime_ns": 1778455879720000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00025.ARW",
+      "bytes": 39374848,
+      "mtime_ns": 1778455880970000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00026.ARW",
+      "bytes": 39485440,
+      "mtime_ns": 1778455882190000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00027.ARW",
+      "bytes": 39616512,
+      "mtime_ns": 1778455883420000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00028.ARW",
+      "bytes": 39743488,
+      "mtime_ns": 1778455884700000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00029.ARW",
+      "bytes": 39878656,
+      "mtime_ns": 1778455885960000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00030.ARW",
+      "bytes": 39985152,
+      "mtime_ns": 1778455887190000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00031.ARW",
+      "bytes": 40099840,
+      "mtime_ns": 1778455888420000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00032.ARW",
+      "bytes": 40185856,
+      "mtime_ns": 1778455889630000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00033.ARW",
+      "bytes": 40251392,
+      "mtime_ns": 1778455890910000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00034.ARW",
+      "bytes": 40325120,
+      "mtime_ns": 1778455892140000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00035.ARW",
+      "bytes": 40325120,
+      "mtime_ns": 1778455893360000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00036.ARW",
+      "bytes": 40390656,
+      "mtime_ns": 1778455894570000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00037.ARW",
+      "bytes": 40415232,
+      "mtime_ns": 1778455895790000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00038.ARW",
+      "bytes": 40509440,
+      "mtime_ns": 1778455897030000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00039.ARW",
+      "bytes": 40583168,
+      "mtime_ns": 1778455898260000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00040.ARW",
+      "bytes": 40574976,
+      "mtime_ns": 1778455899540000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00041.ARW",
+      "bytes": 40611840,
+      "mtime_ns": 1778455900810000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00042.ARW",
+      "bytes": 40873984,
+      "mtime_ns": 1778455902060000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00043.ARW",
+      "bytes": 40804352,
+      "mtime_ns": 1778455903360000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00044.ARW",
+      "bytes": 40857600,
+      "mtime_ns": 1778455904660000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00045.ARW",
+      "bytes": 40906752,
+      "mtime_ns": 1778455905980000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00046.ARW",
+      "bytes": 40878080,
+      "mtime_ns": 1778455907320000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00047.ARW",
+      "bytes": 40833024,
+      "mtime_ns": 1778455908600000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00048.ARW",
+      "bytes": 40878080,
+      "mtime_ns": 1778455909890000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00049.ARW",
+      "bytes": 40927232,
+      "mtime_ns": 1778455911210000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00050.ARW",
+      "bytes": 40931328,
+      "mtime_ns": 1778455912500000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00051.ARW",
+      "bytes": 40869888,
+      "mtime_ns": 1778455913830000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00052.ARW",
+      "bytes": 40841216,
+      "mtime_ns": 1778455915160000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00053.ARW",
+      "bytes": 40828928,
+      "mtime_ns": 1778455916420000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00054.ARW",
+      "bytes": 40677376,
+      "mtime_ns": 1778455917690000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00055.ARW",
+      "bytes": 40669184,
+      "mtime_ns": 1778455918950000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00056.ARW",
+      "bytes": 40726528,
+      "mtime_ns": 1778455920220000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00057.ARW",
+      "bytes": 40550400,
+      "mtime_ns": 1778455921440000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00058.ARW",
+      "bytes": 40407040,
+      "mtime_ns": 1778455922620000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00059.ARW",
+      "bytes": 40263680,
+      "mtime_ns": 1778455923780000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00060.ARW",
+      "bytes": 40153088,
+      "mtime_ns": 1778455924960000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00061.ARW",
+      "bytes": 40046592,
+      "mtime_ns": 1778455926160000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00062.ARW",
+      "bytes": 39923712,
+      "mtime_ns": 1778455927360000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00063.ARW",
+      "bytes": 39837696,
+      "mtime_ns": 1778455928560000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00064.ARW",
+      "bytes": 39747584,
+      "mtime_ns": 1778455929760000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00065.ARW",
+      "bytes": 39665664,
+      "mtime_ns": 1778455930920000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00066.ARW",
+      "bytes": 39604224,
+      "mtime_ns": 1778455932110000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00067.ARW",
+      "bytes": 39538688,
+      "mtime_ns": 1778455933300000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00068.ARW",
+      "bytes": 39497728,
+      "mtime_ns": 1778455934500000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00069.ARW",
+      "bytes": 39456768,
+      "mtime_ns": 1778455935690000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00070.ARW",
+      "bytes": 39424000,
+      "mtime_ns": 1778455936850000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00071.ARW",
+      "bytes": 39395328,
+      "mtime_ns": 1778455938040000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00072.ARW",
+      "bytes": 39366656,
+      "mtime_ns": 1778455939180000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00073.ARW",
+      "bytes": 39337984,
+      "mtime_ns": 1778455940350000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00074.ARW",
+      "bytes": 39325696,
+      "mtime_ns": 1778455941520000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00075.ARW",
+      "bytes": 39305216,
+      "mtime_ns": 1778455942690000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00076.ARW",
+      "bytes": 39288832,
+      "mtime_ns": 1778455943850000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00077.ARW",
+      "bytes": 39288832,
+      "mtime_ns": 1778455945040000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00078.ARW",
+      "bytes": 39268352,
+      "mtime_ns": 1778455946190000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00079.ARW",
+      "bytes": 39251968,
+      "mtime_ns": 1778455947350000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00080.ARW",
+      "bytes": 39243776,
+      "mtime_ns": 1778455948540000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00081.ARW",
+      "bytes": 39235584,
+      "mtime_ns": 1778455949690000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00082.ARW",
+      "bytes": 39231488,
+      "mtime_ns": 1778455950870000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00083.ARW",
+      "bytes": 39223296,
+      "mtime_ns": 1778455952020000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00084.ARW",
+      "bytes": 39215104,
+      "mtime_ns": 1778455953220000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00085.ARW",
+      "bytes": 39190528,
+      "mtime_ns": 1778455954350000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00086.ARW",
+      "bytes": 39182336,
+      "mtime_ns": 1778455955520000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00087.ARW",
+      "bytes": 39161856,
+      "mtime_ns": 1778455956650000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00088.ARW",
+      "bytes": 39161856,
+      "mtime_ns": 1778455957820000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00089.ARW",
+      "bytes": 39149568,
+      "mtime_ns": 1778455958950000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00090.ARW",
+      "bytes": 39137280,
+      "mtime_ns": 1778455960080000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00091.ARW",
+      "bytes": 39124992,
+      "mtime_ns": 1778455961250000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00092.ARW",
+      "bytes": 39112704,
+      "mtime_ns": 1778455962380000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00093.ARW",
+      "bytes": 39100416,
+      "mtime_ns": 1778455963550000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00094.ARW",
+      "bytes": 39096320,
+      "mtime_ns": 1778455964700000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00095.ARW",
+      "bytes": 39079936,
+      "mtime_ns": 1778455965850000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00096.ARW",
+      "bytes": 39075840,
+      "mtime_ns": 1778455966990000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00097.ARW",
+      "bytes": 39071744,
+      "mtime_ns": 1778455968120000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00098.ARW",
+      "bytes": 39059456,
+      "mtime_ns": 1778455969250000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00099.ARW",
+      "bytes": 39043072,
+      "mtime_ns": 1778455970400000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00100.ARW",
+      "bytes": 39051264,
+      "mtime_ns": 1778455971550000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00101.ARW",
+      "bytes": 39043072,
+      "mtime_ns": 1778455972690000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00102.ARW",
+      "bytes": 39038976,
+      "mtime_ns": 1778455973820000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00103.ARW",
+      "bytes": 39026688,
+      "mtime_ns": 1778455974950000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00104.ARW",
+      "bytes": 39022592,
+      "mtime_ns": 1778455976120000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00105.ARW",
+      "bytes": 39014400,
+      "mtime_ns": 1778455977250000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00106.ARW",
+      "bytes": 39018496,
+      "mtime_ns": 1778455978380000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00107.ARW",
+      "bytes": 39018496,
+      "mtime_ns": 1778455979520000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00108.ARW",
+      "bytes": 39010304,
+      "mtime_ns": 1778455980650000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00109.ARW",
+      "bytes": 39010304,
+      "mtime_ns": 1778455981780000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00110.ARW",
+      "bytes": 39002112,
+      "mtime_ns": 1778455982920000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00111.ARW",
+      "bytes": 38998016,
+      "mtime_ns": 1778455984080000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00112.ARW",
+      "bytes": 38998016,
+      "mtime_ns": 1778455985190000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00113.ARW",
+      "bytes": 38993920,
+      "mtime_ns": 1778455986310000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00114.ARW",
+      "bytes": 38989824,
+      "mtime_ns": 1778455987420000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00115.ARW",
+      "bytes": 38989824,
+      "mtime_ns": 1778455988560000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00116.ARW",
+      "bytes": 38985728,
+      "mtime_ns": 1778455989690000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00117.ARW",
+      "bytes": 38985728,
+      "mtime_ns": 1778455990820000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00118.ARW",
+      "bytes": 38977536,
+      "mtime_ns": 1778455991930000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00119.ARW",
+      "bytes": 38973440,
+      "mtime_ns": 1778455993050000000
+    },
+    {
+      "path": "D:\\personal\\macro\\coffee-bean\\DSC00120.ARW",
+      "bytes": 38969344,
+      "mtime_ns": 1778455994150000000
+    }
+  ],
+  "baseline": {
+    "label": "native",
+    "output": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-product-comparison\\run-1\\native-coffee-bean.tiff",
+      "sha256": "411f3bb79fcee3aecbf27899d036e785b92469e53b21b0b339e82d65cd5c6e87",
+      "bytes": 184149970
+    },
+    "decoded": {
+      "shape": [
+        4524,
+        6784,
+        3
+      ],
+      "dtype": "uint16",
+      "bytes": 184144896,
+      "sha256": "e6c8d7ada22b7bd0f944bf8e554600d6c209f37e80dad1e35aa0968c5c8664cb"
+    },
+    "tags": {
+      "Software": "strehl 0.0.0 (f290b6145c09)",
+      "PhotometricInterpretation": "2",
+      "icc_profile": {
+        "bytes": 2716,
+        "sha256": "238ad2596316306a72025bb245cf3c8cd72f1090c8d95af2f38dc090e84ece5b"
+      }
+    },
+    "process_wall_seconds": 50.06300000000192,
+    "job_cpu_seconds": 305.078125,
+    "peak_job_commit_bytes": 2838089728
+  },
+  "retained_before": 3955965340
+}

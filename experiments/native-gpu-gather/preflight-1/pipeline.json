@@ -1,0 +1,83 @@
+{
+  "adapter": "NVIDIA GeForce RTX 5090",
+  "backend": "Vulkan",
+  "coordinate_compilation": {
+    "added_capabilities": [
+      "SignedZeroInfNanPreserve",
+      "RoundingModeRTE"
+    ],
+    "arithmetic_results": 24,
+    "bindings": [
+      0,
+      1,
+      2
+    ],
+    "coefficient_guard": "every finite nonzero pull coefficient abs>=2^-900; unsafe actual frames use Parallel256; direct descriptor helper refuses",
+    "entry_point": "main",
+    "execution_modes": [
+      "SignedZeroInfNanPreserve 64",
+      "RoundingModeRTE 32",
+      "RoundingModeRTE 64"
+    ],
+    "hardware": {
+      "denorm_independence": 1,
+      "denorm_preserve_f64": false,
+      "rounding_independence": 1,
+      "rounding_rte_f32": true,
+      "rounding_rte_f64": true,
+      "shader_f64": true,
+      "signed_zero_inf_nan_preserve_f64": true,
+      "vulkan_api": 4211029
+    },
+    "original_extensions": [
+      "SPV_KHR_storage_buffer_storage_class"
+    ],
+    "original_sha256": "95eb96b66b3e680303fe461954a898cc7f6db199225f67d32eb1f249cd0be3eb",
+    "submitted_sha256": "232804bc0de39feb6d50d271d0ff83d10d650a890c9e215b3f21eef6feee4947",
+    "validation": "owned GLSL+Naga IR and original SPIR-V parse+IR; final fixed additions structurally checked with exact removal identity; final patched SPIR-V NOT fully Naga-validated and NOT spirv-val"
+  },
+  "device_type": "DiscreteGpu",
+  "gather_compilation": {
+    "added_decorations": 30,
+    "arithmetic_results": 30,
+    "bounds_policy": "Restrict indices/buffers/images/binding-arrays; integer division checks and loop bounds enabled",
+    "decorated_sha256": "a7dce2107ce7713ac4d9cd961dd44e303bd69b37c2d2ca7029f20aa1f131de9d",
+    "entry_points": [
+      "mhc",
+      "gather",
+      "quantize_vector"
+    ],
+    "float_operations": {
+      "FAdd": 8,
+      "FMul": 17,
+      "FSub": 5
+    },
+    "group_zero_bindings": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "max_buffer_size": 4294967295,
+    "max_storage_buffer_binding_size": 2147483644,
+    "no_contraction": true,
+    "original_sha256": "41658a89bd9b17c73b0f452b48bde689679e4ecc50774872ebfff0171cdb6560",
+    "submitted_sha256": "a7dce2107ce7713ac4d9cd961dd44e303bd69b37c2d2ca7029f20aa1f131de9d",
+    "validation": "embedded WGSL+IR; Naga SPIR-V parse+IR; structural decoration/removal identity; NOT spirv-val"
+  },
+  "hardware": {
+    "denorm_independence": 1,
+    "denorm_preserve_f64": false,
+    "rounding_independence": 1,
+    "rounding_rte_f32": true,
+    "rounding_rte_f64": true,
+    "shader_f64": true,
+    "signed_zero_inf_nan_preserve_f64": true,
+    "vulkan_api": 4211029
+  },
+  "schedule": "Device256",
+  "scope": "constructor and pipeline creation only; no descriptors/images/RAW dispatched",
+  "status": "COORDINATE_PIPELINE_READY"
+}

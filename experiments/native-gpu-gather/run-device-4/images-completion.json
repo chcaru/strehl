@@ -1,0 +1,12 @@
+{
+  "test": "independent_gpu_gather_controls",
+  "exit_code": 0,
+  "error": null,
+  "wall_seconds": 0.5319999999992433,
+  "child_cpu_seconds": 0.328125,
+  "peak_job_commit_bytes": 552136704,
+  "measurement": {
+    "sha256": "743eab25f5e15a7be8a89090bf67b38ccb6778b556671fc05e9cbfdd14134ff7",
+    "bytes": 14157
+  }
+}
