@@ -1,0 +1,390 @@
+{
+  "status": "ORIGINAL_CFA_PATCHES_READY",
+  "frames": [
+    {
+      "index": 145,
+      "source": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00146.ARW",
+      "bytes": 42553344,
+      "mtime_ns": 1789283047350000000,
+      "source_xywh": [
+        1322,
+        1098,
+        410,
+        410
+      ],
+      "a": [
+        1.0007941629248038,
+        -0.000390845366598851
+      ],
+      "b_plane": [
+        0.3656084663917163,
+        1.2812410003702297
+      ],
+      "raw_u16_sha256": "b600056c30cb830bc37ec68f10defcc9c73536c735d7e58342c2c5ab55175aa4",
+      "independently_decoded_different_sensels": 0,
+      "exact_16383": 506,
+      "metadata": {
+        "black": [
+          512,
+          512,
+          512,
+          512
+        ],
+        "white": 16383,
+        "camera_wb": [
+          1637.0,
+          1024.0,
+          2774.0,
+          1024.0
+        ]
+      }
+    },
+    {
+      "index": 146,
+      "source": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00147.ARW",
+      "bytes": 42532864,
+      "mtime_ns": 1789283049860000000,
+      "source_xywh": [
+        1322,
+        1096,
+        410,
+        412
+      ],
+      "a": [
+        1.000559795719962,
+        -0.0003124139092834568
+      ],
+      "b_plane": [
+        0.27835361213599796,
+        0.9865307842859181
+      ],
+      "raw_u16_sha256": "038225ead5db8d4ccb4afdc267f76e01f6b734ffb2398e3b9c80a2c16261b93a",
+      "independently_decoded_different_sensels": 0,
+      "exact_16383": 552,
+      "metadata": {
+        "black": [
+          512,
+          512,
+          512,
+          512
+        ],
+        "white": 16383,
+        "camera_wb": [
+          1637.0,
+          1024.0,
+          2774.0,
+          1024.0
+        ]
+      }
+    },
+    {
+      "index": 147,
+      "source": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00148.ARW",
+      "bytes": 42516480,
+      "mtime_ns": 1789283052340000000,
+      "source_xywh": [
+        1322,
+        1096,
+        410,
+        410
+      ],
+      "a": [
+        1.0003692383226275,
+        -0.00020275336746234177
+      ],
+      "b_plane": [
+        0.15734233526574926,
+        0.6559849244898643
+      ],
+      "raw_u16_sha256": "ba50fdc5abc8d9b274bbb7578a7f32eb79e19d531e00d86878b146e45ac10784",
+      "independently_decoded_different_sensels": 0,
+      "exact_16383": 571,
+      "metadata": {
+        "black": [
+          512,
+          512,
+          512,
+          512
+        ],
+        "white": 16383,
+        "camera_wb": [
+          1637.0,
+          1024.0,
+          2774.0,
+          1024.0
+        ]
+      }
+    },
+    {
+      "index": 148,
+      "source": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00149.ARW",
+      "bytes": 42504192,
+      "mtime_ns": 1789283054800000000,
+      "source_xywh": [
+        1322,
+        1096,
+        410,
+        410
+      ],
+      "a": [
+        1.0001935682680476,
+        -0.00011493681239386697
+      ],
+      "b_plane": [
+        0.07480221195597636,
+        0.3167758800559497
+      ],
+      "raw_u16_sha256": "4142898f325df24e1b46d88c951ab5dfa0e6acc3cddea7b46e82c4235cbe5155",
+      "independently_decoded_different_sensels": 0,
+      "exact_16383": 542,
+      "metadata": {
+        "black": [
+          512,
+          512,
+          512,
+          512
+        ],
+        "white": 16383,
+        "camera_wb": [
+          1637.0,
+          1024.0,
+          2774.0,
+          1024.0
+        ]
+      }
+    },
+    {
+      "index": 149,
+      "source": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00150.ARW",
+      "bytes": 42491904,
+      "mtime_ns": 1789283057290000000,
+      "source_xywh": [
+        1324,
+        1096,
+        410,
+        408
+      ],
+      "a": [
+        0.9999999999999999,
+        0.0
+      ],
+      "b_plane": [
+        0.0,
+        7.105427357601002e-15
+      ],
+      "raw_u16_sha256": "ce6eeb4a31751b821c37efbc4826c553474f316a76566220f85741c988e1cac6",
+      "independently_decoded_different_sensels": 0,
+      "exact_16383": 476,
+      "metadata": {
+        "black": [
+          512,
+          512,
+          512,
+          512
+        ],
+        "white": 16383,
+        "camera_wb": [
+          1637.0,
+          1024.0,
+          2774.0,
+          1024.0
+        ]
+      }
+    },
+    {
+      "index": 150,
+      "source": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00151.ARW",
+      "bytes": 42467328,
+      "mtime_ns": 1789283059750000000,
+      "source_xywh": [
+        1324,
+        1094,
+        410,
+        410
+      ],
+      "a": [
+        0.9997620388117304,
+        0.00010491135513003482
+      ],
+      "b_plane": [
+        -0.1767734210910561,
+        -0.19957003976262655
+      ],
+      "raw_u16_sha256": "5105d0182dbd92043d8b940eeda69f73f162a532a8eb48c614369967455aec75",
+      "independently_decoded_different_sensels": 0,
+      "exact_16383": 419,
+      "metadata": {
+        "black": [
+          512,
+          512,
+          512,
+          512
+        ],
+        "white": 16383,
+        "camera_wb": [
+          1637.0,
+          1024.0,
+          2774.0,
+          1024.0
+        ]
+      }
+    },
+    {
+      "index": 151,
+      "source": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00152.ARW",
+      "bytes": 42463232,
+      "mtime_ns": 1789283062250000000,
+      "source_xywh": [
+        1324,
+        1094,
+        410,
+        410
+      ],
+      "a": [
+        0.9995246093125443,
+        0.00018071422845693068
+      ],
+      "b_plane": [
+        -0.30639625057374076,
+        -0.45637847208052307
+      ],
+      "raw_u16_sha256": "3fb22883886b1a2ca32e7bd1704306c9e9a55a314a2d9c89e876cdc70aa76301",
+      "independently_decoded_different_sensels": 0,
+      "exact_16383": 370,
+      "metadata": {
+        "black": [
+          512,
+          512,
+          512,
+          512
+        ],
+        "white": 16383,
+        "camera_wb": [
+          1637.0,
+          1024.0,
+          2774.0,
+          1024.0
+        ]
+      }
+    },
+    {
+      "index": 152,
+      "source": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00153.ARW",
+      "bytes": 42438656,
+      "mtime_ns": 1789283064710000000,
+      "source_xywh": [
+        1324,
+        1094,
+        410,
+        410
+      ],
+      "a": [
+        0.999350876689088,
+        0.0002215266038326988
+      ],
+      "b_plane": [
+        -0.3837659932307389,
+        -0.7203855574158595
+      ],
+      "raw_u16_sha256": "444fa914a03ffaae98ab36b85eb1d487a6a9ad80429875b04e1d24d2b58c021c",
+      "independently_decoded_different_sensels": 0,
+      "exact_16383": 337,
+      "metadata": {
+        "black": [
+          512,
+          512,
+          512,
+          512
+        ],
+        "white": 16383,
+        "camera_wb": [
+          1637.0,
+          1024.0,
+          2774.0,
+          1024.0
+        ]
+      }
+    },
+    {
+      "index": 153,
+      "source": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00154.ARW",
+      "bytes": 42422272,
+      "mtime_ns": 1789283067180000000,
+      "source_xywh": [
+        1324,
+        1094,
+        410,
+        410
+      ],
+      "a": [
+        0.999206456164703,
+        0.00026336091822967266
+      ],
+      "b_plane": [
+        -0.39960303333887737,
+        -1.04010691518981
+      ],
+      "raw_u16_sha256": "43c0e9e828b975f5e058fd0072fa53dfa0675677575f09a07ee7f7081c230f86",
+      "independently_decoded_different_sensels": 0,
+      "exact_16383": 258,
+      "metadata": {
+        "black": [
+          512,
+          512,
+          512,
+          512
+        ],
+        "white": 16383,
+        "camera_wb": [
+          1637.0,
+          1024.0,
+          2774.0,
+          1024.0
+        ]
+      }
+    }
+  ],
+  "reference_index": 149,
+  "target_origin_native": [
+    1332,
+    1104
+  ],
+  "target_shape": [
+    392,
+    392
+  ],
+  "native_sensor_shape": [
+    4688,
+    7032
+  ],
+  "libraw_visible_shape": [
+    4688,
+    7028
+  ],
+  "wb_bits": [
+    1070374912,
+    1065353216,
+    1076715520
+  ],
+  "levels": [
+    512.0,
+    15360.0
+  ],
+  "map_sha256": "ce8534c9e65c5c761373bad87df5352c1c46319b7eaf7f7c91477ea61b4f4922",
+  "noise": {
+    "provenance": "Shipping A7C2 profile, ISO100, Corrections::SHIPPED; injected once",
+    "gain_dn_per_e": 0.22893773019313812,
+    "read_noise_e": 4.199999809265137,
+    "read_noise_dn": 0.9615384340286255,
+    "source": "crates/strehl-core/src/profile.rs::A7C2/noise_model; noise.rs::variance",
+    "profile_sha256": "07e7cf7b3040239a5a32464ae998a434696031010ce8d87dac7f2dd2a95ac1f1"
+  },
+  "scope": "Nine fixed contiguous observations; original CFA only. No equal-focus or registration-accuracy claim. No CA correction; reference149 native sensor gauge. No 2x output.",
+  "rawpy": "0.27.0",
+  "libraw": [
+    0,
+    22,
+    1
+  ],
+  "source_metadata_unchanged": true
+}

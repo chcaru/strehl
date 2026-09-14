@@ -1,0 +1,11 @@
+file      : D:\personal\macro\requests\misc-diagnostic\uncapped-IC-chip-cpl\DSC00146.ARW
+camera    : ILCE-7CM2
+stride    : 7168
+buffer h  : 5120
+active    : 7032x4688 at (0,0)
+levels    : black 512 white 15360
+plane R(even,even)  : n 8241504 mean 1685.2241
+plane G1(even,odd)  : n 8241504 mean 2310.6502
+plane G2(odd,even)  : n 8241504 mean 2311.8542
+plane B(odd,odd)    : n 8241504 mean 994.8770
+wrote     : C:\dev\blog\death-of-software\projects\strehl\experiments\quality-september14\joint-raw-samples-2\rawler-145.bin

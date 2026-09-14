@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "C:\dev\blog\death-of-software\projects\strehl\experiments\quality-september14\joint-raw-samples.py", line 125, in <module>
+    main()
+  File "C:\dev\blog\death-of-software\projects\strehl\experiments\quality-september14\joint-raw-samples.py", line 108, in main
+    child()
+  File "C:\dev\blog\death-of-software\projects\strehl\experiments\quality-september14\joint-raw-samples.py", line 64, in child
+    assert raw.raw_image_visible.shape == (4688, 7032)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

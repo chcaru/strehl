@@ -1,0 +1,35 @@
+{
+  "receipt": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\matched-chip-on-1\\receipt.json",
+  "width": 392,
+  "height": 392,
+  "baseline_rgb": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\matched-chip-on-1\\pale-circuit-frame149-raw-mhc-camera-rgb.f32",
+  "baseline_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\matched-chip-on-1\\pale-circuit-frame149-raw.tiff",
+  "out": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\joint-backprojection-comparison-1\\render",
+  "candidates": [
+    {
+      "name": "local-eight-mean",
+      "rgb": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\mhc-catmul-mean-2\\local-map-eight-mean-camera-rgb.f32"
+    },
+    {
+      "name": "local-eight-four-updates",
+      "rgb": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\joint-backprojection-comparison-1\\local-eight-four-updates-camera-rgb.f32"
+    }
+  ],
+  "xyz_to_cam": [
+    [
+      0.746,
+      -0.2365,
+      -0.0588
+    ],
+    [
+      -0.5687,
+      1.3442,
+      0.2474
+    ],
+    [
+      -0.0624,
+      0.1156,
+      0.6584
+    ]
+  ]
+}

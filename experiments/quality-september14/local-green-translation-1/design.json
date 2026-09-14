@@ -1,0 +1,17 @@
+{
+  "guide_sigma_native": 1.5,
+  "guide_support_radius_native": 6,
+  "guide_boundary": "whole-sample mirror",
+  "guide": "normalized Gaussian of original G sites only; clipped G excluded; no R/B or MHC",
+  "coordinates": "source=C+a*(reference-C)+2*b_plane+delta_source_native",
+  "fit": "x32..182, y32..358, stride2",
+  "validation": "x208..358, y32..358, stride2; no nuisance refit",
+  "finite_difference_absolute_step_native": 0.02,
+  "translation_bounds_native": [
+    -4,
+    4
+  ],
+  "nuisance": "gain/bias profiled by linear least squares on left only; sign reported",
+  "gate": "known shifted controls error<.05native, blur-only delta norm<.05; wrong sign must worsen validation",
+  "interpretation": "predictive guide alignment only; no within-DOF, geometric-truth or photographic-quality claim"
+}

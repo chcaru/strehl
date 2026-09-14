@@ -1,0 +1,353 @@
+{
+  "status": "INDEPENDENT_CATMULL_SAMPLER_PASS",
+  "source": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\mhc-catmul-mean.py",
+  "source_sha256": "fd8f06982c68830f071804fe9f9f81b69e6da15836bb8e2fd57b16273519d774",
+  "tests": [
+    {
+      "name": "integer identity, asymmetric RGB",
+      "maximum_error": 0.0,
+      "bound": 0.0,
+      "actual": [
+        [
+          108.0,
+          5.0,
+          0.5
+        ],
+        [
+          336.0,
+          13.0,
+          -1.0
+        ],
+        [
+          557.0,
+          18.0,
+          -2.0
+        ]
+      ],
+      "expected": [
+        [
+          108.0,
+          5.0,
+          0.5
+        ],
+        [
+          336.0,
+          13.0,
+          -1.0
+        ],
+        [
+          557.0,
+          18.0,
+          -2.0
+        ]
+      ]
+    },
+    {
+      "name": "literal half-step x tap0",
+      "maximum_error": 0.0,
+      "bound": 0.0,
+      "actual": [
+        [
+          -0.0625,
+          -0.125,
+          -0.25
+        ]
+      ],
+      "expected": [
+        [
+          -0.0625,
+          -0.125,
+          -0.25
+        ]
+      ]
+    },
+    {
+      "name": "literal half-step x tap1",
+      "maximum_error": 0.0,
+      "bound": 0.0,
+      "actual": [
+        [
+          0.5625,
+          1.125,
+          2.25
+        ]
+      ],
+      "expected": [
+        [
+          0.5625,
+          1.125,
+          2.25
+        ]
+      ]
+    },
+    {
+      "name": "literal half-step x tap2",
+      "maximum_error": 0.0,
+      "bound": 0.0,
+      "actual": [
+        [
+          0.5625,
+          1.125,
+          2.25
+        ]
+      ],
+      "expected": [
+        [
+          0.5625,
+          1.125,
+          2.25
+        ]
+      ]
+    },
+    {
+      "name": "literal half-step x tap3",
+      "maximum_error": 0.0,
+      "bound": 0.0,
+      "actual": [
+        [
+          -0.0625,
+          -0.125,
+          -0.25
+        ]
+      ],
+      "expected": [
+        [
+          -0.0625,
+          -0.125,
+          -0.25
+        ]
+      ]
+    },
+    {
+      "name": "literal half-step y tap0",
+      "maximum_error": 0.0,
+      "bound": 0.0,
+      "actual": [
+        [
+          -0.0625,
+          -0.125,
+          -0.25
+        ]
+      ],
+      "expected": [
+        [
+          -0.0625,
+          -0.125,
+          -0.25
+        ]
+      ]
+    },
+    {
+      "name": "literal half-step y tap1",
+      "maximum_error": 0.0,
+      "bound": 0.0,
+      "actual": [
+        [
+          0.5625,
+          1.125,
+          2.25
+        ]
+      ],
+      "expected": [
+        [
+          0.5625,
+          1.125,
+          2.25
+        ]
+      ]
+    },
+    {
+      "name": "literal half-step y tap2",
+      "maximum_error": 0.0,
+      "bound": 0.0,
+      "actual": [
+        [
+          0.5625,
+          1.125,
+          2.25
+        ]
+      ],
+      "expected": [
+        [
+          0.5625,
+          1.125,
+          2.25
+        ]
+      ]
+    },
+    {
+      "name": "literal half-step y tap3",
+      "maximum_error": 0.0,
+      "bound": 0.0,
+      "actual": [
+        [
+          -0.0625,
+          -0.125,
+          -0.25
+        ]
+      ],
+      "expected": [
+        [
+          -0.0625,
+          -0.125,
+          -0.25
+        ]
+      ]
+    },
+    {
+      "name": "constant reproduction",
+      "maximum_error": 4.76837158203125e-07,
+      "bound": 1.1920928955078125e-06,
+      "actual": [
+        [
+          0.1250000149011612,
+          0.3750000596046448,
+          1.25
+        ],
+        [
+          0.125,
+          0.375,
+          1.25
+        ],
+        [
+          0.1249999850988388,
+          0.3749999403953552,
+          1.2499998807907104
+        ],
+        [
+          0.1250000298023224,
+          0.3750000596046448,
+          1.2500004768371582
+        ]
+      ],
+      "expected": [
+        [
+          0.125,
+          0.375,
+          1.25
+        ],
+        [
+          0.125,
+          0.375,
+          1.25
+        ],
+        [
+          0.125,
+          0.375,
+          1.25
+        ],
+        [
+          0.125,
+          0.375,
+          1.25
+        ]
+      ]
+    },
+    {
+      "name": "independent affine formula",
+      "maximum_error": 7.152557373046875e-07,
+      "bound": 4.498958787735319e-06,
+      "actual": [
+        [
+          2.0687503814697266,
+          -0.4693750739097595,
+          4.71750020980835
+        ],
+        [
+          2.59375,
+          0.453125,
+          3.9375
+        ],
+        [
+          3.161249876022339,
+          1.8243749141693115,
+          3.8424999713897705
+        ],
+        [
+          3.499875783920288,
+          2.749563217163086,
+          3.9997506141662598
+        ]
+      ],
+      "expected": [
+        [
+          2.0687499046325684,
+          -0.46937501430511475,
+          4.71750020980835
+        ],
+        [
+          2.59375,
+          0.453125,
+          3.9375
+        ],
+        [
+          3.161250114440918,
+          1.824375033378601,
+          3.8424999713897705
+        ],
+        [
+          3.499875068664551,
+          2.7495625019073486,
+          3.9997498989105225
+        ]
+      ]
+    },
+    {
+      "name": "asymmetric xy/channel impulses",
+      "maximum_error": 0.0,
+      "bound": 0.0,
+      "actual": [
+        [
+          -0.03955078125,
+          -0.0283203125,
+          0.01171875
+        ],
+        [
+          0.0,
+          0.0,
+          -0.31640625
+        ]
+      ],
+      "expected": [
+        [
+          -0.03955078125,
+          -0.0283203125,
+          0.01171875
+        ],
+        [
+          0.0,
+          0.0,
+          -0.31640625
+        ]
+      ]
+    }
+  ],
+  "refused_positions": [
+    [
+      0.999,
+      3
+    ],
+    [
+      9,
+      3
+    ],
+    [
+      3,
+      0.999
+    ],
+    [
+      3,
+      6
+    ],
+    [
+      "nan",
+      3
+    ],
+    [
+      3,
+      "inf"
+    ]
+  ],
+  "cpu_seconds": 0.0,
+  "scope": "catmull_sample only, exact literal half/quarter weights and independent affine truth; no RAW or mean run; source unchanged"
+}

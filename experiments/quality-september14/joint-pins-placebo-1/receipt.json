@@ -1,0 +1,80 @@
+{
+  "status": "PINS_ADMISSION_PLACEBO_COMPLETE",
+  "source_pins": {
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\joint-inputs.py": "8cb164fae6a0586da0185f5fafd4ad656eb83a7b50eef2c8974686e60b10ef5d",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\joint-cfa-lanczos.py": "3e5b208df4f3f43d97ef2669c95a8252b6eb9526c86216c685bb555f674e15d4",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\joint-comparison-1\\joint-nine-camera-rgb.f32": "776196afaef64ce27724c86665d4800063f39e0c300890030f0f44c286a4528c",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\joint-comparison-1\\joint-nine-diagnostics.json": "323c6075e17adaa755286905292c985a4fd08e820171cb6b6b4db38b2b4aed14",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\joint-comparison-1\\joint-nine-diagnostics.npz": "49dbabd3fa84e6a3474e920862fdf325f45eb04fdc4378f2c815ce6b3f77a3a8"
+  },
+  "shape": [
+    392,
+    392
+  ],
+  "trim": 32,
+  "cpu_seconds": 2.359375,
+  "originally_invalid_observations": 4031,
+  "newly_admitted_observations": 3838,
+  "changed_support_count_entries": 21475,
+  "comparison": [
+    {
+      "channel": "R",
+      "newly_admitted_observations": 0,
+      "previous_observations": 336594,
+      "observations": 336594,
+      "previous_iterations": 58,
+      "iterations": 58,
+      "previous_median_variance": 1.2183998478576541e-05,
+      "median_variance": 1.2183998478576541e-05,
+      "changed_interior_pixels": 0,
+      "interior_rmse_delta": 0.0,
+      "interior_mean_delta": 0.0,
+      "interior_maximum_absolute_delta": 0.0
+    },
+    {
+      "channel": "G",
+      "newly_admitted_observations": 3838,
+      "previous_observations": 670205,
+      "observations": 674043,
+      "previous_iterations": 39,
+      "iterations": 39,
+      "previous_median_variance": 8.307560165121686e-06,
+      "median_variance": 8.314829756272957e-06,
+      "changed_interior_pixels": 104963,
+      "interior_rmse_delta": 0.015960805644269018,
+      "interior_mean_delta": 0.0018111278758760195,
+      "interior_maximum_absolute_delta": 0.3814840316772461
+    },
+    {
+      "channel": "B",
+      "newly_admitted_observations": 0,
+      "previous_observations": 337450,
+      "observations": 337450,
+      "previous_iterations": 38,
+      "iterations": 38,
+      "previous_median_variance": 7.506675501645077e-06,
+      "median_variance": 7.506675501645077e-06,
+      "changed_interior_pixels": 0,
+      "interior_rmse_delta": 0.0,
+      "interior_mean_delta": 0.0,
+      "interior_maximum_absolute_delta": 0.0
+    }
+  ],
+  "product_baseline_differing_u16_samples": 0,
+  "render_command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\patch-render-build-2\\saved-rgb-render.exe",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\joint-pins-placebo-1\\render-config.json"
+  ],
+  "source_frame_indices": [
+    145,
+    146,
+    147,
+    148,
+    149,
+    150,
+    151,
+    152,
+    153
+  ],
+  "limits": "Diagnostic only: container-pinned lower bounds are incorrectly treated as measurements. Only validity changed; the unchanged solver also recomputes its variance median. No recovery, registration, or image-quality claim."
+}

@@ -1,0 +1,23 @@
+{
+  "solver_sha256": "3e5b208df4f3f43d97ef2669c95a8252b6eb9526c86216c685bb555f674e15d4",
+  "baseline_product_pixels_exact": true,
+  "admitted_frames": [
+    146,
+    147,
+    148,
+    149,
+    150,
+    151,
+    152,
+    153
+  ],
+  "excluded_frame145": "Translation reached search bound; excluded in BOTH geometry arms",
+  "intervention": "Original sensor values/noise/clip flags unchanged; only inverse coordinates subtract delta_source/a. No photometric gain/bias applied.",
+  "corrected_reference149_unchanged": true,
+  "render_command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\patch-render-build-2\\saved-rgb-render.exe",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\joint-local-comparison-1\\render-config.json"
+  ],
+  "trim": 32,
+  "local_alignment_sha256": "ed8880a95a4dc7f0af5da6b27968ae74805eb205780d5281c84790c53eac1b6e"
+}

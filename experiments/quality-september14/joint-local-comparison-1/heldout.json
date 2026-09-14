@@ -1,0 +1,81 @@
+{
+  "frames": [
+    147,
+    151
+  ],
+  "results": [
+    {
+      "arm": "old-map-eight",
+      "channel": 0,
+      "observations": 53465,
+      "rmse": 0.05574436460304778
+    },
+    {
+      "arm": "old-map-eight",
+      "channel": 1,
+      "observations": 106201,
+      "rmse": 0.09548341738812217
+    },
+    {
+      "arm": "old-map-eight",
+      "channel": 2,
+      "observations": 53465,
+      "rmse": 0.14374718553995489
+    },
+    {
+      "arm": "local-map-eight",
+      "channel": 0,
+      "observations": 53465,
+      "rmse": 0.016192366458703568
+    },
+    {
+      "arm": "local-map-eight",
+      "channel": 1,
+      "observations": 106201,
+      "rmse": 0.049461426847259654
+    },
+    {
+      "arm": "local-map-eight",
+      "channel": 2,
+      "observations": 53465,
+      "rmse": 0.06951791005371863
+    },
+    {
+      "arm": "old-map-six-heldout",
+      "channel": 0,
+      "observations": 53465,
+      "rmse": 0.05601648185788185
+    },
+    {
+      "arm": "old-map-six-heldout",
+      "channel": 1,
+      "observations": 106201,
+      "rmse": 0.09381285894023111
+    },
+    {
+      "arm": "old-map-six-heldout",
+      "channel": 2,
+      "observations": 53465,
+      "rmse": 0.14344791060306594
+    },
+    {
+      "arm": "local-map-six-heldout",
+      "channel": 0,
+      "observations": 53465,
+      "rmse": 0.023054846179274842
+    },
+    {
+      "arm": "local-map-six-heldout",
+      "channel": 1,
+      "observations": 106201,
+      "rmse": 0.05886155053035824
+    },
+    {
+      "arm": "local-map-six-heldout",
+      "channel": 2,
+      "observations": 53465,
+      "rmse": 0.08489043613384017
+    }
+  ],
+  "scope": "Both six-frame fits exclude these RAW measurements. Eight-frame fits include them. Held frames participate in low-pass registration, so this is conditional validation of reconstruction, not fully independent end-to-end validation. Error can favour blur."
+}

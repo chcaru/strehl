@@ -1,0 +1,106 @@
+{
+  "frames": [
+    147,
+    151
+  ],
+  "common_observations": 213125,
+  "results": [
+    {
+      "arm": "reference149-mhc",
+      "channel": 0,
+      "observations": 53628,
+      "rmse": 0.09072037668568984,
+      "mean_error": 0.0004224100614821981,
+      "mean_error_squared_over_observation_variance": 1597.0538175736483
+    },
+    {
+      "arm": "reference149-mhc",
+      "channel": 1,
+      "observations": 106196,
+      "rmse": 0.10748772809640629,
+      "mean_error": 0.0028493798027354085,
+      "mean_error_squared_over_observation_variance": 1555.3320319628515
+    },
+    {
+      "arm": "reference149-mhc",
+      "channel": 2,
+      "observations": 53301,
+      "rmse": 0.18806960742606718,
+      "mean_error": -7.837977334366348e-05,
+      "mean_error_squared_over_observation_variance": 1451.0213248679622
+    },
+    {
+      "arm": "joint-nine",
+      "channel": 0,
+      "observations": 53628,
+      "rmse": 0.03131614471718558,
+      "mean_error": -0.0037419336431238036,
+      "mean_error_squared_over_observation_variance": 113.78776302616654
+    },
+    {
+      "arm": "joint-nine",
+      "channel": 1,
+      "observations": 106196,
+      "rmse": 0.07370051191489649,
+      "mean_error": -0.008583052112632541,
+      "mean_error_squared_over_observation_variance": 603.714203230888
+    },
+    {
+      "arm": "joint-nine",
+      "channel": 2,
+      "observations": 53301,
+      "rmse": 0.15515769719116318,
+      "mean_error": -0.027568894426651367,
+      "mean_error_squared_over_observation_variance": 566.716165265199
+    },
+    {
+      "arm": "joint-seven-heldout",
+      "channel": 0,
+      "observations": 53628,
+      "rmse": 0.03706132792791398,
+      "mean_error": -0.004186682959262315,
+      "mean_error_squared_over_observation_variance": 171.59679659245552
+    },
+    {
+      "arm": "joint-seven-heldout",
+      "channel": 1,
+      "observations": 106196,
+      "rmse": 0.07935817855256488,
+      "mean_error": -0.00823130849833742,
+      "mean_error_squared_over_observation_variance": 723.8902132310463
+    },
+    {
+      "arm": "joint-seven-heldout",
+      "channel": 2,
+      "observations": 53301,
+      "rmse": 0.167225340525686,
+      "mean_error": -0.02769920916959865,
+      "mean_error_squared_over_observation_variance": 758.705753935644
+    },
+    {
+      "arm": "wrong-map-seven",
+      "channel": 0,
+      "observations": 53628,
+      "rmse": 0.053461677568943246,
+      "mean_error": -0.0031649219809277724,
+      "mean_error_squared_over_observation_variance": 391.3056958287473
+    },
+    {
+      "arm": "wrong-map-seven",
+      "channel": 1,
+      "observations": 106196,
+      "rmse": 0.09833416376794694,
+      "mean_error": -0.009234047855637709,
+      "mean_error_squared_over_observation_variance": 1263.8778093231022
+    },
+    {
+      "arm": "wrong-map-seven",
+      "channel": 2,
+      "observations": 53301,
+      "rmse": 0.19376608404160203,
+      "mean_error": -0.019345823790750085,
+      "mean_error_squared_over_observation_variance": 1309.5304967451145
+    }
+  ],
+  "limits": "Seven-frame arms exclude these observations. Nine-frame arm includes them and is NOT held-out validation. Residual can favour blur; observation variance excludes reconstruction uncertainty and optical/geometry mismatch, so ratios are not calibrated chi-square tests."
+}

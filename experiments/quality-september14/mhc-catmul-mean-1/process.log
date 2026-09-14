@@ -1,0 +1,14 @@
+frame146: both means updated
+frame147: both means updated
+frame148: both means updated
+Traceback (most recent call last):
+  File "C:\dev\blog\death-of-software\projects\strehl\experiments\quality-september14\mhc-catmul-mean.py", line 196, in <module>
+    if __name__=="__main__":main()
+                            ^^^^^^
+  File "C:\dev\blog\death-of-software\projects\strehl\experiments\quality-september14\mhc-catmul-mean.py", line 184, in main
+    child();return
+    ^^^^^^^
+  File "C:\dev\blog\death-of-software\projects\strehl\experiments\quality-september14\mhc-catmul-mean.py", line 129, in child
+    assert known==0
+           ^^^^^^^^
+AssertionError

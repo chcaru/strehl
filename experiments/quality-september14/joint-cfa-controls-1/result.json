@@ -1,0 +1,2194 @@
+{
+  "status": "CONTINUOUS_CFA_FALSIFIERS_EXECUTED",
+  "nominal_cases": [
+    {
+      "kind": "neutral",
+      "frequency": 0.08,
+      "orientation": "x",
+      "regression_vs_same_data_mean": {
+        "rgb_rmse": true,
+        "chroma_rmse": true
+      },
+      "joint": {
+        "rgb_rmse": 0.0021363841187654526,
+        "chroma_rmse": 0.0016657121576113384,
+        "green_mse": 2.722852049298156e-06,
+        "signed_bias_rgb": [
+          7.385791589816411e-05,
+          7.805290321509044e-05,
+          9.76657805343469e-05
+        ]
+      },
+      "anchor_mhc": {
+        "rgb_rmse": 0.003151974265585554,
+        "chroma_rmse": 0.0032312571204848764,
+        "green_mse": 1.0389272646268525e-05,
+        "signed_bias_rgb": [
+          9.686794752875964e-05,
+          0.00011285192643602689,
+          0.00012883745754758516
+        ]
+      },
+      "nine_mhc_mean": {
+        "rgb_rmse": 0.0006726943598211589,
+        "chroma_rmse": 0.0002736331996036985,
+        "green_mse": 4.047507389341269e-07,
+        "signed_bias_rgb": [
+          2.9404181987047195e-05,
+          3.144703805446625e-05,
+          3.348601361115774e-05
+        ]
+      },
+      "diagnostics": {
+        "shape": [
+          64,
+          64
+        ],
+        "channels": [
+          {
+            "channel": "R",
+            "status": "CONVERGED",
+            "observations": 9025,
+            "data_supported_pixels": 4096,
+            "prior_only_pixels": 0,
+            "support_min": 1,
+            "support_max": 9,
+            "median_provided_variance": 2.299969673913438e-05,
+            "converged": true,
+            "cg_info": 0,
+            "iterations": 6,
+            "relative_normal_residual": 3.901160198438447e-06,
+            "data_rmse": 0.00044631140190176666,
+            "weighted_data_rmse": 0.00044631140190176666,
+            "mean_residual": 2.061891422044937e-07,
+            "max_abs_residual": 0.0009223818778991699,
+            "mean_squared_residual_over_provided_variance": 0.008660717867314816
+          },
+          {
+            "channel": "G",
+            "status": "CONVERGED",
+            "observations": 17860,
+            "data_supported_pixels": 4096,
+            "prior_only_pixels": 0,
+            "support_min": 2,
+            "support_max": 13,
+            "median_provided_variance": 9.000000318337698e-06,
+            "converged": true,
+            "cg_info": 0,
+            "iterations": 6,
+            "relative_normal_residual": 8.414722287852783e-06,
+            "data_rmse": 0.0011422691168263555,
+            "weighted_data_rmse": 0.0011422691168263555,
+            "mean_residual": -3.539734905189107e-07,
+            "max_abs_residual": 0.0027575790882110596,
+            "mean_squared_residual_over_provided_variance": 0.1449754387140274
+          },
+          {
+            "channel": "B",
+            "status": "CONVERGED",
+            "observations": 8836,
+            "data_supported_pixels": 4096,
+            "prior_only_pixels": 0,
+            "support_min": 1,
+            "support_max": 9,
+            "median_provided_variance": 6.604813097510487e-05,
+            "converged": true,
+            "cg_info": 0,
+            "iterations": 7,
+            "relative_normal_residual": 6.600224878638983e-06,
+            "data_rmse": 0.00045914811198599637,
+            "weighted_data_rmse": 0.00045914811198599637,
+            "mean_residual": -1.2659410231208312e-07,
+            "max_abs_residual": 0.001466214656829834,
+            "mean_squared_residual_over_provided_variance": 0.00319186900742352
+          }
+        ],
+        "lambda_first_difference": 0.009999999776482582,
+        "max_iterations": 80,
+        "rtol": 1e-05,
+        "observations_total": 36864,
+        "observations_used": 35721,
+        "supplied_invalid": 0,
+        "valid_nonfinite": 0,
+        "valid_finite_nonpositive_variance": 0,
+        "valid_finite_positive_outside": 1143,
+        "limits": "First-difference algorithm prior, not sensor calibration. Unsupported pixels may be prior-filled; no all-clipped recovery claim. CG convergence is algebraic, not image quality. Bilinear forward-model error, blur mismatch and geometry error are unmodelled."
+      }
+    },
+    {
+      "kind": "independent-colour",
+      "frequency": 0.08,
+      "orientation": "x",
+      "regression_vs_same_data_mean": {
+        "rgb_rmse": false,
+        "chroma_rmse": false
+      },
+      "joint": {
+        "rgb_rmse": 0.20207918175248185,
+        "chroma_rmse": 0.3499809307927485,
+        "green_mse": 0.12249999582767579,
+        "signed_bias_rgb": [
+          4.643108695745468e-05,
+          0.3499999940395355,
+          3.110462178786596e-06
+        ]
+      },
+      "anchor_mhc": {
+        "rgb_rmse": 0.2023682091348226,
+        "chroma_rmse": 0.3502102248568339,
+        "green_mse": 0.12264914727408913,
+        "signed_bias_rgb": [
+          -4.5909546315670013e-05,
+          0.35016497907539207,
+          0.0001541643093029658
+        ]
+      },
+      "nine_mhc_mean": {
+        "rgb_rmse": 0.20224372710001656,
+        "chroma_rmse": 0.3502789984414979,
+        "green_mse": 0.12258799982491045,
+        "signed_bias_rgb": [
+          -0.00017543571690718332,
+          0.35011931136250496,
+          5.163298919796944e-05
+        ]
+      },
+      "diagnostics": {
+        "shape": [
+          64,
+          64
+        ],
+        "channels": [
+          {
+            "channel": "R",
+            "status": "CONVERGED",
+            "observations": 9025,
+            "data_supported_pixels": 4096,
+            "prior_only_pixels": 0,
+            "support_min": 1,
+            "support_max": 9,
+            "median_provided_variance": 2.299969673913438e-05,
+            "converged": true,
+            "cg_info": 0,
+            "iterations": 5,
+            "relative_normal_residual": 8.366070687770844e-06,
+            "data_rmse": 0.0003723316185642034,
+            "weighted_data_rmse": 0.0003723316185642034,
+            "mean_residual": -3.4270524906787614e-07,
+            "max_abs_residual": 0.0007937252521514893,
+            "mean_squared_residual_over_provided_variance": 0.006027508061379194
+          },
+          {
+            "channel": "G",
+            "status": "CONVERGED",
+            "observations": 17860,
+            "data_supported_pixels": 4096,
+            "prior_only_pixels": 0,
+            "support_min": 2,
+            "support_max": 13,
+            "median_provided_variance": 9.000000318337698e-06,
+            "converged": true,
+            "cg_info": 0,
+            "iterations": 0,
+            "relative_normal_residual": 5.3586710180297814e-08,
+            "data_rmse": 2.4494752892678662e-08,
+            "weighted_data_rmse": 2.4494752892678662e-08,
+            "mean_residual": -1.2046078801120075e-08,
+            "max_abs_residual": 5.960464477539063e-08,
+            "mean_squared_residual_over_provided_variance": 6.666587420989245e-11
+          },
+          {
+            "channel": "B",
+            "status": "CONVERGED",
+            "observations": 8836,
+            "data_supported_pixels": 4096,
+            "prior_only_pixels": 0,
+            "support_min": 1,
+            "support_max": 9,
+            "median_provided_variance": 6.604813097510487e-05,
+            "converged": true,
+            "cg_info": 0,
+            "iterations": 7,
+            "relative_normal_residual": 8.872758371580858e-06,
+            "data_rmse": 0.00038968209992162883,
+            "weighted_data_rmse": 0.00038968209992162883,
+            "mean_residual": -4.573894329951145e-08,
+            "max_abs_residual": 0.001862645149230957,
+            "mean_squared_residual_over_provided_variance": 0.002299113664776087
+          }
+        ],
+        "lambda_first_difference": 0.009999999776482582,
+        "max_iterations": 80,
+        "rtol": 1e-05,
+        "observations_total": 36864,
+        "observations_used": 35721,
+        "supplied_invalid": 0,
+        "valid_nonfinite": 0,
+        "valid_finite_nonpositive_variance": 0,
+        "valid_finite_positive_outside": 1143,
+        "limits": "First-difference algorithm prior, not sensor calibration. Unsupported pixels may be prior-filled; no all-clipped recovery claim. CG convergence is algebraic, not image quality. Bilinear forward-model error, blur mismatch and geometry error are unmodelled."
+      }
+    },
+    {
+      "kind": "neutral",
+      "frequency": 0.08,
+      "orientation": "oblique",
+      "regression_vs_same_data_mean": {
+        "rgb_rmse": true,
+        "chroma_rmse": true
+      },
+      "joint": {
+        "rgb_rmse": 0.001989485037006194,
+        "chroma_rmse": 0.0013186414597930178,
+        "green_mse": 2.787412045478125e-06,
+        "signed_bias_rgb": [
+          4.872660307834546e-06,
+          4.944242795722352e-06,
+          6.129848770797253e-06
+        ]
+      },
+      "anchor_mhc": {
+        "rgb_rmse": 0.0032269571189968535,
+        "chroma_rmse": 0.003032168630795467,
+        "green_mse": 1.2222081420843162e-05,
+        "signed_bias_rgb": [
+          6.74094513265623e-06,
+          7.474413400308953e-06,
+          8.67314843667878e-06
+        ]
+      },
+      "nine_mhc_mean": {
+        "rgb_rmse": 0.000835092958156885,
+        "chroma_rmse": 0.00024121871896674478,
+        "green_mse": 6.608883639097618e-07,
+        "signed_bias_rgb": [
+          2.41105186028613e-06,
+          2.5308820315533212e-06,
+          2.6604910898539756e-06
+        ]
+      },
+      "diagnostics": {
+        "shape": [
+          64,
+          64
+        ],
+        "channels": [
+          {
+            "channel": "R",
+            "status": "CONVERGED",
+            "observations": 9025,
+            "data_supported_pixels": 4096,
+            "prior_only_pixels": 0,
+            "support_min": 1,
+            "support_max": 9,
+            "median_provided_variance": 2.299969673913438e-05,
+            "converged": true,
+            "cg_info": 0,
+            "iterations": 6,
+            "relative_normal_residual": 3.920833933079848e-06,
+            "data_rmse": 0.0002745930396486074,
+            "weighted_data_rmse": 0.0002745930396486074,
+            "mean_residual": -1.1678217504140775e-08,
+            "max_abs_residual": 0.0008812546730041504,
+            "mean_squared_residual_over_provided_variance": 0.003278361866250634
+          },
+          {
+            "channel": "G",
+            "status": "CONVERGED",
+            "observations": 17860,
+            "data_supported_pixels": 4096,
+            "prior_only_pixels": 0,
+            "support_min": 2,
+            "support_max": 13,
+            "median_provided_variance": 9.000000318337698e-06,
+            "converged": true,
+            "cg_info": 0,
+            "iterations": 7,
+            "relative_normal_residual": 3.931054379791021e-06,
+            "data_rmse": 0.0008202843018807471,
+            "weighted_data_rmse": 0.0008202843018807471,
+            "mean_residual": 4.7374179246162385e-08,
+            "max_abs_residual": 0.001685023307800293,
+            "mean_squared_residual_over_provided_variance": 0.07476292550563812
+          },
+          {
+            "channel": "B",
+            "status": "CONVERGED",
+            "observations": 8836,
+            "data_supported_pixels": 4096,
+            "prior_only_pixels": 0,
+            "support_min": 1,
+            "support_max": 9,
+            "median_provided_variance": 6.604813097510487e-05,
+            "converged": true,
+            "cg_info": 0,
+            "iterations": 7,
+            "relative_normal_residual": 5.918764600210125e-06,
+            "data_rmse": 0.00029713843832723796,
+            "weighted_data_rmse": 0.00029713843832723796,
+            "mean_residual": 5.757082988111506e-08,
+            "max_abs_residual": 0.001330554485321045,
+            "mean_squared_residual_over_provided_variance": 0.001336771179921925
+          }
+        ],
+        "lambda_first_difference": 0.009999999776482582,
+        "max_iterations": 80,
+        "rtol": 1e-05,
+        "observations_total": 36864,
+        "observations_used": 35721,
+        "supplied_invalid": 0,
+        "valid_nonfinite": 0,
+        "valid_finite_nonpositive_variance": 0,
+        "valid_finite_positive_outside": 1143,
+        "limits": "First-difference algorithm prior, not sensor calibration. Unsupported pixels may be prior-filled; no all-clipped recovery claim. CG convergence is algebraic, not image quality. Bilinear forward-model error, blur mismatch and geometry error are unmodelled."
+      }
+    },
+    {
+      "kind": "independent-colour",
+      "frequency": 0.08,
+      "orientation": "oblique",
+      "regression_vs_same_data_mean": {
+        "rgb_rmse": false,
+        "chroma_rmse": false
+      },
+      "joint": {
+        "rgb_rmse": 0.20207779100110687,
+        "chroma_rmse": 0.35000254789211815,
+        "green_mse": 0.12249999582767579,
+        "signed_bias_rgb": [
+          3.0821215154396164e-06,
+          0.3499999940395355,
+          8.173261044753922e-07
+        ]
+      },
+      "anchor_mhc": {
+        "rgb_rmse": 0.20226828689943852,
+        "chroma_rmse": 0.35009498557116153,
+        "green_mse": 0.12254517164844146,
+        "signed_bias_rgb": [
+          -1.344312396314409e-06,
+          0.35001248087630504,
+          8.828252450459533e-06
+        ]
+      },
+      "nine_mhc_mean": {
+        "rgb_rmse": 0.20217876481503835,
+        "chroma_rmse": 0.35010967990879766,
+        "green_mse": 0.12251091090461402,
+        "signed_bias_rgb": [
+          -9.953083160022894e-06,
+          0.35000841407519245,
+          2.2877615669535266e-06
+        ]
+      },
+      "diagnostics": {
+        "shape": [
+          64,
+          64
+        ],
+        "channels": [
+          {
+            "channel": "R",
+            "status": "CONVERGED",
+            "observations": 9025,
+            "data_supported_pixels": 4096,
+            "prior_only_pixels": 0,
+            "support_min": 1,
+            "support_max": 9,
+            "median_provided_variance": 2.299969673913438e-05,
+            "converged": true,
+            "cg_info": 0,
+            "iterations": 5,
+            "relative_normal_residual": 8.679483471496496e-06,
+            "data_rmse": 0.00022875686408951879,
+            "weighted_data_rmse": 0.00022875686408951879,
+            "mean_residual": 1.7623822401446887e-08,
+            "max_abs_residual": 0.0010207295417785645,
+            "mean_squared_residual_over_provided_variance": 0.002275234553962946
+          },
+          {
+            "channel": "G",
+            "status": "CONVERGED",
+            "observations": 17860,
+            "data_supported_pixels": 4096,
+            "prior_only_pixels": 0,
+            "support_min": 2,
+            "support_max": 13,
+            "median_provided_variance": 9.000000318337698e-06,
+            "converged": true,
+            "cg_info": 0,
+            "iterations": 0,
+            "relative_normal_residual": 5.3586710180297814e-08,
+            "data_rmse": 2.4494752892678662e-08,
+            "weighted_data_rmse": 2.4494752892678662e-08,
+            "mean_residual": -1.2046078801120075e-08,
+            "max_abs_residual": 5.960464477539063e-08,
+            "mean_squared_residual_over_provided_variance": 6.666587420989245e-11
+          },
+          {
+            "channel": "B",
+            "status": "CONVERGED",
+            "observations": 8836,
+            "data_supported_pixels": 4096,
+            "prior_only_pixels": 0,
+            "support_min": 1,
+            "support_max": 9,
+            "median_provided_variance": 6.604813097510487e-05,
+            "converged": true,
+            "cg_info": 0,
+            "iterations": 7,
+            "relative_normal_residual": 5.9643734857672825e-06,
+            "data_rmse": 0.0002488665923010558,
+            "weighted_data_rmse": 0.0002488665923010558,
+            "mean_residual": 2.1935196770073162e-08,
+            "max_abs_residual": 0.002634584903717041,
+            "mean_squared_residual_over_provided_variance": 0.0009377188398502767
+          }
+        ],
+        "lambda_first_difference": 0.009999999776482582,
+        "max_iterations": 80,
+        "rtol": 1e-05,
+        "observations_total": 36864,
+        "observations_used": 35721,
+        "supplied_invalid": 0,
+        "valid_nonfinite": 0,
+        "valid_finite_nonpositive_variance": 0,
+        "valid_finite_positive_outside": 1143,
+        "limits": "First-difference algorithm prior, not sensor calibration. Unsupported pixels may be prior-filled; no all-clipped recovery claim. CG convergence is algebraic, not image quality. Bilinear forward-model error, blur mismatch and geometry error are unmodelled."
+      }
+    },
+    {
+      "kind": "neutral",
+      "frequency": 0.2,
+      "orientation": "x",
+      "regression_vs_same_data_mean": {
+        "rgb_rmse": true,
+        "chroma_rmse": true
+      },
+      "joint": {
+        "rgb_rmse": 0.01177074490546898,
+        "chroma_rmse": 0.0071556003269596154,
+        "green_mse": 0.00010185166974220616,
+        "signed_bias_rgb": [
+          0.0005079040614267191,
+          0.0003111545617381732,
+          0.0001577010326501396
+        ]
+      },
+      "anchor_mhc": {
+        "rgb_rmse": 0.006686859289163507,
+        "chroma_rmse": 0.009616199331265375,
+        "green_mse": 4.1098340294525026e-05,
+        "signed_bias_rgb": [
+          0.00012918716917435327,
+          0.00014305471753080687,
+          0.00015692878514528275
+        ]
+      },
+      "nine_mhc_mean": {
+        "rgb_rmse": 0.005740814793179008,
+        "chroma_rmse": 0.00014009446266715012,
+        "green_mse": 3.295442864792673e-05,
+        "signed_bias_rgb": [
+          -0.0001825458991030852,
+          -0.0001811439481874307,
+          -0.00017974510168035826
+        ]
+      },
+      "diagnostics": {
+        "shape": [
+          64,
+          64
+        ],
+        "channels": [
+          {
+            "channel": "R",
+            "status": "CONVERGED",
+            "observations": 9025,
+            "data_supported_pixels": 4096,
+            "prior_only_pixels": 0,
+            "support_min": 1,
+            "support_max": 9,
+            "median_provided_variance": 2.299969673913438e-05,
+            "converged": true,
+            "cg_info": 0,
+            "iterations": 6,
+            "relative_normal_residual": 9.474034413869958e-06,
+            "data_rmse": 0.005912144668400288,
+            "weighted_data_rmse": 0.005912144668400288,
+            "mean_residual": 1.863033105564682e-07,
+            "max_abs_residual": 0.010379284620285034,
+            "mean_squared_residual_over_provided_variance": 1.5197358131408691
+          },
+          {
+            "channel": "G",
+            "status": "CONVERGED",
+            "observations": 17860,
+            "data_supported_pixels": 4096,
+            "prior_only_pixels": 0,
+            "support_min": 2,
+            "support_max": 13,
+            "median_provided_variance": 9.000000318337698e-06,
+            "converged": true,
+            "cg_info": 0,
+            "iterations": 7,
+            "relative_normal_residual": 9.521608262730297e-06,
+            "data_rmse": 0.007806634996086359,
+            "weighted_data_rmse": 0.007806634996086359,
+            "mean_residual": 1.8223218489765713e-07,
+            "max_abs_residual": 0.016019761562347412,
+            "mean_squared_residual_over_provided_variance": 6.771504878997803
+          },
+          {
+            "channel": "B",
+            "status": "CONVERGED",
+            "observations": 8836,
+            "data_supported_pixels": 4096,
+            "prior_only_pixels": 0,
+            "support_min": 1,
+            "support_max": 9,
+            "median_provided_variance": 6.604813097510487e-05,
+            "converged": true,
+            "cg_info": 0,
+            "iterations": 9,
+            "relative_normal_residual": 7.606613507959992e-06,
+            "data_rmse": 0.005755751859396696,
+            "weighted_data_rmse": 0.005755751859396696,
+            "mean_residual": 1.5823292187633342e-07,
+            "max_abs_residual": 0.010424584150314331,
+            "mean_squared_residual_over_provided_variance": 0.5015838742256165
+          }
+        ],
+        "lambda_first_difference": 0.009999999776482582,
+        "max_iterations": 80,
+        "rtol": 1e-05,
+        "observations_total": 36864,
+        "observations_used": 35721,
+        "supplied_invalid": 0,
+        "valid_nonfinite": 0,
+        "valid_finite_nonpositive_variance": 0,
+        "valid_finite_positive_outside": 1143,
+        "limits": "First-difference algorithm prior, not sensor calibration. Unsupported pixels may be prior-filled; no all-clipped recovery claim. CG convergence is algebraic, not image quality. Bilinear forward-model error, blur mismatch and geometry error are unmodelled."
+      }
+    },
+    {
+      "kind": "independent-colour",
+      "frequency": 0.2,
+      "orientation": "x",
+      "regression_vs_same_data_mean": {
+        "rgb_rmse": false,
+        "chroma_rmse": false
+      },
+      "joint": {
+        "rgb_rmse": 0.20224527563067196,
+        "chroma_rmse": 0.3501533243843114,
+        "green_mse": 0.12249999582767579,
+        "signed_bias_rgb": [
+          0.0004541594535112381,
+          0.3499999940395355,
+          -0.00046166057129287056
+        ]
+      },
+      "anchor_mhc": {
+        "rgb_rmse": 0.20619108171321654,
+        "chroma_rmse": 0.3523515627108251,
+        "green_mse": 0.122976617271809,
+        "signed_bias_rgb": [
+          -0.0017709673071901004,
+          0.3499297847350438,
+          0.0016439723161359627
+        ]
+      },
+      "nine_mhc_mean": {
+        "rgb_rmse": 0.2042256700303779,
+        "chroma_rmse": 0.35205012373924804,
+        "green_mse": 0.12253582654867243,
+        "signed_bias_rgb": [
+          -0.0016425919408599536,
+          0.34996815734646386,
+          0.0017003356479108334
+        ]
+      },
+      "diagnostics": {
+        "shape": [
+          64,
+          64
+        ],
+        "channels": [
+          {
+            "channel": "R",
+            "status": "CONVERGED",
+            "observations": 9025,
+            "data_supported_pixels": 4096,
+            "prior_only_pixels": 0,
+            "support_min": 1,
+            "support_max": 9,
+            "median_provided_variance": 2.299969673913438e-05,
+            "converged": true,
+            "cg_info": 0,
+            "iterations": 6,
+            "relative_normal_residual": 7.731810001132544e-06,
+            "data_rmse": 0.004912273027002811,
+            "weighted_data_rmse": 0.004912273027002811,
+            "mean_residual": 1.8446729654897354e-07,
+            "max_abs_residual": 0.00875881314277649,
+            "mean_squared_residual_over_provided_variance": 1.0491628646850586
+          },
+          {
+            "channel": "G",
+            "status": "CONVERGED",
+            "observations": 17860,
+            "data_supported_pixels": 4096,
+            "prior_only_pixels": 0,
+            "support_min": 2,
+            "support_max": 13,
+            "median_provided_variance": 9.000000318337698e-06,
+            "converged": true,
+            "cg_info": 0,
+            "iterations": 0,
+            "relative_normal_residual": 5.3586710180297814e-08,
+            "data_rmse": 2.4494752892678662e-08,
+            "weighted_data_rmse": 2.4494752892678662e-08,
+            "mean_residual": -1.2046078801120075e-08,
+            "max_abs_residual": 5.960464477539063e-08,
+            "mean_squared_residual_over_provided_variance": 6.666587420989245e-11
+          },
+          {
+            "channel": "B",
+            "status": "CONVERGED",
+            "observations": 8836,
+            "data_supported_pixels": 4096,
+            "prior_only_pixels": 0,
+            "support_min": 1,
+            "support_max": 9,
+            "median_provided_variance": 6.604813097510487e-05,
+            "converged": true,
+            "cg_info": 0,
+            "iterations": 10,
+            "relative_normal_residual": 3.637803956735297e-06,
+            "data_rmse": 0.004834823310375214,
+            "weighted_data_rmse": 0.004834823310375214,
+            "mean_residual": 5.4253650461077996e-08,
+            "max_abs_residual": 0.009234756231307983,
+            "mean_squared_residual_over_provided_variance": 0.3539164066314697
+          }
+        ],
+        "lambda_first_difference": 0.009999999776482582,
+        "max_iterations": 80,
+        "rtol": 1e-05,
+        "observations_total": 36864,
+        "observations_used": 35721,
+        "supplied_invalid": 0,
+        "valid_nonfinite": 0,
+        "valid_finite_nonpositive_variance": 0,
+        "valid_finite_positive_outside": 1143,
+        "limits": "First-difference algorithm prior, not sensor calibration. Unsupported pixels may be prior-filled; no all-clipped recovery claim. CG convergence is algebraic, not image quality. Bilinear forward-model error, blur mismatch and geometry error are unmodelled."
+      }
+    },
+    {
+      "kind": "neutral",
+      "frequency": 0.2,
+      "orientation": "oblique",
+      "regression_vs_same_data_mean": {
+        "rgb_rmse": true,
+        "chroma_rmse": true
+      },
+      "joint": {
+        "rgb_rmse": 0.011847758024530794,
+        "chroma_rmse": 0.006428312445084871,
+        "green_mse": 0.0001070331271422991,
+        "signed_bias_rgb": [
+          2.189004509192374e-05,
+          1.4608370191935035e-05,
+          1.1056512852923737e-05
+        ]
+      },
+      "anchor_mhc": {
+        "rgb_rmse": 0.01299810764449528,
+        "chroma_rmse": 0.010989257437925315,
+        "green_mse": 0.00017924962129286492,
+        "signed_bias_rgb": [
+          2.0770052085734074e-05,
+          1.1128981390761004e-05,
+          6.194284651428461e-06
+        ]
+      },
+      "nine_mhc_mean": {
+        "rgb_rmse": 0.0014801445377675272,
+        "chroma_rmse": 0.0009160593579609242,
+        "green_mse": 1.6479924767520847e-06,
+        "signed_bias_rgb": [
+          -1.1308455011910862e-06,
+          -1.9629563515384993e-06,
+          -2.7218937045998045e-06
+        ]
+      },
+      "diagnostics": {
+        "shape": [
+          64,
+          64
+        ],
+        "channels": [
+          {
+            "channel": "R",
+            "status": "CONVERGED",
+            "observations": 9025,
+            "data_supported_pixels": 4096,
+            "prior_only_pixels": 0,
+            "support_min": 1,
+            "support_max": 9,
+            "median_provided_variance": 2.299969673913438e-05,
+            "converged": true,
+            "cg_info": 0,
+            "iterations": 6,
+            "relative_normal_residual": 5.6043036238406785e-06,
+            "data_rmse": 0.0034995267633348703,
+            "weighted_data_rmse": 0.0034995267633348703,
+            "mean_residual": -4.7748109466283495e-08,
+            "max_abs_residual": 0.00769275426864624,
+            "mean_squared_residual_over_provided_variance": 0.532471776008606
+          },
+          {
+            "channel": "G",
+            "status": "CONVERGED",
+            "observations": 17860,
+            "data_supported_pixels": 4096,
+            "prior_only_pixels": 0,
+            "support_min": 2,
+            "support_max": 13,
+            "median_provided_variance": 9.000000318337698e-06,
+            "converged": true,
+            "cg_info": 0,
+            "iterations": 8,
+            "relative_normal_residual": 4.6934142119425815e-06,
+            "data_rmse": 0.005460910499095917,
+            "weighted_data_rmse": 0.005460910499095917,
+            "mean_residual": 6.194077428745004e-08,
+            "max_abs_residual": 0.011714905500411987,
+            "mean_squared_residual_over_provided_variance": 3.313504695892334
+          },
+          {
+            "channel": "B",
+            "status": "CONVERGED",
+            "observations": 8836,
+            "data_supported_pixels": 4096,
+            "prior_only_pixels": 0,
+            "support_min": 1,
+            "support_max": 9,
+            "median_provided_variance": 6.604813097510487e-05,
+            "converged": true,
+            "cg_info": 0,
+            "iterations": 9,
+            "relative_normal_residual": 6.708733053528704e-06,
+            "data_rmse": 0.0035040208604186773,
+            "weighted_data_rmse": 0.0035040208604186773,
+            "mean_residual": -3.6416441417941314e-08,
+            "max_abs_residual": 0.008568644523620605,
+            "mean_squared_residual_over_provided_variance": 0.18589720129966736
+          }
+        ],
+        "lambda_first_difference": 0.009999999776482582,
+        "max_iterations": 80,
+        "rtol": 1e-05,
+        "observations_total": 36864,
+        "observations_used": 35721,
+        "supplied_invalid": 0,
+        "valid_nonfinite": 0,
+        "valid_finite_nonpositive_variance": 0,
+        "valid_finite_positive_outside": 1143,
+        "limits": "First-difference algorithm prior, not sensor calibration. Unsupported pixels may be prior-filled; no all-clipped recovery claim. CG convergence is algebraic, not image quality. Bilinear forward-model error, blur mismatch and geometry error are unmodelled."
+      }
+    },
+    {
+      "kind": "independent-colour",
+      "frequency": 0.2,
+      "orientation": "oblique",
+      "regression_vs_same_data_mean": {
+        "rgb_rmse": false,
+        "chroma_rmse": false
+      },
+      "joint": {
+        "rgb_rmse": 0.20225259650301095,
+        "chroma_rmse": 0.3501557615159424,
+        "green_mse": 0.12249999582767579,
+        "signed_bias_rgb": [
+          1.9334722310304642e-05,
+          0.3499999940395355,
+          -1.9021067095713483e-05
+        ]
+      },
+      "anchor_mhc": {
+        "rgb_rmse": 0.2067838005991092,
+        "chroma_rmse": 0.3522597051153831,
+        "green_mse": 0.12337259079022783,
+        "signed_bias_rgb": [
+          -5.716337667157253e-05,
+          0.35000224473575753,
+          5.997553105569548e-05
+        ]
+      },
+      "nine_mhc_mean": {
+        "rgb_rmse": 0.2045162304153875,
+        "chroma_rmse": 0.35237286039588434,
+        "green_mse": 0.12259747630655779,
+        "signed_bias_rgb": [
+          -7.385644130408764e-05,
+          0.3500009920292844,
+          7.288974140667253e-05
+        ]
+      },
+      "diagnostics": {
+        "shape": [
+          64,
+          64
+        ],
+        "channels": [
+          {
+            "channel": "R",
+            "status": "CONVERGED",
+            "observations": 9025,
+            "data_supported_pixels": 4096,
+            "prior_only_pixels": 0,
+            "support_min": 1,
+            "support_max": 9,
+            "median_provided_variance": 2.299969673913438e-05,
+            "converged": true,
+            "cg_info": 0,
+            "iterations": 6,
+            "relative_normal_residual": 3.9840242607169785e-06,
+            "data_rmse": 0.0029162480495870113,
+            "weighted_data_rmse": 0.0029162480495870113,
+            "mean_residual": -5.023301241635636e-08,
+            "max_abs_residual": 0.006412386894226074,
+            "mean_squared_residual_over_provided_variance": 0.36976590752601624
+          },
+          {
+            "channel": "G",
+            "status": "CONVERGED",
+            "observations": 17860,
+            "data_supported_pixels": 4096,
+            "prior_only_pixels": 0,
+            "support_min": 2,
+            "support_max": 13,
+            "median_provided_variance": 9.000000318337698e-06,
+            "converged": true,
+            "cg_info": 0,
+            "iterations": 0,
+            "relative_normal_residual": 5.3586710180297814e-08,
+            "data_rmse": 2.4494752892678662e-08,
+            "weighted_data_rmse": 2.4494752892678662e-08,
+            "mean_residual": -1.2046078801120075e-08,
+            "max_abs_residual": 5.960464477539063e-08,
+            "mean_squared_residual_over_provided_variance": 6.666587420989245e-11
+          },
+          {
+            "channel": "B",
+            "status": "CONVERGED",
+            "observations": 8836,
+            "data_supported_pixels": 4096,
+            "prior_only_pixels": 0,
+            "support_min": 1,
+            "support_max": 9,
+            "median_provided_variance": 6.604813097510487e-05,
+            "converged": true,
+            "cg_info": 0,
+            "iterations": 9,
+            "relative_normal_residual": 6.250863407331053e-06,
+            "data_rmse": 0.00292087160050869,
+            "weighted_data_rmse": 0.00292087160050869,
+            "mean_residual": 2.3365277712628085e-08,
+            "max_abs_residual": 0.007999330759048462,
+            "mean_squared_residual_over_provided_variance": 0.12917080521583557
+          }
+        ],
+        "lambda_first_difference": 0.009999999776482582,
+        "max_iterations": 80,
+        "rtol": 1e-05,
+        "observations_total": 36864,
+        "observations_used": 35721,
+        "supplied_invalid": 0,
+        "valid_nonfinite": 0,
+        "valid_finite_nonpositive_variance": 0,
+        "valid_finite_positive_outside": 1143,
+        "limits": "First-difference algorithm prior, not sensor calibration. Unsupported pixels may be prior-filled; no all-clipped recovery claim. CG convergence is algebraic, not image quality. Bilinear forward-model error, blur mismatch and geometry error are unmodelled."
+      }
+    },
+    {
+      "kind": "neutral",
+      "frequency": 0.3,
+      "orientation": "x",
+      "regression_vs_same_data_mean": {
+        "rgb_rmse": false,
+        "chroma_rmse": true
+      },
+      "joint": {
+        "rgb_rmse": 0.023026917428167,
+        "chroma_rmse": 0.011059967794538541,
+        "green_mse": 0.0004349005776236851,
+        "signed_bias_rgb": [
+          -0.0006946801828841368,
+          -0.0007050589774735272,
+          -0.000789098150562495
+        ]
+      },
+      "anchor_mhc": {
+        "rgb_rmse": 0.028384629447883777,
+        "chroma_rmse": 0.028602696732820957,
+        "green_mse": 0.00014912588656268433,
+        "signed_bias_rgb": [
+          0.00017378246411681175,
+          0.00029584144552548725,
+          0.00041789934039115906
+        ]
+      },
+      "nine_mhc_mean": {
+        "rgb_rmse": 0.027500215447408757,
+        "chroma_rmse": 0.0018860778040573926,
+        "green_mse": 0.0007538805978638541,
+        "signed_bias_rgb": [
+          0.0009321523959644967,
+          0.0009406935423612595,
+          0.0009492325286070505
+        ]
+      },
+      "diagnostics": {
+        "shape": [
+          64,
+          64
+        ],
+        "channels": [
+          {
+            "channel": "R",
+            "status": "CONVERGED",
+            "observations": 9025,
+            "data_supported_pixels": 4096,
+            "prior_only_pixels": 0,
+            "support_min": 1,
+            "support_max": 9,
+            "median_provided_variance": 2.299969673913438e-05,
+            "converged": true,
+            "cg_info": 0,
+            "iterations": 7,
+            "relative_normal_residual": 3.2251368793367874e-06,
+            "data_rmse": 0.017512040212750435,
+            "weighted_data_rmse": 0.017512040212750435,
+            "mean_residual": -1.3996690029216552e-07,
+            "max_abs_residual": 0.02955913543701172,
+            "mean_squared_residual_over_provided_variance": 13.333723068237305
+          },
+          {
+            "channel": "G",
+            "status": "CONVERGED",
+            "observations": 17860,
+            "data_supported_pixels": 4096,
+            "prior_only_pixels": 0,
+            "support_min": 2,
+            "support_max": 13,
+            "median_provided_variance": 9.000000318337698e-06,
+            "converged": true,
+            "cg_info": 0,
+            "iterations": 9,
+            "relative_normal_residual": 4.986426120012766e-06,
+            "data_rmse": 0.019711026921868324,
+            "weighted_data_rmse": 0.019711026921868324,
+            "mean_residual": -2.5980332907238335e-07,
+            "max_abs_residual": 0.03129702806472778,
+            "mean_squared_residual_over_provided_variance": 43.169395446777344
+          },
+          {
+            "channel": "B",
+            "status": "CONVERGED",
+            "observations": 8836,
+            "data_supported_pixels": 4096,
+            "prior_only_pixels": 0,
+            "support_min": 1,
+            "support_max": 9,
+            "median_provided_variance": 6.604813097510487e-05,
+            "converged": true,
+            "cg_info": 0,
+            "iterations": 10,
+            "relative_normal_residual": 6.320818556559971e-06,
+            "data_rmse": 0.017332183197140694,
+            "weighted_data_rmse": 0.017332183197140694,
+            "mean_residual": 2.9554419356259132e-08,
+            "max_abs_residual": 0.030467897653579712,
+            "mean_squared_residual_over_provided_variance": 4.548266887664795
+          }
+        ],
+        "lambda_first_difference": 0.009999999776482582,
+        "max_iterations": 80,
+        "rtol": 1e-05,
+        "observations_total": 36864,
+        "observations_used": 35721,
+        "supplied_invalid": 0,
+        "valid_nonfinite": 0,
+        "valid_finite_nonpositive_variance": 0,
+        "valid_finite_positive_outside": 1143,
+        "limits": "First-difference algorithm prior, not sensor calibration. Unsupported pixels may be prior-filled; no all-clipped recovery claim. CG convergence is algebraic, not image quality. Bilinear forward-model error, blur mismatch and geometry error are unmodelled."
+      }
+    },
+    {
+      "kind": "independent-colour",
+      "frequency": 0.3,
+      "orientation": "x",
+      "regression_vs_same_data_mean": {
+        "rgb_rmse": false,
+        "chroma_rmse": false
+      },
+      "joint": {
+        "rgb_rmse": 0.20272728981652025,
+        "chroma_rmse": 0.3505396538255625,
+        "green_mse": 0.12249999582767579,
+        "signed_bias_rgb": [
+          -0.0004568373163541158,
+          0.3499999940395355,
+          0.000512494640942249
+        ]
+      },
+      "anchor_mhc": {
+        "rgb_rmse": 0.21164281983578562,
+        "chroma_rmse": 0.35766202365321964,
+        "green_mse": 0.122509965858341,
+        "signed_bias_rgb": [
+          0.00032130318383375805,
+          0.3492882785697778,
+          -0.003027167016019424
+        ]
+      },
+      "nine_mhc_mean": {
+        "rgb_rmse": 0.20733540954016727,
+        "chroma_rmse": 0.3544420714555936,
+        "green_mse": 0.12240313993977517,
+        "signed_bias_rgb": [
+          0.0016807156304518382,
+          0.3498034089182814,
+          -0.0007755660141507784
+        ]
+      },
+      "diagnostics": {
+        "shape": [
+          64,
+          64
+        ],
+        "channels": [
+          {
+            "channel": "R",
+            "status": "CONVERGED",
+            "observations": 9025,
+            "data_supported_pixels": 4096,
+            "prior_only_pixels": 0,
+            "support_min": 1,
+            "support_max": 9,
+            "median_provided_variance": 2.299969673913438e-05,
+            "converged": true,
+            "cg_info": 0,
+            "iterations": 6,
+            "relative_normal_residual": 7.808241207385436e-06,
+            "data_rmse": 0.014479496516287327,
+            "weighted_data_rmse": 0.014479496516287327,
+            "mean_residual": 5.453247240438941e-07,
+            "max_abs_residual": 0.024408996105194092,
+            "mean_squared_residual_over_provided_variance": 9.115591049194336
+          },
+          {
+            "channel": "G",
+            "status": "CONVERGED",
+            "observations": 17860,
+            "data_supported_pixels": 4096,
+            "prior_only_pixels": 0,
+            "support_min": 2,
+            "support_max": 13,
+            "median_provided_variance": 9.000000318337698e-06,
+            "converged": true,
+            "cg_info": 0,
+            "iterations": 0,
+            "relative_normal_residual": 5.3586710180297814e-08,
+            "data_rmse": 2.4494752892678662e-08,
+            "weighted_data_rmse": 2.4494752892678662e-08,
+            "mean_residual": -1.2046078801120075e-08,
+            "max_abs_residual": 5.960464477539063e-08,
+            "mean_squared_residual_over_provided_variance": 6.666587420989245e-11
+          },
+          {
+            "channel": "B",
+            "status": "CONVERGED",
+            "observations": 8836,
+            "data_supported_pixels": 4096,
+            "prior_only_pixels": 0,
+            "support_min": 1,
+            "support_max": 9,
+            "median_provided_variance": 6.604813097510487e-05,
+            "converged": true,
+            "cg_info": 0,
+            "iterations": 9,
+            "relative_normal_residual": 7.3675687417562585e-06,
+            "data_rmse": 0.014422756619751453,
+            "weighted_data_rmse": 0.014422756619751453,
+            "mean_residual": 9.256224586806638e-08,
+            "max_abs_residual": 0.02617916464805603,
+            "mean_squared_residual_over_provided_variance": 3.1494596004486084
+          }
+        ],
+        "lambda_first_difference": 0.009999999776482582,
+        "max_iterations": 80,
+        "rtol": 1e-05,
+        "observations_total": 36864,
+        "observations_used": 35721,
+        "supplied_invalid": 0,
+        "valid_nonfinite": 0,
+        "valid_finite_nonpositive_variance": 0,
+        "valid_finite_positive_outside": 1143,
+        "limits": "First-difference algorithm prior, not sensor calibration. Unsupported pixels may be prior-filled; no all-clipped recovery claim. CG convergence is algebraic, not image quality. Bilinear forward-model error, blur mismatch and geometry error are unmodelled."
+      }
+    },
+    {
+      "kind": "neutral",
+      "frequency": 0.3,
+      "orientation": "oblique",
+      "regression_vs_same_data_mean": {
+        "rgb_rmse": true,
+        "chroma_rmse": true
+      },
+      "joint": {
+        "rgb_rmse": 0.02554564729975098,
+        "chroma_rmse": 0.011279335067021563,
+        "green_mse": 0.0005362664731966373,
+        "signed_bias_rgb": [
+          2.8180805707557334e-05,
+          9.039688544968763e-06,
+          -7.727015246119765e-06
+        ]
+      },
+      "anchor_mhc": {
+        "rgb_rmse": 0.015630600080748222,
+        "chroma_rmse": 0.01399686890156407,
+        "green_mse": 8.291933825494727e-05,
+        "signed_bias_rgb": [
+          1.6820106086217696e-05,
+          1.1021620593965054e-06,
+          -1.642490193868677e-05
+        ]
+      },
+      "nine_mhc_mean": {
+        "rgb_rmse": 0.015587672082024287,
+        "chroma_rmse": 0.0012014983966064433,
+        "green_mse": 0.00024201130898451238,
+        "signed_bias_rgb": [
+          -5.173891420579619e-06,
+          -6.608128185487456e-06,
+          -8.060887921601534e-06
+        ]
+      },
+      "diagnostics": {
+        "shape": [
+          64,
+          64
+        ],
+        "channels": [
+          {
+            "channel": "R",
+            "status": "CONVERGED",
+            "observations": 9025,
+            "data_supported_pixels": 4096,
+            "prior_only_pixels": 0,
+            "support_min": 1,
+            "support_max": 9,
+            "median_provided_variance": 2.299969673913438e-05,
+            "converged": true,
+            "cg_info": 0,
+            "iterations": 6,
+            "relative_normal_residual": 6.682908406219212e-06,
+            "data_rmse": 0.010632320307195187,
+            "weighted_data_rmse": 0.010632320307195187,
+            "mean_residual": 1.0408523110072565e-07,
+            "max_abs_residual": 0.022857338190078735,
+            "mean_squared_residual_over_provided_variance": 4.91511869430542
+          },
+          {
+            "channel": "G",
+            "status": "CONVERGED",
+            "observations": 17860,
+            "data_supported_pixels": 4096,
+            "prior_only_pixels": 0,
+            "support_min": 2,
+            "support_max": 13,
+            "median_provided_variance": 9.000000318337698e-06,
+            "converged": true,
+            "cg_info": 0,
+            "iterations": 8,
+            "relative_normal_residual": 9.677370144345332e-06,
+            "data_rmse": 0.013268256559967995,
+            "weighted_data_rmse": 0.013268256559967995,
+            "mean_residual": -8.423410946534204e-08,
+            "max_abs_residual": 0.02901589870452881,
+            "mean_squared_residual_over_provided_variance": 19.56073570251465
+          },
+          {
+            "channel": "B",
+            "status": "CONVERGED",
+            "observations": 8836,
+            "data_supported_pixels": 4096,
+            "prior_only_pixels": 0,
+            "support_min": 1,
+            "support_max": 9,
+            "median_provided_variance": 6.604813097510487e-05,
+            "converged": true,
+            "cg_info": 0,
+            "iterations": 10,
+            "relative_normal_residual": 4.2212232074234635e-06,
+            "data_rmse": 0.01061018742620945,
+            "weighted_data_rmse": 0.01061018742620945,
+            "mean_residual": -6.330801483045434e-08,
+            "max_abs_residual": 0.02401679754257202,
+            "mean_squared_residual_over_provided_variance": 1.704455018043518
+          }
+        ],
+        "lambda_first_difference": 0.009999999776482582,
+        "max_iterations": 80,
+        "rtol": 1e-05,
+        "observations_total": 36864,
+        "observations_used": 35721,
+        "supplied_invalid": 0,
+        "valid_nonfinite": 0,
+        "valid_finite_nonpositive_variance": 0,
+        "valid_finite_positive_outside": 1143,
+        "limits": "First-difference algorithm prior, not sensor calibration. Unsupported pixels may be prior-filled; no all-clipped recovery claim. CG convergence is algebraic, not image quality. Bilinear forward-model error, blur mismatch and geometry error are unmodelled."
+      }
+    },
+    {
+      "kind": "independent-colour",
+      "frequency": 0.3,
+      "orientation": "oblique",
+      "regression_vs_same_data_mean": {
+        "rgb_rmse": false,
+        "chroma_rmse": false
+      },
+      "joint": {
+        "rgb_rmse": 0.20288510028857548,
+        "chroma_rmse": 0.3507053769068817,
+        "green_mse": 0.12249999582767579,
+        "signed_bias_rgb": [
+          2.8507473568121593e-05,
+          0.3499999940395355,
+          -3.055775434606605e-05
+        ]
+      },
+      "anchor_mhc": {
+        "rgb_rmse": 0.21425738690115068,
+        "chroma_rmse": 0.3563735586359662,
+        "green_mse": 0.12453049701680419,
+        "signed_bias_rgb": [
+          -8.893088023695681e-05,
+          0.34996235563368017,
+          3.297761496570375e-05
+        ]
+      },
+      "nine_mhc_mean": {
+        "rgb_rmse": 0.20832775908138346,
+        "chroma_rmse": 0.35609295924811385,
+        "green_mse": 0.12265694182324226,
+        "signed_bias_rgb": [
+          -6.797002990626627e-05,
+          0.34998797215262634,
+          8.553908103042179e-05
+        ]
+      },
+      "diagnostics": {
+        "shape": [
+          64,
+          64
+        ],
+        "channels": [
+          {
+            "channel": "R",
+            "status": "CONVERGED",
+            "observations": 9025,
+            "data_supported_pixels": 4096,
+            "prior_only_pixels": 0,
+            "support_min": 1,
+            "support_max": 9,
+            "median_provided_variance": 2.299969673913438e-05,
+            "converged": true,
+            "cg_info": 0,
+            "iterations": 6,
+            "relative_normal_residual": 4.616758815245703e-06,
+            "data_rmse": 0.008858084678649902,
+            "weighted_data_rmse": 0.008858084678649902,
+            "mean_residual": 4.992920921154109e-08,
+            "max_abs_residual": 0.01925763487815857,
+            "mean_squared_residual_over_provided_variance": 3.4115958213806152
+          },
+          {
+            "channel": "G",
+            "status": "CONVERGED",
+            "observations": 17860,
+            "data_supported_pixels": 4096,
+            "prior_only_pixels": 0,
+            "support_min": 2,
+            "support_max": 13,
+            "median_provided_variance": 9.000000318337698e-06,
+            "converged": true,
+            "cg_info": 0,
+            "iterations": 0,
+            "relative_normal_residual": 5.3586710180297814e-08,
+            "data_rmse": 2.4494752892678662e-08,
+            "weighted_data_rmse": 2.4494752892678662e-08,
+            "mean_residual": -1.2046078801120075e-08,
+            "max_abs_residual": 5.960464477539063e-08,
+            "mean_squared_residual_over_provided_variance": 6.666587420989245e-11
+          },
+          {
+            "channel": "B",
+            "status": "CONVERGED",
+            "observations": 8836,
+            "data_supported_pixels": 4096,
+            "prior_only_pixels": 0,
+            "support_min": 1,
+            "support_max": 9,
+            "median_provided_variance": 6.604813097510487e-05,
+            "converged": true,
+            "cg_info": 0,
+            "iterations": 10,
+            "relative_normal_residual": 4.426826308190357e-06,
+            "data_rmse": 0.008840332739055157,
+            "weighted_data_rmse": 0.008840332739055157,
+            "mean_residual": -6.885631620434651e-09,
+            "max_abs_residual": 0.019490569829940796,
+            "mean_squared_residual_over_provided_variance": 1.1832503080368042
+          }
+        ],
+        "lambda_first_difference": 0.009999999776482582,
+        "max_iterations": 80,
+        "rtol": 1e-05,
+        "observations_total": 36864,
+        "observations_used": 35721,
+        "supplied_invalid": 0,
+        "valid_nonfinite": 0,
+        "valid_finite_nonpositive_variance": 0,
+        "valid_finite_positive_outside": 1143,
+        "limits": "First-difference algorithm prior, not sensor calibration. Unsupported pixels may be prior-filled; no all-clipped recovery claim. CG convergence is algebraic, not image quality. Bilinear forward-model error, blur mismatch and geometry error are unmodelled."
+      }
+    }
+  ],
+  "nominal_bar_failures": [
+    {
+      "kind": "neutral",
+      "frequency": 0.08,
+      "orientation": "x",
+      "regression_vs_same_data_mean": {
+        "rgb_rmse": true,
+        "chroma_rmse": true
+      }
+    },
+    {
+      "kind": "neutral",
+      "frequency": 0.08,
+      "orientation": "oblique",
+      "regression_vs_same_data_mean": {
+        "rgb_rmse": true,
+        "chroma_rmse": true
+      }
+    },
+    {
+      "kind": "neutral",
+      "frequency": 0.2,
+      "orientation": "x",
+      "regression_vs_same_data_mean": {
+        "rgb_rmse": true,
+        "chroma_rmse": true
+      }
+    },
+    {
+      "kind": "neutral",
+      "frequency": 0.2,
+      "orientation": "oblique",
+      "regression_vs_same_data_mean": {
+        "rgb_rmse": true,
+        "chroma_rmse": true
+      }
+    },
+    {
+      "kind": "neutral",
+      "frequency": 0.3,
+      "orientation": "x",
+      "regression_vs_same_data_mean": {
+        "rgb_rmse": false,
+        "chroma_rmse": true
+      }
+    },
+    {
+      "kind": "neutral",
+      "frequency": 0.3,
+      "orientation": "oblique",
+      "regression_vs_same_data_mean": {
+        "rgb_rmse": true,
+        "chroma_rmse": true
+      }
+    }
+  ],
+  "phase_cases": [
+    {
+      "layout": "coincident",
+      "joint": {
+        "rgb_rmse": 0.20720909895382036,
+        "chroma_rmse": 0.3544660511788606,
+        "green_mse": 0.12249997496605047,
+        "signed_bias_rgb": [
+          -6.489028843740623e-05,
+          0.34999996423721313,
+          8.552480075094436e-05
+        ]
+      },
+      "anchor_mhc": {
+        "rgb_rmse": 0.21425738690115068,
+        "chroma_rmse": 0.3563735586359662,
+        "green_mse": 0.12453049701680419,
+        "signed_bias_rgb": [
+          -8.893088023695681e-05,
+          0.34996235563368017,
+          3.297761496570375e-05
+        ]
+      },
+      "nine_mhc_mean": {
+        "rgb_rmse": 0.21425737757967767,
+        "chroma_rmse": 0.35637354276624184,
+        "green_mse": 0.12453048515040264,
+        "signed_bias_rgb": [
+          -8.893208319528235e-05,
+          0.3499623386499782,
+          3.2977466212792526e-05
+        ]
+      },
+      "diagnostics": {
+        "shape": [
+          64,
+          64
+        ],
+        "channels": [
+          {
+            "channel": "R",
+            "status": "CONVERGED",
+            "observations": 9216,
+            "data_supported_pixels": 1024,
+            "prior_only_pixels": 3072,
+            "support_min": 0,
+            "support_max": 9,
+            "median_provided_variance": 2.299969673913438e-05,
+            "converged": true,
+            "cg_info": 0,
+            "iterations": 3,
+            "relative_normal_residual": 6.808021225879202e-06,
+            "data_rmse": 0.00029004691168665886,
+            "weighted_data_rmse": 0.00029004691168665886,
+            "mean_residual": 5.7334545999765396e-08,
+            "max_abs_residual": 0.0004188120365142822,
+            "mean_squared_residual_over_provided_variance": 0.0036577533464878798
+          },
+          {
+            "channel": "G",
+            "status": "CONVERGED",
+            "observations": 17856,
+            "data_supported_pixels": 1984,
+            "prior_only_pixels": 2112,
+            "support_min": 0,
+            "support_max": 9,
+            "median_provided_variance": 9.000000318337698e-06,
+            "converged": true,
+            "cg_info": 0,
+            "iterations": 0,
+            "relative_normal_residual": 7.568846882577418e-08,
+            "data_rmse": 2.9802322387695312e-08,
+            "weighted_data_rmse": 2.9802322387695312e-08,
+            "mean_residual": -2.9802322387695312e-08,
+            "max_abs_residual": 2.9802322387695312e-08,
+            "mean_squared_residual_over_provided_variance": 9.868648953581527e-11
+          },
+          {
+            "channel": "B",
+            "status": "CONVERGED",
+            "observations": 8649,
+            "data_supported_pixels": 961,
+            "prior_only_pixels": 3135,
+            "support_min": 0,
+            "support_max": 9,
+            "median_provided_variance": 6.604813097510487e-05,
+            "converged": true,
+            "cg_info": 0,
+            "iterations": 4,
+            "relative_normal_residual": 7.371629180852324e-06,
+            "data_rmse": 0.00029467607964761555,
+            "weighted_data_rmse": 0.00029467607964761555,
+            "mean_residual": 1.3335066384456695e-08,
+            "max_abs_residual": 0.00041922926902770996,
+            "mean_squared_residual_over_provided_variance": 0.0013147079152986407
+          }
+        ],
+        "lambda_first_difference": 0.009999999776482582,
+        "max_iterations": 80,
+        "rtol": 1e-05,
+        "observations_total": 36864,
+        "observations_used": 35721,
+        "supplied_invalid": 0,
+        "valid_nonfinite": 0,
+        "valid_finite_nonpositive_variance": 0,
+        "valid_finite_positive_outside": 1143,
+        "limits": "First-difference algorithm prior, not sensor calibration. Unsupported pixels may be prior-filled; no all-clipped recovery claim. CG convergence is algebraic, not image quality. Bilinear forward-model error, blur mismatch and geometry error are unmodelled."
+      }
+    },
+    {
+      "layout": "fractional2d",
+      "joint": {
+        "rgb_rmse": 0.20288510028857548,
+        "chroma_rmse": 0.3507053769068817,
+        "green_mse": 0.12249999582767579,
+        "signed_bias_rgb": [
+          2.8507473568121593e-05,
+          0.3499999940395355,
+          -3.055775434606605e-05
+        ]
+      },
+      "anchor_mhc": {
+        "rgb_rmse": 0.21425738690115068,
+        "chroma_rmse": 0.3563735586359662,
+        "green_mse": 0.12453049701680419,
+        "signed_bias_rgb": [
+          -8.893088023695681e-05,
+          0.34996235563368017,
+          3.297761496570375e-05
+        ]
+      },
+      "nine_mhc_mean": {
+        "rgb_rmse": 0.20832775908138346,
+        "chroma_rmse": 0.35609295924811385,
+        "green_mse": 0.12265694182324226,
+        "signed_bias_rgb": [
+          -6.797002990626627e-05,
+          0.34998797215262634,
+          8.553908103042179e-05
+        ]
+      },
+      "diagnostics": {
+        "shape": [
+          64,
+          64
+        ],
+        "channels": [
+          {
+            "channel": "R",
+            "status": "CONVERGED",
+            "observations": 9025,
+            "data_supported_pixels": 4096,
+            "prior_only_pixels": 0,
+            "support_min": 1,
+            "support_max": 9,
+            "median_provided_variance": 2.299969673913438e-05,
+            "converged": true,
+            "cg_info": 0,
+            "iterations": 6,
+            "relative_normal_residual": 4.616758815245703e-06,
+            "data_rmse": 0.008858084678649902,
+            "weighted_data_rmse": 0.008858084678649902,
+            "mean_residual": 4.992920921154109e-08,
+            "max_abs_residual": 0.01925763487815857,
+            "mean_squared_residual_over_provided_variance": 3.4115958213806152
+          },
+          {
+            "channel": "G",
+            "status": "CONVERGED",
+            "observations": 17860,
+            "data_supported_pixels": 4096,
+            "prior_only_pixels": 0,
+            "support_min": 2,
+            "support_max": 13,
+            "median_provided_variance": 9.000000318337698e-06,
+            "converged": true,
+            "cg_info": 0,
+            "iterations": 0,
+            "relative_normal_residual": 5.3586710180297814e-08,
+            "data_rmse": 2.4494752892678662e-08,
+            "weighted_data_rmse": 2.4494752892678662e-08,
+            "mean_residual": -1.2046078801120075e-08,
+            "max_abs_residual": 5.960464477539063e-08,
+            "mean_squared_residual_over_provided_variance": 6.666587420989245e-11
+          },
+          {
+            "channel": "B",
+            "status": "CONVERGED",
+            "observations": 8836,
+            "data_supported_pixels": 4096,
+            "prior_only_pixels": 0,
+            "support_min": 1,
+            "support_max": 9,
+            "median_provided_variance": 6.604813097510487e-05,
+            "converged": true,
+            "cg_info": 0,
+            "iterations": 10,
+            "relative_normal_residual": 4.426826308190357e-06,
+            "data_rmse": 0.008840332739055157,
+            "weighted_data_rmse": 0.008840332739055157,
+            "mean_residual": -6.885631620434651e-09,
+            "max_abs_residual": 0.019490569829940796,
+            "mean_squared_residual_over_provided_variance": 1.1832503080368042
+          }
+        ],
+        "lambda_first_difference": 0.009999999776482582,
+        "max_iterations": 80,
+        "rtol": 1e-05,
+        "observations_total": 36864,
+        "observations_used": 35721,
+        "supplied_invalid": 0,
+        "valid_nonfinite": 0,
+        "valid_finite_nonpositive_variance": 0,
+        "valid_finite_positive_outside": 1143,
+        "limits": "First-difference algorithm prior, not sensor calibration. Unsupported pixels may be prior-filled; no all-clipped recovery claim. CG convergence is algebraic, not image quality. Bilinear forward-model error, blur mismatch and geometry error are unmodelled."
+      }
+    },
+    {
+      "layout": "integer2d",
+      "joint": {
+        "rgb_rmse": 0.2020753746707575,
+        "chroma_rmse": 0.3500015909330274,
+        "green_mse": 0.1224999958276749,
+        "signed_bias_rgb": [
+          -2.590887662437227e-08,
+          0.3499999940395355,
+          1.6539965549276935e-06
+        ]
+      },
+      "anchor_mhc": {
+        "rgb_rmse": 0.21425738690115068,
+        "chroma_rmse": 0.3563735586359662,
+        "green_mse": 0.12453049701680419,
+        "signed_bias_rgb": [
+          -8.893088023695681e-05,
+          0.34996235563368017,
+          3.297761496570375e-05
+        ]
+      },
+      "nine_mhc_mean": {
+        "rgb_rmse": 0.20862807149643706,
+        "chroma_rmse": 0.35585419784680133,
+        "green_mse": 0.1229399827288849,
+        "signed_bias_rgb": [
+          -5.461445026513603e-05,
+          0.3499993746841533,
+          0.00010042026406154037
+        ]
+      },
+      "diagnostics": {
+        "shape": [
+          64,
+          64
+        ],
+        "channels": [
+          {
+            "channel": "R",
+            "status": "CONVERGED",
+            "observations": 8836,
+            "data_supported_pixels": 3969,
+            "prior_only_pixels": 127,
+            "support_min": 0,
+            "support_max": 4,
+            "median_provided_variance": 2.299969673913438e-05,
+            "converged": true,
+            "cg_info": 0,
+            "iterations": 3,
+            "relative_normal_residual": 7.683832336624619e-06,
+            "data_rmse": 0.001046407618559897,
+            "weighted_data_rmse": 0.001046407618559897,
+            "mean_residual": -7.478237762370554e-08,
+            "max_abs_residual": 0.0030985474586486816,
+            "mean_squared_residual_over_provided_variance": 0.04760797321796417
+          },
+          {
+            "channel": "G",
+            "status": "CONVERGED",
+            "observations": 17672,
+            "data_supported_pixels": 3969,
+            "prior_only_pixels": 127,
+            "support_min": 0,
+            "support_max": 5,
+            "median_provided_variance": 9.000000318337698e-06,
+            "converged": true,
+            "cg_info": 0,
+            "iterations": 0,
+            "relative_normal_residual": 6.721457418423782e-11,
+            "data_rmse": 0.0,
+            "weighted_data_rmse": 0.0,
+            "mean_residual": 0.0,
+            "max_abs_residual": 0.0,
+            "mean_squared_residual_over_provided_variance": 0.0
+          },
+          {
+            "channel": "B",
+            "status": "CONVERGED",
+            "observations": 8836,
+            "data_supported_pixels": 3969,
+            "prior_only_pixels": 127,
+            "support_min": 0,
+            "support_max": 4,
+            "median_provided_variance": 6.604813097510487e-05,
+            "converged": true,
+            "cg_info": 0,
+            "iterations": 3,
+            "relative_normal_residual": 8.031622201087885e-06,
+            "data_rmse": 0.0010484361555427313,
+            "weighted_data_rmse": 0.0010484361555427313,
+            "mean_residual": -6.224556869938169e-09,
+            "max_abs_residual": 0.0029154419898986816,
+            "mean_squared_residual_over_provided_variance": 0.01664268784224987
+          }
+        ],
+        "lambda_first_difference": 0.009999999776482582,
+        "max_iterations": 80,
+        "rtol": 1e-05,
+        "observations_total": 36864,
+        "observations_used": 35344,
+        "supplied_invalid": 0,
+        "valid_nonfinite": 0,
+        "valid_finite_nonpositive_variance": 0,
+        "valid_finite_positive_outside": 1520,
+        "limits": "First-difference algorithm prior, not sensor calibration. Unsupported pixels may be prior-filled; no all-clipped recovery claim. CG convergence is algebraic, not image quality. Bilinear forward-model error, blur mismatch and geometry error are unmodelled."
+      }
+    }
+  ],
+  "exact_duplication": {
+    "max_output_change": 0.0003692209720611572,
+    "truth_metrics": {
+      "rgb_rmse": 0.207205986085372,
+      "chroma_rmse": 0.35445788562005826,
+      "green_mse": 0.12249996453523915,
+      "signed_bias_rgb": [
+        -5.332803508887688e-05,
+        0.34999994933605194,
+        8.495831085989873e-05
+      ]
+    },
+    "diagnostics": {
+      "shape": [
+        64,
+        64
+      ],
+      "channels": [
+        {
+          "channel": "R",
+          "status": "CONVERGED",
+          "observations": 18432,
+          "data_supported_pixels": 1024,
+          "prior_only_pixels": 3072,
+          "support_min": 0,
+          "support_max": 18,
+          "median_provided_variance": 2.299969673913438e-05,
+          "converged": true,
+          "cg_info": 0,
+          "iterations": 2,
+          "relative_normal_residual": 7.549618203483988e-06,
+          "data_rmse": 0.0001491975417593494,
+          "weighted_data_rmse": 0.0001491975417593494,
+          "mean_residual": 4.0512531995773315e-08,
+          "max_abs_residual": 0.00021523237228393555,
+          "mean_squared_residual_over_provided_variance": 0.0009678348433226347
+        },
+        {
+          "channel": "G",
+          "status": "CONVERGED",
+          "observations": 35712,
+          "data_supported_pixels": 1984,
+          "prior_only_pixels": 2112,
+          "support_min": 0,
+          "support_max": 18,
+          "median_provided_variance": 9.000000318337698e-06,
+          "converged": true,
+          "cg_info": 0,
+          "iterations": 0,
+          "relative_normal_residual": 1.9301592268927692e-10,
+          "data_rmse": 5.960464477539063e-08,
+          "weighted_data_rmse": 5.960464477539063e-08,
+          "mean_residual": -5.960464477539063e-08,
+          "max_abs_residual": 5.960464477539063e-08,
+          "mean_squared_residual_over_provided_variance": 3.947459581432611e-10
+        },
+        {
+          "channel": "B",
+          "status": "CONVERGED",
+          "observations": 17298,
+          "data_supported_pixels": 961,
+          "prior_only_pixels": 3135,
+          "support_min": 0,
+          "support_max": 18,
+          "median_provided_variance": 6.604813097510487e-05,
+          "converged": true,
+          "cg_info": 0,
+          "iterations": 3,
+          "relative_normal_residual": 7.870681656640954e-06,
+          "data_rmse": 0.00014656818530056626,
+          "weighted_data_rmse": 0.00014656818530056626,
+          "mean_residual": 2.217342309762671e-09,
+          "max_abs_residual": 0.0002084970474243164,
+          "mean_squared_residual_over_provided_variance": 0.0003252511960454285
+        }
+      ],
+      "lambda_first_difference": 0.009999999776482582,
+      "max_iterations": 80,
+      "rtol": 1e-05,
+      "observations_total": 73728,
+      "observations_used": 71442,
+      "supplied_invalid": 0,
+      "valid_nonfinite": 0,
+      "valid_finite_nonpositive_variance": 0,
+      "valid_finite_positive_outside": 2286,
+      "limits": "First-difference algorithm prior, not sensor calibration. Unsupported pixels may be prior-filled; no all-clipped recovery claim. CG convergence is algebraic, not image quality. Bilinear forward-model error, blur mismatch and geometry error are unmodelled."
+    },
+    "interpretation": "Any change is data/prior reweighting; observations are exact duplicates and cannot establish additional resolved information."
+  },
+  "coincident_alias": {
+    "high_truth": {
+      "rgb_rmse": 0.2892762111630134,
+      "chroma_rmse": 0.252043906375963,
+      "green_mse": 0.12249997496605047,
+      "signed_bias_rgb": [
+        0.0021285119776924453,
+        0.34999996423721313,
+        0.34999994188547134
+      ]
+    },
+    "low_truth": {
+      "rgb_rmse": 0.28724178168483244,
+      "chroma_rmse": 0.2503102569505202,
+      "green_mse": 0.12249997496605047,
+      "signed_bias_rgb": [
+        -0.00040983625998099643,
+        0.34999996423721313,
+        0.34999994188547134
+      ]
+    },
+    "observations_identical": true,
+    "outputs_identical": true
+  },
+  "mismatch": {
+    "correct": {
+      "rgb_rmse": 0.20288510028857548,
+      "chroma_rmse": 0.3507053769068817,
+      "green_mse": 0.12249999582767579,
+      "signed_bias_rgb": [
+        2.8507473568121593e-05,
+        0.3499999940395355,
+        -3.055775434606605e-05
+      ]
+    },
+    "wrong_map": {
+      "rgb_rmse": 0.22225741855012032,
+      "chroma_rmse": 0.3678647507102046,
+      "green_mse": 0.12249998539686269,
+      "signed_bias_rgb": [
+        -0.00011880442293153869,
+        0.34999997913837433,
+        0.00018468451970774267
+      ]
+    },
+    "blur_mismatch": {
+      "rgb_rmse": 0.20540341176348084,
+      "chroma_rmse": 0.35288460248599013,
+      "green_mse": 0.12249999582767579,
+      "signed_bias_rgb": [
+        -5.0618817719320454e-05,
+        0.3499999940395355,
+        7.432620946524871e-05
+      ]
+    },
+    "diagnostics": {
+      "correct": {
+        "shape": [
+          64,
+          64
+        ],
+        "channels": [
+          {
+            "channel": "R",
+            "status": "CONVERGED",
+            "observations": 9025,
+            "data_supported_pixels": 4096,
+            "prior_only_pixels": 0,
+            "support_min": 1,
+            "support_max": 9,
+            "median_provided_variance": 2.299969673913438e-05,
+            "converged": true,
+            "cg_info": 0,
+            "iterations": 6,
+            "relative_normal_residual": 4.616758815245703e-06,
+            "data_rmse": 0.008858084678649902,
+            "weighted_data_rmse": 0.008858084678649902,
+            "mean_residual": 4.992920921154109e-08,
+            "max_abs_residual": 0.01925763487815857,
+            "mean_squared_residual_over_provided_variance": 3.4115958213806152
+          },
+          {
+            "channel": "G",
+            "status": "CONVERGED",
+            "observations": 17860,
+            "data_supported_pixels": 4096,
+            "prior_only_pixels": 0,
+            "support_min": 2,
+            "support_max": 13,
+            "median_provided_variance": 9.000000318337698e-06,
+            "converged": true,
+            "cg_info": 0,
+            "iterations": 0,
+            "relative_normal_residual": 5.3586710180297814e-08,
+            "data_rmse": 2.4494752892678662e-08,
+            "weighted_data_rmse": 2.4494752892678662e-08,
+            "mean_residual": -1.2046078801120075e-08,
+            "max_abs_residual": 5.960464477539063e-08,
+            "mean_squared_residual_over_provided_variance": 6.666587420989245e-11
+          },
+          {
+            "channel": "B",
+            "status": "CONVERGED",
+            "observations": 8836,
+            "data_supported_pixels": 4096,
+            "prior_only_pixels": 0,
+            "support_min": 1,
+            "support_max": 9,
+            "median_provided_variance": 6.604813097510487e-05,
+            "converged": true,
+            "cg_info": 0,
+            "iterations": 10,
+            "relative_normal_residual": 4.426826308190357e-06,
+            "data_rmse": 0.008840332739055157,
+            "weighted_data_rmse": 0.008840332739055157,
+            "mean_residual": -6.885631620434651e-09,
+            "max_abs_residual": 0.019490569829940796,
+            "mean_squared_residual_over_provided_variance": 1.1832503080368042
+          }
+        ],
+        "lambda_first_difference": 0.009999999776482582,
+        "max_iterations": 80,
+        "rtol": 1e-05,
+        "observations_total": 36864,
+        "observations_used": 35721,
+        "supplied_invalid": 0,
+        "valid_nonfinite": 0,
+        "valid_finite_nonpositive_variance": 0,
+        "valid_finite_positive_outside": 1143,
+        "limits": "First-difference algorithm prior, not sensor calibration. Unsupported pixels may be prior-filled; no all-clipped recovery claim. CG convergence is algebraic, not image quality. Bilinear forward-model error, blur mismatch and geometry error are unmodelled."
+      },
+      "wrong_map": {
+        "shape": [
+          64,
+          64
+        ],
+        "channels": [
+          {
+            "channel": "R",
+            "status": "CONVERGED",
+            "observations": 9025,
+            "data_supported_pixels": 4096,
+            "prior_only_pixels": 0,
+            "support_min": 1,
+            "support_max": 9,
+            "median_provided_variance": 2.299969673913438e-05,
+            "converged": true,
+            "cg_info": 0,
+            "iterations": 7,
+            "relative_normal_residual": 3.922229097952368e-06,
+            "data_rmse": 0.03552486374974251,
+            "weighted_data_rmse": 0.03552486374974251,
+            "mean_residual": -1.4428617589601345e-07,
+            "max_abs_residual": 0.06622514128684998,
+            "mean_squared_residual_over_provided_variance": 54.8709831237793
+          },
+          {
+            "channel": "G",
+            "status": "CONVERGED",
+            "observations": 17860,
+            "data_supported_pixels": 4096,
+            "prior_only_pixels": 0,
+            "support_min": 2,
+            "support_max": 13,
+            "median_provided_variance": 9.000000318337698e-06,
+            "converged": true,
+            "cg_info": 0,
+            "iterations": 0,
+            "relative_normal_residual": 5.3040281500216224e-08,
+            "data_rmse": 3.233149215020603e-08,
+            "weighted_data_rmse": 3.233149215020603e-08,
+            "mean_residual": -2.835058587891126e-08,
+            "max_abs_residual": 5.960464477539063e-08,
+            "mean_squared_residual_over_provided_variance": 1.1614725847763907e-10
+          },
+          {
+            "channel": "B",
+            "status": "CONVERGED",
+            "observations": 8836,
+            "data_supported_pixels": 4096,
+            "prior_only_pixels": 0,
+            "support_min": 1,
+            "support_max": 9,
+            "median_provided_variance": 6.604813097510487e-05,
+            "converged": true,
+            "cg_info": 0,
+            "iterations": 10,
+            "relative_normal_residual": 6.179013325890992e-06,
+            "data_rmse": 0.03531636670231819,
+            "weighted_data_rmse": 0.03531636670231819,
+            "mean_residual": -1.698388274462559e-08,
+            "max_abs_residual": 0.0661270022392273,
+            "mean_squared_residual_over_provided_variance": 18.883892059326172
+          }
+        ],
+        "lambda_first_difference": 0.009999999776482582,
+        "max_iterations": 80,
+        "rtol": 1e-05,
+        "observations_total": 36864,
+        "observations_used": 35721,
+        "supplied_invalid": 0,
+        "valid_nonfinite": 0,
+        "valid_finite_nonpositive_variance": 0,
+        "valid_finite_positive_outside": 1143,
+        "limits": "First-difference algorithm prior, not sensor calibration. Unsupported pixels may be prior-filled; no all-clipped recovery claim. CG convergence is algebraic, not image quality. Bilinear forward-model error, blur mismatch and geometry error are unmodelled."
+      },
+      "blur_mismatch": {
+        "shape": [
+          64,
+          64
+        ],
+        "channels": [
+          {
+            "channel": "R",
+            "status": "CONVERGED",
+            "observations": 9025,
+            "data_supported_pixels": 4096,
+            "prior_only_pixels": 0,
+            "support_min": 1,
+            "support_max": 9,
+            "median_provided_variance": 2.299969673913438e-05,
+            "converged": true,
+            "cg_info": 0,
+            "iterations": 6,
+            "relative_normal_residual": 6.623735316679813e-06,
+            "data_rmse": 0.00926391500979662,
+            "weighted_data_rmse": 0.00926391500979662,
+            "mean_residual": 1.5456920721135248e-07,
+            "max_abs_residual": 0.02431344985961914,
+            "mean_squared_residual_over_provided_variance": 3.731358528137207
+          },
+          {
+            "channel": "G",
+            "status": "CONVERGED",
+            "observations": 17860,
+            "data_supported_pixels": 4096,
+            "prior_only_pixels": 0,
+            "support_min": 2,
+            "support_max": 13,
+            "median_provided_variance": 9.000000318337698e-06,
+            "converged": true,
+            "cg_info": 0,
+            "iterations": 0,
+            "relative_normal_residual": 5.3586710180297814e-08,
+            "data_rmse": 2.4494752892678662e-08,
+            "weighted_data_rmse": 2.4494752892678662e-08,
+            "mean_residual": -1.2046078801120075e-08,
+            "max_abs_residual": 5.960464477539063e-08,
+            "mean_squared_residual_over_provided_variance": 6.666587420989245e-11
+          },
+          {
+            "channel": "B",
+            "status": "CONVERGED",
+            "observations": 8836,
+            "data_supported_pixels": 4096,
+            "prior_only_pixels": 0,
+            "support_min": 1,
+            "support_max": 9,
+            "median_provided_variance": 6.604813097510487e-05,
+            "converged": true,
+            "cg_info": 0,
+            "iterations": 9,
+            "relative_normal_residual": 4.740078111353796e-06,
+            "data_rmse": 0.009106346406042576,
+            "weighted_data_rmse": 0.009106346406042576,
+            "mean_residual": 2.1992535792492163e-08,
+            "max_abs_residual": 0.02423495054244995,
+            "mean_squared_residual_over_provided_variance": 1.2555320262908936
+          }
+        ],
+        "lambda_first_difference": 0.009999999776482582,
+        "max_iterations": 80,
+        "rtol": 1e-05,
+        "observations_total": 36864,
+        "observations_used": 35721,
+        "supplied_invalid": 0,
+        "valid_nonfinite": 0,
+        "valid_finite_nonpositive_variance": 0,
+        "valid_finite_positive_outside": 1143,
+        "limits": "First-difference algorithm prior, not sensor calibration. Unsupported pixels may be prior-filled; no all-clipped recovery claim. CG convergence is algebraic, not image quality. Bilinear forward-model error, blur mismatch and geometry error are unmodelled."
+      }
+    },
+    "wrong_map_falsifier_exercised": false
+  },
+  "unsupported_channel_check": {
+    "shape": [
+      64,
+      64
+    ],
+    "channels": [
+      {
+        "channel": "R",
+        "status": "CONVERGED",
+        "observations": 9025,
+        "data_supported_pixels": 4096,
+        "prior_only_pixels": 0,
+        "support_min": 1,
+        "support_max": 9,
+        "median_provided_variance": 2.299969673913438e-05,
+        "converged": true,
+        "cg_info": 0,
+        "iterations": 6,
+        "relative_normal_residual": 4.616758815245703e-06,
+        "data_rmse": 0.008858084678649902,
+        "weighted_data_rmse": 0.008858084678649902,
+        "mean_residual": 4.992920921154109e-08,
+        "max_abs_residual": 0.01925763487815857,
+        "mean_squared_residual_over_provided_variance": 3.4115958213806152
+      },
+      {
+        "channel": "G",
+        "status": "CONVERGED",
+        "observations": 17860,
+        "data_supported_pixels": 4096,
+        "prior_only_pixels": 0,
+        "support_min": 2,
+        "support_max": 13,
+        "median_provided_variance": 9.000000318337698e-06,
+        "converged": true,
+        "cg_info": 0,
+        "iterations": 0,
+        "relative_normal_residual": 5.3586710180297814e-08,
+        "data_rmse": 2.4494752892678662e-08,
+        "weighted_data_rmse": 2.4494752892678662e-08,
+        "mean_residual": -1.2046078801120075e-08,
+        "max_abs_residual": 5.960464477539063e-08,
+        "mean_squared_residual_over_provided_variance": 6.666587420989245e-11
+      },
+      {
+        "channel": "B",
+        "status": "NO_USABLE_OBSERVATIONS",
+        "observations": 0,
+        "data_supported_pixels": 0,
+        "prior_only_pixels": 4096,
+        "converged": false
+      }
+    ],
+    "lambda_first_difference": 0.009999999776482582,
+    "max_iterations": 80,
+    "rtol": 1e-05,
+    "observations_total": 36864,
+    "observations_used": 26885,
+    "supplied_invalid": 9216,
+    "valid_nonfinite": 0,
+    "valid_finite_nonpositive_variance": 0,
+    "valid_finite_positive_outside": 763,
+    "limits": "First-difference algorithm prior, not sensor calibration. Unsupported pixels may be prior-filled; no all-clipped recovery claim. CG convergence is algebraic, not image quality. Bilinear forward-model error, blur mismatch and geometry error are unmodelled."
+  },
+  "cpu_seconds": 0.3125,
+  "source_sha256": "05fe15bece42cb44f667219c35423261358bc4b8c5b594b0c2630c545748b490"
+}

@@ -1,0 +1,23 @@
+{
+  "solver_sha256": "18de9215052d96eb959db3208ed81cace73a82050f5f96b3825a2b86b7b96f8e",
+  "initializer_sha256": "17d71a20faaa7d4cdb249c381aeab6ad3ef5faa48c61203eea3a130d6443522a",
+  "admitted_frames": [
+    146,
+    147,
+    148,
+    149,
+    150,
+    151,
+    152,
+    153
+  ],
+  "fixed_updates": 4,
+  "trim": 32,
+  "baseline_product_pixels_exact": true,
+  "initializer_bits_unchanged": true,
+  "render_command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\patch-render-build-2\\saved-rgb-render.exe",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\joint-backprojection-comparison-1\\render-config.json"
+  ],
+  "scope": "Same eight saved RAW patches, corrected local source geometry. No fitted gain/bias applied. Clipped observations excluded from updates. Initializer retains its original pinned-sample handling. This is not full-depth stack fusion or a noise-quality claim."
+}

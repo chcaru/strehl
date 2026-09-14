@@ -1,0 +1,920 @@
+[
+  {
+    "layout": "coincident",
+    "noise_seed": null,
+    "updated": {
+      "rgb_rmse": 0.0,
+      "chroma_rmse": 0.0,
+      "green_mse": 0.0,
+      "signed_bias_rgb": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "initializer": {
+      "rgb_rmse": 0.0,
+      "chroma_rmse": 0.0,
+      "green_mse": 0.0,
+      "signed_bias_rgb": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "anchor_mhc": {
+      "rgb_rmse": 0.0,
+      "chroma_rmse": 0.0,
+      "green_mse": 0.0,
+      "signed_bias_rgb": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "diagnostics": {
+      "shape": [
+        64,
+        64
+      ],
+      "channels": [
+        {
+          "channel": "R",
+          "status": "FOUR_FIXED_UPDATES_COMPLETED",
+          "observations": 8100,
+          "data_supported_pixels": 900,
+          "initial_only_pixels": 3196,
+          "support_min": 0,
+          "support_max": 9,
+          "iterations": 4,
+          "median_provided_variance": 2.299969673913438e-05,
+          "majorizer_min": 0.0,
+          "majorizer_max": 9.0,
+          "weighted_data_energy_by_step": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "max_abs_update_by_step": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "initial_data_rmse": 0.0,
+          "data_rmse": 0.0,
+          "weighted_data_rmse": 0.0,
+          "mean_residual": 0.0,
+          "max_abs_residual": 0.0,
+          "mean_squared_residual_over_provided_variance": 0.0
+        },
+        {
+          "channel": "G",
+          "status": "FOUR_FIXED_UPDATES_COMPLETED",
+          "observations": 15660,
+          "data_supported_pixels": 1740,
+          "initial_only_pixels": 2356,
+          "support_min": 0,
+          "support_max": 9,
+          "iterations": 4,
+          "median_provided_variance": 9.000000318337698e-06,
+          "majorizer_min": 0.0,
+          "majorizer_max": 9.0,
+          "weighted_data_energy_by_step": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "max_abs_update_by_step": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "initial_data_rmse": 0.0,
+          "data_rmse": 0.0,
+          "weighted_data_rmse": 0.0,
+          "mean_residual": 0.0,
+          "max_abs_residual": 0.0,
+          "mean_squared_residual_over_provided_variance": 0.0
+        },
+        {
+          "channel": "B",
+          "status": "FOUR_FIXED_UPDATES_COMPLETED",
+          "observations": 7569,
+          "data_supported_pixels": 841,
+          "initial_only_pixels": 3255,
+          "support_min": 0,
+          "support_max": 9,
+          "iterations": 4,
+          "median_provided_variance": 6.604813097510487e-05,
+          "majorizer_min": 0.0,
+          "majorizer_max": 9.0,
+          "weighted_data_energy_by_step": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "max_abs_update_by_step": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "initial_data_rmse": 0.0,
+          "data_rmse": 0.0,
+          "weighted_data_rmse": 0.0,
+          "mean_residual": 0.0,
+          "max_abs_residual": 0.0,
+          "mean_squared_residual_over_provided_variance": 0.0
+        }
+      ],
+      "fixed_iterations": 4,
+      "basis_sha256": "3e5b208df4f3f43d97ef2669c95a8252b6eb9526c86216c685bb555f674e15d4",
+      "update": "x+=A.T@(w*(v-A@x))/D on D>0, D=abs(A).T@(w*row_sum(abs(A)))",
+      "regularization": "Fixed four updates from explicit initializer; no L prior, no CG, no adaptive stopping",
+      "weight_convention": "median(provided channel variance)/variance; common scale cancels numerator and majorizer, no noise estimate",
+      "observations_total": 36864,
+      "observations_used": 31329,
+      "supplied_invalid": 0,
+      "valid_nonfinite": 0,
+      "valid_finite_nonpositive_variance": 0,
+      "valid_finite_positive_outside": 5535,
+      "limits": "D0 and no-data channels preserve the initial image, not recovered observations. Initializer quality is an explicit dependency. Data-residual decrease is not image-quality evidence. Noise, blur mismatch and geometry errors remain potential failures."
+    },
+    "noise_cost": null
+  },
+  {
+    "layout": "coincident",
+    "noise_seed": 1001,
+    "updated": {
+      "rgb_rmse": 0.0016787068932100477,
+      "chroma_rmse": 0.0014398399181594728,
+      "green_mse": 1.2837219084948597e-06,
+      "signed_bias_rgb": [
+        9.807870568086703e-05,
+        3.653706517070532e-05,
+        9.763865576436122e-05
+      ]
+    },
+    "initializer": {
+      "rgb_rmse": 0.0016787069026771228,
+      "chroma_rmse": 0.0014398400154301781,
+      "green_mse": 1.2837223847932584e-06,
+      "signed_bias_rgb": [
+        9.807870568086703e-05,
+        3.653671592473984e-05,
+        9.76387851147188e-05
+      ]
+    },
+    "anchor_mhc": {
+      "rgb_rmse": 0.0051578900376509544,
+      "chroma_rmse": 0.0045784233435798545,
+      "green_mse": 1.141025141417872e-05,
+      "signed_bias_rgb": [
+        0.00019639073353674676,
+        -0.00010255422805332475,
+        0.0004771202543957366
+      ]
+    },
+    "diagnostics": {
+      "shape": [
+        64,
+        64
+      ],
+      "channels": [
+        {
+          "channel": "R",
+          "status": "FOUR_FIXED_UPDATES_COMPLETED",
+          "observations": 8100,
+          "data_supported_pixels": 900,
+          "initial_only_pixels": 3196,
+          "support_min": 0,
+          "support_max": 9,
+          "iterations": 4,
+          "median_provided_variance": 2.299969673913438e-05,
+          "majorizer_min": 0.0,
+          "majorizer_max": 9.0,
+          "weighted_data_energy_by_step": [
+            0.16392476856708527,
+            0.16392476856708527,
+            0.16392476856708527,
+            0.16392476856708527,
+            0.16392476856708527
+          ],
+          "max_abs_update_by_step": [
+            5.298190686175985e-08,
+            1.3245476715439963e-08,
+            1.3245476715439963e-08,
+            1.3245476715439963e-08
+          ],
+          "initial_data_rmse": 0.004498624708503485,
+          "data_rmse": 0.004498624708503485,
+          "weighted_data_rmse": 0.004498624708503485,
+          "mean_residual": 2.1707864672482202e-10,
+          "max_abs_residual": 0.015591651201248169,
+          "mean_squared_residual_over_provided_variance": 0.8799083828926086
+        },
+        {
+          "channel": "G",
+          "status": "FOUR_FIXED_UPDATES_COMPLETED",
+          "observations": 15660,
+          "data_supported_pixels": 1740,
+          "initial_only_pixels": 2356,
+          "support_min": 0,
+          "support_max": 9,
+          "iterations": 4,
+          "median_provided_variance": 9.000000318337698e-06,
+          "majorizer_min": 0.0,
+          "majorizer_max": 9.0,
+          "weighted_data_energy_by_step": [
+            0.12362780421972275,
+            0.12362781167030334,
+            0.12362781167030334,
+            0.12362781167030334,
+            0.12362781167030334
+          ],
+          "max_abs_update_by_step": [
+            4.967053612858763e-08,
+            1.3245476715439963e-08,
+            1.3245476715439963e-08,
+            1.3245476715439963e-08
+          ],
+          "initial_data_rmse": 0.002809714525938034,
+          "data_rmse": 0.002809714525938034,
+          "weighted_data_rmse": 0.002809714525938034,
+          "mean_residual": -8.373576831921525e-11,
+          "max_abs_residual": 0.011692404747009277,
+          "mean_squared_residual_over_provided_variance": 0.877166211605072
+        },
+        {
+          "channel": "B",
+          "status": "FOUR_FIXED_UPDATES_COMPLETED",
+          "observations": 7569,
+          "data_supported_pixels": 841,
+          "initial_only_pixels": 3255,
+          "support_min": 0,
+          "support_max": 9,
+          "iterations": 4,
+          "median_provided_variance": 6.604813097510487e-05,
+          "majorizer_min": 0.0,
+          "majorizer_max": 9.0,
+          "weighted_data_energy_by_step": [
+            0.4390867352485657,
+            0.43908676505088806,
+            0.43908676505088806,
+            0.43908676505088806,
+            0.43908676505088806
+          ],
+          "max_abs_update_by_step": [
+            5.298190686175985e-08,
+            1.3245476715439963e-08,
+            1.3245476715439963e-08,
+            1.3245476715439963e-08
+          ],
+          "initial_data_rmse": 0.007616508286446333,
+          "data_rmse": 0.007616508286446333,
+          "weighted_data_rmse": 0.007616508286446333,
+          "mean_residual": 2.047457758891369e-10,
+          "max_abs_residual": 0.02647075057029724,
+          "mean_squared_residual_over_provided_variance": 0.8783169984817505
+        }
+      ],
+      "fixed_iterations": 4,
+      "basis_sha256": "3e5b208df4f3f43d97ef2669c95a8252b6eb9526c86216c685bb555f674e15d4",
+      "update": "x+=A.T@(w*(v-A@x))/D on D>0, D=abs(A).T@(w*row_sum(abs(A)))",
+      "regularization": "Fixed four updates from explicit initializer; no L prior, no CG, no adaptive stopping",
+      "weight_convention": "median(provided channel variance)/variance; common scale cancels numerator and majorizer, no noise estimate",
+      "observations_total": 36864,
+      "observations_used": 31329,
+      "supplied_invalid": 0,
+      "valid_nonfinite": 0,
+      "valid_finite_nonpositive_variance": 0,
+      "valid_finite_positive_outside": 5535,
+      "limits": "D0 and no-data channels preserve the initial image, not recovered observations. Initializer quality is an explicit dependency. Data-residual decrease is not image-quality evidence. Noise, blur mismatch and geometry errors remain potential failures."
+    },
+    "noise_cost": {
+      "rgb_rmse": false,
+      "chroma_rmse": false
+    }
+  },
+  {
+    "layout": "coincident",
+    "noise_seed": 2003,
+    "updated": {
+      "rgb_rmse": 0.0017262337968029877,
+      "chroma_rmse": 0.0014952576719243658,
+      "green_mse": 1.3821142318215363e-06,
+      "signed_bias_rgb": [
+        -8.669073900414838e-06,
+        -7.502120246903764e-05,
+        2.9167690728273657e-05
+      ]
+    },
+    "initializer": {
+      "rgb_rmse": 0.001726233930339394,
+      "chroma_rmse": 0.0014952578207600266,
+      "green_mse": 1.3821142184818984e-06,
+      "signed_bias_rgb": [
+        -8.66922912084394e-06,
+        -7.502094376832247e-05,
+        2.9167328547272417e-05
+      ]
+    },
+    "anchor_mhc": {
+      "rgb_rmse": 0.005059991508418203,
+      "chroma_rmse": 0.004354103095364953,
+      "green_mse": 1.17393798775351e-05,
+      "signed_bias_rgb": [
+        0.00023256763557179106,
+        1.0832600916425386e-05,
+        5.240184772345755e-05
+      ]
+    },
+    "diagnostics": {
+      "shape": [
+        64,
+        64
+      ],
+      "channels": [
+        {
+          "channel": "R",
+          "status": "FOUR_FIXED_UPDATES_COMPLETED",
+          "observations": 8100,
+          "data_supported_pixels": 900,
+          "initial_only_pixels": 3196,
+          "support_min": 0,
+          "support_max": 9,
+          "iterations": 4,
+          "median_provided_variance": 2.299969673913438e-05,
+          "majorizer_min": 0.0,
+          "majorizer_max": 9.0,
+          "weighted_data_energy_by_step": [
+            0.1653956174850464,
+            0.1653956174850464,
+            0.1653956174850464,
+            0.1653956174850464,
+            0.1653956174850464
+          ],
+          "max_abs_update_by_step": [
+            4.635916894812908e-08,
+            1.3245476715439963e-08,
+            1.3245476715439963e-08,
+            1.3245476715439963e-08
+          ],
+          "initial_data_rmse": 0.004518762230873108,
+          "data_rmse": 0.004518762230873108,
+          "weighted_data_rmse": 0.004518762230873108,
+          "mean_residual": -1.471719621171097e-11,
+          "max_abs_residual": 0.019566118717193604,
+          "mean_squared_residual_over_provided_variance": 0.8878034353256226
+        },
+        {
+          "channel": "G",
+          "status": "FOUR_FIXED_UPDATES_COMPLETED",
+          "observations": 15660,
+          "data_supported_pixels": 1740,
+          "initial_only_pixels": 2356,
+          "support_min": 0,
+          "support_max": 9,
+          "iterations": 4,
+          "median_provided_variance": 9.000000318337698e-06,
+          "majorizer_min": 0.0,
+          "majorizer_max": 9.0,
+          "weighted_data_energy_by_step": [
+            0.12486985325813293,
+            0.12486985325813293,
+            0.12486985325813293,
+            0.12486985325813293,
+            0.12486985325813293
+          ],
+          "max_abs_update_by_step": [
+            5.62932740422184e-08,
+            1.3245476715439963e-08,
+            1.3245476715439963e-08,
+            1.3245476715439963e-08
+          ],
+          "initial_data_rmse": 0.0028237933292984962,
+          "data_rmse": 0.0028237933292984962,
+          "weighted_data_rmse": 0.0028237933292984962,
+          "mean_residual": -2.283702914274155e-11,
+          "max_abs_residual": 0.01120913028717041,
+          "mean_squared_residual_over_provided_variance": 0.8859787583351135
+        },
+        {
+          "channel": "B",
+          "status": "FOUR_FIXED_UPDATES_COMPLETED",
+          "observations": 7569,
+          "data_supported_pixels": 841,
+          "initial_only_pixels": 3255,
+          "support_min": 0,
+          "support_max": 9,
+          "iterations": 4,
+          "median_provided_variance": 6.604813097510487e-05,
+          "majorizer_min": 0.0,
+          "majorizer_max": 9.0,
+          "weighted_data_energy_by_step": [
+            0.45380181074142456,
+            0.45380181074142456,
+            0.45380181074142456,
+            0.45380181074142456,
+            0.45380181074142456
+          ],
+          "max_abs_update_by_step": [
+            5.62932740422184e-08,
+            1.3245476715439963e-08,
+            1.3245476715439963e-08,
+            1.3245476715439963e-08
+          ],
+          "initial_data_rmse": 0.007743082009255886,
+          "data_rmse": 0.007743082009255886,
+          "weighted_data_rmse": 0.007743082009255886,
+          "mean_residual": 1.259973930745062e-10,
+          "max_abs_residual": 0.02879267930984497,
+          "mean_squared_residual_over_provided_variance": 0.9077519178390503
+        }
+      ],
+      "fixed_iterations": 4,
+      "basis_sha256": "3e5b208df4f3f43d97ef2669c95a8252b6eb9526c86216c685bb555f674e15d4",
+      "update": "x+=A.T@(w*(v-A@x))/D on D>0, D=abs(A).T@(w*row_sum(abs(A)))",
+      "regularization": "Fixed four updates from explicit initializer; no L prior, no CG, no adaptive stopping",
+      "weight_convention": "median(provided channel variance)/variance; common scale cancels numerator and majorizer, no noise estimate",
+      "observations_total": 36864,
+      "observations_used": 31329,
+      "supplied_invalid": 0,
+      "valid_nonfinite": 0,
+      "valid_finite_nonpositive_variance": 0,
+      "valid_finite_positive_outside": 5535,
+      "limits": "D0 and no-data channels preserve the initial image, not recovered observations. Initializer quality is an explicit dependency. Data-residual decrease is not image-quality evidence. Noise, blur mismatch and geometry errors remain potential failures."
+    },
+    "noise_cost": {
+      "rgb_rmse": false,
+      "chroma_rmse": false
+    }
+  },
+  {
+    "layout": "fractional2d",
+    "noise_seed": null,
+    "updated": {
+      "rgb_rmse": 0.0,
+      "chroma_rmse": 0.0,
+      "green_mse": 0.0,
+      "signed_bias_rgb": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "initializer": {
+      "rgb_rmse": 0.0,
+      "chroma_rmse": 0.0,
+      "green_mse": 0.0,
+      "signed_bias_rgb": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "anchor_mhc": {
+      "rgb_rmse": 0.0,
+      "chroma_rmse": 0.0,
+      "green_mse": 0.0,
+      "signed_bias_rgb": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "diagnostics": {
+      "shape": [
+        64,
+        64
+      ],
+      "channels": [
+        {
+          "channel": "R",
+          "status": "FOUR_FIXED_UPDATES_COMPLETED",
+          "observations": 7921,
+          "data_supported_pixels": 4096,
+          "initial_only_pixels": 0,
+          "support_min": 1,
+          "support_max": 49,
+          "iterations": 4,
+          "median_provided_variance": 2.299969673913438e-05,
+          "majorizer_min": 0.00042937861871905625,
+          "majorizer_max": 7.633876800537109,
+          "weighted_data_energy_by_step": [
+            3.917755009297252e-12,
+            3.916866830877552e-12,
+            3.916866830877552e-12,
+            3.916866830877552e-12,
+            3.916866830877552e-12
+          ],
+          "max_abs_update_by_step": [
+            1.5356039995140236e-08,
+            1.5356039995140236e-08,
+            1.5356039995140236e-08,
+            1.5356039995140236e-08
+          ],
+          "initial_data_rmse": 2.2239685648628438e-08,
+          "data_rmse": 2.223716499827333e-08,
+          "weighted_data_rmse": 2.223716499827333e-08,
+          "mean_residual": -1.0263948801991774e-08,
+          "max_abs_residual": 2.9802322387695312e-08,
+          "mean_squared_residual_over_provided_variance": 2.149991643052296e-11
+        },
+        {
+          "channel": "G",
+          "status": "FOUR_FIXED_UPDATES_COMPLETED",
+          "observations": 15664,
+          "data_supported_pixels": 4096,
+          "initial_only_pixels": 0,
+          "support_min": 2,
+          "support_max": 85,
+          "iterations": 4,
+          "median_provided_variance": 9.000000318337698e-06,
+          "majorizer_min": 0.0019176516216248274,
+          "majorizer_max": 14.876459121704102,
+          "weighted_data_energy_by_step": [
+            7.72804042981079e-12,
+            7.72804042981079e-12,
+            7.72804042981079e-12,
+            7.72804042981079e-12,
+            7.72804042981079e-12
+          ],
+          "max_abs_update_by_step": [
+            1.114649528233258e-08,
+            1.114649528233258e-08,
+            1.114649528233258e-08,
+            1.114649528233258e-08
+          ],
+          "initial_data_rmse": 2.221177908268146e-08,
+          "data_rmse": 2.221177908268146e-08,
+          "weighted_data_rmse": 2.221177908268146e-08,
+          "mean_residual": -9.933473599232912e-09,
+          "max_abs_residual": 2.9802322387695312e-08,
+          "mean_squared_residual_over_provided_variance": 5.481812920260509e-11
+        },
+        {
+          "channel": "B",
+          "status": "FOUR_FIXED_UPDATES_COMPLETED",
+          "observations": 7744,
+          "data_supported_pixels": 4096,
+          "initial_only_pixels": 0,
+          "support_min": 1,
+          "support_max": 49,
+          "iterations": 4,
+          "median_provided_variance": 6.604813097510487e-05,
+          "majorizer_min": 0.00042937876423820853,
+          "majorizer_max": 7.633876800537109,
+          "weighted_data_energy_by_step": [
+            3.812949955772638e-12,
+            3.812949955772638e-12,
+            3.812949955772638e-12,
+            3.812949955772638e-12,
+            3.812949955772638e-12
+          ],
+          "max_abs_update_by_step": [
+            1.338181832011287e-08,
+            1.338181832011287e-08,
+            1.338181832011287e-08,
+            1.338181832011287e-08
+          ],
+          "initial_data_rmse": 2.2189519555126935e-08,
+          "data_rmse": 2.2189519555126935e-08,
+          "weighted_data_rmse": 2.2189519555126935e-08,
+          "mean_residual": -9.594161909376453e-09,
+          "max_abs_residual": 2.9802322387695312e-08,
+          "mean_squared_residual_over_provided_variance": 7.454785053151447e-12
+        }
+      ],
+      "fixed_iterations": 4,
+      "basis_sha256": "3e5b208df4f3f43d97ef2669c95a8252b6eb9526c86216c685bb555f674e15d4",
+      "update": "x+=A.T@(w*(v-A@x))/D on D>0, D=abs(A).T@(w*row_sum(abs(A)))",
+      "regularization": "Fixed four updates from explicit initializer; no L prior, no CG, no adaptive stopping",
+      "weight_convention": "median(provided channel variance)/variance; common scale cancels numerator and majorizer, no noise estimate",
+      "observations_total": 36864,
+      "observations_used": 31329,
+      "supplied_invalid": 0,
+      "valid_nonfinite": 0,
+      "valid_finite_nonpositive_variance": 0,
+      "valid_finite_positive_outside": 5535,
+      "limits": "D0 and no-data channels preserve the initial image, not recovered observations. Initializer quality is an explicit dependency. Data-residual decrease is not image-quality evidence. Noise, blur mismatch and geometry errors remain potential failures."
+    },
+    "noise_cost": null
+  },
+  {
+    "layout": "fractional2d",
+    "noise_seed": 1001,
+    "updated": {
+      "rgb_rmse": 0.00289480843578273,
+      "chroma_rmse": 0.003480262690205352,
+      "green_mse": 1.367715398313309e-06,
+      "signed_bias_rgb": [
+        9.373973848091232e-05,
+        3.147576676888598e-05,
+        0.00010347846222834455
+      ]
+    },
+    "initializer": {
+      "rgb_rmse": 0.001402751936747778,
+      "chroma_rmse": 0.0012931850012811862,
+      "green_mse": 7.416556235385741e-07,
+      "signed_bias_rgb": [
+        8.784974407818582e-05,
+        3.0465501671036083e-05,
+        0.00010293970505396526
+      ]
+    },
+    "anchor_mhc": {
+      "rgb_rmse": 0.0051578900376509544,
+      "chroma_rmse": 0.0045784233435798545,
+      "green_mse": 1.141025141417872e-05,
+      "signed_bias_rgb": [
+        0.00019639073353674676,
+        -0.00010255422805332475,
+        0.0004771202543957366
+      ]
+    },
+    "diagnostics": {
+      "shape": [
+        64,
+        64
+      ],
+      "channels": [
+        {
+          "channel": "R",
+          "status": "FOUR_FIXED_UPDATES_COMPLETED",
+          "observations": 7921,
+          "data_supported_pixels": 4096,
+          "initial_only_pixels": 0,
+          "support_min": 1,
+          "support_max": 49,
+          "iterations": 4,
+          "median_provided_variance": 2.299969673913438e-05,
+          "majorizer_min": 0.00042937861871905625,
+          "majorizer_max": 7.633876800537109,
+          "weighted_data_energy_by_step": [
+            0.16194269061088562,
+            0.13691233098506927,
+            0.12254521250724792,
+            0.11395896971225739,
+            0.1086326315999031
+          ],
+          "max_abs_update_by_step": [
+            0.00414211954921484,
+            0.0035015905741602182,
+            0.003041851567104459,
+            0.002703928854316473
+          ],
+          "initial_data_rmse": 0.00452158460393548,
+          "data_rmse": 0.0037033106200397015,
+          "weighted_data_rmse": 0.0037033106200397015,
+          "mean_residual": 2.9407453894236824e-06,
+          "max_abs_residual": 0.014971166849136353,
+          "mean_squared_residual_over_provided_variance": 0.5962909460067749
+        },
+        {
+          "channel": "G",
+          "status": "FOUR_FIXED_UPDATES_COMPLETED",
+          "observations": 15664,
+          "data_supported_pixels": 4096,
+          "initial_only_pixels": 0,
+          "support_min": 2,
+          "support_max": 85,
+          "iterations": 4,
+          "median_provided_variance": 9.000000318337698e-06,
+          "majorizer_min": 0.0019176516216248274,
+          "majorizer_max": 14.876459121704102,
+          "weighted_data_energy_by_step": [
+            0.12907004356384277,
+            0.12059173732995987,
+            0.11575572192668915,
+            0.1128862053155899,
+            0.11111517995595932
+          ],
+          "max_abs_update_by_step": [
+            0.0015087939100340009,
+            0.0013711713254451752,
+            0.0013348961947485805,
+            0.0013390339445322752
+          ],
+          "initial_data_rmse": 0.0028705252334475517,
+          "data_rmse": 0.0026633937377482653,
+          "weighted_data_rmse": 0.0026633937377482653,
+          "mean_residual": 3.557804575393675e-07,
+          "max_abs_residual": 0.011632531881332397,
+          "mean_squared_residual_over_provided_variance": 0.7881850600242615
+        },
+        {
+          "channel": "B",
+          "status": "FOUR_FIXED_UPDATES_COMPLETED",
+          "observations": 7744,
+          "data_supported_pixels": 4096,
+          "initial_only_pixels": 0,
+          "support_min": 1,
+          "support_max": 49,
+          "iterations": 4,
+          "median_provided_variance": 6.604813097510487e-05,
+          "majorizer_min": 0.00042937876423820853,
+          "majorizer_max": 7.633876800537109,
+          "weighted_data_energy_by_step": [
+            0.44030630588531494,
+            0.3760470747947693,
+            0.3383079171180725,
+            0.31528764963150024,
+            0.3007313907146454
+          ],
+          "max_abs_update_by_step": [
+            0.009584351442754269,
+            0.00674727326259017,
+            0.0048264735378324986,
+            0.003516166238114238
+          ],
+          "initial_data_rmse": 0.007540406659245491,
+          "data_rmse": 0.006231702398508787,
+          "weighted_data_rmse": 0.006231702398508787,
+          "mean_residual": 5.689726663149486e-07,
+          "max_abs_residual": 0.023847371339797974,
+          "mean_squared_residual_over_provided_variance": 0.5879668593406677
+        }
+      ],
+      "fixed_iterations": 4,
+      "basis_sha256": "3e5b208df4f3f43d97ef2669c95a8252b6eb9526c86216c685bb555f674e15d4",
+      "update": "x+=A.T@(w*(v-A@x))/D on D>0, D=abs(A).T@(w*row_sum(abs(A)))",
+      "regularization": "Fixed four updates from explicit initializer; no L prior, no CG, no adaptive stopping",
+      "weight_convention": "median(provided channel variance)/variance; common scale cancels numerator and majorizer, no noise estimate",
+      "observations_total": 36864,
+      "observations_used": 31329,
+      "supplied_invalid": 0,
+      "valid_nonfinite": 0,
+      "valid_finite_nonpositive_variance": 0,
+      "valid_finite_positive_outside": 5535,
+      "limits": "D0 and no-data channels preserve the initial image, not recovered observations. Initializer quality is an explicit dependency. Data-residual decrease is not image-quality evidence. Noise, blur mismatch and geometry errors remain potential failures."
+    },
+    "noise_cost": {
+      "rgb_rmse": true,
+      "chroma_rmse": true
+    }
+  },
+  {
+    "layout": "fractional2d",
+    "noise_seed": 2003,
+    "updated": {
+      "rgb_rmse": 0.0029012289910884666,
+      "chroma_rmse": 0.0034938409397128225,
+      "green_mse": 1.4734479025563857e-06,
+      "signed_bias_rgb": [
+        2.70348714871539e-06,
+        -7.84397642645571e-05,
+        4.0932584346996416e-05
+      ]
+    },
+    "initializer": {
+      "rgb_rmse": 0.0014268474327234178,
+      "chroma_rmse": 0.00134192433371964,
+      "green_mse": 7.890309562972073e-07,
+      "signed_bias_rgb": [
+        -6.258746402131187e-07,
+        -7.739647602041562e-05,
+        3.60074271965358e-05
+      ]
+    },
+    "anchor_mhc": {
+      "rgb_rmse": 0.005059991508418203,
+      "chroma_rmse": 0.004354103095364953,
+      "green_mse": 1.17393798775351e-05,
+      "signed_bias_rgb": [
+        0.00023256763557179106,
+        1.0832600916425386e-05,
+        5.240184772345755e-05
+      ]
+    },
+    "diagnostics": {
+      "shape": [
+        64,
+        64
+      ],
+      "channels": [
+        {
+          "channel": "R",
+          "status": "FOUR_FIXED_UPDATES_COMPLETED",
+          "observations": 7921,
+          "data_supported_pixels": 4096,
+          "initial_only_pixels": 0,
+          "support_min": 1,
+          "support_max": 49,
+          "iterations": 4,
+          "median_provided_variance": 2.299969673913438e-05,
+          "majorizer_min": 0.00042937861871905625,
+          "majorizer_max": 7.633876800537109,
+          "weighted_data_energy_by_step": [
+            0.16370072960853577,
+            0.1383713036775589,
+            0.12386442720890045,
+            0.11522179841995239,
+            0.10987785458564758
+          ],
+          "max_abs_update_by_step": [
+            0.004190260078758001,
+            0.002800172893330455,
+            0.002484468976035714,
+            0.002289260271936655
+          ],
+          "initial_data_rmse": 0.004546061623841524,
+          "data_rmse": 0.003724475158378482,
+          "weighted_data_rmse": 0.003724475158378482,
+          "mean_residual": 5.471497388498392e-07,
+          "max_abs_residual": 0.0180513858795166,
+          "mean_squared_residual_over_provided_variance": 0.603126049041748
+        },
+        {
+          "channel": "G",
+          "status": "FOUR_FIXED_UPDATES_COMPLETED",
+          "observations": 15664,
+          "data_supported_pixels": 4096,
+          "initial_only_pixels": 0,
+          "support_min": 2,
+          "support_max": 85,
+          "iterations": 4,
+          "median_provided_variance": 9.000000318337698e-06,
+          "majorizer_min": 0.0019176516216248274,
+          "majorizer_max": 14.876459121704102,
+          "weighted_data_energy_by_step": [
+            0.13012202084064484,
+            0.12137574702501297,
+            0.11638341844081879,
+            0.11341136693954468,
+            0.11156762391328812
+          ],
+          "max_abs_update_by_step": [
+            0.001739370753057301,
+            0.0013903159415349364,
+            0.0011789974523708224,
+            0.001150344149209559
+          ],
+          "initial_data_rmse": 0.0028821995947510004,
+          "data_rmse": 0.0026688105426728725,
+          "weighted_data_rmse": 0.0026688105426728725,
+          "mean_residual": -4.0784317434372497e-07,
+          "max_abs_residual": 0.010662317276000977,
+          "mean_squared_residual_over_provided_variance": 0.7913944125175476
+        },
+        {
+          "channel": "B",
+          "status": "FOUR_FIXED_UPDATES_COMPLETED",
+          "observations": 7744,
+          "data_supported_pixels": 4096,
+          "initial_only_pixels": 0,
+          "support_min": 1,
+          "support_max": 49,
+          "iterations": 4,
+          "median_provided_variance": 6.604813097510487e-05,
+          "majorizer_min": 0.00042937876423820853,
+          "majorizer_max": 7.633876800537109,
+          "weighted_data_energy_by_step": [
+            0.45572084188461304,
+            0.3929497003555298,
+            0.35599133372306824,
+            0.33337509632110596,
+            0.3190281093120575
+          ],
+          "max_abs_update_by_step": [
+            0.005719473119825125,
+            0.004214716609567404,
+            0.003741967724636197,
+            0.003450769232586026
+          ],
+          "initial_data_rmse": 0.007671261206269264,
+          "data_rmse": 0.006418474018573761,
+          "weighted_data_rmse": 0.006418474018573761,
+          "mean_residual": 2.3629386305401567e-06,
+          "max_abs_residual": 0.0234241783618927,
+          "mean_squared_residual_over_provided_variance": 0.6237391829490662
+        }
+      ],
+      "fixed_iterations": 4,
+      "basis_sha256": "3e5b208df4f3f43d97ef2669c95a8252b6eb9526c86216c685bb555f674e15d4",
+      "update": "x+=A.T@(w*(v-A@x))/D on D>0, D=abs(A).T@(w*row_sum(abs(A)))",
+      "regularization": "Fixed four updates from explicit initializer; no L prior, no CG, no adaptive stopping",
+      "weight_convention": "median(provided channel variance)/variance; common scale cancels numerator and majorizer, no noise estimate",
+      "observations_total": 36864,
+      "observations_used": 31329,
+      "supplied_invalid": 0,
+      "valid_nonfinite": 0,
+      "valid_finite_nonpositive_variance": 0,
+      "valid_finite_positive_outside": 5535,
+      "limits": "D0 and no-data channels preserve the initial image, not recovered observations. Initializer quality is an explicit dependency. Data-residual decrease is not image-quality evidence. Noise, blur mismatch and geometry errors remain potential failures."
+    },
+    "noise_cost": {
+      "rgb_rmse": true,
+      "chroma_rmse": true
+    }
+  }
+]

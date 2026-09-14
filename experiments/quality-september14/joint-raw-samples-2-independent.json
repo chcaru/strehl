@@ -1,0 +1,67 @@
+{
+  "status": "PASS_SAVED_CFA_AND_COORDINATES",
+  "sensels_exact_between_decoders": 1512900,
+  "frames": [
+    {
+      "frame": 145,
+      "sensels": 168100,
+      "pin_count": 506
+    },
+    {
+      "frame": 146,
+      "sensels": 168920,
+      "pin_count": 552
+    },
+    {
+      "frame": 147,
+      "sensels": 168100,
+      "pin_count": 571
+    },
+    {
+      "frame": 148,
+      "sensels": 168100,
+      "pin_count": 542
+    },
+    {
+      "frame": 149,
+      "sensels": 167280,
+      "pin_count": 476
+    },
+    {
+      "frame": 150,
+      "sensels": 168100,
+      "pin_count": 419
+    },
+    {
+      "frame": 151,
+      "sensels": 168100,
+      "pin_count": 370
+    },
+    {
+      "frame": 152,
+      "sensels": 168100,
+      "pin_count": 337
+    },
+    {
+      "frame": 153,
+      "sensels": 168100,
+      "pin_count": 258
+    }
+  ],
+  "maximum_inverse_closure_native_px": 9.374856803373542e-13,
+  "maximum_independent_matrix_inverse_difference_native_px": 9.094947017729282e-13,
+  "wrong_direction_error_by_frame_native_px": [
+    5.758753291907299,
+    4.494368186098787,
+    3.0120235455316546,
+    1.5355927394480393,
+    1.016845989170083e-12,
+    0.8941300783749163,
+    1.9505524304425979,
+    2.9498038143304166,
+    4.260578390820741
+  ],
+  "frame149_prior_source_overlap_exact_sensels": 157608,
+  "frame149_matched_normalized_cfa_exact_sensels": 153664,
+  "scope": "Existing files only. Coordinate convention and preserved samples; not registration accuracy, equal focus, calibration validation or solver quality."
+}

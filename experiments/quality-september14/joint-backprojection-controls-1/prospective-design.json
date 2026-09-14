@@ -1,0 +1,14 @@
+{
+  "scope": "Native1x only. Same continuous scenes, 12 nominal signals, phase layouts, six flat conditions and injected noise draws as preceding joint controls. No RAW reads.",
+  "initializer": "Same-data nine-MHC bilinear-gather mean, unchanged diagnostic comparator. This is not the product Catmull-Rom mean.",
+  "bars": "Any nominal RGB or chroma truth-RMSE increase >5% AND >.0005 absolute over initializer blocks a broad quality claim. Flat RGB or chroma RMSE rise >5% is an explicit noise cost. Require at least two independent-colour signals to improve RGB RMSE >10% AND >.0005 for meaningful signal gain.",
+  "metric_limits": "Truth error penalizes wrong phase, contrast bias and invented texture; no contrast-only or fit-residual quality score. Injected synthetic noise validates operator, not camera calibration.",
+  "controls": "Noiseless flat first; wrong-map texture and flat placebo; same-data alias pair with two different truths; blur mismatch; exact data replication adds no information; no B data must preserve initializer B. Four updates and all parameters fixed before execution.",
+  "strict_support": [
+    2,
+    61
+  ],
+  "trim": 8,
+  "source_sha256": "18de9215052d96eb959db3208ed81cace73a82050f5f96b3825a2b86b7b96f8e",
+  "fixture_sha256": "f7f68ab015a01f731585860ec3a875bc30d007185c2fb45743b12210a3842682"
+}

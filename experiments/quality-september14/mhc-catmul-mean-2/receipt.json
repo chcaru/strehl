@@ -1,0 +1,121 @@
+{
+  "status": "EIGHT_FRAME_MHC_CATMULL_MEANS_COMPLETE",
+  "source_pins": {
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\joint-raw-samples-2\\receipt.json": "7815340c1dac862c65904746b98beb0d2db80908e60f4f9c7cbb2c534952f638",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\local-green-translation-1\\result.json": "ed8880a95a4dc7f0af5da6b27968ae74805eb205780d5281c84790c53eac1b6e",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M95-demosaic\\src\\m95dem.py": "12639cc3e76b8ed95952d45e78a6b1f6e72bee1729119902e9e93ec2b304f466",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\joint-inputs.py": "8cb164fae6a0586da0185f5fafd4ad656eb83a7b50eef2c8974686e60b10ef5d"
+  },
+  "source_frames": [
+    146,
+    147,
+    148,
+    149,
+    150,
+    151,
+    152,
+    153
+  ],
+  "target_origin_native": [
+    1332,
+    1104
+  ],
+  "shape": [
+    392,
+    392
+  ],
+  "trim": 32,
+  "source149_mhc_comparison": {
+    "maximum_absolute_f32_difference": 7.152557373046875e-07,
+    "rms_difference": 3.8055687506634456e-08,
+    "different_f32_channels": 212920,
+    "known_cfa_site_differences_due_to_normalization_order": 6195,
+    "known_cfa_sites": 153664,
+    "same_normalization_known_cfa_site_differences": 0,
+    "same_normalization_mhc_maximum_absolute_difference": 7.152557373046875e-07,
+    "same_normalization_mhc_rms_difference": 3.693522496581018e-08,
+    "own_normalized_cfa_site_identity_exact": true,
+    "scope": "Same392x392 source extent and mirror boundary. Means retain joint-inputs rounded-reciprocal normalization; held observer uses division. Separate same-normalization comparison isolates M95 SciPy versus actual Rust convolution f32 rounding."
+  },
+  "coverage": [
+    {
+      "frame": 146,
+      "minimum_source_border_distance_native": 6.3655420109696355,
+      "pixels_per_arm": 153664,
+      "delta_source_native": [
+        0.734533754227414,
+        -3.473531004194696
+      ]
+    },
+    {
+      "frame": 147,
+      "minimum_source_border_distance_native": 6.992268153745503,
+      "pixels_per_arm": 153664,
+      "delta_source_native": [
+        0.5212236011843451,
+        -2.225382963036051
+      ]
+    },
+    {
+      "frame": 148,
+      "minimum_source_border_distance_native": 7.488578242777494,
+      "pixels_per_arm": 153664,
+      "delta_source_native": [
+        0.2882349539056873,
+        -1.1110305695774787
+      ]
+    },
+    {
+      "frame": 149,
+      "minimum_source_border_distance_native": 8.0,
+      "pixels_per_arm": 153664,
+      "delta_source_native": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "frame": 150,
+      "minimum_source_border_distance_native": 7.633232656033158,
+      "pixels_per_arm": 153664,
+      "delta_source_native": [
+        -0.13582581064956387,
+        0.7519844343992973
+      ]
+    },
+    {
+      "frame": 151,
+      "minimum_source_border_distance_native": 7.223864180381668,
+      "pixels_per_arm": 153664,
+      "delta_source_native": [
+        -0.32182696945364636,
+        1.609306681752569
+      ]
+    },
+    {
+      "frame": 152,
+      "minimum_source_border_distance_native": 6.6589875237954175,
+      "pixels_per_arm": 153664,
+      "delta_source_native": [
+        -0.49768813315609584,
+        2.627875100743808
+      ]
+    },
+    {
+      "frame": 153,
+      "minimum_source_border_distance_native": 6.267374348985015,
+      "pixels_per_arm": 153664,
+      "delta_source_native": [
+        -0.7708538182772289,
+        3.6113268916132455
+      ]
+    }
+  ],
+  "cpu_seconds": 1.71875,
+  "render_command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\patch-render-build-2\\saved-rgb-render.exe",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\mhc-catmul-mean-2\\render-config.json"
+  ],
+  "baseline_product_differing_u16_samples": 0,
+  "scope": "Eight-frame RGB mean comparator, not the actual product pyramid. All source values including pins retained; no CA correction, fitted photometric gain/bias, noise weighting, or focus selection. Local source delta is added after original pull map. Float32 streaming means; no aligned frame collection."
+}

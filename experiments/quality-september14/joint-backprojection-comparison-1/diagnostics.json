@@ -1,0 +1,117 @@
+{
+  "shape": [
+    392,
+    392
+  ],
+  "channels": [
+    {
+      "channel": "R",
+      "status": "FOUR_FIXED_UPDATES_COMPLETED",
+      "observations": 299268,
+      "data_supported_pixels": 153664,
+      "initial_only_pixels": 0,
+      "support_min": 1,
+      "support_max": 75,
+      "iterations": 4,
+      "median_provided_variance": 1.2181344573036768e-05,
+      "majorizer_min": 5.771834366896655e-06,
+      "majorizer_max": 261.5189208984375,
+      "weighted_data_energy_by_step": [
+        661.3037109375,
+        512.9580688476562,
+        442.38848876953125,
+        403.2052917480469,
+        377.6991882324219
+      ],
+      "max_abs_update_by_step": [
+        0.07738684862852097,
+        0.050453197211027145,
+        0.04139663279056549,
+        0.036488212645053864
+      ],
+      "initial_data_rmse": 0.03468790277838707,
+      "data_rmse": 0.028247985988855362,
+      "weighted_data_rmse": 0.018862254917621613,
+      "mean_residual": -0.002106224885210395,
+      "max_abs_residual": 0.30974262952804565,
+      "mean_squared_residual_over_provided_variance": 103.60734558105469
+    },
+    {
+      "channel": "G",
+      "status": "FOUR_FIXED_UPDATES_COMPLETED",
+      "observations": 595672,
+      "data_supported_pixels": 153664,
+      "initial_only_pixels": 0,
+      "support_min": 3,
+      "support_max": 142,
+      "iterations": 4,
+      "median_provided_variance": 8.314829756272957e-06,
+      "majorizer_min": 0.002390515524893999,
+      "majorizer_max": 267.26312255859375,
+      "weighted_data_energy_by_step": [
+        2273.09716796875,
+        2003.849365234375,
+        1867.912109375,
+        1796.1939697265625,
+        1756.6046142578125
+      ],
+      "max_abs_update_by_step": [
+        0.13136015832424164,
+        0.09941365569829941,
+        0.07559216022491455,
+        0.057763103395700455
+      ],
+      "initial_data_rmse": 0.05682487413287163,
+      "data_rmse": 0.052465762943029404,
+      "weighted_data_rmse": 0.03262658417224884,
+      "mean_residual": -0.004275325685739517,
+      "max_abs_residual": 0.5920785665512085,
+      "mean_squared_residual_over_provided_variance": 354.6610107421875
+    },
+    {
+      "channel": "B",
+      "status": "FOUR_FIXED_UPDATES_COMPLETED",
+      "observations": 299782,
+      "data_supported_pixels": 153664,
+      "initial_only_pixels": 0,
+      "support_min": 2,
+      "support_max": 75,
+      "iterations": 4,
+      "median_provided_variance": 7.506675501645077e-06,
+      "majorizer_min": 7.744220783933997e-05,
+      "majorizer_max": 97.25091552734375,
+      "weighted_data_energy_by_step": [
+        670.508056640625,
+        563.1845703125,
+        509.3502502441406,
+        477.44873046875,
+        455.36358642578125
+      ],
+      "max_abs_update_by_step": [
+        0.27144020795822144,
+        0.19408456981182098,
+        0.15118670463562012,
+        0.12969887256622314
+      ],
+      "initial_data_rmse": 0.08758769184350967,
+      "data_rmse": 0.07982998341321945,
+      "weighted_data_rmse": 0.033646222203969955,
+      "mean_residual": -0.007734724786132574,
+      "max_abs_residual": 1.8510130643844604,
+      "mean_squared_residual_over_provided_variance": 202.3508758544922
+    }
+  ],
+  "fixed_iterations": 4,
+  "basis_sha256": "3e5b208df4f3f43d97ef2669c95a8252b6eb9526c86216c685bb555f674e15d4",
+  "update": "x+=A.T@(w*(v-A@x))/D on D>0, D=abs(A).T@(w*row_sum(abs(A)))",
+  "regularization": "Fixed four updates from explicit initializer; no L prior, no CG, no adaptive stopping",
+  "weight_convention": "median(provided channel variance)/variance; common scale cancels numerator and majorizer, no noise estimate",
+  "observations_total": 1512900,
+  "observations_used": 1194722,
+  "supplied_invalid": 171625,
+  "valid_nonfinite": 0,
+  "valid_finite_nonpositive_variance": 0,
+  "valid_finite_positive_outside": 146553,
+  "limits": "D0 and no-data channels preserve the initial image, not recovered observations. Initializer quality is an explicit dependency. Data-residual decrease is not image-quality evidence. Noise, blur mismatch and geometry errors remain potential failures.",
+  "cpu_seconds": 1.078125
+}

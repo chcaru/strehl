@@ -32,10 +32,11 @@
 //!    adaptive or iterative demosaic couples its interpolation decisions to the
 //!    noise, which is structurally the same defect as electing a merge winner
 //!    on a noisy argmax (rule 4), one stage later.
-//! 2. **It cannot manufacture detail.** Every output is a bounded linear
-//!    combination of measured samples. Rule 18 asks which direction a stage can
-//!    be fooled in; a linear interpolator can only blur and alias, never
-//!    hallucinate, so a sharpness metric downstream cannot be inflated by it.
+//! 2. **Its transfer is explicit, not necessarily faithful.** The stencils have
+//!    signed coefficients: linearity does not prevent overshoot, false colour,
+//!    or increased gradient energy. A downstream sharpness metric can therefore
+//!    reward reconstruction artifacts. Use known-truth colour/phase controls
+//!    and a flat-noise control; linearity alone is not a quality guarantee.
 //! 3. **It has a closed form to test against.** The stencils are exact for
 //!    constant and for linear image content, which gives two known answers to
 //!    assert against rather than an eyeball.

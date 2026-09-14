@@ -1,0 +1,17 @@
+{
+  "solver_sha256": "3e5b208df4f3f43d97ef2669c95a8252b6eb9526c86216c685bb555f674e15d4",
+  "solver": "lanczos",
+  "product_baseline_exact": true,
+  "render_command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\patch-render-build-2\\saved-rgb-render.exe",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\joint-comparison-1\\render-config.json"
+  ],
+  "target_shape": [
+    392,
+    392
+  ],
+  "trim": 32,
+  "coordinate_scope": "Reference149 original sensor gauge, no CA correction, native1x only",
+  "invalid_clipped_observations": 4031,
+  "scope": "Small focused-window experiment; no all-depth fusion or default change"
+}

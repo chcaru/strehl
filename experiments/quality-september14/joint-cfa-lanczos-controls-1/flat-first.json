@@ -1,0 +1,668 @@
+[
+  {
+    "layout": "coincident",
+    "noise_seed": null,
+    "joint": {
+      "rgb_rmse": 3.650024149988857e-08,
+      "chroma_rmse": 4.9421560620597e-08,
+      "green_mse": 8.881784197001252e-16,
+      "signed_bias_rgb": [
+        -7.450580596923828e-09,
+        0.0,
+        -5.21540641784668e-08
+      ]
+    },
+    "anchor_mhc": {
+      "rgb_rmse": 0.0,
+      "chroma_rmse": 0.0,
+      "green_mse": 0.0,
+      "signed_bias_rgb": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "nine_mhc_mean": {
+      "rgb_rmse": 0.0,
+      "chroma_rmse": 0.0,
+      "green_mse": 0.0,
+      "signed_bias_rgb": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "diagnostics": {
+      "shape": [
+        64,
+        64
+      ],
+      "channels": [
+        {
+          "channel": "R",
+          "status": "CONVERGED",
+          "observations": 8100,
+          "data_supported_pixels": 900,
+          "prior_only_pixels": 3196,
+          "support_min": 0,
+          "support_max": 9,
+          "median_provided_variance": 2.299969673913438e-05,
+          "converged": true,
+          "cg_info": 0,
+          "iterations": 0,
+          "relative_normal_residual": 1.4634322920148435e-10,
+          "data_rmse": 2.9802322387695312e-08,
+          "weighted_data_rmse": 2.9802322387695312e-08,
+          "mean_residual": -2.9802322387695312e-08,
+          "max_abs_residual": 2.9802322387695312e-08,
+          "mean_squared_residual_over_provided_variance": 3.8616967262816715e-11
+        },
+        {
+          "channel": "G",
+          "status": "CONVERGED",
+          "observations": 15660,
+          "data_supported_pixels": 1740,
+          "prior_only_pixels": 2356,
+          "support_min": 0,
+          "support_max": 9,
+          "median_provided_variance": 9.000000318337698e-06,
+          "converged": true,
+          "cg_info": 0,
+          "iterations": 0,
+          "relative_normal_residual": 8.196993639408845e-10,
+          "data_rmse": 2.9802322387695312e-08,
+          "weighted_data_rmse": 2.9802322387695312e-08,
+          "mean_residual": -2.9802322387695312e-08,
+          "max_abs_residual": 2.9802322387695312e-08,
+          "mean_squared_residual_over_provided_variance": 9.868648953581527e-11
+        },
+        {
+          "channel": "B",
+          "status": "CONVERGED",
+          "observations": 7569,
+          "data_supported_pixels": 841,
+          "prior_only_pixels": 3255,
+          "support_min": 0,
+          "support_max": 9,
+          "median_provided_variance": 6.604813097510487e-05,
+          "converged": true,
+          "cg_info": 0,
+          "iterations": 0,
+          "relative_normal_residual": 1.4634322920148435e-10,
+          "data_rmse": 2.9802322387695312e-08,
+          "weighted_data_rmse": 2.9802322387695312e-08,
+          "mean_residual": -2.9802322387695312e-08,
+          "max_abs_residual": 2.9802322387695312e-08,
+          "mean_squared_residual_over_provided_variance": 1.3447441077341082e-11
+        }
+      ],
+      "lambda_first_difference": 0.009999999776482582,
+      "max_iterations": 80,
+      "rtol": 1e-05,
+      "forward_basis": "separable normalized Lanczos3,36taps, exact integer Kronecker rows",
+      "weight_convention": "w=median(provided channel variance)/variance; lambda is relative to this median, not solely numerical rescaling",
+      "observations_total": 36864,
+      "observations_used": 31329,
+      "supplied_invalid": 0,
+      "valid_nonfinite": 0,
+      "valid_finite_nonpositive_variance": 0,
+      "valid_finite_positive_outside": 5535,
+      "limits": "First-difference algorithm prior, not sensor calibration. Unsupported pixels may be prior-filled; no all-clipped recovery claim. CG convergence is algebraic, not image quality. Finite Lanczos forward-model error, blur mismatch and geometry error are unmodelled."
+    }
+  },
+  {
+    "layout": "coincident",
+    "noise_seed": 1001,
+    "joint": {
+      "rgb_rmse": 0.0011665351133344683,
+      "chroma_rmse": 0.001524457891834065,
+      "green_mse": 5.910616758716033e-07,
+      "signed_bias_rgb": [
+        8.426587252567212e-05,
+        3.632134757936001e-05,
+        9.435698545227449e-05
+      ]
+    },
+    "anchor_mhc": {
+      "rgb_rmse": 0.0051578900376509544,
+      "chroma_rmse": 0.0045784233435798545,
+      "green_mse": 1.141025141417872e-05,
+      "signed_bias_rgb": [
+        0.00019639073353674676,
+        -0.00010255422805332475,
+        0.0004771202543957366
+      ]
+    },
+    "nine_mhc_mean": {
+      "rgb_rmse": 0.0016787069026771228,
+      "chroma_rmse": 0.0014398400154301781,
+      "green_mse": 1.2837223847932584e-06,
+      "signed_bias_rgb": [
+        9.807870568086703e-05,
+        3.653671592473984e-05,
+        9.76387851147188e-05
+      ]
+    },
+    "diagnostics": {
+      "shape": [
+        64,
+        64
+      ],
+      "channels": [
+        {
+          "channel": "R",
+          "status": "CONVERGED",
+          "observations": 8100,
+          "data_supported_pixels": 900,
+          "prior_only_pixels": 3196,
+          "support_min": 0,
+          "support_max": 9,
+          "median_provided_variance": 2.299969673913438e-05,
+          "converged": true,
+          "cg_info": 0,
+          "iterations": 1,
+          "relative_normal_residual": 8.407218956563156e-06,
+          "data_rmse": 0.004498630296438932,
+          "weighted_data_rmse": 0.004498630296438932,
+          "mean_residual": 1.5085126203739918e-10,
+          "max_abs_residual": 0.01560160517692566,
+          "mean_squared_residual_over_provided_variance": 0.8799105286598206
+        },
+        {
+          "channel": "G",
+          "status": "CONVERGED",
+          "observations": 15660,
+          "data_supported_pixels": 1740,
+          "prior_only_pixels": 2356,
+          "support_min": 0,
+          "support_max": 9,
+          "median_provided_variance": 9.000000318337698e-06,
+          "converged": true,
+          "cg_info": 0,
+          "iterations": 1,
+          "relative_normal_residual": 4.751608230435522e-06,
+          "data_rmse": 0.002809718018397689,
+          "weighted_data_rmse": 0.002809718018397689,
+          "mean_residual": 1.02956942971133e-09,
+          "max_abs_residual": 0.011694878339767456,
+          "mean_squared_residual_over_provided_variance": 0.8771683573722839
+        },
+        {
+          "channel": "B",
+          "status": "CONVERGED",
+          "observations": 7569,
+          "data_supported_pixels": 841,
+          "prior_only_pixels": 3255,
+          "support_min": 0,
+          "support_max": 9,
+          "median_provided_variance": 6.604813097510487e-05,
+          "converged": true,
+          "cg_info": 0,
+          "iterations": 3,
+          "relative_normal_residual": 2.9981167699588696e-06,
+          "data_rmse": 0.007616511546075344,
+          "weighted_data_rmse": 0.007616511546075344,
+          "mean_residual": 1.1650821640785125e-08,
+          "max_abs_residual": 0.026475220918655396,
+          "mean_squared_residual_over_provided_variance": 0.8783177733421326
+        }
+      ],
+      "lambda_first_difference": 0.009999999776482582,
+      "max_iterations": 80,
+      "rtol": 1e-05,
+      "forward_basis": "separable normalized Lanczos3,36taps, exact integer Kronecker rows",
+      "weight_convention": "w=median(provided channel variance)/variance; lambda is relative to this median, not solely numerical rescaling",
+      "observations_total": 36864,
+      "observations_used": 31329,
+      "supplied_invalid": 0,
+      "valid_nonfinite": 0,
+      "valid_finite_nonpositive_variance": 0,
+      "valid_finite_positive_outside": 5535,
+      "limits": "First-difference algorithm prior, not sensor calibration. Unsupported pixels may be prior-filled; no all-clipped recovery claim. CG convergence is algebraic, not image quality. Finite Lanczos forward-model error, blur mismatch and geometry error are unmodelled."
+    }
+  },
+  {
+    "layout": "coincident",
+    "noise_seed": 2003,
+    "joint": {
+      "rgb_rmse": 0.0012154045306392732,
+      "chroma_rmse": 0.0015877215354674853,
+      "green_mse": 6.227284232506211e-07,
+      "signed_bias_rgb": [
+        -2.684278620613946e-05,
+        -7.37195239505834e-05,
+        3.361039691501194e-05
+      ]
+    },
+    "anchor_mhc": {
+      "rgb_rmse": 0.005059991508418203,
+      "chroma_rmse": 0.004354103095364953,
+      "green_mse": 1.17393798775351e-05,
+      "signed_bias_rgb": [
+        0.00023256763557179106,
+        1.0832600916425386e-05,
+        5.240184772345755e-05
+      ]
+    },
+    "nine_mhc_mean": {
+      "rgb_rmse": 0.001726233930339394,
+      "chroma_rmse": 0.0014952578207600266,
+      "green_mse": 1.3821142184818984e-06,
+      "signed_bias_rgb": [
+        -8.66922912084394e-06,
+        -7.502094376832247e-05,
+        2.9167328547272417e-05
+      ]
+    },
+    "diagnostics": {
+      "shape": [
+        64,
+        64
+      ],
+      "channels": [
+        {
+          "channel": "R",
+          "status": "CONVERGED",
+          "observations": 8100,
+          "data_supported_pixels": 900,
+          "prior_only_pixels": 3196,
+          "support_min": 0,
+          "support_max": 9,
+          "median_provided_variance": 2.299969673913438e-05,
+          "converged": true,
+          "cg_info": 0,
+          "iterations": 1,
+          "relative_normal_residual": 8.248130143329035e-06,
+          "data_rmse": 0.004518767353147268,
+          "weighted_data_rmse": 0.004518767353147268,
+          "mean_residual": 8.131250672782642e-10,
+          "max_abs_residual": 0.01956731081008911,
+          "mean_squared_residual_over_provided_variance": 0.8878056406974792
+        },
+        {
+          "channel": "G",
+          "status": "CONVERGED",
+          "observations": 15660,
+          "data_supported_pixels": 1740,
+          "prior_only_pixels": 2356,
+          "support_min": 0,
+          "support_max": 9,
+          "median_provided_variance": 9.000000318337698e-06,
+          "converged": true,
+          "cg_info": 0,
+          "iterations": 1,
+          "relative_normal_residual": 4.944417014485225e-06,
+          "data_rmse": 0.002823796821758151,
+          "weighted_data_rmse": 0.002823796821758151,
+          "mean_residual": 1.998240045653077e-10,
+          "max_abs_residual": 0.01120901107788086,
+          "mean_squared_residual_over_provided_variance": 0.8859809041023254
+        },
+        {
+          "channel": "B",
+          "status": "CONVERGED",
+          "observations": 7569,
+          "data_supported_pixels": 841,
+          "prior_only_pixels": 3255,
+          "support_min": 0,
+          "support_max": 9,
+          "median_provided_variance": 6.604813097510487e-05,
+          "converged": true,
+          "cg_info": 0,
+          "iterations": 3,
+          "relative_normal_residual": 3.0764308576181065e-06,
+          "data_rmse": 0.0077430857345461845,
+          "weighted_data_rmse": 0.0077430857345461845,
+          "mean_residual": 1.6497784249835945e-09,
+          "max_abs_residual": 0.028787076473236084,
+          "mean_squared_residual_over_provided_variance": 0.9077527523040771
+        }
+      ],
+      "lambda_first_difference": 0.009999999776482582,
+      "max_iterations": 80,
+      "rtol": 1e-05,
+      "forward_basis": "separable normalized Lanczos3,36taps, exact integer Kronecker rows",
+      "weight_convention": "w=median(provided channel variance)/variance; lambda is relative to this median, not solely numerical rescaling",
+      "observations_total": 36864,
+      "observations_used": 31329,
+      "supplied_invalid": 0,
+      "valid_nonfinite": 0,
+      "valid_finite_nonpositive_variance": 0,
+      "valid_finite_positive_outside": 5535,
+      "limits": "First-difference algorithm prior, not sensor calibration. Unsupported pixels may be prior-filled; no all-clipped recovery claim. CG convergence is algebraic, not image quality. Finite Lanczos forward-model error, blur mismatch and geometry error are unmodelled."
+    }
+  },
+  {
+    "layout": "fractional2d",
+    "noise_seed": null,
+    "joint": {
+      "rgb_rmse": 4.552379940903028e-08,
+      "chroma_rmse": 7.742870483855355e-08,
+      "green_mse": 2.220446049250313e-15,
+      "signed_bias_rgb": [
+        -3.725290298461914e-08,
+        1.4901161193847656e-08,
+        -3.725290298461914e-08
+      ]
+    },
+    "anchor_mhc": {
+      "rgb_rmse": 0.0,
+      "chroma_rmse": 0.0,
+      "green_mse": 0.0,
+      "signed_bias_rgb": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "nine_mhc_mean": {
+      "rgb_rmse": 0.0,
+      "chroma_rmse": 0.0,
+      "green_mse": 0.0,
+      "signed_bias_rgb": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "diagnostics": {
+      "shape": [
+        64,
+        64
+      ],
+      "channels": [
+        {
+          "channel": "R",
+          "status": "CONVERGED",
+          "observations": 7921,
+          "data_supported_pixels": 4096,
+          "prior_only_pixels": 0,
+          "support_min": 1,
+          "support_max": 49,
+          "median_provided_variance": 2.299969673913438e-05,
+          "converged": true,
+          "cg_info": 0,
+          "iterations": 0,
+          "relative_normal_residual": 2.1467874944391951e-07,
+          "data_rmse": 5.4295476559218514e-08,
+          "weighted_data_rmse": 5.4295476559218514e-08,
+          "mean_residual": -3.962982830785222e-08,
+          "max_abs_residual": 8.940696716308594e-08,
+          "mean_squared_residual_over_provided_variance": 1.281755535043061e-10
+        },
+        {
+          "channel": "G",
+          "status": "CONVERGED",
+          "observations": 15664,
+          "data_supported_pixels": 4096,
+          "prior_only_pixels": 0,
+          "support_min": 2,
+          "support_max": 85,
+          "median_provided_variance": 9.000000318337698e-06,
+          "converged": true,
+          "cg_info": 0,
+          "iterations": 0,
+          "relative_normal_residual": 6.34128127785516e-08,
+          "data_rmse": 3.181842700428206e-08,
+          "weighted_data_rmse": 3.181842700428206e-08,
+          "mean_residual": 1.8019521874634847e-08,
+          "max_abs_residual": 8.940696716308594e-08,
+          "mean_squared_residual_over_provided_variance": 1.1249024628456894e-10
+        },
+        {
+          "channel": "B",
+          "status": "CONVERGED",
+          "observations": 7744,
+          "data_supported_pixels": 4096,
+          "prior_only_pixels": 0,
+          "support_min": 1,
+          "support_max": 49,
+          "median_provided_variance": 6.604813097510487e-05,
+          "converged": true,
+          "cg_info": 0,
+          "iterations": 0,
+          "relative_normal_residual": 2.1457830712279247e-07,
+          "data_rmse": 5.5010549004919085e-08,
+          "weighted_data_rmse": 5.5010549004919085e-08,
+          "mean_residual": -3.9211759172985694e-08,
+          "max_abs_residual": 1.1920928955078125e-07,
+          "mean_squared_residual_over_provided_variance": 4.581750256971162e-11
+        }
+      ],
+      "lambda_first_difference": 0.009999999776482582,
+      "max_iterations": 80,
+      "rtol": 1e-05,
+      "forward_basis": "separable normalized Lanczos3,36taps, exact integer Kronecker rows",
+      "weight_convention": "w=median(provided channel variance)/variance; lambda is relative to this median, not solely numerical rescaling",
+      "observations_total": 36864,
+      "observations_used": 31329,
+      "supplied_invalid": 0,
+      "valid_nonfinite": 0,
+      "valid_finite_nonpositive_variance": 0,
+      "valid_finite_positive_outside": 5535,
+      "limits": "First-difference algorithm prior, not sensor calibration. Unsupported pixels may be prior-filled; no all-clipped recovery claim. CG convergence is algebraic, not image quality. Finite Lanczos forward-model error, blur mismatch and geometry error are unmodelled."
+    }
+  },
+  {
+    "layout": "fractional2d",
+    "noise_seed": 1001,
+    "joint": {
+      "rgb_rmse": 0.0042846245906777375,
+      "chroma_rmse": 0.005342456203414756,
+      "green_mse": 2.6369489062679096e-06,
+      "signed_bias_rgb": [
+        9.174690219677157e-05,
+        3.2074516639113426e-05,
+        9.806802134133047e-05
+      ]
+    },
+    "anchor_mhc": {
+      "rgb_rmse": 0.0051578900376509544,
+      "chroma_rmse": 0.0045784233435798545,
+      "green_mse": 1.141025141417872e-05,
+      "signed_bias_rgb": [
+        0.00019639073353674676,
+        -0.00010255422805332475,
+        0.0004771202543957366
+      ]
+    },
+    "nine_mhc_mean": {
+      "rgb_rmse": 0.001402751936747778,
+      "chroma_rmse": 0.0012931850012811862,
+      "green_mse": 7.416556235385741e-07,
+      "signed_bias_rgb": [
+        8.784974407818582e-05,
+        3.0465501671036083e-05,
+        0.00010293970505396526
+      ]
+    },
+    "diagnostics": {
+      "shape": [
+        64,
+        64
+      ],
+      "channels": [
+        {
+          "channel": "R",
+          "status": "CONVERGED",
+          "observations": 7921,
+          "data_supported_pixels": 4096,
+          "prior_only_pixels": 0,
+          "support_min": 1,
+          "support_max": 49,
+          "median_provided_variance": 2.299969673913438e-05,
+          "converged": true,
+          "cg_info": 0,
+          "iterations": 10,
+          "relative_normal_residual": 9.80156892183004e-06,
+          "data_rmse": 0.0035063247196376324,
+          "weighted_data_rmse": 0.0035063247196376324,
+          "mean_residual": -3.198077891397588e-08,
+          "max_abs_residual": 0.014378517866134644,
+          "mean_squared_residual_over_provided_variance": 0.5345423817634583
+        },
+        {
+          "channel": "G",
+          "status": "CONVERGED",
+          "observations": 15664,
+          "data_supported_pixels": 4096,
+          "prior_only_pixels": 0,
+          "support_min": 2,
+          "support_max": 85,
+          "median_provided_variance": 9.000000318337698e-06,
+          "converged": true,
+          "cg_info": 0,
+          "iterations": 11,
+          "relative_normal_residual": 8.048342351685278e-06,
+          "data_rmse": 0.0026139174588024616,
+          "weighted_data_rmse": 0.0026139174588024616,
+          "mean_residual": 4.1724010912957965e-08,
+          "max_abs_residual": 0.01110181212425232,
+          "mean_squared_residual_over_provided_variance": 0.7591737508773804
+        },
+        {
+          "channel": "B",
+          "status": "CONVERGED",
+          "observations": 7744,
+          "data_supported_pixels": 4096,
+          "prior_only_pixels": 0,
+          "support_min": 1,
+          "support_max": 49,
+          "median_provided_variance": 6.604813097510487e-05,
+          "converged": true,
+          "cg_info": 0,
+          "iterations": 13,
+          "relative_normal_residual": 7.2350890150119085e-06,
+          "data_rmse": 0.005881758406758308,
+          "weighted_data_rmse": 0.005881758406758308,
+          "mean_residual": 3.2176810549344737e-08,
+          "max_abs_residual": 0.02201196551322937,
+          "mean_squared_residual_over_provided_variance": 0.5237858891487122
+        }
+      ],
+      "lambda_first_difference": 0.009999999776482582,
+      "max_iterations": 80,
+      "rtol": 1e-05,
+      "forward_basis": "separable normalized Lanczos3,36taps, exact integer Kronecker rows",
+      "weight_convention": "w=median(provided channel variance)/variance; lambda is relative to this median, not solely numerical rescaling",
+      "observations_total": 36864,
+      "observations_used": 31329,
+      "supplied_invalid": 0,
+      "valid_nonfinite": 0,
+      "valid_finite_nonpositive_variance": 0,
+      "valid_finite_positive_outside": 5535,
+      "limits": "First-difference algorithm prior, not sensor calibration. Unsupported pixels may be prior-filled; no all-clipped recovery claim. CG convergence is algebraic, not image quality. Finite Lanczos forward-model error, blur mismatch and geometry error are unmodelled."
+    }
+  },
+  {
+    "layout": "fractional2d",
+    "noise_seed": 2003,
+    "joint": {
+      "rgb_rmse": 0.004248209394671062,
+      "chroma_rmse": 0.00531128621374656,
+      "green_mse": 2.8383949248971743e-06,
+      "signed_bias_rgb": [
+        7.26228528138664e-06,
+        -7.817834719187683e-05,
+        4.3151137005123826e-05
+      ]
+    },
+    "anchor_mhc": {
+      "rgb_rmse": 0.005059991508418203,
+      "chroma_rmse": 0.004354103095364953,
+      "green_mse": 1.17393798775351e-05,
+      "signed_bias_rgb": [
+        0.00023256763557179106,
+        1.0832600916425386e-05,
+        5.240184772345755e-05
+      ]
+    },
+    "nine_mhc_mean": {
+      "rgb_rmse": 0.0014268474327234178,
+      "chroma_rmse": 0.00134192433371964,
+      "green_mse": 7.890309562972073e-07,
+      "signed_bias_rgb": [
+        -6.258746402131187e-07,
+        -7.739647602041562e-05,
+        3.60074271965358e-05
+      ]
+    },
+    "diagnostics": {
+      "shape": [
+        64,
+        64
+      ],
+      "channels": [
+        {
+          "channel": "R",
+          "status": "CONVERGED",
+          "observations": 7921,
+          "data_supported_pixels": 4096,
+          "prior_only_pixels": 0,
+          "support_min": 1,
+          "support_max": 49,
+          "median_provided_variance": 2.299969673913438e-05,
+          "converged": true,
+          "cg_info": 0,
+          "iterations": 10,
+          "relative_normal_residual": 9.670547115092631e-06,
+          "data_rmse": 0.0035298108123242855,
+          "weighted_data_rmse": 0.0035298108123242855,
+          "mean_residual": -5.314076645390742e-08,
+          "max_abs_residual": 0.01686340570449829,
+          "mean_squared_residual_over_provided_variance": 0.5417273044586182
+        },
+        {
+          "channel": "G",
+          "status": "CONVERGED",
+          "observations": 15664,
+          "data_supported_pixels": 4096,
+          "prior_only_pixels": 0,
+          "support_min": 2,
+          "support_max": 85,
+          "median_provided_variance": 9.000000318337698e-06,
+          "converged": true,
+          "cg_info": 0,
+          "iterations": 11,
+          "relative_normal_residual": 8.344839443452656e-06,
+          "data_rmse": 0.002616564044728875,
+          "weighted_data_rmse": 0.002616564044728875,
+          "mean_residual": -1.1101669805668735e-08,
+          "max_abs_residual": 0.010683298110961914,
+          "mean_squared_residual_over_provided_variance": 0.7607119083404541
+        },
+        {
+          "channel": "B",
+          "status": "CONVERGED",
+          "observations": 7744,
+          "data_supported_pixels": 4096,
+          "prior_only_pixels": 0,
+          "support_min": 1,
+          "support_max": 49,
+          "median_provided_variance": 6.604813097510487e-05,
+          "converged": true,
+          "cg_info": 0,
+          "iterations": 13,
+          "relative_normal_residual": 8.59740157466149e-06,
+          "data_rmse": 0.006081701721996069,
+          "weighted_data_rmse": 0.006081701721996069,
+          "mean_residual": 2.3698696338669833e-08,
+          "max_abs_residual": 0.02252066135406494,
+          "mean_squared_residual_over_provided_variance": 0.5600021481513977
+        }
+      ],
+      "lambda_first_difference": 0.009999999776482582,
+      "max_iterations": 80,
+      "rtol": 1e-05,
+      "forward_basis": "separable normalized Lanczos3,36taps, exact integer Kronecker rows",
+      "weight_convention": "w=median(provided channel variance)/variance; lambda is relative to this median, not solely numerical rescaling",
+      "observations_total": 36864,
+      "observations_used": 31329,
+      "supplied_invalid": 0,
+      "valid_nonfinite": 0,
+      "valid_finite_nonpositive_variance": 0,
+      "valid_finite_positive_outside": 5535,
+      "limits": "First-difference algorithm prior, not sensor calibration. Unsupported pixels may be prior-filled; no all-clipped recovery claim. CG convergence is algebraic, not image quality. Finite Lanczos forward-model error, blur mismatch and geometry error are unmodelled."
+    }
+  }
+]

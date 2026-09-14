@@ -1,0 +1,6 @@
+{
+  "fixture_sha256": "f7f68ab015a01f731585860ec3a875bc30d007185c2fb45743b12210a3842682",
+  "solver_sha256": "3e5b208df4f3f43d97ef2669c95a8252b6eb9526c86216c685bb555f674e15d4",
+  "anchor_and_mean_nominal_and_noise_metrics_exact": true,
+  "change": "Only reconstruction basis and its required support bounds; identical scenes, phases, noise draws, bars and comparators."
+}
