@@ -1,0 +1,4 @@
+{
+  "status": "NO_CHILD_STARTED",
+  "reason": "compile-only helper accepts cargo test --no-run; changed caller to existing generic bounded process helper for cargo build"
+}

@@ -1,0 +1,107 @@
+[
+  {
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00001.ARW",
+    "bytes": 37253120,
+    "mtime_ns": 1789361374380000000,
+    "index": 0,
+    "preview": "camera embedded JPEG; orientation only"
+  },
+  {
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00053.ARW",
+    "bytes": 40357888,
+    "mtime_ns": 1789361814660000000,
+    "index": 52,
+    "preview": "camera embedded JPEG; orientation only"
+  },
+  {
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00105.ARW",
+    "bytes": 37076992,
+    "mtime_ns": 1789362254800000000,
+    "index": 104,
+    "preview": "camera embedded JPEG; orientation only"
+  },
+  {
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00001.ARW",
+    "bytes": 38256640,
+    "mtime_ns": 1789282688680000000,
+    "index": 0,
+    "preview": "camera embedded JPEG; orientation only"
+  },
+  {
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00150.ARW",
+    "bytes": 42491904,
+    "mtime_ns": 1789283057290000000,
+    "index": 149,
+    "preview": "camera embedded JPEG; orientation only"
+  },
+  {
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00299.ARW",
+    "bytes": 38563840,
+    "mtime_ns": 1789283426070000000,
+    "index": 298,
+    "preview": "camera embedded JPEG; orientation only"
+  },
+  {
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00001.ARW",
+    "bytes": 38068224,
+    "mtime_ns": 1789360042590000000,
+    "index": 0,
+    "preview": "camera embedded JPEG; orientation only"
+  },
+  {
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00076.ARW",
+    "bytes": 38305792,
+    "mtime_ns": 1789360152510000000,
+    "index": 75,
+    "preview": "camera embedded JPEG; orientation only"
+  },
+  {
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00150.ARW",
+    "bytes": 38051840,
+    "mtime_ns": 1789360260920000000,
+    "index": 149,
+    "preview": "camera embedded JPEG; orientation only"
+  },
+  {
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\high-res-calibration-checker-slide-cpl\\DSC00001.ARW",
+    "bytes": 37494784,
+    "mtime_ns": 1789281611440000000,
+    "index": 0,
+    "preview": "camera embedded JPEG; orientation only"
+  },
+  {
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\high-res-calibration-checker-slide-cpl\\DSC00150.ARW",
+    "bytes": 38207488,
+    "mtime_ns": 1789281830720000000,
+    "index": 149,
+    "preview": "camera embedded JPEG; orientation only"
+  },
+  {
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\high-res-calibration-checker-slide-cpl\\DSC00299.ARW",
+    "bytes": 38072320,
+    "mtime_ns": 1789282050060000000,
+    "index": 298,
+    "preview": "camera embedded JPEG; orientation only"
+  },
+  {
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\high-res-calibration-slide-2-cpl\\DSC00001.ARW",
+    "bytes": 37490688,
+    "mtime_ns": 1789280183940000000,
+    "index": 0,
+    "preview": "camera embedded JPEG; orientation only"
+  },
+  {
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\high-res-calibration-slide-2-cpl\\DSC00150.ARW",
+    "bytes": 39038976,
+    "mtime_ns": 1789280552310000000,
+    "index": 149,
+    "preview": "camera embedded JPEG; orientation only"
+  },
+  {
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\high-res-calibration-slide-2-cpl\\DSC00299.ARW",
+    "bytes": 37752832,
+    "mtime_ns": 1789280920410000000,
+    "index": 298,
+    "preview": "camera embedded JPEG; orientation only"
+  }
+]

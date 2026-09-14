@@ -1,0 +1,73 @@
+{
+  "status": "CENSUS_COMPLETE",
+  "source": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00150.ARW",
+  "source_raw_sha256": "ddc6a71aa92117a07a8d8f056625f599acf0741599c1839ea2a2df6b4961e2a3",
+  "sensor_xywh": [
+    1336,
+    1108,
+    384,
+    384
+  ],
+  "sensels": 147456,
+  "counts_by_phase": [
+    {
+      "phase": "R",
+      "sensels": 36864,
+      "maximum": 8244,
+      "at_or_above_profile15360": 0,
+      "profile15360_to16382": 0,
+      "exactly_container16383": 0,
+      "above_container16383": 0
+    },
+    {
+      "phase": "G1",
+      "sensels": 36864,
+      "maximum": 16383,
+      "at_or_above_profile15360": 405,
+      "profile15360_to16382": 177,
+      "exactly_container16383": 228,
+      "above_container16383": 0
+    },
+    {
+      "phase": "G2",
+      "sensels": 36864,
+      "maximum": 16383,
+      "at_or_above_profile15360": 397,
+      "profile15360_to16382": 160,
+      "exactly_container16383": 237,
+      "above_container16383": 0
+    },
+    {
+      "phase": "B",
+      "sensels": 36864,
+      "maximum": 15883,
+      "at_or_above_profile15360": 3,
+      "profile15360_to16382": 3,
+      "exactly_container16383": 0,
+      "above_container16383": 0
+    }
+  ],
+  "positions": [
+    {
+      "label": "profile15360",
+      "count": 805,
+      "local_bbox_xywh": [
+        0,
+        6,
+        360,
+        378
+      ]
+    },
+    {
+      "label": "container16383",
+      "count": 465,
+      "local_bbox_xywh": [
+        0,
+        23,
+        355,
+        361
+      ]
+    }
+  ],
+  "scope": "Presence/location only on a fixed original frame and ROI, no per-pixel winner selection. Profile threshold is not equated with ADC clipping; exact ceiling values are strong evidence of pinning but do not identify the sole fringe cause."
+}

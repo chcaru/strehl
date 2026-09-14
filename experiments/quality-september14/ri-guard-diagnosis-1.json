@@ -1,0 +1,187 @@
+{
+  "source": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\matched-chip-on-1\\pale-circuit-frame149-raw-cfa.f32",
+  "dtype": "float32",
+  "original_guard": 0.0013639891985803843,
+  "results": [
+    {
+      "channel": "R",
+      "trim": 0,
+      "max_error_reference_units": 21.750885009765625,
+      "at_yx": [
+        0,
+        300
+      ],
+      "expected": 94.39018249511719,
+      "got": 72.63929748535156,
+      "beyond_roundoff": 390
+    },
+    {
+      "channel": "R",
+      "trim": 1,
+      "max_error_reference_units": 1.9073486328125e-06,
+      "at_yx": [
+        38,
+        238
+      ],
+      "expected": 26.466588973999023,
+      "got": 26.466590881347656,
+      "beyond_roundoff": 0
+    },
+    {
+      "channel": "R",
+      "trim": 2,
+      "max_error_reference_units": 1.9073486328125e-06,
+      "at_yx": [
+        38,
+        238
+      ],
+      "expected": 26.466588973999023,
+      "got": 26.466590881347656,
+      "beyond_roundoff": 0
+    },
+    {
+      "channel": "R",
+      "trim": 12,
+      "max_error_reference_units": 1.9073486328125e-06,
+      "at_yx": [
+        38,
+        238
+      ],
+      "expected": 26.466588973999023,
+      "got": 26.466590881347656,
+      "beyond_roundoff": 0
+    },
+    {
+      "channel": "R",
+      "trim": 32,
+      "max_error_reference_units": 1.9073486328125e-06,
+      "at_yx": [
+        38,
+        238
+      ],
+      "expected": 26.466588973999023,
+      "got": 26.466590881347656,
+      "beyond_roundoff": 0
+    },
+    {
+      "channel": "G",
+      "trim": 0,
+      "max_error_reference_units": 0.0,
+      "at_yx": [
+        0,
+        1
+      ],
+      "expected": 90.98800659179688,
+      "got": 90.98800659179688,
+      "beyond_roundoff": 0
+    },
+    {
+      "channel": "G",
+      "trim": 1,
+      "max_error_reference_units": 0.0,
+      "at_yx": [
+        1,
+        2
+      ],
+      "expected": 129.9558868408203,
+      "got": 129.9558868408203,
+      "beyond_roundoff": 0
+    },
+    {
+      "channel": "G",
+      "trim": 2,
+      "max_error_reference_units": 0.0,
+      "at_yx": [
+        2,
+        3
+      ],
+      "expected": 139.04095458984375,
+      "got": 139.04095458984375,
+      "beyond_roundoff": 0
+    },
+    {
+      "channel": "G",
+      "trim": 12,
+      "max_error_reference_units": 0.0,
+      "at_yx": [
+        12,
+        13
+      ],
+      "expected": 148.6755828857422,
+      "got": 148.6755828857422,
+      "beyond_roundoff": 0
+    },
+    {
+      "channel": "G",
+      "trim": 32,
+      "max_error_reference_units": 0.0,
+      "at_yx": [
+        32,
+        33
+      ],
+      "expected": 148.62405395507812,
+      "got": 148.62405395507812,
+      "beyond_roundoff": 0
+    },
+    {
+      "channel": "B",
+      "trim": 0,
+      "max_error_reference_units": 79.84675598144531,
+      "at_yx": [
+        391,
+        57
+      ],
+      "expected": 226.7123260498047,
+      "got": 306.55908203125,
+      "beyond_roundoff": 389
+    },
+    {
+      "channel": "B",
+      "trim": 1,
+      "max_error_reference_units": 7.62939453125e-06,
+      "at_yx": [
+        85,
+        55
+      ],
+      "expected": 120.77677154541016,
+      "got": 120.77676391601562,
+      "beyond_roundoff": 0
+    },
+    {
+      "channel": "B",
+      "trim": 2,
+      "max_error_reference_units": 7.62939453125e-06,
+      "at_yx": [
+        85,
+        55
+      ],
+      "expected": 120.77677154541016,
+      "got": 120.77676391601562,
+      "beyond_roundoff": 0
+    },
+    {
+      "channel": "B",
+      "trim": 12,
+      "max_error_reference_units": 7.62939453125e-06,
+      "at_yx": [
+        85,
+        55
+      ],
+      "expected": 120.77677154541016,
+      "got": 120.77676391601562,
+      "beyond_roundoff": 0
+    },
+    {
+      "channel": "B",
+      "trim": 32,
+      "max_error_reference_units": 7.62939453125e-06,
+      "at_yx": [
+        85,
+        55
+      ],
+      "expected": 120.77677154541016,
+      "got": 120.77676391601562,
+      "beyond_roundoff": 0
+    }
+  ]
+}

@@ -1,0 +1,639 @@
+build           : strehl 0.0.0 (36b91f0e5ced)
+merge backend   : pyramid (--merge)
+2026-09-14T08:31:50.963534Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+strehl stack -- LAPLACIAN MULTI-BAND MERGE (--merge pyramid; THE DEFAULT PATH)
+camera          : ILCE-7CM2
+lateral CA      : CORRECTING, profile "a7c2-fe100gm-2xtc-x4cpl" (gear matched; default on)
+iso             : 100
+levels          : black 512, white 15360
+noise model     : PROVENANCE=Profile -- camera profile at ISO 100. Trustworthy for ranking.
+                  GAIN: anchored by a PHOTON-TRANSFER MEASUREMENT on signal (M25 fact 200,
+                  SYNTHESIS fact 550). The divisor was originally DERIVED by reproducing the
+                  camera's own white level, which checks one relation and is not a PTC; the
+                  PTC now exists and the relation survives it at true gain steps -- the ISO 160
+                  control measures 0.3273 DN/e- against the relation's 0.3663, 10.7% low.
+                  READ NOISE: not photon-transfer measured. DERIVED from dark frames, and below
+                  ISO 400 it carries a shape error `profile.rs` asserts rather than hides.
+                  This is a PROFILE, NOT A PER-BODY CALIBRATION: the constants describe the
+                  camera MODEL and nothing here was fitted from this stack. Below the profile's
+                  base ISO the sensor reads out at base-ISO gain (extended/pull ISO); that floor
+                  is measured, but the ISO at which it starts is not (SYNTHESIS question 126
+                  -- the corpus holds no ISO 64 or 80 capture).
+defect map      : off (STREHL_DEFECT=off)
+frames          : 105 from D:\personal\macro\requests\misc-diagnostic\3d-printer-piece-cpl  (first decode 0.11 s)
+planes          : 3516 x 2344 per CFA plane
+analysis domain : 3420 x 2280 at full-plane origin (48, 32) -- Crop is applied BEFORE luma, variance, weighting and accumulation
+--- the merge ---
+bands           : 7 Laplacian levels + 1 base, coarsest 27 x 18
+selection       : SOFT -- weight = (band power above the noise floor)^exponent, a convex combination.
+                  Sign coherence is free: a convex combination cannot take adjacent
+                  coefficients from opposite-signed frames, which is the ringing a
+                  coefficient-wise argmax produces.
+noise gate      : 2.00 x the modelled band-noise power. Below it, NO frame may win and the
+                  merge averages -- which is the correct estimator when there is no
+                  information, and the only operation that gets below single-frame noise.
+exponent        : 2.00
+per-band exp    : 2 3 4 5 8 8 8   (coarsest -> finest)
+                  sharpness ramps 1.4x per octave toward the fine bands. A wrong pick in a
+                  fine band is one high-frequency coefficient nobody can see; a wrong pick
+                  in a coarse band IS the rim.
+base band       : plain mean across frames
+not applied     : photometric gain, clip census, outlier rejection, halo correction, through-focus
+                  statistics. Those are the --merge estimator path's stages; this arm is the merge only.
+coverage mode   : crop -- as asked, --cover
+alignment       : ON (sidecar-override), reference frame 52, 105 placed / 0 refused, 0.0 s
+  held-out err  : 4.650 px   resampler: CatmullRom
+  coverage      : CROPPED to the region EVERY frame covers -- 3420 x 2280 plane px at (48, 32) of 3516 x 2344, emitted at UNITY SCALE. 2.7% of width dropped and NOT upsampled (k=0.9729), so the output is SMALLER than the plane by design and no placement carries a coverage scale. The reference frame's own placement reaches the gather unmodified.
+memory plan     : 4 canonical chunks, 1 reusable frame worker, 1 retained + 1 scratch accumulator, 8 execution threads
+                  CONSTANT in the frame count and reduction order. Chunks run serially; spatial work uses
+                  the execution pool. STREHL_PYRAMID_WORKERS=N changes threads, never arithmetic.
+2026-09-14T08:31:51.252350Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+2026-09-14T08:31:51.257427Z  WARN naga::front::spv: Unknown decoration NoContraction
+2026-09-14T08:31:51.257443Z  WARN naga::front::spv: Unknown decoration NoContraction
+2026-09-14T08:31:51.257445Z  WARN naga::front::spv: Unknown decoration NoContraction
+2026-09-14T08:31:51.257447Z  WARN naga::front::spv: Unknown decoration NoContraction
+2026-09-14T08:31:51.257449Z  WARN naga::front::spv: Unknown decoration NoContraction
+2026-09-14T08:31:51.257450Z  WARN naga::front::spv: Unknown decoration NoContraction
+2026-09-14T08:31:51.257452Z  WARN naga::front::spv: Unknown decoration NoContraction
+2026-09-14T08:31:51.257453Z  WARN naga::front::spv: Unknown decoration NoContraction
+2026-09-14T08:31:51.257455Z  WARN naga::front::spv: Unknown decoration NoContraction
+2026-09-14T08:31:51.257457Z  WARN naga::front::spv: Unknown decoration NoContraction
+2026-09-14T08:31:51.257459Z  WARN naga::front::spv: Unknown decoration NoContraction
+2026-09-14T08:31:51.257460Z  WARN naga::front::spv: Unknown decoration NoContraction
+2026-09-14T08:31:51.257462Z  WARN naga::front::spv: Unknown decoration NoContraction
+2026-09-14T08:31:51.257463Z  WARN naga::front::spv: Unknown decoration NoContraction
+2026-09-14T08:31:51.257465Z  WARN naga::front::spv: Unknown decoration NoContraction
+2026-09-14T08:31:51.257466Z  WARN naga::front::spv: Unknown decoration NoContraction
+2026-09-14T08:31:51.257470Z  WARN naga::front::spv: Unknown decoration NoContraction
+2026-09-14T08:31:51.257472Z  WARN naga::front::spv: Unknown decoration NoContraction
+2026-09-14T08:31:51.257474Z  WARN naga::front::spv: Unknown decoration NoContraction
+2026-09-14T08:31:51.257475Z  WARN naga::front::spv: Unknown decoration NoContraction
+2026-09-14T08:31:51.257476Z  WARN naga::front::spv: Unknown decoration NoContraction
+2026-09-14T08:31:51.257478Z  WARN naga::front::spv: Unknown decoration NoContraction
+2026-09-14T08:31:51.257480Z  WARN naga::front::spv: Unknown decoration NoContraction
+2026-09-14T08:31:51.257481Z  WARN naga::front::spv: Unknown decoration NoContraction
+2026-09-14T08:31:51.257482Z  WARN naga::front::spv: Unknown decoration NoContraction
+2026-09-14T08:31:51.257484Z  WARN naga::front::spv: Unknown decoration NoContraction
+2026-09-14T08:31:51.257485Z  WARN naga::front::spv: Unknown decoration NoContraction
+2026-09-14T08:31:51.257487Z  WARN naga::front::spv: Unknown decoration NoContraction
+2026-09-14T08:31:51.257488Z  WARN naga::front::spv: Unknown decoration NoContraction
+2026-09-14T08:31:51.257489Z  WARN naga::front::spv: Unknown decoration NoContraction
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:31:51.934850Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:31:52.253889Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:31:52.571319Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:31:52.884097Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:31:53.192779Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:31:53.499580Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:31:53.806624Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:31:54.116628Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:31:54.424722Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:31:54.735254Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:31:55.054169Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:31:55.372529Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:31:55.680204Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:31:55.987065Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:31:56.296691Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:31:56.608790Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:31:56.917453Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:31:57.224866Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:31:57.534905Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:31:57.845159Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:31:58.152923Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:31:58.464652Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:31:58.774085Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:31:59.085430Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:31:59.398418Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:31:59.710156Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:32:00.088320Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:32:00.403272Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:32:00.715651Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:32:01.029123Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:32:01.343619Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:32:01.657274Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:32:01.972106Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:32:02.291810Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:32:02.605425Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:32:02.919841Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:32:03.238197Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:32:03.558503Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:32:03.874610Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:32:04.193750Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:32:04.511806Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:32:04.828176Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:32:05.146358Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:32:05.466266Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:32:05.785146Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:32:06.102700Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:32:06.421162Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:32:06.737096Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:32:07.055523Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:32:07.372882Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:32:07.688726Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:32:08.007464Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:32:08.324337Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:32:08.689240Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:32:09.003842Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:32:09.318535Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:32:09.631722Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:32:09.945821Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:32:10.260743Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:32:10.572470Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:32:10.882138Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:32:11.196493Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:32:11.508214Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:32:11.820322Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:32:12.132358Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:32:12.442459Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:32:12.752146Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:32:13.060104Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:32:13.367794Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:32:13.678418Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:32:13.987031Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:32:14.296977Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:32:14.605773Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:32:14.914568Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:32:15.225082Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:32:15.532378Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:32:15.843906Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:32:16.153892Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:32:16.463817Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:32:16.773108Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:32:17.130558Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:32:17.439814Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:32:17.753353Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:32:18.065173Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:32:18.373479Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:32:18.685089Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:32:18.992753Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:32:19.303045Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:32:19.612232Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:32:19.923237Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:32:20.232221Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:32:20.541408Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:32:20.849600Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:32:21.163413Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:32:21.472144Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:32:21.780547Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:32:22.089761Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:32:22.398458Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:32:22.708118Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:32:23.019312Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:32:23.332172Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:32:23.646306Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:32:23.956405Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+2026-09-14T08:32:24.274237Z  WARN rawler::lens: No lens definition found in database, search parameters: Mounts: ["e-mount", "a-mount"], ID: '0:0'. Please open an issue at https://github.com/dnglab/dnglab/issues and provide this message (optionally the RAW file, if you can license it under CC0-license).
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+
+folded          : 105 / 105 frames in 33.6 s (0.32 s per frame, 8 execution threads)
+band noise gain : 0.8898 0.0529 0.0101 0.0024 0.0006 0.0001 0.0000 0.0000
+                  (E[L_k^2] / sigma_0^2, MEASURED on these operators, not derived.)
+measured floor  : 1.0647 0.0491 0.0098 0.0024
+                  x white       : 1.1965 0.9268 0.9727 0.9946
+                  THE FLOOR THE GATE ACTUALLY USED, averaged over 105 warped
+  frames. The line above it is the white-noise constant, which is
+  exact only for an UNWARPED frame; resampling correlates neighbours
+                  and moves the per-band split. Bands past this list kept the constant.
+                  STREHL_GATE_FLOOR=white restores it everywhere.
+averaged        : 1.8% 0.0% 0.0% 0.0% 0.0% 0.0% 0.0% 100.0%
+                  per level, the fraction of coefficients where NO frame cleared the noise
+                  floor and the merge therefore averaged instead of selecting. Near 0%
+                  everywhere would mean the gate is not gating and this is a naive
+                  pyramid stacker.
+
+output domain    : compact Crop 3420x2280 from full-plane origin (48, 32); collapsed plane written directly (no second crop)
+colour          : camera RGB -> sRGB (BT.709 primaries, D65 white)
+                  characterisation: decoder color_matrix[D65]
+                  XYZ->cam rows: [0.7460 -0.2365 -0.0588] [-0.5687 1.3442 0.2474] [-0.0624 0.1156 0.6584]
+                  implied daylight WB R 2.6266 B 1.3878, against as-shot R 1.5986 B 2.7090
+                  Order: black, as-shot WB, demosaic, matrix, clamp, sRGB curve.
+exposure        : none -- this is a FAITHFUL render of the capture, which is not the same
+                  thing as a flattering one. --auto-exposure would choose +1.49 stops (gain 2.809x).
+                  Nothing was applied. Pass --exposure=1.49 to apply it. (--auto-exposure is
+                  superseded by the tone rendering on this path and applies
+                  nothing -- see the M100/M109 guard above.)
+tone            : black 0.00858, white 0.35776 (linear), contrast 0.55
+
+wrote           : C:\dev\blog\death-of-software\projects\strehl\experiments\quality-september14\quadratic-1\printer.tiff (6840 x 4560, 16-bit RGB, sRGB (BT.709 primaries, D65, sRGB transfer) -- for looking at, Malvar-He-Cutler demosaic)
+                  Full sensor resolution: every CFA site estimated, one focus
+                  decision per quad. Interpolated -- do not measure resolution on it.
+collapse+write  : 0.5 s
+total           : 34.3 s

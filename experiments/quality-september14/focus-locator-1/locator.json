@@ -1,0 +1,4865 @@
+{
+  "records": [
+    {
+      "frame_index": 0,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3178,
+            3180,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3534,
+            2600,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 1.0213112239873043,
+      "rotation_radians": -0.0009749216782126355,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 1,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3178,
+            3178,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3534,
+            2600,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 1.020904890488922,
+      "rotation_radians": -0.0009139577465854186,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 2,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3178,
+            3178,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3534,
+            2600,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 1.0205361933738257,
+      "rotation_radians": -0.0008833496299066957,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 3,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3178,
+            3178,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3534,
+            2600,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 1.0201509246560372,
+      "rotation_radians": -0.0008582784570768563,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 4,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3178,
+            3178,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3534,
+            2600,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 1.019727267409801,
+      "rotation_radians": -0.0008600430453436375,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 5,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3178,
+            3178,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3534,
+            2600,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 1.019298686417429,
+      "rotation_radians": -0.0008382220906656449,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 6,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3178,
+            3178,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3534,
+            2600,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 1.0188861718759867,
+      "rotation_radians": -0.0008010388977005475,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 7,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3178,
+            3178,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3534,
+            2600,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 1.0184671865509698,
+      "rotation_radians": -0.0007374885061446423,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 8,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3178,
+            3178,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3534,
+            2600,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 1.018051141964398,
+      "rotation_radians": -0.0007622837687525895,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 9,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3178,
+            3178,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3534,
+            2600,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 1.0177035026575592,
+      "rotation_radians": -0.000759254737167452,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 10,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3178,
+            3176,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3534,
+            2600,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 1.01733128280024,
+      "rotation_radians": -0.000758948136256697,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 11,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3178,
+            3176,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3534,
+            2600,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 1.0169497114620971,
+      "rotation_radians": -0.0008151349197794376,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 12,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3178,
+            3176,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3534,
+            2600,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 1.0165328675149778,
+      "rotation_radians": -0.0008196495413429674,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 13,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3178,
+            3176,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3534,
+            2600,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 1.0161069956319435,
+      "rotation_radians": -0.0007971371739038585,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 14,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3180,
+            3176,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3534,
+            2600,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 1.015707856335887,
+      "rotation_radians": -0.000775370639469045,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 15,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3180,
+            3176,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3534,
+            2600,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 1.0153064980479718,
+      "rotation_radians": -0.0007821870484448586,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 16,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3180,
+            3176,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3534,
+            2600,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 1.0148843199471513,
+      "rotation_radians": -0.0008006615034270098,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 17,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3180,
+            3174,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3534,
+            2600,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 1.0144694354846733,
+      "rotation_radians": -0.0008043617502486534,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 18,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3180,
+            3174,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3534,
+            2600,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 1.0140297257702844,
+      "rotation_radians": -0.000842640211450443,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 19,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3180,
+            3174,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3534,
+            2600,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 1.0136015406025043,
+      "rotation_radians": -0.000886175729147868,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 20,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3180,
+            3174,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3534,
+            2600,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 1.0131693994992226,
+      "rotation_radians": -0.0009091179430459987,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 21,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3180,
+            3174,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3534,
+            2600,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 1.0127404252732566,
+      "rotation_radians": -0.000924340519319216,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 22,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3180,
+            3174,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3534,
+            2600,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 1.0123400772733888,
+      "rotation_radians": -0.0009186071804181973,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 23,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3180,
+            3174,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3534,
+            2600,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 1.0119193891691995,
+      "rotation_radians": -0.0009428153977803515,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 24,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3180,
+            3174,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3534,
+            2600,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 1.0114766440873146,
+      "rotation_radians": -0.0009966759708535016,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 25,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3180,
+            3172,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3534,
+            2600,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 1.0110491531801682,
+      "rotation_radians": -0.0010260953771484983,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 26,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3180,
+            3172,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3534,
+            2600,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 1.0106093944083443,
+      "rotation_radians": -0.0010553370190510038,
+      "cache_reused": true
+    },
+    {
+      "frame_index": 27,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3180,
+            3172,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3534,
+            2600,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 1.0102166397362906,
+      "rotation_radians": -0.0011129361691632588,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 28,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3180,
+            3172,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3534,
+            2600,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 1.0097740804737796,
+      "rotation_radians": -0.0011860297322168177,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 29,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3180,
+            3172,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3534,
+            2600,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 1.0093482719745606,
+      "rotation_radians": -0.001226823193150327,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 30,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3180,
+            3172,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3534,
+            2600,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 1.0089112820402268,
+      "rotation_radians": -0.001227987647732234,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 31,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3180,
+            3172,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3534,
+            2600,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 1.0085020237071334,
+      "rotation_radians": -0.0011745737552419822,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 32,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3182,
+            3172,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3534,
+            2600,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 1.0080882081591573,
+      "rotation_radians": -0.0011603024455501838,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 33,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3182,
+            3172,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3534,
+            2602,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 1.007701975752091,
+      "rotation_radians": -0.0011094507332235948,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 34,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3182,
+            3172,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3534,
+            2602,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 1.0072830118859657,
+      "rotation_radians": -0.0011068889075283308,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 35,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3182,
+            3172,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3534,
+            2602,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 1.0068457223598402,
+      "rotation_radians": -0.0010911747994584561,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 36,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3182,
+            3172,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3534,
+            2602,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 1.006443901787539,
+      "rotation_radians": -0.0010506582033044786,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 37,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3182,
+            3172,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3532,
+            2602,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 1.0060352653848643,
+      "rotation_radians": -0.0010468017417973252,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 38,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3182,
+            3172,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3532,
+            2602,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 1.0056188366167012,
+      "rotation_radians": -0.0010257338525435573,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 39,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3182,
+            3170,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3532,
+            2602,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 1.0052199217370288,
+      "rotation_radians": -0.0009790958672525303,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 40,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3182,
+            3170,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3532,
+            2602,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 1.0048084507240318,
+      "rotation_radians": -0.0009125870309628815,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 41,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3182,
+            3170,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3532,
+            2602,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 1.0044010237545697,
+      "rotation_radians": -0.0008556609377424389,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 42,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3182,
+            3170,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3532,
+            2602,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 1.0040015406327611,
+      "rotation_radians": -0.0007828684949118548,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 43,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3182,
+            3170,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3532,
+            2602,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 1.0035956029425468,
+      "rotation_radians": -0.0006760554891378049,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 44,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3182,
+            3170,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3532,
+            2602,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 1.0032092696285682,
+      "rotation_radians": -0.0006092080286482029,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 45,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3182,
+            3168,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3532,
+            2600,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 1.0028113386413038,
+      "rotation_radians": -0.0005580529566584825,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 46,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3182,
+            3168,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3532,
+            2600,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 1.002397826703569,
+      "rotation_radians": -0.00047823832123905914,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 47,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3180,
+            3168,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3532,
+            2600,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 1.0019743462313146,
+      "rotation_radians": -0.00037390497641572165,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 48,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3180,
+            3166,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3532,
+            2600,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 1.001574028586812,
+      "rotation_radians": -0.0003044874004177009,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 49,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3180,
+            3166,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3530,
+            2600,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 1.0011909821991647,
+      "rotation_radians": -0.00023795549347031684,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 50,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3180,
+            3166,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3530,
+            2600,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 1.0007910884477669,
+      "rotation_radians": -0.00016066944049010528,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 51,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3180,
+            3164,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3530,
+            2598,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 1.0003942252647118,
+      "rotation_radians": -9.98816544989392e-05,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 52,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3180,
+            3164,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3530,
+            2598,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 1.0,
+      "rotation_radians": 0.0,
+      "cache_reused": true
+    },
+    {
+      "frame_index": 53,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3180,
+            3164,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3530,
+            2598,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 0.9996150090940161,
+      "rotation_radians": 4.730160622307725e-05,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 54,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3180,
+            3162,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3530,
+            2596,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 0.9992095324496028,
+      "rotation_radians": 6.003628544868463e-05,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 55,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3180,
+            3162,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3530,
+            2596,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 0.9988149261304774,
+      "rotation_radians": 0.00011728376776835399,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 56,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3180,
+            3160,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3528,
+            2596,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 0.9983898332444924,
+      "rotation_radians": 0.00021263549685463022,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 57,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3180,
+            3160,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3528,
+            2594,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 0.9980008817063477,
+      "rotation_radians": 0.00030128319092666343,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 58,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3178,
+            3158,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3528,
+            2594,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 0.9976222930526839,
+      "rotation_radians": 0.0003158409219638248,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 59,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3178,
+            3158,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3528,
+            2594,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 0.9972408991685884,
+      "rotation_radians": 0.00032933153663428967,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 60,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3178,
+            3158,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3528,
+            2592,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 0.9968534371675687,
+      "rotation_radians": 0.00036170865854860614,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 61,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3178,
+            3156,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3528,
+            2592,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 0.996464053919672,
+      "rotation_radians": 0.00038985266454676234,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 62,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3178,
+            3156,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3528,
+            2592,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 0.9960902250731352,
+      "rotation_radians": 0.00042888144643959074,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 63,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3178,
+            3154,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3526,
+            2590,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 0.9957138657623982,
+      "rotation_radians": 0.00042630100826811484,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 64,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3178,
+            3154,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3526,
+            2590,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 0.9953161764507416,
+      "rotation_radians": 0.0004362835676291902,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 65,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3178,
+            3152,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3526,
+            2590,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 0.994911987607062,
+      "rotation_radians": 0.00044543912417311065,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 66,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3178,
+            3152,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3526,
+            2590,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 0.994515071723023,
+      "rotation_radians": 0.0004924640373166215,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 67,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3178,
+            3150,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3526,
+            2588,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 0.9941182658388432,
+      "rotation_radians": 0.0005055568345200571,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 68,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3176,
+            3150,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3524,
+            2588,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 0.9937020651284022,
+      "rotation_radians": 0.0005142219261903025,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 69,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3176,
+            3150,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3524,
+            2588,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 0.9933308601265923,
+      "rotation_radians": 0.000575173061872293,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 70,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3176,
+            3148,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3524,
+            2586,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 0.9929241389117422,
+      "rotation_radians": 0.0006407291016207318,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 71,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3176,
+            3148,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3524,
+            2586,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 0.9925025209226946,
+      "rotation_radians": 0.0006764595305702282,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 72,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3176,
+            3146,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3524,
+            2586,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 0.9921092846778585,
+      "rotation_radians": 0.0007697043505913035,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 73,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3176,
+            3146,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3524,
+            2584,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 0.9917359426731569,
+      "rotation_radians": 0.000888061504223955,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 74,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3176,
+            3144,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3522,
+            2584,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 0.9913379815150273,
+      "rotation_radians": 0.0009911035878310465,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 75,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3174,
+            3144,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3522,
+            2584,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 0.9909529693013747,
+      "rotation_radians": 0.0011009212115542417,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 76,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3174,
+            3142,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3522,
+            2582,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 0.990564753091066,
+      "rotation_radians": 0.0012108429489171197,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 77,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3174,
+            3142,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3522,
+            2582,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 0.9901925287596554,
+      "rotation_radians": 0.0013079357036806247,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 78,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3174,
+            3142,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3522,
+            2582,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 0.9897995694505458,
+      "rotation_radians": 0.001376651880781304,
+      "cache_reused": true
+    },
+    {
+      "frame_index": 79,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3174,
+            3140,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3520,
+            2580,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 0.989397132486683,
+      "rotation_radians": 0.0014160439943920074,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 80,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3174,
+            3140,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3520,
+            2580,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 0.9890152127408918,
+      "rotation_radians": 0.0014954864713706973,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 81,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3174,
+            3138,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3520,
+            2580,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 0.9886030135770898,
+      "rotation_radians": 0.001568481780853666,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 82,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3172,
+            3138,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3520,
+            2578,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 0.9881995902816534,
+      "rotation_radians": 0.0016644203669545238,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 83,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3172,
+            3136,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3520,
+            2578,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 0.9878005378405587,
+      "rotation_radians": 0.0017693188517039537,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 84,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3172,
+            3136,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3518,
+            2578,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 0.9874231017012343,
+      "rotation_radians": 0.0017810038935868564,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 85,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3172,
+            3134,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3518,
+            2576,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 0.9869990217405716,
+      "rotation_radians": 0.0018116260755147863,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 86,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3172,
+            3134,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3518,
+            2576,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 0.9865848875908879,
+      "rotation_radians": 0.0018761396201711596,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 87,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3172,
+            3132,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3518,
+            2576,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 0.9861875796538382,
+      "rotation_radians": 0.001926728062889376,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 88,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3172,
+            3132,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3518,
+            2574,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 0.9858296811217391,
+      "rotation_radians": 0.0019438769943899553,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 89,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3172,
+            3130,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3516,
+            2574,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 0.9853627950992564,
+      "rotation_radians": 0.0019220899699197785,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 90,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3170,
+            3130,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3516,
+            2572,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 0.9849145478520348,
+      "rotation_radians": 0.001985086779549815,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 91,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3170,
+            3128,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3516,
+            2572,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 0.9844294280024711,
+      "rotation_radians": 0.002086887022041226,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 92,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3170,
+            3128,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3516,
+            2572,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 0.9840361240110902,
+      "rotation_radians": 0.0021693802074600516,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 93,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3170,
+            3126,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3516,
+            2570,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 0.9836276084465558,
+      "rotation_radians": 0.0022136358968972885,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 94,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3170,
+            3126,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3516,
+            2570,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 0.9832180625908244,
+      "rotation_radians": 0.0022145989958950317,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 95,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3170,
+            3124,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3514,
+            2570,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 0.982774793525869,
+      "rotation_radians": 0.0022329394608437817,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 96,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3170,
+            3124,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3514,
+            2568,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 0.9823034356121579,
+      "rotation_radians": 0.0022797507900020266,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 97,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3170,
+            3122,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3514,
+            2568,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 0.9818169401787269,
+      "rotation_radians": 0.0022454333483215728,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 98,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3170,
+            3122,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3514,
+            2568,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 0.9813614298065662,
+      "rotation_radians": 0.0022410645799822446,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 99,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3168,
+            3122,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3514,
+            2566,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 0.980927893641712,
+      "rotation_radians": 0.0022784306126468474,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 100,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3168,
+            3120,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3514,
+            2566,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 0.9805085993153926,
+      "rotation_radians": 0.0023504209932447154,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 101,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3168,
+            3120,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3512,
+            2566,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 0.9800851524122373,
+      "rotation_radians": 0.0024158321911706285,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 102,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3168,
+            3118,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3512,
+            2564,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 0.9796997111669841,
+      "rotation_radians": 0.002416569797220343,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 103,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3168,
+            3118,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3512,
+            2564,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 0.9793276748524053,
+      "rotation_radians": 0.0024027277803782623,
+      "cache_reused": false
+    },
+    {
+      "frame_index": 104,
+      "rois": [
+        {
+          "name": "fibre",
+          "source_xywh": [
+            3166,
+            3120,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "source_xywh": [
+            3510,
+            2566,
+            300,
+            300
+          ],
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ]
+        }
+      ],
+      "scale": 0.9789593874044359,
+      "rotation_radians": 0.002445063787380689,
+      "cache_reused": true
+    }
+  ],
+  "score_curves": [
+    [
+      171.2107430078163,
+      482.84976149731756
+    ],
+    [
+      184.37362599291677,
+      527.6797460497786
+    ],
+    [
+      198.24015023931068,
+      575.4980542055489
+    ],
+    [
+      216.30817404877126,
+      648.1745002603626
+    ],
+    [
+      234.59507349018776,
+      720.2496639512249
+    ],
+    [
+      249.9928180923151,
+      775.0854648711123
+    ],
+    [
+      269.80273792405575,
+      850.8011271644236
+    ],
+    [
+      289.4393876329158,
+      940.2774066699112
+    ],
+    [
+      313.1617696410727,
+      1011.3079881636863
+    ],
+    [
+      337.3592181174429,
+      1105.0610800094162
+    ],
+    [
+      368.0502756204882,
+      1210.1733501301508
+    ],
+    [
+      400.19097748786237,
+      1335.675894817921
+    ],
+    [
+      437.9154617331906,
+      1464.481812141096
+    ],
+    [
+      480.4826523216389,
+      1642.9531978703612
+    ],
+    [
+      527.0088039688773,
+      1814.6513252790223
+    ],
+    [
+      578.6292559106641,
+      2009.7492355118982
+    ],
+    [
+      640.1449505696124,
+      2242.7814596972316
+    ],
+    [
+      716.1783907731179,
+      2482.1350813706463
+    ],
+    [
+      795.337294085528,
+      2745.6966677842697
+    ],
+    [
+      898.4420120677178,
+      3056.174295161973
+    ],
+    [
+      1020.1083624133404,
+      3419.5253197620323
+    ],
+    [
+      1163.7157676564777,
+      3808.640658432251
+    ],
+    [
+      1331.474971419551,
+      4314.964194069422
+    ],
+    [
+      1562.2182167518574,
+      4848.2101467205875
+    ],
+    [
+      1858.0983060183996,
+      5475.964149717962
+    ],
+    [
+      2268.9485898658495,
+      6322.4744249943315
+    ],
+    [
+      2776.9778470143883,
+      7177.144531263745
+    ],
+    [
+      3504.6612942019196,
+      8274.953933485598
+    ],
+    [
+      4427.016162387658,
+      9406.53391060866
+    ],
+    [
+      5711.581635440571,
+      10769.530278183744
+    ],
+    [
+      7459.78396123634,
+      12496.545733034094
+    ],
+    [
+      9794.554977216794,
+      14578.352833546962
+    ],
+    [
+      12653.0064374078,
+      16809.607844871272
+    ],
+    [
+      16542.400432878174,
+      20111.963717796792
+    ],
+    [
+      21262.356043682517,
+      23895.58158558199
+    ],
+    [
+      26429.902551828964,
+      28492.608984279774
+    ],
+    [
+      31707.586976650215,
+      33693.27467101472
+    ],
+    [
+      36686.83277384202,
+      40061.71252225633
+    ],
+    [
+      40490.933791628544,
+      46138.04865823588
+    ],
+    [
+      41465.470853297746,
+      51870.83785415491
+    ],
+    [
+      40128.64098129487,
+      56853.22060380628
+    ],
+    [
+      35842.95910777497,
+      56431.84171931606
+    ],
+    [
+      30558.510322530896,
+      55645.69907353906
+    ],
+    [
+      24835.843096486715,
+      52158.23432395665
+    ],
+    [
+      19987.85552900142,
+      49293.96430592703
+    ],
+    [
+      15757.873238083917,
+      45063.87354178364
+    ],
+    [
+      12293.260889376294,
+      39976.43862887149
+    ],
+    [
+      9563.645998055617,
+      36382.976980539315
+    ],
+    [
+      7493.8138530006945,
+      31243.295094719284
+    ],
+    [
+      5975.924996203949,
+      26814.619827762144
+    ],
+    [
+      4911.605682410036,
+      23300.741943687666
+    ],
+    [
+      4046.6400735056645,
+      20121.399331745855
+    ],
+    [
+      3426.0667044750785,
+      17813.271221567767
+    ],
+    [
+      2931.439720975624,
+      15676.544409534483
+    ],
+    [
+      2495.726394409925,
+      13592.517052200115
+    ],
+    [
+      2197.202200349837,
+      12033.106219140678
+    ],
+    [
+      1951.215562890606,
+      10628.714225621128
+    ],
+    [
+      1732.2119498080458,
+      9352.205795772645
+    ],
+    [
+      1559.9771714854198,
+      8328.874245571584
+    ],
+    [
+      1389.327781152009,
+      7512.376711350066
+    ],
+    [
+      1253.6935432509513,
+      6825.18755086357
+    ],
+    [
+      1134.4365805629086,
+      6262.446361578644
+    ],
+    [
+      1022.2862785138869,
+      5873.038157911948
+    ],
+    [
+      928.4559176387672,
+      5468.03427039252
+    ],
+    [
+      835.2243599224881,
+      4987.936704082817
+    ],
+    [
+      755.7757089844017,
+      4525.454990802431
+    ],
+    [
+      686.3342897945041,
+      4057.103505395845
+    ],
+    [
+      627.5796771747773,
+      3662.0948439649083
+    ],
+    [
+      563.9869908878958,
+      3261.3098330233192
+    ],
+    [
+      513.2450796777247,
+      2964.3119391250234
+    ],
+    [
+      476.10919083078255,
+      2710.1472264685653
+    ],
+    [
+      436.49596013465833,
+      2471.5630565437223
+    ],
+    [
+      403.9372292136594,
+      2265.699985570885
+    ],
+    [
+      368.7999539173602,
+      2054.9707502529054
+    ],
+    [
+      342.80193705723065,
+      1860.9899120544399
+    ],
+    [
+      312.665171234194,
+      1704.5234853280801
+    ],
+    [
+      292.2644795238806,
+      1546.649354915231
+    ],
+    [
+      266.7499889429751,
+      1400.8566981514603
+    ],
+    [
+      243.72604197118275,
+      1262.5804536047315
+    ],
+    [
+      230.37193392307458,
+      1168.7503618014305
+    ],
+    [
+      213.1150514978283,
+      1082.4003175090986
+    ],
+    [
+      200.81731233047117,
+      990.1778432487001
+    ],
+    [
+      180.93721371834306,
+      886.6376984306538
+    ],
+    [
+      170.88212889951504,
+      814.7167588704895
+    ],
+    [
+      158.93576202371526,
+      744.0805589467755
+    ],
+    [
+      150.1969972422714,
+      692.9352107929125
+    ],
+    [
+      138.84860228208674,
+      638.6048946307653
+    ],
+    [
+      130.50922021600815,
+      602.3455283194071
+    ],
+    [
+      123.6445198489796,
+      566.2057304423487
+    ],
+    [
+      117.29995432365513,
+      530.1908518895143
+    ],
+    [
+      110.55123432139554,
+      503.83568691743983
+    ],
+    [
+      105.1923560693366,
+      477.0915062927333
+    ],
+    [
+      99.52835235260733,
+      454.90465240029715
+    ],
+    [
+      93.18603636758263,
+      422.8093588711073
+    ],
+    [
+      89.07979696607208,
+      392.58712694319684
+    ],
+    [
+      86.60763475613092,
+      361.8387239801657
+    ],
+    [
+      80.24943761317549,
+      340.29092225318806
+    ],
+    [
+      77.99463636640992,
+      314.30776922247077
+    ],
+    [
+      74.20179245129918,
+      290.4460335150623
+    ],
+    [
+      70.82278136540701,
+      280.30594212244443
+    ],
+    [
+      67.40028648183332,
+      256.84086589146017
+    ],
+    [
+      64.15607431073391,
+      238.17012459827893
+    ],
+    [
+      61.31568570390315,
+      229.54374705293768
+    ],
+    [
+      59.37012798464169,
+      208.05191507107568
+    ],
+    [
+      46.79538549619443,
+      140.7222870320822
+    ]
+  ],
+  "smoothed_score_curves": [
+    [
+      182.39976283423076,
+      522.6775534985043
+    ],
+    [
+      191.48147326271572,
+      555.8777388103236
+    ],
+    [
+      203.7269622327677,
+      601.4065269267958
+    ],
+    [
+      218.53677880012566,
+      657.2708771188436
+    ],
+    [
+      235.2112890871699,
+      720.7740165809307
+    ],
+    [
+      253.3532960477583,
+      790.0526114804463
+    ],
+    [
+      272.99709842280936,
+      864.6481723300333
+    ],
+    [
+      294.4945300324321,
+      945.2618755136438
+    ],
+    [
+      318.34120475341035,
+      1033.4730541796798
+    ],
+    [
+      345.06317854047114,
+      1131.6062103422846
+    ],
+    [
+      375.16771361201546,
+      1242.4030304663936
+    ],
+    [
+      409.1391803901028,
+      1368.4827442684484
+    ],
+    [
+      447.4877480446389,
+      1511.913907721394
+    ],
+    [
+      490.8671783602294,
+      1674.1333218228642
+    ],
+    [
+      540.2277086668628,
+      1856.2561100033513
+    ],
+    [
+      596.9210049547044,
+      2059.6205791286684
+    ],
+    [
+      662.7191055050536,
+      2286.380677966305
+    ],
+    [
+      739.8425895770167,
+      2540.093472034299
+    ],
+    [
+      831.1220026020159,
+      2826.1522355603415
+    ],
+    [
+      940.3801994356508,
+      3151.812504239442
+    ],
+    [
+      1073.1512415958973,
+      3525.907526789235
+    ],
+    [
+      1237.7994973478417,
+      3958.805291029362
+    ],
+    [
+      1446.7429824781768,
+      4462.748240161372
+    ],
+    [
+      1717.4188846272004,
+      5051.933579713661
+    ],
+    [
+      2073.2125824736745,
+      5741.610091846502
+    ],
+    [
+      2545.129359013234,
+      6547.0822704142
+    ],
+    [
+      3174.525024418721,
+      7485.038885046748
+    ],
+    [
+      4016.160381444516,
+      8578.399368897299
+    ],
+    [
+      5139.930772663006,
+      9862.152443545101
+    ],
+    [
+      6629.54518833588,
+      11386.764962521765
+    ],
+    [
+      8576.746983179559,
+      13218.776184653143
+    ],
+    [
+      11068.45950752564,
+      15439.739288765428
+    ],
+    [
+      14162.211915047836,
+      18140.298401578377
+    ],
+    [
+      17848.47340378936,
+      21404.160639775015
+    ],
+    [
+      22009.254803325835,
+      25282.57380487164
+    ],
+    [
+      26388.507746885574,
+      29761.006667912865
+    ],
+    [
+      30587.706167651704,
+      34717.10167187794
+    ],
+    [
+      34100.84725581683,
+      39876.700524768356
+    ],
+    [
+      36404.994281583975,
+      44798.1927823754
+    ],
+    [
+      37100.03838895841,
+      48928.48070702543
+    ],
+    [
+      36046.40515713759,
+      51747.035090840094
+    ],
+    [
+      33426.706924304686,
+      52941.61425949793
+    ],
+    [
+      29689.484971933547,
+      52501.525994228025
+    ],
+    [
+      25400.673197626857,
+      50664.780876253266
+    ],
+    [
+      21080.21320491194,
+      47778.68229838394
+    ],
+    [
+      17098.455655162248,
+      44184.16682319466
+    ],
+    [
+      13655.91211668645,
+      40171.22212060868
+    ],
+    [
+      10817.94782035088,
+      35982.207847982376
+    ],
+    [
+      8562.562461683803,
+      31828.391924291376
+    ],
+    [
+      6818.6930548354685,
+      27895.78687676689
+    ],
+    [
+      5493.385551667119,
+      24327.395160926833
+    ],
+    [
+      4491.785222568196,
+      21195.98734692336
+    ],
+    [
+      3730.8705241475463,
+      18499.36500910744
+    ],
+    [
+      3145.8095988734876,
+      16187.48482837468
+    ],
+    [
+      2689.6816651886925,
+      14199.843908048448
+    ],
+    [
+      2329.2044339722925,
+      12487.558619784748
+    ],
+    [
+      2039.8999603083769,
+      11016.199661666888
+    ],
+    [
+      1803.096961981997,
+      9760.75384128826
+    ],
+    [
+      1604.9035456010572,
+      8700.612211725736
+    ],
+    [
+      1435.6862884991879,
+      7815.221785359337
+    ],
+    [
+      1289.0538235961344,
+      7079.995115755255
+    ],
+    [
+      1160.5882244451773,
+      6464.137494589421
+    ],
+    [
+      1046.991164603815,
+      5932.16317729205
+    ],
+    [
+      945.7944971321147,
+      5449.921158830586
+    ],
+    [
+      855.2814112585272,
+      4992.9137045957
+    ],
+    [
+      774.2793866801048,
+      4551.301314045508
+    ],
+    [
+      701.8643251664571,
+      4127.985149888892
+    ],
+    [
+      637.2346854242261,
+      3731.9985221433203
+    ],
+    [
+      579.7613905469385,
+      3371.839991128253
+    ],
+    [
+      528.9204790389097,
+      3051.370752194899
+    ],
+    [
+      484.043678200481,
+      2768.7710467383317
+    ],
+    [
+      444.2032958816027,
+      2518.225433197332
+    ],
+    [
+      408.4149521925226,
+      2293.033215990894
+    ],
+    [
+      375.9114232723866,
+      2088.090997722637
+    ],
+    [
+      346.2078481696674,
+      1900.5073014019854
+    ],
+    [
+      319.00351979072326,
+      1728.864009192358
+    ],
+    [
+      294.10843200805755,
+      1572.4684753516758
+    ],
+    [
+      271.4360086688755,
+      1431.073256356572
+    ],
+    [
+      250.93933281164794,
+      1304.3864566293025
+    ],
+    [
+      232.4641032827045,
+      1191.2044966918515
+    ],
+    [
+      215.6934899661332,
+      1089.2094271256956
+    ],
+    [
+      200.3007360934497,
+      996.0826082976921
+    ],
+    [
+      186.1331542900421,
+      910.8280732620558
+    ],
+    [
+      173.19478392491615,
+      833.8281882969945
+    ],
+    [
+      161.48366005667663,
+      765.7562793031448
+    ],
+    [
+      150.91251882396355,
+      706.622593004204
+    ],
+    [
+      141.36967282922754,
+      655.6341956225874
+    ],
+    [
+      132.77275708348367,
+      611.5487891911
+    ],
+    [
+      125.0357380140764,
+      573.0361413935998
+    ],
+    [
+      118.02666834004319,
+      538.8517316674712
+    ],
+    [
+      111.59065650706137,
+      507.8074264208537
+    ],
+    [
+      105.61199956051544,
+      478.69783262685985
+    ],
+    [
+      100.04837692028525,
+      450.4363693124385
+    ],
+    [
+      94.90830370645037,
+      422.4092170640487
+    ],
+    [
+      90.19135238650847,
+      394.6915119280266
+    ],
+    [
+      85.8523324549868,
+      367.8587932039461
+    ],
+    [
+      81.81980978147385,
+      342.5551438175047
+    ],
+    [
+      78.0292334726593,
+      319.16396541000324
+    ],
+    [
+      74.4239967640344,
+      297.6685876560388
+    ],
+    [
+      70.93645821563655,
+      277.6102025212831
+    ],
+    [
+      67.46825461209117,
+      258.10136513243185
+    ],
+    [
+      63.8901649390875,
+      238.02140416012878
+    ],
+    [
+      60.11810795443381,
+      216.65383323645563
+    ],
+    [
+      56.26985691701951,
+      194.66535092792384
+    ],
+    [
+      52.73345803621689,
+      174.41067693500221
+    ]
+  ],
+  "nominations": {
+    "fibre": [
+      39,
+      41
+    ],
+    "junction": [
+      41,
+      43
+    ]
+  },
+  "frame_smoothing": "gaussian1d sigma2 axis0 on pooled scalar curves only",
+  "supports_green_xywh": {
+    "fibre": [
+      4,
+      5,
+      141,
+      75
+    ],
+    "junction": [
+      4,
+      90,
+      141,
+      55
+    ]
+  },
+  "map_sha256": "420883f6cda294fa3cd3205d52c4634e5cd72313d7d81e7d0615b527e9c6b3ee",
+  "purpose": "Only nominate a focus neighbourhood for visual inspection; no pixelwise winner, no quality claim."
+}

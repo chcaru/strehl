@@ -1,0 +1,88 @@
+{
+  "status": "PASS",
+  "scope": "saved artifacts only; pinned-tone observer neutrality, patch replay equality and one independent original-CFA normalization; no photographic quality claim",
+  "replay_sha256": {
+    "printer-on": "29c2028c25bcafb25d4f1c3105de7b1f91abfdae1035cec154bd0c01242a08a6",
+    "printer-off": "29c2028c25bcafb25d4f1c3105de7b1f91abfdae1035cec154bd0c01242a08a6",
+    "printer-placebo": "29c2028c25bcafb25d4f1c3105de7b1f91abfdae1035cec154bd0c01242a08a6",
+    "chip-on": "52c3af66d10e9aba1e0632a04a45a4d207b8b1f512d1014b3d03db0356070b5b"
+  },
+  "printer_on_off_placebo_identical": true,
+  "image_checks": [
+    {
+      "label": "printer-on",
+      "patch": "junction-frame41-merged",
+      "full_equal_channels": 442368,
+      "independent_inner_xywh": [
+        31,
+        27,
+        137,
+        119
+      ],
+      "inner_equal_channels": 48909,
+      "wrong_origin_differing_channels": 48836
+    },
+    {
+      "label": "printer-on",
+      "patch": "fibre-frame39-merged",
+      "full_equal_channels": 270000,
+      "independent_inner_xywh": [
+        31,
+        27,
+        137,
+        119
+      ],
+      "inner_equal_channels": 48909,
+      "wrong_origin_differing_channels": 48880
+    },
+    {
+      "label": "printer-placebo",
+      "patch": "surface-placebo-frame39-merged",
+      "full_equal_channels": 270000,
+      "independent_inner_xywh": [
+        31,
+        27,
+        137,
+        119
+      ],
+      "inner_equal_channels": 48909,
+      "wrong_origin_differing_channels": 48814
+    },
+    {
+      "label": "chip-on",
+      "patch": "pale-circuit-frame149-merged",
+      "full_equal_channels": 442368,
+      "independent_inner_xywh": [
+        31,
+        27,
+        137,
+        119
+      ],
+      "inner_equal_channels": 48909,
+      "wrong_origin_differing_channels": 47766
+    }
+  ],
+  "raw_check": {
+    "source": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00150.ARW",
+    "intersection_native_xywh": [
+      1336,
+      1108,
+      388,
+      388
+    ],
+    "sensels": 150544,
+    "different_bits": 0,
+    "wb_from_first_frame_bits": [
+      1070374912,
+      1065353216,
+      1076715520
+    ],
+    "source_white_level": 16383,
+    "consumer_white_level": 15360.0
+  },
+  "caveats": [
+    "Old automatic baseline is not the pinned-tone control.",
+    "Raw source panels have no CA or geometric resampling; gathered and merged share the output grid.",
+    "Noise and color stage differences are descriptive, not true scene error."
+  ]
+}

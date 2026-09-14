@@ -1233,7 +1233,7 @@ fn gamut_map(v: [f32; 3]) -> [f32; 3] {
 /// instead would clip in the wrong space and shift hue — which is why the
 /// highlight clip has its own explicit ceiling rather than reusing this clamp.
 #[inline]
-fn develop_pixel(lin: [f32; 3], dev: &Develop) -> [u16; 3] {
+pub(crate) fn develop_pixel(lin: [f32; 3], dev: &Develop) -> [u16; 3] {
     let v = match &dev.matrix {
         Some(r) => r.develop(lin),
         None => lin,
@@ -1357,6 +1357,11 @@ fn tone_from_rgb(width: usize, height: usize, rgb_lin: &[f32], dev: &Develop) ->
 fn resolve_tone(dev: &Develop, measure: impl FnOnce() -> Tone) -> Develop {
     if !dev.wants_tone || dev.tone.is_some() {
         return *dev;
+    }
+    #[cfg(all(test, feature = "native-direct-planes"))]
+    if let Some(tone) = crate::merge_cmd::matched_source_tests::pinned_tone() {
+        eprintln!("tone diagnostic : shared pinned {:?}", tone);
+        return Develop { tone: Some(tone), ..*dev };
     }
     let t = measure();
     eprintln!("{}", t.report());

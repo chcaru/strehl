@@ -1,0 +1,14 @@
+{
+  "status": "CANDIDATE_RENDERED",
+  "map": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\quadratic-1\\printer.warpmap.txt",
+    "sha256": "07180ea76d5c51a6c340509fe333d72cf1ae34bdeebc1e8a2f2b448f451809b6",
+    "bytes": 14652
+  },
+  "image": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\quadratic-1\\printer.tiff",
+    "sha256": "504644bba2d4ef830191fa1118ebbd55eb26d99fef6c7cedb60df0187cf2662d",
+    "bytes": 187147490
+  },
+  "original_metadata_unchanged": true
+}

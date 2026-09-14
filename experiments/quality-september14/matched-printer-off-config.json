@@ -1,0 +1,30 @@
+{
+  "dir": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl",
+  "map": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\baseline-1\\printer.warpmap.txt",
+  "out": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\matched-printer-off-1",
+  "frames": 105,
+  "tone": {
+    "black": 0.008555,
+    "white": 0.359037,
+    "contrast": 0.55
+  },
+  "regions": [
+    {
+      "name": "junction",
+      "frame": 41,
+      "x": 3350,
+      "y": 2450,
+      "width": 384,
+      "height": 384
+    },
+    {
+      "name": "fibre",
+      "frame": 39,
+      "x": 3084,
+      "y": 3100,
+      "width": 300,
+      "height": 300
+    }
+  ],
+  "observe": false
+}

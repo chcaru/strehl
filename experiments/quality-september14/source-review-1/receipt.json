@@ -1,0 +1,101 @@
+{
+  "source": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00053.ARW",
+  "original_bytes": 40357888,
+  "original_mtime_ns": 1789361814660000000,
+  "output_crop_origin_native": [
+    96,
+    64
+  ],
+  "reference_index": 52,
+  "reference_warp": "identity",
+  "decoder": {
+    "visible_shape": [
+      4688,
+      7028
+    ],
+    "pattern": [
+      [
+        0,
+        1
+      ],
+      [
+        3,
+        2
+      ]
+    ],
+    "black": [
+      512.0,
+      512.0,
+      512.0,
+      512.0
+    ],
+    "white": 16383,
+    "camera_whitebalance": [
+      1637.0,
+      1024.0,
+      2774.0,
+      1024.0
+    ],
+    "rawpy": "0.27.0",
+    "libraw": [
+      0,
+      22,
+      1
+    ]
+  },
+  "raw_union_xywh": [
+    1246,
+    1364,
+    2584,
+    2184
+  ],
+  "regions": [
+    {
+      "name": "junction",
+      "x": 3350,
+      "y": 2450,
+      "width": 384,
+      "height": 384,
+      "display": "sRGB16 to8 floor(code*255/65535); no spatial resampling",
+      "sensor_x": 3446,
+      "sensor_y": 2514
+    },
+    {
+      "name": "letter-edge",
+      "x": 3000,
+      "y": 1550,
+      "width": 384,
+      "height": 384,
+      "display": "sRGB16 to8 floor(code*255/65535); no spatial resampling",
+      "sensor_x": 3096,
+      "sensor_y": 1614
+    },
+    {
+      "name": "fibre",
+      "x": 3000,
+      "y": 3100,
+      "width": 384,
+      "height": 384,
+      "display": "sRGB16 to8 floor(code*255/65535); no spatial resampling",
+      "sensor_x": 3096,
+      "sensor_y": 3164
+    },
+    {
+      "name": "surface",
+      "x": 1150,
+      "y": 1300,
+      "width": 384,
+      "height": 384,
+      "display": "sRGB16 to8 floor(code*255/65535); no spatial resampling",
+      "sensor_x": 1246,
+      "sensor_y": 1364
+    }
+  ],
+  "independent_decode_different_sensels": 0,
+  "raw_u16_sha256": "e1cce903caf7a4bc9a81c5d52bb528c1992d79bf1ca5145ad7aabbf1c1e2c9fb",
+  "display": "fixed exposure gain 2.809 then power 1/2.2, clipped [0,1], round to8; no spatial resampling",
+  "green_sampling": "one displayed pixel per original same-colour green sensel; pitch two native pixels",
+  "colour_display": "LibRaw AHD, camera WB, linear sRGB16, no_auto_bright; supplementary developer, not matched pipeline",
+  "interpretation": "No focus winner selection or sharpness metric; single middle source cannot establish best-focus loss.",
+  "command": "python -X faulthandler experiments/quality-september14/source-review.py"
+}

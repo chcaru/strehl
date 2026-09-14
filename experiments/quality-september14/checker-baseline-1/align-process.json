@@ -1,0 +1,93 @@
+{
+  "command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-gpu-gather\\build-native-6\\strehl.exe",
+    "align",
+    "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl",
+    "--out",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\checker-baseline-1\\checker.warpmap.txt",
+    "--threads",
+    "8",
+    "--resampler",
+    "catmull-rom"
+  ],
+  "exit_code": 0,
+  "error": null,
+  "cleanup_errors": [],
+  "wall_seconds": 32.421999999991385,
+  "log_bytes": 578,
+  "job_accounting": {
+    "total_user_100ns": 2436562500,
+    "total_kernel_100ns": 95468750,
+    "total_cpu_100ns": 2532031250,
+    "total_page_fault_count": 8849820,
+    "total_processes": 2,
+    "active_processes": 0,
+    "total_terminated_processes": 0
+  },
+  "job_memory": {
+    "peak_process_memory_used_bytes": 5658370048,
+    "peak_job_memory_used_bytes": 5659615232
+  },
+  "terminal_job_accounting": true,
+  "configured_job_limits": {
+    "flags": 8704,
+    "committed_bytes": 17179869184
+  },
+  "direct_exit_observed": true,
+  "pipe_eof_observed": true,
+  "post_exit_drain": {
+    "initial_accounting": {
+      "total_user_100ns": 2436562500,
+      "total_kernel_100ns": 95468750,
+      "total_cpu_100ns": 2532031250,
+      "total_page_fault_count": 8849820,
+      "total_processes": 2,
+      "active_processes": 0,
+      "total_terminated_processes": 0
+    },
+    "last_accounting": {
+      "total_user_100ns": 2436562500,
+      "total_kernel_100ns": 95468750,
+      "total_cpu_100ns": 2532031250,
+      "total_page_fault_count": 8849820,
+      "total_processes": 2,
+      "active_processes": 0,
+      "total_terminated_processes": 0
+    },
+    "observations": [
+      {
+        "wall_seconds": 32.421999999991385,
+        "accounting": {
+          "total_user_100ns": 2436562500,
+          "total_kernel_100ns": 95468750,
+          "total_cpu_100ns": 2532031250,
+          "total_page_fault_count": 8849820,
+          "total_processes": 2,
+          "active_processes": 0,
+          "total_terminated_processes": 0
+        }
+      }
+    ],
+    "observation_count": 1,
+    "completed": true,
+    "started_wall_seconds": 32.421999999991385,
+    "ended_wall_seconds": 32.421999999991385
+  },
+  "termination": {
+    "attempted": false,
+    "before_accounting": null,
+    "succeeded": false
+  },
+  "limits": {
+    "wall_seconds": 600,
+    "cpu_seconds": 3600,
+    "log_bytes": 4194304,
+    "committed_bytes": 17179869184
+  },
+  "scope": "owned job tree; committed memory, observed user+kernel CPU; not RSS or a timing benchmark",
+  "log": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\checker-baseline-1\\align.log",
+    "sha256": "9a1dee333636fbb007b598b6c02cd821e0da758b89674b839ffad3dc901482ab",
+    "bytes": 578
+  }
+}

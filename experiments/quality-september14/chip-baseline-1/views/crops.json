@@ -1,0 +1,38 @@
+{
+  "regions": [
+    {
+      "name": "fine-grid",
+      "x": 1400,
+      "y": 2850,
+      "width": 384,
+      "height": 384
+    },
+    {
+      "name": "colour-edge",
+      "x": 2550,
+      "y": 1180,
+      "width": 384,
+      "height": 384
+    },
+    {
+      "name": "dark-flat",
+      "x": 1780,
+      "y": 1640,
+      "width": 384,
+      "height": 384
+    },
+    {
+      "name": "pale-circuit",
+      "x": 1070,
+      "y": 930,
+      "width": 384,
+      "height": 384
+    }
+  ],
+  "output_origin_native": [
+    266,
+    178
+  ],
+  "reference_index": 149,
+  "display": "sRGB16 to8 floor(*255/65535); native sampling"
+}

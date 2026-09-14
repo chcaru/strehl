@@ -1,0 +1,46 @@
+{
+  "status": "FOCUS_NEIGHBOURHOODS_READY",
+  "nominations": {
+    "fibre": [
+      39,
+      41
+    ],
+    "junction": [
+      41,
+      43
+    ]
+  },
+  "independent_decode_checks": [
+    {
+      "frame_index": 39,
+      "region": "fibre",
+      "different_sensels": 0
+    },
+    {
+      "frame_index": 41,
+      "region": "fibre",
+      "different_sensels": 0
+    },
+    {
+      "frame_index": 41,
+      "region": "junction",
+      "different_sensels": 0
+    },
+    {
+      "frame_index": 43,
+      "region": "junction",
+      "different_sensels": 0
+    }
+  ],
+  "original_inventory_unchanged": true,
+  "new_locator_decodes": 101,
+  "cached_originals_reused": [
+    26,
+    52,
+    78,
+    104
+  ],
+  "selected_frame_postprocesses": 3,
+  "display": "Sources fixed gain2.809 gamma1/2.2; native RGB1:1. Green150x150 is original same-colour pitch2. No image resampling.",
+  "source_scales_retained": true
+}

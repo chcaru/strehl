@@ -1,0 +1,38 @@
+{
+  "demosaic_RI.py": {
+    "original_sha256": "2718eef6ed4196dd644e171b06d847c199c17311f40b8f54d850474b343dc0c3",
+    "adapted_sha256": "f4ebce0fe8cb63a4e7f432d895f5f7e73c42556f217c0b4417bf889ee3d8866d"
+  },
+  "mosaic_bayer.py": {
+    "original_sha256": "d812027fa6713ac1caaa1106d394839736983fee4bb6f7fb9efd15e5c13a77b0",
+    "adapted_sha256": "cd9fa9c2734f23d461dda4eed4f8c52900b33f73859efc41558d39525a050d0a"
+  },
+  "RIgreen_interpolation.py": {
+    "original_sha256": "85fe282b50561f51707139f4df82364df400445b9113fcc6c80e5d055540a8fb",
+    "adapted_sha256": "92a500c1d2de0b1324890bb0ddbb9c46c9aa5b2bae7cd0ca532bf8be509fe1c2"
+  },
+  "RIGuidefilterResidual.py": {
+    "original_sha256": "65aca93d35eea633a52d7cb90363f807f5f2175d1d4c323c3f1d66a83d068a8b",
+    "adapted_sha256": "c2086f4a7ac768e363610bb1cc822e5536c86ded7fac56467a37a5048d67f697"
+  },
+  "RIguidedfilter3gf.py": {
+    "original_sha256": "7be390a6cd1dcbe49cd1239c99edfd7eb79e98ae9935e33978837c85f49d5428",
+    "adapted_sha256": "0337eab2ba854cf8958c2be7e44d2f99aa33224cff174b23ca72ec93040b4135"
+  },
+  "RIred_interpolation.py": {
+    "original_sha256": "3fa945f704e085340570a88243b4aafb57dab889ccac6d6fc29fd547780f84e5",
+    "adapted_sha256": "a2b51083d5570ddf0c5d93fe7fb0d9ea35478580ce50633ed78d1bfde8b99274"
+  },
+  "RIblue_interpolation.py": {
+    "original_sha256": "242b77ca1f660c605a5303b72a870d699eb7bac9ec800b87d79696e28f19ad24",
+    "adapted_sha256": "ffa33a92b7da8db1a85da1569ca76832b21cf3de9ddedb65938a9603f543134c"
+  },
+  "RIHaResidual.py": {
+    "original_sha256": "42d87c69848598fe552022a63f8d62f57b6c37c014a0c83ea9958d72ebff5d5c",
+    "adapted_sha256": "462f3834474d65538ba39d34d2db145775baee9702916d617dc29b63bdb0a5a9"
+  },
+  "filtertools.py": {
+    "original_sha256": "7c69d610515cf2358a7581cd53be99baa78773902ac10fd61c9baacde734b01c",
+    "adapted_sha256": "98f2d0c830abd44beebde434354d2ef69eda55fcba1a8713645802ea183ee2c7"
+  }
+}

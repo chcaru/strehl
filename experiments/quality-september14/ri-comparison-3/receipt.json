@@ -1,0 +1,114 @@
+{
+  "records": [
+    {
+      "stage": "raw",
+      "command": [
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\patch-render-build-2\\saved-rgb-render.exe",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\ri-comparison-3\\fibre-frame39-raw\\config.json"
+      ],
+      "baseline_exact": true,
+      "shape": [
+        308,
+        308
+      ],
+      "trim": 32,
+      "reference_output_origin": [
+        3112,
+        3128
+      ],
+      "display": "actual product sRGB16, floor(code*255/65535), trim32, no spatial resampling"
+    },
+    {
+      "stage": "gathered",
+      "command": [
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\patch-render-build-2\\saved-rgb-render.exe",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\ri-comparison-3\\fibre-frame39-gathered\\config.json"
+      ],
+      "baseline_exact": true,
+      "shape": [
+        308,
+        308
+      ],
+      "trim": 32,
+      "reference_output_origin": [
+        3112,
+        3128
+      ],
+      "display": "actual product sRGB16, floor(code*255/65535), trim32, no spatial resampling"
+    },
+    {
+      "stage": "raw",
+      "command": [
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\patch-render-build-2\\saved-rgb-render.exe",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\ri-comparison-3\\junction-frame41-raw\\config.json"
+      ],
+      "baseline_exact": true,
+      "shape": [
+        392,
+        392
+      ],
+      "trim": 32,
+      "reference_output_origin": [
+        3378,
+        2478
+      ],
+      "display": "actual product sRGB16, floor(code*255/65535), trim32, no spatial resampling"
+    },
+    {
+      "stage": "gathered",
+      "command": [
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\patch-render-build-2\\saved-rgb-render.exe",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\ri-comparison-3\\junction-frame41-gathered\\config.json"
+      ],
+      "baseline_exact": true,
+      "shape": [
+        392,
+        392
+      ],
+      "trim": 32,
+      "reference_output_origin": [
+        3378,
+        2478
+      ],
+      "display": "actual product sRGB16, floor(code*255/65535), trim32, no spatial resampling"
+    },
+    {
+      "stage": "merged",
+      "command": [
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\patch-render-build-2\\saved-rgb-render.exe",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\ri-comparison-3\\junction-frame41-merged\\config.json"
+      ],
+      "baseline_exact": true,
+      "shape": [
+        392,
+        392
+      ],
+      "trim": 32,
+      "reference_output_origin": [
+        3378,
+        2478
+      ],
+      "display": "actual product sRGB16, floor(code*255/65535), trim32, no spatial resampling"
+    },
+    {
+      "stage": "merged",
+      "command": [
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\patch-render-build-2\\saved-rgb-render.exe",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\ri-comparison-3\\fibre-frame39-merged\\config.json"
+      ],
+      "baseline_exact": true,
+      "shape": [
+        308,
+        308
+      ],
+      "trim": 32,
+      "reference_output_origin": [
+        3112,
+        3128
+      ],
+      "display": "actual product sRGB16, floor(code*255/65535), trim32, no spatial resampling"
+    }
+  ],
+  "adapter_sha256": "9147ee3c9a56af99654fe3e9fa7088f7e2d9cf95cd6736fc96372ced4ac2abd3",
+  "scope": "bounded saved-patch candidates; no RAW decode or full merge changes"
+}

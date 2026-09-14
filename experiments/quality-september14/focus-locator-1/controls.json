@@ -1,0 +1,13 @@
+{
+  "status": "PASS",
+  "values": {
+    "flat": 0.0,
+    "flat_noise_sigma10": 2.781445113451055,
+    "flat_noise_sigma100": 275.26269744169576,
+    "sharp_texture": 892.3814760483905,
+    "blurred_texture": 0.9368846428048411
+  },
+  "failure_input": "A noisy flat patch can outscore a blurred real pattern; sigma100 control must demonstrate this.",
+  "interpretation": "Locator only. Score rises with noise, contrast and structure; no image quality or calibrated noise claim.",
+  "spatial_filter": "2D plane gaussian sigma1.2; np.gradient; interior pooled energy. No frame axis passed to a spatial filter."
+}

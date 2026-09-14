@@ -1,0 +1,11 @@
+stack tiny-high-res-calibration-checker-slide-cpl: 150 frames, digest 11a8816be276fc90
+  reference frame 75 (middle, default)
+  decoded 150 frames in 5.0 s, plane 3516x2344
+  measured 999/999 edges in 27.2 s (0.0% refused)
+align: track prior on, lambda=1 huber=Some(1.0) px
+
+  placed 150/150 frames, refused 0
+  total corner drift frame 0 -> 149: 0.398 plane px
+  held-out corner error (median): 0.453 plane px
+  cycle-consistency floor: 0.097 plane px
+  wrote C:\dev\blog\death-of-software\projects\strehl\experiments\quality-september14\checker-baseline-1\checker.warpmap.txt

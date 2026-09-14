@@ -1,0 +1,14 @@
+{
+  "status": "BASELINE_RENDERED",
+  "map": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\chip-baseline-1\\chip.warpmap.txt",
+    "sha256": "ce8534c9e65c5c761373bad87df5352c1c46319b7eaf7f7c91477ea61b4f4922",
+    "bytes": 41142
+  },
+  "image": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\chip-baseline-1\\chip.tiff",
+    "sha256": "5e6a7351310d00e1c7e3e0b7660d9678d6b11761afa8f4d0c248214d0bc223d1",
+    "bytes": 168952962
+  },
+  "original_metadata_unchanged": true
+}

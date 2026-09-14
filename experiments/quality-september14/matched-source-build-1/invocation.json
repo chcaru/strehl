@@ -1,0 +1,192 @@
+{
+  "command": [
+    "cargo",
+    "test",
+    "-p",
+    "strehl-cli",
+    "--bin",
+    "strehl",
+    "--test",
+    "byte-freeze",
+    "--no-run",
+    "--release",
+    "--features",
+    "native-pyramid-profile,native-gpu-gather,native-direct-planes",
+    "--jobs",
+    "2",
+    "--target-dir",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\target\\native-pyramid-profile",
+    "--message-format=json-render-diagnostics",
+    "--locked",
+    "--offline"
+  ],
+  "revision": "cbe7ed2a601c3a141757ea93b9c48a11fab04fa4",
+  "environment_overrides": {
+    "RAYON_NUM_THREADS": "8",
+    "CARGO_INCREMENTAL": "0"
+  },
+  "removed_environment": [],
+  "source_files": [
+    {
+      "path": "crates\\strehl-cli\\Cargo.toml",
+      "bytes": 1887,
+      "sha256": "c5dfa69451015a18f3e50b15a109cdf01c153108cf5200caf973755655ec662f"
+    },
+    {
+      "path": "crates\\strehl-cli\\src\\merge_cmd.rs",
+      "bytes": 448997,
+      "sha256": "6de09dc60c68237674cd5cfd4723c15503d187ba9c1d5c5f3f51cbd832bb2ed6"
+    },
+    {
+      "path": "experiments\\native-pyramid-profile\\implementation.rs",
+      "bytes": 12621,
+      "sha256": "85362dd472a95d64704c80235159abb188573914ac3cf9e7ac3b0fa16c029c69"
+    },
+    {
+      "path": "experiments\\native-pyramid-profile\\build.py",
+      "bytes": 6922,
+      "sha256": "e731b006cdaed830d6715730b2fac827c840066d61e7816b4b95f3cbc165dfbf"
+    },
+    {
+      "path": "crates\\strehl-cli\\src\\merge_cmd\\gatefloor.rs",
+      "bytes": 28470,
+      "sha256": "9d9d5b0d7c51b95c71882f362631936a142e4e41fac8770ac34e5e959252fa36"
+    },
+    {
+      "path": "crates\\strehl-cli\\src\\align_cmd.rs",
+      "bytes": 131382,
+      "sha256": "6007017f336ecbf6813ba032179f3f72cab88ef3f9cdc01e259e825a9be6a8fa"
+    },
+    {
+      "path": "crates\\strehl-core\\src\\demosaic.rs",
+      "bytes": 52206,
+      "sha256": "17cca911c2e756f3224deb1520379a1994c58375d3bcb5f4c91fcf9dc6fbe514"
+    },
+    {
+      "path": "Cargo.toml",
+      "bytes": 1146,
+      "sha256": "2ef9e1e68aa0816c2bc8d41c2ea1321341bd0cf17bd4d633e3c6edfa69ddccc4"
+    },
+    {
+      "path": "Cargo.lock",
+      "bytes": 64738,
+      "sha256": "ea23b6dc6afc5fb9f1b12d08f065083ba77a75425b2a0b000d3f3a8466696efa"
+    },
+    {
+      "path": "crates\\strehl-core\\Cargo.toml",
+      "bytes": 955,
+      "sha256": "722149ae720fc5e376d3b7b1cfead95ee61c6ba3e1628ddb5c05d0f0621fa4c8"
+    },
+    {
+      "path": "crates\\strehl-core\\src\\align.rs",
+      "bytes": 155298,
+      "sha256": "e6685dd17bd28a9466cfe7ceb534faee65000c0c915df7cd7fc6ef039b6f9dc6"
+    },
+    {
+      "path": "crates\\strehl-core\\src\\optics.rs",
+      "bytes": 93722,
+      "sha256": "1884fd98c7a2adf903c152b3d877051cfeba71316bdbb797fd2f1ba1433a5524"
+    },
+    {
+      "path": "experiments\\native-gpu-gather\\Cargo.toml",
+      "bytes": 878,
+      "sha256": "bc7d9ba7d9b0e9bd0751f3aea248a548a9ba74c5ed3f308d7d4eefe5b24484a5"
+    },
+    {
+      "path": "experiments\\native-gpu-gather\\src\\lib.rs",
+      "bytes": 27296,
+      "sha256": "daf49d8deab32658231cabaf57e98243bed6f2183e704beed671f44f63d9cdb1"
+    },
+    {
+      "path": "experiments\\native-gpu-gather\\src\\strict-spirv.rs",
+      "bytes": 11170,
+      "sha256": "a904c1017c051e3285390a5e714e797720cab6a150a27e15c1aefc3a3145a65e"
+    },
+    {
+      "path": "experiments\\native-gpu-gather\\src\\gather.wgsl",
+      "bytes": 4921,
+      "sha256": "dbf900189081c839f67d103a555d27d9ec4a8165a62f0f609b63573c440cbcd0"
+    },
+    {
+      "path": "experiments\\native-gpu-gather\\src\\device-coordinates.rs",
+      "bytes": 20509,
+      "sha256": "124009ae19d5f4003404a1b68ebdd1641253f7fb35e48bdce536d9de198bf0ba"
+    },
+    {
+      "path": "experiments\\native-gpu-gather\\src\\coordinates.glsl",
+      "bytes": 2242,
+      "sha256": "b331df15f3049484bbc1fc5151218a0658cdace28aec4a063a4b4f89d87030cb"
+    },
+    {
+      "path": "experiments\\native-gpu-gather\\independent-design-device.md",
+      "bytes": 4081,
+      "sha256": "d5d45340d472eebb11d660753826cf84cbab31de9b66414848467cac8038e0b1"
+    },
+    {
+      "path": "experiments\\native-gpu-gather\\independent-design-device-guard.md",
+      "bytes": 4275,
+      "sha256": "d37937f9b11b2f4fc1a7e7d3d248600b7476bdfcd9cd13c3fb2c515c0430d5c4"
+    },
+    {
+      "path": "experiments\\native-gpu-gather\\integration.rs",
+      "bytes": 10590,
+      "sha256": "42192933800a2dd2b22d085c27b472a2df5b1f190bb28fc9c758af34de9439d0"
+    },
+    {
+      "path": "experiments\\native-direct-planes\\implementation.rs",
+      "bytes": 6144,
+      "sha256": "8cdfe54f55c85c204d9f9b74b02fad0e326ab9c06a0a670577859ec8c2280ac9"
+    },
+    {
+      "path": "experiments\\native-direct-planes\\bridge.rs",
+      "bytes": 5111,
+      "sha256": "f3c10e7a9b415d78ab01943cbf97ab44062f40bc798a32a2f95a5b717247e648"
+    },
+    {
+      "path": "experiments\\native-direct-planes\\independent-tests.rs",
+      "bytes": 11957,
+      "sha256": "efc70237e6818411bee8cae8f04b3abc833568643694504891df0f73447207ad"
+    },
+    {
+      "path": "experiments\\native-direct-planes\\bridge-controls.rs",
+      "bytes": 1249,
+      "sha256": "4138bd0a632d71a7d8c12de1790bd36e3f3e6f56606d4d63f54c3f41c947d8a3"
+    },
+    {
+      "path": "experiments\\native-parallel-writeback\\independent-tests.rs",
+      "bytes": 9426,
+      "sha256": "b4cd15fd4940f19003f752956dbf03b68ccc6c73495de901ff46947056a53cd0"
+    },
+    {
+      "path": "experiments\\native-green-probe\\independent-tests.rs",
+      "bytes": 14153,
+      "sha256": "05a3d6472f19b1e2c50768e63e602d4cb2de659a52050971bef61f0efafcf0a6"
+    },
+    {
+      "path": "experiments\\native-gpu-gather\\cpu-bridge.rs",
+      "bytes": 3283,
+      "sha256": "d87515250211d04a5e51656b451d0d59ef61b98f2c87d77c0f25700754c7359c"
+    },
+    {
+      "path": "experiments\\native-gpu-gather\\independent-tests.rs",
+      "bytes": 47204,
+      "sha256": "e965704a6fad905ea12e5a3cc23d111f97ee839b92117510ae88946b66779f7e"
+    },
+    {
+      "path": "experiments\\native-gpu-gather\\independent-design.md",
+      "bytes": 4117,
+      "sha256": "735f8be97698898e315a1c002a420dea6a6120a8e8168341f78e6dd2d39cd4c6"
+    },
+    {
+      "path": "experiments\\native-gpu-gather\\charter.md",
+      "bytes": 2583,
+      "sha256": "f61908b063150da5946c1e4ae04098cebefc98debc69ccfe46b949ec829f4c8b"
+    },
+    {
+      "path": "experiments\\m194c-probe-layout\\independent-tests.rs",
+      "bytes": 21156,
+      "sha256": "72accd1598756d13e340947ded9c27f40c65420bd137c593b962131ddf8dc58d"
+    }
+  ],
+  "scope": "release compile only; existing integration test is compiled to obtain CLI artifact and is not executed"
+}

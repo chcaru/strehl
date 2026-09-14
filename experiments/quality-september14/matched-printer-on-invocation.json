@@ -1,0 +1,620 @@
+{
+  "inputs": [
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00001.ARW",
+      "bytes": 37253120,
+      "mtime_ns": 1789361374380000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00002.ARW",
+      "bytes": 37269504,
+      "mtime_ns": 1789361382810000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00003.ARW",
+      "bytes": 37285888,
+      "mtime_ns": 1789361391290000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00004.ARW",
+      "bytes": 37314560,
+      "mtime_ns": 1789361399750000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00005.ARW",
+      "bytes": 37335040,
+      "mtime_ns": 1789361408200000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00006.ARW",
+      "bytes": 37359616,
+      "mtime_ns": 1789361416680000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00007.ARW",
+      "bytes": 37380096,
+      "mtime_ns": 1789361425130000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00008.ARW",
+      "bytes": 37412864,
+      "mtime_ns": 1789361433590000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00009.ARW",
+      "bytes": 37437440,
+      "mtime_ns": 1789361442050000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00010.ARW",
+      "bytes": 37462016,
+      "mtime_ns": 1789361450520000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00011.ARW",
+      "bytes": 37494784,
+      "mtime_ns": 1789361459000000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00012.ARW",
+      "bytes": 37531648,
+      "mtime_ns": 1789361467450000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00013.ARW",
+      "bytes": 37564416,
+      "mtime_ns": 1789361475910000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00014.ARW",
+      "bytes": 37609472,
+      "mtime_ns": 1789361484380000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00015.ARW",
+      "bytes": 37650432,
+      "mtime_ns": 1789361492840000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00016.ARW",
+      "bytes": 37695488,
+      "mtime_ns": 1789361501300000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00017.ARW",
+      "bytes": 37744640,
+      "mtime_ns": 1789361509760000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00018.ARW",
+      "bytes": 37801984,
+      "mtime_ns": 1789361518230000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00019.ARW",
+      "bytes": 37855232,
+      "mtime_ns": 1789361526710000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00020.ARW",
+      "bytes": 37916672,
+      "mtime_ns": 1789361535170000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00021.ARW",
+      "bytes": 37990400,
+      "mtime_ns": 1789361543630000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00022.ARW",
+      "bytes": 38068224,
+      "mtime_ns": 1789361552110000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00023.ARW",
+      "bytes": 38150144,
+      "mtime_ns": 1789361560590000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00024.ARW",
+      "bytes": 38248448,
+      "mtime_ns": 1789361569070000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00025.ARW",
+      "bytes": 38363136,
+      "mtime_ns": 1789361577550000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00026.ARW",
+      "bytes": 38486016,
+      "mtime_ns": 1789361586000000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00027.ARW",
+      "bytes": 38621184,
+      "mtime_ns": 1789361594460000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00028.ARW",
+      "bytes": 38809600,
+      "mtime_ns": 1789361602950000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00029.ARW",
+      "bytes": 38981632,
+      "mtime_ns": 1789361611410000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00030.ARW",
+      "bytes": 39194624,
+      "mtime_ns": 1789361619860000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00031.ARW",
+      "bytes": 39436288,
+      "mtime_ns": 1789361628330000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00032.ARW",
+      "bytes": 39714816,
+      "mtime_ns": 1789361636820000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00033.ARW",
+      "bytes": 40001536,
+      "mtime_ns": 1789361645270000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00034.ARW",
+      "bytes": 40353792,
+      "mtime_ns": 1789361653730000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00035.ARW",
+      "bytes": 40747008,
+      "mtime_ns": 1789361662190000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00036.ARW",
+      "bytes": 41115648,
+      "mtime_ns": 1789361670670000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00037.ARW",
+      "bytes": 41484288,
+      "mtime_ns": 1789361679150000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00038.ARW",
+      "bytes": 41836544,
+      "mtime_ns": 1789361687610000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00039.ARW",
+      "bytes": 42123264,
+      "mtime_ns": 1789361696110000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00040.ARW",
+      "bytes": 42348544,
+      "mtime_ns": 1789361704560000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00041.ARW",
+      "bytes": 42463232,
+      "mtime_ns": 1789361713030000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00042.ARW",
+      "bytes": 42487808,
+      "mtime_ns": 1789361721500000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00043.ARW",
+      "bytes": 42463232,
+      "mtime_ns": 1789361729970000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00044.ARW",
+      "bytes": 42377216,
+      "mtime_ns": 1789361738420000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00045.ARW",
+      "bytes": 42266624,
+      "mtime_ns": 1789361746880000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00046.ARW",
+      "bytes": 42123264,
+      "mtime_ns": 1789361755380000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00047.ARW",
+      "bytes": 41918464,
+      "mtime_ns": 1789361763850000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00048.ARW",
+      "bytes": 41672704,
+      "mtime_ns": 1789361772310000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00049.ARW",
+      "bytes": 41410560,
+      "mtime_ns": 1789361780790000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00050.ARW",
+      "bytes": 41144320,
+      "mtime_ns": 1789361789240000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00051.ARW",
+      "bytes": 40873984,
+      "mtime_ns": 1789361797710000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00052.ARW",
+      "bytes": 40607744,
+      "mtime_ns": 1789361806170000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00053.ARW",
+      "bytes": 40357888,
+      "mtime_ns": 1789361814660000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00054.ARW",
+      "bytes": 40140800,
+      "mtime_ns": 1789361823130000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00055.ARW",
+      "bytes": 39890944,
+      "mtime_ns": 1789361831590000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00056.ARW",
+      "bytes": 39694336,
+      "mtime_ns": 1789361840070000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00057.ARW",
+      "bytes": 39510016,
+      "mtime_ns": 1789361848530000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00058.ARW",
+      "bytes": 39313408,
+      "mtime_ns": 1789361856990000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00059.ARW",
+      "bytes": 39149568,
+      "mtime_ns": 1789361865450000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00060.ARW",
+      "bytes": 38985728,
+      "mtime_ns": 1789361873920000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00061.ARW",
+      "bytes": 38842368,
+      "mtime_ns": 1789361882390000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00062.ARW",
+      "bytes": 38703104,
+      "mtime_ns": 1789361890840000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00063.ARW",
+      "bytes": 38592512,
+      "mtime_ns": 1789361899300000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00064.ARW",
+      "bytes": 38490112,
+      "mtime_ns": 1789361907790000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00065.ARW",
+      "bytes": 38387712,
+      "mtime_ns": 1789361916250000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00066.ARW",
+      "bytes": 38297600,
+      "mtime_ns": 1789361924710000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00067.ARW",
+      "bytes": 38207488,
+      "mtime_ns": 1789361933170000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00068.ARW",
+      "bytes": 38133760,
+      "mtime_ns": 1789361941650000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00069.ARW",
+      "bytes": 38064128,
+      "mtime_ns": 1789361950110000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00070.ARW",
+      "bytes": 38002688,
+      "mtime_ns": 1789361958570000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00071.ARW",
+      "bytes": 37945344,
+      "mtime_ns": 1789361967050000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00072.ARW",
+      "bytes": 37888000,
+      "mtime_ns": 1789361975520000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00073.ARW",
+      "bytes": 37838848,
+      "mtime_ns": 1789361983970000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00074.ARW",
+      "bytes": 37785600,
+      "mtime_ns": 1789361992430000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00075.ARW",
+      "bytes": 37744640,
+      "mtime_ns": 1789362000920000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00076.ARW",
+      "bytes": 37707776,
+      "mtime_ns": 1789362009370000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00077.ARW",
+      "bytes": 37679104,
+      "mtime_ns": 1789362017830000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00078.ARW",
+      "bytes": 37634048,
+      "mtime_ns": 1789362026290000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00079.ARW",
+      "bytes": 37593088,
+      "mtime_ns": 1789362034770000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00080.ARW",
+      "bytes": 37568512,
+      "mtime_ns": 1789362043230000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00081.ARW",
+      "bytes": 37548032,
+      "mtime_ns": 1789362051680000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00082.ARW",
+      "bytes": 37519360,
+      "mtime_ns": 1789362060150000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00083.ARW",
+      "bytes": 37482496,
+      "mtime_ns": 1789362068620000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00084.ARW",
+      "bytes": 37457920,
+      "mtime_ns": 1789362077090000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00085.ARW",
+      "bytes": 37437440,
+      "mtime_ns": 1789362085550000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00086.ARW",
+      "bytes": 37412864,
+      "mtime_ns": 1789362094020000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00087.ARW",
+      "bytes": 37392384,
+      "mtime_ns": 1789362102500000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00088.ARW",
+      "bytes": 37371904,
+      "mtime_ns": 1789362110970000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00089.ARW",
+      "bytes": 37351424,
+      "mtime_ns": 1789362119420000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00090.ARW",
+      "bytes": 37330944,
+      "mtime_ns": 1789362127890000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00091.ARW",
+      "bytes": 37318656,
+      "mtime_ns": 1789362136350000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00092.ARW",
+      "bytes": 37302272,
+      "mtime_ns": 1789362144810000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00093.ARW",
+      "bytes": 37289984,
+      "mtime_ns": 1789362153260000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00094.ARW",
+      "bytes": 37277696,
+      "mtime_ns": 1789362161740000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00095.ARW",
+      "bytes": 37261312,
+      "mtime_ns": 1789362170190000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00096.ARW",
+      "bytes": 37253120,
+      "mtime_ns": 1789362178650000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00097.ARW",
+      "bytes": 37240832,
+      "mtime_ns": 1789362187110000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00098.ARW",
+      "bytes": 37232640,
+      "mtime_ns": 1789362195580000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00099.ARW",
+      "bytes": 37216256,
+      "mtime_ns": 1789362204030000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00100.ARW",
+      "bytes": 37199872,
+      "mtime_ns": 1789362212480000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00101.ARW",
+      "bytes": 37191680,
+      "mtime_ns": 1789362220940000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00102.ARW",
+      "bytes": 37179392,
+      "mtime_ns": 1789362229410000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00103.ARW",
+      "bytes": 37171200,
+      "mtime_ns": 1789362237880000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00104.ARW",
+      "bytes": 37158912,
+      "mtime_ns": 1789362246340000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00105.ARW",
+      "bytes": 37076992,
+      "mtime_ns": 1789362254800000000
+    }
+  ],
+  "configuration": {
+    "dir": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl",
+    "map": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\baseline-1\\printer.warpmap.txt",
+    "out": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\matched-printer-on-1",
+    "frames": 105,
+    "tone": {
+      "black": 0.008555,
+      "white": 0.359037,
+      "contrast": 0.55
+    },
+    "regions": [
+      {
+        "name": "junction",
+        "frame": 41,
+        "x": 3350,
+        "y": 2450,
+        "width": 384,
+        "height": 384
+      },
+      {
+        "name": "fibre",
+        "frame": 39,
+        "x": 3084,
+        "y": 3100,
+        "width": 300,
+        "height": 300
+      }
+    ],
+    "observe": true
+  },
+  "map": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\baseline-1\\printer.warpmap.txt",
+    "sha256": "420883f6cda294fa3cd3205d52c4634e5cd72313d7d81e7d0615b527e9c6b3ee",
+    "bytes": 14610
+  },
+  "executable": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\matched-source-build-1\\cli-tests.exe",
+    "sha256": "ed2556a39a1a52e9ea346189a87b6320bd7788f4547889909294750a6a328d61",
+    "bytes": 21996032
+  },
+  "source_files": [
+    {
+      "path": "crates/strehl-cli/src/main.rs",
+      "bytes": 88555,
+      "sha256": "176b95f4669ac9c40e70a0498db4233c4695fda80f3f6b8e1d80a9763101627d"
+    },
+    {
+      "path": "crates/strehl-cli/src/image_out.rs",
+      "bytes": 132195,
+      "sha256": "0c2c542b6c62cf8bd67a3b645b4baff3881a863dc8bd3f5a2c9ab82bc656e5fa"
+    },
+    {
+      "path": "crates/strehl-cli/src/merge_cmd.rs",
+      "bytes": 448997,
+      "sha256": "6de09dc60c68237674cd5cfd4723c15503d187ba9c1d5c5f3f51cbd832bb2ed6"
+    },
+    {
+      "path": "experiments/quality-september14/matched-source-tests.rs",
+      "bytes": 11457,
+      "sha256": "093e25703bd86a303c95edbc557c253359365557d396364baa7dbdb9b6782111"
+    }
+  ],
+  "runner": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\matched-source-run.py",
+    "sha256": "bbf48ac5482c2e6e0ae27c933428c0da1458737a607a754958d9c0baa94c350a",
+    "bytes": 4830
+  },
+  "command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\matched-source-build-1\\cli-tests.exe",
+    "merge_cmd::matched_source_tests::matched_source_actual_consumer",
+    "--exact",
+    "--ignored",
+    "--nocapture",
+    "--test-threads=1"
+  ],
+  "environment": {
+    "RAYON_NUM_THREADS": "8",
+    "STREHL_PYRAMID_WORKERS": "8",
+    "STREHL_ALIGN": "1",
+    "STREHL_WARPMAP": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\baseline-1\\printer.warpmap.txt",
+    "STREHL_FULLRES_GATHER": "1",
+    "STREHL_DIRECT_PLANES": "rounded",
+    "STREHL_PROBE_GATHER": "green",
+    "STREHL_WARP_WRITEBACK": "parallel",
+    "STREHL_GPU_GATHER": "on",
+    "STREHL_GPU_SCHEDULE": "device",
+    "STREHL_GPU_GATHER_LOG": "off",
+    "STREHL_DEFECT": "off",
+    "STREHL_MATCHED_SOURCE_CONFIG": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\matched-printer-on-config.json"
+  },
+  "removed_environment": []
+}

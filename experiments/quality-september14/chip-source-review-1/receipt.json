@@ -1,0 +1,87 @@
+{
+  "status": "CHIP_SOURCE_READY",
+  "source": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00150.ARW",
+  "original_bytes": 42491904,
+  "original_mtime_ns": 1789283057290000000,
+  "original_metadata_unchanged": true,
+  "reference_index": 149,
+  "reference_displacement_bound_native": 4.833584748946457e-13,
+  "native_output_origin": [
+    266,
+    178
+  ],
+  "regions": [
+    {
+      "name": "fine-grid",
+      "x": 1400,
+      "y": 2850,
+      "width": 384,
+      "height": 384,
+      "sensor_x": 1666,
+      "sensor_y": 3028
+    },
+    {
+      "name": "colour-edge",
+      "x": 2550,
+      "y": 1180,
+      "width": 384,
+      "height": 384,
+      "sensor_x": 2816,
+      "sensor_y": 1358
+    },
+    {
+      "name": "dark-flat",
+      "x": 1780,
+      "y": 1640,
+      "width": 384,
+      "height": 384,
+      "sensor_x": 2046,
+      "sensor_y": 1818
+    },
+    {
+      "name": "pale-circuit",
+      "x": 1070,
+      "y": 930,
+      "width": 384,
+      "height": 384,
+      "sensor_x": 1336,
+      "sensor_y": 1108
+    }
+  ],
+  "union_xywh": [
+    1336,
+    1108,
+    1864,
+    2304
+  ],
+  "decoder": {
+    "rawpy": "0.27.0",
+    "libraw": [
+      0,
+      22,
+      1
+    ],
+    "black": [
+      512,
+      512,
+      512,
+      512
+    ],
+    "white": 16383,
+    "visible_shape": [
+      4688,
+      7028
+    ],
+    "camera_whitebalance": [
+      1637.0,
+      1024.0,
+      2774.0,
+      1024.0
+    ]
+  },
+  "raw_u16_sha256": "ddc6a71aa92117a07a8d8f056625f599acf0741599c1839ea2a2df6b4961e2a3",
+  "independent_decode_different_sensels": 0,
+  "display": "Source fixed gain1.050, gamma1/2.2, round8; native RGB1:1; G192x192 at original same-colour pitch2. No spatial resampling.",
+  "developer": "LibRaw AHD cameraWB sRGBlinear, no auto brightness; differs from baseline colour/tone, qualitative only.",
+  "command": "python -X faulthandler experiments/quality-september14/chip-source-review.py"
+}

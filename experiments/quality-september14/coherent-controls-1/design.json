@@ -1,0 +1,14 @@
+{
+  "shape": [
+    96,
+    96
+  ],
+  "trim": 12,
+  "invariants": "All known CFA samples bit-identical; noiseless flat RGB bias max<1e-6; candidate green unchanged by arbitrary R/B replacement.",
+  "quality_bar": "A >5% and >0.0005 absolute increase in truth RGB RMSE on a reconstructable in-band neutral or independent-chroma case blocks broad promotion. Chroma RMSE and green MSE are also reported; no amplitude-only pass.",
+  "power": "Wrong known sample must fail identity; a neutralized genuine chromatic pattern and a one-pixel-shifted pattern must fail direct truth metrics despite attractive chroma/energy.",
+  "diamond_counterexample": "(.30,.30) and the sign-flipped (-.20,-.20) wave coincide at green sites; reconstructed green cannot recover both. Alias must be disclosed, not excluded from results.",
+  "noise": "Injected Gaussian sensor surrogate: g=1/4096, read_sigma=.0006 before WB, WB=(1.5986,1,2.709); same draw/calibration for every arm. It tests operators, not actual camera calibration.",
+  "metric_failure": "RMSE may favour blur if truth itself is blurred; here analytic full RGB truth is fixed independently and phase/frequency are not fitted. Camera-coordinate chroma RMSE is not a perceptual colour metric.",
+  "extra_arm": "C only; all prior fixtures/bars retained. C intentionally reads R/B curvature, so green-only independence remains Q's contract; C sensitivity is recorded."
+}

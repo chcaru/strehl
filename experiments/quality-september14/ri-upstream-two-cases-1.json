@@ -1,0 +1,133 @@
+{
+  "status": "TWO_UNMODIFIED_UPSTREAM_CASES_EXECUTED",
+  "cases": [
+    {
+      "index": 9,
+      "kind": "independent-chroma",
+      "frequency": 0.08,
+      "orientation": "diag-plus",
+      "phase": 0.17,
+      "input_sha256": "e29426341e4281f3df30ee7c9f0a82692464bc62433856c03f111aaabfb5664f",
+      "scaled_input_minmax": [
+        48.4583625793457,
+        132.59661865234375
+      ],
+      "unmodified_upstream_float64": {
+        "rgb_rmse": 0.04827050712010076,
+        "chroma_rmse": 0.05807434024939874,
+        "green_mse": 8.027688778927443e-06,
+        "signed_bias_rgb": [
+          0.00044010096752513116,
+          2.669483678356709e-06,
+          -0.0007558884424973526
+        ]
+      },
+      "adapted_float32": {
+        "rgb_rmse": 0.04826733974435167,
+        "chroma_rmse": 0.058070476633170325,
+        "green_mse": 8.02766631741083e-06,
+        "signed_bias_rgb": [
+          0.00043988318066112697,
+          2.6675115805119276e-06,
+          -0.0007553856412414461
+        ]
+      },
+      "shipped_mhc": {
+        "rgb_rmse": 0.009044644141414402,
+        "chroma_rmse": 0.007924864327638843,
+        "green_mse": 3.665495887715704e-05,
+        "signed_bias_rgb": [
+          8.516281377524137e-05,
+          -1.0244024451822042e-05,
+          -9.289983427152038e-05
+        ]
+      },
+      "still_regresses_vs_shipped_mhc": true
+    },
+    {
+      "index": 40,
+      "kind": "neutral",
+      "frequency": 0.3,
+      "orientation": "diag-plus",
+      "phase": 0.17,
+      "input_sha256": "a5b927a84df9bc618d617fddbd53a25174c1b26b5e986a1ce66a147f781c246e",
+      "scaled_input_minmax": [
+        58.736656188964844,
+        119.84896850585938
+      ],
+      "unmodified_upstream_float64": {
+        "rgb_rmse": 0.05190636882483132,
+        "chroma_rmse": 0.08347817710329244,
+        "green_mse": 0.005757281699424875,
+        "signed_bias_rgb": [
+          -0.0018850739182784257,
+          0.004201391557982182,
+          -0.001878053341065983
+        ]
+      },
+      "adapted_float32": {
+        "rgb_rmse": 0.05572529173422306,
+        "chroma_rmse": 0.09010643769548837,
+        "green_mse": 0.0069221903753147905,
+        "signed_bias_rgb": [
+          -2.2194974008016288e-05,
+          1.0313422535546124e-05,
+          -2.2159030777402222e-05
+        ]
+      },
+      "shipped_mhc": {
+        "rgb_rmse": 0.017804564495693134,
+        "chroma_rmse": 0.015007414288640351,
+        "green_mse": 0.00011797902176239206,
+        "signed_bias_rgb": [
+          -1.9623126718215644e-05,
+          1.7163401935249567e-06,
+          1.9597719074226916e-05
+        ]
+      },
+      "still_regresses_vs_shipped_mhc": true
+    }
+  ],
+  "cpu_seconds": 0.046875,
+  "source_directory": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\residual-interpolation-reference\\source",
+  "original_source_bindings": {
+    "demosaic_RI.py": {
+      "original_sha256": "2718eef6ed4196dd644e171b06d847c199c17311f40b8f54d850474b343dc0c3",
+      "adapted_sha256": "f4ebce0fe8cb63a4e7f432d895f5f7e73c42556f217c0b4417bf889ee3d8866d"
+    },
+    "mosaic_bayer.py": {
+      "original_sha256": "d812027fa6713ac1caaa1106d394839736983fee4bb6f7fb9efd15e5c13a77b0",
+      "adapted_sha256": "cd9fa9c2734f23d461dda4eed4f8c52900b33f73859efc41558d39525a050d0a"
+    },
+    "RIgreen_interpolation.py": {
+      "original_sha256": "85fe282b50561f51707139f4df82364df400445b9113fcc6c80e5d055540a8fb",
+      "adapted_sha256": "92a500c1d2de0b1324890bb0ddbb9c46c9aa5b2bae7cd0ca532bf8be509fe1c2"
+    },
+    "RIGuidefilterResidual.py": {
+      "original_sha256": "65aca93d35eea633a52d7cb90363f807f5f2175d1d4c323c3f1d66a83d068a8b",
+      "adapted_sha256": "c2086f4a7ac768e363610bb1cc822e5536c86ded7fac56467a37a5048d67f697"
+    },
+    "RIguidedfilter3gf.py": {
+      "original_sha256": "7be390a6cd1dcbe49cd1239c99edfd7eb79e98ae9935e33978837c85f49d5428",
+      "adapted_sha256": "0337eab2ba854cf8958c2be7e44d2f99aa33224cff174b23ca72ec93040b4135"
+    },
+    "RIred_interpolation.py": {
+      "original_sha256": "3fa945f704e085340570a88243b4aafb57dab889ccac6d6fc29fd547780f84e5",
+      "adapted_sha256": "a2b51083d5570ddf0c5d93fe7fb0d9ea35478580ce50633ed78d1bfde8b99274"
+    },
+    "RIblue_interpolation.py": {
+      "original_sha256": "242b77ca1f660c605a5303b72a870d699eb7bac9ec800b87d79696e28f19ad24",
+      "adapted_sha256": "ffa33a92b7da8db1a85da1569ca76832b21cf3de9ddedb65938a9603f543134c"
+    },
+    "RIHaResidual.py": {
+      "original_sha256": "42d87c69848598fe552022a63f8d62f57b6c37c014a0c83ea9958d72ebff5d5c",
+      "adapted_sha256": "462f3834474d65538ba39d34d2db145775baee9702916d617dc29b63bdb0a5a9"
+    },
+    "filtertools.py": {
+      "original_sha256": "7c69d610515cf2358a7581cd53be99baa78773902ac10fd61c9baacde734b01c",
+      "adapted_sha256": "98f2d0c830abd44beebde434354d2ef69eda55fcba1a8713645802ea183ee2c7"
+    }
+  },
+  "trim": 32,
+  "scope": "Untouched BSD upstream RI float64, original clips and boundary rules; two fixed frozen synthetic cases only, no adapter or RAW"
+}

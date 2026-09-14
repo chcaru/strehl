@@ -1,0 +1,826 @@
+{
+  "inputs": [
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00001.ARW",
+      "bytes": 38068224,
+      "mtime_ns": 1789360042590000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00002.ARW",
+      "bytes": 38076416,
+      "mtime_ns": 1789360044000000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00003.ARW",
+      "bytes": 38084608,
+      "mtime_ns": 1789360045490000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00004.ARW",
+      "bytes": 38084608,
+      "mtime_ns": 1789360046950000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00005.ARW",
+      "bytes": 38088704,
+      "mtime_ns": 1789360048420000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00006.ARW",
+      "bytes": 38088704,
+      "mtime_ns": 1789360049890000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00007.ARW",
+      "bytes": 38096896,
+      "mtime_ns": 1789360051340000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00008.ARW",
+      "bytes": 38105088,
+      "mtime_ns": 1789360052820000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00009.ARW",
+      "bytes": 38109184,
+      "mtime_ns": 1789360054290000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00010.ARW",
+      "bytes": 38113280,
+      "mtime_ns": 1789360055750000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00011.ARW",
+      "bytes": 38117376,
+      "mtime_ns": 1789360057220000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00012.ARW",
+      "bytes": 38121472,
+      "mtime_ns": 1789360058680000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00013.ARW",
+      "bytes": 38125568,
+      "mtime_ns": 1789360060160000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00014.ARW",
+      "bytes": 38133760,
+      "mtime_ns": 1789360061620000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00015.ARW",
+      "bytes": 38133760,
+      "mtime_ns": 1789360063090000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00016.ARW",
+      "bytes": 38137856,
+      "mtime_ns": 1789360064550000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00017.ARW",
+      "bytes": 38146048,
+      "mtime_ns": 1789360066010000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00018.ARW",
+      "bytes": 38146048,
+      "mtime_ns": 1789360067480000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00019.ARW",
+      "bytes": 38154240,
+      "mtime_ns": 1789360068930000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00020.ARW",
+      "bytes": 38162432,
+      "mtime_ns": 1789360070420000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00021.ARW",
+      "bytes": 38162432,
+      "mtime_ns": 1789360071870000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00022.ARW",
+      "bytes": 38174720,
+      "mtime_ns": 1789360073330000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00023.ARW",
+      "bytes": 38178816,
+      "mtime_ns": 1789360074790000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00024.ARW",
+      "bytes": 38182912,
+      "mtime_ns": 1789360076250000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00025.ARW",
+      "bytes": 38191104,
+      "mtime_ns": 1789360077700000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00026.ARW",
+      "bytes": 38195200,
+      "mtime_ns": 1789360079170000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00027.ARW",
+      "bytes": 38191104,
+      "mtime_ns": 1789360080650000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00028.ARW",
+      "bytes": 38191104,
+      "mtime_ns": 1789360082110000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00029.ARW",
+      "bytes": 38203392,
+      "mtime_ns": 1789360083590000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00030.ARW",
+      "bytes": 38207488,
+      "mtime_ns": 1789360085040000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00031.ARW",
+      "bytes": 38215680,
+      "mtime_ns": 1789360086530000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00032.ARW",
+      "bytes": 38219776,
+      "mtime_ns": 1789360088000000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00033.ARW",
+      "bytes": 38227968,
+      "mtime_ns": 1789360089460000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00034.ARW",
+      "bytes": 38232064,
+      "mtime_ns": 1789360090910000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00035.ARW",
+      "bytes": 38236160,
+      "mtime_ns": 1789360092370000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00036.ARW",
+      "bytes": 38244352,
+      "mtime_ns": 1789360093840000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00037.ARW",
+      "bytes": 38248448,
+      "mtime_ns": 1789360095290000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00038.ARW",
+      "bytes": 38256640,
+      "mtime_ns": 1789360096750000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00039.ARW",
+      "bytes": 38256640,
+      "mtime_ns": 1789360098230000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00040.ARW",
+      "bytes": 38264832,
+      "mtime_ns": 1789360099680000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00041.ARW",
+      "bytes": 38273024,
+      "mtime_ns": 1789360101160000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00042.ARW",
+      "bytes": 38273024,
+      "mtime_ns": 1789360102610000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00043.ARW",
+      "bytes": 38273024,
+      "mtime_ns": 1789360104070000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00044.ARW",
+      "bytes": 38281216,
+      "mtime_ns": 1789360105540000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00045.ARW",
+      "bytes": 38281216,
+      "mtime_ns": 1789360107010000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00046.ARW",
+      "bytes": 38289408,
+      "mtime_ns": 1789360108470000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00047.ARW",
+      "bytes": 38289408,
+      "mtime_ns": 1789360109940000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00048.ARW",
+      "bytes": 38289408,
+      "mtime_ns": 1789360111410000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00049.ARW",
+      "bytes": 38293504,
+      "mtime_ns": 1789360112880000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00050.ARW",
+      "bytes": 38297600,
+      "mtime_ns": 1789360114350000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00051.ARW",
+      "bytes": 38297600,
+      "mtime_ns": 1789360115810000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00052.ARW",
+      "bytes": 38297600,
+      "mtime_ns": 1789360117290000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00053.ARW",
+      "bytes": 38293504,
+      "mtime_ns": 1789360118750000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00054.ARW",
+      "bytes": 38297600,
+      "mtime_ns": 1789360120230000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00055.ARW",
+      "bytes": 38297600,
+      "mtime_ns": 1789360121690000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00056.ARW",
+      "bytes": 38297600,
+      "mtime_ns": 1789360123160000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00057.ARW",
+      "bytes": 38297600,
+      "mtime_ns": 1789360124630000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00058.ARW",
+      "bytes": 38297600,
+      "mtime_ns": 1789360126100000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00059.ARW",
+      "bytes": 38301696,
+      "mtime_ns": 1789360127570000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00060.ARW",
+      "bytes": 38293504,
+      "mtime_ns": 1789360129050000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00061.ARW",
+      "bytes": 38281216,
+      "mtime_ns": 1789360130520000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00062.ARW",
+      "bytes": 38297600,
+      "mtime_ns": 1789360131990000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00063.ARW",
+      "bytes": 38301696,
+      "mtime_ns": 1789360133460000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00064.ARW",
+      "bytes": 38301696,
+      "mtime_ns": 1789360134920000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00065.ARW",
+      "bytes": 38305792,
+      "mtime_ns": 1789360136390000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00066.ARW",
+      "bytes": 38301696,
+      "mtime_ns": 1789360137860000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00067.ARW",
+      "bytes": 38301696,
+      "mtime_ns": 1789360139310000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00068.ARW",
+      "bytes": 38305792,
+      "mtime_ns": 1789360140770000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00069.ARW",
+      "bytes": 38305792,
+      "mtime_ns": 1789360142250000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00070.ARW",
+      "bytes": 38305792,
+      "mtime_ns": 1789360143700000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00071.ARW",
+      "bytes": 38305792,
+      "mtime_ns": 1789360145190000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00072.ARW",
+      "bytes": 38301696,
+      "mtime_ns": 1789360146640000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00073.ARW",
+      "bytes": 38301696,
+      "mtime_ns": 1789360148120000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00074.ARW",
+      "bytes": 38305792,
+      "mtime_ns": 1789360149570000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00075.ARW",
+      "bytes": 38301696,
+      "mtime_ns": 1789360151030000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00076.ARW",
+      "bytes": 38305792,
+      "mtime_ns": 1789360152510000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00077.ARW",
+      "bytes": 38309888,
+      "mtime_ns": 1789360153970000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00078.ARW",
+      "bytes": 38309888,
+      "mtime_ns": 1789360155430000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00079.ARW",
+      "bytes": 38309888,
+      "mtime_ns": 1789360156910000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00080.ARW",
+      "bytes": 38309888,
+      "mtime_ns": 1789360158360000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00081.ARW",
+      "bytes": 38313984,
+      "mtime_ns": 1789360159840000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00082.ARW",
+      "bytes": 38318080,
+      "mtime_ns": 1789360161300000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00083.ARW",
+      "bytes": 38318080,
+      "mtime_ns": 1789360162760000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00084.ARW",
+      "bytes": 38322176,
+      "mtime_ns": 1789360164230000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00085.ARW",
+      "bytes": 38322176,
+      "mtime_ns": 1789360165680000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00086.ARW",
+      "bytes": 38322176,
+      "mtime_ns": 1789360167150000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00087.ARW",
+      "bytes": 38318080,
+      "mtime_ns": 1789360168610000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00088.ARW",
+      "bytes": 38318080,
+      "mtime_ns": 1789360170060000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00089.ARW",
+      "bytes": 38313984,
+      "mtime_ns": 1789360171550000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00090.ARW",
+      "bytes": 38309888,
+      "mtime_ns": 1789360173010000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00091.ARW",
+      "bytes": 38313984,
+      "mtime_ns": 1789360174480000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00092.ARW",
+      "bytes": 38305792,
+      "mtime_ns": 1789360175930000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00093.ARW",
+      "bytes": 38309888,
+      "mtime_ns": 1789360177390000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00094.ARW",
+      "bytes": 38305792,
+      "mtime_ns": 1789360178860000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00095.ARW",
+      "bytes": 38301696,
+      "mtime_ns": 1789360180320000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00096.ARW",
+      "bytes": 38305792,
+      "mtime_ns": 1789360181790000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00097.ARW",
+      "bytes": 38301696,
+      "mtime_ns": 1789360183270000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00098.ARW",
+      "bytes": 38297600,
+      "mtime_ns": 1789360184720000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00099.ARW",
+      "bytes": 38297600,
+      "mtime_ns": 1789360186210000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00100.ARW",
+      "bytes": 38293504,
+      "mtime_ns": 1789360187660000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00101.ARW",
+      "bytes": 38289408,
+      "mtime_ns": 1789360189130000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00102.ARW",
+      "bytes": 38285312,
+      "mtime_ns": 1789360190590000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00103.ARW",
+      "bytes": 38281216,
+      "mtime_ns": 1789360192050000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00104.ARW",
+      "bytes": 38277120,
+      "mtime_ns": 1789360193520000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00105.ARW",
+      "bytes": 38273024,
+      "mtime_ns": 1789360194990000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00106.ARW",
+      "bytes": 38268928,
+      "mtime_ns": 1789360196440000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00107.ARW",
+      "bytes": 38244352,
+      "mtime_ns": 1789360197920000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00108.ARW",
+      "bytes": 38244352,
+      "mtime_ns": 1789360199390000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00109.ARW",
+      "bytes": 38236160,
+      "mtime_ns": 1789360200860000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00110.ARW",
+      "bytes": 38232064,
+      "mtime_ns": 1789360202310000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00111.ARW",
+      "bytes": 38227968,
+      "mtime_ns": 1789360203790000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00112.ARW",
+      "bytes": 38223872,
+      "mtime_ns": 1789360205260000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00113.ARW",
+      "bytes": 38219776,
+      "mtime_ns": 1789360206710000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00114.ARW",
+      "bytes": 38219776,
+      "mtime_ns": 1789360208180000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00115.ARW",
+      "bytes": 38211584,
+      "mtime_ns": 1789360209650000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00116.ARW",
+      "bytes": 38207488,
+      "mtime_ns": 1789360211100000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00117.ARW",
+      "bytes": 38203392,
+      "mtime_ns": 1789360212580000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00118.ARW",
+      "bytes": 38199296,
+      "mtime_ns": 1789360214040000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00119.ARW",
+      "bytes": 38195200,
+      "mtime_ns": 1789360215490000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00120.ARW",
+      "bytes": 38187008,
+      "mtime_ns": 1789360216950000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00121.ARW",
+      "bytes": 38182912,
+      "mtime_ns": 1789360218410000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00122.ARW",
+      "bytes": 38182912,
+      "mtime_ns": 1789360219890000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00123.ARW",
+      "bytes": 38174720,
+      "mtime_ns": 1789360221340000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00124.ARW",
+      "bytes": 38174720,
+      "mtime_ns": 1789360222810000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00125.ARW",
+      "bytes": 38166528,
+      "mtime_ns": 1789360224280000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00126.ARW",
+      "bytes": 38162432,
+      "mtime_ns": 1789360225740000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00127.ARW",
+      "bytes": 38154240,
+      "mtime_ns": 1789360227210000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00128.ARW",
+      "bytes": 38154240,
+      "mtime_ns": 1789360228670000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00129.ARW",
+      "bytes": 38150144,
+      "mtime_ns": 1789360230130000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00130.ARW",
+      "bytes": 38146048,
+      "mtime_ns": 1789360231610000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00131.ARW",
+      "bytes": 38141952,
+      "mtime_ns": 1789360233060000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00132.ARW",
+      "bytes": 38137856,
+      "mtime_ns": 1789360234540000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00133.ARW",
+      "bytes": 38133760,
+      "mtime_ns": 1789360236010000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00134.ARW",
+      "bytes": 38129664,
+      "mtime_ns": 1789360237470000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00135.ARW",
+      "bytes": 38125568,
+      "mtime_ns": 1789360238940000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00136.ARW",
+      "bytes": 38117376,
+      "mtime_ns": 1789360240410000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00137.ARW",
+      "bytes": 38113280,
+      "mtime_ns": 1789360241880000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00138.ARW",
+      "bytes": 38113280,
+      "mtime_ns": 1789360243350000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00139.ARW",
+      "bytes": 38109184,
+      "mtime_ns": 1789360244800000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00140.ARW",
+      "bytes": 38105088,
+      "mtime_ns": 1789360246280000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00141.ARW",
+      "bytes": 38100992,
+      "mtime_ns": 1789360247750000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00142.ARW",
+      "bytes": 38088704,
+      "mtime_ns": 1789360249220000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00143.ARW",
+      "bytes": 38084608,
+      "mtime_ns": 1789360250670000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00144.ARW",
+      "bytes": 38080512,
+      "mtime_ns": 1789360252140000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00145.ARW",
+      "bytes": 38072320,
+      "mtime_ns": 1789360253600000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00146.ARW",
+      "bytes": 38088704,
+      "mtime_ns": 1789360255060000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00147.ARW",
+      "bytes": 38096896,
+      "mtime_ns": 1789360256530000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00148.ARW",
+      "bytes": 38092800,
+      "mtime_ns": 1789360257980000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00149.ARW",
+      "bytes": 38084608,
+      "mtime_ns": 1789360259440000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00150.ARW",
+      "bytes": 38051840,
+      "mtime_ns": 1789360260920000000
+    }
+  ],
+  "executable": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-gpu-gather\\build-native-6\\strehl.exe",
+    "sha256": "2fd0a1615989e262fbba61e0a1587a9b8f20ff4913d3969510e967ce9d9219d7",
+    "bytes": 17714688
+  },
+  "runner": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\checker-baseline.py",
+    "sha256": "fed66c0cdec9a590737d4d578c79d8e135d9dfe89e2ca7161514100e77b2b908",
+    "bytes": 3057
+  },
+  "commands": [
+    [
+      "align",
+      [
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-gpu-gather\\build-native-6\\strehl.exe",
+        "align",
+        "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl",
+        "--out",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\checker-baseline-1\\checker.warpmap.txt",
+        "--threads",
+        "8",
+        "--resampler",
+        "catmull-rom"
+      ]
+    ],
+    [
+      "render",
+      [
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-gpu-gather\\build-native-6\\strehl.exe",
+        "stack",
+        "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl",
+        "--merge",
+        "pyramid",
+        "--pyramid-bands",
+        "7",
+        "--pyramid-gate",
+        "2",
+        "--pyramid-exponent",
+        "2",
+        "--pyramid-sharpen",
+        "1.4",
+        "--pyramid-select",
+        "soft",
+        "--pyramid-base",
+        "mean",
+        "--srgb",
+        "--demosaic",
+        "--resampler",
+        "catmull-rom",
+        "--cover",
+        "crop",
+        "--out",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\checker-baseline-1\\checker.tiff"
+      ]
+    ]
+  ],
+  "environment": {
+    "RAYON_NUM_THREADS": "8",
+    "STREHL_PYRAMID_WORKERS": "8",
+    "STREHL_ALIGN": "1",
+    "STREHL_WARPMAP": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\checker-baseline-1\\checker.warpmap.txt",
+    "STREHL_FULLRES_GATHER": "1",
+    "STREHL_DIRECT_PLANES": "rounded",
+    "STREHL_PROBE_GATHER": "green",
+    "STREHL_WARP_WRITEBACK": "parallel",
+    "STREHL_GPU_GATHER": "on",
+    "STREHL_GPU_SCHEDULE": "device",
+    "STREHL_GPU_GATHER_LOG": "off",
+    "STREHL_DEFECT": "off"
+  },
+  "removed_environment": [],
+  "scope": "new150 RAW baseline; output image inspection, no speed or quality claim"
+}

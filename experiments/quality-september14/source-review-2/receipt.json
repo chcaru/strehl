@@ -1,0 +1,259 @@
+{
+  "status": "SOURCE_DETAIL_CROPS_READY",
+  "records": [
+    {
+      "frame_index": 26,
+      "source": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00027.ARW",
+      "original_bytes": 38621184,
+      "original_mtime_ns": 1789361594460000000,
+      "regions": [
+        {
+          "name": "fibre",
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ],
+          "reference_sensor_xywh": [
+            3180,
+            3164,
+            300,
+            300
+          ],
+          "mapped_source_centre_native": [
+            3330.2934108321883,
+            3322.7447438612785
+          ],
+          "source_sensor_xywh": [
+            3180,
+            3172,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ],
+          "reference_sensor_xywh": [
+            3530,
+            2598,
+            300,
+            300
+          ],
+          "mapped_source_centre_native": [
+            3683.402844051291,
+            2750.366858499713
+          ],
+          "source_sensor_xywh": [
+            3534,
+            2600,
+            300,
+            300
+          ]
+        }
+      ],
+      "raw_union_xywh": [
+        3180,
+        2600,
+        654,
+        872
+      ],
+      "independent_decode_different_sensels": 0,
+      "raw_u16_sha256": "92409d54e47e08a7cf7a80798fe311673e07df44053b6a950d31c04243030600",
+      "frame_scale": 1.0106093944083443,
+      "rotation_radians": -0.0010553370190510038,
+      "a": [
+        1.0106088316322512,
+        -0.00106653330774702
+      ],
+      "b": [
+        0.6160581036361874,
+        -0.8720990086230627
+      ],
+      "decoder_black": [
+        512,
+        512,
+        512,
+        512
+      ],
+      "decoder_white": 16383
+    },
+    {
+      "frame_index": 78,
+      "source": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00079.ARW",
+      "original_bytes": 37593088,
+      "original_mtime_ns": 1789362034770000000,
+      "regions": [
+        {
+          "name": "fibre",
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ],
+          "reference_sensor_xywh": [
+            3180,
+            3164,
+            300,
+            300
+          ],
+          "mapped_source_centre_native": [
+            3323.9890832419037,
+            3291.1392011154835
+          ],
+          "source_sensor_xywh": [
+            3174,
+            3142,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ],
+          "reference_sensor_xywh": [
+            3530,
+            2598,
+            300,
+            300
+          ],
+          "mapped_source_centre_native": [
+            3671.189840976651,
+            2731.390088821754
+          ],
+          "source_sensor_xywh": [
+            3522,
+            2582,
+            300,
+            300
+          ]
+        }
+      ],
+      "raw_union_xywh": [
+        3174,
+        2582,
+        648,
+        860
+      ],
+      "independent_decode_different_sensels": 0,
+      "raw_u16_sha256": "d69646e1bdcf76235b7972109b731da9242ac60aeaa57f4bf61967bd9c7642b9",
+      "frame_scale": 0.9897995694505458,
+      "rotation_radians": 0.001376651880781304,
+      "a": [
+        0.9897986315312706,
+        0.0013626090084844803
+      ],
+      "b": [
+        -3.2933202775249946,
+        -6.3560130971354045
+      ],
+      "decoder_black": [
+        512,
+        512,
+        512,
+        512
+      ],
+      "decoder_white": 16383
+    },
+    {
+      "frame_index": 104,
+      "source": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl\\DSC00105.ARW",
+      "original_bytes": 37076992,
+      "original_mtime_ns": 1789362254800000000,
+      "regions": [
+        {
+          "name": "fibre",
+          "reference_output_xywh": [
+            3084,
+            3100,
+            300,
+            300
+          ],
+          "reference_sensor_xywh": [
+            3180,
+            3164,
+            300,
+            300
+          ],
+          "mapped_source_centre_native": [
+            3316.7052608203885,
+            3269.4246183939204
+          ],
+          "source_sensor_xywh": [
+            3166,
+            3120,
+            300,
+            300
+          ]
+        },
+        {
+          "name": "junction",
+          "reference_output_xywh": [
+            3434,
+            2534,
+            300,
+            300
+          ],
+          "reference_sensor_xywh": [
+            3530,
+            2598,
+            300,
+            300
+          ],
+          "mapped_source_centre_native": [
+            3660.694808737933,
+            2716.173026910436
+          ],
+          "source_sensor_xywh": [
+            3510,
+            2566,
+            300,
+            300
+          ]
+        }
+      ],
+      "raw_union_xywh": [
+        3166,
+        2566,
+        644,
+        854
+      ],
+      "independent_decode_different_sensels": 0,
+      "raw_u16_sha256": "98952924c813c041c447bd35599056a227ff7079ccbf9f2aae15e2a73d2e77c1",
+      "frame_scale": 0.9789593874044359,
+      "rotation_radians": 0.002445063787380689,
+      "a": [
+        0.9789564611313671,
+        0.002393615762483723
+      ],
+      "b": [
+        -7.443515059783921,
+        -11.858968185841906
+      ],
+      "decoder_black": [
+        512,
+        512,
+        512,
+        512
+      ],
+      "decoder_white": 16383
+    }
+  ],
+  "map_sha256": "420883f6cda294fa3cd3205d52c4634e5cd72313d7d81e7d0615b527e9c6b3ee",
+  "reference_index": 52,
+  "display": "Sources: fixed gain2.809, power1/2.2, round8; LibRaw AHD cameraWB sRGBlinear, no auto brightness. Baseline: existing product tone.",
+  "sampling": "Native RGB1:1; green each150x150 at original CFA pitch2; rounded-even source crop centre only; no image resampling",
+  "interpretation": "Different frame scales are retained. No sharpness metric or best-frame argmax. Visual feature existence/separation/continuity only."
+}

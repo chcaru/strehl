@@ -1,0 +1,11 @@
+file      : D:\personal\macro\requests\misc-diagnostic\3d-printer-piece-cpl\DSC00105.ARW
+camera    : ILCE-7CM2
+stride    : 7168
+buffer h  : 5120
+active    : 7032x4688 at (0,0)
+levels    : black 512 white 15360
+plane R(even,even)  : n 8241504 mean 1006.7857
+plane G1(even,odd)  : n 8241504 mean 1471.7386
+plane G2(odd,even)  : n 8241504 mean 1471.2556
+plane B(odd,odd)    : n 8241504 mean 946.3940
+wrote     : C:\dev\blog\death-of-software\projects\strehl\experiments\quality-september14\source-review-2\rawler-104.bin

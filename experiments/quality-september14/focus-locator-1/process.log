@@ -1,0 +1,10 @@
+{"stage": "locate", "frame": 0}
+{"stage": "locate", "frame": 20}
+{"stage": "locate", "frame": 40}
+{"stage": "locate", "frame": 60}
+{"stage": "locate", "frame": 80}
+{"stage": "locate", "frame": 100}
+{"stage": "locate", "frame": 104}
+{"stage": "selected_ready", "frame": 39, "regions": ["fibre"]}
+{"stage": "selected_ready", "frame": 41, "regions": ["fibre", "junction"]}
+{"stage": "selected_ready", "frame": 43, "regions": ["junction"]}

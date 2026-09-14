@@ -4860,8 +4860,26 @@ impl PyramidFrameSource for RawPyramidSource<'_> {
             .paths
             .get(index)
             .context("Pyramid source index out of bounds")?;
-        Ok(strehl_raw::decode(path)?)
+        let frame = strehl_raw::decode(path)?;
+        #[cfg(all(test, feature = "native-direct-planes"))]
+        matched_source_tests::observe_raw(index, &frame)?;
+        Ok(frame)
     }
+
+    #[cfg(all(test, feature = "native-direct-planes"))]
+    fn observe_direct_inputs(&self, index: usize, planes: &[Vec<f32>], _luma: &[f32], _beta: Option<&[f32]>) -> Result<()> {
+        matched_source_tests::observe_planes(Some(index), planes)
+    }
+
+    #[cfg(all(test, feature = "native-direct-planes"))]
+    fn observe_direct_collapsed(&self, planes: &[Vec<f32>]) -> Result<()> {
+        matched_source_tests::observe_planes(None, planes)
+    }
+}
+
+#[cfg(all(test, feature = "native-direct-planes"))]
+pub(crate) mod matched_source_tests {
+    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/quality-september14/matched-source-tests.rs"));
 }
 
 impl BandWorker {

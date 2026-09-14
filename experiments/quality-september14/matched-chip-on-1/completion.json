@@ -1,0 +1,14 @@
+{
+  "status": "MATCHED_SOURCE_REPLAYED",
+  "replay": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\matched-chip-on-1\\replay.tiff",
+    "sha256": "52c3af66d10e9aba1e0632a04a45a4d207b8b1f512d1014b3d03db0356070b5b",
+    "bytes": 168952968
+  },
+  "patches": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\matched-chip-on-1\\receipt.json",
+    "sha256": "d6de7978d1b1a391c4150926c287be6ab0e313ac03382708b75722174cb3fc32",
+    "bytes": 3807
+  },
+  "original_metadata_unchanged": true
+}

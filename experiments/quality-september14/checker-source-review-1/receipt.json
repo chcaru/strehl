@@ -1,0 +1,98 @@
+{
+  "status": "CHECKER_SOURCE_READY",
+  "source": "D:\\personal\\macro\\requests\\misc-diagnostic\\tiny-high-res-calibration-checker-slide-cpl\\DSC00076.ARW",
+  "original_bytes": 38305792,
+  "original_mtime_ns": 1789360152510000000,
+  "original_metadata_unchanged": true,
+  "reference_index": 75,
+  "reference_warp": "identity within recorded f64 residual",
+  "reference_displacement_bound_native": 4.692048397644252e-13,
+  "native_output_origin": [
+    10,
+    8
+  ],
+  "regions": [
+    {
+      "name": "checker-middle",
+      "x": 2650,
+      "y": 2570,
+      "width": 384,
+      "height": 384,
+      "sensor_x": 2660,
+      "sensor_y": 2578
+    },
+    {
+      "name": "checker-upper",
+      "x": 2700,
+      "y": 1930,
+      "width": 384,
+      "height": 384,
+      "sensor_x": 2710,
+      "sensor_y": 1938
+    },
+    {
+      "name": "checker-edge",
+      "x": 2210,
+      "y": 2440,
+      "width": 384,
+      "height": 384,
+      "sensor_x": 2220,
+      "sensor_y": 2448
+    },
+    {
+      "name": "white",
+      "x": 3200,
+      "y": 1600,
+      "width": 384,
+      "height": 384,
+      "sensor_x": 3210,
+      "sensor_y": 1608
+    }
+  ],
+  "union_xywh": [
+    2220,
+    1608,
+    1374,
+    1354
+  ],
+  "decoder": {
+    "rawpy": "0.27.0",
+    "libraw": [
+      0,
+      22,
+      1
+    ],
+    "pattern": [
+      [
+        0,
+        1
+      ],
+      [
+        3,
+        2
+      ]
+    ],
+    "black": [
+      512,
+      512,
+      512,
+      512
+    ],
+    "white": 16383,
+    "visible_shape": [
+      4688,
+      7028
+    ],
+    "camera_whitebalance": [
+      1637.0,
+      1024.0,
+      2774.0,
+      1024.0
+    ]
+  },
+  "raw_u16_sha256": "74ff0aaa800ccba2da3a483dc167fbf31fdacf51ec7722252b491811725b29cb",
+  "independent_decode_different_sensels": 0,
+  "display": "Sources fixed gain3.580, gamma1/2.2, round8; native RGB1:1. Green192x192 is original same-colour pitch2. No spatial resampling.",
+  "developer": "LibRaw AHD cameraWB sRGBlinear, no auto brightness; differs from baseline colour/tone, qualitative only.",
+  "command": "python -X faulthandler experiments/quality-september14/checker-source-review.py"
+}

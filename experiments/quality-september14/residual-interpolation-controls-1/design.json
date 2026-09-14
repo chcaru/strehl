@@ -1,0 +1,20 @@
+{
+  "status": "FROZEN_BEFORE_RI",
+  "shape": [
+    96,
+    96
+  ],
+  "trims": [
+    12,
+    32
+  ],
+  "interpretation": {
+    "12": "boundary-exposed for RI; retained old reading",
+    "32": "conservative common interior; all previous arms recomputed before RI"
+  },
+  "bars": "Same >5% plus >0.0005 absolute truth-RGB-RMSE regression bar. Shipped MHC and unshipped MHC-CDIFF comparisons reported separately. Chroma RMSE and green MSE retained.",
+  "inputs": "Same 48 analytic signals, two flat colours, six fixed noise draws, alias pair and metric sabotage controls. Separate RAW-headroom integration check is not a tuned quality fixture.",
+  "source_sha256": "9147ee3c9a56af99654fe3e9fa7088f7e2d9cf95cd6736fc96372ced4ac2abd3",
+  "fixed_reference_units": "Normalized WB CFA times255; fixed RI spatial sigma1, guided eps0, variance floor1e-5*255^2; no fitted noise and no per-image tuning.",
+  "boundary_check": "Compare central trim32 against unpadded reference; fixed strict comparison tolerance16*f32epsilon*max(1,absolute central values). Excess is reported, not hidden by restoring samples or widening tolerance."
+}

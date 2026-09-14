@@ -1,0 +1,22 @@
+[
+  {
+    "path": "crates/strehl-cli/src/main.rs",
+    "bytes": 88555,
+    "sha256": "176b95f4669ac9c40e70a0498db4233c4695fda80f3f6b8e1d80a9763101627d"
+  },
+  {
+    "path": "crates/strehl-cli/src/image_out.rs",
+    "bytes": 132195,
+    "sha256": "0c2c542b6c62cf8bd67a3b645b4baff3881a863dc8bd3f5a2c9ab82bc656e5fa"
+  },
+  {
+    "path": "crates/strehl-cli/src/merge_cmd.rs",
+    "bytes": 448997,
+    "sha256": "6de09dc60c68237674cd5cfd4723c15503d187ba9c1d5c5f3f51cbd832bb2ed6"
+  },
+  {
+    "path": "experiments/quality-september14/matched-source-tests.rs",
+    "bytes": 11457,
+    "sha256": "093e25703bd86a303c95edbc557c253359365557d396364baa7dbdb9b6782111"
+  }
+]

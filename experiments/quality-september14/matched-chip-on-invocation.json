@@ -1,0 +1,1582 @@
+{
+  "inputs": [
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00001.ARW",
+      "bytes": 38256640,
+      "mtime_ns": 1789282688680000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00002.ARW",
+      "bytes": 38264832,
+      "mtime_ns": 1789282691090000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00003.ARW",
+      "bytes": 38277120,
+      "mtime_ns": 1789282693590000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00004.ARW",
+      "bytes": 38289408,
+      "mtime_ns": 1789282696060000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00005.ARW",
+      "bytes": 38297600,
+      "mtime_ns": 1789282698550000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00006.ARW",
+      "bytes": 38309888,
+      "mtime_ns": 1789282701020000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00007.ARW",
+      "bytes": 38322176,
+      "mtime_ns": 1789282703500000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00008.ARW",
+      "bytes": 38330368,
+      "mtime_ns": 1789282705970000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00009.ARW",
+      "bytes": 38346752,
+      "mtime_ns": 1789282708430000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00010.ARW",
+      "bytes": 38359040,
+      "mtime_ns": 1789282710880000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00011.ARW",
+      "bytes": 38371328,
+      "mtime_ns": 1789282713380000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00012.ARW",
+      "bytes": 38383616,
+      "mtime_ns": 1789282715870000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00013.ARW",
+      "bytes": 38395904,
+      "mtime_ns": 1789282718350000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00014.ARW",
+      "bytes": 38408192,
+      "mtime_ns": 1789282720820000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00015.ARW",
+      "bytes": 38420480,
+      "mtime_ns": 1789282723300000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00016.ARW",
+      "bytes": 38440960,
+      "mtime_ns": 1789282725770000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00017.ARW",
+      "bytes": 38453248,
+      "mtime_ns": 1789282728230000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00018.ARW",
+      "bytes": 38465536,
+      "mtime_ns": 1789282730690000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00019.ARW",
+      "bytes": 38477824,
+      "mtime_ns": 1789282733180000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00020.ARW",
+      "bytes": 38494208,
+      "mtime_ns": 1789282735660000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00021.ARW",
+      "bytes": 38506496,
+      "mtime_ns": 1789282738120000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00022.ARW",
+      "bytes": 38522880,
+      "mtime_ns": 1789282740580000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00023.ARW",
+      "bytes": 38539264,
+      "mtime_ns": 1789282743050000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00024.ARW",
+      "bytes": 38535168,
+      "mtime_ns": 1789282745510000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00025.ARW",
+      "bytes": 38572032,
+      "mtime_ns": 1789282747990000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00026.ARW",
+      "bytes": 38584320,
+      "mtime_ns": 1789282750460000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00027.ARW",
+      "bytes": 38604800,
+      "mtime_ns": 1789282752930000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00028.ARW",
+      "bytes": 38621184,
+      "mtime_ns": 1789282755390000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00029.ARW",
+      "bytes": 38641664,
+      "mtime_ns": 1789282757850000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00030.ARW",
+      "bytes": 38653952,
+      "mtime_ns": 1789282760340000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00031.ARW",
+      "bytes": 38678528,
+      "mtime_ns": 1789282762810000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00032.ARW",
+      "bytes": 38699008,
+      "mtime_ns": 1789282765300000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00033.ARW",
+      "bytes": 38715392,
+      "mtime_ns": 1789282767780000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00034.ARW",
+      "bytes": 38735872,
+      "mtime_ns": 1789282770230000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00035.ARW",
+      "bytes": 38756352,
+      "mtime_ns": 1789282772690000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00036.ARW",
+      "bytes": 38776832,
+      "mtime_ns": 1789282775150000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00037.ARW",
+      "bytes": 38797312,
+      "mtime_ns": 1789282777640000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00038.ARW",
+      "bytes": 38817792,
+      "mtime_ns": 1789282780120000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00039.ARW",
+      "bytes": 38842368,
+      "mtime_ns": 1789282782610000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00040.ARW",
+      "bytes": 38866944,
+      "mtime_ns": 1789282785090000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00041.ARW",
+      "bytes": 38887424,
+      "mtime_ns": 1789282787550000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00042.ARW",
+      "bytes": 38907904,
+      "mtime_ns": 1789282790010000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00043.ARW",
+      "bytes": 38932480,
+      "mtime_ns": 1789282792470000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00044.ARW",
+      "bytes": 38957056,
+      "mtime_ns": 1789282794970000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00045.ARW",
+      "bytes": 38981632,
+      "mtime_ns": 1789282797440000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00046.ARW",
+      "bytes": 39010304,
+      "mtime_ns": 1789282799930000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00047.ARW",
+      "bytes": 39038976,
+      "mtime_ns": 1789282802400000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00048.ARW",
+      "bytes": 39059456,
+      "mtime_ns": 1789282804860000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00049.ARW",
+      "bytes": 39084032,
+      "mtime_ns": 1789282807330000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00050.ARW",
+      "bytes": 39112704,
+      "mtime_ns": 1789282809790000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00051.ARW",
+      "bytes": 39141376,
+      "mtime_ns": 1789282812280000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00052.ARW",
+      "bytes": 39161856,
+      "mtime_ns": 1789282814760000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00053.ARW",
+      "bytes": 39182336,
+      "mtime_ns": 1789282817230000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00054.ARW",
+      "bytes": 39211008,
+      "mtime_ns": 1789282819690000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00055.ARW",
+      "bytes": 39239680,
+      "mtime_ns": 1789282822150000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00056.ARW",
+      "bytes": 39276544,
+      "mtime_ns": 1789282824610000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00057.ARW",
+      "bytes": 39309312,
+      "mtime_ns": 1789282827100000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00058.ARW",
+      "bytes": 39346176,
+      "mtime_ns": 1789282829570000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00059.ARW",
+      "bytes": 39366656,
+      "mtime_ns": 1789282832060000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00060.ARW",
+      "bytes": 39395328,
+      "mtime_ns": 1789282834540000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00061.ARW",
+      "bytes": 39424000,
+      "mtime_ns": 1789282837020000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00062.ARW",
+      "bytes": 39456768,
+      "mtime_ns": 1789282839490000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00063.ARW",
+      "bytes": 39497728,
+      "mtime_ns": 1789282841950000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00064.ARW",
+      "bytes": 39526400,
+      "mtime_ns": 1789282844400000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00065.ARW",
+      "bytes": 39559168,
+      "mtime_ns": 1789282846890000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00066.ARW",
+      "bytes": 39591936,
+      "mtime_ns": 1789282849380000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00067.ARW",
+      "bytes": 39624704,
+      "mtime_ns": 1789282851860000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00068.ARW",
+      "bytes": 39661568,
+      "mtime_ns": 1789282854330000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00069.ARW",
+      "bytes": 39694336,
+      "mtime_ns": 1789282856790000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00070.ARW",
+      "bytes": 39731200,
+      "mtime_ns": 1789282859250000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00071.ARW",
+      "bytes": 39772160,
+      "mtime_ns": 1789282861740000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00072.ARW",
+      "bytes": 39813120,
+      "mtime_ns": 1789282864220000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00073.ARW",
+      "bytes": 39845888,
+      "mtime_ns": 1789282866690000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00074.ARW",
+      "bytes": 39890944,
+      "mtime_ns": 1789282869160000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00075.ARW",
+      "bytes": 39931904,
+      "mtime_ns": 1789282871630000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00076.ARW",
+      "bytes": 39972864,
+      "mtime_ns": 1789282874090000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00077.ARW",
+      "bytes": 40022016,
+      "mtime_ns": 1789282876550000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00078.ARW",
+      "bytes": 40067072,
+      "mtime_ns": 1789282879020000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00079.ARW",
+      "bytes": 40112128,
+      "mtime_ns": 1789282881520000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00080.ARW",
+      "bytes": 40157184,
+      "mtime_ns": 1789282884000000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00081.ARW",
+      "bytes": 40210432,
+      "mtime_ns": 1789282886470000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00082.ARW",
+      "bytes": 40263680,
+      "mtime_ns": 1789282888930000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00083.ARW",
+      "bytes": 40321024,
+      "mtime_ns": 1789282891410000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00084.ARW",
+      "bytes": 40374272,
+      "mtime_ns": 1789282893870000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00085.ARW",
+      "bytes": 40423424,
+      "mtime_ns": 1789282896360000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00086.ARW",
+      "bytes": 40480768,
+      "mtime_ns": 1789282898840000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00087.ARW",
+      "bytes": 40534016,
+      "mtime_ns": 1789282901330000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00088.ARW",
+      "bytes": 40591360,
+      "mtime_ns": 1789282903830000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00089.ARW",
+      "bytes": 40644608,
+      "mtime_ns": 1789282906310000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00090.ARW",
+      "bytes": 40701952,
+      "mtime_ns": 1789282908770000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00091.ARW",
+      "bytes": 40755200,
+      "mtime_ns": 1789282911230000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00092.ARW",
+      "bytes": 40816640,
+      "mtime_ns": 1789282913690000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00093.ARW",
+      "bytes": 40865792,
+      "mtime_ns": 1789282916180000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00094.ARW",
+      "bytes": 40923136,
+      "mtime_ns": 1789282918670000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00095.ARW",
+      "bytes": 40976384,
+      "mtime_ns": 1789282921150000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00096.ARW",
+      "bytes": 40935424,
+      "mtime_ns": 1789282923630000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00097.ARW",
+      "bytes": 40665088,
+      "mtime_ns": 1789282926090000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00098.ARW",
+      "bytes": 41082880,
+      "mtime_ns": 1789282928550000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00099.ARW",
+      "bytes": 41181184,
+      "mtime_ns": 1789282931010000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00100.ARW",
+      "bytes": 41254912,
+      "mtime_ns": 1789282933500000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00101.ARW",
+      "bytes": 41299968,
+      "mtime_ns": 1789282935990000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00102.ARW",
+      "bytes": 41361408,
+      "mtime_ns": 1789282938490000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00103.ARW",
+      "bytes": 41410560,
+      "mtime_ns": 1789282940960000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00104.ARW",
+      "bytes": 41476096,
+      "mtime_ns": 1789282943460000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00105.ARW",
+      "bytes": 41517056,
+      "mtime_ns": 1789282945940000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00106.ARW",
+      "bytes": 41570304,
+      "mtime_ns": 1789282948420000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00107.ARW",
+      "bytes": 41627648,
+      "mtime_ns": 1789282950880000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00108.ARW",
+      "bytes": 41664512,
+      "mtime_ns": 1789282953350000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00109.ARW",
+      "bytes": 41574400,
+      "mtime_ns": 1789282955820000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00110.ARW",
+      "bytes": 41537536,
+      "mtime_ns": 1789282958270000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00111.ARW",
+      "bytes": 41779200,
+      "mtime_ns": 1789282960750000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00112.ARW",
+      "bytes": 41865216,
+      "mtime_ns": 1789282963220000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00113.ARW",
+      "bytes": 41918464,
+      "mtime_ns": 1789282965690000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00114.ARW",
+      "bytes": 41959424,
+      "mtime_ns": 1789282968150000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00115.ARW",
+      "bytes": 42000384,
+      "mtime_ns": 1789282970640000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00116.ARW",
+      "bytes": 42041344,
+      "mtime_ns": 1789282973110000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00117.ARW",
+      "bytes": 42078208,
+      "mtime_ns": 1789282975610000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00118.ARW",
+      "bytes": 42110976,
+      "mtime_ns": 1789282978080000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00119.ARW",
+      "bytes": 42143744,
+      "mtime_ns": 1789282980580000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00120.ARW",
+      "bytes": 42180608,
+      "mtime_ns": 1789282983060000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00121.ARW",
+      "bytes": 42213376,
+      "mtime_ns": 1789282985540000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00122.ARW",
+      "bytes": 42246144,
+      "mtime_ns": 1789282988010000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00123.ARW",
+      "bytes": 42283008,
+      "mtime_ns": 1789282990470000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00124.ARW",
+      "bytes": 42311680,
+      "mtime_ns": 1789282992920000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00125.ARW",
+      "bytes": 42340352,
+      "mtime_ns": 1789282995410000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00126.ARW",
+      "bytes": 42373120,
+      "mtime_ns": 1789282997880000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00127.ARW",
+      "bytes": 42397696,
+      "mtime_ns": 1789283000360000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00128.ARW",
+      "bytes": 42422272,
+      "mtime_ns": 1789283002830000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00129.ARW",
+      "bytes": 42442752,
+      "mtime_ns": 1789283005300000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00130.ARW",
+      "bytes": 42463232,
+      "mtime_ns": 1789283007750000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00131.ARW",
+      "bytes": 42483712,
+      "mtime_ns": 1789283010240000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00132.ARW",
+      "bytes": 42504192,
+      "mtime_ns": 1789283012720000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00133.ARW",
+      "bytes": 42516480,
+      "mtime_ns": 1789283015190000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00134.ARW",
+      "bytes": 42528768,
+      "mtime_ns": 1789283017660000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00135.ARW",
+      "bytes": 42541056,
+      "mtime_ns": 1789283020110000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00136.ARW",
+      "bytes": 42557440,
+      "mtime_ns": 1789283022570000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00137.ARW",
+      "bytes": 42557440,
+      "mtime_ns": 1789283025050000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00138.ARW",
+      "bytes": 42577920,
+      "mtime_ns": 1789283027530000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00139.ARW",
+      "bytes": 42577920,
+      "mtime_ns": 1789283030010000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00140.ARW",
+      "bytes": 42577920,
+      "mtime_ns": 1789283032470000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00141.ARW",
+      "bytes": 42582016,
+      "mtime_ns": 1789283034930000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00142.ARW",
+      "bytes": 42582016,
+      "mtime_ns": 1789283037380000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00143.ARW",
+      "bytes": 42573824,
+      "mtime_ns": 1789283039880000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00144.ARW",
+      "bytes": 42561536,
+      "mtime_ns": 1789283042360000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00145.ARW",
+      "bytes": 42561536,
+      "mtime_ns": 1789283044850000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00146.ARW",
+      "bytes": 42553344,
+      "mtime_ns": 1789283047350000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00147.ARW",
+      "bytes": 42532864,
+      "mtime_ns": 1789283049860000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00148.ARW",
+      "bytes": 42516480,
+      "mtime_ns": 1789283052340000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00149.ARW",
+      "bytes": 42504192,
+      "mtime_ns": 1789283054800000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00150.ARW",
+      "bytes": 42491904,
+      "mtime_ns": 1789283057290000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00151.ARW",
+      "bytes": 42467328,
+      "mtime_ns": 1789283059750000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00152.ARW",
+      "bytes": 42463232,
+      "mtime_ns": 1789283062250000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00153.ARW",
+      "bytes": 42438656,
+      "mtime_ns": 1789283064710000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00154.ARW",
+      "bytes": 42422272,
+      "mtime_ns": 1789283067180000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00155.ARW",
+      "bytes": 42397696,
+      "mtime_ns": 1789283069680000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00156.ARW",
+      "bytes": 42381312,
+      "mtime_ns": 1789283072150000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00157.ARW",
+      "bytes": 42364928,
+      "mtime_ns": 1789283074650000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00158.ARW",
+      "bytes": 42344448,
+      "mtime_ns": 1789283077130000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00159.ARW",
+      "bytes": 42328064,
+      "mtime_ns": 1789283079590000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00160.ARW",
+      "bytes": 42311680,
+      "mtime_ns": 1789283082050000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00161.ARW",
+      "bytes": 42287104,
+      "mtime_ns": 1789283084510000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00162.ARW",
+      "bytes": 42278912,
+      "mtime_ns": 1789283087000000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00163.ARW",
+      "bytes": 42262528,
+      "mtime_ns": 1789283089500000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00164.ARW",
+      "bytes": 42246144,
+      "mtime_ns": 1789283091980000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00165.ARW",
+      "bytes": 42233856,
+      "mtime_ns": 1789283094470000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00166.ARW",
+      "bytes": 42225664,
+      "mtime_ns": 1789283096950000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00167.ARW",
+      "bytes": 42221568,
+      "mtime_ns": 1789283099430000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00168.ARW",
+      "bytes": 42205184,
+      "mtime_ns": 1789283101910000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00169.ARW",
+      "bytes": 42196992,
+      "mtime_ns": 1789283104380000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00170.ARW",
+      "bytes": 42188800,
+      "mtime_ns": 1789283106850000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00171.ARW",
+      "bytes": 42172416,
+      "mtime_ns": 1789283109310000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00172.ARW",
+      "bytes": 42160128,
+      "mtime_ns": 1789283111810000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00173.ARW",
+      "bytes": 42151936,
+      "mtime_ns": 1789283114290000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00174.ARW",
+      "bytes": 42164224,
+      "mtime_ns": 1789283116760000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00175.ARW",
+      "bytes": 42151936,
+      "mtime_ns": 1789283119240000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00176.ARW",
+      "bytes": 42151936,
+      "mtime_ns": 1789283121720000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00177.ARW",
+      "bytes": 42147840,
+      "mtime_ns": 1789283124180000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00178.ARW",
+      "bytes": 42147840,
+      "mtime_ns": 1789283126650000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00179.ARW",
+      "bytes": 42127360,
+      "mtime_ns": 1789283129110000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00180.ARW",
+      "bytes": 42135552,
+      "mtime_ns": 1789283131610000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00181.ARW",
+      "bytes": 42127360,
+      "mtime_ns": 1789283134080000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00182.ARW",
+      "bytes": 42123264,
+      "mtime_ns": 1789283136560000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00183.ARW",
+      "bytes": 42110976,
+      "mtime_ns": 1789283139030000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00184.ARW",
+      "bytes": 42106880,
+      "mtime_ns": 1789283141520000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00185.ARW",
+      "bytes": 42102784,
+      "mtime_ns": 1789283143990000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00186.ARW",
+      "bytes": 42078208,
+      "mtime_ns": 1789283146450000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00187.ARW",
+      "bytes": 42078208,
+      "mtime_ns": 1789283148940000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00188.ARW",
+      "bytes": 42070016,
+      "mtime_ns": 1789283151420000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00189.ARW",
+      "bytes": 42053632,
+      "mtime_ns": 1789283153890000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00190.ARW",
+      "bytes": 42045440,
+      "mtime_ns": 1789283156380000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00191.ARW",
+      "bytes": 42029056,
+      "mtime_ns": 1789283158860000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00192.ARW",
+      "bytes": 42004480,
+      "mtime_ns": 1789283161330000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00193.ARW",
+      "bytes": 41979904,
+      "mtime_ns": 1789283163780000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00194.ARW",
+      "bytes": 41959424,
+      "mtime_ns": 1789283166250000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00195.ARW",
+      "bytes": 41934848,
+      "mtime_ns": 1789283168720000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00196.ARW",
+      "bytes": 41889792,
+      "mtime_ns": 1789283171220000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00197.ARW",
+      "bytes": 41697280,
+      "mtime_ns": 1789283173700000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00198.ARW",
+      "bytes": 41570304,
+      "mtime_ns": 1789283176150000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00199.ARW",
+      "bytes": 41291776,
+      "mtime_ns": 1789283178620000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00200.ARW",
+      "bytes": 41578496,
+      "mtime_ns": 1789283181100000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00201.ARW",
+      "bytes": 41709568,
+      "mtime_ns": 1789283183580000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00202.ARW",
+      "bytes": 41676800,
+      "mtime_ns": 1789283186050000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00203.ARW",
+      "bytes": 41644032,
+      "mtime_ns": 1789283188530000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00204.ARW",
+      "bytes": 41590784,
+      "mtime_ns": 1789283191040000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00205.ARW",
+      "bytes": 41549824,
+      "mtime_ns": 1789283193510000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00206.ARW",
+      "bytes": 41504768,
+      "mtime_ns": 1789283195980000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00207.ARW",
+      "bytes": 41467904,
+      "mtime_ns": 1789283198450000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00208.ARW",
+      "bytes": 41414656,
+      "mtime_ns": 1789283200910000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00209.ARW",
+      "bytes": 41377792,
+      "mtime_ns": 1789283203370000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00210.ARW",
+      "bytes": 41230336,
+      "mtime_ns": 1789283205850000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00211.ARW",
+      "bytes": 41242624,
+      "mtime_ns": 1789283208340000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00212.ARW",
+      "bytes": 41246720,
+      "mtime_ns": 1789283210820000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00213.ARW",
+      "bytes": 41181184,
+      "mtime_ns": 1789283213280000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00214.ARW",
+      "bytes": 41164800,
+      "mtime_ns": 1789283215760000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00215.ARW",
+      "bytes": 41123840,
+      "mtime_ns": 1789283218220000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00216.ARW",
+      "bytes": 41082880,
+      "mtime_ns": 1789283220680000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00217.ARW",
+      "bytes": 41037824,
+      "mtime_ns": 1789283223160000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00218.ARW",
+      "bytes": 40988672,
+      "mtime_ns": 1789283225670000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00219.ARW",
+      "bytes": 40943616,
+      "mtime_ns": 1789283228140000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00220.ARW",
+      "bytes": 40902656,
+      "mtime_ns": 1789283230630000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00221.ARW",
+      "bytes": 40865792,
+      "mtime_ns": 1789283233100000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00222.ARW",
+      "bytes": 40833024,
+      "mtime_ns": 1789283235550000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00223.ARW",
+      "bytes": 40792064,
+      "mtime_ns": 1789283238020000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00224.ARW",
+      "bytes": 40747008,
+      "mtime_ns": 1789283240490000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00225.ARW",
+      "bytes": 40710144,
+      "mtime_ns": 1789283242980000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00226.ARW",
+      "bytes": 40669184,
+      "mtime_ns": 1789283245470000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00227.ARW",
+      "bytes": 40620032,
+      "mtime_ns": 1789283247960000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00228.ARW",
+      "bytes": 40583168,
+      "mtime_ns": 1789283250430000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00229.ARW",
+      "bytes": 40538112,
+      "mtime_ns": 1789283252890000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00230.ARW",
+      "bytes": 40505344,
+      "mtime_ns": 1789283255360000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00231.ARW",
+      "bytes": 40468480,
+      "mtime_ns": 1789283257810000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00232.ARW",
+      "bytes": 40431616,
+      "mtime_ns": 1789283260300000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00233.ARW",
+      "bytes": 40394752,
+      "mtime_ns": 1789283262780000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00234.ARW",
+      "bytes": 40361984,
+      "mtime_ns": 1789283265280000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00235.ARW",
+      "bytes": 40312832,
+      "mtime_ns": 1789283267780000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00236.ARW",
+      "bytes": 40275968,
+      "mtime_ns": 1789283270260000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00237.ARW",
+      "bytes": 40243200,
+      "mtime_ns": 1789283272720000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00238.ARW",
+      "bytes": 40218624,
+      "mtime_ns": 1789283275200000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00239.ARW",
+      "bytes": 40177664,
+      "mtime_ns": 1789283277670000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00240.ARW",
+      "bytes": 40140800,
+      "mtime_ns": 1789283280130000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00241.ARW",
+      "bytes": 40103936,
+      "mtime_ns": 1789283282600000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00242.ARW",
+      "bytes": 40054784,
+      "mtime_ns": 1789283285080000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00243.ARW",
+      "bytes": 40022016,
+      "mtime_ns": 1789283287530000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00244.ARW",
+      "bytes": 39976960,
+      "mtime_ns": 1789283290000000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00245.ARW",
+      "bytes": 39936000,
+      "mtime_ns": 1789283292480000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00246.ARW",
+      "bytes": 39899136,
+      "mtime_ns": 1789283294960000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00247.ARW",
+      "bytes": 39862272,
+      "mtime_ns": 1789283297440000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00248.ARW",
+      "bytes": 39817216,
+      "mtime_ns": 1789283299930000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00249.ARW",
+      "bytes": 39780352,
+      "mtime_ns": 1789283302400000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00250.ARW",
+      "bytes": 39743488,
+      "mtime_ns": 1789283304880000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00251.ARW",
+      "bytes": 39714816,
+      "mtime_ns": 1789283307360000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00252.ARW",
+      "bytes": 39673856,
+      "mtime_ns": 1789283309830000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00253.ARW",
+      "bytes": 39641088,
+      "mtime_ns": 1789283312290000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00254.ARW",
+      "bytes": 39604224,
+      "mtime_ns": 1789283314750000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00255.ARW",
+      "bytes": 39567360,
+      "mtime_ns": 1789283317240000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00256.ARW",
+      "bytes": 39530496,
+      "mtime_ns": 1789283319720000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00257.ARW",
+      "bytes": 39497728,
+      "mtime_ns": 1789283322210000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00258.ARW",
+      "bytes": 39460864,
+      "mtime_ns": 1789283324670000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00259.ARW",
+      "bytes": 39432192,
+      "mtime_ns": 1789283327130000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00260.ARW",
+      "bytes": 39395328,
+      "mtime_ns": 1789283329590000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00261.ARW",
+      "bytes": 39362560,
+      "mtime_ns": 1789283332070000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00262.ARW",
+      "bytes": 39325696,
+      "mtime_ns": 1789283334550000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00263.ARW",
+      "bytes": 39297024,
+      "mtime_ns": 1789283337020000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00264.ARW",
+      "bytes": 39260160,
+      "mtime_ns": 1789283339520000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00265.ARW",
+      "bytes": 39231488,
+      "mtime_ns": 1789283341970000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00266.ARW",
+      "bytes": 39198720,
+      "mtime_ns": 1789283344430000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00267.ARW",
+      "bytes": 39170048,
+      "mtime_ns": 1789283346910000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00268.ARW",
+      "bytes": 39141376,
+      "mtime_ns": 1789283349400000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00269.ARW",
+      "bytes": 39108608,
+      "mtime_ns": 1789283351880000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00270.ARW",
+      "bytes": 39084032,
+      "mtime_ns": 1789283354360000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00271.ARW",
+      "bytes": 39055360,
+      "mtime_ns": 1789283356850000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00272.ARW",
+      "bytes": 39026688,
+      "mtime_ns": 1789283359330000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00273.ARW",
+      "bytes": 39006208,
+      "mtime_ns": 1789283361790000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00274.ARW",
+      "bytes": 38977536,
+      "mtime_ns": 1789283364280000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00275.ARW",
+      "bytes": 38957056,
+      "mtime_ns": 1789283366760000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00276.ARW",
+      "bytes": 38936576,
+      "mtime_ns": 1789283369230000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00277.ARW",
+      "bytes": 38916096,
+      "mtime_ns": 1789283371690000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00278.ARW",
+      "bytes": 38895616,
+      "mtime_ns": 1789283374170000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00279.ARW",
+      "bytes": 38871040,
+      "mtime_ns": 1789283376640000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00280.ARW",
+      "bytes": 38854656,
+      "mtime_ns": 1789283379090000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00281.ARW",
+      "bytes": 38838272,
+      "mtime_ns": 1789283381550000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00282.ARW",
+      "bytes": 38809600,
+      "mtime_ns": 1789283384010000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00283.ARW",
+      "bytes": 38793216,
+      "mtime_ns": 1789283386490000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00284.ARW",
+      "bytes": 38785024,
+      "mtime_ns": 1789283388980000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00285.ARW",
+      "bytes": 38768640,
+      "mtime_ns": 1789283391440000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00286.ARW",
+      "bytes": 38752256,
+      "mtime_ns": 1789283393890000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00287.ARW",
+      "bytes": 38731776,
+      "mtime_ns": 1789283396350000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00288.ARW",
+      "bytes": 38715392,
+      "mtime_ns": 1789283398840000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00289.ARW",
+      "bytes": 38699008,
+      "mtime_ns": 1789283401320000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00290.ARW",
+      "bytes": 38682624,
+      "mtime_ns": 1789283403790000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00291.ARW",
+      "bytes": 38662144,
+      "mtime_ns": 1789283406290000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00292.ARW",
+      "bytes": 38645760,
+      "mtime_ns": 1789283408760000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00293.ARW",
+      "bytes": 38637568,
+      "mtime_ns": 1789283411210000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00294.ARW",
+      "bytes": 38625280,
+      "mtime_ns": 1789283413710000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00295.ARW",
+      "bytes": 38608896,
+      "mtime_ns": 1789283416170000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00296.ARW",
+      "bytes": 38608896,
+      "mtime_ns": 1789283418660000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00297.ARW",
+      "bytes": 38592512,
+      "mtime_ns": 1789283421130000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00298.ARW",
+      "bytes": 38580224,
+      "mtime_ns": 1789283423610000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00299.ARW",
+      "bytes": 38563840,
+      "mtime_ns": 1789283426070000000
+    }
+  ],
+  "configuration": {
+    "dir": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl",
+    "map": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\chip-baseline-1\\chip.warpmap.txt",
+    "out": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\matched-chip-on-1",
+    "frames": 299,
+    "tone": {
+      "black": 0.004293,
+      "white": 0.946441,
+      "contrast": 0.55
+    },
+    "regions": [
+      {
+        "name": "pale-circuit",
+        "frame": 149,
+        "x": 1070,
+        "y": 930,
+        "width": 384,
+        "height": 384
+      }
+    ],
+    "observe": true
+  },
+  "map": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\chip-baseline-1\\chip.warpmap.txt",
+    "sha256": "ce8534c9e65c5c761373bad87df5352c1c46319b7eaf7f7c91477ea61b4f4922",
+    "bytes": 41142
+  },
+  "executable": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\matched-source-build-1\\cli-tests.exe",
+    "sha256": "ed2556a39a1a52e9ea346189a87b6320bd7788f4547889909294750a6a328d61",
+    "bytes": 21996032
+  },
+  "source_files": [
+    {
+      "path": "crates/strehl-cli/src/main.rs",
+      "bytes": 88555,
+      "sha256": "176b95f4669ac9c40e70a0498db4233c4695fda80f3f6b8e1d80a9763101627d"
+    },
+    {
+      "path": "crates/strehl-cli/src/image_out.rs",
+      "bytes": 132195,
+      "sha256": "0c2c542b6c62cf8bd67a3b645b4baff3881a863dc8bd3f5a2c9ab82bc656e5fa"
+    },
+    {
+      "path": "crates/strehl-cli/src/merge_cmd.rs",
+      "bytes": 448997,
+      "sha256": "6de09dc60c68237674cd5cfd4723c15503d187ba9c1d5c5f3f51cbd832bb2ed6"
+    },
+    {
+      "path": "experiments/quality-september14/matched-source-tests.rs",
+      "bytes": 11457,
+      "sha256": "093e25703bd86a303c95edbc557c253359365557d396364baa7dbdb9b6782111"
+    }
+  ],
+  "runner": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\matched-source-run.py",
+    "sha256": "bbf48ac5482c2e6e0ae27c933428c0da1458737a607a754958d9c0baa94c350a",
+    "bytes": 4830
+  },
+  "command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\matched-source-build-1\\cli-tests.exe",
+    "merge_cmd::matched_source_tests::matched_source_actual_consumer",
+    "--exact",
+    "--ignored",
+    "--nocapture",
+    "--test-threads=1"
+  ],
+  "environment": {
+    "RAYON_NUM_THREADS": "8",
+    "STREHL_PYRAMID_WORKERS": "8",
+    "STREHL_ALIGN": "1",
+    "STREHL_WARPMAP": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\chip-baseline-1\\chip.warpmap.txt",
+    "STREHL_FULLRES_GATHER": "1",
+    "STREHL_DIRECT_PLANES": "rounded",
+    "STREHL_PROBE_GATHER": "green",
+    "STREHL_WARP_WRITEBACK": "parallel",
+    "STREHL_GPU_GATHER": "on",
+    "STREHL_GPU_SCHEDULE": "device",
+    "STREHL_GPU_GATHER_LOG": "off",
+    "STREHL_DEFECT": "off",
+    "STREHL_MATCHED_SOURCE_CONFIG": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\matched-chip-on-config.json"
+  },
+  "removed_environment": []
+}

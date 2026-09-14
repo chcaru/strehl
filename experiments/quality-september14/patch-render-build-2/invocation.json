@@ -1,0 +1,54 @@
+{
+  "command": [
+    "cargo",
+    "build",
+    "-p",
+    "strehl-cli",
+    "--example",
+    "saved-rgb-render",
+    "--release",
+    "--features",
+    "native-pyramid-profile,native-gpu-gather,native-direct-planes",
+    "--target-dir",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\target\\native-pyramid-profile",
+    "--jobs",
+    "2",
+    "--locked",
+    "--offline",
+    "--message-format=json-render-diagnostics"
+  ],
+  "source_files": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-cli\\src\\image_out.rs",
+      "sha256": "b1bb4674337f5396e92f8fff027724e246df904faf5257b1753683a26c64c9e9",
+      "bytes": 132206
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-cli\\examples\\saved-rgb-render.rs",
+      "sha256": "d8c2c9fa1d532e5d9d07aff924f51c1c4b40b9d4eb855e72319055430afcf325",
+      "bytes": 5317
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-core\\src\\color.rs",
+      "sha256": "83c1aa371dc751862bfef5724a6eceab8182c5d68b6f31ac299b3443c14c8f1e",
+      "bytes": 83992
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-core\\src\\highlight.rs",
+      "sha256": "97d4aacec3d7e6c3dd2df1f792ffb7ee136a8f6064ffb0dc1656476730f7641e",
+      "bytes": 29639
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-cli\\Cargo.toml",
+      "sha256": "c5dfa69451015a18f3e50b15a109cdf01c153108cf5200caf973755655ec662f",
+      "bytes": 1887
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\Cargo.lock",
+      "sha256": "ea23b6dc6afc5fb9f1b12d08f065083ba77a75425b2a0b000d3f3a8466696efa",
+      "bytes": 64738
+    }
+  ],
+  "removed_environment": [],
+  "scope": "saved-patch developer only; no RAW or full CLI replay"
+}

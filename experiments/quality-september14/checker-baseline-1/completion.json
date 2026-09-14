@@ -1,0 +1,14 @@
+{
+  "status": "BASELINE_RENDERED",
+  "map": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\checker-baseline-1\\checker.warpmap.txt",
+    "sha256": "053c4202f8be59119a7ef2d14d01f7dd08d546008341447995198b1b5c992cbe",
+    "bytes": 20696
+  },
+  "image": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\checker-baseline-1\\checker.tiff",
+    "sha256": "28244cff4c54c0133e5779b6d72b32bdbcc48e7702eb6ac7ea1e3f06019fc94f",
+    "bytes": 196565570
+  },
+  "original_metadata_unchanged": true
+}

@@ -1,0 +1,4621 @@
+{
+  "status": "CONTROLS_EXECUTED",
+  "broad_promotion_pass": false,
+  "predefined_bar_failures": [
+    {
+      "kind": "neutral",
+      "frequency": 0.3,
+      "orientation": "diag-plus",
+      "phase": 0.17,
+      "regresses_vs": {
+        "mhc": true,
+        "mhc_cdiff": true
+      },
+      "rmse": {
+        "mhc": 0.017738620040869887,
+        "mhc_cdiff": 0.008839800332942373,
+        "quincunx_cdiff": 0.023970192069763443,
+        "coherent_cdiff": 0.008839799438938294
+      }
+    },
+    {
+      "kind": "neutral",
+      "frequency": 0.3,
+      "orientation": "diag-plus",
+      "phase": 1.13,
+      "regresses_vs": {
+        "mhc": true,
+        "mhc_cdiff": true
+      },
+      "rmse": {
+        "mhc": 0.01773530829832366,
+        "mhc_cdiff": 0.008838265049151247,
+        "quincunx_cdiff": 0.023966026556531822,
+        "coherent_cdiff": 0.008838265078753944
+      }
+    },
+    {
+      "kind": "neutral",
+      "frequency": 0.3,
+      "orientation": "diag-minus",
+      "phase": 0.17,
+      "regresses_vs": {
+        "mhc": true,
+        "mhc_cdiff": true
+      },
+      "rmse": {
+        "mhc": 0.01775025908065208,
+        "mhc_cdiff": 0.008845308009807243,
+        "quincunx_cdiff": 0.023985126178370758,
+        "coherent_cdiff": 0.008845310389655319
+      }
+    },
+    {
+      "kind": "neutral",
+      "frequency": 0.3,
+      "orientation": "diag-minus",
+      "phase": 1.13,
+      "regresses_vs": {
+        "mhc": true,
+        "mhc_cdiff": true
+      },
+      "rmse": {
+        "mhc": 0.017702228844659634,
+        "mhc_cdiff": 0.008822865233118317,
+        "quincunx_cdiff": 0.023924264958527036,
+        "coherent_cdiff": 0.00882286471601703
+      }
+    }
+  ],
+  "cases": [
+    {
+      "kind": "neutral",
+      "frequency": 0.08,
+      "orientation": "x",
+      "phase": 0.17,
+      "fx": 0.08,
+      "fy": 0,
+      "within_green_diamond": true,
+      "independent_chroma_within_rb_band": true,
+      "broad_promotion_bar_applicable": true,
+      "results": {
+        "mhc": {
+          "metrics": {
+            "rgb_rmse": 0.003205722196499709,
+            "chroma_rmse": 0.0032863561585641196,
+            "green_mse": 1.0746607016530926e-05,
+            "signed_bias_rgb": [
+              -8.412243591414558e-05,
+              -5.786565856801139e-05,
+              -3.1609295143021475e-05
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "mhc_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.0031575366990399013,
+            "chroma_rmse": 0.004358793298525382,
+            "green_mse": 1.0746607016530926e-05,
+            "signed_bias_rgb": [
+              4.721401880184809e-05,
+              -5.786565856801139e-05,
+              5.42021460003323e-05
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "quincunx_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.0001672701393562442,
+            "chroma_rmse": 0.00023090617472929003,
+            "green_mse": 3.015858257262829e-08,
+            "signed_bias_rgb": [
+              2.4915983279546103e-06,
+              -3.0539102024502226e-06,
+              2.8597811857859292e-06
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "coherent_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.0,
+            "chroma_rmse": 0.0,
+            "green_mse": 0.0,
+            "signed_bias_rgb": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        }
+      },
+      "regresses_vs": {
+        "mhc": false,
+        "mhc_cdiff": false
+      },
+      "coherent_regresses_vs": {
+        "mhc": false,
+        "mhc_cdiff": false
+      }
+    },
+    {
+      "kind": "independent-chroma",
+      "frequency": 0.08,
+      "orientation": "x",
+      "phase": 0.17,
+      "fx": 0.08,
+      "fy": 0,
+      "within_green_diamond": true,
+      "independent_chroma_within_rb_band": true,
+      "broad_promotion_bar_applicable": true,
+      "results": {
+        "mhc": {
+          "metrics": {
+            "rgb_rmse": 0.00909548350974279,
+            "chroma_rmse": 0.008304292994053657,
+            "green_mse": 3.349059259464024e-05,
+            "signed_bias_rgb": [
+              0.0003758524027135637,
+              3.36805565489663e-05,
+              -0.00034691000150309666
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "mhc_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.01192212161101771,
+            "chroma_rmse": 0.01253116112473163,
+            "green_mse": 3.349059259464024e-05,
+            "signed_bias_rgb": [
+              0.0005761438773738013,
+              3.36805565489663e-05,
+              -0.0006154622468683454
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "quincunx_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.0049806097340135014,
+            "chroma_rmse": 0.006099976254513062,
+            "green_mse": 4.440892098500626e-16,
+            "signed_bias_rgb": [
+              0.00022235078116257986,
+              1.4901161193847656e-08,
+              -0.00024396005190081068
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "coherent_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.0049806106452827265,
+            "chroma_rmse": 0.006099977344208372,
+            "green_mse": 0.0,
+            "signed_bias_rgb": [
+              0.00022236423359976875,
+              0.0,
+              -0.00024394463333818648
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        }
+      },
+      "regresses_vs": {
+        "mhc": false,
+        "mhc_cdiff": false
+      },
+      "coherent_regresses_vs": {
+        "mhc": false,
+        "mhc_cdiff": false
+      }
+    },
+    {
+      "kind": "neutral",
+      "frequency": 0.08,
+      "orientation": "x",
+      "phase": 1.13,
+      "fx": 0.08,
+      "fy": 0,
+      "within_green_diamond": true,
+      "independent_chroma_within_rb_band": true,
+      "broad_promotion_bar_applicable": true,
+      "results": {
+        "mhc": {
+          "metrics": {
+            "rgb_rmse": 0.003135300732005549,
+            "chroma_rmse": 0.0032141633441158703,
+            "green_mse": 1.02796427219347e-05,
+            "signed_bias_rgb": [
+              -0.00012707110080454085,
+              -0.00012332335528400209,
+              -0.00011957623064517975
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "mhc_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.0030881726959211568,
+            "chroma_rmse": 0.004263040274179965,
+            "green_mse": 1.02796427219347e-05,
+            "signed_bias_rgb": [
+              0.00010757065481609768,
+              -0.00012332335528400209,
+              0.00010856882565551334
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "quincunx_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.00016359551425230756,
+            "chroma_rmse": 0.0002258332433910085,
+            "green_mse": 2.8847991251974076e-08,
+            "signed_bias_rgb": [
+              5.681274665726556e-06,
+              -6.516774495442708e-06,
+              5.732807848188612e-06
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "coherent_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.0,
+            "chroma_rmse": 0.0,
+            "green_mse": 0.0,
+            "signed_bias_rgb": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        }
+      },
+      "regresses_vs": {
+        "mhc": false,
+        "mhc_cdiff": false
+      },
+      "coherent_regresses_vs": {
+        "mhc": false,
+        "mhc_cdiff": false
+      }
+    },
+    {
+      "kind": "independent-chroma",
+      "frequency": 0.08,
+      "orientation": "x",
+      "phase": 1.13,
+      "fx": 0.08,
+      "fy": 0,
+      "within_green_diamond": true,
+      "independent_chroma_within_rb_band": true,
+      "broad_promotion_bar_applicable": true,
+      "results": {
+        "mhc": {
+          "metrics": {
+            "rgb_rmse": 0.009181847374904907,
+            "chroma_rmse": 0.008388637014232321,
+            "green_mse": 3.3643064352661955e-05,
+            "signed_bias_rgb": [
+              0.00023491328789128197,
+              -9.786813623375363e-05,
+              -0.0003190120268199179
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "mhc_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.012053300599254337,
+            "chroma_rmse": 0.012657027374899293,
+            "green_mse": 3.3643064352661955e-05,
+            "signed_bias_rgb": [
+              0.000513749404086007,
+              -9.786813623375363e-05,
+              -0.0003994977515604761
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "quincunx_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.005041078315873401,
+            "chroma_rmse": 0.00617403473799972,
+            "green_mse": 4.440892098500626e-16,
+            "signed_bias_rgb": [
+              0.00021002648605240716,
+              1.4901161193847656e-08,
+              -0.00014735313339365853
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "coherent_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.00504107834787883,
+            "chroma_rmse": 0.006174034852847782,
+            "green_mse": 0.0,
+            "signed_bias_rgb": [
+              0.00021004097329245674,
+              0.0,
+              -0.00014733792179160647
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        }
+      },
+      "regresses_vs": {
+        "mhc": false,
+        "mhc_cdiff": false
+      },
+      "coherent_regresses_vs": {
+        "mhc": false,
+        "mhc_cdiff": false
+      }
+    },
+    {
+      "kind": "neutral",
+      "frequency": 0.08,
+      "orientation": "y",
+      "phase": 0.17,
+      "fx": 0,
+      "fy": 0.08,
+      "within_green_diamond": true,
+      "independent_chroma_within_rb_band": true,
+      "broad_promotion_bar_applicable": true,
+      "results": {
+        "mhc": {
+          "metrics": {
+            "rgb_rmse": 0.003205722196499709,
+            "chroma_rmse": 0.0032863561585641196,
+            "green_mse": 1.0746607016530926e-05,
+            "signed_bias_rgb": [
+              -8.412243591414558e-05,
+              -5.786565856801139e-05,
+              -3.1609295143021475e-05
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "mhc_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.0031575366990399013,
+            "chroma_rmse": 0.004358793298525382,
+            "green_mse": 1.0746607016530926e-05,
+            "signed_bias_rgb": [
+              4.721401880184809e-05,
+              -5.786565856801139e-05,
+              5.42021460003323e-05
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "quincunx_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.0001672606452047818,
+            "chroma_rmse": 0.00023089340374033346,
+            "green_mse": 3.0155040165519907e-08,
+            "signed_bias_rgb": [
+              2.488079998228285e-06,
+              -3.0549450053109063e-06,
+              2.8630925549401177e-06
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "coherent_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.0,
+            "chroma_rmse": 0.0,
+            "green_mse": 0.0,
+            "signed_bias_rgb": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        }
+      },
+      "regresses_vs": {
+        "mhc": false,
+        "mhc_cdiff": false
+      },
+      "coherent_regresses_vs": {
+        "mhc": false,
+        "mhc_cdiff": false
+      }
+    },
+    {
+      "kind": "independent-chroma",
+      "frequency": 0.08,
+      "orientation": "y",
+      "phase": 0.17,
+      "fx": 0,
+      "fy": 0.08,
+      "within_green_diamond": true,
+      "independent_chroma_within_rb_band": true,
+      "broad_promotion_bar_applicable": true,
+      "results": {
+        "mhc": {
+          "metrics": {
+            "rgb_rmse": 0.00909548350974279,
+            "chroma_rmse": 0.008304292994053657,
+            "green_mse": 3.349059259464024e-05,
+            "signed_bias_rgb": [
+              0.0003758524027135637,
+              3.36805565489663e-05,
+              -0.00034691000150309666
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "mhc_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.011922121781597163,
+            "chroma_rmse": 0.0125311613107205,
+            "green_mse": 3.349059259464024e-05,
+            "signed_bias_rgb": [
+              0.0005761438773738013,
+              3.36805565489663e-05,
+              -0.0006154620399077734
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "quincunx_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.00498060956280314,
+            "chroma_rmse": 0.0060999760448245555,
+            "green_mse": 4.440892098500626e-16,
+            "signed_bias_rgb": [
+              0.00022235078116257986,
+              1.4901161193847656e-08,
+              -0.0002439602588613828
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "coherent_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.0049806106452827265,
+            "chroma_rmse": 0.006099977344208372,
+            "green_mse": 0.0,
+            "signed_bias_rgb": [
+              0.00022236423359976875,
+              0.0,
+              -0.00024394463333818648
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        }
+      },
+      "regresses_vs": {
+        "mhc": false,
+        "mhc_cdiff": false
+      },
+      "coherent_regresses_vs": {
+        "mhc": false,
+        "mhc_cdiff": false
+      }
+    },
+    {
+      "kind": "neutral",
+      "frequency": 0.08,
+      "orientation": "y",
+      "phase": 1.13,
+      "fx": 0,
+      "fy": 0.08,
+      "within_green_diamond": true,
+      "independent_chroma_within_rb_band": true,
+      "broad_promotion_bar_applicable": true,
+      "results": {
+        "mhc": {
+          "metrics": {
+            "rgb_rmse": 0.003135300732005549,
+            "chroma_rmse": 0.0032141633441158703,
+            "green_mse": 1.02796427219347e-05,
+            "signed_bias_rgb": [
+              -0.00012707110080454085,
+              -0.00012332335528400209,
+              -0.00011957623064517975
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "mhc_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.0030881726959211568,
+            "chroma_rmse": 0.004263040274179965,
+            "green_mse": 1.02796427219347e-05,
+            "signed_bias_rgb": [
+              0.00010757065481609768,
+              -0.00012332335528400209,
+              0.00010856882565551334
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "quincunx_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.00016359131389244395,
+            "chroma_rmse": 0.00022582856332385576,
+            "green_mse": 2.8846618394899142e-08,
+            "signed_bias_rgb": [
+              5.686345199743907e-06,
+              -6.524535516897838e-06,
+              5.744708081086476e-06
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "coherent_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.0,
+            "chroma_rmse": 0.0,
+            "green_mse": 0.0,
+            "signed_bias_rgb": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        }
+      },
+      "regresses_vs": {
+        "mhc": false,
+        "mhc_cdiff": false
+      },
+      "coherent_regresses_vs": {
+        "mhc": false,
+        "mhc_cdiff": false
+      }
+    },
+    {
+      "kind": "independent-chroma",
+      "frequency": 0.08,
+      "orientation": "y",
+      "phase": 1.13,
+      "fx": 0,
+      "fy": 0.08,
+      "within_green_diamond": true,
+      "independent_chroma_within_rb_band": true,
+      "broad_promotion_bar_applicable": true,
+      "results": {
+        "mhc": {
+          "metrics": {
+            "rgb_rmse": 0.009181847374904907,
+            "chroma_rmse": 0.008388637014232321,
+            "green_mse": 3.3643064352661955e-05,
+            "signed_bias_rgb": [
+              0.00023491328789128197,
+              -9.786813623375363e-05,
+              -0.0003190120268199179
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "mhc_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.012053300599254337,
+            "chroma_rmse": 0.012657027374899293,
+            "green_mse": 3.3643064352661955e-05,
+            "signed_bias_rgb": [
+              0.000513749404086007,
+              -9.786813623375363e-05,
+              -0.0003994977515604761
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "quincunx_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.005041078315873401,
+            "chroma_rmse": 0.00617403473799972,
+            "green_mse": 4.440892098500626e-16,
+            "signed_bias_rgb": [
+              0.00021002648605240716,
+              1.4901161193847656e-08,
+              -0.00014735313339365853
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "coherent_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.00504107834787883,
+            "chroma_rmse": 0.006174034852847782,
+            "green_mse": 0.0,
+            "signed_bias_rgb": [
+              0.00021004097329245674,
+              0.0,
+              -0.00014733792179160647
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        }
+      },
+      "regresses_vs": {
+        "mhc": false,
+        "mhc_cdiff": false
+      },
+      "coherent_regresses_vs": {
+        "mhc": false,
+        "mhc_cdiff": false
+      }
+    },
+    {
+      "kind": "neutral",
+      "frequency": 0.08,
+      "orientation": "diag-plus",
+      "phase": 0.17,
+      "fx": 0.056568542494923796,
+      "fy": 0.056568542494923796,
+      "within_green_diamond": true,
+      "independent_chroma_within_rb_band": true,
+      "broad_promotion_bar_applicable": true,
+      "results": {
+        "mhc": {
+          "metrics": {
+            "rgb_rmse": 0.0032320075502065638,
+            "chroma_rmse": 0.003012602245302221,
+            "green_mse": 1.2361905730832412e-05,
+            "signed_bias_rgb": [
+              -1.0296863354282615e-06,
+              -8.804045249650508e-07,
+              -7.876890631001673e-07
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "mhc_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.003380016757020903,
+            "chroma_rmse": 0.004671262909215343,
+            "green_mse": 1.2361905730832412e-05,
+            "signed_bias_rgb": [
+              8.135418879029192e-07,
+              -8.804045249650508e-07,
+              8.418926118332663e-07
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "quincunx_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.0002896792855672645,
+            "chroma_rmse": 0.00040034382331321155,
+            "green_mse": 9.079962440959719e-08,
+            "signed_bias_rgb": [
+              5.4856049425808e-08,
+              -6.066531770759158e-08,
+              5.730508286275982e-08
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "coherent_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.003380016257405904,
+            "chroma_rmse": 0.004671262097536324,
+            "green_mse": 1.2361899011049589e-05,
+            "signed_bias_rgb": [
+              8.135505112600915e-07,
+              -8.812151205392532e-07,
+              8.419012351904386e-07
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        }
+      },
+      "regresses_vs": {
+        "mhc": false,
+        "mhc_cdiff": false
+      },
+      "coherent_regresses_vs": {
+        "mhc": false,
+        "mhc_cdiff": false
+      }
+    },
+    {
+      "kind": "independent-chroma",
+      "frequency": 0.08,
+      "orientation": "diag-plus",
+      "phase": 0.17,
+      "fx": 0.056568542494923796,
+      "fy": 0.056568542494923796,
+      "within_green_diamond": true,
+      "independent_chroma_within_rb_band": true,
+      "broad_promotion_bar_applicable": true,
+      "results": {
+        "mhc": {
+          "metrics": {
+            "rgb_rmse": 0.00902868917133666,
+            "chroma_rmse": 0.007908920730014528,
+            "green_mse": 3.666260358830697e-05,
+            "signed_bias_rgb": [
+              2.75209845032221e-06,
+              -3.306540074171843e-07,
+              -3.0010001572929783e-06
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "mhc_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.012171405720225492,
+            "chroma_rmse": 0.012670903795613852,
+            "green_mse": 3.666260358830697e-05,
+            "signed_bias_rgb": [
+              5.18766795227557e-06,
+              -3.306540074171843e-07,
+              -4.8647059794561365e-06
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "quincunx_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.00432864768726004,
+            "chroma_rmse": 0.005301489054937033,
+            "green_mse": 4.440892098500626e-16,
+            "signed_bias_rgb": [
+              1.974869519472122e-06,
+              1.4901161193847656e-08,
+              -1.7570866340840304e-06
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "coherent_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.012171405988170615,
+            "chroma_rmse": 0.012670904136966771,
+            "green_mse": 3.6662605540109885e-05,
+            "signed_bias_rgb": [
+              5.187225286607389e-06,
+              -3.304470468450476e-07,
+              -4.864769217408733e-06
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        }
+      },
+      "regresses_vs": {
+        "mhc": false,
+        "mhc_cdiff": false
+      },
+      "coherent_regresses_vs": {
+        "mhc": true,
+        "mhc_cdiff": false
+      }
+    },
+    {
+      "kind": "neutral",
+      "frequency": 0.08,
+      "orientation": "diag-plus",
+      "phase": 1.13,
+      "fx": 0.056568542494923796,
+      "fy": 0.056568542494923796,
+      "within_green_diamond": true,
+      "independent_chroma_within_rb_band": true,
+      "broad_promotion_bar_applicable": true,
+      "results": {
+        "mhc": {
+          "metrics": {
+            "rgb_rmse": 0.0032322167309776005,
+            "chroma_rmse": 0.003012804792744675,
+            "green_mse": 1.2363424003445325e-05,
+            "signed_bias_rgb": [
+              -9.841406372962175e-07,
+              -1.023793708027145e-06,
+              -1.1220856075301581e-06
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "mhc_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.003380266719248254,
+            "chroma_rmse": 0.004671595381552578,
+            "green_mse": 1.2363424003445325e-05,
+            "signed_bias_rgb": [
+              9.70351889177605e-07,
+              -1.023793708027145e-06,
+              9.541945922889826e-07
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "quincunx_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.00028969794766087523,
+            "chroma_rmse": 0.00040036833495642177,
+            "green_mse": 9.080886984910205e-08,
+            "signed_bias_rgb": [
+              6.548002546216235e-08,
+              -7.00963960017687e-08,
+              6.412040948131937e-08
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "coherent_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.0033802672157173196,
+            "chroma_rmse": 0.004671595995015755,
+            "green_mse": 1.2363420400996011e-05,
+            "signed_bias_rgb": [
+              9.691762381497725e-07,
+              -1.0239115605751674e-06,
+              9.530189412611502e-07
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        }
+      },
+      "regresses_vs": {
+        "mhc": false,
+        "mhc_cdiff": false
+      },
+      "coherent_regresses_vs": {
+        "mhc": false,
+        "mhc_cdiff": false
+      }
+    },
+    {
+      "kind": "independent-chroma",
+      "frequency": 0.08,
+      "orientation": "diag-plus",
+      "phase": 1.13,
+      "fx": 0.056568542494923796,
+      "fy": 0.056568542494923796,
+      "within_green_diamond": true,
+      "independent_chroma_within_rb_band": true,
+      "broad_promotion_bar_applicable": true,
+      "results": {
+        "mhc": {
+          "metrics": {
+            "rgb_rmse": 0.009027329955236706,
+            "chroma_rmse": 0.007907561732378374,
+            "green_mse": 3.666326976145602e-05,
+            "signed_bias_rgb": [
+              5.895156919220347e-07,
+              -1.328163722782959e-06,
+              -1.5915670420652554e-06
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "mhc_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.012168834043109495,
+            "chroma_rmse": 0.012668368768877596,
+            "green_mse": 3.666326976145602e-05,
+            "signed_bias_rgb": [
+              2.554911016314118e-06,
+              -1.328163722782959e-06,
+              -1.2532296234074935e-06
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "quincunx_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.004327575911355419,
+            "chroma_rmse": 0.005300176402543852,
+            "green_mse": 4.440892098500626e-16,
+            "signed_bias_rgb": [
+              1.1871430884908747e-06,
+              1.4901161193847656e-08,
+              -2.2540880758085368e-07
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "coherent_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.012168835083525936,
+            "chroma_rmse": 0.012668369664403411,
+            "green_mse": 3.666327627598465e-05,
+            "signed_bias_rgb": [
+              2.553784230976929e-06,
+              -1.327841784115191e-06,
+              -1.2528444467871278e-06
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        }
+      },
+      "regresses_vs": {
+        "mhc": false,
+        "mhc_cdiff": false
+      },
+      "coherent_regresses_vs": {
+        "mhc": true,
+        "mhc_cdiff": false
+      }
+    },
+    {
+      "kind": "neutral",
+      "frequency": 0.08,
+      "orientation": "diag-minus",
+      "phase": 0.17,
+      "fx": 0.056568542494923796,
+      "fy": -0.056568542494923796,
+      "within_green_diamond": true,
+      "independent_chroma_within_rb_band": true,
+      "broad_promotion_bar_applicable": true,
+      "results": {
+        "mhc": {
+          "metrics": {
+            "rgb_rmse": 0.0032323756084478715,
+            "chroma_rmse": 0.0030129228373105494,
+            "green_mse": 1.2364957614335356e-05,
+            "signed_bias_rgb": [
+              1.1051062172577706e-06,
+              1.1387085657060882e-06,
+              1.1051062172577706e-06
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "mhc_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.003380319034657393,
+            "chroma_rmse": 0.004671714640995598,
+            "green_mse": 1.2364957614335356e-05,
+            "signed_bias_rgb": [
+              -9.312708344724443e-07,
+              1.1387085657060882e-06,
+              -9.312708344724443e-07
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "quincunx_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.00028969693087223697,
+            "chroma_rmse": 0.00040037091971874907,
+            "green_mse": 9.081694848528456e-08,
+            "signed_bias_rgb": [
+              -9.427916396547247e-08,
+              1.1164373085822588e-07,
+              -9.427916396547247e-08
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "coherent_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.0033803184401081225,
+            "chroma_rmse": 0.004671713987304704,
+            "green_mse": 1.236495028808344e-05,
+            "signed_bias_rgb": [
+              -9.321849103327151e-07,
+              1.138984513135604e-06,
+              -9.321849103327151e-07
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        }
+      },
+      "regresses_vs": {
+        "mhc": false,
+        "mhc_cdiff": false
+      },
+      "coherent_regresses_vs": {
+        "mhc": false,
+        "mhc_cdiff": false
+      }
+    },
+    {
+      "kind": "independent-chroma",
+      "frequency": 0.08,
+      "orientation": "diag-minus",
+      "phase": 0.17,
+      "fx": 0.056568542494923796,
+      "fy": -0.056568542494923796,
+      "within_green_diamond": true,
+      "independent_chroma_within_rb_band": true,
+      "broad_promotion_bar_applicable": true,
+      "results": {
+        "mhc": {
+          "metrics": {
+            "rgb_rmse": 0.009027284291086476,
+            "chroma_rmse": 0.007907666266176963,
+            "green_mse": 3.6659188843581474e-05,
+            "signed_bias_rgb": [
+              -1.7890074278837369e-06,
+              7.328646326506579e-07,
+              1.4439380417267482e-06
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "mhc_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.01216923032788936,
+            "chroma_rmse": 0.012668932932631605,
+            "green_mse": 3.6659188843581474e-05,
+            "signed_bias_rgb": [
+              -3.933929550794908e-06,
+              7.328646326506579e-07,
+              1.2893126242690616e-06
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "quincunx_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.004327854873730285,
+            "chroma_rmse": 0.0053005180628075904,
+            "green_mse": 4.440892098500626e-16,
+            "signed_bias_rgb": [
+              -1.653195301323761e-06,
+              1.4901161193847656e-08,
+              1.8077718530908043e-07
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "coherent_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.012169230169298346,
+            "chroma_rmse": 0.012668933201409577,
+            "green_mse": 3.6659186907901295e-05,
+            "signed_bias_rgb": [
+              -3.9324520822660425e-06,
+              7.321000283147081e-07,
+              1.2898300256994035e-06
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        }
+      },
+      "regresses_vs": {
+        "mhc": false,
+        "mhc_cdiff": false
+      },
+      "coherent_regresses_vs": {
+        "mhc": true,
+        "mhc_cdiff": false
+      }
+    },
+    {
+      "kind": "neutral",
+      "frequency": 0.08,
+      "orientation": "diag-minus",
+      "phase": 1.13,
+      "fx": 0.056568542494923796,
+      "fy": -0.056568542494923796,
+      "within_green_diamond": true,
+      "independent_chroma_within_rb_band": true,
+      "broad_promotion_bar_applicable": true,
+      "results": {
+        "mhc": {
+          "metrics": {
+            "rgb_rmse": 0.0032315112707673598,
+            "chroma_rmse": 0.0030121446006465555,
+            "green_mse": 1.2358051097074482e-05,
+            "signed_bias_rgb": [
+              4.780271814929115e-07,
+              4.922557208273146e-07,
+              4.780271814929115e-07
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "mhc_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.003379520059857318,
+            "chroma_rmse": 0.0046705673251515815,
+            "green_mse": 1.2358051097074482e-05,
+            "signed_bias_rgb": [
+              -4.028545025690102e-07,
+              4.922557208273146e-07,
+              -4.028545025690102e-07
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "quincunx_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.00028963377049831383,
+            "chroma_rmse": 0.0004002799451113837,
+            "green_mse": 9.076944501422041e-08,
+            "signed_bias_rgb": [
+              -4.421195222271813e-08,
+              5.243576051276407e-08,
+              -4.421195222271813e-08
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "coherent_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.0033795174429352877,
+            "chroma_rmse": 0.004670563785270926,
+            "green_mse": 1.2358032822792274e-05,
+            "signed_bias_rgb": [
+              -4.003336078222887e-07,
+              4.896859603899497e-07,
+              -4.003336078222887e-07
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        }
+      },
+      "regresses_vs": {
+        "mhc": false,
+        "mhc_cdiff": false
+      },
+      "coherent_regresses_vs": {
+        "mhc": false,
+        "mhc_cdiff": false
+      }
+    },
+    {
+      "kind": "independent-chroma",
+      "frequency": 0.08,
+      "orientation": "diag-minus",
+      "phase": 1.13,
+      "fx": 0.056568542494923796,
+      "fy": -0.056568542494923796,
+      "within_green_diamond": true,
+      "independent_chroma_within_rb_band": true,
+      "broad_promotion_bar_applicable": true,
+      "results": {
+        "mhc": {
+          "metrics": {
+            "rgb_rmse": 0.009026980109397006,
+            "chroma_rmse": 0.007907431926723916,
+            "green_mse": 3.665743747913963e-05,
+            "signed_bias_rgb": [
+              1.0711244410938687e-06,
+              7.845070443035643e-07,
+              -1.4374417793235662e-06
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "mhc_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.012168877560523993,
+            "chroma_rmse": 0.012668665510291596,
+            "green_mse": 3.665743747913963e-05,
+            "signed_bias_rgb": [
+              6.151155649143972e-07,
+              7.845070443035643e-07,
+              -3.4418060547775694e-06
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "quincunx_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.004327760332885265,
+            "chroma_rmse": 0.005300402274540849,
+            "green_mse": 4.440892098500626e-16,
+            "signed_bias_rgb": [
+              -7.423560744450416e-08,
+              1.4901161193847656e-08,
+              -1.4989263159625325e-06
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "coherent_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.012168877187793232,
+            "chroma_rmse": 0.012668664973895512,
+            "green_mse": 3.665743093067381e-05,
+            "signed_bias_rgb": [
+              6.155927240112681e-07,
+              7.840586297306014e-07,
+              -3.442067629945131e-06
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        }
+      },
+      "regresses_vs": {
+        "mhc": false,
+        "mhc_cdiff": false
+      },
+      "coherent_regresses_vs": {
+        "mhc": true,
+        "mhc_cdiff": false
+      }
+    },
+    {
+      "kind": "neutral",
+      "frequency": 0.2,
+      "orientation": "x",
+      "phase": 0.17,
+      "fx": 0.2,
+      "fy": 0,
+      "within_green_diamond": true,
+      "independent_chroma_within_rb_band": true,
+      "broad_promotion_bar_applicable": true,
+      "results": {
+        "mhc": {
+          "metrics": {
+            "rgb_rmse": 0.006708587539595219,
+            "chroma_rmse": 0.009647448989442472,
+            "green_mse": 4.136591598594296e-05,
+            "signed_bias_rgb": [
+              -0.0001439676723546452,
+              -0.00014187819841835235,
+              -0.00013979006972577836
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "mhc_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.005956295343542145,
+            "chroma_rmse": 0.006731716297536956,
+            "green_mse": 4.136591598594296e-05,
+            "signed_bias_rgb": [
+              5.606820599900352e-05,
+              -0.00014187819841835235,
+              3.1615193519327375e-05
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "quincunx_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.0027496057028127516,
+            "chroma_rmse": 0.003107564137015733,
+            "green_mse": 8.815180722031455e-06,
+            "signed_bias_rgb": [
+              2.587172720167372e-05,
+              -6.548398070865207e-05,
+              1.4583062794473437e-05
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "coherent_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.0,
+            "chroma_rmse": 0.0,
+            "green_mse": 0.0,
+            "signed_bias_rgb": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        }
+      },
+      "regresses_vs": {
+        "mhc": false,
+        "mhc_cdiff": false
+      },
+      "coherent_regresses_vs": {
+        "mhc": false,
+        "mhc_cdiff": false
+      }
+    },
+    {
+      "kind": "independent-chroma",
+      "frequency": 0.2,
+      "orientation": "x",
+      "phase": 0.17,
+      "fx": 0.2,
+      "fy": 0,
+      "within_green_diamond": true,
+      "independent_chroma_within_rb_band": true,
+      "broad_promotion_bar_applicable": true,
+      "results": {
+        "mhc": {
+          "metrics": {
+            "rgb_rmse": 0.042804185929391454,
+            "chroma_rmse": 0.04177605716113147,
+            "green_mse": 0.0005149105878539056,
+            "signed_bias_rgb": [
+              0.00010282773938443925,
+              -0.00047201352814833325,
+              -0.0011093388828966352
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "mhc_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.04519504213702877,
+            "chroma_rmse": 0.04711215043323239,
+            "green_mse": 0.0005149105878539056,
+            "signed_bias_rgb": [
+              0.0005645143489042918,
+              -0.00047201352814833325,
+              -0.0009233705285522672
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "quincunx_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.028039802666963893,
+            "chroma_rmse": 0.03434160457595913,
+            "green_mse": 4.440892098500626e-16,
+            "signed_bias_rgb": [
+              0.00034028788407643634,
+              1.4901161193847656e-08,
+              -0.0006388038810756472
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "coherent_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.02803980361678419,
+            "chroma_rmse": 0.034341605674483765,
+            "green_mse": 0.0,
+            "signed_bias_rgb": [
+              0.0003402982321050432,
+              0.0,
+              -0.0006387918773624632
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        }
+      },
+      "regresses_vs": {
+        "mhc": false,
+        "mhc_cdiff": false
+      },
+      "coherent_regresses_vs": {
+        "mhc": false,
+        "mhc_cdiff": false
+      }
+    },
+    {
+      "kind": "neutral",
+      "frequency": 0.2,
+      "orientation": "x",
+      "phase": 1.13,
+      "fx": 0.2,
+      "fy": 0,
+      "within_green_diamond": true,
+      "independent_chroma_within_rb_band": true,
+      "broad_promotion_bar_applicable": true,
+      "results": {
+        "mhc": {
+          "metrics": {
+            "rgb_rmse": 0.006663345514168224,
+            "chroma_rmse": 0.009582384551141309,
+            "green_mse": 4.0809828529625755e-05,
+            "signed_bias_rgb": [
+              -7.258469445837868e-05,
+              -6.142124119732116e-05,
+              -5.02548904882537e-05
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "mhc_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.005916126927943772,
+            "chroma_rmse": 0.006686317596707596,
+            "green_mse": 4.0809828529625755e-05,
+            "signed_bias_rgb": [
+              8.434336632490158e-05,
+              -6.142124119732116e-05,
+              -4.6379450294706556e-05
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "quincunx_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.002731063655001862,
+            "chroma_rmse": 0.0030866072450272154,
+            "green_mse": 8.696684655971744e-06,
+            "signed_bias_rgb": [
+              3.8931663665506574e-05,
+              -2.8348734809292688e-05,
+              -2.1414106918705835e-05
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "coherent_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.0,
+            "chroma_rmse": 0.0,
+            "green_mse": 0.0,
+            "signed_bias_rgb": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        }
+      },
+      "regresses_vs": {
+        "mhc": false,
+        "mhc_cdiff": false
+      },
+      "coherent_regresses_vs": {
+        "mhc": false,
+        "mhc_cdiff": false
+      }
+    },
+    {
+      "kind": "independent-chroma",
+      "frequency": 0.2,
+      "orientation": "x",
+      "phase": 1.13,
+      "fx": 0.2,
+      "fy": 0,
+      "within_green_diamond": true,
+      "independent_chroma_within_rb_band": true,
+      "broad_promotion_bar_applicable": true,
+      "results": {
+        "mhc": {
+          "metrics": {
+            "rgb_rmse": 0.04275683727104194,
+            "chroma_rmse": 0.04170060371085461,
+            "green_mse": 0.0005165654451169369,
+            "signed_bias_rgb": [
+              -0.0010094187325901454,
+              -0.0005053368707497915,
+              -6.814570062690311e-05
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "mhc_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.045130066703056075,
+            "chroma_rmse": 0.04702814798652179,
+            "green_mse": 0.0005165654451169369,
+            "signed_bias_rgb": [
+              -0.0007697869506147173,
+              -0.0005053368707497915,
+              0.00038559589948919084
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "quincunx_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.02796104099050737,
+            "chroma_rmse": 0.0342451416214225,
+            "green_mse": 4.440892098500626e-16,
+            "signed_bias_rgb": [
+              -0.0005399355043967565,
+              1.4901161193847656e-08,
+              0.0002203474028242959
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "coherent_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.027961039057098208,
+            "chroma_rmse": 0.034245139183960945,
+            "green_mse": 0.0,
+            "signed_bias_rgb": [
+              -0.0005399220519595676,
+              0.0,
+              0.00022036230398548974
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        }
+      },
+      "regresses_vs": {
+        "mhc": false,
+        "mhc_cdiff": false
+      },
+      "coherent_regresses_vs": {
+        "mhc": false,
+        "mhc_cdiff": false
+      }
+    },
+    {
+      "kind": "neutral",
+      "frequency": 0.2,
+      "orientation": "y",
+      "phase": 0.17,
+      "fx": 0,
+      "fy": 0.2,
+      "within_green_diamond": true,
+      "independent_chroma_within_rb_band": true,
+      "broad_promotion_bar_applicable": true,
+      "results": {
+        "mhc": {
+          "metrics": {
+            "rgb_rmse": 0.006708587539595219,
+            "chroma_rmse": 0.009647448989442472,
+            "green_mse": 4.136591598594296e-05,
+            "signed_bias_rgb": [
+              -0.0001439676723546452,
+              -0.00014187819841835235,
+              -0.00013979006972577836
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "mhc_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.005956295343542145,
+            "chroma_rmse": 0.006731716297536956,
+            "green_mse": 4.136591598594296e-05,
+            "signed_bias_rgb": [
+              5.606820599900352e-05,
+              -0.00014187819841835235,
+              3.1615193519327375e-05
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "quincunx_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.0027496005126845533,
+            "chroma_rmse": 0.0031075571765147103,
+            "green_mse": 8.815141000803606e-06,
+            "signed_bias_rgb": [
+              2.587410724825329e-05,
+              -6.548532595237096e-05,
+              1.458668460448583e-05
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "coherent_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.0,
+            "chroma_rmse": 0.0,
+            "green_mse": 0.0,
+            "signed_bias_rgb": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        }
+      },
+      "regresses_vs": {
+        "mhc": false,
+        "mhc_cdiff": false
+      },
+      "coherent_regresses_vs": {
+        "mhc": false,
+        "mhc_cdiff": false
+      }
+    },
+    {
+      "kind": "independent-chroma",
+      "frequency": 0.2,
+      "orientation": "y",
+      "phase": 0.17,
+      "fx": 0,
+      "fy": 0.2,
+      "within_green_diamond": true,
+      "independent_chroma_within_rb_band": true,
+      "broad_promotion_bar_applicable": true,
+      "results": {
+        "mhc": {
+          "metrics": {
+            "rgb_rmse": 0.042804185929391454,
+            "chroma_rmse": 0.04177605716113146,
+            "green_mse": 0.0005149105878539056,
+            "signed_bias_rgb": [
+              0.00010282773938443925,
+              -0.00047201352814833325,
+              -0.0011093388828966352
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "mhc_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.04519504213702876,
+            "chroma_rmse": 0.04711215043323239,
+            "green_mse": 0.0005149105878539056,
+            "signed_bias_rgb": [
+              0.0005645143489042918,
+              -0.00047201352814833325,
+              -0.0009233705285522672
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "quincunx_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.028039802666963893,
+            "chroma_rmse": 0.03434160457595913,
+            "green_mse": 4.440892098500626e-16,
+            "signed_bias_rgb": [
+              0.00034028788407643634,
+              1.4901161193847656e-08,
+              -0.0006388038810756472
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "coherent_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.02803980361678419,
+            "chroma_rmse": 0.034341605674483765,
+            "green_mse": 0.0,
+            "signed_bias_rgb": [
+              0.0003402982321050432,
+              0.0,
+              -0.0006387918773624632
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        }
+      },
+      "regresses_vs": {
+        "mhc": false,
+        "mhc_cdiff": false
+      },
+      "coherent_regresses_vs": {
+        "mhc": false,
+        "mhc_cdiff": false
+      }
+    },
+    {
+      "kind": "neutral",
+      "frequency": 0.2,
+      "orientation": "y",
+      "phase": 1.13,
+      "fx": 0,
+      "fy": 0.2,
+      "within_green_diamond": true,
+      "independent_chroma_within_rb_band": true,
+      "broad_promotion_bar_applicable": true,
+      "results": {
+        "mhc": {
+          "metrics": {
+            "rgb_rmse": 0.006663345514168224,
+            "chroma_rmse": 0.009582384551141309,
+            "green_mse": 4.0809828529625755e-05,
+            "signed_bias_rgb": [
+              -7.258469445837868e-05,
+              -6.142124119732116e-05,
+              -5.02548904882537e-05
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "mhc_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.005916126927943772,
+            "chroma_rmse": 0.006686317596707596,
+            "green_mse": 4.0809828529625755e-05,
+            "signed_bias_rgb": [
+              8.434336632490158e-05,
+              -6.142124119732116e-05,
+              -4.6379450294706556e-05
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "quincunx_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.002731069475013032,
+            "chroma_rmse": 0.0030866142992504847,
+            "green_mse": 8.696722648007187e-06,
+            "signed_bias_rgb": [
+              3.891593466202418e-05,
+              -2.8337145017253028e-05,
+              -2.1428180237611134e-05
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "coherent_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.0,
+            "chroma_rmse": 0.0,
+            "green_mse": 0.0,
+            "signed_bias_rgb": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        }
+      },
+      "regresses_vs": {
+        "mhc": false,
+        "mhc_cdiff": false
+      },
+      "coherent_regresses_vs": {
+        "mhc": false,
+        "mhc_cdiff": false
+      }
+    },
+    {
+      "kind": "independent-chroma",
+      "frequency": 0.2,
+      "orientation": "y",
+      "phase": 1.13,
+      "fx": 0,
+      "fy": 0.2,
+      "within_green_diamond": true,
+      "independent_chroma_within_rb_band": true,
+      "broad_promotion_bar_applicable": true,
+      "results": {
+        "mhc": {
+          "metrics": {
+            "rgb_rmse": 0.04275683727104194,
+            "chroma_rmse": 0.0417006037108546,
+            "green_mse": 0.0005165654451169369,
+            "signed_bias_rgb": [
+              -0.0010094187325901454,
+              -0.0005053368707497915,
+              -6.814570062690311e-05
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "mhc_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.045130066703056075,
+            "chroma_rmse": 0.04702814798652178,
+            "green_mse": 0.0005165654451169369,
+            "signed_bias_rgb": [
+              -0.0007697869506147173,
+              -0.0005053368707497915,
+              0.00038559589948919084
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "quincunx_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.02796104099050737,
+            "chroma_rmse": 0.0342451416214225,
+            "green_mse": 4.440892098500626e-16,
+            "signed_bias_rgb": [
+              -0.0005399355043967565,
+              1.4901161193847656e-08,
+              0.0002203474028242959
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "coherent_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.027961039057098208,
+            "chroma_rmse": 0.034245139183960945,
+            "green_mse": 0.0,
+            "signed_bias_rgb": [
+              -0.0005399220519595676,
+              0.0,
+              0.00022036230398548974
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        }
+      },
+      "regresses_vs": {
+        "mhc": false,
+        "mhc_cdiff": false
+      },
+      "coherent_regresses_vs": {
+        "mhc": false,
+        "mhc_cdiff": false
+      }
+    },
+    {
+      "kind": "neutral",
+      "frequency": 0.2,
+      "orientation": "diag-plus",
+      "phase": 0.17,
+      "fx": 0.1414213562373095,
+      "fy": 0.1414213562373095,
+      "within_green_diamond": true,
+      "independent_chroma_within_rb_band": true,
+      "broad_promotion_bar_applicable": true,
+      "results": {
+        "mhc": {
+          "metrics": {
+            "rgb_rmse": 0.013794047031044141,
+            "chroma_rmse": 0.011423425563119887,
+            "green_mse": 0.00019535823590629666,
+            "signed_bias_rgb": [
+              -4.512599933846497e-06,
+              -3.22333904972047e-06,
+              -3.2670422238700182e-06
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "mhc_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.011856131417299102,
+            "chroma_rmse": 0.013814404412003059,
+            "green_mse": 0.00019535823590629666,
+            "signed_bias_rgb": [
+              1.9628399362166724e-06,
+              -3.22333904972047e-06,
+              2.5432004972740457e-06
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "quincunx_cdiff": {
+          "metrics": {
+            "rgb_rmse": 2.3500983113396452e-05,
+            "chroma_rmse": 2.7382603268913448e-05,
+            "green_mse": 7.675781372818155e-10,
+            "signed_bias_rgb": [
+              -2.2702424982447684e-08,
+              2.58010846597177e-08,
+              -2.3837833676809148e-08
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "coherent_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.011856130082156474,
+            "chroma_rmse": 0.013814403321616917,
+            "green_mse": 0.00019535817877160271,
+            "signed_bias_rgb": [
+              1.962437512881962e-06,
+              -3.222450843931716e-06,
+              2.542789450582163e-06
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        }
+      },
+      "regresses_vs": {
+        "mhc": false,
+        "mhc_cdiff": false
+      },
+      "coherent_regresses_vs": {
+        "mhc": false,
+        "mhc_cdiff": false
+      }
+    },
+    {
+      "kind": "independent-chroma",
+      "frequency": 0.2,
+      "orientation": "diag-plus",
+      "phase": 0.17,
+      "fx": 0.1414213562373095,
+      "fy": 0.1414213562373095,
+      "within_green_diamond": true,
+      "independent_chroma_within_rb_band": true,
+      "broad_promotion_bar_applicable": true,
+      "results": {
+        "mhc": {
+          "metrics": {
+            "rgb_rmse": 0.04564354256056091,
+            "chroma_rmse": 0.040587191674071973,
+            "green_mse": 0.0009071799213179484,
+            "signed_bias_rgb": [
+              6.463062478068434e-06,
+              -6.3765414611057e-06,
+              -1.5372841584461707e-05
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "mhc_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.051605347803519684,
+            "chroma_rmse": 0.05238105648805802,
+            "green_mse": 0.0009071799213179484,
+            "signed_bias_rgb": [
+              1.565372732318478e-05,
+              -6.3765414611057e-06,
+              -1.8931474007758092e-05
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "quincunx_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.023022931112544744,
+            "chroma_rmse": 0.028197216805981397,
+            "green_mse": 4.440892098500626e-16,
+            "signed_bias_rgb": [
+              9.602234687334225e-06,
+              1.4901161193847656e-08,
+              -8.97899304551107e-06
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "coherent_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.05160534692723322,
+            "chroma_rmse": 0.052381055628312356,
+            "green_mse": 0.000907179863286515,
+            "signed_bias_rgb": [
+              1.5653963028280822e-05,
+              -6.376984126773881e-06,
+              -1.893025811439679e-05
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        }
+      },
+      "regresses_vs": {
+        "mhc": false,
+        "mhc_cdiff": false
+      },
+      "coherent_regresses_vs": {
+        "mhc": true,
+        "mhc_cdiff": false
+      }
+    },
+    {
+      "kind": "neutral",
+      "frequency": 0.2,
+      "orientation": "diag-plus",
+      "phase": 1.13,
+      "fx": 0.1414213562373095,
+      "fy": 0.1414213562373095,
+      "within_green_diamond": true,
+      "independent_chroma_within_rb_band": true,
+      "broad_promotion_bar_applicable": true,
+      "results": {
+        "mhc": {
+          "metrics": {
+            "rgb_rmse": 0.013794404243747312,
+            "chroma_rmse": 0.011423365750955948,
+            "green_mse": 0.00019537863317164542,
+            "signed_bias_rgb": [
+              -1.2590618873084033e-06,
+              -2.4897011893766896e-06,
+              -4.7465401161232116e-06
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "mhc_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.011855411863647271,
+            "chroma_rmse": 0.01381340267475633,
+            "green_mse": 0.00019537863317164542,
+            "signed_bias_rgb": [
+              2.5520854296139728e-06,
+              -2.4897011893766896e-06,
+              9.271661164583984e-07
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "quincunx_cdiff": {
+          "metrics": {
+            "rgb_rmse": 2.3499332145563992e-05,
+            "chroma_rmse": 2.738013779325319e-05,
+            "green_mse": 7.675884354570224e-10,
+            "signed_bias_rgb": [
+              -1.750828951229284e-08,
+              1.77181245368204e-08,
+              -1.4283153929828125e-08
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "coherent_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.011855411500607352,
+            "chroma_rmse": 0.01381340216434259,
+            "green_mse": 0.0001953786245012769,
+            "signed_bias_rgb": [
+              2.5508666618002785e-06,
+              -2.4885514084203745e-06,
+              9.25947348644704e-07
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        }
+      },
+      "regresses_vs": {
+        "mhc": false,
+        "mhc_cdiff": false
+      },
+      "coherent_regresses_vs": {
+        "mhc": false,
+        "mhc_cdiff": false
+      }
+    },
+    {
+      "kind": "independent-chroma",
+      "frequency": 0.2,
+      "orientation": "diag-plus",
+      "phase": 1.13,
+      "fx": 0.1414213562373095,
+      "fy": 0.1414213562373095,
+      "within_green_diamond": true,
+      "independent_chroma_within_rb_band": true,
+      "broad_promotion_bar_applicable": true,
+      "results": {
+        "mhc": {
+          "metrics": {
+            "rgb_rmse": 0.04565061654978652,
+            "chroma_rmse": 0.04058824605650779,
+            "green_mse": 0.0009078977745449792,
+            "signed_bias_rgb": [
+              -7.783039760442427e-06,
+              -1.1017333348224193e-05,
+              -7.612921044598391e-06
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "mhc_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.051603190377418756,
+            "chroma_rmse": 0.0523722375717833,
+            "green_mse": 0.0009078977745449792,
+            "signed_bias_rgb": [
+              -2.967463921249649e-06,
+              -1.1017333348224193e-05,
+              -2.6953970024615156e-06
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "quincunx_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.023016475606807883,
+            "chroma_rmse": 0.028189310459520975,
+            "green_mse": 4.440892098500626e-16,
+            "signed_bias_rgb": [
+              4.768946472509408e-07,
+              1.4901161193847656e-08,
+              6.205770244568954e-07
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "coherent_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.05160319030967825,
+            "chroma_rmse": 0.052372237831613766,
+            "green_mse": 0.000907897751390335,
+            "signed_bias_rgb": [
+              -2.9668832818667093e-06,
+              -1.101721837012856e-05,
+              -2.697230903086839e-06
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        }
+      },
+      "regresses_vs": {
+        "mhc": false,
+        "mhc_cdiff": false
+      },
+      "coherent_regresses_vs": {
+        "mhc": true,
+        "mhc_cdiff": false
+      }
+    },
+    {
+      "kind": "neutral",
+      "frequency": 0.2,
+      "orientation": "diag-minus",
+      "phase": 0.17,
+      "fx": 0.1414213562373095,
+      "fy": -0.1414213562373095,
+      "within_green_diamond": true,
+      "independent_chroma_within_rb_band": true,
+      "broad_promotion_bar_applicable": true,
+      "results": {
+        "mhc": {
+          "metrics": {
+            "rgb_rmse": 0.013798362263098801,
+            "chroma_rmse": 0.011426143758177049,
+            "green_mse": 0.00019550515612798097,
+            "signed_bias_rgb": [
+              4.505888087514006e-06,
+              5.1845405480743926e-06,
+              4.505888087514006e-06
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "mhc_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.01185736744462948,
+            "chroma_rmse": 0.013815450782417535,
+            "green_mse": 0.00019550515612798097,
+            "signed_bias_rgb": [
+              -5.006175028321184e-07,
+              5.1845405480743926e-06,
+              -5.006175028321184e-07
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "quincunx_cdiff": {
+          "metrics": {
+            "rgb_rmse": 2.350279229908321e-05,
+            "chroma_rmse": 2.7384022259392152e-05,
+            "green_mse": 7.681109169492499e-10,
+            "signed_bias_rgb": [
+              -1.7907838394612442e-08,
+              7.841506122071066e-09,
+              -1.7907838394612442e-08
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "coherent_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.011857369541878344,
+            "chroma_rmse": 0.013815454215727389,
+            "green_mse": 0.00019550521640207506,
+            "signed_bias_rgb": [
+              -5.000569846159146e-07,
+              5.184017397739269e-06,
+              -5.000569846159146e-07
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        }
+      },
+      "regresses_vs": {
+        "mhc": false,
+        "mhc_cdiff": false
+      },
+      "coherent_regresses_vs": {
+        "mhc": false,
+        "mhc_cdiff": false
+      }
+    },
+    {
+      "kind": "independent-chroma",
+      "frequency": 0.2,
+      "orientation": "diag-minus",
+      "phase": 0.17,
+      "fx": 0.1414213562373095,
+      "fy": -0.1414213562373095,
+      "within_green_diamond": true,
+      "independent_chroma_within_rb_band": true,
+      "broad_promotion_bar_applicable": true,
+      "results": {
+        "mhc": {
+          "metrics": {
+            "rgb_rmse": 0.04563959721445352,
+            "chroma_rmse": 0.040583455645871666,
+            "green_mse": 0.0009071819787588834,
+            "signed_bias_rgb": [
+              -9.25520779909911e-06,
+              4.174877648000364e-06,
+              8.115421313746477e-06
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "mhc_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.051600395610464714,
+            "chroma_rmse": 0.0523769179544338,
+            "green_mse": 0.0009071819787588834,
+            "signed_bias_rgb": [
+              -1.46266049992891e-05,
+              4.174877648000364e-06,
+              6.420290626493501e-06
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "quincunx_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.023020250753338068,
+            "chroma_rmse": 0.028193934050510048,
+            "green_mse": 4.440892098500626e-16,
+            "signed_bias_rgb": [
+              -8.422662906440688e-06,
+              1.4901161193847656e-08,
+              9.878228108088176e-07
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "coherent_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.05160039355435911,
+            "chroma_rmse": 0.0523769163816475,
+            "green_mse": 0.000907181865254125,
+            "signed_bias_rgb": [
+              -1.4626260065002206e-05,
+              4.1739405765209665e-06,
+              6.420750538876027e-06
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        }
+      },
+      "regresses_vs": {
+        "mhc": false,
+        "mhc_cdiff": false
+      },
+      "coherent_regresses_vs": {
+        "mhc": true,
+        "mhc_cdiff": false
+      }
+    },
+    {
+      "kind": "neutral",
+      "frequency": 0.2,
+      "orientation": "diag-minus",
+      "phase": 1.13,
+      "fx": 0.1414213562373095,
+      "fy": -0.1414213562373095,
+      "within_green_diamond": true,
+      "independent_chroma_within_rb_band": true,
+      "broad_promotion_bar_applicable": true,
+      "results": {
+        "mhc": {
+          "metrics": {
+            "rgb_rmse": 0.013791835148692515,
+            "chroma_rmse": 0.01142147579241874,
+            "green_mse": 0.00019529898342687178,
+            "signed_bias_rgb": [
+              1.951537589416092e-06,
+              2.2436940559634457e-06,
+              1.951537589416092e-06
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "mhc_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.01185388985956634,
+            "chroma_rmse": 0.013811738211437559,
+            "green_mse": 0.00019529898342687178,
+            "signed_bias_rgb": [
+              -2.145951176867073e-07,
+              2.2436940559634457e-06,
+              -2.145951176867073e-07
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "quincunx_cdiff": {
+          "metrics": {
+            "rgb_rmse": 2.350075153172686e-05,
+            "chroma_rmse": 2.7382569200362733e-05,
+            "green_mse": 7.676478459239663e-10,
+            "signed_bias_rgb": [
+              -1.4291777287000491e-08,
+              8.721088553652352e-09,
+              -1.4291777287000491e-08
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "coherent_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.011853889060943612,
+            "chroma_rmse": 0.013811737713261987,
+            "green_mse": 0.00019529895302065745,
+            "signed_bias_rgb": [
+              -2.1587712345299898e-07,
+              2.2431939012474486e-06,
+              -2.1587712345299898e-07
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        }
+      },
+      "regresses_vs": {
+        "mhc": false,
+        "mhc_cdiff": false
+      },
+      "coherent_regresses_vs": {
+        "mhc": false,
+        "mhc_cdiff": false
+      }
+    },
+    {
+      "kind": "independent-chroma",
+      "frequency": 0.2,
+      "orientation": "diag-minus",
+      "phase": 1.13,
+      "fx": 0.1414213562373095,
+      "fy": -0.1414213562373095,
+      "within_green_diamond": true,
+      "independent_chroma_within_rb_band": true,
+      "broad_promotion_bar_applicable": true,
+      "results": {
+        "mhc": {
+          "metrics": {
+            "rgb_rmse": 0.0456369574668612,
+            "chroma_rmse": 0.04058160375336125,
+            "green_mse": 0.0009071005597713354,
+            "signed_bias_rgb": [
+              6.133495013654968e-06,
+              4.468692673577203e-06,
+              -7.3551171585733505e-06
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "mhc_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.05159835276862775,
+            "chroma_rmse": 0.05237601687881478,
+            "green_mse": 0.0009071005597713354,
+            "signed_bias_rgb": [
+              3.7777375567842413e-06,
+              4.468692673577203e-06,
+              -1.2564148041017262e-05
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "quincunx_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.023019750482906984,
+            "chroma_rmse": 0.02819332134702029,
+            "green_mse": 4.440892098500626e-16,
+            "signed_bias_rgb": [
+              -3.2485336249257313e-07,
+              1.4901161193847656e-08,
+              -7.631668223091113e-06
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "coherent_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.05159835261153532,
+            "chroma_rmse": 0.05237601695187777,
+            "green_mse": 0.0009071005818722606,
+            "signed_bias_rgb": [
+              3.777616829783828e-06,
+              4.4689053830541214e-06,
+              -1.25651655971636e-05
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        }
+      },
+      "regresses_vs": {
+        "mhc": false,
+        "mhc_cdiff": false
+      },
+      "coherent_regresses_vs": {
+        "mhc": true,
+        "mhc_cdiff": false
+      }
+    },
+    {
+      "kind": "neutral",
+      "frequency": 0.3,
+      "orientation": "x",
+      "phase": 0.17,
+      "fx": 0.3,
+      "fy": 0,
+      "within_green_diamond": true,
+      "independent_chroma_within_rb_band": false,
+      "broad_promotion_bar_applicable": true,
+      "results": {
+        "mhc": {
+          "metrics": {
+            "rgb_rmse": 0.028320822461654425,
+            "chroma_rmse": 0.02853840007184048,
+            "green_mse": 0.0001484561620171394,
+            "signed_bias_rgb": [
+              -0.0008715905456079377,
+              -3.352192127042347e-05,
+              0.0008045467030670908
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "mhc_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.013729189525123382,
+            "chroma_rmse": 0.012752742554134678,
+            "green_mse": 0.0001484561620171394,
+            "signed_bias_rgb": [
+              -0.00036220293905999925,
+              -3.352192127042347e-05,
+              0.000341482667459382
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "quincunx_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.003060290579275241,
+            "chroma_rmse": 0.0028426373355751036,
+            "green_mse": 7.376220707441816e-06,
+            "signed_bias_rgb": [
+              -8.073521571026908e-05,
+              -7.453581525219812e-06,
+              7.608439773321152e-05
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "coherent_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.0,
+            "chroma_rmse": 0.0,
+            "green_mse": 0.0,
+            "signed_bias_rgb": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        }
+      },
+      "regresses_vs": {
+        "mhc": false,
+        "mhc_cdiff": false
+      },
+      "coherent_regresses_vs": {
+        "mhc": false,
+        "mhc_cdiff": false
+      }
+    },
+    {
+      "kind": "independent-chroma",
+      "frequency": 0.3,
+      "orientation": "x",
+      "phase": 0.17,
+      "fx": 0.3,
+      "fy": 0,
+      "within_green_diamond": true,
+      "independent_chroma_within_rb_band": false,
+      "broad_promotion_bar_applicable": false,
+      "results": {
+        "mhc": {
+          "metrics": {
+            "rgb_rmse": 0.06593875104929454,
+            "chroma_rmse": 0.07135760645360924,
+            "green_mse": 0.0005052097674664981,
+            "signed_bias_rgb": [
+              -0.002129527222779062,
+              -0.00032041056288613216,
+              0.0007494136484132872
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "mhc_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.057883136071252575,
+            "chroma_rmse": 0.06282555859694011,
+            "green_mse": 0.0005052097674664981,
+            "signed_bias_rgb": [
+              -0.0017197608119911617,
+              -0.00032041056288613216,
+              0.0009162925804654757
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "quincunx_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.05362693235573481,
+            "chroma_rmse": 0.06567931047318949,
+            "green_mse": 4.440892098500626e-16,
+            "signed_bias_rgb": [
+              -0.0018159703661998112,
+              1.4901161193847656e-08,
+              0.000916444179084566
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "coherent_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.05362693103748216,
+            "chroma_rmse": 0.0656793087566267,
+            "green_mse": 0.0,
+            "signed_bias_rgb": [
+              -0.0018159598112106323,
+              0.0,
+              0.0009164619776937696
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        }
+      },
+      "regresses_vs": {
+        "mhc": false,
+        "mhc_cdiff": false
+      },
+      "coherent_regresses_vs": {
+        "mhc": false,
+        "mhc_cdiff": false
+      }
+    },
+    {
+      "kind": "neutral",
+      "frequency": 0.3,
+      "orientation": "x",
+      "phase": 1.13,
+      "fx": 0.3,
+      "fy": 0,
+      "within_green_diamond": true,
+      "independent_chroma_within_rb_band": false,
+      "broad_promotion_bar_applicable": true,
+      "results": {
+        "mhc": {
+          "metrics": {
+            "rgb_rmse": 0.02812983351266672,
+            "chroma_rmse": 0.028345943750368145,
+            "green_mse": 0.00014646062563718044,
+            "signed_bias_rgb": [
+              -0.0005419961073332363,
+              -0.00017919888099034628,
+              0.0001835990697145462
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "mhc_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.01363660449629062,
+            "chroma_rmse": 0.01266674256395852,
+            "green_mse": 0.00014646062563718044,
+            "signed_bias_rgb": [
+              -0.00020768214017152786,
+              -0.00017919888099034628,
+              9.693267444769542e-05
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "quincunx_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.003039666124617541,
+            "chroma_rmse": 0.0028234785948764865,
+            "green_mse": 7.2771314850758915e-06,
+            "signed_bias_rgb": [
+              -4.628631803724501e-05,
+              -3.9945666988690696e-05,
+              2.1601302756203546e-05
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "coherent_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.0,
+            "chroma_rmse": 0.0,
+            "green_mse": 0.0,
+            "signed_bias_rgb": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        }
+      },
+      "regresses_vs": {
+        "mhc": false,
+        "mhc_cdiff": false
+      },
+      "coherent_regresses_vs": {
+        "mhc": false,
+        "mhc_cdiff": false
+      }
+    },
+    {
+      "kind": "independent-chroma",
+      "frequency": 0.3,
+      "orientation": "x",
+      "phase": 1.13,
+      "fx": 0.3,
+      "fy": 0,
+      "within_green_diamond": true,
+      "independent_chroma_within_rb_band": false,
+      "broad_promotion_bar_applicable": false,
+      "results": {
+        "mhc": {
+          "metrics": {
+            "rgb_rmse": 0.06596496893210833,
+            "chroma_rmse": 0.07143279443651726,
+            "green_mse": 0.0005023754720748662,
+            "signed_bias_rgb": [
+              -0.0010052509605884552,
+              0.00024880882766511705,
+              0.0020769352300299537
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "mhc_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.057908389239691875,
+            "chroma_rmse": 0.0628910071637799,
+            "green_mse": 0.0005023754720748662,
+            "signed_bias_rgb": [
+              -0.0010991307596365611,
+              0.00024880882766511705,
+              0.0017230291333463457
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "quincunx_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.05371304171715956,
+            "chroma_rmse": 0.06578477229082798,
+            "green_mse": 4.440892098500626e-16,
+            "signed_bias_rgb": [
+              -0.0011134367022249433,
+              1.4901161193847656e-08,
+              0.0018118839297029707
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "coherent_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.05371304507581416,
+            "chroma_rmse": 0.06578477648342865,
+            "green_mse": 0.0,
+            "signed_bias_rgb": [
+              -0.0011134234567483265,
+              0.0,
+              0.0018119004865487416
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        }
+      },
+      "regresses_vs": {
+        "mhc": false,
+        "mhc_cdiff": false
+      },
+      "coherent_regresses_vs": {
+        "mhc": false,
+        "mhc_cdiff": false
+      }
+    },
+    {
+      "kind": "neutral",
+      "frequency": 0.3,
+      "orientation": "y",
+      "phase": 0.17,
+      "fx": 0,
+      "fy": 0.3,
+      "within_green_diamond": true,
+      "independent_chroma_within_rb_band": false,
+      "broad_promotion_bar_applicable": true,
+      "results": {
+        "mhc": {
+          "metrics": {
+            "rgb_rmse": 0.028320822461654425,
+            "chroma_rmse": 0.02853840007184048,
+            "green_mse": 0.0001484561620171394,
+            "signed_bias_rgb": [
+              -0.0008715905456079377,
+              -3.352192127042347e-05,
+              0.0008045467030670908
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "mhc_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.013729189525123382,
+            "chroma_rmse": 0.012752742554134678,
+            "green_mse": 0.0001484561620171394,
+            "signed_bias_rgb": [
+              -0.00036220293905999925,
+              -3.352192127042347e-05,
+              0.000341482667459382
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "quincunx_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.0030602814388708834,
+            "chroma_rmse": 0.002842628526475317,
+            "green_mse": 7.376175304784873e-06,
+            "signed_bias_rgb": [
+              -8.075694657034344e-05,
+              -7.451925840642717e-06,
+              7.610012673669391e-05
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "coherent_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.0,
+            "chroma_rmse": 0.0,
+            "green_mse": 0.0,
+            "signed_bias_rgb": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        }
+      },
+      "regresses_vs": {
+        "mhc": false,
+        "mhc_cdiff": false
+      },
+      "coherent_regresses_vs": {
+        "mhc": false,
+        "mhc_cdiff": false
+      }
+    },
+    {
+      "kind": "independent-chroma",
+      "frequency": 0.3,
+      "orientation": "y",
+      "phase": 0.17,
+      "fx": 0,
+      "fy": 0.3,
+      "within_green_diamond": true,
+      "independent_chroma_within_rb_band": false,
+      "broad_promotion_bar_applicable": false,
+      "results": {
+        "mhc": {
+          "metrics": {
+            "rgb_rmse": 0.06593875104929456,
+            "chroma_rmse": 0.07135760645360924,
+            "green_mse": 0.0005052097674664981,
+            "signed_bias_rgb": [
+              -0.002129527222779062,
+              -0.00032041056288613216,
+              0.0007494136484132872
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "mhc_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.057883136071252575,
+            "chroma_rmse": 0.06282555859694011,
+            "green_mse": 0.0005052097674664981,
+            "signed_bias_rgb": [
+              -0.0017197608119911617,
+              -0.00032041056288613216,
+              0.0009162925804654757
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "quincunx_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.05362693235573481,
+            "chroma_rmse": 0.06567931047318949,
+            "green_mse": 4.440892098500626e-16,
+            "signed_bias_rgb": [
+              -0.0018159703661998112,
+              1.4901161193847656e-08,
+              0.000916444179084566
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "coherent_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.05362693103748216,
+            "chroma_rmse": 0.0656793087566267,
+            "green_mse": 0.0,
+            "signed_bias_rgb": [
+              -0.0018159598112106323,
+              0.0,
+              0.0009164619776937696
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        }
+      },
+      "regresses_vs": {
+        "mhc": false,
+        "mhc_cdiff": false
+      },
+      "coherent_regresses_vs": {
+        "mhc": false,
+        "mhc_cdiff": false
+      }
+    },
+    {
+      "kind": "neutral",
+      "frequency": 0.3,
+      "orientation": "y",
+      "phase": 1.13,
+      "fx": 0,
+      "fy": 0.3,
+      "within_green_diamond": true,
+      "independent_chroma_within_rb_band": false,
+      "broad_promotion_bar_applicable": true,
+      "results": {
+        "mhc": {
+          "metrics": {
+            "rgb_rmse": 0.02812983351266672,
+            "chroma_rmse": 0.028345943750368145,
+            "green_mse": 0.00014646062563718044,
+            "signed_bias_rgb": [
+              -0.0005419961073332363,
+              -0.00017919888099034628,
+              0.0001835990697145462
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "mhc_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.01363660449629062,
+            "chroma_rmse": 0.01266674256395852,
+            "green_mse": 0.00014646062563718044,
+            "signed_bias_rgb": [
+              -0.00020768214017152786,
+              -0.00017919888099034628,
+              9.693267444769542e-05
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "quincunx_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.003039656049488529,
+            "chroma_rmse": 0.0028234700265804395,
+            "green_mse": 7.2770869502957065e-06,
+            "signed_bias_rgb": [
+              -4.629066420925988e-05,
+              -3.9945666988690696e-05,
+              2.1603682802783118e-05
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "coherent_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.0,
+            "chroma_rmse": 0.0,
+            "green_mse": 0.0,
+            "signed_bias_rgb": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        }
+      },
+      "regresses_vs": {
+        "mhc": false,
+        "mhc_cdiff": false
+      },
+      "coherent_regresses_vs": {
+        "mhc": false,
+        "mhc_cdiff": false
+      }
+    },
+    {
+      "kind": "independent-chroma",
+      "frequency": 0.3,
+      "orientation": "y",
+      "phase": 1.13,
+      "fx": 0,
+      "fy": 0.3,
+      "within_green_diamond": true,
+      "independent_chroma_within_rb_band": false,
+      "broad_promotion_bar_applicable": false,
+      "results": {
+        "mhc": {
+          "metrics": {
+            "rgb_rmse": 0.06596496893210833,
+            "chroma_rmse": 0.07143279443651726,
+            "green_mse": 0.0005023754720748662,
+            "signed_bias_rgb": [
+              -0.0010052509605884552,
+              0.00024880882766511705,
+              0.0020769352300299537
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "mhc_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.057908389239691875,
+            "chroma_rmse": 0.0628910071637799,
+            "green_mse": 0.0005023754720748662,
+            "signed_bias_rgb": [
+              -0.0010991307596365611,
+              0.00024880882766511705,
+              0.0017230291333463457
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "quincunx_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.05371304171715956,
+            "chroma_rmse": 0.06578477229082798,
+            "green_mse": 4.440892098500626e-16,
+            "signed_bias_rgb": [
+              -0.0011134367022249433,
+              1.4901161193847656e-08,
+              0.0018118839297029707
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "coherent_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.05371304507581416,
+            "chroma_rmse": 0.06578477648342865,
+            "green_mse": 0.0,
+            "signed_bias_rgb": [
+              -0.0011134234567483265,
+              0.0,
+              0.0018119004865487416
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        }
+      },
+      "regresses_vs": {
+        "mhc": false,
+        "mhc_cdiff": false
+      },
+      "coherent_regresses_vs": {
+        "mhc": false,
+        "mhc_cdiff": false
+      }
+    },
+    {
+      "kind": "neutral",
+      "frequency": 0.3,
+      "orientation": "diag-plus",
+      "phase": 0.17,
+      "fx": 0.21213203435596423,
+      "fy": 0.21213203435596423,
+      "within_green_diamond": true,
+      "independent_chroma_within_rb_band": true,
+      "broad_promotion_bar_applicable": true,
+      "results": {
+        "mhc": {
+          "metrics": {
+            "rgb_rmse": 0.017738620040869887,
+            "chroma_rmse": 0.014955113722222734,
+            "green_mse": 0.00011706041517372725,
+            "signed_bias_rgb": [
+              -5.835604014587991e-06,
+              5.102411694364784e-07,
+              5.825733145078023e-06
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "mhc_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.008839800332942373,
+            "chroma_rmse": 0.008073767680322082,
+            "green_mse": 0.00011706041517372725,
+            "signed_bias_rgb": [
+              -2.3696640575373614e-06,
+              5.102411694364784e-07,
+              1.8317332882204173e-06
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "quincunx_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.023970192069763443,
+            "chroma_rmse": 0.02189300263164856,
+            "green_mse": 0.0008607324793381879,
+            "signed_bias_rgb": [
+              6.416045060312307e-06,
+              -1.373493836985694e-06,
+              -4.976576792053235e-06
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "coherent_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.008839799438938294,
+            "chroma_rmse": 0.008073767252461747,
+            "green_mse": 0.00011706040161201253,
+            "signed_bias_rgb": [
+              -2.3689856867731353e-06,
+              5.098761139828482e-07,
+              1.8324202823418158e-06
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        }
+      },
+      "regresses_vs": {
+        "mhc": true,
+        "mhc_cdiff": true
+      },
+      "coherent_regresses_vs": {
+        "mhc": false,
+        "mhc_cdiff": false
+      }
+    },
+    {
+      "kind": "independent-chroma",
+      "frequency": 0.3,
+      "orientation": "diag-plus",
+      "phase": 0.17,
+      "fx": 0.21213203435596423,
+      "fy": 0.21213203435596423,
+      "within_green_diamond": true,
+      "independent_chroma_within_rb_band": true,
+      "broad_promotion_bar_applicable": true,
+      "results": {
+        "mhc": {
+          "metrics": {
+            "rgb_rmse": 0.07445802561399519,
+            "chroma_rmse": 0.06836700171410638,
+            "green_mse": 0.002234934253535746,
+            "signed_bias_rgb": [
+              2.3584973848896262e-05,
+              1.9834221651156742e-05,
+              7.748471595990806e-06
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "mhc_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.07021041089631043,
+            "chroma_rmse": 0.06922144989650172,
+            "green_mse": 0.002234934253535746,
+            "signed_bias_rgb": [
+              1.9507678110658386e-05,
+              1.9834221651156742e-05,
+              -1.3344846435903032e-06
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "quincunx_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.041422260581570246,
+            "chroma_rmse": 0.050731701204109546,
+            "green_mse": 4.440892098500626e-16,
+            "signed_bias_rgb": [
+              1.0068942275312213e-05,
+              1.4901161193847656e-08,
+              -8.512607396200852e-06
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "coherent_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.07021041092572351,
+            "chroma_rmse": 0.06922144987754938,
+            "green_mse": 0.0022349342364612963,
+            "signed_bias_rgb": [
+              1.950850020404215e-05,
+              1.9834043435108514e-05,
+              -1.3350796552351964e-06
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        }
+      },
+      "regresses_vs": {
+        "mhc": false,
+        "mhc_cdiff": false
+      },
+      "coherent_regresses_vs": {
+        "mhc": false,
+        "mhc_cdiff": false
+      }
+    },
+    {
+      "kind": "neutral",
+      "frequency": 0.3,
+      "orientation": "diag-plus",
+      "phase": 1.13,
+      "fx": 0.21213203435596423,
+      "fy": 0.21213203435596423,
+      "within_green_diamond": true,
+      "independent_chroma_within_rb_band": true,
+      "broad_promotion_bar_applicable": true,
+      "results": {
+        "mhc": {
+          "metrics": {
+            "rgb_rmse": 0.01773530829832366,
+            "chroma_rmse": 0.014952487536641497,
+            "green_mse": 0.00011701436783642775,
+            "signed_bias_rgb": [
+              -5.601252785619394e-06,
+              -5.915766742862301e-07,
+              5.611376606939751e-06
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "mhc_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.008838265049151247,
+            "chroma_rmse": 0.008072515622770648,
+            "green_mse": 0.00011701436783642775,
+            "signed_bias_rgb": [
+              -1.7068412062930472e-06,
+              -5.915766742862301e-07,
+              2.332891188102004e-06
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "quincunx_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.023966026556531822,
+            "chroma_rmse": 0.021889602382347273,
+            "green_mse": 0.0008603935017960026,
+            "signed_bias_rgb": [
+              4.6087704874851085e-06,
+              1.6240598518907288e-06,
+              -6.345462881856494e-06
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "coherent_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.008838265078753944,
+            "chroma_rmse": 0.008072515940942299,
+            "green_mse": 0.00011701436582374933,
+            "signed_bias_rgb": [
+              -1.7081634543928098e-06,
+              -5.908005721407172e-07,
+              2.3315516932878966e-06
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        }
+      },
+      "regresses_vs": {
+        "mhc": true,
+        "mhc_cdiff": true
+      },
+      "coherent_regresses_vs": {
+        "mhc": false,
+        "mhc_cdiff": false
+      }
+    },
+    {
+      "kind": "independent-chroma",
+      "frequency": 0.3,
+      "orientation": "diag-plus",
+      "phase": 1.13,
+      "fx": 0.21213203435596423,
+      "fy": 0.21213203435596423,
+      "within_green_diamond": true,
+      "independent_chroma_within_rb_band": true,
+      "broad_promotion_bar_applicable": true,
+      "results": {
+        "mhc": {
+          "metrics": {
+            "rgb_rmse": 0.07431361975344893,
+            "chroma_rmse": 0.06830068232300267,
+            "green_mse": 0.002223184978471973,
+            "signed_bias_rgb": [
+              2.2703045864164093e-05,
+              4.254247027414816e-06,
+              -1.598396166055291e-05
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "mhc_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.07013236130313731,
+            "chroma_rmse": 0.06923221469769474,
+            "green_mse": 0.002223184978471973,
+            "signed_bias_rgb": [
+              2.74074608805003e-05,
+              4.254247027414816e-06,
+              -2.3508570904349104e-05
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "quincunx_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.041454321137303726,
+            "chroma_rmse": 0.05077096720894535,
+            "green_mse": 4.440892098500626e-16,
+            "signed_bias_rgb": [
+              2.2851051417765796e-05,
+              1.4901161193847656e-08,
+              -2.2541958677731915e-05
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "coherent_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.07013236145731012,
+            "chroma_rmse": 0.06923221487200684,
+            "green_mse": 0.002223184991821039,
+            "signed_bias_rgb": [
+              2.7406167376924446e-05,
+              4.2544252434630455e-06,
+              -2.3506785869414423e-05
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        }
+      },
+      "regresses_vs": {
+        "mhc": false,
+        "mhc_cdiff": false
+      },
+      "coherent_regresses_vs": {
+        "mhc": false,
+        "mhc_cdiff": false
+      }
+    },
+    {
+      "kind": "neutral",
+      "frequency": 0.3,
+      "orientation": "diag-minus",
+      "phase": 0.17,
+      "fx": 0.21213203435596423,
+      "fy": -0.21213203435596423,
+      "within_green_diamond": true,
+      "independent_chroma_within_rb_band": true,
+      "broad_promotion_bar_applicable": true,
+      "results": {
+        "mhc": {
+          "metrics": {
+            "rgb_rmse": 0.01775025908065208,
+            "chroma_rmse": 0.014964511279619591,
+            "green_mse": 0.00011721992302236655,
+            "signed_bias_rgb": [
+              6.178572176047313e-06,
+              4.990221817552308e-06,
+              6.178572176047313e-06
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "mhc_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.008845308009807243,
+            "chroma_rmse": 0.008078425165073861,
+            "green_mse": 0.00011721992302236655,
+            "signed_bias_rgb": [
+              2.082408532316302e-06,
+              4.990221817552308e-06,
+              2.082408532316302e-06
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "quincunx_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.023985126178370758,
+            "chroma_rmse": 0.02190562957034609,
+            "green_mse": 0.0008619051578038592,
+            "signed_bias_rgb": [
+              -5.64906355223538e-06,
+              -1.3527230440098562e-05,
+              -5.64906355223538e-06
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "coherent_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.008845310389655319,
+            "chroma_rmse": 0.008078427030132696,
+            "green_mse": 0.00011721998483995036,
+            "signed_bias_rgb": [
+              2.079649058021145e-06,
+              4.9921534495589175e-06,
+              2.079649058021145e-06
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        }
+      },
+      "regresses_vs": {
+        "mhc": true,
+        "mhc_cdiff": true
+      },
+      "coherent_regresses_vs": {
+        "mhc": false,
+        "mhc_cdiff": false
+      }
+    },
+    {
+      "kind": "independent-chroma",
+      "frequency": 0.3,
+      "orientation": "diag-minus",
+      "phase": 0.17,
+      "fx": 0.21213203435596423,
+      "fy": -0.21213203435596423,
+      "within_green_diamond": true,
+      "independent_chroma_within_rb_band": true,
+      "broad_promotion_bar_applicable": true,
+      "results": {
+        "mhc": {
+          "metrics": {
+            "rgb_rmse": 0.07435590547938403,
+            "chroma_rmse": 0.06831612072069358,
+            "green_mse": 0.0022276299816785155,
+            "signed_bias_rgb": [
+              -1.4441484516417538e-05,
+              8.15122836717853e-06,
+              1.5407501731389833e-05
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "mhc_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.07015230813096765,
+            "chroma_rmse": 0.06922455285352337,
+            "green_mse": 0.0022276299816785155,
+            "signed_bias_rgb": [
+              -1.5434147905052445e-05,
+              8.15122836717853e-06,
+              1.0966481410978753e-05
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "quincunx_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.041437378232488324,
+            "chroma_rmse": 0.05075021647654897,
+            "green_mse": 4.440892098500626e-16,
+            "signed_bias_rgb": [
+              -1.2800586122421571e-05,
+              1.4901161193847656e-08,
+              1.5135055384886118e-06
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "coherent_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.07015230871185775,
+            "chroma_rmse": 0.06922455335156762,
+            "green_mse": 0.002227630011256025,
+            "signed_bias_rgb": [
+              -1.5433245327001738e-05,
+              8.15065347670037e-06,
+              1.096632044164487e-05
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        }
+      },
+      "regresses_vs": {
+        "mhc": false,
+        "mhc_cdiff": false
+      },
+      "coherent_regresses_vs": {
+        "mhc": false,
+        "mhc_cdiff": false
+      }
+    },
+    {
+      "kind": "neutral",
+      "frequency": 0.3,
+      "orientation": "diag-minus",
+      "phase": 1.13,
+      "fx": 0.21213203435596423,
+      "fy": -0.21213203435596423,
+      "within_green_diamond": true,
+      "independent_chroma_within_rb_band": true,
+      "broad_promotion_bar_applicable": true,
+      "results": {
+        "mhc": {
+          "metrics": {
+            "rgb_rmse": 0.017702228844659634,
+            "chroma_rmse": 0.014926143606907876,
+            "green_mse": 0.00011655653751384679,
+            "signed_bias_rgb": [
+              2.6740771890790376e-06,
+              2.161065047537839e-06,
+              2.6740771890790376e-06
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "mhc_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.008822865233118317,
+            "chroma_rmse": 0.00805983906650301,
+            "green_mse": 0.00011655653751384679,
+            "signed_bias_rgb": [
+              8.991430801006011e-07,
+              2.161065047537839e-06,
+              8.991430801006011e-07
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "quincunx_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.023924264958527036,
+            "chroma_rmse": 0.02185522600225374,
+            "green_mse": 0.0008570270734130026,
+            "signed_bias_rgb": [
+              -2.45579989787973e-06,
+              -5.845819818384853e-06,
+              -2.45579989787973e-06
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "coherent_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.00882286471601703,
+            "chroma_rmse": 0.008059838456815063,
+            "green_mse": 0.0001165565307529547,
+            "signed_bias_rgb": [
+              8.97812208643666e-07,
+              2.1627667233531856e-06,
+              8.97812208643666e-07
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        }
+      },
+      "regresses_vs": {
+        "mhc": true,
+        "mhc_cdiff": true
+      },
+      "coherent_regresses_vs": {
+        "mhc": false,
+        "mhc_cdiff": false
+      }
+    },
+    {
+      "kind": "independent-chroma",
+      "frequency": 0.3,
+      "orientation": "diag-minus",
+      "phase": 1.13,
+      "fx": 0.21213203435596423,
+      "fy": -0.21213203435596423,
+      "within_green_diamond": true,
+      "independent_chroma_within_rb_band": true,
+      "broad_promotion_bar_applicable": true,
+      "results": {
+        "mhc": {
+          "metrics": {
+            "rgb_rmse": 0.07433692445855603,
+            "chroma_rmse": 0.06830556690085017,
+            "green_mse": 0.002226552360871083,
+            "signed_bias_rgb": [
+              1.21068255400952e-05,
+              8.726538515385287e-06,
+              -1.1073712857417119e-05
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "mhc_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.07014070858068981,
+            "chroma_rmse": 0.06922388162905245,
+            "green_mse": 0.002226552360871083,
+            "signed_bias_rgb": [
+              7.85602785554933e-06,
+              8.726538515385287e-06,
+              -1.2641191988447567e-05
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "quincunx_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.04143809061593076,
+            "chroma_rmse": 0.050751088964685144,
+            "green_mse": 4.440892098500626e-16,
+            "signed_bias_rgb": [
+              -4.831207111293887e-07,
+              1.4901161193847656e-08,
+              -1.1597869250877405e-05
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        },
+        "coherent_cdiff": {
+          "metrics": {
+            "rgb_rmse": 0.0701407072473738,
+            "chroma_rmse": 0.06922388038013404,
+            "green_mse": 0.002226552254463215,
+            "signed_bias_rgb": [
+              7.858350413081086e-06,
+              8.72553245704851e-06,
+              -1.2639918606038447e-05
+            ]
+          },
+          "sample_identity": {
+            "R": true,
+            "G": true,
+            "B": true
+          }
+        }
+      },
+      "regresses_vs": {
+        "mhc": false,
+        "mhc_cdiff": false
+      },
+      "coherent_regresses_vs": {
+        "mhc": false,
+        "mhc_cdiff": false
+      }
+    }
+  ],
+  "alias_counterexample": {
+    "green_sample_difference": 1.0547118733938987e-14,
+    "quincunx_green_output_difference": 0.0,
+    "high_truth_results": {
+      "mhc": {
+        "rgb_rmse": 0.037370806060488065,
+        "chroma_rmse": 0.05520501004656388,
+        "green_mse": 0.0005888179958727589,
+        "signed_bias_rgb": [
+          3.362936255188636e-05,
+          -5.258730164280644e-06,
+          2.532823724143299e-05
+        ]
+      },
+      "mhc_cdiff": {
+        "rgb_rmse": 0.01985873273325479,
+        "chroma_rmse": 0.018798190663306822,
+        "green_mse": 0.0005888179958727589,
+        "signed_bias_rgb": [
+          -4.788464004242862e-07,
+          -5.258730164280644e-06,
+          6.2369034384135845e-06
+        ]
+      },
+      "quincunx_cdiff": {
+        "rgb_rmse": 0.08083874535986821,
+        "chroma_rmse": 0.07652160884871115,
+        "green_mse": 0.009757020089169328,
+        "signed_bias_rgb": [
+          -1.9334342882589056e-06,
+          -2.1423149945927255e-05,
+          2.5404286628336083e-05
+        ]
+      },
+      "coherent_cdiff": {
+        "rgb_rmse": 0.019858727690537117,
+        "chroma_rmse": 0.018798185833584283,
+        "green_mse": 0.0005888177330873841,
+        "signed_bias_rgb": [
+          -4.833132994395715e-07,
+          -5.255752231603787e-06,
+          6.232436539398299e-06
+        ]
+      }
+    },
+    "low_truth_results": {
+      "mhc": {
+        "rgb_rmse": 0.017332380057184037,
+        "chroma_rmse": 0.013606943148927363,
+        "green_mse": 0.0001640683384924811,
+        "signed_bias_rgb": [
+          -6.562297197955626e-06,
+          -2.775191800829805e-06,
+          1.7388194891405694e-06
+        ]
+      },
+      "mhc_cdiff": {
+        "rgb_rmse": 0.010482706195638786,
+        "chroma_rmse": 0.009922882870278317,
+        "green_mse": 0.0001640683384924811,
+        "signed_bias_rgb": [
+          -2.493501215437312e-07,
+          -2.775191800829805e-06,
+          3.295648774063146e-06
+        ]
+      },
+      "quincunx_cdiff": {
+        "rgb_rmse": 0.01734820204920884,
+        "chroma_rmse": 0.01642173325767692,
+        "green_mse": 0.00044935232203255495,
+        "signed_bias_rgb": [
+          4.275374252487112e-07,
+          4.584797554545932e-06,
+          -5.439219904350646e-06
+        ]
+      },
+      "coherent_cdiff": {
+        "rgb_rmse": 0.01048270948303458,
+        "chroma_rmse": 0.0099228884395249,
+        "green_mse": 0.0001640684881088186,
+        "signed_bias_rgb": [
+          -2.5530598689744504e-07,
+          -2.772213868152948e-06,
+          3.2896929087094317e-06
+        ]
+      }
+    }
+  },
+  "negative_controls": {
+    "neutralized_metrics": {
+      "rgb_rmse": 0.07027691027194008,
+      "chroma_rmse": 0.08607128543280548,
+      "green_mse": 0.0,
+      "signed_bias_rgb": [
+        -0.04778513146771325,
+        0.0,
+        0.05038018917871846
+      ]
+    },
+    "same_amplitude_wrong_phase_metrics": {
+      "rgb_rmse": 0.06787159575270584,
+      "chroma_rmse": 0.08312538881128963,
+      "green_mse": 0.0,
+      "signed_bias_rgb": [
+        0.0011688503954145643,
+        0.0,
+        0.002369181356496281
+      ]
+    },
+    "damaged_known_sample_identity": {
+      "R": false,
+      "G": true,
+      "B": true
+    }
+  },
+  "flat_summary": {
+    "mhc": {
+      "rgb_rmse": 0.011070215455870842,
+      "chroma_rmse": 0.009494608975721066,
+      "green_mse": 7.627651248359999e-05
+    },
+    "mhc_cdiff": {
+      "rgb_rmse": 0.009900086881917847,
+      "chroma_rmse": 0.007181808373871283,
+      "green_mse": 7.627651248359999e-05
+    },
+    "quincunx_cdiff": {
+      "rgb_rmse": 0.010343267481742737,
+      "chroma_rmse": 0.011201592672754682,
+      "green_mse": 6.461947171791873e-05
+    },
+    "coherent_cdiff": {
+      "rgb_rmse": 0.009899119683649564,
+      "chroma_rmse": 0.0072181759526876174,
+      "green_mse": 7.591213280174924e-05
+    }
+  },
+  "sources": {
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\quincunx-chroma.py": "9e8fe10dd89b54924513b1f42b212609a9586f1da72e7a7eda499225ee18b9aa",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\M95-demosaic\\src\\m95dem.py": "12639cc3e76b8ed95952d45e78a6b1f6e72bee1729119902e9e93ec2b304f466",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\coherent-chroma.py": "c1a91bb4ae35587fde7ce7fe44b7e33265a895545836a636d7a929d4f6432447"
+  },
+  "cpu_seconds": 0.828125,
+  "scope": "Analytic operator comparison only; no RAW reads, sensor calibration validation, or image-quality claim from noise alone.",
+  "coherent_broad_promotion_pass": false,
+  "coherent_predefined_bar_failures": [
+    {
+      "kind": "independent-chroma",
+      "frequency": 0.08,
+      "orientation": "diag-plus",
+      "phase": 0.17,
+      "regresses_vs": {
+        "mhc": true,
+        "mhc_cdiff": false
+      },
+      "rmse": {
+        "mhc": 0.00902868917133666,
+        "mhc_cdiff": 0.012171405720225492,
+        "quincunx_cdiff": 0.00432864768726004,
+        "coherent_cdiff": 0.012171405988170615
+      }
+    },
+    {
+      "kind": "independent-chroma",
+      "frequency": 0.08,
+      "orientation": "diag-plus",
+      "phase": 1.13,
+      "regresses_vs": {
+        "mhc": true,
+        "mhc_cdiff": false
+      },
+      "rmse": {
+        "mhc": 0.009027329955236706,
+        "mhc_cdiff": 0.012168834043109495,
+        "quincunx_cdiff": 0.004327575911355419,
+        "coherent_cdiff": 0.012168835083525936
+      }
+    },
+    {
+      "kind": "independent-chroma",
+      "frequency": 0.08,
+      "orientation": "diag-minus",
+      "phase": 0.17,
+      "regresses_vs": {
+        "mhc": true,
+        "mhc_cdiff": false
+      },
+      "rmse": {
+        "mhc": 0.009027284291086476,
+        "mhc_cdiff": 0.01216923032788936,
+        "quincunx_cdiff": 0.004327854873730285,
+        "coherent_cdiff": 0.012169230169298346
+      }
+    },
+    {
+      "kind": "independent-chroma",
+      "frequency": 0.08,
+      "orientation": "diag-minus",
+      "phase": 1.13,
+      "regresses_vs": {
+        "mhc": true,
+        "mhc_cdiff": false
+      },
+      "rmse": {
+        "mhc": 0.009026980109397006,
+        "mhc_cdiff": 0.012168877560523993,
+        "quincunx_cdiff": 0.004327760332885265,
+        "coherent_cdiff": 0.012168877187793232
+      }
+    },
+    {
+      "kind": "independent-chroma",
+      "frequency": 0.2,
+      "orientation": "diag-plus",
+      "phase": 0.17,
+      "regresses_vs": {
+        "mhc": true,
+        "mhc_cdiff": false
+      },
+      "rmse": {
+        "mhc": 0.04564354256056091,
+        "mhc_cdiff": 0.051605347803519684,
+        "quincunx_cdiff": 0.023022931112544744,
+        "coherent_cdiff": 0.05160534692723322
+      }
+    },
+    {
+      "kind": "independent-chroma",
+      "frequency": 0.2,
+      "orientation": "diag-plus",
+      "phase": 1.13,
+      "regresses_vs": {
+        "mhc": true,
+        "mhc_cdiff": false
+      },
+      "rmse": {
+        "mhc": 0.04565061654978652,
+        "mhc_cdiff": 0.051603190377418756,
+        "quincunx_cdiff": 0.023016475606807883,
+        "coherent_cdiff": 0.05160319030967825
+      }
+    },
+    {
+      "kind": "independent-chroma",
+      "frequency": 0.2,
+      "orientation": "diag-minus",
+      "phase": 0.17,
+      "regresses_vs": {
+        "mhc": true,
+        "mhc_cdiff": false
+      },
+      "rmse": {
+        "mhc": 0.04563959721445352,
+        "mhc_cdiff": 0.051600395610464714,
+        "quincunx_cdiff": 0.023020250753338068,
+        "coherent_cdiff": 0.05160039355435911
+      }
+    },
+    {
+      "kind": "independent-chroma",
+      "frequency": 0.2,
+      "orientation": "diag-minus",
+      "phase": 1.13,
+      "regresses_vs": {
+        "mhc": true,
+        "mhc_cdiff": false
+      },
+      "rmse": {
+        "mhc": 0.0456369574668612,
+        "mhc_cdiff": 0.05159835276862775,
+        "quincunx_cdiff": 0.023019750482906984,
+        "coherent_cdiff": 0.05159835261153532
+      }
+    }
+  ],
+  "frozen_prior_inputs_and_results_identical": true,
+  "coherent_rb_green_intervention_change": 0.8008124828338623
+}

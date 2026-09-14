@@ -1,0 +1,33 @@
+{
+  "regions": [
+    {
+      "name": "checker-middle",
+      "x": 2650,
+      "y": 2570,
+      "width": 384,
+      "height": 384
+    },
+    {
+      "name": "checker-upper",
+      "x": 2700,
+      "y": 1930,
+      "width": 384,
+      "height": 384
+    },
+    {
+      "name": "checker-edge",
+      "x": 2210,
+      "y": 2440,
+      "width": 384,
+      "height": 384
+    },
+    {
+      "name": "white",
+      "x": 3200,
+      "y": 1600,
+      "width": 384,
+      "height": 384
+    }
+  ],
+  "display": "sRGB16 to8 floor(*255/65535), native sampling"
+}

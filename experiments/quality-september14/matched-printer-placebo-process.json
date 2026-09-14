@@ -1,0 +1,90 @@
+{
+  "command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\matched-source-build-1\\cli-tests.exe",
+    "merge_cmd::matched_source_tests::matched_source_actual_consumer",
+    "--exact",
+    "--ignored",
+    "--nocapture",
+    "--test-threads=1"
+  ],
+  "exit_code": 0,
+  "error": null,
+  "cleanup_errors": [],
+  "wall_seconds": 40.51600000000326,
+  "log_bytes": 21954,
+  "job_accounting": {
+    "total_user_100ns": 1484843750,
+    "total_kernel_100ns": 102187500,
+    "total_cpu_100ns": 1587031250,
+    "total_page_fault_count": 14874708,
+    "total_processes": 2,
+    "active_processes": 0,
+    "total_terminated_processes": 0
+  },
+  "job_memory": {
+    "peak_process_memory_used_bytes": 3440857088,
+    "peak_job_memory_used_bytes": 3442077696
+  },
+  "terminal_job_accounting": true,
+  "configured_job_limits": {
+    "flags": 8704,
+    "committed_bytes": 17179869184
+  },
+  "direct_exit_observed": true,
+  "pipe_eof_observed": true,
+  "post_exit_drain": {
+    "initial_accounting": {
+      "total_user_100ns": 1484843750,
+      "total_kernel_100ns": 102187500,
+      "total_cpu_100ns": 1587031250,
+      "total_page_fault_count": 14874708,
+      "total_processes": 2,
+      "active_processes": 0,
+      "total_terminated_processes": 0
+    },
+    "last_accounting": {
+      "total_user_100ns": 1484843750,
+      "total_kernel_100ns": 102187500,
+      "total_cpu_100ns": 1587031250,
+      "total_page_fault_count": 14874708,
+      "total_processes": 2,
+      "active_processes": 0,
+      "total_terminated_processes": 0
+    },
+    "observations": [
+      {
+        "wall_seconds": 40.51600000000326,
+        "accounting": {
+          "total_user_100ns": 1484843750,
+          "total_kernel_100ns": 102187500,
+          "total_cpu_100ns": 1587031250,
+          "total_page_fault_count": 14874708,
+          "total_processes": 2,
+          "active_processes": 0,
+          "total_terminated_processes": 0
+        }
+      }
+    ],
+    "observation_count": 1,
+    "completed": true,
+    "started_wall_seconds": 40.51600000000326,
+    "ended_wall_seconds": 40.51600000000326
+  },
+  "termination": {
+    "attempted": false,
+    "before_accounting": null,
+    "succeeded": false
+  },
+  "limits": {
+    "wall_seconds": 600,
+    "cpu_seconds": 3600,
+    "log_bytes": 4194304,
+    "committed_bytes": 17179869184
+  },
+  "scope": "owned job tree; committed memory, observed user+kernel CPU; not RSS or a timing benchmark",
+  "log": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\matched-printer-placebo.log",
+    "sha256": "f07c303f4d9eca283735dea7c50eab7cea0c78d9ec338775b7c60b17ce326c01",
+    "bytes": 21954
+  }
+}

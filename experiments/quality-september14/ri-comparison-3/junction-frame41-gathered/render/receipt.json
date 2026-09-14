@@ -1,0 +1,67 @@
+{
+  "baseline_differing_u16_samples": 0,
+  "configuration": {
+    "baseline_rgb": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\matched-printer-on-1\\junction-frame41-gathered-mhc-camera-rgb.f32",
+    "baseline_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\matched-printer-on-1\\junction-frame41-gathered.tiff",
+    "candidates": [
+      {
+        "name": "residual-interpolation",
+        "rgb": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\ri-comparison-3\\junction-frame41-gathered\\residual-interpolation-camera-rgb.f32"
+      }
+    ],
+    "height": 392,
+    "out": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\ri-comparison-3\\junction-frame41-gathered\\render",
+    "receipt": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\matched-printer-on-1\\receipt.json",
+    "width": 392,
+    "xyz_to_cam": [
+      [
+        0.746,
+        -0.2365,
+        -0.0588
+      ],
+      [
+        -0.5687,
+        1.3442,
+        0.2474
+      ],
+      [
+        -0.0624,
+        0.1156,
+        0.6584
+      ]
+    ]
+  },
+  "outputs": [
+    "mhc",
+    "residual-interpolation"
+  ],
+  "scope": "saved camera RGB through actual develop_pixel; no RAW decode, gather, merge or tone remeasurement",
+  "status": "BASELINE_PIXELS_EXACT",
+  "tone_bits": [
+    1007430213,
+    1052234675,
+    1057803469
+  ],
+  "wb_bits": [
+    1070374912,
+    1065353216,
+    1076715520
+  ],
+  "xyz_to_cam_bits": [
+    [
+      1061091803,
+      3195153678,
+      3178289221
+    ],
+    [
+      3205600851,
+      1068240575,
+      1048401517
+    ],
+    [
+      3179255588,
+      1038925745,
+      1059622119
+    ]
+  ]
+}

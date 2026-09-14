@@ -1,0 +1,22 @@
+{
+  "algorithm": "RI",
+  "sigma_spatial": 1,
+  "guided_eps": 0,
+  "reference_scale": 255,
+  "clip_adaptation": "all reference [0,255] clips disabled",
+  "boundary_adaptation": "parity-preserving reflect-pad32 before RI, crop32 after; every returned site guarded",
+  "pre_restore_max_error_reference_units_rgb": [
+    7.62939453125e-06,
+    0.0,
+    7.62939453125e-06
+  ],
+  "roundoff_bound_reference_units": 0.001340473652817309,
+  "restored_sample_count_rgb": [
+    1409,
+    0,
+    154
+  ],
+  "known_samples_bit_exact": true,
+  "dtype": "float32",
+  "trim": 32
+}

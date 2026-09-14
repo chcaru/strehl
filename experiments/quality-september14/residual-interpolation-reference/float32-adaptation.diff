@@ -1,0 +1,364 @@
+--- source/demosaic_RI.py
++++ float32-ri/demosaic_RI.py
+@@ -1,3 +1,4 @@
++# Adapted locally: explicit f32 constructors; published clips disabled for RAW headroom.
+ import numpy as np
+ from mosaic_bayer import mosaic_bayer
+ from RIgreen_interpolation import green_interpolation
+@@ -34,7 +35,7 @@
+ 
+     # result image
+     rgb_size = mosaic.shape
+-    rgb_dem = np.zeros((rgb_size[0], rgb_size[1], 3))
++    rgb_dem = np.zeros((rgb_size[0], rgb_size[1], 3), dtype=np.float32)
+     rgb_dem[:, :, 0] = red
+     rgb_dem[:, :, 1] = green
+     rgb_dem[:, :, 2] = blue
+--- source/mosaic_bayer.py
++++ float32-ri/mosaic_bayer.py
+@@ -1,3 +1,4 @@
++# Adapted locally: explicit f32 constructors; published clips disabled for RAW headroom.
+ import numpy as np
+ 
+ 
+@@ -6,7 +7,7 @@
+     generate a mosaic from a rgb image
+     pattern can be: 'grbg', 'rggb', 'gbrg', 'bggr'
+     """
+-    num = np.zeros(len(pattern))
++    num = np.zeros(len(pattern), dtype=np.float32)
+     pattern_list = list(pattern)
+     p = pattern_list.index('r')
+     num[p] = 0
+@@ -16,7 +17,7 @@
+     num[p] = 2
+ 
+     size_rgb = rgb.shape
+-    mask = np.zeros((size_rgb[0], size_rgb[1], 3))
++    mask = np.zeros((size_rgb[0], size_rgb[1], 3), dtype=np.float32)
+ 
+     # Generate mask
+     mask[0::2, 0::2, int(num[0])] = 1
+@@ -37,10 +38,10 @@
+     returns:  maskGr, maskGb, maskR, maskB
+     """
+     size_rawq = mosaic.shape
+-    maskGr = np.zeros((size_rawq[0], size_rawq[1]))
+-    maskGb = np.zeros((size_rawq[0], size_rawq[1]))
+-    maskR  = np.zeros((size_rawq[0], size_rawq[1]))
+-    maskB  = np.zeros((size_rawq[0], size_rawq[1]))
++    maskGr = np.zeros((size_rawq[0], size_rawq[1]), dtype=np.float32)
++    maskGb = np.zeros((size_rawq[0], size_rawq[1]), dtype=np.float32)
++    maskR  = np.zeros((size_rawq[0], size_rawq[1]), dtype=np.float32)
++    maskB  = np.zeros((size_rawq[0], size_rawq[1]), dtype=np.float32)
+ 
+     if pattern == 'grbg':
+         maskGr[0::2, 0::2] = 1
+--- source/RIgreen_interpolation.py
++++ float32-ri/RIgreen_interpolation.py
+@@ -1,3 +1,4 @@
++# Adapted locally: explicit f32 constructors; published clips disabled for RAW headroom.
+ import numpy as np
+ from RIHaResidual import haresidual  # used by GBTF
+ from RIGuidefilterResidual import GuidefilterResidual  # used by RI, MLRI, and WMLRI
+@@ -13,24 +14,24 @@
+     sigma is ignored by GBTF 
+     """
+     if Algorithm == 'GBTF':
+-        Ke = np.array([[0, 0, 0, 0, 26, 24, 21, 17, 12]]) / 100
+-        Kw = np.array([[12, 17, 21, 24, 26, 0, 0, 0, 0]]) / 100
++        Ke = np.array([[0, 0, 0, 0, 26, 24, 21, 17, 12]], dtype=np.float32) / 100
++        Kw = np.array([[12, 17, 21, 24, 26, 0, 0, 0, 0]], dtype=np.float32) / 100
+     elif Algorithm == 'RI':
+         h = getGaussianKernel(9, sigma).T
+-        Ke = np.array([[0, 0, 0, 0, 1, 1, 1, 1, 1]]) * h
+-        Kw = np.array([[1, 1, 1, 1, 1, 0, 0, 0, 0]]) * h
++        Ke = np.array([[0, 0, 0, 0, 1, 1, 1, 1, 1]], dtype=np.float32) * h
++        Kw = np.array([[1, 1, 1, 1, 1, 0, 0, 0, 0]], dtype=np.float32) * h
+         Ke = Ke / np.sum(Ke, 1)
+         Kw = Kw / np.sum(Kw, 1)
+     elif Algorithm == 'MLRI':
+         h = getGaussianKernel(9, sigma).T
+-        Ke = np.array([[0, 0, 0, 0, 1, 1, 1, 1, 1]]) * h
+-        Kw = np.array([[1, 1, 1, 1, 1, 0, 0, 0, 0]]) * h
++        Ke = np.array([[0, 0, 0, 0, 1, 1, 1, 1, 1]], dtype=np.float32) * h
++        Kw = np.array([[1, 1, 1, 1, 1, 0, 0, 0, 0]], dtype=np.float32) * h
+         Ke = Ke / np.sum(Ke, 1)
+         Kw = Kw / np.sum(Kw, 1)
+     elif Algorithm == 'WMLRI':
+         h = getGaussianKernel(9, sigma).T
+-        Ke = np.array([[0, 0, 0, 0, 1, 1, 1, 1, 1]]) * h
+-        Kw = np.array([[1, 1, 1, 1, 1, 0, 0, 0, 0]]) * h
++        Ke = np.array([[0, 0, 0, 0, 1, 1, 1, 1, 1]], dtype=np.float32) * h
++        Kw = np.array([[1, 1, 1, 1, 1, 0, 0, 0, 0]], dtype=np.float32) * h
+         Ke = Ke / np.sum(Ke, 1)
+         Kw = Kw / np.sum(Kw, 1)
+ 
+@@ -50,23 +51,23 @@
+     """    
+     if Algorithm == 'GBTF':
+         K = np.multiply(getGaussianKernel(5, 2), (getGaussianKernel(5, 2)).T)
+-        Kw = np.array([[1, 0, 0]])
+-        Ke = np.array([[0, 0, 1]])
++        Kw = np.array([[1, 0, 0]], dtype=np.float32)
++        Ke = np.array([[0, 0, 1]], dtype=np.float32)
+     elif Algorithm == "RI":
+-        K = np.ones((5, 5))
+-        Kw = np.array([[1, 0, 0, 0, 0]])
+-        Ke = np.array([[0, 0, 0, 0, 1]])
++        K = np.ones((5, 5), dtype=np.float32)
++        Kw = np.array([[1, 0, 0, 0, 0]], dtype=np.float32)
++        Ke = np.array([[0, 0, 0, 0, 1]], dtype=np.float32)
+         # 3-tap filters also work quite well
+         #Kw = np.array([[1, 0, 0, 0, 0]])
+         #Ke = np.array([[0, 0, 0, 0, 1]])
+     elif Algorithm == "MLRI":
+-        K = np.ones((3, 3))
+-        Kw = np.array([[1, 0, 0]])
+-        Ke = np.array([[0, 0, 1]])
++        K = np.ones((3, 3), dtype=np.float32)
++        Kw = np.array([[1, 0, 0]], dtype=np.float32)
++        Ke = np.array([[0, 0, 1]], dtype=np.float32)
+     elif Algorithm == "WMLRI":
+         K = np.multiply(getGaussianKernel(5, 2), (getGaussianKernel(5, 2)).T)
+-        Kw = np.array([[1, 0, 0]])
+-        Ke = np.array([[0, 0, 1]])
++        Kw = np.array([[1, 0, 0]], dtype=np.float32)
++        Ke = np.array([[0, 0, 1]], dtype=np.float32)
+ 
+     wh = filter2D(difh2, K)
+     wv = filter2D(difv2, K)
+@@ -140,6 +141,6 @@
+     green = green * (1-mask[:, :, 1]) + rawq * mask[:, :, 1]
+ 
+     # clip to 0-255
+-    green = np.clip(green, 0, 255)
++    green = green
+ 
+     return green, dif
+--- source/RIGuidefilterResidual.py
++++ float32-ri/RIGuidefilterResidual.py
+@@ -1,3 +1,4 @@
++# Adapted locally: explicit f32 constructors; published clips disabled for RAW headroom.
+ import numpy as np
+ from RIguidedfilter3gf import guidedfilter3gf
+ from filtertools import filter2D
+@@ -30,7 +31,7 @@
+     #Guiderv = mosaic[:, :, 0] + filter2D(mosaic[:, :, 0], Kv)  
+     #Guidegv = mosaic[:, :, 1] + filter2D(mosaic[:, :, 1], Kv)  
+     #Guidebv = mosaic[:, :, 2] + filter2D(mosaic[:, :, 2], Kv)  
+-    Kh = np.array([[1/2, 0, 1/2]])
++    Kh = np.array([[1/2, 0, 1/2]], dtype=np.float32)
+     Kv = Kh.T
+     rawh = filter2D(rawq, Kh)
+     rawv = filter2D(rawq, Kv)
+@@ -59,7 +60,7 @@
+         v = 3
+ 
+     eps = 0
+-    F = np.array([[-1, 0, 2, 0, -1]])
++    F = np.array([[-1, 0, 2, 0, -1]], dtype=np.float32)
+     FT = F.T
+ 
+     # apply the guided filtering algorithm to each directional inteprolation
+@@ -73,14 +74,14 @@
+     tentativeGbv = guidedfilter3gf(Guidebv, mosaic[:, :, 1] * maskGr, maskGr, v, h, eps, Algorithm, FT)
+     tentativeBv  = guidedfilter3gf(Guidegv, mosaic[:, :, 2]         , maskB , v, h, eps, Algorithm, FT)
+ 
+-    tentativeGrh = np.clip(tentativeGrh, 0, 255)
+-    tentativeGrv = np.clip(tentativeGrv, 0, 255)
+-    tentativeGbh = np.clip(tentativeGbh, 0, 255)
+-    tentativeGbv = np.clip(tentativeGbv, 0, 255)
+-    tentativeRh = np.clip(tentativeRh, 0, 255)
+-    tentativeRv = np.clip(tentativeRv, 0, 255)
+-    tentativeBh = np.clip(tentativeBh, 0, 255)
+-    tentativeBv = np.clip(tentativeBv, 0, 255)
++    tentativeGrh = tentativeGrh
++    tentativeGrv = tentativeGrv
++    tentativeGbh = tentativeGbh
++    tentativeGbv = tentativeGbv
++    tentativeRh = tentativeRh
++    tentativeRv = tentativeRv
++    tentativeBh = tentativeBh
++    tentativeBv = tentativeBv
+ 
+     # residual
+     residualGrh = (mosaic[:, :, 1] - tentativeGrh) * maskGr
+@@ -113,14 +114,14 @@
+     Rv = (tentativeRv + residualRv) * maskGb
+     Bv = (tentativeBv + residualBv) * maskGr
+ 
+-    Grh = np.clip(Grh, 0, 255)
+-    Grv = np.clip(Grv, 0, 255)
+-    Gbh = np.clip(Gbh, 0, 255)
+-    Gbv = np.clip(Gbv, 0, 255)
+-    Rh = np.clip(Rh, 0, 255)
+-    Rv = np.clip(Rv, 0, 255)
+-    Bh = np.clip(Bh, 0, 255)
+-    Bv = np.clip(Bv, 0, 255)
++    Grh = Grh
++    Grv = Grv
++    Gbh = Gbh
++    Gbv = Gbv
++    Rh = Rh
++    Rv = Rv
++    Bh = Bh
++    Bv = Bv
+ 
+     # vertical and horizontal color difference
+     difh = mosaic[:, :, 1] + Grh + Gbh - mosaic[:, :, 0] - mosaic[:, :, 2] - Rh - Bh
+@@ -129,7 +130,7 @@
+ 
+     ###  Combine Vertical and Horizontal Color Differences ###
+     # color difference gradient
+-    Kh = np.array([[1, 0, -1]])
++    Kh = np.array([[1, 0, -1]], dtype=np.float32)
+     Kv = Kh.T
+     difh2 = abs(filter2D(difh, Kh))
+     difv2 = abs(filter2D(difv, Kv))
+--- source/RIguidedfilter3gf.py
++++ float32-ri/RIguidedfilter3gf.py
+@@ -1,3 +1,4 @@
++# Adapted locally: explicit f32 constructors; published clips disabled for RAW headroom.
+ ##### GuidedFilter ##################################################################
+ # This functions implements Algorithm 11
+ #
+@@ -31,7 +32,7 @@
+         q: filtered version of p 
+     """   
+     # threshold parameter
+-    th = 0.00001 * 255 * 255
++    th = np.float32(0.00001) * np.float32(255) * np.float32(255)
+ 
+     # Image size
+     I_size = I.shape
+@@ -86,7 +87,7 @@
+ 
+     else:
+         # The size of each local patch; N=(2h+1)*(2v+1) except for boundary pixels.
+-        N2 = boxFilter(np.ones((I_size[0], I_size[1])), boxsz)
++        N2 = boxFilter(np.ones((I_size[0], I_size[1]), dtype=np.float32), boxsz)
+ 
+         mean_a = boxFilter(a, boxsz) / N2
+         mean_b = boxFilter(b, boxsz) / N2
+--- source/RIred_interpolation.py
++++ float32-ri/RIred_interpolation.py
+@@ -1,3 +1,4 @@
++# Adapted locally: explicit f32 constructors; published clips disabled for RAW headroom.
+ import numpy as np
+ from RIguidedfilter3gf import guidedfilter3gf
+ from filtertools import filter2D
+@@ -29,8 +30,8 @@
+                         [0, 0, 0, 0, 0, 0, 0], 
+                         [-1, 0, 10, 0, 10, 0, -1], 
+                         [0, 0, 0, 0, 0, 0, 0],
+-                        [0, 0, -1, 0, -1, 0, 0]]) / 32
+-        Aknl = np.array([[0, 1, 0], [1, 0, 1], [0, 1, 0]]) / 4
++                        [0, 0, -1, 0, -1, 0, 0]], dtype=np.float32) / 32
++        Aknl = np.array([[0, 1, 0], [1, 0, 1], [0, 1, 0]], dtype=np.float32) / 4
+ 
+         # this line corresponds to line 4 of Algorithm 4
+         red = mosaic[:, :, 0] + mask[:, :, 2] * (green - filter2D(dif, Prb))
+@@ -45,17 +46,17 @@
+                       [0, 0, 0, 0, 0], 
+                       [-1, 0, 4, 0, -1], 
+                       [0, 0, 0, 0, 0], 
+-                      [0, 0, -1, 0, 0]])
+-        H = np.array([[1/4, 1/2, 1/4], [1/2, 1, 1/2], [1/4, 1/2, 1/4]])
++                      [0, 0, -1, 0, 0]], dtype=np.float32)
++        H = np.array([[1/4, 1/2, 1/4], [1/2, 1, 1/2], [1/4, 1/2, 1/4]], dtype=np.float32)
+         
+         tentativeR = guidedfilter3gf(green, mosaic[:, :, 0], mask[:, :, 0], h, v, eps, Algorithm, F)
+-        tentativeR = np.clip(tentativeR, 0, 255)
++        tentativeR = tentativeR
+         residualR = mask[:, :, 0] * (mosaic[:, :, 0] - tentativeR)
+         residualR = filter2D(residualR, H)
+         red = residualR + tentativeR
+ 
+     # R interpolation
+-    red = np.clip(red, 0, 255)
++    red = red
+ 
+     return red
+ 
+--- source/RIblue_interpolation.py
++++ float32-ri/RIblue_interpolation.py
+@@ -1,3 +1,4 @@
++# Adapted locally: explicit f32 constructors; published clips disabled for RAW headroom.
+ import numpy as np
+ from RIguidedfilter3gf import guidedfilter3gf
+ from filtertools import filter2D
+@@ -28,8 +29,8 @@
+                         [0, 0, 0, 0, 0, 0, 0], 
+                         [-1, 0, 10, 0, 10, 0, -1], 
+                         [0, 0, 0, 0, 0, 0, 0],
+-                        [0, 0, -1, 0, -1, 0, 0]]) / 32
+-        Aknl = np.array([[0, 1, 0], [1, 0, 1], [0, 1, 0]]) / 4
++                        [0, 0, -1, 0, -1, 0, 0]], dtype=np.float32) / 32
++        Aknl = np.array([[0, 1, 0], [1, 0, 1], [0, 1, 0]], dtype=np.float32) / 4
+ 
+         blue = mosaic[:, :, 2] + mask[:, :, 0] * (green - filter2D(dif, Prb))
+         tempimg = mosaic[:, :, 1] - mask[:, :, 1] * filter2D(green, Aknl)\
+@@ -42,17 +43,17 @@
+                       [0, 0, 0, 0, 0], 
+                       [-1, 0, 4, 0, -1], 
+                       [0, 0, 0, 0, 0], 
+-                      [0, 0, -1, 0, 0]])
+-        H = np.array([[1/4, 1/2, 1/4], [1/2, 1, 1/2], [1/4, 1/2, 1/4]])
++                      [0, 0, -1, 0, 0]], dtype=np.float32)
++        H = np.array([[1/4, 1/2, 1/4], [1/2, 1, 1/2], [1/4, 1/2, 1/4]], dtype=np.float32)
+ 
+         tentativeB = guidedfilter3gf(green, mosaic[:, :, 2], mask[:, :, 2], h, v, eps, Algorithm, F)
+-        tentativeB = np.clip(tentativeB, 0, 255)
++        tentativeB = tentativeB
+         residualB = mask[:, :, 2] * (mosaic[:, :, 2] - tentativeB)
+         residualB = filter2D(residualB, H)
+         blue = residualB + tentativeB
+ 
+     # blue interpolation
+-    blue = np.clip(blue, 0, 255)
++    blue = blue
+ 
+     return blue
+ 
+--- source/RIHaResidual.py
++++ float32-ri/RIHaResidual.py
+@@ -1,3 +1,4 @@
++# Adapted locally: explicit f32 constructors; published clips disabled for RAW headroom.
+ import numpy as np
+ from filtertools import filter2D
+ 
+@@ -10,7 +11,7 @@
+     """
+     # (1st step of GBTF: HA interpolation - line 11)
+     # The filter f is:  1/2 K_H - 1/4 Delta_H 
+-    f = np.array([[-1/4, 1/2, 1/2, 1/2, -1/4]])
++    f = np.array([[-1/4, 1/2, 1/2, 1/2, -1/4]], dtype=np.float32)
+     rawh = filter2D(rawq, f)
+     rawv = filter2D(rawq, f.T)
+ 
+@@ -38,9 +39,9 @@
+ 
+     ### Combine Vertical and Horizontal Color Differences ###
+     # color difference gradient (first half of 3rd step of GBTF)
+-    Kh = np.array([[1, 0, -1]])
++    Kh = np.array([[1, 0, -1]], dtype=np.float32)
+     Kv = Kh.T
+-    AvK = np.array([[1, 1, 1]])
++    AvK = np.array([[1, 1, 1]], dtype=np.float32)
+     difh2 = filter2D ( abs(filter2D(difh, Kh)), AvK.T )
+     difv2 = filter2D ( abs(filter2D(difv, Kv)), AvK   )
+ 
+--- source/filtertools.py
++++ float32-ri/filtertools.py
+@@ -1,3 +1,4 @@
++# Adapted locally: explicit f32 constructors; published clips disabled for RAW headroom.
+ import cv2
+ 
+ 
+@@ -21,4 +22,4 @@
+     """
+     returns a 1d Gaussian kernel with standard deviation sigma and support sz 
+     """
+-    return cv2.getGaussianKernel(sz, sigma)
++    return cv2.getGaussianKernel(sz, sigma, ktype=cv2.CV_32F)

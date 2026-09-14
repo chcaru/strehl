@@ -1,0 +1,14 @@
+{
+  "status": "MATCHED_SOURCE_REPLAYED",
+  "replay": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\matched-printer-on-1\\replay.tiff",
+    "sha256": "29c2028c25bcafb25d4f1c3105de7b1f91abfdae1035cec154bd0c01242a08a6",
+    "bytes": 187147496
+  },
+  "patches": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\matched-printer-on-1\\receipt.json",
+    "sha256": "e903af1a9858d91baf6dc56a196bfd593f5dabad8d137c755a9e0a5a186e7a5d",
+    "bytes": 6189
+  },
+  "original_metadata_unchanged": true
+}

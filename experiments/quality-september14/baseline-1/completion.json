@@ -1,0 +1,14 @@
+{
+  "status": "BASELINE_RENDERED",
+  "map": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\baseline-1\\printer.warpmap.txt",
+    "sha256": "420883f6cda294fa3cd3205d52c4634e5cd72313d7d81e7d0615b527e9c6b3ee",
+    "bytes": 14610
+  },
+  "image": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\baseline-1\\printer.tiff",
+    "sha256": "a5ad3db382e89da97431fa2baa93aca61590ce4b582abacdf1ed3c516f8847d8",
+    "bytes": 187147490
+  },
+  "original_metadata_unchanged": true
+}

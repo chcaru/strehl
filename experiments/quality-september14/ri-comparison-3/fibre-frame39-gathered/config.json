@@ -1,0 +1,31 @@
+{
+  "receipt": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\matched-printer-on-1\\receipt.json",
+  "width": 308,
+  "height": 308,
+  "baseline_rgb": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\matched-printer-on-1\\fibre-frame39-gathered-mhc-camera-rgb.f32",
+  "baseline_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\matched-printer-on-1\\fibre-frame39-gathered.tiff",
+  "out": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\ri-comparison-3\\fibre-frame39-gathered\\render",
+  "candidates": [
+    {
+      "name": "residual-interpolation",
+      "rgb": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\ri-comparison-3\\fibre-frame39-gathered\\residual-interpolation-camera-rgb.f32"
+    }
+  ],
+  "xyz_to_cam": [
+    [
+      0.746,
+      -0.2365,
+      -0.0588
+    ],
+    [
+      -0.5687,
+      1.3442,
+      0.2474
+    ],
+    [
+      -0.0624,
+      0.1156,
+      0.6584
+    ]
+  ]
+}

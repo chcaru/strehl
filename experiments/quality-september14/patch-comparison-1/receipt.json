@@ -1,0 +1,59 @@
+{
+  "records": [
+    {
+      "stage": "raw",
+      "command": [
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\patch-render-build-2\\saved-rgb-render.exe",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\patch-comparison-1\\pale-circuit-frame149-raw\\config.json"
+      ],
+      "baseline_exact": true,
+      "shape": [
+        392,
+        392
+      ],
+      "trim": 8,
+      "reference_output_origin": [
+        1074,
+        934
+      ],
+      "display": "actual product sRGB16, floor(code*255/65535), trim8, no spatial resampling"
+    },
+    {
+      "stage": "gathered",
+      "command": [
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\patch-render-build-2\\saved-rgb-render.exe",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\patch-comparison-1\\pale-circuit-frame149-gathered\\config.json"
+      ],
+      "baseline_exact": true,
+      "shape": [
+        392,
+        392
+      ],
+      "trim": 8,
+      "reference_output_origin": [
+        1074,
+        934
+      ],
+      "display": "actual product sRGB16, floor(code*255/65535), trim8, no spatial resampling"
+    },
+    {
+      "stage": "merged",
+      "command": [
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\patch-render-build-2\\saved-rgb-render.exe",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\patch-comparison-1\\pale-circuit-frame149-merged\\config.json"
+      ],
+      "baseline_exact": true,
+      "shape": [
+        392,
+        392
+      ],
+      "trim": 8,
+      "reference_output_origin": [
+        1074,
+        934
+      ],
+      "display": "actual product sRGB16, floor(code*255/65535), trim8, no spatial resampling"
+    }
+  ],
+  "scope": "bounded saved-patch candidates; no RAW decode or full merge changes"
+}

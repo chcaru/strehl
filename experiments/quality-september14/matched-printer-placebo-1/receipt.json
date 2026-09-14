@@ -1,0 +1,138 @@
+{
+  "configuration": {
+    "dir": "D:\\personal\\macro\\requests\\misc-diagnostic\\3d-printer-piece-cpl",
+    "frames": 105,
+    "map": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\baseline-1\\printer.warpmap.txt",
+    "observe": true,
+    "out": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\matched-printer-placebo-1",
+    "regions": [
+      {
+        "frame": 39,
+        "height": 300,
+        "name": "surface-placebo",
+        "width": 300,
+        "x": 1150,
+        "y": 1300
+      }
+    ],
+    "tone": {
+      "black": 0.008555,
+      "contrast": 0.55,
+      "white": 0.359037
+    }
+  },
+  "crop_quad_xywh": [
+    48,
+    32,
+    3420,
+    2280
+  ],
+  "gathered_count": 1,
+  "levels": [
+    512.0,
+    15360.0
+  ],
+  "limits": "raw panels have no CA correction or geometric resampling; gathered and merged share the exact reference grid and production correction path; shared pinned tone differs slightly from prior automatic baseline; retain replay until independent pixel comparison",
+  "merged_count": 1,
+  "native_map_reference": 52,
+  "patches": [
+    {
+      "cfa_encoding": "row-major RGGB f32 little endian; black subtracted, first-frame WB and 1/(white-black), no upper clamp",
+      "coordinates": "active native sensor; mapped centre rounded to even origin, no warp or CA correction",
+      "frame": 39,
+      "height": 308,
+      "meaningful_interior_xywh": [
+        4,
+        4,
+        300,
+        300
+      ],
+      "name": "surface-placebo",
+      "padded_origin_xy": [
+        1232,
+        1358
+      ],
+      "reference_output_xywh": [
+        1150,
+        1300,
+        300,
+        300
+      ],
+      "rgb_encoding": "row-major interleaved linear camera RGB f32; actual current demosaic_row before colour matrix/tone",
+      "stage": "raw",
+      "stem": "surface-placebo-frame39-raw",
+      "trim": 4,
+      "width": 308
+    },
+    {
+      "cfa_encoding": "row-major RGGB f32 little endian; black subtracted, first-frame WB and 1/(white-black), no upper clamp",
+      "coordinates": "cropped reference output native grid",
+      "frame": 39,
+      "height": 308,
+      "meaningful_interior_xywh": [
+        4,
+        4,
+        300,
+        300
+      ],
+      "name": "surface-placebo",
+      "padded_origin_xy": [
+        1146,
+        1296
+      ],
+      "reference_output_xywh": [
+        1150,
+        1300,
+        300,
+        300
+      ],
+      "rgb_encoding": "row-major interleaved linear camera RGB f32; actual current demosaic_row before colour matrix/tone",
+      "stage": "gathered",
+      "stem": "surface-placebo-frame39-gathered",
+      "trim": 4,
+      "width": 308
+    },
+    {
+      "cfa_encoding": "row-major RGGB f32 little endian; black subtracted, first-frame WB and 1/(white-black), no upper clamp",
+      "coordinates": "cropped reference output native grid",
+      "frame": 39,
+      "height": 308,
+      "meaningful_interior_xywh": [
+        4,
+        4,
+        300,
+        300
+      ],
+      "name": "surface-placebo",
+      "padded_origin_xy": [
+        1146,
+        1296
+      ],
+      "reference_output_xywh": [
+        1150,
+        1300,
+        300,
+        300
+      ],
+      "rgb_encoding": "row-major interleaved linear camera RGB f32; actual current demosaic_row before colour matrix/tone",
+      "stage": "merged",
+      "stem": "surface-placebo-frame39-merged",
+      "trim": 4,
+      "width": 308
+    }
+  ],
+  "raw_count": 1,
+  "replay_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\matched-printer-placebo-1\\replay.tiff",
+  "source_frame_count": 105,
+  "status": "MATCHED_SOURCE_CAPTURED",
+  "tone_bits": [
+    1007430213,
+    1052234675,
+    1057803469
+  ],
+  "wb_bits": [
+    1070374912,
+    1065353216,
+    1076715520
+  ]
+}

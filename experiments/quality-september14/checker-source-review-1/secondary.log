@@ -1,0 +1,11 @@
+file      : D:\personal\macro\requests\misc-diagnostic\tiny-high-res-calibration-checker-slide-cpl\DSC00076.ARW
+camera    : ILCE-7CM2
+stride    : 7168
+buffer h  : 5120
+active    : 7032x4688 at (0,0)
+levels    : black 512 white 15360
+plane R(even,even)  : n 8241504 mean 2366.5749
+plane G1(even,odd)  : n 8241504 mean 4184.0311
+plane G2(odd,even)  : n 8241504 mean 4184.9704
+plane B(odd,odd)    : n 8241504 mean 2269.0455
+wrote     : C:\dev\blog\death-of-software\projects\strehl\experiments\quality-september14\checker-source-review-1\rawler-reference75.bin

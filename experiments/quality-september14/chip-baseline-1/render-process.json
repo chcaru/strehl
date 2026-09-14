@@ -1,0 +1,109 @@
+{
+  "command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-gpu-gather\\build-native-6\\strehl.exe",
+    "stack",
+    "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl",
+    "--merge",
+    "pyramid",
+    "--pyramid-bands",
+    "7",
+    "--pyramid-gate",
+    "2",
+    "--pyramid-exponent",
+    "2",
+    "--pyramid-sharpen",
+    "1.4",
+    "--pyramid-select",
+    "soft",
+    "--pyramid-base",
+    "mean",
+    "--srgb",
+    "--demosaic",
+    "--resampler",
+    "catmull-rom",
+    "--cover",
+    "crop",
+    "--out",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\chip-baseline-1\\chip.tiff"
+  ],
+  "exit_code": 0,
+  "error": null,
+  "cleanup_errors": [],
+  "wall_seconds": 92.18700000000536,
+  "log_bytes": 144196,
+  "job_accounting": {
+    "total_user_100ns": 3271875000,
+    "total_kernel_100ns": 210312500,
+    "total_cpu_100ns": 3482187500,
+    "total_page_fault_count": 40529454,
+    "total_processes": 2,
+    "active_processes": 0,
+    "total_terminated_processes": 0
+  },
+  "job_memory": {
+    "peak_process_memory_used_bytes": 3200221184,
+    "peak_job_memory_used_bytes": 3201441792
+  },
+  "terminal_job_accounting": true,
+  "configured_job_limits": {
+    "flags": 8704,
+    "committed_bytes": 17179869184
+  },
+  "direct_exit_observed": true,
+  "pipe_eof_observed": true,
+  "post_exit_drain": {
+    "initial_accounting": {
+      "total_user_100ns": 3271875000,
+      "total_kernel_100ns": 210312500,
+      "total_cpu_100ns": 3482187500,
+      "total_page_fault_count": 40529454,
+      "total_processes": 2,
+      "active_processes": 0,
+      "total_terminated_processes": 0
+    },
+    "last_accounting": {
+      "total_user_100ns": 3271875000,
+      "total_kernel_100ns": 210312500,
+      "total_cpu_100ns": 3482187500,
+      "total_page_fault_count": 40529454,
+      "total_processes": 2,
+      "active_processes": 0,
+      "total_terminated_processes": 0
+    },
+    "observations": [
+      {
+        "wall_seconds": 92.1710000000021,
+        "accounting": {
+          "total_user_100ns": 3271875000,
+          "total_kernel_100ns": 210312500,
+          "total_cpu_100ns": 3482187500,
+          "total_page_fault_count": 40529454,
+          "total_processes": 2,
+          "active_processes": 0,
+          "total_terminated_processes": 0
+        }
+      }
+    ],
+    "observation_count": 1,
+    "completed": true,
+    "started_wall_seconds": 92.1710000000021,
+    "ended_wall_seconds": 92.1710000000021
+  },
+  "termination": {
+    "attempted": false,
+    "before_accounting": null,
+    "succeeded": false
+  },
+  "limits": {
+    "wall_seconds": 600,
+    "cpu_seconds": 3600,
+    "log_bytes": 4194304,
+    "committed_bytes": 17179869184
+  },
+  "scope": "owned job tree; committed memory, observed user+kernel CPU; not RSS or a timing benchmark",
+  "log": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\chip-baseline-1\\render.log",
+    "sha256": "f51c5f5aad71dd77b15f7ea018f365cd95d25388ccd1c225dea952fcc649845e",
+    "bytes": 144196
+  }
+}

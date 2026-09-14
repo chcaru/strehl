@@ -1,0 +1,12 @@
+{
+  "strehl": {
+    "path": "experiments\\quality-september14\\matched-source-build-1\\strehl.exe",
+    "bytes": 17725440,
+    "sha256": "be9bd71b3448a0cf780cf95416d44fa1218fc16c637341713b9db51a1a7a582e"
+  },
+  "cli-tests": {
+    "path": "experiments\\quality-september14\\matched-source-build-1\\cli-tests.exe",
+    "bytes": 21996032,
+    "sha256": "ed2556a39a1a52e9ea346189a87b6320bd7788f4547889909294750a6a328d61"
+  }
+}

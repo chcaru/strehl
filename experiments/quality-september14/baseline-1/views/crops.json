@@ -1,0 +1,41 @@
+{
+  "shape": [
+    4560,
+    6840,
+    3
+  ],
+  "regions": [
+    {
+      "name": "junction",
+      "x": 3350,
+      "y": 2450,
+      "width": 384,
+      "height": 384,
+      "display": "sRGB16 to8 floor(code*255/65535); no spatial resampling"
+    },
+    {
+      "name": "letter-edge",
+      "x": 3000,
+      "y": 1550,
+      "width": 384,
+      "height": 384,
+      "display": "sRGB16 to8 floor(code*255/65535); no spatial resampling"
+    },
+    {
+      "name": "fibre",
+      "x": 3000,
+      "y": 3100,
+      "width": 384,
+      "height": 384,
+      "display": "sRGB16 to8 floor(code*255/65535); no spatial resampling"
+    },
+    {
+      "name": "surface",
+      "x": 1150,
+      "y": 1300,
+      "width": 384,
+      "height": 384,
+      "display": "sRGB16 to8 floor(code*255/65535); no spatial resampling"
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "receipt": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\matched-chip-on-1\\receipt.json",
+  "width": 392,
+  "height": 392,
+  "baseline_rgb": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\matched-chip-on-1\\pale-circuit-frame149-merged-mhc-camera-rgb.f32",
+  "baseline_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\matched-chip-on-1\\pale-circuit-frame149-merged.tiff",
+  "out": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\green-only-comparison-1\\pale-circuit-frame149-merged\\render",
+  "candidates": [
+    {
+      "name": "coherent-green",
+      "rgb": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\green-only-comparison-1\\pale-circuit-frame149-merged\\coherent-green-camera-rgb.f32"
+    }
+  ],
+  "xyz_to_cam": [
+    [
+      0.746,
+      -0.2365,
+      -0.0588
+    ],
+    [
+      -0.5687,
+      1.3442,
+      0.2474
+    ],
+    [
+      -0.0624,
+      0.1156,
+      0.6584
+    ]
+  ]
+}

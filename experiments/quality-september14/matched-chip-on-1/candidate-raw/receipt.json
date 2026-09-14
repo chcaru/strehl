@@ -1,0 +1,25 @@
+{
+  "shape": [
+    392,
+    392,
+    3
+  ],
+  "trim": 6,
+  "dtype": "little-endian f32 camera RGB",
+  "arms": {
+    "mhc-cdiff": {
+      "known_samples_bit_exact": {
+        "R": true,
+        "G": true,
+        "B": true
+      }
+    },
+    "quincunx-cdiff": {
+      "known_samples_bit_exact": {
+        "R": true,
+        "G": true,
+        "B": true
+      }
+    }
+  }
+}
