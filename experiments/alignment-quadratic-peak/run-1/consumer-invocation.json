@@ -1,0 +1,15 @@
+{
+  "command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\alignment-quadratic-peak\\build-1\\core-tests.exe",
+    "--exact",
+    "align::quadratic_peak_tests::alignment_quadratic_peak_fixed_consumer",
+    "--ignored",
+    "--nocapture",
+    "--test-threads=1"
+  ],
+  "environment_overrides": {
+    "RAYON_NUM_THREADS": "2",
+    "STREHL_QUADRATIC_PEAK_CONSUMER_OUT": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\alignment-quadratic-peak\\run-1\\consumer.json"
+  },
+  "removed_environment": []
+}

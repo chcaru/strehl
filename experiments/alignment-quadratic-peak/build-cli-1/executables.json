@@ -1,0 +1,12 @@
+{
+  "strehl": {
+    "path": "experiments\\alignment-quadratic-peak\\build-cli-1\\strehl.exe",
+    "bytes": 17725440,
+    "sha256": "c5599844af296d3f8f257e48e6e88982804b090671f3813ab44702a89b6f37e6"
+  },
+  "cli-tests": {
+    "path": "experiments\\alignment-quadratic-peak\\build-cli-1\\cli-tests.exe",
+    "bytes": 21459456,
+    "sha256": "04dd8e4f5106a33d58cf82102aea9de1baed2e1d6886270e1139821736565afd"
+  }
+}

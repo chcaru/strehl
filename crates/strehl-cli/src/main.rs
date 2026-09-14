@@ -1288,6 +1288,31 @@ mod tests {
     use super::{SOFTWARE, VERSION};
     use strehl_core::photometric::PhotometricMode;
 
+    #[test]
+    fn quadratic_peak_refinement_is_explicit_and_keeps_the_automatic_cache_separate() {
+        use clap::Parser;
+        let parsed = super::Cli::try_parse_from(["strehl", "align", "example-stack"]).unwrap();
+        match parsed.command {
+            super::Command::Align(args) => assert_eq!(args.peak_refinement, "separable"),
+            _ => panic!("align parsed as another command"),
+        }
+        let parsed = super::Cli::try_parse_from([
+            "strehl", "align", "example-stack", "--peak-refinement", "quadratic",
+            "--out", "candidate-warpmap.txt",
+        ]).unwrap();
+        match parsed.command {
+            super::Command::Align(args) => assert_eq!(args.peak_refinement, "quadratic"),
+            _ => panic!("align parsed as another command"),
+        }
+        for argv in [
+            vec!["strehl", "align", "example-stack", "--peak-refinement", "quadratic"],
+            vec!["strehl", "align", "example-stack", "--peak-refinement", "typo", "--out", "candidate-warpmap.txt"],
+            vec!["strehl", "stack", "example-stack", "--peak-refinement", "quadratic"],
+        ] {
+            assert!(super::Cli::try_parse_from(argv).is_err());
+        }
+    }
+
     /// **`--focus` exists, is spelled the way the docs say, and belongs to the
     /// estimator.**
     ///

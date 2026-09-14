@@ -1,0 +1,17 @@
+{
+  "build": {
+    "sha256": "e4cb46c9e1c9e8b184e88f588d6eca545eed7cc0b452dbc5422c75f5b738ae41",
+    "bytes": 2063
+  },
+  "executable": {
+    "path": "experiments\\alignment-quadratic-peak\\build-1\\core-tests.exe",
+    "sha256": "6c63f7f0714cccce75b4be36447f7ae6b8e27c9ee762c3887de6bc52737c152f",
+    "bytes": 3564032
+  },
+  "runner": {
+    "sha256": "4d7be640faa1593aa849c38fee77e2f3d37f19882f22faac8ec429f6b7895ac5",
+    "bytes": 3675
+  },
+  "revision": "5c9b70e074a0aff2a899ce13c7eadc06b4bbf593",
+  "scope": "no original captures; fixed generated source"
+}

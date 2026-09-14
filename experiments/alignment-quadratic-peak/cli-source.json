@@ -1,0 +1,27 @@
+[
+  {
+    "path": "crates/strehl-core/src/align.rs",
+    "bytes": 155298,
+    "sha256": "e6685dd17bd28a9466cfe7ceb534faee65000c0c915df7cd7fc6ef039b6f9dc6"
+  },
+  {
+    "path": "crates/strehl-cli/src/align_cmd.rs",
+    "bytes": 131382,
+    "sha256": "6007017f336ecbf6813ba032179f3f72cab88ef3f9cdc01e259e825a9be6a8fa"
+  },
+  {
+    "path": "crates/strehl-cli/src/main.rs",
+    "bytes": 88555,
+    "sha256": "176b95f4669ac9c40e70a0498db4233c4695fda80f3f6b8e1d80a9763101627d"
+  },
+  {
+    "path": "experiments/M103-halfdrift/probe/src/main.rs",
+    "bytes": 30283,
+    "sha256": "f8958d5f14122e6f2a2523e10078dc5d11ff11d461b23b4b42f604965624a355"
+  },
+  {
+    "path": "experiments/alignment-quadratic-peak/consumer-tests.rs",
+    "bytes": 20299,
+    "sha256": "1fc614164a4af0e58589a5a28b5c87f0a23edad8b17c4e1b4e967846e4a8c152"
+  }
+]

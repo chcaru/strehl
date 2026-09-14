@@ -193,6 +193,7 @@ fn config_from(a: &Args) -> Result<AlignConfig> {
             Some(v) => v == "1" || v == "true" || v == "yes",
             None => base.warp_tiles,
         },
+        peak_refinement: base.peak_refinement,
     })
 }
 

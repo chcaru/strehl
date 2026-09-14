@@ -550,6 +550,16 @@ pub struct AlignFrame<'a> {
 // the pairwise estimator
 // ===========================================================================
 
+/// Refinement of an already accepted integer NCC peak.
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+pub enum PeakRefinement {
+    /// The original independent horizontal and vertical parabolas.
+    #[default]
+    Separable,
+    /// Experimental coupled quadratic; unsupported peaks use the original result.
+    Quadratic,
+}
+
 /// Estimator configuration.
 #[derive(Clone, Debug)]
 pub struct AlignConfig {
@@ -611,6 +621,8 @@ pub struct AlignConfig {
     /// per pass, against the `(2*radius+1)^2 * tile^2` multiply-adds the
     /// correlation already spends — under 1%.
     pub warp_tiles: bool,
+    /// Local peak refinement. Automatic alignment retains [`PeakRefinement::Separable`].
+    pub peak_refinement: PeakRefinement,
 }
 
 impl AlignConfig {
@@ -631,6 +643,7 @@ impl AlignConfig {
             outlier_mads: 3.0,
             fine_iters: 1,
             warp_tiles: false,
+            peak_refinement: PeakRefinement::Separable,
         }
     }
 
@@ -796,6 +809,75 @@ fn parabola(l: f32, c: f32, r: f32) -> f32 {
     if o.abs() > 1.0 { 0.0 } else { o }
 }
 
+/// Refine an integer NCC maximum with the full quadratic on its 3x3 stencil.
+///
+/// The mixed derivative couples the two offsets on a rotated peak. The former
+/// one-dimensional fits omit it. This closed-form fit is exact for quadratics,
+/// not for arbitrary defocused correlation peaks; photographic benefit remains
+/// experimental. No image is sampled or resampled here.
+///
+/// Refuse unsupported, tied, nonfinite, nonconcave, ill-conditioned or outside-cell
+/// peaks. A caller must then retain its original separable result. Conditioning
+/// is relative to the Hessian scale, so a positive score gain cannot change it.
+pub fn quadratic_peak(scores: &[f32], side: usize, x: usize, y: usize) -> Option<(f32, f32)> {
+    if side < 3 || scores.len() != side.checked_mul(side)?
+        || x == 0 || y == 0 || x.checked_add(1)? >= side || y.checked_add(1)? >= side
+    {
+        return None;
+    }
+    let centre_index = y * side + x;
+    let centre = scores[centre_index];
+    if !centre.is_finite()
+        || scores.iter().enumerate().any(|(i, &v)| i != centre_index && v >= centre)
+    {
+        return None;
+    }
+    let mut local = [0.0f32; 9];
+    for j in 0..3 {
+        for i in 0..3 {
+            let value = scores[(y + j - 1) * side + x + i - 1];
+            if !value.is_finite() {
+                return None;
+            }
+            // Remove the common score level before curvature arithmetic.
+            local[j * 3 + i] = value - centre;
+        }
+    }
+    let gx = 0.5 * (local[5] - local[3]);
+    let gy = 0.5 * (local[7] - local[1]);
+    let hxx = local[5] + local[3];
+    let hyy = local[7] + local[1];
+    let hxy = 0.25 * (local[8] - local[6] - local[2] + local[0]);
+    let scale = hxx.abs().max(hyy.abs()).max(hxy.abs());
+    if !scale.is_finite() || scale == 0.0 {
+        return None;
+    }
+    let (a, b, c) = (hxx / scale, hxy / scale, hyy / scale);
+    let (gx, gy) = (gx / scale, gy / scale);
+    let determinant = a * c - b * b;
+    if a >= 0.0 || c >= 0.0 || !determinant.is_finite() || determinant <= 1e-4 {
+        return None;
+    }
+    let ox = (b * gy - c * gx) / determinant;
+    let oy = (b * gx - a * gy) / determinant;
+    if !ox.is_finite() || !oy.is_finite() || ox.abs() >= 0.5 || oy.abs() >= 0.5 {
+        return None;
+    }
+    Some((ox, oy))
+}
+
+fn refine_peak(scores: &[f32], side: usize, x: usize, y: usize, mode: PeakRefinement) -> (f32, f32) {
+    let sc = |i: usize, j: usize| scores[j * side + i];
+    let old = (
+        parabola(sc(x - 1, y), sc(x, y), sc(x + 1, y)),
+        parabola(sc(x, y - 1), sc(x, y), sc(x, y + 1)),
+    );
+    match mode {
+        PeakRefinement::Separable => old,
+        PeakRefinement::Quadratic => quadratic_peak(scores, side, x, y).unwrap_or(old),
+    }
+}
+
 #[cfg(feature = "alignment-sinc-peak")]
 pub mod sinc_peak_diagnostic {
     include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/alignment-sinc-peak/implementation.rs"));
@@ -934,9 +1016,8 @@ fn ncc_tile_impl<const SINC: bool>(
         m.peak = best;
         return m;
     }
-    let sc = |i: usize, j: usize| scores[j * n + i];
-    let ox = parabola(sc(bi - 1, bj), sc(bi, bj), sc(bi + 1, bj));
-    let oy = parabola(sc(bi, bj - 1), sc(bi, bj), sc(bi, bj + 1));
+    let mode = if SINC { PeakRefinement::Separable } else { cfg.peak_refinement };
+    let (ox, oy) = refine_peak(&scores, n, bi, bj, mode);
     #[cfg(feature = "alignment-sinc-peak")]
     let (ox, oy) = if SINC {
         let result = sinc_peak_diagnostic::refine(&scores, n, bi, bj);
@@ -1140,9 +1221,8 @@ fn ncc_tile_warped_impl<const SINC: bool>(
         m.peak = best;
         return m;
     }
-    let sc = |i: usize, j: usize| scores[j * n + i];
-    let ox = parabola(sc(bi - 1, bj), sc(bi, bj), sc(bi + 1, bj));
-    let oy = parabola(sc(bi, bj - 1), sc(bi, bj), sc(bi, bj + 1));
+    let mode = if SINC { PeakRefinement::Separable } else { cfg.peak_refinement };
+    let (ox, oy) = refine_peak(&scores, n, bi, bj, mode);
     #[cfg(feature = "alignment-sinc-peak")]
     let (ox, oy) = if SINC {
         let result = sinc_peak_diagnostic::refine(&scores, n, bi, bj);
@@ -3060,6 +3140,28 @@ pub fn gather_into(
 mod tests {
     use super::*;
 
+    #[test]
+    fn quadratic_refinement_keeps_separable_bits_on_a_tied_peak() {
+        let mut scores = vec![0.0; 25];
+        scores[12] = 1.0;
+        scores[11] = 0.96;
+        scores[13] = 0.98;
+        scores[7] = 0.95;
+        scores[17] = 0.93;
+        scores[0] = 1.0; // A separate equal maximum must preserve the old choice.
+        let expected = (
+            parabola(scores[11], scores[12], scores[13]),
+            parabola(scores[7], scores[12], scores[17]),
+        );
+        assert!(expected.0 != 0.0 && expected.1 != 0.0, "fallback must carry fractional information");
+        assert!(quadratic_peak(&scores, 5, 2, 2).is_none());
+        for mode in [PeakRefinement::Separable, PeakRefinement::Quadratic] {
+            let actual = refine_peak(&scores, 5, 2, 2, mode);
+            assert_eq!((actual.0.to_bits(), actual.1.to_bits()),
+                       (expected.0.to_bits(), expected.1.to_bits()));
+        }
+    }
+
     const TEST_W: usize = 400;
     const TEST_H: usize = 300;
 
@@ -4124,4 +4226,9 @@ mod tests {
         assert!(PlaneRef::new(&data, 5, 2).is_some());
         assert!(PlaneRef::new(&data, 0, 0).is_none());
     }
+}
+
+#[cfg(test)]
+mod quadratic_peak_tests {
+    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/alignment-quadratic-peak/consumer-tests.rs"));
 }

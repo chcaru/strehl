@@ -1,0 +1,67 @@
+{
+  "command": [
+    "cargo",
+    "test",
+    "-p",
+    "strehl-core",
+    "--lib",
+    "--no-run",
+    "--release",
+    "--jobs",
+    "2",
+    "--target-dir",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\target\\native-pyramid-profile",
+    "--message-format=json-render-diagnostics",
+    "--locked",
+    "--offline"
+  ],
+  "source_files": [
+    {
+      "path": "crates\\strehl-core\\Cargo.toml",
+      "sha256": "722149ae720fc5e376d3b7b1cfead95ee61c6ba3e1628ddb5c05d0f0621fa4c8",
+      "bytes": 955
+    },
+    {
+      "path": "crates\\strehl-core\\src\\align.rs",
+      "sha256": "e6685dd17bd28a9466cfe7ceb534faee65000c0c915df7cd7fc6ef039b6f9dc6",
+      "bytes": 155298
+    },
+    {
+      "path": "crates\\strehl-core\\src\\lib.rs",
+      "sha256": "91419ceb273be1dc9ab15dbdc6347bd2b398d29cf36c0da9184ee533372f8022",
+      "bytes": 4356
+    },
+    {
+      "path": "Cargo.lock",
+      "sha256": "ea23b6dc6afc5fb9f1b12d08f065083ba77a75425b2a0b000d3f3a8466696efa",
+      "bytes": 64738
+    },
+    {
+      "path": "experiments\\alignment-quadratic-peak\\consumer-tests.rs",
+      "sha256": "1fc614164a4af0e58589a5a28b5c87f0a23edad8b17c4e1b4e967846e4a8c152",
+      "bytes": 20299
+    },
+    {
+      "path": "experiments\\alignment-quadratic-peak\\charter.md",
+      "sha256": "a2eab7012dd397ad1566eb02bc2929d47567dea0eab6f9460d23e101aae761c5",
+      "bytes": 4133
+    },
+    {
+      "path": "experiments\\alignment-quadratic-peak\\build.py",
+      "sha256": "d14b7730f979bac698eb7f89fb70116d1f88ca01b475098db3302d857d2e4e2a",
+      "bytes": 2769
+    },
+    {
+      "path": "experiments\\alignment-quadratic-peak\\run.py",
+      "sha256": "4d7be640faa1593aa849c38fee77e2f3d37f19882f22faac8ec429f6b7895ac5",
+      "bytes": 3675
+    }
+  ],
+  "revision": "5c9b70e074a0aff2a899ce13c7eadc06b4bbf593",
+  "environment_overrides": {
+    "RAYON_NUM_THREADS": "2",
+    "CARGO_INCREMENTAL": "0"
+  },
+  "removed_environment": [],
+  "scope": "core-only compile; no test or original image execution"
+}

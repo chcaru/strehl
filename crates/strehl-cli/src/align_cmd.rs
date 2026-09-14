@@ -24,7 +24,7 @@ use std::path::{Path, PathBuf};
 use anyhow::{Context, Result, bail};
 use rayon::prelude::*;
 use strehl_core::align::{
-    AlignConfig, AlignEdge, AlignFrame, AlignPyramid, GlobalOptions, PlaneRef, Resampler,
+    AlignConfig, AlignEdge, AlignFrame, AlignPyramid, GlobalOptions, PeakRefinement, PlaneRef, Resampler,
     Similarity, SimilarityParams, Weighting, align_pair, cycle_consistency, edge_errors,
     solve_global, tile_grid, total_drift,
 };
@@ -130,6 +130,11 @@ pub struct AlignArgs {
     #[arg(long, default_value = DEFAULT_RESAMPLER_NAME)]
     pub resampler: String,
 
+    /// Experimental NCC peak refinement. Quadratic requires --out to keep its
+    /// placements separate from the automatic alignment cache.
+    #[arg(long, default_value = "separable", value_parser = ["separable", "quadratic"], requires_if("quadratic", "out"))]
+    pub peak_refinement: String,
+
     /// Solve a bracket flagged as tilted anyway, knowing the model is wrong.
     #[arg(long)]
     pub force_tilted: bool,
@@ -195,6 +200,15 @@ impl AlignArgs {
 
     fn resampler(&self) -> Result<Resampler> {
         parse_resampler(&self.resampler)
+    }
+
+    fn peak_refinement(&self) -> Result<PeakRefinement> {
+        match self.peak_refinement.as_str() {
+            "separable" => Ok(PeakRefinement::Separable),
+            "quadratic" if self.out.is_some() => Ok(PeakRefinement::Quadratic),
+            "quadratic" => bail!("quadratic peak refinement requires an explicit --out sidecar"),
+            other => bail!("unknown peak refinement {other:?}; valid choices are separable and quadratic"),
+        }
     }
 }
 
@@ -334,6 +348,13 @@ pub fn run(args: &AlignArgs) -> Result<()> {
     args.guard_subject()?;
     preflight_ca_profile()?;
     let resampler = args.resampler()?;
+    let peak_refinement = args.peak_refinement()?;
+
+    if peak_refinement == PeakRefinement::Quadratic
+        && (args.verify_plant.is_some() || args.resampler_cost || args.verify_warp || args.check.is_some())
+    {
+        bail!("quadratic peak refinement applies to alignment solving, not verification submodes");
+    }
 
     if let Some(scale) = args.verify_plant {
         return run_verify_plant(args, scale, resampler);
@@ -388,7 +409,10 @@ pub fn run(args: &AlignArgs) -> Result<()> {
         st.geom.height
     );
 
-    let cfg = AlignConfig::deep();
+    let cfg = AlignConfig { peak_refinement, ..AlignConfig::deep() };
+    if peak_refinement == PeakRefinement::Quadratic {
+        println!("  peak refinement: quadratic (experimental; separable fallback)");
+    }
     let mut pairs: Vec<(usize, usize)> = Vec::new();
     for &s in &args.spans {
         for i in 0..n.saturating_sub(s) {
@@ -438,7 +462,12 @@ pub fn run(args: &AlignArgs) -> Result<()> {
             heldout_px: heldout,
             cycle_floor_px: floor,
             reference,
-            note: format!("strehl align, M86b, spans {:?}", args.spans),
+            note: match peak_refinement {
+                PeakRefinement::Separable => format!("strehl align, M86b, spans {:?}", args.spans),
+                PeakRefinement::Quadratic => format!(
+                    "strehl align, M86b, spans {:?}, peak-refinement quadratic (experimental)", args.spans
+                ),
+            },
         },
         st.geom,
         resampler,

@@ -1,0 +1,213 @@
+{
+  "coupled_witness": 4,
+  "positive": [
+    {
+      "error": 0.0,
+      "kind": 0,
+      "offset": [
+        0.0,
+        0.0
+      ],
+      "separable_error": 0.0,
+      "separable_offset": [
+        -0.0,
+        -0.0
+      ],
+      "symmetry_affine": "PASS",
+      "truth": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "error": 3.54196558118007e-7,
+      "kind": 0,
+      "offset": [
+        0.18749965727329254,
+        -0.31250008940696716
+      ],
+      "separable_error": 3.0719530773294425e-7,
+      "separable_offset": [
+        0.18749971687793732,
+        -0.31250011920928955
+      ],
+      "symmetry_affine": "PASS",
+      "truth": [
+        0.1875,
+        -0.3125
+      ]
+    },
+    {
+      "error": 3.54196558118007e-7,
+      "kind": 0,
+      "offset": [
+        -0.18749965727329254,
+        0.31250008940696716
+      ],
+      "separable_error": 3.0719530773294425e-7,
+      "separable_offset": [
+        -0.18749971687793732,
+        0.31250011920928955
+      ],
+      "symmetry_affine": "PASS",
+      "truth": [
+        -0.1875,
+        0.3125
+      ]
+    },
+    {
+      "error": 0.0,
+      "kind": 1,
+      "offset": [
+        0.0,
+        0.0
+      ],
+      "separable_error": 0.0,
+      "separable_offset": [
+        -0.0,
+        -0.0
+      ],
+      "symmetry_affine": "PASS",
+      "truth": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "error": 2.4800474907596765e-7,
+      "kind": 1,
+      "offset": [
+        0.18750013411045074,
+        -0.3125002086162567
+      ],
+      "separable_error": 0.1501875553714164,
+      "separable_offset": [
+        0.046874966472387314,
+        -0.25976574420928955
+      ],
+      "symmetry_affine": "PASS",
+      "truth": [
+        0.1875,
+        -0.3125
+      ]
+    },
+    {
+      "error": 2.4800474907596765e-7,
+      "kind": 1,
+      "offset": [
+        -0.18750013411045074,
+        0.3125002086162567
+      ],
+      "separable_error": 0.1501875553714164,
+      "separable_offset": [
+        -0.046874966472387314,
+        0.25976574420928955
+      ],
+      "symmetry_affine": "PASS",
+      "truth": [
+        -0.1875,
+        0.3125
+      ]
+    },
+    {
+      "error": 0.0,
+      "kind": 2,
+      "offset": [
+        0.0,
+        0.0
+      ],
+      "separable_error": 0.0,
+      "separable_offset": [
+        -0.0,
+        -0.0
+      ],
+      "symmetry_affine": "PASS",
+      "truth": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "error": 3.8310766614027146e-7,
+      "kind": 2,
+      "offset": [
+        0.18749962747097015,
+        -0.31250008940696716
+      ],
+      "separable_error": 0.2232432062007395,
+      "separable_offset": [
+        0.40234339237213135,
+        -0.3731617331504822
+      ],
+      "symmetry_affine": "PASS",
+      "truth": [
+        0.1875,
+        -0.3125
+      ]
+    },
+    {
+      "error": 3.8310766614027146e-7,
+      "kind": 2,
+      "offset": [
+        -0.18749962747097015,
+        0.31250008940696716
+      ],
+      "separable_error": 0.22324324669161524,
+      "separable_offset": [
+        -0.40234339237213135,
+        0.3731618821620941
+      ],
+      "symmetry_affine": "PASS",
+      "truth": [
+        -0.1875,
+        0.3125
+      ]
+    }
+  ],
+  "positive_count": 9,
+  "refusal_count": 10,
+  "refusals": [
+    {
+      "name": "flat",
+      "refused": true
+    },
+    {
+      "name": "nan",
+      "refused": true
+    },
+    {
+      "name": "infinite",
+      "refused": true
+    },
+    {
+      "name": "tie",
+      "refused": true
+    },
+    {
+      "name": "indefinite",
+      "refused": true
+    },
+    {
+      "name": "ill-conditioned",
+      "refused": true
+    },
+    {
+      "name": "outside-cell",
+      "refused": true
+    },
+    {
+      "name": "short-buffer",
+      "refused": true
+    },
+    {
+      "name": "boundary",
+      "refused": true
+    },
+    {
+      "name": "zero-side",
+      "refused": true
+    }
+  ],
+  "scope": "literal quadratic arithmetic/refusal only; analytic sampled-image consumers decide model accuracy",
+  "status": "PASS"
+}

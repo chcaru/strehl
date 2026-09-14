@@ -1,0 +1,29 @@
+{
+  "status": "GENERATED_CONTROLS_PASS",
+  "proceed_to_raw_comparison": true,
+  "steps": [
+    {
+      "name": "literal",
+      "result": {
+        "sha256": "90016e55fd5cb701ed9d718fee32b99b07ac958fdcf29a3c7e25fc459f08a217",
+        "bytes": 3995
+      },
+      "cpu_seconds": 0.015625,
+      "wall_seconds": 0.125,
+      "peak_job_commit_bytes": 2215936
+    },
+    {
+      "name": "consumer",
+      "result": {
+        "sha256": "4243d534ad69fd3e7927d187ae015fe0677cd68b8b822d0ea5d6eb1395aa1865",
+        "bytes": 56444
+      },
+      "cpu_seconds": 5.9375,
+      "wall_seconds": 5.98399999999674,
+      "peak_job_commit_bytes": 3878912
+    }
+  ],
+  "aggregate_child_cpu_seconds": 5.953125,
+  "retained_bytes_before_completion": 68022,
+  "scope": "generated actual NCC calls only; no automatic RAW allocation or quality claim"
+}

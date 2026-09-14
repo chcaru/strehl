@@ -1,0 +1,7 @@
+
+running 1 test
+test align::quadratic_peak_tests::quadratic_peak_literal_controls ... QUADRATIC_LITERAL PASS positives=9 refusals=10
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 561 filtered out; finished in 0.00s
+
