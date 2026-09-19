@@ -1,0 +1,13 @@
+{
+  "source": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\green-match-rgb\\full-2\\output\\baseline.tiff",
+  "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\green-match-rgb\\full-2\\photo-comparison-1\\baseline.png",
+  "shape": [
+    4612,
+    6920,
+    3
+  ],
+  "conversion": "rounded division by 257; full extent; no resampling",
+  "source_sha256": "bc6a921000bf942e678a31d6d4374bf2d347f61e61162d1d0dc98f80212cfd9e",
+  "png_sha256": "68b2f4533e14eefb6e8b2473cc4312fe0d330cd70c83569148270fba12491326",
+  "icc_preserved": true
+}

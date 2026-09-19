@@ -4899,6 +4899,11 @@ pub(crate) mod phase_packed_rgb {
     include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/phase-packed-rgb/implementation.rs"));
 }
 
+#[cfg(all(test, feature = "native-direct-planes"))]
+pub(crate) mod green_match_rgb {
+    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/green-match-rgb/implementation.rs"));
+}
+
 #[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance"))]
 pub(crate) mod fine_support_tests {
     include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/fine-support-guidance/measure.rs"));

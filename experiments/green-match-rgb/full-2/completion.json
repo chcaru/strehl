@@ -1,0 +1,27 @@
+{
+  "baseline": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\green-match-rgb\\full-2\\output\\baseline.tiff",
+    "sha256": "bc6a921000bf942e678a31d6d4374bf2d347f61e61162d1d0dc98f80212cfd9e",
+    "bytes": 191495352
+  },
+  "candidate": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\green-match-rgb\\full-2\\output\\candidate.tiff",
+    "sha256": "c27d8b10fc0b702792d46b7bacbbcc57939c3255ee85b5db411d0fbcf75d8b8d",
+    "bytes": 191495352
+  },
+  "shape": [
+    4612,
+    6920,
+    3
+  ],
+  "original_metadata_unchanged": true,
+  "map_unchanged": true,
+  "baseline_pixels_identical": true,
+  "baseline_whole_file_identical": false,
+  "reference": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\phase-packed-rgb\\full-1\\output\\baseline.tiff",
+    "sha256": "c0d8faca8a23f31a73b843fbc9aa9f55fda96b5fcce9d3540ebf6a2b4319bb21",
+    "bytes": 191495352
+  },
+  "sources_unchanged": true
+}

@@ -1,0 +1,30 @@
+{
+  "status": "PIXELS_BIT_EXACT",
+  "different_samples": 0,
+  "max_sample_difference": 0,
+  "only_differing_tag": 305,
+  "images": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\phase-packed-rgb\\full-1\\output\\baseline.tiff",
+      "file_sha256": "c0d8faca8a23f31a73b843fbc9aa9f55fda96b5fcce9d3540ebf6a2b4319bb21",
+      "pixel_le_u16_sha256": "2a19cd9b7236a13bf90e81b87e85b1058e071aa19f4a5af82b97f453687d0dda",
+      "software": "strehl 0.0.0 (ed20dc3be490-dirty)",
+      "shape": [
+        4612,
+        6920,
+        3
+      ]
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\green-match-rgb\\full-1\\output\\baseline.tiff",
+      "file_sha256": "bc6a921000bf942e678a31d6d4374bf2d347f61e61162d1d0dc98f80212cfd9e",
+      "pixel_le_u16_sha256": "2a19cd9b7236a13bf90e81b87e85b1058e071aa19f4a5af82b97f453687d0dda",
+      "software": "strehl 0.0.0 (93c08ce7655d-dirty)",
+      "shape": [
+        4612,
+        6920,
+        3
+      ]
+    }
+  ]
+}

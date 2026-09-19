@@ -148,6 +148,33 @@ generic spatial pooling and unvalidated guided smoothing are not the next step.
 
 ## What counts as progress
 
+September19 continuation: source-profile inspection distinguishes coherent
+focus-dependent spread at the facet from mixed extended structure at the dark
+feature. It does not identify a transferable point-spread function; no optical
+kernel is fitted from those profiles. Evidence is in
+experiments/highlight-spread/results.md (commit93c08ce7). The actual comparison
+stacker also reconstructs complete source-colour tuples against a fused grey
+target. A separate RAW-native variant now has a positive generated screen:
+match source green to the current collapsed green within one fixed injected
+variance threshold, retain complete colour tuples, average matches and preserve
+the baseline where none match. It is a heuristic with explicit equal-green
+colour ambiguity and no clipping repair. Genuine-colour truth errors improve
+at both tested ISOs while component/flat controls pass. This admits exactly
+one complete vitamin-C paired RAW replay, not promotion. See
+experiments/green-match-rgb/results.md and full-plan.md.
+
+That complete replay is now finished. Both reviewers see reduced fine grain
+in low-detail backgrounds, but the targeted coloured fans persist and some
+fine crystal texture looks smoother. Preserve the complete paired images and
+keep this mode experimental. Do not promote it, optimize it, or sweep its
+threshold on this evidence. Native RGB preservation and subsequent source
+colour projection have both failed to repair the target by themselves; the
+next bounded prior-work audit concerns the directional complex-wavelet source
+selection used by the comparison stacker. Existing source evidence does not
+justify the separately considered parent-band weight multiplier as a full
+render. Evidence: experiments/green-match-rgb/results.md and its independent
+photographic review.
+
 Show the owner the complete stack output whenever presenting an improvement,
 including the complete before image for comparisons and a link to the RGB16
 master. Native crops remain diagnostic evidence, never the sole presentation.

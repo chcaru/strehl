@@ -1,0 +1,88 @@
+{
+  "command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\green-match-rgb\\build-1\\cli-tests.exe",
+    "merge_cmd::green_match_rgb::independent_controls::",
+    "--nocapture",
+    "--test-threads=1"
+  ],
+  "exit_code": 0,
+  "error": null,
+  "cleanup_errors": [],
+  "wall_seconds": 1.764999999999418,
+  "log_bytes": 26898,
+  "job_accounting": {
+    "total_user_100ns": 15468750,
+    "total_kernel_100ns": 5468750,
+    "total_cpu_100ns": 20937500,
+    "total_page_fault_count": 154780,
+    "total_processes": 2,
+    "active_processes": 0,
+    "total_terminated_processes": 0
+  },
+  "job_memory": {
+    "peak_process_memory_used_bytes": 14004224,
+    "peak_job_memory_used_bytes": 15282176
+  },
+  "terminal_job_accounting": true,
+  "configured_job_limits": {
+    "flags": 8704,
+    "committed_bytes": 17179869184
+  },
+  "direct_exit_observed": true,
+  "pipe_eof_observed": true,
+  "post_exit_drain": {
+    "initial_accounting": {
+      "total_user_100ns": 15468750,
+      "total_kernel_100ns": 5468750,
+      "total_cpu_100ns": 20937500,
+      "total_page_fault_count": 154780,
+      "total_processes": 2,
+      "active_processes": 0,
+      "total_terminated_processes": 0
+    },
+    "last_accounting": {
+      "total_user_100ns": 15468750,
+      "total_kernel_100ns": 5468750,
+      "total_cpu_100ns": 20937500,
+      "total_page_fault_count": 154780,
+      "total_processes": 2,
+      "active_processes": 0,
+      "total_terminated_processes": 0
+    },
+    "observations": [
+      {
+        "wall_seconds": 1.764999999999418,
+        "accounting": {
+          "total_user_100ns": 15468750,
+          "total_kernel_100ns": 5468750,
+          "total_cpu_100ns": 20937500,
+          "total_page_fault_count": 154780,
+          "total_processes": 2,
+          "active_processes": 0,
+          "total_terminated_processes": 0
+        }
+      }
+    ],
+    "observation_count": 1,
+    "completed": true,
+    "started_wall_seconds": 1.764999999999418,
+    "ended_wall_seconds": 1.764999999999418
+  },
+  "termination": {
+    "attempted": false,
+    "before_accounting": null,
+    "succeeded": false
+  },
+  "limits": {
+    "wall_seconds": 180,
+    "cpu_seconds": 3600,
+    "log_bytes": 16777216,
+    "committed_bytes": 17179869184
+  },
+  "scope": "owned job tree; committed memory, observed user+kernel CPU; not RSS or a timing benchmark",
+  "log": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\green-match-rgb\\controls-1\\process.log",
+    "sha256": "8448c83e3c2fc4ad3bf4ca9ac0022c140b8e136cfa124861b0dd26f77a6ffd9d",
+    "bytes": 26898
+  }
+}

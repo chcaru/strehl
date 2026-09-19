@@ -1,0 +1,566 @@
+
+running 1 test
+test merge_cmd::green_match_rgb::full_stack::vitamin_c_complete_pair ...   GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+green-match baseline 1/70, total 1.0s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+green-match baseline 2/70, total 1.4s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+green-match baseline 3/70, total 1.7s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+green-match baseline 4/70, total 2.1s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+green-match baseline 5/70, total 2.5s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+green-match baseline 6/70, total 2.9s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+green-match baseline 7/70, total 3.3s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+green-match baseline 8/70, total 3.7s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+green-match baseline 9/70, total 4.1s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+green-match baseline 10/70, total 4.5s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+green-match baseline 11/70, total 4.9s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+green-match baseline 12/70, total 5.4s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+green-match baseline 13/70, total 5.8s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+green-match baseline 14/70, total 6.3s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+green-match baseline 15/70, total 6.7s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+green-match baseline 16/70, total 7.1s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+green-match baseline 17/70, total 7.5s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+green-match baseline 18/70, total 7.9s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+green-match baseline 19/70, total 8.4s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+green-match baseline 20/70, total 8.8s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+green-match baseline 21/70, total 9.3s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+green-match baseline 22/70, total 9.7s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+green-match baseline 23/70, total 10.1s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+green-match baseline 24/70, total 10.5s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+green-match baseline 25/70, total 11.0s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+green-match baseline 26/70, total 11.4s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+green-match baseline 27/70, total 11.8s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+green-match baseline 28/70, total 12.2s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+green-match baseline 29/70, total 12.6s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+green-match baseline 30/70, total 13.1s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+green-match baseline 31/70, total 13.5s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+green-match baseline 32/70, total 13.9s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+green-match baseline 33/70, total 14.3s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+green-match baseline 34/70, total 14.7s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+green-match baseline 35/70, total 15.2s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+green-match baseline 36/70, total 15.6s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+green-match baseline 37/70, total 16.1s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+green-match baseline 38/70, total 16.5s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+green-match baseline 39/70, total 16.9s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+green-match baseline 40/70, total 17.3s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+green-match baseline 41/70, total 17.7s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+green-match baseline 42/70, total 18.2s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+green-match baseline 43/70, total 18.6s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+green-match baseline 44/70, total 19.0s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+green-match baseline 45/70, total 19.4s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+green-match baseline 46/70, total 19.8s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+green-match baseline 47/70, total 20.3s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+green-match baseline 48/70, total 20.7s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+green-match baseline 49/70, total 21.1s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+green-match baseline 50/70, total 21.5s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+green-match baseline 51/70, total 21.9s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+green-match baseline 52/70, total 22.4s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+green-match baseline 53/70, total 22.8s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+green-match baseline 54/70, total 23.2s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+green-match baseline 55/70, total 23.7s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+green-match baseline 56/70, total 24.1s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+green-match baseline 57/70, total 24.5s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+green-match baseline 58/70, total 24.9s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+green-match baseline 59/70, total 25.3s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+green-match baseline 60/70, total 25.7s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+green-match baseline 61/70, total 26.1s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+green-match baseline 62/70, total 26.6s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+green-match baseline 63/70, total 27.0s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+green-match baseline 64/70, total 27.4s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+green-match baseline 65/70, total 27.8s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+green-match baseline 66/70, total 28.2s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+green-match baseline 67/70, total 28.6s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+green-match baseline 68/70, total 29.1s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+green-match baseline 69/70, total 29.5s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+green-match baseline 70/70, total 29.9s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+green-match colour replay 1/70, total 32.3s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+green-match colour replay 2/70, total 33.2s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+green-match colour replay 3/70, total 34.1s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+green-match colour replay 4/70, total 34.9s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+green-match colour replay 5/70, total 35.8s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+green-match colour replay 6/70, total 36.7s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+green-match colour replay 7/70, total 37.6s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+green-match colour replay 8/70, total 38.5s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+green-match colour replay 9/70, total 39.3s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+green-match colour replay 10/70, total 40.2s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+green-match colour replay 11/70, total 41.0s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+green-match colour replay 12/70, total 41.9s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+green-match colour replay 13/70, total 42.8s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+green-match colour replay 14/70, total 43.7s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+green-match colour replay 15/70, total 44.5s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+green-match colour replay 16/70, total 45.4s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+green-match colour replay 17/70, total 46.3s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+green-match colour replay 18/70, total 47.1s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+green-match colour replay 19/70, total 48.0s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+green-match colour replay 20/70, total 48.9s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+green-match colour replay 21/70, total 49.8s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+green-match colour replay 22/70, total 50.7s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+green-match colour replay 23/70, total 51.6s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+green-match colour replay 24/70, total 52.5s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+green-match colour replay 25/70, total 53.4s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+green-match colour replay 26/70, total 54.3s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+green-match colour replay 27/70, total 55.2s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+green-match colour replay 28/70, total 56.1s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+green-match colour replay 29/70, total 57.0s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+green-match colour replay 30/70, total 57.9s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+green-match colour replay 31/70, total 58.8s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+green-match colour replay 32/70, total 59.7s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+green-match colour replay 33/70, total 60.7s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+green-match colour replay 34/70, total 61.6s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+green-match colour replay 35/70, total 62.5s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+green-match colour replay 36/70, total 63.4s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+green-match colour replay 37/70, total 64.3s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+green-match colour replay 38/70, total 65.2s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+green-match colour replay 39/70, total 66.1s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+green-match colour replay 40/70, total 67.1s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+green-match colour replay 41/70, total 68.0s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+green-match colour replay 42/70, total 68.9s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+green-match colour replay 43/70, total 69.8s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+green-match colour replay 44/70, total 70.7s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+green-match colour replay 45/70, total 71.6s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+green-match colour replay 46/70, total 72.5s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+green-match colour replay 47/70, total 73.4s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+green-match colour replay 48/70, total 74.3s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+green-match colour replay 49/70, total 75.2s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+green-match colour replay 50/70, total 76.1s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+green-match colour replay 51/70, total 77.0s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+green-match colour replay 52/70, total 78.0s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+green-match colour replay 53/70, total 79.0s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+green-match colour replay 54/70, total 79.9s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+green-match colour replay 55/70, total 80.8s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+green-match colour replay 56/70, total 81.7s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+green-match colour replay 57/70, total 82.6s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+green-match colour replay 58/70, total 83.5s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+green-match colour replay 59/70, total 84.4s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+green-match colour replay 60/70, total 85.2s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+green-match colour replay 61/70, total 86.1s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+green-match colour replay 62/70, total 87.0s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+green-match colour replay 63/70, total 87.9s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+green-match colour replay 64/70, total 88.8s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+green-match colour replay 65/70, total 89.6s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+green-match colour replay 66/70, total 90.5s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+green-match colour replay 67/70, total 91.4s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+green-match colour replay 68/70, total 92.3s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+green-match colour replay 69/70, total 93.1s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+green-match colour replay 70/70, total 94.0s
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 195 filtered out; finished in 94.82s
+

@@ -1,0 +1,36 @@
+{
+  "schema": 1,
+  "source_dir": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl",
+  "warp_map": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-baseline-1\\vitamin-c.warpmap.txt",
+  "warp_map_sha256": "84275850a032dc8beb88945b00514a58ebca433e267c8e10342ac55986cf830f",
+  "out_dir": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\green-match-rgb\\full-1\\output",
+  "expected_crop": [
+    28,
+    19,
+    3460,
+    2306
+  ],
+  "max_extra_inset_quads": 0,
+  "expected_xyz_to_cam": [
+    [
+      0.746,
+      -0.2365,
+      -0.0588
+    ],
+    [
+      -0.5687,
+      1.3442,
+      0.2474
+    ],
+    [
+      -0.0624,
+      0.1156,
+      0.6584
+    ]
+  ],
+  "tone": [
+    0.09042,
+    0.914606,
+    0.55
+  ]
+}
