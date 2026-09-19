@@ -1,0 +1,25 @@
+{
+  "status": "INDEPENDENT_COORDINATE_BIN_CONTROLS_PASS",
+  "coordinate_and_linear_bins": {
+    "maximum_coordinate_error": 4.547473508864641e-13,
+    "checked_colour_means": 432,
+    "all_144_bins_populated": true,
+    "wrong_translation_rejected": true
+  },
+  "signed_axes_and_empty_bins": {
+    "reversed_overlap_bins": 72,
+    "side_strip_displacement_bins": 48,
+    "empty_bins_nan_with_zero_count": true,
+    "constant_field_unchanged": true,
+    "inclusive_source_margin_and_outside_refusal": true
+  },
+  "stationary_and_spreading_profiles": {
+    "stationary_amplitude_change_preserves_support": true,
+    "compact_nonzero_bins": 4,
+    "spread_nonzero_bins": 16,
+    "equal_profile_integral": true,
+    "unrelated_side_object_is_visible": true,
+    "scope": "Rectangular operator examples; no physical PSF or quality inference."
+  },
+  "reads_originals": false
+}

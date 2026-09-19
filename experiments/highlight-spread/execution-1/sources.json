@@ -1,0 +1,27 @@
+[
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\highlight-spread\\measure.py",
+    "sha256": "4c17982165776903be7626fe3821ce25413f2365db90be2f33b75423f2d16fa3",
+    "bytes": 10782
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\highlight-spread\\plan.md",
+    "sha256": "7bb7ce614ec94555b2d5f9343cc4d87b5b3367cee0894467d36d881719e62d8f",
+    "bytes": 3631
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\highlight-spread\\independent-controls.py",
+    "sha256": "b9fdf50cbfb8570c22f6606d77e18e26a69d6bb6c22af4f978e02265ff720ebb",
+    "bytes": 8552
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\highlight-spread\\independent-review.md",
+    "sha256": "fe39c84889608bd128a8a9b111c275f5490376bfd08d7b1fe3fab706801787b3",
+    "bytes": 2717
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\highlight-spread\\independent-controls-1.json",
+    "sha256": "b41ce1da68205d1fa832dd1c61f8dcf7189ba7d59ee6812275338f1b7747fe11",
+    "bytes": 897
+  }
+]

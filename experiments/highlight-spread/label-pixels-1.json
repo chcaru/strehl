@@ -1,0 +1,193 @@
+{
+  "status": "VERIFIED",
+  "conclusion": "Selected nonblank label regions are byte-identical across the three saved target PNGs in each version. Missing-label file-defect claim withdrawn; presentation cause not established.",
+  "script_sha256": "5fc8e83e6784f2781e22c4bcbe065bb3f24ca0d46dcbe5c52a30c0a1c3e73f85",
+  "files": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\highlight-spread\\run-1\\facet-glint.png",
+      "file_sha256": "510b2ac7dd05a2098d5617c0f26f8b683ae7107ed6633dfad80852b699f8e07f",
+      "shape": [
+        1040,
+        1820,
+        3
+      ],
+      "regions": [
+        {
+          "box": [
+            160,
+            990,
+            460,
+            1030
+          ],
+          "dark_pixels": 1007,
+          "sha256": "e345ed629a2ef9ee0d4a22f23c9e3ac77adf6e7334c390e3c04a95977ebac135"
+        },
+        {
+          "box": [
+            5,
+            430,
+            140,
+            710
+          ],
+          "dark_pixels": 706,
+          "sha256": "5998429a1c4977a60678bdbccbbaaafcc1f521d54e4f8d93aca6859ceb072fd6"
+        }
+      ]
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\highlight-spread\\run-1\\dark-glint.png",
+      "file_sha256": "15080ca5c4abe45625e3cafa65d74fd2121ab0885264ada331ed79b37e30bfdb",
+      "shape": [
+        1040,
+        1820,
+        3
+      ],
+      "regions": [
+        {
+          "box": [
+            160,
+            990,
+            460,
+            1030
+          ],
+          "dark_pixels": 1007,
+          "sha256": "e345ed629a2ef9ee0d4a22f23c9e3ac77adf6e7334c390e3c04a95977ebac135"
+        },
+        {
+          "box": [
+            5,
+            430,
+            140,
+            710
+          ],
+          "dark_pixels": 706,
+          "sha256": "5998429a1c4977a60678bdbccbbaaafcc1f521d54e4f8d93aca6859ceb072fd6"
+        }
+      ]
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\highlight-spread\\run-1\\real-structure.png",
+      "file_sha256": "0f9c6ce6f6ba9906d7bf6938b809f9cf6cb4c63a54fdd89c3c7101f26f6b019a",
+      "shape": [
+        1040,
+        1820,
+        3
+      ],
+      "regions": [
+        {
+          "box": [
+            160,
+            990,
+            460,
+            1030
+          ],
+          "dark_pixels": 1007,
+          "sha256": "e345ed629a2ef9ee0d4a22f23c9e3ac77adf6e7334c390e3c04a95977ebac135"
+        },
+        {
+          "box": [
+            5,
+            430,
+            140,
+            710
+          ],
+          "dark_pixels": 706,
+          "sha256": "5998429a1c4977a60678bdbccbbaaafcc1f521d54e4f8d93aca6859ceb072fd6"
+        }
+      ]
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\highlight-spread\\views-2\\facet-glint.png",
+      "file_sha256": "3ca576ff501b5f82da20278a2b34d5313edcaeceebee3bd60e756f4548c2141a",
+      "shape": [
+        1300,
+        2080,
+        3
+      ],
+      "regions": [
+        {
+          "box": [
+            260,
+            1230,
+            1850,
+            1290
+          ],
+          "dark_pixels": 3408,
+          "sha256": "6361608fd846f91cb3503b233c5c9e6f9e2a012b2fdf74e5783ee97b991e817c"
+        },
+        {
+          "box": [
+            10,
+            220,
+            240,
+            430
+          ],
+          "dark_pixels": 1279,
+          "sha256": "fb8cf2fe66a8ad849a4f4b0b9a3a1adfcbe99e584efafee98210a89ff9d1c986"
+        }
+      ]
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\highlight-spread\\views-2\\dark-glint.png",
+      "file_sha256": "5323a32bfab9d13496e8d36f190eb23a979651d4a326f39e527ca6272689926d",
+      "shape": [
+        1300,
+        2080,
+        3
+      ],
+      "regions": [
+        {
+          "box": [
+            260,
+            1230,
+            1850,
+            1290
+          ],
+          "dark_pixels": 3408,
+          "sha256": "6361608fd846f91cb3503b233c5c9e6f9e2a012b2fdf74e5783ee97b991e817c"
+        },
+        {
+          "box": [
+            10,
+            220,
+            240,
+            430
+          ],
+          "dark_pixels": 1279,
+          "sha256": "fb8cf2fe66a8ad849a4f4b0b9a3a1adfcbe99e584efafee98210a89ff9d1c986"
+        }
+      ]
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\highlight-spread\\views-2\\real-structure.png",
+      "file_sha256": "f96bb78d636b93cc24b46d13110f761ca7454f54564d91ceb6672db600d07ea7",
+      "shape": [
+        1300,
+        2080,
+        3
+      ],
+      "regions": [
+        {
+          "box": [
+            260,
+            1230,
+            1850,
+            1290
+          ],
+          "dark_pixels": 3408,
+          "sha256": "6361608fd846f91cb3503b233c5c9e6f9e2a012b2fdf74e5783ee97b991e817c"
+        },
+        {
+          "box": [
+            10,
+            220,
+            240,
+            430
+          ],
+          "dark_pixels": 1279,
+          "sha256": "fb8cf2fe66a8ad849a4f4b0b9a3a1adfcbe99e584efafee98210a89ff9d1c986"
+        }
+      ]
+    }
+  ]
+}

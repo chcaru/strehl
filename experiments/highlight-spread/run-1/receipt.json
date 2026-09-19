@@ -1,0 +1,2873 @@
+{
+  "status": "SOURCE_MORPHOLOGY_ONLY",
+  "seconds": 2.691552700000102,
+  "script_sha256": "4c17982165776903be7626fe3821ce25413f2365db90be2f33b75423f2d16fa3",
+  "plan_sha256": "7bb7ce614ec94555b2d5f9343cc4d87b5b3367cee0894467d36d881719e62d8f",
+  "scan_receipt_sha256": "0cca4885f036a419549beba62d56516d033038abf19db8fe9c57d2060c3157f5",
+  "export_receipt_sha256": "88cc56b6d56f3f055defeb48e575b533c4bf46a06a22530b4e040396bbf44bb5",
+  "warpmap_sha256": "84275850a032dc8beb88945b00514a58ebca433e267c8e10342ac55986cf830f",
+  "profiles_sha256": "f92f85627ba20bde1ad888f779d515a8820c8ae749e50c19bbf06c1fdc54b93e",
+  "source_tone_bits": [
+    1035546143,
+    1063920542,
+    1057803469
+  ],
+  "source_wb_bits": [
+    1070374912,
+    1065353216,
+    1076715520
+  ],
+  "targets": [
+    {
+      "name": "facet-glint",
+      "source_region": "facet-edges",
+      "core_output_native": [
+        2624,
+        2906
+      ],
+      "direction": [
+        -22,
+        39
+      ]
+    },
+    {
+      "name": "dark-glint",
+      "source_region": "dark-inclusion",
+      "core_output_native": [
+        3080,
+        2150
+      ],
+      "direction": [
+        22,
+        53
+      ]
+    },
+    {
+      "name": "real-structure",
+      "source_region": "dark-inclusion",
+      "core_output_native": [
+        3240,
+        2070
+      ],
+      "direction": [
+        22,
+        53
+      ]
+    }
+  ],
+  "axes": [
+    "target",
+    "frame_index0",
+    "transverse_strip",
+    "distance_bin",
+    "RGB"
+  ],
+  "units": "Unchanged developed RGB16 display codes, arithmetic mean; not linear radiance",
+  "pixel_count_range": [
+    14,
+    18
+  ],
+  "bindings": [
+    {
+      "index0": 0,
+      "region": "facet-edges",
+      "source_native_xywh": [
+        2547,
+        2741,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "99f0d5e32c16288f9c4368bfec0563842b44dc11c7dc0822039e2081a82d73ec",
+      "pull_bits": [
+        "3ff02ccb811f6d40",
+        "bf406db580b53483",
+        "bfe23ba0629cf0bf",
+        "bffd0ef2563367be"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00094.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849481371425300
+    },
+    {
+      "index0": 0,
+      "region": "dark-inclusion",
+      "source_native_xywh": [
+        3102,
+        1882,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "83c4add3888e1c0659922294a125f734ebc6ec830c36788451bb09ddb754f9e3",
+      "pull_bits": [
+        "3ff02ccb811f6d40",
+        "bf406db580b53483",
+        "bfe23ba0629cf0bf",
+        "bffd0ef2563367be"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00094.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849481371425300
+    },
+    {
+      "index0": 1,
+      "region": "facet-edges",
+      "source_native_xywh": [
+        2547,
+        2741,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "3a3316492df0b2b753258aaa34929c9e13e966e2ad3c8119a5e3766602cef433",
+      "pull_bits": [
+        "3ff02b9be5006b19",
+        "bf41465eb30ec645",
+        "bfe141c31e72b09f",
+        "bffba4628cca221d"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00095.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849481871470000
+    },
+    {
+      "index0": 1,
+      "region": "dark-inclusion",
+      "source_native_xywh": [
+        3102,
+        1882,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "21ff8b8fd253fa47efb8b7246b27552b6d92a255827446284990e2514867360c",
+      "pull_bits": [
+        "3ff02b9be5006b19",
+        "bf41465eb30ec645",
+        "bfe141c31e72b09f",
+        "bffba4628cca221d"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00095.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849481871470000
+    },
+    {
+      "index0": 2,
+      "region": "facet-edges",
+      "source_native_xywh": [
+        2547,
+        2741,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "cf1b4aa3ea2588069fa8c7c6e845ea3c6e71f4bf36eaf60dd7ea400ffe523079",
+      "pull_bits": [
+        "3ff02a62f112caf3",
+        "bf411d5b07ecf81e",
+        "bfe0c16729584ed8",
+        "bffa95a845c08283"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00096.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849482363156200
+    },
+    {
+      "index0": 2,
+      "region": "dark-inclusion",
+      "source_native_xywh": [
+        3103,
+        1882,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "a3c38df0a64034af21cd4c8226213f5638e457047c51e52b8d59473312a31aea",
+      "pull_bits": [
+        "3ff02a62f112caf3",
+        "bf411d5b07ecf81e",
+        "bfe0c16729584ed8",
+        "bffa95a845c08283"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00096.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849482363156200
+    },
+    {
+      "index0": 3,
+      "region": "facet-edges",
+      "source_native_xywh": [
+        2548,
+        2741,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "676b2473e607bacdeb547d1578ef3d3bd5b248d57ee499ef2b5d272e82ecacab",
+      "pull_bits": [
+        "3ff02925dc3dbef7",
+        "bf41418121cc6c65",
+        "bfdfef7d366bc3db",
+        "bff976f0b8426868"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00097.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849482850735300
+    },
+    {
+      "index0": 3,
+      "region": "dark-inclusion",
+      "source_native_xywh": [
+        3103,
+        1882,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "d67599604b882cf91f070c3b4b9fadf5b22375be10199cf2e160e5677f812403",
+      "pull_bits": [
+        "3ff02925dc3dbef7",
+        "bf41418121cc6c65",
+        "bfdfef7d366bc3db",
+        "bff976f0b8426868"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00097.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849482850735300
+    },
+    {
+      "index0": 4,
+      "region": "facet-edges",
+      "source_native_xywh": [
+        2548,
+        2741,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "a1adcc852457aff96639daa33abf5ec16fa9a66d5191359080d77ece63468539",
+      "pull_bits": [
+        "3ff027ef4adac442",
+        "bf40f113cb5bd9bf",
+        "bfddd31214d0e4f3",
+        "bff85abd5cfb6314"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00098.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849483354873200
+    },
+    {
+      "index0": 4,
+      "region": "dark-inclusion",
+      "source_native_xywh": [
+        3103,
+        1882,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "f9a42ae6e216e330a3415c150bd6989ecae0312ab2fa8cbb0b317a6c231f1e49",
+      "pull_bits": [
+        "3ff027ef4adac442",
+        "bf40f113cb5bd9bf",
+        "bfddd31214d0e4f3",
+        "bff85abd5cfb6314"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00098.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849483354873200
+    },
+    {
+      "index0": 5,
+      "region": "facet-edges",
+      "source_native_xywh": [
+        2548,
+        2741,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "bf38700aafc429abb742331983db048183c3db97d27739169c57a27a1993d1e1",
+      "pull_bits": [
+        "3ff026b7a5deb467",
+        "bf404dcf95cbd73c",
+        "bfddf471d2514147",
+        "bff7961832d7951a"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00099.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849483846586400
+    },
+    {
+      "index0": 5,
+      "region": "dark-inclusion",
+      "source_native_xywh": [
+        3103,
+        1883,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "3af34f288bbf7359140f15673b1be59058a941629d4185af372bb61fde099683",
+      "pull_bits": [
+        "3ff026b7a5deb467",
+        "bf404dcf95cbd73c",
+        "bfddf471d2514147",
+        "bff7961832d7951a"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00099.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849483846586400
+    },
+    {
+      "index0": 6,
+      "region": "facet-edges",
+      "source_native_xywh": [
+        2548,
+        2741,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "21c5e864843d73ff869969b11532b1380624637534e351814c0a48fa61b526cc",
+      "pull_bits": [
+        "3ff025754a673f02",
+        "bf3d5add2fa12b6b",
+        "bfde1fd539839ef4",
+        "bff6a88057dd441f"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00100.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849484334118400
+    },
+    {
+      "index0": 6,
+      "region": "dark-inclusion",
+      "source_native_xywh": [
+        3103,
+        1883,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "d7b28850c685ff5ac622be7a84503f3901c37a55b7c0888471e229a2ebd6ac92",
+      "pull_bits": [
+        "3ff025754a673f02",
+        "bf3d5add2fa12b6b",
+        "bfde1fd539839ef4",
+        "bff6a88057dd441f"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00100.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849484334118400
+    },
+    {
+      "index0": 7,
+      "region": "facet-edges",
+      "source_native_xywh": [
+        2549,
+        2741,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "d86cf53e4544419372f370666484c442fc0c356196c438cab624331ea0186429",
+      "pull_bits": [
+        "3ff0242b81bcf891",
+        "bf3bf4b7ad9270cc",
+        "bfdc30de35ae9284",
+        "bff56572c0e255d6"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00101.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849484817483000
+    },
+    {
+      "index0": 7,
+      "region": "dark-inclusion",
+      "source_native_xywh": [
+        3103,
+        1883,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "af87880e0daa3fd84d3f77070be3b9ad16fbe16ee1fbaf08025fa9bc41aef1c4",
+      "pull_bits": [
+        "3ff0242b81bcf891",
+        "bf3bf4b7ad9270cc",
+        "bfdc30de35ae9284",
+        "bff56572c0e255d6"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00101.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849484817483000
+    },
+    {
+      "index0": 8,
+      "region": "facet-edges",
+      "source_native_xywh": [
+        2549,
+        2741,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "e7100fcc637781c7e1a10559df3e8a91f2219e958f676912d8328f5f6d7bb547",
+      "pull_bits": [
+        "3ff022dfbc534a9a",
+        "bf3bcb6afd2ad04c",
+        "bfd9e2d1a00e8cd9",
+        "bff411fd1e37f2db"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00102.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849485300812000
+    },
+    {
+      "index0": 8,
+      "region": "dark-inclusion",
+      "source_native_xywh": [
+        3103,
+        1883,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "8db12b2db12e613391099c7c7ef56d39976a2384196b04b5514e61d9a46fdc9d",
+      "pull_bits": [
+        "3ff022dfbc534a9a",
+        "bf3bcb6afd2ad04c",
+        "bfd9e2d1a00e8cd9",
+        "bff411fd1e37f2db"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00102.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849485300812000
+    },
+    {
+      "index0": 9,
+      "region": "facet-edges",
+      "source_native_xywh": [
+        2549,
+        2741,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "fbfad64f95e443b7fa34ca38a105dc576364bc6ee74debc2b9933a2ef00e85be",
+      "pull_bits": [
+        "3ff02195dafee23c",
+        "bf3b614ae868561a",
+        "bfd7f315cb218aae",
+        "bff33067185cf8ec"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00103.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849485788377400
+    },
+    {
+      "index0": 9,
+      "region": "dark-inclusion",
+      "source_native_xywh": [
+        3103,
+        1884,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "e1ccbdba9af1923a4882743dda076011fd503a9f585374587330ffb0d4aa022d",
+      "pull_bits": [
+        "3ff02195dafee23c",
+        "bf3b614ae868561a",
+        "bfd7f315cb218aae",
+        "bff33067185cf8ec"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00103.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849485788377400
+    },
+    {
+      "index0": 10,
+      "region": "facet-edges",
+      "source_native_xywh": [
+        2550,
+        2741,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "3ce198925cfc6fb62a06f817aacf2615016847bd20eb6666bdd8bff8b7dc6e22",
+      "pull_bits": [
+        "3ff0204a28cffad0",
+        "bf3bbe59eeed0022",
+        "bfd490f15b2c4b64",
+        "bff1b91c93c6e04f"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00104.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849486275883000
+    },
+    {
+      "index0": 10,
+      "region": "dark-inclusion",
+      "source_native_xywh": [
+        3104,
+        1884,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "267bd992c79707b0ee8053b13b6bdd450225632f482501d92cb1573d8e3d6518",
+      "pull_bits": [
+        "3ff0204a28cffad0",
+        "bf3bbe59eeed0022",
+        "bfd490f15b2c4b64",
+        "bff1b91c93c6e04f"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00104.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849486275883000
+    },
+    {
+      "index0": 11,
+      "region": "facet-edges",
+      "source_native_xywh": [
+        2550,
+        2741,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "5753731226f6ed2508a2a88dfe50b9384a559e7a113bec483d01ebb2acb5e4f3",
+      "pull_bits": [
+        "3ff01efb27249bb4",
+        "bf3b8d85828c98c5",
+        "bfd307ec68d04254",
+        "bff07c6ddd93f9fc"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00105.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849486767622400
+    },
+    {
+      "index0": 11,
+      "region": "dark-inclusion",
+      "source_native_xywh": [
+        3104,
+        1884,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "8f696e7cca5692d1ea3a97571ec2266906f59f9258403d2e8d04d3179b1efb0d",
+      "pull_bits": [
+        "3ff01efb27249bb4",
+        "bf3b8d85828c98c5",
+        "bfd307ec68d04254",
+        "bff07c6ddd93f9fc"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00105.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849486767622400
+    },
+    {
+      "index0": 12,
+      "region": "facet-edges",
+      "source_native_xywh": [
+        2550,
+        2741,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "a733d336e0c6ec8797e6d2705e38fd6b7d69d7c83c076ed97e302cd7c5f95274",
+      "pull_bits": [
+        "3ff01db0821c0340",
+        "bf3b6f81e6df5f00",
+        "bfcfa480f276ff16",
+        "bfee40ea43063d99"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00106.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849487251019100
+    },
+    {
+      "index0": 12,
+      "region": "dark-inclusion",
+      "source_native_xywh": [
+        3104,
+        1884,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "56dbdfb9a7a15a07c849599c8d52567a4fa31fed940b68626b176bdba949369c",
+      "pull_bits": [
+        "3ff01db0821c0340",
+        "bf3b6f81e6df5f00",
+        "bfcfa480f276ff16",
+        "bfee40ea43063d99"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00106.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849487251019100
+    },
+    {
+      "index0": 13,
+      "region": "facet-edges",
+      "source_native_xywh": [
+        2550,
+        2741,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "5fcd76ed2203463c3a185ee16e778fae99cf20dba8ef567f4fcdf3b80fc6653b",
+      "pull_bits": [
+        "3ff01c66a4fb083b",
+        "bf3bda49fa1e1870",
+        "bfcbdd15f4fc226c",
+        "bfeb7c2c18fef314"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00107.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849487734298600
+    },
+    {
+      "index0": 13,
+      "region": "dark-inclusion",
+      "source_native_xywh": [
+        3104,
+        1885,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "42bcbf13f306856fa7790c5c0d2146da43a0692f3026cc8db71d47a14ab9bc4b",
+      "pull_bits": [
+        "3ff01c66a4fb083b",
+        "bf3bda49fa1e1870",
+        "bfcbdd15f4fc226c",
+        "bfeb7c2c18fef314"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00107.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849487734298600
+    },
+    {
+      "index0": 14,
+      "region": "facet-edges",
+      "source_native_xywh": [
+        2551,
+        2741,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "feaea56eb3e9f1652927f98bbffc7c4a255b3167198e8a7ad017933f5246284f",
+      "pull_bits": [
+        "3ff01b2825eeb20b",
+        "bf3c5afec8eff8fa",
+        "bfca1d56f349fbf2",
+        "bfe93105b9cf545c"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00108.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849488217691900
+    },
+    {
+      "index0": 14,
+      "region": "dark-inclusion",
+      "source_native_xywh": [
+        3104,
+        1885,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "286bed0ac5741775dacfbf2d14d29542ebc7d68b039b9c4a8686c38fe569f46f",
+      "pull_bits": [
+        "3ff01b2825eeb20b",
+        "bf3c5afec8eff8fa",
+        "bfca1d56f349fbf2",
+        "bfe93105b9cf545c"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00108.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849488217691900
+    },
+    {
+      "index0": 15,
+      "region": "facet-edges",
+      "source_native_xywh": [
+        2551,
+        2741,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "ade264437bb040cd6d9680a8c92f0b21cb32bdc6ee31c42ceecf48c62acffe41",
+      "pull_bits": [
+        "3ff019d6ed52c73e",
+        "bf3cf6d9aed0819b",
+        "bfc5e7277c004a7e",
+        "bfe753962f025fe8"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00109.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849488706421300
+    },
+    {
+      "index0": 15,
+      "region": "dark-inclusion",
+      "source_native_xywh": [
+        3104,
+        1885,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "a88113a290494ed113d9601e2095c6ce8f42e85a19ca1fdf9afd638683956e96",
+      "pull_bits": [
+        "3ff019d6ed52c73e",
+        "bf3cf6d9aed0819b",
+        "bfc5e7277c004a7e",
+        "bfe753962f025fe8"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00109.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849488706421300
+    },
+    {
+      "index0": 16,
+      "region": "facet-edges",
+      "source_native_xywh": [
+        2551,
+        2741,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "94c636bd94cc490f5cabe0c11cacf9e7b685d414098db0e0e2adb3faca6c762d",
+      "pull_bits": [
+        "3ff01869295d98b4",
+        "bf3d436c1a2732ba",
+        "bfc2879ace21f928",
+        "bfe4b6b3acb190ee"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00110.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849489192775000
+    },
+    {
+      "index0": 16,
+      "region": "dark-inclusion",
+      "source_native_xywh": [
+        3104,
+        1885,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "21334ba1896ff2b8d442f3b52c4964079cc17308c43329d19f28c4c7626bdfdd",
+      "pull_bits": [
+        "3ff01869295d98b4",
+        "bf3d436c1a2732ba",
+        "bfc2879ace21f928",
+        "bfe4b6b3acb190ee"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00110.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849489192775000
+    },
+    {
+      "index0": 17,
+      "region": "facet-edges",
+      "source_native_xywh": [
+        2552,
+        2741,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "06d759d9064b1906e976d8ace37917baed08d504b4ffcf6975d45e582ed933cd",
+      "pull_bits": [
+        "3ff01718fc4fa424",
+        "bf3db5046b3039bd",
+        "bfc055591e9d5190",
+        "bfe1cd2dd42e2b0c"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00111.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849489676969800
+    },
+    {
+      "index0": 17,
+      "region": "dark-inclusion",
+      "source_native_xywh": [
+        3104,
+        1885,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "8f42653a96909cc5c6ca109937436af6817c20a182e3161da4ff1ff666ee8ecd",
+      "pull_bits": [
+        "3ff01718fc4fa424",
+        "bf3db5046b3039bd",
+        "bfc055591e9d5190",
+        "bfe1cd2dd42e2b0c"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00111.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849489676969800
+    },
+    {
+      "index0": 18,
+      "region": "facet-edges",
+      "source_native_xywh": [
+        2552,
+        2741,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "eda64fe7fbae3f65e384a8d197d80c540bc2f6ab4702a47302cc0673220ad23d",
+      "pull_bits": [
+        "3ff015cb549160b2",
+        "bf3d7173815b8d63",
+        "bfba22a7a9f369b4",
+        "bfde9f6414663434"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00112.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849490163701600
+    },
+    {
+      "index0": 18,
+      "region": "dark-inclusion",
+      "source_native_xywh": [
+        3105,
+        1886,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "438774333e4d0c6c3265878413bb4a6328bcb1ef16affa508a580b882955e82a",
+      "pull_bits": [
+        "3ff015cb549160b2",
+        "bf3d7173815b8d63",
+        "bfba22a7a9f369b4",
+        "bfde9f6414663434"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00112.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849490163701600
+    },
+    {
+      "index0": 19,
+      "region": "facet-edges",
+      "source_native_xywh": [
+        2552,
+        2740,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "5ab66af530f98348b7ca7faca0c33e6129d291333e78e7b6dc1d459650ce72fb",
+      "pull_bits": [
+        "3ff0147b79301dbc",
+        "bf3cb2050f66f67d",
+        "bfb7ceee86c2f238",
+        "bfdba7d8fa2239ec"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00113.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849490667504000
+    },
+    {
+      "index0": 19,
+      "region": "dark-inclusion",
+      "source_native_xywh": [
+        3105,
+        1886,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "2b4a14e0fab5a03934322ac02f8a8b048e7f6be32d4f6463f7c7436775503672",
+      "pull_bits": [
+        "3ff0147b79301dbc",
+        "bf3cb2050f66f67d",
+        "bfb7ceee86c2f238",
+        "bfdba7d8fa2239ec"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00113.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849490667504000
+    },
+    {
+      "index0": 20,
+      "region": "facet-edges",
+      "source_native_xywh": [
+        2553,
+        2740,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "e51eecc94801bb96597651bbc2f5173e7458b2904718d0ef39d3d96f8ca01380",
+      "pull_bits": [
+        "3ff0132e22192e01",
+        "bf3c13fe158e37a3",
+        "bfb1d9c01967947c",
+        "bfd7d5f9ac6d78dc"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00114.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849491151190300
+    },
+    {
+      "index0": 20,
+      "region": "dark-inclusion",
+      "source_native_xywh": [
+        3105,
+        1886,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "79b70d3420bcd8816623e5fef65ae455a6862b89dcb0a2dd1c6bf7b352cdd680",
+      "pull_bits": [
+        "3ff0132e22192e01",
+        "bf3c13fe158e37a3",
+        "bfb1d9c01967947c",
+        "bfd7d5f9ac6d78dc"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00114.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849491151190300
+    },
+    {
+      "index0": 21,
+      "region": "facet-edges",
+      "source_native_xywh": [
+        2553,
+        2740,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "658f7006ca85a00c0696e8c73bc88abeb494bb2bd07fbbd2d89932042c8503b4",
+      "pull_bits": [
+        "3ff011d77ca2c353",
+        "bf3c030570da8142",
+        "bf991c2baffb3700",
+        "bfd2c5c2f148ea3c"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00115.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849491642958100
+    },
+    {
+      "index0": 21,
+      "region": "dark-inclusion",
+      "source_native_xywh": [
+        3105,
+        1886,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "b56ae3ec7b8f3c03a9d085bf2b4ee5193b77ab7ef0b2e9fb003394aa5e7a387b",
+      "pull_bits": [
+        "3ff011d77ca2c353",
+        "bf3c030570da8142",
+        "bf991c2baffb3700",
+        "bfd2c5c2f148ea3c"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00115.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849491642958100
+    },
+    {
+      "index0": 22,
+      "region": "facet-edges",
+      "source_native_xywh": [
+        2553,
+        2740,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "91c33cdeb7a6eefb2f49656da1f2220b1affd92b24c6624e22a47987a9b1db8f",
+      "pull_bits": [
+        "3ff01082d18b68e5",
+        "bf3b193e027300b1",
+        "3f443856f14cec00",
+        "bfcfa6841c66c7d8"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00116.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849492126301400
+    },
+    {
+      "index0": 22,
+      "region": "dark-inclusion",
+      "source_native_xywh": [
+        3105,
+        1887,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "71b73a2d3f61ab0f33c3a67ecc312b740c13b5a92e7058fec314ffa572cc6de0",
+      "pull_bits": [
+        "3ff01082d18b68e5",
+        "bf3b193e027300b1",
+        "3f443856f14cec00",
+        "bfcfa6841c66c7d8"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00116.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849492126301400
+    },
+    {
+      "index0": 23,
+      "region": "facet-edges",
+      "source_native_xywh": [
+        2553,
+        2740,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "0f80cab213b102c27479223eef4b0b7c8d518bfbbece2271553fb08438b70fbe",
+      "pull_bits": [
+        "3ff00f34bf0d3f55",
+        "bf3a4765721d2a78",
+        "3f6446daaa0dfd00",
+        "bfc8794a115ddd48"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00117.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849492613738100
+    },
+    {
+      "index0": 23,
+      "region": "dark-inclusion",
+      "source_native_xywh": [
+        3105,
+        1887,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "9d7dc0675c4d75f3f4e744e02bc1403c009e24083f790af50be6e76cc1254a5b",
+      "pull_bits": [
+        "3ff00f34bf0d3f55",
+        "bf3a4765721d2a78",
+        "3f6446daaa0dfd00",
+        "bfc8794a115ddd48"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00117.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849492613738100
+    },
+    {
+      "index0": 24,
+      "region": "facet-edges",
+      "source_native_xywh": [
+        2554,
+        2740,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "3e6cdfa40fe47f18d9224140707b6dcdcc10eb6e0fb8cf0a87c868c6f47dcb3e",
+      "pull_bits": [
+        "3ff00de389220a3a",
+        "bf3904d49dc1d41f",
+        "3f73218be289b400",
+        "bfc2ef4559da8008"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00118.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849493455546800
+    },
+    {
+      "index0": 24,
+      "region": "dark-inclusion",
+      "source_native_xywh": [
+        3105,
+        1887,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "1c787879be3cfc4c9b46bbcd303e76187f36de04bd13843ef7852ee34067e325",
+      "pull_bits": [
+        "3ff00de389220a3a",
+        "bf3904d49dc1d41f",
+        "3f73218be289b400",
+        "bfc2ef4559da8008"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00118.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849493455546800
+    },
+    {
+      "index0": 25,
+      "region": "facet-edges",
+      "source_native_xywh": [
+        2554,
+        2740,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "4223979b8d7bbb6982470566179325d4fc6b1f875fabf7e4fadcb5aefc591f48",
+      "pull_bits": [
+        "3ff00ca2e2e3b9e1",
+        "bf37929fe889fbae",
+        "3f72c2b74768d200",
+        "bfb99fe04390aea0"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00119.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849493943130400
+    },
+    {
+      "index0": 25,
+      "region": "dark-inclusion",
+      "source_native_xywh": [
+        3105,
+        1887,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "b92bf5adfd5c5b60f3d2fc9b254bb31dbd8043cae8e319146f9bf8c2fe08d331",
+      "pull_bits": [
+        "3ff00ca2e2e3b9e1",
+        "bf37929fe889fbae",
+        "3f72c2b74768d200",
+        "bfb99fe04390aea0"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00119.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849493943130400
+    },
+    {
+      "index0": 26,
+      "region": "facet-edges",
+      "source_native_xywh": [
+        2554,
+        2740,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "ea9f0e6df2f4840f979f6e70c0b70eee247854f315f75987425571763685b146",
+      "pull_bits": [
+        "3ff00b5e45d52a9e",
+        "bf35cae42a3c0acf",
+        "bf73f3c4ce1b6a00",
+        "bfa36c320d393ca0"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00120.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849494426466100
+    },
+    {
+      "index0": 26,
+      "region": "dark-inclusion",
+      "source_native_xywh": [
+        3105,
+        1887,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "fe5b2bfb1ae0285cb570eec5bf42e3b68ac17a04e225c8ce4e78a3e9033b11e9",
+      "pull_bits": [
+        "3ff00b5e45d52a9e",
+        "bf35cae42a3c0acf",
+        "bf73f3c4ce1b6a00",
+        "bfa36c320d393ca0"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00120.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849494426466100
+    },
+    {
+      "index0": 27,
+      "region": "facet-edges",
+      "source_native_xywh": [
+        2554,
+        2740,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "56123edecb23c8c385822ce6287e32ad5eaa508f42dafff193bfde5ad6c476ce",
+      "pull_bits": [
+        "3ff00a22f38bd344",
+        "bf3397b99b47fbb2",
+        "3f7a60e00eb4be80",
+        "bf7b91df7a83e700"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00121.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849494917774300
+    },
+    {
+      "index0": 27,
+      "region": "dark-inclusion",
+      "source_native_xywh": [
+        3105,
+        1887,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "33dd9e2548e315613b782b5137266e7ba4280aa3824cbc2f84e0ca23db98b220",
+      "pull_bits": [
+        "3ff00a22f38bd344",
+        "bf3397b99b47fbb2",
+        "3f7a60e00eb4be80",
+        "bf7b91df7a83e700"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00121.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849494917774300
+    },
+    {
+      "index0": 28,
+      "region": "facet-edges",
+      "source_native_xywh": [
+        2555,
+        2739,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "fc8004978c00005fdf6038642db62f99ba696cd9c2d243aada2a63a8787bd027",
+      "pull_bits": [
+        "3ff008e2a9c3b05a",
+        "bf31022180488a50",
+        "3f90d617807d0c00",
+        "3f865a3bc2960100"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00122.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849495405655600
+    },
+    {
+      "index0": 28,
+      "region": "dark-inclusion",
+      "source_native_xywh": [
+        3105,
+        1888,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "a4f44a831297a0c9891a79d40b4f234753cbdeff3f5dc0e42b58994486648881",
+      "pull_bits": [
+        "3ff008e2a9c3b05a",
+        "bf31022180488a50",
+        "3f90d617807d0c00",
+        "3f865a3bc2960100"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00122.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849495405655600
+    },
+    {
+      "index0": 29,
+      "region": "facet-edges",
+      "source_native_xywh": [
+        2555,
+        2739,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "34a1e0e7a26fe83f93a30400a370e0dd47eebed188ffb07413143790f65e16b6",
+      "pull_bits": [
+        "3ff0079ab8366ab8",
+        "bf2d6ac6b2dd26ee",
+        "3f916134f2a72820",
+        "3f947ad4771d7980"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00123.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849495896134700
+    },
+    {
+      "index0": 29,
+      "region": "dark-inclusion",
+      "source_native_xywh": [
+        3106,
+        1888,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "d581ef3b292028cd684eb57cd86860e6b07a09b1fb84228e559406f98d3a5476",
+      "pull_bits": [
+        "3ff0079ab8366ab8",
+        "bf2d6ac6b2dd26ee",
+        "3f916134f2a72820",
+        "3f947ad4771d7980"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00123.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849495896134700
+    },
+    {
+      "index0": 30,
+      "region": "facet-edges",
+      "source_native_xywh": [
+        2555,
+        2739,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "488746ac5feb30e7a39c722ad9a7164d83d6b70c28931545e66ff3c18360258f",
+      "pull_bits": [
+        "3ff006574a40ce68",
+        "bf28c725051fc098",
+        "3f99c962894849a0",
+        "3fa3ac968a7098e0"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00124.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849496384945000
+    },
+    {
+      "index0": 30,
+      "region": "dark-inclusion",
+      "source_native_xywh": [
+        3106,
+        1888,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "8d51994fee54e692e4d0f5d6cf28b06da737b2db3f01e3c386d52e4a988230f2",
+      "pull_bits": [
+        "3ff006574a40ce68",
+        "bf28c725051fc098",
+        "3f99c962894849a0",
+        "3fa3ac968a7098e0"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00124.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849496384945000
+    },
+    {
+      "index0": 31,
+      "region": "facet-edges",
+      "source_native_xywh": [
+        2555,
+        2739,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "a53fabe27f5e72202f14279a99cf2e1923e6cbebc78784478436d644cdf71557",
+      "pull_bits": [
+        "3ff0051412502a60",
+        "bf24b05142a23bb6",
+        "3f92b4721663c7a0",
+        "3fa83f1e681523c0"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00125.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849496873087300
+    },
+    {
+      "index0": 31,
+      "region": "dark-inclusion",
+      "source_native_xywh": [
+        3106,
+        1888,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "845bf1e41d07fa1d9928ceb51151b5658265f2733778ef67dd04e25cf27359d9",
+      "pull_bits": [
+        "3ff0051412502a60",
+        "bf24b05142a23bb6",
+        "3f92b4721663c7a0",
+        "3fa83f1e681523c0"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00125.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849496873087300
+    },
+    {
+      "index0": 32,
+      "region": "facet-edges",
+      "source_native_xywh": [
+        2555,
+        2739,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "3d85e62a8a252d67cdb5e14b758f2e7271ec83b32e68b92d752359581cf154ba",
+      "pull_bits": [
+        "3ff003c3ce27e0de",
+        "bf21a2451704fa5c",
+        "3f9cf6a4761ba5e0",
+        "3fa1be5e7661ec00"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00126.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849497364123800
+    },
+    {
+      "index0": 32,
+      "region": "dark-inclusion",
+      "source_native_xywh": [
+        3106,
+        1888,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "ab5cb3b334403d3ddc5a2db26cfeb10d7892bfd36bc144e7faceec218a0e3f3e",
+      "pull_bits": [
+        "3ff003c3ce27e0de",
+        "bf21a2451704fa5c",
+        "3f9cf6a4761ba5e0",
+        "3fa1be5e7661ec00"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00126.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849497364123800
+    },
+    {
+      "index0": 33,
+      "region": "facet-edges",
+      "source_native_xywh": [
+        2556,
+        2738,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "ba592143c3c63dbd58e1eda183c5687468c9f8c555aa39c8e42eab9b8050e6f0",
+      "pull_bits": [
+        "3ff0027d00a29ffa",
+        "bf1893a80673ba68",
+        "3f9c2690790c4680",
+        "3fa22d81a56d2b60"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00127.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849497860044100
+    },
+    {
+      "index0": 33,
+      "region": "dark-inclusion",
+      "source_native_xywh": [
+        3106,
+        1888,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "00573f79bf1030f46a60fe11f00af8c5aac0f74d697391c8a1ea65fc9de10c3c",
+      "pull_bits": [
+        "3ff0027d00a29ffa",
+        "bf1893a80673ba68",
+        "3f9c2690790c4680",
+        "3fa22d81a56d2b60"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00127.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849497860044100
+    },
+    {
+      "index0": 34,
+      "region": "facet-edges",
+      "source_native_xywh": [
+        2556,
+        2738,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "873b3a22dbd0c85a04f34c5d55b87c43fc5273f5b1472bfed9be7e43d7b17edf",
+      "pull_bits": [
+        "3ff001402cf304be",
+        "bf0931c137bf3748",
+        "3fa1995e3108afc0",
+        "3f9419983732de40"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00128.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849498357040100
+    },
+    {
+      "index0": 34,
+      "region": "dark-inclusion",
+      "source_native_xywh": [
+        3106,
+        1888,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "a14ffe68e95dedc2e94b0bcfab834b6e4500322f1ff1d59febb0fca4cbdd14e3",
+      "pull_bits": [
+        "3ff001402cf304be",
+        "bf0931c137bf3748",
+        "3fa1995e3108afc0",
+        "3f9419983732de40"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00128.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849498357040100
+    },
+    {
+      "index0": 35,
+      "region": "facet-edges",
+      "source_native_xywh": [
+        2556,
+        2738,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "8512c94d67a5f056208d6946bb4bcf428f8e2440d3ec2448acecf801c9eacabc",
+      "pull_bits": [
+        "3ff0000000000000",
+        "3c00000000000000",
+        "0000000000000000",
+        "bcb0000000000000"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00129.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849498855905500
+    },
+    {
+      "index0": 35,
+      "region": "dark-inclusion",
+      "source_native_xywh": [
+        3106,
+        1888,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "02f5a6246acc16abc0ade39297d1b8f843a23d4f4cef072fa172ff9b3f8a939b",
+      "pull_bits": [
+        "3ff0000000000000",
+        "3c00000000000000",
+        "0000000000000000",
+        "bcb0000000000000"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00129.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849498855905500
+    },
+    {
+      "index0": 36,
+      "region": "facet-edges",
+      "source_native_xywh": [
+        2556,
+        2738,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "5007ce15a4938562507c8d5d1c7e00e1cfa6832d8d4b01aebfbeb34a6ce63c25",
+      "pull_bits": [
+        "3feffd742c968d5f",
+        "3f0260951beee490",
+        "bf9eaed7cce697c0",
+        "bf7b04d20ee63000"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00130.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849499355947600
+    },
+    {
+      "index0": 36,
+      "region": "dark-inclusion",
+      "source_native_xywh": [
+        3106,
+        1888,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "3fece49379ca9cdfa3e62b348421ba977fe34a1b17cdfc7b0afbdacc780bd89a",
+      "pull_bits": [
+        "3feffd742c968d5f",
+        "3f0260951beee490",
+        "bf9eaed7cce697c0",
+        "bf7b04d20ee63000"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00130.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849499355947600
+    },
+    {
+      "index0": 37,
+      "region": "facet-edges",
+      "source_native_xywh": [
+        2556,
+        2738,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "a217b5cd4e0958b53a46ed6c2747dc7bbe1dc82f7f0ef61e4e8c4a505cd12c8b",
+      "pull_bits": [
+        "3feffae830e4edd2",
+        "3f132c9fcd1cb570",
+        "bfa566bd2df153f0",
+        "bf91459dd8f9d500"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00131.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849499851804200
+    },
+    {
+      "index0": 37,
+      "region": "dark-inclusion",
+      "source_native_xywh": [
+        3106,
+        1888,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "5578a4ba90a242998d7d3977dd7c9e9b1d43769364b5be01a4a450bb72245c3d",
+      "pull_bits": [
+        "3feffae830e4edd2",
+        "3f132c9fcd1cb570",
+        "bfa566bd2df153f0",
+        "bf91459dd8f9d500"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00131.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849499851804200
+    },
+    {
+      "index0": 38,
+      "region": "facet-edges",
+      "source_native_xywh": [
+        2557,
+        2737,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "d4594b306917cef0b3a7d3ae01cbeeb4e117e48cd0ae77e3a56ed744e1f83f76",
+      "pull_bits": [
+        "3feff84cb1bc016d",
+        "3f198d0f388e0998",
+        "bfa2d7bc2406b3f0",
+        "3f7b8c521c20a100"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00132.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849500351869900
+    },
+    {
+      "index0": 38,
+      "region": "dark-inclusion",
+      "source_native_xywh": [
+        3106,
+        1888,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "0342403ac32074b29e6c751920640d218bd17b3b792d07b5688b34a168dcf1f4",
+      "pull_bits": [
+        "3feff84cb1bc016d",
+        "3f198d0f388e0998",
+        "bfa2d7bc2406b3f0",
+        "3f7b8c521c20a100"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00132.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849500351869900
+    },
+    {
+      "index0": 39,
+      "region": "facet-edges",
+      "source_native_xywh": [
+        2557,
+        2737,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "10cdaf36e7a196ea4547adb265b907e594175e116baa2a5e02238f897ca3fc67",
+      "pull_bits": [
+        "3feff5b4d6d61d6b",
+        "3f2123e7f24df9d4",
+        "bfa6a7ef5a387f50",
+        "bf6002299f7b2600"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00133.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849500856085400
+    },
+    {
+      "index0": 39,
+      "region": "dark-inclusion",
+      "source_native_xywh": [
+        3106,
+        1888,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "10bcab0c9b8f6c70daa043d01fc38fca8d146bab91009eb66e6f0c7d0ff21025",
+      "pull_bits": [
+        "3feff5b4d6d61d6b",
+        "3f2123e7f24df9d4",
+        "bfa6a7ef5a387f50",
+        "bf6002299f7b2600"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00133.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849500856085400
+    },
+    {
+      "index0": 40,
+      "region": "facet-edges",
+      "source_native_xywh": [
+        2557,
+        2737,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "394b9c4eceec709d2db95ee55556b7cfc5d22bfc6b25c262e5230fccab611386",
+      "pull_bits": [
+        "3feff321de91a977",
+        "3f252744c8c62a0c",
+        "bfae83a8b67107a0",
+        "bf818f16cc0c3780"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00134.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849501351888200
+    },
+    {
+      "index0": 40,
+      "region": "dark-inclusion",
+      "source_native_xywh": [
+        3106,
+        1888,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "9f3d3d2caeeacc5a23d5937eb227e3866fdb8139752aaf58c5417692d32f096c",
+      "pull_bits": [
+        "3feff321de91a977",
+        "3f252744c8c62a0c",
+        "bfae83a8b67107a0",
+        "bf818f16cc0c3780"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00134.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849501351888200
+    },
+    {
+      "index0": 41,
+      "region": "facet-edges",
+      "source_native_xywh": [
+        2557,
+        2737,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "704146d17b7489ca50dd241876f389d76e4d159296603f4f8e6b35ae537a4378",
+      "pull_bits": [
+        "3feff078f8d82096",
+        "3f2979a5a38a4468",
+        "bfae7cc7d441deb0",
+        "bf9d8e73684c34c0"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00135.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849501847750500
+    },
+    {
+      "index0": 41,
+      "region": "dark-inclusion",
+      "source_native_xywh": [
+        3106,
+        1888,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "6b2fb3c7ff04c220392d4fb87a4117ffa4771a78f7e191667c68ddcf00b24727",
+      "pull_bits": [
+        "3feff078f8d82096",
+        "3f2979a5a38a4468",
+        "bfae7cc7d441deb0",
+        "bf9d8e73684c34c0"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00135.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849501847750500
+    },
+    {
+      "index0": 42,
+      "region": "facet-edges",
+      "source_native_xywh": [
+        2557,
+        2736,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "67b8e3e9f23eb27920836bb1f3a8acc0167526a817ea92121411b88b8e7a238d",
+      "pull_bits": [
+        "3fefedf2cf589863",
+        "3f2e06bfdd5acf44",
+        "bfb67c1bab7503d4",
+        "bfb8090f9ef9a5c0"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00136.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849502535331600
+    },
+    {
+      "index0": 42,
+      "region": "dark-inclusion",
+      "source_native_xywh": [
+        3106,
+        1888,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "ff0837feabcd30701c845c1eb63b8e82ebe597cb9b397695089359b368629481",
+      "pull_bits": [
+        "3fefedf2cf589863",
+        "3f2e06bfdd5acf44",
+        "bfb67c1bab7503d4",
+        "bfb8090f9ef9a5c0"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00136.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849502535331600
+    },
+    {
+      "index0": 43,
+      "region": "facet-edges",
+      "source_native_xywh": [
+        2558,
+        2736,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "7ede99091a54e823d6be291e67c125f28c3dc1e21cfce8b86f3ce2f14eadcb3a",
+      "pull_bits": [
+        "3fefeb74b51fa911",
+        "3f301fc270c32bd8",
+        "bfbc9800b17972c4",
+        "bfc21d1ac6083268"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00137.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849503026676200
+    },
+    {
+      "index0": 43,
+      "region": "dark-inclusion",
+      "source_native_xywh": [
+        3106,
+        1888,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "17baf3acc885957624acc921801be9aa71a7f717169164a2b3770f8c82f362fe",
+      "pull_bits": [
+        "3fefeb74b51fa911",
+        "3f301fc270c32bd8",
+        "bfbc9800b17972c4",
+        "bfc21d1ac6083268"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00137.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849503026676200
+    },
+    {
+      "index0": 44,
+      "region": "facet-edges",
+      "source_native_xywh": [
+        2558,
+        2736,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "1fd8d506c0f2f6f77e1928c9ce8e223e98651094478a2d5a7ef23521783c54e5",
+      "pull_bits": [
+        "3fefe8e2ed8ca9a8",
+        "3f3160d428b8ad68",
+        "bfc3e108e78d32fa",
+        "bfcc1bf37bc0ab40"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00138.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849503522864400
+    },
+    {
+      "index0": 44,
+      "region": "dark-inclusion",
+      "source_native_xywh": [
+        3106,
+        1888,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "c48e790442ec54bc1f215c5a53c8eec2620d5b64c1e133e06afdd4f72517ff58",
+      "pull_bits": [
+        "3fefe8e2ed8ca9a8",
+        "3f3160d428b8ad68",
+        "bfc3e108e78d32fa",
+        "bfcc1bf37bc0ab40"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00138.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849503522864400
+    },
+    {
+      "index0": 45,
+      "region": "facet-edges",
+      "source_native_xywh": [
+        2558,
+        2735,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "6ba6698ca39bb9b25dd39315acb17fae4d9702a0ff788425b21447b49089f4db",
+      "pull_bits": [
+        "3fefe64d8314b3e7",
+        "3f3271e641381dea",
+        "bfc7e818706f7b56",
+        "bfd3e57c3e9813e0"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00139.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849504010822600
+    },
+    {
+      "index0": 45,
+      "region": "dark-inclusion",
+      "source_native_xywh": [
+        3106,
+        1888,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "9d59a0c3494e96ae8bfa596390f78e216f1bb30e715a2f3d792378b80f98f363",
+      "pull_bits": [
+        "3fefe64d8314b3e7",
+        "3f3271e641381dea",
+        "bfc7e818706f7b56",
+        "bfd3e57c3e9813e0"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00139.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849504010822600
+    },
+    {
+      "index0": 46,
+      "region": "facet-edges",
+      "source_native_xywh": [
+        2558,
+        2735,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "931caf36b800c686b15da7b68233aa33e46d0300e5ebfb9d72dc71dc3b9254e9",
+      "pull_bits": [
+        "3fefe3b08f646e5f",
+        "3f333768ac9fcca6",
+        "bfc867928ca4b842",
+        "bfd8101c20b01d40"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00140.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849504515153900
+    },
+    {
+      "index0": 46,
+      "region": "dark-inclusion",
+      "source_native_xywh": [
+        3106,
+        1888,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "b095f8e5b38632594bc7e9a1bd5d2d8232a9d98d32a7fad1babecb833de774eb",
+      "pull_bits": [
+        "3fefe3b08f646e5f",
+        "3f333768ac9fcca6",
+        "bfc867928ca4b842",
+        "bfd8101c20b01d40"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00140.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849504515153900
+    },
+    {
+      "index0": 47,
+      "region": "facet-edges",
+      "source_native_xywh": [
+        2558,
+        2735,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "a518a4d786e29632735d30e573ffb5a46c403e62e056567cb902514b0e8d4c86",
+      "pull_bits": [
+        "3fefe116baa447da",
+        "3f342d14ea04109e",
+        "bfca64cabc0a9bf8",
+        "bfdc774064f56e90"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00141.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849505019169000
+    },
+    {
+      "index0": 47,
+      "region": "dark-inclusion",
+      "source_native_xywh": [
+        3106,
+        1888,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "a12e299290f5729ea3e25854ad69df9b22b95d0389963a6d0055463cb55d0b2e",
+      "pull_bits": [
+        "3fefe116baa447da",
+        "3f342d14ea04109e",
+        "bfca64cabc0a9bf8",
+        "bfdc774064f56e90"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00141.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849505019169000
+    },
+    {
+      "index0": 48,
+      "region": "facet-edges",
+      "source_native_xywh": [
+        2558,
+        2734,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "dce691824089ffa86a21b3f7e0d4c37b59ee17b6ebe8e60f054fdad3300ea5c6",
+      "pull_bits": [
+        "3fefde89f45d418c",
+        "3f3446ec9255f5c0",
+        "bfcf90de22040b12",
+        "bfe14ef72ccacb38"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00142.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849505512056700
+    },
+    {
+      "index0": 48,
+      "region": "dark-inclusion",
+      "source_native_xywh": [
+        3106,
+        1888,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "66b8924c92ef0b5d82ce75493b9b2e14cc9b80a54217ecff62722a7e36722afc",
+      "pull_bits": [
+        "3fefde89f45d418c",
+        "3f3446ec9255f5c0",
+        "bfcf90de22040b12",
+        "bfe14ef72ccacb38"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00142.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849505512056700
+    },
+    {
+      "index0": 49,
+      "region": "facet-edges",
+      "source_native_xywh": [
+        2559,
+        2734,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "d482a9fe7829c3e6f9c7e7364363710865742393d996001baf876b58b68c9af2",
+      "pull_bits": [
+        "3fefdbfd8c97335c",
+        "3f33ff8d461b8702",
+        "bfd21cfacc822afa",
+        "bfe3bbdf5a29d4a6"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00143.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849506006516300
+    },
+    {
+      "index0": 49,
+      "region": "dark-inclusion",
+      "source_native_xywh": [
+        3106,
+        1888,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "052441fb50570d28e72ab2f73b831d6e1b47c59cf4d2ac518bdbe1e55abdd1a0",
+      "pull_bits": [
+        "3fefdbfd8c97335c",
+        "3f33ff8d461b8702",
+        "bfd21cfacc822afa",
+        "bfe3bbdf5a29d4a6"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00143.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849506006516300
+    },
+    {
+      "index0": 50,
+      "region": "facet-edges",
+      "source_native_xywh": [
+        2559,
+        2734,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "61069ba6b1960f4b46f57a6011857544254771a21003b7cffa2f5ced4c959e50",
+      "pull_bits": [
+        "3fefd97be0f75c29",
+        "3f32e9bdba7ffc5a",
+        "bfd4291a7089f80a",
+        "bfe6a11858121e1a"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00144.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849506489712400
+    },
+    {
+      "index0": 50,
+      "region": "dark-inclusion",
+      "source_native_xywh": [
+        3106,
+        1888,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "9d1e77f740e1946c26daadff4cfbfb80d925a637448620beff4c8b49f35049f4",
+      "pull_bits": [
+        "3fefd97be0f75c29",
+        "3f32e9bdba7ffc5a",
+        "bfd4291a7089f80a",
+        "bfe6a11858121e1a"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00144.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849506489712400
+    },
+    {
+      "index0": 51,
+      "region": "facet-edges",
+      "source_native_xywh": [
+        2559,
+        2733,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "57b09520438de9e2a2d524aff2aefa839f998a5afc997e0182242af95e5769f9",
+      "pull_bits": [
+        "3fefd6e48ed28ae7",
+        "3f31d177121bcb96",
+        "bfd601b66bd99226",
+        "bfe9635f075d253c"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00145.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849506977264200
+    },
+    {
+      "index0": 51,
+      "region": "dark-inclusion",
+      "source_native_xywh": [
+        3106,
+        1888,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "3294e6d6528249a338646665746563d5d46cda0c7ba37d3f867ec33448e9136f",
+      "pull_bits": [
+        "3fefd6e48ed28ae7",
+        "3f31d177121bcb96",
+        "bfd601b66bd99226",
+        "bfe9635f075d253c"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00145.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849506977264200
+    },
+    {
+      "index0": 52,
+      "region": "facet-edges",
+      "source_native_xywh": [
+        2559,
+        2733,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "72103c7a1177b1187f577e426fe9d866d797068f5df28f4981843f054c6dc207",
+      "pull_bits": [
+        "3fefd456d410f7c9",
+        "3f304cd4aaaf1532",
+        "bfd7af823eb1476f",
+        "bfecc29dc9a0285a"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00146.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849507464797500
+    },
+    {
+      "index0": 52,
+      "region": "dark-inclusion",
+      "source_native_xywh": [
+        3106,
+        1888,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "0eef857c3e8ff00c8e8f2b5527061541f37e40385eafac2e84001b88b0c0cd1f",
+      "pull_bits": [
+        "3fefd456d410f7c9",
+        "3f304cd4aaaf1532",
+        "bfd7af823eb1476f",
+        "bfecc29dc9a0285a"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00146.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849507464797500
+    },
+    {
+      "index0": 53,
+      "region": "facet-edges",
+      "source_native_xywh": [
+        2559,
+        2732,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "14bdb0afa09881f760200c090ed4c80b467ceb30c98ced6664022e4faccbc308",
+      "pull_bits": [
+        "3fefd1d3416b44ec",
+        "3f2dde8ba5028694",
+        "bfda0347587776e8",
+        "bff056aaa0fa1564"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00147.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849507955750200
+    },
+    {
+      "index0": 53,
+      "region": "dark-inclusion",
+      "source_native_xywh": [
+        3106,
+        1887,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "4e7bd870a5139a1d0e64b7f87f7b7c3b6671de32be46836365d4d220cc496d81",
+      "pull_bits": [
+        "3fefd1d3416b44ec",
+        "3f2dde8ba5028694",
+        "bfda0347587776e8",
+        "bff056aaa0fa1564"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00147.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849507955750200
+    },
+    {
+      "index0": 54,
+      "region": "facet-edges",
+      "source_native_xywh": [
+        2560,
+        2732,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "68d3d06c9ffbc30c8a16df2c10a17e22e950baca360b6166d6d59d908b17a5b4",
+      "pull_bits": [
+        "3fefcf57360524ba",
+        "3f290bfa33c6aab0",
+        "bfdcd358307189cb",
+        "bff2410621b2f754"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00148.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849508448177300
+    },
+    {
+      "index0": 54,
+      "region": "dark-inclusion",
+      "source_native_xywh": [
+        3106,
+        1887,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "0f4562b59fed2ff17376e49260340e44ddeca57ac99a93bc27c4ce93b1aa920c",
+      "pull_bits": [
+        "3fefcf57360524ba",
+        "3f290bfa33c6aab0",
+        "bfdcd358307189cb",
+        "bff2410621b2f754"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00148.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849508448177300
+    },
+    {
+      "index0": 55,
+      "region": "facet-edges",
+      "source_native_xywh": [
+        2560,
+        2732,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "6ef5ad6bbd9d76806e82decab91f79e13bc19a914fd4cd5e2c44c2e17cd4e087",
+      "pull_bits": [
+        "3fefccc35bbdb10e",
+        "3f255921151a3fe8",
+        "bfe08f771a11fb44",
+        "bff408b2a2df104a"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00149.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849508935669200
+    },
+    {
+      "index0": 55,
+      "region": "dark-inclusion",
+      "source_native_xywh": [
+        3106,
+        1887,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "a1101b46dd494fc1e1039924cc37fedfee9eecf0bde5526f4ed96ec0c155de41",
+      "pull_bits": [
+        "3fefccc35bbdb10e",
+        "3f255921151a3fe8",
+        "bfe08f771a11fb44",
+        "bff408b2a2df104a"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00149.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849508935669200
+    },
+    {
+      "index0": 56,
+      "region": "facet-edges",
+      "source_native_xywh": [
+        2560,
+        2731,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "37761fe270fcc3ab56ec1c52b56a7b95e8cf5b358eca0534347b4302837251f6",
+      "pull_bits": [
+        "3fefca1c8a65995f",
+        "3f21471522af30a4",
+        "bfe25c570282381b",
+        "bff6167754480da1"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00150.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849509431586900
+    },
+    {
+      "index0": 56,
+      "region": "dark-inclusion",
+      "source_native_xywh": [
+        3106,
+        1887,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "734337cbf61075437de9edda42e182454325198c0ecec8f15bae47fabb26c7d1",
+      "pull_bits": [
+        "3fefca1c8a65995f",
+        "3f21471522af30a4",
+        "bfe25c570282381b",
+        "bff6167754480da1"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00150.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849509431586900
+    },
+    {
+      "index0": 57,
+      "region": "facet-edges",
+      "source_native_xywh": [
+        2560,
+        2731,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "c2cfff73f9df99f1c739e7ebdf9733375949b8bad86613a50f31699f80618da5",
+      "pull_bits": [
+        "3fefc77b8f5b96fb",
+        "3f195f7a705b3288",
+        "bfe398106dd44fc7",
+        "bff82770a756c6de"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00151.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849509927424000
+    },
+    {
+      "index0": 57,
+      "region": "dark-inclusion",
+      "source_native_xywh": [
+        3106,
+        1887,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "3b3c142f9c163cfb1b5cfd903a62719ea37738cc8e99decc0d8f7cba686e9a69",
+      "pull_bits": [
+        "3fefc77b8f5b96fb",
+        "3f195f7a705b3288",
+        "bfe398106dd44fc7",
+        "bff82770a756c6de"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00151.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849509927424000
+    },
+    {
+      "index0": 58,
+      "region": "facet-edges",
+      "source_native_xywh": [
+        2560,
+        2730,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "56ca8f414439cf9db5afec323d2d56f9fd54f9c4dbb16c62f70b0d03bf3ba342",
+      "pull_bits": [
+        "3fefc4d3f6862fa9",
+        "3f0e7fe8d725dae0",
+        "bfe4e42288af552c",
+        "bffa0d520b8b343b"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00152.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849510419147200
+    },
+    {
+      "index0": 58,
+      "region": "dark-inclusion",
+      "source_native_xywh": [
+        3106,
+        1887,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "2d4d7e7a2accab2537581cf92127d0e783956d30b446192450cf0b441b2ae9de",
+      "pull_bits": [
+        "3fefc4d3f6862fa9",
+        "3f0e7fe8d725dae0",
+        "bfe4e42288af552c",
+        "bffa0d520b8b343b"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00152.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849510419147200
+    },
+    {
+      "index0": 59,
+      "region": "facet-edges",
+      "source_native_xywh": [
+        2560,
+        2730,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "bff637b788ea1f17745effe66afe9cd818b499994c60a103fc20c13fcd687d3b",
+      "pull_bits": [
+        "3fefc2197dfcf4fb",
+        "3ee98af74c90b200",
+        "bfe5fbd31524eeed",
+        "bffc2ff0317ce596"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00153.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849510919580600
+    },
+    {
+      "index0": 59,
+      "region": "dark-inclusion",
+      "source_native_xywh": [
+        3106,
+        1886,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "f7684343606136c093a8729bed25eba7b68e4e5cb07db8fb4f39bec22632be7b",
+      "pull_bits": [
+        "3fefc2197dfcf4fb",
+        "3ee98af74c90b200",
+        "bfe5fbd31524eeed",
+        "bffc2ff0317ce596"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00153.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849510919580600
+    },
+    {
+      "index0": 60,
+      "region": "facet-edges",
+      "source_native_xywh": [
+        2561,
+        2730,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "c2e4c0400baef043a1b984f6c5e3eaaa2c921295e800ceae949e3a1686bbd974",
+      "pull_bits": [
+        "3fefbf676c011433",
+        "bf033cf7de356220",
+        "bfe7b7e1b40285b3",
+        "bffe144cc4a5957c"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00154.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849511403792700
+    },
+    {
+      "index0": 60,
+      "region": "dark-inclusion",
+      "source_native_xywh": [
+        3106,
+        1886,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "cf90e91defe8c0ddbfae72113ff85a2f15c6d2aa6bf32caaaf3c463cd13f4c02",
+      "pull_bits": [
+        "3fefbf676c011433",
+        "bf033cf7de356220",
+        "bfe7b7e1b40285b3",
+        "bffe144cc4a5957c"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00154.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849511403792700
+    },
+    {
+      "index0": 61,
+      "region": "facet-edges",
+      "source_native_xywh": [
+        2561,
+        2729,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "b4e3463a4cc383fbcd1f9c68669b3f1c3f5f11ec10020e0738f608e61c17b8e0",
+      "pull_bits": [
+        "3fefbcc949921828",
+        "bf14504d3a6d370c",
+        "bfe8d6224b0fb64f",
+        "c000048324435476"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00155.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849511889713000
+    },
+    {
+      "index0": 61,
+      "region": "dark-inclusion",
+      "source_native_xywh": [
+        3106,
+        1886,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "a07f7f958bbb9e30e1480da213596d60862c6ca46a165e2edc6261f098bcfc2d",
+      "pull_bits": [
+        "3fefbcc949921828",
+        "bf14504d3a6d370c",
+        "bfe8d6224b0fb64f",
+        "c000048324435476"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00155.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849511889713000
+    },
+    {
+      "index0": 62,
+      "region": "facet-edges",
+      "source_native_xywh": [
+        2561,
+        2729,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "b5176c4ea76c6af5727b0e23753ec6826662a488535cf70b90cf04d66d3198be",
+      "pull_bits": [
+        "3fefba2c1cb2940f",
+        "bf2190f500590790",
+        "bfeac10f6eb17add",
+        "c001273a26aa96f6"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00156.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849512373467300
+    },
+    {
+      "index0": 62,
+      "region": "dark-inclusion",
+      "source_native_xywh": [
+        3106,
+        1886,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "a197bad629abb6877b917e4b21ba613f3115552fad889ee1e54a366e7c7f6127",
+      "pull_bits": [
+        "3fefba2c1cb2940f",
+        "bf2190f500590790",
+        "bfeac10f6eb17add",
+        "c001273a26aa96f6"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00156.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849512373467300
+    },
+    {
+      "index0": 63,
+      "region": "facet-edges",
+      "source_native_xywh": [
+        2561,
+        2728,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "1cc4c81270515c194e1f230778e18e331a662629ea19a9ca701a6d9685ec3b3b",
+      "pull_bits": [
+        "3fefb78325aaa09e",
+        "bf273c6d9614ecca",
+        "bfecb0f6c9d57b22",
+        "c0021a609dfcb284"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00157.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849512862736100
+    },
+    {
+      "index0": 63,
+      "region": "dark-inclusion",
+      "source_native_xywh": [
+        3106,
+        1886,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "0ef70be9a042e79c68914d83d7f9de7284e0d688a8c2671b2a812726e7181630",
+      "pull_bits": [
+        "3fefb78325aaa09e",
+        "bf273c6d9614ecca",
+        "bfecb0f6c9d57b22",
+        "c0021a609dfcb284"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00157.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849512862736100
+    },
+    {
+      "index0": 64,
+      "region": "facet-edges",
+      "source_native_xywh": [
+        2561,
+        2728,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "588f0019f615668ad5364ecd52469ac84021cb76ee43346e695aa4344485853c",
+      "pull_bits": [
+        "3fefb4cfd9eb0e52",
+        "bf29b42fb9c9780e",
+        "bfeec1bc6d97745c",
+        "c002f88a54644632"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00158.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849513348468200
+    },
+    {
+      "index0": 64,
+      "region": "dark-inclusion",
+      "source_native_xywh": [
+        3106,
+        1886,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "a9194289127e7b3ceb29987072a3a85602216710907bc19d46c1f6a14bfa1591",
+      "pull_bits": [
+        "3fefb4cfd9eb0e52",
+        "bf29b42fb9c9780e",
+        "bfeec1bc6d97745c",
+        "c002f88a54644632"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00158.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849513348468200
+    },
+    {
+      "index0": 65,
+      "region": "facet-edges",
+      "source_native_xywh": [
+        2561,
+        2728,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "ac3cec1a8256514bf0d965bd7143343f029fe3d814eb6d6bfefcbad0afd81a9c",
+      "pull_bits": [
+        "3fefb22577c458e7",
+        "bf2c9f129e80e438",
+        "bff08db17b89ba05",
+        "c003ff75dda025b4"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00159.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849513827718600
+    },
+    {
+      "index0": 65,
+      "region": "dark-inclusion",
+      "source_native_xywh": [
+        3106,
+        1886,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "7987e74c7edea0ccc487cad36143ce6f38e636f21bafd6fb7cf907463752b292",
+      "pull_bits": [
+        "3fefb22577c458e7",
+        "bf2c9f129e80e438",
+        "bff08db17b89ba05",
+        "c003ff75dda025b4"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00159.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849513827718600
+    },
+    {
+      "index0": 66,
+      "region": "facet-edges",
+      "source_native_xywh": [
+        2561,
+        2727,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "5d1999a9b84026235ca94a54318f45a584285be7da426ef3e56f7ae06f5768dd",
+      "pull_bits": [
+        "3fefaf7c3c686b9d",
+        "bf30f8635d3ba9bc",
+        "bff1aa47c0b35ebe",
+        "c005164c97cad1a3"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00160.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849514319410100
+    },
+    {
+      "index0": 66,
+      "region": "dark-inclusion",
+      "source_native_xywh": [
+        3106,
+        1885,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "355f4da7c01b02efaa1b05b40e83c9f630fb7a092e7a0a5dc8a360b947905d45",
+      "pull_bits": [
+        "3fefaf7c3c686b9d",
+        "bf30f8635d3ba9bc",
+        "bff1aa47c0b35ebe",
+        "c005164c97cad1a3"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00160.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849514319410100
+    },
+    {
+      "index0": 67,
+      "region": "facet-edges",
+      "source_native_xywh": [
+        2562,
+        2727,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "6e506da94da053eb950b410245def4395dbda80e3c0b598962435bfb7757ee9c",
+      "pull_bits": [
+        "3fefacce50696b10",
+        "bf33775ef331c38d",
+        "bff24ef5899d7100",
+        "c0060d4b7d06b36c"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00161.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849514806528600
+    },
+    {
+      "index0": 67,
+      "region": "dark-inclusion",
+      "source_native_xywh": [
+        3106,
+        1885,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "cf0381811b7e25be582c6f0bdb7180531298aafab90e656587bb9a9003d32313",
+      "pull_bits": [
+        "3fefacce50696b10",
+        "bf33775ef331c38d",
+        "bff24ef5899d7100",
+        "c0060d4b7d06b36c"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00161.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849514806528600
+    },
+    {
+      "index0": 68,
+      "region": "facet-edges",
+      "source_native_xywh": [
+        2562,
+        2726,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "3eed6160ade4ad6ecd2e9c48c638d76c3c7cb4c9a74d23aab2a0c4e4ced2f9f6",
+      "pull_bits": [
+        "3fefaa22a7c1433c",
+        "bf35a4b9174ba296",
+        "bff350dbb7569b38",
+        "c0073567a998f8ac"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00162.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849515298338400
+    },
+    {
+      "index0": 68,
+      "region": "dark-inclusion",
+      "source_native_xywh": [
+        3106,
+        1885,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "c698ff06eccad4b13ba349eac1fe9cfdc27035a6e23032bb3296cbfba0df5d71",
+      "pull_bits": [
+        "3fefaa22a7c1433c",
+        "bf35a4b9174ba296",
+        "bff350dbb7569b38",
+        "c0073567a998f8ac"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00162.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849515298338400
+    },
+    {
+      "index0": 69,
+      "region": "facet-edges",
+      "source_native_xywh": [
+        2562,
+        2726,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "639a979eb18971f2b806feea45f10cfbc8c8f065415cfb293c20bff8b8b43bfd",
+      "pull_bits": [
+        "3fefa789c1a8197e",
+        "bf380a38ea22005d",
+        "bff496d23dc0086a",
+        "c0085a0c3d944104"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00163.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849515789914400
+    },
+    {
+      "index0": 69,
+      "region": "dark-inclusion",
+      "source_native_xywh": [
+        3106,
+        1885,
+        384,
+        384
+      ],
+      "crop_rgb16_sha256": "fb2504af008a9528f1f963b00500a4241a81fab8a0dae7edaf3bf084033f8704",
+      "pull_bits": [
+        "3fefa789c1a8197e",
+        "bf380a38ea22005d",
+        "bff496d23dc0086a",
+        "c0085a0c3d944104"
+      ],
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00163.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849515789914400
+    }
+  ],
+  "interpretation": "No quality score, focus optimum, optical PSF, spectral attribution or RAW clipping measurement."
+}

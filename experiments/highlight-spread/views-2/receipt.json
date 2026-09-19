@@ -1,0 +1,22 @@
+{
+  "status": "PRESENTATION_ONLY",
+  "script_sha256": "8c9bb043069feaeb408f13a26899d88e675d1ed72473839f5c9e4e9d14d479fc",
+  "profiles": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\highlight-spread\\run-1\\profiles.npz",
+  "profiles_sha256": "f92f85627ba20bde1ad888f779d515a8820c8ae749e50c19bbf06c1fdc54b93e",
+  "source_receipt_sha256": "4bd2b0293b9c52e3804f939ab33db937dd9714a300a43d676111f13f460266d6",
+  "outputs": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\highlight-spread\\views-2\\facet-glint.png",
+      "sha256": "3ca576ff501b5f82da20278a2b34d5313edcaeceebee3bd60e756f4548c2141a"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\highlight-spread\\views-2\\dark-glint.png",
+      "sha256": "5323a32bfab9d13496e8d36f190eb23a979651d4a326f39e527ca6272689926d"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\highlight-spread\\views-2\\real-structure.png",
+      "sha256": "f96bb78d636b93cc24b46d13110f761ca7454f54564d91ceb6672db600d07ea7"
+    }
+  ],
+  "changes": "Fresh standalone figures; explicit axes, ticks and strip labels. No numerical changes."
+}
