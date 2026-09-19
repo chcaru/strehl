@@ -4910,6 +4910,16 @@ pub(crate) mod complex_wavelet_merge {
 }
 
 #[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance"))]
+pub(crate) mod all_cfa_wavelet {
+    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/all-cfa-wavelet/implementation.rs"));
+}
+
+#[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance"))]
+pub(crate) mod complete_cfa_wavelet {
+    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/complete-cfa-wavelet/implementation.rs"));
+}
+
+#[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance"))]
 pub(crate) mod fine_support_tests {
     include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/fine-support-guidance/measure.rs"));
 }

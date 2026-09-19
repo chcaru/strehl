@@ -175,6 +175,35 @@ justify the separately considered parent-band weight multiplier as a full
 render. Evidence: experiments/green-match-rgb/results.md and its independent
 photographic review.
 
+The first native complex-wavelet screen is now complete and rejected
+(fbe8bbcb). Its transform and identity variance checks pass, but green-only
+directional evidence loses real red/blue detail under spatially varying focus.
+Flat-field gains do not compensate for that loss. The exact failed rule is
+closed. The next fixed test uses energy from all four original CFA planes,
+shared colour weights, two decomposition levels and exact composed sensor-noise
+propagation. It retains independent truth/detail controls and adds a weak-colour
+test under the warm capture WB. No RAW replay or promotion is yet admitted;
+see experiments/all-cfa-wavelet/charter.md.
+
+That two-level screen has now completed and remains rejected: fine/colour/noise
+guards pass, but genuine coarse structure is attenuated to about0.528 of truth.
+Independent filter analysis predicts0.528616 from structure left in the mean
+base. The separately scoped next operator decomposes geometrically to terminal
+DC, first on a fixed periodic generated domain with no image padding. Natural
+boundaries and fractional noise remain subsequent questions, not assumptions.
+See all-cfa-wavelet/results-review.md and complete-cfa-wavelet/charter.md.
+
+The complete periodic candidate now passes all32 fixed scene/ISO/phase cases,
+including coarse recovery near truth and the weak-red focused-source guard.
+This admits a boundary/composed-gather check, not a photographic claim. The
+comparison changes transform, actual depth, exponent ramp and boundaries;
+seven requested baseline bands reach four on the fixed128-square domain.
+See complete-cfa-wavelet/results.md and its independent results review.
+In parallel, Helicon8.3.11 trial B/C have produced complete70-frame vitamin-C
+outputs from the retained RGB16 inputs. RAW loading requires an absent Adobe
+DNG converter; these are prepared-TIFF whole-workflow comparisons with
+unmatched development/alignment, not native-RAW or speed benchmarks.
+
 Show the owner the complete stack output whenever presenting an improvement,
 including the complete before image for comparisons and a link to the RGB16
 master. Native crops remain diagnostic evidence, never the sole presentation.
