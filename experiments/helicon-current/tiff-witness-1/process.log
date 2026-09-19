@@ -1,0 +1,4 @@
+QIODevice::write (QFile, "C:\Users\chris\AppData\Local\HeliconFocus\HeliconFocus.log"): device not open
+Processing started...
+0.01%25.01%50.00%62.50%73.16%75.00%83.33%91.07%92.07%
+Processing complete.

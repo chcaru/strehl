@@ -1,0 +1,946 @@
+{
+  "schema": 1,
+  "inputs": {
+    "baseline": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\green-match-rgb\\full-2\\photo-comparison-1\\baseline.png",
+      "bytes": 37540366,
+      "sha256": "68b2f4533e14eefb6e8b2473cc4312fe0d330cd70c83569148270fba12491326",
+      "shape": [
+        4612,
+        6920,
+        3
+      ],
+      "icc_bytes": 2716,
+      "icc_sha256": "238ad2596316306a72025bb245cf3c8cd72f1090c8d95af2f38dc090e84ece5b",
+      "icc_description": "strehl sRGB (IEC 61966-2-1)"
+    },
+    "green-match": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\green-match-rgb\\full-2\\photo-comparison-1\\candidate.png",
+      "bytes": 34316401,
+      "sha256": "e70877a558c6dd5ff863fcb64361e1fcb9e77f5f65df20146b4dddb5c00d64b8",
+      "shape": [
+        4612,
+        6920,
+        3
+      ],
+      "icc_bytes": 2716,
+      "icc_sha256": "238ad2596316306a72025bb245cf3c8cd72f1090c8d95af2f38dc090e84ece5b",
+      "icc_description": "strehl sRGB (IEC 61966-2-1)"
+    },
+    "helicon-b": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\helicon-current\\vitamin-c-b-2\\whole-stack.tiff",
+      "bytes": 197827122,
+      "sha256": "f08335d17083789fa2bd60ee17ecbaba921bbc7aa20c9fdfdfa0cf0e1ca1d2d8",
+      "shape": [
+        4688,
+        7032,
+        3
+      ],
+      "icc_bytes": 2716,
+      "icc_sha256": "238ad2596316306a72025bb245cf3c8cd72f1090c8d95af2f38dc090e84ece5b",
+      "icc_description": "strehl sRGB (IEC 61966-2-1)"
+    },
+    "helicon-c": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\helicon-current\\vitamin-c-c-2\\whole-stack.tiff",
+      "bytes": 197827122,
+      "sha256": "1cc7b2f041ce3753b5d3d88b2a3fa41a265014b4c0909c181e913774115b65bf",
+      "shape": [
+        4688,
+        7032,
+        3
+      ],
+      "icc_bytes": 2716,
+      "icc_sha256": "238ad2596316306a72025bb245cf3c8cd72f1090c8d95af2f38dc090e84ece5b",
+      "icc_description": "strehl sRGB (IEC 61966-2-1)"
+    },
+    "fork": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-fork-40g-1\\fork.tiff",
+      "bytes": 212698226,
+      "sha256": "7b83629a998ba543026bb7cce66beaf72c996a77dd9568cae4b5b0c63071c3b9",
+      "shape": [
+        4626,
+        6958,
+        3
+      ],
+      "icc_bytes": 0,
+      "icc_sha256": null,
+      "icc_description": null
+    }
+  },
+  "helper": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\helicon-current\\compare.py",
+    "bytes": 9127,
+    "sha256": "6bea9ae7c18523d398fe0c05c0f0a0aebe96e34af39fe10a52fe2ac47a6a80d4"
+  },
+  "frozen_regions": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-review-1\\regions.json",
+    "bytes": 1068,
+    "sha256": "ff55ed297385ff8fef5d2badce07729537e2e867701d96d328be1eaf7bcb0f4f"
+  },
+  "registrations": {
+    "helicon-b": {
+      "matrix_baseline_to_output": [
+        [
+          1.0107248408247895,
+          0.00010157169086644213,
+          18.587361174977467
+        ],
+        [
+          -0.00010157169086644213,
+          1.0107248408247895,
+          13.668897785409621
+        ]
+      ],
+      "scale": 1.0107248459284577,
+      "angle_degrees": -0.005757876872121524,
+      "ratio_matches": 2618,
+      "training_matches": 1314,
+      "training_inliers": 1252,
+      "training_residual_all": {
+        "n": 1314,
+        "median": 0.6910025643046004,
+        "p90": 2.549608727919203,
+        "p95": 3.8918588400559404,
+        "max": 13.33103900467911
+      },
+      "heldout_residual_all": {
+        "n": 1304,
+        "median": 0.7203287361875492,
+        "p90": 2.358451935144435,
+        "p95": 3.9640167522553424,
+        "max": 2441.6090147365576
+      },
+      "heldout_fraction_within2": 0.8734662576687117,
+      "heldout_fraction_within4": 0.9501533742331288,
+      "heldout_fraction_within8": 0.9877300613496932,
+      "heldout_definition": "odd checkerboard cells of384native; no held-out match used in fit",
+      "interpretation": "coordinate correspondence only; not placement truth or image quality"
+    },
+    "helicon-c": {
+      "matrix_baseline_to_output": [
+        [
+          1.0106972052621228,
+          0.00011312501091543593,
+          18.50365625251346
+        ],
+        [
+          -0.00011312501091543593,
+          1.0106972052621228,
+          13.280320987429178
+        ]
+      ],
+      "scale": 1.0106972115930337,
+      "angle_degrees": -0.0064129846426934254,
+      "ratio_matches": 2294,
+      "training_matches": 1166,
+      "training_inliers": 1103,
+      "training_residual_all": {
+        "n": 1166,
+        "median": 0.8556368958851461,
+        "p90": 2.6916601325795693,
+        "p95": 4.063641579866705,
+        "max": 3250.4696056714292
+      },
+      "heldout_residual_all": {
+        "n": 1128,
+        "median": 0.8996657982881144,
+        "p90": 3.0388435882325378,
+        "p95": 3.9780609012774684,
+        "max": 4018.0427774563004
+      },
+      "heldout_fraction_within2": 0.8173758865248227,
+      "heldout_fraction_within4": 0.9512411347517731,
+      "heldout_fraction_within8": 0.9875886524822695,
+      "heldout_definition": "odd checkerboard cells of384native; no held-out match used in fit",
+      "interpretation": "coordinate correspondence only; not placement truth or image quality"
+    },
+    "fork": {
+      "matrix_baseline_to_output": [
+        [
+          0.9997473525951515,
+          3.202499498119809e-05,
+          18.67776400460933
+        ],
+        [
+          -3.202499498119809e-05,
+          0.9997473525951515,
+          4.506915790343163
+        ]
+      ],
+      "scale": 0.9997473531080812,
+      "angle_degrees": -0.0018353607498530974,
+      "ratio_matches": 2516,
+      "training_matches": 1259,
+      "training_inliers": 1174,
+      "training_residual_all": {
+        "n": 1259,
+        "median": 0.7722601653964364,
+        "p90": 3.1380304908465857,
+        "p95": 4.710358384731656,
+        "max": 14.583830973469057
+      },
+      "heldout_residual_all": {
+        "n": 1257,
+        "median": 0.8140943140864978,
+        "p90": 3.016719531085583,
+        "p95": 4.355823458234209,
+        "max": 2434.739887027056
+      },
+      "heldout_fraction_within2": 0.8146380270485283,
+      "heldout_fraction_within4": 0.939538583929992,
+      "heldout_fraction_within8": 0.984884645982498,
+      "heldout_definition": "odd checkerboard cells of384native; no held-out match used in fit",
+      "interpretation": "coordinate correspondence only; not placement truth or image quality"
+    }
+  },
+  "regions": [
+    {
+      "name": "facet-edges",
+      "baseline_xywh": [
+        2500,
+        2700,
+        384,
+        384
+      ],
+      "arms": {
+        "baseline": {
+          "xywh": [
+            2500,
+            2700,
+            384,
+            384
+          ],
+          "mapped_centre": [
+            2691.5,
+            2891.5
+          ],
+          "rounding_native": [
+            0.0,
+            0.0
+          ]
+        },
+        "green-match": {
+          "xywh": [
+            2500,
+            2700,
+            384,
+            384
+          ],
+          "mapped_centre": [
+            2691.5,
+            2891.5
+          ],
+          "rounding_native": [
+            0.0,
+            0.0
+          ]
+        },
+        "helicon-b": {
+          "xywh": [
+            2548,
+            2744,
+            384,
+            384
+          ],
+          "mapped_centre": [
+            2739.246964799039,
+            2935.9063948243215
+          ],
+          "rounding_native": [
+            0.25303520096122156,
+            -0.40639482432152363
+          ],
+          "local_heldout_residual_all": {
+            "n": 47,
+            "median": 0.7577414469718833,
+            "p90": 3.1675004268487648,
+            "p95": 4.941364454440525,
+            "max": 12.154876347345581
+          },
+          "local_heldout_fraction_within8": 0.9787234042553191,
+          "local_status": "at least4 heldout structural correspondences within700native"
+        },
+        "helicon-c": {
+          "xywh": [
+            2548,
+            2744,
+            384,
+            384
+          ],
+          "mapped_centre": [
+            2739.1222851845787,
+            2935.4068140359786
+          ],
+          "rounding_native": [
+            0.3777148154213137,
+            0.09318596402135881
+          ],
+          "local_heldout_residual_all": {
+            "n": 45,
+            "median": 0.963094196732871,
+            "p90": 4.386868918490963,
+            "p95": 6.993806901147712,
+            "max": 8.957708795456261
+          },
+          "local_heldout_fraction_within8": 0.9555555555555556,
+          "local_status": "at least4 heldout structural correspondences within700native"
+        },
+        "fork": {
+          "xywh": [
+            2518,
+            2704,
+            384,
+            384
+          ],
+          "mapped_centre": [
+            2709.5903637874476,
+            2895.1901905452314
+          ],
+          "rounding_native": [
+            -0.09036378744758622,
+            0.30980945476858324
+          ],
+          "local_heldout_residual_all": {
+            "n": 47,
+            "median": 1.3898557795653654,
+            "p90": 5.316067547881232,
+            "p95": 7.30606329143105,
+            "max": 12.730336518299689
+          },
+          "local_heldout_fraction_within8": 0.9574468085106383,
+          "local_status": "at least4 heldout structural correspondences within700native"
+        }
+      }
+    },
+    {
+      "name": "pale-background",
+      "baseline_xywh": [
+        400,
+        1150,
+        384,
+        384
+      ],
+      "arms": {
+        "baseline": {
+          "xywh": [
+            400,
+            1150,
+            384,
+            384
+          ],
+          "mapped_centre": [
+            591.5,
+            1341.5
+          ],
+          "rounding_native": [
+            0.0,
+            0.0
+          ]
+        },
+        "green-match": {
+          "xywh": [
+            400,
+            1150,
+            384,
+            384
+          ],
+          "mapped_centre": [
+            591.5,
+            1341.5
+          ],
+          "rounding_native": [
+            0.0,
+            0.0
+          ]
+        },
+        "helicon-b": {
+          "xywh": [
+            425,
+            1178,
+            384,
+            384
+          ],
+          "mapped_centre": [
+            616.5673629461378,
+            1369.4961920967173
+          ],
+          "rounding_native": [
+            -0.06736294613779137,
+            0.0038079032826772163
+          ],
+          "local_heldout_residual_all": {
+            "n": 35,
+            "median": 0.7152419265337904,
+            "p90": 2.4946611631213558,
+            "p95": 6.7401371848451,
+            "max": 2441.6090147365576
+          },
+          "local_heldout_fraction_within8": 0.9714285714285714,
+          "local_status": "at least4 heldout structural correspondences within700native"
+        },
+        "helicon-c": {
+          "xywh": [
+            425,
+            1178,
+            384,
+            384
+          ],
+          "mapped_centre": [
+            616.4828103672022,
+            1369.0637084026105
+          ],
+          "rounding_native": [
+            0.01718963279779473,
+            0.43629159738952694
+          ],
+          "local_heldout_residual_all": {
+            "n": 32,
+            "median": 1.1560116929796769,
+            "p90": 3.2995568003179003,
+            "p95": 4.187400978628009,
+            "max": 5.788161227241704
+          },
+          "local_heldout_fraction_within8": 1.0,
+          "local_status": "at least4 heldout structural correspondences within700native"
+        },
+        "fork": {
+          "xywh": [
+            419,
+            1154,
+            384,
+            384
+          ],
+          "mapped_centre": [
+            610.0712845954087,
+            1345.6490465122074
+          ],
+          "rounding_native": [
+            0.42871540459134394,
+            -0.1490465122074056
+          ],
+          "local_heldout_residual_all": {
+            "n": 32,
+            "median": 1.283815129896772,
+            "p90": 3.827090827145697,
+            "p95": 4.790976193136149,
+            "max": 7.910102807153972
+          },
+          "local_heldout_fraction_within8": 1.0,
+          "local_status": "at least4 heldout structural correspondences within700native"
+        }
+      }
+    },
+    {
+      "name": "fine-crystals",
+      "baseline_xywh": [
+        4200,
+        1700,
+        384,
+        384
+      ],
+      "arms": {
+        "baseline": {
+          "xywh": [
+            4200,
+            1700,
+            384,
+            384
+          ],
+          "mapped_centre": [
+            4391.5,
+            1891.5
+          ],
+          "rounding_native": [
+            0.0,
+            0.0
+          ]
+        },
+        "green-match": {
+          "xywh": [
+            4200,
+            1700,
+            384,
+            384
+          ],
+          "mapped_centre": [
+            4391.5,
+            1891.5
+          ],
+          "rounding_native": [
+            0.0,
+            0.0
+          ]
+        },
+        "helicon-b": {
+          "xywh": [
+            4266,
+            1734,
+            384,
+            384
+          ],
+          "mapped_centre": [
+            4457.377622510315,
+            1925.008882125059
+          ],
+          "rounding_native": [
+            0.1223774896852774,
+            0.4911178749409828
+          ],
+          "local_heldout_residual_all": {
+            "n": 73,
+            "median": 0.5418409792620845,
+            "p90": 1.3983707714101168,
+            "p95": 1.6137736143014532,
+            "max": 7.144202269837292
+          },
+          "local_heldout_fraction_within8": 1.0,
+          "local_status": "at least4 heldout structural correspondences within700native"
+        },
+        "helicon-c": {
+          "xywh": [
+            4266,
+            1733,
+            384,
+            384
+          ],
+          "mapped_centre": [
+            4457.194409119273,
+            1924.5172962552992
+          ],
+          "rounding_native": [
+            0.30559088072732266,
+            -0.017296255299243057
+          ],
+          "local_heldout_residual_all": {
+            "n": 62,
+            "median": 0.7256175492044172,
+            "p90": 1.8745933833824469,
+            "p95": 2.1307138377306796,
+            "max": 3.9833881315000794
+          },
+          "local_heldout_fraction_within8": 1.0,
+          "local_status": "at least4 heldout structural correspondences within700native"
+        },
+        "fork": {
+          "xywh": [
+            4218,
+            1704,
+            384,
+            384
+          ],
+          "mapped_centre": [
+            4409.128838204224,
+            1895.388395458612
+          ],
+          "rounding_native": [
+            0.3711617957760609,
+            0.11160454138803289
+          ],
+          "local_heldout_residual_all": {
+            "n": 67,
+            "median": 0.7761142463096674,
+            "p90": 2.3138977120371784,
+            "p95": 2.894480434977572,
+            "max": 5.7670728905206685
+          },
+          "local_heldout_fraction_within8": 1.0,
+          "local_status": "at least4 heldout structural correspondences within700native"
+        }
+      }
+    },
+    {
+      "name": "bright-facet",
+      "baseline_xywh": [
+        1150,
+        3850,
+        384,
+        384
+      ],
+      "arms": {
+        "baseline": {
+          "xywh": [
+            1150,
+            3850,
+            384,
+            384
+          ],
+          "mapped_centre": [
+            1341.5,
+            4041.5
+          ],
+          "rounding_native": [
+            0.0,
+            0.0
+          ]
+        },
+        "green-match": {
+          "xywh": [
+            1150,
+            3850,
+            384,
+            384
+          ],
+          "mapped_centre": [
+            1341.5,
+            4041.5
+          ],
+          "rounding_native": [
+            0.0,
+            0.0
+          ]
+        },
+        "helicon-b": {
+          "xywh": [
+            1183,
+            3907,
+            384,
+            384
+          ],
+          "mapped_centre": [
+            1374.8852371300695,
+            4098.377083555499
+          ],
+          "rounding_native": [
+            -0.38523713006952676,
+            0.12291644450124295
+          ],
+          "local_heldout_residual_all": {
+            "n": 16,
+            "median": 1.526063257909405,
+            "p90": 4.709426048692676,
+            "p95": 6.017899334438151,
+            "max": 6.017899334438151
+          },
+          "local_heldout_fraction_within8": 1.0,
+          "local_status": "at least4 heldout structural correspondences within700native"
+        },
+        "helicon-c": {
+          "xywh": [
+            1183,
+            3906,
+            384,
+            384
+          ],
+          "mapped_centre": [
+            1374.811151843266,
+            4097.861318852156
+          ],
+          "rounding_native": [
+            -0.3111518432660887,
+            -0.3613188521558186
+          ],
+          "local_heldout_residual_all": {
+            "n": 15,
+            "median": 2.1588792541226494,
+            "p90": 5.455412725766672,
+            "p95": 5.530085890572009,
+            "max": 5.530085890572009
+          },
+          "local_heldout_fraction_within8": 1.0,
+          "local_status": "at least4 heldout structural correspondences within700native"
+        },
+        "fork": {
+          "xywh": [
+            1168,
+            3853,
+            384,
+            384
+          ],
+          "mapped_centre": [
+            1359.9682665282216,
+            4044.9428797728806
+          ],
+          "rounding_native": [
+            -0.4682665282216476,
+            -0.44287977288058755
+          ],
+          "local_heldout_residual_all": {
+            "n": 16,
+            "median": 1.7406297540262383,
+            "p90": 4.636604174303275,
+            "p95": 4.8080385071297105,
+            "max": 5.3223415056090175
+          },
+          "local_heldout_fraction_within8": 1.0,
+          "local_status": "at least4 heldout structural correspondences within700native"
+        }
+      }
+    },
+    {
+      "name": "dark-inclusion",
+      "baseline_xywh": [
+        3050,
+        1850,
+        384,
+        384
+      ],
+      "arms": {
+        "baseline": {
+          "xywh": [
+            3050,
+            1850,
+            384,
+            384
+          ],
+          "mapped_centre": [
+            3241.5,
+            2041.5
+          ],
+          "rounding_native": [
+            0.0,
+            0.0
+          ]
+        },
+        "green-match": {
+          "xywh": [
+            3050,
+            1850,
+            384,
+            384
+          ],
+          "mapped_centre": [
+            3241.5,
+            2041.5
+          ],
+          "rounding_native": [
+            0.0,
+            0.0
+          ]
+        },
+        "helicon-b": {
+          "xywh": [
+            3104,
+            1885,
+            384,
+            384
+          ],
+          "mapped_centre": [
+            3295.0592913154364,
+            2076.7344156932736
+          ],
+          "rounding_native": [
+            0.4407086845635604,
+            -0.23441569327360412
+          ],
+          "local_heldout_residual_all": {
+            "n": 82,
+            "median": 0.76093407455268,
+            "p90": 3.9832767628401498,
+            "p95": 4.728895645343456,
+            "max": 1303.4278200210222
+          },
+          "local_heldout_fraction_within8": 0.975609756097561,
+          "local_status": "at least4 heldout structural correspondences within700native"
+        },
+        "helicon-c": {
+          "xywh": [
+            3103,
+            1885,
+            384,
+            384
+          ],
+          "mapped_centre": [
+            3294.9095918194685,
+            2076.2519708071704
+          ],
+          "rounding_native": [
+            -0.40959181946846,
+            0.24802919282956282
+          ],
+          "local_heldout_residual_all": {
+            "n": 96,
+            "median": 0.9691831170901682,
+            "p90": 3.263649671468478,
+            "p95": 3.7224151914388646,
+            "max": 7.56107836093557
+          },
+          "local_heldout_fraction_within8": 1.0,
+          "local_status": "at least4 heldout structural correspondences within700native"
+        },
+        "fork": {
+          "xywh": [
+            3068,
+            1854,
+            384,
+            384
+          ],
+          "mapped_centre": [
+            3259.424186469047,
+            2045.387327092113
+          ],
+          "rounding_native": [
+            0.07581353095292798,
+            0.11267290788691753
+          ],
+          "local_heldout_residual_all": {
+            "n": 84,
+            "median": 0.8735065969304215,
+            "p90": 2.98987285027492,
+            "p95": 4.704141113124856,
+            "max": 6.577694858562666
+          },
+          "local_heldout_fraction_within8": 1.0,
+          "local_status": "at least4 heldout structural correspondences within700native"
+        }
+      }
+    }
+  ],
+  "outputs": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\helicon-current\\photo-comparison-1\\facet-edges-baseline.png",
+      "bytes": 192716,
+      "sha256": "2e547ac1bab0614449209083bc9d12a21312e4295f67ba467133a87aaa8f98f4"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\helicon-current\\photo-comparison-1\\facet-edges-green-match.png",
+      "bytes": 178405,
+      "sha256": "669ac6c4fda1293ee7daffe6a01dbbccda87683a1225d38445426a6469b7bfad"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\helicon-current\\photo-comparison-1\\facet-edges-helicon-b.png",
+      "bytes": 193627,
+      "sha256": "dbbfeb121b91052da1c660ed132204ef7dd4a7f22edff6663f66dc2ae3ee3d17"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\helicon-current\\photo-comparison-1\\facet-edges-helicon-c.png",
+      "bytes": 208874,
+      "sha256": "3ea43f4310161555653e3a5528a85b23daf0122dd1ba3b5e90ca67cf11ed82b1"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\helicon-current\\photo-comparison-1\\facet-edges-fork.png",
+      "bytes": 239706,
+      "sha256": "c5bb12e8fd17dd7e05419d77211fdefc3010dc5a5164236ff53448cc0ecffedf"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\helicon-current\\photo-comparison-1\\facet-edges-board.png",
+      "bytes": 1046467,
+      "sha256": "054a10d1cd4b802f2843f144aad7bf647cd814a3470152f74d6f11794c6b9da3"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\helicon-current\\photo-comparison-1\\pale-background-baseline.png",
+      "bytes": 138476,
+      "sha256": "dbf8d5a5d13522474a118e7e6efd6bc142aacd573ab5f83bcf6f2a93ecd47353"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\helicon-current\\photo-comparison-1\\pale-background-green-match.png",
+      "bytes": 114323,
+      "sha256": "163bdd925001482dd52bf43703b6bb34d51fe6f9606c11a62b6b2dfc207f3ed5"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\helicon-current\\photo-comparison-1\\pale-background-helicon-b.png",
+      "bytes": 141801,
+      "sha256": "cc904dd5284a11023060c842ca4a76864fb373ec35f8989295b195bbda55f336"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\helicon-current\\photo-comparison-1\\pale-background-helicon-c.png",
+      "bytes": 153817,
+      "sha256": "e6e363a11aa964ea63fb3e225606af2f5aa084a4426322c39bb65afd96b48453"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\helicon-current\\photo-comparison-1\\pale-background-fork.png",
+      "bytes": 194777,
+      "sha256": "9075b9ec971708dc6fbad4fed83929f005fc51b00a3a551d9b0a519133da88d5"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\helicon-current\\photo-comparison-1\\pale-background-board.png",
+      "bytes": 795510,
+      "sha256": "24c087ebf753802c4f24c1ca269704d0923fb03082b16f4725daf6caccdab07a"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\helicon-current\\photo-comparison-1\\fine-crystals-baseline.png",
+      "bytes": 200537,
+      "sha256": "d8144e2030108058ed0c21117ed5a75d9b407920984080cd88b9db54fd065838"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\helicon-current\\photo-comparison-1\\fine-crystals-green-match.png",
+      "bytes": 187931,
+      "sha256": "652ad107bd72fc007f7efbe81b1e6a32067a45188ec7ad99cfce889dcdb01fee"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\helicon-current\\photo-comparison-1\\fine-crystals-helicon-b.png",
+      "bytes": 201169,
+      "sha256": "ce9ce0d5b0b6c735109a029f65254269591e5b427837215289725754720c62b4"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\helicon-current\\photo-comparison-1\\fine-crystals-helicon-c.png",
+      "bytes": 209061,
+      "sha256": "b263ffcf64b00d73943d9118e60eee41b86ab00cbb88093d5da55a0dff7e77a0"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\helicon-current\\photo-comparison-1\\fine-crystals-fork.png",
+      "bytes": 241346,
+      "sha256": "b89bf1776415c4d03d707f20f1d240a9574f936a697091369f84298fde680d8b"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\helicon-current\\photo-comparison-1\\fine-crystals-board.png",
+      "bytes": 1076243,
+      "sha256": "7509036dc7ead88d3d824573d0cbe55938df203ae42b33c1d57b5c6b8df6cb4f"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\helicon-current\\photo-comparison-1\\bright-facet-baseline.png",
+      "bytes": 144642,
+      "sha256": "1443ac73dc871aed2fe6fc5f72b32711c3ed6f155490ce083420acd5b5ee507f"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\helicon-current\\photo-comparison-1\\bright-facet-green-match.png",
+      "bytes": 119741,
+      "sha256": "3634e81671591daf2491cfaff22743579497e65c4d535fddc040b90db220bcdf"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\helicon-current\\photo-comparison-1\\bright-facet-helicon-b.png",
+      "bytes": 146313,
+      "sha256": "edaad39178479b58bfed94721499a219d11299bbb3e7c5bfdc534ba0d7ebc871"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\helicon-current\\photo-comparison-1\\bright-facet-helicon-c.png",
+      "bytes": 158043,
+      "sha256": "8013d0e2182b5a5c3b3d291f17d77049c0134bbfbb79195457970713e7ff0530"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\helicon-current\\photo-comparison-1\\bright-facet-fork.png",
+      "bytes": 197474,
+      "sha256": "f09a8eb48b26feadc07150929645e882323e0e4ea2da452fd16b843b715e879a"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\helicon-current\\photo-comparison-1\\bright-facet-board.png",
+      "bytes": 815753,
+      "sha256": "66d61d184fa5f42705735b0ad35bf22cd27ad031a5a895dcaa4684e9fe2ea3e7"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\helicon-current\\photo-comparison-1\\dark-inclusion-baseline.png",
+      "bytes": 187949,
+      "sha256": "851143c7d19524d584e8378125456e230d923e7ee9b427989b1e7c1f548594ce"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\helicon-current\\photo-comparison-1\\dark-inclusion-green-match.png",
+      "bytes": 172583,
+      "sha256": "a2ded8a4a587880ec3c375582e23599e3be3556dc98bcdd674d10a36dbc5908c"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\helicon-current\\photo-comparison-1\\dark-inclusion-helicon-b.png",
+      "bytes": 186747,
+      "sha256": "9084a40c390b0586c8edfc3196b7785731e8ecc5146d81a5ef6486e588ab75b2"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\helicon-current\\photo-comparison-1\\dark-inclusion-helicon-c.png",
+      "bytes": 198765,
+      "sha256": "ca760f1952360d50c6c6f2c3674ce96254855480f1cbf8b9569972c8a5344d5c"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\helicon-current\\photo-comparison-1\\dark-inclusion-fork.png",
+      "bytes": 231607,
+      "sha256": "6a9f390294befd7098e30dc6432c01d09687809405dec2a9e887cb8ef1d46da6"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\helicon-current\\photo-comparison-1\\dark-inclusion-board.png",
+      "bytes": 1013357,
+      "sha256": "1890bf784258b7bbc9dd8f4c48ac90c6a74565a7427174597aaf86edb8182a36"
+    }
+  ],
+  "known_profile_equality": true,
+  "fork_profile": "Absent; existing invocation requests output-colorspace=srgb. Individual fork crops remain untagged; boards display code values in shared sRGB with explicit label.",
+  "registration": "quarter-size SIFT5000, ratio.70; spatially disjoint training/heldout384native cells; similarity RANSAC4native. No crop resampling.",
+  "green_match_identity": "same completed paired renderer geometry and coordinate receipt; no fit needed",
+  "display": "PNG sources unchanged RGB8; TIFF sources rounded (u16+128)//257. 384native crops centered via similarity, no scaling/rotation/resampling. Scale mismatch retained.",
+  "scope": "Existing workspace outputs only; no RAW, new merge, sharpness score or product ranking."
+}

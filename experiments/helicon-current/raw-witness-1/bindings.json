@@ -1,0 +1,38 @@
+{
+  "executable": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\helicon-current\\program\\HeliconFocus.exe",
+    "sha256": "29ca62df122163c1295e1e2a416a42acfdf52f20c83d0beed99c4af154d42089",
+    "bytes": 16249488
+  },
+  "originals": [
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00128.ARW",
+      "sha256": "401171ccdc2288c1345d1636246d2925e26de089144b073f77fc8b4814669bf9",
+      "bytes": 41070592
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00129.ARW",
+      "sha256": "0454d0fc91d763a8dd051236c5ef53cf9b5d3b4989738a3e207c75a56e2f9711",
+      "bytes": 41074688
+    }
+  ],
+  "inputs": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\helicon-current\\raw-witness-1\\input\\DSC00128.ARW",
+      "sha256": "401171ccdc2288c1345d1636246d2925e26de089144b073f77fc8b4814669bf9",
+      "bytes": 41070592
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\helicon-current\\raw-witness-1\\input\\DSC00129.ARW",
+      "sha256": "0454d0fc91d763a8dd051236c5ef53cf9b5d3b4989738a3e207c75a56e2f9711",
+      "bytes": 41074688
+    }
+  ],
+  "runner": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\helicon-current\\run-witness.py",
+    "sha256": "47d65cec297862b195efd68a813053dd6426383f3ce2e26181e266d30033eae9",
+    "bytes": 2398
+  },
+  "purpose": "RAW compatibility and full-resolution trial witness; not a quality or timing comparison",
+  "codec_development_alignment_settings": "application defaults, not yet independently established"
+}

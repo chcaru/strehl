@@ -1,0 +1,24 @@
+{
+  "command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\helicon-current\\program\\HeliconFocus.exe",
+    "-silent",
+    "-noprogress",
+    "-i",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\helicon-current\\raw-witness-1\\inputs.txt",
+    "-mp:1",
+    "-rp:8",
+    "-sp:4",
+    "-sort:asc",
+    "-tif:u",
+    "-save:C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\helicon-current\\raw-witness-1\\witness.tiff",
+    "-o",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\helicon-current\\raw-witness-1\\saved-outputs.txt"
+  ],
+  "environment": {},
+  "removed_environment": [],
+  "runner": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\full-context-placement\\run.py",
+    "sha256": "17451d237bf256004ca8853ef4c2a9e1c582012d43ad33fd687606e68a5fb76f",
+    "bytes": 7707
+  }
+}

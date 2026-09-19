@@ -1,0 +1,18 @@
+{
+  "executable": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\helicon-current\\helicon-focus-installer.exe",
+  "arguments": [
+    "/VERYSILENT",
+    "/SUPPRESSMSGBOXES",
+    "/NORESTART",
+    "/NOCLOSEAPPLICATIONS",
+    "/NORESTARTAPPLICATIONS",
+    "/SP-",
+    "/CURRENTUSER",
+    "/NOICONS",
+    "/TASKS=\"\"",
+    "/DIR=\"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\helicon-current\\program\"",
+    "/LOG=\"C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\helicon-current\\install.log\""
+  ],
+  "target": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\helicon-current\\program",
+  "utc": "2026-09-19T22:59:43.6855398Z"
+}

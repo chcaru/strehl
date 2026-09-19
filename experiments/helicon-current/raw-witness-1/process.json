@@ -1,0 +1,68 @@
+{
+  "command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\helicon-current\\program\\HeliconFocus.exe",
+    "-silent",
+    "-noprogress",
+    "-i",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\helicon-current\\raw-witness-1\\inputs.txt",
+    "-mp:1",
+    "-rp:8",
+    "-sp:4",
+    "-sort:asc",
+    "-tif:u",
+    "-save:C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\helicon-current\\raw-witness-1\\witness.tiff",
+    "-o",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\helicon-current\\raw-witness-1\\saved-outputs.txt"
+  ],
+  "exit_code": 3784556766,
+  "error": "ValueError('child wall bound')",
+  "cleanup_errors": [],
+  "wall_seconds": 180.03100000000268,
+  "log_bytes": 23,
+  "job_accounting": {
+    "total_user_100ns": 2812500,
+    "total_kernel_100ns": 6406250,
+    "total_cpu_100ns": 9218750,
+    "total_page_fault_count": 26065,
+    "total_processes": 1,
+    "active_processes": 0,
+    "total_terminated_processes": 0
+  },
+  "job_memory": {
+    "peak_process_memory_used_bytes": 36712448,
+    "peak_job_memory_used_bytes": 36712448
+  },
+  "terminal_job_accounting": true,
+  "configured_job_limits": {
+    "flags": 8704,
+    "committed_bytes": 17179869184
+  },
+  "direct_exit_observed": false,
+  "pipe_eof_observed": false,
+  "post_exit_drain": null,
+  "termination": {
+    "attempted": true,
+    "before_accounting": {
+      "total_user_100ns": 2812500,
+      "total_kernel_100ns": 6406250,
+      "total_cpu_100ns": 9218750,
+      "total_page_fault_count": 26065,
+      "total_processes": 1,
+      "active_processes": 1,
+      "total_terminated_processes": 0
+    },
+    "succeeded": true
+  },
+  "limits": {
+    "wall_seconds": 180,
+    "cpu_seconds": 3600,
+    "log_bytes": 16777216,
+    "committed_bytes": 17179869184
+  },
+  "scope": "owned job tree; committed memory, observed user+kernel CPU; not RSS or a timing benchmark",
+  "log": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\helicon-current\\raw-witness-1\\process.log",
+    "sha256": "1ebd4978c5c6bf73abf95f966740574707f9ed43b195ad6b808dd25408a07a14",
+    "bytes": 23
+  }
+}

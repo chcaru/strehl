@@ -1,0 +1,11 @@
+{
+  "url": "https://www.heliconsoft.com/downloads/HeliconFocus.exe",
+  "downloaded_utc": "2026-09-19T22:56:30.1507933Z",
+  "bytes": 120754544,
+  "sha256": "A0F5E558D05A56BB9FD37EFE88A03F97DA4CBD0A159B2D5C492A85645BC11D56",
+  "signature_status": "Valid",
+  "signer": "CN=\"GELIKON SOFT, TOV\", O=\"GELIKON SOFT, TOV\", S=Kharkivska oblast, C=UA",
+  "file_version": "8.3.11.0            ",
+  "product_name": "Helicon Focus 8                                             ",
+  "executed": false
+}

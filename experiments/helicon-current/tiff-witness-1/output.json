@@ -1,0 +1,22 @@
+{
+  "file": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\helicon-current\\tiff-witness-1\\witness.tiff",
+    "sha256": "7800c574b9b50fd2af47d8bb6684b532264c2233f3031f51b7b0c7d177c6d67d",
+    "bytes": 197827122
+  },
+  "pages": [
+    {
+      "shape": [
+        4688,
+        7032,
+        3
+      ],
+      "dtype": "uint16",
+      "description": "",
+      "software": null
+    }
+  ],
+  "full_resolution_witness": true,
+  "watermark_visual_check": "pending",
+  "inputs_unchanged": true
+}

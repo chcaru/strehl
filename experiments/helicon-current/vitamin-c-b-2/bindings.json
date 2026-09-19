@@ -1,0 +1,373 @@
+{
+  "executable": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\helicon-current\\program\\HeliconFocus.exe",
+    "sha256": "29ca62df122163c1295e1e2a416a42acfdf52f20c83d0beed99c4af154d42089",
+    "bytes": 16249488
+  },
+  "inputs": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00094.tiff",
+      "sha256": "442926e619dfbe91a0cd8e1f97bc61380763df82c8ec5ea674507d53ed43d9b8",
+      "bytes": 197801325
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00095.tiff",
+      "sha256": "ebaaf85ae678c075c489f29923f370e428a23c49af16bbc1c0be05e5749d4650",
+      "bytes": 197801325
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00096.tiff",
+      "sha256": "cf933fda2d4ceb677b334dc15dac884892a1f1c3d7be17433cbb9311f302902a",
+      "bytes": 197801325
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00097.tiff",
+      "sha256": "c041d32ed67daa32f021075f40fca42c25ec4844f1301d2a19d306b3cfc80c6d",
+      "bytes": 197801325
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00098.tiff",
+      "sha256": "255a8c3e2f0a5fbb9b104a6bc1c0f16e9cc0119daa8c01ad5aeb8aeb65368da4",
+      "bytes": 197801325
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00099.tiff",
+      "sha256": "5b2196993c1a4f5ba48fe9ee6862891e587f1a9bea354a2a547f9a16431cc4c5",
+      "bytes": 197801325
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00100.tiff",
+      "sha256": "07420058c32a8c46d3aa585a9604900d7042b2eced6c1bc8ffd3d441c518d678",
+      "bytes": 197801325
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00101.tiff",
+      "sha256": "b091de5da609fe40fa3e8ff0c3803c816a500017c3215dbcce7272ffb3500ae4",
+      "bytes": 197801325
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00102.tiff",
+      "sha256": "70a95e4de171c3e0e63c1055d06cf6a82a2a330d01907643a5b9d1e632444fbd",
+      "bytes": 197801325
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00103.tiff",
+      "sha256": "432de513b3e528b4134455d3a8ef28808c226c95f92ad1189c4bf65d7ff226bb",
+      "bytes": 197801325
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00104.tiff",
+      "sha256": "f88f4f7a68667066006837155cae23527ca4bdabeb4215497e5fb41cd4b76718",
+      "bytes": 197801325
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00105.tiff",
+      "sha256": "5faecc084a6ef81176d897c0fe70a6d9d8fd9f235cf47339a17f8a7e053c66fa",
+      "bytes": 197801325
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00106.tiff",
+      "sha256": "268fa2ef45bb730bb6f3b497297b277611f299b6bfaaaa9daaae6b758ab3cc18",
+      "bytes": 197801325
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00107.tiff",
+      "sha256": "cd802b6e79a7c9ea67a1a8899005c8b82286ba26a97b1c20493058f0e785d5b0",
+      "bytes": 197801325
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00108.tiff",
+      "sha256": "0f5b6844708e1161195ba22719a2ed408f6ed2399914d080c8d050ad4ec5f0e7",
+      "bytes": 197801325
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00109.tiff",
+      "sha256": "74f02d1e473b97fe46b83c41f330b03152d38af2c65dc3dfdf07668c6be1f1e7",
+      "bytes": 197801325
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00110.tiff",
+      "sha256": "bd061afaacf21d8475e8cd55e7a176c320bbdb4977424a6638134214389be933",
+      "bytes": 197801325
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00111.tiff",
+      "sha256": "30413ea04083f3706a60e1be73e4471ac0e41d8fab660f35a67372d8d0a3ed7c",
+      "bytes": 197801325
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00112.tiff",
+      "sha256": "9437ff9b73466daa858a141c2953f9323361db4736dd896c272b0dbe68eef2ca",
+      "bytes": 197801325
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00113.tiff",
+      "sha256": "adf12bdca103c5789a05498e2a5a8495d719e64c68cccc1a11e95f8e34324cb9",
+      "bytes": 197801325
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00114.tiff",
+      "sha256": "e21f5a7956874ebe8791cef79c826512aec193c60434db788b8147a80e530f07",
+      "bytes": 197801325
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00115.tiff",
+      "sha256": "14f4c401e0c56abb12a2a258ae47dcc631bb4fc5b79462f840657de5cf1308fa",
+      "bytes": 197801325
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00116.tiff",
+      "sha256": "5c2f3164c5c9511ee36c4ae30149901cbda7ef9aeb5bc2ff9fcca1d30a7579bc",
+      "bytes": 197801325
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00117.tiff",
+      "sha256": "f17f21ca086abb3434cca4aafd9aa54c3b7f719eda1c277a8b163bdd401787d3",
+      "bytes": 197801325
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00118.tiff",
+      "sha256": "4f028820c8ac659bcdd2c48e78764d442bd8b3e9dd70f11b7d8f48f67124e37a",
+      "bytes": 197801325
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00119.tiff",
+      "sha256": "f545ebe5a224f20d61c6e5ee10d304fd1f1f381fea3d1d169f10f05e9c14c345",
+      "bytes": 197801325
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00120.tiff",
+      "sha256": "4e9fd994a5c382bd37fb2cf9235bf7199becf631eb3d7134ff27320d1869a17a",
+      "bytes": 197801325
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00121.tiff",
+      "sha256": "a8980225bdd01bff45154650fcdf4a9ac61a45b8918f6d6df5ce421c9927189f",
+      "bytes": 197801325
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00122.tiff",
+      "sha256": "01412522706b15a55c6b544424b155d8dd2a350b1458f34c1b3c87c5c631c204",
+      "bytes": 197801325
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00123.tiff",
+      "sha256": "92840f98c1eaf7356c66f015429c2482d116cb06bde8cf6caf5a0cb04cc2134a",
+      "bytes": 197801325
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00124.tiff",
+      "sha256": "4f56929c715d5db85d377b03bad4752d36e5cc6633c5493c6d321878734e48f9",
+      "bytes": 197801325
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00125.tiff",
+      "sha256": "5e3641217cd056f23a19c37ee1eefe7fe7f7af9dbf8f7361c5b995382427b272",
+      "bytes": 197801325
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00126.tiff",
+      "sha256": "a1edd38c92f7b81d4701565a4132d7249df1d16490331df846b28bc40f4596b7",
+      "bytes": 197801325
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00127.tiff",
+      "sha256": "7528b0a03cfb3ccf25d2c70125412cd74ef7362bf30f6f64fa8750b7722af927",
+      "bytes": 197801325
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00128.tiff",
+      "sha256": "61fcebe13d8d9d4b077168f397b1ef464c2d109490b3a21383c40eb60c4e86c7",
+      "bytes": 197801325
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00129.tiff",
+      "sha256": "e8621fdb9f3a1e58de6f1d22e9fc164d9eab0299dd9b1c57e0bac5e0ad8229f3",
+      "bytes": 197801325
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00130.tiff",
+      "sha256": "ad4f21b3a1c68939d89a5fbd95f00bffc4598d1ae92db07dbe64deb09d365480",
+      "bytes": 197801325
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00131.tiff",
+      "sha256": "6898ff12272bdd07b1bebf9e3627297461deb4ec56ffbacb1dc0745d95d3266f",
+      "bytes": 197801325
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00132.tiff",
+      "sha256": "dc7baf81251b540ec6f5ce3bf4cf0c406ef1dd20b2e215aebe31710e2dae8cdb",
+      "bytes": 197801325
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00133.tiff",
+      "sha256": "803c880d855ade614305a1e7b7f02632ce27aabd2395fdd3dd75c3dd920d327c",
+      "bytes": 197801325
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00134.tiff",
+      "sha256": "691624a367069f7353b3cac19795d6f42e841c5b31e3114c64ec8cc9a84aa5fd",
+      "bytes": 197801325
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00135.tiff",
+      "sha256": "4db85bf6e15b3d93c244aae8bcc5ac43318583f6c88f7cff5b1d911ac63deb86",
+      "bytes": 197801325
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00136.tiff",
+      "sha256": "2098ca3ac59ffe3440bc5870484639c87a10d243a43b4818576ff80e371da298",
+      "bytes": 197801325
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00137.tiff",
+      "sha256": "bb4016ae8466b3ccada0a77687c6e7a9c98544e2b64b377fdf901e2d1cc939ba",
+      "bytes": 197801325
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00138.tiff",
+      "sha256": "5bdd8268376182e6dbde7e45ba99290eac95fa66efa0dcd01d86ec2827e9cb4d",
+      "bytes": 197801325
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00139.tiff",
+      "sha256": "7a29009d8c5529bb0b38c6da571a052961fd3519162279e1ccabac12cee66abd",
+      "bytes": 197801325
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00140.tiff",
+      "sha256": "b48b96e8f794d12eb907cadbf4f08d152af97548ce0bcf09bfd9989accb30e78",
+      "bytes": 197801325
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00141.tiff",
+      "sha256": "b5b223d25b2d0377e440460ecb67263d5fa3a5e88b3a3d08ee2ca0b99076d225",
+      "bytes": 197801325
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00142.tiff",
+      "sha256": "cb3987b0c50540e44efa7997c0b6e4306ef483895cb43034ac8d15c78dbaebca",
+      "bytes": 197801325
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00143.tiff",
+      "sha256": "68848524c8239751e621b8eb76ae71a588052a6d937d94d1d123a079b653d45b",
+      "bytes": 197801325
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00144.tiff",
+      "sha256": "2f533c07c164e5d3d28b94436cb0273bc2b9e1bac32f98ec601bbdffa89c0e6b",
+      "bytes": 197801325
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00145.tiff",
+      "sha256": "ed02bd3b253c2eee95b7a1f9dd8ef161e35f4882ff55349ea69c14d4fb7c0673",
+      "bytes": 197801325
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00146.tiff",
+      "sha256": "c3303092c13b0822e785fc2a97e4bd3e854792cd3d84a112260993680c78f000",
+      "bytes": 197801325
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00147.tiff",
+      "sha256": "3eb259c42b0e5080ad97c1c8ac08da5304ee1949c81faae23ec7ddbd859b179a",
+      "bytes": 197801325
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00148.tiff",
+      "sha256": "3a976ab046893aa9aa65bf73a558f3bfb15ace0726b3e80cd57cef75133027ed",
+      "bytes": 197801325
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00149.tiff",
+      "sha256": "d9b3062ca28feb8375556a6995723f5b3bd58e522902bce7bba928faf42cc134",
+      "bytes": 197801325
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00150.tiff",
+      "sha256": "ef3e89195527ca61c51682259ff3d38ed597988db59dab042b9b1badbea2fff6",
+      "bytes": 197801325
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00151.tiff",
+      "sha256": "d94e1491c9f6a56fa9b5d8e9c461d44ce98fb7f87dbfe1a67a8cc1c9d4d86736",
+      "bytes": 197801325
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00152.tiff",
+      "sha256": "2dce7514b051129ab998d7db2575daecb3432fb97d97b2b51ec14d1f6df5fbb4",
+      "bytes": 197801325
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00153.tiff",
+      "sha256": "0f8d74b9a6b9966b6073df02059f6ac887a2499f85d38c58473759f40504a868",
+      "bytes": 197801325
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00154.tiff",
+      "sha256": "84c4eb416faf0a8f543e068a1cbbc3cd92e1ae4167ceac81fa514b6d7c9bad60",
+      "bytes": 197801325
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00155.tiff",
+      "sha256": "d3cc326847fd9d3e04b57572f42b1ec948efb26719301228abf394d793ff3711",
+      "bytes": 197801325
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00156.tiff",
+      "sha256": "9eb1ad698d5739ff10bc66ba8a10c7f7b2f58e68ef1ef70b40b100b1ab3d5ba2",
+      "bytes": 197801325
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00157.tiff",
+      "sha256": "43cda914372740303a8f0e2bdbf2c7f128b8342d3bc9efeb943f77e854c00085",
+      "bytes": 197801325
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00158.tiff",
+      "sha256": "b138e4f648a528d72101f44190f552ac22ca94057214d062448bc60f30699040",
+      "bytes": 197801325
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00159.tiff",
+      "sha256": "aaba72d2b29f9f04cfa8cb98918aa2b0888cde55524935206e87630b8484e064",
+      "bytes": 197801325
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00160.tiff",
+      "sha256": "df3909fa455772203a21ed3f24203365e3151a96c9e402d600411b9c30ec2085",
+      "bytes": 197801325
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00161.tiff",
+      "sha256": "c12fad796b07d9b7c2f2648532ae290bb8725fd339fc10a6a808d620df0e3506",
+      "bytes": 197801325
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00162.tiff",
+      "sha256": "2979bf8e788d2ff142a9d199cf56629f2c21a83dfe87c1a0924920e6c4488548",
+      "bytes": 197801325
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00163.tiff",
+      "sha256": "17b306f4ac808b943ee0d7d79cf3aef80ff7cdc1121c43208269990c0256c0e0",
+      "bytes": 197801325
+    }
+  ],
+  "runner": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\helicon-current\\run-full-tiff.py",
+    "sha256": "ee0aba7c668c37523d9abbdff50d8ad1ee44bbb644221873f9ef5364d6720509",
+    "bytes": 3277
+  },
+  "settings": {
+    "method": "b",
+    "radius": 8,
+    "smoothing": 4,
+    "order": "ascending",
+    "other_settings": "application defaults"
+  },
+  "purpose": "Full product output comparison on prepared TIFFs; not native RAW compatibility or matched colour/alignment/timing",
+  "visual_plan": "Full output plus frozen five native detail/background regions; report defects and retained detail, no SOTA score"
+}

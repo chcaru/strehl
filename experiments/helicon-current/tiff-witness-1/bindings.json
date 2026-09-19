@@ -1,0 +1,26 @@
+{
+  "executable": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\helicon-current\\program\\HeliconFocus.exe",
+    "sha256": "29ca62df122163c1295e1e2a416a42acfdf52f20c83d0beed99c4af154d42089",
+    "bytes": 16249488
+  },
+  "inputs": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00128.tiff",
+      "sha256": "61fcebe13d8d9d4b077168f397b1ef464c2d109490b3a21383c40eb60c4e86c7",
+      "bytes": 197801325
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00129.tiff",
+      "sha256": "e8621fdb9f3a1e58de6f1d22e9fc164d9eab0299dd9b1c57e0bac5e0ad8229f3",
+      "bytes": 197801325
+    }
+  ],
+  "runner": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\helicon-current\\run-tiff-witness.py",
+    "sha256": "2b181d3e9691e935facca52bc99b0d008995ce835ef403981369b012eceef227",
+    "bytes": 2093
+  },
+  "purpose": "Prepared TIFF compatibility and full-resolution trial witness; no RAW loader or quality claim",
+  "settings": "method B, radius8, smoothing4, ascending; other settings application defaults"
+}

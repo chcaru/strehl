@@ -1,0 +1,24 @@
+[
+  {
+    "method": "b",
+    "source": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\helicon-current\\vitamin-c-b-2\\whole-stack.tiff",
+    "source_sha256": "f08335d17083789fa2bd60ee17ecbaba921bbc7aa20c9fdfdfa0cf0e1ca1d2d8",
+    "dimensions": [
+      4688,
+      7032,
+      3
+    ],
+    "mapping": "round(u16/257); unchanged sRGB ICC; no new tone or sharpening"
+  },
+  {
+    "method": "c",
+    "source": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\helicon-current\\vitamin-c-c-2\\whole-stack.tiff",
+    "source_sha256": "1cc7b2f041ce3753b5d3d88b2a3fa41a265014b4c0909c181e913774115b65bf",
+    "dimensions": [
+      4688,
+      7032,
+      3
+    ],
+    "mapping": "round(u16/257); unchanged sRGB ICC; no new tone or sharpening"
+  }
+]

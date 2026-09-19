@@ -1,0 +1,25 @@
+{
+  "file": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\helicon-current\\vitamin-c-c-2\\whole-stack.tiff",
+    "sha256": "1cc7b2f041ce3753b5d3d88b2a3fa41a265014b4c0909c181e913774115b65bf",
+    "bytes": 197827122
+  },
+  "pages": [
+    {
+      "shape": [
+        4688,
+        7032,
+        3
+      ],
+      "dtype": "uint16",
+      "description": ""
+    }
+  ],
+  "inputs_unchanged": true,
+  "preview": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\helicon-current\\vitamin-c-c-2\\whole-stack-preview.png",
+    "sha256": "c18df61cc45c3a2a78db57b5bfe1241b1558a795445c913752d9e71be53f9d42",
+    "bytes": 3307162
+  },
+  "watermark_visual_check": "pending"
+}
