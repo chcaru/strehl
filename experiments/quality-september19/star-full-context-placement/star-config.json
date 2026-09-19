@@ -1,0 +1,135 @@
+{
+  "schema_version": 1,
+  "source_dir": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl",
+  "expected_frame_count": 259,
+  "native_geometry": [
+    7032,
+    4688
+  ],
+  "support_native": [
+    594,
+    1424,
+    392,
+    392
+  ],
+  "taper_native": 32,
+  "frames": [
+    {
+      "file_name": "DSC00141.ARW",
+      "transform_bits": [
+        "3ff004cd2df00547",
+        "3ee9ad8647d12e80",
+        "bfc81db0cd071168",
+        "3fb38054d43dde58"
+      ],
+      "delta_source_native": [
+        0.23221228549977582,
+        0.41270442109301664
+      ]
+    },
+    {
+      "file_name": "DSC00142.ARW",
+      "transform_bits": [
+        "3ff0038caf450877",
+        "3ef4acc1dcd94ec0",
+        "bfc854ed079aff88",
+        "3fadbd26f6b598f8"
+      ],
+      "delta_source_native": [
+        0.22364683934942797,
+        0.3032345775063625
+      ]
+    },
+    {
+      "file_name": "DSC00143.ARW",
+      "transform_bits": [
+        "3ff0026f3db4cc68",
+        "3ee9e0bc15c9bb00",
+        "bfbde37d5c1de5a0",
+        "3fa969701e1bbd58"
+      ],
+      "delta_source_native": [
+        0.16465846437921752,
+        0.21717934463746283
+      ]
+    },
+    {
+      "file_name": "DSC00144.ARW",
+      "transform_bits": [
+        "3ff00146175e1019",
+        "3efb5c87da310800",
+        "3fa2267184715600",
+        "3fa72366da290548"
+      ],
+      "delta_source_native": [
+        -0.10645681102515486,
+        0.13809053314856673
+      ]
+    },
+    {
+      "file_name": "DSC00145.ARW",
+      "transform_bits": [
+        "3ff0000000000000",
+        "3c10000000000000",
+        "bcb0000000000000",
+        "0000000000000000"
+      ],
+      "delta_source_native": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "file_name": "DSC00146.ARW",
+      "transform_bits": [
+        "3feffd58324ad996",
+        "bef557d1ed27a700",
+        "bfb02c92df5c9be0",
+        "3f52facfd2fcab00"
+      ],
+      "delta_source_native": [
+        0.04529496801278322,
+        -0.2926602788242734
+      ]
+    },
+    {
+      "file_name": "DSC00147.ARW",
+      "transform_bits": [
+        "3feffa842f81c67c",
+        "3ee0f21c6b7e9b80",
+        "bfbb484845ba2960",
+        "3fa83819b98190e0"
+      ],
+      "delta_source_native": [
+        -0.020935679107334727,
+        -0.555272699180917
+      ]
+    },
+    {
+      "file_name": "DSC00148.ARW",
+      "transform_bits": [
+        "3feff7e8f8f4fe81",
+        "3f0cb2e12b120be0",
+        "bfc168fc1826a918",
+        "3f9beadef49755e0"
+      ],
+      "delta_source_native": [
+        -0.03963594471430904,
+        -0.6189580400252291
+      ]
+    },
+    {
+      "file_name": "DSC00149.ARW",
+      "transform_bits": [
+        "3feff5e1b37b2ac5",
+        "3ed8ea0406431300",
+        "bfc47548bb51e930",
+        "3fb6cfd083bd01bc"
+      ],
+      "delta_source_native": [
+        0.23785699295570759,
+        -1.0964067910905622
+      ]
+    }
+  ]
+}

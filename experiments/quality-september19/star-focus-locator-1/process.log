@@ -1,0 +1,11 @@
+{"stage": "locate", "frame": 0}
+{"stage": "locate", "frame": 32}
+{"stage": "locate", "frame": 64}
+{"stage": "locate", "frame": 96}
+{"stage": "locate", "frame": 128}
+{"stage": "locate", "frame": 160}
+{"stage": "locate", "frame": 192}
+{"stage": "locate", "frame": 224}
+{"stage": "locate", "frame": 256}
+{"stage": "locate", "frame": 258}
+{"nominated_anchor": 120, "retained": [116, 117, 118, 119, 120, 121, 122, 123, 124], "nominees": [116, 118, 120, 122, 124], "independent_differences": 0}

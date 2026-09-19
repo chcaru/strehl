@@ -79,8 +79,12 @@ pub(crate) fn warp_frame_fullres_into_planes<const GREEN_ONLY: bool>(
         && crop.y.checked_add(crop.height).is_some_and(|y|y<=geom.height)
         && planes.iter().all(|p|p.len()==crop.width*crop.height),
         "direct fullres sink has invalid mode, CFA sites, crop, or plane lengths");
+    // Validate geometry/support before the base gather writes anything. The
+    // exact same entry point consumes actual frames and the synthetic probe.
+    let local = local_placement::prepare(frame,t,geom,resampler,crop,offsets,mode)?;
     #[cfg(feature = "native-gpu-gather")]
     if native_gpu_integration::gpu_rounded_planes::<GREEN_ONLY>(frame,t,geom,resampler,crop,offsets,planes,mode)? {
+        if let Some(local) = local { local.apply(frame,planes,mode)?; }
         return Ok(());
     }
     warp_frame_fullres_with_sink::<GREEN_ONLY,_>(frame,t,geom,resampler,scratch,
@@ -91,6 +95,7 @@ pub(crate) fn warp_frame_fullres_into_planes<const GREEN_ONLY: bool>(
                 Ok(cover[..geom.pixels()].par_iter().filter(|&&v|v).count())
             }
         })?;
+    if let Some(local) = local { local.apply(frame,planes,mode)?; }
     Ok(())
 }
 

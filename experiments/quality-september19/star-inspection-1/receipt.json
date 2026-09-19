@@ -1,0 +1,61 @@
+{
+  "source": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\star-baseline-1\\star.tiff",
+  "source_sha256": "0111ed93166e775f87d50399ce75b5e2b039d74ff956208c50ca6d29bcd7e459",
+  "source_shape": [
+    4480,
+    6724,
+    3
+  ],
+  "reference_index": 129,
+  "reference_filename": "DSC00145.ARW",
+  "sensor_crop_origin": [
+    154,
+    104
+  ],
+  "plane_crop_origin": [
+    77,
+    52
+  ],
+  "tone_log_rounded": {
+    "black": 0.01566,
+    "white": 0.51099,
+    "contrast": 0.55
+  },
+  "tone_precision": "Printed log values only; not exact renderer float bits",
+  "native_crop_encoding": "Unresampled RGB16 TIFF and uint16*255//65535 RGB8 PNG; no enhancement",
+  "overview": "1513x1008 Lanczos resize for orientation only; not quality evidence",
+  "rois": [
+    {
+      "name": "ridged-shell",
+      "output_xywh": [
+        1360,
+        1136,
+        392,
+        392
+      ],
+      "reference_sensor_xywh": [
+        1514,
+        1240,
+        392,
+        392
+      ],
+      "raw_u16_rgb_sha256": "b5d9f2f2e43e2a7ee4a8e19ee26a174aa8be55ed1b9526564196199328ed430d"
+    },
+    {
+      "name": "porous-grain",
+      "output_xywh": [
+        440,
+        1320,
+        392,
+        392
+      ],
+      "reference_sensor_xywh": [
+        594,
+        1424,
+        392,
+        392
+      ],
+      "raw_u16_rgb_sha256": "3ad6f4885b896eb45ee1236448477a9611e8520ca7b51bdecf724d9331f355bc"
+    }
+  ]
+}

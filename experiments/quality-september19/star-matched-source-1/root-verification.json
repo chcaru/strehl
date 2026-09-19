@@ -1,0 +1,37 @@
+{
+  "status": "INDEPENDENT_PIXEL_CHECK_PASS",
+  "full_image_rgb_samples": 90370560,
+  "full_image_differing_samples": 0,
+  "regions": [
+    {
+      "frame": 125,
+      "asymmetric_check_xywh": [
+        37,
+        101,
+        123,
+        109
+      ],
+      "wrong_one_native_pixel_rgb_mismatches": 40183
+    },
+    {
+      "frame": 129,
+      "asymmetric_check_xywh": [
+        37,
+        101,
+        123,
+        109
+      ],
+      "wrong_one_native_pixel_rgb_mismatches": 40183
+    },
+    {
+      "frame": 133,
+      "asymmetric_check_xywh": [
+        37,
+        101,
+        123,
+        109
+      ],
+      "wrong_one_native_pixel_rgb_mismatches": 40183
+    }
+  ]
+}

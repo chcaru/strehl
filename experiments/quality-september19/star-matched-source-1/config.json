@@ -1,0 +1,38 @@
+{
+  "dir": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl",
+  "map": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\star-baseline-1\\star.warpmap.txt",
+  "out": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\star-matched-source-1\\output",
+  "frames": 259,
+  "tone": {
+    "black": 0.01566,
+    "white": 0.51099,
+    "contrast": 0.55
+  },
+  "observe": true,
+  "regions": [
+    {
+      "name": "porous-source-125",
+      "frame": 125,
+      "x": 472,
+      "y": 1352,
+      "width": 328,
+      "height": 328
+    },
+    {
+      "name": "porous-source-129",
+      "frame": 129,
+      "x": 472,
+      "y": 1352,
+      "width": 328,
+      "height": 328
+    },
+    {
+      "name": "porous-source-133",
+      "frame": 133,
+      "x": 472,
+      "y": 1352,
+      "width": 328,
+      "height": 328
+    }
+  ]
+}

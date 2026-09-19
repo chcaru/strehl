@@ -1,0 +1,456 @@
+{
+  "local_anchor": 120,
+  "global_reference": 129,
+  "frames": [
+    {
+      "before": {
+        "delta_source_native": [
+          0.0,
+          0.0
+        ],
+        "gain_left": 1.031136281350897,
+        "bias_left": -0.008324381880915051,
+        "gain_positive": true,
+        "fit_rmse": 0.0036049509062500026,
+        "validation_rmse": 0.0034583200553318337,
+        "validation_mean_error": 5.716752115965939e-05,
+        "validation_max_abs": 0.0236039402887398
+      },
+      "after": {
+        "delta_source_native": [
+          -0.040847983466638274,
+          -0.48006247424311715
+        ],
+        "gain_left": 1.0322060026283102,
+        "bias_left": -0.008733050980493933,
+        "gain_positive": true,
+        "fit_rmse": 0.003110814369080809,
+        "validation_rmse": 0.0030470998955121884,
+        "validation_mean_error": 5.4724905199124654e-05,
+        "validation_max_abs": 0.01841094913381136
+      },
+      "delta_source_native": [
+        -0.040847983466638274,
+        -0.48006247424311715
+      ],
+      "converged": true,
+      "status": 4,
+      "message": "Both `ftol` and `xtol` termination conditions are satisfied.",
+      "nfev": 13,
+      "optimality": 1.2435793943164156e-05,
+      "at_translation_bound": false,
+      "fit_samples": 12464,
+      "validation_samples": 12464,
+      "source_support_gap_native": 4.059660720456542,
+      "frame": 116,
+      "validation_ratio": 0.8810925092992332,
+      "accepted": true
+    },
+    {
+      "before": {
+        "delta_source_native": [
+          0.0,
+          0.0
+        ],
+        "gain_left": 1.020374470028604,
+        "bias_left": -0.005075906260699638,
+        "gain_positive": true,
+        "fit_rmse": 0.0029019751684572124,
+        "validation_rmse": 0.002853336406221805,
+        "validation_mean_error": -2.612233314159832e-06,
+        "validation_max_abs": 0.019244392358827134
+      },
+      "after": {
+        "delta_source_native": [
+          -0.1738400578391742,
+          -0.42536279771064034
+        ],
+        "gain_left": 1.0213763280615034,
+        "bias_left": -0.005452472931973399,
+        "gain_positive": true,
+        "fit_rmse": 0.0023600980947148633,
+        "validation_rmse": 0.0023753948058062788,
+        "validation_mean_error": 1.7827331495645804e-05,
+        "validation_max_abs": 0.014565040192640766
+      },
+      "delta_source_native": [
+        -0.1738400578391742,
+        -0.42536279771064034
+      ],
+      "converged": true,
+      "status": 2,
+      "message": "`ftol` termination condition is satisfied.",
+      "nfev": 12,
+      "optimality": 2.311856487087155e-07,
+      "at_translation_bound": false,
+      "fit_samples": 12464,
+      "validation_samples": 12464,
+      "source_support_gap_native": 4.052163494055968,
+      "frame": 117,
+      "validation_ratio": 0.8324972830496408,
+      "accepted": true
+    },
+    {
+      "before": {
+        "delta_source_native": [
+          0.0,
+          0.0
+        ],
+        "gain_left": 1.0133013513869449,
+        "bias_left": -0.002837655257570468,
+        "gain_positive": true,
+        "fit_rmse": 0.0020433731641185415,
+        "validation_rmse": 0.0020456657668356097,
+        "validation_mean_error": 3.2333843388848814e-05,
+        "validation_max_abs": 0.012146758179185091
+      },
+      "after": {
+        "delta_source_native": [
+          -0.13348550642487458,
+          -0.27986469237065575
+        ],
+        "gain_left": 1.0136927474467794,
+        "bias_left": -0.002999984113202308,
+        "gain_positive": true,
+        "fit_rmse": 0.0016758818077655887,
+        "validation_rmse": 0.0017683344083206313,
+        "validation_mean_error": 4.82074375011029e-05,
+        "validation_max_abs": 0.009724874110768333
+      },
+      "delta_source_native": [
+        -0.13348550642487458,
+        -0.27986469237065575
+      ],
+      "converged": true,
+      "status": 4,
+      "message": "Both `ftol` and `xtol` termination conditions are satisfied.",
+      "nfev": 11,
+      "optimality": 1.0156458582039966e-07,
+      "at_translation_bound": false,
+      "fit_samples": 12464,
+      "validation_samples": 12464,
+      "source_support_gap_native": 4.043775235850681,
+      "frame": 118,
+      "validation_ratio": 0.8644297797758157,
+      "accepted": true
+    },
+    {
+      "before": {
+        "delta_source_native": [
+          0.0,
+          0.0
+        ],
+        "gain_left": 1.003891294063819,
+        "bias_left": -0.0010175275120320934,
+        "gain_positive": true,
+        "fit_rmse": 0.001323946199321205,
+        "validation_rmse": 0.0013191870604947829,
+        "validation_mean_error": -1.4361008894271592e-05,
+        "validation_max_abs": 0.0066587799254254065
+      },
+      "after": {
+        "delta_source_native": [
+          -0.08790006960082848,
+          -0.15663112739657464
+        ],
+        "gain_left": 1.0039299942108149,
+        "bias_left": -0.0010517761656132587,
+        "gain_positive": true,
+        "fit_rmse": 0.0011344402604381884,
+        "validation_rmse": 0.0011657226699367744,
+        "validation_mean_error": -4.168824334374435e-06,
+        "validation_max_abs": 0.005921439847615895
+      },
+      "delta_source_native": [
+        -0.08790006960082848,
+        -0.15663112739657464
+      ],
+      "converged": true,
+      "status": 2,
+      "message": "`ftol` termination condition is satisfied.",
+      "nfev": 7,
+      "optimality": 1.5834533083340666e-07,
+      "at_translation_bound": false,
+      "fit_samples": 12464,
+      "validation_samples": 12464,
+      "source_support_gap_native": 4.034089803452353,
+      "frame": 119,
+      "validation_ratio": 0.8836674531203715,
+      "accepted": true
+    },
+    {
+      "before": {
+        "delta_source_native": [
+          0.0,
+          0.0
+        ],
+        "gain_left": 0.999999999999995,
+        "bias_left": 3.802503627110864e-18,
+        "gain_positive": true,
+        "fit_rmse": 1.589864756449133e-15,
+        "validation_rmse": 1.6031920580945159e-15,
+        "validation_mean_error": -1.5955069065960085e-15,
+        "validation_max_abs": 2.0539125955565396e-15
+      },
+      "after": {
+        "delta_source_native": [
+          0.0,
+          0.0
+        ],
+        "gain_left": 0.999999999999995,
+        "bias_left": 3.802503627110864e-18,
+        "gain_positive": true,
+        "fit_rmse": 1.589864756449133e-15,
+        "validation_rmse": 1.6031920580945159e-15,
+        "validation_mean_error": -1.5955069065960085e-15,
+        "validation_max_abs": 2.0539125955565396e-15
+      },
+      "delta_source_native": [
+        0.0,
+        0.0
+      ],
+      "converged": true,
+      "status": 1,
+      "message": "`gtol` termination condition is satisfied.",
+      "nfev": 1,
+      "optimality": 2.2738610610741035e-17,
+      "at_translation_bound": false,
+      "fit_samples": 12464,
+      "validation_samples": 12464,
+      "source_support_gap_native": 4.022053278573331,
+      "frame": 120,
+      "validation_ratio": 1.0,
+      "accepted": true
+    },
+    {
+      "before": {
+        "delta_source_native": [
+          0.0,
+          0.0
+        ],
+        "gain_left": 0.9997036008603482,
+        "bias_left": -9.916407420435162e-05,
+        "gain_positive": true,
+        "fit_rmse": 0.0011937032573202098,
+        "validation_rmse": 0.0013144921817212873,
+        "validation_mean_error": 3.266463149127521e-05,
+        "validation_max_abs": 0.0063869244351641985
+      },
+      "after": {
+        "delta_source_native": [
+          0.09759857353723686,
+          -0.08848647697086919
+        ],
+        "gain_left": 0.9999451501693825,
+        "bias_left": -0.000187834227994509,
+        "gain_positive": true,
+        "fit_rmse": 0.0010761354832529771,
+        "validation_rmse": 0.001218519403204968,
+        "validation_mean_error": 1.9907352748521698e-05,
+        "validation_max_abs": 0.006033599909578857
+      },
+      "delta_source_native": [
+        0.09759857353723686,
+        -0.08848647697086919
+      ],
+      "converged": true,
+      "status": 2,
+      "message": "`ftol` termination condition is satisfied.",
+      "nfev": 6,
+      "optimality": 1.480949814483643e-07,
+      "at_translation_bound": false,
+      "fit_samples": 12464,
+      "validation_samples": 12464,
+      "source_support_gap_native": 4.020210792722956,
+      "frame": 121,
+      "validation_ratio": 0.9269887034317345,
+      "accepted": true
+    },
+    {
+      "before": {
+        "delta_source_native": [
+          0.0,
+          0.0
+        ],
+        "gain_left": 1.0029458647538092,
+        "bias_left": -0.0009598378906694929,
+        "gain_positive": true,
+        "fit_rmse": 0.0018490791263253601,
+        "validation_rmse": 0.002116596390307147,
+        "validation_mean_error": 5.6799271562434936e-05,
+        "validation_max_abs": 0.015116344285194871
+      },
+      "after": {
+        "delta_source_native": [
+          0.06849012819656257,
+          -0.1816825345221345
+        ],
+        "gain_left": 1.0033000125142606,
+        "bias_left": -0.0010968433072545448,
+        "gain_positive": true,
+        "fit_rmse": 0.0016806855406956388,
+        "validation_rmse": 0.0019450938437139671,
+        "validation_mean_error": 4.703325869986462e-05,
+        "validation_max_abs": 0.012398982337803732
+      },
+      "delta_source_native": [
+        0.06849012819656257,
+        -0.1816825345221345
+      ],
+      "converged": true,
+      "status": 2,
+      "message": "`ftol` termination condition is satisfied.",
+      "nfev": 6,
+      "optimality": 4.302349180317719e-06,
+      "at_translation_bound": false,
+      "fit_samples": 12464,
+      "validation_samples": 12464,
+      "source_support_gap_native": 4.013503263884068,
+      "frame": 122,
+      "validation_ratio": 0.9189724846085122,
+      "accepted": true
+    },
+    {
+      "before": {
+        "delta_source_native": [
+          0.0,
+          0.0
+        ],
+        "gain_left": 1.0100926377380894,
+        "bias_left": -0.0026915281728548857,
+        "gain_positive": true,
+        "fit_rmse": 0.002750505378510142,
+        "validation_rmse": 0.0031406157129275935,
+        "validation_mean_error": 1.594282476124303e-06,
+        "validation_max_abs": 0.02427025580258585
+      },
+      "after": {
+        "delta_source_native": [
+          0.1428752974497278,
+          -0.31053683761771844
+        ],
+        "gain_left": 1.010780625684086,
+        "bias_left": -0.0029523400443770818,
+        "gain_positive": true,
+        "fit_rmse": 0.0024045479518998705,
+        "validation_rmse": 0.002814415521337455,
+        "validation_mean_error": -1.8829693263028312e-05,
+        "validation_max_abs": 0.019580805812328628
+      },
+      "delta_source_native": [
+        0.1428752974497278,
+        -0.31053683761771844
+      ],
+      "converged": true,
+      "status": 2,
+      "message": "`ftol` termination condition is satisfied.",
+      "nfev": 13,
+      "optimality": 0.0003516573288550626,
+      "at_translation_bound": false,
+      "fit_samples": 12464,
+      "validation_samples": 12464,
+      "source_support_gap_native": 4.004598465208311,
+      "frame": 123,
+      "validation_ratio": 0.8961349552422434,
+      "accepted": true
+    },
+    {
+      "before": {
+        "delta_source_native": [
+          0.0,
+          0.0
+        ],
+        "gain_left": 1.0173402061029149,
+        "bias_left": -0.00553703757062533,
+        "gain_positive": true,
+        "fit_rmse": 0.0035702547551782295,
+        "validation_rmse": 0.0040758167467635055,
+        "validation_mean_error": 0.0001036762184160957,
+        "validation_max_abs": 0.03216257479522955
+      },
+      "after": {
+        "delta_source_native": [
+          0.25426797575527693,
+          -0.31465648210830566
+        ],
+        "gain_left": 1.0179789066445932,
+        "bias_left": -0.0057841239815132565,
+        "gain_positive": true,
+        "fit_rmse": 0.00325391597907897,
+        "validation_rmse": 0.0037730064297584213,
+        "validation_mean_error": 6.753089969735631e-05,
+        "validation_max_abs": 0.028845786012115904
+      },
+      "delta_source_native": [
+        0.25426797575527693,
+        -0.31465648210830566
+      ],
+      "converged": true,
+      "status": 2,
+      "message": "`ftol` termination condition is satisfied.",
+      "nfev": 9,
+      "optimality": 1.5509994086987552e-06,
+      "at_translation_bound": false,
+      "fit_samples": 12464,
+      "validation_samples": 12464,
+      "source_support_gap_native": 3.9949003586175067,
+      "frame": 124,
+      "validation_ratio": 0.9257056104778171,
+      "accepted": true
+    }
+  ],
+  "source_receipt": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\star-focus-locator-1\\receipt.json",
+    "sha256": "8017d9baea8b07ceb17c2395b2c0527397e9ae3b7b301a2f0bfb64874cb2f7c3",
+    "bytes": 7953
+  },
+  "source_bindings": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\star-focus-locator-1\\frame-116-cfa.npy",
+      "sha256": "eca2277287ce0186e98d335310837c338895b2709c1339f87f7c2fca07805252",
+      "bytes": 352928
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\star-focus-locator-1\\frame-117-cfa.npy",
+      "sha256": "797c5348b44a460cc353d3e3dd9f6131d6cf24fa310d40e1b077ab97fc021dc8",
+      "bytes": 352928
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\star-focus-locator-1\\frame-118-cfa.npy",
+      "sha256": "940160657c18cb3dd77476999b8b92e6a39601e58c00a88dc7e9f18ef6446ba8",
+      "bytes": 351248
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\star-focus-locator-1\\frame-119-cfa.npy",
+      "sha256": "d4156558df3139428662007a1b3fd9a383cbed2f66500476dd437d87db7dc471",
+      "bytes": 352928
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\star-focus-locator-1\\frame-120-cfa.npy",
+      "sha256": "49223df0e2e2087b64f0b8edc5687f48f8d4e8df438d6c29cd5e256f10045b2e",
+      "bytes": 351248
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\star-focus-locator-1\\frame-121-cfa.npy",
+      "sha256": "3e6c5dc780c85da29a4a99bf3dece8357d9a8564fd6c1676954ee29fb5df043a",
+      "bytes": 351248
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\star-focus-locator-1\\frame-122-cfa.npy",
+      "sha256": "921385dd1e6ea78f1ae637bd18b220a78b4fad21e84751d5ea3219e4444e446b",
+      "bytes": 351248
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\star-focus-locator-1\\frame-123-cfa.npy",
+      "sha256": "250b95026849bd1c8179573628fa28068605c5916c948c2228c4718e25bc1c13",
+      "bytes": 349576
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\star-focus-locator-1\\frame-124-cfa.npy",
+      "sha256": "ad8c278f63ba4ccea1e17e1c592558a2db83b22398a2b192ae332e60aef26528",
+      "bytes": 351248
+    }
+  ],
+  "cpu_seconds": 0.640625,
+  "interpretation": "Fixed guide prediction, not photographic quality. Failed fits retain the original map. Local anchor remains in global129 gauge."
+}

@@ -1,0 +1,17 @@
+{
+  "registrar_sha256": "5b64f7e612fd94cd8a22515bffb67addcee71021f6338f10a249c63864420196",
+  "anchor": 120,
+  "samples": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\star-focus-locator-1\\receipt.json",
+    "sha256": "8017d9baea8b07ceb17c2395b2c0527397e9ae3b7b301a2f0bfb64874cb2f7c3",
+    "bytes": 7953
+  },
+  "runner": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\star-focused-fit.py",
+    "sha256": "d14192d8544b9e0491887765b0a88a8da42bafcff25d47fa42035f5cc4a76d6d",
+    "bytes": 5900
+  },
+  "unchanged": "sigma1.5, radius6, +/-4 source-native search, same left/right support and nuisance protocol",
+  "accept": "Converged, off bounds, positive gain and held-out decrease; exact zero for visually confirmed local anchor. Photo review remains mandatory.",
+  "scope": "Only saved u16 patches; no new RAW read, no search-bound expansion, no intensity correction"
+}

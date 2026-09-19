@@ -1,0 +1,32 @@
+{
+  "status": "MERGED_PATCH_LOCATION_VERIFIED",
+  "checks": [
+    {
+      "frame": 125,
+      "stem": "porous-source-125-frame125-merged",
+      "different_rgb16_samples": 0,
+      "independently_trimmed_inner_differences": 0,
+      "wrong_x_plus_two_different_samples": 322565,
+      "pixel_sha256": "833f0622e02468286e6d1c1187ae4bc6af1c7b75fe4ece60c2ee1d4618e65905"
+    },
+    {
+      "frame": 129,
+      "stem": "porous-source-129-frame129-merged",
+      "different_rgb16_samples": 0,
+      "independently_trimmed_inner_differences": 0,
+      "wrong_x_plus_two_different_samples": 322565,
+      "pixel_sha256": "833f0622e02468286e6d1c1187ae4bc6af1c7b75fe4ece60c2ee1d4618e65905"
+    },
+    {
+      "frame": 133,
+      "stem": "porous-source-133-frame133-merged",
+      "different_rgb16_samples": 0,
+      "independently_trimmed_inner_differences": 0,
+      "wrong_x_plus_two_different_samples": 322565,
+      "pixel_sha256": "833f0622e02468286e6d1c1187ae4bc6af1c7b75fe4ece60c2ee1d4618e65905"
+    }
+  ],
+  "baseline_file_sha256": "5fc6c3ab8e2bcb64ee9d1383586f0c3763d6dbc709968a218bf36b9d654420ae",
+  "note": "All three merged captures are the same output field, not independent photographic replicates",
+  "scope": "Independent actual RGB16 full-image lookup, alternate inner trim, and wrong-location placebo; no RAW decode"
+}

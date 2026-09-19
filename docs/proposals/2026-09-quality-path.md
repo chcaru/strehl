@@ -61,6 +61,45 @@ defocused regions. It must demonstrate that it does not convert blur or an
 occlusion into motion. These are implementation requirements to test, not
 claims that a suitable general algorithm has already shipped.
 
+## September 19 full-context decision
+
+The local chip gain now survives the complete 299-frame, seven-band RAW render.
+Both reviewers see modestly cleaner existing rail cores and crossings, with no
+obvious seam in the frozen transition views. Strong colour stipple remains.
+The default-off consumer validates stack/map identity, reconstructs a small
+supported original-CFA patch, and applies a tapered source displacement before
+existing colour geometry. Actual inputs and the noise probe share the hook.
+Independent affine, textured-noise, constant, CFA-phase and refusal controls
+pass. The disabled baseline reproduces the earlier baseline's pixels exactly.
+
+The new star-sand stack supplies the counterexample needed to limit this
+direction: all eight local fits improve held-out guide prediction, yet neither
+reviewer can identify a clearer feature in the complete 259-frame result.
+Do not treat that residual improvement as an image-quality gain, and do not
+expand the proposed multi-region correction before locating the remaining
+loss. The matched source/gathered/merged comparison now shows that the selected
+frames 125/129/133 are softer than the merged porous-grain patch. The first
+transfer therefore tested a weak detail-bearing window. Locate and visually
+confirm the focused originals before repeating the same fixed correction;
+the global alignment reference is not a guarantee of local focus. If a focused
+source retains a feature that the merge loses, target that actual consumer
+behavior. Do not infer a capture limit from three defocused originals.
+
+That follow-up is complete: a bounded full-stack locator and native review
+identify a detail-bearing neighbourhood at frames 116–124, with local anchor
+120 and unchanged global reference 129. The same fixed correction improves
+held-out guide prediction but still yields no identifiable feature improvement
+in the complete render. Close this specific star-region intervention and
+defer the four-region extension. Preserve the targeted chip gain; automatic
+general refinement has not earned promotion. Further work must address an
+identified photographic deficit, including persistent colour artifacts and a
+matched comparison with strong external outputs, rather than another sweep of
+the same translation fit.
+
+Evidence and commands: experiments/full-context-placement/results.md and
+experiments/quality-september19/results.md. The new crystallized-vitamin-C
+stack is inventoried but has not been RAW-rendered in this work.
+
 ## What counts as progress
 
 An image-quality change must retain or restore an identifiable feature in

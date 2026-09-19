@@ -1,0 +1,14 @@
+{
+  "status": "BASELINE_RENDERED",
+  "map": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\star-baseline-1\\star.warpmap.txt",
+    "sha256": "6594d98255383218a3114fd783bfd0e2215b39b202777f1ee2e493f4b287a6a1",
+    "bytes": 35382
+  },
+  "image": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\star-baseline-1\\star.tiff",
+    "sha256": "0111ed93166e775f87d50399ce75b5e2b039d74ff956208c50ca6d29bcd7e459",
+    "bytes": 180746186
+  },
+  "original_metadata_unchanged": true
+}

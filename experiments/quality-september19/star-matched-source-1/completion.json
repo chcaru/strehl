@@ -1,0 +1,15 @@
+{
+  "status": "MATCHED_SOURCE_OBSERVER_FINISHED",
+  "original_metadata_unchanged": true,
+  "observer_pixel_identical": true,
+  "selected_frames": [
+    125,
+    129,
+    133
+  ],
+  "final_image": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\star-matched-source-1\\output\\replay.tiff",
+    "sha256": "5fc6c3ab8e2bcb64ee9d1383586f0c3763d6dbc709968a218bf36b9d654420ae",
+    "bytes": 180746192
+  }
+}

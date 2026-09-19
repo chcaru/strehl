@@ -2955,6 +2955,13 @@ pub fn preflight_soft_kernel() -> Result<()> {
 /// lines of compiled, tested, unreachable code and `blend-render` -- an example
 /// binary that ships nothing -- was the only way to run it.
 pub fn run(opts: &MergeOptions) -> Result<()> {
+    #[cfg(feature = "native-direct-planes")]
+    if align_cmd::local_placement::enabled()? {
+        ensure!(opts.backend == MergeBackend::Pyramid, "local placement requires the pyramid consumer");
+    }
+    #[cfg(not(feature = "native-direct-planes"))]
+    ensure!(std::env::var_os("STREHL_LOCAL_PLACEMENT_FILE").is_none(),
+        "local placement requires a build with native-direct-planes");
     #[cfg(feature = "native-gpu-gather")]
     align_cmd::native_gpu_integration::gpu_gather_enabled()?;
     preflight_soft_kernel()?;
@@ -5945,6 +5952,8 @@ fn run_pyramid(opts: &MergeOptions) -> Result<()> {
     });
     let align_secs = t_align.elapsed().as_secs_f64();
     let domain = pyramid_domain(geom, opts.cover, alignment.as_ref().map(|(_, _, fit)| fit))?;
+    #[cfg(feature = "native-direct-planes")]
+    align_cmd::local_placement::preflight(&paths,geom,alignment.as_ref().map(|(map,_,_)|map))?;
     let analysis_geom = domain.analysis();
     let sizes = level_sizes(analysis_geom.width, analysis_geom.height, cfg.bands);
 

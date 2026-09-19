@@ -1,0 +1,45 @@
+{
+  "registrar_sha256": "5b64f7e612fd94cd8a22515bffb67addcee71021f6338f10a249c63864420196",
+  "script_sha256": "72b669a6f01332af61200ef7bab92603f0510e5aed127dff9c6c8210a2411973",
+  "criterion": "Each known source-native residual recovered within 0.05 native px; anchor remains exact zero; wrong sign and doubled displacement worsen validation; ignoring nonidentity anchor must worsen validation.",
+  "failure_inputs": "A registrar subtracting instead of adding source delta, converting source delta twice, treating the local anchor as identity, or using patch-local CFA phase can fail these controls.",
+  "finite_tolerance_native": 0.05,
+  "centre_native": [
+    360.0,
+    320.0
+  ],
+  "target_origin_native": [
+    147,
+    93
+  ],
+  "anchor_a": [
+    1.014,
+    0.003
+  ],
+  "anchor_b_plane": [
+    1.8,
+    -1.2
+  ],
+  "anchor_patch_origin": [
+    123,
+    64
+  ],
+  "source_a": [
+    0.997,
+    -0.002
+  ],
+  "source_b_plane": [
+    -0.65,
+    0.95
+  ],
+  "source_patch_origin": [
+    121,
+    67
+  ],
+  "source_shape": [
+    448,
+    442
+  ],
+  "fixture": "Analytic continuous Fourier radiance sampled directly on each original CFA lattice, u16 quantization, different nuisance gain/bias, unrelated R/B. No image resampling creates the source samples.",
+  "scope": "No original RAW reads; no map rebasing; no fitted intensity correction; not photographic or alignment-truth evidence on the owner stack."
+}

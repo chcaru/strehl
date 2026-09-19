@@ -1,0 +1,1371 @@
+{
+  "inputs": [
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00016.ARW",
+      "bytes": 38129664,
+      "mtime_ns": 1789629032620000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00017.ARW",
+      "bytes": 38133760,
+      "mtime_ns": 1789629034070000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00018.ARW",
+      "bytes": 38137856,
+      "mtime_ns": 1789629035560000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00019.ARW",
+      "bytes": 38141952,
+      "mtime_ns": 1789629037020000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00020.ARW",
+      "bytes": 38150144,
+      "mtime_ns": 1789629038510000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00021.ARW",
+      "bytes": 38150144,
+      "mtime_ns": 1789629039960000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00022.ARW",
+      "bytes": 38158336,
+      "mtime_ns": 1789629041420000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00023.ARW",
+      "bytes": 38166528,
+      "mtime_ns": 1789629042900000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00024.ARW",
+      "bytes": 38174720,
+      "mtime_ns": 1789629044360000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00025.ARW",
+      "bytes": 38174720,
+      "mtime_ns": 1789629045850000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00026.ARW",
+      "bytes": 38182912,
+      "mtime_ns": 1789629047320000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00027.ARW",
+      "bytes": 38182912,
+      "mtime_ns": 1789629048800000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00028.ARW",
+      "bytes": 38191104,
+      "mtime_ns": 1789629050250000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00029.ARW",
+      "bytes": 38195200,
+      "mtime_ns": 1789629051720000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00030.ARW",
+      "bytes": 38207488,
+      "mtime_ns": 1789629053210000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00031.ARW",
+      "bytes": 38215680,
+      "mtime_ns": 1789629054660000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00032.ARW",
+      "bytes": 38219776,
+      "mtime_ns": 1789629056150000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00033.ARW",
+      "bytes": 38227968,
+      "mtime_ns": 1789629057620000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00034.ARW",
+      "bytes": 38236160,
+      "mtime_ns": 1789629059110000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00035.ARW",
+      "bytes": 38244352,
+      "mtime_ns": 1789629060560000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00036.ARW",
+      "bytes": 38248448,
+      "mtime_ns": 1789629062050000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00037.ARW",
+      "bytes": 38260736,
+      "mtime_ns": 1789629063520000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00038.ARW",
+      "bytes": 38268928,
+      "mtime_ns": 1789629064980000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00039.ARW",
+      "bytes": 38281216,
+      "mtime_ns": 1789629066440000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00040.ARW",
+      "bytes": 38293504,
+      "mtime_ns": 1789629067900000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00041.ARW",
+      "bytes": 38301696,
+      "mtime_ns": 1789629069370000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00042.ARW",
+      "bytes": 38318080,
+      "mtime_ns": 1789629070830000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00043.ARW",
+      "bytes": 38326272,
+      "mtime_ns": 1789629072310000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00044.ARW",
+      "bytes": 38338560,
+      "mtime_ns": 1789629073780000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00045.ARW",
+      "bytes": 38354944,
+      "mtime_ns": 1789629075240000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00046.ARW",
+      "bytes": 38363136,
+      "mtime_ns": 1789629076730000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00047.ARW",
+      "bytes": 38383616,
+      "mtime_ns": 1789629078180000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00048.ARW",
+      "bytes": 38400000,
+      "mtime_ns": 1789629079640000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00049.ARW",
+      "bytes": 38412288,
+      "mtime_ns": 1789629081110000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00050.ARW",
+      "bytes": 38424576,
+      "mtime_ns": 1789629082580000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00051.ARW",
+      "bytes": 38449152,
+      "mtime_ns": 1789629084070000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00052.ARW",
+      "bytes": 38461440,
+      "mtime_ns": 1789629085520000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00053.ARW",
+      "bytes": 38473728,
+      "mtime_ns": 1789629087000000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00054.ARW",
+      "bytes": 38486016,
+      "mtime_ns": 1789629088460000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00055.ARW",
+      "bytes": 38506496,
+      "mtime_ns": 1789629089920000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00056.ARW",
+      "bytes": 38522880,
+      "mtime_ns": 1789629091420000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00057.ARW",
+      "bytes": 38535168,
+      "mtime_ns": 1789629092880000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00058.ARW",
+      "bytes": 38547456,
+      "mtime_ns": 1789629094370000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00059.ARW",
+      "bytes": 38567936,
+      "mtime_ns": 1789629095840000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00060.ARW",
+      "bytes": 38584320,
+      "mtime_ns": 1789629097320000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00061.ARW",
+      "bytes": 38600704,
+      "mtime_ns": 1789629098780000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00062.ARW",
+      "bytes": 38617088,
+      "mtime_ns": 1789629100250000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00063.ARW",
+      "bytes": 38633472,
+      "mtime_ns": 1789629101700000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00064.ARW",
+      "bytes": 38649856,
+      "mtime_ns": 1789629103160000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00065.ARW",
+      "bytes": 38666240,
+      "mtime_ns": 1789629104660000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00066.ARW",
+      "bytes": 38682624,
+      "mtime_ns": 1789629106110000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00067.ARW",
+      "bytes": 38703104,
+      "mtime_ns": 1789629107580000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00068.ARW",
+      "bytes": 38719488,
+      "mtime_ns": 1789629109040000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00069.ARW",
+      "bytes": 38739968,
+      "mtime_ns": 1789629110500000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00070.ARW",
+      "bytes": 38752256,
+      "mtime_ns": 1789629111980000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00071.ARW",
+      "bytes": 38772736,
+      "mtime_ns": 1789629113460000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00072.ARW",
+      "bytes": 38793216,
+      "mtime_ns": 1789629114930000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00073.ARW",
+      "bytes": 38813696,
+      "mtime_ns": 1789629116400000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00074.ARW",
+      "bytes": 38842368,
+      "mtime_ns": 1789629117860000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00075.ARW",
+      "bytes": 38862848,
+      "mtime_ns": 1789629119350000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00076.ARW",
+      "bytes": 38887424,
+      "mtime_ns": 1789629120820000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00077.ARW",
+      "bytes": 38912000,
+      "mtime_ns": 1789629122310000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00078.ARW",
+      "bytes": 38944768,
+      "mtime_ns": 1789629123760000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00079.ARW",
+      "bytes": 38965248,
+      "mtime_ns": 1789629125250000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00080.ARW",
+      "bytes": 38985728,
+      "mtime_ns": 1789629126720000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00081.ARW",
+      "bytes": 39014400,
+      "mtime_ns": 1789629128210000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00082.ARW",
+      "bytes": 39030784,
+      "mtime_ns": 1789629129680000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00083.ARW",
+      "bytes": 39047168,
+      "mtime_ns": 1789629131150000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00084.ARW",
+      "bytes": 39067648,
+      "mtime_ns": 1789629132610000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00085.ARW",
+      "bytes": 39084032,
+      "mtime_ns": 1789629134070000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00086.ARW",
+      "bytes": 39104512,
+      "mtime_ns": 1789629135560000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00087.ARW",
+      "bytes": 39108608,
+      "mtime_ns": 1789629137020000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00088.ARW",
+      "bytes": 39124992,
+      "mtime_ns": 1789629138510000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00089.ARW",
+      "bytes": 39141376,
+      "mtime_ns": 1789629139960000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00090.ARW",
+      "bytes": 39157760,
+      "mtime_ns": 1789629141440000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00091.ARW",
+      "bytes": 39170048,
+      "mtime_ns": 1789629142900000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00092.ARW",
+      "bytes": 39178240,
+      "mtime_ns": 1789629144350000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00093.ARW",
+      "bytes": 39194624,
+      "mtime_ns": 1789629145850000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00094.ARW",
+      "bytes": 39206912,
+      "mtime_ns": 1789629147320000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00095.ARW",
+      "bytes": 39223296,
+      "mtime_ns": 1789629148800000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00096.ARW",
+      "bytes": 39227392,
+      "mtime_ns": 1789629150270000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00097.ARW",
+      "bytes": 39256064,
+      "mtime_ns": 1789629151740000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00098.ARW",
+      "bytes": 39264256,
+      "mtime_ns": 1789629153200000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00099.ARW",
+      "bytes": 39268352,
+      "mtime_ns": 1789629154660000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00100.ARW",
+      "bytes": 39288832,
+      "mtime_ns": 1789629156140000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00101.ARW",
+      "bytes": 39309312,
+      "mtime_ns": 1789629157600000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00102.ARW",
+      "bytes": 39325696,
+      "mtime_ns": 1789629159080000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00103.ARW",
+      "bytes": 39337984,
+      "mtime_ns": 1789629160550000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00104.ARW",
+      "bytes": 39358464,
+      "mtime_ns": 1789629162010000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00105.ARW",
+      "bytes": 39370752,
+      "mtime_ns": 1789629163480000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00106.ARW",
+      "bytes": 39383040,
+      "mtime_ns": 1789629164940000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00107.ARW",
+      "bytes": 39395328,
+      "mtime_ns": 1789629166430000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00108.ARW",
+      "bytes": 39403520,
+      "mtime_ns": 1789629167890000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00109.ARW",
+      "bytes": 39415808,
+      "mtime_ns": 1789629169350000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00110.ARW",
+      "bytes": 39424000,
+      "mtime_ns": 1789629170820000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00111.ARW",
+      "bytes": 39424000,
+      "mtime_ns": 1789629172270000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00112.ARW",
+      "bytes": 39432192,
+      "mtime_ns": 1789629173770000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00113.ARW",
+      "bytes": 39436288,
+      "mtime_ns": 1789629175230000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00114.ARW",
+      "bytes": 39436288,
+      "mtime_ns": 1789629176720000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00115.ARW",
+      "bytes": 39436288,
+      "mtime_ns": 1789629178180000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00116.ARW",
+      "bytes": 39436288,
+      "mtime_ns": 1789629179640000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00117.ARW",
+      "bytes": 39432192,
+      "mtime_ns": 1789629181130000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00118.ARW",
+      "bytes": 39432192,
+      "mtime_ns": 1789629182600000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00119.ARW",
+      "bytes": 39428096,
+      "mtime_ns": 1789629184090000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00120.ARW",
+      "bytes": 39428096,
+      "mtime_ns": 1789629185550000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00121.ARW",
+      "bytes": 39428096,
+      "mtime_ns": 1789629187040000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00122.ARW",
+      "bytes": 39424000,
+      "mtime_ns": 1789629188500000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00123.ARW",
+      "bytes": 39419904,
+      "mtime_ns": 1789629189990000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00124.ARW",
+      "bytes": 39428096,
+      "mtime_ns": 1789629191460000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00125.ARW",
+      "bytes": 39424000,
+      "mtime_ns": 1789629192930000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00126.ARW",
+      "bytes": 39428096,
+      "mtime_ns": 1789629194420000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00127.ARW",
+      "bytes": 39428096,
+      "mtime_ns": 1789629195900000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00128.ARW",
+      "bytes": 39436288,
+      "mtime_ns": 1789629197350000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00129.ARW",
+      "bytes": 39436288,
+      "mtime_ns": 1789629198840000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00130.ARW",
+      "bytes": 39440384,
+      "mtime_ns": 1789629200300000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00131.ARW",
+      "bytes": 39436288,
+      "mtime_ns": 1789629201790000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00132.ARW",
+      "bytes": 39440384,
+      "mtime_ns": 1789629203240000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00133.ARW",
+      "bytes": 39436288,
+      "mtime_ns": 1789629204700000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00134.ARW",
+      "bytes": 39432192,
+      "mtime_ns": 1789629206160000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00135.ARW",
+      "bytes": 39424000,
+      "mtime_ns": 1789629207650000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00136.ARW",
+      "bytes": 39424000,
+      "mtime_ns": 1789629209110000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00137.ARW",
+      "bytes": 39407616,
+      "mtime_ns": 1789629210590000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00138.ARW",
+      "bytes": 39403520,
+      "mtime_ns": 1789629212060000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00139.ARW",
+      "bytes": 39391232,
+      "mtime_ns": 1789629213530000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00140.ARW",
+      "bytes": 39383040,
+      "mtime_ns": 1789629215000000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00141.ARW",
+      "bytes": 39370752,
+      "mtime_ns": 1789629216470000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00142.ARW",
+      "bytes": 39366656,
+      "mtime_ns": 1789629217940000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00143.ARW",
+      "bytes": 39358464,
+      "mtime_ns": 1789629219400000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00144.ARW",
+      "bytes": 39350272,
+      "mtime_ns": 1789629220870000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00145.ARW",
+      "bytes": 39342080,
+      "mtime_ns": 1789629222350000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00146.ARW",
+      "bytes": 39337984,
+      "mtime_ns": 1789629223830000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00147.ARW",
+      "bytes": 39329792,
+      "mtime_ns": 1789629225300000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00148.ARW",
+      "bytes": 39321600,
+      "mtime_ns": 1789629226770000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00149.ARW",
+      "bytes": 39317504,
+      "mtime_ns": 1789629228240000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00150.ARW",
+      "bytes": 39309312,
+      "mtime_ns": 1789629229700000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00151.ARW",
+      "bytes": 39305216,
+      "mtime_ns": 1789629231190000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00152.ARW",
+      "bytes": 39305216,
+      "mtime_ns": 1789629232650000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00153.ARW",
+      "bytes": 39301120,
+      "mtime_ns": 1789629234140000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00154.ARW",
+      "bytes": 39284736,
+      "mtime_ns": 1789629235600000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00155.ARW",
+      "bytes": 39280640,
+      "mtime_ns": 1789629237090000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00156.ARW",
+      "bytes": 39280640,
+      "mtime_ns": 1789629238560000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00157.ARW",
+      "bytes": 39264256,
+      "mtime_ns": 1789629240040000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00158.ARW",
+      "bytes": 39256064,
+      "mtime_ns": 1789629241500000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00159.ARW",
+      "bytes": 39251968,
+      "mtime_ns": 1789629242960000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00160.ARW",
+      "bytes": 39243776,
+      "mtime_ns": 1789629244450000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00161.ARW",
+      "bytes": 39231488,
+      "mtime_ns": 1789629245920000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00162.ARW",
+      "bytes": 39223296,
+      "mtime_ns": 1789629247410000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00163.ARW",
+      "bytes": 39211008,
+      "mtime_ns": 1789629248860000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00164.ARW",
+      "bytes": 39190528,
+      "mtime_ns": 1789629250340000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00165.ARW",
+      "bytes": 39178240,
+      "mtime_ns": 1789629251800000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00166.ARW",
+      "bytes": 39165952,
+      "mtime_ns": 1789629253260000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00167.ARW",
+      "bytes": 39161856,
+      "mtime_ns": 1789629254750000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00168.ARW",
+      "bytes": 39145472,
+      "mtime_ns": 1789629256220000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00169.ARW",
+      "bytes": 39129088,
+      "mtime_ns": 1789629257710000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00170.ARW",
+      "bytes": 39112704,
+      "mtime_ns": 1789629259180000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00171.ARW",
+      "bytes": 39100416,
+      "mtime_ns": 1789629260670000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00172.ARW",
+      "bytes": 39084032,
+      "mtime_ns": 1789629262140000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00173.ARW",
+      "bytes": 39071744,
+      "mtime_ns": 1789629263630000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00174.ARW",
+      "bytes": 39059456,
+      "mtime_ns": 1789629265100000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00175.ARW",
+      "bytes": 39047168,
+      "mtime_ns": 1789629266590000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00176.ARW",
+      "bytes": 39034880,
+      "mtime_ns": 1789629268050000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00177.ARW",
+      "bytes": 39018496,
+      "mtime_ns": 1789629269540000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00178.ARW",
+      "bytes": 39018496,
+      "mtime_ns": 1789629271000000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00179.ARW",
+      "bytes": 39014400,
+      "mtime_ns": 1789629272460000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00180.ARW",
+      "bytes": 39006208,
+      "mtime_ns": 1789629273950000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00181.ARW",
+      "bytes": 39002112,
+      "mtime_ns": 1789629275420000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00182.ARW",
+      "bytes": 39002112,
+      "mtime_ns": 1789629276910000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00183.ARW",
+      "bytes": 38993920,
+      "mtime_ns": 1789629278380000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00184.ARW",
+      "bytes": 38989824,
+      "mtime_ns": 1789629279880000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00185.ARW",
+      "bytes": 38989824,
+      "mtime_ns": 1789629281340000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00186.ARW",
+      "bytes": 38989824,
+      "mtime_ns": 1789629282830000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00187.ARW",
+      "bytes": 38981632,
+      "mtime_ns": 1789629284300000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00188.ARW",
+      "bytes": 38977536,
+      "mtime_ns": 1789629285790000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00189.ARW",
+      "bytes": 38973440,
+      "mtime_ns": 1789629287260000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00190.ARW",
+      "bytes": 38969344,
+      "mtime_ns": 1789629288750000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00191.ARW",
+      "bytes": 38961152,
+      "mtime_ns": 1789629290200000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00192.ARW",
+      "bytes": 38952960,
+      "mtime_ns": 1789629291690000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00193.ARW",
+      "bytes": 38948864,
+      "mtime_ns": 1789629293150000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00194.ARW",
+      "bytes": 38940672,
+      "mtime_ns": 1789629294620000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00195.ARW",
+      "bytes": 38936576,
+      "mtime_ns": 1789629296080000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00196.ARW",
+      "bytes": 38928384,
+      "mtime_ns": 1789629297540000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00197.ARW",
+      "bytes": 38916096,
+      "mtime_ns": 1789629299020000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00198.ARW",
+      "bytes": 38912000,
+      "mtime_ns": 1789629300470000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00199.ARW",
+      "bytes": 38903808,
+      "mtime_ns": 1789629301950000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00200.ARW",
+      "bytes": 38899712,
+      "mtime_ns": 1789629303400000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00201.ARW",
+      "bytes": 38887424,
+      "mtime_ns": 1789629304860000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00202.ARW",
+      "bytes": 38883328,
+      "mtime_ns": 1789629306330000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00203.ARW",
+      "bytes": 38879232,
+      "mtime_ns": 1789629307800000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00204.ARW",
+      "bytes": 38871040,
+      "mtime_ns": 1789629309260000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00205.ARW",
+      "bytes": 38862848,
+      "mtime_ns": 1789629310750000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00206.ARW",
+      "bytes": 38850560,
+      "mtime_ns": 1789629312210000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00207.ARW",
+      "bytes": 38838272,
+      "mtime_ns": 1789629313700000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00208.ARW",
+      "bytes": 38830080,
+      "mtime_ns": 1789629315160000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00209.ARW",
+      "bytes": 38813696,
+      "mtime_ns": 1789629316630000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00210.ARW",
+      "bytes": 38805504,
+      "mtime_ns": 1789629318110000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00211.ARW",
+      "bytes": 38793216,
+      "mtime_ns": 1789629319590000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00212.ARW",
+      "bytes": 38780928,
+      "mtime_ns": 1789629321060000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00213.ARW",
+      "bytes": 38756352,
+      "mtime_ns": 1789629322520000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00214.ARW",
+      "bytes": 38744064,
+      "mtime_ns": 1789629324020000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00215.ARW",
+      "bytes": 38731776,
+      "mtime_ns": 1789629325480000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00216.ARW",
+      "bytes": 38719488,
+      "mtime_ns": 1789629326970000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00217.ARW",
+      "bytes": 38711296,
+      "mtime_ns": 1789629328440000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00218.ARW",
+      "bytes": 38699008,
+      "mtime_ns": 1789629329930000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00219.ARW",
+      "bytes": 38686720,
+      "mtime_ns": 1789629331400000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00220.ARW",
+      "bytes": 38666240,
+      "mtime_ns": 1789629332890000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00221.ARW",
+      "bytes": 38653952,
+      "mtime_ns": 1789629334340000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00222.ARW",
+      "bytes": 38633472,
+      "mtime_ns": 1789629335830000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00223.ARW",
+      "bytes": 38629376,
+      "mtime_ns": 1789629337290000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00224.ARW",
+      "bytes": 38617088,
+      "mtime_ns": 1789629338760000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00225.ARW",
+      "bytes": 38608896,
+      "mtime_ns": 1789629340240000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00226.ARW",
+      "bytes": 38596608,
+      "mtime_ns": 1789629341700000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00227.ARW",
+      "bytes": 38580224,
+      "mtime_ns": 1789629343190000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00228.ARW",
+      "bytes": 38572032,
+      "mtime_ns": 1789629344660000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00229.ARW",
+      "bytes": 38559744,
+      "mtime_ns": 1789629346150000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00230.ARW",
+      "bytes": 38551552,
+      "mtime_ns": 1789629347620000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00231.ARW",
+      "bytes": 38535168,
+      "mtime_ns": 1789629349110000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00232.ARW",
+      "bytes": 38526976,
+      "mtime_ns": 1789629350580000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00233.ARW",
+      "bytes": 38514688,
+      "mtime_ns": 1789629352070000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00234.ARW",
+      "bytes": 38506496,
+      "mtime_ns": 1789629353540000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00235.ARW",
+      "bytes": 38498304,
+      "mtime_ns": 1789629355030000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00236.ARW",
+      "bytes": 38481920,
+      "mtime_ns": 1789629356500000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00237.ARW",
+      "bytes": 38473728,
+      "mtime_ns": 1789629357990000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00238.ARW",
+      "bytes": 38465536,
+      "mtime_ns": 1789629359440000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00239.ARW",
+      "bytes": 38457344,
+      "mtime_ns": 1789629360900000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00240.ARW",
+      "bytes": 38445056,
+      "mtime_ns": 1789629362410000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00241.ARW",
+      "bytes": 38436864,
+      "mtime_ns": 1789629363860000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00242.ARW",
+      "bytes": 38428672,
+      "mtime_ns": 1789629365340000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00243.ARW",
+      "bytes": 38424576,
+      "mtime_ns": 1789629366800000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00244.ARW",
+      "bytes": 38416384,
+      "mtime_ns": 1789629368270000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00245.ARW",
+      "bytes": 38408192,
+      "mtime_ns": 1789629369720000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00246.ARW",
+      "bytes": 38400000,
+      "mtime_ns": 1789629371190000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00247.ARW",
+      "bytes": 38387712,
+      "mtime_ns": 1789629372680000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00248.ARW",
+      "bytes": 38379520,
+      "mtime_ns": 1789629374130000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00249.ARW",
+      "bytes": 38375424,
+      "mtime_ns": 1789629375630000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00250.ARW",
+      "bytes": 38371328,
+      "mtime_ns": 1789629377080000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00251.ARW",
+      "bytes": 38363136,
+      "mtime_ns": 1789629378550000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00252.ARW",
+      "bytes": 38359040,
+      "mtime_ns": 1789629380000000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00253.ARW",
+      "bytes": 38350848,
+      "mtime_ns": 1789629381460000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00254.ARW",
+      "bytes": 38342656,
+      "mtime_ns": 1789629382950000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00255.ARW",
+      "bytes": 38338560,
+      "mtime_ns": 1789629384400000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00256.ARW",
+      "bytes": 38334464,
+      "mtime_ns": 1789629385870000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00257.ARW",
+      "bytes": 38326272,
+      "mtime_ns": 1789629387320000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00258.ARW",
+      "bytes": 38326272,
+      "mtime_ns": 1789629388780000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00259.ARW",
+      "bytes": 38318080,
+      "mtime_ns": 1789629390240000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00260.ARW",
+      "bytes": 38318080,
+      "mtime_ns": 1789629391730000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00261.ARW",
+      "bytes": 38309888,
+      "mtime_ns": 1789629393180000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00262.ARW",
+      "bytes": 38305792,
+      "mtime_ns": 1789629394670000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00263.ARW",
+      "bytes": 38297600,
+      "mtime_ns": 1789629396130000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00264.ARW",
+      "bytes": 38297600,
+      "mtime_ns": 1789629397610000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00265.ARW",
+      "bytes": 38293504,
+      "mtime_ns": 1789629399070000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00266.ARW",
+      "bytes": 38281216,
+      "mtime_ns": 1789629400550000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00267.ARW",
+      "bytes": 38277120,
+      "mtime_ns": 1789629402000000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00268.ARW",
+      "bytes": 38273024,
+      "mtime_ns": 1789629403460000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00269.ARW",
+      "bytes": 38277120,
+      "mtime_ns": 1789629404930000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00270.ARW",
+      "bytes": 38268928,
+      "mtime_ns": 1789629406400000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00271.ARW",
+      "bytes": 38264832,
+      "mtime_ns": 1789629407860000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00272.ARW",
+      "bytes": 38264832,
+      "mtime_ns": 1789629409350000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00273.ARW",
+      "bytes": 38260736,
+      "mtime_ns": 1789629410820000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00274.ARW",
+      "bytes": 38252544,
+      "mtime_ns": 1789629412310000000
+    }
+  ],
+  "executable": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-gpu-gather\\build-native-6\\strehl.exe",
+    "sha256": "2fd0a1615989e262fbba61e0a1587a9b8f20ff4913d3969510e967ce9d9219d7",
+    "bytes": 17714688
+  },
+  "runner": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\star-baseline.py",
+    "sha256": "1e10665ddea9f06bed5a38188c926a30d62258c64ee8a5eb0b40bafc0414bc30",
+    "bytes": 3016
+  },
+  "commands": [
+    [
+      "align",
+      [
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-gpu-gather\\build-native-6\\strehl.exe",
+        "align",
+        "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl",
+        "--out",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\star-baseline-1\\star.warpmap.txt",
+        "--threads",
+        "8",
+        "--resampler",
+        "catmull-rom"
+      ]
+    ],
+    [
+      "render",
+      [
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-gpu-gather\\build-native-6\\strehl.exe",
+        "stack",
+        "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl",
+        "--merge",
+        "pyramid",
+        "--pyramid-bands",
+        "7",
+        "--pyramid-gate",
+        "2",
+        "--pyramid-exponent",
+        "2",
+        "--pyramid-sharpen",
+        "1.4",
+        "--pyramid-select",
+        "soft",
+        "--pyramid-base",
+        "mean",
+        "--srgb",
+        "--demosaic",
+        "--resampler",
+        "catmull-rom",
+        "--cover",
+        "crop",
+        "--out",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\star-baseline-1\\star.tiff"
+      ]
+    ]
+  ],
+  "environment": {
+    "RAYON_NUM_THREADS": "8",
+    "STREHL_PYRAMID_WORKERS": "8",
+    "STREHL_ALIGN": "1",
+    "STREHL_WARPMAP": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\star-baseline-1\\star.warpmap.txt",
+    "STREHL_FULLRES_GATHER": "1",
+    "STREHL_DIRECT_PLANES": "rounded",
+    "STREHL_PROBE_GATHER": "green",
+    "STREHL_WARP_WRITEBACK": "parallel",
+    "STREHL_GPU_GATHER": "on",
+    "STREHL_GPU_SCHEDULE": "device",
+    "STREHL_GPU_GATHER_LOG": "off",
+    "STREHL_DEFECT": "off"
+  },
+  "removed_environment": [],
+  "scope": "new259 RAW baseline; output image inspection, no speed or quality claim"
+}

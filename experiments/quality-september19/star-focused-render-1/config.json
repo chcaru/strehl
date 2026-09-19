@@ -1,0 +1,22 @@
+{
+  "dir": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl",
+  "map": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\star-baseline-1\\star.warpmap.txt",
+  "out": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\star-focused-render-1\\output",
+  "frames": 259,
+  "tone": {
+    "black": 0.01566,
+    "white": 0.51099,
+    "contrast": 0.55
+  },
+  "observe": false,
+  "regions": [
+    {
+      "name": "porous-grain",
+      "frame": 129,
+      "x": 472,
+      "y": 1352,
+      "width": 328,
+      "height": 328
+    }
+  ]
+}

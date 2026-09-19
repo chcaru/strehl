@@ -1,0 +1,92 @@
+[
+  {
+    "frame": 125,
+    "stage": "raw",
+    "file": "porous-source-125-frame125-raw-native.png",
+    "padded_origin_xy": [
+      618,
+      1450
+    ],
+    "coordinates": "active native sensor; mapped centre rounded to even origin, no warp or CA correction"
+  },
+  {
+    "frame": 125,
+    "stage": "gathered",
+    "file": "porous-source-125-frame125-gathered-native.png",
+    "padded_origin_xy": [
+      468,
+      1348
+    ],
+    "coordinates": "cropped reference output native grid"
+  },
+  {
+    "frame": 129,
+    "stage": "raw",
+    "file": "porous-source-129-frame129-raw-native.png",
+    "padded_origin_xy": [
+      622,
+      1452
+    ],
+    "coordinates": "active native sensor; mapped centre rounded to even origin, no warp or CA correction"
+  },
+  {
+    "frame": 129,
+    "stage": "gathered",
+    "file": "porous-source-129-frame129-gathered-native.png",
+    "padded_origin_xy": [
+      468,
+      1348
+    ],
+    "coordinates": "cropped reference output native grid"
+  },
+  {
+    "frame": 133,
+    "stage": "raw",
+    "file": "porous-source-133-frame133-raw-native.png",
+    "padded_origin_xy": [
+      624,
+      1452
+    ],
+    "coordinates": "active native sensor; mapped centre rounded to even origin, no warp or CA correction"
+  },
+  {
+    "frame": 133,
+    "stage": "gathered",
+    "file": "porous-source-133-frame133-gathered-native.png",
+    "padded_origin_xy": [
+      468,
+      1348
+    ],
+    "coordinates": "cropped reference output native grid"
+  },
+  {
+    "frame": 125,
+    "stage": "merged",
+    "file": "porous-source-125-frame125-merged-native.png",
+    "padded_origin_xy": [
+      468,
+      1348
+    ],
+    "coordinates": "cropped reference output native grid"
+  },
+  {
+    "frame": 129,
+    "stage": "merged",
+    "file": "porous-source-129-frame129-merged-native.png",
+    "padded_origin_xy": [
+      468,
+      1348
+    ],
+    "coordinates": "cropped reference output native grid"
+  },
+  {
+    "frame": 133,
+    "stage": "merged",
+    "file": "porous-source-133-frame133-merged-native.png",
+    "padded_origin_xy": [
+      468,
+      1348
+    ],
+    "coordinates": "cropped reference output native grid"
+  }
+]

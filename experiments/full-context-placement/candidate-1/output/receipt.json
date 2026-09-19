@@ -1,0 +1,53 @@
+{
+  "configuration": {
+    "dir": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl",
+    "frames": 299,
+    "map": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\chip-baseline-1\\chip.warpmap.txt",
+    "observe": false,
+    "out": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\full-context-placement\\candidate-1\\output",
+    "regions": [
+      {
+        "frame": 149,
+        "height": 384,
+        "name": "pale-circuit",
+        "width": 384,
+        "x": 1070,
+        "y": 930
+      }
+    ],
+    "tone": {
+      "black": 0.004293,
+      "contrast": 0.55,
+      "white": 0.946441
+    }
+  },
+  "crop_quad_xywh": [
+    133,
+    89,
+    3250,
+    2166
+  ],
+  "gathered_count": 0,
+  "levels": [
+    512.0,
+    15360.0
+  ],
+  "limits": "raw panels have no CA correction or geometric resampling; gathered and merged share the exact reference grid and production correction path; shared pinned tone differs slightly from prior automatic baseline; retain replay until independent pixel comparison",
+  "merged_count": 0,
+  "native_map_reference": 149,
+  "patches": [],
+  "raw_count": 0,
+  "replay_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\full-context-placement\\candidate-1\\output\\replay.tiff",
+  "source_frame_count": 299,
+  "status": "MATCHED_SOURCE_CAPTURED",
+  "tone_bits": [
+    999074891,
+    1064454645,
+    1057803469
+  ],
+  "wb_bits": [
+    1070374912,
+    1065353216,
+    1076715520
+  ]
+}

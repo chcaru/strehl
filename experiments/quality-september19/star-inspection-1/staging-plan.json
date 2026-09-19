@@ -1,0 +1,400 @@
+{
+  "status": "PLANNED_ONLY_NO_RAW_DECODE",
+  "reference_index": 129,
+  "frames": [
+    125,
+    126,
+    127,
+    128,
+    129,
+    130,
+    131,
+    132,
+    133
+  ],
+  "registrar_sha256": "5b64f7e612fd94cd8a22515bffb67addcee71021f6338f10a249c63864420196",
+  "map_sha256": "6594d98255383218a3114fd783bfd0e2215b39b202777f1ee2e493f4b287a6a1",
+  "rois": [
+    {
+      "name": "ridged-shell",
+      "reference_index": 129,
+      "target_origin_native": [
+        1514,
+        1240
+      ],
+      "target_shape": [
+        392,
+        392
+      ],
+      "native_sensor_shape": [
+        4688,
+        7032
+      ],
+      "libraw_visible_shape": [
+        4688,
+        7028
+      ],
+      "levels": [
+        512,
+        15360
+      ],
+      "map_sha256": "6594d98255383218a3114fd783bfd0e2215b39b202777f1ee2e493f4b287a6a1",
+      "frames": [
+        {
+          "index": 125,
+          "source": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00141.ARW",
+          "source_xywh": [
+            1502,
+            1230,
+            410,
+            410
+          ],
+          "a": [
+            1.0011722368656863,
+            1.2244143585380578e-05
+          ],
+          "b_plane": [
+            -0.18840608607400644,
+            0.07617693120652669
+          ]
+        },
+        {
+          "index": 126,
+          "source": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00142.ARW",
+          "source_xywh": [
+            1502,
+            1230,
+            412,
+            410
+          ],
+          "a": [
+            1.0008665892096624,
+            1.9717057332903657e-05
+          ],
+          "b_plane": [
+            -0.19009173270569257,
+            0.05808374177540715
+          ]
+        },
+        {
+          "index": 127,
+          "source": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00143.ARW",
+          "source_xywh": [
+            1504,
+            1230,
+            410,
+            410
+          ],
+          "a": [
+            1.0005943689727932,
+            1.2339529967789805e-05
+          ],
+          "b_plane": [
+            -0.11675246714539478,
+            0.04963255279096285
+          ]
+        },
+        {
+          "index": 128,
+          "source": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00144.ARW",
+          "source_xywh": [
+            1504,
+            1230,
+            410,
+            410
+          ],
+          "a": [
+            1.0003109848776204,
+            2.6093910161735512e-05
+          ],
+          "b_plane": [
+            0.03544955007297901,
+            0.045191969042671476
+          ]
+        },
+        {
+          "index": 129,
+          "source": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00145.ARW",
+          "source_xywh": [
+            1506,
+            1232,
+            408,
+            408
+          ],
+          "a": [
+            1.0,
+            2.168404344971009e-19
+          ],
+          "b_plane": [
+            -2.220446049250313e-16,
+            0.0
+          ]
+        },
+        {
+          "index": 130,
+          "source": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00146.ARW",
+          "source_xywh": [
+            1506,
+            1232,
+            410,
+            410
+          ],
+          "a": [
+            0.9996758444092844,
+            -2.0354315731475024e-05
+          ],
+          "b_plane": [
+            -0.06318014100234803,
+            0.0011584310086145133
+          ]
+        },
+        {
+          "index": 131,
+          "source": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00147.ARW",
+          "source_xywh": [
+            1506,
+            1232,
+            410,
+            410
+          ],
+          "a": [
+            0.9993306091184446,
+            8.080361439356245e-06
+          ],
+          "b_plane": [
+            -0.10657169058155125,
+            0.04730301274756399
+          ]
+        },
+        {
+          "index": 132,
+          "source": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00148.ARW",
+          "source_xywh": [
+            1506,
+            1232,
+            410,
+            410
+          ],
+          "a": [
+            0.9990124571267672,
+            5.4738518323403434e-05
+          ],
+          "b_plane": [
+            -0.13601638011216077,
+            0.027263148955020244
+          ]
+        },
+        {
+          "index": 133,
+          "source": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00149.ARW",
+          "source_xywh": [
+            1508,
+            1232,
+            408,
+            410
+          ],
+          "a": [
+            0.9987648492327358,
+            5.939990021801246e-06
+          ],
+          "b_plane": [
+            -0.15982922693712842,
+            0.08910849777476576
+          ]
+        }
+      ]
+    },
+    {
+      "name": "porous-grain",
+      "reference_index": 129,
+      "target_origin_native": [
+        594,
+        1424
+      ],
+      "target_shape": [
+        392,
+        392
+      ],
+      "native_sensor_shape": [
+        4688,
+        7032
+      ],
+      "libraw_visible_shape": [
+        4688,
+        7028
+      ],
+      "levels": [
+        512,
+        15360
+      ],
+      "map_sha256": "6594d98255383218a3114fd783bfd0e2215b39b202777f1ee2e493f4b287a6a1",
+      "frames": [
+        {
+          "index": 125,
+          "source": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00141.ARW",
+          "source_xywh": [
+            582,
+            1414,
+            410,
+            410
+          ],
+          "a": [
+            1.0011722368656863,
+            1.2244143585380578e-05
+          ],
+          "b_plane": [
+            -0.18840608607400644,
+            0.07617693120652669
+          ]
+        },
+        {
+          "index": 126,
+          "source": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00142.ARW",
+          "source_xywh": [
+            582,
+            1414,
+            410,
+            410
+          ],
+          "a": [
+            1.0008665892096624,
+            1.9717057332903657e-05
+          ],
+          "b_plane": [
+            -0.19009173270569257,
+            0.05808374177540715
+          ]
+        },
+        {
+          "index": 127,
+          "source": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00143.ARW",
+          "source_xywh": [
+            584,
+            1414,
+            410,
+            410
+          ],
+          "a": [
+            1.0005943689727932,
+            1.2339529967789805e-05
+          ],
+          "b_plane": [
+            -0.11675246714539478,
+            0.04963255279096285
+          ]
+        },
+        {
+          "index": 128,
+          "source": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00144.ARW",
+          "source_xywh": [
+            584,
+            1414,
+            410,
+            410
+          ],
+          "a": [
+            1.0003109848776204,
+            2.6093910161735512e-05
+          ],
+          "b_plane": [
+            0.03544955007297901,
+            0.045191969042671476
+          ]
+        },
+        {
+          "index": 129,
+          "source": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00145.ARW",
+          "source_xywh": [
+            586,
+            1416,
+            408,
+            408
+          ],
+          "a": [
+            1.0,
+            2.168404344971009e-19
+          ],
+          "b_plane": [
+            -2.220446049250313e-16,
+            0.0
+          ]
+        },
+        {
+          "index": 130,
+          "source": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00146.ARW",
+          "source_xywh": [
+            586,
+            1416,
+            410,
+            410
+          ],
+          "a": [
+            0.9996758444092844,
+            -2.0354315731475024e-05
+          ],
+          "b_plane": [
+            -0.06318014100234803,
+            0.0011584310086145133
+          ]
+        },
+        {
+          "index": 131,
+          "source": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00147.ARW",
+          "source_xywh": [
+            586,
+            1416,
+            410,
+            410
+          ],
+          "a": [
+            0.9993306091184446,
+            8.080361439356245e-06
+          ],
+          "b_plane": [
+            -0.10657169058155125,
+            0.04730301274756399
+          ]
+        },
+        {
+          "index": 132,
+          "source": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00148.ARW",
+          "source_xywh": [
+            588,
+            1416,
+            410,
+            410
+          ],
+          "a": [
+            0.9990124571267672,
+            5.4738518323403434e-05
+          ],
+          "b_plane": [
+            -0.13601638011216077,
+            0.027263148955020244
+          ]
+        },
+        {
+          "index": 133,
+          "source": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00149.ARW",
+          "source_xywh": [
+            588,
+            1416,
+            410,
+            410
+          ],
+          "a": [
+            0.9987648492327358,
+            5.939990021801246e-06
+          ],
+          "b_plane": [
+            -0.15982922693712842,
+            0.08910849777476576
+          ]
+        }
+      ]
+    }
+  ],
+  "storage": "Original u16 CFA; copy inside RawPy context; independently decode identical patches",
+  "required_receipt": "Add raw_u16_sha256 to each frame; independently decode reference129 and record 0 differing sensels; other decoder checks may be null",
+  "scope": "Nine preselected neighbours; local placement diagnostic, not equal-focus or quality truth"
+}

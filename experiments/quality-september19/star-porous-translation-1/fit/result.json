@@ -1,0 +1,668 @@
+{
+  "status": "LOCAL_TRANSLATION_DIAGNOSTIC",
+  "design": {
+    "status": "PLANNED_ONLY_NO_RAW_DECODE",
+    "reference_index": 129,
+    "frames": [
+      125,
+      126,
+      127,
+      128,
+      129,
+      130,
+      131,
+      132,
+      133
+    ],
+    "registrar_sha256": "5b64f7e612fd94cd8a22515bffb67addcee71021f6338f10a249c63864420196",
+    "map_sha256": "6594d98255383218a3114fd783bfd0e2215b39b202777f1ee2e493f4b287a6a1",
+    "rois": [
+      {
+        "name": "porous-grain",
+        "reference_index": 129,
+        "target_origin_native": [
+          594,
+          1424
+        ],
+        "target_shape": [
+          392,
+          392
+        ],
+        "native_sensor_shape": [
+          4688,
+          7032
+        ],
+        "libraw_visible_shape": [
+          4688,
+          7028
+        ],
+        "levels": [
+          512,
+          15360
+        ],
+        "map_sha256": "6594d98255383218a3114fd783bfd0e2215b39b202777f1ee2e493f4b287a6a1",
+        "frames": [
+          {
+            "index": 125,
+            "source": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00141.ARW",
+            "source_xywh": [
+              582,
+              1414,
+              410,
+              410
+            ],
+            "a": [
+              1.0011722368656863,
+              1.2244143585380578e-05
+            ],
+            "b_plane": [
+              -0.18840608607400644,
+              0.07617693120652669
+            ]
+          },
+          {
+            "index": 126,
+            "source": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00142.ARW",
+            "source_xywh": [
+              582,
+              1414,
+              410,
+              410
+            ],
+            "a": [
+              1.0008665892096624,
+              1.9717057332903657e-05
+            ],
+            "b_plane": [
+              -0.19009173270569257,
+              0.05808374177540715
+            ]
+          },
+          {
+            "index": 127,
+            "source": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00143.ARW",
+            "source_xywh": [
+              584,
+              1414,
+              410,
+              410
+            ],
+            "a": [
+              1.0005943689727932,
+              1.2339529967789805e-05
+            ],
+            "b_plane": [
+              -0.11675246714539478,
+              0.04963255279096285
+            ]
+          },
+          {
+            "index": 128,
+            "source": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00144.ARW",
+            "source_xywh": [
+              584,
+              1414,
+              410,
+              410
+            ],
+            "a": [
+              1.0003109848776204,
+              2.6093910161735512e-05
+            ],
+            "b_plane": [
+              0.03544955007297901,
+              0.045191969042671476
+            ]
+          },
+          {
+            "index": 129,
+            "source": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00145.ARW",
+            "source_xywh": [
+              586,
+              1416,
+              408,
+              408
+            ],
+            "a": [
+              1.0,
+              2.168404344971009e-19
+            ],
+            "b_plane": [
+              -2.220446049250313e-16,
+              0.0
+            ]
+          },
+          {
+            "index": 130,
+            "source": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00146.ARW",
+            "source_xywh": [
+              586,
+              1416,
+              410,
+              410
+            ],
+            "a": [
+              0.9996758444092844,
+              -2.0354315731475024e-05
+            ],
+            "b_plane": [
+              -0.06318014100234803,
+              0.0011584310086145133
+            ]
+          },
+          {
+            "index": 131,
+            "source": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00147.ARW",
+            "source_xywh": [
+              586,
+              1416,
+              410,
+              410
+            ],
+            "a": [
+              0.9993306091184446,
+              8.080361439356245e-06
+            ],
+            "b_plane": [
+              -0.10657169058155125,
+              0.04730301274756399
+            ]
+          },
+          {
+            "index": 132,
+            "source": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00148.ARW",
+            "source_xywh": [
+              588,
+              1416,
+              410,
+              410
+            ],
+            "a": [
+              0.9990124571267672,
+              5.4738518323403434e-05
+            ],
+            "b_plane": [
+              -0.13601638011216077,
+              0.027263148955020244
+            ]
+          },
+          {
+            "index": 133,
+            "source": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00149.ARW",
+            "source_xywh": [
+              588,
+              1416,
+              410,
+              410
+            ],
+            "a": [
+              0.9987648492327358,
+              5.939990021801246e-06
+            ],
+            "b_plane": [
+              -0.15982922693712842,
+              0.08910849777476576
+            ]
+          }
+        ]
+      }
+    ],
+    "storage": "Original u16 CFA; copy inside RawPy context; independently decode identical patches",
+    "required_receipt": "Add raw_u16_sha256 to each frame; independently decode reference129 and record 0 differing sensels; other decoder checks may be null",
+    "scope": "Nine preselected neighbours; local placement diagnostic, not equal-focus or quality truth"
+  },
+  "rois": [
+    {
+      "roi": "porous-grain",
+      "target_origin_native": [
+        594,
+        1424
+      ],
+      "frames": [
+        {
+          "before": {
+            "delta_source_native": [
+              0.0,
+              0.0
+            ],
+            "gain_left": 0.9284285812272031,
+            "bias_left": 0.023157420363580854,
+            "gain_positive": true,
+            "fit_rmse": 0.004822013532837685,
+            "validation_rmse": 0.004915018663692515,
+            "validation_mean_error": -0.00015237034252305146,
+            "validation_max_abs": 0.02881544603148839
+          },
+          "after": {
+            "delta_source_native": [
+              0.23221228549977582,
+              0.41270442109301664
+            ],
+            "gain_left": 0.929939087752939,
+            "bias_left": 0.022729786520000406,
+            "gain_positive": true,
+            "fit_rmse": 0.0045936707154962605,
+            "validation_rmse": 0.004635182458435598,
+            "validation_mean_error": -0.00017178717462935157,
+            "validation_max_abs": 0.02326456422590345
+          },
+          "delta_source_native": [
+            0.23221228549977582,
+            0.41270442109301664
+          ],
+          "converged": true,
+          "status": 2,
+          "message": "`ftol` termination condition is satisfied.",
+          "nfev": 6,
+          "optimality": 3.930646328276329e-06,
+          "at_translation_bound": false,
+          "fit_samples": 12464,
+          "validation_samples": 12464,
+          "source_support_gap_native": 3.9864865676990675,
+          "frame": 125,
+          "source_xywh": [
+            582,
+            1414,
+            410,
+            410
+          ],
+          "validation_ratio": 0.9430650777942959
+        },
+        {
+          "before": {
+            "delta_source_native": [
+              0.0,
+              0.0
+            ],
+            "gain_left": 0.9455815785822981,
+            "bias_left": 0.017702312117436753,
+            "gain_positive": true,
+            "fit_rmse": 0.003800049248169522,
+            "validation_rmse": 0.0038764973534653165,
+            "validation_mean_error": -0.00012582336995694995,
+            "validation_max_abs": 0.019519891302322456
+          },
+          "after": {
+            "delta_source_native": [
+              0.22364683934942797,
+              0.3032345775063625
+            ],
+            "gain_left": 0.9465414577516723,
+            "bias_left": 0.01743672544136004,
+            "gain_positive": true,
+            "fit_rmse": 0.003635196468353326,
+            "validation_rmse": 0.0036671137220346895,
+            "validation_mean_error": -0.00014766936644506327,
+            "validation_max_abs": 0.015763725311746024
+          },
+          "delta_source_native": [
+            0.22364683934942797,
+            0.3032345775063625
+          ],
+          "converged": true,
+          "status": 2,
+          "message": "`ftol` termination condition is satisfied.",
+          "nfev": 5,
+          "optimality": 4.909976842422183e-07,
+          "at_translation_bound": false,
+          "fit_samples": 12464,
+          "validation_samples": 12464,
+          "source_support_gap_native": 3.976103558760734,
+          "frame": 126,
+          "source_xywh": [
+            582,
+            1414,
+            410,
+            410
+          ],
+          "validation_ratio": 0.945986386075189
+        },
+        {
+          "before": {
+            "delta_source_native": [
+              0.0,
+              0.0
+            ],
+            "gain_left": 0.9630934876603707,
+            "bias_left": 0.01205397340123962,
+            "gain_positive": true,
+            "fit_rmse": 0.0026872571331095873,
+            "validation_rmse": 0.0027273903857688007,
+            "validation_mean_error": -0.00010990970150593905,
+            "validation_max_abs": 0.011793817591765898
+          },
+          "after": {
+            "delta_source_native": [
+              0.16465846437921752,
+              0.21717934463746283
+            ],
+            "gain_left": 0.9635225835353921,
+            "bias_left": 0.011946750335706517,
+            "gain_positive": true,
+            "fit_rmse": 0.0025738615099913146,
+            "validation_rmse": 0.0025785988181631146,
+            "validation_mean_error": -0.0001267615939808987,
+            "validation_max_abs": 0.010798188208784865
+          },
+          "delta_source_native": [
+            0.16465846437921752,
+            0.21717934463746283
+          ],
+          "converged": true,
+          "status": 2,
+          "message": "`ftol` termination condition is satisfied.",
+          "nfev": 7,
+          "optimality": 5.529966370846894e-07,
+          "at_translation_bound": false,
+          "fit_samples": 12464,
+          "validation_samples": 12464,
+          "source_support_gap_native": 3.971430906522947,
+          "frame": 127,
+          "source_xywh": [
+            584,
+            1414,
+            410,
+            410
+          ],
+          "validation_ratio": 0.9454454454404244
+        },
+        {
+          "before": {
+            "delta_source_native": [
+              0.0,
+              0.0
+            ],
+            "gain_left": 0.98188710898862,
+            "bias_left": 0.005923396856662278,
+            "gain_positive": true,
+            "fit_rmse": 0.0015825321364859807,
+            "validation_rmse": 0.001605692923115566,
+            "validation_mean_error": -0.00010468252978900753,
+            "validation_max_abs": 0.00614981770640366
+          },
+          "after": {
+            "delta_source_native": [
+              -0.10645681102515486,
+              0.13809053314856673
+            ],
+            "gain_left": 0.9814480555985735,
+            "bias_left": 0.006082750498294741,
+            "gain_positive": true,
+            "fit_rmse": 0.001504586543356118,
+            "validation_rmse": 0.0015156171431942396,
+            "validation_mean_error": -8.739298426482918e-05,
+            "validation_max_abs": 0.006512290935175857
+          },
+          "delta_source_native": [
+            -0.10645681102515486,
+            0.13809053314856673
+          ],
+          "converged": true,
+          "status": 3,
+          "message": "`xtol` termination condition is satisfied.",
+          "nfev": 10,
+          "optimality": 2.426183661916035e-07,
+          "at_translation_bound": false,
+          "fit_samples": 12464,
+          "validation_samples": 12464,
+          "source_support_gap_native": 3.959578992105399,
+          "frame": 128,
+          "source_xywh": [
+            584,
+            1414,
+            410,
+            410
+          ],
+          "validation_ratio": 0.9439022377039876
+        },
+        {
+          "before": {
+            "delta_source_native": [
+              0.0,
+              0.0
+            ],
+            "gain_left": 0.9999999999999933,
+            "bias_left": -4.241011657192551e-18,
+            "gain_positive": true,
+            "fit_rmse": 2.1244360710617616e-15,
+            "validation_rmse": 2.1417621729729524e-15,
+            "validation_mean_error": -2.1346317952448674e-15,
+            "validation_max_abs": 2.609024107869118e-15
+          },
+          "after": {
+            "delta_source_native": [
+              0.0,
+              0.0
+            ],
+            "gain_left": 0.9999999999999933,
+            "bias_left": -4.241011657192551e-18,
+            "gain_positive": true,
+            "fit_rmse": 2.1244360710617616e-15,
+            "validation_rmse": 2.1417621729729524e-15,
+            "validation_mean_error": -2.1346317952448674e-15,
+            "validation_max_abs": 2.609024107869118e-15
+          },
+          "delta_source_native": [
+            0.0,
+            0.0
+          ],
+          "converged": true,
+          "status": 1,
+          "message": "`gtol` termination condition is satisfied.",
+          "nfev": 1,
+          "optimality": 1.9067091727611633e-17,
+          "at_translation_bound": false,
+          "fit_samples": 12464,
+          "validation_samples": 12464,
+          "source_support_gap_native": 3.960000000000001,
+          "frame": 129,
+          "source_xywh": [
+            586,
+            1416,
+            408,
+            408
+          ],
+          "validation_ratio": 1.0
+        },
+        {
+          "before": {
+            "delta_source_native": [
+              0.0,
+              0.0
+            ],
+            "gain_left": 1.018190070515617,
+            "bias_left": -0.005776069694803416,
+            "gain_positive": true,
+            "fit_rmse": 0.00177733370532524,
+            "validation_rmse": 0.0017126993131228244,
+            "validation_mean_error": 1.2204285635045895e-05,
+            "validation_max_abs": 0.008307539038970635
+          },
+          "after": {
+            "delta_source_native": [
+              0.04529496801278322,
+              -0.2926602788242734
+            ],
+            "gain_left": 1.017662352563128,
+            "bias_left": -0.005653406729869329,
+            "gain_positive": true,
+            "fit_rmse": 0.0015629604031153356,
+            "validation_rmse": 0.0015055978710028103,
+            "validation_mean_error": -6.115104729845513e-06,
+            "validation_max_abs": 0.006208289891706409
+          },
+          "delta_source_native": [
+            0.04529496801278322,
+            -0.2926602788242734
+          ],
+          "converged": true,
+          "status": 2,
+          "message": "`ftol` termination condition is satisfied.",
+          "nfev": 18,
+          "optimality": 1.8565382471929385e-05,
+          "at_translation_bound": false,
+          "fit_samples": 12464,
+          "validation_samples": 12464,
+          "source_support_gap_native": 3.944936447713154,
+          "frame": 130,
+          "source_xywh": [
+            586,
+            1416,
+            410,
+            410
+          ],
+          "validation_ratio": 0.879078924985146
+        },
+        {
+          "before": {
+            "delta_source_native": [
+              0.0,
+              0.0
+            ],
+            "gain_left": 1.0349712321541145,
+            "bias_left": -0.011391471749633921,
+            "gain_positive": true,
+            "fit_rmse": 0.0031918597693918254,
+            "validation_rmse": 0.003140655971832103,
+            "validation_mean_error": 3.2624617465040074e-05,
+            "validation_max_abs": 0.015450633143712478
+          },
+          "after": {
+            "delta_source_native": [
+              -0.020935679107334727,
+              -0.555272699180917
+            ],
+            "gain_left": 1.0349011842309839,
+            "bias_left": -0.011458422973433633,
+            "gain_positive": true,
+            "fit_rmse": 0.0028074105664305194,
+            "validation_rmse": 0.0027323681835619224,
+            "validation_mean_error": 1.3382732863226268e-05,
+            "validation_max_abs": 0.011158354072828058
+          },
+          "delta_source_native": [
+            -0.020935679107334727,
+            -0.555272699180917
+          ],
+          "converged": true,
+          "status": 2,
+          "message": "`ftol` termination condition is satisfied.",
+          "nfev": 10,
+          "optimality": 8.15656533316285e-05,
+          "at_translation_bound": false,
+          "fit_samples": 12464,
+          "validation_samples": 12464,
+          "source_support_gap_native": 3.939961639250633,
+          "frame": 131,
+          "source_xywh": [
+            586,
+            1416,
+            410,
+            410
+          ],
+          "validation_ratio": 0.8699992001887409
+        },
+        {
+          "before": {
+            "delta_source_native": [
+              0.0,
+              0.0
+            ],
+            "gain_left": 1.052460899382506,
+            "bias_left": -0.016851145533484678,
+            "gain_positive": true,
+            "fit_rmse": 0.004401538260641529,
+            "validation_rmse": 0.0043687091245111186,
+            "validation_mean_error": 7.937801580095748e-06,
+            "validation_max_abs": 0.01913028288520907
+          },
+          "after": {
+            "delta_source_native": [
+              -0.03963594471430904,
+              -0.6189580400252291
+            ],
+            "gain_left": 1.052599035166127,
+            "bias_left": -0.01699905973948113,
+            "gain_positive": true,
+            "fit_rmse": 0.004092194961308306,
+            "validation_rmse": 0.00400666030938747,
+            "validation_mean_error": -1.2860226674613472e-05,
+            "validation_max_abs": 0.015561534953396683
+          },
+          "delta_source_native": [
+            -0.03963594471430904,
+            -0.6189580400252291
+          ],
+          "converged": true,
+          "status": 2,
+          "message": "`ftol` termination condition is satisfied.",
+          "nfev": 11,
+          "optimality": 2.6755487881511826e-05,
+          "at_translation_bound": false,
+          "fit_samples": 12464,
+          "validation_samples": 12464,
+          "source_support_gap_native": 3.916479128322372,
+          "frame": 132,
+          "source_xywh": [
+            588,
+            1416,
+            410,
+            410
+          ],
+          "validation_ratio": 0.9171268205767388
+        },
+        {
+          "before": {
+            "delta_source_native": [
+              0.0,
+              0.0
+            ],
+            "gain_left": 1.065056378397228,
+            "bias_left": -0.02078055328703641,
+            "gain_positive": true,
+            "fit_rmse": 0.006018113829621381,
+            "validation_rmse": 0.005942592556351471,
+            "validation_mean_error": 5.219733206855269e-05,
+            "validation_max_abs": 0.02395563511327209
+          },
+          "after": {
+            "delta_source_native": [
+              0.23785699295570759,
+              -1.0964067910905622
+            ],
+            "gain_left": 1.0679881402450437,
+            "bias_left": -0.02190403183295214,
+            "gain_positive": true,
+            "fit_rmse": 0.005359463662148446,
+            "validation_rmse": 0.005248051503322243,
+            "validation_mean_error": -3.417580909088143e-05,
+            "validation_max_abs": 0.020608730662314445
+          },
+          "delta_source_native": [
+            0.23785699295570759,
+            -1.0964067910905622
+          ],
+          "converged": true,
+          "status": 2,
+          "message": "`ftol` termination condition is satisfied.",
+          "nfev": 13,
+          "optimality": 0.00012179542294155501,
+          "at_translation_bound": false,
+          "fit_samples": 12464,
+          "validation_samples": 12464,
+          "source_support_gap_native": 3.9259496433041576,
+          "frame": 133,
+          "source_xywh": [
+            588,
+            1416,
+            410,
+            410
+          ],
+          "validation_ratio": 0.8831249077834052
+        }
+      ]
+    }
+  ],
+  "cpu_seconds": 0.84375,
+  "interpretation": "Low-pass guide prediction only; bounds are not optima; gains/biases are not image corrections"
+}

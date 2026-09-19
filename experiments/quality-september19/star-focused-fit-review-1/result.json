@@ -1,0 +1,325 @@
+{
+  "status": "PASS",
+  "self_anchor": {
+    "before": {
+      "delta_source_native": [
+        0.0,
+        0.0
+      ],
+      "gain_left": 0.9999999999999938,
+      "bias_left": 2.984458717951362e-17,
+      "gain_positive": true,
+      "fit_rmse": 2.1215349875487917e-15,
+      "validation_rmse": 2.122128528957639e-15,
+      "validation_mean_error": -2.0616954691746898e-15,
+      "validation_max_abs": 3.219646771412954e-15
+    },
+    "after": {
+      "delta_source_native": [
+        0.0,
+        0.0
+      ],
+      "gain_left": 0.9999999999999938,
+      "bias_left": 2.984458717951362e-17,
+      "gain_positive": true,
+      "fit_rmse": 2.1215349875487917e-15,
+      "validation_rmse": 2.122128528957639e-15,
+      "validation_mean_error": -2.0616954691746898e-15,
+      "validation_max_abs": 3.219646771412954e-15
+    },
+    "delta_source_native": [
+      0.0,
+      0.0
+    ],
+    "converged": true,
+    "status": 1,
+    "message": "`gtol` termination condition is satisfied.",
+    "nfev": 1,
+    "optimality": 3.710213543999803e-17,
+    "at_translation_bound": false,
+    "fit_samples": 12464,
+    "validation_samples": 12464,
+    "source_support_gap_native": 3.345999999999968
+  },
+  "cases": [
+    {
+      "before": {
+        "delta_source_native": [
+          0.0,
+          0.0
+        ],
+        "gain_left": 0.8868292568917767,
+        "bias_left": 0.012354054131879745,
+        "gain_positive": true,
+        "fit_rmse": 0.012483617761702714,
+        "validation_rmse": 0.012480224511144881,
+        "validation_mean_error": -1.2755226300493072e-05,
+        "validation_max_abs": 0.02981200410965712
+      },
+      "after": {
+        "delta_source_native": [
+          0.6099785190983057,
+          -0.4298790204883105
+        ],
+        "gain_left": 0.898451096160553,
+        "bias_left": 0.008071087598012417,
+        "gain_positive": true,
+        "fit_rmse": 0.00030505829282992093,
+        "validation_rmse": 0.0003103026761379722,
+        "validation_mean_error": -3.385380102278096e-07,
+        "validation_max_abs": 0.0015792553514419883
+      },
+      "delta_source_native": [
+        0.6099785190983057,
+        -0.4298790204883105
+      ],
+      "converged": true,
+      "status": 1,
+      "message": "`gtol` termination condition is satisfied.",
+      "nfev": 6,
+      "optimality": 8.496131301772621e-09,
+      "at_translation_bound": false,
+      "fit_samples": 12464,
+      "validation_samples": 12464,
+      "source_support_gap_native": 3.2299999999999827,
+      "label": "shift",
+      "known_delta_source_native": [
+        0.61,
+        -0.43
+      ],
+      "error_native": 0.00012287176806014972,
+      "tolerance_native": 0.05,
+      "wrong_sign": {
+        "delta_source_native": [
+          -0.61,
+          0.43
+        ],
+        "gain_left": 0.8565574063907092,
+        "bias_left": 0.02351462920862338,
+        "gain_positive": true,
+        "fit_rmse": 0.024585684846576947,
+        "validation_rmse": 0.024573127920798958,
+        "validation_mean_error": -3.5097924804414024e-05,
+        "validation_max_abs": 0.05865280858477756
+      },
+      "wrong_double": {
+        "delta_source_native": [
+          1.22,
+          -0.86
+        ],
+        "gain_left": 0.8871342270286059,
+        "bias_left": 0.012251582835937734,
+        "gain_positive": true,
+        "fit_rmse": 0.012480374413439542,
+        "validation_rmse": 0.012479506329409074,
+        "validation_mean_error": 2.6504705547146366e-06,
+        "validation_max_abs": 0.029640747977321413
+      },
+      "identity_anchor_placebo": {
+        "before": {
+          "delta_source_native": [
+            0.0,
+            0.0
+          ],
+          "gain_left": 0.7263844345412206,
+          "bias_left": 0.07161798010633547,
+          "gain_positive": true,
+          "fit_rmse": 0.04868302238377396,
+          "validation_rmse": 0.06764868577173921,
+          "validation_mean_error": 0.00020628571464186262,
+          "validation_max_abs": 0.19748508864354908
+        },
+        "after": {
+          "delta_source_native": [
+            -1.5463845641293141,
+            2.6965418029683064
+          ],
+          "gain_left": 0.8696545504801386,
+          "bias_left": 0.01870565864597651,
+          "gain_positive": true,
+          "fit_rmse": 0.022170866368249092,
+          "validation_rmse": 0.04472616158259518,
+          "validation_mean_error": 0.00012032142501547556,
+          "validation_max_abs": 0.14623240947701077
+        },
+        "delta_source_native": [
+          -1.5463845641293141,
+          2.6965418029683064
+        ],
+        "converged": true,
+        "status": 2,
+        "message": "`ftol` termination condition is satisfied.",
+        "nfev": 8,
+        "optimality": 2.900149440412241e-06,
+        "at_translation_bound": false,
+        "fit_samples": 12464,
+        "validation_samples": 12464,
+        "source_support_gap_native": 3.2299999999999827
+      }
+    },
+    {
+      "before": {
+        "delta_source_native": [
+          0.0,
+          0.0
+        ],
+        "gain_left": 0.8934978979931861,
+        "bias_left": 0.009893345475261096,
+        "gain_positive": true,
+        "fit_rmse": 0.012465715823104599,
+        "validation_rmse": 0.01246377084637737,
+        "validation_mean_error": -1.3025695802769422e-05,
+        "validation_max_abs": 0.029719553857543712
+      },
+      "after": {
+        "delta_source_native": [
+          0.610046145722247,
+          -0.42987511533510964
+        ],
+        "gain_left": 0.9051613720742847,
+        "bias_left": 0.005595120778523112,
+        "gain_positive": true,
+        "fit_rmse": 0.0005004693979435155,
+        "validation_rmse": 0.0004715374247723751,
+        "validation_mean_error": -6.191486788912725e-07,
+        "validation_max_abs": 0.001612561079428143
+      },
+      "delta_source_native": [
+        0.610046145722247,
+        -0.42987511533510964
+      ],
+      "converged": true,
+      "status": 3,
+      "message": "`xtol` termination condition is satisfied.",
+      "nfev": 14,
+      "optimality": 7.928131713950583e-05,
+      "at_translation_bound": false,
+      "fit_samples": 12464,
+      "validation_samples": 12464,
+      "source_support_gap_native": 3.2299999999999827,
+      "label": "shift-and-blur",
+      "known_delta_source_native": [
+        0.61,
+        -0.43
+      ],
+      "error_native": 0.0001331375499492064,
+      "tolerance_native": 0.05,
+      "wrong_sign": {
+        "delta_source_native": [
+          -0.61,
+          0.43
+        ],
+        "gain_left": 0.8631080462835271,
+        "bias_left": 0.02109737853526973,
+        "gain_positive": true,
+        "fit_rmse": 0.024544897728428886,
+        "validation_rmse": 0.024532343038764743,
+        "validation_mean_error": -3.5315178753390484e-05,
+        "validation_max_abs": 0.05852211382652894
+      },
+      "wrong_double": {
+        "delta_source_native": [
+          1.22,
+          -0.86
+        ],
+        "gain_left": 0.8938036714412916,
+        "bias_left": 0.009790786639759052,
+        "gain_positive": true,
+        "fit_rmse": 0.012462998722418982,
+        "validation_rmse": 0.012462448509813366,
+        "validation_mean_error": 2.4094130776545507e-06,
+        "validation_max_abs": 0.029561923603609264
+      },
+      "identity_anchor_placebo": {
+        "before": {
+          "delta_source_native": [
+            0.0,
+            0.0
+          ],
+          "gain_left": 0.7323512312871481,
+          "bias_left": 0.06941627736932598,
+          "gain_positive": true,
+          "fit_rmse": 0.04861801102201685,
+          "validation_rmse": 0.06757458449771828,
+          "validation_mean_error": 0.00020615608990284985,
+          "validation_max_abs": 0.19722367888117354
+        },
+        "after": {
+          "delta_source_native": [
+            -1.5465336683266178,
+            2.696537399292381
+          ],
+          "gain_left": 0.8762057667544308,
+          "bias_left": 0.01628809690809133,
+          "gain_positive": true,
+          "fit_rmse": 0.022155915536324632,
+          "validation_rmse": 0.04470289915400029,
+          "validation_mean_error": 0.00012027675953528177,
+          "validation_max_abs": 0.1459468956145447
+        },
+        "delta_source_native": [
+          -1.5465336683266178,
+          2.696537399292381
+        ],
+        "converged": true,
+        "status": 2,
+        "message": "`ftol` termination condition is satisfied.",
+        "nfev": 8,
+        "optimality": 9.797495648890384e-06,
+        "at_translation_bound": false,
+        "fit_samples": 12464,
+        "validation_samples": 12464,
+        "source_support_gap_native": 3.2299999999999827
+      }
+    },
+    {
+      "before": {
+        "delta_source_native": [
+          0.0,
+          0.0
+        ],
+        "gain_left": 0.9040874398488955,
+        "bias_left": 0.005992119402649763,
+        "gain_positive": true,
+        "fit_rmse": 0.0004731972725590816,
+        "validation_rmse": 0.0005143158147110174,
+        "validation_mean_error": -4.6765869585074684e-07,
+        "validation_max_abs": 0.0022399088146743684
+      },
+      "after": {
+        "delta_source_native": [
+          0.00016381060828033348,
+          0.0001580542858099093
+        ],
+        "gain_left": 0.9040873122602866,
+        "bias_left": 0.005992165931043591,
+        "gain_positive": true,
+        "fit_rmse": 0.00047318445435341706,
+        "validation_rmse": 0.0005143070982029092,
+        "validation_mean_error": -4.6773963880734357e-07,
+        "validation_max_abs": 0.0022387078433395435
+      },
+      "delta_source_native": [
+        0.00016381060828033348,
+        0.0001580542858099093
+      ],
+      "converged": true,
+      "status": 3,
+      "message": "`xtol` termination condition is satisfied.",
+      "nfev": 11,
+      "optimality": 1.6485782603129274e-07,
+      "at_translation_bound": false,
+      "fit_samples": 12464,
+      "validation_samples": 12464,
+      "source_support_gap_native": 3.2299999999999827,
+      "label": "blur-only",
+      "known_delta_source_native": [
+        0.0,
+        0.0
+      ],
+      "error_native": 0.00022762924383315373,
+      "tolerance_native": 0.05
+    }
+  ],
+  "cpu_seconds": 0.546875
+}

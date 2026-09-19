@@ -1,0 +1,11 @@
+{
+  "status": "FULL_STACK_REPLAYED",
+  "image": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\full-context-placement\\baseline-1\\output\\replay.tiff",
+    "sha256": "c358ff6f6247663e368f4f5e0b1b3a1b2daca2d78a670d60306078b2e8d60ad9",
+    "bytes": 168952968
+  },
+  "original_metadata_unchanged": true,
+  "input_frames": 299,
+  "pinned_tone": true
+}

@@ -1,0 +1,44 @@
+[
+  {
+    "stack": "star-sand-cpl",
+    "index": 0,
+    "frames": 259,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00016.ARW",
+    "bytes": 38129664
+  },
+  {
+    "stack": "star-sand-cpl",
+    "index": 129,
+    "frames": 259,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00145.ARW",
+    "bytes": 39342080
+  },
+  {
+    "stack": "star-sand-cpl",
+    "index": 258,
+    "frames": 259,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00274.ARW",
+    "bytes": 38252544
+  },
+  {
+    "stack": "crystalized-vitamin-c-cpl",
+    "index": 0,
+    "frames": 70,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00094.ARW",
+    "bytes": 38887424
+  },
+  {
+    "stack": "crystalized-vitamin-c-cpl",
+    "index": 35,
+    "frames": 70,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00129.ARW",
+    "bytes": 41074688
+  },
+  {
+    "stack": "crystalized-vitamin-c-cpl",
+    "index": 69,
+    "frames": 70,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00163.ARW",
+    "bytes": 39133184
+  }
+]

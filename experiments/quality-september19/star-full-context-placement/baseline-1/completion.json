@@ -1,0 +1,12 @@
+{
+  "status": "FULL_STAR_STACK_REPLAYED",
+  "input_frames": 259,
+  "image": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\star-full-context-placement\\baseline-1\\output\\replay.tiff",
+    "sha256": "5fc6c3ab8e2bcb64ee9d1383586f0c3763d6dbc709968a218bf36b9d654420ae",
+    "bytes": 180746192
+  },
+  "original_metadata_unchanged": true,
+  "pinned_tone": true,
+  "observer": false
+}

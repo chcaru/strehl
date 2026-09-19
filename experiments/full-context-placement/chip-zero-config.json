@@ -1,0 +1,122 @@
+{
+  "schema_version": 1,
+  "source_dir": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl",
+  "expected_frame_count": 299,
+  "native_geometry": [
+    7032,
+    4688
+  ],
+  "support_native": [
+    1332,
+    1104,
+    392,
+    392
+  ],
+  "taper_native": 32,
+  "frames": [
+    {
+      "file_name": "DSC00147.ARW",
+      "transform_bits": [
+        "3ff0024afd04f470",
+        "bf34796f85efa560",
+        "3fd1d08bab363ec0",
+        "3fef91a901e02b00"
+      ],
+      "delta_source_native": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "file_name": "DSC00148.ARW",
+      "transform_bits": [
+        "3ff001832ca85264",
+        "bf2a93462a30f080",
+        "3fc423cb2c1f0f80",
+        "3fe4fdd418ab4bc0"
+      ],
+      "delta_source_native": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "file_name": "DSC00149.ARW",
+      "transform_bits": [
+        "3ff000caf89617ca",
+        "bf1e214766bf0b00",
+        "3fb3263cde04f600",
+        "3fd4460e57401f80"
+      ],
+      "delta_source_native": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "file_name": "DSC00150.ARW",
+      "transform_bits": [
+        "3fefffffffffffff",
+        "0000000000000000",
+        "0000000000000000",
+        "3d00000000000000"
+      ],
+      "delta_source_native": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "file_name": "DSC00151.ARW",
+      "transform_bits": [
+        "3feffe0cf58f5139",
+        "3f1b807b5b67a3c0",
+        "bfc6a082ef31ae00",
+        "bfc98b82d5055d00"
+      ],
+      "delta_source_native": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "file_name": "DSC00152.ARW",
+      "transform_bits": [
+        "3feffc1b08916cfe",
+        "3f27afc366fc65c0",
+        "bfd39bff04f53300",
+        "bfdd354e0d0bcb80"
+      ],
+      "delta_source_native": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "file_name": "DSC00153.ARW",
+      "transform_bits": [
+        "3feffaaeb0937956",
+        "3f2d0933098d3300",
+        "bfd88f9f3d8f8d00",
+        "bfe70d6603339440"
+      ],
+      "delta_source_native": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "file_name": "DSC00154.ARW",
+      "transform_bits": [
+        "3feff97fd165be1d",
+        "3f31427687e531b0",
+        "bfd9931899e4aa00",
+        "bff0a447261156c0"
+      ],
+      "delta_source_native": [
+        0.0,
+        0.0
+      ]
+    }
+  ]
+}

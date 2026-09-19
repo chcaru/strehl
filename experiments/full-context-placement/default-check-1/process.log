@@ -1,0 +1,42 @@
+    Checking strehl-core v0.0.0 (C:\dev\blog\death-of-software\projects\strehl\crates\strehl-core)
+    Checking toml v0.8.23
+   Compiling rawler v0.7.2
+    Checking crypto-common v0.2.2
+    Checking block-buffer v0.12.1
+    Checking bitstream-io v4.10.0
+    Checking chrono v0.4.45
+    Checking itertools v0.14.0
+   Compiling enumn v0.1.14
+    Checking strsim v0.11.1
+    Checking memmap2 v0.9.11
+    Checking byteorder v1.5.0
+   Compiling heck v0.5.0
+   Compiling serde_json v1.0.151
+    Checking const-oid v0.10.2
+    Checking md5 v0.8.1
+    Checking clap_lex v1.1.0
+    Checking hex v0.4.3
+    Checking clap_builder v4.6.6
+    Checking digest v0.11.3
+   Compiling clap_derive v4.6.4
+    Checking zmij v1.0.23
+    Checking flate2 v1.1.9
+    Checking matchers v0.2.0
+    Checking tracing-log v0.2.0
+    Checking sharded-slab v0.1.7
+    Checking half v2.7.1
+    Checking nu-ansi-term v0.50.3
+    Checking thread_local v1.1.10
+    Checking cpufeatures v0.3.1
+    Checking quick-error v2.0.1
+    Checking fax v0.2.7
+   Compiling strehl-cli v0.0.0 (C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli)
+    Checking smallvec v1.15.2
+    Checking itoa v1.0.18
+    Checking tracing-subscriber v0.3.23
+    Checking strehl-raw v0.0.0 (C:\dev\blog\death-of-software\projects\strehl\crates\strehl-raw)
+    Checking tiff v0.11.3
+    Checking sha2 v0.11.0
+    Checking clap v4.6.6
+    Checking strehl-plugin v0.0.0 (C:\dev\blog\death-of-software\projects\strehl\crates\strehl-plugin)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 13.04s

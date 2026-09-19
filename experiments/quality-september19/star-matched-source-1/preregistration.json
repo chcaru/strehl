@@ -1,0 +1,33 @@
+{
+  "reference": 129,
+  "selected_frames": [
+    125,
+    129,
+    133
+  ],
+  "output_roi": [
+    472,
+    1352,
+    328,
+    328
+  ],
+  "source_selection": "Preselected brackets, not known best-focus frames",
+  "comparison": "Same actual developer for unwarped source CFA, gathered source, and merged CFA; source lacks CA correction",
+  "observer_nonperturbation": "Require exact equality of every final RGB16 sample to saved observer-false baseline, and retain pixel hashes",
+  "falsifier": "Any differing final RGB16 sample fails the observer check; identical structure in three sources cannot establish an acquisition limit",
+  "baseline": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\star-full-context-placement\\baseline-1\\output\\replay.tiff",
+    "sha256": "5fc6c3ab8e2bcb64ee9d1383586f0c3763d6dbc709968a218bf36b9d654420ae",
+    "bytes": 180746192
+  },
+  "build": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\full-context-placement\\build-3\\cli-tests.exe",
+    "sha256": "46f784ec34b2c021857685eb0af374f1100be8605f3a08204b2966d73d5893b0",
+    "bytes": 22291456
+  },
+  "runner": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\star-matched-source-run.py",
+    "sha256": "4e3bbbede19b01aad5104d65ac2aaa70326164599fff03e7c1423e1baefeb0c2",
+    "bytes": 5560
+  }
+}

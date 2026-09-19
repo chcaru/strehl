@@ -1,0 +1,26 @@
+{
+  "receipt": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\star-matched-source-1\\output\\receipt.json",
+  "width": 336,
+  "height": 336,
+  "baseline_rgb": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\star-matched-source-1\\output\\porous-source-129-frame129-raw-mhc-camera-rgb.f32",
+  "baseline_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\star-matched-source-1\\output\\porous-source-129-frame129-raw.tiff",
+  "out": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\star-focus-locator-1\\preflight\\render",
+  "candidates": [],
+  "xyz_to_cam": [
+    [
+      0.746,
+      -0.2365,
+      -0.0588
+    ],
+    [
+      -0.5687,
+      1.3442,
+      0.2474
+    ],
+    [
+      -0.0624,
+      0.1156,
+      0.6584
+    ]
+  ]
+}

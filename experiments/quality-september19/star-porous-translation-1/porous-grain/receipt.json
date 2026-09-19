@@ -1,0 +1,244 @@
+{
+  "name": "porous-grain",
+  "reference_index": 129,
+  "target_origin_native": [
+    594,
+    1424
+  ],
+  "target_shape": [
+    392,
+    392
+  ],
+  "native_sensor_shape": [
+    4688,
+    7032
+  ],
+  "libraw_visible_shape": [
+    4688,
+    7028
+  ],
+  "levels": [
+    512,
+    15360
+  ],
+  "map_sha256": "6594d98255383218a3114fd783bfd0e2215b39b202777f1ee2e493f4b287a6a1",
+  "frames": [
+    {
+      "index": 125,
+      "source": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00141.ARW",
+      "source_xywh": [
+        582,
+        1414,
+        410,
+        410
+      ],
+      "a": [
+        1.0011722368656863,
+        1.2244143585380578e-05
+      ],
+      "b_plane": [
+        -0.18840608607400644,
+        0.07617693120652669
+      ],
+      "bytes": 39370752,
+      "mtime_ns": 1789629216470000000,
+      "raw_u16_sha256": "23c1a4d56d8f0dd9b4f2cbbcee88aeba6fe8a81f3b3fc2cdabca00e7c3bcc7bc",
+      "independently_decoded_different_sensels": null,
+      "exact_16383": 0
+    },
+    {
+      "index": 126,
+      "source": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00142.ARW",
+      "source_xywh": [
+        582,
+        1414,
+        410,
+        410
+      ],
+      "a": [
+        1.0008665892096624,
+        1.9717057332903657e-05
+      ],
+      "b_plane": [
+        -0.19009173270569257,
+        0.05808374177540715
+      ],
+      "bytes": 39366656,
+      "mtime_ns": 1789629217940000000,
+      "raw_u16_sha256": "78227994b6d569458175a1c05cb9fda42367b91d7f45b53c69f13054ba584fe7",
+      "independently_decoded_different_sensels": null,
+      "exact_16383": 0
+    },
+    {
+      "index": 127,
+      "source": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00143.ARW",
+      "source_xywh": [
+        584,
+        1414,
+        410,
+        410
+      ],
+      "a": [
+        1.0005943689727932,
+        1.2339529967789805e-05
+      ],
+      "b_plane": [
+        -0.11675246714539478,
+        0.04963255279096285
+      ],
+      "bytes": 39358464,
+      "mtime_ns": 1789629219400000000,
+      "raw_u16_sha256": "2182ba0dcacdf3d1b10470f6d86cb383af66d18d2d62e901976f003ef1cbf66d",
+      "independently_decoded_different_sensels": null,
+      "exact_16383": 0
+    },
+    {
+      "index": 128,
+      "source": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00144.ARW",
+      "source_xywh": [
+        584,
+        1414,
+        410,
+        410
+      ],
+      "a": [
+        1.0003109848776204,
+        2.6093910161735512e-05
+      ],
+      "b_plane": [
+        0.03544955007297901,
+        0.045191969042671476
+      ],
+      "bytes": 39350272,
+      "mtime_ns": 1789629220870000000,
+      "raw_u16_sha256": "c824bc297c7012e7e058db4218b91a42e75d24c926e05233edb9f5c198fb090f",
+      "independently_decoded_different_sensels": null,
+      "exact_16383": 0
+    },
+    {
+      "index": 129,
+      "source": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00145.ARW",
+      "source_xywh": [
+        586,
+        1416,
+        408,
+        408
+      ],
+      "a": [
+        1.0,
+        2.168404344971009e-19
+      ],
+      "b_plane": [
+        -2.220446049250313e-16,
+        0.0
+      ],
+      "bytes": 39342080,
+      "mtime_ns": 1789629222350000000,
+      "raw_u16_sha256": "960f0c36bc031fe331e5f2ad26199b4e6d6a4a6402761cfd449b5b80cbbbac05",
+      "independently_decoded_different_sensels": 0,
+      "exact_16383": 0
+    },
+    {
+      "index": 130,
+      "source": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00146.ARW",
+      "source_xywh": [
+        586,
+        1416,
+        410,
+        410
+      ],
+      "a": [
+        0.9996758444092844,
+        -2.0354315731475024e-05
+      ],
+      "b_plane": [
+        -0.06318014100234803,
+        0.0011584310086145133
+      ],
+      "bytes": 39337984,
+      "mtime_ns": 1789629223830000000,
+      "raw_u16_sha256": "160e1918db0246eaed5d8a42e252f18e0dbff6797601958503e2a027e40d1a3a",
+      "independently_decoded_different_sensels": null,
+      "exact_16383": 0
+    },
+    {
+      "index": 131,
+      "source": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00147.ARW",
+      "source_xywh": [
+        586,
+        1416,
+        410,
+        410
+      ],
+      "a": [
+        0.9993306091184446,
+        8.080361439356245e-06
+      ],
+      "b_plane": [
+        -0.10657169058155125,
+        0.04730301274756399
+      ],
+      "bytes": 39329792,
+      "mtime_ns": 1789629225300000000,
+      "raw_u16_sha256": "85fae676d13ad4853c41b6a7c9d60cfad5dbbed936fadd50ee3f3e9ccff0f30f",
+      "independently_decoded_different_sensels": null,
+      "exact_16383": 0
+    },
+    {
+      "index": 132,
+      "source": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00148.ARW",
+      "source_xywh": [
+        588,
+        1416,
+        410,
+        410
+      ],
+      "a": [
+        0.9990124571267672,
+        5.4738518323403434e-05
+      ],
+      "b_plane": [
+        -0.13601638011216077,
+        0.027263148955020244
+      ],
+      "bytes": 39321600,
+      "mtime_ns": 1789629226770000000,
+      "raw_u16_sha256": "7bc32b2522e52b410e6b03f84e1d012daf607e1632572db3de78e64fcb939fa9",
+      "independently_decoded_different_sensels": null,
+      "exact_16383": 0
+    },
+    {
+      "index": 133,
+      "source": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00149.ARW",
+      "source_xywh": [
+        588,
+        1416,
+        410,
+        410
+      ],
+      "a": [
+        0.9987648492327358,
+        5.939990021801246e-06
+      ],
+      "b_plane": [
+        -0.15982922693712842,
+        0.08910849777476576
+      ],
+      "bytes": 39317504,
+      "mtime_ns": 1789629228240000000,
+      "raw_u16_sha256": "ec639ac5928be13e0361ac016a74c17a2f1d78a321ef57403087c0499a3f5ee6",
+      "independently_decoded_different_sensels": null,
+      "exact_16383": 0
+    }
+  ],
+  "rawpy": "0.27.0",
+  "libraw": [
+    0,
+    22,
+    1
+  ],
+  "independent_decode_scope": "Reference129 original-u16 patch only; other eight frames not second-decoded",
+  "decoder_sha256": "ecf20e1b1e639fc3b86fe82d26a3e3ca02fd326549aa6353e80ad4480682d89d",
+  "source_metadata_unchanged": true,
+  "scope": "Original CFA; no WB, alignment resampling, demosaic, or reconstruction"
+}

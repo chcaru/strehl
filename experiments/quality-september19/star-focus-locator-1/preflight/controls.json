@@ -1,0 +1,30 @@
+{
+  "locator_values": {
+    "flat": 0.0,
+    "flat_noise_sigma10": 2.781445113451055,
+    "flat_noise_sigma100": 275.26269744169576,
+    "sharp_texture": 892.3814760483905,
+    "blurred_texture": 0.9368846428048411
+  },
+  "ordered_mhc_goldens": [
+    {
+      "frame": 125,
+      "different_f32_rgb_bits": 0,
+      "samples": 338688
+    },
+    {
+      "frame": 129,
+      "different_f32_rgb_bits": 0,
+      "samples": 338688
+    },
+    {
+      "frame": 133,
+      "different_f32_rgb_bits": 0,
+      "samples": 338688
+    }
+  ],
+  "baseline_product_differing_u16_samples": 0,
+  "failure": "Noisy flat outranks blurred structure; score nominates only. Wrong MHC operation order fails exact Rust f32 fixtures.",
+  "old_locator_sha256": "8c75f1a14fd0024774954a31423f4bf5bcf6bedc9dc5b4840cb0e22d450edb03",
+  "demosaic_source_sha256": "91f736847c55f9f0658c92de4c3d0065f76fa03126f600e4f8468f61a3564784"
+}

@@ -1,0 +1,36 @@
+{
+  "config": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\star-full-context-placement\\star-config.json",
+    "sha256": "3fb50ec24fadff9b1f1f957708af4dfa91e051bd1372030f29e7a6bd294f44f2",
+    "bytes": 3003
+  },
+  "fit": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\star-porous-translation-1\\fit\\result.json",
+    "sha256": "bfb01606213b0fcd46c3120d4826c238d0fe2681e260a64b21495f2c9d3e6c4a",
+    "bytes": 21358
+  },
+  "samples": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\star-porous-translation-1\\porous-grain\\receipt.json",
+    "sha256": "a71ac01c6e3a5475e17525943d49fdbb608375198816f0a8271cdd9b46afea5e",
+    "bytes": 6501
+  },
+  "map": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\star-baseline-1\\star.warpmap.txt",
+    "sha256": "6594d98255383218a3114fd783bfd0e2215b39b202777f1ee2e493f4b287a6a1",
+    "bytes": 35382
+  },
+  "runner": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\star-full-context-placement.py",
+    "sha256": "268f8dc182a96daaa83938057edabad75521dc2140f6f5bbf76f0ff567691501",
+    "bytes": 7315
+  },
+  "reference_delta": "Frame129 forced to exact [0,0]; fitting a frame to itself is not motion",
+  "mutation_scope": "Only neighbours125..133, inside 392 native support with taper32; all other frames/locations retain zero correction",
+  "comparison": "All259 original RAWs; seven Laplacian bands + base; same pinned tone; observer disabled",
+  "tone": {
+    "black": 0.01566,
+    "white": 0.51099,
+    "contrast": 0.55
+  },
+  "status": "PREPARED_NOT_EXECUTED"
+}

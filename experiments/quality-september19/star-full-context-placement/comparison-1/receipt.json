@@ -1,0 +1,109 @@
+{
+  "images": {
+    "baseline": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\star-full-context-placement\\baseline-1\\output\\replay.tiff",
+      "sha256": "5fc6c3ab8e2bcb64ee9d1383586f0c3763d6dbc709968a218bf36b9d654420ae"
+    },
+    "candidate": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\star-full-context-placement\\candidate-1\\output\\replay.tiff",
+      "sha256": "dff5011da9525857c35ab8db6a1c008959e00b3f02ff3d972cb58c4ddfde35bc"
+    }
+  },
+  "frozen": {
+    "output_native_regions": {
+      "core": [
+        472,
+        1352,
+        328,
+        328
+      ],
+      "left-transition": [
+        394,
+        1352,
+        128,
+        328
+      ],
+      "right-transition": [
+        750,
+        1352,
+        128,
+        328
+      ],
+      "top-transition": [
+        472,
+        1276,
+        328,
+        128
+      ],
+      "bottom-transition": [
+        472,
+        1630,
+        328,
+        128
+      ],
+      "far-control": [
+        1392,
+        1168,
+        328,
+        328
+      ]
+    },
+    "output_shape": [
+      4480,
+      6724,
+      3
+    ],
+    "sensor_crop_origin": [
+      154,
+      104
+    ],
+    "support_sensor_xywh": [
+      594,
+      1424,
+      392,
+      392
+    ],
+    "interpretation": "Native core, taper boundaries and distant ridged-shell control frozen before paired renders; no sharpness score"
+  },
+  "changed_pixels": 247420,
+  "changed_bbox_xyxy": [
+    0,
+    2,
+    6723,
+    4479
+  ],
+  "region_changes": {
+    "core": {
+      "changed_pixels": 106686,
+      "pixels": 107584,
+      "max_abs_16bit": 1028
+    },
+    "left-transition": {
+      "changed_pixels": 36892,
+      "pixels": 41984,
+      "max_abs_16bit": 1024
+    },
+    "right-transition": {
+      "changed_pixels": 35650,
+      "pixels": 41984,
+      "max_abs_16bit": 1193
+    },
+    "top-transition": {
+      "changed_pixels": 33366,
+      "pixels": 41984,
+      "max_abs_16bit": 821
+    },
+    "bottom-transition": {
+      "changed_pixels": 35692,
+      "pixels": 41984,
+      "max_abs_16bit": 896
+    },
+    "far-control": {
+      "changed_pixels": 171,
+      "pixels": 107584,
+      "max_abs_16bit": 1
+    }
+  },
+  "far_control_pixel_identical": false,
+  "interpretation": "Change counts measure intervention liveness/locality, not photographic quality or noise. Native PNGs round identical RGB16 development without resizing."
+}

@@ -1,0 +1,10 @@
+{
+  "Source": "C:\\dev\\blog\\death-of-software\\.git\\modules\\projects\\strehl\\index.lock",
+  "Backup": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\stale-index-lock-1.bin",
+  "Length": 0,
+  "LastWriteTimeUtc": "2026-09-14T15:19:00.7667425Z",
+  "GitProcessCount": 0,
+  "ExclusiveReadOpen": true,
+  "Action": "Preserve stale empty lock by moving it intact",
+  "ObservationUtc": "2026-09-19T19:24:51.6274307Z"
+}

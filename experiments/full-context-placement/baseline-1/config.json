@@ -1,0 +1,22 @@
+{
+  "dir": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl",
+  "map": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\chip-baseline-1\\chip.warpmap.txt",
+  "out": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\full-context-placement\\baseline-1\\output",
+  "frames": 299,
+  "tone": {
+    "black": 0.004293,
+    "white": 0.946441,
+    "contrast": 0.55
+  },
+  "regions": [
+    {
+      "name": "pale-circuit",
+      "frame": 149,
+      "x": 1070,
+      "y": 930,
+      "width": 384,
+      "height": 384
+    }
+  ],
+  "observe": false
+}

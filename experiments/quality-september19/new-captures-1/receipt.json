@@ -1,0 +1,8 @@
+{
+  "inventory_method": "Get-ChildItem -Force -Recurse -File",
+  "before_after_listing_equal": true,
+  "content_hash_check": false,
+  "files": 329,
+  "bytes": 12858843136.0,
+  "scope": "Metadata and embedded JPEG extraction only; no full RAW pixel decode"
+}

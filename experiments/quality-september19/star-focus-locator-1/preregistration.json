@@ -1,0 +1,19 @@
+{
+  "helper_sha256": "bda3492733e8fa189197e113ed298c1514b9f89378b04282d2e70a3392a6b361",
+  "map_sha256": "6594d98255383218a3114fd783bfd0e2215b39b202777f1ee2e493f4b287a6a1",
+  "source_frames": 259,
+  "global_reference": 129,
+  "target_sensor_support": [
+    594,
+    1424,
+    392,
+    392
+  ],
+  "minimum_margin_native": 12,
+  "spatial_locator": "Exact old 2D G1 score; flat/noise/blur control first",
+  "retention": "Rolling13-patch buffer plus best9; five nominees at retained positions0,2,4,6,8",
+  "output": "336-source RGB patch then PAD4 trim328; actual developer, identical starred golden fixtures first",
+  "wall_seconds": 240,
+  "cpu_seconds": 240,
+  "committed_bytes": 2147483648
+}

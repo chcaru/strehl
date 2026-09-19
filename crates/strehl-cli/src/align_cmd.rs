@@ -2167,6 +2167,11 @@ pub(crate) fn writeback_fullres_site(
 #[cfg(feature = "native-direct-planes")]
 include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/native-direct-planes/implementation.rs"));
 
+#[cfg(feature = "native-direct-planes")]
+pub(crate) mod local_placement {
+    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/full-context-placement/implementation.rs"));
+}
+
 #[cfg(feature = "native-gpu-gather")]
 pub(crate) mod native_gpu_integration {
     include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/native-gpu-gather/integration.rs"));

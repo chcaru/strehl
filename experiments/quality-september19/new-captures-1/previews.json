@@ -1,0 +1,92 @@
+[
+  {
+    "stack": "star-sand-cpl",
+    "index": 0,
+    "frames": 259,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00016.ARW",
+    "bytes": 38129664,
+    "preview": "star-sand-cpl-000-embedded.jpg",
+    "preview_tag": "PreviewImage",
+    "dimensions": [
+      1616,
+      1080
+    ],
+    "sha256": "ff5a7392c13d9abc31c17d0e6af13abfea1f87891a8fccf158a4f52db00eff3b",
+    "purpose": "Camera-rendered embedded JPEG; orientation only, not RAW quality evidence"
+  },
+  {
+    "stack": "star-sand-cpl",
+    "index": 129,
+    "frames": 259,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00145.ARW",
+    "bytes": 39342080,
+    "preview": "star-sand-cpl-129-embedded.jpg",
+    "preview_tag": "PreviewImage",
+    "dimensions": [
+      1616,
+      1080
+    ],
+    "sha256": "3cbadf05a46ef9d2dbcf238b37f4791c8384fbeb3d3afe1c0cdc2b0870dbf33f",
+    "purpose": "Camera-rendered embedded JPEG; orientation only, not RAW quality evidence"
+  },
+  {
+    "stack": "star-sand-cpl",
+    "index": 258,
+    "frames": 259,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00274.ARW",
+    "bytes": 38252544,
+    "preview": "star-sand-cpl-258-embedded.jpg",
+    "preview_tag": "PreviewImage",
+    "dimensions": [
+      1616,
+      1080
+    ],
+    "sha256": "455358cce872f60a02c8f77410402beead535420bef6db0c3fc9cac6459c5caf",
+    "purpose": "Camera-rendered embedded JPEG; orientation only, not RAW quality evidence"
+  },
+  {
+    "stack": "crystalized-vitamin-c-cpl",
+    "index": 0,
+    "frames": 70,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00094.ARW",
+    "bytes": 38887424,
+    "preview": "crystalized-vitamin-c-cpl-000-embedded.jpg",
+    "preview_tag": "PreviewImage",
+    "dimensions": [
+      1616,
+      1080
+    ],
+    "sha256": "79ff2dc922b0bde5706035bcb4c4a208f4b317d185ef07ecdb6b877016627717",
+    "purpose": "Camera-rendered embedded JPEG; orientation only, not RAW quality evidence"
+  },
+  {
+    "stack": "crystalized-vitamin-c-cpl",
+    "index": 35,
+    "frames": 70,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00129.ARW",
+    "bytes": 41074688,
+    "preview": "crystalized-vitamin-c-cpl-035-embedded.jpg",
+    "preview_tag": "PreviewImage",
+    "dimensions": [
+      1616,
+      1080
+    ],
+    "sha256": "9de88cd818d84eb2df4fea1a8292f196dec5312dad82d1341bce750bfe94fc47",
+    "purpose": "Camera-rendered embedded JPEG; orientation only, not RAW quality evidence"
+  },
+  {
+    "stack": "crystalized-vitamin-c-cpl",
+    "index": 69,
+    "frames": 70,
+    "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00163.ARW",
+    "bytes": 39133184,
+    "preview": "crystalized-vitamin-c-cpl-069-embedded.jpg",
+    "preview_tag": "PreviewImage",
+    "dimensions": [
+      1616,
+      1080
+    ],
+    "sha256": "5b060dbfc84846ea6a3c131bdaa50346116c773882171d6836ee00c1241acb9e",
+    "purpose": "Camera-rendered embedded JPEG; orientation only, not RAW quality evidence"
+  }
+]

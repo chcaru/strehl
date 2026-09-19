@@ -1,0 +1,34 @@
+Supplement to the fixed independent controls; do not apply during a bound run.
+The original affine full-weight oracle cannot distinguish interpolation kernels.
+This check uses the already fixed seeded noise fixture and existing uniform CPU
+gather. No source fixture, transform, support, threshold, or production code changes.
+
+Apply this patch to independent-controls.rs after root releases the source freeze:
+
+@@
+         let (out,touched)=corrected(&f,t,profile,&cfg,&SITES,&base);
+         assert!(touched>0);
++        let uniform_noise = if kind=="noise" {
++            let mut shifted=t;
++            shifted.b.re+=DELTA[0]/2.0; shifted.b.im+=DELTA[1]/2.0;
++            Some(uniform(&f,shifted,profile,&SITES))
++        } else { None };
++        let mut core_compared=0usize; let mut core_base_mismatches=0usize;
+         let mut sum=0.0; let mut sumsq=0.0; let mut count=0usize; let mut changed=0usize;
+@@
+                 if w==0.0 {assert_eq!(out[slot][i].to_bits(),base[slot][i].to_bits());}
++                if w==1.0 {
++                    if let Some(expected)=uniform_noise.as_ref() {
++                        core_compared+=1;
++                        core_base_mismatches+=usize::from(out[slot][i].to_bits()!=base[slot][i].to_bits());
++                        assert_eq!(out[slot][i].to_bits(),expected[slot][i].to_bits(),
++                            "noisy uniform-shift mismatch at {x},{y}, CFA slot {slot}");
++                    }
++                }
+                 if w>0.0 && w<1.0 {
+@@
+         if kind=="noise" {
++            assert!(core_compared>10000 && core_base_mismatches>10000,
++                "noisy core did not distinguish corrected sampling from the unchanged gather");
++            eprintln!("independent local noisy core: compared={core_compared}, unchanged-gather mismatches={core_base_mismatches}");
+             assert!(changed>10000,"noise fixture does not exercise fractional correction");

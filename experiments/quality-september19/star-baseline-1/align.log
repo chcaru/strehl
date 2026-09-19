@@ -1,0 +1,11 @@
+stack star-sand-cpl: 259 frames, digest 4f19917ec74e1bb1
+  reference frame 129 (middle, default)
+  decoded 259 frames in 7.4 s, plane 3516x2344
+  measured 1980/1980 edges in 53.9 s (0.0% refused)
+align: track prior on, lambda=1 huber=Some(1.0) px
+
+  placed 259/259 frames, refused 0
+  total corner drift frame 0 -> 258: 167.105 plane px
+  held-out corner error (median): 2.728 plane px
+  cycle-consistency floor: 1.012 plane px
+  wrote C:\dev\blog\death-of-software\projects\strehl\experiments\quality-september19\star-baseline-1\star.warpmap.txt

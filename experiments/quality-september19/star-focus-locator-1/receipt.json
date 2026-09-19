@@ -1,0 +1,320 @@
+{
+  "status": "FOCUS_NEIGHBOURHOOD_NOMINATED",
+  "reference_index": 129,
+  "local_anchor_nomination": 120,
+  "target_origin_native": [
+    594,
+    1424
+  ],
+  "target_shape": [
+    392,
+    392
+  ],
+  "native_sensor_shape": [
+    4688,
+    7032
+  ],
+  "libraw_visible_shape": [
+    4688,
+    7028
+  ],
+  "levels": [
+    512.0,
+    15360.0
+  ],
+  "wb_bits": [
+    1070374912,
+    1065353216,
+    1076715520
+  ],
+  "tone_bits": [
+    1015040358,
+    1057148990,
+    1057803469
+  ],
+  "map_sha256": "6594d98255383218a3114fd783bfd0e2215b39b202777f1ee2e493f4b287a6a1",
+  "frames": [
+    {
+      "index": 116,
+      "source": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00132.ARW",
+      "bytes": 39440384,
+      "mtime_ns": 1789629203240000000,
+      "source_xywh": [
+        570,
+        1408,
+        420,
+        420
+      ],
+      "source_display_xywh": [
+        610,
+        1448,
+        336,
+        336
+      ],
+      "a": [
+        1.0039088331274186,
+        6.039695877469364e-06
+      ],
+      "b_plane": [
+        0.057318336326954045,
+        0.11527015848937916
+      ],
+      "minimum_mapped_corner_margin_native": 12.61676584839961,
+      "raw_u16_sha256": "14d9f378ac2883ecf5998a6012f9b6bfa49059620975461e35e143a9c099a846"
+    },
+    {
+      "index": 117,
+      "source": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00133.ARW",
+      "bytes": 39436288,
+      "mtime_ns": 1789629204700000000,
+      "source_xywh": [
+        570,
+        1408,
+        420,
+        420
+      ],
+      "source_display_xywh": [
+        612,
+        1450,
+        336,
+        336
+      ],
+      "a": [
+        1.0035918375045663,
+        3.7554633830292478e-06
+      ],
+      "b_plane": [
+        0.05874244687040364,
+        0.11518127497323455
+      ],
+      "minimum_mapped_corner_margin_native": 12.914898581740317,
+      "raw_u16_sha256": "e3c8139629f459312a243ed9a3e256518e26cdfc5dd071d56b5540fb7ccbd639"
+    },
+    {
+      "index": 118,
+      "source": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00134.ARW",
+      "bytes": 39432192,
+      "mtime_ns": 1789629206160000000,
+      "source_xywh": [
+        572,
+        1408,
+        418,
+        420
+      ],
+      "source_display_xywh": [
+        612,
+        1450,
+        336,
+        336
+      ],
+      "a": [
+        1.003292697299642,
+        5.628509019587041e-06
+      ],
+      "b_plane": [
+        0.03917155720562837,
+        0.1025326542511597
+      ],
+      "minimum_mapped_corner_margin_native": 12.250295522684723,
+      "raw_u16_sha256": "46279f33047667322a37d110cff2d0ce20166d4cebfefecc8c99599eb93fcc0d"
+    },
+    {
+      "index": 119,
+      "source": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00135.ARW",
+      "bytes": 39424000,
+      "mtime_ns": 1789629207650000000,
+      "source_xywh": [
+        572,
+        1408,
+        420,
+        420
+      ],
+      "source_display_xywh": [
+        614,
+        1450,
+        336,
+        336
+      ],
+      "a": [
+        1.0029806979247666,
+        1.0455038623689026e-05
+      ],
+      "b_plane": [
+        0.027878218024347978,
+        0.083298732664153
+      ],
+      "minimum_mapped_corner_margin_native": 13.35168781531263,
+      "raw_u16_sha256": "371e89be5661ee506242ef7134701db8f646231b49e924078f9d0909f9f9f743"
+    },
+    {
+      "index": 120,
+      "source": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00136.ARW",
+      "bytes": 39424000,
+      "mtime_ns": 1789629209110000000,
+      "source_xywh": [
+        574,
+        1408,
+        418,
+        420
+      ],
+      "source_display_xywh": [
+        614,
+        1450,
+        336,
+        336
+      ],
+      "a": [
+        1.0026883858737203,
+        2.406366301575466e-05
+      ],
+      "b_plane": [
+        0.025459282138110106,
+        0.050680761012825704
+      ],
+      "minimum_mapped_corner_margin_native": 12.208184719000542,
+      "raw_u16_sha256": "4963134cd8effeacc0c2dba8fcc31af9bbb1f6cec69b7aac1aa33b5a3f679858"
+    },
+    {
+      "index": 121,
+      "source": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00137.ARW",
+      "bytes": 39407616,
+      "mtime_ns": 1789629210590000000,
+      "source_xywh": [
+        574,
+        1408,
+        418,
+        420
+      ],
+      "source_display_xywh": [
+        614,
+        1450,
+        336,
+        336
+      ],
+      "a": [
+        1.0024059634892557,
+        7.190975453194798e-06
+      ],
+      "b_plane": [
+        -0.020097268918318978,
+        0.04901024133630166
+      ],
+      "minimum_mapped_corner_margin_native": 12.123072431726087,
+      "raw_u16_sha256": "8a771983fc453bfd8a7354d22eaa190dfb3567de9f49b9f9ef82425fb7d79939"
+    },
+    {
+      "index": 122,
+      "source": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00138.ARW",
+      "bytes": 39403520,
+      "mtime_ns": 1789629212060000000,
+      "source_xywh": [
+        574,
+        1410,
+        420,
+        418
+      ],
+      "source_display_xywh": [
+        616,
+        1450,
+        336,
+        336
+      ],
+      "a": [
+        1.0020826111993975,
+        -1.9773843560086206e-06
+      ],
+      "b_plane": [
+        -0.026926140760015427,
+        0.053388044680884206
+      ],
+      "minimum_mapped_corner_margin_native": 12.195778545721168,
+      "raw_u16_sha256": "396cbae563c4bb490c3a64df456ff2b400210c3069255f1a39070bde6e826a7d"
+    },
+    {
+      "index": 123,
+      "source": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00139.ARW",
+      "bytes": 39391232,
+      "mtime_ns": 1789629213530000000,
+      "source_xywh": [
+        576,
+        1410,
+        418,
+        418
+      ],
+      "source_display_xywh": [
+        616,
+        1450,
+        336,
+        336
+      ],
+      "a": [
+        1.001760653006611,
+        -3.61507044156599e-06
+      ],
+      "b_plane": [
+        -0.10539953199046614,
+        0.08641732186629303
+      ],
+      "minimum_mapped_corner_margin_native": 12.562183620937958,
+      "raw_u16_sha256": "4caf56b4527d93853a16a8b94549ba4731de1a9e483e337c5af27d9ca366dd2d"
+    },
+    {
+      "index": 124,
+      "source": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00140.ARW",
+      "bytes": 39383040,
+      "mtime_ns": 1789629215000000000,
+      "source_xywh": [
+        576,
+        1410,
+        420,
+        418
+      ],
+      "source_display_xywh": [
+        618,
+        1450,
+        336,
+        336
+      ],
+      "a": [
+        1.0014665227192852,
+        9.90561988868416e-06
+      ],
+      "b_plane": [
+        -0.1434726900127159,
+        0.07118237177827791
+      ],
+      "minimum_mapped_corner_margin_native": 12.658496898883413,
+      "raw_u16_sha256": "d2cc313fb42d6d2369dfe08c000c5eefbdf2637b667363b1e7feb00f2c48c917"
+    }
+  ],
+  "photographic_nominees": [
+    116,
+    118,
+    120,
+    122,
+    124
+  ],
+  "independent_decode": {
+    "frame": 120,
+    "different_sensels": 0,
+    "command": [
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m61-ptc-high-iso\\decode-check\\target\\release\\m61-decode-check.exe",
+      "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl\\DSC00136.ARW",
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\star-focus-locator-1",
+      "120",
+      "1408",
+      "574",
+      "420",
+      "418"
+    ]
+  },
+  "retained": "Nine original-u16 padded CFA patches; no full RGB frames; global map remains reference129",
+  "source_metadata_unchanged": true,
+  "rawpy": "0.27.0",
+  "libraw": [
+    0,
+    22,
+    1
+  ],
+  "baseline_developer_different_u16_samples": 0
+}

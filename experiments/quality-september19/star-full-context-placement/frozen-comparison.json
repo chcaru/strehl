@@ -1,0 +1,56 @@
+{
+  "output_native_regions": {
+    "core": [
+      472,
+      1352,
+      328,
+      328
+    ],
+    "left-transition": [
+      394,
+      1352,
+      128,
+      328
+    ],
+    "right-transition": [
+      750,
+      1352,
+      128,
+      328
+    ],
+    "top-transition": [
+      472,
+      1276,
+      328,
+      128
+    ],
+    "bottom-transition": [
+      472,
+      1630,
+      328,
+      128
+    ],
+    "far-control": [
+      1392,
+      1168,
+      328,
+      328
+    ]
+  },
+  "output_shape": [
+    4480,
+    6724,
+    3
+  ],
+  "sensor_crop_origin": [
+    154,
+    104
+  ],
+  "support_sensor_xywh": [
+    594,
+    1424,
+    392,
+    392
+  ],
+  "interpretation": "Native core, taper boundaries and distant ridged-shell control frozen before paired renders; no sharpness score"
+}

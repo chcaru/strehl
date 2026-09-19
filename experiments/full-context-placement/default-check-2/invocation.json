@@ -1,0 +1,27 @@
+{
+  "command": [
+    "cargo",
+    "check",
+    "-p",
+    "strehl-cli",
+    "--bin",
+    "strehl",
+    "--jobs",
+    "2",
+    "--target-dir",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\target\\native-pyramid-profile",
+    "--locked",
+    "--offline",
+    "--message-format=json-render-diagnostics"
+  ],
+  "environment": {
+    "RAYON_NUM_THREADS": "2",
+    "CARGO_INCREMENTAL": "0"
+  },
+  "removed_environment": [],
+  "runner": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\full-context-placement\\run.py",
+    "sha256": "17451d237bf256004ca8853ef4c2a9e1c582012d43ad33fd687606e68a5fb76f",
+    "bytes": 7707
+  }
+}

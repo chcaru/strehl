@@ -1,0 +1,12 @@
+
+running 5 tests
+test align_cmd::local_placement::independent_controls::independent_local_placement_affine_direction_phase_taper_and_scope ... independent local affine: outside=114288, core=107584, taper=44516, wrong-sign=143277, wrong-factor=139055, swapped-greens=38025
+ok
+test align_cmd::local_placement::independent_controls::independent_local_placement_constant_and_flat_noise_control ... independent local flat: transition samples=44516, changed=43163, output/input variance=0.8412271081947803
+ok
+test align_cmd::local_placement::independent_controls::independent_local_placement_disabled_consumer_is_exact ... ok
+test align_cmd::local_placement::independent_controls::independent_local_placement_refuses_mismatched_or_nonfinite_geometry ... ok
+test align_cmd::local_placement::independent_controls::independent_local_placement_stack_identity_refusals ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 177 filtered out; finished in 0.07s
+

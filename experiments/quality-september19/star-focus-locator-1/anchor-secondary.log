@@ -1,0 +1,11 @@
+file      : D:\personal\macro\requests\misc-diagnostic\star-sand-cpl\DSC00136.ARW
+camera    : ILCE-7CM2
+stride    : 7168
+buffer h  : 5120
+active    : 7032x4688 at (0,0)
+levels    : black 512 white 15360
+plane R(even,even)  : n 8241504 mean 2268.2896
+plane G1(even,odd)  : n 8241504 mean 3320.0170
+plane G2(odd,even)  : n 8241504 mean 3322.6553
+plane B(odd,odd)    : n 8241504 mean 1540.0885
+wrote     : C:\dev\blog\death-of-software\projects\strehl\experiments\quality-september19\star-focus-locator-1\rawler-120.bin
