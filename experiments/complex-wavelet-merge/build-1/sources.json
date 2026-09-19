@@ -1,0 +1,162 @@
+[
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\Cargo.lock",
+    "sha256": "ea23b6dc6afc5fb9f1b12d08f065083ba77a75425b2a0b000d3f3a8466696efa",
+    "bytes": 64738
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-cli\\Cargo.toml",
+    "sha256": "c5dfa69451015a18f3e50b15a109cdf01c153108cf5200caf973755655ec662f",
+    "bytes": 1887
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-cli\\src\\image_out.rs",
+    "sha256": "b1bb4674337f5396e92f8fff027724e246df904faf5257b1753683a26c64c9e9",
+    "bytes": 132206
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-cli\\src\\main.rs",
+    "sha256": "176b95f4669ac9c40e70a0498db4233c4695fda80f3f6b8e1d80a9763101627d",
+    "bytes": 88555
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-cli\\src\\merge_cmd.rs",
+    "sha256": "6c96d4329931b389718b271d52e12ef69fa670b20ad9f7db8fbb4faf6d138427",
+    "bytes": 450892
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-core\\Cargo.toml",
+    "sha256": "722149ae720fc5e376d3b7b1cfead95ee61c6ba3e1628ddb5c05d0f0621fa4c8",
+    "bytes": 955
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-core\\src\\boxfilter.rs",
+    "sha256": "5cf6dab36c8ddb7499acbec140df509b4e1e5fe0b0ace3a13f8d7cf68f979b8e",
+    "bytes": 7986
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-core\\src\\demosaic.rs",
+    "sha256": "91f736847c55f9f0658c92de4c3d0065f76fa03126f600e4f8468f61a3564784",
+    "bytes": 52295
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-core\\src\\pyramid.rs",
+    "sha256": "c66982bb56f14374b52bd0a291d36a7186865925934a02e2f115168922cc0c66",
+    "bytes": 214160
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\complex-wavelet-merge\\charter.md",
+    "sha256": "93eb6ffcd4dbf3b1ac616b3ebdf8889d51718d9fe03348f7f1eb0fd57393169a",
+    "bytes": 3333
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\complex-wavelet-merge\\implementation.rs",
+    "sha256": "1881d89ca6d2642c32d9bb702f7cc593de3254d67b88ba76dcf1c7ba81f1c0f1",
+    "bytes": 19592
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\complex-wavelet-merge\\independent-controls.rs",
+    "sha256": "5e68d748e2584750fdd783994a84cd3f665212ef35a5e7fd7314bbb477e0b9ea",
+    "bytes": 24170
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\complex-wavelet-merge\\independent-plan.md",
+    "sha256": "7e385fb748805679b144a41d02fc05c6aeddc37bbae98a5d0fe37d38aa7b3c26",
+    "bytes": 5054
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\complex-wavelet-merge\\licence.txt",
+    "sha256": "e3c43b8b81b9ad935beff66d7c6714339b3a33de466fb5348be2c92c43a60098",
+    "bytes": 1497
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\complex-wavelet-merge\\run.py",
+    "sha256": "99956017b6e46b1ee4ad5d369ae156b6899f4f56979dd4a0a0726150a6bafc76",
+    "bytes": 4463
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\fine-support-guidance\\candidate-adapter.rs",
+    "sha256": "7da635ab31c823bc62a7f43c58c192e63aa86f95552ade31a3db0258bdd41648",
+    "bytes": 5656
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\fine-support-guidance\\candidate-independent-controls.rs",
+    "sha256": "bdd0a7e1bf90ab9ad89849c3e05bda76ed4c15f691c680ab29ed13b793cfd30e",
+    "bytes": 16842
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\fine-support-guidance\\core-candidate.rs",
+    "sha256": "998329a36397436a4d67d303a71615faf6d66f15ffa72f707aab9b91b95f2c10",
+    "bytes": 4121
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\fine-support-guidance\\independent-controls.rs",
+    "sha256": "f9c00c454222ba923d372405ea89b11121e5dc07be4f8cedf81ac74b8950f2e6",
+    "bytes": 5010
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\fine-support-guidance\\measure.rs",
+    "sha256": "d9cebcc5b581a44d6dd5378c052a04199fe9f514dbe5c9768b99c11a89668cd6",
+    "bytes": 15584
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\full-context-placement\\implementation.rs",
+    "sha256": "fb123d6f37bb68add6ef0ca290ce7e473b8fdaaf7783dd176f9c98ac3ae6203c",
+    "bytes": 14894
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\full-context-placement\\independent-controls.rs",
+    "sha256": "3d3acd2ad2751be810d3bd2d1d552b41f77ced52988d961115abecec4c84531b",
+    "bytes": 17408
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\full-context-placement\\run.py",
+    "sha256": "17451d237bf256004ca8853ef4c2a9e1c582012d43ad33fd687606e68a5fb76f",
+    "bytes": 7707
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\green-match-rgb\\full-stack.rs",
+    "sha256": "2511ae67eb151e196ce40830754faddb65de89ca682b603fbd3204bb9e22bc5d",
+    "bytes": 20441
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\green-match-rgb\\implementation.rs",
+    "sha256": "0638ac4cbacf3b366b699f5c9b2d50adbd3f7c1f4cf7463be06010cdc27841c5",
+    "bytes": 11934
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\green-match-rgb\\independent-controls.rs",
+    "sha256": "5e41c7988d410756ccbaae227945057caa43e602adbe22848413233c8d639e6c",
+    "bytes": 18980
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-correction-variance\\core-bridge.rs",
+    "sha256": "b70090a51a95bfb19cb8d3207c12437cb82aaf21efac2cd1e5760e9860b6d9f4",
+    "bytes": 1262
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-direct-planes\\implementation.rs",
+    "sha256": "2fcd38747b8352cd4d3f01e2d9a57c286a4bd65dc304af2dcff6f31ab6917059",
+    "bytes": 6529
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\phase-packed-rgb\\full-stack.rs",
+    "sha256": "a5f9f7d63d5337751b9e531badbbf4ed65a4c130b7ff17a343b0da5e68d6ff2c",
+    "bytes": 17652
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\phase-packed-rgb\\implementation.rs",
+    "sha256": "ebef117ce5837140647b2d828ebfcf80d04912c2b32248faa33f06f84d051e91",
+    "bytes": 12603
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\phase-packed-rgb\\independent-controls.rs",
+    "sha256": "572d028a0d83214f9df8ac47634f04e703c855a93d96439a9c8534a5f0b240f9",
+    "bytes": 30884
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\matched-source-tests.rs",
+    "sha256": "093e25703bd86a303c95edbc557c253359365557d396364baa7dbdb9b6782111",
+    "bytes": 11457
+  }
+]

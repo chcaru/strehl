@@ -20,3 +20,9 @@ pub fn energy(coefficients: &[f32], size: LevelSize) -> Vec<f32> {
     let squared: Vec<f32> = coefficients.iter().map(|x| x*x).collect();
     smooth(&squared, size)
 }
+
+/// Existing SoftPower rule with the production default significance floor.
+/// Inputs are supported excess energy, noise floor, and the held exponent.
+pub fn soft_weight(excess: f32, floor: f32, exponent: f32) -> f32 {
+    super::select_weight(excess, floor, exponent, 0.0)
+}

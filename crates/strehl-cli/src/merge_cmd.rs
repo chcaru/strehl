@@ -4905,6 +4905,11 @@ pub(crate) mod green_match_rgb {
 }
 
 #[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance"))]
+pub(crate) mod complex_wavelet_merge {
+    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/complex-wavelet-merge/implementation.rs"));
+}
+
+#[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance"))]
 pub(crate) mod fine_support_tests {
     include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/fine-support-guidance/measure.rs"));
 }

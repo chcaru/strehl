@@ -1,0 +1,1680 @@
+{
+  "cases": [
+    {
+      "baseline": {
+        "chroma_rg_bg_rmse": 0.0012228999434449768,
+        "inphase_truth_amplitude": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quadrature_truth_amplitude": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rgb_rmse": 0.0014282927549678225
+      },
+      "baseline_averaged_fraction": [
+        0.8949372759856631,
+        1.0
+      ],
+      "candidate": {
+        "chroma_rg_bg_rmse": 0.0011108309904209938,
+        "inphase_truth_amplitude": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quadrature_truth_amplitude": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rgb_rmse": 0.0013291020220864507
+      },
+      "chroma_ratio": 0.9083580356473985,
+      "control_votes_changed": 2171,
+      "directional_participation": [
+        {
+          "fallback_fraction": 0.9162186379928315,
+          "max_weight": 0.00020728337403852493,
+          "min_weight": 0.0,
+          "multi_source_coefficients": 17,
+          "orientation": "H",
+          "positive_source_coefficients": 392,
+          "total_coefficients": 4464
+        },
+        {
+          "fallback_fraction": 0.912410394265233,
+          "max_weight": 0.00026002744561992586,
+          "min_weight": 0.0,
+          "multi_source_coefficients": 14,
+          "orientation": "D",
+          "positive_source_coefficients": 406,
+          "total_coefficients": 4464
+        },
+        {
+          "fallback_fraction": 0.9045698924731183,
+          "max_weight": 0.0001893776498036459,
+          "min_weight": 0.0,
+          "multi_source_coefficients": 21,
+          "orientation": "V",
+          "positive_source_coefficients": 447,
+          "total_coefficients": 4464
+        }
+      ],
+      "flat_mean_placebo": {
+        "candidate_rgb_over_mean": 1.1433013310788942,
+        "direct_source_mean": {
+          "chroma_rg_bg_rmse": 0.0009915191258380168,
+          "inphase_truth_amplitude": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "quadrature_truth_amplitude": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "rgb_rmse": 0.0011625124417831499
+        },
+        "single_frame": {
+          "chroma_rg_bg_rmse": 0.002227405793755446,
+          "inphase_truth_amplitude": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "quadrature_truth_amplitude": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "rgb_rmse": 0.002609210582901277
+        },
+        "unsafe_control_rgb_over_mean": 1.977133142456713
+      },
+      "guard_pass": true,
+      "iso": 100.0,
+      "rgb_ratio": 0.9305529398392793,
+      "scene": "flat",
+      "source_evidence": [
+        {
+          "coefficient_variance_sha256": "63ae5fc1249a87b971a6f516f98d152909d01e7d1518e6aa7848ce34d423d802",
+          "guide_sha256": "50874fbf287bd1a7aa13ece5dc01c43ce3e9bf188ef36e669d7351e7c50ddecf",
+          "identity_guide_original_exact": true,
+          "known4_original_exact": true,
+          "source_sha256": "aac189c47f005e54120251bc535841bd40b6e9f4ba49bd34060c81df3329cde8",
+          "variance_sha256": "c623d27d137f0172dcaf210c6fb4dc908fdb7f629c7dcb30ce4563bd378aeb6b"
+        },
+        {
+          "coefficient_variance_sha256": "7c0773f135c1e0edb456fe7e91d6770f438bf2f2204c028edb2e8d6a873e6f5e",
+          "guide_sha256": "2fc1f57f61d82161fc1d2bf577e7d3ac3949b0ddd5ebb7aa8e064b339d57be45",
+          "identity_guide_original_exact": true,
+          "known4_original_exact": true,
+          "source_sha256": "d7fe7225d0d8002cbf55267a13a23f027aa226154f64981b1ff16061053b9d94",
+          "variance_sha256": "a0e11c1b836fafa732c122954ac02a3aac22bf9c107d7b0e86342ebc77781b21"
+        },
+        {
+          "coefficient_variance_sha256": "70115853a7aed306713080c612c4fdd19eca17342c92d28c742e062720583be9",
+          "guide_sha256": "47842ede1da2ab94c78b0e9089cacda5bd9eea5903103a6840c8f747beaf0f37",
+          "identity_guide_original_exact": true,
+          "known4_original_exact": true,
+          "source_sha256": "d6a07a605285282acf3b4dbdedc1ac759db79d8a90d6de3c4ada2478226dafbf",
+          "variance_sha256": "34644f6ddd5e3fe771163ec8d0aa88e88f1fce0ea93e861285a6ada1c8399aad"
+        },
+        {
+          "coefficient_variance_sha256": "7c620da7d8cf86674f71a3769da27d1d8ce8aea1b2a2063d33b9a4d09d2e6ab4",
+          "guide_sha256": "4493e86752e5d81c8f092c4ef7012b748ef01b04ea2c20d7e32971a8935569ef",
+          "identity_guide_original_exact": true,
+          "known4_original_exact": true,
+          "source_sha256": "075ff0d0e306b060c8129bb37d7c555e15d0d9117126dea9c5932b12511d500a",
+          "variance_sha256": "fdf8808c1d80b42dd979bbf255fac9e9d52958ee44457ae23eae0f4c9f9444fe"
+        },
+        {
+          "coefficient_variance_sha256": "af42b0898c1b49a97b8018d16c18d59a4ecb632bedbb8ece0cbfc084e8a80fbf",
+          "guide_sha256": "6a104479ad02d5b3f4d8c8ef13e0463f1b646b900b58e819ffadb2c494f6037b",
+          "identity_guide_original_exact": true,
+          "known4_original_exact": true,
+          "source_sha256": "a8c6e719101c68b318f52ac030a3eee10e7e3b2f36cd398e913bb496060557ef",
+          "variance_sha256": "a2920607b138696711f601bd8999116ef3a910831293f59191ab455e500fe2f0"
+        }
+      ],
+      "truth_green_zero_crossings": null,
+      "unsafe_hard_control": {
+        "chroma_rg_bg_rmse": 0.002008744312490431,
+        "inphase_truth_amplitude": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quadrature_truth_amplitude": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rgb_rmse": 0.0022984418771677456
+      }
+    },
+    {
+      "baseline": {
+        "chroma_rg_bg_rmse": 0.006149404593021139,
+        "inphase_truth_amplitude": [
+          1.0413196105985125,
+          1.0413987261900006,
+          1.0412387012293662
+        ],
+        "quadrature_truth_amplitude": [
+          -0.0004170640804325507,
+          -0.0002767161669734903,
+          -0.00024183910481482147
+        ],
+        "rgb_rmse": 0.004499113175678222
+      },
+      "baseline_averaged_fraction": [
+        0.0,
+        1.0
+      ],
+      "candidate": {
+        "chroma_rg_bg_rmse": 0.006574888035739701,
+        "inphase_truth_amplitude": [
+          0.9878350666334067,
+          0.987924414054174,
+          0.9870430814763811
+        ],
+        "quadrature_truth_amplitude": [
+          -0.00020774002411409824,
+          -0.0002569184682147579,
+          -0.0003002691704701041
+        ],
+        "rgb_rmse": 0.005999491034364292
+      },
+      "chroma_ratio": 1.0691909982962313,
+      "control_votes_changed": 2176,
+      "directional_participation": [
+        {
+          "fallback_fraction": 0.0,
+          "max_weight": 933.5692138671875,
+          "min_weight": 0.0,
+          "multi_source_coefficients": 4464,
+          "orientation": "H",
+          "positive_source_coefficients": 15549,
+          "total_coefficients": 4464
+        },
+        {
+          "fallback_fraction": 0.9117383512544803,
+          "max_weight": 0.00025487379753030837,
+          "min_weight": 0.0,
+          "multi_source_coefficients": 16,
+          "orientation": "D",
+          "positive_source_coefficients": 411,
+          "total_coefficients": 4464
+        },
+        {
+          "fallback_fraction": 0.9074820788530465,
+          "max_weight": 0.00021415695664472878,
+          "min_weight": 0.0,
+          "multi_source_coefficients": 21,
+          "orientation": "V",
+          "positive_source_coefficients": 434,
+          "total_coefficients": 4464
+        }
+      ],
+      "flat_mean_placebo": null,
+      "guard_pass": false,
+      "iso": 100.0,
+      "rgb_ratio": 1.3334830221202192,
+      "scene": "horizontal-wave-vector",
+      "source_evidence": [
+        {
+          "coefficient_variance_sha256": "97703ebd7761b939bf467564c17eaee6b1257dc188d460610219b22957c884e7",
+          "guide_sha256": "2070f48ee31653808a5aef5ce5f34c06f149c5497976b6436f54972b937b06e0",
+          "identity_guide_original_exact": true,
+          "known4_original_exact": true,
+          "source_sha256": "620839a7c97ecd45c1351834f0412ca8aa016f25169b25d5d5a6e2010a75062d",
+          "variance_sha256": "8b832fb10f65cf6a5204476665f1fcfe979b6df13ece9ea6efdd18412f107aac"
+        },
+        {
+          "coefficient_variance_sha256": "17b34c574f770e8cf8e95461c20d3c73acc9b46197dbc5860f3f1acc5b7a24cd",
+          "guide_sha256": "656d42792ad5c5ed3a139333bba0dc6849b22b93d93106759f91f1e12a655032",
+          "identity_guide_original_exact": true,
+          "known4_original_exact": true,
+          "source_sha256": "00ecd4a9ff9b61846ec6abfb818b35d3b3ecc06952943baf71edfe187240c9e2",
+          "variance_sha256": "3a7455ac3c754d09dff6bf28f8cda88272d9e403fb87b14d2d7414a8844a8ab2"
+        },
+        {
+          "coefficient_variance_sha256": "094c465e9b9cdfbddbaeab29cce858640835f6904185076b48d519feab5d9fc9",
+          "guide_sha256": "9e5054047b04489f9e419a9df755b6914eb769173f593bfc1494a68beab8e631",
+          "identity_guide_original_exact": true,
+          "known4_original_exact": true,
+          "source_sha256": "85d05697979bbb970111cb1cfbcbf0731d7e70a8cf7b011fd10e721ee54955b1",
+          "variance_sha256": "0ee7cf1e5f4e646c08d61b57519350b400c3e9adc4deb163bdb8b2fb8f2f6eaf"
+        },
+        {
+          "coefficient_variance_sha256": "8287aacbdda7bb96cb037e02a1e90a21a855132bd3cddf1ad991d70d434d01b7",
+          "guide_sha256": "9114f2e72835fef3a4cd33d0af0c71f48689264970ff1299a64103417f4ce5c6",
+          "identity_guide_original_exact": true,
+          "known4_original_exact": true,
+          "source_sha256": "b793b82d9f6aecf9500052a0587fe5c35164620f26fd788b1d39a8e3db6edea9",
+          "variance_sha256": "435624bd33a6abc4604d439d8ecd792a31321d44aea6c228e79d4f5f4fbacec2"
+        },
+        {
+          "coefficient_variance_sha256": "a33abba4d0ea012ae0bd53b9f3e7370444f90077629e390d5a5317fac8709777",
+          "guide_sha256": "66749acbfda8e8002480c3c8819ff6d24b6d708b290972fa949175e2be979ed6",
+          "identity_guide_original_exact": true,
+          "known4_original_exact": true,
+          "source_sha256": "f8f0b028dc48bf55609354245c7997644606fad7c469e0cd4daa4c5574304797",
+          "variance_sha256": "fda468244892afec91caae4eae40aafe7fd3f91c596db8bd0f9f8adfa49ea277"
+        }
+      ],
+      "truth_green_zero_crossings": null,
+      "unsafe_hard_control": {
+        "chroma_rg_bg_rmse": 0.007407547176586616,
+        "inphase_truth_amplitude": [
+          0.8674590361946047,
+          0.8691751806164605,
+          0.8712468045149527
+        ],
+        "quadrature_truth_amplitude": [
+          -0.0014349759994079926,
+          -0.001594965490021,
+          -0.0020676259406691255
+        ],
+        "rgb_rmse": 0.017474881536452342
+      }
+    },
+    {
+      "baseline": {
+        "chroma_rg_bg_rmse": 0.00614851178924492,
+        "inphase_truth_amplitude": [
+          1.0418920509923673,
+          1.0420904256584331,
+          1.0415243424562288
+        ],
+        "quadrature_truth_amplitude": [
+          0.0002392883962809938,
+          -0.0001201980090142845,
+          -0.00006515252631782904
+        ],
+        "rgb_rmse": 0.004511979411939228
+      },
+      "baseline_averaged_fraction": [
+        0.0,
+        1.0
+      ],
+      "candidate": {
+        "chroma_rg_bg_rmse": 0.006588537477447986,
+        "inphase_truth_amplitude": [
+          0.9883535798888898,
+          0.9887256702487228,
+          0.987926255344211
+        ],
+        "quadrature_truth_amplitude": [
+          0.0002656104729875538,
+          0.000021164176536861622,
+          -0.00016823923471760938
+        ],
+        "rgb_rmse": 0.006016990561599038
+      },
+      "chroma_ratio": 1.0715662103751296,
+      "control_votes_changed": 2173,
+      "directional_participation": [
+        {
+          "fallback_fraction": 0.9173387096774194,
+          "max_weight": 0.0002172245440306142,
+          "min_weight": 0.0,
+          "multi_source_coefficients": 15,
+          "orientation": "H",
+          "positive_source_coefficients": 385,
+          "total_coefficients": 4464
+        },
+        {
+          "fallback_fraction": 0.91084229390681,
+          "max_weight": 0.0002597413258627057,
+          "min_weight": 0.0,
+          "multi_source_coefficients": 13,
+          "orientation": "D",
+          "positive_source_coefficients": 412,
+          "total_coefficients": 4464
+        },
+        {
+          "fallback_fraction": 0.0,
+          "max_weight": 932.7376708984375,
+          "min_weight": 0.0,
+          "multi_source_coefficients": 4464,
+          "orientation": "V",
+          "positive_source_coefficients": 15546,
+          "total_coefficients": 4464
+        }
+      ],
+      "flat_mean_placebo": null,
+      "guard_pass": false,
+      "iso": 100.0,
+      "rgb_ratio": 1.333558957666645,
+      "scene": "vertical-wave-vector",
+      "source_evidence": [
+        {
+          "coefficient_variance_sha256": "a243ecfc12c81c7588c8a123bf962e51dcb1cbabf4b5f624f86184af98f68b24",
+          "guide_sha256": "b1b149f8d5860d723401c13d0ae109fe94926a0041b32ec2ef3d40e2462b9520",
+          "identity_guide_original_exact": true,
+          "known4_original_exact": true,
+          "source_sha256": "48d4df800b59ce83bd186bd4c18266ba65426c9e17e16b22b7dac738a152992c",
+          "variance_sha256": "2f7bfaa76cc08aa2517d074b429726080fc9a7756ed25647c070eca0504ccd2d"
+        },
+        {
+          "coefficient_variance_sha256": "e7868cacb7a6fff368604f0f58728fb5335141908e42e4dfcd944d7dfaeb43f5",
+          "guide_sha256": "cb71b0b2a6167a2b9ca490e3fbff457f769cf6f45ba11558af5cc4afb4481c50",
+          "identity_guide_original_exact": true,
+          "known4_original_exact": true,
+          "source_sha256": "dc0696cbf7b6ede5ccdce8f1b36d40279d5bd866265b5da8209d942709971076",
+          "variance_sha256": "cd8bb867402ab0562c0346f511876fc7bed60f512f662144591e2e67899c2447"
+        },
+        {
+          "coefficient_variance_sha256": "fe5975d4e8f065d9f0f731886004fdc0ea504f5a73c545929f86025d4aa9ffc1",
+          "guide_sha256": "c02c5ac750784cd26d6e5fdad337919837542ddbf137d86069c30a513daee70e",
+          "identity_guide_original_exact": true,
+          "known4_original_exact": true,
+          "source_sha256": "4846cdcccdadbdca26b9d41290b56e545096655ecb82d24b3cc49b133728d37e",
+          "variance_sha256": "04d3da4c0d12b1feec0d92eb209b695b39c1c8ba42bfa2a473691ecba005a115"
+        },
+        {
+          "coefficient_variance_sha256": "0810166afbe2ee13064fb021ed3cb2e87e7b91e3247bfb3df8b8d4e4db8d0c32",
+          "guide_sha256": "886eadd19d4ada6ae3a1bd07109674ab5ad8fd0a14dfc7ee031c92bc9237bfc8",
+          "identity_guide_original_exact": true,
+          "known4_original_exact": true,
+          "source_sha256": "39892937646d74db2679c2a16cc5096074915c3124d13a4d35d6981c723f8dfb",
+          "variance_sha256": "3637f1b3ce474d134c27e9d0573a4d58b60216935527d160e3b94ba52617c295"
+        },
+        {
+          "coefficient_variance_sha256": "f74f91ca497578d1718552e61cdb82b960298d7eb64af04fe34e53d35261732b",
+          "guide_sha256": "7dcc4559f06502bb2b48a625f0b1b6cbb68d382c24f7130026655d88ac29e4db",
+          "identity_guide_original_exact": true,
+          "known4_original_exact": true,
+          "source_sha256": "374a912f32c5c90c8104d6be2ac0156e3fc864a238f4f127d9170c7337560d7f",
+          "variance_sha256": "ecdf5103d0a40fb7a305a54319a6e931f8ebf0477bda509796652a09ed0bb010"
+        }
+      ],
+      "truth_green_zero_crossings": null,
+      "unsafe_hard_control": {
+        "chroma_rg_bg_rmse": 0.007410695200262434,
+        "inphase_truth_amplitude": [
+          0.8732997133550469,
+          0.8743371669603327,
+          0.8753173849873921
+        ],
+        "quadrature_truth_amplitude": [
+          -0.0005492446423140165,
+          -0.0008346881899247939,
+          -0.0005330322706221449
+        ],
+        "rgb_rmse": 0.01716530887338495
+      }
+    },
+    {
+      "baseline": {
+        "chroma_rg_bg_rmse": 0.006930791935561299,
+        "inphase_truth_amplitude": [
+          1.081034474984067,
+          1.0811946082024597,
+          1.0809939208538493
+        ],
+        "quadrature_truth_amplitude": [
+          0.0004759385436706311,
+          0.00036753797922574875,
+          0.0001900296312511277
+        ],
+        "rgb_rmse": 0.007296959749781359
+      },
+      "baseline_averaged_fraction": [
+        0.0,
+        1.0
+      ],
+      "candidate": {
+        "chroma_rg_bg_rmse": 0.009092216220600963,
+        "inphase_truth_amplitude": [
+          0.8959110029611084,
+          0.8960093171665031,
+          0.8957585399962539
+        ],
+        "quadrature_truth_amplitude": [
+          0.00019744203248839613,
+          0.00029323995537845,
+          0.00023222642115788752
+        ],
+        "rgb_rmse": 0.011369478444290692
+      },
+      "chroma_ratio": 1.3118581981879418,
+      "control_votes_changed": 216,
+      "directional_participation": [
+        {
+          "fallback_fraction": 0.0,
+          "max_weight": 939.5411376953125,
+          "min_weight": 0.0,
+          "multi_source_coefficients": 4464,
+          "orientation": "H",
+          "positive_source_coefficients": 14720,
+          "total_coefficients": 4464
+        },
+        {
+          "fallback_fraction": 0.0,
+          "max_weight": 1609.7064208984375,
+          "min_weight": 0.0,
+          "multi_source_coefficients": 4464,
+          "orientation": "D",
+          "positive_source_coefficients": 13973,
+          "total_coefficients": 4464
+        },
+        {
+          "fallback_fraction": 0.0,
+          "max_weight": 261.9199523925781,
+          "min_weight": 0.0,
+          "multi_source_coefficients": 4464,
+          "orientation": "V",
+          "positive_source_coefficients": 13703,
+          "total_coefficients": 4464
+        }
+      ],
+      "flat_mean_placebo": null,
+      "guard_pass": false,
+      "iso": 100.0,
+      "rgb_ratio": 1.5581117114742697,
+      "scene": "diagonal-wave-vector",
+      "source_evidence": [
+        {
+          "coefficient_variance_sha256": "ffbeb05c322dad67511f3fb0170fa80afe5318c20b6f72231e9ba78978c97f20",
+          "guide_sha256": "dc3872c2064b252acfd350e4394ec611406473126c2b7dcd6d178ef239490e00",
+          "identity_guide_original_exact": true,
+          "known4_original_exact": true,
+          "source_sha256": "ad82f662fe1eb30a665e34739b30332e245236222cd05ff227e4b5150349ef72",
+          "variance_sha256": "d9b8c109e40d581b4008ff826ea809bee175448591736d6a75eb01680fa78c52"
+        },
+        {
+          "coefficient_variance_sha256": "e96128a7b566f8237ec9d7df1218d73f2c79fde47a1e932a54a480cd7989f92d",
+          "guide_sha256": "7b5a1de029ceadaa548ffe43ecd26f03c390fdf50d02053593117352ee495487",
+          "identity_guide_original_exact": true,
+          "known4_original_exact": true,
+          "source_sha256": "f1ed2e66af4905ac2ea669860f963479fb4849635c488765e84de561bee001ca",
+          "variance_sha256": "fdb98655f3e181039bf43ac33b1192b772499790caa254ee8ac5f7de8bd4ad4a"
+        },
+        {
+          "coefficient_variance_sha256": "9efef08c19515deeddc0f5add98d891503cb9cae05881216e91c6ebb01edde58",
+          "guide_sha256": "fdea9c5b4ee7d11925de7b6797c60805042017032f9a723c57926020c96164aa",
+          "identity_guide_original_exact": true,
+          "known4_original_exact": true,
+          "source_sha256": "fe7bb911a8746b24cdc0f91086d4120210313747fd95854d5e014009a43effb6",
+          "variance_sha256": "1b26fb089cfb914f7566e4baaa6110bd8573ef2c472179481ba6ac4691f82fc1"
+        },
+        {
+          "coefficient_variance_sha256": "6b8242df82ed0e41c872c552670342a5a200d9a04f311e1151860cff38a713ca",
+          "guide_sha256": "47d4be7f6ad31c02521c0a2f2bd6f148126a8a9b6aa4a811cafdea3cb1bdbcfa",
+          "identity_guide_original_exact": true,
+          "known4_original_exact": true,
+          "source_sha256": "725cf99876730381a4d65df441ef49f08fd875d6c892b805c500b0645d191288",
+          "variance_sha256": "0a23c2cda77627484e65c6390554cec5ecb86f482802524a4485adbc29c7150d"
+        },
+        {
+          "coefficient_variance_sha256": "11d028ba7f7e50985fe13138ae7ac9e9e681a7993d6e3f16f943f2587e5c900b",
+          "guide_sha256": "6c7113ef0950f1ea4819c7b32e51a293dd3d4c92634a1ae0e6ace28cb5309d0a",
+          "identity_guide_original_exact": true,
+          "known4_original_exact": true,
+          "source_sha256": "f57ceaaa14adeb755d763a62a8b1eb0d2394142f16990e612df77385e14e8e85",
+          "variance_sha256": "28029e56b65f0e4687b1a15cbb593949ba83f8084e816cac1b1a5e1118821324"
+        }
+      ],
+      "truth_green_zero_crossings": null,
+      "unsafe_hard_control": {
+        "chroma_rg_bg_rmse": 0.009545443575690631,
+        "inphase_truth_amplitude": [
+          0.9446435215671583,
+          0.9484879904256973,
+          0.9443563062213776
+        ],
+        "quadrature_truth_amplitude": [
+          -0.001960114593193635,
+          0.0003728351602915451,
+          0.0023911465791875207
+        ],
+        "rgb_rmse": 0.010863548654894013
+      }
+    },
+    {
+      "baseline": {
+        "chroma_rg_bg_rmse": 0.033407211208053754,
+        "inphase_truth_amplitude": [
+          0.7193765517362067,
+          0.8568278403302787,
+          0.7192339324490019
+        ],
+        "quadrature_truth_amplitude": [
+          0.000013738939710407336,
+          -0.000025708316662337806,
+          0.00015731078266082647
+        ],
+        "rgb_rmse": 0.031943206667599304
+      },
+      "baseline_averaged_fraction": [
+        0.0,
+        1.0
+      ],
+      "candidate": {
+        "chroma_rg_bg_rmse": 0.03341228518968712,
+        "inphase_truth_amplitude": [
+          0.719416029217221,
+          0.8566040134195907,
+          0.7193142596162581
+        ],
+        "quadrature_truth_amplitude": [
+          0.00003856960135208266,
+          -0.00001903695136485122,
+          0.00014493004629024603
+        ],
+        "rgb_rmse": 0.03194715596274609
+      },
+      "chroma_ratio": 1.0001518828255902,
+      "control_votes_changed": 2167,
+      "directional_participation": [
+        {
+          "fallback_fraction": 0.0,
+          "max_weight": 814.4580688476562,
+          "min_weight": 68.20816040039062,
+          "multi_source_coefficients": 4464,
+          "orientation": "H",
+          "positive_source_coefficients": 22320,
+          "total_coefficients": 4464
+        },
+        {
+          "fallback_fraction": 0.9153225806451613,
+          "max_weight": 0.000247277959715575,
+          "min_weight": 0.0,
+          "multi_source_coefficients": 12,
+          "orientation": "D",
+          "positive_source_coefficients": 391,
+          "total_coefficients": 4464
+        },
+        {
+          "fallback_fraction": 0.9043458781362007,
+          "max_weight": 0.00023995192896109074,
+          "min_weight": 0.0,
+          "multi_source_coefficients": 22,
+          "orientation": "V",
+          "positive_source_coefficients": 449,
+          "total_coefficients": 4464
+        }
+      ],
+      "flat_mean_placebo": null,
+      "guard_pass": true,
+      "iso": 100.0,
+      "rgb_ratio": 1.0001236348995228,
+      "scene": "colour-mid",
+      "source_evidence": [
+        {
+          "coefficient_variance_sha256": "29cfa1986bd95a9b7d40dc7d9e4a1fe35c03b99af541990a92c48ae697793544",
+          "guide_sha256": "65a8fb481616d6fce3a80895c2ff043e71ed8d812cab4a56094bc2827d6038fc",
+          "identity_guide_original_exact": true,
+          "known4_original_exact": true,
+          "source_sha256": "c94516e0be0f169ccfa255cb49b7bfdfc21d39902f1a24e7995d829b1b5e3c44",
+          "variance_sha256": "6a2c146da26245f267dcc064320992ea52d65efd07dc977969692dfe10499c82"
+        },
+        {
+          "coefficient_variance_sha256": "86503732fda151a8466335a7964acec89eb208c2881d7325c63a1219967b1475",
+          "guide_sha256": "9d21c52fc76729a9e5fc47d64e6dbd3c106106f274e24ed437886b07b624d205",
+          "identity_guide_original_exact": true,
+          "known4_original_exact": true,
+          "source_sha256": "0e15d408869ba20ea67b4d0a3e3b4a5c93b59ed3ba38327a5b05ba212df2d5a9",
+          "variance_sha256": "7a82131ec3081262c07767086544121ef4962b392d48179e11f8c0ffa2e2b0f3"
+        },
+        {
+          "coefficient_variance_sha256": "d1a3e35f4f1fb04c5af344806372b946c2cfb2c5bfa9118e2967f5bfe56657a8",
+          "guide_sha256": "829149981ae407a0f145855324f0776ae76de9d5bdccf342a7106b7a854c0209",
+          "identity_guide_original_exact": true,
+          "known4_original_exact": true,
+          "source_sha256": "83fd916307bf38fb27d3ccc91e416828ce9bb73355913ba3cf933775c9748452",
+          "variance_sha256": "16a0c33d832faed4caa7b189393d673c93722780bc7b39b09bd71becf099887e"
+        },
+        {
+          "coefficient_variance_sha256": "497e2ebaff872cc658d6ff8c77cac16dc4a3504706e70952744fb2331591aa92",
+          "guide_sha256": "aec68ab6d82851e4b758ce8548619cf20db640ae74f4845f43e3963103aa1f42",
+          "identity_guide_original_exact": true,
+          "known4_original_exact": true,
+          "source_sha256": "233f92dd8b2ecb17e5aae960afb58c4cff45257af6fca01bbe7511f243cf309c",
+          "variance_sha256": "5cd3f787c205dedf2f89a5c77095fe95646e07025235b318e3a94856703a6ffa"
+        },
+        {
+          "coefficient_variance_sha256": "6eb4524a67a507915c0399c6b397872056072066d501f2f95ce30b6399ffe6d7",
+          "guide_sha256": "35036f21c10f35af370ab90bec9bd500da5ece1620ae052937c4bccc9c08a7bd",
+          "identity_guide_original_exact": true,
+          "known4_original_exact": true,
+          "source_sha256": "fdbfb7d63371b2536f043a10cf960bbefd7f5b4337f5232469eff3845317f028",
+          "variance_sha256": "a0a05604301811bc59a698dc02cde88061a68d9016d6a663db7bd1619e23fc70"
+        }
+      ],
+      "truth_green_zero_crossings": null,
+      "unsafe_hard_control": {
+        "chroma_rg_bg_rmse": 0.033351604994795545,
+        "inphase_truth_amplitude": [
+          0.7195149991468469,
+          0.8632206859904898,
+          0.719223287557274
+        ],
+        "quadrature_truth_amplitude": [
+          -2.8779086544865762e-6,
+          -0.000051132100241042034,
+          -0.00010974972256346168
+        ],
+        "rgb_rmse": 0.032031173611847805
+      }
+    },
+    {
+      "baseline": {
+        "chroma_rg_bg_rmse": 0.03835188559816894,
+        "inphase_truth_amplitude": [
+          0.6295090731895099,
+          0.7506902738199432,
+          0.6295309913126843
+        ],
+        "quadrature_truth_amplitude": [
+          -0.0001781590491338301,
+          -0.0001847533129180283,
+          0.0005137101769176893
+        ],
+        "rgb_rmse": 0.032019128115421305
+      },
+      "baseline_averaged_fraction": [
+        0.0,
+        1.0
+      ],
+      "candidate": {
+        "chroma_rg_bg_rmse": 0.049778473787467074,
+        "inphase_truth_amplitude": [
+          0.4294168314296223,
+          0.7163160283137263,
+          0.2734778693173701
+        ],
+        "quadrature_truth_amplitude": [
+          0.00023818026129722707,
+          -0.00014012704676910615,
+          -0.0005524805391940797
+        ],
+        "rgb_rmse": 0.03822716967117236
+      },
+      "chroma_ratio": 1.2979407142850803,
+      "control_votes_changed": 2142,
+      "directional_participation": [
+        {
+          "fallback_fraction": 0.0,
+          "max_weight": 857.075439453125,
+          "min_weight": 0.0,
+          "multi_source_coefficients": 4464,
+          "orientation": "H",
+          "positive_source_coefficients": 15042,
+          "total_coefficients": 4464
+        },
+        {
+          "fallback_fraction": 0.8779121863799283,
+          "max_weight": 0.03185729682445526,
+          "min_weight": 0.0,
+          "multi_source_coefficients": 150,
+          "orientation": "D",
+          "positive_source_coefficients": 772,
+          "total_coefficients": 4464
+        },
+        {
+          "fallback_fraction": 0.9025537634408602,
+          "max_weight": 0.00020200657309032977,
+          "min_weight": 0.0,
+          "multi_source_coefficients": 26,
+          "orientation": "V",
+          "positive_source_coefficients": 463,
+          "total_coefficients": 4464
+        }
+      ],
+      "flat_mean_placebo": null,
+      "guard_pass": false,
+      "iso": 100.0,
+      "rgb_ratio": 1.1938854029182977,
+      "scene": "colour-varying-focus",
+      "source_evidence": [
+        {
+          "coefficient_variance_sha256": "fac4327af2af97286fb82b6a59bfaaba8220f5b35fdef3aa34bb855d780d368b",
+          "guide_sha256": "c0907a56246327fef3ac4d25d7675dbb2e584bb08793256039c53850601acb3a",
+          "identity_guide_original_exact": true,
+          "known4_original_exact": true,
+          "source_sha256": "1f9dc21dadea9a23257c58801ecdc9fb8a935cc1c241682e8af069e10f2a338e",
+          "variance_sha256": "2c2873704aaf82fee88a07892723c6154d6297ac14d0d18abe5f424322025b6c"
+        },
+        {
+          "coefficient_variance_sha256": "ad9b9fe86817aa1bf0223d506c57434d34c88befdaa5ac77ad0e80a6ff589042",
+          "guide_sha256": "b1da06615009274d991da17695111303cf3eae8e09d0239dc23e958dee94dc7a",
+          "identity_guide_original_exact": true,
+          "known4_original_exact": true,
+          "source_sha256": "84e3e97c7471f7229e73ecea6e28d55f917a6829bfeb2c327c3c8cca14e6d96e",
+          "variance_sha256": "794b9bafec02bd997ab6ce106cee3673afb6ad4a04cd112572ceddd53e5c488b"
+        },
+        {
+          "coefficient_variance_sha256": "3bcecfe70d599666adebad762ba80d1d4a2cd88332d85458294d016fd2e0a5ba",
+          "guide_sha256": "023c58fff63a12b99a0ff9fd6b5e52f4fb4e6f7339e3388d58c124f5a3243787",
+          "identity_guide_original_exact": true,
+          "known4_original_exact": true,
+          "source_sha256": "a2e97e4a3297ea81edfb36fbf5793761e275f7039360e7d82c7f23d58892227b",
+          "variance_sha256": "882f2056d599365918c677a719203c72c2c53b71c4d4938925f3ff9fb86eb99e"
+        },
+        {
+          "coefficient_variance_sha256": "43186b61c1d95619e232712d09d50aaf648340b80f25645e28afeda4b970c949",
+          "guide_sha256": "c7947ebecf3f09a5589fe809f787f1412ae7161dc292df50b8eb9a9598fbc7d5",
+          "identity_guide_original_exact": true,
+          "known4_original_exact": true,
+          "source_sha256": "a736ca045c9ae01ff51f3c86d9db02b3c9244a55eeb57111404c08002a267abc",
+          "variance_sha256": "7f52c1658bd418feac73a56e0d57c7411d982da44a0782fa1ef32e21fcdf008e"
+        },
+        {
+          "coefficient_variance_sha256": "5555f9c202b5ab6597306598a9c3325c8479c984f49cc54eb5f56bfad8418f4f",
+          "guide_sha256": "c0e49badd4618be9233243ff2b67a8f649f03bbac603ca38016aefe37ac5c0f2",
+          "identity_guide_original_exact": true,
+          "known4_original_exact": true,
+          "source_sha256": "bbc8fc4889b1748ff135e8deae63b2354b669f39fead66062168d4c2f1452b55",
+          "variance_sha256": "72bf7bdaaaa16cd31122ac549f4446c365c71f724bec72b61ef3d6c31f2194aa"
+        }
+      ],
+      "truth_green_zero_crossings": {
+        "baseline_rb_rmse": 0.031968757816443705,
+        "candidate_rb_rmse": 0.04203360176097466,
+        "pixels": 3800,
+        "ratio": 1.3148337511992387,
+        "reported_not_new_gate": true
+      },
+      "unsafe_hard_control": {
+        "chroma_rg_bg_rmse": 0.05082258169826029,
+        "inphase_truth_amplitude": [
+          0.4312268707615256,
+          0.6434821749387258,
+          0.3393266834188177
+        ],
+        "quadrature_truth_amplitude": [
+          -8.51913838429982e-6,
+          0.0005669487353389184,
+          -0.0014069792397088806
+        ],
+        "rgb_rmse": 0.039205962592484433
+      }
+    },
+    {
+      "baseline": {
+        "chroma_rg_bg_rmse": 0.0024494317434247026,
+        "inphase_truth_amplitude": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quadrature_truth_amplitude": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rgb_rmse": 0.002859455909350826
+      },
+      "baseline_averaged_fraction": [
+        0.8944332437275986,
+        1.0
+      ],
+      "candidate": {
+        "chroma_rg_bg_rmse": 0.0022226180642968382,
+        "inphase_truth_amplitude": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quadrature_truth_amplitude": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rgb_rmse": 0.002655907588032048
+      },
+      "chroma_ratio": 0.907401510682334,
+      "control_votes_changed": 2174,
+      "directional_participation": [
+        {
+          "fallback_fraction": 0.9162186379928315,
+          "max_weight": 0.0002066871675197035,
+          "min_weight": 0.0,
+          "multi_source_coefficients": 17,
+          "orientation": "H",
+          "positive_source_coefficients": 392,
+          "total_coefficients": 4464
+        },
+        {
+          "fallback_fraction": 0.912410394265233,
+          "max_weight": 0.000263688008999452,
+          "min_weight": 0.0,
+          "multi_source_coefficients": 14,
+          "orientation": "D",
+          "positive_source_coefficients": 406,
+          "total_coefficients": 4464
+        },
+        {
+          "fallback_fraction": 0.9041218637992832,
+          "max_weight": 0.00018976353749167174,
+          "min_weight": 0.0,
+          "multi_source_coefficients": 21,
+          "orientation": "V",
+          "positive_source_coefficients": 449,
+          "total_coefficients": 4464
+        }
+      ],
+      "flat_mean_placebo": {
+        "candidate_rgb_over_mean": 1.1430803352207581,
+        "direct_source_mean": {
+          "chroma_rg_bg_rmse": 0.001981783484161628,
+          "inphase_truth_amplitude": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "quadrature_truth_amplitude": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "rgb_rmse": 0.0023234653822639018
+        },
+        "single_frame": {
+          "chroma_rg_bg_rmse": 0.004451565690416905,
+          "inphase_truth_amplitude": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "quadrature_truth_amplitude": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "rgb_rmse": 0.005215131965146927
+        },
+        "unsafe_control_rgb_over_mean": 1.977912399040383
+      },
+      "guard_pass": true,
+      "iso": 400.0,
+      "rgb_ratio": 0.9288157160762136,
+      "scene": "flat",
+      "source_evidence": [
+        {
+          "coefficient_variance_sha256": "defbb340daf84bb9cbaf825e2b405417a3357bda3babf8039c83977c6f0ceea9",
+          "guide_sha256": "b131a0affeef7d0cbfb70b7e1a9530e6073cb596b0db21bd6baccc0c74584f72",
+          "identity_guide_original_exact": true,
+          "known4_original_exact": true,
+          "source_sha256": "70f7a2ceded6e29363c3372095ef68dd1371124b2b9ca45d66a65a0dc1b7bac7",
+          "variance_sha256": "1d9d6c66ce540f21c280e7725b9f382017ebbf82c186ecdf70124281964832ea"
+        },
+        {
+          "coefficient_variance_sha256": "22c5a73820dc1991d6693c85e9114a370c89b62ab4f541b8cb593762eadd179e",
+          "guide_sha256": "846d9ab871537c7b767b4d190535adce2da6fe1d266430d99bc2f42821420981",
+          "identity_guide_original_exact": true,
+          "known4_original_exact": true,
+          "source_sha256": "5846d3b2b60dce8542df2269cb04dd602b90a3c1a99f2ad1c0c13fcbfbcb1034",
+          "variance_sha256": "5f1002e786113f687e6509244b84e07bdcc84446c65ebc4af2e81a54d257aedf"
+        },
+        {
+          "coefficient_variance_sha256": "ea0393880369b52508b2ca06c66f0edc8bf995751f64e71a42210cacbbebe6ee",
+          "guide_sha256": "054c6f2663b797fb5e5b3a1e364de60551289369fe72c1a927a082a07dd56597",
+          "identity_guide_original_exact": true,
+          "known4_original_exact": true,
+          "source_sha256": "497fee1d8026380ac0c9feddb0ad349aebbd371cbe9580162d63856268d363fe",
+          "variance_sha256": "440d649b77fbb92b00da5497184ad770c7d74cd5192e6028dffbdd3c5da41690"
+        },
+        {
+          "coefficient_variance_sha256": "439d34fc3d801f5966a4fdabe94572b1029d7377f4808f740de88748f90d3c07",
+          "guide_sha256": "c6870ab8809d381eb9d66b74716ae79e4c1308707355e696074b1b7f3d617067",
+          "identity_guide_original_exact": true,
+          "known4_original_exact": true,
+          "source_sha256": "e719340e8cebdac65508c73c8786850ebf03dec2df4ffbebfd39d23955f2aeaf",
+          "variance_sha256": "96453b0aeb381ed20fc6d731654cb5ba72e8387f42b5b337a90dba90ba7034f2"
+        },
+        {
+          "coefficient_variance_sha256": "b4c2888bddab11fa9f93348d6108a0dafc9cfe618e9e766e660bfc5b965dc048",
+          "guide_sha256": "c7c9b5baf1dc457cc6248bddc5a730f473df347a963bb9b80e79a291a86be1db",
+          "identity_guide_original_exact": true,
+          "known4_original_exact": true,
+          "source_sha256": "341a2c88f285cff1d2d0cb10d7137aa584a50b39d7791f9fa2e6ee1f6cdfc6cf",
+          "variance_sha256": "dd9d35db63add897b8496cec6927cdb7d92fceaf84d4ef4258719d0016f4ccfc"
+        }
+      ],
+      "truth_green_zero_crossings": null,
+      "unsafe_hard_control": {
+        "chroma_rg_bg_rmse": 0.004015278744339673,
+        "inphase_truth_amplitude": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quadrature_truth_amplitude": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rgb_rmse": 0.004595610988320875
+      }
+    },
+    {
+      "baseline": {
+        "chroma_rg_bg_rmse": 0.007068371326744315,
+        "inphase_truth_amplitude": [
+          1.0401189366766315,
+          1.0405134168454522,
+          1.0400283691386343
+        ],
+        "quadrature_truth_amplitude": [
+          -0.000906611841185934,
+          -0.0004674767401827569,
+          -0.00022934469964666195
+        ],
+        "rgb_rmse": 0.00615628155535261
+      },
+      "baseline_averaged_fraction": [
+        0.0,
+        1.0
+      ],
+      "candidate": {
+        "chroma_rg_bg_rmse": 0.0071492208395924454,
+        "inphase_truth_amplitude": [
+          0.9826000100881028,
+          0.983904046882415,
+          0.9811757037538621
+        ],
+        "quadrature_truth_amplitude": [
+          0.00006647150707643803,
+          0.00008246952626416656,
+          0.0004157137680640369
+        ],
+        "rgb_rmse": 0.006927283634866279
+      },
+      "chroma_ratio": 1.011438209611629,
+      "control_votes_changed": 2175,
+      "directional_participation": [
+        {
+          "fallback_fraction": 0.0,
+          "max_weight": 61.69184875488281,
+          "min_weight": 0.0,
+          "multi_source_coefficients": 4464,
+          "orientation": "H",
+          "positive_source_coefficients": 13765,
+          "total_coefficients": 4464
+        },
+        {
+          "fallback_fraction": 0.9117383512544803,
+          "max_weight": 0.00026193683152087033,
+          "min_weight": 0.0,
+          "multi_source_coefficients": 16,
+          "orientation": "D",
+          "positive_source_coefficients": 411,
+          "total_coefficients": 4464
+        },
+        {
+          "fallback_fraction": 0.905241935483871,
+          "max_weight": 0.00021289837604854256,
+          "min_weight": 0.0,
+          "multi_source_coefficients": 21,
+          "orientation": "V",
+          "positive_source_coefficients": 444,
+          "total_coefficients": 4464
+        }
+      ],
+      "flat_mean_placebo": null,
+      "guard_pass": false,
+      "iso": 400.0,
+      "rgb_ratio": 1.125238274530072,
+      "scene": "horizontal-wave-vector",
+      "source_evidence": [
+        {
+          "coefficient_variance_sha256": "99b0398a5df7670756bed49a2de818aad806c6f317e736d49fd3740bbe675f40",
+          "guide_sha256": "97f6d792fbad4d804704d7d42ea390c93923f52af50e9c4aa86c9de5800eae78",
+          "identity_guide_original_exact": true,
+          "known4_original_exact": true,
+          "source_sha256": "9344c57e3a00d3cafc2511334a021d9d5ac5b11d7cadb7ff5fa4944ec1a86a9f",
+          "variance_sha256": "1ef959ec9d3bf609ee9d8f5069976c67030e5c46329a0a682e5f8d5e34348eee"
+        },
+        {
+          "coefficient_variance_sha256": "df8e08ee777fd33bbd5f7e8b6168464bc0c1e045e58f1c92eec9dbd54dc9abad",
+          "guide_sha256": "f7ecce872bc12eb8bf0293692a0247b9c19ffbae9425ca57f752c5c36d1956b1",
+          "identity_guide_original_exact": true,
+          "known4_original_exact": true,
+          "source_sha256": "e9e0ed3822f57565293a100221c65e2981d4d861ef5e0e8d5bcd1e5787afa61c",
+          "variance_sha256": "6128abd1303dfa3ee35cacac760288be2007a37942999fab5d580ff42dcd7ead"
+        },
+        {
+          "coefficient_variance_sha256": "e2b8461b14b64874335abfb42ac00265b3c4de275c4f1e52201a364eef1b623c",
+          "guide_sha256": "8b7b60a89988b014fc8b15009e7133a1e8e073ef9ae535bf39f74042a88de09c",
+          "identity_guide_original_exact": true,
+          "known4_original_exact": true,
+          "source_sha256": "245333c31f4ed3abdbdc1a4fb2de3eaa29f8b94ca265bdb57b335bf93a62bde1",
+          "variance_sha256": "60fb1c1ca911afd4db28eabdf91603f97e195b53733343bf05659da16b514ffb"
+        },
+        {
+          "coefficient_variance_sha256": "a1431569858445d9ee32e68251078ae2c08279dffdb935e9c680acd5b434ed47",
+          "guide_sha256": "87451e558936619e4005dbaf00157bae192265c443599a1aa8bbfedcb1972e29",
+          "identity_guide_original_exact": true,
+          "known4_original_exact": true,
+          "source_sha256": "32b1052d7109b6afd7bf571c2020898977591baae71944e71d449d24e288a206",
+          "variance_sha256": "eb9c16ce6ef0b612a4a62ac879ebe8068b83bbcee4d080a57aebd266db44d96d"
+        },
+        {
+          "coefficient_variance_sha256": "4d0d031f0164d1751d16e3b5fe71dce9c63193436520746f2ed40930868e388a",
+          "guide_sha256": "88f06923e956b27a93dd2f5ef95b521b4f29e6154150f70e8797fba66fe2a463",
+          "identity_guide_original_exact": true,
+          "known4_original_exact": true,
+          "source_sha256": "44d6dc1810128395eeb3f339daba3d54564179daa5d364c3b133cd4c5474511c",
+          "variance_sha256": "e57b83f22c8c00d63c974489e7f3d84a0595bad6e9c37f9c78ae0ddbceda5aac"
+        }
+      ],
+      "truth_green_zero_crossings": null,
+      "unsafe_hard_control": {
+        "chroma_rg_bg_rmse": 0.008221167111988972,
+        "inphase_truth_amplitude": [
+          0.8549555592605492,
+          0.8564152619544133,
+          0.8579260310840617
+        ],
+        "quadrature_truth_amplitude": [
+          -0.003509740605452909,
+          -0.0013474681825111476,
+          0.0012619623775305085
+        ],
+        "rgb_rmse": 0.018352147160729415
+      }
+    },
+    {
+      "baseline": {
+        "chroma_rg_bg_rmse": 0.0070708985190177905,
+        "inphase_truth_amplitude": [
+          1.041253089587739,
+          1.041800143790199,
+          1.0404228444269195
+        ],
+        "quadrature_truth_amplitude": [
+          0.000505153013547788,
+          -0.00021955225728604417,
+          -0.00011394542469254665
+        ],
+        "rgb_rmse": 0.006171634446968586
+      },
+      "baseline_averaged_fraction": [
+        0.0,
+        1.0
+      ],
+      "candidate": {
+        "chroma_rg_bg_rmse": 0.007169448764487467,
+        "inphase_truth_amplitude": [
+          0.9838502172153331,
+          0.9853426456077822,
+          0.9824700853764862
+        ],
+        "quadrature_truth_amplitude": [
+          0.0005158562596297666,
+          -0.000016399519337859724,
+          -0.00019746840585481822
+        ],
+        "rgb_rmse": 0.0069327571329274576
+      },
+      "chroma_ratio": 1.0139374430568644,
+      "control_votes_changed": 2173,
+      "directional_participation": [
+        {
+          "fallback_fraction": 0.9168906810035843,
+          "max_weight": 0.00021836273663211614,
+          "min_weight": 0.0,
+          "multi_source_coefficients": 15,
+          "orientation": "H",
+          "positive_source_coefficients": 387,
+          "total_coefficients": 4464
+        },
+        {
+          "fallback_fraction": 0.9117383512544803,
+          "max_weight": 0.00026252612587995827,
+          "min_weight": 0.0,
+          "multi_source_coefficients": 13,
+          "orientation": "D",
+          "positive_source_coefficients": 408,
+          "total_coefficients": 4464
+        },
+        {
+          "fallback_fraction": 0.0,
+          "max_weight": 61.24080276489258,
+          "min_weight": 0.0,
+          "multi_source_coefficients": 4464,
+          "orientation": "V",
+          "positive_source_coefficients": 13847,
+          "total_coefficients": 4464
+        }
+      ],
+      "flat_mean_placebo": null,
+      "guard_pass": false,
+      "iso": 400.0,
+      "rgb_ratio": 1.1233259507670166,
+      "scene": "vertical-wave-vector",
+      "source_evidence": [
+        {
+          "coefficient_variance_sha256": "66ceecf5daa223601ad95af59481508353b2f6524f5c2f00991c6bec4901623e",
+          "guide_sha256": "9457281f5171e39dce4ce173d3a744318ac9f4ced2bb12f8bd2ec7aeffbd9b0d",
+          "identity_guide_original_exact": true,
+          "known4_original_exact": true,
+          "source_sha256": "d46d29d15f5bc9b245728a64bf61c08e07ab0932b9dea3899e20d766f8a3de83",
+          "variance_sha256": "a5f1940ba9d127171565a4b396b38932c2de9612fc7a6c587e2212355064f966"
+        },
+        {
+          "coefficient_variance_sha256": "e72ee631645ba53d709ae81e0823f10c5ff597fe80de16927f78594920039966",
+          "guide_sha256": "5e689a4c1b6c3d6f3e1a9af4398863083508bee86ff0fe65c00df8062f011d79",
+          "identity_guide_original_exact": true,
+          "known4_original_exact": true,
+          "source_sha256": "e824c6e89e7d723b4081ff66c0df48f33db42538854e7258bd2e8300016fe424",
+          "variance_sha256": "69573d27d1a9e737d6dac90da8df07b098243ba5f82e1f8e92fade6e53bd9d33"
+        },
+        {
+          "coefficient_variance_sha256": "a8d51b555a785ed3a7cc954e9ee0f29c7986d3aa95bbfc5d71cd45a4e116e18e",
+          "guide_sha256": "b1718f483a58b966059430d701326a0baf3a0fcb62a3654d3e0e3b5cca60dbab",
+          "identity_guide_original_exact": true,
+          "known4_original_exact": true,
+          "source_sha256": "a456b2418aab31cef833ddfa9fabd4ba90e845075efaaf4e67f43a13005cba28",
+          "variance_sha256": "4d4a2a88d667eeb328583b5d557400615a54f736e7589b3c869319a4e4109d2c"
+        },
+        {
+          "coefficient_variance_sha256": "e93df852a89fdc4f5926f9b6d6b916d6574757f9a19383c585da9b48ba3b7c28",
+          "guide_sha256": "846ad4dd5091b016d6d444804fc0073793b517b4d3df999b5fb390245d4cb9d9",
+          "identity_guide_original_exact": true,
+          "known4_original_exact": true,
+          "source_sha256": "f4ffe0e6c04db754777564c08c54bfd7e04fef762c843b8d1bc81afadd286612",
+          "variance_sha256": "ef7619b29d34c4c0a5efefd60666ad4f63364b7decd50f56aaa2c5e164deca84"
+        },
+        {
+          "coefficient_variance_sha256": "a91791472ccb9043c0d1e75d84aec84c8af63a65e6099350187bda2ac3cb4b4f",
+          "guide_sha256": "49ca1f79eed87a3b587ea9304ab1bb26c5d9c8c30d889560ca003b5cd50f54db",
+          "identity_guide_original_exact": true,
+          "known4_original_exact": true,
+          "source_sha256": "c853c1f879bac0fca08a4b8bcc28a3b3545e305169fca36188742e2ad6fd1a56",
+          "variance_sha256": "ad14ccc20d10e256d64f2c75ef1c3ffe14d225ea84ce99177ef1d52f2908fdcd"
+        }
+      ],
+      "truth_green_zero_crossings": null,
+      "unsafe_hard_control": {
+        "chroma_rg_bg_rmse": 0.008221383775495578,
+        "inphase_truth_amplitude": [
+          0.8631775245850873,
+          0.863801165571866,
+          0.8632804220715335
+        ],
+        "quadrature_truth_amplitude": [
+          -0.002083413639941175,
+          -0.0007987864943700842,
+          0.0020513020097237262
+        ],
+        "rgb_rmse": 0.017967692957393255
+      }
+    },
+    {
+      "baseline": {
+        "chroma_rg_bg_rmse": 0.007749390784417621,
+        "inphase_truth_amplitude": [
+          1.079940674366931,
+          1.0806021651187652,
+          1.0796976343270794
+        ],
+        "quadrature_truth_amplitude": [
+          0.0009456374893601583,
+          0.0007267448069440689,
+          0.00038006689188224913
+        ],
+        "rgb_rmse": 0.008395643213770003
+      },
+      "baseline_averaged_fraction": [
+        0.0,
+        1.0
+      ],
+      "candidate": {
+        "chroma_rg_bg_rmse": 0.009586826492226504,
+        "inphase_truth_amplitude": [
+          0.8954929952827945,
+          0.8956783268198006,
+          0.8952540967906182
+        ],
+        "quadrature_truth_amplitude": [
+          0.0006790778417583753,
+          0.000609011440821154,
+          0.0005202320536513796
+        ],
+        "rgb_rmse": 0.012108323971351894
+      },
+      "chroma_ratio": 1.237107117052811,
+      "control_votes_changed": 432,
+      "directional_participation": [
+        {
+          "fallback_fraction": 0.0,
+          "max_weight": 61.34429168701172,
+          "min_weight": 0.0,
+          "multi_source_coefficients": 4464,
+          "orientation": "H",
+          "positive_source_coefficients": 13700,
+          "total_coefficients": 4464
+        },
+        {
+          "fallback_fraction": 0.0,
+          "max_weight": 103.69789123535156,
+          "min_weight": 0.0,
+          "multi_source_coefficients": 4464,
+          "orientation": "D",
+          "positive_source_coefficients": 13614,
+          "total_coefficients": 4464
+        },
+        {
+          "fallback_fraction": 0.0,
+          "max_weight": 17.34213638305664,
+          "min_weight": 0.0,
+          "multi_source_coefficients": 4464,
+          "orientation": "V",
+          "positive_source_coefficients": 13591,
+          "total_coefficients": 4464
+        }
+      ],
+      "flat_mean_placebo": null,
+      "guard_pass": false,
+      "iso": 400.0,
+      "rgb_ratio": 1.442215166015224,
+      "scene": "diagonal-wave-vector",
+      "source_evidence": [
+        {
+          "coefficient_variance_sha256": "dbc5d51313579b0b1f6be71037e71eefc15e66f6c3960c27aa3d8cf5445da1a0",
+          "guide_sha256": "016283c229ee69d973cb56c8d607f95f0636ccc5091cfb8d4d99e9f29c222a2f",
+          "identity_guide_original_exact": true,
+          "known4_original_exact": true,
+          "source_sha256": "5019799c28fa9875f718f06e5f65e4771ee4bf18adc098be0ecfd4782245faff",
+          "variance_sha256": "a02226dfab14eb13ecc89c574db134f16829b205cfa627d08b5fae804cd61fc8"
+        },
+        {
+          "coefficient_variance_sha256": "85cdfa201f7d4f1c63a333004723c7736b096d37d8a2898fda8d6a21d3f0fe0b",
+          "guide_sha256": "4a60b627bf57e27582b0939508c3ec2520394db3a4613b94451cdea83d08df9d",
+          "identity_guide_original_exact": true,
+          "known4_original_exact": true,
+          "source_sha256": "392c0432ffb8ac5cebe05a12f0a9ed68b44deaba7627a08350a5730d8c49818e",
+          "variance_sha256": "e77d1226a72952d009ec54fc2f811bdc10cad1c206bb0a4be94f7f6938b66c90"
+        },
+        {
+          "coefficient_variance_sha256": "10f0edf46e7f1116bc8c0a1694334ff4bd4921bb59af9f8e51caf105feb8b538",
+          "guide_sha256": "e4688bfe666bf96ffa39ec326d96861d6988dbae7471192a1e9f69f20a30ebbf",
+          "identity_guide_original_exact": true,
+          "known4_original_exact": true,
+          "source_sha256": "a6f3c6204267192cd0f450e2143ffa56fbe18ff80ef6e72dc7595ece8340df1e",
+          "variance_sha256": "c5534bf905944cacccbdd0888a228832045c79ab8b61f05d304fd55e2b4ed362"
+        },
+        {
+          "coefficient_variance_sha256": "1e813c93a60373446c2216da15a8fd88087778fd8ef5f00fa4df4c838cdff646",
+          "guide_sha256": "cf69f420b6207431aea6b4d13f5683718df7f63f2737a2ddf97d1df24d93c057",
+          "identity_guide_original_exact": true,
+          "known4_original_exact": true,
+          "source_sha256": "3b6abe2cfcb322e9062237ae9b6793db702f09d693b8e7685a3f17b70df6ba5d",
+          "variance_sha256": "593a8481436f6f57621b53e5186cd8279ffb98bcf0bfa33ed249dd83566e6454"
+        },
+        {
+          "coefficient_variance_sha256": "331942f2d85b51cd95351dd2d677fcd0df607c5d6ee751563517f0b7e4b1b65a",
+          "guide_sha256": "397e6217ea23e4d2205336fb8d329af82d408cb8d063a389f4b66ce32ee9c5b0",
+          "identity_guide_original_exact": true,
+          "known4_original_exact": true,
+          "source_sha256": "c586c4d872cbeb3c7dc103960293e63b4bdb61faa5e472fed9e4c348e2445ffc",
+          "variance_sha256": "5b3f140d8c0cd1a4f8388dbdd903a3bd21f09a0736dc875d65eaffa35b79798d"
+        }
+      ],
+      "truth_green_zero_crossings": null,
+      "unsafe_hard_control": {
+        "chroma_rg_bg_rmse": 0.010286680479148168,
+        "inphase_truth_amplitude": [
+          0.9379151612957326,
+          0.943986904051967,
+          0.9369494317543923
+        ],
+        "quadrature_truth_amplitude": [
+          -0.0033188578173745827,
+          0.0008246268472591907,
+          0.004682668328410815
+        ],
+        "rgb_rmse": 0.012058847890568294
+      }
+    },
+    {
+      "baseline": {
+        "chroma_rg_bg_rmse": 0.03344503570763175,
+        "inphase_truth_amplitude": [
+          0.7192944917380327,
+          0.857786718882337,
+          0.7192054542013776
+        ],
+        "quadrature_truth_amplitude": [
+          0.0001346965700057225,
+          -0.00007696648996197004,
+          0.00032967313114948114
+        ],
+        "rgb_rmse": 0.03201036057073199
+      },
+      "baseline_averaged_fraction": [
+        0.0,
+        1.0
+      ],
+      "candidate": {
+        "chroma_rg_bg_rmse": 0.03346674190455391,
+        "inphase_truth_amplitude": [
+          0.7193928330613762,
+          0.856869869983747,
+          0.719364247194441
+        ],
+        "quadrature_truth_amplitude": [
+          0.00018524360443131452,
+          -0.0000594728475680396,
+          0.00030473786906476017
+        ],
+        "rgb_rmse": 0.03202464663365707
+      },
+      "chroma_ratio": 1.00064901102549,
+      "control_votes_changed": 2167,
+      "directional_participation": [
+        {
+          "fallback_fraction": 0.0,
+          "max_weight": 54.54365158081055,
+          "min_weight": 3.8506641387939453,
+          "multi_source_coefficients": 4464,
+          "orientation": "H",
+          "positive_source_coefficients": 22320,
+          "total_coefficients": 4464
+        },
+        {
+          "fallback_fraction": 0.9148745519713262,
+          "max_weight": 0.0002527704054955393,
+          "min_weight": 0.0,
+          "multi_source_coefficients": 12,
+          "orientation": "D",
+          "positive_source_coefficients": 393,
+          "total_coefficients": 4464
+        },
+        {
+          "fallback_fraction": 0.9045698924731183,
+          "max_weight": 0.00023729974054731429,
+          "min_weight": 0.0,
+          "multi_source_coefficients": 22,
+          "orientation": "V",
+          "positive_source_coefficients": 448,
+          "total_coefficients": 4464
+        }
+      ],
+      "flat_mean_placebo": null,
+      "guard_pass": true,
+      "iso": 400.0,
+      "rgb_ratio": 1.0004462949704522,
+      "scene": "colour-mid",
+      "source_evidence": [
+        {
+          "coefficient_variance_sha256": "ae874f7be3de1a5a915df00e322cdcbec3089fc93e4ed2238f5d66d4de3f19b7",
+          "guide_sha256": "f4930fcef57a0b8fdf16e06591cd6c34ae9c4cdfca50339457fab0e13e3404dd",
+          "identity_guide_original_exact": true,
+          "known4_original_exact": true,
+          "source_sha256": "72e99d001c879c691d3eacb4e44b898fa41f567a9b5b44e95599713aa5175b2f",
+          "variance_sha256": "2e5b9edbebd2de519acd72ef3be6c0e946a17ecd406223dd2ae907d1f79ecccc"
+        },
+        {
+          "coefficient_variance_sha256": "6c01ee99867c8c2977b0303ac769ecd3c40f9892b0ab2320e0616d0f44ef1b39",
+          "guide_sha256": "ec8dcf78fde9c927c07d2a47433c226151dc19a5fc114761f40b707c1294642c",
+          "identity_guide_original_exact": true,
+          "known4_original_exact": true,
+          "source_sha256": "1b7d7955dde3389c787a9efae2f4dd4062ecbbbb6d6ce4ad3245e2486dc49b1b",
+          "variance_sha256": "6b0d9fee0ed9adee6b1bf15e6a0cb34261da98bb7e5a001235453725f72bf8ac"
+        },
+        {
+          "coefficient_variance_sha256": "245e9d907f894610a53d65db6b3bcf2f53eff2874b1b25c30685f11dfcb49065",
+          "guide_sha256": "e2649dfe3eefb63db740af9ad51531fc41eaa1a489c74fb7b9b6f33541036861",
+          "identity_guide_original_exact": true,
+          "known4_original_exact": true,
+          "source_sha256": "697abb342d5918d2cdcd2b8632dc956a7b1a51d35eab8031f324cdb58e6a4a1b",
+          "variance_sha256": "001ab3b2f6ac4cd8b282f3864225c64dcf4d95881802051d9fd3bb0b72e174ec"
+        },
+        {
+          "coefficient_variance_sha256": "d9fd34575d8085035d7171f828d450f12eee264411c76f07228adae59ab4ba95",
+          "guide_sha256": "74e9ffffcd49c4aeff5dae3b1fac715e0bf0c46261c01f7fc6aeb23e0250d00c",
+          "identity_guide_original_exact": true,
+          "known4_original_exact": true,
+          "source_sha256": "56578d8820fef4058a5749a9ff895bab2af6efaeab3e4068bf414bad8d5f9493",
+          "variance_sha256": "04c8a308435a613d7cb3cdfd75fc5ecfcc212734815938533fceff9e93bf1f82"
+        },
+        {
+          "coefficient_variance_sha256": "8237a32cf0360a8fa9c22feab2b505fa28b473ab0d61c56a4548b0026c16ef1a",
+          "guide_sha256": "07221a733443b4011e1efa6d0aa0c0ecdc3485b7333da98ba6c53e0c82263d6a",
+          "identity_guide_original_exact": true,
+          "known4_original_exact": true,
+          "source_sha256": "87f3f8f34d2abbb86c9e6e13bcbaeb963d13f9e1474a391db5f83e9c2dffb7f8",
+          "variance_sha256": "3ed0875e9b0b00b78d1c485177e474f8dca2f9b1eef22cd32f9c8c870de6ca80"
+        }
+      ],
+      "truth_green_zero_crossings": null,
+      "unsafe_hard_control": {
+        "chroma_rg_bg_rmse": 0.03343566493697421,
+        "inphase_truth_amplitude": [
+          0.7196608798753266,
+          0.8699767741316564,
+          0.7190072419760724
+        ],
+        "quadrature_truth_amplitude": [
+          0.00013937371277076253,
+          -0.00006643476123252856,
+          -0.00014499077401679858
+        ],
+        "rgb_rmse": 0.032301461107454306
+      }
+    },
+    {
+      "baseline": {
+        "chroma_rg_bg_rmse": 0.03847956995606176,
+        "inphase_truth_amplitude": [
+          0.6295561484791874,
+          0.7510518927505683,
+          0.6295441424249417
+        ],
+        "quadrature_truth_amplitude": [
+          -0.0003083031408906268,
+          -0.0004005333727120717,
+          0.0011121621938100016
+        ],
+        "rgb_rmse": 0.032237823535949534
+      },
+      "baseline_averaged_fraction": [
+        0.0,
+        1.0
+      ],
+      "candidate": {
+        "chroma_rg_bg_rmse": 0.04991864509163132,
+        "inphase_truth_amplitude": [
+          0.4289627381261615,
+          0.7138846089557978,
+          0.27340104724320596
+        ],
+        "quadrature_truth_amplitude": [
+          0.00016070165060642615,
+          -0.0005095708208574495,
+          -0.0006689714614521288
+        ],
+        "rgb_rmse": 0.038372067855438965
+      },
+      "chroma_ratio": 1.297276584655997,
+      "control_votes_changed": 2157,
+      "directional_participation": [
+        {
+          "fallback_fraction": 0.0,
+          "max_weight": 57.35469055175781,
+          "min_weight": 0.0,
+          "multi_source_coefficients": 4464,
+          "orientation": "H",
+          "positive_source_coefficients": 13843,
+          "total_coefficients": 4464
+        },
+        {
+          "fallback_fraction": 0.896505376344086,
+          "max_weight": 0.004384282510727644,
+          "min_weight": 0.0,
+          "multi_source_coefficients": 79,
+          "orientation": "D",
+          "positive_source_coefficients": 555,
+          "total_coefficients": 4464
+        },
+        {
+          "fallback_fraction": 0.9059139784946236,
+          "max_weight": 0.0001916483452077955,
+          "min_weight": 0.0,
+          "multi_source_coefficients": 22,
+          "orientation": "V",
+          "positive_source_coefficients": 442,
+          "total_coefficients": 4464
+        }
+      ],
+      "flat_mean_placebo": null,
+      "guard_pass": false,
+      "iso": 400.0,
+      "rgb_ratio": 1.1902809695775187,
+      "scene": "colour-varying-focus",
+      "source_evidence": [
+        {
+          "coefficient_variance_sha256": "312bb0f93b9d013ee606b330da5c42b306f4aefb632d146c14a94217c6b81cf6",
+          "guide_sha256": "7fdd69270fff1e5cce87d3b0b96d3b70c3e77dbf6a1d4e4ad139403eff9de1b5",
+          "identity_guide_original_exact": true,
+          "known4_original_exact": true,
+          "source_sha256": "8f26fc33f5695049cf92a6c90f85c672807bfce48e224acdf939dfbedf53e5ba",
+          "variance_sha256": "d30f764499ea767d0fa6401be149bc41b0ec6709dc91309202caf729e7b84a75"
+        },
+        {
+          "coefficient_variance_sha256": "ceb28c5cd889902688687c31da15f8be661f6c826f8cdbf17ab76f2bd946cc28",
+          "guide_sha256": "8d5a59e1feee9be1362e54a7009b65b7f82d7d24e18181b2d68d2063cd3f750c",
+          "identity_guide_original_exact": true,
+          "known4_original_exact": true,
+          "source_sha256": "3d562d321211ef3533b70896890a5d58e4ddce1ce5ae6f171ebd47ce0b9066ef",
+          "variance_sha256": "a25a0a028f30e7e3a4198bab3b9eec23ba802cecdddabfc1c51e44ed7c73e88e"
+        },
+        {
+          "coefficient_variance_sha256": "b8392a3c473d4bf745c5edf3e4c457189cf8d550114b390cf6e1b5e11f955af5",
+          "guide_sha256": "9242c65dd3aed541f1130b36ee6bcc49ea32ab04924eba2ef52d37ea59062dd3",
+          "identity_guide_original_exact": true,
+          "known4_original_exact": true,
+          "source_sha256": "04e583a9ca65cae02f7c912fe98367d55498fc3da2b66d0ddb64390f11310c8b",
+          "variance_sha256": "bb51a1b1fd41ee3da9c63d8ff37f41156b59c516268c1646042c71d3a12fd066"
+        },
+        {
+          "coefficient_variance_sha256": "c2d2c902511c2d6a87c6cd53e7f9136e3c7e277cb0f061577096daf6a1908043",
+          "guide_sha256": "0a749e17742197eac0148d454a91dd2ae15c0eb7768e1c544eaf2adfc61f8525",
+          "identity_guide_original_exact": true,
+          "known4_original_exact": true,
+          "source_sha256": "ca502d012f856f21f8fb88d47adda4ef430d058cc778441a7bc3d3d7b77b4f94",
+          "variance_sha256": "1d4e3fdac64d2b097884cff8a82409b7c8a7b4f0b0e3656b9467df218033fdac"
+        },
+        {
+          "coefficient_variance_sha256": "252f811bc9ab21a9c29802ca220e96f1f52d1da542166ef6cd1995dcc41f0177",
+          "guide_sha256": "e9eeee3f3460e60f3ff90cd6fc872093b0b70b03640a9814ee158bd8ec46bf93",
+          "identity_guide_original_exact": true,
+          "known4_original_exact": true,
+          "source_sha256": "416104bf752a5ce461fc0028a26cf6721d4687ca8f8386e436550b6d0f2d9b28",
+          "variance_sha256": "a170061f01ba1f03b2b44b4cd97c7fdc9354328007eb2134a62233a2fb1ca888"
+        }
+      ],
+      "truth_green_zero_crossings": {
+        "baseline_rb_rmse": 0.0322453421623725,
+        "candidate_rb_rmse": 0.04219381972575815,
+        "pixels": 3800,
+        "ratio": 1.3085244843515618,
+        "reported_not_new_gate": true
+      },
+      "unsafe_hard_control": {
+        "chroma_rg_bg_rmse": 0.051313888735367394,
+        "inphase_truth_amplitude": [
+          0.42612859326015107,
+          0.6341681374707013,
+          0.33513097402120107
+        ],
+        "quadrature_truth_amplitude": [
+          -0.00008609993267724161,
+          0.00010275103774774527,
+          -0.001724834817113944
+        ],
+        "rgb_rmse": 0.03963780714316404
+      }
+    }
+  ],
+  "clipped_fixture_refused": true,
+  "iso_decisions": [
+    {
+      "admitted": false,
+      "benefit": true,
+      "guards_pass": false,
+      "iso": 100.0
+    },
+    {
+      "admitted": false,
+      "benefit": true,
+      "guards_pass": false,
+      "iso": 400.0
+    }
+  ],
+  "metric_commission": {
+    "exact_truth": {
+      "chroma_rg_bg_rmse": 1.169283880192982e-8,
+      "inphase_truth_amplitude": [
+        1.0000000063797767,
+        0.9999999719530333,
+        1.0000000034746532
+      ],
+      "quadrature_truth_amplitude": [
+        -5.192224600994375e-9,
+        3.103819785852424e-8,
+        2.3044614636164506e-9
+      ],
+      "rgb_rmse": 8.212016154022533e-9
+    },
+    "grey_destroyer": {
+      "chroma_rg_bg_rmse": 0.08427785582816007,
+      "inphase_truth_amplitude": [
+        0.3334521014805325,
+        0.3335096947721478,
+        0.33333551569021685
+      ],
+      "quadrature_truth_amplitude": [
+        -0.00011561474580723502,
+        -0.00002712800778989145,
+        -0.00006216291898526363
+      ],
+      "rgb_rmse": 0.04927794085462751
+    },
+    "half_amplitude_destroyer": {
+      "chroma_rg_bg_rmse": 0.038998977677655026,
+      "inphase_truth_amplitude": [
+        0.5000000112283156,
+        0.4999999353581962,
+        0.4999999774625892
+      ],
+      "quadrature_truth_amplitude": [
+        1.4708421012891079e-8,
+        7.865792487437617e-11,
+        2.3284369321803857e-9
+      ],
+      "rgb_rmse": 0.02844581492143408
+    },
+    "overcontrast_baseline": {
+      "chroma_rg_bg_rmse": 0.031199174968125496,
+      "inphase_truth_amplitude": [
+        1.399999988735305,
+        1.3999998466917258,
+        1.3999999861130006
+      ],
+      "quadrature_truth_amplitude": [
+        3.169323058426332e-11,
+        3.4682952600287616e-8,
+        8.112441207635577e-9
+      ],
+      "rgb_rmse": 0.022756648332962974
+    },
+    "truth_cap_avoids_false_rejection": true
+  },
+  "next_composed_check_admitted": false,
+  "photographic_replay_admitted": false,
+  "scope": "Identity u16 gather, one complex level versus actual one-level pyramid. No fractional, multilevel, optical or photographic claim.",
+  "status": "SCREEN_COMPLETE"
+}
