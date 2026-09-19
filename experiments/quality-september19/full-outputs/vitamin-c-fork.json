@@ -1,0 +1,13 @@
+{
+  "source": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-fork-40g-1\\fork.tiff",
+  "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\full-outputs\\vitamin-c-fork.png",
+  "shape": [
+    4626,
+    6958,
+    3
+  ],
+  "conversion": "rounded division by 257; full extent; no resampling",
+  "source_sha256": "7b83629a998ba543026bb7cce66beaf72c996a77dd9568cae4b5b0c63071c3b9",
+  "png_sha256": "28b0d1c7010ba958c72a2cbad1c947730db4be24bac4e3b400e020e54b1571c9",
+  "icc_preserved": false
+}

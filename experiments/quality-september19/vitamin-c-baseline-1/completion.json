@@ -1,0 +1,14 @@
+{
+  "status": "BASELINE_RENDERED",
+  "map": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-baseline-1\\vitamin-c.warpmap.txt",
+    "sha256": "84275850a032dc8beb88945b00514a58ebca433e267c8e10342ac55986cf830f",
+    "bytes": 9906
+  },
+  "image": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-baseline-1\\vitamin-c.tiff",
+    "sha256": "2593ecdaa7bcaa34217b595bd3cdf3622637a3dae115c5e014ff6c6a9635bdf4",
+    "bytes": 191495346
+  },
+  "original_metadata_unchanged": true
+}

@@ -1,0 +1,172 @@
+{
+  "inputs": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-baseline-1\\vitamin-c.tiff",
+      "bytes": 191495346,
+      "sha256": "2593ecdaa7bcaa34217b595bd3cdf3622637a3dae115c5e014ff6c6a9635bdf4"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-fork-40g-1\\fork.tiff",
+      "bytes": 212698226,
+      "sha256": "7b83629a998ba543026bb7cce66beaf72c996a77dd9568cae4b5b0c63071c3b9"
+    }
+  ],
+  "frozen_regions": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-review-1\\regions.json",
+    "bytes": 1068,
+    "sha256": "ff55ed297385ff8fef5d2badce07729537e2e867701d96d328be1eaf7bcb0f4f"
+  },
+  "helper": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-external-review-1\\prepare.py",
+    "bytes": 5853,
+    "sha256": "d177a75500cd74fb92568502c62fdb27f3751485fcb6fb9cdcfaecce4b9cbf3c"
+  },
+  "feature_method": "quarter-size SIFT n5000 ratio0.70 + similarity RANSAC native reprojection4; coordinates only",
+  "feature_counts": [
+    5000,
+    5000
+  ],
+  "ratio_matches": 2460,
+  "inliers": 2029,
+  "baseline_to_fork_native_matrix": [
+    [
+      0.9997162394270249,
+      0.00015781030766280374,
+      18.714938205066314
+    ],
+    [
+      -0.00015781030766280374,
+      0.9997162394270249,
+      5.285293261551924
+    ]
+  ],
+  "scale": 0.9997162518826058,
+  "angle_degrees": -0.009044430970551699,
+  "coordinate_residual_native": {
+    "median": 0.712704542754204,
+    "p95": 2.5913341273604464,
+    "interpretation": "fit consistency only, not alignment truth or image quality"
+  },
+  "falsifier": "unrelated or severely distorted images fail correspondence/inlier/scale/rotation/residual checks",
+  "regions": [
+    {
+      "name": "facet-edges",
+      "baseline_xywh": [
+        2500,
+        2700,
+        384,
+        384
+      ],
+      "fork_xywh": [
+        2518,
+        2704,
+        384,
+        384
+      ],
+      "mapped_centre_native": [
+        2709.907505127511,
+        2895.54005312172
+      ],
+      "subpixel_rounding": [
+        -0.4075051275108308,
+        -0.040053121720120544
+      ]
+    },
+    {
+      "name": "pale-background",
+      "baseline_xywh": [
+        400,
+        1150,
+        384,
+        384
+      ],
+      "fork_xywh": [
+        419,
+        1155,
+        384,
+        384
+      ],
+      "mapped_centre_native": [
+        610.2587963538813,
+        1346.3112836559233
+      ],
+      "subpixel_rounding": [
+        0.24120364611871992,
+        0.1887163440767381
+      ]
+    },
+    {
+      "name": "fine-crystals",
+      "baseline_xywh": [
+        4200,
+        1700,
+        384,
+        384
+      ],
+      "fork_xywh": [
+        4218,
+        1704,
+        384,
+        384
+      ],
+      "mapped_centre_native": [
+        4409.267301845791,
+        1895.5555361716683
+      ],
+      "subpixel_rounding": [
+        0.2326981542091744,
+        -0.055536171668336465
+      ]
+    },
+    {
+      "name": "bright-facet",
+      "baseline_xywh": [
+        1150,
+        3850,
+        384,
+        384
+      ],
+      "fork_xywh": [
+        1169,
+        3854,
+        384,
+        384
+      ],
+      "mapped_centre_native": [
+        1360.4720637548396,
+        4045.426772378143
+      ],
+      "subpixel_rounding": [
+        0.027936245160390172,
+        0.0732276218568586
+      ]
+    },
+    {
+      "name": "dark-inclusion",
+      "baseline_xywh": [
+        3050,
+        1850,
+        384,
+        384
+      ],
+      "fork_xywh": [
+        3068,
+        1854,
+        384,
+        384
+      ],
+      "mapped_centre_native": [
+        3259.617298050861,
+        2045.6944539395345
+      ],
+      "subpixel_rounding": [
+        -0.11729805086088163,
+        -0.1944539395344691
+      ]
+    }
+  ],
+  "display": "rounded division by257; 384x384 native unresampled crops; integer crop-centre shifts only",
+  "orientation": "whole-field resized images with ROI overlays; no quality inference from these",
+  "limitations": "independent output geometry may differ locally; fixed-size crops preserve native samples rather than conceal scale/shape differences",
+  "wall_seconds": 1.738695900001403
+}

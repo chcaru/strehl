@@ -1,0 +1,13 @@
+{
+  "source": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-baseline-1\\vitamin-c.tiff",
+  "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\full-outputs\\vitamin-c-baseline.png",
+  "shape": [
+    4612,
+    6920,
+    3
+  ],
+  "conversion": "rounded division by 257; full extent; no resampling",
+  "source_sha256": "2593ecdaa7bcaa34217b595bd3cdf3622637a3dae115c5e014ff6c6a9635bdf4",
+  "png_sha256": "1606ad4ac47eb84642b4a4a8e55a56a83b1d1cc099a48661545e607a8dcc62f6",
+  "icc_preserved": true
+}

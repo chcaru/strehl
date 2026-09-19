@@ -100,7 +100,43 @@ Evidence and commands: experiments/full-context-placement/results.md and
 experiments/quality-september19/results.md. The new crystallized-vitamin-C
 stack is inventoried but has not been RAW-rendered in this work.
 
+September 19 continuation: the complete 70-frame vitamin-C RAW baseline is now
+rendered, with its full image retained alongside chip/star outputs. The next
+fixed intervention preserves reconstructed RGB through the current quad-scale
+pyramid by carrying twelve colour/site planes instead of four CFA planes.
+The original four planes and green decisions must remain exact. It omits the
+final MHC operation; it changes neither the source demosaicer nor the geometry.
+BUILD-DEMOSAIC already measured a mixed single-frame tradeoff, so this is a
+testable candidate, not a presumed colour fix. Independent known-scene and
+flat-noise controls must admit it before a photographic replay. See
+experiments/phase-packed-rgb/charter.md and independent-plan.md. A complete
+vitamin-C comparison with the available MIT fork is now complete;
+historical commercial outputs do not cover these new captures. Independent
+native review finds fewer long chromatic highlight spokes in the fork, paid
+for by broader granular highlights and grainier low-detail fields. Neither
+arm clearly recovers an additional facet. This establishes an actionable
+tradeoff rather than a blanket competitor win. The twelve-plane candidate
+passes its fixed generated-scene screen: fractional true-colour truth improves,
+known-site values remain exact, and the measured flat chroma penalty is modest.
+One complete paired photographic replay is justified; no default promotion or
+SOTA conclusion follows from that generated screen.
+
+The complete photographic replay is now negative: both reviewers see the same
+highlight fans, no newly resolved facet or inclusion, and slight local
+comb-like colour structure in one candidate cluster. All 70 frames and all
+seven bands were exercised with exact known-site values and admission. Keep
+this twelve-plane implementation experimental; no default promotion, speed
+optimization or setting sweep is earned. The next bounded diagnosis uses the
+already-developed original frames to locate where those exact highlight
+structures enter, before choosing another change. Evidence and complete
+paired images: experiments/phase-packed-rgb/results.md and full-1.
+
 ## What counts as progress
+
+Show the owner the complete stack output whenever presenting an improvement,
+including the complete before image for comparisons and a link to the RGB16
+master. Native crops remain diagnostic evidence, never the sole presentation.
+This is the owner's explicit September 19 instruction.
 
 An image-quality change must retain or restore an identifiable feature in
 matched native views, preserve genuine colour, and survive independent review.

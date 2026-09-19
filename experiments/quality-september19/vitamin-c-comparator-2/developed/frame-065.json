@@ -1,0 +1,30 @@
+{
+  "held_wb_differs": false,
+  "input": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00159.ARW",
+  "input_bytes": 39243776,
+  "input_sha256": "d7b16cb17045ebb48e4bdac11475e39e8a53aca1b7135c1a118b3c7c5df23e6e",
+  "input_wb_bits": [
+    1070374912,
+    1065353216,
+    1076715520
+  ],
+  "ordinal": 65,
+  "original_metadata_unchanged": true,
+  "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00159.tiff",
+  "output_bytes": 197801325,
+  "output_sha256": "aaba72d2b29f9f04cfa8cb98918aa2b0888cde55524935206e87630b8484e064",
+  "output_wh": [
+    7032,
+    4688
+  ],
+  "raw_active_xywh": [
+    0,
+    0,
+    7032,
+    4688
+  ],
+  "raw_buffer_wh": [
+    7168,
+    5120
+  ]
+}

@@ -4894,6 +4894,11 @@ mod local_placement_consumer_tests {
     include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/quality-september14/local-placement-consumer-tests.rs"));
 }
 
+#[cfg(all(test, feature = "native-direct-planes"))]
+pub(crate) mod phase_packed_rgb {
+    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/phase-packed-rgb/implementation.rs"));
+}
+
 impl BandWorker {
     fn new(domain: PyramidDomain, cfg: MergeConfig) -> Self {
         let geom = domain.analysis();

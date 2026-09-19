@@ -1,0 +1,244 @@
+{
+  "schema": 1,
+  "input_images": {
+    "baseline": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\phase-packed-rgb\\full-1\\output\\baseline.tiff",
+      "bytes": 191495352,
+      "sha256": "c0d8faca8a23f31a73b843fbc9aa9f55fda96b5fcce9d3540ebf6a2b4319bb21"
+    },
+    "candidate": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\phase-packed-rgb\\full-1\\output\\candidate.tiff",
+      "bytes": 191495352,
+      "sha256": "7e1801d7009bf014e49be84e2f8084d729317cd1c0bf5390ed666536c372e62c"
+    }
+  },
+  "started": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\phase-packed-rgb\\full-1\\output\\started.json",
+    "bytes": 1257,
+    "sha256": "4ea8a938eacfb150493ae6129097003f8e58a88f1169e4414e8380147faef005"
+  },
+  "completion": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\phase-packed-rgb\\full-1\\output\\receipt.json",
+    "bytes": 19052,
+    "sha256": "b13e13e3df1201cccc31e5db73bfdbc6fd9dcea7ace3fbb1f3764f2605723765"
+  },
+  "frozen_regions": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-review-1\\regions.json",
+    "bytes": 1068,
+    "sha256": "ff55ed297385ff8fef5d2badce07729537e2e867701d96d328be1eaf7bcb0f4f"
+  },
+  "helper": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\phase-packed-rgb\\photo-compare.py",
+    "bytes": 6280,
+    "sha256": "d21de8ba49359677b7f4edf902577d9787a5cb751ca69cdafba5458ed0270242"
+  },
+  "full_output_helper": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\full-output-views.py",
+    "bytes": 1503,
+    "sha256": "8b51a9eacfa5aeae00e51501882d73dd6496c24cc05898494d5c22902078d955"
+  },
+  "initial_crop_quads": [
+    28,
+    19,
+    3460,
+    2306
+  ],
+  "effective_crop_quads": [
+    28,
+    19,
+    3460,
+    2306
+  ],
+  "native_translation": [
+    0,
+    0
+  ],
+  "coordinate_rule": "pair_xy = frozen_xy + 2 * (initial_crop_origin - effective_crop_origin)",
+  "native_dimensions": [
+    6920,
+    4612
+  ],
+  "regions": [
+    {
+      "name": "facet-edges",
+      "frozen_xywh": [
+        2500,
+        2700,
+        384,
+        384
+      ],
+      "pair_xywh": [
+        2500,
+        2700,
+        384,
+        384
+      ],
+      "reference_sensor_xywh": [
+        2556,
+        2738,
+        384,
+        384
+      ]
+    },
+    {
+      "name": "pale-background",
+      "frozen_xywh": [
+        400,
+        1150,
+        384,
+        384
+      ],
+      "pair_xywh": [
+        400,
+        1150,
+        384,
+        384
+      ],
+      "reference_sensor_xywh": [
+        456,
+        1188,
+        384,
+        384
+      ]
+    },
+    {
+      "name": "fine-crystals",
+      "frozen_xywh": [
+        4200,
+        1700,
+        384,
+        384
+      ],
+      "pair_xywh": [
+        4200,
+        1700,
+        384,
+        384
+      ],
+      "reference_sensor_xywh": [
+        4256,
+        1738,
+        384,
+        384
+      ]
+    },
+    {
+      "name": "bright-facet",
+      "frozen_xywh": [
+        1150,
+        3850,
+        384,
+        384
+      ],
+      "pair_xywh": [
+        1150,
+        3850,
+        384,
+        384
+      ],
+      "reference_sensor_xywh": [
+        1206,
+        3888,
+        384,
+        384
+      ]
+    },
+    {
+      "name": "dark-inclusion",
+      "frozen_xywh": [
+        3050,
+        1850,
+        384,
+        384
+      ],
+      "pair_xywh": [
+        3050,
+        1850,
+        384,
+        384
+      ],
+      "reference_sensor_xywh": [
+        3106,
+        1888,
+        384,
+        384
+      ]
+    }
+  ],
+  "outputs": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\phase-packed-rgb\\full-1\\photo-comparison-1\\facet-edges-baseline.png",
+      "bytes": 192716,
+      "sha256": "2e547ac1bab0614449209083bc9d12a21312e4295f67ba467133a87aaa8f98f4"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\phase-packed-rgb\\full-1\\photo-comparison-1\\pale-background-baseline.png",
+      "bytes": 138476,
+      "sha256": "dbf8d5a5d13522474a118e7e6efd6bc142aacd573ab5f83bcf6f2a93ecd47353"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\phase-packed-rgb\\full-1\\photo-comparison-1\\fine-crystals-baseline.png",
+      "bytes": 200537,
+      "sha256": "d8144e2030108058ed0c21117ed5a75d9b407920984080cd88b9db54fd065838"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\phase-packed-rgb\\full-1\\photo-comparison-1\\bright-facet-baseline.png",
+      "bytes": 144642,
+      "sha256": "1443ac73dc871aed2fe6fc5f72b32711c3ed6f155490ce083420acd5b5ee507f"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\phase-packed-rgb\\full-1\\photo-comparison-1\\dark-inclusion-baseline.png",
+      "bytes": 187949,
+      "sha256": "851143c7d19524d584e8378125456e230d923e7ee9b427989b1e7c1f548594ce"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\phase-packed-rgb\\full-1\\photo-comparison-1\\baseline.png",
+      "bytes": 37540366,
+      "sha256": "68b2f4533e14eefb6e8b2473cc4312fe0d330cd70c83569148270fba12491326"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\phase-packed-rgb\\full-1\\photo-comparison-1\\baseline-overview.jpg",
+      "bytes": 569836,
+      "sha256": "00c549c367e4ac80a5551bf3132b119e9cf9b8e1836364b5219e07e89e1cd9d6"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\phase-packed-rgb\\full-1\\photo-comparison-1\\facet-edges-candidate.png",
+      "bytes": 194964,
+      "sha256": "84e8731c545bf0929773d42fe2119095c969f8370b9aa4cbf37801a5f2647868"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\phase-packed-rgb\\full-1\\photo-comparison-1\\pale-background-candidate.png",
+      "bytes": 150734,
+      "sha256": "99dc4da6c8314ccf6c80eee81e0510ebca6263e0088ce4ee2a4f624f8766fcae"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\phase-packed-rgb\\full-1\\photo-comparison-1\\fine-crystals-candidate.png",
+      "bytes": 198089,
+      "sha256": "d04072afd7ee5bd7c6300c19a1b78d0b58665b5cda58b087706afa79d4ba6259"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\phase-packed-rgb\\full-1\\photo-comparison-1\\bright-facet-candidate.png",
+      "bytes": 157239,
+      "sha256": "0d6751500bb24058f6bd133b61d1c8ddc293ce82952c3f6d8963f331a830eedf"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\phase-packed-rgb\\full-1\\photo-comparison-1\\dark-inclusion-candidate.png",
+      "bytes": 189726,
+      "sha256": "4bb0bf30469c79259b43248fdfb77e89eab79d39827b93da478e2ec941ad0d2c"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\phase-packed-rgb\\full-1\\photo-comparison-1\\candidate.png",
+      "bytes": 38875114,
+      "sha256": "b1eda8453cbcfbf4026ab64da6c84958135e21a6f89b883674452d345c1e79c3"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\phase-packed-rgb\\full-1\\photo-comparison-1\\candidate-overview.jpg",
+      "bytes": 562344,
+      "sha256": "750c4eca3194c315b72bd81b904b0e010423b2371def531bc66d59f287e4f5c7"
+    }
+  ],
+  "crop_display": "384 x 384 native samples; rounded division by 257; no resampling or other adjustment",
+  "whole_png": "complete paired extent, same dimensions; rounded division by 257; ICC retained",
+  "overview": "resized for whole-field orientation only; not evidence of native detail",
+  "scope": "image preparation only; no RAW decode, render, score or quality verdict"
+}

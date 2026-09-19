@@ -1,0 +1,13 @@
+{
+  "source": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\phase-packed-rgb\\full-1\\output\\candidate.tiff",
+  "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\phase-packed-rgb\\full-1\\photo-comparison-1\\candidate.png",
+  "shape": [
+    4612,
+    6920,
+    3
+  ],
+  "conversion": "rounded division by 257; full extent; no resampling",
+  "source_sha256": "7e1801d7009bf014e49be84e2f8084d729317cd1c0bf5390ed666536c372e62c",
+  "png_sha256": "b1eda8453cbcfbf4026ab64da6c84958135e21a6f89b883674452d345c1e79c3",
+  "icc_preserved": true
+}

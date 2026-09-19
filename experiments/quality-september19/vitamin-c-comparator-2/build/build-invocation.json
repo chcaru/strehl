@@ -1,0 +1,31 @@
+{
+  "command": [
+    "cargo",
+    "build",
+    "-p",
+    "strehl-cli",
+    "--example",
+    "quality-batch-develop",
+    "--release",
+    "--features",
+    "native-pyramid-profile,native-gpu-gather,native-direct-planes",
+    "--target-dir",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\target\\native-pyramid-profile",
+    "--jobs",
+    "2",
+    "--locked",
+    "--offline",
+    "--message-format=json-render-diagnostics"
+  ],
+  "removed_environment": [],
+  "explicit_environment": {
+    "RAYON_NUM_THREADS": "8",
+    "CARGO_INCREMENTAL": "0"
+  },
+  "limits": {
+    "wall_seconds": 600,
+    "cpu_seconds": 1800,
+    "log_bytes": 16777216,
+    "committed_bytes": 8589934592
+  }
+}

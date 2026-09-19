@@ -1,0 +1,13 @@
+{
+  "source": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\full-context-placement\\baseline-1\\output\\replay.tiff",
+  "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\full-outputs\\chip-before.png",
+  "shape": [
+    4332,
+    6500,
+    3
+  ],
+  "conversion": "rounded division by 257; full extent; no resampling",
+  "source_sha256": "c358ff6f6247663e368f4f5e0b1b3a1b2daca2d78a670d60306078b2e8d60ad9",
+  "png_sha256": "4115cd55d827d821b6d83e316ad4ad4621e64111c6b09f2c0fd7f6d658c68aa4",
+  "icc_preserved": true
+}

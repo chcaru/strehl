@@ -1,0 +1,17 @@
+{
+  "command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\build\\quality-batch-develop.exe",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\develop-config.json"
+  ],
+  "removed_environment": [],
+  "explicit_environment": {
+    "RAYON_NUM_THREADS": "8",
+    "CARGO_INCREMENTAL": "0"
+  },
+  "limits": {
+    "wall_seconds": 360,
+    "cpu_seconds": 1800,
+    "log_bytes": 4194304,
+    "committed_bytes": 3221225472
+  }
+}

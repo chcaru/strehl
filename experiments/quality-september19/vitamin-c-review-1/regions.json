@@ -1,0 +1,53 @@
+{
+  "source": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-baseline-1\\vitamin-c.tiff",
+  "regions": [
+    {
+      "name": "facet-edges",
+      "xywh": [
+        2500,
+        2700,
+        384,
+        384
+      ]
+    },
+    {
+      "name": "pale-background",
+      "xywh": [
+        400,
+        1150,
+        384,
+        384
+      ]
+    },
+    {
+      "name": "fine-crystals",
+      "xywh": [
+        4200,
+        1700,
+        384,
+        384
+      ]
+    },
+    {
+      "name": "bright-facet",
+      "xywh": [
+        1150,
+        3850,
+        384,
+        384
+      ]
+    },
+    {
+      "name": "dark-inclusion",
+      "xywh": [
+        3050,
+        1850,
+        384,
+        384
+      ]
+    }
+  ],
+  "display": "rounded division by257, no scaling; native output coordinates",
+  "selection": "root chose from complete baseline overview before candidate/comparator",
+  "scope": "photographic diagnostic regions, no assumed flat calibrated noise ROI"
+}

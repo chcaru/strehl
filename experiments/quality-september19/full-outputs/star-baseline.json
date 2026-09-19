@@ -1,0 +1,13 @@
+{
+  "source": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\star-full-context-placement\\baseline-1\\output\\replay.tiff",
+  "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\full-outputs\\star-baseline.png",
+  "shape": [
+    4480,
+    6724,
+    3
+  ],
+  "conversion": "rounded division by 257; full extent; no resampling",
+  "source_sha256": "5fc6c3ab8e2bcb64ee9d1383586f0c3763d6dbc709968a218bf36b9d654420ae",
+  "png_sha256": "8b7e590d79f6f007d4f62376ab6b4c8ed5cb61257b18dca92838539e1679b6fe",
+  "icc_preserved": true
+}

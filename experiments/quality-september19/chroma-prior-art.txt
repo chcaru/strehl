@@ -1,0 +1,41 @@
+terms: chroma, color, coherence
+==============================================================================
+CITE THESE IN THE BRIEF (rule 40):
+
+  BUILD-CHROMA.md                      score   138  <-- HEADLINE MATCH
+      BUILD-CHROMA — longitudinal chromatic aberration: measurement, and what it does and does not explain
+  V-chroma2.md                         score    97  <-- HEADLINE MATCH
+      V-chroma2: independent verification of BUILD-CHROMA `48d3acb` / `36075ed`
+  BUILD-DEMOSAIC.md                    score    91  <-- HEADLINE MATCH
+      BUILD-DEMOSAIC — is the gather flip's chroma excess restored or created? A ground-truth answer, and a de
+  M95-chroma-cositing.md               score    78  <-- HEADLINE MATCH
+      M95 — Chroma co-siting: the binned render misregisters red and blue, and a fix
+  V-GATHER.md                          score    59  <-- HEADLINE MATCH
+      V-GATHER — the chroma cost is not the demosaic, it is a stale noise gate
+  V-LINEAR2.md                         score    58  <-- HEADLINE MATCH
+      V-LINEAR2 — the free field, a band that contains signal, and a coherence bug that was costing strehl a f
+  V-SOFTCHECK-coherence.md             score    57  <-- HEADLINE MATCH
+      V-SOFTCHECK: half-stack selection coherence, and the depth prediction
+  M-PHASE0-LCA.md                      score    56  <-- HEADLINE MATCH
+      M-PHASE0-LCA — chromatic z-diversity is real, but this census is NOT ROBUST
+  BUILD-COSITE.md                      score    50  <-- HEADLINE MATCH
+      BUILD-COSITE — the chroma co-site, measured on the path it is actually on
+  M107b-radial-chroma.md               score    50  <-- HEADLINE MATCH
+      M107b R-series — D2 vs a single-frame control cannot validate a chroma fix
+
+  also mentions it: ORCH-veiling.md, M107-chroma.md, V-HIGHLIGHT.md, V-ADJ13.md, V-CA-audit.md, M107b-lateral-correction.md
+
+IN THE SOURCE (a test name can be the whole answer):
+  crates\strehl-cli\examples\build-demosaic-truth.rs:181  fn chroma_waves(scale: f64) -> Vec<Wave> {
+  crates\strehl-cli\examples\build-demosaic-truth.rs:197  fn scene_achromatic() -> Scene {
+  crates\strehl-cli\examples\build-demosaic-truth.rs:447  fn planted_chroma(base: &Planes, fw: usize, fh: usize, d: f32) -> Planes {
+  crates\strehl-cli\examples\build-demosaic-truth.rs:926  fn flat_tile_chroma(
+  crates\strehl-cli\src\image_out.rs:130  fn color_description(dev: &Develop) -> String {
+  crates\strehl-cli\src\image_out.rs:911  pub fn develop(self, matrix: Option<color::Render>) -> Develop {
+  crates\strehl-cli\src\image_out.rs:2202  fn the_tone_curve_preserves_chromaticity_on_a_saturated_pixel() {
+  crates\strehl-cli\src\image_out.rs:2663  fn only_the_colorimetric_paths_get_a_profile() {
+  crates\strehl-core\src\color.rs:902  fn the_srgb_matrix_is_what_its_own_chromaticities_imply() {
+  crates\strehl-core\src\color.rs:1045  fn synthetic_patches_of_known_chromaticity_round_trip() {
+  crates\strehl-core\src\election_coherence.rs:77  pub fn incoherence(best_index: &[u16], geom: PlaneGeometry) -> Vec<f32> {
+  crates\strehl-core\src\merge.rs:2363  pub fn enable_veil_from_incoherence(
+==============================================================================

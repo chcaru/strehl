@@ -143,6 +143,35 @@ extension and automatic promotion; do not spend another search-bound, focus
 window or taper sweep on this result. Broader alignment methods are not refuted.
 Competitive quality and the persistent colour artifacts remain unresolved.
 
+## Complete-output presentation and the second new stack
+
+The owner now requires the complete output whenever an improvement is shown.
+`full-output-views.py` exports the entire RGB16 TIFF as a same-size RGB8 PNG by
+rounded division by 257, retaining its ICC profile. It performs no crop, tone
+change or resampling and checks the saved PNG pixels. Full chip before/after
+and star baseline images are under `full-outputs`; RGB16 masters remain at
+their original experiment paths. Displayed overviews locate the subjects only;
+native diagnostic views remain necessary to evaluate fine defects.
+
+MEASURED: `python -I -B -X faulthandler
+experiments/quality-september19/vitamin-c-baseline.py` consumes all 70 original
+`crystalized-vitamin-c-cpl` captures DSC00094 through DSC00163 with the held
+native6 executable and existing seven-band preset. It places 70/70 and writes
+a complete 6920x4612 RGB16 image. Alignment and render take 14.390 and 26.156
+wall seconds respectively; these are single operational observations, not a
+speed ranking. Render peak job commit is 3,462,656,000 bytes. Original file
+sizes and modification times are unchanged before/after; no content-hash
+guarantee is inferred from those metadata checks. All outputs and the explicit
+alignment map are inside this workspace.
+
+The complete vitamin-C TIFF SHA256 is
+`2593ecdaa7bcaa34217b595bd3cdf3622637a3dae115c5e014ff6c6a9635bdf4`.
+This is a new baseline, not a claimed quality improvement. It adds transparent
+facets and highlights to the opaque-grain/chip tests. The next fixed candidate
+is specified in `../phase-packed-rgb/charter.md`: preserve all colour values
+through the existing merge while retaining its exact green decisions. Prior
+one-demosaic evidence is mixed; a small independent screen precedes a RAW replay.
+
 Additional commands actually run:
 
 ```
@@ -153,3 +182,48 @@ python -I -B experiments/quality-september19/star-focused-fit.py --samples exper
 python -I -B experiments/quality-september19/star-focused-replay.py experiments/quality-september19/star-focused-fit-1/placement.json --out experiments/quality-september19/star-focused-render-1
 python -I -B experiments/quality-september19/star-full-context-compare.py --candidate experiments/quality-september19/star-focused-render-1/output/replay.tiff --out experiments/quality-september19/star-focused-comparison-1
 ```
+
+## Complete vitamin-C external comparison
+
+The same 70 captures now have a complete external MIT focus-stack output.
+The batch developer uses the actual decoder, MHC, camera colour transform and
+pinned product tone. Before any new RAW decode, its normalization matches
+112,896 independently retained CFA floats and its writer matches 338,688
+RGB16 values exactly. Every capture is checked for held camera, ISO, levels,
+normalized WB and matrix. These are unaligned input TIFFs, processed one at a
+time; the native product does not retain a volume of aligned RGB frames.
+
+Commands actually run:
+
+```
+python -I -B experiments/quality-september19/vitamin-c-comparator.py build --out experiments/quality-september19/vitamin-c-comparator-2
+python -I -B -X faulthandler experiments/quality-september19/vitamin-c-comparator.py develop --out experiments/quality-september19/vitamin-c-comparator-2
+python -I -B -X faulthandler experiments/quality-september19/vitamin-c-comparator.py fork --out experiments/quality-september19/vitamin-c-comparator-2
+python -I -B -X faulthandler experiments/quality-september19/vitamin-c-fork-retry.py
+python experiments/quality-september19/vitamin-c-external-review-1/prepare.py
+```
+
+The first external run exceeded its 12 GiB job bound. Its failure is retained;
+the retry changes only that bound to 40 GiB and its output location, after
+checking available RAM and all developed-input hashes. It completes in 75.891
+wall seconds, peaks at 31,322,202,112 committed bytes, and writes 6958x4626
+RGB16. Export costs 35.140 wall seconds. These are single operational costs,
+not a speed ranking: external CPU execution, different alignment and the
+development stage differ from the native GPU path.
+
+ARGUED FROM INDEPENDENT NATIVE INSPECTION: this is a useful highlight-colour
+counterexample, not an overall quality winner. The external output reduces
+long coloured spokes around bright points but replaces them with broader,
+granular highlights. The native baseline has visibly smoother low-detail
+areas. No convincingly new facet structure is identified in either arm.
+Both root and the independent reviewer reach this interpretation from the
+five frozen windows. Whole outputs are retained under `full-outputs` and the
+detailed review is `vitamin-c-external-review-1/photographic-review.md`.
+
+The comparison cannot isolate the cause to one algorithm: tone precedes the
+external merge, alignment differs, and lateral CA correction is native-only.
+The pinned tone comes from the baseline's rounded six-decimal description,
+not its full original f32 bits. The blue overall rendering is not established
+as colour-accurate without a neutral reference. The next concrete target is
+reduced highlight colour artifacts with the native baseline's smoothness and
+continuous facet structure preserved. SOTA remains unestablished.

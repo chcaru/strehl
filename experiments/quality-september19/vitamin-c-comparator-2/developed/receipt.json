@@ -1,0 +1,2248 @@
+{
+  "configuration": {
+    "expected_xyz_to_cam": [
+      [
+        0.746,
+        -0.2365,
+        -0.0588
+      ],
+      [
+        -0.5687,
+        1.3442,
+        0.2474
+      ],
+      [
+        -0.0624,
+        0.1156,
+        0.6584
+      ]
+    ],
+    "fixture_dir": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\star-matched-source-1\\output",
+    "fixture_original_u16": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\star-porous-translation-1\\porous-grain\\rawler-129.bin",
+    "input_dir": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl",
+    "inputs": [
+      "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00094.ARW",
+      "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00095.ARW",
+      "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00096.ARW",
+      "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00097.ARW",
+      "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00098.ARW",
+      "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00099.ARW",
+      "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00100.ARW",
+      "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00101.ARW",
+      "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00102.ARW",
+      "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00103.ARW",
+      "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00104.ARW",
+      "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00105.ARW",
+      "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00106.ARW",
+      "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00107.ARW",
+      "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00108.ARW",
+      "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00109.ARW",
+      "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00110.ARW",
+      "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00111.ARW",
+      "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00112.ARW",
+      "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00113.ARW",
+      "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00114.ARW",
+      "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00115.ARW",
+      "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00116.ARW",
+      "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00117.ARW",
+      "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00118.ARW",
+      "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00119.ARW",
+      "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00120.ARW",
+      "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00121.ARW",
+      "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00122.ARW",
+      "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00123.ARW",
+      "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00124.ARW",
+      "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00125.ARW",
+      "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00126.ARW",
+      "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00127.ARW",
+      "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00128.ARW",
+      "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00129.ARW",
+      "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00130.ARW",
+      "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00131.ARW",
+      "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00132.ARW",
+      "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00133.ARW",
+      "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00134.ARW",
+      "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00135.ARW",
+      "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00136.ARW",
+      "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00137.ARW",
+      "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00138.ARW",
+      "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00139.ARW",
+      "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00140.ARW",
+      "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00141.ARW",
+      "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00142.ARW",
+      "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00143.ARW",
+      "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00144.ARW",
+      "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00145.ARW",
+      "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00146.ARW",
+      "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00147.ARW",
+      "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00148.ARW",
+      "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00149.ARW",
+      "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00150.ARW",
+      "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00151.ARW",
+      "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00152.ARW",
+      "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00153.ARW",
+      "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00154.ARW",
+      "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00155.ARW",
+      "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00156.ARW",
+      "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00157.ARW",
+      "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00158.ARW",
+      "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00159.ARW",
+      "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00160.ARW",
+      "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00161.ARW",
+      "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00162.ARW",
+      "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00163.ARW"
+    ],
+    "out": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed",
+    "tone": [
+      0.09042,
+      0.914606,
+      0.55
+    ]
+  },
+  "frames": [
+    {
+      "held_wb_differs": false,
+      "input": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00094.ARW",
+      "input_bytes": 38887424,
+      "input_sha256": "847db3cd07af2438414e0a0dccb6cddbeab0b28f3e46b5e23246435c8b997ef1",
+      "input_wb_bits": [
+        1070374912,
+        1065353216,
+        1076715520
+      ],
+      "ordinal": 0,
+      "original_metadata_unchanged": true,
+      "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00094.tiff",
+      "output_bytes": 197801325,
+      "output_sha256": "442926e619dfbe91a0cd8e1f97bc61380763df82c8ec5ea674507d53ed43d9b8",
+      "output_wh": [
+        7032,
+        4688
+      ],
+      "raw_active_xywh": [
+        0,
+        0,
+        7032,
+        4688
+      ],
+      "raw_buffer_wh": [
+        7168,
+        5120
+      ]
+    },
+    {
+      "held_wb_differs": false,
+      "input": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00095.ARW",
+      "input_bytes": 38920192,
+      "input_sha256": "eca282769faca0c3e032ec9ae30998507a576f8e569a01f4bdb6d5c1807ef612",
+      "input_wb_bits": [
+        1070374912,
+        1065353216,
+        1076715520
+      ],
+      "ordinal": 1,
+      "original_metadata_unchanged": true,
+      "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00095.tiff",
+      "output_bytes": 197801325,
+      "output_sha256": "ebaaf85ae678c075c489f29923f370e428a23c49af16bbc1c0be05e5749d4650",
+      "output_wh": [
+        7032,
+        4688
+      ],
+      "raw_active_xywh": [
+        0,
+        0,
+        7032,
+        4688
+      ],
+      "raw_buffer_wh": [
+        7168,
+        5120
+      ]
+    },
+    {
+      "held_wb_differs": false,
+      "input": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00096.ARW",
+      "input_bytes": 38944768,
+      "input_sha256": "aa7809e0b6dc7f06a1e982a20fce75f84fd2be4131b2c5823d377ee1886bfb5b",
+      "input_wb_bits": [
+        1070374912,
+        1065353216,
+        1076715520
+      ],
+      "ordinal": 2,
+      "original_metadata_unchanged": true,
+      "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00096.tiff",
+      "output_bytes": 197801325,
+      "output_sha256": "cf933fda2d4ceb677b334dc15dac884892a1f1c3d7be17433cbb9311f302902a",
+      "output_wh": [
+        7032,
+        4688
+      ],
+      "raw_active_xywh": [
+        0,
+        0,
+        7032,
+        4688
+      ],
+      "raw_buffer_wh": [
+        7168,
+        5120
+      ]
+    },
+    {
+      "held_wb_differs": false,
+      "input": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00097.ARW",
+      "input_bytes": 38977536,
+      "input_sha256": "77ebec9e3f505bea0a8aa7d65f107f0a6cb0434151ba3b75a48bdefaff1637db",
+      "input_wb_bits": [
+        1070374912,
+        1065353216,
+        1076715520
+      ],
+      "ordinal": 3,
+      "original_metadata_unchanged": true,
+      "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00097.tiff",
+      "output_bytes": 197801325,
+      "output_sha256": "c041d32ed67daa32f021075f40fca42c25ec4844f1301d2a19d306b3cfc80c6d",
+      "output_wh": [
+        7032,
+        4688
+      ],
+      "raw_active_xywh": [
+        0,
+        0,
+        7032,
+        4688
+      ],
+      "raw_buffer_wh": [
+        7168,
+        5120
+      ]
+    },
+    {
+      "held_wb_differs": false,
+      "input": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00098.ARW",
+      "input_bytes": 39006208,
+      "input_sha256": "ef1e5011cb45fe39581e709117edc5d71e2073daadc60b952b1fc1ff9893a107",
+      "input_wb_bits": [
+        1070374912,
+        1065353216,
+        1076715520
+      ],
+      "ordinal": 4,
+      "original_metadata_unchanged": true,
+      "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00098.tiff",
+      "output_bytes": 197801325,
+      "output_sha256": "255a8c3e2f0a5fbb9b104a6bc1c0f16e9cc0119daa8c01ad5aeb8aeb65368da4",
+      "output_wh": [
+        7032,
+        4688
+      ],
+      "raw_active_xywh": [
+        0,
+        0,
+        7032,
+        4688
+      ],
+      "raw_buffer_wh": [
+        7168,
+        5120
+      ]
+    },
+    {
+      "held_wb_differs": false,
+      "input": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00099.ARW",
+      "input_bytes": 39047168,
+      "input_sha256": "f825f6addb06fc1e6fa31b97c0b6cda11209f2e737e4890805b0db3d357e93f0",
+      "input_wb_bits": [
+        1070374912,
+        1065353216,
+        1076715520
+      ],
+      "ordinal": 5,
+      "original_metadata_unchanged": true,
+      "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00099.tiff",
+      "output_bytes": 197801325,
+      "output_sha256": "5b2196993c1a4f5ba48fe9ee6862891e587f1a9bea354a2a547f9a16431cc4c5",
+      "output_wh": [
+        7032,
+        4688
+      ],
+      "raw_active_xywh": [
+        0,
+        0,
+        7032,
+        4688
+      ],
+      "raw_buffer_wh": [
+        7168,
+        5120
+      ]
+    },
+    {
+      "held_wb_differs": false,
+      "input": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00100.ARW",
+      "input_bytes": 39084032,
+      "input_sha256": "8456aec9f5111648598669790279b175bb2b5185e5c9e21ca9b3add96aa242b0",
+      "input_wb_bits": [
+        1070374912,
+        1065353216,
+        1076715520
+      ],
+      "ordinal": 6,
+      "original_metadata_unchanged": true,
+      "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00100.tiff",
+      "output_bytes": 197801325,
+      "output_sha256": "07420058c32a8c46d3aa585a9604900d7042b2eced6c1bc8ffd3d441c518d678",
+      "output_wh": [
+        7032,
+        4688
+      ],
+      "raw_active_xywh": [
+        0,
+        0,
+        7032,
+        4688
+      ],
+      "raw_buffer_wh": [
+        7168,
+        5120
+      ]
+    },
+    {
+      "held_wb_differs": false,
+      "input": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00101.ARW",
+      "input_bytes": 39133184,
+      "input_sha256": "a304be508d7ca3310bb68adb6e2ab5123577da492ac23ee8a60723ca6950f250",
+      "input_wb_bits": [
+        1070374912,
+        1065353216,
+        1076715520
+      ],
+      "ordinal": 7,
+      "original_metadata_unchanged": true,
+      "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00101.tiff",
+      "output_bytes": 197801325,
+      "output_sha256": "b091de5da609fe40fa3e8ff0c3803c816a500017c3215dbcce7272ffb3500ae4",
+      "output_wh": [
+        7032,
+        4688
+      ],
+      "raw_active_xywh": [
+        0,
+        0,
+        7032,
+        4688
+      ],
+      "raw_buffer_wh": [
+        7168,
+        5120
+      ]
+    },
+    {
+      "held_wb_differs": false,
+      "input": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00102.ARW",
+      "input_bytes": 39170048,
+      "input_sha256": "69d5c1655f7b234f1ec5a35ad48b3bc8025d6f35b72f2b7afa272e134c54e676",
+      "input_wb_bits": [
+        1070374912,
+        1065353216,
+        1076715520
+      ],
+      "ordinal": 8,
+      "original_metadata_unchanged": true,
+      "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00102.tiff",
+      "output_bytes": 197801325,
+      "output_sha256": "70a95e4de171c3e0e63c1055d06cf6a82a2a330d01907643a5b9d1e632444fbd",
+      "output_wh": [
+        7032,
+        4688
+      ],
+      "raw_active_xywh": [
+        0,
+        0,
+        7032,
+        4688
+      ],
+      "raw_buffer_wh": [
+        7168,
+        5120
+      ]
+    },
+    {
+      "held_wb_differs": false,
+      "input": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00103.ARW",
+      "input_bytes": 39227392,
+      "input_sha256": "cd2e075b7c0347a88ccb0488633bc9af4683db1de1f6ff2984037b62fff40d75",
+      "input_wb_bits": [
+        1070374912,
+        1065353216,
+        1076715520
+      ],
+      "ordinal": 9,
+      "original_metadata_unchanged": true,
+      "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00103.tiff",
+      "output_bytes": 197801325,
+      "output_sha256": "432de513b3e528b4134455d3a8ef28808c226c95f92ad1189c4bf65d7ff226bb",
+      "output_wh": [
+        7032,
+        4688
+      ],
+      "raw_active_xywh": [
+        0,
+        0,
+        7032,
+        4688
+      ],
+      "raw_buffer_wh": [
+        7168,
+        5120
+      ]
+    },
+    {
+      "held_wb_differs": false,
+      "input": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00104.ARW",
+      "input_bytes": 39284736,
+      "input_sha256": "2433144c9c8aca6075c95f9ed0474b45e1f42b5023e360fd14492cd30fab8ff1",
+      "input_wb_bits": [
+        1070374912,
+        1065353216,
+        1076715520
+      ],
+      "ordinal": 10,
+      "original_metadata_unchanged": true,
+      "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00104.tiff",
+      "output_bytes": 197801325,
+      "output_sha256": "f88f4f7a68667066006837155cae23527ca4bdabeb4215497e5fb41cd4b76718",
+      "output_wh": [
+        7032,
+        4688
+      ],
+      "raw_active_xywh": [
+        0,
+        0,
+        7032,
+        4688
+      ],
+      "raw_buffer_wh": [
+        7168,
+        5120
+      ]
+    },
+    {
+      "held_wb_differs": false,
+      "input": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00105.ARW",
+      "input_bytes": 39342080,
+      "input_sha256": "5b7c15bf52d5b94221d7e738db9bcf530c32bb8dd25facd643c819a8bc1564c9",
+      "input_wb_bits": [
+        1070374912,
+        1065353216,
+        1076715520
+      ],
+      "ordinal": 11,
+      "original_metadata_unchanged": true,
+      "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00105.tiff",
+      "output_bytes": 197801325,
+      "output_sha256": "5faecc084a6ef81176d897c0fe70a6d9d8fd9f235cf47339a17f8a7e053c66fa",
+      "output_wh": [
+        7032,
+        4688
+      ],
+      "raw_active_xywh": [
+        0,
+        0,
+        7032,
+        4688
+      ],
+      "raw_buffer_wh": [
+        7168,
+        5120
+      ]
+    },
+    {
+      "held_wb_differs": false,
+      "input": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00106.ARW",
+      "input_bytes": 39411712,
+      "input_sha256": "004acf75852788d205558e9b01b6a440f462b45cf24b9b90b71792443e235e84",
+      "input_wb_bits": [
+        1070374912,
+        1065353216,
+        1076715520
+      ],
+      "ordinal": 12,
+      "original_metadata_unchanged": true,
+      "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00106.tiff",
+      "output_bytes": 197801325,
+      "output_sha256": "268fa2ef45bb730bb6f3b497297b277611f299b6bfaaaa9daaae6b758ab3cc18",
+      "output_wh": [
+        7032,
+        4688
+      ],
+      "raw_active_xywh": [
+        0,
+        0,
+        7032,
+        4688
+      ],
+      "raw_buffer_wh": [
+        7168,
+        5120
+      ]
+    },
+    {
+      "held_wb_differs": false,
+      "input": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00107.ARW",
+      "input_bytes": 39489536,
+      "input_sha256": "f0ea2dee53b57fbc6739070d76828c768ae66c33249c63cce3ec711f0b32e925",
+      "input_wb_bits": [
+        1070374912,
+        1065353216,
+        1076715520
+      ],
+      "ordinal": 13,
+      "original_metadata_unchanged": true,
+      "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00107.tiff",
+      "output_bytes": 197801325,
+      "output_sha256": "cd802b6e79a7c9ea67a1a8899005c8b82286ba26a97b1c20493058f0e785d5b0",
+      "output_wh": [
+        7032,
+        4688
+      ],
+      "raw_active_xywh": [
+        0,
+        0,
+        7032,
+        4688
+      ],
+      "raw_buffer_wh": [
+        7168,
+        5120
+      ]
+    },
+    {
+      "held_wb_differs": false,
+      "input": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00108.ARW",
+      "input_bytes": 39571456,
+      "input_sha256": "b998c07f3e37f09d01631a838719897e3a75a0f628a051a4c03f7ce93715bfea",
+      "input_wb_bits": [
+        1070374912,
+        1065353216,
+        1076715520
+      ],
+      "ordinal": 14,
+      "original_metadata_unchanged": true,
+      "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00108.tiff",
+      "output_bytes": 197801325,
+      "output_sha256": "0f5b6844708e1161195ba22719a2ed408f6ed2399914d080c8d050ad4ec5f0e7",
+      "output_wh": [
+        7032,
+        4688
+      ],
+      "raw_active_xywh": [
+        0,
+        0,
+        7032,
+        4688
+      ],
+      "raw_buffer_wh": [
+        7168,
+        5120
+      ]
+    },
+    {
+      "held_wb_differs": false,
+      "input": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00109.ARW",
+      "input_bytes": 39657472,
+      "input_sha256": "a5db815d59c0f5de746a2be60c6754267cb592a844b8ce7734b9077aff0b3960",
+      "input_wb_bits": [
+        1070374912,
+        1065353216,
+        1076715520
+      ],
+      "ordinal": 15,
+      "original_metadata_unchanged": true,
+      "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00109.tiff",
+      "output_bytes": 197801325,
+      "output_sha256": "74f02d1e473b97fe46b83c41f330b03152d38af2c65dc3dfdf07668c6be1f1e7",
+      "output_wh": [
+        7032,
+        4688
+      ],
+      "raw_active_xywh": [
+        0,
+        0,
+        7032,
+        4688
+      ],
+      "raw_buffer_wh": [
+        7168,
+        5120
+      ]
+    },
+    {
+      "held_wb_differs": false,
+      "input": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00110.ARW",
+      "input_bytes": 39763968,
+      "input_sha256": "ed1885d98102b08fedaef3284e9516d8893a9bdca21b4b7fa2e668a977379919",
+      "input_wb_bits": [
+        1070374912,
+        1065353216,
+        1076715520
+      ],
+      "ordinal": 16,
+      "original_metadata_unchanged": true,
+      "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00110.tiff",
+      "output_bytes": 197801325,
+      "output_sha256": "bd061afaacf21d8475e8cd55e7a176c320bbdb4977424a6638134214389be933",
+      "output_wh": [
+        7032,
+        4688
+      ],
+      "raw_active_xywh": [
+        0,
+        0,
+        7032,
+        4688
+      ],
+      "raw_buffer_wh": [
+        7168,
+        5120
+      ]
+    },
+    {
+      "held_wb_differs": false,
+      "input": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00111.ARW",
+      "input_bytes": 39874560,
+      "input_sha256": "5ad68895af1e4d8d82730119e067dbece600643341bc21bb4d363b8debbf9517",
+      "input_wb_bits": [
+        1070374912,
+        1065353216,
+        1076715520
+      ],
+      "ordinal": 17,
+      "original_metadata_unchanged": true,
+      "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00111.tiff",
+      "output_bytes": 197801325,
+      "output_sha256": "30413ea04083f3706a60e1be73e4471ac0e41d8fab660f35a67372d8d0a3ed7c",
+      "output_wh": [
+        7032,
+        4688
+      ],
+      "raw_active_xywh": [
+        0,
+        0,
+        7032,
+        4688
+      ],
+      "raw_buffer_wh": [
+        7168,
+        5120
+      ]
+    },
+    {
+      "held_wb_differs": false,
+      "input": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00112.ARW",
+      "input_bytes": 39993344,
+      "input_sha256": "7d8f5edb230b36f5af68b919ac4c9d3d2331d0646da29fc3cf5fefdd40cf58d1",
+      "input_wb_bits": [
+        1070374912,
+        1065353216,
+        1076715520
+      ],
+      "ordinal": 18,
+      "original_metadata_unchanged": true,
+      "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00112.tiff",
+      "output_bytes": 197801325,
+      "output_sha256": "9437ff9b73466daa858a141c2953f9323361db4736dd896c272b0dbe68eef2ca",
+      "output_wh": [
+        7032,
+        4688
+      ],
+      "raw_active_xywh": [
+        0,
+        0,
+        7032,
+        4688
+      ],
+      "raw_buffer_wh": [
+        7168,
+        5120
+      ]
+    },
+    {
+      "held_wb_differs": false,
+      "input": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00113.ARW",
+      "input_bytes": 40112128,
+      "input_sha256": "67770ad43678c6cb0fdb1427c89530218123e79babfef00820640fda522dcdca",
+      "input_wb_bits": [
+        1070374912,
+        1065353216,
+        1076715520
+      ],
+      "ordinal": 19,
+      "original_metadata_unchanged": true,
+      "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00113.tiff",
+      "output_bytes": 197801325,
+      "output_sha256": "adf12bdca103c5789a05498e2a5a8495d719e64c68cccc1a11e95f8e34324cb9",
+      "output_wh": [
+        7032,
+        4688
+      ],
+      "raw_active_xywh": [
+        0,
+        0,
+        7032,
+        4688
+      ],
+      "raw_buffer_wh": [
+        7168,
+        5120
+      ]
+    },
+    {
+      "held_wb_differs": false,
+      "input": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00114.ARW",
+      "input_bytes": 40243200,
+      "input_sha256": "d65bd88ea6cb4d282eba0e228271a6fb0504ae50d90149abb6cbc6b654c4b99d",
+      "input_wb_bits": [
+        1070374912,
+        1065353216,
+        1076715520
+      ],
+      "ordinal": 20,
+      "original_metadata_unchanged": true,
+      "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00114.tiff",
+      "output_bytes": 197801325,
+      "output_sha256": "e21f5a7956874ebe8791cef79c826512aec193c60434db788b8147a80e530f07",
+      "output_wh": [
+        7032,
+        4688
+      ],
+      "raw_active_xywh": [
+        0,
+        0,
+        7032,
+        4688
+      ],
+      "raw_buffer_wh": [
+        7168,
+        5120
+      ]
+    },
+    {
+      "held_wb_differs": false,
+      "input": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00115.ARW",
+      "input_bytes": 40370176,
+      "input_sha256": "fe971dcc275a2f8fecedd6a79ea46a0681fcd1c864dc830d5757dcae937d55fb",
+      "input_wb_bits": [
+        1070374912,
+        1065353216,
+        1076715520
+      ],
+      "ordinal": 21,
+      "original_metadata_unchanged": true,
+      "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00115.tiff",
+      "output_bytes": 197801325,
+      "output_sha256": "14f4c401e0c56abb12a2a258ae47dcc631bb4fc5b79462f840657de5cf1308fa",
+      "output_wh": [
+        7032,
+        4688
+      ],
+      "raw_active_xywh": [
+        0,
+        0,
+        7032,
+        4688
+      ],
+      "raw_buffer_wh": [
+        7168,
+        5120
+      ]
+    },
+    {
+      "held_wb_differs": false,
+      "input": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00116.ARW",
+      "input_bytes": 40480768,
+      "input_sha256": "f3b10b68bb123cbea1d6cb05763291565bf9fb476e02ca183abb243ea6c5569f",
+      "input_wb_bits": [
+        1070374912,
+        1065353216,
+        1076715520
+      ],
+      "ordinal": 22,
+      "original_metadata_unchanged": true,
+      "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00116.tiff",
+      "output_bytes": 197801325,
+      "output_sha256": "5c2f3164c5c9511ee36c4ae30149901cbda7ef9aeb5bc2ff9fcca1d30a7579bc",
+      "output_wh": [
+        7032,
+        4688
+      ],
+      "raw_active_xywh": [
+        0,
+        0,
+        7032,
+        4688
+      ],
+      "raw_buffer_wh": [
+        7168,
+        5120
+      ]
+    },
+    {
+      "held_wb_differs": false,
+      "input": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00117.ARW",
+      "input_bytes": 40599552,
+      "input_sha256": "3ccf57540b17d0a896a3c5d3581181d934f9035873a332b7dac2e0e5e422a533",
+      "input_wb_bits": [
+        1070374912,
+        1065353216,
+        1076715520
+      ],
+      "ordinal": 23,
+      "original_metadata_unchanged": true,
+      "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00117.tiff",
+      "output_bytes": 197801325,
+      "output_sha256": "f17f21ca086abb3434cca4aafd9aa54c3b7f719eda1c277a8b163bdd401787d3",
+      "output_wh": [
+        7032,
+        4688
+      ],
+      "raw_active_xywh": [
+        0,
+        0,
+        7032,
+        4688
+      ],
+      "raw_buffer_wh": [
+        7168,
+        5120
+      ]
+    },
+    {
+      "held_wb_differs": false,
+      "input": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00118.ARW",
+      "input_bytes": 40706048,
+      "input_sha256": "51412b261bc2757f0bfb2f43689ed3cf344f0d2747881ea8655a748b158b587c",
+      "input_wb_bits": [
+        1070374912,
+        1065353216,
+        1076715520
+      ],
+      "ordinal": 24,
+      "original_metadata_unchanged": true,
+      "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00118.tiff",
+      "output_bytes": 197801325,
+      "output_sha256": "4f028820c8ac659bcdd2c48e78764d442bd8b3e9dd70f11b7d8f48f67124e37a",
+      "output_wh": [
+        7032,
+        4688
+      ],
+      "raw_active_xywh": [
+        0,
+        0,
+        7032,
+        4688
+      ],
+      "raw_buffer_wh": [
+        7168,
+        5120
+      ]
+    },
+    {
+      "held_wb_differs": false,
+      "input": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00119.ARW",
+      "input_bytes": 40792064,
+      "input_sha256": "15c5ace6ffd79a1e4f3df10fd4bd7fc76720f44fc8a8ab41e7d895af2b2b25e3",
+      "input_wb_bits": [
+        1070374912,
+        1065353216,
+        1076715520
+      ],
+      "ordinal": 25,
+      "original_metadata_unchanged": true,
+      "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00119.tiff",
+      "output_bytes": 197801325,
+      "output_sha256": "f545ebe5a224f20d61c6e5ee10d304fd1f1f381fea3d1d169f10f05e9c14c345",
+      "output_wh": [
+        7032,
+        4688
+      ],
+      "raw_active_xywh": [
+        0,
+        0,
+        7032,
+        4688
+      ],
+      "raw_buffer_wh": [
+        7168,
+        5120
+      ]
+    },
+    {
+      "held_wb_differs": false,
+      "input": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00120.ARW",
+      "input_bytes": 40865792,
+      "input_sha256": "48b96cd1692b781892cf1a9cf23243f6ada21c8e6c3e3d461198d4504380a9d2",
+      "input_wb_bits": [
+        1070374912,
+        1065353216,
+        1076715520
+      ],
+      "ordinal": 26,
+      "original_metadata_unchanged": true,
+      "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00120.tiff",
+      "output_bytes": 197801325,
+      "output_sha256": "4e9fd994a5c382bd37fb2cf9235bf7199becf631eb3d7134ff27320d1869a17a",
+      "output_wh": [
+        7032,
+        4688
+      ],
+      "raw_active_xywh": [
+        0,
+        0,
+        7032,
+        4688
+      ],
+      "raw_buffer_wh": [
+        7168,
+        5120
+      ]
+    },
+    {
+      "held_wb_differs": false,
+      "input": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00121.ARW",
+      "input_bytes": 40923136,
+      "input_sha256": "11d461fc2d08f10294c3f5b596244468aa19b5b6a49e5240eb121497acc18639",
+      "input_wb_bits": [
+        1070374912,
+        1065353216,
+        1076715520
+      ],
+      "ordinal": 27,
+      "original_metadata_unchanged": true,
+      "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00121.tiff",
+      "output_bytes": 197801325,
+      "output_sha256": "a8980225bdd01bff45154650fcdf4a9ac61a45b8918f6d6df5ce421c9927189f",
+      "output_wh": [
+        7032,
+        4688
+      ],
+      "raw_active_xywh": [
+        0,
+        0,
+        7032,
+        4688
+      ],
+      "raw_buffer_wh": [
+        7168,
+        5120
+      ]
+    },
+    {
+      "held_wb_differs": false,
+      "input": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00122.ARW",
+      "input_bytes": 40968192,
+      "input_sha256": "287d3aa660954d638e9147355b7018aaa18eeed6c9431753bc748eccfa045d7e",
+      "input_wb_bits": [
+        1070374912,
+        1065353216,
+        1076715520
+      ],
+      "ordinal": 28,
+      "original_metadata_unchanged": true,
+      "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00122.tiff",
+      "output_bytes": 197801325,
+      "output_sha256": "01412522706b15a55c6b544424b155d8dd2a350b1458f34c1b3c87c5c631c204",
+      "output_wh": [
+        7032,
+        4688
+      ],
+      "raw_active_xywh": [
+        0,
+        0,
+        7032,
+        4688
+      ],
+      "raw_buffer_wh": [
+        7168,
+        5120
+      ]
+    },
+    {
+      "held_wb_differs": false,
+      "input": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00123.ARW",
+      "input_bytes": 41009152,
+      "input_sha256": "4d254e7dc829c25c02549c6c03b38de176775fc5e16983a39bbf370e9cb87a8a",
+      "input_wb_bits": [
+        1070374912,
+        1065353216,
+        1076715520
+      ],
+      "ordinal": 29,
+      "original_metadata_unchanged": true,
+      "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00123.tiff",
+      "output_bytes": 197801325,
+      "output_sha256": "92840f98c1eaf7356c66f015429c2482d116cb06bde8cf6caf5a0cb04cc2134a",
+      "output_wh": [
+        7032,
+        4688
+      ],
+      "raw_active_xywh": [
+        0,
+        0,
+        7032,
+        4688
+      ],
+      "raw_buffer_wh": [
+        7168,
+        5120
+      ]
+    },
+    {
+      "held_wb_differs": false,
+      "input": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00124.ARW",
+      "input_bytes": 41037824,
+      "input_sha256": "7a378f0c78af37d338542616c72d6f589769cf59c2fa7ffb400a0e6b648b81bf",
+      "input_wb_bits": [
+        1070374912,
+        1065353216,
+        1076715520
+      ],
+      "ordinal": 30,
+      "original_metadata_unchanged": true,
+      "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00124.tiff",
+      "output_bytes": 197801325,
+      "output_sha256": "4f56929c715d5db85d377b03bad4752d36e5cc6633c5493c6d321878734e48f9",
+      "output_wh": [
+        7032,
+        4688
+      ],
+      "raw_active_xywh": [
+        0,
+        0,
+        7032,
+        4688
+      ],
+      "raw_buffer_wh": [
+        7168,
+        5120
+      ]
+    },
+    {
+      "held_wb_differs": false,
+      "input": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00125.ARW",
+      "input_bytes": 41050112,
+      "input_sha256": "a1f9e00bae4de4a6a8b2cca50b72db945935492fb6eb5e3d2d7adf907410f457",
+      "input_wb_bits": [
+        1070374912,
+        1065353216,
+        1076715520
+      ],
+      "ordinal": 31,
+      "original_metadata_unchanged": true,
+      "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00125.tiff",
+      "output_bytes": 197801325,
+      "output_sha256": "5e3641217cd056f23a19c37ee1eefe7fe7f7af9dbf8f7361c5b995382427b272",
+      "output_wh": [
+        7032,
+        4688
+      ],
+      "raw_active_xywh": [
+        0,
+        0,
+        7032,
+        4688
+      ],
+      "raw_buffer_wh": [
+        7168,
+        5120
+      ]
+    },
+    {
+      "held_wb_differs": false,
+      "input": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00126.ARW",
+      "input_bytes": 41062400,
+      "input_sha256": "b1320c09dc671bb905678812d49f6b11a37a3d536541c1f8aad8f4011f75d599",
+      "input_wb_bits": [
+        1070374912,
+        1065353216,
+        1076715520
+      ],
+      "ordinal": 32,
+      "original_metadata_unchanged": true,
+      "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00126.tiff",
+      "output_bytes": 197801325,
+      "output_sha256": "a1edd38c92f7b81d4701565a4132d7249df1d16490331df846b28bc40f4596b7",
+      "output_wh": [
+        7032,
+        4688
+      ],
+      "raw_active_xywh": [
+        0,
+        0,
+        7032,
+        4688
+      ],
+      "raw_buffer_wh": [
+        7168,
+        5120
+      ]
+    },
+    {
+      "held_wb_differs": false,
+      "input": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00127.ARW",
+      "input_bytes": 41074688,
+      "input_sha256": "a5b1e70f61339850fd2945fd82701ee3464913743ceec241c702fb230c2f0fa0",
+      "input_wb_bits": [
+        1070374912,
+        1065353216,
+        1076715520
+      ],
+      "ordinal": 33,
+      "original_metadata_unchanged": true,
+      "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00127.tiff",
+      "output_bytes": 197801325,
+      "output_sha256": "7528b0a03cfb3ccf25d2c70125412cd74ef7362bf30f6f64fa8750b7722af927",
+      "output_wh": [
+        7032,
+        4688
+      ],
+      "raw_active_xywh": [
+        0,
+        0,
+        7032,
+        4688
+      ],
+      "raw_buffer_wh": [
+        7168,
+        5120
+      ]
+    },
+    {
+      "held_wb_differs": false,
+      "input": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00128.ARW",
+      "input_bytes": 41070592,
+      "input_sha256": "401171ccdc2288c1345d1636246d2925e26de089144b073f77fc8b4814669bf9",
+      "input_wb_bits": [
+        1070374912,
+        1065353216,
+        1076715520
+      ],
+      "ordinal": 34,
+      "original_metadata_unchanged": true,
+      "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00128.tiff",
+      "output_bytes": 197801325,
+      "output_sha256": "61fcebe13d8d9d4b077168f397b1ef464c2d109490b3a21383c40eb60c4e86c7",
+      "output_wh": [
+        7032,
+        4688
+      ],
+      "raw_active_xywh": [
+        0,
+        0,
+        7032,
+        4688
+      ],
+      "raw_buffer_wh": [
+        7168,
+        5120
+      ]
+    },
+    {
+      "held_wb_differs": false,
+      "input": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00129.ARW",
+      "input_bytes": 41074688,
+      "input_sha256": "0454d0fc91d763a8dd051236c5ef53cf9b5d3b4989738a3e207c75a56e2f9711",
+      "input_wb_bits": [
+        1070374912,
+        1065353216,
+        1076715520
+      ],
+      "ordinal": 35,
+      "original_metadata_unchanged": true,
+      "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00129.tiff",
+      "output_bytes": 197801325,
+      "output_sha256": "e8621fdb9f3a1e58de6f1d22e9fc164d9eab0299dd9b1c57e0bac5e0ad8229f3",
+      "output_wh": [
+        7032,
+        4688
+      ],
+      "raw_active_xywh": [
+        0,
+        0,
+        7032,
+        4688
+      ],
+      "raw_buffer_wh": [
+        7168,
+        5120
+      ]
+    },
+    {
+      "held_wb_differs": false,
+      "input": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00130.ARW",
+      "input_bytes": 41062400,
+      "input_sha256": "c8362824654d3014b9d496283e9925d1eabc7fc550fb436dbe34a0024e1e867b",
+      "input_wb_bits": [
+        1070374912,
+        1065353216,
+        1076715520
+      ],
+      "ordinal": 36,
+      "original_metadata_unchanged": true,
+      "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00130.tiff",
+      "output_bytes": 197801325,
+      "output_sha256": "ad4f21b3a1c68939d89a5fbd95f00bffc4598d1ae92db07dbe64deb09d365480",
+      "output_wh": [
+        7032,
+        4688
+      ],
+      "raw_active_xywh": [
+        0,
+        0,
+        7032,
+        4688
+      ],
+      "raw_buffer_wh": [
+        7168,
+        5120
+      ]
+    },
+    {
+      "held_wb_differs": false,
+      "input": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00131.ARW",
+      "input_bytes": 41037824,
+      "input_sha256": "fa9c48485151df310e1ea54b8f85cc69406a1eba3abfe4f468ad2b7995425915",
+      "input_wb_bits": [
+        1070374912,
+        1065353216,
+        1076715520
+      ],
+      "ordinal": 37,
+      "original_metadata_unchanged": true,
+      "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00131.tiff",
+      "output_bytes": 197801325,
+      "output_sha256": "6898ff12272bdd07b1bebf9e3627297461deb4ec56ffbacb1dc0745d95d3266f",
+      "output_wh": [
+        7032,
+        4688
+      ],
+      "raw_active_xywh": [
+        0,
+        0,
+        7032,
+        4688
+      ],
+      "raw_buffer_wh": [
+        7168,
+        5120
+      ]
+    },
+    {
+      "held_wb_differs": false,
+      "input": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00132.ARW",
+      "input_bytes": 41017344,
+      "input_sha256": "232e291fc6421533bfb641100dcd28648e132f0d2781cb545e6f347b47d9a325",
+      "input_wb_bits": [
+        1070374912,
+        1065353216,
+        1076715520
+      ],
+      "ordinal": 38,
+      "original_metadata_unchanged": true,
+      "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00132.tiff",
+      "output_bytes": 197801325,
+      "output_sha256": "dc7baf81251b540ec6f5ce3bf4cf0c406ef1dd20b2e215aebe31710e2dae8cdb",
+      "output_wh": [
+        7032,
+        4688
+      ],
+      "raw_active_xywh": [
+        0,
+        0,
+        7032,
+        4688
+      ],
+      "raw_buffer_wh": [
+        7168,
+        5120
+      ]
+    },
+    {
+      "held_wb_differs": false,
+      "input": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00133.ARW",
+      "input_bytes": 41009152,
+      "input_sha256": "e6f0b24870c4f30e042618424e41b808795900cbfea584e437be56cdfec4e249",
+      "input_wb_bits": [
+        1070374912,
+        1065353216,
+        1076715520
+      ],
+      "ordinal": 39,
+      "original_metadata_unchanged": true,
+      "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00133.tiff",
+      "output_bytes": 197801325,
+      "output_sha256": "803c880d855ade614305a1e7b7f02632ce27aabd2395fdd3dd75c3dd920d327c",
+      "output_wh": [
+        7032,
+        4688
+      ],
+      "raw_active_xywh": [
+        0,
+        0,
+        7032,
+        4688
+      ],
+      "raw_buffer_wh": [
+        7168,
+        5120
+      ]
+    },
+    {
+      "held_wb_differs": false,
+      "input": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00134.ARW",
+      "input_bytes": 40972288,
+      "input_sha256": "1cba62057255b10f599a9a921bbe1eba26e5d0e3fcbca6869a1b89a312f390fa",
+      "input_wb_bits": [
+        1070374912,
+        1065353216,
+        1076715520
+      ],
+      "ordinal": 40,
+      "original_metadata_unchanged": true,
+      "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00134.tiff",
+      "output_bytes": 197801325,
+      "output_sha256": "691624a367069f7353b3cac19795d6f42e841c5b31e3114c64ec8cc9a84aa5fd",
+      "output_wh": [
+        7032,
+        4688
+      ],
+      "raw_active_xywh": [
+        0,
+        0,
+        7032,
+        4688
+      ],
+      "raw_buffer_wh": [
+        7168,
+        5120
+      ]
+    },
+    {
+      "held_wb_differs": false,
+      "input": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00135.ARW",
+      "input_bytes": 40931328,
+      "input_sha256": "d8864594e181ebf5558e4f1d8467e53eba8ab1e648f22d5e2a64eedb422a006d",
+      "input_wb_bits": [
+        1070374912,
+        1065353216,
+        1076715520
+      ],
+      "ordinal": 41,
+      "original_metadata_unchanged": true,
+      "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00135.tiff",
+      "output_bytes": 197801325,
+      "output_sha256": "4db85bf6e15b3d93c244aae8bcc5ac43318583f6c88f7cff5b1d911ac63deb86",
+      "output_wh": [
+        7032,
+        4688
+      ],
+      "raw_active_xywh": [
+        0,
+        0,
+        7032,
+        4688
+      ],
+      "raw_buffer_wh": [
+        7168,
+        5120
+      ]
+    },
+    {
+      "held_wb_differs": false,
+      "input": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00136.ARW",
+      "input_bytes": 40886272,
+      "input_sha256": "3c0ac5978075d2e60afb1bfaaf99d937e6ae75e77590589be2941ed7eb29d50b",
+      "input_wb_bits": [
+        1070374912,
+        1065353216,
+        1076715520
+      ],
+      "ordinal": 42,
+      "original_metadata_unchanged": true,
+      "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00136.tiff",
+      "output_bytes": 197801325,
+      "output_sha256": "2098ca3ac59ffe3440bc5870484639c87a10d243a43b4818576ff80e371da298",
+      "output_wh": [
+        7032,
+        4688
+      ],
+      "raw_active_xywh": [
+        0,
+        0,
+        7032,
+        4688
+      ],
+      "raw_buffer_wh": [
+        7168,
+        5120
+      ]
+    },
+    {
+      "held_wb_differs": false,
+      "input": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00137.ARW",
+      "input_bytes": 40824832,
+      "input_sha256": "da208837514528758ae51f644df1b09c3e9f1ff1f417675811be6a1ec6529acc",
+      "input_wb_bits": [
+        1070374912,
+        1065353216,
+        1076715520
+      ],
+      "ordinal": 43,
+      "original_metadata_unchanged": true,
+      "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00137.tiff",
+      "output_bytes": 197801325,
+      "output_sha256": "bb4016ae8466b3ccada0a77687c6e7a9c98544e2b64b377fdf901e2d1cc939ba",
+      "output_wh": [
+        7032,
+        4688
+      ],
+      "raw_active_xywh": [
+        0,
+        0,
+        7032,
+        4688
+      ],
+      "raw_buffer_wh": [
+        7168,
+        5120
+      ]
+    },
+    {
+      "held_wb_differs": false,
+      "input": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00138.ARW",
+      "input_bytes": 40775680,
+      "input_sha256": "1bfa6fc981fd5c412e1777ac42add9ba92c2560d62580a0d13de668353604e1c",
+      "input_wb_bits": [
+        1070374912,
+        1065353216,
+        1076715520
+      ],
+      "ordinal": 44,
+      "original_metadata_unchanged": true,
+      "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00138.tiff",
+      "output_bytes": 197801325,
+      "output_sha256": "5bdd8268376182e6dbde7e45ba99290eac95fa66efa0dcd01d86ec2827e9cb4d",
+      "output_wh": [
+        7032,
+        4688
+      ],
+      "raw_active_xywh": [
+        0,
+        0,
+        7032,
+        4688
+      ],
+      "raw_buffer_wh": [
+        7168,
+        5120
+      ]
+    },
+    {
+      "held_wb_differs": false,
+      "input": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00139.ARW",
+      "input_bytes": 40697856,
+      "input_sha256": "293737f35136d20a22068381d46ee5bcfb639d742497ee2fe35a64e9b7e2c769",
+      "input_wb_bits": [
+        1070374912,
+        1065353216,
+        1076715520
+      ],
+      "ordinal": 45,
+      "original_metadata_unchanged": true,
+      "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00139.tiff",
+      "output_bytes": 197801325,
+      "output_sha256": "7a29009d8c5529bb0b38c6da571a052961fd3519162279e1ccabac12cee66abd",
+      "output_wh": [
+        7032,
+        4688
+      ],
+      "raw_active_xywh": [
+        0,
+        0,
+        7032,
+        4688
+      ],
+      "raw_buffer_wh": [
+        7168,
+        5120
+      ]
+    },
+    {
+      "held_wb_differs": false,
+      "input": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00140.ARW",
+      "input_bytes": 40615936,
+      "input_sha256": "740e0ef923b47aa489c2caea3b92525bc0225d726a0cd2c5e005b567558e4865",
+      "input_wb_bits": [
+        1070374912,
+        1065353216,
+        1076715520
+      ],
+      "ordinal": 46,
+      "original_metadata_unchanged": true,
+      "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00140.tiff",
+      "output_bytes": 197801325,
+      "output_sha256": "b48b96e8f794d12eb907cadbf4f08d152af97548ce0bcf09bfd9989accb30e78",
+      "output_wh": [
+        7032,
+        4688
+      ],
+      "raw_active_xywh": [
+        0,
+        0,
+        7032,
+        4688
+      ],
+      "raw_buffer_wh": [
+        7168,
+        5120
+      ]
+    },
+    {
+      "held_wb_differs": false,
+      "input": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00141.ARW",
+      "input_bytes": 40534016,
+      "input_sha256": "9f34033f3c1d267c0b1f2dce9c9c27da30b86a156b29a800c9955a6f87a76f76",
+      "input_wb_bits": [
+        1070374912,
+        1065353216,
+        1076715520
+      ],
+      "ordinal": 47,
+      "original_metadata_unchanged": true,
+      "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00141.tiff",
+      "output_bytes": 197801325,
+      "output_sha256": "b5b223d25b2d0377e440460ecb67263d5fa3a5e88b3a3d08ee2ca0b99076d225",
+      "output_wh": [
+        7032,
+        4688
+      ],
+      "raw_active_xywh": [
+        0,
+        0,
+        7032,
+        4688
+      ],
+      "raw_buffer_wh": [
+        7168,
+        5120
+      ]
+    },
+    {
+      "held_wb_differs": false,
+      "input": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00142.ARW",
+      "input_bytes": 40443904,
+      "input_sha256": "ba3d0190ee2158b48f9650a3e8720944e0384590f195f9b1bbbc2eab375fd7b3",
+      "input_wb_bits": [
+        1070374912,
+        1065353216,
+        1076715520
+      ],
+      "ordinal": 48,
+      "original_metadata_unchanged": true,
+      "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00142.tiff",
+      "output_bytes": 197801325,
+      "output_sha256": "cb3987b0c50540e44efa7997c0b6e4306ef483895cb43034ac8d15c78dbaebca",
+      "output_wh": [
+        7032,
+        4688
+      ],
+      "raw_active_xywh": [
+        0,
+        0,
+        7032,
+        4688
+      ],
+      "raw_buffer_wh": [
+        7168,
+        5120
+      ]
+    },
+    {
+      "held_wb_differs": false,
+      "input": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00143.ARW",
+      "input_bytes": 40337408,
+      "input_sha256": "ae3fffbc1bdaead134c549c5f217557cf50b0a797648aa1b195497d647b1440b",
+      "input_wb_bits": [
+        1070374912,
+        1065353216,
+        1076715520
+      ],
+      "ordinal": 49,
+      "original_metadata_unchanged": true,
+      "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00143.tiff",
+      "output_bytes": 197801325,
+      "output_sha256": "68848524c8239751e621b8eb76ae71a588052a6d937d94d1d123a079b653d45b",
+      "output_wh": [
+        7032,
+        4688
+      ],
+      "raw_active_xywh": [
+        0,
+        0,
+        7032,
+        4688
+      ],
+      "raw_buffer_wh": [
+        7168,
+        5120
+      ]
+    },
+    {
+      "held_wb_differs": false,
+      "input": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00144.ARW",
+      "input_bytes": 40230912,
+      "input_sha256": "d157da52e9487e8535fb6bd85af7c1fd5a28f3ff0c0cbc4a25a484bf703968df",
+      "input_wb_bits": [
+        1070374912,
+        1065353216,
+        1076715520
+      ],
+      "ordinal": 50,
+      "original_metadata_unchanged": true,
+      "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00144.tiff",
+      "output_bytes": 197801325,
+      "output_sha256": "2f533c07c164e5d3d28b94436cb0273bc2b9e1bac32f98ec601bbdffa89c0e6b",
+      "output_wh": [
+        7032,
+        4688
+      ],
+      "raw_active_xywh": [
+        0,
+        0,
+        7032,
+        4688
+      ],
+      "raw_buffer_wh": [
+        7168,
+        5120
+      ]
+    },
+    {
+      "held_wb_differs": false,
+      "input": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00145.ARW",
+      "input_bytes": 40124416,
+      "input_sha256": "6991b93063ea3b25bf99a5d163349cad53ea4c46afd3394ddaba5d153af0bd39",
+      "input_wb_bits": [
+        1070374912,
+        1065353216,
+        1076715520
+      ],
+      "ordinal": 51,
+      "original_metadata_unchanged": true,
+      "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00145.tiff",
+      "output_bytes": 197801325,
+      "output_sha256": "ed02bd3b253c2eee95b7a1f9dd8ef161e35f4882ff55349ea69c14d4fb7c0673",
+      "output_wh": [
+        7032,
+        4688
+      ],
+      "raw_active_xywh": [
+        0,
+        0,
+        7032,
+        4688
+      ],
+      "raw_buffer_wh": [
+        7168,
+        5120
+      ]
+    },
+    {
+      "held_wb_differs": false,
+      "input": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00146.ARW",
+      "input_bytes": 40013824,
+      "input_sha256": "3c82cc21f4a6f85d4d3a3f1f13ff5a9a5ac7960ad381ea21b7a676905e4298c9",
+      "input_wb_bits": [
+        1070374912,
+        1065353216,
+        1076715520
+      ],
+      "ordinal": 52,
+      "original_metadata_unchanged": true,
+      "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00146.tiff",
+      "output_bytes": 197801325,
+      "output_sha256": "c3303092c13b0822e785fc2a97e4bd3e854792cd3d84a112260993680c78f000",
+      "output_wh": [
+        7032,
+        4688
+      ],
+      "raw_active_xywh": [
+        0,
+        0,
+        7032,
+        4688
+      ],
+      "raw_buffer_wh": [
+        7168,
+        5120
+      ]
+    },
+    {
+      "held_wb_differs": false,
+      "input": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00147.ARW",
+      "input_bytes": 39919616,
+      "input_sha256": "ed8b565c589f1e87d94dd469301f57199c4cc5ef5e03d4853735ee10b09447b3",
+      "input_wb_bits": [
+        1070374912,
+        1065353216,
+        1076715520
+      ],
+      "ordinal": 53,
+      "original_metadata_unchanged": true,
+      "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00147.tiff",
+      "output_bytes": 197801325,
+      "output_sha256": "3eb259c42b0e5080ad97c1c8ac08da5304ee1949c81faae23ec7ddbd859b179a",
+      "output_wh": [
+        7032,
+        4688
+      ],
+      "raw_active_xywh": [
+        0,
+        0,
+        7032,
+        4688
+      ],
+      "raw_buffer_wh": [
+        7168,
+        5120
+      ]
+    },
+    {
+      "held_wb_differs": false,
+      "input": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00148.ARW",
+      "input_bytes": 39833600,
+      "input_sha256": "a5449fec86ff75ad57c653c3290fa9df377819e9d06ac2865785ecebf0d61243",
+      "input_wb_bits": [
+        1070374912,
+        1065353216,
+        1076715520
+      ],
+      "ordinal": 54,
+      "original_metadata_unchanged": true,
+      "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00148.tiff",
+      "output_bytes": 197801325,
+      "output_sha256": "3a976ab046893aa9aa65bf73a558f3bfb15ace0726b3e80cd57cef75133027ed",
+      "output_wh": [
+        7032,
+        4688
+      ],
+      "raw_active_xywh": [
+        0,
+        0,
+        7032,
+        4688
+      ],
+      "raw_buffer_wh": [
+        7168,
+        5120
+      ]
+    },
+    {
+      "held_wb_differs": false,
+      "input": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00149.ARW",
+      "input_bytes": 39751680,
+      "input_sha256": "2b728bb3db811892a751eed92ce658c7c09fde160bf824530628899c46e18059",
+      "input_wb_bits": [
+        1070374912,
+        1065353216,
+        1076715520
+      ],
+      "ordinal": 55,
+      "original_metadata_unchanged": true,
+      "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00149.tiff",
+      "output_bytes": 197801325,
+      "output_sha256": "d9b3062ca28feb8375556a6995723f5b3bd58e522902bce7bba928faf42cc134",
+      "output_wh": [
+        7032,
+        4688
+      ],
+      "raw_active_xywh": [
+        0,
+        0,
+        7032,
+        4688
+      ],
+      "raw_buffer_wh": [
+        7168,
+        5120
+      ]
+    },
+    {
+      "held_wb_differs": false,
+      "input": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00150.ARW",
+      "input_bytes": 39677952,
+      "input_sha256": "08fc876067919aa560e63452097d37c66d51eacd16a9a9d724b9e2f3d991bd33",
+      "input_wb_bits": [
+        1070374912,
+        1065353216,
+        1076715520
+      ],
+      "ordinal": 56,
+      "original_metadata_unchanged": true,
+      "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00150.tiff",
+      "output_bytes": 197801325,
+      "output_sha256": "ef3e89195527ca61c51682259ff3d38ed597988db59dab042b9b1badbea2fff6",
+      "output_wh": [
+        7032,
+        4688
+      ],
+      "raw_active_xywh": [
+        0,
+        0,
+        7032,
+        4688
+      ],
+      "raw_buffer_wh": [
+        7168,
+        5120
+      ]
+    },
+    {
+      "held_wb_differs": false,
+      "input": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00151.ARW",
+      "input_bytes": 39608320,
+      "input_sha256": "815d674228313c4817395098094c9a17656da4fdea0a44dc65ced352d63d8cdb",
+      "input_wb_bits": [
+        1070374912,
+        1065353216,
+        1076715520
+      ],
+      "ordinal": 57,
+      "original_metadata_unchanged": true,
+      "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00151.tiff",
+      "output_bytes": 197801325,
+      "output_sha256": "d94e1491c9f6a56fa9b5d8e9c461d44ce98fb7f87dbfe1a67a8cc1c9d4d86736",
+      "output_wh": [
+        7032,
+        4688
+      ],
+      "raw_active_xywh": [
+        0,
+        0,
+        7032,
+        4688
+      ],
+      "raw_buffer_wh": [
+        7168,
+        5120
+      ]
+    },
+    {
+      "held_wb_differs": false,
+      "input": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00152.ARW",
+      "input_bytes": 39555072,
+      "input_sha256": "6e85a51848336b4103bfc299088c40d85b7eb47a367adebc7439dd4569b24e69",
+      "input_wb_bits": [
+        1070374912,
+        1065353216,
+        1076715520
+      ],
+      "ordinal": 58,
+      "original_metadata_unchanged": true,
+      "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00152.tiff",
+      "output_bytes": 197801325,
+      "output_sha256": "2dce7514b051129ab998d7db2575daecb3432fb97d97b2b51ec14d1f6df5fbb4",
+      "output_wh": [
+        7032,
+        4688
+      ],
+      "raw_active_xywh": [
+        0,
+        0,
+        7032,
+        4688
+      ],
+      "raw_buffer_wh": [
+        7168,
+        5120
+      ]
+    },
+    {
+      "held_wb_differs": false,
+      "input": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00153.ARW",
+      "input_bytes": 39489536,
+      "input_sha256": "d840ece6c4d35b45c2be162a0b8b4e59b93a193b4b79ff3bdb1286e913b736b9",
+      "input_wb_bits": [
+        1070374912,
+        1065353216,
+        1076715520
+      ],
+      "ordinal": 59,
+      "original_metadata_unchanged": true,
+      "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00153.tiff",
+      "output_bytes": 197801325,
+      "output_sha256": "0f8d74b9a6b9966b6073df02059f6ac887a2499f85d38c58473759f40504a868",
+      "output_wh": [
+        7032,
+        4688
+      ],
+      "raw_active_xywh": [
+        0,
+        0,
+        7032,
+        4688
+      ],
+      "raw_buffer_wh": [
+        7168,
+        5120
+      ]
+    },
+    {
+      "held_wb_differs": false,
+      "input": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00154.ARW",
+      "input_bytes": 39436288,
+      "input_sha256": "71480ba830418c063f6b0462c72da4c9c523346f710afca3522a0e26aaee9e5b",
+      "input_wb_bits": [
+        1070374912,
+        1065353216,
+        1076715520
+      ],
+      "ordinal": 60,
+      "original_metadata_unchanged": true,
+      "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00154.tiff",
+      "output_bytes": 197801325,
+      "output_sha256": "84c4eb416faf0a8f543e068a1cbbc3cd92e1ae4167ceac81fa514b6d7c9bad60",
+      "output_wh": [
+        7032,
+        4688
+      ],
+      "raw_active_xywh": [
+        0,
+        0,
+        7032,
+        4688
+      ],
+      "raw_buffer_wh": [
+        7168,
+        5120
+      ]
+    },
+    {
+      "held_wb_differs": false,
+      "input": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00155.ARW",
+      "input_bytes": 39395328,
+      "input_sha256": "c73ecc6ad929a59361dcb9550dde580d56c2f4f636c05baff725e1b8e06b8058",
+      "input_wb_bits": [
+        1070374912,
+        1065353216,
+        1076715520
+      ],
+      "ordinal": 61,
+      "original_metadata_unchanged": true,
+      "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00155.tiff",
+      "output_bytes": 197801325,
+      "output_sha256": "d3cc326847fd9d3e04b57572f42b1ec948efb26719301228abf394d793ff3711",
+      "output_wh": [
+        7032,
+        4688
+      ],
+      "raw_active_xywh": [
+        0,
+        0,
+        7032,
+        4688
+      ],
+      "raw_buffer_wh": [
+        7168,
+        5120
+      ]
+    },
+    {
+      "held_wb_differs": false,
+      "input": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00156.ARW",
+      "input_bytes": 39354368,
+      "input_sha256": "6ad806e70a1bbe9144a21af5074eaa70b56c7fbec370928faf9d839a09f09943",
+      "input_wb_bits": [
+        1070374912,
+        1065353216,
+        1076715520
+      ],
+      "ordinal": 62,
+      "original_metadata_unchanged": true,
+      "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00156.tiff",
+      "output_bytes": 197801325,
+      "output_sha256": "9eb1ad698d5739ff10bc66ba8a10c7f7b2f58e68ef1ef70b40b100b1ab3d5ba2",
+      "output_wh": [
+        7032,
+        4688
+      ],
+      "raw_active_xywh": [
+        0,
+        0,
+        7032,
+        4688
+      ],
+      "raw_buffer_wh": [
+        7168,
+        5120
+      ]
+    },
+    {
+      "held_wb_differs": false,
+      "input": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00157.ARW",
+      "input_bytes": 39313408,
+      "input_sha256": "862b8397cc55fa156a8c7055b663d0b4645d82eb215eb4519d8bcbf23302b53a",
+      "input_wb_bits": [
+        1070374912,
+        1065353216,
+        1076715520
+      ],
+      "ordinal": 63,
+      "original_metadata_unchanged": true,
+      "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00157.tiff",
+      "output_bytes": 197801325,
+      "output_sha256": "43cda914372740303a8f0e2bdbf2c7f128b8342d3bc9efeb943f77e854c00085",
+      "output_wh": [
+        7032,
+        4688
+      ],
+      "raw_active_xywh": [
+        0,
+        0,
+        7032,
+        4688
+      ],
+      "raw_buffer_wh": [
+        7168,
+        5120
+      ]
+    },
+    {
+      "held_wb_differs": false,
+      "input": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00158.ARW",
+      "input_bytes": 39276544,
+      "input_sha256": "66f3c0620738e4457bce19e648bedead2850e8115584ae73845f5ab806a59c88",
+      "input_wb_bits": [
+        1070374912,
+        1065353216,
+        1076715520
+      ],
+      "ordinal": 64,
+      "original_metadata_unchanged": true,
+      "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00158.tiff",
+      "output_bytes": 197801325,
+      "output_sha256": "b138e4f648a528d72101f44190f552ac22ca94057214d062448bc60f30699040",
+      "output_wh": [
+        7032,
+        4688
+      ],
+      "raw_active_xywh": [
+        0,
+        0,
+        7032,
+        4688
+      ],
+      "raw_buffer_wh": [
+        7168,
+        5120
+      ]
+    },
+    {
+      "held_wb_differs": false,
+      "input": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00159.ARW",
+      "input_bytes": 39243776,
+      "input_sha256": "d7b16cb17045ebb48e4bdac11475e39e8a53aca1b7135c1a118b3c7c5df23e6e",
+      "input_wb_bits": [
+        1070374912,
+        1065353216,
+        1076715520
+      ],
+      "ordinal": 65,
+      "original_metadata_unchanged": true,
+      "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00159.tiff",
+      "output_bytes": 197801325,
+      "output_sha256": "aaba72d2b29f9f04cfa8cb98918aa2b0888cde55524935206e87630b8484e064",
+      "output_wh": [
+        7032,
+        4688
+      ],
+      "raw_active_xywh": [
+        0,
+        0,
+        7032,
+        4688
+      ],
+      "raw_buffer_wh": [
+        7168,
+        5120
+      ]
+    },
+    {
+      "held_wb_differs": false,
+      "input": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00160.ARW",
+      "input_bytes": 39211008,
+      "input_sha256": "8392e7ad0ae05d1a47cf56145b9f3b1cbf006bac60f8908f2995c8ced7f9577d",
+      "input_wb_bits": [
+        1070374912,
+        1065353216,
+        1076715520
+      ],
+      "ordinal": 66,
+      "original_metadata_unchanged": true,
+      "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00160.tiff",
+      "output_bytes": 197801325,
+      "output_sha256": "df3909fa455772203a21ed3f24203365e3151a96c9e402d600411b9c30ec2085",
+      "output_wh": [
+        7032,
+        4688
+      ],
+      "raw_active_xywh": [
+        0,
+        0,
+        7032,
+        4688
+      ],
+      "raw_buffer_wh": [
+        7168,
+        5120
+      ]
+    },
+    {
+      "held_wb_differs": false,
+      "input": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00161.ARW",
+      "input_bytes": 39182336,
+      "input_sha256": "147919c4fa4ff66be5d7564386b0eaef584f17f0118ded39031ab06d6e0fa67c",
+      "input_wb_bits": [
+        1070374912,
+        1065353216,
+        1076715520
+      ],
+      "ordinal": 67,
+      "original_metadata_unchanged": true,
+      "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00161.tiff",
+      "output_bytes": 197801325,
+      "output_sha256": "c12fad796b07d9b7c2f2648532ae290bb8725fd339fc10a6a808d620df0e3506",
+      "output_wh": [
+        7032,
+        4688
+      ],
+      "raw_active_xywh": [
+        0,
+        0,
+        7032,
+        4688
+      ],
+      "raw_buffer_wh": [
+        7168,
+        5120
+      ]
+    },
+    {
+      "held_wb_differs": false,
+      "input": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00162.ARW",
+      "input_bytes": 39161856,
+      "input_sha256": "aa3fbac2127dbf8bd2184b5b3281cbf5fafa19ecb76a022d354839e5dad36089",
+      "input_wb_bits": [
+        1070374912,
+        1065353216,
+        1076715520
+      ],
+      "ordinal": 68,
+      "original_metadata_unchanged": true,
+      "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00162.tiff",
+      "output_bytes": 197801325,
+      "output_sha256": "2979bf8e788d2ff142a9d199cf56629f2c21a83dfe87c1a0924920e6c4488548",
+      "output_wh": [
+        7032,
+        4688
+      ],
+      "raw_active_xywh": [
+        0,
+        0,
+        7032,
+        4688
+      ],
+      "raw_buffer_wh": [
+        7168,
+        5120
+      ]
+    },
+    {
+      "held_wb_differs": false,
+      "input": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00163.ARW",
+      "input_bytes": 39133184,
+      "input_sha256": "de6ee812348df02283ac76a027aba96d40545b1d4d4de77b39af0a8ff5f066e9",
+      "input_wb_bits": [
+        1070374912,
+        1065353216,
+        1076715520
+      ],
+      "ordinal": 69,
+      "original_metadata_unchanged": true,
+      "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00163.tiff",
+      "output_bytes": 197801325,
+      "output_sha256": "17b306f4ac808b943ee0d7d79cf3aef80ff7cdc1121c43208269990c0256c0e0",
+      "output_wh": [
+        7032,
+        4688
+      ],
+      "raw_active_xywh": [
+        0,
+        0,
+        7032,
+        4688
+      ],
+      "raw_buffer_wh": [
+        7168,
+        5120
+      ]
+    }
+  ],
+  "golden": {
+    "differing": 0,
+    "fixture_cfa_sha256": "73b0677ed475541f5e5158117ac15b1b70662feed0455d2bb70b3dac93898fd8",
+    "fixture_tiff_sha256": "cd7b587d95648db2a05c3a63c78529e5dcc5f712b9c02b0ce58ea8c978103b19",
+    "normalized_f32_differences": 0,
+    "normalized_f32_samples": 112896,
+    "original_u16_sha256": "b966b02f4e27bdf386ff3d90f16fbd4772f1f2aaa95804e1c1e6aff1c3f9e357",
+    "rgb16_samples": 338688,
+    "status": "EXACT"
+  },
+  "levels": [
+    512.0,
+    15360.0
+  ],
+  "matrix_source": "decoder color_matrix[D65]",
+  "scope": "Same product decoder, MHC and colour developer; no CA warp or alignment; tone before external merge, six-digit rounded baseline tone; not a pure merge comparison",
+  "status": "70_UNALIGNED_NATIVE_RGB16_DEVELOPED",
+  "tone_bits": [
+    1035546143,
+    1063920542,
+    1057803469
+  ],
+  "wb_bits": [
+    1070374912,
+    1065353216,
+    1076715520
+  ],
+  "xyz_to_cam_bits": [
+    [
+      1061091803,
+      3195153678,
+      3178289221
+    ],
+    [
+      3205600851,
+      1068240575,
+      1048401517
+    ],
+    [
+      3179255588,
+      1038925745,
+      1059622119
+    ]
+  ]
+}

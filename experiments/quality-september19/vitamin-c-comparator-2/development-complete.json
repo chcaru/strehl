@@ -1,0 +1,19 @@
+{
+  "status": "DEVELOPED_NOT_STACKED",
+  "receipt": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\receipt.json",
+    "sha256": "88cc56b6d56f3f055defeb48e575b533c4bf46a06a22530b4e040396bbf44bb5",
+    "bytes": 72437
+  },
+  "original_metadata_unchanged": true,
+  "format_witness": {
+    "shape": [
+      4688,
+      7032,
+      3
+    ],
+    "dtype": "uint16",
+    "icc_equal_baseline": true,
+    "icc_bytes": 2716
+  }
+}

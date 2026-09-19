@@ -1,0 +1,25 @@
+{
+  "failed_process": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\fork-process.json",
+    "sha256": "57b673de51829bd65896342a5e43b4c3e8a70f8abec344744921595d1f60e0a0",
+    "bytes": 12180
+  },
+  "frozen_plan": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\fork-freeze.json",
+    "sha256": "244cd504607902c7b628e045cc7899fe3ba448b8f6a11223c0814626139e33b0",
+    "bytes": 11318
+  },
+  "changed": [
+    "output path",
+    "job commit cap12GiBto40GiB"
+  ],
+  "all_quality_settings_unchanged": true,
+  "available_physical_before": 51956740096,
+  "total_physical": 66094223360,
+  "runner": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-fork-retry.py",
+    "sha256": "ab07e25c73436f1abba15f32f6fd84c28360ef5c4e8c960998b2f30630236a44",
+    "bytes": 2851
+  },
+  "note": "Prior coffee comparator required40GiB;12GiB was an insufficient harness cap, not engine failure."
+}

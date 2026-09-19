@@ -1,0 +1,11 @@
+stack crystalized-vitamin-c-cpl: 70 frames, digest f52dc0af78c665a0
+  reference frame 35 (middle, default)
+  decoded 70 frames in 2.5 s, plane 3516x2344
+  measured 363/363 edges in 11.7 s (0.0% refused)
+align: track prior on, lambda=1 huber=Some(1.0) px
+
+  placed 70/70 frames, refused 0
+  total corner drift frame 0 -> 69: 46.737 plane px
+  held-out corner error (median): 2.062 plane px
+  cycle-consistency floor: 0.211 plane px
+  wrote C:\dev\blog\death-of-software\projects\strehl\experiments\quality-september19\vitamin-c-baseline-1\vitamin-c.warpmap.txt

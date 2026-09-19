@@ -1,0 +1,627 @@
+{
+  "inputs": [
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00094.ARW",
+      "bytes": 38887424,
+      "mtime_ns": 1789454932730000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00095.ARW",
+      "bytes": 38920192,
+      "mtime_ns": 1789454934190000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00096.ARW",
+      "bytes": 38944768,
+      "mtime_ns": 1789454935640000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00097.ARW",
+      "bytes": 38977536,
+      "mtime_ns": 1789454937130000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00098.ARW",
+      "bytes": 39006208,
+      "mtime_ns": 1789454938580000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00099.ARW",
+      "bytes": 39047168,
+      "mtime_ns": 1789454940060000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00100.ARW",
+      "bytes": 39084032,
+      "mtime_ns": 1789454941520000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00101.ARW",
+      "bytes": 39133184,
+      "mtime_ns": 1789454942980000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00102.ARW",
+      "bytes": 39170048,
+      "mtime_ns": 1789454944460000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00103.ARW",
+      "bytes": 39227392,
+      "mtime_ns": 1789454945920000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00104.ARW",
+      "bytes": 39284736,
+      "mtime_ns": 1789454947410000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00105.ARW",
+      "bytes": 39342080,
+      "mtime_ns": 1789454948880000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00106.ARW",
+      "bytes": 39411712,
+      "mtime_ns": 1789454950350000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00107.ARW",
+      "bytes": 39489536,
+      "mtime_ns": 1789454951800000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00108.ARW",
+      "bytes": 39571456,
+      "mtime_ns": 1789454953260000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00109.ARW",
+      "bytes": 39657472,
+      "mtime_ns": 1789454954740000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00110.ARW",
+      "bytes": 39763968,
+      "mtime_ns": 1789454956200000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00111.ARW",
+      "bytes": 39874560,
+      "mtime_ns": 1789454957680000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00112.ARW",
+      "bytes": 39993344,
+      "mtime_ns": 1789454959140000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00113.ARW",
+      "bytes": 40112128,
+      "mtime_ns": 1789454960600000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00114.ARW",
+      "bytes": 40243200,
+      "mtime_ns": 1789454962080000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00115.ARW",
+      "bytes": 40370176,
+      "mtime_ns": 1789454963530000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00116.ARW",
+      "bytes": 40480768,
+      "mtime_ns": 1789454965010000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00117.ARW",
+      "bytes": 40599552,
+      "mtime_ns": 1789454966490000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00118.ARW",
+      "bytes": 40706048,
+      "mtime_ns": 1789454967940000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00119.ARW",
+      "bytes": 40792064,
+      "mtime_ns": 1789454969420000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00120.ARW",
+      "bytes": 40865792,
+      "mtime_ns": 1789454970890000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00121.ARW",
+      "bytes": 40923136,
+      "mtime_ns": 1789454972370000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00122.ARW",
+      "bytes": 40968192,
+      "mtime_ns": 1789454973840000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00123.ARW",
+      "bytes": 41009152,
+      "mtime_ns": 1789454975320000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00124.ARW",
+      "bytes": 41037824,
+      "mtime_ns": 1789454976780000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00125.ARW",
+      "bytes": 41050112,
+      "mtime_ns": 1789454978240000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00126.ARW",
+      "bytes": 41062400,
+      "mtime_ns": 1789454979720000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00127.ARW",
+      "bytes": 41074688,
+      "mtime_ns": 1789454981180000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00128.ARW",
+      "bytes": 41070592,
+      "mtime_ns": 1789454982660000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00129.ARW",
+      "bytes": 41074688,
+      "mtime_ns": 1789454984120000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00130.ARW",
+      "bytes": 41062400,
+      "mtime_ns": 1789454985600000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00131.ARW",
+      "bytes": 41037824,
+      "mtime_ns": 1789454987060000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00132.ARW",
+      "bytes": 41017344,
+      "mtime_ns": 1789454988520000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00133.ARW",
+      "bytes": 41009152,
+      "mtime_ns": 1789454989990000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00134.ARW",
+      "bytes": 40972288,
+      "mtime_ns": 1789454991460000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00135.ARW",
+      "bytes": 40931328,
+      "mtime_ns": 1789454992940000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00136.ARW",
+      "bytes": 40886272,
+      "mtime_ns": 1789454994390000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00137.ARW",
+      "bytes": 40824832,
+      "mtime_ns": 1789454995860000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00138.ARW",
+      "bytes": 40775680,
+      "mtime_ns": 1789454997340000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00139.ARW",
+      "bytes": 40697856,
+      "mtime_ns": 1789454998800000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00140.ARW",
+      "bytes": 40615936,
+      "mtime_ns": 1789455000280000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00141.ARW",
+      "bytes": 40534016,
+      "mtime_ns": 1789455001740000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00142.ARW",
+      "bytes": 40443904,
+      "mtime_ns": 1789455003200000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00143.ARW",
+      "bytes": 40337408,
+      "mtime_ns": 1789455004680000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00144.ARW",
+      "bytes": 40230912,
+      "mtime_ns": 1789455006140000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00145.ARW",
+      "bytes": 40124416,
+      "mtime_ns": 1789455007630000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00146.ARW",
+      "bytes": 40013824,
+      "mtime_ns": 1789455009080000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00147.ARW",
+      "bytes": 39919616,
+      "mtime_ns": 1789455010560000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00148.ARW",
+      "bytes": 39833600,
+      "mtime_ns": 1789455012010000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00149.ARW",
+      "bytes": 39751680,
+      "mtime_ns": 1789455013480000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00150.ARW",
+      "bytes": 39677952,
+      "mtime_ns": 1789455014950000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00151.ARW",
+      "bytes": 39608320,
+      "mtime_ns": 1789455016400000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00152.ARW",
+      "bytes": 39555072,
+      "mtime_ns": 1789455017870000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00153.ARW",
+      "bytes": 39489536,
+      "mtime_ns": 1789455019340000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00154.ARW",
+      "bytes": 39436288,
+      "mtime_ns": 1789455020810000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00155.ARW",
+      "bytes": 39395328,
+      "mtime_ns": 1789455022280000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00156.ARW",
+      "bytes": 39354368,
+      "mtime_ns": 1789455023730000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00157.ARW",
+      "bytes": 39313408,
+      "mtime_ns": 1789455025190000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00158.ARW",
+      "bytes": 39276544,
+      "mtime_ns": 1789455026670000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00159.ARW",
+      "bytes": 39243776,
+      "mtime_ns": 1789455028140000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00160.ARW",
+      "bytes": 39211008,
+      "mtime_ns": 1789455029610000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00161.ARW",
+      "bytes": 39182336,
+      "mtime_ns": 1789455031090000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00162.ARW",
+      "bytes": 39161856,
+      "mtime_ns": 1789455032560000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00163.ARW",
+      "bytes": 39133184,
+      "mtime_ns": 1789455034020000000
+    }
+  ],
+  "executable": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\build\\quality-batch-develop.exe",
+    "sha256": "68cd9173c41272b9d2269cbb68b81ce4454527585a1c3a38f42ddb0dea7f3684",
+    "bytes": 6965248
+  },
+  "baseline": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-baseline-1\\vitamin-c.tiff",
+    "sha256": "2593ecdaa7bcaa34217b595bd3cdf3622637a3dae115c5e014ff6c6a9635bdf4",
+    "bytes": 191495346
+  },
+  "sources": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\Cargo.lock",
+      "sha256": "ea23b6dc6afc5fb9f1b12d08f065083ba77a75425b2a0b000d3f3a8466696efa",
+      "bytes": 64738
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\Cargo.toml",
+      "sha256": "2ef9e1e68aa0816c2bc8d41c2ea1321341bd0cf17bd4d633e3c6edfa69ddccc4",
+      "bytes": 1146
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-cli\\Cargo.toml",
+      "sha256": "c5dfa69451015a18f3e50b15a109cdf01c153108cf5200caf973755655ec662f",
+      "bytes": 1887
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-cli\\examples\\quality-batch-develop.rs",
+      "sha256": "804107b7910daff699d194414260e7a2750e9128ff77ce5921bf026d2e9fdb70",
+      "bytes": 10902
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-cli\\src\\image_out.rs",
+      "sha256": "b1bb4674337f5396e92f8fff027724e246df904faf5257b1753683a26c64c9e9",
+      "bytes": 132206
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-core\\Cargo.toml",
+      "sha256": "722149ae720fc5e376d3b7b1cfead95ee61c6ba3e1628ddb5c05d0f0621fa4c8",
+      "bytes": 955
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-plugin\\Cargo.toml",
+      "sha256": "b3fd67fd414ac138119f4ab8dedaee280cea23b1bcc20f21f066f09d3575c88c",
+      "bytes": 417
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-raw\\Cargo.toml",
+      "sha256": "6e1e7cfdadb24371423143fb10945b0e61b3f45696365aa87a721661edde31c9",
+      "bytes": 424
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-core\\src\\align.rs",
+      "sha256": "e6685dd17bd28a9466cfe7ceb534faee65000c0c915df7cd7fc6ef039b6f9dc6",
+      "bytes": 155298
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-core\\src\\boxfilter.rs",
+      "sha256": "5cf6dab36c8ddb7499acbec140df509b4e1e5fe0b0ace3a13f8d7cf68f979b8e",
+      "bytes": 7986
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-core\\src\\clip.rs",
+      "sha256": "aa1ccdac944d928879f94770b2161152a271f9fa208c57c66d8921e5a643533d",
+      "bytes": 10231
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-core\\src\\color.rs",
+      "sha256": "83c1aa371dc751862bfef5724a6eceab8182c5d68b6f31ac299b3443c14c8f1e",
+      "bytes": 83992
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-core\\src\\defect-map-ILCE-7CM2-dust.txt",
+      "sha256": "a406efd51f806e360e1e51fc1421eca5e3cc912f356ced0693c8477a398853ee",
+      "bytes": 23797
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-core\\src\\defect_map.rs",
+      "sha256": "1738c770c9f316a6aeac3f742bf7abc9581ea386b4e07ec128e50df35c2ffb14",
+      "bytes": 176181
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-core\\src\\demosaic.rs",
+      "sha256": "91f736847c55f9f0658c92de4c3d0065f76fa03126f600e4f8468f61a3564784",
+      "bytes": 52295
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-core\\src\\edgeaware.rs",
+      "sha256": "a32580ac72dd273e62cab40afa9b36e2462ef57335c8d7cd8ab0725184c7f77b",
+      "bytes": 105131
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-core\\src\\election_coherence.rs",
+      "sha256": "47640a176cb445dd2f01b309d907da066ae7f5a6d28b354d2de60362538f948e",
+      "bytes": 13331
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-core\\src\\flat_ratio.rs",
+      "sha256": "da1df7167b6f18ac248c1ee347671388391a968aa45a762299c4418a2287fef0",
+      "bytes": 32764
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-core\\src\\focus.rs",
+      "sha256": "71e63def76e40f18df440617a9dba7013d799ceabd30bf805149223433384e3e",
+      "bytes": 78172
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-core\\src\\highlight.rs",
+      "sha256": "97d4aacec3d7e6c3dd2df1f792ffb7ee136a8f6064ffb0dc1656476730f7641e",
+      "bytes": 29639
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-core\\src\\lib.rs",
+      "sha256": "91419ceb273be1dc9ab15dbdc6347bd2b398d29cf36c0da9184ee533372f8022",
+      "bytes": 4356
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-core\\src\\merge.rs",
+      "sha256": "7362cf6fab70db56443693e5483f052ba48b32cc7ef264d64ec4a7bd1b50e4ef",
+      "bytes": 253103
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-core\\src\\noise.rs",
+      "sha256": "d88dc9cf419a8fdb1e3ff2c51f0b0ac80d785c17de7f9e71e905fc977fce0ecc",
+      "bytes": 29746
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-core\\src\\optics.rs",
+      "sha256": "1884fd98c7a2adf903c152b3d877051cfeba71316bdbb797fd2f1ba1433a5524",
+      "bytes": 93722
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-core\\src\\outlier.rs",
+      "sha256": "8d3fb7a225b5811c2d831db4339953b15a5181bfcda7591ac05f23f6adf5e67d",
+      "bytes": 51153
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-core\\src\\photometric.rs",
+      "sha256": "b6102288c7fc2312f16d108dc3d943d290a5b8fd5d5a5c39306d97489191399b",
+      "bytes": 83028
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-core\\src\\plane.rs",
+      "sha256": "8c219f9c4d2c8c0da19416998b0f369a9f9d44e305740664f29caaba69203dc4",
+      "bytes": 11536
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-core\\src\\profile.rs",
+      "sha256": "07e7cf7b3040239a5a32464ae998a434696031010ce8d87dac7f2dd2a95ac1f1",
+      "bytes": 44194
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-core\\src\\pyramid.rs",
+      "sha256": "29210ab4ed704fbde09191b83b92d9824232f2ef4af6ce3d2a2841560efad011",
+      "bytes": 211904
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-core\\src\\restore.rs",
+      "sha256": "3ab5c6660b7a45837ac4b5560078092e6aafa9c85a041a935e95b0cd77533afd",
+      "bytes": 60029
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-core\\src\\robust.rs",
+      "sha256": "2cf6013b948f5c9d4f11783633f04e6d76ac9830383197c05506b0d68fe24004",
+      "bytes": 31317
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-core\\src\\softgate.rs",
+      "sha256": "0cb0f916dade24e6e3a31529378390a083c6c56cb3e8b479eb7eb65ac04f688d",
+      "bytes": 25418
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-core\\src\\stack.rs",
+      "sha256": "c951cdbb304e4894676f1ff6a77316e7e2ab68d7756f22bf623562380d5f6337",
+      "bytes": 20542
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-core\\src\\through_focus.rs",
+      "sha256": "475a6c4eece089638ab916e3d7f4cf480197e2d838b5244347c16762f5122a3d",
+      "bytes": 90250
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-core\\src\\warpmap.rs",
+      "sha256": "9d2198eeab5e8a941e297cf8fcd8a217d2454390220433ae19cc6b07e6fd721b",
+      "bytes": 54829
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-plugin\\src\\calibrate.rs",
+      "sha256": "7e10fbd56d8257f409a083461854bf999f8c97ce1a65aad5f90da3b76c8d2a10",
+      "bytes": 36532
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-plugin\\src\\field.rs",
+      "sha256": "6a1da0df1fc4d6ba5e7cbfc0bc3d79295e89bca7b21647f237154bd97018ced5",
+      "bytes": 7730
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-plugin\\src\\lib.rs",
+      "sha256": "9dbb902a31cb21ba5e07fe1576f96b0cffad2dd8fed70a777c2bfaaab41f97e7",
+      "bytes": 8756
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-plugin\\src\\measure.rs",
+      "sha256": "a3941112f7e5a19b2929d83e95afa97d7be1f2ed3465d6160715386705a23c20",
+      "bytes": 8713
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-plugin\\src\\reference.rs",
+      "sha256": "eca4ecf81d1e783c48d680323907fd34336d1f3d5accdedfbdf726e14e847cfb",
+      "bytes": 28757
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-plugin\\src\\registry.rs",
+      "sha256": "1543ba679a56bdcd9ff625e54c9efd97d74c316cbf0726866e125cc1eb806a35",
+      "bytes": 25801
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-plugin\\src\\rng.rs",
+      "sha256": "402c5fa0acb97df6de6df14a51935de05ad9a71d20f4a909a9f7154f52442225",
+      "bytes": 9324
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-raw\\src\\common_tiff.rs",
+      "sha256": "bac1d18f036b8960a8e82d01b610ae945d00d259d4cc3fe7eb9106e8a8077f42",
+      "bytes": 33071
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-raw\\src\\identity.rs",
+      "sha256": "676d18872656a72a93e3257b1677c38ea2ee39084574e1153bdbbfbc6e8ad1fe",
+      "bytes": 36796
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-raw\\src\\lib.rs",
+      "sha256": "1513fd3e682f2edb8c54c7d47083f20f66525ad72a5687fb2e530bb5697fef2a",
+      "bytes": 24809
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-gpu-gather\\Cargo.toml",
+      "sha256": "bc7d9ba7d9b0e9bd0751f3aea248a548a9ba74c5ed3f308d7d4eefe5b24484a5",
+      "bytes": 878
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-gpu-gather\\src\\coordinates.glsl",
+      "sha256": "b331df15f3049484bbc1fc5151218a0658cdace28aec4a063a4b4f89d87030cb",
+      "bytes": 2242
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-gpu-gather\\src\\device-coordinates.rs",
+      "sha256": "124009ae19d5f4003404a1b68ebdd1641253f7fb35e48bdce536d9de198bf0ba",
+      "bytes": 20509
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-gpu-gather\\src\\gather.wgsl",
+      "sha256": "dbf900189081c839f67d103a555d27d9ec4a8165a62f0f609b63573c440cbcd0",
+      "bytes": 4921
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-gpu-gather\\src\\lib.rs",
+      "sha256": "daf49d8deab32658231cabaf57e98243bed6f2183e704beed671f44f63d9cdb1",
+      "bytes": 27296
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-gpu-gather\\src\\strict-spirv.rs",
+      "sha256": "a904c1017c051e3285390a5e714e797720cab6a150a27e15c1aefc3a3145a65e",
+      "bytes": 11170
+    }
+  ],
+  "free_bytes_before": 722395557888,
+  "baseline_description_tone_precision": "6 decimal places; not exact original f32",
+  "independent_geometry": true,
+  "external_ca_correction": false,
+  "baseline_ca_correction": true,
+  "interpretation": "Product developer shared; external tone occurs before merge; complete workflows, not merge-only"
+}
