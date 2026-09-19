@@ -1,0 +1,357 @@
+
+running 1 test
+test merge_cmd::fine_support_tests::actual_green_fine_support ...   GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+fine-support 1/70, 1.0s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+fine-support 2/70, 1.3s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+fine-support 3/70, 1.6s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+fine-support 4/70, 2.0s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+fine-support 5/70, 2.3s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+fine-support 6/70, 2.6s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+fine-support 7/70, 2.9s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+fine-support 8/70, 3.3s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+fine-support 9/70, 3.6s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+fine-support 10/70, 3.9s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+fine-support 11/70, 4.2s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+fine-support 12/70, 4.6s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+fine-support 13/70, 4.9s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+fine-support 14/70, 5.2s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+fine-support 15/70, 5.6s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+fine-support 16/70, 5.9s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+fine-support 17/70, 6.2s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+fine-support 18/70, 6.6s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+fine-support 19/70, 6.9s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+fine-support 20/70, 7.2s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+fine-support 21/70, 7.5s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+fine-support 22/70, 7.9s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+fine-support 23/70, 8.2s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+fine-support 24/70, 8.5s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+fine-support 25/70, 8.8s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+fine-support 26/70, 9.2s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+fine-support 27/70, 9.5s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+fine-support 28/70, 9.8s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+fine-support 29/70, 10.2s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+fine-support 30/70, 10.5s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+fine-support 31/70, 10.8s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+fine-support 32/70, 11.2s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+fine-support 33/70, 11.5s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+fine-support 34/70, 11.8s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+fine-support 35/70, 12.2s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+fine-support 36/70, 12.5s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+fine-support 37/70, 12.8s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+fine-support 38/70, 13.2s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+fine-support 39/70, 13.5s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+fine-support 40/70, 13.8s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+fine-support 41/70, 14.2s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+fine-support 42/70, 14.5s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+fine-support 43/70, 14.8s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+fine-support 44/70, 15.2s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+fine-support 45/70, 15.5s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+fine-support 46/70, 15.8s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+fine-support 47/70, 16.2s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+fine-support 48/70, 16.5s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+fine-support 49/70, 16.8s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+fine-support 50/70, 17.2s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+fine-support 51/70, 17.5s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+fine-support 52/70, 17.8s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+fine-support 53/70, 18.2s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+fine-support 54/70, 18.5s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+fine-support 55/70, 18.8s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+fine-support 56/70, 19.1s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+fine-support 57/70, 19.4s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+fine-support 58/70, 19.8s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+fine-support 59/70, 20.1s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+fine-support 60/70, 20.4s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+fine-support 61/70, 20.8s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+fine-support 62/70, 21.1s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+fine-support 63/70, 21.4s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+fine-support 64/70, 21.7s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+fine-support 65/70, 22.1s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+fine-support 66/70, 22.4s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+fine-support 67/70, 22.7s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+fine-support 68/70, 23.1s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+fine-support 69/70, 23.4s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+fine-support 70/70, 23.7s
+FINE_SUPPORT_NOMINATIONS [{"actual_weight_dump_arg":23,"caveat":"A max-SNR tie can differ from clamped exponent weight ties; mismatches require inspection, not threshold relaxation.","name":"facet-core","output_native":[2624,2906],"pooled":{"all_zero":false,"exact_tied_indices":[23],"first_index":23,"max":436.2231140136719},"unpooled":{"all_zero":false,"exact_tied_indices":[23],"first_index":23,"max":1546.6788330078125},"unpooled_arg_matches_dump":true},{"actual_weight_dump_arg":57,"caveat":"A max-SNR tie can differ from clamped exponent weight ties; mismatches require inspection, not threshold relaxation.","name":"facet-fan","output_native":[2602,2945],"pooled":{"all_zero":false,"exact_tied_indices":[23],"first_index":23,"max":465.4288635253906},"unpooled":{"all_zero":false,"exact_tied_indices":[57],"first_index":57,"max":88.48397064208984},"unpooled_arg_matches_dump":true},{"actual_weight_dump_arg":58,"caveat":"A max-SNR tie can differ from clamped exponent weight ties; mismatches require inspection, not threshold relaxation.","name":"facet-rim","output_native":[2760,2998],"pooled":{"all_zero":false,"exact_tied_indices":[25],"first_index":25,"max":147.0657196044922},"unpooled":{"all_zero":false,"exact_tied_indices":[58],"first_index":58,"max":21.32698631286621},"unpooled_arg_matches_dump":true},{"actual_weight_dump_arg":32,"caveat":"A max-SNR tie can differ from clamped exponent weight ties; mismatches require inspection, not threshold relaxation.","name":"dark-core","output_native":[3080,2150],"pooled":{"all_zero":false,"exact_tied_indices":[27],"first_index":27,"max":801.616943359375},"unpooled":{"all_zero":false,"exact_tied_indices":[32],"first_index":32,"max":412.22442626953125},"unpooled_arg_matches_dump":true},{"actual_weight_dump_arg":69,"caveat":"A max-SNR tie can differ from clamped exponent weight ties; mismatches require inspection, not threshold relaxation.","name":"dark-fan","output_native":[3102,2203],"pooled":{"all_zero":false,"exact_tied_indices":[27],"first_index":27,"max":651.37548828125},"unpooled":{"all_zero":false,"exact_tied_indices":[69],"first_index":69,"max":171.81170654296875},"unpooled_arg_matches_dump":true},{"actual_weight_dump_arg":25,"caveat":"A max-SNR tie can differ from clamped exponent weight ties; mismatches require inspection, not threshold relaxation.","name":"nearby-structure","output_native":[3240,2070],"pooled":{"all_zero":false,"exact_tied_indices":[35],"first_index":35,"max":12.348349571228027},"unpooled":{"all_zero":false,"exact_tied_indices":[25],"first_index":25,"max":2.8190550804138184},"unpooled_arg_matches_dump":true}]
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 190 filtered out; finished in 24.96s
+

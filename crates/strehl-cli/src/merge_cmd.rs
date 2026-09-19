@@ -4899,6 +4899,16 @@ pub(crate) mod phase_packed_rgb {
     include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/phase-packed-rgb/implementation.rs"));
 }
 
+#[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance"))]
+pub(crate) mod fine_support_tests {
+    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/fine-support-guidance/measure.rs"));
+}
+
+#[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance"))]
+pub(crate) mod fine_support_candidate_tests {
+    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/fine-support-guidance/candidate-adapter.rs"));
+}
+
 impl BandWorker {
     fn new(domain: PyramidDomain, cfg: MergeConfig) -> Self {
         let geom = domain.analysis();

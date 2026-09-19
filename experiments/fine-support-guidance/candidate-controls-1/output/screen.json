@@ -1,0 +1,752 @@
+{
+  "cases": [
+    {
+      "baseline_averaged_fraction": [
+        0.9494620689655172,
+        0.8236573168080017,
+        0.7035472972972973,
+        0.47368421052631576,
+        1.0
+      ],
+      "candidate_averaged_fraction": [
+        1.0,
+        0.8236573168080017,
+        0.7035472972972973,
+        0.47368421052631576,
+        1.0
+      ],
+      "disabled_exact": null,
+      "fixture_exercised": true,
+      "iso": 100.0,
+      "non_finest_accumulators_bit_exact": true,
+      "quality_pass": true,
+      "scene": "flat",
+      "source_hashes": [
+        "c003ee704e1611ad26d4e0cb78c11cada8ce95af08c36adf15d30054be664598",
+        "1795ff3e13d43ab263f7ca83d39abb5b345f4fb292b363e6801cbed9fea7c485",
+        "280175839a56c9ed312a7314781f5efaeece005bfcc9342818e0e82d425af132",
+        "31e27d8b080dbfb17426293c23d2368841da0e5cdf5987b6fed3ecc77f80cd10",
+        "33203c2066cc2476fefea9557bc9c59ed5658485641d4c20ebb43ff92cbc44a4"
+      ],
+      "unmerged_defocused_fan_truth_rmse": null,
+      "windows": [
+        {
+          "active_native_bounds": [
+            38,
+            42,
+            280,
+            244
+          ],
+          "baseline": {
+            "chroma_rg_bg_rmse": 0.0009223195793755463,
+            "rgb_rmse": 0.0011098913245796978,
+            "truth_template_recovery": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "truth_template_sd": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "candidate": {
+            "chroma_rg_bg_rmse": 0.0008200186798903348,
+            "rgb_rmse": 0.0009750954465781551,
+            "truth_template_recovery": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "truth_template_sd": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "chroma_ratio": 0.889083023094366,
+          "name": "flat-interior",
+          "quality_pass": true,
+          "rgb_ratio": 0.878550381450555
+        }
+      ]
+    },
+    {
+      "baseline_averaged_fraction": [
+        0.43702068965517243,
+        0.0,
+        0.07601351351351351,
+        0.0,
+        1.0
+      ],
+      "candidate_averaged_fraction": [
+        0.21169655172413793,
+        0.0,
+        0.07601351351351351,
+        0.0,
+        1.0
+      ],
+      "disabled_exact": true,
+      "fixture_exercised": true,
+      "iso": 100.0,
+      "non_finest_accumulators_bit_exact": true,
+      "quality_pass": false,
+      "scene": "glint-depth-step",
+      "source_hashes": [
+        "5830fe96e397d621051d798e4d23ac2fbbb5af89fce34577a4c75a9a7a990d3e",
+        "89ae65f67434fc00a401400e730c75ca027739abb429239666e553eb355fc408",
+        "bd574c9bd6bb47baccbe452b65fd2ec1f03001063747a0fa4e18971b44a502c1",
+        "5f1c0ed78289af482f7f1431f94c0c9a93f56668f1436d3c9ed7589d7676feb3",
+        "da73864d9588dca3008b466154c94924d4fb1737dc87c47194a785096d3a540d"
+      ],
+      "unmerged_defocused_fan_truth_rmse": 0.0037014708033989894,
+      "windows": [
+        {
+          "active_native_bounds": [
+            138,
+            133,
+            171,
+            167
+          ],
+          "baseline": {
+            "chroma_rg_bg_rmse": 0.0037905635407293526,
+            "rgb_rmse": 0.002749244069904629,
+            "truth_template_recovery": [
+              0.9914434800721504,
+              1.1260951462107252,
+              1.027636142936459
+            ],
+            "truth_template_sd": [
+              0.0068338701747547755,
+              0.006833870174754311,
+              0.00683387017475269
+            ]
+          },
+          "candidate": {
+            "chroma_rg_bg_rmse": 0.0038178645517754524,
+            "rgb_rmse": 0.0030945944094024048,
+            "truth_template_recovery": [
+              0.9719964323994573,
+              1.0664371487862472,
+              0.9853113369407966
+            ],
+            "truth_template_sd": [
+              0.0068338701747547755,
+              0.006833870174754311,
+              0.00683387017475269
+            ]
+          },
+          "chroma_ratio": 1.0072023620637809,
+          "name": "fan",
+          "quality_pass": false,
+          "rgb_ratio": 1.1256164715523986
+        },
+        {
+          "active_native_bounds": [
+            112,
+            110,
+            133,
+            132
+          ],
+          "baseline": {
+            "chroma_rg_bg_rmse": 0.005473493866913214,
+            "rgb_rmse": 0.00673594542279073,
+            "truth_template_recovery": [
+              1.0438356447228567,
+              1.0342244118658148,
+              1.0530864869715266
+            ],
+            "truth_template_sd": [
+              0.0702536563430525,
+              0.07308570678936346,
+              0.06742183755596477
+            ]
+          },
+          "candidate": {
+            "chroma_rg_bg_rmse": 0.004893095197487332,
+            "rgb_rmse": 0.04398576435071919,
+            "truth_template_recovery": [
+              0.4096364131712583,
+              0.41039708767632294,
+              0.4231830691894958
+            ],
+            "truth_template_sd": [
+              0.0702536563430525,
+              0.07308570678936346,
+              0.06742183755596477
+            ]
+          },
+          "chroma_ratio": 0.893961940300264,
+          "name": "core",
+          "quality_pass": false,
+          "rgb_ratio": 6.530006048133287
+        },
+        {
+          "active_native_bounds": [
+            160,
+            80,
+            192,
+            208
+          ],
+          "baseline": {
+            "chroma_rg_bg_rmse": 0.01480722374485636,
+            "rgb_rmse": 0.011598607962926985,
+            "truth_template_recovery": [
+              0.9215078371878053,
+              0.9434438508848111,
+              0.9506292409659274
+            ],
+            "truth_template_sd": [
+              0.04736747193117171,
+              0.05543015900196193,
+              0.057968344041297824
+            ]
+          },
+          "candidate": {
+            "chroma_rg_bg_rmse": 0.014816845461367375,
+            "rgb_rmse": 0.011621149126894784,
+            "truth_template_recovery": [
+              0.9190507238967951,
+              0.9399691797062097,
+              0.9472108039088274
+            ],
+            "truth_template_sd": [
+              0.04736747193117171,
+              0.05543015900196193,
+              0.057968344041297824
+            ]
+          },
+          "chroma_ratio": 1.0006497988196037,
+          "name": "depth-boundary",
+          "quality_pass": true,
+          "rgb_ratio": 1.0019434370089797
+        },
+        {
+          "active_native_bounds": [
+            180,
+            96,
+            224,
+            192
+          ],
+          "baseline": {
+            "chroma_rg_bg_rmse": 0.01999943241438441,
+            "rgb_rmse": 0.01551080129510214,
+            "truth_template_recovery": [
+              0.7782787499441128,
+              0.8564738582452514,
+              0.7638697938171984
+            ],
+            "truth_template_sd": [
+              0.039077379855128866,
+              0.04521535404296994,
+              0.03305599524293764
+            ]
+          },
+          "candidate": {
+            "chroma_rg_bg_rmse": 0.019999430380182277,
+            "rgb_rmse": 0.015510806627185712,
+            "truth_template_recovery": [
+              0.7782789833423547,
+              0.8564746976404758,
+              0.7638700563326778
+            ],
+            "truth_template_sd": [
+              0.039077379855128866,
+              0.04521535404296994,
+              0.03305599524293764
+            ]
+          },
+          "chroma_ratio": 0.9999998982870067,
+          "name": "nearer-real-texture",
+          "quality_pass": true,
+          "rgb_ratio": 1.0000003437658358
+        }
+      ]
+    },
+    {
+      "baseline_averaged_fraction": [
+        0.9185103448275862,
+        0.7379865188084366,
+        0.5464527027027027,
+        0.1611842105263158,
+        1.0
+      ],
+      "candidate_averaged_fraction": [
+        0.6568827586206897,
+        0.7379865188084366,
+        0.5464527027027027,
+        0.1611842105263158,
+        1.0
+      ],
+      "disabled_exact": null,
+      "fixture_exercised": true,
+      "iso": 100.0,
+      "non_finest_accumulators_bit_exact": true,
+      "quality_pass": true,
+      "scene": "true-coloured-radial",
+      "source_hashes": [
+        "9fa9e6af80272fb55bb0a3bb006528807cac19b41a50c514dbf2960f14d438f2",
+        "41226f5abed3e96c57143d0b89ec1aaad72b457e0c7fd277edb8c5475f42f65b",
+        "e6bf831a05b92175c9022bfc679223cea3ac397eb1febbe344d01c10251311ea",
+        "a23b193e2a9c5da7589fa055da428c9d73fe2e332075944693b8e8ced2498725",
+        "93d3eef416419a2f20b9f047d63ad097ef3b5d2242374c0f31c71679d8b05126"
+      ],
+      "unmerged_defocused_fan_truth_rmse": null,
+      "windows": [
+        {
+          "active_native_bounds": [
+            84,
+            72,
+            232,
+            216
+          ],
+          "baseline": {
+            "chroma_rg_bg_rmse": 0.0033595366300743167,
+            "rgb_rmse": 0.0026659375287968546,
+            "truth_template_recovery": [
+              0.8202420164680305,
+              0.9390558469416577,
+              0.861255073934357
+            ],
+            "truth_template_sd": [
+              0.010012502699632142,
+              0.010012092818908242,
+              0.010012092821949975
+            ]
+          },
+          "candidate": {
+            "chroma_rg_bg_rmse": 0.0027816058575824945,
+            "rgb_rmse": 0.002489125762666651,
+            "truth_template_recovery": [
+              0.8884793078521621,
+              0.9395728143722647,
+              0.9053443430555072
+            ],
+            "truth_template_sd": [
+              0.010012502699632142,
+              0.010012092818908242,
+              0.010012092821949975
+            ]
+          },
+          "chroma_ratio": 0.8279730700602489,
+          "name": "real-coloured-rays",
+          "quality_pass": true,
+          "rgb_ratio": 0.9336774533460284
+        }
+      ]
+    },
+    {
+      "baseline_averaged_fraction": [
+        0.9492413793103448,
+        0.8251793868232224,
+        0.706081081081081,
+        0.47368421052631576,
+        1.0
+      ],
+      "candidate_averaged_fraction": [
+        1.0,
+        0.8251793868232224,
+        0.706081081081081,
+        0.47368421052631576,
+        1.0
+      ],
+      "disabled_exact": null,
+      "fixture_exercised": true,
+      "iso": 400.0,
+      "non_finest_accumulators_bit_exact": true,
+      "quality_pass": true,
+      "scene": "flat",
+      "source_hashes": [
+        "46d5866df78608078d786ee285ebd6d947768b8687d5e770ddc65462bf67f1be",
+        "4fcde534b56ea846396d963eaf215f2315d0db21e6f501a33700d9a410a9ad86",
+        "9dd2dd3ad11c6e3c64090ab4448c42ea9760c9abb888504b62ad034f1092f178",
+        "664cc43cc88a46955fe71afcafb577cbcdec1240c4e55c73b349abfcc793a931",
+        "fbe20cc89e4c81c9f59a853d4a9f14c0290edeb2522b1afaa0ec11c89a51227c"
+      ],
+      "unmerged_defocused_fan_truth_rmse": null,
+      "windows": [
+        {
+          "active_native_bounds": [
+            38,
+            42,
+            280,
+            244
+          ],
+          "baseline": {
+            "chroma_rg_bg_rmse": 0.001847227374486053,
+            "rgb_rmse": 0.0022207832190160293,
+            "truth_template_recovery": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "truth_template_sd": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "candidate": {
+            "chroma_rg_bg_rmse": 0.0016390868018300504,
+            "rgb_rmse": 0.001949055838565383,
+            "truth_template_recovery": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "truth_template_sd": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "chroma_ratio": 0.8873227110366353,
+          "name": "flat-interior",
+          "quality_pass": true,
+          "rgb_ratio": 0.877643446634543
+        }
+      ]
+    },
+    {
+      "baseline_averaged_fraction": [
+        0.47911724137931033,
+        0.0,
+        0.10472972972972973,
+        0.0,
+        1.0
+      ],
+      "candidate_averaged_fraction": [
+        0.22157241379310344,
+        0.0,
+        0.10472972972972973,
+        0.0,
+        1.0
+      ],
+      "disabled_exact": true,
+      "fixture_exercised": false,
+      "iso": 400.0,
+      "non_finest_accumulators_bit_exact": true,
+      "quality_pass": false,
+      "scene": "glint-depth-step",
+      "source_hashes": [
+        "a96b29fa837249c304a23eb330d49a2afc3078ae34ef186fc92a87e499bb417b",
+        "25148ff6371d525eebfe7ff5f3418aed14aff96ba55f970a34af1e454aa714bf",
+        "3575c54f5f376f1e11c8c84303cf7aed4a7e3b1418fb731c66ab4b2f575618d7",
+        "996d98fb7cc91f07ffd97d6727efdf0cb94e1a37e709e7d49fc815cbcaefff35",
+        "415d94c313e446aa1536fbda0c7cadb120d9fa9c3d6b049094c03eadab9410d4"
+      ],
+      "unmerged_defocused_fan_truth_rmse": 0.0037014708033989894,
+      "windows": [
+        {
+          "active_native_bounds": [
+            138,
+            133,
+            171,
+            167
+          ],
+          "baseline": {
+            "chroma_rg_bg_rmse": 0.004152870437217488,
+            "rgb_rmse": 0.0034005730575280557,
+            "truth_template_recovery": [
+              0.9783340194322218,
+              1.1337494742864367,
+              1.0132494180621716
+            ],
+            "truth_template_sd": [
+              0.0068338701747547755,
+              0.006833870174754311,
+              0.00683387017475269
+            ]
+          },
+          "candidate": {
+            "chroma_rg_bg_rmse": 0.004369820060818784,
+            "rgb_rmse": 0.004189033473470081,
+            "truth_template_recovery": [
+              0.9674264121653451,
+              1.0652332472048625,
+              0.9779650138612709
+            ],
+            "truth_template_sd": [
+              0.0068338701747547755,
+              0.006833870174754311,
+              0.00683387017475269
+            ]
+          },
+          "chroma_ratio": 1.0522408841983177,
+          "name": "fan",
+          "quality_pass": false,
+          "rgb_ratio": 1.2318610430076078
+        },
+        {
+          "active_native_bounds": [
+            112,
+            110,
+            133,
+            132
+          ],
+          "baseline": {
+            "chroma_rg_bg_rmse": 0.005981743626325871,
+            "rgb_rmse": 0.007207707604058486,
+            "truth_template_recovery": [
+              1.0450610622116008,
+              1.0316881583090305,
+              1.0541139394214785
+            ],
+            "truth_template_sd": [
+              0.0702536563430525,
+              0.07308570678936346,
+              0.06742183755596477
+            ]
+          },
+          "candidate": {
+            "chroma_rg_bg_rmse": 0.005180635352383555,
+            "rgb_rmse": 0.04412590311801936,
+            "truth_template_recovery": [
+              0.40702617837388366,
+              0.408084996078296,
+              0.4210310094730989
+            ],
+            "truth_template_sd": [
+              0.0702536563430525,
+              0.07308570678936346,
+              0.06742183755596477
+            ]
+          },
+          "chroma_ratio": 0.8660744552112516,
+          "name": "core",
+          "quality_pass": false,
+          "rgb_ratio": 6.122044003723615
+        },
+        {
+          "active_native_bounds": [
+            160,
+            80,
+            192,
+            208
+          ],
+          "baseline": {
+            "chroma_rg_bg_rmse": 0.01501855098201107,
+            "rgb_rmse": 0.012020799363511631,
+            "truth_template_recovery": [
+              0.9208829250352322,
+              0.9432673432635874,
+              0.9504861438168105
+            ],
+            "truth_template_sd": [
+              0.04736747193117171,
+              0.05543015900196193,
+              0.057968344041297824
+            ]
+          },
+          "candidate": {
+            "chroma_rg_bg_rmse": 0.015046289078775341,
+            "rgb_rmse": 0.012087891499152415,
+            "truth_template_recovery": [
+              0.9184553841028437,
+              0.9397772956799249,
+              0.9473334426112019
+            ],
+            "truth_template_sd": [
+              0.04736747193117171,
+              0.05543015900196193,
+              0.057968344041297824
+            ]
+          },
+          "chroma_ratio": 1.0018469223027904,
+          "name": "depth-boundary",
+          "quality_pass": true,
+          "rgb_ratio": 1.0055813372814821
+        },
+        {
+          "active_native_bounds": [
+            180,
+            96,
+            224,
+            192
+          ],
+          "baseline": {
+            "chroma_rg_bg_rmse": 0.020292869970066334,
+            "rgb_rmse": 0.016014882566984134,
+            "truth_template_recovery": [
+              0.7762268255476763,
+              0.8555798481959299,
+              0.7649774183246668
+            ],
+            "truth_template_sd": [
+              0.039077379855128866,
+              0.04521535404296994,
+              0.03305599524293764
+            ]
+          },
+          "candidate": {
+            "chroma_rg_bg_rmse": 0.020292857650295405,
+            "rgb_rmse": 0.016014886743061695,
+            "truth_template_recovery": [
+              0.7762272461306757,
+              0.8555809037941277,
+              0.7649780368971403
+            ],
+            "truth_template_sd": [
+              0.039077379855128866,
+              0.04521535404296994,
+              0.03305599524293764
+            ]
+          },
+          "chroma_ratio": 0.9999993929014995,
+          "name": "nearer-real-texture",
+          "quality_pass": true,
+          "rgb_ratio": 1.0000002607622966
+        }
+      ]
+    },
+    {
+      "baseline_averaged_fraction": [
+        0.9273931034482759,
+        0.7551641661230702,
+        0.5692567567567568,
+        0.21052631578947367,
+        1.0
+      ],
+      "candidate_averaged_fraction": [
+        0.7554206896551724,
+        0.7551641661230702,
+        0.5692567567567568,
+        0.21052631578947367,
+        1.0
+      ],
+      "disabled_exact": null,
+      "fixture_exercised": true,
+      "iso": 400.0,
+      "non_finest_accumulators_bit_exact": true,
+      "quality_pass": false,
+      "scene": "true-coloured-radial",
+      "source_hashes": [
+        "5a85009e86a10f23d5698ef4fb71590c51b8ddcd990ee79b0e37d9472db13cd2",
+        "3fcf6730a10359e076283b372911fdf284f5b8fc0fd0f2fd6b9ac44ab3740028",
+        "e3c9956f7a9f173c3156effc5f011ad6ef93693373244bd80b07b021e8d83e5b",
+        "2098823e8de5903e8389fdc8c82dce0107f0f984153b320983c8bca1b8e38d16",
+        "fbcb500d4f22dad9c74169f5e93577806fdc3d6e962ef4186cc257c128f4f6ea"
+      ],
+      "unmerged_defocused_fan_truth_rmse": null,
+      "windows": [
+        {
+          "active_native_bounds": [
+            84,
+            72,
+            232,
+            216
+          ],
+          "baseline": {
+            "chroma_rg_bg_rmse": 0.003704057882562277,
+            "rgb_rmse": 0.0033076267611985457,
+            "truth_template_recovery": [
+              0.8337449412805128,
+              0.9396096352553444,
+              0.8520665870536014
+            ],
+            "truth_template_sd": [
+              0.010012502699632142,
+              0.010012092818908242,
+              0.010012092821949975
+            ]
+          },
+          "candidate": {
+            "chroma_rg_bg_rmse": 0.00355150260366148,
+            "rgb_rmse": 0.0038413051005771344,
+            "truth_template_recovery": [
+              0.8970535379617304,
+              0.9410407702608736,
+              0.9115415654186934
+            ],
+            "truth_template_sd": [
+              0.010012502699632142,
+              0.010012092818908242,
+              0.010012092821949975
+            ]
+          },
+          "chroma_ratio": 0.9588140132423452,
+          "name": "real-coloured-rays",
+          "quality_pass": false,
+          "rgb_ratio": 1.1613478115605782
+        }
+      ]
+    }
+  ],
+  "interpretation": "Only band0 support pooling tested. Structural pass is not quality acceptance; an unexercised fixture refuses admission. No calibration, photographic or SOTA claim.",
+  "iso_decisions": [
+    {
+      "admitted": false,
+      "fixtures_exercised": true,
+      "iso": 100.0,
+      "quality_pass": false
+    },
+    {
+      "admitted": false,
+      "fixtures_exercised": false,
+      "iso": 400.0,
+      "quality_pass": false
+    }
+  ],
+  "metric_commission": {
+    "all_commission_checks_pass": true,
+    "exact": {
+      "chroma_rg_bg_rmse": 7.800001828731135e-9,
+      "rgb_rmse": 6.4309796504226115e-9,
+      "truth_template_recovery": [
+        1.0000000783347605,
+        1.0000001048825016,
+        1.0000000030049596
+      ],
+      "truth_template_sd": [
+        0.010012502699632142,
+        0.010012092818908242,
+        0.010012092821949975
+      ]
+    },
+    "half_amplitude_destroyer": {
+      "chroma_rg_bg_rmse": 0.006550764173286987,
+      "rgb_rmse": 0.005068227068614968,
+      "truth_template_recovery": [
+        0.5000000356407207,
+        0.5000000598601508,
+        0.49999999972620746
+      ],
+      "truth_template_sd": [
+        0.010012502699632142,
+        0.010012092818908242,
+        0.010012092821949975
+      ]
+    },
+    "neutralized_colour_destroyer": {
+      "chroma_rg_bg_rmse": 0.034230793772932276,
+      "rgb_rmse": 0.0179967485534449,
+      "truth_template_recovery": [
+        0.4292457720672839,
+        0.42922797327598455,
+        0.4292279854674465
+      ],
+      "truth_template_sd": [
+        0.010012502699632142,
+        0.010012092818908242,
+        0.010012092821949975
+      ]
+    },
+    "overcontrast_baseline": {
+      "chroma_rg_bg_rmse": 0.0052406124704712535,
+      "rgb_rmse": 0.00405458121994351,
+      "truth_template_recovery": [
+        1.4000000882074701,
+        1.4000001327843516,
+        1.3999999687012918
+      ],
+      "truth_template_sd": [
+        0.010012502699632142,
+        0.010012092818908242,
+        0.010012092821949975
+      ]
+    }
+  },
+  "photographic_replay_admitted": false,
+  "status": "SCREEN_COMPLETE"
+}

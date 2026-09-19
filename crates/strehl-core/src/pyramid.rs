@@ -90,6 +90,11 @@ pub mod correction_variance_diagnostic {
     include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/native-correction-variance/core-bridge.rs"));
 }
 
+#[cfg(feature = "native-correction-variance")]
+pub mod fine_support_candidate {
+    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/fine-support-guidance/core-candidate.rs"));
+}
+
 /// The 5-tap binomial generating kernel, `[1, 4, 6, 4, 1] / 16`.
 ///
 /// Burt & Adelson's `a = 0.4` member of the generating-kernel family, which is
@@ -1758,7 +1763,19 @@ impl BandMerge {
         ws: &mut FrameWorkspace,
     ) {
         self.add_frame_with_gain_impl(planes,luma,variance,frame_beta,ws,
-            #[cfg(feature = "native-green-cue")] None);
+            #[cfg(feature = "native-green-cue")] None,
+            #[cfg(feature = "native-correction-variance")] fine_support_candidate::environment_mode());
+    }
+
+    /// Explicit experimental mode for generated controls. Ordinary consumers
+    /// use the validated, default-off environment route above.
+    #[cfg(feature = "native-correction-variance")]
+    pub fn add_frame_with_fine_support(
+        &mut self, planes: &[&[f32]], luma: &[f32], variance: &[f32],
+        frame_beta: Option<&[f32]>, ws: &mut FrameWorkspace, mode: fine_support_candidate::Mode,
+    ) {
+        self.add_frame_with_gain_impl(planes,luma,variance,frame_beta,ws,
+            #[cfg(feature = "native-green-cue")] None, mode);
     }
 
     #[cfg(feature = "native-green-cue")]
@@ -1768,18 +1785,26 @@ impl BandMerge {
     ) {
         let n = self.sizes[0].pixels();
         assert_eq!(cue.energy.len(),n); assert_eq!(cue.variance.len(),n); assert_eq!(cue.valid.len(),n);
-        self.add_frame_with_gain_impl(planes,luma,variance,frame_beta,ws,Some(cue));
+        self.add_frame_with_gain_impl(planes,luma,variance,frame_beta,ws,Some(cue),
+            #[cfg(feature = "native-correction-variance")] fine_support_candidate::environment_mode());
     }
 
     fn add_frame_with_gain_impl(
         &mut self, planes: &[&[f32]], luma: &[f32], variance: &[f32],
         frame_beta: Option<&[f32]>, ws: &mut FrameWorkspace,
         #[cfg(feature = "native-green-cue")] cue: Option<&native_green_cue::Cue>,
+        #[cfg(feature = "native-correction-variance")] fine_mode: fine_support_candidate::Mode,
     ) {
         assert_eq!(planes.len(), self.planes, "wrong number of planes");
         let n0 = self.sizes[0].pixels();
         assert_eq!(luma.len(), n0);
         assert_eq!(variance.len(), n0);
+
+        #[cfg(feature = "native-correction-variance")]
+        fine_support_candidate::validate_config(fine_mode,self.cfg);
+        #[cfg(all(feature = "native-correction-variance", feature = "native-green-cue"))]
+        assert!(fine_mode == fine_support_candidate::Mode::Off || cue.is_none(),
+            "fine support cannot combine with the original-CFA green cue");
 
         #[cfg(feature = "m194h-pedestal-causality")]
         m194h::begin_frame(self, frame_beta);
@@ -1865,6 +1890,13 @@ impl BandMerge {
                         }
                     });
                 }
+            }
+            #[cfg(feature = "native-correction-variance")]
+            if k == 0 && !averaged {
+                fine_support_candidate::rewrite_weights(fine_mode,sq,ws.var.level(0),sz,
+                    Self::beta_for(&self.gain,frame_beta,0),self.cfg.gate,
+                    self.cfg.exponent_at(0,nb),significance_floor(self.cfg.gate)*self.cfg.significance_scale,
+                    w,&mut ws.smooth_scratch,&mut ws.fine_support);
             }
             #[cfg(feature = "m194h-pedestal-causality")]
             m194h::band(self, k, planes, &mut ws.plane, sq, ws.var.level(k),
@@ -2659,6 +2691,10 @@ pub struct FrameWorkspace {
     weight: Vec<f32>,
     coarse: Vec<f32>,
     smooth_scratch: Vec<f32>,
+    /// Diagnostic storage is empty when disabled. Excluded from the legacy
+    /// planning formula so the experiment cannot change arithmetic chunks.
+    #[cfg(feature = "native-correction-variance")]
+    fine_support: fine_support_candidate::Scratch,
 }
 
 impl FrameWorkspace {
@@ -2674,6 +2710,8 @@ impl FrameWorkspace {
             weight: vec![0.0; n0],
             coarse: vec![0.0; n0],
             smooth_scratch: vec![0.0; n0 + sizes[0].width],
+            #[cfg(feature = "native-correction-variance")]
+            fine_support: fine_support_candidate::Scratch::default(),
         }
     }
 

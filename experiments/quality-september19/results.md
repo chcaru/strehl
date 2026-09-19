@@ -227,3 +227,52 @@ not its full original f32 bits. The blue overall rendering is not established
 as colour-accurate without a neutral reference. The next concrete target is
 reduced highlight colour artifacts with the native baseline's smoothness and
 continuous facet structure preserved. SOTA remains unestablished.
+
+## Localized failure: defocused highlight structure enters the finest band
+
+The phase-packed RGB replay is negative and is retained separately in
+`../phase-packed-rgb/results.md`: all70 frames, identical green decisions,
+complete paired images, no convincing photographic gain. Do not promote it.
+
+The next source check reuses the70 existing unaligned exports. Its fixed
+locator is explicitly shown to be fooled by noisy flat input before use.
+Native inspection finds compact glints near source indices28/33, and long
+coloured fans in distant, defocused indices52/69. Root independently inspects
+those six source views and agrees. The merge retains similar fan structure
+alongside sharper crystal boundaries. This does not identify sensor clipping
+or distinguish optics from source demosaic/development; it does rule out the
+claim that those long fans are absent from every source photograph.
+
+Commands actually run:
+
+```
+python -I -B experiments/quality-september19/vitamin-c-source-highlights/scan.py
+python -I -B experiments/quality-september19/vitamin-c-source-highlights/distant-crops.py
+python -I -B -X faulthandler experiments/quality-september19/vitamin-c-weight-trace.py
+python -I -B experiments/quality-september19/vitamin-c-weight-trace-review-1/inspect-support.py
+```
+
+MEASURED: the existing weight observer reproduces the complete baseline TIFF
+SHA256 exactly, in a26.250-second operational run. At cropped-output-native
+(3102,2203), a known-green site in the dark fan, its finest coefficient's
+largest weight belongs to frame69 with share0.956702 and participation1.090619.
+All six quad positions in that pixel's MHC ancestry also have frame69 as the
+largest-weight source. The nearby glint core instead favours32; nearby crystal
+structure favours25. At the other fan the finest neighbourhood has later
+indices55–61, but much more diffuse weights. Coarse-band late maxima often
+carry only2–8% of total weight and must not be called late-frame dominance.
+
+This diagnostic measures weight preference, not signed coefficient radiance or
+one frame's ownership of a final RGB pixel. The independent ancestry helper is
+checked against forward impulse expansion; final hull clipping and development
+remain nonlinear. Its report and exact tap sets are in
+`vitamin-c-weight-trace-review-1`.
+
+ARGUED direction: the finest local evidence itself can favour a textured
+defocus fan. Propagating that unpooled evidence across scales would preserve
+the error. The next bounded diagnostic pools the actual fine energy and its
+injected noise floor over one declared neighbourhood containing the compact
+glint and the fan. It must change that ordering while retaining nearby
+structure before a new fusion path is worth building. See
+`../fine-support-guidance/charter.md`; no neighbourhood sweep is authorized
+by this result and no new image-quality gain is claimed.

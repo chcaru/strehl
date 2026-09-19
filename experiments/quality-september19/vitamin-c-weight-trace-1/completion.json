@@ -1,0 +1,136 @@
+{
+  "image": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-weight-trace-1\\output.tiff",
+    "sha256": "2593ecdaa7bcaa34217b595bd3cdf3622637a3dae115c5e014ff6c6a9635bdf4",
+    "bytes": 191495346
+  },
+  "observer_output_bit_exact": true,
+  "original_metadata_unchanged": true,
+  "weights": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-weight-trace-1\\weights-b0-arg.i32",
+      "sha256": "2f7a7e0e9cb01c0f35d57fed5955018a6569e88b06729ff684c70c11c23f7cc5",
+      "bytes": 31915040
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-weight-trace-1\\weights-b0-conc.f32",
+      "sha256": "c37b43c768e05af1743b834fdee0ae3342d502269cb9403471641314d8414d60",
+      "bytes": 31915040
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-weight-trace-1\\weights-b0-neff.f32",
+      "sha256": "ae22d00fd1d14ff170c8ee23741f4b27230c88d275987bd6e1ed0598ede142d6",
+      "bytes": 31915040
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-weight-trace-1\\weights-b1-arg.i32",
+      "sha256": "5de0b42ad2176738e4894f9b239fc3ad05218700abdfcdd80e59a6b99ca2a52a",
+      "bytes": 7978760
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-weight-trace-1\\weights-b1-conc.f32",
+      "sha256": "b78a4b903c24d227d263064bd8e031423e0864a36b207b7d1d4f8a6e26c78ea5",
+      "bytes": 7978760
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-weight-trace-1\\weights-b1-neff.f32",
+      "sha256": "ab4a115c42a062b8a79d6f1ebc6e84b330b2c096b8899bba97421794be9a7d56",
+      "bytes": 7978760
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-weight-trace-1\\weights-b2-arg.i32",
+      "sha256": "0bc0a4b98d6cc175d3a653a357664ed93b98264afb4f775b06072e48da5ba22d",
+      "bytes": 1996420
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-weight-trace-1\\weights-b2-conc.f32",
+      "sha256": "fb0bbf7b42a96b5d31c206e498de2a8d17ae51b736dd45d21207e0bda2caf065",
+      "bytes": 1996420
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-weight-trace-1\\weights-b2-neff.f32",
+      "sha256": "c1dfc866078e743667b6b3c2cbe941e595876e93e34faa9b6ab0e5493fc2bb12",
+      "bytes": 1996420
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-weight-trace-1\\weights-b3-arg.i32",
+      "sha256": "b0926a06fb8dfde46e1552ae100e19ae4eaaf1050a711cc8263fc2aeb87a380d",
+      "bytes": 500548
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-weight-trace-1\\weights-b3-conc.f32",
+      "sha256": "f7a777dd64c805821fc21fdd14b71050078356a47fd540883764a7974d2fdc6d",
+      "bytes": 500548
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-weight-trace-1\\weights-b3-neff.f32",
+      "sha256": "f051c7f74eada6b4fd8c27d50a42265e4acae8193b845231368713f05dc27e7f",
+      "bytes": 500548
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-weight-trace-1\\weights-b4-arg.i32",
+      "sha256": "60ad8e532461e144fe1871c2301732c92d9eb9b73aa363f565815703ba7f6d80",
+      "bytes": 125860
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-weight-trace-1\\weights-b4-conc.f32",
+      "sha256": "404417241ba0d9f5ff9460afd19b87477a3e6261f69d56fa8103887e062ada68",
+      "bytes": 125860
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-weight-trace-1\\weights-b4-neff.f32",
+      "sha256": "6a7f3c924cc61fa7356db3e74b6540951d4e77a7695ef1b3a2d0fbf4dae5f3e1",
+      "bytes": 125860
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-weight-trace-1\\weights-b5-arg.i32",
+      "sha256": "a46924d2acffe915db822d3eb2d456e7c272e5a196eb91315624373b82838cb3",
+      "bytes": 31828
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-weight-trace-1\\weights-b5-conc.f32",
+      "sha256": "8f8866cb59c4cdee1fc209ce1200c553247cd7b9283c49608e8ad5b3600b31b4",
+      "bytes": 31828
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-weight-trace-1\\weights-b5-neff.f32",
+      "sha256": "10ec7ff7bfc602f6c036807f0d3c5053c3d584014697c78bd8672761e8affa4d",
+      "bytes": 31828
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-weight-trace-1\\weights-b6-arg.i32",
+      "sha256": "1093d4f69e1745c1e28c83512550d123a9639cd72472b95e04e1129258a39a52",
+      "bytes": 8140
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-weight-trace-1\\weights-b6-conc.f32",
+      "sha256": "ce79758dbc5a5eab7830136e02575156ac60f380e09d3a163862d2cdd2552e64",
+      "bytes": 8140
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-weight-trace-1\\weights-b6-neff.f32",
+      "sha256": "d0c67c87a154e1b12b74865e1f49ac1460f0aad13d39f13c55609585755062cb",
+      "bytes": 8140
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-weight-trace-1\\weights-b7-arg.i32",
+      "sha256": "511387b04cc95030bf9e86539bfc5187acc940fe8f8dfbc5e51eb859916cea64",
+      "bytes": 2128
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-weight-trace-1\\weights-b7-conc.f32",
+      "sha256": "791a7f5a0697c850a0434bcb83bbc7d07285d36cc69a47a8575768cb1777b40b",
+      "bytes": 2128
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-weight-trace-1\\weights-b7-neff.f32",
+      "sha256": "791a7f5a0697c850a0434bcb83bbc7d07285d36cc69a47a8575768cb1777b40b",
+      "bytes": 2128
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-weight-trace-1\\weights-dims.json",
+      "sha256": "0063a27c3bba85e4f44d8da02c6615b03f38c3877105fbc55cf0f02c52c3b94e",
+      "bytes": 340
+    }
+  ]
+}

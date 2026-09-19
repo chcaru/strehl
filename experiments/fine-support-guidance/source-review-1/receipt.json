@@ -1,0 +1,312 @@
+{
+  "source_scan_sha256": "0cca4885f036a419549beba62d56516d033038abf19db8fe9c57d2060c3157f5",
+  "script_sha256": "c160ca377e1968ac82d56ced6696571e67d9daadfefa9097e9d60dc387a8c2fb",
+  "scope": "Original-source crops use the existing coordinate-only mapping. Gathered views use the actual consumer. No resize or tone change.",
+  "records": [
+    {
+      "region": "facet-edges",
+      "index0": 23,
+      "original_raw_name": "DSC00117.ARW",
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00117.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849492613738100,
+      "pull_bits": [
+        "3ff00f34bf0d3f55",
+        "bf3a4765721d2a78",
+        "3f6446daaa0dfd00",
+        "bfc8794a115ddd48"
+      ],
+      "reference_native_center": [
+        2747.5,
+        2929.5
+      ],
+      "mapped_native_center": [
+        2744.8867378073815,
+        2931.599370662209
+      ],
+      "source_native_xywh": [
+        2553,
+        2740,
+        384,
+        384
+      ],
+      "green_locator": 0.0015273633090518404,
+      "crop_rgb16_sha256": "0f80cab213b102c27479223eef4b0b7c8d518bfbbece2271553fb08438b70fbe",
+      "png": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\fine-support-guidance\\source-review-1\\facet-edges-source-23.png",
+      "png_sha256": "9d208ffe481c9d2b13af5ee736e420b7064be6be261932034cc9b9ce1225301a"
+    },
+    {
+      "region": "dark-inclusion",
+      "index0": 23,
+      "original_raw_name": "DSC00117.ARW",
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00117.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849492613738100,
+      "pull_bits": [
+        "3ff00f34bf0d3f55",
+        "bf3a4765721d2a78",
+        "3f6446daaa0dfd00",
+        "bfc8794a115ddd48"
+      ],
+      "reference_native_center": [
+        3297.5,
+        2079.5
+      ],
+      "mapped_native_center": [
+        3296.5877280415307,
+        2078.2232790881385
+      ],
+      "source_native_xywh": [
+        3105,
+        1887,
+        384,
+        384
+      ],
+      "green_locator": 0.002234851809675275,
+      "crop_rgb16_sha256": "9d7dc0675c4d75f3f4e744e02bc1403c009e24083f790af50be6e76cc1254a5b",
+      "png": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\fine-support-guidance\\source-review-1\\dark-inclusion-source-23.png",
+      "png_sha256": "8c68f9f8100ddb6eed0f4cb67a5fdd915aabd52e5f8966d9a8795ecd10649417"
+    },
+    {
+      "region": "facet-edges",
+      "index0": 25,
+      "original_raw_name": "DSC00119.ARW",
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00119.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849493943130400,
+      "pull_bits": [
+        "3ff00ca2e2e3b9e1",
+        "bf37929fe889fbae",
+        "3f72c2b74768d200",
+        "bfb99fe04390aea0"
+      ],
+      "reference_native_center": [
+        2747.5,
+        2929.5
+      ],
+      "mapped_native_center": [
+        2745.348915925552,
+        2931.3825153856983
+      ],
+      "source_native_xywh": [
+        2554,
+        2740,
+        384,
+        384
+      ],
+      "green_locator": 0.0016677953387796802,
+      "crop_rgb16_sha256": "4223979b8d7bbb6982470566179325d4fc6b1f875fabf7e4fadcb5aefc591f48",
+      "display_png": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-source-highlights\\scan-1\\facet-edges-source-25-DSC00119.png",
+      "png": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\fine-support-guidance\\source-review-1\\facet-edges-source-25.png",
+      "png_sha256": "912e3f3fe55c758b9f8ed807d013ca701aa90f230170c0451ade33c10e330676"
+    },
+    {
+      "region": "dark-inclusion",
+      "index0": 25,
+      "original_raw_name": "DSC00119.ARW",
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00119.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849493943130400,
+      "pull_bits": [
+        "3ff00ca2e2e3b9e1",
+        "bf37929fe889fbae",
+        "3f72c2b74768d200",
+        "bfb99fe04390aea0"
+      ],
+      "reference_native_center": [
+        3297.5,
+        2079.5
+      ],
+      "mapped_native_center": [
+        3296.7399433989267,
+        2078.562411200313
+      ],
+      "source_native_xywh": [
+        3105,
+        1887,
+        384,
+        384
+      ],
+      "green_locator": 0.0024735316048468767,
+      "crop_rgb16_sha256": "b92bf5adfd5c5b60f3d2fc9b254bb31dbd8043cae8e319146f9bf8c2fe08d331",
+      "png": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\fine-support-guidance\\source-review-1\\dark-inclusion-source-25.png",
+      "png_sha256": "53d4046cb91f2878c97edcabf8237ec401055091ac0ea58e9595a3f8aecb7b29"
+    },
+    {
+      "region": "facet-edges",
+      "index0": 27,
+      "original_raw_name": "DSC00121.ARW",
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00121.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849494917774300,
+      "pull_bits": [
+        "3ff00a22f38bd344",
+        "bf3397b99b47fbb2",
+        "3f7a60e00eb4be80",
+        "bf7b91df7a83e700"
+      ],
+      "reference_native_center": [
+        2747.5,
+        2929.5
+      ],
+      "mapped_native_center": [
+        2745.786084960797,
+        2931.1652486929815
+      ],
+      "source_native_xywh": [
+        2554,
+        2740,
+        384,
+        384
+      ],
+      "green_locator": 0.0016977410589604346,
+      "crop_rgb16_sha256": "56123edecb23c8c385822ce6287e32ad5eaa508f42dafff193bfde5ad6c476ce",
+      "png": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\fine-support-guidance\\source-review-1\\facet-edges-source-27.png",
+      "png_sha256": "2f13862f4e4c6d52f80c20e80581916886e92c6cc2c9b84dc40c0724f684c5eb"
+    },
+    {
+      "region": "dark-inclusion",
+      "index0": 27,
+      "original_raw_name": "DSC00121.ARW",
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00121.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849494917774300,
+      "pull_bits": [
+        "3ff00a22f38bd344",
+        "bf3397b99b47fbb2",
+        "3f7a60e00eb4be80",
+        "bf7b91df7a83e700"
+      ],
+      "reference_native_center": [
+        3297.5,
+        2079.5
+      ],
+      "mapped_native_center": [
+        3296.893074679983,
+        2078.897292724865
+      ],
+      "source_native_xywh": [
+        3105,
+        1887,
+        384,
+        384
+      ],
+      "green_locator": 0.00259703853989038,
+      "crop_rgb16_sha256": "33dd9e2548e315613b782b5137266e7ba4280aa3824cbc2f84e0ca23db98b220",
+      "png": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\fine-support-guidance\\source-review-1\\dark-inclusion-source-27.png",
+      "png_sha256": "9b5922742e985ff9a3a734643399da1cedce739a744f0afbbbe03ccfe8706637"
+    },
+    {
+      "region": "facet-edges",
+      "index0": 35,
+      "original_raw_name": "DSC00129.ARW",
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00129.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849498855905500,
+      "pull_bits": [
+        "3ff0000000000000",
+        "3c00000000000000",
+        "0000000000000000",
+        "bcb0000000000000"
+      ],
+      "reference_native_center": [
+        2747.5,
+        2929.5
+      ],
+      "mapped_native_center": [
+        2747.5,
+        2929.5
+      ],
+      "source_native_xywh": [
+        2556,
+        2738,
+        384,
+        384
+      ],
+      "green_locator": 0.001508624212386579,
+      "crop_rgb16_sha256": "8512c94d67a5f056208d6946bb4bcf428f8e2440d3ec2448acecf801c9eacabc",
+      "png": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\fine-support-guidance\\source-review-1\\facet-edges-source-35.png",
+      "png_sha256": "4dd7958d65062182d7c725719a53e9065921ed4435d7a23b884eb30ff502296d"
+    },
+    {
+      "region": "dark-inclusion",
+      "index0": 35,
+      "original_raw_name": "DSC00129.ARW",
+      "source_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00129.tiff",
+      "source_bytes": 197801325,
+      "source_mtime_ns": 1789849498855905500,
+      "pull_bits": [
+        "3ff0000000000000",
+        "3c00000000000000",
+        "0000000000000000",
+        "bcb0000000000000"
+      ],
+      "reference_native_center": [
+        3297.5,
+        2079.5
+      ],
+      "mapped_native_center": [
+        3297.5,
+        2079.5
+      ],
+      "source_native_xywh": [
+        3106,
+        1888,
+        384,
+        384
+      ],
+      "green_locator": 0.0026076384388717816,
+      "crop_rgb16_sha256": "02f5a6246acc16abc0ade39297d1b8f843a23d4f4cef072fa172ff9b3f8a939b",
+      "png": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\fine-support-guidance\\source-review-1\\dark-inclusion-source-35.png",
+      "png_sha256": "9b70ca43dcdadba834c681e4b6575b0830ccfb0bfa121df317f842a6599276a4"
+    },
+    {
+      "gathered_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\fine-support-guidance\\measure-1\\output\\dark-inclusion-gathered-28.tiff",
+      "sha256": "71ca732024b09a0cf84033a81a7e7b42f104457a24e16d6ea8c56efbad3ef6c2",
+      "png": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\fine-support-guidance\\source-review-1\\dark-inclusion-gathered-28.png",
+      "png_sha256": "332c41e370b63ab02d80e21fd3b5111775c76b8cc66c49d4e075a11d5e6f6e59"
+    },
+    {
+      "gathered_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\fine-support-guidance\\measure-1\\output\\dark-inclusion-gathered-33.tiff",
+      "sha256": "d82c5982bff21a0a86ea2ae29ddf5b9bccf0f2e35d545121ef418039b8a8ebd7",
+      "png": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\fine-support-guidance\\source-review-1\\dark-inclusion-gathered-33.png",
+      "png_sha256": "e7368c51e617112d1c393f7995d309a9b54990eccd3cc149246d6294c2b03dc3"
+    },
+    {
+      "gathered_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\fine-support-guidance\\measure-1\\output\\dark-inclusion-gathered-52.tiff",
+      "sha256": "4f515e9e313e9e1c05a41f7ed39d909b2e62c4993e86929530c3d4cfdcb506d5",
+      "png": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\fine-support-guidance\\source-review-1\\dark-inclusion-gathered-52.png",
+      "png_sha256": "8dd5ae0402d4119fe256fac4e7ea35e8a8307088192d0de76e35e1c4d334f7c1"
+    },
+    {
+      "gathered_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\fine-support-guidance\\measure-1\\output\\dark-inclusion-gathered-69.tiff",
+      "sha256": "26c623894afa1d3128f8edc6a915ffaf1427edcdcd5e369381f753a0efa386b4",
+      "png": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\fine-support-guidance\\source-review-1\\dark-inclusion-gathered-69.png",
+      "png_sha256": "8e7c8f16ab40d5d54e7fb344f67de08176bff98355e777b46375b1e73430a391"
+    },
+    {
+      "gathered_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\fine-support-guidance\\measure-1\\output\\facet-edges-gathered-28.tiff",
+      "sha256": "623041deebe451ae6612c8a74d057e8348122f5f9b4b7d525c388a760cca8e49",
+      "png": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\fine-support-guidance\\source-review-1\\facet-edges-gathered-28.png",
+      "png_sha256": "68532813ffbba5c4c7687d4b0e3eafb0bbd05c1b4bdb299a3dd360324edf2d10"
+    },
+    {
+      "gathered_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\fine-support-guidance\\measure-1\\output\\facet-edges-gathered-33.tiff",
+      "sha256": "181e27404144798d2ddf42d1da566d0ff4753f9ab7236505450b625c1923232a",
+      "png": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\fine-support-guidance\\source-review-1\\facet-edges-gathered-33.png",
+      "png_sha256": "3ec6a9bd92b86f70bb037977587fd72f46a51b4766e6573fe76499668982eb74"
+    },
+    {
+      "gathered_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\fine-support-guidance\\measure-1\\output\\facet-edges-gathered-52.tiff",
+      "sha256": "8164c163377ab0aaa396a10291a73c7dc58644e2dd967a1b62ce1bd0091d8148",
+      "png": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\fine-support-guidance\\source-review-1\\facet-edges-gathered-52.png",
+      "png_sha256": "f7147736cf4489c2c2b8c469b566924c2e94f833d4c6447fb9bda20e3eea9c52"
+    },
+    {
+      "gathered_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\fine-support-guidance\\measure-1\\output\\facet-edges-gathered-69.tiff",
+      "sha256": "336ceb35b78904858783055f52e1c74fd9a862ac49201f0f72ba08807ae23991",
+      "png": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\fine-support-guidance\\source-review-1\\facet-edges-gathered-69.png",
+      "png_sha256": "2f184ed403cdd17693e516bd4f970452cceb76caea3e8b2a051ec8509b95f6c6"
+    }
+  ]
+}

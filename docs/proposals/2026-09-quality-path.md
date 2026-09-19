@@ -131,6 +131,21 @@ already-developed original frames to locate where those exact highlight
 structures enter, before choosing another change. Evidence and complete
 paired images: experiments/phase-packed-rgb/results.md and full-1.
 
+September19 source diagnosis and fixed support experiment: long coloured fans
+already occur in defocused source frames. The actual native finest-band
+observer reproduces the whole baseline hash and shows a95.67% weight share
+for the final frame at one fan point. A fixed65x65-quad energy/floor pool
+changes both measured fan nominations toward compact-source frames, but also
+borrows focus from a visibly softer neighbouring structure. Its finest-only
+implementation is now **rejected** by independent generated controls: at
+ISO100 fan error rises12.56% and true glint-core recovery loses58–59%.
+Coarse/base accumulators remain exact; this is a selection failure, not an
+unintended wider code change. No full candidate RAW replay or default promotion
+is justified. See experiments/fine-support-guidance/results.md and the
+independent control report. The next bounded question is whether source point
+spread measurements can separate the highlight from neighbouring surfaces;
+generic spatial pooling and unvalidated guided smoothing are not the next step.
+
 ## What counts as progress
 
 Show the owner the complete stack output whenever presenting an improvement,

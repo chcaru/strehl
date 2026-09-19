@@ -1,0 +1,40 @@
+{
+  "config_sha256": "2872c7525aed50402b39fab2d5720491698eb8003d365373c20b1b96f46c5b68",
+  "crop": [
+    28,
+    19,
+    3460,
+    2306
+  ],
+  "floor": "current actual BandWorker beta[0] * current injected variance * gate, production multiplication order",
+  "gate": 2.0,
+  "guide_rectangles": [
+    [
+      1202,
+      1302,
+      288,
+      288
+    ],
+    [
+      1476,
+      876,
+      290,
+      290
+    ]
+  ],
+  "interpretation": "Fine-guide diagnostic, not output RGB winners or image-quality evidence; original+pooled SNR use max(floor,1).",
+  "map_sha256": "84275850a032dc8beb88945b00514a58ebca433e267c8e10342ac55986cf830f",
+  "padding_quads": 48,
+  "pool_radius_quads": 32,
+  "schema": 1,
+  "source_dir": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl",
+  "weight_trace_centre_arg": [
+    23,
+    57,
+    58,
+    32,
+    69,
+    25
+  ],
+  "weight_trace_sha256": "2f7a7e0e9cb01c0f35d57fed5955018a6569e88b06729ff684c70c11c23f7cc5"
+}
