@@ -1,0 +1,57 @@
+{
+  "phase": "full",
+  "sources_unchanged": true,
+  "original_metadata_unchanged": true,
+  "same_original_source_arrays": true,
+  "common_crop": [
+    141,
+    97,
+    3234,
+    2150
+  ],
+  "fresh_current_baseline": true,
+  "views": {
+    "current": {
+      "master": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\ca-before-mhc\\full-1\\current\\output\\image.tiff",
+        "sha256": "c69db8e95e4f26df43632d453027770d1e52baae150ebe0e0916b47fd68f74b4",
+        "bytes": 166879360
+      },
+      "native_whole": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\ca-before-mhc\\full-1\\current-whole.png",
+        "sha256": "304c604245bee72067ceceff10169012f097f12c78df95566c33ed9699e4b858",
+        "bytes": 46167590
+      },
+      "overview": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\ca-before-mhc\\full-1\\current-overview.png",
+        "sha256": "5f52728f8f0ab07ec51cfd764bc4c57cc1caa22107c75d54465e7002462e8841",
+        "bytes": 3232004
+      },
+      "rgb16_le_sha256": "7df99f8f54339711c189380cca45cd63fd8106a2a196162bf562ecc60fbfd7db",
+      "icc_sha256": "238ad2596316306a72025bb245cf3c8cd72f1090c8d95af2f38dc090e84ece5b",
+      "display": "fixed high byte; overview 1/4, no automatic contrast; TIFF ICC preserved"
+    },
+    "before": {
+      "master": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\ca-before-mhc\\full-1\\before\\output\\image.tiff",
+        "sha256": "916f9d79e37fbf9ed8440a07cbc68a754bde4b46d36d21bab2c724929873ebc5",
+        "bytes": 166879360
+      },
+      "native_whole": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\ca-before-mhc\\full-1\\before-whole.png",
+        "sha256": "3929d33d9b084cc514f25b4de8394006f1acbefcdcca28a951b4d929fc7aacaa",
+        "bytes": 44810863
+      },
+      "overview": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\ca-before-mhc\\full-1\\before-overview.png",
+        "sha256": "24db52accb575c255091bd05d0c24e9fc40a7650e256387b9c06e3330b2221e9",
+        "bytes": 3210446
+      },
+      "rgb16_le_sha256": "8b6efbf42e601e40da13b8f46a888a51d4e550e1037bb28d7c1a25b97fc76677",
+      "icc_sha256": "238ad2596316306a72025bb245cf3c8cd72f1090c8d95af2f38dc090e84ece5b",
+      "display": "fixed high byte; overview 1/4, no automatic contrast; TIFF ICC preserved"
+    }
+  },
+  "original_failed_screen_reclassified": false,
+  "photographic_promotion": false
+}

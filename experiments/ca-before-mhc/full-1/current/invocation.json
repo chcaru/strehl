@@ -1,0 +1,32 @@
+{
+  "command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\ca-before-mhc\\build-3-driver-fixed\\cli-tests.exe",
+    "merge_cmd::ca_before_mhc_full::chip_actual_consumer",
+    "--exact",
+    "--ignored",
+    "--nocapture",
+    "--test-threads=1"
+  ],
+  "environment": {
+    "RAYON_NUM_THREADS": "8",
+    "STREHL_PYRAMID_WORKERS": "8",
+    "STREHL_ALIGN": "1",
+    "STREHL_FULLRES_GATHER": "1",
+    "STREHL_DIRECT_PLANES": "rounded",
+    "STREHL_PROBE_GATHER": "green",
+    "STREHL_WARP_WRITEBACK": "parallel",
+    "STREHL_GPU_GATHER": "on",
+    "STREHL_GPU_GATHER_LOG": "off",
+    "STREHL_GPU_SCHEDULE": "device",
+    "STREHL_DEFECT": "off",
+    "STREHL_CA_BEFORE_MHC": "off",
+    "STREHL_WARPMAP": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\chip-baseline-1\\chip.warpmap.txt",
+    "STREHL_CA_BEFORE_MHC_FULL_CONFIG": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\ca-before-mhc\\full-1\\current\\config.json"
+  },
+  "removed_environment": [],
+  "runner": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\ca-before-mhc\\full-run.py",
+    "sha256": "5bad213484fe9246b321c82b9785441d44e57cb57f383a52da016f5f0a723a3b",
+    "bytes": 10791
+  }
+}

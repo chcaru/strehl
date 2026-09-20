@@ -5,7 +5,15 @@ quality actions in 2026-09-sota-program.md and the older SOTA proposal. Read
 the measured decision record in docs/research/SYNTHESIS.md before architectural
 changes; this plan does not promote any experimental default.
 
-Current execution checkpoint: complete Helicon B/C comparisons at e250ddc2
+Latest execution checkpoint: the complete CA-ordering chip trial has no identified
+photographic gain; see experiments/ca-before-mhc/full-results.md. The next
+bounded trial retains twelve colour/site planes to remove final MHC on the chip,
+where this exact consumer has not been tested. Its prior vitamin-C fan failure
+and flat-chroma tradeoff remain; it is an observational trial, not a promoted
+default. A complete-chip commercial reference is being prepared separately,
+subject to a resource check. Historical decisions follow.
+
+Complete Helicon B/C comparisons at e250ddc2
 retain an unresolved vitamin-C glint-fan deficit. Subsequent donor, wavelet,
 colour-guide and temporal-affinity interventions have not earned promotion;
 their exact closures appear below. Focused star-sand attribution is complete
@@ -106,7 +114,14 @@ is too defocused at the bar targets to test finest-detail retention. No specific
 resolved source feature was lost in the inspected regions. See
 experiments/quality-september20/slide2-source-results.md at a5ea5081. This is
 corpus coverage and a bounded source149 null, not a capture limit or improvement.
-No photographic admission yet. The passing complete-periodic all-CFA controls
+The separate CA colour qualification passed all eight live-component cases,
+and the complete299-frame chip trial is now finished. Root and independent
+inspection find no meaningful photographic gain: prominent coloured rims,
+contact bloom and central stipple remain. Keep this recipe off; no optimization
+or parameter sweep. Complete before/after views and both masters were shown to
+the owner. See experiments/ca-before-mhc/full-results.md. Generated improvement
+has not transferred into an identified useful photographic change.
+The passing complete-periodic all-CFA controls
 remain retained at48276660; speed work stays behind demonstrated image quality.
 
 The owner's priority is photographic quality on the A7C II macro captures.

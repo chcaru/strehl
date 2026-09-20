@@ -1,0 +1,113 @@
+{
+  "script": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\ca-before-mhc\\inspect-full.py",
+    "sha256": "f843c9a4e2d8886f349227b5865f0b8966eee400b3946248aa66f312570683a5"
+  },
+  "selection": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\ca-before-mhc\\photographic-inspection-plan.md",
+    "sha256": "16aeee1cfe20564e746415982692baf720f85f1d4634af44513581ac913d90e4"
+  },
+  "current_whole": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\ca-before-mhc\\full-1\\current-whole.png",
+    "sha256": "304c604245bee72067ceceff10169012f097f12c78df95566c33ed9699e4b858"
+  },
+  "before_whole": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\ca-before-mhc\\full-1\\before-whole.png",
+    "sha256": "3929d33d9b084cc514f25b4de8394006f1acbefcdcca28a951b4d929fc7aacaa"
+  },
+  "layout": "Current on left; Before on right. Native scale, no resampling or tone change.",
+  "exact_display_slice_checks": true,
+  "regions": [
+    {
+      "region": "rail-crossing",
+      "output_native_xywh": [
+        1082,
+        942,
+        384,
+        384
+      ],
+      "view": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\ca-before-mhc\\inspection-1\\rail-crossing-current-left-before-right.png",
+        "sha256": "24eb1a4da893c6f92af09f2f48ee0dfa1a0aa5ba91664969fc2bf6700e474bd7"
+      }
+    },
+    {
+      "region": "upper-colour",
+      "output_native_xywh": [
+        1020,
+        180,
+        512,
+        512
+      ],
+      "view": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\ca-before-mhc\\inspection-1\\upper-colour-current-left-before-right.png",
+        "sha256": "d720ec7c34a099b7cf4f892bd462b8b4026ff375d5b6ecbfd5839705be21b5dc"
+      }
+    },
+    {
+      "region": "central-stipple",
+      "output_native_xywh": [
+        2960,
+        1290,
+        512,
+        512
+      ],
+      "view": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\ca-before-mhc\\inspection-1\\central-stipple-current-left-before-right.png",
+        "sha256": "9fcc3856f4dc39af39be5c99ae7ece90b84d0df899de22f9f93a476196c4e436"
+      }
+    },
+    {
+      "region": "lower-array",
+      "output_native_xywh": [
+        550,
+        2780,
+        512,
+        512
+      ],
+      "view": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\ca-before-mhc\\inspection-1\\lower-array-current-left-before-right.png",
+        "sha256": "8305c5f424a54fd4711d5e55016780133e39dd8f6bdb5a18cb52b8480b6a8a96"
+      }
+    },
+    {
+      "region": "lower-colour",
+      "output_native_xywh": [
+        4650,
+        3000,
+        512,
+        512
+      ],
+      "view": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\ca-before-mhc\\inspection-1\\lower-colour-current-left-before-right.png",
+        "sha256": "9e94aafa90de6c3825940406658becf7b0e5e96ca436171e53550e51255e9e1e"
+      }
+    },
+    {
+      "region": "surface-scratches",
+      "output_native_xywh": [
+        4840,
+        1240,
+        512,
+        512
+      ],
+      "view": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\ca-before-mhc\\inspection-1\\surface-scratches-current-left-before-right.png",
+        "sha256": "66928a66686d2bd51058566d28a2ed5e1c42fea6729651f330325024b83546f1"
+      }
+    },
+    {
+      "region": "upper-left-contact-grid",
+      "output_native_xywh": [
+        32,
+        320,
+        512,
+        512
+      ],
+      "view": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\ca-before-mhc\\inspection-1\\upper-left-contact-grid-current-left-before-right.png",
+        "sha256": "de2048a32603842b0d5a3037d0617389a53321cbdb379743ae11ad5a20a866a2"
+      }
+    }
+  ]
+}

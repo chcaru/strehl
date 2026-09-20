@@ -1,0 +1,1501 @@
+
+running 1 test
+test merge_cmd::ca_before_mhc_full::chip_actual_consumer ...   GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 1/299 source0 1.180s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 2/299 source1 0.668s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 3/299 source2 0.661s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 4/299 source3 0.665s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 5/299 source4 0.673s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 6/299 source5 0.659s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 7/299 source6 0.672s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 8/299 source7 0.677s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 9/299 source8 0.660s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 10/299 source9 0.681s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 11/299 source10 0.684s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 12/299 source11 0.665s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 13/299 source12 0.665s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 14/299 source13 0.734s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 15/299 source14 0.690s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 16/299 source15 0.650s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 17/299 source16 0.648s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 18/299 source17 0.648s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 19/299 source18 0.653s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 20/299 source19 0.645s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 21/299 source20 0.649s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 22/299 source21 0.648s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 23/299 source22 0.646s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 24/299 source23 0.651s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 25/299 source24 0.649s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 26/299 source25 0.647s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 27/299 source26 0.679s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 28/299 source27 0.650s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 29/299 source28 0.649s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 30/299 source29 0.662s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 31/299 source30 0.679s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 32/299 source31 0.680s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 33/299 source32 0.662s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 34/299 source33 0.709s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 35/299 source34 0.664s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 36/299 source35 0.677s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 37/299 source36 0.675s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 38/299 source37 0.660s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 39/299 source38 0.654s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 40/299 source39 0.679s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 41/299 source40 0.669s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 42/299 source41 0.689s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 43/299 source42 0.655s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 44/299 source43 0.683s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 45/299 source44 0.642s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 46/299 source45 0.642s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 47/299 source46 0.642s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 48/299 source47 0.644s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 49/299 source48 0.647s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 50/299 source49 0.651s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 51/299 source50 0.663s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 52/299 source51 0.650s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 53/299 source52 0.649s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 54/299 source53 0.673s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 55/299 source54 0.646s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 56/299 source55 0.650s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 57/299 source56 0.653s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 58/299 source57 0.654s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 59/299 source58 0.676s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 60/299 source59 0.648s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 61/299 source60 0.680s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 62/299 source61 0.647s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 63/299 source62 0.644s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 64/299 source63 0.673s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 65/299 source64 0.651s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 66/299 source65 0.687s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 67/299 source66 0.681s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 68/299 source67 0.687s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 69/299 source68 0.661s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 70/299 source69 0.657s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 71/299 source70 0.660s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 72/299 source71 0.663s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 73/299 source72 0.679s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 74/299 source73 0.676s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 75/299 source74 0.713s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 76/299 source75 0.696s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 77/299 source76 0.679s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 78/299 source77 0.657s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 79/299 source78 0.655s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 80/299 source79 0.667s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 81/299 source80 0.666s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 82/299 source81 0.662s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 83/299 source82 0.665s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 84/299 source83 0.664s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 85/299 source84 0.666s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 86/299 source85 0.665s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 87/299 source86 0.666s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 88/299 source87 0.663s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 89/299 source88 0.665s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 90/299 source89 0.663s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 91/299 source90 0.658s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 92/299 source91 0.670s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 93/299 source92 0.664s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 94/299 source93 0.665s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 95/299 source94 0.667s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 96/299 source95 0.674s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 97/299 source96 0.672s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 98/299 source97 0.672s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 99/299 source98 0.686s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 100/299 source99 0.663s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 101/299 source100 0.659s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 102/299 source101 0.667s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 103/299 source102 0.662s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 104/299 source103 0.661s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 105/299 source104 0.669s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 106/299 source105 0.667s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 107/299 source106 0.668s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 108/299 source107 0.668s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 109/299 source108 0.670s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 110/299 source109 0.657s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 111/299 source110 0.701s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 112/299 source111 0.663s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 113/299 source112 0.657s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 114/299 source113 0.716s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 115/299 source114 0.662s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 116/299 source115 0.701s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 117/299 source116 0.692s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 118/299 source117 0.675s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 119/299 source118 0.664s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 120/299 source119 0.668s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 121/299 source120 0.685s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 122/299 source121 0.682s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 123/299 source122 0.652s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 124/299 source123 0.657s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 125/299 source124 0.654s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 126/299 source125 0.839s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 127/299 source126 0.692s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 128/299 source127 0.684s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 129/299 source128 0.673s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 130/299 source129 0.678s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 131/299 source130 0.721s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 132/299 source131 0.702s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 133/299 source132 0.691s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 134/299 source133 0.700s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 135/299 source134 0.678s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 136/299 source135 0.667s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 137/299 source136 0.664s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 138/299 source137 0.665s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 139/299 source138 0.685s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 140/299 source139 0.693s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 141/299 source140 0.701s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 142/299 source141 0.659s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 143/299 source142 0.654s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 144/299 source143 0.654s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 145/299 source144 0.657s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 146/299 source145 0.663s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 147/299 source146 0.728s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 148/299 source147 0.664s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 149/299 source148 0.682s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 150/299 source149 0.799s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 151/299 source150 0.702s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 152/299 source151 0.678s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 153/299 source152 0.675s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 154/299 source153 0.671s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 155/299 source154 0.679s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 156/299 source155 0.688s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 157/299 source156 0.699s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 158/299 source157 0.680s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 159/299 source158 0.700s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 160/299 source159 0.706s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 161/299 source160 0.682s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 162/299 source161 0.676s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 163/299 source162 0.678s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 164/299 source163 0.694s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 165/299 source164 0.683s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 166/299 source165 0.667s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 167/299 source166 0.654s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 168/299 source167 0.655s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 169/299 source168 0.659s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 170/299 source169 0.687s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 171/299 source170 0.663s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 172/299 source171 0.656s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 173/299 source172 0.702s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 174/299 source173 0.696s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 175/299 source174 0.689s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 176/299 source175 0.675s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 177/299 source176 0.706s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 178/299 source177 0.714s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 179/299 source178 0.674s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 180/299 source179 0.655s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 181/299 source180 0.656s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 182/299 source181 0.658s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 183/299 source182 0.652s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 184/299 source183 0.738s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 185/299 source184 0.649s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 186/299 source185 0.658s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 187/299 source186 0.657s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 188/299 source187 0.655s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 189/299 source188 0.654s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 190/299 source189 0.660s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 191/299 source190 0.655s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 192/299 source191 0.655s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 193/299 source192 0.669s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 194/299 source193 0.681s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 195/299 source194 0.653s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 196/299 source195 0.649s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 197/299 source196 0.654s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 198/299 source197 0.659s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 199/299 source198 0.653s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 200/299 source199 0.655s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 201/299 source200 0.651s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 202/299 source201 0.672s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 203/299 source202 0.671s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 204/299 source203 0.664s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 205/299 source204 0.654s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 206/299 source205 0.657s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 207/299 source206 0.651s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 208/299 source207 0.654s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 209/299 source208 0.654s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 210/299 source209 0.679s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 211/299 source210 0.651s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 212/299 source211 0.651s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 213/299 source212 0.655s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 214/299 source213 0.653s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 215/299 source214 0.657s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 216/299 source215 0.651s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 217/299 source216 0.652s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 218/299 source217 0.650s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 219/299 source218 0.653s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 220/299 source219 0.652s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 221/299 source220 0.658s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 222/299 source221 0.650s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 223/299 source222 0.647s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 224/299 source223 0.656s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 225/299 source224 0.693s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 226/299 source225 0.652s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 227/299 source226 0.654s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 228/299 source227 0.651s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 229/299 source228 0.651s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 230/299 source229 0.653s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 231/299 source230 0.650s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 232/299 source231 0.655s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 233/299 source232 0.662s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 234/299 source233 0.676s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 235/299 source234 0.684s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 236/299 source235 0.657s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 237/299 source236 0.665s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 238/299 source237 0.662s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 239/299 source238 0.706s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 240/299 source239 0.691s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 241/299 source240 0.655s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 242/299 source241 0.650s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 243/299 source242 0.652s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 244/299 source243 0.647s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 245/299 source244 0.647s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 246/299 source245 0.651s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 247/299 source246 0.650s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 248/299 source247 0.686s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 249/299 source248 0.649s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 250/299 source249 0.647s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 251/299 source250 0.647s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 252/299 source251 0.654s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 253/299 source252 0.657s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 254/299 source253 0.649s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 255/299 source254 0.653s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 256/299 source255 0.649s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 257/299 source256 0.646s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 258/299 source257 0.650s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 259/299 source258 0.674s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 260/299 source259 0.645s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 261/299 source260 0.649s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 262/299 source261 0.649s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 263/299 source262 0.648s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 264/299 source263 0.648s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 265/299 source264 0.646s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 266/299 source265 0.649s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 267/299 source266 0.653s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 268/299 source267 0.657s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 269/299 source268 0.665s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 270/299 source269 0.679s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 271/299 source270 0.664s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 272/299 source271 0.657s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 273/299 source272 0.663s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 274/299 source273 0.660s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 275/299 source274 0.698s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 276/299 source275 0.660s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 277/299 source276 0.680s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 278/299 source277 0.647s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 279/299 source278 0.651s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 280/299 source279 0.650s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 281/299 source280 0.650s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 282/299 source281 0.648s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 283/299 source282 0.652s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 284/299 source283 0.650s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 285/299 source284 0.683s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 286/299 source285 0.647s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 287/299 source286 0.647s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 288/299 source287 0.650s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 289/299 source288 0.652s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 290/299 source289 0.650s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 291/299 source290 0.646s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 292/299 source291 0.649s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 293/299 source292 0.647s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 294/299 source293 0.649s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 295/299 source294 0.648s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 296/299 source295 0.672s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 297/299 source296 0.648s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 298/299 source297 0.648s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+CA full before 299/299 source298 0.676s
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 193 filtered out; finished in 201.96s
+

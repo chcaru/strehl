@@ -14,6 +14,8 @@ REGIONS = [
     ('lower-array',550,2780,512,512),
     ('lower-colour',4650,3000,512,512),
     ('surface-scratches',4840,1240,512,512),
+    # Independent reviewer chose this from Current alone, before seeing Before.
+    ('upper-left-contact-grid',32,320,512,512),
 ]
 def binding(p):
     return {'path':str(p), 'sha256':hashlib.sha256(p.read_bytes()).hexdigest()}
