@@ -1,0 +1,32 @@
+{
+  "baseline": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\output\\baseline.tiff",
+    "sha256": "4f5a271785a3ba1046c57bb1305738dd07dbf515cc460ae10c7e2b491d2810f6",
+    "bytes": 191495346
+  },
+  "candidate": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\output\\candidate.tiff",
+    "sha256": "e1a066b0a0a6ae4e6f8504e77ede81559b74929de8029d8ebe77b0822845fe11",
+    "bytes": 191495346
+  },
+  "late": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\output\\late.tiff",
+    "sha256": "56366d788a2e47ed9bb58397cf40cc964eb16b0a789448ba93ccac9b83f1c0dc",
+    "bytes": 191495346
+  },
+  "shape": [
+    4612,
+    6920,
+    3
+  ],
+  "original_metadata_unchanged": true,
+  "map_unchanged": true,
+  "baseline_pixels_identical": true,
+  "baseline_whole_file_identical": false,
+  "reference": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\phase-packed-rgb\\full-1\\output\\baseline.tiff",
+    "sha256": "c0d8faca8a23f31a73b843fbc9aa9f55fda96b5fcce9d3540ebf6a2b4319bb21",
+    "bytes": 191495352
+  },
+  "sources_unchanged": true
+}

@@ -1,0 +1,70 @@
+{
+  "scope": "Observer neutrality only, including late-donor placebo; no quality claim",
+  "arms": {
+    "baseline": {
+      "pixel_sha256": "2a19cd9b7236a13bf90e81b87e85b1058e071aa19f4a5af82b97f453687d0dda",
+      "off_on_original_pixels_identical": true,
+      "off_on_tiff_bytes_identical": true,
+      "files": [
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-off-2\\output\\baseline.tiff",
+          "sha256": "4f5a271785a3ba1046c57bb1305738dd07dbf515cc460ae10c7e2b491d2810f6"
+        },
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\output\\baseline.tiff",
+          "sha256": "4f5a271785a3ba1046c57bb1305738dd07dbf515cc460ae10c7e2b491d2810f6"
+        },
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-full-1\\output\\baseline.tiff",
+          "sha256": "920123586543b94dd7822b5f51fe0b5817a7ac16ceb4f69ae48540fe29a413c1"
+        }
+      ]
+    },
+    "candidate": {
+      "pixel_sha256": "6e3516a4b19fa79891b0295251bfac03df4566522ef2dc4b428d128ed0efc60b",
+      "off_on_original_pixels_identical": true,
+      "off_on_tiff_bytes_identical": true,
+      "files": [
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-off-2\\output\\candidate.tiff",
+          "sha256": "e1a066b0a0a6ae4e6f8504e77ede81559b74929de8029d8ebe77b0822845fe11"
+        },
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\output\\candidate.tiff",
+          "sha256": "e1a066b0a0a6ae4e6f8504e77ede81559b74929de8029d8ebe77b0822845fe11"
+        },
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-full-1\\output\\candidate.tiff",
+          "sha256": "528e790139aa8db58916fe75df2a6b3523ddc867113a136eed3cfa8d578597d9"
+        }
+      ]
+    },
+    "late": {
+      "pixel_sha256": "1bb5c54bf99bbe815b6a6570cedc90fe999889b154e3cb76a7eb91d2962f4af1",
+      "off_on_original_pixels_identical": true,
+      "off_on_tiff_bytes_identical": true,
+      "files": [
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-off-2\\output\\late.tiff",
+          "sha256": "56366d788a2e47ed9bb58397cf40cc964eb16b0a789448ba93ccac9b83f1c0dc"
+        },
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\output\\late.tiff",
+          "sha256": "56366d788a2e47ed9bb58397cf40cc964eb16b0a789448ba93ccac9b83f1c0dc"
+        },
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-full-1\\output\\late.tiff",
+          "sha256": "d8ceb85eb4b17fe99325a67e6fd4ba9c348732dabe1e1fd81031978a8d16f5ad"
+        }
+      ]
+    }
+  },
+  "observer": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\receipt.json",
+    "sha256": "45dee5d6ca1498337dbc88eef009406e964733b673f78c509791b9c17e5047ac"
+  },
+  "helper": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\verify-attribution-pair.py",
+    "sha256": "d6cba5343cf701432ea0bbe3552b8a01700556803a39e7a98459deaa0f88a028"
+  }
+}

@@ -1,0 +1,601 @@
+{
+  "analyzer": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-witness-analysis.py",
+    "bytes": 13217,
+    "sha256": "153a58fffee9d0773e00b11b4a6eb3904d5b4f18509355f7153d3d22c6372127"
+  },
+  "plan": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-witness-analysis-plan.md",
+    "bytes": 3389,
+    "sha256": "8cea13d5b2eae0f5d1d77474704aa362ca4e67dfdb767bbae018b196cb66f096"
+  },
+  "inputs": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\receipt.json",
+      "bytes": 41079,
+      "sha256": "45dee5d6ca1498337dbc88eef009406e964733b673f78c509791b9c17e5047ac"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\source-25\\facet-edges-source-known4.f32",
+      "bytes": 589824,
+      "sha256": "fc856bb794262ccc0e5512828835bf9a93768f6a632f53ac19953ffac97233a6"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\source-25\\dark-inclusion-source-known4.f32",
+      "bytes": 589824,
+      "sha256": "6347d1faa07eb084fe98fc242548272a3db78f6f3d87e5418acdd73df1cfc019"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\source-25\\facet-edges-source-known4-pad4.f32",
+      "bytes": 614656,
+      "sha256": "943a7605568674d0bcf693f0152aa8b166319cc1052fcbc508d705f965a6aff2"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\source-25\\dark-inclusion-source-known4-pad4.f32",
+      "bytes": 614656,
+      "sha256": "e17040431caba38053a45e06ded3b1a9c9f78e771212e2c54ebba2c5877e0f41"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\source-25\\facet-edges-source-ac.f32",
+      "bytes": 589824,
+      "sha256": "635fb4626ae9d2e312a787085291fe6c110958cd6cd425fe02896cf8663f88b5"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\source-25\\dark-inclusion-source-ac.f32",
+      "bytes": 589824,
+      "sha256": "336712d4e3ebbbbfc0963cd1f127a6653dc11a78c897d028ef5b80cf66e20fbe"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\source-25\\facet-edges-source-base.f32",
+      "bytes": 589824,
+      "sha256": "581187e356c6952adc33c54b0af0985abe08776e1a5b03f30524fd51c2fe756c"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\source-25\\dark-inclusion-source-base.f32",
+      "bytes": 589824,
+      "sha256": "5e28d5eb7e9d05d0094b4f1dcbbc55a5ed5eb4db6e6706511dfbcb7a889eab3b"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\source-25\\facet-edges-actual-source-pad4.tiff",
+      "bytes": 925610,
+      "sha256": "b41ec548004fa114d0f4c1a5614e5a82007faa415c8d0e8a105abbc03be5b7c0"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\source-25\\dark-inclusion-actual-source-pad4.tiff",
+      "bytes": 925610,
+      "sha256": "9bbcc89ce1f107258ef4a70b5da20e9df4755559e88ac54acc3dcfe5f4b3da1f"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\source-28\\facet-edges-source-known4.f32",
+      "bytes": 589824,
+      "sha256": "69c7356759977fd844b83700eac1bce8dd7b5fc460bbd0ea5e36f8cdc6f31153"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\source-28\\dark-inclusion-source-known4.f32",
+      "bytes": 589824,
+      "sha256": "587c52b044a2757fb1e0b065bbb8e2c7c8af679974f588c954f7ee7de23bef4b"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\source-28\\facet-edges-source-known4-pad4.f32",
+      "bytes": 614656,
+      "sha256": "b76c34901d218c2bb268be69a602e80fc1b302e0bfd08e31077e93940543fcfa"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\source-28\\dark-inclusion-source-known4-pad4.f32",
+      "bytes": 614656,
+      "sha256": "8c30f327c9987a0c6160a91293835912419001897223ffbb1963af5ecd048284"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\source-28\\facet-edges-source-ac.f32",
+      "bytes": 589824,
+      "sha256": "776e6698494f334ded2f5011c65587a9a21caffa7fb4669cbc6acc86b8485948"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\source-28\\dark-inclusion-source-ac.f32",
+      "bytes": 589824,
+      "sha256": "38bbb23343c455e48a896fac326ecb3471ccaafd0aff81b82f394c225f014058"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\source-28\\facet-edges-source-base.f32",
+      "bytes": 589824,
+      "sha256": "d28278240d0ce1624a3a5b6b16e392efc8cae1f00170ecfe574a85a415fb691a"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\source-28\\dark-inclusion-source-base.f32",
+      "bytes": 589824,
+      "sha256": "4c5346f99807c9dbc58a4be3e5dcfc97d281c8f2a065c34968af902581775bba"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\source-28\\facet-edges-actual-source-pad4.tiff",
+      "bytes": 925610,
+      "sha256": "7264b7ab074c75a88730384fe2b8dc85c0a6f61f33963349aeb0f3ae7558d417"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\source-28\\dark-inclusion-actual-source-pad4.tiff",
+      "bytes": 925610,
+      "sha256": "e9e3490c39d351ba4a2934e06afe8018454cd0f9a638e57f54e63e7755ab0161"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\source-33\\facet-edges-source-known4.f32",
+      "bytes": 589824,
+      "sha256": "0781f8eb00fc9b7fc6d81d2c9847160ef9f70bbbc232b88747cc4449d6f2065d"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\source-33\\dark-inclusion-source-known4.f32",
+      "bytes": 589824,
+      "sha256": "9a8b47c68c68ea8d6210ccd527018040dacf1f1026be91ddbae11027b48b1730"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\source-33\\facet-edges-source-known4-pad4.f32",
+      "bytes": 614656,
+      "sha256": "6ac4cd620fc568979d2f10c6bb8994b6ac5e58eccc2d46d96f79db0d6a810089"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\source-33\\dark-inclusion-source-known4-pad4.f32",
+      "bytes": 614656,
+      "sha256": "237a930a975bd0ed1b6e1f54422100c6237902d3f6895a83d170a89e7e5de133"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\source-33\\facet-edges-source-ac.f32",
+      "bytes": 589824,
+      "sha256": "a71ea1ef3e10579a7b15e0283286d1c9378e575cb140e18407b0e4474d9e8c01"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\source-33\\dark-inclusion-source-ac.f32",
+      "bytes": 589824,
+      "sha256": "211d58a5804bb8fc855ac4659642664d151e0e0bac00120940976158edfdbc7b"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\source-33\\facet-edges-source-base.f32",
+      "bytes": 589824,
+      "sha256": "7e64b3dc795ca85516770fd0f6bacad84212bfb5a2f788e24d8fd56dc8416a2c"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\source-33\\dark-inclusion-source-base.f32",
+      "bytes": 589824,
+      "sha256": "9adfe7e1080467c0948718730de8cbf63067d0dc883b4ae7621f1a802d98d52e"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\source-33\\facet-edges-actual-source-pad4.tiff",
+      "bytes": 925610,
+      "sha256": "6ebf07891c185da88f5ae136dbe19e47823e44b2f3947151df509ceda2179ad8"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\source-33\\dark-inclusion-actual-source-pad4.tiff",
+      "bytes": 925610,
+      "sha256": "31c4ba68689585aed4281354cfe383027f4357db4732a42ca06dbda1598ffcfd"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\source-69\\facet-edges-source-known4.f32",
+      "bytes": 589824,
+      "sha256": "f5512e476805bd83e8cc56c03bda03d920b2b13b7df928bac04ec11f958e9639"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\source-69\\dark-inclusion-source-known4.f32",
+      "bytes": 589824,
+      "sha256": "02a3c6f86344bc49bd743260b2e5a556c21d6c396eed774e63bba44dfdbd35ef"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\source-69\\facet-edges-source-known4-pad4.f32",
+      "bytes": 614656,
+      "sha256": "b78724888877c1146cad759c408199d220ff12d0b7c05706265f038077559d9b"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\source-69\\dark-inclusion-source-known4-pad4.f32",
+      "bytes": 614656,
+      "sha256": "9de46912cf61e36cd156b82ca690644f751b4db9f4eae3770f4e0a38065c8a82"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\source-69\\facet-edges-source-ac.f32",
+      "bytes": 589824,
+      "sha256": "3fbd92eeb080f33f6378cb4ed453cb9c3f39df51609ecd2d5b66e66cedb3f16a"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\source-69\\dark-inclusion-source-ac.f32",
+      "bytes": 589824,
+      "sha256": "ea32c41e316f5ac3b17993c3da024966dd87dddffdd8b36f55c3741ec5cea487"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\source-69\\facet-edges-source-base.f32",
+      "bytes": 589824,
+      "sha256": "e1f735059ef32d62af273ec58238732237666df496b658f5beb8d2bf441f2999"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\source-69\\dark-inclusion-source-base.f32",
+      "bytes": 589824,
+      "sha256": "0066e1a267bdd20692af354b5d4837a415785388fca24a203dc3510c7ff4e8e9"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\source-69\\facet-edges-actual-source-pad4.tiff",
+      "bytes": 925610,
+      "sha256": "faf61a4f83ab6ac4cb268e97528a415ad34d4043ff2fa113090f6fadf01a1360"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\source-69\\dark-inclusion-actual-source-pad4.tiff",
+      "bytes": 925610,
+      "sha256": "c1d3a22b563b0881cd8b095f8a4be5aa896d0145a695f35bbd55190271e41470"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\candidate\\facet-edges-baseline-ac.f32",
+      "bytes": 589824,
+      "sha256": "9fb425a71876f205fccfbce248ae1b74cc36aee1deee76c635fc7a3ddd15330b"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\candidate\\dark-inclusion-baseline-ac.f32",
+      "bytes": 589824,
+      "sha256": "f22d4b00a04e0ea701623210086585d66e66333e6b9bea7983ac19a60d38b153"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\candidate\\facet-edges-baseline-base.f32",
+      "bytes": 589824,
+      "sha256": "67fd2b8aaffffa6e294a297084c2595139a241a99fd93661bd3466981018730b"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\candidate\\dark-inclusion-baseline-base.f32",
+      "bytes": 589824,
+      "sha256": "38a4c62b6a969c2533a8930468b63d1c94ce7860558cf5726bf6ee389752385f"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\candidate\\facet-edges-baseline-pre.f32",
+      "bytes": 589824,
+      "sha256": "12ec345b534a717c8689bd4a4afe2ba66b026430a4f7e03bcd1dd7a107484c30"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\candidate\\dark-inclusion-baseline-pre.f32",
+      "bytes": 589824,
+      "sha256": "15f487642856e273f286df9b5d20049c5445012c8b20e2c67241de69d4a96501"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\candidate\\facet-edges-baseline-post.f32",
+      "bytes": 589824,
+      "sha256": "c5a634a1109e3a832072caf55bfa1a7b7c13b61e0fb272603ba6feb2fff61c7a"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\candidate\\dark-inclusion-baseline-post.f32",
+      "bytes": 589824,
+      "sha256": "13a1fb01689ba253783d787346ff77d9f207f0f2278bb962a513b675be5e0196"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\candidate\\facet-edges-baseline-hull.f32",
+      "bytes": 589824,
+      "sha256": "80267479064c8c8d8a316b6e67af12d03bbd761e9b74c43a600a899222924a6f"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\candidate\\dark-inclusion-baseline-hull.f32",
+      "bytes": 589824,
+      "sha256": "09a31bf9e63e480ad7471a8f9af3ee499b49c0a7e2071f11243dff6d95658087"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\candidate\\facet-edges-lo.f32",
+      "bytes": 589824,
+      "sha256": "82e7af299431515f6a3f4bfce2a5b16f84faf9254639db326171e98520e662ba"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\candidate\\dark-inclusion-lo.f32",
+      "bytes": 589824,
+      "sha256": "f3497b1c11730489cc0a863f0038a59ed2d816239a41e6348734f52bae42164b"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\candidate\\facet-edges-hi.f32",
+      "bytes": 589824,
+      "sha256": "c821f2c2c763589ffdcbce9e31228ab24ec7eac8d676a442a2d7501d9d8dc465"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\candidate\\dark-inclusion-hi.f32",
+      "bytes": 589824,
+      "sha256": "1760727f6f8fd243b37d89eb2688b911d8d9da3018a7c7b80240132d6b6b24bb"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\candidate\\facet-edges-coverage.f32",
+      "bytes": 589824,
+      "sha256": "29d8ccbf5dacdc4e52b949f9a819df9a1f0a57e0c110414640215160779d7091"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\candidate\\dark-inclusion-coverage.f32",
+      "bytes": 589824,
+      "sha256": "f93feec171002eb693834497f8f40b1d089676b1756a263de86b00bf89cf7a82"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\candidate\\facet-edges-donor-sum.f32",
+      "bytes": 589824,
+      "sha256": "0556b2c9a1a4ffc56945bc52d1d6d0c5e20e94d116bfa1ca0d1bde732d09921a"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\candidate\\dark-inclusion-donor-sum.f32",
+      "bytes": 589824,
+      "sha256": "318b4dc188c4816a5c0fcc6776750a6123eea4b41d2e1cce0b7340f33bb4ce04"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\candidate\\facet-edges-retained-ac.f32",
+      "bytes": 589824,
+      "sha256": "efd93ffce61d086e91f011c8c0c10681ccf35db5dfe1eb21047bd66cd9769d5b"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\candidate\\dark-inclusion-retained-ac.f32",
+      "bytes": 589824,
+      "sha256": "ee8aecff9ebc61c879623b35103d3279643c1f7e0da71dba57e9b5dc47f983b2"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\candidate\\facet-edges-pre-hull.f32",
+      "bytes": 589824,
+      "sha256": "5445c1e977eaa8aaba079afb6aa053335cedbe5f5dc98eba6de5917a28026474"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\candidate\\dark-inclusion-pre-hull.f32",
+      "bytes": 589824,
+      "sha256": "73273fdb4cc8445d467f7c63660398bb98f7ffc948a574eab9c0403df4813f16"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\candidate\\facet-edges-post-hull.f32",
+      "bytes": 589824,
+      "sha256": "cbcaeddbd71efd86fdd248b17d49caa8ae8d5366391c8dfb0fccc5424b991200"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\candidate\\dark-inclusion-post-hull.f32",
+      "bytes": 589824,
+      "sha256": "899a9cdda3de888cbcf6afc5d059151f02a4b53b1f40bc6b14e97947d81fe800"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\candidate\\facet-edges-hull-correction.f32",
+      "bytes": 589824,
+      "sha256": "9e50071c6b5ee526211ef5a1b721f359bb739f1568c5289b15940770d986eccc"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\candidate\\dark-inclusion-hull-correction.f32",
+      "bytes": 589824,
+      "sha256": "637ba20004f2181b131270aeb613e6f6fd92887b0631a8dee05cf24162edc0b9"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\candidate\\facet-edges-mask-0.f32",
+      "bytes": 589824,
+      "sha256": "29d8ccbf5dacdc4e52b949f9a819df9a1f0a57e0c110414640215160779d7091"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\candidate\\dark-inclusion-mask-0.f32",
+      "bytes": 589824,
+      "sha256": "250480ecefa3655c774b6a4e5d4eb16675ee4f181c2285c25020fac6e3aaf3b5"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\candidate\\facet-edges-mask-1.f32",
+      "bytes": 589824,
+      "sha256": "250480ecefa3655c774b6a4e5d4eb16675ee4f181c2285c25020fac6e3aaf3b5"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\candidate\\dark-inclusion-mask-1.f32",
+      "bytes": 589824,
+      "sha256": "8eb2a3fb247ae6f3a6f2e6c21dad2d651ce56ffd754106237ea38739c3d7cafc"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\candidate\\facet-edges-mask-2.f32",
+      "bytes": 589824,
+      "sha256": "250480ecefa3655c774b6a4e5d4eb16675ee4f181c2285c25020fac6e3aaf3b5"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\candidate\\dark-inclusion-mask-2.f32",
+      "bytes": 589824,
+      "sha256": "e9751ae176066e1fa1be0c10c0ea5c57a022ae4633ee1025593f8358027bdb3d"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\late\\facet-edges-baseline-ac.f32",
+      "bytes": 589824,
+      "sha256": "9fb425a71876f205fccfbce248ae1b74cc36aee1deee76c635fc7a3ddd15330b"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\late\\dark-inclusion-baseline-ac.f32",
+      "bytes": 589824,
+      "sha256": "f22d4b00a04e0ea701623210086585d66e66333e6b9bea7983ac19a60d38b153"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\late\\facet-edges-baseline-base.f32",
+      "bytes": 589824,
+      "sha256": "67fd2b8aaffffa6e294a297084c2595139a241a99fd93661bd3466981018730b"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\late\\dark-inclusion-baseline-base.f32",
+      "bytes": 589824,
+      "sha256": "38a4c62b6a969c2533a8930468b63d1c94ce7860558cf5726bf6ee389752385f"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\late\\facet-edges-baseline-pre.f32",
+      "bytes": 589824,
+      "sha256": "12ec345b534a717c8689bd4a4afe2ba66b026430a4f7e03bcd1dd7a107484c30"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\late\\dark-inclusion-baseline-pre.f32",
+      "bytes": 589824,
+      "sha256": "15f487642856e273f286df9b5d20049c5445012c8b20e2c67241de69d4a96501"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\late\\facet-edges-baseline-post.f32",
+      "bytes": 589824,
+      "sha256": "c5a634a1109e3a832072caf55bfa1a7b7c13b61e0fb272603ba6feb2fff61c7a"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\late\\dark-inclusion-baseline-post.f32",
+      "bytes": 589824,
+      "sha256": "13a1fb01689ba253783d787346ff77d9f207f0f2278bb962a513b675be5e0196"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\late\\facet-edges-baseline-hull.f32",
+      "bytes": 589824,
+      "sha256": "80267479064c8c8d8a316b6e67af12d03bbd761e9b74c43a600a899222924a6f"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\late\\dark-inclusion-baseline-hull.f32",
+      "bytes": 589824,
+      "sha256": "09a31bf9e63e480ad7471a8f9af3ee499b49c0a7e2071f11243dff6d95658087"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\late\\facet-edges-lo.f32",
+      "bytes": 589824,
+      "sha256": "82e7af299431515f6a3f4bfce2a5b16f84faf9254639db326171e98520e662ba"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\late\\dark-inclusion-lo.f32",
+      "bytes": 589824,
+      "sha256": "f3497b1c11730489cc0a863f0038a59ed2d816239a41e6348734f52bae42164b"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\late\\facet-edges-hi.f32",
+      "bytes": 589824,
+      "sha256": "c821f2c2c763589ffdcbce9e31228ab24ec7eac8d676a442a2d7501d9d8dc465"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\late\\dark-inclusion-hi.f32",
+      "bytes": 589824,
+      "sha256": "1760727f6f8fd243b37d89eb2688b911d8d9da3018a7c7b80240132d6b6b24bb"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\late\\facet-edges-coverage.f32",
+      "bytes": 589824,
+      "sha256": "29d8ccbf5dacdc4e52b949f9a819df9a1f0a57e0c110414640215160779d7091"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\late\\dark-inclusion-coverage.f32",
+      "bytes": 589824,
+      "sha256": "f93feec171002eb693834497f8f40b1d089676b1756a263de86b00bf89cf7a82"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\late\\facet-edges-donor-sum.f32",
+      "bytes": 589824,
+      "sha256": "a4e4303fd73d204eec031b2bbc3e37bb91faab9c7bd387daa5088f5ed38f1af0"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\late\\dark-inclusion-donor-sum.f32",
+      "bytes": 589824,
+      "sha256": "3e8d584fb7fe0ce3e7280e0f9be1fcd9ca0a9c98c2c4daa4b6855e8574f17098"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\late\\facet-edges-retained-ac.f32",
+      "bytes": 589824,
+      "sha256": "efd93ffce61d086e91f011c8c0c10681ccf35db5dfe1eb21047bd66cd9769d5b"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\late\\dark-inclusion-retained-ac.f32",
+      "bytes": 589824,
+      "sha256": "ee8aecff9ebc61c879623b35103d3279643c1f7e0da71dba57e9b5dc47f983b2"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\late\\facet-edges-pre-hull.f32",
+      "bytes": 589824,
+      "sha256": "a4190334967514744cd4d4f11dda715a8c35cca48f5633e09c707f841862c581"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\late\\dark-inclusion-pre-hull.f32",
+      "bytes": 589824,
+      "sha256": "9158de477154e3ae9c7ab2671d51bf48c6d97f7d8969d1fcba60c99d0cb84fe6"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\late\\facet-edges-post-hull.f32",
+      "bytes": 589824,
+      "sha256": "b2997514369e4fee77299c0594c4ec94fa10227e4ddfb76eefee3468cd9f5ffc"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\late\\dark-inclusion-post-hull.f32",
+      "bytes": 589824,
+      "sha256": "39c7cf4004a7c2179abf1f63b4e14c6fc071ec79c00faf23a98d7e8814291334"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\late\\facet-edges-hull-correction.f32",
+      "bytes": 589824,
+      "sha256": "6ec486f44628ac62a200a71469d8de6a4dc0fc7b540b2af2092389e766660919"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\late\\dark-inclusion-hull-correction.f32",
+      "bytes": 589824,
+      "sha256": "733d795603b8b530a8b4803948f7ef1c60f532a613b1695808ca8dbb67d0849f"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\late\\facet-edges-mask-0.f32",
+      "bytes": 589824,
+      "sha256": "29d8ccbf5dacdc4e52b949f9a819df9a1f0a57e0c110414640215160779d7091"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\late\\dark-inclusion-mask-0.f32",
+      "bytes": 589824,
+      "sha256": "250480ecefa3655c774b6a4e5d4eb16675ee4f181c2285c25020fac6e3aaf3b5"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\late\\facet-edges-mask-1.f32",
+      "bytes": 589824,
+      "sha256": "250480ecefa3655c774b6a4e5d4eb16675ee4f181c2285c25020fac6e3aaf3b5"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\late\\dark-inclusion-mask-1.f32",
+      "bytes": 589824,
+      "sha256": "8eb2a3fb247ae6f3a6f2e6c21dad2d651ce56ffd754106237ea38739c3d7cafc"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\late\\facet-edges-mask-2.f32",
+      "bytes": 589824,
+      "sha256": "250480ecefa3655c774b6a4e5d4eb16675ee4f181c2285c25020fac6e3aaf3b5"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\late\\dark-inclusion-mask-2.f32",
+      "bytes": 589824,
+      "sha256": "e9751ae176066e1fa1be0c10c0ea5c57a022ae4633ee1025593f8358027bdb3d"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\output\\receipt.json",
+      "bytes": 52963,
+      "sha256": "8489d681d94d6aa56bca54b8cfacc3cb302c964109cb9fe97d939cc4ec05cd26"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\output\\baseline.tiff",
+      "bytes": 191495346,
+      "sha256": "4f5a271785a3ba1046c57bb1305738dd07dbf515cc460ae10c7e2b491d2810f6"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\output\\candidate.tiff",
+      "bytes": 191495346,
+      "sha256": "e1a066b0a0a6ae4e6f8504e77ede81559b74929de8029d8ebe77b0822845fe11"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\output\\late.tiff",
+      "bytes": 191495346,
+      "sha256": "56366d788a2e47ed9bb58397cf40cc964eb16b0a789448ba93ccac9b83f1c0dc"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-witness-analysis-1\\facet-edges-photographs.png",
+      "bytes": 1202136,
+      "sha256": "231ba2b15a2742dae6dbab8a79b3cf4326d5eb5d46d24547cc62d7322a720517"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-witness-analysis-1\\facet-edges-fields-64dn.png",
+      "bytes": 272906,
+      "sha256": "7c1022452f23e2dcd34feac94c00a926ad1a41ef358b8c45eee77f64e9a2d461"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-witness-analysis-1\\facet-edges-fields-512dn.png",
+      "bytes": 420942,
+      "sha256": "512986e44b9c7965b8cf46884ae7f0bac52b66979c176904bcff586d78a76930"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-witness-analysis-1\\dark-inclusion-photographs.png",
+      "bytes": 1175352,
+      "sha256": "43acf437cf633f65d5a9cbbd0e26c2d9caa0db6eb679ac8ba32b37d03aa70a96"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-witness-analysis-1\\dark-inclusion-fields-64dn.png",
+      "bytes": 332186,
+      "sha256": "e3d417ad6212b6a2f2465dd214f4d84664fabe452ec1296e7934d7ac8c5c2daa"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-witness-analysis-1\\dark-inclusion-fields-512dn.png",
+      "bytes": 522869,
+      "sha256": "30ffbede44005acd88fdec24076010cb007ede183b391ff6b1f015482d862465"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-witness-analysis-1\\accounting.json",
+      "bytes": 62595,
+      "sha256": "6eb3c23fd8b4ebd155d9772f5eb8e4d7fc84a190b077935d14c02b4582ebbaf6"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-witness-analysis-1\\accounting.md",
+      "bytes": 1194,
+      "sha256": "89b7b820df1641fd590deb5f28f0a3533b9044ce29102712c14111304ac94d91"
+    }
+  ]
+}

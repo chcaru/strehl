@@ -117,10 +117,16 @@ impl FullDonor {
     fn bands(&self) -> &DonorBlend {
         match self { Self::Bands(d) => d, Self::Spatial(_) => panic!("coefficient observer excludes spatial mode") }
     }
+    fn spatial(&self) -> &SpatialDonor {
+        match self { Self::Spatial(d) => d, Self::Bands(_) => panic!("spatial witness requires spatial mode") }
+    }
 }
 
 mod attribution {
     include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/donor-consistency/attribution.rs"));
+}
+mod spatial_witness {
+    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/donor-consistency/spatial-witness.rs"));
 }
 impl PyramidFrameSource for OneFrame<'_> {
     fn len(&self) -> usize { 70 }
@@ -141,6 +147,8 @@ fn vitamin_c_complete_triplet() -> Result<()> {
     };
     ensure!(!spatial || std::env::var_os("STREHL_DONOR_ATTRIBUTION_DIR").is_none(),
         "old coefficient attribution is incompatible with spatial donor mode");
+    ensure!(spatial || std::env::var_os("STREHL_DONOR_SPATIAL_WITNESS_DIR").is_none(),
+        "spatial witness requires spatial donor mode");
     let mode = if spatial { "fixed-native-spatial-donor-oracle" } else { MODE };
     let counterfactual = if spatial { "baseline_pre + (sum(mask0*full_donor_ac) - coverage0*baseline_ac); unchanged terminal mean" }
         else { "prescribed shared donor AC coefficients; baseline terminal mean retained" };
@@ -195,6 +203,7 @@ fn vitamin_c_complete_triplet() -> Result<()> {
     ensure!(parent.starts_with(workspace.join("experiments").canonicalize()?),
         "outputs must be below workspace experiments");
     let mut attribution = attribution::Observer::from_env(&workspace, &config.out_dir)?;
+    let mut spatial_witness = spatial_witness::Witness::from_env(&workspace,&config.out_dir)?;
     let first = strehl_raw::decode(&paths[0])?;
     let levels = first.levels;
     let wb = first.wb_coeffs;
@@ -292,6 +301,9 @@ fn vitamin_c_complete_triplet() -> Result<()> {
                 let donor_hashes=if prescribed.is_some() || is_late {
                     Some(base.planes.iter().map(|p|field_hash(p)).collect::<Vec<_>>())
                 } else {None};
+                if let (Some(witness),Some(hashes))=(spatial_witness.as_mut(),donor_hashes.as_ref()) {
+                    witness.source(index,&base.planes,&sizes,hashes,levels,wb,&dev)?;
+                }
                 if let Some(region)=prescribed {oracle.add_source(&[region],&base.planes);}
                 if is_late {late.add_source(&[0,1,2],&base.planes);}
                 if let Some(ref hashes)=donor_hashes {
@@ -336,6 +348,9 @@ fn vitamin_c_complete_triplet() -> Result<()> {
     if let Some(observer) = attribution.as_mut() {
         pool.install(||observer.record("candidate",&total,oracle.bands(),&sizes,&candidate))?;
     }
+    if let Some(witness)=spatial_witness.as_mut() {
+        pool.install(||witness.finish_arm("candidate",&total,oracle.spatial(),&sizes,&candidate))?;
+    }
     drop(candidate);drop(oracle);
     let late_image=pool.install(||late.finish(&total,&mut Workspace::new(&sizes)));
     let late_plane_hashes=late_image.iter().map(|p|field_hash(p)).collect::<Vec<_>>();
@@ -344,8 +359,12 @@ fn vitamin_c_complete_triplet() -> Result<()> {
     if let Some(observer) = attribution.as_mut() {
         pool.install(||observer.record("late",&total,late.bands(),&sizes,&late_image))?;
     }
+    if let Some(witness)=spatial_witness.as_mut() {
+        pool.install(||witness.finish_arm("late",&total,late.spatial(),&sizes,&late_image))?;
+    }
     drop(late_image);drop(late);drop(total);
     if let Some(observer) = attribution { observer.finish(&sizes)?; }
+    if let Some(witness)=spatial_witness { witness.finish(&sizes,levels,wb,config.tone)?; }
     for (i,path) in paths.iter().enumerate(){ensure!(before[i]==stamp(path)?,"original metadata changed after triplet");}
     ensure!(file_hash(&config.warp_map)?==EXPECTED_MAP,"held warp map changed");
     write_json(&config.out_dir.join("receipt.json"),&json!({"schema":1,"mode":mode,"frames":70,

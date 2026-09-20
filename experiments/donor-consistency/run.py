@@ -22,10 +22,12 @@ def main():
     p.add_argument('--screen', type=Path)
     p.add_argument('--observe', action='store_true', help='Record unchanged actual coefficient contributions')
     p.add_argument('--spatial', action='store_true', help='Apply fixed masks after full AC reconstruction')
+    p.add_argument('--witness', action='store_true', help='Record actual gathered source and spatial reconstruction witnesses')
     a = p.parse_args()
     assert not a.observe or a.phase == 'full'
     assert not a.spatial or a.phase == 'full'
     assert not (a.observe and a.spatial), 'Attribution observer describes the preceding coefficient-mask recipe'
+    assert not a.witness or (a.phase == 'full' and a.spatial and not a.observe)
     out = a.out.resolve()
     assert out.is_relative_to(HERE)
     out.mkdir()
@@ -38,6 +40,7 @@ def main():
         paths.update([Path(__file__), HERE / 'independent-plan.md', HERE / 'charter.md',
             HERE / 'independent-attribution-plan.md',
             HERE / 'independent-spatial-plan.md', HERE / 'reconstruction-design.md',
+            HERE / 'independent-spatial-witness-plan.md',
             ROOT / 'crates/strehl-core/src/pyramid.rs', ROOT / 'crates/strehl-core/src/boxfilter.rs',
             ROOT / 'experiments/native-correction-variance/core-bridge.rs',
             ROOT / 'crates/strehl-cli/Cargo.toml', ROOT / 'crates/strehl-core/Cargo.toml'])
@@ -105,6 +108,8 @@ def main():
             fields['STREHL_DONOR_ATTRIBUTION_DIR'] = str(out / 'attribution')
         if a.spatial:
             fields['STREHL_DONOR_SPATIAL'] = '1'
+        if a.witness:
+            fields['STREHL_DONOR_SPATIAL_WITNESS_DIR'] = str(out / 'witness')
     def check_inputs():
         for r in inputs or []:
             st = Path(r['path']).stat()
@@ -117,9 +122,9 @@ def main():
     assert all(c.ref(Path(r['path'])) == r for r in sources)
     check_inputs()
     if a.phase == 'controls':
-        assert 'test result: ok. 4 passed;' in log
+        assert 'test result: ok. 5 passed;' in log
         records = {}
-        for label in ['DONOR_GEOMETRY', 'DONOR_CONSUMER', 'DONOR_ATTRIBUTION', 'DONOR_SPATIAL']:
+        for label in ['DONOR_GEOMETRY', 'DONOR_CONSUMER', 'DONOR_ATTRIBUTION', 'DONOR_SPATIAL', 'DONOR_SPATIAL_WITNESS']:
             lines = [line.split(label + ' ', 1)[1] for line in log.splitlines() if label + ' ' in line]
             assert len(lines) == 1, (label, len(lines))
             records[label] = json.loads(lines[0])
@@ -150,6 +155,8 @@ def main():
         reference=c.ref(reference), sources_unchanged=True))
     if a.observe:
         assert (out / 'attribution/receipt.json').is_file()
+    if a.witness:
+        assert (out / 'witness/receipt.json').is_file()
 
 
 if __name__ == '__main__':

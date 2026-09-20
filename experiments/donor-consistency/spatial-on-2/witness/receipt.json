@@ -1,0 +1,1487 @@
+{
+  "exposure": 1.0,
+  "groups": [
+    {
+      "actual_known4_sha256": [
+        "4990475fe54118c2f905a676597a0c52ac56c159761762be3202dd1aa1ebb9be",
+        "0d75d5f4f3475aa9157499792101709196649eb6ac17887c5539af3ce1ade499",
+        "1ef3713a3703202e2fd3f39e1355de965276e9c6be4772c83725c65ae79a781a",
+        "76d399d12f6cbf8e43decd894cb5932acac970f4ce6bead69096a08d1ea043b2"
+      ],
+      "artifacts": [
+        {
+          "field": "source-known4",
+          "path": "source-25/facet-edges-source-known4.f32",
+          "region": "facet-edges",
+          "sha256": "fc856bb794262ccc0e5512828835bf9a93768f6a632f53ac19953ffac97233a6",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "source-known4",
+          "path": "source-25/dark-inclusion-source-known4.f32",
+          "region": "dark-inclusion",
+          "sha256": "6347d1faa07eb084fe98fc242548272a3db78f6f3d87e5418acdd73df1cfc019",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "source-known4-pad4",
+          "path": "source-25/facet-edges-source-known4-pad4.f32",
+          "region": "facet-edges",
+          "sha256": "943a7605568674d0bcf693f0152aa8b166319cc1052fcbc508d705f965a6aff2",
+          "shape": [
+            4,
+            196,
+            196
+          ]
+        },
+        {
+          "field": "source-known4-pad4",
+          "path": "source-25/dark-inclusion-source-known4-pad4.f32",
+          "region": "dark-inclusion",
+          "sha256": "e17040431caba38053a45e06ded3b1a9c9f78e771212e2c54ebba2c5877e0f41",
+          "shape": [
+            4,
+            196,
+            196
+          ]
+        },
+        {
+          "field": "source-ac",
+          "path": "source-25/facet-edges-source-ac.f32",
+          "region": "facet-edges",
+          "sha256": "635fb4626ae9d2e312a787085291fe6c110958cd6cd425fe02896cf8663f88b5",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "source-ac",
+          "path": "source-25/dark-inclusion-source-ac.f32",
+          "region": "dark-inclusion",
+          "sha256": "336712d4e3ebbbbfc0963cd1f127a6653dc11a78c897d028ef5b80cf66e20fbe",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "source-base",
+          "path": "source-25/facet-edges-source-base.f32",
+          "region": "facet-edges",
+          "sha256": "581187e356c6952adc33c54b0af0985abe08776e1a5b03f30524fd51c2fe756c",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "source-base",
+          "path": "source-25/dark-inclusion-source-base.f32",
+          "region": "dark-inclusion",
+          "sha256": "5e28d5eb7e9d05d0094b4f1dcbbc55a5ed5eb4db6e6706511dfbcb7a889eab3b",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        }
+      ],
+      "developed": [
+        {
+          "development": "actual held four-CFA write_planes/MHC/developer; no baseline InputRange applied to source",
+          "display_crop_xywh": [
+            4,
+            4,
+            384,
+            384
+          ],
+          "native_dimensions": [
+            392,
+            392
+          ],
+          "path": "source-25/facet-edges-actual-source-pad4.tiff",
+          "region": "facet-edges",
+          "sha256": "b41ec548004fa114d0f4c1a5614e5a82007faa415c8d0e8a105abbc03be5b7c0"
+        },
+        {
+          "development": "actual held four-CFA write_planes/MHC/developer; no baseline InputRange applied to source",
+          "display_crop_xywh": [
+            4,
+            4,
+            384,
+            384
+          ],
+          "native_dimensions": [
+            392,
+            392
+          ],
+          "path": "source-25/dark-inclusion-actual-source-pad4.tiff",
+          "region": "dark-inclusion",
+          "sha256": "9bbcc89ce1f107258ef4a70b5da20e9df4755559e88ac54acc3dcfe5f4b3da1f"
+        }
+      ],
+      "group": "source-25",
+      "index0": 25,
+      "pad4_central_known4_bit_exact": true,
+      "summary": {
+        "source_ac_plus_base_max_abs": [
+          0.0035400390625,
+          0.003662109375,
+          0.00390625,
+          0.0032958984375
+        ]
+      }
+    },
+    {
+      "actual_known4_sha256": [
+        "67e3198a072bf84642f0366ff95c0c25e1910808e59634b26bf4a3a80f6f4885",
+        "becaa3f5a28b3f4194438c815da4ac9b33c0bfa87ccff9fb6b32b022f2e6a71b",
+        "0c6aa5ce4cb858359f4b57db70f407cda11dc48c8edcc9450069768e1763ddae",
+        "b2afc7b372753de6696a876afb9a36aac074b6e021f9caeef97dd4d3643832ab"
+      ],
+      "artifacts": [
+        {
+          "field": "source-known4",
+          "path": "source-28/facet-edges-source-known4.f32",
+          "region": "facet-edges",
+          "sha256": "69c7356759977fd844b83700eac1bce8dd7b5fc460bbd0ea5e36f8cdc6f31153",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "source-known4",
+          "path": "source-28/dark-inclusion-source-known4.f32",
+          "region": "dark-inclusion",
+          "sha256": "587c52b044a2757fb1e0b065bbb8e2c7c8af679974f588c954f7ee7de23bef4b",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "source-known4-pad4",
+          "path": "source-28/facet-edges-source-known4-pad4.f32",
+          "region": "facet-edges",
+          "sha256": "b76c34901d218c2bb268be69a602e80fc1b302e0bfd08e31077e93940543fcfa",
+          "shape": [
+            4,
+            196,
+            196
+          ]
+        },
+        {
+          "field": "source-known4-pad4",
+          "path": "source-28/dark-inclusion-source-known4-pad4.f32",
+          "region": "dark-inclusion",
+          "sha256": "8c30f327c9987a0c6160a91293835912419001897223ffbb1963af5ecd048284",
+          "shape": [
+            4,
+            196,
+            196
+          ]
+        },
+        {
+          "field": "source-ac",
+          "path": "source-28/facet-edges-source-ac.f32",
+          "region": "facet-edges",
+          "sha256": "776e6698494f334ded2f5011c65587a9a21caffa7fb4669cbc6acc86b8485948",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "source-ac",
+          "path": "source-28/dark-inclusion-source-ac.f32",
+          "region": "dark-inclusion",
+          "sha256": "38bbb23343c455e48a896fac326ecb3471ccaafd0aff81b82f394c225f014058",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "source-base",
+          "path": "source-28/facet-edges-source-base.f32",
+          "region": "facet-edges",
+          "sha256": "d28278240d0ce1624a3a5b6b16e392efc8cae1f00170ecfe574a85a415fb691a",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "source-base",
+          "path": "source-28/dark-inclusion-source-base.f32",
+          "region": "dark-inclusion",
+          "sha256": "4c5346f99807c9dbc58a4be3e5dcfc97d281c8f2a065c34968af902581775bba",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        }
+      ],
+      "developed": [
+        {
+          "development": "actual held four-CFA write_planes/MHC/developer; no baseline InputRange applied to source",
+          "display_crop_xywh": [
+            4,
+            4,
+            384,
+            384
+          ],
+          "native_dimensions": [
+            392,
+            392
+          ],
+          "path": "source-28/facet-edges-actual-source-pad4.tiff",
+          "region": "facet-edges",
+          "sha256": "7264b7ab074c75a88730384fe2b8dc85c0a6f61f33963349aeb0f3ae7558d417"
+        },
+        {
+          "development": "actual held four-CFA write_planes/MHC/developer; no baseline InputRange applied to source",
+          "display_crop_xywh": [
+            4,
+            4,
+            384,
+            384
+          ],
+          "native_dimensions": [
+            392,
+            392
+          ],
+          "path": "source-28/dark-inclusion-actual-source-pad4.tiff",
+          "region": "dark-inclusion",
+          "sha256": "e9e3490c39d351ba4a2934e06afe8018454cd0f9a638e57f54e63e7755ab0161"
+        }
+      ],
+      "group": "source-28",
+      "index0": 28,
+      "pad4_central_known4_bit_exact": true,
+      "summary": {
+        "source_ac_plus_base_max_abs": [
+          0.0029296875,
+          0.003662109375,
+          0.00390625,
+          0.00341796875
+        ]
+      }
+    },
+    {
+      "actual_known4_sha256": [
+        "9ce4c861a4ba905f71f5165e48721086771003d9f035da097f83c5ba4ac07f88",
+        "ceadfa392f6fd5d0d55ac6701b570e94a3f030e1476169f6a2d6aba92c94fd38",
+        "206510e9d1b0fbf6394550de1c9a0114d3ba2f7f4bd0d3b63a0b129e72462270",
+        "13c8d87a77ed618154d613c4df906c61b47ef1165419d5a6b0f8020c674cfe40"
+      ],
+      "artifacts": [
+        {
+          "field": "source-known4",
+          "path": "source-33/facet-edges-source-known4.f32",
+          "region": "facet-edges",
+          "sha256": "0781f8eb00fc9b7fc6d81d2c9847160ef9f70bbbc232b88747cc4449d6f2065d",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "source-known4",
+          "path": "source-33/dark-inclusion-source-known4.f32",
+          "region": "dark-inclusion",
+          "sha256": "9a8b47c68c68ea8d6210ccd527018040dacf1f1026be91ddbae11027b48b1730",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "source-known4-pad4",
+          "path": "source-33/facet-edges-source-known4-pad4.f32",
+          "region": "facet-edges",
+          "sha256": "6ac4cd620fc568979d2f10c6bb8994b6ac5e58eccc2d46d96f79db0d6a810089",
+          "shape": [
+            4,
+            196,
+            196
+          ]
+        },
+        {
+          "field": "source-known4-pad4",
+          "path": "source-33/dark-inclusion-source-known4-pad4.f32",
+          "region": "dark-inclusion",
+          "sha256": "237a930a975bd0ed1b6e1f54422100c6237902d3f6895a83d170a89e7e5de133",
+          "shape": [
+            4,
+            196,
+            196
+          ]
+        },
+        {
+          "field": "source-ac",
+          "path": "source-33/facet-edges-source-ac.f32",
+          "region": "facet-edges",
+          "sha256": "a71ea1ef3e10579a7b15e0283286d1c9378e575cb140e18407b0e4474d9e8c01",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "source-ac",
+          "path": "source-33/dark-inclusion-source-ac.f32",
+          "region": "dark-inclusion",
+          "sha256": "211d58a5804bb8fc855ac4659642664d151e0e0bac00120940976158edfdbc7b",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "source-base",
+          "path": "source-33/facet-edges-source-base.f32",
+          "region": "facet-edges",
+          "sha256": "7e64b3dc795ca85516770fd0f6bacad84212bfb5a2f788e24d8fd56dc8416a2c",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "source-base",
+          "path": "source-33/dark-inclusion-source-base.f32",
+          "region": "dark-inclusion",
+          "sha256": "9adfe7e1080467c0948718730de8cbf63067d0dc883b4ae7621f1a802d98d52e",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        }
+      ],
+      "developed": [
+        {
+          "development": "actual held four-CFA write_planes/MHC/developer; no baseline InputRange applied to source",
+          "display_crop_xywh": [
+            4,
+            4,
+            384,
+            384
+          ],
+          "native_dimensions": [
+            392,
+            392
+          ],
+          "path": "source-33/facet-edges-actual-source-pad4.tiff",
+          "region": "facet-edges",
+          "sha256": "6ebf07891c185da88f5ae136dbe19e47823e44b2f3947151df509ceda2179ad8"
+        },
+        {
+          "development": "actual held four-CFA write_planes/MHC/developer; no baseline InputRange applied to source",
+          "display_crop_xywh": [
+            4,
+            4,
+            384,
+            384
+          ],
+          "native_dimensions": [
+            392,
+            392
+          ],
+          "path": "source-33/dark-inclusion-actual-source-pad4.tiff",
+          "region": "dark-inclusion",
+          "sha256": "31c4ba68689585aed4281354cfe383027f4357db4732a42ca06dbda1598ffcfd"
+        }
+      ],
+      "group": "source-33",
+      "index0": 33,
+      "pad4_central_known4_bit_exact": true,
+      "summary": {
+        "source_ac_plus_base_max_abs": [
+          0.00341796875,
+          0.00341796875,
+          0.00390625,
+          0.0032958984375
+        ]
+      }
+    },
+    {
+      "actual_known4_sha256": [
+        "5acacc1a64c8fa76aa2e6d0e8f77655cd0f8f10cd225b6fb50404225370cee99",
+        "545e2b8b63ea385f602b309ddc4c6dc8e2052ab08e9e7e2cad5785fecfb45bb2",
+        "44bedcbf8db9f30942eef4b59091b16e4faaa8a3710b02d5a3506b398af75078",
+        "6820528308939354c5bc5ab53955d90784a245d8b0db11afb242ea9c609a22a7"
+      ],
+      "artifacts": [
+        {
+          "field": "source-known4",
+          "path": "source-69/facet-edges-source-known4.f32",
+          "region": "facet-edges",
+          "sha256": "f5512e476805bd83e8cc56c03bda03d920b2b13b7df928bac04ec11f958e9639",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "source-known4",
+          "path": "source-69/dark-inclusion-source-known4.f32",
+          "region": "dark-inclusion",
+          "sha256": "02a3c6f86344bc49bd743260b2e5a556c21d6c396eed774e63bba44dfdbd35ef",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "source-known4-pad4",
+          "path": "source-69/facet-edges-source-known4-pad4.f32",
+          "region": "facet-edges",
+          "sha256": "b78724888877c1146cad759c408199d220ff12d0b7c05706265f038077559d9b",
+          "shape": [
+            4,
+            196,
+            196
+          ]
+        },
+        {
+          "field": "source-known4-pad4",
+          "path": "source-69/dark-inclusion-source-known4-pad4.f32",
+          "region": "dark-inclusion",
+          "sha256": "9de46912cf61e36cd156b82ca690644f751b4db9f4eae3770f4e0a38065c8a82",
+          "shape": [
+            4,
+            196,
+            196
+          ]
+        },
+        {
+          "field": "source-ac",
+          "path": "source-69/facet-edges-source-ac.f32",
+          "region": "facet-edges",
+          "sha256": "3fbd92eeb080f33f6378cb4ed453cb9c3f39df51609ecd2d5b66e66cedb3f16a",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "source-ac",
+          "path": "source-69/dark-inclusion-source-ac.f32",
+          "region": "dark-inclusion",
+          "sha256": "ea32c41e316f5ac3b17993c3da024966dd87dddffdd8b36f55c3741ec5cea487",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "source-base",
+          "path": "source-69/facet-edges-source-base.f32",
+          "region": "facet-edges",
+          "sha256": "e1f735059ef32d62af273ec58238732237666df496b658f5beb8d2bf441f2999",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "source-base",
+          "path": "source-69/dark-inclusion-source-base.f32",
+          "region": "dark-inclusion",
+          "sha256": "0066e1a267bdd20692af354b5d4837a415785388fca24a203dc3510c7ff4e8e9",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        }
+      ],
+      "developed": [
+        {
+          "development": "actual held four-CFA write_planes/MHC/developer; no baseline InputRange applied to source",
+          "display_crop_xywh": [
+            4,
+            4,
+            384,
+            384
+          ],
+          "native_dimensions": [
+            392,
+            392
+          ],
+          "path": "source-69/facet-edges-actual-source-pad4.tiff",
+          "region": "facet-edges",
+          "sha256": "faf61a4f83ab6ac4cb268e97528a415ad34d4043ff2fa113090f6fadf01a1360"
+        },
+        {
+          "development": "actual held four-CFA write_planes/MHC/developer; no baseline InputRange applied to source",
+          "display_crop_xywh": [
+            4,
+            4,
+            384,
+            384
+          ],
+          "native_dimensions": [
+            392,
+            392
+          ],
+          "path": "source-69/dark-inclusion-actual-source-pad4.tiff",
+          "region": "dark-inclusion",
+          "sha256": "c1d3a22b563b0881cd8b095f8a4be5aa896d0145a695f35bbd55190271e41470"
+        }
+      ],
+      "group": "source-69",
+      "index0": 69,
+      "pad4_central_known4_bit_exact": true,
+      "summary": {
+        "source_ac_plus_base_max_abs": [
+          0.004150390625,
+          0.00390625,
+          0.00390625,
+          0.00341796875
+        ]
+      }
+    },
+    {
+      "actual_post_hull_bit_exact": true,
+      "artifacts": [
+        {
+          "field": "baseline-ac",
+          "path": "candidate/facet-edges-baseline-ac.f32",
+          "region": "facet-edges",
+          "sha256": "9fb425a71876f205fccfbce248ae1b74cc36aee1deee76c635fc7a3ddd15330b",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "baseline-ac",
+          "path": "candidate/dark-inclusion-baseline-ac.f32",
+          "region": "dark-inclusion",
+          "sha256": "f22d4b00a04e0ea701623210086585d66e66333e6b9bea7983ac19a60d38b153",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "baseline-base",
+          "path": "candidate/facet-edges-baseline-base.f32",
+          "region": "facet-edges",
+          "sha256": "67fd2b8aaffffa6e294a297084c2595139a241a99fd93661bd3466981018730b",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "baseline-base",
+          "path": "candidate/dark-inclusion-baseline-base.f32",
+          "region": "dark-inclusion",
+          "sha256": "38a4c62b6a969c2533a8930468b63d1c94ce7860558cf5726bf6ee389752385f",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "baseline-pre",
+          "path": "candidate/facet-edges-baseline-pre.f32",
+          "region": "facet-edges",
+          "sha256": "12ec345b534a717c8689bd4a4afe2ba66b026430a4f7e03bcd1dd7a107484c30",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "baseline-pre",
+          "path": "candidate/dark-inclusion-baseline-pre.f32",
+          "region": "dark-inclusion",
+          "sha256": "15f487642856e273f286df9b5d20049c5445012c8b20e2c67241de69d4a96501",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "baseline-post",
+          "path": "candidate/facet-edges-baseline-post.f32",
+          "region": "facet-edges",
+          "sha256": "c5a634a1109e3a832072caf55bfa1a7b7c13b61e0fb272603ba6feb2fff61c7a",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "baseline-post",
+          "path": "candidate/dark-inclusion-baseline-post.f32",
+          "region": "dark-inclusion",
+          "sha256": "13a1fb01689ba253783d787346ff77d9f207f0f2278bb962a513b675be5e0196",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "baseline-hull",
+          "path": "candidate/facet-edges-baseline-hull.f32",
+          "region": "facet-edges",
+          "sha256": "80267479064c8c8d8a316b6e67af12d03bbd761e9b74c43a600a899222924a6f",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "baseline-hull",
+          "path": "candidate/dark-inclusion-baseline-hull.f32",
+          "region": "dark-inclusion",
+          "sha256": "09a31bf9e63e480ad7471a8f9af3ee499b49c0a7e2071f11243dff6d95658087",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "lo",
+          "path": "candidate/facet-edges-lo.f32",
+          "region": "facet-edges",
+          "sha256": "82e7af299431515f6a3f4bfce2a5b16f84faf9254639db326171e98520e662ba",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "lo",
+          "path": "candidate/dark-inclusion-lo.f32",
+          "region": "dark-inclusion",
+          "sha256": "f3497b1c11730489cc0a863f0038a59ed2d816239a41e6348734f52bae42164b",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "hi",
+          "path": "candidate/facet-edges-hi.f32",
+          "region": "facet-edges",
+          "sha256": "c821f2c2c763589ffdcbce9e31228ab24ec7eac8d676a442a2d7501d9d8dc465",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "hi",
+          "path": "candidate/dark-inclusion-hi.f32",
+          "region": "dark-inclusion",
+          "sha256": "1760727f6f8fd243b37d89eb2688b911d8d9da3018a7c7b80240132d6b6b24bb",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "coverage",
+          "path": "candidate/facet-edges-coverage.f32",
+          "region": "facet-edges",
+          "sha256": "29d8ccbf5dacdc4e52b949f9a819df9a1f0a57e0c110414640215160779d7091",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "coverage",
+          "path": "candidate/dark-inclusion-coverage.f32",
+          "region": "dark-inclusion",
+          "sha256": "f93feec171002eb693834497f8f40b1d089676b1756a263de86b00bf89cf7a82",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "donor-sum",
+          "path": "candidate/facet-edges-donor-sum.f32",
+          "region": "facet-edges",
+          "sha256": "0556b2c9a1a4ffc56945bc52d1d6d0c5e20e94d116bfa1ca0d1bde732d09921a",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "donor-sum",
+          "path": "candidate/dark-inclusion-donor-sum.f32",
+          "region": "dark-inclusion",
+          "sha256": "318b4dc188c4816a5c0fcc6776750a6123eea4b41d2e1cce0b7340f33bb4ce04",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "retained-ac",
+          "path": "candidate/facet-edges-retained-ac.f32",
+          "region": "facet-edges",
+          "sha256": "efd93ffce61d086e91f011c8c0c10681ccf35db5dfe1eb21047bd66cd9769d5b",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "retained-ac",
+          "path": "candidate/dark-inclusion-retained-ac.f32",
+          "region": "dark-inclusion",
+          "sha256": "ee8aecff9ebc61c879623b35103d3279643c1f7e0da71dba57e9b5dc47f983b2",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "pre-hull",
+          "path": "candidate/facet-edges-pre-hull.f32",
+          "region": "facet-edges",
+          "sha256": "5445c1e977eaa8aaba079afb6aa053335cedbe5f5dc98eba6de5917a28026474",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "pre-hull",
+          "path": "candidate/dark-inclusion-pre-hull.f32",
+          "region": "dark-inclusion",
+          "sha256": "73273fdb4cc8445d467f7c63660398bb98f7ffc948a574eab9c0403df4813f16",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "post-hull",
+          "path": "candidate/facet-edges-post-hull.f32",
+          "region": "facet-edges",
+          "sha256": "cbcaeddbd71efd86fdd248b17d49caa8ae8d5366391c8dfb0fccc5424b991200",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "post-hull",
+          "path": "candidate/dark-inclusion-post-hull.f32",
+          "region": "dark-inclusion",
+          "sha256": "899a9cdda3de888cbcf6afc5d059151f02a4b53b1f40bc6b14e97947d81fe800",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "hull-correction",
+          "path": "candidate/facet-edges-hull-correction.f32",
+          "region": "facet-edges",
+          "sha256": "9e50071c6b5ee526211ef5a1b721f359bb739f1568c5289b15940770d986eccc",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "hull-correction",
+          "path": "candidate/dark-inclusion-hull-correction.f32",
+          "region": "dark-inclusion",
+          "sha256": "637ba20004f2181b131270aeb613e6f6fd92887b0631a8dee05cf24162edc0b9",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "mask-0",
+          "path": "candidate/facet-edges-mask-0.f32",
+          "region": "facet-edges",
+          "sha256": "29d8ccbf5dacdc4e52b949f9a819df9a1f0a57e0c110414640215160779d7091",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "mask-0",
+          "path": "candidate/dark-inclusion-mask-0.f32",
+          "region": "dark-inclusion",
+          "sha256": "250480ecefa3655c774b6a4e5d4eb16675ee4f181c2285c25020fac6e3aaf3b5",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "mask-1",
+          "path": "candidate/facet-edges-mask-1.f32",
+          "region": "facet-edges",
+          "sha256": "250480ecefa3655c774b6a4e5d4eb16675ee4f181c2285c25020fac6e3aaf3b5",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "mask-1",
+          "path": "candidate/dark-inclusion-mask-1.f32",
+          "region": "dark-inclusion",
+          "sha256": "8eb2a3fb247ae6f3a6f2e6c21dad2d651ce56ffd754106237ea38739c3d7cafc",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "mask-2",
+          "path": "candidate/facet-edges-mask-2.f32",
+          "region": "facet-edges",
+          "sha256": "250480ecefa3655c774b6a4e5d4eb16675ee4f181c2285c25020fac6e3aaf3b5",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "mask-2",
+          "path": "candidate/dark-inclusion-mask-2.f32",
+          "region": "dark-inclusion",
+          "sha256": "e9751ae176066e1fa1be0c10c0ea5c57a022ae4633ee1025593f8358027bdb3d",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        }
+      ],
+      "group": "candidate",
+      "summary": {
+        "baseline_hull_sum_max_abs": [
+          0.0001220703125,
+          0.0001220703125,
+          0.0001220703125,
+          0.0001220703125
+        ],
+        "baseline_sum_max_abs": [
+          0.00390625,
+          0.005859375,
+          0.0048828125,
+          0.0032958984375
+        ],
+        "mixed_hull_sum_max_abs": [
+          0.0001220703125,
+          0.0001220703125,
+          0.0001220703125,
+          0.0001220703125
+        ],
+        "mixed_sum_max_abs": [
+          0.00390625,
+          0.005859375,
+          0.0048828125,
+          0.0032958984375
+        ]
+      }
+    },
+    {
+      "actual_post_hull_bit_exact": true,
+      "artifacts": [
+        {
+          "field": "baseline-ac",
+          "path": "late/facet-edges-baseline-ac.f32",
+          "region": "facet-edges",
+          "sha256": "9fb425a71876f205fccfbce248ae1b74cc36aee1deee76c635fc7a3ddd15330b",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "baseline-ac",
+          "path": "late/dark-inclusion-baseline-ac.f32",
+          "region": "dark-inclusion",
+          "sha256": "f22d4b00a04e0ea701623210086585d66e66333e6b9bea7983ac19a60d38b153",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "baseline-base",
+          "path": "late/facet-edges-baseline-base.f32",
+          "region": "facet-edges",
+          "sha256": "67fd2b8aaffffa6e294a297084c2595139a241a99fd93661bd3466981018730b",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "baseline-base",
+          "path": "late/dark-inclusion-baseline-base.f32",
+          "region": "dark-inclusion",
+          "sha256": "38a4c62b6a969c2533a8930468b63d1c94ce7860558cf5726bf6ee389752385f",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "baseline-pre",
+          "path": "late/facet-edges-baseline-pre.f32",
+          "region": "facet-edges",
+          "sha256": "12ec345b534a717c8689bd4a4afe2ba66b026430a4f7e03bcd1dd7a107484c30",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "baseline-pre",
+          "path": "late/dark-inclusion-baseline-pre.f32",
+          "region": "dark-inclusion",
+          "sha256": "15f487642856e273f286df9b5d20049c5445012c8b20e2c67241de69d4a96501",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "baseline-post",
+          "path": "late/facet-edges-baseline-post.f32",
+          "region": "facet-edges",
+          "sha256": "c5a634a1109e3a832072caf55bfa1a7b7c13b61e0fb272603ba6feb2fff61c7a",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "baseline-post",
+          "path": "late/dark-inclusion-baseline-post.f32",
+          "region": "dark-inclusion",
+          "sha256": "13a1fb01689ba253783d787346ff77d9f207f0f2278bb962a513b675be5e0196",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "baseline-hull",
+          "path": "late/facet-edges-baseline-hull.f32",
+          "region": "facet-edges",
+          "sha256": "80267479064c8c8d8a316b6e67af12d03bbd761e9b74c43a600a899222924a6f",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "baseline-hull",
+          "path": "late/dark-inclusion-baseline-hull.f32",
+          "region": "dark-inclusion",
+          "sha256": "09a31bf9e63e480ad7471a8f9af3ee499b49c0a7e2071f11243dff6d95658087",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "lo",
+          "path": "late/facet-edges-lo.f32",
+          "region": "facet-edges",
+          "sha256": "82e7af299431515f6a3f4bfce2a5b16f84faf9254639db326171e98520e662ba",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "lo",
+          "path": "late/dark-inclusion-lo.f32",
+          "region": "dark-inclusion",
+          "sha256": "f3497b1c11730489cc0a863f0038a59ed2d816239a41e6348734f52bae42164b",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "hi",
+          "path": "late/facet-edges-hi.f32",
+          "region": "facet-edges",
+          "sha256": "c821f2c2c763589ffdcbce9e31228ab24ec7eac8d676a442a2d7501d9d8dc465",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "hi",
+          "path": "late/dark-inclusion-hi.f32",
+          "region": "dark-inclusion",
+          "sha256": "1760727f6f8fd243b37d89eb2688b911d8d9da3018a7c7b80240132d6b6b24bb",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "coverage",
+          "path": "late/facet-edges-coverage.f32",
+          "region": "facet-edges",
+          "sha256": "29d8ccbf5dacdc4e52b949f9a819df9a1f0a57e0c110414640215160779d7091",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "coverage",
+          "path": "late/dark-inclusion-coverage.f32",
+          "region": "dark-inclusion",
+          "sha256": "f93feec171002eb693834497f8f40b1d089676b1756a263de86b00bf89cf7a82",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "donor-sum",
+          "path": "late/facet-edges-donor-sum.f32",
+          "region": "facet-edges",
+          "sha256": "a4e4303fd73d204eec031b2bbc3e37bb91faab9c7bd387daa5088f5ed38f1af0",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "donor-sum",
+          "path": "late/dark-inclusion-donor-sum.f32",
+          "region": "dark-inclusion",
+          "sha256": "3e8d584fb7fe0ce3e7280e0f9be1fcd9ca0a9c98c2c4daa4b6855e8574f17098",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "retained-ac",
+          "path": "late/facet-edges-retained-ac.f32",
+          "region": "facet-edges",
+          "sha256": "efd93ffce61d086e91f011c8c0c10681ccf35db5dfe1eb21047bd66cd9769d5b",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "retained-ac",
+          "path": "late/dark-inclusion-retained-ac.f32",
+          "region": "dark-inclusion",
+          "sha256": "ee8aecff9ebc61c879623b35103d3279643c1f7e0da71dba57e9b5dc47f983b2",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "pre-hull",
+          "path": "late/facet-edges-pre-hull.f32",
+          "region": "facet-edges",
+          "sha256": "a4190334967514744cd4d4f11dda715a8c35cca48f5633e09c707f841862c581",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "pre-hull",
+          "path": "late/dark-inclusion-pre-hull.f32",
+          "region": "dark-inclusion",
+          "sha256": "9158de477154e3ae9c7ab2671d51bf48c6d97f7d8969d1fcba60c99d0cb84fe6",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "post-hull",
+          "path": "late/facet-edges-post-hull.f32",
+          "region": "facet-edges",
+          "sha256": "b2997514369e4fee77299c0594c4ec94fa10227e4ddfb76eefee3468cd9f5ffc",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "post-hull",
+          "path": "late/dark-inclusion-post-hull.f32",
+          "region": "dark-inclusion",
+          "sha256": "39c7cf4004a7c2179abf1f63b4e14c6fc071ec79c00faf23a98d7e8814291334",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "hull-correction",
+          "path": "late/facet-edges-hull-correction.f32",
+          "region": "facet-edges",
+          "sha256": "6ec486f44628ac62a200a71469d8de6a4dc0fc7b540b2af2092389e766660919",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "hull-correction",
+          "path": "late/dark-inclusion-hull-correction.f32",
+          "region": "dark-inclusion",
+          "sha256": "733d795603b8b530a8b4803948f7ef1c60f532a613b1695808ca8dbb67d0849f",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "mask-0",
+          "path": "late/facet-edges-mask-0.f32",
+          "region": "facet-edges",
+          "sha256": "29d8ccbf5dacdc4e52b949f9a819df9a1f0a57e0c110414640215160779d7091",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "mask-0",
+          "path": "late/dark-inclusion-mask-0.f32",
+          "region": "dark-inclusion",
+          "sha256": "250480ecefa3655c774b6a4e5d4eb16675ee4f181c2285c25020fac6e3aaf3b5",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "mask-1",
+          "path": "late/facet-edges-mask-1.f32",
+          "region": "facet-edges",
+          "sha256": "250480ecefa3655c774b6a4e5d4eb16675ee4f181c2285c25020fac6e3aaf3b5",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "mask-1",
+          "path": "late/dark-inclusion-mask-1.f32",
+          "region": "dark-inclusion",
+          "sha256": "8eb2a3fb247ae6f3a6f2e6c21dad2d651ce56ffd754106237ea38739c3d7cafc",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "mask-2",
+          "path": "late/facet-edges-mask-2.f32",
+          "region": "facet-edges",
+          "sha256": "250480ecefa3655c774b6a4e5d4eb16675ee4f181c2285c25020fac6e3aaf3b5",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "mask-2",
+          "path": "late/dark-inclusion-mask-2.f32",
+          "region": "dark-inclusion",
+          "sha256": "e9751ae176066e1fa1be0c10c0ea5c57a022ae4633ee1025593f8358027bdb3d",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        }
+      ],
+      "group": "late",
+      "summary": {
+        "baseline_hull_sum_max_abs": [
+          0.0001220703125,
+          0.0001220703125,
+          0.0001220703125,
+          0.0001220703125
+        ],
+        "baseline_sum_max_abs": [
+          0.00390625,
+          0.005859375,
+          0.0048828125,
+          0.0032958984375
+        ],
+        "mixed_hull_sum_max_abs": [
+          0.0001220703125,
+          0.0001220703125,
+          0.0001220703125,
+          0.0001220703125
+        ],
+        "mixed_sum_max_abs": [
+          0.00390625,
+          0.005859375,
+          0.0048828125,
+          0.0032958984375
+        ]
+      }
+    }
+  ],
+  "layout": "planar-y-x-f32le",
+  "level_sizes": [
+    [
+      3460,
+      2306
+    ],
+    [
+      1730,
+      1153
+    ],
+    [
+      865,
+      577
+    ],
+    [
+      433,
+      289
+    ],
+    [
+      217,
+      145
+    ],
+    [
+      109,
+      73
+    ],
+    [
+      55,
+      37
+    ],
+    [
+      28,
+      19
+    ]
+  ],
+  "levels": [
+    512.0,
+    15360.0
+  ],
+  "matrix": [
+    [
+      0.7459999918937683,
+      -0.23649999499320984,
+      -0.058800000697374344
+    ],
+    [
+      -0.5687000155448914,
+      1.3442000150680542,
+      0.24740000069141388
+    ],
+    [
+      -0.06239999830722809,
+      0.11559999734163284,
+      0.6583999991416931
+    ]
+  ],
+  "native_dimensions": [
+    6920,
+    4612
+  ],
+  "plane_order": [
+    "R",
+    "G1",
+    "G2",
+    "B"
+  ],
+  "raw_metadata_wb_bits": [
+    1070374912,
+    1065353216,
+    1076715520
+  ],
+  "reconstruction_absolute_tolerance_dn": 0.02,
+  "schema": 1,
+  "scope": "actual consumed GPU known4 and full-domain pyramid witnesses; signed fields are not photographs or ownership probabilities",
+  "source_output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\output",
+  "tone_bits": [
+    1035546143,
+    1063920542,
+    1057803469
+  ],
+  "units": "signed black-subtracted source DN; masks and coverage dimensionless",
+  "wb_bits": [
+    1070374912,
+    1065353216,
+    1076715520
+  ],
+  "windows": [
+    {
+      "name": "facet-edges",
+      "native_xywh": [
+        2500,
+        2700,
+        384,
+        384
+      ],
+      "pad4_native_xywh": [
+        2496,
+        2696,
+        392,
+        392
+      ],
+      "pad4_quad_xywh": [
+        1248,
+        1348,
+        196,
+        196
+      ],
+      "quad_xywh": [
+        1250,
+        1350,
+        192,
+        192
+      ]
+    },
+    {
+      "name": "dark-inclusion",
+      "native_xywh": [
+        3050,
+        1850,
+        384,
+        384
+      ],
+      "pad4_native_xywh": [
+        3046,
+        1846,
+        392,
+        392
+      ],
+      "pad4_quad_xywh": [
+        1523,
+        923,
+        196,
+        196
+      ],
+      "quad_xywh": [
+        1525,
+        925,
+        192,
+        192
+      ]
+    }
+  ]
+}
