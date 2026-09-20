@@ -1,0 +1,26 @@
+[
+  {
+    "name": "medium-bars",
+    "exact_differences": 0,
+    "interior_differences": 0,
+    "wrong_x_plus_two_differences": 433892
+  },
+  {
+    "name": "fine-bars",
+    "exact_differences": 0,
+    "interior_differences": 0,
+    "wrong_x_plus_two_differences": 441955
+  },
+  {
+    "name": "lettering",
+    "exact_differences": 0,
+    "interior_differences": 0,
+    "wrong_x_plus_two_differences": 436481
+  },
+  {
+    "name": "pale-control",
+    "exact_differences": 0,
+    "interior_differences": 0,
+    "wrong_x_plus_two_differences": 294609
+  }
+]

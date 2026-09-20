@@ -1,0 +1,27 @@
+{
+  "status": "SLIDE2_SOURCE_ATTRIBUTION_READY",
+  "observer_pixel_and_byte_identical": true,
+  "selected_frames": [
+    149
+  ],
+  "regions": [
+    "medium-bars",
+    "fine-bars",
+    "lettering",
+    "pale-control"
+  ],
+  "source_frame_count": 299,
+  "original_metadata_unchanged": true,
+  "photographically_reviewed": false,
+  "full_image": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september20\\slide2-source-1\\off\\output\\replay.tiff",
+    "sha256": "6d79e5996493afee9e3d7ba6edc6dc37c2d4983750efc0369ec880f810feb5ca",
+    "bytes": 167707456
+  },
+  "full_png": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september20\\slide2-source-1\\matched-full.png",
+    "sha256": "fa3a108d91fbf1b764fbcce13a1a01f7370158eaa858c9f22f67f40d9dd8e94d",
+    "bytes": 33689641
+  },
+  "native_views": 12
+}

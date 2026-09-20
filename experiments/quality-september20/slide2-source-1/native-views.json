@@ -1,0 +1,254 @@
+[
+  {
+    "name": "medium-bars",
+    "stage": "raw",
+    "image": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september20\\slide2-source-1\\medium-bars-frame149-raw-native.png",
+      "sha256": "9cd4049d5c5d9329dcc0416eacf9a5c6db77fcfceb3b0ffc42c9ef2fbb3b0e22",
+      "bytes": 205752
+    },
+    "pixel_sha256": "ec07a6746c63cc5ebe2de240f71eb538524fc621ddcc2935a116676fc96e4946",
+    "padded_origin_xy": [
+      2866,
+      1766
+    ],
+    "reference_output_xywh": [
+      2592,
+      1584,
+      384,
+      384
+    ],
+    "coordinates": "active native sensor; mapped centre rounded to even origin, no warp or CA correction"
+  },
+  {
+    "name": "fine-bars",
+    "stage": "raw",
+    "image": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september20\\slide2-source-1\\fine-bars-frame149-raw-native.png",
+      "sha256": "3f6b8b4be6f3cae36dedea89dae1a115bfea299b14020841719db46f829386d4",
+      "bytes": 168086
+    },
+    "pixel_sha256": "aa78913db4ac54019efab1849d5cc4f567e85eedc8765ae4f3a5492f4d228ed2",
+    "padded_origin_xy": [
+      3850,
+      1892
+    ],
+    "reference_output_xywh": [
+      3576,
+      1710,
+      384,
+      384
+    ],
+    "coordinates": "active native sensor; mapped centre rounded to even origin, no warp or CA correction"
+  },
+  {
+    "name": "lettering",
+    "stage": "raw",
+    "image": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september20\\slide2-source-1\\lettering-frame149-raw-native.png",
+      "sha256": "b6389cc427d9ae421dfa8761c43e1a9c7e4a63460ac66f827b1819a812b339b5",
+      "bytes": 181540
+    },
+    "pixel_sha256": "002e0ba7c351fba84a2e4ba218c46331b31c8e64bb2fcd5a8c3f7f6005642c6e",
+    "padded_origin_xy": [
+      3046,
+      2288
+    ],
+    "reference_output_xywh": [
+      2772,
+      2106,
+      384,
+      384
+    ],
+    "coordinates": "active native sensor; mapped centre rounded to even origin, no warp or CA correction"
+  },
+  {
+    "name": "pale-control",
+    "stage": "raw",
+    "image": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september20\\slide2-source-1\\pale-control-frame149-raw-native.png",
+      "sha256": "4f65911a1ad46b84de1c6fa3a27b355c73bea5106e87caec47183f8cb2a7f5ed",
+      "bytes": 95700
+    },
+    "pixel_sha256": "b4b29a897b3040f33d72379be04ed33f71c7ab497b3632f4cbf224aef6b54a18",
+    "padded_origin_xy": [
+      1066,
+      782
+    ],
+    "reference_output_xywh": [
+      792,
+      600,
+      384,
+      384
+    ],
+    "coordinates": "active native sensor; mapped centre rounded to even origin, no warp or CA correction"
+  },
+  {
+    "name": "medium-bars",
+    "stage": "gathered",
+    "image": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september20\\slide2-source-1\\medium-bars-frame149-gathered-native.png",
+      "sha256": "7d3fabb47be3d91b78319791e22ac222d6b34f3d78a8648245d536d6a3b23e53",
+      "bytes": 204578
+    },
+    "pixel_sha256": "448352753782679bd42822abbb3dbe7214a1904855a1fbec5f17b7ac4ca48d00",
+    "padded_origin_xy": [
+      2588,
+      1580
+    ],
+    "reference_output_xywh": [
+      2592,
+      1584,
+      384,
+      384
+    ],
+    "coordinates": "cropped reference output native grid"
+  },
+  {
+    "name": "fine-bars",
+    "stage": "gathered",
+    "image": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september20\\slide2-source-1\\fine-bars-frame149-gathered-native.png",
+      "sha256": "85be6a534e75f2bae0861c31a72fa4c9b903401c4860740e0ef3e572fa041f94",
+      "bytes": 166530
+    },
+    "pixel_sha256": "a5dca73ca296272628643fd7d382a96f3ba84ddbda31387880e63ef3cb9adae2",
+    "padded_origin_xy": [
+      3572,
+      1706
+    ],
+    "reference_output_xywh": [
+      3576,
+      1710,
+      384,
+      384
+    ],
+    "coordinates": "cropped reference output native grid"
+  },
+  {
+    "name": "lettering",
+    "stage": "gathered",
+    "image": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september20\\slide2-source-1\\lettering-frame149-gathered-native.png",
+      "sha256": "e08f919265466b4855a6be7b2f1be9cb3771d74bf9dc540d5ac33a5237ddf6b1",
+      "bytes": 181262
+    },
+    "pixel_sha256": "042925c27fed3f28086cc1259c649d2aaa69e22dc6c9c2f4584d8a875f5719df",
+    "padded_origin_xy": [
+      2768,
+      2102
+    ],
+    "reference_output_xywh": [
+      2772,
+      2106,
+      384,
+      384
+    ],
+    "coordinates": "cropped reference output native grid"
+  },
+  {
+    "name": "pale-control",
+    "stage": "gathered",
+    "image": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september20\\slide2-source-1\\pale-control-frame149-gathered-native.png",
+      "sha256": "ea6ef0cf79ac5f755f6e0d7fe7c91f17e5bbb566b82146018f085622acf03281",
+      "bytes": 95994
+    },
+    "pixel_sha256": "c4decb94b38097b120eaa72d2dfdaf2bd8ea5b8bf696f7e3ef2ebfcf7daeddad",
+    "padded_origin_xy": [
+      788,
+      596
+    ],
+    "reference_output_xywh": [
+      792,
+      600,
+      384,
+      384
+    ],
+    "coordinates": "cropped reference output native grid"
+  },
+  {
+    "name": "medium-bars",
+    "stage": "merged",
+    "image": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september20\\slide2-source-1\\medium-bars-frame149-merged-native.png",
+      "sha256": "2e812e13716c8b9baaa72e8ba424d8d8242bc67f500fcdcdc973c16db64303d0",
+      "bytes": 221488
+    },
+    "pixel_sha256": "969c32effc55c0c72dac48ee1f7f606d4d232a98d131e993eace9aa22c6e59aa",
+    "padded_origin_xy": [
+      2588,
+      1580
+    ],
+    "reference_output_xywh": [
+      2592,
+      1584,
+      384,
+      384
+    ],
+    "coordinates": "cropped reference output native grid"
+  },
+  {
+    "name": "fine-bars",
+    "stage": "merged",
+    "image": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september20\\slide2-source-1\\fine-bars-frame149-merged-native.png",
+      "sha256": "3f36e380b64fbf4cbe6dd79da76bf0c7184b7f0e93c6e2f008a696065aa78170",
+      "bytes": 209504
+    },
+    "pixel_sha256": "493cc838344d8a7d579728e8c793b859ba4d3bd4beeff410b96c155d14d1f104",
+    "padded_origin_xy": [
+      3572,
+      1706
+    ],
+    "reference_output_xywh": [
+      3576,
+      1710,
+      384,
+      384
+    ],
+    "coordinates": "cropped reference output native grid"
+  },
+  {
+    "name": "lettering",
+    "stage": "merged",
+    "image": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september20\\slide2-source-1\\lettering-frame149-merged-native.png",
+      "sha256": "ec6d27dffd2cc22f447f890fbdf28c448ea0e458c5bcbc530984f00713c45353",
+      "bytes": 159478
+    },
+    "pixel_sha256": "3800ceded9ddb51b366c97fe8e948fb174cef4c2968ef5ed9456322bad377e84",
+    "padded_origin_xy": [
+      2768,
+      2102
+    ],
+    "reference_output_xywh": [
+      2772,
+      2106,
+      384,
+      384
+    ],
+    "coordinates": "cropped reference output native grid"
+  },
+  {
+    "name": "pale-control",
+    "stage": "merged",
+    "image": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september20\\slide2-source-1\\pale-control-frame149-merged-native.png",
+      "sha256": "424f54c8f3382350ca556208defc8fafd83c0cb21b6cc61cf69e3c0893c7cdaa",
+      "bytes": 93979
+    },
+    "pixel_sha256": "6184aab1c4192ef7084986801b301a78b637ab4a2bc53a87016b1ff1b9849de2",
+    "padded_origin_xy": [
+      788,
+      596
+    ],
+    "reference_output_xywh": [
+      792,
+      600,
+      384,
+      384
+    ],
+    "coordinates": "cropped reference output native grid"
+  }
+]

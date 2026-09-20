@@ -1,0 +1,16 @@
+{
+  "different_rgb16_samples": 0,
+  "off": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september20\\slide2-source-1\\off\\output\\replay.tiff",
+    "sha256": "6d79e5996493afee9e3d7ba6edc6dc37c2d4983750efc0369ec880f810feb5ca",
+    "bytes": 167707456
+  },
+  "on": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september20\\slide2-source-1\\on\\output\\replay.tiff",
+    "sha256": "6d79e5996493afee9e3d7ba6edc6dc37c2d4983750efc0369ec880f810feb5ca",
+    "bytes": 167707456
+  },
+  "off_pixel_sha256": "cdd44d049ee569144f909ef38490a402572a21a8a3490130090d25d958d1b272",
+  "on_pixel_sha256": "cdd44d049ee569144f909ef38490a402572a21a8a3490130090d25d958d1b272",
+  "identical_tiff_bytes": true
+}
