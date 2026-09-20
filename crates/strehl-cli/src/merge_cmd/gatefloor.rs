@@ -690,3 +690,6 @@ pub(crate) fn gpu_fixture(w: usize, h: usize, layout: usize, k: usize) -> Frame 
 pub(crate) fn gpu_warp() -> Similarity {
     m194c_independent_tests::variance_warp()
 }
+
+#[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance", feature = "native-gpu-gather"))]
+include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/boundary-cfa-wavelet/gatefloor-bridge.rs"));
