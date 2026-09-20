@@ -1,0 +1,14 @@
+[
+  {
+    "path": "experiments\\source-concentration\\controls-1\\output\\controls.json",
+    "sha256": "67d886f988f3f12b4f8809b37bbef90c9bc6908dea17e84397284065dddf2143",
+    "archive": "experiments\\source-concentration\\controls-1\\output\\controls.json.gz",
+    "roundtrip_equal": true
+  },
+  {
+    "path": "experiments\\source-concentration\\failure-scan-1\\receipt.json",
+    "sha256": "653665beb84b6eefd71038a141ac34f9a2a84e8f499bd1c6c5362565ca597a3f",
+    "archive": "experiments\\source-concentration\\failure-scan-1\\receipt.json.gz",
+    "roundtrip_equal": true
+  }
+]

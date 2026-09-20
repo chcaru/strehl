@@ -1,6 +1,13 @@
 # Automatic concentration-track discriminator
 
-**SAVED, CONDITIONAL DESIGN: not authorized for implementation.** I independently
+**Current authorization after attribution, September19:** root authorizes the
+single read-only discriminator below in `experiments/source-concentration/`,
+with independent generated controls before execution. This proceeds in parallel
+with the separately controlled reconstruction-order trial. It authorizes no RAW
+fusion, automatically selected render, or source-label promotion. The algorithm
+and refusal choices below remain frozen. The earlier conditional record follows.
+
+**Original conditional design, before attribution:** I independently
 inspected baseline/candidate/late facet-edges and dark-inclusion crops. Focused
 donors locally contract rays while retaining compact glint cores; late69
 broadens/softens those regions. The independent photographic decision is only
