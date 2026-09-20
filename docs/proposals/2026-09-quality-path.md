@@ -18,8 +18,11 @@ radiance penalty failed: it can invent an occluding foreground, hide large
 radiances and destroy genuine highlights/filaments. It is closed without a
 strength sweep. Supplying known visibility fixes the flat-image failure and
 improves layered reconstruction, but bright prediction and glint retention
-still fail. A read-only directional objective check now separates remaining
-descent from a local prior tradeoff before any further model change. See
+still fail. A read-only directional check finds that a small true-highlight
+addition improves data and image truth but costs more in the original prior;
+the near-zero total derivative's sign remains unresolved. One fixed photon-
+noise-scaled sheet prior is next, with known visibility and all original image
+and held-out protections. Its brightness-bias incentive must be tested. See
 experiments/layered-raw-inverse/visibility-results.md and its independent
 review. It has no photographic
 admission yet. The passing complete-periodic all-CFA controls

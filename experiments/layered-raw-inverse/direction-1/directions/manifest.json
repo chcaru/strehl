@@ -1,0 +1,27 @@
+{
+  "status": "PHYSICAL_FAR_DIRECTIONS_PREPARED",
+  "directions": [
+    {
+      "label": "glint",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\direction-1\\directions\\glint-dn.npy",
+      "sha256": "94e1f50a09569470005a8391be40a57710b5cf3351ab27053ae6a731fda459fa",
+      "array_sha256": "f5375504363c2b02646152b3276b1d7499d55f386882e16f1f00dd93d239735e"
+    },
+    {
+      "label": "shifted-glint",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\direction-1\\directions\\shifted-glint-dn.npy",
+      "sha256": "f6b74226b9f2e85106446327465fea68f39c099509c7bbc01fadb7b27a2a7502",
+      "array_sha256": "abcba2d001508ece6c6d7526f450bb42a522a503a97463c3b5ebe01188856dd4"
+    }
+  ],
+  "shift_native_xy": [
+    20,
+    0
+  ],
+  "zero_fill": true,
+  "controls_sha256": "6915c024dbbfaa0e0d912ecba1a22075aabce6ef29c845f0e586472be60815ec",
+  "model_sha256": "5710146ffcf463de85e317050bc81357922965d6006c7b4cf311f4d80d8ee512",
+  "exporter_sha256": "358a7f3c0edc4b9255a01d4a7ea9b74df50cdd72af7bb88b026974d5228ffa6b",
+  "source_root": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output",
+  "units": "black-subtracted far-sheet camera RGB DN; no observed inputs exported"
+}

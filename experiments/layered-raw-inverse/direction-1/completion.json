@@ -1,0 +1,27 @@
+{
+  "instrument_completed": true,
+  "sources_unchanged": true,
+  "independent_scores": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\direction-1\\scored\\result.json",
+    "sha256": "b01435e6f06b0930a1b11a9ae8a597ba0a727541bad2374b3dd91dc91b762bdc",
+    "bytes": 52962
+  },
+  "direction_files": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\direction-1\\directions\\glint-dn.npy",
+      "sha256": "94e1f50a09569470005a8391be40a57710b5cf3351ab27053ae6a731fda459fa",
+      "bytes": 110720
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\direction-1\\directions\\manifest.json",
+      "sha256": "50923970e6ff1852c917b18a284a0450f790a0b7e78d99fadff68149d41ebc7d",
+      "bytes": 1350
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\direction-1\\directions\\shifted-glint-dn.npy",
+      "sha256": "f6b74226b9f2e85106446327465fea68f39c099509c7bbc01fadb7b27a2a7502",
+      "bytes": 110720
+    }
+  ],
+  "scope": "No optimization; separate local objective derivatives and truth changes, no photo admission"
+}

@@ -1,0 +1,1276 @@
+{
+  "status": "DIRECTIONAL_IMAGES_SCORED",
+  "base": {
+    "quality": {
+      "regions": {
+        "whole": {
+          "candidate": {
+            "rgb_rmse": 150.97138428415263,
+            "chroma_rmse": 67.30989610944206
+          },
+          "far_only": {
+            "rgb_rmse": 496.88377690019985,
+            "chroma_rmse": 650.2708373566716
+          },
+          "mean": {
+            "rgb_rmse": 753.7234759667058,
+            "chroma_rmse": 518.2588805886822
+          },
+          "oracle_bound": {
+            "rgb_rmse": 397.5372463674584,
+            "chroma_rmse": 249.56266183318613
+          }
+        },
+        "core": {
+          "candidate": {
+            "rgb_rmse": 731.4569057195841,
+            "chroma_rmse": 260.39316741578875
+          },
+          "far_only": {
+            "rgb_rmse": 1786.240868102814,
+            "chroma_rmse": 1573.837047318474
+          },
+          "mean": {
+            "rgb_rmse": 3452.1334344936117,
+            "chroma_rmse": 1303.8572499053812
+          },
+          "oracle_bound": {
+            "rgb_rmse": 1850.2248549886135,
+            "chroma_rmse": 793.2909697045076
+          }
+        },
+        "ridge": {
+          "candidate": {
+            "rgb_rmse": 312.40350450710577,
+            "chroma_rmse": 120.1635302552204
+          },
+          "far_only": {
+            "rgb_rmse": 944.0280541704689,
+            "chroma_rmse": 1162.315886756699
+          },
+          "mean": {
+            "rgb_rmse": 1536.391066451828,
+            "chroma_rmse": 930.9825690440236
+          },
+          "oracle_bound": {
+            "rgb_rmse": 816.8284571147884,
+            "chroma_rmse": 467.7684323233422
+          }
+        },
+        "crossing": {
+          "candidate": {
+            "rgb_rmse": 577.4133996765559,
+            "chroma_rmse": 211.42265726478158
+          },
+          "far_only": {
+            "rgb_rmse": 1532.7317908619168,
+            "chroma_rmse": 1626.109964055532
+          },
+          "mean": {
+            "rgb_rmse": 2763.9900380411414,
+            "chroma_rmse": 1324.4845045485336
+          },
+          "oracle_bound": {
+            "rgb_rmse": 1478.1547026912529,
+            "chroma_rmse": 720.596585345536
+          }
+        },
+        "fan": {
+          "candidate": {
+            "rgb_rmse": 274.326015543561,
+            "chroma_rmse": 106.57290327724068
+          },
+          "far_only": {
+            "rgb_rmse": 846.3604041669115,
+            "chroma_rmse": 1052.7729389537033
+          },
+          "mean": {
+            "rgb_rmse": 1356.894321753337,
+            "chroma_rmse": 840.3174706916507
+          },
+          "oracle_bound": {
+            "rgb_rmse": 719.6762645538982,
+            "chroma_rmse": 419.2428008816227
+          }
+        }
+      },
+      "components": {
+        "glint": {
+          "candidate": {
+            "recovery": [
+              0.9615300689251757,
+              0.9533521395877116,
+              0.9639818427190928
+            ],
+            "template_energy": [
+              3871784984.164553,
+              3600167379.165745,
+              2844576438.871642
+            ],
+            "live": true
+          },
+          "oracle_bound": {
+            "recovery": [
+              0.6257763794626515,
+              0.6123604175607923,
+              0.6521991427767284
+            ],
+            "template_energy": [
+              3871784984.164553,
+              3600167379.165745,
+              2844576438.871642
+            ],
+            "live": true
+          },
+          "passed": true,
+          "bounds": [
+            39,
+            42,
+            52,
+            55
+          ]
+        },
+        "ridge": {
+          "candidate": {
+            "recovery": [
+              0.9535608898416983,
+              0.9824860272419995,
+              0.9743370829260569
+            ],
+            "template_energy": [
+              51983735.586246416,
+              138514832.62970743,
+              161668706.2341408
+            ],
+            "live": true
+          },
+          "oracle_bound": {
+            "recovery": [
+              0.7196321313843479,
+              0.8267673147030402,
+              0.8474577243749162
+            ],
+            "template_energy": [
+              51983735.586246416,
+              138514832.62970743,
+              161668706.2341408
+            ],
+            "live": true
+          },
+          "passed": true,
+          "bounds": [
+            39,
+            31,
+            63,
+            41
+          ]
+        }
+      },
+      "bars": {
+        "whole_mean_gain": true,
+        "core_mean_gain": true,
+        "ridge_mean_gain": true,
+        "whole_far_only_comparison": true,
+        "crossing_far_only_comparison": true,
+        "core_far_only_comparison": true,
+        "ridge_far_only_comparison": true,
+        "glint_component": true,
+        "ridge_component": true
+      },
+      "passed": true
+    },
+    "rgb_sha256": "eab1fc6b763c5ad9bcd38f49edf2127851e456083ed429fe62655af7505f7b7a",
+    "core": {
+      "rgb_rmse": 731.4569057195841,
+      "chroma_rmse": 260.39316741578875
+    },
+    "glint": {
+      "recovery": [
+        0.9615300689251757,
+        0.9533521395877116,
+        0.9639818427190928
+      ],
+      "template_energy": [
+        3871784984.164553,
+        3600167379.165745,
+        2844576438.871642
+      ],
+      "live": true
+    },
+    "filament": {
+      "recovery": [
+        0.9535608898416983,
+        0.9824860272419995,
+        0.9743370829260569
+      ],
+      "template_energy": [
+        51983735.586246416,
+        138514832.62970743,
+        161668706.2341408
+      ],
+      "live": true
+    }
+  },
+  "directions": [
+    {
+      "label": "glint",
+      "minus": {
+        "quality": {
+          "regions": {
+            "whole": {
+              "candidate": {
+                "rgb_rmse": 151.200029307436,
+                "chroma_rmse": 67.31892545338685
+              },
+              "far_only": {
+                "rgb_rmse": 496.88377690019985,
+                "chroma_rmse": 650.2708373566716
+              },
+              "mean": {
+                "rgb_rmse": 753.7234759667058,
+                "chroma_rmse": 518.2588805886822
+              },
+              "oracle_bound": {
+                "rgb_rmse": 397.5372463674584,
+                "chroma_rmse": 249.56266183318613
+              }
+            },
+            "core": {
+              "candidate": {
+                "rgb_rmse": 732.6006536161274,
+                "chroma_rmse": 260.44973347847906
+              },
+              "far_only": {
+                "rgb_rmse": 1786.240868102814,
+                "chroma_rmse": 1573.837047318474
+              },
+              "mean": {
+                "rgb_rmse": 3452.1334344936117,
+                "chroma_rmse": 1303.8572499053812
+              },
+              "oracle_bound": {
+                "rgb_rmse": 1850.2248549886135,
+                "chroma_rmse": 793.2909697045076
+              }
+            },
+            "ridge": {
+              "candidate": {
+                "rgb_rmse": 312.8870278236981,
+                "chroma_rmse": 120.18566302127692
+              },
+              "far_only": {
+                "rgb_rmse": 944.0280541704689,
+                "chroma_rmse": 1162.315886756699
+              },
+              "mean": {
+                "rgb_rmse": 1536.391066451828,
+                "chroma_rmse": 930.9825690440236
+              },
+              "oracle_bound": {
+                "rgb_rmse": 816.8284571147884,
+                "chroma_rmse": 467.7684323233422
+              }
+            },
+            "crossing": {
+              "candidate": {
+                "rgb_rmse": 578.3136301888417,
+                "chroma_rmse": 211.46594501762706
+              },
+              "far_only": {
+                "rgb_rmse": 1532.7317908619168,
+                "chroma_rmse": 1626.109964055532
+              },
+              "mean": {
+                "rgb_rmse": 2763.9900380411414,
+                "chroma_rmse": 1324.4845045485336
+              },
+              "oracle_bound": {
+                "rgb_rmse": 1478.1547026912529,
+                "chroma_rmse": 720.596585345536
+              }
+            },
+            "fan": {
+              "candidate": {
+                "rgb_rmse": 274.74986256684207,
+                "chroma_rmse": 106.59211227401478
+              },
+              "far_only": {
+                "rgb_rmse": 846.3604041669115,
+                "chroma_rmse": 1052.7729389537033
+              },
+              "mean": {
+                "rgb_rmse": 1356.894321753337,
+                "chroma_rmse": 840.3174706916507
+              },
+              "oracle_bound": {
+                "rgb_rmse": 719.6762645538982,
+                "chroma_rmse": 419.2428008816227
+              }
+            }
+          },
+          "components": {
+            "glint": {
+              "candidate": {
+                "recovery": [
+                  0.9605300940863699,
+                  0.9523521494406826,
+                  0.9629818577184945
+                ],
+                "template_energy": [
+                  3871784984.164553,
+                  3600167379.165745,
+                  2844576438.871642
+                ],
+                "live": true
+              },
+              "oracle_bound": {
+                "recovery": [
+                  0.6257763794626515,
+                  0.6123604175607923,
+                  0.6521991427767284
+                ],
+                "template_energy": [
+                  3871784984.164553,
+                  3600167379.165745,
+                  2844576438.871642
+                ],
+                "live": true
+              },
+              "passed": true,
+              "bounds": [
+                39,
+                42,
+                52,
+                55
+              ]
+            },
+            "ridge": {
+              "candidate": {
+                "recovery": [
+                  0.9535608898416983,
+                  0.9824860272419995,
+                  0.9743370829260569
+                ],
+                "template_energy": [
+                  51983735.586246416,
+                  138514832.62970743,
+                  161668706.2341408
+                ],
+                "live": true
+              },
+              "oracle_bound": {
+                "recovery": [
+                  0.7196321313843479,
+                  0.8267673147030402,
+                  0.8474577243749162
+                ],
+                "template_energy": [
+                  51983735.586246416,
+                  138514832.62970743,
+                  161668706.2341408
+                ],
+                "live": true
+              },
+              "passed": true,
+              "bounds": [
+                39,
+                31,
+                63,
+                41
+              ]
+            }
+          },
+          "bars": {
+            "whole_mean_gain": true,
+            "core_mean_gain": true,
+            "ridge_mean_gain": true,
+            "whole_far_only_comparison": true,
+            "crossing_far_only_comparison": true,
+            "core_far_only_comparison": true,
+            "ridge_far_only_comparison": true,
+            "glint_component": true,
+            "ridge_component": true
+          },
+          "passed": true
+        },
+        "rgb_sha256": "b4313285b96c5b3219da9a6b299d768bb29a6dd106e4b1856c3eec3672a1e10d",
+        "core": {
+          "rgb_rmse": 732.6006536161274,
+          "chroma_rmse": 260.44973347847906
+        },
+        "glint": {
+          "recovery": [
+            0.9605300940863699,
+            0.9523521494406826,
+            0.9629818577184945
+          ],
+          "template_energy": [
+            3871784984.164553,
+            3600167379.165745,
+            2844576438.871642
+          ],
+          "live": true
+        },
+        "filament": {
+          "recovery": [
+            0.9535608898416983,
+            0.9824860272419995,
+            0.9743370829260569
+          ],
+          "template_energy": [
+            51983735.586246416,
+            138514832.62970743,
+            161668706.2341408
+          ],
+          "live": true
+        },
+        "literal_perturbation_max_bound_fraction": 0.17119964957237244
+      },
+      "plus": {
+        "quality": {
+          "regions": {
+            "whole": {
+              "candidate": {
+                "rgb_rmse": 150.74796259981875,
+                "chroma_rmse": 67.30096779788425
+              },
+              "far_only": {
+                "rgb_rmse": 496.88377690019985,
+                "chroma_rmse": 650.2708373566716
+              },
+              "mean": {
+                "rgb_rmse": 753.7234759667058,
+                "chroma_rmse": 518.2588805886822
+              },
+              "oracle_bound": {
+                "rgb_rmse": 397.5372463674584,
+                "chroma_rmse": 249.56266183318613
+              }
+            },
+            "core": {
+              "candidate": {
+                "rgb_rmse": 730.3392318928942,
+                "chroma_rmse": 260.33722799683324
+              },
+              "far_only": {
+                "rgb_rmse": 1786.240868102814,
+                "chroma_rmse": 1573.837047318474
+              },
+              "mean": {
+                "rgb_rmse": 3452.1334344936117,
+                "chroma_rmse": 1303.8572499053812
+              },
+              "oracle_bound": {
+                "rgb_rmse": 1850.2248549886135,
+                "chroma_rmse": 793.2909697045076
+              }
+            },
+            "ridge": {
+              "candidate": {
+                "rgb_rmse": 311.93101161282624,
+                "chroma_rmse": 120.14164405097317
+              },
+              "far_only": {
+                "rgb_rmse": 944.0280541704689,
+                "chroma_rmse": 1162.315886756699
+              },
+              "mean": {
+                "rgb_rmse": 1536.391066451828,
+                "chroma_rmse": 930.9825690440236
+              },
+              "oracle_bound": {
+                "rgb_rmse": 816.8284571147884,
+                "chroma_rmse": 467.7684323233422
+              }
+            },
+            "crossing": {
+              "candidate": {
+                "rgb_rmse": 576.533695802252,
+                "chroma_rmse": 211.37985153668154
+              },
+              "far_only": {
+                "rgb_rmse": 1532.7317908619168,
+                "chroma_rmse": 1626.109964055532
+              },
+              "mean": {
+                "rgb_rmse": 2763.9900380411414,
+                "chroma_rmse": 1324.4845045485336
+              },
+              "oracle_bound": {
+                "rgb_rmse": 1478.1547026912529,
+                "chroma_rmse": 720.596585345536
+              }
+            },
+            "fan": {
+              "candidate": {
+                "rgb_rmse": 273.91183868044993,
+                "chroma_rmse": 106.55390834567012
+              },
+              "far_only": {
+                "rgb_rmse": 846.3604041669115,
+                "chroma_rmse": 1052.7729389537033
+              },
+              "mean": {
+                "rgb_rmse": 1356.894321753337,
+                "chroma_rmse": 840.3174706916507
+              },
+              "oracle_bound": {
+                "rgb_rmse": 719.6762645538982,
+                "chroma_rmse": 419.2428008816227
+              }
+            }
+          },
+          "components": {
+            "glint": {
+              "candidate": {
+                "recovery": [
+                  0.9625300727964771,
+                  0.9543520940352824,
+                  0.9649818483019645
+                ],
+                "template_energy": [
+                  3871784984.164553,
+                  3600167379.165745,
+                  2844576438.871642
+                ],
+                "live": true
+              },
+              "oracle_bound": {
+                "recovery": [
+                  0.6257763794626515,
+                  0.6123604175607923,
+                  0.6521991427767284
+                ],
+                "template_energy": [
+                  3871784984.164553,
+                  3600167379.165745,
+                  2844576438.871642
+                ],
+                "live": true
+              },
+              "passed": true,
+              "bounds": [
+                39,
+                42,
+                52,
+                55
+              ]
+            },
+            "ridge": {
+              "candidate": {
+                "recovery": [
+                  0.9535608898416983,
+                  0.9824860272419995,
+                  0.9743370829260569
+                ],
+                "template_energy": [
+                  51983735.586246416,
+                  138514832.62970743,
+                  161668706.2341408
+                ],
+                "live": true
+              },
+              "oracle_bound": {
+                "recovery": [
+                  0.7196321313843479,
+                  0.8267673147030402,
+                  0.8474577243749162
+                ],
+                "template_energy": [
+                  51983735.586246416,
+                  138514832.62970743,
+                  161668706.2341408
+                ],
+                "live": true
+              },
+              "passed": true,
+              "bounds": [
+                39,
+                31,
+                63,
+                41
+              ]
+            }
+          },
+          "bars": {
+            "whole_mean_gain": true,
+            "core_mean_gain": true,
+            "ridge_mean_gain": true,
+            "whole_far_only_comparison": true,
+            "crossing_far_only_comparison": true,
+            "core_far_only_comparison": true,
+            "ridge_far_only_comparison": true,
+            "glint_component": true,
+            "ridge_component": true
+          },
+          "passed": true
+        },
+        "rgb_sha256": "75ad3280eb4bc251c2683daa6d1bd82787f2a6843e1e002c590b4837e29cf5b2",
+        "core": {
+          "rgb_rmse": 730.3392318928942,
+          "chroma_rmse": 260.33722799683324
+        },
+        "glint": {
+          "recovery": [
+            0.9625300727964771,
+            0.9543520940352824,
+            0.9649818483019645
+          ],
+          "template_energy": [
+            3871784984.164553,
+            3600167379.165745,
+            2844576438.871642
+          ],
+          "live": true
+        },
+        "filament": {
+          "recovery": [
+            0.9535608898416983,
+            0.9824860272419995,
+            0.9743370829260569
+          ],
+          "template_energy": [
+            51983735.586246416,
+            138514832.62970743,
+            161668706.2341408
+          ],
+          "live": true
+        },
+        "literal_perturbation_max_bound_fraction": 0.21174824237823486
+      },
+      "plus_core_rgb_improves": true,
+      "plus_core_chroma_improves": true,
+      "plus_glint_component_toward_truth": true
+    },
+    {
+      "label": "shifted-glint",
+      "minus": {
+        "quality": {
+          "regions": {
+            "whole": {
+              "candidate": {
+                "rgb_rmse": 150.97533040415675,
+                "chroma_rmse": 67.30976746206149
+              },
+              "far_only": {
+                "rgb_rmse": 496.88377690019985,
+                "chroma_rmse": 650.2708373566716
+              },
+              "mean": {
+                "rgb_rmse": 753.7234759667058,
+                "chroma_rmse": 518.2588805886822
+              },
+              "oracle_bound": {
+                "rgb_rmse": 397.5372463674584,
+                "chroma_rmse": 249.56266183318613
+              }
+            },
+            "core": {
+              "candidate": {
+                "rgb_rmse": 731.4569057195841,
+                "chroma_rmse": 260.39316741578875
+              },
+              "far_only": {
+                "rgb_rmse": 1786.240868102814,
+                "chroma_rmse": 1573.837047318474
+              },
+              "mean": {
+                "rgb_rmse": 3452.1334344936117,
+                "chroma_rmse": 1303.8572499053812
+              },
+              "oracle_bound": {
+                "rgb_rmse": 1850.2248549886135,
+                "chroma_rmse": 793.2909697045076
+              }
+            },
+            "ridge": {
+              "candidate": {
+                "rgb_rmse": 312.40337262279684,
+                "chroma_rmse": 120.16355835689019
+              },
+              "far_only": {
+                "rgb_rmse": 944.0280541704689,
+                "chroma_rmse": 1162.315886756699
+              },
+              "mean": {
+                "rgb_rmse": 1536.391066451828,
+                "chroma_rmse": 930.9825690440236
+              },
+              "oracle_bound": {
+                "rgb_rmse": 816.8284571147884,
+                "chroma_rmse": 467.7684323233422
+              }
+            },
+            "crossing": {
+              "candidate": {
+                "rgb_rmse": 577.4133996765559,
+                "chroma_rmse": 211.42265726478158
+              },
+              "far_only": {
+                "rgb_rmse": 1532.7317908619168,
+                "chroma_rmse": 1626.109964055532
+              },
+              "mean": {
+                "rgb_rmse": 2763.9900380411414,
+                "chroma_rmse": 1324.4845045485336
+              },
+              "oracle_bound": {
+                "rgb_rmse": 1478.1547026912529,
+                "chroma_rmse": 720.596585345536
+              }
+            },
+            "fan": {
+              "candidate": {
+                "rgb_rmse": 274.33044236751476,
+                "chroma_rmse": 106.57332470249914
+              },
+              "far_only": {
+                "rgb_rmse": 846.3604041669115,
+                "chroma_rmse": 1052.7729389537033
+              },
+              "mean": {
+                "rgb_rmse": 1356.894321753337,
+                "chroma_rmse": 840.3174706916507
+              },
+              "oracle_bound": {
+                "rgb_rmse": 719.6762645538982,
+                "chroma_rmse": 419.2428008816227
+              }
+            }
+          },
+          "components": {
+            "glint": {
+              "candidate": {
+                "recovery": [
+                  0.9615300689251757,
+                  0.9533521395877116,
+                  0.9639818427190928
+                ],
+                "template_energy": [
+                  3871784984.164553,
+                  3600167379.165745,
+                  2844576438.871642
+                ],
+                "live": true
+              },
+              "oracle_bound": {
+                "recovery": [
+                  0.6257763794626515,
+                  0.6123604175607923,
+                  0.6521991427767284
+                ],
+                "template_energy": [
+                  3871784984.164553,
+                  3600167379.165745,
+                  2844576438.871642
+                ],
+                "live": true
+              },
+              "passed": true,
+              "bounds": [
+                39,
+                42,
+                52,
+                55
+              ]
+            },
+            "ridge": {
+              "candidate": {
+                "recovery": [
+                  0.9535608898416983,
+                  0.9824860272419995,
+                  0.9743370829260569
+                ],
+                "template_energy": [
+                  51983735.586246416,
+                  138514832.62970743,
+                  161668706.2341408
+                ],
+                "live": true
+              },
+              "oracle_bound": {
+                "recovery": [
+                  0.7196321313843479,
+                  0.8267673147030402,
+                  0.8474577243749162
+                ],
+                "template_energy": [
+                  51983735.586246416,
+                  138514832.62970743,
+                  161668706.2341408
+                ],
+                "live": true
+              },
+              "passed": true,
+              "bounds": [
+                39,
+                31,
+                63,
+                41
+              ]
+            }
+          },
+          "bars": {
+            "whole_mean_gain": true,
+            "core_mean_gain": true,
+            "ridge_mean_gain": true,
+            "whole_far_only_comparison": true,
+            "crossing_far_only_comparison": true,
+            "core_far_only_comparison": true,
+            "ridge_far_only_comparison": true,
+            "glint_component": true,
+            "ridge_component": true
+          },
+          "passed": true
+        },
+        "rgb_sha256": "8e1b97a37fefc3b7df9f9d68ff8e7a8ebc551954f5553f5f40b4f37011062e2d",
+        "core": {
+          "rgb_rmse": 731.4569057195841,
+          "chroma_rmse": 260.39316741578875
+        },
+        "glint": {
+          "recovery": [
+            0.9615300689251757,
+            0.9533521395877116,
+            0.9639818427190928
+          ],
+          "template_energy": [
+            3871784984.164553,
+            3600167379.165745,
+            2844576438.871642
+          ],
+          "live": true
+        },
+        "filament": {
+          "recovery": [
+            0.9535608898416983,
+            0.9824860272419995,
+            0.9743370829260569
+          ],
+          "template_energy": [
+            51983735.586246416,
+            138514832.62970743,
+            161668706.2341408
+          ],
+          "live": true
+        },
+        "literal_perturbation_max_bound_fraction": 0.13936960697174072
+      },
+      "plus": {
+        "quality": {
+          "regions": {
+            "whole": {
+              "candidate": {
+                "rgb_rmse": 150.97487590937857,
+                "chroma_rmse": 67.31014431500407
+              },
+              "far_only": {
+                "rgb_rmse": 496.88377690019985,
+                "chroma_rmse": 650.2708373566716
+              },
+              "mean": {
+                "rgb_rmse": 753.7234759667058,
+                "chroma_rmse": 518.2588805886822
+              },
+              "oracle_bound": {
+                "rgb_rmse": 397.5372463674584,
+                "chroma_rmse": 249.56266183318613
+              }
+            },
+            "core": {
+              "candidate": {
+                "rgb_rmse": 731.4569057195841,
+                "chroma_rmse": 260.39316741578875
+              },
+              "far_only": {
+                "rgb_rmse": 1786.240868102814,
+                "chroma_rmse": 1573.837047318474
+              },
+              "mean": {
+                "rgb_rmse": 3452.1334344936117,
+                "chroma_rmse": 1303.8572499053812
+              },
+              "oracle_bound": {
+                "rgb_rmse": 1850.2248549886135,
+                "chroma_rmse": 793.2909697045076
+              }
+            },
+            "ridge": {
+              "candidate": {
+                "rgb_rmse": 312.4037241183234,
+                "chroma_rmse": 120.16350367003878
+              },
+              "far_only": {
+                "rgb_rmse": 944.0280541704689,
+                "chroma_rmse": 1162.315886756699
+              },
+              "mean": {
+                "rgb_rmse": 1536.391066451828,
+                "chroma_rmse": 930.9825690440236
+              },
+              "oracle_bound": {
+                "rgb_rmse": 816.8284571147884,
+                "chroma_rmse": 467.7684323233422
+              }
+            },
+            "crossing": {
+              "candidate": {
+                "rgb_rmse": 577.4133996765559,
+                "chroma_rmse": 211.42265726478158
+              },
+              "far_only": {
+                "rgb_rmse": 1532.7317908619168,
+                "chroma_rmse": 1626.109964055532
+              },
+              "mean": {
+                "rgb_rmse": 2763.9900380411414,
+                "chroma_rmse": 1324.4845045485336
+              },
+              "oracle_bound": {
+                "rgb_rmse": 1478.1547026912529,
+                "chroma_rmse": 720.596585345536
+              }
+            },
+            "fan": {
+              "candidate": {
+                "rgb_rmse": 274.3311650480764,
+                "chroma_rmse": 106.57265861734244
+              },
+              "far_only": {
+                "rgb_rmse": 846.3604041669115,
+                "chroma_rmse": 1052.7729389537033
+              },
+              "mean": {
+                "rgb_rmse": 1356.894321753337,
+                "chroma_rmse": 840.3174706916507
+              },
+              "oracle_bound": {
+                "rgb_rmse": 719.6762645538982,
+                "chroma_rmse": 419.2428008816227
+              }
+            }
+          },
+          "components": {
+            "glint": {
+              "candidate": {
+                "recovery": [
+                  0.9615300689251757,
+                  0.9533521395877116,
+                  0.9639818427190928
+                ],
+                "template_energy": [
+                  3871784984.164553,
+                  3600167379.165745,
+                  2844576438.871642
+                ],
+                "live": true
+              },
+              "oracle_bound": {
+                "recovery": [
+                  0.6257763794626515,
+                  0.6123604175607923,
+                  0.6521991427767284
+                ],
+                "template_energy": [
+                  3871784984.164553,
+                  3600167379.165745,
+                  2844576438.871642
+                ],
+                "live": true
+              },
+              "passed": true,
+              "bounds": [
+                39,
+                42,
+                52,
+                55
+              ]
+            },
+            "ridge": {
+              "candidate": {
+                "recovery": [
+                  0.9535608898416983,
+                  0.9824860272419995,
+                  0.9743370829260569
+                ],
+                "template_energy": [
+                  51983735.586246416,
+                  138514832.62970743,
+                  161668706.2341408
+                ],
+                "live": true
+              },
+              "oracle_bound": {
+                "recovery": [
+                  0.7196321313843479,
+                  0.8267673147030402,
+                  0.8474577243749162
+                ],
+                "template_energy": [
+                  51983735.586246416,
+                  138514832.62970743,
+                  161668706.2341408
+                ],
+                "live": true
+              },
+              "passed": true,
+              "bounds": [
+                39,
+                31,
+                63,
+                41
+              ]
+            }
+          },
+          "bars": {
+            "whole_mean_gain": true,
+            "core_mean_gain": true,
+            "ridge_mean_gain": true,
+            "whole_far_only_comparison": true,
+            "crossing_far_only_comparison": true,
+            "core_far_only_comparison": true,
+            "ridge_far_only_comparison": true,
+            "glint_component": true,
+            "ridge_component": true
+          },
+          "passed": true
+        },
+        "rgb_sha256": "4c7ff6a7f267aad2317839abc59928b930836dad6203e6870ca5b0229f3e1da7",
+        "core": {
+          "rgb_rmse": 731.4569057195841,
+          "chroma_rmse": 260.39316741578875
+        },
+        "glint": {
+          "recovery": [
+            0.9615300689251757,
+            0.9533521395877116,
+            0.9639818427190928
+          ],
+          "template_energy": [
+            3871784984.164553,
+            3600167379.165745,
+            2844576438.871642
+          ],
+          "live": true
+        },
+        "filament": {
+          "recovery": [
+            0.9535608898416983,
+            0.9824860272419995,
+            0.9743370829260569
+          ],
+          "template_energy": [
+            51983735.586246416,
+            138514832.62970743,
+            161668706.2341408
+          ],
+          "live": true
+        },
+        "literal_perturbation_max_bound_fraction": 0.11627896130084991
+      },
+      "plus_core_rgb_improves": false,
+      "plus_core_chroma_improves": false,
+      "plus_glint_component_toward_truth": false
+    }
+  ],
+  "derivative_diagnostic": {
+    "status": "RADIANCE_DIRECTION_COMPLETE",
+    "base_objective": {
+      "data_nll": 3.8101009130477905,
+      "prior": 2.9694650173187256,
+      "total": 6.779565930366516
+    },
+    "directions": {
+      "glint": {
+        "direction_sha256": "94e1f50a09569470005a8391be40a57710b5cf3351ab27053ae6a731fda459fa",
+        "step": 0.001,
+        "values": {
+          "zero": {
+            "data_nll": 3.8101009130477905,
+            "prior": 2.9694650173187256,
+            "total": 6.779565930366516
+          },
+          "minus": {
+            "data_nll": 3.811213731765747,
+            "prior": 2.9684197902679443,
+            "total": 6.779633522033691
+          },
+          "plus": {
+            "data_nll": 3.8090953826904297,
+            "prior": 2.970538377761841,
+            "total": 6.7796337604522705
+          }
+        },
+        "autograd": {
+          "data_nll": -1.0591640658676624,
+          "prior": 1.0593688488006592,
+          "total": 0.00020478293299674988
+        },
+        "central_difference": {
+          "data_nll": -1.0591745376586914,
+          "prior": 1.0592937469482422,
+          "total": 0.00011920928955078125
+        },
+        "agreement": {
+          "data_nll": true,
+          "prior": true,
+          "total": true
+        },
+        "derivative_tolerance": {
+          "data_nll": 0.003118328131735325,
+          "prior": 0.0031187376976013186,
+          "total": 0.0010004095658659934
+        },
+        "nonnegative_far_checked": true
+      },
+      "shifted-glint": {
+        "direction_sha256": "f6b74226b9f2e85106446327465fea68f39c099509c7bbc01fadb7b27a2a7502",
+        "step": 0.001,
+        "values": {
+          "zero": {
+            "data_nll": 3.8101009130477905,
+            "prior": 2.9694650173187256,
+            "total": 6.779565930366516
+          },
+          "minus": {
+            "data_nll": 3.810587704181671,
+            "prior": 2.9693405628204346,
+            "total": 6.779928267002106
+          },
+          "plus": {
+            "data_nll": 3.8101548552513123,
+            "prior": 2.9697697162628174,
+            "total": 6.77992457151413
+          }
+        },
+        "autograd": {
+          "data_nll": -0.21549456007778645,
+          "prior": 0.21450190246105194,
+          "total": -0.0009926576167345047
+        },
+        "central_difference": {
+          "data_nll": -0.21642446517944336,
+          "prior": 0.21457672119140625,
+          "total": -0.0018477439880371094
+        },
+        "agreement": {
+          "data_nll": true,
+          "prior": true,
+          "total": true
+        },
+        "derivative_tolerance": {
+          "data_nll": 0.001430989120155573,
+          "prior": 0.0014290038049221039,
+          "total": 0.001001985315233469
+        },
+        "nonnegative_far_checked": true
+      }
+    },
+    "checkpoint": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\visibility-1\\output\\layered\\fixed-alpha",
+    "checkpoint_sha256": "a4481365ba6ebfa19165770d2fa4b0417d95f1266fe8933152decdeec4310280",
+    "state_unchanged": true,
+    "read_indices": [
+      0,
+      1,
+      3,
+      4,
+      5,
+      7,
+      8
+    ],
+    "read_count": 42,
+    "base_objective_tolerance": {
+      "absolute": 1e-06,
+      "relative": 1e-06
+    },
+    "real_photo_admission": false
+  },
+  "source_immutable": true,
+  "diagnostic_immutable": true,
+  "source_files": {
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\angular-mismatch\\candidate-rgb-f32.npy": "7e6df1cac1082405cbbdbdfe96063dccdbd8277158ce9f858987be6c9a1e353f",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\angular-mismatch\\far-only\\receipt.json": "e8ce6071defc318ceafca7a01554ee57bead2b2f889ddb5b5589816c3e8ad48f",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\angular-mismatch\\far-only\\reconstruction.npz": "aaf0d1ba11e9f367734834a56620a42d373accc23ecacee0b1a54f7727519c06",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\angular-mismatch\\far-only\\state.pt": "3c8aa8eb0864d3308e278dd12e95bb1940ea8671fa73a2ae8d692422d6937cce",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\angular-mismatch\\far-only-rgb-f32.npy": "4ee31cdbe8274858f0dd9b21ea80392807e58917288b190f654af6e7418c5af5",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\angular-mismatch\\mean-rgb-f32.npy": "b5cacd3550abfef4c3e05e6118cb57d020b67d356a9b582e3d348e43c2844bc8",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\angular-mismatch\\observations-u16.npy": "30be163b7949cd191c09db98edf1b45930d125189ca610ac62f285f25252a9f2",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\angular-mismatch\\oracle-bound-rgb-f32.npy": "e5016da8a2e5553f1fce8199576411f56fc2f3330236dc23515808022e86fcc4",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\angular-mismatch\\prefit-adequacy.json": "880baa12481177c51895e3be1854368345d9feacb04f5f9b0dcd093d5420f970",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\angular-mismatch\\result.json": "9c73e49806bc74b59dfe14c9043baf3c50890020ddf7342ad1a7800c55a64a2c",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\angular-mismatch\\truth-rgb-f32.npy": "2668537f49285dae0b06ad4f9f027387c9605947d8a8b53b5d021d17f239d743",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\angular-mismatch\\two-layer\\receipt.json": "4feb650b2e387753c335758e8356ed477bb5529761db20b70cf7c53bc15ff768",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\angular-mismatch\\two-layer\\reconstruction.npz": "1e09ae50c8260d03bfc4d431df82c413e48f0aab3f6da35b6b194eb85f70867e",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\angular-mismatch\\two-layer\\state.pt": "1d11c2cb0f29592a2ceb68b44082a3ef4273e6be7b65d0c6a775ad1ec980718c",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\bindings.json": "83dc03308210095339b2629105a9131669bd1bef408b0ebddbaade3c7b91140a",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\far-only\\candidate-rgb-f32.npy": "43d4b9e35b96eb3f962b14555fb49dd0e2f782b272798c52e6105ba4fe80ea1d",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\far-only\\far-only\\receipt.json": "ef1a336761446fe0a32725a80416975e1fea540cd3b8456489a2b553b483d371",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\far-only\\far-only\\reconstruction.npz": "b081bc5298d26f8b2472d16f36366e3ca56f5c6934519908ec0f4d83be05acee",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\far-only\\far-only\\state.pt": "3425241fae9dd3da39bf3deb4242391eb9d75da61d7117868928c88d0a7901e3",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\far-only\\far-only-rgb-f32.npy": "190c0214a1e661d34b3cf40389fccebb7fa5b6a2c7f2259c36d2528b17e5b1a0",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\far-only\\mean-rgb-f32.npy": "f53b7be4ece753b343061879cf6f4c38d076cc516632905f12c2faef1e1603a2",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\far-only\\observations-u16.npy": "9958c444cfd91c2b497dfbfa352b82efaa047166f499ad6adf77002be5d26b71",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\far-only\\oracle-bound-rgb-f32.npy": "47cbc7a6238ceff5a3520402a8cf42110a88e2638b0b248ce3adf6fa317334f2",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\far-only\\prefit-adequacy.json": "81451f4a303b9f0684f575df55421c9c74bef8010d6fb1ad07e6da40085239a7",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\far-only\\result.json": "40294d58e123573a70be10df97a24f2aa34e00a4e20d089cbd02b1eafcfe2b54",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\far-only\\truth-rgb-f32.npy": "cafcfd22a43660fd754298af6b2b7c8ec5098d57e7f8cb1eb465fa311c6c2241",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\far-only\\two-layer\\receipt.json": "3096c854ebf8a7064967e8d7872cc99a9a33ed200de4918f7a2330d5e55534a6",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\far-only\\two-layer\\reconstruction.npz": "d4798ae712f66d3111083fc6ac816e6f0fc7c702de0f445e619bf2fd48db23f6",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\far-only\\two-layer\\state.pt": "0c25d6413f6c51ba3851ba9f4bf26741e5a1d9db8d6bd6b98344aea4aef2a456",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\candidate-rgb-f32.npy": "26d1933361d4e55f36654bda5de2e481eb3bf827d99b7a5e0753aa1925f27523",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\far-only\\receipt.json": "bbad44a03ceda48c64f60bba2ab802d34a41bd252941300ebaf62e391ed86d32",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\far-only\\reconstruction.npz": "7179a526e21427fec5f98ab6dd344d5b00815432c2f232f5d8f19c964bfc511f",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\far-only\\state.pt": "55db3d2d50981e788f29bf1846abee895cf50795f6fdf94d9e7e82f54f2226a1",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\far-only-rgb-f32.npy": "bcc4801e2d39cee761940771e509371a892ea535578dffc8ec1c84dc1717555d",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\mean-rgb-f32.npy": "949b99f79af998d85f0c273f6e7d85736a4adb6ada236d243776b5ec71ebcd94",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\observations-u16.npy": "2db55b6a69c2a484ee3287128f3e5a624d3caccdb6a2f18cae60fafd5f7a3f9f",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\oracle-bound-rgb-f32.npy": "2a3dfd15829c0dee5b9858504688eb1b14b8ed2d7cb4bd3871bcd3487a8d2680",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\prefit-adequacy.json": "9c87853a7a0c005345be767a3c80c471f5fdb41ac8f85539ab41afa0076fe80d",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\result.json": "b08597f4abe41b78e3046f571985e091e7245d368f827a624f014e8796a07b95",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\truth-rgb-f32.npy": "82a5a40523bf883867d551676e62c6935941bbdbe8af6bb8a5a0ef990f6d5a86",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\two-layer\\receipt.json": "dd242dea7cf0bf4c5d7f87607efb05a67a56bda626c300cf7157c865d56084fa",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\two-layer\\reconstruction.npz": "5358ec2d7e0820b651c104c6e55f0c4464d82f7751fdff37830103a6c56dd76d",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\two-layer\\state.pt": "36a6fcd39ef371bfc6eecf40dd30f2870cb6a161a9c9fccebff8a7126208a15b",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\candidate-rgb-f32.npy": "fbf011cd81e05479a5fcb2e716ed57029fbabb9478b62c83c50244c58a92b335",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\far-only\\receipt.json": "5a4dd625f2b797fede7205d6aa9a1aa21176750f5a4c062dac0168f651725f96",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\far-only\\reconstruction.npz": "a83fc632004cfbba810a1c2d3b1ccb454c0e729ad4014442dae7d61da67ca34c",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\far-only\\state.pt": "d729c65a507be5f64861a8c953713934de124d63eb1e1f33b0e857ee337fbb66",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\far-only-rgb-f32.npy": "320894206c1e15cd1e2304e872c73da1c705c89df9564ece86c07f8b8d95d91b",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\mean-rgb-f32.npy": "ffe024f6a3d3950dcfba7d3e281eaf15cd6059b3a05d326fe857f8d427280bb5",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\observations-u16.npy": "ff29cf425e33b3076f433c8ea4a98b7079aa23a8deb4dd6aedc61657fd3045c5",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\oracle-bound-rgb-f32.npy": "758b9efce098b81dcd0690d8a69b42822cc270c0cf6ac52b6d140b4234960b04",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\physical-adequacy.json": "08445cf6964b21153769770a038e22abda388c4f26232b8f7c19c4cc81bc306a",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\prefit-adequacy.json": "d534765750774b6aee5f00df5b2fa81216db4193705c03ed25a84f27c7ee8cd4",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\result.json": "699fa88ffecb3c846218943798682953d8d4bca99aeb07081e7a7fc3a0e981a3",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\truth-rgb-f32.npy": "2668537f49285dae0b06ad4f9f027387c9605947d8a8b53b5d021d17f239d743",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\two-layer\\receipt.json": "e1271a3933ea74cce2931c5c5807cdfb3504d1c1eff3b6c9e2543f487373796d",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\two-layer\\reconstruction.npz": "c6e19e5232c8c814095880105050b52f1dbfc3408ed9ecef61c09781180b70ec",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\two-layer\\state.pt": "7abcc019b15cad5d8f43dcfb78babac75cf98b0cbaafc0f05f5b4e5d18a23e3f",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\mechanical.json": "49f6053cd2499d05838a819b22de3494ea25f166f2b0b4d29bc76ad610ef1f7b",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\screen.json": "cb26cc5a5358ebc054e867c2da974717f7084f7b5144d7bbb0bdbae4bfb8a460"
+  },
+  "checkpoint_files": {
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\visibility-1\\output\\layered\\fixed-alpha\\initial-reconstruction.npz": "ad85404840682f0b1167d4fafb5cddab2d9d83c7e77bc7c25943fd54e730d6c1",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\visibility-1\\output\\layered\\fixed-alpha\\predicted-cfa-2.npy": "6268813eb964138bf4484a6dc5ce1910088644e5fb4ca072a350b840303f66b8",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\visibility-1\\output\\layered\\fixed-alpha\\predicted-cfa-6.npy": "fb2a158bd7495531be06a45ba8b05c294f3f9f24c884e825bdfba13e5b3f011f",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\visibility-1\\output\\layered\\fixed-alpha\\receipt.json": "0aebcaa70bc77d986661df45713776d3b0cf88ef7d41d71d3f8495dec060c67a",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\visibility-1\\output\\layered\\fixed-alpha\\reconstruction.npz": "bdf2989ea519a66316c0d51966f6a4f744d11b17593b00568abe6f7e68029cd8",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\visibility-1\\output\\layered\\fixed-alpha\\state.pt": "a4481365ba6ebfa19165770d2fa4b0417d95f1266fe8933152decdeec4310280"
+  },
+  "direction_files": {
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\direction-1\\directions\\glint-dn.npy": "94e1f50a09569470005a8391be40a57710b5cf3351ab27053ae6a731fda459fa",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\direction-1\\directions\\manifest.json": "50923970e6ff1852c917b18a284a0450f790a0b7e78d99fadff68149d41ebc7d",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\direction-1\\directions\\shifted-glint-dn.npy": "f6b74226b9f2e85106446327465fea68f39c099509c7bbc01fadb7b27a2a7502"
+  },
+  "diagnostic_files": {
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\direction-1\\output\\base-pinhole-rgb-f32.npy": "e61438c9560e2a0b67d84d69cbc7dc630a503ca23a01a4c4cc52f2ed9f433a92",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\direction-1\\output\\glint\\minus-pinhole-rgb-f32.npy": "04a673af38be903489f9f65d7a47d1d5bb0bf2bceea6038479844338c02e0455",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\direction-1\\output\\glint\\plus-pinhole-rgb-f32.npy": "9090e6f6d0ccf030432037076929d188e76766504894b2673fce902949f5eaf4",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\direction-1\\output\\result.json": "7fc084770429a786b7cc6267af9ee8f75ccf04edea2bc09402837009d4e1a356",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\direction-1\\output\\shifted-glint\\minus-pinhole-rgb-f32.npy": "d75e6e90f9730ac3084ebfdd738a15dd1cd9c5000455d24ac16008d99eb2191b",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\direction-1\\output\\shifted-glint\\plus-pinhole-rgb-f32.npy": "cd4a020015f17328cefdd578a2ded25ec4b897a2396580f12533a2fcd90b0a9e"
+  },
+  "scorer_sha256": "358a7f3c0edc4b9255a01d4a7ea9b74df50cdd72af7bb88b026974d5228ffa6b",
+  "real_photo_admission": false,
+  "interpretation": "Truth improvement and objective derivatives are separate. Shift is a specificity placebo, not a required negative outcome; no optimizer or model-family verdict."
+}
