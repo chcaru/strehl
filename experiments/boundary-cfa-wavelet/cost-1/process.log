@@ -1,0 +1,49 @@
+
+running 1 test
+test merge_cmd::boundary_cfa_wavelet::full_stack::vitamin_c_observational_pair ...   GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+observational wavelet source 35/69, 32.2s
+Error: nonfinite inverse input
+FAILED
+
+failures:
+
+failures:
+    merge_cmd::boundary_cfa_wavelet::full_stack::vitamin_c_observational_pair
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 212 filtered out; finished in 33.00s
+

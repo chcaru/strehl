@@ -1,8 +1,9 @@
-// Generated-only complete CFA operator with a fixed boundary and source-space probe.
-// No production dispatch, RAW decode, parameter sweep or photographic admission.
+// Fixed-boundary complete CFA operator; public generated entry points remain bounded.
+// A separate explicitly invoked observational adapter has no quality admission.
 use super::*;
 use sha2::{Digest,Sha256};
 use strehl_core::{CfaPlane,align::Similarity};
+use strehl_core::optics::OpticalProfile;
 use strehl_core::pyramid::{correction_variance_diagnostic as kernels,
     AdmissionMode,BaseBand,Fallback,Hull,LevelSize,SelectMode};
 pub(crate) use super::complex_wavelet_merge::Complex;
@@ -43,6 +44,46 @@ fn original_equality(frame:&Frame,crop:align_cmd::CropRect,planes:&[Vec<f32>],gu
     }
     ensure!(guide.iter().enumerate().all(|(i,v)|v.to_bits()==(0.5*(planes[1][i]+planes[2][i])).to_bits()),"identity green mismatch");Ok(())
 }
+// Shared ordered fusion loop. Moving this code does not change source order,
+// f32 association, support, floor, exponent schedule, fallback, or hull.
+#[allow(clippy::too_many_arguments)]
+fn fold_coefficients(known:&[Vec<f32>],wave:&[Vec<Complex>],variance4:&[Vec<f32>],
+    cfg:MergeConfig,gains:[f32;4],depth:usize,bands:&[Subband],
+    sums:&mut[Vec<Complex>],means:&mut[Vec<Complex>],den:&mut[f32],counts:&mut[u16],
+    low:&mut[Vec<f32>],high:&mut[Vec<f32>],summary:&mut[DirectionWeightSummary],diagnostics:bool)->Result<()> {
+    let n=den.len();let native_n=known[0].len();
+        for c in 0..4 {for i in 0..n {means[c][i].re+=wave[c][i].re;means[c][i].im+=wave[c][i].im;}
+            for i in 0..native_n {low[c][i]=low[c][i].min(known[c][i]);high[c][i]=high[c][i].max(known[c][i]);}}
+        for (j,b) in bands.iter().enumerate() {
+            let size=LevelSize{width:b.width,height:b.height};let pos=&b.positions;
+            let energy=pos.iter().map(|&i|(0..4).map(|c|gains[c]*squared(wave[c][i])).sum()).collect::<Vec<f32>>();
+            let variance=pos.iter().map(|&i|(0..4).map(|c|gains[c]*variance4[c][i]).sum()).collect::<Vec<f32>>();
+            let energy=kernels::smooth(&energy,size);let variance=kernels::smooth(&variance,size);
+            let mut own=Vec::new();
+            if diagnostics {for c in 0..4 {
+                let e=pos.iter().map(|&i|gains[c]*squared(wave[c][i])).collect::<Vec<_>>();
+                let v=pos.iter().map(|&i|gains[c]*variance4[c][i]).collect::<Vec<_>>();
+                let e=kernels::smooth(&e,size);let v=kernels::smooth(&v,size);
+                let live=e.iter().zip(v).map(|(&e,v)|{
+                    let floor=cfg.gate*v;kernels::soft_weight((e-floor).max(0.0),floor,cfg.exponent_at(b.level,depth))>0.0
+                }).collect::<Vec<_>>();
+                summary[j].own_plane_positive_source_coefficients[c]+=live.iter().filter(|&&v|v).count();own.push(live);
+            }}
+            for (local,((&i,&e),&v)) in pos.iter().zip(&energy).zip(&variance).enumerate() {
+                ensure!(e.is_finite() && v.is_finite(),"nonfinite supported coefficient evidence");
+                let floor=cfg.gate*v;
+                let weight=kernels::soft_weight((e-floor).max(0.0),floor,cfg.exponent_at(b.level,depth));
+                ensure!(weight.is_finite() && weight>=0.0,"invalid shared weight");
+                summary[j].min_weight=summary[j].min_weight.min(weight);summary[j].max_weight=summary[j].max_weight.max(weight);
+                if weight>0.0 {counts[i]+=1;summary[j].positive_source_coefficients+=1;}
+                else if diagnostics {for c in 0..4 {if own[c][local]{summary[j].own_plane_positive_aggregate_zero[c]+=1;}}}
+                den[i]+=weight;
+                for c in 0..4 {sums[c][i].re+=weight*wave[c][i].re;sums[c][i].im+=weight*wave[c][i].im;}
+            }
+        }
+    Ok(())
+}
+
 pub(crate) fn compare_generated(frames:&[Frame],crop:align_cmd::CropRect,warps:&[Similarity],
     noise:&NoiseModel,diagnostics:bool)->Result<Comparison> {
     ensure!(!frames.is_empty() && frames.len()<=32 && frames.len()==warps.len(),"bounded matched source/warp count");
@@ -95,35 +136,8 @@ pub(crate) fn compare_generated(frames:&[Frame],crop:align_cmd::CropRect,warps:&
         let start=Instant::now();
         let probe=probe_from_wave(frame,warp,crop,noise,&plan,index,diagnostics,&wave)?;
         let probe_seconds=start.elapsed().as_secs_f64();
-        for c in 0..4 {for i in 0..n {means[c][i].re+=wave[c][i].re;means[c][i].im+=wave[c][i].im;}
-            for i in 0..native_n {low[c][i]=low[c][i].min(baseline.planes[c][i]);high[c][i]=high[c][i].max(baseline.planes[c][i]);}}
-        for (j,b) in bands.iter().enumerate() {
-            let size=LevelSize{width:b.width,height:b.height};let pos=&b.positions;
-            let energy=pos.iter().map(|&i|(0..4).map(|c|gains[c]*squared(wave[c][i])).sum()).collect::<Vec<f32>>();
-            let variance=pos.iter().map(|&i|(0..4).map(|c|gains[c]*probe.variance4[c][i]).sum()).collect::<Vec<f32>>();
-            let energy=kernels::smooth(&energy,size);let variance=kernels::smooth(&variance,size);
-            let mut own=Vec::new();
-            if diagnostics {for c in 0..4 {
-                let e=pos.iter().map(|&i|gains[c]*squared(wave[c][i])).collect::<Vec<_>>();
-                let v=pos.iter().map(|&i|gains[c]*probe.variance4[c][i]).collect::<Vec<_>>();
-                let e=kernels::smooth(&e,size);let v=kernels::smooth(&v,size);
-                let live=e.iter().zip(v).map(|(&e,v)|{
-                    let floor=cfg.gate*v;kernels::soft_weight((e-floor).max(0.0),floor,cfg.exponent_at(b.level,depth))>0.0
-                }).collect::<Vec<_>>();
-                summary[j].own_plane_positive_source_coefficients[c]+=live.iter().filter(|&&v|v).count();own.push(live);
-            }}
-            for (local,((&i,&e),&v)) in pos.iter().zip(&energy).zip(&variance).enumerate() {
-                ensure!(e.is_finite() && v.is_finite(),"nonfinite supported coefficient evidence");
-                let floor=cfg.gate*v;
-                let weight=kernels::soft_weight((e-floor).max(0.0),floor,cfg.exponent_at(b.level,depth));
-                ensure!(weight.is_finite() && weight>=0.0,"invalid shared weight");
-                summary[j].min_weight=summary[j].min_weight.min(weight);summary[j].max_weight=summary[j].max_weight.max(weight);
-                if weight>0.0 {counts[i]+=1;summary[j].positive_source_coefficients+=1;}
-                else if diagnostics {for c in 0..4 {if own[c][local]{summary[j].own_plane_positive_aggregate_zero[c]+=1;}}}
-                den[i]+=weight;
-                for c in 0..4 {sums[c][i].re+=weight*wave[c][i].re;sums[c][i].im+=weight*wave[c][i].im;}
-            }
-        }
+        fold_coefficients(&baseline.planes,&wave,&probe.variance4,cfg,gains,depth,&bands,
+            &mut sums,&mut means,&mut den,&mut counts,&mut low,&mut high,&mut summary,diagnostics)?;
         let bias_band_mean_square4=probe.bias4.as_ref().map(|bias|bands.iter().map(|b|
             std::array::from_fn(|c|b.positions.iter().map(|&i|{
                 let v=bias[c][i];(v.re as f64).powi(2)+(v.im as f64).powi(2)
@@ -162,4 +176,12 @@ pub(crate) fn compare_generated(frames:&[Frame],crop:align_cmd::CropRect,warps:&
 
 mod independent_controls {
     include!(concat!(env!("CARGO_MANIFEST_DIR"),"/../../experiments/boundary-cfa-wavelet/independent-controls.rs"));
+}
+
+mod full_stack {
+    include!(concat!(env!("CARGO_MANIFEST_DIR"),"/../../experiments/boundary-cfa-wavelet/full-stack.rs"));
+}
+
+mod independent_full_controls {
+    include!(concat!(env!("CARGO_MANIFEST_DIR"),"/../../experiments/boundary-cfa-wavelet/independent-full-controls.rs"));
 }

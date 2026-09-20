@@ -1,0 +1,187 @@
+
+running 1 test
+test merge_cmd::boundary_cfa_wavelet::independent_full_controls::independent_full_mechanical_controls ...   GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+BOUNDARY_CFA_FULL_MECHANICAL {"ca_binding":{"actual_profile_key":"a7c2-fe100gm-2xtc-x4cpl","full_binding_and_refusals":true,"no_calibration_claim":true,"signal_and_noisy_source":[{"covered":2876,"cpu_gpu_code_and_support_exact":true,"source":"signal"},{"covered":2876,"cpu_gpu_code_and_support_exact":true,"source":"source-noise-draw"}],"small_actual_ca_changed_rgb_sites":[1057,0,396]},"extent":{"full_plan":[3460,2306,4096,4096,318,895],"large_arrays_allocated":false,"one_axis_controls":[{"levels":12,"non_dc_max_energy":2.2737367544323206e-13,"packing_exact":true,"parseval_relative":7.76422414138372e-9,"roundtrip_max":3.769728732309794e-7,"shape":[4096,1]},{"levels":12,"non_dc_max_energy":2.2737367544323206e-13,"packing_exact":true,"parseval_relative":7.76422414138372e-9,"roundtrip_max":3.769728732309794e-7,"shape":[1,4096]}]},"generated_regression":{"baseline_candidate_rgb_hashes":["76b42e87ca9a53011af3f8a9d6d81b0925534c9075d67476be3c192a57c8be40","893ef6e6fbf4ab76e42e94a8506cfc7ff4bf94c8d33bd2e86142a2a7335a22b7"],"previous_failed_result_exact":true,"source_hashes":["693f258df81f1484273eefc4cb6c6a737b307a856565e5f6fa998927dd9aa7b9","16b911c744223ade7f9cd73c7de917471c330116c3b63fff25e9b6d613005ea2","84af728c362760fd490aaa0c6c3bd513639fdd131fe02865bb2ae41981938e69","385765c36e916c3631d4cf4b15f42f5d36d7548281e4276bd685aa04039998cf","f3c148c7b6312f6660eec741a30336d4ed105d7108dc03e7341e1852362d50ea"]},"observational_scope_only":true,"previous_quality_admission":false,"source_simulation":{"above_sensor_white_not_silently_clamped":true,"draw_metadata_and_input_preserved":true,"invalid_variance_refused":true,"zero_and_max_refused":true},"writer":{"held_tone_matrix_native_samples_exact":5916,"source_immutable":true,"tone_live":true}}
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 212 filtered out; finished in 0.90s
+

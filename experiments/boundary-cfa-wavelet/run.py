@@ -32,6 +32,7 @@ def main():
             'phase-packed-rgb', 'fine-support-guidance', 'green-match-rgb', 'donor-consistency')]:
             paths.update(directory.glob('*.rs'))
         paths.update(HERE.glob('*.md'))
+        paths.update(HERE.glob('*.py'))
         paths.update([Path(__file__), ROOT / 'experiments/complete-cfa-wavelet/next-design.md',
             ROOT / 'experiments/complex-wavelet-merge/licence.txt',
             ROOT / 'crates/strehl-core/src/pyramid.rs', ROOT / 'crates/strehl-core/src/boxfilter.rs',

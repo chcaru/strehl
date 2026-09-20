@@ -263,6 +263,35 @@ registration residual, stronger gradient or better synthetic score alone does
 not justify promotion. A local crop improvement cannot establish a full-stack
 or competitive SOTA result.
 
+The boundary/actual-rounded-gather screen is now committed at4eced9b4. Its
+structural, propagated-noise and observer controls pass, but the frozen
+photographic admission remains false: fractional weak-red retention is about
+88.73% of the focused source against90%, and the separate5% RGB-error benefit
+is absent. The same candidate recovers about2.58 times the baseline's weak-red
+component and passes every baseline-relative RGB/edge/corner guard. Do not
+confuse failed admission with demonstrated general harm.
+
+Root has separately scoped one observational full-image pair, contingent on
+new full-domain/CA mechanical checks and a measured one-source cost checkpoint.
+This does not change the failed screen or promote the method. Retain fixed
+geometry, colour, tone, eight source-noise pairs, canonical baseline pixels,
+one worker and resource caps. See boundary-cfa-wavelet/observational-plan.md.
+An independent priority review retains a shared categorical source-field
+approach as the next distinct hypothesis for the real streaks; do not mix it
+into the wavelet trial or open another parameter sweep.
+
+That one-source checkpoint has now refused the full wavelet route. Mechanical
+and unchanged generated checks pass, but source35 takes31.708s and candidate
+reconstruction refuses nonfinite input. The incomplete70-source extrapolation
+already exceeds the frozen resource bar; no candidate photograph exists.
+Weighted-numerator overflow is a strongly supported source-level explanation,
+not a measured offending coefficient. Preserve the failure in
+boundary-cfa-wavelet/cost-results.md and its independent review. Do not spend a
+full render on this exact CPU/eight-pair implementation. The next authorized
+quality experiment is shared-source-field: one fixed categorical spatial
+regularizer and soft full-AC replay, with independent flat/detail/depth controls
+before any complete photograph.
+
 Keep subagent work bounded: one implementation, one independent choice review,
 and photographic review when there is a new image. Reuse retained samples and
 fixed settings. Each negative result closes its proposed intervention; it is

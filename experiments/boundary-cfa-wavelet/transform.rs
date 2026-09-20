@@ -14,11 +14,15 @@ pub(crate) fn reflect_index(index:isize,length:usize)->usize {
 impl BoundaryPlan {
     pub(crate) fn new(w:usize,h:usize)->Result<Self> {
         ensure!(w>0 && h>0 && w<=512 && h<=512,"bounded positive boundary dimensions");
+        Ok(Self::extent(w,h))
+    }
+    pub(crate) fn full_vitamin_c()->Self {Self::extent(3460,2306)}
+    fn extent(w:usize,h:usize)->Self {
         let (pw,ph)=(w.next_power_of_two(),h.next_power_of_two());
         let (left,top)=((pw-w)/2,(ph-h)/2);
-        Ok(Self{input_width:w,input_height:h,padded_width:pw,padded_height:ph,left,top,
+        Self{input_width:w,input_height:h,padded_width:pw,padded_height:ph,left,top,
             x_indices:(0..pw).map(|x|reflect_index(x as isize-left as isize,w)).collect(),
-            y_indices:(0..ph).map(|y|reflect_index(y as isize-top as isize,h)).collect()})
+            y_indices:(0..ph).map(|y|reflect_index(y as isize-top as isize,h)).collect()}
     }
     pub(crate) fn depth(&self)->usize {self.padded_width.max(self.padded_height).ilog2() as usize}
 }
@@ -36,8 +40,11 @@ pub(crate) fn crop_four(input:&[Vec<f32>],p:&BoundaryPlan)->Result<Vec<Vec<f32>>
         v[y*p.padded_width+p.left..y*p.padded_width+p.left+p.input_width].iter().copied()).collect()).collect())
 }
 fn dimensions(w:usize,h:usize,n:usize)->Result<()> {
+    dimensions_scoped(w,h,n,false)
+}
+fn dimensions_scoped(w:usize,h:usize,n:usize,full:bool)->Result<()> {
     ensure!(w>0 && h>0 && w.is_power_of_two() && h.is_power_of_two()
-        && w.checked_mul(h)==Some(n) && n<=512*512,"bounded dyadic rectangle required");Ok(())
+        && w.checked_mul(h)==Some(n) && n<=if full{4096*4096}else{512*512},"bounded dyadic rectangle required");Ok(())
 }
 fn location(line:usize,pos:usize,w:usize,vertical:bool)->usize {if vertical {pos*w+line} else {line*w+pos}}
 fn analysis_1d(src:&[Complex],w:usize,h:usize,vertical:bool)->Vec<Complex> {
@@ -78,38 +85,53 @@ fn synthesis_1d(src:&[Complex],w:usize,h:usize,vertical:bool)->Vec<Complex> {
     }}dst
 }
 pub(crate) fn transform_one(input:&[Complex],w:usize,h:usize)->Result<Vec<Complex>> {
-    dimensions(w,h,input.len())?;ensure!(input.iter().all(|v|v.re.is_finite() && v.im.is_finite()),"nonfinite transform input");
+    transform_one_scoped(input,w,h,false)
+}
+fn transform_one_scoped(input:&[Complex],w:usize,h:usize,full:bool)->Result<Vec<Complex>> {
+    dimensions_scoped(w,h,input.len(),full)?;ensure!(input.iter().all(|v|v.re.is_finite() && v.im.is_finite()),"nonfinite transform input");
     Ok(analysis_1d(&analysis_1d(input,w,h,true),w,h,false))
 }
 pub(crate) fn inverse_one(input:&[Complex],w:usize,h:usize)->Result<Vec<Complex>> {
-    dimensions(w,h,input.len())?;ensure!(input.iter().all(|v|v.re.is_finite() && v.im.is_finite()),"nonfinite inverse input");
+    inverse_one_scoped(input,w,h,false)
+}
+fn inverse_one_scoped(input:&[Complex],w:usize,h:usize,full:bool)->Result<Vec<Complex>> {
+    dimensions_scoped(w,h,input.len(),full)?;ensure!(input.iter().all(|v|v.re.is_finite() && v.im.is_finite()),"nonfinite inverse input");
     Ok(synthesis_1d(&synthesis_1d(input,w,h,true),w,h,false))
 }
 pub(crate) fn level_rectangles(w:usize,h:usize)->Result<Vec<[usize;2]>> {
-    dimensions(w,h,w*h)?;let(mut cw,mut ch)=(w,h);let mut out=Vec::new();
+    level_rectangles_scoped(w,h,false)
+}
+fn level_rectangles_scoped(w:usize,h:usize,full:bool)->Result<Vec<[usize;2]>> {
+    dimensions_scoped(w,h,w*h,full)?;let(mut cw,mut ch)=(w,h);let mut out=Vec::new();
     while cw>1 || ch>1 {out.push([cw,ch]);cw=(cw/2).max(1);ch=(ch/2).max(1);}Ok(out)
 }
-fn transform_all(input:&[Complex],w:usize,h:usize,inverse:bool)->Result<Vec<Complex>> {
-    dimensions(w,h,input.len())?;let mut sizes=level_rectangles(w,h)?;
+fn transform_all(input:&[Complex],w:usize,h:usize,inverse:bool,full:bool)->Result<Vec<Complex>> {
+    dimensions_scoped(w,h,input.len(),full)?;let mut sizes=level_rectangles_scoped(w,h,full)?;
     if inverse{sizes.reverse();}let mut out=input.to_vec();
     for [cw,ch] in sizes {
         let rect=(0..ch).flat_map(|y|out[y*w..y*w+cw].iter().copied()).collect::<Vec<_>>();
-        let inner=if inverse{inverse_one(&rect,cw,ch)?}else{transform_one(&rect,cw,ch)?};
+        let inner=if inverse{inverse_one_scoped(&rect,cw,ch,full)?}else{transform_one_scoped(&rect,cw,ch,full)?};
         for y in 0..ch {out[y*w..y*w+cw].copy_from_slice(&inner[y*cw..(y+1)*cw]);}
     }
     ensure!(out.iter().all(|v|v.re.is_finite() && v.im.is_finite()),"nonfinite complete transform");Ok(out)
 }
-pub(crate) fn transform_complete(input:&[Complex],w:usize,h:usize)->Result<Vec<Complex>> {transform_all(input,w,h,false)}
+pub(crate) fn transform_complete(input:&[Complex],w:usize,h:usize)->Result<Vec<Complex>> {transform_all(input,w,h,false,false)}
 pub(crate) fn forward_real(input:&[f32],w:usize,h:usize)->Result<Vec<Complex>> {
     transform_complete(&input.iter().map(|&re|Complex{re,im:0.0}).collect::<Vec<_>>(),w,h)
 }
-pub(crate) fn inverse_complete(input:&[Complex],w:usize,h:usize)->Result<Vec<Complex>> {transform_all(input,w,h,true)}
+pub(crate) fn inverse_complete(input:&[Complex],w:usize,h:usize)->Result<Vec<Complex>> {transform_all(input,w,h,true,false)}
+fn forward_real_scoped(input:&[f32],w:usize,h:usize,full:bool)->Result<Vec<Complex>> {
+    transform_all(&input.iter().map(|&re|Complex{re,im:0.0}).collect::<Vec<_>>(),w,h,false,full)
+}
 
 #[derive(Clone,Debug)]
 pub(crate) struct Subband {pub level:usize,pub direction:usize,pub width:usize,pub height:usize,pub positions:Vec<usize>}
 pub(crate) fn subbands(w:usize,h:usize)->Result<Vec<Subband>> {
+    subbands_scoped(w,h,false)
+}
+fn subbands_scoped(w:usize,h:usize,full:bool)->Result<Vec<Subband>> {
     let mut out=Vec::new();
-    for (level,[cw,ch]) in level_rectangles(w,h)?.into_iter().enumerate() {
+    for (level,[cw,ch]) in level_rectangles_scoped(w,h,full)?.into_iter().enumerate() {
         let(bw,bh)=((cw/2).max(1),(ch/2).max(1));
         for (direction,bx,by) in [(0,1,0),(1,1,1),(2,0,1)] {
             if (bx==1 && cw==1) || (by==1 && ch==1){continue;}

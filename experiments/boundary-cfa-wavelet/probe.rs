@@ -43,16 +43,38 @@ fn gather_scope(frame:&Frame,warp:Similarity,crop:align_cmd::CropRect)->Result<(
     Ok(())
 }
 pub(crate) fn gather_known4(frame:&Frame,warp:Similarity,crop:align_cmd::CropRect)->Result<Vec<Vec<f32>>> {
-    gather_scope(frame,warp,crop)?;
+    gather_known4_scoped(frame,warp,crop,false)
+}
+pub(crate) fn full_gather_binding(full:PlaneGeometry,crop:align_cmd::CropRect,warp:Similarity,
+    profile:Option<&OpticalProfile>)->Result<()> {
+    ensure!(full==PlaneGeometry{width:3516,height:2344}
+        && [crop.x,crop.y,crop.width,crop.height]==[28,19,3460,2306],"fixed full observational domain required");
+    ensure!(profile.is_some_and(|p|p.key=="a7c2-fe100gm-2xtc-x4cpl"),"held full CA profile required");
+    ensure!(phase_packed_rgb::full_stack::full_source_supported(warp,full,crop,profile),"full CA pull unsupported");Ok(())
+}
+fn gather_known4_scoped(frame:&Frame,warp:Similarity,crop:align_cmd::CropRect,full:bool)->Result<Vec<Vec<f32>>> {
+    if full {
+        ensure!(align_cmd::fullres_gather_enabled() && align_cmd::direct_plane_mode()?==align_cmd::DirectPlaneMode::Rounded
+            && align_cmd::native_gpu_integration::gpu_gather_enabled()?,"actual GPU rounded fullres gather required");
+        ensure!(!std::env::var(strehl_core::demosaic::DEMOSAIC_ENV).is_ok_and(|v|v.eq_ignore_ascii_case("directional"))
+            && std::env::var_os("STREHL_LOCAL_PLACEMENT_FILE").is_none(),"held Malvar/no-local-placement route required");
+        validate_pyramid_frame(frame,frame.geometry(),0)?;
+        let id=strehl_raw::identity(&frame.path);
+        let profile=strehl_core::optics::profile_for_capture_env(id.model.as_deref(),id.lens_type3)?;
+        full_gather_binding(frame.geometry(),crop,warp,profile)?;
+    }else{gather_scope(frame,warp,crop)?;}
     let mut current=frame.clone();let mut planes=vec![vec![0.0;crop.width*crop.height];4];
     align_cmd::warp_frame_fullres_into_planes::<false>(&mut current,warp,frame.geometry(),Resampler::CatmullRom,
         &mut WarpScratch::new(frame.geometry()),crop,&[(0,0),(1,0),(0,1),(1,1)],&mut planes,align_cmd::DirectPlaneMode::Rounded)?;
     ensure!(planes.iter().flatten().all(|v|v.is_finite()),"nonfinite consumed samples");Ok(planes)
 }
 pub(crate) fn gathered_wave(frame:&Frame,warp:Similarity,crop:align_cmd::CropRect,plan:&BoundaryPlan)->Result<Vec<Vec<Complex>>> {
+    gathered_wave_scoped(frame,warp,crop,plan,false)
+}
+fn gathered_wave_scoped(frame:&Frame,warp:Similarity,crop:align_cmd::CropRect,plan:&BoundaryPlan,full:bool)->Result<Vec<Vec<Complex>>> {
     ensure!(crop.width==plan.input_width && crop.height==plan.input_height,"probe boundary/crop mismatch");
-    extend_four(&gather_known4(frame,warp,crop)?,plan)?.iter()
-        .map(|p|forward_real(p,plan.padded_width,plan.padded_height)).collect()
+    extend_four(&gather_known4_scoped(frame,warp,crop,full)?,plan)?.iter()
+        .map(|p|forward_real_scoped(p,plan.padded_width,plan.padded_height,full)).collect()
 }
 pub(crate) struct ProbeResult {
     pub variance4:Vec<Vec<f32>>,
@@ -68,19 +90,23 @@ pub(crate) fn probe_variance8(frame:&Frame,warp:Similarity,crop:align_cmd::CropR
 }
 fn probe_from_wave(frame:&Frame,warp:Similarity,crop:align_cmd::CropRect,noise:&NoiseModel,
     plan:&BoundaryPlan,source_id:usize,diagnostics:bool,signal:&[Vec<Complex>])->Result<ProbeResult> {
+    probe_from_wave_scoped(frame,warp,crop,noise,plan,source_id,diagnostics,signal,false)
+}
+fn probe_from_wave_scoped(frame:&Frame,warp:Similarity,crop:align_cmd::CropRect,noise:&NoiseModel,
+    plan:&BoundaryPlan,source_id:usize,diagnostics:bool,signal:&[Vec<Complex>],full:bool)->Result<ProbeResult> {
     let original_variance=original_variances(frame,noise)?;
     let n=plan.padded_width*plan.padded_height;
     ensure!(signal.len()==4 && signal.iter().all(|v|v.len()==n),"signal coefficient shape");
     let seeds=std::array::from_fn(|draw|probe_seed(source_id,draw));
     let mut variance4=vec![vec![0.0f32;n];4];
     let mut bias4=diagnostics.then(||vec![vec![Complex::default();n];4]);
-    let bands=subbands(plan.padded_width,plan.padded_height)?;
+    let bands=subbands_scoped(plan.padded_width,plan.padded_height,full)?;
     let mut pair_band_mean4=Vec::new();
     for pair in 0..PROBE_PAIRS {
         // Two independent original-source draws. Never antithetic +/- draws.
         let mut member=|draw:usize|->Result<Vec<Vec<Complex>>> {
             let noisy=noisy_source(frame,&original_variance,seeds[draw])?;
-            let wave=gathered_wave(&noisy,warp,crop,plan)?;
+            let wave=gathered_wave_scoped(&noisy,warp,crop,plan,full)?;
             if let Some(mean)=bias4.as_mut(){for c in 0..4 {for i in 0..n {
                 mean[c][i].re+=wave[c][i].re;mean[c][i].im+=wave[c][i].im;
             }}}

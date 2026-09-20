@@ -1,0 +1,29 @@
+{
+  "observational_full_feasible": false,
+  "reason": "One-source cost run failed before candidate reconstruction; its measured source-time extrapolation also exceeds the prior feasibility bar.",
+  "frame": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\boundary-cfa-wavelet\\cost-1\\output\\source-35.json",
+    "bytes": 2008,
+    "sha256": "2e09d7cab2dc5b4c8710ff132e174fa00099c1a48bb07ee7c62fdb8917edbfae"
+  },
+  "process": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\boundary-cfa-wavelet\\cost-1\\process.json",
+    "bytes": 2773,
+    "sha256": "42acb740eb40ea072211220f8d8b1f134f04b9e7575ee83ad61a60e706d6642c"
+  },
+  "log": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\boundary-cfa-wavelet\\cost-1\\process.log",
+    "bytes": 1584,
+    "sha256": "cef971d550f92cb2c007fef56ce0dee3a6c5f3d2713c1112c6bd5aa738d1a480"
+  },
+  "source_frame_seconds": 31.708082,
+  "partial_source_time_extrapolation_70_plus120_seconds": 2339.56574,
+  "preregistered_maximum_estimate_seconds": 1500,
+  "peak_job_memory_bytes": 7101923328,
+  "actual_full_stack_seconds": null,
+  "complete_cost_receipt": false,
+  "candidate_output_exists": false,
+  "generated_quality_admission": false,
+  "photographic_promotion": false,
+  "scope": "Failure record and incomplete cost extrapolation; not a complete timing or a physical lower bound on another run."
+}

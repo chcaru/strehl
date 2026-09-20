@@ -1,0 +1,9 @@
+# Observational adapter API and preservation
+
+The new ignored test is `merge_cmd::boundary_cfa_wavelet::full_stack::vitamin_c_observational_pair`. Its strict JSON config is supplied by `STREHL_BOUNDARY_CFA_FULL_CONFIG`, with the existing held donor config fields. `STREHL_BOUNDARY_CFA_PHASE` must be exactly `cost` or `full`. Cost processes only original source ordinal 35; full processes all 70 in canonical order. Both explicitly record `generated_quality_admitted: false`.
+
+Generated admission and extent guards remain intact. The transform's scoped internal wrappers share the original ordered tap loops; generated wrappers retain the 512² limit. The new fixed full constructor is 3460×2306, extended to 4096² and 12 levels. `full_gather_binding` checks original geometry, crop, actual CA profile key and pull support. The existing GPU consumer resolves each retained original path's profile for both signal and noisy members. `noisy_source` and its headroom refusal are unchanged.
+
+The source-by-source coefficient fold was extracted into one shared function, retaining operation order, WB-squared energy/variance sums, smooth5 support, SoftPower rule, mean fallback and input hull. Full accumulation shares that function; generated baseline and output paths remain as before. Equality is a pending independent generated hash control, not an author-verified assertion.
+
+The full adapter reuses canonical baseline chunk planning/absorption and the existing four-CFA TIFF developer. Full baseline decoded RGB16 must match the historical fixed hash before candidate reconstruction/write. Cost records phase times, requires one-source candidate planes to equal actual gathered known4, and requires identical decoded RGB16 baseline/candidate results. Only scalar receipts survive each source. Root owns builds, runs, resource decisions and photographic review; no author execution occurred.
