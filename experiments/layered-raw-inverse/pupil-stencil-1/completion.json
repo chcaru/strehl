@@ -1,0 +1,10 @@
+{
+  "instrument_completed": true,
+  "sources_unchanged": true,
+  "independent_result": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\pupil-stencil-1\\output\\result.json",
+    "sha256": "8ae48a156f1a4ccfb175b13c97549503da1ce02de05882fff222bfba91c8e1c3",
+    "bytes": 17784
+  },
+  "scope": "Fixed-pupil forward/adjoint and numerical quadrature; no fit, quality or photographic admission"
+}

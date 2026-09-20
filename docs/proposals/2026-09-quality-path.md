@@ -57,10 +57,15 @@ and several retained known-alpha image guards still fail despite passing
 matched held-RAW predictions. See free-visibility-results.md. All eight fits
 remain nonstationary; no duration, coefficient or parameterization rescue is
 authorized. A separately commissioned fused joint-pupil GPU operator now
-targets the independently known64/1024 integration discrepancy. Its forward
-and adjoint must pass before dense-pupil adequacy is evaluated; this numerical
-engineering step does not itself cure the free-visibility failure. No
-photographic admission yet. The passing complete-periodic all-CFA controls
+targets the independently known64/1024 integration discrepancy. Its fixed64
+forward/adjoint commission and preselected16384 forward convergence checks now
+pass; maximum4096/rotated16384 crossing discrepancies are0.02195/0.005235
+supplied-noise units against the fixed0.75 bar. See pupil-stencil-results.md.
+This resolves that bounded numerical error, without a dense derivative,
+inverse-quality, real-optics or speed claim. It does not cure free visibility.
+Keep old64 observations distinct from any future resolved-pupil data, and
+check the delivered colour consumer's observability before another fit.
+No photographic admission yet. The passing complete-periodic all-CFA controls
 remain retained at48276660; speed work stays behind demonstrated image quality.
 
 The owner's priority is photographic quality on the A7C II macro captures.
