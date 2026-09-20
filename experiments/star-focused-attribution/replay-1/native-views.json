@@ -1,0 +1,326 @@
+[
+  {
+    "frame": 116,
+    "stage": "raw",
+    "file": "porous-focused-116-frame116-raw-native.png",
+    "rgb16_sha256": "c6887fb5a8b97e1bef4352411ea3aa659f69bea422942328a75754d9c001e99d",
+    "reference_output_xywh": [
+      472,
+      1352,
+      328,
+      328
+    ],
+    "padded_origin_xy": [
+      610,
+      1448
+    ],
+    "coordinates": "active native sensor; mapped centre rounded to even origin, no warp or CA correction",
+    "icc_sha256": "238ad2596316306a72025bb245cf3c8cd72f1090c8d95af2f38dc090e84ece5b",
+    "colour_management": "ICC preserved",
+    "artifacts": [
+      {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\star-focused-attribution\\replay-1\\output\\porous-focused-116-frame116-raw.tiff",
+        "sha256": "e99d352cfa619506e4b19abbe3fd4a365ec037d772634cef1b80c3df2ec615a3",
+        "bytes": 681008
+      },
+      {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\star-focused-attribution\\replay-1\\output\\porous-focused-116-frame116-raw-cfa.f32",
+        "sha256": "9d8eb0ff454f412d2941e903d66f6b4b3abe44a5fd2843844bb88bf5b719ed06",
+        "bytes": 451584
+      },
+      {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\star-focused-attribution\\replay-1\\output\\porous-focused-116-frame116-raw-mhc-camera-rgb.f32",
+        "sha256": "ed9a3a4881a7eae1e666233b980ceaab8f4bebd7b0330e56cdf036a6bfcf5953",
+        "bytes": 1354752
+      }
+    ]
+  },
+  {
+    "frame": 116,
+    "stage": "gathered",
+    "file": "porous-focused-116-frame116-gathered-native.png",
+    "rgb16_sha256": "3a6acc985a24c9ff669c01fb483020ff8bd5fc304d51911b076579a9016a25aa",
+    "reference_output_xywh": [
+      472,
+      1352,
+      328,
+      328
+    ],
+    "padded_origin_xy": [
+      468,
+      1348
+    ],
+    "coordinates": "cropped reference output native grid",
+    "icc_sha256": "238ad2596316306a72025bb245cf3c8cd72f1090c8d95af2f38dc090e84ece5b",
+    "colour_management": "ICC preserved",
+    "artifacts": [
+      {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\star-focused-attribution\\replay-1\\output\\porous-focused-116-frame116-gathered.tiff",
+        "sha256": "f902ed28e1d36e5dfdcbe15153842395a45197ca54f9b39e5ba9977531dd7196",
+        "bytes": 681008
+      },
+      {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\star-focused-attribution\\replay-1\\output\\porous-focused-116-frame116-gathered-cfa.f32",
+        "sha256": "7f9c749a7392c9f549bb64c2e9dce4cba99b67b579c682b0af4ccc288f2134f1",
+        "bytes": 451584
+      },
+      {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\star-focused-attribution\\replay-1\\output\\porous-focused-116-frame116-gathered-mhc-camera-rgb.f32",
+        "sha256": "8f452843e9fd3766096d26e3403aec7202747e4b92b1f7e757b32b451f258b90",
+        "bytes": 1354752
+      }
+    ]
+  },
+  {
+    "frame": 118,
+    "stage": "raw",
+    "file": "porous-focused-118-frame118-raw-native.png",
+    "rgb16_sha256": "20581fbbf6b5b8480547f011e5a4d94d47086d836aacb863af9c445723f55575",
+    "reference_output_xywh": [
+      472,
+      1352,
+      328,
+      328
+    ],
+    "padded_origin_xy": [
+      612,
+      1450
+    ],
+    "coordinates": "active native sensor; mapped centre rounded to even origin, no warp or CA correction",
+    "icc_sha256": "238ad2596316306a72025bb245cf3c8cd72f1090c8d95af2f38dc090e84ece5b",
+    "colour_management": "ICC preserved",
+    "artifacts": [
+      {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\star-focused-attribution\\replay-1\\output\\porous-focused-118-frame118-raw.tiff",
+        "sha256": "e560a45a56f0c5dce43f3667433407d04bc6af6019cb8c9fb53d3025ff63c2db",
+        "bytes": 681008
+      },
+      {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\star-focused-attribution\\replay-1\\output\\porous-focused-118-frame118-raw-cfa.f32",
+        "sha256": "e9b4b3e20713414b8e9fcf9e49f5198c55c98b792f7fc1cc24c2689f1441c289",
+        "bytes": 451584
+      },
+      {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\star-focused-attribution\\replay-1\\output\\porous-focused-118-frame118-raw-mhc-camera-rgb.f32",
+        "sha256": "29a867fe96882a3d1dc7085618295a58a0269caf5b1c8c4cb53f6c9bed5cb438",
+        "bytes": 1354752
+      }
+    ]
+  },
+  {
+    "frame": 118,
+    "stage": "gathered",
+    "file": "porous-focused-118-frame118-gathered-native.png",
+    "rgb16_sha256": "1c326e21075fe5371789ee6a86be8240129a359f685fa52f0bc193e04d9d0380",
+    "reference_output_xywh": [
+      472,
+      1352,
+      328,
+      328
+    ],
+    "padded_origin_xy": [
+      468,
+      1348
+    ],
+    "coordinates": "cropped reference output native grid",
+    "icc_sha256": "238ad2596316306a72025bb245cf3c8cd72f1090c8d95af2f38dc090e84ece5b",
+    "colour_management": "ICC preserved",
+    "artifacts": [
+      {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\star-focused-attribution\\replay-1\\output\\porous-focused-118-frame118-gathered.tiff",
+        "sha256": "edc2563ce9e6782119a6b8c79348b41ef33a8538397c3656f5eceb685ea35fbc",
+        "bytes": 681008
+      },
+      {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\star-focused-attribution\\replay-1\\output\\porous-focused-118-frame118-gathered-cfa.f32",
+        "sha256": "076a0a152d3b969d160c9e2e00b3af96eb338051c6989c5a6e495d2e4ddeb568",
+        "bytes": 451584
+      },
+      {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\star-focused-attribution\\replay-1\\output\\porous-focused-118-frame118-gathered-mhc-camera-rgb.f32",
+        "sha256": "c3a8c583880b3a810e92aa2268a97bd27e5a825d06e5ca57899927635a266fb5",
+        "bytes": 1354752
+      }
+    ]
+  },
+  {
+    "frame": 120,
+    "stage": "raw",
+    "file": "porous-focused-120-frame120-raw-native.png",
+    "rgb16_sha256": "3845d4c29a0295802d47cd0488de4f1681f13f501cd40623591636ca4d4ebd1e",
+    "reference_output_xywh": [
+      472,
+      1352,
+      328,
+      328
+    ],
+    "padded_origin_xy": [
+      614,
+      1450
+    ],
+    "coordinates": "active native sensor; mapped centre rounded to even origin, no warp or CA correction",
+    "icc_sha256": "238ad2596316306a72025bb245cf3c8cd72f1090c8d95af2f38dc090e84ece5b",
+    "colour_management": "ICC preserved",
+    "artifacts": [
+      {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\star-focused-attribution\\replay-1\\output\\porous-focused-120-frame120-raw.tiff",
+        "sha256": "fc67897c7bd5350eb5daecfaf7cefc69186ab8e281537e4638aa84e2e97acfc6",
+        "bytes": 681008
+      },
+      {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\star-focused-attribution\\replay-1\\output\\porous-focused-120-frame120-raw-cfa.f32",
+        "sha256": "41a8537feb6f805e9a5d3af16977e85bc696a0e6cf186513932f463a1368b31a",
+        "bytes": 451584
+      },
+      {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\star-focused-attribution\\replay-1\\output\\porous-focused-120-frame120-raw-mhc-camera-rgb.f32",
+        "sha256": "ef512d6a95249de72f0133a5c5d7f21b125c77829d4011973e038389c44b4b54",
+        "bytes": 1354752
+      }
+    ]
+  },
+  {
+    "frame": 120,
+    "stage": "gathered",
+    "file": "porous-focused-120-frame120-gathered-native.png",
+    "rgb16_sha256": "746d4928485e06567a823baeef0807e92d7ab1c6909fc36479ea565190284fed",
+    "reference_output_xywh": [
+      472,
+      1352,
+      328,
+      328
+    ],
+    "padded_origin_xy": [
+      468,
+      1348
+    ],
+    "coordinates": "cropped reference output native grid",
+    "icc_sha256": "238ad2596316306a72025bb245cf3c8cd72f1090c8d95af2f38dc090e84ece5b",
+    "colour_management": "ICC preserved",
+    "artifacts": [
+      {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\star-focused-attribution\\replay-1\\output\\porous-focused-120-frame120-gathered.tiff",
+        "sha256": "76a7a9c10fc1df62528a26018c12a03a5a37ed3966e871b54d7829718ba19f64",
+        "bytes": 681008
+      },
+      {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\star-focused-attribution\\replay-1\\output\\porous-focused-120-frame120-gathered-cfa.f32",
+        "sha256": "953caf12a9cc82e1738748a77b2a338acfbcec8f43f939b5031786375e1b15aa",
+        "bytes": 451584
+      },
+      {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\star-focused-attribution\\replay-1\\output\\porous-focused-120-frame120-gathered-mhc-camera-rgb.f32",
+        "sha256": "d23bc9f75500d265007824809cb6a8cc15e12395530ded12c24e6ff2c0bc0599",
+        "bytes": 1354752
+      }
+    ]
+  },
+  {
+    "frame": 116,
+    "stage": "merged",
+    "file": "porous-focused-116-frame116-merged-native.png",
+    "rgb16_sha256": "833f0622e02468286e6d1c1187ae4bc6af1c7b75fe4ece60c2ee1d4618e65905",
+    "reference_output_xywh": [
+      472,
+      1352,
+      328,
+      328
+    ],
+    "padded_origin_xy": [
+      468,
+      1348
+    ],
+    "coordinates": "cropped reference output native grid",
+    "icc_sha256": "238ad2596316306a72025bb245cf3c8cd72f1090c8d95af2f38dc090e84ece5b",
+    "colour_management": "ICC preserved",
+    "artifacts": [
+      {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\star-focused-attribution\\replay-1\\output\\porous-focused-116-frame116-merged.tiff",
+        "sha256": "7a8bfc0c8a7ebc00e6a6ee898c65f8ce824c3e6c0f21b12a54d4b1c56171551e",
+        "bytes": 681008
+      },
+      {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\star-focused-attribution\\replay-1\\output\\porous-focused-116-frame116-merged-cfa.f32",
+        "sha256": "a3fd8ea2fbb09c453185a8153ae887b96db40bb0d6880ee99043bd524d5d5299",
+        "bytes": 451584
+      },
+      {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\star-focused-attribution\\replay-1\\output\\porous-focused-116-frame116-merged-mhc-camera-rgb.f32",
+        "sha256": "593dc683c25362923879d29987b0c8ea4ee3573e98ec95d8cc91c4107011d184",
+        "bytes": 1354752
+      }
+    ]
+  },
+  {
+    "frame": 118,
+    "stage": "merged",
+    "file": "porous-focused-118-frame118-merged-native.png",
+    "rgb16_sha256": "833f0622e02468286e6d1c1187ae4bc6af1c7b75fe4ece60c2ee1d4618e65905",
+    "reference_output_xywh": [
+      472,
+      1352,
+      328,
+      328
+    ],
+    "padded_origin_xy": [
+      468,
+      1348
+    ],
+    "coordinates": "cropped reference output native grid",
+    "icc_sha256": "238ad2596316306a72025bb245cf3c8cd72f1090c8d95af2f38dc090e84ece5b",
+    "colour_management": "ICC preserved",
+    "artifacts": [
+      {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\star-focused-attribution\\replay-1\\output\\porous-focused-118-frame118-merged.tiff",
+        "sha256": "7a8bfc0c8a7ebc00e6a6ee898c65f8ce824c3e6c0f21b12a54d4b1c56171551e",
+        "bytes": 681008
+      },
+      {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\star-focused-attribution\\replay-1\\output\\porous-focused-118-frame118-merged-cfa.f32",
+        "sha256": "a3fd8ea2fbb09c453185a8153ae887b96db40bb0d6880ee99043bd524d5d5299",
+        "bytes": 451584
+      },
+      {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\star-focused-attribution\\replay-1\\output\\porous-focused-118-frame118-merged-mhc-camera-rgb.f32",
+        "sha256": "593dc683c25362923879d29987b0c8ea4ee3573e98ec95d8cc91c4107011d184",
+        "bytes": 1354752
+      }
+    ]
+  },
+  {
+    "frame": 120,
+    "stage": "merged",
+    "file": "porous-focused-120-frame120-merged-native.png",
+    "rgb16_sha256": "833f0622e02468286e6d1c1187ae4bc6af1c7b75fe4ece60c2ee1d4618e65905",
+    "reference_output_xywh": [
+      472,
+      1352,
+      328,
+      328
+    ],
+    "padded_origin_xy": [
+      468,
+      1348
+    ],
+    "coordinates": "cropped reference output native grid",
+    "icc_sha256": "238ad2596316306a72025bb245cf3c8cd72f1090c8d95af2f38dc090e84ece5b",
+    "colour_management": "ICC preserved",
+    "artifacts": [
+      {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\star-focused-attribution\\replay-1\\output\\porous-focused-120-frame120-merged.tiff",
+        "sha256": "7a8bfc0c8a7ebc00e6a6ee898c65f8ce824c3e6c0f21b12a54d4b1c56171551e",
+        "bytes": 681008
+      },
+      {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\star-focused-attribution\\replay-1\\output\\porous-focused-120-frame120-merged-cfa.f32",
+        "sha256": "a3fd8ea2fbb09c453185a8153ae887b96db40bb0d6880ee99043bd524d5d5299",
+        "bytes": 451584
+      },
+      {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\star-focused-attribution\\replay-1\\output\\porous-focused-120-frame120-merged-mhc-camera-rgb.f32",
+        "sha256": "593dc683c25362923879d29987b0c8ea4ee3573e98ec95d8cc91c4107011d184",
+        "bytes": 1354752
+      }
+    ]
+  }
+]

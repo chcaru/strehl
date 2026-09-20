@@ -1,0 +1,18 @@
+{
+  "different_rgb16_samples": 0,
+  "total_rgb16_samples": 90370560,
+  "expected_pixel_sha256": "c6a5d6a68bc67950ebfc351ef3130ccd1b84b9bf33a7934f2d40cb1822022df9",
+  "baseline_pixel_sha256": "c6a5d6a68bc67950ebfc351ef3130ccd1b84b9bf33a7934f2d40cb1822022df9",
+  "observed_pixel_sha256": "c6a5d6a68bc67950ebfc351ef3130ccd1b84b9bf33a7934f2d40cb1822022df9",
+  "baseline_file": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\star-full-context-placement\\baseline-1\\output\\replay.tiff",
+    "sha256": "5fc6c3ab8e2bcb64ee9d1383586f0c3763d6dbc709968a218bf36b9d654420ae",
+    "bytes": 180746192
+  },
+  "observed_file": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\star-focused-attribution\\replay-1\\output\\replay.tiff",
+    "sha256": "2689e59c7da17cf753bc8ac0dc92610d6e84ea8162dee0553a8942bee562ecaa",
+    "bytes": 180746192
+  },
+  "scope": "Entire current observer-on RGB16 versus retained observer-off canonical; TIFF metadata can differ."
+}

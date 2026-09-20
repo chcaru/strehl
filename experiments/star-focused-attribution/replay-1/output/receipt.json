@@ -1,0 +1,322 @@
+{
+  "configuration": {
+    "dir": "D:\\personal\\macro\\requests\\misc-diagnostic\\star-sand-cpl",
+    "frames": 259,
+    "map": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\star-baseline-1\\star.warpmap.txt",
+    "observe": true,
+    "out": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\star-focused-attribution\\replay-1\\output",
+    "regions": [
+      {
+        "frame": 116,
+        "height": 328,
+        "name": "porous-focused-116",
+        "width": 328,
+        "x": 472,
+        "y": 1352
+      },
+      {
+        "frame": 118,
+        "height": 328,
+        "name": "porous-focused-118",
+        "width": 328,
+        "x": 472,
+        "y": 1352
+      },
+      {
+        "frame": 120,
+        "height": 328,
+        "name": "porous-focused-120",
+        "width": 328,
+        "x": 472,
+        "y": 1352
+      }
+    ],
+    "tone": {
+      "black": 0.01566,
+      "contrast": 0.55,
+      "white": 0.51099
+    }
+  },
+  "crop_quad_xywh": [
+    77,
+    52,
+    3362,
+    2240
+  ],
+  "gathered_count": 3,
+  "levels": [
+    512.0,
+    15360.0
+  ],
+  "limits": "raw panels have no CA correction or geometric resampling; gathered and merged share the exact reference grid and production correction path; shared pinned tone differs slightly from prior automatic baseline; retain replay until independent pixel comparison",
+  "merged_count": 3,
+  "native_map_reference": 129,
+  "patches": [
+    {
+      "cfa_encoding": "row-major RGGB f32 little endian; black subtracted, first-frame WB and 1/(white-black), no upper clamp",
+      "coordinates": "active native sensor; mapped centre rounded to even origin, no warp or CA correction",
+      "frame": 116,
+      "height": 336,
+      "meaningful_interior_xywh": [
+        4,
+        4,
+        328,
+        328
+      ],
+      "name": "porous-focused-116",
+      "padded_origin_xy": [
+        610,
+        1448
+      ],
+      "reference_output_xywh": [
+        472,
+        1352,
+        328,
+        328
+      ],
+      "rgb_encoding": "row-major interleaved linear camera RGB f32; actual current demosaic_row before colour matrix/tone",
+      "stage": "raw",
+      "stem": "porous-focused-116-frame116-raw",
+      "trim": 4,
+      "width": 336
+    },
+    {
+      "cfa_encoding": "row-major RGGB f32 little endian; black subtracted, first-frame WB and 1/(white-black), no upper clamp",
+      "coordinates": "cropped reference output native grid",
+      "frame": 116,
+      "height": 336,
+      "meaningful_interior_xywh": [
+        4,
+        4,
+        328,
+        328
+      ],
+      "name": "porous-focused-116",
+      "padded_origin_xy": [
+        468,
+        1348
+      ],
+      "reference_output_xywh": [
+        472,
+        1352,
+        328,
+        328
+      ],
+      "rgb_encoding": "row-major interleaved linear camera RGB f32; actual current demosaic_row before colour matrix/tone",
+      "stage": "gathered",
+      "stem": "porous-focused-116-frame116-gathered",
+      "trim": 4,
+      "width": 336
+    },
+    {
+      "cfa_encoding": "row-major RGGB f32 little endian; black subtracted, first-frame WB and 1/(white-black), no upper clamp",
+      "coordinates": "active native sensor; mapped centre rounded to even origin, no warp or CA correction",
+      "frame": 118,
+      "height": 336,
+      "meaningful_interior_xywh": [
+        4,
+        4,
+        328,
+        328
+      ],
+      "name": "porous-focused-118",
+      "padded_origin_xy": [
+        612,
+        1450
+      ],
+      "reference_output_xywh": [
+        472,
+        1352,
+        328,
+        328
+      ],
+      "rgb_encoding": "row-major interleaved linear camera RGB f32; actual current demosaic_row before colour matrix/tone",
+      "stage": "raw",
+      "stem": "porous-focused-118-frame118-raw",
+      "trim": 4,
+      "width": 336
+    },
+    {
+      "cfa_encoding": "row-major RGGB f32 little endian; black subtracted, first-frame WB and 1/(white-black), no upper clamp",
+      "coordinates": "cropped reference output native grid",
+      "frame": 118,
+      "height": 336,
+      "meaningful_interior_xywh": [
+        4,
+        4,
+        328,
+        328
+      ],
+      "name": "porous-focused-118",
+      "padded_origin_xy": [
+        468,
+        1348
+      ],
+      "reference_output_xywh": [
+        472,
+        1352,
+        328,
+        328
+      ],
+      "rgb_encoding": "row-major interleaved linear camera RGB f32; actual current demosaic_row before colour matrix/tone",
+      "stage": "gathered",
+      "stem": "porous-focused-118-frame118-gathered",
+      "trim": 4,
+      "width": 336
+    },
+    {
+      "cfa_encoding": "row-major RGGB f32 little endian; black subtracted, first-frame WB and 1/(white-black), no upper clamp",
+      "coordinates": "active native sensor; mapped centre rounded to even origin, no warp or CA correction",
+      "frame": 120,
+      "height": 336,
+      "meaningful_interior_xywh": [
+        4,
+        4,
+        328,
+        328
+      ],
+      "name": "porous-focused-120",
+      "padded_origin_xy": [
+        614,
+        1450
+      ],
+      "reference_output_xywh": [
+        472,
+        1352,
+        328,
+        328
+      ],
+      "rgb_encoding": "row-major interleaved linear camera RGB f32; actual current demosaic_row before colour matrix/tone",
+      "stage": "raw",
+      "stem": "porous-focused-120-frame120-raw",
+      "trim": 4,
+      "width": 336
+    },
+    {
+      "cfa_encoding": "row-major RGGB f32 little endian; black subtracted, first-frame WB and 1/(white-black), no upper clamp",
+      "coordinates": "cropped reference output native grid",
+      "frame": 120,
+      "height": 336,
+      "meaningful_interior_xywh": [
+        4,
+        4,
+        328,
+        328
+      ],
+      "name": "porous-focused-120",
+      "padded_origin_xy": [
+        468,
+        1348
+      ],
+      "reference_output_xywh": [
+        472,
+        1352,
+        328,
+        328
+      ],
+      "rgb_encoding": "row-major interleaved linear camera RGB f32; actual current demosaic_row before colour matrix/tone",
+      "stage": "gathered",
+      "stem": "porous-focused-120-frame120-gathered",
+      "trim": 4,
+      "width": 336
+    },
+    {
+      "cfa_encoding": "row-major RGGB f32 little endian; black subtracted, first-frame WB and 1/(white-black), no upper clamp",
+      "coordinates": "cropped reference output native grid",
+      "frame": 116,
+      "height": 336,
+      "meaningful_interior_xywh": [
+        4,
+        4,
+        328,
+        328
+      ],
+      "name": "porous-focused-116",
+      "padded_origin_xy": [
+        468,
+        1348
+      ],
+      "reference_output_xywh": [
+        472,
+        1352,
+        328,
+        328
+      ],
+      "rgb_encoding": "row-major interleaved linear camera RGB f32; actual current demosaic_row before colour matrix/tone",
+      "stage": "merged",
+      "stem": "porous-focused-116-frame116-merged",
+      "trim": 4,
+      "width": 336
+    },
+    {
+      "cfa_encoding": "row-major RGGB f32 little endian; black subtracted, first-frame WB and 1/(white-black), no upper clamp",
+      "coordinates": "cropped reference output native grid",
+      "frame": 118,
+      "height": 336,
+      "meaningful_interior_xywh": [
+        4,
+        4,
+        328,
+        328
+      ],
+      "name": "porous-focused-118",
+      "padded_origin_xy": [
+        468,
+        1348
+      ],
+      "reference_output_xywh": [
+        472,
+        1352,
+        328,
+        328
+      ],
+      "rgb_encoding": "row-major interleaved linear camera RGB f32; actual current demosaic_row before colour matrix/tone",
+      "stage": "merged",
+      "stem": "porous-focused-118-frame118-merged",
+      "trim": 4,
+      "width": 336
+    },
+    {
+      "cfa_encoding": "row-major RGGB f32 little endian; black subtracted, first-frame WB and 1/(white-black), no upper clamp",
+      "coordinates": "cropped reference output native grid",
+      "frame": 120,
+      "height": 336,
+      "meaningful_interior_xywh": [
+        4,
+        4,
+        328,
+        328
+      ],
+      "name": "porous-focused-120",
+      "padded_origin_xy": [
+        468,
+        1348
+      ],
+      "reference_output_xywh": [
+        472,
+        1352,
+        328,
+        328
+      ],
+      "rgb_encoding": "row-major interleaved linear camera RGB f32; actual current demosaic_row before colour matrix/tone",
+      "stage": "merged",
+      "stem": "porous-focused-120-frame120-merged",
+      "trim": 4,
+      "width": 336
+    }
+  ],
+  "raw_count": 3,
+  "replay_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\star-focused-attribution\\replay-1\\output\\replay.tiff",
+  "source_frame_count": 259,
+  "status": "MATCHED_SOURCE_CAPTURED",
+  "tone_bits": [
+    1015040358,
+    1057148990,
+    1057803469
+  ],
+  "wb_bits": [
+    1070374912,
+    1065353216,
+    1076715520
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "status": "FOCUSED_SOURCE_ATTRIBUTION_READY",
+  "selected_frames": [
+    116,
+    118,
+    120
+  ],
+  "source_frame_count": 259,
+  "observer_pixel_identical": true,
+  "original_metadata_unchanged": true,
+  "selected_original_content_unchanged": true,
+  "full_image": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\star-focused-attribution\\replay-1\\output\\replay.tiff",
+    "sha256": "2689e59c7da17cf753bc8ac0dc92610d6e84ea8162dee0553a8942bee562ecaa",
+    "bytes": 180746192
+  },
+  "receipt": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\star-focused-attribution\\replay-1\\output\\receipt.json",
+    "sha256": "a14980cc638cf3c0b72dafa4bcf84b25a524fa04ef2e5e85b60213bbac99f682",
+    "bytes": 8845
+  },
+  "photographically_reviewed": false
+}

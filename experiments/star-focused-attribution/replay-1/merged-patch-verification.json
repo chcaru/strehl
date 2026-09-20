@@ -1,0 +1,23 @@
+{
+  "checks": [
+    {
+      "frame": 116,
+      "different_rgb16_samples": 0,
+      "independently_trimmed_inner_differences": 0,
+      "wrong_x_plus_two_different_samples": 322565
+    },
+    {
+      "frame": 118,
+      "different_rgb16_samples": 0,
+      "independently_trimmed_inner_differences": 0,
+      "wrong_x_plus_two_different_samples": 322565
+    },
+    {
+      "frame": 120,
+      "different_rgb16_samples": 0,
+      "independently_trimmed_inner_differences": 0,
+      "wrong_x_plus_two_different_samples": 322565
+    }
+  ],
+  "scope": "Same merged field repeated3times; exact full-image lookup, alternate trim and wrong-location placebo."
+}
