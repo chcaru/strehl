@@ -1,0 +1,381 @@
+{
+  "references": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\config.json",
+      "sha256": "03d677617f4307516877cd34c5b2e155a3d3976b5ba135501e768e40fa98375f",
+      "bytes": 844
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\output\\receipt.json",
+      "sha256": "8489d681d94d6aa56bca54b8cfacc3cb302c964109cb9fe97d939cc4ec05cd26",
+      "bytes": 52963
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-on-2\\witness\\receipt.json",
+      "sha256": "45dee5d6ca1498337dbc88eef009406e964733b673f78c509791b9c17e5047ac",
+      "bytes": 41079
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-baseline-1\\vitamin-c.warpmap.txt",
+      "sha256": "84275850a032dc8beb88945b00514a58ebca433e267c8e10342ac55986cf830f",
+      "bytes": 9906
+    }
+  ],
+  "inputs": [
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00094.ARW",
+      "bytes": 38887424,
+      "mtime_ns": 1789454932730000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00095.ARW",
+      "bytes": 38920192,
+      "mtime_ns": 1789454934190000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00096.ARW",
+      "bytes": 38944768,
+      "mtime_ns": 1789454935640000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00097.ARW",
+      "bytes": 38977536,
+      "mtime_ns": 1789454937130000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00098.ARW",
+      "bytes": 39006208,
+      "mtime_ns": 1789454938580000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00099.ARW",
+      "bytes": 39047168,
+      "mtime_ns": 1789454940060000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00100.ARW",
+      "bytes": 39084032,
+      "mtime_ns": 1789454941520000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00101.ARW",
+      "bytes": 39133184,
+      "mtime_ns": 1789454942980000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00102.ARW",
+      "bytes": 39170048,
+      "mtime_ns": 1789454944460000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00103.ARW",
+      "bytes": 39227392,
+      "mtime_ns": 1789454945920000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00104.ARW",
+      "bytes": 39284736,
+      "mtime_ns": 1789454947410000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00105.ARW",
+      "bytes": 39342080,
+      "mtime_ns": 1789454948880000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00106.ARW",
+      "bytes": 39411712,
+      "mtime_ns": 1789454950350000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00107.ARW",
+      "bytes": 39489536,
+      "mtime_ns": 1789454951800000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00108.ARW",
+      "bytes": 39571456,
+      "mtime_ns": 1789454953260000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00109.ARW",
+      "bytes": 39657472,
+      "mtime_ns": 1789454954740000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00110.ARW",
+      "bytes": 39763968,
+      "mtime_ns": 1789454956200000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00111.ARW",
+      "bytes": 39874560,
+      "mtime_ns": 1789454957680000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00112.ARW",
+      "bytes": 39993344,
+      "mtime_ns": 1789454959140000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00113.ARW",
+      "bytes": 40112128,
+      "mtime_ns": 1789454960600000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00114.ARW",
+      "bytes": 40243200,
+      "mtime_ns": 1789454962080000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00115.ARW",
+      "bytes": 40370176,
+      "mtime_ns": 1789454963530000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00116.ARW",
+      "bytes": 40480768,
+      "mtime_ns": 1789454965010000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00117.ARW",
+      "bytes": 40599552,
+      "mtime_ns": 1789454966490000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00118.ARW",
+      "bytes": 40706048,
+      "mtime_ns": 1789454967940000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00119.ARW",
+      "bytes": 40792064,
+      "mtime_ns": 1789454969420000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00120.ARW",
+      "bytes": 40865792,
+      "mtime_ns": 1789454970890000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00121.ARW",
+      "bytes": 40923136,
+      "mtime_ns": 1789454972370000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00122.ARW",
+      "bytes": 40968192,
+      "mtime_ns": 1789454973840000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00123.ARW",
+      "bytes": 41009152,
+      "mtime_ns": 1789454975320000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00124.ARW",
+      "bytes": 41037824,
+      "mtime_ns": 1789454976780000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00125.ARW",
+      "bytes": 41050112,
+      "mtime_ns": 1789454978240000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00126.ARW",
+      "bytes": 41062400,
+      "mtime_ns": 1789454979720000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00127.ARW",
+      "bytes": 41074688,
+      "mtime_ns": 1789454981180000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00128.ARW",
+      "bytes": 41070592,
+      "mtime_ns": 1789454982660000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00129.ARW",
+      "bytes": 41074688,
+      "mtime_ns": 1789454984120000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00130.ARW",
+      "bytes": 41062400,
+      "mtime_ns": 1789454985600000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00131.ARW",
+      "bytes": 41037824,
+      "mtime_ns": 1789454987060000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00132.ARW",
+      "bytes": 41017344,
+      "mtime_ns": 1789454988520000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00133.ARW",
+      "bytes": 41009152,
+      "mtime_ns": 1789454989990000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00134.ARW",
+      "bytes": 40972288,
+      "mtime_ns": 1789454991460000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00135.ARW",
+      "bytes": 40931328,
+      "mtime_ns": 1789454992940000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00136.ARW",
+      "bytes": 40886272,
+      "mtime_ns": 1789454994390000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00137.ARW",
+      "bytes": 40824832,
+      "mtime_ns": 1789454995860000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00138.ARW",
+      "bytes": 40775680,
+      "mtime_ns": 1789454997340000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00139.ARW",
+      "bytes": 40697856,
+      "mtime_ns": 1789454998800000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00140.ARW",
+      "bytes": 40615936,
+      "mtime_ns": 1789455000280000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00141.ARW",
+      "bytes": 40534016,
+      "mtime_ns": 1789455001740000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00142.ARW",
+      "bytes": 40443904,
+      "mtime_ns": 1789455003200000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00143.ARW",
+      "bytes": 40337408,
+      "mtime_ns": 1789455004680000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00144.ARW",
+      "bytes": 40230912,
+      "mtime_ns": 1789455006140000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00145.ARW",
+      "bytes": 40124416,
+      "mtime_ns": 1789455007630000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00146.ARW",
+      "bytes": 40013824,
+      "mtime_ns": 1789455009080000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00147.ARW",
+      "bytes": 39919616,
+      "mtime_ns": 1789455010560000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00148.ARW",
+      "bytes": 39833600,
+      "mtime_ns": 1789455012010000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00149.ARW",
+      "bytes": 39751680,
+      "mtime_ns": 1789455013480000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00150.ARW",
+      "bytes": 39677952,
+      "mtime_ns": 1789455014950000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00151.ARW",
+      "bytes": 39608320,
+      "mtime_ns": 1789455016400000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00152.ARW",
+      "bytes": 39555072,
+      "mtime_ns": 1789455017870000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00153.ARW",
+      "bytes": 39489536,
+      "mtime_ns": 1789455019340000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00154.ARW",
+      "bytes": 39436288,
+      "mtime_ns": 1789455020810000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00155.ARW",
+      "bytes": 39395328,
+      "mtime_ns": 1789455022280000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00156.ARW",
+      "bytes": 39354368,
+      "mtime_ns": 1789455023730000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00157.ARW",
+      "bytes": 39313408,
+      "mtime_ns": 1789455025190000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00158.ARW",
+      "bytes": 39276544,
+      "mtime_ns": 1789455026670000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00159.ARW",
+      "bytes": 39243776,
+      "mtime_ns": 1789455028140000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00160.ARW",
+      "bytes": 39211008,
+      "mtime_ns": 1789455029610000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00161.ARW",
+      "bytes": 39182336,
+      "mtime_ns": 1789455031090000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00162.ARW",
+      "bytes": 39161856,
+      "mtime_ns": 1789455032560000000
+    },
+    {
+      "path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00163.ARW",
+      "bytes": 39133184,
+      "mtime_ns": 1789455034020000000
+    }
+  ],
+  "controls": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\through-focus-events\\controls-1\\completion.json",
+    "sha256": "c3fd686937d3feb48621a71d8b0eae02ae026ae733fda6f44486f0a0cf2d1ea9",
+    "bytes": 563
+  }
+}

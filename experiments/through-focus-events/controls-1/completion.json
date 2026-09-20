@@ -1,0 +1,14 @@
+{
+  "passed": true,
+  "executable": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\through-focus-events\\build-1\\cli-tests.exe",
+    "sha256": "661dcc9c5f7eee23fb8fa0844a9ed1b9954f1fd4bff858ba597b85b52152c26c",
+    "bytes": 28488704
+  },
+  "sources_unchanged": true,
+  "process": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\through-focus-events\\controls-1\\process.json",
+    "sha256": "61756832004faa450da7ca49cdf0c89e46de15a5f59a052b1302dffb2b53b101",
+    "bytes": 2655
+  }
+}

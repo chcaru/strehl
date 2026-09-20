@@ -1,0 +1,356 @@
+
+running 1 test
+test merge_cmd::through_focus_events::vitamin_c_complete_source_traces ...   GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+through-focus events source 0/69: 1.39s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+through-focus events source 1/69: 0.71s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+through-focus events source 2/69: 0.68s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+through-focus events source 3/69: 0.69s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+through-focus events source 4/69: 0.69s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+through-focus events source 5/69: 0.70s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+through-focus events source 6/69: 0.71s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+through-focus events source 7/69: 0.69s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+through-focus events source 8/69: 0.69s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+through-focus events source 9/69: 0.68s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+through-focus events source 10/69: 0.69s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+through-focus events source 11/69: 0.71s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+through-focus events source 12/69: 0.73s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+through-focus events source 13/69: 0.68s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+through-focus events source 14/69: 0.68s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+through-focus events source 15/69: 0.70s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+through-focus events source 16/69: 0.71s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+through-focus events source 17/69: 0.69s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+through-focus events source 18/69: 0.69s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+through-focus events source 19/69: 0.70s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+through-focus events source 20/69: 0.70s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+through-focus events source 21/69: 0.69s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+through-focus events source 22/69: 0.68s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+through-focus events source 23/69: 0.70s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+through-focus events source 24/69: 0.70s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+through-focus events source 25/69: 0.79s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+through-focus events source 26/69: 0.70s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+through-focus events source 27/69: 0.70s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+through-focus events source 28/69: 0.77s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+through-focus events source 29/69: 0.69s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+through-focus events source 30/69: 0.72s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+through-focus events source 31/69: 0.69s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+through-focus events source 32/69: 0.70s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+through-focus events source 33/69: 0.77s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+through-focus events source 34/69: 0.71s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+through-focus events source 35/69: 0.69s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+through-focus events source 36/69: 0.72s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+through-focus events source 37/69: 0.70s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+through-focus events source 38/69: 0.69s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+through-focus events source 39/69: 0.68s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+through-focus events source 40/69: 0.69s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+through-focus events source 41/69: 0.70s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+through-focus events source 42/69: 0.69s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+through-focus events source 43/69: 0.71s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+through-focus events source 44/69: 0.70s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+through-focus events source 45/69: 0.69s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+through-focus events source 46/69: 0.71s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+through-focus events source 47/69: 0.69s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+through-focus events source 48/69: 0.70s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+through-focus events source 49/69: 0.69s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+through-focus events source 50/69: 0.70s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+through-focus events source 51/69: 0.70s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+through-focus events source 52/69: 0.71s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+through-focus events source 53/69: 0.71s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+through-focus events source 54/69: 0.70s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+through-focus events source 55/69: 0.70s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+through-focus events source 56/69: 0.70s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+through-focus events source 57/69: 0.70s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+through-focus events source 58/69: 0.72s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+through-focus events source 59/69: 0.68s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+through-focus events source 60/69: 0.70s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+through-focus events source 61/69: 0.70s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+through-focus events source 62/69: 0.71s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+through-focus events source 63/69: 0.68s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+through-focus events source 64/69: 0.69s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+through-focus events source 65/69: 0.69s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+through-focus events source 66/69: 0.69s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+through-focus events source 67/69: 0.69s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+through-focus events source 68/69: 0.70s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+through-focus events source 69/69: 0.77s
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 228 filtered out; finished in 57.14s
+

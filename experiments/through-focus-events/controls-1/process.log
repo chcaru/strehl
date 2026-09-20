@@ -1,0 +1,7 @@
+
+running 1 test
+test merge_cmd::through_focus_events::independent_controls::independent_through_focus_summary_controls ... THROUGH_FOCUS_SUMMARY {"asymmetric_direct_index_means":true,"global_parity_swap_exact":true,"ignored_outside_sentinel":true,"invalid_values_refused":true,"one_quad_shift_live":true,"scope":"arithmetic only; no optical or image-quality evidence","signed_values":true,"source_unchanged":true}
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 228 filtered out; finished in 0.00s
+
