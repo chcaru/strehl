@@ -1,0 +1,46 @@
+
+running 1 test
+test merge_cmd::parallel_cfa_wavelet::full_stack::vitamin_c_observational_pair ...   GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+parallel wavelet source 35/69, 18.7s
+parallel wavelet sources complete; finishing baseline, 18.7s
+parallel wavelet baseline written; reconstructing candidate, 19.3s
+parallel wavelet candidate reconstructed; writing, 20.3s
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 220 filtered out; finished in 20.87s
+

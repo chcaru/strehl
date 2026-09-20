@@ -1,0 +1,35 @@
+{
+  "observational_full_feasible": true,
+  "measured_cost": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\parallel-cfa-wavelet\\cost-1\\output\\cost.json",
+    "bytes": 16889,
+    "sha256": "e923cb53dbdf5b88362d8d8680677dad2c31c266e21235765eb8ca9c69b74631"
+  },
+  "process": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\parallel-cfa-wavelet\\cost-1\\process.json",
+    "bytes": 2732,
+    "sha256": "5b0468441785efe523e62c9532ad6a1802d3e0ee90b985cf0eadbadea437c77a"
+  },
+  "prior_plan": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\parallel-cfa-wavelet\\charter.md",
+    "bytes": 5703,
+    "sha256": "58b4e8b0a61500f8596800e9059a22fb67d9d4304506915b2b217b5c5757ae17"
+  },
+  "helper": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\parallel-cfa-wavelet\\cost-decision.py",
+    "bytes": 2395,
+    "sha256": "c63f0c843dfa7321d17a2e542ec202a96350f705eb8ba48d0ecc69111515cbc1"
+  },
+  "source_phase_seconds": 18.340805200000002,
+  "finish_seconds": 2.1419226,
+  "cost_peak_job_bytes": 7171502080,
+  "estimated_full_wall_seconds": 1405.9982866000003,
+  "maximum_estimate_seconds": 1500,
+  "maximum_cost_peak_bytes": 12884901888,
+  "full_wall_cap_seconds": 1800,
+  "full_cpu_cap_seconds": 3600,
+  "full_committed_cap_bytes": 17179869184,
+  "generated_quality_admission": false,
+  "photographic_promotion": false,
+  "scope": "One measured source and a prior feasibility extrapolation; not a speed benchmark."
+}

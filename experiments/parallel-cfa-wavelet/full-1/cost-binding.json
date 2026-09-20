@@ -1,0 +1,17 @@
+{
+  "decision": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\parallel-cfa-wavelet\\cost-1\\root-cost-decision.json",
+    "sha256": "a3c34c6513b2773f4089f7ffeb1ee23d9ae9993f005a69912f359d7d508d4b7a",
+    "bytes": 1573
+  },
+  "measured": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\parallel-cfa-wavelet\\cost-1\\output\\cost.json",
+    "sha256": "e923cb53dbdf5b88362d8d8680677dad2c31c266e21235765eb8ca9c69b74631",
+    "bytes": 16889
+  },
+  "process": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\parallel-cfa-wavelet\\cost-1\\process.json",
+    "sha256": "5b0468441785efe523e62c9532ad6a1802d3e0ee90b985cf0eadbadea437c77a",
+    "bytes": 2732
+  }
+}

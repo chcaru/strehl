@@ -1,0 +1,34 @@
+{
+  "command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\parallel-cfa-wavelet\\build-1\\cli-tests.exe",
+    "merge_cmd::parallel_cfa_wavelet::full_stack::vitamin_c_observational_pair",
+    "--exact",
+    "--ignored",
+    "--nocapture",
+    "--test-threads=1"
+  ],
+  "environment": {
+    "RAYON_NUM_THREADS": "8",
+    "STREHL_PYRAMID_WORKERS": "8",
+    "STREHL_ALIGN": "1",
+    "STREHL_FULLRES_GATHER": "1",
+    "STREHL_DIRECT_PLANES": "rounded",
+    "STREHL_PROBE_GATHER": "green",
+    "STREHL_WARP_WRITEBACK": "parallel",
+    "STREHL_GPU_GATHER": "on",
+    "STREHL_GPU_GATHER_LOG": "off",
+    "STREHL_GPU_SCHEDULE": "device",
+    "STREHL_DEFECT": "off",
+    "STREHL_FINE_SUPPORT": "off",
+    "STREHL_BOUNDARY_CFA_WAVELET_OUT": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\parallel-cfa-wavelet\\full-1\\output",
+    "STREHL_WARPMAP": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-baseline-1\\vitamin-c.warpmap.txt",
+    "STREHL_PARALLEL_CFA_FULL_CONFIG": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\parallel-cfa-wavelet\\full-1\\config.json",
+    "STREHL_PARALLEL_CFA_PHASE": "full"
+  },
+  "removed_environment": [],
+  "runner": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\full-context-placement\\run.py",
+    "sha256": "17451d237bf256004ca8853ef4c2a9e1c582012d43ad33fd687606e68a5fb76f",
+    "bytes": 7707
+  }
+}

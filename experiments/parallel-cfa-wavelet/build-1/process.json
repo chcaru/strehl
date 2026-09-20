@@ -1,0 +1,101 @@
+{
+  "command": [
+    "cargo",
+    "test",
+    "-p",
+    "strehl-cli",
+    "--bin",
+    "strehl",
+    "--no-run",
+    "--release",
+    "--features",
+    "native-pyramid-profile,native-gpu-gather,native-direct-planes,native-correction-variance",
+    "--jobs",
+    "2",
+    "--target-dir",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\target\\native-pyramid-profile",
+    "--message-format=json-render-diagnostics",
+    "--locked",
+    "--offline"
+  ],
+  "exit_code": 0,
+  "error": null,
+  "cleanup_errors": [],
+  "wall_seconds": 136.32800000000134,
+  "log_bytes": 279065,
+  "job_accounting": {
+    "total_user_100ns": 2030156250,
+    "total_kernel_100ns": 34218750,
+    "total_cpu_100ns": 2064375000,
+    "total_page_fault_count": 1885163,
+    "total_processes": 21,
+    "active_processes": 0,
+    "total_terminated_processes": 0
+  },
+  "job_memory": {
+    "peak_process_memory_used_bytes": 1944768512,
+    "peak_job_memory_used_bytes": 2003767296
+  },
+  "terminal_job_accounting": true,
+  "configured_job_limits": {
+    "flags": 8704,
+    "committed_bytes": 17179869184
+  },
+  "direct_exit_observed": true,
+  "pipe_eof_observed": true,
+  "post_exit_drain": {
+    "initial_accounting": {
+      "total_user_100ns": 2030156250,
+      "total_kernel_100ns": 34218750,
+      "total_cpu_100ns": 2064375000,
+      "total_page_fault_count": 1885163,
+      "total_processes": 21,
+      "active_processes": 0,
+      "total_terminated_processes": 0
+    },
+    "last_accounting": {
+      "total_user_100ns": 2030156250,
+      "total_kernel_100ns": 34218750,
+      "total_cpu_100ns": 2064375000,
+      "total_page_fault_count": 1885163,
+      "total_processes": 21,
+      "active_processes": 0,
+      "total_terminated_processes": 0
+    },
+    "observations": [
+      {
+        "wall_seconds": 136.32800000000134,
+        "accounting": {
+          "total_user_100ns": 2030156250,
+          "total_kernel_100ns": 34218750,
+          "total_cpu_100ns": 2064375000,
+          "total_page_fault_count": 1885163,
+          "total_processes": 21,
+          "active_processes": 0,
+          "total_terminated_processes": 0
+        }
+      }
+    ],
+    "observation_count": 1,
+    "completed": true,
+    "started_wall_seconds": 136.32800000000134,
+    "ended_wall_seconds": 136.32800000000134
+  },
+  "termination": {
+    "attempted": false,
+    "before_accounting": null,
+    "succeeded": false
+  },
+  "limits": {
+    "wall_seconds": 600,
+    "cpu_seconds": 3600,
+    "log_bytes": 16777216,
+    "committed_bytes": 17179869184
+  },
+  "scope": "owned job tree; committed memory, observed user+kernel CPU; not RSS or a timing benchmark",
+  "log": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\parallel-cfa-wavelet\\build-1\\process.log",
+    "sha256": "212ece3c668f0d7f8fa7d5b890a306e2ba23dc4c1059cb2eafe050802da7ec3c",
+    "bytes": 279065
+  }
+}

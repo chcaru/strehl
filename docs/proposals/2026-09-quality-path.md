@@ -309,3 +309,16 @@ the distinction between increased error and erasure, and between successful
 test execution and quality admission. See shared-source-field/results.md and
 its independent review. No penalty sweep or complete render of this rule is
 authorized by its result.
+
+The separately scoped parallel complete-CFA wavelet repair is also now
+photographically closed. Exact transform controls and a scaled accumulator
+remove the execution blockers without changing the old quality decisions.
+The complete70-source vitamin-C pair finishes in1253.844s with exact baseline
+pixels, but independent full/native review finds broader coloured highlight
+smears and worse dark-core contamination. No compensating real-detail gain
+earns promotion. Both complete images and masters were shown to the owner.
+See parallel-cfa-wavelet/results.md and photographic-review.md. Preserve the
+reusable numerical work; do not spend another render or optimization campaign
+on this fixed image operator. The next intervention must address source
+evidence and the observed through-focus relationship, not merely substitute
+another transform or larger spatial prior.

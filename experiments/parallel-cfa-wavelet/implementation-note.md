@@ -1,0 +1,13 @@
+# Fixed execution revision
+
+Author implementation only; no builds, tests, original reads or photographic judgments were performed by this author. The parent owns execution and resource admission; separate agents own the full adapter and independent controls. The old boundary files remain unchanged.
+
+`transform.rs` retains the commissioned taps, indexing, axis order, packing, reflection and recursion. Horizontal stages partition destination rows. Vertical analysis partitions paired low/high destination rows; vertical synthesis partitions ordinary destination rows. Each output retains the original ordered scalar tap expressions. Parallel tasks share only immutable input/taps and write disjoint outputs. Source frames, four CFA planes, probe members and transform stages remain sequential. No additional image-sized workspace is created for parallel execution.
+
+`implementation.rs` includes the frozen boundary probe source verbatim. Original source perturbations, all sixteen seed-indexed draws, actual GPU gather/CA, mean fallback, energy/noise support, exponent and hull are unchanged. Generated restrictions remain in place. The old boundary quality tests are included unchanged as `boundary_controls`; independent numerical controls live under `independent_controls`, and independently adapted full-domain/CA/developer controls under `independent_full_controls`.
+
+The only fusion change is `scaled_add(weight, values4, scale, denominator, numerators4)`. Every coefficient has one running maximum shared by all four CFA numerators. When a larger weight arrives, existing numerators and denominator are multiplied by old-scale/new-weight; the new contribution uses weight/current-scale. Zero weights skip this update. Final positive-weight normalization still divides numerator by denominator; zero-weight coefficients still use the original unweighted mean. Finite inputs and post-update accumulators are checked explicitly.
+
+This preserves the mathematical relative weights while changing f32 association. It does not promise arbitrary cancellation accuracy or identical old candidate bits. The independent f64 oracle and old/new image comparisons determine the permitted numerical error. The added state is one padded f32 field, 64 MiB at 4096². The full adapter passes that field as the final `fold_coefficients` argument; its baseline and source ordering are unchanged.
+
+No performance or image-quality improvement is claimed before execution. The previous absolute weak-red and error-benefit failures remain disclosed, and the full photograph remains a separately labelled observation behind the parent's unchanged resource gate.

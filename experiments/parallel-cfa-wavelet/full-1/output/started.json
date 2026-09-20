@@ -1,0 +1,122 @@
+{
+  "admission": "observation only; prior generated quality rejection retained",
+  "baseline_level_sizes": [
+    [
+      3460,
+      2306
+    ],
+    [
+      1730,
+      1153
+    ],
+    [
+      865,
+      577
+    ],
+    [
+      433,
+      289
+    ],
+    [
+      217,
+      145
+    ],
+    [
+      109,
+      73
+    ],
+    [
+      55,
+      37
+    ],
+    [
+      28,
+      19
+    ]
+  ],
+  "ca_profile": "a7c2-fe100gm-2xtc-x4cpl",
+  "candidate_extent": [
+    4096,
+    4096
+  ],
+  "candidate_levels": 12,
+  "candidate_terminal": [
+    1,
+    1
+  ],
+  "config_sha256": "0f9e4220e2ba4fae446c2b855afd1b3d01d527b5d6aa1d515cf0033645baf72c",
+  "cost_source_index": 35,
+  "diagnostics": false,
+  "effective_crop": [
+    28,
+    19,
+    3460,
+    2306
+  ],
+  "execution_threads": 8,
+  "generated_quality_admitted": false,
+  "map_sha256": "84275850a032dc8beb88945b00514a58ebca433e267c8e10342ac55986cf830f",
+  "matrix": [
+    [
+      0.7459999918937683,
+      -0.23649999499320984,
+      -0.058800000697374344
+    ],
+    [
+      -0.5687000155448914,
+      1.3442000150680542,
+      0.24740000069141388
+    ],
+    [
+      -0.06239999830722809,
+      0.11559999734163284,
+      0.6583999991416931
+    ]
+  ],
+  "merge_config": "MergeConfig { bands: 7, gate: 2.0, exponent: 2.0, sharpen_per_octave: 1.4, select: SoftPower, admission: HardFloor, base: Mean, mean_coarse: 0, hull: InputRange, hull_lambda: 2.0, hull_low_only: false, fallback: Mean, fallback_k: 3, fallback_power: 4.0, hull_from_level: 1, significance_scale: 0.0 }",
+  "mode": "observational-parallel-cfa-wavelet",
+  "native_dimensions": [
+    6920,
+    4612
+  ],
+  "operator_workers": 1,
+  "original_crop": [
+    28,
+    19,
+    3460,
+    2306
+  ],
+  "padding_left_top": [
+    318,
+    895
+  ],
+  "phase": "full",
+  "plan": {
+    "canonical_chunks": 4,
+    "per_chunk": 18,
+    "planning_bytes": 1392085228
+  },
+  "probe_pairs": 8,
+  "schema": 1,
+  "source_active": [
+    0,
+    0,
+    7032,
+    4688
+  ],
+  "source_buffer_height": 5120,
+  "source_count": 70,
+  "source_dir": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl",
+  "source_stride": 7168,
+  "tone_bits": [
+    1035546143,
+    1063920542,
+    1057803469
+  ],
+  "variance": "eight independent original-source pairs through actual rounded GPU MHC/Catmull/CA gather",
+  "wb_bits": [
+    1070374912,
+    1065353216,
+    1076715520
+  ]
+}

@@ -1,0 +1,563 @@
+{
+  "schema": 1,
+  "helper": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\parallel-cfa-wavelet\\photo-compare.py",
+    "bytes": 9362,
+    "sha256": "290c2e4bf494a34d79a77ab7cecd15545bc7af72d6f7d916daf835535584a6ca"
+  },
+  "full_output_helper": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\full-output-views.py",
+    "bytes": 1503,
+    "sha256": "8b51a9eacfa5aeae00e51501882d73dd6496c24cc05898494d5c22902078d955"
+  },
+  "completion": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\parallel-cfa-wavelet\\full-1\\completion.json",
+    "bytes": 1368,
+    "sha256": "77d8222408aca7a57b6aed4fcba9b65cd3bc56a001c5c6cd37ede4e0675543cd"
+  },
+  "config": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\parallel-cfa-wavelet\\full-1\\config.json",
+    "bytes": 841,
+    "sha256": "0f9e4220e2ba4fae446c2b855afd1b3d01d527b5d6aa1d515cf0033645baf72c"
+  },
+  "merge_receipt": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\parallel-cfa-wavelet\\full-1\\output\\receipt.json",
+    "bytes": 172441,
+    "sha256": "6a31739c39fb290b4bc65ded4fb290131f2c4b3b125b1d7ebab9940dc629c8d1"
+  },
+  "inputs": {
+    "baseline": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\parallel-cfa-wavelet\\full-1\\output\\baseline.tiff",
+      "bytes": 191495352,
+      "sha256": "b7617f42537487fbecf9d88e47bf99b571ee7f6faeae2ccd9b34ba619995decb"
+    },
+    "candidate": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\parallel-cfa-wavelet\\full-1\\output\\candidate.tiff",
+      "bytes": 191495352,
+      "sha256": "0b3e50438b3215513234713862716a4bd4c50cc6a4ca6c9428f2b17a5edab9d6"
+    },
+    "helicon-b": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\helicon-current\\vitamin-c-b-2\\whole-stack.tiff",
+      "bytes": 197827122,
+      "sha256": "f08335d17083789fa2bd60ee17ecbaba921bbc7aa20c9fdfdfa0cf0e1ca1d2d8"
+    }
+  },
+  "frozen_regions": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-review-1\\regions.json",
+    "bytes": 1068,
+    "sha256": "ff55ed297385ff8fef5d2badce07729537e2e867701d96d328be1eaf7bcb0f4f"
+  },
+  "helicon_registration": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\helicon-current\\photo-comparison-1\\coordinate-receipt.json",
+    "bytes": 30865,
+    "sha256": "9323b01478a6b70905dca18aa6802cd55f31d270a66fa1015b198308d77deaab"
+  },
+  "registration_baseline": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\green-match-rgb\\full-2\\photo-comparison-1\\baseline.png",
+    "bytes": 37540366,
+    "sha256": "68b2f4533e14eefb6e8b2473cc4312fe0d330cd70c83569148270fba12491326"
+  },
+  "registration_baseline_rgb8_exact": true,
+  "original_crop_quads": [
+    28,
+    19,
+    3460,
+    2306
+  ],
+  "native_shape": [
+    4612,
+    6920,
+    3
+  ],
+  "matrix_baseline_to_helicon_b": [
+    [
+      1.0107248408247895,
+      0.00010157169086644213,
+      18.587361174977467
+    ],
+    [
+      -0.00010157169086644213,
+      1.0107248408247895,
+      13.668897785409621
+    ]
+  ],
+  "regions": [
+    {
+      "name": "facet-edges",
+      "baseline_xywh": [
+        2500,
+        2700,
+        384,
+        384
+      ],
+      "display_integer_zoom": 1,
+      "arms": {
+        "baseline": [
+          2500,
+          2700,
+          384,
+          384
+        ],
+        "candidate": [
+          2500,
+          2700,
+          384,
+          384
+        ],
+        "helicon-b": [
+          2548,
+          2744,
+          384,
+          384
+        ]
+      }
+    },
+    {
+      "name": "pale-background",
+      "baseline_xywh": [
+        400,
+        1150,
+        384,
+        384
+      ],
+      "display_integer_zoom": 1,
+      "arms": {
+        "baseline": [
+          400,
+          1150,
+          384,
+          384
+        ],
+        "candidate": [
+          400,
+          1150,
+          384,
+          384
+        ],
+        "helicon-b": [
+          425,
+          1178,
+          384,
+          384
+        ]
+      }
+    },
+    {
+      "name": "fine-crystals",
+      "baseline_xywh": [
+        4200,
+        1700,
+        384,
+        384
+      ],
+      "display_integer_zoom": 1,
+      "arms": {
+        "baseline": [
+          4200,
+          1700,
+          384,
+          384
+        ],
+        "candidate": [
+          4200,
+          1700,
+          384,
+          384
+        ],
+        "helicon-b": [
+          4266,
+          1734,
+          384,
+          384
+        ]
+      }
+    },
+    {
+      "name": "bright-facet",
+      "baseline_xywh": [
+        1150,
+        3850,
+        384,
+        384
+      ],
+      "display_integer_zoom": 1,
+      "arms": {
+        "baseline": [
+          1150,
+          3850,
+          384,
+          384
+        ],
+        "candidate": [
+          1150,
+          3850,
+          384,
+          384
+        ],
+        "helicon-b": [
+          1183,
+          3907,
+          384,
+          384
+        ]
+      }
+    },
+    {
+      "name": "dark-inclusion",
+      "baseline_xywh": [
+        3050,
+        1850,
+        384,
+        384
+      ],
+      "display_integer_zoom": 1,
+      "arms": {
+        "baseline": [
+          3050,
+          1850,
+          384,
+          384
+        ],
+        "candidate": [
+          3050,
+          1850,
+          384,
+          384
+        ],
+        "helicon-b": [
+          3104,
+          1885,
+          384,
+          384
+        ]
+      }
+    },
+    {
+      "name": "facet-core-boundary",
+      "baseline_xywh": [
+        2533,
+        2846,
+        160,
+        160
+      ],
+      "display_integer_zoom": 3,
+      "arms": {
+        "baseline": [
+          2533,
+          2846,
+          160,
+          160
+        ],
+        "candidate": [
+          2533,
+          2846,
+          160,
+          160
+        ],
+        "helicon-b": [
+          2580,
+          2891,
+          160,
+          160
+        ]
+      }
+    },
+    {
+      "name": "dark-core-boundary",
+      "baseline_xywh": [
+        3011,
+        2097,
+        160,
+        160
+      ],
+      "display_integer_zoom": 3,
+      "arms": {
+        "baseline": [
+          3011,
+          2097,
+          160,
+          160
+        ],
+        "candidate": [
+          3011,
+          2097,
+          160,
+          160
+        ],
+        "helicon-b": [
+          3063,
+          2134,
+          160,
+          160
+        ]
+      }
+    },
+    {
+      "name": "competing-structure",
+      "baseline_xywh": [
+        3180,
+        2010,
+        120,
+        120
+      ],
+      "display_integer_zoom": 3,
+      "arms": {
+        "baseline": [
+          3180,
+          2010,
+          120,
+          120
+        ],
+        "candidate": [
+          3180,
+          2010,
+          120,
+          120
+        ],
+        "helicon-b": [
+          3234,
+          2046,
+          120,
+          120
+        ]
+      }
+    }
+  ],
+  "icc": {
+    "bytes": 2716,
+    "sha256": "238ad2596316306a72025bb245cf3c8cd72f1090c8d95af2f38dc090e84ece5b",
+    "all_exact": true
+  },
+  "commands": [
+    {
+      "argv": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-I",
+        "-B",
+        "-X",
+        "faulthandler",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\full-output-views.py",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\parallel-cfa-wavelet\\full-1\\output\\baseline.tiff",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\parallel-cfa-wavelet\\full-1\\photo-comparison-1\\baseline.png"
+      ],
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-I",
+        "-B",
+        "-X",
+        "faulthandler",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\full-output-views.py",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\parallel-cfa-wavelet\\full-1\\output\\candidate.tiff",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\parallel-cfa-wavelet\\full-1\\photo-comparison-1\\candidate.png"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "outputs": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\parallel-cfa-wavelet\\full-1\\photo-comparison-1\\baseline.png",
+      "bytes": 37540366,
+      "sha256": "68b2f4533e14eefb6e8b2473cc4312fe0d330cd70c83569148270fba12491326"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\parallel-cfa-wavelet\\full-1\\photo-comparison-1\\baseline.json",
+      "bytes": 602,
+      "sha256": "18241ceb79b8cefbca9ac212e0d10c234e5368195195b9fc704cd204e9aca3dc"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\parallel-cfa-wavelet\\full-1\\photo-comparison-1\\baseline-overview.jpg",
+      "bytes": 569836,
+      "sha256": "00c549c367e4ac80a5551bf3132b119e9cf9b8e1836364b5219e07e89e1cd9d6"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\parallel-cfa-wavelet\\full-1\\photo-comparison-1\\baseline-full-conversion.log",
+      "bytes": 558,
+      "sha256": "fdbb4d875514e0854811be72f3472dd7536cdc512173f9e98919a04889889b87"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\parallel-cfa-wavelet\\full-1\\photo-comparison-1\\candidate.png",
+      "bytes": 38721006,
+      "sha256": "c6baeb3e72520ed4b1d4e2942d708bcfb91a5ed61ab6274e73d2c40410ed68b6"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\parallel-cfa-wavelet\\full-1\\photo-comparison-1\\candidate.json",
+      "bytes": 604,
+      "sha256": "c37ab1ef759e7591e501db92973fa7adacd2bfdd999ec6ac1b2b4ac145e55b4a"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\parallel-cfa-wavelet\\full-1\\photo-comparison-1\\candidate-overview.jpg",
+      "bytes": 551397,
+      "sha256": "58a6c5ab87d1bb6ba8793bd692ec86947187eb01ca52ed7e58fa786f783993e2"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\parallel-cfa-wavelet\\full-1\\photo-comparison-1\\candidate-full-conversion.log",
+      "bytes": 560,
+      "sha256": "a15f6026fadcf68d45e3cef5717c99321df072ae597765d1b4de48ba35583cd5"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\parallel-cfa-wavelet\\full-1\\photo-comparison-1\\facet-edges-baseline.png",
+      "bytes": 192716,
+      "sha256": "2e547ac1bab0614449209083bc9d12a21312e4295f67ba467133a87aaa8f98f4"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\parallel-cfa-wavelet\\full-1\\photo-comparison-1\\facet-edges-candidate.png",
+      "bytes": 196335,
+      "sha256": "fec7de9201bcb335f2b2703103aa42695af2ee430202d385b10421713b68e480"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\parallel-cfa-wavelet\\full-1\\photo-comparison-1\\facet-edges-helicon-b.png",
+      "bytes": 193627,
+      "sha256": "dbbfeb121b91052da1c660ed132204ef7dd4a7f22edff6663f66dc2ae3ee3d17"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\parallel-cfa-wavelet\\full-1\\photo-comparison-1\\facet-edges-board.png",
+      "bytes": 588484,
+      "sha256": "4cff6894707d55076350758be28674015555aec9ab3bcb1526237f6144fd8bdb"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\parallel-cfa-wavelet\\full-1\\photo-comparison-1\\pale-background-baseline.png",
+      "bytes": 138476,
+      "sha256": "dbf8d5a5d13522474a118e7e6efd6bc142aacd573ab5f83bcf6f2a93ecd47353"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\parallel-cfa-wavelet\\full-1\\photo-comparison-1\\pale-background-candidate.png",
+      "bytes": 137514,
+      "sha256": "d0ccb62e44f826d6e05f76b3bd363590e5106ed0b65790299b8a5b6dd41a66f1"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\parallel-cfa-wavelet\\full-1\\photo-comparison-1\\pale-background-helicon-b.png",
+      "bytes": 141801,
+      "sha256": "cc904dd5284a11023060c842ca4a76864fb373ec35f8989295b195bbda55f336"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\parallel-cfa-wavelet\\full-1\\photo-comparison-1\\pale-background-board.png",
+      "bytes": 429460,
+      "sha256": "9f80a1c1ac85d6556cafc13487dcbe064005ad270294d20a6779184ece935184"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\parallel-cfa-wavelet\\full-1\\photo-comparison-1\\fine-crystals-baseline.png",
+      "bytes": 200537,
+      "sha256": "d8144e2030108058ed0c21117ed5a75d9b407920984080cd88b9db54fd065838"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\parallel-cfa-wavelet\\full-1\\photo-comparison-1\\fine-crystals-candidate.png",
+      "bytes": 205528,
+      "sha256": "67df37d2fcbca57cc43476af616790e43b0fb8074ab193b4fc8d883be9fdd857"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\parallel-cfa-wavelet\\full-1\\photo-comparison-1\\fine-crystals-helicon-b.png",
+      "bytes": 201169,
+      "sha256": "ce9ce0d5b0b6c735109a029f65254269591e5b427837215289725754720c62b4"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\parallel-cfa-wavelet\\full-1\\photo-comparison-1\\fine-crystals-board.png",
+      "bytes": 614729,
+      "sha256": "201a78b999dae31043e01caef954174cf7cdf5e24ce5beacc12dc2a13e466dcb"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\parallel-cfa-wavelet\\full-1\\photo-comparison-1\\bright-facet-baseline.png",
+      "bytes": 144642,
+      "sha256": "1443ac73dc871aed2fe6fc5f72b32711c3ed6f155490ce083420acd5b5ee507f"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\parallel-cfa-wavelet\\full-1\\photo-comparison-1\\bright-facet-candidate.png",
+      "bytes": 144107,
+      "sha256": "0b9b45177b26861b34adb9b099ad860b156008f664cc45fa2e81c94957a03281"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\parallel-cfa-wavelet\\full-1\\photo-comparison-1\\bright-facet-helicon-b.png",
+      "bytes": 146313,
+      "sha256": "edaad39178479b58bfed94721499a219d11299bbb3e7c5bfdc534ba0d7ebc871"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\parallel-cfa-wavelet\\full-1\\photo-comparison-1\\bright-facet-board.png",
+      "bytes": 444563,
+      "sha256": "8eed101780b7f86dd61a111f08aa4f042cbfeaa4127ff853367bb90a4634a44a"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\parallel-cfa-wavelet\\full-1\\photo-comparison-1\\dark-inclusion-baseline.png",
+      "bytes": 187949,
+      "sha256": "851143c7d19524d584e8378125456e230d923e7ee9b427989b1e7c1f548594ce"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\parallel-cfa-wavelet\\full-1\\photo-comparison-1\\dark-inclusion-candidate.png",
+      "bytes": 186558,
+      "sha256": "45fce6ade41ee86ac10878028c0f8f0bfbff1947d522ff53d3af4b97a636e8cc"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\parallel-cfa-wavelet\\full-1\\photo-comparison-1\\dark-inclusion-helicon-b.png",
+      "bytes": 186747,
+      "sha256": "9084a40c390b0586c8edfc3196b7785731e8ecc5146d81a5ef6486e588ab75b2"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\parallel-cfa-wavelet\\full-1\\photo-comparison-1\\dark-inclusion-board.png",
+      "bytes": 568464,
+      "sha256": "96bc56dca74175ca6e5f545ab52fb9054ab56966fa6d4bfc170e7e5ef5467e60"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\parallel-cfa-wavelet\\full-1\\photo-comparison-1\\facet-core-boundary-baseline-zoom.png",
+      "bytes": 54045,
+      "sha256": "58ddc5aaebe9e878e597c7efc0fe6c36fd73f6cd2d4333da707395470675bcba"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\parallel-cfa-wavelet\\full-1\\photo-comparison-1\\facet-core-boundary-candidate-zoom.png",
+      "bytes": 55803,
+      "sha256": "23c30f4d87238f9240a106e296641fb214a40460664a7b84de61be0deb1311d1"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\parallel-cfa-wavelet\\full-1\\photo-comparison-1\\facet-core-boundary-helicon-b-zoom.png",
+      "bytes": 53901,
+      "sha256": "652940786d343244200b226212c2413c623d81d217eb2bdfba5f850ba0c025ba"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\parallel-cfa-wavelet\\full-1\\photo-comparison-1\\facet-core-boundary-board.png",
+      "bytes": 164622,
+      "sha256": "b1ea7d0f4c1c022efbfb8a638b0c56e0c7fe5a59ffa54efcba41ffca0b697ad2"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\parallel-cfa-wavelet\\full-1\\photo-comparison-1\\dark-core-boundary-baseline-zoom.png",
+      "bytes": 61147,
+      "sha256": "8a5292f268d7502a9b34c80df79985b6a05c300e4d8909c15c688e42903fbd07"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\parallel-cfa-wavelet\\full-1\\photo-comparison-1\\dark-core-boundary-candidate-zoom.png",
+      "bytes": 61529,
+      "sha256": "a4650ca667256bfbc79cd43a957de0cc24274f48c9f7cab433f4827b9b0a1680"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\parallel-cfa-wavelet\\full-1\\photo-comparison-1\\dark-core-boundary-helicon-b-zoom.png",
+      "bytes": 58625,
+      "sha256": "215649d2da9b961b7301c32caed21327c6230de9ccd956f6acd1b482fae3cec1"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\parallel-cfa-wavelet\\full-1\\photo-comparison-1\\dark-core-boundary-board.png",
+      "bytes": 182135,
+      "sha256": "25a1aacb936a6f604a796a1ff549af715fce15fc2a0930affa96a7336035b0aa"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\parallel-cfa-wavelet\\full-1\\photo-comparison-1\\competing-structure-baseline-zoom.png",
+      "bytes": 29307,
+      "sha256": "c260dc7afd0e92f4ba420445e0aba50fd305e21638d84d5e2d3cb59ad03707a1"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\parallel-cfa-wavelet\\full-1\\photo-comparison-1\\competing-structure-candidate-zoom.png",
+      "bytes": 28895,
+      "sha256": "d38bb5ad183c6057cf8fe5e1442d936eb138e41600502c2ce32adcef8720953c"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\parallel-cfa-wavelet\\full-1\\photo-comparison-1\\competing-structure-helicon-b-zoom.png",
+      "bytes": 30115,
+      "sha256": "330de629623e24cf6603273131ac0d468d45ceface72611a16f1b0810d49bcbb"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\parallel-cfa-wavelet\\full-1\\photo-comparison-1\\competing-structure-board.png",
+      "bytes": 90840,
+      "sha256": "8ac331035662df5229a1dee4ac6053a3803f06cfc0771520eb7fdd0ad40d86bd"
+    }
+  ],
+  "display": "Full PNG and native crops: rounded RGB16 division by257, no tone/normalization. Centred zooms use3x nearest replication. OverviewJPEG is resized for orientation only. Helicon crops use mapped centres rounded to integer origins; native scale mismatch is retained.",
+  "scope": "Completed saved outputs only; no RAW, merge, registration fit, score or photographic admission. The failed generated screen remains failed; this is a separate observational pair."
+}

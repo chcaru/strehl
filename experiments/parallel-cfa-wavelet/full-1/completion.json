@@ -1,0 +1,33 @@
+{
+  "baseline": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\parallel-cfa-wavelet\\full-1\\output\\baseline.tiff",
+    "sha256": "b7617f42537487fbecf9d88e47bf99b571ee7f6faeae2ccd9b34ba619995decb",
+    "bytes": 191495352
+  },
+  "candidate": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\parallel-cfa-wavelet\\full-1\\output\\candidate.tiff",
+    "sha256": "0b3e50438b3215513234713862716a4bd4c50cc6a4ca6c9428f2b17a5edab9d6",
+    "bytes": 191495352
+  },
+  "receipt": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\parallel-cfa-wavelet\\full-1\\output\\receipt.json",
+    "sha256": "6a31739c39fb290b4bc65ded4fb290131f2c4b3b125b1d7ebab9940dc629c8d1",
+    "bytes": 172441
+  },
+  "shape": [
+    4612,
+    6920,
+    3
+  ],
+  "original_metadata_unchanged": true,
+  "map_unchanged": true,
+  "baseline_pixels_identical": true,
+  "reference": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\phase-packed-rgb\\full-1\\output\\baseline.tiff",
+    "sha256": "c0d8faca8a23f31a73b843fbc9aa9f55fda96b5fcce9d3540ebf6a2b4319bb21",
+    "bytes": 191495352
+  },
+  "sources_unchanged": true,
+  "photographic_promotion": false,
+  "scope": "One separately scoped observational photograph; generated admission remains false."
+}

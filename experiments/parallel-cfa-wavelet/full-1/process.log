@@ -1,0 +1,2599 @@
+
+running 1 test
+test merge_cmd::parallel_cfa_wavelet::full_stack::vitamin_c_observational_pair ...   GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+parallel wavelet source 0/69, 18.6s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+parallel wavelet source 1/69, 36.3s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+parallel wavelet source 2/69, 54.2s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+parallel wavelet source 3/69, 72.0s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+parallel wavelet source 4/69, 89.8s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+parallel wavelet source 5/69, 107.6s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+parallel wavelet source 6/69, 125.5s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+parallel wavelet source 7/69, 143.3s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+parallel wavelet source 8/69, 161.1s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+parallel wavelet source 9/69, 178.9s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+parallel wavelet source 10/69, 196.7s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+parallel wavelet source 11/69, 214.5s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+parallel wavelet source 12/69, 232.4s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+parallel wavelet source 13/69, 250.3s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+parallel wavelet source 14/69, 268.1s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+parallel wavelet source 15/69, 286.1s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+parallel wavelet source 16/69, 303.9s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+parallel wavelet source 17/69, 321.8s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+parallel wavelet source 18/69, 339.7s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+parallel wavelet source 19/69, 357.7s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+parallel wavelet source 20/69, 375.5s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+parallel wavelet source 21/69, 393.4s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+parallel wavelet source 22/69, 411.3s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+parallel wavelet source 23/69, 429.2s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+parallel wavelet source 24/69, 447.1s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+parallel wavelet source 25/69, 465.0s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+parallel wavelet source 26/69, 482.9s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+parallel wavelet source 27/69, 500.8s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+parallel wavelet source 28/69, 518.7s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+parallel wavelet source 29/69, 536.6s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+parallel wavelet source 30/69, 554.5s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+parallel wavelet source 31/69, 572.4s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+parallel wavelet source 32/69, 590.3s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+parallel wavelet source 33/69, 608.2s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+parallel wavelet source 34/69, 626.1s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+parallel wavelet source 35/69, 643.9s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+parallel wavelet source 36/69, 661.9s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+parallel wavelet source 37/69, 679.8s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+parallel wavelet source 38/69, 697.7s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+parallel wavelet source 39/69, 715.6s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+parallel wavelet source 40/69, 733.5s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+parallel wavelet source 41/69, 751.6s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+parallel wavelet source 42/69, 769.5s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+parallel wavelet source 43/69, 787.4s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+parallel wavelet source 44/69, 805.3s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+parallel wavelet source 45/69, 823.1s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+parallel wavelet source 46/69, 841.0s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+parallel wavelet source 47/69, 858.9s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+parallel wavelet source 48/69, 876.8s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+parallel wavelet source 49/69, 894.6s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+parallel wavelet source 50/69, 912.6s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+parallel wavelet source 51/69, 930.4s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+parallel wavelet source 52/69, 948.2s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+parallel wavelet source 53/69, 966.1s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+parallel wavelet source 54/69, 984.0s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+parallel wavelet source 55/69, 1001.8s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+parallel wavelet source 56/69, 1019.6s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+parallel wavelet source 57/69, 1037.5s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+parallel wavelet source 58/69, 1055.3s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+parallel wavelet source 59/69, 1073.1s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+parallel wavelet source 60/69, 1091.0s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+parallel wavelet source 61/69, 1108.8s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+parallel wavelet source 62/69, 1126.6s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+parallel wavelet source 63/69, 1144.4s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+parallel wavelet source 64/69, 1162.3s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+parallel wavelet source 65/69, 1180.2s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+parallel wavelet source 66/69, 1198.0s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+parallel wavelet source 67/69, 1215.8s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+parallel wavelet source 68/69, 1233.8s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+parallel wavelet source 69/69, 1251.5s
+parallel wavelet sources complete; finishing baseline, 1251.6s
+parallel wavelet baseline written; reconstructing candidate, 1252.3s
+parallel wavelet candidate reconstructed; writing, 1253.3s
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 220 filtered out; finished in 1253.71s
+

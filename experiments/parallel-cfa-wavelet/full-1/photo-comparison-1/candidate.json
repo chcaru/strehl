@@ -1,0 +1,13 @@
+{
+  "source": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\parallel-cfa-wavelet\\full-1\\output\\candidate.tiff",
+  "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\parallel-cfa-wavelet\\full-1\\photo-comparison-1\\candidate.png",
+  "shape": [
+    4612,
+    6920,
+    3
+  ],
+  "conversion": "rounded division by 257; full extent; no resampling",
+  "source_sha256": "0b3e50438b3215513234713862716a4bd4c50cc6a4ca6c9428f2b17a5edab9d6",
+  "png_sha256": "c6baeb3e72520ed4b1d4e2942d708bcfb91a5ed61ab6274e73d2c40410ed68b6",
+  "icc_preserved": true
+}
