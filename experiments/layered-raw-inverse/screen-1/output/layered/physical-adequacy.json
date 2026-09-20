@@ -1,0 +1,41 @@
+{
+  "records": [
+    {
+      "index": 0,
+      "normalized_rms": {
+        "whole": 0.5031009187802951,
+        "crossing": 1.0694726224298692
+      }
+    },
+    {
+      "index": 2,
+      "normalized_rms": {
+        "whole": 0.45461367236226197,
+        "crossing": 1.3490733263673196
+      }
+    },
+    {
+      "index": 4,
+      "normalized_rms": {
+        "whole": 0.4717774978865741,
+        "crossing": 1.524503237817421
+      }
+    },
+    {
+      "index": 6,
+      "normalized_rms": {
+        "whole": 0.6420379970064604,
+        "crossing": 1.678243724770749
+      }
+    },
+    {
+      "index": 8,
+      "normalized_rms": {
+        "whole": 0.8870094153387984,
+        "crossing": 1.1994156834564524
+      }
+    }
+  ],
+  "passed": false,
+  "scope": "Independent1024-ray resolution check; does not block discrete utility execution, does block real-RAW license"
+}

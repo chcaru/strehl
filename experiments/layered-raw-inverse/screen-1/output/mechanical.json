@@ -1,0 +1,91 @@
+{
+  "metric_commission": {
+    "glint": {
+      "exact": {
+        "recovery": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "template_energy": [
+          3871784984.164553,
+          3600167379.165745,
+          2844576438.871642
+        ],
+        "live": true
+      },
+      "half_destroyer": {
+        "recovery": [
+          0.5000000001311334,
+          0.4999999969752106,
+          0.4999999975403275
+        ],
+        "template_energy": [
+          3871784984.164553,
+          3600167379.165745,
+          2844576438.871642
+        ],
+        "live": true
+      },
+      "bounds": [
+        39,
+        42,
+        52,
+        55
+      ]
+    },
+    "ridge": {
+      "exact": {
+        "recovery": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "template_energy": [
+          51983735.586246416,
+          138514832.62970743,
+          161668706.2341408
+        ],
+        "live": true
+      },
+      "half_destroyer": {
+        "recovery": [
+          0.4999999995693285,
+          0.49999999809410317,
+          0.5000000062797598
+        ],
+        "template_energy": [
+          51983735.586246416,
+          138514832.62970743,
+          161668706.2341408
+        ],
+        "live": true
+      },
+      "bounds": [
+        39,
+        31,
+        63,
+        41
+      ]
+    },
+    "wrong_colour": {
+      "rgb_rmse": 746.5192928302298,
+      "chroma_rmse": 914.2956752886997
+    }
+  },
+  "model_controls": {
+    "same_pupil_forward_max_dn": {
+      "alpha0": 0.005859375,
+      "alpha1": 0.0048828125,
+      "layered": 0.00634765625
+    },
+    "constant_exact_within_dn": 0.1,
+    "visibility_noncommutation_crossing_rms": 233.78179203558756,
+    "uncensored_above_white_loss_difference": 1.456737995147705,
+    "digital_censor_losses": [
+      923.4949340820312,
+      0.0
+    ],
+    "wrong_metadata_ceiling_detected": true
+  }
+}

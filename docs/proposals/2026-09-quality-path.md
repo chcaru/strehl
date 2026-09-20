@@ -5,18 +5,16 @@ quality actions in 2026-09-sota-program.md and the older SOTA proposal. Read
 the measured decision record in docs/research/SYNTHESIS.md before architectural
 changes; this plan does not promote any experimental default.
 
-Current September19 execution checkpoint: complete Helicon B/C comparisons
-are committed at e250ddc2. B reduces the known vitamin-C glint fans, while
-Strehl green-match has cleaner smooth fields. This evidence changes the next
-priority to the fixed donor-consistency counterfactual. Its complete70-frame
-RAW triplet passes mechanical controls and reproduces baseline pixels exactly.
-Independent photographic review finds a partial facet gain but a persistent
-dark-inclusion tail: close that exact recipe as an incomplete repair. The
-automatic assignment design stays conditional while an immutable coefficient
-observer isolates the remaining reconstruction loss. This is an oracle
-diagnostic, not a product feature. See experiments/donor-consistency. The
-passing complete-periodic all-CFA controls are retained at48276660; their
-boundary/noise-probe continuation is deferred behind this visible defect.
+Current execution checkpoint: complete Helicon B/C comparisons at e250ddc2
+retain an unresolved vitamin-C glint-fan deficit. Subsequent donor, wavelet,
+colour-guide and temporal-affinity interventions have not earned promotion;
+their exact closures appear below. Focused star-sand attribution is complete
+at9c00ca3e, and RAW-affinity's independent rejection is committed at13405ce7.
+The next bounded implementation is layered original-CFA inverse rendering in
+experiments/layered-raw-inverse: known-optics generated reconstruction first,
+with unknown radiances/coverage and whole-observation holdouts. It has no
+photographic admission yet. The passing complete-periodic all-CFA controls
+remain retained at48276660; speed work stays behind demonstrated image quality.
 
 The owner's priority is photographic quality on the A7C II macro captures.
 The existing program has not established SOTA quality. Further speed-only work

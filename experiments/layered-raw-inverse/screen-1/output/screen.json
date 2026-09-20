@@ -1,0 +1,1926 @@
+{
+  "status": "SCREEN_COMPLETE",
+  "known_optics_utility_pass": false,
+  "real_photo_admission": false,
+  "cases": [
+    {
+      "name": "flat",
+      "source_sha256": "affa3a8051fd5f56cd3c805ed899afdc105212c0c96835d306fa341650a3d9d1",
+      "source_unchanged": true,
+      "observation_shape": [
+        9,
+        96,
+        96
+      ],
+      "saturated_codes": 0,
+      "clipped_training_valid": 0,
+      "protected_glint_core_bounds": [
+        39,
+        42,
+        52,
+        55
+      ],
+      "wholly_unclipped_training_glint_views": [
+        0,
+        1,
+        3,
+        4,
+        5,
+        7,
+        8
+      ],
+      "above_metadata_white_not_censored": 0,
+      "oracle_training_indices": [
+        0
+      ],
+      "operator_adequacy": {
+        "records": [
+          {
+            "index": 0,
+            "maximum_difference_dn": {
+              "whole": 0.000244140625,
+              "crossing": 0.000244140625
+            }
+          },
+          {
+            "index": 1,
+            "maximum_difference_dn": {
+              "whole": 0.000244140625,
+              "crossing": 0.000244140625
+            }
+          },
+          {
+            "index": 2,
+            "maximum_difference_dn": {
+              "whole": 0.000244140625,
+              "crossing": 0.000244140625
+            }
+          },
+          {
+            "index": 3,
+            "maximum_difference_dn": {
+              "whole": 0.000244140625,
+              "crossing": 0.000244140625
+            }
+          },
+          {
+            "index": 4,
+            "maximum_difference_dn": {
+              "whole": 0.000244140625,
+              "crossing": 0.000244140625
+            }
+          },
+          {
+            "index": 5,
+            "maximum_difference_dn": {
+              "whole": 0.000244140625,
+              "crossing": 0.000244140625
+            }
+          },
+          {
+            "index": 6,
+            "maximum_difference_dn": {
+              "whole": 0.000244140625,
+              "crossing": 0.000244140625
+            }
+          },
+          {
+            "index": 7,
+            "maximum_difference_dn": {
+              "whole": 0.000244140625,
+              "crossing": 0.000244140625
+            }
+          },
+          {
+            "index": 8,
+            "maximum_difference_dn": {
+              "whole": 0.000244140625,
+              "crossing": 0.000244140625
+            }
+          }
+        ],
+        "passed": true,
+        "scope": "Same supplied64 discrete pupil; independent interpolation/compositing implementation"
+      },
+      "physical_adequacy": null,
+      "heldout_prediction": [
+        {
+          "index": 2,
+          "candidate": {
+            "uncensored": {
+              "all": {
+                "count": 4096,
+                "normalized_rms": 1.0009114777327417,
+                "bar": 1.5,
+                "passed": true,
+                "present": true
+              },
+              "R": {
+                "count": 1024,
+                "normalized_rms": 0.9731962963349318,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G1": {
+                "count": 1024,
+                "normalized_rms": 1.0127286776248217,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G2": {
+                "count": 1024,
+                "normalized_rms": 1.0227212344848728,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "B": {
+                "count": 1024,
+                "normalized_rms": 0.9942866869663659,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "bright": {
+                "count": 0,
+                "normalized_rms": null,
+                "bar": 1.75,
+                "passed": true,
+                "present": false
+              },
+              "dim": {
+                "count": 4096,
+                "normalized_rms": 1.0009114777327417,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              }
+            },
+            "censor_count": 0,
+            "censor_one_sided_rms": null,
+            "passed": true
+          },
+          "far_only": {
+            "uncensored": {
+              "all": {
+                "count": 4096,
+                "normalized_rms": 1.0030099410804465,
+                "bar": 1.5,
+                "passed": true,
+                "present": true
+              },
+              "R": {
+                "count": 1024,
+                "normalized_rms": 0.9739464973341412,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G1": {
+                "count": 1024,
+                "normalized_rms": 1.014298292744307,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G2": {
+                "count": 1024,
+                "normalized_rms": 1.023285445554908,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "B": {
+                "count": 1024,
+                "normalized_rms": 0.9998149119746303,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "bright": {
+                "count": 0,
+                "normalized_rms": null,
+                "bar": 1.75,
+                "passed": true,
+                "present": false
+              },
+              "dim": {
+                "count": 4096,
+                "normalized_rms": 1.0030099410804465,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              }
+            },
+            "censor_count": 0,
+            "censor_one_sided_rms": null,
+            "passed": true
+          }
+        },
+        {
+          "index": 6,
+          "candidate": {
+            "uncensored": {
+              "all": {
+                "count": 4096,
+                "normalized_rms": 1.0162619286640344,
+                "bar": 1.5,
+                "passed": true,
+                "present": true
+              },
+              "R": {
+                "count": 1024,
+                "normalized_rms": 1.0075434064226638,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G1": {
+                "count": 1024,
+                "normalized_rms": 0.9986203681530612,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G2": {
+                "count": 1024,
+                "normalized_rms": 1.0218262599674872,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "B": {
+                "count": 1024,
+                "normalized_rms": 1.0366474663706504,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "bright": {
+                "count": 0,
+                "normalized_rms": null,
+                "bar": 1.75,
+                "passed": true,
+                "present": false
+              },
+              "dim": {
+                "count": 4096,
+                "normalized_rms": 1.0162619286640344,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              }
+            },
+            "censor_count": 0,
+            "censor_one_sided_rms": null,
+            "passed": true
+          },
+          "far_only": {
+            "uncensored": {
+              "all": {
+                "count": 4096,
+                "normalized_rms": 1.0059539520246714,
+                "bar": 1.5,
+                "passed": true,
+                "present": true
+              },
+              "R": {
+                "count": 1024,
+                "normalized_rms": 0.9992925412469676,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G1": {
+                "count": 1024,
+                "normalized_rms": 0.9874262372285884,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G2": {
+                "count": 1024,
+                "normalized_rms": 1.011692972708611,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "B": {
+                "count": 1024,
+                "normalized_rms": 1.0250144322832735,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "bright": {
+                "count": 0,
+                "normalized_rms": null,
+                "bar": 1.75,
+                "passed": true,
+                "present": false
+              },
+              "dim": {
+                "count": 4096,
+                "normalized_rms": 1.0059539520246714,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              }
+            },
+            "censor_count": 0,
+            "censor_one_sided_rms": null,
+            "passed": true
+          }
+        }
+      ],
+      "heldout_pass": true,
+      "quality": {
+        "regions": {
+          "whole": {
+            "candidate": {
+              "rgb_rmse": 8.67524582284642,
+              "chroma_rmse": 12.345579699627306
+            },
+            "far_only": {
+              "rgb_rmse": 5.606326374176431,
+              "chroma_rmse": 7.775942627238773
+            },
+            "mean": {
+              "rgb_rmse": 6.018454527257956,
+              "chroma_rmse": 8.367617007550058
+            },
+            "oracle_bound": {
+              "rgb_rmse": 15.927476031907533,
+              "chroma_rmse": 21.78031256038975
+            }
+          }
+        },
+        "components": {},
+        "bars": {
+          "rgb_rmse": false,
+          "chroma_rmse": false
+        },
+        "passed": false
+      },
+      "qualified": false,
+      "heldout_poison_initialization_exact": true,
+      "actual_fit_read_indices": [
+        0,
+        1,
+        3,
+        4,
+        5,
+        7,
+        8
+      ],
+      "actual_fit_read_count": 1143,
+      "one_layer_read_indices": [
+        0,
+        1,
+        3,
+        4,
+        5,
+        7,
+        8
+      ],
+      "output_fingerprints": {
+        "pinhole": "fbd0085967fb57c086693e05e2a182b1487310fdae04879d2cc57ad41fd19125",
+        "near": "93fa048d673b7d5c47d830f55744b09bca8548a18d7b08c7b9b10cd1f609666a",
+        "far": "01dc294625710a2cc683a289b90c2e2ea76f6cd11f7c25f0f7a96efd37033657",
+        "alpha": "2ee1be69a44048b53cf6e58b8396083807d8b452825a2b2d158e1aee04c64cd0",
+        "history": "744c86ff7b31264e55d053d7a44e41138f9aa99931f5d1c7e6ed0f60b5810cb1"
+      },
+      "interpretation": "Known-optics utility only; neither calibration nor canonical-merge comparison."
+    },
+    {
+      "name": "layered",
+      "source_sha256": "c9a6276c51aefe1fa3ad4de0a656cd08c41b6c57c9182685fa195951f7708767",
+      "source_unchanged": true,
+      "observation_shape": [
+        9,
+        96,
+        96
+      ],
+      "saturated_codes": 1,
+      "clipped_training_valid": 1,
+      "protected_glint_core_bounds": [
+        39,
+        42,
+        52,
+        55
+      ],
+      "wholly_unclipped_training_glint_views": [
+        1,
+        3,
+        4,
+        5,
+        7,
+        8
+      ],
+      "above_metadata_white_not_censored": 2,
+      "oracle_training_indices": [
+        0,
+        1,
+        3,
+        4,
+        5,
+        7,
+        8
+      ],
+      "operator_adequacy": {
+        "records": [
+          {
+            "index": 0,
+            "maximum_difference_dn": {
+              "whole": 0.0244140625,
+              "crossing": 0.0244140625
+            }
+          },
+          {
+            "index": 1,
+            "maximum_difference_dn": {
+              "whole": 0.0107421875,
+              "crossing": 0.0107421875
+            }
+          },
+          {
+            "index": 2,
+            "maximum_difference_dn": {
+              "whole": 0.00732421875,
+              "crossing": 0.00732421875
+            }
+          },
+          {
+            "index": 3,
+            "maximum_difference_dn": {
+              "whole": 0.00439453125,
+              "crossing": 0.00439453125
+            }
+          },
+          {
+            "index": 4,
+            "maximum_difference_dn": {
+              "whole": 0.0029296875,
+              "crossing": 0.0029296875
+            }
+          },
+          {
+            "index": 5,
+            "maximum_difference_dn": {
+              "whole": 0.0029296875,
+              "crossing": 0.00244140625
+            }
+          },
+          {
+            "index": 6,
+            "maximum_difference_dn": {
+              "whole": 0.00244140625,
+              "crossing": 0.00244140625
+            }
+          },
+          {
+            "index": 7,
+            "maximum_difference_dn": {
+              "whole": 0.003173828125,
+              "crossing": 0.003173828125
+            }
+          },
+          {
+            "index": 8,
+            "maximum_difference_dn": {
+              "whole": 0.004638671875,
+              "crossing": 0.004150390625
+            }
+          }
+        ],
+        "passed": true,
+        "scope": "Same supplied64 discrete pupil; independent interpolation/compositing implementation"
+      },
+      "physical_adequacy": {
+        "records": [
+          {
+            "index": 0,
+            "normalized_rms": {
+              "whole": 0.5031009187802951,
+              "crossing": 1.0694726224298692
+            }
+          },
+          {
+            "index": 2,
+            "normalized_rms": {
+              "whole": 0.45461367236226197,
+              "crossing": 1.3490733263673196
+            }
+          },
+          {
+            "index": 4,
+            "normalized_rms": {
+              "whole": 0.4717774978865741,
+              "crossing": 1.524503237817421
+            }
+          },
+          {
+            "index": 6,
+            "normalized_rms": {
+              "whole": 0.6420379970064604,
+              "crossing": 1.678243724770749
+            }
+          },
+          {
+            "index": 8,
+            "normalized_rms": {
+              "whole": 0.8870094153387984,
+              "crossing": 1.1994156834564524
+            }
+          }
+        ],
+        "passed": false,
+        "scope": "Independent1024-ray resolution check; does not block discrete utility execution, does block real-RAW license"
+      },
+      "heldout_prediction": [
+        {
+          "index": 2,
+          "candidate": {
+            "uncensored": {
+              "all": {
+                "count": 4096,
+                "normalized_rms": 1.1657227817321547,
+                "bar": 1.5,
+                "passed": true,
+                "present": true
+              },
+              "R": {
+                "count": 1024,
+                "normalized_rms": 1.1830421150111152,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G1": {
+                "count": 1024,
+                "normalized_rms": 1.16288745238602,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G2": {
+                "count": 1024,
+                "normalized_rms": 1.136750111851469,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "B": {
+                "count": 1024,
+                "normalized_rms": 1.1796362684303425,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "bright": {
+                "count": 41,
+                "normalized_rms": 4.280079914508441,
+                "bar": 1.75,
+                "passed": false,
+                "present": true
+              },
+              "dim": {
+                "count": 4055,
+                "normalized_rms": 1.0896906528652324,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              }
+            },
+            "censor_count": 0,
+            "censor_one_sided_rms": null,
+            "passed": false
+          },
+          "far_only": {
+            "uncensored": {
+              "all": {
+                "count": 4096,
+                "normalized_rms": 2.615053033645941,
+                "bar": 1.5,
+                "passed": false,
+                "present": true
+              },
+              "R": {
+                "count": 1024,
+                "normalized_rms": 2.4032964434591735,
+                "bar": 1.75,
+                "passed": false,
+                "present": true
+              },
+              "G1": {
+                "count": 1024,
+                "normalized_rms": 2.409156820937294,
+                "bar": 1.75,
+                "passed": false,
+                "present": true
+              },
+              "G2": {
+                "count": 1024,
+                "normalized_rms": 2.4753551435032213,
+                "bar": 1.75,
+                "passed": false,
+                "present": true
+              },
+              "B": {
+                "count": 1024,
+                "normalized_rms": 3.1059227301469217,
+                "bar": 1.75,
+                "passed": false,
+                "present": true
+              },
+              "bright": {
+                "count": 41,
+                "normalized_rms": 17.091937011315814,
+                "bar": 1.75,
+                "passed": false,
+                "present": true
+              },
+              "dim": {
+                "count": 4055,
+                "normalized_rms": 1.9884375366560414,
+                "bar": 1.75,
+                "passed": false,
+                "present": true
+              }
+            },
+            "censor_count": 0,
+            "censor_one_sided_rms": null,
+            "passed": false
+          }
+        },
+        {
+          "index": 6,
+          "candidate": {
+            "uncensored": {
+              "all": {
+                "count": 4096,
+                "normalized_rms": 1.2757378259588685,
+                "bar": 1.5,
+                "passed": true,
+                "present": true
+              },
+              "R": {
+                "count": 1024,
+                "normalized_rms": 1.3308046638865292,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G1": {
+                "count": 1024,
+                "normalized_rms": 1.2352937231794463,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G2": {
+                "count": 1024,
+                "normalized_rms": 1.193851222133521,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "B": {
+                "count": 1024,
+                "normalized_rms": 1.337069790919929,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "bright": {
+                "count": 0,
+                "normalized_rms": null,
+                "bar": 1.75,
+                "passed": true,
+                "present": false
+              },
+              "dim": {
+                "count": 4096,
+                "normalized_rms": 1.2757378259588685,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              }
+            },
+            "censor_count": 0,
+            "censor_one_sided_rms": null,
+            "passed": true
+          },
+          "far_only": {
+            "uncensored": {
+              "all": {
+                "count": 4096,
+                "normalized_rms": 8.787571897847391,
+                "bar": 1.5,
+                "passed": false,
+                "present": true
+              },
+              "R": {
+                "count": 1024,
+                "normalized_rms": 7.550305594296856,
+                "bar": 1.75,
+                "passed": false,
+                "present": true
+              },
+              "G1": {
+                "count": 1024,
+                "normalized_rms": 7.964421052397338,
+                "bar": 1.75,
+                "passed": false,
+                "present": true
+              },
+              "G2": {
+                "count": 1024,
+                "normalized_rms": 7.838203871498228,
+                "bar": 1.75,
+                "passed": false,
+                "present": true
+              },
+              "B": {
+                "count": 1024,
+                "normalized_rms": 11.269832396315335,
+                "bar": 1.75,
+                "passed": false,
+                "present": true
+              },
+              "bright": {
+                "count": 0,
+                "normalized_rms": null,
+                "bar": 1.75,
+                "passed": true,
+                "present": false
+              },
+              "dim": {
+                "count": 4096,
+                "normalized_rms": 8.787571897847391,
+                "bar": 1.75,
+                "passed": false,
+                "present": true
+              }
+            },
+            "censor_count": 0,
+            "censor_one_sided_rms": null,
+            "passed": false
+          }
+        }
+      ],
+      "heldout_pass": false,
+      "quality": {
+        "regions": {
+          "whole": {
+            "candidate": {
+              "rgb_rmse": 235.1119157460787,
+              "chroma_rmse": 163.18695215726
+            },
+            "far_only": {
+              "rgb_rmse": 496.88377690019985,
+              "chroma_rmse": 650.2708373566716
+            },
+            "mean": {
+              "rgb_rmse": 753.7234759667058,
+              "chroma_rmse": 518.2588805886822
+            },
+            "oracle_bound": {
+              "rgb_rmse": 397.5372463674584,
+              "chroma_rmse": 249.56266183318613
+            }
+          },
+          "core": {
+            "candidate": {
+              "rgb_rmse": 1064.7315455801588,
+              "chroma_rmse": 400.478480861108
+            },
+            "far_only": {
+              "rgb_rmse": 1786.240868102814,
+              "chroma_rmse": 1573.837047318474
+            },
+            "mean": {
+              "rgb_rmse": 3452.1334344936117,
+              "chroma_rmse": 1303.8572499053812
+            },
+            "oracle_bound": {
+              "rgb_rmse": 1850.2248549886135,
+              "chroma_rmse": 793.2909697045076
+            }
+          },
+          "ridge": {
+            "candidate": {
+              "rgb_rmse": 473.9414575621931,
+              "chroma_rmse": 273.15738078747376
+            },
+            "far_only": {
+              "rgb_rmse": 944.0280541704689,
+              "chroma_rmse": 1162.315886756699
+            },
+            "mean": {
+              "rgb_rmse": 1536.391066451828,
+              "chroma_rmse": 930.9825690440236
+            },
+            "oracle_bound": {
+              "rgb_rmse": 816.8284571147884,
+              "chroma_rmse": 467.7684323233422
+            }
+          },
+          "crossing": {
+            "candidate": {
+              "rgb_rmse": 848.91985218846,
+              "chroma_rmse": 360.8020895049356
+            },
+            "far_only": {
+              "rgb_rmse": 1532.7317908619168,
+              "chroma_rmse": 1626.109964055532
+            },
+            "mean": {
+              "rgb_rmse": 2763.9900380411414,
+              "chroma_rmse": 1324.4845045485336
+            },
+            "oracle_bound": {
+              "rgb_rmse": 1478.1547026912529,
+              "chroma_rmse": 720.596585345536
+            }
+          },
+          "fan": {
+            "candidate": {
+              "rgb_rmse": 418.2435445298352,
+              "chroma_rmse": 246.77024034112793
+            },
+            "far_only": {
+              "rgb_rmse": 846.3604041669115,
+              "chroma_rmse": 1052.7729389537033
+            },
+            "mean": {
+              "rgb_rmse": 1356.894321753337,
+              "chroma_rmse": 840.3174706916507
+            },
+            "oracle_bound": {
+              "rgb_rmse": 719.6762645538982,
+              "chroma_rmse": 419.2428008816227
+            }
+          }
+        },
+        "components": {
+          "glint": {
+            "candidate": {
+              "recovery": [
+                0.839659485349958,
+                0.8365318641756718,
+                0.8545372437058062
+              ],
+              "template_energy": [
+                3871784984.164553,
+                3600167379.165745,
+                2844576438.871642
+              ],
+              "live": true
+            },
+            "oracle_bound": {
+              "recovery": [
+                0.6257763794626515,
+                0.6123604175607923,
+                0.6521991427767284
+              ],
+              "template_energy": [
+                3871784984.164553,
+                3600167379.165745,
+                2844576438.871642
+              ],
+              "live": true
+            },
+            "passed": true,
+            "bounds": [
+              39,
+              42,
+              52,
+              55
+            ]
+          },
+          "ridge": {
+            "candidate": {
+              "recovery": [
+                0.9392214672660634,
+                0.9354654863929729,
+                0.9152912216332367
+              ],
+              "template_energy": [
+                51983735.586246416,
+                138514832.62970743,
+                161668706.2341408
+              ],
+              "live": true
+            },
+            "oracle_bound": {
+              "recovery": [
+                0.7196321313843479,
+                0.8267673147030402,
+                0.8474577243749162
+              ],
+              "template_energy": [
+                51983735.586246416,
+                138514832.62970743,
+                161668706.2341408
+              ],
+              "live": true
+            },
+            "passed": true,
+            "bounds": [
+              39,
+              31,
+              63,
+              41
+            ]
+          }
+        },
+        "bars": {
+          "whole_mean_gain": true,
+          "core_mean_gain": true,
+          "ridge_mean_gain": true,
+          "whole_far_only_comparison": true,
+          "crossing_far_only_comparison": true,
+          "core_far_only_comparison": true,
+          "ridge_far_only_comparison": true,
+          "glint_component": true,
+          "ridge_component": true
+        },
+        "passed": true
+      },
+      "qualified": false,
+      "heldout_poison_initialization_exact": null,
+      "actual_fit_read_indices": [
+        0,
+        1,
+        3,
+        4,
+        5,
+        7,
+        8
+      ],
+      "actual_fit_read_count": 1143,
+      "one_layer_read_indices": [
+        0,
+        1,
+        3,
+        4,
+        5,
+        7,
+        8
+      ],
+      "output_fingerprints": {
+        "pinhole": "a77a48b9a044e18f2d155ed7e1087be39fa5dd5b2a8f3dbca8bde3d4a596c2fa",
+        "near": "8714b965166f82afe227fff5993868bc715b4937cf4a84d82f8e5b0ac02e37ce",
+        "far": "80b39eba32b47fa400a7226aac22fae333d37902f259650406c200c721c68eb3",
+        "alpha": "c04523c8eea23b2c8a5c8aa68b0c6908298bfd6a4dfa04a5e73b853ec44d53c5",
+        "history": "6273cfc555fd5ac0db5a5c765a7ad2d0d7b8cd0ca33ef57380b9ea3ad5b5e14a"
+      },
+      "interpretation": "Known-optics utility only; neither calibration nor canonical-merge comparison."
+    },
+    {
+      "name": "far-only",
+      "source_sha256": "89e82a9ab649f933f99ac46e4629418eb6059b235e35000bdad7d14b833f19e2",
+      "source_unchanged": true,
+      "observation_shape": [
+        9,
+        96,
+        96
+      ],
+      "saturated_codes": 12,
+      "clipped_training_valid": 12,
+      "protected_glint_core_bounds": [
+        39,
+        42,
+        52,
+        55
+      ],
+      "wholly_unclipped_training_glint_views": [
+        3,
+        4,
+        5,
+        7,
+        8
+      ],
+      "above_metadata_white_not_censored": 4,
+      "oracle_training_indices": [
+        0,
+        1,
+        3,
+        4,
+        5,
+        7,
+        8
+      ],
+      "operator_adequacy": {
+        "records": [
+          {
+            "index": 0,
+            "maximum_difference_dn": {
+              "whole": 0.04296875,
+              "crossing": 0.04296875
+            }
+          },
+          {
+            "index": 1,
+            "maximum_difference_dn": {
+              "whole": 0.015625,
+              "crossing": 0.015625
+            }
+          },
+          {
+            "index": 2,
+            "maximum_difference_dn": {
+              "whole": 0.0087890625,
+              "crossing": 0.0087890625
+            }
+          },
+          {
+            "index": 3,
+            "maximum_difference_dn": {
+              "whole": 0.00439453125,
+              "crossing": 0.00439453125
+            }
+          },
+          {
+            "index": 4,
+            "maximum_difference_dn": {
+              "whole": 0.0029296875,
+              "crossing": 0.0029296875
+            }
+          },
+          {
+            "index": 5,
+            "maximum_difference_dn": {
+              "whole": 0.002197265625,
+              "crossing": 0.002197265625
+            }
+          },
+          {
+            "index": 6,
+            "maximum_difference_dn": {
+              "whole": 0.001953125,
+              "crossing": 0.00146484375
+            }
+          },
+          {
+            "index": 7,
+            "maximum_difference_dn": {
+              "whole": 0.00146484375,
+              "crossing": 0.0009765625
+            }
+          },
+          {
+            "index": 8,
+            "maximum_difference_dn": {
+              "whole": 0.001708984375,
+              "crossing": 0.001220703125
+            }
+          }
+        ],
+        "passed": true,
+        "scope": "Same supplied64 discrete pupil; independent interpolation/compositing implementation"
+      },
+      "physical_adequacy": null,
+      "heldout_prediction": [
+        {
+          "index": 2,
+          "candidate": {
+            "uncensored": {
+              "all": {
+                "count": 4096,
+                "normalized_rms": 1.2697455840877074,
+                "bar": 1.5,
+                "passed": true,
+                "present": true
+              },
+              "R": {
+                "count": 1024,
+                "normalized_rms": 1.4639678237693856,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G1": {
+                "count": 1024,
+                "normalized_rms": 1.238112113665966,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G2": {
+                "count": 1024,
+                "normalized_rms": 1.2001406110829196,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "B": {
+                "count": 1024,
+                "normalized_rms": 1.1543632495154956,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "bright": {
+                "count": 43,
+                "normalized_rms": 6.738419224258488,
+                "bar": 1.75,
+                "passed": false,
+                "present": true
+              },
+              "dim": {
+                "count": 4053,
+                "normalized_rms": 1.0712722634984322,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              }
+            },
+            "censor_count": 0,
+            "censor_one_sided_rms": null,
+            "passed": false
+          },
+          "far_only": {
+            "uncensored": {
+              "all": {
+                "count": 4096,
+                "normalized_rms": 1.5020077011235997,
+                "bar": 1.5,
+                "passed": false,
+                "present": true
+              },
+              "R": {
+                "count": 1024,
+                "normalized_rms": 1.77675700964694,
+                "bar": 1.75,
+                "passed": false,
+                "present": true
+              },
+              "G1": {
+                "count": 1024,
+                "normalized_rms": 1.4902937740111901,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G2": {
+                "count": 1024,
+                "normalized_rms": 1.3993624790991386,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "B": {
+                "count": 1024,
+                "normalized_rms": 1.2992506243376845,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "bright": {
+                "count": 43,
+                "normalized_rms": 9.465784149354256,
+                "bar": 1.75,
+                "passed": false,
+                "present": true
+              },
+              "dim": {
+                "count": 4053,
+                "normalized_rms": 1.1529728735911582,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              }
+            },
+            "censor_count": 0,
+            "censor_one_sided_rms": null,
+            "passed": false
+          }
+        },
+        {
+          "index": 6,
+          "candidate": {
+            "uncensored": {
+              "all": {
+                "count": 4096,
+                "normalized_rms": 1.0637189439695602,
+                "bar": 1.5,
+                "passed": true,
+                "present": true
+              },
+              "R": {
+                "count": 1024,
+                "normalized_rms": 1.0613895413841377,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G1": {
+                "count": 1024,
+                "normalized_rms": 1.0500578028708332,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G2": {
+                "count": 1024,
+                "normalized_rms": 1.08239331423873,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "B": {
+                "count": 1024,
+                "normalized_rms": 1.0607768532545439,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "bright": {
+                "count": 0,
+                "normalized_rms": null,
+                "bar": 1.75,
+                "passed": true,
+                "present": false
+              },
+              "dim": {
+                "count": 4096,
+                "normalized_rms": 1.0637189439695602,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              }
+            },
+            "censor_count": 0,
+            "censor_one_sided_rms": null,
+            "passed": true
+          },
+          "far_only": {
+            "uncensored": {
+              "all": {
+                "count": 4096,
+                "normalized_rms": 1.1229717521458904,
+                "bar": 1.5,
+                "passed": true,
+                "present": true
+              },
+              "R": {
+                "count": 1024,
+                "normalized_rms": 1.1728561984482704,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G1": {
+                "count": 1024,
+                "normalized_rms": 1.1127998534630401,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G2": {
+                "count": 1024,
+                "normalized_rms": 1.0941566677736243,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "B": {
+                "count": 1024,
+                "normalized_rms": 1.1104810825633504,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "bright": {
+                "count": 0,
+                "normalized_rms": null,
+                "bar": 1.75,
+                "passed": true,
+                "present": false
+              },
+              "dim": {
+                "count": 4096,
+                "normalized_rms": 1.1229717521458904,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              }
+            },
+            "censor_count": 0,
+            "censor_one_sided_rms": null,
+            "passed": true
+          }
+        }
+      ],
+      "heldout_pass": false,
+      "quality": {
+        "regions": {
+          "whole": {
+            "candidate": {
+              "rgb_rmse": 247.55986192812605,
+              "chroma_rmse": 74.81783461007343
+            },
+            "far_only": {
+              "rgb_rmse": 291.1171360099486,
+              "chroma_rmse": 80.00779382934371
+            },
+            "mean": {
+              "rgb_rmse": 761.0106909703819,
+              "chroma_rmse": 77.27346220786558
+            },
+            "oracle_bound": {
+              "rgb_rmse": 377.22840944318074,
+              "chroma_rmse": 99.93446861813557
+            }
+          },
+          "core": {
+            "candidate": {
+              "rgb_rmse": 1214.6397146887582,
+              "chroma_rmse": 364.87853849736797
+            },
+            "far_only": {
+              "rgb_rmse": 1432.7182512802606,
+              "chroma_rmse": 391.88801558773275
+            },
+            "mean": {
+              "rgb_rmse": 3727.284470112629,
+              "chroma_rmse": 377.37354684182304
+            },
+            "oracle_bound": {
+              "rgb_rmse": 1855.6565162663092,
+              "chroma_rmse": 481.8683571746009
+            }
+          },
+          "ridge": {
+            "candidate": {
+              "rgb_rmse": 516.6712139392772,
+              "chroma_rmse": 155.39895715965173
+            },
+            "far_only": {
+              "rgb_rmse": 608.8440803952694,
+              "chroma_rmse": 166.7178189944199
+            },
+            "mean": {
+              "rgb_rmse": 1589.4675318571337,
+              "chroma_rmse": 160.91620964094548
+            },
+            "oracle_bound": {
+              "rgb_rmse": 788.6357054809403,
+              "chroma_rmse": 205.64834110604588
+            }
+          },
+          "crossing": {
+            "candidate": {
+              "rgb_rmse": 957.4601556338854,
+              "chroma_rmse": 287.7203661077273
+            },
+            "far_only": {
+              "rgb_rmse": 1129.3377508322537,
+              "chroma_rmse": 308.9619818544793
+            },
+            "mean": {
+              "rgb_rmse": 2941.6068118750113,
+              "chroma_rmse": 297.65496631771254
+            },
+            "oracle_bound": {
+              "rgb_rmse": 1462.7281127372596,
+              "chroma_rmse": 380.04218581422884
+            }
+          },
+          "fan": {
+            "candidate": {
+              "rgb_rmse": 453.42868514823436,
+              "chroma_rmse": 136.43945926110354
+            },
+            "far_only": {
+              "rgb_rmse": 534.177343328475,
+              "chroma_rmse": 146.31106143848504
+            },
+            "mean": {
+              "rgb_rmse": 1396.0190692394578,
+              "chroma_rmse": 141.30905695009156
+            },
+            "oracle_bound": {
+              "rgb_rmse": 691.9381292084967,
+              "chroma_rmse": 180.71021819394824
+            }
+          }
+        },
+        "components": {},
+        "bars": {
+          "rgb_rmse": true,
+          "chroma_rmse": true
+        },
+        "passed": true
+      },
+      "qualified": false,
+      "heldout_poison_initialization_exact": null,
+      "actual_fit_read_indices": [
+        0,
+        1,
+        3,
+        4,
+        5,
+        7,
+        8
+      ],
+      "actual_fit_read_count": 1143,
+      "one_layer_read_indices": [
+        0,
+        1,
+        3,
+        4,
+        5,
+        7,
+        8
+      ],
+      "output_fingerprints": {
+        "pinhole": "8d7255c5023aae9710a18e33a7db933361e054fd386dd998431137dc112b8165",
+        "near": "e0054c3ecbe24d4fa007f5f66bf10978f9952310d111e20cbd1d69882ec6a6d9",
+        "far": "a518d69c8dbe5f7d40f60b030d8bd66f9125d2cae0bd961523603ecd6e091cf3",
+        "alpha": "b59b63831a04612a44db7b234332e01128fd43542a84ac61c68e57f5edf4404b",
+        "history": "09fe14e882881ac7014a4f65ca3bcd8be4d9cdb8523079aef70a65d8924d8c39"
+      },
+      "interpretation": "Known-optics utility only; neither calibration nor canonical-merge comparison."
+    },
+    {
+      "name": "angular-mismatch",
+      "source_sha256": "931877c0199642ac55d47565012d55dfdfa6aa1942eeaf139c6c142c480507da",
+      "source_unchanged": true,
+      "observation_shape": [
+        9,
+        96,
+        96
+      ],
+      "saturated_codes": 3,
+      "clipped_training_valid": 3,
+      "protected_glint_core_bounds": [
+        39,
+        42,
+        52,
+        55
+      ],
+      "wholly_unclipped_training_glint_views": [
+        1,
+        3,
+        4,
+        5,
+        7,
+        8
+      ],
+      "above_metadata_white_not_censored": 2,
+      "oracle_training_indices": [
+        0,
+        1,
+        3,
+        4,
+        5,
+        7,
+        8
+      ],
+      "operator_adequacy": null,
+      "physical_adequacy": null,
+      "heldout_prediction": [
+        {
+          "index": 2,
+          "candidate": {
+            "uncensored": {
+              "all": {
+                "count": 4096,
+                "normalized_rms": 1.5855249356776222,
+                "bar": 1.5,
+                "passed": false,
+                "present": true
+              },
+              "R": {
+                "count": 1024,
+                "normalized_rms": 1.7024704047495043,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G1": {
+                "count": 1024,
+                "normalized_rms": 1.5537748093160573,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G2": {
+                "count": 1024,
+                "normalized_rms": 1.5538596781703686,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "B": {
+                "count": 1024,
+                "normalized_rms": 1.5259278325220034,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "bright": {
+                "count": 43,
+                "normalized_rms": 10.00426565963435,
+                "bar": 1.75,
+                "passed": false,
+                "present": true
+              },
+              "dim": {
+                "count": 4053,
+                "normalized_rms": 1.2160231961068784,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              }
+            },
+            "censor_count": 0,
+            "censor_one_sided_rms": null,
+            "passed": false
+          },
+          "far_only": {
+            "uncensored": {
+              "all": {
+                "count": 4096,
+                "normalized_rms": 3.506405586567261,
+                "bar": 1.5,
+                "passed": false,
+                "present": true
+              },
+              "R": {
+                "count": 1024,
+                "normalized_rms": 3.522924170129491,
+                "bar": 1.75,
+                "passed": false,
+                "present": true
+              },
+              "G1": {
+                "count": 1024,
+                "normalized_rms": 3.3090433601678986,
+                "bar": 1.75,
+                "passed": false,
+                "present": true
+              },
+              "G2": {
+                "count": 1024,
+                "normalized_rms": 3.3432355676931684,
+                "bar": 1.75,
+                "passed": false,
+                "present": true
+              },
+              "B": {
+                "count": 1024,
+                "normalized_rms": 3.826425723961972,
+                "bar": 1.75,
+                "passed": false,
+                "present": true
+              },
+              "bright": {
+                "count": 43,
+                "normalized_rms": 25.76750057049194,
+                "bar": 1.75,
+                "passed": false,
+                "present": true
+              },
+              "dim": {
+                "count": 4053,
+                "normalized_rms": 2.319707848078885,
+                "bar": 1.75,
+                "passed": false,
+                "present": true
+              }
+            },
+            "censor_count": 0,
+            "censor_one_sided_rms": null,
+            "passed": false
+          }
+        },
+        {
+          "index": 6,
+          "candidate": {
+            "uncensored": {
+              "all": {
+                "count": 4096,
+                "normalized_rms": 1.7038622119692801,
+                "bar": 1.5,
+                "passed": false,
+                "present": true
+              },
+              "R": {
+                "count": 1024,
+                "normalized_rms": 1.7517491622305943,
+                "bar": 1.75,
+                "passed": false,
+                "present": true
+              },
+              "G1": {
+                "count": 1024,
+                "normalized_rms": 1.7138089695237273,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G2": {
+                "count": 1024,
+                "normalized_rms": 1.6740818170909324,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "B": {
+                "count": 1024,
+                "normalized_rms": 1.6745953265781397,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "bright": {
+                "count": 0,
+                "normalized_rms": null,
+                "bar": 1.75,
+                "passed": true,
+                "present": false
+              },
+              "dim": {
+                "count": 4096,
+                "normalized_rms": 1.7038622119692801,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              }
+            },
+            "censor_count": 0,
+            "censor_one_sided_rms": null,
+            "passed": false
+          },
+          "far_only": {
+            "uncensored": {
+              "all": {
+                "count": 4096,
+                "normalized_rms": 8.970171051160913,
+                "bar": 1.5,
+                "passed": false,
+                "present": true
+              },
+              "R": {
+                "count": 1024,
+                "normalized_rms": 8.150018856045332,
+                "bar": 1.75,
+                "passed": false,
+                "present": true
+              },
+              "G1": {
+                "count": 1024,
+                "normalized_rms": 8.103036827027472,
+                "bar": 1.75,
+                "passed": false,
+                "present": true
+              },
+              "G2": {
+                "count": 1024,
+                "normalized_rms": 8.070296302076724,
+                "bar": 1.75,
+                "passed": false,
+                "present": true
+              },
+              "B": {
+                "count": 1024,
+                "normalized_rms": 11.164415755917098,
+                "bar": 1.75,
+                "passed": false,
+                "present": true
+              },
+              "bright": {
+                "count": 0,
+                "normalized_rms": null,
+                "bar": 1.75,
+                "passed": true,
+                "present": false
+              },
+              "dim": {
+                "count": 4096,
+                "normalized_rms": 8.970171051160913,
+                "bar": 1.75,
+                "passed": false,
+                "present": true
+              }
+            },
+            "censor_count": 0,
+            "censor_one_sided_rms": null,
+            "passed": false
+          }
+        }
+      ],
+      "heldout_pass": false,
+      "quality": {
+        "regions": {
+          "whole": {
+            "candidate": {
+              "rgb_rmse": 249.0588887442987,
+              "chroma_rmse": 171.3474619586712
+            },
+            "far_only": {
+              "rgb_rmse": 490.3037083207367,
+              "chroma_rmse": 650.9225076712718
+            },
+            "mean": {
+              "rgb_rmse": 744.170355071125,
+              "chroma_rmse": 517.6590546796673
+            },
+            "oracle_bound": {
+              "rgb_rmse": 380.19997632765916,
+              "chroma_rmse": 250.36084350501568
+            }
+          },
+          "core": {
+            "candidate": {
+              "rgb_rmse": 1113.1665038517688,
+              "chroma_rmse": 431.6900277991935
+            },
+            "far_only": {
+              "rgb_rmse": 1734.498161424095,
+              "chroma_rmse": 1582.0837557184466
+            },
+            "mean": {
+              "rgb_rmse": 3396.5243735816616,
+              "chroma_rmse": 1302.916548082658
+            },
+            "oracle_bound": {
+              "rgb_rmse": 1760.7005820346176,
+              "chroma_rmse": 801.0869221977448
+            }
+          },
+          "ridge": {
+            "candidate": {
+              "rgb_rmse": 499.0463675380407,
+              "chroma_rmse": 295.7770020182341
+            },
+            "far_only": {
+              "rgb_rmse": 926.9079376518897,
+              "chroma_rmse": 1164.0845423564328
+            },
+            "mean": {
+              "rgb_rmse": 1512.8219498331325,
+              "chroma_rmse": 929.6767984964803
+            },
+            "oracle_bound": {
+              "rgb_rmse": 778.8043990093504,
+              "chroma_rmse": 468.68523344618933
+            }
+          },
+          "crossing": {
+            "candidate": {
+              "rgb_rmse": 889.151573607443,
+              "chroma_rmse": 408.18000913026526
+            },
+            "far_only": {
+              "rgb_rmse": 1494.4756773720665,
+              "chroma_rmse": 1629.563963129289
+            },
+            "mean": {
+              "rgb_rmse": 2715.1462358519893,
+              "chroma_rmse": 1321.2141969838297
+            },
+            "oracle_bound": {
+              "rgb_rmse": 1404.9085207618903,
+              "chroma_rmse": 720.4371026387086
+            }
+          },
+          "fan": {
+            "candidate": {
+              "rgb_rmse": 442.8008914543511,
+              "chroma_rmse": 266.3184493287434
+            },
+            "far_only": {
+              "rgb_rmse": 833.0264768870161,
+              "chroma_rmse": 1054.2229770606086
+            },
+            "mean": {
+              "rgb_rmse": 1338.7186939803835,
+              "chroma_rmse": 839.0565268065349
+            },
+            "oracle_bound": {
+              "rgb_rmse": 687.0119091806663,
+              "chroma_rmse": 420.2078360833102
+            }
+          }
+        },
+        "components": {
+          "glint": {
+            "candidate": {
+              "recovery": [
+                0.9566704483888937,
+                0.9656005483778085,
+                0.9942929050035474
+              ],
+              "template_energy": [
+                3871784984.164553,
+                3600167379.165745,
+                2844576438.871642
+              ],
+              "live": true
+            },
+            "oracle_bound": {
+              "recovery": [
+                0.6514734890370383,
+                0.6488711749778239,
+                0.6934436634891918
+              ],
+              "template_energy": [
+                3871784984.164553,
+                3600167379.165745,
+                2844576438.871642
+              ],
+              "live": true
+            },
+            "passed": true,
+            "bounds": [
+              39,
+              42,
+              52,
+              55
+            ]
+          },
+          "ridge": {
+            "candidate": {
+              "recovery": [
+                0.9546498641862248,
+                0.9187924288515217,
+                0.9161582699314129
+              ],
+              "template_energy": [
+                51983735.586246416,
+                138514832.62970743,
+                161668706.2341408
+              ],
+              "live": true
+            },
+            "oracle_bound": {
+              "recovery": [
+                0.7365502687882224,
+                0.8155077390770025,
+                0.837038256998121
+              ],
+              "template_energy": [
+                51983735.586246416,
+                138514832.62970743,
+                161668706.2341408
+              ],
+              "live": true
+            },
+            "passed": true,
+            "bounds": [
+              39,
+              31,
+              63,
+              41
+            ]
+          }
+        },
+        "bars": {},
+        "passed": null
+      },
+      "qualified": null,
+      "heldout_poison_initialization_exact": null,
+      "actual_fit_read_indices": [
+        0,
+        1,
+        3,
+        4,
+        5,
+        7,
+        8
+      ],
+      "actual_fit_read_count": 1143,
+      "one_layer_read_indices": [
+        0,
+        1,
+        3,
+        4,
+        5,
+        7,
+        8
+      ],
+      "output_fingerprints": {
+        "pinhole": "a0e13de24d18a28d2edaf39261bc881db4490cddc7a6e59676d8c41e905bec06",
+        "near": "04dc8d3b2b5b901ddbe30d46c66add40f0e2d42d6608f64129a12d3388b9f2e6",
+        "far": "2afee3bccef51763157a93934a4ff6e599717edfff598b892fb37b3273d9ccb9",
+        "alpha": "b10eab517f4ff194166f2ced8b60b45eff22ff01127e53ecc07dacca07e4ef23",
+        "history": "880a1734dd125d3207604bd64b5d8c6bb0850d1827b64d6aaba196b91fe0fe8a"
+      },
+      "interpretation": "Descriptive mismatch. Heldout failure => screen refusal; no automatic model gate exists."
+    }
+  ],
+  "limitations": [
+    "Known discrete64-ray optics and depths; shared injected calibration is not independently validated.",
+    "Far-only comparator is restricted, not the best possible one-layer method.",
+    "Truth-informed donor is a bound and never sees withheld input.",
+    "No canonical full-consumer comparison; no SOTA or photographic claim.",
+    "Heldout prediction can fit incorrect latent layers; truth/component bars remain binding."
+  ]
+}

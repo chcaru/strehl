@@ -1,0 +1,165 @@
+{
+  "status": "FINAL_CHECKPOINTS_SCORED",
+  "arms": [
+    {
+      "name": "flat",
+      "arm": "two-layer",
+      "measurement_complete": false,
+      "missing": [],
+      "optimizer_status": "numerical_refusal",
+      "optimizer_error": "view size is not compatible with input tensor's size and stride (at least one dimension spans across two contiguous subspaces). Use .reshape(...) instead.",
+      "interpretation": "Optimizer/export incomplete; not an image-quality rejection"
+    },
+    {
+      "name": "far-only",
+      "arm": "far-only",
+      "measurement_complete": false,
+      "missing": [],
+      "optimizer_status": "numerical_refusal",
+      "optimizer_error": "view size is not compatible with input tensor's size and stride (at least one dimension spans across two contiguous subspaces). Use .reshape(...) instead.",
+      "interpretation": "Optimizer/export incomplete; not an image-quality rejection"
+    },
+    {
+      "name": "layered",
+      "arm": "two-layer",
+      "measurement_complete": false,
+      "missing": [],
+      "optimizer_status": "numerical_refusal",
+      "optimizer_error": "view size is not compatible with input tensor's size and stride (at least one dimension spans across two contiguous subspaces). Use .reshape(...) instead.",
+      "interpretation": "Optimizer/export incomplete; not an image-quality rejection"
+    }
+  ],
+  "measurement_complete": false,
+  "all_fixed_quality_bars_pass": null,
+  "all_stationary": null,
+  "original_160_step_screen_still_failed": true,
+  "physical_adequacy": {
+    "records": [
+      {
+        "index": 0,
+        "normalized_rms": {
+          "whole": 0.5031009187802951,
+          "crossing": 1.0694726224298692
+        }
+      },
+      {
+        "index": 2,
+        "normalized_rms": {
+          "whole": 0.45461367236226197,
+          "crossing": 1.3490733263673196
+        }
+      },
+      {
+        "index": 4,
+        "normalized_rms": {
+          "whole": 0.4717774978865741,
+          "crossing": 1.524503237817421
+        }
+      },
+      {
+        "index": 6,
+        "normalized_rms": {
+          "whole": 0.6420379970064604,
+          "crossing": 1.678243724770749
+        }
+      },
+      {
+        "index": 8,
+        "normalized_rms": {
+          "whole": 0.8870094153387984,
+          "crossing": 1.1994156834564524
+        }
+      }
+    ],
+    "passed": false,
+    "scope": "Independent1024-ray resolution check; does not block discrete utility execution, does block real-RAW license"
+  },
+  "real_photo_admission": false,
+  "source_immutable": true,
+  "continuation_immutable": true,
+  "source_files": {
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\angular-mismatch\\candidate-rgb-f32.npy": "7e6df1cac1082405cbbdbdfe96063dccdbd8277158ce9f858987be6c9a1e353f",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\angular-mismatch\\far-only\\receipt.json": "e8ce6071defc318ceafca7a01554ee57bead2b2f889ddb5b5589816c3e8ad48f",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\angular-mismatch\\far-only\\reconstruction.npz": "aaf0d1ba11e9f367734834a56620a42d373accc23ecacee0b1a54f7727519c06",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\angular-mismatch\\far-only\\state.pt": "3c8aa8eb0864d3308e278dd12e95bb1940ea8671fa73a2ae8d692422d6937cce",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\angular-mismatch\\far-only-rgb-f32.npy": "4ee31cdbe8274858f0dd9b21ea80392807e58917288b190f654af6e7418c5af5",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\angular-mismatch\\mean-rgb-f32.npy": "b5cacd3550abfef4c3e05e6118cb57d020b67d356a9b582e3d348e43c2844bc8",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\angular-mismatch\\observations-u16.npy": "30be163b7949cd191c09db98edf1b45930d125189ca610ac62f285f25252a9f2",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\angular-mismatch\\oracle-bound-rgb-f32.npy": "e5016da8a2e5553f1fce8199576411f56fc2f3330236dc23515808022e86fcc4",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\angular-mismatch\\prefit-adequacy.json": "880baa12481177c51895e3be1854368345d9feacb04f5f9b0dcd093d5420f970",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\angular-mismatch\\result.json": "9c73e49806bc74b59dfe14c9043baf3c50890020ddf7342ad1a7800c55a64a2c",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\angular-mismatch\\truth-rgb-f32.npy": "2668537f49285dae0b06ad4f9f027387c9605947d8a8b53b5d021d17f239d743",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\angular-mismatch\\two-layer\\receipt.json": "4feb650b2e387753c335758e8356ed477bb5529761db20b70cf7c53bc15ff768",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\angular-mismatch\\two-layer\\reconstruction.npz": "1e09ae50c8260d03bfc4d431df82c413e48f0aab3f6da35b6b194eb85f70867e",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\angular-mismatch\\two-layer\\state.pt": "1d11c2cb0f29592a2ceb68b44082a3ef4273e6be7b65d0c6a775ad1ec980718c",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\bindings.json": "83dc03308210095339b2629105a9131669bd1bef408b0ebddbaade3c7b91140a",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\far-only\\candidate-rgb-f32.npy": "43d4b9e35b96eb3f962b14555fb49dd0e2f782b272798c52e6105ba4fe80ea1d",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\far-only\\far-only\\receipt.json": "ef1a336761446fe0a32725a80416975e1fea540cd3b8456489a2b553b483d371",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\far-only\\far-only\\reconstruction.npz": "b081bc5298d26f8b2472d16f36366e3ca56f5c6934519908ec0f4d83be05acee",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\far-only\\far-only\\state.pt": "3425241fae9dd3da39bf3deb4242391eb9d75da61d7117868928c88d0a7901e3",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\far-only\\far-only-rgb-f32.npy": "190c0214a1e661d34b3cf40389fccebb7fa5b6a2c7f2259c36d2528b17e5b1a0",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\far-only\\mean-rgb-f32.npy": "f53b7be4ece753b343061879cf6f4c38d076cc516632905f12c2faef1e1603a2",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\far-only\\observations-u16.npy": "9958c444cfd91c2b497dfbfa352b82efaa047166f499ad6adf77002be5d26b71",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\far-only\\oracle-bound-rgb-f32.npy": "47cbc7a6238ceff5a3520402a8cf42110a88e2638b0b248ce3adf6fa317334f2",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\far-only\\prefit-adequacy.json": "81451f4a303b9f0684f575df55421c9c74bef8010d6fb1ad07e6da40085239a7",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\far-only\\result.json": "40294d58e123573a70be10df97a24f2aa34e00a4e20d089cbd02b1eafcfe2b54",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\far-only\\truth-rgb-f32.npy": "cafcfd22a43660fd754298af6b2b7c8ec5098d57e7f8cb1eb465fa311c6c2241",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\far-only\\two-layer\\receipt.json": "3096c854ebf8a7064967e8d7872cc99a9a33ed200de4918f7a2330d5e55534a6",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\far-only\\two-layer\\reconstruction.npz": "d4798ae712f66d3111083fc6ac816e6f0fc7c702de0f445e619bf2fd48db23f6",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\far-only\\two-layer\\state.pt": "0c25d6413f6c51ba3851ba9f4bf26741e5a1d9db8d6bd6b98344aea4aef2a456",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\candidate-rgb-f32.npy": "26d1933361d4e55f36654bda5de2e481eb3bf827d99b7a5e0753aa1925f27523",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\far-only\\receipt.json": "bbad44a03ceda48c64f60bba2ab802d34a41bd252941300ebaf62e391ed86d32",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\far-only\\reconstruction.npz": "7179a526e21427fec5f98ab6dd344d5b00815432c2f232f5d8f19c964bfc511f",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\far-only\\state.pt": "55db3d2d50981e788f29bf1846abee895cf50795f6fdf94d9e7e82f54f2226a1",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\far-only-rgb-f32.npy": "bcc4801e2d39cee761940771e509371a892ea535578dffc8ec1c84dc1717555d",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\mean-rgb-f32.npy": "949b99f79af998d85f0c273f6e7d85736a4adb6ada236d243776b5ec71ebcd94",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\observations-u16.npy": "2db55b6a69c2a484ee3287128f3e5a624d3caccdb6a2f18cae60fafd5f7a3f9f",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\oracle-bound-rgb-f32.npy": "2a3dfd15829c0dee5b9858504688eb1b14b8ed2d7cb4bd3871bcd3487a8d2680",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\prefit-adequacy.json": "9c87853a7a0c005345be767a3c80c471f5fdb41ac8f85539ab41afa0076fe80d",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\result.json": "b08597f4abe41b78e3046f571985e091e7245d368f827a624f014e8796a07b95",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\truth-rgb-f32.npy": "82a5a40523bf883867d551676e62c6935941bbdbe8af6bb8a5a0ef990f6d5a86",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\two-layer\\receipt.json": "dd242dea7cf0bf4c5d7f87607efb05a67a56bda626c300cf7157c865d56084fa",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\two-layer\\reconstruction.npz": "5358ec2d7e0820b651c104c6e55f0c4464d82f7751fdff37830103a6c56dd76d",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\two-layer\\state.pt": "36a6fcd39ef371bfc6eecf40dd30f2870cb6a161a9c9fccebff8a7126208a15b",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\candidate-rgb-f32.npy": "fbf011cd81e05479a5fcb2e716ed57029fbabb9478b62c83c50244c58a92b335",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\far-only\\receipt.json": "5a4dd625f2b797fede7205d6aa9a1aa21176750f5a4c062dac0168f651725f96",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\far-only\\reconstruction.npz": "a83fc632004cfbba810a1c2d3b1ccb454c0e729ad4014442dae7d61da67ca34c",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\far-only\\state.pt": "d729c65a507be5f64861a8c953713934de124d63eb1e1f33b0e857ee337fbb66",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\far-only-rgb-f32.npy": "320894206c1e15cd1e2304e872c73da1c705c89df9564ece86c07f8b8d95d91b",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\mean-rgb-f32.npy": "ffe024f6a3d3950dcfba7d3e281eaf15cd6059b3a05d326fe857f8d427280bb5",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\observations-u16.npy": "ff29cf425e33b3076f433c8ea4a98b7079aa23a8deb4dd6aedc61657fd3045c5",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\oracle-bound-rgb-f32.npy": "758b9efce098b81dcd0690d8a69b42822cc270c0cf6ac52b6d140b4234960b04",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\physical-adequacy.json": "08445cf6964b21153769770a038e22abda388c4f26232b8f7c19c4cc81bc306a",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\prefit-adequacy.json": "d534765750774b6aee5f00df5b2fa81216db4193705c03ed25a84f27c7ee8cd4",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\result.json": "699fa88ffecb3c846218943798682953d8d4bca99aeb07081e7a7fc3a0e981a3",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\truth-rgb-f32.npy": "2668537f49285dae0b06ad4f9f027387c9605947d8a8b53b5d021d17f239d743",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\two-layer\\receipt.json": "e1271a3933ea74cce2931c5c5807cdfb3504d1c1eff3b6c9e2543f487373796d",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\two-layer\\reconstruction.npz": "c6e19e5232c8c814095880105050b52f1dbfc3408ed9ecef61c09781180b70ec",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\two-layer\\state.pt": "7abcc019b15cad5d8f43dcfb78babac75cf98b0cbaafc0f05f5b4e5d18a23e3f",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\mechanical.json": "49f6053cd2499d05838a819b22de3494ea25f166f2b0b4d29bc76ad610ef1f7b",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\screen.json": "cb26cc5a5358ebc054e867c2da974717f7084f7b5144d7bbb0bdbae4bfb8a460"
+  },
+  "continued_files": {
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\convergence-1\\output\\bindings-after.json": "e384f01fb1de6171c9e47d1fade28885760b6232c753cce2a889bf0a516c93e5",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\convergence-1\\output\\bindings-before.json": "e384f01fb1de6171c9e47d1fade28885760b6232c753cce2a889bf0a516c93e5",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\convergence-1\\output\\far-only\\far-only\\predicted-cfa-2.npy": "bb07e69bb08b567ce6fd9cbe12b802e40463342082ddd2b843c3bf929a672ded",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\convergence-1\\output\\far-only\\far-only\\predicted-cfa-6.npy": "2c13261663fc29096af2c75561c985dffc32a0645742415e86207bb94c0cd277",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\convergence-1\\output\\far-only\\far-only\\receipt.json": "2c02f9e475676938f2cbd2aa8b118f960824062a14475969c462aa63ef6f2ff6",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\convergence-1\\output\\far-only\\far-only\\reconstruction.npz": "b081bc5298d26f8b2472d16f36366e3ca56f5c6934519908ec0f4d83be05acee",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\convergence-1\\output\\far-only\\far-only\\state.pt": "3425241fae9dd3da39bf3deb4242391eb9d75da61d7117868928c88d0a7901e3",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\convergence-1\\output\\flat\\two-layer\\predicted-cfa-2.npy": "58474df97be9c54f28dcf95afdc8ab31078818dab820ba6a2acb09cd6ad7e2df",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\convergence-1\\output\\flat\\two-layer\\predicted-cfa-6.npy": "a03cef782976485e6f5f2b776468ba74ceb6882113095c240e79d794f345edc2",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\convergence-1\\output\\flat\\two-layer\\receipt.json": "dfec5a632c3458306133293dba55d8a5dec5ac75ecf6b96d4dd6c040f03c1853",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\convergence-1\\output\\flat\\two-layer\\reconstruction.npz": "5358ec2d7e0820b651c104c6e55f0c4464d82f7751fdff37830103a6c56dd76d",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\convergence-1\\output\\flat\\two-layer\\state.pt": "36a6fcd39ef371bfc6eecf40dd30f2870cb6a161a9c9fccebff8a7126208a15b",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\convergence-1\\output\\layered\\two-layer\\predicted-cfa-2.npy": "888c6f6ad5df24370821ba7644f55baeed11a66dbd358a5bee6daf84400a8e91",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\convergence-1\\output\\layered\\two-layer\\predicted-cfa-6.npy": "e9aa7480314bb2a25493ecb6f20757c99092332e9a6e211e66eb1625cc8fb22b",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\convergence-1\\output\\layered\\two-layer\\receipt.json": "b5f5ce0d3733e6fea4184b2dfcb3155501d387593e4513e7c60801c1e7642ecc",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\convergence-1\\output\\layered\\two-layer\\reconstruction.npz": "c6e19e5232c8c814095880105050b52f1dbfc3408ed9ecef61c09781180b70ec",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\convergence-1\\output\\layered\\two-layer\\state.pt": "7abcc019b15cad5d8f43dcfb78babac75cf98b0cbaafc0f05f5b4e5d18a23e3f",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\convergence-1\\output\\result.json": "7b042b9411eb5e8bcb32e85dd90c8139e6dad07bfb490899346371350fdd8e2f"
+  },
+  "scorer_sha256": "ed396953a185a545733192588230e81eb458cb517e1b405f1fd7fe87ace7ff94",
+  "frozen_model_sha256": "5710146ffcf463de85e317050bc81357922965d6006c7b4cf311f4d80d8ee512",
+  "scope": "Unchanged-objective convergence diagnostic; no iteration chosen by truth and no canonical/SOTA claim"
+}

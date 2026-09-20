@@ -1,0 +1,9 @@
+LAYERED_CASE_START flat
+LAYERED_CASE_COMPLETE {"name": "flat", "qualified": false, "heldout_pass": true, "quality_bars": {"rgb_rmse": false, "chroma_rmse": false}}
+LAYERED_CASE_START layered
+LAYERED_CASE_COMPLETE {"name": "layered", "qualified": false, "heldout_pass": false, "quality_bars": {"whole_mean_gain": true, "core_mean_gain": true, "ridge_mean_gain": true, "whole_far_only_comparison": true, "crossing_far_only_comparison": true, "core_far_only_comparison": true, "ridge_far_only_comparison": true, "glint_component": true, "ridge_component": true}}
+LAYERED_CASE_START far-only
+LAYERED_CASE_COMPLETE {"name": "far-only", "qualified": false, "heldout_pass": false, "quality_bars": {"rgb_rmse": true, "chroma_rmse": true}}
+LAYERED_CASE_START angular-mismatch
+LAYERED_CASE_COMPLETE {"name": "angular-mismatch", "qualified": null, "heldout_pass": false, "quality_bars": {}}
+LAYERED_SCREEN {"known_optics_utility_pass": false, "real_photo_admission": false}

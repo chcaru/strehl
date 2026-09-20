@@ -1,0 +1,18 @@
+{
+  "instrument_completed": true,
+  "sources_unchanged": true,
+  "case_count": 4,
+  "known_optics_utility_pass": false,
+  "real_photo_admission": false,
+  "result": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\screen.json",
+    "sha256": "cb26cc5a5358ebc054e867c2da974717f7084f7b5144d7bbb0bdbae4bfb8a460",
+    "bytes": 57092
+  },
+  "process": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\process.json",
+    "sha256": "8e62de835367d6d541ef245c664d500d297a635a025f427a2b398f8eb92663a5",
+    "bytes": 2862
+  },
+  "scope": "Generated original-CFA reconstruction with supplied optics; not a camera calibration or a full-stack photographic result."
+}

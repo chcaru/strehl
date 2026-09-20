@@ -1,0 +1,71 @@
+{
+  "operator": {
+    "records": [
+      {
+        "index": 0,
+        "maximum_difference_dn": {
+          "whole": 0.000244140625,
+          "crossing": 0.000244140625
+        }
+      },
+      {
+        "index": 1,
+        "maximum_difference_dn": {
+          "whole": 0.000244140625,
+          "crossing": 0.000244140625
+        }
+      },
+      {
+        "index": 2,
+        "maximum_difference_dn": {
+          "whole": 0.000244140625,
+          "crossing": 0.000244140625
+        }
+      },
+      {
+        "index": 3,
+        "maximum_difference_dn": {
+          "whole": 0.000244140625,
+          "crossing": 0.000244140625
+        }
+      },
+      {
+        "index": 4,
+        "maximum_difference_dn": {
+          "whole": 0.000244140625,
+          "crossing": 0.000244140625
+        }
+      },
+      {
+        "index": 5,
+        "maximum_difference_dn": {
+          "whole": 0.000244140625,
+          "crossing": 0.000244140625
+        }
+      },
+      {
+        "index": 6,
+        "maximum_difference_dn": {
+          "whole": 0.000244140625,
+          "crossing": 0.000244140625
+        }
+      },
+      {
+        "index": 7,
+        "maximum_difference_dn": {
+          "whole": 0.000244140625,
+          "crossing": 0.000244140625
+        }
+      },
+      {
+        "index": 8,
+        "maximum_difference_dn": {
+          "whole": 0.000244140625,
+          "crossing": 0.000244140625
+        }
+      }
+    ],
+    "passed": true,
+    "scope": "Same supplied64 discrete pupil; independent interpolation/compositing implementation"
+  }
+}

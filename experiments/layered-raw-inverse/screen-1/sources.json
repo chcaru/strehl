@@ -1,0 +1,47 @@
+[
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\model.py",
+    "sha256": "5710146ffcf463de85e317050bc81357922965d6006c7b4cf311f4d80d8ee512",
+    "bytes": 16869
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\design.md",
+    "sha256": "079c9e2ef5e4113c1202d4435b1cac7d5dfcbc482b7ebd20e7ca72e86446f9a1",
+    "bytes": 6648
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\independent-controls.py",
+    "sha256": "6915c024dbbfaa0e0d912ecba1a22075aabce6ef29c845f0e586472be60815ec",
+    "bytes": 30128
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\independent-plan.md",
+    "sha256": "94e65319535b3744882431f14975e5b9b5f2da7f0093c818ed8d006bb6997408",
+    "bytes": 7088
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\independent-source-review.md",
+    "sha256": "595cfe00de7f62b8b322f28041f608658db5a48c84c79266e5aab7754fcb01e1",
+    "bytes": 5701
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\run.py",
+    "sha256": "dd2ed76f08980d7bb7f74c5bd814547c9fa43eb026bd2272136c19e8e523d849",
+    "bytes": 2748
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\full-context-placement\\run.py",
+    "sha256": "17451d237bf256004ca8853ef4c2a9e1c582012d43ad33fd687606e68a5fb76f",
+    "bytes": 7707
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\bounded-process.py",
+    "sha256": "47b9f8d848759eba61f055b9fdca1f8ac400f134dcd7636f0e0eaaa955704e0b",
+    "bytes": 12664
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\m12-harness.py",
+    "sha256": "6cfb408992f37b225f102da4d62ba836f9c5b67c92bdd418ff460987866a1bb9",
+    "bytes": 117908
+  }
+]

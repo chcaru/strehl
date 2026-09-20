@@ -1,0 +1,15 @@
+{
+  "instrument_completed": true,
+  "sources_unchanged": true,
+  "continuation": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\convergence-1\\output\\result.json",
+    "sha256": "7b042b9411eb5e8bcb32e85dd90c8139e6dad07bfb490899346371350fdd8e2f",
+    "bytes": 1518
+  },
+  "independent_scores": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\convergence-1\\scored\\result.json",
+    "sha256": "866fb22f9477174af1c674b42b3aed15e96f3f48508f2b89852535d19e6286de",
+    "bytes": 19610
+  },
+  "scope": "Three fixed saved states, unchanged objective; first screen and optical refusal remain."
+}
