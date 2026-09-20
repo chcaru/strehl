@@ -65,6 +65,17 @@ This resolves that bounded numerical error, without a dense derivative,
 inverse-quality, real-optics or speed claim. It does not cure free visibility.
 Keep old64 observations distinct from any future resolved-pupil data, and
 check the delivered colour consumer's observability before another fit.
+That review now retires a standalone Bayer-null experiment: the ambiguity is
+DERIVED, and earlier real joint-CFA inversions already failed despite ideal
+alias controls and nominal full rank. Repeating that demonstration would not
+choose an image-producing change. Retain its corrected per-ray translation
+and live diagonal controls for an actual motion-aware forward. The next bounded
+candidate adds known source sampling positions inside the coupled optical
+operator, using a fixed real-map phase pattern in a generated plant and an
+identity-pattern counterfactual. Check dense derivatives and optical sampling
+in the same run; require flat colour/noise first before spending on layered
+reconstruction. This remains supplied-geometry/optics research, with no claim
+that it calibrates real placement or repairs the earlier photographic failure.
 No photographic admission yet. The passing complete-periodic all-CFA controls
 remain retained at48276660; speed work stays behind demonstrated image quality.
 
