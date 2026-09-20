@@ -1,0 +1,21 @@
+{
+  "status": "VISIBILITY_ORACLE_COMPLETE",
+  "arms": [
+    {
+      "case": "flat",
+      "status": "nonstationary_return",
+      "receipt": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\visibility-1\\output\\flat\\fixed-alpha\\receipt.json",
+      "receipt_sha256": "e14ae9c361a4d9bb91a03d59e1569dfac725b4e7baa5a24236395e44602427c3"
+    },
+    {
+      "case": "layered",
+      "status": "nonstationary_return",
+      "receipt": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\visibility-1\\output\\layered\\fixed-alpha\\receipt.json",
+      "receipt_sha256": "0aebcaa70bc77d986661df45713776d3b0cf88ef7d41d71d3f8495dec060c67a"
+    }
+  ],
+  "source_root": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output",
+  "alpha_directory": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\visibility-1\\alpha",
+  "real_photo_admission": false,
+  "interpretation": "Only supplied visibility is changed; original sheets/prior/solver retained."
+}

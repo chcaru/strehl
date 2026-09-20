@@ -1,0 +1,37 @@
+{
+  "status": "ALPHA_ONLY_PREPARED",
+  "arrays": [
+    {
+      "case": "flat",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\visibility-1\\alpha\\flat-alpha-f32.npy",
+      "sha256": "964fd875558f7c98352d1bdba87b004bfa9ebbad8cdf37bc0450962954a86773",
+      "array_sha256": "8eccb45ed6e49b8ac519abfb94b4787ad6794b3ee31cb3c732db60ac057a9fd5",
+      "shape": [
+        96,
+        96
+      ],
+      "dtype": "float32",
+      "minimum": 0.3499999940395355,
+      "maximum": 0.3499999940395355
+    },
+    {
+      "case": "layered",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\visibility-1\\alpha\\layered-alpha-f32.npy",
+      "sha256": "a581e15652ba8c0f03c888c20ba5a701f7c99c45618599d1fadb37698f1f156b",
+      "array_sha256": "9e65cd7208938ce5e1b8d19a1aafcd1451de52bf3fc23fbcd037d60680ae8865",
+      "shape": [
+        96,
+        96
+      ],
+      "dtype": "float32",
+      "minimum": 0.0,
+      "maximum": 0.949999988079071
+    }
+  ],
+  "controls_sha256": "6915c024dbbfaa0e0d912ecba1a22075aabce6ef29c845f0e586472be60815ec",
+  "model_sha256": "5710146ffcf463de85e317050bc81357922965d6006c7b4cf311f4d80d8ee512",
+  "exporter_sha256": "ee9912c5b9d415f5013e473eba0228af39082b27051873a3da1ad97733769922",
+  "source_root": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output",
+  "source_immutable": true,
+  "scope": "Known synthetic coverage only; no truth radiances or heldout observations exported"
+}

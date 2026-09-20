@@ -1,0 +1,978 @@
+{
+  "status": "FIXED_VISIBILITY_SCORED",
+  "cases": [
+    {
+      "name": "flat",
+      "complete": true,
+      "initial_quality": {
+        "regions": {
+          "whole": {
+            "candidate": {
+              "rgb_rmse": 7.5167753582777594,
+              "chroma_rmse": 10.294493539588151
+            },
+            "far_only": {
+              "rgb_rmse": 5.606326374176431,
+              "chroma_rmse": 7.775942627238773
+            },
+            "mean": {
+              "rgb_rmse": 6.018454527257956,
+              "chroma_rmse": 8.367617007550058
+            },
+            "oracle_bound": {
+              "rgb_rmse": 15.927476031907533,
+              "chroma_rmse": 21.78031256038975
+            }
+          }
+        },
+        "components": {},
+        "bars": {
+          "rgb_rmse": false,
+          "chroma_rmse": false
+        },
+        "passed": false
+      },
+      "quality": {
+        "regions": {
+          "whole": {
+            "candidate": {
+              "rgb_rmse": 5.672017378202054,
+              "chroma_rmse": 7.925566300601692
+            },
+            "far_only": {
+              "rgb_rmse": 5.606326374176431,
+              "chroma_rmse": 7.775942627238773
+            },
+            "mean": {
+              "rgb_rmse": 6.018454527257956,
+              "chroma_rmse": 8.367617007550058
+            },
+            "oracle_bound": {
+              "rgb_rmse": 15.927476031907533,
+              "chroma_rmse": 21.78031256038975
+            }
+          }
+        },
+        "components": {},
+        "bars": {
+          "rgb_rmse": true,
+          "chroma_rmse": true
+        },
+        "passed": true
+      },
+      "heldout": [
+        {
+          "index": 2,
+          "scores": {
+            "uncensored": {
+              "all": {
+                "count": 4096,
+                "normalized_rms": 1.0021584373417702,
+                "bar": 1.5,
+                "passed": true,
+                "present": true
+              },
+              "R": {
+                "count": 1024,
+                "normalized_rms": 0.9732755572996404,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G1": {
+                "count": 1024,
+                "normalized_rms": 1.0136782494328311,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G2": {
+                "count": 1024,
+                "normalized_rms": 1.022877766894175,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "B": {
+                "count": 1024,
+                "normalized_rms": 0.9980973421087967,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "bright": {
+                "count": 0,
+                "normalized_rms": null,
+                "bar": 1.75,
+                "passed": true,
+                "present": false
+              },
+              "dim": {
+                "count": 4096,
+                "normalized_rms": 1.0021584373417702,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              }
+            },
+            "censor_count": 0,
+            "censor_one_sided_rms": null,
+            "passed": true
+          }
+        },
+        {
+          "index": 6,
+          "scores": {
+            "uncensored": {
+              "all": {
+                "count": 4096,
+                "normalized_rms": 1.0104981038082645,
+                "bar": 1.5,
+                "passed": true,
+                "present": true
+              },
+              "R": {
+                "count": 1024,
+                "normalized_rms": 1.0024680392314649,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G1": {
+                "count": 1024,
+                "normalized_rms": 0.9927485240005753,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G2": {
+                "count": 1024,
+                "normalized_rms": 1.0160836186752986,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "B": {
+                "count": 1024,
+                "normalized_rms": 1.030295078836255,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "bright": {
+                "count": 0,
+                "normalized_rms": null,
+                "bar": 1.75,
+                "passed": true,
+                "present": false
+              },
+              "dim": {
+                "count": 4096,
+                "normalized_rms": 1.0104981038082645,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              }
+            },
+            "censor_count": 0,
+            "censor_one_sided_rms": null,
+            "passed": true
+          }
+        }
+      ],
+      "heldout_pass": true,
+      "paired_bars": {
+        "rgb_rmse": true,
+        "chroma_rmse": true
+      },
+      "paired_components": {},
+      "fixed_checks_pass": true,
+      "status": "nonstationary_return",
+      "stationary": false,
+      "final_objective": {
+        "evaluation": 196,
+        "tag": "final",
+        "evaluation_status": "complete",
+        "data_nll": 3.678508698940277,
+        "prior": 0.010846046730875969,
+        "total": 3.689354745671153,
+        "gradient_max": 7.240858394652605e-06,
+        "gradient_l2": 0.00025123803061433136,
+        "optimizer_iteration": 184,
+        "noncontiguous_gradients_converted": 2,
+        "gradient_storage_logical_exact": true,
+        "elapsed_seconds": 5.5
+      },
+      "free_status": "nonstationary_return",
+      "free_final_objective": {
+        "evaluation": 1022,
+        "tag": "final",
+        "evaluation_status": "complete",
+        "elapsed_seconds": 28.264999999999418,
+        "data_nll": 3.6392224431037903,
+        "prior": 0.016349000856280327,
+        "total": 3.6555714439600706,
+        "gradient_l2": 0.003486081724986434,
+        "gradient_max": 0.00013024033978581429,
+        "optimizer_iteration": 1000,
+        "noncontiguous_gradients_converted": 2,
+        "gradient_storage_logical_exact": true
+      },
+      "initial_pinhole_max_abs_change_dn": 50.167236328125,
+      "rgb_sha256": "f9ff7a4ffe3a53ee47bf8c4ca87bde7c4f456b5dfac9a56512f7a47ebdb105b4"
+    },
+    {
+      "name": "layered",
+      "complete": true,
+      "initial_quality": {
+        "regions": {
+          "whole": {
+            "candidate": {
+              "rgb_rmse": 266.9296564055731,
+              "chroma_rmse": 272.05756079975333
+            },
+            "far_only": {
+              "rgb_rmse": 496.88377690019985,
+              "chroma_rmse": 650.2708373566716
+            },
+            "mean": {
+              "rgb_rmse": 753.7234759667058,
+              "chroma_rmse": 518.2588805886822
+            },
+            "oracle_bound": {
+              "rgb_rmse": 397.5372463674584,
+              "chroma_rmse": 249.56266183318613
+            }
+          },
+          "core": {
+            "candidate": {
+              "rgb_rmse": 966.2344238858374,
+              "chroma_rmse": 391.05922209616307
+            },
+            "far_only": {
+              "rgb_rmse": 1786.240868102814,
+              "chroma_rmse": 1573.837047318474
+            },
+            "mean": {
+              "rgb_rmse": 3452.1334344936117,
+              "chroma_rmse": 1303.8572499053812
+            },
+            "oracle_bound": {
+              "rgb_rmse": 1850.2248549886135,
+              "chroma_rmse": 793.2909697045076
+            }
+          },
+          "ridge": {
+            "candidate": {
+              "rgb_rmse": 454.4661866617356,
+              "chroma_rmse": 317.422980707113
+            },
+            "far_only": {
+              "rgb_rmse": 944.0280541704689,
+              "chroma_rmse": 1162.315886756699
+            },
+            "mean": {
+              "rgb_rmse": 1536.391066451828,
+              "chroma_rmse": 930.9825690440236
+            },
+            "oracle_bound": {
+              "rgb_rmse": 816.8284571147884,
+              "chroma_rmse": 467.7684323233422
+            }
+          },
+          "crossing": {
+            "candidate": {
+              "rgb_rmse": 770.2882709254118,
+              "chroma_rmse": 342.94695478175004
+            },
+            "far_only": {
+              "rgb_rmse": 1532.7317908619168,
+              "chroma_rmse": 1626.109964055532
+            },
+            "mean": {
+              "rgb_rmse": 2763.9900380411414,
+              "chroma_rmse": 1324.4845045485336
+            },
+            "oracle_bound": {
+              "rgb_rmse": 1478.1547026912529,
+              "chroma_rmse": 720.596585345536
+            }
+          },
+          "fan": {
+            "candidate": {
+              "rgb_rmse": 410.8020533267791,
+              "chroma_rmse": 306.08334513464814
+            },
+            "far_only": {
+              "rgb_rmse": 846.3604041669115,
+              "chroma_rmse": 1052.7729389537033
+            },
+            "mean": {
+              "rgb_rmse": 1356.894321753337,
+              "chroma_rmse": 840.3174706916507
+            },
+            "oracle_bound": {
+              "rgb_rmse": 719.6762645538982,
+              "chroma_rmse": 419.2428008816227
+            }
+          }
+        },
+        "components": {
+          "glint": {
+            "candidate": {
+              "recovery": [
+                1.0962964669008388,
+                1.0953674099485935,
+                1.104078972006266
+              ],
+              "template_energy": [
+                3871784984.164553,
+                3600167379.165745,
+                2844576438.871642
+              ],
+              "live": true
+            },
+            "oracle_bound": {
+              "recovery": [
+                0.6257763794626515,
+                0.6123604175607923,
+                0.6521991427767284
+              ],
+              "template_energy": [
+                3871784984.164553,
+                3600167379.165745,
+                2844576438.871642
+              ],
+              "live": true
+            },
+            "passed": true,
+            "bounds": [
+              39,
+              42,
+              52,
+              55
+            ]
+          },
+          "ridge": {
+            "candidate": {
+              "recovery": [
+                0.755496550343331,
+                0.8133918803563638,
+                0.6880795395571242
+              ],
+              "template_energy": [
+                51983735.586246416,
+                138514832.62970743,
+                161668706.2341408
+              ],
+              "live": true
+            },
+            "oracle_bound": {
+              "recovery": [
+                0.7196321313843479,
+                0.8267673147030402,
+                0.8474577243749162
+              ],
+              "template_energy": [
+                51983735.586246416,
+                138514832.62970743,
+                161668706.2341408
+              ],
+              "live": true
+            },
+            "passed": false,
+            "bounds": [
+              39,
+              31,
+              63,
+              41
+            ]
+          }
+        },
+        "bars": {
+          "whole_mean_gain": true,
+          "core_mean_gain": true,
+          "ridge_mean_gain": true,
+          "whole_far_only_comparison": true,
+          "crossing_far_only_comparison": true,
+          "core_far_only_comparison": true,
+          "ridge_far_only_comparison": true,
+          "glint_component": true,
+          "ridge_component": false
+        },
+        "passed": false
+      },
+      "quality": {
+        "regions": {
+          "whole": {
+            "candidate": {
+              "rgb_rmse": 150.97138428415263,
+              "chroma_rmse": 67.30989610944206
+            },
+            "far_only": {
+              "rgb_rmse": 496.88377690019985,
+              "chroma_rmse": 650.2708373566716
+            },
+            "mean": {
+              "rgb_rmse": 753.7234759667058,
+              "chroma_rmse": 518.2588805886822
+            },
+            "oracle_bound": {
+              "rgb_rmse": 397.5372463674584,
+              "chroma_rmse": 249.56266183318613
+            }
+          },
+          "core": {
+            "candidate": {
+              "rgb_rmse": 731.4569057195841,
+              "chroma_rmse": 260.39316741578875
+            },
+            "far_only": {
+              "rgb_rmse": 1786.240868102814,
+              "chroma_rmse": 1573.837047318474
+            },
+            "mean": {
+              "rgb_rmse": 3452.1334344936117,
+              "chroma_rmse": 1303.8572499053812
+            },
+            "oracle_bound": {
+              "rgb_rmse": 1850.2248549886135,
+              "chroma_rmse": 793.2909697045076
+            }
+          },
+          "ridge": {
+            "candidate": {
+              "rgb_rmse": 312.40350450710577,
+              "chroma_rmse": 120.1635302552204
+            },
+            "far_only": {
+              "rgb_rmse": 944.0280541704689,
+              "chroma_rmse": 1162.315886756699
+            },
+            "mean": {
+              "rgb_rmse": 1536.391066451828,
+              "chroma_rmse": 930.9825690440236
+            },
+            "oracle_bound": {
+              "rgb_rmse": 816.8284571147884,
+              "chroma_rmse": 467.7684323233422
+            }
+          },
+          "crossing": {
+            "candidate": {
+              "rgb_rmse": 577.4133996765559,
+              "chroma_rmse": 211.42265726478158
+            },
+            "far_only": {
+              "rgb_rmse": 1532.7317908619168,
+              "chroma_rmse": 1626.109964055532
+            },
+            "mean": {
+              "rgb_rmse": 2763.9900380411414,
+              "chroma_rmse": 1324.4845045485336
+            },
+            "oracle_bound": {
+              "rgb_rmse": 1478.1547026912529,
+              "chroma_rmse": 720.596585345536
+            }
+          },
+          "fan": {
+            "candidate": {
+              "rgb_rmse": 274.326015543561,
+              "chroma_rmse": 106.57290327724068
+            },
+            "far_only": {
+              "rgb_rmse": 846.3604041669115,
+              "chroma_rmse": 1052.7729389537033
+            },
+            "mean": {
+              "rgb_rmse": 1356.894321753337,
+              "chroma_rmse": 840.3174706916507
+            },
+            "oracle_bound": {
+              "rgb_rmse": 719.6762645538982,
+              "chroma_rmse": 419.2428008816227
+            }
+          }
+        },
+        "components": {
+          "glint": {
+            "candidate": {
+              "recovery": [
+                0.9615300689251757,
+                0.9533521395877116,
+                0.9639818427190928
+              ],
+              "template_energy": [
+                3871784984.164553,
+                3600167379.165745,
+                2844576438.871642
+              ],
+              "live": true
+            },
+            "oracle_bound": {
+              "recovery": [
+                0.6257763794626515,
+                0.6123604175607923,
+                0.6521991427767284
+              ],
+              "template_energy": [
+                3871784984.164553,
+                3600167379.165745,
+                2844576438.871642
+              ],
+              "live": true
+            },
+            "passed": true,
+            "bounds": [
+              39,
+              42,
+              52,
+              55
+            ]
+          },
+          "ridge": {
+            "candidate": {
+              "recovery": [
+                0.9535608898416983,
+                0.9824860272419995,
+                0.9743370829260569
+              ],
+              "template_energy": [
+                51983735.586246416,
+                138514832.62970743,
+                161668706.2341408
+              ],
+              "live": true
+            },
+            "oracle_bound": {
+              "recovery": [
+                0.7196321313843479,
+                0.8267673147030402,
+                0.8474577243749162
+              ],
+              "template_energy": [
+                51983735.586246416,
+                138514832.62970743,
+                161668706.2341408
+              ],
+              "live": true
+            },
+            "passed": true,
+            "bounds": [
+              39,
+              31,
+              63,
+              41
+            ]
+          }
+        },
+        "bars": {
+          "whole_mean_gain": true,
+          "core_mean_gain": true,
+          "ridge_mean_gain": true,
+          "whole_far_only_comparison": true,
+          "crossing_far_only_comparison": true,
+          "core_far_only_comparison": true,
+          "ridge_far_only_comparison": true,
+          "glint_component": true,
+          "ridge_component": true
+        },
+        "passed": true
+      },
+      "heldout": [
+        {
+          "index": 2,
+          "scores": {
+            "uncensored": {
+              "all": {
+                "count": 4096,
+                "normalized_rms": 1.0472785460769756,
+                "bar": 1.5,
+                "passed": true,
+                "present": true
+              },
+              "R": {
+                "count": 1024,
+                "normalized_rms": 1.0319881286373043,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G1": {
+                "count": 1024,
+                "normalized_rms": 1.0612320433438678,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G2": {
+                "count": 1024,
+                "normalized_rms": 1.0275127253633123,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "B": {
+                "count": 1024,
+                "normalized_rms": 1.067789335047297,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "bright": {
+                "count": 41,
+                "normalized_rms": 2.1478070545418397,
+                "bar": 1.75,
+                "passed": false,
+                "present": true
+              },
+              "dim": {
+                "count": 4055,
+                "normalized_rms": 1.0301646998558898,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              }
+            },
+            "censor_count": 0,
+            "censor_one_sided_rms": null,
+            "passed": false
+          }
+        },
+        {
+          "index": 6,
+          "scores": {
+            "uncensored": {
+              "all": {
+                "count": 4096,
+                "normalized_rms": 1.2219850798787049,
+                "bar": 1.5,
+                "passed": true,
+                "present": true
+              },
+              "R": {
+                "count": 1024,
+                "normalized_rms": 1.3588971880390237,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G1": {
+                "count": 1024,
+                "normalized_rms": 1.153700008336025,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G2": {
+                "count": 1024,
+                "normalized_rms": 1.108180885358124,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "B": {
+                "count": 1024,
+                "normalized_rms": 1.2519185237932346,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "bright": {
+                "count": 0,
+                "normalized_rms": null,
+                "bar": 1.75,
+                "passed": true,
+                "present": false
+              },
+              "dim": {
+                "count": 4096,
+                "normalized_rms": 1.2219850798787049,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              }
+            },
+            "censor_count": 0,
+            "censor_one_sided_rms": null,
+            "passed": true
+          }
+        }
+      ],
+      "heldout_pass": false,
+      "paired_bars": {
+        "core_rgb": true,
+        "ridge_rgb": true,
+        "glint_component": false,
+        "ridge_component": true
+      },
+      "paired_components": {
+        "glint": {
+          "fixed": {
+            "recovery": [
+              0.9615300689251757,
+              0.9533521395877116,
+              0.9639818427190928
+            ],
+            "template_energy": [
+              3871784984.164553,
+              3600167379.165745,
+              2844576438.871642
+            ],
+            "live": true
+          },
+          "free": {
+            "recovery": [
+              1.018382133387487,
+              1.0062048628838116,
+              1.022476196066069
+            ],
+            "template_energy": [
+              3871784984.164553,
+              3600167379.165745,
+              2844576438.871642
+            ],
+            "live": true
+          },
+          "passed": false
+        },
+        "ridge": {
+          "fixed": {
+            "recovery": [
+              0.9535608898416983,
+              0.9824860272419995,
+              0.9743370829260569
+            ],
+            "template_energy": [
+              51983735.586246416,
+              138514832.62970743,
+              161668706.2341408
+            ],
+            "live": true
+          },
+          "free": {
+            "recovery": [
+              0.9477429744712536,
+              0.9884476410200203,
+              0.965543702858969
+            ],
+            "template_energy": [
+              51983735.586246416,
+              138514832.62970743,
+              161668706.2341408
+            ],
+            "live": true
+          },
+          "passed": true
+        }
+      },
+      "fixed_checks_pass": false,
+      "status": "nonstationary_return",
+      "stationary": false,
+      "final_objective": {
+        "evaluation": 1021,
+        "tag": "final",
+        "evaluation_status": "complete",
+        "data_nll": 3.8101009130477905,
+        "prior": 2.9694650173187256,
+        "total": 6.779565930366516,
+        "gradient_max": 0.002852201461791992,
+        "gradient_l2": 0.006897709332406521,
+        "optimizer_iteration": 1000,
+        "noncontiguous_gradients_converted": 2,
+        "gradient_storage_logical_exact": true,
+        "elapsed_seconds": 26.859000000004016
+      },
+      "free_status": "nonstationary_return",
+      "free_final_objective": {
+        "evaluation": 1011,
+        "tag": "final",
+        "evaluation_status": "complete",
+        "elapsed_seconds": 27.860000000000582,
+        "data_nll": 3.8126903772354126,
+        "prior": 2.321960210800171,
+        "total": 6.1346505880355835,
+        "gradient_l2": 0.02814294770359993,
+        "gradient_max": 0.0078034307807683945,
+        "optimizer_iteration": 1000,
+        "noncontiguous_gradients_converted": 2,
+        "gradient_storage_logical_exact": true
+      },
+      "initial_pinhole_max_abs_change_dn": 6235.404296875,
+      "rgb_sha256": "eab1fc6b763c5ad9bcd38f49edf2127851e456083ed429fe62655af7505f7b7a"
+    }
+  ],
+  "all_complete": true,
+  "all_fixed_checks_pass": false,
+  "all_stationary": false,
+  "source_immutable": true,
+  "outputs_immutable": true,
+  "physical_adequacy": {
+    "records": [
+      {
+        "index": 0,
+        "normalized_rms": {
+          "whole": 0.5031009187802951,
+          "crossing": 1.0694726224298692
+        }
+      },
+      {
+        "index": 2,
+        "normalized_rms": {
+          "whole": 0.45461367236226197,
+          "crossing": 1.3490733263673196
+        }
+      },
+      {
+        "index": 4,
+        "normalized_rms": {
+          "whole": 0.4717774978865741,
+          "crossing": 1.524503237817421
+        }
+      },
+      {
+        "index": 6,
+        "normalized_rms": {
+          "whole": 0.6420379970064604,
+          "crossing": 1.678243724770749
+        }
+      },
+      {
+        "index": 8,
+        "normalized_rms": {
+          "whole": 0.8870094153387984,
+          "crossing": 1.1994156834564524
+        }
+      }
+    ],
+    "passed": false,
+    "scope": "Independent1024-ray resolution check; does not block discrete utility execution, does block real-RAW license"
+  },
+  "source_files": {
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\angular-mismatch\\candidate-rgb-f32.npy": "7e6df1cac1082405cbbdbdfe96063dccdbd8277158ce9f858987be6c9a1e353f",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\angular-mismatch\\far-only\\receipt.json": "e8ce6071defc318ceafca7a01554ee57bead2b2f889ddb5b5589816c3e8ad48f",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\angular-mismatch\\far-only\\reconstruction.npz": "aaf0d1ba11e9f367734834a56620a42d373accc23ecacee0b1a54f7727519c06",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\angular-mismatch\\far-only\\state.pt": "3c8aa8eb0864d3308e278dd12e95bb1940ea8671fa73a2ae8d692422d6937cce",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\angular-mismatch\\far-only-rgb-f32.npy": "4ee31cdbe8274858f0dd9b21ea80392807e58917288b190f654af6e7418c5af5",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\angular-mismatch\\mean-rgb-f32.npy": "b5cacd3550abfef4c3e05e6118cb57d020b67d356a9b582e3d348e43c2844bc8",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\angular-mismatch\\observations-u16.npy": "30be163b7949cd191c09db98edf1b45930d125189ca610ac62f285f25252a9f2",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\angular-mismatch\\oracle-bound-rgb-f32.npy": "e5016da8a2e5553f1fce8199576411f56fc2f3330236dc23515808022e86fcc4",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\angular-mismatch\\prefit-adequacy.json": "880baa12481177c51895e3be1854368345d9feacb04f5f9b0dcd093d5420f970",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\angular-mismatch\\result.json": "9c73e49806bc74b59dfe14c9043baf3c50890020ddf7342ad1a7800c55a64a2c",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\angular-mismatch\\truth-rgb-f32.npy": "2668537f49285dae0b06ad4f9f027387c9605947d8a8b53b5d021d17f239d743",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\angular-mismatch\\two-layer\\receipt.json": "4feb650b2e387753c335758e8356ed477bb5529761db20b70cf7c53bc15ff768",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\angular-mismatch\\two-layer\\reconstruction.npz": "1e09ae50c8260d03bfc4d431df82c413e48f0aab3f6da35b6b194eb85f70867e",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\angular-mismatch\\two-layer\\state.pt": "1d11c2cb0f29592a2ceb68b44082a3ef4273e6be7b65d0c6a775ad1ec980718c",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\bindings.json": "83dc03308210095339b2629105a9131669bd1bef408b0ebddbaade3c7b91140a",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\far-only\\candidate-rgb-f32.npy": "43d4b9e35b96eb3f962b14555fb49dd0e2f782b272798c52e6105ba4fe80ea1d",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\far-only\\far-only\\receipt.json": "ef1a336761446fe0a32725a80416975e1fea540cd3b8456489a2b553b483d371",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\far-only\\far-only\\reconstruction.npz": "b081bc5298d26f8b2472d16f36366e3ca56f5c6934519908ec0f4d83be05acee",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\far-only\\far-only\\state.pt": "3425241fae9dd3da39bf3deb4242391eb9d75da61d7117868928c88d0a7901e3",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\far-only\\far-only-rgb-f32.npy": "190c0214a1e661d34b3cf40389fccebb7fa5b6a2c7f2259c36d2528b17e5b1a0",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\far-only\\mean-rgb-f32.npy": "f53b7be4ece753b343061879cf6f4c38d076cc516632905f12c2faef1e1603a2",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\far-only\\observations-u16.npy": "9958c444cfd91c2b497dfbfa352b82efaa047166f499ad6adf77002be5d26b71",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\far-only\\oracle-bound-rgb-f32.npy": "47cbc7a6238ceff5a3520402a8cf42110a88e2638b0b248ce3adf6fa317334f2",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\far-only\\prefit-adequacy.json": "81451f4a303b9f0684f575df55421c9c74bef8010d6fb1ad07e6da40085239a7",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\far-only\\result.json": "40294d58e123573a70be10df97a24f2aa34e00a4e20d089cbd02b1eafcfe2b54",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\far-only\\truth-rgb-f32.npy": "cafcfd22a43660fd754298af6b2b7c8ec5098d57e7f8cb1eb465fa311c6c2241",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\far-only\\two-layer\\receipt.json": "3096c854ebf8a7064967e8d7872cc99a9a33ed200de4918f7a2330d5e55534a6",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\far-only\\two-layer\\reconstruction.npz": "d4798ae712f66d3111083fc6ac816e6f0fc7c702de0f445e619bf2fd48db23f6",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\far-only\\two-layer\\state.pt": "0c25d6413f6c51ba3851ba9f4bf26741e5a1d9db8d6bd6b98344aea4aef2a456",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\candidate-rgb-f32.npy": "26d1933361d4e55f36654bda5de2e481eb3bf827d99b7a5e0753aa1925f27523",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\far-only\\receipt.json": "bbad44a03ceda48c64f60bba2ab802d34a41bd252941300ebaf62e391ed86d32",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\far-only\\reconstruction.npz": "7179a526e21427fec5f98ab6dd344d5b00815432c2f232f5d8f19c964bfc511f",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\far-only\\state.pt": "55db3d2d50981e788f29bf1846abee895cf50795f6fdf94d9e7e82f54f2226a1",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\far-only-rgb-f32.npy": "bcc4801e2d39cee761940771e509371a892ea535578dffc8ec1c84dc1717555d",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\mean-rgb-f32.npy": "949b99f79af998d85f0c273f6e7d85736a4adb6ada236d243776b5ec71ebcd94",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\observations-u16.npy": "2db55b6a69c2a484ee3287128f3e5a624d3caccdb6a2f18cae60fafd5f7a3f9f",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\oracle-bound-rgb-f32.npy": "2a3dfd15829c0dee5b9858504688eb1b14b8ed2d7cb4bd3871bcd3487a8d2680",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\prefit-adequacy.json": "9c87853a7a0c005345be767a3c80c471f5fdb41ac8f85539ab41afa0076fe80d",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\result.json": "b08597f4abe41b78e3046f571985e091e7245d368f827a624f014e8796a07b95",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\truth-rgb-f32.npy": "82a5a40523bf883867d551676e62c6935941bbdbe8af6bb8a5a0ef990f6d5a86",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\two-layer\\receipt.json": "dd242dea7cf0bf4c5d7f87607efb05a67a56bda626c300cf7157c865d56084fa",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\two-layer\\reconstruction.npz": "5358ec2d7e0820b651c104c6e55f0c4464d82f7751fdff37830103a6c56dd76d",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\two-layer\\state.pt": "36a6fcd39ef371bfc6eecf40dd30f2870cb6a161a9c9fccebff8a7126208a15b",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\candidate-rgb-f32.npy": "fbf011cd81e05479a5fcb2e716ed57029fbabb9478b62c83c50244c58a92b335",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\far-only\\receipt.json": "5a4dd625f2b797fede7205d6aa9a1aa21176750f5a4c062dac0168f651725f96",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\far-only\\reconstruction.npz": "a83fc632004cfbba810a1c2d3b1ccb454c0e729ad4014442dae7d61da67ca34c",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\far-only\\state.pt": "d729c65a507be5f64861a8c953713934de124d63eb1e1f33b0e857ee337fbb66",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\far-only-rgb-f32.npy": "320894206c1e15cd1e2304e872c73da1c705c89df9564ece86c07f8b8d95d91b",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\mean-rgb-f32.npy": "ffe024f6a3d3950dcfba7d3e281eaf15cd6059b3a05d326fe857f8d427280bb5",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\observations-u16.npy": "ff29cf425e33b3076f433c8ea4a98b7079aa23a8deb4dd6aedc61657fd3045c5",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\oracle-bound-rgb-f32.npy": "758b9efce098b81dcd0690d8a69b42822cc270c0cf6ac52b6d140b4234960b04",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\physical-adequacy.json": "08445cf6964b21153769770a038e22abda388c4f26232b8f7c19c4cc81bc306a",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\prefit-adequacy.json": "d534765750774b6aee5f00df5b2fa81216db4193705c03ed25a84f27c7ee8cd4",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\result.json": "699fa88ffecb3c846218943798682953d8d4bca99aeb07081e7a7fc3a0e981a3",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\truth-rgb-f32.npy": "2668537f49285dae0b06ad4f9f027387c9605947d8a8b53b5d021d17f239d743",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\two-layer\\receipt.json": "e1271a3933ea74cce2931c5c5807cdfb3504d1c1eff3b6c9e2543f487373796d",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\two-layer\\reconstruction.npz": "c6e19e5232c8c814095880105050b52f1dbfc3408ed9ecef61c09781180b70ec",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\two-layer\\state.pt": "7abcc019b15cad5d8f43dcfb78babac75cf98b0cbaafc0f05f5b4e5d18a23e3f",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\mechanical.json": "49f6053cd2499d05838a819b22de3494ea25f166f2b0b4d29bc76ad610ef1f7b",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\screen.json": "cb26cc5a5358ebc054e867c2da974717f7084f7b5144d7bbb0bdbae4bfb8a460"
+  },
+  "oracle_files": {
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\visibility-1\\output\\flat\\fixed-alpha\\initial-reconstruction.npz": "62ae8bd984079cfe75c5002c644af66270e841f1a9f80af88a8c37d0ee939324",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\visibility-1\\output\\flat\\fixed-alpha\\predicted-cfa-2.npy": "c179629702cfeb906ae7406a714457e535c178b3105e2f94520eb88b65a37f4d",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\visibility-1\\output\\flat\\fixed-alpha\\predicted-cfa-6.npy": "db84b680dbfcb13d70146f1c04afe36ae0687eac732d53a4688808ed6c79bcdd",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\visibility-1\\output\\flat\\fixed-alpha\\receipt.json": "e14ae9c361a4d9bb91a03d59e1569dfac725b4e7baa5a24236395e44602427c3",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\visibility-1\\output\\flat\\fixed-alpha\\reconstruction.npz": "324299052dabc4cab0fc88745f880cc9b5b0c3166f33facfbed6b0328cf509c8",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\visibility-1\\output\\flat\\fixed-alpha\\state.pt": "155cce9b94986e6e85e8077ae3f83cec55b1cb1abb9e8da6b3476569aa71a145",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\visibility-1\\output\\layered\\fixed-alpha\\initial-reconstruction.npz": "ad85404840682f0b1167d4fafb5cddab2d9d83c7e77bc7c25943fd54e730d6c1",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\visibility-1\\output\\layered\\fixed-alpha\\predicted-cfa-2.npy": "6268813eb964138bf4484a6dc5ce1910088644e5fb4ca072a350b840303f66b8",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\visibility-1\\output\\layered\\fixed-alpha\\predicted-cfa-6.npy": "fb2a158bd7495531be06a45ba8b05c294f3f9f24c884e825bdfba13e5b3f011f",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\visibility-1\\output\\layered\\fixed-alpha\\receipt.json": "0aebcaa70bc77d986661df45713776d3b0cf88ef7d41d71d3f8495dec060c67a",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\visibility-1\\output\\layered\\fixed-alpha\\reconstruction.npz": "bdf2989ea519a66316c0d51966f6a4f744d11b17593b00568abe6f7e68029cd8",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\visibility-1\\output\\layered\\fixed-alpha\\state.pt": "a4481365ba6ebfa19165770d2fa4b0417d95f1266fe8933152decdeec4310280",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\visibility-1\\output\\result.json": "8766b6d83f8c3247e6ca4f78673fe20a9f4441abbc1dcdfd8c982a9257a62d9b"
+  },
+  "reference_files": {
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\composite-1\\output\\angular-mismatch\\composite\\predicted-cfa-2.npy": "4c0a704fea195cd5ee985297ec44ebdfb9a1bbacbedec8d0e5b81651d1b00d8b",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\composite-1\\output\\angular-mismatch\\composite\\predicted-cfa-6.npy": "9fb64d37c2aa1fc4bf0e1b83ebdeeafcc6e33dcc73f0d8da4296a14aa3f82817",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\composite-1\\output\\angular-mismatch\\composite\\receipt.json": "64f23dabb3c10c3e9837d93c49c44ef53331991b02f079c05125da9841698054",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\composite-1\\output\\angular-mismatch\\composite\\reconstruction.npz": "f4ab73adc33428608c0c56e57297198c25ed1d2ede82700c6b387e225d204f2d",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\composite-1\\output\\angular-mismatch\\composite\\state.pt": "00d02fb0f620067db2942062bfcfe6b4cbaf76102bd108e72af63c1ff8b13b61",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\composite-1\\output\\angular-mismatch\\original\\predicted-cfa-2.npy": "7a1ccc33c03c5c1e1ee8b7ecb2764a9afbbc75375ff936b7a371e71895b5bd47",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\composite-1\\output\\angular-mismatch\\original\\predicted-cfa-6.npy": "0ec5550f9ac76689e43f4ede894ee248e65a6baf3705d296a4ad1c11724e1fa8",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\composite-1\\output\\angular-mismatch\\original\\receipt.json": "c98b5b2b048c88424d61749d284b5e0975859bcc470a6cc14b0f3786fec53f36",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\composite-1\\output\\angular-mismatch\\original\\reconstruction.npz": "8e6d07bf741dbfc8f7a3d731fec592203cf5a5c636a5eb517e60f51931bfa90a",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\composite-1\\output\\angular-mismatch\\original\\state.pt": "7ec4ed674a574d4f345f50555bf972544edf6cacfd5470b7e8e612f8dbef99ae",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\composite-1\\output\\bindings-after.json": "eab7d8a62e57b28f86ef551b11e67c95512d3dc16af31bf96e5cd6dea0a8933c",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\composite-1\\output\\bindings-before.json": "eab7d8a62e57b28f86ef551b11e67c95512d3dc16af31bf96e5cd6dea0a8933c",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\composite-1\\output\\far-only\\composite\\predicted-cfa-2.npy": "e252a86d8496a9c7e44cd57b556ba55fcb7a96574f63fa486173d3bcee7b61de",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\composite-1\\output\\far-only\\composite\\predicted-cfa-6.npy": "ad975f5dabec68baa758e5253d04ada2f0e05897816ebb10f2f3afb9d527c25a",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\composite-1\\output\\far-only\\composite\\receipt.json": "2ba46ecf56aa370da11c2b4e993c2515765b9a281bc1b56477646b9847249c99",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\composite-1\\output\\far-only\\composite\\reconstruction.npz": "9d06a89615d6869684df5c84601e0b7659523650ac54c32fe448334ced13030d",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\composite-1\\output\\far-only\\composite\\state.pt": "893236b497f00eaf9ba45f07aea598d9d56c74476d33cd03ae0cb57e90fd9a7d",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\composite-1\\output\\far-only\\original\\predicted-cfa-2.npy": "540fa8b29ebfa9ac9b8a54e52b2305bca1ddabfd91fe88224fbbd06251993d29",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\composite-1\\output\\far-only\\original\\predicted-cfa-6.npy": "440a304ec01b14d33e3dbb59b081eda5ba3cdfca95e878b13da665ddcc35fa09",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\composite-1\\output\\far-only\\original\\receipt.json": "4c08a75a635b640a171a1bc0d59080b22b4f38821da2d38e053a93a7a9db923e",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\composite-1\\output\\far-only\\original\\reconstruction.npz": "e908e78970e5d39495a41d0b8f9951f2b2c9f1d77d3ee5204652b3be93365d2f",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\composite-1\\output\\far-only\\original\\state.pt": "8236cd8660f31f16ad7e0526221233e7ba11649eac7f44a8085019cafc4ef889",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\composite-1\\output\\flat\\composite\\predicted-cfa-2.npy": "ba060f2a32cba56af1c3fca8ed87ad93b78a6b4553be1a492df929a2ca45b934",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\composite-1\\output\\flat\\composite\\predicted-cfa-6.npy": "3bacea538a61f93b4bea0ad5c248e2d735ce5ef891d908b93e4a3c4e23193ec8",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\composite-1\\output\\flat\\composite\\receipt.json": "453645db0c69770a1cd8c44e3577f3cbfea61a6822b62ea1f4df9fb9361ca16c",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\composite-1\\output\\flat\\composite\\reconstruction.npz": "590ae283a2110a8a8f65fbaee018da4edf62fa2206ba498772c4e8cbd0f769ff",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\composite-1\\output\\flat\\composite\\state.pt": "64ae630a65560d235face6915b2f735be36d16045691e8d7b90859e2c2cf0aa8",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\composite-1\\output\\flat\\original\\predicted-cfa-2.npy": "3e13e5153bdf2ea05b9e1cfc3aae729d9a5813e73a29fa4d6ffbba4e97c4cc1a",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\composite-1\\output\\flat\\original\\predicted-cfa-6.npy": "f6322609257a15c620c7ed0b212a993b8076b9289d33489320ef5807178cb8d0",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\composite-1\\output\\flat\\original\\receipt.json": "b18ad359ce474f0580e746c378875638739c86257daebaf03dd7f805aa939b6a",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\composite-1\\output\\flat\\original\\reconstruction.npz": "39591e41736a0b5a1d182a367dc1a411081952864510303c51dae14fabf31ab4",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\composite-1\\output\\flat\\original\\state.pt": "1e217243caeca8de911b41b90f90058bdedb74f45641e36b0b68926b9c78fd88",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\composite-1\\output\\layered\\composite\\predicted-cfa-2.npy": "eca3689196c6e9b1991b892467fc4ea79d0ea0dc015ca060961c3f44014cf37e",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\composite-1\\output\\layered\\composite\\predicted-cfa-6.npy": "06e8b2871cc3fbc5b120133baa64c730d5c5880ed2e1d57d6273faf536b12831",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\composite-1\\output\\layered\\composite\\receipt.json": "bd420c82012618dd84ada669b859f70750ed90121002c5170b222ebe7a881ee4",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\composite-1\\output\\layered\\composite\\reconstruction.npz": "75e70ae2511be45fb309a5c3a8d703765536986730619255b02724254eb70fc7",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\composite-1\\output\\layered\\composite\\state.pt": "196f122b38f6d44df9328a48bb0f2185ac81aaf6362d01578823a7ffb694b8e3",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\composite-1\\output\\layered\\original\\predicted-cfa-2.npy": "d5ad805d45b82585db2c1f42c231b4b2b9e94c9ea568391c966c445901a58eff",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\composite-1\\output\\layered\\original\\predicted-cfa-6.npy": "d29a76fa8681e87032edd93b7d09172ce60f948cc594559663b5fefa1811731d",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\composite-1\\output\\layered\\original\\receipt.json": "afb51ad8e8743397b4e663a92ab628943da136a817eb672aa33f9acf428aa81a",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\composite-1\\output\\layered\\original\\reconstruction.npz": "e4348cb0d5a25e1f48ba1547c665ce084e84cace4dcf01400a5f5e3039318579",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\composite-1\\output\\layered\\original\\state.pt": "f7101da2dc60a3029e83d27af4c6bbd15dde3097ff34d85dc13b6dcae31e2c0a",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\composite-1\\output\\result.json": "121812f23ad9d86361eef7f139bd7b9450aa88b26736f785ac09ca5c8a3f660c"
+  },
+  "original_screens_remain_failed": true,
+  "real_photo_admission": false,
+  "scope": "Known-alpha degree-of-freedom diagnostic with unchanged original sheet prior; no automatic visibility or calibrated-camera claim",
+  "scorer_sha256": "ee9912c5b9d415f5013e473eba0228af39082b27051873a3da1ad97733769922"
+}

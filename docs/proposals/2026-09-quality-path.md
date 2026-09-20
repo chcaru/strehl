@@ -16,10 +16,12 @@ physical pupil-integration checks. Its unchanged-objective continuation reduces
 structured-scene errors without establishing convergence. The paired delivered-
 radiance penalty failed: it can invent an occluding foreground, hide large
 radiances and destroy genuine highlights/filaments. It is closed without a
-strength sweep. The next bounded diagnostic fixes known visibility and fits
-only radiances with the original prior, separating a visibility failure from
-the remaining inverse problem. See experiments/layered-raw-inverse/
-composite-results.md and its independent review. It has no photographic
+strength sweep. Supplying known visibility fixes the flat-image failure and
+improves layered reconstruction, but bright prediction and glint retention
+still fail. A read-only directional objective check now separates remaining
+descent from a local prior tradeoff before any further model change. See
+experiments/layered-raw-inverse/visibility-results.md and its independent
+review. It has no photographic
 admission yet. The passing complete-periodic all-CFA controls
 remain retained at48276660; speed work stays behind demonstrated image quality.
 

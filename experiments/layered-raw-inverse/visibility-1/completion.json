@@ -1,0 +1,32 @@
+{
+  "instrument_completed": true,
+  "sources_unchanged": true,
+  "alpha_immutable": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\visibility-1\\alpha\\flat-alpha-f32.npy",
+      "sha256": "964fd875558f7c98352d1bdba87b004bfa9ebbad8cdf37bc0450962954a86773",
+      "bytes": 36992
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\visibility-1\\alpha\\layered-alpha-f32.npy",
+      "sha256": "a581e15652ba8c0f03c888c20ba5a701f7c99c45618599d1fadb37698f1f156b",
+      "bytes": 36992
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\visibility-1\\alpha\\manifest.json",
+      "sha256": "f86aa5f9c4744d554ec3b1b5e05c00e2ceb67456f39a9f0051b3334c2001ac86",
+      "bytes": 1593
+    }
+  ],
+  "fit": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\visibility-1\\output\\result.json",
+    "sha256": "8766b6d83f8c3247e6ca4f78673fe20a9f4441abbc1dcdfd8c982a9257a62d9b",
+    "bytes": 1123
+  },
+  "independent_scores": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\visibility-1\\scored\\result.json",
+    "sha256": "1b419e0c0eb0223522a23d4de0642b454bb1ec93b4b2a09e0e5f8ebf7a021088",
+    "bytes": 50914
+  },
+  "scope": "Known visibility intervention only; original sheet prior and solver unchanged. No photo admission."
+}
