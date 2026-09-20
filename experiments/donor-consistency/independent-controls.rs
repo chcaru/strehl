@@ -16,6 +16,10 @@ mod spatial_witness_controls {
     include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/donor-consistency/independent-spatial-witness-controls.rs"));
 }
 
+mod corrected_target_controls {
+    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/donor-consistency/independent-corrected-target-controls.rs"));
+}
+
 const W:usize=89;
 const H:usize=73;
 fn hash(v:&[f32])->String {

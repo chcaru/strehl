@@ -1,0 +1,116 @@
+{
+  "helper": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\corrected-photo-review.py",
+    "bytes": 9034,
+    "sha256": "80830a3167a70afeaa710a348673ee70628d82daf2ab234058217b9cb5a2268f"
+  },
+  "meaning": "Exact RGB16 activity and support only; no quality metric",
+  "conservative_dark_union_plus_mhc_xywh": [
+    3052,
+    2122,
+    80,
+    120
+  ],
+  "arms": {
+    "baseline": {
+      "arm": "baseline",
+      "old": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-full-1\\output\\baseline.tiff",
+        "bytes": 191495346,
+        "sha256": "920123586543b94dd7822b5f51fe0b5817a7ac16ceb4f69ae48540fe29a413c1"
+      },
+      "corrected": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\corrected-full-1\\output\\baseline.tiff",
+        "bytes": 191495346,
+        "sha256": "672df4f82e7e075484d8cbda55017177326f8a47bb9a61654a8b565adb925993"
+      },
+      "changed_rgb16_pixels": 0,
+      "changed_bbox_inclusive": null,
+      "maximum_abs_channel_difference_dn": 0,
+      "outside_allowed_rectangle": 0,
+      "allowed_rectangle_xywh": [
+        3052,
+        2122,
+        80,
+        120
+      ],
+      "canonical_changed_rgb16_pixels": {
+        "facet-edges": 0,
+        "pale-background": 0,
+        "fine-crystals": 0,
+        "bright-facet": 0,
+        "dark-inclusion": 0
+      }
+    },
+    "candidate": {
+      "arm": "candidate",
+      "old": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-full-1\\output\\candidate.tiff",
+        "bytes": 191495346,
+        "sha256": "528e790139aa8db58916fe75df2a6b3523ddc867113a136eed3cfa8d578597d9"
+      },
+      "corrected": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\corrected-full-1\\output\\candidate.tiff",
+        "bytes": 191495346,
+        "sha256": "a41c456285253b1031e14fdd6b5313a89d85062d8ff8cfebcfa07613ada25b32"
+      },
+      "changed_rgb16_pixels": 4271,
+      "changed_bbox_inclusive": [
+        3054,
+        2141,
+        3127,
+        2235
+      ],
+      "maximum_abs_channel_difference_dn": 33174,
+      "outside_allowed_rectangle": 0,
+      "allowed_rectangle_xywh": [
+        3052,
+        2122,
+        80,
+        120
+      ],
+      "canonical_changed_rgb16_pixels": {
+        "facet-edges": 0,
+        "pale-background": 0,
+        "fine-crystals": 0,
+        "bright-facet": 0,
+        "dark-inclusion": 4258
+      }
+    },
+    "late": {
+      "arm": "late",
+      "old": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-full-1\\output\\late.tiff",
+        "bytes": 191495346,
+        "sha256": "d8ceb85eb4b17fe99325a67e6fd4ba9c348732dabe1e1fd81031978a8d16f5ad"
+      },
+      "corrected": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\corrected-full-1\\output\\late.tiff",
+        "bytes": 191495346,
+        "sha256": "00ddc6e77d9638d02fda7d0d79fd739ee43991825fb462c94b4e3095e2b36cc8"
+      },
+      "changed_rgb16_pixels": 4283,
+      "changed_bbox_inclusive": [
+        3054,
+        2140,
+        3127,
+        2236
+      ],
+      "maximum_abs_channel_difference_dn": 40903,
+      "outside_allowed_rectangle": 0,
+      "allowed_rectangle_xywh": [
+        3052,
+        2122,
+        80,
+        120
+      ],
+      "canonical_changed_rgb16_pixels": {
+        "facet-edges": 0,
+        "pale-background": 0,
+        "fine-crystals": 0,
+        "bright-facet": 0,
+        "dark-inclusion": 4255
+      }
+    }
+  }
+}

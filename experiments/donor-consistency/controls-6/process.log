@@ -1,0 +1,65 @@
+
+running 6 tests
+test merge_cmd::donor_consistency::independent_controls::attribution_controls::independent_attribution_signed_parts_and_neutrality ... DONOR_ATTRIBUTION {"all_three_observer_output_hashes_equal":true,"domain_quads":[89,73],"false_mask_weight_max_difference_dn":5.2839250564575195,"field_max_error_dn":0.0001220703125,"hull_identity_max_error_dn":0.0,"inputs_unchanged":true,"largest_pin_clamp_dn":607.75732421875,"late_changed_samples":25984,"live_donor_samples":[77953,77958],"live_retained_samples":47338,"negative_terms":101024,"opposed_sign_cancellation_samples":14910,"positive_terms":102225,"scope":"Signed actual-coefficient observer controls; not photographic source ownership or quality","shared_pin_clamps":4,"signed_reconstruction_max_error_dn":0.0007616281509399414,"status":"PASS","whole_crop_field_bits_equal":true,"windows":[[0,0,89,73],[5,7,33,29],[6,8,31,27]]}
+ok
+test merge_cmd::donor_consistency::independent_controls::corrected_target_controls::independent_corrected_target_geometry_and_scope ... DONOR_TARGET {"changed_dark_samples":1885,"core_membership_exact":true,"corrected_frozen_fan_membership":0.09228515625,"corrected_tail_membership":1.0,"mask_analytic_max_error":0.00002915660793489927,"native_phase_changed_samples":1353,"old_frozen_fan_membership":1.0,"old_tail_membership":0.010997951030731201,"original_wrapper_exact":true,"other_two_masks_exact":true,"scope":"Post-failure corrected feature-address geometry; no photographic success claim","setting_refusals_checked":true,"status":"PASS","unchanged_facet_structure_active_samples":[1977,902]}
+ok
+test merge_cmd::donor_consistency::independent_controls::independent_donor_00_native_geometry ... DONOR_GEOMETRY {"evaluation":"2*quad+0.5+odd native output offset; three fixed photo masks","full_weight_samples":2852,"max_analytic_mask_error":0.00002915660793489927,"one_native_phase_changed":1287,"taper_samples":2306}
+ok
+test merge_cmd::donor_consistency::independent_controls::independent_donor_10_actual_coefficients_finish_and_placebo ... DONOR_ONES_DIAGNOSTIC {"actual_pin":[1800.0,1940.0,2080.0,2220.0],"excursions":4,"expected_bounded_pin":[1800.0,1940.0,2080.0,2220.0],"max_error_dn":0.0,"pre_hull_pin":[2396.861328125,2547.75732421875,2674.78564453125,2818.296875],"source_pin":[[1800.0,1940.0,2080.0,2220.0],[1800.0,1940.0,2080.0,2220.0],[1800.0,1940.0,2080.0,2220.0]]}
+DONOR_EXPLICIT_CLAMP {"excursions":4,"max_error_dn":0.0,"post_hull_pin":[1000.0,1100.0,1200.0,1300.0],"pre_hull_pin":[2328.877685546875,2428.8779296875,2528.8779296875,2628.8779296875]}
+
+thread 'merge_cmd::donor_consistency::independent_controls::independent_donor_10_actual_coefficients_finish_and_placebo' (4736) panicked at C:\dev\blog\death-of-software\projects\strehl\crates\strehl-core/../../experiments/donor-consistency/core-bridge.rs:50:13:
+assertion failed: src.iter().all(|v| v.is_finite() && (0.0..=1.0).contains(v))
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread 'merge_cmd::donor_consistency::independent_controls::independent_donor_10_actual_coefficients_finish_and_placebo' (4736) panicked at C:\dev\blog\death-of-software\projects\strehl\crates\strehl-core/../../experiments/donor-consistency/core-bridge.rs:50:13:
+assertion failed: src.iter().all(|v| v.is_finite() && (0.0..=1.0).contains(v))
+
+thread 'merge_cmd::donor_consistency::independent_controls::independent_donor_10_actual_coefficients_finish_and_placebo' (4736) panicked at C:\dev\blog\death-of-software\projects\strehl\crates\strehl-core/../../experiments/donor-consistency/core-bridge.rs:50:13:
+assertion failed: src.iter().all(|v| v.is_finite() && (0.0..=1.0).contains(v))
+
+thread 'merge_cmd::donor_consistency::independent_controls::independent_donor_10_actual_coefficients_finish_and_placebo' (4736) panicked at C:\dev\blog\death-of-software\projects\strehl\crates\strehl-core/../../experiments/donor-consistency/core-bridge.rs:49:13:
+assertion `left == right` failed
+  left: 6496
+ right: 6497
+
+thread 'merge_cmd::donor_consistency::independent_controls::independent_donor_10_actual_coefficients_finish_and_placebo' (4736) panicked at C:\dev\blog\death-of-software\projects\strehl\crates\strehl-core/../../experiments/donor-consistency/core-bridge.rs:102:13:
+prescribed region has no actual donor
+
+thread 'merge_cmd::donor_consistency::independent_controls::independent_donor_10_actual_coefficients_finish_and_placebo' (4736) panicked at C:\dev\blog\death-of-software\projects\strehl\crates\strehl-core/../../experiments/donor-consistency/core-bridge.rs:86:13:
+assertion `left == right` failed
+  left: 6496
+ right: 6497
+
+thread 'merge_cmd::donor_consistency::independent_controls::independent_donor_10_actual_coefficients_finish_and_placebo' (4736) panicked at C:\dev\blog\death-of-software\projects\strehl\crates\strehl-core/../../experiments/donor-consistency/core-bridge.rs:87:13:
+assertion failed: source.iter().all(|v| v.is_finite())
+DONOR_CONSUMER {"baseline_observer_after_bit_exact":true,"coefficient_max_error_dn":0.000030517578125,"independent_mean_base_max_error_dn":0.0,"independent_three_source_mean_base_bit_exact":true,"mask_max_error":0.0,"normalized_by_level":[3212,832,227,68],"off_zero_finish_bit_exact":true,"ones_changes_baseline":25984,"ones_differs_from_direct_donor":25984,"ones_output_max_error_dn":0.0,"ones_pre_hull_excursions":4,"output_max_error_dn":0.000244140625,"raw_overlap_by_level":[6497,1665,437,120],"same_mask_late_placebo_changed_samples":25984,"scope":"Mechanical actual-consumer controls; generated u16 sources, no photographic quality claim","source_hashes_before_after":["43ec76f88fa4711aa6f16cd4a5fafe701ff6a57fa26c168d8e7877186b468afe","2bc56c07d4f2df061babdc8284bdbc0092a6907d4b4b6bdc0f56dca32bd1afb3","0fe06ceac0455b8bb187a27d22ecac5a4ebd6a0d44b973c5e398b3d5e3349369","1915ed14f7e4055c8ad6c416f9c38c6f99491b832282762ad0dc6a9662aced1d","f77e28669fd7af73d189642b82361eb0162711e9d0ab431e0b3f8fb4260315fa","cc1a43a361779ef035cd79f949603c30b0d904a1d42b80e6c3a2ad6210230aa7","8c9c6ed1167d2f15dd97cc6dbc7cb1f20b4327f08172c48660aa3cd140bac1ad","f1bb65efe8d16654c3f9137fe88eeb0c2fefffa19f6cbca705b6871c15ef9ae4","8c43bf6b8ea94bb6a7c3aa97a4f36c588265cc67979f6285ce4b2819eab15992","c915b7929cfa097c29efc56209cf4a92efdd57d697b5081dab78cf5afe8c1db8","46688641d8d5574436e6afeab64c64f1d062a88e71e120a4fe9631a51d27fdf8","e2514edcb832906ff1fda22846cd4a6d2921204b51d337ddbe1b71c12f0aee20"],"terminal_base_bit_exact":true}
+ok
+test merge_cmd::donor_consistency::independent_controls::spatial_controls::independent_spatial_masks_after_full_collapse ... 
+thread 'merge_cmd::donor_consistency::independent_controls::spatial_controls::independent_spatial_masks_after_full_collapse' (38724) panicked at C:\dev\blog\death-of-software\projects\strehl\crates\strehl-core/../../experiments/donor-consistency/spatial-donor.rs:20:13:
+assertion failed: mask.iter().all(|v| v.is_finite() && (0.0..=1.0).contains(v))
+
+thread 'merge_cmd::donor_consistency::independent_controls::spatial_controls::independent_spatial_masks_after_full_collapse' (38724) panicked at C:\dev\blog\death-of-software\projects\strehl\crates\strehl-core/../../experiments/donor-consistency/spatial-donor.rs:20:13:
+assertion failed: mask.iter().all(|v| v.is_finite() && (0.0..=1.0).contains(v))
+
+thread 'merge_cmd::donor_consistency::independent_controls::spatial_controls::independent_spatial_masks_after_full_collapse' (38724) panicked at C:\dev\blog\death-of-software\projects\strehl\crates\strehl-core/../../experiments/donor-consistency/spatial-donor.rs:20:13:
+assertion failed: mask.iter().all(|v| v.is_finite() && (0.0..=1.0).contains(v))
+
+thread 'merge_cmd::donor_consistency::independent_controls::spatial_controls::independent_spatial_masks_after_full_collapse' (38724) panicked at C:\dev\blog\death-of-software\projects\strehl\crates\strehl-core/../../experiments/donor-consistency/spatial-donor.rs:19:13:
+assertion `left == right` failed
+  left: 6496
+ right: 6497
+
+thread 'merge_cmd::donor_consistency::independent_controls::spatial_controls::independent_spatial_masks_after_full_collapse' (38724) panicked at C:\dev\blog\death-of-software\projects\strehl\crates\strehl-core/../../experiments/donor-consistency/spatial-donor.rs:73:13:
+prescribed spatial region has no actual donor
+
+thread 'merge_cmd::donor_consistency::independent_controls::spatial_controls::independent_spatial_masks_after_full_collapse' (38724) panicked at C:\dev\blog\death-of-software\projects\strehl\crates\strehl-core/../../experiments/donor-consistency/spatial-donor.rs:47:13:
+duplicate or invalid prescribed spatial donor region
+DONOR_SPATIAL {"allones_shared_base_max_error_dn":0.000732421875,"alternate_pre_hull_algebra_max_error_dn":0.000732421875,"baseline_unchanged":true,"changed_covered_samples":29800,"detail_sum_max_error_dn":0.0,"direct_donor_max_difference_dn":663.979248046875,"domain_quads":[89,73],"independent_mean_base_exact":true,"inputs_unchanged":true,"largest_pin_clamp_dn":607.757080078125,"late_changed_samples":14900,"native_phase_changed_samples":487,"negative_pin_clamps":4,"normalization_count":2826,"off_zero_exact":true,"old_coefficient_mask_max_difference_dn":36.07470703125,"output_max_error_dn":0.0,"positive_pin_clamps":4,"scope":"Post-collapse masking integration controls; no photographic quality or noise calibration claim","status":"PASS","zero_outside_exact_samples":22168}
+ok
+test merge_cmd::donor_consistency::independent_controls::spatial_witness_controls::independent_spatial_witness_fields_and_neutrality ... DONOR_SPATIAL_WITNESS {"domain_quads":[89,73],"field_max_error_dn":0.000823974609375,"hull_identity_max_error_dn":0.0,"inputs_unchanged":true,"largest_pin_clamp_dn":607.757080078125,"late_changed_samples":14900,"live_source_mean_base_difference_dn":663.979248046875,"lower_pin_clamps":4,"nonzero_donor_samples":29807,"nonzero_retained_samples":37704,"normalized_samples":1782,"post_hull_finish_bits_equal":true,"scope":"Immutable source-gauge and spatial-reconstruction witness; no photographic quality claim","source_identity_max_error_dn":0.000823974609375,"spatial_closure_max_error_dn":0.000797271728515625,"status":"PASS","three_outputs_observer_neutral":true,"upper_pin_clamps":4,"whole_crop_bits_equal":true}
+ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 203 filtered out; finished in 0.25s
+

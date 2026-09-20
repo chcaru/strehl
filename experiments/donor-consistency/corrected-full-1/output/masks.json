@@ -1,0 +1,112 @@
+{
+  "coverage_sha256": "97a381d928819a1e34ea234e13468ce8d421a0daf5b7514663007fdf331e2d5a",
+  "mask_domain": "finest output quads after full-domain AC reconstruction; no reduced masks",
+  "masks": [
+    {
+      "dimensions": [
+        3460,
+        2306
+      ],
+      "positive_quads": 991,
+      "prescribed_donor": 28,
+      "region": 0,
+      "segment": [
+        [
+          2624.0,
+          2906.0
+        ],
+        [
+          2602.0,
+          2945.0
+        ]
+      ],
+      "sha256": "137f5fcb4045f26143f44ccc6b830c756e0c449da9302ef5aea837c0ca43912c"
+    },
+    {
+      "dimensions": [
+        3460,
+        2306
+      ],
+      "positive_quads": 1195,
+      "prescribed_donor": 33,
+      "region": 1,
+      "segment": [
+        [
+          3080.0,
+          2150.0
+        ],
+        [
+          3080.0,
+          2212.0
+        ]
+      ],
+      "sha256": "2e58e37bfeeadee5f13fc21d5a2271502f9dd81995425a11b2e51a2558178c4b"
+    },
+    {
+      "dimensions": [
+        3460,
+        2306
+      ],
+      "positive_quads": 451,
+      "prescribed_donor": 25,
+      "region": 2,
+      "segment": [
+        [
+          3240.0,
+          2070.0
+        ],
+        [
+          3240.0,
+          2070.0
+        ]
+      ],
+      "sha256": "eda4c960a93f16e4e4625c8c5cabbc563beea4142e303c47fbea35a73c7f4f60"
+    }
+  ],
+  "native_origin": [
+    0,
+    0
+  ],
+  "native_quad_centre": [
+    0.5,
+    0.5
+  ],
+  "normalized_count": 0,
+  "radii": [
+    16,
+    24
+  ],
+  "segments": [
+    [
+      [
+        2624.0,
+        2906.0
+      ],
+      [
+        2602.0,
+        2945.0
+      ]
+    ],
+    [
+      [
+        3080.0,
+        2150.0
+      ],
+      [
+        3080.0,
+        2212.0
+      ]
+    ],
+    [
+      [
+        3240.0,
+        2070.0
+      ],
+      [
+        3240.0,
+        2070.0
+      ]
+    ]
+  ],
+  "target": "corrected-dark-tail"
+}

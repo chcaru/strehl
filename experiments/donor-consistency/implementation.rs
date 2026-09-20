@@ -9,6 +9,20 @@ pub(crate) const SEGMENTS:[([f32;2],[f32;2]);3]=[
     ([3080.0,2150.0],[3102.0,2203.0]),
     ([3240.0,2070.0],[3240.0,2070.0]),
 ];
+/// One explicit post-failure address correction, not a configurable geometry.
+pub(crate) fn target_from_setting(setting:Option<&str>,spatial:bool)->Result<bool> {
+    match setting {
+        None=>Ok(false),
+        Some("corrected-dark-tail") if spatial=>Ok(true),
+        Some("corrected-dark-tail")=>bail!("corrected-dark-tail requires spatial donor mode"),
+        Some(_)=>bail!("STREHL_DONOR_TARGET must be absent or exactly corrected-dark-tail"),
+    }
+}
+pub(crate) fn target_segments(corrected_dark_tail:bool)->[([f32;2],[f32;2]);3] {
+    let mut segments=SEGMENTS;
+    if corrected_dark_tail {segments[1].1=[3080.0,2212.0];}
+    segments
+}
 pub(crate) fn capsule_at(x:f32,y:f32,start:[f32;2],end:[f32;2])->f32 {
     assert!([x,y,start[0],start[1],end[0],end[1]].iter().all(|v|v.is_finite()));
     let (vx,vy)=(end[0]-start[0],end[1]-start[1]);let norm=vx*vx+vy*vy;
@@ -22,8 +36,11 @@ pub(crate) fn capsule_at(x:f32,y:f32,start:[f32;2],end:[f32;2])->f32 {
 /// Native origin is relative to the original baseline OUTPUT, not the sensor.
 /// Common four-plane mask is evaluated at the native quad centre (2x+.5,2y+.5).
 pub(crate) fn fixed_masks(w:usize,h:usize,origin_native:[isize;2])->Vec<Vec<f32>> {
+    fixed_masks_for_target(w,h,origin_native,false)
+}
+pub(crate) fn fixed_masks_for_target(w:usize,h:usize,origin_native:[isize;2],corrected_dark_tail:bool)->Vec<Vec<f32>> {
     assert!(w>0 && h>0);
-    SEGMENTS.iter().map(|&(a,b)|(0..h).flat_map(|y|(0..w).map(move|x|
+    target_segments(corrected_dark_tail).iter().map(|&(a,b)|(0..h).flat_map(|y|(0..w).map(move|x|
         capsule_at(origin_native[0] as f32+2.0*x as f32+0.5,
             origin_native[1] as f32+2.0*y as f32+0.5,a,b))).collect()).collect()
 }

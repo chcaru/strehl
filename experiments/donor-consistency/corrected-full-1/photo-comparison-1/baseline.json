@@ -1,0 +1,13 @@
+{
+  "source": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\corrected-full-1\\output\\baseline.tiff",
+  "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\corrected-full-1\\photo-comparison-1\\baseline.png",
+  "shape": [
+    4612,
+    6920,
+    3
+  ],
+  "conversion": "rounded division by 257; full extent; no resampling",
+  "source_sha256": "672df4f82e7e075484d8cbda55017177326f8a47bb9a61654a8b565adb925993",
+  "png_sha256": "68b2f4533e14eefb6e8b2473cc4312fe0d330cd70c83569148270fba12491326",
+  "icc_preserved": true
+}

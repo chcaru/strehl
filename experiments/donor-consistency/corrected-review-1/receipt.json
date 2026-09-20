@@ -1,0 +1,677 @@
+{
+  "helper": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\corrected-photo-review.py",
+    "bytes": 9034,
+    "sha256": "80830a3167a70afeaa710a348673ee70628d82daf2ab234058217b9cb5a2268f"
+  },
+  "inputs": {
+    "baseline": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\corrected-full-1\\photo-comparison-1\\baseline.png",
+      "bytes": 37540366,
+      "sha256": "68b2f4533e14eefb6e8b2473cc4312fe0d330cd70c83569148270fba12491326"
+    },
+    "old-candidate": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-full-1\\photo-comparison-1\\candidate.png",
+      "bytes": 37540085,
+      "sha256": "6ee3f719a621ce6cfc98bffaebb14b0d3795abceffef5fac15fb625126d9c7e9"
+    },
+    "corrected-candidate": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\corrected-full-1\\photo-comparison-1\\candidate.png",
+      "bytes": 37539338,
+      "sha256": "bf343c9771477f9fc751cadb3f03f493099a528763ce8e5b7196cffb3692719c"
+    },
+    "helicon-b": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\helicon-current\\vitamin-c-b-2\\whole-stack.tiff",
+      "bytes": 197827122,
+      "sha256": "f08335d17083789fa2bd60ee17ecbaba921bbc7aa20c9fdfdfa0cf0e1ca1d2d8"
+    },
+    "old-late": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-full-1\\photo-comparison-1\\late.png",
+      "bytes": 37538358,
+      "sha256": "3bd698f3022157f831da24a82aa58e1f9afe1a4364c250d1c8e90dd9afa2915a"
+    },
+    "corrected-late": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\corrected-full-1\\photo-comparison-1\\late.png",
+      "bytes": 37538629,
+      "sha256": "548f511348f229bce93ad68146d9e3c9e9b70a0c83fe0e29708296434db4887e"
+    }
+  },
+  "outputs": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\corrected-review-1\\facet-edges-board.png",
+      "bytes": 637078,
+      "sha256": "9f78a79155d14cad8a614a1926941b827ea61b2e919826037605653049fbc7b9"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\corrected-review-1\\pale-background-board.png",
+      "bytes": 474204,
+      "sha256": "8b6d66195b8da998cffc5b1b44a8967be52527729b12d91d939901d58ef8487e"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\corrected-review-1\\fine-crystals-board.png",
+      "bytes": 656531,
+      "sha256": "cd1fd5bd9d8adaba3e9f14330e1ce1076cd6c468b9d6c919954c9894c7b97b8c"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\corrected-review-1\\bright-facet-board.png",
+      "bytes": 490269,
+      "sha256": "78ba1d0eb88f7b61302dae8570ef8e11dc79c2f8048186fa0667bc5e0a16f4ad"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\corrected-review-1\\dark-inclusion-board.png",
+      "bytes": 639643,
+      "sha256": "f26ecd7c0ff1ae87646899f4a3f12ca86f586e219faf03968129740ee4e5c8c9"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\corrected-review-1\\facet-core-boundary-baseline-zoom.png",
+      "bytes": 54045,
+      "sha256": "58ddc5aaebe9e878e597c7efc0fe6c36fd73f6cd2d4333da707395470675bcba"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\corrected-review-1\\facet-core-boundary-old-candidate-zoom.png",
+      "bytes": 53239,
+      "sha256": "6d6e7096e20d357ea1de55f7ffe80ddc5824557016c346386a519cff12c3dabe"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\corrected-review-1\\facet-core-boundary-corrected-candidate-zoom.png",
+      "bytes": 53239,
+      "sha256": "6d6e7096e20d357ea1de55f7ffe80ddc5824557016c346386a519cff12c3dabe"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\corrected-review-1\\facet-core-boundary-helicon-b-zoom.png",
+      "bytes": 53901,
+      "sha256": "652940786d343244200b226212c2413c623d81d217eb2bdfba5f850ba0c025ba"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\corrected-review-1\\facet-core-boundary-old-late-zoom.png",
+      "bytes": 53525,
+      "sha256": "0e00bb2e785e080898b8decd280dc6ff09928b6cd5f32fc3b510a51c3c1eca31"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\corrected-review-1\\facet-core-boundary-corrected-late-zoom.png",
+      "bytes": 53525,
+      "sha256": "0e00bb2e785e080898b8decd280dc6ff09928b6cd5f32fc3b510a51c3c1eca31"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\corrected-review-1\\facet-core-boundary-board.png",
+      "bytes": 198837,
+      "sha256": "85e3012be749ddcb0c5d5b763620e48002599cca6e9cec7fae1bfe256210401f"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\corrected-review-1\\facet-core-boundary-old-mask-outline.png",
+      "bytes": 54927,
+      "sha256": "6af6b16f3cda16e0eb534be461d76d59878bb8d9e6f0ee0a39fe20ff9d50a7bc"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\corrected-review-1\\facet-core-boundary-corrected-mask-outline.png",
+      "bytes": 54927,
+      "sha256": "6af6b16f3cda16e0eb534be461d76d59878bb8d9e6f0ee0a39fe20ff9d50a7bc"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\corrected-review-1\\dark-core-boundary-baseline-zoom.png",
+      "bytes": 61147,
+      "sha256": "8a5292f268d7502a9b34c80df79985b6a05c300e4d8909c15c688e42903fbd07"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\corrected-review-1\\dark-core-boundary-old-candidate-zoom.png",
+      "bytes": 61795,
+      "sha256": "182d65b25355b8404afdb39556674ee1f40d07a715ef1a7f54375f7b5744c385"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\corrected-review-1\\dark-core-boundary-corrected-candidate-zoom.png",
+      "bytes": 60947,
+      "sha256": "1a06616f48263df567ec2e6bce4defb823840457e8c75d19aead6f7f1dee14ba"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\corrected-review-1\\dark-core-boundary-helicon-b-zoom.png",
+      "bytes": 58625,
+      "sha256": "215649d2da9b961b7301c32caed21327c6230de9ccd956f6acd1b482fae3cec1"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\corrected-review-1\\dark-core-boundary-old-late-zoom.png",
+      "bytes": 59875,
+      "sha256": "af8bf56e9958627a5cccae2a5d84c3fb7d96d60b2ca3636f299e2eeea83cafa6"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\corrected-review-1\\dark-core-boundary-corrected-late-zoom.png",
+      "bytes": 60285,
+      "sha256": "fc9c31b2badbe3f313eda0fbae66c4c14d553f5dccac9be9c215d93327e40aaf"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\corrected-review-1\\dark-core-boundary-board.png",
+      "bytes": 237290,
+      "sha256": "ac749ab2bacd374df6c2ae1b5859f43dc2e683804b691aa2044497d511327d17"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\corrected-review-1\\dark-core-boundary-old-mask-outline.png",
+      "bytes": 61987,
+      "sha256": "7b23ee562aa8cf97337bebcf6833ab1205d6f6d543edd1582d49b994ecfff24e"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\corrected-review-1\\dark-core-boundary-corrected-mask-outline.png",
+      "bytes": 61332,
+      "sha256": "f1bacec405d94910769c8db274f13a3ef7eaa8163a0cb195d14e6244c5802a5c"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\corrected-review-1\\competing-structure-baseline-zoom.png",
+      "bytes": 29307,
+      "sha256": "c260dc7afd0e92f4ba420445e0aba50fd305e21638d84d5e2d3cb59ad03707a1"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\corrected-review-1\\competing-structure-old-candidate-zoom.png",
+      "bytes": 29363,
+      "sha256": "e30d25713d828bcb0cf83869453efb037b4f32025cfb9576cf97a74f1677fee7"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\corrected-review-1\\competing-structure-corrected-candidate-zoom.png",
+      "bytes": 29363,
+      "sha256": "e30d25713d828bcb0cf83869453efb037b4f32025cfb9576cf97a74f1677fee7"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\corrected-review-1\\competing-structure-helicon-b-zoom.png",
+      "bytes": 30115,
+      "sha256": "330de629623e24cf6603273131ac0d468d45ceface72611a16f1b0810d49bcbb"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\corrected-review-1\\competing-structure-old-late-zoom.png",
+      "bytes": 29019,
+      "sha256": "1c7c7e018c1dece1624f2e386901ef3638cd6cd9cd9ad79b29022ea7266a3d6f"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\corrected-review-1\\competing-structure-corrected-late-zoom.png",
+      "bytes": 29019,
+      "sha256": "1c7c7e018c1dece1624f2e386901ef3638cd6cd9cd9ad79b29022ea7266a3d6f"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\corrected-review-1\\competing-structure-board.png",
+      "bytes": 111215,
+      "sha256": "bcc9f19162a508944b0902ee4038b0a8a7101368fa7b71f0d68108e82fc0851e"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\corrected-review-1\\competing-structure-old-mask-outline.png",
+      "bytes": 30218,
+      "sha256": "f32c8b0a219642d2aa2f828c78a167d50bcdc67329a45e4710ab77012c0a3634"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\corrected-review-1\\competing-structure-corrected-mask-outline.png",
+      "bytes": 30218,
+      "sha256": "f32c8b0a219642d2aa2f828c78a167d50bcdc67329a45e4710ab77012c0a3634"
+    }
+  ],
+  "rows": [
+    {
+      "name": "facet-edges",
+      "baseline_xywh": [
+        2500,
+        2700,
+        384,
+        384
+      ],
+      "display_integer_zoom": 1,
+      "arms": {
+        "baseline": [
+          2500,
+          2700,
+          384,
+          384
+        ],
+        "old-candidate": [
+          2500,
+          2700,
+          384,
+          384
+        ],
+        "corrected-candidate": [
+          2500,
+          2700,
+          384,
+          384
+        ],
+        "helicon-b": [
+          2548,
+          2744,
+          384,
+          384
+        ],
+        "old-late": [
+          2500,
+          2700,
+          384,
+          384
+        ],
+        "corrected-late": [
+          2500,
+          2700,
+          384,
+          384
+        ]
+      }
+    },
+    {
+      "name": "pale-background",
+      "baseline_xywh": [
+        400,
+        1150,
+        384,
+        384
+      ],
+      "display_integer_zoom": 1,
+      "arms": {
+        "baseline": [
+          400,
+          1150,
+          384,
+          384
+        ],
+        "old-candidate": [
+          400,
+          1150,
+          384,
+          384
+        ],
+        "corrected-candidate": [
+          400,
+          1150,
+          384,
+          384
+        ],
+        "helicon-b": [
+          425,
+          1178,
+          384,
+          384
+        ],
+        "old-late": [
+          400,
+          1150,
+          384,
+          384
+        ],
+        "corrected-late": [
+          400,
+          1150,
+          384,
+          384
+        ]
+      }
+    },
+    {
+      "name": "fine-crystals",
+      "baseline_xywh": [
+        4200,
+        1700,
+        384,
+        384
+      ],
+      "display_integer_zoom": 1,
+      "arms": {
+        "baseline": [
+          4200,
+          1700,
+          384,
+          384
+        ],
+        "old-candidate": [
+          4200,
+          1700,
+          384,
+          384
+        ],
+        "corrected-candidate": [
+          4200,
+          1700,
+          384,
+          384
+        ],
+        "helicon-b": [
+          4266,
+          1734,
+          384,
+          384
+        ],
+        "old-late": [
+          4200,
+          1700,
+          384,
+          384
+        ],
+        "corrected-late": [
+          4200,
+          1700,
+          384,
+          384
+        ]
+      }
+    },
+    {
+      "name": "bright-facet",
+      "baseline_xywh": [
+        1150,
+        3850,
+        384,
+        384
+      ],
+      "display_integer_zoom": 1,
+      "arms": {
+        "baseline": [
+          1150,
+          3850,
+          384,
+          384
+        ],
+        "old-candidate": [
+          1150,
+          3850,
+          384,
+          384
+        ],
+        "corrected-candidate": [
+          1150,
+          3850,
+          384,
+          384
+        ],
+        "helicon-b": [
+          1183,
+          3907,
+          384,
+          384
+        ],
+        "old-late": [
+          1150,
+          3850,
+          384,
+          384
+        ],
+        "corrected-late": [
+          1150,
+          3850,
+          384,
+          384
+        ]
+      }
+    },
+    {
+      "name": "dark-inclusion",
+      "baseline_xywh": [
+        3050,
+        1850,
+        384,
+        384
+      ],
+      "display_integer_zoom": 1,
+      "arms": {
+        "baseline": [
+          3050,
+          1850,
+          384,
+          384
+        ],
+        "old-candidate": [
+          3050,
+          1850,
+          384,
+          384
+        ],
+        "corrected-candidate": [
+          3050,
+          1850,
+          384,
+          384
+        ],
+        "helicon-b": [
+          3104,
+          1885,
+          384,
+          384
+        ],
+        "old-late": [
+          3050,
+          1850,
+          384,
+          384
+        ],
+        "corrected-late": [
+          3050,
+          1850,
+          384,
+          384
+        ]
+      }
+    },
+    {
+      "name": "facet-core-boundary",
+      "baseline_xywh": [
+        2533,
+        2846,
+        160,
+        160
+      ],
+      "display_integer_zoom": 3,
+      "arms": {
+        "baseline": [
+          2533,
+          2846,
+          160,
+          160
+        ],
+        "old-candidate": [
+          2533,
+          2846,
+          160,
+          160
+        ],
+        "corrected-candidate": [
+          2533,
+          2846,
+          160,
+          160
+        ],
+        "helicon-b": [
+          2580,
+          2891,
+          160,
+          160
+        ],
+        "old-late": [
+          2533,
+          2846,
+          160,
+          160
+        ],
+        "corrected-late": [
+          2533,
+          2846,
+          160,
+          160
+        ]
+      }
+    },
+    {
+      "name": "dark-core-boundary",
+      "baseline_xywh": [
+        3011,
+        2097,
+        160,
+        160
+      ],
+      "display_integer_zoom": 3,
+      "arms": {
+        "baseline": [
+          3011,
+          2097,
+          160,
+          160
+        ],
+        "old-candidate": [
+          3011,
+          2097,
+          160,
+          160
+        ],
+        "corrected-candidate": [
+          3011,
+          2097,
+          160,
+          160
+        ],
+        "helicon-b": [
+          3063,
+          2134,
+          160,
+          160
+        ],
+        "old-late": [
+          3011,
+          2097,
+          160,
+          160
+        ],
+        "corrected-late": [
+          3011,
+          2097,
+          160,
+          160
+        ]
+      }
+    },
+    {
+      "name": "competing-structure",
+      "baseline_xywh": [
+        3180,
+        2010,
+        120,
+        120
+      ],
+      "display_integer_zoom": 3,
+      "arms": {
+        "baseline": [
+          3180,
+          2010,
+          120,
+          120
+        ],
+        "old-candidate": [
+          3180,
+          2010,
+          120,
+          120
+        ],
+        "corrected-candidate": [
+          3180,
+          2010,
+          120,
+          120
+        ],
+        "helicon-b": [
+          3234,
+          2046,
+          120,
+          120
+        ],
+        "old-late": [
+          3180,
+          2010,
+          120,
+          120
+        ],
+        "corrected-late": [
+          3180,
+          2010,
+          120,
+          120
+        ]
+      }
+    }
+  ],
+  "change_extent": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\corrected-review-1\\change-extent.json",
+    "bytes": 3825,
+    "sha256": "68c3f1096e0e6081ed9b677813075842c76e6719078b925252f7a504cb4ad569"
+  },
+  "canonical_regions": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-review-1\\regions.json",
+    "bytes": 1068,
+    "sha256": "ff55ed297385ff8fef5d2badce07729537e2e867701d96d328be1eaf7bcb0f4f"
+  },
+  "helicon_registration": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\helicon-current\\photo-comparison-1\\coordinate-receipt.json",
+    "bytes": 30865,
+    "sha256": "9323b01478a6b70905dca18aa6802cd55f31d270a66fa1015b198308d77deaab"
+  },
+  "current_coordinates": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\corrected-full-1\\photo-comparison-1\\coordinate-receipt.json",
+    "bytes": 10594,
+    "sha256": "e2eed91fe9e19932eef2299a98494a2dad28208950971214eabe4847f37302b5"
+  },
+  "old_coordinates": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-full-1\\photo-comparison-1\\coordinate-receipt.json",
+    "bytes": 10542,
+    "sha256": "2cd94cfcd3c776fab89a8dd8ca3380c62485b3443fab1b5d31e463a12e3e21ae"
+  },
+  "old_segments": [
+    [
+      [
+        2624,
+        2906
+      ],
+      [
+        2602,
+        2945
+      ]
+    ],
+    [
+      [
+        3080,
+        2150
+      ],
+      [
+        3102,
+        2203
+      ]
+    ],
+    [
+      [
+        3240,
+        2070
+      ],
+      [
+        3240,
+        2070
+      ]
+    ]
+  ],
+  "corrected_segments": [
+    [
+      [
+        2624,
+        2906
+      ],
+      [
+        2602,
+        2945
+      ]
+    ],
+    [
+      [
+        3080,
+        2150
+      ],
+      [
+        3080,
+        2212
+      ]
+    ],
+    [
+      [
+        3240,
+        2070
+      ],
+      [
+        3240,
+        2070
+      ]
+    ]
+  ],
+  "scope": "Existing outputs only. Native crops and3x nearest replication, same exact sRGB ICC, no tone change. Helicon scale difference retained. Old/corrected radius16/24 outlines are separate geometry views. Both long left tail and right branch must be reviewed; no photographic gate passed by this helper."
+}

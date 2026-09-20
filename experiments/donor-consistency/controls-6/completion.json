@@ -1,0 +1,10 @@
+{
+  "screen": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\controls-6\\output\\screen.json",
+    "sha256": "d325a8657c4565d0b7f180fc5906d98a21351d7eb2dc9327832a69b3bed15ef9",
+    "bytes": 6275
+  },
+  "sources_unchanged": true,
+  "structural_controls_passed": true,
+  "photographic_replay_admitted": true
+}

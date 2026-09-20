@@ -235,6 +235,27 @@ automatic concentration diagnostic is being controlled in parallel, without
 presuming it repairs images. See donor-consistency/spatial-results.md and
 the independent photographic decision; no SOTA/default promotion is earned.
 
+The actual-source witness now identifies a target annotation error: the
+visible long dark-field streak was sampled at a location with mask0.010998,
+while the originally named fan point was fully covered. Actual donor33 is
+compact at the missed streak. The separately labelled corrected-address
+oracle changes only that endpoint; all six controls pass and the complete
+render changes4271 pixels within the declared dark-field rectangle, with
+every other pixel exactly unchanged relative to the preceding spatial trial.
+Its full photographs and independent verdict live in donor-consistency/
+corrected-results.md. This remains a manual diagnostic, not automatic repair.
+
+The proposed automatic concentration rule is closed: a real extended radial
+truth control defeats its radius ordering, and an unchanged read-only scan
+of124 real tracks makes zero nominations. Preserve both results rather than
+tuning thresholds. Unconstrained positive blur fitting likewise cannot prove
+ownership, because a compact core can encode an unrelated positive object in
+its fitted kernel. Further ownership work is deferred. The next automatic
+whole-image candidate resumes the positive complete all-CFA wavelet operator
+with the fixed natural-boundary and actual-GPU-gather noise test in
+complete-cfa-wavelet/next-design.md, implemented under boundary-cfa-wavelet.
+No photographic admission follows until that small independent screen passes.
+
 An image-quality change must retain or restore an identifiable feature in
 matched native views, preserve genuine colour, and survive independent review.
 Use known-scene truth and flat-noise controls alongside photographs. A lower

@@ -145,11 +145,20 @@ fn vitamin_c_complete_triplet() -> Result<()> {
         Ok(value) if value == "1" => true,
         _ => anyhow::bail!("STREHL_DONOR_SPATIAL must be absent or exactly1"),
     };
+    let target_setting=match std::env::var("STREHL_DONOR_TARGET") {
+        Ok(value)=>Some(value),
+        Err(std::env::VarError::NotPresent)=>None,
+        Err(error)=>return Err(error.into()),
+    };
+    let corrected_dark_tail=target_from_setting(target_setting.as_deref(),spatial)?;
+    let target=if corrected_dark_tail {"corrected-dark-tail"} else {"original"};
+    let segments=target_segments(corrected_dark_tail);
     ensure!(!spatial || std::env::var_os("STREHL_DONOR_ATTRIBUTION_DIR").is_none(),
         "old coefficient attribution is incompatible with spatial donor mode");
     ensure!(spatial || std::env::var_os("STREHL_DONOR_SPATIAL_WITNESS_DIR").is_none(),
         "spatial witness requires spatial donor mode");
-    let mode = if spatial { "fixed-native-spatial-donor-oracle" } else { MODE };
+    let mode = if corrected_dark_tail { "fixed-native-spatial-donor-corrected-dark-tail-oracle" }
+        else if spatial { "fixed-native-spatial-donor-oracle" } else { MODE };
     let counterfactual = if spatial { "baseline_pre + (sum(mask0*full_donor_ac) - coverage0*baseline_ac); unchanged terminal mean" }
         else { "prescribed shared donor AC coefficients; baseline terminal mean retained" };
     let config_path = PathBuf::from(std::env::var_os("STREHL_DONOR_CONSISTENCY_FULL_CONFIG")
@@ -243,7 +252,7 @@ fn vitamin_c_complete_triplet() -> Result<()> {
     dev.tone = Some(image_out::Tone { black: config.tone[0], white: config.tone[1], contrast: config.tone[2] });
     dev.exposure_gain = 1.0;
     std::fs::create_dir(&config.out_dir)?;
-    write_json(&config.out_dir.join("started.json"), &json!({"schema":1,"mode":mode,
+    write_json(&config.out_dir.join("started.json"), &json!({"schema":1,"mode":mode,"target":target,
         "source_dir":config.source_dir,"map_sha256":EXPECTED_MAP,"config_sha256":file_hash(&config_path)?,
         "original_crop":config.expected_crop,"effective_crop":config.expected_crop,"plan":plan,
         "execution_threads":workers,"wb_bits":EXPECTED_WB_BITS,"tone_bits":config.tone.map(f32::to_bits),
@@ -252,15 +261,15 @@ fn vitamin_c_complete_triplet() -> Result<()> {
         "source_active":[active.x,active.y,active.width,active.height],"source_stride":stride,
         "source_buffer_height":buffer_height,"original_metadata_check":"length and modified time; all70 before/after both passes",
         "counterfactual":counterfactual,
-        "donors":DONORS,"late_donor":69,"segments":SEGMENTS,"radii_native":[16,24],
+        "donors":DONORS,"late_donor":69,"segments":segments,"radii_native":[16,24],
         "mask_native_origin":[0,0],"mask_sample_offset_native":[0.5,0.5]}))?;
-    let masks0=fixed_masks(crop.width,crop.height,[0,0]);
+    let masks0=fixed_masks_for_target(crop.width,crop.height,[0,0],corrected_dark_tail);
     let mut oracle=FullDonor::new(spatial,&sizes,&masks0);
     let mut late=FullDonor::new(spatial,&sizes,&masks0);
-    let mask_record=match &oracle {
+    let mut mask_record=match &oracle {
         FullDonor::Bands(donor) => {
             let mask_receipt=donor.masks().iter().enumerate().map(|(region,p)|json!({
-        "region":region,"prescribed_donor":DONORS[region],"segment":SEGMENTS[region],
+        "region":region,"prescribed_donor":DONORS[region],"segment":segments[region],
         "levels":(0..p.levels()).map(|k|json!({"level":k,
             "dimensions":[p.sizes()[k].width,p.sizes()[k].height],
             "sha256":field_hash(p.level(k)),
@@ -277,11 +286,13 @@ fn vitamin_c_complete_triplet() -> Result<()> {
             "mask_domain":"finest output quads after full-domain AC reconstruction; no reduced masks",
             "normalized_count":donor.normalized_count(),"coverage_sha256":field_hash(donor.coverage()),
             "masks":donor.masks().iter().enumerate().map(|(region,m)|json!({
-                "region":region,"prescribed_donor":DONORS[region],"segment":SEGMENTS[region],
+                "region":region,"prescribed_donor":DONORS[region],"segment":segments[region],
                 "dimensions":[crop.width,crop.height],"sha256":field_hash(m),
                 "positive_quads":m.iter().filter(|&&v|v>0.0).count()})).collect::<Vec<_>>()
         }),
     };
+    mask_record["target"]=json!(target);
+    mask_record["segments"]=json!(segments);
     write_json(&config.out_dir.join("masks.json"),&mask_record)?;
     drop(masks0);
     let mut base=BandWorker::new(domain,merge_cfg);
@@ -368,6 +379,7 @@ fn vitamin_c_complete_triplet() -> Result<()> {
     for (i,path) in paths.iter().enumerate(){ensure!(before[i]==stamp(path)?,"original metadata changed after triplet");}
     ensure!(file_hash(&config.warp_map)?==EXPECTED_MAP,"held warp map changed");
     write_json(&config.out_dir.join("receipt.json"),&json!({"schema":1,"mode":mode,"frames":70,
+        "target":target,"segments":segments,"radii_native":[16,24],
         "counterfactual":counterfactual,
         "baseline_sha256":baseline_sha256,"candidate_sha256":file_hash(&candidate_path)?,"late_sha256":file_hash(&late_path)?,
         "baseline_rgb16_le_sha256":baseline_rgb16_sha256,"baseline_software":baseline_software,
