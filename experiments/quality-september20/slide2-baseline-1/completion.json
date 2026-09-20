@@ -1,0 +1,60 @@
+{
+  "status": "BASELINE_RENDERED",
+  "original_count": 299,
+  "reference": 149,
+  "crop_quad_xywh": [
+    139,
+    93,
+    3238,
+    2158
+  ],
+  "original_metadata_and_content_unchanged": true,
+  "map": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september20\\slide2-baseline-1\\slide2.warpmap.txt",
+    "sha256": "7712a5eb7f74001485bc69b9d9721fe1bde4c0aa8099e28ddf703ede8069c14a",
+    "bytes": 40987
+  },
+  "master": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september20\\slide2-baseline-1\\slide2.tiff",
+    "sha256": "c512ef36a61f2d7c4e13f5fc086429f965c007f17b44a8db6c84cc9d4b7a229d",
+    "bytes": 167707450
+  },
+  "display": {
+    "shape": [
+      4316,
+      6476,
+      3
+    ],
+    "decoded_rgb16_le_sha256": "e899a56b58bc928b0905a15271b01d684ada6842ddeedef4f18422a39a2f329c",
+    "full_native_png": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september20\\slide2-baseline-1\\slide2-full.png",
+      "sha256": "affc83538a5e02640b0e8dfe3594897104387cb38aefc93fce40c18879a42bcb",
+      "bytes": 33689435
+    },
+    "overview_only": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september20\\slide2-baseline-1\\slide2-overview-only.png",
+      "sha256": "1b93f24d4a2180231018c1a2d1bbdae501281d034339ec1a4830acfea6eb7e65",
+      "bytes": 3156707
+    },
+    "icc_sha256": "238ad2596316306a72025bb245cf3c8cd72f1090c8d95af2f38dc090e84ece5b",
+    "display": "rounded u16/257; original sRGB ICC; full PNG unresampled; overview is orientation only"
+  },
+  "executable": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-gpu-gather\\build-native-6\\strehl.exe",
+    "sha256": "2fd0a1615989e262fbba61e0a1587a9b8f20ff4913d3969510e967ce9d9219d7",
+    "bytes": 17714688
+  },
+  "selected_render_log": [
+    "camera          : ILCE-7CM2",
+    "lateral CA      : CORRECTING, profile \"a7c2-fe100gm-2xtc-x4cpl\" (gear matched; default on)",
+    "iso             : 100",
+    "levels          : black 512, white 15360",
+    "frames          : 299 from D:\\personal\\macro\\requests\\misc-diagnostic\\high-res-calibration-slide-2-cpl  (first decode 0.12 s)",
+    "analysis domain : 3238 x 2158 at full-plane origin (139, 93) -- Crop is applied BEFORE luma, variance, weighting and accumulation",
+    "bands           : 7 Laplacian levels + 1 base, coarsest 26 x 17",
+    "exposure        : none -- this is a FAITHFUL render of the capture, which is not the same",
+    "tone            : black 0.00547, white 0.47609 (linear), contrast 0.55"
+  ],
+  "baseline_only": true,
+  "quality_gain_claim": false
+}

@@ -1,0 +1,11 @@
+stack high-res-calibration-slide-2-cpl: 299 frames, digest 3098eb7488dfd247
+  reference frame 149 (middle, default)
+  decoded 299 frames in 10.3 s, plane 3516x2344
+  measured 1343/2340 edges in 63.4 s (42.6% refused)
+align: track prior on, lambda=1 huber=Some(1.0) px
+
+  placed 299/299 frames, refused 0
+  total corner drift frame 0 -> 298: 320.910 plane px
+  held-out corner error: NOT MEASURED (too few edges)
+  cycle-consistency floor: 1.625 plane px
+  wrote C:\dev\blog\death-of-software\projects\strehl\experiments\quality-september20\slide2-baseline-1\slide2.warpmap.txt

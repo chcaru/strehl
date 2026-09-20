@@ -1,0 +1,119 @@
+{
+  "executable": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-gpu-gather\\build-native-6\\strehl.exe",
+    "sha256": "2fd0a1615989e262fbba61e0a1587a9b8f20ff4913d3969510e967ce9d9219d7",
+    "bytes": 17714688
+  },
+  "sources": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september20\\slide2-baseline.py",
+      "sha256": "c4b0b221e2352c58b136f9c5b282dc53946fdc7c98188bca9c1a79e95ee0d9be",
+      "bytes": 8304
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september20\\slide2-baseline-plan.md",
+      "sha256": "1fc53843aa7d1485e121f49aaa3f3f987c433e7be51afd90494be88f0eee207e",
+      "bytes": 2278
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\bounded-process.py",
+      "sha256": "47b9f8d848759eba61f055b9fdca1f8ac400f134dcd7636f0e0eaaa955704e0b",
+      "bytes": 12664
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\m12-harness.py",
+      "sha256": "6cfb408992f37b225f102da4d62ba836f9c5b67c92bdd418ff460987866a1bb9",
+      "bytes": 117908
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\checker-baseline.py",
+      "sha256": "fed66c0cdec9a590737d4d578c79d8e135d9dfe89e2ca7161514100e77b2b908",
+      "bytes": 3057
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-gpu-gather\\build-native-6\\invocation.json",
+      "sha256": "a9afed55f2f1d67d140229d61de658084ab3b1769bd180b17a1d4dd960f6bedb",
+      "bytes": 6757
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-gpu-gather\\build-native-6\\executables.json",
+      "sha256": "2e04e63703079259843894ecb91a6e225de68312f88a70d6c3ee1144fdd86ce1",
+      "bytes": 415
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-gpu-gather\\build-native-6\\build-result.json",
+      "sha256": "1588bdfaa07390450f91d9349654321d63a8653d865b5d309b927f1637a55117",
+      "bytes": 5105
+    }
+  ],
+  "commands": [
+    [
+      "align",
+      [
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-gpu-gather\\build-native-6\\strehl.exe",
+        "align",
+        "D:\\personal\\macro\\requests\\misc-diagnostic\\high-res-calibration-slide-2-cpl",
+        "--out",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september20\\slide2-baseline-1\\slide2.warpmap.txt",
+        "--threads",
+        "8",
+        "--resampler",
+        "catmull-rom"
+      ]
+    ],
+    [
+      "render",
+      [
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-gpu-gather\\build-native-6\\strehl.exe",
+        "stack",
+        "D:\\personal\\macro\\requests\\misc-diagnostic\\high-res-calibration-slide-2-cpl",
+        "--merge",
+        "pyramid",
+        "--pyramid-bands",
+        "7",
+        "--pyramid-gate",
+        "2",
+        "--pyramid-exponent",
+        "2",
+        "--pyramid-sharpen",
+        "1.4",
+        "--pyramid-select",
+        "soft",
+        "--pyramid-base",
+        "mean",
+        "--srgb",
+        "--demosaic",
+        "--resampler",
+        "catmull-rom",
+        "--cover",
+        "crop",
+        "--out",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september20\\slide2-baseline-1\\slide2.tiff"
+      ]
+    ]
+  ],
+  "environment": {
+    "RAYON_NUM_THREADS": "8",
+    "STREHL_PYRAMID_WORKERS": "8",
+    "STREHL_ALIGN": "1",
+    "STREHL_WARPMAP": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september20\\slide2-baseline-1\\slide2.warpmap.txt",
+    "STREHL_FULLRES_GATHER": "1",
+    "STREHL_DIRECT_PLANES": "rounded",
+    "STREHL_PROBE_GATHER": "green",
+    "STREHL_WARP_WRITEBACK": "parallel",
+    "STREHL_GPU_GATHER": "on",
+    "STREHL_GPU_SCHEDULE": "device",
+    "STREHL_GPU_GATHER_LOG": "off",
+    "STREHL_DEFECT": "off"
+  },
+  "removed_environment": [],
+  "original_count": 299,
+  "expected_reference": 149,
+  "limits": {
+    "wall_seconds_per_stage": 900,
+    "cpu_seconds_per_stage": 7200,
+    "committed_bytes_per_stage": 12884901888
+  },
+  "scope": "Unchanged historical renderer baseline; automatic gear profile and tone; no source witness or quality-gain claim",
+  "binary_provenance": "Retained build-native-6 receipts; no claim it was built from current edited sources"
+}
