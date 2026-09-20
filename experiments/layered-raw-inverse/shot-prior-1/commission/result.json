@@ -1,0 +1,15 @@
+{
+  "status": "PASS",
+  "passed": true,
+  "literal_prior": 7.420995686760298,
+  "actual_prior": 7.420995712280273,
+  "constant_prior": 5.320592988948157e-16,
+  "reference_2048_ratio": 0.9999758408935953,
+  "autograd": 9.822551727294922,
+  "independent_finite_difference": 9.822552589155542,
+  "bright_offset_prior": 5.164566993713379,
+  "brightness_derivative": -0.0014829242136329412,
+  "brightness_finite_difference": -0.0014829238769937803,
+  "expected_risk": "Equal DN edges cost less at higher brightness; denominator derivative is retained. This is not a calibration or utility result.",
+  "controls_sha256": "394ce6c39ad34b4ba40d24915430207c5eace4185fddb354a843113de1e65cbb"
+}

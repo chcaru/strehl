@@ -1,0 +1,287 @@
+[
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\full-context-placement\\run.py",
+    "sha256": "17451d237bf256004ca8853ef4c2a9e1c582012d43ad33fd687606e68a5fb76f",
+    "bytes": 7707
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\composite-1\\output\\flat\\original\\predicted-cfa-2.npy",
+    "sha256": "3e13e5153bdf2ea05b9e1cfc3aae729d9a5813e73a29fa4d6ffbba4e97c4cc1a",
+    "bytes": 36992
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\composite-1\\output\\flat\\original\\predicted-cfa-6.npy",
+    "sha256": "f6322609257a15c620c7ed0b212a993b8076b9289d33489320ef5807178cb8d0",
+    "bytes": 36992
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\composite-1\\output\\flat\\original\\receipt.json",
+    "sha256": "b18ad359ce474f0580e746c378875638739c86257daebaf03dd7f805aa939b6a",
+    "bytes": 500426
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\composite-1\\output\\flat\\original\\reconstruction.npz",
+    "sha256": "39591e41736a0b5a1d182a367dc1a411081952864510303c51dae14fabf31ab4",
+    "bytes": 299851
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\composite-1\\output\\flat\\original\\state.pt",
+    "sha256": "1e217243caeca8de911b41b90f90058bdedb74f45641e36b0b68926b9c78fd88",
+    "bytes": 260047
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\composite-1\\output\\layered\\original\\predicted-cfa-2.npy",
+    "sha256": "d5ad805d45b82585db2c1f42c231b4b2b9e94c9ea568391c966c445901a58eff",
+    "bytes": 36992
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\composite-1\\output\\layered\\original\\predicted-cfa-6.npy",
+    "sha256": "d29a76fa8681e87032edd93b7d09172ce60f948cc594559663b5fefa1811731d",
+    "bytes": 36992
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\composite-1\\output\\layered\\original\\receipt.json",
+    "sha256": "afb51ad8e8743397b4e663a92ab628943da136a817eb672aa33f9acf428aa81a",
+    "bytes": 489292
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\composite-1\\output\\layered\\original\\reconstruction.npz",
+    "sha256": "e4348cb0d5a25e1f48ba1547c665ce084e84cace4dcf01400a5f5e3039318579",
+    "bytes": 315262
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\composite-1\\output\\layered\\original\\state.pt",
+    "sha256": "f7101da2dc60a3029e83d27af4c6bbd15dde3097ff34d85dc13b6dcae31e2c0a",
+    "bytes": 260047
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\composite-prior.py",
+    "sha256": "856003f26de6ec841a5b4e6ff1dd06ac35bdc3a95baec1683e5fa91889038a6d",
+    "bytes": 12424
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\convergence.py",
+    "sha256": "e755e29ec5494714818fae9c61428e6c10d085c2e2d2fd78e2959998c58df468",
+    "bytes": 11759
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\design.md",
+    "sha256": "079c9e2ef5e4113c1202d4435b1cac7d5dfcbc482b7ebd20e7ca72e86446f9a1",
+    "bytes": 6648
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\independent-composite-score.py",
+    "sha256": "3ceb0517da70155a85f8248ae417b1391a7481f058005e42db66da9c0afed1e2",
+    "bytes": 12727
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\independent-controls.py",
+    "sha256": "6915c024dbbfaa0e0d912ecba1a22075aabce6ef29c845f0e586472be60815ec",
+    "bytes": 30128
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\independent-plan.md",
+    "sha256": "94e65319535b3744882431f14975e5b9b5f2da7f0093c818ed8d006bb6997408",
+    "bytes": 7088
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\independent-shot-noise-prior-review.md",
+    "sha256": "41f709ee956696ae4cf367b6a3027bb0bc02f7ec9b277a4cf59e32c087b1b0ec",
+    "bytes": 3399
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\independent-source-review.md",
+    "sha256": "595cfe00de7f62b8b322f28041f608658db5a48c84c79266e5aab7754fcb01e1",
+    "bytes": 5701
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\independent-visibility-oracle-review.md",
+    "sha256": "a3c8ce681de6238b638cec78de79da900bb6fdf8d9e04a1ee21523662ff9d1ce",
+    "bytes": 4498
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\model.py",
+    "sha256": "5710146ffcf463de85e317050bc81357922965d6006c7b4cf311f4d80d8ee512",
+    "bytes": 16869
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\run-shot-noise-prior.py",
+    "sha256": "a4e08d7da6f46a25e828fcd1ff4312485a1415c49cab5c3c895fa7b64720c1d2",
+    "bytes": 3037
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\run-visibility-oracle.py",
+    "sha256": "e86904d8c5c2b3faba4e6054816a1b590fabd6277a840b9c7e501de5d461856f",
+    "bytes": 3591
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\run.py",
+    "sha256": "dd2ed76f08980d7bb7f74c5bd814547c9fa43eb026bd2272136c19e8e523d849",
+    "bytes": 2748
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\observations-u16.npy",
+    "sha256": "2db55b6a69c2a484ee3287128f3e5a624d3caccdb6a2f18cae60fafd5f7a3f9f",
+    "bytes": 166016
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\two-layer\\receipt.json",
+    "sha256": "dd242dea7cf0bf4c5d7f87607efb05a67a56bda626c300cf7157c865d56084fa",
+    "bytes": 45316
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\two-layer\\reconstruction.npz",
+    "sha256": "5358ec2d7e0820b651c104c6e55f0c4464d82f7751fdff37830103a6c56dd76d",
+    "bytes": 286439
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\two-layer\\state.pt",
+    "sha256": "36a6fcd39ef371bfc6eecf40dd30f2870cb6a161a9c9fccebff8a7126208a15b",
+    "bytes": 260047
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\observations-u16.npy",
+    "sha256": "ff29cf425e33b3076f433c8ea4a98b7079aa23a8deb4dd6aedc61657fd3045c5",
+    "bytes": 166016
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\two-layer\\receipt.json",
+    "sha256": "e1271a3933ea74cce2931c5c5807cdfb3504d1c1eff3b6c9e2543f487373796d",
+    "bytes": 44841
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\two-layer\\reconstruction.npz",
+    "sha256": "c6e19e5232c8c814095880105050b52f1dbfc3408ed9ecef61c09781180b70ec",
+    "bytes": 316572
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\two-layer\\state.pt",
+    "sha256": "7abcc019b15cad5d8f43dcfb78babac75cf98b0cbaafc0f05f5b4e5d18a23e3f",
+    "bytes": 260047
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\shot-noise-prior-controls.py",
+    "sha256": "394ce6c39ad34b4ba40d24915430207c5eace4185fddb354a843113de1e65cbb",
+    "bytes": 12364
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\shot-noise-prior-independent-plan.md",
+    "sha256": "986ac355e3f8703c8ef686701c31bf6241513201976fefcef34d7325160f5c2b",
+    "bytes": 4367
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\shot-noise-prior-plan.md",
+    "sha256": "0ccd1fdb0f426a3c3571b73ac3f7d81367f3c359ada5d696d7e19a91a12a10fe",
+    "bytes": 3717
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\shot-noise-prior.py",
+    "sha256": "adaf3118df4893186f37f844c449c8f79b77add297c7b5177fbe771986e77670",
+    "bytes": 12918
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\visibility-1\\alpha\\flat-alpha-f32.npy",
+    "sha256": "964fd875558f7c98352d1bdba87b004bfa9ebbad8cdf37bc0450962954a86773",
+    "bytes": 36992
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\visibility-1\\alpha\\layered-alpha-f32.npy",
+    "sha256": "a581e15652ba8c0f03c888c20ba5a701f7c99c45618599d1fadb37698f1f156b",
+    "bytes": 36992
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\visibility-1\\alpha\\manifest.json",
+    "sha256": "f86aa5f9c4744d554ec3b1b5e05c00e2ceb67456f39a9f0051b3334c2001ac86",
+    "bytes": 1593
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\visibility-1\\output\\flat\\fixed-alpha\\initial-reconstruction.npz",
+    "sha256": "62ae8bd984079cfe75c5002c644af66270e841f1a9f80af88a8c37d0ee939324",
+    "bytes": 254140
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\visibility-1\\output\\flat\\fixed-alpha\\predicted-cfa-2.npy",
+    "sha256": "c179629702cfeb906ae7406a714457e535c178b3105e2f94520eb88b65a37f4d",
+    "bytes": 36992
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\visibility-1\\output\\flat\\fixed-alpha\\predicted-cfa-6.npy",
+    "sha256": "db84b680dbfcb13d70146f1c04afe36ae0687eac732d53a4688808ed6c79bcdd",
+    "bytes": 36992
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\visibility-1\\output\\flat\\fixed-alpha\\receipt.json",
+    "sha256": "e14ae9c361a4d9bb91a03d59e1569dfac725b4e7baa5a24236395e44602427c3",
+    "bytes": 104613
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\visibility-1\\output\\flat\\fixed-alpha\\reconstruction.npz",
+    "sha256": "324299052dabc4cab0fc88745f880cc9b5b0c3166f33facfbed6b0328cf509c8",
+    "bytes": 246517
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\visibility-1\\output\\flat\\fixed-alpha\\state.pt",
+    "sha256": "155cce9b94986e6e85e8077ae3f83cec55b1cb1abb9e8da6b3476569aa71a145",
+    "bytes": 260047
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\visibility-1\\output\\layered\\fixed-alpha\\initial-reconstruction.npz",
+    "sha256": "ad85404840682f0b1167d4fafb5cddab2d9d83c7e77bc7c25943fd54e730d6c1",
+    "bytes": 307216
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\visibility-1\\output\\layered\\fixed-alpha\\predicted-cfa-2.npy",
+    "sha256": "6268813eb964138bf4484a6dc5ce1910088644e5fb4ca072a350b840303f66b8",
+    "bytes": 36992
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\visibility-1\\output\\layered\\fixed-alpha\\predicted-cfa-6.npy",
+    "sha256": "fb2a158bd7495531be06a45ba8b05c294f3f9f24c884e825bdfba13e5b3f011f",
+    "bytes": 36992
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\visibility-1\\output\\layered\\fixed-alpha\\receipt.json",
+    "sha256": "0aebcaa70bc77d986661df45713776d3b0cf88ef7d41d71d3f8495dec060c67a",
+    "bytes": 494815
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\visibility-1\\output\\layered\\fixed-alpha\\reconstruction.npz",
+    "sha256": "bdf2989ea519a66316c0d51966f6a4f744d11b17593b00568abe6f7e68029cd8",
+    "bytes": 308115
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\visibility-1\\output\\layered\\fixed-alpha\\state.pt",
+    "sha256": "a4481365ba6ebfa19165770d2fa4b0417d95f1266fe8933152decdeec4310280",
+    "bytes": 260047
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\visibility-oracle-controls.py",
+    "sha256": "ee9912c5b9d415f5013e473eba0228af39082b27051873a3da1ad97733769922",
+    "bytes": 12030
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\visibility-oracle-independent-plan.md",
+    "sha256": "9602a949ba085067eb26f38f0147f5cf8602b29d307ec8ffff740de8c870411d",
+    "bytes": 4551
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\visibility-oracle-plan.md",
+    "sha256": "5bfcdde9a931798be00c7c8dc18c7aa2b4845096075516c05d60d6d6dab9e043",
+    "bytes": 3316
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\visibility-oracle.py",
+    "sha256": "b2b718df8b13be042c8f51a07287ebbe2872936baacfd5b52c8a83dbaf91d6a9",
+    "bytes": 12117
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\m12-harness.py",
+    "sha256": "6cfb408992f37b225f102da4d62ba836f9c5b67c92bdd418ff460987866a1bb9",
+    "bytes": 117908
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\bounded-process.py",
+    "sha256": "47b9f8d848759eba61f055b9fdca1f8ac400f134dcd7636f0e0eaaa955704e0b",
+    "bytes": 12664
+  }
+]

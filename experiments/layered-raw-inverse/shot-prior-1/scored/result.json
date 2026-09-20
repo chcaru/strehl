@@ -1,0 +1,771 @@
+{
+  "status": "SHOT_NOISE_PRIOR_SCORED",
+  "cases": [
+    {
+      "name": "flat",
+      "complete": true,
+      "quality": {
+        "regions": {
+          "whole": {
+            "candidate": {
+              "rgb_rmse": 6.338638002283178,
+              "chroma_rmse": 9.12643387800136
+            },
+            "far_only": {
+              "rgb_rmse": 5.606326374176431,
+              "chroma_rmse": 7.775942627238773
+            },
+            "mean": {
+              "rgb_rmse": 6.018454527257956,
+              "chroma_rmse": 8.367617007550058
+            },
+            "oracle_bound": {
+              "rgb_rmse": 15.927476031907533,
+              "chroma_rmse": 21.78031256038975
+            }
+          }
+        },
+        "components": {},
+        "bars": {
+          "rgb_rmse": false,
+          "chroma_rmse": false
+        },
+        "passed": false
+      },
+      "heldout": [
+        {
+          "index": 2,
+          "scores": {
+            "uncensored": {
+              "all": {
+                "count": 4096,
+                "normalized_rms": 1.002823262967859,
+                "bar": 1.5,
+                "passed": true,
+                "present": true
+              },
+              "R": {
+                "count": 1024,
+                "normalized_rms": 0.9739139624258618,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G1": {
+                "count": 1024,
+                "normalized_rms": 1.014466960332169,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G2": {
+                "count": 1024,
+                "normalized_rms": 1.0242973087888194,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "B": {
+                "count": 1024,
+                "normalized_rms": 0.9978884659080716,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "bright": {
+                "count": 0,
+                "normalized_rms": null,
+                "bar": 1.75,
+                "passed": true,
+                "present": false
+              },
+              "dim": {
+                "count": 4096,
+                "normalized_rms": 1.002823262967859,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              }
+            },
+            "censor_count": 0,
+            "censor_one_sided_rms": null,
+            "passed": true
+          }
+        },
+        {
+          "index": 6,
+          "scores": {
+            "uncensored": {
+              "all": {
+                "count": 4096,
+                "normalized_rms": 1.011349683690553,
+                "bar": 1.5,
+                "passed": true,
+                "present": true
+              },
+              "R": {
+                "count": 1024,
+                "normalized_rms": 1.0031415914050816,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G1": {
+                "count": 1024,
+                "normalized_rms": 0.9944389843844567,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G2": {
+                "count": 1024,
+                "normalized_rms": 1.017251460369294,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "B": {
+                "count": 1024,
+                "normalized_rms": 1.0301991317750927,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "bright": {
+                "count": 0,
+                "normalized_rms": null,
+                "bar": 1.75,
+                "passed": true,
+                "present": false
+              },
+              "dim": {
+                "count": 4096,
+                "normalized_rms": 1.011349683690553,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              }
+            },
+            "censor_count": 0,
+            "censor_one_sided_rms": null,
+            "passed": true
+          }
+        }
+      ],
+      "paired_bars": {
+        "rgb_rmse": false,
+        "chroma_rmse": false
+      },
+      "paired_components": {},
+      "flat_bias_descriptive": {
+        "candidate": {
+          "mean_bias_dn": [
+            0.11742204427719116,
+            -0.24383240938186646,
+            -0.03927144408226013
+          ],
+          "signed_error_p01_dn": [
+            -13.65245361328125,
+            -17.4282470703125,
+            -14.270745849609375
+          ],
+          "signed_error_p99_dn": [
+            12.839880371093752,
+            15.479724121093753,
+            13.380401611328127
+          ]
+        },
+        "reference": {
+          "mean_bias_dn": [
+            0.12266814708709717,
+            -0.25287485122680664,
+            -0.04287827014923096
+          ],
+          "signed_error_p01_dn": [
+            -12.162646484375,
+            -13.9977294921875,
+            -14.42081298828125
+          ],
+          "signed_error_p99_dn": [
+            11.61451416015625,
+            12.090625000000006,
+            13.45993041992189
+          ]
+        }
+      },
+      "fixed_checks_pass": false,
+      "status": "nonstationary_return",
+      "stationary": false,
+      "final_objective": {
+        "evaluation": 128,
+        "tag": "final",
+        "evaluation_status": "complete",
+        "data_nll": 3.6749813556671143,
+        "prior": 0.011939385905861855,
+        "total": 3.686920741572976,
+        "gradient_max": 8.918766980059445e-06,
+        "gradient_l2": 0.0003522032347973436,
+        "optimizer_iteration": 116,
+        "noncontiguous_gradients_converted": 2,
+        "gradient_storage_logical_exact": true,
+        "elapsed_seconds": 3.7969999999986612
+      },
+      "reference_status": "nonstationary_return",
+      "reference_final_objective": {
+        "evaluation": 196,
+        "tag": "final",
+        "evaluation_status": "complete",
+        "data_nll": 3.678508698940277,
+        "prior": 0.010846046730875969,
+        "total": 3.689354745671153,
+        "gradient_max": 7.240858394652605e-06,
+        "gradient_l2": 0.00025123803061433136,
+        "optimizer_iteration": 184,
+        "noncontiguous_gradients_converted": 2,
+        "gradient_storage_logical_exact": true,
+        "elapsed_seconds": 5.5
+      },
+      "rgb_sha256": "e89379b165be1756a3370360c5192be13c70f335c04f9695bf9b19b47ee05026"
+    },
+    {
+      "name": "layered",
+      "complete": true,
+      "quality": {
+        "regions": {
+          "whole": {
+            "candidate": {
+              "rgb_rmse": 149.69145200525986,
+              "chroma_rmse": 66.30588602279973
+            },
+            "far_only": {
+              "rgb_rmse": 496.88377690019985,
+              "chroma_rmse": 650.2708373566716
+            },
+            "mean": {
+              "rgb_rmse": 753.7234759667058,
+              "chroma_rmse": 518.2588805886822
+            },
+            "oracle_bound": {
+              "rgb_rmse": 397.5372463674584,
+              "chroma_rmse": 249.56266183318613
+            }
+          },
+          "core": {
+            "candidate": {
+              "rgb_rmse": 728.5923805101972,
+              "chroma_rmse": 274.1731078101826
+            },
+            "far_only": {
+              "rgb_rmse": 1786.240868102814,
+              "chroma_rmse": 1573.837047318474
+            },
+            "mean": {
+              "rgb_rmse": 3452.1334344936117,
+              "chroma_rmse": 1303.8572499053812
+            },
+            "oracle_bound": {
+              "rgb_rmse": 1850.2248549886135,
+              "chroma_rmse": 793.2909697045076
+            }
+          },
+          "ridge": {
+            "candidate": {
+              "rgb_rmse": 310.60542098690894,
+              "chroma_rmse": 122.73808300766201
+            },
+            "far_only": {
+              "rgb_rmse": 944.0280541704689,
+              "chroma_rmse": 1162.315886756699
+            },
+            "mean": {
+              "rgb_rmse": 1536.391066451828,
+              "chroma_rmse": 930.9825690440236
+            },
+            "oracle_bound": {
+              "rgb_rmse": 816.8284571147884,
+              "chroma_rmse": 467.7684323233422
+            }
+          },
+          "crossing": {
+            "candidate": {
+              "rgb_rmse": 574.8077127119749,
+              "chroma_rmse": 220.23016546690576
+            },
+            "far_only": {
+              "rgb_rmse": 1532.7317908619168,
+              "chroma_rmse": 1626.109964055532
+            },
+            "mean": {
+              "rgb_rmse": 2763.9900380411414,
+              "chroma_rmse": 1324.4845045485336
+            },
+            "oracle_bound": {
+              "rgb_rmse": 1478.1547026912529,
+              "chroma_rmse": 720.596585345536
+            }
+          },
+          "fan": {
+            "candidate": {
+              "rgb_rmse": 272.5918625929769,
+              "chroma_rmse": 108.39954254466687
+            },
+            "far_only": {
+              "rgb_rmse": 846.3604041669115,
+              "chroma_rmse": 1052.7729389537033
+            },
+            "mean": {
+              "rgb_rmse": 1356.894321753337,
+              "chroma_rmse": 840.3174706916507
+            },
+            "oracle_bound": {
+              "rgb_rmse": 719.6762645538982,
+              "chroma_rmse": 419.2428008816227
+            }
+          }
+        },
+        "components": {
+          "glint": {
+            "candidate": {
+              "recovery": [
+                0.9851885463608668,
+                0.9684892868213592,
+                0.9854630858887083
+              ],
+              "template_energy": [
+                3871784984.164553,
+                3600167379.165745,
+                2844576438.871642
+              ],
+              "live": true
+            },
+            "oracle_bound": {
+              "recovery": [
+                0.6257763794626515,
+                0.6123604175607923,
+                0.6521991427767284
+              ],
+              "template_energy": [
+                3871784984.164553,
+                3600167379.165745,
+                2844576438.871642
+              ],
+              "live": true
+            },
+            "passed": true,
+            "bounds": [
+              39,
+              42,
+              52,
+              55
+            ]
+          },
+          "ridge": {
+            "candidate": {
+              "recovery": [
+                0.956918754123397,
+                0.9916842385299263,
+                0.98968668055975
+              ],
+              "template_energy": [
+                51983735.586246416,
+                138514832.62970743,
+                161668706.2341408
+              ],
+              "live": true
+            },
+            "oracle_bound": {
+              "recovery": [
+                0.7196321313843479,
+                0.8267673147030402,
+                0.8474577243749162
+              ],
+              "template_energy": [
+                51983735.586246416,
+                138514832.62970743,
+                161668706.2341408
+              ],
+              "live": true
+            },
+            "passed": true,
+            "bounds": [
+              39,
+              31,
+              63,
+              41
+            ]
+          }
+        },
+        "bars": {
+          "whole_mean_gain": true,
+          "core_mean_gain": true,
+          "ridge_mean_gain": true,
+          "whole_far_only_comparison": true,
+          "crossing_far_only_comparison": true,
+          "core_far_only_comparison": true,
+          "ridge_far_only_comparison": true,
+          "glint_component": true,
+          "ridge_component": true
+        },
+        "passed": true
+      },
+      "heldout": [
+        {
+          "index": 2,
+          "scores": {
+            "uncensored": {
+              "all": {
+                "count": 4096,
+                "normalized_rms": 1.0330484755049083,
+                "bar": 1.5,
+                "passed": true,
+                "present": true
+              },
+              "R": {
+                "count": 1024,
+                "normalized_rms": 1.0131709108493405,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G1": {
+                "count": 1024,
+                "normalized_rms": 1.048126634617834,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G2": {
+                "count": 1024,
+                "normalized_rms": 1.0142976259382077,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "B": {
+                "count": 1024,
+                "normalized_rms": 1.0558750874045606,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "bright": {
+                "count": 41,
+                "normalized_rms": 1.4685950332945945,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "dim": {
+                "count": 4055,
+                "normalized_rms": 1.0277024934968042,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              }
+            },
+            "censor_count": 0,
+            "censor_one_sided_rms": null,
+            "passed": true
+          }
+        },
+        {
+          "index": 6,
+          "scores": {
+            "uncensored": {
+              "all": {
+                "count": 4096,
+                "normalized_rms": 1.1622305897811127,
+                "bar": 1.5,
+                "passed": true,
+                "present": true
+              },
+              "R": {
+                "count": 1024,
+                "normalized_rms": 1.285164618937965,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G1": {
+                "count": 1024,
+                "normalized_rms": 1.1277283015661996,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G2": {
+                "count": 1024,
+                "normalized_rms": 1.0830108831675236,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "B": {
+                "count": 1024,
+                "normalized_rms": 1.1431482766068293,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "bright": {
+                "count": 0,
+                "normalized_rms": null,
+                "bar": 1.75,
+                "passed": true,
+                "present": false
+              },
+              "dim": {
+                "count": 4096,
+                "normalized_rms": 1.1622305897811127,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              }
+            },
+            "censor_count": 0,
+            "censor_one_sided_rms": null,
+            "passed": true
+          }
+        }
+      ],
+      "paired_bars": {
+        "core_rgb": true,
+        "ridge_rgb": true,
+        "glint_component": true,
+        "ridge_component": true
+      },
+      "paired_components": {
+        "glint": {
+          "candidate": {
+            "recovery": [
+              0.9851885463608668,
+              0.9684892868213592,
+              0.9854630858887083
+            ],
+            "template_energy": [
+              3871784984.164553,
+              3600167379.165745,
+              2844576438.871642
+            ],
+            "live": true
+          },
+          "reference": {
+            "recovery": [
+              0.9615300689251757,
+              0.9533521395877116,
+              0.9639818427190928
+            ],
+            "template_energy": [
+              3871784984.164553,
+              3600167379.165745,
+              2844576438.871642
+            ],
+            "live": true
+          }
+        },
+        "ridge": {
+          "candidate": {
+            "recovery": [
+              0.956918754123397,
+              0.9916842385299263,
+              0.98968668055975
+            ],
+            "template_energy": [
+              51983735.586246416,
+              138514832.62970743,
+              161668706.2341408
+            ],
+            "live": true
+          },
+          "reference": {
+            "recovery": [
+              0.9535608898416983,
+              0.9824860272419995,
+              0.9743370829260569
+            ],
+            "template_energy": [
+              51983735.586246416,
+              138514832.62970743,
+              161668706.2341408
+            ],
+            "live": true
+          }
+        }
+      },
+      "flat_bias_descriptive": {},
+      "fixed_checks_pass": true,
+      "status": "nonstationary_return",
+      "stationary": false,
+      "final_objective": {
+        "evaluation": 507,
+        "tag": "final",
+        "evaluation_status": "complete",
+        "data_nll": 3.754565954208374,
+        "prior": 2.089090585708618,
+        "total": 5.843656539916992,
+        "gradient_max": 0.00019678985700011253,
+        "gradient_l2": 0.0005324605153873563,
+        "optimizer_iteration": 500,
+        "noncontiguous_gradients_converted": 2,
+        "gradient_storage_logical_exact": true,
+        "elapsed_seconds": 13.718999999997322
+      },
+      "reference_status": "nonstationary_return",
+      "reference_final_objective": {
+        "evaluation": 1021,
+        "tag": "final",
+        "evaluation_status": "complete",
+        "data_nll": 3.8101009130477905,
+        "prior": 2.9694650173187256,
+        "total": 6.779565930366516,
+        "gradient_max": 0.002852201461791992,
+        "gradient_l2": 0.006897709332406521,
+        "optimizer_iteration": 1000,
+        "noncontiguous_gradients_converted": 2,
+        "gradient_storage_logical_exact": true,
+        "elapsed_seconds": 26.859000000004016
+      },
+      "rgb_sha256": "6f195e73bca4916abae85adcd0ab767491a2f57326541a3f1683b7362005df39"
+    }
+  ],
+  "all_fixed_checks_pass": false,
+  "all_stationary": false,
+  "original_screens_remain_failed": true,
+  "real_photo_admission": false,
+  "physical_adequacy": {
+    "records": [
+      {
+        "index": 0,
+        "normalized_rms": {
+          "whole": 0.5031009187802951,
+          "crossing": 1.0694726224298692
+        }
+      },
+      {
+        "index": 2,
+        "normalized_rms": {
+          "whole": 0.45461367236226197,
+          "crossing": 1.3490733263673196
+        }
+      },
+      {
+        "index": 4,
+        "normalized_rms": {
+          "whole": 0.4717774978865741,
+          "crossing": 1.524503237817421
+        }
+      },
+      {
+        "index": 6,
+        "normalized_rms": {
+          "whole": 0.6420379970064604,
+          "crossing": 1.678243724770749
+        }
+      },
+      {
+        "index": 8,
+        "normalized_rms": {
+          "whole": 0.8870094153387984,
+          "crossing": 1.1994156834564524
+        }
+      }
+    ],
+    "passed": false,
+    "scope": "Independent1024-ray resolution check; does not block discrete utility execution, does block real-RAW license"
+  },
+  "source_immutable": true,
+  "outputs_immutable": true,
+  "source_files": {
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\angular-mismatch\\candidate-rgb-f32.npy": "7e6df1cac1082405cbbdbdfe96063dccdbd8277158ce9f858987be6c9a1e353f",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\angular-mismatch\\far-only\\receipt.json": "e8ce6071defc318ceafca7a01554ee57bead2b2f889ddb5b5589816c3e8ad48f",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\angular-mismatch\\far-only\\reconstruction.npz": "aaf0d1ba11e9f367734834a56620a42d373accc23ecacee0b1a54f7727519c06",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\angular-mismatch\\far-only\\state.pt": "3c8aa8eb0864d3308e278dd12e95bb1940ea8671fa73a2ae8d692422d6937cce",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\angular-mismatch\\far-only-rgb-f32.npy": "4ee31cdbe8274858f0dd9b21ea80392807e58917288b190f654af6e7418c5af5",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\angular-mismatch\\mean-rgb-f32.npy": "b5cacd3550abfef4c3e05e6118cb57d020b67d356a9b582e3d348e43c2844bc8",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\angular-mismatch\\observations-u16.npy": "30be163b7949cd191c09db98edf1b45930d125189ca610ac62f285f25252a9f2",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\angular-mismatch\\oracle-bound-rgb-f32.npy": "e5016da8a2e5553f1fce8199576411f56fc2f3330236dc23515808022e86fcc4",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\angular-mismatch\\prefit-adequacy.json": "880baa12481177c51895e3be1854368345d9feacb04f5f9b0dcd093d5420f970",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\angular-mismatch\\result.json": "9c73e49806bc74b59dfe14c9043baf3c50890020ddf7342ad1a7800c55a64a2c",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\angular-mismatch\\truth-rgb-f32.npy": "2668537f49285dae0b06ad4f9f027387c9605947d8a8b53b5d021d17f239d743",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\angular-mismatch\\two-layer\\receipt.json": "4feb650b2e387753c335758e8356ed477bb5529761db20b70cf7c53bc15ff768",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\angular-mismatch\\two-layer\\reconstruction.npz": "1e09ae50c8260d03bfc4d431df82c413e48f0aab3f6da35b6b194eb85f70867e",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\angular-mismatch\\two-layer\\state.pt": "1d11c2cb0f29592a2ceb68b44082a3ef4273e6be7b65d0c6a775ad1ec980718c",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\bindings.json": "83dc03308210095339b2629105a9131669bd1bef408b0ebddbaade3c7b91140a",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\far-only\\candidate-rgb-f32.npy": "43d4b9e35b96eb3f962b14555fb49dd0e2f782b272798c52e6105ba4fe80ea1d",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\far-only\\far-only\\receipt.json": "ef1a336761446fe0a32725a80416975e1fea540cd3b8456489a2b553b483d371",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\far-only\\far-only\\reconstruction.npz": "b081bc5298d26f8b2472d16f36366e3ca56f5c6934519908ec0f4d83be05acee",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\far-only\\far-only\\state.pt": "3425241fae9dd3da39bf3deb4242391eb9d75da61d7117868928c88d0a7901e3",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\far-only\\far-only-rgb-f32.npy": "190c0214a1e661d34b3cf40389fccebb7fa5b6a2c7f2259c36d2528b17e5b1a0",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\far-only\\mean-rgb-f32.npy": "f53b7be4ece753b343061879cf6f4c38d076cc516632905f12c2faef1e1603a2",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\far-only\\observations-u16.npy": "9958c444cfd91c2b497dfbfa352b82efaa047166f499ad6adf77002be5d26b71",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\far-only\\oracle-bound-rgb-f32.npy": "47cbc7a6238ceff5a3520402a8cf42110a88e2638b0b248ce3adf6fa317334f2",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\far-only\\prefit-adequacy.json": "81451f4a303b9f0684f575df55421c9c74bef8010d6fb1ad07e6da40085239a7",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\far-only\\result.json": "40294d58e123573a70be10df97a24f2aa34e00a4e20d089cbd02b1eafcfe2b54",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\far-only\\truth-rgb-f32.npy": "cafcfd22a43660fd754298af6b2b7c8ec5098d57e7f8cb1eb465fa311c6c2241",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\far-only\\two-layer\\receipt.json": "3096c854ebf8a7064967e8d7872cc99a9a33ed200de4918f7a2330d5e55534a6",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\far-only\\two-layer\\reconstruction.npz": "d4798ae712f66d3111083fc6ac816e6f0fc7c702de0f445e619bf2fd48db23f6",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\far-only\\two-layer\\state.pt": "0c25d6413f6c51ba3851ba9f4bf26741e5a1d9db8d6bd6b98344aea4aef2a456",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\candidate-rgb-f32.npy": "26d1933361d4e55f36654bda5de2e481eb3bf827d99b7a5e0753aa1925f27523",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\far-only\\receipt.json": "bbad44a03ceda48c64f60bba2ab802d34a41bd252941300ebaf62e391ed86d32",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\far-only\\reconstruction.npz": "7179a526e21427fec5f98ab6dd344d5b00815432c2f232f5d8f19c964bfc511f",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\far-only\\state.pt": "55db3d2d50981e788f29bf1846abee895cf50795f6fdf94d9e7e82f54f2226a1",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\far-only-rgb-f32.npy": "bcc4801e2d39cee761940771e509371a892ea535578dffc8ec1c84dc1717555d",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\mean-rgb-f32.npy": "949b99f79af998d85f0c273f6e7d85736a4adb6ada236d243776b5ec71ebcd94",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\observations-u16.npy": "2db55b6a69c2a484ee3287128f3e5a624d3caccdb6a2f18cae60fafd5f7a3f9f",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\oracle-bound-rgb-f32.npy": "2a3dfd15829c0dee5b9858504688eb1b14b8ed2d7cb4bd3871bcd3487a8d2680",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\prefit-adequacy.json": "9c87853a7a0c005345be767a3c80c471f5fdb41ac8f85539ab41afa0076fe80d",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\result.json": "b08597f4abe41b78e3046f571985e091e7245d368f827a624f014e8796a07b95",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\truth-rgb-f32.npy": "82a5a40523bf883867d551676e62c6935941bbdbe8af6bb8a5a0ef990f6d5a86",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\two-layer\\receipt.json": "dd242dea7cf0bf4c5d7f87607efb05a67a56bda626c300cf7157c865d56084fa",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\two-layer\\reconstruction.npz": "5358ec2d7e0820b651c104c6e55f0c4464d82f7751fdff37830103a6c56dd76d",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\two-layer\\state.pt": "36a6fcd39ef371bfc6eecf40dd30f2870cb6a161a9c9fccebff8a7126208a15b",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\candidate-rgb-f32.npy": "fbf011cd81e05479a5fcb2e716ed57029fbabb9478b62c83c50244c58a92b335",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\far-only\\receipt.json": "5a4dd625f2b797fede7205d6aa9a1aa21176750f5a4c062dac0168f651725f96",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\far-only\\reconstruction.npz": "a83fc632004cfbba810a1c2d3b1ccb454c0e729ad4014442dae7d61da67ca34c",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\far-only\\state.pt": "d729c65a507be5f64861a8c953713934de124d63eb1e1f33b0e857ee337fbb66",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\far-only-rgb-f32.npy": "320894206c1e15cd1e2304e872c73da1c705c89df9564ece86c07f8b8d95d91b",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\mean-rgb-f32.npy": "ffe024f6a3d3950dcfba7d3e281eaf15cd6059b3a05d326fe857f8d427280bb5",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\observations-u16.npy": "ff29cf425e33b3076f433c8ea4a98b7079aa23a8deb4dd6aedc61657fd3045c5",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\oracle-bound-rgb-f32.npy": "758b9efce098b81dcd0690d8a69b42822cc270c0cf6ac52b6d140b4234960b04",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\physical-adequacy.json": "08445cf6964b21153769770a038e22abda388c4f26232b8f7c19c4cc81bc306a",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\prefit-adequacy.json": "d534765750774b6aee5f00df5b2fa81216db4193705c03ed25a84f27c7ee8cd4",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\result.json": "699fa88ffecb3c846218943798682953d8d4bca99aeb07081e7a7fc3a0e981a3",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\truth-rgb-f32.npy": "2668537f49285dae0b06ad4f9f027387c9605947d8a8b53b5d021d17f239d743",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\two-layer\\receipt.json": "e1271a3933ea74cce2931c5c5807cdfb3504d1c1eff3b6c9e2543f487373796d",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\two-layer\\reconstruction.npz": "c6e19e5232c8c814095880105050b52f1dbfc3408ed9ecef61c09781180b70ec",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\two-layer\\state.pt": "7abcc019b15cad5d8f43dcfb78babac75cf98b0cbaafc0f05f5b4e5d18a23e3f",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\mechanical.json": "49f6053cd2499d05838a819b22de3494ea25f166f2b0b4d29bc76ad610ef1f7b",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\screen.json": "cb26cc5a5358ebc054e867c2da974717f7084f7b5144d7bbb0bdbae4bfb8a460"
+  },
+  "candidate_files": {
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\shot-prior-1\\output\\flat\\fixed-alpha\\initial-reconstruction.npz": "62ae8bd984079cfe75c5002c644af66270e841f1a9f80af88a8c37d0ee939324",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\shot-prior-1\\output\\flat\\fixed-alpha\\predicted-cfa-2.npy": "7849f393499b3189f24ce585e095db5d5f893e4578960f9238ebaddfe32b6642",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\shot-prior-1\\output\\flat\\fixed-alpha\\predicted-cfa-6.npy": "efdfd186b2588d4b11ca22e24b9ee3881d6f4d79867867a20af33cb80e17730a",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\shot-prior-1\\output\\flat\\fixed-alpha\\receipt.json": "d4d878d1090c19dac85f56f3085f9cad86bbe1907dbff0c359df942558a42eb6",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\shot-prior-1\\output\\flat\\fixed-alpha\\reconstruction.npz": "e9aa372b17404520eed9d63a6a143d9bda1ff7b20767f8f53cb01f6225796745",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\shot-prior-1\\output\\flat\\fixed-alpha\\state.pt": "6e1a68f237d35a294ed19d96163f8da51aebd6058152dd2d7372ffbfe3bb340d",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\shot-prior-1\\output\\layered\\fixed-alpha\\initial-reconstruction.npz": "ad85404840682f0b1167d4fafb5cddab2d9d83c7e77bc7c25943fd54e730d6c1",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\shot-prior-1\\output\\layered\\fixed-alpha\\predicted-cfa-2.npy": "6eb8491ccf9429b543a324980bfaed2e9fa404de1936167f4dbaa3548ca12545",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\shot-prior-1\\output\\layered\\fixed-alpha\\predicted-cfa-6.npy": "4fb4de85afc2be56e7c2eecce1683ad5adfb3ce3f5bfffb4c407a36e1e2bea4d",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\shot-prior-1\\output\\layered\\fixed-alpha\\receipt.json": "cd8459b18ad26ddb20c4cd69d2634755db0f3ccfcfb26cf442dfbb0e7cb6a120",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\shot-prior-1\\output\\layered\\fixed-alpha\\reconstruction.npz": "fc4216dd7a92337256b9dc141ac7f4b7264df80df1569a09ae399f469b1d083e",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\shot-prior-1\\output\\layered\\fixed-alpha\\state.pt": "2e91fd4e0c8d9e20a8f408b47855290cfd642bbb443453f559c315e5720f2c82",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\shot-prior-1\\output\\result.json": "1f54da10a235a0e0b8998d742381b956b02a2092227e31897c4d5a1f833f21a8"
+  },
+  "reference_files": {
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\visibility-1\\output\\flat\\fixed-alpha\\initial-reconstruction.npz": "62ae8bd984079cfe75c5002c644af66270e841f1a9f80af88a8c37d0ee939324",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\visibility-1\\output\\flat\\fixed-alpha\\predicted-cfa-2.npy": "c179629702cfeb906ae7406a714457e535c178b3105e2f94520eb88b65a37f4d",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\visibility-1\\output\\flat\\fixed-alpha\\predicted-cfa-6.npy": "db84b680dbfcb13d70146f1c04afe36ae0687eac732d53a4688808ed6c79bcdd",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\visibility-1\\output\\flat\\fixed-alpha\\receipt.json": "e14ae9c361a4d9bb91a03d59e1569dfac725b4e7baa5a24236395e44602427c3",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\visibility-1\\output\\flat\\fixed-alpha\\reconstruction.npz": "324299052dabc4cab0fc88745f880cc9b5b0c3166f33facfbed6b0328cf509c8",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\visibility-1\\output\\flat\\fixed-alpha\\state.pt": "155cce9b94986e6e85e8077ae3f83cec55b1cb1abb9e8da6b3476569aa71a145",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\visibility-1\\output\\layered\\fixed-alpha\\initial-reconstruction.npz": "ad85404840682f0b1167d4fafb5cddab2d9d83c7e77bc7c25943fd54e730d6c1",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\visibility-1\\output\\layered\\fixed-alpha\\predicted-cfa-2.npy": "6268813eb964138bf4484a6dc5ce1910088644e5fb4ca072a350b840303f66b8",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\visibility-1\\output\\layered\\fixed-alpha\\predicted-cfa-6.npy": "fb2a158bd7495531be06a45ba8b05c294f3f9f24c884e825bdfba13e5b3f011f",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\visibility-1\\output\\layered\\fixed-alpha\\receipt.json": "0aebcaa70bc77d986661df45713776d3b0cf88ef7d41d71d3f8495dec060c67a",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\visibility-1\\output\\layered\\fixed-alpha\\reconstruction.npz": "bdf2989ea519a66316c0d51966f6a4f744d11b17593b00568abe6f7e68029cd8",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\visibility-1\\output\\layered\\fixed-alpha\\state.pt": "a4481365ba6ebfa19165770d2fa4b0417d95f1266fe8933152decdeec4310280",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\visibility-1\\output\\result.json": "8766b6d83f8c3247e6ca4f78673fe20a9f4441abbc1dcdfd8c982a9257a62d9b"
+  },
+  "controls_sha256": "394ce6c39ad34b4ba40d24915430207c5eace4185fddb354a843113de1e65cbb"
+}

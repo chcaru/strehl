@@ -1,0 +1,22 @@
+{
+  "status": "SHOT_NOISE_PRIOR_COMPLETE",
+  "prior_kind": "shot-noise-stabilized-sheets",
+  "arms": [
+    {
+      "case": "flat",
+      "status": "nonstationary_return",
+      "receipt": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\shot-prior-1\\output\\flat\\fixed-alpha\\receipt.json",
+      "receipt_sha256": "d4d878d1090c19dac85f56f3085f9cad86bbe1907dbff0c359df942558a42eb6"
+    },
+    {
+      "case": "layered",
+      "status": "nonstationary_return",
+      "receipt": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\shot-prior-1\\output\\layered\\fixed-alpha\\receipt.json",
+      "receipt_sha256": "cd8459b18ad26ddb20c4cd69d2634755db0f3ccfcfb26cf442dfbb0e7cb6a120"
+    }
+  ],
+  "source_root": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output",
+  "alpha_directory": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\visibility-1\\alpha",
+  "real_photo_admission": false,
+  "interpretation": "Known-alpha, one fixed supplied-noise image-prior change; independent scoring required."
+}

@@ -1,0 +1,10 @@
+{
+  "instrument_completed": true,
+  "sources_unchanged": true,
+  "independent_scores": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\shot-prior-1\\scored\\result.json",
+    "sha256": "b90831f884314111c2ede55132987f4e9a5cc0c8bc264c7b5935f95cb56336a2",
+    "bytes": 38827
+  },
+  "scope": "One fixed radiance-prior change, oracle alpha, unchanged original-CFA likelihood and solver; no photo admission"
+}

@@ -20,11 +20,14 @@ strength sweep. Supplying known visibility fixes the flat-image failure and
 improves layered reconstruction, but bright prediction and glint retention
 still fail. A read-only directional check finds that a small true-highlight
 addition improves data and image truth but costs more in the original prior;
-the near-zero total derivative's sign remains unresolved. One fixed photon-
-noise-scaled sheet prior is next, with known visibility and all original image
-and held-out protections. Its brightness-bias incentive must be tested. See
-experiments/layered-raw-inverse/visibility-results.md and its independent
-review. It has no photographic
+the near-zero total derivative's sign remains unresolved. The fixed photon-
+noise-scaled sheet prior now passes all layered-image and held-prediction bars
+with known visibility, but fails flat RGB/chroma controls and increases core
+chroma error. Reject the combined result without a coefficient sweep. See
+experiments/layered-raw-inverse/shot-prior-results.md and its independent review.
+The next implementation must preserve flat-region averaging while retaining
+supported bright detail and must ultimately estimate visibility from RAW data.
+It has no photographic
 admission yet. The passing complete-periodic all-CFA controls
 remain retained at48276660; speed work stays behind demonstrated image quality.
 
