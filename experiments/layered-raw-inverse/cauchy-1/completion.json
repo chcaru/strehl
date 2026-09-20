@@ -1,0 +1,10 @@
+{
+  "instrument_completed": true,
+  "sources_unchanged": true,
+  "independent_scores": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\cauchy-1\\scored\\result.json",
+    "sha256": "2ea54d4ce819a1a5cb9af23d4a3463d28f1ddc0db4a1579d784896f5ce8450c8",
+    "bytes": 39071
+  },
+  "scope": "One original-scale robust-prior change, oracle alpha, fixed RAW likelihood/solver; no photo admission"
+}

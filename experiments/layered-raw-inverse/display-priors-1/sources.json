@@ -1,0 +1,34 @@
+[
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\truth-rgb-f32.npy",
+    "sha256": "82a5a40523bf883867d551676e62c6935941bbdbe8af6bb8a5a0ef990f6d5a86"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\visibility-1\\output\\flat\\fixed-alpha\\reconstruction.npz",
+    "sha256": "324299052dabc4cab0fc88745f880cc9b5b0c3166f33facfbed6b0328cf509c8"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\shot-prior-1\\output\\flat\\fixed-alpha\\reconstruction.npz",
+    "sha256": "e9aa372b17404520eed9d63a6a143d9bda1ff7b20767f8f53cb01f6225796745"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\cauchy-1\\output\\flat\\fixed-alpha\\reconstruction.npz",
+    "sha256": "9e85c3ca0dcfa4ce64c7d0db07284891c9403a09208c3a5dea65cb4bd21eec90"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\truth-rgb-f32.npy",
+    "sha256": "2668537f49285dae0b06ad4f9f027387c9605947d8a8b53b5d021d17f239d743"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\visibility-1\\output\\layered\\fixed-alpha\\reconstruction.npz",
+    "sha256": "bdf2989ea519a66316c0d51966f6a4f744d11b17593b00568abe6f7e68029cd8"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\shot-prior-1\\output\\layered\\fixed-alpha\\reconstruction.npz",
+    "sha256": "fc4216dd7a92337256b9dc141ac7f4b7264df80df1569a09ae399f469b1d083e"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\cauchy-1\\output\\layered\\fixed-alpha\\reconstruction.npz",
+    "sha256": "8c312a233629fc48ac7b23a8ad861a66635adb33d8052b6c6b4d7d020e195ab8"
+  }
+]

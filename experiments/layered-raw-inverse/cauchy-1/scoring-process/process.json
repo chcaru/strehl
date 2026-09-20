@@ -1,0 +1,99 @@
+{
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-I",
+    "-B",
+    "-X",
+    "faulthandler",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\cauchy-prior-controls.py",
+    "score",
+    "--source",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output",
+    "--candidate",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\cauchy-1\\output",
+    "--reference",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\visibility-1\\output",
+    "--out",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\cauchy-1\\scored"
+  ],
+  "exit_code": 0,
+  "error": null,
+  "cleanup_errors": [],
+  "wall_seconds": 2.360000000000582,
+  "log_bytes": 40,
+  "job_accounting": {
+    "total_user_100ns": 13906250,
+    "total_kernel_100ns": 9062500,
+    "total_cpu_100ns": 22968750,
+    "total_page_fault_count": 137309,
+    "total_processes": 3,
+    "active_processes": 0,
+    "total_terminated_processes": 0
+  },
+  "job_memory": {
+    "peak_process_memory_used_bytes": 1119485952,
+    "peak_job_memory_used_bytes": 1120759808
+  },
+  "terminal_job_accounting": true,
+  "configured_job_limits": {
+    "flags": 8704,
+    "committed_bytes": 17179869184
+  },
+  "direct_exit_observed": true,
+  "pipe_eof_observed": true,
+  "post_exit_drain": {
+    "initial_accounting": {
+      "total_user_100ns": 13906250,
+      "total_kernel_100ns": 9062500,
+      "total_cpu_100ns": 22968750,
+      "total_page_fault_count": 137309,
+      "total_processes": 3,
+      "active_processes": 0,
+      "total_terminated_processes": 0
+    },
+    "last_accounting": {
+      "total_user_100ns": 13906250,
+      "total_kernel_100ns": 9062500,
+      "total_cpu_100ns": 22968750,
+      "total_page_fault_count": 137309,
+      "total_processes": 3,
+      "active_processes": 0,
+      "total_terminated_processes": 0
+    },
+    "observations": [
+      {
+        "wall_seconds": 2.360000000000582,
+        "accounting": {
+          "total_user_100ns": 13906250,
+          "total_kernel_100ns": 9062500,
+          "total_cpu_100ns": 22968750,
+          "total_page_fault_count": 137309,
+          "total_processes": 3,
+          "active_processes": 0,
+          "total_terminated_processes": 0
+        }
+      }
+    ],
+    "observation_count": 1,
+    "completed": true,
+    "started_wall_seconds": 2.360000000000582,
+    "ended_wall_seconds": 2.360000000000582
+  },
+  "termination": {
+    "attempted": false,
+    "before_accounting": null,
+    "succeeded": false
+  },
+  "limits": {
+    "wall_seconds": 90,
+    "cpu_seconds": 3600,
+    "log_bytes": 16777216,
+    "committed_bytes": 17179869184
+  },
+  "scope": "owned job tree; committed memory, observed user+kernel CPU; not RSS or a timing benchmark",
+  "log": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\cauchy-1\\scoring-process\\process.log",
+    "sha256": "2d66f236f2815deab6bab8466261fcfc627f263cdae925ec2f9f53114acc64b1",
+    "bytes": 40
+  }
+}

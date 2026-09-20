@@ -1,0 +1,76 @@
+{
+  "status": "PASS",
+  "passed": true,
+  "actual_prior": 3.080528736114502,
+  "literal_prior": 3.080529100133859,
+  "constant_floor": 5.320592988948157e-16,
+  "brightness_translation_exact": true,
+  "brightness_derivative": 1.0913936421275139e-10,
+  "derivative_cases": [
+    {
+      "s": 0.0,
+      "derivative": 0.0,
+      "expected_derivative": 0.0,
+      "penalty": 5.320593518343749e-16,
+      "zero_curvature": 0.9999998807907104,
+      "original_zero_curvature": 0.9999998807907104
+    },
+    {
+      "s": 0.001,
+      "derivative": 0.0009999996982514858,
+      "expected_derivative": 0.0009999997500000624,
+      "penalty": 2.4999997094710125e-07,
+      "small_gradient_original_ratio": 0.9999997726263499
+    },
+    {
+      "s": 0.1,
+      "derivative": 0.09975061565637589,
+      "expected_derivative": 0.09975062344139651,
+      "penalty": 0.0024968802463263273
+    },
+    {
+      "s": 1.0,
+      "derivative": 0.7999999523162842,
+      "expected_derivative": 0.8,
+      "penalty": 0.2231435328722
+    },
+    {
+      "s": 2.0,
+      "derivative": 0.9999998807907104,
+      "expected_derivative": 1.0,
+      "penalty": 0.6931471228599548
+    },
+    {
+      "s": 4.0,
+      "derivative": 0.7999999523162842,
+      "expected_derivative": 0.8,
+      "penalty": 1.6094378232955933
+    },
+    {
+      "s": 16.0,
+      "derivative": 0.2461538165807724,
+      "expected_derivative": 0.24615384615384617,
+      "penalty": 4.174386978149414
+    },
+    {
+      "s": 64.0,
+      "derivative": 0.062439028173685074,
+      "expected_derivative": 0.0624390243902439,
+      "penalty": 6.932447910308838
+    }
+  ],
+  "isolated_impulse": {
+    "native_xy": [
+      5,
+      4
+    ],
+    "s": 16,
+    "incident_edges": 4,
+    "edge_mean_factor": 0.022474747474747474,
+    "cauchy_force": 0.005532245151698589,
+    "huber_force": 0.0449494943022728,
+    "ratio": 0.12307691638299166
+  },
+  "expected_risk": "Restoring force decreases beyond s2; a large spurious edge can persist. Arithmetic pass is not a quality or noise-calibration claim.",
+  "controls_sha256": "84083ee81caab69d514482795403d4dfdf7248debf40b131d4f440247f9c1c56"
+}

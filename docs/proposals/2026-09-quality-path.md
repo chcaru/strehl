@@ -25,8 +25,14 @@ noise-scaled sheet prior now passes all layered-image and held-prediction bars
 with known visibility, but fails flat RGB/chroma controls and increases core
 chroma error. Reject the combined result without a coefficient sweep. See
 experiments/layered-raw-inverse/shot-prior-results.md and its independent review.
-The next implementation must preserve flat-region averaging while retaining
-supported bright detail and must ultimately estimate visibility from RAW data.
+The next original-scale Cauchy prior preserves the flat guard and improves
+bright RAW prediction, but more than doubles core/ridge colour error. Reject
+it under the predeclared colour guards; its pass-gated stress test is not
+admitted. See experiments/layered-raw-inverse/cauchy-results.md. Inspect the
+spatial colour error before another prior; pooled RGB and near-unit component
+recovery are inadequate on their own. The model's exact opacity/radiance gauge
+also means true visibility is not identifiable, although that gauge preserves
+the desired pinhole image. Do not confuse hidden radiance size with image error.
 It has no photographic
 admission yet. The passing complete-periodic all-CFA controls
 remain retained at48276660; speed work stays behind demonstrated image quality.

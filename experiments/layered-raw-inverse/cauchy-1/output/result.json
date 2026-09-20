@@ -1,0 +1,22 @@
+{
+  "status": "CAUCHY_PRIOR_COMPLETE",
+  "prior_kind": "cauchy-original-scale-sheets",
+  "arms": [
+    {
+      "case": "flat",
+      "status": "nonstationary_return",
+      "receipt": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\cauchy-1\\output\\flat\\fixed-alpha\\receipt.json",
+      "receipt_sha256": "f6d77798ed3c539de4498b424d8d62b4a69857548ce021d3617b9301abe3641c"
+    },
+    {
+      "case": "layered",
+      "status": "nonstationary_return",
+      "receipt": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\cauchy-1\\output\\layered\\fixed-alpha\\receipt.json",
+      "receipt_sha256": "210fdb279494cbdc079c3f34a614ec3ffc75093255777709e57f98e445ab6591"
+    }
+  ],
+  "source_root": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output",
+  "alpha_directory": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\visibility-1\\alpha",
+  "real_photo_admission": false,
+  "interpretation": "Known-alpha, fixed Cauchy image prior at the original scale; independent scoring required."
+}
