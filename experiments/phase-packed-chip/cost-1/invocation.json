@@ -1,0 +1,37 @@
+{
+  "command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\phase-packed-chip\\build-1\\cli-tests.exe",
+    "merge_cmd::phase_packed_chip::chip_complete_pair",
+    "--exact",
+    "--ignored",
+    "--nocapture",
+    "--test-threads=1"
+  ],
+  "environment": {
+    "RAYON_NUM_THREADS": "8",
+    "STREHL_PYRAMID_WORKERS": "8",
+    "STREHL_FULLRES_GATHER": "1",
+    "STREHL_DIRECT_PLANES": "rounded",
+    "STREHL_PROBE_GATHER": "green",
+    "STREHL_WARP_WRITEBACK": "parallel",
+    "STREHL_GPU_GATHER": "on",
+    "STREHL_GPU_SCHEDULE": "device",
+    "STREHL_GPU_GATHER_LOG": "off",
+    "STREHL_DEFECT": "off",
+    "STREHL_CA_BEFORE_MHC": "off",
+    "STREHL_ALIGN": "1",
+    "STREHL_WARPMAP": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\chip-baseline-1\\chip.warpmap.txt",
+    "STREHL_PHASE_PACKED_CHIP_CONFIG": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\phase-packed-chip\\cost-1\\config.json"
+  },
+  "removed_environment": [],
+  "executable": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\phase-packed-chip\\build-1\\cli-tests.exe",
+    "sha256": "e6240c7158ce0d61b57df5d23feec47acca7183aec5524edff2b66affef06476",
+    "bytes": 23491072
+  },
+  "runner": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\phase-packed-chip\\run.py",
+    "sha256": "95e0cfd019487e93f84ae75dbb9e9c82aa720cb84fcdcd19a56fb93069a6cfed",
+    "bytes": 15350
+  }
+}

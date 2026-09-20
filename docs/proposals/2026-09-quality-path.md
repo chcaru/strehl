@@ -5,13 +5,20 @@ quality actions in 2026-09-sota-program.md and the older SOTA proposal. Read
 the measured decision record in docs/research/SYNTHESIS.md before architectural
 changes; this plan does not promote any experimental default.
 
-Latest execution checkpoint: the complete CA-ordering chip trial has no identified
-photographic gain; see experiments/ca-before-mhc/full-results.md. The next
-bounded trial retains twelve colour/site planes to remove final MHC on the chip,
-where this exact consumer has not been tested. Its prior vitamin-C fan failure
-and flat-chroma tradeoff remain; it is an observational trial, not a promoted
-default. A complete-chip commercial reference is being prepared separately,
-subject to a resource check. Historical decisions follow.
+Latest execution checkpoint: both complete chip pipeline-ordering trials are
+closed without an identified meaningful photographic gain: CA-before-MHC and
+twelve-plane merging without final MHC. See their `full-results.md` reports.
+The latter reproduces every baseline RGB16 pixel and preserves its prior
+vitamin-C failure and generated flat-chroma penalty. Neither is promoted.
+Complete299-frame Helicon B/C references now expose a concrete whole-chip
+quality gap: B has much cleaner broad contact/compartment boundaries, while C
+retains strong colour spill on identical prepared inputs. See
+experiments/chip-competitor/results.md and independent photographic review.
+Both automatic cross-workflow mappings refuse, so no matched-native detail or
+noise superiority is claimed. The next implementation priority is coherent
+source/depth choice in the RAW consumer, with complete before/after images;
+do not infer that changing predevelopment alone explains the B/C difference.
+Historical decisions follow.
 
 Complete Helicon B/C comparisons at e250ddc2
 retain an unresolved vitamin-C glint-fan deficit. Subsequent donor, wavelet,

@@ -1,0 +1,33 @@
+{
+  "native_receipt": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\ca-before-mhc\\full-1\\current\\output\\receipt.json",
+    "sha256": "de8000b81cbe108a3770da21014d4e320c91f47558bee07c341ee606d8747206",
+    "bytes": 97123
+  },
+  "native_master": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\ca-before-mhc\\full-1\\current\\output\\image.tiff",
+    "sha256": "c69db8e95e4f26df43632d453027770d1e52baae150ebe0e0916b47fd68f74b4",
+    "bytes": 166879360
+  },
+  "helicon": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\helicon-current\\program\\HeliconFocus.exe",
+    "sha256": "29ca62df122163c1295e1e2a416a42acfdf52f20c83d0beed99c4af154d42089",
+    "bytes": 16249488
+  },
+  "resource_evidence": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\resource-evidence.json",
+    "sha256": "34af3f3e2cc64c2ac14f790ae4d962ec417c5bd554398b69bee790e2fb771172",
+    "bytes": 3218
+  },
+  "old_exporter": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\crates\\strehl-cli\\examples\\quality-batch-develop.rs",
+    "sha256": "804107b7910daff699d194414260e7a2750e9128ff77ce5921bf026d2e9fdb70",
+    "bytes": 10902
+  },
+  "old_export_build": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\build\\executable.json",
+    "sha256": "8f567076f31232bc3f3fe5f6c8ff4572cf3b7a14340f4026724ef2e566e1c905",
+    "bytes": 264
+  },
+  "free_bytes": 691123470336
+}

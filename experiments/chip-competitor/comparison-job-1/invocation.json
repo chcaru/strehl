@@ -1,0 +1,22 @@
+{
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-I",
+    "-B",
+    "-X",
+    "faulthandler",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\compare.py",
+    "compare",
+    "--run",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1",
+    "--commission",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\comparison-commission-1",
+    "--out",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\comparison-1"
+  ],
+  "environment": {
+    "OMP_NUM_THREADS": "4",
+    "OPENBLAS_NUM_THREADS": "4"
+  },
+  "removed_environment": []
+}

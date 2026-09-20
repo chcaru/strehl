@@ -1,0 +1,30 @@
+{
+  "held_wb_differs": false,
+  "input": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl\\DSC00192.ARW",
+  "input_bytes": 42004480,
+  "input_sha256": "3234a4e6f589fc6b9e06fc7e10fee3bd553eb56084a5d969d2944d4443b4ec99",
+  "input_wb_bits": [
+    1070374912,
+    1065353216,
+    1076715520
+  ],
+  "ordinal": 191,
+  "original_metadata_unchanged": true,
+  "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\DSC00192.tiff",
+  "output_bytes": 197801322,
+  "output_sha256": "f041258e6b5726dadd16742e3fcd25107876bbf90f2fde8ebad0fd41178e2e5e",
+  "output_wh": [
+    7032,
+    4688
+  ],
+  "raw_active_xywh": [
+    0,
+    0,
+    7032,
+    4688
+  ],
+  "raw_buffer_wh": [
+    7168,
+    5120
+  ]
+}

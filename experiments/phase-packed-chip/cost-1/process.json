@@ -1,0 +1,90 @@
+{
+  "command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\phase-packed-chip\\build-1\\cli-tests.exe",
+    "merge_cmd::phase_packed_chip::chip_complete_pair",
+    "--exact",
+    "--ignored",
+    "--nocapture",
+    "--test-threads=1"
+  ],
+  "exit_code": 0,
+  "error": null,
+  "cleanup_errors": [],
+  "wall_seconds": 4.10899999999674,
+  "log_bytes": 360,
+  "job_accounting": {
+    "total_user_100ns": 95000000,
+    "total_kernel_100ns": 35625000,
+    "total_cpu_100ns": 130625000,
+    "total_page_fault_count": 2155704,
+    "total_processes": 2,
+    "active_processes": 0,
+    "total_terminated_processes": 0
+  },
+  "job_memory": {
+    "peak_process_memory_used_bytes": 6676459520,
+    "peak_job_memory_used_bytes": 6677725184
+  },
+  "terminal_job_accounting": true,
+  "configured_job_limits": {
+    "flags": 8704,
+    "committed_bytes": 17179869184
+  },
+  "direct_exit_observed": true,
+  "pipe_eof_observed": true,
+  "post_exit_drain": {
+    "initial_accounting": {
+      "total_user_100ns": 95000000,
+      "total_kernel_100ns": 35625000,
+      "total_cpu_100ns": 130625000,
+      "total_page_fault_count": 2155704,
+      "total_processes": 2,
+      "active_processes": 0,
+      "total_terminated_processes": 0
+    },
+    "last_accounting": {
+      "total_user_100ns": 95000000,
+      "total_kernel_100ns": 35625000,
+      "total_cpu_100ns": 130625000,
+      "total_page_fault_count": 2155704,
+      "total_processes": 2,
+      "active_processes": 0,
+      "total_terminated_processes": 0
+    },
+    "observations": [
+      {
+        "wall_seconds": 4.10899999999674,
+        "accounting": {
+          "total_user_100ns": 95000000,
+          "total_kernel_100ns": 35625000,
+          "total_cpu_100ns": 130625000,
+          "total_page_fault_count": 2155704,
+          "total_processes": 2,
+          "active_processes": 0,
+          "total_terminated_processes": 0
+        }
+      }
+    ],
+    "observation_count": 1,
+    "completed": true,
+    "started_wall_seconds": 4.10899999999674,
+    "ended_wall_seconds": 4.10899999999674
+  },
+  "termination": {
+    "attempted": false,
+    "before_accounting": null,
+    "succeeded": false
+  },
+  "limits": {
+    "wall_seconds": 180,
+    "cpu_seconds": 600,
+    "log_bytes": 16777216,
+    "committed_bytes": 17179869184
+  },
+  "scope": "owned job tree; committed memory, observed user+kernel CPU; not RSS or a timing benchmark",
+  "log": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\phase-packed-chip\\cost-1\\process.log",
+    "sha256": "f231a43165764291b03b696e72f3a4fc47bcb00d266eb0c2fc55f327f502cf79",
+    "bytes": 360
+  }
+}

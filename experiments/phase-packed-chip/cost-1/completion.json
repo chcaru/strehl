@@ -1,0 +1,16 @@
+{
+  "phase": "cost",
+  "sources_unchanged": true,
+  "original_metadata_unchanged": true,
+  "common_crop": [
+    141,
+    97,
+    3234,
+    2150
+  ],
+  "views": {},
+  "historical_full_baseline_exact": false,
+  "old_vitamin_failure_preserved": true,
+  "strict_flat_guard_pass_claimed": false,
+  "photographic_promotion": false
+}

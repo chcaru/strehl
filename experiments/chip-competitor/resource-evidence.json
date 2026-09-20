@@ -1,0 +1,47 @@
+{
+  "prepared_date": "2026-09-20",
+  "root_approved_bounded_attempt": true,
+  "approval_scope": "One complete299-frame B, then C only after B succeeds; sequential, no concurrent large Strehl job; no registry or preference changes",
+  "external_job_gib": 40,
+  "external_wall_seconds": 600,
+  "external_cpu_seconds": 12000,
+  "free_workspace_volume_bytes_at_preparation": 691728486400,
+  "required_free_bytes_before_export": 85899345920,
+  "native_tiff_pixel_bytes_derived": 59141032704,
+  "native_tiff_derivation": "299*7032*4688*3*2; excludes small headers, golden and receipts",
+  "additional_outputs_estimate_bytes": 1073741824,
+  "host_memory_read_only_inventory": {
+    "total_physical_bytes": 66094223360,
+    "available_physical_bytes": 51085832192,
+    "total_commit_bytes": 70254972928,
+    "available_commit_bytes": 48817655808,
+    "method": "GlobalMemoryStatusEx; snapshot, not an experiment or guaranteed run headroom"
+  },
+  "vendor_runtime_evidence": {
+    "source": "C:/Users/chris/AppData/Local/HeliconFocus/HeliconFocus.log",
+    "scope": "Retained prior startup log; relevant lines only, not a fresh app launch",
+    "cache_line": "0.405: \"cleanupCache() 0 MiB used, 31516 MiB limit, 31483.1 MiB cache quota, 0 loaded, 0 referenced\"",
+    "trial_line": "0.742: Trial license",
+    "cache_limit_mib": 31516
+  },
+  "local_vendor_help": {
+    "path": "C:/dev/blog/death-of-software/projects/strehl/experiments/helicon-current/program/Help/english/HeliconFocus.html",
+    "sha256": "c7568f8884788358174d1b306499344d7acfc978602b3720d5c1762a522ab035",
+    "section": "Program Preferences / Performance, lines529-535; Command line mode, lines655-799",
+    "summary": "RAM cache is limited to a share of RAM for recently used images; a disk cache stores temporary files. No memory-limit command-line option is documented in the local CLI table. This does not bound all processing memory."
+  },
+  "retained_seventy_source_measurements": {
+    "development": {"wall_seconds": 35.14, "peak_job_committed_bytes": 421789696},
+    "helicon_b": {"wall_seconds": 13.25, "peak_job_committed_bytes": 20982267904},
+    "helicon_c": {"wall_seconds": 10.437, "peak_job_committed_bytes": 16160284672},
+    "scope": "Prior vitamin-C receipt measurements. Linear299-source wall estimates about150/57/45seconds are unverified; cache limits make a linear RAM extrapolation inappropriate."
+  },
+  "admission_limit": "Documented recent-image cache plus retained31,516MiB runtime cap permits a bounded attempt, not a guarantee all299 fit. The40GiB Job cap remains authoritative. Preserve any failure; no automatic C after failed B, no lossy resize or substack substituted as complete reference.",
+  "helicon_executable": {
+    "path": "C:/dev/blog/death-of-software/projects/strehl/experiments/helicon-current/program/HeliconFocus.exe",
+    "sha256": "29ca62df122163c1295e1e2a416a42acfdf52f20c83d0beed99c4af154d42089",
+    "prior_product_receipt_version": "8.3.11",
+    "windows_file_version": "8.3",
+    "license_scope": "Existing trial, prior successful full-resolution TIFF output Sept19. No new license verification, reset, purchase or circumvention. Full dimensions and independent overlay review remain required."
+  }
+}

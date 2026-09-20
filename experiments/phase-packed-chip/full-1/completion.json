@@ -1,0 +1,257 @@
+{
+  "phase": "full",
+  "sources_unchanged": true,
+  "original_metadata_unchanged": true,
+  "common_crop": [
+    141,
+    97,
+    3234,
+    2150
+  ],
+  "views": {
+    "baseline": {
+      "master": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\phase-packed-chip\\full-1\\output\\baseline.tiff",
+        "sha256": "46692b100544fca30358f2594d5aeeebd3c620f313efc9561b3c2da3f8dcefa2",
+        "bytes": 166879360
+      },
+      "native_whole": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\phase-packed-chip\\full-1\\baseline-whole.png",
+        "sha256": "304c604245bee72067ceceff10169012f097f12c78df95566c33ed9699e4b858",
+        "bytes": 46167590
+      },
+      "overview": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\phase-packed-chip\\full-1\\baseline-overview.png",
+        "sha256": "5f52728f8f0ab07ec51cfd764bc4c57cc1caa22107c75d54465e7002462e8841",
+        "bytes": 3232004
+      },
+      "regions": [
+        {
+          "region": "rail-crossing",
+          "output_native_xywh": [
+            1082,
+            942,
+            384,
+            384
+          ],
+          "image": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\phase-packed-chip\\full-1\\rail-crossing-baseline.png",
+            "sha256": "78649e4d5c8c63c152a364a75264a326503c3f4311a956da5f3b2a3da6c9e7a3",
+            "bytes": 308804
+          }
+        },
+        {
+          "region": "upper-colour",
+          "output_native_xywh": [
+            1020,
+            180,
+            512,
+            512
+          ],
+          "image": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\phase-packed-chip\\full-1\\upper-colour-baseline.png",
+            "sha256": "80996fa86b3d169115cdb73a55d17c507cf402043209b48ecd5e4315e2ad0a74",
+            "bytes": 486217
+          }
+        },
+        {
+          "region": "central-stipple",
+          "output_native_xywh": [
+            2960,
+            1290,
+            512,
+            512
+          ],
+          "image": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\phase-packed-chip\\full-1\\central-stipple-baseline.png",
+            "sha256": "9062714a6111adecd284adab76622f700d4235a53b335d8ec812c81041f7a3ab",
+            "bytes": 474643
+          }
+        },
+        {
+          "region": "lower-array",
+          "output_native_xywh": [
+            550,
+            2780,
+            512,
+            512
+          ],
+          "image": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\phase-packed-chip\\full-1\\lower-array-baseline.png",
+            "sha256": "88f4a13e49c55321c726391cbfa2602ccd38093ae3a59ec7282524d6741a932c",
+            "bytes": 551670
+          }
+        },
+        {
+          "region": "lower-colour",
+          "output_native_xywh": [
+            4650,
+            3000,
+            512,
+            512
+          ],
+          "image": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\phase-packed-chip\\full-1\\lower-colour-baseline.png",
+            "sha256": "1be37f747c92d09b5a9e9e6abc5498091f50691bc42e026ce0a8a46d28644b76",
+            "bytes": 320437
+          }
+        },
+        {
+          "region": "surface-scratches",
+          "output_native_xywh": [
+            4840,
+            1240,
+            512,
+            512
+          ],
+          "image": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\phase-packed-chip\\full-1\\surface-scratches-baseline.png",
+            "sha256": "57d107a3feda295df6b8036a12b5ea1f82403aefbf095bc304dc02853916c698",
+            "bytes": 329441
+          }
+        },
+        {
+          "region": "upper-left-contact-grid",
+          "output_native_xywh": [
+            32,
+            320,
+            512,
+            512
+          ],
+          "image": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\phase-packed-chip\\full-1\\upper-left-contact-grid-baseline.png",
+            "sha256": "3afa6bd8fd0b0ab03a8b3fd47301a2fe484d518c7b4057caf0d868f1e0513604",
+            "bytes": 529966
+          }
+        }
+      ],
+      "rgb16_le_sha256": "7df99f8f54339711c189380cca45cd63fd8106a2a196162bf562ecc60fbfd7db",
+      "icc_sha256": "238ad2596316306a72025bb245cf3c8cd72f1090c8d95af2f38dc090e84ece5b",
+      "display": "fixed high byte; overview1/4; seven native crops; no automatic contrast; TIFF ICC preserved"
+    },
+    "candidate": {
+      "master": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\phase-packed-chip\\full-1\\output\\candidate.tiff",
+        "sha256": "01a05c85cadbbff754e3e435f9608ddfe46e8cd5563d85b1993a2daa6f043e90",
+        "bytes": 166879360
+      },
+      "native_whole": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\phase-packed-chip\\full-1\\candidate-whole.png",
+        "sha256": "862aa7d985af07dcb2a3d5bedeebfae6aaf972b5cb429fe0ce4bf187786e2912",
+        "bytes": 46497706
+      },
+      "overview": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\phase-packed-chip\\full-1\\candidate-overview.png",
+        "sha256": "96129f0b1826d76a44220f05e6a395472321a0e3fd4cf9e7571e55c2776230f6",
+        "bytes": 3224056
+      },
+      "regions": [
+        {
+          "region": "rail-crossing",
+          "output_native_xywh": [
+            1082,
+            942,
+            384,
+            384
+          ],
+          "image": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\phase-packed-chip\\full-1\\rail-crossing-candidate.png",
+            "sha256": "fd7c41fde82324370e6041cf87d1ee5fb403f5e4b01aedcd2ad3c2eb4f47c042",
+            "bytes": 301507
+          }
+        },
+        {
+          "region": "upper-colour",
+          "output_native_xywh": [
+            1020,
+            180,
+            512,
+            512
+          ],
+          "image": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\phase-packed-chip\\full-1\\upper-colour-candidate.png",
+            "sha256": "c9007e25154d27be161b073a9c1411f4406819e2dbeb847c9a3b61be6181f055",
+            "bytes": 494849
+          }
+        },
+        {
+          "region": "central-stipple",
+          "output_native_xywh": [
+            2960,
+            1290,
+            512,
+            512
+          ],
+          "image": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\phase-packed-chip\\full-1\\central-stipple-candidate.png",
+            "sha256": "6e455d811f1c650c3e244f90c4e49b20249575eff0e5be80216e2fb4baea5584",
+            "bytes": 476739
+          }
+        },
+        {
+          "region": "lower-array",
+          "output_native_xywh": [
+            550,
+            2780,
+            512,
+            512
+          ],
+          "image": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\phase-packed-chip\\full-1\\lower-array-candidate.png",
+            "sha256": "7ec33117d2afca3874a135ca854ed78b5945d62a6d441e7609cc7d96a31837ce",
+            "bytes": 541580
+          }
+        },
+        {
+          "region": "lower-colour",
+          "output_native_xywh": [
+            4650,
+            3000,
+            512,
+            512
+          ],
+          "image": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\phase-packed-chip\\full-1\\lower-colour-candidate.png",
+            "sha256": "617ab4af4f7a040d79999ac1a196567ba11128c50aeb702153708753cc30dd8c",
+            "bytes": 336052
+          }
+        },
+        {
+          "region": "surface-scratches",
+          "output_native_xywh": [
+            4840,
+            1240,
+            512,
+            512
+          ],
+          "image": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\phase-packed-chip\\full-1\\surface-scratches-candidate.png",
+            "sha256": "2f531cca4cb6f691e13005c1c3356f4ac2edfbc3595bac679f9684723aaaade3",
+            "bytes": 345122
+          }
+        },
+        {
+          "region": "upper-left-contact-grid",
+          "output_native_xywh": [
+            32,
+            320,
+            512,
+            512
+          ],
+          "image": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\phase-packed-chip\\full-1\\upper-left-contact-grid-candidate.png",
+            "sha256": "f947eb99ca2bb340b9236adc66430d3430033374cddea5a0f0ad7ccc6d02c60c",
+            "bytes": 516477
+          }
+        }
+      ],
+      "rgb16_le_sha256": "3154dcd880109cd399284dd5268399c9b7a825707f150528e1c6ddc056fd5a9d",
+      "icc_sha256": "238ad2596316306a72025bb245cf3c8cd72f1090c8d95af2f38dc090e84ece5b",
+      "display": "fixed high byte; overview1/4; seven native crops; no automatic contrast; TIFF ICC preserved"
+    }
+  },
+  "historical_full_baseline_exact": true,
+  "old_vitamin_failure_preserved": true,
+  "strict_flat_guard_pass_claimed": false,
+  "photographic_promotion": false
+}

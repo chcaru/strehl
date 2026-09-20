@@ -1,0 +1,12 @@
+{
+  "strehl": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\phase-packed-chip\\build-1\\strehl.exe",
+    "sha256": "0155cf16f3fb86a4290d0868675a0670b3af09820caeec3052f49c7c22cc71a5",
+    "bytes": 17902080
+  },
+  "cli-tests": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\phase-packed-chip\\build-1\\cli-tests.exe",
+    "sha256": "e6240c7158ce0d61b57df5d23feec47acca7183aec5524edff2b66affef06476",
+    "bytes": 23491072
+  }
+}

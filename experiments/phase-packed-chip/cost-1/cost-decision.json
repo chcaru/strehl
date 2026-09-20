@@ -1,0 +1,24 @@
+{
+  "full_pair_feasible": true,
+  "estimated_full_seconds": 750.8146206,
+  "maximum_estimate_seconds": 1500,
+  "cost_peak_bytes": 6677725184,
+  "whole_job_cpu_times299_upper_estimate": 3905.6875,
+  "cpu_estimate_used_as_gate": false,
+  "full_limits": {
+    "wall_seconds": 1800,
+    "cpu_seconds": 7200,
+    "committed_bytes": 17179869184
+  },
+  "receipt": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\phase-packed-chip\\cost-1\\output\\receipt.json",
+    "sha256": "b161dfce2591d062f68ee9621eaa8c803bf420d25d24711aebe7c92611ff6cb8",
+    "bytes": 4361
+  },
+  "process": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\phase-packed-chip\\cost-1\\process.json",
+    "sha256": "ae4619d3c1347f2fbb94547f2d67ff58a1afb4b36175a7673f88448b611c90f4",
+    "bytes": 2725
+  },
+  "scope": "Feasibility only; whole-job CPU extrapolation repeats fixed writers/hash/setup and is not an admission predicate."
+}

@@ -1,0 +1,25 @@
+{
+  "controls_executed": 4,
+  "sources_unchanged": true,
+  "admission": {
+    "retained_screen": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\phase-packed-rgb\\screen-2\\output\\screen.json",
+      "sha256": "431fe14cb2a0b07ad53137f3c080e139b6091d79462b7eba62dfa7232a8b85d1",
+      "bytes": 103920
+    },
+    "fresh_screen": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\phase-packed-chip\\controls-1\\output\\screen.json",
+      "sha256": "e5bba53b0a337bb6d39c307c74211a7bff5cda802c29e8dc52d4b6ca69ff610e",
+      "bytes": 103923
+    },
+    "unchanged_28_cases": true,
+    "original_flat_limit": 1.25,
+    "historical_worst_flat_chroma_ratio": 1.078951,
+    "strict_1_05_flat_chroma_pass": false,
+    "vitamin_failure": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\phase-packed-rgb\\full-1\\photo-comparison-1\\photographic-review.md",
+      "sha256": "ce4f458ebcb79c714fc1e7bc264914dc475230b8b7971144e0b77cd547b1e2c7",
+      "bytes": 4864
+    }
+  }
+}

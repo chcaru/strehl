@@ -1,0 +1,12 @@
+{
+  "receipt": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\developed\\receipt.json",
+    "sha256": "97f198664496c18ebb7723450e240163983cf00a5499e1db0695bdd0f4c3bf9c",
+    "bytes": 293831
+  },
+  "source_count": 299,
+  "original_metadata_unchanged": true,
+  "all_formats_and_icc_checked": true,
+  "ca_policy": "no CA or alignment applied to prepared TIFFs; native current has held CA",
+  "scope": "same decoder/MHC/WB/matrix/tone; external tone-before-merge and independent geometry"
+}

@@ -1,0 +1,28 @@
+{
+  "complete_299_source_reference": true,
+  "prepared_inputs_unchanged": true,
+  "original_metadata_unchanged": true,
+  "views": {
+    "master": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\helicon-c\\whole-stack.tiff",
+      "sha256": "800ad948c4fa4a6eb839a096af009341f08dce9e89bc5d65a9e4ce617a708a48",
+      "bytes": 197827122
+    },
+    "native_whole": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\helicon-c\\whole.png",
+      "sha256": "aeb2c1b610265c58736d54e94c1b1bb9acc18974f25aefbabc1f31630eeb2573",
+      "bytes": 57132245
+    },
+    "overview": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-competitor\\run-1\\helicon-c\\overview.png",
+      "sha256": "ed459a674849106ebdea75e4d4c783cf5219e239aeb5c555a6afaa4d8450b22c",
+      "bytes": 4043117
+    },
+    "rgb16_le_sha256": "fd4a936f22993fb7a552d74d5f47ca61465938575297c14475c09b55406484d4",
+    "icc_sha256": "238ad2596316306a72025bb245cf3c8cd72f1090c8d95af2f38dc090e84ece5b",
+    "display": "round(u16/257); same sRGB ICC; overview only resized",
+    "watermark_visual_review": "pending; dimensions alone do not prove absence"
+  },
+  "photographic_review": "pending",
+  "quality_claim": false
+}
