@@ -385,3 +385,28 @@ do not tune, optimize or extend this failed photographic operator. The next
 bounded step must check source evidence on the real focused cores and fan
 sources before another full implementation, using a common colour-vector
 reconstruction and explicit flat/detail destroyers if a new rule is justified.
+
+The complete 70-source RAW trace export now supplies that evidence, with exact
+historical witness hashes. Signed four-plane brightness changes associate the
+dark core with its column/fan, but chiefly through shared late brightening;
+the facet does not replicate it. Signed finest-band traces also fail small
+coordinate/checker controls. See through-focus-events/results.md and its
+independent review. This is a narrow association, not source ownership.
+
+The fixed RAW temporal-affinity support consumer has now been implemented and
+rejected on actual rounded-gather truth controls. It reduces flat error but
+raises stable-light ISO100 core/interior RGB error to 1.07016/1.09468 of
+baseline. A no-glint twin also fails, and common brightening damages genuine
+thin structure. Only three of thirteen cases pass. See
+raw-affinity-support/results.md and independent-results.md. Do not tune or
+render this rule; its successful instrument execution is not quality admission.
+
+The focused star-sand attribution gap is also closed. Original frames
+116/118/120, their actual gathered samples and the completed merge retain the
+inspected pore/rim separations; no specific lost feature is identified. The
+full 259-frame replay reproduces the historical baseline pixels exactly.
+See star-focused-attribution/results.md and photographic-review.md. This is
+a bounded null, not a capture-resolution limit or a whole-stack retention
+claim. Neither repeated placement fits nor another descriptor campaign is
+justified by it. The current SOTA claim remains unproven; continue toward a
+reconstructive change whose complete photograph can earn promotion.

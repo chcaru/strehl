@@ -4964,6 +4964,11 @@ pub(crate) mod through_focus_events {
     include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/through-focus-events/source-traces.rs"));
 }
 
+#[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance", feature = "native-gpu-gather"))]
+pub(crate) mod raw_affinity_support {
+    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/raw-affinity-support/implementation.rs"));
+}
+
 #[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance"))]
 pub(crate) mod donor_consistency {
     include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/donor-consistency/implementation.rs"));

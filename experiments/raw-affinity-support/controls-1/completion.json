@@ -1,0 +1,21 @@
+{
+  "instrument_completed": true,
+  "sources_unchanged": true,
+  "executable": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\raw-affinity-support\\build-1\\cli-tests.exe",
+    "sha256": "561adc89912d59966f60d9c77aba8633b456668dc1a71d338a1121309eabf3dc",
+    "bytes": 28707328
+  },
+  "process": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\raw-affinity-support\\controls-1\\process.json",
+    "sha256": "3dbdc947892833a0e879d50eee8ba30f8a2bfe88fa873516c5b39be9b83b91f5",
+    "bytes": 2773
+  },
+  "screen": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\raw-affinity-support\\controls-1\\output\\screen.json",
+    "sha256": "c36ea2504d1a93c221553ada1d7632b9d903d3e810f06c149ee37a1dd36b9d65",
+    "bytes": 208230
+  },
+  "photographic_replay_admitted": false,
+  "scope": "Generated screen only; read independent quality decision separately."
+}
