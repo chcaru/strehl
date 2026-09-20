@@ -1,0 +1,13 @@
+Traceback (most recent call last):
+  File "C:\dev\blog\death-of-software\projects\strehl\experiments\layered-raw-inverse\phase-aware-controls.py", line 456, in <module>
+    main()
+  File "C:\dev\blog\death-of-software\projects\strehl\experiments\layered-raw-inverse\phase-aware-controls.py", line 443, in main
+    result = commission(control, focus, pc, author)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\dev\blog\death-of-software\projects\strehl\experiments\layered-raw-inverse\phase-aware-controls.py", line 154, in commission
+    return commission_dense(control, focus, pc, author, cfg, values, phase, tests,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\dev\blog\death-of-software\projects\strehl\experiments\layered-raw-inverse\phase-aware-controls.py", line 234, in commission_dense
+    assert abs(fd-derivative) <= bound
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
