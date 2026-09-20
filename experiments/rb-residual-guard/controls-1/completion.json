@@ -1,0 +1,10 @@
+{
+  "screen": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\rb-residual-guard\\controls-1\\output\\screen.json",
+    "sha256": "9f064df49645fafc45b5c2cd16d379a5c1fe048a3b47549f7af8062783aea8ae",
+    "bytes": 261382
+  },
+  "sources_unchanged": true,
+  "photographic_replay_admitted": false,
+  "scope": "Actual-consumer guarded R/B truth screen only; no real photograph or SOTA claim."
+}

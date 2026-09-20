@@ -106,6 +106,11 @@ pub mod rb_own_guide_diagnostic {
 }
 
 #[cfg(feature = "native-correction-variance")]
+pub mod rb_residual_guard_diagnostic {
+    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/rb-residual-guard/core-bridge.rs"));
+}
+
+#[cfg(feature = "native-correction-variance")]
 pub mod fine_support_candidate {
     include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/fine-support-guidance/core-candidate.rs"));
 }

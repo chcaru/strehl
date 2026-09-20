@@ -1,0 +1,19 @@
+{
+  "passed": true,
+  "executable": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\rb-residual-full\\build-1\\cli-tests.exe",
+    "sha256": "72d5ff65d6d5a34ea6540b1398e2a1dd11945b278708ce37545bc10f167996f7",
+    "bytes": 28342784
+  },
+  "sources_unchanged": true,
+  "process": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\rb-residual-full\\build-1\\mechanical-1\\process.json",
+    "sha256": "d0171faef4f3b273c61e8e484d366613694511d85e6fc196d43758d78569aeca",
+    "bytes": 2673
+  },
+  "log": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\rb-residual-full\\build-1\\mechanical-1\\process.log",
+    "sha256": "42974006e62d254b4d294780fb0c6a9eaea8c6c645680e375b1e0fb667d39e73",
+    "bytes": 832
+  }
+}

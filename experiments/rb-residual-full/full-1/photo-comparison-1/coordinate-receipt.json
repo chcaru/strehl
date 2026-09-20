@@ -1,0 +1,563 @@
+{
+  "schema": 1,
+  "helper": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\rb-residual-full\\photo-compare.py",
+    "bytes": 9368,
+    "sha256": "d3dd05243227f244265e6db7cf1524c04b93df2155e5f3b1d54fd444673deefe"
+  },
+  "full_output_helper": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\full-output-views.py",
+    "bytes": 1503,
+    "sha256": "8b51a9eacfa5aeae00e51501882d73dd6496c24cc05898494d5c22902078d955"
+  },
+  "completion": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\rb-residual-full\\full-1\\completion.json",
+    "bytes": 1356,
+    "sha256": "aff40b68961d9da30e70f1726f942fd3dd7bac27d39e447dae113c6e6dfe2cb6"
+  },
+  "config": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\rb-residual-full\\full-1\\config.json",
+    "bytes": 837,
+    "sha256": "d1ee96565d57ad6a0c40383e8589b6ec27715113c0ff34f583384079648d2d7c"
+  },
+  "merge_receipt": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\rb-residual-full\\full-1\\output\\receipt.json",
+    "bytes": 416352,
+    "sha256": "959542800c7937b94f67b21b56daeffe4e5668382bdb38ba5ea2458a69672aef"
+  },
+  "inputs": {
+    "baseline": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\rb-residual-full\\full-1\\output\\baseline.tiff",
+      "bytes": 191495352,
+      "sha256": "47ac86c8ddc8103fbac358f56c9a5371628ef3fb8f0122e54be69422c439bb3b"
+    },
+    "candidate": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\rb-residual-full\\full-1\\output\\candidate.tiff",
+      "bytes": 191495352,
+      "sha256": "db9aaa2683fa2dfb4e98880e053bbaf982a84575f98aafbd3e1b6020db76ecf8"
+    },
+    "helicon-b": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\helicon-current\\vitamin-c-b-2\\whole-stack.tiff",
+      "bytes": 197827122,
+      "sha256": "f08335d17083789fa2bd60ee17ecbaba921bbc7aa20c9fdfdfa0cf0e1ca1d2d8"
+    }
+  },
+  "frozen_regions": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-review-1\\regions.json",
+    "bytes": 1068,
+    "sha256": "ff55ed297385ff8fef5d2badce07729537e2e867701d96d328be1eaf7bcb0f4f"
+  },
+  "helicon_registration": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\helicon-current\\photo-comparison-1\\coordinate-receipt.json",
+    "bytes": 30865,
+    "sha256": "9323b01478a6b70905dca18aa6802cd55f31d270a66fa1015b198308d77deaab"
+  },
+  "registration_baseline": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\green-match-rgb\\full-2\\photo-comparison-1\\baseline.png",
+    "bytes": 37540366,
+    "sha256": "68b2f4533e14eefb6e8b2473cc4312fe0d330cd70c83569148270fba12491326"
+  },
+  "registration_baseline_rgb8_exact": true,
+  "original_crop_quads": [
+    28,
+    19,
+    3460,
+    2306
+  ],
+  "native_shape": [
+    4612,
+    6920,
+    3
+  ],
+  "matrix_baseline_to_helicon_b": [
+    [
+      1.0107248408247895,
+      0.00010157169086644213,
+      18.587361174977467
+    ],
+    [
+      -0.00010157169086644213,
+      1.0107248408247895,
+      13.668897785409621
+    ]
+  ],
+  "regions": [
+    {
+      "name": "facet-edges",
+      "baseline_xywh": [
+        2500,
+        2700,
+        384,
+        384
+      ],
+      "display_integer_zoom": 1,
+      "arms": {
+        "baseline": [
+          2500,
+          2700,
+          384,
+          384
+        ],
+        "candidate": [
+          2500,
+          2700,
+          384,
+          384
+        ],
+        "helicon-b": [
+          2548,
+          2744,
+          384,
+          384
+        ]
+      }
+    },
+    {
+      "name": "pale-background",
+      "baseline_xywh": [
+        400,
+        1150,
+        384,
+        384
+      ],
+      "display_integer_zoom": 1,
+      "arms": {
+        "baseline": [
+          400,
+          1150,
+          384,
+          384
+        ],
+        "candidate": [
+          400,
+          1150,
+          384,
+          384
+        ],
+        "helicon-b": [
+          425,
+          1178,
+          384,
+          384
+        ]
+      }
+    },
+    {
+      "name": "fine-crystals",
+      "baseline_xywh": [
+        4200,
+        1700,
+        384,
+        384
+      ],
+      "display_integer_zoom": 1,
+      "arms": {
+        "baseline": [
+          4200,
+          1700,
+          384,
+          384
+        ],
+        "candidate": [
+          4200,
+          1700,
+          384,
+          384
+        ],
+        "helicon-b": [
+          4266,
+          1734,
+          384,
+          384
+        ]
+      }
+    },
+    {
+      "name": "bright-facet",
+      "baseline_xywh": [
+        1150,
+        3850,
+        384,
+        384
+      ],
+      "display_integer_zoom": 1,
+      "arms": {
+        "baseline": [
+          1150,
+          3850,
+          384,
+          384
+        ],
+        "candidate": [
+          1150,
+          3850,
+          384,
+          384
+        ],
+        "helicon-b": [
+          1183,
+          3907,
+          384,
+          384
+        ]
+      }
+    },
+    {
+      "name": "dark-inclusion",
+      "baseline_xywh": [
+        3050,
+        1850,
+        384,
+        384
+      ],
+      "display_integer_zoom": 1,
+      "arms": {
+        "baseline": [
+          3050,
+          1850,
+          384,
+          384
+        ],
+        "candidate": [
+          3050,
+          1850,
+          384,
+          384
+        ],
+        "helicon-b": [
+          3104,
+          1885,
+          384,
+          384
+        ]
+      }
+    },
+    {
+      "name": "facet-core-boundary",
+      "baseline_xywh": [
+        2533,
+        2846,
+        160,
+        160
+      ],
+      "display_integer_zoom": 3,
+      "arms": {
+        "baseline": [
+          2533,
+          2846,
+          160,
+          160
+        ],
+        "candidate": [
+          2533,
+          2846,
+          160,
+          160
+        ],
+        "helicon-b": [
+          2580,
+          2891,
+          160,
+          160
+        ]
+      }
+    },
+    {
+      "name": "dark-core-boundary",
+      "baseline_xywh": [
+        3011,
+        2097,
+        160,
+        160
+      ],
+      "display_integer_zoom": 3,
+      "arms": {
+        "baseline": [
+          3011,
+          2097,
+          160,
+          160
+        ],
+        "candidate": [
+          3011,
+          2097,
+          160,
+          160
+        ],
+        "helicon-b": [
+          3063,
+          2134,
+          160,
+          160
+        ]
+      }
+    },
+    {
+      "name": "competing-structure",
+      "baseline_xywh": [
+        3180,
+        2010,
+        120,
+        120
+      ],
+      "display_integer_zoom": 3,
+      "arms": {
+        "baseline": [
+          3180,
+          2010,
+          120,
+          120
+        ],
+        "candidate": [
+          3180,
+          2010,
+          120,
+          120
+        ],
+        "helicon-b": [
+          3234,
+          2046,
+          120,
+          120
+        ]
+      }
+    }
+  ],
+  "icc": {
+    "bytes": 2716,
+    "sha256": "238ad2596316306a72025bb245cf3c8cd72f1090c8d95af2f38dc090e84ece5b",
+    "all_exact": true
+  },
+  "commands": [
+    {
+      "argv": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-I",
+        "-B",
+        "-X",
+        "faulthandler",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\full-output-views.py",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\rb-residual-full\\full-1\\output\\baseline.tiff",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\rb-residual-full\\full-1\\photo-comparison-1\\baseline.png"
+      ],
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-I",
+        "-B",
+        "-X",
+        "faulthandler",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\full-output-views.py",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\rb-residual-full\\full-1\\output\\candidate.tiff",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\rb-residual-full\\full-1\\photo-comparison-1\\candidate.png"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "outputs": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\rb-residual-full\\full-1\\photo-comparison-1\\baseline.png",
+      "bytes": 37540366,
+      "sha256": "68b2f4533e14eefb6e8b2473cc4312fe0d330cd70c83569148270fba12491326"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\rb-residual-full\\full-1\\photo-comparison-1\\baseline.json",
+      "bytes": 594,
+      "sha256": "65d44d5393b7375328c7114d3e36ff3149e19ffae59dc162c4c1b42fa2851d97"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\rb-residual-full\\full-1\\photo-comparison-1\\baseline-overview.jpg",
+      "bytes": 569836,
+      "sha256": "00c549c367e4ac80a5551bf3132b119e9cf9b8e1836364b5219e07e89e1cd9d6"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\rb-residual-full\\full-1\\photo-comparison-1\\baseline-full-conversion.log",
+      "bytes": 550,
+      "sha256": "8c7898fc348150c4165bcaf5e8136c63d819c515b3eebf69e4642ea00e48b871"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\rb-residual-full\\full-1\\photo-comparison-1\\candidate.png",
+      "bytes": 38679467,
+      "sha256": "8fe6a47f67208d15a3168cdf482038c024f51d2c05bd0f928146e65dc2fde667"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\rb-residual-full\\full-1\\photo-comparison-1\\candidate.json",
+      "bytes": 596,
+      "sha256": "c13c2bb7661f45f62bddc34dc7fd94539d05411d133140be11e0c914203aa7bb"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\rb-residual-full\\full-1\\photo-comparison-1\\candidate-overview.jpg",
+      "bytes": 574939,
+      "sha256": "2f839a261d72bc5cfb62bf470125b89fb473b1842ff9a40e1fa2ee8aeeff3996"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\rb-residual-full\\full-1\\photo-comparison-1\\candidate-full-conversion.log",
+      "bytes": 552,
+      "sha256": "93034ffcdc639dd26d2b3e11917a64a97eb16ec8cbb5338c78c7d5c63bdf66ff"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\rb-residual-full\\full-1\\photo-comparison-1\\facet-edges-baseline.png",
+      "bytes": 192716,
+      "sha256": "2e547ac1bab0614449209083bc9d12a21312e4295f67ba467133a87aaa8f98f4"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\rb-residual-full\\full-1\\photo-comparison-1\\facet-edges-candidate.png",
+      "bytes": 199607,
+      "sha256": "22d67980271117b39e55b41cb5c45e9af8f3ebd863f6c18681c1fff729f149c3"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\rb-residual-full\\full-1\\photo-comparison-1\\facet-edges-helicon-b.png",
+      "bytes": 193627,
+      "sha256": "dbbfeb121b91052da1c660ed132204ef7dd4a7f22edff6663f66dc2ae3ee3d17"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\rb-residual-full\\full-1\\photo-comparison-1\\facet-edges-board.png",
+      "bytes": 586330,
+      "sha256": "eee3d2070079027de7830cd12a78f0de8299d1f5dce6ffb7b2b8bd4f567e02c6"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\rb-residual-full\\full-1\\photo-comparison-1\\pale-background-baseline.png",
+      "bytes": 138476,
+      "sha256": "dbf8d5a5d13522474a118e7e6efd6bc142aacd573ab5f83bcf6f2a93ecd47353"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\rb-residual-full\\full-1\\photo-comparison-1\\pale-background-candidate.png",
+      "bytes": 138652,
+      "sha256": "95c9e75406d717348b23442f8e9cab16b266064154da14a563879cf89250cea3"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\rb-residual-full\\full-1\\photo-comparison-1\\pale-background-helicon-b.png",
+      "bytes": 141801,
+      "sha256": "cc904dd5284a11023060c842ca4a76864fb373ec35f8989295b195bbda55f336"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\rb-residual-full\\full-1\\photo-comparison-1\\pale-background-board.png",
+      "bytes": 388135,
+      "sha256": "e7a677828455bc7e5e7162bcd06347839cfb0b96e56719446c25b639e8b9627d"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\rb-residual-full\\full-1\\photo-comparison-1\\fine-crystals-baseline.png",
+      "bytes": 200537,
+      "sha256": "d8144e2030108058ed0c21117ed5a75d9b407920984080cd88b9db54fd065838"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\rb-residual-full\\full-1\\photo-comparison-1\\fine-crystals-candidate.png",
+      "bytes": 208681,
+      "sha256": "d1e7ceeaa618d6115768c4a8fea64551b3b2bc509b0b47243adacfb795fb9a07"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\rb-residual-full\\full-1\\photo-comparison-1\\fine-crystals-helicon-b.png",
+      "bytes": 201169,
+      "sha256": "ce9ce0d5b0b6c735109a029f65254269591e5b427837215289725754720c62b4"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\rb-residual-full\\full-1\\photo-comparison-1\\fine-crystals-board.png",
+      "bytes": 614025,
+      "sha256": "2f8115cbce6a219f184010c4eaaf41f84ee9c69042f24eafa4a546de9b15031f"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\rb-residual-full\\full-1\\photo-comparison-1\\bright-facet-baseline.png",
+      "bytes": 144642,
+      "sha256": "1443ac73dc871aed2fe6fc5f72b32711c3ed6f155490ce083420acd5b5ee507f"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\rb-residual-full\\full-1\\photo-comparison-1\\bright-facet-candidate.png",
+      "bytes": 145123,
+      "sha256": "3cb928552bcb3b906b9b813e6c3c98e43099ee3ecd471b5b6030617ff76f46b7"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\rb-residual-full\\full-1\\photo-comparison-1\\bright-facet-helicon-b.png",
+      "bytes": 146313,
+      "sha256": "edaad39178479b58bfed94721499a219d11299bbb3e7c5bfdc534ba0d7ebc871"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\rb-residual-full\\full-1\\photo-comparison-1\\bright-facet-board.png",
+      "bytes": 404637,
+      "sha256": "dee52dce600011bd040605131680a0ef14b9de1222cd0df9013f3f90cca7dc41"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\rb-residual-full\\full-1\\photo-comparison-1\\dark-inclusion-baseline.png",
+      "bytes": 187949,
+      "sha256": "851143c7d19524d584e8378125456e230d923e7ee9b427989b1e7c1f548594ce"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\rb-residual-full\\full-1\\photo-comparison-1\\dark-inclusion-candidate.png",
+      "bytes": 193174,
+      "sha256": "5fbd07323094a4e4da1cd735a92f17d0699484edf537c227bf865e4e0730651e"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\rb-residual-full\\full-1\\photo-comparison-1\\dark-inclusion-helicon-b.png",
+      "bytes": 186747,
+      "sha256": "9084a40c390b0586c8edfc3196b7785731e8ecc5146d81a5ef6486e588ab75b2"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\rb-residual-full\\full-1\\photo-comparison-1\\dark-inclusion-board.png",
+      "bytes": 566566,
+      "sha256": "55bbfaa9ff1a2511d3b9c7ccf62aa295e84e0be57244073a7fc237f299d072ed"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\rb-residual-full\\full-1\\photo-comparison-1\\facet-core-boundary-baseline-zoom.png",
+      "bytes": 54045,
+      "sha256": "58ddc5aaebe9e878e597c7efc0fe6c36fd73f6cd2d4333da707395470675bcba"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\rb-residual-full\\full-1\\photo-comparison-1\\facet-core-boundary-candidate-zoom.png",
+      "bytes": 56097,
+      "sha256": "c6c98d67ad8068595f6c25ed47d019cc3eb6098d906b6e4ea98015e7b49fde05"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\rb-residual-full\\full-1\\photo-comparison-1\\facet-core-boundary-helicon-b-zoom.png",
+      "bytes": 53901,
+      "sha256": "652940786d343244200b226212c2413c623d81d217eb2bdfba5f850ba0c025ba"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\rb-residual-full\\full-1\\photo-comparison-1\\facet-core-boundary-board.png",
+      "bytes": 164687,
+      "sha256": "fa2f052ed50e7110e97f076c5a87cfd6157f7fda10c73916e4a55566cd4f54ba"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\rb-residual-full\\full-1\\photo-comparison-1\\dark-core-boundary-baseline-zoom.png",
+      "bytes": 61147,
+      "sha256": "8a5292f268d7502a9b34c80df79985b6a05c300e4d8909c15c688e42903fbd07"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\rb-residual-full\\full-1\\photo-comparison-1\\dark-core-boundary-candidate-zoom.png",
+      "bytes": 63318,
+      "sha256": "644b06ac8d98e63a68649804949ff6e50ba4cf88cfdf7e8f113fc07d52178214"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\rb-residual-full\\full-1\\photo-comparison-1\\dark-core-boundary-helicon-b-zoom.png",
+      "bytes": 58625,
+      "sha256": "215649d2da9b961b7301c32caed21327c6230de9ccd956f6acd1b482fae3cec1"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\rb-residual-full\\full-1\\photo-comparison-1\\dark-core-boundary-board.png",
+      "bytes": 179996,
+      "sha256": "26b5a8c8cca70aaa4b5ef502b63f6d7c5618ab4629b29d46c61c70669003cdbf"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\rb-residual-full\\full-1\\photo-comparison-1\\competing-structure-baseline-zoom.png",
+      "bytes": 29307,
+      "sha256": "c260dc7afd0e92f4ba420445e0aba50fd305e21638d84d5e2d3cb59ad03707a1"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\rb-residual-full\\full-1\\photo-comparison-1\\competing-structure-candidate-zoom.png",
+      "bytes": 29917,
+      "sha256": "131b51cf7a8018dc1e63fdd126f64d1ff4b1dde32c7f3eb7016ff0accbc5d526"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\rb-residual-full\\full-1\\photo-comparison-1\\competing-structure-helicon-b-zoom.png",
+      "bytes": 30115,
+      "sha256": "330de629623e24cf6603273131ac0d468d45ceface72611a16f1b0810d49bcbb"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\rb-residual-full\\full-1\\photo-comparison-1\\competing-structure-board.png",
+      "bytes": 91301,
+      "sha256": "024b0ce149c027d8c7d432ef3cffbf90847967d897efa7a5684186de9efdb2eb"
+    }
+  ],
+  "display": "Full PNG and native crops: rounded RGB16 division by257, no tone/normalization. Centred zooms use3x nearest replication. OverviewJPEG is resized for orientation only. Helicon crops use mapped centres rounded to integer origins; native scale mismatch is retained.",
+  "scope": "Completed saved outputs only; no RAW, merge, registration fit, score or photographic admission. The failed generated screen remains failed; this is a separate observational pair."
+}

@@ -1,0 +1,33 @@
+{
+  "baseline": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\rb-residual-full\\full-1\\output\\baseline.tiff",
+    "sha256": "47ac86c8ddc8103fbac358f56c9a5371628ef3fb8f0122e54be69422c439bb3b",
+    "bytes": 191495352
+  },
+  "candidate": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\rb-residual-full\\full-1\\output\\candidate.tiff",
+    "sha256": "db9aaa2683fa2dfb4e98880e053bbaf982a84575f98aafbd3e1b6020db76ecf8",
+    "bytes": 191495352
+  },
+  "receipt": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\rb-residual-full\\full-1\\output\\receipt.json",
+    "sha256": "959542800c7937b94f67b21b56daeffe4e5668382bdb38ba5ea2458a69672aef",
+    "bytes": 416352
+  },
+  "shape": [
+    4612,
+    6920,
+    3
+  ],
+  "original_metadata_unchanged": true,
+  "map_unchanged": true,
+  "baseline_pixels_identical": true,
+  "reference": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\phase-packed-rgb\\full-1\\output\\baseline.tiff",
+    "sha256": "c0d8faca8a23f31a73b843fbc9aa9f55fda96b5fcce9d3540ebf6a2b4319bb21",
+    "bytes": 191495352
+  },
+  "sources_unchanged": true,
+  "photographic_promotion": false,
+  "scope": "One separately scoped observational photograph; generated admission remains false."
+}

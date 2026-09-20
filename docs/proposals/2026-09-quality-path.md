@@ -362,3 +362,26 @@ repeats both effects. Preserve rb-own-guide/results.md and independent review.
 No full render or default change is earned. The next design must control noisy
 R/B updates and make the delivered-green preservation contract explicit, without
 claiming that these generated focus offsets explain the photographic fans.
+
+The fixed guarded R/B residual now passes all actual-consumer image bars:
+flat RGB error stays within1.006 of canonical and the colour-detail gains
+survive against matched-noise green guidance. One diagnostic still fails:
+a single ISO400/N5 coarse-band crossing expands to20/1184 cells, exceeding
+the frozen1% mask-area bar. Keep photographic_replay_admitted=false and the
+uncalibrated F-null limitation. Independent review supports a separate,
+preregistered ISO100 complete vitamin-C observation after source35 cost and
+full-domain mechanical checks; see rb-residual-guard/results.md and
+rb-residual-full/observational-plan.md. No further threshold sweep. The next
+decision must come from the complete photograph, with complete before/after
+views and full-resolution masters shown to the owner for any claimed gain.
+
+The separately scoped guarded R/B complete photograph is now also rejected.
+It finishes70 sources in464.125s with exact historical baseline pixels, but
+independent full/native inspection finds stronger magenta/cyan highlight
+fringes and persistent extended branches, with no compensating visible detail
+gain. Background is essentially unchanged. See rb-residual-full/results.md
+and photographic-review.md. Preserve generated headroom as a narrow result;
+do not tune, optimize or extend this failed photographic operator. The next
+bounded step must check source evidence on the real focused cores and fan
+sources before another full implementation, using a common colour-vector
+reconstruction and explicit flat/detail destroyers if a new rule is justified.

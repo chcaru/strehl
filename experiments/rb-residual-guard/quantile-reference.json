@@ -1,0 +1,56 @@
+{
+  "scipy_version": "1.17.1",
+  "rows": [
+    {
+      "sources": 2,
+      "bands": 1,
+      "tail": 0.0001,
+      "quantile": 50.69445529015648,
+      "scipy_survival": 9.999999999998907e-05,
+      "half_quantile_survival": 0.0010083713269955186
+    },
+    {
+      "sources": 5,
+      "bands": 4,
+      "tail": 1e-05,
+      "quantile": 95.69792676129401,
+      "scipy_survival": 9.999999999954485e-06,
+      "half_quantile_survival": 0.00012237642195527792
+    },
+    {
+      "sources": 9,
+      "bands": 4,
+      "tail": 5.555555555555556e-06,
+      "quantile": 111.97862357387781,
+      "scipy_survival": 5.555555555591952e-06,
+      "half_quantile_survival": 7.042928636037911e-05
+    },
+    {
+      "sources": 16,
+      "bands": 7,
+      "tail": 1.7857142857142857e-06,
+      "quantile": 151.068365041692,
+      "scipy_survival": 1.7857142856625504e-06,
+      "half_quantile_survival": 2.39395424029783e-05
+    },
+    {
+      "sources": 70,
+      "bands": 7,
+      "tail": 4.081632653061225e-07,
+      "quantile": 221.6844284406637,
+      "scipy_survival": 4.0816326529746813e-07,
+      "half_quantile_survival": 5.7726805359195636e-06
+    },
+    {
+      "sources": 299,
+      "bands": 7,
+      "tail": 9.555661729574773e-08,
+      "quantile": 321.84026754602087,
+      "scipy_survival": 9.555661728555261e-08,
+      "half_quantile_survival": 1.4024582115652613e-06
+    }
+  ],
+  "script_sha256": "15d90746496cf02cee70ed1a21bf7c08a96c68e0452e90413c7fd303edba9539",
+  "primary_reference": "https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.f.html",
+  "scope": "Distribution arithmetic only; does not establish Gaussianity, independence, camera calibration or photographic quality."
+}

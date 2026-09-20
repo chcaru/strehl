@@ -1,0 +1,25 @@
+{
+  "icc_exact": true,
+  "independent_camera_rgb_oracle_exact": true,
+  "live_output_samples": 8541,
+  "mhc_camera_green_changed_pixels": 1423,
+  "missing_green_copy_wrong_samples": 4227,
+  "old_writer_identity_exact": true,
+  "original_generated_admission": false,
+  "quality_claim": false,
+  "samples": 8556,
+  "schema": 1,
+  "source_arrays_unchanged": true,
+  "threshold": 221.68442843945058,
+  "threshold_population": 70,
+  "writer": {
+    "camera_green_exact": true,
+    "final_srgb_green_held": false,
+    "native_dimensions": [
+      62,
+      46
+    ],
+    "path": "full-context MHC -> [candidateR,canonicalG,candidateB] -> unchanged Develop -> RGB16",
+    "second_demosaic": false
+  }
+}

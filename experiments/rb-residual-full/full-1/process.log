@@ -1,0 +1,2599 @@
+
+running 1 test
+test merge_cmd::rb_residual_full::full_stack::vitamin_c_observational_pair ...   GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+R/B residual guard source 0/69, 7.4s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+R/B residual guard source 1/69, 14.3s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+R/B residual guard source 2/69, 21.0s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+R/B residual guard source 3/69, 27.6s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+R/B residual guard source 4/69, 34.3s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+R/B residual guard source 5/69, 40.9s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+R/B residual guard source 6/69, 47.6s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+R/B residual guard source 7/69, 54.2s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+R/B residual guard source 8/69, 60.9s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+R/B residual guard source 9/69, 67.5s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+R/B residual guard source 10/69, 74.2s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+R/B residual guard source 11/69, 80.9s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+R/B residual guard source 12/69, 87.6s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+R/B residual guard source 13/69, 94.4s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+R/B residual guard source 14/69, 101.2s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+R/B residual guard source 15/69, 108.1s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+R/B residual guard source 16/69, 114.9s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+R/B residual guard source 17/69, 121.5s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+R/B residual guard source 18/69, 128.7s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+R/B residual guard source 19/69, 135.8s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+R/B residual guard source 20/69, 142.6s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+R/B residual guard source 21/69, 149.2s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+R/B residual guard source 22/69, 156.3s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+R/B residual guard source 23/69, 163.5s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+R/B residual guard source 24/69, 170.5s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+R/B residual guard source 25/69, 177.3s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+R/B residual guard source 26/69, 183.9s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+R/B residual guard source 27/69, 190.6s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+R/B residual guard source 28/69, 197.1s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+R/B residual guard source 29/69, 203.6s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+R/B residual guard source 30/69, 210.2s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+R/B residual guard source 31/69, 216.6s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+R/B residual guard source 32/69, 223.0s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+R/B residual guard source 33/69, 229.4s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+R/B residual guard source 34/69, 235.8s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+R/B residual guard source 35/69, 242.3s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+R/B residual guard source 36/69, 248.8s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+R/B residual guard source 37/69, 255.4s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+R/B residual guard source 38/69, 261.9s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+R/B residual guard source 39/69, 268.3s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+R/B residual guard source 40/69, 274.8s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+R/B residual guard source 41/69, 281.2s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+R/B residual guard source 42/69, 287.6s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+R/B residual guard source 43/69, 294.0s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+R/B residual guard source 44/69, 300.5s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+R/B residual guard source 45/69, 307.0s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+R/B residual guard source 46/69, 313.3s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+R/B residual guard source 47/69, 320.0s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+R/B residual guard source 48/69, 326.9s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+R/B residual guard source 49/69, 333.4s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+R/B residual guard source 50/69, 339.9s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+R/B residual guard source 51/69, 346.3s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+R/B residual guard source 52/69, 352.8s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+R/B residual guard source 53/69, 359.2s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+R/B residual guard source 54/69, 365.8s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+R/B residual guard source 55/69, 372.2s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+R/B residual guard source 56/69, 378.6s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+R/B residual guard source 57/69, 384.9s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+R/B residual guard source 58/69, 391.3s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+R/B residual guard source 59/69, 397.7s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+R/B residual guard source 60/69, 404.1s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+R/B residual guard source 61/69, 410.7s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+R/B residual guard source 62/69, 417.0s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+R/B residual guard source 63/69, 423.4s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+R/B residual guard source 64/69, 429.8s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+R/B residual guard source 65/69, 436.1s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+R/B residual guard source 66/69, 442.5s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+R/B residual guard source 67/69, 449.0s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+R/B residual guard source 68/69, 455.5s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+R/B residual guard source 69/69, 462.0s
+R/B residual guard sources complete; finishing baseline, 462.1s
+R/B residual guard baseline written; reconstructing candidate, 462.9s
+R/B residual guard candidate reconstructed; writing, 463.2s
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 226 filtered out; finished in 463.94s
+

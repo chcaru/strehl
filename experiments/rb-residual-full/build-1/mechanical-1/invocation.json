@@ -1,0 +1,18 @@
+{
+  "command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\rb-residual-full\\build-1\\cli-tests.exe",
+    "merge_cmd::rb_residual_full::independent_controls::",
+    "--nocapture",
+    "--test-threads=1"
+  ],
+  "environment": {
+    "RAYON_NUM_THREADS": "8",
+    "STREHL_RB_RESIDUAL_GUARD_OUT": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\rb-residual-full\\build-1\\mechanical-1\\output"
+  },
+  "removed_environment": [],
+  "runner": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\full-context-placement\\run.py",
+    "sha256": "17451d237bf256004ca8853ef4c2a9e1c582012d43ad33fd687606e68a5fb76f",
+    "bytes": 7707
+  }
+}

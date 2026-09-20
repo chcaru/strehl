@@ -1,0 +1,17 @@
+{
+  "decision": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\rb-residual-full\\cost-1\\root-cost-decision.json",
+    "sha256": "283ef15390b42d5296e042b86868ed127e83a3a62546c26b3239827a1fe8466e",
+    "bytes": 1552
+  },
+  "measured": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\rb-residual-full\\cost-1\\output\\cost.json",
+    "sha256": "e53202b411e7da9b70567d4dddf3a11a15a1ea0b84281c2a425aea373453b439",
+    "bytes": 10825
+  },
+  "process": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\rb-residual-full\\cost-1\\process.json",
+    "sha256": "fd4794a6a97bda6d4779c4683ef192d956011d245873b01a17b8328aeee99b50",
+    "bytes": 2703
+  }
+}

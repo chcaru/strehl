@@ -1,0 +1,35 @@
+{
+  "observational_full_feasible": true,
+  "measured_cost": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\rb-residual-full\\cost-1\\output\\cost.json",
+    "bytes": 10825,
+    "sha256": "e53202b411e7da9b70567d4dddf3a11a15a1ea0b84281c2a425aea373453b439"
+  },
+  "process": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\rb-residual-full\\cost-1\\process.json",
+    "bytes": 2703,
+    "sha256": "fd4794a6a97bda6d4779c4683ef192d956011d245873b01a17b8328aeee99b50"
+  },
+  "prior_plan": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\rb-residual-full\\observational-plan.md",
+    "bytes": 3870,
+    "sha256": "15a68d7e4867ccf21dbd33e07a4bf43a7973c7f3cd2b949fd1c98cc0fe279c41"
+  },
+  "helper": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\rb-residual-full\\cost-decision.py",
+    "bytes": 2456,
+    "sha256": "fc84eab652b06c2f61969e6ec2b9639066ec51025d88a6be7962440e6c6ac286"
+  },
+  "source_phase_seconds": 7.5261979,
+  "finish_seconds": 1.8897303,
+  "cost_peak_job_bytes": 5066752000,
+  "estimated_full_wall_seconds": 648.7235833,
+  "maximum_estimate_seconds": 1500,
+  "maximum_cost_peak_bytes": 12884901888,
+  "full_wall_cap_seconds": 1800,
+  "full_cpu_cap_seconds": 3600,
+  "full_committed_cap_bytes": 17179869184,
+  "generated_quality_admission": false,
+  "photographic_promotion": false,
+  "scope": "One measured source and a prior feasibility extrapolation; not a speed benchmark."
+}
