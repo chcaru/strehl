@@ -99,6 +99,10 @@ fn stamp(path: &Path) -> Result<(u64, SystemTime)> {
     Ok((m.len(), m.modified()?))
 }
 struct OneFrame<'a> { frame: &'a Frame, index: usize }
+
+mod attribution {
+    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/donor-consistency/attribution.rs"));
+}
 impl PyramidFrameSource for OneFrame<'_> {
     fn len(&self) -> usize { 70 }
     fn decode(&self, index: usize) -> Result<Frame> {
@@ -161,6 +165,7 @@ fn vitamin_c_complete_triplet() -> Result<()> {
     let parent = config.out_dir.parent().context("output parent")?.canonicalize()?;
     ensure!(parent.starts_with(workspace.join("experiments").canonicalize()?),
         "outputs must be below workspace experiments");
+    let mut attribution = attribution::Observer::from_env(&workspace, &config.out_dir)?;
     let first = strehl_raw::decode(&paths[0])?;
     let levels = first.levels;
     let wb = first.wb_coeffs;
@@ -285,12 +290,19 @@ fn vitamin_c_complete_triplet() -> Result<()> {
     let candidate_plane_hashes=candidate.iter().map(|p|field_hash(p)).collect::<Vec<_>>();
     let candidate_path=config.out_dir.join("candidate.tiff");
     pool.install(||write_planes(&candidate_path,&candidate,crop,levels,wb,&dev))?;
+    if let Some(observer) = attribution.as_mut() {
+        pool.install(||observer.record("candidate",&total,&oracle,&sizes,&candidate))?;
+    }
     drop(candidate);drop(oracle);
     let late_image=pool.install(||late.finish(&total,&mut Workspace::new(&sizes)));
     let late_plane_hashes=late_image.iter().map(|p|field_hash(p)).collect::<Vec<_>>();
     let late_path=config.out_dir.join("late.tiff");
     pool.install(||write_planes(&late_path,&late_image,crop,levels,wb,&dev))?;
+    if let Some(observer) = attribution.as_mut() {
+        pool.install(||observer.record("late",&total,&late,&sizes,&late_image))?;
+    }
     drop(late_image);drop(late);drop(total);
+    if let Some(observer) = attribution { observer.finish(&sizes)?; }
     for (i,path) in paths.iter().enumerate(){ensure!(before[i]==stamp(path)?,"original metadata changed after triplet");}
     ensure!(file_hash(&config.warp_map)?==EXPECTED_MAP,"held warp map changed");
     write_json(&config.out_dir.join("receipt.json"),&json!({"schema":1,"mode":MODE,"frames":70,

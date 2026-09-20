@@ -1,0 +1,1494 @@
+{
+  "arms": [
+    {
+      "actual_delivered_windows_bit_exact": true,
+      "arm": "candidate",
+      "artifacts": [
+        {
+          "field": "baseline-ac",
+          "level": 0,
+          "path": "candidate/facet-edges-baseline-ac-0.f32",
+          "region": "facet-edges",
+          "sha256": "dcdf53b261ff7c16d8ed1d6c1f6c4d36328a8ce65177a2c060432a7fd23e718e",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "baseline-ac",
+          "level": 0,
+          "path": "candidate/dark-inclusion-baseline-ac-0.f32",
+          "region": "dark-inclusion",
+          "sha256": "706596834b5f265bc658e027f58614bf27e447350f1dd019e23ab5572c0a22df",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "retained-ac",
+          "level": 0,
+          "path": "candidate/facet-edges-retained-ac-0.f32",
+          "region": "facet-edges",
+          "sha256": "e87c04aadb707672cf226dad20611106e362898102fbc903c5d5ea0fc33fb770",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "retained-ac",
+          "level": 0,
+          "path": "candidate/dark-inclusion-retained-ac-0.f32",
+          "region": "dark-inclusion",
+          "sha256": "506f905e7cfcd595f76c23e687cda0e522cbcac31aa9ba726dc726f42a8cee6e",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "donor-ac",
+          "level": 0,
+          "path": "candidate/facet-edges-donor-ac-0.f32",
+          "region": "facet-edges",
+          "sha256": "c6d2294e19c3723082fd53d9fead3b4b3e28e5826512cf50d55d0747c27c290d",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "donor-ac",
+          "level": 0,
+          "path": "candidate/dark-inclusion-donor-ac-0.f32",
+          "region": "dark-inclusion",
+          "sha256": "46bd6b57cc63e37ec540db052758948fbc6a588416bccb34359d02f75cccf4f8",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "baseline-ac",
+          "level": 1,
+          "path": "candidate/facet-edges-baseline-ac-1.f32",
+          "region": "facet-edges",
+          "sha256": "e369037c8bf5fc8f24cc6b0eefbb1fb8d07e37fa6bad6a5b40b60962e8fe0a0a",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "baseline-ac",
+          "level": 1,
+          "path": "candidate/dark-inclusion-baseline-ac-1.f32",
+          "region": "dark-inclusion",
+          "sha256": "1e6e55159334d14b20aca7d90db57cf018acf611f8eea46e4a506061b6fe596c",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "retained-ac",
+          "level": 1,
+          "path": "candidate/facet-edges-retained-ac-1.f32",
+          "region": "facet-edges",
+          "sha256": "d0a0cc3ebe41c70265980e988108dbfbbf0ddca4dc372857d57e48f30aaa7159",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "retained-ac",
+          "level": 1,
+          "path": "candidate/dark-inclusion-retained-ac-1.f32",
+          "region": "dark-inclusion",
+          "sha256": "04170c0725ca25c3fb5bc536f4413681ff6d6235eb7171b6aa592094549eabef",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "donor-ac",
+          "level": 1,
+          "path": "candidate/facet-edges-donor-ac-1.f32",
+          "region": "facet-edges",
+          "sha256": "17258f6647238e9e84131e9e306bde934723e80716a81d8fac3c235c66b957b5",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "donor-ac",
+          "level": 1,
+          "path": "candidate/dark-inclusion-donor-ac-1.f32",
+          "region": "dark-inclusion",
+          "sha256": "064fb76fd0766c5d32f26d1b65f91a1e000fe0bd6c10f5276ea6b655377acd64",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "baseline-ac",
+          "level": 2,
+          "path": "candidate/facet-edges-baseline-ac-2.f32",
+          "region": "facet-edges",
+          "sha256": "bea7582ab600460a84eada02bb7758186ec93bbb5450bc32529bffc2fca6cf74",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "baseline-ac",
+          "level": 2,
+          "path": "candidate/dark-inclusion-baseline-ac-2.f32",
+          "region": "dark-inclusion",
+          "sha256": "d946b4c89feeb7d78e706101621e5941c531060de025ba858ce7653f1faec96d",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "retained-ac",
+          "level": 2,
+          "path": "candidate/facet-edges-retained-ac-2.f32",
+          "region": "facet-edges",
+          "sha256": "6293245fb22aa2b71019630ed2e6dbd69804ef141a7574602db56db09ab49d0c",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "retained-ac",
+          "level": 2,
+          "path": "candidate/dark-inclusion-retained-ac-2.f32",
+          "region": "dark-inclusion",
+          "sha256": "07eb19c9229fc3c37fe35158520a32e271448055706e8a0a9d33e461d1caf5cc",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "donor-ac",
+          "level": 2,
+          "path": "candidate/facet-edges-donor-ac-2.f32",
+          "region": "facet-edges",
+          "sha256": "0d1eb6ef955f4975dd052156faf037c29421a708a36aeae22b3e5c712d991d0e",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "donor-ac",
+          "level": 2,
+          "path": "candidate/dark-inclusion-donor-ac-2.f32",
+          "region": "dark-inclusion",
+          "sha256": "7e8e70860828b9a70a3da2a45156c4dc5f4f2eaaab09c75ec8ea96bd1e69c675",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "baseline-ac",
+          "level": 3,
+          "path": "candidate/facet-edges-baseline-ac-3.f32",
+          "region": "facet-edges",
+          "sha256": "eff3514281220eb90c9e7324e959065a3ef7fc9b8056c2a666f1248661db11d9",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "baseline-ac",
+          "level": 3,
+          "path": "candidate/dark-inclusion-baseline-ac-3.f32",
+          "region": "dark-inclusion",
+          "sha256": "292a2e5924f2804f322285859ea784c608e58565a30a2df29774a6758451ea2b",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "retained-ac",
+          "level": 3,
+          "path": "candidate/facet-edges-retained-ac-3.f32",
+          "region": "facet-edges",
+          "sha256": "081631494c7ee0d391ee6d97730ad380818aed87d1e6ac075b892c494303b940",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "retained-ac",
+          "level": 3,
+          "path": "candidate/dark-inclusion-retained-ac-3.f32",
+          "region": "dark-inclusion",
+          "sha256": "7560affee44a8d097c4adf46473456456e8a47a3b44a67d015e8b7018bfc369d",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "donor-ac",
+          "level": 3,
+          "path": "candidate/facet-edges-donor-ac-3.f32",
+          "region": "facet-edges",
+          "sha256": "74408174c1ed5077b449bf836078dfbcbd908ac5d4904ee78cbc69c8bb775b94",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "donor-ac",
+          "level": 3,
+          "path": "candidate/dark-inclusion-donor-ac-3.f32",
+          "region": "dark-inclusion",
+          "sha256": "3ef50ba5e3e488d6a42878079d6e97851011d421c6a88d3c2638bfd825ea7a82",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "baseline-ac",
+          "level": 4,
+          "path": "candidate/facet-edges-baseline-ac-4.f32",
+          "region": "facet-edges",
+          "sha256": "55e74cb9becf8e18c94497478311191c30145f06302e5bdddebea45ca17b9b44",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "baseline-ac",
+          "level": 4,
+          "path": "candidate/dark-inclusion-baseline-ac-4.f32",
+          "region": "dark-inclusion",
+          "sha256": "5c4d2bf636dc1ce9439ff6d0f1ffcd3a124433ddeac93e6d5f65f18c519719dc",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "retained-ac",
+          "level": 4,
+          "path": "candidate/facet-edges-retained-ac-4.f32",
+          "region": "facet-edges",
+          "sha256": "26a252c68c1591e1d1d2193f3f4c3f4b87d2537d6d9eec982bc548364f173148",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "retained-ac",
+          "level": 4,
+          "path": "candidate/dark-inclusion-retained-ac-4.f32",
+          "region": "dark-inclusion",
+          "sha256": "0bea9d51b739f96e561bc9a7588ab411f29cfb80ec12c9761185b078dd0e6d27",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "donor-ac",
+          "level": 4,
+          "path": "candidate/facet-edges-donor-ac-4.f32",
+          "region": "facet-edges",
+          "sha256": "6ad95ecca1f7a28b891ed776b1302245fe55feb1318b813c58345f209b33852f",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "donor-ac",
+          "level": 4,
+          "path": "candidate/dark-inclusion-donor-ac-4.f32",
+          "region": "dark-inclusion",
+          "sha256": "dab49d5d6be5967fb75e0907a7f8c806545133aaa360e77442daf39a64ccee3c",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "baseline-ac",
+          "level": 5,
+          "path": "candidate/facet-edges-baseline-ac-5.f32",
+          "region": "facet-edges",
+          "sha256": "f133d97d5cee789406483a48cec36a68749d3a06be42ff43556224ba52ba846c",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "baseline-ac",
+          "level": 5,
+          "path": "candidate/dark-inclusion-baseline-ac-5.f32",
+          "region": "dark-inclusion",
+          "sha256": "a7700eaa933530224da19d45dab9a0d5bc92b7ce0af6d070aa4708736eb44734",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "retained-ac",
+          "level": 5,
+          "path": "candidate/facet-edges-retained-ac-5.f32",
+          "region": "facet-edges",
+          "sha256": "030c18c4985f98371feecc88166025aa1b7cc2d9ad098faaf7ede328cc995f71",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "retained-ac",
+          "level": 5,
+          "path": "candidate/dark-inclusion-retained-ac-5.f32",
+          "region": "dark-inclusion",
+          "sha256": "0afb69b1cc829821d60be6f4eb9cf01b6b67acbfbfcba37896a553a44344f302",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "donor-ac",
+          "level": 5,
+          "path": "candidate/facet-edges-donor-ac-5.f32",
+          "region": "facet-edges",
+          "sha256": "999d2de751da7172c374a1ced7a3520ebbcd42f3a34249b0c73023e9ddcae885",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "donor-ac",
+          "level": 5,
+          "path": "candidate/dark-inclusion-donor-ac-5.f32",
+          "region": "dark-inclusion",
+          "sha256": "b4c6820ea94f7b66098cb49eeaf0bb39d73e4862544f286bd66f1cfe5546c1ee",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "baseline-ac",
+          "level": 6,
+          "path": "candidate/facet-edges-baseline-ac-6.f32",
+          "region": "facet-edges",
+          "sha256": "dc6f3e09180f73f9d4ec7d645edac58e58e0432a05045ebe6a430240ad8b2983",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "baseline-ac",
+          "level": 6,
+          "path": "candidate/dark-inclusion-baseline-ac-6.f32",
+          "region": "dark-inclusion",
+          "sha256": "1cb940eb874c3e089ee2f3e9a47ec22cefb86eff293016520b2e895f6fe4e78e",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "retained-ac",
+          "level": 6,
+          "path": "candidate/facet-edges-retained-ac-6.f32",
+          "region": "facet-edges",
+          "sha256": "d2e395e22f23bf6f15d7fde2a551c6f3ddcf8ea2a23af430aad9c80cc003b3b2",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "retained-ac",
+          "level": 6,
+          "path": "candidate/dark-inclusion-retained-ac-6.f32",
+          "region": "dark-inclusion",
+          "sha256": "ffc4b50d680de74fd294eda66ef6f888ad2cc25616dcec3e0c1d0e4fb7359268",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "donor-ac",
+          "level": 6,
+          "path": "candidate/facet-edges-donor-ac-6.f32",
+          "region": "facet-edges",
+          "sha256": "416a29a96b59faec8a2929724c7d81512bc59d026e1c4ca9316304455a9709cb",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "donor-ac",
+          "level": 6,
+          "path": "candidate/dark-inclusion-donor-ac-6.f32",
+          "region": "dark-inclusion",
+          "sha256": "d42e5ab4953c9692028a0a7e42ebbf39c1b7984486f0757ec172703f03047c43",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "base",
+          "level": null,
+          "path": "candidate/facet-edges-base.f32",
+          "region": "facet-edges",
+          "sha256": "67fd2b8aaffffa6e294a297084c2595139a241a99fd93661bd3466981018730b",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "base",
+          "level": null,
+          "path": "candidate/dark-inclusion-base.f32",
+          "region": "dark-inclusion",
+          "sha256": "38a4c62b6a969c2533a8930468b63d1c94ce7860558cf5726bf6ee389752385f",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "baseline-pre-hull",
+          "level": null,
+          "path": "candidate/facet-edges-baseline-pre-hull.f32",
+          "region": "facet-edges",
+          "sha256": "12ec345b534a717c8689bd4a4afe2ba66b026430a4f7e03bcd1dd7a107484c30",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "baseline-pre-hull",
+          "level": null,
+          "path": "candidate/dark-inclusion-baseline-pre-hull.f32",
+          "region": "dark-inclusion",
+          "sha256": "15f487642856e273f286df9b5d20049c5445012c8b20e2c67241de69d4a96501",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "baseline-post-hull",
+          "level": null,
+          "path": "candidate/facet-edges-baseline-post-hull.f32",
+          "region": "facet-edges",
+          "sha256": "c5a634a1109e3a832072caf55bfa1a7b7c13b61e0fb272603ba6feb2fff61c7a",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "baseline-post-hull",
+          "level": null,
+          "path": "candidate/dark-inclusion-baseline-post-hull.f32",
+          "region": "dark-inclusion",
+          "sha256": "13a1fb01689ba253783d787346ff77d9f207f0f2278bb962a513b675be5e0196",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "baseline-hull-correction",
+          "level": null,
+          "path": "candidate/facet-edges-baseline-hull-correction.f32",
+          "region": "facet-edges",
+          "sha256": "80267479064c8c8d8a316b6e67af12d03bbd761e9b74c43a600a899222924a6f",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "baseline-hull-correction",
+          "level": null,
+          "path": "candidate/dark-inclusion-baseline-hull-correction.f32",
+          "region": "dark-inclusion",
+          "sha256": "09a31bf9e63e480ad7471a8f9af3ee499b49c0a7e2071f11243dff6d95658087",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "pre-hull",
+          "level": null,
+          "path": "candidate/facet-edges-pre-hull.f32",
+          "region": "facet-edges",
+          "sha256": "dde836b8afaafb137ddc775eb6cacf04496d976fb717dd6f88a8dff2e56df376",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "pre-hull",
+          "level": null,
+          "path": "candidate/dark-inclusion-pre-hull.f32",
+          "region": "dark-inclusion",
+          "sha256": "69d2f0f091b0414dddc957743bfaed561c84b52bd4a6fcc3d95abf95f23a865a",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "post-hull",
+          "level": null,
+          "path": "candidate/facet-edges-post-hull.f32",
+          "region": "facet-edges",
+          "sha256": "e24d1e501b56b17a44ab6be5787570265d2680dca8bc167b8d8019011a16e8f2",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "post-hull",
+          "level": null,
+          "path": "candidate/dark-inclusion-post-hull.f32",
+          "region": "dark-inclusion",
+          "sha256": "da066683d34496a8f14ecc90cd03c98d2fda47618c52fd42f10fad2d52a3b757",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "hull-correction",
+          "level": null,
+          "path": "candidate/facet-edges-hull-correction.f32",
+          "region": "facet-edges",
+          "sha256": "5304e40fdc0d1dd78d29ac24e59366c2e57f9b53c39c4ea681227a3a1f7a95e7",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "hull-correction",
+          "level": null,
+          "path": "candidate/dark-inclusion-hull-correction.f32",
+          "region": "dark-inclusion",
+          "sha256": "4c3c4516080f7c593a965f70c18473402e9474a588c1c81c30be186fdcc3234d",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        }
+      ],
+      "summary": {
+        "baseline_hull_sum_max_abs": [
+          0.0001220703125,
+          0.0001220703125,
+          0.0001220703125,
+          0.0001220703125
+        ],
+        "baseline_sum_max_abs": [
+          0.00408935546875,
+          0.00396728515625,
+          0.00434112548828125,
+          0.0025634765625
+        ],
+        "mixed_hull_sum_max_abs": [
+          0.0001220703125,
+          0.0001220703125,
+          0.0001220703125,
+          0.0001220703125
+        ],
+        "mixed_sum_max_abs": [
+          0.00274658203125,
+          0.00396728515625,
+          0.00434112548828125,
+          0.0030311942100524902
+        ]
+      }
+    },
+    {
+      "actual_delivered_windows_bit_exact": true,
+      "arm": "late",
+      "artifacts": [
+        {
+          "field": "baseline-ac",
+          "level": 0,
+          "path": "late/facet-edges-baseline-ac-0.f32",
+          "region": "facet-edges",
+          "sha256": "dcdf53b261ff7c16d8ed1d6c1f6c4d36328a8ce65177a2c060432a7fd23e718e",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "baseline-ac",
+          "level": 0,
+          "path": "late/dark-inclusion-baseline-ac-0.f32",
+          "region": "dark-inclusion",
+          "sha256": "706596834b5f265bc658e027f58614bf27e447350f1dd019e23ab5572c0a22df",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "retained-ac",
+          "level": 0,
+          "path": "late/facet-edges-retained-ac-0.f32",
+          "region": "facet-edges",
+          "sha256": "e87c04aadb707672cf226dad20611106e362898102fbc903c5d5ea0fc33fb770",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "retained-ac",
+          "level": 0,
+          "path": "late/dark-inclusion-retained-ac-0.f32",
+          "region": "dark-inclusion",
+          "sha256": "506f905e7cfcd595f76c23e687cda0e522cbcac31aa9ba726dc726f42a8cee6e",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "donor-ac",
+          "level": 0,
+          "path": "late/facet-edges-donor-ac-0.f32",
+          "region": "facet-edges",
+          "sha256": "1a75f5a03444ec1e9653345a16d798d5c4b1aa6a123442dbe3931be932903b61",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "donor-ac",
+          "level": 0,
+          "path": "late/dark-inclusion-donor-ac-0.f32",
+          "region": "dark-inclusion",
+          "sha256": "4aaf8d9904d30b478f64afec927368b164be36c59d831e899f9ca76bc88b42e8",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "baseline-ac",
+          "level": 1,
+          "path": "late/facet-edges-baseline-ac-1.f32",
+          "region": "facet-edges",
+          "sha256": "e369037c8bf5fc8f24cc6b0eefbb1fb8d07e37fa6bad6a5b40b60962e8fe0a0a",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "baseline-ac",
+          "level": 1,
+          "path": "late/dark-inclusion-baseline-ac-1.f32",
+          "region": "dark-inclusion",
+          "sha256": "1e6e55159334d14b20aca7d90db57cf018acf611f8eea46e4a506061b6fe596c",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "retained-ac",
+          "level": 1,
+          "path": "late/facet-edges-retained-ac-1.f32",
+          "region": "facet-edges",
+          "sha256": "d0a0cc3ebe41c70265980e988108dbfbbf0ddca4dc372857d57e48f30aaa7159",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "retained-ac",
+          "level": 1,
+          "path": "late/dark-inclusion-retained-ac-1.f32",
+          "region": "dark-inclusion",
+          "sha256": "04170c0725ca25c3fb5bc536f4413681ff6d6235eb7171b6aa592094549eabef",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "donor-ac",
+          "level": 1,
+          "path": "late/facet-edges-donor-ac-1.f32",
+          "region": "facet-edges",
+          "sha256": "04a843360b791cfdbcf37846f6831299b7d052db11218106db78b852dce10b59",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "donor-ac",
+          "level": 1,
+          "path": "late/dark-inclusion-donor-ac-1.f32",
+          "region": "dark-inclusion",
+          "sha256": "a8e223dbf9c97cfe0ac42324e67e8376521e2ef2d3b25100dd7a0cdd218fe20f",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "baseline-ac",
+          "level": 2,
+          "path": "late/facet-edges-baseline-ac-2.f32",
+          "region": "facet-edges",
+          "sha256": "bea7582ab600460a84eada02bb7758186ec93bbb5450bc32529bffc2fca6cf74",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "baseline-ac",
+          "level": 2,
+          "path": "late/dark-inclusion-baseline-ac-2.f32",
+          "region": "dark-inclusion",
+          "sha256": "d946b4c89feeb7d78e706101621e5941c531060de025ba858ce7653f1faec96d",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "retained-ac",
+          "level": 2,
+          "path": "late/facet-edges-retained-ac-2.f32",
+          "region": "facet-edges",
+          "sha256": "6293245fb22aa2b71019630ed2e6dbd69804ef141a7574602db56db09ab49d0c",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "retained-ac",
+          "level": 2,
+          "path": "late/dark-inclusion-retained-ac-2.f32",
+          "region": "dark-inclusion",
+          "sha256": "07eb19c9229fc3c37fe35158520a32e271448055706e8a0a9d33e461d1caf5cc",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "donor-ac",
+          "level": 2,
+          "path": "late/facet-edges-donor-ac-2.f32",
+          "region": "facet-edges",
+          "sha256": "ad2d4efed7e61f57b849890fe7e2aed465c75cf02c9045dfa1e602ff84bca73a",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "donor-ac",
+          "level": 2,
+          "path": "late/dark-inclusion-donor-ac-2.f32",
+          "region": "dark-inclusion",
+          "sha256": "01b62a34838d3d3cb2e175c3388f327daba364846edb5b1ec0e49147d2691fe8",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "baseline-ac",
+          "level": 3,
+          "path": "late/facet-edges-baseline-ac-3.f32",
+          "region": "facet-edges",
+          "sha256": "eff3514281220eb90c9e7324e959065a3ef7fc9b8056c2a666f1248661db11d9",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "baseline-ac",
+          "level": 3,
+          "path": "late/dark-inclusion-baseline-ac-3.f32",
+          "region": "dark-inclusion",
+          "sha256": "292a2e5924f2804f322285859ea784c608e58565a30a2df29774a6758451ea2b",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "retained-ac",
+          "level": 3,
+          "path": "late/facet-edges-retained-ac-3.f32",
+          "region": "facet-edges",
+          "sha256": "081631494c7ee0d391ee6d97730ad380818aed87d1e6ac075b892c494303b940",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "retained-ac",
+          "level": 3,
+          "path": "late/dark-inclusion-retained-ac-3.f32",
+          "region": "dark-inclusion",
+          "sha256": "7560affee44a8d097c4adf46473456456e8a47a3b44a67d015e8b7018bfc369d",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "donor-ac",
+          "level": 3,
+          "path": "late/facet-edges-donor-ac-3.f32",
+          "region": "facet-edges",
+          "sha256": "a70b609e543aeee33e6a189ff9456be23e3f78257d0667204d33a19e3e3f9305",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "donor-ac",
+          "level": 3,
+          "path": "late/dark-inclusion-donor-ac-3.f32",
+          "region": "dark-inclusion",
+          "sha256": "252df4c8161b0bc87891882a8b0a5de26ffe295051716ada40a32bd5269a9db3",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "baseline-ac",
+          "level": 4,
+          "path": "late/facet-edges-baseline-ac-4.f32",
+          "region": "facet-edges",
+          "sha256": "55e74cb9becf8e18c94497478311191c30145f06302e5bdddebea45ca17b9b44",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "baseline-ac",
+          "level": 4,
+          "path": "late/dark-inclusion-baseline-ac-4.f32",
+          "region": "dark-inclusion",
+          "sha256": "5c4d2bf636dc1ce9439ff6d0f1ffcd3a124433ddeac93e6d5f65f18c519719dc",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "retained-ac",
+          "level": 4,
+          "path": "late/facet-edges-retained-ac-4.f32",
+          "region": "facet-edges",
+          "sha256": "26a252c68c1591e1d1d2193f3f4c3f4b87d2537d6d9eec982bc548364f173148",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "retained-ac",
+          "level": 4,
+          "path": "late/dark-inclusion-retained-ac-4.f32",
+          "region": "dark-inclusion",
+          "sha256": "0bea9d51b739f96e561bc9a7588ab411f29cfb80ec12c9761185b078dd0e6d27",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "donor-ac",
+          "level": 4,
+          "path": "late/facet-edges-donor-ac-4.f32",
+          "region": "facet-edges",
+          "sha256": "23fd37792191a6402fe73414faf6fc0005243159bdac64531dcbd3650c3f7d19",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "donor-ac",
+          "level": 4,
+          "path": "late/dark-inclusion-donor-ac-4.f32",
+          "region": "dark-inclusion",
+          "sha256": "76e876a64675b32709cf82fd08984681eff8f5c4b971cdeaced191c87fd0b1e7",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "baseline-ac",
+          "level": 5,
+          "path": "late/facet-edges-baseline-ac-5.f32",
+          "region": "facet-edges",
+          "sha256": "f133d97d5cee789406483a48cec36a68749d3a06be42ff43556224ba52ba846c",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "baseline-ac",
+          "level": 5,
+          "path": "late/dark-inclusion-baseline-ac-5.f32",
+          "region": "dark-inclusion",
+          "sha256": "a7700eaa933530224da19d45dab9a0d5bc92b7ce0af6d070aa4708736eb44734",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "retained-ac",
+          "level": 5,
+          "path": "late/facet-edges-retained-ac-5.f32",
+          "region": "facet-edges",
+          "sha256": "030c18c4985f98371feecc88166025aa1b7cc2d9ad098faaf7ede328cc995f71",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "retained-ac",
+          "level": 5,
+          "path": "late/dark-inclusion-retained-ac-5.f32",
+          "region": "dark-inclusion",
+          "sha256": "0afb69b1cc829821d60be6f4eb9cf01b6b67acbfbfcba37896a553a44344f302",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "donor-ac",
+          "level": 5,
+          "path": "late/facet-edges-donor-ac-5.f32",
+          "region": "facet-edges",
+          "sha256": "9c5cb724f1ebd94ecec0edd76e77b8ee02140fe5fe1aaecc751d2f0fbed560de",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "donor-ac",
+          "level": 5,
+          "path": "late/dark-inclusion-donor-ac-5.f32",
+          "region": "dark-inclusion",
+          "sha256": "f35b2ba5dda1212cad5c70415e6aee82938b68d53c9407dbaf14a8b364494c7f",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "baseline-ac",
+          "level": 6,
+          "path": "late/facet-edges-baseline-ac-6.f32",
+          "region": "facet-edges",
+          "sha256": "dc6f3e09180f73f9d4ec7d645edac58e58e0432a05045ebe6a430240ad8b2983",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "baseline-ac",
+          "level": 6,
+          "path": "late/dark-inclusion-baseline-ac-6.f32",
+          "region": "dark-inclusion",
+          "sha256": "1cb940eb874c3e089ee2f3e9a47ec22cefb86eff293016520b2e895f6fe4e78e",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "retained-ac",
+          "level": 6,
+          "path": "late/facet-edges-retained-ac-6.f32",
+          "region": "facet-edges",
+          "sha256": "d2e395e22f23bf6f15d7fde2a551c6f3ddcf8ea2a23af430aad9c80cc003b3b2",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "retained-ac",
+          "level": 6,
+          "path": "late/dark-inclusion-retained-ac-6.f32",
+          "region": "dark-inclusion",
+          "sha256": "ffc4b50d680de74fd294eda66ef6f888ad2cc25616dcec3e0c1d0e4fb7359268",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "donor-ac",
+          "level": 6,
+          "path": "late/facet-edges-donor-ac-6.f32",
+          "region": "facet-edges",
+          "sha256": "093745834f8f92a885b30b352bc97af15a7bd12245a6c28b23399788cbef651b",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "donor-ac",
+          "level": 6,
+          "path": "late/dark-inclusion-donor-ac-6.f32",
+          "region": "dark-inclusion",
+          "sha256": "d409c37938b610b0a8c1ed71cb6e3bca14033f49d937f96a31f2c3ce7858bbc5",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "base",
+          "level": null,
+          "path": "late/facet-edges-base.f32",
+          "region": "facet-edges",
+          "sha256": "67fd2b8aaffffa6e294a297084c2595139a241a99fd93661bd3466981018730b",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "base",
+          "level": null,
+          "path": "late/dark-inclusion-base.f32",
+          "region": "dark-inclusion",
+          "sha256": "38a4c62b6a969c2533a8930468b63d1c94ce7860558cf5726bf6ee389752385f",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "baseline-pre-hull",
+          "level": null,
+          "path": "late/facet-edges-baseline-pre-hull.f32",
+          "region": "facet-edges",
+          "sha256": "12ec345b534a717c8689bd4a4afe2ba66b026430a4f7e03bcd1dd7a107484c30",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "baseline-pre-hull",
+          "level": null,
+          "path": "late/dark-inclusion-baseline-pre-hull.f32",
+          "region": "dark-inclusion",
+          "sha256": "15f487642856e273f286df9b5d20049c5445012c8b20e2c67241de69d4a96501",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "baseline-post-hull",
+          "level": null,
+          "path": "late/facet-edges-baseline-post-hull.f32",
+          "region": "facet-edges",
+          "sha256": "c5a634a1109e3a832072caf55bfa1a7b7c13b61e0fb272603ba6feb2fff61c7a",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "baseline-post-hull",
+          "level": null,
+          "path": "late/dark-inclusion-baseline-post-hull.f32",
+          "region": "dark-inclusion",
+          "sha256": "13a1fb01689ba253783d787346ff77d9f207f0f2278bb962a513b675be5e0196",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "baseline-hull-correction",
+          "level": null,
+          "path": "late/facet-edges-baseline-hull-correction.f32",
+          "region": "facet-edges",
+          "sha256": "80267479064c8c8d8a316b6e67af12d03bbd761e9b74c43a600a899222924a6f",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "baseline-hull-correction",
+          "level": null,
+          "path": "late/dark-inclusion-baseline-hull-correction.f32",
+          "region": "dark-inclusion",
+          "sha256": "09a31bf9e63e480ad7471a8f9af3ee499b49c0a7e2071f11243dff6d95658087",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "pre-hull",
+          "level": null,
+          "path": "late/facet-edges-pre-hull.f32",
+          "region": "facet-edges",
+          "sha256": "e20eb292d70b12bff8faef0a1fb2d40c74f01edbfb341fc3d6e26c9377a7f5b9",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "pre-hull",
+          "level": null,
+          "path": "late/dark-inclusion-pre-hull.f32",
+          "region": "dark-inclusion",
+          "sha256": "c04ef059374bb9d6515efaff4d77a958041191d73302591ac7a55d0fa755a4d2",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "post-hull",
+          "level": null,
+          "path": "late/facet-edges-post-hull.f32",
+          "region": "facet-edges",
+          "sha256": "34d4d0b05cc46fe4b1899baae36a77477a9e4cc45a6b2eabc92b2715a9c605d0",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "post-hull",
+          "level": null,
+          "path": "late/dark-inclusion-post-hull.f32",
+          "region": "dark-inclusion",
+          "sha256": "619d558d152e58baa7d1a8316043516ecc9eeeb37b5cdce895dd4e40722c48d9",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "hull-correction",
+          "level": null,
+          "path": "late/facet-edges-hull-correction.f32",
+          "region": "facet-edges",
+          "sha256": "6330a0ef3fe0a2464948e61f2f445a8f560c0fdad2d8e0fe681f8e53c7d260e2",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        },
+        {
+          "field": "hull-correction",
+          "level": null,
+          "path": "late/dark-inclusion-hull-correction.f32",
+          "region": "dark-inclusion",
+          "sha256": "1eec44579cf42dbd4f8bfe26f7c36eb1514eb85827d734d8beb05a995fd82669",
+          "shape": [
+            4,
+            192,
+            192
+          ]
+        }
+      ],
+      "summary": {
+        "baseline_hull_sum_max_abs": [
+          0.0001220703125,
+          0.0001220703125,
+          0.0001220703125,
+          0.0001220703125
+        ],
+        "baseline_sum_max_abs": [
+          0.00408935546875,
+          0.00396728515625,
+          0.00434112548828125,
+          0.0025634765625
+        ],
+        "mixed_hull_sum_max_abs": [
+          0.0001220703125,
+          0.0001220703125,
+          0.0001220703125,
+          0.0001220703125
+        ],
+        "mixed_sum_max_abs": [
+          0.00333404541015625,
+          0.0044956207275390625,
+          0.00434112548828125,
+          0.002818584442138672
+        ]
+      }
+    }
+  ],
+  "layout": "planar-y-x-f32le",
+  "level_sizes": [
+    [
+      3460,
+      2306
+    ],
+    [
+      1730,
+      1153
+    ],
+    [
+      865,
+      577
+    ],
+    [
+      433,
+      289
+    ],
+    [
+      217,
+      145
+    ],
+    [
+      109,
+      73
+    ],
+    [
+      55,
+      37
+    ],
+    [
+      28,
+      19
+    ]
+  ],
+  "native_dimensions": [
+    6920,
+    4612
+  ],
+  "plane_order": [
+    "R",
+    "G1",
+    "G2",
+    "B"
+  ],
+  "reconstruction_absolute_tolerance_dn": 0.02,
+  "schema": 1,
+  "scope": "actual full-context coefficient collapse then window extraction; before MHC, WB, tone and RGB development; signed terms are not ownership probabilities",
+  "source_output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\full-on-2\\output",
+  "units": "signed black-subtracted source DN",
+  "windows": [
+    {
+      "name": "facet-edges",
+      "native_xywh": [
+        2500,
+        2700,
+        384,
+        384
+      ],
+      "quad_xywh": [
+        1250,
+        1350,
+        192,
+        192
+      ]
+    },
+    {
+      "name": "dark-inclusion",
+      "native_xywh": [
+        3050,
+        1850,
+        384,
+        384
+      ],
+      "quad_xywh": [
+        1525,
+        925,
+        192,
+        192
+      ]
+    }
+  ]
+}

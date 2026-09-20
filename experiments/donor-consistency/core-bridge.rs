@@ -9,6 +9,8 @@ fn supported(merge:&BandMerge) {
         && merge.cfg.admission==AdmissionMode::HardFloor && merge.cfg.mean_coarse==0,
         "donor diagnostic requires the held baseline modes");
 }
+
+include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/donor-consistency/core-attribution.rs"));
 /// The actual default BandMerge denominator/fallback resolution, before collapse.
 /// Public only under the experiment feature so controls can compare coefficients.
 pub fn resolved_coefficients(merge:&BandMerge)->Vec<Pyramid> {

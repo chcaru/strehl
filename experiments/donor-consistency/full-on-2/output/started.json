@@ -1,0 +1,118 @@
+{
+  "ca_profile": "a7c2-fe100gm-2xtc-x4cpl",
+  "config_sha256": "cafff3927f24a6b3c2432022b3196796a76d38a7ac3a7403dd0506191316f19d",
+  "counterfactual": "prescribed shared donor AC coefficients; baseline terminal mean retained",
+  "donors": [
+    28,
+    33,
+    25
+  ],
+  "effective_crop": [
+    28,
+    19,
+    3460,
+    2306
+  ],
+  "execution_threads": 8,
+  "late_donor": 69,
+  "map_sha256": "84275850a032dc8beb88945b00514a58ebca433e267c8e10342ac55986cf830f",
+  "mask_native_origin": [
+    0,
+    0
+  ],
+  "mask_sample_offset_native": [
+    0.5,
+    0.5
+  ],
+  "matrix": [
+    [
+      0.7459999918937683,
+      -0.23649999499320984,
+      -0.058800000697374344
+    ],
+    [
+      -0.5687000155448914,
+      1.3442000150680542,
+      0.24740000069141388
+    ],
+    [
+      -0.06239999830722809,
+      0.11559999734163284,
+      0.6583999991416931
+    ]
+  ],
+  "merge_config": "MergeConfig { bands: 7, gate: 2.0, exponent: 2.0, sharpen_per_octave: 1.4, select: SoftPower, admission: HardFloor, base: Mean, mean_coarse: 0, hull: InputRange, hull_lambda: 2.0, hull_low_only: false, fallback: Mean, fallback_k: 3, fallback_power: 4.0, hull_from_level: 1, significance_scale: 0.0 }",
+  "mode": "fixed-native-donor-consistency-oracle",
+  "native_dimensions": [
+    6920,
+    4612
+  ],
+  "original_crop": [
+    28,
+    19,
+    3460,
+    2306
+  ],
+  "original_metadata_check": "length and modified time; all70 before/after both passes",
+  "plan": {
+    "canonical_chunks": 4,
+    "per_chunk": 18,
+    "planning_bytes": 1392085228
+  },
+  "radii_native": [
+    16,
+    24
+  ],
+  "schema": 1,
+  "segments": [
+    [
+      [
+        2624.0,
+        2906.0
+      ],
+      [
+        2602.0,
+        2945.0
+      ]
+    ],
+    [
+      [
+        3080.0,
+        2150.0
+      ],
+      [
+        3102.0,
+        2203.0
+      ]
+    ],
+    [
+      [
+        3240.0,
+        2070.0
+      ],
+      [
+        3240.0,
+        2070.0
+      ]
+    ]
+  ],
+  "source_active": [
+    0,
+    0,
+    7032,
+    4688
+  ],
+  "source_buffer_height": 5120,
+  "source_dir": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl",
+  "source_stride": 7168,
+  "tone_bits": [
+    1035546143,
+    1063920542,
+    1057803469
+  ],
+  "wb_bits": [
+    1070374912,
+    1065353216,
+    1076715520
+  ]
+}

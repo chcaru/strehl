@@ -1,0 +1,67 @@
+{
+  "scope": "Observer neutrality only, including late-donor placebo; no quality claim",
+  "arms": {
+    "baseline": {
+      "pixel_sha256": "2a19cd9b7236a13bf90e81b87e85b1058e071aa19f4a5af82b97f453687d0dda",
+      "off_on_original_pixels_identical": true,
+      "files": [
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\full-off-2\\output\\baseline.tiff",
+          "sha256": "18c80cc3d4b6611a2940499653eca39fa48ae2fb130ca2ea9610482e574dd0e8"
+        },
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\full-on-2\\output\\baseline.tiff",
+          "sha256": "18c80cc3d4b6611a2940499653eca39fa48ae2fb130ca2ea9610482e574dd0e8"
+        },
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\full-1\\output\\baseline.tiff",
+          "sha256": "f0eab596dd0e37e80084588629d592a6c261c97eb9a1655b20e39ef430e23535"
+        }
+      ]
+    },
+    "candidate": {
+      "pixel_sha256": "0f7ef99afb7bbe8e29a2ec1971da64ad3fc31beea175838bca8feb3f749ef585",
+      "off_on_original_pixels_identical": true,
+      "files": [
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\full-off-2\\output\\candidate.tiff",
+          "sha256": "f1a460c361cee5cac18d4cb64808ebc60f58fe4d29c3b9f821312294957bb9f8"
+        },
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\full-on-2\\output\\candidate.tiff",
+          "sha256": "f1a460c361cee5cac18d4cb64808ebc60f58fe4d29c3b9f821312294957bb9f8"
+        },
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\full-1\\output\\candidate.tiff",
+          "sha256": "ba57bb889a0dbe883e3fd889dffb831bbf7296d8f32730337ecde7f6123f2b48"
+        }
+      ]
+    },
+    "late": {
+      "pixel_sha256": "114e3a17436b4469a6478717ea869683b7c121c4cacc073e84a7e11a91c75adc",
+      "off_on_original_pixels_identical": true,
+      "files": [
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\full-off-2\\output\\late.tiff",
+          "sha256": "ab8864a121be2d6c3a634906bccd5932b204434636b7c8dac1bf68797a21173a"
+        },
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\full-on-2\\output\\late.tiff",
+          "sha256": "ab8864a121be2d6c3a634906bccd5932b204434636b7c8dac1bf68797a21173a"
+        },
+        {
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\full-1\\output\\late.tiff",
+          "sha256": "6635aee9c56f350e906b9add33453d1aab7e55b3f7e1ae03e80b4ba3b0b3fb6d"
+        }
+      ]
+    }
+  },
+  "observer": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\full-on-2\\attribution\\receipt.json",
+    "sha256": "0fbb43c683449521ff9722c41c044a13a39e14fd0365c6a50b5cd6c32f389d48"
+  },
+  "helper": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\verify-attribution-pair.py",
+    "sha256": "a009dec67fcdad7a082b0f97048699769eaf670fb48e6676d780ca2374f7d05a"
+  }
+}

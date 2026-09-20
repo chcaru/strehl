@@ -1,0 +1,49 @@
+{
+  "analyzer": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\attribution-analysis.py",
+    "sha256": "9a573e3c23205ac18e7f6d44023c1aacab3fc6692a4322e09b1beae79515038e",
+    "bytes": 14311
+  },
+  "plan": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\attribution-analysis-plan.md",
+    "sha256": "6659665062c4351951b7062d766fbebe930a4eb1c9a859ce1f66601eb18a70b6",
+    "bytes": 4148
+  },
+  "observer_receipt": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\full-on-2\\attribution\\receipt.json",
+    "sha256": "0fbb43c683449521ff9722c41c044a13a39e14fd0365c6a50b5cd6c32f389d48",
+    "bytes": 41209
+  },
+  "outputs": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\attribution-analysis-1\\accounting.json",
+      "sha256": "a86f8adce41f0c4aefdf0ad9c96be1a527ecaa2c55aee5c4a523de16ae9d4e84",
+      "bytes": 225018
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\attribution-analysis-1\\accounting.md",
+      "sha256": "69f07684c5ebe9063b3ae2eb36c44d31396819265205f084ad04200854f768fd",
+      "bytes": 5946
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\attribution-analysis-1\\facet-edges-signed-64dn.png",
+      "sha256": "eada2fd1756198e09c5198ebdbb74064b8788bfbac3979a2af74de167ed82767",
+      "bytes": 574348
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\attribution-analysis-1\\facet-edges-signed-512dn.png",
+      "sha256": "be217438591367bf1828292592427fb096bf5216a536c32301244348214aefb4",
+      "bytes": 840902
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\attribution-analysis-1\\dark-inclusion-signed-64dn.png",
+      "sha256": "f0244163f3f0a564916bce0d16cc431af5565ac581aaf229173885f161a8620b",
+      "bytes": 653969
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\attribution-analysis-1\\dark-inclusion-signed-512dn.png",
+      "sha256": "0cd21eb04162d65d7e85a0a3b02112e0f3404764283cf4fc2134ba72220514b4",
+      "bytes": 937767
+    }
+  ]
+}

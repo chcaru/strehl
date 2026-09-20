@@ -20,7 +20,9 @@ def main():
     p.add_argument('--out', type=Path, required=True)
     p.add_argument('--build', type=Path)
     p.add_argument('--screen', type=Path)
+    p.add_argument('--observe', action='store_true', help='Record unchanged actual coefficient contributions')
     a = p.parse_args()
+    assert not a.observe or a.phase == 'full'
     out = a.out.resolve()
     assert out.is_relative_to(HERE)
     out.mkdir()
@@ -31,6 +33,7 @@ def main():
         for directory in [HERE, ROOT / 'experiments/phase-packed-rgb', ROOT / 'experiments/fine-support-guidance', ROOT / 'experiments/green-match-rgb', ROOT / 'experiments/complex-wavelet-merge', ROOT / 'experiments/all-cfa-wavelet', ROOT / 'experiments/complete-cfa-wavelet']:
             paths.update(directory.glob('*.rs'))
         paths.update([Path(__file__), HERE / 'independent-plan.md', HERE / 'charter.md',
+            HERE / 'independent-attribution-plan.md',
             ROOT / 'crates/strehl-core/src/pyramid.rs', ROOT / 'crates/strehl-core/src/boxfilter.rs',
             ROOT / 'experiments/native-correction-variance/core-bridge.rs',
             ROOT / 'crates/strehl-cli/Cargo.toml', ROOT / 'crates/strehl-core/Cargo.toml'])
@@ -94,6 +97,8 @@ def main():
             STREHL_DONOR_CONSISTENCY_FULL_CONFIG=str(out / 'config.json'))
         command = [str(exe), 'merge_cmd::donor_consistency::full_stack::vitamin_c_complete_triplet',
             '--exact', '--ignored', '--nocapture', '--test-threads=1']
+        if a.observe:
+            fields['STREHL_DONOR_ATTRIBUTION_DIR'] = str(out / 'attribution')
     def check_inputs():
         for r in inputs or []:
             st = Path(r['path']).stat()
@@ -106,9 +111,9 @@ def main():
     assert all(c.ref(Path(r['path'])) == r for r in sources)
     check_inputs()
     if a.phase == 'controls':
-        assert 'test result: ok. 2 passed;' in log
+        assert 'test result: ok. 3 passed;' in log
         records = {}
-        for label in ['DONOR_GEOMETRY', 'DONOR_CONSUMER']:
+        for label in ['DONOR_GEOMETRY', 'DONOR_CONSUMER', 'DONOR_ATTRIBUTION']:
             lines = [line.split(label + ' ', 1)[1] for line in log.splitlines() if label + ' ' in line]
             assert len(lines) == 1, (label, len(lines))
             records[label] = json.loads(lines[0])
@@ -116,7 +121,7 @@ def main():
         screen = out / 'output/screen.json'
         c.save(screen, dict(status='MECHANICAL_CONTROLS_PASSED', records=records,
             photographic_replay_admitted=True,
-            scope='Fixed externally-labelled donor diagnostic only; no automatic selector or quality admission'))
+            scope='Mechanical and immutable attribution controls only; no automatic selector or quality admission'))
         c.save(out / 'completion.json', dict(screen=c.ref(screen), sources_unchanged=True,
             structural_controls_passed=True, photographic_replay_admitted=json.loads(screen.read_text())['photographic_replay_admitted']))
         return
@@ -137,6 +142,8 @@ def main():
         shape=[4612, 6920, 3], original_metadata_unchanged=True, map_unchanged=True,
         baseline_pixels_identical=True, baseline_whole_file_identical=c.ref(baseline)['sha256'] == expected,
         reference=c.ref(reference), sources_unchanged=True))
+    if a.observe:
+        assert (out / 'attribution/receipt.json').is_file()
 
 
 if __name__ == '__main__':

@@ -4,6 +4,10 @@ use sha2::{Digest,Sha256};
 use strehl_core::pyramid::{level_sizes,BandMerge,FrameWorkspace,Hull,MergeConfig,Pyramid,Workspace};
 use strehl_core::pyramid::donor_consistency_diagnostic::{DonorBlend,resolved_coefficients};
 
+mod attribution_controls {
+    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/donor-consistency/independent-attribution-controls.rs"));
+}
+
 const W:usize=89;
 const H:usize=73;
 fn hash(v:&[f32])->String {

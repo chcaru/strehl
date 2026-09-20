@@ -1,0 +1,32 @@
+{
+  "baseline": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\full-off-2\\output\\baseline.tiff",
+    "sha256": "18c80cc3d4b6611a2940499653eca39fa48ae2fb130ca2ea9610482e574dd0e8",
+    "bytes": 191495346
+  },
+  "candidate": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\full-off-2\\output\\candidate.tiff",
+    "sha256": "f1a460c361cee5cac18d4cb64808ebc60f58fe4d29c3b9f821312294957bb9f8",
+    "bytes": 191495346
+  },
+  "late": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\full-off-2\\output\\late.tiff",
+    "sha256": "ab8864a121be2d6c3a634906bccd5932b204434636b7c8dac1bf68797a21173a",
+    "bytes": 191495346
+  },
+  "shape": [
+    4612,
+    6920,
+    3
+  ],
+  "original_metadata_unchanged": true,
+  "map_unchanged": true,
+  "baseline_pixels_identical": true,
+  "baseline_whole_file_identical": false,
+  "reference": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\phase-packed-rgb\\full-1\\output\\baseline.tiff",
+    "sha256": "c0d8faca8a23f31a73b843fbc9aa9f55fda96b5fcce9d3540ebf6a2b4319bb21",
+    "bytes": 191495352
+  },
+  "sources_unchanged": true
+}
