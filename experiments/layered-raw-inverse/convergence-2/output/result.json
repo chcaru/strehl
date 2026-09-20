@@ -1,0 +1,32 @@
+{
+  "status": "NUMERICAL_DIAGNOSTIC_COMPLETE",
+  "arms": [
+    {
+      "case": "flat",
+      "arm": "two-layer",
+      "status": "stationary_gradient",
+      "receipt": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\convergence-2\\output\\flat\\two-layer\\receipt.json",
+      "receipt_sha256": "db41b9d2b82322c88722f1e02d1099117c9b4c1c74eb3012bca2a3689052d24f"
+    },
+    {
+      "case": "far-only",
+      "arm": "far-only",
+      "status": "nonstationary_return",
+      "receipt": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\convergence-2\\output\\far-only\\far-only\\receipt.json",
+      "receipt_sha256": "fb952460633d6c3b0d56fb1317d05ee3254d702b273ceb116ab0f6057497a9c5"
+    },
+    {
+      "case": "layered",
+      "arm": "two-layer",
+      "status": "nonstationary_return",
+      "receipt": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\convergence-2\\output\\layered\\two-layer\\receipt.json",
+      "receipt_sha256": "143250d97dfd39f448f9d1a4a43f2c26c9406898317fa376c86fdcd147a7d1a0"
+    }
+  ],
+  "source_root": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output",
+  "bindings_unchanged": true,
+  "wall_seconds": 7.0310000000026776,
+  "frozen_first_screen_pass": false,
+  "real_photo_admission": false,
+  "interpretation": "Continuation at unchanged objective; original 160-step budget failed. No promotion."
+}

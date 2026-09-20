@@ -1,0 +1,1884 @@
+{
+  "status": "FINAL_CHECKPOINTS_SCORED",
+  "arms": [
+    {
+      "name": "flat",
+      "arm": "two-layer",
+      "measurement_complete": true,
+      "quality": {
+        "regions": {
+          "whole": {
+            "candidate": {
+              "rgb_rmse": 8.6828007104627,
+              "chroma_rmse": 12.357442210469681
+            },
+            "far_only": {
+              "rgb_rmse": 5.606326374176431,
+              "chroma_rmse": 7.775942627238773
+            },
+            "mean": {
+              "rgb_rmse": 6.018454527257956,
+              "chroma_rmse": 8.367617007550058
+            },
+            "oracle_bound": {
+              "rgb_rmse": 15.927476031907533,
+              "chroma_rmse": 21.78031256038975
+            }
+          }
+        },
+        "components": {},
+        "bars": {
+          "rgb_rmse": false,
+          "chroma_rmse": false
+        },
+        "passed": false
+      },
+      "heldout": [
+        {
+          "index": 2,
+          "scores": {
+            "uncensored": {
+              "all": {
+                "count": 4096,
+                "normalized_rms": 1.0009129085639463,
+                "bar": 1.5,
+                "passed": true,
+                "present": true
+              },
+              "R": {
+                "count": 1024,
+                "normalized_rms": 0.9731958723328806,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G1": {
+                "count": 1024,
+                "normalized_rms": 1.0127365650232398,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G2": {
+                "count": 1024,
+                "normalized_rms": 1.0227190416450829,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "B": {
+                "count": 1024,
+                "normalized_rms": 0.9942870852603345,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "bright": {
+                "count": 0,
+                "normalized_rms": null,
+                "bar": 1.75,
+                "passed": true,
+                "present": false
+              },
+              "dim": {
+                "count": 4096,
+                "normalized_rms": 1.0009129085639463,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              }
+            },
+            "censor_count": 0,
+            "censor_one_sided_rms": null,
+            "passed": true
+          }
+        },
+        {
+          "index": 6,
+          "scores": {
+            "uncensored": {
+              "all": {
+                "count": 4096,
+                "normalized_rms": 1.0162610440363948,
+                "bar": 1.5,
+                "passed": true,
+                "present": true
+              },
+              "R": {
+                "count": 1024,
+                "normalized_rms": 1.007546383693791,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G1": {
+                "count": 1024,
+                "normalized_rms": 0.9986124667363586,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G2": {
+                "count": 1024,
+                "normalized_rms": 1.021826339646818,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "B": {
+                "count": 1024,
+                "normalized_rms": 1.0366486367579173,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "bright": {
+                "count": 0,
+                "normalized_rms": null,
+                "bar": 1.75,
+                "passed": true,
+                "present": false
+              },
+              "dim": {
+                "count": 4096,
+                "normalized_rms": 1.0162610440363948,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              }
+            },
+            "censor_count": 0,
+            "censor_one_sided_rms": null,
+            "passed": true
+          }
+        }
+      ],
+      "fixed_quality_pass": false,
+      "stationarity": {
+        "status": "stationary_gradient",
+        "final_objective": {
+          "evaluation": 4,
+          "tag": "final",
+          "evaluation_status": "complete",
+          "elapsed_seconds": 0.3899999999994179,
+          "data_nll": 3.668786644935608,
+          "noncontiguous_gradients_converted": 2,
+          "gradient_storage_logical_exact": true,
+          "prior": 0.013274143449962139,
+          "total": 3.68206078838557,
+          "gradient_l2": 0.0031240324024111032,
+          "gradient_max": 7.912417640909553e-05
+        },
+        "stationary": true
+      },
+      "original_case_quality": {
+        "regions": {
+          "whole": {
+            "candidate": {
+              "rgb_rmse": 8.67524582284642,
+              "chroma_rmse": 12.345579699627306
+            },
+            "far_only": {
+              "rgb_rmse": 5.606326374176431,
+              "chroma_rmse": 7.775942627238773
+            },
+            "mean": {
+              "rgb_rmse": 6.018454527257956,
+              "chroma_rmse": 8.367617007550058
+            },
+            "oracle_bound": {
+              "rgb_rmse": 15.927476031907533,
+              "chroma_rmse": 21.78031256038975
+            }
+          }
+        },
+        "components": {},
+        "bars": {
+          "rgb_rmse": false,
+          "chroma_rmse": false
+        },
+        "passed": false
+      },
+      "original_heldout": [
+        {
+          "index": 2,
+          "candidate": {
+            "uncensored": {
+              "all": {
+                "count": 4096,
+                "normalized_rms": 1.0009114777327417,
+                "bar": 1.5,
+                "passed": true,
+                "present": true
+              },
+              "R": {
+                "count": 1024,
+                "normalized_rms": 0.9731962963349318,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G1": {
+                "count": 1024,
+                "normalized_rms": 1.0127286776248217,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G2": {
+                "count": 1024,
+                "normalized_rms": 1.0227212344848728,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "B": {
+                "count": 1024,
+                "normalized_rms": 0.9942866869663659,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "bright": {
+                "count": 0,
+                "normalized_rms": null,
+                "bar": 1.75,
+                "passed": true,
+                "present": false
+              },
+              "dim": {
+                "count": 4096,
+                "normalized_rms": 1.0009114777327417,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              }
+            },
+            "censor_count": 0,
+            "censor_one_sided_rms": null,
+            "passed": true
+          },
+          "far_only": {
+            "uncensored": {
+              "all": {
+                "count": 4096,
+                "normalized_rms": 1.0030099410804465,
+                "bar": 1.5,
+                "passed": true,
+                "present": true
+              },
+              "R": {
+                "count": 1024,
+                "normalized_rms": 0.9739464973341412,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G1": {
+                "count": 1024,
+                "normalized_rms": 1.014298292744307,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G2": {
+                "count": 1024,
+                "normalized_rms": 1.023285445554908,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "B": {
+                "count": 1024,
+                "normalized_rms": 0.9998149119746303,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "bright": {
+                "count": 0,
+                "normalized_rms": null,
+                "bar": 1.75,
+                "passed": true,
+                "present": false
+              },
+              "dim": {
+                "count": 4096,
+                "normalized_rms": 1.0030099410804465,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              }
+            },
+            "censor_count": 0,
+            "censor_one_sided_rms": null,
+            "passed": true
+          }
+        },
+        {
+          "index": 6,
+          "candidate": {
+            "uncensored": {
+              "all": {
+                "count": 4096,
+                "normalized_rms": 1.0162619286640344,
+                "bar": 1.5,
+                "passed": true,
+                "present": true
+              },
+              "R": {
+                "count": 1024,
+                "normalized_rms": 1.0075434064226638,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G1": {
+                "count": 1024,
+                "normalized_rms": 0.9986203681530612,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G2": {
+                "count": 1024,
+                "normalized_rms": 1.0218262599674872,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "B": {
+                "count": 1024,
+                "normalized_rms": 1.0366474663706504,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "bright": {
+                "count": 0,
+                "normalized_rms": null,
+                "bar": 1.75,
+                "passed": true,
+                "present": false
+              },
+              "dim": {
+                "count": 4096,
+                "normalized_rms": 1.0162619286640344,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              }
+            },
+            "censor_count": 0,
+            "censor_one_sided_rms": null,
+            "passed": true
+          },
+          "far_only": {
+            "uncensored": {
+              "all": {
+                "count": 4096,
+                "normalized_rms": 1.0059539520246714,
+                "bar": 1.5,
+                "passed": true,
+                "present": true
+              },
+              "R": {
+                "count": 1024,
+                "normalized_rms": 0.9992925412469676,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G1": {
+                "count": 1024,
+                "normalized_rms": 0.9874262372285884,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G2": {
+                "count": 1024,
+                "normalized_rms": 1.011692972708611,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "B": {
+                "count": 1024,
+                "normalized_rms": 1.0250144322832735,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "bright": {
+                "count": 0,
+                "normalized_rms": null,
+                "bar": 1.75,
+                "passed": true,
+                "present": false
+              },
+              "dim": {
+                "count": 4096,
+                "normalized_rms": 1.0059539520246714,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              }
+            },
+            "censor_count": 0,
+            "censor_one_sided_rms": null,
+            "passed": true
+          }
+        }
+      ],
+      "reference_scope": "Original fixed truth bars and historical references unchanged",
+      "final_checkpoint_sha256": "9245d1ac89cf7f094a95b34556b0d49357a2e1add4d419e51db06f7ca34962de",
+      "final_rgb_sha256": "6eff13e520c1851dbc0eeb40d75a2e9f0f3562d29931e760f7c9e7e1c83c2d54"
+    },
+    {
+      "name": "far-only",
+      "arm": "far-only",
+      "measurement_complete": true,
+      "quality": {
+        "regions": {
+          "whole": {
+            "candidate": {
+              "rgb_rmse": 187.3958707210551,
+              "chroma_rmse": 61.69035904331111
+            },
+            "far_only": {
+              "rgb_rmse": 291.1171360099486,
+              "chroma_rmse": 80.00779382934371
+            },
+            "mean": {
+              "rgb_rmse": 761.0106909703819,
+              "chroma_rmse": 77.27346220786558
+            },
+            "oracle_bound": {
+              "rgb_rmse": 377.22840944318074,
+              "chroma_rmse": 99.93446861813557
+            }
+          },
+          "core": {
+            "candidate": {
+              "rgb_rmse": 921.8617567612656,
+              "chroma_rmse": 301.0837240834753
+            },
+            "far_only": {
+              "rgb_rmse": 1432.7182512802606,
+              "chroma_rmse": 391.88801558773275
+            },
+            "mean": {
+              "rgb_rmse": 3727.284470112629,
+              "chroma_rmse": 377.37354684182304
+            },
+            "oracle_bound": {
+              "rgb_rmse": 1855.6565162663092,
+              "chroma_rmse": 481.8683571746009
+            }
+          },
+          "ridge": {
+            "candidate": {
+              "rgb_rmse": 391.7901378026704,
+              "chroma_rmse": 128.196209662873
+            },
+            "far_only": {
+              "rgb_rmse": 608.8440803952694,
+              "chroma_rmse": 166.7178189944199
+            },
+            "mean": {
+              "rgb_rmse": 1589.4675318571337,
+              "chroma_rmse": 160.91620964094548
+            },
+            "oracle_bound": {
+              "rgb_rmse": 788.6357054809403,
+              "chroma_rmse": 205.64834110604588
+            }
+          },
+          "crossing": {
+            "candidate": {
+              "rgb_rmse": 726.6570005372624,
+              "chroma_rmse": 237.4039744234888
+            },
+            "far_only": {
+              "rgb_rmse": 1129.3377508322537,
+              "chroma_rmse": 308.9619818544793
+            },
+            "mean": {
+              "rgb_rmse": 2941.6068118750113,
+              "chroma_rmse": 297.65496631771254
+            },
+            "oracle_bound": {
+              "rgb_rmse": 1462.7281127372596,
+              "chroma_rmse": 380.04218581422884
+            }
+          },
+          "fan": {
+            "candidate": {
+              "rgb_rmse": 343.7502479484846,
+              "chroma_rmse": 112.53692106381492
+            },
+            "far_only": {
+              "rgb_rmse": 534.177343328475,
+              "chroma_rmse": 146.31106143848504
+            },
+            "mean": {
+              "rgb_rmse": 1396.0190692394578,
+              "chroma_rmse": 141.30905695009156
+            },
+            "oracle_bound": {
+              "rgb_rmse": 691.9381292084967,
+              "chroma_rmse": 180.71021819394824
+            }
+          }
+        },
+        "components": {},
+        "bars": {
+          "rgb_rmse": true,
+          "chroma_rmse": true
+        },
+        "passed": true
+      },
+      "heldout": [
+        {
+          "index": 2,
+          "scores": {
+            "uncensored": {
+              "all": {
+                "count": 4096,
+                "normalized_rms": 1.1668808913726711,
+                "bar": 1.5,
+                "passed": true,
+                "present": true
+              },
+              "R": {
+                "count": 1024,
+                "normalized_rms": 1.3489046221808056,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G1": {
+                "count": 1024,
+                "normalized_rms": 1.1032430612489383,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G2": {
+                "count": 1024,
+                "normalized_rms": 1.0606085840892454,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "B": {
+                "count": 1024,
+                "normalized_rms": 1.1335186624066906,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "bright": {
+                "count": 43,
+                "normalized_rms": 4.891267632991073,
+                "bar": 1.75,
+                "passed": false,
+                "present": true
+              },
+              "dim": {
+                "count": 4053,
+                "normalized_rms": 1.0593543994017667,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              }
+            },
+            "censor_count": 0,
+            "censor_one_sided_rms": null,
+            "passed": false
+          }
+        },
+        {
+          "index": 6,
+          "scores": {
+            "uncensored": {
+              "all": {
+                "count": 4096,
+                "normalized_rms": 1.0524998416296383,
+                "bar": 1.5,
+                "passed": true,
+                "present": true
+              },
+              "R": {
+                "count": 1024,
+                "normalized_rms": 1.081697995084282,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G1": {
+                "count": 1024,
+                "normalized_rms": 1.0279258170741468,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G2": {
+                "count": 1024,
+                "normalized_rms": 1.0313770024024858,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "B": {
+                "count": 1024,
+                "normalized_rms": 1.0679808553808494,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "bright": {
+                "count": 0,
+                "normalized_rms": null,
+                "bar": 1.75,
+                "passed": true,
+                "present": false
+              },
+              "dim": {
+                "count": 4096,
+                "normalized_rms": 1.0524998416296383,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              }
+            },
+            "censor_count": 0,
+            "censor_one_sided_rms": null,
+            "passed": true
+          }
+        }
+      ],
+      "fixed_quality_pass": false,
+      "stationarity": {
+        "status": "nonstationary_return",
+        "final_objective": {
+          "evaluation": 105,
+          "tag": "final",
+          "evaluation_status": "complete",
+          "elapsed_seconds": 2.389999999999418,
+          "data_nll": 3.715138614177704,
+          "noncontiguous_gradients_converted": 1,
+          "gradient_storage_logical_exact": true,
+          "prior": 2.0866100788116455,
+          "total": 5.801748692989349,
+          "gradient_l2": 0.041810620576143265,
+          "gradient_max": 0.015180382877588272
+        },
+        "stationary": false
+      },
+      "original_case_quality": {
+        "regions": {
+          "whole": {
+            "candidate": {
+              "rgb_rmse": 247.55986192812605,
+              "chroma_rmse": 74.81783461007343
+            },
+            "far_only": {
+              "rgb_rmse": 291.1171360099486,
+              "chroma_rmse": 80.00779382934371
+            },
+            "mean": {
+              "rgb_rmse": 761.0106909703819,
+              "chroma_rmse": 77.27346220786558
+            },
+            "oracle_bound": {
+              "rgb_rmse": 377.22840944318074,
+              "chroma_rmse": 99.93446861813557
+            }
+          },
+          "core": {
+            "candidate": {
+              "rgb_rmse": 1214.6397146887582,
+              "chroma_rmse": 364.87853849736797
+            },
+            "far_only": {
+              "rgb_rmse": 1432.7182512802606,
+              "chroma_rmse": 391.88801558773275
+            },
+            "mean": {
+              "rgb_rmse": 3727.284470112629,
+              "chroma_rmse": 377.37354684182304
+            },
+            "oracle_bound": {
+              "rgb_rmse": 1855.6565162663092,
+              "chroma_rmse": 481.8683571746009
+            }
+          },
+          "ridge": {
+            "candidate": {
+              "rgb_rmse": 516.6712139392772,
+              "chroma_rmse": 155.39895715965173
+            },
+            "far_only": {
+              "rgb_rmse": 608.8440803952694,
+              "chroma_rmse": 166.7178189944199
+            },
+            "mean": {
+              "rgb_rmse": 1589.4675318571337,
+              "chroma_rmse": 160.91620964094548
+            },
+            "oracle_bound": {
+              "rgb_rmse": 788.6357054809403,
+              "chroma_rmse": 205.64834110604588
+            }
+          },
+          "crossing": {
+            "candidate": {
+              "rgb_rmse": 957.4601556338854,
+              "chroma_rmse": 287.7203661077273
+            },
+            "far_only": {
+              "rgb_rmse": 1129.3377508322537,
+              "chroma_rmse": 308.9619818544793
+            },
+            "mean": {
+              "rgb_rmse": 2941.6068118750113,
+              "chroma_rmse": 297.65496631771254
+            },
+            "oracle_bound": {
+              "rgb_rmse": 1462.7281127372596,
+              "chroma_rmse": 380.04218581422884
+            }
+          },
+          "fan": {
+            "candidate": {
+              "rgb_rmse": 453.42868514823436,
+              "chroma_rmse": 136.43945926110354
+            },
+            "far_only": {
+              "rgb_rmse": 534.177343328475,
+              "chroma_rmse": 146.31106143848504
+            },
+            "mean": {
+              "rgb_rmse": 1396.0190692394578,
+              "chroma_rmse": 141.30905695009156
+            },
+            "oracle_bound": {
+              "rgb_rmse": 691.9381292084967,
+              "chroma_rmse": 180.71021819394824
+            }
+          }
+        },
+        "components": {},
+        "bars": {
+          "rgb_rmse": true,
+          "chroma_rmse": true
+        },
+        "passed": true
+      },
+      "original_heldout": [
+        {
+          "index": 2,
+          "candidate": {
+            "uncensored": {
+              "all": {
+                "count": 4096,
+                "normalized_rms": 1.2697455840877074,
+                "bar": 1.5,
+                "passed": true,
+                "present": true
+              },
+              "R": {
+                "count": 1024,
+                "normalized_rms": 1.4639678237693856,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G1": {
+                "count": 1024,
+                "normalized_rms": 1.238112113665966,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G2": {
+                "count": 1024,
+                "normalized_rms": 1.2001406110829196,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "B": {
+                "count": 1024,
+                "normalized_rms": 1.1543632495154956,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "bright": {
+                "count": 43,
+                "normalized_rms": 6.738419224258488,
+                "bar": 1.75,
+                "passed": false,
+                "present": true
+              },
+              "dim": {
+                "count": 4053,
+                "normalized_rms": 1.0712722634984322,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              }
+            },
+            "censor_count": 0,
+            "censor_one_sided_rms": null,
+            "passed": false
+          },
+          "far_only": {
+            "uncensored": {
+              "all": {
+                "count": 4096,
+                "normalized_rms": 1.5020077011235997,
+                "bar": 1.5,
+                "passed": false,
+                "present": true
+              },
+              "R": {
+                "count": 1024,
+                "normalized_rms": 1.77675700964694,
+                "bar": 1.75,
+                "passed": false,
+                "present": true
+              },
+              "G1": {
+                "count": 1024,
+                "normalized_rms": 1.4902937740111901,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G2": {
+                "count": 1024,
+                "normalized_rms": 1.3993624790991386,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "B": {
+                "count": 1024,
+                "normalized_rms": 1.2992506243376845,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "bright": {
+                "count": 43,
+                "normalized_rms": 9.465784149354256,
+                "bar": 1.75,
+                "passed": false,
+                "present": true
+              },
+              "dim": {
+                "count": 4053,
+                "normalized_rms": 1.1529728735911582,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              }
+            },
+            "censor_count": 0,
+            "censor_one_sided_rms": null,
+            "passed": false
+          }
+        },
+        {
+          "index": 6,
+          "candidate": {
+            "uncensored": {
+              "all": {
+                "count": 4096,
+                "normalized_rms": 1.0637189439695602,
+                "bar": 1.5,
+                "passed": true,
+                "present": true
+              },
+              "R": {
+                "count": 1024,
+                "normalized_rms": 1.0613895413841377,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G1": {
+                "count": 1024,
+                "normalized_rms": 1.0500578028708332,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G2": {
+                "count": 1024,
+                "normalized_rms": 1.08239331423873,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "B": {
+                "count": 1024,
+                "normalized_rms": 1.0607768532545439,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "bright": {
+                "count": 0,
+                "normalized_rms": null,
+                "bar": 1.75,
+                "passed": true,
+                "present": false
+              },
+              "dim": {
+                "count": 4096,
+                "normalized_rms": 1.0637189439695602,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              }
+            },
+            "censor_count": 0,
+            "censor_one_sided_rms": null,
+            "passed": true
+          },
+          "far_only": {
+            "uncensored": {
+              "all": {
+                "count": 4096,
+                "normalized_rms": 1.1229717521458904,
+                "bar": 1.5,
+                "passed": true,
+                "present": true
+              },
+              "R": {
+                "count": 1024,
+                "normalized_rms": 1.1728561984482704,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G1": {
+                "count": 1024,
+                "normalized_rms": 1.1127998534630401,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G2": {
+                "count": 1024,
+                "normalized_rms": 1.0941566677736243,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "B": {
+                "count": 1024,
+                "normalized_rms": 1.1104810825633504,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "bright": {
+                "count": 0,
+                "normalized_rms": null,
+                "bar": 1.75,
+                "passed": true,
+                "present": false
+              },
+              "dim": {
+                "count": 4096,
+                "normalized_rms": 1.1229717521458904,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              }
+            },
+            "censor_count": 0,
+            "censor_one_sided_rms": null,
+            "passed": true
+          }
+        }
+      ],
+      "reference_scope": "Final far-only vs frozen historical far-only, not two-layer admission",
+      "final_checkpoint_sha256": "425029bf2ffdee3c5dfc1a3091a9bda11ae7874638cb874f24c269cbd47ab5b0",
+      "final_rgb_sha256": "1e9dd10039e93276b5c7ca1176c2a5ced47680bbf6f4111826fb083e287dc174"
+    },
+    {
+      "name": "layered",
+      "arm": "two-layer",
+      "measurement_complete": true,
+      "quality": {
+        "regions": {
+          "whole": {
+            "candidate": {
+              "rgb_rmse": 209.05702978705085,
+              "chroma_rmse": 156.66572427344724
+            },
+            "far_only": {
+              "rgb_rmse": 496.88377690019985,
+              "chroma_rmse": 650.2708373566716
+            },
+            "mean": {
+              "rgb_rmse": 753.7234759667058,
+              "chroma_rmse": 518.2588805886822
+            },
+            "oracle_bound": {
+              "rgb_rmse": 397.5372463674584,
+              "chroma_rmse": 249.56266183318613
+            }
+          },
+          "core": {
+            "candidate": {
+              "rgb_rmse": 931.7275629811788,
+              "chroma_rmse": 376.01441489328323
+            },
+            "far_only": {
+              "rgb_rmse": 1786.240868102814,
+              "chroma_rmse": 1573.837047318474
+            },
+            "mean": {
+              "rgb_rmse": 3452.1334344936117,
+              "chroma_rmse": 1303.8572499053812
+            },
+            "oracle_bound": {
+              "rgb_rmse": 1850.2248549886135,
+              "chroma_rmse": 793.2909697045076
+            }
+          },
+          "ridge": {
+            "candidate": {
+              "rgb_rmse": 419.0801125809886,
+              "chroma_rmse": 264.38561441281826
+            },
+            "far_only": {
+              "rgb_rmse": 944.0280541704689,
+              "chroma_rmse": 1162.315886756699
+            },
+            "mean": {
+              "rgb_rmse": 1536.391066451828,
+              "chroma_rmse": 930.9825690440236
+            },
+            "oracle_bound": {
+              "rgb_rmse": 816.8284571147884,
+              "chroma_rmse": 467.7684323233422
+            }
+          },
+          "crossing": {
+            "candidate": {
+              "rgb_rmse": 747.2694198487565,
+              "chroma_rmse": 354.63363543736597
+            },
+            "far_only": {
+              "rgb_rmse": 1532.7317908619168,
+              "chroma_rmse": 1626.109964055532
+            },
+            "mean": {
+              "rgb_rmse": 2763.9900380411414,
+              "chroma_rmse": 1324.4845045485336
+            },
+            "oracle_bound": {
+              "rgb_rmse": 1478.1547026912529,
+              "chroma_rmse": 720.596585345536
+            }
+          },
+          "fan": {
+            "candidate": {
+              "rgb_rmse": 369.9000013887724,
+              "chroma_rmse": 238.400468158457
+            },
+            "far_only": {
+              "rgb_rmse": 846.3604041669115,
+              "chroma_rmse": 1052.7729389537033
+            },
+            "mean": {
+              "rgb_rmse": 1356.894321753337,
+              "chroma_rmse": 840.3174706916507
+            },
+            "oracle_bound": {
+              "rgb_rmse": 719.6762645538982,
+              "chroma_rmse": 419.2428008816227
+            }
+          }
+        },
+        "components": {
+          "glint": {
+            "candidate": {
+              "recovery": [
+                1.0418047950584008,
+                1.0321711647270202,
+                1.0530243675020075
+              ],
+              "template_energy": [
+                3871784984.164553,
+                3600167379.165745,
+                2844576438.871642
+              ],
+              "live": true
+            },
+            "oracle_bound": {
+              "recovery": [
+                0.6257763794626515,
+                0.6123604175607923,
+                0.6521991427767284
+              ],
+              "template_energy": [
+                3871784984.164553,
+                3600167379.165745,
+                2844576438.871642
+              ],
+              "live": true
+            },
+            "passed": true,
+            "bounds": [
+              39,
+              42,
+              52,
+              55
+            ]
+          },
+          "ridge": {
+            "candidate": {
+              "recovery": [
+                0.9379466731752756,
+                0.9751060274495983,
+                0.9892274437232391
+              ],
+              "template_energy": [
+                51983735.586246416,
+                138514832.62970743,
+                161668706.2341408
+              ],
+              "live": true
+            },
+            "oracle_bound": {
+              "recovery": [
+                0.7196321313843479,
+                0.8267673147030402,
+                0.8474577243749162
+              ],
+              "template_energy": [
+                51983735.586246416,
+                138514832.62970743,
+                161668706.2341408
+              ],
+              "live": true
+            },
+            "passed": true,
+            "bounds": [
+              39,
+              31,
+              63,
+              41
+            ]
+          }
+        },
+        "bars": {
+          "whole_mean_gain": true,
+          "core_mean_gain": true,
+          "ridge_mean_gain": true,
+          "whole_far_only_comparison": true,
+          "crossing_far_only_comparison": true,
+          "core_far_only_comparison": true,
+          "ridge_far_only_comparison": true,
+          "glint_component": true,
+          "ridge_component": true
+        },
+        "passed": true
+      },
+      "heldout": [
+        {
+          "index": 2,
+          "scores": {
+            "uncensored": {
+              "all": {
+                "count": 4096,
+                "normalized_rms": 1.12768865983742,
+                "bar": 1.5,
+                "passed": true,
+                "present": true
+              },
+              "R": {
+                "count": 1024,
+                "normalized_rms": 1.1489952636043257,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G1": {
+                "count": 1024,
+                "normalized_rms": 1.1415353551534169,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G2": {
+                "count": 1024,
+                "normalized_rms": 1.0740260747596868,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "B": {
+                "count": 1024,
+                "normalized_rms": 1.1445093979472398,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "bright": {
+                "count": 41,
+                "normalized_rms": 2.8259977119280113,
+                "bar": 1.75,
+                "passed": false,
+                "present": true
+              },
+              "dim": {
+                "count": 4055,
+                "normalized_rms": 1.0971739858927176,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              }
+            },
+            "censor_count": 0,
+            "censor_one_sided_rms": null,
+            "passed": false
+          }
+        },
+        {
+          "index": 6,
+          "scores": {
+            "uncensored": {
+              "all": {
+                "count": 4096,
+                "normalized_rms": 1.29451354596707,
+                "bar": 1.5,
+                "passed": true,
+                "present": true
+              },
+              "R": {
+                "count": 1024,
+                "normalized_rms": 1.3282112606537047,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G1": {
+                "count": 1024,
+                "normalized_rms": 1.25505138621264,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G2": {
+                "count": 1024,
+                "normalized_rms": 1.2005329735877908,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "B": {
+                "count": 1024,
+                "normalized_rms": 1.3865362336180886,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "bright": {
+                "count": 0,
+                "normalized_rms": null,
+                "bar": 1.75,
+                "passed": true,
+                "present": false
+              },
+              "dim": {
+                "count": 4096,
+                "normalized_rms": 1.29451354596707,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              }
+            },
+            "censor_count": 0,
+            "censor_one_sided_rms": null,
+            "passed": true
+          }
+        }
+      ],
+      "fixed_quality_pass": false,
+      "stationarity": {
+        "status": "nonstationary_return",
+        "final_objective": {
+          "evaluation": 105,
+          "tag": "final",
+          "evaluation_status": "complete",
+          "elapsed_seconds": 2.9069999999992433,
+          "data_nll": 3.935638129711151,
+          "noncontiguous_gradients_converted": 2,
+          "gradient_storage_logical_exact": true,
+          "prior": 3.060835361480713,
+          "total": 6.996473491191864,
+          "gradient_l2": 0.13177698850631714,
+          "gradient_max": 0.04650362208485603
+        },
+        "stationary": false
+      },
+      "original_case_quality": {
+        "regions": {
+          "whole": {
+            "candidate": {
+              "rgb_rmse": 235.1119157460787,
+              "chroma_rmse": 163.18695215726
+            },
+            "far_only": {
+              "rgb_rmse": 496.88377690019985,
+              "chroma_rmse": 650.2708373566716
+            },
+            "mean": {
+              "rgb_rmse": 753.7234759667058,
+              "chroma_rmse": 518.2588805886822
+            },
+            "oracle_bound": {
+              "rgb_rmse": 397.5372463674584,
+              "chroma_rmse": 249.56266183318613
+            }
+          },
+          "core": {
+            "candidate": {
+              "rgb_rmse": 1064.7315455801588,
+              "chroma_rmse": 400.478480861108
+            },
+            "far_only": {
+              "rgb_rmse": 1786.240868102814,
+              "chroma_rmse": 1573.837047318474
+            },
+            "mean": {
+              "rgb_rmse": 3452.1334344936117,
+              "chroma_rmse": 1303.8572499053812
+            },
+            "oracle_bound": {
+              "rgb_rmse": 1850.2248549886135,
+              "chroma_rmse": 793.2909697045076
+            }
+          },
+          "ridge": {
+            "candidate": {
+              "rgb_rmse": 473.9414575621931,
+              "chroma_rmse": 273.15738078747376
+            },
+            "far_only": {
+              "rgb_rmse": 944.0280541704689,
+              "chroma_rmse": 1162.315886756699
+            },
+            "mean": {
+              "rgb_rmse": 1536.391066451828,
+              "chroma_rmse": 930.9825690440236
+            },
+            "oracle_bound": {
+              "rgb_rmse": 816.8284571147884,
+              "chroma_rmse": 467.7684323233422
+            }
+          },
+          "crossing": {
+            "candidate": {
+              "rgb_rmse": 848.91985218846,
+              "chroma_rmse": 360.8020895049356
+            },
+            "far_only": {
+              "rgb_rmse": 1532.7317908619168,
+              "chroma_rmse": 1626.109964055532
+            },
+            "mean": {
+              "rgb_rmse": 2763.9900380411414,
+              "chroma_rmse": 1324.4845045485336
+            },
+            "oracle_bound": {
+              "rgb_rmse": 1478.1547026912529,
+              "chroma_rmse": 720.596585345536
+            }
+          },
+          "fan": {
+            "candidate": {
+              "rgb_rmse": 418.2435445298352,
+              "chroma_rmse": 246.77024034112793
+            },
+            "far_only": {
+              "rgb_rmse": 846.3604041669115,
+              "chroma_rmse": 1052.7729389537033
+            },
+            "mean": {
+              "rgb_rmse": 1356.894321753337,
+              "chroma_rmse": 840.3174706916507
+            },
+            "oracle_bound": {
+              "rgb_rmse": 719.6762645538982,
+              "chroma_rmse": 419.2428008816227
+            }
+          }
+        },
+        "components": {
+          "glint": {
+            "candidate": {
+              "recovery": [
+                0.839659485349958,
+                0.8365318641756718,
+                0.8545372437058062
+              ],
+              "template_energy": [
+                3871784984.164553,
+                3600167379.165745,
+                2844576438.871642
+              ],
+              "live": true
+            },
+            "oracle_bound": {
+              "recovery": [
+                0.6257763794626515,
+                0.6123604175607923,
+                0.6521991427767284
+              ],
+              "template_energy": [
+                3871784984.164553,
+                3600167379.165745,
+                2844576438.871642
+              ],
+              "live": true
+            },
+            "passed": true,
+            "bounds": [
+              39,
+              42,
+              52,
+              55
+            ]
+          },
+          "ridge": {
+            "candidate": {
+              "recovery": [
+                0.9392214672660634,
+                0.9354654863929729,
+                0.9152912216332367
+              ],
+              "template_energy": [
+                51983735.586246416,
+                138514832.62970743,
+                161668706.2341408
+              ],
+              "live": true
+            },
+            "oracle_bound": {
+              "recovery": [
+                0.7196321313843479,
+                0.8267673147030402,
+                0.8474577243749162
+              ],
+              "template_energy": [
+                51983735.586246416,
+                138514832.62970743,
+                161668706.2341408
+              ],
+              "live": true
+            },
+            "passed": true,
+            "bounds": [
+              39,
+              31,
+              63,
+              41
+            ]
+          }
+        },
+        "bars": {
+          "whole_mean_gain": true,
+          "core_mean_gain": true,
+          "ridge_mean_gain": true,
+          "whole_far_only_comparison": true,
+          "crossing_far_only_comparison": true,
+          "core_far_only_comparison": true,
+          "ridge_far_only_comparison": true,
+          "glint_component": true,
+          "ridge_component": true
+        },
+        "passed": true
+      },
+      "original_heldout": [
+        {
+          "index": 2,
+          "candidate": {
+            "uncensored": {
+              "all": {
+                "count": 4096,
+                "normalized_rms": 1.1657227817321547,
+                "bar": 1.5,
+                "passed": true,
+                "present": true
+              },
+              "R": {
+                "count": 1024,
+                "normalized_rms": 1.1830421150111152,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G1": {
+                "count": 1024,
+                "normalized_rms": 1.16288745238602,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G2": {
+                "count": 1024,
+                "normalized_rms": 1.136750111851469,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "B": {
+                "count": 1024,
+                "normalized_rms": 1.1796362684303425,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "bright": {
+                "count": 41,
+                "normalized_rms": 4.280079914508441,
+                "bar": 1.75,
+                "passed": false,
+                "present": true
+              },
+              "dim": {
+                "count": 4055,
+                "normalized_rms": 1.0896906528652324,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              }
+            },
+            "censor_count": 0,
+            "censor_one_sided_rms": null,
+            "passed": false
+          },
+          "far_only": {
+            "uncensored": {
+              "all": {
+                "count": 4096,
+                "normalized_rms": 2.615053033645941,
+                "bar": 1.5,
+                "passed": false,
+                "present": true
+              },
+              "R": {
+                "count": 1024,
+                "normalized_rms": 2.4032964434591735,
+                "bar": 1.75,
+                "passed": false,
+                "present": true
+              },
+              "G1": {
+                "count": 1024,
+                "normalized_rms": 2.409156820937294,
+                "bar": 1.75,
+                "passed": false,
+                "present": true
+              },
+              "G2": {
+                "count": 1024,
+                "normalized_rms": 2.4753551435032213,
+                "bar": 1.75,
+                "passed": false,
+                "present": true
+              },
+              "B": {
+                "count": 1024,
+                "normalized_rms": 3.1059227301469217,
+                "bar": 1.75,
+                "passed": false,
+                "present": true
+              },
+              "bright": {
+                "count": 41,
+                "normalized_rms": 17.091937011315814,
+                "bar": 1.75,
+                "passed": false,
+                "present": true
+              },
+              "dim": {
+                "count": 4055,
+                "normalized_rms": 1.9884375366560414,
+                "bar": 1.75,
+                "passed": false,
+                "present": true
+              }
+            },
+            "censor_count": 0,
+            "censor_one_sided_rms": null,
+            "passed": false
+          }
+        },
+        {
+          "index": 6,
+          "candidate": {
+            "uncensored": {
+              "all": {
+                "count": 4096,
+                "normalized_rms": 1.2757378259588685,
+                "bar": 1.5,
+                "passed": true,
+                "present": true
+              },
+              "R": {
+                "count": 1024,
+                "normalized_rms": 1.3308046638865292,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G1": {
+                "count": 1024,
+                "normalized_rms": 1.2352937231794463,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G2": {
+                "count": 1024,
+                "normalized_rms": 1.193851222133521,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "B": {
+                "count": 1024,
+                "normalized_rms": 1.337069790919929,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "bright": {
+                "count": 0,
+                "normalized_rms": null,
+                "bar": 1.75,
+                "passed": true,
+                "present": false
+              },
+              "dim": {
+                "count": 4096,
+                "normalized_rms": 1.2757378259588685,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              }
+            },
+            "censor_count": 0,
+            "censor_one_sided_rms": null,
+            "passed": true
+          },
+          "far_only": {
+            "uncensored": {
+              "all": {
+                "count": 4096,
+                "normalized_rms": 8.787571897847391,
+                "bar": 1.5,
+                "passed": false,
+                "present": true
+              },
+              "R": {
+                "count": 1024,
+                "normalized_rms": 7.550305594296856,
+                "bar": 1.75,
+                "passed": false,
+                "present": true
+              },
+              "G1": {
+                "count": 1024,
+                "normalized_rms": 7.964421052397338,
+                "bar": 1.75,
+                "passed": false,
+                "present": true
+              },
+              "G2": {
+                "count": 1024,
+                "normalized_rms": 7.838203871498228,
+                "bar": 1.75,
+                "passed": false,
+                "present": true
+              },
+              "B": {
+                "count": 1024,
+                "normalized_rms": 11.269832396315335,
+                "bar": 1.75,
+                "passed": false,
+                "present": true
+              },
+              "bright": {
+                "count": 0,
+                "normalized_rms": null,
+                "bar": 1.75,
+                "passed": true,
+                "present": false
+              },
+              "dim": {
+                "count": 4096,
+                "normalized_rms": 8.787571897847391,
+                "bar": 1.75,
+                "passed": false,
+                "present": true
+              }
+            },
+            "censor_count": 0,
+            "censor_one_sided_rms": null,
+            "passed": false
+          }
+        }
+      ],
+      "reference_scope": "Original fixed truth bars and historical references unchanged",
+      "final_checkpoint_sha256": "10b632a7734ec3ae62d3a9bc364cd3f7012e85fae853887856998ab72ec31f19",
+      "final_rgb_sha256": "501867c0cc16645117047ed2b4dcaaf465c6d8866205eebe58228f2f6db47882"
+    }
+  ],
+  "measurement_complete": true,
+  "all_fixed_quality_bars_pass": false,
+  "all_stationary": false,
+  "original_160_step_screen_still_failed": true,
+  "physical_adequacy": {
+    "records": [
+      {
+        "index": 0,
+        "normalized_rms": {
+          "whole": 0.5031009187802951,
+          "crossing": 1.0694726224298692
+        }
+      },
+      {
+        "index": 2,
+        "normalized_rms": {
+          "whole": 0.45461367236226197,
+          "crossing": 1.3490733263673196
+        }
+      },
+      {
+        "index": 4,
+        "normalized_rms": {
+          "whole": 0.4717774978865741,
+          "crossing": 1.524503237817421
+        }
+      },
+      {
+        "index": 6,
+        "normalized_rms": {
+          "whole": 0.6420379970064604,
+          "crossing": 1.678243724770749
+        }
+      },
+      {
+        "index": 8,
+        "normalized_rms": {
+          "whole": 0.8870094153387984,
+          "crossing": 1.1994156834564524
+        }
+      }
+    ],
+    "passed": false,
+    "scope": "Independent1024-ray resolution check; does not block discrete utility execution, does block real-RAW license"
+  },
+  "real_photo_admission": false,
+  "source_immutable": true,
+  "continuation_immutable": true,
+  "source_files": {
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\angular-mismatch\\candidate-rgb-f32.npy": "7e6df1cac1082405cbbdbdfe96063dccdbd8277158ce9f858987be6c9a1e353f",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\angular-mismatch\\far-only\\receipt.json": "e8ce6071defc318ceafca7a01554ee57bead2b2f889ddb5b5589816c3e8ad48f",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\angular-mismatch\\far-only\\reconstruction.npz": "aaf0d1ba11e9f367734834a56620a42d373accc23ecacee0b1a54f7727519c06",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\angular-mismatch\\far-only\\state.pt": "3c8aa8eb0864d3308e278dd12e95bb1940ea8671fa73a2ae8d692422d6937cce",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\angular-mismatch\\far-only-rgb-f32.npy": "4ee31cdbe8274858f0dd9b21ea80392807e58917288b190f654af6e7418c5af5",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\angular-mismatch\\mean-rgb-f32.npy": "b5cacd3550abfef4c3e05e6118cb57d020b67d356a9b582e3d348e43c2844bc8",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\angular-mismatch\\observations-u16.npy": "30be163b7949cd191c09db98edf1b45930d125189ca610ac62f285f25252a9f2",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\angular-mismatch\\oracle-bound-rgb-f32.npy": "e5016da8a2e5553f1fce8199576411f56fc2f3330236dc23515808022e86fcc4",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\angular-mismatch\\prefit-adequacy.json": "880baa12481177c51895e3be1854368345d9feacb04f5f9b0dcd093d5420f970",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\angular-mismatch\\result.json": "9c73e49806bc74b59dfe14c9043baf3c50890020ddf7342ad1a7800c55a64a2c",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\angular-mismatch\\truth-rgb-f32.npy": "2668537f49285dae0b06ad4f9f027387c9605947d8a8b53b5d021d17f239d743",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\angular-mismatch\\two-layer\\receipt.json": "4feb650b2e387753c335758e8356ed477bb5529761db20b70cf7c53bc15ff768",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\angular-mismatch\\two-layer\\reconstruction.npz": "1e09ae50c8260d03bfc4d431df82c413e48f0aab3f6da35b6b194eb85f70867e",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\angular-mismatch\\two-layer\\state.pt": "1d11c2cb0f29592a2ceb68b44082a3ef4273e6be7b65d0c6a775ad1ec980718c",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\bindings.json": "83dc03308210095339b2629105a9131669bd1bef408b0ebddbaade3c7b91140a",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\far-only\\candidate-rgb-f32.npy": "43d4b9e35b96eb3f962b14555fb49dd0e2f782b272798c52e6105ba4fe80ea1d",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\far-only\\far-only\\receipt.json": "ef1a336761446fe0a32725a80416975e1fea540cd3b8456489a2b553b483d371",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\far-only\\far-only\\reconstruction.npz": "b081bc5298d26f8b2472d16f36366e3ca56f5c6934519908ec0f4d83be05acee",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\far-only\\far-only\\state.pt": "3425241fae9dd3da39bf3deb4242391eb9d75da61d7117868928c88d0a7901e3",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\far-only\\far-only-rgb-f32.npy": "190c0214a1e661d34b3cf40389fccebb7fa5b6a2c7f2259c36d2528b17e5b1a0",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\far-only\\mean-rgb-f32.npy": "f53b7be4ece753b343061879cf6f4c38d076cc516632905f12c2faef1e1603a2",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\far-only\\observations-u16.npy": "9958c444cfd91c2b497dfbfa352b82efaa047166f499ad6adf77002be5d26b71",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\far-only\\oracle-bound-rgb-f32.npy": "47cbc7a6238ceff5a3520402a8cf42110a88e2638b0b248ce3adf6fa317334f2",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\far-only\\prefit-adequacy.json": "81451f4a303b9f0684f575df55421c9c74bef8010d6fb1ad07e6da40085239a7",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\far-only\\result.json": "40294d58e123573a70be10df97a24f2aa34e00a4e20d089cbd02b1eafcfe2b54",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\far-only\\truth-rgb-f32.npy": "cafcfd22a43660fd754298af6b2b7c8ec5098d57e7f8cb1eb465fa311c6c2241",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\far-only\\two-layer\\receipt.json": "3096c854ebf8a7064967e8d7872cc99a9a33ed200de4918f7a2330d5e55534a6",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\far-only\\two-layer\\reconstruction.npz": "d4798ae712f66d3111083fc6ac816e6f0fc7c702de0f445e619bf2fd48db23f6",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\far-only\\two-layer\\state.pt": "0c25d6413f6c51ba3851ba9f4bf26741e5a1d9db8d6bd6b98344aea4aef2a456",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\candidate-rgb-f32.npy": "26d1933361d4e55f36654bda5de2e481eb3bf827d99b7a5e0753aa1925f27523",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\far-only\\receipt.json": "bbad44a03ceda48c64f60bba2ab802d34a41bd252941300ebaf62e391ed86d32",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\far-only\\reconstruction.npz": "7179a526e21427fec5f98ab6dd344d5b00815432c2f232f5d8f19c964bfc511f",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\far-only\\state.pt": "55db3d2d50981e788f29bf1846abee895cf50795f6fdf94d9e7e82f54f2226a1",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\far-only-rgb-f32.npy": "bcc4801e2d39cee761940771e509371a892ea535578dffc8ec1c84dc1717555d",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\mean-rgb-f32.npy": "949b99f79af998d85f0c273f6e7d85736a4adb6ada236d243776b5ec71ebcd94",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\observations-u16.npy": "2db55b6a69c2a484ee3287128f3e5a624d3caccdb6a2f18cae60fafd5f7a3f9f",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\oracle-bound-rgb-f32.npy": "2a3dfd15829c0dee5b9858504688eb1b14b8ed2d7cb4bd3871bcd3487a8d2680",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\prefit-adequacy.json": "9c87853a7a0c005345be767a3c80c471f5fdb41ac8f85539ab41afa0076fe80d",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\result.json": "b08597f4abe41b78e3046f571985e091e7245d368f827a624f014e8796a07b95",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\truth-rgb-f32.npy": "82a5a40523bf883867d551676e62c6935941bbdbe8af6bb8a5a0ef990f6d5a86",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\two-layer\\receipt.json": "dd242dea7cf0bf4c5d7f87607efb05a67a56bda626c300cf7157c865d56084fa",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\two-layer\\reconstruction.npz": "5358ec2d7e0820b651c104c6e55f0c4464d82f7751fdff37830103a6c56dd76d",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\two-layer\\state.pt": "36a6fcd39ef371bfc6eecf40dd30f2870cb6a161a9c9fccebff8a7126208a15b",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\candidate-rgb-f32.npy": "fbf011cd81e05479a5fcb2e716ed57029fbabb9478b62c83c50244c58a92b335",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\far-only\\receipt.json": "5a4dd625f2b797fede7205d6aa9a1aa21176750f5a4c062dac0168f651725f96",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\far-only\\reconstruction.npz": "a83fc632004cfbba810a1c2d3b1ccb454c0e729ad4014442dae7d61da67ca34c",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\far-only\\state.pt": "d729c65a507be5f64861a8c953713934de124d63eb1e1f33b0e857ee337fbb66",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\far-only-rgb-f32.npy": "320894206c1e15cd1e2304e872c73da1c705c89df9564ece86c07f8b8d95d91b",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\mean-rgb-f32.npy": "ffe024f6a3d3950dcfba7d3e281eaf15cd6059b3a05d326fe857f8d427280bb5",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\observations-u16.npy": "ff29cf425e33b3076f433c8ea4a98b7079aa23a8deb4dd6aedc61657fd3045c5",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\oracle-bound-rgb-f32.npy": "758b9efce098b81dcd0690d8a69b42822cc270c0cf6ac52b6d140b4234960b04",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\physical-adequacy.json": "08445cf6964b21153769770a038e22abda388c4f26232b8f7c19c4cc81bc306a",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\prefit-adequacy.json": "d534765750774b6aee5f00df5b2fa81216db4193705c03ed25a84f27c7ee8cd4",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\result.json": "699fa88ffecb3c846218943798682953d8d4bca99aeb07081e7a7fc3a0e981a3",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\truth-rgb-f32.npy": "2668537f49285dae0b06ad4f9f027387c9605947d8a8b53b5d021d17f239d743",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\two-layer\\receipt.json": "e1271a3933ea74cce2931c5c5807cdfb3504d1c1eff3b6c9e2543f487373796d",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\two-layer\\reconstruction.npz": "c6e19e5232c8c814095880105050b52f1dbfc3408ed9ecef61c09781180b70ec",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\two-layer\\state.pt": "7abcc019b15cad5d8f43dcfb78babac75cf98b0cbaafc0f05f5b4e5d18a23e3f",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\mechanical.json": "49f6053cd2499d05838a819b22de3494ea25f166f2b0b4d29bc76ad610ef1f7b",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\screen.json": "cb26cc5a5358ebc054e867c2da974717f7084f7b5144d7bbb0bdbae4bfb8a460"
+  },
+  "continued_files": {
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\convergence-2\\output\\bindings-after.json": "4edf644a862f995c4c7792296ac17eda71177ea5838e62a95b2af611e370ccc1",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\convergence-2\\output\\bindings-before.json": "4edf644a862f995c4c7792296ac17eda71177ea5838e62a95b2af611e370ccc1",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\convergence-2\\output\\far-only\\far-only\\predicted-cfa-2.npy": "f63f0def17b812594a07dcc1774c96f1125e77216586d7f372e4740f769bf445",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\convergence-2\\output\\far-only\\far-only\\predicted-cfa-6.npy": "575ae54843ed718ca2ae1ec53024c946641345f257b548194300b5896afd5b34",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\convergence-2\\output\\far-only\\far-only\\receipt.json": "fb952460633d6c3b0d56fb1317d05ee3254d702b273ceb116ab0f6057497a9c5",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\convergence-2\\output\\far-only\\far-only\\reconstruction.npz": "9115801e7060bfa0c43253b80a94b799b79c183ac04fc89974d37722be9427dd",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\convergence-2\\output\\far-only\\far-only\\state.pt": "425029bf2ffdee3c5dfc1a3091a9bda11ae7874638cb874f24c269cbd47ab5b0",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\convergence-2\\output\\flat\\two-layer\\predicted-cfa-2.npy": "51d5e99a6fbd25dea810aefffbc6628b55cf3b1a1384116060a03047b7e6d7ad",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\convergence-2\\output\\flat\\two-layer\\predicted-cfa-6.npy": "81abc876054ce6ff407a781aa4b55eb9c46ea8c4acd4647c36a771cbb376a940",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\convergence-2\\output\\flat\\two-layer\\receipt.json": "db41b9d2b82322c88722f1e02d1099117c9b4c1c74eb3012bca2a3689052d24f",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\convergence-2\\output\\flat\\two-layer\\reconstruction.npz": "cf39faec49f1a9393bc43aee5d1fb60c01b9b7ab706b963dd80604fb086f6deb",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\convergence-2\\output\\flat\\two-layer\\state.pt": "9245d1ac89cf7f094a95b34556b0d49357a2e1add4d419e51db06f7ca34962de",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\convergence-2\\output\\layered\\two-layer\\predicted-cfa-2.npy": "49287057746391ce95bdd5db9f9d9378ff0bfe8b2348c50faa4cc3fd8f4bf2b1",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\convergence-2\\output\\layered\\two-layer\\predicted-cfa-6.npy": "28ab071efd90c6f2c2ad9578faff560e24bdf6ac338cf2dd9bc41b3b12873547",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\convergence-2\\output\\layered\\two-layer\\receipt.json": "143250d97dfd39f448f9d1a4a43f2c26c9406898317fa376c86fdcd147a7d1a0",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\convergence-2\\output\\layered\\two-layer\\reconstruction.npz": "14552c72684ac6d824dd8abda6769b1aca3a0a9ca4b3149468ab5b98c9bddd25",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\convergence-2\\output\\layered\\two-layer\\state.pt": "10b632a7734ec3ae62d3a9bc364cd3f7012e85fae853887856998ab72ec31f19",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\convergence-2\\output\\result.json": "fb2475537f8255832fe7c15a7458f443d567b638200e83931873eacedbbbca32"
+  },
+  "scorer_sha256": "ed396953a185a545733192588230e81eb458cb517e1b405f1fd7fe87ace7ff94",
+  "frozen_model_sha256": "5710146ffcf463de85e317050bc81357922965d6006c7b4cf311f4d80d8ee512",
+  "scope": "Unchanged-objective convergence diagnostic; no iteration chosen by truth and no canonical/SOTA claim"
+}

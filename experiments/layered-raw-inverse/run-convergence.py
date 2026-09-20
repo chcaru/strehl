@@ -27,6 +27,7 @@ def main():
     paths.update(HERE / name for name in (
         'convergence.py', 'convergence-plan.md', 'independent-convergence-score.py',
         'independent-convergence-plan.md', 'independent-convergence-review.md',
+        'independent-convergence-storage-review.md',
         'run-convergence.py'))
     assert all(p.is_file() for p in paths)
     sources = [c.ref(p) for p in sorted(paths)]
@@ -38,6 +39,12 @@ def main():
                '--source', str(source), '--out', str(out / 'output')]
     c.job(command, fields, out, wall=180)
     assert all(c.ref(Path(row['path'])) == row for row in sources)
+    continued = json.loads((out / 'output/result.json').read_text())
+    for arm in continued['arms']:
+        receipt = json.loads(Path(arm['receipt']).read_text())
+        assert receipt['noncontiguous_gradients_converted'] > 0
+        assert all(row['gradient_storage_logical_exact'] for row in receipt['closure_history']
+                   if row['evaluation_status'] == 'complete')
     scoring = out / 'scoring-process'
     scoring.mkdir()
     command = [sys.executable, '-I', '-B', '-X', 'faulthandler',

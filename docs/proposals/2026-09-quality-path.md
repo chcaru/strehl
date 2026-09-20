@@ -10,10 +10,14 @@ retain an unresolved vitamin-C glint-fan deficit. Subsequent donor, wavelet,
 colour-guide and temporal-affinity interventions have not earned promotion;
 their exact closures appear below. Focused star-sand attribution is complete
 at9c00ca3e, and RAW-affinity's independent rejection is committed at13405ce7.
-The next bounded implementation is layered original-CFA inverse rendering in
-experiments/layered-raw-inverse: known-optics generated reconstruction first,
-with unknown radiances/coverage and whole-observation holdouts. It has no
-photographic admission yet. The passing complete-periodic all-CFA controls
+Layered original-CFA inverse rendering now reconstructs generated coloured
+filaments and highlights, but fails flat noise, bright withheld prediction and
+physical pupil-integration checks. Its unchanged-objective continuation reduces
+structured-scene errors without establishing convergence. The next bounded
+implementation compares regularization on delivered radiance against the old
+hidden-sheet penalty, with identical solver budgets and protected true detail.
+See experiments/layered-raw-inverse/results.md. It has no photographic
+admission yet. The passing complete-periodic all-CFA controls
 remain retained at48276660; speed work stays behind demonstrated image quality.
 
 The owner's priority is photographic quality on the A7C II macro captures.

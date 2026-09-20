@@ -95,3 +95,49 @@ failures. Its SHA256 is
 `866fb22f9477174af1c674b42b3aed15e96f3f48508f2b89852535d19e6286de`.
 A layout-only repair will copy gradients to contiguous storage and assert exact
 logical-value equality. No objective or optimizer setting change is warranted.
+
+## Fixed continuation after the storage repair
+
+MEASURED command, with the same Python312 runtime:
+
+```
+python -I -B -X faulthandler experiments/layered-raw-inverse/run-convergence.py --out experiments/layered-raw-inverse/convergence-2
+```
+
+The optimizer process completed in9.016s; separate independent scoring took
+2.422s. Peak job committed memory was2,786,213,888bytes. These are execution
+costs, not performance benchmarks. The nine-line storage repair copies only
+noncontiguous gradients; every closure asserts exact logical-value equality.
+All original input, checkpoint, model and control bindings remain unchanged.
+Independent score SHA256:
+`7af5c79a280684c4cabe90087d081464fdda6b1250ee07fe07b95b67afb48516`.
+
+| Arm / measure | Loaded checkpoint | Final returned state |
+|---|---:|---:|
+| Flat RGB RMS, DN | 8.67525 | 8.68280 |
+| Far-only one-layer whole RGB RMS, DN | 291.11714 | 187.39587 |
+| Far-only one-layer bright held residual, supplied sigma | 9.46578 | 4.89127 |
+| Layered whole RGB RMS, DN | 235.11192 | 209.05703 |
+| Layered core RGB RMS, DN | 1064.73155 | 931.72756 |
+| Layered crossing RGB RMS, DN | 848.91985 | 747.26942 |
+| Layered bright held residual, supplied sigma | 4.28008 | 2.82600 |
+
+The flat arm takes one optimizer update and reaches the declared normalized
+softplus/logit max-gradient tolerance:7.9124e-5 against1e-4. This is not
+radiance-space stationarity or a uniqueness certificate. Its RGB/chroma error
+still exceeds the training mean6.01845/8.36762DN, at8.68280/12.35744DN.
+The criterion allows a noisy image; calling it stationary does not admit it.
+
+Both structured arms consume105 actual objective evaluations and remain
+nonstationary: max gradients0.01518 and0.04650. All layered image bars still
+pass, while bright prediction still fails1.75sigma. Optimization incompleteness
+has a measured effect, but no optimum has been established. The new glint
+component ratios1.032–1.053 are overshoot beyond truth, not extra recovered
+detail. Uncapped RGB error remains binding when capped component scores pass.
+The original64-versus1024-ray physical integration failure also remains.
+
+No real-photo application, default promotion or SOTA claim follows. The
+independent review is in independent-convergence-results.md. The next change
+must address an identified degree of freedom or objective defect, with the
+unchanged solver/control arm alongside it; another favorable final iterate
+alone cannot explain the failure.

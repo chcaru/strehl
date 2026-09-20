@@ -107,8 +107,16 @@ def run_arm(model, source, out, case, arm):
         gradient = torch.cat([p.grad.detach().reshape(-1) for p in state.parameters()])
         if not torch.isfinite(prior) or not torch.isfinite(gradient).all():
             raise FloatingPointError("nonfinite unchanged objective/gradient")
+        converted = 0
+        for p in state.parameters():
+            logical, contiguous = p.grad.detach().reshape(-1), p.grad.contiguous()
+            if not torch.equal(logical, contiguous.view(-1)):
+                raise AssertionError("contiguous gradient changed logical values")
+            converted += int(not p.grad.is_contiguous())
+            p.grad = contiguous
         total = data+float(prior.detach())
         record.update(dict(evaluation_status="complete", data_nll=data,
+            noncontiguous_gradients_converted=converted, gradient_storage_logical_exact=True,
             prior=float(prior.detach()), total=total, gradient_l2=float(torch.linalg.vector_norm(gradient)),
             gradient_max=float(gradient.abs().max()), elapsed_seconds=time.monotonic()-started))
         # LBFGS consumes scalar value and already-populated parameter gradients.
@@ -158,6 +166,7 @@ def run_arm(model, source, out, case, arm):
         returned_state_accepted=accepted, optimizer_n_iter=internal.get("n_iter", 0),
         optimizer_func_evals=internal.get("func_evals", 0), actual_evaluations=evaluations,
         completed_evaluations=sum(h["evaluation_status"] == "complete" for h in history),
+        noncontiguous_gradients_converted=sum(h.get("noncontiguous_gradients_converted", 0) for h in history),
         wall_seconds=time.monotonic()-started, read_indices=sorted(set(observed.reads)),
         read_count=len(observed.reads), predictions=prediction_files,
         stationarity_scope="raw normalized softplus/logit parameter gradient; no image/truth guarantee")
