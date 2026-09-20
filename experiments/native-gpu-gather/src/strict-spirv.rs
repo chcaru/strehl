@@ -118,7 +118,11 @@ fn decorate(words: &[u32]) -> Result<(Vec<u32>, BTreeMap<String, usize>), String
 }
 
 pub fn compile(strict: bool) -> Result<(Vec<u32>, CompilationReport), String> {
-    let module = naga::front::wgsl::parse_str(include_str!("gather.wgsl"))
+    compile_source(strict, include_str!("gather.wgsl"))
+}
+
+pub(crate) fn compile_source(strict: bool, source: &str) -> Result<(Vec<u32>, CompilationReport), String> {
+    let module = naga::front::wgsl::parse_str(source)
         .map_err(|e| format!("owned WGSL parse: {e:?}"))?;
     let info = validate(&module)?;
     if module.entry_points.len() != 3 || ENTRY_POINTS.iter().any(|name| !module.entry_points.iter().any(|ep|

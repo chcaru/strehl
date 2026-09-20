@@ -10,6 +10,8 @@ use wgpu::util::DeviceExt;
 #[path = "strict-spirv.rs"]
 mod strict_spirv;
 pub use strict_spirv::CompilationReport;
+#[path = "../../ca-before-mhc/gpu.rs"]
+pub mod ca_before_mhc;
 #[path = "device-coordinates.rs"]
 mod device_coordinates;
 pub use device_coordinates::{CoordinateReport, MIN_DEVICE_COEFFICIENT, coefficients_safe as device_coordinate_eligible};
@@ -104,6 +106,7 @@ pub struct GpuGather {
     gather: wgpu::ComputePipeline,
     quantize: wgpu::ComputePipeline,
     coordinates: Option<device_coordinates::DeviceCoordinates>,
+    ca_stage: Option<ca_before_mhc::Kernels>,
     pub coordinate_compilation: Option<CoordinateReport>,
     schedule: Schedule,
     pub adapter: String,
@@ -177,7 +180,7 @@ impl GpuGather {
             let (kernel, report) = device_coordinates::DeviceCoordinates::new(&device, hardware)?;
             (Some(kernel), Some(report))
         } else { (None, None) };
-        Ok(Self { device, queue, layout, mhc, gather, quantize, schedule, coordinates, coordinate_compilation,
+        Ok(Self { device, queue, layout, mhc, gather, quantize, schedule, coordinates, coordinate_compilation, ca_stage: None,
             adapter: info.name.clone(), device_type: format!("{:?}",info.device_type),
             backend: format!("{:?}",info.backend), compilation, initialization_ms: start.elapsed().as_secs_f64()*1000.0 })
     }
@@ -198,17 +201,18 @@ impl GpuGather {
     /// The caller must explicitly select this experiment; unsupported modes
     /// return Err before upload rather than silently changing the operator.
     pub fn run(&mut self, input: &Input<'_>) -> Result<Output, String> {
-        self.run_inner(input, None)
+        self.run_inner(input, None, None)
     }
 
     /// Independent control seam; the ordinary experiment has no mutator.
     pub fn run_with_plan_mutator(&mut self, input: &Input<'_>,
         mutate: &mut dyn FnMut(usize, &mut [SamplePlan])) -> Result<Output, String> {
-        self.run_inner(input, Some(mutate))
+        self.run_inner(input, Some(mutate), None)
     }
 
     fn run_inner(&mut self, input: &Input<'_>,
-        mut mutate: Option<&mut dyn FnMut(usize, &mut [SamplePlan])>) -> Result<Output, String> {
+        mut mutate: Option<&mut dyn FnMut(usize, &mut [SamplePlan])>,
+        ca_stage: Option<ca_before_mhc::Stage>) -> Result<Output, String> {
         let total = Instant::now();
         let coordinate_fallback = (self.schedule == Schedule::Device256 && !device_coordinate_eligible(input.pulls))
             .then_some(device_coordinates::COEFFICIENT_GUARD);
@@ -293,7 +297,12 @@ impl GpuGather {
         });
         let transforms = coordinates.map(|_| device_coordinates::DeviceCoordinates::transforms(&self.device,input.pulls));
         let coordinate_bind = coordinates.zip(transforms.as_ref()).map(|(kernel,transforms)|kernel.bind(&self.device,transforms,&uniform,&plans));
-        let buffers = [&uniform,&source,&rgb,&plans,&output,&coverage];
+        let prepared = if let Some(stage) = ca_stage {
+            Some(self.ca_stage.as_ref().ok_or("CA kernels absent")?.prepare(self,input,stage,&source,&rgb,&output,&coverage,&mut costs)?)
+        } else { None };
+        let mhc_source = prepared.as_ref().filter(|_|ca_stage.is_some_and(|s|s.order==ca_before_mhc::Order::Before)).unwrap_or(&source);
+        let gathered_rgb = prepared.as_ref().filter(|_|ca_stage.is_some_and(|s|s.order==ca_before_mhc::Order::StagedAfter)).unwrap_or(&rgb);
+        let buffers = [&uniform,&source,gathered_rgb,&plans,&output,&coverage];
         let entries: Vec<_> = buffers.iter().enumerate().map(|(i,b)| wgpu::BindGroupEntry {
             binding:i as u32,resource:b.as_entire_binding(),
         }).collect();
@@ -301,15 +310,21 @@ impl GpuGather {
             label:None,layout:&self.layout,entries:&entries,
         });
         let mut encoder = self.device.create_command_encoder(&Default::default());
-        { let mut pass = encoder.begin_compute_pass(&wgpu::ComputePassDescriptor {label:Some("MHC"),timestamp_writes:None});
-          pass.set_pipeline(&self.mhc);pass.set_bind_group(0,&bind,&[]);pass.dispatch_workgroups(w.div_ceil(64) as u32,h as u32,1); }
+        if !ca_stage.is_some_and(|s|s.order==ca_before_mhc::Order::StagedAfter) {
+          let mhc_buffers = [&uniform,mhc_source,&rgb,&plans,&output,&coverage];
+          let mhc_entries:Vec<_> = mhc_buffers.iter().enumerate().map(|(i,b)|wgpu::BindGroupEntry{binding:i as u32,resource:b.as_entire_binding()}).collect();
+          let mhc_bind = self.device.create_bind_group(&wgpu::BindGroupDescriptor{label:None,layout:&self.layout,entries:&mhc_entries});
+          let mut pass = encoder.begin_compute_pass(&wgpu::ComputePassDescriptor {label:Some("MHC"),timestamp_writes:None});
+          pass.set_pipeline(if ca_stage.is_some(){&self.ca_stage.as_ref().unwrap().mhc}else{&self.mhc});
+          pass.set_bind_group(0,&mhc_bind,&[]);pass.dispatch_workgroups(w.div_ceil(64) as u32,h as u32,1);
+        }
         self.queue.submit([encoder.finish()]);
         self.device.poll(wgpu::PollType::wait_indefinitely()).map_err(|e|e.to_string())?;
         costs.submit_wait_readback_ms += execute_start.elapsed().as_secs_f64()*1000.0;
         costs.source_upload_bytes = source_bytes;
-        costs.coordinate_upload_bytes = if transforms.is_some() {96} else {0};
-        costs.parameter_upload_bytes = std::mem::size_of::<Params>() as u64;
-        costs.device_buffer_bytes = source_bytes+rgb_bytes+plan_bytes+4*output_bytes+std::mem::size_of::<Params>() as u64+costs.coordinate_upload_bytes;
+        costs.coordinate_upload_bytes += if transforms.is_some() {96} else {0};
+        costs.parameter_upload_bytes += std::mem::size_of::<Params>() as u64;
+        costs.device_buffer_bytes += source_bytes+rgb_bytes+plan_bytes+4*output_bytes+std::mem::size_of::<Params>() as u64+if transforms.is_some(){96}else{0};
         let mut all_coverage = Vec::with_capacity(n/2);
         let mut covered = 0usize;
         let mut plan = match schedule {
@@ -379,7 +394,7 @@ impl GpuGather {
                 if let Some((kernel,bind)) = coordinates.zip(coordinate_bind.as_ref()) {kernel.encode(&mut encoder,bind,w*rows);}
             }
             { let mut pass = encoder.begin_compute_pass(&wgpu::ComputePassDescriptor {label:Some("Catmull packed gather"),timestamp_writes:None});
-              pass.set_pipeline(&self.gather);pass.set_bind_group(0,&bind,&[]);pass.dispatch_workgroups((w*rows/2).div_ceil(64) as u32,1,1); }
+              pass.set_pipeline(if ca_stage.is_some(){&self.ca_stage.as_ref().unwrap().gather}else{&self.gather});pass.set_bind_group(0,&bind,&[]);pass.dispatch_workgroups((w*rows/2).div_ceil(64) as u32,1,1); }
             encoder.copy_buffer_to_buffer(&output,0,&stage,0,bytes);
             encoder.copy_buffer_to_buffer(&coverage,0,&stage,bytes,bytes);
             self.queue.submit([encoder.finish()]);

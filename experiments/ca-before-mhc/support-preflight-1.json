@@ -1,0 +1,35 @@
+{
+  "label": "DERIVED conservative geometric bound; not image quality or an exact coverage census",
+  "map_sha256": "ce8534c9e65c5c761373bad87df5352c1c46319b7eaf7f7c91477ea61b4f4922",
+  "script_sha256": "6c662bd6b6021d50ee74f292dfa6139478a6306b4ca14a82c0154d4a99326415",
+  "cases": [
+    {
+      "additional_inset_quads": 0,
+      "crop_quad_xywh": [
+        133,
+        89,
+        3250,
+        2166
+      ],
+      "sufficient_support": false,
+      "refusing_frames": [
+        0
+      ],
+      "minimum_margin_mixed_native_green_and_colour_plane_pixels": -0.22218558154054335,
+      "scope": "Failure is inconclusive; envelope bounds a superset. Actual finite coverage remains authoritative."
+    },
+    {
+      "additional_inset_quads": 8,
+      "crop_quad_xywh": [
+        141,
+        97,
+        3234,
+        2150
+      ],
+      "sufficient_support": true,
+      "refusing_frames": [],
+      "minimum_margin_mixed_native_green_and_colour_plane_pixels": 8.085882822379972,
+      "scope": "Failure is inconclusive; envelope bounds a superset. Actual finite coverage remains authoritative."
+    }
+  ]
+}

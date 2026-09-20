@@ -6,6 +6,9 @@
 use super::*;
 use std::sync::{Mutex, OnceLock};
 use strehl_native_gpu_gather::{GpuGather, Input, Output, Schedule};
+pub(crate) mod ca_stage {
+    include!(concat!(env!("CARGO_MANIFEST_DIR"),"/../../experiments/ca-before-mhc/integration.rs"));
+}
 
 // One context shared across actual RGB, RGB probe and green-only probe calls.
 static GPU: OnceLock<std::result::Result<Mutex<GpuGather>, String>> = OnceLock::new();
@@ -43,6 +46,7 @@ pub(crate) fn gpu_gather_enabled() -> Result<bool> {
         Ok(v) if v == "on" => Ok(true),
         other => Err(format!("STREHL_GPU_GATHER: expected off or on, got {other:?}")),
     }) { Ok(value) => *value, Err(message) => bail!("{message}") };
+    ca_stage::validate(enabled)?;
     if enabled { gpu_schedule()?; } // CPU-only requests never select a GPU schedule.
     Ok(enabled)
 }
@@ -55,6 +59,7 @@ fn eligible(resampler: Resampler) -> Result<bool> {
     let malvar = *MALVAR.get_or_init(|| !std::env::var(strehl_core::demosaic::DEMOSAIC_ENV)
         .is_ok_and(|v| v.eq_ignore_ascii_case("directional")));
     if !malvar || resampler != Resampler::CatmullRom {
+        anyhow::ensure!(ca_stage::mode()?==ca_stage::Mode::Current,"CA stage requires Malvar/Catmull");
         eprintln!("  GPU gather requested; this demosaic/resampler remains CPU (Malvar + Catmull only)");
         return Ok(false);
     }
@@ -73,8 +78,7 @@ fn run<const GREEN_ONLY: bool>(frame: &strehl_raw::Frame, t: Similarity,
     let inverse_gain = [1.0 / gain[0], 1.0 / gain[1], 1.0 / gain[2]];
     let ident = strehl_raw::identity(&frame.path);
     let ca = strehl_core::optics::profile_for_capture_env(ident.model.as_deref(), ident.lens_type3)?;
-    let pulls = [(0,0),(1,0),(1,1)].map(|(x,y)| strehl_core::optics::OpticalProfile::compose(
-        ca, strehl_core::optics::cfa_site_channel(x,y), t));
+    let (ca_mode,ca_pulls,pulls) = ca_stage::inputs(t,ca)?;
     let input = Input { data: &frame.data, stride: frame.stride,
         active: [frame.active.x, frame.active.y, frame.active.width, frame.active.height],
         geom, black: frame.levels.black, gain, inverse_gain, pulls,
@@ -95,8 +99,10 @@ fn run<const GREEN_ONLY: bool>(frame: &strehl_raw::Frame, t: Similarity,
     }) { Ok(gpu) => gpu, Err(message) => bail!("GPU gather initialization failed: {message}") };
     // Initialization, validation, allocation, device or dispatch errors abort
     // the explicit experiment. Never turn a failed GPU timing into a CPU run.
-    let output = gpu.lock().map_err(|_| anyhow::anyhow!("GPU gather mutex poisoned"))?
-        .run(&input).map_err(anyhow::Error::msg)?;
+    let output = {
+        let mut locked = gpu.lock().map_err(|_| anyhow::anyhow!("GPU gather mutex poisoned"))?;
+        ca_stage::execute(&mut locked,&input,t,ca_mode,ca_pulls)?
+    };
     match gpu_log_mode()? {
         GpuLog::Off => {}
         GpuLog::On => eprintln!("  GPU gather {} {:?}: {}x{}, covered {}/{}, library call {:.3} ms, pack {:.3}, CPU coordinates {:.3}, submit/wait/readback {:.3}; upload {} B, download {} B",
@@ -122,6 +128,7 @@ pub(super) fn gpu_remosaic<const GREEN_ONLY: bool>(frame: &mut strehl_raw::Frame
     t: Similarity, geom: PlaneGeometry, resampler: Resampler) -> Result<Option<f64>>
 {
     if !eligible(resampler)? { return Ok(None); }
+    anyhow::ensure!(ca_stage::mode()?==ca_stage::Mode::Current,"CA stage requires cropped direct consumer");
     let execution = warp_writeback_mode()?; // Preserve the existing refusal.
     let output = run::<GREEN_ONLY>(frame,t,geom,resampler)?;
     let words_per_row = output.width / 2;
@@ -149,6 +156,7 @@ pub(super) fn gpu_rounded_planes<const GREEN_ONLY: bool>(frame: &strehl_raw::Fra
 {
     if !gpu_gather_enabled()? { return Ok(false); }
     if mode != DirectPlaneMode::Rounded {
+        anyhow::ensure!(ca_stage::mode()?==ca_stage::Mode::Current,"CA stage requires rounded direct-plane call");
         eprintln!("  GPU gather requested; direct mode {mode:?} remains CPU (rounded only)");
         return Ok(false);
     }
@@ -165,6 +173,9 @@ pub(super) fn gpu_rounded_planes<const GREEN_ONLY: bool>(frame: &strehl_raw::Fra
     let execution = warp_writeback_mode()?;
     let output = run::<GREEN_ONLY>(frame,t,geom,resampler)?;
     let black = frame.levels.black;
+    let check_ca_support = ca_stage::mode()?!=ca_stage::Mode::Current;
+    #[cfg(test)] let check_ca_support = check_ca_support || ca_stage::explicit();
+    if check_ca_support {ca_stage::require_coverage(&output,crop,offsets)?;}
     for (&(dx,dy), plane) in offsets.iter().zip(planes) {
         let copy_row = |y: usize, values: &mut [f32]| {
             // One word is one native horizontal pair. Crop remains in the

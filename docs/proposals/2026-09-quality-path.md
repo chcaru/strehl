@@ -85,6 +85,17 @@ Both returned fits remain nonstationary; this rejects the fixed recipe, not
 all motion-aware reconstruction. No further prior, schedule or iteration
 rescue. Select the next intervention against an identified real photographic
 defect, and require complete before/after stack images for any claimed gain.
+The next concrete pipeline counterfactual corrects same-colour RAW geometry
+before warp-time MHC mixes channels, then uses the common alignment pull.
+Current full-resolution gathering does those operations in the opposite order.
+The frozen lens profile is an intervention parameter, not newly validated
+optical truth. Added interpolation may destroy colour detail, so independent
+continuous-scene, flat-noise and genuine-colour controls precede a complete
+chip comparison. See experiments/ca-before-mhc/plan.md and independent-plan.md.
+The second calibration slide now has a complete299-source baseline at6476x4316,
+with original content hashes unchanged; source attribution is next. See
+experiments/quality-september20/slide2-baseline-results.md. This new baseline
+is corpus coverage, not an image-quality improvement.
 No photographic admission yet. The passing complete-periodic all-CFA controls
 remain retained at48276660; speed work stays behind demonstrated image quality.
 
