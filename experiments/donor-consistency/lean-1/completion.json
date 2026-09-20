@@ -1,0 +1,9 @@
+{
+  "passed": true,
+  "source_unchanged": true,
+  "executable": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\lean-1\\lean.exe",
+    "sha256": "34877e99d94dd2372734057b8a69d27086addd78aaecea6c939c1c348c5c0e6d",
+    "bytes": 1274368
+  }
+}

@@ -1,0 +1,324 @@
+{
+  "masks": [
+    {
+      "levels": [
+        {
+          "dimensions": [
+            3460,
+            2306
+          ],
+          "level": 0,
+          "positive_coefficients": 991,
+          "sha256": "137f5fcb4045f26143f44ccc6b830c756e0c449da9302ef5aea837c0ca43912c",
+          "terminal_ignored": false
+        },
+        {
+          "dimensions": [
+            1730,
+            1153
+          ],
+          "level": 1,
+          "positive_coefficients": 328,
+          "sha256": "34d366552c28ce5e68a1098b5846e0adfefb35724a5be4546cdd21b69b5cf12b",
+          "terminal_ignored": false
+        },
+        {
+          "dimensions": [
+            865,
+            577
+          ],
+          "level": 2,
+          "positive_coefficients": 132,
+          "sha256": "38614601699141f2bba324656763a9189f9169f149508964351c30b3ad44218a",
+          "terminal_ignored": false
+        },
+        {
+          "dimensions": [
+            433,
+            289
+          ],
+          "level": 3,
+          "positive_coefficients": 64,
+          "sha256": "d01f2690612081fd4eec334a9ae1f7f09f76e8b606a67c023bfee2ae0123910d",
+          "terminal_ignored": false
+        },
+        {
+          "dimensions": [
+            217,
+            145
+          ],
+          "level": 4,
+          "positive_coefficients": 34,
+          "sha256": "472ef56a1c5e8a4e3d697053c381efd60d1af9b7253b2004a4269bf37d78c7ca",
+          "terminal_ignored": false
+        },
+        {
+          "dimensions": [
+            109,
+            73
+          ],
+          "level": 5,
+          "positive_coefficients": 24,
+          "sha256": "2d735c060c624109b51ef448006608068341439e9a9d5695dd1cd20469d2e267",
+          "terminal_ignored": false
+        },
+        {
+          "dimensions": [
+            55,
+            37
+          ],
+          "level": 6,
+          "positive_coefficients": 20,
+          "sha256": "5aa04f0b2ab9526526ddb12d2441611f27e004e1e961ec78dcd048b4435314aa",
+          "terminal_ignored": false
+        },
+        {
+          "dimensions": [
+            28,
+            19
+          ],
+          "level": 7,
+          "positive_coefficients": 16,
+          "sha256": "9dd838ca59248abbe6e619844204176f6798209d110f7cd9982848884f8cbcfd",
+          "terminal_ignored": true
+        }
+      ],
+      "prescribed_donor": 28,
+      "region": 0,
+      "segment": [
+        [
+          2624.0,
+          2906.0
+        ],
+        [
+          2602.0,
+          2945.0
+        ]
+      ]
+    },
+    {
+      "levels": [
+        {
+          "dimensions": [
+            3460,
+            2306
+          ],
+          "level": 0,
+          "positive_coefficients": 1143,
+          "sha256": "c13ac5ef601963e230ff2c45aaf397848613840b6aeea2e97ce3b68dc723c2ea",
+          "terminal_ignored": false
+        },
+        {
+          "dimensions": [
+            1730,
+            1153
+          ],
+          "level": 1,
+          "positive_coefficients": 376,
+          "sha256": "99d5e305ad87bb0736678ff02fd53f43d693fe675af4628a912aa211b96613e6",
+          "terminal_ignored": false
+        },
+        {
+          "dimensions": [
+            865,
+            577
+          ],
+          "level": 2,
+          "positive_coefficients": 143,
+          "sha256": "c370edefff346f65d2f49507afce228d2ba51d634cbca948db96b3010928d950",
+          "terminal_ignored": false
+        },
+        {
+          "dimensions": [
+            433,
+            289
+          ],
+          "level": 3,
+          "positive_coefficients": 64,
+          "sha256": "fda0f96c4f1679e06bf96ae47b7cf52c0294e3fe640472e3e1429b076c7fc43f",
+          "terminal_ignored": false
+        },
+        {
+          "dimensions": [
+            217,
+            145
+          ],
+          "level": 4,
+          "positive_coefficients": 40,
+          "sha256": "3a27621a6d0b0718fcfe98ddc60fe5500673cb1aa683965fd4a9bb22ea129ba2",
+          "terminal_ignored": false
+        },
+        {
+          "dimensions": [
+            109,
+            73
+          ],
+          "level": 5,
+          "positive_coefficients": 25,
+          "sha256": "dc6a942150f09bb68a0a317d84f5c8df2bfb6173ae36ef76491d4765ba52d94b",
+          "terminal_ignored": false
+        },
+        {
+          "dimensions": [
+            55,
+            37
+          ],
+          "level": 6,
+          "positive_coefficients": 25,
+          "sha256": "6fe1ad8b9945cfd46e84d1401f4080345206ff4713030683199b60f9ac82bcd1",
+          "terminal_ignored": false
+        },
+        {
+          "dimensions": [
+            28,
+            19
+          ],
+          "level": 7,
+          "positive_coefficients": 20,
+          "sha256": "a6d639645bf6cf31c1ed2e6514a116773e02827a190830a1c0f3cb542eb501c5",
+          "terminal_ignored": true
+        }
+      ],
+      "prescribed_donor": 33,
+      "region": 1,
+      "segment": [
+        [
+          3080.0,
+          2150.0
+        ],
+        [
+          3102.0,
+          2203.0
+        ]
+      ]
+    },
+    {
+      "levels": [
+        {
+          "dimensions": [
+            3460,
+            2306
+          ],
+          "level": 0,
+          "positive_coefficients": 451,
+          "sha256": "eda4c960a93f16e4e4625c8c5cabbc563beea4142e303c47fbea35a73c7f4f60",
+          "terminal_ignored": false
+        },
+        {
+          "dimensions": [
+            1730,
+            1153
+          ],
+          "level": 1,
+          "positive_coefficients": 163,
+          "sha256": "cb6d23e4d41df6d21d1d1f0ffca62ce4b88e66a95eefea0a206934d64cf2a006",
+          "terminal_ignored": false
+        },
+        {
+          "dimensions": [
+            865,
+            577
+          ],
+          "level": 2,
+          "positive_coefficients": 73,
+          "sha256": "8d098377f3cda2fe19963b49e898226189b89f5a9b55f51c2534dddbe73cea36",
+          "terminal_ignored": false
+        },
+        {
+          "dimensions": [
+            433,
+            289
+          ],
+          "level": 3,
+          "positive_coefficients": 36,
+          "sha256": "cb000d0b34f08d488a49d36e1c267904b4e5a04ddeafeab95ba60e3d248d335d",
+          "terminal_ignored": false
+        },
+        {
+          "dimensions": [
+            217,
+            145
+          ],
+          "level": 4,
+          "positive_coefficients": 25,
+          "sha256": "bcda9f6c5116056bc6c92e65cd5a53dca6994549b6debd040263a50eb0523e7e",
+          "terminal_ignored": false
+        },
+        {
+          "dimensions": [
+            109,
+            73
+          ],
+          "level": 5,
+          "positive_coefficients": 16,
+          "sha256": "54e93a994da11302601f0d4b6d49af32c147e3b5c3a7302a1b007042e164d75a",
+          "terminal_ignored": false
+        },
+        {
+          "dimensions": [
+            55,
+            37
+          ],
+          "level": 6,
+          "positive_coefficients": 16,
+          "sha256": "34a49db69ef6c2303c40e5b49b51472b61e45e2da1418c4dbb533f6728fbfc31",
+          "terminal_ignored": false
+        },
+        {
+          "dimensions": [
+            28,
+            19
+          ],
+          "level": 7,
+          "positive_coefficients": 16,
+          "sha256": "d72394bfd2da5e2bd02f1875ebbc169562487ee9737f4aeab1dc5e451dcad20c",
+          "terminal_ignored": true
+        }
+      ],
+      "prescribed_donor": 25,
+      "region": 2,
+      "segment": [
+        [
+          3240.0,
+          2070.0
+        ],
+        [
+          3240.0,
+          2070.0
+        ]
+      ]
+    }
+  ],
+  "native_origin": [
+    0,
+    0
+  ],
+  "native_quad_centre": [
+    0.5,
+    0.5
+  ],
+  "normalized_counts": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "radii": [
+    16,
+    24
+  ],
+  "raw_overlap_counts": [
+    0,
+    0,
+    0,
+    0,
+    2,
+    6,
+    12,
+    17
+  ]
+}

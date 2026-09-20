@@ -1,0 +1,13 @@
+{
+  "source": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\full-1\\output\\late.tiff",
+  "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\full-1\\photo-comparison-1\\late.png",
+  "shape": [
+    4612,
+    6920,
+    3
+  ],
+  "conversion": "rounded division by 257; full extent; no resampling",
+  "source_sha256": "6635aee9c56f350e906b9add33453d1aab7e55b3f7e1ae03e80b4ba3b0b3fb6d",
+  "png_sha256": "7629a35c1cda298bd8dfdf1d0c72509a549f11449dc44cd033c002db441bd280",
+  "icc_preserved": true
+}

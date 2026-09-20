@@ -1,0 +1,56 @@
+{
+  "status": "MECHANICAL_CONTROLS_PASSED",
+  "records": {
+    "DONOR_GEOMETRY": {
+      "evaluation": "2*quad+0.5+odd native output offset; three fixed photo masks",
+      "full_weight_samples": 2852,
+      "max_analytic_mask_error": 2.915660793489927e-05,
+      "one_native_phase_changed": 1287,
+      "taper_samples": 2306
+    },
+    "DONOR_CONSUMER": {
+      "baseline_observer_after_bit_exact": true,
+      "coefficient_max_error_dn": 3.0517578125e-05,
+      "independent_mean_base_max_error_dn": 0.0,
+      "independent_three_source_mean_base_bit_exact": true,
+      "mask_max_error": 0.0,
+      "normalized_by_level": [
+        3212,
+        832,
+        227,
+        68
+      ],
+      "off_zero_finish_bit_exact": true,
+      "ones_changes_baseline": 25984,
+      "ones_differs_from_direct_donor": 25984,
+      "ones_output_max_error_dn": 0.0,
+      "ones_pre_hull_excursions": 4,
+      "output_max_error_dn": 0.000244140625,
+      "raw_overlap_by_level": [
+        6497,
+        1665,
+        437,
+        120
+      ],
+      "same_mask_late_placebo_changed_samples": 25984,
+      "scope": "Mechanical actual-consumer controls; generated u16 sources, no photographic quality claim",
+      "source_hashes_before_after": [
+        "43ec76f88fa4711aa6f16cd4a5fafe701ff6a57fa26c168d8e7877186b468afe",
+        "2bc56c07d4f2df061babdc8284bdbc0092a6907d4b4b6bdc0f56dca32bd1afb3",
+        "0fe06ceac0455b8bb187a27d22ecac5a4ebd6a0d44b973c5e398b3d5e3349369",
+        "1915ed14f7e4055c8ad6c416f9c38c6f99491b832282762ad0dc6a9662aced1d",
+        "f77e28669fd7af73d189642b82361eb0162711e9d0ab431e0b3f8fb4260315fa",
+        "cc1a43a361779ef035cd79f949603c30b0d904a1d42b80e6c3a2ad6210230aa7",
+        "8c9c6ed1167d2f15dd97cc6dbc7cb1f20b4327f08172c48660aa3cd140bac1ad",
+        "f1bb65efe8d16654c3f9137fe88eeb0c2fefffa19f6cbca705b6871c15ef9ae4",
+        "8c43bf6b8ea94bb6a7c3aa97a4f36c588265cc67979f6285ce4b2819eab15992",
+        "c915b7929cfa097c29efc56209cf4a92efdd57d697b5081dab78cf5afe8c1db8",
+        "46688641d8d5574436e6afeab64c64f1d062a88e71e120a4fe9631a51d27fdf8",
+        "e2514edcb832906ff1fda22846cd4a6d2921204b51d337ddbe1b71c12f0aee20"
+      ],
+      "terminal_base_bit_exact": true
+    }
+  },
+  "photographic_replay_admitted": true,
+  "scope": "Fixed externally-labelled donor diagnostic only; no automatic selector or quality admission"
+}

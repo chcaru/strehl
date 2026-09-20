@@ -1,0 +1,284 @@
+{
+  "schema": 1,
+  "input_images": {
+    "baseline": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\full-1\\output\\baseline.tiff",
+      "bytes": 191495352,
+      "sha256": "f0eab596dd0e37e80084588629d592a6c261c97eb9a1655b20e39ef430e23535"
+    },
+    "candidate": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\full-1\\output\\candidate.tiff",
+      "bytes": 191495352,
+      "sha256": "ba57bb889a0dbe883e3fd889dffb831bbf7296d8f32730337ecde7f6123f2b48"
+    },
+    "late": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\full-1\\output\\late.tiff",
+      "bytes": 191495352,
+      "sha256": "6635aee9c56f350e906b9add33453d1aab7e55b3f7e1ae03e80b4ba3b0b3fb6d"
+    }
+  },
+  "started": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\full-1\\output\\started.json",
+    "bytes": 2273,
+    "sha256": "7494f32a5c44cdf4df3d2f872f2b40d9509cdf5e3a5cdd090c835a214099561f"
+  },
+  "completion": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\full-1\\output\\receipt.json",
+    "bytes": 52857,
+    "sha256": "494230e2942a5adb40d4e5545e8c1966a53b456b5d41b304abcd9cf3a911be48"
+  },
+  "frozen_regions": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-review-1\\regions.json",
+    "bytes": 1068,
+    "sha256": "ff55ed297385ff8fef5d2badce07729537e2e867701d96d328be1eaf7bcb0f4f"
+  },
+  "helper": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\photo-compare.py",
+    "bytes": 6432,
+    "sha256": "d2f939d9704e0b8c5b611cea2f0746cad2b45cbdd28ec420ddf938ca3c5f1a86"
+  },
+  "full_output_helper": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\full-output-views.py",
+    "bytes": 1503,
+    "sha256": "8b51a9eacfa5aeae00e51501882d73dd6496c24cc05898494d5c22902078d955"
+  },
+  "initial_crop_quads": [
+    28,
+    19,
+    3460,
+    2306
+  ],
+  "effective_crop_quads": [
+    28,
+    19,
+    3460,
+    2306
+  ],
+  "native_translation": [
+    0,
+    0
+  ],
+  "coordinate_rule": "pair_xy = frozen_xy + 2 * (initial_crop_origin - effective_crop_origin)",
+  "native_dimensions": [
+    6920,
+    4612
+  ],
+  "regions": [
+    {
+      "name": "facet-edges",
+      "frozen_xywh": [
+        2500,
+        2700,
+        384,
+        384
+      ],
+      "pair_xywh": [
+        2500,
+        2700,
+        384,
+        384
+      ],
+      "reference_sensor_xywh": [
+        2556,
+        2738,
+        384,
+        384
+      ]
+    },
+    {
+      "name": "pale-background",
+      "frozen_xywh": [
+        400,
+        1150,
+        384,
+        384
+      ],
+      "pair_xywh": [
+        400,
+        1150,
+        384,
+        384
+      ],
+      "reference_sensor_xywh": [
+        456,
+        1188,
+        384,
+        384
+      ]
+    },
+    {
+      "name": "fine-crystals",
+      "frozen_xywh": [
+        4200,
+        1700,
+        384,
+        384
+      ],
+      "pair_xywh": [
+        4200,
+        1700,
+        384,
+        384
+      ],
+      "reference_sensor_xywh": [
+        4256,
+        1738,
+        384,
+        384
+      ]
+    },
+    {
+      "name": "bright-facet",
+      "frozen_xywh": [
+        1150,
+        3850,
+        384,
+        384
+      ],
+      "pair_xywh": [
+        1150,
+        3850,
+        384,
+        384
+      ],
+      "reference_sensor_xywh": [
+        1206,
+        3888,
+        384,
+        384
+      ]
+    },
+    {
+      "name": "dark-inclusion",
+      "frozen_xywh": [
+        3050,
+        1850,
+        384,
+        384
+      ],
+      "pair_xywh": [
+        3050,
+        1850,
+        384,
+        384
+      ],
+      "reference_sensor_xywh": [
+        3106,
+        1888,
+        384,
+        384
+      ]
+    }
+  ],
+  "outputs": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\full-1\\photo-comparison-1\\facet-edges-baseline.png",
+      "bytes": 192716,
+      "sha256": "2e547ac1bab0614449209083bc9d12a21312e4295f67ba467133a87aaa8f98f4"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\full-1\\photo-comparison-1\\pale-background-baseline.png",
+      "bytes": 138476,
+      "sha256": "dbf8d5a5d13522474a118e7e6efd6bc142aacd573ab5f83bcf6f2a93ecd47353"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\full-1\\photo-comparison-1\\fine-crystals-baseline.png",
+      "bytes": 200537,
+      "sha256": "d8144e2030108058ed0c21117ed5a75d9b407920984080cd88b9db54fd065838"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\full-1\\photo-comparison-1\\bright-facet-baseline.png",
+      "bytes": 144642,
+      "sha256": "1443ac73dc871aed2fe6fc5f72b32711c3ed6f155490ce083420acd5b5ee507f"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\full-1\\photo-comparison-1\\dark-inclusion-baseline.png",
+      "bytes": 187949,
+      "sha256": "851143c7d19524d584e8378125456e230d923e7ee9b427989b1e7c1f548594ce"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\full-1\\photo-comparison-1\\baseline.png",
+      "bytes": 37540366,
+      "sha256": "68b2f4533e14eefb6e8b2473cc4312fe0d330cd70c83569148270fba12491326"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\full-1\\photo-comparison-1\\baseline-overview.jpg",
+      "bytes": 569836,
+      "sha256": "00c549c367e4ac80a5551bf3132b119e9cf9b8e1836364b5219e07e89e1cd9d6"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\full-1\\photo-comparison-1\\facet-edges-candidate.png",
+      "bytes": 192004,
+      "sha256": "ae70faccd95ff49cbf914f9be34312ac9216dba940e07cb742375145ada5260d"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\full-1\\photo-comparison-1\\pale-background-candidate.png",
+      "bytes": 138476,
+      "sha256": "dbf8d5a5d13522474a118e7e6efd6bc142aacd573ab5f83bcf6f2a93ecd47353"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\full-1\\photo-comparison-1\\fine-crystals-candidate.png",
+      "bytes": 200537,
+      "sha256": "d8144e2030108058ed0c21117ed5a75d9b407920984080cd88b9db54fd065838"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\full-1\\photo-comparison-1\\bright-facet-candidate.png",
+      "bytes": 144642,
+      "sha256": "1443ac73dc871aed2fe6fc5f72b32711c3ed6f155490ce083420acd5b5ee507f"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\full-1\\photo-comparison-1\\dark-inclusion-candidate.png",
+      "bytes": 187520,
+      "sha256": "78d89aee74dbd9c49859e33d6637c96a2a95deb72705e3788d73e92f5cfd51ef"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\full-1\\photo-comparison-1\\candidate.png",
+      "bytes": 37538836,
+      "sha256": "20abc2efd73774531de402d20199c954a0c0d1ed90cc0c6e5c1c4b1d6a4e35fb"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\full-1\\photo-comparison-1\\candidate-overview.jpg",
+      "bytes": 569795,
+      "sha256": "cb69ab0730b548a22685ecadeeaf04afee7ff7c234e5cc82f4e7ccc8f8a8cc63"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\full-1\\photo-comparison-1\\facet-edges-late.png",
+      "bytes": 192336,
+      "sha256": "3089283075c18d5fcae9a42eb23ccbbe7cde6e9cfef6420667a64c42d1a25b6f"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\full-1\\photo-comparison-1\\pale-background-late.png",
+      "bytes": 138476,
+      "sha256": "dbf8d5a5d13522474a118e7e6efd6bc142aacd573ab5f83bcf6f2a93ecd47353"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\full-1\\photo-comparison-1\\fine-crystals-late.png",
+      "bytes": 200537,
+      "sha256": "d8144e2030108058ed0c21117ed5a75d9b407920984080cd88b9db54fd065838"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\full-1\\photo-comparison-1\\bright-facet-late.png",
+      "bytes": 144642,
+      "sha256": "1443ac73dc871aed2fe6fc5f72b32711c3ed6f155490ce083420acd5b5ee507f"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\full-1\\photo-comparison-1\\dark-inclusion-late.png",
+      "bytes": 186770,
+      "sha256": "d070beaebe5d5ad982d9e5f51ee302758b7eb656385551d1d957ca4c36db6d7b"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\full-1\\photo-comparison-1\\late.png",
+      "bytes": 37538571,
+      "sha256": "7629a35c1cda298bd8dfdf1d0c72509a549f11449dc44cd033c002db441bd280"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\full-1\\photo-comparison-1\\late-overview.jpg",
+      "bytes": 569794,
+      "sha256": "e1020afd31e1e961dbd98cbf4c1a9c7fc827bc2deb2f9b5cee4349933b608578"
+    }
+  ],
+  "crop_display": "384 x 384 native samples; rounded division by 257; no resampling or other adjustment",
+  "whole_png": "complete triplet extent, same dimensions; rounded division by 257; ICC retained",
+  "overview": "resized for whole-field orientation only; not evidence of native detail",
+  "scope": "image preparation only; no RAW decode, render, score or quality verdict"
+}

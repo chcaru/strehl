@@ -1,0 +1,395 @@
+{
+  "scope": "Exact production collapse of one mask level carrying unit AC; not actual image coefficients or a quality metric",
+  "sources": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\mask-membership.py",
+      "sha256": "711303efb3551415855e8c680ebfacf077f8a7d3643712a81bc829e3b085ca1b"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\mask-membership-1\\membership.rs",
+      "sha256": "7a9e58db830ea6bca6c7963d848521d5bd08ccd1da811d1fb7080d3d47f66fd0"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\implementation.rs",
+      "sha256": "4ff2eab275082e874212702e792b6b6f057c196a14c24a4cdcbf0fabc81a9b36"
+    }
+  ],
+  "libraries": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\target\\native-pyramid-profile\\release\\deps\\libserde_json-642a4c52219539fe.rlib",
+      "sha256": "28398946ff449831766e58e9aa990c5ec62c87881ca578c2d6e3d7edcc107b97"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\target\\native-pyramid-profile\\release\\deps\\libstrehl_core-60ead7b714ba5262.rlib",
+      "sha256": "6c3e7d0f6608d1f8f9a0f59dc4f6fdbb1b549f1e62fb329bb67c84eef882cf84"
+    }
+  ],
+  "command": [
+    "rustc",
+    "--edition=2021",
+    "-O",
+    "-C",
+    "lto=thin",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\mask-membership-1\\membership.rs",
+    "-L",
+    "dependency=C:\\dev\\blog\\death-of-software\\projects\\strehl\\target\\native-pyramid-profile\\release\\deps",
+    "-o",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\mask-membership-1\\membership.exe",
+    "--extern",
+    "serde_json=C:\\dev\\blog\\death-of-software\\projects\\strehl\\target\\native-pyramid-profile\\release\\deps\\libserde_json-642a4c52219539fe.rlib",
+    "--extern",
+    "strehl_core=C:\\dev\\blog\\death-of-software\\projects\\strehl\\target\\native-pyramid-profile\\release\\deps\\libstrehl_core-60ead7b714ba5262.rlib"
+  ],
+  "records": [
+    {
+      "effective_weight_for_constant_coefficient": 1.0,
+      "level": 0,
+      "native_mask": 1.0,
+      "output_native_xy": [
+        2624,
+        2906
+      ],
+      "point": "facet-core"
+    },
+    {
+      "effective_weight_for_constant_coefficient": 1.0,
+      "level": 0,
+      "native_mask": 1.0,
+      "output_native_xy": [
+        2602,
+        2945
+      ],
+      "point": "facet-fan"
+    },
+    {
+      "effective_weight_for_constant_coefficient": 1.0,
+      "level": 0,
+      "native_mask": 1.0,
+      "output_native_xy": [
+        3080,
+        2150
+      ],
+      "point": "dark-core"
+    },
+    {
+      "effective_weight_for_constant_coefficient": 1.0,
+      "level": 0,
+      "native_mask": 1.0,
+      "output_native_xy": [
+        3102,
+        2203
+      ],
+      "point": "dark-fan"
+    },
+    {
+      "effective_weight_for_constant_coefficient": 1.0,
+      "level": 0,
+      "native_mask": 1.0,
+      "output_native_xy": [
+        3240,
+        2070
+      ],
+      "point": "nearby"
+    },
+    {
+      "effective_weight_for_constant_coefficient": 1.0,
+      "level": 1,
+      "native_mask": 1.0,
+      "output_native_xy": [
+        2624,
+        2906
+      ],
+      "point": "facet-core"
+    },
+    {
+      "effective_weight_for_constant_coefficient": 1.0,
+      "level": 1,
+      "native_mask": 1.0,
+      "output_native_xy": [
+        2602,
+        2945
+      ],
+      "point": "facet-fan"
+    },
+    {
+      "effective_weight_for_constant_coefficient": 1.0,
+      "level": 1,
+      "native_mask": 1.0,
+      "output_native_xy": [
+        3080,
+        2150
+      ],
+      "point": "dark-core"
+    },
+    {
+      "effective_weight_for_constant_coefficient": 1.0,
+      "level": 1,
+      "native_mask": 1.0,
+      "output_native_xy": [
+        3102,
+        2203
+      ],
+      "point": "dark-fan"
+    },
+    {
+      "effective_weight_for_constant_coefficient": 1.0,
+      "level": 1,
+      "native_mask": 1.0,
+      "output_native_xy": [
+        3240,
+        2070
+      ],
+      "point": "nearby"
+    },
+    {
+      "effective_weight_for_constant_coefficient": 0.9948612451553345,
+      "level": 2,
+      "native_mask": 1.0,
+      "output_native_xy": [
+        2624,
+        2906
+      ],
+      "point": "facet-core"
+    },
+    {
+      "effective_weight_for_constant_coefficient": 0.9959447979927063,
+      "level": 2,
+      "native_mask": 1.0,
+      "output_native_xy": [
+        2602,
+        2945
+      ],
+      "point": "facet-fan"
+    },
+    {
+      "effective_weight_for_constant_coefficient": 0.9965943694114685,
+      "level": 2,
+      "native_mask": 1.0,
+      "output_native_xy": [
+        3080,
+        2150
+      ],
+      "point": "dark-core"
+    },
+    {
+      "effective_weight_for_constant_coefficient": 0.9959748983383179,
+      "level": 2,
+      "native_mask": 1.0,
+      "output_native_xy": [
+        3102,
+        2203
+      ],
+      "point": "dark-fan"
+    },
+    {
+      "effective_weight_for_constant_coefficient": 0.9921793937683105,
+      "level": 2,
+      "native_mask": 1.0,
+      "output_native_xy": [
+        3240,
+        2070
+      ],
+      "point": "nearby"
+    },
+    {
+      "effective_weight_for_constant_coefficient": 0.7797691226005554,
+      "level": 3,
+      "native_mask": 1.0,
+      "output_native_xy": [
+        2624,
+        2906
+      ],
+      "point": "facet-core"
+    },
+    {
+      "effective_weight_for_constant_coefficient": 0.7863745093345642,
+      "level": 3,
+      "native_mask": 1.0,
+      "output_native_xy": [
+        2602,
+        2945
+      ],
+      "point": "facet-fan"
+    },
+    {
+      "effective_weight_for_constant_coefficient": 0.7883390188217163,
+      "level": 3,
+      "native_mask": 1.0,
+      "output_native_xy": [
+        3080,
+        2150
+      ],
+      "point": "dark-core"
+    },
+    {
+      "effective_weight_for_constant_coefficient": 0.7847188711166382,
+      "level": 3,
+      "native_mask": 1.0,
+      "output_native_xy": [
+        3102,
+        2203
+      ],
+      "point": "dark-fan"
+    },
+    {
+      "effective_weight_for_constant_coefficient": 0.6835955381393433,
+      "level": 3,
+      "native_mask": 1.0,
+      "output_native_xy": [
+        3240,
+        2070
+      ],
+      "point": "nearby"
+    },
+    {
+      "effective_weight_for_constant_coefficient": 0.40264326333999634,
+      "level": 4,
+      "native_mask": 1.0,
+      "output_native_xy": [
+        2624,
+        2906
+      ],
+      "point": "facet-core"
+    },
+    {
+      "effective_weight_for_constant_coefficient": 0.3959996700286865,
+      "level": 4,
+      "native_mask": 1.0,
+      "output_native_xy": [
+        2602,
+        2945
+      ],
+      "point": "facet-fan"
+    },
+    {
+      "effective_weight_for_constant_coefficient": 0.400612473487854,
+      "level": 4,
+      "native_mask": 1.0,
+      "output_native_xy": [
+        3080,
+        2150
+      ],
+      "point": "dark-core"
+    },
+    {
+      "effective_weight_for_constant_coefficient": 0.4057179093360901,
+      "level": 4,
+      "native_mask": 1.0,
+      "output_native_xy": [
+        3102,
+        2203
+      ],
+      "point": "dark-fan"
+    },
+    {
+      "effective_weight_for_constant_coefficient": 0.2458125650882721,
+      "level": 4,
+      "native_mask": 1.0,
+      "output_native_xy": [
+        3240,
+        2070
+      ],
+      "point": "nearby"
+    },
+    {
+      "effective_weight_for_constant_coefficient": 0.14468619227409363,
+      "level": 5,
+      "native_mask": 1.0,
+      "output_native_xy": [
+        2624,
+        2906
+      ],
+      "point": "facet-core"
+    },
+    {
+      "effective_weight_for_constant_coefficient": 0.14630436897277832,
+      "level": 5,
+      "native_mask": 1.0,
+      "output_native_xy": [
+        2602,
+        2945
+      ],
+      "point": "facet-fan"
+    },
+    {
+      "effective_weight_for_constant_coefficient": 0.1595797836780548,
+      "level": 5,
+      "native_mask": 1.0,
+      "output_native_xy": [
+        3080,
+        2150
+      ],
+      "point": "dark-core"
+    },
+    {
+      "effective_weight_for_constant_coefficient": 0.15318167209625244,
+      "level": 5,
+      "native_mask": 1.0,
+      "output_native_xy": [
+        3102,
+        2203
+      ],
+      "point": "dark-fan"
+    },
+    {
+      "effective_weight_for_constant_coefficient": 0.06589710712432861,
+      "level": 5,
+      "native_mask": 1.0,
+      "output_native_xy": [
+        3240,
+        2070
+      ],
+      "point": "nearby"
+    },
+    {
+      "effective_weight_for_constant_coefficient": 0.03963012248277664,
+      "level": 6,
+      "native_mask": 1.0,
+      "output_native_xy": [
+        2624,
+        2906
+      ],
+      "point": "facet-core"
+    },
+    {
+      "effective_weight_for_constant_coefficient": 0.041244253516197205,
+      "level": 6,
+      "native_mask": 1.0,
+      "output_native_xy": [
+        2602,
+        2945
+      ],
+      "point": "facet-fan"
+    },
+    {
+      "effective_weight_for_constant_coefficient": 0.053680919110774994,
+      "level": 6,
+      "native_mask": 1.0,
+      "output_native_xy": [
+        3080,
+        2150
+      ],
+      "point": "dark-core"
+    },
+    {
+      "effective_weight_for_constant_coefficient": 0.052244625985622406,
+      "level": 6,
+      "native_mask": 1.0,
+      "output_native_xy": [
+        3102,
+        2203
+      ],
+      "point": "dark-fan"
+    },
+    {
+      "effective_weight_for_constant_coefficient": 0.02863829955458641,
+      "level": 6,
+      "native_mask": 1.0,
+      "output_native_xy": [
+        3240,
+        2070
+      ],
+      "point": "nearby"
+    }
+  ]
+}

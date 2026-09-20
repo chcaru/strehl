@@ -1,0 +1,17 @@
+
+running 2 tests
+test merge_cmd::donor_consistency::independent_controls::independent_donor_00_native_geometry ... DONOR_GEOMETRY {"evaluation":"2*quad+0.5+odd native output offset; three fixed photo masks","full_weight_samples":2852,"max_analytic_mask_error":0.00002915660793489927,"one_native_phase_changed":1287,"taper_samples":2306}
+ok
+test merge_cmd::donor_consistency::independent_controls::independent_donor_10_actual_coefficients_finish_and_placebo ... 
+thread 'merge_cmd::donor_consistency::independent_controls::independent_donor_10_actual_coefficients_finish_and_placebo' (27288) panicked at C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli/../../experiments/donor-consistency/independent-controls.rs:113:95:
+assertion failed: ones_error <= 0.003 && excursions >= 4
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+FAILED
+
+failures:
+
+failures:
+    merge_cmd::donor_consistency::independent_controls::independent_donor_10_actual_coefficients_finish_and_placebo
+
+test result: FAILED. 1 passed; 1 failed; 0 ignored; 0 measured; 203 filtered out; finished in 0.02s
+

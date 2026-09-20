@@ -1,0 +1,52 @@
+{
+  "source": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\core-bridge.rs",
+      "sha256": "7326f08951a939763313f80ae511bdfc22247089eaf8e6317216930c69c158f0",
+      "bytes": 5901
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\implementation.rs",
+      "sha256": "4ff2eab275082e874212702e792b6b6f057c196a14c24a4cdcbf0fabc81a9b36",
+      "bytes": 1906
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\independent-controls.rs",
+      "sha256": "6c30205b996d7800b03ee93537087ed85192882d7f01ea2493d8ddf1625d7aff",
+      "bytes": 15494
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\independent-plan.md",
+      "sha256": "16251ade69fefb0fc0149904467d2f9e019e426733df12064228b0441c09e8a6",
+      "bytes": 6334
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\lean-controls.py",
+      "sha256": "344c024c373fe2622076b5ff3e4582d5fab0f79f770f8e9583ef374605b15ffc",
+      "bytes": 3100
+    }
+  ],
+  "libs": {
+    "sha2": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\target\\native-pyramid-profile\\release\\deps\\libsha2-0b0cd130a4500f5d.rlib",
+      "sha256": "6cd3ac6e4f16a1ac7365e2028e84248c7a3b1d0f1bd528d62d2aa749ef4bd805",
+      "bytes": 772922
+    },
+    "serde_json": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\target\\native-pyramid-profile\\release\\deps\\libserde_json-642a4c52219539fe.rlib",
+      "sha256": "28398946ff449831766e58e9aa990c5ec62c87881ca578c2d6e3d7edcc107b97",
+      "bytes": 2480794
+    },
+    "strehl_core": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\target\\native-pyramid-profile\\release\\deps\\libstrehl_core-60ead7b714ba5262.rlib",
+      "sha256": "6c3e7d0f6608d1f8f9a0f59dc4f6fdbb1b549f1e62fb329bb67c84eef882cf84",
+      "bytes": 6123318
+    }
+  },
+  "harness": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\lean-1\\lean.rs",
+    "sha256": "7fec5312a912ef4107b7eafc3c9c7e84c9e1d30c8338608120914bc231180dbc",
+    "bytes": 1207
+  },
+  "purpose": "Same core and exact independent controls; generated geometry copied verbatim; debugging, not full CLI/source integration proof"
+}

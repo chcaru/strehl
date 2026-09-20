@@ -1,0 +1,5 @@
+excursions 4
+plane 0 error 0 pin pre 2396.8613 expected 1800 actual 1800
+plane 1 error 0 pin pre 2547.7573 expected 1940 actual 1940
+plane 2 error 0 pin pre 2674.7856 expected 2080 actual 2080
+plane 3 error 0 pin pre 2818.2969 expected 2220 actual 2220

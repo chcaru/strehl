@@ -1,0 +1,373 @@
+{
+  "inputs": {
+    "baseline": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\full-1\\photo-comparison-1\\baseline.png",
+      "bytes": 37540366,
+      "sha256": "68b2f4533e14eefb6e8b2473cc4312fe0d330cd70c83569148270fba12491326"
+    },
+    "candidate": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\full-1\\photo-comparison-1\\candidate.png",
+      "bytes": 37538836,
+      "sha256": "20abc2efd73774531de402d20199c954a0c0d1ed90cc0c6e5c1c4b1d6a4e35fb"
+    },
+    "late": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\full-1\\photo-comparison-1\\late.png",
+      "bytes": 37538571,
+      "sha256": "7629a35c1cda298bd8dfdf1d0c72509a549f11449dc44cd033c002db441bd280"
+    },
+    "helicon-b": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\helicon-current\\vitamin-c-b-2\\whole-stack.tiff",
+      "bytes": 197827122,
+      "sha256": "f08335d17083789fa2bd60ee17ecbaba921bbc7aa20c9fdfdfa0cf0e1ca1d2d8"
+    }
+  },
+  "helper": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\independent-photo-review.py",
+    "bytes": 5790,
+    "sha256": "0244ba09a0507f12c9b1017bab8aa7ae3c57e8394e0c68f8909281f34615d56a"
+  },
+  "canonical_regions": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-review-1\\regions.json",
+    "bytes": 1068,
+    "sha256": "ff55ed297385ff8fef5d2badce07729537e2e867701d96d328be1eaf7bcb0f4f"
+  },
+  "helicon_registration": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\helicon-current\\photo-comparison-1\\coordinate-receipt.json",
+    "bytes": 30865,
+    "sha256": "9323b01478a6b70905dca18aa6802cd55f31d270a66fa1015b198308d77deaab"
+  },
+  "photo_receipt": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\full-1\\photo-comparison-1\\coordinate-receipt.json",
+    "bytes": 10334,
+    "sha256": "57ce02badd3ecc113591c3faa0a6d09c65a5db995aedece365efb48af68678d2"
+  },
+  "rows": [
+    {
+      "name": "facet-edges",
+      "baseline_xywh": [
+        2500,
+        2700,
+        384,
+        384
+      ],
+      "display_integer_zoom": 1,
+      "arms": {
+        "baseline": [
+          2500,
+          2700,
+          384,
+          384
+        ],
+        "candidate": [
+          2500,
+          2700,
+          384,
+          384
+        ],
+        "late": [
+          2500,
+          2700,
+          384,
+          384
+        ],
+        "helicon-b": [
+          2548,
+          2744,
+          384,
+          384
+        ]
+      }
+    },
+    {
+      "name": "pale-background",
+      "baseline_xywh": [
+        400,
+        1150,
+        384,
+        384
+      ],
+      "display_integer_zoom": 1,
+      "arms": {
+        "baseline": [
+          400,
+          1150,
+          384,
+          384
+        ],
+        "candidate": [
+          400,
+          1150,
+          384,
+          384
+        ],
+        "late": [
+          400,
+          1150,
+          384,
+          384
+        ],
+        "helicon-b": [
+          425,
+          1178,
+          384,
+          384
+        ]
+      }
+    },
+    {
+      "name": "fine-crystals",
+      "baseline_xywh": [
+        4200,
+        1700,
+        384,
+        384
+      ],
+      "display_integer_zoom": 1,
+      "arms": {
+        "baseline": [
+          4200,
+          1700,
+          384,
+          384
+        ],
+        "candidate": [
+          4200,
+          1700,
+          384,
+          384
+        ],
+        "late": [
+          4200,
+          1700,
+          384,
+          384
+        ],
+        "helicon-b": [
+          4266,
+          1734,
+          384,
+          384
+        ]
+      }
+    },
+    {
+      "name": "bright-facet",
+      "baseline_xywh": [
+        1150,
+        3850,
+        384,
+        384
+      ],
+      "display_integer_zoom": 1,
+      "arms": {
+        "baseline": [
+          1150,
+          3850,
+          384,
+          384
+        ],
+        "candidate": [
+          1150,
+          3850,
+          384,
+          384
+        ],
+        "late": [
+          1150,
+          3850,
+          384,
+          384
+        ],
+        "helicon-b": [
+          1183,
+          3907,
+          384,
+          384
+        ]
+      }
+    },
+    {
+      "name": "dark-inclusion",
+      "baseline_xywh": [
+        3050,
+        1850,
+        384,
+        384
+      ],
+      "display_integer_zoom": 1,
+      "arms": {
+        "baseline": [
+          3050,
+          1850,
+          384,
+          384
+        ],
+        "candidate": [
+          3050,
+          1850,
+          384,
+          384
+        ],
+        "late": [
+          3050,
+          1850,
+          384,
+          384
+        ],
+        "helicon-b": [
+          3104,
+          1885,
+          384,
+          384
+        ]
+      }
+    },
+    {
+      "name": "facet-core-boundary",
+      "baseline_xywh": [
+        2533,
+        2846,
+        160,
+        160
+      ],
+      "display_integer_zoom": 3,
+      "arms": {
+        "baseline": [
+          2533,
+          2846,
+          160,
+          160
+        ],
+        "candidate": [
+          2533,
+          2846,
+          160,
+          160
+        ],
+        "late": [
+          2533,
+          2846,
+          160,
+          160
+        ],
+        "helicon-b": [
+          2580,
+          2891,
+          160,
+          160
+        ]
+      }
+    },
+    {
+      "name": "dark-core-boundary",
+      "baseline_xywh": [
+        3011,
+        2097,
+        160,
+        160
+      ],
+      "display_integer_zoom": 3,
+      "arms": {
+        "baseline": [
+          3011,
+          2097,
+          160,
+          160
+        ],
+        "candidate": [
+          3011,
+          2097,
+          160,
+          160
+        ],
+        "late": [
+          3011,
+          2097,
+          160,
+          160
+        ],
+        "helicon-b": [
+          3063,
+          2134,
+          160,
+          160
+        ]
+      }
+    },
+    {
+      "name": "competing-structure",
+      "baseline_xywh": [
+        3180,
+        2010,
+        120,
+        120
+      ],
+      "display_integer_zoom": 3,
+      "arms": {
+        "baseline": [
+          3180,
+          2010,
+          120,
+          120
+        ],
+        "candidate": [
+          3180,
+          2010,
+          120,
+          120
+        ],
+        "late": [
+          3180,
+          2010,
+          120,
+          120
+        ],
+        "helicon-b": [
+          3234,
+          2046,
+          120,
+          120
+        ]
+      }
+    }
+  ],
+  "activity": {
+    "candidate": {
+      "changed_rgb16_pixels": 523457,
+      "outside_native_radius24_footprints": 513912,
+      "changed_bbox_inclusive": [
+        2199,
+        1677,
+        3675,
+        3324
+      ],
+      "canonical_changed_rgb16_pixels": {
+        "facet-edges": 125688,
+        "pale-background": 0,
+        "fine-crystals": 0,
+        "bright-facet": 0,
+        "dark-inclusion": 131255
+      }
+    },
+    "late": {
+      "changed_rgb16_pixels": 561599,
+      "outside_native_radius24_footprints": 551498,
+      "changed_bbox_inclusive": [
+        2199,
+        1678,
+        3686,
+        3345
+      ],
+      "canonical_changed_rgb16_pixels": {
+        "facet-edges": 131759,
+        "pale-background": 0,
+        "fine-crystals": 0,
+        "bright-facet": 0,
+        "dark-inclusion": 128547
+      }
+    }
+  },
+  "geometry_overlay": "Yellow radius16, magenta radius24 on baseline only; no outline on comparison boards.",
+  "meaning": "Activity counts show intervention support, not noise or quality. Gaussian expansion legitimately extends outside native mask. Canonical regions preserved; three independent centred boundary/detail views added.",
+  "scope": "No originals or new merge. Common sRGB profile, no tone adjustment. Zoom uses nearest replication; Helicon native scale mismatch retained."
+}

@@ -1,0 +1,12 @@
+{
+  "source": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-comparator-2\\developed\\DSC00119.tiff",
+  "crop_xywh": [
+    3105,
+    1887,
+    384,
+    384
+  ],
+  "retained_scan_receipt": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-source-highlights\\scan-1\\receipt.json",
+  "crop_sha256_matches_retained": true,
+  "purpose": "Actual retained developed source25, mapped original384native window; no resampling. No RAW read or new merge."
+}

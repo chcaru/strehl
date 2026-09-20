@@ -1,0 +1,30 @@
+{
+  "command": [
+    "rustc",
+    "--edition=2021",
+    "--test",
+    "-O",
+    "-C",
+    "lto=thin",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\lean-1\\lean.rs",
+    "-L",
+    "dependency=C:\\dev\\blog\\death-of-software\\projects\\strehl\\target\\native-pyramid-profile\\release\\deps",
+    "-o",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\lean-1\\lean.exe",
+    "--extern",
+    "sha2=C:\\dev\\blog\\death-of-software\\projects\\strehl\\target\\native-pyramid-profile\\release\\deps\\libsha2-0b0cd130a4500f5d.rlib",
+    "--extern",
+    "serde_json=C:\\dev\\blog\\death-of-software\\projects\\strehl\\target\\native-pyramid-profile\\release\\deps\\libserde_json-642a4c52219539fe.rlib",
+    "--extern",
+    "strehl_core=C:\\dev\\blog\\death-of-software\\projects\\strehl\\target\\native-pyramid-profile\\release\\deps\\libstrehl_core-60ead7b714ba5262.rlib"
+  ],
+  "environment": {
+    "RAYON_NUM_THREADS": "2"
+  },
+  "removed_environment": [],
+  "runner": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\full-context-placement\\run.py",
+    "sha256": "17451d237bf256004ca8853ef4c2a9e1c582012d43ad33fd687606e68a5fb76f",
+    "bytes": 7707
+  }
+}

@@ -4920,6 +4920,11 @@ pub(crate) mod complete_cfa_wavelet {
 }
 
 #[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance"))]
+pub(crate) mod donor_consistency {
+    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/donor-consistency/implementation.rs"));
+}
+
+#[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance"))]
 pub(crate) mod fine_support_tests {
     include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/fine-support-guidance/measure.rs"));
 }

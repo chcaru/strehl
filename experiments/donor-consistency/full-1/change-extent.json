@@ -1,0 +1,140 @@
+{
+  "scope": "RGB16 change extent, not quality or noise measurements",
+  "arms": {
+    "candidate": {
+      "sha256": "ba57bb889a0dbe883e3fd889dffb831bbf7296d8f32730337ecde7f6123f2b48",
+      "strict_channel_threshold_dn": {
+        "0": {
+          "pixels": 523457,
+          "fraction": 0.016401577438098152,
+          "bbox_xywh": [
+            2199,
+            1677,
+            1477,
+            1648
+          ]
+        },
+        "1": {
+          "pixels": 291827,
+          "fraction": 0.0091438707267796,
+          "bbox_xywh": [
+            2403,
+            1894,
+            1031,
+            1216
+          ]
+        },
+        "16": {
+          "pixels": 107424,
+          "fraction": 0.003365936561570971,
+          "bbox_xywh": [
+            2533,
+            1997,
+            785,
+            1041
+          ]
+        },
+        "257": {
+          "pixels": 24148,
+          "fraction": 0.0007566338629060155,
+          "bbox_xywh": [
+            2563,
+            2049,
+            699,
+            927
+          ]
+        }
+      },
+      "frozen_windows": {
+        "facet-edges": {
+          "changed_pixels": 125688,
+          "max_channel_change_dn": 63845
+        },
+        "pale-background": {
+          "changed_pixels": 0,
+          "max_channel_change_dn": 0
+        },
+        "fine-crystals": {
+          "changed_pixels": 0,
+          "max_channel_change_dn": 0
+        },
+        "bright-facet": {
+          "changed_pixels": 0,
+          "max_channel_change_dn": 0
+        },
+        "dark-inclusion": {
+          "changed_pixels": 131255,
+          "max_channel_change_dn": 58958
+        }
+      }
+    },
+    "late": {
+      "sha256": "6635aee9c56f350e906b9add33453d1aab7e55b3f7e1ae03e80b4ba3b0b3fb6d",
+      "strict_channel_threshold_dn": {
+        "0": {
+          "pixels": 561599,
+          "fraction": 0.01759668795652457,
+          "bbox_xywh": [
+            2199,
+            1678,
+            1488,
+            1668
+          ]
+        },
+        "1": {
+          "pixels": 316325,
+          "fraction": 0.009911471206052068,
+          "bbox_xywh": [
+            2411,
+            1889,
+            1021,
+            1245
+          ]
+        },
+        "16": {
+          "pixels": 117510,
+          "fraction": 0.003681963112062526,
+          "bbox_xywh": [
+            2500,
+            1993,
+            810,
+            1032
+          ]
+        },
+        "257": {
+          "pixels": 22528,
+          "fraction": 0.0007058740957241476,
+          "bbox_xywh": [
+            2572,
+            2034,
+            698,
+            950
+          ]
+        }
+      },
+      "frozen_windows": {
+        "facet-edges": {
+          "changed_pixels": 131759,
+          "max_channel_change_dn": 56814
+        },
+        "pale-background": {
+          "changed_pixels": 0,
+          "max_channel_change_dn": 0
+        },
+        "fine-crystals": {
+          "changed_pixels": 0,
+          "max_channel_change_dn": 0
+        },
+        "bright-facet": {
+          "changed_pixels": 0,
+          "max_channel_change_dn": 0
+        },
+        "dark-inclusion": {
+          "changed_pixels": 128547,
+          "max_channel_change_dn": 65460
+        }
+      }
+    }
+  },
+  "script_sha256": "91d71add79dcac93346e51bd39169df4084ff5ec9518bcec50c1b1e15af7740c"
+}
