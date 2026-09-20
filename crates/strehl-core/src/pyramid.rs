@@ -101,6 +101,11 @@ pub mod shared_source_field_diagnostic {
 }
 
 #[cfg(feature = "native-correction-variance")]
+pub mod rb_own_guide_diagnostic {
+    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/rb-own-guide/core-bridge.rs"));
+}
+
+#[cfg(feature = "native-correction-variance")]
 pub mod fine_support_candidate {
     include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/fine-support-guidance/core-candidate.rs"));
 }

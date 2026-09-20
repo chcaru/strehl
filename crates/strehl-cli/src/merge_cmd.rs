@@ -4944,6 +4944,11 @@ pub(crate) mod core_lineage {
     include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/core-lineage/implementation.rs"));
 }
 
+#[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance", feature = "native-gpu-gather"))]
+pub(crate) mod rb_own_guide {
+    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/rb-own-guide/implementation.rs"));
+}
+
 #[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance"))]
 pub(crate) mod donor_consistency {
     include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/donor-consistency/implementation.rs"));

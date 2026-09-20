@@ -352,3 +352,13 @@ information used for R/B election in the existing Laplacian merge, with their
 own propagated RAW noise and both greens held fixed. Historical axial offsets
 do not justify a fixed source shift or explain current fans. Actual colour,
 neutral-edge, flat-noise and competing-depth controls decide admission.
+
+The R/B own-guide screen now demonstrates live colour-information headroom but
+fails full-render admission. RGB truth errors on colour-offset/colour-only
+plants fall to0.190/0.437 of canonical at ISO100 and also beat the matched-noise
+green control. Flat RGB error rises to1.465 of canonical, while final MHC changes
+green despite exact collapsed green CFA samples; its green guard fails. ISO400
+repeats both effects. Preserve rb-own-guide/results.md and independent review.
+No full render or default change is earned. The next design must control noisy
+R/B updates and make the delivered-green preservation contract explicit, without
+claiming that these generated focus offsets explain the photographic fans.

@@ -1,0 +1,13 @@
+# Independent pre-execution source review
+
+ARGUED from source only; no build, tests or RAW execution by this reviewer. No source blocker found to the one frozen generated screen. This does not admit a full photograph or establish colour/optical causation.
+
+Reviewed author freezes: implementation `1769722875899ee419163f2e95558e903cb2742547110645cde56e1a5b3fb6c6`, probe `ecd4044b8d23f520a0fede5686b9fc50350c13fa18f97de6e5143b1eefa21f0b`, core bridge `4594cf7a5a0bd3c2fe02d50032e921d6b211a5906cb10603096f828bbb1e291d`, design `9549aac2807f0ca3747d3671b873158a4444195eb528797f3c00a1adbfba457c`.
+
+The same sixteen independently seeded original-u16 noisy sources feed the actual rounded GPU gather. R, averaged G1/G2, and B guides are formed before the actual Laplacian, preserving gathered green covariance. Eight pair differences accumulate squared differences, divide by16, and then use the production energy smoother. The implementation applies `cfg.gate` exactly once to this result. It does not apply the scalar beta again. Beta remains solely in canonical/identity reconstruction, where the production multiplication order is retained.
+
+Measured-green and own-R/B arms use the same floor estimator and source probes. Swapped guidance exchanges the guide and its matching floor, keeping destination CFA samples in place. Each colour merge calls the production accumulation and finish operators, with workspace invalidation before every source, held exponent/significance settings, unchanged terminal means, and input-range hull. G1/G2 are copied from canonical. This is exact CFA preservation, not developed-green invariance: MHC can couple changed R/B values into developed green.
+
+Independent controls compare all these arms. They separately require canonical identity, source/active/known4 hashes, original input hull, green CFA and terminal-base exactness, as well as focused-source feasibility and actual positive guide/output changes. Root will execute the independently authored floor/routing helper before the image screen. The helper verifies arithmetic and covariance handling, not calibration of the injected sensor model. Diagnostics on/off must produce identical arrays and RGB hashes on one positive scene.
+
+The strongest interpretation risks remain selection coupled to colour noise, MHC cross-colour error, independent channels choosing incompatible depths, and scalar-energy preference for real defocused streaks. Fixed flat, neutral, radial, crossing-depth and clipped-adjacent guards can reject these on the declared scenes. A gain over canonical alone is insufficient: own guidance must also beat matched-estimator green. The real clipped glint's radiance and cause are not inferred from this experiment.
