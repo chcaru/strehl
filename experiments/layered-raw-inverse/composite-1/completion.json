@@ -1,0 +1,20 @@
+{
+  "instrument_completed": true,
+  "sources_unchanged": true,
+  "commission": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\composite-1\\commission\\result.json",
+    "sha256": "641c27fe9fd888819c2b45088af5d4108b1638ee1b91c80c2fbda69ac510bd62",
+    "bytes": 742
+  },
+  "fit": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\composite-1\\output\\result.json",
+    "sha256": "121812f23ad9d86361eef7f139bd7b9450aa88b26736f785ac09ca5c8a3f660c",
+    "bytes": 3403
+  },
+  "independent_scores": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\composite-1\\scored\\result.json",
+    "sha256": "3234da9d72352b995eddb8bf685ac425c612717bf802ef9b68aa456e2c413e48",
+    "bytes": 100323
+  },
+  "scope": "Only prior placement changes; same generated original CFA and optimizer. No photo admission."
+}

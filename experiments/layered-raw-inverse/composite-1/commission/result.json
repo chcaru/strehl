@@ -1,0 +1,22 @@
+{
+  "status": "PASS",
+  "passed": true,
+  "cases": [
+    {
+      "name": "coverage-escape",
+      "independent_image_prior": 0.06139731779694557,
+      "original_image_prior": 5.320594047739341e-16,
+      "composite_image_prior": 0.06139731407165527
+    },
+    {
+      "name": "contrast-cancelling-flat",
+      "independent_image_prior": 1.4845012372144417e-11,
+      "original_image_prior": 1.8930904865264893,
+      "composite_image_prior": 1.484501063742094e-11
+    }
+  ],
+  "one_layer_value_gradient_exact": true,
+  "wrong_composite_destroyer_live": true,
+  "scope": "Prior algebra only; not camera calibration or image utility",
+  "scorer_sha256": "3ceb0517da70155a85f8248ae417b1391a7481f058005e42db66da9c0afed1e2"
+}

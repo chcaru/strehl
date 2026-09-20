@@ -1,0 +1,67 @@
+{
+  "status": "COMPOSITE_COMPARISON_COMPLETE",
+  "arms": [
+    {
+      "case": "flat",
+      "prior_kind": "original",
+      "status": "nonstationary_return",
+      "receipt": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\composite-1\\output\\flat\\original\\receipt.json",
+      "receipt_sha256": "b18ad359ce474f0580e746c378875638739c86257daebaf03dd7f805aa939b6a"
+    },
+    {
+      "case": "flat",
+      "prior_kind": "composite",
+      "status": "nonstationary_return",
+      "receipt": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\composite-1\\output\\flat\\composite\\receipt.json",
+      "receipt_sha256": "453645db0c69770a1cd8c44e3577f3cbfea61a6822b62ea1f4df9fb9361ca16c"
+    },
+    {
+      "case": "layered",
+      "prior_kind": "original",
+      "status": "nonstationary_return",
+      "receipt": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\composite-1\\output\\layered\\original\\receipt.json",
+      "receipt_sha256": "afb51ad8e8743397b4e663a92ab628943da136a817eb672aa33f9acf428aa81a"
+    },
+    {
+      "case": "layered",
+      "prior_kind": "composite",
+      "status": "nonstationary_return",
+      "receipt": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\composite-1\\output\\layered\\composite\\receipt.json",
+      "receipt_sha256": "bd420c82012618dd84ada669b859f70750ed90121002c5170b222ebe7a881ee4"
+    },
+    {
+      "case": "far-only",
+      "prior_kind": "original",
+      "status": "nonstationary_return",
+      "receipt": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\composite-1\\output\\far-only\\original\\receipt.json",
+      "receipt_sha256": "4c08a75a635b640a171a1bc0d59080b22b4f38821da2d38e053a93a7a9db923e"
+    },
+    {
+      "case": "far-only",
+      "prior_kind": "composite",
+      "status": "nonstationary_return",
+      "receipt": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\composite-1\\output\\far-only\\composite\\receipt.json",
+      "receipt_sha256": "2ba46ecf56aa370da11c2b4e993c2515765b9a281bc1b56477646b9847249c99"
+    },
+    {
+      "case": "angular-mismatch",
+      "prior_kind": "original",
+      "status": "nonstationary_return",
+      "receipt": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\composite-1\\output\\angular-mismatch\\original\\receipt.json",
+      "receipt_sha256": "c98b5b2b048c88424d61749d284b5e0975859bcc470a6cc14b0f3786fec53f36"
+    },
+    {
+      "case": "angular-mismatch",
+      "prior_kind": "composite",
+      "status": "nonstationary_return",
+      "receipt": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\composite-1\\output\\angular-mismatch\\composite\\receipt.json",
+      "receipt_sha256": "64f23dabb3c10c3e9837d93c49c44ef53331991b02f079c05125da9841698054"
+    }
+  ],
+  "source_root": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output",
+  "bindings_unchanged": true,
+  "wall_seconds": 222.59399999999732,
+  "frozen_first_screen_pass": false,
+  "real_photo_admission": false,
+  "interpretation": "Only image-prior placement differs. Independent scoring remains separate."
+}

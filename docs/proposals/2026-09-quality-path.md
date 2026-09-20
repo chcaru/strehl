@@ -13,10 +13,13 @@ at9c00ca3e, and RAW-affinity's independent rejection is committed at13405ce7.
 Layered original-CFA inverse rendering now reconstructs generated coloured
 filaments and highlights, but fails flat noise, bright withheld prediction and
 physical pupil-integration checks. Its unchanged-objective continuation reduces
-structured-scene errors without establishing convergence. The next bounded
-implementation compares regularization on delivered radiance against the old
-hidden-sheet penalty, with identical solver budgets and protected true detail.
-See experiments/layered-raw-inverse/results.md. It has no photographic
+structured-scene errors without establishing convergence. The paired delivered-
+radiance penalty failed: it can invent an occluding foreground, hide large
+radiances and destroy genuine highlights/filaments. It is closed without a
+strength sweep. The next bounded diagnostic fixes known visibility and fits
+only radiances with the original prior, separating a visibility failure from
+the remaining inverse problem. See experiments/layered-raw-inverse/
+composite-results.md and its independent review. It has no photographic
 admission yet. The passing complete-periodic all-CFA controls
 remain retained at48276660; speed work stays behind demonstrated image quality.
 

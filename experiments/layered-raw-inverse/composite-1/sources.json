@@ -1,0 +1,82 @@
+[
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\full-context-placement\\run.py",
+    "sha256": "17451d237bf256004ca8853ef4c2a9e1c582012d43ad33fd687606e68a5fb76f",
+    "bytes": 7707
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\composite-prior-plan.md",
+    "sha256": "cdda538d94c1237b51177797141444e940567d43e395b18bdb40877e1885d870",
+    "bytes": 4234
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\composite-prior.py",
+    "sha256": "856003f26de6ec841a5b4e6ff1dd06ac35bdc3a95baec1683e5fa91889038a6d",
+    "bytes": 12424
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\convergence.py",
+    "sha256": "e755e29ec5494714818fae9c61428e6c10d085c2e2d2fd78e2959998c58df468",
+    "bytes": 11759
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\design.md",
+    "sha256": "079c9e2ef5e4113c1202d4435b1cac7d5dfcbc482b7ebd20e7ca72e86446f9a1",
+    "bytes": 6648
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\independent-composite-plan.md",
+    "sha256": "fb3c474d9b6080d45494e18105a07164f63b9e7226131a79248375e7dcfb4b69",
+    "bytes": 3484
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\independent-composite-review.md",
+    "sha256": "76c0b3903bff0de84767726ac3b2ab95f334a7e2adfd0bd829001adbc06a5b90",
+    "bytes": 4518
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\independent-composite-score.py",
+    "sha256": "3ceb0517da70155a85f8248ae417b1391a7481f058005e42db66da9c0afed1e2",
+    "bytes": 12727
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\independent-controls.py",
+    "sha256": "6915c024dbbfaa0e0d912ecba1a22075aabce6ef29c845f0e586472be60815ec",
+    "bytes": 30128
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\independent-plan.md",
+    "sha256": "94e65319535b3744882431f14975e5b9b5f2da7f0093c818ed8d006bb6997408",
+    "bytes": 7088
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\independent-source-review.md",
+    "sha256": "595cfe00de7f62b8b322f28041f608658db5a48c84c79266e5aab7754fcb01e1",
+    "bytes": 5701
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\model.py",
+    "sha256": "5710146ffcf463de85e317050bc81357922965d6006c7b4cf311f4d80d8ee512",
+    "bytes": 16869
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\run-composite.py",
+    "sha256": "aa8a68a7bf0c8eb9438db973de0fd6b87af51cd968347f1d0180d9ec6498f392",
+    "bytes": 2929
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\run.py",
+    "sha256": "dd2ed76f08980d7bb7f74c5bd814547c9fa43eb026bd2272136c19e8e523d849",
+    "bytes": 2748
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\m12-harness.py",
+    "sha256": "6cfb408992f37b225f102da4d62ba836f9c5b67c92bdd418ff460987866a1bb9",
+    "bytes": 117908
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\bounded-process.py",
+    "sha256": "47b9f8d848759eba61f055b9fdca1f8ac400f134dcd7636f0e0eaaa955704e0b",
+    "bytes": 12664
+  }
+]
