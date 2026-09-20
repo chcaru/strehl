@@ -1,0 +1,872 @@
+{
+  "schema": 1,
+  "status": "COMPLETE_DESCRIPTIVE_ONLY",
+  "image_quality_claim": false,
+  "ownership_claim": false,
+  "native_noise_calibration": false,
+  "split": "disjoint target values; observed source stencils may overlap",
+  "bindings": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\relative-blur-evidence\\witness-1\\completion.json",
+      "bytes": 484,
+      "sha256": "91177f7671f63a14430cefc3efb730268819f16b798023a06bbb6ae9305691b0"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\relative-blur-evidence\\witness-1\\output\\receipt.json",
+      "bytes": 24605,
+      "sha256": "cbf028ae17deb80c79fb388e1b515c614e1290ec6406ab7445c75b4c44d0ee15"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\relative-blur-evidence\\model.py",
+      "bytes": 10353,
+      "sha256": "4a40f8b201e5baaf47597203b8031e896bb68c0b005e2b09082d8b6adc739e0c"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\relative-blur-evidence\\real-plan.md",
+      "bytes": 2574,
+      "sha256": "9de19bc6f88f1e18131d04450426ac695e79d3a0a662ce016b46f72b824e82d0"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\relative-blur-evidence\\real-check.py",
+      "bytes": 5233,
+      "sha256": "5cd1e108d5c394f48a249bea1aaf583e28baadedc91590b83d3dd6f4f6e43747"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\relative-blur-evidence\\witness-1\\output\\source-25-facet-edges-known4.f32",
+      "bytes": 4194304,
+      "sha256": "ddc395d60247fc53e3502343f45619242e3e7203075086bf24d7368b5ea5f5b4"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\relative-blur-evidence\\witness-1\\output\\source-25-dark-inclusion-known4.f32",
+      "bytes": 4194304,
+      "sha256": "147e152f866ae9ba2feb8120daf6eacb8841fbaad0c19f3401b5eacfad25ea8d"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\relative-blur-evidence\\witness-1\\output\\source-28-facet-edges-known4.f32",
+      "bytes": 4194304,
+      "sha256": "ed4b1da626a838c2405aa7e054286d452ae12267c523cd35e8f8546ffe1e36ce"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\relative-blur-evidence\\witness-1\\output\\source-28-dark-inclusion-known4.f32",
+      "bytes": 4194304,
+      "sha256": "873a78bacc9bb5528fe999eef051732aeac7f01fee1622697376b8820de9132d"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\relative-blur-evidence\\witness-1\\output\\source-33-facet-edges-known4.f32",
+      "bytes": 4194304,
+      "sha256": "14543070c762eb919a54fa6a20caf98803224288a2f7140014c8fce0ddf090eb"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\relative-blur-evidence\\witness-1\\output\\source-33-dark-inclusion-known4.f32",
+      "bytes": 4194304,
+      "sha256": "dbae9502eb936a938a5b9bdbb4f0ea2ce1ebe8b636ae5db1e1584b762633851c"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\relative-blur-evidence\\witness-1\\output\\source-69-facet-edges-known4.f32",
+      "bytes": 4194304,
+      "sha256": "1c7ddfe7fe5bca91e11b02d71eb5c310b4ecb83d7556364aa4e0fcf0323ade93"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\relative-blur-evidence\\witness-1\\output\\source-69-dark-inclusion-known4.f32",
+      "bytes": 4194304,
+      "sha256": "6a9ae352d78368b4718ca16d78c678f127124872893389f02bb42477886dff0e"
+    }
+  ],
+  "cases": [
+    {
+      "name": "facet",
+      "source_id": 28,
+      "target_id": 69,
+      "train_quad_xywh": [
+        248,
+        252,
+        16,
+        10
+      ],
+      "fit": {
+        "params": [
+          7.082282543182373,
+          1.97562837600708,
+          -0.3527047336101532
+        ],
+        "covariance": [
+          [
+            44.639183044433594,
+            -14.9948148727417
+          ],
+          [
+            -14.9948148727417,
+            9.422648429870605
+          ]
+        ],
+        "status": "fitted",
+        "reasons": [],
+        "train_rmse4": [
+          1745.7860107421875,
+          1797.2548828125,
+          1648.531494140625,
+          1198.63818359375
+        ],
+        "initial_rmse4": [
+          6322.544921875,
+          4372.22021484375,
+          4230.85791015625,
+          5295.5224609375
+        ],
+        "nfev": 372,
+        "train_pixels": 160,
+        "optimizer_success": true
+      },
+      "held": [
+        {
+          "label": "extension",
+          "quad_xywh": [
+            240,
+            272,
+            12,
+            12
+          ],
+          "shape": [
+            4,
+            12,
+            12
+          ],
+          "rmse4_dn": [
+            222.45919799804688,
+            370.11151123046875,
+            344.4388427734375,
+            275.9649658203125
+          ],
+          "identity_rmse4_dn": [
+            567.265625,
+            1122.8917236328125,
+            1059.691162109375,
+            614.4075317382812
+          ],
+          "prediction": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\relative-blur-evidence\\real-1\\output\\facet-28-69-extension-prediction.f32",
+            "bytes": 2304,
+            "sha256": "40bf5f7cb3fa58115e9351bd54deb4347c936aa1955225a51b006bb13fd037a5"
+          },
+          "signed_residual": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\relative-blur-evidence\\real-1\\output\\facet-28-69-extension-residual.f32",
+            "bytes": 2304,
+            "sha256": "dbf0212c0c8867b3887d6bab266f9e97c67c4a05cf6949718c6f54e9e6def296"
+          }
+        },
+        {
+          "label": "adjacent",
+          "quad_xywh": [
+            268,
+            272,
+            20,
+            20
+          ],
+          "shape": [
+            4,
+            20,
+            20
+          ],
+          "rmse4_dn": [
+            668.2146606445312,
+            1071.90234375,
+            1058.9534912109375,
+            311.20245361328125
+          ],
+          "identity_rmse4_dn": [
+            649.7357788085938,
+            1230.4716796875,
+            1249.73095703125,
+            416.7774353027344
+          ],
+          "prediction": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\relative-blur-evidence\\real-1\\output\\facet-28-69-adjacent-prediction.f32",
+            "bytes": 6400,
+            "sha256": "0f9fc0c3bfd0c7d57ece357399ef05589a58743f6eecde4903dab2059ea10562"
+          },
+          "signed_residual": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\relative-blur-evidence\\real-1\\output\\facet-28-69-adjacent-residual.f32",
+            "bytes": 6400,
+            "sha256": "2164cbce1aafdd74f07a880e378f2270b436ba6a56e44a8f435d4cc09d1fe9c8"
+          }
+        }
+      ],
+      "seconds": 2.061999999998079
+    },
+    {
+      "name": "facet",
+      "source_id": 69,
+      "target_id": 28,
+      "train_quad_xywh": [
+        248,
+        252,
+        16,
+        10
+      ],
+      "fit": {
+        "params": [
+          1.0754872560501099,
+          0.4353677034378052,
+          0.61714106798172
+        ],
+        "covariance": [
+          [
+            0.8327811360359192,
+            0.4564414620399475
+          ],
+          [
+            0.4564414620399475,
+            0.5134366750717163
+          ]
+        ],
+        "status": "fitted",
+        "reasons": [],
+        "train_rmse4": [
+          6315.66455078125,
+          4356.68017578125,
+          4203.3984375,
+          5298.45751953125
+        ],
+        "initial_rmse4": [
+          6322.544921875,
+          4372.22021484375,
+          4230.85791015625,
+          5295.5224609375
+        ],
+        "nfev": 383,
+        "train_pixels": 160,
+        "optimizer_success": true
+      },
+      "held": [
+        {
+          "label": "extension",
+          "quad_xywh": [
+            240,
+            272,
+            12,
+            12
+          ],
+          "shape": [
+            4,
+            12,
+            12
+          ],
+          "rmse4_dn": [
+            564.5390014648438,
+            1113.750244140625,
+            1049.66357421875,
+            614.2692260742188
+          ],
+          "identity_rmse4_dn": [
+            567.265625,
+            1122.8917236328125,
+            1059.691162109375,
+            614.4075317382812
+          ],
+          "prediction": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\relative-blur-evidence\\real-1\\output\\facet-69-28-extension-prediction.f32",
+            "bytes": 2304,
+            "sha256": "61b7e5dd2fc3d4c8b6ecf9233bd011820b873ae3b68216cd2a5ded4117d564d7"
+          },
+          "signed_residual": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\relative-blur-evidence\\real-1\\output\\facet-69-28-extension-residual.f32",
+            "bytes": 2304,
+            "sha256": "dc96bd0addae445b182f1b6b9b17db9e49a598ee00385ac0d66e0b410fd3c466"
+          }
+        },
+        {
+          "label": "adjacent",
+          "quad_xywh": [
+            268,
+            272,
+            20,
+            20
+          ],
+          "shape": [
+            4,
+            20,
+            20
+          ],
+          "rmse4_dn": [
+            625.514404296875,
+            1205.534423828125,
+            1225.96630859375,
+            410.4927062988281
+          ],
+          "identity_rmse4_dn": [
+            649.7357788085938,
+            1230.4716796875,
+            1249.73095703125,
+            416.7774353027344
+          ],
+          "prediction": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\relative-blur-evidence\\real-1\\output\\facet-69-28-adjacent-prediction.f32",
+            "bytes": 6400,
+            "sha256": "1b0d1e1b21cbbdca7a02608e2208246cb5983e78f816057156d691f19b23a9c9"
+          },
+          "signed_residual": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\relative-blur-evidence\\real-1\\output\\facet-69-28-adjacent-residual.f32",
+            "bytes": 6400,
+            "sha256": "01e6425b191462847753eb4ae4972b9d287a79f55fe37ad7ab74e0ef11fab98d"
+          }
+        }
+      ],
+      "seconds": 2.0939999999973224
+    },
+    {
+      "name": "dark",
+      "source_id": 33,
+      "target_id": 69,
+      "train_quad_xywh": [
+        248,
+        252,
+        16,
+        10
+      ],
+      "fit": {
+        "params": [
+          7.999992370605469,
+          7.999659538269043,
+          0.6533628106117249
+        ],
+        "covariance": [
+          [
+            63.99791717529297,
+            0.0025703590363264084
+          ],
+          [
+            0.0025703590363264084,
+            63.996524810791016
+          ]
+        ],
+        "status": "refused",
+        "reasons": [
+          "sigma-upper-bound"
+        ],
+        "train_rmse4": [
+          6085.4970703125,
+          5474.1357421875,
+          5710.2744140625,
+          4228.671875
+        ],
+        "initial_rmse4": [
+          7291.63916015625,
+          7174.60888671875,
+          7274.19677734375,
+          5121.0703125
+        ],
+        "nfev": 286,
+        "train_pixels": 160,
+        "optimizer_success": true
+      },
+      "held": [
+        {
+          "label": "column",
+          "quad_xywh": [
+            250,
+            283,
+            12,
+            12
+          ],
+          "shape": [
+            4,
+            12,
+            12
+          ],
+          "rmse4_dn": [
+            2186.94970703125,
+            4919.28125,
+            4755.427734375,
+            1960.7752685546875
+          ],
+          "identity_rmse4_dn": [
+            2542.570068359375,
+            5462.02197265625,
+            5245.88623046875,
+            2258.187255859375
+          ],
+          "prediction": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\relative-blur-evidence\\real-1\\output\\dark-33-69-column-prediction.f32",
+            "bytes": 2304,
+            "sha256": "30d6cabd3280113ff78160cdcce3cd97dcf9fe5b0cb6c26b6d8bcf10b3710544"
+          },
+          "signed_residual": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\relative-blur-evidence\\real-1\\output\\dark-33-69-column-residual.f32",
+            "bytes": 2304,
+            "sha256": "2eb198593ccd51ebcb3a5e34eed24cef12e62844a480dac2cec83aef3de13f54"
+          }
+        },
+        {
+          "label": "fan",
+          "quad_xywh": [
+            261,
+            278,
+            12,
+            12
+          ],
+          "shape": [
+            4,
+            12,
+            12
+          ],
+          "rmse4_dn": [
+            2146.2841796875,
+            4093.9169921875,
+            4199.5537109375,
+            1471.6243896484375
+          ],
+          "identity_rmse4_dn": [
+            2893.414794921875,
+            5066.5419921875,
+            5191.578125,
+            2062.6142578125
+          ],
+          "prediction": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\relative-blur-evidence\\real-1\\output\\dark-33-69-fan-prediction.f32",
+            "bytes": 2304,
+            "sha256": "a268ec60271928a64c543c8154c5b5db70ad6244dbfa6ea1eef4197575c79f7b"
+          },
+          "signed_residual": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\relative-blur-evidence\\real-1\\output\\dark-33-69-fan-residual.f32",
+            "bytes": 2304,
+            "sha256": "3d625549152a314219dbb70a770238a837d83808d9b74499f8bd71f1ba5d58d7"
+          }
+        },
+        {
+          "label": "structure",
+          "quad_xywh": [
+            328,
+            210,
+            16,
+            16
+          ],
+          "shape": [
+            4,
+            16,
+            16
+          ],
+          "rmse4_dn": [
+            37.77521896362305,
+            74.97183227539062,
+            71.52244567871094,
+            40.30332946777344
+          ],
+          "identity_rmse4_dn": [
+            67.06847381591797,
+            144.0009002685547,
+            147.70326232910156,
+            66.90676879882812
+          ],
+          "prediction": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\relative-blur-evidence\\real-1\\output\\dark-33-69-structure-prediction.f32",
+            "bytes": 4096,
+            "sha256": "fcd585605ed7417eccb1c0d5c4b87e85d0ec6d3221aa52276a05a4e16820fcd7"
+          },
+          "signed_residual": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\relative-blur-evidence\\real-1\\output\\dark-33-69-structure-residual.f32",
+            "bytes": 4096,
+            "sha256": "afda8374c894ce45af9e489753c282c6ac1e1ac9f11c96e5947d94971687fc2d"
+          }
+        }
+      ],
+      "seconds": 1.6410000000032596
+    },
+    {
+      "name": "dark",
+      "source_id": 69,
+      "target_id": 33,
+      "train_quad_xywh": [
+        248,
+        252,
+        16,
+        10
+      ],
+      "fit": {
+        "params": [
+          0.1921592801809311,
+          7.69870662689209,
+          0.5769618153572083
+        ],
+        "covariance": [
+          [
+            17.661663055419922,
+            -27.0802059173584
+          ],
+          [
+            -27.0802059173584,
+            41.645347595214844
+          ]
+        ],
+        "status": "fitted",
+        "reasons": [],
+        "train_rmse4": [
+          5398.109375,
+          6054.88037109375,
+          6117.16943359375,
+          3828.990478515625
+        ],
+        "initial_rmse4": [
+          7291.63916015625,
+          7174.60888671875,
+          7274.19677734375,
+          5121.0703125
+        ],
+        "nfev": 714,
+        "train_pixels": 160,
+        "optimizer_success": true
+      },
+      "held": [
+        {
+          "label": "column",
+          "quad_xywh": [
+            250,
+            283,
+            12,
+            12
+          ],
+          "shape": [
+            4,
+            12,
+            12
+          ],
+          "rmse4_dn": [
+            2333.40234375,
+            4802.4150390625,
+            4583.140625,
+            2003.02294921875
+          ],
+          "identity_rmse4_dn": [
+            2542.570068359375,
+            5462.02197265625,
+            5245.88623046875,
+            2258.187255859375
+          ],
+          "prediction": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\relative-blur-evidence\\real-1\\output\\dark-69-33-column-prediction.f32",
+            "bytes": 2304,
+            "sha256": "55f1d8db0e3df0ee7c4024d91e0c0dc32ab6eece85fefe9b5c0a72ed5a3bf0db"
+          },
+          "signed_residual": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\relative-blur-evidence\\real-1\\output\\dark-69-33-column-residual.f32",
+            "bytes": 2304,
+            "sha256": "a227e237b7638bc5acc12d8c75bade391baa3f0a3e2f67e6e6da5f2860a4c1e7"
+          }
+        },
+        {
+          "label": "fan",
+          "quad_xywh": [
+            261,
+            278,
+            12,
+            12
+          ],
+          "shape": [
+            4,
+            12,
+            12
+          ],
+          "rmse4_dn": [
+            2627.431884765625,
+            4613.56396484375,
+            4725.32275390625,
+            1889.6409912109375
+          ],
+          "identity_rmse4_dn": [
+            2893.414794921875,
+            5066.5419921875,
+            5191.578125,
+            2062.6142578125
+          ],
+          "prediction": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\relative-blur-evidence\\real-1\\output\\dark-69-33-fan-prediction.f32",
+            "bytes": 2304,
+            "sha256": "b780b7b5749b14bea66262be6e63ec64e4b5eb6455f0cfa03bebe4599d2b65e8"
+          },
+          "signed_residual": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\relative-blur-evidence\\real-1\\output\\dark-69-33-fan-residual.f32",
+            "bytes": 2304,
+            "sha256": "a1a1030daaee9030075df79a93a29737d408afa6476e8d06342b2d8de7942541"
+          }
+        },
+        {
+          "label": "structure",
+          "quad_xywh": [
+            328,
+            210,
+            16,
+            16
+          ],
+          "shape": [
+            4,
+            16,
+            16
+          ],
+          "rmse4_dn": [
+            67.17713928222656,
+            148.0009002685547,
+            150.04869079589844,
+            67.2257080078125
+          ],
+          "identity_rmse4_dn": [
+            67.06847381591797,
+            144.0009002685547,
+            147.70326232910156,
+            66.90676879882812
+          ],
+          "prediction": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\relative-blur-evidence\\real-1\\output\\dark-69-33-structure-prediction.f32",
+            "bytes": 4096,
+            "sha256": "02646518046f7a1dda74048edb5bc8b94703aac7533020d84d9d8eaed5280056"
+          },
+          "signed_residual": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\relative-blur-evidence\\real-1\\output\\dark-69-33-structure-residual.f32",
+            "bytes": 4096,
+            "sha256": "5b165fd5775dfa0f7eca9ac0a03ed4fa7fcd20240ddf73dff323d4d0cfd98dd5"
+          }
+        }
+      ],
+      "seconds": 3.8430000000007567
+    },
+    {
+      "name": "nearby",
+      "source_id": 25,
+      "target_id": 33,
+      "train_quad_xywh": [
+        328,
+        212,
+        16,
+        10
+      ],
+      "fit": {
+        "params": [
+          2.8235015869140625,
+          1.067563772201538,
+          -1.1706727743148804
+        ],
+        "covariance": [
+          [
+            2.176419258117676,
+            -2.451244592666626
+          ],
+          [
+            -2.451244592666626,
+            6.935434818267822
+          ]
+        ],
+        "status": "fitted",
+        "reasons": [],
+        "train_rmse4": [
+          47.60793685913086,
+          102.1240234375,
+          103.04342651367188,
+          48.1890869140625
+        ],
+        "initial_rmse4": [
+          76.1775894165039,
+          144.46002197265625,
+          146.92445373535156,
+          63.940547943115234
+        ],
+        "nfev": 403,
+        "train_pixels": 160,
+        "optimizer_success": true
+      },
+      "held": [
+        {
+          "label": "continuation",
+          "quad_xywh": [
+            328,
+            224,
+            16,
+            16
+          ],
+          "shape": [
+            4,
+            16,
+            16
+          ],
+          "rmse4_dn": [
+            50.47636032104492,
+            93.82543182373047,
+            115.07574462890625,
+            46.2269172668457
+          ],
+          "identity_rmse4_dn": [
+            67.9499740600586,
+            92.11416625976562,
+            98.31849670410156,
+            45.04316329956055
+          ],
+          "prediction": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\relative-blur-evidence\\real-1\\output\\nearby-25-33-continuation-prediction.f32",
+            "bytes": 4096,
+            "sha256": "446e153428abda088b0c4b875aa4c69222ff4ac77ff06ef60e53dc08ba434923"
+          },
+          "signed_residual": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\relative-blur-evidence\\real-1\\output\\nearby-25-33-continuation-residual.f32",
+            "bytes": 4096,
+            "sha256": "2683b51212fb2ff4a5e83499c4c36511f29cc5c79fa73722e12e576fb84e6f25"
+          }
+        },
+        {
+          "label": "column",
+          "quad_xywh": [
+            250,
+            283,
+            12,
+            12
+          ],
+          "shape": [
+            4,
+            12,
+            12
+          ],
+          "rmse4_dn": [
+            35.39505386352539,
+            65.09539794921875,
+            65.39254760742188,
+            35.88386154174805
+          ],
+          "identity_rmse4_dn": [
+            43.42434310913086,
+            74.09031677246094,
+            78.12703704833984,
+            42.46894073486328
+          ],
+          "prediction": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\relative-blur-evidence\\real-1\\output\\nearby-25-33-column-prediction.f32",
+            "bytes": 2304,
+            "sha256": "846d9f0babd7b857022ca59234a2be72cd84fc79562749028a8d2dab64cb3e18"
+          },
+          "signed_residual": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\relative-blur-evidence\\real-1\\output\\nearby-25-33-column-residual.f32",
+            "bytes": 2304,
+            "sha256": "016dcd0a86cb52d4cfaea35ba735e68502907e98991a05005fcf84068e15fb21"
+          }
+        }
+      ],
+      "seconds": 2.2039999999979045
+    },
+    {
+      "name": "nearby",
+      "source_id": 33,
+      "target_id": 25,
+      "train_quad_xywh": [
+        328,
+        212,
+        16,
+        10
+      ],
+      "fit": {
+        "params": [
+          2.076524496078491,
+          0.9530780911445618,
+          -0.3090972602367401
+        ],
+        "covariance": [
+          [
+            3.9969959259033203,
+            -0.9863021969795227
+          ],
+          [
+            -0.9863021969795227,
+            1.2233161926269531
+          ]
+        ],
+        "status": "fitted",
+        "reasons": [],
+        "train_rmse4": [
+          68.80913543701172,
+          131.13092041015625,
+          129.03309631347656,
+          55.80614471435547
+        ],
+        "initial_rmse4": [
+          76.1775894165039,
+          144.46002197265625,
+          146.92445373535156,
+          63.940547943115234
+        ],
+        "nfev": 393,
+        "train_pixels": 160,
+        "optimizer_success": true
+      },
+      "held": [
+        {
+          "label": "continuation",
+          "quad_xywh": [
+            328,
+            224,
+            16,
+            16
+          ],
+          "shape": [
+            4,
+            16,
+            16
+          ],
+          "rmse4_dn": [
+            68.55332946777344,
+            101.33778381347656,
+            102.31615447998047,
+            49.37592315673828
+          ],
+          "identity_rmse4_dn": [
+            67.9499740600586,
+            92.11416625976562,
+            98.31849670410156,
+            45.04316329956055
+          ],
+          "prediction": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\relative-blur-evidence\\real-1\\output\\nearby-33-25-continuation-prediction.f32",
+            "bytes": 4096,
+            "sha256": "68e7a45bda246c7c79f0a4505f38900e282f0d80ee4cdf3b197f2aa08e185841"
+          },
+          "signed_residual": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\relative-blur-evidence\\real-1\\output\\nearby-33-25-continuation-residual.f32",
+            "bytes": 4096,
+            "sha256": "471a280ab411c42fd32052bdc694b9e97d8f545cd4026417dce492cba7ecd4a2"
+          }
+        },
+        {
+          "label": "column",
+          "quad_xywh": [
+            250,
+            283,
+            12,
+            12
+          ],
+          "shape": [
+            4,
+            12,
+            12
+          ],
+          "rmse4_dn": [
+            40.1472282409668,
+            72.36885833740234,
+            77.75962829589844,
+            40.67652130126953
+          ],
+          "identity_rmse4_dn": [
+            43.42434310913086,
+            74.09031677246094,
+            78.12703704833984,
+            42.46894073486328
+          ],
+          "prediction": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\relative-blur-evidence\\real-1\\output\\nearby-33-25-column-prediction.f32",
+            "bytes": 2304,
+            "sha256": "080bfd278ced3ef269c39e3744016ce885f84d8857827ba02920751fff8c4bc1"
+          },
+          "signed_residual": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\relative-blur-evidence\\real-1\\output\\nearby-33-25-column-residual.f32",
+            "bytes": 2304,
+            "sha256": "17506278b0907ac81713672456f481159ae5dfc33ab06d0c19294a9a90fec7d4"
+          }
+        }
+      ],
+      "seconds": 2.2030000000013388
+    }
+  ],
+  "bindings_unchanged": true
+}

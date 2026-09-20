@@ -1,0 +1,11 @@
+{
+  "receipt": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\relative-blur-evidence\\witness-1\\output\\receipt.json",
+    "sha256": "cbf028ae17deb80c79fb388e1b515c614e1290ec6406ab7445c75b4c44d0ee15",
+    "bytes": 24605
+  },
+  "sources_unchanged": true,
+  "original_metadata_unchanged": true,
+  "retained_consumer_exact": true,
+  "scope": "Four original-source measurement export only; no complete stack, model or image-quality result."
+}

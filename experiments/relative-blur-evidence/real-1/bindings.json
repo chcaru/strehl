@@ -1,0 +1,29 @@
+{
+  "sources": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\relative-blur-evidence\\model.py",
+      "sha256": "4a40f8b201e5baaf47597203b8031e896bb68c0b005e2b09082d8b6adc739e0c",
+      "bytes": 10353
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\relative-blur-evidence\\real-check.py",
+      "sha256": "5cd1e108d5c394f48a249bea1aaf583e28baadedc91590b83d3dd6f4f6e43747",
+      "bytes": 5233
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\relative-blur-evidence\\real-plan.md",
+      "sha256": "9de19bc6f88f1e18131d04450426ac695e79d3a0a662ce016b46f72b824e82d0",
+      "bytes": 2574
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\relative-blur-evidence\\real-run.py",
+      "sha256": "99a9c28bac6001fb3737160c061798d28765ef91fd2be4dd7f14906ad578988a",
+      "bytes": 2408
+    }
+  ],
+  "python": {
+    "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "sha256": "4d6f5f81a4bca11191c4c7c6b43632694d0a4ce74e068619d8fdc161d469859a",
+    "bytes": 104952
+  }
+}

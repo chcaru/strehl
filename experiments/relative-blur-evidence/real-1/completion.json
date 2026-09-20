@@ -1,0 +1,11 @@
+{
+  "result": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\relative-blur-evidence\\real-1\\output\\result.json",
+    "sha256": "3f76584c988e1ba86d2e7e02929ca585106270767f9d03c3df24f174b024b950",
+    "bytes": 27472
+  },
+  "sources_unchanged": true,
+  "native_noise_calibration": false,
+  "ownership_claim": false,
+  "image_quality_claim": false
+}

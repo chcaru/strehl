@@ -1,0 +1,6 @@
+{"name": "facet", "source": 28, "target": 69, "status": "fitted", "seconds": 2.061999999998079}
+{"name": "facet", "source": 69, "target": 28, "status": "fitted", "seconds": 2.0939999999973224}
+{"name": "dark", "source": 33, "target": 69, "status": "refused", "seconds": 1.6410000000032596}
+{"name": "dark", "source": 69, "target": 33, "status": "fitted", "seconds": 3.8430000000007567}
+{"name": "nearby", "source": 25, "target": 33, "status": "fitted", "seconds": 2.2039999999979045}
+{"name": "nearby", "source": 33, "target": 25, "status": "fitted", "seconds": 2.2030000000013388}

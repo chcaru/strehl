@@ -1,0 +1,1122 @@
+{
+  "status": "PASS_GENERATED_ADEQUACY_ONLY",
+  "actual_consumer_admitted": false,
+  "scope": "Generated model adequacy only; no ownership, RAW calibration or fusion claim",
+  "kernel_params": [
+    6.0,
+    2.5,
+    0.5235987755982988
+  ],
+  "sigma_source_target_dn": 5.0,
+  "clean_limit4": [
+    1.0,
+    1.0,
+    1.0,
+    1.0
+  ],
+  "noisy_limit4": [
+    30.0,
+    30.0,
+    30.0,
+    30.0
+  ],
+  "records": [
+    {
+      "name": "flat-first",
+      "fit": {
+        "params": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "covariance": [
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ]
+        ],
+        "status": "ambiguous",
+        "reasons": [
+          "constant-source-support"
+        ],
+        "train_rmse4": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "initial_rmse4": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "nfev": 0,
+        "train_pixels": 4998,
+        "optimizer_success": true
+      },
+      "evaluation": {
+        "status": "ambiguous",
+        "reasons": [
+          "constant-source-support"
+        ],
+        "rmse4": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "pixels": 2378,
+        "rmse_limit4": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ]
+      }
+    },
+    {
+      "name": "flat-independent-noise-48271",
+      "fit": {
+        "params": [
+          7.997763633728027,
+          7.9831695556640625,
+          0.8710955381393433
+        ],
+        "covariance": [
+          [
+            63.82771301269531,
+            0.1149047464132309
+          ],
+          [
+            0.1149047464132309,
+            63.86749267578125
+          ]
+        ],
+        "status": "fitted",
+        "reasons": [],
+        "train_rmse4": [
+          4.928902626037598,
+          4.950844764709473,
+          5.013034820556641,
+          5.026156902313232
+        ],
+        "initial_rmse4": [
+          7.1241350173950195,
+          6.93208646774292,
+          6.9451775550842285,
+          7.085413455963135
+        ],
+        "nfev": 259,
+        "train_pixels": 4998,
+        "optimizer_success": true
+      },
+      "evaluation": {
+        "status": "compatible",
+        "reasons": [],
+        "rmse4": [
+          5.0221710205078125,
+          5.057997226715088,
+          5.120318412780762,
+          5.032999515533447
+        ],
+        "pixels": 2378,
+        "rmse_limit4": [
+          30.0,
+          30.0,
+          30.0,
+          30.0
+        ]
+      }
+    },
+    {
+      "name": "flat-independent-noise-reverse-48271",
+      "fit": {
+        "params": [
+          7.994667053222656,
+          7.989214897155762,
+          -0.19966545701026917
+        ],
+        "covariance": [
+          [
+            63.91127395629883,
+            -0.016941417008638382
+          ],
+          [
+            -0.016941417008638382,
+            63.83098220825195
+          ]
+        ],
+        "status": "fitted",
+        "reasons": [],
+        "train_rmse4": [
+          5.1221022605896,
+          4.935997009277344,
+          4.983174800872803,
+          4.9696478843688965
+        ],
+        "initial_rmse4": [
+          7.1241350173950195,
+          6.93208646774292,
+          6.9451775550842285,
+          7.085413455963135
+        ],
+        "nfev": 529,
+        "train_pixels": 4998,
+        "optimizer_success": true
+      },
+      "evaluation": {
+        "status": "compatible",
+        "reasons": [],
+        "rmse4": [
+          5.029125213623047,
+          4.909374713897705,
+          5.042961597442627,
+          5.158730983734131
+        ],
+        "pixels": 2378,
+        "rmse_limit4": [
+          30.0,
+          30.0,
+          30.0,
+          30.0
+        ]
+      }
+    },
+    {
+      "name": "flat-independent-noise-99173",
+      "fit": {
+        "params": [
+          7.999636173248291,
+          7.984116554260254,
+          -0.7605569362640381
+        ],
+        "covariance": [
+          [
+            63.876304626464844,
+            -0.12387801706790924
+          ],
+          [
+            -0.12387801706790924,
+            63.86398696899414
+          ]
+        ],
+        "status": "refused",
+        "reasons": [
+          "sigma-upper-bound"
+        ],
+        "train_rmse4": [
+          5.050384998321533,
+          4.992269992828369,
+          5.046976566314697,
+          5.0207109451293945
+        ],
+        "initial_rmse4": [
+          7.083563327789307,
+          7.046095371246338,
+          7.148974895477295,
+          7.151801109313965
+        ],
+        "nfev": 277,
+        "train_pixels": 4998,
+        "optimizer_success": true
+      },
+      "evaluation": {
+        "status": "refused",
+        "reasons": [
+          "sigma-upper-bound"
+        ],
+        "rmse4": [
+          5.079817771911621,
+          5.03177547454834,
+          4.954164981842041,
+          5.005998134613037
+        ],
+        "pixels": 2378,
+        "rmse_limit4": [
+          30.0,
+          30.0,
+          30.0,
+          30.0
+        ]
+      }
+    },
+    {
+      "name": "flat-independent-noise-reverse-99173",
+      "fit": {
+        "params": [
+          7.999144554138184,
+          7.994654655456543,
+          -0.39149606227874756
+        ],
+        "covariance": [
+          [
+            63.975852966308594,
+            -0.025328099727630615
+          ],
+          [
+            -0.025328099727630615,
+            63.92495346069336
+          ]
+        ],
+        "status": "refused",
+        "reasons": [
+          "sigma-upper-bound"
+        ],
+        "train_rmse4": [
+          5.011383056640625,
+          5.063207626342773,
+          5.016045093536377,
+          5.017635345458984
+        ],
+        "initial_rmse4": [
+          7.083563327789307,
+          7.046095371246338,
+          7.148974895477295,
+          7.151801109313965
+        ],
+        "nfev": 168,
+        "train_pixels": 4998,
+        "optimizer_success": true
+      },
+      "evaluation": {
+        "status": "refused",
+        "reasons": [
+          "sigma-upper-bound"
+        ],
+        "rmse4": [
+          4.979045391082764,
+          4.902933597564697,
+          4.917684078216553,
+          5.205035209655762
+        ],
+        "pixels": 2378,
+        "rmse_limit4": [
+          30.0,
+          30.0,
+          30.0,
+          30.0
+        ]
+      }
+    },
+    {
+      "name": "structured-identity",
+      "fit": {
+        "params": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "covariance": [
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ]
+        ],
+        "status": "ambiguous",
+        "reasons": [
+          "identity-does-not-order-sources"
+        ],
+        "train_rmse4": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "initial_rmse4": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "nfev": 307,
+        "train_pixels": 4998,
+        "optimizer_success": true
+      },
+      "evaluation": {
+        "status": "ambiguous",
+        "reasons": [
+          "identity-does-not-order-sources"
+        ],
+        "rmse4": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "pixels": 2378,
+        "rmse_limit4": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ]
+      }
+    },
+    {
+      "name": "useful-positive",
+      "fit": {
+        "params": [
+          5.999998092651367,
+          2.5000009536743164,
+          0.5235982537269592
+        ],
+        "covariance": [
+          [
+            28.562498092651367,
+            12.882108688354492
+          ],
+          [
+            12.882108688354492,
+            13.687484741210938
+          ]
+        ],
+        "status": "fitted",
+        "reasons": [],
+        "train_rmse4": [
+          9.859858982963488e-05,
+          0.00010062635556096211,
+          9.48299712035805e-05,
+          0.00010472070425748825
+        ],
+        "initial_rmse4": [
+          100.75145721435547,
+          110.5400161743164,
+          120.31432342529297,
+          130.1141357421875
+        ],
+        "nfev": 261,
+        "train_pixels": 4998,
+        "optimizer_success": true
+      },
+      "evaluation": {
+        "status": "compatible",
+        "reasons": [],
+        "rmse4": [
+          9.813887299969792e-05,
+          9.42632177611813e-05,
+          9.990286343963817e-05,
+          0.00011258362792432308
+        ],
+        "pixels": 2378,
+        "rmse_limit4": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ]
+      }
+    },
+    {
+      "name": "wrong-direction",
+      "fit": {
+        "params": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "covariance": [
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ]
+        ],
+        "status": "ambiguous",
+        "reasons": [
+          "identity-does-not-order-sources"
+        ],
+        "train_rmse4": [
+          100.75145721435547,
+          110.5400161743164,
+          120.31432342529297,
+          130.1141357421875
+        ],
+        "initial_rmse4": [
+          100.75145721435547,
+          110.5400161743164,
+          120.31432342529297,
+          130.1141357421875
+        ],
+        "nfev": 158,
+        "train_pixels": 4998,
+        "optimizer_success": true
+      },
+      "evaluation": {
+        "status": "refused",
+        "reasons": [
+          "identity-does-not-order-sources",
+          "held-out-residual-exceeds-caller-allowance"
+        ],
+        "rmse4": [
+          160.6522979736328,
+          122.38703155517578,
+          122.40169525146484,
+          195.0543975830078
+        ],
+        "pixels": 2378,
+        "rmse_limit4": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ]
+      }
+    },
+    {
+      "name": "two-depth-crossing",
+      "fit": {
+        "params": [
+          5.999998569488525,
+          2.499998092651367,
+          0.5235987305641174
+        ],
+        "covariance": [
+          [
+            28.562488555908203,
+            12.882124900817871
+          ],
+          [
+            12.882124900817871,
+            13.687488555908203
+          ]
+        ],
+        "status": "fitted",
+        "reasons": [],
+        "train_rmse4": [
+          0.00010017721797339618,
+          0.00010266489698551595,
+          0.00012199701450299472,
+          0.00010210434265900403
+        ],
+        "initial_rmse4": [
+          100.75145721435547,
+          110.5400161743164,
+          120.31432342529297,
+          130.1141357421875
+        ],
+        "nfev": 316,
+        "train_pixels": 4998,
+        "optimizer_success": true
+      },
+      "evaluation": {
+        "status": "refused",
+        "reasons": [
+          "held-out-residual-exceeds-caller-allowance"
+        ],
+        "rmse4": [
+          633.8323364257812,
+          138.3438720703125,
+          142.38690185546875,
+          893.0071411132812
+        ],
+        "pixels": 294,
+        "rmse_limit4": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ]
+      }
+    },
+    {
+      "name": "ridge-continuation-same-fit",
+      "evaluation": {
+        "status": "refused",
+        "reasons": [
+          "held-out-residual-exceeds-caller-allowance"
+        ],
+        "rmse4": [
+          667.6203002929688,
+          144.81655883789062,
+          144.0051727294922,
+          885.188720703125
+        ],
+        "pixels": 175,
+        "rmse_limit4": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ]
+      }
+    },
+    {
+      "name": "no-glint-real-ridge-twin",
+      "fit": {
+        "params": [
+          5.999999046325684,
+          2.5,
+          0.5235990881919861
+        ],
+        "covariance": [
+          [
+            28.562484741210938,
+            12.882128715515137
+          ],
+          [
+            12.882128715515137,
+            13.687505722045898
+          ]
+        ],
+        "status": "fitted",
+        "reasons": [],
+        "train_rmse4": [
+          0.00010692529758671299,
+          9.327669977210462e-05,
+          0.00011468134471215308,
+          9.9445394880604e-05
+        ],
+        "initial_rmse4": [
+          100.75145721435547,
+          110.54002380371094,
+          120.31432342529297,
+          130.1141357421875
+        ],
+        "nfev": 315,
+        "train_pixels": 4998,
+        "optimizer_success": true
+      },
+      "evaluation": {
+        "status": "refused",
+        "reasons": [
+          "held-out-residual-exceeds-caller-allowance"
+        ],
+        "rmse4": [
+          633.8323364257812,
+          138.34381103515625,
+          142.38682556152344,
+          893.007080078125
+        ],
+        "pixels": 294,
+        "rmse_limit4": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ]
+      }
+    },
+    {
+      "name": "coloured-fan-family-mismatch",
+      "fit": {
+        "params": [
+          7.999996662139893,
+          7.384735107421875,
+          0.6477837562561035
+        ],
+        "covariance": [
+          [
+            60.55335235595703,
+            4.5546875
+          ],
+          [
+            4.5546875,
+            57.98090744018555
+          ]
+        ],
+        "status": "refused",
+        "reasons": [
+          "sigma-upper-bound"
+        ],
+        "train_rmse4": [
+          69.20443725585938,
+          63.9492301940918,
+          69.5028076171875,
+          80.30769348144531
+        ],
+        "initial_rmse4": [
+          146.6694793701172,
+          153.99290466308594,
+          167.2108612060547,
+          170.77032470703125
+        ],
+        "nfev": 266,
+        "train_pixels": 4998,
+        "optimizer_success": true
+      },
+      "evaluation": {
+        "status": "refused",
+        "reasons": [
+          "sigma-upper-bound",
+          "held-out-residual-exceeds-caller-allowance"
+        ],
+        "rmse4": [
+          44.5543327331543,
+          32.45915222167969,
+          32.45915985107422,
+          54.141910552978516
+        ],
+        "pixels": 3306,
+        "rmse_limit4": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ]
+      }
+    },
+    {
+      "name": "noisy-positive-48271",
+      "fit": {
+        "params": [
+          6.001590728759766,
+          2.5038163661956787,
+          0.5237908363342285
+        ],
+        "covariance": [
+          [
+            28.576644897460938,
+            12.884982109069824
+          ],
+          [
+            12.884982109069824,
+            13.711544036865234
+          ]
+        ],
+        "status": "fitted",
+        "reasons": [],
+        "train_rmse4": [
+          4.932413101196289,
+          4.959624767303467,
+          5.024969577789307,
+          5.033461570739746
+        ],
+        "initial_rmse4": [
+          100.95278930664062,
+          110.54078674316406,
+          120.3674087524414,
+          130.58950805664062
+        ],
+        "nfev": 319,
+        "train_pixels": 4998,
+        "optimizer_success": true
+      },
+      "evaluation": {
+        "status": "compatible",
+        "reasons": [],
+        "rmse4": [
+          5.0258636474609375,
+          5.074112892150879,
+          5.139739036560059,
+          5.0446953773498535
+        ],
+        "pixels": 2378,
+        "rmse_limit4": [
+          30.0,
+          30.0,
+          30.0,
+          30.0
+        ]
+      }
+    },
+    {
+      "name": "noisy-wrong-direction-48271",
+      "fit": {
+        "params": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "covariance": [
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ]
+        ],
+        "status": "ambiguous",
+        "reasons": [
+          "identity-does-not-order-sources"
+        ],
+        "train_rmse4": [
+          100.95278930664062,
+          110.54078674316406,
+          120.3674087524414,
+          130.58950805664062
+        ],
+        "initial_rmse4": [
+          100.95278930664062,
+          110.54078674316406,
+          120.3674087524414,
+          130.58950805664062
+        ],
+        "nfev": 232,
+        "train_pixels": 4998,
+        "optimizer_success": true
+      },
+      "evaluation": {
+        "status": "refused",
+        "reasons": [
+          "identity-does-not-order-sources",
+          "held-out-residual-exceeds-caller-allowance"
+        ],
+        "rmse4": [
+          160.7598114013672,
+          122.39722442626953,
+          122.56507873535156,
+          195.26307678222656
+        ],
+        "pixels": 2378,
+        "rmse_limit4": [
+          30.0,
+          30.0,
+          30.0,
+          30.0
+        ]
+      }
+    },
+    {
+      "name": "noisy-crossing-48271",
+      "fit": {
+        "params": [
+          6.001562595367432,
+          2.5041003227233887,
+          0.5237083435058594
+        ],
+        "covariance": [
+          [
+            28.57887077331543,
+            12.8829927444458
+          ],
+          [
+            12.8829927444458,
+            13.710399627685547
+          ]
+        ],
+        "status": "fitted",
+        "reasons": [],
+        "train_rmse4": [
+          4.93240213394165,
+          4.959685325622559,
+          5.025027275085449,
+          5.033356666564941
+        ],
+        "initial_rmse4": [
+          100.95278930664062,
+          110.54078674316406,
+          120.3674087524414,
+          130.58950805664062
+        ],
+        "nfev": 284,
+        "train_pixels": 4998,
+        "optimizer_success": true
+      },
+      "evaluation": {
+        "status": "refused",
+        "reasons": [
+          "held-out-residual-exceeds-caller-allowance"
+        ],
+        "rmse4": [
+          633.9539184570312,
+          138.03953552246094,
+          142.4891357421875,
+          893.389892578125
+        ],
+        "pixels": 294,
+        "rmse_limit4": [
+          30.0,
+          30.0,
+          30.0,
+          30.0
+        ]
+      }
+    },
+    {
+      "name": "noisy-positive-99173",
+      "fit": {
+        "params": [
+          6.000962257385254,
+          2.5034303665161133,
+          0.5230377316474915
+        ],
+        "covariance": [
+          [
+            28.58989715576172,
+            12.871343612670898
+          ],
+          [
+            12.871343612670898,
+            13.688812255859375
+          ]
+        ],
+        "status": "fitted",
+        "reasons": [],
+        "train_rmse4": [
+          5.060302734375,
+          5.007998466491699,
+          5.06749153137207,
+          5.016782760620117
+        ],
+        "initial_rmse4": [
+          100.87344360351562,
+          110.93238067626953,
+          120.5433120727539,
+          130.2750244140625
+        ],
+        "nfev": 297,
+        "train_pixels": 4998,
+        "optimizer_success": true
+      },
+      "evaluation": {
+        "status": "compatible",
+        "reasons": [],
+        "rmse4": [
+          5.091773509979248,
+          5.041438579559326,
+          4.969637870788574,
+          5.014744758605957
+        ],
+        "pixels": 2378,
+        "rmse_limit4": [
+          30.0,
+          30.0,
+          30.0,
+          30.0
+        ]
+      }
+    },
+    {
+      "name": "noisy-wrong-direction-99173",
+      "fit": {
+        "params": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "covariance": [
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ]
+        ],
+        "status": "ambiguous",
+        "reasons": [
+          "identity-does-not-order-sources"
+        ],
+        "train_rmse4": [
+          100.87344360351562,
+          110.93238067626953,
+          120.5433120727539,
+          130.2750244140625
+        ],
+        "initial_rmse4": [
+          100.87344360351562,
+          110.93238067626953,
+          120.5433120727539,
+          130.2750244140625
+        ],
+        "nfev": 160,
+        "train_pixels": 4998,
+        "optimizer_success": true
+      },
+      "evaluation": {
+        "status": "refused",
+        "reasons": [
+          "identity-does-not-order-sources",
+          "held-out-residual-exceeds-caller-allowance"
+        ],
+        "rmse4": [
+          160.98951721191406,
+          122.75131225585938,
+          122.29596710205078,
+          195.29449462890625
+        ],
+        "pixels": 2378,
+        "rmse_limit4": [
+          30.0,
+          30.0,
+          30.0,
+          30.0
+        ]
+      }
+    },
+    {
+      "name": "noisy-crossing-99173",
+      "fit": {
+        "params": [
+          6.001038074493408,
+          2.5034451484680176,
+          0.5230468511581421
+        ],
+        "covariance": [
+          [
+            28.59036636352539,
+            12.871842384338379
+          ],
+          [
+            12.871842384338379,
+            13.689329147338867
+          ]
+        ],
+        "status": "fitted",
+        "reasons": [],
+        "train_rmse4": [
+          5.06030797958374,
+          5.00798225402832,
+          5.067502975463867,
+          5.016792297363281
+        ],
+        "initial_rmse4": [
+          100.87344360351562,
+          110.93238067626953,
+          120.5433120727539,
+          130.2750244140625
+        ],
+        "nfev": 264,
+        "train_pixels": 4998,
+        "optimizer_success": true
+      },
+      "evaluation": {
+        "status": "refused",
+        "reasons": [
+          "held-out-residual-exceeds-caller-allowance"
+        ],
+        "rmse4": [
+          634.0374755859375,
+          138.50221252441406,
+          142.3743896484375,
+          893.2020874023438
+        ],
+        "pixels": 294,
+        "rmse_limit4": [
+          30.0,
+          30.0,
+          30.0,
+          30.0
+        ]
+      }
+    },
+    {
+      "name": "gain-only",
+      "fit": {
+        "params": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "covariance": [
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ]
+        ],
+        "status": "ambiguous",
+        "reasons": [
+          "identity-does-not-order-sources"
+        ],
+        "train_rmse4": [
+          186.42311096191406,
+          189.30123901367188,
+          192.18968200683594,
+          195.19277954101562
+        ],
+        "initial_rmse4": [
+          186.42311096191406,
+          189.30123901367188,
+          192.18968200683594,
+          195.19277954101562
+        ],
+        "nfev": 161,
+        "train_pixels": 4998,
+        "optimizer_success": true
+      },
+      "evaluation": {
+        "status": "refused",
+        "reasons": [
+          "identity-does-not-order-sources",
+          "held-out-residual-exceeds-caller-allowance"
+        ],
+        "rmse4": [
+          167.03140258789062,
+          164.6665496826172,
+          164.66702270507812,
+          169.50360107421875
+        ],
+        "pixels": 2378,
+        "rmse_limit4": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ]
+      }
+    },
+    {
+      "name": "clipped-protected-core",
+      "fit": {
+        "params": [
+          5.999997615814209,
+          2.5000030994415283,
+          0.5235985517501831
+        ],
+        "covariance": [
+          [
+            28.562488555908203,
+            12.88210678100586
+          ],
+          [
+            12.88210678100586,
+            13.6875
+          ]
+        ],
+        "status": "fitted",
+        "reasons": [],
+        "train_rmse4": [
+          0.00012324009730946273,
+          0.00014008741709403694,
+          0.00011600927246036008,
+          0.00011316344171063974
+        ],
+        "initial_rmse4": [
+          100.75145721435547,
+          110.5400161743164,
+          120.31432342529297,
+          130.1141357421875
+        ],
+        "nfev": 313,
+        "train_pixels": 4998,
+        "optimizer_success": true
+      },
+      "evaluation": {
+        "status": "refused",
+        "reasons": [
+          "clipped-held-out-support"
+        ],
+        "rmse4": null,
+        "pixels": 2378
+      }
+    }
+  ],
+  "inputs": {
+    "source_sha256": "6f14fff60f0aa64fed8718afd506aec928c9036e11cc8c0eaee44c18fa783daa",
+    "target_sha256": "ccee295ae6f4d451a4e9973fba032bc73325f94323aa101640cbf1790f376f3f",
+    "training_sha256": "f1edd926bb6eaaaf417f2f934df73f9d1f19f817a9372ebbf3f0ae3bd8d68445",
+    "protected_sha256": "5a9ebe35a97c97aa67a366f5947dc41f50674936a2f2af7668ca9db12a67e6d0",
+    "component_a_sha256": "8633955d4101cb519bc617633e7d593cb2f00c49b7b87eda5f8a9febf30185f0",
+    "component_b_sha256": "99e8016af9d1b9be24380b43a64a27f11dc8bbf8b234817e0842594df3888d21"
+  },
+  "next_scope": "A separately authorized retained-linear-source diagnostic only"
+}

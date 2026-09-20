@@ -1,0 +1,26 @@
+
+running 1 test
+test merge_cmd::relative_blur_source_witness::vitamin_c_wide_source_witness ...   GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+relative blur source witness 25: 1.19s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+relative blur source witness 28: 0.61s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+relative blur source witness 33: 0.60s
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+relative blur source witness 69: 0.62s
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 221 filtered out; finished in 3.18s
+

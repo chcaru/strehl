@@ -1,0 +1,17 @@
+{
+  "process": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\relative-blur-evidence\\controls-1\\process.json",
+    "sha256": "976238d6c9c2d85118b4f8c2deae0c66b5e55d5ed062f1d6374d37095b081771",
+    "bytes": 2865
+  },
+  "screen": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\relative-blur-evidence\\controls-1\\output\\screen.json",
+    "sha256": "20a8982465ca776ed5bcbaaaf915c55c0738c668e5841197461925f0edddc7d5",
+    "bytes": 25718
+  },
+  "sources_unchanged": true,
+  "status": "PASS_GENERATED_ADEQUACY_ONLY",
+  "exit_code": 0,
+  "actual_consumer_admitted": false,
+  "scope": "Algebra and model adequacy falsifier only; no native covariance, ownership or image-quality admission."
+}

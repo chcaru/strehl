@@ -1,0 +1,24 @@
+{
+  "sources": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\relative-blur-evidence\\model.py",
+      "sha256": "4a40f8b201e5baaf47597203b8031e896bb68c0b005e2b09082d8b6adc739e0c",
+      "bytes": 10353
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\relative-blur-evidence\\flat-refusal-stress.py",
+      "sha256": "6cecb2ea2fcf34872d8d8c4c6258d36c4b84f0da01f759b1e9b54e0203d28745",
+      "bytes": 4246
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\relative-blur-evidence\\flat-refusal-plan.md",
+      "sha256": "aaa7cfd964d13101a6e2f56bda76faab20bc23b7e4b359ad6df30d7b7f5d390b",
+      "bytes": 1390
+    }
+  ],
+  "python": {
+    "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "sha256": "4d6f5f81a4bca11191c4c7c6b43632694d0a4ce74e068619d8fdc161d469859a",
+    "bytes": 104952
+  }
+}

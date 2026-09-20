@@ -322,3 +322,13 @@ reusable numerical work; do not spend another render or optimization campaign
 on this fixed image operator. The next intervention must address source
 evidence and the observed through-focus relationship, not merely substitute
 another transform or larger spatial prior.
+
+The bounded relative-blur check has now passed its generated algebra/adequacy
+controls and completed six fixed actual-source transfer fits. It has not
+provided automatic ownership or photographic admission. Facet prediction
+improves a held residual, but dark-core fitting reaches its finite blur bound
+and nearby real-structure continuation worsens in three planes. Numerical
+refusal is unknown, not evidence for the reverse direction; the finite kernel
+also cannot rule out broader physical spread. Preserve the exact source
+witnesses and separate target-holdout scope in relative-blur-evidence/results.md.
+Do not spend a full render on these compatibility scores alone.

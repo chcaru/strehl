@@ -1,0 +1,14 @@
+{
+  "process": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\relative-blur-evidence\\flat-stress-1\\process.json",
+    "sha256": "c1a4ee388d222158ff90ed25bfbf67f331ef738594e4b6fa835b11fd302b9195",
+    "bytes": 2879
+  },
+  "screen": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\relative-blur-evidence\\flat-stress-1\\screen.json",
+    "sha256": "d634f51c608833daea2cf220e90112a1f4fb8da9524569d49f289086c00c4c0c",
+    "bytes": 6348
+  },
+  "sources_unchanged": true,
+  "actual_consumer_admitted": false
+}

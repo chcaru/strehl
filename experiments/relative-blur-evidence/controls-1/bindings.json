@@ -1,0 +1,34 @@
+{
+  "sources": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\relative-blur-evidence\\model.py",
+      "sha256": "4a40f8b201e5baaf47597203b8031e896bb68c0b005e2b09082d8b6adc739e0c",
+      "bytes": 10353
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\relative-blur-evidence\\independent-controls.py",
+      "sha256": "39677cd2c4fcf9eb62054c56ab2a3bcefc0b1373c2bc5e51c2e7b822b63f9852",
+      "bytes": 11951
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\relative-blur-evidence\\independent-brief.md",
+      "sha256": "35d36c3cbf3130f3e372fd09cf5b969dc2e5ac85d6fbb9e7b7ea1dd5d7b24aba",
+      "bytes": 5090
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\relative-blur-evidence\\independent-plan.md",
+      "sha256": "4c77b09220ff560d8494cc26e8e0a0d00faa0a4a62e48a656f35811cfc19f99f",
+      "bytes": 4519
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\relative-blur-evidence\\screen-run.py",
+      "sha256": "e1b19b75a31a4eca685331fc5e8771f6cc6a4431c82d4b951e804c3c7299d427",
+      "bytes": 2784
+    }
+  ],
+  "python": {
+    "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "sha256": "4d6f5f81a4bca11191c4c7c6b43632694d0a4ce74e068619d8fdc161d469859a",
+    "bytes": 104952
+  }
+}
