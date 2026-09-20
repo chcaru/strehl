@@ -1,0 +1,23 @@
+{
+  "instrument_completed": true,
+  "controls_executed": 2,
+  "sources_unchanged": true,
+  "executable": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-source-prior\\build-1\\cli-tests.exe",
+    "sha256": "894c34700759ece4efc8368161c8ea5da43a846b6d054ca2dcbafa886d14861a",
+    "bytes": 29314560
+  },
+  "process": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-source-prior\\controls-1\\process.json",
+    "sha256": "8bcd71f097b5f30116d228e991c486c45c64d6a38953af4403a1f8fe167384f3",
+    "bytes": 2722
+  },
+  "screen": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-source-prior\\controls-1\\output\\screen.json",
+    "sha256": "a63516111176f8b68a2f3d433ca596f672ea0a02823f71e298c92be546ee9144",
+    "bytes": 259952
+  },
+  "photographic_replay_admitted": false,
+  "full_render_available": false,
+  "scope": "Generated controls only. Successful test execution is not quality admission."
+}

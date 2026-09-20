@@ -1,0 +1,22 @@
+{
+  "controls_executed": 2,
+  "sources_unchanged": true,
+  "photographic_replay_admitted": false,
+  "preservation": {
+    "retained_screen": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-source-prior\\controls-1\\output\\screen.json",
+      "sha256": "a63516111176f8b68a2f3d433ca596f672ea0a02823f71e298c92be546ee9144",
+      "bytes": 259952
+    },
+    "fresh_screen": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-source-prior\\chip-controls-1\\output\\screen.json",
+      "sha256": "a63516111176f8b68a2f3d433ca596f672ea0a02823f71e298c92be546ee9144",
+      "bytes": 259952
+    },
+    "semantic_json_exact": true,
+    "unchanged_cases": 12,
+    "photographic_replay_admitted": false,
+    "scope": "Root explicitly rescoped after rejection to one unchanged full-chip observation. Generated qualification remains false. This is not a gate pass, default change, automatic opaque-surface classifier, or photographic quality claim."
+  },
+  "scope": "Root explicitly rescoped after rejection to one unchanged full-chip observation. Generated qualification remains false. This is not a gate pass, default change, automatic opaque-surface classifier, or photographic quality claim."
+}

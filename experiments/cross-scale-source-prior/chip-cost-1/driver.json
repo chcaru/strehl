@@ -1,0 +1,26 @@
+{
+  "driver": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-source-prior\\chip-run.py",
+    "sha256": "1748eaa15c21b46059a934cfbfc34fecf96912091a1b9270a538f03682c564cc",
+    "bytes": 17740
+  },
+  "bounded_helper": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-source-prior\\run.py",
+    "sha256": "8bb539359b1d712c5894ce43d7c7ee66f636fefa1432cdc5d53d7777c75860b0",
+    "bytes": 7134
+  },
+  "command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-source-prior\\chip-build-1\\cli-tests.exe",
+    "merge_cmd::cross_scale_source_prior_chip::chip_complete_pair",
+    "--exact",
+    "--ignored",
+    "--nocapture",
+    "--test-threads=1"
+  ],
+  "limits": {
+    "wall": 180,
+    "cpu": 600,
+    "gib": 16
+  },
+  "scope": "Root explicitly rescoped after rejection to one unchanged full-chip observation. Generated qualification remains false. This is not a gate pass, default change, automatic opaque-surface classifier, or photographic quality claim."
+}

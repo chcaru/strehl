@@ -18,6 +18,23 @@ Both automatic cross-workflow mappings refuse, so no matched-native detail or
 noise superiority is claimed. The next implementation priority is coherent
 source/depth choice in the RAW consumer, with complete before/after images;
 do not infer that changing predevelopment alone explains the B/C difference.
+The fixed coarse-only finest-source prior now fails its generated general
+qualification at ISO100 and400: it loses about72% of genuine far coarse
+structure behind fine near detail, and increases local glint errors. Flat
+noise remains unchanged; broad-contact interior/edge errors improve, while
+the registered outside bright-spill positive is unexercised. See
+experiments/cross-scale-source-prior/results-review.md. General admission
+remains false. Root separately authorized and completed one unchanged
+complete-chip observational pair. Both whole images and all seven frozen
+native pairs show a bounded broad-border/contact benefit, with strong bright
+spill and central coloured stipple still present and no identified extra fine
+detail. The exact baseline is preserved; the instrumented pair takes400.563s
+and5,470,801,920 bytes peak job commitment. See chip-results.md and the
+independent photographic review. This changes the experimental question after
+rejection; it does not waive or pass the old gate. Opacity alone cannot protect
+against the measured glint failures. No parameter sweep or default promotion.
+The next investigation is coherent whole-image source choice on the same
+native gather, preserving injected noise and regularized/gated averaging.
 Historical decisions follow.
 
 Complete Helicon B/C comparisons at e250ddc2

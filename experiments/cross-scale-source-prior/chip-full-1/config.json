@@ -1,0 +1,18 @@
+{
+  "schema": 1,
+  "phase": "full",
+  "source_dir": "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl",
+  "warp_map": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\chip-baseline-1\\chip.warpmap.txt",
+  "out_dir": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-source-prior\\chip-full-1\\output",
+  "expected_crop": [
+    141,
+    97,
+    3234,
+    2150
+  ],
+  "tone": [
+    0.004293,
+    0.946441,
+    0.55
+  ]
+}

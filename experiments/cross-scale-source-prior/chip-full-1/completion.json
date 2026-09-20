@@ -1,0 +1,13 @@
+{
+  "phase": "full",
+  "sources_unchanged": true,
+  "original_metadata_unchanged": true,
+  "historical_full_baseline_exact": true,
+  "receipt": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-source-prior\\chip-full-1\\output\\receipt.json",
+    "sha256": "190d045e23d4b59f14c6f2c33722153729aeaec643977fa11b70d4ab961e79cc",
+    "bytes": 1294911
+  },
+  "photographic_replay_admitted": false,
+  "scope": "Root explicitly rescoped after rejection to one unchanged full-chip observation. Generated qualification remains false. This is not a gate pass, default change, automatic opaque-surface classifier, or photographic quality claim."
+}

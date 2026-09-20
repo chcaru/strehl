@@ -1,0 +1,88 @@
+{
+  "all299_support_preflight": true,
+  "ca_stage": "off",
+  "crop": [
+    141,
+    97,
+    3234,
+    2150
+  ],
+  "generated_photographic_replay_admitted": false,
+  "level_sizes": [
+    [
+      3234,
+      2150
+    ],
+    [
+      1617,
+      1075
+    ],
+    [
+      809,
+      538
+    ],
+    [
+      405,
+      269
+    ],
+    [
+      203,
+      135
+    ],
+    [
+      102,
+      68
+    ],
+    [
+      51,
+      34
+    ],
+    [
+      26,
+      17
+    ]
+  ],
+  "map_sha256": "ce8534c9e65c5c761373bad87df5352c1c46319b7eaf7f7c91477ea61b4f4922",
+  "matrix": [
+    [
+      0.7459999918937683,
+      -0.23649999499320984,
+      -0.058800000697374344
+    ],
+    [
+      -0.5687000155448914,
+      1.3442000150680542,
+      0.24740000069141388
+    ],
+    [
+      -0.06239999830722809,
+      0.11559999734163284,
+      0.6583999991416931
+    ]
+  ],
+  "observer": false,
+  "optical_ca": "a7c2-fe100gm-2xtc-x4cpl",
+  "phase": "full",
+  "plan": {
+    "canonical_chunks": 4,
+    "per_chunk": 75,
+    "planning_bytes": 1392085228
+  },
+  "prior_source_count": 299,
+  "probe_source_count": 299,
+  "probe_source_index": "original index",
+  "schema": 1,
+  "scope": "separate observational chip counterfactual",
+  "source_count": 299,
+  "threads": 8,
+  "tone_bits": [
+    999074891,
+    1064454645,
+    1057803469
+  ],
+  "wb_bits": [
+    1070374912,
+    1065353216,
+    1076715520
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-source-prior\\chip-build-1\\cli-tests.exe",
+    "merge_cmd::cross_scale_source_prior_chip::chip_complete_pair",
+    "--exact",
+    "--ignored",
+    "--nocapture",
+    "--test-threads=1"
+  ],
+  "environment": {
+    "RAYON_NUM_THREADS": "8",
+    "STREHL_PYRAMID_WORKERS": "8",
+    "STREHL_ALIGN": "1",
+    "STREHL_FULLRES_GATHER": "1",
+    "STREHL_DIRECT_PLANES": "rounded",
+    "STREHL_PROBE_GATHER": "green",
+    "STREHL_WARP_WRITEBACK": "parallel",
+    "STREHL_GPU_GATHER": "on",
+    "STREHL_GPU_SCHEDULE": "device",
+    "STREHL_GPU_GATHER_LOG": "on",
+    "STREHL_DEFECT": "off",
+    "STREHL_FINE_SUPPORT": "off",
+    "STREHL_CA_BEFORE_MHC": "off",
+    "STREHL_WARPMAP": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\chip-baseline-1\\chip.warpmap.txt",
+    "STREHL_CROSS_SCALE_SOURCE_PRIOR_CHIP_CONFIG": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-source-prior\\chip-cost-1\\config.json"
+  },
+  "removed_environment": [],
+  "runner": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-source-prior\\run.py",
+    "sha256": "8bb539359b1d712c5894ce43d7c7ee66f636fefa1432cdc5d53d7777c75860b0",
+    "bytes": 7134
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "resource_feasible": true,
+  "estimated_full_seconds": 1047.4242796,
+  "maximum_estimate_seconds": 1500,
+  "source_time_multiplier": 1.25,
+  "source_phase_seconds": 2.3172304,
+  "finish_seconds": 1.3594176,
+  "setup_allowance_seconds": 180,
+  "cost_peak_bytes": 5035110400,
+  "maximum_cost_peak_bytes": 12884901888,
+  "full_limits": {
+    "wall_seconds": 1800,
+    "cpu_seconds": 7200,
+    "committed_bytes": 17179869184
+  },
+  "receipt": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-source-prior\\chip-cost-1\\output\\receipt.json",
+    "sha256": "622830267a56f6476563ab616c80271c48db10db67314f5e9ccf3bdf0162d600",
+    "bytes": 7772
+  },
+  "process": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-source-prior\\chip-cost-1\\process.json",
+    "sha256": "f5ac89e184d15f4191859e4e15080e0df1f30ea8a4dfa0342dc7a98d755e3005",
+    "bytes": 2767
+  },
+  "photographic_replay_admitted": false,
+  "limitation": "One source measures both passes; extrapolation and cost peak cannot guarantee full runtime or peak. No speed or quality claim."
+}

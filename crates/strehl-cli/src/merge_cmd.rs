@@ -4984,6 +4984,16 @@ pub(crate) mod phase_packed_chip {
     include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/phase-packed-chip/implementation.rs"));
 }
 
+#[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance", feature = "native-gpu-gather"))]
+pub(crate) mod cross_scale_source_prior {
+    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/cross-scale-source-prior/implementation.rs"));
+}
+
+#[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance", feature = "native-gpu-gather"))]
+pub(crate) mod cross_scale_source_prior_chip {
+    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/cross-scale-source-prior/chip-implementation.rs"));
+}
+
 #[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance"))]
 pub(crate) mod donor_consistency {
     include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/donor-consistency/implementation.rs"));
