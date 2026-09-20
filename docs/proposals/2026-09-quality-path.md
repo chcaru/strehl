@@ -51,9 +51,16 @@ experiments/layered-raw-inverse/in-focus-results.md. This is generated,
 known-visibility/known-optics headroom; old pinhole and pupil-adequacy failures
 remain. The next paired test removes supplied visibility and compares matrix
 against original Huber with the same continuation driver and original free-
-alpha initialization. The newly declared output is the in-focus target;
-no solver/strength/PSF sweep is authorized. It has no photographic admission
-yet. The passing complete-periodic all-CFA controls
+alpha initialization. That paired test now fails qualification: free matrix
+beats free Huber on structured scenes and passes the far-only case, but flat
+and several retained known-alpha image guards still fail despite passing
+matched held-RAW predictions. See free-visibility-results.md. All eight fits
+remain nonstationary; no duration, coefficient or parameterization rescue is
+authorized. A separately commissioned fused joint-pupil GPU operator now
+targets the independently known64/1024 integration discrepancy. Its forward
+and adjoint must pass before dense-pupil adequacy is evaluated; this numerical
+engineering step does not itself cure the free-visibility failure. No
+photographic admission yet. The passing complete-periodic all-CFA controls
 remain retained at48276660; speed work stays behind demonstrated image quality.
 
 The owner's priority is photographic quality on the A7C II macro captures.

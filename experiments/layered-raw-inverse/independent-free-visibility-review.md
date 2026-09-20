@@ -1,0 +1,25 @@
+# Independent free-visibility source and choice review
+
+SOURCE REVIEW ONLY; no builds, numerical commissioning, fitting or RAW execution by this reviewer. No material blocker remains in the final fitting source, controls, plans or root wrapper. The review authorizes only the fixed prospective generated experiment.
+
+The fitter restores each case's original160-step free-alpha two-layer checkpoint into the actual frozen `model._State`. It checks every parameter and exported initial near/far/alpha/pinhole field exactly. `near`, `far` and `alpha_logit` are all trainable and all enter the optimizer; there is no fixed-alpha wrapper or truth-alpha file input. The matrix module is imported for its prior helper, not its oracle runner. Only the original seven training observations are accessed through `TrainingOnly`; held-out settings are predicted after fitting without reading their observed values. Known optics/depths remain supplied assumptions.
+
+The paired change is restricted to `state.prior()` versus frozen `matrix.selected_prior(state,config)`. Matrix retains the original alpha-TV, binary and radiance-L2 terms. Both arms use the same original starts, streaming likelihood, f32 image arithmetic, unchanged contiguous-gradient repair, LBFGS1000/1400/history10 settings and hard1800 actual-evaluation cap including monitors. The cap reserves a final evaluation; failed attempts remain counted. Only final returned states are scored, with numerical refusal and nonstationarity distinguished. Different objectives can follow different paths or stop at different counts; equal budget does not establish equal convergence or a global optimum.
+
+The small independent commission uses the real state and both dispatch paths. It independently enumerates alpha-TV edge contributions plus the binary derivative and sigmoid chain, requiring nonzero logit gradients and all three parameter gradients to be live. That would expose fixed/detached alpha or a changed remainder. Exact dispatch equality is a reuse check, not a new independent proof of the already commissioned matrix formula. The fitter itself passes all state parameters to LBFGS. The frozen in-focus commission, including extra-blur and half-colour destroyers, runs before any fit.
+
+The primary consumer B(P) is now declared before these new fits. Full96 composed pinholes receive the original single optical PSF; the scorer independently checks this and retains pinhole scoring separately. Mean and retained donor observations remain unfiltered and unelected. Fixed-alpha visibility quality guards remain required without supplying its alpha to either fit; the plan wording was aligned to this stricter independent contract before execution. Additional same-budget free-Huber comparisons cannot excuse an absolute or fixed-reference failure.
+
+Flat guards protect RGB and chroma despite a fitted noisy mask. The far-only damage null uses the actual historical single-depth reconstruction, with whole/core/ridge RGB and chroma protection plus its live glint component. Its ridge template is identically zero, so no fictitious ridge-recovery assertion is used: invented foreground detail is instead exposed by the fixed-region errors. The restricted old single-depth comparator is not a best-possible one-layer solver. Angular mismatch has descriptive image/component results and a held-out adequacy refusal; the scorer labels refusal selective only if all three matched cases pass. It does not manufacture a required failure or implement a calibrated automatic adequacy gate.
+
+Final scorer checks bind the source chain, actual starts/training reads, final states, held predictions and both image artifacts. The final image amendment checks exact target names, filenames, hashes and zero/one PSF applications; this closes a receipt-use omission without changing stimuli or bars. Accepted output arrays are checked against their reconstruction and independent full-context convolution. Missing/refused arms stay incomplete. No mask-accuracy or likelihood statistic replaces image quality.
+
+Root wrapper names and CLI match the reviewed scripts. It validates the `in-focus-2` frozen chain, binds all four case input trees and retained delivered references, requires commissioning success before fitting, applies fixed60/600/90-second stage limits, and checks immutable sources after each stage. No timeout-dependent budget increase, deferred projected-opacity driver, parameter search or photographic admission is present. The unresolved64/1024 pupil discrepancy and visibility/radiance gauge remain outside what this utility screen can establish.
+
+Frozen SHA256 bindings:
+
+- Fitter: `6279275e8ac30d833b555bf3a8326d1a82f55ca4ef74debc7368955fab0a23a1`.
+- Fitter plan: `3973fb0288c0ded23e9a784eebdfd894e824a506a0c353cf96620bd6d8cc73db`.
+- Controls: `1320de1e738d7cc3fcd19c0536e27cd41efe572783ab1bb18bb91dd26c6362a2`.
+- Independent plan: `47acc3a2a02d00378703dd3d09a0baaa716dbbfb72dbfa51e2c21bc1f3f28a28`.
+- Wrapper: `f707e63654c935fb475de68fbbb11a1c9fc1fcb7862173c9d06dae5433f96c75`.

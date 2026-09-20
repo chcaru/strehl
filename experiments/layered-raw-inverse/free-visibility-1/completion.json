@@ -1,0 +1,10 @@
+{
+  "instrument_completed": true,
+  "sources_unchanged": true,
+  "independent_scores": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\free-visibility-1\\scored\\result.json",
+    "sha256": "e7f0815720f33d308cb98bf3cbb69f65dd0b806a1af8eb57328dfaea32db16d4",
+    "bytes": 145790
+  },
+  "scope": "Same-driver Huber/matrix free-visibility fits; fixed in-focus target; no photographic admission"
+}

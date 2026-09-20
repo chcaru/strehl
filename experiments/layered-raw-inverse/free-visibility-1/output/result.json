@@ -1,0 +1,69 @@
+{
+  "status": "FREE_VISIBILITY_COMPLETE",
+  "arms": [
+    {
+      "case": "flat",
+      "prior_kind": "original",
+      "status": "nonstationary_return",
+      "receipt": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\free-visibility-1\\output\\flat\\original\\receipt.json",
+      "receipt_sha256": "320ca727663e41cdbcb593c36a1d96aaa5e73539ec5479efcf52af3b48d6ec15"
+    },
+    {
+      "case": "flat",
+      "prior_kind": "matrix",
+      "status": "nonstationary_return",
+      "receipt": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\free-visibility-1\\output\\flat\\matrix\\receipt.json",
+      "receipt_sha256": "706aab80d1eaaa79c090d52aac081a3552f8309d7b36d77c429596f840bd5f1d"
+    },
+    {
+      "case": "layered",
+      "prior_kind": "original",
+      "status": "nonstationary_return",
+      "receipt": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\free-visibility-1\\output\\layered\\original\\receipt.json",
+      "receipt_sha256": "6c5bf49ddc17adf252b605b87c1a3903e24d6d86dbb9b2609213f3014105c543"
+    },
+    {
+      "case": "layered",
+      "prior_kind": "matrix",
+      "status": "nonstationary_return",
+      "receipt": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\free-visibility-1\\output\\layered\\matrix\\receipt.json",
+      "receipt_sha256": "7cf42053b4e6365c560c83d1ac80e2b76ae2347c908247983f86ef6a2edd3cce"
+    },
+    {
+      "case": "far-only",
+      "prior_kind": "original",
+      "status": "nonstationary_return",
+      "receipt": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\free-visibility-1\\output\\far-only\\original\\receipt.json",
+      "receipt_sha256": "684a21c32f4574dd41bc8a59fe474cc90b5f8c0f7d0bb2bce69872b5ab193b11"
+    },
+    {
+      "case": "far-only",
+      "prior_kind": "matrix",
+      "status": "nonstationary_return",
+      "receipt": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\free-visibility-1\\output\\far-only\\matrix\\receipt.json",
+      "receipt_sha256": "138258208f096b7ef304f4a1c33ec8c98284ebabd678d986717c6852c329148c"
+    },
+    {
+      "case": "angular-mismatch",
+      "prior_kind": "original",
+      "status": "nonstationary_return",
+      "receipt": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\free-visibility-1\\output\\angular-mismatch\\original\\receipt.json",
+      "receipt_sha256": "a091a8f6e9782ce42504816c7130e3c31647faca8a40fc8ec71533acffeeefd1"
+    },
+    {
+      "case": "angular-mismatch",
+      "prior_kind": "matrix",
+      "status": "nonstationary_return",
+      "receipt": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\free-visibility-1\\output\\angular-mismatch\\matrix\\receipt.json",
+      "receipt_sha256": "7391381fe7bbf99bf86660e281b8b9244f3c0b21bd167b9636876590a40b8344"
+    }
+  ],
+  "source_root": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output",
+  "bindings_unchanged": true,
+  "wall_seconds": 221.4690000000046,
+  "visibility_oracle_used": false,
+  "original_pinhole_admission_unchanged": true,
+  "real_photo_admission": false,
+  "primary_target": "common-PSF of composed pinhole RGB",
+  "interpretation": "Paired free-alpha original/matrix priors; same original160 starts and optimizer. Independent scoring required."
+}
