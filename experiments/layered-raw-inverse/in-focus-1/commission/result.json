@@ -1,0 +1,7 @@
+{
+  "status": "PASS",
+  "passed": true,
+  "operator": {
+    "constant": {
+      "max_abs_dn": 0.00048828125,
+      "bound_dn": 
