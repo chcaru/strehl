@@ -4939,6 +4939,11 @@ pub(crate) mod relative_blur_source_witness {
     include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/relative-blur-evidence/source-witness.rs"));
 }
 
+#[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance", feature = "native-gpu-gather"))]
+pub(crate) mod core_lineage {
+    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/core-lineage/implementation.rs"));
+}
+
 #[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance"))]
 pub(crate) mod donor_consistency {
     include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/donor-consistency/implementation.rs"));

@@ -332,3 +332,23 @@ refusal is unknown, not evidence for the reverse direction; the finite kernel
 also cannot rule out broader physical spread. Preserve the exact source
 witnesses and separate target-holdout scope in relative-blur-evidence/results.md.
 Do not spend a full render on these compatibility scores alone.
+
+The next bounded consumer test is core-lineage: transport existing focus
+weights from persistent source cores only across unambiguous observed branches,
+with exact baseline fallback at crossings, contested support and clipping.
+Original-code checks around the vitamin-C highlights reach16383 in four
+independently decoded inputs; the broad boxes do not identify exact branch
+stencils, but clipping refusal must remain explicit. Independent actual-consumer
+truth controls must demonstrate useful coverage and preserve radial/coloured
+and different-depth detail before any photographic replay is considered.
+
+That core-lineage screen is now closed without a full render: it activates no
+quads on any through-focus truth scene, including the required glint case.
+Its safe fallback and refusal controls do not constitute useful repair. Source
+reversal additionally changes existing probe floors, so it cannot isolate
+lineage ordering. Preserve core-lineage/results.md and independent review;
+do not tune this rule. The next bounded colour investigation changes the
+information used for R/B election in the existing Laplacian merge, with their
+own propagated RAW noise and both greens held fixed. Historical axial offsets
+do not justify a fixed source shift or explain current fans. Actual colour,
+neutral-edge, flat-noise and competing-depth controls decide admission.

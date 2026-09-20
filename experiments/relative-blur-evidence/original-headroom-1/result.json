@@ -1,0 +1,393 @@
+{
+  "scope": "Original integer-code headroom in fixed broad source neighbourhoods; not an exact consumed-stencil clipping map or a physical ADC saturation calibration",
+  "pipeline_white": 15360,
+  "comparison_code": 16383,
+  "boxes_half_extent_native": 32,
+  "mapping": "held green similarity around active-native centre plus output crop origin; broad box includes surrounding context, without channel-specific pull attribution",
+  "bindings": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\relative-blur-evidence\\witness-1\\output\\receipt.json",
+      "bytes": 24605,
+      "sha256": "cbf028ae17deb80c79fb388e1b515c614e1290ec6406ab7445c75b4c44d0ee15"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\relative-blur-evidence\\original-headroom.py",
+      "bytes": 4044,
+      "sha256": "38b849fe989425b0c0db8c640b1531ab7b218621aad828aaff61347572de93f7"
+    }
+  ],
+  "groups": [
+    {
+      "source_index": 25,
+      "source_path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00119.ARW",
+      "original_active_sha256": "fcf71290087ebad289846abd8da7a1fc44d69377758ee4db946e2b42870df29a",
+      "independent_decode_exact": true,
+      "libraw_white": 16383,
+      "libraw_visible_shape": [
+        4688,
+        7028
+      ],
+      "regions": [
+        {
+          "name": "facet-core",
+          "source_centre_native": [
+            2677.645892066707,
+            2945.9515274781693
+          ],
+          "original_xywh": [
+            2645,
+            2913,
+            65,
+            65
+          ],
+          "samples": 4225,
+          "minimum": 2106,
+          "maximum": 16383,
+          "at_or_above_pipeline_white": 279,
+          "exactly_pipeline_white": 0,
+          "at_or_above_16383": 253,
+          "u16_sha256": "bc457e94b4a77fd486587cd2826ec5125e5d26b794b3fbbd6fb9a80b4105eb96"
+        },
+        {
+          "name": "dark-core",
+          "source_centre_native": [
+            3134.7807379268875,
+            2187.455226937708
+          ],
+          "original_xywh": [
+            3102,
+            2155,
+            65,
+            65
+          ],
+          "samples": 4225,
+          "minimum": 1143,
+          "maximum": 16383,
+          "at_or_above_pipeline_white": 224,
+          "exactly_pipeline_white": 0,
+          "at_or_above_16383": 196,
+          "u16_sha256": "24ac87fb7ddfcf18a84a11ff9ab9355af02d7df06fbb30946fb32d6034924141"
+        },
+        {
+          "name": "dark-column",
+          "source_centre_native": [
+            3134.803038809692,
+            2249.6464986717688
+          ],
+          "original_xywh": [
+            3102,
+            2217,
+            65,
+            65
+          ],
+          "samples": 4225,
+          "minimum": 2314,
+          "maximum": 16383,
+          "at_or_above_pipeline_white": 8,
+          "exactly_pipeline_white": 0,
+          "at_or_above_16383": 4,
+          "u16_sha256": "a293b32a74af34e8a01b79e8d4b37460d4e42315aade1d678fb95cb0a6f6d5f9"
+        },
+        {
+          "name": "nearby-structure",
+          "source_centre_native": [
+            3295.2455670692307,
+            2107.1508740349086
+          ],
+          "original_xywh": [
+            3263,
+            2075,
+            65,
+            65
+          ],
+          "samples": 4225,
+          "minimum": 1970,
+          "maximum": 6431,
+          "at_or_above_pipeline_white": 0,
+          "exactly_pipeline_white": 0,
+          "at_or_above_16383": 0,
+          "u16_sha256": "36f1ef36bdbb7f68a006202a80ec1ddfa81ed28d466a03db7c39a0933978458e"
+        }
+      ]
+    },
+    {
+      "source_index": 28,
+      "source_path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00122.ARW",
+      "original_active_sha256": "6fefaf546c99828da79239090dcc3f328de3e994d9d88267e501ea37729e3b7b",
+      "independent_decode_exact": true,
+      "libraw_white": 16383,
+      "libraw_visible_shape": [
+        4688,
+        7028
+      ],
+      "regions": [
+        {
+          "name": "facet-core",
+          "source_centre_native": [
+            2678.37507462971,
+            2945.540365368571
+          ],
+          "original_xywh": [
+            2646,
+            2913,
+            65,
+            65
+          ],
+          "samples": 4225,
+          "minimum": 2104,
+          "maximum": 16383,
+          "at_or_above_pipeline_white": 272,
+          "exactly_pipeline_white": 0,
+          "at_or_above_16383": 243,
+          "u16_sha256": "347c5aae72fa9c19d76891c3c0deaabdc4028dff26aac05b681aa113feba0d22"
+        },
+        {
+          "name": "dark-core",
+          "source_centre_native": [
+            3135.168067898243,
+            2187.7820397296687
+          ],
+          "original_xywh": [
+            3103,
+            2155,
+            65,
+            65
+          ],
+          "samples": 4225,
+          "minimum": 1086,
+          "maximum": 16383,
+          "at_or_above_pipeline_white": 236,
+          "exactly_pipeline_white": 0,
+          "at_or_above_16383": 213,
+          "u16_sha256": "403d7996f952fd9f2744829d3b138c0cf3e3764e660c584a2f8b7164169672e8"
+        },
+        {
+          "name": "dark-column",
+          "source_centre_native": [
+            3135.184158536496,
+            2249.916535574336
+          ],
+          "original_xywh": [
+            3103,
+            2217,
+            65,
+            65
+          ],
+          "samples": 4225,
+          "minimum": 2338,
+          "maximum": 16383,
+          "at_or_above_pipeline_white": 22,
+          "exactly_pipeline_white": 0,
+          "at_or_above_16383": 18,
+          "u16_sha256": "35594324387b343775c895e7696f274d8fb6ee7ecee08c91035a8cd114903c1e"
+        },
+        {
+          "name": "nearby-structure",
+          "source_centre_native": [
+            3295.4943918351223,
+            2107.566972476542
+          ],
+          "original_xywh": [
+            3263,
+            2075,
+            65,
+            65
+          ],
+          "samples": 4225,
+          "minimum": 1970,
+          "maximum": 6064,
+          "at_or_above_pipeline_white": 0,
+          "exactly_pipeline_white": 0,
+          "at_or_above_16383": 0,
+          "u16_sha256": "737a2b6f3a017613dfdff243ffdf7643a190573c4fad74f00c1fd5b48ffb2fb2"
+        }
+      ]
+    },
+    {
+      "source_index": 33,
+      "source_path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00127.ARW",
+      "original_active_sha256": "8c3a05906c5c0b9262ff2d8d173383dddc6b5fa93fa96d4ba888e80946831b3c",
+      "independent_decode_exact": true,
+      "libraw_white": 16383,
+      "libraw_visible_shape": [
+        4688,
+        7028
+      ],
+      "regions": [
+        {
+          "name": "facet-core",
+          "source_centre_native": [
+            2679.6033694444113,
+            2944.513880112471
+          ],
+          "original_xywh": [
+            2647,
+            2912,
+            65,
+            65
+          ],
+          "samples": 4225,
+          "minimum": 2109,
+          "maximum": 16383,
+          "at_or_above_pipeline_white": 266,
+          "exactly_pipeline_white": 0,
+          "at_or_above_16383": 250,
+          "u16_sha256": "5ce7ad1269f6ea48ca6ea3bb6d8d264b5cf2e0fc2eb9336a56feb9711d6e3d87"
+        },
+        {
+          "name": "dark-core",
+          "source_centre_native": [
+            3135.8095089525914,
+            2188.01186411414
+          ],
+          "original_xywh": [
+            3103,
+            2156,
+            65,
+            65
+          ],
+          "samples": 4225,
+          "minimum": 1109,
+          "maximum": 16383,
+          "at_or_above_pipeline_white": 255,
+          "exactly_pipeline_white": 0,
+          "at_or_above_16383": 229,
+          "u16_sha256": "155a2ea94d85f89d8860230fc4e076a9dde8d0f7e1d3555cd121d37c4c1c0faf"
+        },
+        {
+          "name": "dark-column",
+          "source_centre_native": [
+            3135.8153216376877,
+            2250.0495286743153
+          ],
+          "original_xywh": [
+            3103,
+            2218,
+            65,
+            65
+          ],
+          "samples": 4225,
+          "minimum": 2323,
+          "maximum": 16383,
+          "at_or_above_pipeline_white": 46,
+          "exactly_pipeline_white": 0,
+          "at_or_above_16383": 39,
+          "u16_sha256": "7c2c6c615ff9374df9def6fe588addc588903a3dd1d21e452095ece20d05e6bf"
+        },
+        {
+          "name": "nearby-structure",
+          "source_centre_native": [
+            3295.8992075787264,
+            2107.948264203988
+          ],
+          "original_xywh": [
+            3263,
+            2075,
+            65,
+            65
+          ],
+          "samples": 4225,
+          "minimum": 1960,
+          "maximum": 5575,
+          "at_or_above_pipeline_white": 0,
+          "exactly_pipeline_white": 0,
+          "at_or_above_16383": 0,
+          "u16_sha256": "db5d9a53fa3317a76ff1f5d48439d9513b6bfbb59f39786da3aaafa6c549d3ed"
+        }
+      ]
+    },
+    {
+      "source_index": 69,
+      "source_path": "D:\\personal\\macro\\requests\\misc-diagnostic\\crystalized-vitamin-c-cpl\\DSC00163.ARW",
+      "original_active_sha256": "f9fe784cdaf64c2c006d2f6dbd47fca24f862a5ee4c70a5bba0f14a5ef82305c",
+      "independent_decode_exact": true,
+      "libraw_white": 16383,
+      "libraw_visible_shape": [
+        4688,
+        7028
+      ],
+      "regions": [
+        {
+          "name": "facet-core",
+          "source_centre_native": [
+            2686.674053811734,
+            2931.7395821528958
+          ],
+          "original_xywh": [
+            2654,
+            2899,
+            65,
+            65
+          ],
+          "samples": 4225,
+          "minimum": 2178,
+          "maximum": 16383,
+          "at_or_above_pipeline_white": 6,
+          "exactly_pipeline_white": 0,
+          "at_or_above_16383": 3,
+          "u16_sha256": "d3cb850a87ec5f7888ff757200ec8b3c1ce2b96e7e848544d2799cc37350b64d"
+        },
+        {
+          "name": "dark-core",
+          "source_centre_native": [
+            3137.4725896076156,
+            2183.73603135417
+          ],
+          "original_xywh": [
+            3105,
+            2151,
+            65,
+            65
+          ],
+          "samples": 4225,
+          "minimum": 2154,
+          "maximum": 16383,
+          "at_or_above_pipeline_white": 877,
+          "exactly_pipeline_white": 0,
+          "at_or_above_16383": 810,
+          "u16_sha256": "a9587f03dac615194fcf3b3b755af31113d6fdab5a3d15bf24b257b91285a7fc"
+        },
+        {
+          "name": "dark-column",
+          "source_centre_native": [
+            3137.4953324622106,
+            2245.06651998886
+          ],
+          "original_xywh": [
+            3105,
+            2213,
+            65,
+            65
+          ],
+          "samples": 4225,
+          "minimum": 2387,
+          "maximum": 16383,
+          "at_or_above_pipeline_white": 65,
+          "exactly_pipeline_white": 0,
+          "at_or_above_16383": 39,
+          "u16_sha256": "bf5528dd08940c90d9d096bb572ce68d6f5a8b0ed27892dd750b42a6ea09a969"
+        },
+        {
+          "name": "nearby-structure",
+          "source_centre_native": [
+            3295.715472723467,
+            2104.541225749163
+          ],
+          "original_xywh": [
+            3263,
+            2072,
+            65,
+            65
+          ],
+          "samples": 4225,
+          "minimum": 2165,
+          "maximum": 4797,
+          "at_or_above_pipeline_white": 0,
+          "exactly_pipeline_white": 0,
+          "at_or_above_16383": 0,
+          "u16_sha256": "7f3dda1f3a03762cac141d1be92223954444e85c314321dc7d031fb49a30cbf7"
+        }
+      ]
+    }
+  ]
+}
