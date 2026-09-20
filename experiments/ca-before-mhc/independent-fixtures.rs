@@ -42,17 +42,22 @@ fn gaussian(x:usize,y:usize,k:usize)->f64 {
     let u=(hash32(s) as f64+0.5)/4294967296.0;let v=(hash32(s^0x3971bc61) as f64+0.5)/4294967296.0;
     (-2.0*u.ln()).sqrt()*(TAU*v).cos()
 }
-pub fn hash16(v:&[u16])->String {let mut h=Sha256::new();for x in v {h.update(x.to_le_bytes());}format!("{:x}",h.finalize())}
+pub fn hash16(v:&[u16])->String {let mut h=Sha256::new();for x in v {h.update(x.to_le_bytes());}h.finalize().iter().map(|b|format!("{b:02x}")).collect()}
 #[derive(Clone,Copy,PartialEq,Eq)]
-pub enum Scene {Flat,NeutralChip,ColourEdges,ColourFine,ColourFocus}
+pub enum Scene {Flat,NeutralChip,ColourEdges,ColourFine,ColourFocus,ColourFineHalf,ColourFocusHalf}
 pub const SCENES:[Scene;5]=[Scene::Flat,Scene::NeutralChip,Scene::ColourEdges,Scene::ColourFine,Scene::ColourFocus];
 impl Scene {
-    pub fn name(self)->&'static str {match self {Self::Flat=>"flat",Self::NeutralChip=>"neutral-chip",Self::ColourEdges=>"colour-edges",Self::ColourFine=>"colour-fine",Self::ColourFocus=>"colour-varying-focus"}}
-    pub fn components(self)->bool {matches!(self,Self::ColourFine|Self::ColourFocus)}
+    pub fn name(self)->&'static str {match self {Self::Flat=>"flat",Self::NeutralChip=>"neutral-chip",Self::ColourEdges=>"colour-edges",Self::ColourFine=>"colour-fine",Self::ColourFocus=>"colour-varying-focus",Self::ColourFineHalf=>"colour-fine-half-frequency",Self::ColourFocusHalf=>"colour-varying-focus-half-frequency"}}
+    pub fn components(self)->bool {matches!(self,Self::ColourFine|Self::ColourFocus|Self::ColourFineHalf|Self::ColourFocusHalf)}
 }
 pub fn wave(c:usize,x:f64,y:f64)->(f64,f64,f64,f64) {
     let (frequency,dx,dy,phase,base,amp)=[(0.18,0.8,0.6,0.31,0.30,0.09),(0.14,0.0,1.0,1.17,0.28,0.065),(0.20,-0.6,0.8,2.03,0.32,0.08)][c];
     (TAU*frequency*(dx*x+dy*y)+phase,base,amp,frequency)
+}
+pub fn wave_for(scene:Scene,c:usize,x:f64,y:f64)->(f64,f64,f64,f64) {
+    if matches!(scene,Scene::ColourFineHalf|Scene::ColourFocusHalf) {
+        let (p,base,amp,f)=wave(c,x*0.5,y*0.5);(p,base,amp,f*0.5)
+    } else {wave(c,x,y)}
 }
 pub fn radiance(scene:Scene,c:usize,x:f64,y:f64,k:Option<usize>)->f64 {
     match scene {
@@ -66,9 +71,9 @@ pub fn radiance(scene:Scene,c:usize,x:f64,y:f64,k:Option<usize>)->f64 {
             let p=[(1.0,0.4,210.0,0.095),(-0.3,1.0,91.0,-0.065),(0.8,-0.6,64.0,0.08)][c];
             0.30+p.3*((p.0*x+p.1*y-p.2)/1.2).tanh()
         },
-        Scene::ColourFine|Scene::ColourFocus=>{
-            let (p,base,amp,f)=wave(c,x,y);
-            let sigma=if scene==Scene::ColourFocus {k.map_or(0.0,|j|0.6*(j as f64-(2.0+1.7*(TAU*x/W as f64).sin())).abs())} else {0.0};
+        Scene::ColourFine|Scene::ColourFocus|Scene::ColourFineHalf|Scene::ColourFocusHalf=>{
+            let (p,base,amp,f)=wave_for(scene,c,x,y);
+            let sigma=if matches!(scene,Scene::ColourFocus|Scene::ColourFocusHalf) {k.map_or(0.0,|j|0.6*(j as f64-(2.0+1.7*(TAU*x/W as f64).sin())).abs())} else {0.0};
             base+amp*(-0.5*TAU*TAU*sigma*sigma*f*f).exp()*p.cos()
         }
     }
@@ -99,7 +104,7 @@ pub fn score(scene:Scene,rgb:&[f32],crop:CropRect)->Score {
         let (gx,gy)=((2*crop.x+x) as f64,(2*crop.y+y) as f64);let mut e=[0.0;3];
         for c in 0..3 {
             let value=f64::from(rgb[(y*w+x)*3+c]);e[c]=value-radiance(scene,c,gx,gy,None);error+=e[c]*e[c];
-            if scene.components() {let (s,co)=wave(c,gx,gy).0.sin_cos();for(o,v)in sums[c].iter_mut().zip([co,s,value,co*co,s*s,co*s,value*co,value*s]) {*o+=v;}}
+            if scene.components() {let (s,co)=wave_for(scene,c,gx,gy).0.sin_cos();for(o,v)in sums[c].iter_mut().zip([co,s,value,co*co,s*s,co*s,value*co,value*s]) {*o+=v;}}
         }
         chroma+=(e[0]-e[1]).powi(2)+(e[2]-e[1]).powi(2);count+=1;
     }}

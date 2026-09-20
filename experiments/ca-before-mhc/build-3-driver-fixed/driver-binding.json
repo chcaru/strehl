@@ -1,0 +1,39 @@
+{
+  "compiled_parent": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\ca-before-mhc\\build-3\\process.json",
+    "sha256": "ecc0338b65ced06c7cdedb6c6f85e01b98482bcf9ffc2e95ed6f3ee51221a41c",
+    "bytes": 2968
+  },
+  "compiler_log": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\ca-before-mhc\\build-3\\process.log",
+    "sha256": "62f1ad564eea898c5faf4a1dc6ec148005a44d292ea0b6dc1f2fadde486f8dfd",
+    "bytes": 269909
+  },
+  "original_bindings": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\ca-before-mhc\\build-3\\sources.json",
+    "sha256": "786ed20d446c85a2414f1ca57961edcd184021e762b034f300966be7bcc85c80",
+    "bytes": 30097
+  },
+  "changed_before": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\ca-before-mhc\\full-run.py",
+      "sha256": "51a5c01e7544a8fc60874c52021677b35e5e8a93c5af115892b6c078d3b8643f",
+      "bytes": 10244
+    }
+  ],
+  "changed_after": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\ca-before-mhc\\full-run.py",
+      "sha256": "5bad213484fe9246b321c82b9785441d44e57cb57f383a52da016f5f0a723a3b",
+      "bytes": 10791
+    }
+  ],
+  "compiled_sources_unchanged": true,
+  "executable_bytes_unchanged": true,
+  "binder": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\ca-before-mhc\\rebind-driver.py",
+    "sha256": "54e28b82fb6d75ef19b5bafc853f712e8634d212e57b8b208399bc6ceb394a27",
+    "bytes": 2748
+  },
+  "reason": "ICC-preserving PNG views and corrected master reference; Python is not compiled into Rust. The parent wrapper caught the driver change after successful compilation. No generated or photographic execution used the old driver."
+}

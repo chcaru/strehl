@@ -4974,6 +4974,11 @@ pub(crate) mod ca_before_mhc {
     include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/ca-before-mhc/implementation.rs"));
 }
 
+#[cfg(all(test, feature = "native-direct-planes", feature = "native-gpu-gather"))]
+pub(crate) mod ca_before_mhc_full {
+    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/ca-before-mhc/full-implementation.rs"));
+}
+
 #[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance"))]
 pub(crate) mod donor_consistency {
     include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/donor-consistency/implementation.rs"));

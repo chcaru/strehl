@@ -3,6 +3,7 @@ use super::{compare_generated,gather_single,Mode};
 use serde_json::{json,Value};
 use std::path::PathBuf;
 use strehl_core::{align::{Cx,Similarity},profile,pyramid::MergeConfig};
+use strehl_core::plane::QuadSource;
 use crate::align_cmd::CropRect;
 mod fixture {
     include!(concat!(env!("CARGO_MANIFEST_DIR"),"/../../experiments/ca-before-mhc/independent-fixtures.rs"));
@@ -16,18 +17,21 @@ fn rgb(planes:&[Vec<f32>],c:CropRect)->Vec<f32> {
     crate::merge_cmd::phase_packed_rgb::camera_rgb(planes,c.width,c.height,levels(),[WB[0],WB[1],WB[2],f32::NAN]).unwrap()
 }
 fn component_commission()->Value {
-    let c=crop(false);let (w,h)=(2*c.width,2*c.height);let truth=truth(Scene::ColourFine,c);let good=score(Scene::ColourFine,&truth,c);
+    component_commission_for(Scene::ColourFine)
+}
+fn component_commission_for(scene:Scene)->Value {
+    let c=crop(false);let (w,h)=(2*c.width,2*c.height);let truth=truth(scene,c);let good=score(scene,&truth,c);
     assert!(good.rgb<1e-7 && good.chroma<1e-7 && good.inphase.iter().all(|v|(v-1.0).abs()<1e-6));
     let mut half=truth.clone();let mut grey=truth.clone();
     for (a,b) in half.chunks_exact_mut(3).zip(grey.chunks_exact_mut(3)) {let m=(b[0]+b[1]+b[2])/3.0;for k in 0..3 {let base=wave(k,0.0,0.0).1 as f32;a[k]=base+0.5*(a[k]-base);b[k]=m;}}
     let mut horizontal=truth.clone();let mut blurred=truth.clone();let weights=[1.0f32,4.0,6.0,4.0,1.0];
     for y in 0..h {for x in 2..w-2 {for k in 0..3 {horizontal[3*(y*w+x)+k]=(0..5).map(|d|weights[d]*truth[3*(y*w+x+d-2)+k]).sum::<f32>()/16.0;}}}
     for y in 2..h-2 {for x in 0..w {for k in 0..3 {blurred[3*(y*w+x)+k]=(0..5).map(|d|weights[d]*horizontal[3*((y+d-2)*w+x)+k]).sum::<f32>()/16.0;}}}
-    let half_score=score(Scene::ColourFine,&half,c);let grey_score=score(Scene::ColourFine,&grey,c);let blur_score=score(Scene::ColourFine,&blurred,c);
+    let half_score=score(scene,&half,c);let grey_score=score(scene,&grey,c);let blur_score=score(scene,&blurred,c);
     assert!(!preserves(&good,&half_score) && !preserves(&good,&blur_score));
     assert!(grey_score.chroma>0.02 && !preserves(&good,&grey_score));
     let mut overshoot=truth.clone();for p in overshoot.chunks_exact_mut(3) {for k in 0..3 {let base=wave(k,0.0,0.0).1 as f32;p[k]=base+1.4*(p[k]-base);}}
-    let over=score(Scene::ColourFine,&overshoot,c);assert!(preserves(&over,&good),"removing manufactured contrast cannot count as lost truth");
+    let over=score(scene,&overshoot,c);assert!(preserves(&over,&good),"removing manufactured contrast cannot count as lost truth");
     json!({"truth":good.json(),"half_detail":half_score.json(),"desaturated":grey_score.json(),"extra_blur":blur_score.json(),"overcontrast_truth_cap":true})
 }
 
@@ -141,4 +145,59 @@ fn independent_quality_screen() {
     let record=json!({"instrument_passed":true,"photographic_replay_admitted":admitted,"case_count":cases.len(),"zero_ca_actual_merge_exact":zero_merge_checked,
         "actual_probe_transfer_changed":probe_live,"staged_after_green_and_probe_exact":true,"fixed_ca_radial_slopes":[-508.4e-6,0.0,174.4e-6],"virtual_full_sensor":[7032,4688],"virtual_patch_centre":[5984,560],"cases":cases});
     eprintln!("CA_BEFORE_MHC_SCREEN {record}");save("screen.json",&record);
+}
+
+#[test]
+fn independent_colour_qualification() {
+    // A separate prospective qualification. The original20 cases above and
+    // their rejected admission are retained and must reproduce unchanged.
+    let commission=component_commission_for(Scene::ColourFineHalf);
+    let mut cases=Vec::new();let mut admitted=true;
+    for iso in [100.0f32,400.0] {
+        let noise=profile::noise_model_for("ILCE-7CM2",Some(iso),levels());
+        assert!(noise.is_trustworthy() && noise.prnu().is_none());
+        for phase in [false,true] {
+            let c=crop(phase);let ts=transforms(phase);
+            for scene in [Scene::ColourFineHalf,Scene::ColourFocusHalf] {
+                let frames=ts.iter().enumerate().map(|(i,t)|fixture(scene,i,*t,ca_pulls(1.0),iso,&noise,true)).collect::<Vec<_>>();
+                let original=frames.iter().map(|f|hash16(&f.data)).collect::<Vec<_>>();
+                let cmp=compare_generated(&frames,&ts,c,&noise,MergeConfig::default(),ca_pulls(1.0)).unwrap();
+                assert_eq!((cmp.native_width,cmp.native_height),(2*c.width,2*c.height));
+                let scores=[&cmp.current,&cmp.before,&cmp.staged_after].map(|a|score(scene,&a.rgb,c));
+                for arm in [&cmp.current,&cmp.before,&cmp.staged_after] {
+                    assert_eq!(arm.frames.len(),N);
+                    for (i,e) in arm.frames.iter().enumerate() {
+                        assert_eq!(e.source_sha256,original[i]);assert!(e.source_unchanged);
+                        assert!(!e.beta.is_empty() && e.beta.iter().all(|v|v.is_finite() && *v>=0.0));
+                    }
+                }
+                for i in 0..N {assert_eq!(hash16(&frames[i].data),original[i]);}
+                for k in [1,2] {assert_eq!(cmp.current.planes4[k],cmp.staged_after.planes4[k]);}
+                for (a,b) in cmp.current.frames.iter().zip(&cmp.staged_after.frames) {
+                    assert_eq!(a.guide_sha256,b.guide_sha256);assert_eq!(a.variance_sha256,b.variance_sha256);assert_eq!(a.beta,b.beta);
+                    for k in [1,2] {assert_eq!(a.known4_sha256[k],b.known4_sha256[k]);}
+                }
+                let component_live=scores[0].inphase.iter().all(|v|*v>=0.5);
+                let component_pass=preserves(&scores[0],&scores[1]);
+                let rgb_pass=scores[1].rgb<=1.05*scores[0].rgb;
+                let chroma_pass=scores[1].chroma<=1.05*scores[0].chroma;
+                let pass=component_live && component_pass && rgb_pass && chroma_pass;admitted&=pass;
+                if scene==Scene::ColourFocusHalf {assert!(cmp.current.averaged_fraction[0]<1.0,"supplementary varying-focus election unexercised");}
+                let evidence=[&cmp.current,&cmp.before,&cmp.staged_after].map(|a|json!({"frames":a.frames.iter().map(|e|json!({
+                    "source_sha256":e.source_sha256,"known4_sha256":e.known4_sha256,"guide_sha256":e.guide_sha256,
+                    "variance_sha256":e.variance_sha256,"beta":e.beta,"source_unchanged":e.source_unchanged})).collect::<Vec<_>>(),"averaged_fraction":a.averaged_fraction}));
+                let record=json!({"scene":scene.name(),"iso":iso,"fractional_and_shifted_crop":phase,"crop":[c.x,c.y,c.width,c.height],
+                    "current":scores[0].json(),"before":scores[1].json(),"staged_after":scores[2].json(),
+                    "before_rgb_ratio":scores[1].rgb/scores[0].rgb,"before_chroma_ratio":scores[1].chroma/scores[0].chroma,
+                    "staged_rgb_ratio":scores[2].rgb/scores[0].rgb,"staged_chroma_ratio":scores[2].chroma/scores[0].chroma,
+                    "component_live":component_live,"component_pass":component_pass,"rgb_pass":rgb_pass,"chroma_pass":chroma_pass,
+                    "case_admitted":pass,"level_sizes":cmp.level_sizes,"evidence":evidence});
+                eprintln!("CA_BEFORE_MHC_QUALIFICATION_CASE {record}");cases.push(record);
+            }
+        }
+    }
+    let record=json!({"instrument_passed":true,"supplementary_colour_admitted":admitted,"case_count":cases.len(),
+        "frequencies_cycles_per_native_pixel":[0.09,0.07,0.10],"original_screen1_reclassified":false,
+        "metric_commission":commission,"cases":cases});
+    eprintln!("CA_BEFORE_MHC_QUALIFICATION {record}");save("qualification.json",&record);
 }

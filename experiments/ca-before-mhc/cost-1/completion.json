@@ -1,0 +1,16 @@
+{
+  "phase": "cost",
+  "sources_unchanged": true,
+  "original_metadata_unchanged": true,
+  "same_original_source_arrays": true,
+  "common_crop": [
+    141,
+    97,
+    3234,
+    2150
+  ],
+  "fresh_current_baseline": true,
+  "views": {},
+  "original_failed_screen_reclassified": false,
+  "photographic_promotion": false
+}

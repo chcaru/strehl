@@ -92,10 +92,20 @@ The frozen lens profile is an intervention parameter, not newly validated
 optical truth. Added interpolation may destroy colour detail, so independent
 continuous-scene, flat-noise and genuine-colour controls precede a complete
 chip comparison. See experiments/ca-before-mhc/plan.md and independent-plan.md.
+The original CA ordering screen now completes all20 cases: Before reduces
+RGB/chroma truth error in every case and increases fine R/B recovery, but the
+fixed screen refuses because the baseline fine-colour witnesses recover less
+than the required0.5 of truth. This is inadequate witness strength, not measured
+candidate detail loss. Preserve screen-1=false and qualify once at fixed half
+frequencies with unchanged guards; see ca-before-mhc/results.md and the
+independent result/qualification records. No photographic admission yet.
 The second calibration slide now has a complete299-source baseline at6476x4316,
-with original content hashes unchanged; source attribution is next. See
-experiments/quality-september20/slide2-baseline-results.md. This new baseline
-is corpus coverage, not an image-quality improvement.
+with original content hashes unchanged. The later complete observer-off/on
+source comparison is byte-identical and independently reviewed, but source149
+is too defocused at the bar targets to test finest-detail retention. No specific
+resolved source feature was lost in the inspected regions. See
+experiments/quality-september20/slide2-source-results.md at a5ea5081. This is
+corpus coverage and a bounded source149 null, not a capture limit or improvement.
 No photographic admission yet. The passing complete-periodic all-CFA controls
 remain retained at48276660; speed work stays behind demonstrated image quality.
 

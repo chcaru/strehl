@@ -1,0 +1,43 @@
+{
+  "arms": {
+    "current": {
+      "estimated_full_seconds": 451.1217783,
+      "maximum_estimate_seconds": 1500,
+      "cost_peak_bytes": 2720473088,
+      "feasible": true,
+      "receipt": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\ca-before-mhc\\cost-1\\current\\output\\receipt.json",
+        "sha256": "b1f9933b32671a1088de74aa08a7e4ba01ca052043e07e75137f6452f77b9558",
+        "bytes": 2480
+      },
+      "process": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\ca-before-mhc\\cost-1\\current\\process.json",
+        "sha256": "c27e038b1cd0564999cd65897cf7cca83cdd6607f96f553c293e5771280e3863",
+        "bytes": 2734
+      }
+    },
+    "before": {
+      "estimated_full_seconds": 606.2440492000001,
+      "maximum_estimate_seconds": 1500,
+      "cost_peak_bytes": 3058991104,
+      "feasible": true,
+      "receipt": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\ca-before-mhc\\cost-1\\before\\output\\receipt.json",
+        "sha256": "bf1e57fc043992f1b78c02cd3e0d116ffc77fe486ac94fc11730b2b8404c71d4",
+        "bytes": 2481
+      },
+      "process": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\ca-before-mhc\\cost-1\\before\\process.json",
+        "sha256": "951e7205222c08bbbc741740d2decaabb33a6eed36a8c05b179b7aa9cbfe15a7",
+        "bytes": 2737
+      }
+    }
+  },
+  "full_pair_feasible": true,
+  "full_limits": {
+    "wall_seconds_per_arm": 1800,
+    "cpu_seconds_per_arm": 3600,
+    "committed_bytes": 17179869184
+  },
+  "scope": "Single-source feasibility extrapolation, not a speed benchmark or photographic result."
+}

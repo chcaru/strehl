@@ -29,4 +29,3 @@ fn mhc(@builtin(global_invocation_id) id:vec3<u32>){
  else if(p.flags.x!=0u){rgb[i]=stage_value(x,y,1u);}
  else{for(var c=0u;c<3u;c+=1u){rgb[3u*i+c]=stage_value(x,y,c);}}
 }
-

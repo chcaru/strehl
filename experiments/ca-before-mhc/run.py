@@ -20,7 +20,7 @@ def bindings():
     for root in (ROOT/'crates', ROOT/'experiments/native-gpu-gather/src', HERE):
         paths.update(p for p in root.rglob('*') if p.is_file()
                      and p.suffix in ('.rs', '.wgsl', '.toml', '.py', '.md')
-                     and not any(part.startswith(('build-', 'controls-', 'full-')) for part in p.relative_to(root).parts))
+                     and not any(part.startswith(('build-', 'controls-', 'full-')) for part in p.relative_to(root).parts[:-1]))
     paths.add(ROOT/'experiments/native-gpu-gather/integration.rs')
     paths.add(ROOT/'experiments/native-gpu-gather/Cargo.toml')
     return [common.ref(p.resolve()) for p in sorted(paths)]

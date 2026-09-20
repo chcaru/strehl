@@ -1,0 +1,12 @@
+{
+  "strehl": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\ca-before-mhc\\build-3-driver-fixed\\strehl.exe",
+    "sha256": "7b19ebcb721f0b24c148cf71e91e56bd5cfcc4ae294b499cc3b927122b4db05f",
+    "bytes": 17902080
+  },
+  "cli-tests": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\ca-before-mhc\\build-3-driver-fixed\\cli-tests.exe",
+    "sha256": "54c153a19ad0f7a993395099a6ad74b67964c05b1babb175070dbf90a34ca9c5",
+    "bytes": 23388672
+  }
+}

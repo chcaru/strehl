@@ -1,0 +1,104 @@
+{
+  "affine_max_dn": [
+    0.5,
+    0.5,
+    0.5
+  ],
+  "identity_green_known_sites_exact": true,
+  "metric_commission": {
+    "desaturated": {
+      "chroma_rg_bg_rmse": 0.08211528993182707,
+      "inphase_truth_amplitude": [
+        0.3333305603629201,
+        0.3333578708409686,
+        0.33335541257459034
+      ],
+      "quadrature_truth_amplitude": [
+        -0.000013165686109205346,
+        0.00003668079662265432,
+        -4.117603091760402e-6
+      ],
+      "rgb_rmse": 0.048460623833642164
+    },
+    "extra_blur": {
+      "chroma_rg_bg_rmse": 0.03466041365221904,
+      "inphase_truth_amplitude": [
+        0.5174293133255551,
+        0.6702892713492689,
+        0.4406956084430391
+      ],
+      "quadrature_truth_amplitude": [
+        -1.2096017779141116e-8,
+        -2.381025362122949e-8,
+        5.5284515334591166e-8
+      ],
+      "rgb_rmse": 0.026916303056383126
+    },
+    "half_detail": {
+      "chroma_rg_bg_rmse": 0.03786167203705239,
+      "inphase_truth_amplitude": [
+        0.49999999282496477,
+        0.4999999686484953,
+        0.500000101009738
+      ],
+      "quadrature_truth_amplitude": [
+        -9.59234427899187e-9,
+        -1.6325265093790493e-8,
+        -2.2520028308498136e-8
+      ],
+      "rgb_rmse": 0.027927274366323265
+    },
+    "overcontrast_truth_cap": true,
+    "truth": {
+      "chroma_rg_bg_rmse": 1.0225054171744762e-8,
+      "inphase_truth_amplitude": [
+        1.000000001865704,
+        1.00000003495071,
+        0.9999999908584699
+      ],
+      "quadrature_truth_amplitude": [
+        -2.5211002916595366e-9,
+        7.362739904848723e-9,
+        -9.86056733780595e-9
+      ],
+      "rgb_rmse": 7.2721278212736485e-9
+    }
+  },
+  "native_known_sites_exact": true,
+  "new_boundary_refusal": true,
+  "nonfinite_refusal": true,
+  "nonzero_ca_live": true,
+  "original_source_unchanged": true,
+  "passed": true,
+  "wrong_sign": {
+    "correct": {
+      "chroma_rg_bg_rmse": 0.002005392195992878,
+      "inphase_truth_amplitude": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "quadrature_truth_amplitude": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "rgb_rmse": 0.001655288298173201
+    },
+    "wrong": {
+      "chroma_rg_bg_rmse": 0.009652483274721959,
+      "inphase_truth_amplitude": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "quadrature_truth_amplitude": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "rgb_rmse": 0.00839811352149887
+    }
+  },
+  "zero_ca_and_absent_profile_cpu_exact": true
+}

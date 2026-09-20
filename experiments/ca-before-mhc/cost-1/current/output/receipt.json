@@ -1,0 +1,96 @@
+{
+  "averaged_fraction": [
+    0.41831542765097585,
+    0.06478088909982598,
+    0.0028604776193473977,
+    0.00014686309605764375,
+    0.0,
+    0.0,
+    0.0,
+    1.0
+  ],
+  "crop": [
+    141,
+    97,
+    3234,
+    2150
+  ],
+  "finish_seconds": 0.5025582,
+  "frames": [
+    {
+      "active_u16_sha256": "b6811b14a2b7e2998bd14b04995c12bfdc8b0010b7a8a6824a966b1bbfd69a85",
+      "beta": [
+        0.8897408843040466,
+        0.05297623202204704,
+        0.010089061222970486,
+        0.0023820826318114996
+      ],
+      "fields": {
+        "guide": "1f7b306ca64a675099830e4b36a94f17d793e4cccf1b0030d729886a017d0d3d",
+        "known4": [
+          "3386db1f442f856cb2325f1282cd225287ce7193c4835dfca98db73f5d27be66",
+          "a9c79aa2873bba0b6e79e8a4fbf0193128d8dde8a4ec30f676c5e48a2cef3f0f",
+          "8852291115e94d5dda901f0a0216db8b96e8372c3da6df85c97de9efd2812712",
+          "b8627d2fe3c4e89b481855a148550ac20cbce6ec335f1b9f53f9cf0661ca1205"
+        ],
+        "variance": "c28f26c52524500101c1af4a556ba556f3514099fada0860c1d87e630f9ec90c"
+      },
+      "index": 149,
+      "seconds": 0.7397978
+    }
+  ],
+  "image_sha256": "d6ea7b22172723fa6528ee95ee77b4ded02cfcc224f97d72b340e2f8c46753f5",
+  "map_sha256": "ce8534c9e65c5c761373bad87df5352c1c46319b7eaf7f7c91477ea61b4f4922",
+  "matrix": [
+    [
+      0.7459999918937683,
+      -0.23649999499320984,
+      -0.058800000697374344
+    ],
+    [
+      -0.5687000155448914,
+      1.3442000150680542,
+      0.24740000069141388
+    ],
+    [
+      -0.06239999830722809,
+      0.11559999734163284,
+      0.6583999991416931
+    ]
+  ],
+  "mode": "off",
+  "native_dimensions": [
+    6468,
+    4300
+  ],
+  "observer": false,
+  "original_metadata_unchanged": true,
+  "phase": "cost",
+  "plan": {
+    "canonical_chunks": 4,
+    "per_chunk": 75,
+    "planning_bytes": 1392085228
+  },
+  "planes_sha256": [
+    "3386db1f442f856cb2325f1282cd225287ce7193c4835dfca98db73f5d27be66",
+    "a9c79aa2873bba0b6e79e8a4fbf0193128d8dde8a4ec30f676c5e48a2cef3f0f",
+    "8852291115e94d5dda901f0a0216db8b96e8372c3da6df85c97de9efd2812712",
+    "b8627d2fe3c4e89b481855a148550ac20cbce6ec335f1b9f53f9cf0661ca1205"
+  ],
+  "rgb16_le_sha256": "590c14fc7eaf5a6b3f8ddbbb853caf4dc8e6a7aaae4f49e20d819b666c3ee14a",
+  "schema": 1,
+  "source_count": 1,
+  "source_phase_seconds": 1.1057499,
+  "threads": 8,
+  "tone_bits": [
+    999074891,
+    1064454645,
+    1057803469
+  ],
+  "total_seconds": 2.4209732,
+  "wb_bits": [
+    1070374912,
+    1065353216,
+    1076715520
+  ]
+}
