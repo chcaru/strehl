@@ -265,7 +265,7 @@ def main():
     result = commission(control, source) if args.mode == 'commission' else score(control, source, args.candidate.resolve())
     result['controls_sha256'] = sha(__file__)
     out.mkdir(parents=True)
-    control.save(out/'result.json', result)
+    control.save(out/'result.json', control.jsonable(result))
     print('IN_FOCUS_' + args.mode.upper(), result['status'], flush=True)
 
 

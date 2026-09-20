@@ -1,0 +1,66 @@
+[
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\in-focus-2\\delivered\\flat\\truth-rgb-f32.npy",
+    "sha256": "3d68c10bb178875f4c8a237cd356f770a1c5f35753436623046da0b571ba992d"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\in-focus-2\\delivered\\flat\\visibility-rgb-f32.npy",
+    "sha256": "6bc71fb0b0792dad2a585bcfebe38696d08220880fde03f19a4e4ca7820f02be"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\in-focus-2\\delivered\\flat\\shot-rgb-f32.npy",
+    "sha256": "d27866c1f5d165bba208866927374e9ef3897ad3012bd121e976d5d1ae318e0c"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\in-focus-2\\delivered\\flat\\cauchy-rgb-f32.npy",
+    "sha256": "2c1d252f0087f819166b178d948fa808dae6fcd3564a4a9cc32f0ba8f74a0d6c"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\in-focus-2\\delivered\\flat\\matrix-rgb-f32.npy",
+    "sha256": "55d543b8c9ffab339d9cf88f40fc7656ebfb496c5b4e6284e8096f567929a4cb"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\in-focus-2\\delivered\\flat\\far-only-rgb-f32.npy",
+    "sha256": "ac3fc8b153661aab288618e5810011dac2919116af2b6dd7f65b07139528f5ce"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\in-focus-2\\delivered\\flat\\mean-observed-rgb-f32.npy",
+    "sha256": "949b99f79af998d85f0c273f6e7d85736a4adb6ada236d243776b5ec71ebcd94"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\in-focus-2\\delivered\\flat\\donor-observed-rgb-f32.npy",
+    "sha256": "2a3dfd15829c0dee5b9858504688eb1b14b8ed2d7cb4bd3871bcd3487a8d2680"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\in-focus-2\\delivered\\layered\\truth-rgb-f32.npy",
+    "sha256": "30f5279325a6084139ae35cceccb7ca24f2f91c40700cd5d7d7a671afe8f9441"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\in-focus-2\\delivered\\layered\\visibility-rgb-f32.npy",
+    "sha256": "e240beaf89afa597fe95ace844a1482bf6a11fbc14f9c2c783595e0f684dcc34"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\in-focus-2\\delivered\\layered\\shot-rgb-f32.npy",
+    "sha256": "eeab48db76609662c5518de81fdd4c9be6aec23c3b69a336ff57cbcee49b702c"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\in-focus-2\\delivered\\layered\\cauchy-rgb-f32.npy",
+    "sha256": "a521fdb5c4d91da2fc26707d05332da5906fb9fc1d30413a8a578559e02d9911"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\in-focus-2\\delivered\\layered\\matrix-rgb-f32.npy",
+    "sha256": "d28c08b3726dc2ebcf978ae5c98dde504ec5edd04cef93c0e7b523c9fa0e8227"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\in-focus-2\\delivered\\layered\\far-only-rgb-f32.npy",
+    "sha256": "71998dffd3c880b9b5acd3780537398e30d36bf2f72b1075066b382e64ac2de2"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\in-focus-2\\delivered\\layered\\mean-observed-rgb-f32.npy",
+    "sha256": "ffe024f6a3d3950dcfba7d3e281eaf15cd6059b3a05d326fe857f8d427280bb5"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\in-focus-2\\delivered\\layered\\donor-observed-rgb-f32.npy",
+    "sha256": "758b9efce098b81dcd0690d8a69b42822cc270c0cf6ac52b6d140b4234960b04"
+  }
+]

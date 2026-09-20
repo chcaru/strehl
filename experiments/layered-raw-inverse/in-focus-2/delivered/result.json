@@ -1,0 +1,399 @@
+{
+  "status": "IN_FOCUS_CONSUMER_COMPLETE",
+  "target": "common-PSF of composed pinhole RGB",
+  "full_native_shape": [
+    96,
+    96,
+    3
+  ],
+  "scoring_support_native_xywh": [
+    16,
+    16,
+    64,
+    64
+  ],
+  "psf": {
+    "nominal_sigma": 0.7,
+    "supplied_f32_sigma": 0.699999988079071,
+    "radius": 3,
+    "kernel_1d_f32": [
+      5.852465983480215e-05,
+      0.009618931449949741,
+      0.20539966225624084,
+      0.5698457956314087,
+      0.20539966225624084,
+      0.009618931449949741,
+      5.852465983480215e-05
+    ],
+    "kernel_sha256": "2417e9b95928ea0060b3ebf4dfbcb9e6275d5f470166e9ce6304e2b5d35b9ec6",
+    "implementation": "frozen model._blur; separable x then y; zero padding; CUDAf32; TF32 disabled"
+  },
+  "artifacts": [
+    {
+      "case": "flat",
+      "arm": "truth",
+      "source_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\truth-rgb-f32.npy",
+      "source_sha256": "82a5a40523bf883867d551676e62c6935941bbdbe8af6bb8a5a0ef990f6d5a86",
+      "source_array_sha256": "f089f6ecaefb1b8d90d10d4e69c62a7b8c5a1da84b18ff39411561ee17e7cb3f",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\in-focus-2\\delivered\\flat\\truth-rgb-f32.npy",
+      "sha256": "3d68c10bb178875f4c8a237cd356f770a1c5f35753436623046da0b571ba992d",
+      "array_sha256": "91a43c97ae486b93fc5b8a23ff369e790b458e8f35cab6cbb2d220b46f8406c7",
+      "shape": [
+        96,
+        96,
+        3
+      ],
+      "dtype": "float32",
+      "psf_applications": 1,
+      "source_kind": "latent-pinhole",
+      "source_receipt_sha256": null
+    },
+    {
+      "case": "flat",
+      "arm": "visibility",
+      "source_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\visibility-1\\output\\flat\\fixed-alpha\\reconstruction.npz",
+      "source_sha256": "324299052dabc4cab0fc88745f880cc9b5b0c3166f33facfbed6b0328cf509c8",
+      "source_array_sha256": "f9ff7a4ffe3a53ee47bf8c4ca87bde7c4f456b5dfac9a56512f7a47ebdb105b4",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\in-focus-2\\delivered\\flat\\visibility-rgb-f32.npy",
+      "sha256": "6bc71fb0b0792dad2a585bcfebe38696d08220880fde03f19a4e4ca7820f02be",
+      "array_sha256": "d38a33a616d1a4fb6cc8f089f426f7c39972d8397ee7537293fdb56aaeee36fd",
+      "shape": [
+        96,
+        96,
+        3
+      ],
+      "dtype": "float32",
+      "psf_applications": 1,
+      "source_kind": "latent-pinhole",
+      "source_receipt_sha256": "e14ae9c361a4d9bb91a03d59e1569dfac725b4e7baa5a24236395e44602427c3"
+    },
+    {
+      "case": "flat",
+      "arm": "shot",
+      "source_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\shot-prior-1\\output\\flat\\fixed-alpha\\reconstruction.npz",
+      "source_sha256": "e9aa372b17404520eed9d63a6a143d9bda1ff7b20767f8f53cb01f6225796745",
+      "source_array_sha256": "e89379b165be1756a3370360c5192be13c70f335c04f9695bf9b19b47ee05026",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\in-focus-2\\delivered\\flat\\shot-rgb-f32.npy",
+      "sha256": "d27866c1f5d165bba208866927374e9ef3897ad3012bd121e976d5d1ae318e0c",
+      "array_sha256": "a498b0f54795b341ee56c2246ad4cd7d9ca82bd8527f01b1bdf961b3d3b9e92d",
+      "shape": [
+        96,
+        96,
+        3
+      ],
+      "dtype": "float32",
+      "psf_applications": 1,
+      "source_kind": "latent-pinhole",
+      "source_receipt_sha256": "d4d878d1090c19dac85f56f3085f9cad86bbe1907dbff0c359df942558a42eb6"
+    },
+    {
+      "case": "flat",
+      "arm": "cauchy",
+      "source_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\cauchy-1\\output\\flat\\fixed-alpha\\reconstruction.npz",
+      "source_sha256": "9e85c3ca0dcfa4ce64c7d0db07284891c9403a09208c3a5dea65cb4bd21eec90",
+      "source_array_sha256": "4552cca2393fd134892ef38b0288bbd2007a4821eaa8a380f0ccb149790ea35d",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\in-focus-2\\delivered\\flat\\cauchy-rgb-f32.npy",
+      "sha256": "2c1d252f0087f819166b178d948fa808dae6fcd3564a4a9cc32f0ba8f74a0d6c",
+      "array_sha256": "e2e11a872f8a2244641c692ac83469e32efee766513a1b454b6ef701c9a82119",
+      "shape": [
+        96,
+        96,
+        3
+      ],
+      "dtype": "float32",
+      "psf_applications": 1,
+      "source_kind": "latent-pinhole",
+      "source_receipt_sha256": "f6d77798ed3c539de4498b424d8d62b4a69857548ce021d3617b9301abe3641c"
+    },
+    {
+      "case": "flat",
+      "arm": "matrix",
+      "source_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\matrix-cauchy-1\\output\\flat\\fixed-alpha\\reconstruction.npz",
+      "source_sha256": "ff675a8a4792716c8d1edfec393cf2a5cd918d9cb62138ea64f6484fb2146315",
+      "source_array_sha256": "7b6e85e2922189514b57403eeb1e581e7de2a811cf8138dab7c4b78cf4349749",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\in-focus-2\\delivered\\flat\\matrix-rgb-f32.npy",
+      "sha256": "55d543b8c9ffab339d9cf88f40fc7656ebfb496c5b4e6284e8096f567929a4cb",
+      "array_sha256": "8c575b096a0b742461a5fd2415ad68a181ece527d5a828e9b6ef04cd77e28918",
+      "shape": [
+        96,
+        96,
+        3
+      ],
+      "dtype": "float32",
+      "psf_applications": 1,
+      "source_kind": "latent-pinhole",
+      "source_receipt_sha256": "b5f3866c0d8ff40579a550741cf25d9983fdf5cf718f1b5f26067cb806da3539"
+    },
+    {
+      "case": "flat",
+      "arm": "far-only",
+      "source_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\far-only\\reconstruction.npz",
+      "source_sha256": "7179a526e21427fec5f98ab6dd344d5b00815432c2f232f5d8f19c964bfc511f",
+      "source_array_sha256": "3538bcfa0febaa5bb2c376076a7bcc074ffa4a2f2865884f91908d46ffc9902b",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\in-focus-2\\delivered\\flat\\far-only-rgb-f32.npy",
+      "sha256": "ac3fc8b153661aab288618e5810011dac2919116af2b6dd7f65b07139528f5ce",
+      "array_sha256": "bc45a14d989b012e685b2273239842c3ff62e7b22c2fffe693bce1aab32b585e",
+      "shape": [
+        96,
+        96,
+        3
+      ],
+      "dtype": "float32",
+      "psf_applications": 1,
+      "source_kind": "latent-pinhole",
+      "source_receipt_sha256": "bbad44a03ceda48c64f60bba2ab802d34a41bd252941300ebaf62e391ed86d32"
+    },
+    {
+      "case": "flat",
+      "arm": "mean-observed",
+      "source_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\mean-rgb-f32.npy",
+      "source_sha256": "949b99f79af998d85f0c273f6e7d85736a4adb6ada236d243776b5ec71ebcd94",
+      "source_array_sha256": "6a492a84e5bf2fd218b321b2fdd77a8394eeea4b02fc07bfca8b8e612048070e",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\in-focus-2\\delivered\\flat\\mean-observed-rgb-f32.npy",
+      "sha256": "949b99f79af998d85f0c273f6e7d85736a4adb6ada236d243776b5ec71ebcd94",
+      "array_sha256": "6a492a84e5bf2fd218b321b2fdd77a8394eeea4b02fc07bfca8b8e612048070e",
+      "shape": [
+        96,
+        96,
+        3
+      ],
+      "dtype": "float32",
+      "psf_applications": 0,
+      "source_kind": "already-observed-developed",
+      "source_receipt_sha256": null
+    },
+    {
+      "case": "flat",
+      "arm": "donor-observed",
+      "source_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\oracle-bound-rgb-f32.npy",
+      "source_sha256": "2a3dfd15829c0dee5b9858504688eb1b14b8ed2d7cb4bd3871bcd3487a8d2680",
+      "source_array_sha256": "e49d860d97247771b825ebc68ebc8f04b38d5443f61e3d1c0c9f256973fe9982",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\in-focus-2\\delivered\\flat\\donor-observed-rgb-f32.npy",
+      "sha256": "2a3dfd15829c0dee5b9858504688eb1b14b8ed2d7cb4bd3871bcd3487a8d2680",
+      "array_sha256": "e49d860d97247771b825ebc68ebc8f04b38d5443f61e3d1c0c9f256973fe9982",
+      "shape": [
+        96,
+        96,
+        3
+      ],
+      "dtype": "float32",
+      "psf_applications": 0,
+      "source_kind": "already-observed-developed",
+      "source_receipt_sha256": null
+    },
+    {
+      "case": "layered",
+      "arm": "truth",
+      "source_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\truth-rgb-f32.npy",
+      "source_sha256": "2668537f49285dae0b06ad4f9f027387c9605947d8a8b53b5d021d17f239d743",
+      "source_array_sha256": "cedcd6d36156df6d180a682ca40f8053e9fcfdd30a51c0ddab8b90552ad8e3e4",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\in-focus-2\\delivered\\layered\\truth-rgb-f32.npy",
+      "sha256": "30f5279325a6084139ae35cceccb7ca24f2f91c40700cd5d7d7a671afe8f9441",
+      "array_sha256": "d747217321f59e02535d6434c42db2e10f0802747abd26fb2d0e447114f6888b",
+      "shape": [
+        96,
+        96,
+        3
+      ],
+      "dtype": "float32",
+      "psf_applications": 1,
+      "source_kind": "latent-pinhole",
+      "source_receipt_sha256": null
+    },
+    {
+      "case": "layered",
+      "arm": "visibility",
+      "source_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\visibility-1\\output\\layered\\fixed-alpha\\reconstruction.npz",
+      "source_sha256": "bdf2989ea519a66316c0d51966f6a4f744d11b17593b00568abe6f7e68029cd8",
+      "source_array_sha256": "eab1fc6b763c5ad9bcd38f49edf2127851e456083ed429fe62655af7505f7b7a",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\in-focus-2\\delivered\\layered\\visibility-rgb-f32.npy",
+      "sha256": "e240beaf89afa597fe95ace844a1482bf6a11fbc14f9c2c783595e0f684dcc34",
+      "array_sha256": "5f2c10e17687061f96e3ee9cfc43bf30f36af247382d40ebed2675bdbbcccfa5",
+      "shape": [
+        96,
+        96,
+        3
+      ],
+      "dtype": "float32",
+      "psf_applications": 1,
+      "source_kind": "latent-pinhole",
+      "source_receipt_sha256": "0aebcaa70bc77d986661df45713776d3b0cf88ef7d41d71d3f8495dec060c67a"
+    },
+    {
+      "case": "layered",
+      "arm": "shot",
+      "source_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\shot-prior-1\\output\\layered\\fixed-alpha\\reconstruction.npz",
+      "source_sha256": "fc4216dd7a92337256b9dc141ac7f4b7264df80df1569a09ae399f469b1d083e",
+      "source_array_sha256": "6f195e73bca4916abae85adcd0ab767491a2f57326541a3f1683b7362005df39",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\in-focus-2\\delivered\\layered\\shot-rgb-f32.npy",
+      "sha256": "eeab48db76609662c5518de81fdd4c9be6aec23c3b69a336ff57cbcee49b702c",
+      "array_sha256": "8abec97fa58e7e27a7a01b155c870c30c119f400dd3533fe318295725624c92b",
+      "shape": [
+        96,
+        96,
+        3
+      ],
+      "dtype": "float32",
+      "psf_applications": 1,
+      "source_kind": "latent-pinhole",
+      "source_receipt_sha256": "cd8459b18ad26ddb20c4cd69d2634755db0f3ccfcfb26cf442dfbb0e7cb6a120"
+    },
+    {
+      "case": "layered",
+      "arm": "cauchy",
+      "source_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\cauchy-1\\output\\layered\\fixed-alpha\\reconstruction.npz",
+      "source_sha256": "8c312a233629fc48ac7b23a8ad861a66635adb33d8052b6c6b4d7d020e195ab8",
+      "source_array_sha256": "dd8ad6338f066b22f7058af8e7c612daea0892fc9961ad9b2fa2f9139645e816",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\in-focus-2\\delivered\\layered\\cauchy-rgb-f32.npy",
+      "sha256": "a521fdb5c4d91da2fc26707d05332da5906fb9fc1d30413a8a578559e02d9911",
+      "array_sha256": "b3903cfbf6bb5666edb08963e2a0694f61a815cd7dd6039df31ecb4106e4dacb",
+      "shape": [
+        96,
+        96,
+        3
+      ],
+      "dtype": "float32",
+      "psf_applications": 1,
+      "source_kind": "latent-pinhole",
+      "source_receipt_sha256": "210fdb279494cbdc079c3f34a614ec3ffc75093255777709e57f98e445ab6591"
+    },
+    {
+      "case": "layered",
+      "arm": "matrix",
+      "source_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\matrix-cauchy-1\\output\\layered\\fixed-alpha\\reconstruction.npz",
+      "source_sha256": "bf2fb2569161ce080a7bc078878ad16e9a33a6a83e3bdcdbd1ad351ab49b5869",
+      "source_array_sha256": "3f8f26c2a510b907b6fa8ef73a8ebe8965158c3abdc06b299221ff534d17dcf2",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\in-focus-2\\delivered\\layered\\matrix-rgb-f32.npy",
+      "sha256": "d28c08b3726dc2ebcf978ae5c98dde504ec5edd04cef93c0e7b523c9fa0e8227",
+      "array_sha256": "c890f371701345d93f2621bbc6ecd68ec52560a634137ce7fd76533d6d2d2368",
+      "shape": [
+        96,
+        96,
+        3
+      ],
+      "dtype": "float32",
+      "psf_applications": 1,
+      "source_kind": "latent-pinhole",
+      "source_receipt_sha256": "9b0732e289c13447b48509952600075881493ab69ef8888d15d3325cae105a2b"
+    },
+    {
+      "case": "layered",
+      "arm": "far-only",
+      "source_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\far-only\\reconstruction.npz",
+      "source_sha256": "a83fc632004cfbba810a1c2d3b1ccb454c0e729ad4014442dae7d61da67ca34c",
+      "source_array_sha256": "8f4d60b35817fd1f2ae59cd27e4170d9da38c36c8e9e5f90dda997d8ea089111",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\in-focus-2\\delivered\\layered\\far-only-rgb-f32.npy",
+      "sha256": "71998dffd3c880b9b5acd3780537398e30d36bf2f72b1075066b382e64ac2de2",
+      "array_sha256": "cd0116ea6e513b077bde1e1cc37c903cdc0cffbddbed30fa1a16156fe9bafe2c",
+      "shape": [
+        96,
+        96,
+        3
+      ],
+      "dtype": "float32",
+      "psf_applications": 1,
+      "source_kind": "latent-pinhole",
+      "source_receipt_sha256": "5a4dd625f2b797fede7205d6aa9a1aa21176750f5a4c062dac0168f651725f96"
+    },
+    {
+      "case": "layered",
+      "arm": "mean-observed",
+      "source_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\mean-rgb-f32.npy",
+      "source_sha256": "ffe024f6a3d3950dcfba7d3e281eaf15cd6059b3a05d326fe857f8d427280bb5",
+      "source_array_sha256": "28fb54423d140216459f2299ead8566712190d567e6594619281d643fe4c27c1",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\in-focus-2\\delivered\\layered\\mean-observed-rgb-f32.npy",
+      "sha256": "ffe024f6a3d3950dcfba7d3e281eaf15cd6059b3a05d326fe857f8d427280bb5",
+      "array_sha256": "28fb54423d140216459f2299ead8566712190d567e6594619281d643fe4c27c1",
+      "shape": [
+        96,
+        96,
+        3
+      ],
+      "dtype": "float32",
+      "psf_applications": 0,
+      "source_kind": "already-observed-developed",
+      "source_receipt_sha256": null
+    },
+    {
+      "case": "layered",
+      "arm": "donor-observed",
+      "source_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\oracle-bound-rgb-f32.npy",
+      "source_sha256": "758b9efce098b81dcd0690d8a69b42822cc270c0cf6ac52b6d140b4234960b04",
+      "source_array_sha256": "55309f470aacf5187340ae38776c927f88ee4e179de5a828616f168b93473eca",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\in-focus-2\\delivered\\layered\\donor-observed-rgb-f32.npy",
+      "sha256": "758b9efce098b81dcd0690d8a69b42822cc270c0cf6ac52b6d140b4234960b04",
+      "array_sha256": "55309f470aacf5187340ae38776c927f88ee4e179de5a828616f168b93473eca",
+      "shape": [
+        96,
+        96,
+        3
+      ],
+      "dtype": "float32",
+      "psf_applications": 0,
+      "source_kind": "already-observed-developed",
+      "source_receipt_sha256": null
+    }
+  ],
+  "source_bindings_before": {
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\cauchy-1\\output\\flat\\fixed-alpha\\receipt.json": "f6d77798ed3c539de4498b424d8d62b4a69857548ce021d3617b9301abe3641c",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\cauchy-1\\output\\flat\\fixed-alpha\\reconstruction.npz": "9e85c3ca0dcfa4ce64c7d0db07284891c9403a09208c3a5dea65cb4bd21eec90",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\cauchy-1\\output\\layered\\fixed-alpha\\receipt.json": "210fdb279494cbdc079c3f34a614ec3ffc75093255777709e57f98e445ab6591",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\cauchy-1\\output\\layered\\fixed-alpha\\reconstruction.npz": "8c312a233629fc48ac7b23a8ad861a66635adb33d8052b6c6b4d7d020e195ab8",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\matrix-cauchy-1\\output\\flat\\fixed-alpha\\receipt.json": "b5f3866c0d8ff40579a550741cf25d9983fdf5cf718f1b5f26067cb806da3539",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\matrix-cauchy-1\\output\\flat\\fixed-alpha\\reconstruction.npz": "ff675a8a4792716c8d1edfec393cf2a5cd918d9cb62138ea64f6484fb2146315",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\matrix-cauchy-1\\output\\layered\\fixed-alpha\\receipt.json": "9b0732e289c13447b48509952600075881493ab69ef8888d15d3325cae105a2b",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\matrix-cauchy-1\\output\\layered\\fixed-alpha\\reconstruction.npz": "bf2fb2569161ce080a7bc078878ad16e9a33a6a83e3bdcdbd1ad351ab49b5869",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\model.py": "5710146ffcf463de85e317050bc81357922965d6006c7b4cf311f4d80d8ee512",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\far-only\\receipt.json": "bbad44a03ceda48c64f60bba2ab802d34a41bd252941300ebaf62e391ed86d32",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\far-only\\reconstruction.npz": "7179a526e21427fec5f98ab6dd344d5b00815432c2f232f5d8f19c964bfc511f",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\mean-rgb-f32.npy": "949b99f79af998d85f0c273f6e7d85736a4adb6ada236d243776b5ec71ebcd94",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\oracle-bound-rgb-f32.npy": "2a3dfd15829c0dee5b9858504688eb1b14b8ed2d7cb4bd3871bcd3487a8d2680",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\truth-rgb-f32.npy": "82a5a40523bf883867d551676e62c6935941bbdbe8af6bb8a5a0ef990f6d5a86",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\far-only\\receipt.json": "5a4dd625f2b797fede7205d6aa9a1aa21176750f5a4c062dac0168f651725f96",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\far-only\\reconstruction.npz": "a83fc632004cfbba810a1c2d3b1ccb454c0e729ad4014442dae7d61da67ca34c",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\mean-rgb-f32.npy": "ffe024f6a3d3950dcfba7d3e281eaf15cd6059b3a05d326fe857f8d427280bb5",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\oracle-bound-rgb-f32.npy": "758b9efce098b81dcd0690d8a69b42822cc270c0cf6ac52b6d140b4234960b04",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\truth-rgb-f32.npy": "2668537f49285dae0b06ad4f9f027387c9605947d8a8b53b5d021d17f239d743",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\shot-prior-1\\output\\flat\\fixed-alpha\\receipt.json": "d4d878d1090c19dac85f56f3085f9cad86bbe1907dbff0c359df942558a42eb6",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\shot-prior-1\\output\\flat\\fixed-alpha\\reconstruction.npz": "e9aa372b17404520eed9d63a6a143d9bda1ff7b20767f8f53cb01f6225796745",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\shot-prior-1\\output\\layered\\fixed-alpha\\receipt.json": "cd8459b18ad26ddb20c4cd69d2634755db0f3ccfcfb26cf442dfbb0e7cb6a120",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\shot-prior-1\\output\\layered\\fixed-alpha\\reconstruction.npz": "fc4216dd7a92337256b9dc141ac7f4b7264df80df1569a09ae399f469b1d083e",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\visibility-1\\output\\flat\\fixed-alpha\\receipt.json": "e14ae9c361a4d9bb91a03d59e1569dfac725b4e7baa5a24236395e44602427c3",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\visibility-1\\output\\flat\\fixed-alpha\\reconstruction.npz": "324299052dabc4cab0fc88745f880cc9b5b0c3166f33facfbed6b0328cf509c8",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\visibility-1\\output\\layered\\fixed-alpha\\receipt.json": "0aebcaa70bc77d986661df45713776d3b0cf88ef7d41d71d3f8495dec060c67a",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\visibility-1\\output\\layered\\fixed-alpha\\reconstruction.npz": "bdf2989ea519a66316c0d51966f6a4f744d11b17593b00568abe6f7e68029cd8"
+  },
+  "source_bindings_after": {
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\cauchy-1\\output\\flat\\fixed-alpha\\receipt.json": "f6d77798ed3c539de4498b424d8d62b4a69857548ce021d3617b9301abe3641c",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\cauchy-1\\output\\flat\\fixed-alpha\\reconstruction.npz": "9e85c3ca0dcfa4ce64c7d0db07284891c9403a09208c3a5dea65cb4bd21eec90",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\cauchy-1\\output\\layered\\fixed-alpha\\receipt.json": "210fdb279494cbdc079c3f34a614ec3ffc75093255777709e57f98e445ab6591",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\cauchy-1\\output\\layered\\fixed-alpha\\reconstruction.npz": "8c312a233629fc48ac7b23a8ad861a66635adb33d8052b6c6b4d7d020e195ab8",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\matrix-cauchy-1\\output\\flat\\fixed-alpha\\receipt.json": "b5f3866c0d8ff40579a550741cf25d9983fdf5cf718f1b5f26067cb806da3539",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\matrix-cauchy-1\\output\\flat\\fixed-alpha\\reconstruction.npz": "ff675a8a4792716c8d1edfec393cf2a5cd918d9cb62138ea64f6484fb2146315",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\matrix-cauchy-1\\output\\layered\\fixed-alpha\\receipt.json": "9b0732e289c13447b48509952600075881493ab69ef8888d15d3325cae105a2b",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\matrix-cauchy-1\\output\\layered\\fixed-alpha\\reconstruction.npz": "bf2fb2569161ce080a7bc078878ad16e9a33a6a83e3bdcdbd1ad351ab49b5869",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\model.py": "5710146ffcf463de85e317050bc81357922965d6006c7b4cf311f4d80d8ee512",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\far-only\\receipt.json": "bbad44a03ceda48c64f60bba2ab802d34a41bd252941300ebaf62e391ed86d32",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\far-only\\reconstruction.npz": "7179a526e21427fec5f98ab6dd344d5b00815432c2f232f5d8f19c964bfc511f",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\mean-rgb-f32.npy": "949b99f79af998d85f0c273f6e7d85736a4adb6ada236d243776b5ec71ebcd94",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\oracle-bound-rgb-f32.npy": "2a3dfd15829c0dee5b9858504688eb1b14b8ed2d7cb4bd3871bcd3487a8d2680",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\truth-rgb-f32.npy": "82a5a40523bf883867d551676e62c6935941bbdbe8af6bb8a5a0ef990f6d5a86",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\far-only\\receipt.json": "5a4dd625f2b797fede7205d6aa9a1aa21176750f5a4c062dac0168f651725f96",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\far-only\\reconstruction.npz": "a83fc632004cfbba810a1c2d3b1ccb454c0e729ad4014442dae7d61da67ca34c",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\mean-rgb-f32.npy": "ffe024f6a3d3950dcfba7d3e281eaf15cd6059b3a05d326fe857f8d427280bb5",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\oracle-bound-rgb-f32.npy": "758b9efce098b81dcd0690d8a69b42822cc270c0cf6ac52b6d140b4234960b04",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\truth-rgb-f32.npy": "2668537f49285dae0b06ad4f9f027387c9605947d8a8b53b5d021d17f239d743",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\shot-prior-1\\output\\flat\\fixed-alpha\\receipt.json": "d4d878d1090c19dac85f56f3085f9cad86bbe1907dbff0c359df942558a42eb6",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\shot-prior-1\\output\\flat\\fixed-alpha\\reconstruction.npz": "e9aa372b17404520eed9d63a6a143d9bda1ff7b20767f8f53cb01f6225796745",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\shot-prior-1\\output\\layered\\fixed-alpha\\receipt.json": "cd8459b18ad26ddb20c4cd69d2634755db0f3ccfcfb26cf442dfbb0e7cb6a120",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\shot-prior-1\\output\\layered\\fixed-alpha\\reconstruction.npz": "fc4216dd7a92337256b9dc141ac7f4b7264df80df1569a09ae399f469b1d083e",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\visibility-1\\output\\flat\\fixed-alpha\\receipt.json": "e14ae9c361a4d9bb91a03d59e1569dfac725b4e7baa5a24236395e44602427c3",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\visibility-1\\output\\flat\\fixed-alpha\\reconstruction.npz": "324299052dabc4cab0fc88745f880cc9b5b0c3166f33facfbed6b0328cf509c8",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\visibility-1\\output\\layered\\fixed-alpha\\receipt.json": "0aebcaa70bc77d986661df45713776d3b0cf88ef7d41d71d3f8495dec060c67a",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\visibility-1\\output\\layered\\fixed-alpha\\reconstruction.npz": "bdf2989ea519a66316c0d51966f6a4f744d11b17593b00568abe6f7e68029cd8"
+  },
+  "sources_unchanged": true,
+  "original_pinhole_admission_unchanged": true,
+  "real_photo_admission": false,
+  "observed_comparator_scope": "No additional PSF or donor reselection; original donor choices targeted pinhole truth."
+}

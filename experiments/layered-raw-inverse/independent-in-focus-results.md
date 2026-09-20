@@ -1,0 +1,26 @@
+# Independent in-focus consumer results
+
+MEASURED by root's completed `in-focus-2` commissioning, delivery and scorer; reviewed without filtering, refitting or changing thresholds. The matrix-Cauchy saved state passes both cases' fixed checks for this separately declared in-focus target and its retained held-out checks. It is the only one of the four arms to pass that conjunction. This is a target-specific generated result, not a repaired pinhole verdict or photographic admission.
+
+| Arm | Flat RGB / chroma RMSE, DN | Layered target checks | Retained layered held-out checks |
+| --- | ---: | --- | --- |
+| Original Huber visibility | 5.0203 / 7.0164 | Pass | Fail: bright stratum |
+| Shot-scaled Huber | 5.5218 / 7.9155 | Fail: core chroma | Pass |
+| Scalar Cauchy | 5.0684 / 7.0817 | Fail: core and ridge chroma | Pass |
+| Matrix Cauchy | 5.0799 / 7.0960 | Pass | Pass |
+
+Flat first changes the interpretation of the apparent layered improvements. Shot passes comparison with the unchanged observed mean (6.0185/8.3676), but fails both paired 1.05 reference guards. Matrix and scalar Cauchy pass those guards while remaining slightly worse than filtered visibility. The filtered far-only result is better still on this flat fixture, 4.8851/6.7484. The new target does not make the latest prior uniformly preferable.
+
+For layered matrix Cauchy, whole/core/ridge RGB errors are 22.787/65.562/34.075 DN versus visibility's 56.344/251.453/110.209. Crucially, the protected chroma errors also improve: 34.237/94.199/49.660 versus 44.168/114.651/63.066. Re-choosing the retained crossing and fan regions preserves this direction: matrix RGB/chroma is 53.130/76.602 and 31.034/44.994, versus 199.775/99.035 and 97.212/56.945. These descriptive regions add context rather than new admission bars.
+
+The other priors demonstrate why whole-image RGB alone would be misleading. Shot core chroma remains 119.926 versus 114.651, exceeding the 2% allowance despite improved whole RGB. Scalar Cauchy whole chroma slightly improves, but core/ridge chroma is 136.034/71.341, still worse than 114.651/63.066. Matrix's success is therefore not merely the automatic consequence of applying a common blur to every inverse.
+
+Matrix glint recovery is [1.00156, 1.00141, 1.00312], and ridge recovery [1.01068, 1.00121, 1.01199]. Capped component guards pass; these small overshoots receive no credit beyond truth. Projections alone could hide other error, which is why the accompanying RGB/chroma guards matter. The negative controls remain strong in this target: applying a second identical PSF to exact truth leaves only 0.897–0.904 glint and 0.922–0.933 ridge recovery, decisively failing the fixed 0.98 guard for both components. Each half-colour destroyer recovers approximately 0.5 in the affected channel. Wrong colour produces 810.087 DN ridge chroma error and fails component protection. These controls establish rejection power for the fixed features, not universal immunity to oversmoothing.
+
+The observed mean and donor files are unchanged, not double-blurred. Their layered whole RGB errors are 614.125 and 272.249 DN; all four inverse arms beat the fixed observed-baseline bars. But the donor was selected for the older target, retains observation noise/defocus and bilinear CFA development, and is not optimal for this new target. Its glint recovery is only 0.712–0.737; the independent absolute 0.8 floor remains binding. The cleaner causal comparison is between equally filtered inverse outputs with the same known visibility. None of these comparators is a production SOTA benchmark.
+
+All16 delivered mappings and source/output hashes passed, with maximum independent convolution discrepancy 0.00390625 DN. Frozen-generator comparisons for full-context truth/templates/absent images are exactly equal on the supported region. The actual focused one-layer witness differs by at most 0.00097656 DN; lost-apron and wrong-composition controls differ by 117.046 and 249.748 DN. Thus neither cropped filtering nor an unnoticed target/template convention explains the measured gain. The earlier `in-focus-1` serialization failure remains preserved; its repair did not change arithmetic.
+
+No state, RAW prediction or fit changed. Visibility still fails its 41-sample bright held-out stratum (2.14781 normalized RMS); matrix retains its 1.19514 pass. All arms remain nonstationary returned states from their original budgets. The supplied64-ray versus independently resolved1024-ray physical check still fails, including crossing normalized disagreement 1.069–1.678. Known alpha and supplied synthetic optics remain assumptions. The result establishes useful dependence on a declared output resolution; it does not identify the earlier error as a CFA/optical nullspace, solve unknown visibility, or license actual RAW deployment. Any next stress must remain separate and prospective.
+
+Bindings: scored result SHA256 `f7df361bcdc2a25a4c1c96118d4b26110ffcdc804adeee4df6477a37da62b873`; repaired controls `8aa5850574c9882aa6bb252bb21299a1e3625e45240850cd519a3e0649559891`; consumer `3e75c94dbf0c2f4665f25161751ec28c6ef162ebdd06c5f4f4681b4a1f0fc013`. This memo interprets numerical receipts; whole-scene visual review is separate.

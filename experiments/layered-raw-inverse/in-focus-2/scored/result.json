@@ -1,0 +1,2478 @@
+{
+  "status": "IN_FOCUS_TARGET_SCORED",
+  "records": [
+    {
+      "case": "flat",
+      "arm": "visibility",
+      "quality": {
+        "regions": {
+          "whole": {
+            "visibility": {
+              "rgb_rmse": 5.020267876052447,
+              "chroma_rmse": 7.016449662733902
+            },
+            "shot": {
+              "rgb_rmse": 5.52181614364231,
+              "chroma_rmse": 7.915507338921219
+            },
+            "cauchy": {
+              "rgb_rmse": 5.06842679977275,
+              "chroma_rmse": 7.081656735186426
+            },
+            "matrix": {
+              "rgb_rmse": 5.079854186452165,
+              "chroma_rmse": 7.095953787940492
+            },
+            "far-only": {
+              "rgb_rmse": 4.885111350751294,
+              "chroma_rmse": 6.748421623307027
+            },
+            "mean-observed": {
+              "rgb_rmse": 6.018454952199159,
+              "chroma_rmse": 8.367614398485559
+            },
+            "donor-observed": {
+              "rgb_rmse": 15.927477770495805,
+              "chroma_rmse": 21.780316606324977
+            }
+          }
+        },
+        "components": {},
+        "bars": {
+          "rgb_rmse_mean": true,
+          "rgb_rmse_visibility": true,
+          "chroma_rmse_mean": true,
+          "chroma_rmse_visibility": true
+        },
+        "passed": true
+      },
+      "fixed_target_checks_pass": true,
+      "retained_heldout_pass": true,
+      "retained_heldout": [
+        {
+          "index": 2,
+          "scores": {
+            "uncensored": {
+              "all": {
+                "count": 4096,
+                "normalized_rms": 1.0021584373417702,
+                "bar": 1.5,
+                "passed": true,
+                "present": true
+              },
+              "R": {
+                "count": 1024,
+                "normalized_rms": 0.9732755572996404,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G1": {
+                "count": 1024,
+                "normalized_rms": 1.0136782494328311,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G2": {
+                "count": 1024,
+                "normalized_rms": 1.022877766894175,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "B": {
+                "count": 1024,
+                "normalized_rms": 0.9980973421087967,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "bright": {
+                "count": 0,
+                "normalized_rms": null,
+                "bar": 1.75,
+                "passed": true,
+                "present": false
+              },
+              "dim": {
+                "count": 4096,
+                "normalized_rms": 1.0021584373417702,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              }
+            },
+            "censor_count": 0,
+            "censor_one_sided_rms": null,
+            "passed": true
+          }
+        },
+        {
+          "index": 6,
+          "scores": {
+            "uncensored": {
+              "all": {
+                "count": 4096,
+                "normalized_rms": 1.0104981038082645,
+                "bar": 1.5,
+                "passed": true,
+                "present": true
+              },
+              "R": {
+                "count": 1024,
+                "normalized_rms": 1.0024680392314649,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G1": {
+                "count": 1024,
+                "normalized_rms": 0.9927485240005753,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G2": {
+                "count": 1024,
+                "normalized_rms": 1.0160836186752986,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "B": {
+                "count": 1024,
+                "normalized_rms": 1.030295078836255,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "bright": {
+                "count": 0,
+                "normalized_rms": null,
+                "bar": 1.75,
+                "passed": true,
+                "present": false
+              },
+              "dim": {
+                "count": 4096,
+                "normalized_rms": 1.0104981038082645,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              }
+            },
+            "censor_count": 0,
+            "censor_one_sided_rms": null,
+            "passed": true
+          }
+        }
+      ],
+      "retained_pinhole_checks_pass": true,
+      "retained_status": "nonstationary_return",
+      "combined_saved_state_checks_pass": true,
+      "retained_scored_result_sha256": "1b419e0c0eb0223522a23d4de0642b454bb1ec93b4b2a09e0e5f8ebf7a021088"
+    },
+    {
+      "case": "flat",
+      "arm": "shot",
+      "quality": {
+        "regions": {
+          "whole": {
+            "visibility": {
+              "rgb_rmse": 5.020267876052447,
+              "chroma_rmse": 7.016449662733902
+            },
+            "shot": {
+              "rgb_rmse": 5.52181614364231,
+              "chroma_rmse": 7.915507338921219
+            },
+            "cauchy": {
+              "rgb_rmse": 5.06842679977275,
+              "chroma_rmse": 7.081656735186426
+            },
+            "matrix": {
+              "rgb_rmse": 5.079854186452165,
+              "chroma_rmse": 7.095953787940492
+            },
+            "far-only": {
+              "rgb_rmse": 4.885111350751294,
+              "chroma_rmse": 6.748421623307027
+            },
+            "mean-observed": {
+              "rgb_rmse": 6.018454952199159,
+              "chroma_rmse": 8.367614398485559
+            },
+            "donor-observed": {
+              "rgb_rmse": 15.927477770495805,
+              "chroma_rmse": 21.780316606324977
+            }
+          }
+        },
+        "components": {},
+        "bars": {
+          "rgb_rmse_mean": true,
+          "rgb_rmse_visibility": false,
+          "chroma_rmse_mean": true,
+          "chroma_rmse_visibility": false
+        },
+        "passed": false
+      },
+      "fixed_target_checks_pass": false,
+      "retained_heldout_pass": true,
+      "retained_heldout": [
+        {
+          "index": 2,
+          "scores": {
+            "uncensored": {
+              "all": {
+                "count": 4096,
+                "normalized_rms": 1.002823262967859,
+                "bar": 1.5,
+                "passed": true,
+                "present": true
+              },
+              "R": {
+                "count": 1024,
+                "normalized_rms": 0.9739139624258618,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G1": {
+                "count": 1024,
+                "normalized_rms": 1.014466960332169,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G2": {
+                "count": 1024,
+                "normalized_rms": 1.0242973087888194,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "B": {
+                "count": 1024,
+                "normalized_rms": 0.9978884659080716,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "bright": {
+                "count": 0,
+                "normalized_rms": null,
+                "bar": 1.75,
+                "passed": true,
+                "present": false
+              },
+              "dim": {
+                "count": 4096,
+                "normalized_rms": 1.002823262967859,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              }
+            },
+            "censor_count": 0,
+            "censor_one_sided_rms": null,
+            "passed": true
+          }
+        },
+        {
+          "index": 6,
+          "scores": {
+            "uncensored": {
+              "all": {
+                "count": 4096,
+                "normalized_rms": 1.011349683690553,
+                "bar": 1.5,
+                "passed": true,
+                "present": true
+              },
+              "R": {
+                "count": 1024,
+                "normalized_rms": 1.0031415914050816,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G1": {
+                "count": 1024,
+                "normalized_rms": 0.9944389843844567,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G2": {
+                "count": 1024,
+                "normalized_rms": 1.017251460369294,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "B": {
+                "count": 1024,
+                "normalized_rms": 1.0301991317750927,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "bright": {
+                "count": 0,
+                "normalized_rms": null,
+                "bar": 1.75,
+                "passed": true,
+                "present": false
+              },
+              "dim": {
+                "count": 4096,
+                "normalized_rms": 1.011349683690553,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              }
+            },
+            "censor_count": 0,
+            "censor_one_sided_rms": null,
+            "passed": true
+          }
+        }
+      ],
+      "retained_pinhole_checks_pass": false,
+      "retained_status": "nonstationary_return",
+      "combined_saved_state_checks_pass": false,
+      "retained_scored_result_sha256": "b90831f884314111c2ede55132987f4e9a5cc0c8bc264c7b5935f95cb56336a2"
+    },
+    {
+      "case": "flat",
+      "arm": "cauchy",
+      "quality": {
+        "regions": {
+          "whole": {
+            "visibility": {
+              "rgb_rmse": 5.020267876052447,
+              "chroma_rmse": 7.016449662733902
+            },
+            "shot": {
+              "rgb_rmse": 5.52181614364231,
+              "chroma_rmse": 7.915507338921219
+            },
+            "cauchy": {
+              "rgb_rmse": 5.06842679977275,
+              "chroma_rmse": 7.081656735186426
+            },
+            "matrix": {
+              "rgb_rmse": 5.079854186452165,
+              "chroma_rmse": 7.095953787940492
+            },
+            "far-only": {
+              "rgb_rmse": 4.885111350751294,
+              "chroma_rmse": 6.748421623307027
+            },
+            "mean-observed": {
+              "rgb_rmse": 6.018454952199159,
+              "chroma_rmse": 8.367614398485559
+            },
+            "donor-observed": {
+              "rgb_rmse": 15.927477770495805,
+              "chroma_rmse": 21.780316606324977
+            }
+          }
+        },
+        "components": {},
+        "bars": {
+          "rgb_rmse_mean": true,
+          "rgb_rmse_visibility": true,
+          "chroma_rmse_mean": true,
+          "chroma_rmse_visibility": true
+        },
+        "passed": true
+      },
+      "fixed_target_checks_pass": true,
+      "retained_heldout_pass": true,
+      "retained_heldout": [
+        {
+          "index": 2,
+          "scores": {
+            "uncensored": {
+              "all": {
+                "count": 4096,
+                "normalized_rms": 1.0022379736820928,
+                "bar": 1.5,
+                "passed": true,
+                "present": true
+              },
+              "R": {
+                "count": 1024,
+                "normalized_rms": 0.9733014071944536,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G1": {
+                "count": 1024,
+                "normalized_rms": 1.0137023281188529,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G2": {
+                "count": 1024,
+                "normalized_rms": 1.0229554865958073,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "B": {
+                "count": 1024,
+                "normalized_rms": 0.998287461969146,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "bright": {
+                "count": 0,
+                "normalized_rms": null,
+                "bar": 1.75,
+                "passed": true,
+                "present": false
+              },
+              "dim": {
+                "count": 4096,
+                "normalized_rms": 1.0022379736820928,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              }
+            },
+            "censor_count": 0,
+            "censor_one_sided_rms": null,
+            "passed": true
+          }
+        },
+        {
+          "index": 6,
+          "scores": {
+            "uncensored": {
+              "all": {
+                "count": 4096,
+                "normalized_rms": 1.0105337135569112,
+                "bar": 1.5,
+                "passed": true,
+                "present": true
+              },
+              "R": {
+                "count": 1024,
+                "normalized_rms": 1.0024987531011007,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G1": {
+                "count": 1024,
+                "normalized_rms": 0.9928156240717904,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G2": {
+                "count": 1024,
+                "normalized_rms": 1.0161108233094558,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "B": {
+                "count": 1024,
+                "normalized_rms": 1.0303134116974046,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "bright": {
+                "count": 0,
+                "normalized_rms": null,
+                "bar": 1.75,
+                "passed": true,
+                "present": false
+              },
+              "dim": {
+                "count": 4096,
+                "normalized_rms": 1.0105337135569112,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              }
+            },
+            "censor_count": 0,
+            "censor_one_sided_rms": null,
+            "passed": true
+          }
+        }
+      ],
+      "retained_pinhole_checks_pass": true,
+      "retained_status": "nonstationary_return",
+      "combined_saved_state_checks_pass": true,
+      "retained_scored_result_sha256": "2ea54d4ce819a1a5cb9af23d4a3463d28f1ddc0db4a1579d784896f5ce8450c8"
+    },
+    {
+      "case": "flat",
+      "arm": "matrix",
+      "quality": {
+        "regions": {
+          "whole": {
+            "visibility": {
+              "rgb_rmse": 5.020267876052447,
+              "chroma_rmse": 7.016449662733902
+            },
+            "shot": {
+              "rgb_rmse": 5.52181614364231,
+              "chroma_rmse": 7.915507338921219
+            },
+            "cauchy": {
+              "rgb_rmse": 5.06842679977275,
+              "chroma_rmse": 7.081656735186426
+            },
+            "matrix": {
+              "rgb_rmse": 5.079854186452165,
+              "chroma_rmse": 7.095953787940492
+            },
+            "far-only": {
+              "rgb_rmse": 4.885111350751294,
+              "chroma_rmse": 6.748421623307027
+            },
+            "mean-observed": {
+              "rgb_rmse": 6.018454952199159,
+              "chroma_rmse": 8.367614398485559
+            },
+            "donor-observed": {
+              "rgb_rmse": 15.927477770495805,
+              "chroma_rmse": 21.780316606324977
+            }
+          }
+        },
+        "components": {},
+        "bars": {
+          "rgb_rmse_mean": true,
+          "rgb_rmse_visibility": true,
+          "chroma_rmse_mean": true,
+          "chroma_rmse_visibility": true
+        },
+        "passed": true
+      },
+      "fixed_target_checks_pass": true,
+      "retained_heldout_pass": true,
+      "retained_heldout": [
+        {
+          "index": 2,
+          "scores": {
+            "uncensored": {
+              "all": {
+                "count": 4096,
+                "normalized_rms": 1.0022701759851276,
+                "bar": 1.5,
+                "passed": true,
+                "present": true
+              },
+              "R": {
+                "count": 1024,
+                "normalized_rms": 0.9733487236547954,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G1": {
+                "count": 1024,
+                "normalized_rms": 1.013713928016395,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G2": {
+                "count": 1024,
+                "normalized_rms": 1.0229679112117827,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "B": {
+                "count": 1024,
+                "normalized_rms": 0.9983461371754732,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "bright": {
+                "count": 0,
+                "normalized_rms": null,
+                "bar": 1.75,
+                "passed": true,
+                "present": false
+              },
+              "dim": {
+                "count": 4096,
+                "normalized_rms": 1.0022701759851276,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              }
+            },
+            "censor_count": 0,
+            "censor_one_sided_rms": null,
+            "passed": true
+          }
+        },
+        {
+          "index": 6,
+          "scores": {
+            "uncensored": {
+              "all": {
+                "count": 4096,
+                "normalized_rms": 1.0105456203879077,
+                "bar": 1.5,
+                "passed": true,
+                "present": true
+              },
+              "R": {
+                "count": 1024,
+                "normalized_rms": 1.0025122612592856,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G1": {
+                "count": 1024,
+                "normalized_rms": 0.9928246891103198,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G2": {
+                "count": 1024,
+                "normalized_rms": 1.0161218341861133,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "B": {
+                "count": 1024,
+                "normalized_rms": 1.030327386974045,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "bright": {
+                "count": 0,
+                "normalized_rms": null,
+                "bar": 1.75,
+                "passed": true,
+                "present": false
+              },
+              "dim": {
+                "count": 4096,
+                "normalized_rms": 1.0105456203879077,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              }
+            },
+            "censor_count": 0,
+            "censor_one_sided_rms": null,
+            "passed": true
+          }
+        }
+      ],
+      "retained_pinhole_checks_pass": true,
+      "retained_status": "nonstationary_return",
+      "combined_saved_state_checks_pass": true,
+      "retained_scored_result_sha256": "1a693c5b5b417a352f62389464b23bb43c3a1de1351788dbbceb8cdf96aa7db0"
+    },
+    {
+      "case": "layered",
+      "arm": "visibility",
+      "quality": {
+        "regions": {
+          "whole": {
+            "visibility": {
+              "rgb_rmse": 56.34389055182788,
+              "chroma_rmse": 44.16764757023066
+            },
+            "shot": {
+              "rgb_rmse": 45.22588898803708,
+              "chroma_rmse": 40.43209342592602
+            },
+            "cauchy": {
+              "rgb_rmse": 30.58084092087542,
+              "chroma_rmse": 43.74212730912
+            },
+            "matrix": {
+              "rgb_rmse": 22.787171106156872,
+              "chroma_rmse": 34.236889568982456
+            },
+            "far-only": {
+              "rgb_rmse": 385.8275577608217,
+              "chroma_rmse": 556.6446186363088
+            },
+            "mean-observed": {
+              "rgb_rmse": 614.1251600218912,
+              "chroma_rmse": 417.17329850852065
+            },
+            "donor-observed": {
+              "rgb_rmse": 272.24934396291604,
+              "chroma_rmse": 175.40105384652418
+            }
+          },
+          "core": {
+            "visibility": {
+              "rgb_rmse": 251.4533476555322,
+              "chroma_rmse": 114.650906222465
+            },
+            "shot": {
+              "rgb_rmse": 200.06141308739842,
+              "chroma_rmse": 119.92573232421833
+            },
+            "cauchy": {
+              "rgb_rmse": 111.83750153591217,
+              "chroma_rmse": 136.03357965411317
+            },
+            "matrix": {
+              "rgb_rmse": 65.56185108565302,
+              "chroma_rmse": 94.19941656153382
+            },
+            "far-only": {
+              "rgb_rmse": 1231.9303317206632,
+              "chroma_rmse": 1288.1091275431447
+            },
+            "mean-observed": {
+              "rgb_rmse": 2809.1777307598663,
+              "chroma_rmse": 1018.1349099078564
+            },
+            "donor-observed": {
+              "rgb_rmse": 1249.738606652609,
+              "chroma_rmse": 601.2878845695006
+            }
+          },
+          "ridge": {
+            "visibility": {
+              "rgb_rmse": 110.20851979917784,
+              "chroma_rmse": 63.06625794513409
+            },
+            "shot": {
+              "rgb_rmse": 87.6035226376071,
+              "chroma_rmse": 60.411759333838276
+            },
+            "cauchy": {
+              "rgb_rmse": 53.200426574367334,
+              "chroma_rmse": 71.34068070686845
+            },
+            "matrix": {
+              "rgb_rmse": 34.07497855176001,
+              "chroma_rmse": 49.65974293555417
+            },
+            "far-only": {
+              "rgb_rmse": 713.5787713106185,
+              "chroma_rmse": 991.9863854086531
+            },
+            "mean-observed": {
+              "rgb_rmse": 1250.9164517507888,
+              "chroma_rmse": 748.7411849781162
+            },
+            "donor-observed": {
+              "rgb_rmse": 558.3864126908549,
+              "chroma_rmse": 337.23156397286806
+            }
+          },
+          "crossing": {
+            "visibility": {
+              "rgb_rmse": 199.77493886406944,
+              "chroma_rmse": 99.03459643955976
+            },
+            "shot": {
+              "rgb_rmse": 158.7562355977235,
+              "chroma_rmse": 99.98977709467314
+            },
+            "cauchy": {
+              "rgb_rmse": 89.345693513783,
+              "chroma_rmse": 109.81838544930994
+            },
+            "matrix": {
+              "rgb_rmse": 53.129577781217144,
+              "chroma_rmse": 76.602261870656
+            },
+            "far-only": {
+              "rgb_rmse": 1099.2748286245953,
+              "chroma_rmse": 1366.0196369713892
+            },
+            "mean-observed": {
+              "rgb_rmse": 2247.4623781825067,
+              "chroma_rmse": 1056.2161844321286
+            },
+            "donor-observed": {
+              "rgb_rmse": 1005.4858544365919,
+              "chroma_rmse": 547.22538174262
+            }
+          },
+          "fan": {
+            "visibility": {
+              "rgb_rmse": 97.21198009504374,
+              "chroma_rmse": 56.94499220800551
+            },
+            "shot": {
+              "rgb_rmse": 77.08758550295877,
+              "chroma_rmse": 54.04589082158075
+            },
+            "cauchy": {
+              "rgb_rmse": 47.39192927966944,
+              "chroma_rmse": 63.54629318839866
+            },
+            "matrix": {
+              "rgb_rmse": 31.034304215029795,
+              "chroma_rmse": 44.993782645161716
+            },
+            "far-only": {
+              "rgb_rmse": 644.2446201295036,
+              "chroma_rmse": 900.3525342706089
+            },
+            "mean-observed": {
+              "rgb_rmse": 1105.6536767504074,
+              "chroma_rmse": 676.7907625334384
+            },
+            "donor-observed": {
+              "rgb_rmse": 492.935668884316,
+              "chroma_rmse": 303.5416129473488
+            }
+          }
+        },
+        "components": {
+          "glint": {
+            "candidate": {
+              "recovery": [
+                0.9717150659267407,
+                0.9656879628920537,
+                0.9729760021868353
+              ],
+              "template_energy": [
+                2964285983.9856625,
+                2756332317.700867,
+                2177842485.6248503
+              ],
+              "live": true
+            },
+            "visibility": {
+              "recovery": [
+                0.9717150659267407,
+                0.9656879628920537,
+                0.9729760021868353
+              ],
+              "template_energy": [
+                2964285983.9856625,
+                2756332317.700867,
+                2177842485.6248503
+              ],
+              "live": true
+            },
+            "retained_donor": {
+              "recovery": [
+                0.7190543472268873,
+                0.7119403090296698,
+                0.7367952030490327
+              ],
+              "template_energy": [
+                2964285983.9856625,
+                2756332317.700867,
+                2177842485.6248503
+              ],
+              "live": true
+            }
+          },
+          "ridge": {
+            "candidate": {
+              "recovery": [
+                0.9569643852541799,
+                0.9800685859514388,
+                0.9754478710104888
+              ],
+              "template_energy": [
+                42794039.66764453,
+                111754783.50906362,
+                135560566.32565916
+              ],
+              "live": true
+            },
+            "visibility": {
+              "recovery": [
+                0.9569643852541799,
+                0.9800685859514388,
+                0.9754478710104888
+              ],
+              "template_energy": [
+                42794039.66764453,
+                111754783.50906362,
+                135560566.32565916
+              ],
+              "live": true
+            },
+            "retained_donor": {
+              "recovery": [
+                0.8072807295459828,
+                0.9372942910335109,
+                0.9354023968961995
+              ],
+              "template_energy": [
+                42794039.66764453,
+                111754783.50906362,
+                135560566.32565916
+              ],
+              "live": true
+            }
+          }
+        },
+        "bars": {
+          "whole_mean_gain": true,
+          "core_mean_gain": true,
+          "ridge_mean_gain": true,
+          "whole_far_only": true,
+          "crossing_far_only": true,
+          "core_far_only": true,
+          "ridge_far_only": true,
+          "core_rgb_rmse_visibility": true,
+          "core_chroma_rmse_visibility": true,
+          "ridge_rgb_rmse_visibility": true,
+          "ridge_chroma_rmse_visibility": true,
+          "glint_visibility": true,
+          "glint_absolute_donor": true,
+          "ridge_visibility": true,
+          "ridge_absolute_donor": true
+        },
+        "passed": true
+      },
+      "fixed_target_checks_pass": true,
+      "retained_heldout_pass": false,
+      "retained_heldout": [
+        {
+          "index": 2,
+          "scores": {
+            "uncensored": {
+              "all": {
+                "count": 4096,
+                "normalized_rms": 1.0472785460769756,
+                "bar": 1.5,
+                "passed": true,
+                "present": true
+              },
+              "R": {
+                "count": 1024,
+                "normalized_rms": 1.0319881286373043,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G1": {
+                "count": 1024,
+                "normalized_rms": 1.0612320433438678,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G2": {
+                "count": 1024,
+                "normalized_rms": 1.0275127253633123,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "B": {
+                "count": 1024,
+                "normalized_rms": 1.067789335047297,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "bright": {
+                "count": 41,
+                "normalized_rms": 2.1478070545418397,
+                "bar": 1.75,
+                "passed": false,
+                "present": true
+              },
+              "dim": {
+                "count": 4055,
+                "normalized_rms": 1.0301646998558898,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              }
+            },
+            "censor_count": 0,
+            "censor_one_sided_rms": null,
+            "passed": false
+          }
+        },
+        {
+          "index": 6,
+          "scores": {
+            "uncensored": {
+              "all": {
+                "count": 4096,
+                "normalized_rms": 1.2219850798787049,
+                "bar": 1.5,
+                "passed": true,
+                "present": true
+              },
+              "R": {
+                "count": 1024,
+                "normalized_rms": 1.3588971880390237,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G1": {
+                "count": 1024,
+                "normalized_rms": 1.153700008336025,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G2": {
+                "count": 1024,
+                "normalized_rms": 1.108180885358124,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "B": {
+                "count": 1024,
+                "normalized_rms": 1.2519185237932346,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "bright": {
+                "count": 0,
+                "normalized_rms": null,
+                "bar": 1.75,
+                "passed": true,
+                "present": false
+              },
+              "dim": {
+                "count": 4096,
+                "normalized_rms": 1.2219850798787049,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              }
+            },
+            "censor_count": 0,
+            "censor_one_sided_rms": null,
+            "passed": true
+          }
+        }
+      ],
+      "retained_pinhole_checks_pass": false,
+      "retained_status": "nonstationary_return",
+      "combined_saved_state_checks_pass": false,
+      "retained_scored_result_sha256": "1b419e0c0eb0223522a23d4de0642b454bb1ec93b4b2a09e0e5f8ebf7a021088"
+    },
+    {
+      "case": "layered",
+      "arm": "shot",
+      "quality": {
+        "regions": {
+          "whole": {
+            "visibility": {
+              "rgb_rmse": 56.34389055182788,
+              "chroma_rmse": 44.16764757023066
+            },
+            "shot": {
+              "rgb_rmse": 45.22588898803708,
+              "chroma_rmse": 40.43209342592602
+            },
+            "cauchy": {
+              "rgb_rmse": 30.58084092087542,
+              "chroma_rmse": 43.74212730912
+            },
+            "matrix": {
+              "rgb_rmse": 22.787171106156872,
+              "chroma_rmse": 34.236889568982456
+            },
+            "far-only": {
+              "rgb_rmse": 385.8275577608217,
+              "chroma_rmse": 556.6446186363088
+            },
+            "mean-observed": {
+              "rgb_rmse": 614.1251600218912,
+              "chroma_rmse": 417.17329850852065
+            },
+            "donor-observed": {
+              "rgb_rmse": 272.24934396291604,
+              "chroma_rmse": 175.40105384652418
+            }
+          },
+          "core": {
+            "visibility": {
+              "rgb_rmse": 251.4533476555322,
+              "chroma_rmse": 114.650906222465
+            },
+            "shot": {
+              "rgb_rmse": 200.06141308739842,
+              "chroma_rmse": 119.92573232421833
+            },
+            "cauchy": {
+              "rgb_rmse": 111.83750153591217,
+              "chroma_rmse": 136.03357965411317
+            },
+            "matrix": {
+              "rgb_rmse": 65.56185108565302,
+              "chroma_rmse": 94.19941656153382
+            },
+            "far-only": {
+              "rgb_rmse": 1231.9303317206632,
+              "chroma_rmse": 1288.1091275431447
+            },
+            "mean-observed": {
+              "rgb_rmse": 2809.1777307598663,
+              "chroma_rmse": 1018.1349099078564
+            },
+            "donor-observed": {
+              "rgb_rmse": 1249.738606652609,
+              "chroma_rmse": 601.2878845695006
+            }
+          },
+          "ridge": {
+            "visibility": {
+              "rgb_rmse": 110.20851979917784,
+              "chroma_rmse": 63.06625794513409
+            },
+            "shot": {
+              "rgb_rmse": 87.6035226376071,
+              "chroma_rmse": 60.411759333838276
+            },
+            "cauchy": {
+              "rgb_rmse": 53.200426574367334,
+              "chroma_rmse": 71.34068070686845
+            },
+            "matrix": {
+              "rgb_rmse": 34.07497855176001,
+              "chroma_rmse": 49.65974293555417
+            },
+            "far-only": {
+              "rgb_rmse": 713.5787713106185,
+              "chroma_rmse": 991.9863854086531
+            },
+            "mean-observed": {
+              "rgb_rmse": 1250.9164517507888,
+              "chroma_rmse": 748.7411849781162
+            },
+            "donor-observed": {
+              "rgb_rmse": 558.3864126908549,
+              "chroma_rmse": 337.23156397286806
+            }
+          },
+          "crossing": {
+            "visibility": {
+              "rgb_rmse": 199.77493886406944,
+              "chroma_rmse": 99.03459643955976
+            },
+            "shot": {
+              "rgb_rmse": 158.7562355977235,
+              "chroma_rmse": 99.98977709467314
+            },
+            "cauchy": {
+              "rgb_rmse": 89.345693513783,
+              "chroma_rmse": 109.81838544930994
+            },
+            "matrix": {
+              "rgb_rmse": 53.129577781217144,
+              "chroma_rmse": 76.602261870656
+            },
+            "far-only": {
+              "rgb_rmse": 1099.2748286245953,
+              "chroma_rmse": 1366.0196369713892
+            },
+            "mean-observed": {
+              "rgb_rmse": 2247.4623781825067,
+              "chroma_rmse": 1056.2161844321286
+            },
+            "donor-observed": {
+              "rgb_rmse": 1005.4858544365919,
+              "chroma_rmse": 547.22538174262
+            }
+          },
+          "fan": {
+            "visibility": {
+              "rgb_rmse": 97.21198009504374,
+              "chroma_rmse": 56.94499220800551
+            },
+            "shot": {
+              "rgb_rmse": 77.08758550295877,
+              "chroma_rmse": 54.04589082158075
+            },
+            "cauchy": {
+              "rgb_rmse": 47.39192927966944,
+              "chroma_rmse": 63.54629318839866
+            },
+            "matrix": {
+              "rgb_rmse": 31.034304215029795,
+              "chroma_rmse": 44.993782645161716
+            },
+            "far-only": {
+              "rgb_rmse": 644.2446201295036,
+              "chroma_rmse": 900.3525342706089
+            },
+            "mean-observed": {
+              "rgb_rmse": 1105.6536767504074,
+              "chroma_rmse": 676.7907625334384
+            },
+            "donor-observed": {
+              "rgb_rmse": 492.935668884316,
+              "chroma_rmse": 303.5416129473488
+            }
+          }
+        },
+        "components": {
+          "glint": {
+            "candidate": {
+              "recovery": [
+                0.9909654325063103,
+                0.9780762519075492,
+                0.9906683000806618
+              ],
+              "template_energy": [
+                2964285983.9856625,
+                2756332317.700867,
+                2177842485.6248503
+              ],
+              "live": true
+            },
+            "visibility": {
+              "recovery": [
+                0.9717150659267407,
+                0.9656879628920537,
+                0.9729760021868353
+              ],
+              "template_energy": [
+                2964285983.9856625,
+                2756332317.700867,
+                2177842485.6248503
+              ],
+              "live": true
+            },
+            "retained_donor": {
+              "recovery": [
+                0.7190543472268873,
+                0.7119403090296698,
+                0.7367952030490327
+              ],
+              "template_energy": [
+                2964285983.9856625,
+                2756332317.700867,
+                2177842485.6248503
+              ],
+              "live": true
+            }
+          },
+          "ridge": {
+            "candidate": {
+              "recovery": [
+                0.9611529951111997,
+                0.9886223631629693,
+                0.989624307747259
+              ],
+              "template_energy": [
+                42794039.66764453,
+                111754783.50906362,
+                135560566.32565916
+              ],
+              "live": true
+            },
+            "visibility": {
+              "recovery": [
+                0.9569643852541799,
+                0.9800685859514388,
+                0.9754478710104888
+              ],
+              "template_energy": [
+                42794039.66764453,
+                111754783.50906362,
+                135560566.32565916
+              ],
+              "live": true
+            },
+            "retained_donor": {
+              "recovery": [
+                0.8072807295459828,
+                0.9372942910335109,
+                0.9354023968961995
+              ],
+              "template_energy": [
+                42794039.66764453,
+                111754783.50906362,
+                135560566.32565916
+              ],
+              "live": true
+            }
+          }
+        },
+        "bars": {
+          "whole_mean_gain": true,
+          "core_mean_gain": true,
+          "ridge_mean_gain": true,
+          "whole_far_only": true,
+          "crossing_far_only": true,
+          "core_far_only": true,
+          "ridge_far_only": true,
+          "core_rgb_rmse_visibility": true,
+          "core_chroma_rmse_visibility": false,
+          "ridge_rgb_rmse_visibility": true,
+          "ridge_chroma_rmse_visibility": true,
+          "glint_visibility": true,
+          "glint_absolute_donor": true,
+          "ridge_visibility": true,
+          "ridge_absolute_donor": true
+        },
+        "passed": false
+      },
+      "fixed_target_checks_pass": false,
+      "retained_heldout_pass": true,
+      "retained_heldout": [
+        {
+          "index": 2,
+          "scores": {
+            "uncensored": {
+              "all": {
+                "count": 4096,
+                "normalized_rms": 1.0330484755049083,
+                "bar": 1.5,
+                "passed": true,
+                "present": true
+              },
+              "R": {
+                "count": 1024,
+                "normalized_rms": 1.0131709108493405,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G1": {
+                "count": 1024,
+                "normalized_rms": 1.048126634617834,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G2": {
+                "count": 1024,
+                "normalized_rms": 1.0142976259382077,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "B": {
+                "count": 1024,
+                "normalized_rms": 1.0558750874045606,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "bright": {
+                "count": 41,
+                "normalized_rms": 1.4685950332945945,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "dim": {
+                "count": 4055,
+                "normalized_rms": 1.0277024934968042,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              }
+            },
+            "censor_count": 0,
+            "censor_one_sided_rms": null,
+            "passed": true
+          }
+        },
+        {
+          "index": 6,
+          "scores": {
+            "uncensored": {
+              "all": {
+                "count": 4096,
+                "normalized_rms": 1.1622305897811127,
+                "bar": 1.5,
+                "passed": true,
+                "present": true
+              },
+              "R": {
+                "count": 1024,
+                "normalized_rms": 1.285164618937965,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G1": {
+                "count": 1024,
+                "normalized_rms": 1.1277283015661996,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G2": {
+                "count": 1024,
+                "normalized_rms": 1.0830108831675236,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "B": {
+                "count": 1024,
+                "normalized_rms": 1.1431482766068293,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "bright": {
+                "count": 0,
+                "normalized_rms": null,
+                "bar": 1.75,
+                "passed": true,
+                "present": false
+              },
+              "dim": {
+                "count": 4096,
+                "normalized_rms": 1.1622305897811127,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              }
+            },
+            "censor_count": 0,
+            "censor_one_sided_rms": null,
+            "passed": true
+          }
+        }
+      ],
+      "retained_pinhole_checks_pass": true,
+      "retained_status": "nonstationary_return",
+      "combined_saved_state_checks_pass": false,
+      "retained_scored_result_sha256": "b90831f884314111c2ede55132987f4e9a5cc0c8bc264c7b5935f95cb56336a2"
+    },
+    {
+      "case": "layered",
+      "arm": "cauchy",
+      "quality": {
+        "regions": {
+          "whole": {
+            "visibility": {
+              "rgb_rmse": 56.34389055182788,
+              "chroma_rmse": 44.16764757023066
+            },
+            "shot": {
+              "rgb_rmse": 45.22588898803708,
+              "chroma_rmse": 40.43209342592602
+            },
+            "cauchy": {
+              "rgb_rmse": 30.58084092087542,
+              "chroma_rmse": 43.74212730912
+            },
+            "matrix": {
+              "rgb_rmse": 22.787171106156872,
+              "chroma_rmse": 34.236889568982456
+            },
+            "far-only": {
+              "rgb_rmse": 385.8275577608217,
+              "chroma_rmse": 556.6446186363088
+            },
+            "mean-observed": {
+              "rgb_rmse": 614.1251600218912,
+              "chroma_rmse": 417.17329850852065
+            },
+            "donor-observed": {
+              "rgb_rmse": 272.24934396291604,
+              "chroma_rmse": 175.40105384652418
+            }
+          },
+          "core": {
+            "visibility": {
+              "rgb_rmse": 251.4533476555322,
+              "chroma_rmse": 114.650906222465
+            },
+            "shot": {
+              "rgb_rmse": 200.06141308739842,
+              "chroma_rmse": 119.92573232421833
+            },
+            "cauchy": {
+              "rgb_rmse": 111.83750153591217,
+              "chroma_rmse": 136.03357965411317
+            },
+            "matrix": {
+              "rgb_rmse": 65.56185108565302,
+              "chroma_rmse": 94.19941656153382
+            },
+            "far-only": {
+              "rgb_rmse": 1231.9303317206632,
+              "chroma_rmse": 1288.1091275431447
+            },
+            "mean-observed": {
+              "rgb_rmse": 2809.1777307598663,
+              "chroma_rmse": 1018.1349099078564
+            },
+            "donor-observed": {
+              "rgb_rmse": 1249.738606652609,
+              "chroma_rmse": 601.2878845695006
+            }
+          },
+          "ridge": {
+            "visibility": {
+              "rgb_rmse": 110.20851979917784,
+              "chroma_rmse": 63.06625794513409
+            },
+            "shot": {
+              "rgb_rmse": 87.6035226376071,
+              "chroma_rmse": 60.411759333838276
+            },
+            "cauchy": {
+              "rgb_rmse": 53.200426574367334,
+              "chroma_rmse": 71.34068070686845
+            },
+            "matrix": {
+              "rgb_rmse": 34.07497855176001,
+              "chroma_rmse": 49.65974293555417
+            },
+            "far-only": {
+              "rgb_rmse": 713.5787713106185,
+              "chroma_rmse": 991.9863854086531
+            },
+            "mean-observed": {
+              "rgb_rmse": 1250.9164517507888,
+              "chroma_rmse": 748.7411849781162
+            },
+            "donor-observed": {
+              "rgb_rmse": 558.3864126908549,
+              "chroma_rmse": 337.23156397286806
+            }
+          },
+          "crossing": {
+            "visibility": {
+              "rgb_rmse": 199.77493886406944,
+              "chroma_rmse": 99.03459643955976
+            },
+            "shot": {
+              "rgb_rmse": 158.7562355977235,
+              "chroma_rmse": 99.98977709467314
+            },
+            "cauchy": {
+              "rgb_rmse": 89.345693513783,
+              "chroma_rmse": 109.81838544930994
+            },
+            "matrix": {
+              "rgb_rmse": 53.129577781217144,
+              "chroma_rmse": 76.602261870656
+            },
+            "far-only": {
+              "rgb_rmse": 1099.2748286245953,
+              "chroma_rmse": 1366.0196369713892
+            },
+            "mean-observed": {
+              "rgb_rmse": 2247.4623781825067,
+              "chroma_rmse": 1056.2161844321286
+            },
+            "donor-observed": {
+              "rgb_rmse": 1005.4858544365919,
+              "chroma_rmse": 547.22538174262
+            }
+          },
+          "fan": {
+            "visibility": {
+              "rgb_rmse": 97.21198009504374,
+              "chroma_rmse": 56.94499220800551
+            },
+            "shot": {
+              "rgb_rmse": 77.08758550295877,
+              "chroma_rmse": 54.04589082158075
+            },
+            "cauchy": {
+              "rgb_rmse": 47.39192927966944,
+              "chroma_rmse": 63.54629318839866
+            },
+            "matrix": {
+              "rgb_rmse": 31.034304215029795,
+              "chroma_rmse": 44.993782645161716
+            },
+            "far-only": {
+              "rgb_rmse": 644.2446201295036,
+              "chroma_rmse": 900.3525342706089
+            },
+            "mean-observed": {
+              "rgb_rmse": 1105.6536767504074,
+              "chroma_rmse": 676.7907625334384
+            },
+            "donor-observed": {
+              "rgb_rmse": 492.935668884316,
+              "chroma_rmse": 303.5416129473488
+            }
+          }
+        },
+        "components": {
+          "glint": {
+            "candidate": {
+              "recovery": [
+                0.9967801993550498,
+                1.0011615957857212,
+                0.9985046584361351
+              ],
+              "template_energy": [
+                2964285983.9856625,
+                2756332317.700867,
+                2177842485.6248503
+              ],
+              "live": true
+            },
+            "visibility": {
+              "recovery": [
+                0.9717150659267407,
+                0.9656879628920537,
+                0.9729760021868353
+              ],
+              "template_energy": [
+                2964285983.9856625,
+                2756332317.700867,
+                2177842485.6248503
+              ],
+              "live": true
+            },
+            "retained_donor": {
+              "recovery": [
+                0.7190543472268873,
+                0.7119403090296698,
+                0.7367952030490327
+              ],
+              "template_energy": [
+                2964285983.9856625,
+                2756332317.700867,
+                2177842485.6248503
+              ],
+              "live": true
+            }
+          },
+          "ridge": {
+            "candidate": {
+              "recovery": [
+                1.0111506942063504,
+                1.0036001388569884,
+                1.0113330613329758
+              ],
+              "template_energy": [
+                42794039.66764453,
+                111754783.50906362,
+                135560566.32565916
+              ],
+              "live": true
+            },
+            "visibility": {
+              "recovery": [
+                0.9569643852541799,
+                0.9800685859514388,
+                0.9754478710104888
+              ],
+              "template_energy": [
+                42794039.66764453,
+                111754783.50906362,
+                135560566.32565916
+              ],
+              "live": true
+            },
+            "retained_donor": {
+              "recovery": [
+                0.8072807295459828,
+                0.9372942910335109,
+                0.9354023968961995
+              ],
+              "template_energy": [
+                42794039.66764453,
+                111754783.50906362,
+                135560566.32565916
+              ],
+              "live": true
+            }
+          }
+        },
+        "bars": {
+          "whole_mean_gain": true,
+          "core_mean_gain": true,
+          "ridge_mean_gain": true,
+          "whole_far_only": true,
+          "crossing_far_only": true,
+          "core_far_only": true,
+          "ridge_far_only": true,
+          "core_rgb_rmse_visibility": true,
+          "core_chroma_rmse_visibility": false,
+          "ridge_rgb_rmse_visibility": true,
+          "ridge_chroma_rmse_visibility": false,
+          "glint_visibility": true,
+          "glint_absolute_donor": true,
+          "ridge_visibility": true,
+          "ridge_absolute_donor": true
+        },
+        "passed": false
+      },
+      "fixed_target_checks_pass": false,
+      "retained_heldout_pass": true,
+      "retained_heldout": [
+        {
+          "index": 2,
+          "scores": {
+            "uncensored": {
+              "all": {
+                "count": 4096,
+                "normalized_rms": 1.026100924594421,
+                "bar": 1.5,
+                "passed": true,
+                "present": true
+              },
+              "R": {
+                "count": 1024,
+                "normalized_rms": 1.0085368372085572,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G1": {
+                "count": 1024,
+                "normalized_rms": 1.0424593074426296,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G2": {
+                "count": 1024,
+                "normalized_rms": 1.0064152066065615,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "B": {
+                "count": 1024,
+                "normalized_rms": 1.0463235169127987,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "bright": {
+                "count": 41,
+                "normalized_rms": 1.1583706453822982,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "dim": {
+                "count": 4055,
+                "normalized_rms": 1.0246763626680664,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              }
+            },
+            "censor_count": 0,
+            "censor_one_sided_rms": null,
+            "passed": true
+          }
+        },
+        {
+          "index": 6,
+          "scores": {
+            "uncensored": {
+              "all": {
+                "count": 4096,
+                "normalized_rms": 1.0785083048774005,
+                "bar": 1.5,
+                "passed": true,
+                "present": true
+              },
+              "R": {
+                "count": 1024,
+                "normalized_rms": 1.093826335769226,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G1": {
+                "count": 1024,
+                "normalized_rms": 1.0672631536231045,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G2": {
+                "count": 1024,
+                "normalized_rms": 1.0366590397357927,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "B": {
+                "count": 1024,
+                "normalized_rms": 1.114698164611521,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "bright": {
+                "count": 0,
+                "normalized_rms": null,
+                "bar": 1.75,
+                "passed": true,
+                "present": false
+              },
+              "dim": {
+                "count": 4096,
+                "normalized_rms": 1.0785083048774005,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              }
+            },
+            "censor_count": 0,
+            "censor_one_sided_rms": null,
+            "passed": true
+          }
+        }
+      ],
+      "retained_pinhole_checks_pass": false,
+      "retained_status": "nonstationary_return",
+      "combined_saved_state_checks_pass": false,
+      "retained_scored_result_sha256": "2ea54d4ce819a1a5cb9af23d4a3463d28f1ddc0db4a1579d784896f5ce8450c8"
+    },
+    {
+      "case": "layered",
+      "arm": "matrix",
+      "quality": {
+        "regions": {
+          "whole": {
+            "visibility": {
+              "rgb_rmse": 56.34389055182788,
+              "chroma_rmse": 44.16764757023066
+            },
+            "shot": {
+              "rgb_rmse": 45.22588898803708,
+              "chroma_rmse": 40.43209342592602
+            },
+            "cauchy": {
+              "rgb_rmse": 30.58084092087542,
+              "chroma_rmse": 43.74212730912
+            },
+            "matrix": {
+              "rgb_rmse": 22.787171106156872,
+              "chroma_rmse": 34.236889568982456
+            },
+            "far-only": {
+              "rgb_rmse": 385.8275577608217,
+              "chroma_rmse": 556.6446186363088
+            },
+            "mean-observed": {
+              "rgb_rmse": 614.1251600218912,
+              "chroma_rmse": 417.17329850852065
+            },
+            "donor-observed": {
+              "rgb_rmse": 272.24934396291604,
+              "chroma_rmse": 175.40105384652418
+            }
+          },
+          "core": {
+            "visibility": {
+              "rgb_rmse": 251.4533476555322,
+              "chroma_rmse": 114.650906222465
+            },
+            "shot": {
+              "rgb_rmse": 200.06141308739842,
+              "chroma_rmse": 119.92573232421833
+            },
+            "cauchy": {
+              "rgb_rmse": 111.83750153591217,
+              "chroma_rmse": 136.03357965411317
+            },
+            "matrix": {
+              "rgb_rmse": 65.56185108565302,
+              "chroma_rmse": 94.19941656153382
+            },
+            "far-only": {
+              "rgb_rmse": 1231.9303317206632,
+              "chroma_rmse": 1288.1091275431447
+            },
+            "mean-observed": {
+              "rgb_rmse": 2809.1777307598663,
+              "chroma_rmse": 1018.1349099078564
+            },
+            "donor-observed": {
+              "rgb_rmse": 1249.738606652609,
+              "chroma_rmse": 601.2878845695006
+            }
+          },
+          "ridge": {
+            "visibility": {
+              "rgb_rmse": 110.20851979917784,
+              "chroma_rmse": 63.06625794513409
+            },
+            "shot": {
+              "rgb_rmse": 87.6035226376071,
+              "chroma_rmse": 60.411759333838276
+            },
+            "cauchy": {
+              "rgb_rmse": 53.200426574367334,
+              "chroma_rmse": 71.34068070686845
+            },
+            "matrix": {
+              "rgb_rmse": 34.07497855176001,
+              "chroma_rmse": 49.65974293555417
+            },
+            "far-only": {
+              "rgb_rmse": 713.5787713106185,
+              "chroma_rmse": 991.9863854086531
+            },
+            "mean-observed": {
+              "rgb_rmse": 1250.9164517507888,
+              "chroma_rmse": 748.7411849781162
+            },
+            "donor-observed": {
+              "rgb_rmse": 558.3864126908549,
+              "chroma_rmse": 337.23156397286806
+            }
+          },
+          "crossing": {
+            "visibility": {
+              "rgb_rmse": 199.77493886406944,
+              "chroma_rmse": 99.03459643955976
+            },
+            "shot": {
+              "rgb_rmse": 158.7562355977235,
+              "chroma_rmse": 99.98977709467314
+            },
+            "cauchy": {
+              "rgb_rmse": 89.345693513783,
+              "chroma_rmse": 109.81838544930994
+            },
+            "matrix": {
+              "rgb_rmse": 53.129577781217144,
+              "chroma_rmse": 76.602261870656
+            },
+            "far-only": {
+              "rgb_rmse": 1099.2748286245953,
+              "chroma_rmse": 1366.0196369713892
+            },
+            "mean-observed": {
+              "rgb_rmse": 2247.4623781825067,
+              "chroma_rmse": 1056.2161844321286
+            },
+            "donor-observed": {
+              "rgb_rmse": 1005.4858544365919,
+              "chroma_rmse": 547.22538174262
+            }
+          },
+          "fan": {
+            "visibility": {
+              "rgb_rmse": 97.21198009504374,
+              "chroma_rmse": 56.94499220800551
+            },
+            "shot": {
+              "rgb_rmse": 77.08758550295877,
+              "chroma_rmse": 54.04589082158075
+            },
+            "cauchy": {
+              "rgb_rmse": 47.39192927966944,
+              "chroma_rmse": 63.54629318839866
+            },
+            "matrix": {
+              "rgb_rmse": 31.034304215029795,
+              "chroma_rmse": 44.993782645161716
+            },
+            "far-only": {
+              "rgb_rmse": 644.2446201295036,
+              "chroma_rmse": 900.3525342706089
+            },
+            "mean-observed": {
+              "rgb_rmse": 1105.6536767504074,
+              "chroma_rmse": 676.7907625334384
+            },
+            "donor-observed": {
+              "rgb_rmse": 492.935668884316,
+              "chroma_rmse": 303.5416129473488
+            }
+          }
+        },
+        "components": {
+          "glint": {
+            "candidate": {
+              "recovery": [
+                1.0015604608448891,
+                1.0014108341690446,
+                1.0031171732858557
+              ],
+              "template_energy": [
+                2964285983.9856625,
+                2756332317.700867,
+                2177842485.6248503
+              ],
+              "live": true
+            },
+            "visibility": {
+              "recovery": [
+                0.9717150659267407,
+                0.9656879628920537,
+                0.9729760021868353
+              ],
+              "template_energy": [
+                2964285983.9856625,
+                2756332317.700867,
+                2177842485.6248503
+              ],
+              "live": true
+            },
+            "retained_donor": {
+              "recovery": [
+                0.7190543472268873,
+                0.7119403090296698,
+                0.7367952030490327
+              ],
+              "template_energy": [
+                2964285983.9856625,
+                2756332317.700867,
+                2177842485.6248503
+              ],
+              "live": true
+            }
+          },
+          "ridge": {
+            "candidate": {
+              "recovery": [
+                1.0106814303548877,
+                1.0012145270439654,
+                1.0119876015833242
+              ],
+              "template_energy": [
+                42794039.66764453,
+                111754783.50906362,
+                135560566.32565916
+              ],
+              "live": true
+            },
+            "visibility": {
+              "recovery": [
+                0.9569643852541799,
+                0.9800685859514388,
+                0.9754478710104888
+              ],
+              "template_energy": [
+                42794039.66764453,
+                111754783.50906362,
+                135560566.32565916
+              ],
+              "live": true
+            },
+            "retained_donor": {
+              "recovery": [
+                0.8072807295459828,
+                0.9372942910335109,
+                0.9354023968961995
+              ],
+              "template_energy": [
+                42794039.66764453,
+                111754783.50906362,
+                135560566.32565916
+              ],
+              "live": true
+            }
+          }
+        },
+        "bars": {
+          "whole_mean_gain": true,
+          "core_mean_gain": true,
+          "ridge_mean_gain": true,
+          "whole_far_only": true,
+          "crossing_far_only": true,
+          "core_far_only": true,
+          "ridge_far_only": true,
+          "core_rgb_rmse_visibility": true,
+          "core_chroma_rmse_visibility": true,
+          "ridge_rgb_rmse_visibility": true,
+          "ridge_chroma_rmse_visibility": true,
+          "glint_visibility": true,
+          "glint_absolute_donor": true,
+          "ridge_visibility": true,
+          "ridge_absolute_donor": true
+        },
+        "passed": true
+      },
+      "fixed_target_checks_pass": true,
+      "retained_heldout_pass": true,
+      "retained_heldout": [
+        {
+          "index": 2,
+          "scores": {
+            "uncensored": {
+              "all": {
+                "count": 4096,
+                "normalized_rms": 1.0270477999931904,
+                "bar": 1.5,
+                "passed": true,
+                "present": true
+              },
+              "R": {
+                "count": 1024,
+                "normalized_rms": 1.009323594110582,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G1": {
+                "count": 1024,
+                "normalized_rms": 1.0453023977707971,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G2": {
+                "count": 1024,
+                "normalized_rms": 1.0071093691110058,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "B": {
+                "count": 1024,
+                "normalized_rms": 1.045776377682418,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "bright": {
+                "count": 41,
+                "normalized_rms": 1.1951447144396823,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "dim": {
+                "count": 4055,
+                "normalized_rms": 1.0252074388836152,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              }
+            },
+            "censor_count": 0,
+            "censor_one_sided_rms": null,
+            "passed": true
+          }
+        },
+        {
+          "index": 6,
+          "scores": {
+            "uncensored": {
+              "all": {
+                "count": 4096,
+                "normalized_rms": 1.061812073198074,
+                "bar": 1.5,
+                "passed": true,
+                "present": true
+              },
+              "R": {
+                "count": 1024,
+                "normalized_rms": 1.079413824748644,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G1": {
+                "count": 1024,
+                "normalized_rms": 1.0536223153510658,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "G2": {
+                "count": 1024,
+                "normalized_rms": 1.017305290119377,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "B": {
+                "count": 1024,
+                "normalized_rms": 1.0952694980632212,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              },
+              "bright": {
+                "count": 0,
+                "normalized_rms": null,
+                "bar": 1.75,
+                "passed": true,
+                "present": false
+              },
+              "dim": {
+                "count": 4096,
+                "normalized_rms": 1.061812073198074,
+                "bar": 1.75,
+                "passed": true,
+                "present": true
+              }
+            },
+            "censor_count": 0,
+            "censor_one_sided_rms": null,
+            "passed": true
+          }
+        }
+      ],
+      "retained_pinhole_checks_pass": false,
+      "retained_status": "nonstationary_return",
+      "combined_saved_state_checks_pass": true,
+      "retained_scored_result_sha256": "1a693c5b5b417a352f62389464b23bb43c3a1de1351788dbbceb8cdf96aa7db0"
+    }
+  ],
+  "operator_checks": [
+    {
+      "case": "flat",
+      "arm": "truth",
+      "max_abs_operator_error_dn": 0.00048828125,
+      "bound_dn": 0.01220703125
+    },
+    {
+      "case": "flat",
+      "arm": "visibility",
+      "max_abs_operator_error_dn": 0.0009765625,
+      "bound_dn": 0.012285021133720875
+    },
+    {
+      "case": "flat",
+      "arm": "shot",
+      "max_abs_operator_error_dn": 0.0009765625,
+      "bound_dn": 0.012303533963859081
+    },
+    {
+      "case": "flat",
+      "arm": "cauchy",
+      "max_abs_operator_error_dn": 0.0009765625,
+      "bound_dn": 0.012285777367651463
+    },
+    {
+      "case": "flat",
+      "arm": "matrix",
+      "max_abs_operator_error_dn": 0.0009765625,
+      "bound_dn": 0.012285899370908737
+    },
+    {
+      "case": "flat",
+      "arm": "far-only",
+      "max_abs_operator_error_dn": 0.0009765625,
+      "bound_dn": 0.012281165458261967
+    },
+    {
+      "case": "flat",
+      "arm": "mean-observed",
+      "max_abs_operator_error_dn": 0.0,
+      "bound_dn": 0.012284005992114544
+    },
+    {
+      "case": "flat",
+      "arm": "donor-observed",
+      "max_abs_operator_error_dn": 0.0,
+      "bound_dn": 0.01242685317993164
+    },
+    {
+      "case": "layered",
+      "arm": "truth",
+      "max_abs_operator_error_dn": 0.00390625,
+      "bound_dn": 0.11003269255161285
+    },
+    {
+      "case": "layered",
+      "arm": "visibility",
+      "max_abs_operator_error_dn": 0.00390625,
+      "bound_dn": 0.08614204078912735
+    },
+    {
+      "case": "layered",
+      "arm": "shot",
+      "max_abs_operator_error_dn": 0.00390625,
+      "bound_dn": 0.08933150768280029
+    },
+    {
+      "case": "layered",
+      "arm": "cauchy",
+      "max_abs_operator_error_dn": 0.00390625,
+      "bound_dn": 0.09835828095674515
+    },
+    {
+      "case": "layered",
+      "arm": "matrix",
+      "max_abs_operator_error_dn": 0.0029296875,
+      "bound_dn": 0.12120319157838821
+    },
+    {
+      "case": "layered",
+      "arm": "far-only",
+      "max_abs_operator_error_dn": 0.001953125,
+      "bound_dn": 0.0608113557100296
+    },
+    {
+      "case": "layered",
+      "arm": "mean-observed",
+      "max_abs_operator_error_dn": 0.0,
+      "bound_dn": 0.028240203857421875
+    },
+    {
+      "case": "layered",
+      "arm": "donor-observed",
+      "max_abs_operator_error_dn": 0.0,
+      "bound_dn": 0.0604400634765625
+    }
+  ],
+  "frozen_generator_psf_checks": {
+    "flat": {
+      "truth": {
+        "max_abs_supported_dn": 0.0,
+        "bound_dn": 0.01220703125
+      },
+      "glint_template": {
+        "max_abs_supported_dn": 0.0,
+        "bound_dn": 3.814697265625e-06
+      },
+      "glint_absent": {
+        "max_abs_supported_dn": 0.0,
+        "bound_dn": 0.01220703125
+      },
+      "ridge_template": {
+        "max_abs_supported_dn": 0.0,
+        "bound_dn": 3.814697265625e-06
+      },
+      "ridge_absent": {
+        "max_abs_supported_dn": 0.0,
+        "bound_dn": 0.01220703125
+      }
+    },
+    "layered": {
+      "truth": {
+        "max_abs_supported_dn": 0.0,
+        "bound_dn": 0.11003269255161285
+      },
+      "glint_template": {
+        "max_abs_supported_dn": 0.0,
+        "bound_dn": 0.10207642614841461
+      },
+      "glint_absent": {
+        "max_abs_supported_dn": 0.0,
+        "bound_dn": 0.022232038900256157
+      },
+      "ridge_template": {
+        "max_abs_supported_dn": 0.0,
+        "bound_dn": 0.027182206511497498
+      },
+      "ridge_absent": {
+        "max_abs_supported_dn": 0.0,
+        "bound_dn": 0.11480265855789185
+      }
+    }
+  },
+  "sources_and_outputs_immutable": true,
+  "bindings": {
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\cauchy-1\\output\\flat\\fixed-alpha\\receipt.json": "f6d77798ed3c539de4498b424d8d62b4a69857548ce021d3617b9301abe3641c",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\cauchy-1\\output\\flat\\fixed-alpha\\reconstruction.npz": "9e85c3ca0dcfa4ce64c7d0db07284891c9403a09208c3a5dea65cb4bd21eec90",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\cauchy-1\\output\\layered\\fixed-alpha\\receipt.json": "210fdb279494cbdc079c3f34a614ec3ffc75093255777709e57f98e445ab6591",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\cauchy-1\\output\\layered\\fixed-alpha\\reconstruction.npz": "8c312a233629fc48ac7b23a8ad861a66635adb33d8052b6c6b4d7d020e195ab8",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\cauchy-1\\scored\\result.json": "2ea54d4ce819a1a5cb9af23d4a3463d28f1ddc0db4a1579d784896f5ce8450c8",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\in-focus-2\\delivered\\flat\\cauchy-rgb-f32.npy": "2c1d252f0087f819166b178d948fa808dae6fcd3564a4a9cc32f0ba8f74a0d6c",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\in-focus-2\\delivered\\flat\\donor-observed-rgb-f32.npy": "2a3dfd15829c0dee5b9858504688eb1b14b8ed2d7cb4bd3871bcd3487a8d2680",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\in-focus-2\\delivered\\flat\\far-only-rgb-f32.npy": "ac3fc8b153661aab288618e5810011dac2919116af2b6dd7f65b07139528f5ce",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\in-focus-2\\delivered\\flat\\matrix-rgb-f32.npy": "55d543b8c9ffab339d9cf88f40fc7656ebfb496c5b4e6284e8096f567929a4cb",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\in-focus-2\\delivered\\flat\\mean-observed-rgb-f32.npy": "949b99f79af998d85f0c273f6e7d85736a4adb6ada236d243776b5ec71ebcd94",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\in-focus-2\\delivered\\flat\\shot-rgb-f32.npy": "d27866c1f5d165bba208866927374e9ef3897ad3012bd121e976d5d1ae318e0c",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\in-focus-2\\delivered\\flat\\truth-rgb-f32.npy": "3d68c10bb178875f4c8a237cd356f770a1c5f35753436623046da0b571ba992d",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\in-focus-2\\delivered\\flat\\visibility-rgb-f32.npy": "6bc71fb0b0792dad2a585bcfebe38696d08220880fde03f19a4e4ca7820f02be",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\in-focus-2\\delivered\\layered\\cauchy-rgb-f32.npy": "a521fdb5c4d91da2fc26707d05332da5906fb9fc1d30413a8a578559e02d9911",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\in-focus-2\\delivered\\layered\\donor-observed-rgb-f32.npy": "758b9efce098b81dcd0690d8a69b42822cc270c0cf6ac52b6d140b4234960b04",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\in-focus-2\\delivered\\layered\\far-only-rgb-f32.npy": "71998dffd3c880b9b5acd3780537398e30d36bf2f72b1075066b382e64ac2de2",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\in-focus-2\\delivered\\layered\\matrix-rgb-f32.npy": "d28c08b3726dc2ebcf978ae5c98dde504ec5edd04cef93c0e7b523c9fa0e8227",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\in-focus-2\\delivered\\layered\\mean-observed-rgb-f32.npy": "ffe024f6a3d3950dcfba7d3e281eaf15cd6059b3a05d326fe857f8d427280bb5",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\in-focus-2\\delivered\\layered\\shot-rgb-f32.npy": "eeab48db76609662c5518de81fdd4c9be6aec23c3b69a336ff57cbcee49b702c",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\in-focus-2\\delivered\\layered\\truth-rgb-f32.npy": "30f5279325a6084139ae35cceccb7ca24f2f91c40700cd5d7d7a671afe8f9441",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\in-focus-2\\delivered\\layered\\visibility-rgb-f32.npy": "e240beaf89afa597fe95ace844a1482bf6a11fbc14f9c2c783595e0f684dcc34",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\in-focus-2\\delivered\\result.json": "382eead8fa910006922b53d9a3e19efa5b10f230fd5879fea36d95b8faa1bc71",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\matrix-cauchy-1\\output\\flat\\fixed-alpha\\receipt.json": "b5f3866c0d8ff40579a550741cf25d9983fdf5cf718f1b5f26067cb806da3539",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\matrix-cauchy-1\\output\\flat\\fixed-alpha\\reconstruction.npz": "ff675a8a4792716c8d1edfec393cf2a5cd918d9cb62138ea64f6484fb2146315",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\matrix-cauchy-1\\output\\layered\\fixed-alpha\\receipt.json": "9b0732e289c13447b48509952600075881493ab69ef8888d15d3325cae105a2b",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\matrix-cauchy-1\\output\\layered\\fixed-alpha\\reconstruction.npz": "bf2fb2569161ce080a7bc078878ad16e9a33a6a83e3bdcdbd1ad351ab49b5869",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\matrix-cauchy-1\\scored\\result.json": "1a693c5b5b417a352f62389464b23bb43c3a1de1351788dbbceb8cdf96aa7db0",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\model.py": "5710146ffcf463de85e317050bc81357922965d6006c7b4cf311f4d80d8ee512",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\far-only\\receipt.json": "bbad44a03ceda48c64f60bba2ab802d34a41bd252941300ebaf62e391ed86d32",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\far-only\\reconstruction.npz": "7179a526e21427fec5f98ab6dd344d5b00815432c2f232f5d8f19c964bfc511f",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\mean-rgb-f32.npy": "949b99f79af998d85f0c273f6e7d85736a4adb6ada236d243776b5ec71ebcd94",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\oracle-bound-rgb-f32.npy": "2a3dfd15829c0dee5b9858504688eb1b14b8ed2d7cb4bd3871bcd3487a8d2680",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\truth-rgb-f32.npy": "82a5a40523bf883867d551676e62c6935941bbdbe8af6bb8a5a0ef990f6d5a86",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\far-only\\receipt.json": "5a4dd625f2b797fede7205d6aa9a1aa21176750f5a4c062dac0168f651725f96",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\far-only\\reconstruction.npz": "a83fc632004cfbba810a1c2d3b1ccb454c0e729ad4014442dae7d61da67ca34c",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\mean-rgb-f32.npy": "ffe024f6a3d3950dcfba7d3e281eaf15cd6059b3a05d326fe857f8d427280bb5",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\oracle-bound-rgb-f32.npy": "758b9efce098b81dcd0690d8a69b42822cc270c0cf6ac52b6d140b4234960b04",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\truth-rgb-f32.npy": "2668537f49285dae0b06ad4f9f027387c9605947d8a8b53b5d021d17f239d743",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\shot-prior-1\\output\\flat\\fixed-alpha\\receipt.json": "d4d878d1090c19dac85f56f3085f9cad86bbe1907dbff0c359df942558a42eb6",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\shot-prior-1\\output\\flat\\fixed-alpha\\reconstruction.npz": "e9aa372b17404520eed9d63a6a143d9bda1ff7b20767f8f53cb01f6225796745",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\shot-prior-1\\output\\layered\\fixed-alpha\\receipt.json": "cd8459b18ad26ddb20c4cd69d2634755db0f3ccfcfb26cf442dfbb0e7cb6a120",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\shot-prior-1\\output\\layered\\fixed-alpha\\reconstruction.npz": "fc4216dd7a92337256b9dc141ac7f4b7264df80df1569a09ae399f469b1d083e",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\shot-prior-1\\scored\\result.json": "b90831f884314111c2ede55132987f4e9a5cc0c8bc264c7b5935f95cb56336a2",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\visibility-1\\output\\flat\\fixed-alpha\\receipt.json": "e14ae9c361a4d9bb91a03d59e1569dfac725b4e7baa5a24236395e44602427c3",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\visibility-1\\output\\flat\\fixed-alpha\\reconstruction.npz": "324299052dabc4cab0fc88745f880cc9b5b0c3166f33facfbed6b0328cf509c8",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\visibility-1\\output\\layered\\fixed-alpha\\receipt.json": "0aebcaa70bc77d986661df45713776d3b0cf88ef7d41d71d3f8495dec060c67a",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\visibility-1\\output\\layered\\fixed-alpha\\reconstruction.npz": "bdf2989ea519a66316c0d51966f6a4f744d11b17593b00568abe6f7e68029cd8",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\visibility-1\\scored\\result.json": "1b419e0c0eb0223522a23d4de0642b454bb1ec93b4b2a09e0e5f8ebf7a021088"
+  },
+  "original_pinhole_admission_unchanged": true,
+  "real_photo_admission": false,
+  "target": "One supplied sigma0.7 PSF on composed pinhole; different output question",
+  "observed_baseline_scope": "Mean and original training-only donor unchanged; donor not reselected for this target",
+  "physical_adequacy_unchanged": {
+    "records": [
+      {
+        "index": 0,
+        "normalized_rms": {
+          "whole": 0.5031009187802951,
+          "crossing": 1.0694726224298692
+        }
+      },
+      {
+        "index": 2,
+        "normalized_rms": {
+          "whole": 0.45461367236226197,
+          "crossing": 1.3490733263673196
+        }
+      },
+      {
+        "index": 4,
+        "normalized_rms": {
+          "whole": 0.4717774978865741,
+          "crossing": 1.524503237817421
+        }
+      },
+      {
+        "index": 6,
+        "normalized_rms": {
+          "whole": 0.6420379970064604,
+          "crossing": 1.678243724770749
+        }
+      },
+      {
+        "index": 8,
+        "normalized_rms": {
+          "whole": 0.8870094153387984,
+          "crossing": 1.1994156834564524
+        }
+      }
+    ],
+    "passed": false,
+    "scope": "Independent1024-ray resolution check; does not block discrete utility execution, does block real-RAW license"
+  },
+  "controls_sha256": "8aa5850574c9882aa6bb252bb21299a1e3625e45240850cd519a3e0649559891"
+}

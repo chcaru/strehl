@@ -44,8 +44,16 @@ retaining the supplied in-focus optical floor is a better stacking target than
 the current unblurred pinhole. Every existing failure remains; observed mean
 and donor comparators must not be blurred twice, and detail-loss/double-blur
 controls must reject damage before this alternate target can admit anything.
-It has no photographic
-admission yet. The passing complete-periodic all-CFA controls
+That read-only audit now passes for the matrix prior alone: in-focus core/ridge
+RGB and chroma, flat noise, real component retention and saved held-RAW bars
+all pass, with working half-component and extra-blur destroyers. See
+experiments/layered-raw-inverse/in-focus-results.md. This is generated,
+known-visibility/known-optics headroom; old pinhole and pupil-adequacy failures
+remain. The next paired test removes supplied visibility and compares matrix
+against original Huber with the same continuation driver and original free-
+alpha initialization. The newly declared output is the in-focus target;
+no solver/strength/PSF sweep is authorized. It has no photographic admission
+yet. The passing complete-periodic all-CFA controls
 remain retained at48276660; speed work stays behind demonstrated image quality.
 
 The owner's priority is photographic quality on the A7C II macro captures.

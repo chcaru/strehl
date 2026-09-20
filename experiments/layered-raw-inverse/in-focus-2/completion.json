@@ -1,0 +1,10 @@
+{
+  "instrument_completed": true,
+  "sources_unchanged": true,
+  "independent_scores": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\in-focus-2\\scored\\result.json",
+    "sha256": "f7df361bcdc2a25a4c1c96118d4b26110ffcdc804adeee4df6477a37da62b873",
+    "bytes": 85397
+  },
+  "scope": "Separate fixed in-focus consumer; no fit, old-result reclassification, or photographic admission"
+}

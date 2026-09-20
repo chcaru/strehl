@@ -1,0 +1,258 @@
+{
+  "status": "PASS",
+  "passed": true,
+  "operator": {
+    "constant": {
+      "max_abs_dn": 0.00048828125,
+      "bound_dn": 0.01220703125
+    },
+    "impulse": {
+      "max_abs_dn": 6.103515625e-05,
+      "bound_dn": 0.011444091796875
+    },
+    "signed": {
+      "max_abs_dn": 2.288818359375e-05,
+      "bound_dn": 0.00038146600127220154
+    }
+  },
+  "focused_one_layer_max_abs_dn": 0.0009765625,
+  "context_destroyer_dn": 117.0461196899414,
+  "compose_before_filter_destroyer_dn": 249.748291015625,
+  "components": {
+    "glint": {
+      "ideal": {
+        "recovery": [
+          1.0000000123675878,
+          0.9999999998272858,
+          1.000000041011783
+        ],
+        "template_energy": [
+          2964285983.9856625,
+          2756332317.700867,
+          2177842485.6248503
+        ],
+        "live": true
+      },
+      "half_colour": [
+        {
+          "channel": 0,
+          "component": {
+            "recovery": [
+              0.5000000064775838,
+              0.9999999998272858,
+              1.000000041011783
+            ],
+            "template_energy": [
+              2964285983.9856625,
+              2756332317.700867,
+              2177842485.6248503
+            ],
+            "live": true
+          },
+          "rgb": {
+            "rgb_rmse": 1208.9993853265892,
+            "chroma_rmse": 1480.7157966943237
+          }
+        },
+        {
+          "channel": 1,
+          "component": {
+            "recovery": [
+              1.0000000123675878,
+              0.499999999834456,
+              1.000000041011783
+            ],
+            "template_energy": [
+              2964285983.9856625,
+              2756332317.700867,
+              2177842485.6248503
+            ],
+            "live": true
+          },
+          "rgb": {
+            "rgb_rmse": 1165.8208368696257,
+            "chroma_rmse": 2019.2609219806595
+          }
+        },
+        {
+          "channel": 2,
+          "component": {
+            "recovery": [
+              1.0000000123675878,
+              0.9999999998272858,
+              0.5000000381024443
+            ],
+            "template_energy": [
+              2964285983.9856625,
+              2756332317.700867,
+              2177842485.6248503
+            ],
+            "live": true
+          },
+          "rgb": {
+            "rgb_rmse": 1036.2851150761535,
+            "chroma_rmse": 1269.1848799889617
+          }
+        }
+      ],
+      "double_psf": {
+        "recovery": [
+          0.8972970290368022,
+          0.8967267920271482,
+          0.9044211620314275
+        ],
+        "template_energy": [
+          2964285983.9856625,
+          2756332317.700867,
+          2177842485.6248503
+        ],
+        "live": true
+      },
+      "double_psf_rejected": true,
+      "double_psf_errors": {
+        "rgb_rmse": 550.9187847393791,
+        "chroma_rmse": 227.8064913446923
+      }
+    },
+    "ridge": {
+      "ideal": {
+        "recovery": [
+          0.9999999997540617,
+          1.0000000233232929,
+          1.000000009215298
+        ],
+        "template_energy": [
+          42794039.66764453,
+          111754783.50906362,
+          135560566.32565916
+        ],
+        "live": true
+      },
+      "half_colour": [
+        {
+          "channel": 0,
+          "component": {
+            "recovery": [
+              0.49999998799664824,
+              1.0000000233232929,
+              1.000000009215298
+            ],
+            "template_energy": [
+              42794039.66764453,
+              111754783.50906362,
+              135560566.32565916
+            ],
+            "live": true
+          },
+          "rgb": {
+            "rgb_rmse": 121.89767122501715,
+            "chroma_rmse": 149.2935476674178
+          }
+        },
+        {
+          "channel": 1,
+          "component": {
+            "recovery": [
+              0.9999999997540617,
+              0.5000000184443197,
+              1.000000009215298
+            ],
+            "template_energy": [
+              42794039.66764453,
+              111754783.50906362,
+              135560566.32565916
+            ],
+            "live": true
+          },
+          "rgb": {
+            "rgb_rmse": 196.98666206439387,
+            "chroma_rmse": 341.1909071089309
+          }
+        },
+        {
+          "channel": 2,
+          "component": {
+            "recovery": [
+              0.9999999997540617,
+              1.0000000233232929,
+              0.5000000022481649
+            ],
+            "template_energy": [
+              42794039.66764453,
+              111754783.50906362,
+              135560566.32565916
+            ],
+            "live": true
+          },
+          "rgb": {
+            "rgb_rmse": 216.955392643421,
+            "chroma_rmse": 265.71500446077835
+          }
+        }
+      ],
+      "double_psf": {
+        "recovery": [
+          0.9291162521988691,
+          0.9224072823700362,
+          0.9329405751208186
+        ],
+        "template_energy": [
+          42794039.66764453,
+          111754783.50906362,
+          135560566.32565916
+        ],
+        "live": true
+      },
+      "double_psf_rejected": true,
+      "double_psf_errors": {
+        "rgb_rmse": 74.13373357260545,
+        "chroma_rmse": 126.11788393760402
+      }
+    }
+  },
+  "wrong_colour": {
+    "errors": {
+      "rgb_rmse": 661.4332307825326,
+      "chroma_rmse": 810.0869571688761
+    },
+    "component": {
+      "recovery": [
+        0.6787562326557898,
+        1.0000000233232929,
+        0.44079813039587123
+      ],
+      "template_energy": [
+        42794039.66764453,
+        111754783.50906362,
+        135560566.32565916
+      ],
+      "live": true
+    },
+    "rejected": true
+  },
+  "frozen_generator_psf_checks": {
+    "truth": {
+      "max_abs_supported_dn": 0.0,
+      "bound_dn": 0.11003269255161285
+    },
+    "glint_template": {
+      "max_abs_supported_dn": 0.0,
+      "bound_dn": 0.10207642614841461
+    },
+    "glint_absent": {
+      "max_abs_supported_dn": 0.0,
+      "bound_dn": 0.022232038900256157
+    },
+    "ridge_template": {
+      "max_abs_supported_dn": 0.0,
+      "bound_dn": 0.027182206511497498
+    },
+    "ridge_absent": {
+      "max_abs_supported_dn": 0.0,
+      "bound_dn": 0.11480265855789185
+    }
+  },
+  "destroyer_reference": "Ideal once-PSF target, per-colour recovery1; actual arms use filtered visibility",
+  "scope": "Fixed supplied synthetic optical PSF; original pinhole failures unchanged",
+  "controls_sha256": "8aa5850574c9882aa6bb252bb21299a1e3625e45240850cd519a3e0649559891"
+}

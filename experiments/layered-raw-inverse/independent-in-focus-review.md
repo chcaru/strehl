@@ -19,3 +19,9 @@ Frozen SHA256 bindings:
 - Controls: `bc6d59d5a2bcc94fe3a12359a13d671957e5eda0347325217d3619b701401524`.
 - Independent plan: `b6a91b5a13279ba9e9e6f6da966b210bd5f28acd1ee661811f52b2e4b936a956`.
 - Wrapper: `2c2e16eb72fff8bd32d9fd40cdd60a6deeff7c2490a2239df061e8fc7f673060`.
+
+## Serialization repair before in-focus-2
+
+SOURCE REVIEW ONLY. Compared the controls with preserved revision `6f24e3c2`: the sole executable change wraps the already computed result in the frozen `control.jsonable` helper immediately before `control.save`. That recursive helper converts NumPy scalars with `.item()` and arrays/tensors to ordinary JSON-compatible values; it does not rerun or alter comparisons, filters, thresholds or image arithmetic. The repaired controls SHA256 is `8aa5850574c9882aa6bb252bb21299a1e3625e45240850cd519a3e0649559891`.
+
+No blocker to rerunning the same recipe into the separate `in-focus-2` directory. The failed `in-focus-1` serialization attempt and its incomplete JSON remain failed artifacts; this source review does not treat them as a completed commissioning result. No execution by this reviewer.
