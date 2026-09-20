@@ -1,0 +1,10 @@
+{
+  "instrument_completed": true,
+  "sources_unchanged": true,
+  "independent_scores": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\colour-error-1\\scored\\result.json",
+    "sha256": "33cb5f37fd617c805b0c4d1c5889414cb8ad4f471fc6b20ba8e290bc213b52f3",
+    "bytes": 27494
+  },
+  "scope": "Read-only colour-error scale decomposition; no fit, restoration, or optical-nullspace claim"
+}

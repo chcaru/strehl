@@ -1,0 +1,1031 @@
+{
+  "status": "COLOUR_ERROR_DECOMPOSITION_COMPLETE",
+  "support_native_xywh": [
+    16,
+    16,
+    64,
+    64
+  ],
+  "records": [
+    {
+      "case": "flat",
+      "arm": "visibility",
+      "decomposition": {
+        "shape": [
+          64,
+          64,
+          2
+        ],
+        "coordinates": [
+          "R-G error",
+          "B-G error"
+        ],
+        "signed_mean": [
+          0.3755429983139038,
+          0.20999658107757568
+        ],
+        "total_mean_square": [
+          64.43620182547602,
+          61.193000544990355
+        ],
+        "chroma_rmse": 7.925566300601692,
+        "phases": [
+          {
+            "origin_xy": [
+              0,
+              0
+            ],
+            "within2_mean_square": [
+              7.711720018553024,
+              8.494154460862774
+            ],
+            "between2_4_mean_square": [
+              18.752023154329436,
+              20.14353435036719
+            ],
+            "common4_mean_square": [
+              37.97245865259356,
+              32.55531173376039
+            ],
+            "common4_ac_mean_square": [
+              37.83142610900951,
+              32.511213169696205
+            ],
+            "dc_mean_square": [
+              0.14103254358259676,
+              0.04409856406427082
+            ],
+            "parseval_error": [
+              0.0,
+              0.0
+            ],
+            "common_dc_split_error": [
+              -1.4495071809506044e-12,
+              8.526512829121202e-14
+            ]
+          },
+          {
+            "origin_xy": [
+              1,
+              0
+            ],
+            "within2_mean_square": [
+              8.794567944845767,
+              9.659019370497845
+            ],
+            "between2_4_mean_square": [
+              19.176205078256316,
+              18.799042314215058
+            ],
+            "common4_mean_square": [
+              36.465428802373935,
+              32.73493886027745
+            ],
+            "common4_ac_mean_square": [
+              36.32439625879019,
+              32.69084029621338
+            ],
+            "dc_mean_square": [
+              0.14103254358259676,
+              0.04409856406427082
+            ],
+            "parseval_error": [
+              0.0,
+              0.0
+            ],
+            "common_dc_split_error": [
+              -1.1510792319313623e-12,
+              1.9895196601282805e-13
+            ]
+          },
+          {
+            "origin_xy": [
+              0,
+              1
+            ],
+            "within2_mean_square": [
+              8.536759811497177,
+              9.15276985419041
+            ],
+            "between2_4_mean_square": [
+              16.88399145881158,
+              19.712071913506406
+            ],
+            "common4_mean_square": [
+              39.01545055516726,
+              32.32815877729354
+            ],
+            "common4_ac_mean_square": [
+              38.87441801158302,
+              32.28406021322944
+            ],
+            "dc_mean_square": [
+              0.14103254358259676,
+              0.04409856406427082
+            ],
+            "parseval_error": [
+              0.0,
+              0.0
+            ],
+            "common_dc_split_error": [
+              -1.6484591469634324e-12,
+              1.7053025658242404e-13
+            ]
+          },
+          {
+            "origin_xy": [
+              1,
+              1
+            ],
+            "within2_mean_square": [
+              9.635058073072287,
+              10.258900906528652
+            ],
+            "between2_4_mean_square": [
+              17.382915442252852,
+              18.522391098542357
+            ],
+            "common4_mean_square": [
+              37.41822831015088,
+              32.411708539919346
+            ],
+            "common4_ac_mean_square": [
+              37.277195766567495,
+              32.367609975855416
+            ],
+            "dc_mean_square": [
+              0.14103254358259676,
+              0.04409856406427082
+            ],
+            "parseval_error": [
+              0.0,
+              0.0
+            ],
+            "common_dc_split_error": [
+              -7.887024366937112e-13,
+              3.410605131648481e-13
+            ]
+          }
+        ]
+      },
+      "source_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\visibility-1\\output\\flat\\fixed-alpha\\reconstruction.npz",
+      "source_sha256": "324299052dabc4cab0fc88745f880cc9b5b0c3166f33facfbed6b0328cf509c8",
+      "truth_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\truth-rgb-f32.npy",
+      "truth_sha256": "82a5a40523bf883867d551676e62c6935941bbdbe8af6bb8a5a0ef990f6d5a86"
+    },
+    {
+      "case": "flat",
+      "arm": "shot",
+      "decomposition": {
+        "shape": [
+          64,
+          64,
+          2
+        ],
+        "coordinates": [
+          "R-G error",
+          "B-G error"
+        ],
+        "signed_mean": [
+          0.3612544536590576,
+          0.20456096529960632
+        ],
+        "total_mean_square": [
+          88.8367973647546,
+          77.74679329430728
+        ],
+        "chroma_rmse": 9.12643387800136,
+        "phases": [
+          {
+            "origin_xy": [
+              0,
+              0
+            ],
+            "within2_mean_square": [
+              12.708129211277992,
+              12.356621784291747
+            ],
+            "between2_4_mean_square": [
+              29.00071096730062,
+              27.638436971610872
+            ],
+            "common4_mean_square": [
+              47.12795718617599,
+              37.75173453840466
+            ],
+            "common4_ac_mean_square": [
+              46.99745240588553,
+              37.70988934988021
+            ],
+            "dc_mean_square": [
+              0.1305047802885042,
+              0.04184518852430674
+            ],
+            "parseval_error": [
+              0.0,
+              0.0
+            ],
+            "common_dc_split_error": [
+              -1.9539925233402755e-12,
+              -1.4921397450962104e-13
+            ]
+          },
+          {
+            "origin_xy": [
+              1,
+              0
+            ],
+            "within2_mean_square": [
+              14.221702761642518,
+              13.940124721994835
+            ],
+            "between2_4_mean_square": [
+              29.2574261180107,
+              25.78134881021856
+            ],
+            "common4_mean_square": [
+              45.357668485101385,
+              38.025319762093886
+            ],
+            "common4_ac_mean_square": [
+              45.22716370481035,
+              37.983474573569936
+            ],
+            "dc_mean_square": [
+              0.1305047802885042,
+              0.04184518852430674
+            ],
+            "parseval_error": [
+              0.0,
+              0.0
+            ],
+            "common_dc_split_error": [
+              -2.5295321393059567e-12,
+              3.552713678800501e-13
+            ]
+          },
+          {
+            "origin_xy": [
+              0,
+              1
+            ],
+            "within2_mean_square": [
+              13.86639944788476,
+              12.97784503622006
+            ],
+            "between2_4_mean_square": [
+              26.18326994896597,
+              26.89690232441103
+            ],
+            "common4_mean_square": [
+              48.78712796790387,
+              37.87204593367619
+            ],
+            "common4_ac_mean_square": [
+              48.65662318761374,
+              37.83020074515178
+            ],
+            "dc_mean_square": [
+              0.1305047802885042,
+              0.04184518852430674
+            ],
+            "parseval_error": [
+              0.0,
+              0.0
+            ],
+            "common_dc_split_error": [
+              -1.6271428648906294e-12,
+              -1.0658141036401503e-13
+            ]
+          },
+          {
+            "origin_xy": [
+              1,
+              1
+            ],
+            "within2_mean_square": [
+              15.418942103264271,
+              14.52188867550376
+            ],
+            "between2_4_mean_square": [
+              26.580111661092815,
+              25.259362265108166
+            ],
+            "common4_mean_square": [
+              46.837743600397516,
+              37.965542353695355
+            ],
+            "common4_ac_mean_square": [
+              46.707238820106895,
+              37.92369716517097
+            ],
+            "dc_mean_square": [
+              0.1305047802885042,
+              0.04184518852430674
+            ],
+            "parseval_error": [
+              0.0,
+              0.0
+            ],
+            "common_dc_split_error": [
+              -2.1174173525650986e-12,
+              -7.815970093361102e-14
+            ]
+          }
+        ]
+      },
+      "source_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\shot-prior-1\\output\\flat\\fixed-alpha\\reconstruction.npz",
+      "source_sha256": "e9aa372b17404520eed9d63a6a143d9bda1ff7b20767f8f53cb01f6225796745",
+      "truth_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\truth-rgb-f32.npy",
+      "truth_sha256": "82a5a40523bf883867d551676e62c6935941bbdbe8af6bb8a5a0ef990f6d5a86"
+    },
+    {
+      "case": "flat",
+      "arm": "cauchy",
+      "decomposition": {
+        "shape": [
+          64,
+          64,
+          2
+        ],
+        "coordinates": [
+          "R-G error",
+          "B-G error"
+        ],
+        "signed_mean": [
+          0.3746505379676819,
+          0.20630300045013428
+        ],
+        "total_mean_square": [
+          65.77629909773532,
+          62.57880615589238
+        ],
+        "chroma_rmse": 8.011089353316056,
+        "phases": [
+          {
+            "origin_xy": [
+              0,
+              0
+            ],
+            "within2_mean_square": [
+              7.962645787414658,
+              8.77405213505881
+            ],
+            "between2_4_mean_square": [
+              19.307033690142816,
+              20.740682791670224
+            ],
+            "common4_mean_square": [
+              38.506619620177844,
+              33.064071229163346
+            ],
+            "common4_ac_mean_square": [
+              38.36625659457837,
+              33.021510301168135
+            ],
+            "dc_mean_square": [
+              0.14036302559947345,
+              0.042560927994728104
+            ],
+            "parseval_error": [
+              0.0,
+              0.0
+            ],
+            "common_dc_split_error": [
+              0.0,
+              -4.831690603168681e-13
+            ]
+          },
+          {
+            "origin_xy": [
+              1,
+              0
+            ],
+            "within2_mean_square": [
+              9.068808692227321,
+              9.974755314124195
+            ],
+            "between2_4_mean_square": [
+              19.741747849730928,
+              19.352924097744562
+            ],
+            "common4_mean_square": [
+              36.96574255577707,
+              33.25112674402362
+            ],
+            "common4_ac_mean_square": [
+              36.82537953017784,
+              33.20856581602897
+            ],
+            "dc_mean_square": [
+              0.14036302559947345,
+              0.042560927994728104
+            ],
+            "parseval_error": [
+              0.0,
+              0.0
+            ],
+            "common_dc_split_error": [
+              2.4158453015843406e-13,
+              7.815970093361102e-14
+            ]
+          },
+          {
+            "origin_xy": [
+              0,
+              1
+            ],
+            "within2_mean_square": [
+              8.809863667160243,
+              9.441647456844294
+            ],
+            "between2_4_mean_square": [
+              17.35770293911355,
+              20.265965272946687
+            ],
+            "common4_mean_square": [
+              39.608732491461524,
+              32.8711934261014
+            ],
+            "common4_ac_mean_square": [
+              39.4683694658623,
+              32.82863249810675
+            ],
+            "dc_mean_square": [
+              0.14036302559947345,
+              0.042560927994728104
+            ],
+            "parseval_error": [
+              0.0,
+              0.0
+            ],
+            "common_dc_split_error": [
+              2.5579538487363607e-13,
+              7.815970093361102e-14
+            ]
+          },
+          {
+            "origin_xy": [
+              1,
+              1
+            ],
+            "within2_mean_square": [
+              9.932027695303987,
+              10.582248078408156
+            ],
+            "between2_4_mean_square": [
+              17.86709325864922,
+              19.03554358048177
+            ],
+            "common4_mean_square": [
+              37.97717814378211,
+              32.96101449700245
+            ],
+            "common4_ac_mean_square": [
+              37.836815118183274,
+              32.91845356900789
+            ],
+            "dc_mean_square": [
+              0.14036302559947345,
+              0.042560927994728104
+            ],
+            "parseval_error": [
+              0.0,
+              0.0
+            ],
+            "common_dc_split_error": [
+              6.394884621840902e-13,
+              1.6342482922482304e-13
+            ]
+          }
+        ]
+      },
+      "source_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\cauchy-1\\output\\flat\\fixed-alpha\\reconstruction.npz",
+      "source_sha256": "9e85c3ca0dcfa4ce64c7d0db07284891c9403a09208c3a5dea65cb4bd21eec90",
+      "truth_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\truth-rgb-f32.npy",
+      "truth_sha256": "82a5a40523bf883867d551676e62c6935941bbdbe8af6bb8a5a0ef990f6d5a86"
+    },
+    {
+      "case": "layered",
+      "arm": "visibility",
+      "decomposition": {
+        "shape": [
+          64,
+          64,
+          2
+        ],
+        "coordinates": [
+          "R-G error",
+          "B-G error"
+        ],
+        "signed_mean": [
+          -2.091117277741432,
+          -2.5274420976638794
+        ],
+        "total_mean_square": [
+          4489.521614266955,
+          4571.722614260812
+        ],
+        "chroma_rmse": 67.30989610944206,
+        "phases": [
+          {
+            "origin_xy": [
+              0,
+              0
+            ],
+            "within2_mean_square": [
+              1984.914484224444,
+              2382.098805574673
+            ],
+            "between2_4_mean_square": [
+              1266.7341585298273,
+              1077.8780406075784
+            ],
+            "common4_mean_square": [
+              1237.8729715125678,
+              1111.7457680782893
+            ],
+            "common4_ac_mean_square": [
+              1233.500200043373,
+              1105.357804521305
+            ],
+            "dc_mean_square": [
+              4.372771469268738,
+              6.387963557043591
+            ],
+            "parseval_error": [
+              -1.1550582712516189e-10,
+              -2.7193891583010554e-10
+            ],
+            "common_dc_split_error": [
+              7.389644451905042e-11,
+              5.934452929068357e-11
+            ]
+          },
+          {
+            "origin_xy": [
+              1,
+              0
+            ],
+            "within2_mean_square": [
+              2101.8040997094604,
+              2542.850023639008
+            ],
+            "between2_4_mean_square": [
+              1219.7843992311816,
+              1083.8041912626572
+            ],
+            "common4_mean_square": [
+              1167.933115326193,
+              945.0683993588834
+            ],
+            "common4_ac_mean_square": [
+              1163.5603438569883,
+              938.6804358018979
+            ],
+            "dc_mean_square": [
+              4.372771469268738,
+              6.387963557043591
+            ],
+            "parseval_error": [
+              -1.2005330063402653e-10,
+              -2.637534635141492e-10
+            ],
+            "common_dc_split_error": [
+              6.389200279954821e-11,
+              5.809397407574579e-11
+            ]
+          },
+          {
+            "origin_xy": [
+              0,
+              1
+            ],
+            "within2_mean_square": [
+              1994.6066007792924,
+              2392.769899863102
+            ],
+            "between2_4_mean_square": [
+              1181.8424270141682,
+              1077.5569388095546
+            ],
+            "common4_mean_square": [
+              1313.072586473378,
+              1101.3957755878912
+            ],
+            "common4_ac_mean_square": [
+              1308.6998150041643,
+              1095.0078120309022
+            ],
+            "dc_mean_square": [
+              4.372771469268738,
+              6.387963557043591
+            ],
+            "parseval_error": [
+              -1.1641532182693481e-10,
+              -2.646629582159221e-10
+            ],
+            "common_dc_split_error": [
+              5.502442945726216e-11,
+              5.4569682106375694e-11
+            ]
+          },
+          {
+            "origin_xy": [
+              1,
+              1
+            ],
+            "within2_mean_square": [
+              2151.580138628855,
+              2619.785317654633
+            ],
+            "between2_4_mean_square": [
+              1060.1857693004617,
+              1091.687253809716
+            ],
+            "common4_mean_square": [
+              1277.7557063375025,
+              860.250042796177
+            ],
+            "common4_ac_mean_square": [
+              1273.3829348683103,
+              853.8620792391894
+            ],
+            "dc_mean_square": [
+              4.372771469268738,
+              6.387963557043591
+            ],
+            "parseval_error": [
+              -1.355147105641663e-10,
+              -2.864908310584724e-10
+            ],
+            "common_dc_split_error": [
+              7.639755494892597e-11,
+              5.5933924159035087e-11
+            ]
+          }
+        ]
+      },
+      "source_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\visibility-1\\output\\layered\\fixed-alpha\\reconstruction.npz",
+      "source_sha256": "bdf2989ea519a66316c0d51966f6a4f744d11b17593b00568abe6f7e68029cd8",
+      "truth_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\truth-rgb-f32.npy",
+      "truth_sha256": "2668537f49285dae0b06ad4f9f027387c9605947d8a8b53b5d021d17f239d743"
+    },
+    {
+      "case": "layered",
+      "arm": "shot",
+      "decomposition": {
+        "shape": [
+          64,
+          64,
+          2
+        ],
+        "coordinates": [
+          "R-G error",
+          "B-G error"
+        ],
+        "signed_mean": [
+          -1.546508476138115,
+          -2.177574396133423
+        ],
+        "total_mean_square": [
+          4606.670050977546,
+          4186.270991559468
+        ],
+        "chroma_rmse": 66.30588602279973,
+        "phases": [
+          {
+            "origin_xy": [
+              0,
+              0
+            ],
+            "within2_mean_square": [
+              2242.18749764535,
+              2328.986453699641
+            ],
+            "between2_4_mean_square": [
+              1350.4774994817858,
+              1038.7061629961775
+            ],
+            "common4_mean_square": [
+              1014.0050538502751,
+              818.5783748633862
+            ],
+            "common4_ac_mean_square": [
+              1011.6133653835606,
+              813.836544612748
+            ],
+            "dc_mean_square": [
+              2.391688466767034,
+              4.741830250695841
+            ],
+            "parseval_error": [
+              -1.355147105641663e-10,
+              -2.637534635141492e-10
+            ],
+            "common_dc_split_error": [
+              5.2523319027386606e-11,
+              5.752553988713771e-11
+            ]
+          },
+          {
+            "origin_xy": [
+              1,
+              0
+            ],
+            "within2_mean_square": [
+              2405.462103930825,
+              2552.2624041395966
+            ],
+            "between2_4_mean_square": [
+              1296.2770278159019,
+              991.2594280738995
+            ],
+            "common4_mean_square": [
+              904.930919230708,
+              642.749159345721
+            ],
+            "common4_ac_mean_square": [
+              902.5392307639927,
+              638.0073290950612
+            ],
+            "dc_mean_square": [
+              2.391688466767034,
+              4.741830250695841
+            ],
+            "parseval_error": [
+              -1.1186784831807017e-10,
+              -2.510205376893282e-10
+            ],
+            "common_dc_split_error": [
+              5.1727511163335294e-11,
+              3.61524143954739e-11
+            ]
+          },
+          {
+            "origin_xy": [
+              0,
+              1
+            ],
+            "within2_mean_square": [
+              2375.7156601325505,
+              2395.1193640936663
+            ],
+            "between2_4_mean_square": [
+              1110.1736764995508,
+              957.8907433497798
+            ],
+            "common4_mean_square": [
+              1120.780714345284,
+              833.2608841157307
+            ],
+            "common4_ac_mean_square": [
+              1118.3890258785789,
+              828.5190538650814
+            ],
+            "dc_mean_square": [
+              2.391688466767034,
+              4.741830250695841
+            ],
+            "parseval_error": [
+              -1.609805622138083e-10,
+              -2.9103830456733704e-10
+            ],
+            "common_dc_split_error": [
+              6.184563972055912e-11,
+              4.661160346586257e-11
+            ]
+          },
+          {
+            "origin_xy": [
+              1,
+              1
+            ],
+            "within2_mean_square": [
+              2530.0866734542697,
+              2628.8526705465247
+            ],
+            "between2_4_mean_square": [
+              1052.2222742282192,
+              990.5881115640825
+            ],
+            "common4_mean_square": [
+              1024.3611032949048,
+              566.8302094485889
+            ],
+            "common4_ac_mean_square": [
+              1021.9694148281815,
+              562.0883791979212
+            ],
+            "dc_mean_square": [
+              2.391688466767034,
+              4.741830250695841
+            ],
+            "parseval_error": [
+              -1.5279510989785194e-10,
+              -2.7193891583010554e-10
+            ],
+            "common_dc_split_error": [
+              4.3655745685100555e-11,
+              2.8194335754960775e-11
+            ]
+          }
+        ]
+      },
+      "source_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\shot-prior-1\\output\\layered\\fixed-alpha\\reconstruction.npz",
+      "source_sha256": "fc4216dd7a92337256b9dc141ac7f4b7264df80df1569a09ae399f469b1d083e",
+      "truth_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\truth-rgb-f32.npy",
+      "truth_sha256": "2668537f49285dae0b06ad4f9f027387c9605947d8a8b53b5d021d17f239d743"
+    },
+    {
+      "case": "layered",
+      "arm": "cauchy",
+      "decomposition": {
+        "shape": [
+          64,
+          64,
+          2
+        ],
+        "coordinates": [
+          "R-G error",
+          "B-G error"
+        ],
+        "signed_mean": [
+          -1.4058370143175125,
+          -0.3505725860595703
+        ],
+        "total_mean_square": [
+          12244.072480499723,
+          22241.767843462592
+        ],
+        "chroma_rmse": 131.3123001168632,
+        "phases": [
+          {
+            "origin_xy": [
+              0,
+              0
+            ],
+            "within2_mean_square": [
+              9943.866339991106,
+              18611.388878080317
+            ],
+            "between2_4_mean_square": [
+              1706.2628668422633,
+              2312.118003290713
+            ],
+            "common4_mean_square": [
+              593.9432736655795,
+              1318.2609620915987
+            ],
+            "common4_ac_mean_square": [
+              591.9668959547722,
+              1318.1380609535033
+            ],
+            "dc_mean_square": [
+              1.9763777108251779,
+              0.12290113809649483
+            ],
+            "parseval_error": [
+              -7.73070496506989e-10,
+              3.637978807091713e-11
+            ],
+            "common_dc_split_error": [
+              1.7962520360015333e-11,
+              1.1368683772161603e-12
+            ]
+          },
+          {
+            "origin_xy": [
+              1,
+              0
+            ],
+            "within2_mean_square": [
+              9860.818179416161,
+              18701.88258128932
+            ],
+            "between2_4_mean_square": [
+              1865.9188225446567,
+              2723.8424077828904
+            ],
+            "common4_mean_square": [
+              517.3354785380959,
+              816.0428543902735
+            ],
+            "common4_ac_mean_square": [
+              515.3591008272799,
+              815.9199532522387
+            ],
+            "dc_mean_square": [
+              1.9763777108251779,
+              0.12290113809649483
+            ],
+            "parseval_error": [
+              -8.094502845779061e-10,
+              -1.0913936421275139e-10
+            ],
+            "common_dc_split_error": [
+              9.208633855450898e-12,
+              6.161826604511589e-11
+            ]
+          },
+          {
+            "origin_xy": [
+              0,
+              1
+            ],
+            "within2_mean_square": [
+              9823.131844692762,
+              18981.400485624494
+            ],
+            "between2_4_mean_square": [
+              1671.0542871075018,
+              2158.2176520486955
+            ],
+            "common4_mean_square": [
+              749.8863486986313,
+              1102.1497057894517
+            ],
+            "common4_ac_mean_square": [
+              747.9099709878487,
+              1102.026804651403
+            ],
+            "dc_mean_square": [
+              1.9763777108251779,
+              0.12290113809649483
+            ],
+            "parseval_error": [
+              -8.276401786133647e-10,
+              5.093170329928398e-11
+            ],
+            "common_dc_split_error": [
+              4.263256414560601e-11,
+              4.774847184307873e-11
+            ]
+          },
+          {
+            "origin_xy": [
+              1,
+              1
+            ],
+            "within2_mean_square": [
+              9924.584829841118,
+              18791.230647735352
+            ],
+            "between2_4_mean_square": [
+              1755.2647665377754,
+              2549.1860145129995
+            ],
+            "common4_mean_square": [
+              564.222884120052,
+              901.3511812142274
+            ],
+            "common4_ac_mean_square": [
+              562.2465064092345,
+              901.2282800761838
+            ],
+            "dc_mean_square": [
+              1.9763777108251779,
+              0.12290113809649483
+            ],
+            "parseval_error": [
+              -7.767084753140807e-10,
+              -1.0913936421275139e-11
+            ],
+            "common_dc_split_error": [
+              7.73070496506989e-12,
+              5.2864379540551454e-11
+            ]
+          }
+        ]
+      },
+      "source_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\cauchy-1\\output\\layered\\fixed-alpha\\reconstruction.npz",
+      "source_sha256": "8c312a233629fc48ac7b23a8ad861a66635adb33d8052b6c6b4d7d020e195ab8",
+      "truth_path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\truth-rgb-f32.npy",
+      "truth_sha256": "2668537f49285dae0b06ad4f9f027387c9605947d8a8b53b5d021d17f239d743"
+    }
+  ],
+  "source_bindings_before": {
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\truth-rgb-f32.npy": "82a5a40523bf883867d551676e62c6935941bbdbe8af6bb8a5a0ef990f6d5a86",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\truth-rgb-f32.npy": "2668537f49285dae0b06ad4f9f027387c9605947d8a8b53b5d021d17f239d743",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\visibility-1\\output\\flat\\fixed-alpha\\reconstruction.npz": "324299052dabc4cab0fc88745f880cc9b5b0c3166f33facfbed6b0328cf509c8",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\visibility-1\\output\\layered\\fixed-alpha\\reconstruction.npz": "bdf2989ea519a66316c0d51966f6a4f744d11b17593b00568abe6f7e68029cd8",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\shot-prior-1\\output\\flat\\fixed-alpha\\reconstruction.npz": "e9aa372b17404520eed9d63a6a143d9bda1ff7b20767f8f53cb01f6225796745",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\shot-prior-1\\output\\layered\\fixed-alpha\\reconstruction.npz": "fc4216dd7a92337256b9dc141ac7f4b7264df80df1569a09ae399f469b1d083e",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\cauchy-1\\output\\flat\\fixed-alpha\\reconstruction.npz": "9e85c3ca0dcfa4ce64c7d0db07284891c9403a09208c3a5dea65cb4bd21eec90",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\cauchy-1\\output\\layered\\fixed-alpha\\reconstruction.npz": "8c312a233629fc48ac7b23a8ad861a66635adb33d8052b6c6b4d7d020e195ab8"
+  },
+  "source_bindings_after": {
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\flat\\truth-rgb-f32.npy": "82a5a40523bf883867d551676e62c6935941bbdbe8af6bb8a5a0ef990f6d5a86",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\screen-1\\output\\layered\\truth-rgb-f32.npy": "2668537f49285dae0b06ad4f9f027387c9605947d8a8b53b5d021d17f239d743",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\visibility-1\\output\\flat\\fixed-alpha\\reconstruction.npz": "324299052dabc4cab0fc88745f880cc9b5b0c3166f33facfbed6b0328cf509c8",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\visibility-1\\output\\layered\\fixed-alpha\\reconstruction.npz": "bdf2989ea519a66316c0d51966f6a4f744d11b17593b00568abe6f7e68029cd8",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\shot-prior-1\\output\\flat\\fixed-alpha\\reconstruction.npz": "e9aa372b17404520eed9d63a6a143d9bda1ff7b20767f8f53cb01f6225796745",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\shot-prior-1\\output\\layered\\fixed-alpha\\reconstruction.npz": "fc4216dd7a92337256b9dc141ac7f4b7264df80df1569a09ae399f469b1d083e",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\cauchy-1\\output\\flat\\fixed-alpha\\reconstruction.npz": "9e85c3ca0dcfa4ce64c7d0db07284891c9403a09208c3a5dea65cb4bd21eec90",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\cauchy-1\\output\\layered\\fixed-alpha\\reconstruction.npz": "8c312a233629fc48ac7b23a8ad861a66635adb33d8052b6c6b4d7d020e195ab8"
+  },
+  "sources_unchanged": true,
+  "real_photo_admission": false,
+  "phase_convention": "origin[x,y] rolls supported error by[-y,-x]; circular boundary pairs are artificial",
+  "interpretation": "Exact common-domain energy partition, not independent samples or a CFA-null cause test."
+}

@@ -33,6 +33,13 @@ spatial colour error before another prior; pooled RGB and near-unit component
 recovery are inadequate on their own. The model's exact opacity/radiance gauge
 also means true visibility is not identifiable, although that gauge preserves
 the desired pinhole image. Do not confuse hidden radiance size with image error.
+Saved-error decomposition now places94-96% of Cauchy's added colour-error
+energy inside native2x2 blocks across the four tested bases, with decreasing
+uniform bias. This is a scale attribution, not proof of a CFA nullspace. See
+experiments/layered-raw-inverse/colour-error-results.md. One fixed matrix-gradient
+prior will test whether coupling spatial edge directions across colours can
+preserve bright detail without this false colour; all existing strict guards
+remain. Its same-direction colour-error counterexample must be commissioned.
 It has no photographic
 admission yet. The passing complete-periodic all-CFA controls
 remain retained at48276660; speed work stays behind demonstrated image quality.

@@ -1,0 +1,656 @@
+{
+  "status": "PASS",
+  "passed": true,
+  "cases": [
+    {
+      "name": "constant",
+      "decomposition": {
+        "shape": [
+          64,
+          64,
+          2
+        ],
+        "coordinates": [
+          "R-G error",
+          "B-G error"
+        ],
+        "signed_mean": [
+          -7.0,
+          13.0
+        ],
+        "total_mean_square": [
+          49.0,
+          169.0
+        ],
+        "chroma_rmse": 10.44030650891055,
+        "phases": [
+          {
+            "origin_xy": [
+              0,
+              0
+            ],
+            "within2_mean_square": [
+              0.0,
+              0.0
+            ],
+            "between2_4_mean_square": [
+              0.0,
+              0.0
+            ],
+            "common4_mean_square": [
+              49.0,
+              169.0
+            ],
+            "common4_ac_mean_square": [
+              0.0,
+              0.0
+            ],
+            "dc_mean_square": [
+              49.0,
+              169.0
+            ],
+            "parseval_error": [
+              0.0,
+              0.0
+            ],
+            "common_dc_split_error": [
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "origin_xy": [
+              1,
+              0
+            ],
+            "within2_mean_square": [
+              0.0,
+              0.0
+            ],
+            "between2_4_mean_square": [
+              0.0,
+              0.0
+            ],
+            "common4_mean_square": [
+              49.0,
+              169.0
+            ],
+            "common4_ac_mean_square": [
+              0.0,
+              0.0
+            ],
+            "dc_mean_square": [
+              49.0,
+              169.0
+            ],
+            "parseval_error": [
+              0.0,
+              0.0
+            ],
+            "common_dc_split_error": [
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "origin_xy": [
+              0,
+              1
+            ],
+            "within2_mean_square": [
+              0.0,
+              0.0
+            ],
+            "between2_4_mean_square": [
+              0.0,
+              0.0
+            ],
+            "common4_mean_square": [
+              49.0,
+              169.0
+            ],
+            "common4_ac_mean_square": [
+              0.0,
+              0.0
+            ],
+            "dc_mean_square": [
+              49.0,
+              169.0
+            ],
+            "parseval_error": [
+              0.0,
+              0.0
+            ],
+            "common_dc_split_error": [
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "origin_xy": [
+              1,
+              1
+            ],
+            "within2_mean_square": [
+              0.0,
+              0.0
+            ],
+            "between2_4_mean_square": [
+              0.0,
+              0.0
+            ],
+            "common4_mean_square": [
+              49.0,
+              169.0
+            ],
+            "common4_ac_mean_square": [
+              0.0,
+              0.0
+            ],
+            "dc_mean_square": [
+              49.0,
+              169.0
+            ],
+            "parseval_error": [
+              0.0,
+              0.0
+            ],
+            "common_dc_split_error": [
+              0.0,
+              0.0
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "bayer-checker",
+      "decomposition": {
+        "shape": [
+          64,
+          64,
+          2
+        ],
+        "coordinates": [
+          "R-G error",
+          "B-G error"
+        ],
+        "signed_mean": [
+          0.0,
+          0.0
+        ],
+        "total_mean_square": [
+          25.0,
+          81.0
+        ],
+        "chroma_rmse": 7.280109889280518,
+        "phases": [
+          {
+            "origin_xy": [
+              0,
+              0
+            ],
+            "within2_mean_square": [
+              25.0,
+              81.0
+            ],
+            "between2_4_mean_square": [
+              0.0,
+              0.0
+            ],
+            "common4_mean_square": [
+              0.0,
+              0.0
+            ],
+            "common4_ac_mean_square": [
+              0.0,
+              0.0
+            ],
+            "dc_mean_square": [
+              0.0,
+              0.0
+            ],
+            "parseval_error": [
+              0.0,
+              0.0
+            ],
+            "common_dc_split_error": [
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "origin_xy": [
+              1,
+              0
+            ],
+            "within2_mean_square": [
+              25.0,
+              81.0
+            ],
+            "between2_4_mean_square": [
+              0.0,
+              0.0
+            ],
+            "common4_mean_square": [
+              0.0,
+              0.0
+            ],
+            "common4_ac_mean_square": [
+              0.0,
+              0.0
+            ],
+            "dc_mean_square": [
+              0.0,
+              0.0
+            ],
+            "parseval_error": [
+              0.0,
+              0.0
+            ],
+            "common_dc_split_error": [
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "origin_xy": [
+              0,
+              1
+            ],
+            "within2_mean_square": [
+              25.0,
+              81.0
+            ],
+            "between2_4_mean_square": [
+              0.0,
+              0.0
+            ],
+            "common4_mean_square": [
+              0.0,
+              0.0
+            ],
+            "common4_ac_mean_square": [
+              0.0,
+              0.0
+            ],
+            "dc_mean_square": [
+              0.0,
+              0.0
+            ],
+            "parseval_error": [
+              0.0,
+              0.0
+            ],
+            "common_dc_split_error": [
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "origin_xy": [
+              1,
+              1
+            ],
+            "within2_mean_square": [
+              25.0,
+              81.0
+            ],
+            "between2_4_mean_square": [
+              0.0,
+              0.0
+            ],
+            "common4_mean_square": [
+              0.0,
+              0.0
+            ],
+            "common4_ac_mean_square": [
+              0.0,
+              0.0
+            ],
+            "dc_mean_square": [
+              0.0,
+              0.0
+            ],
+            "parseval_error": [
+              0.0,
+              0.0
+            ],
+            "common_dc_split_error": [
+              0.0,
+              0.0
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "aligned-four-blocks",
+      "decomposition": {
+        "shape": [
+          64,
+          64,
+          2
+        ],
+        "coordinates": [
+          "R-G error",
+          "B-G error"
+        ],
+        "signed_mean": [
+          0.0,
+          0.0
+        ],
+        "total_mean_square": [
+          16.0,
+          36.0
+        ],
+        "chroma_rmse": 5.0990195135927845,
+        "phases": [
+          {
+            "origin_xy": [
+              0,
+              0
+            ],
+            "within2_mean_square": [
+              0.0,
+              0.0
+            ],
+            "between2_4_mean_square": [
+              0.0,
+              0.0
+            ],
+            "common4_mean_square": [
+              16.0,
+              36.0
+            ],
+            "common4_ac_mean_square": [
+              16.0,
+              36.0
+            ],
+            "dc_mean_square": [
+              0.0,
+              0.0
+            ],
+            "parseval_error": [
+              0.0,
+              0.0
+            ],
+            "common_dc_split_error": [
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "origin_xy": [
+              1,
+              0
+            ],
+            "within2_mean_square": [
+              8.0,
+              18.0
+            ],
+            "between2_4_mean_square": [
+              4.0,
+              9.0
+            ],
+            "common4_mean_square": [
+              4.0,
+              9.0
+            ],
+            "common4_ac_mean_square": [
+              4.0,
+              9.0
+            ],
+            "dc_mean_square": [
+              0.0,
+              0.0
+            ],
+            "parseval_error": [
+              0.0,
+              0.0
+            ],
+            "common_dc_split_error": [
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "origin_xy": [
+              0,
+              1
+            ],
+            "within2_mean_square": [
+              8.0,
+              18.0
+            ],
+            "between2_4_mean_square": [
+              4.0,
+              9.0
+            ],
+            "common4_mean_square": [
+              4.0,
+              9.0
+            ],
+            "common4_ac_mean_square": [
+              4.0,
+              9.0
+            ],
+            "dc_mean_square": [
+              0.0,
+              0.0
+            ],
+            "parseval_error": [
+              0.0,
+              0.0
+            ],
+            "common_dc_split_error": [
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "origin_xy": [
+              1,
+              1
+            ],
+            "within2_mean_square": [
+              12.0,
+              27.0
+            ],
+            "between2_4_mean_square": [
+              3.0,
+              6.75
+            ],
+            "common4_mean_square": [
+              1.0,
+              2.25
+            ],
+            "common4_ac_mean_square": [
+              1.0,
+              2.25
+            ],
+            "dc_mean_square": [
+              0.0,
+              0.0
+            ],
+            "parseval_error": [
+              0.0,
+              0.0
+            ],
+            "common_dc_split_error": [
+              0.0,
+              0.0
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "weak-sine",
+      "decomposition": {
+        "shape": [
+          64,
+          64,
+          2
+        ],
+        "coordinates": [
+          "R-G error",
+          "B-G error"
+        ],
+        "signed_mean": [
+          5.187229768985335e-18,
+          1.7753810574450135e-18
+        ],
+        "total_mean_square": [
+          0.03906249999999996,
+          0.011249999999999934
+        ],
+        "chroma_rmse": 0.15860721925561883,
+        "phases": [
+          {
+            "origin_xy": [
+              0,
+              0
+            ],
+            "within2_mean_square": [
+              9.40483071836546e-05,
+              0.00013490848609416523
+            ],
+            "between2_4_mean_square": [
+              0.0003743839361988653,
+              0.0005257653383455403
+            ],
+            "common4_mean_square": [
+              0.03859406775661729,
+              0.010589326175560769
+            ],
+            "common4_ac_mean_square": [
+              0.03859406775661729,
+              0.010589326175560769
+            ],
+            "dc_mean_square": [
+              2.6907352676247655e-35,
+              3.1519778991345744e-36
+            ],
+            "parseval_error": [
+              -1.457167719820518e-16,
+              5.412337245047638e-16
+            ],
+            "common_dc_split_error": [
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "origin_xy": [
+              1,
+              0
+            ],
+            "within2_mean_square": [
+              9.404830718365454e-05,
+              0.00013490848609416496
+            ],
+            "between2_4_mean_square": [
+              0.0003743839361988658,
+              0.0005257653383455485
+            ],
+            "common4_mean_square": [
+              0.03859406775661726,
+              0.010589326175559664
+            ],
+            "common4_ac_mean_square": [
+              0.03859406775661726,
+              0.010589326175559664
+            ],
+            "dc_mean_square": [
+              2.6907352676247655e-35,
+              3.1519778991345744e-36
+            ],
+            "parseval_error": [
+              -1.8041124150158794e-16,
+              -5.568462357885551e-16
+            ],
+            "common_dc_split_error": [
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "origin_xy": [
+              0,
+              1
+            ],
+            "within2_mean_square": [
+              9.40483071836543e-05,
+              0.00013490848609416523
+            ],
+            "between2_4_mean_square": [
+              0.0003743839361988642,
+              0.0005257653383455489
+            ],
+            "common4_mean_square": [
+              0.03859406775661729,
+              0.010589326175559662
+            ],
+            "common4_ac_mean_square": [
+              0.03859406775661729,
+              0.010589326175559662
+            ],
+            "dc_mean_square": [
+              2.6907352676247655e-35,
+              3.1519778991345744e-36
+            ],
+            "parseval_error": [
+              -1.457167719820518e-16,
+              -5.568462357885551e-16
+            ],
+            "common_dc_split_error": [
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "origin_xy": [
+              1,
+              1
+            ],
+            "within2_mean_square": [
+              9.404830718365428e-05,
+              0.00013490848609416505
+            ],
+            "between2_4_mean_square": [
+              0.00037438393619886436,
+              0.0005257653383455398
+            ],
+            "common4_mean_square": [
+              0.0385940677566173,
+              0.010589326175560765
+            ],
+            "common4_ac_mean_square": [
+              0.0385940677566173,
+              0.010589326175560765
+            ],
+            "dc_mean_square": [
+              2.6907352676247655e-35,
+              3.1519778991345744e-36
+            ],
+            "parseval_error": [
+              -1.3877787807814457e-16,
+              5.360295540768334e-16
+            ],
+            "common_dc_split_error": [
+              0.0,
+              0.0
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "wrong_nonorthogonal_excess": [
+    0.00037438393619871474,
+    0.0005257653383460882
+  ],
+  "scope": "Projection arithmetic and phase convention; not optical information or quality evidence",
+  "controls_sha256": "b6322d22e8f727309c1a91cf1490af4a23071c58d95f8b4d1c6810b3e6e0acda"
+}

@@ -1,0 +1,27 @@
+{
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-I",
+    "-B",
+    "-X",
+    "faulthandler",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\colour-error-controls.py",
+    "score",
+    "--candidate",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\colour-error-1\\decomposed",
+    "--out",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\colour-error-1\\scored"
+  ],
+  "environment": {
+    "OMP_NUM_THREADS": "4",
+    "MKL_NUM_THREADS": "4",
+    "OPENBLAS_NUM_THREADS": "4",
+    "PYTHONDONTWRITEBYTECODE": "1"
+  },
+  "removed_environment": [],
+  "runner": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\full-context-placement\\run.py",
+    "sha256": "17451d237bf256004ca8853ef4c2a9e1c582012d43ad33fd687606e68a5fb76f",
+    "bytes": 7707
+  }
+}
