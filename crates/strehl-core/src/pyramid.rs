@@ -96,6 +96,11 @@ pub mod donor_consistency_diagnostic {
 }
 
 #[cfg(feature = "native-correction-variance")]
+pub mod shared_source_field_diagnostic {
+    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/shared-source-field/core-bridge.rs"));
+}
+
+#[cfg(feature = "native-correction-variance")]
 pub mod fine_support_candidate {
     include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/fine-support-guidance/core-candidate.rs"));
 }

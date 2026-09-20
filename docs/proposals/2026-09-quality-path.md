@@ -299,3 +299,13 @@ not a reason for another open-ended sweep. Once a product-level photographic
 gain is established, measure its full-workflow cost and compare complete
 outputs with the retained external baselines. Quality decides which changes
 deserve optimization.
+
+The fixed shared-source-field screen has now completed and rejected the
+candidate before any full RAW replay. At ISO100, fan truth error is1.1085x
+baseline and core error1.8607x, despite retained template amplitude; the thin
+near feature also fails its error guard. Flat/noise and mechanical controls
+pass. ISO400 additionally lacks the required fan/noise separation. Preserve
+the distinction between increased error and erasure, and between successful
+test execution and quality admission. See shared-source-field/results.md and
+its independent review. No penalty sweep or complete render of this rule is
+authorized by its result.
