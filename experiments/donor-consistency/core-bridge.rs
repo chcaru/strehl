@@ -11,6 +11,7 @@ fn supported(merge:&BandMerge) {
 }
 
 include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/donor-consistency/core-attribution.rs"));
+include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/donor-consistency/spatial-donor.rs"));
 /// The actual default BandMerge denominator/fallback resolution, before collapse.
 /// Public only under the experiment feature so controls can compare coefficients.
 pub fn resolved_coefficients(merge:&BandMerge)->Vec<Pyramid> {

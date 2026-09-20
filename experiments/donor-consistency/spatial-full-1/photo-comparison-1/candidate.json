@@ -1,0 +1,13 @@
+{
+  "source": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-full-1\\output\\candidate.tiff",
+  "output": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-full-1\\photo-comparison-1\\candidate.png",
+  "shape": [
+    4612,
+    6920,
+    3
+  ],
+  "conversion": "rounded division by 257; full extent; no resampling",
+  "source_sha256": "528e790139aa8db58916fe75df2a6b3523ddc867113a136eed3cfa8d578597d9",
+  "png_sha256": "6ee3f719a621ce6cfc98bffaebb14b0d3795abceffef5fac15fb625126d9c7e9",
+  "icc_preserved": true
+}

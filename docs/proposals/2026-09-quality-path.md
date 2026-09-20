@@ -222,6 +222,19 @@ including the complete before image for comparisons and a link to the RGB16
 master. Native crops remain diagnostic evidence, never the sole presentation.
 This is the owner's explicit September 19 instruction.
 
+The complete fixed-donor vitamin-C trials are now closed as insufficient.
+Coefficient masking improves one facet locally but retains the dark coloured
+tail; actual signed reconstruction accounting identifies retained coarse AC.
+Moving the same masks after full AC reconstruction still leaves that tail,
+despite removing baseline AC inside full-weight support. The accounting was
+correct but did not establish a sufficient repair. Baseline pixels remain
+exact and all four independent mechanical controls pass. The next cheap
+consumer witness must show actual gathered donor content/placement, retained
+base, taper and hull separately before any new reconstruction change. An
+automatic concentration diagnostic is being controlled in parallel, without
+presuming it repairs images. See donor-consistency/spatial-results.md and
+the independent photographic decision; no SOTA/default promotion is earned.
+
 An image-quality change must retain or restore an identifiable feature in
 matched native views, preserve genuine colour, and survive independent review.
 Use known-scene truth and flat-noise controls alongside photographs. A lower

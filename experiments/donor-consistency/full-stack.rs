@@ -6,6 +6,7 @@ use serde::Deserialize;
 use serde_json::json;
 use std::{fs::File, io::{Read, Write}, time::SystemTime};
 use strehl_core::pyramid::{AdmissionMode, BaseBand, Fallback, Hull, SelectMode};
+use strehl_core::pyramid::donor_consistency_diagnostic::SpatialDonor;
 
 const EXPECTED_BASELINE: &str = "c0d8faca8a23f31a73b843fbc9aa9f55fda96b5fcce9d3540ebf6a2b4319bb21";
 // Independently decoded from the held baseline. Full-1 proved its pixel bytes
@@ -100,6 +101,24 @@ fn stamp(path: &Path) -> Result<(u64, SystemTime)> {
 }
 struct OneFrame<'a> { frame: &'a Frame, index: usize }
 
+// Dispatch only; each fixed experiment keeps its existing arithmetic separate.
+enum FullDonor { Bands(DonorBlend), Spatial(SpatialDonor) }
+impl FullDonor {
+    fn new(spatial: bool, sizes: &[strehl_core::pyramid::LevelSize], masks: &[Vec<f32>]) -> Self {
+        if spatial { Self::Spatial(SpatialDonor::new(sizes,4,masks)) }
+        else { Self::Bands(DonorBlend::new(sizes,4,masks)) }
+    }
+    fn add_source(&mut self, regions: &[usize], planes: &[Vec<f32>]) {
+        match self { Self::Bands(d) => d.add_source(regions,planes), Self::Spatial(d) => d.add_source(regions,planes) }
+    }
+    fn finish(&self, merge: &BandMerge, ws: &mut Workspace) -> Vec<Vec<f32>> {
+        match self { Self::Bands(d) => d.finish(merge,ws), Self::Spatial(d) => d.finish(merge,ws) }
+    }
+    fn bands(&self) -> &DonorBlend {
+        match self { Self::Bands(d) => d, Self::Spatial(_) => panic!("coefficient observer excludes spatial mode") }
+    }
+}
+
 mod attribution {
     include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/donor-consistency/attribution.rs"));
 }
@@ -115,6 +134,16 @@ impl PyramidFrameSource for OneFrame<'_> {
 #[ignore = "explicit complete photo pair; parent bounds resources and freezes configuration"]
 fn vitamin_c_complete_triplet() -> Result<()> {
     let started = Instant::now();
+    let spatial = match std::env::var("STREHL_DONOR_SPATIAL") {
+        Err(std::env::VarError::NotPresent) => false,
+        Ok(value) if value == "1" => true,
+        _ => anyhow::bail!("STREHL_DONOR_SPATIAL must be absent or exactly1"),
+    };
+    ensure!(!spatial || std::env::var_os("STREHL_DONOR_ATTRIBUTION_DIR").is_none(),
+        "old coefficient attribution is incompatible with spatial donor mode");
+    let mode = if spatial { "fixed-native-spatial-donor-oracle" } else { MODE };
+    let counterfactual = if spatial { "baseline_pre + (sum(mask0*full_donor_ac) - coverage0*baseline_ac); unchanged terminal mean" }
+        else { "prescribed shared donor AC coefficients; baseline terminal mean retained" };
     let config_path = PathBuf::from(std::env::var_os("STREHL_DONOR_CONSISTENCY_FULL_CONFIG")
         .context("STREHL_DONOR_CONSISTENCY_FULL_CONFIG required")?);
     let config: Config = serde_json::from_slice(&std::fs::read(&config_path)?)?;
@@ -205,7 +234,7 @@ fn vitamin_c_complete_triplet() -> Result<()> {
     dev.tone = Some(image_out::Tone { black: config.tone[0], white: config.tone[1], contrast: config.tone[2] });
     dev.exposure_gain = 1.0;
     std::fs::create_dir(&config.out_dir)?;
-    write_json(&config.out_dir.join("started.json"), &json!({"schema":1,"mode":MODE,
+    write_json(&config.out_dir.join("started.json"), &json!({"schema":1,"mode":mode,
         "source_dir":config.source_dir,"map_sha256":EXPECTED_MAP,"config_sha256":file_hash(&config_path)?,
         "original_crop":config.expected_crop,"effective_crop":config.expected_crop,"plan":plan,
         "execution_threads":workers,"wb_bits":EXPECTED_WB_BITS,"tone_bits":config.tone.map(f32::to_bits),
@@ -213,13 +242,15 @@ fn vitamin_c_complete_triplet() -> Result<()> {
         "merge_config":format!("{merge_cfg:?}"),"native_dimensions":[2*crop.width,2*crop.height],
         "source_active":[active.x,active.y,active.width,active.height],"source_stride":stride,
         "source_buffer_height":buffer_height,"original_metadata_check":"length and modified time; all70 before/after both passes",
-        "counterfactual":"prescribed shared donor AC coefficients; baseline terminal mean retained",
+        "counterfactual":counterfactual,
         "donors":DONORS,"late_donor":69,"segments":SEGMENTS,"radii_native":[16,24],
         "mask_native_origin":[0,0],"mask_sample_offset_native":[0.5,0.5]}))?;
     let masks0=fixed_masks(crop.width,crop.height,[0,0]);
-    let mut oracle=DonorBlend::new(&sizes,4,&masks0);
-    let mut late=DonorBlend::new(&sizes,4,&masks0);
-    let mask_receipt=oracle.masks().iter().enumerate().map(|(region,p)|json!({
+    let mut oracle=FullDonor::new(spatial,&sizes,&masks0);
+    let mut late=FullDonor::new(spatial,&sizes,&masks0);
+    let mask_record=match &oracle {
+        FullDonor::Bands(donor) => {
+            let mask_receipt=donor.masks().iter().enumerate().map(|(region,p)|json!({
         "region":region,"prescribed_donor":DONORS[region],"segment":SEGMENTS[region],
         "levels":(0..p.levels()).map(|k|json!({"level":k,
             "dimensions":[p.sizes()[k].width,p.sizes()[k].height],
@@ -227,10 +258,22 @@ fn vitamin_c_complete_triplet() -> Result<()> {
             "positive_coefficients":p.level(k).iter().filter(|&&v|v>0.0).count(),
             "terminal_ignored":k+1==p.levels()})).collect::<Vec<_>>()
     })).collect::<Vec<_>>();
-    write_json(&config.out_dir.join("masks.json"),&json!({
+            json!({
         "native_origin":[0,0],"native_quad_centre":[0.5,0.5],"radii":[16,24],
-        "raw_overlap_counts":oracle.raw_overlap_counts(),"normalized_counts":oracle.normalized_counts(),
-        "masks":mask_receipt}))?;
+                "raw_overlap_counts":donor.raw_overlap_counts(),"normalized_counts":donor.normalized_counts(),
+                "masks":mask_receipt})
+        },
+        FullDonor::Spatial(donor) => json!({
+            "native_origin":[0,0],"native_quad_centre":[0.5,0.5],"radii":[16,24],
+            "mask_domain":"finest output quads after full-domain AC reconstruction; no reduced masks",
+            "normalized_count":donor.normalized_count(),"coverage_sha256":field_hash(donor.coverage()),
+            "masks":donor.masks().iter().enumerate().map(|(region,m)|json!({
+                "region":region,"prescribed_donor":DONORS[region],"segment":SEGMENTS[region],
+                "dimensions":[crop.width,crop.height],"sha256":field_hash(m),
+                "positive_quads":m.iter().filter(|&&v|v>0.0).count()})).collect::<Vec<_>>()
+        }),
+    };
+    write_json(&config.out_dir.join("masks.json"),&mask_record)?;
     drop(masks0);
     let mut base=BandWorker::new(domain,merge_cfg);
     let mut first=Some(first);let mut total=None;let mut evidence=Vec::new();
@@ -291,7 +334,7 @@ fn vitamin_c_complete_triplet() -> Result<()> {
     let candidate_path=config.out_dir.join("candidate.tiff");
     pool.install(||write_planes(&candidate_path,&candidate,crop,levels,wb,&dev))?;
     if let Some(observer) = attribution.as_mut() {
-        pool.install(||observer.record("candidate",&total,&oracle,&sizes,&candidate))?;
+        pool.install(||observer.record("candidate",&total,oracle.bands(),&sizes,&candidate))?;
     }
     drop(candidate);drop(oracle);
     let late_image=pool.install(||late.finish(&total,&mut Workspace::new(&sizes)));
@@ -299,13 +342,14 @@ fn vitamin_c_complete_triplet() -> Result<()> {
     let late_path=config.out_dir.join("late.tiff");
     pool.install(||write_planes(&late_path,&late_image,crop,levels,wb,&dev))?;
     if let Some(observer) = attribution.as_mut() {
-        pool.install(||observer.record("late",&total,&late,&sizes,&late_image))?;
+        pool.install(||observer.record("late",&total,late.bands(),&sizes,&late_image))?;
     }
     drop(late_image);drop(late);drop(total);
     if let Some(observer) = attribution { observer.finish(&sizes)?; }
     for (i,path) in paths.iter().enumerate(){ensure!(before[i]==stamp(path)?,"original metadata changed after triplet");}
     ensure!(file_hash(&config.warp_map)?==EXPECTED_MAP,"held warp map changed");
-    write_json(&config.out_dir.join("receipt.json"),&json!({"schema":1,"mode":MODE,"frames":70,
+    write_json(&config.out_dir.join("receipt.json"),&json!({"schema":1,"mode":mode,"frames":70,
+        "counterfactual":counterfactual,
         "baseline_sha256":baseline_sha256,"candidate_sha256":file_hash(&candidate_path)?,"late_sha256":file_hash(&late_path)?,
         "baseline_rgb16_le_sha256":baseline_rgb16_sha256,"baseline_software":baseline_software,
         "reference_baseline_file_sha256":EXPECTED_BASELINE,

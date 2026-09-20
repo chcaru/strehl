@@ -24,7 +24,8 @@ finest masks at their original output-quad coordinates after these collapses.
 Freeze the root-selected f32 evaluation order: accumulate source-ordered
 `A = sum(m0 * donor_ac)`, then `baseline_pre + (A - coverage0 * baseline_ac)`,
 and apply the original baseline InputRange hull. This keeps only a fixed
-accumulator while sources stream through. Normalize any finest-mask overlap with one
+accumulator while sources stream through. Actual source arrival is25/28/33
+(regions2/0/1); late69 adds regions0/1/2 in that order. Normalize any finest-mask overlap with one
 shared divisor as before; no reduced mask enters this operator. An exactly
 zero total mask copies baseline final bits, with no subtract/add round trip.
 

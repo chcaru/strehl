@@ -1,0 +1,593 @@
+{
+  "helper": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-photo-review.py",
+    "bytes": 6117,
+    "sha256": "4a605f25332127e1c5564c41326d90cc8251eaadce72a00610efb375399af5e3"
+  },
+  "inputs": {
+    "baseline": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-full-1\\photo-comparison-1\\baseline.png",
+      "bytes": 37540366,
+      "sha256": "68b2f4533e14eefb6e8b2473cc4312fe0d330cd70c83569148270fba12491326"
+    },
+    "old-candidate": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\full-1\\photo-comparison-1\\candidate.png",
+      "bytes": 37538836,
+      "sha256": "20abc2efd73774531de402d20199c954a0c0d1ed90cc0c6e5c1c4b1d6a4e35fb"
+    },
+    "spatial-candidate": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-full-1\\photo-comparison-1\\candidate.png",
+      "bytes": 37540085,
+      "sha256": "6ee3f719a621ce6cfc98bffaebb14b0d3795abceffef5fac15fb625126d9c7e9"
+    },
+    "helicon-b": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\helicon-current\\vitamin-c-b-2\\whole-stack.tiff",
+      "bytes": 197827122,
+      "sha256": "f08335d17083789fa2bd60ee17ecbaba921bbc7aa20c9fdfdfa0cf0e1ca1d2d8"
+    },
+    "old-late": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\full-1\\photo-comparison-1\\late.png",
+      "bytes": 37538571,
+      "sha256": "7629a35c1cda298bd8dfdf1d0c72509a549f11449dc44cd033c002db441bd280"
+    },
+    "spatial-late": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-full-1\\photo-comparison-1\\late.png",
+      "bytes": 37538358,
+      "sha256": "3bd698f3022157f831da24a82aa58e1f9afe1a4364c250d1c8e90dd9afa2915a"
+    }
+  },
+  "outputs": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-review-1\\facet-edges-board.png",
+      "bytes": 754784,
+      "sha256": "592302e22516a72aa256e4f0acfb080f23ba065b4fd2d19b0c4d175b23e0fdb7"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-review-1\\pale-background-board.png",
+      "bytes": 477252,
+      "sha256": "5f3274c52da7c9b71ccb75fe037561b665e0c1fcd7bdf9b5c5bbf289a1f676bf"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-review-1\\fine-crystals-board.png",
+      "bytes": 659770,
+      "sha256": "924b9fd50c3580de48b60d8c4cbb7229d9d1b2197344b634eb4ed379b915f7f9"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-review-1\\bright-facet-board.png",
+      "bytes": 493474,
+      "sha256": "042bbc1318c21647a5ea5387df6f915169f08a22e603d77ddf6e805324f47568"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-review-1\\dark-inclusion-board.png",
+      "bytes": 758711,
+      "sha256": "0de97e7d0115c4de4261b104b5c1f36ddba2c2979430f2b3de9a50e1f92056bb"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-review-1\\facet-core-boundary-baseline-zoom.png",
+      "bytes": 54045,
+      "sha256": "58ddc5aaebe9e878e597c7efc0fe6c36fd73f6cd2d4333da707395470675bcba"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-review-1\\facet-core-boundary-old-candidate-zoom.png",
+      "bytes": 52966,
+      "sha256": "c4528fb702ddb1263933e159732e34334ffe123d710ab21f1e928fc6d5e42368"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-review-1\\facet-core-boundary-spatial-candidate-zoom.png",
+      "bytes": 53239,
+      "sha256": "6d6e7096e20d357ea1de55f7ffe80ddc5824557016c346386a519cff12c3dabe"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-review-1\\facet-core-boundary-helicon-b-zoom.png",
+      "bytes": 53901,
+      "sha256": "652940786d343244200b226212c2413c623d81d217eb2bdfba5f850ba0c025ba"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-review-1\\facet-core-boundary-old-late-zoom.png",
+      "bytes": 53461,
+      "sha256": "edde03bf47e48192c0c4254cc533f60138c00ce67bd2f2a34022902a487d2047"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-review-1\\facet-core-boundary-spatial-late-zoom.png",
+      "bytes": 53525,
+      "sha256": "0e00bb2e785e080898b8decd280dc6ff09928b6cd5f32fc3b510a51c3c1eca31"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-review-1\\facet-core-boundary-board.png",
+      "bytes": 274680,
+      "sha256": "7f6e6a41c455c432924f3a19b41f71bd862183635e4d4acbf0a82c7c21e1fdcf"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-review-1\\facet-core-boundary-mask-outline.png",
+      "bytes": 54927,
+      "sha256": "6af6b16f3cda16e0eb534be461d76d59878bb8d9e6f0ee0a39fe20ff9d50a7bc"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-review-1\\dark-core-boundary-baseline-zoom.png",
+      "bytes": 61147,
+      "sha256": "8a5292f268d7502a9b34c80df79985b6a05c300e4d8909c15c688e42903fbd07"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-review-1\\dark-core-boundary-old-candidate-zoom.png",
+      "bytes": 60668,
+      "sha256": "2317934e3e456acd4f4e9c870269b49c71d0a66cc791b5ad15deeaf139985e8f"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-review-1\\dark-core-boundary-spatial-candidate-zoom.png",
+      "bytes": 61795,
+      "sha256": "182d65b25355b8404afdb39556674ee1f40d07a715ef1a7f54375f7b5744c385"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-review-1\\dark-core-boundary-helicon-b-zoom.png",
+      "bytes": 58625,
+      "sha256": "215649d2da9b961b7301c32caed21327c6230de9ccd956f6acd1b482fae3cec1"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-review-1\\dark-core-boundary-old-late-zoom.png",
+      "bytes": 60110,
+      "sha256": "06883263e2360d8a2c7105cf032bc231db3459a820870e9541201c05bcaaba92"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-review-1\\dark-core-boundary-spatial-late-zoom.png",
+      "bytes": 59875,
+      "sha256": "af8bf56e9958627a5cccae2a5d84c3fb7d96d60b2ca3636f299e2eeea83cafa6"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-review-1\\dark-core-boundary-board.png",
+      "bytes": 308021,
+      "sha256": "8790e9a5f65b15c0a631ec508745cab707b65af70ce7197f788a39be3428022a"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-review-1\\dark-core-boundary-mask-outline.png",
+      "bytes": 61987,
+      "sha256": "7b23ee562aa8cf97337bebcf6833ab1205d6f6d543edd1582d49b994ecfff24e"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-review-1\\competing-structure-baseline-zoom.png",
+      "bytes": 29307,
+      "sha256": "c260dc7afd0e92f4ba420445e0aba50fd305e21638d84d5e2d3cb59ad03707a1"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-review-1\\competing-structure-old-candidate-zoom.png",
+      "bytes": 29385,
+      "sha256": "110571ecd66edba68e432f1012f490cecd673a4b89c5bce0b069d99d1b2e07ec"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-review-1\\competing-structure-spatial-candidate-zoom.png",
+      "bytes": 29363,
+      "sha256": "e30d25713d828bcb0cf83869453efb037b4f32025cfb9576cf97a74f1677fee7"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-review-1\\competing-structure-helicon-b-zoom.png",
+      "bytes": 30115,
+      "sha256": "330de629623e24cf6603273131ac0d468d45ceface72611a16f1b0810d49bcbb"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-review-1\\competing-structure-old-late-zoom.png",
+      "bytes": 29026,
+      "sha256": "cefe13614cd2c54caa135df21b24c6b5b59ddfb2c06f69590776d76b58eb96e7"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-review-1\\competing-structure-spatial-late-zoom.png",
+      "bytes": 29019,
+      "sha256": "1c7c7e018c1dece1624f2e386901ef3638cd6cd9cd9ad79b29022ea7266a3d6f"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-review-1\\competing-structure-board.png",
+      "bytes": 143613,
+      "sha256": "6bee91489460ffbe334434ad756d90f4e2d1f1e620fe41caedcebec4490d1b46"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-review-1\\competing-structure-mask-outline.png",
+      "bytes": 30218,
+      "sha256": "f32c8b0a219642d2aa2f828c78a167d50bcdc67329a45e4710ab77012c0a3634"
+    }
+  ],
+  "rows": [
+    {
+      "name": "facet-edges",
+      "baseline_xywh": [
+        2500,
+        2700,
+        384,
+        384
+      ],
+      "display_integer_zoom": 1,
+      "arms": {
+        "baseline": [
+          2500,
+          2700,
+          384,
+          384
+        ],
+        "old-candidate": [
+          2500,
+          2700,
+          384,
+          384
+        ],
+        "spatial-candidate": [
+          2500,
+          2700,
+          384,
+          384
+        ],
+        "helicon-b": [
+          2548,
+          2744,
+          384,
+          384
+        ],
+        "old-late": [
+          2500,
+          2700,
+          384,
+          384
+        ],
+        "spatial-late": [
+          2500,
+          2700,
+          384,
+          384
+        ]
+      }
+    },
+    {
+      "name": "pale-background",
+      "baseline_xywh": [
+        400,
+        1150,
+        384,
+        384
+      ],
+      "display_integer_zoom": 1,
+      "arms": {
+        "baseline": [
+          400,
+          1150,
+          384,
+          384
+        ],
+        "old-candidate": [
+          400,
+          1150,
+          384,
+          384
+        ],
+        "spatial-candidate": [
+          400,
+          1150,
+          384,
+          384
+        ],
+        "helicon-b": [
+          425,
+          1178,
+          384,
+          384
+        ],
+        "old-late": [
+          400,
+          1150,
+          384,
+          384
+        ],
+        "spatial-late": [
+          400,
+          1150,
+          384,
+          384
+        ]
+      }
+    },
+    {
+      "name": "fine-crystals",
+      "baseline_xywh": [
+        4200,
+        1700,
+        384,
+        384
+      ],
+      "display_integer_zoom": 1,
+      "arms": {
+        "baseline": [
+          4200,
+          1700,
+          384,
+          384
+        ],
+        "old-candidate": [
+          4200,
+          1700,
+          384,
+          384
+        ],
+        "spatial-candidate": [
+          4200,
+          1700,
+          384,
+          384
+        ],
+        "helicon-b": [
+          4266,
+          1734,
+          384,
+          384
+        ],
+        "old-late": [
+          4200,
+          1700,
+          384,
+          384
+        ],
+        "spatial-late": [
+          4200,
+          1700,
+          384,
+          384
+        ]
+      }
+    },
+    {
+      "name": "bright-facet",
+      "baseline_xywh": [
+        1150,
+        3850,
+        384,
+        384
+      ],
+      "display_integer_zoom": 1,
+      "arms": {
+        "baseline": [
+          1150,
+          3850,
+          384,
+          384
+        ],
+        "old-candidate": [
+          1150,
+          3850,
+          384,
+          384
+        ],
+        "spatial-candidate": [
+          1150,
+          3850,
+          384,
+          384
+        ],
+        "helicon-b": [
+          1183,
+          3907,
+          384,
+          384
+        ],
+        "old-late": [
+          1150,
+          3850,
+          384,
+          384
+        ],
+        "spatial-late": [
+          1150,
+          3850,
+          384,
+          384
+        ]
+      }
+    },
+    {
+      "name": "dark-inclusion",
+      "baseline_xywh": [
+        3050,
+        1850,
+        384,
+        384
+      ],
+      "display_integer_zoom": 1,
+      "arms": {
+        "baseline": [
+          3050,
+          1850,
+          384,
+          384
+        ],
+        "old-candidate": [
+          3050,
+          1850,
+          384,
+          384
+        ],
+        "spatial-candidate": [
+          3050,
+          1850,
+          384,
+          384
+        ],
+        "helicon-b": [
+          3104,
+          1885,
+          384,
+          384
+        ],
+        "old-late": [
+          3050,
+          1850,
+          384,
+          384
+        ],
+        "spatial-late": [
+          3050,
+          1850,
+          384,
+          384
+        ]
+      }
+    },
+    {
+      "name": "facet-core-boundary",
+      "baseline_xywh": [
+        2533,
+        2846,
+        160,
+        160
+      ],
+      "display_integer_zoom": 3,
+      "arms": {
+        "baseline": [
+          2533,
+          2846,
+          160,
+          160
+        ],
+        "old-candidate": [
+          2533,
+          2846,
+          160,
+          160
+        ],
+        "spatial-candidate": [
+          2533,
+          2846,
+          160,
+          160
+        ],
+        "helicon-b": [
+          2580,
+          2891,
+          160,
+          160
+        ],
+        "old-late": [
+          2533,
+          2846,
+          160,
+          160
+        ],
+        "spatial-late": [
+          2533,
+          2846,
+          160,
+          160
+        ]
+      }
+    },
+    {
+      "name": "dark-core-boundary",
+      "baseline_xywh": [
+        3011,
+        2097,
+        160,
+        160
+      ],
+      "display_integer_zoom": 3,
+      "arms": {
+        "baseline": [
+          3011,
+          2097,
+          160,
+          160
+        ],
+        "old-candidate": [
+          3011,
+          2097,
+          160,
+          160
+        ],
+        "spatial-candidate": [
+          3011,
+          2097,
+          160,
+          160
+        ],
+        "helicon-b": [
+          3063,
+          2134,
+          160,
+          160
+        ],
+        "old-late": [
+          3011,
+          2097,
+          160,
+          160
+        ],
+        "spatial-late": [
+          3011,
+          2097,
+          160,
+          160
+        ]
+      }
+    },
+    {
+      "name": "competing-structure",
+      "baseline_xywh": [
+        3180,
+        2010,
+        120,
+        120
+      ],
+      "display_integer_zoom": 3,
+      "arms": {
+        "baseline": [
+          3180,
+          2010,
+          120,
+          120
+        ],
+        "old-candidate": [
+          3180,
+          2010,
+          120,
+          120
+        ],
+        "spatial-candidate": [
+          3180,
+          2010,
+          120,
+          120
+        ],
+        "helicon-b": [
+          3234,
+          2046,
+          120,
+          120
+        ],
+        "old-late": [
+          3180,
+          2010,
+          120,
+          120
+        ],
+        "spatial-late": [
+          3180,
+          2010,
+          120,
+          120
+        ]
+      }
+    }
+  ],
+  "canonical_regions": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september19\\vitamin-c-review-1\\regions.json",
+    "bytes": 1068,
+    "sha256": "ff55ed297385ff8fef5d2badce07729537e2e867701d96d328be1eaf7bcb0f4f"
+  },
+  "helicon_registration": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\helicon-current\\photo-comparison-1\\coordinate-receipt.json",
+    "bytes": 30865,
+    "sha256": "9323b01478a6b70905dca18aa6802cd55f31d270a66fa1015b198308d77deaab"
+  },
+  "current_coordinates": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\spatial-full-1\\photo-comparison-1\\coordinate-receipt.json",
+    "bytes": 10542,
+    "sha256": "2cd94cfcd3c776fab89a8dd8ca3380c62485b3443fab1b5d31e463a12e3e21ae"
+  },
+  "original_coordinates": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\donor-consistency\\full-1\\photo-comparison-1\\coordinate-receipt.json",
+    "bytes": 10334,
+    "sha256": "57ce02badd3ecc113591c3faa0a6d09c65a5db995aedece365efb48af68678d2"
+  },
+  "scope": "Existing rendered outputs only. No RAW, merge, image interpolation or quality metric. Native crops, optional 3x nearest replication, common exact sRGB ICC; no tone change. Helicon native scale difference retained. Separate radius16/24 outlines are geometry only."
+}

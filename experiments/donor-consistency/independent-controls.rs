@@ -8,6 +8,10 @@ mod attribution_controls {
     include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/donor-consistency/independent-attribution-controls.rs"));
 }
 
+mod spatial_controls {
+    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/donor-consistency/independent-spatial-controls.rs"));
+}
+
 const W:usize=89;
 const H:usize=73;
 fn hash(v:&[f32])->String {

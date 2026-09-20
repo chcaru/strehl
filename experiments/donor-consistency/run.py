@@ -21,8 +21,11 @@ def main():
     p.add_argument('--build', type=Path)
     p.add_argument('--screen', type=Path)
     p.add_argument('--observe', action='store_true', help='Record unchanged actual coefficient contributions')
+    p.add_argument('--spatial', action='store_true', help='Apply fixed masks after full AC reconstruction')
     a = p.parse_args()
     assert not a.observe or a.phase == 'full'
+    assert not a.spatial or a.phase == 'full'
+    assert not (a.observe and a.spatial), 'Attribution observer describes the preceding coefficient-mask recipe'
     out = a.out.resolve()
     assert out.is_relative_to(HERE)
     out.mkdir()
@@ -34,6 +37,7 @@ def main():
             paths.update(directory.glob('*.rs'))
         paths.update([Path(__file__), HERE / 'independent-plan.md', HERE / 'charter.md',
             HERE / 'independent-attribution-plan.md',
+            HERE / 'independent-spatial-plan.md', HERE / 'reconstruction-design.md',
             ROOT / 'crates/strehl-core/src/pyramid.rs', ROOT / 'crates/strehl-core/src/boxfilter.rs',
             ROOT / 'experiments/native-correction-variance/core-bridge.rs',
             ROOT / 'crates/strehl-cli/Cargo.toml', ROOT / 'crates/strehl-core/Cargo.toml'])
@@ -99,6 +103,8 @@ def main():
             '--exact', '--ignored', '--nocapture', '--test-threads=1']
         if a.observe:
             fields['STREHL_DONOR_ATTRIBUTION_DIR'] = str(out / 'attribution')
+        if a.spatial:
+            fields['STREHL_DONOR_SPATIAL'] = '1'
     def check_inputs():
         for r in inputs or []:
             st = Path(r['path']).stat()
@@ -111,9 +117,9 @@ def main():
     assert all(c.ref(Path(r['path'])) == r for r in sources)
     check_inputs()
     if a.phase == 'controls':
-        assert 'test result: ok. 3 passed;' in log
+        assert 'test result: ok. 4 passed;' in log
         records = {}
-        for label in ['DONOR_GEOMETRY', 'DONOR_CONSUMER', 'DONOR_ATTRIBUTION']:
+        for label in ['DONOR_GEOMETRY', 'DONOR_CONSUMER', 'DONOR_ATTRIBUTION', 'DONOR_SPATIAL']:
             lines = [line.split(label + ' ', 1)[1] for line in log.splitlines() if label + ' ' in line]
             assert len(lines) == 1, (label, len(lines))
             records[label] = json.loads(lines[0])
