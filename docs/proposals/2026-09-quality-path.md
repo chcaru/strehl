@@ -36,10 +36,14 @@ the desired pinhole image. Do not confuse hidden radiance size with image error.
 Saved-error decomposition now places94-96% of Cauchy's added colour-error
 energy inside native2x2 blocks across the four tested bases, with decreasing
 uniform bias. This is a scale attribution, not proof of a CFA nullspace. See
-experiments/layered-raw-inverse/colour-error-results.md. One fixed matrix-gradient
-prior will test whether coupling spatial edge directions across colours can
-preserve bright detail without this false colour; all existing strict guards
-remain. Its same-direction colour-error counterexample must be commissioned.
+experiments/layered-raw-inverse/colour-error-results.md. The fixed matrix-gradient
+prior also fails: it reduces scalar-Cauchy colour error, but remains47-48% above
+the protected original core/ridge chroma reference. See matrix-cauchy-results.md.
+No strength or continuation rescue. A separate consumer audit now asks whether
+retaining the supplied in-focus optical floor is a better stacking target than
+the current unblurred pinhole. Every existing failure remains; observed mean
+and donor comparators must not be blurred twice, and detail-loss/double-blur
+controls must reject damage before this alternate target can admit anything.
 It has no photographic
 admission yet. The passing complete-periodic all-CFA controls
 remain retained at48276660; speed work stays behind demonstrated image quality.

@@ -1,0 +1,42 @@
+{
+  "status": "PASS",
+  "passed": true,
+  "edge_eigen_oracle": [
+    0.0,
+    2.917770732084279,
+    6.2410065722767225,
+    0.0008559850644443822,
+    8.788831625213295
+  ],
+  "responses": [
+    {
+      "name": "orthogonal-weak",
+      "weak_amplitude": 0.0,
+      "derivative": 0.0,
+      "curvature": 0.5,
+      "expected_curvature": 0.5
+    },
+    {
+      "name": "same-spatial-weak",
+      "weak_amplitude": 0.0,
+      "derivative": 0.0,
+      "curvature": 0.00769230630248785,
+      "expected_curvature": 0.007692307692307693
+    },
+    {
+      "name": "true-rank2-strong",
+      "weak_amplitude": 8.0,
+      "derivative": 0.23529410362243652,
+      "curvature": -0.025951554998755455,
+      "expected_curvature": -0.025951557093425604
+    }
+  ],
+  "arbitrary_autograd": 0.5011200904846191,
+  "independent_finite_difference": 0.5011201097615547,
+  "rectangular_curvature": 0.018622076138854027,
+  "original_rectangular_curvature": 0.018622076138854027,
+  "expected_rectangular_curvature": 0.018622078521807084,
+  "rgb_rotation_invariant": true,
+  "expected_risk": "Only a new colour AND spatial singular direction retains .5 curvature. Same-spatial rank1 perturbations remain weak; strong rank2 is still nonconvex.",
+  "controls_sha256": "46dc99bf4acd698e80b2d495be199b3540e83f08bbc0152165ab38e69ecc61a1"
+}

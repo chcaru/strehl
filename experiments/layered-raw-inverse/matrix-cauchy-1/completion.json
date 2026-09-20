@@ -1,0 +1,10 @@
+{
+  "instrument_completed": true,
+  "sources_unchanged": true,
+  "independent_scores": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\matrix-cauchy-1\\scored\\result.json",
+    "sha256": "1a693c5b5b417a352f62389464b23bb43c3a1de1351788dbbceb8cdf96aa7db0",
+    "bytes": 39161
+  },
+  "scope": "One spatial-colour gradient coupling prior; fixed known visibility and RAW likelihood; no photo admission"
+}
