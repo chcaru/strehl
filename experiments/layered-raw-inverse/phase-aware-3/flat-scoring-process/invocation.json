@@ -1,0 +1,32 @@
+{
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-I",
+    "-B",
+    "-X",
+    "faulthandler",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\phase-aware-controls.py",
+    "score",
+    "--data",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\phase-aware-3\\data",
+    "--fits",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\phase-aware-3\\fits",
+    "--case",
+    "flat",
+    "--out",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\phase-aware-3\\flat-scored"
+  ],
+  "environment": {
+    "OMP_NUM_THREADS": "4",
+    "MKL_NUM_THREADS": "4",
+    "OPENBLAS_NUM_THREADS": "4",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "CUDA_CACHE_DISABLE": "1"
+  },
+  "removed_environment": [],
+  "runner": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\run-phase-aware.py",
+    "sha256": "6b85b9e5c24dbe2d881ff5cefb30d74bd8fade0cb6953d0345fa9794e161bc59",
+    "bytes": 5306
+  }
+}

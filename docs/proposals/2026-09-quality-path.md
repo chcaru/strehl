@@ -76,6 +76,15 @@ identity-pattern counterfactual. Check dense derivatives and optical sampling
 in the same run; require flat colour/noise first before spending on layered
 reconstruction. This remains supplied-geometry/optics research, with no claim
 that it calibrates real placement or repairs the earlier photographic failure.
+That fixed phase-aware test is now closed: numerical commissioning and data
+adequacy pass, but flat RGB/chroma errors rise to19.1481/18.6372 DN, worse than
+both the paired identity inverse and its own same-data mean. The flat gate
+stops all layered and wrong-phase fits. See
+experiments/layered-raw-inverse/phase-aware-results.md and independent review.
+Both returned fits remain nonstationary; this rejects the fixed recipe, not
+all motion-aware reconstruction. No further prior, schedule or iteration
+rescue. Select the next intervention against an identified real photographic
+defect, and require complete before/after stack images for any claimed gain.
 No photographic admission yet. The passing complete-periodic all-CFA controls
 remain retained at48276660; speed work stays behind demonstrated image quality.
 

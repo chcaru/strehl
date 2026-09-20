@@ -212,7 +212,7 @@ def commission_dense(control, focus, pc, author, cfg, values, phase, tests, prov
     weights = probe.cpu().numpy()
     finite = []
     yy = np.arange(cfg.height, dtype=np.float32)[:, None]/np.float32(cfg.height-1)
-    for plane, step in [(0, .25), (1, .25), (2, .001)]:
+    for plane, step in [(0, .25), (1, .25), (2, .25)]:
         direction = np.broadcast_to(np.float32(.2)+yy, values[plane].shape[:2]).copy()
         if plane != 2:
             direction = np.repeat(direction[..., None], 3, axis=2)
@@ -227,6 +227,7 @@ def commission_dense(control, focus, pc, author, cfg, values, phase, tests, prov
         for sign in [-1, 1]:
             changed = [v.copy() for v in values]
             changed[plane] += np.float32(sign*step)*direction
+            assert np.isfinite(changed[2]).all() and np.all((changed[2] >= 0) & (changed[2] <= 1))
             image = focus.optical(literal(pc, changed, cfg, index, literals, phase[index]))
             objectives.append(float(np.sum(image.astype(np.float64)*weights, dtype=np.float64)))
         fd = (objectives[1]-objectives[0])/(2*step)

@@ -1,0 +1,417 @@
+{
+  "status": "SCORED",
+  "case": "flat",
+  "passed": false,
+  "continue_layered": false,
+  "reports": {
+    "identity": {
+      "quality": {
+        "regions": {
+          "whole": {
+            "visibility": {
+              "rgb_rmse": 5.020267233374212,
+              "chroma_rmse": 7.016453393231751
+            },
+            "far-only": {
+              "rgb_rmse": 4.88511138282783,
+              "chroma_rmse": 6.748426090061713
+            },
+            "candidate": {
+              "rgb_rmse": 17.16311359413937,
+              "chroma_rmse": 16.80169235501247
+            },
+            "mean-observed": {
+              "rgb_rmse": 6.626807659683872,
+              "chroma_rmse": 9.165913554891235
+            },
+            "donor-observed": {
+              "rgb_rmse": 16.250038029552854,
+              "chroma_rmse": 22.571622995984395
+            }
+          }
+        },
+        "components": {},
+        "bars": {
+          "rgb_rmse_mean": false,
+          "rgb_rmse_visibility": false,
+          "chroma_rmse_mean": false,
+          "chroma_rmse_visibility": false
+        },
+        "passed": false
+      },
+      "held": [
+        {
+          "index": 1,
+          "uncensored": {
+            "all": {
+              "count": 4096,
+              "normalized_rms": 1.0091757955110008,
+              "bar": 1.5,
+              "passed": true,
+              "present": true
+            },
+            "R": {
+              "count": 1024,
+              "normalized_rms": 1.009246920619111,
+              "bar": 1.75,
+              "passed": true,
+              "present": true
+            },
+            "G1": {
+              "count": 1024,
+              "normalized_rms": 1.0158705617945425,
+              "bar": 1.75,
+              "passed": true,
+              "present": true
+            },
+            "G2": {
+              "count": 1024,
+              "normalized_rms": 0.9984384619043174,
+              "bar": 1.75,
+              "passed": true,
+              "present": true
+            },
+            "B": {
+              "count": 1024,
+              "normalized_rms": 1.0130604314014384,
+              "bar": 1.75,
+              "passed": true,
+              "present": true
+            },
+            "bright": {
+              "count": 0,
+              "normalized_rms": null,
+              "bar": 1.75,
+              "passed": true,
+              "present": false
+            },
+            "dim": {
+              "count": 4096,
+              "normalized_rms": 1.0091757955110008,
+              "bar": 1.75,
+              "passed": true,
+              "present": true
+            }
+          },
+          "censor_count": 0,
+          "censor_one_sided_rms": null,
+          "passed": true
+        },
+        {
+          "index": 5,
+          "uncensored": {
+            "all": {
+              "count": 4096,
+              "normalized_rms": 1.0111693954765006,
+              "bar": 1.5,
+              "passed": true,
+              "present": true
+            },
+            "R": {
+              "count": 1024,
+              "normalized_rms": 1.0332539273058927,
+              "bar": 1.75,
+              "passed": true,
+              "present": true
+            },
+            "G1": {
+              "count": 1024,
+              "normalized_rms": 1.0017221577121944,
+              "bar": 1.75,
+              "passed": true,
+              "present": true
+            },
+            "G2": {
+              "count": 1024,
+              "normalized_rms": 1.042937206561475,
+              "bar": 1.75,
+              "passed": true,
+              "present": true
+            },
+            "B": {
+              "count": 1024,
+              "normalized_rms": 0.9649223849711274,
+              "bar": 1.75,
+              "passed": true,
+              "present": true
+            },
+            "bright": {
+              "count": 0,
+              "normalized_rms": null,
+              "bar": 1.75,
+              "passed": true,
+              "present": false
+            },
+            "dim": {
+              "count": 4096,
+              "normalized_rms": 1.0111693954765006,
+              "bar": 1.75,
+              "passed": true,
+              "present": true
+            }
+          },
+          "censor_count": 0,
+          "censor_one_sided_rms": null,
+          "passed": true
+        }
+      ],
+      "held_pass": true,
+      "pinhole_regions": {
+        "whole": {
+          "rgb_rmse": 45.76942289649092,
+          "chroma_rmse": 40.85694163768944
+        }
+      },
+      "status": "nonstationary_return",
+      "final_objective": {
+        "tag": "final",
+        "evaluation": 1028,
+        "step": null,
+        "evaluation_status": "complete",
+        "data_nll": 3.6351125240325928,
+        "prior": 0.016679594293236732,
+        "total": 3.6517921183258295,
+        "gradient_l2": 0.00230427086353302,
+        "gradient_max": 8.987488399725407e-05,
+        "optimizer_iteration": 1000,
+        "noncontiguous_gradients_converted": 2,
+        "learning_rate": 1,
+        "elapsed_seconds": 31.79699999999866
+      },
+      "same_data_mean_bars": {
+        "rgb_rmse_mean": false,
+        "chroma_rmse_mean": false
+      },
+      "retained_nonmatched_bars": {
+        "rgb_rmse_visibility": false,
+        "chroma_rmse_visibility": false
+      },
+      "outputs": {
+        "in-focus-rgb-f32.npy": "3e18b228587c4ada9699ff9cc47a1485704b80760df8e1dca421a7b83c216878",
+        "initial-reconstruction.npz": "a6a00914aebe5cf5312284ef6b2f855450ca36fd830d9776f364e39169c47e30",
+        "initial-state.pt": "036540ae9543678ee8e9416e13a118a3ccde3fb10917fc431286de9f50eb9246",
+        "pinhole-rgb-f32.npy": "c49664961c006629b42df48e3b5cf5db0302b6409cb21b31992f53f6b7f6ddad",
+        "predicted-cfa-1.npy": "3da706575a9c6c8eb32e28457c707d43a41ada3afc673b26e3315ff4a345619b",
+        "predicted-cfa-5.npy": "c847c79346c2b283126790cf1bc35fbc2b4107d6879ec72dac7cfea5315642a5",
+        "receipt.json": "d9cff4815648bfed5bd4036fb7240787670acd55a0c15d2f0a550ddf3b6d3b27",
+        "reconstruction.npz": "8ef4ef60760e9fce720fb586d5785b24b9ce6053672aa9abef332bfc199b4866",
+        "state.pt": "0a0374f86c1074c40486bed82dbf7d38b22808fdd584b15e99f40f8c2841b4b7"
+      }
+    },
+    "phase": {
+      "quality": {
+        "regions": {
+          "whole": {
+            "visibility": {
+              "rgb_rmse": 5.020267233374212,
+              "chroma_rmse": 7.016453393231751
+            },
+            "far-only": {
+              "rgb_rmse": 4.88511138282783,
+              "chroma_rmse": 6.748426090061713
+            },
+            "candidate": {
+              "rgb_rmse": 19.14813014800521,
+              "chroma_rmse": 18.637159966866754
+            },
+            "mean-observed": {
+              "rgb_rmse": 5.951022569000677,
+              "chroma_rmse": 8.347236862685794
+            },
+            "donor-observed": {
+              "rgb_rmse": 14.145457152440569,
+              "chroma_rmse": 19.770149770208924
+            }
+          }
+        },
+        "components": {},
+        "bars": {
+          "rgb_rmse_mean": false,
+          "rgb_rmse_visibility": false,
+          "chroma_rmse_mean": false,
+          "chroma_rmse_visibility": false
+        },
+        "passed": false
+      },
+      "held": [
+        {
+          "index": 1,
+          "uncensored": {
+            "all": {
+              "count": 4096,
+              "normalized_rms": 1.0043403458365154,
+              "bar": 1.5,
+              "passed": true,
+              "present": true
+            },
+            "R": {
+              "count": 1024,
+              "normalized_rms": 1.0093679046539183,
+              "bar": 1.75,
+              "passed": true,
+              "present": true
+            },
+            "G1": {
+              "count": 1024,
+              "normalized_rms": 0.992204608460501,
+              "bar": 1.75,
+              "passed": true,
+              "present": true
+            },
+            "G2": {
+              "count": 1024,
+              "normalized_rms": 0.9831426155588168,
+              "bar": 1.75,
+              "passed": true,
+              "present": true
+            },
+            "B": {
+              "count": 1024,
+              "normalized_rms": 1.0319569596531226,
+              "bar": 1.75,
+              "passed": true,
+              "present": true
+            },
+            "bright": {
+              "count": 0,
+              "normalized_rms": null,
+              "bar": 1.75,
+              "passed": true,
+              "present": false
+            },
+            "dim": {
+              "count": 4096,
+              "normalized_rms": 1.0043403458365154,
+              "bar": 1.75,
+              "passed": true,
+              "present": true
+            }
+          },
+          "censor_count": 0,
+          "censor_one_sided_rms": null,
+          "passed": true
+        },
+        {
+          "index": 5,
+          "uncensored": {
+            "all": {
+              "count": 4096,
+              "normalized_rms": 1.0130685570932636,
+              "bar": 1.5,
+              "passed": true,
+              "present": true
+            },
+            "R": {
+              "count": 1024,
+              "normalized_rms": 1.0290598631629693,
+              "bar": 1.75,
+              "passed": true,
+              "present": true
+            },
+            "G1": {
+              "count": 1024,
+              "normalized_rms": 1.0008948212782587,
+              "bar": 1.75,
+              "passed": true,
+              "present": true
+            },
+            "G2": {
+              "count": 1024,
+              "normalized_rms": 1.0322295111589457,
+              "bar": 1.75,
+              "passed": true,
+              "present": true
+            },
+            "B": {
+              "count": 1024,
+              "normalized_rms": 0.9894337757232898,
+              "bar": 1.75,
+              "passed": true,
+              "present": true
+            },
+            "bright": {
+              "count": 0,
+              "normalized_rms": null,
+              "bar": 1.75,
+              "passed": true,
+              "present": false
+            },
+            "dim": {
+              "count": 4096,
+              "normalized_rms": 1.0130685570932636,
+              "bar": 1.75,
+              "passed": true,
+              "present": true
+            }
+          },
+          "censor_count": 0,
+          "censor_one_sided_rms": null,
+          "passed": true
+        }
+      ],
+      "held_pass": true,
+      "pinhole_regions": {
+        "whole": {
+          "rgb_rmse": 46.38833885743434,
+          "chroma_rmse": 44.913410965169646
+        }
+      },
+      "status": "nonstationary_return",
+      "final_objective": {
+        "tag": "final",
+        "evaluation": 1030,
+        "step": null,
+        "evaluation_status": "complete",
+        "data_nll": 3.6451470851898193,
+        "prior": 0.014040344394743443,
+        "total": 3.659187429584563,
+        "gradient_l2": 0.003610466606914997,
+        "gradient_max": 0.00014735324657522142,
+        "optimizer_iteration": 1000,
+        "noncontiguous_gradients_converted": 2,
+        "learning_rate": 1,
+        "elapsed_seconds": 33.86000000000058
+      },
+      "same_data_mean_bars": {
+        "rgb_rmse_mean": false,
+        "chroma_rmse_mean": false
+      },
+      "retained_nonmatched_bars": {
+        "rgb_rmse_visibility": false,
+        "chroma_rmse_visibility": false
+      },
+      "outputs": {
+        "in-focus-rgb-f32.npy": "050c461b7f087e98e4199a93684614d0d705129e65400c29fa0cd4652a7230c3",
+        "initial-reconstruction.npz": "a6a00914aebe5cf5312284ef6b2f855450ca36fd830d9776f364e39169c47e30",
+        "initial-state.pt": "036540ae9543678ee8e9416e13a118a3ccde3fb10917fc431286de9f50eb9246",
+        "pinhole-rgb-f32.npy": "b0355c56d69d80b5ca16c49e86b944713662a7782b7d85f9e4a6374d25bf1484",
+        "predicted-cfa-1.npy": "1802049f0a4304f2e6cb431b4415aa8a650f5a014edd5ad2f9c73800a9012f1e",
+        "predicted-cfa-5.npy": "a4b9f37a7abb85ba7e8173bfc2b37d83e77ed8a067aaeec5d2a23ded4dd52146",
+        "receipt.json": "95883b5141ee7148bcf301140fbaeaf66d1182b97ab91983511d974b134b97a1",
+        "reconstruction.npz": "6e632112fd996fe14f3cdb45d60e6d30f24566f3dacd8eb02f8b484beac127ae",
+        "state.pt": "2f1cb46a070544e413b0c42fb56b850b6ed1ee702f2954bd14499d4f7be249d5"
+      }
+    }
+  },
+  "paired_identity_bars": {
+    "whole_rgb_rmse": false,
+    "whole_chroma_rmse": false
+  },
+  "paired_components": {},
+  "fixed_target_pass": false,
+  "wrong_phase_rejected": true,
+  "old_reference_scope": "Strict retained seven-training/64-pupil known-alpha target; not a paired phase regression",
+  "retained_target_psf_max_abs_dn": 0.00048828125,
+  "retained_target_psf_bound_dn": 0.01220703125,
+  "new_reference_scope": "Six-training dense observations; phase and identity noise distributions share seeds, frame149 exact",
+  "nonstationarity_is_not_image_quality": true,
+  "original_data_unchanged": true,
+  "retained_source_hashes": {
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\in-focus-2\\delivered\\flat\\visibility-rgb-f32.npy": "6bc71fb0b0792dad2a585bcfebe38696d08220880fde03f19a4e4ca7820f02be",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\in-focus-2\\delivered\\flat\\far-only-rgb-f32.npy": "ac3fc8b153661aab288618e5810011dac2919116af2b6dd7f65b07139528f5ce"
+  },
+  "seconds": 0.23500000000058208,
+  "cuda_peak_allocated_bytes": 847872,
+  "cuda_peak_reserved_bytes": 2097152,
+  "real_photo_admission": false
+}

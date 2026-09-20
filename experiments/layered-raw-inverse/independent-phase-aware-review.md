@@ -25,3 +25,11 @@ Pre-execution defects resolved: angular endpoint versus midpoint pupil mismatch;
 | phase-aware-controls.py | `89806616bf54474d22e00fb373a852b803c5412160815a4fed121f374870ee5c` |
 | phase-aware-independent-plan.md | `bd97af81dcb1956fe6038258876bc6ac65b079597b1c761e5cc2ee32b3d8a1b5` |
 | run-phase-aware.py | `6b85b9e5c24dbe2d881ff5cefb30d74bd8fade0cb6953d0345fa9794e161bc59` |
+
+## Preserved commissioning refusal and bounded repair
+
+The original review above had SHA256 `fa88edd5d152b424145fc6213ca7addb39e2f7fce1c730f72c809f8add98a2cb`. First refusal is preserved in commit `3f24b1493425f3d9c0471e40d91d9d4eefb27113`; diagnostic-only logging and its repeated refusal are preserved in `e5df521625e89112870a26d8f1931dba2f422ffc`. No generated observations or fits ran. The second log isolates the failed comparison to physical alpha: step.001 gives FD -0.039358747 versus AD -0.040229902, outside the unchanged0.0004011495 allowance; near/far comparisons and the preceding dense adjoint checks passed.
+
+Source review approves one fixed repair, **not a new passing result**: alpha FD step.001→.25, plus an actual finite/[0,1] assertion on perturbed alpha. With N/F fixed, sampled alpha*N and sampled alpha times sampled F are linear in alpha; zero extension, the fixed PSF and the final cotangent are linear too. This path contains no sigmoid, likelihood, clipping or prior. Thus the larger admissible central step has zero real-arithmetic truncation error. The declared alpha/direction bounds keep both perturbations approximately within[.09,.86]. F32 cancellation of two objectives near21.1 is plausible, not proven by the first failures.
+
+The inspected diff changes only that step and adds the range assertion; direction, AD, tolerance, zero/doubled-gradient rejection, model and quality bars remain unchanged. Repaired controls SHA256 `9c085c1640d544ca687529cf2c6ae9eeff18829a33ff10ff863c6f80e07a5aa2`; appended independent plan `76dfa90485e2ae8104cca7198c50afddf98d2c2cbcfe78c901714c45b11dae32`. No execution by this reviewer.

@@ -1,0 +1,437 @@
+{
+  "passed": true,
+  "mechanics": [
+    {
+      "index": 0,
+      "alpha": null,
+      "max_abs_dn": 0.00244140625
+    },
+    {
+      "index": 0,
+      "alpha": 0.0,
+      "max_abs_dn": 0.0029296875
+    },
+    {
+      "index": 0,
+      "alpha": 1.0,
+      "max_abs_dn": 0.0018310546875
+    },
+    {
+      "index": 3,
+      "alpha": null,
+      "max_abs_dn": 0.0015869140625
+    },
+    {
+      "index": 3,
+      "alpha": 0.0,
+      "max_abs_dn": 0.001953125
+    },
+    {
+      "index": 3,
+      "alpha": 1.0,
+      "max_abs_dn": 0.001220703125
+    },
+    {
+      "index": 7,
+      "alpha": null,
+      "max_abs_dn": 0.001953125
+    },
+    {
+      "index": 7,
+      "alpha": 0.0,
+      "max_abs_dn": 0.001953125
+    },
+    {
+      "index": 7,
+      "alpha": 1.0,
+      "max_abs_dn": 0.001220703125
+    }
+  ],
+  "dense_forward_max_dn": 0.003173828125,
+  "dense_adjoint": [
+    {
+      "field": "near",
+      "max_abs": 5.093170329928398e-11,
+      "relative_l2": 2.477496536812396e-07
+    },
+    {
+      "field": "far",
+      "max_abs": 2.3283064365386963e-10,
+      "relative_l2": 7.630702043570636e-07
+    },
+    {
+      "field": "alpha",
+      "max_abs": 1.0188668966293335e-06,
+      "relative_l2": 4.576688297674991e-06
+    }
+  ],
+  "literal_finite_difference": [
+    {
+      "field": 0,
+      "autograd": 0.0320945680141449,
+      "finite_difference": 0.032093818445332545,
+      "tolerance": 0.0003604728400707245,
+      "zero_and_doubled_derivatives_rejected": true,
+      "direction_sha256": "f77e01601727ea210fc92cd4c4243808eeb52093cf081e891f36da57ab5e5a1c"
+    },
+    {
+      "field": 1,
+      "autograd": 0.10360052436590195,
+      "finite_difference": 0.10359041000015168,
+      "tolerance": 0.0007180026218295097,
+      "zero_and_doubled_derivatives_rejected": true,
+      "direction_sha256": "f77e01601727ea210fc92cd4c4243808eeb52093cf081e891f36da57ab5e5a1c"
+    },
+    {
+      "field": 2,
+      "autograd": -0.04022990167140961,
+      "finite_difference": -0.04022515388442116,
+      "tolerance": 0.00040114950835704803,
+      "zero_and_doubled_derivatives_rejected": true,
+      "direction_sha256": "dd52d2463ca71278ad3a054dfa73a18b6e3d7b6bd0cf5bfdf28504f07f40fca0"
+    }
+  ],
+  "diagonal_product_destroyer_dn": 424.8201904296875,
+  "quarter_diagonal": {
+    "diagonal": {
+      "individual_axis_max_dn": [
+        8.9083251953125,
+        8.9083251953125
+      ],
+      "difference_max_dn": 6.103515625e-05
+    },
+    "x_only": {
+      "individual_axis_max_dn": [
+        8.9083251953125,
+        17.81671142578125
+      ],
+      "difference_max_dn": 8.908447265625
+    }
+  },
+  "optical": {
+    "status": "PASS",
+    "passed": true,
+    "operator": {
+      "constant": {
+        "max_abs_dn": 0.00048828125,
+        "bound_dn": 0.01220703125
+      },
+      "impulse": {
+        "max_abs_dn": 6.103515625e-05,
+        "bound_dn": 0.011444091796875
+      },
+      "signed": {
+        "max_abs_dn": 2.288818359375e-05,
+        "bound_dn": 0.00038146600127220154
+      }
+    },
+    "focused_one_layer_max_abs_dn": 0.0009765625,
+    "context_destroyer_dn": 117.0461196899414,
+    "compose_before_filter_destroyer_dn": 249.748291015625,
+    "components": {
+      "glint": {
+        "ideal": {
+          "recovery": [
+            1.0000000123675878,
+            0.9999999998272858,
+            1.000000041011783
+          ],
+          "template_energy": [
+            2964285983.9856625,
+            2756332317.700867,
+            2177842485.6248503
+          ],
+          "live": true
+        },
+        "half_colour": [
+          {
+            "channel": 0,
+            "component": {
+              "recovery": [
+                0.5000000064775838,
+                0.9999999998272858,
+                1.000000041011783
+              ],
+              "template_energy": [
+                2964285983.9856625,
+                2756332317.700867,
+                2177842485.6248503
+              ],
+              "live": true
+            },
+            "rgb": {
+              "rgb_rmse": 1208.9993853265892,
+              "chroma_rmse": 1480.7157966943237
+            }
+          },
+          {
+            "channel": 1,
+            "component": {
+              "recovery": [
+                1.0000000123675878,
+                0.499999999834456,
+                1.000000041011783
+              ],
+              "template_energy": [
+                2964285983.9856625,
+                2756332317.700867,
+                2177842485.6248503
+              ],
+              "live": true
+            },
+            "rgb": {
+              "rgb_rmse": 1165.8208368696257,
+              "chroma_rmse": 2019.2609219806595
+            }
+          },
+          {
+            "channel": 2,
+            "component": {
+              "recovery": [
+                1.0000000123675878,
+                0.9999999998272858,
+                0.5000000381024443
+              ],
+              "template_energy": [
+                2964285983.9856625,
+                2756332317.700867,
+                2177842485.6248503
+              ],
+              "live": true
+            },
+            "rgb": {
+              "rgb_rmse": 1036.2851150761535,
+              "chroma_rmse": 1269.1848799889617
+            }
+          }
+        ],
+        "double_psf": {
+          "recovery": [
+            0.8972970290368022,
+            0.8967267920271482,
+            0.9044211620314275
+          ],
+          "template_energy": [
+            2964285983.9856625,
+            2756332317.700867,
+            2177842485.6248503
+          ],
+          "live": true
+        },
+        "double_psf_rejected": true,
+        "double_psf_errors": {
+          "rgb_rmse": 550.9187847393791,
+          "chroma_rmse": 227.8064913446923
+        }
+      },
+      "ridge": {
+        "ideal": {
+          "recovery": [
+            0.9999999997540617,
+            1.0000000233232929,
+            1.000000009215298
+          ],
+          "template_energy": [
+            42794039.66764453,
+            111754783.50906362,
+            135560566.32565916
+          ],
+          "live": true
+        },
+        "half_colour": [
+          {
+            "channel": 0,
+            "component": {
+              "recovery": [
+                0.49999998799664824,
+                1.0000000233232929,
+                1.000000009215298
+              ],
+              "template_energy": [
+                42794039.66764453,
+                111754783.50906362,
+                135560566.32565916
+              ],
+              "live": true
+            },
+            "rgb": {
+              "rgb_rmse": 121.89767122501715,
+              "chroma_rmse": 149.2935476674178
+            }
+          },
+          {
+            "channel": 1,
+            "component": {
+              "recovery": [
+                0.9999999997540617,
+                0.5000000184443197,
+                1.000000009215298
+              ],
+              "template_energy": [
+                42794039.66764453,
+                111754783.50906362,
+                135560566.32565916
+              ],
+              "live": true
+            },
+            "rgb": {
+              "rgb_rmse": 196.98666206439387,
+              "chroma_rmse": 341.1909071089309
+            }
+          },
+          {
+            "channel": 2,
+            "component": {
+              "recovery": [
+                0.9999999997540617,
+                1.0000000233232929,
+                0.5000000022481649
+              ],
+              "template_energy": [
+                42794039.66764453,
+                111754783.50906362,
+                135560566.32565916
+              ],
+              "live": true
+            },
+            "rgb": {
+              "rgb_rmse": 216.955392643421,
+              "chroma_rmse": 265.71500446077835
+            }
+          }
+        ],
+        "double_psf": {
+          "recovery": [
+            0.9291162521988691,
+            0.9224072823700362,
+            0.9329405751208186
+          ],
+          "template_energy": [
+            42794039.66764453,
+            111754783.50906362,
+            135560566.32565916
+          ],
+          "live": true
+        },
+        "double_psf_rejected": true,
+        "double_psf_errors": {
+          "rgb_rmse": 74.13373357260545,
+          "chroma_rmse": 126.11788393760402
+        }
+      }
+    },
+    "wrong_colour": {
+      "errors": {
+        "rgb_rmse": 661.4332307825326,
+        "chroma_rmse": 810.0869571688761
+      },
+      "component": {
+        "recovery": [
+          0.6787562326557898,
+          1.0000000233232929,
+          0.44079813039587123
+        ],
+        "template_energy": [
+          42794039.66764453,
+          111754783.50906362,
+          135560566.32565916
+        ],
+        "live": true
+      },
+      "rejected": true
+    },
+    "frozen_generator_psf_checks": {
+      "truth": {
+        "max_abs_supported_dn": 0.0,
+        "bound_dn": 0.11003269255161285
+      },
+      "glint_template": {
+        "max_abs_supported_dn": 0.0,
+        "bound_dn": 0.10207642614841461
+      },
+      "glint_absent": {
+        "max_abs_supported_dn": 0.0,
+        "bound_dn": 0.022232038900256157
+      },
+      "ridge_template": {
+        "max_abs_supported_dn": 0.0,
+        "bound_dn": 0.027182206511497498
+      },
+      "ridge_absent": {
+        "max_abs_supported_dn": 0.0,
+        "bound_dn": 0.11480265855789185
+      }
+    },
+    "destroyer_reference": "Ideal once-PSF target, per-colour recovery1; actual arms use filtered visibility",
+    "scope": "Fixed supplied synthetic optical PSF; original pinhole failures unchanged"
+  },
+  "phase_provenance": {
+    "bindings": {
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\chip-corrected-sample-diversity-1.json": "ac4e83b218e1cb6e56396a461902709b7893f0126f8e2eba375f73d7c6818e97",
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\chip-baseline-1\\chip.warpmap.txt": "ce8534c9e65c5c761373bad87df5352c1c46319b7eaf7f7c91477ea61b4f4922",
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\local-green-translation-1\\result.json": "ed8880a95a4dc7f0af5da6b27968ae74805eb205780d5281c84790c53eac1b6e",
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\chip-local-sample-diversity-1.json": "72e267c31b84ef78f29405bdf8349498d591c0aede383f9b958a1961df6bc5ba"
+    },
+    "source_indices": [
+      146,
+      147,
+      148,
+      149,
+      150,
+      151,
+      152,
+      153
+    ],
+    "reference": 149,
+    "point_native": [
+      1527.5,
+      1299.5
+    ],
+    "mapped_displacements_native": [
+      [
+        -0.14822913889133815,
+        -1.4639410065128686
+      ],
+      [
+        -0.11009802514308831,
+        -0.8959074708418484
+      ],
+      [
+        -0.06712262374026068,
+        -0.4511090139960743
+      ],
+      [
+        2.2737367544323206e-13,
+        2.2737367544323206e-13
+      ],
+      [
+        0.09339308047560735,
+        0.39277858634523
+      ],
+      [
+        0.19945092302805278,
+        0.8337450673525382
+      ],
+      [
+        0.25694612183406207,
+        1.4246076324382102
+      ],
+      [
+        0.2829825106241515,
+        1.8362764113016965
+      ]
+    ],
+    "formula": "t=-(((d-d149)+1)%2-1)",
+    "reduction": "unit-scale translation plant; no a division",
+    "synthetic_origin_native": [
+      1480,
+      1252
+    ],
+    "rggb_parity_preserved": true
+  },
+  "no_fit": true,
+  "seconds": 0.6710000000020955,
+  "cuda_peak_allocated_bytes": 166923776,
+  "cuda_peak_reserved_bytes": 373293056,
+  "real_photo_admission": false
+}

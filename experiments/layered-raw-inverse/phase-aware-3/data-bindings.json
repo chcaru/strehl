@@ -1,0 +1,107 @@
+[
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\phase-aware-3\\data\\evaluation\\flat\\identity-donor-rgb-f32.npy",
+    "sha256": "539d8ba98a2497a8fae0aab2ce9111759f3d9b782931753a616ba850ad0fb4d0",
+    "bytes": 110720
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\phase-aware-3\\data\\evaluation\\flat\\identity-expected-cfa-f32.npy",
+    "sha256": "d1ab0013e0741c4fd54e61fd1ac21f5928c088bb1735259b670f1dfa9086d87e",
+    "bytes": 295040
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\phase-aware-3\\data\\evaluation\\flat\\identity-mean-rgb-f32.npy",
+    "sha256": "8003cc35cd5e53f491e1714b6989be40823f1ebdfac9b845a45a709bfdffd608",
+    "bytes": 110720
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\phase-aware-3\\data\\evaluation\\flat\\phase-donor-rgb-f32.npy",
+    "sha256": "7bc63b482f036662da4c64be6642175093f269d339d51ebfd4466458843fce52",
+    "bytes": 110720
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\phase-aware-3\\data\\evaluation\\flat\\phase-expected-cfa-f32.npy",
+    "sha256": "b2ce40143173cc7b988eda3f54056e3b72959ec00f49881f9e0bb933ff061ae8",
+    "bytes": 295040
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\phase-aware-3\\data\\evaluation\\flat\\phase-mean-rgb-f32.npy",
+    "sha256": "86bb372865f7b4aa0097be36d024c92dc6306e76fe323f4ea48512fe6edd1e3f",
+    "bytes": 110720
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\phase-aware-3\\data\\evaluation\\flat\\truth-rgb-f32.npy",
+    "sha256": "a77ef98fbe575dcbd9d5821308095afc7614516bcc3ded6021c659b81cf3b460",
+    "bytes": 110720
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\phase-aware-3\\data\\evaluation\\layered\\identity-donor-rgb-f32.npy",
+    "sha256": "9e6c50666bf68b39004c6fb4e5be9bb325c89b7fbc47d37877ae9c977493d118",
+    "bytes": 110720
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\phase-aware-3\\data\\evaluation\\layered\\identity-expected-cfa-f32.npy",
+    "sha256": "a4e4114e19afc826af954265e915e9816f3c8056f90d5c91f38bc9e004d74318",
+    "bytes": 295040
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\phase-aware-3\\data\\evaluation\\layered\\identity-mean-rgb-f32.npy",
+    "sha256": "b9a2b886f1681ed422784075a4a8c1ad1a6a793ccda54ae88e28d64684ee2e79",
+    "bytes": 110720
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\phase-aware-3\\data\\evaluation\\layered\\phase-donor-rgb-f32.npy",
+    "sha256": "63a3cf1954b7567f4cf2f1d159fbd793d58680b6acb1cdb69d605e3e75d0d436",
+    "bytes": 110720
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\phase-aware-3\\data\\evaluation\\layered\\phase-expected-cfa-f32.npy",
+    "sha256": "bfa47dbf0624357a59f89a6b86480130507f563c9f0b592e35d6a27c67d4d6e3",
+    "bytes": 295040
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\phase-aware-3\\data\\evaluation\\layered\\phase-mean-rgb-f32.npy",
+    "sha256": "121f4bc8dd7f3197e0d3417d447f43429e6691bcf55a600cace9ebce977061a9",
+    "bytes": 110720
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\phase-aware-3\\data\\evaluation\\layered\\truth-rgb-f32.npy",
+    "sha256": "4e15906986cf92cd0eda829b25103f1eac0e6bad9ebab1c4c36bf24315c46f5e",
+    "bytes": 110720
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\phase-aware-3\\data\\flat\\identity-u16.npy",
+    "sha256": "b6170f9ef148859022c383d68bb4433110c175dde0458c38ab273f89f949f279",
+    "bytes": 147584
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\phase-aware-3\\data\\flat\\phase-u16.npy",
+    "sha256": "18156419650b0d98337cffa51a75103e5005fbec50c7ea7283c422d45acc201b",
+    "bytes": 147584
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\phase-aware-3\\data\\layered\\identity-u16.npy",
+    "sha256": "3d5e34cfd57856f7d250b544b13602f2d84bc566f0340fb06808f178e195a4e2",
+    "bytes": 147584
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\phase-aware-3\\data\\layered\\phase-u16.npy",
+    "sha256": "28189be1d631e0e2eaea7e975c43d2fa4a69361b4a0634492833773dfaec1df3",
+    "bytes": 147584
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\phase-aware-3\\data\\manifest.json",
+    "sha256": "27b43a84b607319e877d1fd0209f25b3e593630489c3dd40151a7c80c47430e6",
+    "bytes": 3533
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\phase-aware-3\\data\\pupil-f64.npy",
+    "sha256": "7bda06d92e9c0b1639e117c545dc343467691057c8a88831b6f9e39c35b077b7",
+    "bytes": 262272
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\phase-aware-3\\data\\result.json",
+    "sha256": "a473df6f88e2ffe4a2c6e48bc5c5daebffb6a9fc8f70fcf744848b1c86293c5e",
+    "bytes": 10696
+  }
+]

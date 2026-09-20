@@ -1,0 +1,14 @@
+{
+  "instrument_completed": true,
+  "sources_unchanged": true,
+  "generated_data_unchanged": true,
+  "layered_executed": false,
+  "stop_reason": "fixed flat-quality gate refused the phase-aware candidate",
+  "flat_score": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\layered-raw-inverse\\phase-aware-3\\flat-scored\\result.json",
+    "sha256": "6987e009c12072a16efbeaa61242131a0b3872d4ed54e231286f54bef97e88a6",
+    "bytes": 13898
+  },
+  "layered_score": null,
+  "scope": "Supplied-phase/optics generated reconstruction; no photographic or default admission"
+}

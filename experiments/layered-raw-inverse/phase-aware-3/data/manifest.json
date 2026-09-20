@@ -1,0 +1,152 @@
+{
+  "schema": 1,
+  "config": {
+    "width": 96,
+    "height": 96,
+    "focus_coordinates": [
+      0.0,
+      0.14285714285714285,
+      0.2857142857142857,
+      0.42857142857142855,
+      0.5714285714285714,
+      0.7142857142857143,
+      0.8571428571428571,
+      1.0
+    ],
+    "gain": 0.22893773019313812,
+    "read_variance": 0.9245561361312866,
+    "inverse_depths": [
+      1.0,
+      0.0
+    ],
+    "defocus_scale": 12.0,
+    "psf_sigma": 0.699999988079071,
+    "black": 512,
+    "saturation": 16383,
+    "steps": 160,
+    "device": "cuda",
+    "pupil_points": null
+  },
+  "train_indices": [
+    0,
+    2,
+    3,
+    4,
+    6,
+    7
+  ],
+  "held_indices": [
+    1,
+    5
+  ],
+  "reference_index": 3,
+  "translations_native": [
+    [
+      0.14822913889156553,
+      -0.536058993486904
+    ],
+    [
+      0.11009802514331568,
+      0.8959074708420758
+    ],
+    [
+      0.06712262374048805,
+      0.45110901399630166
+    ],
+    [
+      -0.0,
+      -0.0
+    ],
+    [
+      -0.09339308047537997,
+      -0.3927785863450026
+    ],
+    [
+      -0.1994509230278254,
+      -0.8337450673523108
+    ],
+    [
+      -0.2569461218338347,
+      0.5753923675620172
+    ],
+    [
+      -0.2829825106239241,
+      0.16372358869853088
+    ]
+  ],
+  "pupil_path": "pupil-f64.npy",
+  "cases": {
+    "flat": {
+      "identity": "flat/identity-u16.npy",
+      "phase": "flat/phase-u16.npy"
+    },
+    "layered": {
+      "identity": "layered/identity-u16.npy",
+      "phase": "layered/phase-u16.npy"
+    }
+  },
+  "phase_provenance": {
+    "bindings": {
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\chip-corrected-sample-diversity-1.json": "ac4e83b218e1cb6e56396a461902709b7893f0126f8e2eba375f73d7c6818e97",
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\chip-baseline-1\\chip.warpmap.txt": "ce8534c9e65c5c761373bad87df5352c1c46319b7eaf7f7c91477ea61b4f4922",
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\local-green-translation-1\\result.json": "ed8880a95a4dc7f0af5da6b27968ae74805eb205780d5281c84790c53eac1b6e",
+      "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\chip-local-sample-diversity-1.json": "72e267c31b84ef78f29405bdf8349498d591c0aede383f9b958a1961df6bc5ba"
+    },
+    "source_indices": [
+      146,
+      147,
+      148,
+      149,
+      150,
+      151,
+      152,
+      153
+    ],
+    "reference": 149,
+    "point_native": [
+      1527.5,
+      1299.5
+    ],
+    "mapped_displacements_native": [
+      [
+        -0.14822913889133815,
+        -1.4639410065128686
+      ],
+      [
+        -0.11009802514308831,
+        -0.8959074708418484
+      ],
+      [
+        -0.06712262374026068,
+        -0.4511090139960743
+      ],
+      [
+        2.2737367544323206e-13,
+        2.2737367544323206e-13
+      ],
+      [
+        0.09339308047560735,
+        0.39277858634523
+      ],
+      [
+        0.19945092302805278,
+        0.8337450673525382
+      ],
+      [
+        0.25694612183406207,
+        1.4246076324382102
+      ],
+      [
+        0.2829825106241515,
+        1.8362764113016965
+      ]
+    ],
+    "formula": "t=-(((d-d149)+1)%2-1)",
+    "reduction": "unit-scale translation plant; no a division",
+    "synthetic_origin_native": [
+      1480,
+      1252
+    ],
+    "rggb_parity_preserved": true
+  }
+}

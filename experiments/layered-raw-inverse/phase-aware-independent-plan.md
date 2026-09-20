@@ -81,3 +81,15 @@ Per-process wrapper caps:8GiB committed, commission/generation120s each,
 fit600s each, scoring60s; maximum five conditional fits. CUDA allocated/reserved
 are recorded separately. New data/foci/phase/initialization change the task: even
 a pass permits only this bounded route's next real-data feasibility decision.
+
+Instrument repair after preserved commissions1/2 (commits3f24b149/e5df5216):
+the diagnostic isolated the refusal to the physical-alpha finite difference;
+near/far directions passed. Root and the independent reviewer authorize only its
+step .001 -> .25, retaining the direction, AD, tolerance and zero/doubled-gradient
+destroyers. With both radiance sheets fixed, this tested same-ray forward, common
+PSF and cotangent are affine in physical alpha: the larger symmetric step has no
+real-arithmetic truncation error. There is no sigmoid, likelihood or prior in this
+FD path. Actual perturbed alpha is asserted finite and within [0,1] before each
+evaluation (the declared range is bounded by [.09,.86]). F32 subtraction error is
+a plausible explanation for the small-step disagreement, not a proven cause or a
+passing result. No generated observations, fits, model or quality bars changed.

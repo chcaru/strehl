@@ -1,0 +1,370 @@
+{
+  "status": "GENERATED",
+  "passed": true,
+  "files": {
+    "manifest.json": "27b43a84b607319e877d1fd0209f25b3e593630489c3dd40151a7c80c47430e6",
+    "pupil-f64.npy": "7bda06d92e9c0b1639e117c545dc343467691057c8a88831b6f9e39c35b077b7",
+    "flat\\identity-u16.npy": "b6170f9ef148859022c383d68bb4433110c175dde0458c38ab273f89f949f279",
+    "flat\\phase-u16.npy": "18156419650b0d98337cffa51a75103e5005fbec50c7ea7283c422d45acc201b",
+    "layered\\identity-u16.npy": "3d5e34cfd57856f7d250b544b13602f2d84bc566f0340fb06808f178e195a4e2",
+    "layered\\phase-u16.npy": "28189be1d631e0e2eaea7e975c43d2fa4a69361b4a0634492833773dfaec1df3",
+    "evaluation\\flat\\identity-donor-rgb-f32.npy": "539d8ba98a2497a8fae0aab2ce9111759f3d9b782931753a616ba850ad0fb4d0",
+    "evaluation\\flat\\identity-expected-cfa-f32.npy": "d1ab0013e0741c4fd54e61fd1ac21f5928c088bb1735259b670f1dfa9086d87e",
+    "evaluation\\flat\\identity-mean-rgb-f32.npy": "8003cc35cd5e53f491e1714b6989be40823f1ebdfac9b845a45a709bfdffd608",
+    "evaluation\\flat\\phase-donor-rgb-f32.npy": "7bc63b482f036662da4c64be6642175093f269d339d51ebfd4466458843fce52",
+    "evaluation\\flat\\phase-expected-cfa-f32.npy": "b2ce40143173cc7b988eda3f54056e3b72959ec00f49881f9e0bb933ff061ae8",
+    "evaluation\\flat\\phase-mean-rgb-f32.npy": "86bb372865f7b4aa0097be36d024c92dc6306e76fe323f4ea48512fe6edd1e3f",
+    "evaluation\\flat\\truth-rgb-f32.npy": "a77ef98fbe575dcbd9d5821308095afc7614516bcc3ded6021c659b81cf3b460",
+    "evaluation\\layered\\identity-donor-rgb-f32.npy": "9e6c50666bf68b39004c6fb4e5be9bb325c89b7fbc47d37877ae9c977493d118",
+    "evaluation\\layered\\identity-expected-cfa-f32.npy": "a4e4114e19afc826af954265e915e9816f3c8056f90d5c91f38bc9e004d74318",
+    "evaluation\\layered\\identity-mean-rgb-f32.npy": "b9a2b886f1681ed422784075a4a8c1ad1a6a793ccda54ae88e28d64684ee2e79",
+    "evaluation\\layered\\phase-donor-rgb-f32.npy": "63a3cf1954b7567f4cf2f1d159fbd793d58680b6acb1cdb69d605e3e75d0d436",
+    "evaluation\\layered\\phase-expected-cfa-f32.npy": "bfa47dbf0624357a59f89a6b86480130507f563c9f0b592e35d6a27c67d4d6e3",
+    "evaluation\\layered\\phase-mean-rgb-f32.npy": "121f4bc8dd7f3197e0d3417d447f43429e6691bcf55a600cace9ebce977061a9",
+    "evaluation\\layered\\truth-rgb-f32.npy": "4e15906986cf92cd0eda829b25103f1eac0e6bad9ebab1c4c36bf24315c46f5e"
+  },
+  "initializer_u16_sha256": {
+    "flat": "21cb5fefbbd1102ac0875fdf78356d0d5ccfaf0d58b5e046724d4f89e6e89bc4",
+    "layered": "990544ca00775a4f38cce8352b139a50fc3bd1bfef61dc7b1600b65a03af12b7"
+  },
+  "adequacy": [
+    {
+      "case": "flat",
+      "geometry": "identity",
+      "index": 0,
+      "normalized_rms": {
+        "whole": 6.850904168077946e-05,
+        "crossing": 6.810640452340237e-05
+      },
+      "passed": true
+    },
+    {
+      "case": "flat",
+      "geometry": "identity",
+      "index": 1,
+      "normalized_rms": {
+        "whole": 8.647814319207245e-05,
+        "crossing": 8.459109192309818e-05
+      },
+      "passed": true
+    },
+    {
+      "case": "flat",
+      "geometry": "identity",
+      "index": 2,
+      "normalized_rms": {
+        "whole": 5.37810602892828e-05,
+        "crossing": 5.342135781013743e-05
+      },
+      "passed": true
+    },
+    {
+      "case": "flat",
+      "geometry": "identity",
+      "index": 3,
+      "normalized_rms": {
+        "whole": 9.889894575555072e-05,
+        "crossing": 9.613909424554012e-05
+      },
+      "passed": true
+    },
+    {
+      "case": "flat",
+      "geometry": "identity",
+      "index": 4,
+      "normalized_rms": {
+        "whole": 9.458041236948022e-05,
+        "crossing": 9.268538323599594e-05
+      },
+      "passed": true
+    },
+    {
+      "case": "flat",
+      "geometry": "identity",
+      "index": 5,
+      "normalized_rms": {
+        "whole": 5.4978178561678255e-05,
+        "crossing": 5.4345774501688046e-05
+      },
+      "passed": true
+    },
+    {
+      "case": "flat",
+      "geometry": "identity",
+      "index": 6,
+      "normalized_rms": {
+        "whole": 0.00010218501483505324,
+        "crossing": 0.00010107820653092231
+      },
+      "passed": true
+    },
+    {
+      "case": "flat",
+      "geometry": "identity",
+      "index": 7,
+      "normalized_rms": {
+        "whole": 5.7647207860305884e-05,
+        "crossing": 5.742415132125992e-05
+      },
+      "passed": true
+    },
+    {
+      "case": "flat",
+      "geometry": "phase",
+      "index": 0,
+      "normalized_rms": {
+        "whole": 0.00010039793819342126,
+        "crossing": 9.953577844118558e-05
+      },
+      "passed": true
+    },
+    {
+      "case": "flat",
+      "geometry": "phase",
+      "index": 1,
+      "normalized_rms": {
+        "whole": 0.0001148139132890874,
+        "crossing": 0.00011293351273856173
+      },
+      "passed": true
+    },
+    {
+      "case": "flat",
+      "geometry": "phase",
+      "index": 2,
+      "normalized_rms": {
+        "whole": 9.54042633008825e-05,
+        "crossing": 9.575658970717756e-05
+      },
+      "passed": true
+    },
+    {
+      "case": "flat",
+      "geometry": "phase",
+      "index": 3,
+      "normalized_rms": {
+        "whole": 9.889894575555072e-05,
+        "crossing": 9.613909424554012e-05
+      },
+      "passed": true
+    },
+    {
+      "case": "flat",
+      "geometry": "phase",
+      "index": 4,
+      "normalized_rms": {
+        "whole": 0.00012596607002015957,
+        "crossing": 0.0001264699687037939
+      },
+      "passed": true
+    },
+    {
+      "case": "flat",
+      "geometry": "phase",
+      "index": 5,
+      "normalized_rms": {
+        "whole": 0.00012144259080761189,
+        "crossing": 0.0001201843885100406
+      },
+      "passed": true
+    },
+    {
+      "case": "flat",
+      "geometry": "phase",
+      "index": 6,
+      "normalized_rms": {
+        "whole": 6.987051100991275e-05,
+        "crossing": 6.902559942411421e-05
+      },
+      "passed": true
+    },
+    {
+      "case": "flat",
+      "geometry": "phase",
+      "index": 7,
+      "normalized_rms": {
+        "whole": 7.242012161024276e-05,
+        "crossing": 7.385991310493728e-05
+      },
+      "passed": true
+    },
+    {
+      "case": "layered",
+      "geometry": "identity",
+      "index": 0,
+      "normalized_rms": {
+        "whole": 0.0018760805322414335,
+        "crossing": 0.00385605302449465
+      },
+      "passed": true
+    },
+    {
+      "case": "layered",
+      "geometry": "identity",
+      "index": 1,
+      "normalized_rms": {
+        "whole": 0.0014639443691745254,
+        "crossing": 0.003040409022146153
+      },
+      "passed": true
+    },
+    {
+      "case": "layered",
+      "geometry": "identity",
+      "index": 2,
+      "normalized_rms": {
+        "whole": 0.0007401494734820244,
+        "crossing": 0.0021333885318851704
+      },
+      "passed": true
+    },
+    {
+      "case": "layered",
+      "geometry": "identity",
+      "index": 3,
+      "normalized_rms": {
+        "whole": 0.0009925701602886297,
+        "crossing": 0.0030433536105538735
+      },
+      "passed": true
+    },
+    {
+      "case": "layered",
+      "geometry": "identity",
+      "index": 4,
+      "normalized_rms": {
+        "whole": 0.0014732101373362495,
+        "crossing": 0.00446159867032873
+      },
+      "passed": true
+    },
+    {
+      "case": "layered",
+      "geometry": "identity",
+      "index": 5,
+      "normalized_rms": {
+        "whole": 0.0010041503266524586,
+        "crossing": 0.002865091718439732
+      },
+      "passed": true
+    },
+    {
+      "case": "layered",
+      "geometry": "identity",
+      "index": 6,
+      "normalized_rms": {
+        "whole": 0.0033257885798241107,
+        "crossing": 0.0074456242966008035
+      },
+      "passed": true
+    },
+    {
+      "case": "layered",
+      "geometry": "identity",
+      "index": 7,
+      "normalized_rms": {
+        "whole": 0.003688319862866181,
+        "crossing": 0.005234424159292453
+      },
+      "passed": true
+    },
+    {
+      "case": "layered",
+      "geometry": "phase",
+      "index": 0,
+      "normalized_rms": {
+        "whole": 0.0022348407224741336,
+        "crossing": 0.003828435182592627
+      },
+      "passed": true
+    },
+    {
+      "case": "layered",
+      "geometry": "phase",
+      "index": 1,
+      "normalized_rms": {
+        "whole": 0.0016928652761840316,
+        "crossing": 0.0034101276345507333
+      },
+      "passed": true
+    },
+    {
+      "case": "layered",
+      "geometry": "phase",
+      "index": 2,
+      "normalized_rms": {
+        "whole": 0.0009307220580541888,
+        "crossing": 0.0028249579327272326
+      },
+      "passed": true
+    },
+    {
+      "case": "layered",
+      "geometry": "phase",
+      "index": 3,
+      "normalized_rms": {
+        "whole": 0.0009925701602886297,
+        "crossing": 0.0030433536105538735
+      },
+      "passed": true
+    },
+    {
+      "case": "layered",
+      "geometry": "phase",
+      "index": 4,
+      "normalized_rms": {
+        "whole": 0.0019068358183115535,
+        "crossing": 0.006160058561099282
+      },
+      "passed": true
+    },
+    {
+      "case": "layered",
+      "geometry": "phase",
+      "index": 5,
+      "normalized_rms": {
+        "whole": 0.0013300762002359603,
+        "crossing": 0.004602922825130791
+      },
+      "passed": true
+    },
+    {
+      "case": "layered",
+      "geometry": "phase",
+      "index": 6,
+      "normalized_rms": {
+        "whole": 0.0035301399190171565,
+        "crossing": 0.008677847161053916
+      },
+      "passed": true
+    },
+    {
+      "case": "layered",
+      "geometry": "phase",
+      "index": 7,
+      "normalized_rms": {
+        "whole": 0.005159385676295369,
+        "crossing": 0.007955559737678222
+      },
+      "passed": true
+    }
+  ],
+  "generator": "Independent same-ray grid_sample, <=1024-ray chunks, separate16384 phase.60",
+  "candidate_pupil_phase": 0.23,
+  "no_heldout_baseline_use": true,
+  "no_fit": true,
+  "observations_sha256": {
+    "flat": {
+      "identity": "b6170f9ef148859022c383d68bb4433110c175dde0458c38ab273f89f949f279",
+      "phase": "18156419650b0d98337cffa51a75103e5005fbec50c7ea7283c422d45acc201b"
+    },
+    "layered": {
+      "identity": "3d5e34cfd57856f7d250b544b13602f2d84bc566f0340fb06808f178e195a4e2",
+      "phase": "28189be1d631e0e2eaea7e975c43d2fa4a69361b4a0634492833773dfaec1df3"
+    }
+  },
+  "seconds": 6.046999999998661,
+  "cuda_peak_allocated_bytes": 528933888,
+  "cuda_peak_reserved_bytes": 794820608,
+  "real_photo_admission": false
+}
