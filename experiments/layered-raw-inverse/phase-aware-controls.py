@@ -231,6 +231,8 @@ def commission_dense(control, focus, pc, author, cfg, values, phase, tests, prov
             objectives.append(float(np.sum(image.astype(np.float64)*weights, dtype=np.float64)))
         fd = (objectives[1]-objectives[0])/(2*step)
         bound = 2e-4+.005*abs(derivative)
+        print('PHASE_LITERAL_FD', dict(field=plane, step=step, objectives=objectives,
+              finite_difference=fd, autograd=derivative, tolerance=bound), flush=True)
         assert abs(fd-derivative) <= bound
         assert abs(derivative) > 10*bound and abs(fd) > bound and abs(fd-2*derivative) > bound
         finite.append(dict(field=plane, autograd=derivative, finite_difference=fd, tolerance=bound,

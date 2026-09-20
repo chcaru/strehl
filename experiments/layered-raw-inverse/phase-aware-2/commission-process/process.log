@@ -1,0 +1,16 @@
+PHASE_LITERAL_FD {'field': 0, 'step': 0.25, 'objectives': [21.109432491580492, 21.125479400803158], 'finite_difference': 0.032093818445332545, 'autograd': 0.0320945680141449, 'tolerance': 0.0003604728400707245}
+PHASE_LITERAL_FD {'field': 1, 'step': 0.25, 'objectives': [21.091557551878566, 21.14335275687864], 'finite_difference': 0.10359041000015168, 'autograd': 0.10360052436590195, 'tolerance': 0.0007180026218295097}
+PHASE_LITERAL_FD {'field': 2, 'step': 0.001, 'objectives': [21.117495956093535, 21.1174172385995], 'finite_difference': -0.03935874701710418, 'autograd': -0.04022990167140961, 'tolerance': 0.00040114950835704803}
+Traceback (most recent call last):
+  File "C:\dev\blog\death-of-software\projects\strehl\experiments\layered-raw-inverse\phase-aware-controls.py", line 458, in <module>
+    main()
+  File "C:\dev\blog\death-of-software\projects\strehl\experiments\layered-raw-inverse\phase-aware-controls.py", line 445, in main
+    result = commission(control, focus, pc, author)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\dev\blog\death-of-software\projects\strehl\experiments\layered-raw-inverse\phase-aware-controls.py", line 154, in commission
+    return commission_dense(control, focus, pc, author, cfg, values, phase, tests,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\dev\blog\death-of-software\projects\strehl\experiments\layered-raw-inverse\phase-aware-controls.py", line 236, in commission_dense
+    assert abs(fd-derivative) <= bound
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
