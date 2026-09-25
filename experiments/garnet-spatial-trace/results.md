@@ -100,11 +100,15 @@ The remaining work concerns per-frame geometric placement and spatially varying
 visibility/defocus while retaining both depths. Existing rejected free-visibility,
 deconvolution and source-prior studies remain binding.
 
-Two bounded questions follow: differential blur versus translation on already
-saved chip patches, and whether excluding independently known mixed optical
-support helps the actual pyramid on a generated opaque edge while preserving
-both depths. Neither is a photographic improvement claim before execution and
-independent review. The previous successful local chip-placement correction
+The differential-blur versus translation discriminator now stops at its first
+independent synthetic control, before opening saved chip patches: a pure
+translation infers a blur coefficient outside the registered near-zero range.
+See `../chip-differential-blur/results.md`; no real-photo attribution follows.
+The parallel optical-support experiment now passes its mechanical controls but
+lacks its registered bright-spill positive and damages far detail where the
+veto acts. No photographic replay follows. A complete corrected-garnet base-only
+comparison also finds no identified benefit. See `../optical-support-veto/results.md`
+and `../base-band-transfer/independent-results.md`. The previous successful local chip-placement correction
 already has a full299-frame trial; its negative star-sand transfer forbids
 silently generalizing it.
 

@@ -1,0 +1,95 @@
+{
+  "status": "INDEPENDENT_RESULT_BINDINGS_VERIFIED",
+  "source_checks": [
+    {
+      "run": "prepare-1",
+      "source_bindings": 290
+    },
+    {
+      "run": "build-1",
+      "source_bindings": 290
+    },
+    {
+      "run": "consume-1",
+      "source_bindings": 290
+    }
+  ],
+  "prepared_arrays_hash_exact": true,
+  "actual_consumer_RGB_CFA_RGB16_hashes_exact": true,
+  "near_protection_window_oracle_bit_exact": true,
+  "far_window_changed_native_pixels": 108,
+  "views": [
+    {
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\optical-support-veto\\result-review-views\\flat-current.png",
+      "sha256": "56c1554e24ad8873d031aab1152e6227b90478f2de6551f07c63afa34ba9255e",
+      "native_dimensions": [
+        64,
+        64
+      ],
+      "resampled": false,
+      "encoding": "Unchanged camera-native measurement RGB16 rounded /257; no ICC exists in this measurement path."
+    },
+    {
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\optical-support-veto\\result-review-views\\transparent-current.png",
+      "sha256": "d824eb5835a0ebbfce28a62fbe9e3a9828625f6158c4120b5ce453b05c4c068a",
+      "native_dimensions": [
+        64,
+        64
+      ],
+      "resampled": false,
+      "encoding": "Unchanged camera-native measurement RGB16 rounded /257; no ICC exists in this measurement path."
+    },
+    {
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\optical-support-veto\\result-review-views\\opaque-current.png",
+      "sha256": "d7b89e98fe2ac2cec84fdc276e2fa41580c2a07e142578f1c140ee177812bebf",
+      "native_dimensions": [
+        64,
+        64
+      ],
+      "resampled": false,
+      "encoding": "Unchanged camera-native measurement RGB16 rounded /257; no ICC exists in this measurement path."
+    },
+    {
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\optical-support-veto\\result-review-views\\opaque-all-one.png",
+      "sha256": "d7b89e98fe2ac2cec84fdc276e2fa41580c2a07e142578f1c140ee177812bebf",
+      "native_dimensions": [
+        64,
+        64
+      ],
+      "resampled": false,
+      "encoding": "Unchanged camera-native measurement RGB16 rounded /257; no ICC exists in this measurement path."
+    },
+    {
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\optical-support-veto\\result-review-views\\opaque-oracle.png",
+      "sha256": "a8583dc6ffb599d6d348efec0d1f27af0d70dba3b08f2059283c1f11c0c902ee",
+      "native_dimensions": [
+        64,
+        64
+      ],
+      "resampled": false,
+      "encoding": "Unchanged camera-native measurement RGB16 rounded /257; no ICC exists in this measurement path."
+    },
+    {
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\optical-support-veto\\result-review-views\\opaque-permuted.png",
+      "sha256": "fd327eebab3568b9fc6f14091df09d5d500e6416d1ea6865527add845a65f865",
+      "native_dimensions": [
+        64,
+        64
+      ],
+      "resampled": false,
+      "encoding": "Unchanged camera-native measurement RGB16 rounded /257; no ICC exists in this measurement path."
+    },
+    {
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\optical-support-veto\\result-review-views\\opaque-no-clean.png",
+      "sha256": "d7b89e98fe2ac2cec84fdc276e2fa41580c2a07e142578f1c140ee177812bebf",
+      "native_dimensions": [
+        64,
+        64
+      ],
+      "resampled": false,
+      "encoding": "Unchanged camera-native measurement RGB16 rounded /257; no ICC exists in this measurement path."
+    }
+  ],
+  "score_sha256": "9329089573a3eaaebb69d058ee0edc4f503e39609f98f0e55d4b746c343cec34",
+  "ray_controls_seconds": 2.8741961999912746
+}

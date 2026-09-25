@@ -111,6 +111,11 @@ pub mod garnet_spatial_trace {
 }
 
 #[cfg(feature = "native-correction-variance")]
+pub mod optical_support_veto_diagnostic {
+    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/optical-support-veto/core-bridge.rs"));
+}
+
+#[cfg(feature = "native-correction-variance")]
 pub mod rb_own_guide_diagnostic {
     include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/rb-own-guide/core-bridge.rs"));
 }

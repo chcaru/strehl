@@ -5004,6 +5004,11 @@ mod marigold_source_pure {
     include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/marigold-source-pure/oracle.rs"));
 }
 
+#[cfg(all(test, feature = "native-correction-variance", feature = "native-gpu-gather", feature = "native-direct-planes"))]
+mod optical_support_veto {
+    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/optical-support-veto/implementation.rs"));
+}
+
 #[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance", feature = "native-gpu-gather"))]
 pub(crate) mod native_coherent_estimator {
     include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/native-coherent-estimator/implementation.rs"));

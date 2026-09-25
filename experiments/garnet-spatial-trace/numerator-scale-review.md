@@ -63,7 +63,7 @@ The separate `range-bound-controls.rs` adds five tests, not yet executed by its 
 2. Signed tiny coefficients at the exponential weight floor exercise actual subnormal storage, requiring the stated absolute error bound.
 3. Normal finite SoftPower/Mean against legacy f32 weighted arithmetic, independent actual decomposition and actual one-frame weights. Full finish pixels, denominators and fallback sums must match bits.
 4. HardMax with both base modes against the corresponding legacy selection oracle.
-5. WeightedFromCoarsest (CLI sharp base) against legacy SoftPower bits; require positive base weights so the branch is exercised.
+5. WeightedFromCoarsest (CLI weighted base) against legacy SoftPower bits; require positive base weights so the branch is exercised.
 
 Controls share the current weight computation by design: they establish accumulator correctness and unchanged weights, not focus-selection quality or camera calibration. They cannot prove a SOTA photographic result. Root must run a fresh compile, the tests, complete corrected stacks with held per-source hashes and canonical plan/threads, then full-output independent review. Historical cache replay remains exactly tied to the user's original full image; candidate output is separately named and may differ.
 

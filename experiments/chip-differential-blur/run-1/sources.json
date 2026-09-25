@@ -1,0 +1,47 @@
+[
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-differential-blur\\implementation.py",
+    "bytes": 7165,
+    "sha256": "14f193c81bc02dd8e8dbf2cb5edf0389a8e5a37751311cbec91d59cfea3cc7db"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-differential-blur\\measure.py",
+    "bytes": 7882,
+    "sha256": "0fcd8710ff494678b4a46e471999d32b202f3b1afb71835f2db8d47ec230f302"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-differential-blur\\run.py",
+    "bytes": 2668,
+    "sha256": "777ca5a5e9015b4fd0f6efac0e7480f559e723c20ab9acf322f46cb538513cf5"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-differential-blur\\design.md",
+    "bytes": 5115,
+    "sha256": "b3584961b9933eacf6e94d6f74c5f0d03f8de82c77b57f64a8b94765e57030f7"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-differential-blur\\independent-controls.py",
+    "bytes": 7177,
+    "sha256": "c2890db5008dd1e54fb508a8d15218346b33c99535b35864964e16bf92028e68"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-differential-blur\\design-review.md",
+    "bytes": 3728,
+    "sha256": "a8d5e489e1cb358ad8773d73f3bfc1239361bae3b7900c8cef4ad3bd86e2ed3d"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\bounded-process.py",
+    "bytes": 12664,
+    "sha256": "47b9f8d848759eba61f055b9fdca1f8ac400f134dcd7636f0e0eaaa955704e0b"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\m12-harness.py",
+    "bytes": 117908,
+    "sha256": "6cfb408992f37b225f102da4d62ba836f9c5b67c92bdd418ff460987866a1bb9"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\local-green-translation.py",
+    "bytes": 9763,
+    "sha256": "5b64f7e612fd94cd8a22515bffb67addcee71021f6338f10a249c63864420196"
+  }
+]

@@ -1,0 +1,75 @@
+{
+  "schema": 1,
+  "status": "COMPLETE_AWAITING_INDEPENDENT_PHOTOGRAPHIC_REVIEW",
+  "frames": 183,
+  "reference": 91,
+  "crop_quad_xywh": [
+    127,
+    85,
+    3262,
+    2174
+  ],
+  "native_dimensions": [
+    6524,
+    4348
+  ],
+  "master": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\base-band-transfer\\garnet104-1\\stack-master.tiff",
+    "bytes": 170203089,
+    "sha256": "e178595379755ec6e6757ec5e984ca1f1eac875fc13bf3094ac01558751d5caa"
+  },
+  "full_jpeg": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\base-band-transfer\\garnet104-1\\stack-full.jpg",
+    "bytes": 11939232,
+    "sha256": "75928628cd6fcc59a961f754febc5ca656d01b22613a0d822e320ca0209e85be"
+  },
+  "overview": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\base-band-transfer\\garnet104-1\\overview.jpg",
+    "bytes": 763522,
+    "sha256": "99ebc0c309facb4c238289bca5be8c78a44bc2e478d65754339c41d5ae4ad832"
+  },
+  "baseline_master": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\quality-september25\\garnet-104\\stack-master.tiff",
+    "sha256": "9c7a12f6a8945f261e884165c777554e5222a9deb6656d7fd472d055babc9ede",
+    "bytes": 170203089
+  },
+  "baseline_full_jpeg": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\quality-september25\\garnet-104\\stack-full.jpg",
+    "sha256": "f2ecf68a4073bd01af42ebd5326cc0cb7a845f8fce0a8a4e377e0171b47319fc",
+    "bytes": 11904287
+  },
+  "baseline_overview": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\quality-september25\\garnet-104\\overview.jpg",
+    "sha256": "7d5e69e360b0ffd80b73d46193829001de3ff3926d639de4049def60021ededd",
+    "bytes": 761753
+  },
+  "baseline_rgb16_le_sha256": "1b7d55986df90131ed4adee4335541c449e741eb914ebd1ba947ddad126da828",
+  "candidate_rgb16_le_sha256": "1dc86cda9e2f70154a8e17ed3ce2532d791e5769ff29370a1633b35f9c73c89c",
+  "icc_sha256": "238ad2596316306a72025bb245cf3c8cd72f1090c8d95af2f38dc090e84ece5b",
+  "command_differences": [
+    {
+      "index": 16,
+      "baseline": "mean",
+      "candidate": "weighted"
+    },
+    {
+      "index": 24,
+      "baseline": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\quality-september25\\garnet-104\\stack-master.tiff",
+      "candidate": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\base-band-transfer\\garnet104-1\\stack-master.tiff"
+    }
+  ],
+  "tone_log_lines": {
+    "mean": [
+      "tone            : black -0.00016, white 0.61642 (linear), contrast 0.55"
+    ],
+    "weighted": [
+      "tone            : black -0.00016, white 0.61907 (linear), contrast 0.55"
+    ]
+  },
+  "tone_anchors_exactly_pinned": false,
+  "original_bytes_and_metadata_unchanged": true,
+  "total_wrapper_wall_seconds": 65.85293110000202,
+  "resource_scope": "Render job includes183 original decodes through final TIFF. Original hash audits and JPEG preparation are outside render-job timing.",
+  "visual_verdict": null,
+  "scope": "Judge structural retention and broad spill; darker is not evidence of improvement. No sweep or default change."
+}

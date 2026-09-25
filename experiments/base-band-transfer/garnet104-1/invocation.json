@@ -1,0 +1,161 @@
+{
+  "schema": 1,
+  "baseline": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\quality-september25\\garnet-104\\invocation.json",
+      "bytes": 2951,
+      "sha256": "b7ef4688da81b31186558918df117d8fcefe097bb3b71fe1b1de3182b39bf2c0"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\quality-september25\\garnet-104\\input-order.json",
+      "bytes": 49488,
+      "sha256": "bb6088a70737f9581c85fd89caaeb586fbb4c29a25196c9e60b953034c40633e"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\quality-september25\\garnet-104\\completion.json",
+      "bytes": 1662,
+      "sha256": "f40f3fdeab28d92000a91b64906c90a0bc30935b51a13ca9bec840c359130bfd"
+    }
+  ],
+  "baseline_master": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\quality-september25\\garnet-104\\stack-master.tiff",
+    "sha256": "9c7a12f6a8945f261e884165c777554e5222a9deb6656d7fd472d055babc9ede",
+    "bytes": 170203089
+  },
+  "baseline_full_jpeg": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\quality-september25\\garnet-104\\stack-full.jpg",
+    "sha256": "f2ecf68a4073bd01af42ebd5326cc0cb7a845f8fce0a8a4e377e0171b47319fc",
+    "bytes": 11904287
+  },
+  "baseline_overview": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\quality-september25\\garnet-104\\overview.jpg",
+    "sha256": "7d5e69e360b0ffd80b73d46193829001de3ff3926d639de4049def60021ededd",
+    "bytes": 761753
+  },
+  "executable": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\garnet-spatial-trace\\build-fixed-2\\strehl.exe",
+    "bytes": 17950720,
+    "sha256": "bec4c357836ad1383800a6c933460ee7ef072c525b5957a6f5deb5194b203314"
+  },
+  "map": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\minerals-september24\\104msdcf\\alignment.txt",
+    "bytes": 25106,
+    "sha256": "641e5a970e4ac736f2ca70e9e47d72c88d39a281cfb8e6e6a202678bcc2e1915"
+  },
+  "reference": 91,
+  "frames": 183,
+  "command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\garnet-spatial-trace\\build-fixed-2\\strehl.exe",
+    "stack",
+    "D:\\personal\\macro\\minerals\\etched-spessartine-garnet\\104MSDCF",
+    "--merge",
+    "pyramid",
+    "--pyramid-bands",
+    "7",
+    "--pyramid-gate",
+    "2",
+    "--pyramid-exponent",
+    "2",
+    "--pyramid-sharpen",
+    "1.4",
+    "--pyramid-select",
+    "soft",
+    "--pyramid-base",
+    "weighted",
+    "--srgb",
+    "--demosaic",
+    "--resampler",
+    "catmull-rom",
+    "--cover",
+    "crop",
+    "--out",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\base-band-transfer\\garnet104-1\\stack-master.tiff",
+    "--exposure=0.0"
+  ],
+  "baseline_command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\garnet-spatial-trace\\build-fixed-2\\strehl.exe",
+    "stack",
+    "D:\\personal\\macro\\minerals\\etched-spessartine-garnet\\104MSDCF",
+    "--merge",
+    "pyramid",
+    "--pyramid-bands",
+    "7",
+    "--pyramid-gate",
+    "2",
+    "--pyramid-exponent",
+    "2",
+    "--pyramid-sharpen",
+    "1.4",
+    "--pyramid-select",
+    "soft",
+    "--pyramid-base",
+    "mean",
+    "--srgb",
+    "--demosaic",
+    "--resampler",
+    "catmull-rom",
+    "--cover",
+    "crop",
+    "--out",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\quality-september25\\garnet-104\\stack-master.tiff",
+    "--exposure=0.0"
+  ],
+  "command_differences": [
+    {
+      "index": 16,
+      "baseline": "mean",
+      "candidate": "weighted"
+    },
+    {
+      "index": 24,
+      "baseline": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\quality-september25\\garnet-104\\stack-master.tiff",
+      "candidate": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\base-band-transfer\\garnet104-1\\stack-master.tiff"
+    }
+  ],
+  "environment": {
+    "RAYON_NUM_THREADS": "8",
+    "STREHL_PYRAMID_WORKERS": "8",
+    "STREHL_ALIGN": "1",
+    "STREHL_WARPMAP": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\minerals-september24\\104msdcf\\alignment.txt",
+    "STREHL_FULLRES_GATHER": "1",
+    "STREHL_DIRECT_PLANES": "rounded",
+    "STREHL_PROBE_GATHER": "green",
+    "STREHL_WARP_WRITEBACK": "parallel",
+    "STREHL_GPU_GATHER": "on",
+    "STREHL_GPU_SCHEDULE": "device",
+    "STREHL_GPU_GATHER_LOG": "on",
+    "STREHL_DEFECT": "off",
+    "STREHL_FINE_SUPPORT": "off",
+    "STREHL_CA_BEFORE_MHC": "off"
+  },
+  "removed_environment": [],
+  "sources": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\base-band-transfer\\run.py",
+      "bytes": 10345,
+      "sha256": "eae95b4f8b5a35de6909ea7b46b0abeda3a98707949155ea722e6a393aeace0f"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\base-band-transfer\\design.md",
+      "bytes": 3389,
+      "sha256": "1fe398eb5ea1f8d38bc5a05cc3d8925a4d97e26d05bd6370aabf676b07b2bf1b"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\bounded-process.py",
+      "bytes": 12664,
+      "sha256": "47b9f8d848759eba61f055b9fdca1f8ac400f134dcd7636f0e0eaaa955704e0b"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\m12-harness.py",
+      "bytes": 117908,
+      "sha256": "6cfb408992f37b225f102da4d62ba836f9c5b67c92bdd418ff460987866a1bb9"
+    }
+  ],
+  "limits": {
+    "wall_seconds": 180,
+    "cpu_seconds": 900,
+    "committed_bytes": 8589934592
+  },
+  "tone_policy": "Actual production automatic tone is independently remeasured in each arm. Logged anchors are rounded, not exact f32. Do not interpret darkening as improvement.",
+  "scope": "One complete base-weighting counterfactual with corrected current production binary; no automatic promotion or sweep."
+}

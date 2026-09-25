@@ -1,0 +1,12 @@
+{
+  "strehl": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\optical-support-veto\\build-1\\strehl.exe",
+    "sha256": "86c89a991a372540ef25484e7bf0d473f9117655499d25e978209bbf23fe5f4e",
+    "bytes": 17950720
+  },
+  "cli-tests": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\optical-support-veto\\build-1\\cli-tests.exe",
+    "sha256": "f35ba42c7465653bccda57935e1a720f1631108fe489cab10aba6b42ce6ec102",
+    "bytes": 30440448
+  }
+}

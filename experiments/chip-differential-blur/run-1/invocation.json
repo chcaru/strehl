@@ -1,0 +1,30 @@
+{
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-I",
+    "-B",
+    "-X",
+    "faulthandler",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-differential-blur\\measure.py",
+    "--out",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\chip-differential-blur\\run-1"
+  ],
+  "cwd": "C:\\dev\\blog\\death-of-software\\projects\\strehl",
+  "environment": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1"
+  },
+  "removed_environment": [],
+  "python": {
+    "path": "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "bytes": 104952,
+    "sha256": "4d6f5f81a4bca11191c4c7c6b43632694d0a4ce74e068619d8fdc161d469859a"
+  },
+  "limits": {
+    "wall_seconds": 180,
+    "cpu_seconds": 180,
+    "committed_bytes": 2147483648
+  }
+}

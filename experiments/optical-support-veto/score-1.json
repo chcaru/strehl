@@ -1,0 +1,398 @@
+{
+  "status": "UNEXERCISED",
+  "scenes": [
+    {
+      "name": "flat",
+      "errors": {
+        "rgb": 0.0011075508082285523,
+        "chroma": 0.0010010983096435666
+      },
+      "luma_rms": 0.0009451008518226445,
+      "null_exact": true
+    },
+    {
+      "name": "transparent",
+      "errors": {
+        "rgb": 0.01492427010089159,
+        "chroma": 0.0217863991856575
+      },
+      "joint_amplitudes": [
+        0.721489429473877,
+        0.8235170245170593
+      ],
+      "null_exact": true
+    },
+    {
+      "name": "opaque",
+      "baseline_protection_accepts_current": true,
+      "baseline_protection": [
+        {
+          "region": "near",
+          "current_error": {
+            "rgb": 0.03721633180975914,
+            "chroma": 0.030040772631764412
+          },
+          "candidate_error": {
+            "rgb": 0.03721633180975914,
+            "chroma": 0.030040772631764412
+          },
+          "current_amplitudes": [
+            0.6475928425788879,
+            0.12199803441762924
+          ],
+          "candidate_amplitudes": [
+            0.6475928425788879,
+            0.12199803441762924
+          ],
+          "pass_": true
+        },
+        {
+          "region": "far",
+          "current_error": {
+            "rgb": 0.00469207763671875,
+            "chroma": 0.005400479305535555
+          },
+          "candidate_error": {
+            "rgb": 0.00469207763671875,
+            "chroma": 0.005400479305535555
+          },
+          "current_amplitudes": [
+            null,
+            0.9400290846824646
+          ],
+          "candidate_amplitudes": [
+            null,
+            0.9400290846824646
+          ],
+          "pass_": true
+        }
+      ],
+      "positive_exercised_coefficients": 14,
+      "outside_luma_excess": -0.0014394704485312104,
+      "twice_flat_luma_rms": 0.001890201703645289,
+      "fixture_exercised": false,
+      "destroyers": [
+        {
+          "name": "blur",
+          "protection_rejected": true,
+          "details": [
+            {
+              "region": "near",
+              "current_error": {
+                "rgb": 0.03721633180975914,
+                "chroma": 0.030040772631764412
+              },
+              "candidate_error": {
+                "rgb": 0.0963442325592041,
+                "chroma": 0.03788863494992256
+              },
+              "current_amplitudes": [
+                0.6475928425788879,
+                0.12199803441762924
+              ],
+              "candidate_amplitudes": [
+                0.19951315224170685,
+                0.06861335039138794
+              ],
+              "pass_": false
+            },
+            {
+              "region": "far",
+              "current_error": {
+                "rgb": 0.00469207763671875,
+                "chroma": 0.005400479305535555
+              },
+              "candidate_error": {
+                "rgb": 0.015341347083449364,
+                "chroma": 0.01277836225926876
+              },
+              "current_amplitudes": [
+                null,
+                0.9400290846824646
+              ],
+              "candidate_amplitudes": [
+                null,
+                0.6501374244689941
+              ],
+              "pass_": false
+            }
+          ]
+        },
+        {
+          "name": "grey",
+          "protection_rejected": true,
+          "details": [
+            {
+              "region": "near",
+              "current_error": {
+                "rgb": 0.03721633180975914,
+                "chroma": 0.030040772631764412
+              },
+              "candidate_error": {
+                "rgb": 0.04799200966954231,
+                "chroma": 0.06279510259628296
+              },
+              "current_amplitudes": [
+                0.6475928425788879,
+                0.12199803441762924
+              ],
+              "candidate_amplitudes": [
+                0.5545957684516907,
+                -0.08696207404136658
+              ],
+              "pass_": false
+            },
+            {
+              "region": "far",
+              "current_error": {
+                "rgb": 0.00469207763671875,
+                "chroma": 0.005400479305535555
+              },
+              "candidate_error": {
+                "rgb": 0.0256010964512825,
+                "chroma": 0.0352080762386322
+              },
+              "current_amplitudes": [
+                null,
+                0.9400290846824646
+              ],
+              "candidate_amplitudes": [
+                null,
+                0.7742635607719421
+              ],
+              "pass_": false
+            }
+          ]
+        },
+        {
+          "name": "overcontrast",
+          "protection_rejected": true,
+          "details": [
+            {
+              "region": "near",
+              "current_error": {
+                "rgb": 0.03721633180975914,
+                "chroma": 0.030040772631764412
+              },
+              "candidate_error": {
+                "rgb": 0.07335212826728821,
+                "chroma": 0.0330752432346344
+              },
+              "current_amplitudes": [
+                0.6475928425788879,
+                0.12199803441762924
+              ],
+              "candidate_amplitudes": [
+                0.9713892936706543,
+                0.18299707770347595
+              ],
+              "pass_": false
+            },
+            {
+              "region": "far",
+              "current_error": {
+                "rgb": 0.00469207763671875,
+                "chroma": 0.005400479305535555
+              },
+              "candidate_error": {
+                "rgb": 0.043643489480018616,
+                "chroma": 0.012687030248343945
+              },
+              "current_amplitudes": [
+                null,
+                0.9400290846824646
+              ],
+              "candidate_amplitudes": [
+                null,
+                1.4100435972213745
+              ],
+              "pass_": false
+            }
+          ]
+        }
+      ],
+      "protection_commissioned": true,
+      "arms": [
+        {
+          "arm": "oracle",
+          "outside_current": {
+            "rgb": 0.004783558193594217,
+            "chroma": 0.00462656794115901
+          },
+          "outside_candidate": {
+            "rgb": 0.023594973608851433,
+            "chroma": 0.01764753833413124
+          },
+          "protection": [
+            {
+              "region": "near",
+              "current_error": {
+                "rgb": 0.03721633180975914,
+                "chroma": 0.030040772631764412
+              },
+              "candidate_error": {
+                "rgb": 0.03721633180975914,
+                "chroma": 0.030040772631764412
+              },
+              "current_amplitudes": [
+                0.6475928425788879,
+                0.12199803441762924
+              ],
+              "candidate_amplitudes": [
+                0.6475928425788879,
+                0.12199803441762924
+              ],
+              "pass_": true
+            },
+            {
+              "region": "far",
+              "current_error": {
+                "rgb": 0.00469207763671875,
+                "chroma": 0.005400479305535555
+              },
+              "candidate_error": {
+                "rgb": 0.02363351173698902,
+                "chroma": 0.018535230308771133
+              },
+              "current_amplitudes": [
+                null,
+                0.9400290846824646
+              ],
+              "candidate_amplitudes": [
+                null,
+                0.5223054885864258
+              ],
+              "pass_": false
+            }
+          ],
+          "protected": false,
+          "paired_edge_improvement": false
+        },
+        {
+          "arm": "permuted",
+          "outside_current": {
+            "rgb": 0.004783558193594217,
+            "chroma": 0.00462656794115901
+          },
+          "outside_candidate": {
+            "rgb": 0.00582306832075119,
+            "chroma": 0.0060007269494235516
+          },
+          "protection": [
+            {
+              "region": "near",
+              "current_error": {
+                "rgb": 0.03721633180975914,
+                "chroma": 0.030040772631764412
+              },
+              "candidate_error": {
+                "rgb": 0.03721633180975914,
+                "chroma": 0.030040772631764412
+              },
+              "current_amplitudes": [
+                0.6475928425788879,
+                0.12199803441762924
+              ],
+              "candidate_amplitudes": [
+                0.6475928425788879,
+                0.12199803441762924
+              ],
+              "pass_": true
+            },
+            {
+              "region": "far",
+              "current_error": {
+                "rgb": 0.00469207763671875,
+                "chroma": 0.005400479305535555
+              },
+              "candidate_error": {
+                "rgb": 0.0065824249759316444,
+                "chroma": 0.006968477740883827
+              },
+              "current_amplitudes": [
+                null,
+                0.9400290846824646
+              ],
+              "candidate_amplitudes": [
+                null,
+                0.8996152877807617
+              ],
+              "pass_": false
+            }
+          ],
+          "protected": false,
+          "paired_edge_improvement": false
+        }
+      ],
+      "generated_oracle_admitted": false
+    }
+  ],
+  "operator_support_checks": [
+    {
+      "operation": "reduce",
+      "fine_size": [
+        9,
+        11
+      ],
+      "input_size": [
+        9,
+        11
+      ],
+      "output_size": [
+        5,
+        6
+      ],
+      "exact": true
+    },
+    {
+      "operation": "expand",
+      "fine_size": [
+        9,
+        11
+      ],
+      "input_size": [
+        5,
+        6
+      ],
+      "output_size": [
+        9,
+        11
+      ],
+      "exact": true
+    },
+    {
+      "operation": "reduce",
+      "fine_size": [
+        32,
+        32
+      ],
+      "input_size": [
+        32,
+        32
+      ],
+      "output_size": [
+        16,
+        16
+      ],
+      "exact": true
+    },
+    {
+      "operation": "expand",
+      "fine_size": [
+        32,
+        32
+      ],
+      "input_size": [
+        16,
+        16
+      ],
+      "output_size": [
+        32,
+        32
+      ],
+      "exact": true
+    }
+  ],
+  "photographic_replay_admitted": false,
+  "scope": "Fixed generated oracle availability; no RAW, automatic visibility or SOTA claim."
+}

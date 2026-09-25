@@ -1,0 +1,100 @@
+
+running 2 tests
+test merge_cmd::optical_support_veto::footprint_and_fallback_mechanics ... ok
+test merge_cmd::optical_support_veto::generated_consumer_screen ...   GPU gather: NVIDIA GeForce RTX 5090 / Vulkan / DiscreteGpu; schedule Device256; initialization 345.327 ms; {"no_contraction":true,"max_storage_buffer_binding_size":2147483644,"max_buffer_size":4294967295,"original_sha256":"41658a89bd9b17c73b0f452b48bde689679e4ecc50774872ebfff0171cdb6560","decorated_sha256":"a7dce2107ce7713ac4d9cd961dd44e303bd69b37c2d2ca7029f20aa1f131de9d","submitted_sha256":"a7dce2107ce7713ac4d9cd961dd44e303bd69b37c2d2ca7029f20aa1f131de9d","arithmetic_results":30,"added_decorations":30,"float_operations":{"FAdd":8,"FMul":17,"FSub":5},"entry_points":["mhc","gather","quantize_vector"],"group_zero_bindings":[0,1,2,3,4,5],"bounds_policy":"Restrict indices/buffers/images/binding-arrays; integer division checks and loop bounds enabled","validation":"embedded WGSL+IR; Naga SPIR-V parse+IR; structural decoration/removal identity; NOT spirv-val"}
+  GPU device coordinates: {"hardware":{"vulkan_api":4211029,"shader_f64":true,"signed_zero_inf_nan_preserve_f64":true,"denorm_preserve_f64":false,"rounding_rte_f32":true,"rounding_rte_f64":true,"denorm_independence":1,"rounding_independence":1},"original_sha256":"95eb96b66b3e680303fe461954a898cc7f6db199225f67d32eb1f249cd0be3eb","submitted_sha256":"232804bc0de39feb6d50d271d0ff83d10d650a890c9e215b3f21eef6feee4947","original_extensions":["SPV_KHR_storage_buffer_storage_class"],"arithmetic_results":24,"added_capabilities":["SignedZeroInfNanPreserve","RoundingModeRTE"],"execution_modes":["SignedZeroInfNanPreserve 64","RoundingModeRTE 32","RoundingModeRTE 64"],"coefficient_guard":"every finite nonzero pull coefficient abs>=2^-900; unsafe actual frames use Parallel256; direct descriptor helper refuses","entry_point":"main","bindings":[0,1,2],"validation":"owned GLSL+Naga IR and original SPIR-V parse+IR; final fixed additions structurally checked with exact removal identity; final patched SPIR-V NOT fully Naga-validated and NOT spirv-val"}
+  GPU gather RGB Device256: 96x96, covered 8464/9216, library call 3.440 ms, pack 0.007, CPU coordinates 0.000, submit/wait/readback 3.422; upload 18656 B, download 36864 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 96x96, covered 4232/4608, library call 0.251 ms, pack 0.003, CPU coordinates 0.000, submit/wait/readback 0.245; upload 18656 B, download 36864 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather RGB Device256: 96x96, covered 8464/9216, library call 0.374 ms, pack 0.002, CPU coordinates 0.001, submit/wait/readback 0.369; upload 18656 B, download 36864 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 96x96, covered 4232/4608, library call 0.399 ms, pack 0.004, CPU coordinates 0.000, submit/wait/readback 0.392; upload 18656 B, download 36864 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather RGB Device256: 96x96, covered 8464/9216, library call 0.373 ms, pack 0.006, CPU coordinates 0.000, submit/wait/readback 0.364; upload 18656 B, download 36864 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 96x96, covered 4232/4608, library call 0.331 ms, pack 0.005, CPU coordinates 0.000, submit/wait/readback 0.324; upload 18656 B, download 36864 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather RGB Device256: 96x96, covered 8464/9216, library call 0.395 ms, pack 0.007, CPU coordinates 0.000, submit/wait/readback 0.386; upload 18656 B, download 36864 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 96x96, covered 4232/4608, library call 0.255 ms, pack 0.003, CPU coordinates 0.000, submit/wait/readback 0.251; upload 18656 B, download 36864 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather RGB Device256: 96x96, covered 8464/9216, library call 0.348 ms, pack 0.007, CPU coordinates 0.000, submit/wait/readback 0.339; upload 18656 B, download 36864 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 96x96, covered 4232/4608, library call 0.337 ms, pack 0.005, CPU coordinates 0.000, submit/wait/readback 0.330; upload 18656 B, download 36864 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather RGB Device256: 96x96, covered 8464/9216, library call 0.448 ms, pack 0.006, CPU coordinates 0.000, submit/wait/readback 0.439; upload 18656 B, download 36864 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 96x96, covered 4232/4608, library call 0.414 ms, pack 0.009, CPU coordinates 0.000, submit/wait/readback 0.401; upload 18656 B, download 36864 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather RGB Device256: 96x96, covered 8464/9216, library call 0.481 ms, pack 0.005, CPU coordinates 0.000, submit/wait/readback 0.473; upload 18656 B, download 36864 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 96x96, covered 4232/4608, library call 0.517 ms, pack 0.008, CPU coordinates 0.000, submit/wait/readback 0.506; upload 18656 B, download 36864 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather RGB Device256: 96x96, covered 8464/9216, library call 0.392 ms, pack 0.005, CPU coordinates 0.000, submit/wait/readback 0.385; upload 18656 B, download 36864 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 96x96, covered 4232/4608, library call 0.300 ms, pack 0.014, CPU coordinates 0.000, submit/wait/readback 0.284; upload 18656 B, download 36864 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather RGB Device256: 96x96, covered 8464/9216, library call 0.400 ms, pack 0.005, CPU coordinates 0.000, submit/wait/readback 0.393; upload 18656 B, download 36864 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 96x96, covered 4232/4608, library call 0.306 ms, pack 0.007, CPU coordinates 0.000, submit/wait/readback 0.296; upload 18656 B, download 36864 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather RGB Device256: 96x96, covered 8464/9216, library call 0.428 ms, pack 0.005, CPU coordinates 0.000, submit/wait/readback 0.421; upload 18656 B, download 36864 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 96x96, covered 4232/4608, library call 0.264 ms, pack 0.007, CPU coordinates 0.000, submit/wait/readback 0.256; upload 18656 B, download 36864 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather RGB Device256: 96x96, covered 8464/9216, library call 0.522 ms, pack 0.003, CPU coordinates 0.000, submit/wait/readback 0.516; upload 18656 B, download 36864 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 96x96, covered 4232/4608, library call 0.256 ms, pack 0.007, CPU coordinates 0.000, submit/wait/readback 0.248; upload 18656 B, download 36864 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather RGB Device256: 96x96, covered 8464/9216, library call 0.367 ms, pack 0.004, CPU coordinates 0.000, submit/wait/readback 0.361; upload 18656 B, download 36864 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 96x96, covered 4232/4608, library call 0.356 ms, pack 0.009, CPU coordinates 0.000, submit/wait/readback 0.344; upload 18656 B, download 36864 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather RGB Device256: 96x96, covered 8464/9216, library call 0.391 ms, pack 0.005, CPU coordinates 0.000, submit/wait/readback 0.385; upload 18656 B, download 36864 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 96x96, covered 4232/4608, library call 0.344 ms, pack 0.010, CPU coordinates 0.000, submit/wait/readback 0.332; upload 18656 B, download 36864 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather RGB Device256: 96x96, covered 8464/9216, library call 0.443 ms, pack 0.004, CPU coordinates 0.000, submit/wait/readback 0.436; upload 18656 B, download 36864 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 96x96, covered 4232/4608, library call 0.369 ms, pack 0.008, CPU coordinates 0.000, submit/wait/readback 0.358; upload 18656 B, download 36864 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+  GPU gather RGB Device256: 96x96, covered 8464/9216, library call 0.506 ms, pack 0.006, CPU coordinates 0.000, submit/wait/readback 0.498; upload 18656 B, download 36864 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 96x96, covered 4232/4608, library call 0.361 ms, pack 0.009, CPU coordinates 0.000, submit/wait/readback 0.350; upload 18656 B, download 36864 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+OPTICAL_SUPPORT_CONSUMED
+ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 251 filtered out; finished in 0.97s
+

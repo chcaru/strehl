@@ -1,0 +1,229 @@
+{
+  "executable": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\optical-support-veto\\build-1\\cli-tests.exe",
+    "sha256": "f35ba42c7465653bccda57935e1a720f1631108fe489cab10aba6b42ce6ec102",
+    "bytes": 30440448
+  },
+  "input_files": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\optical-support-veto\\prepare-1\\output\\manifest.json",
+      "sha256": "fd1a60a788ba81d7ba28d0056c2e94d647b9e9c44857d3aee1ac3a75d1f1c6a4",
+      "bytes": 22768
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\optical-support-veto\\prepare-1\\output\\flat\\truth-rgb.f32",
+      "sha256": "46bb437f51792389688710d58549b0fffe1d757e026d49509874bac1a88988ef",
+      "bytes": 110592
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\optical-support-veto\\prepare-1\\output\\flat\\near-truth-rgb.f32",
+      "sha256": "46bb437f51792389688710d58549b0fffe1d757e026d49509874bac1a88988ef",
+      "bytes": 110592
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\optical-support-veto\\prepare-1\\output\\flat\\far-truth-rgb.f32",
+      "sha256": "7c98d2da7afa2bdee9765910c81cb588e14781b77538fb54df84f7e7039e4348",
+      "bytes": 110592
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\optical-support-veto\\prepare-1\\output\\flat\\sharp-labels.u8",
+      "sha256": "f9de1ef79c9d385cf14b1a1b1fd761391f3e985ce004b1a5942cb94a9275ba17",
+      "bytes": 9216
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\optical-support-veto\\prepare-1\\output\\flat\\frame-0-rgb-dn.f32",
+      "sha256": "7b580ae1009e221a8f9e2d7526da51ddb493aa51195238ef74cc73978752dcd6",
+      "bytes": 110592
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\optical-support-veto\\prepare-1\\output\\flat\\frame-0-support.u8",
+      "sha256": "f9de1ef79c9d385cf14b1a1b1fd761391f3e985ce004b1a5942cb94a9275ba17",
+      "bytes": 9216
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\optical-support-veto\\prepare-1\\output\\flat\\frame-1-rgb-dn.f32",
+      "sha256": "28e50869bb3addc7dfd322d61fe8bea23bf803a370e72fc859cac48f42a95e11",
+      "bytes": 110592
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\optical-support-veto\\prepare-1\\output\\flat\\frame-1-support.u8",
+      "sha256": "f9de1ef79c9d385cf14b1a1b1fd761391f3e985ce004b1a5942cb94a9275ba17",
+      "bytes": 9216
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\optical-support-veto\\prepare-1\\output\\flat\\frame-2-rgb-dn.f32",
+      "sha256": "27fb640d4d66c1d9b727e7b3bce684401045e4080414f7f42ccd942109edae05",
+      "bytes": 110592
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\optical-support-veto\\prepare-1\\output\\flat\\frame-2-support.u8",
+      "sha256": "f9de1ef79c9d385cf14b1a1b1fd761391f3e985ce004b1a5942cb94a9275ba17",
+      "bytes": 9216
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\optical-support-veto\\prepare-1\\output\\flat\\frame-3-rgb-dn.f32",
+      "sha256": "9b9c60879f7582a999b6a089f96019ba9811e17044f69a3b106f597f43297da7",
+      "bytes": 110592
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\optical-support-veto\\prepare-1\\output\\flat\\frame-3-support.u8",
+      "sha256": "f9de1ef79c9d385cf14b1a1b1fd761391f3e985ce004b1a5942cb94a9275ba17",
+      "bytes": 9216
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\optical-support-veto\\prepare-1\\output\\flat\\frame-4-rgb-dn.f32",
+      "sha256": "bb35661a4dc225117999a241780d4d56817343e346680d8735e9244cc4b2a707",
+      "bytes": 110592
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\optical-support-veto\\prepare-1\\output\\flat\\frame-4-support.u8",
+      "sha256": "f9de1ef79c9d385cf14b1a1b1fd761391f3e985ce004b1a5942cb94a9275ba17",
+      "bytes": 9216
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\optical-support-veto\\prepare-1\\output\\transparent\\truth-rgb.f32",
+      "sha256": "800330bd9a180233a810d35fb2ab7dc2e302b1b57262751d5b4ab2a40176da08",
+      "bytes": 110592
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\optical-support-veto\\prepare-1\\output\\transparent\\near-truth-rgb.f32",
+      "sha256": "77aafcbaf7788531168f0e33bf345dfb01e293c461a594c7be9aeb6c5fb3cb70",
+      "bytes": 110592
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\optical-support-veto\\prepare-1\\output\\transparent\\far-truth-rgb.f32",
+      "sha256": "5175617fa9a992c3865eceed6d99df0f8ced7b310740e3e246101d5121f12032",
+      "bytes": 110592
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\optical-support-veto\\prepare-1\\output\\transparent\\sharp-labels.u8",
+      "sha256": "c601641f59f51c98a54aaa9f551396b77ab64cbf0fd6413d4f8e841190bff46c",
+      "bytes": 9216
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\optical-support-veto\\prepare-1\\output\\transparent\\frame-0-rgb-dn.f32",
+      "sha256": "8341617398fd3defc9de46b9c327c9e7840de8040fa3cd3515817d0e611d0dab",
+      "bytes": 110592
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\optical-support-veto\\prepare-1\\output\\transparent\\frame-0-support.u8",
+      "sha256": "f9de1ef79c9d385cf14b1a1b1fd761391f3e985ce004b1a5942cb94a9275ba17",
+      "bytes": 9216
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\optical-support-veto\\prepare-1\\output\\transparent\\frame-1-rgb-dn.f32",
+      "sha256": "66d31a2b6e981c5b276f712c68a68158ea2e310943906b058de8985ac5407a0d",
+      "bytes": 110592
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\optical-support-veto\\prepare-1\\output\\transparent\\frame-1-support.u8",
+      "sha256": "f9de1ef79c9d385cf14b1a1b1fd761391f3e985ce004b1a5942cb94a9275ba17",
+      "bytes": 9216
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\optical-support-veto\\prepare-1\\output\\transparent\\frame-2-rgb-dn.f32",
+      "sha256": "be4dd61f4cda4aba8efded57a4a6bd8a5881de02a5fa434394faf5f66877c299",
+      "bytes": 110592
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\optical-support-veto\\prepare-1\\output\\transparent\\frame-2-support.u8",
+      "sha256": "f9de1ef79c9d385cf14b1a1b1fd761391f3e985ce004b1a5942cb94a9275ba17",
+      "bytes": 9216
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\optical-support-veto\\prepare-1\\output\\transparent\\frame-3-rgb-dn.f32",
+      "sha256": "1fed9556a0645e6d5ce14f8782a2d953f6f5a7b3bb971861a2f64d085981b86a",
+      "bytes": 110592
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\optical-support-veto\\prepare-1\\output\\transparent\\frame-3-support.u8",
+      "sha256": "f9de1ef79c9d385cf14b1a1b1fd761391f3e985ce004b1a5942cb94a9275ba17",
+      "bytes": 9216
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\optical-support-veto\\prepare-1\\output\\transparent\\frame-4-rgb-dn.f32",
+      "sha256": "b2080c5423485fa64a8d596945fd4b646fd61003bdf5f750b2d0da6cc45a8738",
+      "bytes": 110592
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\optical-support-veto\\prepare-1\\output\\transparent\\frame-4-support.u8",
+      "sha256": "f9de1ef79c9d385cf14b1a1b1fd761391f3e985ce004b1a5942cb94a9275ba17",
+      "bytes": 9216
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\optical-support-veto\\prepare-1\\output\\opaque\\truth-rgb.f32",
+      "sha256": "e648071f367cb1852115192892f2b2765e5e85f7057804a751829ee278d9646a",
+      "bytes": 110592
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\optical-support-veto\\prepare-1\\output\\opaque\\near-truth-rgb.f32",
+      "sha256": "e302887b0d4c5f5d0102ad48579a1c4ba5b8f0c65825c48ae020a9ab8a60f141",
+      "bytes": 110592
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\optical-support-veto\\prepare-1\\output\\opaque\\far-truth-rgb.f32",
+      "sha256": "b1a1bfbb17a88fa23a27d9b28f08d2ec2bf6aac6aea07523659b3b494848786f",
+      "bytes": 110592
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\optical-support-veto\\prepare-1\\output\\opaque\\sharp-labels.u8",
+      "sha256": "ee7c900e9fb591f33a6a3f69956de14bcc7b2065908e14ba8350631ef3116890",
+      "bytes": 9216
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\optical-support-veto\\prepare-1\\output\\opaque\\frame-0-rgb-dn.f32",
+      "sha256": "83efa42c5915f11f40a671a2d6d7b5910e2c34f615e6ffb9fdc0890f96c07f09",
+      "bytes": 110592
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\optical-support-veto\\prepare-1\\output\\opaque\\frame-0-support.u8",
+      "sha256": "683caf55a3ab9a154b8715d82028af5b610b4247b6ba771f69fecc6ae770f13e",
+      "bytes": 9216
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\optical-support-veto\\prepare-1\\output\\opaque\\frame-1-rgb-dn.f32",
+      "sha256": "961276fcd0f46bcd8c41a2c13686e5247812183f12b25ff539e5d868bf7210bc",
+      "bytes": 110592
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\optical-support-veto\\prepare-1\\output\\opaque\\frame-1-support.u8",
+      "sha256": "174e6475212e5d90989173558de9b7c693b2d4224fd95dd44ae955c786c896eb",
+      "bytes": 9216
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\optical-support-veto\\prepare-1\\output\\opaque\\frame-2-rgb-dn.f32",
+      "sha256": "11418b0edd3fe90d642279b72bdca4d0d3392641b40938564eae80ff8251e46b",
+      "bytes": 110592
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\optical-support-veto\\prepare-1\\output\\opaque\\frame-2-support.u8",
+      "sha256": "3fcc6f44d68ec3a7069a69365d88dafb223f3dfccfc6042220ab37646c72fa53",
+      "bytes": 9216
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\optical-support-veto\\prepare-1\\output\\opaque\\frame-3-rgb-dn.f32",
+      "sha256": "1f5a0a1713bb5ddfb90264702f92859603e023d86ac80b65bbfa23118f1ed3b6",
+      "bytes": 110592
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\optical-support-veto\\prepare-1\\output\\opaque\\frame-3-support.u8",
+      "sha256": "c6722c283f0ee572d9bd81e25889c8d77af72050f756cde06ee41449870971f0",
+      "bytes": 9216
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\optical-support-veto\\prepare-1\\output\\opaque\\frame-4-rgb-dn.f32",
+      "sha256": "3a057b7a3e0478c188b02cc4dc2a59d48c6d9ac097f58f6fc55bfb5d0a383353",
+      "bytes": 110592
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\optical-support-veto\\prepare-1\\output\\opaque\\frame-4-support.u8",
+      "sha256": "c152253c12ff5bbc09c0d66351af62106ee90c9e9b761ba02def059f1cce221a",
+      "bytes": 9216
+    }
+  ],
+  "build": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\optical-support-veto\\build-1\\executables.json",
+    "sha256": "d8e1c6b3afaee804db2dfa026f58c6216e5732506651cf21e2e2d80e753ef4d2",
+    "bytes": 511
+  }
+}

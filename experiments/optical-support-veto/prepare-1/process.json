@@ -1,0 +1,92 @@
+{
+  "command": [
+    "C:\\Users\\chris\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-I",
+    "-B",
+    "-X",
+    "faulthandler",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\optical-support-veto\\prepare.py",
+    "--out",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\optical-support-veto\\prepare-1\\output"
+  ],
+  "exit_code": 0,
+  "error": null,
+  "cleanup_errors": [],
+  "wall_seconds": 8.921999999991385,
+  "log_bytes": 53,
+  "job_accounting": {
+    "total_user_100ns": 50312500,
+    "total_kernel_100ns": 13437500,
+    "total_cpu_100ns": 63750000,
+    "total_page_fault_count": 1537423,
+    "total_processes": 3,
+    "active_processes": 0,
+    "total_terminated_processes": 0
+  },
+  "job_memory": {
+    "peak_process_memory_used_bytes": 2420871168,
+    "peak_job_memory_used_bytes": 2422128640
+  },
+  "terminal_job_accounting": true,
+  "configured_job_limits": {
+    "flags": 8704,
+    "committed_bytes": 4294967296
+  },
+  "direct_exit_observed": true,
+  "pipe_eof_observed": true,
+  "post_exit_drain": {
+    "initial_accounting": {
+      "total_user_100ns": 50312500,
+      "total_kernel_100ns": 13437500,
+      "total_cpu_100ns": 63750000,
+      "total_page_fault_count": 1537423,
+      "total_processes": 3,
+      "active_processes": 0,
+      "total_terminated_processes": 0
+    },
+    "last_accounting": {
+      "total_user_100ns": 50312500,
+      "total_kernel_100ns": 13437500,
+      "total_cpu_100ns": 63750000,
+      "total_page_fault_count": 1537423,
+      "total_processes": 3,
+      "active_processes": 0,
+      "total_terminated_processes": 0
+    },
+    "observations": [
+      {
+        "wall_seconds": 8.921999999991385,
+        "accounting": {
+          "total_user_100ns": 50312500,
+          "total_kernel_100ns": 13437500,
+          "total_cpu_100ns": 63750000,
+          "total_page_fault_count": 1537423,
+          "total_processes": 3,
+          "active_processes": 0,
+          "total_terminated_processes": 0
+        }
+      }
+    ],
+    "observation_count": 1,
+    "completed": true,
+    "started_wall_seconds": 8.921999999991385,
+    "ended_wall_seconds": 8.921999999991385
+  },
+  "termination": {
+    "attempted": false,
+    "before_accounting": null,
+    "succeeded": false
+  },
+  "limits": {
+    "wall_seconds": 120,
+    "cpu_seconds": 240,
+    "log_bytes": 16777216,
+    "committed_bytes": 4294967296
+  },
+  "scope": "owned job tree; committed memory, observed user+kernel CPU; not RSS or a timing benchmark",
+  "log": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\optical-support-veto\\prepare-1\\process.log",
+    "sha256": "420c469eee235304bb5a63d9443c136fdfb69f44007a69c885edb0ce7f9ba488",
+    "bytes": 53
+  }
+}

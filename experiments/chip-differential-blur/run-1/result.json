@@ -1,0 +1,7 @@
+{
+  "status": "STOP_SYNTHETIC_MODEL_SCREEN_FAILED",
+  "error": "AssertionError('translation: beta differs from independent Gaussian truth')",
+  "photographic_arrays_read": 0,
+  "raw_decodes": 0,
+  "cpu_seconds": 0.46875
+}

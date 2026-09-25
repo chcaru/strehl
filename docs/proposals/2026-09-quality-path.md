@@ -40,10 +40,32 @@ Both complete299-source chip production replays are also finished. Independent
 whole-image and native-scale inspection finds the broad spill and duplicated
 colored edges remain. Existing local geometric corrections already had a modest
 complete-chip benefit and failed star-sand transfer; repeating that experiment
-or globalizing its offsets is not justified. The next bounded discriminator
-uses existing RAW patches to compare translation alone with translation plus
-differential blur, with separate green-phase/spatial holdouts and explicit
-motion/blur controls before any new full-stack intervention.
+or globalizing its offsets is not justified. The bounded translation-plus-blur
+discriminator now fails its first independent synthetic control: a pure
+translation produces a blur coefficient outside the predeclared near-zero
+range. Execution stops before opening any saved photographic patches. The
+real-data phase/support stability comparison is unmeasured, and no alignment
+change follows. See `experiments/chip-differential-blur/results.md`.
+
+The fixed generated optical-support veto now executes on the actual native
+consumer, with independent ray/filter-footprint checks, all-one/no-clean identity,
+flat/transparent nulls and working detail-destroying controls. Its registered
+bright-spill positive is unexercised: the outside error is negative. Where the
+veto is live, it substantially damages far detail; the near region is unchanged.
+No photographic replay or detector follows. See
+`experiments/optical-support-veto/results.md` and its independent result review.
+One complete183-source corrected-garnet base-only comparison also shows no
+identified photographic benefit from weighted versus mean base. Retain mean;
+do not credit the slight automatic-tone change as glare recovery. See
+`experiments/base-band-transfer/independent-results.md`.
+
+Next priority is a source-contribution trace on the remaining corrected real
+image defects, distinguishing captured structure that the merge discards from
+spill already present in its contributing sources. Use the actual CFA consumer,
+held geometry/development and complete-image observer identity. A new treatment
+must address that measured loss and preserve both real depths. Do not start
+another generic visibility plant, donor substitution, source-prior strength or
+base-weighting sweep on the strength of the closed studies above.
 
 Use `scripts/render-native.py` and its checked `scripts/native-build.json`
 for current native renders; `docs/native-rendering.md` documents the entry

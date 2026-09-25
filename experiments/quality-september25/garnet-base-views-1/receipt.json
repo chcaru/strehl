@@ -1,0 +1,76 @@
+{
+  "stack": "garnet-104",
+  "target_file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\minerals\\native-tiles.json",
+  "target_sha256": "8cb3e456529e8f87df98b0cf9f7fa5091430414d1188f93ccdec9156c4edd0a4",
+  "native_shape": [
+    4348,
+    6524,
+    3
+  ],
+  "icc_sha256": "238ad2596316306a72025bb245cf3c8cd72f1090c8d95af2f38dc090e84ece5b",
+  "display": "rounded RGB16/257, same original ICC; native tiles unresampled; whole JPEG98 orientation only",
+  "images": [
+    {
+      "arm": "mean",
+      "master": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\quality-september25\\garnet-104\\stack-master.tiff",
+      "master_sha256": "9c7a12f6a8945f261e884165c777554e5222a9deb6656d7fd472d055babc9ede",
+      "complete_overview": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\garnet-base-views-1\\mean-whole.jpg",
+      "overview_sha256": "8f0dad09a7f60cdd51bf4a95c13abb42a3bdcb68c2b58c748bde9f4776ed8366",
+      "tiles": [
+        {
+          "target": "104-white-facet-native384",
+          "rect": [
+            4668,
+            1858,
+            384,
+            384
+          ],
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\garnet-base-views-1\\mean-104-white-facet-native384.png",
+          "sha256": "07519332d1fe7a8fbc1289eef27774ccfcbafc6ed06254bfccafb1d6b5efbd38"
+        },
+        {
+          "target": "104-red-control-native384",
+          "rect": [
+            3068,
+            1908,
+            384,
+            384
+          ],
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\garnet-base-views-1\\mean-104-red-control-native384.png",
+          "sha256": "7e4cccce0cd04eff17c18ed5dbe5911b042e0476ee8feeac79e1ab53a23e7507"
+        }
+      ]
+    },
+    {
+      "arm": "weighted",
+      "master": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\base-band-transfer\\garnet104-1\\stack-master.tiff",
+      "master_sha256": "e178595379755ec6e6757ec5e984ca1f1eac875fc13bf3094ac01558751d5caa",
+      "complete_overview": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\garnet-base-views-1\\weighted-whole.jpg",
+      "overview_sha256": "419bafab13bb5274122cbbc67eb99e178136c4576092e418ce75b3e8c7aad391",
+      "tiles": [
+        {
+          "target": "104-white-facet-native384",
+          "rect": [
+            4668,
+            1858,
+            384,
+            384
+          ],
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\garnet-base-views-1\\weighted-104-white-facet-native384.png",
+          "sha256": "a351d217077ec95ebd6c595689d9206893ea286af33976e53ac6f86adadddafb"
+        },
+        {
+          "target": "104-red-control-native384",
+          "rect": [
+            3068,
+            1908,
+            384,
+            384
+          ],
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\garnet-base-views-1\\weighted-104-red-control-native384.png",
+          "sha256": "5b3c070e8ad7b85962665475a7325447046d754b6b88f96da8cd899314f6c7d6"
+        }
+      ]
+    }
+  ]
+}

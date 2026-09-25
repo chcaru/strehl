@@ -1,0 +1,10 @@
+{
+  "instrument_completed": true,
+  "photographic_replay_admitted": false,
+  "result": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\optical-support-veto\\consume-1\\output\\result.json",
+    "sha256": "9a149aaaddfe1adbc66dcff67693a8a5a2e0eaa42afb9c2e057c27684db596c1",
+    "bytes": 36166
+  },
+  "scope": "Independent exercise/quality scoring required; no photographic RAW"
+}
