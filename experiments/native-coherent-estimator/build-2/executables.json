@@ -1,0 +1,12 @@
+{
+  "strehl": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-coherent-estimator\\build-2\\strehl.exe",
+    "sha256": "690e35a778e96a629317c285c5b4b651f2cda6974bd5d3cd6413f321768e68d7",
+    "bytes": 17921536
+  },
+  "cli-tests": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-coherent-estimator\\build-2\\cli-tests.exe",
+    "sha256": "566d759dea1544256e56d25aaf41099b8e6dae3a10edb0f3a52970cf9901f402",
+    "bytes": 29640192
+  }
+}

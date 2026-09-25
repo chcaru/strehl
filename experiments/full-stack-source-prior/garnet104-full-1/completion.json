@@ -1,0 +1,13 @@
+{
+  "phase": "full",
+  "mode": "current",
+  "sources_unchanged": true,
+  "historical_full_baseline_exact": true,
+  "receipt": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\full-stack-source-prior\\garnet104-full-1\\output\\receipt.json",
+    "sha256": "ae9aacd0bbe523f3823855062f7ae28c4e897df9c3eab692f54e9355e2e00399",
+    "bytes": 504615
+  },
+  "photographic_replay_admitted": false,
+  "scope": "Separate complete photographic observation of unchanged known-risk prior. General quality qualification remains false; no default or SOTA claim."
+}

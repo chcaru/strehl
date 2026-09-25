@@ -1,0 +1,13 @@
+{
+  "phase": "cost",
+  "mode": "current",
+  "sources_unchanged": true,
+  "historical_full_baseline_exact": false,
+  "receipt": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\full-stack-source-prior\\garnet104-cost-1\\output\\receipt.json",
+    "sha256": "4f36fb36258db4927a4ec71e380cb3ddce98f669a9bc5053621ae32709bf1521",
+    "bytes": 11898
+  },
+  "photographic_replay_admitted": false,
+  "scope": "Separate complete photographic observation of unchanged known-risk prior. General quality qualification remains false; no default or SOTA claim."
+}

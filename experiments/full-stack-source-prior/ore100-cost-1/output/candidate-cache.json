@@ -1,0 +1,63 @@
+{
+  "arm": "candidate",
+  "binary": "candidate-planes.f32",
+  "binary_bytes": 119778144,
+  "binary_sha256": "ed2c6206e2b069c19471904ef8e9f0f5a5a06ad52ea103a50f4bbb46b5c17752",
+  "crop": [
+    83,
+    55,
+    3351,
+    2234
+  ],
+  "exposure_stops_bits": 0,
+  "frames": 207,
+  "full_geometry": [
+    3516,
+    2344
+  ],
+  "input_order_sha256": "6bcab427455dd1315d5130c4c9fa3e000bf6ec18f3d250d5e730846d8f7f8f2c",
+  "levels_bits": [
+    1140850688,
+    1181745152
+  ],
+  "map_sha256": "a1c74342f2266fac447577fa04f7486f0ade56f0861f95176b6957d510dcbfc7",
+  "phase": "cost",
+  "plane_order": [
+    "R",
+    "G1",
+    "G2",
+    "B"
+  ],
+  "plane_sha256": [
+    "43876a3d9d99d1990c547ddb9705bbad4ff5425a1207fa78aaff03cbc550540c",
+    "dee484e67fbfcddb9ab73f004b60db3506a5d9550ce8400954c495102ff2cc75",
+    "b3dc7b0c8dd59e8a628a894596edf50361f919cde062438743170bf7db510975",
+    "8224cb2eaea016af8d6773b697719989d5e177cd229768017f9a97a59495f377"
+  ],
+  "reference": 103,
+  "schema": 1,
+  "tone_policy": "automatic-per-arm-current-writer",
+  "wb_gains_bits": [
+    1071144960,
+    1065353216,
+    1075924992
+  ],
+  "xyz_source": "decoder color_matrix[D65]",
+  "xyz_to_cam_bits": [
+    [
+      1061091803,
+      3195153678,
+      3178289221
+    ],
+    [
+      3205600851,
+      1068240575,
+      1048401517
+    ],
+    [
+      3179255588,
+      1038925745,
+      1059622119
+    ]
+  ]
+}

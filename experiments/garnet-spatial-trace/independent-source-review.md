@@ -1,0 +1,11 @@
+# Independent finish-census source review
+
+Reviewed `core-observer.rs` before integration/execution. No source-level blocker found for the bounded observation. This review runs no build, stack or observer and makes no numerical-cause claim.
+
+The intended hooks inspect the actual `BandMerge` accumulators and actual normalized, reconstructed and hull-clamped arrays. The observer neither recomputes merge weights nor changes an image value. It is inactive without the exact environment setting; an unsupported value refuses. Array inspection is read-only. Only the fixed192x192 crop per plane is retained between pre/post hooks, approximately576KiB total.
+
+The fixed compact CFA origin2334,929 and extent192x192 match the independently verified garnet cache/native facet mapping. At coarse levels the floor origin/ceiling endpoint conversion is consistent with nominal decimated grid coordinates and correctly labeled as distinct from full reconstruction-filter support. The run-length encoder handles transitions through zero and between each nonfinite kind, retaining the exact row-major masks. Pre/post comparisons distinguish floating-bit changes and exact lower/upper hull equality for formerly nonfinite values; they do not mislabel ordinary finite overshoot as numerator overflow.
+
+The observer records NaN, positive/negative infinity, finite extrema and initial witness coordinates rather than collapsing all failures into a scalar. A null extremum when no finite sample exists is valid JSON. Source counts, dimensions, modes and completion are emitted. The root's driver must require a complete end marker and the expected183-source dimensions before accepting the garnet ROI masks; matching dimensions alone are not dataset identity.
+
+Required runtime checks remain: fresh compilation after hook integration; complete current baseline pixel/ICC identity to the retained user master; observer-on/off whole output equality by hash; all expected stage records present; exact spatial overlap with prewriter rectangle geometry. An arithmetic failure on a generated fixture does not establish that the photographed artifact has that cause. Conversely, a finite final hull output does not establish that the accumulator was finite.

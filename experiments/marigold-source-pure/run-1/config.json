@@ -1,0 +1,12 @@
+{
+  "schema": 1,
+  "recipe": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\full-stack-source-prior\\recipes\\marigold-4.json",
+  "recipe_sha256": "c98f715ee16352e0f5591768bfdf6506fcf22cdbd58764bf3d57a938cf8b0f08",
+  "cache": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\garnet-spatial-trace\\marigold4-fixed-1\\output\\candidate-cache.json",
+  "cache_sha256": "3af5e0a0d00b28e73083ce132ff495cd482020b600fecd4bddb2902b1273a95c",
+  "full_receipt": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\garnet-spatial-trace\\marigold4-fixed-1\\output\\receipt.json",
+  "full_receipt_sha256": "3cc4a0f7038f0d458cb6db9b98582af2e23d32c9569a78fd722a20b5a102152b",
+  "expected_current_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\garnet-spatial-trace\\marigold4-fixed-1\\output\\candidate.tiff",
+  "expected_current_file_sha256": "19e657e419d52adf567ec86472f917ad9b9abfc9b0812131e9bba0eacbae462f",
+  "out_dir": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-source-pure\\run-1\\output"
+}

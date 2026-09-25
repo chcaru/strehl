@@ -1,0 +1,266 @@
+[
+  {
+    "stack": 1,
+    "region": "bud-rim",
+    "rect": [
+      2900,
+      540,
+      384,
+      384
+    ],
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\marigold\\stack-1-bud-rim-tile-0-0.png"
+  },
+  {
+    "stack": 1,
+    "region": "bud-rim",
+    "rect": [
+      2900,
+      656,
+      384,
+      384
+    ],
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\marigold\\stack-1-bud-rim-tile-0-116.png"
+  },
+  {
+    "stack": 1,
+    "region": "bud-rim",
+    "rect": [
+      3116,
+      540,
+      384,
+      384
+    ],
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\marigold\\stack-1-bud-rim-tile-216-0.png"
+  },
+  {
+    "stack": 1,
+    "region": "bud-rim",
+    "rect": [
+      3116,
+      656,
+      384,
+      384
+    ],
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\marigold\\stack-1-bud-rim-tile-216-116.png"
+  },
+  {
+    "stack": 1,
+    "region": "left-petal-over-bud",
+    "rect": [
+      640,
+      1480,
+      384,
+      384
+    ],
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\marigold\\stack-1-left-petal-over-bud-tile-0-0.png"
+  },
+  {
+    "stack": 1,
+    "region": "left-petal-over-bud",
+    "rect": [
+      640,
+      1696,
+      384,
+      384
+    ],
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\marigold\\stack-1-left-petal-over-bud-tile-0-216.png"
+  },
+  {
+    "stack": 1,
+    "region": "left-petal-over-bud",
+    "rect": [
+      856,
+      1480,
+      384,
+      384
+    ],
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\marigold\\stack-1-left-petal-over-bud-tile-216-0.png"
+  },
+  {
+    "stack": 1,
+    "region": "left-petal-over-bud",
+    "rect": [
+      856,
+      1696,
+      384,
+      384
+    ],
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\marigold\\stack-1-left-petal-over-bud-tile-216-216.png"
+  },
+  {
+    "stack": 1,
+    "region": "central-pocket",
+    "rect": [
+      2730,
+      1900,
+      384,
+      384
+    ],
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\marigold\\stack-1-central-pocket-tile-0-0.png"
+  },
+  {
+    "stack": 1,
+    "region": "central-pocket",
+    "rect": [
+      2730,
+      2116,
+      384,
+      384
+    ],
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\marigold\\stack-1-central-pocket-tile-0-216.png"
+  },
+  {
+    "stack": 1,
+    "region": "central-pocket",
+    "rect": [
+      2946,
+      1900,
+      384,
+      384
+    ],
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\marigold\\stack-1-central-pocket-tile-216-0.png"
+  },
+  {
+    "stack": 1,
+    "region": "central-pocket",
+    "rect": [
+      2946,
+      2116,
+      384,
+      384
+    ],
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\marigold\\stack-1-central-pocket-tile-216-216.png"
+  },
+  {
+    "stack": 4,
+    "region": "central-throat",
+    "rect": [
+      2350,
+      2310,
+      384,
+      384
+    ],
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\marigold\\stack-4-central-throat-tile-0-0.png"
+  },
+  {
+    "stack": 4,
+    "region": "central-throat",
+    "rect": [
+      2350,
+      2426,
+      384,
+      384
+    ],
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\marigold\\stack-4-central-throat-tile-0-116.png"
+  },
+  {
+    "stack": 4,
+    "region": "central-throat",
+    "rect": [
+      2666,
+      2310,
+      384,
+      384
+    ],
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\marigold\\stack-4-central-throat-tile-316-0.png"
+  },
+  {
+    "stack": 4,
+    "region": "central-throat",
+    "rect": [
+      2666,
+      2426,
+      384,
+      384
+    ],
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\marigold\\stack-4-central-throat-tile-316-116.png"
+  },
+  {
+    "stack": 4,
+    "region": "left-rim",
+    "rect": [
+      1170,
+      1380,
+      384,
+      384
+    ],
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\marigold\\stack-4-left-rim-tile-0-0.png"
+  },
+  {
+    "stack": 4,
+    "region": "left-rim",
+    "rect": [
+      1170,
+      1596,
+      384,
+      384
+    ],
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\marigold\\stack-4-left-rim-tile-0-216.png"
+  },
+  {
+    "stack": 4,
+    "region": "left-rim",
+    "rect": [
+      1436,
+      1380,
+      384,
+      384
+    ],
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\marigold\\stack-4-left-rim-tile-266-0.png"
+  },
+  {
+    "stack": 4,
+    "region": "left-rim",
+    "rect": [
+      1436,
+      1596,
+      384,
+      384
+    ],
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\marigold\\stack-4-left-rim-tile-266-216.png"
+  },
+  {
+    "stack": 4,
+    "region": "foreground-over-bud",
+    "rect": [
+      3230,
+      3000,
+      384,
+      384
+    ],
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\marigold\\stack-4-foreground-over-bud-tile-0-0.png"
+  },
+  {
+    "stack": 4,
+    "region": "foreground-over-bud",
+    "rect": [
+      3230,
+      3216,
+      384,
+      384
+    ],
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\marigold\\stack-4-foreground-over-bud-tile-0-216.png"
+  },
+  {
+    "stack": 4,
+    "region": "foreground-over-bud",
+    "rect": [
+      3446,
+      3000,
+      384,
+      384
+    ],
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\marigold\\stack-4-foreground-over-bud-tile-216-0.png"
+  },
+  {
+    "stack": 4,
+    "region": "foreground-over-bud",
+    "rect": [
+      3446,
+      3216,
+      384,
+      384
+    ],
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\marigold\\stack-4-foreground-over-bud-tile-216-216.png"
+  }
+]

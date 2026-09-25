@@ -1,0 +1,426 @@
+{
+  "command": "python -I -B -X faulthandler experiments/quality-september25/marigold/source-check.py --indices 48,80,104,120,136,152,168,208,224,240,256 --tag refined",
+  "stack": 4,
+  "indices": [
+    48,
+    80,
+    104,
+    120,
+    136,
+    152,
+    168,
+    208,
+    224,
+    240,
+    256
+  ],
+  "selection": "predetermined temporal subsample, not focus argmax",
+  "reference": 244,
+  "quad_crop_origin": [
+    191,
+    128
+  ],
+  "plane_center": [
+    1758,
+    1172
+  ],
+  "regions_native_output": {
+    "throat": [
+      2350,
+      2310,
+      700,
+      500
+    ],
+    "rim": [
+      1170,
+      1380,
+      650,
+      600
+    ],
+    "fan": [
+      3230,
+      3000,
+      600,
+      600
+    ]
+  },
+  "map_sha256": "d2eb0815191279f9d6fc529d76142e56989d4afdcbc052088ef4e7da530b58c1",
+  "display": "direct Gr plane; sqrt((DN-512)/(15360-512)/0.4), clipped only for display; RGB repeated grayscale; native quad samples, linear interpolation of bounded ROIs only",
+  "limitations": "One green CFA phase at two-native-pixel sampling, not production full-resolution gather; phase convention and interpolation can shift apparent edges by approximately a native pixel. Intensity is not matched to rendered sRGB. Active u16 hashes permit independent decoder checking; no decoder agreement asserted.",
+  "sources": [
+    {
+      "index": 48,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00069.ARW",
+      "sha256": "848eebd4af2d0b4dd3b54ae874c6583b5bec983ae53b8781eb04eda7e6546aa5",
+      "active_u16_le_sha256": "1e47e655d9c01b94e4bdff4479a8ac12c84120896d0df8eff014ff90e1d2b729",
+      "pattern": [
+        [
+          0,
+          1
+        ],
+        [
+          3,
+          2
+        ]
+      ],
+      "black": [
+        512,
+        512,
+        512,
+        512
+      ],
+      "white": 16383,
+      "libraw_visible_shape": [
+        4688,
+        7028
+      ],
+      "copied_domain": [
+        0,
+        0,
+        7032,
+        4688
+      ],
+      "domain_note": "Explicit renderer active domain; LibRaw declares four fewer visible columns. All sampled ROIs are well inside the common domain."
+    },
+    {
+      "index": 80,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00101.ARW",
+      "sha256": "c320f7cef8ce4c2c07d39f4667db4942820694e8028cd84b85eeeb8835eec563",
+      "active_u16_le_sha256": "a3a922e09e62d171a3d694a2c0d3e1db24495d0f402de4a218781e9b7c2c8a04",
+      "pattern": [
+        [
+          0,
+          1
+        ],
+        [
+          3,
+          2
+        ]
+      ],
+      "black": [
+        512,
+        512,
+        512,
+        512
+      ],
+      "white": 16383,
+      "libraw_visible_shape": [
+        4688,
+        7028
+      ],
+      "copied_domain": [
+        0,
+        0,
+        7032,
+        4688
+      ],
+      "domain_note": "Explicit renderer active domain; LibRaw declares four fewer visible columns. All sampled ROIs are well inside the common domain."
+    },
+    {
+      "index": 104,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00125.ARW",
+      "sha256": "79a2581a8aa7aebbb69389e8b55fede9e8cb728977298ec8ce8bb87e8d60f484",
+      "active_u16_le_sha256": "59da61fff6ba1fd62c154d15da014994262c750ee65ce80b75c32998fd114436",
+      "pattern": [
+        [
+          0,
+          1
+        ],
+        [
+          3,
+          2
+        ]
+      ],
+      "black": [
+        512,
+        512,
+        512,
+        512
+      ],
+      "white": 16383,
+      "libraw_visible_shape": [
+        4688,
+        7028
+      ],
+      "copied_domain": [
+        0,
+        0,
+        7032,
+        4688
+      ],
+      "domain_note": "Explicit renderer active domain; LibRaw declares four fewer visible columns. All sampled ROIs are well inside the common domain."
+    },
+    {
+      "index": 120,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00141.ARW",
+      "sha256": "ea7c7a4339c153c43bdd44ba8b96d19c9d1a59b8d8e32edcd60e42c10e444e51",
+      "active_u16_le_sha256": "b920d052ca3d10bcc85bfd3a3164769ac3f873ca506ce5916d07a3353d07109b",
+      "pattern": [
+        [
+          0,
+          1
+        ],
+        [
+          3,
+          2
+        ]
+      ],
+      "black": [
+        512,
+        512,
+        512,
+        512
+      ],
+      "white": 16383,
+      "libraw_visible_shape": [
+        4688,
+        7028
+      ],
+      "copied_domain": [
+        0,
+        0,
+        7032,
+        4688
+      ],
+      "domain_note": "Explicit renderer active domain; LibRaw declares four fewer visible columns. All sampled ROIs are well inside the common domain."
+    },
+    {
+      "index": 136,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00157.ARW",
+      "sha256": "f38c624abf8fec7e20c32b82cae68b66055b2a40b42f737a72e44878fdc54acd",
+      "active_u16_le_sha256": "cd2a06a1cb268b6a5e276c272d51f6817f2fb9e7b8e19357ac0095c84fe7001e",
+      "pattern": [
+        [
+          0,
+          1
+        ],
+        [
+          3,
+          2
+        ]
+      ],
+      "black": [
+        512,
+        512,
+        512,
+        512
+      ],
+      "white": 16383,
+      "libraw_visible_shape": [
+        4688,
+        7028
+      ],
+      "copied_domain": [
+        0,
+        0,
+        7032,
+        4688
+      ],
+      "domain_note": "Explicit renderer active domain; LibRaw declares four fewer visible columns. All sampled ROIs are well inside the common domain."
+    },
+    {
+      "index": 152,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00173.ARW",
+      "sha256": "fc268680728e15ee76c2fb117046a5a3282e1f4fc12b3c928a8c7456ef012d38",
+      "active_u16_le_sha256": "7692a1c2e749d4b1ed88423d61ee74cb0be58bd98b618264bc16b4f961e12098",
+      "pattern": [
+        [
+          0,
+          1
+        ],
+        [
+          3,
+          2
+        ]
+      ],
+      "black": [
+        512,
+        512,
+        512,
+        512
+      ],
+      "white": 16383,
+      "libraw_visible_shape": [
+        4688,
+        7028
+      ],
+      "copied_domain": [
+        0,
+        0,
+        7032,
+        4688
+      ],
+      "domain_note": "Explicit renderer active domain; LibRaw declares four fewer visible columns. All sampled ROIs are well inside the common domain."
+    },
+    {
+      "index": 168,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00189.ARW",
+      "sha256": "2eedfa7c87a2ab8a6ea481e0efd9415b7bb16e6b283e44005ddf726dd3241146",
+      "active_u16_le_sha256": "34e769e1fcdc618ea03a6ed33b8e734b8c4d1a75dafbf7b092469da016fa7280",
+      "pattern": [
+        [
+          0,
+          1
+        ],
+        [
+          3,
+          2
+        ]
+      ],
+      "black": [
+        512,
+        512,
+        512,
+        512
+      ],
+      "white": 16383,
+      "libraw_visible_shape": [
+        4688,
+        7028
+      ],
+      "copied_domain": [
+        0,
+        0,
+        7032,
+        4688
+      ],
+      "domain_note": "Explicit renderer active domain; LibRaw declares four fewer visible columns. All sampled ROIs are well inside the common domain."
+    },
+    {
+      "index": 208,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00229.ARW",
+      "sha256": "12f045a9d0e7ccf8a14938f218b6b88ea15291da2d7b04aeda77488a6dd89a98",
+      "active_u16_le_sha256": "e5386873a9d23469054c5347a50c512e1bc9ecb621e684298b2c3bc8e651ac39",
+      "pattern": [
+        [
+          0,
+          1
+        ],
+        [
+          3,
+          2
+        ]
+      ],
+      "black": [
+        512,
+        512,
+        512,
+        512
+      ],
+      "white": 16383,
+      "libraw_visible_shape": [
+        4688,
+        7028
+      ],
+      "copied_domain": [
+        0,
+        0,
+        7032,
+        4688
+      ],
+      "domain_note": "Explicit renderer active domain; LibRaw declares four fewer visible columns. All sampled ROIs are well inside the common domain."
+    },
+    {
+      "index": 224,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00245.ARW",
+      "sha256": "90bc93e90c32ee017750596acb26923665f6d3505ee98fe19f6d415781af225b",
+      "active_u16_le_sha256": "760149d00c34f4285a2649ec1ffa8045ceb5b5d60f4bb9f1929c7b6a601690e3",
+      "pattern": [
+        [
+          0,
+          1
+        ],
+        [
+          3,
+          2
+        ]
+      ],
+      "black": [
+        512,
+        512,
+        512,
+        512
+      ],
+      "white": 16383,
+      "libraw_visible_shape": [
+        4688,
+        7028
+      ],
+      "copied_domain": [
+        0,
+        0,
+        7032,
+        4688
+      ],
+      "domain_note": "Explicit renderer active domain; LibRaw declares four fewer visible columns. All sampled ROIs are well inside the common domain."
+    },
+    {
+      "index": 240,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00261.ARW",
+      "sha256": "ade97d77c49e48f4fef07ab7a62168df50836cc77ca232cbcf9aae2fe0a75133",
+      "active_u16_le_sha256": "0a46f185cd8c6a35c748b4bd6fd8ae01a24968152bd01e1fcaaf48e9da11a83e",
+      "pattern": [
+        [
+          0,
+          1
+        ],
+        [
+          3,
+          2
+        ]
+      ],
+      "black": [
+        512,
+        512,
+        512,
+        512
+      ],
+      "white": 16383,
+      "libraw_visible_shape": [
+        4688,
+        7028
+      ],
+      "copied_domain": [
+        0,
+        0,
+        7032,
+        4688
+      ],
+      "domain_note": "Explicit renderer active domain; LibRaw declares four fewer visible columns. All sampled ROIs are well inside the common domain."
+    },
+    {
+      "index": 256,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00277.ARW",
+      "sha256": "3cb8d3b6c4440bd01fa6065aca3960a25a45ad4e725ba5cdaf788f8d7e38ca34",
+      "active_u16_le_sha256": "31269c540b43d2c879df3e6549f080006359605d8dc00a7b08e922ab3ef3c29c",
+      "pattern": [
+        [
+          0,
+          1
+        ],
+        [
+          3,
+          2
+        ]
+      ],
+      "black": [
+        512,
+        512,
+        512,
+        512
+      ],
+      "white": 16383,
+      "libraw_visible_shape": [
+        4688,
+        7028
+      ],
+      "copied_domain": [
+        0,
+        0,
+        7032,
+        4688
+      ],
+      "domain_note": "Explicit renderer active domain; LibRaw declares four fewer visible columns. All sampled ROIs are well inside the common domain."
+    }
+  ]
+}

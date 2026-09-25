@@ -1,0 +1,1964 @@
+[
+  {
+    "stage": "begin",
+    "frames": 488,
+    "planes": 4,
+    "sizes": [
+      [
+        3134,
+        2088
+      ],
+      [
+        1567,
+        1044
+      ],
+      [
+        784,
+        522
+      ],
+      [
+        392,
+        261
+      ],
+      [
+        196,
+        131
+      ],
+      [
+        98,
+        66
+      ],
+      [
+        49,
+        33
+      ],
+      [
+        25,
+        17
+      ]
+    ],
+    "admission": "HardFloor",
+    "select": "SoftPower",
+    "hull": "InputRange",
+    "island_output_quad_xywh": null,
+    "mask_encoding": "row-major RLE [start,length,kind]; omitted kind0; nonfinite kind1 +inf,2 -inf,3 NaN"
+  },
+  {
+    "stage": "numerator",
+    "plane": 0,
+    "band": 0,
+    "width": 3134,
+    "scan": {
+      "samples": 6543792,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 447524,
+      "finite_min": -56500574000000000,
+      "finite_max": 5457087000000000,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "denominator",
+    "plane": 0,
+    "band": 0,
+    "width": 3134,
+    "scan": {
+      "samples": 6543792,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 447517,
+      "finite_min": 0,
+      "finite_max": 2788254800000000000,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    },
+    "fallback_coefficients": 447517
+  },
+  {
+    "stage": "unweighted_sum",
+    "plane": 0,
+    "band": 0,
+    "width": 3134,
+    "scan": {
+      "samples": 6543792,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 6,
+      "finite_min": -10446.26,
+      "finite_max": 52461.785,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "resolved",
+    "plane": 0,
+    "band": 0,
+    "width": 3134,
+    "scan": {
+      "samples": 6543792,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 8,
+      "finite_min": -1337.986,
+      "finite_max": 4557.0854,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "numerator",
+    "plane": 0,
+    "band": 1,
+    "width": 1567,
+    "scan": {
+      "samples": 1635948,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": -913009640000000000000000,
+      "finite_max": 291706050000000000000,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "denominator",
+    "plane": 0,
+    "band": 1,
+    "width": 1567,
+    "scan": {
+      "samples": 1635948,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": 1.4565979e-21,
+      "finite_max": 55629486000000000000000000,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    },
+    "fallback_coefficients": 0
+  },
+  {
+    "stage": "unweighted_sum",
+    "plane": 0,
+    "band": 1,
+    "width": 1567,
+    "scan": {
+      "samples": 1635948,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": -19241.416,
+      "finite_max": 39828.875,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "resolved",
+    "plane": 0,
+    "band": 1,
+    "width": 1567,
+    "scan": {
+      "samples": 1635948,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": -1244.6566,
+      "finite_max": 2116.8833,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "numerator",
+    "plane": 0,
+    "band": 2,
+    "width": 784,
+    "scan": {
+      "samples": 409248,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": -24360502000000000000000000000,
+      "finite_max": 3289820400000000000000,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "denominator",
+    "plane": 0,
+    "band": 2,
+    "width": 784,
+    "scan": {
+      "samples": 409248,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": 5.3639767e-15,
+      "finite_max": 1457019800000000000000000000000,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    },
+    "fallback_coefficients": 0
+  },
+  {
+    "stage": "unweighted_sum",
+    "plane": 0,
+    "band": 2,
+    "width": 784,
+    "scan": {
+      "samples": 409248,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": -36792.613,
+      "finite_max": 37660.836,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "resolved",
+    "plane": 0,
+    "band": 2,
+    "width": 784,
+    "scan": {
+      "samples": 409248,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": -1250.2563,
+      "finite_max": 926.96826,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "numerator",
+    "plane": 0,
+    "band": 3,
+    "width": 392,
+    "scan": {
+      "samples": 102312,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": -17516098000000000000,
+      "finite_max": 828723100000000000,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "denominator",
+    "plane": 0,
+    "band": 3,
+    "width": 392,
+    "scan": {
+      "samples": 102312,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": 3.299766e-07,
+      "finite_max": 1086740700000000000000,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    },
+    "fallback_coefficients": 0
+  },
+  {
+    "stage": "unweighted_sum",
+    "plane": 0,
+    "band": 3,
+    "width": 392,
+    "scan": {
+      "samples": 102312,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": -61426.77,
+      "finite_max": 37325.414,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "resolved",
+    "plane": 0,
+    "band": 3,
+    "width": 392,
+    "scan": {
+      "samples": 102312,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": -1063.482,
+      "finite_max": 653.5042,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "numerator",
+    "plane": 0,
+    "band": 4,
+    "width": 196,
+    "scan": {
+      "samples": 25676,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": -19215845000000,
+      "finite_max": 9945732000000,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "denominator",
+    "plane": 0,
+    "band": 4,
+    "width": 196,
+    "scan": {
+      "samples": 25676,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": 5.5197287,
+      "finite_max": 1942521400000000,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    },
+    "fallback_coefficients": 0
+  },
+  {
+    "stage": "unweighted_sum",
+    "plane": 0,
+    "band": 4,
+    "width": 196,
+    "scan": {
+      "samples": 25676,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": -113085.83,
+      "finite_max": 80084.11,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "resolved",
+    "plane": 0,
+    "band": 4,
+    "width": 196,
+    "scan": {
+      "samples": 25676,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": -738.77216,
+      "finite_max": 640.3587,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "numerator",
+    "plane": 0,
+    "band": 5,
+    "width": 98,
+    "scan": {
+      "samples": 6468,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": -222644130000,
+      "finite_max": 27692646000,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "denominator",
+    "plane": 0,
+    "band": 5,
+    "width": 98,
+    "scan": {
+      "samples": 6468,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": 23128.703,
+      "finite_max": 18434566000000,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    },
+    "fallback_coefficients": 0
+  },
+  {
+    "stage": "unweighted_sum",
+    "plane": 0,
+    "band": 5,
+    "width": 98,
+    "scan": {
+      "samples": 6468,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": -258232.52,
+      "finite_max": 165461.16,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "resolved",
+    "plane": 0,
+    "band": 5,
+    "width": 98,
+    "scan": {
+      "samples": 6468,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": -791.51337,
+      "finite_max": 677.981,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "numerator",
+    "plane": 0,
+    "band": 6,
+    "width": 49,
+    "scan": {
+      "samples": 1617,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": -83157290,
+      "finite_max": 58610316,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "denominator",
+    "plane": 0,
+    "band": 6,
+    "width": 49,
+    "scan": {
+      "samples": 1617,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": 523772,
+      "finite_max": 6972746000,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    },
+    "fallback_coefficients": 0
+  },
+  {
+    "stage": "unweighted_sum",
+    "plane": 0,
+    "band": 6,
+    "width": 49,
+    "scan": {
+      "samples": 1617,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": -293870.2,
+      "finite_max": 291647.34,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "resolved",
+    "plane": 0,
+    "band": 6,
+    "width": 49,
+    "scan": {
+      "samples": 1617,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": -842.9238,
+      "finite_max": 785.00494,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "numerator",
+    "plane": 0,
+    "band": 7,
+    "width": 25,
+    "scan": {
+      "samples": 425,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 425,
+      "finite_min": 0,
+      "finite_max": 0,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "denominator",
+    "plane": 0,
+    "band": 7,
+    "width": 25,
+    "scan": {
+      "samples": 425,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 425,
+      "finite_min": 0,
+      "finite_max": 0,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    },
+    "fallback_coefficients": 425
+  },
+  {
+    "stage": "unweighted_sum",
+    "plane": 0,
+    "band": 7,
+    "width": 25,
+    "scan": {
+      "samples": 425,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": 255041.34,
+      "finite_max": 2048179.9,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "resolved",
+    "plane": 0,
+    "band": 7,
+    "width": 25,
+    "scan": {
+      "samples": 425,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": 522.6257,
+      "finite_max": 4197.09,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "pre_hull",
+    "plane": 0,
+    "band": null,
+    "width": 3134,
+    "scan": {
+      "samples": 6543792,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": 91.132935,
+      "finite_max": 9334.868,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "post_hull",
+    "plane": 0,
+    "band": null,
+    "width": 3134,
+    "scan": {
+      "samples": 6543792,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": 142.35664,
+      "finite_max": 9334.868,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "numerator",
+    "plane": 1,
+    "band": 0,
+    "width": 3134,
+    "scan": {
+      "samples": 6543792,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 447518,
+      "finite_min": -47829280000000000,
+      "finite_max": 4180850800000000,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "unweighted_sum",
+    "plane": 1,
+    "band": 0,
+    "width": 3134,
+    "scan": {
+      "samples": 6543792,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 1,
+      "finite_min": -14498.8955,
+      "finite_max": 93197,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "resolved",
+    "plane": 1,
+    "band": 0,
+    "width": 3134,
+    "scan": {
+      "samples": 6543792,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 1,
+      "finite_min": -1970.9503,
+      "finite_max": 9313.258,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "numerator",
+    "plane": 1,
+    "band": 1,
+    "width": 1567,
+    "scan": {
+      "samples": 1635948,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": -809188200000000000000000,
+      "finite_max": 437463000000000000000,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "unweighted_sum",
+    "plane": 1,
+    "band": 1,
+    "width": 1567,
+    "scan": {
+      "samples": 1635948,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": -19723.523,
+      "finite_max": 45948.94,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "resolved",
+    "plane": 1,
+    "band": 1,
+    "width": 1567,
+    "scan": {
+      "samples": 1635948,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": -1189.5645,
+      "finite_max": 2732.571,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "numerator",
+    "plane": 1,
+    "band": 2,
+    "width": 784,
+    "scan": {
+      "samples": 409248,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": -21757576000000000000000000000,
+      "finite_max": 11861261000000000000000,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "unweighted_sum",
+    "plane": 1,
+    "band": 2,
+    "width": 784,
+    "scan": {
+      "samples": 409248,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": -38190.03,
+      "finite_max": 42299.188,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "resolved",
+    "plane": 1,
+    "band": 2,
+    "width": 784,
+    "scan": {
+      "samples": 409248,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": -1124.8422,
+      "finite_max": 1116.4514,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "numerator",
+    "plane": 1,
+    "band": 3,
+    "width": 392,
+    "scan": {
+      "samples": 102312,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": -15836130000000000000,
+      "finite_max": 1213985600000000000,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "unweighted_sum",
+    "plane": 1,
+    "band": 3,
+    "width": 392,
+    "scan": {
+      "samples": 102312,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": -64780.043,
+      "finite_max": 45611.465,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "resolved",
+    "plane": 1,
+    "band": 3,
+    "width": 392,
+    "scan": {
+      "samples": 102312,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": -982.86005,
+      "finite_max": 763.67285,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "numerator",
+    "plane": 1,
+    "band": 4,
+    "width": 196,
+    "scan": {
+      "samples": 25676,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": -17876591000000,
+      "finite_max": 9954003000000,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "unweighted_sum",
+    "plane": 1,
+    "band": 4,
+    "width": 196,
+    "scan": {
+      "samples": 25676,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": -122265.75,
+      "finite_max": 91542.75,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "resolved",
+    "plane": 1,
+    "band": 4,
+    "width": 196,
+    "scan": {
+      "samples": 25676,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": -606.0784,
+      "finite_max": 586.2501,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "numerator",
+    "plane": 1,
+    "band": 5,
+    "width": 98,
+    "scan": {
+      "samples": 6468,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": -249751750000,
+      "finite_max": 39327730000,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "unweighted_sum",
+    "plane": 1,
+    "band": 5,
+    "width": 98,
+    "scan": {
+      "samples": 6468,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": -265927.44,
+      "finite_max": 174202.55,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "resolved",
+    "plane": 1,
+    "band": 5,
+    "width": 98,
+    "scan": {
+      "samples": 6468,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": -887.8826,
+      "finite_max": 810.49744,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "numerator",
+    "plane": 1,
+    "band": 6,
+    "width": 49,
+    "scan": {
+      "samples": 1617,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": -82927740,
+      "finite_max": 51625172,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "unweighted_sum",
+    "plane": 1,
+    "band": 6,
+    "width": 49,
+    "scan": {
+      "samples": 1617,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": -282509.4,
+      "finite_max": 252459,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "resolved",
+    "plane": 1,
+    "band": 6,
+    "width": 49,
+    "scan": {
+      "samples": 1617,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": -780.0128,
+      "finite_max": 685.8838,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "numerator",
+    "plane": 1,
+    "band": 7,
+    "width": 25,
+    "scan": {
+      "samples": 425,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 425,
+      "finite_min": 0,
+      "finite_max": 0,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "unweighted_sum",
+    "plane": 1,
+    "band": 7,
+    "width": 25,
+    "scan": {
+      "samples": 425,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": 222868.69,
+      "finite_max": 1573590.5,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "resolved",
+    "plane": 1,
+    "band": 7,
+    "width": 25,
+    "scan": {
+      "samples": 425,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": 456.6981,
+      "finite_max": 3224.5706,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "pre_hull",
+    "plane": 1,
+    "band": null,
+    "width": 3134,
+    "scan": {
+      "samples": 6543792,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": 26.464462,
+      "finite_max": 14976.194,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "post_hull",
+    "plane": 1,
+    "band": null,
+    "width": 3134,
+    "scan": {
+      "samples": 6543792,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": 105,
+      "finite_max": 14976.194,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "numerator",
+    "plane": 2,
+    "band": 0,
+    "width": 3134,
+    "scan": {
+      "samples": 6543792,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 447519,
+      "finite_min": -45164974000000000,
+      "finite_max": 3522191300000000,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "unweighted_sum",
+    "plane": 2,
+    "band": 0,
+    "width": 3134,
+    "scan": {
+      "samples": 6543792,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 2,
+      "finite_min": -14707.118,
+      "finite_max": 86455.35,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "resolved",
+    "plane": 2,
+    "band": 0,
+    "width": 3134,
+    "scan": {
+      "samples": 6543792,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 2,
+      "finite_min": -2170.6738,
+      "finite_max": 7322.957,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "numerator",
+    "plane": 2,
+    "band": 1,
+    "width": 1567,
+    "scan": {
+      "samples": 1635948,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": -853637640000000000000000,
+      "finite_max": 310816300000000000000,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "unweighted_sum",
+    "plane": 2,
+    "band": 1,
+    "width": 1567,
+    "scan": {
+      "samples": 1635948,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": -19347.17,
+      "finite_max": 52673.51,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "resolved",
+    "plane": 2,
+    "band": 1,
+    "width": 1567,
+    "scan": {
+      "samples": 1635948,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": -1287.7986,
+      "finite_max": 2839.9106,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "numerator",
+    "plane": 2,
+    "band": 2,
+    "width": 784,
+    "scan": {
+      "samples": 409248,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": -21923704000000000000000000000,
+      "finite_max": 8045380000000000000000,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "unweighted_sum",
+    "plane": 2,
+    "band": 2,
+    "width": 784,
+    "scan": {
+      "samples": 409248,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": -37899.727,
+      "finite_max": 43542.76,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "resolved",
+    "plane": 2,
+    "band": 2,
+    "width": 784,
+    "scan": {
+      "samples": 409248,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": -1134.7301,
+      "finite_max": 1141.6221,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "numerator",
+    "plane": 2,
+    "band": 3,
+    "width": 392,
+    "scan": {
+      "samples": 102312,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": -16240263000000000000,
+      "finite_max": 1218703200000000000,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "unweighted_sum",
+    "plane": 2,
+    "band": 3,
+    "width": 392,
+    "scan": {
+      "samples": 102312,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": -65290.21,
+      "finite_max": 47771.555,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "resolved",
+    "plane": 2,
+    "band": 3,
+    "width": 392,
+    "scan": {
+      "samples": 102312,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": -979.3706,
+      "finite_max": 766.6405,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "numerator",
+    "plane": 2,
+    "band": 4,
+    "width": 196,
+    "scan": {
+      "samples": 25676,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": -17932298000000,
+      "finite_max": 10310908000000,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "unweighted_sum",
+    "plane": 2,
+    "band": 4,
+    "width": 196,
+    "scan": {
+      "samples": 25676,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": -122618.875,
+      "finite_max": 91841.66,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "resolved",
+    "plane": 2,
+    "band": 4,
+    "width": 196,
+    "scan": {
+      "samples": 25676,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": -615.9037,
+      "finite_max": 595.84674,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "numerator",
+    "plane": 2,
+    "band": 5,
+    "width": 98,
+    "scan": {
+      "samples": 6468,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": -250973880000,
+      "finite_max": 39385070000,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "unweighted_sum",
+    "plane": 2,
+    "band": 5,
+    "width": 98,
+    "scan": {
+      "samples": 6468,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": -266916.88,
+      "finite_max": 174600.03,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "resolved",
+    "plane": 2,
+    "band": 5,
+    "width": 98,
+    "scan": {
+      "samples": 6468,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": -892.22736,
+      "finite_max": 811.67914,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "numerator",
+    "plane": 2,
+    "band": 6,
+    "width": 49,
+    "scan": {
+      "samples": 1617,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": -82900070,
+      "finite_max": 51620068,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "unweighted_sum",
+    "plane": 2,
+    "band": 6,
+    "width": 49,
+    "scan": {
+      "samples": 1617,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": -282429.88,
+      "finite_max": 252102.36,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "resolved",
+    "plane": 2,
+    "band": 6,
+    "width": 49,
+    "scan": {
+      "samples": 1617,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": -779.7525,
+      "finite_max": 685.22754,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "numerator",
+    "plane": 2,
+    "band": 7,
+    "width": 25,
+    "scan": {
+      "samples": 425,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 425,
+      "finite_min": 0,
+      "finite_max": 0,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "unweighted_sum",
+    "plane": 2,
+    "band": 7,
+    "width": 25,
+    "scan": {
+      "samples": 425,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": 223117.97,
+      "finite_max": 1573494.6,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "resolved",
+    "plane": 2,
+    "band": 7,
+    "width": 25,
+    "scan": {
+      "samples": 425,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": 457.20892,
+      "finite_max": 3224.374,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "pre_hull",
+    "plane": 2,
+    "band": null,
+    "width": 3134,
+    "scan": {
+      "samples": 6543792,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": 19.848732,
+      "finite_max": 12655.939,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "post_hull",
+    "plane": 2,
+    "band": null,
+    "width": 3134,
+    "scan": {
+      "samples": 6543792,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": 102.21956,
+      "finite_max": 12655.939,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "numerator",
+    "plane": 3,
+    "band": 0,
+    "width": 3134,
+    "scan": {
+      "samples": 6543792,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 447536,
+      "finite_min": -8377283000000000,
+      "finite_max": 7515803000000000,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "unweighted_sum",
+    "plane": 3,
+    "band": 0,
+    "width": 3134,
+    "scan": {
+      "samples": 6543792,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 9,
+      "finite_min": -3611.713,
+      "finite_max": 18345.62,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "resolved",
+    "plane": 3,
+    "band": 0,
+    "width": 3134,
+    "scan": {
+      "samples": 6543792,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 19,
+      "finite_min": -509.41815,
+      "finite_max": 2114.87,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "numerator",
+    "plane": 3,
+    "band": 1,
+    "width": 1567,
+    "scan": {
+      "samples": 1635948,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": -45797136000000000000000,
+      "finite_max": 100472660000000000000,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "unweighted_sum",
+    "plane": 3,
+    "band": 1,
+    "width": 1567,
+    "scan": {
+      "samples": 1635948,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": -2558.4111,
+      "finite_max": 11862.491,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "resolved",
+    "plane": 3,
+    "band": 1,
+    "width": 1567,
+    "scan": {
+      "samples": 1635948,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": -241.60593,
+      "finite_max": 731.5804,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "numerator",
+    "plane": 3,
+    "band": 2,
+    "width": 784,
+    "scan": {
+      "samples": 409248,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": -1416688400000000000000000000,
+      "finite_max": 8906673300000000000000,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "unweighted_sum",
+    "plane": 3,
+    "band": 2,
+    "width": 784,
+    "scan": {
+      "samples": 409248,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": -2818.6882,
+      "finite_max": 16285.498,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "resolved",
+    "plane": 3,
+    "band": 2,
+    "width": 784,
+    "scan": {
+      "samples": 409248,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": -160.59001,
+      "finite_max": 588.10785,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "numerator",
+    "plane": 3,
+    "band": 3,
+    "width": 392,
+    "scan": {
+      "samples": 102312,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": -1115611300000000000,
+      "finite_max": 163194880000000000,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "unweighted_sum",
+    "plane": 3,
+    "band": 3,
+    "width": 392,
+    "scan": {
+      "samples": 102312,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": -5423.253,
+      "finite_max": 14498.426,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "resolved",
+    "plane": 3,
+    "band": 3,
+    "width": 392,
+    "scan": {
+      "samples": 102312,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": -70.56417,
+      "finite_max": 382.09363,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "numerator",
+    "plane": 3,
+    "band": 4,
+    "width": 196,
+    "scan": {
+      "samples": 25676,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": -1402986400000,
+      "finite_max": 1056537250000,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "unweighted_sum",
+    "plane": 3,
+    "band": 4,
+    "width": 196,
+    "scan": {
+      "samples": 25676,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": -10247.637,
+      "finite_max": 12481.37,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "resolved",
+    "plane": 3,
+    "band": 4,
+    "width": 196,
+    "scan": {
+      "samples": 25676,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": -55.70318,
+      "finite_max": 140.69962,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "numerator",
+    "plane": 3,
+    "band": 5,
+    "width": 98,
+    "scan": {
+      "samples": 6468,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": -19287972000,
+      "finite_max": 3356725200,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "unweighted_sum",
+    "plane": 3,
+    "band": 5,
+    "width": 98,
+    "scan": {
+      "samples": 6468,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": -19680.54,
+      "finite_max": 16682.316,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "resolved",
+    "plane": 3,
+    "band": 5,
+    "width": 98,
+    "scan": {
+      "samples": 6468,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": -68.56991,
+      "finite_max": 72.51543,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "numerator",
+    "plane": 3,
+    "band": 6,
+    "width": 49,
+    "scan": {
+      "samples": 1617,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": -5728783.5,
+      "finite_max": 3701384.8,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "unweighted_sum",
+    "plane": 3,
+    "band": 6,
+    "width": 49,
+    "scan": {
+      "samples": 1617,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": -19688.617,
+      "finite_max": 23464.94,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "resolved",
+    "plane": 3,
+    "band": 6,
+    "width": 49,
+    "scan": {
+      "samples": 1617,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": -53.884556,
+      "finite_max": 63.86609,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "numerator",
+    "plane": 3,
+    "band": 7,
+    "width": 25,
+    "scan": {
+      "samples": 425,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 425,
+      "finite_min": 0,
+      "finite_max": 0,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "unweighted_sum",
+    "plane": 3,
+    "band": 7,
+    "width": 25,
+    "scan": {
+      "samples": 425,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": 14442.776,
+      "finite_max": 104413.31,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "resolved",
+    "plane": 3,
+    "band": 7,
+    "width": 25,
+    "scan": {
+      "samples": 425,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": 29.595852,
+      "finite_max": 213.9617,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "pre_hull",
+    "plane": 3,
+    "band": null,
+    "width": 3134,
+    "scan": {
+      "samples": 6543792,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 0,
+      "finite_min": -31.722961,
+      "finite_max": 3133.1602,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "post_hull",
+    "plane": 3,
+    "band": null,
+    "width": 3134,
+    "scan": {
+      "samples": 6543792,
+      "nan": 0,
+      "positive_infinity": 0,
+      "negative_infinity": 0,
+      "zero": 29,
+      "finite_min": 0,
+      "finite_max": 3133.1602,
+      "first_nonfinite_xy_bits": [],
+      "first_limit": 64
+    }
+  },
+  {
+    "stage": "end",
+    "completed_planes": 4,
+    "expected_planes": 4,
+    "complete": true
+  }
+]

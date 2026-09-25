@@ -1,0 +1,155 @@
+{
+  "arms": [
+    {
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-source-pure\\run-1\\output\\donor-112.tiff",
+      "index": 112,
+      "name": "donor-112",
+      "negative_control": false,
+      "outside_cfa_exact": true,
+      "outside_rgb_support_exact": true,
+      "rgb16_le_sha256": "a727d9e3947c7c664aaa02ba9b1ad545243cc17c6988426311d384a5042494b1",
+      "sha256": "cefa0e089713e45233c1e4c86de85ed6b47c4ff53110c843a182032bf4467236"
+    },
+    {
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-source-pure\\run-1\\output\\donor-152.tiff",
+      "index": 152,
+      "name": "donor-152",
+      "negative_control": false,
+      "outside_cfa_exact": true,
+      "outside_rgb_support_exact": true,
+      "rgb16_le_sha256": "02a9595c7feb55ab328cc5665e10dbbb4aedb073d003fa31bea1152b83746e55",
+      "sha256": "4a070033b76391386d3704cb17d4acb441d6f12be7721d3cb5639a70174542fc"
+    },
+    {
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-source-pure\\run-1\\output\\donor-320.tiff",
+      "index": 320,
+      "name": "donor-320",
+      "negative_control": true,
+      "outside_cfa_exact": true,
+      "outside_rgb_support_exact": true,
+      "rgb16_le_sha256": "0dd3d8c41e864acd5f716f3cc230ae8d35765af7adea9fdab50ea295ad311704",
+      "sha256": "54f3c192b44dc4c0572100656d5eade6defb4994808a3e1e64de71315cf7de48"
+    }
+  ],
+  "baseline_cache_unchanged": true,
+  "baseline_file": "baseline.tiff",
+  "baseline_rgb16_le_sha256": "6d26d2cc00f6eb76500d4574a7f0d3ba7eb35b364e100daac8eeb96422c13c11",
+  "baseline_sha256": "19e657e419d52adf567ec86472f917ad9b9abfc9b0812131e9bba0eacbae462f",
+  "cache": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\garnet-spatial-trace\\marigold4-fixed-1\\output\\candidate-cache.json",
+  "cache_sha256": "3af5e0a0d00b28e73083ce132ff495cd482020b600fecd4bddb2902b1273a95c",
+  "core_native_xywh": [
+    3230,
+    3000,
+    384,
+    384
+  ],
+  "full_receipt": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\garnet-spatial-trace\\marigold4-fixed-1\\output\\receipt.json",
+  "full_receipt_sha256": "3cc4a0f7038f0d458cb6db9b98582af2e23d32c9569a78fd722a20b5a102152b",
+  "icc_sha256": "238ad2596316306a72025bb245cf3c8cd72f1090c8d95af2f38dc090e84ece5b",
+  "indices": [
+    112,
+    152,
+    320
+  ],
+  "native_dimensions": [
+    6268,
+    4176
+  ],
+  "outer_native_xywh": [
+    3198,
+    2968,
+    448,
+    448
+  ],
+  "raw_decode_count": 3,
+  "resolved_development": {
+    "ceiling_bits": [
+      1067682475,
+      1061256642,
+      1072945436
+    ],
+    "exposure_gain_bits": 1060439283,
+    "matrix_bits": [
+      [
+        1070688889,
+        3202724187,
+        3191861519
+      ],
+      [
+        3186350977,
+        1069455000,
+        3200213889
+      ],
+      [
+        3147518954,
+        3198529296,
+        1068107544
+      ]
+    ],
+    "sensor_top_bits": 1064271804,
+    "srgb": true,
+    "tone_bits": [
+      1008079930,
+      1049460607,
+      1057803469
+    ],
+    "wants_tone": true
+  },
+  "rgb_support_native_xywh": [
+    3196,
+    2966,
+    452,
+    452
+  ],
+  "schema": 1,
+  "scope": "Manual complete-CFA source-purity counterfactual, not an automatic method, quality claim, or SOTA qualification.",
+  "source_count": 488,
+  "sources": [
+    {
+      "active_u16_sha256": "bd58e1200bb9b261e04598338a4ab96caeeab8915238cb7173778bd80e0c23b8",
+      "file_sha256": "d61479b87463522b43dea20cddd94c7af15b4080545b993794e799f15da028c7",
+      "full_receipt_match": true,
+      "index": 112,
+      "known4_sha256": [
+        "3c39e6cea67c31d568ff4cee13258ad7c5b2d1ebd99406d14cb59c3fbdfb1e54",
+        "58e373e32d802580b4d4f8ddcf08a7817ec573970a53f727818696ca8ca98fb2",
+        "43308fe237b9732b9c2bf1d87ee06352206265ab8603db7282db8e402c25c3c1",
+        "5543dae331989680ad4c6298f1309b055003b55cfe6567dd400f52e6c72a9b09"
+      ],
+      "original_unchanged": true,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00133.ARW"
+    },
+    {
+      "active_u16_sha256": "7692a1c2e749d4b1ed88423d61ee74cb0be58bd98b618264bc16b4f961e12098",
+      "file_sha256": "fc268680728e15ee76c2fb117046a5a3282e1f4fc12b3c928a8c7456ef012d38",
+      "full_receipt_match": true,
+      "index": 152,
+      "known4_sha256": [
+        "392e16ffc6804b95d1e9d68abc88c32fb826797bb04a86ab285846f3b5c6445e",
+        "93fe1952bbcb19fdafaf649c5fb96f1a2e9eca0ff0964f448d95f892aa095b31",
+        "b0a6d6d5bf252c72e48b4ea6e1d86d477fea712c447a9d8800c1453a66474c92",
+        "0d9d91ff06c59a2da0cef23af1ce7d9560967569c953ee010edf51506fc35543"
+      ],
+      "original_unchanged": true,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00173.ARW"
+    },
+    {
+      "active_u16_sha256": "61040dd12dd4140e9f9ef657734e95acb4867bd03e8666a0ec33ed90470d2ff3",
+      "file_sha256": "ff52e26157c3ed95d7a2a14ffd1e215538f5b030e915c82fd198523e55b5485f",
+      "full_receipt_match": true,
+      "index": 320,
+      "known4_sha256": [
+        "ad163af6bdf9deb67a4c82616f5a784d86776fa17dd3fd4d4a689c6e096541b6",
+        "5f332ae9c335cc9402924e6a77433da6f43f8c37e8e56753119466c649a87b38",
+        "f0e991381f82c814028e3e33f1b46888d7b80a30292625af3d4bc7ce53901704",
+        "cf828e3b6454389213a909e5e22c08cfa93048d0e5f74890c7d2247c5d1195c7"
+      ],
+      "original_unchanged": true,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00042.ARW"
+    }
+  ],
+  "status": "COMPLETE_FIXED_THREE_DONOR_ORACLE",
+  "total_seconds": 4.7906631,
+  "visual_verdict": null,
+  "zero_mask_rgb16_and_icc_exact": true
+}

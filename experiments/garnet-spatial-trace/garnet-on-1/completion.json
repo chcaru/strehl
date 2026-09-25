@@ -1,0 +1,21 @@
+{
+  "observer": true,
+  "actual_historical_pixels_exact": true,
+  "baseline_tiff": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\garnet-spatial-trace\\garnet-on-1\\output\\baseline.tiff",
+    "sha256": "80d2e3ea30d028ebf22b298977cbf113f46c368104fb057a8b8b79596af540b4",
+    "bytes": 170203089
+  },
+  "baseline_pixel_hash": "87c8d5ba3fbaed2441fbcd241c7865c5d78a7e7081de0136e334f31d26b6520a",
+  "merged_plane_hashes": [
+    "2b57b11d16b5e98ae7a939a2b99a2fe4188c45ab5561a13b124f1cfce58acb52",
+    "0079b7e924314ce0ac4ba35ea073b5111f7a3db70ca27bc16729f54e958373ed",
+    "f3925395931e85642c9557b16283aef67f6578997f4e701c9786db6136051ec9",
+    "43ee1ceea64c17cb3a64eb1196b189116135a4b24cb5d9a0c3722680f9563a9c"
+  ],
+  "census": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\garnet-spatial-trace\\garnet-on-1\\census.json",
+    "sha256": "918f40337aabbdcd0c020efd56345dbbbdb18c83fbf2f64dd04031dd7f02907e",
+    "bytes": 755240
+  }
+}

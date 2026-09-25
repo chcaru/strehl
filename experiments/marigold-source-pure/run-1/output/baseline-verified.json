@@ -1,0 +1,43 @@
+{
+  "actual_writer_pixels_and_icc_exact": true,
+  "baseline_sha256": "19e657e419d52adf567ec86472f917ad9b9abfc9b0812131e9bba0eacbae462f",
+  "cache": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\garnet-spatial-trace\\marigold4-fixed-1\\output\\candidate-cache.json",
+  "cache_sha256": "3af5e0a0d00b28e73083ce132ff495cd482020b600fecd4bddb2902b1273a95c",
+  "raw_reads": 0,
+  "resolved_development": {
+    "ceiling_bits": [
+      1067682475,
+      1061256642,
+      1072945436
+    ],
+    "exposure_gain_bits": 1060439283,
+    "matrix_bits": [
+      [
+        1070688889,
+        3202724187,
+        3191861519
+      ],
+      [
+        3186350977,
+        1069455000,
+        3200213889
+      ],
+      [
+        3147518954,
+        3198529296,
+        1068107544
+      ]
+    ],
+    "sensor_top_bits": 1064271804,
+    "srgb": true,
+    "tone_bits": [
+      1008079930,
+      1049460607,
+      1057803469
+    ],
+    "wants_tone": true
+  },
+  "zero_mask_cfa_exact": true,
+  "zero_mask_rgb16_and_icc_exact": true,
+  "zero_placebo_sha256": "19e657e419d52adf567ec86472f917ad9b9abfc9b0812131e9bba0eacbae462f"
+}

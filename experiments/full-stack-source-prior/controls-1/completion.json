@@ -1,0 +1,12 @@
+{
+  "retained_screen_exact": true,
+  "photographic_replay_admitted": false,
+  "retained_screen": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\full-stack-source-prior\\controls-1\\retained\\output\\screen.json",
+    "sha256": "a63516111176f8b68a2f3d433ca596f672ea0a02823f71e298c92be546ee9144",
+    "bytes": 259952
+  },
+  "constructor_completed": true,
+  "sources_unchanged": true,
+  "scope": "Separate complete photographic observation of unchanged known-risk prior. General quality qualification remains false; no default or SOTA claim."
+}

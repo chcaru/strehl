@@ -1,0 +1,183 @@
+{
+  "arms": [
+    {
+      "arm": "current",
+      "file": "current.tiff",
+      "file_sha256": "96a0d56324b776c9cdc10adbb94d1b1f30727f9bdc487ec0c3eb3813f03effcf",
+      "resolved_development": {
+        "ceiling_bits": [
+          1067682475,
+          1061256642,
+          1072945436
+        ],
+        "exposure_gain_bits": 1060439283,
+        "matrix_bits": [
+          [
+            1070688889,
+            3202724187,
+            3191861519
+          ],
+          [
+            3186350977,
+            1069455000,
+            3200213889
+          ],
+          [
+            3147518954,
+            3198529296,
+            1068107544
+          ]
+        ],
+        "sensor_top_bits": 1064271804,
+        "srgb": true,
+        "tone_bits": [
+          1008079930,
+          1049460607,
+          1057803469
+        ],
+        "wants_tone": true
+      },
+      "rgb16_le_sha256": "12801dac65a40a15262ab82c9d5147150181302e88dbf0efbdf4aa29d83ee2d3"
+    },
+    {
+      "arm": "sensor-rolloff-off",
+      "file": "sensor-rolloff-off.tiff",
+      "file_sha256": "96a0d56324b776c9cdc10adbb94d1b1f30727f9bdc487ec0c3eb3813f03effcf",
+      "resolved_development": {
+        "ceiling_bits": [
+          1067682475,
+          1061256642,
+          1072945436
+        ],
+        "exposure_gain_bits": 1060439283,
+        "matrix_bits": [
+          [
+            1070688889,
+            3202724187,
+            3191861519
+          ],
+          [
+            3186350977,
+            1069455000,
+            3200213889
+          ],
+          [
+            3147518954,
+            3198529296,
+            1068107544
+          ]
+        ],
+        "sensor_top_bits": 1064271804,
+        "srgb": true,
+        "tone_bits": [
+          1008079930,
+          1049460607,
+          1057803469
+        ],
+        "wants_tone": true
+      },
+      "rgb16_le_sha256": "12801dac65a40a15262ab82c9d5147150181302e88dbf0efbdf4aa29d83ee2d3",
+      "seconds": 0.4575314
+    },
+    {
+      "arm": "shoulder",
+      "file": "shoulder.tiff",
+      "file_sha256": "fa4c2988ee2f3f9664a0080f3f4dcc35cc235e0288d41f59e2401589f08c7aa8",
+      "resolved_development": {
+        "ceiling_bits": [
+          1067682475,
+          1061256642,
+          1072945436
+        ],
+        "exposure_gain_bits": 1060439283,
+        "matrix_bits": [
+          [
+            1070688889,
+            3202724187,
+            3191861519
+          ],
+          [
+            3186350977,
+            1069455000,
+            3200213889
+          ],
+          [
+            3147518954,
+            3198529296,
+            1068107544
+          ]
+        ],
+        "sensor_top_bits": 1064271804,
+        "srgb": true,
+        "tone_bits": [
+          1008079930,
+          1049460607,
+          1057803469
+        ],
+        "wants_tone": true
+      },
+      "rgb16_le_sha256": "1956f0fd82199a2d7df9cee9e762456f834cb24c4a36f662f9bab398d9a551eb",
+      "seconds": 0.4968325
+    },
+    {
+      "arm": "both",
+      "file": "both.tiff",
+      "file_sha256": "fa5b2df50d2ca3b2b0cbe2459bc2d1e9bdf70c0b8cab0276b2b2786ccb6ebcc2",
+      "resolved_development": {
+        "ceiling_bits": [
+          1067682475,
+          1061256642,
+          1072945436
+        ],
+        "exposure_gain_bits": 1060439283,
+        "matrix_bits": [
+          [
+            1070688889,
+            3202724187,
+            3191861519
+          ],
+          [
+            3186350977,
+            1069455000,
+            3200213889
+          ],
+          [
+            3147518954,
+            3198529296,
+            1068107544
+          ]
+        ],
+        "sensor_top_bits": 1064271804,
+        "srgb": true,
+        "tone_bits": [
+          1008079930,
+          1049460607,
+          1057803469
+        ],
+        "wants_tone": true
+      },
+      "rgb16_le_sha256": "818aeeb2ce68f5f0c02cfc4b5fd3cf31e74c5feb66998b9a97bbdf4a6b2fd3f8",
+      "seconds": 0.4762529
+    }
+  ],
+  "cache": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\full-stack-source-prior\\marigold4-full-1\\output\\baseline-cache.json",
+  "cache_metadata_sha256": "aaa77eea6a3374c5b8cf0fc949ad7926d0f5caa606f1883a69b16e98a11abb9a",
+  "height": 4176,
+  "icc_sha256": "238ad2596316306a72025bb245cf3c8cd72f1090c8d95af2f38dc090e84ece5b",
+  "merged_planes_unchanged": true,
+  "observer_on_off_file_exact": true,
+  "planes_sha256": [
+    "3cea17b417bf33bfc160183a62bb658dbcf9b8dcbf25ad2236d3e6b82268473e",
+    "48ea44ad7e7bfc44b835655ed2e8750d2741b4500d0b289bcf78c171931db26c",
+    "44ff2991892d5813ed519a49bc53dc75063583d2ef43d7af35b0e09436b996f7",
+    "23e7e782545007a103122718fa526c076881d7614c102db70d1a81cdaca13979"
+  ],
+  "raw_reads": 0,
+  "retained_current_pixels_and_icc_exact": true,
+  "schema": 1,
+  "scope": "display-only factorial; no spatial ghosting repair claim",
+  "status": "COMPLETE_CACHED_FACTORIAL",
+  "total_seconds": 2.7602485,
+  "visual_verdict": null,
+  "width": 6268
+}

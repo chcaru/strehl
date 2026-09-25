@@ -1,0 +1,30 @@
+{
+  "command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\garnet-spatial-trace\\build-fixed-2\\cli-tests.exe",
+    "merge_cmd::marigold_source_pure::mask_and_support_controls",
+    "--exact",
+    "--nocapture",
+    "--test-threads=1"
+  ],
+  "environment": {
+    "RAYON_NUM_THREADS": "8",
+    "STREHL_PYRAMID_WORKERS": "8",
+    "STREHL_ALIGN": "1",
+    "STREHL_FULLRES_GATHER": "1",
+    "STREHL_DIRECT_PLANES": "rounded",
+    "STREHL_PROBE_GATHER": "green",
+    "STREHL_WARP_WRITEBACK": "parallel",
+    "STREHL_GPU_GATHER": "on",
+    "STREHL_GPU_SCHEDULE": "device",
+    "STREHL_GPU_GATHER_LOG": "on",
+    "STREHL_DEFECT": "off",
+    "STREHL_FINE_SUPPORT": "off",
+    "STREHL_CA_BEFORE_MHC": "off"
+  },
+  "removed_environment": [],
+  "runner": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-source-prior\\run.py",
+    "sha256": "8bb539359b1d712c5894ce43d7c7ee66f636fefa1432cdc5d53d7777c75860b0",
+    "bytes": 7134
+  }
+}

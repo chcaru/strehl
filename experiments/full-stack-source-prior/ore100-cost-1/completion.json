@@ -1,0 +1,13 @@
+{
+  "phase": "cost",
+  "mode": "prior",
+  "sources_unchanged": true,
+  "historical_full_baseline_exact": false,
+  "receipt": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\full-stack-source-prior\\ore100-cost-1\\output\\receipt.json",
+    "sha256": "a737bfd36d2dcce109abff8080e359d8950e0623e6375ed0221d233e91266f42",
+    "bytes": 19975
+  },
+  "photographic_replay_admitted": false,
+  "scope": "Separate complete photographic observation of unchanged known-risk prior. General quality qualification remains false; no default or SOTA claim."
+}

@@ -1,0 +1,186 @@
+{
+  "stack": "marigold-4",
+  "target_file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\marigold\\highlight-targets.json",
+  "target_sha256": "6f8ff8ba9f0710a51751cd65641957a16a3e95bc6153564a409e0603302bf969",
+  "native_shape": [
+    4176,
+    6268,
+    3
+  ],
+  "icc_sha256": "238ad2596316306a72025bb245cf3c8cd72f1090c8d95af2f38dc090e84ece5b",
+  "display": "rounded RGB16/257, same original ICC; native tiles unresampled; whole JPEG98 orientation only",
+  "images": [
+    {
+      "arm": "baseline",
+      "master": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\full-stack-source-prior\\marigold4-full-1\\output\\baseline.tiff",
+      "master_sha256": "96a0d56324b776c9cdc10adbb94d1b1f30727f9bdc487ec0c3eb3813f03effcf",
+      "complete_overview": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\marigold-prior-views-1\\baseline-whole.jpg",
+      "overview_sha256": "8520e2713dca1aa9d85ba6f4228a35d0d6ce3227102be582d4954006ba51a8aa",
+      "tiles": [
+        {
+          "target": "bright-front-petal",
+          "rect": [
+            1700,
+            2050,
+            384,
+            384
+          ],
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\marigold-prior-views-1\\baseline-bright-front-petal.png",
+          "sha256": "cb687201d9b079f9ba6c75586659d70553cd4db7b571843ecdf3b472d74620d0"
+        },
+        {
+          "target": "bright-upper-petal",
+          "rect": [
+            2200,
+            280,
+            384,
+            384
+          ],
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\marigold-prior-views-1\\baseline-bright-upper-petal.png",
+          "sha256": "fb3bf3091b0cd589029c8d06ef456dbf12ecf16b85ab5e4e9ee23543e8f373f5"
+        },
+        {
+          "target": "right-inner-bud",
+          "rect": [
+            4320,
+            1540,
+            384,
+            384
+          ],
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\marigold-prior-views-1\\baseline-right-inner-bud.png",
+          "sha256": "ffa4e2c588e6d564da44ef453f4b51d66341d1f75c472be81256b5856ab9833b"
+        },
+        {
+          "target": "dark-bud-gap",
+          "rect": [
+            4800,
+            180,
+            384,
+            384
+          ],
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\marigold-prior-views-1\\baseline-dark-bud-gap.png",
+          "sha256": "a427edca81d68545ee93c40e1caeec2e8f38f0f3f2669074b0a05c566591cabe"
+        },
+        {
+          "target": "fan-real-hairs",
+          "rect": [
+            3230,
+            3000,
+            384,
+            384
+          ],
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\marigold-prior-views-1\\baseline-fan-real-hairs.png",
+          "sha256": "e9d1f10ef79e6332513b97b83dbba906c2a18f29b92b62a0bab121970c989b43"
+        },
+        {
+          "target": "bright-rim-hairs",
+          "rect": [
+            1436,
+            1596,
+            384,
+            384
+          ],
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\marigold-prior-views-1\\baseline-bright-rim-hairs.png",
+          "sha256": "aebf24554312822ffe19589e09b27e0801d19576bffc4918e28267d0a2d2193e"
+        },
+        {
+          "target": "central-throat",
+          "rect": [
+            2350,
+            2426,
+            384,
+            384
+          ],
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\marigold-prior-views-1\\baseline-central-throat.png",
+          "sha256": "83c53582c1efdd4473a51865ec5dd88a14401f102ed59350b02bbe773d57787f"
+        }
+      ]
+    },
+    {
+      "arm": "candidate",
+      "master": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\full-stack-source-prior\\marigold4-full-1\\output\\candidate.tiff",
+      "master_sha256": "ffad75cbd63286231a9721832a8ef9dcb342a28bb163483229cfcc49f5eb56c7",
+      "complete_overview": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\marigold-prior-views-1\\candidate-whole.jpg",
+      "overview_sha256": "f798fbb87850d5837d42053697115919d0a265480a8d3b45110c79ca93a0cc2b",
+      "tiles": [
+        {
+          "target": "bright-front-petal",
+          "rect": [
+            1700,
+            2050,
+            384,
+            384
+          ],
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\marigold-prior-views-1\\candidate-bright-front-petal.png",
+          "sha256": "69ec3b5d87b45769bd1b5ad4a1398efccbdfafbee7fb7697e53f21124d2aee4c"
+        },
+        {
+          "target": "bright-upper-petal",
+          "rect": [
+            2200,
+            280,
+            384,
+            384
+          ],
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\marigold-prior-views-1\\candidate-bright-upper-petal.png",
+          "sha256": "ae15f9a18713fe2ad811a0a0d71eb72e8a09fb11a4a1976743aea08aef580379"
+        },
+        {
+          "target": "right-inner-bud",
+          "rect": [
+            4320,
+            1540,
+            384,
+            384
+          ],
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\marigold-prior-views-1\\candidate-right-inner-bud.png",
+          "sha256": "15ad00185c2d87f03e34c16dd21dc7fa5d6420c5efdb5e7ff5943bc4e6b5fe71"
+        },
+        {
+          "target": "dark-bud-gap",
+          "rect": [
+            4800,
+            180,
+            384,
+            384
+          ],
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\marigold-prior-views-1\\candidate-dark-bud-gap.png",
+          "sha256": "d85a28d6cc50a78fe855f0bf44ccaf3ff9db0b7fe7a82e61f4e50196f577c4aa"
+        },
+        {
+          "target": "fan-real-hairs",
+          "rect": [
+            3230,
+            3000,
+            384,
+            384
+          ],
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\marigold-prior-views-1\\candidate-fan-real-hairs.png",
+          "sha256": "446b546fbf20370358dddf0dc1dec8246f295875e98881b21a325d7ce7bede77"
+        },
+        {
+          "target": "bright-rim-hairs",
+          "rect": [
+            1436,
+            1596,
+            384,
+            384
+          ],
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\marigold-prior-views-1\\candidate-bright-rim-hairs.png",
+          "sha256": "d4bfb32a0c7fc1977f154fa0b60089943e218d03c2e7142f49df1d2cb0ad90fc"
+        },
+        {
+          "target": "central-throat",
+          "rect": [
+            2350,
+            2426,
+            384,
+            384
+          ],
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\marigold-prior-views-1\\candidate-central-throat.png",
+          "sha256": "a5583ae860d8fd90039195627b9e539ff06833f24e7ad2939508ac88420dcffb"
+        }
+      ]
+    }
+  ]
+}

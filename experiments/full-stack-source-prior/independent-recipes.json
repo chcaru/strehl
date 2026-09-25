@@ -1,0 +1,98 @@
+{
+  "status": "INDEPENDENT_RECIPE_CHECK_PASS",
+  "results": [
+    {
+      "name": "marigold-4",
+      "recipe_sha256": "c98f715ee16352e0f5591768bfdf6506fcf22cdbd58764bf3d57a938cf8b0f08",
+      "frames": 488,
+      "reference": 244,
+      "crop": [
+        191,
+        128,
+        3134,
+        2088
+      ],
+      "exposure": -0.5,
+      "mode": "prior",
+      "map_digest": "d2436e89ba6b3c5c",
+      "source_runs": [
+        {
+          "directory": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl",
+          "count": 279,
+          "first": "DSC00021.ARW",
+          "last": "DSC00299.ARW"
+        },
+        {
+          "directory": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl",
+          "count": 209,
+          "first": "DSC00001.ARW",
+          "last": "DSC00209.ARW"
+        }
+      ],
+      "baseline_sha256": "7df00e469bb392a5c045613815dbcd885eb470e9f10f630c9add6fda1bb179a0",
+      "pixels_sha256": "12801dac65a40a15262ab82c9d5147150181302e88dbf0efbdf4aa29d83ee2d3",
+      "all_placed": true,
+      "source_order_matches_retained": true,
+      "swapped_order_rejected": true,
+      "original_content_rehashed": false
+    },
+    {
+      "name": "ore-100",
+      "recipe_sha256": "fc0e7266d15960ab371c3846e4fb5e4999063bde14724b96157279135d1a10fb",
+      "frames": 207,
+      "reference": 103,
+      "crop": [
+        83,
+        55,
+        3351,
+        2234
+      ],
+      "exposure": 0.0,
+      "mode": "prior",
+      "map_digest": "360bc163a75e0d8b",
+      "source_runs": [
+        {
+          "directory": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF",
+          "count": 207,
+          "first": "DSC00031.ARW",
+          "last": "DSC00237.ARW"
+        }
+      ],
+      "baseline_sha256": "cfbfd68d72c5e02b1c47d7f6cb1e6465824d330ef64f828dff5bde9d09335530",
+      "pixels_sha256": "6f75d0a5d891ccbf6664f19dba3f86643aaa4a2e3b09f0ef5540ef03edaab3cf",
+      "all_placed": true,
+      "source_order_matches_retained": true,
+      "swapped_order_rejected": true,
+      "original_content_rehashed": false
+    },
+    {
+      "name": "garnet-104",
+      "recipe_sha256": "c027b3de2ae660d6a6fef0a97fbdd392aa4824ef8dced4a92f489b580a2dd459",
+      "frames": 183,
+      "reference": 91,
+      "crop": [
+        127,
+        85,
+        3262,
+        2174
+      ],
+      "exposure": 0.0,
+      "mode": "current",
+      "map_digest": "5108e5fd3696d28b",
+      "source_runs": [
+        {
+          "directory": "D:\\personal\\macro\\minerals\\etched-spessartine-garnet\\104MSDCF",
+          "count": 183,
+          "first": "DSC00027.ARW",
+          "last": "DSC00209.ARW"
+        }
+      ],
+      "baseline_sha256": "2b240b4fd752311b6b0a5bf74ac49dbb39354cdf3e6e806d5eb5cb96dbd4ebc8",
+      "pixels_sha256": "87c8d5ba3fbaed2441fbcd241c7865c5d78a7e7081de0136e334f31d26b6520a",
+      "all_placed": true,
+      "source_order_matches_retained": true,
+      "swapped_order_rejected": true,
+      "original_content_rehashed": false
+    }
+  ]
+}

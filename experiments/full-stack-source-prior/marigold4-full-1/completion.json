@@ -1,0 +1,13 @@
+{
+  "phase": "full",
+  "mode": "prior",
+  "sources_unchanged": true,
+  "historical_full_baseline_exact": true,
+  "receipt": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\full-stack-source-prior\\marigold4-full-1\\output\\receipt.json",
+    "sha256": "b04110a9a8353f55ef927a0848a6a20251ca3343ed730ac4f2dcdc4858206d78",
+    "bytes": 2115566
+  },
+  "photographic_replay_admitted": false,
+  "scope": "Separate complete photographic observation of unchanged known-risk prior. General quality qualification remains false; no default or SOTA claim."
+}

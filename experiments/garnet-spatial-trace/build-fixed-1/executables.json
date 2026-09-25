@@ -1,0 +1,17 @@
+{
+  "core-tests": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\garnet-spatial-trace\\build-fixed-1\\core-tests.exe",
+    "sha256": "b2d01a4cef924f6b596e8d038c7d4cc0fd68c91886f42e82a55dbbd0c65bf699",
+    "bytes": 3689984
+  },
+  "strehl": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\garnet-spatial-trace\\build-fixed-1\\strehl.exe",
+    "sha256": "38a4e22fdb53ecbce298e24a4db5d5fd0977e2c6899a6b554f3564daa03d0cd5",
+    "bytes": 17950720
+  },
+  "cli-tests": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\garnet-spatial-trace\\build-fixed-1\\cli-tests.exe",
+    "sha256": "95c7272e3303e79ed80b2a018471bcd5ee1b95350605a3efac2a6cddde6b6d5c",
+    "bytes": 30138368
+  }
+}

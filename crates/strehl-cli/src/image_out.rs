@@ -99,6 +99,11 @@ use strehl_core::demosaic::{Mosaic, demosaic_row};
 use tiff::encoder::{Rational, TiffEncoder, colortype};
 use tiff::tags::{ResolutionUnit, Tag};
 
+#[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance", feature = "native-gpu-gather"))]
+pub(crate) mod highlight_rendering {
+    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/highlight-rendering/image-out-bridge.rs"));
+}
+
 fn writer(path: &Path) -> Result<TiffEncoder<BufWriter<File>>> {
     if let Some(parent) = path.parent()
         && !parent.as_os_str().is_empty()
@@ -1234,6 +1239,10 @@ fn gamut_map(v: [f32; 3]) -> [f32; 3] {
 /// highlight clip has its own explicit ceiling rather than reusing this clamp.
 #[inline]
 pub(crate) fn develop_pixel(lin: [f32; 3], dev: &Develop) -> [u16; 3] {
+    #[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance", feature = "native-gpu-gather"))]
+    if let Some(value) = highlight_rendering::override_pixel(lin, dev) {
+        return value;
+    }
     let v = match &dev.matrix {
         Some(r) => r.develop(lin),
         None => lin,
@@ -1385,6 +1394,8 @@ pub fn write_demosaiced(
         height,
     };
     let dev = &resolve_tone(dev, || tone_from_mosaic(&m, dev));
+    #[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance", feature = "native-gpu-gather"))]
+    highlight_rendering::record_resolved(dev);
     let mut rgb = vec![0u16; width * height * 3];
     rgb.par_chunks_mut(width * 3).enumerate().for_each_init(
         || vec![0.0f32; width * 3],

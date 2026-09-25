@@ -1,0 +1,7 @@
+{
+  "production_rgb16_and_icc_exact": true,
+  "production": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\quality-september25\\garnet-104\\stack-master.tiff",
+  "corrected_test_adapter": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\garnet-spatial-trace\\garnet-fixed-1\\output\\candidate.tiff",
+  "pixels_sha256": "1b7d55986df90131ed4adee4335541c449e741eb914ebd1ba947ddad126da828",
+  "production_receipt": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\quality-september25\\garnet-104\\completion.json"
+}

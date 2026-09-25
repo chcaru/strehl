@@ -1,0 +1,50 @@
+[
+  {
+    "stack": 1,
+    "source": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\flower-marigold-cpl\\final\\marigold-stack-1-master.tiff",
+    "sha256": "b3b9180580d42cb3627dafb256d1b918fe66e9bd65e33da0dae5b0f2e4e68730",
+    "size": [
+      4152,
+      6228,
+      3
+    ],
+    "overview": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\marigold\\stack-1-overview.png",
+    "display": "rounded u16/257; LANCZOS complete image max 1617; original ICC"
+  },
+  {
+    "stack": 2,
+    "source": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\flower-marigold-cpl\\final\\marigold-stack-2-master.tiff",
+    "sha256": "aca3c2358364d72d9f27e90eda4f07fdbcf0e43cd4e47552997fbcadfb4062da",
+    "size": [
+      4140,
+      6212,
+      3
+    ],
+    "overview": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\marigold\\stack-2-overview.png",
+    "display": "rounded u16/257; LANCZOS complete image max 1617; original ICC"
+  },
+  {
+    "stack": 3,
+    "source": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\flower-marigold-cpl\\final\\marigold-stack-3-master.tiff",
+    "sha256": "aa3a369f53ca333698f0d6af44c021abdb8ea003317790daa05ae7f26a919883",
+    "size": [
+      4176,
+      6268,
+      3
+    ],
+    "overview": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\marigold\\stack-3-overview.png",
+    "display": "rounded u16/257; LANCZOS complete image max 1617; original ICC"
+  },
+  {
+    "stack": 4,
+    "source": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\flower-marigold-cpl\\final\\marigold-stack-4-master.tiff",
+    "sha256": "7df00e469bb392a5c045613815dbcd885eb470e9f10f630c9add6fda1bb179a0",
+    "size": [
+      4176,
+      6268,
+      3
+    ],
+    "overview": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\marigold\\stack-4-overview.png",
+    "display": "rounded u16/257; LANCZOS complete image max 1617; original ICC"
+  }
+]

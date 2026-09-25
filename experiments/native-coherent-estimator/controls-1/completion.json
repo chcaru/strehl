@@ -1,0 +1,16 @@
+{
+  "controls_executed": 2,
+  "sources_unchanged": true,
+  "decision": {
+    "screen": {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-coherent-estimator\\controls-1\\output\\screen.json",
+      "sha256": "a98eb068dd5bfb20cd6db06b9ca7cfe19783bb181ce03b8bf8bdf041c65fe03d",
+      "bytes": 164696
+    },
+    "general_qualification_admitted": false,
+    "optional_chip_observation_admitted": false,
+    "cases": 12,
+    "scope": "New fixed native whole-source estimator: general qualification and optional coherent-surface photographic observation are separate preregistered decisions. A photographic gate pass licenses one observation, not a default change, automatic scene classifier, general quality claim, or SOTA result."
+  },
+  "scope": "New fixed native whole-source estimator: general qualification and optional coherent-surface photographic observation are separate preregistered decisions. A photographic gate pass licenses one observation, not a default change, automatic scene classifier, general quality claim, or SOTA result."
+}

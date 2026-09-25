@@ -1,0 +1,12 @@
+{
+  "strehl": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\full-stack-source-prior\\build-2\\strehl.exe",
+    "sha256": "4c4ff7416049393391a30b3bebc0b32c8c9a9167d32becdc08e763ff316a0c0a",
+    "bytes": 17921536
+  },
+  "cli-tests": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\full-stack-source-prior\\build-2\\cli-tests.exe",
+    "sha256": "c28ea355dba284f9f7d06ddc1b0d67a02c9a45cc17513393594d1d528bd4e88b",
+    "bytes": 30056448
+  }
+}

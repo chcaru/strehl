@@ -1,0 +1,11 @@
+# Proposed M194d regression update, not yet applied or executed
+
+The root's fresh `garnet-spatial-trace/core-suite-fixed-1/process.log` records567 passes,2 failures,2 ignored. Both failures demand that valid finite high-DN inputs overflow the weighted numerator and panic. The scaled accumulator intentionally makes those valid inputs safe. Preserve the original fixtures and replace only that obsolete expectation; do not disable the tests.
+
+`m194d-test-update.patch` is an unapplied patch for root after active full-stack jobs release their source freeze. The first test now requires its original three-source10000-DN-amplitude fixture to finish finite and agree within0.02DN with independently evaluated f64 pedestal weights and their normalized expected image in the registered interior. The cap-times-coefficient legacy destroyer remains explicitly nonfinite, demonstrating that the same old failure is exercised.
+
+The second test retains the original two identical stripe sources, checks every actual accumulator is finite, and compares both unclamped and final actual reconstructions to the analytical f64 identical-source image at every pixel. The before-hull check prevents its degenerate input hull from hiding the defect. The0.02DN bound is a numerical tolerance, not a noise or perceptual quality metric; a zeroed/grey output, corrupted sign or meaningful level shift fails decisively.
+
+All existing invalid-configuration, mismatched-mode, overflowing partial-absorb and division-refusal cases remain. The nonfinite-corruption checks expand from NaN only to NaN,+Inf,-Inf in each numerator, denominator and unweighted sum, through both actual absorb and finish paths. The finite-coefficient reconstruction-refusal fixtures encode their intended large resolved coefficients in the new scaled accumulator units; otherwise they would still panic but at the earlier resolution stage and silently cease testing reconstruction. An explicit finite-resolved-coefficient assertion guards that choice before finish.
+
+No passing claim is made. Root must independently review/apply the patch, force a fresh core compilation, run these cases and the full core suite. Historical failing logs remain retained. Current active production source and test files were not edited by this proposal.

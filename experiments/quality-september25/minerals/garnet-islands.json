@@ -1,0 +1,212 @@
+[
+  {
+    "index": 91,
+    "path": "D:\\personal\\macro\\minerals\\etched-spessartine-garnet\\104MSDCF\\DSC00118.ARW",
+    "file_sha256": "45c82cd9b344707415f588292dd5f2706329d8dde5e3891ee7668c2bca150d26",
+    "output_native_xywh": [
+      4720,
+      1930,
+      256,
+      256
+    ],
+    "sampling": "same retained sidecar; nearest CFA-quad;128x128 original plane samples; noCA/MHC/merge/tone",
+    "planes": {
+      "R": {
+        "n": 16384,
+        "minimum": 722,
+        "maximum": 12869,
+        "at_nominal_white_15360": 0,
+        "at_container_max_16383": 0,
+        "percentiles": {
+          "50": 1692.0,
+          "99": 6512.17,
+          "99.9": 6916.549000000396,
+          "99.99": 11806.489199999822
+        },
+        "sha256": "d6c9d2869f52da9b149eb34eaa8388864cb9c401c7e9adc7349206af63ff1304"
+      },
+      "G1": {
+        "n": 16384,
+        "minimum": 620,
+        "maximum": 12116,
+        "at_nominal_white_15360": 0,
+        "at_container_max_16383": 0,
+        "percentiles": {
+          "50": 2077.0,
+          "99": 11600.51,
+          "99.9": 12007.08500000001,
+          "99.99": 12106.70209999997
+        },
+        "sha256": "0d9cf5909cca87f65d0e1a45e0eb99d35cea9b423c3624b8f747138c0eed3a45"
+      },
+      "G2": {
+        "n": 16384,
+        "minimum": 606,
+        "maximum": 12120,
+        "at_nominal_white_15360": 0,
+        "at_container_max_16383": 0,
+        "percentiles": {
+          "50": 2077.0,
+          "99": 11608.34,
+          "99.9": 11991.787000000022,
+          "99.99": 12073.914799999897
+        },
+        "sha256": "0bae7d52848e6e5d9db97fe60f2336f44607c9384b854d366b40ff05665e5d6c"
+      },
+      "B": {
+        "n": 16384,
+        "minimum": 555,
+        "maximum": 5795,
+        "at_nominal_white_15360": 0,
+        "at_container_max_16383": 0,
+        "percentiles": {
+          "50": 1220.0,
+          "99": 5527.0,
+          "99.9": 5723.617000000002,
+          "99.99": 5788.361699999998
+        },
+        "sha256": "df1e0cf7a7de1725f12df649e1c3f64c5cac71a0ef79467f13826b73d4539555"
+      }
+    }
+  },
+  {
+    "index": 120,
+    "path": "D:\\personal\\macro\\minerals\\etched-spessartine-garnet\\104MSDCF\\DSC00147.ARW",
+    "file_sha256": "bc9a2b3dd7ddf4ea98a6c2d4e8c711ac41e758dca54a738cf68285c9509ce229",
+    "output_native_xywh": [
+      4720,
+      1930,
+      256,
+      256
+    ],
+    "sampling": "same retained sidecar; nearest CFA-quad;128x128 original plane samples; noCA/MHC/merge/tone",
+    "planes": {
+      "R": {
+        "n": 16384,
+        "minimum": 819,
+        "maximum": 9517,
+        "at_nominal_white_15360": 0,
+        "at_container_max_16383": 0,
+        "percentiles": {
+          "50": 1455.0,
+          "99": 8325.0,
+          "99.9": 9047.319000000014,
+          "99.99": 9413.59559999984
+        },
+        "sha256": "222cc2d5a8ae1659b521fd6273f32267b584304b020aa2d7cc6c44aa387679d6"
+      },
+      "G1": {
+        "n": 16384,
+        "minimum": 777,
+        "maximum": 16383,
+        "at_nominal_white_15360": 168,
+        "at_container_max_16383": 24,
+        "percentiles": {
+          "50": 1634.0,
+          "99": 15381.19,
+          "99.9": 16383.0,
+          "99.99": 16383.0
+        },
+        "sha256": "f732004bcd546bc25a6a5e90cd5b8f9cff3ef10ea1a290b39eefce8d6f978aaa"
+      },
+      "G2": {
+        "n": 16384,
+        "minimum": 766,
+        "maximum": 16383,
+        "at_nominal_white_15360": 171,
+        "at_container_max_16383": 28,
+        "percentiles": {
+          "50": 1634.5,
+          "99": 15382.250000000002,
+          "99.9": 16383.0,
+          "99.99": 16383.0
+        },
+        "sha256": "c49ad9072bca41021d711e90aa73f612ef51f4d6b6e51db34a4ab2aa5c82bedf"
+      },
+      "B": {
+        "n": 16384,
+        "minimum": 634,
+        "maximum": 9122,
+        "at_nominal_white_15360": 0,
+        "at_container_max_16383": 0,
+        "percentiles": {
+          "50": 1035.0,
+          "99": 7131.17,
+          "99.9": 7700.872000000032,
+          "99.99": 8362.211999999156
+        },
+        "sha256": "876d452340fbb2301f8a02fb0a1354d27aa6d3be98775c1e507a2f4e697b69fd"
+      }
+    }
+  },
+  {
+    "index": 137,
+    "path": "D:\\personal\\macro\\minerals\\etched-spessartine-garnet\\104MSDCF\\DSC00164.ARW",
+    "file_sha256": "ade5618229c5b4960fa3b81e67c6915f9c3f7b33721429a3adcf271ee907b416",
+    "output_native_xywh": [
+      4720,
+      1930,
+      256,
+      256
+    ],
+    "sampling": "same retained sidecar; nearest CFA-quad;128x128 original plane samples; noCA/MHC/merge/tone",
+    "planes": {
+      "R": {
+        "n": 16384,
+        "minimum": 750,
+        "maximum": 10188,
+        "at_nominal_white_15360": 0,
+        "at_container_max_16383": 0,
+        "percentiles": {
+          "50": 1602.5,
+          "99": 8667.17,
+          "99.9": 9642.617000000002,
+          "99.99": 9826.425499999965
+        },
+        "sha256": "769f275cd5178a7ed62b2d8376e34a69fca9cb959d64cba682388dbe48135c64"
+      },
+      "G1": {
+        "n": 16384,
+        "minimum": 645,
+        "maximum": 16383,
+        "at_nominal_white_15360": 455,
+        "at_container_max_16383": 142,
+        "percentiles": {
+          "50": 1796.0,
+          "99": 16245.7,
+          "99.9": 16383.0,
+          "99.99": 16383.0
+        },
+        "sha256": "b91a2c8543580b10f5abdcf8a603bba0f5e00b5b9d019324376a563ea2c4a303"
+      },
+      "G2": {
+        "n": 16384,
+        "minimum": 657,
+        "maximum": 16383,
+        "at_nominal_white_15360": 465,
+        "at_container_max_16383": 144,
+        "percentiles": {
+          "50": 1797.5,
+          "99": 16231.02,
+          "99.9": 16383.0,
+          "99.99": 16383.0
+        },
+        "sha256": "186f875906a2944788d17fc4eeed7728721b823667601229b5e3918379e791f7"
+      },
+      "B": {
+        "n": 16384,
+        "minimum": 574,
+        "maximum": 8641,
+        "at_nominal_white_15360": 0,
+        "at_container_max_16383": 0,
+        "percentiles": {
+          "50": 1124.0,
+          "99": 7387.17,
+          "99.9": 8212.319000000014,
+          "99.99": 8516.169899999655
+        },
+        "sha256": "348474dd419855932fe0edefba154cb6b082e1d23d5f1a28e75a60228f880689"
+      }
+    }
+  }
+]

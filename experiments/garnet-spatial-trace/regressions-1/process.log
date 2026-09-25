@@ -1,0 +1,37 @@
+
+running 4 tests
+test pyramid::accumulator_range_independent::independent_00_flat_and_midtone_controls ... PYRAMID_ACCUMULATOR_RANGE {"case":"flat","frames":2,"profile_variance":false,"max_weight":0,"max_coefficient":900,"actual_nonfinite_num":0,"actual_nonfinite_den":0,"legacy_nonfinite_num":0,"actual_nonfinite_pre_hull":0,"actual_nonfinite_output":0,"finite_max_error_dn":0}
+PYRAMID_ACCUMULATOR_RANGE {"case":"midtone","frames":2,"profile_variance":false,"max_weight":470254730000000000,"max_coefficient":1100.0452,"actual_nonfinite_num":0,"actual_nonfinite_den":0,"legacy_nonfinite_num":0,"actual_nonfinite_pre_hull":0,"actual_nonfinite_output":0,"finite_max_error_dn":0.00012207031}
+ok
+test pyramid::accumulator_range_independent::independent_10_high_dn_numerator_range_regression ... PYRAMID_ACCUMULATOR_RANGE {"case":"camera-range-low-variance-pair","frames":2,"profile_variance":false,"max_weight":55406225000000000000000000000000000,"max_coefficient":8320.3125,"actual_nonfinite_num":262143,"actual_nonfinite_den":0,"legacy_nonfinite_num":262143,"actual_nonfinite_pre_hull":262143,"actual_nonfinite_output":0,"finite_max_error_dn":305.50977}
+
+thread 'pyramid::accumulator_range_independent::independent_10_high_dn_numerator_range_regression' (30104) panicked at C:\dev\blog\death-of-software\projects\strehl\crates\strehl-core/../../experiments/pyramid-accumulator-range/independent-controls.rs:126:5:
+assertion `left == right` failed: finite source/weight produced nonfinite numerator before hull
+  left: 262143
+ right: 0
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+FAILED
+test pyramid::accumulator_range_independent::independent_20_identical_frame_hull_is_not_safety ... PYRAMID_ACCUMULATOR_RANGE {"case":"identical-high-dn-pair","frames":2,"profile_variance":false,"max_weight":55406225000000000000000000000000000,"max_coefficient":8320.3125,"actual_nonfinite_num":262143,"actual_nonfinite_den":0,"legacy_nonfinite_num":262143,"actual_nonfinite_pre_hull":262143,"actual_nonfinite_output":0,"finite_max_error_dn":0}
+
+thread 'pyramid::accumulator_range_independent::independent_20_identical_frame_hull_is_not_safety' (30508) panicked at C:\dev\blog\death-of-software\projects\strehl\crates\strehl-core/../../experiments/pyramid-accumulator-range/independent-controls.rs:126:5:
+assertion `left == right` failed: finite source/weight produced nonfinite numerator before hull
+  left: 262143
+ right: 0
+FAILED
+test pyramid::accumulator_range_independent::independent_30_profile_noise_high_dn_pair ... PYRAMID_ACCUMULATOR_RANGE {"case":"camera-range-profile-variance-pair","frames":2,"profile_variance":true,"max_weight":55406225000000000000000000000000000,"max_coefficient":8320.3125,"actual_nonfinite_num":65534,"actual_nonfinite_den":0,"legacy_nonfinite_num":65534,"actual_nonfinite_pre_hull":65534,"actual_nonfinite_output":0,"finite_max_error_dn":0.001953125}
+
+thread 'pyramid::accumulator_range_independent::independent_30_profile_noise_high_dn_pair' (19724) panicked at C:\dev\blog\death-of-software\projects\strehl\crates\strehl-core/../../experiments/pyramid-accumulator-range/independent-controls.rs:126:5:
+assertion `left == right` failed: finite source/weight produced nonfinite numerator before hull
+  left: 65534
+ right: 0
+FAILED
+
+failures:
+
+failures:
+    pyramid::accumulator_range_independent::independent_10_high_dn_numerator_range_regression
+    pyramid::accumulator_range_independent::independent_20_identical_frame_hull_is_not_safety
+    pyramid::accumulator_range_independent::independent_30_profile_noise_high_dn_pair
+
+test result: FAILED. 1 passed; 3 failed; 0 ignored; 0 measured; 562 filtered out; finished in 0.17s
+

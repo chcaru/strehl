@@ -234,8 +234,8 @@ fn assert_refuses(label: &str, action: impl FnOnce()) {
 }
 
 #[test]
-fn independent_numeric_refusal_before_hull() {
-    assert_refuses("finite-input-weighted-product", || {
+fn independent_high_dn_safe_and_numeric_refusal_before_hull() {
+    {
         let mut merge = BandMerge::new(W, H, 1, cfg(AdmissionMode::FloorPedestalV1, 8.0));
         let mut work = FrameWorkspace::new(merge.sizes(), 1);
         let field = stripe(16384.0, 24576.0);
@@ -250,7 +250,24 @@ fn independent_numeric_refusal_before_hull() {
                 &mut work,
             );
         }
-    });
+        assert!(merge.num.iter().chain(&merge.den).chain(&merge.usum)
+            .flatten().all(|v| v.is_finite()), "valid high-DN input has bad accumulator");
+        assert!(!(80.0_f32.exp() * 16384.0).is_finite(), "legacy destroyer unexercised");
+        // Identical sources have an analytical f64 image oracle. Inspect the
+        // actual reconstruction with hull disabled as well, so the degenerate
+        // input hull cannot conceal bad arithmetic or an incorrect mean.
+        let mut unbounded = merge.clone();
+        unbounded.cfg.hull = Hull::Unclamped;
+        let before = unbounded.finish(&mut Workspace::new(unbounded.sizes())).remove(0);
+        let after = merge.finish(&mut Workspace::new(merge.sizes())).remove(0);
+        for j in 0..W * H {
+            let expected = 24576.0_f64 + if (j / W).is_multiple_of(2) { 16384.0 } else { -16384.0 };
+            assert!(before[j].is_finite() && after[j].is_finite());
+            assert!((f64::from(before[j]) - expected).abs() <= 0.02);
+            assert!((f64::from(after[j]) - expected).abs() <= 0.02);
+        }
+        println!("M194D_INDEPENDENT_CORE valid-high-dn finite_before_hull=true reference=identical-source-f64");
+    }
     assert_refuses("finite-partial-numerator-absorb", || {
         let mut left = BandMerge::new(W, H, 1, cfg(AdmissionMode::FloorPedestalV1, 2.0));
         let mut right = left.clone();
@@ -259,7 +276,8 @@ fn independent_numeric_refusal_before_hull() {
         left.absorb(&right);
     });
     for field in ["num", "den", "usum"] {
-        assert_refuses(&format!("nonfinite-{field}-absorb"), || {
+      for bad in [f32::NAN, f32::INFINITY, f32::NEG_INFINITY] {
+        assert_refuses(&format!("nonfinite-{field}-{bad:?}-absorb"), || {
             let mut left = BandMerge::new(W, H, 1, cfg(AdmissionMode::FloorPedestalV1, 2.0));
             let mut right = left.clone();
             let target = match field {
@@ -267,9 +285,21 @@ fn independent_numeric_refusal_before_hull() {
                 "den" => &mut right.den,
                 _ => &mut right.usum,
             };
-            target[0][0] = f32::NAN;
+            target[0][0] = bad;
             left.absorb(&right);
         });
+        assert_refuses(&format!("nonfinite-{field}-{bad:?}-finish"), || {
+            let mut merge = BandMerge::new(W, H, 1, cfg(AdmissionMode::FloorPedestalV1, 2.0));
+            merge.frames = 1;
+            let target = match field {
+                "num" => &mut merge.num,
+                "den" => &mut merge.den,
+                _ => &mut merge.usum,
+            };
+            target[0][0] = bad;
+            let _ = merge.finish(&mut Workspace::new(merge.sizes()));
+        });
+      }
     }
     assert_refuses("finite-state-resolved-division", || {
         let mut merge = BandMerge::new(W, H, 1, cfg(AdmissionMode::FloorPedestalV1, 2.0));
@@ -288,8 +318,9 @@ fn independent_numeric_refusal_before_hull() {
         merge.hi[0].fill(2000.0);
         // Both resolved levels are finite; their reconstruction sum is not.
         for k in 0..merge.sizes.len() {
-            merge.num[k].fill(f32::MAX * 0.75);
+            merge.num[k].fill((f32::MAX * 0.75) / SOFT_NUMERATOR_SCALE);
             merge.den[k].fill(1.0);
+            assert!(resolve_soft_numerator(merge.num[k][0], merge.den[k][0]).is_finite());
         }
         let mut work = Workspace::new(merge.sizes());
         let _ = merge.finish(&mut work);

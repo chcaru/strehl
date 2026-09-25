@@ -1,0 +1,138 @@
+{
+  "stack": "garnet-104",
+  "target_file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\minerals\\native-tiles.json",
+  "target_sha256": "8cb3e456529e8f87df98b0cf9f7fa5091430414d1188f93ccdec9156c4edd0a4",
+  "native_shape": [
+    4348,
+    6524,
+    3
+  ],
+  "icc_sha256": "238ad2596316306a72025bb245cf3c8cd72f1090c8d95af2f38dc090e84ece5b",
+  "display": "rounded RGB16/257, same original ICC; native tiles unresampled; whole JPEG98 orientation only",
+  "images": [
+    {
+      "arm": "current",
+      "master": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\highlight-rendering\\replay-garnet104-1\\output\\current.tiff",
+      "master_sha256": "80d2e3ea30d028ebf22b298977cbf113f46c368104fb057a8b8b79596af540b4",
+      "complete_overview": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\garnet-render-views-1\\current-whole.jpg",
+      "overview_sha256": "5563f1bc99782762b94d6d6e9b0c1f4cfc0874463a54a2eedebf47762dc25508",
+      "tiles": [
+        {
+          "target": "104-white-facet-native384",
+          "rect": [
+            4668,
+            1858,
+            384,
+            384
+          ],
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\garnet-render-views-1\\current-104-white-facet-native384.png",
+          "sha256": "dae706d0a45926b9ac0cf70de5a205eeec39a9d12f298f9114fe32ede255bfc8"
+        },
+        {
+          "target": "104-red-control-native384",
+          "rect": [
+            3068,
+            1908,
+            384,
+            384
+          ],
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\garnet-render-views-1\\current-104-red-control-native384.png",
+          "sha256": "ae4c2c0bdc811cc1ff41207a7e305e9206feb6be475f227c484ca231e21f1498"
+        }
+      ]
+    },
+    {
+      "arm": "shoulder",
+      "master": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\highlight-rendering\\replay-garnet104-1\\output\\shoulder.tiff",
+      "master_sha256": "1d1e58c0ffbb0ed6c7086e8a383f355647e784e02d26bd8fdf71a04b3b6ab515",
+      "complete_overview": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\garnet-render-views-1\\shoulder-whole.jpg",
+      "overview_sha256": "bac69d6ad07aca50952ea022803476821d182eadc3fae1827264f4d1372bc8f1",
+      "tiles": [
+        {
+          "target": "104-white-facet-native384",
+          "rect": [
+            4668,
+            1858,
+            384,
+            384
+          ],
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\garnet-render-views-1\\shoulder-104-white-facet-native384.png",
+          "sha256": "1182a1bd3e755f75534fcf8a13565454a8f2a381e315db11a0f07cfb4014a4c9"
+        },
+        {
+          "target": "104-red-control-native384",
+          "rect": [
+            3068,
+            1908,
+            384,
+            384
+          ],
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\garnet-render-views-1\\shoulder-104-red-control-native384.png",
+          "sha256": "cfced233f7ee727c54ba6703292f3d9aead6d04c3c762716abc71cec6fa7df45"
+        }
+      ]
+    },
+    {
+      "arm": "sensor-rolloff-off",
+      "master": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\highlight-rendering\\replay-garnet104-1\\output\\sensor-rolloff-off.tiff",
+      "master_sha256": "d78180a9664911701914856a56ef9c8ac0b334cb2d9423d6dc526e34460bcece",
+      "complete_overview": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\garnet-render-views-1\\sensor-rolloff-off-whole.jpg",
+      "overview_sha256": "5563f1bc99782762b94d6d6e9b0c1f4cfc0874463a54a2eedebf47762dc25508",
+      "tiles": [
+        {
+          "target": "104-white-facet-native384",
+          "rect": [
+            4668,
+            1858,
+            384,
+            384
+          ],
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\garnet-render-views-1\\sensor-rolloff-off-104-white-facet-native384.png",
+          "sha256": "dae706d0a45926b9ac0cf70de5a205eeec39a9d12f298f9114fe32ede255bfc8"
+        },
+        {
+          "target": "104-red-control-native384",
+          "rect": [
+            3068,
+            1908,
+            384,
+            384
+          ],
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\garnet-render-views-1\\sensor-rolloff-off-104-red-control-native384.png",
+          "sha256": "ae4c2c0bdc811cc1ff41207a7e305e9206feb6be475f227c484ca231e21f1498"
+        }
+      ]
+    },
+    {
+      "arm": "both",
+      "master": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\highlight-rendering\\replay-garnet104-1\\output\\both.tiff",
+      "master_sha256": "66fb9d3f80569c47613d5028fd4d92ba095fe20b7a6ce439e6221c9c1244cef8",
+      "complete_overview": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\garnet-render-views-1\\both-whole.jpg",
+      "overview_sha256": "9234831a180f6da2ed677b80626c1f5b56062624ae502beffed2f018b62c27b1",
+      "tiles": [
+        {
+          "target": "104-white-facet-native384",
+          "rect": [
+            4668,
+            1858,
+            384,
+            384
+          ],
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\garnet-render-views-1\\both-104-white-facet-native384.png",
+          "sha256": "8fdb7cb5d600028929d756adf4f0c402a0cae743f6bd6fba5bf49e40dbdf1c29"
+        },
+        {
+          "target": "104-red-control-native384",
+          "rect": [
+            3068,
+            1908,
+            384,
+            384
+          ],
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\garnet-render-views-1\\both-104-red-control-native384.png",
+          "sha256": "e999f3911499651f2dbe1f0de1cdfbfbeba12f85e701d4ecc176b1c8426b5379"
+        }
+      ]
+    }
+  ]
+}

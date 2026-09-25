@@ -4994,6 +4994,26 @@ pub(crate) mod cross_scale_source_prior_chip {
     include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/cross-scale-source-prior/chip-implementation.rs"));
 }
 
+#[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance", feature = "native-gpu-gather"))]
+pub(crate) mod full_stack_source_prior {
+    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/full-stack-source-prior/adapter.rs"));
+}
+
+#[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance", feature = "native-gpu-gather"))]
+mod marigold_source_pure {
+    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/marigold-source-pure/oracle.rs"));
+}
+
+#[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance", feature = "native-gpu-gather"))]
+pub(crate) mod native_coherent_estimator {
+    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/native-coherent-estimator/implementation.rs"));
+}
+
+#[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance", feature = "native-gpu-gather"))]
+pub(crate) mod highlight_rendering_replay {
+    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/highlight-rendering/merge-replay.rs"));
+}
+
 #[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance"))]
 pub(crate) mod donor_consistency {
     include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/donor-consistency/implementation.rs"));

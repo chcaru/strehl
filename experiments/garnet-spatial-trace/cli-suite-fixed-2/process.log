@@ -1,0 +1,469 @@
+
+running 251 tests
+test align_cmd::local_placement::independent_controls::independent_local_placement_affine_direction_phase_taper_and_scope ... ok
+test align_cmd::local_placement::independent_controls::independent_local_placement_constant_and_flat_noise_control ... ok
+test align_cmd::local_placement::independent_controls::independent_local_placement_disabled_consumer_is_exact ... ok
+test align_cmd::local_placement::independent_controls::independent_local_placement_refuses_mismatched_or_nonfinite_geometry ... ok
+test align_cmd::local_placement::independent_controls::independent_local_placement_stack_identity_refusals ... ok
+test align_cmd::tests::an_unknown_resampler_is_refused_by_name_and_offers_the_choices ... ok
+test align_cmd::tests::different_solve_configurations_get_different_cache_entries ... ok
+test align_cmd::tests::every_offered_resampler_name_reaches_a_variant ... ok
+test align_cmd::tests::same_leaf_name_in_different_parents_gets_different_entries ... ok
+test align_cmd::tests::save_atomic_creates_the_cache_directory_and_leaves_no_temporary ... ok
+test align_cmd::tests::sidecar_never_lands_inside_the_capture_directory ... ok
+test align_cmd::tests::the_gather_default_is_on_and_a_typo_refuses_rather_than_defaulting ... ok
+test align_cmd::tests::the_merge_default_is_still_the_literal_it_replaced ... ok
+test align_cmd::tests::the_solve_environment_keys_the_cache ... ok
+test image_out::highlight_rendering::independent_controls::independent_color_ratios_and_grey_destroyer ... ok
+test image_out::highlight_rendering::independent_controls::independent_flat_first_and_actual_current_identity ... ok
+test image_out::highlight_rendering::independent_controls::independent_sensor_pinning_is_not_disabled_with_rolloff ... ok
+test image_out::highlight_rendering::independent_controls::independent_shoulder_neutral_order_detail_and_destroyer ... ok
+test image_out::tests::a_constant_plane_is_invariant_including_at_the_clamped_borders ... ok
+test image_out::tests::a_measurement_render_carries_neither_print_size_nor_build_stamp ... ok
+test image_out::tests::a_measurement_render_still_clamps_per_channel_and_does_not_gamut_map ... ok
+test image_out::tests::a_neutral_survives_the_shipping_path_as_a_neutral ... ok
+test image_out::tests::an_exposure_request_changes_the_pixels_and_not_only_the_banner ... ok
+test image_out::tests::asking_for_both_colour_flags_is_refused_rather_than_guessed ... ok
+test image_out::tests::every_development_state_states_a_different_colour_space_in_the_file ... ok
+test image_out::tests::linear_srgb_takes_the_matrix_and_stops_before_the_curve ... ok
+test image_out::tests::only_the_colorimetric_paths_get_a_profile ... ok
+test image_out::tests::the_binned_path_leaves_green_untouched_and_separates_red_from_blue ... ok
+test image_out::tests::the_clamp_is_after_the_matrix_and_clips_real_out_of_gamut_colour ... ok
+test image_out::tests::the_contrast_curve_is_monotonic_and_leaves_the_endpoints_alone ... ok
+test image_out::tests::the_cosite_resample_reproduces_low_order_polynomials_exactly ... ok
+test image_out::tests::the_default_development_is_the_identity_the_corpus_was_measured_on ... ok
+test image_out::tests::the_derived_primaries_match_the_published_srgb_icc_columns ... ok
+test image_out::tests::the_embedded_profile_states_the_transfer_curve_the_pixels_carry ... ok
+test image_out::tests::the_gamut_map_is_exactly_the_identity_inside_the_gamut ... ok
+test image_out::tests::the_gamut_map_lands_inside_and_keeps_the_luminance ... ok
+test image_out::tests::the_gamut_map_moves_a_colour_only_as_far_as_it_must ... ok
+test image_out::tests::the_keys_kernel_partitions_unity_and_is_the_identity_at_zero ... ok
+test image_out::tests::the_primary_columns_sum_to_the_pcs_white ... ok
+test image_out::tests::the_profile_is_structurally_well_formed_and_deterministic ... ok
+test image_out::tests::the_tone_curve_cannot_zero_a_channel_that_carries_signal ... ok
+test image_out::tests::the_tone_curve_does_not_tint_a_neutral ... ok
+test image_out::tests::the_tone_curve_preserves_chromaticity_on_a_saturated_pixel ... ok
+test image_out::tests::the_tone_places_the_measured_floor_at_black_and_the_white_at_its_target ... ok
+test image_out::tests::the_tone_toe_never_merges_two_shadow_values ... ok
+test image_out::tests::the_transfer_curve_is_stored_in_the_decoding_direction ... ok
+test image_out::tests::the_writers_agree_with_the_per_pixel_development ... ok
+test image_out::tests::the_written_file_states_its_print_size_and_the_build_that_made_it ... ok
+test image_out::tests::tone_rides_with_the_viewing_render_and_never_with_a_measurement ... ok
+test merge_cmd::all_cfa_wavelet::independent_controls::independent_all_cfa_00_transform_variance_and_mapping ... FAILED
+test merge_cmd::all_cfa_wavelet::independent_controls::independent_all_cfa_10_generated_quality_screen ... FAILED
+test merge_cmd::boundary_cfa_wavelet::full_stack::vitamin_c_observational_pair ... ignored, explicit observational image/cost run; parent bounds resources
+test merge_cmd::boundary_cfa_wavelet::independent_controls::independent_boundary_cfa_00_structure_and_noise ... FAILED
+test merge_cmd::boundary_cfa_wavelet::independent_controls::independent_boundary_cfa_10_generated_quality_screen ... FAILED
+test merge_cmd::boundary_cfa_wavelet::independent_full_controls::independent_full_mechanical_controls ... FAILED
+test merge_cmd::ca_before_mhc::independent_controls::independent_colour_qualification ... FAILED
+test merge_cmd::ca_before_mhc::independent_controls::independent_operator_controls ... FAILED
+test merge_cmd::ca_before_mhc::independent_controls::independent_quality_screen ... FAILED
+test merge_cmd::ca_before_mhc_full::chip_actual_consumer ... ignored, root-owned complete chip pair/cost; explicit frozen config required
+test merge_cmd::complete_cfa_wavelet::independent_controls::independent_complete_cfa_00_transform_variance_and_mapping ... FAILED
+test merge_cmd::complete_cfa_wavelet::independent_controls::independent_complete_cfa_10_generated_quality_screen ... FAILED
+test merge_cmd::complex_wavelet_merge::independent_controls::independent_complex_00_transform_and_direction_controls ... ok
+test merge_cmd::complex_wavelet_merge::independent_controls::independent_complex_10_generated_quality_screen ... FAILED
+test merge_cmd::core_lineage::independent_controls::independent_core_lineage_actual_truth_screen ... FAILED
+test merge_cmd::cross_scale_source_prior::independent_controls::independent_operator_controls ... ok
+test merge_cmd::cross_scale_source_prior::independent_controls::independent_quality_screen ... FAILED
+test merge_cmd::cross_scale_source_prior_chip::chip_complete_pair ... ignored, root-owned observational chip pair/cost; fixed config required
+test merge_cmd::donor_consistency::full_stack::vitamin_c_complete_triplet ... ignored, explicit complete photo pair; parent bounds resources and freezes configuration
+test merge_cmd::donor_consistency::independent_controls::attribution_controls::independent_attribution_signed_parts_and_neutrality ... ok
+test merge_cmd::donor_consistency::independent_controls::corrected_target_controls::independent_corrected_target_geometry_and_scope ... ok
+test merge_cmd::donor_consistency::independent_controls::independent_donor_00_native_geometry ... ok
+test merge_cmd::donor_consistency::independent_controls::independent_donor_10_actual_coefficients_finish_and_placebo ... ok
+test merge_cmd::donor_consistency::independent_controls::spatial_controls::independent_spatial_masks_after_full_collapse ... ok
+test merge_cmd::donor_consistency::independent_controls::spatial_witness_controls::independent_spatial_witness_fields_and_neutrality ... ok
+test merge_cmd::dump::tests::a_length_mismatch_is_refused_and_the_message_names_both_shapes ... ok
+test merge_cmd::dump::tests::an_emitted_plane_is_a_header_plus_exactly_its_own_bytes ... ok
+test merge_cmd::dump::tests::the_npy_header_is_a_multiple_of_sixty_four_and_carries_the_shape ... ok
+test merge_cmd::fine_support_candidate_tests::independent_controls::independent_finest_support_quality_screen ... FAILED
+test merge_cmd::fine_support_candidate_tests::independent_controls::independent_finest_support_weight_hook ... ok
+test merge_cmd::fine_support_tests::actual_green_fine_support ... ignored, root-owned bounded seventy-frame diagnostic; no candidate merge
+test merge_cmd::fine_support_tests::independent_controls::independent_fixed_support_phase_floor_and_pooling ... ok
+test merge_cmd::full_stack_source_prior::bounded_constructor_preserves_retained_arithmetic ... ok
+test merge_cmd::full_stack_source_prior::complete_pair ... ignored, root-owned complete observational pair/cost; explicit config required
+test merge_cmd::full_stack_source_prior::corrected_current ... ignored, root-owned corrected current observation; immutable historical bundle required
+test merge_cmd::gatefloor::m194c_author_tests::m194c_actual_probe_is_invariant_to_layout_in_each_gather ... ignored, run-controls.py isolates fullres and plane gather environments
+test merge_cmd::gatefloor::m194c_author_tests::m194c_sampler_matches_legacy_packed_and_rejects_storage_addressing ... ok
+test merge_cmd::gatefloor::m194c_author_tests::m194c_sampler_refuses_malformed_storage_before_writing ... ok
+test merge_cmd::gatefloor::m194c_author_tests::m194c_sampler_seed_and_quantization_are_live ... ok
+test merge_cmd::gatefloor::m194c_independent_tests::independent_actual_probe_layout_and_live_metadata ... ok
+test merge_cmd::gatefloor::m194c_independent_tests::independent_actual_writer_layout_and_power ... ok
+test merge_cmd::gatefloor::m194c_independent_tests::independent_empty_nan_and_real_merge_fallback ... ok
+test merge_cmd::gatefloor::m194c_independent_tests::independent_original_inert_fallback_power_retained - should panic ... ok
+test merge_cmd::gatefloor::m194c_independent_tests::independent_sequence_layout_legacy_and_seed ... ok
+test merge_cmd::gatefloor::native_correction_variance::correction_variance_smoke ... ignored, root-owned bounded source-transfer diagnostic
+test merge_cmd::gatefloor::native_correction_variance::correction_variance_transfer ... ignored, root-owned64seed correction variance diagnostic
+test merge_cmd::gatefloor::native_direct_planes_independent_tests::independent_direct_planes_controls ... FAILED
+test merge_cmd::gatefloor::native_green_probe_independent_tests::independent_green_probe_controls ... FAILED
+test merge_cmd::gatefloor::native_parallel_writeback_independent_tests::independent_parallel_writeback_controls ... FAILED
+test merge_cmd::gatefloor::native_probe_fill_independent_tests::independent_fill_mode_parser ... ok
+test merge_cmd::gatefloor::native_probe_fill_independent_tests::independent_scalar_stream_layout_threads_and_edges ... ok
+test merge_cmd::green_match_rgb::full_stack::vitamin_c_complete_pair ... ignored, explicit complete photo pair; parent bounds resources and freezes configuration
+test merge_cmd::green_match_rgb::independent_controls::independent_green_match_acceptance_tuple_fallback_and_ambiguities ... ok
+test merge_cmd::green_match_rgb::independent_controls::independent_green_match_generated_screen ... FAILED
+test merge_cmd::halo::tests::a_small_speck_is_not_a_subject ... ok
+test merge_cmd::halo::tests::an_untreated_pixel_is_never_overridden ... ok
+test merge_cmd::halo::tests::edt_is_exact_on_a_single_seed ... ok
+test merge_cmd::halo::tests::edt_matches_brute_force_on_a_scattered_mask ... ok
+test merge_cmd::halo::tests::otsu_splits_a_clean_two_class_histogram ... ok
+test merge_cmd::halo::tests::the_band_is_the_only_thing_that_vetoes_a_frame ... ok
+test merge_cmd::highlight_rendering_replay::complete_cached_factorial ... ignored, root-owned complete cached render factorial; no RAW reads
+test merge_cmd::known_scene_benchmark::band_admission_benchmark::m194d_defaults_and_explicit_option ... ok
+test merge_cmd::known_scene_benchmark::band_admission_benchmark::m194d_independent_consumer_tests::independent_candidate_layout_and_source_power ... ok
+test merge_cmd::known_scene_benchmark::band_admission_benchmark::m194d_known_scene_consumer ... ignored, explicit generated fixture manifest and external hash bindings required
+test merge_cmd::known_scene_benchmark::joint_pupil_bridge::m194f_author_tests::m194f_author_default_and_configuration_controls ... ok
+test merge_cmd::known_scene_benchmark::joint_pupil_bridge::m194f_author_tests::m194f_private_coordinate_and_rank_controls ... ignored, M194f private intended five-TIFF component population, explicit fresh output
+test merge_cmd::known_scene_benchmark::joint_pupil_bridge::m194f_independent_tests::m194f_independent_bounded_json_and_payload ... ok
+test merge_cmd::known_scene_benchmark::joint_pupil_bridge::m194f_independent_tests::m194f_independent_gate_and_child_semantics ... ok
+test merge_cmd::known_scene_benchmark::joint_pupil_bridge::m194f_independent_tests::m194f_independent_manifest_semantics ... ok
+test merge_cmd::known_scene_benchmark::joint_pupil_bridge::m194f_independent_tests::m194f_independent_plan_and_actual_confidence_reread ... ok
+test merge_cmd::known_scene_benchmark::joint_pupil_bridge::m194f_independent_tests::m194f_independent_relocated_chain_and_live_corruption ... ok
+test merge_cmd::known_scene_benchmark::joint_pupil_bridge::m194f_independent_tests::m194f_independent_source_observer_and_second_file_read ... ok
+test merge_cmd::known_scene_benchmark::joint_pupil_bridge::m194f_production_bridge ... ignored, M194f explicit admitted manifest, plan and output only
+test merge_cmd::known_scene_benchmark::m194b_direct_planes_consumer ... ignored, Requires fixed M194b source, explicit direct mode and bound plan/output paths
+test merge_cmd::known_scene_benchmark::m194b_known_scene_consumer ... ignored, explicit generated fixture manifest and external hash bindings required
+test merge_cmd::known_scene_benchmark::noise_pupil_bridge::m194g_noise_production_bridge ... ignored, M194g requires externally admitted90 CFA files and frozen command
+test merge_cmd::known_scene_benchmark::noise_pupil_bridge::private_controls::m194g_private_actual_plan_controls ... FAILED
+test merge_cmd::known_scene_benchmark::noise_pupil_bridge::private_controls::m194g_private_bounded_json_paths_aliases ... FAILED
+test merge_cmd::known_scene_benchmark::noise_pupil_bridge::private_controls::m194g_private_ledger_changed_input ... FAILED
+test merge_cmd::known_scene_benchmark::noise_pupil_bridge::private_controls::m194g_private_manifest_schema_tuple_controls ... FAILED
+test merge_cmd::known_scene_benchmark::noise_pupil_bridge::private_controls::m194g_private_production_outputs ... ignored, private six RGB outputs; root freezes exact command before execution
+test merge_cmd::known_scene_benchmark::noise_pupil_bridge::private_controls::m194g_private_settings_geometry ... FAILED
+test merge_cmd::known_scene_benchmark::noise_pupil_bridge::private_controls::m194g_private_source_rails_and_fault ... FAILED
+test merge_cmd::local_placement_consumer_tests::local_placement_actual_consumer ... ignored, root-owned actual saved-CFA consumer; full-geometry gather, no RAW decode
+test merge_cmd::local_placement_consumer_tests::local_placement_configuration_preflight ... ignored, root-owned saved-CFA configuration and current CA preflight; no RAW decode
+test merge_cmd::marigold_source_pure::mask_and_support_controls ... ok
+test merge_cmd::marigold_source_pure::three_source_oracle ... ignored, root-run fixed three-RAW source-purity counterfactual; explicit corrected cache
+test merge_cmd::matched_source_tests::matched_source_actual_consumer ... ignored, root-owned matched RAW source diagnostic; explicit JSON configuration required
+test merge_cmd::native_coherent_estimator::independent_controls::independent_operator_controls ... ok
+test merge_cmd::native_coherent_estimator::independent_controls::independent_quality_screen ... FAILED
+test merge_cmd::native_pyramid_profile::tests::phase_timer_smoke ... ignored, root releases off/on/placebo/on-with-known-delay once each
+test merge_cmd::native_sensor_transfer::fixed_native_sensor_transfer_pair ... ignored, requires separately frozen native sensor transfer source/input/resource release
+test merge_cmd::parallel_cfa_wavelet::boundary_controls::independent_boundary_cfa_00_structure_and_noise ... FAILED
+test merge_cmd::parallel_cfa_wavelet::boundary_controls::independent_boundary_cfa_10_generated_quality_screen ... FAILED
+test merge_cmd::parallel_cfa_wavelet::full_stack::vitamin_c_observational_pair ... ignored, explicit observational image/cost run; parent bounds resources
+test merge_cmd::parallel_cfa_wavelet::independent_controls::independent_parallel_transform_and_scaled_numerator ... ok
+test merge_cmd::parallel_cfa_wavelet::independent_full_controls::independent_full_mechanical_controls ... FAILED
+test merge_cmd::phase_packed_chip::chip_complete_pair ... ignored, root-owned complete chip pair/cost; explicit frozen config required
+test merge_cmd::phase_packed_rgb::full_stack::vitamin_c_complete_pair ... ignored, explicit complete photograph replay; root bounds resources and freezes config
+test merge_cmd::phase_packed_rgb::independent_controls::independent_phase_packed_all_channel_phase_ca_and_support ... ok
+test merge_cmd::phase_packed_rgb::independent_controls::independent_phase_packed_full_adapter_chunks_and_held_writer ... FAILED
+test merge_cmd::phase_packed_rgb::independent_controls::independent_phase_packed_full_source_and_twelve_pull_support ... ok
+test merge_cmd::phase_packed_rgb::independent_controls::independent_phase_packed_generated_screen ... FAILED
+test merge_cmd::production_truth::independent::independent_m194_cfa_coordinates_and_crop ... ok
+test merge_cmd::production_truth::independent::independent_m194_confidence_source_and_null ... ok
+test merge_cmd::production_truth::independent::independent_m194_delegate_and_live_inputs ... ok
+test merge_cmd::production_truth::independent::independent_m194_malformed_decoded_storage ... ok
+test merge_cmd::production_truth::independent::independent_m194_refusal_and_errors ... ok
+test merge_cmd::production_truth::m193c_output_grid::m193c_private_output_case ... ignored, M193c requires future frozen source, exact parent commands, fresh output paths and independent reader
+test merge_cmd::production_truth::m193c_output_grid::precision_witness::m193c_private_precision_witness ... ignored, M193c requires committed component command and independent fixed-site oracle
+test merge_cmd::production_truth::m193c_registration_derivative::m193c_derivative_native ... ignored, M193c needs admitted private controls, fixed nine-input plan, both decoders and explicit native release
+test merge_cmd::production_truth::m193c_registration_derivative::m193c_derivative_private ... ignored, M193c needs frozen source, exact parent command, independent reader and fresh workspace
+test merge_cmd::production_truth::m194_actual_source_gather_fold_writer_controls ... ok
+test merge_cmd::raw_affinity_support::independent_controls::independent_raw_affinity_actual_truth_screen ... FAILED
+test merge_cmd::raw_affinity_support::independent_controls::independent_raw_affinity_operator_controls ... ok
+test merge_cmd::rb_own_guide::independent_controls::independent_rb_own_guide_actual_truth_screen ... FAILED
+test merge_cmd::rb_residual_full::full_stack::vitamin_c_observational_pair ... ignored, explicit observational image/cost run; parent bounds resources
+test merge_cmd::rb_residual_full::independent_controls::independent_rb_residual_full_mechanical ... FAILED
+test merge_cmd::rb_residual_guard::independent_controls::independent_rb_residual_guard_actual_truth_screen ... FAILED
+test merge_cmd::relative_blur_source_witness::vitamin_c_wide_source_witness ... ignored, explicit four-source measurement export; parent freezes inputs and bounds resources
+test merge_cmd::shared_source_field::full_stack::vitamin_c_complete_pair ... ignored, root-owned full70 pair; requires independent screen admission and resource-bounded runner
+test merge_cmd::shared_source_field::independent_controls::independent_shared_source_mechanical ... ok
+test merge_cmd::shared_source_field::independent_controls::independent_shared_source_quality_screen ... FAILED
+test merge_cmd::tests::a_gradient_increase_is_never_scored_as_a_pass ... ok
+test merge_cmd::tests::a_non_monotone_ladder_is_a_bug_and_is_reported_as_one ... ok
+test merge_cmd::tests::a_solved_gate_reproduces_its_target_when_fed_back ... ok
+test merge_cmd::tests::a_stack_the_shipped_ladder_cannot_reach_is_refused_not_extrapolated ... ok
+test merge_cmd::tests::a_target_outside_the_ladder_is_refused_rather_than_extrapolated ... ok
+test merge_cmd::tests::all_four_banner_strings_are_distinct_and_self_consistent ... ok
+test merge_cmd::tests::an_unsorted_ladder_solves_the_same_as_a_sorted_one ... ok
+test merge_cmd::tests::both_merge_banners_state_the_role_the_constant_gives_them ... ok
+test merge_cmd::tests::cover_backend_refuses_only_estimator_crop_and_keeps_scale_default ... ok
+test merge_cmd::tests::crop_domain_extracts_at_full_origin_and_excludes_every_outside_sample ... ok
+test merge_cmd::tests::crop_domain_rejects_empty_overflow_and_out_of_bounds_rectangles ... ok
+test merge_cmd::tests::crop_domain_requires_an_actual_covered_fit ... ok
+test merge_cmd::tests::crop_domain_whole_plane_keeps_the_historical_addressing ... ok
+test merge_cmd::tests::crop_domain_writer_reads_compact_indices_without_a_second_crop ... ok
+test merge_cmd::tests::cross_fitted_metric_keeps_detail_and_detects_blur_across_frame_counts ... ok
+test merge_cmd::tests::degenerate_ladders_and_targets_are_refused ... ok
+test merge_cmd::tests::degenerate_rois_do_not_panic ... ok
+test merge_cmd::tests::every_frame_is_covered_exactly_once_by_the_chunking ... ok
+test merge_cmd::tests::every_writer_develop_carries_the_exposure_gain ... ok
+test merge_cmd::tests::gradient_noise_moments_match_a_dense_covariance_calculation ... ok
+test merge_cmd::tests::log_log_interpolation_is_exact_on_a_power_law ... ok
+test merge_cmd::tests::merge_backend_parse_accepts_every_documented_spelling ... ok
+test merge_cmd::tests::merge_backend_parse_refuses_unknown_spellings ... ok
+test merge_cmd::tests::native_gpu_gather_controls::independent_gpu_device_descriptor_controls ... ignored, root runs device descriptor controls before the unchanged18 image cases
+test merge_cmd::tests::native_gpu_gather_controls::independent_gpu_device_guard_controls ... ignored, root runs guard controls before the unchanged descriptor and image populations
+test merge_cmd::tests::native_gpu_gather_controls::independent_gpu_gather_controls ... ignored, root runs the fixed 18 GPU consumer comparisons explicitly
+test merge_cmd::tests::no_single_gate_calibrates_across_the_corpus ... ok
+test merge_cmd::tests::parse_base_band_accepts_its_spellings_and_refuses_the_rest ... ok
+test merge_cmd::tests::parse_select_mode_accepts_its_spellings_and_refuses_the_rest ... ok
+test merge_cmd::tests::restoration_accepts_linear_kernels_and_refuses_clamped_catmull ... ok
+test merge_cmd::tests::selection_noise_null_is_not_a_retention_target_across_frame_counts ... ok
+test merge_cmd::tests::selector_detectability_false_answers_match_the_registered_noise_model ... ok
+test merge_cmd::tests::selector_detectability_has_a_noise_derived_contrast_transition ... ok
+test merge_cmd::tests::solving_at_a_rungs_own_value_returns_that_rungs_gate ... ok
+test merge_cmd::tests::the_corrected_column_falls_under_blur_which_is_the_property_it_is_used_for ... ok
+test merge_cmd::tests::the_correction_leaves_signal_alone_while_removing_added_noise ... ok
+test merge_cmd::tests::the_estimator_refuses_a_configured_defect_correction_it_cannot_apply ... ok
+test merge_cmd::tests::the_isotropic_column_is_the_analytic_value_on_a_linear_ramp ... ok
+test merge_cmd::tests::the_m2_convention_column_reproduces_the_independently_identified_definition ... ok
+test merge_cmd::tests::the_merge_environment_channels_behave ... ok
+test merge_cmd::tests::the_noise_correction_removes_pure_noise_down_to_sampling_error ... ok
+test merge_cmd::tests::the_plan_is_bounded_by_memory_and_scales_down_as_accumulators_are_added ... ok
+test merge_cmd::tests::the_shipping_banner_bytes_are_unchanged_by_deriving_the_role ... ok
+test merge_cmd::tests::the_speckle_companion_uses_the_same_tolerance_as_the_argmax_baseline ... ok
+test merge_cmd::tests::the_statistics_are_priced_into_the_plan_and_do_not_grow_with_the_stack ... ok
+test merge_cmd::through_focus_events::independent_controls::independent_through_focus_summary_controls ... ok
+test merge_cmd::through_focus_events::vitamin_c_complete_source_traces ... ignored, explicit all70 measurement export; root freezes inputs and bounds resources
+test stack::tests::a_single_frame_stack_has_a_flat_roi_ratio_of_exactly_one ... ok
+test stack::tests::describe_reports_both_the_lower_bound_and_the_measured_prediction ... ok
+test stack::tests::every_citation_the_binary_prints_resolves_to_synthesis_or_the_source ... ok
+test stack::tests::every_frame_is_covered_exactly_once_by_the_chunking ... ok
+test stack::tests::mean_and_sigma_match_the_population_definition ... ok
+test stack::tests::reduce_levels_is_ceil_log2 ... ok
+test stack::tests::roi_green_and_mean_and_sigma_recover_an_injected_noise_level ... ok
+test stack::tests::roi_green_is_hand_computable_and_never_reads_the_padding ... ok
+test stack::tests::roi_parses_four_unsigned_fields ... ok
+test stack::tests::roi_rejects_malformed_and_degenerate_input ... ok
+test stack::tests::srgb_transfer_hits_its_endpoints_and_is_monotone ... ok
+test stack::tests::the_buffers_model_still_reproduces_the_pre_m8_plan ... ok
+test stack::tests::the_core_and_cli_moment_helpers_agree ... ok
+test stack::tests::the_default_memory_model_is_m8 ... ok
+test stack::tests::the_flat_roi_ratio_is_the_ratio_of_the_two_sigmas ... ok
+test stack::tests::the_m8_constants_match_the_measurements_they_came_from ... ok
+test stack::tests::the_m8_memory_model_is_opt_in_and_plans_within_the_budget ... ok
+test stack::tests::the_m8_model_over_predicts_at_a_single_live_worker ... ok
+test stack::tests::the_m8_model_reproduces_the_measured_full_overlap_peaks ... ok
+test stack::tests::worker_plan_is_bounded_by_memory_not_by_frame_count ... ok
+test tests::quadratic_peak_refinement_is_explicit_and_keeps_the_automatic_cache_separate ... ok
+test tests::stack_help_marks_the_backend_the_constant_selects ... ok
+test tests::the_default_impl_defers_to_the_constant ... ok
+test tests::the_focus_listing_surface_is_reachable ... ok
+test tests::the_focus_selector_is_on_stack_and_is_refused_under_the_pyramid ... ok
+test tests::the_gate_multiplicity_claim_matches_what_is_enforced ... ok
+test tests::the_help_this_module_reads_is_actually_rendered ... ok
+test tests::the_merge_flag_help_names_the_same_default ... ok
+test tests::the_migration_note_counts_the_flags_it_enumerates ... ok
+test tests::the_not_yet_caveat_names_a_backend_that_is_not_the_default ... ok
+test tests::the_photometric_flag_help_names_the_same_default ... ok
+test tests::the_software_tag_and_the_version_string_are_the_same_fact ... ok
+
+failures:
+
+---- merge_cmd::all_cfa_wavelet::independent_controls::independent_all_cfa_00_transform_variance_and_mapping stdout ----
+
+thread 'merge_cmd::all_cfa_wavelet::independent_controls::independent_all_cfa_00_transform_variance_and_mapping' (9932) panicked at C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli/../../experiments/all-cfa-wavelet/independent-controls.rs:300:58:
+called `Result::unwrap()` on an `Err` value: actual rounded gather required
+
+---- merge_cmd::all_cfa_wavelet::independent_controls::independent_all_cfa_10_generated_quality_screen stdout ----
+
+thread 'merge_cmd::all_cfa_wavelet::independent_controls::independent_all_cfa_10_generated_quality_screen' (22568) panicked at C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli/../../experiments/all-cfa-wavelet/independent-controls.rs:310:74:
+root-owned new output path required
+
+---- merge_cmd::boundary_cfa_wavelet::independent_controls::independent_boundary_cfa_00_structure_and_noise stdout ----
+
+thread 'merge_cmd::boundary_cfa_wavelet::independent_controls::independent_boundary_cfa_00_structure_and_noise' (31484) panicked at C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli/../../experiments/boundary-cfa-wavelet/independent-controls.rs:101:47:
+called `Result::unwrap()` on an `Err` value: actual GPU rounded fullres gather required
+
+---- merge_cmd::boundary_cfa_wavelet::independent_controls::independent_boundary_cfa_10_generated_quality_screen stdout ----
+
+thread 'merge_cmd::boundary_cfa_wavelet::independent_controls::independent_boundary_cfa_10_generated_quality_screen' (21780) panicked at C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli/../../experiments/boundary-cfa-wavelet/independent-controls.rs:241:79:
+root-owned output directory
+
+---- merge_cmd::boundary_cfa_wavelet::independent_full_controls::independent_full_mechanical_controls stdout ----
+
+thread 'merge_cmd::boundary_cfa_wavelet::independent_full_controls::independent_full_mechanical_controls' (7824) panicked at C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli/../../experiments/boundary-cfa-wavelet/independent-full-controls.rs:55:128:
+called `Result::unwrap()` on an `Err` value: actual GPU rounded fullres gather required
+
+---- merge_cmd::ca_before_mhc::independent_controls::independent_colour_qualification stdout ----
+
+thread 'merge_cmd::ca_before_mhc::independent_controls::independent_colour_qualification' (17784) panicked at C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli/../../experiments/ca-before-mhc/independent-controls.rs:164:102:
+called `Result::unwrap()` on an `Err` value: CA controls require actual rounded GPU/probe route
+
+---- merge_cmd::ca_before_mhc::independent_controls::independent_operator_controls stdout ----
+
+thread 'merge_cmd::ca_before_mhc::independent_controls::independent_operator_controls' (6912) panicked at C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli/../../experiments/ca-before-mhc/independent-controls.rs:42:72:
+called `Result::unwrap()` on an `Err` value: CA controls require actual rounded GPU/probe route
+
+---- merge_cmd::ca_before_mhc::independent_controls::independent_quality_screen stdout ----
+
+thread 'merge_cmd::ca_before_mhc::independent_controls::independent_quality_screen' (12752) panicked at C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli/../../experiments/ca-before-mhc/independent-controls.rs:105:102:
+called `Result::unwrap()` on an `Err` value: CA controls require actual rounded GPU/probe route
+
+---- merge_cmd::complete_cfa_wavelet::independent_controls::independent_complete_cfa_00_transform_variance_and_mapping stdout ----
+
+thread 'merge_cmd::complete_cfa_wavelet::independent_controls::independent_complete_cfa_00_transform_variance_and_mapping' (5980) panicked at C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli/../../experiments/complete-cfa-wavelet/independent-controls.rs:356:58:
+called `Result::unwrap()` on an `Err` value: actual rounded gather required
+
+---- merge_cmd::complete_cfa_wavelet::independent_controls::independent_complete_cfa_10_generated_quality_screen stdout ----
+
+thread 'merge_cmd::complete_cfa_wavelet::independent_controls::independent_complete_cfa_10_generated_quality_screen' (32048) panicked at C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli/../../experiments/complete-cfa-wavelet/independent-controls.rs:366:79:
+root-owned new output path required
+
+---- merge_cmd::complex_wavelet_merge::independent_controls::independent_complex_10_generated_quality_screen stdout ----
+
+thread 'merge_cmd::complex_wavelet_merge::independent_controls::independent_complex_10_generated_quality_screen' (8636) panicked at C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli/../../experiments/complex-wavelet-merge/independent-controls.rs:304:74:
+root-owned new output path required
+
+---- merge_cmd::core_lineage::independent_controls::independent_core_lineage_actual_truth_screen stdout ----
+
+thread 'merge_cmd::core_lineage::independent_controls::independent_core_lineage_actual_truth_screen' (27164) panicked at C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli/../../experiments/core-lineage/independent-controls.rs:72:71:
+root-owned unique output required
+
+---- merge_cmd::cross_scale_source_prior::independent_controls::independent_quality_screen stdout ----
+
+thread 'merge_cmd::cross_scale_source_prior::independent_controls::independent_quality_screen' (17092) panicked at C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli/../../experiments/cross-scale-source-prior/independent-controls.rs:188:83:
+root-owned output required
+
+---- merge_cmd::fine_support_candidate_tests::independent_controls::independent_finest_support_quality_screen stdout ----
+
+thread 'merge_cmd::fine_support_candidate_tests::independent_controls::independent_finest_support_quality_screen' (31884) panicked at C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli/../../experiments/fine-support-guidance/candidate-independent-controls.rs:168:81:
+root-owned unique output required
+
+---- merge_cmd::gatefloor::native_direct_planes_independent_tests::independent_direct_planes_controls stdout ----
+
+thread 'merge_cmd::gatefloor::native_direct_planes_independent_tests::independent_direct_planes_controls' (7800) panicked at C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli/../../experiments/native-green-probe/independent-tests.rs:202:86:
+root provides a fresh output directory
+
+---- merge_cmd::gatefloor::native_green_probe_independent_tests::independent_green_probe_controls stdout ----
+
+thread 'merge_cmd::gatefloor::native_green_probe_independent_tests::independent_green_probe_controls' (16036) panicked at C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli/../../experiments/native-green-probe/independent-tests.rs:202:86:
+root provides a fresh output directory
+
+---- merge_cmd::gatefloor::native_parallel_writeback_independent_tests::independent_parallel_writeback_controls stdout ----
+
+thread 'merge_cmd::gatefloor::native_parallel_writeback_independent_tests::independent_parallel_writeback_controls' (1316) panicked at C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli/../../experiments/native-green-probe/independent-tests.rs:202:86:
+root provides a fresh output directory
+
+---- merge_cmd::green_match_rgb::independent_controls::independent_green_match_generated_screen stdout ----
+
+thread 'merge_cmd::green_match_rgb::independent_controls::independent_green_match_generated_screen' (16848) panicked at C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli/../../experiments/green-match-rgb/independent-controls.rs:197:70:
+root-owned new output path required
+
+---- merge_cmd::known_scene_benchmark::noise_pupil_bridge::private_controls::m194g_private_actual_plan_controls stdout ----
+Error: bridge required STREHL_DEFECT=off
+
+---- merge_cmd::known_scene_benchmark::noise_pupil_bridge::private_controls::m194g_private_bounded_json_paths_aliases stdout ----
+Error: missing STREHL_M194G_BRIDGE_PRIVATE_OUTPUT
+
+Caused by:
+    environment variable not found
+
+---- merge_cmd::known_scene_benchmark::noise_pupil_bridge::private_controls::m194g_private_ledger_changed_input stdout ----
+Error: missing STREHL_M194G_BRIDGE_PRIVATE_OUTPUT
+
+Caused by:
+    environment variable not found
+
+---- merge_cmd::known_scene_benchmark::noise_pupil_bridge::private_controls::m194g_private_manifest_schema_tuple_controls stdout ----
+Error: missing STREHL_M194G_BRIDGE_PRIVATE_OUTPUT
+
+Caused by:
+    environment variable not found
+
+---- merge_cmd::known_scene_benchmark::noise_pupil_bridge::private_controls::m194g_private_settings_geometry stdout ----
+Error: bridge required STREHL_DEFECT=off
+
+---- merge_cmd::known_scene_benchmark::noise_pupil_bridge::private_controls::m194g_private_source_rails_and_fault stdout ----
+Error: missing STREHL_M194G_BRIDGE_PRIVATE_OUTPUT
+
+Caused by:
+    environment variable not found
+
+---- merge_cmd::native_coherent_estimator::independent_controls::independent_quality_screen stdout ----
+
+thread 'merge_cmd::native_coherent_estimator::independent_controls::independent_quality_screen' (30952) panicked at C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli/../../experiments/native-coherent-estimator/independent-controls.rs:209:74:
+root-owned output required
+
+---- merge_cmd::parallel_cfa_wavelet::boundary_controls::independent_boundary_cfa_00_structure_and_noise stdout ----
+
+thread 'merge_cmd::parallel_cfa_wavelet::boundary_controls::independent_boundary_cfa_00_structure_and_noise' (16332) panicked at C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli/../../experiments/boundary-cfa-wavelet/independent-controls.rs:101:47:
+called `Result::unwrap()` on an `Err` value: actual GPU rounded fullres gather required
+
+---- merge_cmd::parallel_cfa_wavelet::boundary_controls::independent_boundary_cfa_10_generated_quality_screen stdout ----
+
+thread 'merge_cmd::parallel_cfa_wavelet::boundary_controls::independent_boundary_cfa_10_generated_quality_screen' (14856) panicked at C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli/../../experiments/boundary-cfa-wavelet/independent-controls.rs:241:79:
+root-owned output directory
+
+---- merge_cmd::parallel_cfa_wavelet::independent_full_controls::independent_full_mechanical_controls stdout ----
+
+thread 'merge_cmd::parallel_cfa_wavelet::independent_full_controls::independent_full_mechanical_controls' (14812) panicked at C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli/../../experiments/parallel-cfa-wavelet/independent-full-controls.rs:57:128:
+called `Result::unwrap()` on an `Err` value: actual GPU rounded fullres gather required
+
+---- merge_cmd::phase_packed_rgb::independent_controls::independent_phase_packed_full_adapter_chunks_and_held_writer stdout ----
+
+thread 'merge_cmd::phase_packed_rgb::independent_controls::independent_phase_packed_full_adapter_chunks_and_held_writer' (8604) panicked at C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli/../../experiments/phase-packed-rgb/independent-controls.rs:413:71:
+called `Option::unwrap()` on a `None` value
+
+---- merge_cmd::phase_packed_rgb::independent_controls::independent_phase_packed_generated_screen stdout ----
+
+thread 'merge_cmd::phase_packed_rgb::independent_controls::independent_phase_packed_generated_screen' (25736) panicked at C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli/../../experiments/phase-packed-rgb/independent-controls.rs:164:71:
+root-owned output required
+
+---- merge_cmd::raw_affinity_support::independent_controls::independent_raw_affinity_actual_truth_screen stdout ----
+
+thread 'merge_cmd::raw_affinity_support::independent_controls::independent_raw_affinity_actual_truth_screen' (29124) panicked at C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli/../../experiments/raw-affinity-support/independent-controls.rs:359:79:
+root-owned unique output required
+
+---- merge_cmd::rb_own_guide::independent_controls::independent_rb_own_guide_actual_truth_screen stdout ----
+
+thread 'merge_cmd::rb_own_guide::independent_controls::independent_rb_own_guide_actual_truth_screen' (27120) panicked at C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli/../../experiments/rb-own-guide/independent-controls.rs:59:71:
+root-owned unique output required
+
+---- merge_cmd::rb_residual_full::independent_controls::independent_rb_residual_full_mechanical stdout ----
+Error: mechanical output required
+
+---- merge_cmd::rb_residual_guard::independent_controls::independent_rb_residual_guard_actual_truth_screen stdout ----
+
+thread 'merge_cmd::rb_residual_guard::independent_controls::independent_rb_residual_guard_actual_truth_screen' (30508) panicked at C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli/../../experiments/rb-residual-guard/independent-controls.rs:64:76:
+root-owned output required
+
+---- merge_cmd::shared_source_field::independent_controls::independent_shared_source_quality_screen stdout ----
+
+thread 'merge_cmd::shared_source_field::independent_controls::independent_shared_source_quality_screen' (11052) panicked at C:\dev\blog\death-of-software\projects\strehl\crates\strehl-cli/../../experiments/shared-source-field/independent-controls.rs:332:78:
+root-owned unique output required
+
+
+failures:
+    merge_cmd::all_cfa_wavelet::independent_controls::independent_all_cfa_00_transform_variance_and_mapping
+    merge_cmd::all_cfa_wavelet::independent_controls::independent_all_cfa_10_generated_quality_screen
+    merge_cmd::boundary_cfa_wavelet::independent_controls::independent_boundary_cfa_00_structure_and_noise
+    merge_cmd::boundary_cfa_wavelet::independent_controls::independent_boundary_cfa_10_generated_quality_screen
+    merge_cmd::boundary_cfa_wavelet::independent_full_controls::independent_full_mechanical_controls
+    merge_cmd::ca_before_mhc::independent_controls::independent_colour_qualification
+    merge_cmd::ca_before_mhc::independent_controls::independent_operator_controls
+    merge_cmd::ca_before_mhc::independent_controls::independent_quality_screen
+    merge_cmd::complete_cfa_wavelet::independent_controls::independent_complete_cfa_00_transform_variance_and_mapping
+    merge_cmd::complete_cfa_wavelet::independent_controls::independent_complete_cfa_10_generated_quality_screen
+    merge_cmd::complex_wavelet_merge::independent_controls::independent_complex_10_generated_quality_screen
+    merge_cmd::core_lineage::independent_controls::independent_core_lineage_actual_truth_screen
+    merge_cmd::cross_scale_source_prior::independent_controls::independent_quality_screen
+    merge_cmd::fine_support_candidate_tests::independent_controls::independent_finest_support_quality_screen
+    merge_cmd::gatefloor::native_direct_planes_independent_tests::independent_direct_planes_controls
+    merge_cmd::gatefloor::native_green_probe_independent_tests::independent_green_probe_controls
+    merge_cmd::gatefloor::native_parallel_writeback_independent_tests::independent_parallel_writeback_controls
+    merge_cmd::green_match_rgb::independent_controls::independent_green_match_generated_screen
+    merge_cmd::known_scene_benchmark::noise_pupil_bridge::private_controls::m194g_private_actual_plan_controls
+    merge_cmd::known_scene_benchmark::noise_pupil_bridge::private_controls::m194g_private_bounded_json_paths_aliases
+    merge_cmd::known_scene_benchmark::noise_pupil_bridge::private_controls::m194g_private_ledger_changed_input
+    merge_cmd::known_scene_benchmark::noise_pupil_bridge::private_controls::m194g_private_manifest_schema_tuple_controls
+    merge_cmd::known_scene_benchmark::noise_pupil_bridge::private_controls::m194g_private_settings_geometry
+    merge_cmd::known_scene_benchmark::noise_pupil_bridge::private_controls::m194g_private_source_rails_and_fault
+    merge_cmd::native_coherent_estimator::independent_controls::independent_quality_screen
+    merge_cmd::parallel_cfa_wavelet::boundary_controls::independent_boundary_cfa_00_structure_and_noise
+    merge_cmd::parallel_cfa_wavelet::boundary_controls::independent_boundary_cfa_10_generated_quality_screen
+    merge_cmd::parallel_cfa_wavelet::independent_full_controls::independent_full_mechanical_controls
+    merge_cmd::phase_packed_rgb::independent_controls::independent_phase_packed_full_adapter_chunks_and_held_writer
+    merge_cmd::phase_packed_rgb::independent_controls::independent_phase_packed_generated_screen
+    merge_cmd::raw_affinity_support::independent_controls::independent_raw_affinity_actual_truth_screen
+    merge_cmd::rb_own_guide::independent_controls::independent_rb_own_guide_actual_truth_screen
+    merge_cmd::rb_residual_full::independent_controls::independent_rb_residual_full_mechanical
+    merge_cmd::rb_residual_guard::independent_controls::independent_rb_residual_guard_actual_truth_screen
+    merge_cmd::shared_source_field::independent_controls::independent_shared_source_quality_screen
+
+test result: FAILED. 177 passed; 35 failed; 39 ignored; 0 measured; 0 filtered out; finished in 5.02s
+

@@ -1,0 +1,16 @@
+{
+  "receipt": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\highlight-rendering\\replay-ore100-1\\output\\receipt.json",
+    "sha256": "79e3d476bf4a14baceed4e9121cf7d7ac405d25c3e0a2ac1f66e4bcd96888bc9",
+    "bytes": 4889
+  },
+  "sources_unchanged": true,
+  "inputs_unchanged": true,
+  "whole_output_arms": [
+    "current",
+    "sensor-rolloff-off",
+    "shoulder",
+    "both"
+  ],
+  "visual_verdict": null
+}

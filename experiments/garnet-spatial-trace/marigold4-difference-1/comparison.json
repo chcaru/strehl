@@ -1,0 +1,66 @@
+{
+  "scope": "Exact state checks and change localization; a smaller/larger change count is not an image-quality score.",
+  "candidate_receipt_sha256": "3cc4a0f7038f0d458cb6db9b98582af2e23d32c9569a78fd722a20b5a102152b",
+  "historical_receipt_sha256": "b04110a9a8353f55ef927a0848a6a20251ca3343ed730ac4f2dcdc4858206d78",
+  "plan_and_threads_exact": true,
+  "held_source_evidence_exact": true,
+  "all_finish_values_finite": true,
+  "plane_changes": [
+    {
+      "plane": 0,
+      "changed": 109,
+      "quad_bbox": [
+        148,
+        18,
+        2950,
+        2060
+      ],
+      "max_abs_dn": 0.00048828125
+    },
+    {
+      "plane": 1,
+      "changed": 60,
+      "quad_bbox": [
+        270,
+        6,
+        2801,
+        2035
+      ],
+      "max_abs_dn": 0.000244140625
+    },
+    {
+      "plane": 2,
+      "changed": 59,
+      "quad_bbox": [
+        52,
+        36,
+        3052,
+        2025
+      ],
+      "max_abs_dn": 0.000244140625
+    },
+    {
+      "plane": 3,
+      "changed": 2412,
+      "quad_bbox": [
+        2,
+        1,
+        3131,
+        2085
+      ],
+      "max_abs_dn": 3.0517578125e-05
+    }
+  ],
+  "native_dimensions": [
+    6268,
+    4176
+  ],
+  "changed_rgb_pixels": 10,
+  "native_rgb_bbox": [
+    949,
+    227,
+    4725,
+    3770
+  ],
+  "icc_exact": true
+}

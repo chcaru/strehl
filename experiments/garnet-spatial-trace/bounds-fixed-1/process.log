@@ -1,0 +1,10 @@
+
+running 5 tests
+test pyramid::accumulator_range_bounds::range_01_peak_1024_serial_and_absorb_are_finite ... ok
+test pyramid::accumulator_range_bounds::range_02_clamped_floor_tiny_signed_products_have_small_absolute_error ... ok
+test pyramid::accumulator_range_bounds::range_03_normal_soft_mean_base_matches_legacy_bits ... ok
+test pyramid::accumulator_range_bounds::range_04_hard_max_both_base_modes_match_legacy_bits ... ok
+test pyramid::accumulator_range_bounds::range_05_weighted_sharp_base_matches_legacy_bits ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 566 filtered out; finished in 0.13s
+

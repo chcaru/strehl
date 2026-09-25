@@ -1,0 +1,13 @@
+{
+  "phase": "full",
+  "mode": "prior",
+  "sources_unchanged": true,
+  "historical_full_baseline_exact": true,
+  "receipt": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\full-stack-source-prior\\ore100-full-1\\output\\receipt.json",
+    "sha256": "b48aba57255053f8bdc9c82a4826011075cd8dbb64cd08dc3026237cbfb0ccde",
+    "bytes": 901166
+  },
+  "photographic_replay_admitted": false,
+  "scope": "Separate complete photographic observation of unchanged known-risk prior. General quality qualification remains false; no default or SOTA claim."
+}

@@ -1,0 +1,42 @@
+{
+  "schema": 1,
+  "status": "RENDERED_AWAITING_INDEPENDENT_VISUAL_REVIEW",
+  "frames": 299,
+  "native_dimensions": [
+    6500,
+    4332
+  ],
+  "crop_quad_xywh": [
+    133,
+    89,
+    3250,
+    2166
+  ],
+  "master": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\quality-september25\\chip-before\\stack-master.tiff",
+    "sha256": "5e6a7351310d00e1c7e3e0b7660d9678d6b11761afa8f4d0c248214d0bc223d1",
+    "bytes": 168952962
+  },
+  "full_jpeg": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\quality-september25\\chip-before\\stack-full.jpg",
+    "sha256": "30936fbc19544313352efa8ea8208a613f00d3ade45b6c99ba5313bf5c712cd1",
+    "bytes": 23963620
+  },
+  "overview": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\quality-september25\\chip-before\\overview.jpg",
+    "sha256": "3498b96076068bba65727809ca2b37b5bff8ab82f1342634f1f3a30b0b75e6fe",
+    "bytes": 1262312
+  },
+  "warp_map": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\chip-baseline-1\\chip.warpmap.txt",
+    "sha256": "ce8534c9e65c5c761373bad87df5352c1c46319b7eaf7f7c91477ea61b4f4922",
+    "bytes": 41142
+  },
+  "executable": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-gpu-gather\\build-native-6\\strehl.exe",
+    "sha256": "2fd0a1615989e262fbba61e0a1587a9b8f20ff4913d3969510e967ce9d9219d7",
+    "bytes": 17714688
+  },
+  "original_bytes_and_metadata_unchanged": true,
+  "viewing_note": "Full JPEG and RGB16 master contain the entire stack output. Overview is resampled for orientation."
+}

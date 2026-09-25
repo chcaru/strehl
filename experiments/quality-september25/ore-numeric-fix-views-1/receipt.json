@@ -1,0 +1,76 @@
+{
+  "stack": "ore-100",
+  "target_file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\minerals\\native-tiles.json",
+  "target_sha256": "8cb3e456529e8f87df98b0cf9f7fa5091430414d1188f93ccdec9156c4edd0a4",
+  "native_shape": [
+    4468,
+    6702,
+    3
+  ],
+  "icc_sha256": "238ad2596316306a72025bb245cf3c8cd72f1090c8d95af2f38dc090e84ece5b",
+  "display": "rounded RGB16/257, same original ICC; native tiles unresampled; whole JPEG98 orientation only",
+  "images": [
+    {
+      "arm": "before",
+      "master": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\full-stack-source-prior\\ore100-full-1\\output\\baseline.tiff",
+      "master_sha256": "cbd8f60e5234b7be473a5635fd55f8825bcffa0ffb569e947df192dc78a5d191",
+      "complete_overview": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\ore-numeric-fix-views-1\\before-whole.jpg",
+      "overview_sha256": "1ec099b452ba24c1d08fb643c3684b373a6d387355df00ff8090d725296faabd",
+      "tiles": [
+        {
+          "target": "100-white-patch-native384",
+          "rect": [
+            1208,
+            748,
+            384,
+            384
+          ],
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\ore-numeric-fix-views-1\\before-100-white-patch-native384.png",
+          "sha256": "efef78cbcd34ea5ba68fa5f212c82dc82a7f62f1edeb5b792cd112838ca41a64"
+        },
+        {
+          "target": "100-blue-control-native384",
+          "rect": [
+            2908,
+            2768,
+            384,
+            384
+          ],
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\ore-numeric-fix-views-1\\before-100-blue-control-native384.png",
+          "sha256": "d03c0285672b8488c781a88009057f71f276023548857045218149baebf6c776"
+        }
+      ]
+    },
+    {
+      "arm": "after",
+      "master": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\garnet-spatial-trace\\ore100-fixed-1\\output\\candidate.tiff",
+      "master_sha256": "65ebf5e8a76ed34a0919400987c54f0738f68e54abccb570e15761951e531be7",
+      "complete_overview": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\ore-numeric-fix-views-1\\after-whole.jpg",
+      "overview_sha256": "5c8207c2025e9d1e2ace5d38c234420509e0fb26abebf95e0062c0962c5e18ac",
+      "tiles": [
+        {
+          "target": "100-white-patch-native384",
+          "rect": [
+            1208,
+            748,
+            384,
+            384
+          ],
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\ore-numeric-fix-views-1\\after-100-white-patch-native384.png",
+          "sha256": "efef78cbcd34ea5ba68fa5f212c82dc82a7f62f1edeb5b792cd112838ca41a64"
+        },
+        {
+          "target": "100-blue-control-native384",
+          "rect": [
+            2908,
+            2768,
+            384,
+            384
+          ],
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\ore-numeric-fix-views-1\\after-100-blue-control-native384.png",
+          "sha256": "d03c0285672b8488c781a88009057f71f276023548857045218149baebf6c776"
+        }
+      ]
+    }
+  ]
+}

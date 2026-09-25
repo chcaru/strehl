@@ -1,0 +1,13 @@
+{
+  "schema": 1,
+  "executable": {
+    "path": "experiments/garnet-spatial-trace/build-fixed-2/strehl.exe",
+    "sha256": "bec4c357836ad1383800a6c933460ee7ef072c525b5957a6f5deb5194b203314"
+  },
+  "source_bindings": "experiments/garnet-spatial-trace/build-fixed-2/sources.json",
+  "validation": {
+    "core_tests": "569 passed, 2 ignored",
+    "production_equivalence": "experiments/garnet-spatial-trace/production-equivalence.json",
+    "scope": "Numerator range repair verified on complete native RAW stacks; remaining glare and occlusion defects are unresolved."
+  }
+}

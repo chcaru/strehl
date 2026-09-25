@@ -1,0 +1,7 @@
+{
+  "schema": 1,
+  "cache": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\full-stack-source-prior\\garnet104-full-1\\output\\baseline-cache.json",
+  "expected_current_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\minerals-september24\\final\\etched-spessartine-garnet-104msdcf-master.tiff",
+  "expected_current_file_sha256": "2b240b4fd752311b6b0a5bf74ac49dbb39354cdf3e6e806d5eb5cb96dbd4ebc8",
+  "out_dir": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\highlight-rendering\\replay-garnet104-1\\output"
+}

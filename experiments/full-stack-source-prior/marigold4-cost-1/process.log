@@ -1,0 +1,78 @@
+
+running 1 test
+test merge_cmd::full_stack_source_prior::complete_pair ...   GPU gather: NVIDIA GeForce RTX 5090 / Vulkan / DiscreteGpu; schedule Device256; initialization 331.194 ms; {"no_contraction":true,"max_storage_buffer_binding_size":2147483644,"max_buffer_size":4294967295,"original_sha256":"41658a89bd9b17c73b0f452b48bde689679e4ecc50774872ebfff0171cdb6560","decorated_sha256":"a7dce2107ce7713ac4d9cd961dd44e303bd69b37c2d2ca7029f20aa1f131de9d","submitted_sha256":"a7dce2107ce7713ac4d9cd961dd44e303bd69b37c2d2ca7029f20aa1f131de9d","arithmetic_results":30,"added_decorations":30,"float_operations":{"FAdd":8,"FMul":17,"FSub":5},"entry_points":["mhc","gather","quantize_vector"],"group_zero_bindings":[0,1,2,3,4,5],"bounds_policy":"Restrict indices/buffers/images/binding-arrays; integer division checks and loop bounds enabled","validation":"embedded WGSL+IR; Naga SPIR-V parse+IR; structural decoration/removal identity; NOT spirv-val"}
+  GPU device coordinates: {"hardware":{"vulkan_api":4211029,"shader_f64":true,"signed_zero_inf_nan_preserve_f64":true,"denorm_preserve_f64":false,"rounding_rte_f32":true,"rounding_rte_f64":true,"denorm_independence":1,"rounding_independence":1},"original_sha256":"95eb96b66b3e680303fe461954a898cc7f6db199225f67d32eb1f249cd0be3eb","submitted_sha256":"232804bc0de39feb6d50d271d0ff83d10d650a890c9e215b3f21eef6feee4947","original_extensions":["SPV_KHR_storage_buffer_storage_class"],"arithmetic_results":24,"added_capabilities":["SignedZeroInfNanPreserve","RoundingModeRTE"],"execution_modes":["SignedZeroInfNanPreserve 64","RoundingModeRTE 32","RoundingModeRTE 64"],"coefficient_guard":"every finite nonzero pull coefficient abs>=2^-900; unsafe actual frames use Parallel256; direct descriptor helper refuses","entry_point":"main","bindings":[0,1,2],"validation":"owned GLSL+Naga IR and original SPIR-V parse+IR; final fixed additions structurally checked with exact removal identity; final patched SPIR-V NOT fully Naga-validated and NOT spirv-val"}
+  GPU gather RGB Device256: 7032x4688, covered 32899144/32966016, library call 47.557 ms, pack 12.231, CPU coordinates 0.002, submit/wait/readback 35.303; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16447189/16483008, library call 43.611 ms, pack 12.411, CPU coordinates 0.002, submit/wait/readback 31.176; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+full-stack prior pass1 1/3 source243 0.847s
+  GPU gather RGB Device256: 7032x4688, covered 32925010/32966016, library call 47.261 ms, pack 12.312, CPU coordinates 0.003, submit/wait/readback 34.919; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16459576/16483008, library call 44.665 ms, pack 13.056, CPU coordinates 0.003, submit/wait/readback 31.581; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+full-stack prior pass1 2/3 source244 0.508s
+  GPU gather RGB Device256: 7032x4688, covered 32947478/32966016, library call 47.756 ms, pack 12.807, CPU coordinates 0.003, submit/wait/readback 34.924; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16471290/16483008, library call 43.555 ms, pack 12.077, CPU coordinates 0.001, submit/wait/readback 31.455; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+full-stack prior pass1 3/3 source245 0.530s
+output domain    : compact Crop 3134x2088 from full-plane origin (191, 128); collapsed plane written directly (no second crop)
+colour          : camera RGB -> sRGB (BT.709 primaries, D65 white)
+                  characterisation: decoder color_matrix[D65]
+                  XYZ->cam rows: [0.7460 -0.2365 -0.0588] [-0.5687 1.3442 0.2474] [-0.0624 0.1156 0.6584]
+                  implied daylight WB R 2.6266 B 1.3878, against as-shot R 1.6904 B 2.5205
+                  Order: black, as-shot WB, demosaic, matrix, clamp, sRGB curve.
+exposure        : -0.50 stops (gain 0.707x), as asked
+                  ONE multiply in linear light, before the curve. No tone curve, no
+                  saturation, no roll-off: every unclipped ratio is unchanged.
+tone            : black 0.01532, white 0.27245 (linear), contrast 0.55
+
+wrote           : C:\dev\blog\death-of-software\projects\strehl\experiments\full-stack-source-prior\marigold4-cost-1\output\baseline.tiff (6268 x 4176, 16-bit RGB, sRGB (BT.709 primaries, D65, sRGB transfer) -- for looking at, Malvar-He-Cutler demosaic)
+                  Full sensor resolution: every CFA site estimated, one focus
+                  decision per quad. Interpolated -- do not measure resolution on it.
+  GPU gather RGB Device256: 7032x4688, covered 32899144/32966016, library call 49.022 ms, pack 12.009, CPU coordinates 0.002, submit/wait/readback 36.980; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16447189/16483008, library call 45.875 ms, pack 12.347, CPU coordinates 0.002, submit/wait/readback 33.505; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+full-stack prior pass2 1/3 source243 0.841s
+  GPU gather RGB Device256: 7032x4688, covered 32925010/32966016, library call 78.103 ms, pack 12.196, CPU coordinates 0.001, submit/wait/readback 65.882; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16459576/16483008, library call 59.615 ms, pack 12.653, CPU coordinates 0.001, submit/wait/readback 46.900; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+full-stack prior pass2 2/3 source244 0.741s
+  GPU gather RGB Device256: 7032x4688, covered 32947478/32966016, library call 47.205 ms, pack 12.075, CPU coordinates 0.002, submit/wait/readback 35.096; upload 65933408 B, download 131864064 B
+  GPU gather completed RGB
+  GPU device coordinates completed RGB
+  GPU gather green-only Device256: 7032x4688, covered 16471290/16483008, library call 46.092 ms, pack 12.735, CPU coordinates 0.002, submit/wait/readback 33.322; upload 65933408 B, download 131864064 B
+  GPU gather completed green-only
+  GPU device coordinates completed green-only
+full-stack prior pass2 3/3 source245 0.747s
+output domain    : compact Crop 3134x2088 from full-plane origin (191, 128); collapsed plane written directly (no second crop)
+colour          : camera RGB -> sRGB (BT.709 primaries, D65 white)
+                  characterisation: decoder color_matrix[D65]
+                  XYZ->cam rows: [0.7460 -0.2365 -0.0588] [-0.5687 1.3442 0.2474] [-0.0624 0.1156 0.6584]
+                  implied daylight WB R 2.6266 B 1.3878, against as-shot R 1.6904 B 2.5205
+                  Order: black, as-shot WB, demosaic, matrix, clamp, sRGB curve.
+exposure        : -0.50 stops (gain 0.707x), as asked
+                  ONE multiply in linear light, before the curve. No tone curve, no
+                  saturation, no roll-off: every unclipped ratio is unchanged.
+tone            : black 0.01532, white 0.27244 (linear), contrast 0.55
+
+wrote           : C:\dev\blog\death-of-software\projects\strehl\experiments\full-stack-source-prior\marigold4-cost-1\output\candidate.tiff (6268 x 4176, 16-bit RGB, sRGB (BT.709 primaries, D65, sRGB transfer) -- for looking at, Malvar-He-Cutler demosaic)
+                  Full sensor resolution: every CFA site estimated, one focus
+                  decision per quad. Interpolated -- do not measure resolution on it.
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 247 filtered out; finished in 16.01s
+

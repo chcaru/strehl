@@ -1,0 +1,16 @@
+{
+  "all_finish_values_finite": true,
+  "held_source_evidence_exact": true,
+  "historical_cache_replay_exact": true,
+  "changed": true,
+  "candidate_tiff": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\garnet-spatial-trace\\marigold4-fixed-1\\output\\candidate.tiff",
+    "sha256": "19e657e419d52adf567ec86472f917ad9b9abfc9b0812131e9bba0eacbae462f",
+    "bytes": 157055880
+  },
+  "receipt": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\garnet-spatial-trace\\marigold4-fixed-1\\output\\receipt.json",
+    "sha256": "3cc4a0f7038f0d458cb6db9b98582af2e23d32c9569a78fd722a20b5a102152b",
+    "bytes": 1343087
+  }
+}

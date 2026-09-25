@@ -1,0 +1,153 @@
+{
+  "scope": "Numerical attribution only; neither pixel-change count nor dimming is a quality score.",
+  "old_cache_sha256": "c837f0ba784a0f2bc08118ac2fedac8e7a4ac69f654b9d6a5e3052675bb92ef8",
+  "new_cache_sha256": "e6320d599c283da147aa92ea159f75f45c6260ec797ea976fe3b1a99eeb96e77",
+  "old_tone_reproduces_actual_writer_bits": true,
+  "old_tone": {
+    "bits": [
+      3106357674,
+      1058905051,
+      1057803469
+    ],
+    "values": [
+      -0.0001595082285348326,
+      0.6156594157218933,
+      0.550000011920929
+    ],
+    "sample_count": 144926,
+    "sampled_white_luminance": 0.5540775060653687
+  },
+  "new_tone_reconstructed": {
+    "bits": [
+      3106357674,
+      1058917892,
+      1057803469
+    ],
+    "values": [
+      -0.0001595082285348326,
+      0.6164247989654541,
+      0.550000011920929
+    ],
+    "sample_count": 144926,
+    "sampled_white_luminance": 0.5547663569450378
+  },
+  "new_tone_direct_writer_capture": false,
+  "nominal_placement_gain_ratio": 0.998758672196761,
+  "tone_sample_luminances_changed": 130,
+  "cfa": [
+    {
+      "plane": 0,
+      "old_bad_sites": 1164,
+      "old_bad_changed": 602,
+      "old_bad_max_abs_dn": 14044.173828125,
+      "outside_bad_changed": 5192,
+      "outside_max_abs_dn": 2.86102294921875e-06,
+      "outside_changed_quantiles": [
+        2.9802322387695312e-08,
+        9.5367431640625e-07,
+        2.1457672119140625e-06,
+        2.5683641433715907e-06,
+        2.86102294921875e-06
+      ],
+      "outside_exceed_0_001_dn": 0
+    },
+    {
+      "plane": 1,
+      "old_bad_sites": 1248,
+      "old_bad_changed": 536,
+      "old_bad_max_abs_dn": 13430.3271484375,
+      "outside_bad_changed": 2919,
+      "outside_max_abs_dn": 3.814697265625e-06,
+      "outside_changed_quantiles": [
+        2.9802322387695312e-08,
+        9.5367431640625e-07,
+        2.1457672119140625e-06,
+        2.86102294921875e-06,
+        3.814697265625e-06
+      ],
+      "outside_exceed_0_001_dn": 0
+    },
+    {
+      "plane": 2,
+      "old_bad_sites": 1232,
+      "old_bad_changed": 552,
+      "old_bad_max_abs_dn": 14862.779296875,
+      "outside_bad_changed": 2861,
+      "outside_max_abs_dn": 3.814697265625e-06,
+      "outside_changed_quantiles": [
+        5.960464477539063e-08,
+        1.1920928955078125e-06,
+        2.384185791015625e-06,
+        2.86102294921875e-06,
+        3.814697265625e-06
+      ],
+      "outside_exceed_0_001_dn": 0
+    },
+    {
+      "plane": 3,
+      "old_bad_sites": 699,
+      "old_bad_changed": 391,
+      "old_bad_max_abs_dn": 5741.69580078125,
+      "outside_bad_changed": 4886,
+      "outside_max_abs_dn": 3.814697265625e-06,
+      "outside_changed_quantiles": [
+        5.960464477539063e-08,
+        9.5367431640625e-07,
+        2.1457672119140625e-06,
+        2.5033950805664062e-06,
+        3.814697265625e-06
+      ],
+      "outside_exceed_0_001_dn": 0
+    }
+  ],
+  "rgb_changed_pixels": 19816225,
+  "rgb_channel_abs_delta_quantiles": [
+    0.0,
+    1.0,
+    13.0,
+    27.0,
+    37.0,
+    65535.0
+  ],
+  "rois": {
+    "red_control": {
+      "native_xywh": [
+        3068,
+        1908,
+        384,
+        384
+      ],
+      "changed_pixels": 147115,
+      "max_code_delta": 199,
+      "median_abs_code_delta": 6.0,
+      "mean_abs_code_delta": 8.433510109230324,
+      "mean_code_change": -8.433510109230324
+    },
+    "dark_control": {
+      "native_xywh": [
+        256,
+        256,
+        384,
+        384
+      ],
+      "changed_pixels": 81695,
+      "max_code_delta": 29,
+      "median_abs_code_delta": 0.0,
+      "mean_abs_code_delta": 0.42933711299189814,
+      "mean_code_change": -0.42933711299189814
+    },
+    "white_facet": {
+      "native_xywh": [
+        4668,
+        1858,
+        384,
+        384
+      ],
+      "changed_pixels": 133338,
+      "max_code_delta": 65535,
+      "median_abs_code_delta": 15.0,
+      "mean_abs_code_delta": 124.66893853081598,
+      "mean_code_change": 89.36909315321181
+    }
+  }
+}

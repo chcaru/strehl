@@ -1,0 +1,80 @@
+{
+  "schema": 1,
+  "executable": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-gpu-gather\\build-native-6\\strehl.exe",
+    "sha256": "2fd0a1615989e262fbba61e0a1587a9b8f20ff4913d3969510e967ce9d9219d7",
+    "bytes": 17714688
+  },
+  "build_manifest": null,
+  "runner": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\scripts\\render-native.py",
+    "sha256": "e8ce03f59f2e9f029f81ccc399392afade3f8f11fedf874358183b1fa1e255df",
+    "bytes": 7194
+  },
+  "helper": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m193c-output-grid\\bounded-process.py",
+    "sha256": "47b9f8d848759eba61f055b9fdca1f8ac400f134dcd7636f0e0eaaa955704e0b",
+    "bytes": 12664
+  },
+  "harness": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\m12-scorecard\\m12-harness.py",
+    "sha256": "6cfb408992f37b225f102da4d62ba836f9c5b67c92bdd418ff460987866a1bb9",
+    "bytes": 117908
+  },
+  "commands": [
+    [
+      "render",
+      [
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-gpu-gather\\build-native-6\\strehl.exe",
+        "stack",
+        "D:\\personal\\macro\\requests\\misc-diagnostic\\uncapped-IC-chip-cpl",
+        "--merge",
+        "pyramid",
+        "--pyramid-bands",
+        "7",
+        "--pyramid-gate",
+        "2",
+        "--pyramid-exponent",
+        "2",
+        "--pyramid-sharpen",
+        "1.4",
+        "--pyramid-select",
+        "soft",
+        "--pyramid-base",
+        "mean",
+        "--srgb",
+        "--demosaic",
+        "--resampler",
+        "catmull-rom",
+        "--cover",
+        "crop",
+        "--out",
+        "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\quality-september25\\chip-before\\stack-master.tiff"
+      ]
+    ]
+  ],
+  "environment": {
+    "RAYON_NUM_THREADS": "8",
+    "STREHL_PYRAMID_WORKERS": "8",
+    "STREHL_ALIGN": "1",
+    "STREHL_WARPMAP": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\chip-baseline-1\\chip.warpmap.txt",
+    "STREHL_FULLRES_GATHER": "1",
+    "STREHL_DIRECT_PLANES": "rounded",
+    "STREHL_PROBE_GATHER": "green",
+    "STREHL_WARP_WRITEBACK": "parallel",
+    "STREHL_GPU_GATHER": "on",
+    "STREHL_GPU_SCHEDULE": "device",
+    "STREHL_GPU_GATHER_LOG": "on",
+    "STREHL_DEFECT": "off",
+    "STREHL_FINE_SUPPORT": "off",
+    "STREHL_CA_BEFORE_MHC": "off"
+  },
+  "removed_environment": [],
+  "existing_map": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\chip-baseline-1\\chip.warpmap.txt",
+    "sha256": "ce8534c9e65c5c761373bad87df5352c1c46319b7eaf7f7c91477ea61b4f4922",
+    "bytes": 41142
+  },
+  "frames": 299,
+  "settings": "Native rounded GPU gather, matching camera/lens profile, as-shot WB, automatic tone; explicit exposure only when supplied."
+}

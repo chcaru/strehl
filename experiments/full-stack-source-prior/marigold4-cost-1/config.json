@@ -1,0 +1,3445 @@
+{
+  "schema": 1,
+  "mode": "prior",
+  "stack_name": "ordered-raw",
+  "inputs": [
+    {
+      "index": 0,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00021.ARW",
+      "identity_name": "frame-00000.ARW",
+      "bytes": 37216256,
+      "sha256": "ee69aeebc4b5b001d208a6d0f87468e993f57b5645687dacc7077104a96a4a00"
+    },
+    {
+      "index": 1,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00022.ARW",
+      "identity_name": "frame-00001.ARW",
+      "bytes": 37220352,
+      "sha256": "bb58aefb9192b48cb8525edd9953dfbd5f4be2a8b65c447aad9efef1c555bc2d"
+    },
+    {
+      "index": 2,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00023.ARW",
+      "identity_name": "frame-00002.ARW",
+      "bytes": 37220352,
+      "sha256": "1d06bc8fae8bf49966ba24fef6e5face79eb7ae2079b74b7fe127d10ddb3042b"
+    },
+    {
+      "index": 3,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00024.ARW",
+      "identity_name": "frame-00003.ARW",
+      "bytes": 37220352,
+      "sha256": "803ae296a5d2124f7928698f47dc7494c0edfc66e32f667f81e888c3ef3df268"
+    },
+    {
+      "index": 4,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00025.ARW",
+      "identity_name": "frame-00004.ARW",
+      "bytes": 37224448,
+      "sha256": "b575927cef883264567f3ef85c83fe4e27bb881cc770feea9a1814fcf0c0f157"
+    },
+    {
+      "index": 5,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00026.ARW",
+      "identity_name": "frame-00005.ARW",
+      "bytes": 37228544,
+      "sha256": "0a85a190a33fb525c0ae3a5abca789b686f5b07f1a74721f56d4f2ea3647dcca"
+    },
+    {
+      "index": 6,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00027.ARW",
+      "identity_name": "frame-00006.ARW",
+      "bytes": 37228544,
+      "sha256": "c8a855d4b6bb236eb37c4c844dfdb2bf6297122170151f3568a5c023a99fff1d"
+    },
+    {
+      "index": 7,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00028.ARW",
+      "identity_name": "frame-00007.ARW",
+      "bytes": 37232640,
+      "sha256": "5fa24588a9c78bd74da241c9900f40307dd2c0650e7e653894616bba3608e0b8"
+    },
+    {
+      "index": 8,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00029.ARW",
+      "identity_name": "frame-00008.ARW",
+      "bytes": 37232640,
+      "sha256": "d8451324e404d0e7e2f7b62ac2669f19698d3fa10d9453e97a052a9fba9679f2"
+    },
+    {
+      "index": 9,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00030.ARW",
+      "identity_name": "frame-00009.ARW",
+      "bytes": 37232640,
+      "sha256": "c9860dfba1096a310c842d3d767f6c23db4ea7f48f6450c4cb553ab481f6e289"
+    },
+    {
+      "index": 10,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00031.ARW",
+      "identity_name": "frame-00010.ARW",
+      "bytes": 37232640,
+      "sha256": "d88d3f0784ddca19d8f30bf14197a06caf56901a60824826edd17d1eb04e3b02"
+    },
+    {
+      "index": 11,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00032.ARW",
+      "identity_name": "frame-00011.ARW",
+      "bytes": 37240832,
+      "sha256": "7089bb482065f37dbd9f2fa9d31ee79881afdf7f05efd56a0aa8939140205db9"
+    },
+    {
+      "index": 12,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00033.ARW",
+      "identity_name": "frame-00012.ARW",
+      "bytes": 37236736,
+      "sha256": "0cc17a890a1d65d697d38ca0d66ab9fbfd6757e5cac6698dcceed6b858a5cd7c"
+    },
+    {
+      "index": 13,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00034.ARW",
+      "identity_name": "frame-00013.ARW",
+      "bytes": 37240832,
+      "sha256": "3a9f125c7b940184189ed8d722dde83c309d710eec6479f04318edb36b0feceb"
+    },
+    {
+      "index": 14,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00035.ARW",
+      "identity_name": "frame-00014.ARW",
+      "bytes": 37244928,
+      "sha256": "552d15ced2c8dc690b7ee12553d0c9a0f685f55b96b2901bc5a0a2e0e3ed962f"
+    },
+    {
+      "index": 15,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00036.ARW",
+      "identity_name": "frame-00015.ARW",
+      "bytes": 37244928,
+      "sha256": "9c0aa0458f5d530d203c7f4068df768597d2070c32bbd71a41bd642ca406ebee"
+    },
+    {
+      "index": 16,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00037.ARW",
+      "identity_name": "frame-00016.ARW",
+      "bytes": 37249024,
+      "sha256": "fc1b43e36795cb8ee2cd86f6513f0cb89192bd50904892950fcc9665e84d7200"
+    },
+    {
+      "index": 17,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00038.ARW",
+      "identity_name": "frame-00017.ARW",
+      "bytes": 37253120,
+      "sha256": "0a8fc25ad5573d5150ee69e7676078737d809953b6863a9e2ee792a07489b016"
+    },
+    {
+      "index": 18,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00039.ARW",
+      "identity_name": "frame-00018.ARW",
+      "bytes": 37253120,
+      "sha256": "42a3d0d4fa2bf90977f919849ae8f431f9e1acadc7df4eea90ecbe375cfe15cf"
+    },
+    {
+      "index": 19,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00040.ARW",
+      "identity_name": "frame-00019.ARW",
+      "bytes": 37253120,
+      "sha256": "28f64deee8bd5bd10632d9e27745eea8c1dee01993d62ae24d9d2b42ac2e18af"
+    },
+    {
+      "index": 20,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00041.ARW",
+      "identity_name": "frame-00020.ARW",
+      "bytes": 37257216,
+      "sha256": "ebaf66d09c735a20d5bd785debe053f63b6825dd3a006d5ef56a88805d40c2b7"
+    },
+    {
+      "index": 21,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00042.ARW",
+      "identity_name": "frame-00021.ARW",
+      "bytes": 37265408,
+      "sha256": "7e654b484ea807012944b83f3f6436622feaabcf3e892139184210518abe4d0d"
+    },
+    {
+      "index": 22,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00043.ARW",
+      "identity_name": "frame-00022.ARW",
+      "bytes": 37269504,
+      "sha256": "e21e18479d6c3c2f3f9696ba994659b7d09d32342f587875842ee4dfe50a7dd0"
+    },
+    {
+      "index": 23,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00044.ARW",
+      "identity_name": "frame-00023.ARW",
+      "bytes": 37273600,
+      "sha256": "2f5e0f9443455aeb3fe45f10a2f80b334f49ed04b00d93dfbe148f2c53729502"
+    },
+    {
+      "index": 24,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00045.ARW",
+      "identity_name": "frame-00024.ARW",
+      "bytes": 37277696,
+      "sha256": "efd7241fda903fd7b800ab5054ac3d0e724fe52b786f34121d85eb5129b370a6"
+    },
+    {
+      "index": 25,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00046.ARW",
+      "identity_name": "frame-00025.ARW",
+      "bytes": 37281792,
+      "sha256": "03f2c51c1d078e511bd9f51d487109fecab6d76fe412bb072f7aed68633c9e8a"
+    },
+    {
+      "index": 26,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00047.ARW",
+      "identity_name": "frame-00026.ARW",
+      "bytes": 37281792,
+      "sha256": "63d73c1c311677912c306a2b07216843be708f7ea1109212042aa437bbc73954"
+    },
+    {
+      "index": 27,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00048.ARW",
+      "identity_name": "frame-00027.ARW",
+      "bytes": 37285888,
+      "sha256": "e1912c2f3afac8e9ef09854a970a2f2e971664b186e17fb4cf1b65470dab9a3b"
+    },
+    {
+      "index": 28,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00049.ARW",
+      "identity_name": "frame-00028.ARW",
+      "bytes": 37285888,
+      "sha256": "f7690853ec00aadadc117c87d562dd2b659c9e6c9b47e87de83519293d4f1db6"
+    },
+    {
+      "index": 29,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00050.ARW",
+      "identity_name": "frame-00029.ARW",
+      "bytes": 37294080,
+      "sha256": "194e59a2182f2d570c3211aa4f740aea82b106af12a73d6071d352e33654eeea"
+    },
+    {
+      "index": 30,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00051.ARW",
+      "identity_name": "frame-00030.ARW",
+      "bytes": 37294080,
+      "sha256": "2b7b06c7070ba715bee5b376e24b8a1b91f6b0adc487ac80f6c69d6efbe98425"
+    },
+    {
+      "index": 31,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00052.ARW",
+      "identity_name": "frame-00031.ARW",
+      "bytes": 37294080,
+      "sha256": "f2f6c2b6b231ab43eacc516e86e056b9f09fc36b827373f95844eb896b7cf0ab"
+    },
+    {
+      "index": 32,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00053.ARW",
+      "identity_name": "frame-00032.ARW",
+      "bytes": 37302272,
+      "sha256": "b0516cdd17865fb106d90225c81cf7cd51a6271b7e97307345ce318182cdaef1"
+    },
+    {
+      "index": 33,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00054.ARW",
+      "identity_name": "frame-00033.ARW",
+      "bytes": 37302272,
+      "sha256": "06c873f26b1172391b1e54de752dbef39aa92f9346cb9692176684032a608668"
+    },
+    {
+      "index": 34,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00055.ARW",
+      "identity_name": "frame-00034.ARW",
+      "bytes": 37310464,
+      "sha256": "55717762bc98da94c181779da9dffb5ca73c57e8056ddf599f9aed25cbae4307"
+    },
+    {
+      "index": 35,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00056.ARW",
+      "identity_name": "frame-00035.ARW",
+      "bytes": 37314560,
+      "sha256": "9522f74ece391a72a9e984ec120480b25ac201b523527b89dd0289edb64c2b70"
+    },
+    {
+      "index": 36,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00057.ARW",
+      "identity_name": "frame-00036.ARW",
+      "bytes": 37318656,
+      "sha256": "a2b5731a959574c0641dbd4b85e01615521f5c6d287ad9fd6970cfed1a6e33e8"
+    },
+    {
+      "index": 37,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00058.ARW",
+      "identity_name": "frame-00037.ARW",
+      "bytes": 37322752,
+      "sha256": "edefdbf25f3494362948bb6680554572f075983e9dc942974236a4f9fe82816e"
+    },
+    {
+      "index": 38,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00059.ARW",
+      "identity_name": "frame-00038.ARW",
+      "bytes": 37326848,
+      "sha256": "679ca3f423517d23858af16e85de9cc69892466e7868b4c247082dc5cd1c08ea"
+    },
+    {
+      "index": 39,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00060.ARW",
+      "identity_name": "frame-00039.ARW",
+      "bytes": 37330944,
+      "sha256": "6afae167aed3094e86ca57e675c2fe09242c9c3d8de021474cd7a769b1600ea5"
+    },
+    {
+      "index": 40,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00061.ARW",
+      "identity_name": "frame-00040.ARW",
+      "bytes": 37330944,
+      "sha256": "18dd907c40a0174f3b424f1cf803d14730c7b65cdb60e226c3011f6bde10e623"
+    },
+    {
+      "index": 41,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00062.ARW",
+      "identity_name": "frame-00041.ARW",
+      "bytes": 37335040,
+      "sha256": "b59c6e54fbafc113fa05c0ad692f3bd622215390131ee0dbc9a1979a8d3a17b8"
+    },
+    {
+      "index": 42,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00063.ARW",
+      "identity_name": "frame-00042.ARW",
+      "bytes": 37339136,
+      "sha256": "6c552381246e80a00f019cbec5e85f728df2c99d14ca26c99bdf1461654a18b9"
+    },
+    {
+      "index": 43,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00064.ARW",
+      "identity_name": "frame-00043.ARW",
+      "bytes": 37339136,
+      "sha256": "ddd1a0558f7b986d785b288c8eb96295ebfbd6d13412441ca2d56288356ca988"
+    },
+    {
+      "index": 44,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00065.ARW",
+      "identity_name": "frame-00044.ARW",
+      "bytes": 37347328,
+      "sha256": "97835d1d83a0806f87363995394e85b1709d6b20791bd758403bf353c0d5e3c2"
+    },
+    {
+      "index": 45,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00066.ARW",
+      "identity_name": "frame-00045.ARW",
+      "bytes": 37347328,
+      "sha256": "1ab7599486c6f607c42ab334d81ae14bb3eb102495aba7dec5632d36317f972e"
+    },
+    {
+      "index": 46,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00067.ARW",
+      "identity_name": "frame-00046.ARW",
+      "bytes": 37347328,
+      "sha256": "4fbe91afca27d5d9b09c5068cd400a1529a483095003c04483c030cb9e9ad89f"
+    },
+    {
+      "index": 47,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00068.ARW",
+      "identity_name": "frame-00047.ARW",
+      "bytes": 37351424,
+      "sha256": "51da3b98a2a1af0f23399a09abea44e6f650115594280a630bbc17ccfcc330c9"
+    },
+    {
+      "index": 48,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00069.ARW",
+      "identity_name": "frame-00048.ARW",
+      "bytes": 37355520,
+      "sha256": "848eebd4af2d0b4dd3b54ae874c6583b5bec983ae53b8781eb04eda7e6546aa5"
+    },
+    {
+      "index": 49,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00070.ARW",
+      "identity_name": "frame-00049.ARW",
+      "bytes": 37355520,
+      "sha256": "325fcb0377eb8530db66f0fb4c8bfa7b754d05597f5a1aebeb89791eb18ce1b8"
+    },
+    {
+      "index": 50,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00071.ARW",
+      "identity_name": "frame-00050.ARW",
+      "bytes": 37363712,
+      "sha256": "fb8a964d0726269b999538a8a4e5a3e4f6c46edd2be30c363dd8efde751d3fde"
+    },
+    {
+      "index": 51,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00072.ARW",
+      "identity_name": "frame-00051.ARW",
+      "bytes": 37367808,
+      "sha256": "843a7ab9f8ef535bd9ad77beb02f5a636a02ef38cabfc1adf3b122d0750556ec"
+    },
+    {
+      "index": 52,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00073.ARW",
+      "identity_name": "frame-00052.ARW",
+      "bytes": 37367808,
+      "sha256": "95a04349a605044f89508ca24fa3faf78fccea0f7aff632c898b5dd7a6cd2601"
+    },
+    {
+      "index": 53,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00074.ARW",
+      "identity_name": "frame-00053.ARW",
+      "bytes": 37371904,
+      "sha256": "3bea9c2827c37d6e3251341ed610bde7f92f1d088b4f18b1076c290d206d8a79"
+    },
+    {
+      "index": 54,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00075.ARW",
+      "identity_name": "frame-00054.ARW",
+      "bytes": 37376000,
+      "sha256": "16c2aab684c06d2dad45dab817e102060430cf125909f87fc541a709dfafec7a"
+    },
+    {
+      "index": 55,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00076.ARW",
+      "identity_name": "frame-00055.ARW",
+      "bytes": 37376000,
+      "sha256": "51c61cb63ce799a87ad0985fb74063214a67861c307df350ca8adecaf5c4c94d"
+    },
+    {
+      "index": 56,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00077.ARW",
+      "identity_name": "frame-00056.ARW",
+      "bytes": 37376000,
+      "sha256": "3cadf6eb01cc9b7fad6fe746bb2f5486d20eaeaa31cd23af2a9def537d50a263"
+    },
+    {
+      "index": 57,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00078.ARW",
+      "identity_name": "frame-00057.ARW",
+      "bytes": 37380096,
+      "sha256": "0a4ddc33295531bc5e893a06f92b9cfcc696b6cb0b2a4be2c04290aa867c3911"
+    },
+    {
+      "index": 58,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00079.ARW",
+      "identity_name": "frame-00058.ARW",
+      "bytes": 37376000,
+      "sha256": "664db6af772c02c43b83cae047023b2e44c85785a1ac5d511f41dc1eeeae59f7"
+    },
+    {
+      "index": 59,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00080.ARW",
+      "identity_name": "frame-00059.ARW",
+      "bytes": 37380096,
+      "sha256": "3d70ccdcf1e226e4ee030c7430c8b04a5b57234ea361e0fcbd102807cb0ffbd5"
+    },
+    {
+      "index": 60,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00081.ARW",
+      "identity_name": "frame-00060.ARW",
+      "bytes": 37380096,
+      "sha256": "eb47c16c00d0ff1ea05ea3c75b14bdb38df338c00d5318cdbb25b506c6a563a8"
+    },
+    {
+      "index": 61,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00082.ARW",
+      "identity_name": "frame-00061.ARW",
+      "bytes": 37384192,
+      "sha256": "b75c110c8be649a8e89ef68603c9fc85ccf5edcbd614cf12b6c17660a0f489f5"
+    },
+    {
+      "index": 62,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00083.ARW",
+      "identity_name": "frame-00062.ARW",
+      "bytes": 37384192,
+      "sha256": "8ad6027fcadc61d85b2ec7c4bc5fec78f658f7c5b945d390ea1a459249f77db0"
+    },
+    {
+      "index": 63,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00084.ARW",
+      "identity_name": "frame-00063.ARW",
+      "bytes": 37384192,
+      "sha256": "8863d1dccbb27b40d37f63a7e7cae3161a334e95b1340a7857ed74b572949a31"
+    },
+    {
+      "index": 64,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00085.ARW",
+      "identity_name": "frame-00064.ARW",
+      "bytes": 37388288,
+      "sha256": "db885dcaa2d6963f45616aaffcce840395407dcf6d9b7eea6c0b7193641d4d18"
+    },
+    {
+      "index": 65,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00086.ARW",
+      "identity_name": "frame-00065.ARW",
+      "bytes": 37388288,
+      "sha256": "2f475feee5afd0ff1f773cd0a4fae2c134fe738e48bc50e88d4c5b8d05309c1a"
+    },
+    {
+      "index": 66,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00087.ARW",
+      "identity_name": "frame-00066.ARW",
+      "bytes": 37388288,
+      "sha256": "9e11c533181bb9c75db5ea962d8d72f91f46d0906a51ab413694330218df17aa"
+    },
+    {
+      "index": 67,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00088.ARW",
+      "identity_name": "frame-00067.ARW",
+      "bytes": 37388288,
+      "sha256": "528aab9b6113751284229ebf6c4aafe9ad04ec0f8cbd14f2949f0343e98068f7"
+    },
+    {
+      "index": 68,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00089.ARW",
+      "identity_name": "frame-00068.ARW",
+      "bytes": 37388288,
+      "sha256": "042cd13a70b6065152eb52d12870e1281922f869239280491dfeebe5be5ca91d"
+    },
+    {
+      "index": 69,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00090.ARW",
+      "identity_name": "frame-00069.ARW",
+      "bytes": 37392384,
+      "sha256": "04796437af4cda7b48a47e0c30222436f008d7736c3cda9df43c5e145537e2ae"
+    },
+    {
+      "index": 70,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00091.ARW",
+      "identity_name": "frame-00070.ARW",
+      "bytes": 37392384,
+      "sha256": "0a8450478c5534d5c356b23a192ee40786843427c2fd846b880e12832d097eb8"
+    },
+    {
+      "index": 71,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00092.ARW",
+      "identity_name": "frame-00071.ARW",
+      "bytes": 37396480,
+      "sha256": "1dd0f5195e6f7888b56cf4887ea80c57865d68803ede14dba55b68353ae07ac0"
+    },
+    {
+      "index": 72,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00093.ARW",
+      "identity_name": "frame-00072.ARW",
+      "bytes": 37392384,
+      "sha256": "4dfa56033b79fb342b4248f3bec4a247bfdb19a9736ab419ee0174bfc3c2e5eb"
+    },
+    {
+      "index": 73,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00094.ARW",
+      "identity_name": "frame-00073.ARW",
+      "bytes": 37396480,
+      "sha256": "f22cf8671a0a1f7723d178b82a894a7a9db966cda81bf2caaee775cb40783a21"
+    },
+    {
+      "index": 74,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00095.ARW",
+      "identity_name": "frame-00074.ARW",
+      "bytes": 37392384,
+      "sha256": "ee9dbdc8d4512a3fdc5e8fb5d9e502b4da74c3dea911b7eed50579d83f6f6b3d"
+    },
+    {
+      "index": 75,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00096.ARW",
+      "identity_name": "frame-00075.ARW",
+      "bytes": 37392384,
+      "sha256": "eefa98546f85bc4a7dc8017b4fb636a44bd82c8575a88edcd092346a9d6474a7"
+    },
+    {
+      "index": 76,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00097.ARW",
+      "identity_name": "frame-00076.ARW",
+      "bytes": 37396480,
+      "sha256": "5b37b3e262e909eec00c6641e90fbbecb686b98335c1899d63e10ffcea360cf0"
+    },
+    {
+      "index": 77,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00098.ARW",
+      "identity_name": "frame-00077.ARW",
+      "bytes": 37400576,
+      "sha256": "551d1ba0f2159cac2b948ced9a597751f80381f7dcbae24f94a0b786cd3f7c5c"
+    },
+    {
+      "index": 78,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00099.ARW",
+      "identity_name": "frame-00078.ARW",
+      "bytes": 37400576,
+      "sha256": "8d0b33a9842d32dc8fb4e2c5a123f1dea6a38408b8c43f3fc15353d0f4ee56a0"
+    },
+    {
+      "index": 79,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00100.ARW",
+      "identity_name": "frame-00079.ARW",
+      "bytes": 37396480,
+      "sha256": "1a2e901ec5b7eba3f134e345b9448eb4cf59e86d8fd73820619d4d1eff908a69"
+    },
+    {
+      "index": 80,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00101.ARW",
+      "identity_name": "frame-00080.ARW",
+      "bytes": 37400576,
+      "sha256": "c320f7cef8ce4c2c07d39f4667db4942820694e8028cd84b85eeeb8835eec563"
+    },
+    {
+      "index": 81,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00102.ARW",
+      "identity_name": "frame-00081.ARW",
+      "bytes": 37404672,
+      "sha256": "04bdaee8d7e4c59f0f06a1fa430bd23f998ee839c5352f6833c4f71045443fd4"
+    },
+    {
+      "index": 82,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00103.ARW",
+      "identity_name": "frame-00082.ARW",
+      "bytes": 37404672,
+      "sha256": "b6bed8ad8c82a249e590fe0597a5c7eff483efe33a379a51d3512a489936e211"
+    },
+    {
+      "index": 83,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00104.ARW",
+      "identity_name": "frame-00083.ARW",
+      "bytes": 37408768,
+      "sha256": "a627dd901731e97572a1f960609d053bfcdb7e5feb5b9377293bcf7c202f1a7f"
+    },
+    {
+      "index": 84,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00105.ARW",
+      "identity_name": "frame-00084.ARW",
+      "bytes": 37404672,
+      "sha256": "a2269fcda9b70637638df04ebfd104c1a4cd739bbc621e5f2dbea6aa0dca2616"
+    },
+    {
+      "index": 85,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00106.ARW",
+      "identity_name": "frame-00085.ARW",
+      "bytes": 37412864,
+      "sha256": "afd2da15a1837fa419d1bd66a5bdf5db308e6056b9956693960668697c18f641"
+    },
+    {
+      "index": 86,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00107.ARW",
+      "identity_name": "frame-00086.ARW",
+      "bytes": 37412864,
+      "sha256": "8dd2b99b5fd267dd2b3c9e5c511327e5a565c27d247c2e46ff3c6f36c7ff0ac3"
+    },
+    {
+      "index": 87,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00108.ARW",
+      "identity_name": "frame-00087.ARW",
+      "bytes": 37412864,
+      "sha256": "6101b8f7681c535cf95dd0a1be105ef099650d3c40a367f00cab4980c815bbfa"
+    },
+    {
+      "index": 88,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00109.ARW",
+      "identity_name": "frame-00088.ARW",
+      "bytes": 37412864,
+      "sha256": "8b7422f323a8e672333b9513a782782bf3e4c79806eab2660a02e33ea50d906b"
+    },
+    {
+      "index": 89,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00110.ARW",
+      "identity_name": "frame-00089.ARW",
+      "bytes": 37416960,
+      "sha256": "3c55ddbd7fc4696bfead9ec1df3488547604d95f4bd42b3db668d702c800208e"
+    },
+    {
+      "index": 90,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00111.ARW",
+      "identity_name": "frame-00090.ARW",
+      "bytes": 37416960,
+      "sha256": "84557c4fc2841d58e2591337d76445e69270ba870df46745c8182062d1e89b96"
+    },
+    {
+      "index": 91,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00112.ARW",
+      "identity_name": "frame-00091.ARW",
+      "bytes": 37412864,
+      "sha256": "206792fcb00bd4a81eacb960c1eea7c18ad16b648f2123c5512493d6ec51bf35"
+    },
+    {
+      "index": 92,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00113.ARW",
+      "identity_name": "frame-00092.ARW",
+      "bytes": 37421056,
+      "sha256": "d233d69d56626a68c04427dab22496c4e3517441c7b11b02d1fda7815c80437e"
+    },
+    {
+      "index": 93,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00114.ARW",
+      "identity_name": "frame-00093.ARW",
+      "bytes": 37421056,
+      "sha256": "43ce0cbf07f3ebbaf9b6ff03fac79662a5c494196460f2d79c5bb4947f5553d0"
+    },
+    {
+      "index": 94,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00115.ARW",
+      "identity_name": "frame-00094.ARW",
+      "bytes": 37421056,
+      "sha256": "20307345b892ddd660e2174045cf85da20417a4acde1939fff590b72da7874c8"
+    },
+    {
+      "index": 95,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00116.ARW",
+      "identity_name": "frame-00095.ARW",
+      "bytes": 37425152,
+      "sha256": "f812710a4218a07bdc7808f6b794d1e8ff6002acdd2521f997ffd407ada1c261"
+    },
+    {
+      "index": 96,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00117.ARW",
+      "identity_name": "frame-00096.ARW",
+      "bytes": 37425152,
+      "sha256": "54e800d6c3a8f4493555eee792b77ab17904cdb8587c2d8a239773f64b021cee"
+    },
+    {
+      "index": 97,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00118.ARW",
+      "identity_name": "frame-00097.ARW",
+      "bytes": 37425152,
+      "sha256": "b24b7331ea0eb2db8a586ecdd03f00053e8f719c65638b4ca6afee933b4dcf2e"
+    },
+    {
+      "index": 98,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00119.ARW",
+      "identity_name": "frame-00098.ARW",
+      "bytes": 37425152,
+      "sha256": "88ee7bdbb691c91497e2fa771c3026f77c6eb9b3134e12ed10e2a667133e34b3"
+    },
+    {
+      "index": 99,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00120.ARW",
+      "identity_name": "frame-00099.ARW",
+      "bytes": 37429248,
+      "sha256": "b8c284251b2294b297b03260e8b2ff2285261081dc9df295d0863e60e0522327"
+    },
+    {
+      "index": 100,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00121.ARW",
+      "identity_name": "frame-00100.ARW",
+      "bytes": 37433344,
+      "sha256": "a1a660bd9e711198f3796d7b62bd63e93de1224ac61910c0e839bd0a315e18c9"
+    },
+    {
+      "index": 101,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00122.ARW",
+      "identity_name": "frame-00101.ARW",
+      "bytes": 37429248,
+      "sha256": "b94025765400062cc9033cb78bc546956f8a4516c2a79e4b0077f9d954d1934e"
+    },
+    {
+      "index": 102,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00123.ARW",
+      "identity_name": "frame-00102.ARW",
+      "bytes": 37433344,
+      "sha256": "050a71fbd5a8be7c42a10f8b15cdc3a3d2dc780ab95e8d34c1128d1a35af3d7a"
+    },
+    {
+      "index": 103,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00124.ARW",
+      "identity_name": "frame-00103.ARW",
+      "bytes": 37429248,
+      "sha256": "364773c1da151c6c54b4635871ed8121ff7f391aa4e047497b7e8feb8553ce0d"
+    },
+    {
+      "index": 104,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00125.ARW",
+      "identity_name": "frame-00104.ARW",
+      "bytes": 37433344,
+      "sha256": "79a2581a8aa7aebbb69389e8b55fede9e8cb728977298ec8ce8bb87e8d60f484"
+    },
+    {
+      "index": 105,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00126.ARW",
+      "identity_name": "frame-00105.ARW",
+      "bytes": 37437440,
+      "sha256": "24eb7c891879af4d7294429345c3d8c913266c587793ead066c356d82e2d9879"
+    },
+    {
+      "index": 106,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00127.ARW",
+      "identity_name": "frame-00106.ARW",
+      "bytes": 37437440,
+      "sha256": "5cfbb2ef8b3e42ef4bf688c3b06eb01d4929fbba674714ec5d02ff59ff2d6ba2"
+    },
+    {
+      "index": 107,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00128.ARW",
+      "identity_name": "frame-00107.ARW",
+      "bytes": 37433344,
+      "sha256": "f83c51edbaa52738a1d84f6a4a83784ae1e6a3558b6c66232462a6942c1d1b18"
+    },
+    {
+      "index": 108,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00129.ARW",
+      "identity_name": "frame-00108.ARW",
+      "bytes": 37433344,
+      "sha256": "b8d7b62cceb39b5bb2460fabf9b3e76b8f85d41060cdc958ed48bcb9d06da143"
+    },
+    {
+      "index": 109,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00130.ARW",
+      "identity_name": "frame-00109.ARW",
+      "bytes": 37437440,
+      "sha256": "86bd14d41a4878e80ebc452bfed7f8a16e22b47b2d8c9127fcfcc2e88d64a2c5"
+    },
+    {
+      "index": 110,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00131.ARW",
+      "identity_name": "frame-00110.ARW",
+      "bytes": 37437440,
+      "sha256": "e47339f0339862fd419b13f26360fff9d0dc3476de5e1346ed38ad881e9dd087"
+    },
+    {
+      "index": 111,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00132.ARW",
+      "identity_name": "frame-00111.ARW",
+      "bytes": 37437440,
+      "sha256": "82287d0792212b57ba1b362552a469537b4c10564ea4e27f96a249386b5b27a0"
+    },
+    {
+      "index": 112,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00133.ARW",
+      "identity_name": "frame-00112.ARW",
+      "bytes": 37437440,
+      "sha256": "d61479b87463522b43dea20cddd94c7af15b4080545b993794e799f15da028c7"
+    },
+    {
+      "index": 113,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00134.ARW",
+      "identity_name": "frame-00113.ARW",
+      "bytes": 37437440,
+      "sha256": "7fab5825a3e7729d38aa9d807317ec296d213fffd8747ee049999c3db111015d"
+    },
+    {
+      "index": 114,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00135.ARW",
+      "identity_name": "frame-00114.ARW",
+      "bytes": 37433344,
+      "sha256": "bb7fd8f095e18067e2249e4c5ddd57009055f1cec5b2067647f8780e8528574a"
+    },
+    {
+      "index": 115,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00136.ARW",
+      "identity_name": "frame-00115.ARW",
+      "bytes": 37437440,
+      "sha256": "bfc001c4e8d3598246c06d29ad6c2f2adc89afe7db77d4fdbe4fd2e9e6ca3604"
+    },
+    {
+      "index": 116,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00137.ARW",
+      "identity_name": "frame-00116.ARW",
+      "bytes": 37437440,
+      "sha256": "7c04af9edb19a7f01b78d2effc29d6531267c7621f4cdbbe35f1415f61966d57"
+    },
+    {
+      "index": 117,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00138.ARW",
+      "identity_name": "frame-00117.ARW",
+      "bytes": 37433344,
+      "sha256": "7d4adbcb321a24ed8cb48b521b77f73d9eaf6c13d997768e0dc01c872b1bbb9c"
+    },
+    {
+      "index": 118,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00139.ARW",
+      "identity_name": "frame-00118.ARW",
+      "bytes": 37433344,
+      "sha256": "6fa8d7ba020987be2d2177dbf19b0243cf61e01122d80e3695a015652f887638"
+    },
+    {
+      "index": 119,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00140.ARW",
+      "identity_name": "frame-00119.ARW",
+      "bytes": 37433344,
+      "sha256": "0320d817f8e8836f547412f38a1b24ae25169be9ff667add287ef18a3a1e84cf"
+    },
+    {
+      "index": 120,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00141.ARW",
+      "identity_name": "frame-00120.ARW",
+      "bytes": 37433344,
+      "sha256": "ea7c7a4339c153c43bdd44ba8b96d19c9d1a59b8d8e32edcd60e42c10e444e51"
+    },
+    {
+      "index": 121,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00142.ARW",
+      "identity_name": "frame-00121.ARW",
+      "bytes": 37437440,
+      "sha256": "b54279b5d5b0fdc53c3119915fe162d5133a8cfcd512671336740ef432e0269b"
+    },
+    {
+      "index": 122,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00143.ARW",
+      "identity_name": "frame-00122.ARW",
+      "bytes": 37437440,
+      "sha256": "276fc075c419fdb2bf412ba6c3a466d39981a5bb7a4b66c1549d8af8f7b3f131"
+    },
+    {
+      "index": 123,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00144.ARW",
+      "identity_name": "frame-00123.ARW",
+      "bytes": 37433344,
+      "sha256": "e07b1948dca9f2295b0b0453211c12c61345f4ca93dee19262e30494155c0875"
+    },
+    {
+      "index": 124,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00145.ARW",
+      "identity_name": "frame-00124.ARW",
+      "bytes": 37437440,
+      "sha256": "ee5dcf15e36fc69f99fc2ecd309326fca746ffc4c2f7dabd7c4785b522c50ed2"
+    },
+    {
+      "index": 125,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00146.ARW",
+      "identity_name": "frame-00125.ARW",
+      "bytes": 37433344,
+      "sha256": "2e6ac8d4b74a79dff66c59dbe29a19d7ce0aac764286938e2a9e9b9f4145e5af"
+    },
+    {
+      "index": 126,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00147.ARW",
+      "identity_name": "frame-00126.ARW",
+      "bytes": 37441536,
+      "sha256": "b4a11d4fd2afec6fcc8825650d92e40ced39ee4478432126180e5433b2421f32"
+    },
+    {
+      "index": 127,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00148.ARW",
+      "identity_name": "frame-00127.ARW",
+      "bytes": 37441536,
+      "sha256": "784b4a86b5181ce5acfdf51e680e8906cdce6c910a13af74bd8c6ca85d540056"
+    },
+    {
+      "index": 128,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00149.ARW",
+      "identity_name": "frame-00128.ARW",
+      "bytes": 37441536,
+      "sha256": "37d68cbc470ad3d91d53cc649b25d6d42016dd9276743cc9f4a6c4655db4e953"
+    },
+    {
+      "index": 129,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00150.ARW",
+      "identity_name": "frame-00129.ARW",
+      "bytes": 37441536,
+      "sha256": "9a878880c1be198410f72a8621fcad4bfe7be64498cc2b0c7c35dfe1efb9ab01"
+    },
+    {
+      "index": 130,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00151.ARW",
+      "identity_name": "frame-00130.ARW",
+      "bytes": 37445632,
+      "sha256": "154c3c81ad41c6934f3cbce2463677a09e43f5244917a7041d3462b1ffb3c0bd"
+    },
+    {
+      "index": 131,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00152.ARW",
+      "identity_name": "frame-00131.ARW",
+      "bytes": 37441536,
+      "sha256": "912121368262f78cbcabf4c2559420de876c5a4921b86f19618ac5d32fc0ecc2"
+    },
+    {
+      "index": 132,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00153.ARW",
+      "identity_name": "frame-00132.ARW",
+      "bytes": 37441536,
+      "sha256": "163b5b24f4ee0170794e0c046a663d2edbb2afedbfa3f084a8a5a7642792d32c"
+    },
+    {
+      "index": 133,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00154.ARW",
+      "identity_name": "frame-00133.ARW",
+      "bytes": 37441536,
+      "sha256": "c65d3b15e8499f8c7070bec2b1f9bbb7a2b9228b1d004fb784ec742e55cd03a0"
+    },
+    {
+      "index": 134,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00155.ARW",
+      "identity_name": "frame-00134.ARW",
+      "bytes": 37441536,
+      "sha256": "e6d4f24872b8d494fce432cf24b60e9717eaa54a4c638392e725b2370101c04d"
+    },
+    {
+      "index": 135,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00156.ARW",
+      "identity_name": "frame-00135.ARW",
+      "bytes": 37441536,
+      "sha256": "96e95971077b22f484393929a2e77f910bdb1443bf8bccea4a5a487bc32aa572"
+    },
+    {
+      "index": 136,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00157.ARW",
+      "identity_name": "frame-00136.ARW",
+      "bytes": 37445632,
+      "sha256": "f38c624abf8fec7e20c32b82cae68b66055b2a40b42f737a72e44878fdc54acd"
+    },
+    {
+      "index": 137,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00158.ARW",
+      "identity_name": "frame-00137.ARW",
+      "bytes": 37441536,
+      "sha256": "32452932eb6d43e7f913216e9fd2789f3db443198dc87ff50c3fa87f90b61cf9"
+    },
+    {
+      "index": 138,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00159.ARW",
+      "identity_name": "frame-00138.ARW",
+      "bytes": 37449728,
+      "sha256": "2dd9e7e159a0ea18dba3cd92e0e074c4754ce204c3207d2f131c44265c7e6c09"
+    },
+    {
+      "index": 139,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00160.ARW",
+      "identity_name": "frame-00139.ARW",
+      "bytes": 37449728,
+      "sha256": "25d0d522395a23a514c5ade2f06c9ec0d9232b80b52e0537bae6feaa4213a404"
+    },
+    {
+      "index": 140,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00161.ARW",
+      "identity_name": "frame-00140.ARW",
+      "bytes": 37449728,
+      "sha256": "f9fd5d6df91529da4e25754dbf947295c55fe34d9473ebfa7418a841d8db5fad"
+    },
+    {
+      "index": 141,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00162.ARW",
+      "identity_name": "frame-00141.ARW",
+      "bytes": 37453824,
+      "sha256": "7a41c51749e6b5f3909ccd47ff3457b272570677d59656ca1204df1c08d28c03"
+    },
+    {
+      "index": 142,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00163.ARW",
+      "identity_name": "frame-00142.ARW",
+      "bytes": 37453824,
+      "sha256": "9f7add6cbb156bb8b3c227b04af265b4c1f43939f426a974323874842f6dbb1f"
+    },
+    {
+      "index": 143,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00164.ARW",
+      "identity_name": "frame-00143.ARW",
+      "bytes": 37453824,
+      "sha256": "8f39e73b534b53c187f3393eed72fec2d7805055c14984477cbefac0a76e46d9"
+    },
+    {
+      "index": 144,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00165.ARW",
+      "identity_name": "frame-00144.ARW",
+      "bytes": 37453824,
+      "sha256": "609f4b9143fc98efea34ed322c293a1956ae73d032a4287a8ef25e8e3592028c"
+    },
+    {
+      "index": 145,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00166.ARW",
+      "identity_name": "frame-00145.ARW",
+      "bytes": 37453824,
+      "sha256": "a8299e67ee0b9831d08dd12408f7be5d2ad3f5c17fbc35bab2490f9c98390115"
+    },
+    {
+      "index": 146,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00167.ARW",
+      "identity_name": "frame-00146.ARW",
+      "bytes": 37457920,
+      "sha256": "bc9e44972f75888f176a444f2482ea6841b4e52bb266caa2c13c51212109ba0e"
+    },
+    {
+      "index": 147,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00168.ARW",
+      "identity_name": "frame-00147.ARW",
+      "bytes": 37457920,
+      "sha256": "1aee7c22d96bf2c17f643287ee5a4b8b2d688e8653c4e4d456391a98c29a1942"
+    },
+    {
+      "index": 148,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00169.ARW",
+      "identity_name": "frame-00148.ARW",
+      "bytes": 37453824,
+      "sha256": "530d959440452319fb9b5d533ef0cc69cbe8163b423f77744fe676654451f0b1"
+    },
+    {
+      "index": 149,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00170.ARW",
+      "identity_name": "frame-00149.ARW",
+      "bytes": 37453824,
+      "sha256": "49f31d1f031c2c4d90e546831fbe3b5ca3a902945b282ce32ae1b3b43466d83c"
+    },
+    {
+      "index": 150,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00171.ARW",
+      "identity_name": "frame-00150.ARW",
+      "bytes": 37453824,
+      "sha256": "0f0d3738400b47d31b25bac32a372db200f7be1abda259df256c6e95884a7083"
+    },
+    {
+      "index": 151,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00172.ARW",
+      "identity_name": "frame-00151.ARW",
+      "bytes": 37453824,
+      "sha256": "bd34384e4b0f219fb9a39f3a2450282a7fa676c0b5782f05293fb0589d421e3b"
+    },
+    {
+      "index": 152,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00173.ARW",
+      "identity_name": "frame-00152.ARW",
+      "bytes": 37449728,
+      "sha256": "fc268680728e15ee76c2fb117046a5a3282e1f4fc12b3c928a8c7456ef012d38"
+    },
+    {
+      "index": 153,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00174.ARW",
+      "identity_name": "frame-00153.ARW",
+      "bytes": 37453824,
+      "sha256": "6670459109db2dece8ceca03ac52d4932105e369e12669d704479b00655483d6"
+    },
+    {
+      "index": 154,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00175.ARW",
+      "identity_name": "frame-00154.ARW",
+      "bytes": 37453824,
+      "sha256": "8138759624a2d138e03bb1d295b9e27910a14b7e4b03ef1c36ea29715ffe66e2"
+    },
+    {
+      "index": 155,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00176.ARW",
+      "identity_name": "frame-00155.ARW",
+      "bytes": 37449728,
+      "sha256": "898a6d01ac2aca482909918ed85e04e09d341216150b957b4ec7150630f4c5fe"
+    },
+    {
+      "index": 156,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00177.ARW",
+      "identity_name": "frame-00156.ARW",
+      "bytes": 37453824,
+      "sha256": "6cf18bd324bb35cf3b52146fbfb38d054a1fbf07f6d1d479d193f149c7df2b73"
+    },
+    {
+      "index": 157,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00178.ARW",
+      "identity_name": "frame-00157.ARW",
+      "bytes": 37453824,
+      "sha256": "34626acb72272b35d5461d58a49211666c625279e957513d5e6880f7aef84511"
+    },
+    {
+      "index": 158,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00179.ARW",
+      "identity_name": "frame-00158.ARW",
+      "bytes": 37453824,
+      "sha256": "8618e8157dc95f64e92b5aec3c7177006b9787e876a109bb352e26eb7581ba1a"
+    },
+    {
+      "index": 159,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00180.ARW",
+      "identity_name": "frame-00159.ARW",
+      "bytes": 37453824,
+      "sha256": "49b9eb994b1356bef802c371baab799560d236008ec3eb1837afd6d093eb64c0"
+    },
+    {
+      "index": 160,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00181.ARW",
+      "identity_name": "frame-00160.ARW",
+      "bytes": 37453824,
+      "sha256": "36cb3444e55d8ff1da392e199789d9966c4cffede8847e9fbf00420f45dc0ef3"
+    },
+    {
+      "index": 161,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00182.ARW",
+      "identity_name": "frame-00161.ARW",
+      "bytes": 37457920,
+      "sha256": "d837bd957a5fd35a1b477a8047cdfce503a172595107fdd6590bd85dfbebab4b"
+    },
+    {
+      "index": 162,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00183.ARW",
+      "identity_name": "frame-00162.ARW",
+      "bytes": 37453824,
+      "sha256": "f7cb50d63e719d7a6735eadb259aa8efaa1818731c675463c2aafc8df7d92c1d"
+    },
+    {
+      "index": 163,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00184.ARW",
+      "identity_name": "frame-00163.ARW",
+      "bytes": 37453824,
+      "sha256": "e951eea42acd1972902ebf49c86ee0c26f31e9da545755a62e32d855b7dad252"
+    },
+    {
+      "index": 164,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00185.ARW",
+      "identity_name": "frame-00164.ARW",
+      "bytes": 37457920,
+      "sha256": "ae40b5c280406be3616712cf282eaeb01fd9783771d6c1eaf6436bf3ef67c5b5"
+    },
+    {
+      "index": 165,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00186.ARW",
+      "identity_name": "frame-00165.ARW",
+      "bytes": 37453824,
+      "sha256": "5d2c589d11babd420d1605d6459f4345c20702fc815b3c1803c31f2d4291acad"
+    },
+    {
+      "index": 166,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00187.ARW",
+      "identity_name": "frame-00166.ARW",
+      "bytes": 37457920,
+      "sha256": "4c2923b5a34a5bd835580eb87573b653a2bea786150e5aada0c36a349aea5ad0"
+    },
+    {
+      "index": 167,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00188.ARW",
+      "identity_name": "frame-00167.ARW",
+      "bytes": 37457920,
+      "sha256": "a4a8c1b196d3379457ebc879b696888d4e90cdbad0d68a5f436025aacb6890fa"
+    },
+    {
+      "index": 168,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00189.ARW",
+      "identity_name": "frame-00168.ARW",
+      "bytes": 37457920,
+      "sha256": "2eedfa7c87a2ab8a6ea481e0efd9415b7bb16e6b283e44005ddf726dd3241146"
+    },
+    {
+      "index": 169,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00190.ARW",
+      "identity_name": "frame-00169.ARW",
+      "bytes": 37453824,
+      "sha256": "17043b6d67a0d08b84d2681f79e400f0f1ab414f669cb900c94945076e8abd00"
+    },
+    {
+      "index": 170,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00191.ARW",
+      "identity_name": "frame-00170.ARW",
+      "bytes": 37453824,
+      "sha256": "19e892e5f36a8493d9e503ddfa09bcc8c99b57ab1ebb17daf6177c5f19dd5ca8"
+    },
+    {
+      "index": 171,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00192.ARW",
+      "identity_name": "frame-00171.ARW",
+      "bytes": 37453824,
+      "sha256": "58df86931ecffefa6e73420563d053405433ec0ddca3f4b4141a6ff93b725a83"
+    },
+    {
+      "index": 172,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00193.ARW",
+      "identity_name": "frame-00172.ARW",
+      "bytes": 37453824,
+      "sha256": "85fd7f43e9966918385f0683e871b11baf3ba018d1bd4627fad755b1055675e3"
+    },
+    {
+      "index": 173,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00194.ARW",
+      "identity_name": "frame-00173.ARW",
+      "bytes": 37457920,
+      "sha256": "351fd2d65231737a0ef3b00d27066b2f067f90d615246426facfddc3dc102192"
+    },
+    {
+      "index": 174,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00195.ARW",
+      "identity_name": "frame-00174.ARW",
+      "bytes": 37453824,
+      "sha256": "9909f1b3be7fc1c41821d4a56c145916a9623dbbb6d3de9b5bb9478c7723847d"
+    },
+    {
+      "index": 175,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00196.ARW",
+      "identity_name": "frame-00175.ARW",
+      "bytes": 37453824,
+      "sha256": "5057e2f8aec7de54377f93e6857d051237389188fccf223dacb99de1b9d43739"
+    },
+    {
+      "index": 176,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00197.ARW",
+      "identity_name": "frame-00176.ARW",
+      "bytes": 37453824,
+      "sha256": "9798c0dce5c9007284b937e510b174274d1d2d55560b8a6a5ddc2c7e9067efd5"
+    },
+    {
+      "index": 177,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00198.ARW",
+      "identity_name": "frame-00177.ARW",
+      "bytes": 37453824,
+      "sha256": "a0b7725dfaeb41662500514338229b16fcd862be3a5e1b688c3c64c41e0ca758"
+    },
+    {
+      "index": 178,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00199.ARW",
+      "identity_name": "frame-00178.ARW",
+      "bytes": 37457920,
+      "sha256": "c677f74d1c0fd81dcf04f227301e67a38374edf364191041976a0163586ee93d"
+    },
+    {
+      "index": 179,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00200.ARW",
+      "identity_name": "frame-00179.ARW",
+      "bytes": 37457920,
+      "sha256": "4e00a02731fa4164e60fa18b1f620cf86e6fc47c6124267a3c947df0f82dc91e"
+    },
+    {
+      "index": 180,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00201.ARW",
+      "identity_name": "frame-00180.ARW",
+      "bytes": 37457920,
+      "sha256": "7fe98939a1142ed1b33b39eea7391c4f90fb16058d6e2a3f2e0be01fd47b790f"
+    },
+    {
+      "index": 181,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00202.ARW",
+      "identity_name": "frame-00181.ARW",
+      "bytes": 37453824,
+      "sha256": "c683f928e10cd693f955be7402dcbd804146767a7ce0acdab07d42c114d175ea"
+    },
+    {
+      "index": 182,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00203.ARW",
+      "identity_name": "frame-00182.ARW",
+      "bytes": 37453824,
+      "sha256": "7604604e049e3f3b631956dff6e246e5d6189aaa7807e5d21dabd1723b1166d3"
+    },
+    {
+      "index": 183,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00204.ARW",
+      "identity_name": "frame-00183.ARW",
+      "bytes": 37457920,
+      "sha256": "b951c7ddd6307c90daa18c3220827342a66e6283b70aa342adc459aa58b6a377"
+    },
+    {
+      "index": 184,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00205.ARW",
+      "identity_name": "frame-00184.ARW",
+      "bytes": 37457920,
+      "sha256": "d7359cc91dc5aa3fc7f357ff1394f435f9d403410fd4f33f1e01bfe27901941a"
+    },
+    {
+      "index": 185,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00206.ARW",
+      "identity_name": "frame-00185.ARW",
+      "bytes": 37457920,
+      "sha256": "e2d6f003dbc997e694b0381068d1b2ff85b091a23190a4e73d646e9974c85de0"
+    },
+    {
+      "index": 186,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00207.ARW",
+      "identity_name": "frame-00186.ARW",
+      "bytes": 37453824,
+      "sha256": "b7fde1e95d9601a1dd339312790d46c91c892d94a583f590284ac7dbc63c78f8"
+    },
+    {
+      "index": 187,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00208.ARW",
+      "identity_name": "frame-00187.ARW",
+      "bytes": 37453824,
+      "sha256": "4caa2975c75a98a322c69d7773c59a8f18d34210e9dfd6bc49c7b06a627f8c81"
+    },
+    {
+      "index": 188,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00209.ARW",
+      "identity_name": "frame-00188.ARW",
+      "bytes": 37453824,
+      "sha256": "0248ea908c2a93fa65b7f5c4049da955d301bd8484f00ac5549450ca2b889447"
+    },
+    {
+      "index": 189,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00210.ARW",
+      "identity_name": "frame-00189.ARW",
+      "bytes": 37457920,
+      "sha256": "b43f359701c2b21f737db11df60cfd48f3595aa6279f049f60c683c82bc9f617"
+    },
+    {
+      "index": 190,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00211.ARW",
+      "identity_name": "frame-00190.ARW",
+      "bytes": 37453824,
+      "sha256": "5799ba852a0bc0084c9b9d4a0d3bd5007c2afec400f2bf4bc64187fd69e7cd19"
+    },
+    {
+      "index": 191,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00212.ARW",
+      "identity_name": "frame-00191.ARW",
+      "bytes": 37457920,
+      "sha256": "29c1a4f2c107a40a7ba3e9931b91d2665a75b8a2e578c32d25b03467a8e54152"
+    },
+    {
+      "index": 192,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00213.ARW",
+      "identity_name": "frame-00192.ARW",
+      "bytes": 37457920,
+      "sha256": "4a49b3a3f7ed1139a4f173d8ffb8c5740e66c2335ba723e1560dbfb86318eeef"
+    },
+    {
+      "index": 193,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00214.ARW",
+      "identity_name": "frame-00193.ARW",
+      "bytes": 37453824,
+      "sha256": "d4e18db42d93f73437a4328708891f277e07e26c0bfab906595c4bed95e01cc5"
+    },
+    {
+      "index": 194,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00215.ARW",
+      "identity_name": "frame-00194.ARW",
+      "bytes": 37457920,
+      "sha256": "3707e1e5e803928f42658ac521162d3643766116ed629512a498a28e2fca9f58"
+    },
+    {
+      "index": 195,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00216.ARW",
+      "identity_name": "frame-00195.ARW",
+      "bytes": 37457920,
+      "sha256": "2b826860b0068774c71609699ed84a80b1d9a1d4f6d8732d7631d2ba50acd0d1"
+    },
+    {
+      "index": 196,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00217.ARW",
+      "identity_name": "frame-00196.ARW",
+      "bytes": 37457920,
+      "sha256": "04c799f1263915bfae850f7edf5daf22f29577dacc4f7511b1b207cb57e3d1e1"
+    },
+    {
+      "index": 197,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00218.ARW",
+      "identity_name": "frame-00197.ARW",
+      "bytes": 37457920,
+      "sha256": "5e54fddc1af81b344db530bd4b674e5c2e965ec84567753f2a558ac7beee11c2"
+    },
+    {
+      "index": 198,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00219.ARW",
+      "identity_name": "frame-00198.ARW",
+      "bytes": 37457920,
+      "sha256": "285008481d3beb13adead91b03632c0c989bc64ef1191468e109f986b933c065"
+    },
+    {
+      "index": 199,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00220.ARW",
+      "identity_name": "frame-00199.ARW",
+      "bytes": 37457920,
+      "sha256": "5b92e2cd18c6a8d293e665fc10b6ebf09cd40feb92e3da2d2bb07f2a27693ace"
+    },
+    {
+      "index": 200,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00221.ARW",
+      "identity_name": "frame-00200.ARW",
+      "bytes": 37457920,
+      "sha256": "3469b69178fa0e14df2fc857f6b69d176fdf578a8e27a684732d4a051372883b"
+    },
+    {
+      "index": 201,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00222.ARW",
+      "identity_name": "frame-00201.ARW",
+      "bytes": 37457920,
+      "sha256": "43ef8363004872a8ad0fb49e9234daeb481090e1261e46cc2fc91729e903a151"
+    },
+    {
+      "index": 202,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00223.ARW",
+      "identity_name": "frame-00202.ARW",
+      "bytes": 37457920,
+      "sha256": "44748fdf7c0767e9fc465b20e449b4fa4c65552233b22768549d43c123baaccf"
+    },
+    {
+      "index": 203,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00224.ARW",
+      "identity_name": "frame-00203.ARW",
+      "bytes": 37457920,
+      "sha256": "69da67b8ba0c185fcea47f5dafd8ba5b54bcb08401de90d0a5c324b9cc299cac"
+    },
+    {
+      "index": 204,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00225.ARW",
+      "identity_name": "frame-00204.ARW",
+      "bytes": 37462016,
+      "sha256": "64846b8aba287cceb50edab4bb57b0835435ff2b22a492ec32114d6791f14387"
+    },
+    {
+      "index": 205,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00226.ARW",
+      "identity_name": "frame-00205.ARW",
+      "bytes": 37462016,
+      "sha256": "c07a5cd351b0f083a01fe97dd077a406235e46709800249ab102059ccdb15a95"
+    },
+    {
+      "index": 206,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00227.ARW",
+      "identity_name": "frame-00206.ARW",
+      "bytes": 37462016,
+      "sha256": "376d53b03baaf9b9492e0fca5c9c140bb1e91d63fccca1431a9b3d9bf6a4839b"
+    },
+    {
+      "index": 207,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00228.ARW",
+      "identity_name": "frame-00207.ARW",
+      "bytes": 37470208,
+      "sha256": "1f7aa4a0bc529d875082ed8e4c897c5e9bbcfdcb6ccb9ece22443da65489f54e"
+    },
+    {
+      "index": 208,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00229.ARW",
+      "identity_name": "frame-00208.ARW",
+      "bytes": 37470208,
+      "sha256": "12f045a9d0e7ccf8a14938f218b6b88ea15291da2d7b04aeda77488a6dd89a98"
+    },
+    {
+      "index": 209,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00230.ARW",
+      "identity_name": "frame-00209.ARW",
+      "bytes": 37470208,
+      "sha256": "8da3a441b2bcfa6d09c8e495b44524195bc4f01fc11d24c27fa23b263002ea99"
+    },
+    {
+      "index": 210,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00231.ARW",
+      "identity_name": "frame-00210.ARW",
+      "bytes": 37470208,
+      "sha256": "0ff82293d551eb65cc752aa34acd312666f359ca4c82f05d57f5033c572dee4f"
+    },
+    {
+      "index": 211,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00232.ARW",
+      "identity_name": "frame-00211.ARW",
+      "bytes": 37470208,
+      "sha256": "46e02606b504111e69d357a1a8f7e581d7d464582d164a18916eb218b512ef3f"
+    },
+    {
+      "index": 212,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00233.ARW",
+      "identity_name": "frame-00212.ARW",
+      "bytes": 37470208,
+      "sha256": "35b00720af6ad9054ca37346f64a9cec2ff608ab38f815214643bc0be0720856"
+    },
+    {
+      "index": 213,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00234.ARW",
+      "identity_name": "frame-00213.ARW",
+      "bytes": 37470208,
+      "sha256": "13bb1635fd59cb55f943bb4791c78250e77218cfef281a5a61eb37e0008ee795"
+    },
+    {
+      "index": 214,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00235.ARW",
+      "identity_name": "frame-00214.ARW",
+      "bytes": 37470208,
+      "sha256": "840a781b97578ff1e20fc7cea5ac5ed6cd02c773fca9a8067a2867bbbcb4ef69"
+    },
+    {
+      "index": 215,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00236.ARW",
+      "identity_name": "frame-00215.ARW",
+      "bytes": 37474304,
+      "sha256": "502e3c69116da506d1fb45a25080741bd75abc082698361edf25b651fa1bb6e9"
+    },
+    {
+      "index": 216,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00237.ARW",
+      "identity_name": "frame-00216.ARW",
+      "bytes": 37474304,
+      "sha256": "bde7408cdbee155f080424e53b873317bb3cca80edd3048f26232b73d5cf442e"
+    },
+    {
+      "index": 217,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00238.ARW",
+      "identity_name": "frame-00217.ARW",
+      "bytes": 37474304,
+      "sha256": "6231d7891fc9b73728d12f61ed570e9d0659ff046d356d3630279fdf2aa2a618"
+    },
+    {
+      "index": 218,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00239.ARW",
+      "identity_name": "frame-00218.ARW",
+      "bytes": 37474304,
+      "sha256": "cfed9c7dd8c2bb7b754bab5b87a6fbc50f6f6bc7dcff7a5fe5e73e2a61d50183"
+    },
+    {
+      "index": 219,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00240.ARW",
+      "identity_name": "frame-00219.ARW",
+      "bytes": 37474304,
+      "sha256": "11ad225e7954df78c7c523e9162f94e1ef63fce404848731011f3fba34f6e9ea"
+    },
+    {
+      "index": 220,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00241.ARW",
+      "identity_name": "frame-00220.ARW",
+      "bytes": 37478400,
+      "sha256": "351731d382746da89b68c38d0a244a2ea709ac404eddaf437d1d97ba8234c985"
+    },
+    {
+      "index": 221,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00242.ARW",
+      "identity_name": "frame-00221.ARW",
+      "bytes": 37474304,
+      "sha256": "8a69dbc4b5839b8059e8d2b07bc988343d1bec0de8b50d99f915f900e07dc5c6"
+    },
+    {
+      "index": 222,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00243.ARW",
+      "identity_name": "frame-00222.ARW",
+      "bytes": 37474304,
+      "sha256": "e4430d48324a0696bdd1d1a5c7648484a8c06eb580fa469f505a98ecfe6c0c99"
+    },
+    {
+      "index": 223,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00244.ARW",
+      "identity_name": "frame-00223.ARW",
+      "bytes": 37478400,
+      "sha256": "8afa3975da45c488ca760ad7f192db2c419b74c3f7d68a793a50b1fd42bc67da"
+    },
+    {
+      "index": 224,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00245.ARW",
+      "identity_name": "frame-00224.ARW",
+      "bytes": 37478400,
+      "sha256": "90bc93e90c32ee017750596acb26923665f6d3505ee98fe19f6d415781af225b"
+    },
+    {
+      "index": 225,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00246.ARW",
+      "identity_name": "frame-00225.ARW",
+      "bytes": 37478400,
+      "sha256": "175249784a0645b88b29a4cf146a7c45e0a57b2639c2128074a975e0208aec8f"
+    },
+    {
+      "index": 226,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00247.ARW",
+      "identity_name": "frame-00226.ARW",
+      "bytes": 37478400,
+      "sha256": "bca2073e077b47d269fd0d5702e41e30a2b1cb771d1c88586fcabd26c37dc7a2"
+    },
+    {
+      "index": 227,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00248.ARW",
+      "identity_name": "frame-00227.ARW",
+      "bytes": 37478400,
+      "sha256": "a1fb1c7187e10f6409bb912cfd540b6b06dff04adc1f85182b2383e7477c9302"
+    },
+    {
+      "index": 228,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00249.ARW",
+      "identity_name": "frame-00228.ARW",
+      "bytes": 37478400,
+      "sha256": "2de24a453f51168eb4c5a7c4e7b8f885b45b0779571b506bcc20644faef3a5d1"
+    },
+    {
+      "index": 229,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00250.ARW",
+      "identity_name": "frame-00229.ARW",
+      "bytes": 37478400,
+      "sha256": "c4583883736f2d907989982cc60fd63c75ccf90a024c263dc418ff4bd283e1c3"
+    },
+    {
+      "index": 230,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00251.ARW",
+      "identity_name": "frame-00230.ARW",
+      "bytes": 37478400,
+      "sha256": "e04ec490324e6d5b21fc4c4be8ded1284512ccec9e24c549e8dd468e90e8f266"
+    },
+    {
+      "index": 231,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00252.ARW",
+      "identity_name": "frame-00231.ARW",
+      "bytes": 37482496,
+      "sha256": "25ba2285a17966d90b2f2d184552084a2adc76fbb90181505c444871b80e2ef8"
+    },
+    {
+      "index": 232,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00253.ARW",
+      "identity_name": "frame-00232.ARW",
+      "bytes": 37482496,
+      "sha256": "b7398495a08d531ad32765f55ed12a8441a49eaecbcbb5ed734a0207c0ca1186"
+    },
+    {
+      "index": 233,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00254.ARW",
+      "identity_name": "frame-00233.ARW",
+      "bytes": 37482496,
+      "sha256": "d3e52aef3ec50de4389a697afc43d17c14f129456ce75e75cf1bceb403b33462"
+    },
+    {
+      "index": 234,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00255.ARW",
+      "identity_name": "frame-00234.ARW",
+      "bytes": 37482496,
+      "sha256": "58e0e41d99fa69f1dbabfa6761a63730f04201dedb6c9562e6deafbc2103dd26"
+    },
+    {
+      "index": 235,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00256.ARW",
+      "identity_name": "frame-00235.ARW",
+      "bytes": 37486592,
+      "sha256": "5d79e959e758323529ac0077e6f7293f3ef2ab1d7ef0693ce7f30e0ade230f7c"
+    },
+    {
+      "index": 236,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00257.ARW",
+      "identity_name": "frame-00236.ARW",
+      "bytes": 37486592,
+      "sha256": "a4b7cc7cc31a53db823ccdd8df1e2c5ba4336c1eff0e1c9b8a1ea4982f1bd937"
+    },
+    {
+      "index": 237,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00258.ARW",
+      "identity_name": "frame-00237.ARW",
+      "bytes": 37486592,
+      "sha256": "1dfd7fc22a409e8803a07ca4f2de2895c7a1267010021d1c6461b357c96a2ad3"
+    },
+    {
+      "index": 238,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00259.ARW",
+      "identity_name": "frame-00238.ARW",
+      "bytes": 37490688,
+      "sha256": "5dfc839bd0db05100fc8df9a0229bfe88c42cad167f548462b4d1381a3b4c88b"
+    },
+    {
+      "index": 239,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00260.ARW",
+      "identity_name": "frame-00239.ARW",
+      "bytes": 37490688,
+      "sha256": "d169b46b7b98885d8f6484d67e9554c8b56714b42ad1a1b4db5e7bf450de352c"
+    },
+    {
+      "index": 240,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00261.ARW",
+      "identity_name": "frame-00240.ARW",
+      "bytes": 37490688,
+      "sha256": "ade97d77c49e48f4fef07ab7a62168df50836cc77ca232cbcf9aae2fe0a75133"
+    },
+    {
+      "index": 241,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00262.ARW",
+      "identity_name": "frame-00241.ARW",
+      "bytes": 37494784,
+      "sha256": "336f6925e25a1d6e9c458982352af0e4b72239bad24e9621807998e0ad380d8a"
+    },
+    {
+      "index": 242,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00263.ARW",
+      "identity_name": "frame-00242.ARW",
+      "bytes": 37494784,
+      "sha256": "dc97ae8f1842c94087ee14cf69eaf479a8f6e442b3251808ef18c75a7c60fc51"
+    },
+    {
+      "index": 243,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00264.ARW",
+      "identity_name": "frame-00243.ARW",
+      "bytes": 37494784,
+      "sha256": "3e98544cf5273c39bd4a737a2bbb87179ec60a3fbbc6c0497dde294353052ba6"
+    },
+    {
+      "index": 244,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00265.ARW",
+      "identity_name": "frame-00244.ARW",
+      "bytes": 37494784,
+      "sha256": "c0229012615f4dd6c98dc28dd80a393e4d8fb8183e5a0729b87b1eacb13b3a93"
+    },
+    {
+      "index": 245,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00266.ARW",
+      "identity_name": "frame-00245.ARW",
+      "bytes": 37498880,
+      "sha256": "ec249c25ba7eb744481021ac96aa5bd0c87ba4313b17d69581f67b05b4528e8c"
+    },
+    {
+      "index": 246,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00267.ARW",
+      "identity_name": "frame-00246.ARW",
+      "bytes": 37498880,
+      "sha256": "02e446a5ee738f19060a8a1b203e80af29fbcefc07f5cc5b65e0638c867bfc97"
+    },
+    {
+      "index": 247,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00268.ARW",
+      "identity_name": "frame-00247.ARW",
+      "bytes": 37498880,
+      "sha256": "66f171c0955c6defd28f8226f43754b25c8f07e59d8640b8c37b1d4ce88187d6"
+    },
+    {
+      "index": 248,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00269.ARW",
+      "identity_name": "frame-00248.ARW",
+      "bytes": 37498880,
+      "sha256": "1428d5d2b0c2c075196d834dcf7f1b0cdcb2b584c74546ab136c6d15deb2a876"
+    },
+    {
+      "index": 249,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00270.ARW",
+      "identity_name": "frame-00249.ARW",
+      "bytes": 37502976,
+      "sha256": "b84517cc0962d77f1aee61b852c6ba8b9cb06127832f1adf1a40fabb3b4e8bb1"
+    },
+    {
+      "index": 250,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00271.ARW",
+      "identity_name": "frame-00250.ARW",
+      "bytes": 37502976,
+      "sha256": "dd32131bee73a13984e4dde82167bb9cfa279b9ba36a640371811ef72850259b"
+    },
+    {
+      "index": 251,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00272.ARW",
+      "identity_name": "frame-00251.ARW",
+      "bytes": 37502976,
+      "sha256": "8a06a26d3999b6f49f2597b9f10ead068eb55eb0d5038434e3b1fd4280d786a1"
+    },
+    {
+      "index": 252,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00273.ARW",
+      "identity_name": "frame-00252.ARW",
+      "bytes": 37502976,
+      "sha256": "71df2a32f0b46cd8d1ce611a7305c4ef16995e295b8421b75788c04c05d79c99"
+    },
+    {
+      "index": 253,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00274.ARW",
+      "identity_name": "frame-00253.ARW",
+      "bytes": 37502976,
+      "sha256": "cc87674a89bfad744ece18428349bd27d4774b538587a3801103246427923f83"
+    },
+    {
+      "index": 254,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00275.ARW",
+      "identity_name": "frame-00254.ARW",
+      "bytes": 37511168,
+      "sha256": "986198066aa1c2a3b1d286b7f9a5b2e5bdf23dc3505fbacd2417548bb16d73a9"
+    },
+    {
+      "index": 255,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00276.ARW",
+      "identity_name": "frame-00255.ARW",
+      "bytes": 37511168,
+      "sha256": "ced72c28b1f8fe3e2d4b53656f7609e2bcdfd2092918b28d0c156b645e5092b1"
+    },
+    {
+      "index": 256,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00277.ARW",
+      "identity_name": "frame-00256.ARW",
+      "bytes": 37515264,
+      "sha256": "3cb8d3b6c4440bd01fa6065aca3960a25a45ad4e725ba5cdaf788f8d7e38ca34"
+    },
+    {
+      "index": 257,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00278.ARW",
+      "identity_name": "frame-00257.ARW",
+      "bytes": 37515264,
+      "sha256": "76847e6b071f82933094090d770b50a2631a7acf6e8308cbc0b04d00b56490da"
+    },
+    {
+      "index": 258,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00279.ARW",
+      "identity_name": "frame-00258.ARW",
+      "bytes": 37511168,
+      "sha256": "c1acb310475c678f0529f83471358010c9e2535a70474a4761f1b7e1a418a6ac"
+    },
+    {
+      "index": 259,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00280.ARW",
+      "identity_name": "frame-00259.ARW",
+      "bytes": 37515264,
+      "sha256": "15d4fa482b23e94ae1b105e487e2d8453107a4c477d5b7c50847ba4440d2b154"
+    },
+    {
+      "index": 260,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00281.ARW",
+      "identity_name": "frame-00260.ARW",
+      "bytes": 37519360,
+      "sha256": "a74fb773f485e4b0bd367d11c4ec797d9778903476e9394c4d8f2a5f9484d688"
+    },
+    {
+      "index": 261,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00282.ARW",
+      "identity_name": "frame-00261.ARW",
+      "bytes": 37523456,
+      "sha256": "9f387f1d40b88b1171c4be94d9c564c345a75e2dcd8c1f2f69b5c2ebb57cb7b9"
+    },
+    {
+      "index": 262,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00283.ARW",
+      "identity_name": "frame-00262.ARW",
+      "bytes": 37523456,
+      "sha256": "31b818e6eba08e977879a7a17be26b23771c356d9d34d2d97e1b297afbc1dc29"
+    },
+    {
+      "index": 263,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00284.ARW",
+      "identity_name": "frame-00263.ARW",
+      "bytes": 37527552,
+      "sha256": "8a09ff195283072b558bf2679c5657acbf113f69b7742097cc63163750033041"
+    },
+    {
+      "index": 264,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00285.ARW",
+      "identity_name": "frame-00264.ARW",
+      "bytes": 37531648,
+      "sha256": "888482a2c4e65cb57aa9ecd2bfb70537991d57fc9fabf45df2fb7695137deb98"
+    },
+    {
+      "index": 265,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00286.ARW",
+      "identity_name": "frame-00265.ARW",
+      "bytes": 37535744,
+      "sha256": "709cc58a444a037b70bd4cf334b07b399f64c2e7b02c86d9625e62dbf2ee85a7"
+    },
+    {
+      "index": 266,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00287.ARW",
+      "identity_name": "frame-00266.ARW",
+      "bytes": 37539840,
+      "sha256": "3f220c425c33947b5ffb4a33f146d7c819ec12c560374dc3dc63e9bb87242c9f"
+    },
+    {
+      "index": 267,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00288.ARW",
+      "identity_name": "frame-00267.ARW",
+      "bytes": 37543936,
+      "sha256": "52787f5aacc304300926a0e643002c0db9ed803e9c66b1da5ba17e2e871fb659"
+    },
+    {
+      "index": 268,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00289.ARW",
+      "identity_name": "frame-00268.ARW",
+      "bytes": 37556224,
+      "sha256": "d228a636d7131700c2db4d34568eda29bc0304186f1803b7f961005e3b61e63f"
+    },
+    {
+      "index": 269,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00290.ARW",
+      "identity_name": "frame-00269.ARW",
+      "bytes": 37560320,
+      "sha256": "46340bb6ee6e8016be5eb966536bf9a0774ecb5345d7f6f810119504a103a63c"
+    },
+    {
+      "index": 270,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00291.ARW",
+      "identity_name": "frame-00270.ARW",
+      "bytes": 37560320,
+      "sha256": "86d6aa36bdaec8c69462993327cabaa8dd7576f7e1ef3c15a4f55eec40d04e8f"
+    },
+    {
+      "index": 271,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00292.ARW",
+      "identity_name": "frame-00271.ARW",
+      "bytes": 37568512,
+      "sha256": "d4fb02f194af9da329a5584ccc7c7759aebc4c8b7020b3c00cff944b6a5d6794"
+    },
+    {
+      "index": 272,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00293.ARW",
+      "identity_name": "frame-00272.ARW",
+      "bytes": 37564416,
+      "sha256": "172e774ac1f91b28284d8ec4d6098be31322a9f264b08dbaa3df1ebaf16178db"
+    },
+    {
+      "index": 273,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00294.ARW",
+      "identity_name": "frame-00273.ARW",
+      "bytes": 37564416,
+      "sha256": "57d20126652b22670e4be51e0d8944ad2a291f6809c8af06f4cf4594f48f614d"
+    },
+    {
+      "index": 274,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00295.ARW",
+      "identity_name": "frame-00274.ARW",
+      "bytes": 37568512,
+      "sha256": "db9a7f50f3c65d9bd5dd2d71c88f938423a547991332ab6e00a36ef42142a606"
+    },
+    {
+      "index": 275,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00296.ARW",
+      "identity_name": "frame-00275.ARW",
+      "bytes": 37564416,
+      "sha256": "4c9b842b2562480bc303f2cc36b4364bc863aae533049c2276ca909d7212aee4"
+    },
+    {
+      "index": 276,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00297.ARW",
+      "identity_name": "frame-00276.ARW",
+      "bytes": 37564416,
+      "sha256": "892d98700e9f2388b0b85791c56ffc746d4a94e53ee0d2a82f0105c9ac82dce5"
+    },
+    {
+      "index": 277,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00298.ARW",
+      "identity_name": "frame-00277.ARW",
+      "bytes": 37564416,
+      "sha256": "e608dc45955db3b6c987576dab727ae28253f1a52467f42bc4179fda4dd1ab8b"
+    },
+    {
+      "index": 278,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.1-offcenter-sw5-cpl\\DSC00299.ARW",
+      "identity_name": "frame-00278.ARW",
+      "bytes": 37564416,
+      "sha256": "2732e9801b2f96aa79307efc842c30968d2b27717f4a9c2a31dc0ff4a5dfcaf3"
+    },
+    {
+      "index": 279,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00001.ARW",
+      "identity_name": "frame-00279.ARW",
+      "bytes": 37597184,
+      "sha256": "8f6e09bde17f9e5106565fd8a84dc230e851f369c5ccd6a98e472c5246601eff"
+    },
+    {
+      "index": 280,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00002.ARW",
+      "identity_name": "frame-00280.ARW",
+      "bytes": 37588992,
+      "sha256": "b08a9c901a4e2755181f9161165aca05607ca8dfb4e1272df875045b6ee911ed"
+    },
+    {
+      "index": 281,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00003.ARW",
+      "identity_name": "frame-00281.ARW",
+      "bytes": 37593088,
+      "sha256": "93d47e86e8d28e6d7435a434c50f540dcd5ed8fe935a9acf81cf45242f673f97"
+    },
+    {
+      "index": 282,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00004.ARW",
+      "identity_name": "frame-00282.ARW",
+      "bytes": 37593088,
+      "sha256": "56f16994d6a1671079bfcfb461241350fd77b7864ea5048986ca79c89fa42128"
+    },
+    {
+      "index": 283,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00005.ARW",
+      "identity_name": "frame-00283.ARW",
+      "bytes": 37588992,
+      "sha256": "9d4e09975571add45171e001f9436143fc290c18d7c70b71ab869bc58464438b"
+    },
+    {
+      "index": 284,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00006.ARW",
+      "identity_name": "frame-00284.ARW",
+      "bytes": 37588992,
+      "sha256": "0a95a06d834055de451fe27f32a948ee749b2552e563d070680c6f42ba353722"
+    },
+    {
+      "index": 285,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00007.ARW",
+      "identity_name": "frame-00285.ARW",
+      "bytes": 37584896,
+      "sha256": "07fa2e0e9bb20f052c310a70d86b11e6aa03ec06c33f70dc9b328d398db6f1ed"
+    },
+    {
+      "index": 286,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00008.ARW",
+      "identity_name": "frame-00286.ARW",
+      "bytes": 37584896,
+      "sha256": "af61187c6c5e13dd9854fc904583aa2febb9093d7e880f6ba5ec6b83bf1546a3"
+    },
+    {
+      "index": 287,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00009.ARW",
+      "identity_name": "frame-00287.ARW",
+      "bytes": 37580800,
+      "sha256": "b172612fe1bd90bcc39c7a0ec51d874ad3f08ee942aa9fdd17ed2ad537ded133"
+    },
+    {
+      "index": 288,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00010.ARW",
+      "identity_name": "frame-00288.ARW",
+      "bytes": 37580800,
+      "sha256": "2fd735465a289def7ba8fb12957fcff29469ce19f3cbc5996cfc1f7469c8f4c1"
+    },
+    {
+      "index": 289,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00011.ARW",
+      "identity_name": "frame-00289.ARW",
+      "bytes": 37580800,
+      "sha256": "d567b00918976d68565ee7cdc60c56338ba17ef5ff1e1f90800e40c62e4a6684"
+    },
+    {
+      "index": 290,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00012.ARW",
+      "identity_name": "frame-00290.ARW",
+      "bytes": 37580800,
+      "sha256": "24f6ce1edb96ed38185aba3b469639a6ead129072692c09e071410ed9152c95f"
+    },
+    {
+      "index": 291,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00013.ARW",
+      "identity_name": "frame-00291.ARW",
+      "bytes": 37576704,
+      "sha256": "2f024e6570dd9caa33fcddb28de5d4047d9df3794c13bc5465883eae5a8edb11"
+    },
+    {
+      "index": 292,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00014.ARW",
+      "identity_name": "frame-00292.ARW",
+      "bytes": 37576704,
+      "sha256": "b21c62cea1abe21d7a8084cf349f22e50197e2a1744030f150a8fba6f99beb86"
+    },
+    {
+      "index": 293,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00015.ARW",
+      "identity_name": "frame-00293.ARW",
+      "bytes": 37576704,
+      "sha256": "51a295de84f095e60f8baf40ac0795ab2c26e27bbf4b05540ea37218a44e7bc0"
+    },
+    {
+      "index": 294,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00016.ARW",
+      "identity_name": "frame-00294.ARW",
+      "bytes": 37576704,
+      "sha256": "d682bd36cb666cbfa83cd4ae2d00a3467e84eccc741d5c0d059e1e3f1a3ca1fc"
+    },
+    {
+      "index": 295,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00017.ARW",
+      "identity_name": "frame-00295.ARW",
+      "bytes": 37576704,
+      "sha256": "dd1a6ee61ad90121aa043ccd6f990d3105f7b392414ec8ccc07e3cacad48c478"
+    },
+    {
+      "index": 296,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00018.ARW",
+      "identity_name": "frame-00296.ARW",
+      "bytes": 37576704,
+      "sha256": "bf5ff3b9763639c246f546dfc814a6af6ce23daa1b49d9e55c3998cb17e2992c"
+    },
+    {
+      "index": 297,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00019.ARW",
+      "identity_name": "frame-00297.ARW",
+      "bytes": 37576704,
+      "sha256": "bb338ca3f0297f6261fdd3168112b6e93fde6872a8ae4ffa2c124006bb68376b"
+    },
+    {
+      "index": 298,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00020.ARW",
+      "identity_name": "frame-00298.ARW",
+      "bytes": 37576704,
+      "sha256": "dd7c9008452f0530bf57d62f9cc946d37a482d5f0e232b22bc17d9950c995cab"
+    },
+    {
+      "index": 299,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00021.ARW",
+      "identity_name": "frame-00299.ARW",
+      "bytes": 37580800,
+      "sha256": "59cda2dd15816aa4b34f7aeb4fcd92a9f50a0fafa73608965b2a5aa4f10a1ff8"
+    },
+    {
+      "index": 300,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00022.ARW",
+      "identity_name": "frame-00300.ARW",
+      "bytes": 37576704,
+      "sha256": "6ca6a042b24ef23400cb65efa21ce941c7ae8e74fc4d22da8b23ae34480aa8aa"
+    },
+    {
+      "index": 301,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00023.ARW",
+      "identity_name": "frame-00301.ARW",
+      "bytes": 37576704,
+      "sha256": "e127945f71020c9579328bdc4dc3b3e3023ab17acae5c2aaf5ba21114ccb65ec"
+    },
+    {
+      "index": 302,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00024.ARW",
+      "identity_name": "frame-00302.ARW",
+      "bytes": 37576704,
+      "sha256": "0023c9bdbf6bd326d4b70e1b6a4bc76ecf1831aadf9c3a788e03c7591f4ce690"
+    },
+    {
+      "index": 303,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00025.ARW",
+      "identity_name": "frame-00303.ARW",
+      "bytes": 37576704,
+      "sha256": "13696f240cb626e9c0339f95d56ea7f9ee758b670b16411a3f4fd450ce946e71"
+    },
+    {
+      "index": 304,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00026.ARW",
+      "identity_name": "frame-00304.ARW",
+      "bytes": 37576704,
+      "sha256": "5d62dfcb38d3716602f2859d644059b9ac3151264171c796d6b93aedc593dc5b"
+    },
+    {
+      "index": 305,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00027.ARW",
+      "identity_name": "frame-00305.ARW",
+      "bytes": 37576704,
+      "sha256": "8c61b6d136e8a83b7b363fb9224ad496a032de6af835c403fb5ecc6f1545fc4d"
+    },
+    {
+      "index": 306,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00028.ARW",
+      "identity_name": "frame-00306.ARW",
+      "bytes": 37572608,
+      "sha256": "c3b9357cd2c6b4dbddddf9344ec1366c09e4f276fe6397ff2a896f6c57f32c72"
+    },
+    {
+      "index": 307,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00029.ARW",
+      "identity_name": "frame-00307.ARW",
+      "bytes": 37568512,
+      "sha256": "95ba97efe606061a4fc072cd8b5edca7f36bcae27c6753005ebea19842f3dea0"
+    },
+    {
+      "index": 308,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00030.ARW",
+      "identity_name": "frame-00308.ARW",
+      "bytes": 37572608,
+      "sha256": "62138d120e3f743d7a16aefece05c8f38c72c5c1f7cf481c3be081d18c886808"
+    },
+    {
+      "index": 309,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00031.ARW",
+      "identity_name": "frame-00309.ARW",
+      "bytes": 37568512,
+      "sha256": "05424981f41f6cbc6c997e86bd92d4ad7735e798bf07432d0660eb49ae02e635"
+    },
+    {
+      "index": 310,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00032.ARW",
+      "identity_name": "frame-00310.ARW",
+      "bytes": 37564416,
+      "sha256": "3fd5002deee604d6f4a336cbda40a352ad41ee051fd2879436b98b5225638018"
+    },
+    {
+      "index": 311,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00033.ARW",
+      "identity_name": "frame-00311.ARW",
+      "bytes": 37564416,
+      "sha256": "7f24e7b80620a9807299013db72df048522da3fda4800a4798ea0e461f342090"
+    },
+    {
+      "index": 312,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00034.ARW",
+      "identity_name": "frame-00312.ARW",
+      "bytes": 37564416,
+      "sha256": "6ad0c6c01ead82abd1904d7c5e07bab30b52090fe08695965f9269f7880ea59f"
+    },
+    {
+      "index": 313,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00035.ARW",
+      "identity_name": "frame-00313.ARW",
+      "bytes": 37564416,
+      "sha256": "f88b558c9a1dd11233cd302a3bff4c7d933a2b7f8f5d787619469624aa27f9e2"
+    },
+    {
+      "index": 314,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00036.ARW",
+      "identity_name": "frame-00314.ARW",
+      "bytes": 37560320,
+      "sha256": "6724b893755e21805feff552f79361528aa2a74edcc81b73200cd8f8eed0ca38"
+    },
+    {
+      "index": 315,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00037.ARW",
+      "identity_name": "frame-00315.ARW",
+      "bytes": 37556224,
+      "sha256": "15e7ebfee427d52004c2f7726f7147e3d4035ca191746b6006c2edb99bd2b0ee"
+    },
+    {
+      "index": 316,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00038.ARW",
+      "identity_name": "frame-00316.ARW",
+      "bytes": 37556224,
+      "sha256": "c6e8f554a4a7ed61e37ca069e030249edcb907f666e52c3fae72c5abe5a036ca"
+    },
+    {
+      "index": 317,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00039.ARW",
+      "identity_name": "frame-00317.ARW",
+      "bytes": 37552128,
+      "sha256": "f7f3578fdc98c135efc6bf870bed40296d78a0bc850d87fa298dbce87e8ec8f3"
+    },
+    {
+      "index": 318,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00040.ARW",
+      "identity_name": "frame-00318.ARW",
+      "bytes": 37552128,
+      "sha256": "92637f01cbe0c76bbba27a57140b1a76c460b224b7e662c3b36e0642944dcbff"
+    },
+    {
+      "index": 319,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00041.ARW",
+      "identity_name": "frame-00319.ARW",
+      "bytes": 37552128,
+      "sha256": "ff533f7cdcd5308bbc5deaef2f3ed80ec8273a3a817bff1d4b3a254c1ed4ce36"
+    },
+    {
+      "index": 320,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00042.ARW",
+      "identity_name": "frame-00320.ARW",
+      "bytes": 37552128,
+      "sha256": "ff52e26157c3ed95d7a2a14ffd1e215538f5b030e915c82fd198523e55b5485f"
+    },
+    {
+      "index": 321,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00043.ARW",
+      "identity_name": "frame-00321.ARW",
+      "bytes": 37548032,
+      "sha256": "a06ffb68e17074959dd552dd4371d3b292390a3b92d3b5aa1ce6631989794f09"
+    },
+    {
+      "index": 322,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00044.ARW",
+      "identity_name": "frame-00322.ARW",
+      "bytes": 37552128,
+      "sha256": "96eff89d1699f1b647d253af7a1fc03e3bed7b58ad385ce6dd2e80686018e976"
+    },
+    {
+      "index": 323,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00045.ARW",
+      "identity_name": "frame-00323.ARW",
+      "bytes": 37548032,
+      "sha256": "3dc8c207d51898dc8146738ff057899771cb29752d1a4f7d0e8979c625f7a887"
+    },
+    {
+      "index": 324,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00046.ARW",
+      "identity_name": "frame-00324.ARW",
+      "bytes": 37552128,
+      "sha256": "162d638e997521b6f9e37bac2e6e516fc0fe13df2d0e73e66189fe9e7320adae"
+    },
+    {
+      "index": 325,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00047.ARW",
+      "identity_name": "frame-00325.ARW",
+      "bytes": 37548032,
+      "sha256": "4589c632d4ce0be90538102592b713131b998e24f5586fd07052bbcb9170d043"
+    },
+    {
+      "index": 326,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00048.ARW",
+      "identity_name": "frame-00326.ARW",
+      "bytes": 37543936,
+      "sha256": "0b16d2af85cba52b8237a87e401953bfa254bd708eec73a2aae78d1d1dd25cb9"
+    },
+    {
+      "index": 327,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00049.ARW",
+      "identity_name": "frame-00327.ARW",
+      "bytes": 37543936,
+      "sha256": "437e8d3b86da9ddd139d13e78634ee8f9be8bb1ca8e883f2cb42c959b05f44e7"
+    },
+    {
+      "index": 328,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00050.ARW",
+      "identity_name": "frame-00328.ARW",
+      "bytes": 37548032,
+      "sha256": "e7357d5d28c2dfed3545afd19b61920a66edad454aa613583b0f636823be87c9"
+    },
+    {
+      "index": 329,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00051.ARW",
+      "identity_name": "frame-00329.ARW",
+      "bytes": 37543936,
+      "sha256": "e5da4b039b24948e17a47e438e739137736cf414ccfb434078e70b19f0ba4c85"
+    },
+    {
+      "index": 330,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00052.ARW",
+      "identity_name": "frame-00330.ARW",
+      "bytes": 37543936,
+      "sha256": "9cde66165b2a757ec7ce9f3f2e4a922ca04f581a9b3f4336324a797e1d186b2e"
+    },
+    {
+      "index": 331,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00053.ARW",
+      "identity_name": "frame-00331.ARW",
+      "bytes": 37543936,
+      "sha256": "cedefd4f7462e570c16e4cfd5c3b55eef5d93d47e7942b23aa6b067bc6f65299"
+    },
+    {
+      "index": 332,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00054.ARW",
+      "identity_name": "frame-00332.ARW",
+      "bytes": 37543936,
+      "sha256": "341373133322eda298b95e78866bea43bfb195a1f0b6788eb9756feac5f5bc82"
+    },
+    {
+      "index": 333,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00055.ARW",
+      "identity_name": "frame-00333.ARW",
+      "bytes": 37539840,
+      "sha256": "c07231cc92fab5330ca958d31d78f297f71f2ed3d14ed2a2570c43b02186a41f"
+    },
+    {
+      "index": 334,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00056.ARW",
+      "identity_name": "frame-00334.ARW",
+      "bytes": 37535744,
+      "sha256": "d2f339bd33d16fb76ae6da8716c2c5bb384d929f9046e3477f007cb0b3077b59"
+    },
+    {
+      "index": 335,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00057.ARW",
+      "identity_name": "frame-00335.ARW",
+      "bytes": 37539840,
+      "sha256": "fb065a723996cd9d7618d498d57da5df36b050bc54174b85115e2166d21cdbe8"
+    },
+    {
+      "index": 336,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00058.ARW",
+      "identity_name": "frame-00336.ARW",
+      "bytes": 37539840,
+      "sha256": "ce1e94d9af441a8b1df9b33ea58f0c4b1befed854e27dae122dcc4b43670409d"
+    },
+    {
+      "index": 337,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00059.ARW",
+      "identity_name": "frame-00337.ARW",
+      "bytes": 37539840,
+      "sha256": "2f5febe5465804387f8f5c12d14bb514805bcb8c68a36bac0e7fe9eb30637001"
+    },
+    {
+      "index": 338,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00060.ARW",
+      "identity_name": "frame-00338.ARW",
+      "bytes": 37531648,
+      "sha256": "86af4d315e35c1c3e3d98ef71c9d5b2e40134c7de80adefc9ff26a335b5041ac"
+    },
+    {
+      "index": 339,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00061.ARW",
+      "identity_name": "frame-00339.ARW",
+      "bytes": 37531648,
+      "sha256": "77061a52f33771ab325aef5947aedeeb58071f3afd436c8241408c46801ceb55"
+    },
+    {
+      "index": 340,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00062.ARW",
+      "identity_name": "frame-00340.ARW",
+      "bytes": 37531648,
+      "sha256": "1e0a6aca919177f69c61871e7117e031d4c1f960cbe0c7fc43abafe81f73d7c3"
+    },
+    {
+      "index": 341,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00063.ARW",
+      "identity_name": "frame-00341.ARW",
+      "bytes": 37535744,
+      "sha256": "296872283ab4a38a08e5a457a443cd3ff6acd99ec46056020c82a0776f0ef735"
+    },
+    {
+      "index": 342,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00064.ARW",
+      "identity_name": "frame-00342.ARW",
+      "bytes": 37535744,
+      "sha256": "ec47b32633ca0fe0b7c8acce64f227feb76c760757775715840ffe2547e15bdb"
+    },
+    {
+      "index": 343,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00065.ARW",
+      "identity_name": "frame-00343.ARW",
+      "bytes": 37531648,
+      "sha256": "0bbe1db4091c106b19cd36cf6bdcdca2dd6d22ad61c51cc4a8a1c633f59cdba2"
+    },
+    {
+      "index": 344,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00066.ARW",
+      "identity_name": "frame-00344.ARW",
+      "bytes": 37531648,
+      "sha256": "73e755167edd289b01de5cb0480b001736562cfc46740455ca7e8f793cc61c8c"
+    },
+    {
+      "index": 345,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00067.ARW",
+      "identity_name": "frame-00345.ARW",
+      "bytes": 37535744,
+      "sha256": "bbf90536964a6e183a5cd9b89296bfe064f4ed89d9dd2bd2b5e1f4d3eaa68de2"
+    },
+    {
+      "index": 346,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00068.ARW",
+      "identity_name": "frame-00346.ARW",
+      "bytes": 37531648,
+      "sha256": "102980df94d95c9fbcd9d50a195f4227ba6efcd2be21033ea7b7f5dc26de8c7a"
+    },
+    {
+      "index": 347,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00069.ARW",
+      "identity_name": "frame-00347.ARW",
+      "bytes": 37535744,
+      "sha256": "b751b052aeeb8fb3d1cbef8b0d815b02235740eeca0dc919010c0f55d5c621a1"
+    },
+    {
+      "index": 348,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00070.ARW",
+      "identity_name": "frame-00348.ARW",
+      "bytes": 37531648,
+      "sha256": "3f65604338df76573985849ede01de01992009ee100633be4e6c016fc6fd2dd8"
+    },
+    {
+      "index": 349,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00071.ARW",
+      "identity_name": "frame-00349.ARW",
+      "bytes": 37535744,
+      "sha256": "2d69da37fbe5ec87a00078a9cb7d631d1fdc4bf4aa4fe1c5cf7f051a4c6d57b8"
+    },
+    {
+      "index": 350,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00072.ARW",
+      "identity_name": "frame-00350.ARW",
+      "bytes": 37535744,
+      "sha256": "9a877ee6f4b54b7a5da4c8918acfc170b50a7de91c1ff8ec9fb4700aed29f9a3"
+    },
+    {
+      "index": 351,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00073.ARW",
+      "identity_name": "frame-00351.ARW",
+      "bytes": 37535744,
+      "sha256": "0235b98147f45877d6c1f0f98732b09e9db6d03ed07c7d97458a671df950f92f"
+    },
+    {
+      "index": 352,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00074.ARW",
+      "identity_name": "frame-00352.ARW",
+      "bytes": 37531648,
+      "sha256": "e2882c1ae7acfd3d8268129b2d7675ed99d7f3c26f5eece1d525a0dcb02e28b4"
+    },
+    {
+      "index": 353,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00075.ARW",
+      "identity_name": "frame-00353.ARW",
+      "bytes": 37535744,
+      "sha256": "e5eff14cb066b81e089cd6221e3a6e5e333d8a46c07c50711d5b8b469db0b8e9"
+    },
+    {
+      "index": 354,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00076.ARW",
+      "identity_name": "frame-00354.ARW",
+      "bytes": 37531648,
+      "sha256": "141cb0b73d831ad43acd51bf6b2c37504a4df853e4922a9667322674825e633d"
+    },
+    {
+      "index": 355,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00077.ARW",
+      "identity_name": "frame-00355.ARW",
+      "bytes": 37535744,
+      "sha256": "36824a26bdd4758bd0e1e394f49de127d0d8c9d41d792a22ee81e820a8224331"
+    },
+    {
+      "index": 356,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00078.ARW",
+      "identity_name": "frame-00356.ARW",
+      "bytes": 37539840,
+      "sha256": "68fd805945df9ba23fe15edddf80f027abe98f26eb6f022bf446b7aae03d8d12"
+    },
+    {
+      "index": 357,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00079.ARW",
+      "identity_name": "frame-00357.ARW",
+      "bytes": 37539840,
+      "sha256": "89db8193b09346d9d5e928afecb0ba18166161640ec56af6a9fbc1b3c5ff00f3"
+    },
+    {
+      "index": 358,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00080.ARW",
+      "identity_name": "frame-00358.ARW",
+      "bytes": 37543936,
+      "sha256": "4319ec520312a17b2cc5da562469ac6ce318e1662f5da7cf0fb0ffa26b8cd029"
+    },
+    {
+      "index": 359,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00081.ARW",
+      "identity_name": "frame-00359.ARW",
+      "bytes": 37543936,
+      "sha256": "8d40916167205444bc74c1da82ef8363d855c4f458a96d863982365e716be265"
+    },
+    {
+      "index": 360,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00082.ARW",
+      "identity_name": "frame-00360.ARW",
+      "bytes": 37543936,
+      "sha256": "229bb9d1ce23ed76c11f204242609c8d30bd44b6a0dab11b1b6013d4f36a61d7"
+    },
+    {
+      "index": 361,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00083.ARW",
+      "identity_name": "frame-00361.ARW",
+      "bytes": 37539840,
+      "sha256": "f5568f9760467b2c5f2a7411222edac1689774b85ad1cfcef97f6381879daa1f"
+    },
+    {
+      "index": 362,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00084.ARW",
+      "identity_name": "frame-00362.ARW",
+      "bytes": 37539840,
+      "sha256": "e524eef4774bf12350f86facf40c8b0a6e63ad61935afc2e3485ec3757399cd2"
+    },
+    {
+      "index": 363,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00085.ARW",
+      "identity_name": "frame-00363.ARW",
+      "bytes": 37539840,
+      "sha256": "d90785b8daf1f3caf479bca8ef88bf519af89b3d03a23844583ca4a05355bde4"
+    },
+    {
+      "index": 364,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00086.ARW",
+      "identity_name": "frame-00364.ARW",
+      "bytes": 37535744,
+      "sha256": "617c64c7f9361e4b1b0ab02bb37e036e85dd7806b9878a0ed072f57325cce37f"
+    },
+    {
+      "index": 365,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00087.ARW",
+      "identity_name": "frame-00365.ARW",
+      "bytes": 37535744,
+      "sha256": "b103ca6de39125af0a1a2794cf4e18a802c229ae7bca6775266fe2dd341a7e7a"
+    },
+    {
+      "index": 366,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00088.ARW",
+      "identity_name": "frame-00366.ARW",
+      "bytes": 37527552,
+      "sha256": "ab13f570ee246841d56bca5a883596171e0a31117187afb666905e78fb8374bb"
+    },
+    {
+      "index": 367,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00089.ARW",
+      "identity_name": "frame-00367.ARW",
+      "bytes": 37527552,
+      "sha256": "9bef77e5ec520d484c67da5bfdd721607ffacf8a9eecb85a399e88461676d4f2"
+    },
+    {
+      "index": 368,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00090.ARW",
+      "identity_name": "frame-00368.ARW",
+      "bytes": 37527552,
+      "sha256": "53ae675ddbfe2c1659f4c193560389d220cd0e3a32e63f75ed98e8c38d0e5740"
+    },
+    {
+      "index": 369,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00091.ARW",
+      "identity_name": "frame-00369.ARW",
+      "bytes": 37523456,
+      "sha256": "9707779d884667377cb3ffc49d6a471d0d77c19403d9d8e3981f2bd3d3b4e0bb"
+    },
+    {
+      "index": 370,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00092.ARW",
+      "identity_name": "frame-00370.ARW",
+      "bytes": 37523456,
+      "sha256": "e57bd0ee8b5084a2c73db6c11eed4dd2bf573bd1c522bbeb902a9ec33a825bbd"
+    },
+    {
+      "index": 371,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00093.ARW",
+      "identity_name": "frame-00371.ARW",
+      "bytes": 37523456,
+      "sha256": "163c51c3846c2bf5ae53cda3d084d0b4a1776f51f4064c2dab66ed3159888f09"
+    },
+    {
+      "index": 372,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00094.ARW",
+      "identity_name": "frame-00372.ARW",
+      "bytes": 37519360,
+      "sha256": "79ea8c024e015314d8f133578fb37c9e35ca705bc06d7450811a131289055347"
+    },
+    {
+      "index": 373,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00095.ARW",
+      "identity_name": "frame-00373.ARW",
+      "bytes": 37519360,
+      "sha256": "00b8b2903e65f01be1331633f9e49a7c9469de262ebd29517b819e79ecb9dcfe"
+    },
+    {
+      "index": 374,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00096.ARW",
+      "identity_name": "frame-00374.ARW",
+      "bytes": 37519360,
+      "sha256": "ad78b7b6d1bd8f5c968fa298168a14c00749c2d5f21f2b5a65cd9684c2b259c0"
+    },
+    {
+      "index": 375,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00097.ARW",
+      "identity_name": "frame-00375.ARW",
+      "bytes": 37515264,
+      "sha256": "9fb2afca51f196591a85764af4095829c3ec0e7f8120f14e8b1cf869e502f6c7"
+    },
+    {
+      "index": 376,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00098.ARW",
+      "identity_name": "frame-00376.ARW",
+      "bytes": 37515264,
+      "sha256": "a8bccaadf3889580ae7466c5692dd63aa40f48e8c55428a3bb262ebb534099dc"
+    },
+    {
+      "index": 377,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00099.ARW",
+      "identity_name": "frame-00377.ARW",
+      "bytes": 37511168,
+      "sha256": "49898c7f9a808a8a2121e770cabfd0e0ad688e67b1b60b3553bd89291ee32a97"
+    },
+    {
+      "index": 378,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00100.ARW",
+      "identity_name": "frame-00378.ARW",
+      "bytes": 37515264,
+      "sha256": "8ef2a69f06bd7387f162fb95dd33b8c72c959ef40c95306363beeee84415ee77"
+    },
+    {
+      "index": 379,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00101.ARW",
+      "identity_name": "frame-00379.ARW",
+      "bytes": 37511168,
+      "sha256": "a51a3c553246a294fa179c7f31541a9c6ab6b7cfcc82a74651643b04ecbf87f9"
+    },
+    {
+      "index": 380,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00102.ARW",
+      "identity_name": "frame-00380.ARW",
+      "bytes": 37511168,
+      "sha256": "fe8b4e98d2b3f4c0439e628c60bcf5cba80271aa51a9579d8d8755175d9aa5b4"
+    },
+    {
+      "index": 381,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00103.ARW",
+      "identity_name": "frame-00381.ARW",
+      "bytes": 37515264,
+      "sha256": "82589fe8846c1038f4b1f480a6a879501d89ee53ea334cc43b2354d651a5f5e4"
+    },
+    {
+      "index": 382,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00104.ARW",
+      "identity_name": "frame-00382.ARW",
+      "bytes": 37515264,
+      "sha256": "d31acfb588724dc014b26805ff4d74096697102487644a31e85dd4c3a3fec617"
+    },
+    {
+      "index": 383,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00105.ARW",
+      "identity_name": "frame-00383.ARW",
+      "bytes": 37511168,
+      "sha256": "19daf318505d7fea6f63eb23e4dd78d9ad7d56a3ee30852639a82f80a2ab8b1b"
+    },
+    {
+      "index": 384,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00106.ARW",
+      "identity_name": "frame-00384.ARW",
+      "bytes": 37511168,
+      "sha256": "f84054e4c207fc1712aa13e8f5f2848f6aa4cbd3185d54573478bca66b6145b6"
+    },
+    {
+      "index": 385,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00107.ARW",
+      "identity_name": "frame-00385.ARW",
+      "bytes": 37511168,
+      "sha256": "38818f3888da660229a9852615cd15373b737eec3be53f83f8fcb7178f6b163a"
+    },
+    {
+      "index": 386,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00108.ARW",
+      "identity_name": "frame-00386.ARW",
+      "bytes": 37507072,
+      "sha256": "e51af8a91111bf6da4010923b7ce08331e7778bada185ce95886773e6fd8d0ca"
+    },
+    {
+      "index": 387,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00109.ARW",
+      "identity_name": "frame-00387.ARW",
+      "bytes": 37507072,
+      "sha256": "0858ad0285522469b3cb6013b7354769a06c50c08ce4889268c605f24e104f24"
+    },
+    {
+      "index": 388,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00110.ARW",
+      "identity_name": "frame-00388.ARW",
+      "bytes": 37507072,
+      "sha256": "935876474ba098b37b722e86c5165af185993c9b49bdababed5e686f798981e9"
+    },
+    {
+      "index": 389,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00111.ARW",
+      "identity_name": "frame-00389.ARW",
+      "bytes": 37507072,
+      "sha256": "ee6e6e2efc0ac978ba210281735b9a1ba4742b362e29d26bc9e07c8b2a6626c4"
+    },
+    {
+      "index": 390,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00112.ARW",
+      "identity_name": "frame-00390.ARW",
+      "bytes": 37502976,
+      "sha256": "693c607cd996a03b8b2f4ac085ab7f9e2d90e9b73dd97d2e2783a0eb3d56c0ef"
+    },
+    {
+      "index": 391,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00113.ARW",
+      "identity_name": "frame-00391.ARW",
+      "bytes": 37502976,
+      "sha256": "abb1cda02821a457c986ae99e85b293241c304f1e5885fdecfb44db8c380020a"
+    },
+    {
+      "index": 392,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00114.ARW",
+      "identity_name": "frame-00392.ARW",
+      "bytes": 37502976,
+      "sha256": "027617d35c1b30abca4343e3fcaa5a061c9af65bd9c50138f7e5c38491d93326"
+    },
+    {
+      "index": 393,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00115.ARW",
+      "identity_name": "frame-00393.ARW",
+      "bytes": 37502976,
+      "sha256": "8d6296de0bfe42e5d134596195019c4e4263faf871d118a1c47b1064632ce609"
+    },
+    {
+      "index": 394,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00116.ARW",
+      "identity_name": "frame-00394.ARW",
+      "bytes": 37498880,
+      "sha256": "fef34a2d83a30d9732d9468e3fbbd0a6a7703239953520118412c595c9f9e8f1"
+    },
+    {
+      "index": 395,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00117.ARW",
+      "identity_name": "frame-00395.ARW",
+      "bytes": 37498880,
+      "sha256": "e0236acd95c16765c10775b73740126da5aacea99bab55f887cd8cdcebccfea6"
+    },
+    {
+      "index": 396,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00118.ARW",
+      "identity_name": "frame-00396.ARW",
+      "bytes": 37498880,
+      "sha256": "b869b53c1cbeec580cdf578c6130f1c0992f4a4cf6211fcab35d45e21b231388"
+    },
+    {
+      "index": 397,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00119.ARW",
+      "identity_name": "frame-00397.ARW",
+      "bytes": 37494784,
+      "sha256": "c3f1d6a3fd1b90d4777c6bbae9c4822fe0dc51ec7500c8b4d0dbfdb8bc794e80"
+    },
+    {
+      "index": 398,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00120.ARW",
+      "identity_name": "frame-00398.ARW",
+      "bytes": 37494784,
+      "sha256": "f4ec838431d90e4c0f52c53529d490b51e79fff643daaea1b23db408fdd82f53"
+    },
+    {
+      "index": 399,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00121.ARW",
+      "identity_name": "frame-00399.ARW",
+      "bytes": 37494784,
+      "sha256": "9184d63fea6988dd4139066d1d9363d761ec149a759a7b8301d5aeb858e075da"
+    },
+    {
+      "index": 400,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00122.ARW",
+      "identity_name": "frame-00400.ARW",
+      "bytes": 37494784,
+      "sha256": "30183edce95103936d65718d8d811c47279d47973a57b28792ee7a90817c0974"
+    },
+    {
+      "index": 401,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00123.ARW",
+      "identity_name": "frame-00401.ARW",
+      "bytes": 37490688,
+      "sha256": "86d6c78b1fc71b8d289be7414fb972fab982c725dfddcbf76f7d418bfbe849cd"
+    },
+    {
+      "index": 402,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00124.ARW",
+      "identity_name": "frame-00402.ARW",
+      "bytes": 37490688,
+      "sha256": "203f44469edd760e6b58eb2ef6309cffce2ae4e3f77542da10b51b2bf5b951e3"
+    },
+    {
+      "index": 403,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00125.ARW",
+      "identity_name": "frame-00403.ARW",
+      "bytes": 37494784,
+      "sha256": "69e12dae86770ec206cb0ede666afb8494a569b7d9f14caaf34e8469451a54af"
+    },
+    {
+      "index": 404,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00126.ARW",
+      "identity_name": "frame-00404.ARW",
+      "bytes": 37490688,
+      "sha256": "2362238cf8df2ff99552aea85e673e77a8ff73c36cab72df0cd32df22a11b099"
+    },
+    {
+      "index": 405,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00127.ARW",
+      "identity_name": "frame-00405.ARW",
+      "bytes": 37490688,
+      "sha256": "3301e09a27be48c4d96e12e3c204ed2d0236d9fb6d2f4190bfe94d4771b8bfa3"
+    },
+    {
+      "index": 406,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00128.ARW",
+      "identity_name": "frame-00406.ARW",
+      "bytes": 37490688,
+      "sha256": "11b08b082298b70fb36d554a096eb7d3ac21f2964e20fc289d7e49e32a8f60ae"
+    },
+    {
+      "index": 407,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00129.ARW",
+      "identity_name": "frame-00407.ARW",
+      "bytes": 37482496,
+      "sha256": "87527d4e06711f41493b12b3d8ffd3c745e08cadaeb83a60de7419d8f556b258"
+    },
+    {
+      "index": 408,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00130.ARW",
+      "identity_name": "frame-00408.ARW",
+      "bytes": 37486592,
+      "sha256": "a462fbf4aed8b7ebc8039ff987786055e627a414b34c0d78076818b8bb1f9301"
+    },
+    {
+      "index": 409,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00131.ARW",
+      "identity_name": "frame-00409.ARW",
+      "bytes": 37486592,
+      "sha256": "770a9a206a228a74414d9dc88f5ff3f7b7d289a92e34ce84857737cb25f71f81"
+    },
+    {
+      "index": 410,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00132.ARW",
+      "identity_name": "frame-00410.ARW",
+      "bytes": 37486592,
+      "sha256": "265112f9dcc835e201fe0a1c69693233c14ebf68dda47b3b862d68b9b554822a"
+    },
+    {
+      "index": 411,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00133.ARW",
+      "identity_name": "frame-00411.ARW",
+      "bytes": 37482496,
+      "sha256": "25ed0734935510fbf0d11e164f66c074fa0832fdb2906e5e4e3acb74c2460ada"
+    },
+    {
+      "index": 412,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00134.ARW",
+      "identity_name": "frame-00412.ARW",
+      "bytes": 37482496,
+      "sha256": "914a83737e3555593388d882715a2238ccf3b65392b36a6a9cbd4c0b6f27c5be"
+    },
+    {
+      "index": 413,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00135.ARW",
+      "identity_name": "frame-00413.ARW",
+      "bytes": 37482496,
+      "sha256": "9a405986b1650c9ee922fb920b05e837fbe7abed77306d6eafb1a466f83d1295"
+    },
+    {
+      "index": 414,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00136.ARW",
+      "identity_name": "frame-00414.ARW",
+      "bytes": 37482496,
+      "sha256": "b9147424b94bc2ab16c903a3eb83515064c88221afe1c86b064187cb78660384"
+    },
+    {
+      "index": 415,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00137.ARW",
+      "identity_name": "frame-00415.ARW",
+      "bytes": 37478400,
+      "sha256": "65b34bfae87f75d6fb231370ab3063bd7e35fbf5989073bd6b76c1c4b14a6319"
+    },
+    {
+      "index": 416,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00138.ARW",
+      "identity_name": "frame-00416.ARW",
+      "bytes": 37478400,
+      "sha256": "e45b110ea629842e5690f3cda63ed4149c60a406f2b968e65439768b27ec8988"
+    },
+    {
+      "index": 417,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00139.ARW",
+      "identity_name": "frame-00417.ARW",
+      "bytes": 37478400,
+      "sha256": "b779a4080211ea1075df05c12b80014aa27147af161165fa9d4c10ff609f5489"
+    },
+    {
+      "index": 418,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00140.ARW",
+      "identity_name": "frame-00418.ARW",
+      "bytes": 37478400,
+      "sha256": "4d27b79adbec7c0903b16c433490ea39a6a8f8afdcbe70c84b58d0c4461a539c"
+    },
+    {
+      "index": 419,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00141.ARW",
+      "identity_name": "frame-00419.ARW",
+      "bytes": 37474304,
+      "sha256": "76afe0e4ab2e8eada62df07b3350a6f5bfc3f4710070ae1107824603e0f1ce1c"
+    },
+    {
+      "index": 420,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00142.ARW",
+      "identity_name": "frame-00420.ARW",
+      "bytes": 37478400,
+      "sha256": "94f0eb6ccf1e7fe71d04c1d7f948bbe2b374bad08cf7c9eaf071f686de43c504"
+    },
+    {
+      "index": 421,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00143.ARW",
+      "identity_name": "frame-00421.ARW",
+      "bytes": 37478400,
+      "sha256": "1543c2f62be84994e0f1aac00c61ec3fd58f93384ff55d79a693d061bae98403"
+    },
+    {
+      "index": 422,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00144.ARW",
+      "identity_name": "frame-00422.ARW",
+      "bytes": 37478400,
+      "sha256": "d230e04cb7ccad10dafd558fee849ca57581cfedd66e8f3333c38d83c15faa34"
+    },
+    {
+      "index": 423,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00145.ARW",
+      "identity_name": "frame-00423.ARW",
+      "bytes": 37474304,
+      "sha256": "034e5b8738dc0c75848d4b82cde4bc2d65fe0fcd442684b52eb6d678995b8d97"
+    },
+    {
+      "index": 424,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00146.ARW",
+      "identity_name": "frame-00424.ARW",
+      "bytes": 37474304,
+      "sha256": "a752bafd1379a2872e4d396e731c6fb85e5385b4f769541c480c55c3f31a4d97"
+    },
+    {
+      "index": 425,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00147.ARW",
+      "identity_name": "frame-00425.ARW",
+      "bytes": 37474304,
+      "sha256": "3f19677d6ab78fdf596f62c39b05d5f9de64012275cb2d98ac047887a801f67b"
+    },
+    {
+      "index": 426,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00148.ARW",
+      "identity_name": "frame-00426.ARW",
+      "bytes": 37470208,
+      "sha256": "fdda25b4456592731ebb986035b03b3889f6829361a6bb9dea740303e108026f"
+    },
+    {
+      "index": 427,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00149.ARW",
+      "identity_name": "frame-00427.ARW",
+      "bytes": 37474304,
+      "sha256": "a9bec843a30754caa22b5d991b67b7dbe623d3c7cb7dbbde3bc69288b9f823d4"
+    },
+    {
+      "index": 428,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00150.ARW",
+      "identity_name": "frame-00428.ARW",
+      "bytes": 37470208,
+      "sha256": "11febc948a92edaca9b95d55a84772809cec5ccbd101c0f43dab19aa35296726"
+    },
+    {
+      "index": 429,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00151.ARW",
+      "identity_name": "frame-00429.ARW",
+      "bytes": 37470208,
+      "sha256": "ff90ec9b947abc30aa535c6f8cf51ab3c11c679f8a4ba4322221ea5097d1f5f8"
+    },
+    {
+      "index": 430,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00152.ARW",
+      "identity_name": "frame-00430.ARW",
+      "bytes": 37470208,
+      "sha256": "8b7cb03e0d2fd635f58ee2d0ca19d05c2918a364b413eb4a8368a40f235d9209"
+    },
+    {
+      "index": 431,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00153.ARW",
+      "identity_name": "frame-00431.ARW",
+      "bytes": 37466112,
+      "sha256": "74377c5dead47c2cd940be29b5306437d3f35becb5f49df1dd6cf57f6d0ff387"
+    },
+    {
+      "index": 432,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00154.ARW",
+      "identity_name": "frame-00432.ARW",
+      "bytes": 37470208,
+      "sha256": "f236b6f04446cbc4c9f9c8665821c95a5277f53870d3473c43feb7a376eae538"
+    },
+    {
+      "index": 433,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00155.ARW",
+      "identity_name": "frame-00433.ARW",
+      "bytes": 37470208,
+      "sha256": "607bd2ad0523ceb56e9202aa28d5a12f9e1445d72679e0ed54b2a0e6c64628c3"
+    },
+    {
+      "index": 434,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00156.ARW",
+      "identity_name": "frame-00434.ARW",
+      "bytes": 37470208,
+      "sha256": "f7aa2213fbefca75135c71c1a4edb163b27cfd95cecd87af3d44bd577cbc2fbd"
+    },
+    {
+      "index": 435,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00157.ARW",
+      "identity_name": "frame-00435.ARW",
+      "bytes": 37466112,
+      "sha256": "e78d4450915715c3c69efaf0854177bc4c0fb2609c0d0f5a20d83f8b412ee55b"
+    },
+    {
+      "index": 436,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00158.ARW",
+      "identity_name": "frame-00436.ARW",
+      "bytes": 37466112,
+      "sha256": "9bf99db5f6b2822b20bd5aa12e7d4c80e22e18042248f30e2a714841ef6ef289"
+    },
+    {
+      "index": 437,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00159.ARW",
+      "identity_name": "frame-00437.ARW",
+      "bytes": 37466112,
+      "sha256": "f483dea865a0b33b64336aa34b7702f621d3a1e396c85a7ccec19688b2610f2c"
+    },
+    {
+      "index": 438,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00160.ARW",
+      "identity_name": "frame-00438.ARW",
+      "bytes": 37470208,
+      "sha256": "3715a1496f5523ba101ee2ac439326c6f1fc3f66754340060c6c9239353dfa34"
+    },
+    {
+      "index": 439,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00161.ARW",
+      "identity_name": "frame-00439.ARW",
+      "bytes": 37462016,
+      "sha256": "6442d83abd2805ddfbdc1a6f35eff676937c53ba1a138b60b6abc4e1340d3c89"
+    },
+    {
+      "index": 440,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00162.ARW",
+      "identity_name": "frame-00440.ARW",
+      "bytes": 37462016,
+      "sha256": "31432c7a3262a4392fb7db1bf8a83524318a652bb11a9a0a2ec306a667e9d5bd"
+    },
+    {
+      "index": 441,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00163.ARW",
+      "identity_name": "frame-00441.ARW",
+      "bytes": 37462016,
+      "sha256": "b90e0e38340760f00149fddb4f7331e71aefbbbe320fa8ecb9c6fac6cb4492f7"
+    },
+    {
+      "index": 442,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00164.ARW",
+      "identity_name": "frame-00442.ARW",
+      "bytes": 37466112,
+      "sha256": "758a5640dd617a74d085e06764e335b918e418926d0cf1f8414c1c286f1292f5"
+    },
+    {
+      "index": 443,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00165.ARW",
+      "identity_name": "frame-00443.ARW",
+      "bytes": 37462016,
+      "sha256": "df9a2f955aea472cb99cd6b47ea624f6c8518de24f48e4ff117472c365d95cbf"
+    },
+    {
+      "index": 444,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00166.ARW",
+      "identity_name": "frame-00444.ARW",
+      "bytes": 37462016,
+      "sha256": "31958d360125e2dd274084c2a741a264889e735b7779e48f6035da769fd17a66"
+    },
+    {
+      "index": 445,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00167.ARW",
+      "identity_name": "frame-00445.ARW",
+      "bytes": 37462016,
+      "sha256": "124213908b1314ae479de2b728153ff70afaa0ca71657e2caf176e6abc04733d"
+    },
+    {
+      "index": 446,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00168.ARW",
+      "identity_name": "frame-00446.ARW",
+      "bytes": 37462016,
+      "sha256": "73686182e85e1ff65591358ae3695fdb1fe1f4ea3a54e01d4a155e7142c6b6ae"
+    },
+    {
+      "index": 447,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00169.ARW",
+      "identity_name": "frame-00447.ARW",
+      "bytes": 37462016,
+      "sha256": "945df880f2403685a6e468dfd8707cc1c9564c6333ca46aa5c549abfb9da1059"
+    },
+    {
+      "index": 448,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00170.ARW",
+      "identity_name": "frame-00448.ARW",
+      "bytes": 37462016,
+      "sha256": "6d9f1bf303a2fb14e54d44c59a869c4ffae35fddfd6d45b4020ee85c03553046"
+    },
+    {
+      "index": 449,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00171.ARW",
+      "identity_name": "frame-00449.ARW",
+      "bytes": 37462016,
+      "sha256": "8342dda42a8b5d8e9aa63e0a6df501bbc51ca0e06341ebd70e6351898a108a80"
+    },
+    {
+      "index": 450,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00172.ARW",
+      "identity_name": "frame-00450.ARW",
+      "bytes": 37462016,
+      "sha256": "e68b40081f803b2a99ad6b19d2342d1c47afc73bd00153e38b86d4b026ceda20"
+    },
+    {
+      "index": 451,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00173.ARW",
+      "identity_name": "frame-00451.ARW",
+      "bytes": 37462016,
+      "sha256": "08c6b861ffc392fcf7c31004dabe1ee526981a71cbea35e85b8c467e25081490"
+    },
+    {
+      "index": 452,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00174.ARW",
+      "identity_name": "frame-00452.ARW",
+      "bytes": 37457920,
+      "sha256": "e4ab33e7a111674f515700a272cd4de09ad213fea8a7b03573578289e8c9642c"
+    },
+    {
+      "index": 453,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00175.ARW",
+      "identity_name": "frame-00453.ARW",
+      "bytes": 37457920,
+      "sha256": "d80c183dc14a8da06556559e68e1da0304a7949973f685d348bf3a5c824c728e"
+    },
+    {
+      "index": 454,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00176.ARW",
+      "identity_name": "frame-00454.ARW",
+      "bytes": 37457920,
+      "sha256": "8ad813ac79636a234fdf57a21b4c09bf044f6c97c963cd171602a7da8f5631de"
+    },
+    {
+      "index": 455,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00177.ARW",
+      "identity_name": "frame-00455.ARW",
+      "bytes": 37457920,
+      "sha256": "28cec717f0400bfd6f4bd60f859140a649a900b5e8d6aaeee89ca001d3c6b872"
+    },
+    {
+      "index": 456,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00178.ARW",
+      "identity_name": "frame-00456.ARW",
+      "bytes": 37462016,
+      "sha256": "f86e05f5955bd03f1cc103b8ccd227590c7580469e61ae216c50bbec4b799f46"
+    },
+    {
+      "index": 457,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00179.ARW",
+      "identity_name": "frame-00457.ARW",
+      "bytes": 37449728,
+      "sha256": "ff7b1a6bcf322e373589afa8a2ac61f586112be815747b0b1dd03cc6ccf4db2d"
+    },
+    {
+      "index": 458,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00180.ARW",
+      "identity_name": "frame-00458.ARW",
+      "bytes": 37453824,
+      "sha256": "03abd13c6345674472708e86bdabd165ac2845feb4fcd1ba0c9dce15ab37336f"
+    },
+    {
+      "index": 459,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00181.ARW",
+      "identity_name": "frame-00459.ARW",
+      "bytes": 37453824,
+      "sha256": "5a8841dd4500892fb0f767ae893d74ddf6f5840679bed4fc48e0b4b0312e45f0"
+    },
+    {
+      "index": 460,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00182.ARW",
+      "identity_name": "frame-00460.ARW",
+      "bytes": 37453824,
+      "sha256": "db255a36d3fa21c158edaaa6430b2ca5b31a601d2bc483e47cdff2425cb580e3"
+    },
+    {
+      "index": 461,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00183.ARW",
+      "identity_name": "frame-00461.ARW",
+      "bytes": 37449728,
+      "sha256": "7dfbd30a91fe83dd41b8314b6fd8148eac5e4e83fc4371c9798b5237566ef979"
+    },
+    {
+      "index": 462,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00184.ARW",
+      "identity_name": "frame-00462.ARW",
+      "bytes": 37449728,
+      "sha256": "5c521beb549bfa4a02d1b028f722a0463b9171c2fc1326c03fa1aa588591d722"
+    },
+    {
+      "index": 463,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00185.ARW",
+      "identity_name": "frame-00463.ARW",
+      "bytes": 37453824,
+      "sha256": "87ebf535fd6ae10a6be472fe5968e35b4dc78a83256c32b24f6c1b1d51c5a05a"
+    },
+    {
+      "index": 464,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00186.ARW",
+      "identity_name": "frame-00464.ARW",
+      "bytes": 37453824,
+      "sha256": "4b9372c757954557e8ed15c8577a3103c0b17bec24b2f83a15ad938046c2bd6b"
+    },
+    {
+      "index": 465,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00187.ARW",
+      "identity_name": "frame-00465.ARW",
+      "bytes": 37453824,
+      "sha256": "7ee07fb07157da4da510e4117f241f88c2f65c0a30267aa21795e535f23ecbb4"
+    },
+    {
+      "index": 466,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00188.ARW",
+      "identity_name": "frame-00466.ARW",
+      "bytes": 37449728,
+      "sha256": "64073a0b99227ba9c694aacadfca320d9c54c91603360c383f901aae4d6d3ae1"
+    },
+    {
+      "index": 467,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00189.ARW",
+      "identity_name": "frame-00467.ARW",
+      "bytes": 37449728,
+      "sha256": "03da17df4e88e71d32bab9a6d48ef4f600c418c995e521ead8eef918687cf63b"
+    },
+    {
+      "index": 468,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00190.ARW",
+      "identity_name": "frame-00468.ARW",
+      "bytes": 37449728,
+      "sha256": "92ad06bc8e98870cf3a4d61de1f17075e64d484c02a8d6296786a2df1186e02b"
+    },
+    {
+      "index": 469,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00191.ARW",
+      "identity_name": "frame-00469.ARW",
+      "bytes": 37449728,
+      "sha256": "f24edc0a919952c72cdcd0e5f006b37fea2d45f8c1cfd076e92d6f1f1a31785a"
+    },
+    {
+      "index": 470,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00192.ARW",
+      "identity_name": "frame-00470.ARW",
+      "bytes": 37445632,
+      "sha256": "6cd709c63ba2e080a0a665040a3e9516479b3f012f970763050f30604ba6a6f2"
+    },
+    {
+      "index": 471,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00193.ARW",
+      "identity_name": "frame-00471.ARW",
+      "bytes": 37449728,
+      "sha256": "856ef648fa00bd268e2154c819bab59c08126c834bb9b66b8bf3b3a3e675b84c"
+    },
+    {
+      "index": 472,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00194.ARW",
+      "identity_name": "frame-00472.ARW",
+      "bytes": 37449728,
+      "sha256": "0f8f88ab6981e6f31ceaebd0aa4431ba12ff0aa2a0d44e60ef1bdadcb9ddc8db"
+    },
+    {
+      "index": 473,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00195.ARW",
+      "identity_name": "frame-00473.ARW",
+      "bytes": 37449728,
+      "sha256": "a033b49481c148fba0fa345bb18ea96aa2ef52e67d561363fcdc895cbe14c289"
+    },
+    {
+      "index": 474,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00196.ARW",
+      "identity_name": "frame-00474.ARW",
+      "bytes": 37449728,
+      "sha256": "d2f2ffc661db35a8ea0860a94a268aa0e22e210d35bf6ac85a532ad659ecdedf"
+    },
+    {
+      "index": 475,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00197.ARW",
+      "identity_name": "frame-00475.ARW",
+      "bytes": 37449728,
+      "sha256": "6c9cad306b01a800679f5d2739cb4121be4fb4f5594bd0614f2a441f10520680"
+    },
+    {
+      "index": 476,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00198.ARW",
+      "identity_name": "frame-00476.ARW",
+      "bytes": 37445632,
+      "sha256": "4ce04582a088a4ec7bd958aaf2128fc72ca43e8b78f321e69c979a810a8e049d"
+    },
+    {
+      "index": 477,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00199.ARW",
+      "identity_name": "frame-00477.ARW",
+      "bytes": 37445632,
+      "sha256": "94b5707f7efa812dde6005855aeb975b9265c0a15e7f6332ec8d18d04ad8a4c6"
+    },
+    {
+      "index": 478,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00200.ARW",
+      "identity_name": "frame-00478.ARW",
+      "bytes": 37445632,
+      "sha256": "aaf01123c3a73f5cca9fcd551415226a6866940d950a3de7e5aca80def345720"
+    },
+    {
+      "index": 479,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00201.ARW",
+      "identity_name": "frame-00479.ARW",
+      "bytes": 37445632,
+      "sha256": "66d00d616f5df5eb93825d1204f64907824b02593f8059078f9a65f447f1030d"
+    },
+    {
+      "index": 480,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00202.ARW",
+      "identity_name": "frame-00480.ARW",
+      "bytes": 37445632,
+      "sha256": "eec565209cd29fac39e7eb9e546329ac3459c2e64fa8d4f9d095761da98d5d81"
+    },
+    {
+      "index": 481,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00203.ARW",
+      "identity_name": "frame-00481.ARW",
+      "bytes": 37441536,
+      "sha256": "916819fd0adf9d734e8c0c8091a047ad8ddbc730d919069b1aa84e002035ae66"
+    },
+    {
+      "index": 482,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00204.ARW",
+      "identity_name": "frame-00482.ARW",
+      "bytes": 37445632,
+      "sha256": "3fc389145f0cf9f8f6fd5613deb883011bc286f3bd19d3aeb04ff49990fbd3c3"
+    },
+    {
+      "index": 483,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00205.ARW",
+      "identity_name": "frame-00483.ARW",
+      "bytes": 37445632,
+      "sha256": "a1b1189ef95953f9ca0bc6d4a1f2c7a5c4cf9a9bcad25a0d92e9fab82e6ff6fb"
+    },
+    {
+      "index": 484,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00206.ARW",
+      "identity_name": "frame-00484.ARW",
+      "bytes": 37445632,
+      "sha256": "10a2c3287854c33eded87181f7f5dbc81bc8ec6635dc29d355cff3d55ad17ea2"
+    },
+    {
+      "index": 485,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00207.ARW",
+      "identity_name": "frame-00485.ARW",
+      "bytes": 37445632,
+      "sha256": "72f3356fa15eeecea9eac6ca1f2b47133d1e20dcba2b649bc01f4bf161e48542"
+    },
+    {
+      "index": 486,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00208.ARW",
+      "identity_name": "frame-00486.ARW",
+      "bytes": 37441536,
+      "sha256": "722d05a922c8648b6eab5eb1a5afcfb84505e8c9f60a41092d30c36cb9d0bf0c"
+    },
+    {
+      "index": 487,
+      "path": "D:\\personal\\macro\\flower-marigold-cpl\\stack4.2-offcenter-sw5-cpl\\DSC00209.ARW",
+      "identity_name": "frame-00487.ARW",
+      "bytes": 37441536,
+      "sha256": "4d9159021f60db5a721d54f62c2326069e9090d02f29d17683bdc9139271003b"
+    }
+  ],
+  "warp_map": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\flower-marigold-cpl\\stack-4\\alignment.txt",
+  "warp_map_sha256": "d2eb0815191279f9d6fc529d76142e56989d4afdcbc052088ef4e7da530b58c1",
+  "expected_reference": 244,
+  "expected_full_geometry": [
+    3516,
+    2344
+  ],
+  "expected_crop": [
+    191,
+    128,
+    3134,
+    2088
+  ],
+  "expected_baseline": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\flower-marigold-cpl\\final\\marigold-stack-4-master.tiff",
+  "expected_baseline_sha256": "7df00e469bb392a5c045613815dbcd885eb470e9f10f630c9add6fda1bb179a0",
+  "expected_baseline_pixels_sha256": "12801dac65a40a15262ab82c9d5147150181302e88dbf0efbdf4aa29d83ee2d3",
+  "expected_camera": "ILCE-7CM2",
+  "expected_iso": 100.0,
+  "exposure_stops": -0.5,
+  "tone_policy": "automatic-per-arm-current-writer",
+  "phase": "cost",
+  "out_dir": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\full-stack-source-prior\\marigold4-cost-1\\output"
+}

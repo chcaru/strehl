@@ -1,0 +1,138 @@
+{
+  "stack": "ore-100",
+  "target_file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\minerals\\native-tiles.json",
+  "target_sha256": "8cb3e456529e8f87df98b0cf9f7fa5091430414d1188f93ccdec9156c4edd0a4",
+  "native_shape": [
+    4468,
+    6702,
+    3
+  ],
+  "icc_sha256": "238ad2596316306a72025bb245cf3c8cd72f1090c8d95af2f38dc090e84ece5b",
+  "display": "rounded RGB16/257, same original ICC; native tiles unresampled; whole JPEG98 orientation only",
+  "images": [
+    {
+      "arm": "current",
+      "master": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\highlight-rendering\\replay-ore100-1\\output\\current.tiff",
+      "master_sha256": "cbd8f60e5234b7be473a5635fd55f8825bcffa0ffb569e947df192dc78a5d191",
+      "complete_overview": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\ore-render-views-1\\current-whole.jpg",
+      "overview_sha256": "1ec099b452ba24c1d08fb643c3684b373a6d387355df00ff8090d725296faabd",
+      "tiles": [
+        {
+          "target": "100-white-patch-native384",
+          "rect": [
+            1208,
+            748,
+            384,
+            384
+          ],
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\ore-render-views-1\\current-100-white-patch-native384.png",
+          "sha256": "efef78cbcd34ea5ba68fa5f212c82dc82a7f62f1edeb5b792cd112838ca41a64"
+        },
+        {
+          "target": "100-blue-control-native384",
+          "rect": [
+            2908,
+            2768,
+            384,
+            384
+          ],
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\ore-render-views-1\\current-100-blue-control-native384.png",
+          "sha256": "d03c0285672b8488c781a88009057f71f276023548857045218149baebf6c776"
+        }
+      ]
+    },
+    {
+      "arm": "shoulder",
+      "master": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\highlight-rendering\\replay-ore100-1\\output\\shoulder.tiff",
+      "master_sha256": "009ac0dade07056392255b456aad94a8a1a3df5b789c1cbcc23b6451fcaa6201",
+      "complete_overview": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\ore-render-views-1\\shoulder-whole.jpg",
+      "overview_sha256": "aaa3ac525a1b561c457806f288c099ea9daea6553a2083bc3af721f9c6f1c061",
+      "tiles": [
+        {
+          "target": "100-white-patch-native384",
+          "rect": [
+            1208,
+            748,
+            384,
+            384
+          ],
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\ore-render-views-1\\shoulder-100-white-patch-native384.png",
+          "sha256": "3494e21da7e009cb1116311a98fc7910354ea886ba765ddc12ed9bb35c899dfa"
+        },
+        {
+          "target": "100-blue-control-native384",
+          "rect": [
+            2908,
+            2768,
+            384,
+            384
+          ],
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\ore-render-views-1\\shoulder-100-blue-control-native384.png",
+          "sha256": "5cfc8cd2fe8512a71b08bd7ec36ad9bd412746ded49bc752884b40ba0987e123"
+        }
+      ]
+    },
+    {
+      "arm": "sensor-rolloff-off",
+      "master": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\highlight-rendering\\replay-ore100-1\\output\\sensor-rolloff-off.tiff",
+      "master_sha256": "25bbfa54af361b76364a50414529dad6399b0eb05c309c736f4e5f4f48908be4",
+      "complete_overview": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\ore-render-views-1\\sensor-rolloff-off-whole.jpg",
+      "overview_sha256": "88bb967f770ac526ab468d2653956a359090d0b8f79d98ba16807a61b591ca62",
+      "tiles": [
+        {
+          "target": "100-white-patch-native384",
+          "rect": [
+            1208,
+            748,
+            384,
+            384
+          ],
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\ore-render-views-1\\sensor-rolloff-off-100-white-patch-native384.png",
+          "sha256": "1199272e6e3a4a2c9463c00193f35cb76d5065a23882768f571a9b0e3cee2e24"
+        },
+        {
+          "target": "100-blue-control-native384",
+          "rect": [
+            2908,
+            2768,
+            384,
+            384
+          ],
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\ore-render-views-1\\sensor-rolloff-off-100-blue-control-native384.png",
+          "sha256": "d03c0285672b8488c781a88009057f71f276023548857045218149baebf6c776"
+        }
+      ]
+    },
+    {
+      "arm": "both",
+      "master": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\highlight-rendering\\replay-ore100-1\\output\\both.tiff",
+      "master_sha256": "a685ebb9620f433c51f2cad1a2fc0e7244c0aa77f8dc4363b0d36c6d44d37a9d",
+      "complete_overview": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\ore-render-views-1\\both-whole.jpg",
+      "overview_sha256": "6ee8873e28b55836fc102b005602a845808ac1bef921c1cb4bdee57d181dc0e8",
+      "tiles": [
+        {
+          "target": "100-white-patch-native384",
+          "rect": [
+            1208,
+            748,
+            384,
+            384
+          ],
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\ore-render-views-1\\both-100-white-patch-native384.png",
+          "sha256": "bb4b3ec0842a9e7957dddca3d8bf9dfc4b6e4916b4a957f54c5562c32327eb10"
+        },
+        {
+          "target": "100-blue-control-native384",
+          "rect": [
+            2908,
+            2768,
+            384,
+            384
+          ],
+          "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\ore-render-views-1\\both-100-blue-control-native384.png",
+          "sha256": "0f9d2b5f69d5dcbfedda325c00ae87ee64172438818f08114998b760af7c1173"
+        }
+      ]
+    }
+  ]
+}

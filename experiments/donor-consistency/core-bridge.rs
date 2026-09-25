@@ -23,7 +23,7 @@ pub fn resolved_coefficients(merge:&BandMerge)->Vec<Pyramid> {
         for k in 0..merge.sizes.len() {
             let i=k*merge.planes+c;
             for (j,v) in out.level_mut(k).iter_mut().enumerate() {
-                *v=if merge.den[k][j]>0.0 {merge.num[i][j]/merge.den[k][j]}
+                *v=if merge.den[k][j]>0.0 {super::resolve_soft_numerator(merge.num[i][j],merge.den[k][j])}
                     else {merge.usum[i][j]*inv_n};
             }
         }

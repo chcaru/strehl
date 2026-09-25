@@ -1,0 +1,30 @@
+{
+  "resource_feasible": true,
+  "estimated_full_seconds": 622.2864981,
+  "maximum_estimate_seconds": 1500,
+  "variable_source_seconds": 5.7336143999999996,
+  "cost_source_count": 3,
+  "full_source_count": 207,
+  "source_multiplier": 1.25,
+  "observed_fixed_seconds": 7.762256100000001,
+  "additional_allowance_seconds": 120,
+  "cost_peak_bytes": 5613875200,
+  "maximum_cost_peak_bytes": 19327352832,
+  "full_limits": {
+    "wall_seconds": 1800,
+    "cpu_seconds": 12000,
+    "committed_bytes": 25769803776
+  },
+  "receipt": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\full-stack-source-prior\\ore100-cost-1\\output\\receipt.json",
+    "sha256": "a737bfd36d2dcce109abff8080e359d8950e0623e6375ed0221d233e91266f42",
+    "bytes": 19975
+  },
+  "process": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\full-stack-source-prior\\ore100-cost-1\\process.json",
+    "sha256": "8f31636474d0dde4ae6a717d39eda0560602fd9b12b0b55ce2b0106543bc2860",
+    "bytes": 2760
+  },
+  "photographic_replay_admitted": false,
+  "limitation": "Three predetermined original indices, whole-count probe, subset prior only. Resource extrapolation is not runtime guarantee, quality evidence, or a complete stack."
+}

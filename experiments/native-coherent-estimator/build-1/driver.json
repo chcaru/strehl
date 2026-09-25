@@ -1,0 +1,39 @@
+{
+  "driver": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\native-coherent-estimator\\runner.py",
+    "sha256": "8d8399cb618068f578e5bd047a56738544de39ad79e292f6bb93bf825d04a439",
+    "bytes": 18096
+  },
+  "bounded_helper": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\cross-scale-source-prior\\run.py",
+    "sha256": "8bb539359b1d712c5894ce43d7c7ee66f636fefa1432cdc5d53d7777c75860b0",
+    "bytes": 7134
+  },
+  "command": [
+    "cargo",
+    "test",
+    "-p",
+    "strehl-cli",
+    "--bin",
+    "strehl",
+    "--test",
+    "byte-freeze",
+    "--no-run",
+    "--release",
+    "--features",
+    "native-pyramid-profile,native-gpu-gather,native-direct-planes,native-correction-variance",
+    "--jobs",
+    "2",
+    "--target-dir",
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\target\\native-pyramid-profile",
+    "--message-format=json-render-diagnostics",
+    "--locked",
+    "--offline"
+  ],
+  "limits": {
+    "wall": 600,
+    "cpu": 1800,
+    "gib": 16
+  },
+  "scope": "New fixed native whole-source estimator: general qualification and optional coherent-surface photographic observation are separate preregistered decisions. A photographic gate pass licenses one observation, not a default change, automatic scene classifier, general quality claim, or SOTA result."
+}

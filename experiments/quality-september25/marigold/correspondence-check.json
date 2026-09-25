@@ -1,0 +1,222 @@
+{
+  "command": "python -I -B -X faulthandler experiments/quality-september25/marigold/correspondence-check.py",
+  "reference_original": 112,
+  "render_reference": 244,
+  "units": "CFA-plane pixels in existing reference244 map gauge",
+  "rejecting_inputs": "Flat input must be invalid; known translation must be recovered. Disagreement under blur exposes defocus bias. This is correspondence, not ground-truth registration: defocus, shape change, and multiple hairs can shift or invalidate the match.",
+  "template_choice": "Fixed rectangles selected on original112, not independently fitted for each pair. These cover hair groups that remain recognizable through the five adjacent sampled originals.",
+  "controls": {
+    "fan": {
+      "identity": {
+        "valid": true,
+        "ncc": 0.9999998211860657,
+        "quad_shift": [
+          0,
+          0
+        ]
+      },
+      "known_translation": {
+        "valid": true,
+        "ncc": 0.9999999403953552,
+        "quad_shift": [
+          6,
+          -4
+        ]
+      },
+      "flat": {
+        "valid": false
+      },
+      "synthetic_blur": {
+        "valid": true,
+        "ncc": 0.9801756143569946,
+        "quad_shift": [
+          0,
+          0
+        ]
+      }
+    },
+    "rim": {
+      "identity": {
+        "valid": true,
+        "ncc": 0.9999999403953552,
+        "quad_shift": [
+          0,
+          0
+        ]
+      },
+      "known_translation": {
+        "valid": true,
+        "ncc": 0.9999999403953552,
+        "quad_shift": [
+          6,
+          -4
+        ]
+      },
+      "flat": {
+        "valid": false
+      },
+      "synthetic_blur": {
+        "valid": true,
+        "ncc": 0.9831366539001465,
+        "quad_shift": [
+          0,
+          0
+        ]
+      }
+    }
+  },
+  "regions": {
+    "fan": {
+      "template_rect_quad_within_crop": [
+        60,
+        115,
+        155,
+        110
+      ],
+      "measurements": [
+        {
+          "index": 104,
+          "valid": true,
+          "ncc": 0.7638790011405945,
+          "quad_shift": [
+            0,
+            -1
+          ]
+        },
+        {
+          "index": 108,
+          "valid": true,
+          "ncc": 0.9019039273262024,
+          "quad_shift": [
+            0,
+            -1
+          ]
+        },
+        {
+          "index": 112,
+          "valid": true,
+          "ncc": 0.9999998211860657,
+          "quad_shift": [
+            0,
+            0
+          ]
+        },
+        {
+          "index": 116,
+          "valid": true,
+          "ncc": 0.9050052165985107,
+          "quad_shift": [
+            0,
+            1
+          ]
+        },
+        {
+          "index": 120,
+          "valid": true,
+          "ncc": 0.7227694392204285,
+          "quad_shift": [
+            0,
+            2
+          ]
+        }
+      ]
+    },
+    "rim": {
+      "template_rect_quad_within_crop": [
+        60,
+        80,
+        180,
+        160
+      ],
+      "measurements": [
+        {
+          "index": 104,
+          "valid": true,
+          "ncc": 0.7806341052055359,
+          "quad_shift": [
+            1,
+            0
+          ]
+        },
+        {
+          "index": 108,
+          "valid": true,
+          "ncc": 0.9252097606658936,
+          "quad_shift": [
+            0,
+            0
+          ]
+        },
+        {
+          "index": 112,
+          "valid": true,
+          "ncc": 0.9999999403953552,
+          "quad_shift": [
+            0,
+            0
+          ]
+        },
+        {
+          "index": 116,
+          "valid": true,
+          "ncc": 0.9345349073410034,
+          "quad_shift": [
+            0,
+            0
+          ]
+        },
+        {
+          "index": 120,
+          "valid": true,
+          "ncc": 0.8507251739501953,
+          "quad_shift": [
+            0,
+            0
+          ]
+        }
+      ]
+    }
+  },
+  "inputs": [
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\marigold\\adjacent\\source-104-fan-gr.npy",
+      "sha256": "e8c28c6712e0d943070c9ee3f072499552626b5827a149b80c0636348fd717d3"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\marigold\\adjacent\\source-108-fan-gr.npy",
+      "sha256": "a6c6bfc11144c37072f9d895ff85d818536245743322af4173cffaafbe898d63"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\marigold\\adjacent\\source-112-fan-gr.npy",
+      "sha256": "51742dafa192fa9c4fe4bf5c79762fc82f46a6a6a0b0e521a891dd0c5d0dc164"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\marigold\\adjacent\\source-116-fan-gr.npy",
+      "sha256": "93a61467a27efcbe09898bd595a4d34cb84dee70453636d461bdfc86ac2408d2"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\marigold\\adjacent\\source-120-fan-gr.npy",
+      "sha256": "e616c9fba9b52672b1219e19c833bc8a268ea33ecd00c4767657146d9a979707"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\marigold\\adjacent\\source-104-rim-gr.npy",
+      "sha256": "7efa6fef10429c2169d05471d39351cc6e74be02363289def2efbc4f01c878e6"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\marigold\\adjacent\\source-108-rim-gr.npy",
+      "sha256": "0b0304d14f8faeadda84a1ba7ab7dabab7c79638c7903a32537dee99eada41fb"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\marigold\\adjacent\\source-112-rim-gr.npy",
+      "sha256": "9698becabea510aade0252a728036db534849042f91c1e8f557b346f0ab4eb4d"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\marigold\\adjacent\\source-116-rim-gr.npy",
+      "sha256": "a45d0a6263aff668522fd5d94b63c2d2506795be7f7a38476097e1f05e9c84a1"
+    },
+    {
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\marigold\\adjacent\\source-120-rim-gr.npy",
+      "sha256": "51962a66043aa7a974a7d109d450d4ddddc9ab3503614282c531132f392b9d02"
+    }
+  ]
+}

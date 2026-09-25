@@ -1,0 +1,54 @@
+{
+  "status": "DELIVERY_BINDINGS_VERIFIED",
+  "rows": [
+    {
+      "name": "garnet-104",
+      "frames": 183,
+      "native_dimensions": [
+        6524,
+        4348
+      ],
+      "map_digest": "5108e5fd3696d28b",
+      "pixel_sha256": "1b7d55986df90131ed4adee4335541c449e741eb914ebd1ba947ddad126da828",
+      "executable_sha256": "bec4c357836ad1383800a6c933460ee7ef072c525b5957a6f5deb5194b203314",
+      "file_bindings_match": true,
+      "source_metadata_match": true,
+      "original_contents_reread": false,
+      "swapped_order_rejected": true
+    },
+    {
+      "name": "chip-before",
+      "frames": 299,
+      "native_dimensions": [
+        6500,
+        4332
+      ],
+      "map_digest": "bc92dcc743ae3d98",
+      "pixel_sha256": "0e9c87abff6742344447bce4c13e1c23e4b55ee488cfab5b3ac191e353d67544",
+      "executable_sha256": "2fd0a1615989e262fbba61e0a1587a9b8f20ff4913d3969510e967ce9d9219d7",
+      "file_bindings_match": true,
+      "source_metadata_match": true,
+      "original_contents_reread": false,
+      "swapped_order_rejected": true
+    },
+    {
+      "name": "chip-fixed",
+      "frames": 299,
+      "native_dimensions": [
+        6500,
+        4332
+      ],
+      "map_digest": "bc92dcc743ae3d98",
+      "pixel_sha256": "fbeeda70e45be91086e5d6400b642054df908a87ae4021815ad493940960298c",
+      "executable_sha256": "bec4c357836ad1383800a6c933460ee7ef072c525b5957a6f5deb5194b203314",
+      "file_bindings_match": true,
+      "source_metadata_match": true,
+      "original_contents_reread": false,
+      "swapped_order_rejected": true
+    }
+  ],
+  "chip_pair_same_inputs_map_flags_environment": true,
+  "garnet_production_adapter_rgb16_icc_exact": true,
+  "manifest_executable_verified": true,
+  "source_protection_scope": "RAW content hashes at both endpoints are established by executed wrapper receipts; this independent readback compares order and current size/mtime, without rereading all RAW contents."
+}

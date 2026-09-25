@@ -16,7 +16,7 @@ pub fn resolved(merge:&BandMerge,c:usize)->Pyramid {
     let mut p=Pyramid::zeros(&merge.sizes);let inv=1.0/merge.frames as f32;
     for k in 0..merge.sizes.len() {let i=k*merge.planes+c;
         for (j,v) in p.level_mut(k).iter_mut().enumerate() {
-            *v=if merge.den[k][j]>0.0 {merge.num[i][j]/merge.den[k][j]} else {merge.usum[i][j]*inv};
+            *v=if merge.den[k][j]>0.0 {super::resolve_soft_numerator(merge.num[i][j],merge.den[k][j])} else {merge.usum[i][j]*inv};
             assert!(v.is_finite());
         }
     }p

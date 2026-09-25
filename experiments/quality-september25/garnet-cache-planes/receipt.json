@@ -1,0 +1,41 @@
+{
+  "cache": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\full-stack-source-prior\\garnet104-full-1\\output\\baseline-cache.json",
+  "binary_sha256": "591746c200ee9b92c3a1446f78f22286944504ba46095e2b56985abe246c696d",
+  "output_native_xywh": [
+    4668,
+    1858,
+    384,
+    384
+  ],
+  "display": "192x192 CFA quad sites, fixed sqrt(clamp(black-subtracted DN/15871))*255; no WB, matrix, MHC or tone",
+  "planes": [
+    {
+      "plane": "r",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\garnet-cache-planes\\r.png",
+      "minimum": 0.0,
+      "maximum": 15526.828125,
+      "at_sensor_span": 0
+    },
+    {
+      "plane": "g1",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\garnet-cache-planes\\g1.png",
+      "minimum": 0.0,
+      "maximum": 17235.275390625,
+      "at_sensor_span": 32
+    },
+    {
+      "plane": "g2",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\garnet-cache-planes\\g2.png",
+      "minimum": 0.0,
+      "maximum": 16137.564453125,
+      "at_sensor_span": 16
+    },
+    {
+      "plane": "b",
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\garnet-cache-planes\\b.png",
+      "minimum": 0.0,
+      "maximum": 8707.0419921875,
+      "at_sensor_span": 0
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "receipt": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\highlight-rendering\\replay-garnet104-1\\output\\receipt.json",
+    "sha256": "561be6164b8576fc2cfde36c978927442ad64e05d07391e15a195fd915078936",
+    "bytes": 4892
+  },
+  "sources_unchanged": true,
+  "inputs_unchanged": true,
+  "whole_output_arms": [
+    "current",
+    "sensor-rolloff-off",
+    "shoulder",
+    "both"
+  ],
+  "visual_verdict": null
+}

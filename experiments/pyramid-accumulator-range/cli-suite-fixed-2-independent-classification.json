@@ -1,0 +1,54 @@
+{
+  "views_hashed": 24,
+  "control_tile_bytes_equal": true,
+  "log_sha256": "fdce9adc40465c23f5d36a3afd1acbb3e7b0fda3b8d368153354c37600b84bb9",
+  "failed_sections": 35,
+  "failure_counts": {
+    "missing_output_configuration": 24,
+    "required_route_environment": 11,
+    "unclassified": 0
+  },
+  "categories": {
+    "missing_output_configuration": [
+      "merge_cmd::all_cfa_wavelet::independent_controls::independent_all_cfa_10_generated_quality_screen",
+      "merge_cmd::boundary_cfa_wavelet::independent_controls::independent_boundary_cfa_10_generated_quality_screen",
+      "merge_cmd::complete_cfa_wavelet::independent_controls::independent_complete_cfa_10_generated_quality_screen",
+      "merge_cmd::complex_wavelet_merge::independent_controls::independent_complex_10_generated_quality_screen",
+      "merge_cmd::core_lineage::independent_controls::independent_core_lineage_actual_truth_screen",
+      "merge_cmd::cross_scale_source_prior::independent_controls::independent_quality_screen",
+      "merge_cmd::fine_support_candidate_tests::independent_controls::independent_finest_support_quality_screen",
+      "merge_cmd::gatefloor::native_direct_planes_independent_tests::independent_direct_planes_controls",
+      "merge_cmd::gatefloor::native_green_probe_independent_tests::independent_green_probe_controls",
+      "merge_cmd::gatefloor::native_parallel_writeback_independent_tests::independent_parallel_writeback_controls",
+      "merge_cmd::green_match_rgb::independent_controls::independent_green_match_generated_screen",
+      "merge_cmd::known_scene_benchmark::noise_pupil_bridge::private_controls::m194g_private_bounded_json_paths_aliases",
+      "merge_cmd::known_scene_benchmark::noise_pupil_bridge::private_controls::m194g_private_ledger_changed_input",
+      "merge_cmd::known_scene_benchmark::noise_pupil_bridge::private_controls::m194g_private_manifest_schema_tuple_controls",
+      "merge_cmd::known_scene_benchmark::noise_pupil_bridge::private_controls::m194g_private_source_rails_and_fault",
+      "merge_cmd::native_coherent_estimator::independent_controls::independent_quality_screen",
+      "merge_cmd::parallel_cfa_wavelet::boundary_controls::independent_boundary_cfa_10_generated_quality_screen",
+      "merge_cmd::phase_packed_rgb::independent_controls::independent_phase_packed_full_adapter_chunks_and_held_writer",
+      "merge_cmd::phase_packed_rgb::independent_controls::independent_phase_packed_generated_screen",
+      "merge_cmd::raw_affinity_support::independent_controls::independent_raw_affinity_actual_truth_screen",
+      "merge_cmd::rb_own_guide::independent_controls::independent_rb_own_guide_actual_truth_screen",
+      "merge_cmd::rb_residual_full::independent_controls::independent_rb_residual_full_mechanical",
+      "merge_cmd::rb_residual_guard::independent_controls::independent_rb_residual_guard_actual_truth_screen",
+      "merge_cmd::shared_source_field::independent_controls::independent_shared_source_quality_screen"
+    ],
+    "required_route_environment": [
+      "merge_cmd::all_cfa_wavelet::independent_controls::independent_all_cfa_00_transform_variance_and_mapping",
+      "merge_cmd::boundary_cfa_wavelet::independent_controls::independent_boundary_cfa_00_structure_and_noise",
+      "merge_cmd::boundary_cfa_wavelet::independent_full_controls::independent_full_mechanical_controls",
+      "merge_cmd::ca_before_mhc::independent_controls::independent_colour_qualification",
+      "merge_cmd::ca_before_mhc::independent_controls::independent_operator_controls",
+      "merge_cmd::ca_before_mhc::independent_controls::independent_quality_screen",
+      "merge_cmd::complete_cfa_wavelet::independent_controls::independent_complete_cfa_00_transform_variance_and_mapping",
+      "merge_cmd::known_scene_benchmark::noise_pupil_bridge::private_controls::m194g_private_actual_plan_controls",
+      "merge_cmd::known_scene_benchmark::noise_pupil_bridge::private_controls::m194g_private_settings_geometry",
+      "merge_cmd::parallel_cfa_wavelet::boundary_controls::independent_boundary_cfa_00_structure_and_noise",
+      "merge_cmd::parallel_cfa_wavelet::independent_full_controls::independent_full_mechanical_controls"
+    ],
+    "unclassified": []
+  },
+  "scope": "Readback classification only. Missing prerequisites are not passes; no builds/tests/RAW reruns performed."
+}

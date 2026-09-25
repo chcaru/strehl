@@ -1,0 +1,42 @@
+{
+  "schema": 1,
+  "status": "RENDERED_AWAITING_INDEPENDENT_VISUAL_REVIEW",
+  "frames": 299,
+  "native_dimensions": [
+    6500,
+    4332
+  ],
+  "crop_quad_xywh": [
+    133,
+    89,
+    3250,
+    2166
+  ],
+  "master": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\quality-september25\\chip-fixed\\stack-master.tiff",
+    "sha256": "8f0c70b2af0e8fc8dcf850395680d3038962c6e65920359d19671b96628c68ac",
+    "bytes": 168952968
+  },
+  "full_jpeg": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\quality-september25\\chip-fixed\\stack-full.jpg",
+    "sha256": "f88275aba4c07371b147915e38e98d8a54e70b9509dfd0bec686d174b48b7e45",
+    "bytes": 23962478
+  },
+  "overview": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\quality-september25\\chip-fixed\\overview.jpg",
+    "sha256": "3ece980730542faa2c2a3de2d86344dd9da470ac9f2a6d224734bec5fde091c5",
+    "bytes": 1262458
+  },
+  "warp_map": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september14\\chip-baseline-1\\chip.warpmap.txt",
+    "sha256": "ce8534c9e65c5c761373bad87df5352c1c46319b7eaf7f7c91477ea61b4f4922",
+    "bytes": 41142
+  },
+  "executable": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\garnet-spatial-trace\\build-fixed-2\\strehl.exe",
+    "sha256": "bec4c357836ad1383800a6c933460ee7ef072c525b5957a6f5deb5194b203314",
+    "bytes": 17950720
+  },
+  "original_bytes_and_metadata_unchanged": true,
+  "viewing_note": "Full JPEG and RGB16 master contain the entire stack output. Overview is resampled for orientation."
+}

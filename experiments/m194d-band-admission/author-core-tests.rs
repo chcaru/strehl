@@ -175,9 +175,8 @@ fn author_equal_below_floor_mean_and_bounded_state() {
 }
 
 #[test]
-fn author_overflow_refuses_before_clamp_and_configuration_is_explicit() {
-    assert!(
-        catch_unwind(|| fold(
+fn author_high_dn_is_safe_and_invalid_state_still_refuses() {
+    let output = fold(
             AdmissionMode::FloorPedestalV1,
             3,
             2,
@@ -185,9 +184,22 @@ fn author_overflow_refuses_before_clamp_and_configuration_is_explicit() {
             1.0,
             8.0,
             20000.0
-        ))
-        .is_err()
-    );
+        );
+    assert!(output.iter().all(|v| v.is_finite()));
+    // Same former overflow fixture. Independent f64 normalized-weight result,
+    // evaluated away from the finite pyramid's boundary extension.
+    let high = (8.0_f64 * (((1e8_f64 - 1.0).hypot(1.0)) / 64.0).ln())
+        .clamp(-80.0, 80.0).exp();
+    let flat = (8.0_f64 * (1.0_f64 / 64.0).ln()).exp();
+    let share = high / (high + 2.0 * flat);
+    assert!(!(80.0_f32.exp() * 10000.0).is_finite(), "legacy destroyer unexercised");
+    for y in 16..64 {
+        for x in 16..80 {
+            let sign = if (x + y) % 2 == 0 { 1.0 } else { -1.0 };
+            let expected = 20000.0 + sign * 10000.0 * share;
+            assert!((f64::from(output[y * 96 + x]) - expected).abs() <= 0.02);
+        }
+    }
     let make = || {
         let mut m = BandMerge::new(
             32,
@@ -210,7 +222,10 @@ fn author_overflow_refuses_before_clamp_and_configuration_is_explicit() {
     b.num[0][0] = f32::MAX * 0.75;
     assert!(catch_unwind(AssertUnwindSafe(|| a.absorb(&b))).is_err());
     let mut m = make();
-    m.num.iter_mut().for_each(|v| v.fill(f32::MAX * 0.75));
+    // Encode finite resolved coefficients in the new accumulator units, so
+    // this still reaches reconstruction overflow rather than failing earlier.
+    m.num.iter_mut().for_each(|v| v.fill((f32::MAX * 0.75) / SOFT_NUMERATOR_SCALE));
+    assert!(resolve_soft_numerator(m.num[0][0], m.den[0][0]).is_finite());
     assert!(catch_unwind(AssertUnwindSafe(|| m.finish(&mut Workspace::new(m.sizes())))).is_err());
     let mut m = make();
     m.num[0][0] = f32::MAX;

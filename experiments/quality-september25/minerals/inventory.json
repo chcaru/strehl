@@ -1,0 +1,142 @@
+[
+  {
+    "code": "100",
+    "label": "peacock-ore",
+    "frames": 207,
+    "master": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\peacock-ore\\final\\peacock-ore-100msdcf-master.tiff",
+    "sha256": "cfbfd68d72c5e02b1c47d7f6cb1e6465824d330ef64f828dff5bde9d09335530",
+    "active_native_shape": [
+      4688,
+      7032
+    ],
+    "output_shape": [
+      4468,
+      6702,
+      3
+    ],
+    "crop_quad_xywh": [
+      83,
+      55,
+      3351,
+      2234
+    ],
+    "source_folder": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF",
+    "overview": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\minerals\\100-whole.png",
+    "icc_sha256": "238ad2596316306a72025bb245cf3c8cd72f1090c8d95af2f38dc090e84ece5b",
+    "displayed_one_channel_at_65535": 133482,
+    "displayed_three_channels_at_65535": 12387,
+    "output_pixels": 29944536
+  },
+  {
+    "code": "102",
+    "label": "peacock-ore",
+    "frames": 216,
+    "master": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\peacock-ore\\final\\peacock-ore-102msdcf-master.tiff",
+    "sha256": "12ebe04a43623e547a81ff8d58159fd18bd140145906fe908cc6e70ae57aec9c",
+    "active_native_shape": [
+      4688,
+      7032
+    ],
+    "output_shape": [
+      4462,
+      6694,
+      3
+    ],
+    "crop_quad_xywh": [
+      85,
+      57,
+      3347,
+      2231
+    ],
+    "source_folder": "D:\\personal\\macro\\minerals\\peacock-ore\\102MSDCF",
+    "overview": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\minerals\\102-whole.png",
+    "icc_sha256": "238ad2596316306a72025bb245cf3c8cd72f1090c8d95af2f38dc090e84ece5b",
+    "displayed_one_channel_at_65535": 36924,
+    "displayed_three_channels_at_65535": 8140,
+    "output_pixels": 29868628
+  },
+  {
+    "code": "103",
+    "label": "rainbow-opal-cabochon",
+    "frames": 155,
+    "master": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\minerals-september24\\final\\rainbow-opal-cabochon-103msdcf-master.tiff",
+    "sha256": "f80aa668366038aafc113c8adbfac31ed62a729a0b246fb8b0ddc6585e09aff3",
+    "active_native_shape": [
+      4688,
+      7032
+    ],
+    "output_shape": [
+      4528,
+      6792,
+      3
+    ],
+    "crop_quad_xywh": [
+      60,
+      40,
+      3396,
+      2264
+    ],
+    "source_folder": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF",
+    "overview": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\minerals\\103-whole.png",
+    "icc_sha256": "238ad2596316306a72025bb245cf3c8cd72f1090c8d95af2f38dc090e84ece5b",
+    "displayed_one_channel_at_65535": 101977,
+    "displayed_three_channels_at_65535": 310,
+    "output_pixels": 30754176
+  },
+  {
+    "code": "104",
+    "label": "etched-spessartine-garnet",
+    "frames": 183,
+    "master": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\minerals-september24\\final\\etched-spessartine-garnet-104msdcf-master.tiff",
+    "sha256": "2b240b4fd752311b6b0a5bf74ac49dbb39354cdf3e6e806d5eb5cb96dbd4ebc8",
+    "active_native_shape": [
+      4688,
+      7032
+    ],
+    "output_shape": [
+      4348,
+      6524,
+      3
+    ],
+    "crop_quad_xywh": [
+      127,
+      85,
+      3262,
+      2174
+    ],
+    "source_folder": "D:\\personal\\macro\\minerals\\etched-spessartine-garnet\\104MSDCF",
+    "overview": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\minerals\\104-whole.png",
+    "icc_sha256": "238ad2596316306a72025bb245cf3c8cd72f1090c8d95af2f38dc090e84ece5b",
+    "displayed_one_channel_at_65535": 74747,
+    "displayed_three_channels_at_65535": 26195,
+    "output_pixels": 28366352
+  },
+  {
+    "code": "105",
+    "label": "rutile-star-on-hematite",
+    "frames": 228,
+    "master": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\minerals-september24\\final\\rutile-star-on-hematite-105msdcf-master.tiff",
+    "sha256": "173417ec71c6bf78bc2d73d2b4bf7cfe1fc7b53ff3fd1c797c769e7dadd922b4",
+    "active_native_shape": [
+      4688,
+      7032
+    ],
+    "output_shape": [
+      4508,
+      6760,
+      3
+    ],
+    "crop_quad_xywh": [
+      68,
+      45,
+      3380,
+      2254
+    ],
+    "source_folder": "D:\\personal\\macro\\minerals\\rutile-star-on-hematite\\105MSDCF",
+    "overview": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\minerals\\105-whole.png",
+    "icc_sha256": "238ad2596316306a72025bb245cf3c8cd72f1090c8d95af2f38dc090e84ece5b",
+    "displayed_one_channel_at_65535": 36,
+    "displayed_three_channels_at_65535": 3,
+    "output_pixels": 30474080
+  }
+]

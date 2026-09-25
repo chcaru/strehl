@@ -5,7 +5,53 @@ quality actions in 2026-09-sota-program.md and the older SOTA proposal. Read
 the measured decision record in docs/research/SYNTHESIS.md before architectural
 changes; this plan does not promote any experimental default.
 
-Latest execution checkpoint: both complete chip pipeline-ordering trials are
+September 25 checkpoint: the new marigold and mineral complaints now drive the
+queue. Complete 488-source marigold and 207-source ore trials of the unchanged
+coarse source prior show no convincing repair; the fixed rendering factorial
+also fails to establish useful glare recovery. Both branches are closed without
+a parameter sweep. See `experiments/full-stack-source-prior/photographic-review-september25.md`
+and the three photographic reviews in `experiments/highlight-rendering/`.
+
+A separate actual-consumer census identifies a concrete numerical bug on the
+183-source garnet: 47 finite-weight numerator overflows propagate to 4,343
+invalid CFA-plane samples, then the final input bounds hide them as rectangular
+patches. The exact expansion masks match the offending regions, and diagnostic
+on/off complete TIFFs are byte-identical. Scaling only the internal weighted
+numerator, restoring its units after division, removes those artificial
+rectangles in the complete corrected render. The broad bright reflection
+remains. All nine dedicated range controls pass, including three regressions
+that failed before the change. The full core suite exposed two old tests that
+expected valid high-DN input to overflow; their replacement keeps those inputs
+and tests finite reconstruction plus genuine invalid-state refusal. The final
+fresh core suite passes569 tests with2 ignored. The normal production command
+reproduces the corrected garnet RGB16 and ICC exactly. The unconfigured,
+feature-rich CLI suite remains red:35 failures require explicit experiment
+output/route configuration; no blanket CLI-suite pass is claimed.
+See `experiments/garnet-spatial-trace/` and `experiments/pyramid-accumulator-range/`.
+
+Corrected full marigold output changes only ten RGB pixels, so this bug does
+not explain its visible haze. The fixed three-source marigold radiance test
+now rejects both focused substitutions: each loses real hairs at another
+depth while retaining haze. The defocused control visibly destroys both hair
+groups. No donor or mask sweep follows. See
+`experiments/marigold-source-pure/independent-photographic-review.md`.
+
+Both complete299-source chip production replays are also finished. Independent
+whole-image and native-scale inspection finds the broad spill and duplicated
+colored edges remain. Existing local geometric corrections already had a modest
+complete-chip benefit and failed star-sand transfer; repeating that experiment
+or globalizing its offsets is not justified. The next bounded discriminator
+uses existing RAW patches to compare translation alone with translation plus
+differential blur, with separate green-phase/spatial holdouts and explicit
+motion/blur controls before any new full-stack intervention.
+
+Use `scripts/render-native.py` and its checked `scripts/native-build.json`
+for current native renders; `docs/native-rendering.md` documents the entry
+point. Old delivery scripts pin old executables. Historical receipts and
+binaries stay bound to their original runs. This is a numerical repair and
+an evidence-based next experiment, not SOTA qualification.
+
+September20 execution checkpoint: both complete chip pipeline-ordering trials are
 closed without an identified meaningful photographic gain: CA-before-MHC and
 twelve-plane merging without final MHC. See their `full-results.md` reports.
 The latter reproduces every baseline RGB16 pixel and preserves its prior
@@ -25,8 +71,8 @@ noise remains unchanged; broad-contact interior/edge errors improve, while
 the registered outside bright-spill positive is unexercised. See
 experiments/cross-scale-source-prior/results-review.md. General admission
 remains false. Root separately authorized and completed one unchanged
-complete-chip observational pair. Both whole images and all seven frozen
-native pairs show a bounded broad-border/contact benefit, with strong bright
+complete-chip observational pair. Inspection of both whole images and all
+seven frozen native pairs finds a bounded broad-border/contact benefit, with strong bright
 spill and central coloured stipple still present and no identified extra fine
 detail. The exact baseline is preserved; the instrumented pair takes400.563s
 and5,470,801,920 bytes peak job commitment. See chip-results.md and the

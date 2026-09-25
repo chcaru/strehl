@@ -1,0 +1,7 @@
+{
+  "schema": 1,
+  "cache": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\full-stack-source-prior\\ore100-full-1\\output\\baseline-cache.json",
+  "expected_current_tiff": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\peacock-ore\\final\\peacock-ore-100msdcf-master.tiff",
+  "expected_current_file_sha256": "cfbfd68d72c5e02b1c47d7f6cb1e6465824d330ef64f828dff5bde9d09335530",
+  "out_dir": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\highlight-rendering\\replay-ore100-1\\output"
+}

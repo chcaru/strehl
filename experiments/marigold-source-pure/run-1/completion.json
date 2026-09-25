@@ -1,0 +1,11 @@
+{
+  "receipt": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-source-pure\\run-1\\output\\receipt.json",
+    "sha256": "7c4c464bf275a77f7ec18b3336f2da05fb25cfa9d350d58988aa0d1f0a553c24",
+    "bytes": 5650
+  },
+  "sources_unchanged": true,
+  "raw_decode_count": 3,
+  "paired_image_validation": true,
+  "scope": "Fixed manual source-purity counterfactual; no automatic merge, quality, or SOTA claim."
+}

@@ -646,6 +646,11 @@ checker passes.
 
 ## Quickstart
 
+For the current native RAW workflow and the September25 numerical repair, use
+[the checked native rendering command](docs/native-rendering.md). It writes a
+complete TIFF and full-resolution JPEG with the exact executable recorded.
+Historical gallery commands and their different settings remain below.
+
 ```console
 $ cargo build --release -p strehl-cli
 

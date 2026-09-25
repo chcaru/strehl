@@ -1,0 +1,68 @@
+[
+  {
+    "stack": 1,
+    "name": "bud-rim",
+    "rect": [
+      2900,
+      540,
+      600,
+      500
+    ],
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\marigold\\stack-1-bud-rim.png"
+  },
+  {
+    "stack": 1,
+    "name": "left-petal-over-bud",
+    "rect": [
+      640,
+      1480,
+      600,
+      600
+    ],
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\marigold\\stack-1-left-petal-over-bud.png"
+  },
+  {
+    "stack": 1,
+    "name": "central-pocket",
+    "rect": [
+      2730,
+      1900,
+      600,
+      600
+    ],
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\marigold\\stack-1-central-pocket.png"
+  },
+  {
+    "stack": 4,
+    "name": "central-throat",
+    "rect": [
+      2350,
+      2310,
+      700,
+      500
+    ],
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\marigold\\stack-4-central-throat.png"
+  },
+  {
+    "stack": 4,
+    "name": "left-rim",
+    "rect": [
+      1170,
+      1380,
+      650,
+      600
+    ],
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\marigold\\stack-4-left-rim.png"
+  },
+  {
+    "stack": 4,
+    "name": "foreground-over-bud",
+    "rect": [
+      3230,
+      3000,
+      600,
+      600
+    ],
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\marigold\\stack-4-foreground-over-bud.png"
+  }
+]

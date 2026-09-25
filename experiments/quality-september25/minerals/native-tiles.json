@@ -1,0 +1,122 @@
+[
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\minerals\\100-white-patch-native384.png",
+    "output_native_xywh": [
+      1208,
+      748,
+      384,
+      384
+    ],
+    "source": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\minerals\\100-white-patch-stack.png",
+    "operation": "exact integer crop; no resampling or re-encoding",
+    "sha256": "efef78cbcd34ea5ba68fa5f212c82dc82a7f62f1edeb5b792cd112838ca41a64"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\minerals\\100-blue-control-native384.png",
+    "output_native_xywh": [
+      2908,
+      2768,
+      384,
+      384
+    ],
+    "source": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\minerals\\100-blue-control-stack.png",
+    "operation": "exact integer crop; no resampling or re-encoding",
+    "sha256": "d03c0285672b8488c781a88009057f71f276023548857045218149baebf6c776"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\minerals\\102-white-patch-native384.png",
+    "output_native_xywh": [
+      1398,
+      2748,
+      384,
+      384
+    ],
+    "source": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\minerals\\102-white-patch-stack.png",
+    "operation": "exact integer crop; no resampling or re-encoding",
+    "sha256": "57677465063ad3eca68584f08192977a024dcef5690b37040755d3e9c85640c6"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\minerals\\102-blue-control-native384.png",
+    "output_native_xywh": [
+      3328,
+      1628,
+      384,
+      384
+    ],
+    "source": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\minerals\\102-blue-control-stack.png",
+    "operation": "exact integer crop; no resampling or re-encoding",
+    "sha256": "28a5f2a8754c9d2888717d3c0bbc25a8dd85b96c49164aeddd76842600ed2316"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\minerals\\103-reflection-native384.png",
+    "output_native_xywh": [
+      3628,
+      1658,
+      384,
+      384
+    ],
+    "source": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\minerals\\103-reflection-stack.png",
+    "operation": "exact integer crop; no resampling or re-encoding",
+    "sha256": "8760b24e569922592999d9b39845360820f9abe5a154bbdbd394f01b7290cbe2"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\minerals\\103-colour-control-native384.png",
+    "output_native_xywh": [
+      2128,
+      2228,
+      384,
+      384
+    ],
+    "source": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\minerals\\103-colour-control-stack.png",
+    "operation": "exact integer crop; no resampling or re-encoding",
+    "sha256": "ee845c059da2d974b9768a5ceaad74291f0c31b7b116c593eebc39fd82993b02"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\minerals\\104-white-facet-native384.png",
+    "output_native_xywh": [
+      4668,
+      1858,
+      384,
+      384
+    ],
+    "source": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\minerals\\104-white-facet-stack.png",
+    "operation": "exact integer crop; no resampling or re-encoding",
+    "sha256": "dae706d0a45926b9ac0cf70de5a205eeec39a9d12f298f9114fe32ede255bfc8"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\minerals\\104-red-control-native384.png",
+    "output_native_xywh": [
+      3068,
+      1908,
+      384,
+      384
+    ],
+    "source": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\minerals\\104-red-control-stack.png",
+    "operation": "exact integer crop; no resampling or re-encoding",
+    "sha256": "ae4c2c0bdc811cc1ff41207a7e305e9206feb6be475f227c484ca231e21f1498"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\minerals\\105-gold-blades-native384.png",
+    "output_native_xywh": [
+      4708,
+      2378,
+      384,
+      384
+    ],
+    "source": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\minerals\\105-gold-blades-stack.png",
+    "operation": "exact integer crop; no resampling or re-encoding",
+    "sha256": "f21bb634a52272c9d3c8dff238da5e7c3bb4b50e2e95c9a899eed21268f91770"
+  },
+  {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\minerals\\105-dark-control-native384.png",
+    "output_native_xywh": [
+      2428,
+      2428,
+      384,
+      384
+    ],
+    "source": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\minerals\\105-dark-control-stack.png",
+    "operation": "exact integer crop; no resampling or re-encoding",
+    "sha256": "5c022a6f9b3290d2a80e33503559dcbf5c8449a1ca9ffaffabe91f855033eaf3"
+  }
+]

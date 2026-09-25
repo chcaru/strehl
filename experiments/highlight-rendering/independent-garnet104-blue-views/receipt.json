@@ -1,0 +1,49 @@
+{
+  "display": "RGB16 rounded /257, retained ICC, unresampled",
+  "images": [
+    {
+      "arm": "current",
+      "rect": [
+        2970,
+        2500,
+        384,
+        384
+      ],
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\highlight-rendering\\independent-garnet104-blue-views\\current-blue-control-native384.png",
+      "sha256": "fd12555c62e10007efe5b38282b0d0a585d2a44029667231cc9c5bc780703ea3"
+    },
+    {
+      "arm": "sensor-rolloff-off",
+      "rect": [
+        2970,
+        2500,
+        384,
+        384
+      ],
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\highlight-rendering\\independent-garnet104-blue-views\\sensor-rolloff-off-blue-control-native384.png",
+      "sha256": "fd12555c62e10007efe5b38282b0d0a585d2a44029667231cc9c5bc780703ea3"
+    },
+    {
+      "arm": "shoulder",
+      "rect": [
+        2970,
+        2500,
+        384,
+        384
+      ],
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\highlight-rendering\\independent-garnet104-blue-views\\shoulder-blue-control-native384.png",
+      "sha256": "3aec5f2932026b59b32bad66e335e61ede6d27d02c320ca5aac1cf721d62abcd"
+    },
+    {
+      "arm": "both",
+      "rect": [
+        2970,
+        2500,
+        384,
+        384
+      ],
+      "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\highlight-rendering\\independent-garnet104-blue-views\\both-blue-control-native384.png",
+      "sha256": "73de9f7057c1fa806b5782d8186874b25892af9d51709c79e4dc684c94853686"
+    }
+  ]
+}

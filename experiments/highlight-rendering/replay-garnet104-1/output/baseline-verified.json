@@ -1,0 +1,48 @@
+{
+  "cache_metadata_sha256": "c837f0ba784a0f2bc08118ac2fedac8e7a4ac69f654b9d6a5e3052675bb92ef8",
+  "height": 4348,
+  "icc_sha256": "238ad2596316306a72025bb245cf3c8cd72f1090c8d95af2f38dc090e84ece5b",
+  "observer_on_off_file_exact": true,
+  "planes_sha256": [
+    "2b57b11d16b5e98ae7a939a2b99a2fe4188c45ab5561a13b124f1cfce58acb52",
+    "0079b7e924314ce0ac4ba35ea073b5111f7a3db70ca27bc16729f54e958373ed",
+    "f3925395931e85642c9557b16283aef67f6578997f4e701c9786db6136051ec9",
+    "43ee1ceea64c17cb3a64eb1196b189116135a4b24cb5d9a0c3722680f9563a9c"
+  ],
+  "resolved_development": {
+    "ceiling_bits": [
+      1072121961,
+      1065931176,
+      1076653368
+    ],
+    "exposure_gain_bits": 1065353216,
+    "matrix_bits": [
+      [
+        1070688889,
+        3202724187,
+        3191861519
+      ],
+      [
+        3186350977,
+        1069455000,
+        3200213889
+      ],
+      [
+        3147518954,
+        3198529296,
+        1068107544
+      ]
+    ],
+    "sensor_top_bits": 1064271804,
+    "srgb": true,
+    "tone_bits": [
+      3106357674,
+      1058905051,
+      1057803469
+    ],
+    "wants_tone": true
+  },
+  "retained_image_sha256": "2b240b4fd752311b6b0a5bf74ac49dbb39354cdf3e6e806d5eb5cb96dbd4ebc8",
+  "rgb16_le_sha256": "87c8d5ba3fbaed2441fbcd241c7865c5d78a7e7081de0136e334f31d26b6520a",
+  "width": 6524
+}

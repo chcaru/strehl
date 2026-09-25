@@ -1,0 +1,72 @@
+{
+  "exit_code": 101,
+  "all_tests_passed": false,
+  "observations": [
+    {
+      "case": "flat",
+      "frames": 2,
+      "profile_variance": false,
+      "max_weight": 0,
+      "max_coefficient": 900,
+      "actual_nonfinite_num": 0,
+      "actual_nonfinite_den": 0,
+      "legacy_nonfinite_num": 0,
+      "actual_nonfinite_pre_hull": 0,
+      "actual_nonfinite_output": 0,
+      "finite_max_error_dn": 0
+    },
+    {
+      "case": "midtone",
+      "frames": 2,
+      "profile_variance": false,
+      "max_weight": 470254730000000000,
+      "max_coefficient": 1100.0452,
+      "actual_nonfinite_num": 0,
+      "actual_nonfinite_den": 0,
+      "legacy_nonfinite_num": 0,
+      "actual_nonfinite_pre_hull": 0,
+      "actual_nonfinite_output": 0,
+      "finite_max_error_dn": 0.00012207031
+    },
+    {
+      "case": "camera-range-low-variance-pair",
+      "frames": 2,
+      "profile_variance": false,
+      "max_weight": 55406225000000000000000000000000000,
+      "max_coefficient": 8320.3125,
+      "actual_nonfinite_num": 262143,
+      "actual_nonfinite_den": 0,
+      "legacy_nonfinite_num": 262143,
+      "actual_nonfinite_pre_hull": 262143,
+      "actual_nonfinite_output": 0,
+      "finite_max_error_dn": 305.50977
+    },
+    {
+      "case": "identical-high-dn-pair",
+      "frames": 2,
+      "profile_variance": false,
+      "max_weight": 55406225000000000000000000000000000,
+      "max_coefficient": 8320.3125,
+      "actual_nonfinite_num": 262143,
+      "actual_nonfinite_den": 0,
+      "legacy_nonfinite_num": 262143,
+      "actual_nonfinite_pre_hull": 262143,
+      "actual_nonfinite_output": 0,
+      "finite_max_error_dn": 0
+    },
+    {
+      "case": "camera-range-profile-variance-pair",
+      "frames": 2,
+      "profile_variance": true,
+      "max_weight": 55406225000000000000000000000000000,
+      "max_coefficient": 8320.3125,
+      "actual_nonfinite_num": 65534,
+      "actual_nonfinite_den": 0,
+      "legacy_nonfinite_num": 65534,
+      "actual_nonfinite_pre_hull": 65534,
+      "actual_nonfinite_output": 0,
+      "finite_max_error_dn": 0.001953125
+    }
+  ],
+  "scope": "Arithmetic range tests; actual photographic cause requires the separate full-stack census."
+}

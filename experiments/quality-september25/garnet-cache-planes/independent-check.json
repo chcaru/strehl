@@ -1,0 +1,64 @@
+{
+  "status": "PASS_WITH_THRESHOLD_LABEL_CLARIFICATION",
+  "cache_sha256": "591746c200ee9b92c3a1446f78f22286944504ba46095e2b56985abe246c696d",
+  "crop": [
+    127,
+    85,
+    3262,
+    2174
+  ],
+  "output_native_xywh": [
+    4668,
+    1858,
+    384,
+    384
+  ],
+  "compact_quad_slice": [
+    2334,
+    929,
+    192,
+    192
+  ],
+  "full_quad_slice": [
+    2461,
+    1014,
+    192,
+    192
+  ],
+  "levels": [
+    512.0,
+    15360.0
+  ],
+  "nominal_levels_span": 14848.0,
+  "preview_denominator": 15871,
+  "checks": [
+    {
+      "plane": "r",
+      "npy_sha256": "b042162cdeb60f7fe015b8e8932a746fe6494e68faa8b4a4b12fd5e3641212ea",
+      "png_sha256": "c0e577abb3fd5ea24c6c6dd4774737640f06da0e8f1f32d30252906487b55268",
+      "byte_exact_cache_slice": true,
+      "byte_exact_display": true
+    },
+    {
+      "plane": "g1",
+      "npy_sha256": "b7a1f1a257bcb649dbfd21436efaddcd8daf4f43241a1fdfc1e2bd43fffb6c07",
+      "png_sha256": "1e104e3d826c41f181b904122c7a05af05ba52e8299a260b0df8f805dd95e621",
+      "byte_exact_cache_slice": true,
+      "byte_exact_display": true
+    },
+    {
+      "plane": "g2",
+      "npy_sha256": "98cf72e8d022d8a1418bd791eb19e5c805352696b1b0b2500355f22d391bcc5c",
+      "png_sha256": "b3864822ba168109a1a5a3f790ac6f3dc920c5d28a94fd98c5a49dee5c4e4cf9",
+      "byte_exact_cache_slice": true,
+      "byte_exact_display": true
+    },
+    {
+      "plane": "b",
+      "npy_sha256": "8c966b317a16d66656d2a60b49efd778807cc564e889785916705da89d870b2a",
+      "png_sha256": "a47ddea391a30602d4ef8f03a91f9f2c58945dd402a6d153e36dac10e2a8667e",
+      "byte_exact_cache_slice": true,
+      "byte_exact_display": true
+    }
+  ]
+}

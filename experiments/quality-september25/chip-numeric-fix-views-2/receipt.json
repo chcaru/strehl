@@ -1,0 +1,684 @@
+{
+  "native_shape": [
+    4332,
+    6500,
+    3
+  ],
+  "before": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\quality-september25\\chip-before\\stack-master.tiff",
+    "sha256": "5e6a7351310d00e1c7e3e0b7660d9678d6b11761afa8f4d0c248214d0bc223d1",
+    "bytes": 168952962
+  },
+  "after": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\outputs\\quality-september25\\chip-fixed\\stack-master.tiff",
+    "sha256": "8f0c70b2af0e8fc8dcf850395680d3038962c6e65920359d19671b96628c68ac",
+    "bytes": 168952968
+  },
+  "crop": [
+    133,
+    89,
+    3250,
+    2166
+  ],
+  "changed_pixels": 27533491,
+  "max_rgb16_channel_change": 65535,
+  "mean_absolute_channel_change": 26.602045410422143,
+  "prior_roi_translation_native": [
+    16,
+    16
+  ],
+  "reason": "Prior experimental crop141,97; actual production crop133,89. Pair uses identical geometry. Full512 targets tiled256, never resampled.",
+  "tiles": [
+    {
+      "arm": "before",
+      "region": "rail-crossing",
+      "tile": 0,
+      "native_xywh": [
+        1098,
+        958,
+        384,
+        384
+      ],
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\chip-numeric-fix-views-2\\before-rail-crossing-0.png",
+      "sha256": "aa40b34b01b6f8c3ca3bdacbccd962d0f7e9cbb35b6f03597f8ab44287420cbc"
+    },
+    {
+      "arm": "before",
+      "region": "upper-colour",
+      "tile": 0,
+      "native_xywh": [
+        1036,
+        196,
+        256,
+        256
+      ],
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\chip-numeric-fix-views-2\\before-upper-colour-0.png",
+      "sha256": "462962813e017f1c817c48c0a80d0a523f9cdca09747ca1dc2d88f8a1ba39ee1"
+    },
+    {
+      "arm": "before",
+      "region": "upper-colour",
+      "tile": 1,
+      "native_xywh": [
+        1292,
+        196,
+        256,
+        256
+      ],
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\chip-numeric-fix-views-2\\before-upper-colour-1.png",
+      "sha256": "de5a34876032581b98e19efd0053ffdc13eb2b60f64274611798292876556f69"
+    },
+    {
+      "arm": "before",
+      "region": "upper-colour",
+      "tile": 2,
+      "native_xywh": [
+        1036,
+        452,
+        256,
+        256
+      ],
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\chip-numeric-fix-views-2\\before-upper-colour-2.png",
+      "sha256": "9d7bd67161a2623d8ba26d6889725e650235a4822b516dd6ce7d0468d4ef77d6"
+    },
+    {
+      "arm": "before",
+      "region": "upper-colour",
+      "tile": 3,
+      "native_xywh": [
+        1292,
+        452,
+        256,
+        256
+      ],
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\chip-numeric-fix-views-2\\before-upper-colour-3.png",
+      "sha256": "2744d4368081a7b36da9603f64510d7fed37552e762be295fe255f4d851bff7a"
+    },
+    {
+      "arm": "before",
+      "region": "central-stipple",
+      "tile": 0,
+      "native_xywh": [
+        2976,
+        1306,
+        256,
+        256
+      ],
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\chip-numeric-fix-views-2\\before-central-stipple-0.png",
+      "sha256": "8d1c92a9190ecd126f7336a769cca5a5364de48102841c38a1a118f5dccd40f6"
+    },
+    {
+      "arm": "before",
+      "region": "central-stipple",
+      "tile": 1,
+      "native_xywh": [
+        3232,
+        1306,
+        256,
+        256
+      ],
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\chip-numeric-fix-views-2\\before-central-stipple-1.png",
+      "sha256": "76a077bbd7b907380ffa027c4d37466a01cd41ce4a9ea40621575f1319877137"
+    },
+    {
+      "arm": "before",
+      "region": "central-stipple",
+      "tile": 2,
+      "native_xywh": [
+        2976,
+        1562,
+        256,
+        256
+      ],
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\chip-numeric-fix-views-2\\before-central-stipple-2.png",
+      "sha256": "92b3986713d64c46251324280463ee1091c67a5b0de9f1a480b5d602aa5d55f2"
+    },
+    {
+      "arm": "before",
+      "region": "central-stipple",
+      "tile": 3,
+      "native_xywh": [
+        3232,
+        1562,
+        256,
+        256
+      ],
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\chip-numeric-fix-views-2\\before-central-stipple-3.png",
+      "sha256": "5d6834a4123580571fc31c27e902a2bb5beafc3bb563b3e488f9c04ab46f265b"
+    },
+    {
+      "arm": "before",
+      "region": "lower-array",
+      "tile": 0,
+      "native_xywh": [
+        566,
+        2796,
+        256,
+        256
+      ],
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\chip-numeric-fix-views-2\\before-lower-array-0.png",
+      "sha256": "d996684e32d86000074e9236fb63d4fd92ae52248949fba90993c81c85e021ef"
+    },
+    {
+      "arm": "before",
+      "region": "lower-array",
+      "tile": 1,
+      "native_xywh": [
+        822,
+        2796,
+        256,
+        256
+      ],
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\chip-numeric-fix-views-2\\before-lower-array-1.png",
+      "sha256": "e4360ecd20f4331d823b6786d19fa02e0258d85aeebffe8b7d139d98fd3231cd"
+    },
+    {
+      "arm": "before",
+      "region": "lower-array",
+      "tile": 2,
+      "native_xywh": [
+        566,
+        3052,
+        256,
+        256
+      ],
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\chip-numeric-fix-views-2\\before-lower-array-2.png",
+      "sha256": "ecf2e0e5c6e24070c6c8706b724ac18b1891fca9b2224a741c4e66515cf89714"
+    },
+    {
+      "arm": "before",
+      "region": "lower-array",
+      "tile": 3,
+      "native_xywh": [
+        822,
+        3052,
+        256,
+        256
+      ],
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\chip-numeric-fix-views-2\\before-lower-array-3.png",
+      "sha256": "27195dff32c97c8daa405c6c609ed10d041639a86d7e887aca66b08deea4ccda"
+    },
+    {
+      "arm": "before",
+      "region": "lower-colour",
+      "tile": 0,
+      "native_xywh": [
+        4666,
+        3016,
+        256,
+        256
+      ],
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\chip-numeric-fix-views-2\\before-lower-colour-0.png",
+      "sha256": "a53d8d81aafe7723e99ed0fc75f6f85ebef25bdeef38cbf292066a9a70739be5"
+    },
+    {
+      "arm": "before",
+      "region": "lower-colour",
+      "tile": 1,
+      "native_xywh": [
+        4922,
+        3016,
+        256,
+        256
+      ],
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\chip-numeric-fix-views-2\\before-lower-colour-1.png",
+      "sha256": "061960930eb3acdd4110bd2416c67486c522ceaf0b743ae4d6c59298ab47063c"
+    },
+    {
+      "arm": "before",
+      "region": "lower-colour",
+      "tile": 2,
+      "native_xywh": [
+        4666,
+        3272,
+        256,
+        256
+      ],
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\chip-numeric-fix-views-2\\before-lower-colour-2.png",
+      "sha256": "10a8f98eb5b07e091c583425975b545f9e20ab24e48e2735fc8edcff975d7405"
+    },
+    {
+      "arm": "before",
+      "region": "lower-colour",
+      "tile": 3,
+      "native_xywh": [
+        4922,
+        3272,
+        256,
+        256
+      ],
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\chip-numeric-fix-views-2\\before-lower-colour-3.png",
+      "sha256": "2500b843d1df70c976dc61a7aaadadab27590de3a01526e53551880b271becd2"
+    },
+    {
+      "arm": "before",
+      "region": "surface-scratches",
+      "tile": 0,
+      "native_xywh": [
+        4856,
+        1256,
+        256,
+        256
+      ],
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\chip-numeric-fix-views-2\\before-surface-scratches-0.png",
+      "sha256": "b64c2c9a425371bc6d24c2373df22afc52f936866c8ce163646342acd7d6f252"
+    },
+    {
+      "arm": "before",
+      "region": "surface-scratches",
+      "tile": 1,
+      "native_xywh": [
+        5112,
+        1256,
+        256,
+        256
+      ],
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\chip-numeric-fix-views-2\\before-surface-scratches-1.png",
+      "sha256": "624a04d0e536a37cd7c946f78becb7008e9b51c700c3e7dd8eee3fb123a094f0"
+    },
+    {
+      "arm": "before",
+      "region": "surface-scratches",
+      "tile": 2,
+      "native_xywh": [
+        4856,
+        1512,
+        256,
+        256
+      ],
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\chip-numeric-fix-views-2\\before-surface-scratches-2.png",
+      "sha256": "cd0c702d03cb19423060319a6a020b365be9749e5a0d20cd967a7bae2a157c0e"
+    },
+    {
+      "arm": "before",
+      "region": "surface-scratches",
+      "tile": 3,
+      "native_xywh": [
+        5112,
+        1512,
+        256,
+        256
+      ],
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\chip-numeric-fix-views-2\\before-surface-scratches-3.png",
+      "sha256": "99ed3a5c4bd5870874141493af8a78cdfdc846fc5463899f0459ba6feb412e45"
+    },
+    {
+      "arm": "before",
+      "region": "upper-left-contact-grid",
+      "tile": 0,
+      "native_xywh": [
+        48,
+        336,
+        256,
+        256
+      ],
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\chip-numeric-fix-views-2\\before-upper-left-contact-grid-0.png",
+      "sha256": "e4eb5c98fa0e9e037d0d23c2c3cc2571acd126310d29d15156cb09897c1173eb"
+    },
+    {
+      "arm": "before",
+      "region": "upper-left-contact-grid",
+      "tile": 1,
+      "native_xywh": [
+        304,
+        336,
+        256,
+        256
+      ],
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\chip-numeric-fix-views-2\\before-upper-left-contact-grid-1.png",
+      "sha256": "5b435ae8e3c2012b4e8c25e4810a88df0ed460f8ed848bf4eb47cfcabe107906"
+    },
+    {
+      "arm": "before",
+      "region": "upper-left-contact-grid",
+      "tile": 2,
+      "native_xywh": [
+        48,
+        592,
+        256,
+        256
+      ],
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\chip-numeric-fix-views-2\\before-upper-left-contact-grid-2.png",
+      "sha256": "e42212eb822e1c72665835f2adb125463f05cdd5eff5edd30251a9749646f3fe"
+    },
+    {
+      "arm": "before",
+      "region": "upper-left-contact-grid",
+      "tile": 3,
+      "native_xywh": [
+        304,
+        592,
+        256,
+        256
+      ],
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\chip-numeric-fix-views-2\\before-upper-left-contact-grid-3.png",
+      "sha256": "d715c5448b6336257a59306a857194feda4222efcc9f79a24c7831727aae9c76"
+    },
+    {
+      "arm": "after",
+      "region": "rail-crossing",
+      "tile": 0,
+      "native_xywh": [
+        1098,
+        958,
+        384,
+        384
+      ],
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\chip-numeric-fix-views-2\\after-rail-crossing-0.png",
+      "sha256": "bdd4ac7ed25cd02081ef4dce96634d08fae1fb36c8642ffb9f00872fae16fb22"
+    },
+    {
+      "arm": "after",
+      "region": "upper-colour",
+      "tile": 0,
+      "native_xywh": [
+        1036,
+        196,
+        256,
+        256
+      ],
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\chip-numeric-fix-views-2\\after-upper-colour-0.png",
+      "sha256": "e22ecfe3c366a5004371174288ce52cc831343bce84a770542dcf3994c5e88a3"
+    },
+    {
+      "arm": "after",
+      "region": "upper-colour",
+      "tile": 1,
+      "native_xywh": [
+        1292,
+        196,
+        256,
+        256
+      ],
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\chip-numeric-fix-views-2\\after-upper-colour-1.png",
+      "sha256": "39aa01d1e5bed2d8873aad0431fd44d2f6c1aceb3c57a16667bf834db8b3a95c"
+    },
+    {
+      "arm": "after",
+      "region": "upper-colour",
+      "tile": 2,
+      "native_xywh": [
+        1036,
+        452,
+        256,
+        256
+      ],
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\chip-numeric-fix-views-2\\after-upper-colour-2.png",
+      "sha256": "7a536b647be25c2d01d272f8b95925e77ca1447821900e9871b8e68c5293ecef"
+    },
+    {
+      "arm": "after",
+      "region": "upper-colour",
+      "tile": 3,
+      "native_xywh": [
+        1292,
+        452,
+        256,
+        256
+      ],
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\chip-numeric-fix-views-2\\after-upper-colour-3.png",
+      "sha256": "5ebd536b3aea2de34b4062c5ef4e3b616cf9c853063299932d3ede8de6da7a19"
+    },
+    {
+      "arm": "after",
+      "region": "central-stipple",
+      "tile": 0,
+      "native_xywh": [
+        2976,
+        1306,
+        256,
+        256
+      ],
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\chip-numeric-fix-views-2\\after-central-stipple-0.png",
+      "sha256": "9f420533f0778a59443a31e032051894979760d621abe2205e9ae5fcb8bf4561"
+    },
+    {
+      "arm": "after",
+      "region": "central-stipple",
+      "tile": 1,
+      "native_xywh": [
+        3232,
+        1306,
+        256,
+        256
+      ],
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\chip-numeric-fix-views-2\\after-central-stipple-1.png",
+      "sha256": "e1102c1d1b4464aaba6f74e4b556efa3f33ec774ba1e3a364f4d8e30365d8662"
+    },
+    {
+      "arm": "after",
+      "region": "central-stipple",
+      "tile": 2,
+      "native_xywh": [
+        2976,
+        1562,
+        256,
+        256
+      ],
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\chip-numeric-fix-views-2\\after-central-stipple-2.png",
+      "sha256": "55260d39ac5ca78d019d9278064e4631015ca675a06449562643060471c4e8fb"
+    },
+    {
+      "arm": "after",
+      "region": "central-stipple",
+      "tile": 3,
+      "native_xywh": [
+        3232,
+        1562,
+        256,
+        256
+      ],
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\chip-numeric-fix-views-2\\after-central-stipple-3.png",
+      "sha256": "fa605242353e34a54174c660a1d8b90aea6483605f2f03f2c8754db81facf84c"
+    },
+    {
+      "arm": "after",
+      "region": "lower-array",
+      "tile": 0,
+      "native_xywh": [
+        566,
+        2796,
+        256,
+        256
+      ],
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\chip-numeric-fix-views-2\\after-lower-array-0.png",
+      "sha256": "4c18b814f2044f000bb374dad4b2b67efde2116ccc3f7ceb5487befc83d4a695"
+    },
+    {
+      "arm": "after",
+      "region": "lower-array",
+      "tile": 1,
+      "native_xywh": [
+        822,
+        2796,
+        256,
+        256
+      ],
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\chip-numeric-fix-views-2\\after-lower-array-1.png",
+      "sha256": "2a47033f4707bba7318f7bd5a7796f7833fe22b2562d4be9ee2305bcc8bb63c5"
+    },
+    {
+      "arm": "after",
+      "region": "lower-array",
+      "tile": 2,
+      "native_xywh": [
+        566,
+        3052,
+        256,
+        256
+      ],
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\chip-numeric-fix-views-2\\after-lower-array-2.png",
+      "sha256": "6507a5b28b3ce3a989be8074fad63ce0781d0cfd978d2834c5f9f044afac26a4"
+    },
+    {
+      "arm": "after",
+      "region": "lower-array",
+      "tile": 3,
+      "native_xywh": [
+        822,
+        3052,
+        256,
+        256
+      ],
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\chip-numeric-fix-views-2\\after-lower-array-3.png",
+      "sha256": "1d9541de4bb88edfd397f7a7bb739fbea9bfa05fdfeae236a7ecc7bf146408d1"
+    },
+    {
+      "arm": "after",
+      "region": "lower-colour",
+      "tile": 0,
+      "native_xywh": [
+        4666,
+        3016,
+        256,
+        256
+      ],
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\chip-numeric-fix-views-2\\after-lower-colour-0.png",
+      "sha256": "5eed295ab1d397c6513486946ffaa9e6c218a275e7e5433f170f1115b0097dff"
+    },
+    {
+      "arm": "after",
+      "region": "lower-colour",
+      "tile": 1,
+      "native_xywh": [
+        4922,
+        3016,
+        256,
+        256
+      ],
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\chip-numeric-fix-views-2\\after-lower-colour-1.png",
+      "sha256": "aca70668a71393f310613c391cb2458c0d561470bf88df6814d547e88be8bc5e"
+    },
+    {
+      "arm": "after",
+      "region": "lower-colour",
+      "tile": 2,
+      "native_xywh": [
+        4666,
+        3272,
+        256,
+        256
+      ],
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\chip-numeric-fix-views-2\\after-lower-colour-2.png",
+      "sha256": "fc256da9260cff1d99bc1f52db721c40a75d574e2b31c9ff9f35c65ad7163329"
+    },
+    {
+      "arm": "after",
+      "region": "lower-colour",
+      "tile": 3,
+      "native_xywh": [
+        4922,
+        3272,
+        256,
+        256
+      ],
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\chip-numeric-fix-views-2\\after-lower-colour-3.png",
+      "sha256": "80d1a25d13ec5e463d6a25e1fbb8292c41c5324a3d0036a8c51bdcd2b046a9bc"
+    },
+    {
+      "arm": "after",
+      "region": "surface-scratches",
+      "tile": 0,
+      "native_xywh": [
+        4856,
+        1256,
+        256,
+        256
+      ],
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\chip-numeric-fix-views-2\\after-surface-scratches-0.png",
+      "sha256": "ebc6e685b2e9864db380576f006030e04ffdc7e2c1f20a38493051571f57b201"
+    },
+    {
+      "arm": "after",
+      "region": "surface-scratches",
+      "tile": 1,
+      "native_xywh": [
+        5112,
+        1256,
+        256,
+        256
+      ],
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\chip-numeric-fix-views-2\\after-surface-scratches-1.png",
+      "sha256": "1a1b41f3b7fe58a1544ede45b8baca45e6946dc374f697007d95d293e5ed3b23"
+    },
+    {
+      "arm": "after",
+      "region": "surface-scratches",
+      "tile": 2,
+      "native_xywh": [
+        4856,
+        1512,
+        256,
+        256
+      ],
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\chip-numeric-fix-views-2\\after-surface-scratches-2.png",
+      "sha256": "d8d6bd69d9ac343a2deba217784b1860a5206af953b7672f2f8e84a8098a318c"
+    },
+    {
+      "arm": "after",
+      "region": "surface-scratches",
+      "tile": 3,
+      "native_xywh": [
+        5112,
+        1512,
+        256,
+        256
+      ],
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\chip-numeric-fix-views-2\\after-surface-scratches-3.png",
+      "sha256": "c13dabf5aaff8db872b1e74c3515b08b381933b22dd058858ee3173225d8026e"
+    },
+    {
+      "arm": "after",
+      "region": "upper-left-contact-grid",
+      "tile": 0,
+      "native_xywh": [
+        48,
+        336,
+        256,
+        256
+      ],
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\chip-numeric-fix-views-2\\after-upper-left-contact-grid-0.png",
+      "sha256": "23e4fdeb848d8c7446b20dde30216305f65a2aeff3d872459889a9f85ec5d152"
+    },
+    {
+      "arm": "after",
+      "region": "upper-left-contact-grid",
+      "tile": 1,
+      "native_xywh": [
+        304,
+        336,
+        256,
+        256
+      ],
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\chip-numeric-fix-views-2\\after-upper-left-contact-grid-1.png",
+      "sha256": "7c50ff4c9484252b6411ccecfaa28fe8c423b613b2218bcd0988e6ae110a012c"
+    },
+    {
+      "arm": "after",
+      "region": "upper-left-contact-grid",
+      "tile": 2,
+      "native_xywh": [
+        48,
+        592,
+        256,
+        256
+      ],
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\chip-numeric-fix-views-2\\after-upper-left-contact-grid-2.png",
+      "sha256": "aadaab7b7c42ff7a3d962f504cbe43d3c78876ff69b04f0ac450d3e1f43aed48"
+    },
+    {
+      "arm": "after",
+      "region": "upper-left-contact-grid",
+      "tile": 3,
+      "native_xywh": [
+        304,
+        592,
+        256,
+        256
+      ],
+      "file": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\quality-september25\\chip-numeric-fix-views-2\\after-upper-left-contact-grid-3.png",
+      "sha256": "409964314454fe89d7dc0ad8fc1e94920f82c72ca7186c1fb07b1814b7de6ebd"
+    }
+  ],
+  "scope": "Change counts localize differences and cannot establish quality."
+}

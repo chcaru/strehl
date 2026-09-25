@@ -1,0 +1,356 @@
+{
+  "scope": "Fixed manual source-purity counterfactual; no automatic merge, quality, or SOTA claim.",
+  "full_images": [
+    {
+      "name": "baseline",
+      "master": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-source-pure\\run-1\\output\\baseline.tiff",
+        "sha256": "19e657e419d52adf567ec86472f917ad9b9abfc9b0812131e9bba0eacbae462f",
+        "bytes": 157055880
+      },
+      "whole": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-source-pure\\views-1\\baseline-whole.png",
+        "sha256": "d4bc4237a94004e08d103a5e91fc5934201bb67e6222d2a3f73629de6e3916de",
+        "bytes": 1690652
+      },
+      "tiles": [
+        {
+          "name": "fan-core",
+          "native_xywh": [
+            3230,
+            3000,
+            384,
+            384
+          ],
+          "file": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-source-pure\\views-1\\baseline-fan-core.png",
+            "sha256": "e9d1f10ef79e6332513b97b83dbba906c2a18f29b92b62a0bab121970c989b43",
+            "bytes": 118261
+          }
+        },
+        {
+          "name": "ring-upper-left",
+          "native_xywh": [
+            3184,
+            2954,
+            384,
+            384
+          ],
+          "file": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-source-pure\\views-1\\baseline-ring-upper-left.png",
+            "sha256": "15c0fab3a04b34740757cb3c746f805c65dc79649daec4e6910305eac9936130",
+            "bytes": 115290
+          }
+        },
+        {
+          "name": "ring-lower-right",
+          "native_xywh": [
+            3276,
+            3046,
+            384,
+            384
+          ],
+          "file": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-source-pure\\views-1\\baseline-ring-lower-right.png",
+            "sha256": "2795a23004960c59bbf22016244de418f718e1cc60a98c0c42976b3caa29bc7d",
+            "bytes": 120708
+          }
+        },
+        {
+          "name": "rim-hairs-control",
+          "native_xywh": [
+            1436,
+            1596,
+            384,
+            384
+          ],
+          "file": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-source-pure\\views-1\\baseline-rim-hairs-control.png",
+            "sha256": "aebf24554312822ffe19589e09b27e0801d19576bffc4918e28267d0a2d2193e",
+            "bytes": 150113
+          }
+        },
+        {
+          "name": "inner-bud-control",
+          "native_xywh": [
+            4320,
+            1540,
+            384,
+            384
+          ],
+          "file": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-source-pure\\views-1\\baseline-inner-bud-control.png",
+            "sha256": "ffa4e2c588e6d564da44ef453f4b51d66341d1f75c472be81256b5856ab9833b",
+            "bytes": 116936
+          }
+        }
+      ],
+      "icc_sha256": "238ad2596316306a72025bb245cf3c8cd72f1090c8d95af2f38dc090e84ece5b"
+    },
+    {
+      "name": "donor-112",
+      "master": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-source-pure\\run-1\\output\\donor-112.tiff",
+        "sha256": "cefa0e089713e45233c1e4c86de85ed6b47c4ff53110c843a182032bf4467236",
+        "bytes": 157055880
+      },
+      "whole": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-source-pure\\views-1\\donor-112-whole.png",
+        "sha256": "00b48dd98dc41720094434efa62bfe588d7f0bc4bbdcc91a440ac436430b08b5",
+        "bytes": 1689078
+      },
+      "tiles": [
+        {
+          "name": "fan-core",
+          "native_xywh": [
+            3230,
+            3000,
+            384,
+            384
+          ],
+          "file": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-source-pure\\views-1\\donor-112-fan-core.png",
+            "sha256": "ae1a34a2c75191fcdd604e8d8a255a5b29c6a56e8ab6d855382be24cacdeaf5b",
+            "bytes": 104116
+          }
+        },
+        {
+          "name": "ring-upper-left",
+          "native_xywh": [
+            3184,
+            2954,
+            384,
+            384
+          ],
+          "file": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-source-pure\\views-1\\donor-112-ring-upper-left.png",
+            "sha256": "5560a745ca6dc4aa389a6611f95fb47ee057e9efb2d030d7a5ffe3f789b64732",
+            "bytes": 102402
+          }
+        },
+        {
+          "name": "ring-lower-right",
+          "native_xywh": [
+            3276,
+            3046,
+            384,
+            384
+          ],
+          "file": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-source-pure\\views-1\\donor-112-ring-lower-right.png",
+            "sha256": "afb8b6fbc70c73eff6ca8ea3bd70f542e9a7314a86ec21ded62276a0980bb31c",
+            "bytes": 108319
+          }
+        },
+        {
+          "name": "rim-hairs-control",
+          "native_xywh": [
+            1436,
+            1596,
+            384,
+            384
+          ],
+          "file": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-source-pure\\views-1\\donor-112-rim-hairs-control.png",
+            "sha256": "aebf24554312822ffe19589e09b27e0801d19576bffc4918e28267d0a2d2193e",
+            "bytes": 150113
+          }
+        },
+        {
+          "name": "inner-bud-control",
+          "native_xywh": [
+            4320,
+            1540,
+            384,
+            384
+          ],
+          "file": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-source-pure\\views-1\\donor-112-inner-bud-control.png",
+            "sha256": "ffa4e2c588e6d564da44ef453f4b51d66341d1f75c472be81256b5856ab9833b",
+            "bytes": 116936
+          }
+        }
+      ],
+      "icc_sha256": "238ad2596316306a72025bb245cf3c8cd72f1090c8d95af2f38dc090e84ece5b"
+    },
+    {
+      "name": "donor-152",
+      "master": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-source-pure\\run-1\\output\\donor-152.tiff",
+        "sha256": "4a070033b76391386d3704cb17d4acb441d6f12be7721d3cb5639a70174542fc",
+        "bytes": 157055880
+      },
+      "whole": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-source-pure\\views-1\\donor-152-whole.png",
+        "sha256": "d90d6fca2b71f36caefa0fbad2d93a31e71f8f48ac9f4eb52d7a4342138e1830",
+        "bytes": 1688554
+      },
+      "tiles": [
+        {
+          "name": "fan-core",
+          "native_xywh": [
+            3230,
+            3000,
+            384,
+            384
+          ],
+          "file": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-source-pure\\views-1\\donor-152-fan-core.png",
+            "sha256": "f941132105e71a589ea0c0296d7294dbcd354432e357f712b33cbf521f345f28",
+            "bytes": 100310
+          }
+        },
+        {
+          "name": "ring-upper-left",
+          "native_xywh": [
+            3184,
+            2954,
+            384,
+            384
+          ],
+          "file": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-source-pure\\views-1\\donor-152-ring-upper-left.png",
+            "sha256": "9ef8db366bef5fe4a66b8f667c9e28e44dba8550526e395e3d0f177b826a7842",
+            "bytes": 100137
+          }
+        },
+        {
+          "name": "ring-lower-right",
+          "native_xywh": [
+            3276,
+            3046,
+            384,
+            384
+          ],
+          "file": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-source-pure\\views-1\\donor-152-ring-lower-right.png",
+            "sha256": "4a0a1875d7a9b78380d3eb414def0a1b4317993897d5e4d7cb693888ce490f11",
+            "bytes": 105710
+          }
+        },
+        {
+          "name": "rim-hairs-control",
+          "native_xywh": [
+            1436,
+            1596,
+            384,
+            384
+          ],
+          "file": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-source-pure\\views-1\\donor-152-rim-hairs-control.png",
+            "sha256": "aebf24554312822ffe19589e09b27e0801d19576bffc4918e28267d0a2d2193e",
+            "bytes": 150113
+          }
+        },
+        {
+          "name": "inner-bud-control",
+          "native_xywh": [
+            4320,
+            1540,
+            384,
+            384
+          ],
+          "file": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-source-pure\\views-1\\donor-152-inner-bud-control.png",
+            "sha256": "ffa4e2c588e6d564da44ef453f4b51d66341d1f75c472be81256b5856ab9833b",
+            "bytes": 116936
+          }
+        }
+      ],
+      "icc_sha256": "238ad2596316306a72025bb245cf3c8cd72f1090c8d95af2f38dc090e84ece5b"
+    },
+    {
+      "name": "donor-320",
+      "master": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-source-pure\\run-1\\output\\donor-320.tiff",
+        "sha256": "54f3c192b44dc4c0572100656d5eade6defb4994808a3e1e64de71315cf7de48",
+        "bytes": 157055880
+      },
+      "whole": {
+        "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-source-pure\\views-1\\donor-320-whole.png",
+        "sha256": "02d9768fffbc330b7965075ef65fb7f0591eb207155b9343edf44ff48bb1853e",
+        "bytes": 1687569
+      },
+      "tiles": [
+        {
+          "name": "fan-core",
+          "native_xywh": [
+            3230,
+            3000,
+            384,
+            384
+          ],
+          "file": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-source-pure\\views-1\\donor-320-fan-core.png",
+            "sha256": "345c18ea536ae6941c66d080a41b31b8ac8e00f6e88d9b1971958c319576a201",
+            "bytes": 89942
+          }
+        },
+        {
+          "name": "ring-upper-left",
+          "native_xywh": [
+            3184,
+            2954,
+            384,
+            384
+          ],
+          "file": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-source-pure\\views-1\\donor-320-ring-upper-left.png",
+            "sha256": "d1d7020895f29811f0e3cb7441c821615ffedd13cecc4a07a7510a930a5dd205",
+            "bytes": 92117
+          }
+        },
+        {
+          "name": "ring-lower-right",
+          "native_xywh": [
+            3276,
+            3046,
+            384,
+            384
+          ],
+          "file": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-source-pure\\views-1\\donor-320-ring-lower-right.png",
+            "sha256": "70da16a5e84e93902275a18e4ebf5b806d97d2914f63b88be0bcee02c4d2b48b",
+            "bytes": 98342
+          }
+        },
+        {
+          "name": "rim-hairs-control",
+          "native_xywh": [
+            1436,
+            1596,
+            384,
+            384
+          ],
+          "file": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-source-pure\\views-1\\donor-320-rim-hairs-control.png",
+            "sha256": "aebf24554312822ffe19589e09b27e0801d19576bffc4918e28267d0a2d2193e",
+            "bytes": 150113
+          }
+        },
+        {
+          "name": "inner-bud-control",
+          "native_xywh": [
+            4320,
+            1540,
+            384,
+            384
+          ],
+          "file": {
+            "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-source-pure\\views-1\\donor-320-inner-bud-control.png",
+            "sha256": "ffa4e2c588e6d564da44ef453f4b51d66341d1f75c472be81256b5856ab9833b",
+            "bytes": 116936
+          }
+        }
+      ],
+      "icc_sha256": "238ad2596316306a72025bb245cf3c8cd72f1090c8d95af2f38dc090e84ece5b"
+    }
+  ],
+  "receipt": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\marigold-source-pure\\run-1\\output\\receipt.json",
+    "sha256": "7c4c464bf275a77f7ec18b3336f2da05fb25cfa9d350d58988aa0d1f0a553c24",
+    "bytes": 5650
+  },
+  "encoding": "round RGB16/257, retain embedded ICC; whole views <=1617, native tiles 384 without resampling",
+  "visual_verdict": null
+}

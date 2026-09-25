@@ -106,6 +106,11 @@ pub mod cross_scale_source_prior_diagnostic {
 }
 
 #[cfg(feature = "native-correction-variance")]
+pub mod garnet_spatial_trace {
+    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/garnet-spatial-trace/core-observer.rs"));
+}
+
+#[cfg(feature = "native-correction-variance")]
 pub mod rb_own_guide_diagnostic {
     include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/rb-own-guide/core-bridge.rs"));
 }
@@ -1380,7 +1385,8 @@ pub struct BandMerge {
     cfg: MergeConfig,
     sizes: Vec<LevelSize>,
     planes: usize,
-    /// `sum(w * L)`, indexed `[level * planes + plane]`.
+    /// SoftPower: `sum(w * (L / SOFT_NUMERATOR_SCALE))`, indexed
+    /// `[level * planes + plane]`. HardMax stores its selected `L` unscaled.
     num: Vec<Vec<f32>>,
     /// `sum(L)`, same indexing. The fallback numerator where no frame cleared
     /// the noise floor.
@@ -1475,6 +1481,19 @@ pub struct BandMerge {
     /// commissioning bound on 965 647 coefficients of a 19-frame subject, which
     /// is why the bound is checked rather than assumed.
     dsq: Vec<Vec<f64>>,
+}
+
+// The weight cap protects sum(w), not sum(w * L): exp(80) times a bright
+// legal RAW coefficient can overflow f32. A fixed binary scale preserves the
+// weights and leaves ample range for 1024 u16-domain frames, including absorb.
+// Restore DN only AFTER division by the denominator. Very small products can
+// underflow; this is bounded in the independent range controls, not assumed
+// bit-identical for arbitrary f32 inputs.
+const SOFT_NUMERATOR_SCALE: f32 = 65536.0;
+
+#[inline]
+fn resolve_soft_numerator(numerator: f32, denominator: f32) -> f32 {
+    (numerator / denominator) * SOFT_NUMERATOR_SCALE
 }
 
 impl BandMerge {
@@ -2082,7 +2101,7 @@ impl BandMerge {
                             .zip(w.par_iter())
                             .zip(lv.par_iter())
                             .for_each(|(((num, usum), w), lv)| {
-                                *num += *w * *lv;
+                                *num += *w * (*lv / SOFT_NUMERATOR_SCALE);
                                 *usum += *lv;
                             });
                     });
@@ -2487,6 +2506,8 @@ impl BandMerge {
         assert!(self.frames > 0, "cannot finish a merge with no frames");
         self.assert_pedestal_accumulators_finite();
         self.dump_weights();
+        #[cfg(feature = "native-correction-variance")]
+        let mut census = garnet_spatial_trace::start(self);
         let inv_n = 1.0 / self.frames as f32;
         (0..self.planes)
             .map(|c| {
@@ -2529,7 +2550,7 @@ impl BandMerge {
                         SelectMode::SoftPower => {
                             for j in 0..out.len() {
                                 out[j] = if den[j] > 0.0 {
-                                    num[j] / den[j]
+                                    resolve_soft_numerator(num[j], den[j])
                                 } else {
                                     subgate(j)
                                 };
@@ -2549,6 +2570,8 @@ impl BandMerge {
                     }
                     #[cfg(feature = "m194h-pedestal-causality")]
                     m194h::resolved(self, c, k, out);
+                    #[cfg(feature = "native-correction-variance")]
+                    garnet_spatial_trace::resolved(census.as_mut(), self, c, k, out);
                 }
                 let mut img = if self.cfg.hull.bounds_each_level() {
                     // Bound the partial reconstruction at every level on the way
@@ -2578,6 +2601,8 @@ impl BandMerge {
                 // whose weaker cases would have to be argued separately.
                 #[cfg(feature = "m194h-pedestal-causality")]
                 m194h::pre_hull(self, c, &img);
+                #[cfg(feature = "native-correction-variance")]
+                garnet_spatial_trace::pre_hull(census.as_mut(), self, c, &img);
                 if self.cfg.hull.bounds() {
                     for ((p, l), h) in img.iter_mut().zip(&self.lo[c]).zip(&self.hi[c]) {
                         *p = p.clamp(*l, *h);
@@ -2585,6 +2610,8 @@ impl BandMerge {
                 }
                 #[cfg(feature = "m194h-pedestal-causality")]
                 m194h::post_hull(c, &img);
+                #[cfg(feature = "native-correction-variance")]
+                garnet_spatial_trace::post_hull(census.as_mut(), self, c, &img);
                 img
             })
             .collect()
@@ -3003,9 +3030,9 @@ fn select_weight(excess: f32, floor: f32, p: f32, r_floor: f32) -> f32 {
     } else if p == 2.0 {
         r * r
     } else {
-        // `exp(+-80)` spans `[2e-35, 6e34]`; summed over even a 1000-frame
-        // stack that stays inside `f32`, so this bound cannot overflow and,
-        // being centred, effectively never binds.
+        // `exp(+-80)` spans `[2e-35, 6e34]`; its sum stays inside f32 on a
+        // 1000-frame stack. The weighted coefficient sum additionally needs
+        // SOFT_NUMERATOR_SCALE: finite weights alone do not make it safe.
         (p * r.ln()).clamp(-80.0, 80.0).exp()
     }
 }
@@ -3045,6 +3072,16 @@ mod m194d_independent_tests {
         env!("CARGO_MANIFEST_DIR"),
         "/../../experiments/m194d-band-admission/independent-core-tests.rs"
     ));
+}
+
+#[cfg(test)]
+mod accumulator_range_independent {
+    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/pyramid-accumulator-range/independent-controls.rs"));
+}
+
+#[cfg(test)]
+mod accumulator_range_bounds {
+    include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/pyramid-accumulator-range/range-bound-controls.rs"));
 }
 
 #[cfg(test)]

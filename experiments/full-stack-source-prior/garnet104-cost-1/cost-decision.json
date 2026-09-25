@@ -1,0 +1,30 @@
+{
+  "resource_feasible": true,
+  "estimated_full_seconds": 308.5372053,
+  "maximum_estimate_seconds": 1500,
+  "variable_source_seconds": 2.4024524,
+  "cost_source_count": 3,
+  "full_source_count": 183,
+  "source_multiplier": 1.25,
+  "observed_fixed_seconds": 5.3502098,
+  "additional_allowance_seconds": 120,
+  "cost_peak_bytes": 3346362368,
+  "maximum_cost_peak_bytes": 19327352832,
+  "full_limits": {
+    "wall_seconds": 1800,
+    "cpu_seconds": 12000,
+    "committed_bytes": 25769803776
+  },
+  "receipt": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\full-stack-source-prior\\garnet104-cost-1\\output\\receipt.json",
+    "sha256": "4f36fb36258db4927a4ec71e380cb3ddce98f669a9bc5053621ae32709bf1521",
+    "bytes": 11898
+  },
+  "process": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\full-stack-source-prior\\garnet104-cost-1\\process.json",
+    "sha256": "43a6604f78d80fedfefc529c917ab271f43e32d90aa9346e58288d8e016c3997",
+    "bytes": 2759
+  },
+  "photographic_replay_admitted": false,
+  "limitation": "Three predetermined original indices, whole-count probe, subset prior only. Resource extrapolation is not runtime guarantee, quality evidence, or a complete stack."
+}

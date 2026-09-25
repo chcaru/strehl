@@ -1,0 +1,90 @@
+{
+  "command": [
+    "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\full-stack-source-prior\\build-2\\cli-tests.exe",
+    "merge_cmd::full_stack_source_prior::complete_pair",
+    "--exact",
+    "--ignored",
+    "--nocapture",
+    "--test-threads=1"
+  ],
+  "exit_code": 0,
+  "error": null,
+  "cleanup_errors": [],
+  "wall_seconds": 317.125,
+  "log_bytes": 249235,
+  "job_accounting": {
+    "total_user_100ns": 7317187500,
+    "total_kernel_100ns": 500625000,
+    "total_cpu_100ns": 7817812500,
+    "total_page_fault_count": 92725621,
+    "total_processes": 2,
+    "active_processes": 0,
+    "total_terminated_processes": 0
+  },
+  "job_memory": {
+    "peak_process_memory_used_bytes": 5821411328,
+    "peak_job_memory_used_bytes": 5822685184
+  },
+  "terminal_job_accounting": true,
+  "configured_job_limits": {
+    "flags": 8704,
+    "committed_bytes": 25769803776
+  },
+  "direct_exit_observed": true,
+  "pipe_eof_observed": true,
+  "post_exit_drain": {
+    "initial_accounting": {
+      "total_user_100ns": 7317187500,
+      "total_kernel_100ns": 500625000,
+      "total_cpu_100ns": 7817812500,
+      "total_page_fault_count": 92725621,
+      "total_processes": 2,
+      "active_processes": 0,
+      "total_terminated_processes": 0
+    },
+    "last_accounting": {
+      "total_user_100ns": 7317187500,
+      "total_kernel_100ns": 500625000,
+      "total_cpu_100ns": 7817812500,
+      "total_page_fault_count": 92725621,
+      "total_processes": 2,
+      "active_processes": 0,
+      "total_terminated_processes": 0
+    },
+    "observations": [
+      {
+        "wall_seconds": 317.10999999998603,
+        "accounting": {
+          "total_user_100ns": 7317187500,
+          "total_kernel_100ns": 500625000,
+          "total_cpu_100ns": 7817812500,
+          "total_page_fault_count": 92725621,
+          "total_processes": 2,
+          "active_processes": 0,
+          "total_terminated_processes": 0
+        }
+      }
+    ],
+    "observation_count": 1,
+    "completed": true,
+    "started_wall_seconds": 317.10999999998603,
+    "ended_wall_seconds": 317.10999999998603
+  },
+  "termination": {
+    "attempted": false,
+    "before_accounting": null,
+    "succeeded": false
+  },
+  "limits": {
+    "wall_seconds": 1800,
+    "cpu_seconds": 12000,
+    "log_bytes": 16777216,
+    "committed_bytes": 25769803776
+  },
+  "scope": "owned job tree; committed memory, observed user+kernel CPU; not RSS or a timing benchmark",
+  "log": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\full-stack-source-prior\\ore100-full-1\\process.log",
+    "sha256": "8cd5f5123b54740d293c4c8749cb0eb52ffe60c31d3cec27664944b6fa9624e1",
+    "bytes": 249235
+  }
+}

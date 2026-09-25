@@ -1,0 +1,16 @@
+{
+  "receipt": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\highlight-rendering\\replay-marigold4-1\\output\\receipt.json",
+    "sha256": "162a94a03730aa2a736bf48ff0e1f2c47d78e19accbd0f4add6d2e5fea0512d0",
+    "bytes": 4893
+  },
+  "sources_unchanged": true,
+  "inputs_unchanged": true,
+  "whole_output_arms": [
+    "current",
+    "sensor-rolloff-off",
+    "shoulder",
+    "both"
+  ],
+  "visual_verdict": null
+}

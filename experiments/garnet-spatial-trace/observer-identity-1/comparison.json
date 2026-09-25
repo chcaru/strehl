@@ -1,0 +1,19 @@
+{
+  "observer_output_file_exact": true,
+  "merged_planes_exact": true,
+  "on": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\garnet-spatial-trace\\garnet-on-1\\completion.json",
+    "sha256": "7ab3305d93da76d74cd42018ac10d67cc6168d41150e32f62f8814c7b25c1fac",
+    "bytes": 1014
+  },
+  "off": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\garnet-spatial-trace\\garnet-off-1\\completion.json",
+    "sha256": "5abcaa64dd4bdf3c7fc002bfb3b83f7f58ee7690d4617ffa88a89a467357a020",
+    "bytes": 1012
+  },
+  "census": {
+    "path": "C:\\dev\\blog\\death-of-software\\projects\\strehl\\experiments\\garnet-spatial-trace\\garnet-on-1\\census.json",
+    "sha256": "918f40337aabbdcd0c020efd56345dbbbdb18c83fbf2f64dd04031dd7f02907e",
+    "bytes": 755240
+  }
+}

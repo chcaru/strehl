@@ -1,0 +1,6152 @@
+[
+  {
+    "code": "100",
+    "index": 0,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00031.ARW",
+    "file_sha256": "b1d471226dc1eb79c7bc3865bd246a8541396f69cc0ea5c9bca4af920b8521a4",
+    "metadata": {
+      "raw_sizes": "ImageSizes(raw_height=5120, raw_width=7168, height=4688, width=7028, top_margin=0, left_margin=0, iheight=4688, iwidth=7028, pixel_aspect=1.0, flip=0, crop_left_margin=12, crop_top_margin=8, crop_width=7008, crop_height=4672)",
+      "black": [
+        512,
+        512,
+        512,
+        512
+      ],
+      "white": 16383,
+      "camera_white": [
+        15360,
+        15360,
+        15360,
+        15360
+      ],
+      "wb": [
+        1731.0,
+        1024.0,
+        2581.0,
+        1024.0
+      ],
+      "pattern": [
+        [
+          0,
+          1
+        ],
+        [
+          3,
+          2
+        ]
+      ]
+    },
+    "active": {
+      "n": 32947264,
+      "minimum": 537,
+      "maximum": 9548,
+      "at_nominal_white_15360": 0,
+      "at_container_max_16383": 0,
+      "percentiles": {
+        "50": 818.0,
+        "99": 4521.0,
+        "99.9": 7854.0,
+        "99.99": 9092.0
+      },
+      "sha256": "93d6b22681548f36c1d6d29b65fa5991a943766be27d1307a71d6fee3bf4819d"
+    },
+    "planes": {
+      "R": {
+        "n": 8236816,
+        "minimum": 537,
+        "maximum": 5062,
+        "at_nominal_white_15360": 0,
+        "at_container_max_16383": 0,
+        "percentiles": {
+          "50": 665.0,
+          "99": 3060.0,
+          "99.9": 4487.0,
+          "99.99": 4904.0
+        },
+        "sha256": "3c30b477081b92510ccc6ba5f88eac2a25250a41d50b717a25d549146a4d1e35"
+      },
+      "G1": {
+        "n": 8236816,
+        "minimum": 577,
+        "maximum": 9548,
+        "at_nominal_white_15360": 0,
+        "at_container_max_16383": 0,
+        "percentiles": {
+          "50": 922.0,
+          "99": 5642.0,
+          "99.9": 8433.0,
+          "99.99": 9246.31849999912
+        },
+        "sha256": "d986aa8e790c1c28ba9da82c16c8d86198a163a1c6249abd920cdddf72cd9277"
+      },
+      "G2": {
+        "n": 8236816,
+        "minimum": 579,
+        "maximum": 9541,
+        "at_nominal_white_15360": 0,
+        "at_container_max_16383": 0,
+        "percentiles": {
+          "50": 922.0,
+          "99": 5642.0,
+          "99.9": 8431.0,
+          "99.99": 9235.31849999912
+        },
+        "sha256": "c6ba022995f8d88eef2d0a0bbebd5a8a6471cb50d2ac165254a6f74cfae32c6b"
+      },
+      "B": {
+        "n": 8236816,
+        "minimum": 544,
+        "maximum": 4700,
+        "at_nominal_white_15360": 0,
+        "at_container_max_16383": 0,
+        "percentiles": {
+          "50": 757.0,
+          "99": 2943.0,
+          "99.9": 4191.0,
+          "99.99": 4535.0
+        },
+        "sha256": "f70a6ac76247aa6e99bc9db0784d0bbe9f318c774df0ddcde46547861eb32f08"
+      }
+    },
+    "rois": {
+      "white-patch": {
+        "output_native_xywh": [
+          1080,
+          620,
+          640,
+          640
+        ],
+        "gauge": "held sidecar reference, nearest CFA-quad sample; no CA",
+        "planes": {
+          "R": {
+            "n": 102400,
+            "minimum": 585,
+            "maximum": 5062,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 2080.0,
+              "99": 4876.0,
+              "99.9": 4990.60100000001,
+              "99.99": 5042.52019999997
+            },
+            "sha256": "6e111e4aa83ce612172edcdb0ff6d1445f7ebf6af2ef077206ceb35e5effe1f7"
+          },
+          "G1": {
+            "n": 102400,
+            "minimum": 740,
+            "maximum": 9548,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 3719.0,
+              "99": 9185.0,
+              "99.9": 9417.0,
+              "99.99": 9502.56059999991
+            },
+            "sha256": "14f9b2e30d5330999565e50415e82b26241c6c93fdbe4039d8b123995d765d83"
+          },
+          "G2": {
+            "n": 102400,
+            "minimum": 743,
+            "maximum": 9541,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 3726.0,
+              "99": 9177.0,
+              "99.9": 9405.60100000001,
+              "99.99": 9482.760099999985
+            },
+            "sha256": "f427b2480d19f1dc93aac6f61d3b7c3f19cb36d817516ef7df60cb2f54f5d2ee"
+          },
+          "B": {
+            "n": 102400,
+            "minimum": 659,
+            "maximum": 4700,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 2018.0,
+              "99": 4500.0,
+              "99.9": 4608.0,
+              "99.99": 4656.280299999955
+            },
+            "sha256": "ac74130f1173662ba9a3b5f9ab24674f3eb7ca9e5f802168a66144b2079fb4ba"
+          }
+        }
+      },
+      "blue-control": {
+        "output_native_xywh": [
+          2780,
+          2640,
+          640,
+          640
+        ],
+        "gauge": "held sidecar reference, nearest CFA-quad sample; no CA",
+        "planes": {
+          "R": {
+            "n": 102400,
+            "minimum": 557,
+            "maximum": 774,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 644.0,
+              "99": 742.0,
+              "99.9": 756.0,
+              "99.99": 766.0
+            },
+            "sha256": "7099e10434e5db476de0fb88bd7a614e1b7d4cdba19d45519378d5569dd24083"
+          },
+          "G1": {
+            "n": 102400,
+            "minimum": 618,
+            "maximum": 1341,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 833.0,
+              "99": 1290.0,
+              "99.9": 1314.0,
+              "99.99": 1328.0
+            },
+            "sha256": "490dce40599f96d628c6fc70b385f9722c5ca8c608308e1f0eee231eb048fc39"
+          },
+          "G2": {
+            "n": 102400,
+            "minimum": 615,
+            "maximum": 1347,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 833.0,
+              "99": 1288.0,
+              "99.9": 1314.0,
+              "99.99": 1328.0
+            },
+            "sha256": "fce4fdb9f07dc1fbe1f3ade80de8efcb783595d65fc770ee0278866e93acfbdb"
+          },
+          "B": {
+            "n": 102400,
+            "minimum": 559,
+            "maximum": 1211,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 690.0,
+              "99": 1160.0,
+              "99.9": 1184.0,
+              "99.99": 1198.760099999985
+            },
+            "sha256": "5236fd6a3a2804a40e3f8f1d5c42bcfa8139a1ef7a7a8938d75e1a7d2d304821"
+          }
+        }
+      }
+    }
+  },
+  {
+    "code": "100",
+    "index": 51,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00082.ARW",
+    "file_sha256": "8a05f2eaacf03660a876ca8df268465768534c94e1b4d827425f6cb5640965dd",
+    "metadata": {
+      "raw_sizes": "ImageSizes(raw_height=5120, raw_width=7168, height=4688, width=7028, top_margin=0, left_margin=0, iheight=4688, iwidth=7028, pixel_aspect=1.0, flip=0, crop_left_margin=12, crop_top_margin=8, crop_width=7008, crop_height=4672)",
+      "black": [
+        512,
+        512,
+        512,
+        512
+      ],
+      "white": 16383,
+      "camera_white": [
+        15360,
+        15360,
+        15360,
+        15360
+      ],
+      "wb": [
+        1731.0,
+        1024.0,
+        2581.0,
+        1024.0
+      ],
+      "pattern": [
+        [
+          0,
+          1
+        ],
+        [
+          3,
+          2
+        ]
+      ]
+    },
+    "active": {
+      "n": 32947264,
+      "minimum": 506,
+      "maximum": 16383,
+      "at_nominal_white_15360": 245,
+      "at_container_max_16383": 177,
+      "percentiles": {
+        "50": 776.0,
+        "99": 5682.0,
+        "99.9": 10003.0,
+        "99.99": 12565.27369999513
+      },
+      "sha256": "031458df2a83256b5de3b8f147f295419a8df36afc55e11be524ccbd30118dc8"
+    },
+    "planes": {
+      "R": {
+        "n": 8236816,
+        "minimum": 509,
+        "maximum": 16383,
+        "at_nominal_white_15360": 25,
+        "at_container_max_16383": 16,
+        "percentiles": {
+          "50": 646.0,
+          "99": 3947.0,
+          "99.9": 5619.0,
+          "99.99": 6840.0
+        },
+        "sha256": "3b56500421bba630363237110bfba0f0761b6cf7a212890e1924d4a6af4bcead"
+      },
+      "G1": {
+        "n": 8236816,
+        "minimum": 526,
+        "maximum": 16383,
+        "at_nominal_white_15360": 111,
+        "at_container_max_16383": 79,
+        "percentiles": {
+          "50": 878.0,
+          "99": 7418.0,
+          "99.9": 10752.0,
+          "99.99": 13226.31849999912
+        },
+        "sha256": "ef4635847b4e2c571430dcacf1f8808e2d82a4ca3f016fa9d0fd5e111993ff34"
+      },
+      "G2": {
+        "n": 8236816,
+        "minimum": 526,
+        "maximum": 16383,
+        "at_nominal_white_15360": 107,
+        "at_container_max_16383": 80,
+        "percentiles": {
+          "50": 877.0,
+          "99": 7423.0,
+          "99.9": 10756.0,
+          "99.99": 13240.31849999912
+        },
+        "sha256": "64cceede336d585ff8912baf9f250effbecedcd5aa394cc5532ead51a3f8a1f4"
+      },
+      "B": {
+        "n": 8236816,
+        "minimum": 506,
+        "maximum": 16383,
+        "at_nominal_white_15360": 2,
+        "at_container_max_16383": 2,
+        "percentiles": {
+          "50": 731.0,
+          "99": 3787.0,
+          "99.9": 5349.0,
+          "99.99": 6403.636999998242
+        },
+        "sha256": "dd881ebbc79c8de13195b7a83666111a7137c321ae7f3e74f4700c9a683e93b5"
+      }
+    },
+    "rois": {
+      "white-patch": {
+        "output_native_xywh": [
+          1080,
+          620,
+          640,
+          640
+        ],
+        "gauge": "held sidecar reference, nearest CFA-quad sample; no CA",
+        "planes": {
+          "R": {
+            "n": 102400,
+            "minimum": 550,
+            "maximum": 7142,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 1870.0,
+              "99": 5836.0,
+              "99.9": 6788.202000000019,
+              "99.99": 7016.280299999955
+            },
+            "sha256": "b86ebd5ddea9d0f7be5e1dbdd86598eff9f4283cd33fd2143f77944c2a41e754"
+          },
+          "G1": {
+            "n": 102400,
+            "minimum": 641,
+            "maximum": 13720,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 3340.0,
+              "99": 11074.009999999995,
+              "99.9": 13053.0,
+              "99.99": 13367.52019999997
+            },
+            "sha256": "c8682f753a6ee046b6bbae545214da9986ff71f3ed830421c2fe8f3f7f90e95d"
+          },
+          "G2": {
+            "n": 102400,
+            "minimum": 642,
+            "maximum": 13683,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 3347.5,
+              "99": 11072.009999999995,
+              "99.9": 13044.0,
+              "99.99": 13461.56059999991
+            },
+            "sha256": "f5a5d473207841fc2a3f764361d21218cc31fc0b1bc8a5948c91130e16625f71"
+          },
+          "B": {
+            "n": 102400,
+            "minimum": 610,
+            "maximum": 6571,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 1827.0,
+              "99": 5378.0,
+              "99.9": 6318.202000000019,
+              "99.99": 6481.760099999985
+            },
+            "sha256": "7e28c6c35d644661a3b3e1cd78f3e9fd6073090c0a1c160b5df248f48515a9f5"
+          }
+        }
+      },
+      "blue-control": {
+        "output_native_xywh": [
+          2780,
+          2640,
+          640,
+          640
+        ],
+        "gauge": "held sidecar reference, nearest CFA-quad sample; no CA",
+        "planes": {
+          "R": {
+            "n": 102400,
+            "minimum": 527,
+            "maximum": 1070,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 649.0,
+              "99": 838.0,
+              "99.9": 939.0,
+              "99.99": 1038.0403999999398
+            },
+            "sha256": "a847c27d4ba857ad9b8e1895e74eb8342589eef200cfcf296cb304a3e2f8bb3b"
+          },
+          "G1": {
+            "n": 102400,
+            "minimum": 551,
+            "maximum": 1597,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 859.0,
+              "99": 1519.0,
+              "99.9": 1568.0,
+              "99.99": 1588.760099999985
+            },
+            "sha256": "636702f9de7875263f16593b1bb83f1195b57d3f9cda8fb7b37f66c97418b278"
+          },
+          "G2": {
+            "n": 102400,
+            "minimum": 550,
+            "maximum": 1607,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 859.0,
+              "99": 1518.0,
+              "99.9": 1569.0,
+              "99.99": 1589.0
+            },
+            "sha256": "7b4c10c489bfe242182e2c0b2980be053ff8589fe64eec303ae3e2cac7b037d2"
+          },
+          "B": {
+            "n": 102400,
+            "minimum": 528,
+            "maximum": 1502,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 698.0,
+              "99": 1418.0,
+              "99.9": 1470.0,
+              "99.99": 1491.760099999985
+            },
+            "sha256": "5dbf74db1396900fed14d9e5cc2cdc23d04b23945f3b32a013368640e6de13b6"
+          }
+        }
+      }
+    }
+  },
+  {
+    "code": "100",
+    "index": 103,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00134.ARW",
+    "file_sha256": "b2181536da66f816f25bee2a49369f2505f42e6fb1a194e90f00c0999c27bf6f",
+    "metadata": {
+      "raw_sizes": "ImageSizes(raw_height=5120, raw_width=7168, height=4688, width=7028, top_margin=0, left_margin=0, iheight=4688, iwidth=7028, pixel_aspect=1.0, flip=0, crop_left_margin=12, crop_top_margin=8, crop_width=7008, crop_height=4672)",
+      "black": [
+        512,
+        512,
+        512,
+        512
+      ],
+      "white": 16383,
+      "camera_white": [
+        15360,
+        15360,
+        15360,
+        15360
+      ],
+      "wb": [
+        1731.0,
+        1024.0,
+        2581.0,
+        1024.0
+      ],
+      "pattern": [
+        [
+          0,
+          1
+        ],
+        [
+          3,
+          2
+        ]
+      ]
+    },
+    "active": {
+      "n": 32947264,
+      "minimum": 500,
+      "maximum": 16383,
+      "at_nominal_white_15360": 197,
+      "at_container_max_16383": 164,
+      "percentiles": {
+        "50": 787.0,
+        "99": 5115.0,
+        "99.9": 9136.0,
+        "99.99": 11175.0
+      },
+      "sha256": "63543bdb778b7d1136f34d0034346ecde605748e103ae7116310ccf1d877ed5e"
+    },
+    "planes": {
+      "R": {
+        "n": 8236816,
+        "minimum": 500,
+        "maximum": 16383,
+        "at_nominal_white_15360": 2,
+        "at_container_max_16383": 2,
+        "percentiles": {
+          "50": 659.0,
+          "99": 3527.0,
+          "99.9": 5131.0,
+          "99.99": 5917.0
+        },
+        "sha256": "35324c3cf61c8ca90e879960e129493727da9520202a82d69c03a5f362c3e5be"
+      },
+      "G1": {
+        "n": 8236816,
+        "minimum": 505,
+        "maximum": 16383,
+        "at_nominal_white_15360": 90,
+        "at_container_max_16383": 72,
+        "percentiles": {
+          "50": 895.0,
+          "99": 6663.0,
+          "99.9": 9815.0,
+          "99.99": 11584.0
+        },
+        "sha256": "2b45d79b394ae60055eed3aaa5b210c016d5cd403871f4ad35ea81064b852f7e"
+      },
+      "G2": {
+        "n": 8236816,
+        "minimum": 504,
+        "maximum": 16383,
+        "at_nominal_white_15360": 90,
+        "at_container_max_16383": 78,
+        "percentiles": {
+          "50": 895.0,
+          "99": 6663.0,
+          "99.9": 9815.0,
+          "99.99": 11568.955499997362
+        },
+        "sha256": "6e26f10f4110e5823fbf28eed070f0984c05e0954342d2ef8e0d9d6e8085cb8f"
+      },
+      "B": {
+        "n": 8236816,
+        "minimum": 506,
+        "maximum": 16383,
+        "at_nominal_white_15360": 15,
+        "at_container_max_16383": 12,
+        "percentiles": {
+          "50": 740.0,
+          "99": 3394.0,
+          "99.9": 4783.0,
+          "99.99": 5622.0
+        },
+        "sha256": "18caedc40c5695ef4666b2d00b15da07937cf3ed6d20c374472e4ee76da2e1ce"
+      }
+    },
+    "rois": {
+      "white-patch": {
+        "output_native_xywh": [
+          1080,
+          620,
+          640,
+          640
+        ],
+        "gauge": "held sidecar reference, nearest CFA-quad sample; no CA",
+        "planes": {
+          "R": {
+            "n": 102400,
+            "minimum": 555,
+            "maximum": 6276,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 1983.0,
+              "99": 5639.0,
+              "99.9": 6039.0,
+              "99.99": 6212.0
+            },
+            "sha256": "e85161d0d5d18914e5a5954880d102233d2b249984346972dc28c3ba59b3c4ec"
+          },
+          "G1": {
+            "n": 102400,
+            "minimum": 653,
+            "maximum": 12152,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 3502.5,
+              "99": 10739.0,
+              "99.9": 11640.005000000048,
+              "99.99": 11972.280299999955
+            },
+            "sha256": "12b9c450d4f91ecf7064fc04c2929dca1c11f359dbfb0eed660f695c1b20ba4b"
+          },
+          "G2": {
+            "n": 102400,
+            "minimum": 645,
+            "maximum": 12125,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 3504.0,
+              "99": 10743.0,
+              "99.9": 11652.404000000039,
+              "99.99": 11963.760099999985
+            },
+            "sha256": "efac3f693196c923fbdb11cf87553a9d892981319fcb70b33a293daa3998ee87"
+          },
+          "B": {
+            "n": 102400,
+            "minimum": 627,
+            "maximum": 5723,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 1919.0,
+              "99": 5168.0,
+              "99.9": 5554.60100000001,
+              "99.99": 5677.0
+            },
+            "sha256": "2fe313c54c767f6ee39c5f4ee8e200b03f462eeee7327302c56e1efb9e4a501a"
+          }
+        }
+      },
+      "blue-control": {
+        "output_native_xywh": [
+          2780,
+          2640,
+          640,
+          640
+        ],
+        "gauge": "held sidecar reference, nearest CFA-quad sample; no CA",
+        "planes": {
+          "R": {
+            "n": 102400,
+            "minimum": 516,
+            "maximum": 2253,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 635.0,
+              "99": 975.0,
+              "99.9": 1385.0,
+              "99.99": 1842.8029999995488
+            },
+            "sha256": "46d5ba03aec15d76effdf4ceaf84f1e20913ed450ebe88733278872d46d8d1b0"
+          },
+          "G1": {
+            "n": 102400,
+            "minimum": 535,
+            "maximum": 5413,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 846.0,
+              "99": 1983.0,
+              "99.9": 2492.606000000058,
+              "99.99": 3657.8054999991728
+            },
+            "sha256": "f90a4d251f76a32ed7a92cef54ff56f8a55f18892fee887df720b2a0f6c6f509"
+          },
+          "G2": {
+            "n": 102400,
+            "minimum": 539,
+            "maximum": 5390,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 846.0,
+              "99": 1988.0,
+              "99.9": 2519.8080000000773,
+              "99.99": 3661.280299999955
+            },
+            "sha256": "1beb190db9f8c94074de27e74b1fe87f854b7964f16a90208683b1db0e341571"
+          },
+          "B": {
+            "n": 102400,
+            "minimum": 523,
+            "maximum": 2742,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 685.0,
+              "99": 1786.0,
+              "99.9": 2110.0,
+              "99.99": 2399.3206999998947
+            },
+            "sha256": "c82f712f541de7cd841ec4aaa36a77922876e9c7bc43a2c702be62b476eda0f3"
+          }
+        }
+      }
+    }
+  },
+  {
+    "code": "100",
+    "index": 155,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00186.ARW",
+    "file_sha256": "226b7aee6d5f886773b1d6d158d8e0c4c6c424bb46c722803d26de0fded57f09",
+    "metadata": {
+      "raw_sizes": "ImageSizes(raw_height=5120, raw_width=7168, height=4688, width=7028, top_margin=0, left_margin=0, iheight=4688, iwidth=7028, pixel_aspect=1.0, flip=0, crop_left_margin=12, crop_top_margin=8, crop_width=7008, crop_height=4672)",
+      "black": [
+        512,
+        512,
+        512,
+        512
+      ],
+      "white": 16383,
+      "camera_white": [
+        15360,
+        15360,
+        15360,
+        15360
+      ],
+      "wb": [
+        1731.0,
+        1024.0,
+        2581.0,
+        1024.0
+      ],
+      "pattern": [
+        [
+          0,
+          1
+        ],
+        [
+          3,
+          2
+        ]
+      ]
+    },
+    "active": {
+      "n": 32947264,
+      "minimum": 499,
+      "maximum": 16383,
+      "at_nominal_white_15360": 134,
+      "at_container_max_16383": 119,
+      "percentiles": {
+        "50": 831.0,
+        "99": 4269.0,
+        "99.9": 7657.0,
+        "99.99": 9325.0
+      },
+      "sha256": "374d68a0c99f391d570b804781add10ff79475e963075dec796073aab05afa75"
+    },
+    "planes": {
+      "R": {
+        "n": 8236816,
+        "minimum": 499,
+        "maximum": 5915,
+        "at_nominal_white_15360": 0,
+        "at_container_max_16383": 0,
+        "percentiles": {
+          "50": 684.0,
+          "99": 2829.0,
+          "99.9": 4430.0,
+          "99.99": 4998.0
+        },
+        "sha256": "99885889c02cf344a8420d868d296f37cfb460aeba7cf4cf3c06025d09f84a13"
+      },
+      "G1": {
+        "n": 8236816,
+        "minimum": 500,
+        "maximum": 16383,
+        "at_nominal_white_15360": 48,
+        "at_container_max_16383": 42,
+        "percentiles": {
+          "50": 952.0,
+          "99": 5248.0,
+          "99.9": 8400.0,
+          "99.99": 9517.0
+        },
+        "sha256": "e3feb8ed68de526ce7d50589833a8695d530451d6376430938dca744447b66e8"
+      },
+      "G2": {
+        "n": 8236816,
+        "minimum": 501,
+        "maximum": 16383,
+        "at_nominal_white_15360": 48,
+        "at_container_max_16383": 42,
+        "percentiles": {
+          "50": 952.0,
+          "99": 5249.0,
+          "99.9": 8398.0,
+          "99.99": 9511.0
+        },
+        "sha256": "518b8c04be45b64bb986d28d4c027f9c5b69f962c10409edbb008b686cd008d6"
+      },
+      "B": {
+        "n": 8236816,
+        "minimum": 501,
+        "maximum": 16383,
+        "at_nominal_white_15360": 38,
+        "at_container_max_16383": 35,
+        "percentiles": {
+          "50": 773.0,
+          "99": 2751.0,
+          "99.9": 4165.0,
+          "99.99": 4695.0
+        },
+        "sha256": "281607914d50e9d96d734d72fbd0e5a771a6fc80d85a0e8ecd617051185bd378"
+      }
+    },
+    "rois": {
+      "white-patch": {
+        "output_native_xywh": [
+          1080,
+          620,
+          640,
+          640
+        ],
+        "gauge": "held sidecar reference, nearest CFA-quad sample; no CA",
+        "planes": {
+          "R": {
+            "n": 102400,
+            "minimum": 594,
+            "maximum": 5204,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 2204.0,
+              "99": 4971.0,
+              "99.9": 5122.0,
+              "99.99": 5183.760099999985
+            },
+            "sha256": "6a47c3ea28765df172003fd873868a1460c9283fa0ddd8e4bc64d7f929727933"
+          },
+          "G1": {
+            "n": 102400,
+            "minimum": 762,
+            "maximum": 9869,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 3942.5,
+              "99": 9420.0,
+              "99.9": 9702.0,
+              "99.99": 9798.52019999997
+            },
+            "sha256": "3392753be8b4b5e716022efc4bc5815d1ad23c3003e1e9afd8e860a1c4d62fca"
+          },
+          "G2": {
+            "n": 102400,
+            "minimum": 772,
+            "maximum": 9815,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 3947.5,
+              "99": 9411.0,
+              "99.9": 9699.0,
+              "99.99": 9778.760099999985
+            },
+            "sha256": "9802e25bc0e10de115ae5d8603d578ac4d76cf7540c3969b28f5ef6792afed11"
+          },
+          "B": {
+            "n": 102400,
+            "minimum": 684,
+            "maximum": 4786,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 2124.0,
+              "99": 4562.0,
+              "99.9": 4695.0,
+              "99.99": 4734.760099999985
+            },
+            "sha256": "7676687b6237f277dc299acf0c63730c25cfb1a8c4502a1843cbaed625844711"
+          }
+        }
+      },
+      "blue-control": {
+        "output_native_xywh": [
+          2780,
+          2640,
+          640,
+          640
+        ],
+        "gauge": "held sidecar reference, nearest CFA-quad sample; no CA",
+        "planes": {
+          "R": {
+            "n": 102400,
+            "minimum": 566,
+            "maximum": 890,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 647.0,
+              "99": 813.0,
+              "99.9": 859.6010000000097,
+              "99.99": 873.0
+            },
+            "sha256": "f8f2c0676997bb383bbdf5a0e6cf5ba4a4097b3f984f990b72c92be98c789bc3"
+          },
+          "G1": {
+            "n": 102400,
+            "minimum": 626,
+            "maximum": 1657,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 844.0,
+              "99": 1527.0,
+              "99.9": 1585.0,
+              "99.99": 1625.0807999998797
+            },
+            "sha256": "b81f1ce42a2e9dfeebd7dd69ef68669262a186a0db871549a6d1b60babdb7b54"
+          },
+          "G2": {
+            "n": 102400,
+            "minimum": 628,
+            "maximum": 1644,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 844.0,
+              "99": 1524.0,
+              "99.9": 1581.6010000000097,
+              "99.99": 1615.0
+            },
+            "sha256": "43474adac6dcfa67e331779b84bb95811293b25abaf99a42952f1cd200902ec9"
+          },
+          "B": {
+            "n": 102400,
+            "minimum": 571,
+            "maximum": 1494,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 694.0,
+              "99": 1400.0,
+              "99.9": 1457.0,
+              "99.99": 1475.0
+            },
+            "sha256": "e506d65a48243b9f50a8ec92a9c94722cf215f1583fd3d0a3c50dab95005d091"
+          }
+        }
+      }
+    }
+  },
+  {
+    "code": "100",
+    "index": 206,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00237.ARW",
+    "file_sha256": "b3f46f85919fe6baa38db6613ca994878c193559ddbf2e21f7629d7343e65212",
+    "metadata": {
+      "raw_sizes": "ImageSizes(raw_height=5120, raw_width=7168, height=4688, width=7028, top_margin=0, left_margin=0, iheight=4688, iwidth=7028, pixel_aspect=1.0, flip=0, crop_left_margin=12, crop_top_margin=8, crop_width=7008, crop_height=4672)",
+      "black": [
+        512,
+        512,
+        512,
+        512
+      ],
+      "white": 16383,
+      "camera_white": [
+        15360,
+        15360,
+        15360,
+        15360
+      ],
+      "wb": [
+        1731.0,
+        1024.0,
+        2581.0,
+        1024.0
+      ],
+      "pattern": [
+        [
+          0,
+          1
+        ],
+        [
+          3,
+          2
+        ]
+      ]
+    },
+    "active": {
+      "n": 32947264,
+      "minimum": 500,
+      "maximum": 8216,
+      "at_nominal_white_15360": 0,
+      "at_container_max_16383": 0,
+      "percentiles": {
+        "50": 860.0,
+        "99": 3665.370000001043,
+        "99.9": 6332.0,
+        "99.99": 7746.0
+      },
+      "sha256": "17d2529e295c877129bd5152a76364d0c6b7c256897a09029af2e277e41ac282"
+    },
+    "planes": {
+      "R": {
+        "n": 8236816,
+        "minimum": 502,
+        "maximum": 4372,
+        "at_nominal_white_15360": 0,
+        "at_container_max_16383": 0,
+        "percentiles": {
+          "50": 700.0,
+          "99": 2490.0,
+          "99.9": 3721.0,
+          "99.99": 4205.0
+        },
+        "sha256": "14e102171fcf2565918c395be81a8cb8c3e1971cfa6e5c9a1c19417a52cc084c"
+      },
+      "G1": {
+        "n": 8236816,
+        "minimum": 500,
+        "maximum": 8196,
+        "at_nominal_white_15360": 0,
+        "at_container_max_16383": 0,
+        "percentiles": {
+          "50": 989.0,
+          "99": 4535.0,
+          "99.9": 6941.0,
+          "99.99": 7892.0
+        },
+        "sha256": "30925c5396b62d874abc427fc03ac77c4df3499b312951d5281ab5f05098eb14"
+      },
+      "G2": {
+        "n": 8236816,
+        "minimum": 501,
+        "maximum": 8216,
+        "at_nominal_white_15360": 0,
+        "at_container_max_16383": 0,
+        "percentiles": {
+          "50": 988.0,
+          "99": 4535.0,
+          "99.9": 6938.0,
+          "99.99": 7886.0
+        },
+        "sha256": "148317c466400bf5360c4e89115bfa06affa96726a14d9f55947090e42b52a24"
+      },
+      "B": {
+        "n": 8236816,
+        "minimum": 501,
+        "maximum": 4044,
+        "at_nominal_white_15360": 0,
+        "at_container_max_16383": 0,
+        "percentiles": {
+          "50": 794.0,
+          "99": 2413.0,
+          "99.9": 3449.0,
+          "99.99": 3871.0
+        },
+        "sha256": "91dd370ef6d54d55f19bbb87a630b9d2b328c62310ac800a4f45ac88c3bf5a16"
+      }
+    },
+    "rois": {
+      "white-patch": {
+        "output_native_xywh": [
+          1080,
+          620,
+          640,
+          640
+        ],
+        "gauge": "held sidecar reference, nearest CFA-quad sample; no CA",
+        "planes": {
+          "R": {
+            "n": 102400,
+            "minimum": 623,
+            "maximum": 4372,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 2204.0,
+              "99": 4195.009999999995,
+              "99.9": 4309.0,
+              "99.99": 4352.52019999997
+            },
+            "sha256": "66ee9ac0024b13d187010fbd169f1d756a62ef328b9840297b8485cc576bc493"
+          },
+          "G1": {
+            "n": 102400,
+            "minimum": 856,
+            "maximum": 8196,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 3944.0,
+              "99": 7868.009999999995,
+              "99.9": 8089.0,
+              "99.99": 8155.280299999955
+            },
+            "sha256": "5ed03e8607a9b60b933649a5b82c4d8fd12af48d0f05c4fb0951175a3a940ec1"
+          },
+          "G2": {
+            "n": 102400,
+            "minimum": 854,
+            "maximum": 8216,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 3947.0,
+              "99": 7867.0,
+              "99.9": 8094.202000000019,
+              "99.99": 8157.04039999994
+            },
+            "sha256": "c3bb1e836ba09d0dc6c53977da2ff33822cc2aa947aa572a64f5b5e447ecc960"
+          },
+          "B": {
+            "n": 102400,
+            "minimum": 740,
+            "maximum": 4044,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 2125.0,
+              "99": 3862.0,
+              "99.9": 3960.6010000000097,
+              "99.99": 3997.760099999985
+            },
+            "sha256": "320b6562ed2dfbb643d8c62ba768c20759bba402a73517be69c160fd87deb375"
+          }
+        }
+      },
+      "blue-control": {
+        "output_native_xywh": [
+          2780,
+          2640,
+          640,
+          640
+        ],
+        "gauge": "held sidecar reference, nearest CFA-quad sample; no CA",
+        "planes": {
+          "R": {
+            "n": 102400,
+            "minimum": 589,
+            "maximum": 753,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 647.0,
+              "99": 722.0,
+              "99.9": 738.0,
+              "99.99": 746.760099999985
+            },
+            "sha256": "1f51fb9970eb1d9189c0284dcb9cb624b96416f207aa3e03e5530fd6fc8170d3"
+          },
+          "G1": {
+            "n": 102400,
+            "minimum": 673,
+            "maximum": 1372,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 872.0,
+              "99": 1325.0,
+              "99.9": 1346.0,
+              "99.99": 1361.760099999985
+            },
+            "sha256": "5299a00da630d0a7b2fd7fe634106f4102f7e3606a3c4206bf7f662def5f3c2a"
+          },
+          "G2": {
+            "n": 102400,
+            "minimum": 669,
+            "maximum": 1381,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 872.0,
+              "99": 1323.0,
+              "99.9": 1346.0,
+              "99.99": 1359.760099999985
+            },
+            "sha256": "b371cd2605077e0500681960c684e3bab4ba393b4e9e776b1becb507e486ec3a"
+          },
+          "B": {
+            "n": 102400,
+            "minimum": 596,
+            "maximum": 1218,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 716.0,
+              "99": 1179.0,
+              "99.9": 1198.0,
+              "99.99": 1210.0
+            },
+            "sha256": "5b9601e2c59be234fababd9cd898cb8ccc237482ededfe8c6cf29ec22e2f032f"
+          }
+        }
+      }
+    }
+  },
+  {
+    "code": "102",
+    "index": 0,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\102MSDCF\\DSC00041.ARW",
+    "file_sha256": "95f96bb764503249a789522603f2c1523801af401e50599fd3601aeadbef6eba",
+    "metadata": {
+      "raw_sizes": "ImageSizes(raw_height=5120, raw_width=7168, height=4688, width=7028, top_margin=0, left_margin=0, iheight=4688, iwidth=7028, pixel_aspect=1.0, flip=0, crop_left_margin=12, crop_top_margin=8, crop_width=7008, crop_height=4672)",
+      "black": [
+        512,
+        512,
+        512,
+        512
+      ],
+      "white": 16383,
+      "camera_white": [
+        15360,
+        15360,
+        15360,
+        15360
+      ],
+      "wb": [
+        1731.0,
+        1024.0,
+        2581.0,
+        1024.0
+      ],
+      "pattern": [
+        [
+          0,
+          1
+        ],
+        [
+          3,
+          2
+        ]
+      ]
+    },
+    "active": {
+      "n": 32947264,
+      "minimum": 501,
+      "maximum": 16383,
+      "at_nominal_white_15360": 7,
+      "at_container_max_16383": 5,
+      "percentiles": {
+        "50": 737.0,
+        "99": 1834.0,
+        "99.9": 4645.0,
+        "99.99": 10216.0
+      },
+      "sha256": "3bfe208d8f130cad78f3f300fd2c8de9445812852981d9c76a561972af339277"
+    },
+    "planes": {
+      "R": {
+        "n": 8236816,
+        "minimum": 501,
+        "maximum": 6330,
+        "at_nominal_white_15360": 0,
+        "at_container_max_16383": 0,
+        "percentiles": {
+          "50": 617.0,
+          "99": 1007.0,
+          "99.9": 3201.0,
+          "99.99": 5857.0
+        },
+        "sha256": "9248d9a55b0efd597843b1dd2ec6320bb3ecfb7f301ef0c6b2de92f43dc46c55"
+      },
+      "G1": {
+        "n": 8236816,
+        "minimum": 505,
+        "maximum": 16383,
+        "at_nominal_white_15360": 4,
+        "at_container_max_16383": 3,
+        "percentiles": {
+          "50": 853.0,
+          "99": 2143.0,
+          "99.9": 6094.1850000005215,
+          "99.99": 11179.0
+        },
+        "sha256": "41dbc9878ea1f2cfc811c2a9ff01274dd572b8a158f5610d9483e305fe8d6c89"
+      },
+      "G2": {
+        "n": 8236816,
+        "minimum": 503,
+        "maximum": 16383,
+        "at_nominal_white_15360": 3,
+        "at_container_max_16383": 2,
+        "percentiles": {
+          "50": 853.0,
+          "99": 2143.0,
+          "99.9": 6115.1850000005215,
+          "99.99": 11182.31849999912
+        },
+        "sha256": "1f39a3eb3f870c66286034d80769821bdd5bf011c5860444eb3d155dff9f7da8"
+      },
+      "B": {
+        "n": 8236816,
+        "minimum": 501,
+        "maximum": 8184,
+        "at_nominal_white_15360": 0,
+        "at_container_max_16383": 0,
+        "percentiles": {
+          "50": 705.0,
+          "99": 1445.0,
+          "99.9": 3207.1850000005215,
+          "99.99": 5497.0
+        },
+        "sha256": "b6106ca6ec843606a61329c3fb4b82dcf092d139eeb36cdc2b20e3b5ce779e10"
+      }
+    },
+    "rois": {
+      "white-patch": {
+        "output_native_xywh": [
+          1270,
+          2620,
+          640,
+          640
+        ],
+        "gauge": "held sidecar reference, nearest CFA-quad sample; no CA",
+        "planes": {
+          "R": {
+            "n": 102400,
+            "minimum": 529,
+            "maximum": 6330,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 596.0,
+              "99": 5706.0199999999895,
+              "99.9": 6194.202000000019,
+              "99.99": 6298.04039999994
+            },
+            "sha256": "a08c26fa83f51f762c86e47ba715fa07d2fb5eefd9830d14476ba63de8664100"
+          },
+          "G1": {
+            "n": 102400,
+            "minimum": 591,
+            "maximum": 12179,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 807.0,
+              "99": 10866.009999999995,
+              "99.9": 11866.20200000002,
+              "99.99": 12033.04039999994
+            },
+            "sha256": "7b249b0dbb063467a828390c6bc21a17f3025e6d30f448c5c266d190f6317b73"
+          },
+          "G2": {
+            "n": 102400,
+            "minimum": 590,
+            "maximum": 12137,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 806.0,
+              "99": 10856.0,
+              "99.9": 11870.803000000029,
+              "99.99": 12046.0
+            },
+            "sha256": "aba2470de1e2e6a66d6646c5a6a36520d14960a3619c71717246af77688c9cb1"
+          },
+          "B": {
+            "n": 102400,
+            "minimum": 551,
+            "maximum": 5927,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 695.0,
+              "99": 5344.0199999999895,
+              "99.9": 5795.60100000001,
+              "99.99": 5882.52019999997
+            },
+            "sha256": "6bd413d883cf2b75985e82829fae1b83c9d26a197f2b4daedb4d1d9168347915"
+          }
+        }
+      },
+      "blue-control": {
+        "output_native_xywh": [
+          3200,
+          1500,
+          640,
+          640
+        ],
+        "gauge": "held sidecar reference, nearest CFA-quad sample; no CA",
+        "planes": {
+          "R": {
+            "n": 102400,
+            "minimum": 587,
+            "maximum": 770,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 641.0,
+              "99": 734.0,
+              "99.9": 749.0,
+              "99.99": 759.5201999999699
+            },
+            "sha256": "8b1a78cdbb73902baa602998322c25b2ff8094096205566b03ad72846eba1654"
+          },
+          "G1": {
+            "n": 102400,
+            "minimum": 755,
+            "maximum": 1519,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 910.0,
+              "99": 1233.0,
+              "99.9": 1420.0,
+              "99.99": 1491.2802999999549
+            },
+            "sha256": "cfe63d56db7c924713beef8b4ad3ec3b2d1a92d9b08ac1110f2b47f366e854d8"
+          },
+          "G2": {
+            "n": 102400,
+            "minimum": 758,
+            "maximum": 1531,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 910.0,
+              "99": 1233.0,
+              "99.9": 1421.0,
+              "99.99": 1487.760099999985
+            },
+            "sha256": "30dfd553af0808808ad2ee1c6609c60cb9f0be0de4ae18caea569a61414d335a"
+          },
+          "B": {
+            "n": 102400,
+            "minimum": 638,
+            "maximum": 1142,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 737.0,
+              "99": 963.0,
+              "99.9": 1076.0,
+              "99.99": 1122.0
+            },
+            "sha256": "6edf0ebb3b1829eb1182cc1d0738841d2729ba27a8ce87b7d1fc398531510d88"
+          }
+        }
+      }
+    }
+  },
+  {
+    "code": "102",
+    "index": 108,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\102MSDCF\\DSC00149.ARW",
+    "file_sha256": "7e71e9dc6953860a99c66b61b975e96ae5838779b8d49da872051d48c0be8695",
+    "metadata": {
+      "raw_sizes": "ImageSizes(raw_height=5120, raw_width=7168, height=4688, width=7028, top_margin=0, left_margin=0, iheight=4688, iwidth=7028, pixel_aspect=1.0, flip=0, crop_left_margin=12, crop_top_margin=8, crop_width=7008, crop_height=4672)",
+      "black": [
+        512,
+        512,
+        512,
+        512
+      ],
+      "white": 16383,
+      "camera_white": [
+        15360,
+        15360,
+        15360,
+        15360
+      ],
+      "wb": [
+        1731.0,
+        1024.0,
+        2581.0,
+        1024.0
+      ],
+      "pattern": [
+        [
+          0,
+          1
+        ],
+        [
+          3,
+          2
+        ]
+      ]
+    },
+    "active": {
+      "n": 32947264,
+      "minimum": 495,
+      "maximum": 16383,
+      "at_nominal_white_15360": 136,
+      "at_container_max_16383": 102,
+      "percentiles": {
+        "50": 734.0,
+        "99": 2142.0,
+        "99.9": 5994.0,
+        "99.99": 9940.0
+      },
+      "sha256": "a599758f90dfee69fed579e145fd3bf779e7ba99e9d8ec8ab28be3f1d5577b14"
+    },
+    "planes": {
+      "R": {
+        "n": 8236816,
+        "minimum": 495,
+        "maximum": 8768,
+        "at_nominal_white_15360": 0,
+        "at_container_max_16383": 0,
+        "percentiles": {
+          "50": 617.0,
+          "99": 1197.0,
+          "99.9": 3572.1850000005215,
+          "99.99": 5167.0
+        },
+        "sha256": "b4186689d4f0587da9804d0f1ff070040bf46f4241cba908c91a0c4f4694b23f"
+      },
+      "G1": {
+        "n": 8236816,
+        "minimum": 498,
+        "maximum": 16383,
+        "at_nominal_white_15360": 60,
+        "at_container_max_16383": 48,
+        "percentiles": {
+          "50": 856.0,
+          "99": 2618.0,
+          "99.9": 7246.1850000005215,
+          "99.99": 10746.0
+        },
+        "sha256": "69a43e9c1f210dc3bac086ce396fc93452b9cd0198af4f106b6b5bb25d3f0bed"
+      },
+      "G2": {
+        "n": 8236816,
+        "minimum": 498,
+        "maximum": 16383,
+        "at_nominal_white_15360": 65,
+        "at_container_max_16383": 46,
+        "percentiles": {
+          "50": 856.0,
+          "99": 2618.0,
+          "99.9": 7250.1850000005215,
+          "99.99": 10752.0
+        },
+        "sha256": "7de385ad11906f1da25dcb80a786cd1c20cf9301bed493c9a35b83ac19b7e20c"
+      },
+      "B": {
+        "n": 8236816,
+        "minimum": 501,
+        "maximum": 16383,
+        "at_nominal_white_15360": 11,
+        "at_container_max_16383": 8,
+        "percentiles": {
+          "50": 707.0,
+          "99": 1741.0,
+          "99.9": 3824.0,
+          "99.99": 5388.318499999121
+        },
+        "sha256": "276ed97d3e873692f2da326a99745766c4d36a1e47cd20acfb06db8a7f959050"
+      }
+    },
+    "rois": {
+      "white-patch": {
+        "output_native_xywh": [
+          1270,
+          2620,
+          640,
+          640
+        ],
+        "gauge": "held sidecar reference, nearest CFA-quad sample; no CA",
+        "planes": {
+          "R": {
+            "n": 102400,
+            "minimum": 542,
+            "maximum": 4136,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 614.0,
+              "99": 3831.0,
+              "99.9": 4050.6010000000097,
+              "99.99": 4099.0
+            },
+            "sha256": "07863aa3096700e87fd54a76286ed964ad8a7a73fa7e8806892ff5b0637cb893"
+          },
+          "G1": {
+            "n": 102400,
+            "minimum": 675,
+            "maximum": 8047,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 873.0,
+              "99": 7467.0,
+              "99.9": 7925.0,
+              "99.99": 8008.04039999994
+            },
+            "sha256": "63be49be9d936369ade797035ef8ad26caaf400c6e9f15b6cab41f62b87a50e7"
+          },
+          "G2": {
+            "n": 102400,
+            "minimum": 675,
+            "maximum": 8152,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 872.0,
+              "99": 7469.009999999995,
+              "99.9": 7919.60100000001,
+              "99.99": 8011.800499999925
+            },
+            "sha256": "1196bbd3d19f24eee83da67b21d67f185f7b740cacdfdde9c160ac9cc182233d"
+          },
+          "B": {
+            "n": 102400,
+            "minimum": 602,
+            "maximum": 3997,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 735.0,
+              "99": 3720.0,
+              "99.9": 3932.0,
+              "99.99": 3977.760099999985
+            },
+            "sha256": "b79872d222c5d1ed9a237702a58292c464b681ec7661dd2672c73d6f3db99e5c"
+          }
+        }
+      },
+      "blue-control": {
+        "output_native_xywh": [
+          3200,
+          1500,
+          640,
+          640
+        ],
+        "gauge": "held sidecar reference, nearest CFA-quad sample; no CA",
+        "planes": {
+          "R": {
+            "n": 102400,
+            "minimum": 588,
+            "maximum": 792,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 649.0,
+              "99": 728.0,
+              "99.9": 749.0,
+              "99.99": 771.5201999999699
+            },
+            "sha256": "6e1fe3a1db8ab144e46ee5c362874ab195aace82440941a58b65bc214d9453f9"
+          },
+          "G1": {
+            "n": 102400,
+            "minimum": 779,
+            "maximum": 1917,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 926.0,
+              "99": 1383.0,
+              "99.9": 1570.6010000000097,
+              "99.99": 1866.0
+            },
+            "sha256": "bc20f4ad0db4a8f0042ee395368d66f90a82e6194b3295297bddc13247e827a5"
+          },
+          "G2": {
+            "n": 102400,
+            "minimum": 784,
+            "maximum": 1920,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 925.0,
+              "99": 1381.0,
+              "99.9": 1576.6010000000097,
+              "99.99": 1851.5605999999098
+            },
+            "sha256": "1ba0f01247d4d7644f35898c0d0f26f7185acbfc62c36ab883f350082aa108d2"
+          },
+          "B": {
+            "n": 102400,
+            "minimum": 652,
+            "maximum": 1205,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 747.0,
+              "99": 1036.0,
+              "99.9": 1104.0,
+              "99.99": 1185.0
+            },
+            "sha256": "46993753dceec34a4d3b11f2b60c605b64c314555868e84c877b7974b8ab5739"
+          }
+        }
+      }
+    }
+  },
+  {
+    "code": "102",
+    "index": 215,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\102MSDCF\\DSC00256.ARW",
+    "file_sha256": "51ab58c5c26e88c24b803726305ab9682a7c3dd487958893598d8c605b0d5495",
+    "metadata": {
+      "raw_sizes": "ImageSizes(raw_height=5120, raw_width=7168, height=4688, width=7028, top_margin=0, left_margin=0, iheight=4688, iwidth=7028, pixel_aspect=1.0, flip=0, crop_left_margin=12, crop_top_margin=8, crop_width=7008, crop_height=4672)",
+      "black": [
+        512,
+        512,
+        512,
+        512
+      ],
+      "white": 16383,
+      "camera_white": [
+        15360,
+        15360,
+        15360,
+        15360
+      ],
+      "wb": [
+        1731.0,
+        1024.0,
+        2581.0,
+        1024.0
+      ],
+      "pattern": [
+        [
+          0,
+          1
+        ],
+        [
+          3,
+          2
+        ]
+      ]
+    },
+    "active": {
+      "n": 32947264,
+      "minimum": 494,
+      "maximum": 3753,
+      "at_nominal_white_15360": 0,
+      "at_container_max_16383": 0,
+      "percentiles": {
+        "50": 765.0,
+        "99": 1858.0,
+        "99.9": 2792.737000003457,
+        "99.99": 3100.0
+      },
+      "sha256": "710e54c99e894420487fe9e4a408e45227534b23d4e5747aca7391939e77346e"
+    },
+    "planes": {
+      "R": {
+        "n": 8236816,
+        "minimum": 497,
+        "maximum": 1732,
+        "at_nominal_white_15360": 0,
+        "at_container_max_16383": 0,
+        "percentiles": {
+          "50": 626.0,
+          "99": 1211.0,
+          "99.9": 1569.0,
+          "99.99": 1653.0
+        },
+        "sha256": "ab24a0153afbaef07d8f736360d018133e046dd553e9127170b3c1ce12237ea6"
+      },
+      "G1": {
+        "n": 8236816,
+        "minimum": 496,
+        "maximum": 3742,
+        "at_nominal_white_15360": 0,
+        "at_container_max_16383": 0,
+        "percentiles": {
+          "50": 896.0,
+          "99": 2214.0,
+          "99.9": 2925.0,
+          "99.99": 3155.318499999121
+        },
+        "sha256": "413482aad88bebd95217b781980422abe90c9fe8faa143c2d06f924afd00f0d9"
+      },
+      "G2": {
+        "n": 8236816,
+        "minimum": 494,
+        "maximum": 3753,
+        "at_nominal_white_15360": 0,
+        "at_container_max_16383": 0,
+        "percentiles": {
+          "50": 896.0,
+          "99": 2214.0,
+          "99.9": 2927.0,
+          "99.99": 3153.318499999121
+        },
+        "sha256": "96fcd314011f85f794198580b5b4527597741bf1a96f1df832f0d66a8076f57c"
+      },
+      "B": {
+        "n": 8236816,
+        "minimum": 497,
+        "maximum": 2682,
+        "at_nominal_white_15360": 0,
+        "at_container_max_16383": 0,
+        "percentiles": {
+          "50": 735.0,
+          "99": 1387.0,
+          "99.9": 1804.0,
+          "99.99": 2223.0
+        },
+        "sha256": "3b58a719c7c24a86c242aa71c2f8cdc2a1b876b7b4b1709621053c35d1006cc9"
+      }
+    },
+    "rois": {
+      "white-patch": {
+        "output_native_xywh": [
+          1270,
+          2620,
+          640,
+          640
+        ],
+        "gauge": "held sidecar reference, nearest CFA-quad sample; no CA",
+        "planes": {
+          "R": {
+            "n": 102400,
+            "minimum": 575,
+            "maximum": 1409,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 1019.0,
+              "99": 1367.0,
+              "99.9": 1387.0,
+              "99.99": 1400.760099999985
+            },
+            "sha256": "e37238d26497e65ec685a3b8dbfa814f0a7cc9f81d806f9d81a12dc8cbdc0a5f"
+          },
+          "G1": {
+            "n": 102400,
+            "minimum": 741,
+            "maximum": 2462,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 1672.0,
+              "99": 2378.0,
+              "99.9": 2411.0,
+              "99.99": 2433.0
+            },
+            "sha256": "b0648ed366ea615dc9a5456f1dc389ee872c89280984ed28bd0293183b2ccb9e"
+          },
+          "G2": {
+            "n": 102400,
+            "minimum": 744,
+            "maximum": 2466,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 1672.0,
+              "99": 2377.0,
+              "99.9": 2412.0,
+              "99.99": 2436.0
+            },
+            "sha256": "45f665b1ee6a858bbaf5ed1be82490e10625ffb73cf7983fd16a9a8a7ede4099"
+          },
+          "B": {
+            "n": 102400,
+            "minimum": 647,
+            "maximum": 1454,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 1099.0,
+              "99": 1407.0,
+              "99.9": 1424.6010000000097,
+              "99.99": 1435.760099999985
+            },
+            "sha256": "fde2827398a620df8a8d23f683822fd50d64d13833f53c3506221fddb3623887"
+          }
+        }
+      },
+      "blue-control": {
+        "output_native_xywh": [
+          3200,
+          1500,
+          640,
+          640
+        ],
+        "gauge": "held sidecar reference, nearest CFA-quad sample; no CA",
+        "planes": {
+          "R": {
+            "n": 102400,
+            "minimum": 621,
+            "maximum": 715,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 660.0,
+              "99": 684.0,
+              "99.9": 698.0,
+              "99.99": 708.0
+            },
+            "sha256": "3af822b39d62899135f7e39d69bc94d062c66817e2e929769414a5ba31951439"
+          },
+          "G1": {
+            "n": 102400,
+            "minimum": 842,
+            "maximum": 1075,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 957.0,
+              "99": 1033.0,
+              "99.9": 1048.0,
+              "99.99": 1059.760099999985
+            },
+            "sha256": "7f2b8dbb154995658525dcab52b77348e800fb2ca966e992c58577b20231733d"
+          },
+          "G2": {
+            "n": 102400,
+            "minimum": 848,
+            "maximum": 1073,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 957.0,
+              "99": 1032.0,
+              "99.9": 1049.0,
+              "99.99": 1062.760099999985
+            },
+            "sha256": "1cd5c383a75546ae98dbff8b5ec3f4bc6ca9142821be3d49a3cb6ce330058774"
+          },
+          "B": {
+            "n": 102400,
+            "minimum": 685,
+            "maximum": 868,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 762.0,
+              "99": 838.0,
+              "99.9": 849.0,
+              "99.99": 860.0
+            },
+            "sha256": "80b29f6a0b1fd6c7ee1f717dff8fc324bba54779dc5ced0c2da7ff5943945a7b"
+          }
+        }
+      }
+    }
+  },
+  {
+    "code": "103",
+    "index": 0,
+    "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00046.ARW",
+    "file_sha256": "7e90a3d476b9abadc5f9002e39463869dec51cf151813324d7add090bb31da9f",
+    "metadata": {
+      "raw_sizes": "ImageSizes(raw_height=5120, raw_width=7168, height=4688, width=7028, top_margin=0, left_margin=0, iheight=4688, iwidth=7028, pixel_aspect=1.0, flip=0, crop_left_margin=12, crop_top_margin=8, crop_width=7008, crop_height=4672)",
+      "black": [
+        512,
+        512,
+        512,
+        512
+      ],
+      "white": 16383,
+      "camera_white": [
+        15360,
+        15360,
+        15360,
+        15360
+      ],
+      "wb": [
+        1731.0,
+        1024.0,
+        2581.0,
+        1024.0
+      ],
+      "pattern": [
+        [
+          0,
+          1
+        ],
+        [
+          3,
+          2
+        ]
+      ]
+    },
+    "active": {
+      "n": 32947264,
+      "minimum": 488,
+      "maximum": 4356,
+      "at_nominal_white_15360": 0,
+      "at_container_max_16383": 0,
+      "percentiles": {
+        "50": 515.0,
+        "99": 3300.0,
+        "99.9": 3613.0,
+        "99.99": 4075.0
+      },
+      "sha256": "fb6623517bd657b5b73b0585cf16ff0cccdb8279d7a3b37a7de289f3b3db4da5"
+    },
+    "planes": {
+      "R": {
+        "n": 8236816,
+        "minimum": 488,
+        "maximum": 3500,
+        "at_nominal_white_15360": 0,
+        "at_container_max_16383": 0,
+        "percentiles": {
+          "50": 514.0,
+          "99": 1737.0,
+          "99.9": 2448.0,
+          "99.99": 3179.0
+        },
+        "sha256": "2889e81dc5690b2e8e31aac2b9399091b0b3e1d05c54fb12141113c6e160bd5f"
+      },
+      "G1": {
+        "n": 8236816,
+        "minimum": 495,
+        "maximum": 4354,
+        "at_nominal_white_15360": 0,
+        "at_container_max_16383": 0,
+        "percentiles": {
+          "50": 516.0,
+          "99": 3406.0,
+          "99.9": 3723.0,
+          "99.99": 4134.0
+        },
+        "sha256": "ec33008d0d8c245801f7b94824bb6430130b33d686ea8211c799ed509483e6ff"
+      },
+      "G2": {
+        "n": 8236816,
+        "minimum": 490,
+        "maximum": 4356,
+        "at_nominal_white_15360": 0,
+        "at_container_max_16383": 0,
+        "percentiles": {
+          "50": 516.0,
+          "99": 3406.0,
+          "99.9": 3729.0,
+          "99.99": 4141.0
+        },
+        "sha256": "b63b2c166cb3ee4dd9f2f457a7bcd44b30d3c48f08b0584d1c4ad4a0911be322"
+      },
+      "B": {
+        "n": 8236816,
+        "minimum": 494,
+        "maximum": 3510,
+        "at_nominal_white_15360": 0,
+        "at_container_max_16383": 0,
+        "percentiles": {
+          "50": 515.0,
+          "99": 1905.0,
+          "99.9": 2465.0,
+          "99.99": 3140.318499999121
+        },
+        "sha256": "a063668086012a221cbe7b1f085173a1e6bb4b27f06bc025b0f343dd045ee176"
+      }
+    },
+    "rois": {
+      "reflection": {
+        "output_native_xywh": [
+          3500,
+          1530,
+          640,
+          640
+        ],
+        "gauge": "held sidecar reference, nearest CFA-quad sample; no CA",
+        "planes": {
+          "R": {
+            "n": 102400,
+            "minimum": 1299,
+            "maximum": 3500,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 1736.0,
+              "99": 3150.0,
+              "99.9": 3366.0,
+              "99.99": 3439.760099999985
+            },
+            "sha256": "664a928ee537bc7969b5fcdba17cbf4458a0d4185d915e6501427b710300042e"
+          },
+          "G1": {
+            "n": 102400,
+            "minimum": 2777,
+            "maximum": 4354,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 3321.0,
+              "99": 4114.0,
+              "99.9": 4248.0,
+              "99.99": 4298.760099999985
+            },
+            "sha256": "ce2d40e11bb13b1bf84b8f77e6ab74e07e441a9e6817ba867c52f56532893851"
+          },
+          "G2": {
+            "n": 102400,
+            "minimum": 2790,
+            "maximum": 4356,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 3322.0,
+              "99": 4119.0,
+              "99.9": 4256.0,
+              "99.99": 4311.52019999997
+            },
+            "sha256": "9ceaedc4b1dbcee016b6e682095506ca8192ddbdb0985a7ce733924ffe61b6b4"
+          },
+          "B": {
+            "n": 102400,
+            "minimum": 1504,
+            "maximum": 1817,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 1655.0,
+              "99": 1760.0,
+              "99.9": 1786.0,
+              "99.99": 1803.0
+            },
+            "sha256": "10dfd5cb9ce961284026c9b7af21de921957d6da5434d9acb5b99a800379b703"
+          }
+        }
+      },
+      "colour-control": {
+        "output_native_xywh": [
+          2000,
+          2100,
+          640,
+          640
+        ],
+        "gauge": "held sidecar reference, nearest CFA-quad sample; no CA",
+        "planes": {
+          "R": {
+            "n": 102400,
+            "minimum": 999,
+            "maximum": 1667,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 1166.0,
+              "99": 1482.0,
+              "99.9": 1608.0,
+              "99.99": 1642.0
+            },
+            "sha256": "af267d0c9dd946ec304b86d8b6a825699735723604cde59ac0b6d3f9a78280f3"
+          },
+          "G1": {
+            "n": 102400,
+            "minimum": 1759,
+            "maximum": 2909,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 2122.0,
+              "99": 2697.0,
+              "99.9": 2820.0,
+              "99.99": 2867.760099999985
+            },
+            "sha256": "7cb43b1080f26d544a77764fd39868536b2440790273396ff7e7145fcf304e52"
+          },
+          "G2": {
+            "n": 102400,
+            "minimum": 1767,
+            "maximum": 2889,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 2120.0,
+              "99": 2687.0,
+              "99.9": 2815.0,
+              "99.99": 2860.0
+            },
+            "sha256": "b46ba9dd9443708fad6e683723a576b4debe455736edd0a8fcbe7f15d4aee496"
+          },
+          "B": {
+            "n": 102400,
+            "minimum": 1252,
+            "maximum": 2674,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 1601.0,
+              "99": 2409.0,
+              "99.9": 2589.0,
+              "99.99": 2642.760099999985
+            },
+            "sha256": "76e56ad86a23b371bce2e1976d77e83b66037557b67404d8666ea989cfe85a53"
+          }
+        }
+      }
+    }
+  },
+  {
+    "code": "103",
+    "index": 77,
+    "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00123.ARW",
+    "file_sha256": "c3104c8519fe9bd14d813891ad15f922624816b0c95a6e405c0d1d842572a472",
+    "metadata": {
+      "raw_sizes": "ImageSizes(raw_height=5120, raw_width=7168, height=4688, width=7028, top_margin=0, left_margin=0, iheight=4688, iwidth=7028, pixel_aspect=1.0, flip=0, crop_left_margin=12, crop_top_margin=8, crop_width=7008, crop_height=4672)",
+      "black": [
+        512,
+        512,
+        512,
+        512
+      ],
+      "white": 16383,
+      "camera_white": [
+        15360,
+        15360,
+        15360,
+        15360
+      ],
+      "wb": [
+        1731.0,
+        1024.0,
+        2581.0,
+        1024.0
+      ],
+      "pattern": [
+        [
+          0,
+          1
+        ],
+        [
+          3,
+          2
+        ]
+      ]
+    },
+    "active": {
+      "n": 32947264,
+      "minimum": 490,
+      "maximum": 4992,
+      "at_nominal_white_15360": 0,
+      "at_container_max_16383": 0,
+      "percentiles": {
+        "50": 515.0,
+        "99": 3360.0,
+        "99.9": 3742.0,
+        "99.99": 4013.0
+      },
+      "sha256": "a0c572b06acea2eb9841d7249bde779aa9d77969f61b12657390f3bcc0975e4b"
+    },
+    "planes": {
+      "R": {
+        "n": 8236816,
+        "minimum": 491,
+        "maximum": 4106,
+        "at_nominal_white_15360": 0,
+        "at_container_max_16383": 0,
+        "percentiles": {
+          "50": 514.0,
+          "99": 1790.0,
+          "99.9": 2513.0,
+          "99.99": 3032.0
+        },
+        "sha256": "aca13513e3aa2d9ae9fd8e3885d8beada7341592d7405fcc7ef4f40dfefac35c"
+      },
+      "G1": {
+        "n": 8236816,
+        "minimum": 492,
+        "maximum": 4992,
+        "at_nominal_white_15360": 0,
+        "at_container_max_16383": 0,
+        "percentiles": {
+          "50": 516.0,
+          "99": 3494.0,
+          "99.9": 3829.0,
+          "99.99": 4060.0
+        },
+        "sha256": "1f614da3cbaa3a6c677953681a1e9e7a3ca7cdaec10d3dd0ad37e235b428f4b7"
+      },
+      "G2": {
+        "n": 8236816,
+        "minimum": 495,
+        "maximum": 4903,
+        "at_nominal_white_15360": 0,
+        "at_container_max_16383": 0,
+        "percentiles": {
+          "50": 516.0,
+          "99": 3495.0,
+          "99.9": 3832.0,
+          "99.99": 4065.0
+        },
+        "sha256": "959348fedd81aab20080e4694f14fdc12126c9b29c9e3d89aec01f4c589f26c0"
+      },
+      "B": {
+        "n": 8236816,
+        "minimum": 490,
+        "maximum": 4349,
+        "at_nominal_white_15360": 0,
+        "at_container_max_16383": 0,
+        "percentiles": {
+          "50": 515.0,
+          "99": 1937.0,
+          "99.9": 2483.0,
+          "99.99": 3395.318499999121
+        },
+        "sha256": "e6ac5a1885f85152316d36b9059031990970994cf65ee1a6a57d4ef5b84b3515"
+      }
+    },
+    "rois": {
+      "reflection": {
+        "output_native_xywh": [
+          3500,
+          1530,
+          640,
+          640
+        ],
+        "gauge": "held sidecar reference, nearest CFA-quad sample; no CA",
+        "planes": {
+          "R": {
+            "n": 102400,
+            "minimum": 1279,
+            "maximum": 3333,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 1785.0,
+              "99": 2914.0,
+              "99.9": 3146.0,
+              "99.99": 3268.52019999997
+            },
+            "sha256": "270908f84ade0d8da85f38f3c39f8c8b449bcb98ef46233d344abc3553fd7e7e"
+          },
+          "G1": {
+            "n": 102400,
+            "minimum": 2766,
+            "maximum": 4261,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 3397.0,
+              "99": 4038.0,
+              "99.9": 4134.0,
+              "99.99": 4200.760099999985
+            },
+            "sha256": "4e64197fc3c0653e8676f347ea8391d33ba55d8cd26c220deae8e51dea6a38ca"
+          },
+          "G2": {
+            "n": 102400,
+            "minimum": 2790,
+            "maximum": 4258,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 3399.0,
+              "99": 4044.0,
+              "99.9": 4139.0,
+              "99.99": 4202.8812999998045
+            },
+            "sha256": "16fb9c0b5f865e7cf3ec07aa6f93d8d2e6d537fb50fe00342c2051a6dc99c857"
+          },
+          "B": {
+            "n": 102400,
+            "minimum": 1526,
+            "maximum": 1920,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 1685.0,
+              "99": 1799.0,
+              "99.9": 1850.6010000000097,
+              "99.99": 1883.760099999985
+            },
+            "sha256": "fde008a86443a907bdceb4e0d4da465b76d35e9b7cb4ae326837bd1983cf7670"
+          }
+        }
+      },
+      "colour-control": {
+        "output_native_xywh": [
+          2000,
+          2100,
+          640,
+          640
+        ],
+        "gauge": "held sidecar reference, nearest CFA-quad sample; no CA",
+        "planes": {
+          "R": {
+            "n": 102400,
+            "minimum": 981,
+            "maximum": 1986,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 1182.0,
+              "99": 1595.0099999999948,
+              "99.9": 1850.6010000000097,
+              "99.99": 1930.8004999999248
+            },
+            "sha256": "3eac9b55a871f66ccb57e94d2ec145b51251c10ce5f56ebfc804d6922dd69486"
+          },
+          "G1": {
+            "n": 102400,
+            "minimum": 1762,
+            "maximum": 3060,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 2165.0,
+              "99": 2769.0,
+              "99.9": 2932.6010000000097,
+              "99.99": 3025.760099999985
+            },
+            "sha256": "b4a49c7d4585efe2d2c1e718369b9b9e42a3cd4a63920959daece8e7ff04c4ea"
+          },
+          "G2": {
+            "n": 102400,
+            "minimum": 1757,
+            "maximum": 3070,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 2163.0,
+              "99": 2762.0,
+              "99.9": 2926.0,
+              "99.99": 3005.0
+            },
+            "sha256": "97c3083808b6db363ebe40d947fe9975e284e9feac133e21ee5f05ace6857e0f"
+          },
+          "B": {
+            "n": 102400,
+            "minimum": 1268,
+            "maximum": 2838,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 1627.0,
+              "99": 2420.0,
+              "99.9": 2667.0,
+              "99.99": 2754.52019999997
+            },
+            "sha256": "78f8af55e3c131d0eaef75f468dfcbbca4f6dd4000182f989b32210bc4a419ca"
+          }
+        }
+      }
+    }
+  },
+  {
+    "code": "103",
+    "index": 154,
+    "path": "D:\\personal\\macro\\minerals\\rainbow-opal-cabochon\\103MSDCF\\DSC00200.ARW",
+    "file_sha256": "1fb9f534da4be6172be1247eee80cf479738717b230140b5ef5a2e8448e28432",
+    "metadata": {
+      "raw_sizes": "ImageSizes(raw_height=5120, raw_width=7168, height=4688, width=7028, top_margin=0, left_margin=0, iheight=4688, iwidth=7028, pixel_aspect=1.0, flip=0, crop_left_margin=12, crop_top_margin=8, crop_width=7008, crop_height=4672)",
+      "black": [
+        512,
+        512,
+        512,
+        512
+      ],
+      "white": 16383,
+      "camera_white": [
+        15360,
+        15360,
+        15360,
+        15360
+      ],
+      "wb": [
+        1731.0,
+        1024.0,
+        2581.0,
+        1024.0
+      ],
+      "pattern": [
+        [
+          0,
+          1
+        ],
+        [
+          3,
+          2
+        ]
+      ]
+    },
+    "active": {
+      "n": 32947264,
+      "minimum": 489,
+      "maximum": 4987,
+      "at_nominal_white_15360": 0,
+      "at_container_max_16383": 0,
+      "percentiles": {
+        "50": 515.0,
+        "99": 3410.0,
+        "99.9": 3717.0,
+        "99.99": 3836.0
+      },
+      "sha256": "89ae06ada1ee2b0c96988f5c597456c1855b795f21dae9eb0d472cf9dbe5e7a9"
+    },
+    "planes": {
+      "R": {
+        "n": 8236816,
+        "minimum": 489,
+        "maximum": 4987,
+        "at_nominal_white_15360": 0,
+        "at_container_max_16383": 0,
+        "percentiles": {
+          "50": 514.0,
+          "99": 1802.0,
+          "99.9": 2289.0,
+          "99.99": 2468.0
+        },
+        "sha256": "452e56039775b668c8694498d43b8ec90ce1059fe4df86ac5449f26d6c85ebe4"
+      },
+      "G1": {
+        "n": 8236816,
+        "minimum": 492,
+        "maximum": 4423,
+        "at_nominal_white_15360": 0,
+        "at_container_max_16383": 0,
+        "percentiles": {
+          "50": 516.0,
+          "99": 3536.0,
+          "99.9": 3771.0,
+          "99.99": 3849.0
+        },
+        "sha256": "13db8f5d0086f40a258c653e76f9b345636f27c1353f07eb5de6e5ca237eb331"
+      },
+      "G2": {
+        "n": 8236816,
+        "minimum": 492,
+        "maximum": 4749,
+        "at_nominal_white_15360": 0,
+        "at_container_max_16383": 0,
+        "percentiles": {
+          "50": 516.0,
+          "99": 3536.0,
+          "99.9": 3774.0,
+          "99.99": 3852.0
+        },
+        "sha256": "18793a3b8487fc874767abdb9680824338b39bc339459d38ec18653b44cd320f"
+      },
+      "B": {
+        "n": 8236816,
+        "minimum": 494,
+        "maximum": 2963,
+        "at_nominal_white_15360": 0,
+        "at_container_max_16383": 0,
+        "percentiles": {
+          "50": 515.0,
+          "99": 1965.0,
+          "99.9": 2335.0,
+          "99.99": 2792.0
+        },
+        "sha256": "56c41bbb71142e891a0c4bf64f0a424db24888a80bf112110738c55b1ebd3672"
+      }
+    },
+    "rois": {
+      "reflection": {
+        "output_native_xywh": [
+          3500,
+          1530,
+          640,
+          640
+        ],
+        "gauge": "held sidecar reference, nearest CFA-quad sample; no CA",
+        "planes": {
+          "R": {
+            "n": 102400,
+            "minimum": 1380,
+            "maximum": 2553,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 1854.0,
+              "99": 2463.0,
+              "99.9": 2514.0,
+              "99.99": 2540.760099999985
+            },
+            "sha256": "d15f6b5cfcf326cd6a8b121d0f15ab794aa8a5d74ee9eaff2b03f74086f053a3"
+          },
+          "G1": {
+            "n": 102400,
+            "minimum": 2913,
+            "maximum": 3918,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 3487.0,
+              "99": 3845.0099999999948,
+              "99.9": 3882.0,
+              "99.99": 3902.760099999985
+            },
+            "sha256": "175ed76605239dc30936dcba8a0d2805d1ce0a9aa0f25316114951fd09ef0dcd"
+          },
+          "G2": {
+            "n": 102400,
+            "minimum": 2909,
+            "maximum": 3932,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 3489.0,
+              "99": 3849.0,
+              "99.9": 3883.0,
+              "99.99": 3911.760099999985
+            },
+            "sha256": "12dfd16738fb3561ffa38fe9e87d4edf703920e792b1e4b62e7ddf59c53b2dff"
+          },
+          "B": {
+            "n": 102400,
+            "minimum": 1584,
+            "maximum": 1934,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 1726.0,
+              "99": 1837.0,
+              "99.9": 1882.0,
+              "99.99": 1914.0
+            },
+            "sha256": "56f79caa25a654c73ea4c680b2acab058360ea68466a73373f27ecd34526ebde"
+          }
+        }
+      },
+      "colour-control": {
+        "output_native_xywh": [
+          2000,
+          2100,
+          640,
+          640
+        ],
+        "gauge": "held sidecar reference, nearest CFA-quad sample; no CA",
+        "planes": {
+          "R": {
+            "n": 102400,
+            "minimum": 1020,
+            "maximum": 1643,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 1218.0,
+              "99": 1515.0,
+              "99.9": 1589.6010000000097,
+              "99.99": 1616.760099999985
+            },
+            "sha256": "e9d552b248fa7a36a04f2f928307d2a357bf67ce74330a7ff155fbe794814348"
+          },
+          "G1": {
+            "n": 102400,
+            "minimum": 1861,
+            "maximum": 2874,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 2229.0,
+              "99": 2752.0,
+              "99.9": 2808.0,
+              "99.99": 2843.52019999997
+            },
+            "sha256": "d8304102e8c3af1578c2de556ea7be5c05da1f21b04f9e34dd8479468fe090a6"
+          },
+          "G2": {
+            "n": 102400,
+            "minimum": 1867,
+            "maximum": 2858,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 2227.0,
+              "99": 2747.0,
+              "99.9": 2806.0,
+              "99.99": 2831.0
+            },
+            "sha256": "7489dcc4e7534616fc93a720f5257b9f83db35ef0fc0093af664cbeada780771"
+          },
+          "B": {
+            "n": 102400,
+            "minimum": 1318,
+            "maximum": 2399,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 1657.0,
+              "99": 2296.0,
+              "99.9": 2349.0,
+              "99.99": 2375.760099999985
+            },
+            "sha256": "2a8d989bc235a7d02fc79239c26b2d621e1af36cf12a7c3729c6e4d3e922e5de"
+          }
+        }
+      }
+    }
+  },
+  {
+    "code": "104",
+    "index": 0,
+    "path": "D:\\personal\\macro\\minerals\\etched-spessartine-garnet\\104MSDCF\\DSC00027.ARW",
+    "file_sha256": "e24f97b1dcefec969b3b0d5ea3a604d361417b93d3c88a729b4fc5fc44539416",
+    "metadata": {
+      "raw_sizes": "ImageSizes(raw_height=5120, raw_width=7168, height=4688, width=7028, top_margin=0, left_margin=0, iheight=4688, iwidth=7028, pixel_aspect=1.0, flip=0, crop_left_margin=12, crop_top_margin=8, crop_width=7008, crop_height=4672)",
+      "black": [
+        512,
+        512,
+        512,
+        512
+      ],
+      "white": 16383,
+      "camera_white": [
+        15360,
+        15360,
+        15360,
+        15360
+      ],
+      "wb": [
+        1731.0,
+        1024.0,
+        2581.0,
+        1024.0
+      ],
+      "pattern": [
+        [
+          0,
+          1
+        ],
+        [
+          3,
+          2
+        ]
+      ]
+    },
+    "active": {
+      "n": 32947264,
+      "minimum": 493,
+      "maximum": 16383,
+      "at_nominal_white_15360": 5,
+      "at_container_max_16383": 3,
+      "percentiles": {
+        "50": 521.0,
+        "99": 1508.0,
+        "99.9": 2765.0,
+        "99.99": 3842.0
+      },
+      "sha256": "460d173315f0b4dc2c4aca435fb182b306ca949a487cea66bb089df4f7904a50"
+    },
+    "planes": {
+      "R": {
+        "n": 8236816,
+        "minimum": 493,
+        "maximum": 16383,
+        "at_nominal_white_15360": 5,
+        "at_container_max_16383": 3,
+        "percentiles": {
+          "50": 518.0,
+          "99": 1612.0,
+          "99.9": 2320.0,
+          "99.99": 3364.318499999121
+        },
+        "sha256": "baa07fb8e279ca4630dae53d7fa398b63d7489c79e3aa23eb26d749b47c930dd"
+      },
+      "G1": {
+        "n": 8236816,
+        "minimum": 496,
+        "maximum": 5253,
+        "at_nominal_white_15360": 0,
+        "at_container_max_16383": 0,
+        "percentiles": {
+          "50": 523.0,
+          "99": 1572.0,
+          "99.9": 3228.0,
+          "99.99": 3906.0
+        },
+        "sha256": "20175e5c679febd65763c86b4790c89e6c5b5e3c1d8c955fbc3448348abadec1"
+      },
+      "G2": {
+        "n": 8236816,
+        "minimum": 495,
+        "maximum": 5309,
+        "at_nominal_white_15360": 0,
+        "at_container_max_16383": 0,
+        "percentiles": {
+          "50": 523.0,
+          "99": 1574.0,
+          "99.9": 3232.0,
+          "99.99": 3909.0
+        },
+        "sha256": "a461f32d598ad9bdd812f58c26aee14ebadc58385ca2e4e166dc6e7c276699d0"
+      },
+      "B": {
+        "n": 8236816,
+        "minimum": 497,
+        "maximum": 3060,
+        "at_nominal_white_15360": 0,
+        "at_container_max_16383": 0,
+        "percentiles": {
+          "50": 518.0,
+          "99": 991.0,
+          "99.9": 1762.0,
+          "99.99": 2061.0
+        },
+        "sha256": "2baea4b1d9bc39de404a6eec78d875643bf8e58e8e022e0c33ea521fdbefc584"
+      }
+    },
+    "rois": {
+      "white-facet": {
+        "output_native_xywh": [
+          4540,
+          1730,
+          640,
+          640
+        ],
+        "gauge": "held sidecar reference, nearest CFA-quad sample; no CA",
+        "planes": {
+          "R": {
+            "n": 102400,
+            "minimum": 506,
+            "maximum": 2601,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 1291.0,
+              "99": 2478.0,
+              "99.9": 2555.0,
+              "99.99": 2582.760099999985
+            },
+            "sha256": "491e29a07c4e4df7648a151c009162d44aed0796635086ea0ac0dd592e6a53ba"
+          },
+          "G1": {
+            "n": 102400,
+            "minimum": 509,
+            "maximum": 4081,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 1322.0,
+              "99": 3860.0099999999948,
+              "99.9": 4010.6010000000097,
+              "99.99": 4055.280299999955
+            },
+            "sha256": "d1dbbea53b1a8c37549e633f529baa0bcac54f3790b5fc94ff986190b674be99"
+          },
+          "G2": {
+            "n": 102400,
+            "minimum": 512,
+            "maximum": 4089,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 1324.0,
+              "99": 3863.0,
+              "99.9": 4013.0,
+              "99.99": 4057.760099999985
+            },
+            "sha256": "8f9c1c4b5f64d2c90b0a0aa9d6197b249f0429e5d1ee6b76a030254205943b5f"
+          },
+          "B": {
+            "n": 102400,
+            "minimum": 513,
+            "maximum": 2170,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 872.0,
+              "99": 2039.0,
+              "99.9": 2111.0,
+              "99.99": 2137.0
+            },
+            "sha256": "70f28d6e8c6fa2e27a948fecef17cd4fd386aae43737e1032e598daba100dae2"
+          }
+        }
+      },
+      "red-control": {
+        "output_native_xywh": [
+          2940,
+          1780,
+          640,
+          640
+        ],
+        "gauge": "held sidecar reference, nearest CFA-quad sample; no CA",
+        "planes": {
+          "R": {
+            "n": 102400,
+            "minimum": 700,
+            "maximum": 1391,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 876.0,
+              "99": 1239.0,
+              "99.9": 1340.0,
+              "99.99": 1371.0403999999398
+            },
+            "sha256": "c354f70f77f982ab32700e01d8d40e22f539299956f53d943e0fe9a974d2189c"
+          },
+          "G1": {
+            "n": 102400,
+            "minimum": 578,
+            "maximum": 1706,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 776.0,
+              "99": 1430.0,
+              "99.9": 1606.0,
+              "99.99": 1679.0
+            },
+            "sha256": "a9f56b62d39f4a0a76a1dc539bc960cb73268f3cd3f6688610d793cc983fbe00"
+          },
+          "G2": {
+            "n": 102400,
+            "minimum": 580,
+            "maximum": 1726,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 777.0,
+              "99": 1434.0099999999948,
+              "99.9": 1621.6010000000097,
+              "99.99": 1695.5605999999098
+            },
+            "sha256": "7e55539396fdd062cde20c5d8b69db3354d73aec62a9dd93d5c12e55d46142f0"
+          },
+          "B": {
+            "n": 102400,
+            "minimum": 530,
+            "maximum": 1118,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 627.0,
+              "99": 950.0,
+              "99.9": 1050.0,
+              "99.99": 1094.2802999999549
+            },
+            "sha256": "d9250547c2e6c7cd9ddbccafaa44bc94718c75a42ef81f28f4f47fbc57bb22d3"
+          }
+        }
+      }
+    }
+  },
+  {
+    "code": "104",
+    "index": 45,
+    "path": "D:\\personal\\macro\\minerals\\etched-spessartine-garnet\\104MSDCF\\DSC00072.ARW",
+    "file_sha256": "cbcf14ef2f10d75957a07f416ebead7d105ad08b2b2fc4954b2e8a4f1d6ec517",
+    "metadata": {
+      "raw_sizes": "ImageSizes(raw_height=5120, raw_width=7168, height=4688, width=7028, top_margin=0, left_margin=0, iheight=4688, iwidth=7028, pixel_aspect=1.0, flip=0, crop_left_margin=12, crop_top_margin=8, crop_width=7008, crop_height=4672)",
+      "black": [
+        512,
+        512,
+        512,
+        512
+      ],
+      "white": 16383,
+      "camera_white": [
+        15360,
+        15360,
+        15360,
+        15360
+      ],
+      "wb": [
+        1731.0,
+        1024.0,
+        2581.0,
+        1024.0
+      ],
+      "pattern": [
+        [
+          0,
+          1
+        ],
+        [
+          3,
+          2
+        ]
+      ]
+    },
+    "active": {
+      "n": 32947264,
+      "minimum": 495,
+      "maximum": 16383,
+      "at_nominal_white_15360": 76,
+      "at_container_max_16383": 66,
+      "percentiles": {
+        "50": 521.0,
+        "99": 1652.0,
+        "99.9": 3495.0,
+        "99.99": 6114.27369999513
+      },
+      "sha256": "d79bdbb39b897dbfb15bb4269ad5a236f61847b3416db5ff90f0df0e04450cf5"
+    },
+    "planes": {
+      "R": {
+        "n": 8236816,
+        "minimum": 495,
+        "maximum": 16383,
+        "at_nominal_white_15360": 61,
+        "at_container_max_16383": 58,
+        "percentiles": {
+          "50": 518.0,
+          "99": 1748.0,
+          "99.9": 3172.0,
+          "99.99": 5290.318499999121
+        },
+        "sha256": "a7349200305b4d05e02a393a6dfe12f06fc631c5044f4a3584b26b07bed12318"
+      },
+      "G1": {
+        "n": 8236816,
+        "minimum": 495,
+        "maximum": 16383,
+        "at_nominal_white_15360": 7,
+        "at_container_max_16383": 2,
+        "percentiles": {
+          "50": 523.0,
+          "99": 1758.0,
+          "99.9": 4391.0,
+          "99.99": 6301.0
+        },
+        "sha256": "a75409e929631d5b7524c9fa3a96a8503aa163e70e2af415b0ee19f36b7d31c0"
+      },
+      "G2": {
+        "n": 8236816,
+        "minimum": 500,
+        "maximum": 16383,
+        "at_nominal_white_15360": 8,
+        "at_container_max_16383": 6,
+        "percentiles": {
+          "50": 523.0,
+          "99": 1762.0,
+          "99.9": 4396.0,
+          "99.99": 6307.318499999121
+        },
+        "sha256": "803bba879f1416d49915605c95ac7e480e97774379709dee0903ba38ec475711"
+      },
+      "B": {
+        "n": 8236816,
+        "minimum": 496,
+        "maximum": 8980,
+        "at_nominal_white_15360": 0,
+        "at_container_max_16383": 0,
+        "percentiles": {
+          "50": 518.0,
+          "99": 1070.0,
+          "99.9": 2341.0,
+          "99.99": 3174.0
+        },
+        "sha256": "9e3071c6c7c83e511bfc644a180ed3f6fce66c9a36af4ac4382713f93d47c7e0"
+      }
+    },
+    "rois": {
+      "white-facet": {
+        "output_native_xywh": [
+          4540,
+          1730,
+          640,
+          640
+        ],
+        "gauge": "held sidecar reference, nearest CFA-quad sample; no CA",
+        "planes": {
+          "R": {
+            "n": 102400,
+            "minimum": 506,
+            "maximum": 4659,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 1228.0,
+              "99": 3596.0,
+              "99.9": 3774.0,
+              "99.99": 3854.9216999997443
+            },
+            "sha256": "e3c678ad8d6afb7a0dbf69efecf650a20444698724b71c5b6c8c367854be25d7"
+          },
+          "G1": {
+            "n": 102400,
+            "minimum": 511,
+            "maximum": 12740,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 1302.0,
+              "99": 6028.009999999995,
+              "99.9": 6385.0,
+              "99.99": 6449.760099999985
+            },
+            "sha256": "171abc4c2147302ced2f0dd4f892b2058842c1a0b0f0d2fb6e076321cccce5d6"
+          },
+          "G2": {
+            "n": 102400,
+            "minimum": 511,
+            "maximum": 8102,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 1304.0,
+              "99": 6030.0,
+              "99.9": 6390.60100000001,
+              "99.99": 6466.52019999997
+            },
+            "sha256": "cd292deaff926d601f7ba45a25f47fac5635e58f300df9ba62d8e99fed295173"
+          },
+          "B": {
+            "n": 102400,
+            "minimum": 509,
+            "maximum": 3926,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 867.0,
+              "99": 3026.0099999999948,
+              "99.9": 3190.0,
+              "99.99": 3220.0
+            },
+            "sha256": "a8f73ea7c23ca7cc28c3436f084cffcffb436e419588800bb05f72dee6de88fd"
+          }
+        }
+      },
+      "red-control": {
+        "output_native_xywh": [
+          2940,
+          1780,
+          640,
+          640
+        ],
+        "gauge": "held sidecar reference, nearest CFA-quad sample; no CA",
+        "planes": {
+          "R": {
+            "n": 102400,
+            "minimum": 575,
+            "maximum": 7410,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 862.0,
+              "99": 1896.0,
+              "99.9": 3709.6160000001546,
+              "99.99": 5777.722199999669
+            },
+            "sha256": "e01bdd21a7049386241c5300776ee79e83c07a8a23b28fff28713b4e1c58397c"
+          },
+          "G1": {
+            "n": 102400,
+            "minimum": 542,
+            "maximum": 11903,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 703.0,
+              "99": 2630.0,
+              "99.9": 5856.035000000338,
+              "99.99": 9786.630999995337
+            },
+            "sha256": "5dfe7bb294c5932fb3f104aa38a16ba963ce428f1796e741a55e842f7411d96c"
+          },
+          "G2": {
+            "n": 102400,
+            "minimum": 545,
+            "maximum": 11977,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 704.0,
+              "99": 2657.0,
+              "99.9": 5733.409000000087,
+              "99.99": 9716.843399999489
+            },
+            "sha256": "cc287728c62a8b9c006bc09ec1dc17e339ada906f417b236ce11c50e3aa035d9"
+          },
+          "B": {
+            "n": 102400,
+            "minimum": 524,
+            "maximum": 5679,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 592.0,
+              "99": 1572.0099999999948,
+              "99.9": 3117.2070000000676,
+              "99.99": 4859.45189999821
+            },
+            "sha256": "7a3292de80002e5ba7cb3ca661c48d58db741e52467c46b65fe14e8723edb258"
+          }
+        }
+      }
+    }
+  },
+  {
+    "code": "104",
+    "index": 91,
+    "path": "D:\\personal\\macro\\minerals\\etched-spessartine-garnet\\104MSDCF\\DSC00118.ARW",
+    "file_sha256": "45c82cd9b344707415f588292dd5f2706329d8dde5e3891ee7668c2bca150d26",
+    "metadata": {
+      "raw_sizes": "ImageSizes(raw_height=5120, raw_width=7168, height=4688, width=7028, top_margin=0, left_margin=0, iheight=4688, iwidth=7028, pixel_aspect=1.0, flip=0, crop_left_margin=12, crop_top_margin=8, crop_width=7008, crop_height=4672)",
+      "black": [
+        512,
+        512,
+        512,
+        512
+      ],
+      "white": 16383,
+      "camera_white": [
+        15360,
+        15360,
+        15360,
+        15360
+      ],
+      "wb": [
+        1731.0,
+        1024.0,
+        2581.0,
+        1024.0
+      ],
+      "pattern": [
+        [
+          0,
+          1
+        ],
+        [
+          3,
+          2
+        ]
+      ]
+    },
+    "active": {
+      "n": 32947264,
+      "minimum": 494,
+      "maximum": 16383,
+      "at_nominal_white_15360": 76,
+      "at_container_max_16383": 63,
+      "percentiles": {
+        "50": 520.0,
+        "99": 1761.0,
+        "99.9": 4580.0,
+        "99.99": 9641.27369999513
+      },
+      "sha256": "9caf09b77eff6320c9b24ea2adb2e64091ff2ca4a09cd5240870dc8c4bebe707"
+    },
+    "planes": {
+      "R": {
+        "n": 8236816,
+        "minimum": 496,
+        "maximum": 16383,
+        "at_nominal_white_15360": 57,
+        "at_container_max_16383": 51,
+        "percentiles": {
+          "50": 518.0,
+          "99": 1845.0,
+          "99.9": 4578.0,
+          "99.99": 7840.318499999121
+        },
+        "sha256": "2216a0e33d607eb0f303257528cdcb0d418fb1bdce0493f892f46962aefdb7b0"
+      },
+      "G1": {
+        "n": 8236816,
+        "minimum": 499,
+        "maximum": 16383,
+        "at_nominal_white_15360": 8,
+        "at_container_max_16383": 5,
+        "percentiles": {
+          "50": 522.0,
+          "99": 1890.0,
+          "99.9": 5628.1850000005215,
+          "99.99": 10337.955499997362
+        },
+        "sha256": "b2e5caa971db89225f24937eb0ed03bb6fe4618c9d4e3405cadc8b8ab9bbaba9"
+      },
+      "G2": {
+        "n": 8236816,
+        "minimum": 499,
+        "maximum": 16383,
+        "at_nominal_white_15360": 11,
+        "at_container_max_16383": 7,
+        "percentiles": {
+          "50": 522.0,
+          "99": 1892.0,
+          "99.9": 5634.1850000005215,
+          "99.99": 10328.0
+        },
+        "sha256": "123c65a35980b0f9ec5db02269a029183a85be3aaff855a65b6a384321f58fe1"
+      },
+      "B": {
+        "n": 8236816,
+        "minimum": 494,
+        "maximum": 8933,
+        "at_nominal_white_15360": 0,
+        "at_container_max_16383": 0,
+        "percentiles": {
+          "50": 518.0,
+          "99": 1120.0,
+          "99.9": 2680.0,
+          "99.99": 4939.318499999121
+        },
+        "sha256": "68af54f8aaeabeeb5fb79bc0b0f8228a910dca7787b6b56a0e9dbcbe749f2f27"
+      }
+    },
+    "rois": {
+      "white-facet": {
+        "output_native_xywh": [
+          4540,
+          1730,
+          640,
+          640
+        ],
+        "gauge": "held sidecar reference, nearest CFA-quad sample; no CA",
+        "planes": {
+          "R": {
+            "n": 102400,
+            "minimum": 506,
+            "maximum": 16383,
+            "at_nominal_white_15360": 2,
+            "at_container_max_16383": 1,
+            "percentiles": {
+              "50": 1101.0,
+              "99": 5947.009999999995,
+              "99.9": 9132.88800000085,
+              "99.99": 13473.969599998556
+            },
+            "sha256": "221efcbcce26e1d4c7fed319624058998108506fe4434098697b411b364779a1"
+          },
+          "G1": {
+            "n": 102400,
+            "minimum": 509,
+            "maximum": 12116,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 1137.0,
+              "99": 9929.009999999995,
+              "99.9": 11762.0,
+              "99.99": 12030.760099999985
+            },
+            "sha256": "2b9065ed1f486b3ea3d6d11fe6c787b7a541d48fc792bcdaa4193409aa1bd8b5"
+          },
+          "G2": {
+            "n": 102400,
+            "minimum": 506,
+            "maximum": 12120,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 1138.0,
+              "99": 9931.009999999995,
+              "99.9": 11767.60100000001,
+              "99.99": 12012.800499999925
+            },
+            "sha256": "a1aaac31e4a2acef611cf74ae872fdf36c1e3b7ea45a1d63462460ef920555cb"
+          },
+          "B": {
+            "n": 102400,
+            "minimum": 506,
+            "maximum": 5795,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 801.0,
+              "99": 4779.009999999995,
+              "99.9": 5617.0,
+              "99.99": 5739.280299999955
+            },
+            "sha256": "7ca9bf6efcfaaed6fb26eac99c93722a4b67308611741095b5ae1c898f2ef224"
+          }
+        }
+      },
+      "red-control": {
+        "output_native_xywh": [
+          2940,
+          1780,
+          640,
+          640
+        ],
+        "gauge": "held sidecar reference, nearest CFA-quad sample; no CA",
+        "planes": {
+          "R": {
+            "n": 102400,
+            "minimum": 551,
+            "maximum": 2623,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 915.0,
+              "99": 1487.0,
+              "99.9": 1682.6010000000097,
+              "99.99": 2202.0857999991276
+            },
+            "sha256": "c4dc92f23c84df94e8ea6939648270c7d993efa150a15537f895270d65d904c0"
+          },
+          "G1": {
+            "n": 102400,
+            "minimum": 541,
+            "maximum": 2174,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 759.0,
+              "99": 1717.0,
+              "99.9": 2004.2020000000193,
+              "99.99": 2111.52019999997
+            },
+            "sha256": "d3312df7084154a493cdabc86cf084f6d1db123d866251f7715e19b507765c79"
+          },
+          "G2": {
+            "n": 102400,
+            "minimum": 542,
+            "maximum": 2167,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 761.0,
+              "99": 1719.0,
+              "99.9": 2011.6010000000097,
+              "99.99": 2113.3206999998947
+            },
+            "sha256": "755b133460297a76ac796be3f13fe2c6af8d190d6ea277a58bfe39d87c717576"
+          },
+          "B": {
+            "n": 102400,
+            "minimum": 524,
+            "maximum": 1329,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 622.0,
+              "99": 1061.0,
+              "99.9": 1155.0,
+              "99.99": 1225.2802999999549
+            },
+            "sha256": "4db8def4b30caa182b781ae42d684a554ffcd022ec8ef895c86b47014291adec"
+          }
+        }
+      }
+    }
+  },
+  {
+    "code": "104",
+    "index": 137,
+    "path": "D:\\personal\\macro\\minerals\\etched-spessartine-garnet\\104MSDCF\\DSC00164.ARW",
+    "file_sha256": "ade5618229c5b4960fa3b81e67c6915f9c3f7b33721429a3adcf271ee907b416",
+    "metadata": {
+      "raw_sizes": "ImageSizes(raw_height=5120, raw_width=7168, height=4688, width=7028, top_margin=0, left_margin=0, iheight=4688, iwidth=7028, pixel_aspect=1.0, flip=0, crop_left_margin=12, crop_top_margin=8, crop_width=7008, crop_height=4672)",
+      "black": [
+        512,
+        512,
+        512,
+        512
+      ],
+      "white": 16383,
+      "camera_white": [
+        15360,
+        15360,
+        15360,
+        15360
+      ],
+      "wb": [
+        1731.0,
+        1024.0,
+        2581.0,
+        1024.0
+      ],
+      "pattern": [
+        [
+          0,
+          1
+        ],
+        [
+          3,
+          2
+        ]
+      ]
+    },
+    "active": {
+      "n": 32947264,
+      "minimum": 490,
+      "maximum": 16383,
+      "at_nominal_white_15360": 2125,
+      "at_container_max_16383": 1251,
+      "percentiles": {
+        "50": 520.0,
+        "99": 1642.0,
+        "99.9": 4911.0,
+        "99.99": 14095.27369999513
+      },
+      "sha256": "990646f55446e8a7ce150ae6cc6be767f9409edb62eb1ee85608b98d5f33ad5c"
+    },
+    "planes": {
+      "R": {
+        "n": 8236816,
+        "minimum": 490,
+        "maximum": 16383,
+        "at_nominal_white_15360": 602,
+        "at_container_max_16383": 467,
+        "percentiles": {
+          "50": 518.0,
+          "99": 1805.0,
+          "99.9": 5030.0,
+          "99.99": 13801.458999987692
+        },
+        "sha256": "e66285171e841a0f74e972f34ee950a6512e77be84141d56012e5023bc2b57c6"
+      },
+      "G1": {
+        "n": 8236816,
+        "minimum": 498,
+        "maximum": 16383,
+        "at_nominal_white_15360": 753,
+        "at_container_max_16383": 393,
+        "percentiles": {
+          "50": 522.0,
+          "99": 1718.0,
+          "99.9": 6178.1850000005215,
+          "99.99": 15226.31849999912
+        },
+        "sha256": "6056d2fccac0daaf6d7142e36e3c1ea1547380cc9886f8e5ad25bd2485007683"
+      },
+      "G2": {
+        "n": 8236816,
+        "minimum": 496,
+        "maximum": 16383,
+        "at_nominal_white_15360": 770,
+        "at_container_max_16383": 391,
+        "percentiles": {
+          "50": 523.0,
+          "99": 1720.0,
+          "99.9": 6200.0,
+          "99.99": 15242.0
+        },
+        "sha256": "49677ac7ccbdd0de2af7a5d49f982dac7b050f860bcde351db9fdbef59433844"
+      },
+      "B": {
+        "n": 8236816,
+        "minimum": 494,
+        "maximum": 14209,
+        "at_nominal_white_15360": 0,
+        "at_container_max_16383": 0,
+        "percentiles": {
+          "50": 518.0,
+          "99": 1050.0,
+          "99.9": 2677.1850000005215,
+          "99.99": 6715.636999998242
+        },
+        "sha256": "135ba639712c986ef34cec6b35e5ffe7a86ed54dc644a2c31f9d66b4e2e3e840"
+      }
+    },
+    "rois": {
+      "white-facet": {
+        "output_native_xywh": [
+          4540,
+          1730,
+          640,
+          640
+        ],
+        "gauge": "held sidecar reference, nearest CFA-quad sample; no CA",
+        "planes": {
+          "R": {
+            "n": 102400,
+            "minimum": 502,
+            "maximum": 16383,
+            "at_nominal_white_15360": 12,
+            "at_container_max_16383": 11,
+            "percentiles": {
+              "50": 1153.0,
+              "99": 7449.0199999999895,
+              "99.9": 9266.005000000048,
+              "99.99": 16228.504399990314
+            },
+            "sha256": "cafe3a4ceb23ef841cfc5811b3d5bffdcf5c732f0c69cebb216d52a6937a5c07"
+          },
+          "G1": {
+            "n": 102400,
+            "minimum": 507,
+            "maximum": 16383,
+            "at_nominal_white_15360": 461,
+            "at_container_max_16383": 143,
+            "percentiles": {
+              "50": 1174.0,
+              "99": 13777.0,
+              "99.9": 16383.0,
+              "99.99": 16383.0
+            },
+            "sha256": "95e8c9d1c144bcfdc82e09918bcafe2a6123fe7af56b68609787a8f8c9455ae9"
+          },
+          "G2": {
+            "n": 102400,
+            "minimum": 510,
+            "maximum": 16383,
+            "at_nominal_white_15360": 475,
+            "at_container_max_16383": 144,
+            "percentiles": {
+              "50": 1175.0,
+              "99": 13790.009999999995,
+              "99.9": 16383.0,
+              "99.99": 16383.0
+            },
+            "sha256": "7278758ebd1fc45396fbd47db93887b7375d8f622a48a1c7c8d5de61d26df839"
+          },
+          "B": {
+            "n": 102400,
+            "minimum": 504,
+            "maximum": 10642,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 815.0,
+              "99": 6386.009999999995,
+              "99.9": 7625.419000000184,
+              "99.99": 8272.280299999955
+            },
+            "sha256": "1ce702736e8a8ac4a2c810d6984d8d56746ce3a143848f55bdbd7db2058bd297"
+          }
+        }
+      },
+      "red-control": {
+        "output_native_xywh": [
+          2940,
+          1780,
+          640,
+          640
+        ],
+        "gauge": "held sidecar reference, nearest CFA-quad sample; no CA",
+        "planes": {
+          "R": {
+            "n": 102400,
+            "minimum": 590,
+            "maximum": 3270,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 938.0,
+              "99": 1433.0,
+              "99.9": 1765.6010000000097,
+              "99.99": 2542.6034999994736
+            },
+            "sha256": "d809d660968f00895ecdfce8767a1c15cc4875d3cbe369c0f0c79cb9f993be2b"
+          },
+          "G1": {
+            "n": 102400,
+            "minimum": 551,
+            "maximum": 1758,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 846.0,
+              "99": 1405.0,
+              "99.9": 1520.803000000029,
+              "99.99": 1671.0807999998797
+            },
+            "sha256": "2993f447c56180e7f0a72d5cdbeb12b8c5396ec0e9a9ef281fb2bf76d9a1bf6e"
+          },
+          "G2": {
+            "n": 102400,
+            "minimum": 552,
+            "maximum": 1771,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 847.0,
+              "99": 1411.0,
+              "99.9": 1530.0,
+              "99.99": 1700.4014999997744
+            },
+            "sha256": "bb6017f53251873c671bb7df54e6a8888c826642437cf1ffbdb0f4c385e52e3e"
+          },
+          "B": {
+            "n": 102400,
+            "minimum": 529,
+            "maximum": 1006,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 663.0,
+              "99": 924.0,
+              "99.9": 965.0,
+              "99.99": 989.0
+            },
+            "sha256": "860e27a8664c9a0c7ebd4144f37fc672cf602b4f8a0b91f2782b5681dfc52f29"
+          }
+        }
+      }
+    }
+  },
+  {
+    "code": "104",
+    "index": 182,
+    "path": "D:\\personal\\macro\\minerals\\etched-spessartine-garnet\\104MSDCF\\DSC00209.ARW",
+    "file_sha256": "79a4cd87bb4fa76ecd48aa1da3638795781b3b73bf4e641a523a2c01102fdaf9",
+    "metadata": {
+      "raw_sizes": "ImageSizes(raw_height=5120, raw_width=7168, height=4688, width=7028, top_margin=0, left_margin=0, iheight=4688, iwidth=7028, pixel_aspect=1.0, flip=0, crop_left_margin=12, crop_top_margin=8, crop_width=7008, crop_height=4672)",
+      "black": [
+        512,
+        512,
+        512,
+        512
+      ],
+      "white": 16383,
+      "camera_white": [
+        15360,
+        15360,
+        15360,
+        15360
+      ],
+      "wb": [
+        1731.0,
+        1024.0,
+        2581.0,
+        1024.0
+      ],
+      "pattern": [
+        [
+          0,
+          1
+        ],
+        [
+          3,
+          2
+        ]
+      ]
+    },
+    "active": {
+      "n": 32947264,
+      "minimum": 492,
+      "maximum": 16383,
+      "at_nominal_white_15360": 12,
+      "at_container_max_16383": 2,
+      "percentiles": {
+        "50": 517.0,
+        "99": 1577.0,
+        "99.9": 4191.0,
+        "99.99": 8056.27369999513
+      },
+      "sha256": "5a9a7f312577f3ea71543144fed85eab783c2d2b3e00d91a218030f93b63abb9"
+    },
+    "planes": {
+      "R": {
+        "n": 8236816,
+        "minimum": 495,
+        "maximum": 16383,
+        "at_nominal_white_15360": 12,
+        "at_container_max_16383": 2,
+        "percentiles": {
+          "50": 516.0,
+          "99": 1745.0,
+          "99.9": 4138.0,
+          "99.99": 8296.955499997362
+        },
+        "sha256": "2b01148cd42ecf9086c7fe60297fd2a20ed5c88c29a170b1acf1e294c040ab1b"
+      },
+      "G1": {
+        "n": 8236816,
+        "minimum": 492,
+        "maximum": 10169,
+        "at_nominal_white_15360": 0,
+        "at_container_max_16383": 0,
+        "percentiles": {
+          "50": 518.0,
+          "99": 1609.0,
+          "99.9": 4927.1850000005215,
+          "99.99": 8390.0
+        },
+        "sha256": "c98dc4d7157a13920734c76855df3d218ae11c9ec337f42559ca2dc8988cce13"
+      },
+      "G2": {
+        "n": 8236816,
+        "minimum": 492,
+        "maximum": 10291,
+        "at_nominal_white_15360": 0,
+        "at_container_max_16383": 0,
+        "percentiles": {
+          "50": 518.0,
+          "99": 1612.0,
+          "99.9": 4939.0,
+          "99.99": 8388.31849999912
+        },
+        "sha256": "7c7dc669fadb0f071f5602187a6cda410633689ea8f7488d4ba86b9643347661"
+      },
+      "B": {
+        "n": 8236816,
+        "minimum": 494,
+        "maximum": 4530,
+        "at_nominal_white_15360": 0,
+        "at_container_max_16383": 0,
+        "percentiles": {
+          "50": 516.0,
+          "99": 1003.0,
+          "99.9": 2197.0,
+          "99.99": 3962.0
+        },
+        "sha256": "99a641a00cf788a186a65c5bafc420f2e159954f875511cf647584bf2b05802d"
+      }
+    },
+    "rois": {
+      "white-facet": {
+        "output_native_xywh": [
+          4540,
+          1730,
+          640,
+          640
+        ],
+        "gauge": "held sidecar reference, nearest CFA-quad sample; no CA",
+        "planes": {
+          "R": {
+            "n": 102400,
+            "minimum": 501,
+            "maximum": 6043,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 1236.0,
+              "99": 4607.009999999995,
+              "99.9": 5206.404000000039,
+              "99.99": 5755.04039999994
+            },
+            "sha256": "2e040100d9f1e9cecaa0526e71ff6f5a7c84d53414c78dab151baf408ecb7674"
+          },
+          "G1": {
+            "n": 102400,
+            "minimum": 504,
+            "maximum": 9726,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 1272.0,
+              "99": 8191.0,
+              "99.9": 9382.803000000029,
+              "99.99": 9638.04039999994
+            },
+            "sha256": "7dc436df67ec953bc304923095edd8f9d5b2ec311c0c8debde3b2db73cc93e4f"
+          },
+          "G2": {
+            "n": 102400,
+            "minimum": 507,
+            "maximum": 9682,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 1273.0,
+              "99": 8196.0,
+              "99.9": 9393.20200000002,
+              "99.99": 9612.280299999955
+            },
+            "sha256": "f227c42eee92d7508fbf6919738bd80377902babb12657137794a59c987e4a7a"
+          },
+          "B": {
+            "n": 102400,
+            "minimum": 502,
+            "maximum": 4530,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 863.0,
+              "99": 3907.0,
+              "99.9": 4387.60100000001,
+              "99.99": 4487.52019999997
+            },
+            "sha256": "fdb7ff2670366452787cd603b8fc21db57ea67c88751f4ff90285a09b400337c"
+          }
+        }
+      },
+      "red-control": {
+        "output_native_xywh": [
+          2940,
+          1780,
+          640,
+          640
+        ],
+        "gauge": "held sidecar reference, nearest CFA-quad sample; no CA",
+        "planes": {
+          "R": {
+            "n": 102400,
+            "minimum": 627,
+            "maximum": 2269,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 962.0,
+              "99": 1355.0,
+              "99.9": 1561.0,
+              "99.99": 1805.0
+            },
+            "sha256": "19d1ab7990438f458be773f501196f25f811a9c3eea9b263b2a4cc8133126f08"
+          },
+          "G1": {
+            "n": 102400,
+            "minimum": 614,
+            "maximum": 1388,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 876.0,
+              "99": 1291.0,
+              "99.9": 1346.0,
+              "99.99": 1370.760099999985
+            },
+            "sha256": "32e9fbe3058885646a1efd36ff85b0d228ee4913b7e8c93ae1bd7c63e4f87538"
+          },
+          "G2": {
+            "n": 102400,
+            "minimum": 612,
+            "maximum": 1389,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 879.0,
+              "99": 1293.0,
+              "99.9": 1347.0,
+              "99.99": 1371.0
+            },
+            "sha256": "b6a817c203d1a9cfe3bfcbb29177db8f00a7e248c599fc0f2749d25faf70faef"
+          },
+          "B": {
+            "n": 102400,
+            "minimum": 551,
+            "maximum": 904,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 678.0,
+              "99": 870.0,
+              "99.9": 888.0,
+              "99.99": 898.0
+            },
+            "sha256": "3a72dce7672158befb718efa52c8077eaa6f620e6412e0d3e8c4ed341c7eb7ce"
+          }
+        }
+      }
+    }
+  },
+  {
+    "code": "105",
+    "index": 0,
+    "path": "D:\\personal\\macro\\minerals\\rutile-star-on-hematite\\105MSDCF\\DSC00027.ARW",
+    "file_sha256": "e48f21959c2310fe720518a040e671b0eeb2571b7ac53cfdeaa94407c494d221",
+    "metadata": {
+      "raw_sizes": "ImageSizes(raw_height=5120, raw_width=7168, height=4688, width=7028, top_margin=0, left_margin=0, iheight=4688, iwidth=7028, pixel_aspect=1.0, flip=0, crop_left_margin=12, crop_top_margin=8, crop_width=7008, crop_height=4672)",
+      "black": [
+        512,
+        512,
+        512,
+        512
+      ],
+      "white": 16383,
+      "camera_white": [
+        15360,
+        15360,
+        15360,
+        15360
+      ],
+      "wb": [
+        1637.0,
+        1024.0,
+        2774.0,
+        1024.0
+      ],
+      "pattern": [
+        [
+          0,
+          1
+        ],
+        [
+          3,
+          2
+        ]
+      ]
+    },
+    "active": {
+      "n": 32947264,
+      "minimum": 493,
+      "maximum": 12710,
+      "at_nominal_white_15360": 0,
+      "at_container_max_16383": 0,
+      "percentiles": {
+        "50": 577.0,
+        "99": 5973.0,
+        "99.9": 9727.0,
+        "99.99": 11540.27369999513
+      },
+      "sha256": "ad86051cfade0b3da73117c31718609d6d0d03147cbc44e81f8e103f9120ef37"
+    },
+    "planes": {
+      "R": {
+        "n": 8236816,
+        "minimum": 496,
+        "maximum": 8344,
+        "at_nominal_white_15360": 0,
+        "at_container_max_16383": 0,
+        "percentiles": {
+          "50": 562.0,
+          "99": 4850.0,
+          "99.9": 6837.0,
+          "99.99": 7768.0
+        },
+        "sha256": "89af1b4729d85b41f1256555b4b0838aa97718b4d8ebe2e369eae0e094883fe0"
+      },
+      "G1": {
+        "n": 8236816,
+        "minimum": 494,
+        "maximum": 12669,
+        "at_nominal_white_15360": 0,
+        "at_container_max_16383": 0,
+        "percentiles": {
+          "50": 605.0,
+          "99": 7277.0,
+          "99.9": 10449.0,
+          "99.99": 11900.0
+        },
+        "sha256": "9b93fd6c3eb0988a808c15f20c6fd49168b33e042dd03ced2b10b4f8c632dca2"
+      },
+      "G2": {
+        "n": 8236816,
+        "minimum": 497,
+        "maximum": 12710,
+        "at_nominal_white_15360": 0,
+        "at_container_max_16383": 0,
+        "percentiles": {
+          "50": 605.0,
+          "99": 7283.0,
+          "99.9": 10464.0,
+          "99.99": 11916.0
+        },
+        "sha256": "6fcdc20a645f0f135c4330d5a863d538572e6712c152d929bc1801a5d2274713"
+      },
+      "B": {
+        "n": 8236816,
+        "minimum": 493,
+        "maximum": 4513,
+        "at_nominal_white_15360": 0,
+        "at_container_max_16383": 0,
+        "percentiles": {
+          "50": 553.0,
+          "99": 2666.0,
+          "99.9": 3658.0,
+          "99.99": 4177.0
+        },
+        "sha256": "223d02e046c3b10a13ec54d138ffde35830de968d367822a3a37f08451d30913"
+      }
+    },
+    "rois": {
+      "gold-blades": {
+        "output_native_xywh": [
+          4580,
+          2250,
+          640,
+          640
+        ],
+        "gauge": "held sidecar reference, nearest CFA-quad sample; no CA",
+        "planes": {
+          "R": {
+            "n": 102400,
+            "minimum": 551,
+            "maximum": 5801,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 3359.0,
+              "99": 5429.0,
+              "99.9": 5645.60100000001,
+              "99.99": 5728.760099999985
+            },
+            "sha256": "fcfb173406d1fe5ba5e3be3451792761f1a9c9c589aa5fe0dd31e4361036cabf"
+          },
+          "G1": {
+            "n": 102400,
+            "minimum": 581,
+            "maximum": 7685,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 4433.0,
+              "99": 7159.0,
+              "99.9": 7427.60100000001,
+              "99.99": 7571.280299999955
+            },
+            "sha256": "a92d3bf2ea534066fc4992a73699facbe176c9f2c0ccb830d4c735f5f31af06d"
+          },
+          "G2": {
+            "n": 102400,
+            "minimum": 581,
+            "maximum": 7638,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 4433.0,
+              "99": 7168.009999999995,
+              "99.9": 7445.60100000001,
+              "99.99": 7590.280299999955
+            },
+            "sha256": "74d15823a964740ab66ebd4438e25780b36f5a96d1534a6db2aa6055597b7f75"
+          },
+          "B": {
+            "n": 102400,
+            "minimum": 537,
+            "maximum": 2431,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 1499.0,
+              "99": 2169.0,
+              "99.9": 2352.0,
+              "99.99": 2396.52019999997
+            },
+            "sha256": "12231d2b4faa34b0bba12e85653442ea7391b3351866ee071070d700e3b17bdf"
+          }
+        }
+      },
+      "dark-control": {
+        "output_native_xywh": [
+          2300,
+          2300,
+          640,
+          640
+        ],
+        "gauge": "held sidecar reference, nearest CFA-quad sample; no CA",
+        "planes": {
+          "R": {
+            "n": 102400,
+            "minimum": 508,
+            "maximum": 628,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 549.0,
+              "99": 606.0,
+              "99.9": 616.0,
+              "99.99": 622.0
+            },
+            "sha256": "be725e49eaa75254ba0a28c0cd4840107e1cc07691df426a0ab9aa1fd33274b9"
+          },
+          "G1": {
+            "n": 102400,
+            "minimum": 518,
+            "maximum": 712,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 579.0,
+              "99": 684.0,
+              "99.9": 699.0,
+              "99.99": 707.760099999985
+            },
+            "sha256": "0fdf435279b9b391e9b9d47dcaf3f15ec8842b4fe289ef7c176c6e9bbbebbf54"
+          },
+          "G2": {
+            "n": 102400,
+            "minimum": 510,
+            "maximum": 715,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 579.0,
+              "99": 684.0,
+              "99.9": 699.0,
+              "99.99": 706.760099999985
+            },
+            "sha256": "22588090bf7553d52ef73b51b0ed262ab38fe7ff4fe034d70c5e2d43face3bd5"
+          },
+          "B": {
+            "n": 102400,
+            "minimum": 511,
+            "maximum": 601,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 539.0,
+              "99": 583.0,
+              "99.9": 591.0,
+              "99.99": 595.760099999985
+            },
+            "sha256": "bb4cdbb0247fc1a673c6aa11de31f28530513fe910980264e63653441fc2b23a"
+          }
+        }
+      }
+    }
+  },
+  {
+    "code": "105",
+    "index": 114,
+    "path": "D:\\personal\\macro\\minerals\\rutile-star-on-hematite\\105MSDCF\\DSC00141.ARW",
+    "file_sha256": "af92d4196d607225eeab8e649ecb872f64e5e5f600248fe51123774e4b3a01cd",
+    "metadata": {
+      "raw_sizes": "ImageSizes(raw_height=5120, raw_width=7168, height=4688, width=7028, top_margin=0, left_margin=0, iheight=4688, iwidth=7028, pixel_aspect=1.0, flip=0, crop_left_margin=12, crop_top_margin=8, crop_width=7008, crop_height=4672)",
+      "black": [
+        512,
+        512,
+        512,
+        512
+      ],
+      "white": 16383,
+      "camera_white": [
+        15360,
+        15360,
+        15360,
+        15360
+      ],
+      "wb": [
+        1637.0,
+        1024.0,
+        2774.0,
+        1024.0
+      ],
+      "pattern": [
+        [
+          0,
+          1
+        ],
+        [
+          3,
+          2
+        ]
+      ]
+    },
+    "active": {
+      "n": 32947264,
+      "minimum": 492,
+      "maximum": 16383,
+      "at_nominal_white_15360": 15803,
+      "at_container_max_16383": 8579,
+      "percentiles": {
+        "50": 556.0,
+        "99": 6607.0,
+        "99.9": 13610.0,
+        "99.99": 16383.0
+      },
+      "sha256": "479add3de9475c26854df569f3a13c1f05fa62073f8e2685fca458399a630ac9"
+    },
+    "planes": {
+      "R": {
+        "n": 8236816,
+        "minimum": 492,
+        "maximum": 14117,
+        "at_nominal_white_15360": 0,
+        "at_container_max_16383": 0,
+        "percentiles": {
+          "50": 547.0,
+          "99": 5457.0,
+          "99.9": 9506.0,
+          "99.99": 11491.31849999912
+        },
+        "sha256": "631c48f48c2eabc938972652610d237034c5bb0f5baedb9695bc9eafa2a0e8b7"
+      },
+      "G1": {
+        "n": 8236816,
+        "minimum": 495,
+        "maximum": 16383,
+        "at_nominal_white_15360": 7880,
+        "at_container_max_16383": 4253,
+        "percentiles": {
+          "50": 574.0,
+          "99": 8314.0,
+          "99.9": 15277.185000000522,
+          "99.99": 16383.0
+        },
+        "sha256": "44a815e8442622038a1969bbe368172af61c574124e990e93cf6bcd1dd51f223"
+      },
+      "G2": {
+        "n": 8236816,
+        "minimum": 496,
+        "maximum": 16383,
+        "at_nominal_white_15360": 7923,
+        "at_container_max_16383": 4326,
+        "percentiles": {
+          "50": 574.0,
+          "99": 8321.0,
+          "99.9": 15288.0,
+          "99.99": 16383.0
+        },
+        "sha256": "95537b96195cd32a7522ac0fa022df3ca6a46cd996904ce82b0e5048624f6c5d"
+      },
+      "B": {
+        "n": 8236816,
+        "minimum": 493,
+        "maximum": 7375,
+        "at_nominal_white_15360": 0,
+        "at_container_max_16383": 0,
+        "percentiles": {
+          "50": 540.0,
+          "99": 3030.0,
+          "99.9": 5249.0,
+          "99.99": 6152.0
+        },
+        "sha256": "47bc4d60376d11dfce51cd77dc547f4388125de03c27db4a8aa3db9c074b2d38"
+      }
+    },
+    "rois": {
+      "gold-blades": {
+        "output_native_xywh": [
+          4580,
+          2250,
+          640,
+          640
+        ],
+        "gauge": "held sidecar reference, nearest CFA-quad sample; no CA",
+        "planes": {
+          "R": {
+            "n": 102400,
+            "minimum": 523,
+            "maximum": 6254,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 3482.0,
+              "99": 5743.0,
+              "99.9": 6015.202000000019,
+              "99.99": 6140.52019999997
+            },
+            "sha256": "b8d8f4413776a3c1f620aba8ffa88210d388c800a1f4613e55b6f04a6c93fbc3"
+          },
+          "G1": {
+            "n": 102400,
+            "minimum": 527,
+            "maximum": 8936,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 4518.0,
+              "99": 7852.0,
+              "99.9": 8485.60100000001,
+              "99.99": 8841.60099999985
+            },
+            "sha256": "3a96cce4afd3df2e7e88c93dc38c36275cf77d417b914b8f7039f78aaaffe8d5"
+          },
+          "G2": {
+            "n": 102400,
+            "minimum": 530,
+            "maximum": 8936,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 4520.0,
+              "99": 7868.0,
+              "99.9": 8490.404000000039,
+              "99.99": 8863.56059999991
+            },
+            "sha256": "1a3829b56ed3ac5b60ec8580aa0755750b13c6c1f9eda30c92a62493326e1a6c"
+          },
+          "B": {
+            "n": 102400,
+            "minimum": 520,
+            "maximum": 3407,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 1463.0,
+              "99": 2684.0,
+              "99.9": 3214.0,
+              "99.99": 3337.760099999985
+            },
+            "sha256": "cc43017cc840c0074299b951bc149d65a4134b24bbfd97e67e13513a7e1db11b"
+          }
+        }
+      },
+      "dark-control": {
+        "output_native_xywh": [
+          2300,
+          2300,
+          640,
+          640
+        ],
+        "gauge": "held sidecar reference, nearest CFA-quad sample; no CA",
+        "planes": {
+          "R": {
+            "n": 102400,
+            "minimum": 507,
+            "maximum": 915,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 539.0,
+              "99": 708.0,
+              "99.9": 830.0,
+              "99.99": 880.5201999999699
+            },
+            "sha256": "58fa4897c9ce96cdbd600ec82a95f0c77d169453ab1d0fa1023ce372957422ec"
+          },
+          "G1": {
+            "n": 102400,
+            "minimum": 512,
+            "maximum": 1330,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 558.0,
+              "99": 881.0,
+              "99.9": 1176.6010000000097,
+              "99.99": 1282.0403999999398
+            },
+            "sha256": "e56205584e979054ae3cbabac49ea3c999629713ea3c44810fc06f308d086456"
+          },
+          "G2": {
+            "n": 102400,
+            "minimum": 510,
+            "maximum": 1340,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 558.0,
+              "99": 878.0,
+              "99.9": 1169.0,
+              "99.99": 1261.52019999997
+            },
+            "sha256": "a532ca7977dccc48e1d448da7bf628adb494fb6916c400c03d8cf0f47e495c73"
+          },
+          "B": {
+            "n": 102400,
+            "minimum": 507,
+            "maximum": 812,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 532.0,
+              "99": 656.0,
+              "99.9": 767.0,
+              "99.99": 797.760099999985
+            },
+            "sha256": "332b9128ed24ab7f9b92f0770578fa9cc0fab56f2d72e5b6fa00281cdfbc69ad"
+          }
+        }
+      }
+    }
+  },
+  {
+    "code": "105",
+    "index": 227,
+    "path": "D:\\personal\\macro\\minerals\\rutile-star-on-hematite\\105MSDCF\\DSC00254.ARW",
+    "file_sha256": "23ceada9a3aec00d02844fc99e3b7e50274a7ee884a78b13f3aababbe34267c7",
+    "metadata": {
+      "raw_sizes": "ImageSizes(raw_height=5120, raw_width=7168, height=4688, width=7028, top_margin=0, left_margin=0, iheight=4688, iwidth=7028, pixel_aspect=1.0, flip=0, crop_left_margin=12, crop_top_margin=8, crop_width=7008, crop_height=4672)",
+      "black": [
+        512,
+        512,
+        512,
+        512
+      ],
+      "white": 16383,
+      "camera_white": [
+        15360,
+        15360,
+        15360,
+        15360
+      ],
+      "wb": [
+        1637.0,
+        1024.0,
+        2774.0,
+        1024.0
+      ],
+      "pattern": [
+        [
+          0,
+          1
+        ],
+        [
+          3,
+          2
+        ]
+      ]
+    },
+    "active": {
+      "n": 32947264,
+      "minimum": 492,
+      "maximum": 12827,
+      "at_nominal_white_15360": 0,
+      "at_container_max_16383": 0,
+      "percentiles": {
+        "50": 583.0,
+        "99": 5898.0,
+        "99.9": 9838.0,
+        "99.99": 11787.0
+      },
+      "sha256": "876b27bcdee5d373eab4c60f8de848958c3c5338506406ebf4351d361f825d45"
+    },
+    "planes": {
+      "R": {
+        "n": 8236816,
+        "minimum": 492,
+        "maximum": 8429,
+        "at_nominal_white_15360": 0,
+        "at_container_max_16383": 0,
+        "percentiles": {
+          "50": 569.0,
+          "99": 4810.0,
+          "99.9": 6776.0,
+          "99.99": 7648.318499999121
+        },
+        "sha256": "861a8207064d299214be6469a97e9bd84ec138afa3cd2f1b182f559d002409a7"
+      },
+      "G1": {
+        "n": 8236816,
+        "minimum": 495,
+        "maximum": 12827,
+        "at_nominal_white_15360": 0,
+        "at_container_max_16383": 0,
+        "percentiles": {
+          "50": 615.0,
+          "99": 7203.0,
+          "99.9": 10616.0,
+          "99.99": 12030.31849999912
+        },
+        "sha256": "8b3760cbb6f49aab222fdca43ebb3cf1496908e6c7cf5a95c4480947a17d2c02"
+      },
+      "G2": {
+        "n": 8236816,
+        "minimum": 494,
+        "maximum": 12803,
+        "at_nominal_white_15360": 0,
+        "at_container_max_16383": 0,
+        "percentiles": {
+          "50": 615.0,
+          "99": 7210.0,
+          "99.9": 10623.0,
+          "99.99": 12033.31849999912
+        },
+        "sha256": "1d9786466c838f08b8e5bf5670733d18c2353ccbf0a087f3bf96326b63e0058e"
+      },
+      "B": {
+        "n": 8236816,
+        "minimum": 495,
+        "maximum": 4505,
+        "at_nominal_white_15360": 0,
+        "at_container_max_16383": 0,
+        "percentiles": {
+          "50": 557.0,
+          "99": 2633.0,
+          "99.9": 3699.0,
+          "99.99": 4201.318499999121
+        },
+        "sha256": "c5e094cb38227b45f7a5bbfbcb7cc952bf82fa779b0236336b551cb76f9a2d2f"
+      }
+    },
+    "rois": {
+      "gold-blades": {
+        "output_native_xywh": [
+          4580,
+          2250,
+          640,
+          640
+        ],
+        "gauge": "held sidecar reference, nearest CFA-quad sample; no CA",
+        "planes": {
+          "R": {
+            "n": 102400,
+            "minimum": 590,
+            "maximum": 5928,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 3535.0,
+              "99": 5507.0,
+              "99.9": 5788.0,
+              "99.99": 5870.760099999985
+            },
+            "sha256": "a0a56f8c1bbc1a01ced3cc1cdcc5686c7ab58a7746edc624c4d9441b5bfa253c"
+          },
+          "G1": {
+            "n": 102400,
+            "minimum": 658,
+            "maximum": 7730,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 4650.0,
+              "99": 7223.0,
+              "99.9": 7548.60100000001,
+              "99.99": 7652.760099999985
+            },
+            "sha256": "200719e36dc4bdc6c1e727d37179cac5b80f30306bf87430c6e5bcf5fb608580"
+          },
+          "G2": {
+            "n": 102400,
+            "minimum": 653,
+            "maximum": 7696,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 4652.0,
+              "99": 7226.009999999995,
+              "99.9": 7547.60100000001,
+              "99.99": 7658.04039999994
+            },
+            "sha256": "2d92bd5047d4d4ceaab508f9e9fffec0d405e895b90d9ccf0251fa87d67fe9e1"
+          },
+          "B": {
+            "n": 102400,
+            "minimum": 564,
+            "maximum": 2231,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 1559.0,
+              "99": 2120.0,
+              "99.9": 2184.0,
+              "99.99": 2210.0
+            },
+            "sha256": "5266da5555becdbd52f6ac8293a9b24879468ec18af500f14cad092bb5f24956"
+          }
+        }
+      },
+      "dark-control": {
+        "output_native_xywh": [
+          2300,
+          2300,
+          640,
+          640
+        ],
+        "gauge": "held sidecar reference, nearest CFA-quad sample; no CA",
+        "planes": {
+          "R": {
+            "n": 102400,
+            "minimum": 515,
+            "maximum": 753,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 553.0,
+              "99": 670.0,
+              "99.9": 718.0,
+              "99.99": 738.0
+            },
+            "sha256": "df05c7c49a4754e44389379c5ad57a9f23a2a97bbbba949b57563a8bbb01e465"
+          },
+          "G1": {
+            "n": 102400,
+            "minimum": 519,
+            "maximum": 902,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 587.0,
+              "99": 789.0,
+              "99.9": 863.0,
+              "99.99": 893.760099999985
+            },
+            "sha256": "ee4a8a1bbc885546aa7edbad9b81c1d1731a87e4644a41d13558c52e26074c59"
+          },
+          "G2": {
+            "n": 102400,
+            "minimum": 522,
+            "maximum": 904,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 587.0,
+              "99": 784.0,
+              "99.9": 860.0,
+              "99.99": 887.0
+            },
+            "sha256": "15e42c01ffc046afc5f726b53194fd0531aa86184a4e95e28a99fa031f23df01"
+          },
+          "B": {
+            "n": 102400,
+            "minimum": 511,
+            "maximum": 664,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 542.0,
+              "99": 616.0,
+              "99.9": 645.0,
+              "99.99": 656.0
+            },
+            "sha256": "6271ddba91a8ec39ac6e2d8066621a7068ba5f8ee011dfcb06a13cd3b870b609"
+          }
+        }
+      }
+    }
+  },
+  {
+    "code": "100",
+    "index": 70,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00101.ARW",
+    "file_sha256": "29e3c972de8c66baa83980baea90fef443002f2348fd4b50a4e587cc6f5b9d63",
+    "metadata": {
+      "raw_sizes": "ImageSizes(raw_height=5120, raw_width=7168, height=4688, width=7028, top_margin=0, left_margin=0, iheight=4688, iwidth=7028, pixel_aspect=1.0, flip=0, crop_left_margin=12, crop_top_margin=8, crop_width=7008, crop_height=4672)",
+      "black": [
+        512,
+        512,
+        512,
+        512
+      ],
+      "white": 16383,
+      "camera_white": [
+        15360,
+        15360,
+        15360,
+        15360
+      ],
+      "wb": [
+        1731.0,
+        1024.0,
+        2581.0,
+        1024.0
+      ],
+      "pattern": [
+        [
+          0,
+          1
+        ],
+        [
+          3,
+          2
+        ]
+      ]
+    },
+    "active": {
+      "n": 32947264,
+      "minimum": 505,
+      "maximum": 16383,
+      "at_nominal_white_15360": 654,
+      "at_container_max_16383": 343,
+      "percentiles": {
+        "50": 770.0,
+        "99": 5857.0,
+        "99.9": 10801.0,
+        "99.99": 13534.0
+      },
+      "sha256": "1e81a57f513f54d9851418a91230049bb1d87b323e2a97339eb28c5b6890b702"
+    },
+    "planes": {
+      "R": {
+        "n": 8236816,
+        "minimum": 505,
+        "maximum": 16383,
+        "at_nominal_white_15360": 8,
+        "at_container_max_16383": 6,
+        "percentiles": {
+          "50": 646.0,
+          "99": 4073.0,
+          "99.9": 6044.0,
+          "99.99": 7340.318499999121
+        },
+        "sha256": "3ef4efe5f84b8695545b33acc0b063b8577e959d1c943d2926ee96ef3aa57112"
+      },
+      "G1": {
+        "n": 8236816,
+        "minimum": 512,
+        "maximum": 16383,
+        "at_nominal_white_15360": 307,
+        "at_container_max_16383": 158,
+        "percentiles": {
+          "50": 872.0,
+          "99": 7745.0,
+          "99.9": 11663.0,
+          "99.99": 14349.0
+        },
+        "sha256": "c621ffdcb718efb0c614e7072d69c18ee48d2c643ac9205082c9d80134560684"
+      },
+      "G2": {
+        "n": 8236816,
+        "minimum": 507,
+        "maximum": 16383,
+        "at_nominal_white_15360": 302,
+        "at_container_max_16383": 155,
+        "percentiles": {
+          "50": 872.0,
+          "99": 7743.0,
+          "99.9": 11660.0,
+          "99.99": 14342.955499997362
+        },
+        "sha256": "d86a75c8883f3c208f1f17f361a1f39ed069f47fba5c67694cac713ee85a6ee0"
+      },
+      "B": {
+        "n": 8236816,
+        "minimum": 510,
+        "maximum": 16383,
+        "at_nominal_white_15360": 37,
+        "at_container_max_16383": 24,
+        "percentiles": {
+          "50": 727.0,
+          "99": 3924.0,
+          "99.9": 5716.0,
+          "99.99": 7036.636999998242
+        },
+        "sha256": "e53191988e876ee683eefcfd240fd880013787265dd75f4c3a2d10f90adf9ef3"
+      }
+    },
+    "rois": {
+      "white-patch": {
+        "output_native_xywh": [
+          1080,
+          620,
+          640,
+          640
+        ],
+        "gauge": "held sidecar reference, nearest CFA-quad sample; no CA",
+        "planes": {
+          "R": {
+            "n": 102400,
+            "minimum": 533,
+            "maximum": 15855,
+            "at_nominal_white_15360": 1,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 1483.0,
+              "99": 6645.009999999995,
+              "99.9": 7542.803000000029,
+              "99.99": 8024.280299999955
+            },
+            "sha256": "26d67fd3527e3963ad8220a5887d99315b67a2b50fe2893c300645b2aac4610b"
+          },
+          "G1": {
+            "n": 102400,
+            "minimum": 583,
+            "maximum": 16383,
+            "at_nominal_white_15360": 10,
+            "at_container_max_16383": 7,
+            "percentiles": {
+              "50": 2611.0,
+              "99": 12703.009999999995,
+              "99.9": 14555.0,
+              "99.99": 15326.002499999624
+            },
+            "sha256": "c65409568f714465a8f433709839b86945db4367ce5edb76b5ee585e433dca4f"
+          },
+          "G2": {
+            "n": 102400,
+            "minimum": 580,
+            "maximum": 16383,
+            "at_nominal_white_15360": 15,
+            "at_container_max_16383": 8,
+            "percentiles": {
+              "50": 2607.0,
+              "99": 12688.009999999995,
+              "99.9": 14537.404000000039,
+              "99.99": 15638.686799998977
+            },
+            "sha256": "30420944ed3d7634694c17485a31390b7a6a2f153e5839c543eff24612780c7c"
+          },
+          "B": {
+            "n": 102400,
+            "minimum": 550,
+            "maximum": 11464,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 1479.0,
+              "99": 6129.0,
+              "99.9": 6927.60100000001,
+              "99.99": 7377.760099999985
+            },
+            "sha256": "611aeddc1e0492942f8bd52e0807f0a463124de4ec32cd27cb88e0ea5a5167a0"
+          }
+        }
+      },
+      "blue-control": {
+        "output_native_xywh": [
+          2780,
+          2640,
+          640,
+          640
+        ],
+        "gauge": "held sidecar reference, nearest CFA-quad sample; no CA",
+        "planes": {
+          "R": {
+            "n": 102400,
+            "minimum": 519,
+            "maximum": 9748,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 645.0,
+              "99": 929.0099999999948,
+              "99.9": 1282.6010000000097,
+              "99.99": 3040.8633999964804
+            },
+            "sha256": "e9ac1c431a5474b3eef4200c965726dbebe19fca17bb1cbccdbfdd5c0aa96f10"
+          },
+          "G1": {
+            "n": 102400,
+            "minimum": 529,
+            "maximum": 16383,
+            "at_nominal_white_15360": 2,
+            "at_container_max_16383": 1,
+            "percentiles": {
+              "50": 853.0,
+              "99": 1633.0,
+              "99.9": 2106.4190000001836,
+              "99.99": 5138.454399997834
+            },
+            "sha256": "077d33db1b382a0e3746c1d551b42bfa09447a60a37775e3c87d2fd5a7151c49"
+          },
+          "G2": {
+            "n": 102400,
+            "minimum": 529,
+            "maximum": 16383,
+            "at_nominal_white_15360": 2,
+            "at_container_max_16383": 2,
+            "percentiles": {
+              "50": 853.0,
+              "99": 1630.0,
+              "99.9": 2105.409000000087,
+              "99.99": 4762.646399999037
+            },
+            "sha256": "9913e1d14f47a5b01841fd569dd55723004076ea879741e2e86b2d293c36f161"
+          },
+          "B": {
+            "n": 102400,
+            "minimum": 517,
+            "maximum": 6075,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 691.0,
+              "99": 1530.0,
+              "99.9": 1602.0,
+              "99.99": 2497.6413999997894
+            },
+            "sha256": "39c9d08700d45d4b8fd894487781d6d4542fc4badc6ed5bd14264f42b9d29d27"
+          }
+        }
+      }
+    }
+  },
+  {
+    "code": "100",
+    "index": 80,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00111.ARW",
+    "file_sha256": "48bd92c27233e21134a6ac62e8a916dbea2042edfd35e6ab3d7e679c7ee4d6e9",
+    "metadata": {
+      "raw_sizes": "ImageSizes(raw_height=5120, raw_width=7168, height=4688, width=7028, top_margin=0, left_margin=0, iheight=4688, iwidth=7028, pixel_aspect=1.0, flip=0, crop_left_margin=12, crop_top_margin=8, crop_width=7008, crop_height=4672)",
+      "black": [
+        512,
+        512,
+        512,
+        512
+      ],
+      "white": 16383,
+      "camera_white": [
+        15360,
+        15360,
+        15360,
+        15360
+      ],
+      "wb": [
+        1731.0,
+        1024.0,
+        2581.0,
+        1024.0
+      ],
+      "pattern": [
+        [
+          0,
+          1
+        ],
+        [
+          3,
+          2
+        ]
+      ]
+    },
+    "active": {
+      "n": 32947264,
+      "minimum": 500,
+      "maximum": 16383,
+      "at_nominal_white_15360": 280,
+      "at_container_max_16383": 141,
+      "percentiles": {
+        "50": 771.0,
+        "99": 5651.0,
+        "99.9": 10226.0,
+        "99.99": 12882.27369999513
+      },
+      "sha256": "04a9dac2c0fc2f580f58a622250c1a8b086d054ba3b9b43a155e25e5bd2d9804"
+    },
+    "planes": {
+      "R": {
+        "n": 8236816,
+        "minimum": 504,
+        "maximum": 16383,
+        "at_nominal_white_15360": 5,
+        "at_container_max_16383": 3,
+        "percentiles": {
+          "50": 648.0,
+          "99": 3950.0,
+          "99.9": 5708.0,
+          "99.99": 6932.0
+        },
+        "sha256": "6b980c17db05f3cb8b0b2fbd335743299cf513569529a1e0a8c180486f064035"
+      },
+      "G1": {
+        "n": 8236816,
+        "minimum": 500,
+        "maximum": 16383,
+        "at_nominal_white_15360": 126,
+        "at_container_max_16383": 63,
+        "percentiles": {
+          "50": 873.0,
+          "99": 7507.0,
+          "99.9": 11066.0,
+          "99.99": 13547.31849999912
+        },
+        "sha256": "31dcaf8a51f7f4bec0a14a5d008a26229b8bbd6197de15b5f5818db2d2deacf4"
+      },
+      "G2": {
+        "n": 8236816,
+        "minimum": 508,
+        "maximum": 16383,
+        "at_nominal_white_15360": 140,
+        "at_container_max_16383": 68,
+        "percentiles": {
+          "50": 872.0,
+          "99": 7510.0,
+          "99.9": 11058.185000000522,
+          "99.99": 13520.0
+        },
+        "sha256": "27892922578c28bb862f6b72272e6f4b798e3652ca3a4de3abf9f047722aafe8"
+      },
+      "B": {
+        "n": 8236816,
+        "minimum": 503,
+        "maximum": 16383,
+        "at_nominal_white_15360": 9,
+        "at_container_max_16383": 7,
+        "percentiles": {
+          "50": 727.0,
+          "99": 3800.0,
+          "99.9": 5380.0,
+          "99.99": 6573.0
+        },
+        "sha256": "c25969067fe92b045bbc1b22879febcbbb11cc4007000b93c2b846fbc751775f"
+      }
+    },
+    "rois": {
+      "white-patch": {
+        "output_native_xywh": [
+          1080,
+          620,
+          640,
+          640
+        ],
+        "gauge": "held sidecar reference, nearest CFA-quad sample; no CA",
+        "planes": {
+          "R": {
+            "n": 102400,
+            "minimum": 528,
+            "maximum": 8322,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 1599.0,
+              "99": 6281.009999999995,
+              "99.9": 7001.803000000029,
+              "99.99": 7421.1211999998195
+            },
+            "sha256": "d2a23f9cd1e96bfb9f86b370ebb7fd2bfb261746c82a797ac8d29eac71dc8b0f"
+          },
+          "G1": {
+            "n": 102400,
+            "minimum": 554,
+            "maximum": 16383,
+            "at_nominal_white_15360": 6,
+            "at_container_max_16383": 3,
+            "percentiles": {
+              "50": 2738.0,
+              "99": 12190.009999999995,
+              "99.9": 13655.606000000058,
+              "99.99": 14290.52019999997
+            },
+            "sha256": "ebc8fb9d27a11677c1fec06402146ab4948ad25994a12bd154b5b285071cdcec"
+          },
+          "G2": {
+            "n": 102400,
+            "minimum": 554,
+            "maximum": 16383,
+            "at_nominal_white_15360": 5,
+            "at_container_max_16383": 3,
+            "percentiles": {
+              "50": 2735.0,
+              "99": 12192.009999999995,
+              "99.9": 13667.20200000002,
+              "99.99": 14568.413999997894
+            },
+            "sha256": "5fcfd37cc578231f53479d4003bb5c190aa7fb7bad5cb90d04411c5649b66bb9"
+          },
+          "B": {
+            "n": 102400,
+            "minimum": 555,
+            "maximum": 9329,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 1579.0,
+              "99": 5828.0,
+              "99.9": 6472.60100000001,
+              "99.99": 6742.161599999759
+            },
+            "sha256": "f6c0cef156e4ccb5dc963800a42668872f90c66a167294342e07d5c1575666e6"
+          }
+        }
+      },
+      "blue-control": {
+        "output_native_xywh": [
+          2780,
+          2640,
+          640,
+          640
+        ],
+        "gauge": "held sidecar reference, nearest CFA-quad sample; no CA",
+        "planes": {
+          "R": {
+            "n": 102400,
+            "minimum": 515,
+            "maximum": 3585,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 639.0,
+              "99": 1016.0,
+              "99.9": 1902.6010000000097,
+              "99.99": 2492.3206999998947
+            },
+            "sha256": "419785a27627334252a530d6f593b801228707eae4f84bf92774d12f2c791728"
+          },
+          "G1": {
+            "n": 102400,
+            "minimum": 519,
+            "maximum": 5964,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 846.0,
+              "99": 1708.0,
+              "99.9": 3046.606000000058,
+              "99.99": 4152.320699999895
+            },
+            "sha256": "e1aebdd84c767eb44414b1b9bc8d1f19c4ff045b2fb10baeb85770de693e9f1e"
+          },
+          "G2": {
+            "n": 102400,
+            "minimum": 521,
+            "maximum": 6668,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 845.0,
+              "99": 1709.0,
+              "99.9": 3062.0,
+              "99.99": 4398.760099999985
+            },
+            "sha256": "ce06d91a5c9984537609c2e5dcdb76c5bd6fccad3393ef42a4e3a61589e5e7d5"
+          },
+          "B": {
+            "n": 102400,
+            "minimum": 514,
+            "maximum": 3503,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 683.0,
+              "99": 1599.0,
+              "99.9": 1885.6010000000097,
+              "99.99": 2594.004999999248
+            },
+            "sha256": "9965871f64d0a15214296dbeb57b383bd9b0552fa7030eaa9c68e5505875dfe4"
+          }
+        }
+      }
+    }
+  },
+  {
+    "code": "100",
+    "index": 90,
+    "path": "D:\\personal\\macro\\minerals\\peacock-ore\\100MSDCF\\DSC00121.ARW",
+    "file_sha256": "7920c33979efd24ef0c261f231146568d878ce055a5943d67d9cf9a4f8022329",
+    "metadata": {
+      "raw_sizes": "ImageSizes(raw_height=5120, raw_width=7168, height=4688, width=7028, top_margin=0, left_margin=0, iheight=4688, iwidth=7028, pixel_aspect=1.0, flip=0, crop_left_margin=12, crop_top_margin=8, crop_width=7008, crop_height=4672)",
+      "black": [
+        512,
+        512,
+        512,
+        512
+      ],
+      "white": 16383,
+      "camera_white": [
+        15360,
+        15360,
+        15360,
+        15360
+      ],
+      "wb": [
+        1731.0,
+        1024.0,
+        2581.0,
+        1024.0
+      ],
+      "pattern": [
+        [
+          0,
+          1
+        ],
+        [
+          3,
+          2
+        ]
+      ]
+    },
+    "active": {
+      "n": 32947264,
+      "minimum": 499,
+      "maximum": 16383,
+      "at_nominal_white_15360": 87,
+      "at_container_max_16383": 74,
+      "percentiles": {
+        "50": 780.0,
+        "99": 5471.0,
+        "99.9": 9710.0,
+        "99.99": 12043.0
+      },
+      "sha256": "730a50103edd59a99b754385b33ed901da12ea3c12a2714db56eb39d2b590198"
+    },
+    "planes": {
+      "R": {
+        "n": 8236816,
+        "minimum": 499,
+        "maximum": 16383,
+        "at_nominal_white_15360": 1,
+        "at_container_max_16383": 1,
+        "percentiles": {
+          "50": 654.0,
+          "99": 3777.0,
+          "99.9": 5394.0,
+          "99.99": 6475.0
+        },
+        "sha256": "c5d8a67569e8d53e6f88e653b36eff1a4d628fe5aea960d12196cb843a503533"
+      },
+      "G1": {
+        "n": 8236816,
+        "minimum": 507,
+        "maximum": 16383,
+        "at_nominal_white_15360": 39,
+        "at_container_max_16383": 34,
+        "percentiles": {
+          "50": 885.0,
+          "99": 7185.0,
+          "99.9": 10383.0,
+          "99.99": 12599.31849999912
+        },
+        "sha256": "5b132b3c5c46e9cffd2f0851802e0a8facc99cff543dce7ae9c734b16623f7ae"
+      },
+      "G2": {
+        "n": 8236816,
+        "minimum": 509,
+        "maximum": 16383,
+        "at_nominal_white_15360": 44,
+        "at_container_max_16383": 36,
+        "percentiles": {
+          "50": 885.0,
+          "99": 7188.0,
+          "99.9": 10378.0,
+          "99.99": 12612.31849999912
+        },
+        "sha256": "8a1be8b7d3458ce5d1a29cba33011106adbe49be70267eb44a2e34a934bea770"
+      },
+      "B": {
+        "n": 8236816,
+        "minimum": 504,
+        "maximum": 16383,
+        "at_nominal_white_15360": 3,
+        "at_container_max_16383": 3,
+        "percentiles": {
+          "50": 734.0,
+          "99": 3644.0,
+          "99.9": 5058.0,
+          "99.99": 6052.0
+        },
+        "sha256": "50dea0dd9aa088989bc83388d74fe6669af7ff604365a10746ec21ab495a7bd6"
+      }
+    },
+    "rois": {
+      "white-patch": {
+        "output_native_xywh": [
+          1080,
+          620,
+          640,
+          640
+        ],
+        "gauge": "held sidecar reference, nearest CFA-quad sample; no CA",
+        "planes": {
+          "R": {
+            "n": 102400,
+            "minimum": 538,
+            "maximum": 6940,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 1791.5,
+              "99": 5946.0199999999895,
+              "99.9": 6585.202000000019,
+              "99.99": 6874.280299999955
+            },
+            "sha256": "b40670d47961618d7c2dd759a4198ccc32a5d23b2b8b1127843f24a1b7646e73"
+          },
+          "G1": {
+            "n": 102400,
+            "minimum": 593,
+            "maximum": 13440,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 3127.0,
+              "99": 11484.01999999999,
+              "99.9": 12761.20200000002,
+              "99.99": 13320.52019999997
+            },
+            "sha256": "13a519ba25a86fac2bf61d0e5afd7ec07227a034f67424edf0e98d353dcd66b9"
+          },
+          "G2": {
+            "n": 102400,
+            "minimum": 595,
+            "maximum": 13710,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 3135.0,
+              "99": 11482.01999999999,
+              "99.9": 12771.0,
+              "99.99": 13323.320699999895
+            },
+            "sha256": "c5c30235b62510da6d803ae936bd574ead7421f79ee057e3cf6abf04e96d9dba"
+          },
+          "B": {
+            "n": 102400,
+            "minimum": 596,
+            "maximum": 6403,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 1748.0,
+              "99": 5514.0,
+              "99.9": 6077.803000000029,
+              "99.99": 6328.0
+            },
+            "sha256": "abd8b394e13a956dc5f825f40e9e6d0b146e6a9cc7cc924f2c291857dafe07d4"
+          }
+        }
+      },
+      "blue-control": {
+        "output_native_xywh": [
+          2780,
+          2640,
+          640,
+          640
+        ],
+        "gauge": "held sidecar reference, nearest CFA-quad sample; no CA",
+        "planes": {
+          "R": {
+            "n": 102400,
+            "minimum": 507,
+            "maximum": 5004,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 634.0,
+              "99": 1175.0,
+              "99.9": 2327.606000000058,
+              "99.99": 3364.760099999985
+            },
+            "sha256": "2abc522e498aeaa0b8f618330c4d0d3e84b80fed0c9743edd94f190f82c7a590"
+          },
+          "G1": {
+            "n": 102400,
+            "minimum": 522,
+            "maximum": 16383,
+            "at_nominal_white_15360": 1,
+            "at_container_max_16383": 1,
+            "percentiles": {
+              "50": 821.0,
+              "99": 2083.0099999999948,
+              "99.9": 4540.838000000367,
+              "99.99": 6874.563099999534
+            },
+            "sha256": "27ae8f4c2546f869072d02855b6dfae58e474f73eab21d5eab414623cb84db4b"
+          },
+          "G2": {
+            "n": 102400,
+            "minimum": 522,
+            "maximum": 16383,
+            "at_nominal_white_15360": 1,
+            "at_container_max_16383": 1,
+            "percentiles": {
+              "50": 823.0,
+              "99": 2070.0099999999948,
+              "99.9": 4566.222000000213,
+              "99.99": 6988.004999999248
+            },
+            "sha256": "acebaaecdfc93d67d5bbfe1be01d7fe1c127da4cc3d857af318fd7048d02525e"
+          },
+          "B": {
+            "n": 102400,
+            "minimum": 516,
+            "maximum": 5201,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 672.0,
+              "99": 1783.0,
+              "99.9": 2486.2070000000676,
+              "99.99": 3607.5630999995337
+            },
+            "sha256": "c036a159f04b2a30a01846e782579eacf6b739907e5415ba7cd6b81b026e190e"
+          }
+        }
+      }
+    }
+  },
+  {
+    "code": "104",
+    "index": 110,
+    "path": "D:\\personal\\macro\\minerals\\etched-spessartine-garnet\\104MSDCF\\DSC00137.ARW",
+    "file_sha256": "45bc3a4f85c0350bef8d62f54be268f41489885784dc5a8703e92da0ec80e993",
+    "metadata": {
+      "raw_sizes": "ImageSizes(raw_height=5120, raw_width=7168, height=4688, width=7028, top_margin=0, left_margin=0, iheight=4688, iwidth=7028, pixel_aspect=1.0, flip=0, crop_left_margin=12, crop_top_margin=8, crop_width=7008, crop_height=4672)",
+      "black": [
+        512,
+        512,
+        512,
+        512
+      ],
+      "white": 16383,
+      "camera_white": [
+        15360,
+        15360,
+        15360,
+        15360
+      ],
+      "wb": [
+        1731.0,
+        1024.0,
+        2581.0,
+        1024.0
+      ],
+      "pattern": [
+        [
+          0,
+          1
+        ],
+        [
+          3,
+          2
+        ]
+      ]
+    },
+    "active": {
+      "n": 32947264,
+      "minimum": 495,
+      "maximum": 16383,
+      "at_nominal_white_15360": 136,
+      "at_container_max_16383": 72,
+      "percentiles": {
+        "50": 520.0,
+        "99": 1689.0,
+        "99.9": 4911.0,
+        "99.99": 12093.0
+      },
+      "sha256": "18b08fb73c33b192d9bfc279ef98f523d1873fee374e431768b0a03b5421069d"
+    },
+    "planes": {
+      "R": {
+        "n": 8236816,
+        "minimum": 497,
+        "maximum": 16383,
+        "at_nominal_white_15360": 24,
+        "at_container_max_16383": 20,
+        "percentiles": {
+          "50": 518.0,
+          "99": 1834.0,
+          "99.9": 5333.1850000005215,
+          "99.99": 8909.0
+        },
+        "sha256": "ccae5dbb8018309da8cdccaa866aa57472ae4ab614f05fee026c99648d0dee8c"
+      },
+      "G1": {
+        "n": 8236816,
+        "minimum": 498,
+        "maximum": 16383,
+        "at_nominal_white_15360": 56,
+        "at_container_max_16383": 25,
+        "percentiles": {
+          "50": 522.0,
+          "99": 1800.0,
+          "99.9": 5838.0,
+          "99.99": 13319.0
+        },
+        "sha256": "c5151ffad12b40ef56f99d8a5558383812c242cc585333376c3d9f33c9bd9c11"
+      },
+      "G2": {
+        "n": 8236816,
+        "minimum": 499,
+        "maximum": 16383,
+        "at_nominal_white_15360": 56,
+        "at_container_max_16383": 27,
+        "percentiles": {
+          "50": 522.0,
+          "99": 1803.0,
+          "99.9": 5840.1850000005215,
+          "99.99": 13339.0
+        },
+        "sha256": "a8ab29737a32683a915b9b6320d777dc6a879852bbe308abee33e55c01855823"
+      },
+      "B": {
+        "n": 8236816,
+        "minimum": 495,
+        "maximum": 11186,
+        "at_nominal_white_15360": 0,
+        "at_container_max_16383": 0,
+        "percentiles": {
+          "50": 518.0,
+          "99": 1081.0,
+          "99.9": 2676.0,
+          "99.99": 6270.318499999121
+        },
+        "sha256": "98b800c40cac4145789d4ca43987472db2a6f356a4640daa0b5fc4317bb6c422"
+      }
+    },
+    "rois": {
+      "white-facet": {
+        "output_native_xywh": [
+          4540,
+          1730,
+          640,
+          640
+        ],
+        "gauge": "held sidecar reference, nearest CFA-quad sample; no CA",
+        "planes": {
+          "R": {
+            "n": 102400,
+            "minimum": 506,
+            "maximum": 12095,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 1115.0,
+              "99": 7184.0199999999895,
+              "99.9": 8368.005000000048,
+              "99.99": 11048.901299996796
+            },
+            "sha256": "a66c0c09c36b70cbe927d923fa7c0a1cb5e537df8b36c15a430d40cbca55a4bf"
+          },
+          "G1": {
+            "n": 102400,
+            "minimum": 506,
+            "maximum": 16383,
+            "at_nominal_white_15360": 32,
+            "at_container_max_16383": 10,
+            "percentiles": {
+              "50": 1132.0,
+              "99": 12728.009999999995,
+              "99.9": 14582.20200000002,
+              "99.99": 16307.765099999233
+            },
+            "sha256": "7c6f4c9d74f1da9e778bcb8d2652218077c26cbba29e7ecf129870c86e6675ad"
+          },
+          "G2": {
+            "n": 102400,
+            "minimum": 510,
+            "maximum": 16383,
+            "at_nominal_white_15360": 33,
+            "at_container_max_16383": 10,
+            "percentiles": {
+              "50": 1133.0,
+              "99": 12744.009999999995,
+              "99.9": 14591.0,
+              "99.99": 16300.858399997232
+            },
+            "sha256": "7a7207c10a05ccf9a0acfb9fbd91e6385a15d6407d7be81db61a5a708144eb97"
+          },
+          "B": {
+            "n": 102400,
+            "minimum": 504,
+            "maximum": 8654,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 798.0,
+              "99": 6010.0199999999895,
+              "99.9": 6785.60100000001,
+              "99.99": 7579.8812999998045
+            },
+            "sha256": "033bad0e65d84144503e29f058be06f4f46cc5094727e372e8784dad5a581e75"
+          }
+        }
+      },
+      "red-control": {
+        "output_native_xywh": [
+          2940,
+          1780,
+          640,
+          640
+        ],
+        "gauge": "held sidecar reference, nearest CFA-quad sample; no CA",
+        "planes": {
+          "R": {
+            "n": 102400,
+            "minimum": 558,
+            "maximum": 2525,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 929.0,
+              "99": 1443.0,
+              "99.9": 1845.6010000000097,
+              "99.99": 2315.6817999997293
+            },
+            "sha256": "30f416407c401a8aedc83adc8205a8d4d4bed8952c31cb3bf53e3be7fc12496a"
+          },
+          "G1": {
+            "n": 102400,
+            "minimum": 550,
+            "maximum": 1925,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 801.0,
+              "99": 1547.0,
+              "99.9": 1721.6010000000097,
+              "99.99": 1837.0403999999398
+            },
+            "sha256": "234058c960d915422f33ca68588161d40ffcb142496a885105ebc2e3c14afab8"
+          },
+          "G2": {
+            "n": 102400,
+            "minimum": 550,
+            "maximum": 1929,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 802.0,
+              "99": 1551.0,
+              "99.9": 1720.0,
+              "99.99": 1849.2802999999549
+            },
+            "sha256": "7101ef0b1544496f0c96d9901e573f663a1eb5aaf118ba25b5c3fde0046ae0df"
+          },
+          "B": {
+            "n": 102400,
+            "minimum": 527,
+            "maximum": 1104,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 642.0,
+              "99": 981.0,
+              "99.9": 1070.0,
+              "99.99": 1087.760099999985
+            },
+            "sha256": "eec1ca5e6a4e96112be7a35b40179983e457a9ebb21084217ed40b775d9a05c8"
+          }
+        }
+      }
+    }
+  },
+  {
+    "code": "104",
+    "index": 120,
+    "path": "D:\\personal\\macro\\minerals\\etched-spessartine-garnet\\104MSDCF\\DSC00147.ARW",
+    "file_sha256": "bc9a2b3dd7ddf4ea98a6c2d4e8c711ac41e758dca54a738cf68285c9509ce229",
+    "metadata": {
+      "raw_sizes": "ImageSizes(raw_height=5120, raw_width=7168, height=4688, width=7028, top_margin=0, left_margin=0, iheight=4688, iwidth=7028, pixel_aspect=1.0, flip=0, crop_left_margin=12, crop_top_margin=8, crop_width=7008, crop_height=4672)",
+      "black": [
+        512,
+        512,
+        512,
+        512
+      ],
+      "white": 16383,
+      "camera_white": [
+        15360,
+        15360,
+        15360,
+        15360
+      ],
+      "wb": [
+        1731.0,
+        1024.0,
+        2581.0,
+        1024.0
+      ],
+      "pattern": [
+        [
+          0,
+          1
+        ],
+        [
+          3,
+          2
+        ]
+      ]
+    },
+    "active": {
+      "n": 32947264,
+      "minimum": 492,
+      "maximum": 16383,
+      "at_nominal_white_15360": 779,
+      "at_container_max_16383": 313,
+      "percentiles": {
+        "50": 520.0,
+        "99": 1667.0,
+        "99.9": 4906.0,
+        "99.99": 13184.27369999513
+      },
+      "sha256": "875ab4049d136f03a510e0e6354e641d77fc58f9ea73f5ed46d97ac2266057ad"
+    },
+    "planes": {
+      "R": {
+        "n": 8236816,
+        "minimum": 492,
+        "maximum": 16383,
+        "at_nominal_white_15360": 123,
+        "at_container_max_16383": 68,
+        "percentiles": {
+          "50": 517.0,
+          "99": 1818.0,
+          "99.9": 5646.1850000005215,
+          "99.99": 9794.229499993846
+        },
+        "sha256": "3c7437ddcac5d9ea3bcbdfd021eea0a1817ef0066f1b15fc7fbefbd3108f46f4"
+      },
+      "G1": {
+        "n": 8236816,
+        "minimum": 497,
+        "maximum": 16383,
+        "at_nominal_white_15360": 324,
+        "at_container_max_16383": 118,
+        "percentiles": {
+          "50": 522.0,
+          "99": 1766.0,
+          "99.9": 5567.0,
+          "99.99": 14351.910999994725
+        },
+        "sha256": "2ae830365e4cdc1333434b58298bc6df35e3c95ad1cfa30eb767ba9377002083"
+      },
+      "G2": {
+        "n": 8236816,
+        "minimum": 498,
+        "maximum": 16383,
+        "at_nominal_white_15360": 332,
+        "at_container_max_16383": 127,
+        "percentiles": {
+          "50": 522.0,
+          "99": 1768.0,
+          "99.9": 5577.555000001565,
+          "99.99": 14359.636999998242
+        },
+        "sha256": "07325718b778cd6f390b0c6d279030beaa156e9819b5f16e3ea1b48deed3d098"
+      },
+      "B": {
+        "n": 8236816,
+        "minimum": 496,
+        "maximum": 9849,
+        "at_nominal_white_15360": 0,
+        "at_container_max_16383": 0,
+        "percentiles": {
+          "50": 518.0,
+          "99": 1072.0,
+          "99.9": 2530.1850000005215,
+          "99.99": 6551.0
+        },
+        "sha256": "03b8c58f9014895107d9c203a6196fabab92599648285bb4589f09fea8a87872"
+      }
+    },
+    "rois": {
+      "white-facet": {
+        "output_native_xywh": [
+          4540,
+          1730,
+          640,
+          640
+        ],
+        "gauge": "held sidecar reference, nearest CFA-quad sample; no CA",
+        "planes": {
+          "R": {
+            "n": 102400,
+            "minimum": 506,
+            "maximum": 10667,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 1127.0,
+              "99": 7503.0199999999895,
+              "99.9": 8733.803000000029,
+              "99.99": 9932.563099999534
+            },
+            "sha256": "df7c45d491e5f96d17200b7c0b8e22a0b0e919d124374f0fd0c62bcf8d740873"
+          },
+          "G1": {
+            "n": 102400,
+            "minimum": 506,
+            "maximum": 16383,
+            "at_nominal_white_15360": 168,
+            "at_container_max_16383": 24,
+            "percentiles": {
+              "50": 1149.0,
+              "99": 13654.049999999974,
+              "99.9": 15635.60100000001,
+              "99.99": 16383.0
+            },
+            "sha256": "ce755e9fcab6a1a23d12c31c245a8d69f1cd9610aabce7ba74f9cc9f2f64a29b"
+          },
+          "G2": {
+            "n": 102400,
+            "minimum": 507,
+            "maximum": 16383,
+            "at_nominal_white_15360": 171,
+            "at_container_max_16383": 28,
+            "percentiles": {
+              "50": 1151.0,
+              "99": 13679.049999999974,
+              "99.9": 15647.0,
+              "99.99": 16383.0
+            },
+            "sha256": "9ca5d57c92a7337ac8c7a34a6a0ad69a8a0550cde16add93ddfe3f0b0a7a5182"
+          },
+          "B": {
+            "n": 102400,
+            "minimum": 506,
+            "maximum": 9122,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 809.0,
+              "99": 6364.0,
+              "99.9": 7257.0,
+              "99.99": 7793.800499999925
+            },
+            "sha256": "bc034efa8ed96ee3901905453af120d2867d7728a2aeea7926a4724e012cd729"
+          }
+        }
+      },
+      "red-control": {
+        "output_native_xywh": [
+          2940,
+          1780,
+          640,
+          640
+        ],
+        "gauge": "held sidecar reference, nearest CFA-quad sample; no CA",
+        "planes": {
+          "R": {
+            "n": 102400,
+            "minimum": 557,
+            "maximum": 4832,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 932.0,
+              "99": 1459.0099999999948,
+              "99.9": 2002.4040000000386,
+              "99.99": 2371.6009999998496
+            },
+            "sha256": "9acc9a05d85456d8d0ed6ce0ec5f65da5ab5d1331f2291ea6214b68e6202d1a3"
+          },
+          "G1": {
+            "n": 102400,
+            "minimum": 554,
+            "maximum": 1782,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 819.0,
+              "99": 1519.0,
+              "99.9": 1665.0,
+              "99.99": 1737.2802999999549
+            },
+            "sha256": "a621bfba0f0de9aaeaaf6669b71716db00e2ab27fbc49874e5fb79170e1216d1"
+          },
+          "G2": {
+            "n": 102400,
+            "minimum": 546,
+            "maximum": 1783,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 820.0,
+              "99": 1526.0,
+              "99.9": 1672.0,
+              "99.99": 1746.52019999997
+            },
+            "sha256": "1b1751cba2718fc8a36c3f05cb0ce55e3f1712720eff9e01209b8a40ee685927"
+          },
+          "B": {
+            "n": 102400,
+            "minimum": 524,
+            "maximum": 1079,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 649.0,
+              "99": 974.0,
+              "99.9": 1030.0,
+              "99.99": 1056.0
+            },
+            "sha256": "c5f395280d3241a4e9fff5d31bc49847e48d60e871b01ae701f0e1a1087a2d65"
+          }
+        }
+      }
+    }
+  },
+  {
+    "code": "104",
+    "index": 130,
+    "path": "D:\\personal\\macro\\minerals\\etched-spessartine-garnet\\104MSDCF\\DSC00157.ARW",
+    "file_sha256": "0a438599b6d9e1bd17010ed1660a883974140a3897277709b6985136b1951d69",
+    "metadata": {
+      "raw_sizes": "ImageSizes(raw_height=5120, raw_width=7168, height=4688, width=7028, top_margin=0, left_margin=0, iheight=4688, iwidth=7028, pixel_aspect=1.0, flip=0, crop_left_margin=12, crop_top_margin=8, crop_width=7008, crop_height=4672)",
+      "black": [
+        512,
+        512,
+        512,
+        512
+      ],
+      "white": 16383,
+      "camera_white": [
+        15360,
+        15360,
+        15360,
+        15360
+      ],
+      "wb": [
+        1731.0,
+        1024.0,
+        2581.0,
+        1024.0
+      ],
+      "pattern": [
+        [
+          0,
+          1
+        ],
+        [
+          3,
+          2
+        ]
+      ]
+    },
+    "active": {
+      "n": 32947264,
+      "minimum": 489,
+      "maximum": 16383,
+      "at_nominal_white_15360": 1875,
+      "at_container_max_16383": 1161,
+      "percentiles": {
+        "50": 520.0,
+        "99": 1652.0,
+        "99.9": 5003.0,
+        "99.99": 13751.54739999026
+      },
+      "sha256": "b8dcf216f8df4750e8461ee47fdafdaf1ee9541654706596150553672680324f"
+    },
+    "planes": {
+      "R": {
+        "n": 8236816,
+        "minimum": 489,
+        "maximum": 16383,
+        "at_nominal_white_15360": 333,
+        "at_container_max_16383": 269,
+        "percentiles": {
+          "50": 518.0,
+          "99": 1816.0,
+          "99.9": 5337.0,
+          "99.99": 12056.0
+        },
+        "sha256": "5b7fc497541017f340df928b45368da05ee634b590aad960c21329f9aaba9969"
+      },
+      "G1": {
+        "n": 8236816,
+        "minimum": 496,
+        "maximum": 16383,
+        "at_nominal_white_15360": 759,
+        "at_container_max_16383": 442,
+        "percentiles": {
+          "50": 522.0,
+          "99": 1735.0,
+          "99.9": 5968.0,
+          "99.99": 15155.0
+        },
+        "sha256": "99dd794401ed6ab431a2244670d50b36029890215fa3ad976b0a2acc18eb7647"
+      },
+      "G2": {
+        "n": 8236816,
+        "minimum": 496,
+        "maximum": 16383,
+        "at_nominal_white_15360": 783,
+        "at_container_max_16383": 450,
+        "percentiles": {
+          "50": 522.0,
+          "99": 1737.0,
+          "99.9": 5973.0,
+          "99.99": 15198.592499995604
+        },
+        "sha256": "6be8809792d93a4769ecd834c7dbf4766e3dbed6bafeed65fc1b2a8d6cd84a58"
+      },
+      "B": {
+        "n": 8236816,
+        "minimum": 497,
+        "maximum": 10164,
+        "at_nominal_white_15360": 0,
+        "at_container_max_16383": 0,
+        "percentiles": {
+          "50": 518.0,
+          "99": 1057.0,
+          "99.9": 2640.0,
+          "99.99": 6823.318499999121
+        },
+        "sha256": "ada8ef2d365d7754e6d1947dd91998dff659d13e37252b13b6b0aff960bc0ba5"
+      }
+    },
+    "rois": {
+      "white-facet": {
+        "output_native_xywh": [
+          4540,
+          1730,
+          640,
+          640
+        ],
+        "gauge": "held sidecar reference, nearest CFA-quad sample; no CA",
+        "planes": {
+          "R": {
+            "n": 102400,
+            "minimum": 502,
+            "maximum": 16383,
+            "at_nominal_white_15360": 2,
+            "at_container_max_16383": 2,
+            "percentiles": {
+              "50": 1140.0,
+              "99": 7618.0,
+              "99.9": 9480.606000000058,
+              "99.99": 11983.605999999098
+            },
+            "sha256": "b7b8e25b23e29ea362d5be89db8d42eaa0b3faa1ee74ad9e1ae02e8089145a88"
+          },
+          "G1": {
+            "n": 102400,
+            "minimum": 509,
+            "maximum": 16383,
+            "at_nominal_white_15360": 531,
+            "at_container_max_16383": 248,
+            "percentiles": {
+              "50": 1168.0,
+              "99": 13931.009999999995,
+              "99.9": 16383.0,
+              "99.99": 16383.0
+            },
+            "sha256": "007eacf28d1b3e2881b099b1db39b9f3c65102147471c01d164e505dde3fbb32"
+          },
+          "G2": {
+            "n": 102400,
+            "minimum": 507,
+            "maximum": 16383,
+            "at_nominal_white_15360": 549,
+            "at_container_max_16383": 248,
+            "percentiles": {
+              "50": 1170.0,
+              "99": 13934.0,
+              "99.9": 16383.0,
+              "99.99": 16383.0
+            },
+            "sha256": "b521c454211b43ee1c5f07c9dcc65554dbfb04869b091cc027d1b1b613a9b41f"
+          },
+          "B": {
+            "n": 102400,
+            "minimum": 504,
+            "maximum": 9071,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 814.0,
+              "99": 6485.009999999995,
+              "99.9": 7966.404000000039,
+              "99.99": 8632.72219999967
+            },
+            "sha256": "036ac51959fc746298d17d12833234a4bd4003dbea3b0c83f6ac05d6c7a99e6c"
+          }
+        }
+      },
+      "red-control": {
+        "output_native_xywh": [
+          2940,
+          1780,
+          640,
+          640
+        ],
+        "gauge": "held sidecar reference, nearest CFA-quad sample; no CA",
+        "planes": {
+          "R": {
+            "n": 102400,
+            "minimum": 572,
+            "maximum": 3037,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 937.0,
+              "99": 1464.0,
+              "99.9": 1893.0,
+              "99.99": 2371.3231999995187
+            },
+            "sha256": "d278b754871ca5f4217adeecaec61fc5326887a3f353d5ac2c72fd64892f268e"
+          },
+          "G1": {
+            "n": 102400,
+            "minimum": 548,
+            "maximum": 1768,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 836.0,
+              "99": 1455.0,
+              "99.9": 1552.0,
+              "99.99": 1736.0
+            },
+            "sha256": "df82bebbd8d4f07aa874ee6fa7667a77dcfd5b46c99fa2f11f93c7d352e035a8"
+          },
+          "G2": {
+            "n": 102400,
+            "minimum": 546,
+            "maximum": 1765,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 838.0,
+              "99": 1458.0,
+              "99.9": 1560.6010000000097,
+              "99.99": 1736.0
+            },
+            "sha256": "d51b576a084b137dad632b5a468edf570acfef2246396e78125f12d804d9588b"
+          },
+          "B": {
+            "n": 102400,
+            "minimum": 526,
+            "maximum": 1014,
+            "at_nominal_white_15360": 0,
+            "at_container_max_16383": 0,
+            "percentiles": {
+              "50": 658.0,
+              "99": 946.0,
+              "99.9": 986.0,
+              "99.99": 1000.760099999985
+            },
+            "sha256": "85a6fc76f645fb0046b6e468982362f61a29a2390e2a06f95d81887ace430859"
+          }
+        }
+      }
+    }
+  }
+]
